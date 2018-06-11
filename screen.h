@@ -2,59 +2,80 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include "color.h"
 #include "geometry.h"
 #include <cairo.h>
-#include <cassert>
-#include <fcntl.h>
-#include <linux/fb.h>
-#include <string>
-#include <sys/ioctl.h>
-#include <sys/mman.h>
 #include <vector>
+#include <memory>
 
-class Screen
+namespace mui
 {
-public:
-	Screen();
 
-	void blit(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty);
-	#if 0
-	void blit_scaled(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, double scale);
-	#endif
+    using shared_cairo_surface_t =
+	std::shared_ptr<cairo_surface_t>;
 
-	void fill();
+    using shared_cairo_t =
+	std::shared_ptr<cairo_t>;
 
-	void flip(const std::vector<Rect>& damage);
+    /**
+     * Base screen class.
+     */
+    class IScreen
+    {
+    public:
+	IScreen();
 
-	virtual ~Screen();
+	virtual void blit(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, bool blend = true);
 
-protected:
+	virtual void fill(const Color& color = Color::RED);
 
+	virtual void flip(const std::vector<Rect>& damage);
+
+	virtual void text(const Point& p, const std::string& str);
+
+	virtual void rect(const Rect& rect, const Color& color);
+
+	Size size() const { return m_size; }
+
+	shared_cairo_t context() const { return m_cr; }
+
+	virtual ~IScreen();
+
+    protected:
+
+	void greenscreen(const std::vector<Rect>& damage);
 	void init(void* ptr, int w, int h);
 
-	cairo_surface_t* m_surface_back;
-	cairo_t* m_cr_back;
+	shared_cairo_surface_t m_surface_back;
+	shared_cairo_t m_cr_back;
 
-	cairo_surface_t* m_surface;
-	cairo_t* m_cr;
-};
+	shared_cairo_surface_t m_surface;
+	shared_cairo_t m_cr;
 
-class FrameBuffer : public Screen
-{
-public:
+	Size m_size;
+    };
+
+    /**
+     * Screen on a fbdev framebuffer.
+     */
+    class FrameBuffer : public IScreen
+    {
+    public:
+
 	FrameBuffer(const std::string& path = "/dev/fb0");
 
 	virtual ~FrameBuffer();
 
-private:
+    private:
 	int m_fd;
 	void* m_fb;
-};
+    };
 
-Screen* screen();
+    IScreen* screen();
+
+}
 
 #endif

@@ -2,7 +2,6 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #ifndef WIDGET_H
 #define WIDGET_H
 
@@ -10,23 +9,30 @@
 #include "input.h"
 #include "screen.h"
 #include "utils.h"
-#include <vector>
-#include <string>
-#include <cassert>
 #include <cairo.h>
+#include <cassert>
 #include <map>
+#include <string>
+#include <vector>
+#include <memory>
 
-using namespace std;
-
-class Widget
+namespace mui
 {
-public:
+
+    class Widget
+    {
+    public:
+
+	/**
+	 * Construct a widget.
+	 */
 	Widget(int x = 0, int y = 0, int w = 0, int h = 0);
 
 	/**
 	 * Draw the widget.
 	 *
-	 * Only the area under rect needs to be drawn.
+	 * Do not call this directly.  When implementing this function, only
+	 * re-draw within rect when possible.
 	 */
 	virtual void draw(const Rect& rect) = 0;
 
@@ -60,8 +66,25 @@ public:
 	 */
 	virtual void move(int x, int y);
 
+	virtual void hide() { m_visible = false; }
+	virtual void show() { m_visible = true; damage(); }
+	virtual bool visible() const { return m_visible; }
+	virtual bool focus() const { return m_focus; }
+	virtual void focus(bool value) { m_focus = value; }
+
+	virtual bool active() const { return m_active; }
+	virtual void active(bool value) { m_active = value; }
+
+	virtual void damage();
+
+	/**
+	 * Bounding box for the widgets.
+	 */
 	const Rect& box() const { return m_box; }
 
+	/**
+	 * Bounding box width.
+	 */
 	inline int w() const { return m_box.w; }
 	inline int h() const { return m_box.h; }
 	inline int x() const { return m_box.x; }
@@ -69,55 +92,36 @@ public:
 
 	virtual ~Widget();
 
-protected:
+    protected:
+
+	enum
+	{
+	    ALIGN_CENTER = 1<<0,
+	    ALIGN_LEFT = 1<<1,
+	    ALIGN_RIGHT = 1<<2,
+	    ALIGN_TOP = 1<<3,
+	    ALIGN_BOTTOM = 1<<4,
+	};
+
+	void draw_text(shared_cairo_t cr, const std::string& text,
+		       const Color& color = Color::BLACK, int align = ALIGN_CENTER);
+
 	Rect m_box;
-};
+	bool m_visible;
+	bool m_focus;
+	bool m_active;
+    };
 
-class Window : public Widget
-{
-public:
-	Window(int w, int h);
+    using shared_cairo_surface_t =
+			   std::shared_ptr<cairo_surface_t>;
 
-	void add(Widget* widget);
+    using shared_cairo_t =
+			   std::shared_ptr<cairo_t>;
 
-	/**
-	 * Damage the rectangle of the entire widget.
-	 */
-	virtual	void damage();
-
-	/**
-	 * Damage the specified rectangle of the widget.
-	 */
-	virtual void damage(const Rect& rect);
-
-#if 0
-	Rect to_parent(const Rect& rect)
-	{
-		return Rect();
-	}
-
-	Rect to_child(const Rect& rect)
-	{
-		return Rect();
-	}
-#endif
-
-	virtual int handle(int event);
-
-	virtual void draw();
-
-	virtual void draw(const Rect& rect);
-
-
-protected:
-	vector<Widget*> m_children;
-	vector<Rect> m_damage;
-};
-
-class Image : public Widget
-{
-public:
-	Image(const string& filename, int x = 0, int y = 0);
+    class Image : public Widget
+    {
+    public:
+	Image(const std::string& filename, int x = 0, int y = 0);
 
 	virtual void draw(const Rect& rect);
 
@@ -125,13 +129,121 @@ public:
 
 	virtual ~Image();
 
-protected:
-	cairo_surface_t* m_image;
-	cairo_surface_t* m_back;
-	string m_filename;
-	std::map<int,cairo_surface_t*> m_cache;
-};
+    protected:
 
-Window* main_window();
+	shared_cairo_surface_t m_image;
+	shared_cairo_surface_t m_back;
+	std::string m_filename;
+	std::map<int,shared_cairo_surface_t> m_cache;
+    };
+
+    class Button : public Widget
+    {
+    public:
+	Button(const std::string& label, const Point& point = Point(),
+	       const Size& size = Size());
+
+	int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	virtual ~Button();
+
+    protected:
+	std::string m_label;
+    };
+
+    class Combo : public Widget
+    {
+    public:
+	Combo(const std::string& label, const Point& point = Point(),
+	      const Size& size = Size());
+
+	int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	virtual ~Combo();
+
+    protected:
+	std::string m_label;
+    };
+
+
+    class Slider : public Widget
+    {
+    public:
+	Slider(int min, int max, const Point& point = Point(),
+	       const Size& size = Size());
+
+	int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	int position() const { return m_pos; }
+
+	inline void position(int pos)
+	{
+	    if (pos <= m_max && pos >= m_min)
+	    {
+		m_pos = pos;
+		damage();
+	    }
+	}
+
+	virtual ~Slider();
+
+    protected:
+
+	constexpr static int RADIUS = 10;
+
+	inline int normalize(int pos)
+	{
+	    return float(w() - RADIUS - RADIUS) / float(m_max - m_min)  * float(pos);
+	}
+
+        inline int denormalize(int diff)
+	{
+	    return float(m_max - m_min)  / float(w() - RADIUS - RADIUS) * float(diff);
+	}
+
+	int m_min;
+	int m_max;
+	int m_pos;
+	int m_moving_x;
+	int m_start_pos;
+    };
+
+    class Label : public Widget
+    {
+    public:
+	Label(const std::string& text, const Point& point = Point(), const Size& size = Size());
+
+	int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	virtual ~Label();
+
+    protected:
+	std::string m_text;
+    };
+
+    class SimpleText : public Widget
+    {
+    public:
+	SimpleText(const std::string& text = std::string(), const Point& point = Point(), const Size& size = Size());
+
+	int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	virtual ~SimpleText();
+
+    protected:
+	std::string m_text;
+    };
+
+}
 
 #endif

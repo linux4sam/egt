@@ -15,50 +15,65 @@
 #include <cassert>
 #include "geometry.h"
 
-using namespace std;
-
-enum
+namespace mui
 {
-	MOUSE_DOWN = 1,
-	MOUSE_UP,
-	MOUSE_MOVE
-};
 
-const Point& mouse_position();
+    enum
+    {
+	EVT_MOUSE_DOWN = 1,
+	EVT_MOUSE_UP,
+	EVT_MOUSE_MOVE,
+	EVT_ENTER,
+	EVT_LEAVE,
+	EVT_KEYDOWN,
+	EVT_KEYUP,
+    };
 
-class Input
-{
-public:
+    Point& mouse_position();
 
-};
+    int& key_position();
 
-class InputEvDev : public Input
-{
-public:
+    class Input
+    {
+    public:
 
-	InputEvDev(const string& path);
+    };
+
+    class InputEvDev : public Input
+    {
+    public:
+
+	InputEvDev(const std::string& path);
 
 	static void process(int fd, uint32_t mask, void *data);
 
 	virtual ~InputEvDev();
 
-private:
+    private:
 	int m_fd;
-};
+    };
 
+#ifdef HAVE_TSLIB
+    class InputTslib : public Input
+    {
+    public:
 
-class InputTslib : public Input
-{
-public:
-
-	InputTslib(const string& path);
+	InputTslib(const std::string& path);
 
 	static void process(int fd, uint32_t mask, void *data);
 
 	virtual ~InputTslib();
 
-private:
+    private:
+
+	static void timer_callback(int fd, void* data);
+
 	int m_fd;
-};
+	int m_timerfd;
+	bool m_active;
+    };
+#endif
+
+}
 
 #endif

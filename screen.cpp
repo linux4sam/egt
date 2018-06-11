@@ -16,21 +16,24 @@ using namespace std;
 
 #define DOUBLE_BUFFER
 
-static Screen* the_screen = 0;
-
-Screen* screen()
+namespace mui
 {
+
+    static IScreen* the_screen = 0;
+
+    IScreen* screen()
+    {
 	return the_screen;
-}
+    }
 
-Screen::Screen()
-{
+    IScreen::IScreen()
+    {
 
-}
+    }
 
 #if 0
-void Screen::blit_scaled(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, double scale)
-{
+    void IScreen::blit_scaled(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, double scale)
+    {
 	//cairo_matrix_t matrix;
 
 	cairo_save(m_cr);
@@ -55,105 +58,161 @@ void Screen::blit_scaled(cairo_surface_t* surface, int srcx, int srcy, int srcw,
 	//cairo_scale(m_cr, 1.0, 1.0);
 	//cairo_set_matrix(m_cr, &matrix);
 	cairo_restore(m_cr);
-}
+    }
 #endif
 
-void Screen::blit(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty)
-{
-	cairo_save(m_cr);
-	cairo_set_source_surface(m_cr, surface, dstx, dsty);
-	cairo_rectangle(m_cr, srcx, srcy, srcw, srch);
-	//cairo_clip(m_cr);
-	cairo_set_operator(m_cr, CAIRO_OPERATOR_OVER);
-	cairo_fill(m_cr);
-	cairo_restore(m_cr);
-}
+    void IScreen::blit(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, bool blend)
+    {
+	cairo_save(m_cr.get());
+	cairo_set_source_surface(m_cr.get(), surface, dstx, dsty);
+	cairo_rectangle(m_cr.get(), srcx, srcy, srcw, srch);
+	if (blend)
+	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
+	else
+	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+	cairo_fill(m_cr.get());
+	cairo_restore(m_cr.get());
 
-void Screen::fill()
-{
-	cairo_save(m_cr);
-	cairo_set_source_rgba(m_cr, 0, 0, 1.00, 1.0);
-	cairo_set_operator(m_cr, CAIRO_OPERATOR_SOURCE);
-	cairo_paint(m_cr);
-	cairo_restore(m_cr);
-}
+	assert(cairo_status(m_cr.get()) == CAIRO_STATUS_SUCCESS);
+    }
 
-void Screen::flip(const vector<Rect>& damage)
-{
-#ifdef DOUBLE_BUFFER
-	int total = 0;
-	cairo_save(m_cr_back);
-	cairo_set_source_surface(m_cr_back, m_surface, 0, 0);
-	for (auto& d: damage)
+    void IScreen::fill(const Color& color)
+    {
+	cairo_save(m_cr.get());
+	cairo_set_source_rgba(m_cr.get(), color.redf(), color.greenf(), color.bluef(), 1.0);
+	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+	cairo_paint(m_cr.get());
+	cairo_restore(m_cr.get());
+    }
+
+    void IScreen::rect(const Rect& rect, const Color& color)
+    {
+	cairo_save(m_cr.get());
+	cairo_set_source_rgba(m_cr.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
+	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+	cairo_rectangle(m_cr.get(), rect.x, rect.y, rect.w, rect.h);
+	cairo_fill(m_cr.get());
+	cairo_restore(m_cr.get());
+    }
+
+    void IScreen::greenscreen(const vector<Rect>& damage)
+    {
+	Color color = Color::GREEN;
+
+	cairo_save(m_cr_back.get());
+	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
+	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
+	cairo_set_source_rgba(m_cr_back.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
+	cairo_set_line_width(m_cr_back.get(), 1.0);
+	for (const auto& d: damage)
 	{
-		total += (d.w * d.h);
-		cairo_rectangle(m_cr_back, d.x, d.y, d.w, d.h);
-		cairo_set_operator(m_cr_back, CAIRO_OPERATOR_SOURCE);
-		cairo_fill(m_cr_back);
+	    cairo_rectangle(m_cr_back.get(), d.x+1, d.y+1, d.w-2, d.h-2);
 	}
-	cairo_restore(m_cr_back);
+	cairo_stroke(m_cr_back.get());
+	cairo_restore(m_cr_back.get());
 
-	cout << "total pixels: " << total << endl;
+	cairo_surface_flush(m_surface_back.get());
 
+	struct timespec ts = {0,300 * 1000000};
+	nanosleep(&ts, NULL);
+    }
+
+    void IScreen::flip(const vector<Rect>& damage)
+    {
+	//greenscreen(damage);
+
+#ifdef DOUBLE_BUFFER
 #if 0 // whole thing
-	cairo_save(m_cr_back);
-	cairo_set_source_surface(m_cr_back, m_surface, 0, 0);
-	cairo_set_operator(m_cr_back, CAIRO_OPERATOR_SOURCE);
-	cairo_paint(m_cr_back);
-	cairo_restore(m_cr_back);
-#endif
+	cairo_save(m_cr_back.get());
+	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
+	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
+	cairo_paint(m_cr_back.get());
+	cairo_restore(m_cr_back.get());
+#else
+	int total = 0;
+	cairo_save(m_cr_back.get());
+	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
+	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
+	for (const auto& d: damage)
+	{
+	    total += (d.w * d.h);
+	    cairo_rectangle(m_cr_back.get(), d.x, d.y, d.w, d.h);
+	}
+	cairo_fill(m_cr_back.get());
+	cairo_restore(m_cr_back.get());
+
+	cairo_surface_flush(m_surface_back.get());
+
+	//cout << "total pixels: " << total << endl;
 
 #endif
-}
 
-Screen::~Screen()
-{
-	cairo_surface_destroy(m_surface);
-	cairo_destroy(m_cr);
-}
+#endif
+    }
 
-void Screen::init(void* ptr, int w, int h)
-{
-	cout << "framebuffer " << w << "," << h << endl;
+    void IScreen::text(const Point& p, const std::string& str)
+    {
+	cairo_text_extents_t textext;
+	cairo_select_font_face(m_cr.get(), "Courier", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+	cairo_set_font_size(m_cr.get(), 15);
+	cairo_text_extents(m_cr.get(), "a", &textext);
+
+	cairo_move_to(m_cr.get(), textext.width - textext.x_bearing, textext.height - textext.y_bearing);
+	cairo_show_text(m_cr.get(), str.c_str());
+    }
+
+    IScreen::~IScreen()
+    {
+    }
+
+    void IScreen::init(void* ptr, int w, int h)
+    {
+	cout << "screen " << w << "," << h << endl;
+
+	m_size = Size(w,h);
 
 	cairo_format_t format = CAIRO_FORMAT_ARGB32;
 	//cairo_format_t format = CAIRO_FORMAT_RGB16_565;
 	//cairo_format_t format = CAIRO_FORMAT_RGB24;
 
 #ifdef DOUBLE_BUFFER
-	m_surface_back = cairo_image_surface_create_for_data((unsigned char*)ptr,
-							format,
-							w, h,
-							cairo_format_stride_for_width(format, w));
-	assert(m_surface_back);
+	if (ptr)
+	{
+	    m_surface_back = shared_cairo_surface_t(cairo_image_surface_create_for_data((unsigned char*)ptr,
+											format,
+											w, h,
+											cairo_format_stride_for_width(format, w)),
+						    cairo_surface_destroy);
+	    assert(m_surface_back);
 
-	m_cr_back = cairo_create(m_surface_back);
-	assert(m_cr_back);
+	    m_cr_back = shared_cairo_t(cairo_create(m_surface_back.get()), cairo_destroy);
+	    assert(m_cr_back);
+	}
 
-	m_surface = cairo_image_surface_create(format, w, h);
-	assert(m_surface);
+	m_surface = shared_cairo_surface_t(cairo_image_surface_create(format, w, h),
+					   cairo_surface_destroy);
+	assert(m_surface.get());
 
-	m_cr = cairo_create(m_surface);
+	m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
 	assert(m_cr);
 #else
-	m_surface = cairo_image_surface_create_for_data((unsigned char*)ptr,
-							format,
-							w, h,
-							cairo_format_stride_for_width(format, w));
-	assert(m_surface);
+	m_surface = shared_cairo_surface_t(cairo_image_surface_create_for_data((unsigned char*)ptr,
+									       format,
+									       w, h,
+									       cairo_format_stride_for_width(format, w)),
+					   cairo_surface_destroy);
+	assert(m_surface.get());
 
-	m_cr = cairo_create(m_surface);
+	m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
 	assert(m_cr);
 #endif
 
 	the_screen = this;
+    }
 
-	fill();
-}
-
-FrameBuffer::FrameBuffer(const string& path)
+    FrameBuffer::FrameBuffer(const string& path)
 	: m_fd(-1)
-{
+    {
 	struct fb_fix_screeninfo fixinfo;
 	struct fb_var_screeninfo varinfo;
 
@@ -161,31 +220,27 @@ FrameBuffer::FrameBuffer(const string& path)
 	m_fd = open(path.c_str(), O_RDWR);
 	assert(m_fd >= 0);
 
-	int ret = ioctl(m_fd, FBIOGET_FSCREENINFO, &fixinfo);
-	assert(ret >= 0);
+	if (ioctl(m_fd, FBIOGET_FSCREENINFO, &fixinfo) < 0)
+	    assert(0);
 
-	ret  = ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo);
-	assert(ret >= 0);
+	if (ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0)
+	    assert(0);
 
-	//int size = fixinfo.smem_len;
-	int size = varinfo.xres * varinfo.yres * varinfo.bits_per_pixel / 8;
+	int size = fixinfo.smem_len;
+	//int size = varinfo.xres * varinfo.yres * varinfo.bits_per_pixel / 8;
 
-	cout << "fb size " << size << endl;
+	cout << "fb size " << size << " " << varinfo.xres << "," << varinfo.yres << endl;
 
 	m_fb = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
 	assert(m_fb != (void *) -1);
 
 	init(m_fb, varinfo.xres, varinfo.yres);
-}
+    }
 
-FrameBuffer::~FrameBuffer()
-{
-	cairo_surface_destroy(m_surface);
-	cairo_destroy(m_cr);
-
-	cairo_surface_destroy(m_surface_back);
-	cairo_destroy(m_cr_back);
-
+    FrameBuffer::~FrameBuffer()
+    {
 	::munmap(m_fb,0);
 	::close(m_fd);
+    }
+
 }

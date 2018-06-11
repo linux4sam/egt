@@ -6,7 +6,9 @@
 #include "event_loop.h"
 #include "geometry.h"
 #include "input.h"
+#ifdef HAVE_TSLIB
 #include "tslib.h"
+#endif
 #include "widget.h"
 #include <cassert>
 #include <errno.h>
@@ -18,26 +20,36 @@
 #include <string>
 #include <sys/time.h>
 #include <unistd.h>
+#include "window.h"
 
 using namespace std;
 
-static Point event_position;
-const Point& mouse_position()
+namespace mui
 {
-	return event_position;
-}
 
-InputEvDev::InputEvDev(const string& path)
+    static Point pointer_abs_pos;
+    Point& mouse_position()
+    {
+	return pointer_abs_pos;
+    }
+
+    static int event_key;
+    int& key_position()
+    {
+	return event_key;
+    }
+
+    InputEvDev::InputEvDev(const string& path)
 	: m_fd(-1)
-{
+    {
 	m_fd = open(path.c_str(), O_RDONLY);
 	assert(m_fd >= 0);
 
 	EventLoop::add_fd(m_fd, EVENT_READABLE, InputEvDev::process);
-}
+    }
 
-void InputEvDev::process(int fd, uint32_t mask, void *data)
-{
+    void InputEvDev::process(int fd, uint32_t mask, void *data)
+    {
 	struct input_event ev[8], *e, *end;
 
 	int dx = 0;
@@ -49,114 +61,120 @@ void InputEvDev::process(int fd, uint32_t mask, void *data)
 	int len = read(fd, &ev, sizeof(ev));
 	if (len < 0 || len % sizeof(e[0]) != 0)
 	{
-		assert(0);
+	    assert(0);
 	}
 
 	e = ev;
 	end = ev + (len/sizeof(e[0]));
 	for (e = ev; e < end; e++)
 	{
-		int value = e->value;
+	    int value = e->value;
 
-		cout << value << endl;
-		switch (e->type)
+	    dbg << value << endl;
+	    switch (e->type)
+	    {
+	    case EV_REL:
+		switch (e->code)
 		{
-		case EV_REL:
-			switch (e->code)
-			{
-			case REL_X:
-				dx += value;
-				break;
+		case REL_X:
+		    dx += value;
+		    break;
 
-			case REL_Y:
-				dy += value;
-				break;
-			default:
-				assert(0);
-			}
-
-		case EV_ABS:
-			absolute_event = true;
-			switch (e->code)
-			{
-			case ABS_X:
-				x = (double)value;// * 800./1024.;
-				break;
-			case ABS_Y:
-				y = (double)value;// * 480./1024.;
-				break;
-			}
-
-		case EV_KEY:
-			if (value == 2)
-				break;
-
-			switch (e->code)
-			{
-			case BTN_TOUCH:
-			case BTN_TOOL_PEN:
-			case BTN_TOOL_RUBBER:
-			case BTN_TOOL_BRUSH:
-			case BTN_TOOL_PENCIL:
-			case BTN_TOOL_AIRBRUSH:
-			case BTN_TOOL_FINGER:
-			case BTN_TOOL_MOUSE:
-			case BTN_TOOL_LENS:
-				//device->tool = value ? e->code : 0;
-				break;
-
-			case BTN_LEFT:
-				main_window()->handle(value ? MOUSE_DOWN : MOUSE_UP);
-				break;
-
-			case BTN_RIGHT:
-				main_window()->handle(value ? MOUSE_DOWN : MOUSE_UP);
-				break;
-
-			case BTN_MIDDLE:
-				main_window()->handle(value ? MOUSE_DOWN : MOUSE_UP);
-				break;
-			}
+		case REL_Y:
+		    dy += value;
+		    break;
+		default:
+		    assert(0);
 		}
+
+	    case EV_ABS:
+		absolute_event = true;
+		switch (e->code)
+		{
+		case ABS_X:
+		    x = (double)value;// * 800./1024.;
+		    break;
+		case ABS_Y:
+		    y = (double)value;// * 480./1024.;
+		    break;
+		}
+
+	    case EV_KEY:
+		if (value == 2)
+		    break;
+
+		switch (e->code)
+		{
+		case BTN_TOUCH:
+		case BTN_TOOL_PEN:
+		case BTN_TOOL_RUBBER:
+		case BTN_TOOL_BRUSH:
+		case BTN_TOOL_PENCIL:
+		case BTN_TOOL_AIRBRUSH:
+		case BTN_TOOL_FINGER:
+		case BTN_TOOL_MOUSE:
+		case BTN_TOOL_LENS:
+		    //device->tool = value ? e->code : 0;
+		    break;
+
+		case BTN_LEFT:
+		    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+		    break;
+
+		case BTN_RIGHT:
+		    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+		    break;
+
+		case BTN_MIDDLE:
+		    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+		    break;
+		}
+	    }
 	}
 
 	if (absolute_event)
 	{
-		event_position = Point(x,y);
-		main_window()->handle(MOUSE_MOVE);
+	    pointer_abs_pos = Point(x,y);
+	    main_window()->handle(EVT_MOUSE_MOVE);
 	}
 	else
 	{
-		if (dx != 0 || dy != 0)
-		{
-			event_position = Point(event_position.x+dx,event_position.y+dy);
-			main_window()->handle(MOUSE_MOVE);
-		}
+	    if (dx != 0 || dy != 0)
+	    {
+		pointer_abs_pos = Point(pointer_abs_pos.x+dx,pointer_abs_pos.y+dy);
+		main_window()->handle(EVT_MOUSE_MOVE);
+	    }
 	}
-}
+    }
 
-InputEvDev::~InputEvDev()
-{
+    InputEvDev::~InputEvDev()
+    {
 	if (m_fd >= 0)
-		close(m_fd);
-}
+	    close(m_fd);
+    }
 
-static const int SLOTS = 2;
-static const int SAMPLES = 50;
+#ifdef HAVE_TSLIB
 
-static struct tsdev *ts;
-static struct ts_sample_mt **samp_mt = NULL;
-//static struct input_absinfo slot;
+    static const int SLOTS = 1;
+    static const int SAMPLES = 20;
+    static struct tsdev *ts;
+    static struct ts_sample_mt **samp_mt;
 
-#define NONBLOCKING 1
+    //bool active = false;
+    //static struct timeval m_last_time = {0,0};
 
-bool active = false;
+    //static inline int diff_ms(const timeval& t1, const timeval& t2)
+    //{
+//	return (((t1.tv_sec - t2.tv_sec) * 1000000) +
+//		(t1.tv_usec - t2.tv_usec))/1000;
+    //  }
 
-//static Point last_event_position;
-
-InputTslib::InputTslib(const string& path)
-	: m_fd(-1)
-{
+    InputTslib::InputTslib(const string& path)
+	: m_fd(-1),
+	  m_timerfd(-1),
+	  m_active(false)
+    {
+	const int NONBLOCKING = 1;
 	int i;
 
 	ts = ts_setup(path.c_str(), NONBLOCKING);
@@ -166,120 +184,114 @@ InputTslib::InputTslib(const string& path)
 	assert(samp_mt);
 
 	for (i = 0; i < SAMPLES; i++) {
-		samp_mt[i] = (struct ts_sample_mt *)calloc(SLOTS, sizeof(struct ts_sample_mt));
-		if (!samp_mt[i]) {
-			free(samp_mt);
-			ts_close(ts);
-			assert(0);
-		}
+	    samp_mt[i] = (struct ts_sample_mt *)calloc(SLOTS, sizeof(struct ts_sample_mt));
+	    if (!samp_mt[i]) {
+		free(samp_mt);
+		ts_close(ts);
+		assert(0);
+	    }
 	}
 
-	EventLoop::add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process);
-}
+	EventLoop::add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
+    }
 
-static struct timeval m_last_time = {0,0};
+    void InputTslib::timer_callback(int fd, void* data)
+    {
+	InputTslib* obj = reinterpret_cast<InputTslib*>(data);
+	assert(obj);
+	obj->m_active = false;
+	main_window()->handle(EVT_MOUSE_UP);
+	dbg << "mouse up " << pointer_abs_pos << endl;
+	obj->m_timerfd = -1;
+    }
 
-static inline int diff_ms(const timeval& t1, const timeval& t2)
-{
-	return (((t1.tv_sec - t2.tv_sec) * 1000000) +
-		(t1.tv_usec - t2.tv_usec))/1000;
-}
-
-
-void InputTslib::process(int fd, uint32_t mask, void *data)
-{
+    void InputTslib::process(int fd, uint32_t mask, void *data)
+    {
+	InputTslib* obj = reinterpret_cast<InputTslib*>(data);
 	int ret;
 	int i;
 	int j;
-	ret = ts_read_mt(ts, samp_mt, SLOTS, SAMPLES);
-	if (ret < 0) {
-		perror("ts_read_mt");
-	}
-	else if (ret != 1)
-	{
-	}
-	else {
-		bool move = false;
-		Point move_event_position;
 
-		for (j = 0; j < ret; j++) {
-			for (i = 0; i < SLOTS; i++) {
+	ret = ts_read_mt(ts, samp_mt, SLOTS, SAMPLES);
+	if (ret < 0)
+	{
+	    perror("ts_read_mt");
+	    return;
+	}
+
+	bool move = false;
+	bool start = false;
+
+	if (obj->m_timerfd > 0)
+	{
+	    EventLoop::rem_fd(obj->m_timerfd);
+	    close(obj->m_timerfd);
+	    obj->m_timerfd = -1;
+	}
+
+	for (j = 0; j < ret; j++)
+	{
+	    for (i = 0; i < SLOTS; i++)
+	    {
 #ifdef TSLIB_MT_VALID
-				if (!(samp_mt[j][i].valid & TSLIB_MT_VALID))
-					continue;
+		if (!(samp_mt[j][i].valid & TSLIB_MT_VALID))
+		    continue;
 #else
-#warning no multitouch
-				if (samp_mt[j][i].valid < 1)
-					continue;
+		if (samp_mt[j][i].valid < 1)
+		    continue;
 #endif
 
 #if 0
-				printf("%ld.%06ld: (slot %d) %d %6d %6d %6d\n",
-				       samp_mt[j][i].tv.tv_sec,
-				       samp_mt[j][i].tv.tv_usec,
-				       samp_mt[j][i].slot,
-       				       samp_mt[j][i].tool_type,
-				       samp_mt[j][i].x,
-				       samp_mt[j][i].y,
-				       samp_mt[j][i].pressure);
+		printf("%ld.%06ld: (slot %d) %d %6d %6d %6d %d %d\n",
+		       samp_mt[j][i].tv.tv_sec,
+		       samp_mt[j][i].tv.tv_usec,
+		       samp_mt[j][i].slot,
+		       samp_mt[j][i].tool_type,
+		       samp_mt[j][i].x,
+		       samp_mt[j][i].y,
+		       samp_mt[j][i].pressure,
+		       samp_mt[j][i].distance,
+		       samp_mt[j][i].pen_down);
+#endif
+		if (samp_mt[j][i].x < 0 || samp_mt[j][i].y < 0)
+		    continue;
+
+		if (obj->m_active)
+		{
+		    pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+		    move = true;
+		    start = true;
+		}
+		else
+		{
+		    if (samp_mt[j][i].pressure > 0 && samp_mt[j][i].pen_down == 1)
+		    {
+			pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+			main_window()->handle(EVT_MOUSE_DOWN);
+			dbg << "mouse down " << pointer_abs_pos << endl;
+			obj->m_active = true;
+			start = true;
+		    }
+		}
+	    }
+	}
+
+	if (move)
+	{
+	    dbg << "mouse move " << pointer_abs_pos << endl;
+	    main_window()->handle(EVT_MOUSE_MOVE);
+	}
+
+	if (start)
+	{
+	    obj->m_timerfd = EventLoop::start_timer(200, InputTslib::timer_callback, obj);
+	}
+    }
+
+    InputTslib::~InputTslib()
+    {
+	ts_close(ts);
+    }
 #endif
 
-
-				if (active)
-				{
-					int elapsed = diff_ms(samp_mt[j][i].tv, m_last_time);
-
-					if (elapsed > 200 || samp_mt[j][i].pressure == 0)
-					{
-						event_position = Point(samp_mt[j][i].x,samp_mt[j][i].y);
-						main_window()->handle(MOUSE_UP);
-						active = false;
-					}
-					else
-					{
-						move_event_position = Point(samp_mt[j][i].x,samp_mt[j][i].y);
-						move = true;
-						event_position = move_event_position;
-						main_window()->handle(MOUSE_MOVE);
-					}
-				}
-				else
-				{
-					if (samp_mt[j][i].pressure > 0)
-					{
-						event_position = Point(samp_mt[j][i].x,samp_mt[j][i].y);
-						main_window()->handle(MOUSE_DOWN);
-						active = true;
-					}
-				}
-
-				m_last_time = samp_mt[j][i].tv;
-
-			}
-		}
-
-		if (move)
-		{
-			//if (last_event_position.x == 0 &&
-			//    last_event_position.y == 0 ||
-			//    (abs(last_event_position.x-event_position.x) > 5 ||
-			//     abs(last_event_position.y-event_position.y) > 5))
-			//{
-
-			//event_position = move_event_position;
-			//	main_window()->handle(MOUSE_MOVE);
-
-
-				//last_event_position = event_position;
-				//}
-
-		}
-
-
-	}
-}
-
-InputTslib::~InputTslib()
-{
-	ts_close(ts);
 }
