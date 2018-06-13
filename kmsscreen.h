@@ -9,6 +9,7 @@
 #include "window.h"
 #include "geometry.h"
 
+#ifdef HAVE_LIBPLANES
 struct plane_data;
 
 namespace mui
@@ -62,5 +63,6 @@ namespace mui
     };
 
 }
+#endif
 
 #endif

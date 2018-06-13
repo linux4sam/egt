@@ -95,6 +95,23 @@ namespace mui
 
 	    return Rect(xmin, ymin, xmax-xmin, ymax-ymin);
 	}
+
+
+	static Rect intersect(const Rect& lhs, const Rect& rhs)
+	{
+	    /*
+	      intersection is empty unless
+	      intersect.Right > intersect.Left
+	      && intersect.Bottom > intersect.Top
+	    */
+
+	    int x = std::max(lhs.x, rhs.x);
+	    int y = std::max(lhs.y, rhs.y);
+	    int r = std::min(lhs.x + lhs.w, rhs.x + rhs.w);
+	    int b = std::min(lhs.y + lhs.h, rhs.y + rhs.h);
+
+	    return Rect(x,y,r-x,b-y);
+	}
     };
 
     inline std::ostream& operator << (std::ostream& os, const Rect& rect)

@@ -19,9 +19,27 @@
 namespace mui
 {
 
+    /**
+     * Base widget class.
+     */
     class Widget
     {
     public:
+
+	enum
+	{
+	    FLAG_NO_BORDER = (1<<0),
+	    FLAG_FULL_REDRAW = (1<<1),
+	};
+
+	enum
+	{
+	    ALIGN_CENTER = 1<<0,
+	    ALIGN_LEFT = 1<<1,
+	    ALIGN_RIGHT = 1<<2,
+	    ALIGN_TOP = 1<<3,
+	    ALIGN_BOTTOM = 1<<4,
+	};
 
 	/**
 	 * Construct a widget.
@@ -94,17 +112,13 @@ namespace mui
 
     protected:
 
-	enum
-	{
-	    ALIGN_CENTER = 1<<0,
-	    ALIGN_LEFT = 1<<1,
-	    ALIGN_RIGHT = 1<<2,
-	    ALIGN_TOP = 1<<3,
-	    ALIGN_BOTTOM = 1<<4,
-	};
 
-	void draw_text(shared_cairo_t cr, const std::string& text,
-		       const Color& color = Color::BLACK, int align = ALIGN_CENTER);
+	void draw_text(const std::string& text,
+		       const Color& color = Color::BLACK, int align = ALIGN_CENTER,
+		       int standoff = 5);
+
+	void draw_image(shared_cairo_surface_t image,
+				int align = ALIGN_CENTER, int standoff = 0);
 
 	Rect m_box;
 	bool m_visible;
@@ -127,6 +141,8 @@ namespace mui
 
 	void scale(double scale);
 
+	double scale() const { return m_scale; }
+
 	virtual ~Image();
 
     protected:
@@ -134,6 +150,7 @@ namespace mui
 	shared_cairo_surface_t m_image;
 	shared_cairo_surface_t m_back;
 	std::string m_filename;
+	double m_scale;
 	std::map<int,shared_cairo_surface_t> m_cache;
     };
 
@@ -199,12 +216,12 @@ namespace mui
 
 	inline int normalize(int pos)
 	{
-	    return float(w() - RADIUS - RADIUS) / float(m_max - m_min)  * float(pos);
+	    return float(w() - RADIUS * 4) / float(m_max - m_min)  * float(pos);
 	}
 
         inline int denormalize(int diff)
 	{
-	    return float(m_max - m_min)  / float(w() - RADIUS - RADIUS) * float(diff);
+	    return float(m_max - m_min)  / float(w() - RADIUS * 4) * float(diff);
 	}
 
 	int m_min;
@@ -217,7 +234,7 @@ namespace mui
     class Label : public Widget
     {
     public:
-	Label(const std::string& text, const Point& point = Point(), const Size& size = Size());
+	Label(const std::string& text, const Point& point = Point(), const Size& size = Size(), int align = ALIGN_CENTER);
 
 	int handle(int event);
 
@@ -226,6 +243,7 @@ namespace mui
 	virtual ~Label();
 
     protected:
+	int m_align;
 	std::string m_text;
     };
 
@@ -244,6 +262,35 @@ namespace mui
 	std::string m_text;
     };
 
+
+    class CheckBox : public Widget
+    {
+    public:
+	CheckBox(const std::string& text = std::string(),
+		 const Point& point = Point(),
+		 const Size& size = Size());
+
+	int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	virtual ~CheckBox();
+    };
+
+    class ImageLabel : public Label
+    {
+    public:
+	ImageLabel(const std::string& image,
+		   const std::string& text = std::string(),
+		   const Point& point = Point(),
+		   const Size& size = Size());
+
+	virtual void draw(const Rect& rect);
+
+	virtual ~ImageLabel();
+    protected:
+	shared_cairo_surface_t m_image;
+    };
 }
 
 #endif

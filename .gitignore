@@ -1,2 +1,7 @@
 *.o
 ui
+widgets
+floating
+easing
+_image*.png
+background.png

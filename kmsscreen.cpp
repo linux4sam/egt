@@ -2,6 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_LIBPLANES
+
 #include "event_loop.h"
 #include "input.h"
 #include "kmsscreen.h"
@@ -90,3 +92,5 @@ namespace mui
     }
 
 }
+
+#endif

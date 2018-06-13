@@ -2,7 +2,6 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #include "screen.h"
 #include <sys/mman.h>
 #include <cassert>
@@ -81,6 +80,8 @@ namespace mui
 	cairo_save(m_cr.get());
 	cairo_set_source_rgba(m_cr.get(), color.redf(), color.greenf(), color.bluef(), 1.0);
 	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+
+
 	cairo_paint(m_cr.get());
 	cairo_restore(m_cr.get());
     }
@@ -89,7 +90,10 @@ namespace mui
     {
 	cairo_save(m_cr.get());
 	cairo_set_source_rgba(m_cr.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
-	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+	if (color.alpha() == 255)
+	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+	else
+	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
 	cairo_rectangle(m_cr.get(), rect.x, rect.y, rect.w, rect.h);
 	cairo_fill(m_cr.get());
 	cairo_restore(m_cr.get());

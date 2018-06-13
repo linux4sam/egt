@@ -105,18 +105,18 @@ namespace mui
 	    auto start = chrono::steady_clock::now();
 
 	    main_window()->draw();
-	    wait(0);
+	    wait();
 
 	    auto end = chrono::steady_clock::now();
 	    auto diff = end - start;
 	    times.push_back(chrono::duration<double, milli>(diff).count());
 
-	    if (times.size() == 20)
+	    static unsigned int COUNT = 50;
+	    if (times.size() == COUNT)
 	    {
-		auto avg = std::accumulate(times.begin(), times.end(), 0) / 20;
+		auto avg = std::accumulate(times.begin(), times.end(), 0) / COUNT;
 		if (avg > 0)
-		cout << 1000/avg << " fps" << endl;
-
+		    cout << 1000./avg << " fps" << endl;
 		times.clear();
 	    }
 	}
@@ -148,8 +148,8 @@ namespace mui
 
     static void ms2ts(struct timespec *ts, unsigned long ms)
     {
-	ts->tv_sec = ms / 1000;
-	ts->tv_nsec = (ms % 1000) * 1000000;
+	ts->tv_sec = ms / 1000ULL;
+	ts->tv_nsec = (ms % 1000ULL) * 1000000ULL;
     }
 
     int EventLoop::start_timer(unsigned long milliseconds, timer_event_callback func, void* data)
@@ -174,4 +174,47 @@ namespace mui
 	return fd;
     }
 
+    static void periodic_timer_event(int fd, uint32_t mask, void *data)
+    {
+	struct timer_data* tdata = reinterpret_cast<struct timer_data*>(data);
+
+	tdata->func(fd, tdata->data);
+
+	unsigned long long missed = 0;
+	(void)read(fd, &missed, sizeof(missed));
+	if (missed > 1)
+	    cout << "missed: " << missed << endl;
+    }
+
+    int EventLoop::start_periodic_timer(unsigned long milliseconds, timer_event_callback func, void* data)
+    {
+	int fd = timerfd_create(CLOCK_MONOTONIC, 0);
+	assert(fd >= 0);
+
+	struct itimerspec ts;
+	ms2ts(&ts.it_value,milliseconds);
+	ms2ts(&ts.it_interval,milliseconds);
+
+	if (timerfd_settime(fd, 0, &ts, NULL) != 0)
+	{
+	    assert(0);
+	}
+
+	struct timer_data* tdata = new timer_data;
+	tdata->func = func;
+	tdata->data = data;
+	EventLoop::add_fd(fd, EVENT_READABLE, periodic_timer_event, tdata);
+
+	return fd;
+    }
+
+    void EventLoop::cancel_periodic_timer(int fd)
+    {
+	// TODO
+	//delete tdata;
+
+	EventLoop::rem_fd(fd);
+
+	::close(fd);
+    }
 }

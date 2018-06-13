@@ -5,6 +5,8 @@
 #ifndef X11SCREEN_H
 #define X11SCREEN_H
 
+#ifdef HAVE_X11
+
 #include "screen.h"
 #include <X11/Xlib.h>
 
@@ -32,5 +34,7 @@ namespace mui
     };
 
 }
+
+#endif
 
 #endif

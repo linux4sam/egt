@@ -2,6 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_X11
+
 #include "event_loop.h"
 #include "input.h"
 #include "widget.h"
@@ -143,7 +145,7 @@ namespace mui
 		break;
 	    }
 	    default:
-		cout << "unhandled " << e.type << endl;
+		dbg << "x11 event unhandled " << e.type << endl;
 		break;
 	    }
 	}
@@ -156,3 +158,5 @@ namespace mui
     }
 
 }
+
+#endif

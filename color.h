@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ * Joshua Henderson <joshua.henderson@microchip.com>
+ */
 #ifndef COLOR_H
 #define COLOR_H
 
@@ -28,6 +32,7 @@ public:
 	    PURPLE = 0x800080ff,
 	    TEAL = 0x008080ff,
 	    NAVY = 0x000080ff,
+	    ORANGE = 0xffa500ff,
 	};
 
     Color(uint32_t c = 0)
@@ -80,6 +85,13 @@ protected:
     uint32_t m_a;
 };
 
+extern Color FG_COLOR;
+extern Color BG_COLOR;
+extern Color TEXT_COLOR;
+//extern Color HANDLE_COLOR;
+extern Color GHIGH_COLOR;
+extern Color GLOW_COLOR;
+extern Color BORDER_COLOR;
 }
 
 #endif

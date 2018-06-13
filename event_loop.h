@@ -45,7 +45,11 @@ namespace mui
 
 	static void close();
 
-	static int start_timer(unsigned long milliseconds, timer_event_callback func, void* data);
+	static int start_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
+
+	static int start_periodic_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
+
+	static void cancel_periodic_timer(int fd);
     };
 
 }

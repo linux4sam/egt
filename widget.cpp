@@ -2,7 +2,6 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #include "widget.h"
 #include "geometry.h"
 #include "input.h"
@@ -83,9 +82,9 @@ namespace mui
 	main_window()->damage(box());
     }
 
-    void Widget::draw_text(shared_cairo_t cr, const std::string& text, const Color& color, int align)
+    void Widget::draw_text(const std::string& text, const Color& color, int align, int standoff)
     {
-	static const int STANDOFF = 5;
+	auto cr = screen()->context();
 
 	cairo_text_extents_t textext;
 	cairo_select_font_face(cr.get(), "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
@@ -100,13 +99,13 @@ namespace mui
 	}
 
 	if (align & ALIGN_LEFT)
-	    p.x = x() + STANDOFF;
+	    p.x = x() + standoff;
 	if (align & ALIGN_RIGHT)
-	    p.x = x() + w() - textext.width - STANDOFF;
+	    p.x = x() + w() - textext.width - standoff;
 	if (align & ALIGN_TOP)
-	    p.y = y() + textext.height + STANDOFF;
+	    p.y = y() + textext.height + standoff;
 	if (align & ALIGN_BOTTOM)
-	    p.y = y() + h() - STANDOFF;
+	    p.y = y() + h() - standoff;
 
 
 	cairo_set_source_rgba(cr.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
@@ -114,11 +113,37 @@ namespace mui
 	cairo_show_text(cr.get(), text.c_str());
     }
 
+
+    void Widget::draw_image(shared_cairo_surface_t image, int align, int standoff)
+    {
+	auto width = cairo_image_surface_get_width(image.get());
+	auto height = cairo_image_surface_get_height(image.get());
+
+	Point p;
+	if (align & ALIGN_CENTER)
+	{
+	    p.x = x() + (w()/2) - (width/2);
+	    p.y = y() + (h()/2) - (height/2);
+	}
+
+	if (align & ALIGN_LEFT)
+	    p.x = x() + standoff;
+	if (align & ALIGN_RIGHT)
+	    p.x = x() + w() - width - standoff;
+	if (align & ALIGN_TOP)
+	    p.y = y() + height + standoff;
+	if (align & ALIGN_BOTTOM)
+	    p.y = y() + h() - standoff;
+
+	screen()->blit(image.get(), p.x, p.y, width, height, p.x, p.y);
+    }
+
     Widget::~Widget()
     {}
 
     Image::Image(const string& filename, int x, int y)
-	: m_filename(filename)
+	: m_filename(filename),
+	  m_scale(1.0)
     {
 	m_image = shared_cairo_surface_t(cairo_image_surface_create_from_png(filename.c_str()), cairo_surface_destroy);
 	assert(m_image.get());
@@ -140,7 +165,7 @@ namespace mui
 	cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
 	cairo_paint(cr.get());
 
-	main_window()->damage(box());
+	damage();
     }
 
     static shared_cairo_surface_t
@@ -175,12 +200,19 @@ namespace mui
 	return new_surface;
     }
 
+    static float round(float v, float fraction)
+    {
+	return floor(v) + floor( (v-floor(v))/fraction) * fraction;
+    }
+
     void Image::scale(double scale)
     {
-	main_window()->damage(box());
+	damage();
 
 	double neww = cairo_image_surface_get_width(m_back.get());
 	double newh = cairo_image_surface_get_height(m_back.get());
+
+	scale = round(scale, 0.01);
 
 	auto i = m_cache.find(scale * 100);
 	if (i != m_cache.end())
@@ -192,15 +224,15 @@ namespace mui
 	    cout << "cache miss " << scale * 100 << endl;
 
 	    m_image = scale_surface(m_back,
-							   neww, newh,
+				    neww, newh,
 				    neww * scale, newh * scale);
 
 	    m_cache.insert(std::make_pair(scale * 100, m_image));
 	}
 
 	size(neww * scale, newh * scale);
-
-	main_window()->damage(box());
+	m_scale = scale;
+	damage();
     }
 
     void Image::draw(const Rect& rect)
@@ -226,15 +258,21 @@ namespace mui
 	{
 	case EVT_MOUSE_DOWN:
 	    cout << "button: mouse down" << endl;
-	    damage();
-	    active(true);
-	    return 1;
+	    if (!active())
+	    {
+		damage();
+		active(true);
+		return 1;
+	    }
 	    break;
 	case EVT_MOUSE_UP:
 	    cout << "button: mouse up" << endl;
-	    damage();
-	    active(false);
-	    return 1;
+	    if (active())
+	    {
+		damage();
+		active(false);
+		return 1;
+	    }
 	    break;
 	case EVT_MOUSE_MOVE:
 	    cout << "button: mouse move" << endl;
@@ -250,9 +288,6 @@ namespace mui
     void Button::draw(const Rect& rect)
     {
 	Color white(Color::WHITE);
-	Color border(Color::GRAY);
-	Color fill(Color::SILVER);
-	Color black(Color::BLACK);
 
 	auto cr = screen()->context();
 
@@ -308,13 +343,20 @@ namespace mui
 	cairo_set_source(cr.get(), pat3);
 	cairo_fill_preserve (cr.get());
 
-	cairo_set_source_rgb (cr.get(), border.redf(), border.greenf(), border.bluef());
+	cairo_set_source_rgba(cr.get(),
+			      BORDER_COLOR.redf(),
+			      BORDER_COLOR.greenf(),
+			      BORDER_COLOR.bluef(),
+			      BORDER_COLOR.alphaf());
 
 	cairo_stroke (cr.get());
 
-	cairo_set_source_rgb (cr.get(), black.redf(), black.greenf(), black.bluef());
+	cairo_set_source_rgb (cr.get(),
+			      TEXT_COLOR.redf(),
+			      TEXT_COLOR.greenf(),
+			      TEXT_COLOR.bluef());
 
-	draw_text(cr, m_label);
+	draw_text(m_label);
 
 	cairo_pattern_destroy(pat3);
 
@@ -340,19 +382,17 @@ namespace mui
     void Combo::draw(const Rect& rect)
     {
 	Color white(Color::WHITE);
-	Color border(Color::GRAY);
-	Color fill(Color::SILVER);
-	Color black(Color::BLACK);
 
 	auto cr = screen()->context();
 
 	cairo_save(cr.get());
 
-	double rx         = x(),
-	    ry         = y(),
-	    width         = w(),
-	    height        = h(),
-	    aspect        = 1.0,
+	// path
+	double rx = x(),
+	    ry = y(),
+	    width = w(),
+	    height = h(),
+	    aspect = 1.0,
 	    corner_radius = height / 10.0;
 
 	double radius = corner_radius / aspect;
@@ -365,6 +405,7 @@ namespace mui
 	cairo_arc (cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
 	cairo_close_path (cr.get());
 
+	// fill
 	cairo_pattern_t *pat3;
 	pat3 = cairo_pattern_create_linear(x()+w()/2, y(), x()+w()/2, y()+h());
 
@@ -378,17 +419,20 @@ namespace mui
 	cairo_pattern_add_color_stop_rgb(pat3, 1.0, step.redf(), step.greenf(), step.bluef());
 
 	cairo_set_source(cr.get(), pat3);
-	cairo_fill_preserve (cr.get());
-
-	cairo_set_source_rgb (cr.get(), border.redf(), border.greenf(), border.bluef());
-	cairo_set_line_width (cr.get(), 1.0);
-	cairo_stroke (cr.get());
-
-	cairo_set_source_rgb (cr.get(), black.redf(), black.greenf(), black.bluef());
-
-	draw_text(cr, m_label, Color::BLACK, ALIGN_LEFT|ALIGN_CENTER);
-
+	cairo_fill_preserve(cr.get());
 	cairo_pattern_destroy(pat3);
+
+	// border
+	cairo_set_source_rgba(cr.get(),
+			      BORDER_COLOR.redf(),
+			      BORDER_COLOR.greenf(),
+			      BORDER_COLOR.bluef(),
+			      BORDER_COLOR.alphaf());
+	cairo_set_line_width (cr.get(), 1.0);
+	cairo_stroke(cr.get());
+
+	// text
+	draw_text(m_label, TEXT_COLOR, ALIGN_LEFT|ALIGN_CENTER);
 
 #if 0
 	// triangle
@@ -405,6 +449,7 @@ namespace mui
 
 	assert(CAIRO_HAS_PNG_FUNCTIONS == 1);
 
+	// images
 	auto up = shared_cairo_surface_t(cairo_image_surface_create_from_png("icons/bullet_arrow_up.png"), cairo_surface_destroy);
 	assert(cairo_surface_status(up.get()) == CAIRO_STATUS_SUCCESS);
 
@@ -479,34 +524,68 @@ namespace mui
 
     void Slider::draw(const Rect& rect)
     {
-	Color border(Color::GRAY);
-	Color color(0x4169E1ff);
-
 	auto cr = screen()->context();
 
 	cairo_save(cr.get());
 
-	cairo_set_source_rgb(cr.get(), border.redf(), border.greenf(), border.bluef());
+	// line
+	cairo_set_source_rgba(cr.get(),
+			      BORDER_COLOR.redf(),
+			      BORDER_COLOR.greenf(),
+			      BORDER_COLOR.bluef(),
+			      BORDER_COLOR.alphaf());
 	cairo_set_line_width(cr.get(), 4.0);
 	cairo_move_to(cr.get(), x() + RADIUS, y()+h()/2);
 	cairo_line_to(cr.get(), x() + w() - RADIUS, y()+h()/2);
-	cairo_stroke (cr.get());
+	cairo_stroke(cr.get());
 
+	// path
+	double rx         = x() + normalize(m_pos) + 1,
+	    ry         = y() + 1,
+	    width         = RADIUS * 4-2,
+	    height        = h()-2,
+	    aspect        = 1.0,
+	    corner_radius = height / 10.0;
+
+	double radius = corner_radius / aspect;
+	double degrees = M_PI / 180.0;
+
+	cairo_new_sub_path (cr.get());
+	cairo_arc (cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
+	cairo_arc (cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
+	cairo_arc (cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
+	cairo_arc (cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+	cairo_close_path (cr.get());
+
+	// fill
+	cairo_pattern_t *pat3;
+	pat3 = cairo_pattern_create_linear(x()+normalize(m_pos)+RADIUS/2, y(), x()+normalize(m_pos)+RADIUS/2, y()+RADIUS*2);
+
+
+	Color step = GLOW_COLOR;
+	cairo_pattern_add_color_stop_rgb(pat3, 0, step.redf(), step.greenf(), step.bluef());
+	step = GLOW_COLOR.tint(.9);
+	cairo_pattern_add_color_stop_rgb(pat3, 0.43, step.redf(), step.greenf(), step.bluef());
+	step = GLOW_COLOR.tint(.82);
+	cairo_pattern_add_color_stop_rgb(pat3, 0.5, step.redf(), step.greenf(), step.bluef());
+	step = GLOW_COLOR.tint(.95);
+	cairo_pattern_add_color_stop_rgb(pat3, 1.0, step.redf(), step.greenf(), step.bluef());
+
+	cairo_set_line_width (cr.get(), 1.0);
+
+	cairo_set_source(cr.get(), pat3);
+	cairo_fill_preserve (cr.get());
+
+	cairo_set_source_rgba(cr.get(),
+			      BORDER_COLOR.redf(),
+			      BORDER_COLOR.greenf(),
+			      BORDER_COLOR.bluef(),
+			      BORDER_COLOR.alphaf());
+	cairo_stroke(cr.get());
+
+
+#if 0
 	cairo_pattern_t *pat;
-
-	/*
-	  pat = cairo_pattern_create_linear(x()+w()/2, y(), x()+w()/2, y()+h());
-	  Color step = color;
-	  cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
-	  step = color.tint(.9);
-	  cairo_pattern_add_color_stop_rgb(pat, 0.43, step.redf(), step.greenf(), step.bluef());
-	  step = color.tint(.82);
-	  cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
-	  step = color.tint(.95);
-	  cairo_pattern_add_color_stop_rgb(pat, 1.0, step.redf(), step.greenf(), step.bluef());
-	*/
-
-
 	pat = cairo_pattern_create_radial(normalize(m_pos) + x() + RADIUS, y()+h()/2, 1,
 					  normalize(m_pos) + x() + RADIUS, y()+h()/2, RADIUS);
 	Color step = color;
@@ -515,17 +594,20 @@ namespace mui
 	cairo_pattern_add_color_stop_rgba(pat, 1, step.redf(), step.greenf(), step.bluef(), step.alphaf());
 
 
-	//cairo_set_source_rgba(cr.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
-	//cairo_set_operator(cr.get(), CAIRO_OPERATOR_SATURATE);
 	cairo_set_source(cr.get(), pat);
 	cairo_arc(cr.get(), normalize(m_pos) + x() + RADIUS, y()+h()/2, RADIUS, 0, 2 * M_PI);
 	cairo_fill(cr.get());
 
 	cairo_set_line_width(cr.get(), 1.0);
-	cairo_set_source_rgb(cr.get(), border.redf(), border.greenf(), border.bluef());
+	cairo_set_source_rgba(cr.get(),
+			      BORDER_COLOR.redf(),
+			      BORDER_COLOR.greenf(),
+			      BORDER_COLOR.bluef(),
+			      BORDER_COLOR.alphaf());
 	cairo_arc(cr.get(), normalize(m_pos) + x() + RADIUS, y()+h()/2, RADIUS, 0, 2 * M_PI);
 	cairo_stroke(cr.get());
 	cairo_pattern_destroy(pat);
+#endif
 
 	cairo_restore(cr.get());
     }
@@ -535,8 +617,9 @@ namespace mui
     }
 
 
-    Label::Label(const std::string& text, const Point& point, const Size& size)
+    Label::Label(const std::string& text, const Point& point, const Size& size, int align)
 	: Widget(point.x, point.y, size.w, size.h),
+	  m_align(align),
 	  m_text(text)
     {
 
@@ -549,17 +632,7 @@ namespace mui
 
     void Label::draw(const Rect& rect)
     {
-	Color border(Color::BLACK);
-
-	auto cr = screen()->context();
-
-	cairo_save(cr.get());
-
-	cairo_set_source_rgb(cr.get(), border.redf(), border.greenf(), border.bluef());
-
-	draw_text(cr, m_text);
-
-	cairo_restore(cr.get());
+	draw_text(m_text, TEXT_COLOR, m_align);
     }
 
     Label::~Label()
@@ -597,7 +670,6 @@ namespace mui
 
     void SimpleText::draw(const Rect& rect)
     {
-        Color border(Color::GRAY);
 	Color background(Color::WHITE);
 	auto cr = screen()->context();
 
@@ -623,11 +695,15 @@ namespace mui
 	cairo_set_source_rgb (cr.get(), background.redf(), background.greenf(),background.bluef());
 	cairo_fill_preserve (cr.get());
 
-	cairo_set_source_rgb (cr.get(), border.redf(), border.greenf(), border.bluef());
+	cairo_set_source_rgba(cr.get(),
+			      BORDER_COLOR.redf(),
+			      BORDER_COLOR.greenf(),
+			      BORDER_COLOR.bluef(),
+			      BORDER_COLOR.alphaf());
 	cairo_set_line_width (cr.get(), 1.0);
 	cairo_stroke (cr.get());
 
-	draw_text(cr, m_text, Color::BLACK, ALIGN_CENTER | ALIGN_LEFT);
+	draw_text(m_text, TEXT_COLOR, ALIGN_CENTER | ALIGN_LEFT);
 
 	cairo_restore(cr.get());
     }
@@ -635,4 +711,32 @@ namespace mui
     SimpleText::~SimpleText()
     {
     }
+
+
+    ImageLabel::ImageLabel(const std::string& image,
+			   const std::string& text,
+			   const Point& point,
+			   const Size& size)
+	: Label(text, point, size)
+    {
+	m_image = shared_cairo_surface_t(cairo_image_surface_create_from_png(image.c_str()),
+					 cairo_surface_destroy);
+	assert(m_image.get());
+
+	damage();
+    }
+
+    void ImageLabel::draw(const Rect& rect)
+    {
+	draw_image(m_image, ALIGN_LEFT | ALIGN_CENTER);
+
+	auto cr = screen()->context();
+
+	draw_text(m_text, TEXT_COLOR, ALIGN_LEFT | ALIGN_CENTER, 20);
+    }
+
+    ImageLabel::~ImageLabel()
+    {
+    }
+
 }
