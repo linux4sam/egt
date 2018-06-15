@@ -11,34 +11,25 @@
 
 #ifdef HAVE_LIBPLANES
 struct plane_data;
+struct kms_device;
 
 namespace mui
 {
 
     /**
-     * Window that resides in a hardware plane.
-     *
-     * This is a window that is composed by hardware. Doing operations like
-     * changing position, alpha, scale in hardware results in a performance
-     * speedup.
+     * A screen backed by an overlay plane.
      */
-    class PlaneWindow : public SimpleWindow
+    class KMSOverlayScreen : public IScreen
     {
     public:
 
-	PlaneWindow(const Size& size = Size(100,100));
-
-	virtual	void damage();
-
-	virtual void damage(const Rect&);
+	KMSOverlayScreen(struct plane_data* plane);
 
 	virtual void position(int x, int y);
 
-	virtual void size(int w, int h);
+	//virtual void apply();
 
-	virtual void draw();
-
-	virtual ~PlaneWindow();
+	virtual ~KMSOverlayScreen();
 
     protected:
 	struct plane_data* m_plane;
@@ -56,10 +47,13 @@ namespace mui
 
 	void flip(const std::vector<Rect>& damage);
 
+	struct plane_data* allocate_overlay(const Rect& rect);
+
 	virtual ~KMSScreen();
 
     protected:
-
+	int m_fd;
+	struct kms_device* m_device;
     };
 
 }

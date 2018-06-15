@@ -5,15 +5,17 @@
 #ifndef UI_H
 #define UI_H
 
+#include "animation.h"
 #include "color.h"
 #include "event_loop.h"
 #include "input.h"
 #include "kmsscreen.h"
+#include "piechart.h"
 #include "screen.h"
+#include "timer.h"
 #include "widget.h"
 #include "window.h"
 #include "x11screen.h"
-#include "animation.h"
-#include "piechart.h"
+#include "font.h"
 
 #endif

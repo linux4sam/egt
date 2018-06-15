@@ -56,12 +56,11 @@ class Box : public Widget
 {
 public:
     Box(int x, int y, int w, int h, int mx, int my, const Color& color)
-	: Widget(x,y,w,h),
+	: Widget(x, y, w, h),
 	  m_color(color),
 	  m_mx(mx),
 	  m_my(my)
-    {
-    }
+    {}
 
     virtual void draw(const Rect& rect)
     {
@@ -98,19 +97,12 @@ protected:
     int m_my;
 };
 
-static Box* box1;
-static Box* box2;
-static Box* box3;
-static Box* box4;
-static Box* box5;
+static vector<Box*> boxes;
 
 static void timer_callback(int fd, void* data)
 {
-    box1->next_frame();
-    box2->next_frame();
-    box3->next_frame();
-    box4->next_frame();
-    box5->next_frame();
+    for (auto i : boxes)
+	i->next_frame();
 }
 
 int main()
@@ -120,6 +112,17 @@ int main()
 #ifdef HAVE_LIBPLANES
     KMSScreen kms;
     InputTslib input0("/dev/input/touchscreen0");
+
+    KMSOverlayScreen overlay(kms.allocate_overlay(Rect(100,100,200,200)));
+
+    PlaneWindow win2(&overlay);
+    win2.position(200,200);
+    win2.active(true);
+
+    Color colorz(255,0,0,0x55);
+    Box* boxz1 = new Box(0,0,100,100,1,2,colorz);
+    win2.add(boxz1);
+
 #else
     FrameBuffer fb("/dev/fb0");
 #endif
@@ -127,28 +130,32 @@ int main()
     X11Screen screen(Size(800,480));
 #endif
 
-    //InputEvDev input1("/dev/input/event4");
-
     MyWindow win;
+    win.active(true);
 
     Color color1(255,0,0,0x55);
-    box1 = new Box(0,0,100,100,1,2,color1);
+    Box* box1 = new Box(0,0,100,100,1,2,color1);
+    boxes.push_back(box1);
     win.add(box1);
 
     Color color2(0,0,255,0x55);
-    box2 = new Box(100,100,100,100,3,-2,color2);
+    Box* box2 = new Box(100,100,100,100,3,-2,color2);
+        boxes.push_back(box2);
     win.add(box2);
 
     Color color3(0,255,0,0x55);
-    box3 = new Box(200,200,100,100,-3,2,color3);
+    Box* box3 = new Box(200,200,100,100,-3,2,color3);
+        boxes.push_back(box3);
     win.add(box3);
 
     Color color4(0xc0,0xc0,0xc0,0x55);
-    box4 = new Box(300,300,100,100,-3,3,color4);
+    Box* box4 = new Box(300,300,100,100,-3,3,color4);
+        boxes.push_back(box4);
     win.add(box4);
 
     Color color5(0xff,0xff,0x00,0x55);
-    box5 = new Box(400,300,100,100,3,3,color5);
+    Box* box5 = new Box(400,300,100,100,3,3,color5);
+    boxes.push_back(box5);
     win.add(box5);
 
     EventLoop::start_periodic_timer(40, timer_callback, NULL);

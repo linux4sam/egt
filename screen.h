@@ -28,7 +28,11 @@ namespace mui
     public:
 	IScreen();
 
-	virtual void blit(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, bool blend = true);
+	virtual void blit(cairo_surface_t* surface,
+			  int srcx, int srcy,
+			  int srcw, int srch,
+			  int dstx, int dsty,
+			  bool blend = true);
 
 	virtual void fill(const Color& color = Color::RED);
 
@@ -74,7 +78,7 @@ namespace mui
 	void* m_fb;
     };
 
-    IScreen* screen();
+    IScreen* main_screen();
 
 }
 

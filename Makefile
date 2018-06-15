@@ -6,16 +6,17 @@ LIBPLANES=y
 
 .SUFFIXES: .o .cpp
 
-CXXFLAGS = -Wall -g -std=c++11 -I. -pedantic -pg
+CXXFLAGS = -Wall -g -std=c++11 -I. -pedantic -Ofast
 
 .cpp.o :
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
-	x11screen.h color.h window.h ui.h kmsscreen.h animation.h piechart.h
+	x11screen.h color.h window.h ui.h kmsscreen.h animation.h piechart.h \
+	timer.h font.h
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
-	window.o kmsscreen.o color.o animation.o piechart.o
+	window.o kmsscreen.o color.o animation.o piechart.o timer.o font.o
 
 ui_objs = main.o $(common_objs)
 

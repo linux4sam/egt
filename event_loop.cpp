@@ -88,25 +88,33 @@ namespace mui
 	return 0;
     }
 
-    static bool doquit = false;
+    static bool do_quit = false;
 
     void EventLoop::quit()
     {
-	doquit = true;
+	do_quit = true;
     }
 
     void EventLoop::run()
     {
+#ifdef STATS
 	vector<uint64_t> times;
-
-	doquit = false;
-	while (!doquit)
+#endif
+	do_quit = false;
+	while (!do_quit)
 	{
+#ifdef STATS
 	    auto start = chrono::steady_clock::now();
+#endif
+	    for (auto& w : windows())
+	    {
+		if (w->active())
+		    w->draw();
+	    }
 
-	    main_window()->draw();
 	    wait();
 
+#ifdef STATS
 	    auto end = chrono::steady_clock::now();
 	    auto diff = end - start;
 	    times.push_back(chrono::duration<double, milli>(diff).count());
@@ -119,6 +127,7 @@ namespace mui
 		    cout << 1000./avg << " fps" << endl;
 		times.clear();
 	    }
+#endif
 	}
     }
 

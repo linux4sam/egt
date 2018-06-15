@@ -21,7 +21,7 @@ namespace mui
 
     static Color lightcolour()
     {
-	static int index = 0;
+	static uint32_t index = 0;
 	static vector<Color> colors;
 	colors.push_back(Color::RED);
 	colors.push_back(Color::GREEN);
@@ -40,6 +40,8 @@ namespace mui
     void PieChart::draw(const Rect& rect)
     {
 	shared_cairo_t cr = screen()->context();
+
+			cairo_save(cr.get());
 
 	cairo_rectangle(cr.get(), x(), y(), w(), h());
 	cairo_set_source_rgba(cr.get(),
@@ -82,6 +84,8 @@ namespace mui
 	    cairo_fill(cr.get());
 	    from_angle = to_angle;
 	}
+
+			cairo_restore(cr.get());
 
     }
 

@@ -7,9 +7,11 @@
 
 #include <cstdint>
 #include <chrono>
+#include <vector>
 
 namespace mui
 {
+
     float easing_linear(float percent);
     float easing_easy(float percent);
     float easing_easy_slow(float percent);
@@ -28,6 +30,9 @@ namespace mui
 
     /**
      * Animation class with configurable easing function.
+     *
+     * See <https://easings.net> for more information about other easing
+     * functions.
      */
     class Animation
     {
@@ -45,9 +50,9 @@ namespace mui
 	float ending() const { return m_end; }
 	void ending(float end) { m_end = end; }
 	void duration(float dur) { m_duration = dur; }
-	void start();
-	bool next();
-	void stop();
+	virtual void start();
+	virtual bool next();
+	virtual void stop();
 	bool running() const { return m_running; }
 	void set_easing_func(easing_func func);
 	void reverse(bool rev) { m_reverse = rev; }
@@ -67,6 +72,42 @@ namespace mui
 	void* m_data;
     };
 
+    class Widget;
+
+    class WidgetPositionAnimator : public Animation
+    {
+    public:
+	enum
+	{
+	    CORD_X,
+	    CORD_Y
+	};
+
+	WidgetPositionAnimator(Widget* widget,
+			       int coordinate,
+			       int start, int end,
+			       uint64_t duration,
+			       easing_func func = easing_linear);
+
+	WidgetPositionAnimator(std::vector<Widget*> widgets,
+			       int coordinate,
+			       int start, int end,
+			       uint64_t duration,
+			       easing_func func = easing_linear);
+
+	void start();
+
+	void reset();
+
+	static void timer_callback(int fd, void* data);
+
+	static void callback(float value, void* data);
+
+    protected:
+	std::vector<Widget*> m_widgets;
+	int m_fd;
+	int m_coord;
+    };
 }
 
 #endif

@@ -6,16 +6,39 @@
 #define WINDOW_H
 
 #include "widget.h"
+#include <vector>
 
 namespace mui
 {
 
+    /**
+     * @todo Rename this to Frame.
+     */
     class SimpleWindow : public Widget
     {
     public:
 	SimpleWindow(int w, int h);
 
 	void add(Widget* widget);
+
+	virtual void enter()
+	{
+	    active(true);
+	    damage();
+	}
+
+	virtual void exit()
+	{
+	    active(false);
+	}
+
+	// unsupported
+	virtual void position(int x, int y) {}
+	virtual void size(int w, int h) {}
+	virtual void resize(int w, int h) {}
+
+	virtual bool active() const { return m_active; }
+	virtual void active(bool value);
 
 	/**
 	 * Damage the rectangle of the entire widget.
@@ -46,12 +69,34 @@ namespace mui
 	virtual void draw(const Rect& rect);
 
     protected:
+
+	virtual IScreen* screen() { assert(m_screen); return m_screen; }
+
 	std::vector<Widget*> m_children;
 	std::vector<Rect> m_damage;
+
+	IScreen* m_screen;
     };
 
-    SimpleWindow* main_window();
+    class KMSOverlayScreen;
 
+    class PlaneWindow : public SimpleWindow
+    {
+    public:
+
+	PlaneWindow(KMSOverlayScreen* screen);
+
+	virtual void position(int x, int y);
+
+	virtual void draw();
+
+	virtual ~PlaneWindow();
+
+    protected:
+    };
+
+    SimpleWindow*& main_window();
+    std::vector<SimpleWindow*>& windows();
 }
 
 #endif

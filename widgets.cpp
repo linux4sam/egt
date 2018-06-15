@@ -42,56 +42,66 @@ int main()
 
     //InputEvDev input1("/dev/input/event4");
 
-    MyWindow win;
+    MyWindow win1;
 
     Label label1("left align", Point(100,50), Size(200,40), Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
-    win.add(&label1);
+    win1.add(&label1);
 
     Label label2("right align", Point(100,100), Size(200,40), Widget::ALIGN_RIGHT | Widget::ALIGN_CENTER);
-    win.add(&label2);
+    win1.add(&label2);
 
     Label label3("top align", Point(100,150), Size(200,40), Widget::ALIGN_TOP | Widget::ALIGN_CENTER);
-    win.add(&label3);
+    win1.add(&label3);
 
     Label label4("bottom align", Point(100,200), Size(200,40), Widget::ALIGN_BOTTOM | Widget::ALIGN_CENTER);
-    win.add(&label4);
+    win1.add(&label4);
 
     Button btn1("button 1", Point(100,250), Size(100,40));
-    win.add(&btn1);
+    win1.add(&btn1);
     btn1.focus(true);
 
     Slider slider1(0,100, Point(100,300), Size(200,40));
-    win.add(&slider1);
+    win1.add(&slider1);
 
     Combo combo1("combo 1", Point(100,350), Size(200,40));
-    win.add(&combo1);
+    win1.add(&combo1);
 
     SimpleText text1("text 1", Point(100,400), Size(200,40));
-    win.add(&text1);
+    win1.add(&text1);
 
-    //CheckBox checkbox1("checkbox 1", Point(350,200), Size(200,50));
-    //win.add(&checkbox1);
+    vector<string> items = { "item 1", "item 2", "item3" };
+    ListBox list1(items, Point(350,50), Size(200,200));
+    win1.add(&list1);
+    list1.selected(1);
 
     ImageLabel imagelabel1("icons/bug.png",
 			   "Bug",
 			   Point(350,250),
 			   Size(200,40));
-    win.add(&imagelabel1);
+    win1.add(&imagelabel1);
 
     ImageLabel imagelabel2("icons/phone.png",
 			   "Phone",
 			   Point(350,300),
 			   Size(200,40));
-    win.add(&imagelabel2);
+    win1.add(&imagelabel2);
+
+    CheckBox checkbox1("checkbox 1", Point(350,350), Size(200,40));
+    win1.add(&checkbox1);
+
+    CheckBox checkbox2("checkbox 2", Point(350,400), Size(200,40));
+    win1.add(&checkbox2);
 
     PieChart pie1(Point(600,50), Size(200,200));
+    win1.add(&pie1);
+
     std::map<std::string, float> data;
     data.insert(make_pair("truck", .25));
     data.insert(make_pair("car", .55));
     data.insert(make_pair("bike", .10));
     data.insert(make_pair("motorcycle", .10));
     pie1.data(data);
-    win.add(&pie1);
+
 
     EventLoop::run();
 

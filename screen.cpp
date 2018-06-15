@@ -20,7 +20,7 @@ namespace mui
 
     static IScreen* the_screen = 0;
 
-    IScreen* screen()
+    IScreen* main_screen()
     {
 	return the_screen;
     }
@@ -33,10 +33,10 @@ namespace mui
 #if 0
     void IScreen::blit_scaled(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, double scale)
     {
-	//cairo_matrix_t matrix;
+	cairo_matrix_t matrix;
 
 	cairo_save(m_cr);
-	//cairo_get_matrix(m_cr, &matrix);
+	cairo_get_matrix(m_cr, &matrix);
 
 	/* Scale *before* setting the source surface (1) */
 	cairo_scale(m_cr, scale, scale);
@@ -46,21 +46,20 @@ namespace mui
 	/* To avoid getting the edge pixels blended with 0 alpha, which would
 	 * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)
 	 */
-	//cairo_pattern_set_extend(cairo_get_source(cr), CAIRO_EXTEND_REFLECT);
+	cairo_pattern_set_extend(cairo_get_source(cr), CAIRO_EXTEND_REFLECT);
 
-	/* Replace the destination with the source instead of overlaying */
-	//cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 	cairo_set_operator(m_cr, CAIRO_OPERATOR_OVER);
 
 	cairo_fill(m_cr);
 
-	//cairo_scale(m_cr, 1.0, 1.0);
-	//cairo_set_matrix(m_cr, &matrix);
+	cairo_scale(m_cr, 1.0, 1.0);
+	cairo_set_matrix(m_cr, &matrix);
 	cairo_restore(m_cr);
     }
 #endif
 
-    void IScreen::blit(cairo_surface_t* surface, int srcx, int srcy, int srcw, int srch, int dstx, int dsty, bool blend)
+    void IScreen::blit(cairo_surface_t* surface, int srcx, int srcy, int srcw,
+		       int srch, int dstx, int dsty, bool blend)
     {
 	cairo_save(m_cr.get());
 	cairo_set_source_surface(m_cr.get(), surface, dstx, dsty);
@@ -78,10 +77,12 @@ namespace mui
     void IScreen::fill(const Color& color)
     {
 	cairo_save(m_cr.get());
-	cairo_set_source_rgba(m_cr.get(), color.redf(), color.greenf(), color.bluef(), 1.0);
+	cairo_set_source_rgba(m_cr.get(),
+			     color.redf(),
+			     color.greenf(),
+			      color.bluef(),
+			      color.alphaf());
 	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
-
-
 	cairo_paint(m_cr.get());
 	cairo_restore(m_cr.get());
     }
@@ -89,7 +90,11 @@ namespace mui
     void IScreen::rect(const Rect& rect, const Color& color)
     {
 	cairo_save(m_cr.get());
-	cairo_set_source_rgba(m_cr.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
+	cairo_set_source_rgba(m_cr.get(),
+			      color.redf(),
+			      color.greenf(),
+			      color.bluef(),
+			      color.alphaf());
 	if (color.alpha() == 255)
 	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
 	else
@@ -193,7 +198,9 @@ namespace mui
 	    assert(m_cr_back);
 	}
 
-	m_surface = shared_cairo_surface_t(cairo_image_surface_create(format, w, h),
+	cairo_format_t format_surface = CAIRO_FORMAT_ARGB32;
+
+	m_surface = shared_cairo_surface_t(cairo_image_surface_create(format_surface, w, h),
 					   cairo_surface_destroy);
 	assert(m_surface.get());
 
@@ -211,7 +218,8 @@ namespace mui
 	assert(m_cr);
 #endif
 
-	the_screen = this;
+	if (!the_screen)
+	    the_screen = this;
     }
 
     FrameBuffer::FrameBuffer(const string& path)

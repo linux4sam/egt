@@ -3,8 +3,11 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "animation.h"
+#include "widget.h"
+#include "event_loop.h"
 #include <cmath>
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 
@@ -245,6 +248,72 @@ namespace mui
 
     void Animation::stop()
     {
+	m_running = false;
+    }
+
+    WidgetPositionAnimator::WidgetPositionAnimator(Widget* widget,
+						   int coordinate,
+						   int start, int end,
+						   uint64_t duration,
+						   easing_func func)
+	: Animation(start, end, WidgetPositionAnimator::callback,
+		    duration, func, this),
+	  m_coord(coordinate)
+
+    {
+	m_widgets.push_back(widget);
+    }
+
+    WidgetPositionAnimator::WidgetPositionAnimator(std::vector<Widget*> widgets,
+						   int coordinate,
+						   int start, int end,
+						   uint64_t duration,
+						   easing_func func)
+	: Animation(start, end, WidgetPositionAnimator::callback,
+		    duration, func, this),
+	  m_widgets(widgets),
+	  m_coord(coordinate)
+    {
+    }
+
+    void WidgetPositionAnimator::start()
+    {
+	m_fd = EventLoop::start_periodic_timer(1,
+					       WidgetPositionAnimator::timer_callback, this);
+	Animation::start();
+    }
+
+    void WidgetPositionAnimator::reset()
+    {
+	for (auto& i : m_widgets)
+	{
+	    if (m_coord == CORD_X)
+		i->move(m_start, i->y());
+	    else
+		i->move(i->x(), m_start);
+	}
+    }
+
+    void WidgetPositionAnimator::timer_callback(int fd, void* data)
+    {
+	WidgetPositionAnimator* a = reinterpret_cast<WidgetPositionAnimator*>(data);
+	assert(a);
+	if (!a->next())
+	    EventLoop::cancel_periodic_timer(a->m_fd);
+    }
+
+    void WidgetPositionAnimator::callback(float value, void* data)
+    {
+	WidgetPositionAnimator* a = reinterpret_cast<WidgetPositionAnimator*>(data);
+	assert(a);
+
+	for (auto& i : a->m_widgets)
+	{
+	    if (a->m_coord == CORD_X)
+		i->move(value, i->y());
+	    else
+		i->move(i->x(), value);
+	}
     }
 
 }

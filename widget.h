@@ -9,12 +9,14 @@
 #include "input.h"
 #include "screen.h"
 #include "utils.h"
+#include "font.h"
 #include <cairo.h>
 #include <cassert>
 #include <map>
 #include <string>
 #include <vector>
 #include <memory>
+#include <iostream>
 
 namespace mui
 {
@@ -93,7 +95,12 @@ namespace mui
 	virtual bool active() const { return m_active; }
 	virtual void active(bool value) { m_active = value; }
 
+	/**
+	 * Damage the box() of the widget.
+	 */
 	virtual void damage();
+
+	virtual void damage(const Rect& rect) {}
 
 	/**
 	 * Bounding box for the widgets.
@@ -108,22 +115,56 @@ namespace mui
 	inline int x() const { return m_box.x; }
 	inline int y() const { return m_box.y; }
 
+	inline Point center() const
+	{
+	    return Point(x() + w()/2, y() + h()/2);
+	}
+
 	virtual ~Widget();
 
     protected:
 
+	Widget* parent()
+	{
+	    if (!m_parent)
+	    {
+		std::cout << "bad parent pointer" << std::endl;
+	    	while(1);
+	    }
+	    assert(m_parent);
+	    return m_parent;
+	}
+	virtual IScreen* screen() { return parent()->screen(); }
 
 	void draw_text(const std::string& text,
-		       const Color& color = Color::BLACK, int align = ALIGN_CENTER,
-		       int standoff = 5);
+		       const Color& color = Color::BLACK,
+		       int align = ALIGN_CENTER,
+		       int standoff = 5,
+		       const Font& font = Font());
+	void draw_basic_text(const std::string& text,
+			     const Rect& rect,
+			     const Color& color = Color::BLACK,
+			     int align = ALIGN_CENTER,
+			     int standoff = 5,
+			     const Font& font = Font());
 
 	void draw_image(shared_cairo_surface_t image,
 				int align = ALIGN_CENTER, int standoff = 0);
+	void draw_basic_box(const Rect& rect,
+			    const Color& border = BORDER_COLOR,
+			    const Color& bg = GLOW_COLOR);
+	void draw_gradient_box(const Rect& rect,
+			       const Color& border = BORDER_COLOR,
+			       const Color& bg = GLOW_COLOR,
+			       bool active = false);
 
 	Rect m_box;
 	bool m_visible;
 	bool m_focus;
 	bool m_active;
+	Widget* m_parent;
+
+	friend class SimpleWindow;
     };
 
     using shared_cairo_surface_t =
@@ -170,6 +211,21 @@ namespace mui
 	std::string m_label;
     };
 
+    class ImageButton : public Button
+    {
+    public:
+	ImageButton(const std::string& image,
+	       const Point& point = Point(),
+	       const Size& size = Size());
+
+	virtual void draw(const Rect& rect);
+
+	virtual ~ImageButton();
+
+    protected:
+	shared_cairo_surface_t m_image;
+    };
+
     class Combo : public Widget
     {
     public:
@@ -190,8 +246,15 @@ namespace mui
     class Slider : public Widget
     {
     public:
+	enum
+	{
+	    ORIENTATION_HORIZONTAL,
+	    ORIENTATION_VERTICAL,
+	};
+
 	Slider(int min, int max, const Point& point = Point(),
-	       const Size& size = Size());
+	       const Size& size = Size(),
+	       int orientation = ORIENTATION_HORIZONTAL);
 
 	int handle(int event);
 
@@ -201,7 +264,7 @@ namespace mui
 
 	inline void position(int pos)
 	{
-	    if (pos <= m_max && pos >= m_min)
+	    if (pos <= m_max && pos >= m_min && pos != m_pos)
 	    {
 		m_pos = pos;
 		damage();
@@ -212,16 +275,32 @@ namespace mui
 
     protected:
 
-	constexpr static int RADIUS = 10;
-
 	inline int normalize(int pos)
 	{
-	    return float(w() - RADIUS * 4) / float(m_max - m_min)  * float(pos);
+	    if (m_orientation == ORIENTATION_HORIZONTAL)
+	    {
+		int dim = h();
+		return float(w() - dim) / float(m_max - m_min)  * float(pos);
+	    }
+	    else
+	    {
+		int dim = w();
+		return float(h() - dim) / float(m_max - m_min)  * float(pos);
+	    }
 	}
 
         inline int denormalize(int diff)
 	{
-	    return float(m_max - m_min)  / float(w() - RADIUS * 4) * float(diff);
+	    if (m_orientation == ORIENTATION_HORIZONTAL)
+	    {
+		int dim = h();
+		return float(m_max - m_min) / float(w() - dim) * float(diff);
+	    }
+	    else
+	    {
+		int dim = w();
+		return float(m_max - m_min) / float(h() - dim) * float(diff);
+	    }
 	}
 
 	int m_min;
@@ -229,14 +308,19 @@ namespace mui
 	int m_pos;
 	int m_moving_x;
 	int m_start_pos;
+	int m_orientation;
     };
 
     class Label : public Widget
     {
     public:
-	Label(const std::string& text, const Point& point = Point(), const Size& size = Size(), int align = ALIGN_CENTER);
+	Label(const std::string& text, const Point& point = Point(),
+	      const Size& size = Size(), int align = ALIGN_CENTER,
+	      const Font& font = Font());
 
 	int handle(int event);
+
+	void fgcolor(const Color& color) { m_fgcolor = color; }
 
 	virtual void draw(const Rect& rect);
 
@@ -245,12 +329,15 @@ namespace mui
     protected:
 	int m_align;
 	std::string m_text;
+	Font m_font;
+	Color m_fgcolor;
     };
 
     class SimpleText : public Widget
     {
     public:
-	SimpleText(const std::string& text = std::string(), const Point& point = Point(), const Size& size = Size());
+	SimpleText(const std::string& text = std::string(),
+		   const Point& point = Point(), const Size& size = Size());
 
 	int handle(int event);
 
@@ -263,18 +350,23 @@ namespace mui
     };
 
 
-    class CheckBox : public Widget
+    class CheckBox : public Label
     {
     public:
 	CheckBox(const std::string& text = std::string(),
 		 const Point& point = Point(),
 		 const Size& size = Size());
 
+	bool checked() const { return m_checked; }
+	void checked(bool c) { m_checked = c; }
+
 	int handle(int event);
 
 	virtual void draw(const Rect& rect);
 
 	virtual ~CheckBox();
+    protected:
+	bool m_checked;
     };
 
     class ImageLabel : public Label
@@ -283,13 +375,55 @@ namespace mui
 	ImageLabel(const std::string& image,
 		   const std::string& text = std::string(),
 		   const Point& point = Point(),
-		   const Size& size = Size());
+		   const Size& size = Size(),
+		   const Font& font = Font());
 
 	virtual void draw(const Rect& rect);
 
 	virtual ~ImageLabel();
     protected:
 	shared_cairo_surface_t m_image;
+    };
+
+    class ListBox : public Widget
+    {
+    public:
+	ListBox(const std::vector<std::string>& items,
+		 const Point& point = Point(),
+		 const Size& size = Size());
+
+	virtual int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	void selected(uint32_t index);
+	uint32_t selected() const { return m_selected; }
+
+	virtual ~ListBox();
+    protected:
+
+	virtual void on_selected(int index) {}
+
+	Rect item_rect(uint32_t index) const;
+
+	std::vector<std::string> m_items;
+	uint32_t m_selected;
+    };
+
+    class Radial : public Widget
+    {
+    public:
+	Radial(const Point&, const Size& size);
+
+	void label(const std::string& label) { m_label = label; }
+
+	virtual int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+    protected:
+	std::string m_label;
+	float m_angle;
     };
 }
 
