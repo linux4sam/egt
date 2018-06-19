@@ -28,7 +28,6 @@ public:
 
 int main()
 {
-    EventLoop::init();
 #ifdef HAVE_TSLIB
 #ifdef HAVE_LIBPLANES
     KMSScreen kms;
@@ -39,8 +38,6 @@ int main()
 #else
     X11Screen screen(Size(800,480));
 #endif
-
-    //InputEvDev input1("/dev/input/event4");
 
     MyWindow win1;
 
@@ -62,6 +59,9 @@ int main()
 
     Slider slider1(0,100, Point(100,300), Size(200,40));
     win1.add(&slider1);
+
+    Slider slider2(0,100, Point(10,200), Size(40,200), Slider::ORIENTATION_VERTICAL);
+    win1.add(&slider2);
 
     Combo combo1("combo 1", Point(100,350), Size(200,40));
     win1.add(&combo1);

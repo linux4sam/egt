@@ -10,6 +10,8 @@
 #include "geometry.h"
 
 #ifdef HAVE_LIBPLANES
+#include <planes/kms.h>
+
 struct plane_data;
 struct kms_device;
 
@@ -27,7 +29,7 @@ namespace mui
 
 	virtual void position(int x, int y);
 
-	//virtual void apply();
+	void apply();
 
 	virtual ~KMSOverlayScreen();
 
@@ -47,9 +49,16 @@ namespace mui
 
 	void flip(const std::vector<Rect>& damage);
 
-	struct plane_data* allocate_overlay(const Rect& rect);
+	struct plane_data* allocate_overlay(const Size& size);
+
+	/**
+	 *
+	 */
+	uint32_t count_planes(int type = DRM_PLANE_TYPE_OVERLAY);
 
 	virtual ~KMSScreen();
+
+	static KMSScreen* instance();
 
     protected:
 	int m_fd;

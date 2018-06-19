@@ -1,4 +1,4 @@
-all: ui floating widgets easing
+all: ui floating widgets easing info
 
 X11=n
 TSLIB=y
@@ -13,10 +13,10 @@ CXXFLAGS = -Wall -g -std=c++11 -I. -pedantic -Ofast
 
 headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
 	x11screen.h color.h window.h ui.h kmsscreen.h animation.h piechart.h \
-	timer.h font.h
+	timer.h font.h tools.h
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
-	window.o kmsscreen.o color.o animation.o piechart.o timer.o font.o
+	window.o kmsscreen.o color.o animation.o piechart.o timer.o font.o tools.o
 
 ui_objs = main.o $(common_objs)
 
@@ -74,5 +74,16 @@ $(easing_objs): $(headers)
 easing: $(easing_objs)
 	$(CXX) $(CXXFLAGS) $(easing_objs) -o $@ $(LDLIBS)
 
+info_objs = info.o $(common_objs)
+
+info: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
+info: LDLIBS += $(shell pkg-config $(DEPS) --libs)
+
+$(info_objs): $(headers)
+
+info: $(info_objs)
+	$(CXX) $(CXXFLAGS) $(info_objs) -o $@ $(LDLIBS)
+
 clean:
-	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) ui floating widgets easing
+	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
+		$(info_objs) ui floating widgets easing info

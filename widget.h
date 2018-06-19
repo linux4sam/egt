@@ -51,8 +51,7 @@ namespace mui
 	/**
 	 * Draw the widget.
 	 *
-	 * Do not call this directly.  When implementing this function, only
-	 * re-draw within rect when possible.
+	 * @note Do not call this directly.
 	 */
 	virtual void draw(const Rect& rect) = 0;
 
@@ -107,6 +106,8 @@ namespace mui
 	 */
 	const Rect& box() const { return m_box; }
 
+	Size size() const { return Size(m_box.w,m_box.h); }
+
 	/**
 	 * Bounding box width.
 	 */
@@ -122,8 +123,6 @@ namespace mui
 
 	virtual ~Widget();
 
-    protected:
-
 	Widget* parent()
 	{
 	    if (!m_parent)
@@ -135,6 +134,8 @@ namespace mui
 	    return m_parent;
 	}
 	virtual IScreen* screen() { return parent()->screen(); }
+
+    protected:
 
 	void draw_text(const std::string& text,
 		       const Color& color = Color::BLACK,
@@ -150,6 +151,7 @@ namespace mui
 
 	void draw_image(shared_cairo_surface_t image,
 				int align = ALIGN_CENTER, int standoff = 0);
+
 	void draw_basic_box(const Rect& rect,
 			    const Color& border = BORDER_COLOR,
 			    const Color& bg = GLOW_COLOR);
@@ -209,21 +211,31 @@ namespace mui
 
     protected:
 	std::string m_label;
+
     };
 
     class ImageButton : public Button
     {
     public:
 	ImageButton(const std::string& image,
-	       const Point& point = Point(),
-	       const Size& size = Size());
+		    const std::string& label = "",
+		    const Point& point = Point(),
+		    const Size& size = Size(),
+		    bool border = true);
 
 	virtual void draw(const Rect& rect);
+
+	void fgcolor(const Color& color) { m_fgcolor = color; }
+
+	void font(const Font& font) { m_font = font; }
 
 	virtual ~ImageButton();
 
     protected:
 	shared_cairo_surface_t m_image;
+	Font m_font;
+	Color m_fgcolor;
+	bool m_border;
     };
 
     class Combo : public Widget
@@ -264,7 +276,17 @@ namespace mui
 
 	inline void position(int pos)
 	{
-	    if (pos <= m_max && pos >= m_min && pos != m_pos)
+	    if (pos > m_max)
+	    {
+		m_pos = m_max;
+		damage();
+	    }
+	    else if (pos < m_min)
+	    {
+		m_pos = m_min;
+		damage();
+	    }
+	    else if (pos != m_pos)
 	    {
 		m_pos = pos;
 		damage();
@@ -275,20 +297,22 @@ namespace mui
 
     protected:
 
+	// position to offset
 	inline int normalize(int pos)
 	{
 	    if (m_orientation == ORIENTATION_HORIZONTAL)
 	    {
 		int dim = h();
-		return float(w() - dim) / float(m_max - m_min)  * float(pos);
+		return float(w() - dim) / float(m_max - m_min) * float(pos);
 	    }
 	    else
 	    {
 		int dim = w();
-		return float(h() - dim) / float(m_max - m_min)  * float(pos);
+		return float(h() - dim) / float(m_max - m_min) * float(pos);
 	    }
 	}
 
+	// offset to position
         inline int denormalize(int diff)
 	{
 	    if (m_orientation == ORIENTATION_HORIZONTAL)
@@ -314,13 +338,18 @@ namespace mui
     class Label : public Widget
     {
     public:
-	Label(const std::string& text, const Point& point = Point(),
-	      const Size& size = Size(), int align = ALIGN_CENTER,
-	      const Font& font = Font());
+	explicit Label(const std::string& text,
+		       const Point& point = Point(),
+		       const Size& size = Size(), int align = ALIGN_CENTER,
+		       const Font& font = Font());
 
 	int handle(int event);
 
+	void text(const std::string& str);
+
 	void fgcolor(const Color& color) { m_fgcolor = color; }
+
+	void font(const Font& font) { m_font = font; }
 
 	virtual void draw(const Rect& rect);
 
@@ -424,6 +453,40 @@ namespace mui
     protected:
 	std::string m_label;
 	float m_angle;
+    };
+
+    class StaticGrid
+    {
+    public:
+	StaticGrid(int x, int y, int w, int h, int columns, int rows, int border = 0)
+	    : m_x(x),
+	      m_y(y),
+	      m_w(w),
+	      m_h(h),
+	      m_columns(columns),
+	      m_rows(rows),
+	      m_border(border)
+	{}
+
+	void add(Widget* widget, int column, int row)
+	{
+	    int x = m_x + (column * (m_w / m_columns)) + m_border;
+	    int y = m_y + (row * (m_h / m_rows)) + m_border;
+	    int w = (m_w / m_columns) - (m_border * 2);
+	    int h = (m_h / m_rows) - (m_border * 2);
+
+	    widget->position(x, y);
+	    widget->size(w, h);
+	}
+
+    protected:
+	int m_x;
+	int m_y;
+	int m_w;
+	int m_h;
+	int m_columns;
+	int m_rows;
+	int m_border;
     };
 }
 

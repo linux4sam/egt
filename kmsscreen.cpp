@@ -30,19 +30,18 @@ namespace mui
     void KMSOverlayScreen::position(int x, int y)
     {
 	plane_set_pos(m_plane, x, y);
-	plane_apply(m_plane);
     }
 
-    /*
-      void KMSOverlayScreen::apply()
-      {
-      plane_apply(m_plane);
-      }
-    */
+    void KMSOverlayScreen::apply()
+    {
+	plane_apply(m_plane);
+    }
 
     KMSOverlayScreen::~KMSOverlayScreen()
     {
     }
+
+    static KMSScreen* the_kms = 0;
 
     KMSScreen::KMSScreen()
     {
@@ -71,24 +70,31 @@ namespace mui
 	plane_apply(plane);
 
 	init(plane->buf, plane_width(plane), plane_height(plane));
+
+	the_kms = this;
     }
 
-    struct plane_data* KMSScreen::allocate_overlay(const Rect& rect)
+    KMSScreen* KMSScreen::instance()
+    {
+	return the_kms;
+    }
+
+    struct plane_data* KMSScreen::allocate_overlay(const Size& size)
     {
 	// TODO
 	static int index = 0;
 	struct plane_data* plane = plane_create(m_device,
 						DRM_PLANE_TYPE_OVERLAY,
 						index++,
-						rect.w,
-						rect.h,
+						size.w,
+						size.h,
 						DRM_FORMAT_ARGB8888);
 
 	assert(plane);
 	plane_fb_map(plane);
 	assert(plane->buf);
 
-	plane_set_pos(plane, rect.x, rect.y);
+	plane_set_pos(plane, 0, 0);
 
 	cout << "overlay dumb buffer " << plane_width(plane) << "," <<
 	    plane_height(plane) << endl;
@@ -96,6 +102,17 @@ namespace mui
 	plane_apply(plane);
 
 	return plane;
+    }
+
+    uint32_t KMSScreen::count_planes(int type)
+    {
+	uint32_t total = 0;
+	for (int x = 0; x < m_device->num_planes;x++)
+	{
+	    if (m_device->planes[x]->type == type)
+		total++;
+	}
+	return total;
     }
 
     void KMSScreen::flip(const vector<Rect>& damage)

@@ -22,8 +22,11 @@ namespace mui
 
     void EventLoop::init()
     {
-	epoll_fd = epoll_create(16);
-	assert(epoll_fd >= 0);
+	if (epoll_fd < 0)
+	{
+	    epoll_fd = epoll_create(16);
+	    assert(epoll_fd >= 0);
+	}
     }
 
     void EventLoop::rem_fd(int fd)
@@ -38,6 +41,8 @@ namespace mui
 
     void EventLoop::add_fd(int fd, uint32_t mask, event_callback func, void* data)
     {
+	EventLoop::init();
+
 	event_source *source;
 	epoll_event ep;
 
@@ -64,6 +69,8 @@ namespace mui
 
     int EventLoop::wait(int timeout)
     {
+	EventLoop::init();
+
 	struct epoll_event ep[32];
 	event_source *source;
 	int i, count;
@@ -97,6 +104,8 @@ namespace mui
 
     void EventLoop::run()
     {
+	EventLoop::init();
+
 #ifdef STATS
 	vector<uint64_t> times;
 #endif
@@ -192,7 +201,7 @@ namespace mui
 	unsigned long long missed = 0;
 	(void)read(fd, &missed, sizeof(missed));
 	if (missed > 1)
-	    cout << "missed: " << missed << endl;
+	    cout << "missed timeouts: " << missed << endl;
     }
 
     int EventLoop::start_periodic_timer(unsigned long milliseconds, timer_event_callback func, void* data)

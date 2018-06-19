@@ -90,7 +90,7 @@ namespace mui
 	    width = rect.w,
 	    height = rect.h,
 	    aspect = 1.0,
-	    corner_radius = height / 10.0;
+	    corner_radius = 50/*height*/ / 10.0;
 
 	double radius = corner_radius / aspect;
 	double degrees = M_PI / 180.0;
@@ -120,6 +120,82 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
+    /* https://people.freedesktop.org/~joonas/shadow.c */
+
+    /* Returns a surface with content COLOR_ALPHA which is the same size
+     * as the passed surface. */
+    static cairo_surface_t *
+    surface_create_similar (cairo_surface_t *surface)
+    {
+	cairo_t *cr = cairo_create (surface);
+	cairo_surface_t *similar;
+	cairo_push_group (cr);
+	similar = cairo_get_group_target (cr);
+	cairo_surface_reference (similar);
+	cairo_destroy (cr);
+	return similar;
+    }
+
+    /* Paint the given surface with a drop shadow to the context cr. */
+    static void
+    paint_surface_with_drop_shadow (cairo_t *cr,
+				    cairo_surface_t *source_surface,
+				    int shadow_offset,
+				    double shadow_alpha,
+				    double tint_alpha,
+				    int srx,
+				    int srcy,
+				    int width,
+				    int height,
+				    int dstx,
+				    int dsty)
+    {
+	/* A temporary surface the size of the source surface.  */
+	cairo_surface_t *shadow_surface = surface_create_similar (
+	    source_surface);
+
+	/* Draw the shadow to the shadow surface. */
+	{
+	    cairo_t *cr = cairo_create (shadow_surface);
+	    if (tint_alpha < 1.0) {
+		/* Draw the shadow image with the desired transparency. */
+		cairo_set_source_surface (cr, source_surface, 0,0);
+		cairo_paint_with_alpha (cr, shadow_alpha);
+
+		/* Darken the shadow by tinting it with black. The
+		 * tint_alpha determines how much black to place on top
+		 * of the shadow image. */
+		cairo_set_operator (cr, CAIRO_OPERATOR_ATOP);
+		cairo_set_source_rgba (cr, 0,0,0,tint_alpha);
+		cairo_paint (cr);
+	    }
+	    else {
+		/* Identical to the above when tint_alpha = 1.0, but
+		 * ostensibly faster. */
+		    cairo_pattern_t *shadow_mask =
+			cairo_pattern_create_for_surface (source_surface);
+		    cairo_set_source_rgba (cr, 0,0,0,shadow_alpha);
+		    cairo_mask (cr, shadow_mask);
+		    cairo_pattern_destroy (shadow_mask);
+	    }
+	    cairo_destroy (cr);
+	}
+
+	/* Paint the shadow surface to cr. */
+	cairo_save (cr); {
+	    cairo_translate (cr, shadow_offset, shadow_offset);
+	    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+	    cairo_set_source_surface (cr, shadow_surface, dstx, dsty);
+	    cairo_paint (cr);
+	}
+	cairo_restore (cr);
+	cairo_surface_destroy (shadow_surface);
+
+	/* Paint the image itself to cr. */
+	cairo_set_source_surface (cr, source_surface, dstx, dsty);
+	cairo_paint (cr);
+    }
+
     void Widget::draw_gradient_box(const Rect& rect,
 				   const Color& border,
 				   const Color& bg,
@@ -134,7 +210,7 @@ namespace mui
 	    width = rect.w,
 	    height = rect.h,
 	    aspect = 1.0,
-	    corner_radius = height / 10.0;
+	    corner_radius = 50/*height*/ / 10.0;
 
 	double radius = corner_radius / aspect;
 	double degrees = M_PI / 180.0;
@@ -235,7 +311,9 @@ namespace mui
 
     void Widget::draw_basic_text(const std::string& text,
 				 const Rect& rect,
-				 const Color& color, int align, int standoff,
+				 const Color& color,
+				 int align,
+				 int standoff,
 				 const Font& font)
     {
 	auto cr = screen()->context();
@@ -297,11 +375,23 @@ namespace mui
 	if (align & ALIGN_RIGHT)
 	    p.x = x() + w() - width - standoff;
 	if (align & ALIGN_TOP)
-	    p.y = y() + height + standoff;
+	    p.y = y() + standoff;
 	if (align & ALIGN_BOTTOM)
-	    p.y = y() + h() - standoff;
+	    p.y = y() + h() - height - standoff;
 
-	screen()->blit(image.get(), p.x, p.y, width, height, p.x, p.y);
+	paint_surface_with_drop_shadow(screen()->context().get(),
+				       image.get(),
+				       5,
+				       0.2,
+				       0.4,
+				       p.x,
+				       p.y,
+				       width,
+				       height,
+				       p.x,
+				       p.y);
+
+	//screen()->blit(image.get(), p.x, p.y, width, height, p.x, p.y);
     }
 
     Widget::~Widget()
@@ -466,23 +556,35 @@ namespace mui
     }
 
 
+
+
     ImageButton::ImageButton(const string& image,
+			     const string& label,
 			     const Point& point,
-			     const Size& size)
-	: Button("", point, size)
+			     const Size& size,
+			     bool border)
+	: Button(label, point, size),
+	  m_fgcolor(TEXT_COLOR),
+	  m_border(border)
     {
 	m_image = shared_cairo_surface_t(cairo_image_surface_create_from_png(image.c_str()),
 					 cairo_surface_destroy);
 	assert(m_image.get());
 	assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
-
-	//damage();
     }
 
     void ImageButton::draw(const Rect& rect)
     {
+	if (m_border)
+	    draw_gradient_box(box(), BORDER_COLOR, GLOW_COLOR);
+
 	// image
-	draw_image(m_image, ALIGN_LEFT | ALIGN_CENTER);
+	draw_image(m_image, ALIGN_CENTER | ALIGN_TOP, 10);
+
+	if (!m_label.empty())
+	    draw_basic_text(m_label, box(), m_fgcolor,
+			    ALIGN_CENTER | ALIGN_BOTTOM, 10,
+			    m_font);
     }
 
     ImageButton::~ImageButton()
@@ -516,7 +618,7 @@ namespace mui
 	    width = w(),
 	    height = h(),
 	    aspect = 1.0,
-	    corner_radius = height / 10.0;
+	    corner_radius = 50/*height*/ / 10.0;
 
 	double radius = corner_radius / aspect;
 	double degrees = M_PI / 180.0;
@@ -629,11 +731,9 @@ namespace mui
 	    m_start_pos = position();
 	    active(true);
 	    return 1;
-	    break;
 	case EVT_MOUSE_UP:
 	    active(false);
 	    return 1;
-	    break;
 	case EVT_MOUSE_MOVE:
 	    if (active())
 	    {
@@ -656,24 +756,34 @@ namespace mui
 
     void Slider::draw(const Rect& rect)
     {
+	Color active(Color::ORANGE);
+
 	auto cr = screen()->context();
 
 	cairo_save(cr.get());
 
 	cairo_set_source_rgba(cr.get(),
-			      BORDER_COLOR.redf(),
-			      BORDER_COLOR.greenf(),
-			      BORDER_COLOR.bluef(),
-			      BORDER_COLOR.alphaf());
-	cairo_set_line_width(cr.get(), 4.0);
+			      active.redf(),
+			      active.greenf(),
+			      active.bluef(),
+			      active.alphaf());
+	cairo_set_line_width(cr.get(), 8.0);
 
 	if (m_orientation == ORIENTATION_HORIZONTAL)
 	{
-	    int dim = h();
-
 	    // line
-	    cairo_move_to(cr.get(), x() + dim/2, y() + h()/2);
-	    cairo_line_to(cr.get(), x() + w() - dim/2, y() + h()/2);
+	    cairo_move_to(cr.get(), x(), y() + h()/2);
+	    cairo_line_to(cr.get(), x() + normalize(m_pos), y() + h()/2);
+	    cairo_stroke(cr.get());
+
+	    cairo_set_source_rgba(cr.get(),
+				  BORDER_COLOR.redf(),
+				  BORDER_COLOR.greenf(),
+				  BORDER_COLOR.bluef(),
+				  BORDER_COLOR.alphaf());
+
+	    cairo_move_to(cr.get(), x() + normalize(m_pos), y() + h()/2);
+	    cairo_line_to(cr.get(), x() + w(), y() + h()/2);
 	    cairo_stroke(cr.get());
 
 	    // handle
@@ -684,16 +794,24 @@ namespace mui
 	}
 	else
 	{
-	    int dim = w();
-
 	    // line
-	    cairo_move_to(cr.get(), x() + w()/2, y() + dim/2);
-	    cairo_line_to(cr.get(), x() + w()/2, y() + h() - dim/2);
+	    cairo_move_to(cr.get(), x() + w()/2, y() + h());
+	    cairo_line_to(cr.get(), x() + w()/2, y() + normalize(m_pos));
+	    cairo_stroke(cr.get());
+
+	    cairo_set_source_rgba(cr.get(),
+				  BORDER_COLOR.redf(),
+				  BORDER_COLOR.greenf(),
+				  BORDER_COLOR.bluef(),
+				  BORDER_COLOR.alphaf());
+
+	    cairo_move_to(cr.get(), x() + w()/2, y() + normalize(m_pos));
+	    cairo_line_to(cr.get(), x() + w()/2, y());
 	    cairo_stroke(cr.get());
 
 	    // handle
 	    draw_gradient_box(Rect(x() + 1,
-				   y() + normalize(m_pos) + 2,
+				   y() + normalize(m_pos) + 1,
 				   w() - 2,
 				   w() - 2));
 	}
@@ -719,6 +837,15 @@ namespace mui
     int Label::handle(int event)
     {
 	return Widget::handle(event);
+    }
+
+    void Label::text(const std::string& str)
+    {
+	if (m_text != str)
+	{
+	    m_text = str;
+	    damage();
+	}
     }
 
     void Label::draw(const Rect& rect)
@@ -841,8 +968,6 @@ namespace mui
 					 cairo_surface_destroy);
 	assert(m_image.get());
 	assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
-
-	//damage();
     }
 
     void ImageLabel::draw(const Rect& rect)
@@ -907,6 +1032,7 @@ namespace mui
 
     void ListBox::draw(const Rect& rect)
     {
+#if 0
 	for (uint32_t i = 0; i < m_items.size(); i++)
 	{
 	    if (i == m_selected)
@@ -920,6 +1046,30 @@ namespace mui
 
 	    draw_basic_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
 	}
+#else
+		auto cr = screen()->context();
+
+	Font font;
+	cairo_text_extents_t textext;
+	cairo_select_font_face(cr.get(),
+			       font.face().c_str(),
+			       CAIRO_FONT_SLANT_NORMAL,
+			       CAIRO_FONT_WEIGHT_BOLD);
+	cairo_set_font_size(cr.get(), font.size());
+	cairo_text_extents(cr.get(),"a", &textext);
+
+	draw_basic_box(Rect(x(), y(), w(), 40 * m_items.size()));
+
+	if (!m_items.empty())
+	{
+	    draw_basic_box(item_rect(m_selected), BORDER_COLOR, Color::ORANGE);
+
+	    for (uint32_t i = 0; i < m_items.size(); i++)
+	    {
+		draw_basic_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
+	    }
+	}
+#endif
     }
 
     void ListBox::selected(uint32_t index)

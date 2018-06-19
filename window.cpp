@@ -24,7 +24,8 @@ namespace mui
     }
 
     SimpleWindow::SimpleWindow(int w, int h)
-	: Widget(0, 0, w, h)
+	: Widget(0, 0, w, h),
+	  m_bgcolor(BG_COLOR)
     {
 	cout << "new window " << w << "," << h << endl;
 	windows().push_back(this);
@@ -155,7 +156,7 @@ namespace mui
     {
 	for (auto& damage: m_damage)
 	{
-	    screen()->rect(damage, BG_COLOR);
+	    screen()->rect(damage, m_bgcolor);
 
 	    for (auto& child: m_children)
 	    {
@@ -177,10 +178,22 @@ namespace mui
 	draw();
     }
 
-    PlaneWindow::PlaneWindow(KMSOverlayScreen* screen)
-	: SimpleWindow(screen->size().w, screen->size().h)
+    PlaneWindow::PlaneWindow(int w, int h)
+	: SimpleWindow(w, h)
     {
-	m_screen = screen;
+	// default plane windows to transparent
+	m_bgcolor = Color(0,0,0,0);
+
+	assert(KMSScreen::instance());
+
+	if (this->w() == 0 || this->h() == 0)
+	{
+	    m_box.w = KMSScreen::instance()->size().w;
+	    m_box.h = KMSScreen::instance()->size().h;
+	}
+
+	m_screen = new KMSOverlayScreen(
+	    KMSScreen::instance()->allocate_overlay(Size(this->w(),this->h())));
     }
 
     void PlaneWindow::position(int x, int y)
@@ -188,16 +201,26 @@ namespace mui
 	if (x != box().x || y != box().y)
 	{
 	    KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-
 	    screen->position(x, y);
+
+	    m_box.x = x;
+	    m_box.y = y;
 	}
+    }
+
+    void PlaneWindow::move(int x, int y)
+    {
+	position(x, y);
     }
 
     void PlaneWindow::draw()
     {
+	KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+	s->apply();
+
 	for (auto& damage: m_damage)
 	{
-	    screen()->rect(damage, Color(0,0,0,0));
+	    screen()->rect(damage, m_bgcolor);
 
 	    for (auto& child: m_children)
 	    {

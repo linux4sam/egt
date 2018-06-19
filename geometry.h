@@ -16,7 +16,7 @@ namespace mui
     class Point
     {
     public:
-	Point(int x_ = 0, int y_ = 0)
+	explicit Point(int x_ = 0, int y_ = 0)
 	    : x(x_),
 	      y(y_)
 	{}

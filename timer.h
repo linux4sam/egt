@@ -10,6 +10,9 @@
 namespace mui
 {
 
+    /**
+     * Basic one shot timer.
+     */
     class Timer
     {
     public:
@@ -17,8 +20,8 @@ namespace mui
 	virtual void start();
 	virtual void stop();
 	virtual void timeout() = 0;
-
 	virtual ~Timer();
+
     protected:
 
 	static void timer_callback(int fd, void* data);
@@ -27,12 +30,15 @@ namespace mui
 	uint64_t m_duration;
     };
 
+    /**
+     * Periodic timer.
+     */
     class PeriodicTimer : public Timer
     {
     public:
 	PeriodicTimer(uint64_t period = 0);
 	virtual void start();
-		virtual void stop();
+	virtual void stop();
 	virtual ~PeriodicTimer();
     };
 

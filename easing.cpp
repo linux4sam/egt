@@ -2,7 +2,6 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #include "ui.h"
 #include <math.h>
 #include <string>
@@ -12,20 +11,12 @@
 #include <iostream>
 #include <random>
 #include <cmath>
+#include "tools.h"
 
 using namespace std;
 using namespace mui;
 
-class MyImage : public Image
-{
-public:
-    MyImage(const string& filename, int x = 0, int y = 0)
-	: Image(filename, x, y)
-    {
-    }
-
-private:
-};
+#define USE_HARDWARE
 
 static Animation* animation = 0;
 
@@ -76,14 +67,11 @@ public:
     }
 };
 
-#define NUM_ITEMS 1
-
 class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(800,480),
-	  m_moving(false)
+	: SimpleWindow(800,480)
     {}
 
     int load()
@@ -95,72 +83,81 @@ public:
 	add(list1);
 	list1->selected(7);
 
-	for (int t = 0; t < NUM_ITEMS; t++)
-	{
-	    MyImage* box = new MyImage("ball.png");
-	    add(box);
-
-	    box->position(600/2, -101);
-
-	    m_boxes[t] = box;
-	}
+#ifndef USE_HARDWARE
+	m_box = new Image("ball.png");
+	add(m_box);
+#else
+	Image* image = new Image("ball.png");
+	// There is a bug on 9x5 that if the plane is all the way out of view
+	// then it will cause glitches. So, we create the height (which will
+	// be invisible), to always keep a portion of the plane on screen
+	// alternate of making the plane the same exact size as the image.
+	m_box = new PlaneWindow(100,200);
+	m_box->add(image);
+	m_box->active(true);
+#endif
+	m_box->position(w()/2 - m_box->w()/2, -110);
 
 	return 0;
     }
 
     void move_item(int x)
     {
-	for (int t = 0; t < NUM_ITEMS; t++)
+	int pos = x;
+
+	Rect to(m_box->box());
+	to.y = pos;
+	bool visible = Rect::is_intersect(Rect::merge(to,m_box->box()), this->box());
+
+	if (visible)
 	{
-	    int pos = x;
-
-	    Rect to(m_boxes[t]->box());
-	    to.y = pos;
-	    bool visible = Rect::is_intersect(Rect::merge(to,m_boxes[t]->box()), this->box());
-
-	    if (visible)
-	    {
-		m_boxes[t]->move(m_boxes[t]->x(), pos);
-	    }
-	    else
-	    {
-		m_boxes[t]->position(m_boxes[t]->x(), pos);
-	    }
+	    m_box->move(m_box->x(), pos);
+	}
+	else
+	{
+	    m_box->position(m_box->x(), pos);
 	}
     }
 
 private:
-    bool m_moving;
-    int m_moving_x;
-    int m_positions[NUM_ITEMS];
-    MyImage* m_boxes[NUM_ITEMS];
+#ifndef USE_HARDWARE
+    Image* m_box;
+#else
+    PlaneWindow* m_box;
+#endif
 };
 
-static MyWindow* window = 0;
-
-static void timer_callback2(int fd, void* data)
+static struct ResetTimer : public Timer
 {
-    animation->start();
-}
+    ResetTimer()
+	: Timer(1000)
+    {}
 
-static void timer_callback(int fd, void* data)
-{
-    if (animation->running())
-	animation->next();
-    else
+    void timeout()
     {
-	EventLoop::start_timer(1000, timer_callback2, NULL);
+	animation->start();
     }
-}
 
-static void animate(float value, void* data)
+} reset_timer;
+
+static struct AnimationTimer : public PeriodicTimer
 {
-    window->move_item(value);
-}
+    AnimationTimer()
+	: PeriodicTimer(30)
+    {}
+
+    void timeout()
+    {
+	if (animation->running())
+	    animation->next();
+	else
+	    reset_timer.start();
+    }
+
+} animation_timer;
 
 int main()
 {
-    EventLoop::init();
 #ifdef HAVE_TSLIB
 #ifdef HAVE_LIBPLANES
     KMSScreen kms;
@@ -172,13 +169,46 @@ int main()
     X11Screen screen(Size(800,480));
 #endif
 
-    window = new MyWindow;
+    MyWindow window;
 
-    animation = new Animation(-101, 380, animate, 2000);
+    animation = new Animation(-110, 380, [](float value, void* data) {
+	    MyWindow* window = reinterpret_cast<MyWindow*>(data);
+	    window->move_item(value);
+	}, 2000, easing_linear, &window);
 
-    window->load();
+    window.load();
 
-    EventLoop::start_periodic_timer(1, timer_callback, NULL);
+    Label label1("CPU: 0%",
+		 Point(40, window.size().h-40),
+		 Size(100, 40),
+		 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+    label1.fgcolor(Color::WHITE);
+    window.add(&label1);
+
+    struct CPUTimer: public PeriodicTimer
+    {
+	CPUTimer(Label& label)
+	    : PeriodicTimer(1000),
+	      m_label(label)
+	{}
+
+	void timeout()
+	{
+	    m_tools.updateCpuUsage();
+
+	    ostringstream ss;
+	    ss << "CPU: " << (int)m_tools.cpu_usage[0] << "%";
+	    m_label.text(ss.str());
+	}
+
+	Label& m_label;
+	Tools m_tools;
+    };
+
+    CPUTimer cputimer(label1);
+    cputimer.start();
+
+    animation_timer.start();
 
     EventLoop::run();
 

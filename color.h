@@ -34,6 +34,7 @@ namespace mui
 	    NAVY = 0x000080ff,
 	    ORANGE = 0xffa500ff,
 	    AQUA = 0x00ffffff,
+	    LIGHTBLUE = 0xadd8e6ff,
 	};
 
 	Color(uint32_t c = 0)

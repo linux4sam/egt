@@ -10,6 +10,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include "tools.h"
 
 using namespace std;
 using namespace mui;
@@ -52,77 +53,61 @@ public:
     }
 };
 
-class Box : public Widget
+class Box
 {
 public:
-    Box(int x, int y, int w, int h, int mx, int my, const Color& color)
-	: Widget(x, y, w, h),
-	  m_color(color),
+    Box(Widget* widget, int mx, int my)
+	: m_widget(widget),
 	  m_mx(mx),
 	  m_my(my)
     {}
 
-    virtual void draw(const Rect& rect)
-    {
-	Rect i = rect;
-	if (Rect::is_intersect(box(), rect))
-	    i = Rect::intersect(rect, box());
+    /*
+      virtual void draw(const Rect& rect)
+      {
+      // TODO: this logic needs to be pushed up into draw() caller
+      Rect i = rect;
+      if (Rect::is_intersect(box(), rect))
+      i = Rect::intersect(rect, box());
 
-	screen()->rect(i, m_color);
-    }
+      screen()->rect(i, m_color);
+      }
+    */
 
     virtual void next_frame()
     {
-	int x = this->x() + m_mx;
-	int y = this->y() + m_my;
+	int x = m_widget->x() + m_mx;
+	int y = m_widget->y() + m_my;
 
-	if (x + w() >= screen()->size().w)
+	if (x + m_widget->w() >= main_window()->size().w)
 	    m_mx *= -1;
 
 	if (x < 0)
 	    m_mx *= -1;
 
-	if (y + h() >= screen()->size().h)
+	if (y + m_widget->h() >= main_window()->size().h)
 	    m_my *= -1;
 
 	if (y < 0)
 	    m_my *= -1;
 
-	move(x, y);
+	m_widget->move(x, y);
     }
 
 protected:
-    Color m_color;
+    Widget* m_widget;
     int m_mx;
     int m_my;
 };
 
 static vector<Box*> boxes;
 
-static void timer_callback(int fd, void* data)
-{
-    for (auto i : boxes)
-	i->next_frame();
-}
-
 int main()
 {
-    EventLoop::init();
 #ifdef HAVE_TSLIB
 #ifdef HAVE_LIBPLANES
     KMSScreen kms;
     InputTslib input0("/dev/input/touchscreen0");
-
-    KMSOverlayScreen overlay(kms.allocate_overlay(Rect(100,100,200,200)));
-
-    PlaneWindow win2(&overlay);
-    win2.position(200,200);
-    win2.active(true);
-
-    Color colorz(255,0,0,0x55);
-    Box* boxz1 = new Box(0,0,100,100,1,2,colorz);
-    win2.add(boxz1);
-
 #else
     FrameBuffer fb("/dev/fb0");
 #endif
@@ -133,32 +118,94 @@ int main()
     MyWindow win;
     win.active(true);
 
-    Color color1(255,0,0,0x55);
-    Box* box1 = new Box(0,0,100,100,1,2,color1);
-    boxes.push_back(box1);
-    win.add(box1);
+    vector<Color> colors = {
+	Color(255,0,0,0x55),
+	Color(0,0,255,0x55),
+	Color(0,255,0,0x55),
+	Color(0xc0,0xc0,0xc0,0x55),
+	Color(0xff,0xff,0x00,0x55),
+	Color(255,0,0,0x55),
+    };
 
-    Color color2(0,0,255,0x55);
-    Box* box2 = new Box(100,100,100,100,3,-2,color2);
-        boxes.push_back(box2);
-    win.add(box2);
+    int f = 2;
 
-    Color color3(0,255,0,0x55);
-    Box* box3 = new Box(200,200,100,100,-3,2,color3);
-        boxes.push_back(box3);
-    win.add(box3);
+    vector<std::pair<int,int>> moveparms = {
+	std::make_pair(1 * f,2 * f),
+	std::make_pair(3* f,-2 * f),
+	std::make_pair(-3 * f,2 * f),
+	std::make_pair(-3 * f,3 * f),
+	std::make_pair(2 * f,3 * f),
+	std::make_pair(2,2),
+    };
 
-    Color color4(0xc0,0xc0,0xc0,0x55);
-    Box* box4 = new Box(300,300,100,100,-3,3,color4);
-        boxes.push_back(box4);
-    win.add(box4);
+    // software
+    for (uint32_t x = 0; x < 3;x++)
+    {
+	stringstream os;
+	os << "_image" << x << ".png";
+	Image* image = new Image(os.str(), 100, 100);
+	boxes.push_back(new Box(image, moveparms[x].first, moveparms[x].second));
+	win.add(image);
+    }
 
-    Color color5(0xff,0xff,0x00,0x55);
-    Box* box5 = new Box(400,300,100,100,3,3,color5);
-    boxes.push_back(box5);
-    win.add(box5);
+    // hardware
+    for (uint32_t x = 3;
+	 x < 3 + KMSScreen::instance()->count_planes(DRM_PLANE_TYPE_OVERLAY); x++)
+    {
+	stringstream os;
+	os << "_image" << x << ".png";
+	Image* image = new Image(os.str(), 0, 0);
+	PlaneWindow* plane = new PlaneWindow(image->w(), image->h());
+	plane->add(image);
+	plane->active(true);
+	plane->position(100,100);
+	boxes.push_back(new Box(plane, moveparms[x].first, moveparms[x].second));
+    }
 
-    EventLoop::start_periodic_timer(40, timer_callback, NULL);
+    struct MoveTimer : public PeriodicTimer
+    {
+	MoveTimer()
+	    : PeriodicTimer(33)
+	{}
+
+	void timeout()
+	{
+	    for (auto i : boxes)
+		i->next_frame();
+	}
+    } timer;
+
+    timer.start();
+
+    Label label1("CPU: 0%",
+		 Point(40, win.size().h-40),
+		 Size(100, 40),
+		 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+    label1.fgcolor(Color::WHITE);
+    win.add(&label1);
+
+    struct CPUTimer: public PeriodicTimer
+    {
+	CPUTimer(Label& label)
+	    : PeriodicTimer(1000),
+	      m_label(label)
+	{}
+
+	void timeout()
+	{
+	    m_tools.updateCpuUsage();
+
+	    ostringstream ss;
+	    ss << "CPU: " << (int)m_tools.cpu_usage[0] << "%";
+	    m_label.text(ss.str());
+	}
+
+	Label& m_label;
+	Tools m_tools;
+    };
+
+    CPUTimer cputimer(label1);
+    cputimer.start();
 
     EventLoop::run();
 

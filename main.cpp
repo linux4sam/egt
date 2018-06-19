@@ -340,8 +340,6 @@ void MyImage::timer_callback(int fd, void* data)
 
 int main()
 {
-    EventLoop::init();
-
 #ifdef HAVE_TSLIB
 #ifdef HAVE_LIBPLANES
     KMSScreen kms;
@@ -364,7 +362,7 @@ int main()
     {
 	MyButton(const std::string& image, const Point& point = Point(),
 		 const Size& size = Size())
-	    : ImageButton(image, point, size)
+	    : ImageButton(image, "", point, size)
 	{}
 
 	int handle(int event)
