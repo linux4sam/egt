@@ -16,7 +16,9 @@
 using namespace std;
 using namespace mui;
 
+#ifdef HAVE_LIBPLANES
 #define USE_HARDWARE
+#endif
 
 static Animation* animation = 0;
 
@@ -210,7 +212,5 @@ int main()
 
     animation_timer.start();
 
-    EventLoop::run();
-
-    return 0;
+    return EventLoop::run();
 }

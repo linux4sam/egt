@@ -39,7 +39,7 @@ namespace mui
 
 	static int wait(int timeout = -1);
 
-	static void run();
+	static int run();
 
 	static void quit();
 

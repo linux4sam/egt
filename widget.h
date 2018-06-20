@@ -5,18 +5,19 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#include "font.h"
 #include "geometry.h"
 #include "input.h"
+#include "palette.h"
 #include "screen.h"
 #include "utils.h"
-#include "font.h"
 #include <cairo.h>
 #include <cassert>
+#include <iostream>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <iostream>
 
 namespace mui
 {
@@ -121,6 +122,19 @@ namespace mui
 	    return Point(x() + w()/2, y() + h()/2);
 	}
 
+	const Palette& palette() const
+	{
+	    if (m_palette.get())
+		return *m_palette.get();
+
+	    return global_palette();
+	}
+
+	void set_palette(const Palette& palette)
+	{
+	    m_palette.reset(new Palette(palette));
+	}
+
 	virtual ~Widget();
 
 	Widget* parent()
@@ -150,7 +164,7 @@ namespace mui
 			     const Font& font = Font());
 
 	void draw_image(shared_cairo_surface_t image,
-				int align = ALIGN_CENTER, int standoff = 0);
+			int align = ALIGN_CENTER, int standoff = 0);
 
 	void draw_basic_box(const Rect& rect,
 			    const Color& border = BORDER_COLOR,
@@ -165,15 +179,16 @@ namespace mui
 	bool m_focus;
 	bool m_active;
 	Widget* m_parent;
+	std::shared_ptr<Palette> m_palette;
 
 	friend class SimpleWindow;
     };
 
     using shared_cairo_surface_t =
-			   std::shared_ptr<cairo_surface_t>;
+	std::shared_ptr<cairo_surface_t>;
 
     using shared_cairo_t =
-			   std::shared_ptr<cairo_t>;
+	std::shared_ptr<cairo_t>;
 
     class Image : public Widget
     {
@@ -418,8 +433,8 @@ namespace mui
     {
     public:
 	ListBox(const std::vector<std::string>& items,
-		 const Point& point = Point(),
-		 const Size& size = Size());
+		const Point& point = Point(),
+		const Size& size = Size());
 
 	virtual int handle(int event);
 
@@ -455,38 +470,135 @@ namespace mui
 	float m_angle;
     };
 
-    class StaticGrid
+    /**
+     * A static grid that does not perform any drawing, but controls the
+     * size and position of any widget added.
+     */
+    class StaticGrid : public Widget
     {
     public:
 	StaticGrid(int x, int y, int w, int h, int columns, int rows, int border = 0)
-	    : m_x(x),
-	      m_y(y),
-	      m_w(w),
-	      m_h(h),
+	    : Widget(x, y, w, h),
 	      m_columns(columns),
 	      m_rows(rows),
 	      m_border(border)
 	{}
 
+	virtual void draw(const Rect& rect) {}
+	virtual void damage() {}
+
+	virtual void position(int x, int y)
+	{
+	    Widget::position(x,y);
+	    reposition();
+	}
+
+	virtual void size(int w, int h)
+	{
+	    Widget::size(w,h);
+	    reposition();
+	}
+
 	void add(Widget* widget, int column, int row)
 	{
-	    int x = m_x + (column * (m_w / m_columns)) + m_border;
-	    int y = m_y + (row * (m_h / m_rows)) + m_border;
-	    int w = (m_w / m_columns) - (m_border * 2);
-	    int h = (m_h / m_rows) - (m_border * 2);
+	    if (column >= (int)m_widgets.size())
+		m_widgets.resize(column+1);
 
-	    widget->position(x, y);
-	    widget->size(w, h);
+	    if (row >= (int)m_widgets[column].size())
+		m_widgets[column].resize(row+1);
+
+	    m_widgets[column][row] = widget;
+
+	    //reposition();
+	}
+
+	/**
+	 * Reposition all child widgets.
+	 */
+	virtual void reposition()
+	{
+	    for (int column = 0; column < (int)m_widgets.size(); column++)
+	    {
+		for (int row = 0; row < (int)m_widgets[column].size(); row++)
+		{
+		    Widget* widget = m_widgets[column][row];
+		    if (widget)
+		    {
+			int ix = x() + (column * (w() / m_columns)) + m_border;
+			int iy = y() + (row * (h() / m_rows)) + m_border;
+			int iw = (w() / m_columns) - (m_border * 2);
+			int ih = (h() / m_rows) - (m_border * 2);
+
+			widget->position(ix, iy);
+			widget->size(iw, ih);
+		    }
+		}
+	    }
 	}
 
     protected:
-	int m_x;
-	int m_y;
-	int m_w;
-	int m_h;
 	int m_columns;
 	int m_rows;
 	int m_border;
+
+	std::vector<std::vector<Widget*>> m_widgets;
+
+    };
+
+    class LineProgress : public Widget
+    {
+    public:
+	LineProgress(const Point& point = Point(), const Size& size = Size());
+
+	virtual void draw(const Rect& rect);
+
+	/**
+	 * Set the percent, from 0 to 100.
+	 */
+	void percent(int p)
+	{
+	    if (m_percent != p)
+	    {
+		m_percent = p;
+		if (m_percent < 0)
+		    m_percent = 0;
+		else if (m_percent > 100)
+		    m_percent = 100;
+		damage();
+	    }
+	}
+
+    protected:
+	int m_percent;
+    };
+
+    class ScrollWheel : public Widget
+    {
+    public:
+	ScrollWheel(const Point& point = Point(), const Size& size = Size());
+
+	int handle(int event);
+
+	virtual void draw(const Rect& rect);
+
+	int position() const { return m_pos; }
+
+	inline void position(int pos)
+	{
+	    if (pos < (int)m_values.size())
+	    {
+		m_pos = pos;
+		damage();
+	    }
+	}
+
+	void values(const std::vector<std::string>& v) { m_values = v; }
+
+    protected:
+	std::vector<std::string> m_values;
+	int m_pos;
+	int m_moving_x;
+	int m_start_pos;
     };
 }
 

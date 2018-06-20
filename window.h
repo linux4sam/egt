@@ -70,8 +70,6 @@ namespace mui
 
 	virtual void draw(const Rect& rect);
 
-	void bgcolor(const Color& color) { m_bgcolor = color; }
-
     protected:
 
 	virtual IScreen* screen() { assert(m_screen); return m_screen; }
@@ -80,8 +78,6 @@ namespace mui
 	std::vector<Rect> m_damage;
 
 	IScreen* m_screen;
-
-	Color m_bgcolor;
     };
 
     class KMSOverlayScreen;

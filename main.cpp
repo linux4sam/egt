@@ -26,14 +26,22 @@ static float sliding_scale(int win_w, int item_w, int item_pos,
 
 #define NUM_ITEMS 10
 
-class MyWindow;
+class LauncherWindow;
+class MySimpleWindow;
+
+static LauncherWindow* win1;
+static MySimpleWindow* win2;
+static SimpleWindow* win3;
+static SimpleWindow* win4;
+
 
 class MyImage : public Image
 {
 public:
-    MyImage(MyWindow& win, const string& filename, int x = 0, int y = 0)
+    MyImage(LauncherWindow* win, SimpleWindow* target, const string& filename, int x = 0, int y = 0)
 	: Image(filename, x, y),
 	  m_win(win),
+	  m_target(target),
 	  m_fd(-1),
 	  m_animation(0, 600, MyImage::animate, 1000, easing_snap, this)
     {}
@@ -76,7 +84,8 @@ public:
     }
 
 private:
-    MyWindow& m_win;
+    LauncherWindow* m_win;
+    SimpleWindow* m_target;
     int m_fd;
     Animation m_animation;
 };
@@ -125,21 +134,21 @@ public:
 			     "Day",
 			     Point(40,150),
 			     Size(200,64),
-			     Font(32));
+			     mui::Font(32));
 	il1->fgcolor(Color(0x80808055));
 	add(il1);
 	il2 = new ImageLabel("night.png",
 			     "Night",
 			     Point(40,214),
 			     Size(200,64),
-			     Font(32));
+			     mui::Font(32));
 	il2->fgcolor(Color(0x80808055));
 	add(il2);
 	il3 = new ImageLabel("vacation.png",
 			     "Vacation",
 			     Point(40,278),
 			     Size(200,64),
-			     Font(32));
+			     mui::Font(32));
 	add(il3);
 
 	m_a1 = new WidgetPositionAnimator({il1, il2, il3},
@@ -169,7 +178,7 @@ public:
 		       Point(700,390),
 		       Size(50,64),
 		       ALIGN_CENTER,
-		       Font(16));
+		       mui::Font(16));
 	add(l1);
 	l1->fgcolor(Color::GRAY);
 
@@ -187,23 +196,13 @@ public:
     }
 };
 
-class MyWindow : public MySimpleWindow
+class LauncherWindow : public SimpleWindow
 {
 public:
-    MyWindow()
-	: MySimpleWindow(800,480),
+    LauncherWindow()
+	: SimpleWindow(800,480),
 	  m_moving(false)
     {}
-
-        virtual void exit()
-    {
-	SimpleWindow::exit();
-    }
-
-    virtual void enter()
-    {
-	SimpleWindow::enter();
-    }
 
     virtual int load()
     {
@@ -212,9 +211,23 @@ public:
 
 	for (int t = 0; t < NUM_ITEMS; t++)
 	{
+	    SimpleWindow* win = 0;
+	    switch (t)
+	    {
+	    case 0:
+		win = win2;
+		break;
+	    case 1:
+		win = win3;
+		break;
+	    case 2:
+		win = win4;
+		break;
+	    }
+
 	    stringstream os;
 	    os << "_image" << t << ".png";
-	    MyImage* box = new MyImage(*this, os.str());
+	    MyImage* box = new MyImage(this, (SimpleWindow*)win, os.str());
 	    add(box);
 
 	    box->position(t * 200, (h() / 2) - (box->h() / 2));
@@ -302,10 +315,6 @@ private:
     MyImage* m_boxes[NUM_ITEMS];
 };
 
-static MyWindow* win1;
-static MySimpleWindow* win2;
-static MySimpleWindow* win3;
-
 void MyImage::timer_callback(int fd, void* data)
 {
     MyImage* image = reinterpret_cast<MyImage*>(data);
@@ -313,28 +322,15 @@ void MyImage::timer_callback(int fd, void* data)
 
     if (!image->m_animation.next())
     {
-	//if (image->m_animation.starting() > image->m_animation.ending())
-//	{
-	image->m_win.scale_box(image, image->x());
+	image->m_win->scale_box(image, image->x());
 	EventLoop::cancel_periodic_timer(image->m_fd);
 
-	main_window()->exit();
-	main_window() = win2;
-	main_window()->enter();
-
-
-/*	}
-	else
+	if (image->m_target)
 	{
-	float starting = image->m_animation.starting();
-	float ending = image->m_animation.ending();
-	image->m_animation.set_easing_func(easing_easy);
-	image->m_animation.starting(ending);
-	image->m_animation.ending(starting);
-	image->m_animation.duration(300);
-	image->m_animation.start();
+	    main_window()->exit();
+	    main_window() = image->m_target;
+	    main_window()->enter();
 	}
-*/
     }
 }
 
@@ -346,23 +342,20 @@ int main()
     InputTslib input0("/dev/input/touchscreen0");
 #else
     FrameBuffer fb("/dev/fb0");
-    //InputEvDev input1("/dev/input/event4");
 #endif
 #else
     X11Screen screen(Size(800,480));
 #endif
 
-    win1 = new MyWindow;
-    win1->load();
+    win1 = new LauncherWindow;
 
     win2 = new MySimpleWindow(800,480);
     win2->load();
 
-    struct MyButton : public ImageButton
+    struct MyButton : public Image
     {
-	MyButton(const std::string& image, const Point& point = Point(),
-		 const Size& size = Size())
-	    : ImageButton(image, "", point, size)
+	MyButton(const std::string& image, const Point& point = Point())
+	    : Image(image, point.x, point.y)
 	{}
 
 	int handle(int event)
@@ -377,17 +370,16 @@ int main()
 		return 1;
 	    }
 	    }
-	    return Button::handle(event);
+	    return Image::handle(event);
 	}
     };
 
-    MyButton btn1("home.png", Point(10,10), Size(64,64));
-    win2->add(&btn1);
+    win3 = new SimpleWindow(800,480);
+    Palette p(win3->palette());
+    p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+    win3->set_palette(p);
 
-    win3 = new MySimpleWindow(800,480);
-    win3->load();
-
-    PieChart pie2(Point(600,50), Size(200,200));
+    PieChart pie2(Point(200,40), Size(400,400));
     win3->add(&pie2);
 
     std::map<std::string, float> data;
@@ -397,7 +389,35 @@ int main()
     data.insert(make_pair("motorcycle", .10));
     pie2.data(data);
 
-    EventLoop::run();
+    win4 = new SimpleWindow(800,480);
+    p = win4->palette();
+    p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+    win4->set_palette(p);
 
-    return 0;
+#ifdef HAVE_KPLOT
+    Chart chart1(Point(0,0),Size(800,480));
+    win4->add(&chart1);
+    std::vector<struct kpair> data2;
+    for (int i = 0; i < 500; i++)
+    {
+	struct kpair p;
+	p.x = i;
+	p.y = sinf(float(i)/10.);
+	data2.push_back(p);
+    }
+    chart1.data(data2);
+#endif
+
+    MyButton home1("home.png", Point(10,10));
+    win1->add(&home1);
+    MyButton home2("home.png", Point(10,10));
+    win2->add(&home2);
+    MyButton home3("home.png", Point(10,10));
+    win3->add(&home3);
+    MyButton home4("home.png", Point(10,10));
+    win4->add(&home4);
+
+    win1->load();
+
+    return EventLoop::run();
 }

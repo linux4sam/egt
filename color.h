@@ -14,28 +14,26 @@ namespace mui
     {
     public:
 
-	enum
-	{
-	    BLACK = 0x000000ff,
-	    WHITE = 0xffffffff,
-	    RED = 0xff0000ff,
-	    GREEN = 0x00ff00ff,
-	    BLUE = 0x0000ffff,
-	    YELLOW = 0xffff00ff,
-	    CYAN = 0x00ffffff,
-	    MAGENTA = 0xff00ffff,
-	    SILVER = 0xc0c0c0ff,
-	    GRAY = 0x808080ff,
-	    LIGHTGRAY = 0xd3d3d3ff,
-	    MAROON = 0x800000ff,
-	    OLIVE = 0x808000ff,
-	    PURPLE = 0x800080ff,
-	    TEAL = 0x008080ff,
-	    NAVY = 0x000080ff,
-	    ORANGE = 0xffa500ff,
-	    AQUA = 0x00ffffff,
-	    LIGHTBLUE = 0xadd8e6ff,
-	};
+	// pre-defined colors
+	static Color BLACK;
+	static Color WHITE;
+	static Color RED;
+	static Color GREEN;
+	static Color BLUE;
+	static Color YELLOW;
+	static Color CYAN;
+	static Color MAGENTA;
+	static Color SILVER;
+	static Color GRAY;
+	static Color LIGHTGRAY;
+	static Color MAROON;
+	static Color OLIVE;
+	static Color PURPLE;
+	static Color TEAL;
+	static Color NAVY;
+	static Color ORANGE;
+	static Color AQUA;
+	static Color LIGHTBLUE;
 
 	Color(uint32_t c = 0)
 	{
@@ -51,15 +49,6 @@ namespace mui
 	      m_b(b),
 	      m_a(a)
 	{}
-
-	/*
-	explicit Color(float r, float g, float b, float a = 1.0)
-	    : m_r(r * 255.),
-	      m_g(g * 255.),
-	      m_b(b * 255.),
-	      m_a(a * 255.)
-	{}
-	*/
 
 	inline float redf() const { return m_r / 255.; }
 	inline float greenf() const { return m_g / 255.; }
@@ -97,6 +86,7 @@ namespace mui
 	uint32_t m_a;
     };
 
+    // TODO: remove and use palette
     extern Color FG_COLOR;
     extern Color BG_COLOR;
     extern Color TEXT_COLOR;

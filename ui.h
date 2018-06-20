@@ -10,12 +10,13 @@
 #include "event_loop.h"
 #include "input.h"
 #include "kmsscreen.h"
-#include "piechart.h"
+#include "chart.h"
 #include "screen.h"
 #include "timer.h"
 #include "widget.h"
 #include "window.h"
 #include "x11screen.h"
 #include "font.h"
+#include "palette.h"
 
 #endif

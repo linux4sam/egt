@@ -24,8 +24,7 @@ namespace mui
     }
 
     SimpleWindow::SimpleWindow(int w, int h)
-	: Widget(0, 0, w, h),
-	  m_bgcolor(BG_COLOR)
+	: Widget(0, 0, w, h)
     {
 	cout << "new window " << w << "," << h << endl;
 	windows().push_back(this);
@@ -156,7 +155,7 @@ namespace mui
     {
 	for (auto& damage: m_damage)
 	{
-	    screen()->rect(damage, m_bgcolor);
+	    screen()->rect(damage, palette().color(Palette::BG));
 
 	    for (auto& child: m_children)
 	    {
@@ -178,11 +177,14 @@ namespace mui
 	draw();
     }
 
+#ifdef HAVE_LIBPLANES
     PlaneWindow::PlaneWindow(int w, int h)
 	: SimpleWindow(w, h)
     {
 	// default plane windows to transparent
-	m_bgcolor = Color(0,0,0,0);
+	Palette p(palette());
+	p.set(Palette::BG, Palette::GROUP_NORMAL, Color(0,0,0,0));
+	set_palette(p);
 
 	assert(KMSScreen::instance());
 
@@ -220,7 +222,7 @@ namespace mui
 
 	for (auto& damage: m_damage)
 	{
-	    screen()->rect(damage, m_bgcolor);
+	    screen()->rect(damage, palette().color(Palette::BG));
 
 	    for (auto& child: m_children)
 	    {
@@ -238,7 +240,31 @@ namespace mui
 
     }
 
+#else
+    PlaneWindow::PlaneWindow(int w, int h)
+	: SimpleWindow(w, h)
+    {
+
+    }
+
+    void PlaneWindow::position(int x, int y)
+    {
+	SimpleWindow::position(x,y);
+    }
+
+    void PlaneWindow::move(int x, int y)
+    {
+	SimpleWindow::move(x,y);
+    }
+
+    void PlaneWindow::draw()
+    {
+	SimpleWindow::draw();
+    }
+#endif
+
     PlaneWindow::~PlaneWindow()
     {
     }
+
 }

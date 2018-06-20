@@ -1,24 +1,32 @@
-all: ui floating widgets easing info
+all: ui floating widgets easing info reflect
 
-X11=n
-TSLIB=y
-LIBPLANES=y
+X11=y
+TSLIB=n
+LIBPLANES=n
+KPLOT=n
 
 .SUFFIXES: .o .cpp
 
 CXXFLAGS = -Wall -g -std=c++11 -I. -pedantic -Ofast
+LDLIBS =
 
 .cpp.o :
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
-	x11screen.h color.h window.h ui.h kmsscreen.h animation.h piechart.h \
-	timer.h font.h tools.h
+	x11screen.h color.h window.h ui.h kmsscreen.h animation.h \
+	timer.h font.h tools.h chart.h palette.h
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
-	window.o kmsscreen.o color.o animation.o piechart.o timer.o font.o tools.o
+	window.o kmsscreen.o color.o animation.o timer.o font.o \
+	tools.o chart.o palette.o
 
 ui_objs = main.o $(common_objs)
+
+ifeq ($(KPLOT),y)
+CXXFLAGS += -Ikplot -DHAVE_KPLOT
+LDLIBS += -Lkplot -lkplot
+endif
 
 DEPS = cairo
 ifeq ($(X11),y)
@@ -84,6 +92,17 @@ $(info_objs): $(headers)
 info: $(info_objs)
 	$(CXX) $(CXXFLAGS) $(info_objs) -o $@ $(LDLIBS)
 
+reflect_objs = reflect.o $(common_objs)
+
+reflect: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
+reflect: LDLIBS += $(shell pkg-config $(DEPS) --libs)
+
+$(reflect_objs): $(headers)
+
+reflect: $(reflect_objs)
+	$(CXX) $(CXXFLAGS) $(reflect_objs) -o $@ $(LDLIBS)
+
 clean:
 	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
-		$(info_objs) ui floating widgets easing info
+		$(info_objs) $(reflect_objs) ui floating widgets easing info \
+		reflect

@@ -172,11 +172,11 @@ namespace mui
 	    else {
 		/* Identical to the above when tint_alpha = 1.0, but
 		 * ostensibly faster. */
-		    cairo_pattern_t *shadow_mask =
-			cairo_pattern_create_for_surface (source_surface);
-		    cairo_set_source_rgba (cr, 0,0,0,shadow_alpha);
-		    cairo_mask (cr, shadow_mask);
-		    cairo_pattern_destroy (shadow_mask);
+		cairo_pattern_t *shadow_mask =
+		    cairo_pattern_create_for_surface (source_surface);
+		cairo_set_source_rgba (cr, 0,0,0,shadow_alpha);
+		cairo_mask (cr, shadow_mask);
+		cairo_pattern_destroy (shadow_mask);
 	    }
 	    cairo_destroy (cr);
 	}
@@ -555,9 +555,6 @@ namespace mui
     {
     }
 
-
-
-
     ImageButton::ImageButton(const string& image,
 			     const string& label,
 			     const Point& point,
@@ -931,17 +928,24 @@ namespace mui
 
 	if (checked())
 	{
-	    draw_basic_box(r, BORDER_COLOR, Color::ORANGE);
-#if 1
+	    draw_basic_box(r, palette().color(Palette::BORDER),
+			   palette().color(Palette::HIGHLIGHT));
+
 	    static const int OFFSET = 5;
 	    auto cr = screen()->context();
+
+	    cairo_set_source_rgba(cr.get(),
+				  palette().color(Palette::DARK).redf(),
+				  palette().color(Palette::DARK).greenf(),
+				  palette().color(Palette::DARK).bluef(),
+				  palette().color(Palette::DARK).alphaf());
+
 	    cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
 	    cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
 	    cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
 	    cairo_line_to(cr.get(), r.x + OFFSET, r.y + r.h - OFFSET);
 	    cairo_set_line_width(cr.get(), 2.0);
 	    cairo_stroke(cr.get());
-#endif
 	}
 	else
 	{
@@ -949,8 +953,10 @@ namespace mui
 	}
 
 	// text
-	draw_text(m_text, TEXT_COLOR, ALIGN_LEFT | ALIGN_CENTER,
-		  STANDOFF + h() - STANDOFF);
+	draw_text(m_text,
+		  palette().color(Palette::TEXT),
+		  ALIGN_LEFT | ALIGN_CENTER,
+		  h());
     }
 
     CheckBox::~CheckBox()
@@ -1047,7 +1053,7 @@ namespace mui
 	    draw_basic_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
 	}
 #else
-		auto cr = screen()->context();
+	auto cr = screen()->context();
 
 	Font font;
 	cairo_text_extents_t textext;
@@ -1142,16 +1148,18 @@ namespace mui
 
 	cairo_save(cr.get());
 
+	// bottom full circle
 	cairo_set_source_rgba(cr.get(),
 			      color1.redf(),
 			      color1.greenf(),
 			      color1.bluef(),
-			      color1.alphaf());
+					      color1.alphaf());
 	cairo_set_line_width(cr.get(), linew);
 
 	cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
 	cairo_stroke(cr.get());
 
+	// top position arc
 	cairo_set_source_rgb(cr.get(),
 			     color2.redf(),
 			     color2.greenf(),
@@ -1162,6 +1170,122 @@ namespace mui
 
 	string text = std::to_string((int)(angle2 / (M_PI/180.0))) + m_label;
 	draw_text(text, color2, ALIGN_CENTER, 0, Font(72));
+
+	cairo_restore(cr.get());
+    }
+
+    LineProgress::LineProgress(const Point& point, const Size& size)
+	: Widget(point.x, point.y, size.w, size.h),
+	  m_percent(0)
+    {
+    }
+
+    void LineProgress::draw(const Rect& rect)
+    {
+	auto cr = screen()->context();
+
+	cairo_save(cr.get());
+
+	int limit = 20 - m_percent / 5;
+	int barheight = h() / 20;
+
+	for (int i = 0; i < 20; i++)
+	{
+	    if (i > limit)
+		cairo_set_source_rgb(cr.get(), 0.6, 1.0, 0);
+	    else
+		cairo_set_source_rgb(cr.get(), 0.2, 0.4, 0);
+
+	    cairo_rectangle(cr.get(), x(),  y() + i * barheight, w(), barheight - 2);
+	    cairo_fill(cr.get());
+	}
+
+	cairo_restore(cr.get());
+    }
+
+    ScrollWheel::ScrollWheel(const Point& point, const Size& size)
+	: Widget(point.x, point.y, size.w, size.h),
+	  m_pos(0),
+	  m_moving_x(0)
+    {}
+
+    int ScrollWheel::handle(int event)
+    {
+	switch (event)
+	{
+	case EVT_MOUSE_DOWN:
+	    m_moving_x = mouse_position().y;
+	    m_start_pos = position();
+	    active(true);
+	    return 1;
+	    break;
+	case EVT_MOUSE_UP:
+	    active(false);
+	    return 1;
+	    break;
+	case EVT_MOUSE_MOVE:
+	    if (active())
+	    {
+		int diff = mouse_position().y - m_moving_x;
+		position(m_start_pos + diff);
+	    }
+	    break;
+	}
+
+	return Widget::handle(event);
+    }
+
+    void ScrollWheel::draw(const Rect& rect)
+    {
+	Color border(Color::BLACK);
+	Color glass(0x00115555);
+	Color color(0x4169E1ff);
+
+	auto cr = screen()->context();
+
+	cairo_save(cr.get());
+
+	cairo_text_extents_t textext;
+	cairo_select_font_face(cr.get(), "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+	cairo_set_font_size(cr.get(), 16);
+	cairo_text_extents(cr.get(),"a", &textext);
+
+	cairo_set_source_rgb(cr.get(), border.redf(), border.greenf(), border.bluef());
+	cairo_set_line_width(cr.get(), 3.0);
+	cairo_move_to(cr.get(), x(), y());
+	cairo_line_to(cr.get(), x(), y()+h());
+	cairo_move_to(cr.get(), x()+w(), y());
+	cairo_line_to(cr.get(), x()+w(), y()+h());
+	cairo_stroke(cr.get());
+
+	cairo_set_source_rgba(cr.get(), glass.redf(), glass.greenf(), glass.bluef(), glass.alphaf());
+	cairo_rectangle(cr.get(), x(),  y() - textext.height + (1 * h()/3), w(), (1 * h()/3));
+	cairo_fill (cr.get());
+
+	cairo_pattern_t *pat;
+	pat = cairo_pattern_create_linear(x(), y(), x(), y()+h()/2);
+
+	Color step = Color(Color::GRAY);
+	cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
+	step = Color(Color::WHITE);
+	cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
+	step = Color(Color::GRAY);
+	cairo_pattern_add_color_stop_rgb(pat, 1.0, step.redf(), step.greenf(), step.bluef());
+
+	cairo_set_source(cr.get(), pat);
+
+	int offset = y() + textext.height;
+	for (uint32_t index = position();
+	     index < m_values.size() && index < position()+3; index++)
+	{
+	    cairo_move_to(cr.get(), x(), offset);
+	    cairo_show_text(cr.get(), m_values[index].c_str());
+
+	    offset += h()/3;//textext.height + 10;
+	}
+
+	//cairo_stroke(cr);
+	cairo_pattern_destroy(pat);
 
 	cairo_restore(cr.get());
     }

@@ -148,6 +148,7 @@ int main()
 	win.add(image);
     }
 
+#ifdef HAVE_LIBPLANES
     // hardware
     for (uint32_t x = 3;
 	 x < 3 + KMSScreen::instance()->count_planes(DRM_PLANE_TYPE_OVERLAY); x++)
@@ -161,7 +162,7 @@ int main()
 	plane->position(100,100);
 	boxes.push_back(new Box(plane, moveparms[x].first, moveparms[x].second));
     }
-
+#endif
     struct MoveTimer : public PeriodicTimer
     {
 	MoveTimer()

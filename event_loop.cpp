@@ -102,7 +102,7 @@ namespace mui
 	do_quit = true;
     }
 
-    void EventLoop::run()
+    int EventLoop::run()
     {
 	EventLoop::init();
 
@@ -138,6 +138,8 @@ namespace mui
 	    }
 #endif
 	}
+
+	return 0;
     }
 
     void EventLoop::close()

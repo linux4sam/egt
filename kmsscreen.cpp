@@ -107,9 +107,9 @@ namespace mui
     uint32_t KMSScreen::count_planes(int type)
     {
 	uint32_t total = 0;
-	for (int x = 0; x < m_device->num_planes;x++)
+	for (uint32_t x = 0; x < m_device->num_planes;x++)
 	{
-	    if (m_device->planes[x]->type == type)
+	    if ((int)m_device->planes[x]->type == type)
 		total++;
 	}
 	return total;
