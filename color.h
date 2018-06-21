@@ -79,6 +79,19 @@ namespace mui
 			 alphaf());
 	}
 
+	    uint32_t pixel() const
+      {
+	  return m_a << 24 | m_r << 16 | m_g << 8 | m_b;
+      }
+
+    uint32_t prepixel() const
+      {
+	  return (m_a << 24) |
+	      (((m_r * m_a / 255) & 0xff) << 16) |
+	      (((m_g * m_a / 255) & 0xff) << 8) |
+	      ((m_b * m_a / 255) & 0xff);
+      }
+
     protected:
 	uint32_t m_r;
 	uint32_t m_g;

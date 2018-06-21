@@ -13,7 +13,7 @@
 
 using namespace std;
 
-#define DOUBLE_BUFFER
+#define BACK_BUFFER
 
 namespace mui
 {
@@ -58,20 +58,96 @@ namespace mui
     }
 #endif
 
+    static inline uint32_t blendPreMulAlpha2(uint32_t p1, uint32_t p2)
+    {
+	static const int AMASK = 0xFF000000;
+	static const int RBMASK = 0x00FF00FF;
+	static const int GMASK = 0x0000FF00;
+	static const int AGMASK = AMASK | GMASK;
+	static const int ONEALPHA = 0x01000000;
+	unsigned int a = (p2 & AMASK) >> 24;
+	unsigned int na = 255 - a;
+	unsigned int rb = ((na * (p1 & RBMASK)) + (a * (p2 & RBMASK))) >> 8;
+	unsigned int ag = (na * ((p1 & AGMASK) >> 8)) +
+	    (a * (ONEALPHA | ((p2 & GMASK) >> 8)));
+	return ((rb & RBMASK) | (ag & AGMASK));
+    }
+
     void IScreen::blit(cairo_surface_t* surface, int srcx, int srcy, int srcw,
 		       int srch, int dstx, int dsty, bool blend)
     {
-	cairo_save(m_cr.get());
-	cairo_set_source_surface(m_cr.get(), surface, dstx, dsty);
-	cairo_rectangle(m_cr.get(), srcx, srcy, srcw, srch);
-	if (blend)
-	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
-	else
-	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
-	cairo_fill(m_cr.get());
-	cairo_restore(m_cr.get());
+	if (true || !blend)
+	{
+	    cairo_save(m_cr.get());
+	    cairo_set_source_surface(m_cr.get(), surface, dstx, dsty);
+	    cairo_rectangle(m_cr.get(), srcx, srcy, srcw, srch);
+	    if (blend)
+		cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
+	    else
+		cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+	    cairo_fill(m_cr.get());
+	    cairo_restore(m_cr.get());
 
-	assert(cairo_status(m_cr.get()) == CAIRO_STATUS_SUCCESS);
+	    assert(cairo_status(m_cr.get()) == CAIRO_STATUS_SUCCESS);
+	}
+	else
+	{
+	    cairo_surface_flush(surface);
+	    cairo_surface_flush(m_surface.get());
+
+	    uint32_t* src = (uint32_t*)cairo_image_surface_get_data(surface);
+	    uint32_t* dst = (uint32_t*)cairo_image_surface_get_data(m_surface.get());
+
+	    const int sw = cairo_image_surface_get_width(surface);
+	    const int sh = cairo_image_surface_get_height(surface);
+	    const int ss = sw * sh;
+	    const int dw = cairo_image_surface_get_width(m_surface.get());
+	    const int dh = cairo_image_surface_get_height(m_surface.get());
+	    const int ds = dw * dh;
+
+	    const int w = srcx + srcw;
+	    const int h = srcy + srch;
+	    for (int y = srcy; y < h;y++)
+	    {
+		const int doff_ = y * dw;
+		const int sy = y - dsty;
+		const int soff_ = sy * sw;
+
+		if (sy < 0 || sy >= sh)
+		  continue;
+
+		for (int x = srcx; x < w;x++)
+		{
+		    const int sx = x - dstx;
+
+		    if (sx < 0 || sx >= sw)
+		    	continue;
+
+		    const int doff = doff_ + x;
+
+		    if (doff < 0 || doff >= ds)
+		    	continue;
+
+		    const int soff = soff_ + sx;
+
+#define SBUF (src + soff)
+#define DBUF (dst + doff)
+
+		    //if (((*SBUF >> 24) & 0xff) == 255)
+		    //{
+			//*DBUF = *SBUF;
+		    //}
+		    //else
+		    //{
+			uint32_t* d = DBUF;
+			*d = blendPreMulAlpha2(*d, *SBUF);
+
+			//}
+		}
+	    }
+
+	    cairo_surface_mark_dirty(m_surface.get());
+	}
     }
 
     void IScreen::fill(const Color& color)
@@ -128,34 +204,29 @@ namespace mui
 
     void IScreen::flip(const vector<Rect>& damage)
     {
+#ifdef BACK_BUFFER
+	//cout << "flip" << endl;
 	//greenscreen(damage);
 
-#ifdef DOUBLE_BUFFER
-#if 0 // whole thing
-	cairo_save(m_cr_back.get());
+	//int total = 0;
+	//cairo_save(m_cr_back.get());
+	//cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
+	//cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
 	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
 	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
-	cairo_paint(m_cr_back.get());
-	cairo_restore(m_cr_back.get());
-#else
-	int total = 0;
-	cairo_save(m_cr_back.get());
-	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
-	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
+
 	for (const auto& d: damage)
 	{
-	    total += (d.w * d.h);
+	    //total += (d.w * d.h);
 	    cairo_rectangle(m_cr_back.get(), d.x, d.y, d.w, d.h);
 	}
+	//cairo_clip(m_cr_back.get());
 	cairo_fill(m_cr_back.get());
-	cairo_restore(m_cr_back.get());
+	//cairo_restore(m_cr_back.get());
 
 	cairo_surface_flush(m_surface_back.get());
 
 	//cout << "total pixels: " << total << endl;
-
-#endif
-
 #endif
     }
 
@@ -184,7 +255,7 @@ namespace mui
 	//cairo_format_t format = CAIRO_FORMAT_RGB16_565;
 	//cairo_format_t format = CAIRO_FORMAT_RGB24;
 
-#ifdef DOUBLE_BUFFER
+#ifdef BACK_BUFFER
 	if (ptr)
 	{
 	    m_surface_back = shared_cairo_surface_t(cairo_image_surface_create_for_data((unsigned char*)ptr,
@@ -196,12 +267,23 @@ namespace mui
 
 	    m_cr_back = shared_cairo_t(cairo_create(m_surface_back.get()), cairo_destroy);
 	    assert(m_cr_back);
+
+	    //m_surface = shared_cairo_surface_t(cairo_surface_create_similar(m_surface_back.get(), CAIRO_CONTENT_COLOR_ALPHA, w, h),
+	    //				       cairo_surface_destroy);
+
+	    cairo_format_t format_surface = CAIRO_FORMAT_ARGB32;
+
+	    m_surface = shared_cairo_surface_t(cairo_image_surface_create(format_surface, w, h),
+					       cairo_surface_destroy);
+	}
+	else
+	{
+	    cairo_format_t format_surface = CAIRO_FORMAT_ARGB32;
+
+	    m_surface = shared_cairo_surface_t(cairo_image_surface_create(format_surface, w, h),
+					       cairo_surface_destroy);
 	}
 
-	cairo_format_t format_surface = CAIRO_FORMAT_ARGB32;
-
-	m_surface = shared_cairo_surface_t(cairo_image_surface_create(format_surface, w, h),
-					   cairo_surface_destroy);
 	assert(m_surface.get());
 
 	m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
@@ -222,6 +304,8 @@ namespace mui
 	    the_screen = this;
     }
 
+    // https://github.com/toradex/cairo-fb-examples/blob/master/rectangles/rectangles.c
+
     FrameBuffer::FrameBuffer(const string& path)
 	: m_fd(-1)
     {
@@ -238,15 +322,13 @@ namespace mui
 	if (ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0)
 	    assert(0);
 
-	int size = fixinfo.smem_len;
-	//int size = varinfo.xres * varinfo.yres * varinfo.bits_per_pixel / 8;
+	cout << "fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres << endl;
 
-	cout << "fb size " << size << " " << varinfo.xres << "," << varinfo.yres << endl;
-
-	m_fb = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
+	m_fb = mmap(NULL, fixinfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
 	assert(m_fb != (void *) -1);
 
 	init(m_fb, varinfo.xres, varinfo.yres);
+	//init(m_fb, varinfo.xres, varinfo.yres_virtual);
     }
 
     FrameBuffer::~FrameBuffer()

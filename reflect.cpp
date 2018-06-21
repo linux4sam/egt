@@ -95,7 +95,7 @@ int main()
     X11Screen screen(Size(800,480));
 #endif
 
-    SimpleWindow win(800,480);
+    SimpleWindow win(Size(800,480));
 
     MyImage image("square.png", 100, 100);
     win.add(&image);

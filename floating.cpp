@@ -15,48 +15,23 @@
 using namespace std;
 using namespace mui;
 
-class MyImage : public Image
-{
-public:
-    MyImage(const string& filename, int x = 0, int y = 0)
-	: Image(filename, x, y)
-    {}
-
-    int handle(int event)
-    {
-	switch (event)
-	{
-	case EVT_MOUSE_UP:
-	    cout << "image clicked" << endl;
-	    //EventLoop::quit();
-	    break;
-	}
-
-	return Image::handle(event);
-    }
-};
-
 class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(800,480)
+	: SimpleWindow(Size(800,480), FLAG_NO_BACKGROUND),
+	  m_img("background.png")
     {
-	// TODO: don't like this API one bit - changing pointer ownership
-	Image* img = new Image("background.png");
-	add(img);
+	add(&m_img);
     }
 
-    int handle(int event)
-    {
-	return SimpleWindow::handle(event);
-    }
+    Image m_img;
 };
 
-class Box
+class FloatingBox
 {
 public:
-    Box(Widget* widget, int mx, int my)
+    FloatingBox(Widget* widget, int mx, int my)
 	: m_widget(widget),
 	  m_mx(mx),
 	  m_my(my)
@@ -100,7 +75,7 @@ protected:
     int m_my;
 };
 
-static vector<Box*> boxes;
+static vector<FloatingBox*> boxes;
 
 int main()
 {
@@ -118,51 +93,52 @@ int main()
     MyWindow win;
     win.active(true);
 
-    vector<Color> colors = {
-	Color(255,0,0,0x55),
-	Color(0,0,255,0x55),
-	Color(0,255,0,0x55),
-	Color(0xc0,0xc0,0xc0,0x55),
-	Color(0xff,0xff,0x00,0x55),
-	Color(255,0,0,0x55),
-    };
-
     int f = 2;
 
     vector<std::pair<int,int>> moveparms = {
-	std::make_pair(1 * f,2 * f),
-	std::make_pair(3* f,-2 * f),
-	std::make_pair(-3 * f,2 * f),
-	std::make_pair(-3 * f,3 * f),
-	std::make_pair(2 * f,3 * f),
-	std::make_pair(2,2),
+	std::make_pair(1 * f, 2 * f),
+	std::make_pair(3* f, -2 * f),
+	std::make_pair(-3 * f, 2 * f),
+	std::make_pair(-3 * f, 3 * f),
+	std::make_pair(2 * f, 3 * f),
+	std::make_pair(2 * f, 2 * f),
+	std::make_pair(4 * f, 2 * f),
+	std::make_pair(-4 * f, 2 * f),
     };
 
+    uint32_t SOFT_COUNT = 5;
+
     // software
-    for (uint32_t x = 0; x < 3;x++)
+    for (uint32_t x = 0; x < SOFT_COUNT;x++)
     {
 	stringstream os;
 	os << "_image" << x << ".png";
 	Image* image = new Image(os.str(), 100, 100);
-	boxes.push_back(new Box(image, moveparms[x].first, moveparms[x].second));
+	boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
 	win.add(image);
     }
 
 #ifdef HAVE_LIBPLANES
-    // hardware
-    for (uint32_t x = 3;
-	 x < 3 + KMSScreen::instance()->count_planes(DRM_PLANE_TYPE_OVERLAY); x++)
+    int total = KMSScreen::instance()->count_planes(DRM_PLANE_TYPE_OVERLAY);
+#else
+    int total = 3;
+#endif
+
+#ifdef HAVE_LIBPLANES
+    // hardware (or emulated)
+    for (uint32_t x = SOFT_COUNT; x < SOFT_COUNT + total; x++)
     {
 	stringstream os;
 	os << "_image" << x << ".png";
 	Image* image = new Image(os.str(), 0, 0);
-	PlaneWindow* plane = new PlaneWindow(image->w(), image->h());
+	PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
 	plane->add(image);
 	plane->active(true);
 	plane->position(100,100);
-	boxes.push_back(new Box(plane, moveparms[x].first, moveparms[x].second));
+	boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
     }
 #endif
+
     struct MoveTimer : public PeriodicTimer
     {
 	MoveTimer()
@@ -178,7 +154,7 @@ int main()
 
     timer.start();
 
-    Label label1("CPU: 0%",
+    Label label1("CPU: -",
 		 Point(40, win.size().h-40),
 		 Size(100, 40),
 		 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);

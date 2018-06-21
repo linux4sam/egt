@@ -73,7 +73,7 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(800,480)
+	: SimpleWindow(Size(800,480))
     {}
 
     int load()
@@ -94,7 +94,7 @@ public:
 	// then it will cause glitches. So, we create the height (which will
 	// be invisible), to always keep a portion of the plane on screen
 	// alternate of making the plane the same exact size as the image.
-	m_box = new PlaneWindow(100,200);
+	m_box = new PlaneWindow(Size(100,200));
 	m_box->add(image);
 	m_box->active(true);
 #endif

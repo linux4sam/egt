@@ -1,14 +1,18 @@
-all: ui floating widgets easing info reflect
+APPS = ui floating widgets easing info reflect paintperf
+
+all: $(APPS)
 
 X11=y
-TSLIB=n
+TSLIB=ny
 LIBPLANES=n
-KPLOT=n
+KPLOT=y
+GD=n
+IMLIB2=n
 
 .SUFFIXES: .o .cpp
 
-CXXFLAGS = -Wall -g -std=c++11 -I. -pedantic -Ofast
-LDLIBS =
+CXXFLAGS = -Wall -g -std=c++11 -I. -pedantic -Ofast -flto -fwhole-program -DNDEBUG
+LDLIBS = -flto -fwhole-program
 
 .cpp.o :
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
@@ -19,7 +23,7 @@ headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
 	window.o kmsscreen.o color.o animation.o timer.o font.o \
-	tools.o chart.o palette.o
+	tools.o chart.o palette.o geometry.o
 
 ui_objs = main.o $(common_objs)
 
@@ -42,6 +46,16 @@ endif
 ifeq ($(LIBPLANES),y)
 CXXFLAGS += -DHAVE_LIBPLANES
 DEPS += libdrm libcjson lua libplanes
+endif
+
+ifeq ($(GD),y)
+CXXFLAGS += -DHAVE_LIBGD
+LDLIBS += -lgd
+endif
+
+ifeq ($(IMLIB2),y)
+CXXFLAGS += -DHAVE_IMLIB2
+LDLIBS += -lImlib2
 endif
 
 ui: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
@@ -102,7 +116,16 @@ $(reflect_objs): $(headers)
 reflect: $(reflect_objs)
 	$(CXX) $(CXXFLAGS) $(reflect_objs) -o $@ $(LDLIBS)
 
+paintperf_objs = paintperf.o $(common_objs)
+
+paintperf: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
+paintperf: LDLIBS += $(shell pkg-config $(DEPS) --libs)
+
+$(paintperf_objs): $(headers)
+
+paintperf: $(paintperf_objs)
+	$(CXX) $(CXXFLAGS) $(paintperf_objs) -o $@ $(LDLIBS)
+
 clean:
 	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
-		$(info_objs) $(reflect_objs) ui floating widgets easing info \
-		reflect
+		$(info_objs) $(reflect_objs) $(paintperf_objs) $(APPS)

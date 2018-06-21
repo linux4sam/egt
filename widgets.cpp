@@ -18,7 +18,7 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(800,480)
+	: SimpleWindow(Size(800,480))
     {}
 
     int handle(int event)

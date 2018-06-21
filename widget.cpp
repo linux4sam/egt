@@ -19,16 +19,18 @@ using namespace std;
 namespace mui
 {
 
-    Widget::Widget(int x, int y, int w, int h)
+    Widget::Widget(int x, int y, int w, int h, uint32_t flags)
 	: m_box(x, y, w, h),
 	  m_visible(true),
 	  m_focus(false),
 	  m_active(false),
-	  m_parent(0)
+	  m_parent(0),
+	  m_flags(flags)
     {}
 
     int Widget::handle(int event)
     {
+	// do nothing
 	return 0;
     }
 
@@ -357,7 +359,6 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
-
     void Widget::draw_image(shared_cairo_surface_t image, int align, int standoff)
     {
 	auto width = cairo_image_surface_get_width(image.get());
@@ -425,8 +426,6 @@ namespace mui
 	cairo_set_source_surface(cr.get(), m_image.get(), 0, 0);
 	cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
 	cairo_paint(cr.get());
-
-	//damage();
     }
 
     static shared_cairo_surface_t
@@ -509,9 +508,7 @@ namespace mui
     Button::Button(const string& label, const Point& point, const Size& size)
 	: Widget(point.x, point.y, size.w, size.h),
 	  m_label(label)
-    {
-
-    }
+    {}
 
     int Button::handle(int event)
     {
@@ -1119,6 +1116,8 @@ namespace mui
 		m_angle = atan2(mouse_position().y - c.y,
 				mouse_position().x - c.x);
 		damage();
+		//parent()->damage(Rect(0,400,1,1));
+		//redraw(Rect());
 
 		return 1;
 	    }
@@ -1127,6 +1126,51 @@ namespace mui
 
 	return Widget::handle(event);
     }
+
+#if 0
+    void Radial::redraw(const Rect& rect)
+    {
+	float linew = 40;
+
+	Color color1(Color::LIGHTGRAY);
+	color1.alpha(0x55);
+	Color color2(Color::ORANGE);
+	if (m_angle > 0)
+	    color2 = Color::GREEN;
+
+	float radius = w() / 2 - (linew / 2);
+	double angle1 = 0;// * (M_PI/180.0);
+	double angle2 = m_angle;
+
+	Point c = center();
+
+	auto cr = screen()->context();
+
+	cairo_save(cr.get());
+
+	// bottom full circle
+	cairo_set_source_rgba(cr.get(),
+			      color1.redf(),
+			      color1.greenf(),
+			      color1.bluef(),
+					      color1.alphaf());
+	cairo_set_line_width(cr.get(), linew);
+
+	cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
+	cairo_stroke(cr.get());
+
+	// top position arc
+	cairo_set_source_rgb(cr.get(),
+			     color2.redf(),
+			     color2.greenf(),
+			     color2.bluef());
+	cairo_set_line_width(cr.get(), linew - (linew/3));
+	cairo_arc_negative(cr.get(), c.x, c.y, radius, angle1, angle2);
+	cairo_stroke(cr.get());
+
+	cairo_restore(cr.get());
+    }
+#endif
 
     void Radial::draw(const Rect& rect)
     {

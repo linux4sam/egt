@@ -23,10 +23,10 @@ namespace mui
 	return the_windows;
     }
 
-    SimpleWindow::SimpleWindow(int w, int h)
-	: Widget(0, 0, w, h)
+    SimpleWindow::SimpleWindow(const Size& size, uint32_t flags)
+	: Widget(0, 0, size.w, size.h, flags)
     {
-	cout << "new window " << w << "," << h << endl;
+	cout << "new window " << size << endl;
 	windows().push_back(this);
 
 	if (!the_window)
@@ -59,7 +59,6 @@ namespace mui
 
     void SimpleWindow::active(bool value)
     {
-
 	if (m_active != value)
 	{
 	    if (value)
@@ -118,7 +117,6 @@ namespace mui
 	    // if we get here, no intersect found so add it
 	    m_damage.push_back(rect);
 	}
-
 #endif
     }
 
@@ -147,18 +145,24 @@ namespace mui
 	    break;
 	}
 
-
 	return Widget::handle(event);
     }
 
     void SimpleWindow::draw()
     {
+	if (m_damage.empty())
+	    return;
+
 	for (auto& damage: m_damage)
 	{
-	    screen()->rect(damage, palette().color(Palette::BG));
+	    if (!is_flag_set(FLAG_NO_BACKGROUND))
+		screen()->rect(damage, palette().color(Palette::BG));
 
 	    for (auto& child: m_children)
 	    {
+		if (child->is_flag_set(FLAG_PLANE_WINDOW))
+		    continue;
+
 		if (Rect::is_intersect(damage,child->box()))
 		{
 		    child->draw(damage);
@@ -166,9 +170,7 @@ namespace mui
 	    }
 	}
 
-	if (!m_damage.empty())
-	    screen()->flip(m_damage);
-
+	screen()->flip(m_damage);
 	m_damage.clear();
     }
 
@@ -178,8 +180,9 @@ namespace mui
     }
 
 #ifdef HAVE_LIBPLANES
-    PlaneWindow::PlaneWindow(int w, int h)
-	: SimpleWindow(w, h)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags)
+	: SimpleWindow(size, flags | FLAG_PLANE_WINDOW),
+	  m_dirty(true)
     {
 	// default plane windows to transparent
 	Palette p(palette());
@@ -207,6 +210,8 @@ namespace mui
 
 	    m_box.x = x;
 	    m_box.y = y;
+
+	    m_dirty = true;
 	}
     }
 
@@ -217,12 +222,20 @@ namespace mui
 
     void PlaneWindow::draw()
     {
-	KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-	s->apply();
+	if (m_dirty)
+	{
+	    KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+	    s->apply();
+	    m_dirty = false;
+	}
+
+	if (m_damage.empty())
+	    return;
 
 	for (auto& damage: m_damage)
 	{
-	    screen()->rect(damage, palette().color(Palette::BG));
+	    if (!is_flag_set(FLAG_NO_BACKGROUND))
+		screen()->rect(damage, palette().color(Palette::BG));
 
 	    for (auto& child: m_children)
 	    {
@@ -233,16 +246,14 @@ namespace mui
 	    }
 	}
 
-	if (!m_damage.empty())
-	    screen()->flip(m_damage);
-
+	screen()->flip(m_damage);
 	m_damage.clear();
-
     }
 
 #else
-    PlaneWindow::PlaneWindow(int w, int h)
-	: SimpleWindow(w, h)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags)
+	: SimpleWindow(size, flags),
+	  m_dirty(true)
     {
 
     }

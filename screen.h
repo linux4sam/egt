@@ -13,7 +13,6 @@
 
 namespace mui
 {
-
     using shared_cairo_surface_t =
 	std::shared_ptr<cairo_surface_t>;
 
@@ -64,16 +63,17 @@ namespace mui
 
     /**
      * Screen on a fbdev framebuffer.
+     *
+     * The framebuffer is mmap()'ed and directly accessible.
      */
     class FrameBuffer : public IScreen
     {
     public:
 
 	FrameBuffer(const std::string& path = "/dev/fb0");
-
 	virtual ~FrameBuffer();
 
-    private:
+    protected:
 	int m_fd;
 	void* m_fb;
     };

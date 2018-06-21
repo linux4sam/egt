@@ -220,8 +220,8 @@ static void bottom_menu(SimpleWindow* win)
 class MainWindow : public SimpleWindow
 {
 public:
-    MainWindow(int w, int h)
-	: SimpleWindow(w, h)
+    MainWindow(const Size& size)
+	: SimpleWindow(size)
     {
 	Palette p(palette());
 	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
@@ -267,8 +267,8 @@ public:
 class ChildWindow : public SimpleWindow
 {
 public:
-    ChildWindow(int w, int h)
-	: SimpleWindow(w, h)
+    ChildWindow(const Size& size)
+	: SimpleWindow(size)
     {
 	Palette p(palette());
 	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
@@ -296,8 +296,8 @@ int main()
     X11Screen screen(Size(800,480));
 #endif
 
-    win1 = new MainWindow(800, 480);
-    win2 = new ChildWindow(800, 480);
+    win1 = new MainWindow(Size(800, 480));
+    win2 = new ChildWindow(Size(800, 480));
 
     return EventLoop::run();
 }

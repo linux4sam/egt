@@ -21,6 +21,38 @@
 
 namespace mui
 {
+    enum
+    {
+	/**
+	 * Do not draw the background color.
+	 *
+	 * The background will essentially be transparent. This can also
+	 * be useful in cases where a widget in the window will occupy
+	 * the entire window and it doesn't make sense to draw the background.
+	 */
+	FLAG_NO_BACKGROUND = (1<<0),
+
+	/**
+	 * This is an overlay window.
+	 */
+	FLAG_PLANE_WINDOW = (1<<1),
+
+	/**
+	 * Don't draw any border.
+	 */
+	FLAG_NO_BORDER = (1<<2),
+
+	/**
+	 * Widget always requires a full redraw.
+	 */
+	FLAG_FULL_REDRAW = (1<<3),
+
+	/**
+	 * Default window flags.
+	 */
+	FLAG_WINDOW_DEFAULT = 0,
+    };
+
 
     /**
      * Base widget class.
@@ -28,12 +60,6 @@ namespace mui
     class Widget
     {
     public:
-
-	enum
-	{
-	    FLAG_NO_BORDER = (1<<0),
-	    FLAG_FULL_REDRAW = (1<<1),
-	};
 
 	enum
 	{
@@ -47,7 +73,7 @@ namespace mui
 	/**
 	 * Construct a widget.
 	 */
-	Widget(int x = 0, int y = 0, int w = 0, int h = 0);
+	Widget(int x = 0, int y = 0, int w = 0, int h = 0, uint32_t flags = 0);
 
 	/**
 	 * Draw the widget.
@@ -149,6 +175,22 @@ namespace mui
 	}
 	virtual IScreen* screen() { return parent()->screen(); }
 
+	inline bool is_flag_set(uint32_t flag) const
+	{
+	    return (m_flags & flag) == flag;
+	}
+
+	inline bool flag_set(uint32_t flag)
+	{
+	    return m_flags |= flag;
+	}
+
+	inline bool flag_clear(uint32_t flag)
+	{
+	    return m_flags &= ~flag;
+	}
+
+
     protected:
 
 	void draw_text(const std::string& text,
@@ -180,6 +222,10 @@ namespace mui
 	bool m_active;
 	Widget* m_parent;
 	std::shared_ptr<Palette> m_palette;
+
+
+	uint32_t m_flags;
+
 
 	friend class SimpleWindow;
     };
@@ -464,6 +510,7 @@ namespace mui
 	virtual int handle(int event);
 
 	virtual void draw(const Rect& rect);
+	//virtual void redraw(const Rect& rect);
 
     protected:
 	std::string m_label;

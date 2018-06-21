@@ -12,12 +12,16 @@ namespace mui
 {
 
     /**
-     * @todo Rename this to Frame.
+     * A window is a widget that is backed by a screen.
+     *
+     * The difference between a widget and a window is a window has zero or more
+     * child widgets and manages the composition of drawing those widgets
+     * together in the window.
      */
     class SimpleWindow : public Widget
     {
     public:
-	SimpleWindow(int w, int h);
+	SimpleWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT);
 
 	void add(Widget* widget);
 
@@ -35,7 +39,7 @@ namespace mui
 	Size size() const { return Size(m_box.w,m_box.h); }
 
 	// unsupported
-	virtual void position(int x, int y) {}
+	//virtual void position(int x, int y) {}
 	virtual void size(int w, int h) {}
 	virtual void resize(int w, int h) {}
 
@@ -91,7 +95,7 @@ namespace mui
     {
     public:
 
-	PlaneWindow(int w = 0, int h = 0);
+	PlaneWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT);
 
 	virtual void position(int x, int y);
 	virtual void move(int x, int y);
@@ -103,6 +107,9 @@ namespace mui
 	virtual void resize(int w, int h) {}
 
 	virtual ~PlaneWindow();
+
+    protected:
+	bool m_dirty;
     };
 
     SimpleWindow*& main_window();

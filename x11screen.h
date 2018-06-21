@@ -8,10 +8,11 @@
 #ifdef HAVE_X11
 
 #include "screen.h"
-#include <X11/Xlib.h>
+#include <memory>
 
 namespace mui
 {
+    struct X11Data;
 
     /**
      * Screen in an X11 window.
@@ -29,8 +30,7 @@ namespace mui
 
 	static void process(int fd, uint32_t mask, void *data);
 
-	Display* m_display;
-	Drawable m_window;
+	std::shared_ptr<X11Data> m_priv;
     };
 
 }

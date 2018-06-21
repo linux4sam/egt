@@ -102,8 +102,8 @@ class MySimpleWindow : public SimpleWindow
     Label* l1;
 
 public:
-    MySimpleWindow(int w, int h)
-	: SimpleWindow(w, h)
+    MySimpleWindow(const Size& size)
+	: SimpleWindow(size)
     {
     }
 
@@ -200,7 +200,7 @@ class LauncherWindow : public SimpleWindow
 {
 public:
     LauncherWindow()
-	: SimpleWindow(800,480),
+	: SimpleWindow(Size(800,480)),
 	  m_moving(false)
     {}
 
@@ -349,7 +349,7 @@ int main()
 
     win1 = new LauncherWindow;
 
-    win2 = new MySimpleWindow(800,480);
+    win2 = new MySimpleWindow(Size(800,480));
     win2->load();
 
     struct MyButton : public Image
@@ -374,7 +374,7 @@ int main()
 	}
     };
 
-    win3 = new SimpleWindow(800,480);
+    win3 = new SimpleWindow(Size(800,480));
     Palette p(win3->palette());
     p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     win3->set_palette(p);
@@ -389,7 +389,7 @@ int main()
     data.insert(make_pair("motorcycle", .10));
     pie2.data(data);
 
-    win4 = new SimpleWindow(800,480);
+    win4 = new SimpleWindow(Size(800,480));
     p = win4->palette();
     p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     win4->set_palette(p);
