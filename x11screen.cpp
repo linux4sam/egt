@@ -115,7 +115,6 @@ namespace mui
 		vector<Rect> damage;
 		damage.push_back(Rect(0,0,screen->size().w, screen->size().h));
 		screen->flip(damage);
-		cairo_surface_flush(screen->m_surface_back.get());
 		break;
 	    }
 	    case ButtonPress:

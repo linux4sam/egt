@@ -210,8 +210,6 @@ namespace mui
 
 	//int total = 0;
 	//cairo_save(m_cr_back.get());
-	//cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
-	//cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
 	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
 	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
 
