@@ -103,12 +103,12 @@ int main()
     data.insert(make_pair("motorcycle", .10));
     pie1.data(data);
 
-    LineProgress lp1(Point(600, 250), Size(50,100));
+    LevelMeter lp1(Point(600, 250), Size(50,100));
     win1.add(&lp1);
 
     struct CPUTimer: public PeriodicTimer
     {
-	CPUTimer(LineProgress& label)
+	CPUTimer(LevelMeter& label)
 	    : PeriodicTimer(1000),
 	      m_label(label)
 	{}
@@ -119,7 +119,7 @@ int main()
 	    m_label.percent(m_tools.cpu_usage[0]);
 	}
 
-	LineProgress& m_label;
+	LevelMeter& m_label;
 	Tools m_tools;
     } cputimer(lp1);
 

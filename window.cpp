@@ -32,7 +32,11 @@ namespace mui
 	if (!the_window)
 	{
 	    the_window = this;
-	    active(true);
+	    show();
+	}
+	else
+	{
+	    hide();
 	}
 
 	damage();
@@ -55,19 +59,6 @@ namespace mui
     void SimpleWindow::damage()
     {
 	damage(m_box);
-    }
-
-    void SimpleWindow::active(bool value)
-    {
-	if (m_active != value)
-	{
-	    if (value)
-	    {
-		damage();
-	    }
-
-	    m_active = value;
-	}
     }
 
 /**
@@ -160,6 +151,9 @@ namespace mui
 
 	    for (auto& child: m_children)
 	    {
+		if (!child->visible())
+		    continue;
+
 		if (child->is_flag_set(FLAG_PLANE_WINDOW))
 		    continue;
 
@@ -180,7 +174,7 @@ namespace mui
     }
 
 #ifdef HAVE_LIBPLANES
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, bool alpha)
 	: SimpleWindow(size, flags | FLAG_PLANE_WINDOW),
 	  m_dirty(true)
     {
@@ -198,7 +192,9 @@ namespace mui
 	}
 
 	m_screen = new KMSOverlayScreen(
-	    KMSScreen::instance()->allocate_overlay(Size(this->w(),this->h())));
+	    KMSScreen::instance()->allocate_overlay(
+		Size(this->w(),this->h()), alpha ?
+		DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888));
     }
 
     void PlaneWindow::position(int x, int y)
@@ -222,12 +218,12 @@ namespace mui
 
     void PlaneWindow::draw()
     {
-	if (m_dirty)
-	{
-	    KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-	    s->apply();
-	    m_dirty = false;
-	}
+	//if (m_dirty)
+	//{
+	KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+	s->apply();
+	m_dirty = false;
+	//}
 
 	if (m_damage.empty())
 	    return;
@@ -239,6 +235,12 @@ namespace mui
 
 	    for (auto& child: m_children)
 	    {
+		if (!child->visible())
+		    continue;
+
+		if (child->is_flag_set(FLAG_PLANE_WINDOW))
+		    continue;
+
 		if (Rect::is_intersect(damage,child->box()))
 		{
 		    child->draw(damage);
@@ -251,7 +253,7 @@ namespace mui
     }
 
 #else
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, bool alpha)
 	: SimpleWindow(size, flags),
 	  m_dirty(true)
     {

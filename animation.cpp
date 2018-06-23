@@ -299,7 +299,10 @@ namespace mui
 	WidgetPositionAnimator* a = reinterpret_cast<WidgetPositionAnimator*>(data);
 	assert(a);
 	if (!a->next())
+	{
 	    EventLoop::cancel_periodic_timer(a->m_fd);
+	    a->m_fd = -1;
+	}
     }
 
     void WidgetPositionAnimator::callback(float value, void* data)
@@ -314,6 +317,36 @@ namespace mui
 	    else
 		i->move(i->x(), value);
 	}
+    }
+
+
+
+    AnimationTimer::AnimationTimer(int start, int end, uint64_t duration, easing_func func)
+	: PeriodicTimer(30),
+	  m_animation(start, end, AnimationTimer::animation_callback,
+		      duration, func, this)
+    {}
+
+    void AnimationTimer::start()
+    {
+	PeriodicTimer::start();
+	m_animation.start();
+    }
+
+    void AnimationTimer::timeout()
+    {
+	if (!m_animation.next())
+	{
+	    PeriodicTimer::stop();
+	}
+    }
+
+    void AnimationTimer::animation_callback(float value, void* data)
+    {
+	AnimationTimer* a = reinterpret_cast<AnimationTimer*>(data);
+	assert(a);
+
+	a->step(value);
     }
 
 }

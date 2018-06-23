@@ -27,13 +27,13 @@ namespace mui
 
 	virtual void enter()
 	{
-	    active(true);
+	    show();
 	    damage();
 	}
 
 	virtual void exit()
 	{
-	    active(false);
+	    hide();
 	}
 
 	Size size() const { return Size(m_box.w,m_box.h); }
@@ -42,9 +42,6 @@ namespace mui
 	//virtual void position(int x, int y) {}
 	virtual void size(int w, int h) {}
 	virtual void resize(int w, int h) {}
-
-	virtual bool active() const { return m_active; }
-	virtual void active(bool value);
 
 	/**
 	 * Damage the rectangle of the entire widget.
@@ -95,7 +92,8 @@ namespace mui
     {
     public:
 
-	PlaneWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT);
+	PlaneWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT,
+		    bool alpha = true);
 
 	virtual void position(int x, int y);
 	virtual void move(int x, int y);

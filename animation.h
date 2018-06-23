@@ -5,6 +5,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
+#include "timer.h"
 #include <cstdint>
 #include <chrono>
 #include <vector>
@@ -107,6 +108,24 @@ namespace mui
 	std::vector<Widget*> m_widgets;
 	int m_fd;
 	int m_coord;
+    };
+
+    class AnimationTimer : public PeriodicTimer
+    {
+    public:
+	AnimationTimer(int start, int end, uint64_t duration, easing_func func);
+
+	void start();
+
+	virtual void step(int value) = 0;
+
+    protected:
+
+	void timeout();
+
+	static void animation_callback(float value, void* data);
+
+	Animation m_animation;
     };
 }
 

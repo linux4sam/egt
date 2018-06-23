@@ -1097,6 +1097,18 @@ namespace mui
 
     }
 
+    static int norm(float angle)
+    {
+	int a = (int)(angle / (M_PI/180.0));
+	if (a > 180)
+	    a -= 180;
+	else
+	    a+= 180;
+	if (a == 360)
+	    a = 0;
+	return a;
+    }
+
     int Radial::handle(int event)
     {
 	switch (event)
@@ -1113,12 +1125,20 @@ namespace mui
 	    if (active())
 	    {
 		Point c = center();
-		m_angle = atan2(mouse_position().y - c.y,
-				mouse_position().x - c.x);
-		damage();
-		//parent()->damage(Rect(0,400,1,1));
-		//redraw(Rect());
+		float angle = atan2f(mouse_position().y - c.y,
+				 mouse_position().x - c.x);
+		angle = angle * (180.0 / M_PI);
+		angle = (angle > 0.0 ? angle : (360.0 + angle));
+		angle = 180 - angle;
 
+		//if (norm(m_angle) > 355 && norm(angle) < 5)
+		//{
+		//}
+		//else
+		//{
+		    m_angle = angle;
+		    damage();
+		    //}
 		return 1;
 	    }
 	    break;
@@ -1127,50 +1147,11 @@ namespace mui
 	return Widget::handle(event);
     }
 
-#if 0
-    void Radial::redraw(const Rect& rect)
+    static float radians(float zero, float degrees)
     {
-	float linew = 40;
-
-	Color color1(Color::LIGHTGRAY);
-	color1.alpha(0x55);
-	Color color2(Color::ORANGE);
-	if (m_angle > 0)
-	    color2 = Color::GREEN;
-
-	float radius = w() / 2 - (linew / 2);
-	double angle1 = 0;// * (M_PI/180.0);
-	double angle2 = m_angle;
-
-	Point c = center();
-
-	auto cr = screen()->context();
-
-	cairo_save(cr.get());
-
-	// bottom full circle
-	cairo_set_source_rgba(cr.get(),
-			      color1.redf(),
-			      color1.greenf(),
-			      color1.bluef(),
-					      color1.alphaf());
-	cairo_set_line_width(cr.get(), linew);
-
-	cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
-	cairo_stroke(cr.get());
-
-	// top position arc
-	cairo_set_source_rgb(cr.get(),
-			     color2.redf(),
-			     color2.greenf(),
-			     color2.bluef());
-	cairo_set_line_width(cr.get(), linew - (linew/3));
-	cairo_arc_negative(cr.get(), c.x, c.y, radius, angle1, angle2);
-	cairo_stroke(cr.get());
-
-	cairo_restore(cr.get());
+	degrees = 360 - degrees - zero;
+	return degrees * (M_PI/180.0);
     }
-#endif
 
     void Radial::draw(const Rect& rect)
     {
@@ -1178,13 +1159,17 @@ namespace mui
 
 	Color color1(Color::LIGHTGRAY);
 	color1.alpha(0x55);
-	Color color2(Color::ORANGE);
-	if (m_angle > 0)
-	    color2 = Color::GREEN;
+
 
 	float radius = w() / 2 - (linew / 2);
-	double angle1 = 0;// * (M_PI/180.0);
-	double angle2 = m_angle;
+	double angle1 = radians(180, 0);
+	double angle2 = radians(180, m_angle);
+
+	int a = norm(angle2);
+
+	Color color2(Color::OLIVE);
+	if (a > 180)
+	    color2 = Color::ORANGE;
 
 	Point c = center();
 
@@ -1209,22 +1194,61 @@ namespace mui
 			     color2.greenf(),
 			     color2.bluef());
 	cairo_set_line_width(cr.get(), linew - (linew/3));
-	cairo_arc_negative(cr.get(), c.x, c.y, radius, angle1, angle2);
+	cairo_arc(cr.get(), c.x, c.y, radius, angle1, angle2);
 	cairo_stroke(cr.get());
 
-	string text = std::to_string((int)(angle2 / (M_PI/180.0))) + m_label;
+	string text = std::to_string(a) + m_label;
 	draw_text(text, color2, ALIGN_CENTER, 0, Font(72));
 
 	cairo_restore(cr.get());
     }
 
-    LineProgress::LineProgress(const Point& point, const Size& size)
+    ProgressBar::ProgressBar(const Point& point, const Size& size)
 	: Widget(point.x, point.y, size.w, size.h),
 	  m_percent(0)
     {
     }
 
-    void LineProgress::draw(const Rect& rect)
+    void ProgressBar::draw(const Rect& rect)
+    {
+	auto cr = screen()->context();
+
+	cairo_save(cr.get());
+
+	Color bg = palette().color(Palette::BG);
+	cairo_set_source_rgba(cr.get(),
+			      bg.redf(),
+			      bg.greenf(),
+			      bg.bluef(),
+			      bg.alphaf());
+	cairo_rectangle(cr.get(), x(), y(), w(), h());
+	cairo_fill(cr.get());
+
+	Color color = palette().color(Palette::HIGHLIGHT);
+	cairo_set_source_rgb(cr.get(), color.redf(), color.greenf(), color.bluef());
+	cairo_rectangle(cr.get(), x(),  y(), w() * m_percent / 100., h());
+	cairo_fill(cr.get());
+
+	cairo_rectangle(cr.get(), x(), y(), w(), h());
+	Color border = palette().color(Palette::BORDER);
+	cairo_set_source_rgba(cr.get(),
+			      border.redf(),
+			      border.greenf(),
+			      border.bluef(),
+			      border.alphaf());
+	cairo_set_line_width(cr.get(), 1.0);
+	cairo_stroke(cr.get());
+
+
+	cairo_restore(cr.get());
+    }
+
+        LevelMeter::LevelMeter(const Point& point, const Size& size)
+	: ProgressBar(point, size)
+    {
+    }
+
+    void LevelMeter::draw(const Rect& rect)
     {
 	auto cr = screen()->context();
 
@@ -1246,6 +1270,44 @@ namespace mui
 
 	cairo_restore(cr.get());
     }
+
+
+    SpinProgress::SpinProgress(const Point& point, const Size& size)
+	: ProgressBar(point, size)
+    {
+    }
+
+    void SpinProgress::draw(const Rect& rect)
+    {
+	float linew = 5;
+
+	Color color2(Color::ORANGE);
+
+	float radius = w() / 2 - (linew / 2);
+	double angle1 = radians(180, 0);
+	double angle2 = radians(180, m_percent / 100. * 360.);
+
+	Point c = center();
+
+	auto cr = screen()->context();
+
+	cairo_save(cr.get());
+
+	cairo_set_source_rgba(cr.get(), 0, 0, 0, 0);
+	cairo_rectangle(cr.get(), x(),  y(), w(), h());
+	cairo_fill(cr.get());
+
+	cairo_set_source_rgb(cr.get(),
+			     color2.redf(),
+			     color2.greenf(),
+			     color2.bluef());
+	cairo_set_line_width(cr.get(), linew - (linew/3));
+	cairo_arc(cr.get(), c.x, c.y, radius, angle1, angle2);
+	cairo_stroke(cr.get());
+
+	cairo_restore(cr.get());
+    }
+
 
     ScrollWheel::ScrollWheel(const Point& point, const Size& size)
 	: Widget(point.x, point.y, size.w, size.h),
@@ -1319,8 +1381,8 @@ namespace mui
 	cairo_set_source(cr.get(), pat);
 
 	int offset = y() + textext.height;
-	for (uint32_t index = position();
-	     index < m_values.size() && index < position()+3; index++)
+	for (int index = position();
+	     index < (int)m_values.size() && index < position()+3; index++)
 	{
 	    cairo_move_to(cr.get(), x(), offset);
 	    cairo_show_text(cr.get(), m_values[index].c_str());

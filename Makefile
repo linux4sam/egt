@@ -1,13 +1,12 @@
-APPS = ui floating widgets easing info reflect paintperf
-
-all: $(APPS)
-
-X11=y
-TSLIB=ny
-LIBPLANES=n
-KPLOT=y
+X11=n
+TSLIB=y
+LIBPLANES=y
+KPLOT=n
 GD=n
 IMLIB2=n
+GSTREAMER=y
+
+APPS = ui floating widgets easing info reflect paintperf
 
 .SUFFIXES: .o .cpp
 
@@ -19,11 +18,11 @@ LDLIBS = -flto -fwhole-program
 
 headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
 	x11screen.h color.h window.h ui.h kmsscreen.h animation.h \
-	timer.h font.h tools.h chart.h palette.h
+	timer.h font.h tools.h chart.h palette.h video.h
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
 	window.o kmsscreen.o color.o animation.o timer.o font.o \
-	tools.o chart.o palette.o geometry.o
+	tools.o chart.o palette.o geometry.o video.o
 
 ui_objs = main.o $(common_objs)
 
@@ -33,6 +32,16 @@ LDLIBS += -Lkplot -lkplot
 endif
 
 DEPS = cairo
+#CXXFLAGS += $(shell pkg-config cairo --cflags)
+#LDLIBS += /home/jhenderson/buildroot/at91sam9x5ek_demo/staging/usr/lib/libcairo.a \
+/home/jhenderson/buildroot/at91sam9x5ek_demo/staging/usr/lib/libpixman-1.a -lfreetype -lpng -lpangoft2-1.0 -lfontconfig -pthread
+
+ifeq ($(GSTREAMER),y)
+DEPS += gstreamer-1.0
+CXXFLAGS += -DHAVE_GSTREAMER
+APPS += videoplayer
+endif
+
 ifeq ($(X11),y)
 DEPS += x11
 CXXFLAGS += -DHAVE_X11
@@ -57,6 +66,8 @@ ifeq ($(IMLIB2),y)
 CXXFLAGS += -DHAVE_IMLIB2
 LDLIBS += -lImlib2
 endif
+
+all: $(APPS)
 
 ui: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
 ui: LDLIBS += $(shell pkg-config $(DEPS) --libs)
@@ -126,6 +137,17 @@ $(paintperf_objs): $(headers)
 paintperf: $(paintperf_objs)
 	$(CXX) $(CXXFLAGS) $(paintperf_objs) -o $@ $(LDLIBS)
 
+videoplayer_objs = videoplayer.o $(common_objs)
+
+videoplayer: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
+videoplayer: LDLIBS += $(shell pkg-config $(DEPS) --libs)
+
+$(videoplayer_objs): $(headers)
+
+videoplayer: $(videoplayer_objs)
+	$(CXX) $(CXXFLAGS) $(videoplayer_objs) -o $@ $(LDLIBS)
+
 clean:
 	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
-		$(info_objs) $(reflect_objs) $(paintperf_objs) $(APPS)
+		$(info_objs) $(reflect_objs) $(paintperf_objs) \
+		$(videoplayer_objs) $(APPS)

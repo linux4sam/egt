@@ -47,10 +47,12 @@ namespace mui
 	 */
 	FLAG_FULL_REDRAW = (1<<3),
 
+	FLAG_WINDOW = (1<<4),
+
 	/**
 	 * Default window flags.
 	 */
-	FLAG_WINDOW_DEFAULT = 0,
+	FLAG_WINDOW_DEFAULT = FLAG_WINDOW,
     };
 
 
@@ -112,7 +114,14 @@ namespace mui
 	 */
 	virtual void move(int x, int y);
 
+	/**
+	 * Hide the widget.  This will prevent draw() calls.
+	 */
 	virtual void hide() { m_visible = false; }
+
+	/**
+	 * Show the widget.  This will allow draw() calls.
+	 */
 	virtual void show() { m_visible = true; damage(); }
 	virtual bool visible() const { return m_visible; }
 	virtual bool focus() const { return m_focus; }
@@ -133,10 +142,10 @@ namespace mui
 	 */
 	const Rect& box() const { return m_box; }
 
-	Size size() const { return Size(m_box.w,m_box.h); }
+	Size size() const { return m_box.size(); }
 
-	/**
-	 * Bounding box width.
+	/*
+	 * Bounding box dimensions.
 	 */
 	inline int w() const { return m_box.w; }
 	inline int h() const { return m_box.h; }
@@ -190,7 +199,6 @@ namespace mui
 	    return m_flags &= ~flag;
 	}
 
-
     protected:
 
 	void draw_text(const std::string& text,
@@ -222,10 +230,7 @@ namespace mui
 	bool m_active;
 	Widget* m_parent;
 	std::shared_ptr<Palette> m_palette;
-
-
 	uint32_t m_flags;
-
 
 	friend class SimpleWindow;
     };
@@ -314,7 +319,6 @@ namespace mui
     protected:
 	std::string m_label;
     };
-
 
     class Slider : public Widget
     {
@@ -423,6 +427,9 @@ namespace mui
 	Color m_fgcolor;
     };
 
+    /**
+     * Input text box.
+     */
     class SimpleText : public Widget
     {
     public:
@@ -439,7 +446,9 @@ namespace mui
 	std::string m_text;
     };
 
-
+    /**
+     * Boolean checkbox.
+     */
     class CheckBox : public Label
     {
     public:
@@ -507,10 +516,12 @@ namespace mui
 
 	void label(const std::string& label) { m_label = label; }
 
+	// todo
+	void percent(int value) { m_angle = value; damage(); }
+
 	virtual int handle(int event);
 
 	virtual void draw(const Rect& rect);
-	//virtual void redraw(const Rect& rect);
 
     protected:
 	std::string m_label;
@@ -546,7 +557,7 @@ namespace mui
 	    reposition();
 	}
 
-	void add(Widget* widget, int column, int row)
+	virtual void add(Widget* widget, int column, int row)
 	{
 	    if (column >= (int)m_widgets.size())
 		m_widgets.resize(column+1);
@@ -555,8 +566,6 @@ namespace mui
 		m_widgets[column].resize(row+1);
 
 	    m_widgets[column][row] = widget;
-
-	    //reposition();
 	}
 
 	/**
@@ -589,20 +598,19 @@ namespace mui
 	int m_border;
 
 	std::vector<std::vector<Widget*>> m_widgets;
-
     };
 
-    class LineProgress : public Widget
+    class ProgressBar : public Widget
     {
     public:
-	LineProgress(const Point& point = Point(), const Size& size = Size());
+	ProgressBar(const Point& point = Point(), const Size& size = Size());
 
 	virtual void draw(const Rect& rect);
 
 	/**
 	 * Set the percent, from 0 to 100.
 	 */
-	void percent(int p)
+	virtual void percent(int p)
 	{
 	    if (m_percent != p)
 	    {
@@ -619,12 +627,28 @@ namespace mui
 	int m_percent;
     };
 
+    class LevelMeter : public ProgressBar
+    {
+    public:
+	LevelMeter(const Point& point = Point(), const Size& size = Size());
+
+	virtual void draw(const Rect& rect);
+    };
+
+    class SpinProgress : public ProgressBar
+    {
+    public:
+	SpinProgress(const Point& point = Point(), const Size& size = Size());
+
+	virtual void draw(const Rect& rect);
+    };
+
     class ScrollWheel : public Widget
     {
     public:
 	ScrollWheel(const Point& point = Point(), const Size& size = Size());
 
-	int handle(int event);
+	virtual int handle(int event);
 
 	virtual void draw(const Rect& rect);
 

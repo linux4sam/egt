@@ -32,6 +32,11 @@ namespace mui
 	plane_set_pos(m_plane, x, y);
     }
 
+    int KMSOverlayScreen::gem()
+    {
+	return m_plane->gem_name;
+    }
+
     void KMSOverlayScreen::apply()
     {
 	plane_apply(m_plane);
@@ -79,7 +84,22 @@ namespace mui
 	return the_kms;
     }
 
-    struct plane_data* KMSScreen::allocate_overlay(const Size& size)
+    /*
+    static uint32_t fb_to_primefd(struct kms_framebuffer* fb)
+    {
+	int prime_fd;
+	int r = drmPrimeHandleToFD(fb->device->fd, fb->handle, DRM_CLOEXEC, &prime_fd);
+	if (r < 0)
+	    printf("cannot get prime-fd for handle\n");
+	else
+	    printf("fb 0x%x: created prime fd %d\n", fb->id, prime_fd);
+
+	return prime_fd;
+    }
+
+*/
+
+    struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format)
     {
 	// TODO
 	static int index = 0;
@@ -88,7 +108,7 @@ namespace mui
 						index++,
 						size.w,
 						size.h,
-						DRM_FORMAT_ARGB8888);
+						format);
 
 	assert(plane);
 	plane_fb_map(plane);

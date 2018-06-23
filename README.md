@@ -36,5 +36,6 @@ Priority 2
 - Radio widget.
 - More grid options.
 - Scroll wheel widget.
+- File open/save.
 
 http://www.peteronion.org.uk/GtkExamples/GladeTutorials.html

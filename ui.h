@@ -18,5 +18,6 @@
 #include "x11screen.h"
 #include "font.h"
 #include "palette.h"
+#include "video.h"
 
 #endif

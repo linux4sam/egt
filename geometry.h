@@ -30,6 +30,20 @@ namespace mui
 
 	int x;
 	int y;
+
+	Point& operator+(const Point& rhs)
+	{
+	    x += rhs.x;
+	    y += rhs.y;
+	    return *this;
+	}
+
+	Point& operator-(const Point& rhs)
+	{
+	    x -= rhs.x;
+	    y -= rhs.y;
+	    return *this;
+	}
     };
 
     std::ostream& operator<<(std::ostream& os, const Point& point);
@@ -96,6 +110,16 @@ namespace mui
 	int y;
 	int w;
 	int h;
+
+	Point point() const
+	{
+	    return Point(x,y);
+	}
+
+	Size size() const
+	{
+	    return Size(w,h);
+	}
 
 	inline void clear()
 	{

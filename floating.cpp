@@ -91,7 +91,7 @@ int main()
 #endif
 
     MyWindow win;
-    win.active(true);
+    win.show();
 
     int f = 2;
 
@@ -133,7 +133,7 @@ int main()
 	Image* image = new Image(os.str(), 0, 0);
 	PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
 	plane->add(image);
-	plane->active(true);
+	plane->show();
 	plane->position(100,100);
 	boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
     }

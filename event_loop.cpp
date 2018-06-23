@@ -117,7 +117,7 @@ namespace mui
 #endif
 	    for (auto& w : windows())
 	    {
-		if (w->active())
+		if (w->visible())
 		    w->draw();
 	    }
 

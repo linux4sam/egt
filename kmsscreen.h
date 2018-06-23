@@ -8,6 +8,7 @@
 #include "screen.h"
 #include "window.h"
 #include "geometry.h"
+#include <drm_fourcc.h>
 
 #ifdef HAVE_LIBPLANES
 #include <planes/kms.h>
@@ -29,7 +30,9 @@ namespace mui
 
 	virtual void position(int x, int y);
 
-	void apply();
+	virtual int gem();
+
+	virtual void apply();
 
 	virtual ~KMSOverlayScreen();
 
@@ -49,7 +52,8 @@ namespace mui
 
 	void flip(const std::vector<Rect>& damage);
 
-	struct plane_data* allocate_overlay(const Size& size);
+	struct plane_data* allocate_overlay(const Size& size,
+					    uint32_t format = DRM_FORMAT_ARGB8888);
 
 	/**
 	 *

@@ -96,7 +96,7 @@ public:
 	// alternate of making the plane the same exact size as the image.
 	m_box = new PlaneWindow(Size(100,200));
 	m_box->add(image);
-	m_box->active(true);
+	m_box->show();
 #endif
 	m_box->position(w()/2 - m_box->w()/2, -110);
 
@@ -142,9 +142,9 @@ static struct ResetTimer : public Timer
 
 } reset_timer;
 
-static struct AnimationTimer : public PeriodicTimer
+static struct MyAnimationTimer : public PeriodicTimer
 {
-    AnimationTimer()
+    MyAnimationTimer()
 	: PeriodicTimer(30)
     {}
 
