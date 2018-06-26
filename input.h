@@ -69,7 +69,6 @@ namespace mui
 	static void timer_callback(int fd, void* data);
 
 	int m_fd;
-	int m_timerfd;
 	bool m_active;
     };
 #endif

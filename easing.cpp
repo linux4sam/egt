@@ -187,27 +187,14 @@ int main()
     label1.fgcolor(Color::WHITE);
     window.add(&label1);
 
-    struct CPUTimer: public PeriodicTimer
-    {
-	CPUTimer(Label& label)
-	    : PeriodicTimer(1000),
-	      m_label(label)
-	{}
-
-	void timeout()
-	{
-	    m_tools.updateCpuUsage();
-
+    Tools tools;
+    PeriodicTimer cputimer(1000);
+    cputimer.add_handler([&label1,&tools]() {
+	    tools.updateCpuUsage();
 	    ostringstream ss;
-	    ss << "CPU: " << (int)m_tools.cpu_usage[0] << "%";
-	    m_label.text(ss.str());
-	}
-
-	Label& m_label;
-	Tools m_tools;
-    };
-
-    CPUTimer cputimer(label1);
+	    ss << "CPU: " << (int)tools.cpu_usage[0] << "%";
+	    label1.text(ss.str());
+	});
     cputimer.start();
 
     animation_timer.start();

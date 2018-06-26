@@ -147,7 +147,7 @@ namespace mui
 
 	    const int sw = cairo_image_surface_get_width(surface);
 	    const int sh = cairo_image_surface_get_height(surface);
-	    const int ss = sw * sh;
+	    //const int ss = sw * sh;
 	    const int dw = cairo_image_surface_get_width(m_surface.get());
 	    const int dh = cairo_image_surface_get_height(m_surface.get());
 	    const int ds = dw * dh;

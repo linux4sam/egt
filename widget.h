@@ -19,6 +19,14 @@
 #include <string>
 #include <vector>
 
+/** @mainpage MUI Home
+ *
+ * @section intro_sec Introduction
+ *
+ * @image html high_level.png
+ * @image html architecture.png
+ */
+
 namespace mui
 {
     enum
@@ -459,6 +467,8 @@ namespace mui
 
     /**
      * Boolean checkbox.
+     *
+     * @todo This should be a ValueWidget<bool>.
      */
     class CheckBox : public Label
     {
@@ -520,15 +530,103 @@ namespace mui
 	uint32_t m_selected;
     };
 
-    class Radial : public Widget
+    /**
+     * A widget that manages a value that must reside between a min and max value.
+     */
+    template<class T>
+    class ValueRangeWidget : public Widget
+    {
+    public:
+
+	ValueRangeWidget(const Point& point, const Size& size, T min, T max, T value = T())
+	    : Widget(point.x, point.y, size.w, size.h),
+	      m_min(min),
+	      m_max(max),
+	      m_value(value)
+	{}
+
+	/**
+	 * Set value.
+	 *
+	 * If the value is above max, the value will be set to max.  If the
+	 * value is beow min, the value will be set to min.
+	 *
+	 * If this results in changing the value, it will damage() the widget.
+	 */
+	virtual void value(T v)
+	{
+	    if (v > m_max)
+		v = m_max;
+
+	    if (v < m_min)
+		v = m_min;
+
+	    if (v != m_value)
+	    {
+		m_value = v;
+		damage();
+	    }
+	}
+
+	/**
+	 * Get the value.
+	 */
+	T value() const { return m_value; }
+
+	virtual ~ValueRangeWidget()
+	{}
+
+    protected:
+	T m_min;
+	T m_max;
+	T m_value;
+    };
+
+    /**
+     * A widget that manages an unbounded value.
+     */
+    template<class T>
+    class ValueWidget : public Widget
+    {
+    public:
+
+	ValueWidget(const Point& point, const Size& size, T value = T())
+	    : Widget(point.x, point.y, size.w, size.h),
+	      m_value(value)
+	{}
+
+	/**
+	 * Set value.
+	 *
+	 * If this results in changing the value, it will damage() the widget.
+	 */
+	virtual void value(T v)
+	{
+	    if (v != m_value)
+	    {
+		m_value = v;
+		damage();
+	    }
+	}
+
+	/**
+	 * Get value.
+	 */
+	T value() const { return m_value; }
+
+	virtual ~ValueWidget()
+	{}
+
+    protected:
+	T m_value;
+    };
+
+    class Radial : public ValueWidget<float>
     {
     public:
 	Radial(const Point&, const Size& size);
 
 	void label(const std::string& label) { m_label = label; }
-
-	// todo
-	void percent(int value) { m_angle = value; damage(); }
 
 	virtual int handle(int event);
 
@@ -536,7 +634,6 @@ namespace mui
 
     protected:
 	std::string m_label;
-	float m_angle;
     };
 
     /**
@@ -611,34 +708,15 @@ namespace mui
 	std::vector<std::vector<Widget*>> m_widgets;
     };
 
-    class ProgressBar : public Widget
+    class ProgressBar : public ValueRangeWidget<int>
     {
     public:
 	ProgressBar(const Point& point = Point(), const Size& size = Size());
 
 	virtual void draw(const Rect& rect);
-
-	/**
-	 * Set the percent, from 0 to 100.
-	 */
-	virtual void percent(int p)
-	{
-	    if (m_percent != p)
-	    {
-		m_percent = p;
-		if (m_percent < 0)
-		    m_percent = 0;
-		else if (m_percent > 100)
-		    m_percent = 100;
-		damage();
-	    }
-	}
-
-    protected:
-	int m_percent;
     };
 
-    class LevelMeter : public ProgressBar
+    class LevelMeter : public ValueRangeWidget<int>
     {
     public:
 	LevelMeter(const Point& point = Point(), const Size& size = Size());
@@ -646,7 +724,10 @@ namespace mui
 	virtual void draw(const Rect& rect);
     };
 
-    class AnalogMeter : public ProgressBar
+    /**
+     * <http://www.peteronion.org.uk/GtkExamples/GladeTutorials.html>
+     */
+    class AnalogMeter : public ValueRangeWidget<int>
     {
     public:
 	AnalogMeter(const Point& point = Point(), const Size& size = Size());
@@ -654,7 +735,7 @@ namespace mui
 	virtual void draw(const Rect& rect);
     };
 
-    class SpinProgress : public ProgressBar
+    class SpinProgress : public ValueRangeWidget<int>
     {
     public:
 	SpinProgress(const Point& point = Point(), const Size& size = Size());
@@ -662,6 +743,7 @@ namespace mui
 	virtual void draw(const Rect& rect);
     };
 
+#ifdef DEVELOPMENT
     class ScrollWheel : public Widget
     {
     public:
@@ -690,6 +772,7 @@ namespace mui
 	int m_moving_x;
 	int m_start_pos;
     };
+#endif
 }
 
 #endif

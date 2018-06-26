@@ -15,7 +15,7 @@ namespace mui
 	std::shared_ptr<cairo_t>;
 
 /**
- *
+ * <https://www.cairographics.org/manual/index.html>
  */
 class Painter
 {

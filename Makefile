@@ -4,7 +4,7 @@ LIBPLANES=y
 KPLOT=n
 GD=n
 IMLIB2=n
-GSTREAMER=y
+GSTREAMER=n
 
 APPS = ui floating widgets easing info reflect paintperf
 

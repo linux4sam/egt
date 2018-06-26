@@ -160,7 +160,7 @@ public:
 	Radial* radial1 = new Radial(Point(800/2-350/2,480/2 - 350/2), Size(350,350));
 	add(radial1);
 	radial1->label(" F");
-	radial1->percent(300);
+	radial1->value(300);
 
 	m_a2 = new WidgetPositionAnimator(radial1,
 					  WidgetPositionAnimator::CORD_Y,

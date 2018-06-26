@@ -1116,13 +1116,9 @@ namespace mui
     {
     }
 
-
     Radial::Radial(const Point& point, const Size& size)
-	: Widget(point.x, point.y, size.w, size.h),
-	  m_angle(-1.0)
-    {
-
-    }
+	: ValueWidget<float>(point, size, -1.0)
+    {}
 
     static int norm(float angle)
     {
@@ -1158,14 +1154,7 @@ namespace mui
 		angle = (angle > 0.0 ? angle : (360.0 + angle));
 		angle = 180 - angle;
 
-		//if (norm(m_angle) > 355 && norm(angle) < 5)
-		//{
-		//}
-		//else
-		//{
-		m_angle = angle;
-		damage();
-		//}
+		value(angle);
 		return 1;
 	    }
 	    break;
@@ -1187,10 +1176,9 @@ namespace mui
 	Color color1(Color::LIGHTGRAY);
 	color1.alpha(0x55);
 
-
 	float radius = w() / 2 - (linew / 2);
 	double angle1 = radians(180, 0);
-	double angle2 = radians(180, m_angle);
+	double angle2 = radians(180, value());
 
 	int a = norm(angle2);
 
@@ -1231,8 +1219,7 @@ namespace mui
     }
 
     ProgressBar::ProgressBar(const Point& point, const Size& size)
-	: Widget(point.x, point.y, size.w, size.h),
-	  m_percent(0)
+	: ValueRangeWidget<int>(point, size, 0, 100, 0)
     {
     }
 
@@ -1253,7 +1240,7 @@ namespace mui
 
 	Color color = palette().color(Palette::HIGHLIGHT);
 	cairo_set_source_rgb(cr.get(), color.redf(), color.greenf(), color.bluef());
-	cairo_rectangle(cr.get(), x(),  y(), w() * m_percent / 100., h());
+	cairo_rectangle(cr.get(), x(),  y(), w() * value() / 100., h());
 	cairo_fill(cr.get());
 
 	cairo_rectangle(cr.get(), x(), y(), w(), h());
@@ -1266,12 +1253,11 @@ namespace mui
 	cairo_set_line_width(cr.get(), 1.0);
 	cairo_stroke(cr.get());
 
-
 	cairo_restore(cr.get());
     }
 
     LevelMeter::LevelMeter(const Point& point, const Size& size)
-	: ProgressBar(point, size)
+	: ValueRangeWidget<int>(point, size, 0, 100, 0)
     {
     }
 
@@ -1281,7 +1267,7 @@ namespace mui
 
 	cairo_save(cr.get());
 
-	int limit = 20 - m_percent / 5;
+	int limit = 20 - value() / 5;
 	int barheight = h() / 20;
 
 	for (int i = 0; i < 20; i++)
@@ -1298,9 +1284,8 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
-
     AnalogMeter::AnalogMeter(const Point& point, const Size& size)
-	: ProgressBar(point, size)
+	: ValueRangeWidget<int>(point, size, 0, 100, 0)
     {
     }
 
@@ -1351,7 +1336,7 @@ namespace mui
 	cairo_stroke(cr.get());
 
 	// Retrieve the new slider value
-	float value = m_percent;
+	float value = this->value();
 
 	cairo_set_source_rgb(cr.get(), 1.0, 0, 0);
 	cairo_set_line_width(cr.get(), 1.5);
@@ -1367,7 +1352,7 @@ namespace mui
     }
 
     SpinProgress::SpinProgress(const Point& point, const Size& size)
-	: ProgressBar(point, size)
+	: ValueRangeWidget<int>(point, size, 0, 100, 0)
     {
     }
 
@@ -1379,7 +1364,7 @@ namespace mui
 
 	float radius = w() / 2 - (linew / 2);
 	double angle1 = radians(180, 0);
-	double angle2 = radians(180, m_percent / 100. * 360.);
+	double angle2 = radians(180, value() / 100. * 360.);
 
 	Point c = center();
 
@@ -1402,7 +1387,7 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
-
+#ifdef DEVELOPMENT
     ScrollWheel::ScrollWheel(const Point& point, const Size& size)
 	: Widget(point.x, point.y, size.w, size.h),
 	  m_pos(0),
@@ -1489,4 +1474,5 @@ namespace mui
 
 	cairo_restore(cr.get());
     }
+#endif
 }

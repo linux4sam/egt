@@ -2,7 +2,6 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #include "event_loop.h"
 #include "geometry.h"
 #include "input.h"
@@ -79,7 +78,6 @@ namespace mui
 		case REL_X:
 		    dx += value;
 		    break;
-
 		case REL_Y:
 		    dy += value;
 		    break;
@@ -160,32 +158,22 @@ namespace mui
     static struct tsdev *ts;
     static struct ts_sample_mt **samp_mt;
 
-    //bool active = false;
-    //static struct timeval m_last_time = {0,0};
-
-    //static inline int diff_ms(const timeval& t1, const timeval& t2)
-    //{
-//	return (((t1.tv_sec - t2.tv_sec) * 1000000) +
-//		(t1.tv_usec - t2.tv_usec))/1000;
-    //  }
-
     InputTslib::InputTslib(const string& path)
 	: m_fd(-1),
-	  m_timerfd(-1),
 	  m_active(false)
     {
 	const int NONBLOCKING = 1;
-	int i;
-
 	ts = ts_setup(path.c_str(), NONBLOCKING);
 	assert(ts);
 
 	samp_mt = (struct ts_sample_mt **)malloc(SAMPLES * sizeof(struct ts_sample_mt *));
 	assert(samp_mt);
 
-	for (i = 0; i < SAMPLES; i++) {
+	for (int i = 0; i < SAMPLES; i++)
+	{
 	    samp_mt[i] = (struct ts_sample_mt *)calloc(SLOTS, sizeof(struct ts_sample_mt));
-	    if (!samp_mt[i]) {
+	    if (!samp_mt[i])
+	    {
 		free(samp_mt);
 		ts_close(ts);
 		assert(0);
@@ -193,16 +181,6 @@ namespace mui
 	}
 
 	EventLoop::add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
-    }
-
-    void InputTslib::timer_callback(int fd, void* data)
-    {
-	InputTslib* obj = reinterpret_cast<InputTslib*>(data);
-	assert(obj);
-	obj->m_active = false;
-	main_window()->handle(EVT_MOUSE_UP);
-	dbg << "mouse up " << pointer_abs_pos << endl;
-	obj->m_timerfd = -1;
     }
 
     void InputTslib::process(int fd, uint32_t mask, void *data)
@@ -220,14 +198,6 @@ namespace mui
 	}
 
 	bool move = false;
-	bool start = false;
-
-	if (obj->m_timerfd > 0)
-	{
-	    EventLoop::rem_fd(obj->m_timerfd);
-	    close(obj->m_timerfd);
-	    obj->m_timerfd = -1;
-	}
 
 	for (j = 0; j < ret; j++)
 	{
@@ -258,19 +228,27 @@ namespace mui
 
 		if (obj->m_active)
 		{
-		    pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
-		    move = true;
-		    start = true;
+		    if (samp_mt[j][i].pen_down == 0)
+		    {
+			pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+			obj->m_active = false;
+			main_window()->handle(EVT_MOUSE_UP);
+			dbg << "mouse up " << pointer_abs_pos << endl;
+		    }
+		    else
+		    {
+			pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+			move = true;
+		    }
 		}
 		else
 		{
-		    if (samp_mt[j][i].pressure > 0 && samp_mt[j][i].pen_down == 1)
+		    if (samp_mt[j][i].pen_down == 1)
 		    {
 			pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
 			main_window()->handle(EVT_MOUSE_DOWN);
 			dbg << "mouse down " << pointer_abs_pos << endl;
 			obj->m_active = true;
-			start = true;
 		    }
 		}
 	    }
@@ -280,11 +258,6 @@ namespace mui
 	{
 	    dbg << "mouse move " << pointer_abs_pos << endl;
 	    main_window()->handle(EVT_MOUSE_MOVE);
-	}
-
-	if (start)
-	{
-	    obj->m_timerfd = EventLoop::start_timer(200, InputTslib::timer_callback, obj);
 	}
     }
 

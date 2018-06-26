@@ -145,8 +145,8 @@ int main()
     PeriodicTimer cputimer(1000);
     cputimer.add_handler([&tools,&lp1,&am1]() {
 	    tools.updateCpuUsage();
-	    lp1.percent(tools.cpu_usage[0]);
-	    am1.percent(tools.cpu_usage[0]);
+	    lp1.value(tools.cpu_usage[0]);
+	    am1.value(tools.cpu_usage[0]);
 	});
     cputimer.start();
 
