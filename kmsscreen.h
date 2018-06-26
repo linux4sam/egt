@@ -8,9 +8,9 @@
 #include "screen.h"
 #include "window.h"
 #include "geometry.h"
-#include <drm_fourcc.h>
 
 #ifdef HAVE_LIBPLANES
+#include <drm_fourcc.h>
 #include <planes/kms.h>
 
 struct plane_data;

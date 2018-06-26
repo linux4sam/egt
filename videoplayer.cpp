@@ -46,11 +46,11 @@ public:
 	Label* label = new Label("Blank Screen", Point(0, 60), Size(800, 480));
 	add(label);
 
-	//ProgressBar* progress = new ProgressBar(Point(10, 10), Size(200, 30));
-	//add(progress);
-
-	SpinProgress* progress = new SpinProgress(Point(10, 10), Size(50, 50));
+	ProgressBar* progress = new ProgressBar(Point(10, 10), Size(200, 30));
 	add(progress);
+
+	//SpinProgress* progress = new SpinProgress(Point(10, 10), Size(50, 50));
+	//add(progress);
 
 	ProgressAnimation* ap = new ProgressAnimation(progress);
 	ap->start();

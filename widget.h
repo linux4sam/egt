@@ -26,14 +26,13 @@ namespace mui
 	/**
 	 * Do not draw the background color.
 	 *
-	 * The background will essentially be transparent. This can also
-	 * be useful in cases where a widget in the window will occupy
-	 * the entire window and it doesn't make sense to draw the background.
+	 * The background color is usually drawn by default. The background will
+	 * essentially be transparent.
 	 */
 	FLAG_NO_BACKGROUND = (1<<0),
 
 	/**
-	 * This is an overlay window.
+	 * This is an overlay plane window.
 	 */
 	FLAG_PLANE_WINDOW = (1<<1),
 
@@ -47,6 +46,9 @@ namespace mui
 	 */
 	FLAG_FULL_REDRAW = (1<<3),
 
+	/**
+	 * This is a window widget.
+	 */
 	FLAG_WINDOW = (1<<4),
 
 	/**
@@ -54,7 +56,6 @@ namespace mui
 	 */
 	FLAG_WINDOW_DEFAULT = FLAG_WINDOW,
     };
-
 
     /**
      * Base widget class.
@@ -65,11 +66,17 @@ namespace mui
 
 	enum
 	{
-	    ALIGN_CENTER = 1<<0,
-	    ALIGN_LEFT = 1<<1,
-	    ALIGN_RIGHT = 1<<2,
-	    ALIGN_TOP = 1<<3,
-	    ALIGN_BOTTOM = 1<<4,
+	    /**
+	     * Center alignment is a weak alignment both horizontal and
+	     * vertical. To break one of those dimensions to another
+	     * alignment, specify it in addiiton to ALIGN_CENTER.  If both
+	     * are broken, ALIGN_CENTER has no effect.
+	     */
+	    ALIGN_CENTER = (1<<0),
+	    ALIGN_LEFT = (1<<1),
+	    ALIGN_RIGHT = (1<<2),
+	    ALIGN_TOP = (1<<3),
+	    ALIGN_BOTTOM = (1<<4),
 	};
 
 	/**
@@ -96,23 +103,27 @@ namespace mui
 	 * Set the position of the widget.
 	 */
 	virtual void position(int x, int y);
+	inline void position(const Point& point) { position(point.x, point.y); }
 
 	/**
 	 * Set the size of the widget.
 	 */
 	virtual void size(int w, int h);
+	inline void size(const Size& s) { size(s.w, s.h); }
 
 	/**
 	 * Resize the widget.
 	 * This will cause a redraw of the widget.
 	 */
 	virtual void resize(int w, int h);
+	inline void resize(const Size& s) { resize(s.w, s.h); }
 
 	/**
 	 * Move the widget.
 	 * This will cause a redraw of the widget.
 	 */
 	virtual void move(int x, int y);
+	inline void move(const Point& point) { move(point.x, point.y); }
 
 	/**
 	 * Hide the widget.  This will prevent draw() calls.
@@ -631,6 +642,14 @@ namespace mui
     {
     public:
 	LevelMeter(const Point& point = Point(), const Size& size = Size());
+
+	virtual void draw(const Rect& rect);
+    };
+
+    class AnalogMeter : public ProgressBar
+    {
+    public:
+	AnalogMeter(const Point& point = Point(), const Size& size = Size());
 
 	virtual void draw(const Rect& rect);
     };

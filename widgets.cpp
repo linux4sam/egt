@@ -14,17 +14,49 @@
 using namespace std;
 using namespace mui;
 
-class MyWindow : public SimpleWindow
+class Keyboard : public PlaneWindow
 {
 public:
-    MyWindow()
-	: SimpleWindow(Size(800,480))
-    {}
-
-    int handle(int event)
+    Keyboard()
+	: PlaneWindow(Size(800, 200)),
+	  m_grid(0, 0, 800, 200, 10, 4, 5)
     {
-	return SimpleWindow::handle(event);
+	Palette p(palette());
+	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+	set_palette(p);
+
+	vector<vector<string>> buttons = {
+	    {"q","w","e","r","t","y","u","i","o","p" },
+	    {"", "a","s","d","f","g","h","j","k","l" },
+	    {"icons/arrow_up.png","z","x","c","v","b","n","m", "", "icons/shape_move_back.png"},
+	    {"123", ",","","", "space", "","","","","."}
+	};
+
+	for (size_t r = 0; r < buttons.size(); r++)
+	{
+	    for (size_t c = 0; c < buttons[r].size(); c++)
+	    {
+		string label = buttons[r][c];
+		if (label.empty())
+		    continue;
+
+		Button* b;
+
+		if (label.find(".png") != string::npos)
+		    b = new ImageButton(label);
+		else
+		    b = new Button(label);
+
+		add(b);
+		m_grid.add(b, c, r);
+	    }
+	}
+
+	m_grid.reposition();
     }
+
+protected:
+    StaticGrid m_grid;
 };
 
 int main()
@@ -40,7 +72,7 @@ int main()
     X11Screen screen(Size(800,480));
 #endif
 
-    MyWindow win1;
+    SimpleWindow win1(Size(800,480));
 
     Label label1("left align", Point(100,50), Size(200,40), Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
     win1.add(&label1);
@@ -106,24 +138,20 @@ int main()
     LevelMeter lp1(Point(600, 250), Size(50,100));
     win1.add(&lp1);
 
-    struct CPUTimer: public PeriodicTimer
-    {
-	CPUTimer(LevelMeter& label)
-	    : PeriodicTimer(1000),
-	      m_label(label)
-	{}
+    AnalogMeter am1(Point(600, 280), Size(180,180));
+    win1.add(&am1);
 
-	void timeout()
-	{
-	    m_tools.updateCpuUsage();
-	    m_label.percent(m_tools.cpu_usage[0]);
-	}
-
-	LevelMeter& m_label;
-	Tools m_tools;
-    } cputimer(lp1);
-
+    Tools tools;
+    PeriodicTimer cputimer(1000);
+    cputimer.add_handler([&tools,&lp1,&am1]() {
+	    tools.updateCpuUsage();
+	    lp1.percent(tools.cpu_usage[0]);
+	    am1.percent(tools.cpu_usage[0]);
+	});
     cputimer.start();
+
+    //Keyboard keyboard;
+    //keyboard.show();
 
     return EventLoop::run();
 }

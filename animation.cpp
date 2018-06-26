@@ -337,7 +337,7 @@ namespace mui
     {
 	if (!m_animation.next())
 	{
-	    PeriodicTimer::stop();
+	    PeriodicTimer::cancel();
 	}
     }
 

@@ -43,6 +43,8 @@ namespace mui
     {
 	EventLoop::init();
 
+	assert(fd >= 0);
+
 	event_source *source;
 	epoll_event ep;
 

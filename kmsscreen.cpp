@@ -84,21 +84,6 @@ namespace mui
 	return the_kms;
     }
 
-    /*
-    static uint32_t fb_to_primefd(struct kms_framebuffer* fb)
-    {
-	int prime_fd;
-	int r = drmPrimeHandleToFD(fb->device->fd, fb->handle, DRM_CLOEXEC, &prime_fd);
-	if (r < 0)
-	    printf("cannot get prime-fd for handle\n");
-	else
-	    printf("fb 0x%x: created prime fd %d\n", fb->id, prime_fd);
-
-	return prime_fd;
-    }
-
-*/
-
     struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format)
     {
 	// TODO
@@ -119,7 +104,7 @@ namespace mui
 	cout << "overlay dumb buffer " << plane_width(plane) << "," <<
 	    plane_height(plane) << endl;
 
-	plane_apply(plane);
+	//plane_apply(plane);
 
 	return plane;
     }

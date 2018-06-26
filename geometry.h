@@ -11,10 +11,11 @@
 
 namespace mui
 {
-
-/**
- * Simple x,y coordinate.
- */
+    /**
+     * Simple x,y coordinate.
+     *
+     * @image html coordsys.png
+     */
     class Point
     {
     public:
@@ -48,9 +49,9 @@ namespace mui
 
     std::ostream& operator<<(std::ostream& os, const Point& point);
 
-/**
- * Simple width,height size.
- */
+    /**
+     * Simple width,height size.
+     */
     class Size
     {
     public:
@@ -70,11 +71,12 @@ namespace mui
 
     std::ostream& operator<<(std::ostream& os, const Size& size);
 
-/**
- * A point and a size from that point.
- *
- * All rectangle points are at the top left.
- */
+    /**
+     * A rectangle. A point and a size from that same point.
+     *
+     * All rectangle points are at the top left.
+     * @image html coordsys.png
+     */
     class Rect
     {
     public:
@@ -91,7 +93,6 @@ namespace mui
 	      w(size.w),
 	      h(size.h)
 	{
-
 	    assert(w >= 0);
 	    assert(h >= 0);
 	}
@@ -143,6 +144,10 @@ namespace mui
 		    lhs.y <= rhs.y + rhs.h && lhs.y + lhs.h >= rhs.y);
 	}
 
+	/**
+	 * Merge two rectangles together into one super rectangle that contains
+	 * them both.
+	 */
 	static inline Rect merge(const Rect& lhs, const Rect& rhs)
 	{
 	    int xmin = std::min(lhs.x, rhs.x);

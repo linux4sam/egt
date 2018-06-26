@@ -18,10 +18,17 @@ namespace mui
 
     void Timer::start()
     {
+	assert(m_fd < 0);
 	m_fd = EventLoop::start_timer(m_duration, Timer::timer_callback, this);
     }
 
-    void Timer::stop()
+    void Timer::start(uint64_t duration)
+    {
+	m_duration = duration;
+	start();
+    }
+
+    void Timer::cancel()
     {
 	if (m_fd >= 0)
 	{
@@ -38,9 +45,15 @@ namespace mui
 	timer->timeout();
     }
 
+    void Timer::timeout()
+    {
+	for (auto& callback : m_callbacks)
+	    callback();
+    }
+
     Timer::~Timer()
     {
-	stop();
+	cancel();
     }
 
     PeriodicTimer::PeriodicTimer(uint64_t duration)
@@ -53,7 +66,7 @@ namespace mui
 	m_fd = EventLoop::start_periodic_timer(m_duration, PeriodicTimer::timer_callback, this);
     }
 
-    void PeriodicTimer::stop()
+    void PeriodicTimer::cancel()
     {
 	if (m_fd >= 0)
 	{
@@ -65,7 +78,7 @@ namespace mui
 
     PeriodicTimer::~PeriodicTimer()
     {
-	stop();
+	cancel();
     }
 
 }

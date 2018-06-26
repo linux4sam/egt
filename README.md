@@ -37,5 +37,29 @@ Priority 2
 - More grid options.
 - Scroll wheel widget.
 - File open/save.
+- Scroll window.
 
+## Widgets
+- MessageBox
+- Popup
+- Radio
+- StaticGrid
+- ScrollWheel
+- Radial
+- SimpleText
+- ListBox
+- Label
+  - CheckBox
+- Button
+  - ImageButton
+- Image
+  - ImageLabel
+- File Open/Save
+- ScrolledWindow
+- Combo
+- Slider
+- ProgressBar
+  - LevelMeter
+  - AnalogMeter
+  - SpingProgress
 http://www.peteronion.org.uk/GtkExamples/GladeTutorials.html

@@ -10,10 +10,17 @@
 #include <linux/fb.h>
 #include <unistd.h>
 #include <iostream>
+#ifdef HAVE_IMLIB2
+#include <Imlib2.h>
+#endif
 
 using namespace std;
 
 #define BACK_BUFFER
+
+#ifdef HAVE_IMLIB2
+//#define USE_IMLIB2
+#endif
 
 namespace mui
 {
@@ -76,6 +83,46 @@ namespace mui
     void IScreen::blit(cairo_surface_t* surface, int srcx, int srcy, int srcw,
 		       int srch, int dstx, int dsty, bool blend)
     {
+#ifdef USE_IMLIB2
+	cairo_surface_flush(surface);
+	cairo_surface_flush(m_surface.get());
+
+	uint32_t* src = (uint32_t*)cairo_image_surface_get_data(surface);
+	uint32_t* dst = (uint32_t*)cairo_image_surface_get_data(m_surface.get());
+
+	const int sw = cairo_image_surface_get_width(surface);
+	const int sh = cairo_image_surface_get_height(surface);
+	const int ss = sw * sh;
+	const int dw = cairo_image_surface_get_width(m_surface.get());
+	const int dh = cairo_image_surface_get_height(m_surface.get());
+	const int ds = dw * dh;
+
+	Imlib_Image image;
+	image = imlib_create_image_using_data(sw,sh,src);
+	assert(image);
+	imlib_context_set_image(image);
+	imlib_image_set_has_alpha(1);
+
+	Imlib_Image buffer;
+	buffer = imlib_create_image_using_data(dw,dh,dst);
+	assert(buffer);
+
+	imlib_context_set_image(buffer);
+
+	//imlib_image_set_format();
+	imlib_context_set_blend(1);
+	//imlib_blend_image_onto_image(image, 0,
+	//			     srcx, srcy, srcw, srch,
+	//			     dstx, dsty, srcw, srch);
+	imlib_blend_image_onto_image(image, 0,
+				     0, 0, sw, sh,
+				     dstx, dsty, sw, sh);
+	imlib_free_image();
+	imlib_context_set_image(image);
+	imlib_free_image();
+
+	cairo_surface_mark_dirty(m_surface.get());
+#else
 	if (true || !blend)
 	{
 	    cairo_save(m_cr.get());
@@ -114,7 +161,7 @@ namespace mui
 		const int soff_ = sy * sw;
 
 		if (sy < 0 || sy >= sh)
-		  continue;
+		    continue;
 
 		for (int x = srcx; x < w;x++)
 		{
@@ -135,27 +182,28 @@ namespace mui
 
 		    //if (((*SBUF >> 24) & 0xff) == 255)
 		    //{
-			//*DBUF = *SBUF;
+		    //*DBUF = *SBUF;
 		    //}
 		    //else
 		    //{
-			uint32_t* d = DBUF;
-			*d = blendPreMulAlpha2(*d, *SBUF);
+		    uint32_t* d = DBUF;
+		    *d = blendPreMulAlpha2(*d, *SBUF);
 
-			//}
+		    //}
 		}
 	    }
 
 	    cairo_surface_mark_dirty(m_surface.get());
 	}
+#endif
     }
 
     void IScreen::fill(const Color& color)
     {
 	cairo_save(m_cr.get());
 	cairo_set_source_rgba(m_cr.get(),
-			     color.redf(),
-			     color.greenf(),
+			      color.redf(),
+			      color.greenf(),
 			      color.bluef(),
 			      color.alphaf());
 	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
@@ -207,7 +255,7 @@ namespace mui
 #ifdef BACK_BUFFER
 	//cout << "flip" << endl;
 	//greenscreen(damage);
-
+#ifndef USE_IMLIB2
 	//int total = 0;
 	//cairo_save(m_cr_back.get());
 	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
@@ -218,9 +266,44 @@ namespace mui
 	    //total += (d.w * d.h);
 	    cairo_rectangle(m_cr_back.get(), d.x, d.y, d.w, d.h);
 	}
-	//cairo_clip(m_cr_back.get());
 	cairo_fill(m_cr_back.get());
 	//cairo_restore(m_cr_back.get());
+#else
+	uint32_t* src = (uint32_t*)cairo_image_surface_get_data(m_surface.get());
+	uint32_t* dst = (uint32_t*)cairo_image_surface_get_data(m_surface_back.get());
+
+	const int sw = cairo_image_surface_get_width(m_surface.get());
+	const int sh = cairo_image_surface_get_height(m_surface.get());
+	const int ss = sw * sh;
+	const int dw = cairo_image_surface_get_width(m_surface_back.get());
+	const int dh = cairo_image_surface_get_height(m_surface_back.get());
+	const int ds = dw * dh;
+
+	Imlib_Image image;
+	image = imlib_create_image_using_data(sw,sh,src);
+	assert(image);
+	imlib_context_set_image(image);
+	imlib_image_set_has_alpha(0);
+
+	Imlib_Image buffer;
+	buffer = imlib_create_image_using_data(dw,dh,dst);
+	assert(buffer);
+
+	imlib_context_set_image(buffer);
+	imlib_context_set_blend(0);
+	for (const auto& d: damage)
+	{
+	    imlib_blend_image_onto_image(image, 0,
+					 d.x, d.y, d.w, d.h,
+					 d.x, d.y, d.w, d.h);
+	}
+
+	imlib_free_image();
+	imlib_context_set_image(image);
+	imlib_free_image();
+
+	cairo_surface_mark_dirty(m_surface_back.get());
+#endif
 
 	cairo_surface_flush(m_surface_back.get());
 

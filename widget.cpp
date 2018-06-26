@@ -13,6 +13,7 @@
 #include <cairo.h>
 #include <iostream>
 #include "window.h"
+#include "painter.h"
 
 using namespace std;
 
@@ -98,10 +99,10 @@ namespace mui
 	double degrees = M_PI / 180.0;
 
 	cairo_new_sub_path (cr.get());
-	cairo_arc (cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-	cairo_arc (cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-	cairo_arc (cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-	cairo_arc (cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+	cairo_arc(cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
+	cairo_arc(cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
+	cairo_arc(cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
+	cairo_arc(cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
 	cairo_close_path (cr.get());
 
 	cairo_set_source_rgba(cr.get(),
@@ -116,8 +117,8 @@ namespace mui
 			      border.greenf(),
 			      border.bluef(),
 			      border.alphaf());
-	cairo_set_line_width (cr.get(), 1.0);
-	cairo_stroke (cr.get());
+	cairo_set_line_width(cr.get(), 1.0);
+	cairo_stroke(cr.get());
 
 	cairo_restore(cr.get());
     }
@@ -218,10 +219,10 @@ namespace mui
 	double degrees = M_PI / 180.0;
 
 	cairo_new_sub_path (cr.get());
-	cairo_arc (cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-	cairo_arc (cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-	cairo_arc (cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-	cairo_arc (cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+	cairo_arc(cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
+	cairo_arc(cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
+	cairo_arc(cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
+	cairo_arc(cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
 	cairo_close_path (cr.get());
 
 	cairo_pattern_t *pat;
@@ -380,18 +381,22 @@ namespace mui
 	if (align & ALIGN_BOTTOM)
 	    p.y = y() + h() - height - standoff;
 
-	paint_surface_with_drop_shadow(screen()->context().get(),
-				       image.get(),
-				       5,
-				       0.2,
-				       0.4,
-				       p.x,
-				       p.y,
-				       width,
-				       height,
-				       p.x,
-				       p.y);
+	/*
+	  paint_surface_with_drop_shadow(screen()->context().get(),
+	  image.get(),
+	  5,
+	  0.2,
+	  0.4,
+	  p.x,
+	  p.y,
+	  width,
+	  height,
+	  p.x,
+	  p.y);
+	*/
 
+	Painter painter(screen()->context());
+	painter.draw_image(p, image);
 	//screen()->blit(image.get(), p.x, p.y, width, height, p.x, p.y);
     }
 
@@ -407,10 +412,6 @@ namespace mui
 
 	m_cache.insert(std::make_pair(1.0 * 100, m_image));
 
-	//position(x, y);
-
-	//size(cairo_image_surface_get_width(m_image.get()),
-	//   cairo_image_surface_get_height(m_image.get()));
 	m_box = Rect(x,y,
 		     cairo_image_surface_get_width(m_image.get()),
 		     cairo_image_surface_get_height(m_image.get()));
@@ -497,7 +498,9 @@ namespace mui
 
     void Image::draw(const Rect& rect)
     {
-	screen()->blit(m_image.get(), rect.x, rect.y, rect.w, rect.h, box().x, box().y);
+	Painter painter(screen()->context());
+	painter.draw_image(rect, box().point(), m_image);
+	//screen()->blit(m_image.get(), rect.x, rect.y, rect.w, rect.h, box().x, box().y);
     }
 
     Image::~Image()
@@ -618,10 +621,10 @@ namespace mui
 	double degrees = M_PI / 180.0;
 
 	cairo_new_sub_path (cr.get());
-	cairo_arc (cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-	cairo_arc (cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-	cairo_arc (cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-	cairo_arc (cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+	cairo_arc(cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
+	cairo_arc(cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
+	cairo_arc(cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
+	cairo_arc(cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
 	cairo_close_path (cr.get());
 
 	// fill
@@ -718,13 +721,37 @@ namespace mui
 	switch (event)
 	{
 	case EVT_MOUSE_DOWN:
+	{
+	    Rect bounding;
+
 	    if (m_orientation == ORIENTATION_HORIZONTAL)
-		m_moving_x = mouse_position().x;
+	    {
+		bounding = Rect(x() + normalize(m_pos) + 1,
+				y() + 1,
+				h() - 2,
+				h() - 2);
+	    }
 	    else
-		m_moving_x = mouse_position().y;
-	    m_start_pos = position();
-	    active(true);
-	    return 1;
+	    {
+		bounding = Rect(x() + 1,
+				y() + normalize(m_pos) + 1,
+				w() - 2,
+				w() - 2);
+	    }
+
+	    if (Rect::point_inside(mouse_position(), bounding))
+	    {
+		if (m_orientation == ORIENTATION_HORIZONTAL)
+		    m_moving_x = mouse_position().x;
+		else
+		    m_moving_x = mouse_position().y;
+		m_start_pos = position();
+		active(true);
+		return 1;
+	    }
+
+	    break;
+	}
 	case EVT_MOUSE_UP:
 	    active(false);
 	    return 1;
@@ -1126,7 +1153,7 @@ namespace mui
 	    {
 		Point c = center();
 		float angle = atan2f(mouse_position().y - c.y,
-				 mouse_position().x - c.x);
+				     mouse_position().x - c.x);
 		angle = angle * (180.0 / M_PI);
 		angle = (angle > 0.0 ? angle : (360.0 + angle));
 		angle = 180 - angle;
@@ -1136,9 +1163,9 @@ namespace mui
 		//}
 		//else
 		//{
-		    m_angle = angle;
-		    damage();
-		    //}
+		m_angle = angle;
+		damage();
+		//}
 		return 1;
 	    }
 	    break;
@@ -1182,7 +1209,7 @@ namespace mui
 			      color1.redf(),
 			      color1.greenf(),
 			      color1.bluef(),
-					      color1.alphaf());
+			      color1.alphaf());
 	cairo_set_line_width(cr.get(), linew);
 
 	cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
@@ -1243,7 +1270,7 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
-        LevelMeter::LevelMeter(const Point& point, const Size& size)
+    LevelMeter::LevelMeter(const Point& point, const Size& size)
 	: ProgressBar(point, size)
     {
     }
@@ -1271,6 +1298,73 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
+
+    AnalogMeter::AnalogMeter(const Point& point, const Size& size)
+	: ProgressBar(point, size)
+    {
+    }
+
+    void AnalogMeter::draw(const Rect& rect)
+    {
+	auto cr = screen()->context();
+
+	cairo_save(cr.get());
+
+	cairo_set_source_rgb(cr.get(), 0, 0, 0);
+	cairo_set_line_width(cr.get(), 1.0);
+
+        // Set origin as middle of bottom edge of the drawing area.
+	// Window is not resizable so "magic numbers" will work here.
+	cairo_translate(cr.get(),x()+w()/2,y()+h());
+
+	float hw = w() / 2.0 - 40.0;
+
+	// Draw the black radial scale marks and labels
+	for(double marks = 0.0; marks <= 100.0; marks += 10.0)
+	{
+	    // Draw the radial marks
+	    cairo_move_to(cr.get(),
+			  hw * cos(M_PI * marks * 0.01),
+			  -hw * sin(M_PI * marks * 0.01) );
+	    cairo_line_to(cr.get(),
+			  (hw + 10.0) * cos(M_PI * marks * 0.01),
+			  -(hw + 10.0) * sin(M_PI * marks * 0.01) );
+
+	    // Set the text to print
+	    char text[10];
+	    sprintf(text,"%2.0f", marks);
+
+	    cairo_text_extents_t textext;
+	    cairo_select_font_face(cr.get(), "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+	    cairo_set_font_size(cr.get(), 16);
+	    cairo_text_extents(cr.get(),text, &textext);
+
+	    int width = textext.width;
+	    int height = textext.height;
+	    // Position the text at the end of the radial marks
+	    cairo_move_to(cr.get(),
+			  (-(hw + 30.0) * cos(M_PI * marks * 0.01)) - ((double)width/2.0),
+			  (-(hw + 30.0) * sin(M_PI * marks * 0.01)) + ((double)height/2.0));
+
+	    cairo_show_text(cr.get(), text);
+	}
+	cairo_stroke(cr.get());
+
+	// Retrieve the new slider value
+	float value = m_percent;
+
+	cairo_set_source_rgb(cr.get(), 1.0, 0, 0);
+	cairo_set_line_width(cr.get(), 1.5);
+
+	// Draw the meter pointer
+	cairo_move_to(cr.get(), 0.0,0.0);
+	cairo_line_to(cr.get(),
+		      -hw * cos(M_PI *value * 0.01),
+		      -hw * sin(M_PI *value * 0.01));
+	cairo_stroke(cr.get());
+
+	cairo_restore(cr.get());
+    }
 
     SpinProgress::SpinProgress(const Point& point, const Size& size)
 	: ProgressBar(point, size)
