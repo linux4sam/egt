@@ -6,7 +6,7 @@ GD=n
 IMLIB2=n
 GSTREAMER=n
 
-APPS = ui floating widgets easing info reflect paintperf
+APPS = ui floating widgets easing info reflect paintperf space
 
 .SUFFIXES: .o .cpp
 
@@ -147,7 +147,17 @@ $(videoplayer_objs): $(headers)
 videoplayer: $(videoplayer_objs)
 	$(CXX) $(CXXFLAGS) $(videoplayer_objs) -o $@ $(LDLIBS)
 
+space_objs = space.o $(common_objs)
+
+space: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
+space: LDLIBS += $(shell pkg-config $(DEPS) --libs)
+
+$(space_objs): $(headers)
+
+space: $(space_objs)
+	$(CXX) $(CXXFLAGS) $(space_objs) -o $@ $(LDLIBS)
+
 clean:
 	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
 		$(info_objs) $(reflect_objs) $(paintperf_objs) \
-		$(videoplayer_objs) $(APPS)
+		$(videoplayer_objs) $(space_objs) $(APPS)

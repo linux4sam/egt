@@ -24,6 +24,7 @@ namespace mui
 	SimpleWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT);
 
 	void add(Widget* widget);
+	void remove(Widget* widget);
 
 	virtual void enter()
 	{

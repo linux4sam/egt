@@ -25,7 +25,7 @@ struct ProgressAnimation : public AnimationTimer
 
     virtual void step(int value)
     {
-	m_progress->percent(value);
+	m_progress->value(value);
     }
 
     ProgressBar* m_progress;

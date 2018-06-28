@@ -14,6 +14,7 @@
 #include <iostream>
 #include "window.h"
 #include "painter.h"
+#include <sstream>
 
 using namespace std;
 
@@ -403,96 +404,130 @@ namespace mui
     Widget::~Widget()
     {}
 
+    /**
+     * Internal image cache.
+     *
+     * Provides an in-memory cache for images based on filename and scale. This
+     * prevents multiple attempts at loading the same file as well as rescaling
+     * the image to the same scale multiple times.
+     */
+    class ImageCache
+    {
+    public:
+
+	shared_cairo_surface_t get(const std::string& filename, float scale = 1.0)
+	{
+	    scale = ImageCache::round(scale, 0.01);
+
+	    string name = id(filename,scale);
+
+	    auto i = m_cache.find(name);
+	    if (i != m_cache.end())
+		return i->second;
+
+	    cout << "image cache miss " << name << endl;
+
+	    shared_cairo_surface_t image;
+
+	    if (scale == 1.0)
+		image = shared_cairo_surface_t(cairo_image_surface_create_from_png(filename.c_str()), cairo_surface_destroy);
+	    else
+	    {
+		shared_cairo_surface_t back = get(filename, 1.0);
+
+		double width = cairo_image_surface_get_width(back.get());
+		double height = cairo_image_surface_get_height(back.get());
+
+		image = scale_surface(back,
+				      width, height,
+				      width * scale,
+				      height * scale);
+	    }
+
+	    m_cache.insert(std::make_pair(name, image));
+
+	    return image;
+	}
+
+	void clear()
+	{
+	    m_cache.clear();
+	}
+
+    protected:
+
+        static float round(float v, float fraction)
+	{
+	    return floor(v) + floor( (v-floor(v))/fraction) * fraction;
+	}
+
+	string id(const string& filename, float scale)
+	{
+	    ostringstream ss;
+	    ss << filename << "-" << scale * 100.;
+
+	    return ss.str();
+	}
+
+	static shared_cairo_surface_t
+	scale_surface(shared_cairo_surface_t old_surface,
+		      int old_width, int old_height,
+		      int new_width, int new_height)
+	{
+	    auto new_surface = shared_cairo_surface_t(cairo_surface_create_similar(old_surface.get(),
+										   CAIRO_CONTENT_COLOR_ALPHA,
+										   new_width,
+										   new_height),
+						      cairo_surface_destroy);
+	    auto cr = shared_cairo_t(cairo_create(new_surface.get()), cairo_destroy);
+
+	    /* Scale *before* setting the source surface (1) */
+	    cairo_scale(cr.get(),
+			(double)new_width / old_width,
+			(double)new_height / old_height);
+	    cairo_set_source_surface(cr.get(), old_surface.get(), 0, 0);
+
+	    /* To avoid getting the edge pixels blended with 0 alpha, which would
+	     * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)
+	     */
+	    cairo_pattern_set_extend(cairo_get_source(cr.get()), CAIRO_EXTEND_REFLECT);
+
+	    /* Replace the destination with the source instead of overlaying */
+	    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
+
+	    /* Do the actual drawing */
+	    cairo_paint(cr.get());
+
+	    return new_surface;
+	}
+
+	std::map<std::string,shared_cairo_surface_t> m_cache;
+    };
+
+    static ImageCache image_cache;
+
     Image::Image(const string& filename, int x, int y)
 	: m_filename(filename),
 	  m_scale(1.0)
     {
-	m_image = shared_cairo_surface_t(cairo_image_surface_create_from_png(filename.c_str()), cairo_surface_destroy);
+	m_image = image_cache.get(filename, 1.0);
 	assert(m_image.get());
-
-	m_cache.insert(std::make_pair(1.0 * 100, m_image));
 
 	m_box = Rect(x,y,
 		     cairo_image_surface_get_width(m_image.get()),
 		     cairo_image_surface_get_height(m_image.get()));
-
-
-	m_back = shared_cairo_surface_t(cairo_surface_create_similar(m_image.get(),
-								     CAIRO_CONTENT_COLOR_ALPHA,
-								     cairo_image_surface_get_width(m_image.get()),
-								     cairo_image_surface_get_height(m_image.get())),
-					cairo_surface_destroy);
-	assert(m_back.get());
-	auto cr = shared_cairo_t(cairo_create(m_back.get()), cairo_destroy);
-	cairo_set_source_surface(cr.get(), m_image.get(), 0, 0);
-	cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-	cairo_paint(cr.get());
-    }
-
-    static shared_cairo_surface_t
-    scale_surface(shared_cairo_surface_t old_surface,
-		  int old_width, int old_height,
-		  int new_width, int new_height)
-    {
-	auto new_surface = shared_cairo_surface_t(cairo_surface_create_similar(old_surface.get(),
-									       CAIRO_CONTENT_COLOR_ALPHA,
-									       new_width,
-									       new_height),
-						  cairo_surface_destroy);
-	auto cr = shared_cairo_t(cairo_create(new_surface.get()), cairo_destroy);
-
-	/* Scale *before* setting the source surface (1) */
-	cairo_scale(cr.get(),
-		    (double)new_width / old_width,
-		    (double)new_height / old_height);
-	cairo_set_source_surface(cr.get(), old_surface.get(), 0, 0);
-
-	/* To avoid getting the edge pixels blended with 0 alpha, which would
-	 * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)
-	 */
-	cairo_pattern_set_extend(cairo_get_source(cr.get()), CAIRO_EXTEND_REFLECT);
-
-	/* Replace the destination with the source instead of overlaying */
-	cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-
-	/* Do the actual drawing */
-	cairo_paint(cr.get());
-
-	return new_surface;
-    }
-
-    static float round(float v, float fraction)
-    {
-	return floor(v) + floor( (v-floor(v))/fraction) * fraction;
     }
 
     void Image::scale(double scale)
     {
 	damage();
 
-	double neww = cairo_image_surface_get_width(m_back.get());
-	double newh = cairo_image_surface_get_height(m_back.get());
+	m_image = image_cache.get(m_filename, scale);
 
-	scale = round(scale, 0.01);
-
-	auto i = m_cache.find(scale * 100);
-	if (i != m_cache.end())
-	{
-	    m_image = i->second;
-	}
-	else
-	{
-	    cout << "cache miss " << scale * 100 << endl;
-
-	    m_image = scale_surface(m_back,
-				    neww, newh,
-				    neww * scale, newh * scale);
-
-	    m_cache.insert(std::make_pair(scale * 100, m_image));
-	}
-
-	size(neww * scale, newh * scale);
+	size(cairo_image_surface_get_width(m_image.get()),
+	     cairo_image_surface_get_height(m_image.get()));
 	m_scale = scale;
+
 	damage();
     }
 

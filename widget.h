@@ -276,10 +276,8 @@ namespace mui
     protected:
 
 	shared_cairo_surface_t m_image;
-	shared_cairo_surface_t m_back;
 	std::string m_filename;
 	double m_scale;
-	std::map<int,shared_cairo_surface_t> m_cache;
     };
 
     class Button : public Widget

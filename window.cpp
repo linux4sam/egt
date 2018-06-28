@@ -56,6 +56,15 @@ namespace mui
 	}
     }
 
+    void SimpleWindow::remove(Widget* widget)
+    {
+	auto i = find(m_children.begin(), m_children.end(), widget);
+	if (i != m_children.end())
+	{
+	    m_children.erase(i);
+	}
+    }
+
     void SimpleWindow::damage()
     {
 	damage(m_box);

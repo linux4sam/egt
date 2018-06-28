@@ -32,18 +32,30 @@ namespace mui
 	int x;
 	int y;
 
-	Point& operator+(const Point& rhs)
+	Point& operator+=(const Point& rhs)
 	{
 	    x += rhs.x;
 	    y += rhs.y;
 	    return *this;
 	}
 
-	Point& operator-(const Point& rhs)
+	Point& operator-=(const Point& rhs)
 	{
 	    x -= rhs.x;
 	    y -= rhs.y;
 	    return *this;
+	}
+
+	Point operator-(const Point& rhs)
+	{
+	    return Point(x - rhs.x,
+			 y - rhs.y);
+	}
+
+	Point operator+(const Point& rhs)
+	{
+	    return Point(x + rhs.x,
+			 y + rhs.y);
 	}
     };
 
@@ -112,6 +124,11 @@ namespace mui
 	int w;
 	int h;
 
+	Point center() const
+	{
+	    return Point(x + (w/2), y + (h/2));
+	}
+
 	Point point() const
 	{
 	    return Point(x,y);
@@ -132,12 +149,18 @@ namespace mui
 	    return w == 0 || h == 0;
 	}
 
+	/**
+	 * Determine if the specified point is inside of the rectangle.
+	 */
 	static inline bool point_inside(const Point& point, const Rect& rhs)
 	{
 	    return (point.x <= rhs.x + rhs.w && point.x >= rhs.x &&
 		    point.y <= rhs.y + rhs.h && point.y >= rhs.y);
 	}
 
+	/**
+	 * Determine if two rectangles intersect, or, overlap.
+	 */
 	static inline bool is_intersect(const Rect& lhs, const Rect& rhs)
 	{
 	    return (lhs.x <= rhs.x + rhs.w && lhs.x + lhs.w >= rhs.x &&
@@ -158,7 +181,10 @@ namespace mui
 	    return Rect(xmin, ymin, xmax-xmin, ymax-ymin);
 	}
 
-	static Rect intersect(const Rect& lhs, const Rect& rhs)
+	/**
+	 * Return the intersecting rectangle of two rectangles, if any.
+	 */
+	static inline Rect intersect(const Rect& lhs, const Rect& rhs)
 	{
 	    int x = std::max(lhs.x, rhs.x);
 	    int y = std::max(lhs.y, rhs.y);
