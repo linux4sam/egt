@@ -69,7 +69,7 @@ namespace mui
 	{
 	    int value = e->value;
 
-	    dbg << value << endl;
+	    DBG(value);
 	    switch (e->type)
 	    {
 	    case EV_REL:
@@ -157,6 +157,7 @@ namespace mui
     static const int SAMPLES = 20;
     static struct tsdev *ts;
     static struct ts_sample_mt **samp_mt;
+    static struct timeval last_down = {0,0};
 
     InputTslib::InputTslib(const string& path)
 	: m_fd(-1),
@@ -181,6 +182,12 @@ namespace mui
 	}
 
 	EventLoop::add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
+    }
+
+    static inline int diff_ms(timeval t1, timeval t2)
+    {
+	return (((t1.tv_sec - t2.tv_sec) * 1000000) +
+		(t1.tv_usec - t2.tv_usec))/1000;
     }
 
     void InputTslib::process(int fd, uint32_t mask, void *data)
@@ -233,7 +240,7 @@ namespace mui
 			pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
 			obj->m_active = false;
 			main_window()->handle(EVT_MOUSE_UP);
-			dbg << "mouse up " << pointer_abs_pos << endl;
+			DBG("mouse up " << pointer_abs_pos);
 		    }
 		    else
 		    {
@@ -246,9 +253,20 @@ namespace mui
 		    if (samp_mt[j][i].pen_down == 1)
 		    {
 			pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
-			main_window()->handle(EVT_MOUSE_DOWN);
-			dbg << "mouse down " << pointer_abs_pos << endl;
-			obj->m_active = true;
+
+			if ((last_down.tv_sec || last_down.tv_usec) &&
+			    diff_ms(samp_mt[j][i].tv, last_down) < 200)
+			{
+			    main_window()->handle(EVT_MOUSE_DBLCLICK);
+			}
+			else
+			{
+			    main_window()->handle(EVT_MOUSE_DOWN);
+			    DBG("mouse down " << pointer_abs_pos);
+			    obj->m_active = true;
+			}
+
+			last_down = samp_mt[j][i].tv;
 		    }
 		}
 	    }
@@ -256,7 +274,7 @@ namespace mui
 
 	if (move)
 	{
-	    dbg << "mouse move " << pointer_abs_pos << endl;
+	    DBG("mouse move " << pointer_abs_pos);
 	    main_window()->handle(EVT_MOUSE_MOVE);
 	}
     }

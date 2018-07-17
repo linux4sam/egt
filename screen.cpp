@@ -219,10 +219,10 @@ namespace mui
 			      color.greenf(),
 			      color.bluef(),
 			      color.alphaf());
-	if (color.alpha() == 255)
+	//if (color.alpha() == 255)
 	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
-	else
-	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
+	    //else
+	    //cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
 	cairo_rectangle(m_cr.get(), rect.x, rect.y, rect.w, rect.h);
 	cairo_fill(m_cr.get());
 	cairo_restore(m_cr.get());
@@ -233,29 +233,49 @@ namespace mui
 	Color color = Color::GREEN;
 
 	cairo_save(m_cr_back.get());
+
 	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
 	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
+	cairo_paint(m_cr_back.get());
+
+//cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
+	//cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
 	cairo_set_source_rgba(m_cr_back.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
 	cairo_set_line_width(m_cr_back.get(), 1.0);
 	for (const auto& d: damage)
 	{
-	    cairo_rectangle(m_cr_back.get(), d.x+1, d.y+1, d.w-2, d.h-2);
+	    cairo_rectangle(m_cr_back.get(), d.x, d.y, d.w, d.h);
 	}
 	cairo_stroke(m_cr_back.get());
 	cairo_restore(m_cr_back.get());
 
-	cairo_surface_flush(m_surface_back.get());
+	//cairo_surface_flush(m_surface_back.get());
 
-	struct timespec ts = {0,300 * 1000000};
-	nanosleep(&ts, NULL);
+	//struct timespec ts = {0,300 * 1000000};
+	//nanosleep(&ts, NULL);
     }
 
     void IScreen::flip(const vector<Rect>& damage)
     {
 #ifdef BACK_BUFFER
 	//cout << "flip" << endl;
-	//greenscreen(damage);
+
 #ifndef USE_IMLIB2
+	static int envset = -1;
+	if (envset < 0)
+	    envset = !!getenv("MUI_GREENSCREEN");
+
+	if (envset)
+	{
+	    if (!damage.empty())
+	    {
+		greenscreen(damage);
+		return;
+	    }
+	}
+
+	if (!damage.empty())
+	{
 	//int total = 0;
 	//cairo_save(m_cr_back.get());
 	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
@@ -268,6 +288,10 @@ namespace mui
 	}
 	cairo_fill(m_cr_back.get());
 	//cairo_restore(m_cr_back.get());
+
+		cairo_surface_flush(m_surface_back.get());
+	}
+
 #else
 	uint32_t* src = (uint32_t*)cairo_image_surface_get_data(m_surface.get());
 	uint32_t* dst = (uint32_t*)cairo_image_surface_get_data(m_surface_back.get());
@@ -303,9 +327,10 @@ namespace mui
 	imlib_free_image();
 
 	cairo_surface_mark_dirty(m_surface_back.get());
+	cairo_surface_flush(m_surface_back.get());
 #endif
 
-	cairo_surface_flush(m_surface_back.get());
+
 
 	//cout << "total pixels: " << total << endl;
 #endif

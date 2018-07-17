@@ -29,10 +29,14 @@ namespace mui
 	KMSOverlayScreen(struct plane_data* plane);
 
 	virtual void position(int x, int y);
+	virtual void scale(float scale);
+	virtual float scale() const;
 
 	virtual int gem();
 
 	virtual void apply();
+
+	void* raw();
 
 	virtual ~KMSOverlayScreen();
 
@@ -48,9 +52,7 @@ namespace mui
     class KMSScreen : public IScreen
     {
     public:
-	KMSScreen();
-
-	void flip(const std::vector<Rect>& damage);
+	KMSScreen(bool primary = true);
 
 	struct plane_data* allocate_overlay(const Size& size,
 					    uint32_t format = DRM_FORMAT_ARGB8888);
@@ -67,6 +69,7 @@ namespace mui
     protected:
 	int m_fd;
 	struct kms_device* m_device;
+	struct plane_data* m_plane;
     };
 
 }

@@ -39,9 +39,11 @@ void LOG_VERBOSE(int verbose);
 extern void LOG(const char *format, ...);
 
 #ifdef DEBUG
-#define dbg std::cout
+#define DBG(x) do { std::cout << x << std::endl; } while (0)
 #else
-#define dbg false && std::cout
+#define DBG(x)
 #endif
+
+#define ERR(x) do { std::cerr << x << std::endl; } while (0)
 
 #endif

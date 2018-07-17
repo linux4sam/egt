@@ -18,11 +18,11 @@ LDLIBS = -flto -fwhole-program
 
 headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
 	x11screen.h color.h window.h ui.h kmsscreen.h animation.h \
-	timer.h font.h tools.h chart.h palette.h video.h
+	timer.h font.h tools.h chart.h palette.h video.h painter.h
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
 	window.o kmsscreen.o color.o animation.o timer.o font.o \
-	tools.o chart.o palette.o geometry.o video.o
+	tools.o chart.o palette.o geometry.o video.o painter.o
 
 ui_objs = main.o $(common_objs)
 
@@ -37,7 +37,7 @@ DEPS = cairo
 /home/jhenderson/buildroot/at91sam9x5ek_demo/staging/usr/lib/libpixman-1.a -lfreetype -lpng -lpangoft2-1.0 -lfontconfig -pthread
 
 ifeq ($(GSTREAMER),y)
-DEPS += gstreamer-1.0
+DEPS += gstreamer-1.0 gstreamer-app-1.0
 CXXFLAGS += -DHAVE_GSTREAMER
 APPS += videoplayer
 endif

@@ -18,7 +18,9 @@ namespace mui
 
     void Timer::start()
     {
-	assert(m_fd < 0);
+	//if (m_fd >= 0)
+	//  cancel();
+
 	m_fd = EventLoop::start_timer(m_duration, Timer::timer_callback, this);
     }
 

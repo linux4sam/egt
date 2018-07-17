@@ -26,6 +26,7 @@ namespace mui
 	  m_visible(true),
 	  m_focus(false),
 	  m_active(false),
+	  m_disabled(false),
 	  m_parent(0),
 	  m_flags(flags)
     {}
@@ -155,8 +156,7 @@ namespace mui
 				    int dsty)
     {
 	/* A temporary surface the size of the source surface.  */
-	cairo_surface_t *shadow_surface = surface_create_similar (
-	    source_surface);
+	cairo_surface_t *shadow_surface = surface_create_similar(source_surface);
 
 	/* Draw the shadow to the shadow surface. */
 	{
@@ -361,7 +361,7 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
-    void Widget::draw_image(shared_cairo_surface_t image, int align, int standoff)
+    void Widget::draw_image(shared_cairo_surface_t image, int align, int standoff, bool bw)
     {
 	auto width = cairo_image_surface_get_width(image.get());
 	auto height = cairo_image_surface_get_height(image.get());
@@ -397,7 +397,7 @@ namespace mui
 	*/
 
 	Painter painter(screen()->context());
-	painter.draw_image(p, image);
+	painter.draw_image(p, image, bw);
 	//screen()->blit(image.get(), p.x, p.y, width, height, p.x, p.y);
     }
 
@@ -557,6 +557,7 @@ namespace mui
 	    {
 		damage();
 		active(true);
+		invoke_handlers();
 		return 1;
 	    }
 	    break;
@@ -565,6 +566,7 @@ namespace mui
 	    {
 		damage();
 		active(false);
+		invoke_handlers();
 		return 1;
 	    }
 	    break;
@@ -599,10 +601,21 @@ namespace mui
 	  m_fgcolor(TEXT_COLOR),
 	  m_border(border)
     {
+	set_image(image);
+    }
+
+    void ImageButton::set_image(const std::string& image)
+    {
 	m_image = shared_cairo_surface_t(cairo_image_surface_create_from_png(image.c_str()),
 					 cairo_surface_destroy);
 	assert(m_image.get());
 	assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
+
+	auto width = cairo_image_surface_get_width(m_image.get());
+	auto height = cairo_image_surface_get_height(m_image.get());
+	//resize(width,height);
+	m_box.w = width;
+	m_box.h = height;
     }
 
     void ImageButton::draw(const Rect& rect)
@@ -774,12 +787,12 @@ namespace mui
 				w() - 2);
 	    }
 
-	    if (Rect::point_inside(mouse_position(), bounding))
+	    if (Rect::point_inside(screen_to_window(mouse_position()), bounding))
 	    {
 		if (m_orientation == ORIENTATION_HORIZONTAL)
-		    m_moving_x = mouse_position().x;
+		    m_moving_x = screen_to_window(mouse_position()).x;
 		else
-		    m_moving_x = mouse_position().y;
+		    m_moving_x = screen_to_window(mouse_position()).y;
 		m_start_pos = position();
 		active(true);
 		return 1;
@@ -795,14 +808,15 @@ namespace mui
 	    {
 		if (m_orientation == ORIENTATION_HORIZONTAL)
 		{
-		    int diff = mouse_position().x - m_moving_x;
+		    int diff = screen_to_window(mouse_position()).x - m_moving_x;
 		    position(m_start_pos + denormalize(diff));
 		}
 		else
 		{
-		    int diff = mouse_position().y - m_moving_x;
+		    int diff = screen_to_window(mouse_position()).y - m_moving_x;
 		    position(m_start_pos + denormalize(diff));
 		}
+		return 1;
 	    }
 	    break;
 	}
@@ -812,21 +826,20 @@ namespace mui
 
     void Slider::draw(const Rect& rect)
     {
-	Color active(Color::ORANGE);
-
 	auto cr = screen()->context();
 
 	cairo_save(cr.get());
 
 	cairo_set_source_rgba(cr.get(),
-			      active.redf(),
-			      active.greenf(),
-			      active.bluef(),
-			      active.alphaf());
-	cairo_set_line_width(cr.get(), 8.0);
+			      palette().color(Palette::HIGHLIGHT).redf(),
+			      palette().color(Palette::HIGHLIGHT).greenf(),
+			      palette().color(Palette::HIGHLIGHT).bluef(),
+			      palette().color(Palette::HIGHLIGHT).alphaf());
 
 	if (m_orientation == ORIENTATION_HORIZONTAL)
 	{
+	    cairo_set_line_width(cr.get(), h()/5.0);
+
 	    // line
 	    cairo_move_to(cr.get(), x(), y() + h()/2);
 	    cairo_line_to(cr.get(), x() + normalize(m_pos), y() + h()/2);
@@ -838,18 +851,20 @@ namespace mui
 				  BORDER_COLOR.bluef(),
 				  BORDER_COLOR.alphaf());
 
-	    cairo_move_to(cr.get(), x() + normalize(m_pos), y() + h()/2);
+	    cairo_move_to(cr.get(), x() + normalize(m_pos) + 1, y() + h()/2);
 	    cairo_line_to(cr.get(), x() + w(), y() + h()/2);
 	    cairo_stroke(cr.get());
 
 	    // handle
-	    draw_gradient_box(Rect(x() + normalize(m_pos) + 1,
+	    draw_gradient_box(Rect(x() + normalize(m_pos)+ 1,
 				   y() + 1,
 				   h() - 2,
 				   h() - 2));
 	}
 	else
 	{
+	    cairo_set_line_width(cr.get(), w()/5.0);
+
 	    // line
 	    cairo_move_to(cr.get(), x() + w()/2, y() + h());
 	    cairo_line_to(cr.get(), x() + w()/2, y() + normalize(m_pos));
@@ -861,7 +876,7 @@ namespace mui
 				  BORDER_COLOR.bluef(),
 				  BORDER_COLOR.alphaf());
 
-	    cairo_move_to(cr.get(), x() + w()/2, y() + normalize(m_pos));
+	    cairo_move_to(cr.get(), x() + w()/2, y() + normalize(m_pos) + 1);
 	    cairo_line_to(cr.get(), x() + w()/2, y());
 	    cairo_stroke(cr.get());
 
@@ -1075,7 +1090,7 @@ namespace mui
 	{
 	    for (uint32_t i = 0; i < m_items.size(); i++)
 	    {
-		if (Rect::point_inside(mouse_position(), item_rect(i)))
+		if (Rect::point_inside(screen_to_window(mouse_position()), item_rect(i)))
 		{
 		    if (m_selected != i)
 		    {
@@ -1183,8 +1198,8 @@ namespace mui
 	    if (active())
 	    {
 		Point c = center();
-		float angle = atan2f(mouse_position().y - c.y,
-				     mouse_position().x - c.x);
+		float angle = atan2f(screen_to_window(mouse_position()).y - c.y,
+				     screen_to_window(mouse_position()).x - c.x);
 		angle = angle * (180.0 / M_PI);
 		angle = (angle > 0.0 ? angle : (360.0 + angle));
 		angle = 180 - angle;
@@ -1434,7 +1449,7 @@ namespace mui
 	switch (event)
 	{
 	case EVT_MOUSE_DOWN:
-	    m_moving_x = mouse_position().y;
+	    m_moving_x = screen_to_window(mouse_position()).y;
 	    m_start_pos = position();
 	    active(true);
 	    return 1;
@@ -1446,7 +1461,7 @@ namespace mui
 	case EVT_MOUSE_MOVE:
 	    if (active())
 	    {
-		int diff = mouse_position().y - m_moving_x;
+		int diff = screen_to_window(mouse_position()).y - m_moving_x;
 		position(m_start_pos + diff);
 	    }
 	    break;

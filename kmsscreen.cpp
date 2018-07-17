@@ -27,9 +27,24 @@ namespace mui
 	init(plane->buf, plane_width(plane), plane_height(plane));
     }
 
+    void* KMSOverlayScreen::raw()
+    {
+	return m_plane->buf;
+    }
+
     void KMSOverlayScreen::position(int x, int y)
     {
 	plane_set_pos(m_plane, x, y);
+    }
+
+    void KMSOverlayScreen::scale(float scale)
+    {
+	plane_set_scale(m_plane, scale);
+    }
+
+    float KMSOverlayScreen::scale() const
+    {
+	return m_plane->scale;
     }
 
     int KMSOverlayScreen::gem()
@@ -48,7 +63,7 @@ namespace mui
 
     static KMSScreen* the_kms = 0;
 
-    KMSScreen::KMSScreen()
+    KMSScreen::KMSScreen(bool primary)
     {
 	m_fd = drmOpen("atmel-hlcdc", NULL);
 	assert(m_fd >= 0);
@@ -56,25 +71,28 @@ namespace mui
 	m_device = kms_device_open(m_fd);
 	assert(m_device);
 
-	//kms_device_dump(device);
+	//kms_device_dump(m_device);
 
-	struct plane_data* plane = plane_create(m_device,
-						DRM_PLANE_TYPE_PRIMARY,
-						0,
-						m_device->screens[0]->width,
-						m_device->screens[0]->height,
-						DRM_FORMAT_ARGB8888);
+	if (primary)
+	{
+	    m_plane = plane_create(m_device,
+				   DRM_PLANE_TYPE_PRIMARY,
+				   0,
+				   m_device->screens[0]->width,
+				   m_device->screens[0]->height,
+				   DRM_FORMAT_XRGB8888);
 
-	assert(plane);
-	plane_fb_map(plane);
-	assert(plane->buf);
+	    assert(m_plane);
+	    plane_fb_map(m_plane);
+	    assert(m_plane->buf);
 
-	cout << "dumb buffer " << plane_width(plane) << "," <<
-	    plane_height(plane) << endl;
+	    plane_apply(m_plane);
 
-	plane_apply(plane);
+	    DBG("primary plane dumb buffer " << plane_width(m_plane) << "," <<
+		plane_height(m_plane));
 
-	init(plane->buf, plane_width(plane), plane_height(plane));
+	    init(m_plane->buf, plane_width(m_plane), plane_height(m_plane));
+	}
 
 	the_kms = this;
     }
@@ -86,14 +104,20 @@ namespace mui
 
     struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format)
     {
-	// TODO
-	static int index = 0;
-	struct plane_data* plane = plane_create(m_device,
-						DRM_PLANE_TYPE_OVERLAY,
-						index++,
-						size.w,
-						size.h,
-						format);
+	struct plane_data* plane = 0;
+
+	// brute force: find something that will work
+	for (int index = 0; index < 3; index++)
+	{
+	    plane = plane_create(m_device,
+				 DRM_PLANE_TYPE_OVERLAY,
+				 index,
+				 size.w,
+				 size.h,
+				 format);
+	    if (plane)
+		break;
+	}
 
 	assert(plane);
 	plane_fb_map(plane);
@@ -101,7 +125,7 @@ namespace mui
 
 	plane_set_pos(plane, 0, 0);
 
-	cout << "overlay dumb buffer " << plane_width(plane) << "," <<
+	cout << "plane " << plane->index << " overlay dumb buffer " << plane_width(plane) << "," <<
 	    plane_height(plane) << endl;
 
 	//plane_apply(plane);
@@ -118,11 +142,6 @@ namespace mui
 		total++;
 	}
 	return total;
-    }
-
-    void KMSScreen::flip(const vector<Rect>& damage)
-    {
-	IScreen::flip(damage);
     }
 
     KMSScreen::~KMSScreen()

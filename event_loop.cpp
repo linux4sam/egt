@@ -158,6 +158,7 @@ namespace mui
     static void timer_event(int fd, uint32_t mask, void *data)
     {
 	struct timer_data* tdata = reinterpret_cast<struct timer_data*>(data);
+	assert(tdata);
 
 	tdata->func(fd, tdata->data);
 

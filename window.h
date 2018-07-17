@@ -7,6 +7,12 @@
 
 #include "widget.h"
 #include <vector>
+#ifdef HAVE_LIBPLANES
+#include <drm_fourcc.h>
+#define DEFAULT_FORMAT DRM_FORMAT_ARGB8888
+#else
+#define DEFAULT_FORMAT 0
+#endif
 
 namespace mui
 {
@@ -93,8 +99,8 @@ namespace mui
     {
     public:
 
-	PlaneWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT,
-		    bool alpha = true);
+	explicit PlaneWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT,
+			     uint32_t format = DEFAULT_FORMAT);
 
 	virtual void position(int x, int y);
 	virtual void move(int x, int y);

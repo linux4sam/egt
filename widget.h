@@ -65,10 +65,39 @@ namespace mui
 	FLAG_WINDOW_DEFAULT = FLAG_WINDOW,
     };
 
+    class Widget;
+
+    class EventWidget
+    {
+    public:
+	EventWidget()
+	{}
+
+	typedef std::function<void(EventWidget* widget)> handler_callback_t;
+
+	virtual void add_handler(handler_callback_t handler)
+	{
+	    m_handlers.push_back(handler);
+	}
+
+	virtual ~EventWidget()
+	{}
+
+    protected:
+
+	virtual void invoke_handlers()
+	{
+	    for (auto x: m_handlers)
+		x(this);
+	}
+
+	std::vector<handler_callback_t> m_handlers;
+    };
+
     /**
      * Base widget class.
      */
-    class Widget
+    class Widget : public EventWidget
     {
     public:
 
@@ -148,6 +177,18 @@ namespace mui
 
 	virtual bool active() const { return m_active; }
 	virtual void active(bool value) { m_active = value; }
+
+	/**
+	 * Return the disabled status of the widget.
+	 *
+	 * When a widget is disabled, it does not receive events. Also, the
+	 * color scheme may change when a widget is disabled.
+	 */
+	virtual bool disabled() const { return m_disabled; }
+	/**
+	 * Set the disabled status of the widget.
+	 */
+	virtual void disable(bool value) { if (m_disabled != value) damage(); m_disabled = value; }
 
 	/**
 	 * Damage the box() of the widget.
@@ -233,7 +274,7 @@ namespace mui
 			     const Font& font = Font());
 
 	void draw_image(shared_cairo_surface_t image,
-			int align = ALIGN_CENTER, int standoff = 0);
+			int align = ALIGN_CENTER, int standoff = 0, bool bw = false);
 
 	void draw_basic_box(const Rect& rect,
 			    const Color& border = BORDER_COLOR,
@@ -247,9 +288,15 @@ namespace mui
 	bool m_visible;
 	bool m_focus;
 	bool m_active;
+	bool m_disabled;
 	Widget* m_parent;
 	std::shared_ptr<Palette> m_palette;
 	uint32_t m_flags;
+
+	inline Point screen_to_window(const Point& p)
+	{
+	    return p - parent()->box().point();
+	}
 
 	friend class SimpleWindow;
     };
@@ -283,6 +330,7 @@ namespace mui
     class Button : public Widget
     {
     public:
+
 	Button(const std::string& label, const Point& point = Point(),
 	       const Size& size = Size());
 
@@ -294,7 +342,6 @@ namespace mui
 
     protected:
 	std::string m_label;
-
     };
 
     class ImageButton : public Button
@@ -308,9 +355,11 @@ namespace mui
 
 	virtual void draw(const Rect& rect);
 
-	void fgcolor(const Color& color) { m_fgcolor = color; }
+	virtual void fgcolor(const Color& color) { m_fgcolor = color; }
 
-	void font(const Font& font) { m_font = font; }
+	virtual void font(const Font& font) { m_font = font; }
+
+	virtual void set_image(const std::string& image);
 
 	virtual ~ImageButton();
 
@@ -360,18 +409,18 @@ namespace mui
 	{
 	    if (pos > m_max)
 	    {
-		m_pos = m_max;
-		damage();
+		pos = m_max;
 	    }
 	    else if (pos < m_min)
 	    {
-		m_pos = m_min;
-		damage();
+		pos = m_min;
 	    }
-	    else if (pos != m_pos)
+
+	    if (pos != m_pos)
 	    {
 		m_pos = pos;
 		damage();
+		invoke_handlers();
 	    }
 	}
 
@@ -698,12 +747,82 @@ namespace mui
 	    }
 	}
 
+	virtual ~StaticGrid()
+	{}
+
     protected:
 	int m_columns;
 	int m_rows;
 	int m_border;
 
 	std::vector<std::vector<Widget*>> m_widgets;
+    };
+
+
+    class HorizontalPositioner : public Widget
+    {
+    public:
+	HorizontalPositioner(int x, int y, int w, int h, int border = 0, int align = ALIGN_CENTER)
+	    : Widget(x, y, w, h),
+	      m_border(border),
+	      m_align(align)
+	{}
+
+	virtual void draw(const Rect& rect) {}
+	virtual void damage() {}
+
+	virtual void position(int x, int y)
+	{
+	    Widget::position(x,y);
+	    reposition();
+	}
+
+	virtual void size(int w, int h)
+	{
+	    Widget::size(w,h);
+	    reposition();
+	}
+
+	virtual void add(Widget* widget)
+	{
+	    m_widgets.push_back(widget);
+	}
+
+	/**
+	 * Reposition all child widgets.
+	 */
+	virtual void reposition()
+	{
+	    int offset = 0;
+	    for (auto widget: m_widgets)
+	    {
+		if (widget)
+		{
+		    Point p;
+		    if (m_align & ALIGN_CENTER)
+		    {
+			p.y = y() + (h()/2) - (widget->h()/2);
+		    }
+
+		    if (m_align & ALIGN_TOP)
+		    	p.y = y();
+		    if (m_align & ALIGN_BOTTOM)
+		    	p.y = y() + h() - widget->h();
+
+		    widget->position(x() + offset + m_border, p.y);
+		    offset += (widget->w() + m_border);
+		}
+	    }
+	}
+
+	virtual ~HorizontalPositioner()
+	{}
+
+    protected:
+	int m_border;
+	int m_align;
+
+	std::vector<Widget*> m_widgets;
     };
 
     class ProgressBar : public ValueRangeWidget<int>

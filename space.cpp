@@ -72,11 +72,11 @@ public:
     void spawn(const Point& p)
     {
 	std::default_random_engine e1(r());
-	std::uniform_int_distribution<int> speed_dist(-8, 8);
+	std::uniform_int_distribution<int> speed_dist(-20, 20);
 	int xspeed = speed_dist(e1);
 	int yspeed = speed_dist(e1);
 
-	std::uniform_real_distribution<float> size_dist(0.2, 1.0);
+	std::uniform_real_distribution<float> size_dist(0.1, 1.0);
 	float size = size_dist(e1);
 
 	// has to move at some speed
@@ -112,7 +112,6 @@ private:
     vector<MyImage*> m_images;
     std::random_device r;
 };
-
 
 
 int main()

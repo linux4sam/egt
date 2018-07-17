@@ -129,7 +129,11 @@ namespace mui
 	case EVT_MOUSE_MOVE:
 	    for (auto& child: reverse_iterate(m_children))
 	    {
-		if (Rect::point_inside(mouse_position(), child->box()))
+		if (child->disabled() && !child->active())
+		    continue;
+
+		Point pos = mouse_position() - box().point();
+		if (Rect::point_inside(pos, child->box()))
 		    if (child->handle(event))
 			return 1;
 	    }
@@ -138,6 +142,9 @@ namespace mui
 	case EVT_KEYUP:
 	    for (auto& child: reverse_iterate(m_children))
 	    {
+		if (child->disabled())
+		    continue;
+
 		if (child->focus())
 		    if (child->handle(event))
 			return 1;
@@ -183,7 +190,7 @@ namespace mui
     }
 
 #ifdef HAVE_LIBPLANES
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, bool alpha)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format)
 	: SimpleWindow(size, flags | FLAG_PLANE_WINDOW),
 	  m_dirty(true)
     {
@@ -201,9 +208,8 @@ namespace mui
 	}
 
 	m_screen = new KMSOverlayScreen(
-	    KMSScreen::instance()->allocate_overlay(
-		Size(this->w(),this->h()), alpha ?
-		DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888));
+	    KMSScreen::instance()->allocate_overlay(Size(this->w(),this->h()), format));
+	assert(m_screen);
     }
 
     void PlaneWindow::position(int x, int y)
@@ -227,6 +233,9 @@ namespace mui
 
     void PlaneWindow::draw()
     {
+	if (!m_screen)
+	    return;
+
 	//if (m_dirty)
 	//{
 	KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
@@ -262,7 +271,7 @@ namespace mui
     }
 
 #else
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, bool alpha)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format)
 	: SimpleWindow(size, flags),
 	  m_dirty(true)
     {

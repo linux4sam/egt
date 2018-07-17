@@ -46,17 +46,18 @@ namespace mui
 	    return *this;
 	}
 
-	Point operator-(const Point& rhs)
+	friend Point operator-(Point lhs, const Point& rhs)
 	{
-	    return Point(x - rhs.x,
-			 y - rhs.y);
+	    lhs -= rhs;
+	    return lhs;
 	}
 
-	Point operator+(const Point& rhs)
+	friend Point operator+(Point lhs, const Point& rhs)
 	{
-	    return Point(x + rhs.x,
-			 y + rhs.y);
+	    lhs += rhs;
+	    return lhs;
 	}
+
     };
 
     std::ostream& operator<<(std::ostream& os, const Point& point);
@@ -198,7 +199,7 @@ namespace mui
 	}
     };
 
-    std::ostream& operator << (std::ostream& os, const Rect& rect);
+    std::ostream& operator<< (std::ostream& os, const Rect& rect);
 
 }
 
