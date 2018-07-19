@@ -71,13 +71,14 @@ namespace mui
 
 	uint64_t position() const { return m_position; }
 	uint64_t duration() const { return m_duration; }
-    private:
+
+    protected:
 
 	bool set_state(GstState state);
 	bool createPipeline();
 	void destroyPipeline();
 
-	static gboolean busCallback(GstBus* bus,
+	static gboolean bus_callback(GstBus* bus,
 				    GstMessage* message,
 				    gpointer data);
 
@@ -151,13 +152,14 @@ namespace mui
 	uint64_t duration() const { return m_duration; }
 
 	bool playing() const;
-    private:
+
+    protected:
 
 	bool set_state(GstState state);
 	bool createPipeline();
 	void destroyPipeline();
 
-	static gboolean busCallback(GstBus* bus,
+	static gboolean bus_callback(GstBus* bus,
 				    GstMessage* message,
 				    gpointer data);
 

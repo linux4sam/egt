@@ -43,7 +43,7 @@ g1kmssink gem-name=%d " SRC_NAME ". ! queue ! audioconvert !		\
 audio/x-raw,format=S16LE ! volume name=" VOLUME_NAME " !		\
 alsasink async=false enable-last-sample=false"
 
-    gboolean HardwareVideo::busCallback(GstBus* bus, GstMessage* message, gpointer data)
+    gboolean HardwareVideo::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     {
 	HardwareVideo *_this = (HardwareVideo*)data;
 
@@ -169,7 +169,7 @@ alsasink async=false enable-last-sample=false"
 	}
 
 	bus = gst_pipeline_get_bus (GST_PIPELINE (m_video_pipeline));
-	/*bus_watch_id =*/ gst_bus_add_watch (bus, &busCallback, this);
+	/*bus_watch_id =*/ gst_bus_add_watch (bus, &bus_callback, this);
 	gst_object_unref (bus);
 
 	return true;
@@ -333,7 +333,7 @@ alsasink async=false enable-last-sample=false"
     SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
     "alsasink async=false enable-last-sample=false sync=true"
 
-    gboolean SoftwareVideo::busCallback(GstBus* bus, GstMessage* message, gpointer data)
+    gboolean SoftwareVideo::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     {
 	SoftwareVideo *_this = (SoftwareVideo*)data;
 
@@ -537,7 +537,7 @@ alsasink async=false enable-last-sample=false"
 
 
 	bus = gst_pipeline_get_bus (GST_PIPELINE (m_video_pipeline));
-	/*bus_watch_id =*/ gst_bus_add_watch (bus, &busCallback, this);
+	/*bus_watch_id =*/ gst_bus_add_watch (bus, &bus_callback, this);
 	gst_object_unref (bus);
 
 	return true;
@@ -657,12 +657,11 @@ alsasink async=false enable-last-sample=false"
 
     bool SoftwareVideo::playing() const
     {
-	GstState state;
-	GstStateChangeReturn ret;
+	GstState state = GST_STATE_VOID_PENDING;
 
 	if (m_video_pipeline)
 	{
-	    ret = gst_element_get_state(m_video_pipeline, &state, NULL, GST_CLOCK_TIME_NONE);
+	    (void)gst_element_get_state(m_video_pipeline, &state, NULL, GST_CLOCK_TIME_NONE);
 	    return state == GST_STATE_PLAYING;
 	}
 

@@ -14,6 +14,7 @@
 #include <iostream>
 #include "window.h"
 #include "painter.h"
+#include "resource.h"
 #include <sstream>
 
 using namespace std;
@@ -410,6 +411,9 @@ namespace mui
      * Provides an in-memory cache for images based on filename and scale. This
      * prevents multiple attempts at loading the same file as well as rescaling
      * the image to the same scale multiple times.
+     *
+     * This is a tradeoff in consuming more memory instead of possibly
+     * constantly reloading or scaling the same image.
      */
     class ImageCache
     {
@@ -425,12 +429,29 @@ namespace mui
 	    if (i != m_cache.end())
 		return i->second;
 
-	    cout << "image cache miss " << name << endl;
+	    DBG("image cache miss: " << filename << " scale:" << scale);
 
 	    shared_cairo_surface_t image;
 
 	    if (scale == 1.0)
-		image = shared_cairo_surface_t(cairo_image_surface_create_from_png(filename.c_str()), cairo_surface_destroy);
+	    {
+		std::string::size_type i = filename.find(":");
+		if (i == 0)
+		{
+		    string name = filename;
+		    name.erase(i, 1);
+		    image = shared_cairo_surface_t(
+			cairo_image_surface_create_from_png_stream(
+			    read_resource_stream,(void*)name.c_str()),
+			cairo_surface_destroy);
+		}
+		else
+		{
+		    image = shared_cairo_surface_t(
+			cairo_image_surface_create_from_png(filename.c_str()),
+			cairo_surface_destroy);
+		}
+	    }
 	    else
 	    {
 		shared_cairo_surface_t back = get(filename, 1.0);
@@ -474,12 +495,14 @@ namespace mui
 		      int old_width, int old_height,
 		      int new_width, int new_height)
 	{
-	    auto new_surface = shared_cairo_surface_t(cairo_surface_create_similar(old_surface.get(),
-										   CAIRO_CONTENT_COLOR_ALPHA,
-										   new_width,
-										   new_height),
-						      cairo_surface_destroy);
-	    auto cr = shared_cairo_t(cairo_create(new_surface.get()), cairo_destroy);
+	    auto new_surface = shared_cairo_surface_t(
+		cairo_surface_create_similar(old_surface.get(),
+					     CAIRO_CONTENT_COLOR_ALPHA,
+					     new_width,
+					     new_height),
+		cairo_surface_destroy);
+	    auto cr = shared_cairo_t(cairo_create(new_surface.get()),
+				     cairo_destroy);
 
 	    /* Scale *before* setting the source surface (1) */
 	    cairo_scale(cr.get(),
@@ -606,8 +629,7 @@ namespace mui
 
     void ImageButton::set_image(const std::string& image)
     {
-	m_image = shared_cairo_surface_t(cairo_image_surface_create_from_png(image.c_str()),
-					 cairo_surface_destroy);
+	m_image = image_cache.get(image, 1.0);
 	assert(m_image.get());
 	assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
 
@@ -1044,8 +1066,7 @@ namespace mui
 			   const Font& font)
 	: Label(text, point, size, ALIGN_CENTER, font)
     {
-	m_image = shared_cairo_surface_t(cairo_image_surface_create_from_png(image.c_str()),
-					 cairo_surface_destroy);
+	m_image = image_cache.get(image, 1.0);
 	assert(m_image.get());
 	assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
     }

@@ -162,7 +162,7 @@ int main(int argc, const char** argv)
 
     HorizontalPositioner grid(0, 0, 600, 80, 5, Widget::ALIGN_CENTER);
 
-    ImageButton* playbtn = new ImageButton("play.png","",Point(),Size(),false);
+    ImageButton* playbtn = new ImageButton(":play_png","",Point(),Size(),false);
     playbtn->add_handler([&window](EventWidget* widget){
 	    ImageButton* btn = dynamic_cast<ImageButton*>(widget);
 	    if (btn->active())
@@ -171,7 +171,7 @@ int main(int argc, const char** argv)
     ctrlwindow.add(playbtn);
     grid.add(playbtn);
 
-    ImageButton* pausebtn = new ImageButton("pause.png", "", Point(), Size(), false);
+    ImageButton* pausebtn = new ImageButton(":pause_png", "", Point(), Size(), false);
     pausebtn->add_handler([&window](EventWidget* widget){
 	    ImageButton* btn = dynamic_cast<ImageButton*>(widget);
 	    if (btn->active())
@@ -202,7 +202,7 @@ int main(int argc, const char** argv)
 	});
     postimer.start();
 
-    ImageButton* volumei = new ImageButton("volumeup.png","",Point(),Size(),false);
+    ImageButton* volumei = new ImageButton(":volumeup_png","",Point(),Size(),false);
     ctrlwindow.add(volumei);
     grid.add(volumei);
 

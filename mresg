@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+# Joshua Henderson <joshua.henderson@microchip.com>
+#
+# Resource generator that takes a list of arbitrary files and generates a source
+# to include and register the resources in the application binary.
+#
+
+function usage()
+{
+    echo "$0 INPUT... -o OUTPUT"
+}
+
+output=""
+inputs=""
+
+for opt in "$@"
+do
+    case "$opt" in
+	-h|--help)
+	    show_help
+	    exit 0
+	    ;;
+	-o|--output)
+	    output=$2
+	    shift 2
+	    #shift
+	    ;;
+	*)
+	    inputs="$inputs $1"
+	    shift
+	    ;;
+    esac
+done
+
+eval set -- "$inputs"
+
+if [ "$#" -le 0 ] || [ -z "$(echo $output)" ]; then
+    usage
+    exit 1
+fi
+
+set -e
+
+cat <<EOF > $output
+namespace mui {
+
+void register_resource(const char* name, const unsigned char* data, unsigned int len);
+
+namespace resource {
+EOF
+
+for f in $@
+do
+    xxd -i $f >> $output
+done
+
+cat <<EOF >> $output
+
+struct initializer {
+    initializer() {
+EOF
+
+for f in $@
+do
+    filename=$(basename "$f")
+    name=$(echo "$filename" | sed "s/\./_/")
+    echo "        register_resource(\"${name}\", ${name}, ${name}_len);" >> $output
+done
+
+cat <<EOF >> $output
+    }
+} ignore;
+
+}
+}
+EOF

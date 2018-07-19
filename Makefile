@@ -18,13 +18,15 @@ LDLIBS = -flto -fwhole-program
 
 headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
 	x11screen.h color.h window.h ui.h kmsscreen.h animation.h \
-	timer.h font.h tools.h chart.h palette.h video.h painter.h
+	timer.h font.h tools.h chart.h palette.h video.h painter.h \
+	resource.h
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
 	window.o kmsscreen.o color.o animation.o timer.o font.o \
-	tools.o chart.o palette.o geometry.o video.o painter.o
+	tools.o chart.o palette.o geometry.o video.o painter.o \
+	resource.o rc.o
 
-ui_objs = main.o $(common_objs)
+resources = volumeup.png play.png pause.png
 
 ifeq ($(KPLOT),y)
 CXXFLAGS += -Ikplot -DHAVE_KPLOT
@@ -68,6 +70,14 @@ LDLIBS += -lImlib2
 endif
 
 all: $(APPS)
+
+rc.cpp: Makefile
+rc.cpp: $(resources)
+	./mresg $(resources) -o rc.cpp
+rc.o: rc.cpp
+	$(CXX) -c $(CXXFLAGS) -fPIC -o $@ $<
+
+ui_objs = main.o $(common_objs)
 
 ui: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
 ui: LDLIBS += $(shell pkg-config $(DEPS) --libs)
@@ -160,4 +170,4 @@ space: $(space_objs)
 clean:
 	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
 		$(info_objs) $(reflect_objs) $(paintperf_objs) \
-		$(videoplayer_objs) $(space_objs) $(APPS)
+		$(videoplayer_objs) $(space_objs) $(APPS) rc.cpp
