@@ -19,13 +19,12 @@ for opt in "$@"
 do
     case "$opt" in
 	-h|--help)
-	    show_help
+	    usage
 	    exit 0
 	    ;;
 	-o|--output)
 	    output=$2
 	    shift 2
-	    #shift
 	    ;;
 	*)
 	    inputs="$inputs $1"
