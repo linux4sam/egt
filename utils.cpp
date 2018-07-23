@@ -17,7 +17,7 @@ void LOG(const char *format, ...)
 	va_list ap;
 
 	if (envset < 0)
-		envset = !!getenv("LIBPLANES_DEBUG");
+		envset = !!getenv("MUI_DEBUG");
 
 	if (m_v || envset)
 	{
@@ -25,4 +25,9 @@ void LOG(const char *format, ...)
 		vfprintf(stderr, format, ap);
 		va_end(ap);
 	}
+}
+
+namespace mui
+{
+    int globalenvset = -1;
 }

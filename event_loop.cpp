@@ -206,7 +206,9 @@ namespace mui
 	unsigned long long missed = 0;
 	(void)read(fd, &missed, sizeof(missed));
 	if (missed > 1)
-	    cout << "missed timeouts: " << missed << endl;
+	{
+	    DBG("missed timeouts: " << missed);
+	}
     }
 
     int EventLoop::start_periodic_timer(unsigned long milliseconds, timer_event_callback func, void* data)

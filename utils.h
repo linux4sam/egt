@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include <functional>
+#include <stdlib.h>
 
 template <typename T>
 class reverse_range
@@ -41,7 +42,13 @@ extern void LOG(const char *format, ...);
 #ifdef DEBUG
 #define DBG(x) do { std::cout << x << std::endl; } while (0)
 #else
-#define DBG(x)
+#define DBG(x) do {						\
+		extern int globalenvset;			\
+		if (globalenvset < 0)				\
+			globalenvset = !!getenv("MUI_DEBUG");	\
+		if (globalenvset)				\
+			std::cout << x << std::endl;		\
+	} while(0)
 #endif
 
 #define ERR(x) do { std::cerr << x << std::endl; } while (0)

@@ -144,7 +144,7 @@ alsasink async=false enable-last-sample=false"
 	DBG("gem = " << _gem << " w()=" << w() << " h()=" << h());
 
 	string pipe(buffer);
-	cout << pipe << endl;
+	DBG(pipe);
 
 	m_video_pipeline = gst_parse_launch (pipe.c_str(), &error);
 	if (!m_video_pipeline)
@@ -393,6 +393,8 @@ alsasink async=false enable-last-sample=false"
 	    break;
 	case GST_MESSAGE_EOS:
 	{
+	    DBG("GStreamer: Message EOS");
+
 	    // TODO: remove me, loop
 	    gst_element_seek (_this->m_video_pipeline, 1.0, GST_FORMAT_TIME,
 			      GST_SEEK_FLAG_FLUSH,
@@ -503,7 +505,7 @@ alsasink async=false enable-last-sample=false"
 	sprintf(buffer, SOFTWAREPIPE);
 
 	string pipe(buffer);
-	cout << pipe << endl;
+	DBG(pipe);
 
 	m_video_pipeline = gst_parse_launch (pipe.c_str(), &error);
 	if (!m_video_pipeline)
