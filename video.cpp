@@ -326,10 +326,26 @@ alsasink async=false enable-last-sample=false"
       appsink drop=true enable-last-sample=false caps=\"video/x-raw;audio/x-raw\" name=" SINK_NAME
     */
 
+/*
 #define SOFTWAREPIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " caps=video/x-raw;audio/x-raw " \
-    SRC_NAME ". ! queue ! autovideoconvert ! "				\
+    SRC_NAME ". ! queue ! videoconvert ! video/x-raw,width=%d,height=%d,format=I420 ! " \
     "progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " ! " \
     "appsink drop=true enable-last-sample=false caps=\"video/x-raw;audio/x-raw\" name=" SINK_NAME " " \
+    SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
+    "alsasink async=false enable-last-sample=false sync=true"
+*/
+
+    /*
+#define SOFTWAREPIPE "filesrc name=" SRC_NAME " ! videoparse width=%d height=%d framerate=24/1 format=nv21 " \
+    " ! autovideoconvert ! " \
+    "progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " ! " \
+    "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME
+*/
+
+#define SOFTWAREPIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " caps=video/x-raw;audio/x-raw use-buffering=true buffer-size=1048576 " \
+    SRC_NAME ". ! queue ! autovideoconvert ! video/x-raw,width=%d,height=%d ! " \
+    "progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " ! " \
+    "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME " " \
     SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
     "alsasink async=false enable-last-sample=false sync=true"
 
@@ -352,36 +368,9 @@ alsasink async=false enable-last-sample=false"
 	    // g_main_loop_quit (loop);
 	    break;
 	}
-	/*
 	case GST_MESSAGE_WARNING:
-	{
-	    GError *err;
-	    gchar *debug;
-
-	    gst_message_parse_error(message, &err, &debug);
-	    cout << "warning: " << err->message << endl;
-	    g_error_free(err);
-	    g_free(debug);
-
-	    // g_main_loop_quit (loop);
-	    break;
-	}
-	*/
-	/*
-	  case GST_MESSAGE_INFO:
-	  {
-	  GError *err;
-	  gchar *debug;
-
-	  gst_message_parse_error(message, &err, &debug);
-	  cout << "info: " << err->message << endl;
-	  g_error_free(err);
-	  g_free(debug);
-
-	  // g_main_loop_quit (loop);
+	case GST_MESSAGE_INFO:
 	  break;
-	  }
-	*/
 	case GST_MESSAGE_CLOCK_PROVIDE:
 	    DBG("GStreamer: Message CLOCK_PROVIDE");
 	    break;
@@ -396,10 +385,10 @@ alsasink async=false enable-last-sample=false"
 	    DBG("GStreamer: Message EOS");
 
 	    // TODO: remove me, loop
-	    gst_element_seek (_this->m_video_pipeline, 1.0, GST_FORMAT_TIME,
-			      GST_SEEK_FLAG_FLUSH,
-	    		      GST_SEEK_TYPE_SET, 0,
-	    		      GST_SEEK_TYPE_NONE, -1);
+	    gst_element_seek(_this->m_video_pipeline, 1.0, GST_FORMAT_TIME,
+			     GST_SEEK_FLAG_FLUSH,
+			     GST_SEEK_TYPE_SET, 0,
+			     GST_SEEK_TYPE_NONE, -1);
 
 	    _this->set_state(GST_STATE_PLAYING);
 
@@ -436,6 +425,28 @@ alsasink async=false enable-last-sample=false"
     GstFlowReturn SoftwareVideo::on_new_buffer_from_source(GstElement * elt, gpointer data)
     {
 	SoftwareVideo *_this = (SoftwareVideo*)data;
+
+#if 0
+	GstCaps* caps = gst_pad_get_current_caps(GST_BASE_SINK_PAD(elt));
+	GstStructure* props = gst_caps_get_structure(caps, 0);
+	for (int x = 0; x < gst_structure_n_fields(props);x++)
+	{
+	    const gchar* fieldname = gst_structure_nth_field_name(props,x);
+	    if (g_strrstr(fieldname, "width"))
+	    {
+		gint width = 0;
+		if (gst_structure_get_int(props, fieldname, &width))
+		    cout << "width:" << width << endl;
+	    }
+	    else if (g_strrstr(fieldname, "height"))
+	    {
+		gint height = 0;
+		if (gst_structure_get_int(props, fieldname, &height))
+		    cout << "height:" << height << endl;
+	    }
+	}
+#endif
+
 	GstSample* sample;
 
 	g_signal_emit_by_name(elt, "pull-sample", &sample);
@@ -460,7 +471,7 @@ alsasink async=false enable-last-sample=false"
 
     SoftwareVideo::SoftwareVideo(const Size& size)
 	: PlaneWindow(size, FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND,
-		      DRM_FORMAT_YUYV),
+		      DRM_FORMAT_YUV420),
 	  m_video_pipeline(NULL),
 	  m_src(NULL),
 	  m_volume(NULL),
@@ -502,7 +513,7 @@ alsasink async=false enable-last-sample=false"
 	destroyPipeline();
 
 	char buffer[2048];
-	sprintf(buffer, SOFTWAREPIPE);
+	sprintf(buffer, SOFTWAREPIPE, w(), h());
 
 	string pipe(buffer);
 	DBG(pipe);
@@ -593,13 +604,13 @@ alsasink async=false enable-last-sample=false"
 	destroyPipeline();
 	createPipeline();
 	g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
+	//g_object_set(m_src, "location", uri.c_str(), NULL);
 
 	return true;
     }
 
     bool SoftwareVideo::set_volume(int volume)
     {
-	assert(m_volume);
 	if (!m_volume)
 	    return false;
 

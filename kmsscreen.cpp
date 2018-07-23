@@ -93,6 +93,11 @@ namespace mui
 
 	    init(m_plane->buf, plane_width(m_plane), plane_height(m_plane));
 	}
+	else
+	{
+	    m_size = Size(m_device->screens[0]->width,
+			  m_device->screens[0]->height);
+	}
 
 	the_kms = this;
     }

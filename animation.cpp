@@ -278,7 +278,7 @@ namespace mui
 
     void WidgetPositionAnimator::start()
     {
-	m_fd = EventLoop::start_periodic_timer(1,
+	m_fd = EventLoop::start_periodic_timer(33,
 					       WidgetPositionAnimator::timer_callback, this);
 	Animation::start();
     }

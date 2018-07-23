@@ -55,8 +55,12 @@ public:
 	: SoftwareVideo(size),
 	  m_moving(false)
     {
+	m_fscale = (double)KMSScreen::instance()->size().w / (double)w();
+	if (m_fscale <= 0)
+	    m_fscale = 1.0;
+
 	move(0,0);
-	scale(2.5);
+	scale(m_fscale);
 	set_media(filename);
 	play();
 	set_volume(50);
@@ -80,7 +84,7 @@ public:
 	    if (scale() <= 1.0)
 	    {
 		move(0,0);
-		scale(2.5);
+		scale(m_fscale);
 		show->start();
 	    }
 	    else
@@ -123,6 +127,7 @@ private:
     Point m_position;
     ShowAnimation<PlaneWindow>* show;
     HideAnimation<PlaneWindow>* hide;
+    double m_fscale;
 };
 
 int main(int argc, const char** argv)
@@ -145,17 +150,17 @@ int main(int argc, const char** argv)
     }
 
     VideoWindow window(Size(320,192), argv[1]);
+    //VideoWindow window(Size(400,240), argv[1]);
 
-    PlaneWindow ctrlwindow(Size(600, 80));
-    /*
-      {
-      Palette p(ctrlwindow.palette());
-      p.set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
-      ctrlwindow.set_palette(p);
-      }
-    */
+    PlaneWindow ctrlwindow(Size(500, 80));
 
-    ctrlwindow.position(100,400);
+    {
+	Palette p(ctrlwindow.palette());
+	p.set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
+	ctrlwindow.set_palette(p);
+    }
+
+    ctrlwindow.position(150,400);
     window.add(&ctrlwindow);
 
     window.set_control_window(&ctrlwindow);
@@ -180,7 +185,7 @@ int main(int argc, const char** argv)
     ctrlwindow.add(pausebtn);
     grid.add(pausebtn);
 
-    Slider* position = new Slider(0, 100, Point(), Size(250,40), Slider::ORIENTATION_HORIZONTAL);
+    Slider* position = new Slider(0, 100, Point(), Size(150,40), Slider::ORIENTATION_HORIZONTAL);
     Palette p(position->palette());
     p.set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
     position->set_palette(p);
