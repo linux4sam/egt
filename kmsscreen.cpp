@@ -2,6 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#include <thread>
+
 #ifdef HAVE_LIBPLANES
 
 #include "event_loop.h"
@@ -20,16 +22,25 @@ using namespace std;
 
 namespace mui
 {
+    static KMSScreen* the_kms = 0;
 
     KMSOverlayScreen::KMSOverlayScreen(struct plane_data* plane)
 	: m_plane(plane)
     {
-	init(plane->buf, plane_width(plane), plane_height(plane));
+	init(plane->bufs[0], plane_width(plane), plane_height(plane));
     }
 
     void* KMSOverlayScreen::raw()
     {
-	return m_plane->buf;
+	if (m_plane->buffer_count > 1)
+	    return m_plane->bufs[m_plane->front_buf ^ 1];
+	else
+	    return m_plane->bufs[m_plane->front_buf];
+    }
+
+    void KMSOverlayScreen::schedule_flip()
+    {
+	plane_flip(m_plane);
     }
 
     void KMSOverlayScreen::position(int x, int y)
@@ -49,7 +60,8 @@ namespace mui
 
     int KMSOverlayScreen::gem()
     {
-	return m_plane->gem_name;
+	// TODO: array
+	return m_plane->gem_names[0];
     }
 
     void KMSOverlayScreen::apply()
@@ -60,8 +72,6 @@ namespace mui
     KMSOverlayScreen::~KMSOverlayScreen()
     {
     }
-
-    static KMSScreen* the_kms = 0;
 
     KMSScreen::KMSScreen(bool primary)
     {
@@ -75,23 +85,22 @@ namespace mui
 
 	if (primary)
 	{
-	    m_plane = plane_create(m_device,
-				   DRM_PLANE_TYPE_PRIMARY,
-				   0,
-				   m_device->screens[0]->width,
-				   m_device->screens[0]->height,
-				   DRM_FORMAT_XRGB8888);
+	    m_plane = plane_create2(m_device,
+				    DRM_PLANE_TYPE_PRIMARY,
+				    0,
+				    m_device->screens[0]->width,
+				    m_device->screens[0]->height,
+				    DRM_FORMAT_XRGB8888, 1);
 
 	    assert(m_plane);
 	    plane_fb_map(m_plane);
-	    assert(m_plane->buf);
 
 	    plane_apply(m_plane);
 
 	    DBG("primary plane dumb buffer " << plane_width(m_plane) << "," <<
 		plane_height(m_plane));
 
-	    init(m_plane->buf, plane_width(m_plane), plane_height(m_plane));
+	    init(m_plane->bufs[0], plane_width(m_plane), plane_height(m_plane));
 	}
 	else
 	{
@@ -100,6 +109,15 @@ namespace mui
 	}
 
 	the_kms = this;
+    }
+
+    void KMSScreen::schedule_flip()
+    {
+	static std::thread t([this](){
+		plane_flip_handler(m_plane);
+	  });
+
+	plane_flip(m_plane);
     }
 
     KMSScreen* KMSScreen::instance()
@@ -111,29 +129,35 @@ namespace mui
     {
 	struct plane_data* plane = 0;
 
+	static vector<int> used;
+
 	// brute force: find something that will work
 	for (int index = 0; index < 3; index++)
 	{
-	    plane = plane_create(m_device,
-				 DRM_PLANE_TYPE_OVERLAY,
-				 index,
-				 size.w,
-				 size.h,
-				 format);
+	    if (find(used.begin(), used.end(), index) != used.end())
+		continue;
+
+	    plane = plane_create2(m_device,
+				  DRM_PLANE_TYPE_OVERLAY,
+				  index,
+				  size.w,
+				  size.h,
+				  format,
+				  2);
 	    if (plane)
+	    {
+		used.push_back(index);
 		break;
+	    }
 	}
 
 	assert(plane);
 	plane_fb_map(plane);
-	assert(plane->buf);
 
 	plane_set_pos(plane, 0, 0);
 
 	cout << "plane " << plane->index << " overlay dumb buffer " << plane_width(plane) << "," <<
 	    plane_height(plane) << endl;
-
-	//plane_apply(plane);
 
 	return plane;
     }

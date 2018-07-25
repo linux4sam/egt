@@ -276,20 +276,18 @@ namespace mui
 
 	if (!damage.empty())
 	{
-	//int total = 0;
-	//cairo_save(m_cr_back.get());
-	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
-	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
+	    //cairo_save(m_cr_back.get());
+	    cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
+	    cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
 
-	for (const auto& d: damage)
-	{
-	    //total += (d.w * d.h);
-	    cairo_rectangle(m_cr_back.get(), d.x, d.y, d.w, d.h);
-	}
-	cairo_fill(m_cr_back.get());
-	//cairo_restore(m_cr_back.get());
+	    for (const auto& d: damage)
+	    {
+		cairo_rectangle(m_cr_back.get(), d.x, d.y, d.w, d.h);
+	    }
+	    cairo_fill(m_cr_back.get());
+	    //cairo_restore(m_cr_back.get());
 
-		cairo_surface_flush(m_surface_back.get());
+	    cairo_surface_flush(m_surface_back.get());
 	}
 
 #else
@@ -330,9 +328,6 @@ namespace mui
 	cairo_surface_flush(m_surface_back.get());
 #endif
 
-
-
-	//cout << "total pixels: " << total << endl;
 #endif
     }
 
@@ -434,7 +429,6 @@ namespace mui
 	assert(m_fb != (void *) -1);
 
 	init(m_fb, varinfo.xres, varinfo.yres);
-	//init(m_fb, varinfo.xres, varinfo.yres_virtual);
     }
 
     FrameBuffer::~FrameBuffer()

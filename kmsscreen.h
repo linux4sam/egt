@@ -38,6 +38,13 @@ namespace mui
 
 	void* raw();
 
+	struct plane_data* s() const
+	{
+		return m_plane;
+	}
+
+	void schedule_flip();
+
 	virtual ~KMSOverlayScreen();
 
     protected:
@@ -66,10 +73,14 @@ namespace mui
 
 	static KMSScreen* instance();
 
+	void schedule_flip();
+
     protected:
 	int m_fd;
 	struct kms_device* m_device;
 	struct plane_data* m_plane;
+
+	friend class KMSOverlayScreen;
     };
 
 }

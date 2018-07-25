@@ -39,6 +39,12 @@ namespace mui
 	    hide();
 	}
 
+	if (size.empty())
+	{
+	    m_box.w = main_screen()->size().w;
+	    m_box.h = main_screen()->size().h;
+	}
+
 	damage();
 
 	// go ahead and pick up the default screen
@@ -200,12 +206,6 @@ namespace mui
 	set_palette(p);
 
 	assert(KMSScreen::instance());
-
-	if (this->w() == 0 || this->h() == 0)
-	{
-	    m_box.w = KMSScreen::instance()->size().w;
-	    m_box.h = KMSScreen::instance()->size().h;
-	}
 
 	m_screen = new KMSOverlayScreen(
 	    KMSScreen::instance()->allocate_overlay(Size(this->w(),this->h()), format));

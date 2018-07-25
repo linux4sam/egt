@@ -27,7 +27,7 @@ namespace mui
     class SimpleWindow : public Widget
     {
     public:
-	SimpleWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT);
+	SimpleWindow(const Size& size = Size(), uint32_t flags = FLAG_WINDOW_DEFAULT);
 
 	void add(Widget* widget);
 	void remove(Widget* widget);
@@ -99,7 +99,8 @@ namespace mui
     {
     public:
 
-	explicit PlaneWindow(const Size& size, uint32_t flags = FLAG_WINDOW_DEFAULT,
+	explicit PlaneWindow(const Size& size = Size(),
+			     uint32_t flags = FLAG_WINDOW_DEFAULT,
 			     uint32_t format = DEFAULT_FORMAT);
 
 	virtual void position(int x, int y);

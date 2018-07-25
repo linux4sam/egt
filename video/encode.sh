@@ -85,20 +85,28 @@ do
 		   "${in}".mpeg1.avi
 	    ;;
 	mpeg2)
-	    ffmpeg -y -i "${in}" ${size_opts} ${audio_opts} ${video_opts} \
-		   -vcodec mpeg2video -q:v 1 -b_strategy 2 -brd_scale 2 \
-		   ${mpeg_opts} -pass 1 -f avi /dev/null
+#	    ffmpeg -y -i "${in}" ${size_opts} ${audio_opts} ${video_opts} \
+#		   -vcodec mpeg2video -q:v 1 -b_strategy 2 -brd_scale 2 \
+#		   ${mpeg_opts} -pass 1 -f avi /dev/null
 
-	    ffmpeg -y -i "${in}" ${size_opts} ${audio_opts} ${video_opts} \
-		   -vcodec mpeg2video -q:v 1 ${mpeg_opts} -pass 2 "${in}".mpeg2.avi
+#	    ffmpeg -y -i "${in}" ${size_opts} ${audio_opts} ${video_opts} \
+#		   -vcodec mpeg2video -q:v 1 ${mpeg_opts} -pass 2 "${in}".mpeg2.avi
+
+    	    ffmpeg -y -i "${in}" ${size_opts} ${audio_opts} ${video_opts} \
+		   -vcodec mpeg2video -q:v 1 ${mpeg_opts} "${in}".mpeg2.avi
 	    ;;
 	mpeg4)
-	    ffmpeg -y -i "${in}" ${size_opts} \
-		   ${audio_opts} ${video_opts} -vcodec mpeg4 -q:v 2 -pass 1 \
-		   -f avi /dev/null
+	    #ffmpeg -y -i "${in}" ${size_opts} \
+	#	   ${audio_opts} ${video_opts} -vcodec mpeg4 -q:v 2 -pass 1 \
+	#	   -f avi /dev/null
+
+	 #   ffmpeg -y -i "${in}" ${size_opts} \
+	#	   ${audio_opts} ${video_opts} -vcodec mpeg4 -q:v 2 -pass 2 \
+	#	   "${in}".mpeg4.avi
+
 
 	    ffmpeg -y -i "${in}" ${size_opts} \
-		   ${audio_opts} ${video_opts} -vcodec mpeg4 -q:v 2 -pass 2 \
+		   ${audio_opts} ${video_opts} -vcodec mpeg4 -q:v 2 \
 		   "${in}".mpeg4.avi
 	    ;;
 	vp8)

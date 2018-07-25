@@ -50,7 +50,7 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(Size(800,480))
+	: SimpleWindow()
     {
 	Palette p(palette());
 	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);

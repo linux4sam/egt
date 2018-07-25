@@ -19,10 +19,15 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(Size(800,480), FLAG_NO_BACKGROUND),
+	: SimpleWindow(Size(), FLAG_NO_BACKGROUND),
 	  m_img("background.png")
     {
 	add(&m_img);
+	if (m_img.w() != w())
+	{
+	    double scale = (double)w() / (double)m_img.w();
+	    m_img.scale(scale);
+	}
     }
 
     Image m_img;

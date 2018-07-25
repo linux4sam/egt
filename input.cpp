@@ -165,23 +165,29 @@ namespace mui
     {
 	const int NONBLOCKING = 1;
 	ts = ts_setup(path.c_str(), NONBLOCKING);
-	assert(ts);
 
-	samp_mt = (struct ts_sample_mt **)malloc(SAMPLES * sizeof(struct ts_sample_mt *));
-	assert(samp_mt);
-
-	for (int i = 0; i < SAMPLES; i++)
+	if (ts)
 	{
-	    samp_mt[i] = (struct ts_sample_mt *)calloc(SLOTS, sizeof(struct ts_sample_mt));
-	    if (!samp_mt[i])
-	    {
-		free(samp_mt);
-		ts_close(ts);
-		assert(0);
-	    }
-	}
+	    samp_mt = (struct ts_sample_mt **)malloc(SAMPLES * sizeof(struct ts_sample_mt *));
+	    assert(samp_mt);
 
-	EventLoop::add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
+	    for (int i = 0; i < SAMPLES; i++)
+	    {
+		samp_mt[i] = (struct ts_sample_mt *)calloc(SLOTS, sizeof(struct ts_sample_mt));
+		if (!samp_mt[i])
+		{
+		    free(samp_mt);
+		    ts_close(ts);
+		    assert(0);
+		}
+	    }
+
+	    EventLoop::add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
+	}
+	else
+	{
+	    cout << "error: ts device not found: " << path << endl;
+	}
     }
 
     static inline int diff_ms(timeval t1, timeval t2)

@@ -50,10 +50,16 @@ class MyWindow : public PlaneWindow
 {
 public:
     MyWindow()
-	: PlaneWindow(Size(800,500), FLAG_WINDOW_DEFAULT, DRM_FORMAT_XRGB8888)
+	: PlaneWindow(Size(KMSScreen::instance()->size().w/*800*/,
+			   KMSScreen::instance()->size().h/*500*/), FLAG_WINDOW_DEFAULT, DRM_FORMAT_XRGB8888)
     {
-	Image* img = new Image("water.png");
+	Image* img = new Image("water_1080.png");
 	add(img);
+	if (img->w() != w())
+	{
+	    double scale = (double)w() / (double)img->w();
+	    img->scale(scale);
+	}
 
 	m_label = new Label("Objects: 0",
 			    Point(10, 10),
@@ -119,7 +125,7 @@ public:
 	}
     }
 
-private:
+//private:
 
     void objects_changed()
     {
@@ -158,8 +164,13 @@ int main()
 
     PeriodicTimer spawntimer(1000);
     spawntimer.add_handler([&win]() {
+	    std::default_random_engine e1(win.r());
+	    std::uniform_int_distribution<int> xoffset_dist(-win.w()/2, win.w()/2);
+	    int offset = xoffset_dist(e1);
+
 	    Point p(win.box().center());
-	    p.y=win.box().h;
+	    p.y = win.box().h;
+	    p.x += offset;
 	    win.spawn(p);
 	});
     spawntimer.start();

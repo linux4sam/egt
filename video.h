@@ -7,76 +7,79 @@
 
 #ifdef HAVE_GSTREAMER
 
+#ifdef HAVE_LIBPLANES
+#include <drm_fourcc.h>
+#endif
 #include "window.h"
 #include <gst/gst.h>
 #include <string>
 
 namespace mui
 {
-
-    /**
-     * Video player window with hardware acceleration supported.
-     */
-    class HardwareVideo : public PlaneWindow
+    class VideoWindow : public PlaneWindow
     {
     public:
 
-	HardwareVideo(const Size& size);
+	VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888);
 
-	void draw();
+	virtual void draw();
 
 	/**
 	 * @brief Sets the media file URI to the current pipeline
 	 * @param uri file URI
 	 * @return true if success
 	 */
-	bool set_media(const std::string& uri);
+	virtual bool set_media(const std::string& uri);
 
 	/**
 	 * @brief Send pipeline to play state
 	 * @return true if success
 	 */
-	bool play(bool mute = false,int volume = 100);
-	bool unpause();
+	virtual bool play(bool mute = false,int volume = 100);
+	virtual bool unpause();
 
 	/**
 	 * @brief pause Send Pipeline to pause state
 	 * @return true if success
 	 */
-	bool pause();
+	virtual bool pause();
 
 	/**
 	 * @brief null Send pipeline to null state
 	 * @return true if success
 	 */
-	bool null();
+	virtual bool null();
 
 	/**
 	 * @brief Adjusts the volume of the audio in the video being played
 	 * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
 	 * @return true if success
 	 */
-	bool set_volume(int volume);
-
-	int get_volume() const;
+	virtual bool set_volume(int volume);
+	virtual int get_volume() const;
 
 	/**
 	 * @brief Mutes the audio of the video being played
 	 * @param mute true if the audio is to be muted
 	 * @return true if success
 	 */
-	bool set_mute(bool mute);
+	virtual bool set_mute(bool mute);
 
-	virtual ~HardwareVideo();
+	virtual void scale(float value);
+	virtual float scale() const;
 
-	uint64_t position() const { return m_position; }
-	uint64_t duration() const { return m_duration; }
+	virtual ~VideoWindow();
+
+	inline uint64_t position() const { return m_position; }
+	inline uint64_t duration() const { return m_duration; }
+
+	virtual bool playing() const;
 
     protected:
 
-	bool set_state(GstState state);
-	bool createPipeline();
-	void destroyPipeline();
+	virtual bool set_state(GstState state);
+	virtual bool createPipeline() = 0;
+	virtual void destroyPipeline();
 
 	static gboolean bus_callback(GstBus* bus,
 				    GstMessage* message,
@@ -85,95 +88,96 @@ namespace mui
 	GstElement* m_video_pipeline;
 	GstElement* m_src;
 	GstElement* m_volume;
-	gint64 m_position;
-	gint64 m_duration;
-	std::string m_filename;
-    };
-
-    /**
-     * Video player window using only software.
-     */
-    class SoftwareVideo : public PlaneWindow
-    {
-    public:
-
-	SoftwareVideo(const Size& size);
-
-	void draw();
-
-	/**
-	 * @brief Sets the media file URI to the current pipeline
-	 * @param uri file URI
-	 * @return true if success
-	 */
-	bool set_media(const std::string& uri);
-
-	/**
-	 * @brief Send pipeline to play state
-	 * @return true if success
-	 */
-	bool play(bool mute = false,int volume = 100);
-	bool unpause();
-
-	/**
-	 * @brief pause Send Pipeline to pause state
-	 * @return true if success
-	 */
-	bool pause();
-
-	/**
-	 * @brief null Send pipeline to null state
-	 * @return true if success
-	 */
-	bool null();
-
-	/**
-	 * @brief Adjusts the volume of the audio in the video being played
-	 * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
-	 * @return true if success
-	 */
-	bool set_volume(int volume);
-
-	int get_volume() const;
-
-	/**
-	 * @brief Mutes the audio of the video being played
-	 * @param mute true if the audio is to be muted
-	 * @return true if success
-	 */
-	bool set_mute(bool mute);
-
-	void scale(float value);
-	float scale() const;
-
-	virtual ~SoftwareVideo();
-
-	uint64_t position() const { return m_position; }
-	uint64_t duration() const { return m_duration; }
-
-	bool playing() const;
-
-    protected:
-
-	bool set_state(GstState state);
-	bool createPipeline();
-	void destroyPipeline();
-
-	static gboolean bus_callback(GstBus* bus,
-				    GstMessage* message,
-				    gpointer data);
-
-	static GstFlowReturn on_new_buffer_from_source(GstElement* elt, gpointer data);
-
-	GstElement* m_video_pipeline;
-	GstElement* m_src;
-	GstElement* m_volume;
-	GstElement* m_testsink;
 	gint64 m_position;
 	gint64 m_duration;
 	std::string m_filename;
 	int m_volume_value;
 	bool m_mute_value;
+    };
+
+
+    /**
+     * Video player window with hardware acceleration supported.
+     */
+    class HardwareVideo : public VideoWindow
+    {
+    public:
+
+	HardwareVideo(const Size& size);
+
+	/**
+	 * @brief Sets the media file URI to the current pipeline
+	 * @param uri file URI
+	 * @return true if success
+	 */
+	bool set_media(const std::string& uri);
+
+	virtual ~HardwareVideo();
+
+    protected:
+
+	virtual bool createPipeline();
+	virtual void destroyPipeline();
+    };
+
+    /**
+     * Video player window using only software.
+     */
+    class SoftwareVideo : public VideoWindow
+    {
+    public:
+
+	SoftwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUV420);
+
+	virtual bool set_media(const std::string& uri);
+
+	virtual ~SoftwareVideo();
+
+    protected:
+
+	virtual bool createPipeline();
+	virtual void destroyPipeline();
+
+	static GstFlowReturn on_new_buffer_from_source(GstElement* elt,
+						       gpointer data);
+
+	GstElement* m_appsink;
+    };
+
+    /**
+     * Specialized SoftwareVideo window with support for a V4L2 source.
+     */
+    class V4L2SoftwareVideo : public SoftwareVideo
+    {
+    public:
+
+	V4L2SoftwareVideo(const Size& size);
+
+	virtual bool set_media(const std::string& uri);
+
+	virtual ~V4L2SoftwareVideo();
+
+    protected:
+
+	virtual bool createPipeline();
+    };
+
+    /**
+     * Specialized SoftwareVideo window that only handles RAW video stream sources.
+     */
+    class RawSoftwareVideo : public SoftwareVideo
+    {
+    public:
+
+	RawSoftwareVideo(const Size& size);
+
+	virtual bool set_media(const std::string& uri);
+
+	virtual ~RawSoftwareVideo();
+
+    protected:
+
+	virtual bool createPipeline();
     };
 
 }

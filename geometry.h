@@ -78,6 +78,8 @@ namespace mui
 	      w(w_)
 	{}
 
+	inline bool empty() const { return w == 0 || h == 0; }
+
 	int h;
 	int w;
     };

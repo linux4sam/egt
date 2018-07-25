@@ -73,15 +73,17 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(Size(800,480))
+	: SimpleWindow()
     {}
 
     int load()
     {
 	Image* img = new Image("background.png");
+	double scale = (double)w() / (double)img->w();
 	add(img);
+	img->scale(scale);
 
-	MyListBox* list1 = new MyListBox(curves_names, Point(700,0), Size(100,480));
+	MyListBox* list1 = new MyListBox(curves_names, Point(w()-100,0), Size(100,h()));
 	add(list1);
 	list1->selected(7);
 
@@ -173,7 +175,7 @@ int main()
 
     MyWindow window;
 
-    animation = new Animation(-110, 380, [](float value, void* data) {
+    animation = new Animation(-110, window.h()-100/*380*/, [](float value, void* data) {
 	    MyWindow* window = reinterpret_cast<MyWindow*>(data);
 	    window->move_item(value);
 	}, 2000, easing_linear, &window);

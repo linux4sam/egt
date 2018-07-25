@@ -48,60 +48,64 @@ struct HideAnimation : public AnimationTimer
     T* m_widget;
 };
 
-class VideoWindow : public SoftwareVideo
+static ShowAnimation<PlaneWindow>* show;
+static HideAnimation<PlaneWindow>* hide;
+
+static void set_control_window(PlaneWindow* window)
+{
+    show = new ShowAnimation<PlaneWindow>(window);
+    hide = new HideAnimation<PlaneWindow>(window);
+}
+
+template <class T>
+class MyVideoWindow : public T
 {
 public:
-    VideoWindow(const Size& size, const string& filename)
-	: SoftwareVideo(size),
+    MyVideoWindow(const Size& size, const string& filename)
+	: T(size),
 	  m_moving(false)
     {
-	m_fscale = (double)KMSScreen::instance()->size().w / (double)w();
+	m_fscale = (double)KMSScreen::instance()->size().w / (double)T::w();
 	if (m_fscale <= 0)
 	    m_fscale = 1.0;
 
-	move(0,0);
-	scale(m_fscale);
-	set_media(filename);
-	play();
-	set_volume(50);
-    }
-
-    void set_control_window(PlaneWindow* window)
-    {
-	show = new ShowAnimation<PlaneWindow>(window);
-	hide = new HideAnimation<PlaneWindow>(window);
+	T::move(0,0);
+	T::scale(m_fscale);
+	T::set_media(filename);
+	T::play();
+	T::set_volume(50);
     }
 
     int handle(int event)
     {
-	int ret = SimpleWindow::handle(event);
+	int ret = T::handle(event);
 	if (ret)
 	    return ret;
 
 	switch (event)
 	{
 	case EVT_MOUSE_DBLCLICK:
-	    if (scale() <= 1.0)
+	    if (T::scale() <= 1.0)
 	    {
-		move(0,0);
-		scale(m_fscale);
+		T::move(0,0);
+		T::scale(m_fscale);
 		show->start();
 	    }
 	    else
 	    {
-		scale(1.0);
+		T::scale(1.0);
 		hide->start();
 	    }
 
 	    return 1;
 	case EVT_MOUSE_DOWN:
-	    if (scale() <= 1.0)
+	    if (T::scale() <= 1.0)
 	    {
 		if (!m_moving)
 		{
 		    m_moving = true;
 		    m_starting_point = mouse_position();
-		    m_position = Point(x(),y());
+		    m_position = Point(T::x(),T::y());
 		}
 	    }
 
@@ -113,7 +117,7 @@ public:
 	    if (m_moving)
 	    {
 		Point diff = mouse_position() - m_starting_point;
-		move(m_position.x + diff.x, m_position.y + diff.y);
+		T::move(m_position.x + diff.x, m_position.y + diff.y);
 		return 1;
 	    }
 	    break;
@@ -125,33 +129,46 @@ private:
     bool m_moving;
     Point m_starting_point;
     Point m_position;
-    ShowAnimation<PlaneWindow>* show;
-    HideAnimation<PlaneWindow>* hide;
     double m_fscale;
 };
 
 int main(int argc, const char** argv)
 {
-#ifdef HAVE_TSLIB
+#ifdef HAVE_X11
+    X11Screen screen(Size(800,480));
+#else
 #ifdef HAVE_LIBPLANES
     KMSScreen kms(false);
-    InputTslib input0("/dev/input/touchscreen0");
 #else
     FrameBuffer fb("/dev/fb0");
 #endif
-#else
-    X11Screen screen(Size(800,480));
+#ifdef HAVE_TSLIB
+    InputTslib input0("/dev/input/touchscreen0");
+#endif
 #endif
 
-    if (argc != 2)
+    if (argc != 3)
     {
-	cerr << argv[0] << " FILENAME" << endl;
+	cerr << argv[0] << " TYPE FILENAME" << endl;
 	return 1;
     }
 
-    VideoWindow window(Size(320,192), argv[1]);
-    //VideoWindow window(Size(400,240), argv[1]);
+    VideoWindow* window = 0;
+    if (argv[1] == string("v4l2"))
+	window = new MyVideoWindow<V4L2SoftwareVideo>(Size(960,720), argv[2]);
+    else if (argv[1] == string("raw"))
+	window = new MyVideoWindow<RawSoftwareVideo>(Size(320,192), argv[2]);
+    else if (argv[1] == string("hardware"))
+	window = new MyVideoWindow<HardwareVideo>(Size(320,192), argv[2]);
+    else if (argv[1] == string("software"))
+	window = new MyVideoWindow<SoftwareVideo>(Size(320,192), argv[2]);
+    else
+    {
+	cerr << "unknown type: " << argv[1] << endl;
+	return 1;
+    }
 
+#if 1
     PlaneWindow ctrlwindow(Size(500, 80));
 
     {
@@ -160,27 +177,28 @@ int main(int argc, const char** argv)
 	ctrlwindow.set_palette(p);
     }
 
-    ctrlwindow.position(150,400);
-    window.add(&ctrlwindow);
+    ctrlwindow.position((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
+			KMSScreen::instance()->size().h - ctrlwindow.h());
+    window->add(&ctrlwindow);
 
-    window.set_control_window(&ctrlwindow);
+    set_control_window(&ctrlwindow);
 
     HorizontalPositioner grid(0, 0, 600, 80, 5, Widget::ALIGN_CENTER);
 
     ImageButton* playbtn = new ImageButton(":play_png","",Point(),Size(),false);
-    playbtn->add_handler([&window](EventWidget* widget){
+    playbtn->add_handler([window](EventWidget* widget){
 	    ImageButton* btn = dynamic_cast<ImageButton*>(widget);
 	    if (btn->active())
-		window.unpause();
+		window->unpause();
 	});
     ctrlwindow.add(playbtn);
     grid.add(playbtn);
 
     ImageButton* pausebtn = new ImageButton(":pause_png", "", Point(), Size(), false);
-    pausebtn->add_handler([&window](EventWidget* widget){
+    pausebtn->add_handler([window](EventWidget* widget){
 	    ImageButton* btn = dynamic_cast<ImageButton*>(widget);
 	    if (btn->active())
-		window.pause();
+		window->pause();
 	});
     ctrlwindow.add(pausebtn);
     grid.add(pausebtn);
@@ -194,10 +212,10 @@ int main(int argc, const char** argv)
     grid.add(position);
 
     PeriodicTimer postimer(200);
-    postimer.add_handler([position,&window]() {
-	    if (window.duration())
+    postimer.add_handler([position,window]() {
+	    if (window->duration())
 	    {
-		double v = (double)window.position() / (double)window.duration() * 100.;
+		double v = (double)window->position() / (double)window->duration() * 100.;
 		position->position(v);
 	    }
 	    else
@@ -212,9 +230,9 @@ int main(int argc, const char** argv)
     grid.add(volumei);
 
     Slider* volume = new Slider(0, 100, Point(), Size(100,20), Slider::ORIENTATION_HORIZONTAL);
-    volume->add_handler([&window](EventWidget* widget){
+    volume->add_handler([window](EventWidget* widget){
 	    Slider* slider = dynamic_cast<Slider*>(widget);
-	    window.set_volume(slider->position());
+	    window->set_volume(slider->position());
 	});
     ctrlwindow.add(volume);
     volume->position(50);
@@ -223,8 +241,8 @@ int main(int argc, const char** argv)
     playbtn->disable(true);
     pausebtn->disable(false);
 
-    window.add_handler([&window,playbtn,pausebtn](EventWidget* widget){
-    	    if (window.playing())
+    window->add_handler([window,playbtn,pausebtn](EventWidget* widget){
+    	    if (window->playing())
 	    {
 		playbtn->disable(true);
 		pausebtn->disable(false);
@@ -239,6 +257,7 @@ int main(int argc, const char** argv)
     grid.reposition();
 
     ctrlwindow.show();
+#endif
 
     return EventLoop::run();
 }
