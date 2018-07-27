@@ -37,6 +37,9 @@ namespace mui
 
 	virtual void flip(const std::vector<Rect>& damage);
 
+	virtual void schedule_flip() {}
+	virtual uint32_t index() { return 0; }
+
 	virtual void text(const Point& p, const std::string& str);
 
 	virtual void rect(const Rect& rect, const Color& color);
@@ -50,13 +53,45 @@ namespace mui
     protected:
 
 	void greenscreen(const std::vector<Rect>& damage);
-	void init(void* ptr, int w, int h);
-
-	shared_cairo_surface_t m_surface_back;
-	shared_cairo_t m_cr_back;
+	void init(void** ptr, uint32_t count, int w, int h);
 
 	shared_cairo_surface_t m_surface;
 	shared_cairo_t m_cr;
+
+	struct DisplayBuffer
+	{
+	    shared_cairo_surface_t surface;
+	    shared_cairo_t cr;
+
+	    /**
+	     * Each region that needs to be copied from the back buffer.
+	     */
+	    std::vector<Rect> damage;
+
+	    void add_damage(const Rect& rect)
+	    {
+		if (!rect.is_clear())
+		{
+		    for (auto i = damage.begin(); i != damage.end(); ++i)
+		    {
+			if (Rect::is_intersect(*i,rect))
+			{
+			    Rect merged(Rect::merge(*i,rect));
+			    damage.erase(i);
+			    add_damage(merged);
+			    return;
+			}
+		    }
+
+		    // if we get here, no intersect found so add it
+		    damage.push_back(rect);
+		}
+	    }
+	};
+
+	std::vector<DisplayBuffer> m_buffers;
+
+	void copy_to_buffer(DisplayBuffer& buffer);
 
 	Size m_size;
     };
@@ -79,7 +114,7 @@ namespace mui
     };
 
     IScreen* main_screen();
-
+    void set_main_screen(IScreen* screen);
 }
 
 #endif

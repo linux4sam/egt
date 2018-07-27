@@ -46,19 +46,12 @@ namespace mui
 	    return *this;
 	}
 
-	friend Point operator-(Point lhs, const Point& rhs)
-	{
-	    lhs -= rhs;
-	    return lhs;
-	}
-
-	friend Point operator+(Point lhs, const Point& rhs)
-	{
-	    lhs += rhs;
-	    return lhs;
-	}
-
+	friend Point operator-(Point lhs, const Point& rhs);
+	friend Point operator+(Point lhs, const Point& rhs);
     };
+
+    Point operator-(Point lhs, const Point& rhs);
+    Point operator+(Point lhs, const Point& rhs);
 
     std::ostream& operator<<(std::ostream& os, const Point& point);
 

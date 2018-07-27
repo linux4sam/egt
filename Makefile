@@ -6,7 +6,7 @@ GD=n
 IMLIB2=n
 GSTREAMER=n
 
-APPS = ui floating widgets easing info reflect paintperf space water
+APPS = ui floating widgets easing info reflect paintperf space water spritetest
 
 .SUFFIXES: .o .cpp
 
@@ -19,12 +19,12 @@ LDLIBS = -flto -fwhole-program
 headers = event_loop.h geometry.h input.h screen.h utils.h widget.h \
 	x11screen.h color.h window.h ui.h kmsscreen.h animation.h \
 	timer.h font.h tools.h chart.h palette.h video.h painter.h \
-	resource.h
+	resource.h sprite.h imagecache.h
 
 common_objs = event_loop.o input.o widget.o screen.o utils.o x11screen.o \
 	window.o kmsscreen.o color.o animation.o timer.o font.o \
 	tools.o chart.o palette.o geometry.o video.o painter.o \
-	resource.o rc.o
+	resource.o rc.o sprite.o imagecache.o
 
 resources = volumeup.png play.png pause.png
 
@@ -177,7 +177,18 @@ $(water_objs): $(headers)
 water: $(water_objs)
 	$(CXX) $(CXXFLAGS) $(water_objs) -o $@ $(LDLIBS)
 
+spritetest_objs = spritetest.o $(common_objs)
+
+spritetest: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
+spritetest: LDLIBS += $(shell pkg-config $(DEPS) --libs)
+
+$(spritetest_objs): $(headers)
+
+spritetest: $(spritetest_objs)
+	$(CXX) $(CXXFLAGS) $(spritetest_objs) -o $@ $(LDLIBS)
+
 clean:
 	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
 		$(info_objs) $(reflect_objs) $(paintperf_objs) \
-		$(videoplayer_objs) $(space_objs) $(water_objs) $(APPS) rc.cpp
+		$(videoplayer_objs) $(space_objs) $(water_objs) \
+		$(spritetest_objs) $(APPS) rc.cpp

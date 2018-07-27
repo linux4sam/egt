@@ -41,6 +41,8 @@ namespace mui
 
 	if (size.empty())
 	{
+	    assert(main_screen());
+
 	    m_box.w = main_screen()->size().w;
 	    m_box.h = main_screen()->size().h;
 	}
@@ -67,6 +69,7 @@ namespace mui
 	auto i = find(m_children.begin(), m_children.end(), widget);
 	if (i != m_children.end())
 	{
+	    (*i)->damage();
 	    m_children.erase(i);
 	}
     }
@@ -90,23 +93,6 @@ namespace mui
  */
     void SimpleWindow::damage(const Rect& rect)
     {
-#if 0
-	if (!rect.is_clear())
-	{
-	    bool found = false;
-	    for (auto& damage: m_damage)
-	    {
-		if (Rect::is_intersect(damage,rect))
-		{
-		    found = true;
-		    damage = Rect::merge(damage,rect);
-		}
-	    }
-
-	    if (!found)
-		m_damage.push_back(rect);
-	}
-#else
 	if (!rect.is_clear())
 	{
 	    for (auto i = m_damage.begin(); i != m_damage.end(); ++i)
@@ -123,7 +109,6 @@ namespace mui
 	    // if we get here, no intersect found so add it
 	    m_damage.push_back(rect);
 	}
-#endif
     }
 
     int SimpleWindow::handle(int event)
@@ -181,7 +166,9 @@ namespace mui
 
 		if (Rect::is_intersect(damage,child->box()))
 		{
-		    child->draw(damage);
+		    // don't give a child a rectangle that is outside of its own box
+		    Rect r = Rect::intersect(damage, child->box());
+		    child->draw(r);
 		}
 	    }
 	}
@@ -198,6 +185,7 @@ namespace mui
 #ifdef HAVE_LIBPLANES
     PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format)
 	: SimpleWindow(size, flags | FLAG_PLANE_WINDOW),
+	  m_format(format),
 	  m_dirty(true)
     {
 	// default plane windows to transparent
@@ -207,9 +195,19 @@ namespace mui
 
 	assert(KMSScreen::instance());
 
+	if (!size.empty())
+	{
+	    resize(this->w(),this->h());
+	}
+    }
+
+    void PlaneWindow::resize(int w, int h)
+    {
 	m_screen = new KMSOverlayScreen(
-	    KMSScreen::instance()->allocate_overlay(Size(this->w(),this->h()), format));
+	    KMSScreen::instance()->allocate_overlay(Size(w,h), m_format));
 	assert(m_screen);
+	size(w, h);
+	damage();
     }
 
     void PlaneWindow::position(int x, int y)
@@ -261,7 +259,9 @@ namespace mui
 
 		if (Rect::is_intersect(damage,child->box()))
 		{
-		    child->draw(damage);
+		    // don't give a child a rectangle that is outside of its own box
+		    Rect r = Rect::intersect(damage, child->box());
+		    child->draw(r);
 		}
 	    }
 	}

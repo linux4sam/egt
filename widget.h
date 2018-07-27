@@ -114,7 +114,39 @@ namespace mui
 	    ALIGN_RIGHT = (1<<2),
 	    ALIGN_TOP = (1<<3),
 	    ALIGN_BOTTOM = (1<<4),
+	    ALIGN_EXPAND = (1<<5),
 	};
+
+	/**
+	 * Given an item size, and a bounding box, and an alignment parameter,
+	 * return the rctangle the item box should be respositioned/resized to.
+	 *
+	 * @warning This is not for text. Only for origin at left,top.
+	 */
+	static Rect align_algorithm(const Size& item, const Rect& bounding,
+				    uint32_t align, int standoff = 0)
+	{
+	    if (align & ALIGN_EXPAND)
+		return bounding;
+
+	    Point p;
+	    if (align & ALIGN_CENTER)
+	    {
+		p.x = bounding.x + (bounding.w/2) - (item.w/2);
+		p.y = bounding.y + (bounding.h/2) - (item.h/2);
+	    }
+
+	    if (align & ALIGN_LEFT)
+		p.x = bounding.x + standoff;
+	    if (align & ALIGN_RIGHT)
+		p.x = bounding.x + bounding.w - item.w - standoff;
+	    if (align & ALIGN_TOP)
+		p.y = bounding.y + standoff;
+	    if (align & ALIGN_BOTTOM)
+		p.y = bounding.y + bounding.h - item.h - standoff;
+
+	    return Rect(p, item);
+	}
 
 	/**
 	 * Construct a widget.
@@ -237,7 +269,7 @@ namespace mui
 	    if (!m_parent)
 	    {
 		std::cout << "bad parent pointer" << std::endl;
-	    	while(1);
+		while(1);
 	    }
 	    assert(m_parent);
 	    return m_parent;
@@ -262,16 +294,11 @@ namespace mui
     protected:
 
 	void draw_text(const std::string& text,
+		       const Rect& rect,
 		       const Color& color = Color::BLACK,
 		       int align = ALIGN_CENTER,
 		       int standoff = 5,
 		       const Font& font = Font());
-	void draw_basic_text(const std::string& text,
-			     const Rect& rect,
-			     const Color& color = Color::BLACK,
-			     int align = ALIGN_CENTER,
-			     int standoff = 5,
-			     const Font& font = Font());
 
 	void draw_image(shared_cairo_surface_t image,
 			int align = ALIGN_CENTER, int standoff = 0, bool bw = false);
@@ -314,7 +341,7 @@ namespace mui
 
 	virtual void draw(const Rect& rect);
 
-	void scale(double scale);
+	virtual void scale(double scale);
 
 	double scale() const { return m_scale; }
 
@@ -444,7 +471,7 @@ namespace mui
 	}
 
 	// offset to position
-        inline int denormalize(int diff)
+	inline int denormalize(int diff)
 	{
 	    if (m_orientation == ORIENTATION_HORIZONTAL)
 	    {
@@ -473,8 +500,6 @@ namespace mui
 		       const Point& point = Point(),
 		       const Size& size = Size(), int align = ALIGN_CENTER,
 		       const Font& font = Font());
-
-	int handle(int event);
 
 	void text(const std::string& str);
 
@@ -712,7 +737,8 @@ namespace mui
 	    reposition();
 	}
 
-	virtual void add(Widget* widget, int column, int row)
+	// TODO: this should really support per-cell/widget properties for alignment or expand
+	virtual Widget* add(Widget* widget, int column, int row, uint32_t align = ALIGN_EXPAND)
 	{
 	    if (column >= (int)m_widgets.size())
 		m_widgets.resize(column+1);
@@ -720,7 +746,12 @@ namespace mui
 	    if (row >= (int)m_widgets[column].size())
 		m_widgets[column].resize(row+1);
 
-	    m_widgets[column][row] = widget;
+	    Cell cell;
+	    cell.widget = widget;
+	    cell.align = align;
+	    m_widgets[column][row] = cell;
+
+	    return widget;
 	}
 
 	/**
@@ -732,16 +763,23 @@ namespace mui
 	    {
 		for (int row = 0; row < (int)m_widgets[column].size(); row++)
 		{
-		    Widget* widget = m_widgets[column][row];
-		    if (widget)
+		    Cell& cell = m_widgets[column][row];
+		    if (cell.widget)
 		    {
+			// find the rect for the cell
 			int ix = x() + (column * (w() / m_columns)) + m_border;
 			int iy = y() + (row * (h() / m_rows)) + m_border;
 			int iw = (w() / m_columns) - (m_border * 2);
 			int ih = (h() / m_rows) - (m_border * 2);
 
-			widget->position(ix, iy);
-			widget->size(iw, ih);
+			// get the aligning rect
+			Rect target = align_algorithm(cell.widget->box().size(),
+						      Rect(ix,iy,iw,ih),
+						      cell.align);
+
+			// reposition/resize widget
+			cell.widget->position(target.x, target.y);
+			cell.widget->size(target.w, target.h);
 		    }
 		}
 	    }
@@ -755,7 +793,13 @@ namespace mui
 	int m_rows;
 	int m_border;
 
-	std::vector<std::vector<Widget*>> m_widgets;
+	struct Cell
+	{
+	    Widget* widget;
+	    uint32_t align;
+	};
+
+	std::vector<std::vector<Cell>> m_widgets;
     };
 
 
@@ -805,9 +849,9 @@ namespace mui
 		    }
 
 		    if (m_align & ALIGN_TOP)
-		    	p.y = y();
+			p.y = y();
 		    if (m_align & ALIGN_BOTTOM)
-		    	p.y = y() + h() - widget->h();
+			p.y = y() + h() - widget->h();
 
 		    widget->position(x() + offset + m_border, p.y);
 		    offset += (widget->w() + m_border);

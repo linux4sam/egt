@@ -11,6 +11,18 @@ using namespace std;
 namespace mui
 {
 
+    Point operator-(Point lhs, const Point& rhs)
+    {
+	lhs -= rhs;
+	return lhs;
+    }
+
+    Point operator+(Point lhs, const Point& rhs)
+    {
+	lhs += rhs;
+	return lhs;
+    }
+
     std::ostream& operator<<(std::ostream& os, const Point& point)
     {
 	os << point.x << "," << point.y;

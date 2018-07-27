@@ -9,5 +9,7 @@ paintperf
 videoplayer
 space
 water
+spritetest
 _image*.png
 background.png
+rc.cpp

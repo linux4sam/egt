@@ -110,11 +110,13 @@ namespace mui
 
 	// not supported
 	virtual void size(int w, int h) {}
-	virtual void resize(int w, int h) {}
+
+	virtual void resize(int w, int h);
 
 	virtual ~PlaneWindow();
 
     protected:
+	uint32_t m_format;
 	bool m_dirty;
     };
 

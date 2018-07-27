@@ -90,21 +90,32 @@ namespace mui
 
 	if (bw)
 	{
-	cairo_set_source_rgb(m_cr.get(), 0,0,0);
-	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_HSL_COLOR);
-	cairo_mask_surface (m_cr.get(),
-			    surface.get(),
-			    point.x,
-			    point.y);
+	    cairo_set_source_rgb(m_cr.get(), 0,0,0);
+	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_HSL_COLOR);
+	    cairo_mask_surface (m_cr.get(),
+				surface.get(),
+				point.x,
+				point.y);
 	}
     }
 
+    /**
+     * @param rect The source rect to copy.
+     * @param point The destination point.
+     */
     void Painter::draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface)
     {
+#if 1
+	cairo_set_source_surface(m_cr.get(), surface.get(), point.x-rect.x, point.y-rect.y);
+	cairo_rectangle(m_cr.get(), point.x, point.y, rect.w, rect.h);
+	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
+	cairo_fill(m_cr.get());
+#else
 	cairo_set_source_surface(m_cr.get(), surface.get(), point.x, point.y);
 	cairo_rectangle(m_cr.get(), rect.x, rect.y, rect.w, rect.h);
 	cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
 	cairo_fill(m_cr.get());
+#endif
     }
 
     void Painter::draw_arc(const Point& point, float radius, float angle1, float angle2)
@@ -128,4 +139,77 @@ namespace mui
 	cairo_show_text(m_cr.get(), str.c_str());
 	cairo_stroke(m_cr.get());
     }
+
+    /* https://people.freedesktop.org/~joonas/shadow.c */
+
+    /* Returns a surface with content COLOR_ALPHA which is the same size
+     * as the passed surface. */
+    static cairo_surface_t* surface_create_similar(cairo_surface_t* surface)
+    {
+	cairo_t* cr = cairo_create(surface);
+	cairo_surface_t* similar;
+	cairo_push_group(cr);
+	similar = cairo_get_group_target(cr);
+	cairo_surface_reference(similar);
+	cairo_destroy(cr);
+	return similar;
+    }
+
+    /* Paint the given surface with a drop shadow to the context cr. */
+    void Painter::paint_surface_with_drop_shadow(cairo_surface_t* source_surface,
+						 int shadow_offset,
+						 double shadow_alpha,
+						 double tint_alpha,
+						 int srx,
+						 int srcy,
+						 int width,
+						 int height,
+						 int dstx,
+						 int dsty)
+    {
+	/* A temporary surface the size of the source surface.  */
+	cairo_surface_t* shadow_surface = surface_create_similar(source_surface);
+
+	/* Draw the shadow to the shadow surface. */
+	{
+	    cairo_t* cr = cairo_create(shadow_surface);
+	    if (tint_alpha < 1.0) {
+		/* Draw the shadow image with the desired transparency. */
+		cairo_set_source_surface(cr, source_surface, 0,0);
+		cairo_paint_with_alpha(cr, shadow_alpha);
+
+		/* Darken the shadow by tinting it with black. The
+		 * tint_alpha determines how much black to place on top
+		 * of the shadow image. */
+		cairo_set_operator(cr, CAIRO_OPERATOR_ATOP);
+		cairo_set_source_rgba(cr, 0,0,0,tint_alpha);
+		cairo_paint(cr);
+	    }
+	    else {
+		/* Identical to the above when tint_alpha = 1.0, but
+		 * ostensibly faster. */
+		cairo_pattern_t* shadow_mask =
+		    cairo_pattern_create_for_surface(source_surface);
+		cairo_set_source_rgba(cr, 0,0,0,shadow_alpha);
+		cairo_mask(cr, shadow_mask);
+		cairo_pattern_destroy(shadow_mask);
+	    }
+	    cairo_destroy(cr);
+	}
+
+	/* Paint the shadow surface to cr. */
+	cairo_save(m_cr.get()); {
+	    cairo_translate(m_cr.get(), shadow_offset, shadow_offset);
+	    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
+	    cairo_set_source_surface(m_cr.get(), shadow_surface, dstx, dsty);
+	    cairo_paint(m_cr.get());
+	}
+	cairo_restore(m_cr.get());
+	cairo_surface_destroy(shadow_surface);
+
+	/* Paint the image itself to cr. */
+	cairo_set_source_surface(m_cr.get(), source_surface, dstx, dsty);
+	cairo_paint(m_cr.get());
+    }
+
 }

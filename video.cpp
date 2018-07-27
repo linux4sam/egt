@@ -398,7 +398,8 @@ alsasink async=false enable-last-sample=false"
 
 	    if (gst_buffer_map(buffer, &map, GST_MAP_READ))
 	    {
-		KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(_this->m_screen);
+		KMSOverlayScreen* screen =
+		    reinterpret_cast<KMSOverlayScreen*>(_this->m_screen);
 		//cout << "frame size: " << map.size << endl;
 		memcpy(screen->raw(), map.data, map.size);
 		screen->schedule_flip();
@@ -414,7 +415,6 @@ alsasink async=false enable-last-sample=false"
     SoftwareVideo::SoftwareVideo(const Size& size, uint32_t format)
 	: VideoWindow(size, format)
     {
-
     }
 
     bool SoftwareVideo::createPipeline()

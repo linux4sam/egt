@@ -78,6 +78,17 @@ namespace mui
 
 	shared_cairo_t context() const { return m_cr; }
 
+	void paint_surface_with_drop_shadow(cairo_surface_t* source_surface,
+					    int shadow_offset,
+					    double shadow_alpha,
+					    double tint_alpha,
+					    int srx,
+					    int srcy,
+					    int width,
+					    int height,
+					    int dstx,
+					    int dsty);
+
     protected:
 
 	shared_cairo_t m_cr;

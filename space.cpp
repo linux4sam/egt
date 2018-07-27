@@ -21,7 +21,7 @@ class MyImage : public Image
 {
 public:
     MyImage(int xspeed, int yspeed, const Point& point)
-	: Image("bubble.png", point.x, point.y),
+	: Image("metalball.png", point.x, point.y),
 	  m_xspeed(xspeed),
 	  m_yspeed(yspeed)
     {}

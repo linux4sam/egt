@@ -15,13 +15,13 @@
 #include "window.h"
 #include "painter.h"
 #include "resource.h"
+#include "imagecache.h"
 #include <sstream>
 
 using namespace std;
 
 namespace mui
 {
-
     Widget::Widget(int x, int y, int w, int h, uint32_t flags)
 	: m_box(x, y, w, h),
 	  m_visible(true),
@@ -126,81 +126,6 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
-    /* https://people.freedesktop.org/~joonas/shadow.c */
-
-    /* Returns a surface with content COLOR_ALPHA which is the same size
-     * as the passed surface. */
-    static cairo_surface_t *
-    surface_create_similar (cairo_surface_t *surface)
-    {
-	cairo_t *cr = cairo_create (surface);
-	cairo_surface_t *similar;
-	cairo_push_group (cr);
-	similar = cairo_get_group_target (cr);
-	cairo_surface_reference (similar);
-	cairo_destroy (cr);
-	return similar;
-    }
-
-    /* Paint the given surface with a drop shadow to the context cr. */
-    static void
-    paint_surface_with_drop_shadow (cairo_t *cr,
-				    cairo_surface_t *source_surface,
-				    int shadow_offset,
-				    double shadow_alpha,
-				    double tint_alpha,
-				    int srx,
-				    int srcy,
-				    int width,
-				    int height,
-				    int dstx,
-				    int dsty)
-    {
-	/* A temporary surface the size of the source surface.  */
-	cairo_surface_t *shadow_surface = surface_create_similar(source_surface);
-
-	/* Draw the shadow to the shadow surface. */
-	{
-	    cairo_t *cr = cairo_create (shadow_surface);
-	    if (tint_alpha < 1.0) {
-		/* Draw the shadow image with the desired transparency. */
-		cairo_set_source_surface (cr, source_surface, 0,0);
-		cairo_paint_with_alpha (cr, shadow_alpha);
-
-		/* Darken the shadow by tinting it with black. The
-		 * tint_alpha determines how much black to place on top
-		 * of the shadow image. */
-		cairo_set_operator (cr, CAIRO_OPERATOR_ATOP);
-		cairo_set_source_rgba (cr, 0,0,0,tint_alpha);
-		cairo_paint (cr);
-	    }
-	    else {
-		/* Identical to the above when tint_alpha = 1.0, but
-		 * ostensibly faster. */
-		cairo_pattern_t *shadow_mask =
-		    cairo_pattern_create_for_surface (source_surface);
-		cairo_set_source_rgba (cr, 0,0,0,shadow_alpha);
-		cairo_mask (cr, shadow_mask);
-		cairo_pattern_destroy (shadow_mask);
-	    }
-	    cairo_destroy (cr);
-	}
-
-	/* Paint the shadow surface to cr. */
-	cairo_save (cr); {
-	    cairo_translate (cr, shadow_offset, shadow_offset);
-	    cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
-	    cairo_set_source_surface (cr, shadow_surface, dstx, dsty);
-	    cairo_paint (cr);
-	}
-	cairo_restore (cr);
-	cairo_surface_destroy (shadow_surface);
-
-	/* Paint the image itself to cr. */
-	cairo_set_source_surface (cr, source_surface, dstx, dsty);
-	cairo_paint (cr);
-    }
-
     void Widget::draw_gradient_box(const Rect& rect,
 				   const Color& border,
 				   const Color& bg,
@@ -271,8 +196,9 @@ namespace mui
 	cairo_restore(cr.get());
     }
 
-    void Widget::draw_text(const std::string& text, const Color& color,
-			   int align, int standoff, const Font& font)
+    void Widget::draw_text(const std::string& text, const Rect& rect,
+			   const Color& color, int align, int standoff,
+			   const Font& font)
     {
 	auto cr = screen()->context();
 
@@ -286,76 +212,17 @@ namespace mui
 	cairo_set_font_size(cr.get(), font.size());
 	cairo_text_extents(cr.get(),text.c_str(), &textext);
 
-	Point p;
-	if (align & ALIGN_CENTER)
-	{
-	    p.x = x() + (w()/2) - (textext.width/2) + textext.x_bearing;
-	    p.y = y() + (h()/2) + (textext.height/2);
-	}
-
-	if (align & ALIGN_LEFT)
-	    p.x = x() + standoff;
-	if (align & ALIGN_RIGHT)
-	    p.x = x() + w() - textext.width - standoff;
-	if (align & ALIGN_TOP)
-	    p.y = y() + textext.height + standoff;
-	if (align & ALIGN_BOTTOM)
-	    p.y = y() + h() - standoff;
+	Rect target = align_algorithm(Size(textext.width, textext.height),
+				      rect,
+				      align,
+				      standoff);
 
 	cairo_set_source_rgba(cr.get(),
 			      color.redf(),
 			      color.greenf(),
 			      color.bluef(),
 			      color.alphaf());
-	cairo_move_to(cr.get(), p.x, p.y);
-	cairo_show_text(cr.get(), text.c_str());
-	cairo_stroke(cr.get());
-
-	cairo_restore(cr.get());
-    }
-
-    void Widget::draw_basic_text(const std::string& text,
-				 const Rect& rect,
-				 const Color& color,
-				 int align,
-				 int standoff,
-				 const Font& font)
-    {
-	auto cr = screen()->context();
-
-	cairo_save(cr.get());
-
-	cairo_text_extents_t textext;
-	cairo_select_font_face(cr.get(),
-			       font.face().c_str(),
-			       CAIRO_FONT_SLANT_NORMAL,
-			       CAIRO_FONT_WEIGHT_BOLD);
-	cairo_set_font_size(cr.get(), font.size());
-	cairo_text_extents(cr.get(),text.c_str(), &textext);
-
-	Point p;
-	if (align & ALIGN_CENTER)
-	{
-	    p.x = rect.x + (rect.w/2) - (textext.width/2) + textext.x_bearing;
-	    p.y = rect.y + (rect.h/2) + (textext.height/2);
-	}
-
-	if (align & ALIGN_LEFT)
-	    p.x = rect.x + standoff;
-	if (align & ALIGN_RIGHT)
-	    p.x = rect.x + rect.w - textext.width - standoff;
-	if (align & ALIGN_TOP)
-	    p.y = rect.y + textext.height + standoff;
-	if (align & ALIGN_BOTTOM)
-	    p.y = rect.y + rect.h - standoff;
-
-
-	cairo_set_source_rgba(cr.get(),
-			      color.redf(),
-			      color.greenf(),
-			      color.bluef(),
-			      color.alphaf());
-	cairo_move_to(cr.get(), p.x, p.y);
+	cairo_move_to(cr.get(), target.x + textext.x_bearing, target.y - textext.y_bearing);
 	cairo_show_text(cr.get(), text.c_str());
 	cairo_stroke(cr.get());
 
@@ -367,167 +234,28 @@ namespace mui
 	auto width = cairo_image_surface_get_width(image.get());
 	auto height = cairo_image_surface_get_height(image.get());
 
-	Point p;
-	if (align & ALIGN_CENTER)
-	{
-	    p.x = x() + (w()/2) - (width/2);
-	    p.y = y() + (h()/2) - (height/2);
-	}
+	Rect target = align_algorithm(Size(width, height), box(), align, standoff);
 
-	if (align & ALIGN_LEFT)
-	    p.x = x() + standoff;
-	if (align & ALIGN_RIGHT)
-	    p.x = x() + w() - width - standoff;
-	if (align & ALIGN_TOP)
-	    p.y = y() + standoff;
-	if (align & ALIGN_BOTTOM)
-	    p.y = y() + h() - height - standoff;
-
-	/*
-	  paint_surface_with_drop_shadow(screen()->context().get(),
+	Painter painter(screen()->context());
+#if 1
+	painter.draw_image(target.point(), image, bw);
+#else
+	painter.paint_surface_with_drop_shadow(
 	  image.get(),
 	  5,
 	  0.2,
 	  0.4,
-	  p.x,
-	  p.y,
+	  target.x,
+	  target.y,
 	  width,
 	  height,
-	  p.x,
-	  p.y);
-	*/
-
-	Painter painter(screen()->context());
-	painter.draw_image(p, image, bw);
-	//screen()->blit(image.get(), p.x, p.y, width, height, p.x, p.y);
+	  target.x,
+	  target.y);
+#endif
     }
 
     Widget::~Widget()
     {}
-
-    /**
-     * Internal image cache.
-     *
-     * Provides an in-memory cache for images based on filename and scale. This
-     * prevents multiple attempts at loading the same file as well as rescaling
-     * the image to the same scale multiple times.
-     *
-     * This is a tradeoff in consuming more memory instead of possibly
-     * constantly reloading or scaling the same image.
-     */
-    class ImageCache
-    {
-    public:
-
-	shared_cairo_surface_t get(const std::string& filename, float scale = 1.0)
-	{
-	    scale = ImageCache::round(scale, 0.01);
-
-	    string name = id(filename,scale);
-
-	    auto i = m_cache.find(name);
-	    if (i != m_cache.end())
-		return i->second;
-
-	    DBG("image cache miss: " << filename << " scale:" << scale);
-
-	    shared_cairo_surface_t image;
-
-	    if (scale == 1.0)
-	    {
-		std::string::size_type i = filename.find(":");
-		if (i == 0)
-		{
-		    string name = filename;
-		    name.erase(i, 1);
-		    image = shared_cairo_surface_t(
-			cairo_image_surface_create_from_png_stream(
-			    read_resource_stream,(void*)name.c_str()),
-			cairo_surface_destroy);
-		}
-		else
-		{
-		    image = shared_cairo_surface_t(
-			cairo_image_surface_create_from_png(filename.c_str()),
-			cairo_surface_destroy);
-		}
-	    }
-	    else
-	    {
-		shared_cairo_surface_t back = get(filename, 1.0);
-
-		double width = cairo_image_surface_get_width(back.get());
-		double height = cairo_image_surface_get_height(back.get());
-
-		image = scale_surface(back,
-				      width, height,
-				      width * scale,
-				      height * scale);
-	    }
-
-	    m_cache.insert(std::make_pair(name, image));
-
-	    return image;
-	}
-
-	void clear()
-	{
-	    m_cache.clear();
-	}
-
-    protected:
-
-        static float round(float v, float fraction)
-	{
-	    return floor(v) + floor( (v-floor(v))/fraction) * fraction;
-	}
-
-	string id(const string& filename, float scale)
-	{
-	    ostringstream ss;
-	    ss << filename << "-" << scale * 100.;
-
-	    return ss.str();
-	}
-
-	static shared_cairo_surface_t
-	scale_surface(shared_cairo_surface_t old_surface,
-		      int old_width, int old_height,
-		      int new_width, int new_height)
-	{
-	    auto new_surface = shared_cairo_surface_t(
-		cairo_surface_create_similar(old_surface.get(),
-					     CAIRO_CONTENT_COLOR_ALPHA,
-					     new_width,
-					     new_height),
-		cairo_surface_destroy);
-	    auto cr = shared_cairo_t(cairo_create(new_surface.get()),
-				     cairo_destroy);
-
-	    /* Scale *before* setting the source surface (1) */
-	    cairo_scale(cr.get(),
-			(double)new_width / old_width,
-			(double)new_height / old_height);
-	    cairo_set_source_surface(cr.get(), old_surface.get(), 0, 0);
-
-	    /* To avoid getting the edge pixels blended with 0 alpha, which would
-	     * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)
-	     */
-	    cairo_pattern_set_extend(cairo_get_source(cr.get()), CAIRO_EXTEND_REFLECT);
-
-	    /* Replace the destination with the source instead of overlaying */
-	    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-
-	    /* Do the actual drawing */
-	    cairo_paint(cr.get());
-
-	    return new_surface;
-	}
-
-	std::map<std::string,shared_cairo_surface_t> m_cache;
-    };
-
-    static ImageCache image_cache;
 
     Image::Image(const string& filename, int x, int y)
 	: m_filename(filename),
@@ -543,21 +271,29 @@ namespace mui
 
     void Image::scale(double scale)
     {
-	damage();
+	if (m_scale != scale)
+	{
+	    damage();
 
-	m_image = image_cache.get(m_filename, scale);
+	    m_image = image_cache.get(m_filename, scale, false);
 
-	size(cairo_image_surface_get_width(m_image.get()),
-	     cairo_image_surface_get_height(m_image.get()));
-	m_scale = scale;
+	    size(cairo_image_surface_get_width(m_image.get()),
+		 cairo_image_surface_get_height(m_image.get()));
+	    m_scale = scale;
 
-	damage();
+	    damage();
+	}
     }
 
     void Image::draw(const Rect& rect)
     {
+	// TODO: this needs to apply to all draw() calls.  Don't give a widget a
+	// rectangle that is outside of its own box.
+	//Rect r = Rect::intersect(rect, box());
+
 	Painter painter(screen()->context());
-	painter.draw_image(rect, box().point(), m_image);
+	//painter.draw_image(Rect(0,0,w(),h()), box().point(), m_image);
+	painter.draw_image(Rect(rect.point() - box().point(),rect.size()), rect.point(), m_image);
 	//screen()->blit(m_image.get(), rect.x, rect.y, rect.w, rect.h, box().x, box().y);
     }
 
@@ -608,7 +344,7 @@ namespace mui
 	draw_gradient_box(box(), BORDER_COLOR, GLOW_COLOR, active());
 
 	// text
-	draw_text(m_label);
+	draw_text(m_label, box());
     }
 
     Button::~Button()
@@ -646,10 +382,10 @@ namespace mui
 	    draw_gradient_box(box(), BORDER_COLOR, GLOW_COLOR);
 
 	// image
-	draw_image(m_image, ALIGN_CENTER | ALIGN_TOP, 10);
+	draw_image(m_image, ALIGN_CENTER /*| ALIGN_TOP*/, 0, disabled());
 
 	if (!m_label.empty())
-	    draw_basic_text(m_label, box(), m_fgcolor,
+	    draw_text(m_label, box(), m_fgcolor,
 			    ALIGN_CENTER | ALIGN_BOTTOM, 10,
 			    m_font);
     }
@@ -724,7 +460,7 @@ namespace mui
 	cairo_stroke(cr.get());
 
 	// text
-	draw_text(m_label, TEXT_COLOR, ALIGN_LEFT|ALIGN_CENTER);
+	draw_text(m_label, box(), TEXT_COLOR, ALIGN_LEFT|ALIGN_CENTER);
 
 #if 0
 	// triangle
@@ -924,12 +660,6 @@ namespace mui
 	  m_font(font),
 	  m_fgcolor(TEXT_COLOR)
     {
-
-    }
-
-    int Label::handle(int event)
-    {
-	return Widget::handle(event);
     }
 
     void Label::text(const std::string& str)
@@ -943,7 +673,7 @@ namespace mui
 
     void Label::draw(const Rect& rect)
     {
-	draw_text(m_text, m_fgcolor, m_align, 5, m_font);
+	draw_text(m_text, box(), m_fgcolor, m_align, 5, m_font);
     }
 
     Label::~Label()
@@ -982,7 +712,7 @@ namespace mui
 	draw_basic_box(box());
 
 	// text
-	draw_text(m_text, TEXT_COLOR, ALIGN_CENTER | ALIGN_LEFT);
+	draw_text(m_text, box(), TEXT_COLOR, ALIGN_CENTER | ALIGN_LEFT);
     }
 
     SimpleText::~SimpleText()
@@ -1050,6 +780,7 @@ namespace mui
 
 	// text
 	draw_text(m_text,
+		  box(),
 		  palette().color(Palette::TEXT),
 		  ALIGN_LEFT | ALIGN_CENTER,
 		  h());
@@ -1078,7 +809,7 @@ namespace mui
 
 	// text
 	auto width = cairo_image_surface_get_width(m_image.get());
-	draw_text(m_text, m_fgcolor, ALIGN_LEFT | ALIGN_CENTER, width + 5, m_font);
+	draw_text(m_text, box(), m_fgcolor, ALIGN_LEFT | ALIGN_CENTER, width + 5, m_font);
     }
 
     ImageLabel::~ImageLabel()
@@ -1145,7 +876,7 @@ namespace mui
 		draw_gradient_box(item_rect(i));
 	    }
 
-	    draw_basic_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
+	    draw_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
 	}
 #else
 	auto cr = screen()->context();
@@ -1167,7 +898,7 @@ namespace mui
 
 	    for (uint32_t i = 0; i < m_items.size(); i++)
 	    {
-		draw_basic_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
+		draw_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
 	    }
 	}
 #endif
@@ -1284,7 +1015,7 @@ namespace mui
 	cairo_stroke(cr.get());
 
 	string text = std::to_string(a) + m_label;
-	draw_text(text, color2, ALIGN_CENTER, 0, Font(72));
+	draw_text(text, box(), color2, ALIGN_CENTER, 0, Font(72));
 
 	cairo_restore(cr.get());
     }

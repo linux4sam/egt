@@ -45,10 +45,13 @@ namespace mui
 
 	void schedule_flip();
 
+	uint32_t index();
+
 	virtual ~KMSOverlayScreen();
 
     protected:
 	struct plane_data* m_plane;
+	uint32_t m_index;
     };
 
     /**
@@ -59,7 +62,7 @@ namespace mui
     class KMSScreen : public IScreen
     {
     public:
-	KMSScreen(bool primary = true);
+	explicit KMSScreen(bool primary = true);
 
 	struct plane_data* allocate_overlay(const Size& size,
 					    uint32_t format = DRM_FORMAT_ARGB8888);
@@ -75,10 +78,13 @@ namespace mui
 
 	void schedule_flip();
 
+	uint32_t index();
+
     protected:
 	int m_fd;
 	struct kms_device* m_device;
 	struct plane_data* m_plane;
+	uint32_t m_index;
 
 	friend class KMSOverlayScreen;
     };

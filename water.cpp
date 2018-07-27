@@ -2,17 +2,18 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "ui.h"
-#include <math.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <random>
-#include <cmath>
+#include "imagecache.h"
 #include "tools.h"
+#include "ui.h"
 #include <chrono>
+#include <cmath>
+#include <iostream>
+#include <map>
+#include <math.h>
+#include <random>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace mui;
@@ -25,6 +26,22 @@ public:
 	  m_xspeed(xspeed),
 	  m_yspeed(yspeed)
     {}
+
+    void scale(double scale)
+    {
+	if (m_scale != scale)
+	{
+	    damage();
+
+	    m_image = image_cache.get(m_filename, scale, true);
+
+	    size(cairo_image_surface_get_width(m_image.get()),
+		 cairo_image_surface_get_height(m_image.get()));
+	    m_scale = scale;
+
+	    damage();
+	}
+    }
 
     bool animate()
     {
@@ -50,14 +67,16 @@ class MyWindow : public PlaneWindow
 {
 public:
     MyWindow()
-	: PlaneWindow(Size(KMSScreen::instance()->size().w/*800*/,
-			   KMSScreen::instance()->size().h/*500*/), FLAG_WINDOW_DEFAULT, DRM_FORMAT_XRGB8888)
+	: PlaneWindow(Size(KMSScreen::instance()->size().w,
+			   KMSScreen::instance()->size().h),
+		      FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, DRM_FORMAT_XRGB8888),
+	  e1(r())
     {
 	Image* img = new Image("water_1080.png");
 	add(img);
-	if (img->w() != w())
+	if (img->h() != h())
 	{
-	    double scale = (double)w() / (double)img->w();
+	    double scale = (double)h() / (double)img->h();
 	    img->scale(scale);
 	}
 
@@ -83,15 +102,14 @@ public:
 
     void spawn(const Point& p)
     {
-	std::default_random_engine e1(r());
-	std::uniform_int_distribution<int> speed_dist(-20, -1);
+	static std::uniform_int_distribution<int> speed_dist(-20, -1);
 	int xspeed = 0;
 	int yspeed = speed_dist(e1);
 
-	std::uniform_int_distribution<int> offset_dist(-20, 20);
+	static std::uniform_int_distribution<int> offset_dist(-20, 20);
 	int offset = offset_dist(e1);
 
-	std::uniform_real_distribution<float> size_dist(0.1, 1.0);
+	static std::uniform_real_distribution<float> size_dist(0.1, 1.0);
 	float size = size_dist(e1);
 
 	// has to move at some speed
@@ -136,6 +154,7 @@ public:
 
     vector<MyImage*> m_images;
     std::random_device r;
+    std::default_random_engine e1;
     Label* m_label;
 };
 
@@ -164,14 +183,19 @@ int main()
 
     PeriodicTimer spawntimer(1000);
     spawntimer.add_handler([&win]() {
-	    std::default_random_engine e1(win.r());
-	    std::uniform_int_distribution<int> xoffset_dist(-win.w()/2, win.w()/2);
-	    int offset = xoffset_dist(e1);
+
+	    static std::uniform_int_distribution<int> xoffset_dist(-win.w()/2, win.w()/2);
+	    int offset = xoffset_dist(win.e1);
+
+	    static std::uniform_int_distribution<int> count_dist(1, 10);
+	    int count = count_dist(win.e1);
 
 	    Point p(win.box().center());
 	    p.y = win.box().h;
 	    p.x += offset;
-	    win.spawn(p);
+
+	    while (count--)
+		win.spawn(p);
 	});
     spawntimer.start();
 
