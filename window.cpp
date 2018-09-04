@@ -79,29 +79,45 @@ namespace mui
 	damage(m_box);
     }
 
-/**
- * Mark the specified rect as a damaged area.
- *
- * This will merge the damaged area with any already existing damaged area that
- * it overlaps with into a super rectangle. Then, the whole array has to be
- * checked again to make sure the new rectangle doesn't conflict with another
- * existing rectangle.
- *
- * It may be worth investigating if this is optimal instead of removing the
- * overlap and still having two rectangles.  In some cases, this could result in
- * significantly less pixels.
- */
+    /**
+     * Mark the specified rect as a damaged area.
+     *
+     * This will merge the damaged area with any already existing damaged area that
+     * it overlaps with into a super rectangle. Then, the whole array has to be
+     * checked again to make sure the new rectangle doesn't conflict with another
+     * existing rectangle.
+     *
+     * It may be worth investigating if this is optimal instead of removing the
+     * overlap and still having two rectangles.  In some cases, this could result in
+     * significantly less pixels.
+     */
     void SimpleWindow::damage(const Rect& rect)
     {
 	if (!rect.is_clear())
 	{
 	    for (auto i = m_damage.begin(); i != m_damage.end(); ++i)
 	    {
+		if (*i == rect)
+		    return;
+
 		if (Rect::is_intersect(*i,rect))
 		{
-		    Rect merged(Rect::merge(*i,rect));
+		    Rect super(Rect::merge(*i,rect));
+
+#if 1
+		    /*
+		     * if the area of the two rectangles minus their
+		     * intersection area is smaller than the area of the super
+		     * rectangle, then don't merge
+		     */
+		    Rect intersect(Rect::intersect(*i, rect));
+		    if (((*i).area() + rect.area() - intersect.area()) < super.area())
+		    {
+			break;
+		    }
+#endif
 		    m_damage.erase(i);
-		    damage(merged);
+		    damage(super);
 		    return;
 		}
 	    }

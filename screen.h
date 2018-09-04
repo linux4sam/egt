@@ -75,9 +75,21 @@ namespace mui
 		    {
 			if (Rect::is_intersect(*i,rect))
 			{
-			    Rect merged(Rect::merge(*i,rect));
+			    Rect super(Rect::merge(*i,rect));
+#if 1
+			    /*
+			     * if the area of the two rectangles minus their
+			     * intersection area is smaller than the area of the super
+			     * rectangle, then don't merge
+			     */
+			    Rect intersect(Rect::intersect(*i, rect));
+			    if (((*i).area() + rect.area() - intersect.area()) < super.area())
+			    {
+				break;
+			    }
+#endif
 			    damage.erase(i);
-			    add_damage(merged);
+			    add_damage(super);
 			    return;
 			}
 		    }
