@@ -52,7 +52,6 @@ namespace mui
 
     protected:
 
-	void greenscreen(const std::vector<Rect>& damage);
 	void init(void** ptr, uint32_t count, int w, int h);
 
 	shared_cairo_surface_t m_surface;
@@ -92,6 +91,7 @@ namespace mui
 	std::vector<DisplayBuffer> m_buffers;
 
 	void copy_to_buffer(DisplayBuffer& buffer);
+	void copy_to_buffer_greenscreen(DisplayBuffer& buffer, const std::vector<Rect>& olddamage);
 
 	Size m_size;
     };

@@ -82,52 +82,16 @@ namespace mui
 	cairo_restore(m_cr.get());
     }
 
-    void IScreen::greenscreen(const vector<Rect>& damage)
-    {
-#if 0
-	Color color = Color::GREEN;
-
-	cairo_save(m_cr_back.get());
-
-	cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
-	cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
-	cairo_paint(m_cr_back.get());
-
-//cairo_set_source_surface(m_cr_back.get(), m_surface.get(), 0, 0);
-	//cairo_set_operator(m_cr_back.get(), CAIRO_OPERATOR_SOURCE);
-	cairo_set_source_rgba(m_cr_back.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
-	cairo_set_line_width(m_cr_back.get(), 1.0);
-	for (const auto& d: damage)
-	{
-	    cairo_rectangle(m_cr_back.get(), d.x, d.y, d.w, d.h);
-	}
-	cairo_stroke(m_cr_back.get());
-	cairo_restore(m_cr_back.get());
-
-	//cairo_surface_flush(m_surface_back.get());
-
-	//struct timespec ts = {0,300 * 1000000};
-	//nanosleep(&ts, NULL);
-#endif
-    }
-
     void IScreen::flip(const vector<Rect>& damage)
     {
 	static int envset = -1;
 	if (envset < 0)
 	    envset = !!getenv("MUI_GREENSCREEN");
 
-	if (envset)
-	{
-	    if (!damage.empty())
-	    {
-		greenscreen(damage);
-		return;
-	    }
-	}
-
 	if (!damage.empty())
 	{
+	    vector<Rect> olddamage = m_buffers[index()].damage;
+
 	    // save the damage to all buffers
 	    for (auto& b: m_buffers)
 		for (const auto& d: damage)
@@ -135,12 +99,39 @@ namespace mui
 
 	    DisplayBuffer& buffer = m_buffers[index()];
 
-	    copy_to_buffer(buffer);
+	    if (envset)
+		copy_to_buffer_greenscreen(buffer, olddamage);
+	    else
+		copy_to_buffer(buffer);
 
 	    // delete all damage from current buffer
 	    buffer.damage.clear();
 	    schedule_flip();
 	}
+    }
+
+    void IScreen::copy_to_buffer_greenscreen(DisplayBuffer& buffer, const vector<Rect>& olddamage)
+    {
+	cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
+	cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
+
+	for (const auto& d: buffer.damage)
+	    cairo_rectangle(buffer.cr.get(), d.x, d.y, d.w, d.h);
+
+	cairo_fill(buffer.cr.get());
+
+	Color color = Color::GREEN;
+	cairo_set_source_rgb(buffer.cr.get(), color.redf(),
+			      color.greenf(), color.bluef());
+	cairo_set_line_width(buffer.cr.get(), 1.0);
+
+	for (const auto& d: buffer.damage)
+	    if (find(olddamage.begin(), olddamage.end(), d) != olddamage.end())
+		cairo_rectangle(buffer.cr.get(), d.x+2, d.y+2, d.w-4, d.h-4);
+
+	cairo_stroke(buffer.cr.get());
+
+	cairo_surface_flush(buffer.surface.get());
     }
 
     void IScreen::copy_to_buffer(DisplayBuffer& buffer)
