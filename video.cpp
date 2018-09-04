@@ -4,7 +4,9 @@
  */
 #include "video.h"
 #include "kmsscreen.h"
+#include <string.h>
 #include <thread>
+#include <chrono>
 
 #ifdef HAVE_GSTREAMER
 
@@ -41,18 +43,37 @@ namespace mui
 	{
 	case GST_MESSAGE_ERROR:
 	{
-	    GError *err;
+	    GError *error;
 	    gchar *debug;
 
-	    gst_message_parse_error(message, &err, &debug);
-	    cout << "error: " << err->message << endl;
-	    g_error_free(err);
+	    gst_message_parse_error(message, &error, &debug);
+	    cout << "error: " << error->message << endl;
+	    g_error_free(error);
 	    g_free(debug);
 	    break;
 	}
 	case GST_MESSAGE_WARNING:
-	case GST_MESSAGE_INFO:
 	    break;
+	case GST_MESSAGE_INFO:
+	{
+	    if (!strncmp(GST_MESSAGE_SRC_NAME(message), PERF_NAME, 4))
+	    {
+		GError* error = NULL;
+		gchar* debug = NULL;
+		gchar* fps = NULL;
+
+		gst_message_parse_info(message, &error, &debug);
+		if (debug)
+		{
+		    fps = g_strrstr(debug, "fps: ") + 5;
+		    _this->m_fps = atoi(fps);
+		}
+
+		g_error_free(error);
+		g_free(debug);
+	    }
+	    break;
+	}
 	case GST_MESSAGE_CLOCK_PROVIDE:
 	    DBG("GStreamer: Message CLOCK_PROVIDE");
 	    break;
@@ -65,6 +86,8 @@ namespace mui
 	case GST_MESSAGE_EOS:
 	{
 	    DBG("GStreamer: Message EOS");
+
+	    _this->m_fps = 0;
 
 	    // TODO: remove me, loop
 	    gst_element_seek(_this->m_video_pipeline, 1.0, GST_FORMAT_TIME,
@@ -79,7 +102,7 @@ namespace mui
 	case GST_MESSAGE_ELEMENT:
 	{
 	    const GstStructure *info = gst_message_get_structure(message);
-	    if(gst_structure_has_name(info, PROGRESS_NAME))
+	    if (gst_structure_has_name(info, PROGRESS_NAME))
 	    {
 		const GValue *vcurrent;
 		const GValue *vtotal;
@@ -103,13 +126,14 @@ namespace mui
 	return TRUE;
     }
 
-    VideoWindow::VideoWindow(const Size& size, uint32_t format)
-	: PlaneWindow(size, FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, format),
+    VideoWindow::VideoWindow(const Size& size, uint32_t format, bool heo)
+	: PlaneWindow(size, FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, format, heo),
 	  m_video_pipeline(NULL),
 	  m_src(NULL),
 	  m_volume(NULL),
 	  m_position(0),
-	  m_duration(0)
+	  m_duration(0),
+	  m_fps(0)
     {
 	gst_init(NULL, NULL);
 	init_thread();
@@ -138,12 +162,23 @@ namespace mui
 
     void VideoWindow::destroyPipeline()
     {
+	null();
+
+	if (m_volume)
+	{
+	    g_object_unref(m_volume);
+	    m_volume = NULL;
+	}
+
+	if (m_src)
+	{
+	    g_object_unref(m_src);
+	    m_src = NULL;
+	}
+
 	if (m_video_pipeline)
 	{
-	    null();
-	    g_object_unref(m_src);
 	    g_object_unref(m_video_pipeline);
-	    m_src = NULL;
 	    m_video_pipeline = NULL;
 	}
     }
@@ -167,12 +202,14 @@ namespace mui
 
     bool VideoWindow::pause()
     {
+	m_fps = 0;
         set_state(GST_STATE_PAUSED);
 	return false;
     }
 
     bool VideoWindow::null()
     {
+	m_fps = 0;
 	return set_state(GST_STATE_NULL);
     }
 
@@ -263,18 +300,18 @@ namespace mui
     }
 
 
-#define HARDWAREPIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " \
-caps=video/x-h264;audio/x-raw " SRC_NAME ". ! queue ! h264parse !	\
-queue ! g1h264dec ! video/x-raw,width=%d,height=%d,format=BGRx !	\
-progressreport silent=true do-query=true update-freq=1 format=time	\
-name=" PROGRESS_NAME " ! perf name=" PERF_NAME " !			\
-g1kmssink gem-name=%d " SRC_NAME ". ! queue ! audioconvert !		\
-audio/x-raw,format=S16LE ! volume name=" VOLUME_NAME " !		\
-alsasink async=false enable-last-sample=false"
+#define HARDWAREPIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " caps=video/x-h264;audio/x-raw " \
+    SRC_NAME ". ! queue ! h264parse ! g1h264dec ! video/x-raw,width=%d,height=%d,format=YUY2 ! " \
+    "progressreport silent=true do-query=true update-freq=1 format=time	name=" PROGRESS_NAME " ! " \
+    "perf name=" PERF_NAME " ! " \
+    "g1kmssink gem-name=%d " \
+    SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
+    "alsasink async=false enable-last-sample=false sync=true"
 
-    HardwareVideo::HardwareVideo(const Size& size)
-	: VideoWindow(size, DRM_FORMAT_XRGB8888)
-    {}
+    HardwareVideo::HardwareVideo(const Size& size, uint32_t format)
+	: VideoWindow(size, format /*DRM_FORMAT_XRGB8888*/ /*DRM_FORMAT_YUYV*/, true)
+    {
+    }
 
     bool HardwareVideo::createPipeline()
     {
@@ -296,7 +333,7 @@ alsasink async=false enable-last-sample=false"
 	string pipe(buffer);
 	DBG(pipe);
 
-	m_video_pipeline = gst_parse_launch (pipe.c_str(), &error);
+	m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
 	if (!m_video_pipeline)
 	{
 	    m_video_pipeline = NULL;
@@ -325,18 +362,6 @@ alsasink async=false enable-last-sample=false"
 	return true;
     }
 
-    void HardwareVideo::destroyPipeline()
-    {
-	if (m_video_pipeline)
-	{
-	    null();
-	    g_object_unref(m_src);
-	    g_object_unref(m_video_pipeline);
-	    m_src = NULL;
-	    m_video_pipeline = NULL;
-	}
-    }
-
     HardwareVideo::~HardwareVideo()
     {
 
@@ -353,11 +378,102 @@ alsasink async=false enable-last-sample=false"
 	return true;
     }
 
+#if 1
+
+#define V4L2HARDWAREPIPE "v4l2src name=" SRC_NAME " do-timestamp=true ! image/jpeg,width=%d,framerate=30/1 ! " \
+    "jpegparse ! jpegdec ! video/x-raw,format=I420,framerate=30/1 ! " \
+    "perf name=" PERF_NAME " ! " \
+    "g1kmssink gem-name=%d"
+#define FORMAT DRM_FORMAT_YUV420
+
+#else
+
+#define V4L2HARDWAREPIPE "v4l2src name=" SRC_NAME " do-timestamp=true ! image/jpeg,width=%d,framerate=30/1 ! " \
+    "jpegparse ! g1jpegdec ! video/x-raw,width=960,height=720,format=YUY2 ! " \
+    "perf name=" PERF_NAME " ! " \
+    "g1kmssink gem-name=%d sync=true"
+#define FORMAT DRM_FORMAT_YUYV
+//#define FORMAT DRM_FORMAT_RGBA8888
+
+#endif
+
+    V4L2HardwareVideo::V4L2HardwareVideo(const Size& size)
+	: HardwareVideo(size, FORMAT)
+    {
+    }
+
+    bool V4L2HardwareVideo::createPipeline()
+    {
+	GError *error = NULL;
+	GstBus *bus;
+	//guint bus_watch_id;
+
+	KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+	int _gem = screen->gem();
+
+	/* Make sure we don't leave orphan references */
+	destroyPipeline();
+
+	char buffer[2048];
+	sprintf(buffer, V4L2HARDWAREPIPE, w(), _gem);
+
+	string pipe(buffer);
+	DBG(pipe);
+
+	m_video_pipeline = gst_parse_launch (pipe.c_str(), &error);
+	if (!m_video_pipeline)
+	{
+	    m_video_pipeline = NULL;
+	    ERR("failed to create video pipeline");
+	    return false;
+	}
+
+	m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
+	if (!m_src)
+	{
+	    m_src = NULL;
+	    ERR("failed to get video src element");
+	    return false;
+	}
+
+	m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
+	if (!m_volume)
+	{
+	    ERR("failed to get volume element");
+	}
+
+	bus = gst_pipeline_get_bus (GST_PIPELINE(m_video_pipeline));
+	/*bus_watch_id =*/ gst_bus_add_watch (bus, &bus_callback, this);
+	gst_object_unref(bus);
+
+	GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(m_video_pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
+
+	return true;
+    }
+
+    V4L2HardwareVideo::~V4L2HardwareVideo()
+    {
+
+    }
+
+    bool V4L2HardwareVideo::set_media(const string& uri)
+    {
+	m_filename = uri;
+
+	destroyPipeline();
+	createPipeline();
+	g_object_set(m_src, "device", uri.c_str(), NULL);
+
+	return true;
+    }
+
+
 #define SINK_NAME "testsink"
 
 #define SOFTWAREPIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " caps=video/x-raw;audio/x-raw use-buffering=true buffer-size=1048576 " \
     SRC_NAME ". ! queue ! autovideoconvert ! video/x-raw,width=%d,height=%d ! " \
     "progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " ! " \
+    "perf name=" PERF_NAME " ! " \
     "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME " " \
     SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
     "alsasink async=false enable-last-sample=false sync=true"
@@ -413,7 +529,8 @@ alsasink async=false enable-last-sample=false"
     }
 
     SoftwareVideo::SoftwareVideo(const Size& size, uint32_t format)
-	: VideoWindow(size, format)
+	: VideoWindow(size, format),
+	  m_appsink(NULL)
     {
     }
 
@@ -441,19 +558,22 @@ alsasink async=false enable-last-sample=false"
 	}
 
 	m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-	if (!m_src) {
+	if (!m_src)
+	{
 	    m_src = NULL;
 	    ERR("failed to get video src element");
 	    return false;
 	}
 
 	m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-	if (!m_volume) {
+	if (!m_volume)
+	{
 	    ERR("failed to get volume element");
 	}
 
 	m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
-	if (!m_appsink) {
+	if (!m_appsink)
+	{
 	    ERR("failed to get test sink element");
 	    return false;
 	}
@@ -465,21 +585,19 @@ alsasink async=false enable-last-sample=false"
 
 	bus = gst_pipeline_get_bus (GST_PIPELINE (m_video_pipeline));
 	/*bus_watch_id =*/ gst_bus_add_watch (bus, &bus_callback, this);
-	gst_object_unref (bus);
+	gst_object_unref(bus);
 
 	return true;
     }
 
     void SoftwareVideo::destroyPipeline()
     {
-	if (m_video_pipeline)
+	VideoWindow::destroyPipeline();
+
+	if (m_appsink)
 	{
-	    null();
-	    g_object_unref(m_src);
 	    g_object_unref(m_appsink);
-	    g_object_unref(m_video_pipeline);
-	    m_src = NULL;
-	    m_video_pipeline = NULL;
+	    m_appsink = NULL;
 	}
     }
 
@@ -500,10 +618,9 @@ alsasink async=false enable-last-sample=false"
     }
 
 
-
-#define V4L2SOFTWAREPIPE "v4l2src name=" SRC_NAME " ! video/x-raw,width=%d,framerate=15/1,rate=15 ! " \
+#define V4L2SOFTWAREPIPE "v4l2src name=" SRC_NAME " ! video/x-raw,width=%d,framerate=15/1 ! " \
+    "perf name=" PERF_NAME " ! " \
     "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME
-
 
     V4L2SoftwareVideo::V4L2SoftwareVideo(const Size& size)
 	: SoftwareVideo(size, DRM_FORMAT_YUYV)
@@ -534,19 +651,22 @@ alsasink async=false enable-last-sample=false"
 	}
 
 	m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-	if (!m_src) {
+	if (!m_src)
+	{
 	    m_src = NULL;
 	    ERR("failed to get video src element");
 	    return false;
 	}
 
 	m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-	if (!m_volume) {
+	if (!m_volume)
+	{
 	    ERR("failed to get volume element");
 	}
 
 	m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
-	if (!m_appsink) {
+	if (!m_appsink)
+	{
 	    ERR("failed to get test sink element");
 	    return false;
 	}
@@ -558,7 +678,7 @@ alsasink async=false enable-last-sample=false"
 
 	bus = gst_pipeline_get_bus (GST_PIPELINE(m_video_pipeline));
 	/*bus_watch_id =*/ gst_bus_add_watch (bus, &bus_callback, this);
-	gst_object_unref (bus);
+	gst_object_unref(bus);
 
 	GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(m_video_pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
 
@@ -585,6 +705,7 @@ alsasink async=false enable-last-sample=false"
 #define RAWSOFTWAREPIPE "filesrc name=" SRC_NAME " ! videoparse width=%d height=%d framerate=24/1 format=nv21 " \
     " ! autovideoconvert ! "						\
     "progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " ! " \
+    "perf name=" PERF_NAME " ! " \
     "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME
 
     RawSoftwareVideo::RawSoftwareVideo(const Size& size)
@@ -615,19 +736,22 @@ alsasink async=false enable-last-sample=false"
 	}
 
 	m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-	if (!m_src) {
+	if (!m_src)
+	{
 	    m_src = NULL;
 	    ERR("failed to get video src element");
 	    return false;
 	}
 
 	m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-	if (!m_volume) {
+	if (!m_volume)
+	{
 	    ERR("failed to get volume element");
 	}
 
 	m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
-	if (!m_appsink) {
+	if (!m_appsink)
+	{
 	    ERR("failed to get test sink element");
 	    return false;
 	}
@@ -639,7 +763,7 @@ alsasink async=false enable-last-sample=false"
 
 	bus = gst_pipeline_get_bus (GST_PIPELINE (m_video_pipeline));
 	/*bus_watch_id =*/ gst_bus_add_watch (bus, &bus_callback, this);
-	gst_object_unref (bus);
+	gst_object_unref(bus);
 
 	return true;
     }

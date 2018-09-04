@@ -120,6 +120,11 @@ namespace mui
 	int w;
 	int h;
 
+	int area() const
+	{
+	    return w * h;
+	}
+
 	Point center() const
 	{
 	    return Point(x + (w/2), y + (h/2));
@@ -143,6 +148,14 @@ namespace mui
 	inline bool is_clear() const
 	{
 	    return w == 0 || h == 0;
+	}
+
+	inline bool operator==(const Rect& rhs) const
+	{
+	    return x == rhs.x &&
+		y == rhs.y &&
+		w == rhs.w &&
+		h == rhs.h;
 	}
 
 	/**

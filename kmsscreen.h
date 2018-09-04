@@ -65,7 +65,7 @@ namespace mui
 	explicit KMSScreen(bool primary = true);
 
 	struct plane_data* allocate_overlay(const Size& size,
-					    uint32_t format = DRM_FORMAT_ARGB8888);
+					    uint32_t format = DRM_FORMAT_ARGB8888, bool heo = false);
 
 	/**
 	 *

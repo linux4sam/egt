@@ -101,7 +101,8 @@ namespace mui
 
 	explicit PlaneWindow(const Size& size = Size(),
 			     uint32_t flags = FLAG_WINDOW_DEFAULT,
-			     uint32_t format = DEFAULT_FORMAT);
+			     uint32_t format = DEFAULT_FORMAT,
+			     bool heo = false);
 
 	virtual void position(int x, int y);
 	virtual void move(int x, int y);
@@ -118,6 +119,7 @@ namespace mui
     protected:
 	uint32_t m_format;
 	bool m_dirty;
+	bool m_heo;
     };
 
     SimpleWindow*& main_window();

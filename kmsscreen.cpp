@@ -15,14 +15,14 @@
 #include "widget.h"
 #include "window.h"
 #include <cairo.h>
-#include <drm_fourcc.h>
-#include <xf86drm.h>
-
-
-#include <thread>
-#include <mutex>
-#include <deque>
 #include <condition_variable>
+#include <cstring>
+#include <deque>
+#include <drm_fourcc.h>
+#include <mutex>
+#include <pthread.h>
+#include <thread>
+#include <xf86drm.h>
 
 using namespace std;
 
@@ -51,6 +51,12 @@ namespace mui
 	    : m_stop(false)
 	{
 	    m_thread = std::thread(&FlipThread::run, this);
+
+	    sched_param sch_params;
+	    sch_params.sched_priority = sched_get_priority_max(SCHED_FIFO);
+	    if(pthread_setschedparam(m_thread.native_handle(), SCHED_FIFO, &sch_params)) {
+		std::cerr << "Failed to set Thread scheduling : " << std::strerror(errno) << std::endl;
+	    }
 	}
 
 	void run()
@@ -81,7 +87,7 @@ namespace mui
 		unique_lock<mutex> lock(m_mutex);
 		m_queue.push_back(job);
 
-		while (m_queue.size() > 1)
+		while (m_queue.size() > 2)
 		{
 		    cout << "too many flip jobs queued" << endl;
 		    m_queue.pop_front();
@@ -232,12 +238,32 @@ namespace mui
 	return the_kms;
     }
 
-    struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format)
+    struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format, bool heo)
     {
+	cout << "allocate plane " << size << endl;
+
 	struct plane_data* plane = 0;
 
 	static vector<int> used;
 
+	if (heo)
+	{
+	    // TODO: need a better way to do this
+	    int index = 2;
+	    plane = plane_create2(m_device,
+				  DRM_PLANE_TYPE_OVERLAY,
+				  index,
+				  size.w,
+				  size.h,
+				  format,
+				  NUM_OVERLAY_BUFFERS);
+	    if (plane)
+	    {
+		used.push_back(index);
+	    }
+	}
+	else
+	{
 	// brute force: find something that will work
 	for (int index = 0; index < 3; index++)
 	{
@@ -256,6 +282,7 @@ namespace mui
 		used.push_back(index);
 		break;
 	    }
+	}
 	}
 
 	assert(plane);

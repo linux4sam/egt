@@ -183,10 +183,11 @@ namespace mui
     }
 
 #ifdef HAVE_LIBPLANES
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format, bool heo)
 	: SimpleWindow(size, flags | FLAG_PLANE_WINDOW),
 	  m_format(format),
-	  m_dirty(true)
+	  m_dirty(true),
+	  m_heo(heo)
     {
 	// default plane windows to transparent
 	Palette p(palette());
@@ -204,7 +205,7 @@ namespace mui
     void PlaneWindow::resize(int w, int h)
     {
 	m_screen = new KMSOverlayScreen(
-	    KMSScreen::instance()->allocate_overlay(Size(w,h), m_format));
+	    KMSScreen::instance()->allocate_overlay(Size(w,h), m_format, m_heo));
 	assert(m_screen);
 	size(w, h);
 	damage();
@@ -271,7 +272,7 @@ namespace mui
     }
 
 #else
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format, bool heo)
 	: SimpleWindow(size, flags),
 	  m_dirty(true)
     {

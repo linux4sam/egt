@@ -132,6 +132,30 @@ private:
     double m_fscale;
 };
 
+class FpsWindow : public PlaneWindow
+{
+public:
+    FpsWindow()
+	: PlaneWindow(Size(100, 50),
+		      FLAG_WINDOW_DEFAULT, DRM_FORMAT_ARGB8888)
+    {
+	m_label = new Label("FPS: 0",
+			    Point(0, 0),
+			    Size(100, 50),
+			    Widget::ALIGN_CENTER);
+	m_label->fgcolor(Color::WHITE);
+	add(m_label);
+    }
+
+    void text(const std::string& str)
+    {
+	m_label->text(str);
+    }
+
+protected:
+    Label* m_label;
+};
+
 int main(int argc, const char** argv)
 {
 #ifdef HAVE_X11
@@ -156,10 +180,12 @@ int main(int argc, const char** argv)
     VideoWindow* window = 0;
     if (argv[1] == string("v4l2"))
 	window = new MyVideoWindow<V4L2SoftwareVideo>(Size(960,720), argv[2]);
+    else if (argv[1] == string("v4l2h"))
+	window = new MyVideoWindow<V4L2HardwareVideo>(Size(960,720), argv[2]);
     else if (argv[1] == string("raw"))
 	window = new MyVideoWindow<RawSoftwareVideo>(Size(320,192), argv[2]);
     else if (argv[1] == string("hardware"))
-	window = new MyVideoWindow<HardwareVideo>(Size(320,192), argv[2]);
+	window = new MyVideoWindow<HardwareVideo>(Size(960,540), argv[2]);
     else if (argv[1] == string("software"))
 	window = new MyVideoWindow<SoftwareVideo>(Size(320,192), argv[2]);
     else
@@ -169,6 +195,9 @@ int main(int argc, const char** argv)
     }
 
 #if 1
+    FpsWindow fpslabel;
+    fpslabel.show();
+
     PlaneWindow ctrlwindow(Size(500, 80));
 
     {
@@ -212,7 +241,7 @@ int main(int argc, const char** argv)
     grid.add(position);
 
     PeriodicTimer postimer(200);
-    postimer.add_handler([position,window]() {
+    postimer.add_handler([position,window,&fpslabel]() {
 	    if (window->duration())
 	    {
 		double v = (double)window->position() / (double)window->duration() * 100.;
@@ -222,6 +251,10 @@ int main(int argc, const char** argv)
 	    {
 		position->position(0);
 	    }
+
+	    ostringstream ss;
+	    ss << "fps: " << window->fps();
+	    fpslabel.text(ss.str());
 	});
     postimer.start();
 

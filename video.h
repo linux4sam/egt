@@ -20,7 +20,7 @@ namespace mui
     {
     public:
 
-	VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888);
+	VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888, bool heo = false);
 
 	virtual void draw();
 
@@ -75,6 +75,8 @@ namespace mui
 
 	virtual bool playing() const;
 
+	virtual uint32_t fps() const { return m_fps; }
+
     protected:
 
 	virtual bool set_state(GstState state);
@@ -93,6 +95,7 @@ namespace mui
 	std::string m_filename;
 	int m_volume_value;
 	bool m_mute_value;
+	uint32_t m_fps;
     };
 
 
@@ -103,7 +106,7 @@ namespace mui
     {
     public:
 
-	HardwareVideo(const Size& size);
+	HardwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUYV);
 
 	/**
 	 * @brief Sets the media file URI to the current pipeline
@@ -117,7 +120,6 @@ namespace mui
     protected:
 
 	virtual bool createPipeline();
-	virtual void destroyPipeline();
     };
 
     /**
@@ -156,6 +158,24 @@ namespace mui
 	virtual bool set_media(const std::string& uri);
 
 	virtual ~V4L2SoftwareVideo();
+
+    protected:
+
+	virtual bool createPipeline();
+    };
+
+    /**
+     * Specialized HardwareVideo window with support for a V4L2 source.
+     */
+    class V4L2HardwareVideo : public HardwareVideo
+    {
+    public:
+
+	V4L2HardwareVideo(const Size& size);
+
+	virtual bool set_media(const std::string& uri);
+
+	virtual ~V4L2HardwareVideo();
 
     protected:
 
