@@ -358,9 +358,12 @@ namespace mui
 			     bool border)
 	: Button(label, point, size),
 	  m_fgcolor(TEXT_COLOR),
-	  m_border(border)
+	  m_border(border),
+	  m_image_align(ALIGN_CENTER),
+	  m_label_align(ALIGN_CENTER | ALIGN_BOTTOM)
     {
-	set_image(image);
+	if (!image.empty())
+	    set_image(image);
     }
 
     void ImageButton::set_image(const std::string& image)
@@ -382,11 +385,11 @@ namespace mui
 	    draw_gradient_box(box(), BORDER_COLOR, GLOW_COLOR);
 
 	// image
-	draw_image(m_image, ALIGN_CENTER /*| ALIGN_TOP*/, 0, disabled());
+	draw_image(m_image, m_image_align, 10, disabled());
 
 	if (!m_label.empty())
 	    draw_text(m_label, box(), m_fgcolor,
-			    ALIGN_CENTER | ALIGN_BOTTOM, 10,
+			    m_label_align, 10,
 			    m_font);
     }
 

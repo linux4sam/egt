@@ -34,7 +34,10 @@ public:
 	     int y = 0,
 	     bool border = true)
 	: ImageButton(filename, label, Point(x, y), Size(), border)
-    {}
+    {
+	set_image_align(ALIGN_CENTER | ALIGN_TOP);
+	set_label_align(ALIGN_CENTER | ALIGN_BOTTOM);
+    }
 
     int handle(int event)
     {

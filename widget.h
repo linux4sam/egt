@@ -388,6 +388,9 @@ namespace mui
 
 	virtual void set_image(const std::string& image);
 
+	virtual void set_image_align(uint32_t align) { m_image_align = align; }
+	virtual void set_label_align(uint32_t align) { m_label_align = align; }
+
 	virtual ~ImageButton();
 
     protected:
@@ -395,6 +398,8 @@ namespace mui
 	Font m_font;
 	Color m_fgcolor;
 	bool m_border;
+	uint32_t m_image_align;
+	uint32_t m_label_align;
     };
 
     class Combo : public Widget
