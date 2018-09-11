@@ -163,7 +163,7 @@ int main()
 {
 #ifdef HAVE_TSLIB
 #ifdef HAVE_LIBPLANES
-    KMSScreen kms(false);
+    KMSScreen screen(false);
     InputTslib input0("/dev/input/touchscreen0");
 #else
     FrameBuffer fb("/dev/fb0");
@@ -175,11 +175,27 @@ int main()
     MyWindow win;
     win.show();
 
+    HardwareSprite sprite1("fish.png", 252, 209, 8, 0, 0, 0, 0);
+    //SoftwareSprite sprite("fish.png", 252, 209, 8, 0, 0, 100, 100);
+    //SoftwareSprite sprite2("diver.png", 250, 140, 5, 0, 0, 0, 0);
+    HardwareSprite sprite2("diver.png", 250, 140, 5, 0, 0, 0, 0);
+    win.add(&sprite1);
+    win.add(&sprite2);
+    sprite1.show();
+    sprite2.show();
+
     PeriodicTimer animatetimer(33);
     animatetimer.add_handler([&win]() {
 	    win.animate();
 	});
     animatetimer.start();
+
+    PeriodicTimer animatetimer2(100);
+    animatetimer2.add_handler([&sprite1,&sprite2]() {
+	    sprite1.advance();
+	    sprite2.advance();
+	});
+    animatetimer2.start();
 
     PeriodicTimer spawntimer(1000);
     spawntimer.add_handler([&win]() {
@@ -199,36 +215,42 @@ int main()
 	});
     spawntimer.start();
 
-#if 0
-    WidgetPositionAnimator a1 = WidgetPositionAnimator({&win},
-						       WidgetPositionAnimator::CORD_Y,
-						       0, -18,
-						       1000,
-						       easing_easy_slow);
+    WidgetPositionAnimator a1 = WidgetPositionAnimator({&sprite1},
+						       WidgetPositionAnimator::CORD_X,
+						       -sprite1.size().w, screen.size().w,
+						       10000,
+						       easing_linear);
+    a1.start();
 
-    WidgetPositionAnimator a2 = WidgetPositionAnimator({&win},
-						       WidgetPositionAnimator::CORD_Y,
-						       -18, 0,
-						       1000,
-						       easing_extend);
+    PeriodicTimer floattimer(1000 * 12);
+    floattimer.add_handler([&a1,&sprite1,&win]() {
 
-    PeriodicTimer floattimer(1000);
-    floattimer.add_handler([&a1,&a2]() {
-	    static bool toggle1 = false;
-	    if (!toggle1)
-	    {
-		a2.stop();
-		a1.start();
-	    }
-	    else
-	    {
-		a1.stop();
-		a2.start();
-	    }
-	    toggle1 = !toggle1;
+	    static std::uniform_int_distribution<int> yoffset_dist(0, win.h()-sprite1.size().h);
+	    int y = yoffset_dist(win.e1);
+
+	    sprite1.move(-sprite1.size().w, y);
+	    a1.start();
 	});
     floattimer.start();
-#endif
 
+#if 1
+    WidgetPositionAnimator a2 = WidgetPositionAnimator({&sprite2},
+						       WidgetPositionAnimator::CORD_X,
+						       -sprite2.size().w, screen.size().w,
+						       8000,
+						       easing_linear);
+    a2.start();
+
+    PeriodicTimer floattimer2(1000 * 10);
+    floattimer2.add_handler([&a2,&sprite2,&win]() {
+
+	    static std::uniform_int_distribution<int> yoffset_dist(0, win.h()-sprite2.size().h);
+	    int y = yoffset_dist(win.e1);
+
+	    sprite2.move(-sprite2.size().w, y);
+	    a2.start();
+	});
+    floattimer2.start();
+#endif
     return EventLoop::run();
 }
