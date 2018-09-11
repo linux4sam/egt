@@ -1,0 +1,46 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the info package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: info 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-11 08:04-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: info.cpp:234
+msgid "Sound"
+msgstr ""
+
+#: info.cpp:238
+msgid "Clock"
+msgstr ""
+
+#: info.cpp:242
+msgid "Bluetooth"
+msgstr ""
+
+#: info.cpp:246
+msgid "Phone"
+msgstr ""
+
+#: info.cpp:250
+msgid "Mobile Apps"
+msgstr ""
+
+#: info.cpp:254
+msgid "Navigation"
+msgstr ""
+
+#: info.cpp:258
+msgid "General"
+msgstr ""

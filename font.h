@@ -20,7 +20,7 @@ namespace mui
 	    WEIGHT_BOLD
 	};
 
-	explicit Font(const std::string& face = "Arial", int size = 16, int weight = WEIGHT_BOLD);
+	explicit Font(const std::string& face = "Arial Unicode", int size = 16, int weight = WEIGHT_BOLD);
 
 	explicit Font(int size);
 

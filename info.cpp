@@ -11,6 +11,8 @@
 #include <iostream>
 #include <chrono>
 #include <iomanip>
+#include <libintl.h>
+#include <locale.h>
 
 using namespace std;
 using namespace mui;
@@ -20,6 +22,8 @@ class ChildWindow;
 
 MainWindow* win1;
 ChildWindow* win2;
+
+#define _(String) gettext(String)
 
 class MyButton : public ImageButton
 {
@@ -194,23 +198,23 @@ static void bottom_menu(SimpleWindow* win)
 
     StaticGrid grid2(0, 390, 800, 90, 5, 1, 0);
 
-    MyButton* bb1 = new MyButton("infores/audio_s.png", "Audio", 0, 0, false);
+    MyButton* bb1 = new MyButton("infores/audio_s.png", _("Audio"), 0, 0, false);
     win->add(bb1);
     grid2.add(bb1, 0, 0);
 
-    MyButton* bb2 = new MyButton("infores/climate_s.png", "Climate", 0, 0, false);
+    MyButton* bb2 = new MyButton("infores/climate_s.png", _("Climate"), 0, 0, false);
     win->add(bb2);
     grid2.add(bb2, 1, 0);
 
-    MyButton* bb3 = new MyButton("infores/navigation_s.png", "Nav", 0, 0, false);
+    MyButton* bb3 = new MyButton("infores/navigation_s.png", _("Nav"), 0, 0, false);
     win->add(bb3);
     grid2.add(bb3, 2, 0);
 
-    MyButton* bb4 = new MyButton("infores/phone_s.png", "Phone", 0, 0, false);
+    MyButton* bb4 = new MyButton("infores/phone_s.png", _("Phone"), 0, 0, false);
     win->add(bb4);
     grid2.add(bb4, 3, 0);
 
-    MyButton* bb5 = new MyButton("infores/apps_s.png", "Apps", 0, 0, false);
+    MyButton* bb5 = new MyButton("infores/apps_s.png", _("Apps"), 0, 0, false);
     win->add(bb5);
     grid2.add(bb5, 4, 0);
 
@@ -229,31 +233,31 @@ public:
 
 	StaticGrid grid(0, 60, 800, 330, 4, 2, 10);
 
-	MyButton* b1 = new MyButton("infores/sound.png", "Sound");
+	MyButton* b1 = new MyButton("infores/sound.png", _("Sound"));
 	add(b1);
 	grid.add(b1, 0, 0);
 
-	MyButton* b2 = new MyButton("infores/clock.png", "Clock");
+	MyButton* b2 = new MyButton("infores/clock.png", _("Clock"));
 	add(b2);
 	grid.add(b2, 1, 0);
 
-	MyButton* b3 = new MyButton("infores/bluetooth.png", "Bluetooth");
+	MyButton* b3 = new MyButton("infores/bluetooth.png", _("Bluetooth"));
 	add(b3);
 	grid.add(b3, 2, 0);
 
-	MyButton* b4 = new MyButton("infores/phone.png", "Phone");
+	MyButton* b4 = new MyButton("infores/phone.png", _("Phone"));
 	add(b4);
 	grid.add(b4, 3, 0);
 
-	MyButton* b5 = new MyButton("infores/apps.png", "Mobile Apps");
+	MyButton* b5 = new MyButton("infores/apps.png", _("Mobile Apps"));
 	add(b5);
 	grid.add(b5, 0, 1);
 
-	MyButton* b6 = new MyButton("infores/navigation.png", "Navigation");
+	MyButton* b6 = new MyButton("infores/navigation.png", _("Navigation"));
 	add(b6);
 	grid.add(b6, 1, 1);
 
-	MyButton* b7 = new MyButton("infores/general.png", "General");
+	MyButton* b7 = new MyButton("infores/general.png", _("General"));
 	add(b7);
 	grid.add(b7, 2, 1);
 
@@ -274,7 +278,7 @@ public:
 	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 	set_palette(p);
 
-	Label* label = new Label("Blank Screen", Point(0, 60), Size(800, 330));
+	Label* label = new Label(_("Blank Screen"), Point(0, 60), Size(800, 330));
 	add(label);
 
 	top_menu(this);
@@ -284,6 +288,10 @@ public:
 
 int main()
 {
+    setlocale(LC_ALL, "");
+    //bindtextdomain("info", ".");
+    textdomain("info");
+
 #ifdef HAVE_TSLIB
 #ifdef HAVE_LIBPLANES
     KMSScreen kms;
