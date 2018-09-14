@@ -42,9 +42,10 @@ namespace mui
 	: m_fd(-1)
     {
 	m_fd = open(path.c_str(), O_RDONLY);
-	assert(m_fd >= 0);
-
-	EventLoop::add_fd(m_fd, EVENT_READABLE, InputEvDev::process);
+	if (m_fd >= 0)
+	    EventLoop::add_fd(m_fd, EVENT_READABLE, InputEvDev::process);
+	else
+	    ERR("could not open input device");
     }
 
     void InputEvDev::process(int fd, uint32_t mask, void *data)
