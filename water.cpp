@@ -27,17 +27,18 @@ public:
 	  m_yspeed(yspeed)
     {}
 
-    void scale(double scale)
+    void scale(double hscale, double vscale)
     {
-	if (m_scale != scale)
+	if (m_hscale != hscale || m_vscale != vscale)
 	{
 	    damage();
 
-	    m_image = image_cache.get(m_filename, scale, true);
+	    m_image = image_cache.get(m_filename, hscale, vscale, true);
 
 	    size(cairo_image_surface_get_width(m_image.get()),
 		 cairo_image_surface_get_height(m_image.get()));
-	    m_scale = scale;
+	    m_hscale = hscale;
+	    m_vscale = vscale;
 
 	    damage();
 	}
@@ -77,7 +78,7 @@ public:
 	if (img->h() != h())
 	{
 	    double scale = (double)h() / (double)img->h();
-	    img->scale(scale);
+	    img->scale(scale,scale);
 	}
 
 	m_label = new Label("Objects: 0",
@@ -118,7 +119,7 @@ public:
 
 	MyImage* image = new MyImage(xspeed, yspeed, p);
 	add(image);
-	image->scale(size);
+	image->scale(size,size);
 	image->move(p.x - image->box().w/2 + offset,
 		    p.y - image->box().h/2 + offset);
 	m_images.push_back(image);

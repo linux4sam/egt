@@ -341,9 +341,21 @@ namespace mui
 
 	virtual void draw(const Rect& rect);
 
-	virtual void scale(double scale);
+	virtual void scale(double hscale, double vscale);
 
-	double scale() const { return m_scale; }
+	// hmm, should resize really mean scale like this?
+	void resize(int w, int h)
+	{
+	    if (box().w != w || box().h != h)
+	    {
+		double hs = (double)box().w/(double)w;
+		double vs = (double)box().h/(double)h;
+		scale(hs,vs);
+	    }
+	}
+
+	double hscale() const { return m_hscale; }
+	double vscale() const { return m_vscale; }
 
 	virtual ~Image();
 
@@ -351,7 +363,8 @@ namespace mui
 
 	shared_cairo_surface_t m_image;
 	std::string m_filename;
-	double m_scale;
+	double m_hscale;
+	double m_vscale;
     };
 
     class Button : public Widget

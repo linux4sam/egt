@@ -33,7 +33,8 @@ namespace mui
     public:
 
 	shared_cairo_surface_t get(const std::string& filename,
-				   float scale = 1.0, bool approximate = true);
+				   float hscale = 1.0, float vscale = 1.0,
+				   bool approximate = true);
 
 	void clear();
 
@@ -41,7 +42,7 @@ namespace mui
 
 	static float round(float v, float fraction);
 
-	std::string id(const std::string& filename, float scale);
+	std::string id(const std::string& filename, float hscale, float vscale);
 
 	static shared_cairo_surface_t
 	scale_surface(shared_cairo_surface_t old_surface,

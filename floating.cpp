@@ -26,7 +26,7 @@ public:
 	if (m_img.w() != w())
 	{
 	    double scale = (double)w() / (double)m_img.w();
-	    m_img.scale(scale);
+	    m_img.scale(scale,scale);
 	}
     }
 

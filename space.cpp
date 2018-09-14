@@ -85,7 +85,7 @@ public:
 
 	MyImage* image = new MyImage(xspeed, yspeed, p);
 	add(image);
-	image->scale(size);
+	image->scale(size,size);
 	image->move(p.x - image->box().w/2,
 		    p.y - image->box().h/2);
 	m_images.push_back(image);

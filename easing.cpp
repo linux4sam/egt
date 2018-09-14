@@ -81,7 +81,7 @@ public:
 	Image* img = new Image("background.png");
 	double scale = (double)w() / (double)img->w();
 	add(img);
-	img->scale(scale);
+	img->scale(scale,scale);
 
 	MyListBox* list1 = new MyListBox(curves_names, Point(w()-100,0), Size(100,h()));
 	add(list1);

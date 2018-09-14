@@ -13,22 +13,25 @@ using namespace std;
 namespace mui
 {
     shared_cairo_surface_t ImageCache::get(const std::string& filename,
-					   float scale, bool approximate)
+					   float hscale, float vscale, bool approximate)
     {
 	if (approximate)
-	    scale = ImageCache::round(scale, 0.01);
+	{
+	    hscale = ImageCache::round(hscale, 0.01);
+	    vscale = ImageCache::round(vscale, 0.01);
+	}
 
-	string name = id(filename,scale);
+	string name = id(filename, hscale, vscale);
 
 	auto i = m_cache.find(name);
 	if (i != m_cache.end())
 	    return i->second;
 
-	DBG("image cache miss: " << filename << " scale:" << scale);
+	DBG("image cache miss: " << filename << " hscale:" << hscale << " vscale:" << vscale);
 
 	shared_cairo_surface_t image;
 
-	if (scale == 1.0)
+	if (hscale == 1.0 && vscale == 1.0)
 	{
 	    std::string::size_type i = filename.find(":");
 	    if (i == 0)
@@ -56,8 +59,8 @@ namespace mui
 
 	    image = scale_surface(back,
 				  width, height,
-				  width * scale,
-				  height * scale);
+				  width * hscale,
+				  height * vscale);
 	}
 
 	m_cache.insert(std::make_pair(name, image));
@@ -75,10 +78,10 @@ namespace mui
 	return floor(v) + floor( (v-floor(v))/fraction) * fraction;
     }
 
-    string ImageCache::id(const string& filename, float scale)
+    string ImageCache::id(const string& filename, float hscale, float vscale)
     {
 	ostringstream ss;
-	ss << filename << "-" << scale * 100.;
+	ss << filename << "-" << hscale * 100. << "-" << vscale * 100.;
 
 	return ss.str();
     }

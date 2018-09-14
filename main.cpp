@@ -51,7 +51,7 @@ public:
 	MyImage* image = reinterpret_cast<MyImage*>(data);
 	assert(image);
 
-	image->scale(value);
+	image->scale(value,value);
     }
 
     static void timer_callback(int fd, void* data);
@@ -65,8 +65,8 @@ public:
 	    if (!m_animation.running())
 	    {
 		m_animation.set_easing_func(easing_snap);
-		m_animation.starting(scale());
-		m_animation.ending(scale() + 0.2);
+		m_animation.starting(hscale());
+		m_animation.ending(hscale() + 0.2);
 		m_animation.duration(500);
 		m_animation.start();
 		m_fd = EventLoop::start_periodic_timer(1, MyImage::timer_callback, this);
@@ -306,7 +306,7 @@ public:
     void scale_box(MyImage* image, int pos)
     {
     	float scale = sliding_scale(this->w(), image->w(), pos);
-	image->scale(scale);
+	image->scale(scale,scale);
     }
 
 private:

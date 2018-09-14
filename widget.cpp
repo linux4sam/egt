@@ -259,7 +259,8 @@ namespace mui
 
     Image::Image(const string& filename, int x, int y)
 	: m_filename(filename),
-	  m_scale(1.0)
+	  m_hscale(1.0),
+	  m_vscale(1.0)
     {
 	m_image = image_cache.get(filename, 1.0);
 	assert(m_image.get());
@@ -269,17 +270,18 @@ namespace mui
 		     cairo_image_surface_get_height(m_image.get()));
     }
 
-    void Image::scale(double scale)
+    void Image::scale(double hscale, double vscale)
     {
-	if (m_scale != scale)
+	if (m_hscale != hscale || m_vscale != vscale)
 	{
 	    damage();
 
-	    m_image = image_cache.get(m_filename, scale, false);
+	    m_image = image_cache.get(m_filename, hscale, vscale, false);
 
 	    size(cairo_image_surface_get_width(m_image.get()),
 		 cairo_image_surface_get_height(m_image.get()));
-	    m_scale = scale;
+	    m_hscale = hscale;
+	    m_vscale = vscale;
 
 	    damage();
 	}
