@@ -91,17 +91,14 @@ namespace mui
 		switch (e->code)
 		{
 		case ABS_X:
-		    x = (double)value;// * 800./1024.;
+		    x = (double)value;
 		    break;
 		case ABS_Y:
-		    y = (double)value;// * 480./1024.;
+		    y = (double)value;
 		    break;
 		}
 
 	    case EV_KEY:
-		if (value == 2)
-		    break;
-
 		switch (e->code)
 		{
 		case BTN_TOUCH:
@@ -113,20 +110,26 @@ namespace mui
 		case BTN_TOOL_FINGER:
 		case BTN_TOOL_MOUSE:
 		case BTN_TOOL_LENS:
-		    //device->tool = value ? e->code : 0;
 		    break;
-
 		case BTN_LEFT:
 		    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
 		    break;
-
 		case BTN_RIGHT:
 		    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
 		    break;
-
 		case BTN_MIDDLE:
 		    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
 		    break;
+		default:
+		    int v;
+		    if (value == 1)
+			v = EVT_KEY_DOWN;
+		    else if (value == 0)
+			v = EVT_KEY_UP;
+		    else if (value == 2)
+			v = EVT_KEY_REPEAT;
+		    event_key = e->code;
+		    main_window()->handle(v);
 		}
 	    }
 	}

@@ -26,8 +26,9 @@ namespace mui
 	EVT_MOUSE_DBLCLICK,
 	EVT_ENTER,
 	EVT_LEAVE,
-	EVT_KEYDOWN,
-	EVT_KEYUP,
+	EVT_KEY_DOWN,
+	EVT_KEY_UP,
+	EVT_KEY_REPEAT,
     };
 
     Point& mouse_position();

@@ -333,7 +333,7 @@ namespace mui
 	    break;
 	case EVT_MOUSE_MOVE:
 	    break;
-	case EVT_KEYDOWN:
+	case EVT_KEY_DOWN:
 	    break;
 	}
 
@@ -698,7 +698,7 @@ namespace mui
 	    damage();
 	    focus(true);
 	    return 1;
-	case EVT_KEYDOWN:
+	case EVT_KEY_DOWN:
 	    if (focus())
 	    {
 		m_text.append(1, (char)key_position());

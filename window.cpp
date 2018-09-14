@@ -145,8 +145,8 @@ namespace mui
 			return 1;
 	    }
 	    break;
-	case EVT_KEYDOWN:
-	case EVT_KEYUP:
+	case EVT_KEY_DOWN:
+	case EVT_KEY_UP:
 	    for (auto& child: reverse_iterate(m_children))
 	    {
 		if (child->disabled())
