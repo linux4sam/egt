@@ -7,12 +7,14 @@
 #include "ui.h"
 #include <chrono>
 #include <cmath>
+#include <cstring>
 #include <iostream>
 #include <map>
 #include <math.h>
 #include <random>
 #include <sstream>
 #include <string>
+#include <thread>
 #include <vector>
 
 using namespace std;
@@ -177,9 +179,8 @@ int main()
     win.show();
 
     HardwareSprite sprite1("fish.png", 252, 209, 8, 0, 0, 0, 0);
-    //SoftwareSprite sprite("fish.png", 252, 209, 8, 0, 0, 100, 100);
-    //SoftwareSprite sprite2("diver.png", 250, 140, 5, 0, 0, 0, 0);
-    HardwareSprite sprite2("diver.png", 250, 140, 5, 0, 0, 0, 0);
+    HardwareSprite sprite2("fish2.png", 100, 87, 6, 0, 0, 0, 0);
+
     win.add(&sprite1);
     win.add(&sprite2);
     sprite1.show();
@@ -216,6 +217,7 @@ int main()
 	});
     spawntimer.start();
 
+#if 1
     WidgetPositionAnimator a1 = WidgetPositionAnimator({&sprite1},
 						       WidgetPositionAnimator::CORD_X,
 						       -sprite1.size().w, screen.size().w,
@@ -233,16 +235,17 @@ int main()
 	    a1.start();
 	});
     floattimer.start();
+#endif
 
 #if 1
     WidgetPositionAnimator a2 = WidgetPositionAnimator({&sprite2},
 						       WidgetPositionAnimator::CORD_X,
 						       -sprite2.size().w, screen.size().w,
-						       8000,
+						       12000,
 						       easing_linear);
     a2.start();
 
-    PeriodicTimer floattimer2(1000 * 10);
+    PeriodicTimer floattimer2(1000 * 15);
     floattimer2.add_handler([&a2,&sprite2,&win]() {
 
 	    static std::uniform_int_distribution<int> yoffset_dist(0, win.h()-sprite2.size().h);
@@ -253,5 +256,6 @@ int main()
 	});
     floattimer2.start();
 #endif
+
     return EventLoop::run();
 }
