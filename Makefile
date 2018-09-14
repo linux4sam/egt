@@ -6,7 +6,7 @@ GD=n
 IMLIB2=n
 GSTREAMER=n
 
-APPS = ui floating widgets easing info reflect paintperf space water spritetest
+APPS = ui floating widgets easing info reflect paintperf space water brick spritetest
 
 .SUFFIXES: .o .cpp
 
@@ -177,6 +177,16 @@ $(water_objs): $(headers)
 water: $(water_objs)
 	$(CXX) $(CXXFLAGS) $(water_objs) -o $@ $(LDLIBS)
 
+brick_objs = brick.o $(common_objs)
+
+brick: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
+brick: LDLIBS += $(shell pkg-config $(DEPS) --libs)
+
+$(brick_objs): $(headers)
+
+brick: $(brick_objs)
+	$(CXX) $(CXXFLAGS) $(brick_objs) -o $@ $(LDLIBS)
+
 spritetest_objs = spritetest.o $(common_objs)
 
 spritetest: CXXFLAGS += $(shell pkg-config $(DEPS) --cflags)
@@ -191,4 +201,4 @@ clean:
 	rm -f $(ui_objs) $(floating_objs) $(widgets_objs) $(easing_objs) \
 		$(info_objs) $(reflect_objs) $(paintperf_objs) \
 		$(videoplayer_objs) $(space_objs) $(water_objs) \
-		$(spritetest_objs) $(APPS) rc.cpp
+		$(brick_objs) $(spritetest_objs) $(APPS) rc.cpp
