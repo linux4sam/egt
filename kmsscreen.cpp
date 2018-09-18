@@ -37,7 +37,7 @@ namespace mui
 	  m_index(0)
     {
 	init(plane->bufs, NUM_OVERLAY_BUFFERS,
-	     plane_width(plane), plane_height(plane));
+	     plane_width(plane), plane_height(plane), plane_format(plane));
     }
 
     void* KMSOverlayScreen::raw()
@@ -153,6 +153,16 @@ namespace mui
 	plane_set_scale(m_plane, scale);
     }
 
+    void KMSOverlayScreen::set_pan_size(int width, int height)
+    {
+	plane_set_pan_size(m_plane, width, height);
+    }
+
+    void KMSOverlayScreen::set_pan_pos(int x, int y)
+    {
+	plane_set_pan_pos(m_plane, x, y);
+    }
+
     float KMSOverlayScreen::scale() const
     {
 	return m_plane->scale;
@@ -187,13 +197,14 @@ namespace mui
 	if (primary)
 	{
 	    static const uint32_t NUM_PRIMARY_BUFFERS = 3;
+	    uint32_t format = DRM_FORMAT_RGB565;
 
 	    m_plane = plane_create2(m_device,
 				    DRM_PLANE_TYPE_PRIMARY,
 				    0,
 				    m_device->screens[0]->width,
 				    m_device->screens[0]->height,
-				    DRM_FORMAT_XRGB8888,
+				    format,
 				    NUM_PRIMARY_BUFFERS);
 
 	    assert(m_plane);
@@ -205,7 +216,7 @@ namespace mui
 		plane_height(m_plane));
 
 	    init(m_plane->bufs, NUM_PRIMARY_BUFFERS,
-		 plane_width(m_plane), plane_height(m_plane));
+		 plane_width(m_plane), plane_height(m_plane), format);
 	}
 	else
 	{
@@ -238,13 +249,13 @@ namespace mui
 	return the_kms;
     }
 
+    static vector<int> used;
+
     struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format, bool heo)
     {
 	cout << "allocate plane " << size << endl;
 
 	struct plane_data* plane = 0;
-
-	static vector<int> used;
 
 	if (heo)
 	{
@@ -264,25 +275,25 @@ namespace mui
 	}
 	else
 	{
-	// brute force: find something that will work
-	for (int index = 0; index < 3; index++)
-	{
-	    if (find(used.begin(), used.end(), index) != used.end())
-		continue;
-
-	    plane = plane_create2(m_device,
-				  DRM_PLANE_TYPE_OVERLAY,
-				  index,
-				  size.w,
-				  size.h,
-				  format,
-				  NUM_OVERLAY_BUFFERS);
-	    if (plane)
+	    // brute force: find something that will work
+	    for (int index = 2; index >= 0; index--)
 	    {
-		used.push_back(index);
-		break;
+		if (find(used.begin(), used.end(), index) != used.end())
+		    continue;
+
+		plane = plane_create2(m_device,
+				      DRM_PLANE_TYPE_OVERLAY,
+				      index,
+				      size.w,
+				      size.h,
+				      format,
+				      NUM_OVERLAY_BUFFERS);
+		if (plane)
+		{
+		    used.push_back(index);
+		    break;
+		}
 	    }
-	}
 	}
 
 	assert(plane);

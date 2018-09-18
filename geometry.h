@@ -140,6 +140,26 @@ namespace mui
 	    return Size(w,h);
 	}
 
+	inline int top() const
+	{
+	    return y;
+	}
+
+	inline int left() const
+	{
+	    return x;
+	}
+
+	inline int bottom() const
+	{
+	    return y + h;
+	}
+
+	inline int right() const
+	{
+	    return x + w;
+	}
+
 	inline void clear()
 	{
 	    x = y = w = h = 0;

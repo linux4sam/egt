@@ -43,7 +43,8 @@ namespace mui
 	    hide();
 	}
 
-	Size size() const { return Size(m_box.w,m_box.h); }
+	// why can't i see this from Widget::size()?
+	Size size() const { return m_box.size(); }
 
 	// unsupported
 	//virtual void position(int x, int y) {}
@@ -78,6 +79,21 @@ namespace mui
 
 	virtual void draw(const Rect& rect);
 
+	template <class T>
+	T find_child(const std::string& name)
+	{
+	    auto i = std::find_if(m_children.begin(), m_children.end(),
+				  [&name](const Widget* obj) {
+				      return obj->name() == name;
+				  });
+
+	    // just return first one
+	    if (i != m_children.end())
+		return reinterpret_cast<T>(*i);
+
+	    return 0;
+	}
+
     protected:
 
 	virtual IScreen* screen() { assert(m_screen); return m_screen; }
@@ -109,10 +125,15 @@ namespace mui
 
 	virtual void draw();
 
+	// why can't i see this from Widget::size()?
+	Size size() const { return m_box.size(); }
+
 	// not supported
 	virtual void size(int w, int h) {}
 
 	virtual void resize(int w, int h);
+
+	virtual void hide() { /** TODO: no way to hide. */  }
 
 	virtual ~PlaneWindow();
 

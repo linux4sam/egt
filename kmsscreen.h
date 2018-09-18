@@ -30,6 +30,8 @@ namespace mui
 
 	virtual void position(int x, int y);
 	virtual void scale(float scale);
+	virtual void set_pan_size(int width, int height);
+	virtual void set_pan_pos(int x, int y);
 	virtual float scale() const;
 
 	virtual int gem();

@@ -10,6 +10,7 @@
 #include <cairo.h>
 #include <vector>
 #include <memory>
+#include <drm_fourcc.h>
 
 namespace mui
 {
@@ -52,7 +53,7 @@ namespace mui
 
     protected:
 
-	void init(void** ptr, uint32_t count, int w, int h);
+	void init(void** ptr, uint32_t count, int w, int h, uint32_t f = DRM_FORMAT_ARGB8888);
 
 	shared_cairo_surface_t m_surface;
 	shared_cairo_t m_cr;

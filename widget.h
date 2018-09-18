@@ -197,12 +197,12 @@ namespace mui
 	/**
 	 * Hide the widget.  This will prevent draw() calls.
 	 */
-	virtual void hide() { m_visible = false; }
+	virtual void hide() { if (!m_visible) return; m_visible = false; damage(); }
 
 	/**
 	 * Show the widget.  This will allow draw() calls.
 	 */
-	virtual void show() { m_visible = true; damage(); }
+	virtual void show() { if (m_visible) return; m_visible = true; damage(); }
 	virtual bool visible() const { return m_visible; }
 	virtual bool focus() const { return m_focus; }
 	virtual void focus(bool value) { m_focus = value; }
@@ -262,8 +262,6 @@ namespace mui
 	    m_palette.reset(new Palette(palette));
 	}
 
-	virtual ~Widget();
-
 	Widget* parent()
 	{
 	    if (!m_parent)
@@ -290,6 +288,18 @@ namespace mui
 	{
 	    return m_flags &= ~flag;
 	}
+
+	const std::string& name() const
+	{
+	    return m_name;
+	}
+
+	void name(const std::string& name)
+	{
+	    m_name = name;
+	}
+
+	virtual ~Widget();
 
     protected:
 
@@ -319,6 +329,10 @@ namespace mui
 	Widget* m_parent;
 	std::shared_ptr<Palette> m_palette;
 	uint32_t m_flags;
+	/**
+	 * Every widget has a user defined name.
+	 */
+	std::string m_name;
 
 	inline Point screen_to_window(const Point& p)
 	{
@@ -356,6 +370,11 @@ namespace mui
 
 	double hscale() const { return m_hscale; }
 	double vscale() const { return m_vscale; }
+
+	shared_cairo_surface_t surface() const
+	{
+	    return m_image;
+	}
 
 	virtual ~Image();
 
@@ -787,8 +806,8 @@ namespace mui
 			// find the rect for the cell
 			int ix = x() + (column * (w() / m_columns)) + m_border;
 			int iy = y() + (row * (h() / m_rows)) + m_border;
-			int iw = (w() / m_columns) - (m_border * 2);
-			int ih = (h() / m_rows) - (m_border * 2);
+			int iw = (w() / m_columns) - (m_border * 2) - 1;
+			int ih = (h() / m_rows) - (m_border * 2) - 1;
 
 			// get the aligning rect
 			Rect target = align_algorithm(cell.widget->box().size(),
@@ -797,7 +816,7 @@ namespace mui
 
 			// reposition/resize widget
 			cell.widget->position(target.x, target.y);
-			cell.widget->size(target.w, target.h);
+			cell.widget->resize(target.w, target.h);
 		    }
 		}
 	    }

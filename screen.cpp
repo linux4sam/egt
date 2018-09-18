@@ -161,13 +161,32 @@ namespace mui
     {
     }
 
-    void IScreen::init(void** ptr, uint32_t count, int w, int h)
+    void IScreen::init(void** ptr, uint32_t count, int w, int h, uint32_t f)
     {
 	cout << "screen " << w << "," << h << endl;
 
 	m_size = Size(w,h);
 
 	cairo_format_t format = CAIRO_FORMAT_ARGB32;
+
+	switch (f)
+	{
+	case DRM_FORMAT_RGB565:
+	    cout << "screen using RGB565 format" << endl;
+	    format = CAIRO_FORMAT_RGB16_565;
+	    break;
+	case DRM_FORMAT_ARGB8888:
+	    cout << "screen using ARGB32 format" << endl;
+	    format = CAIRO_FORMAT_ARGB32;
+	    break;
+	case DRM_FORMAT_XRGB8888:
+	    cout << "screen using RGB24 format" << endl;
+	    format = CAIRO_FORMAT_RGB24;
+	    break;
+	default:
+	    assert(0);
+	    break;
+	}
 
 	for (uint32_t x = 0; x < count; x++)
 	{
