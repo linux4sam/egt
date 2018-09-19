@@ -242,4 +242,11 @@ namespace mui
 
 	::close(fd);
     }
+
+    static std::vector<event_callback> idle;
+
+    void EventLoop::add_idle_callback(event_callback func)
+    {
+	idle.push_back(func);
+    }
 }
