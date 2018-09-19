@@ -67,6 +67,9 @@ public:
 
 	add(&m_paddle);
 	add(&m_ball);
+	double hscale = (double)w() / (double)background->w() * 0.5;
+	double vscale = (double)h() / (double)background->h() * 0.5;
+	m_ball.scale(hscale, vscale);
 
 	m_label = new Label("-",
 			    Point(5, 2),
