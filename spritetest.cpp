@@ -29,8 +29,8 @@ int main()
 
     StaticGrid grid(0,0,win.w(), win.h(), 2, 2, 10);
 
-    HardwareSprite sprite1("walk.png", 75, 132, 8, 0, 0, screen.size().w/2-75, screen.size().h/2-132/2);
-    SoftwareSprite sprite2("walk.png", 75, 132, 8, 0, 0, screen.size().w/2, screen.size().h/2-132/2);
+    HardwareSprite sprite1("walk.png", 75, 132, 8, 0, 0, screen.size().w/2-75, screen.size().h/2 - 132/2);
+    SoftwareSprite sprite2("walk.png", 75, 132, 8, 0, 0, screen.size().w/2, screen.size().h/2 - 132/2);
     win.add(&sprite1);
     grid.add(&sprite1, 0, 1, StaticGrid::ALIGN_CENTER);
     win.add(&sprite2);

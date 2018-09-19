@@ -220,11 +220,21 @@ namespace mui
 
     void PlaneWindow::resize(int w, int h)
     {
-	m_screen = new KMSOverlayScreen(
-	    KMSScreen::instance()->allocate_overlay(Size(w,h), m_format, m_heo));
-	assert(m_screen);
-	size(w, h);
-	damage();
+	// severe limitation that we can only size once
+	// this is horrible: basically, only let the plane get allocated once,
+	// but it starts at main_screen()
+	if (m_screen == main_screen())
+	{
+	    m_screen = new KMSOverlayScreen(
+		KMSScreen::instance()->allocate_overlay(Size(w,h), m_format, m_heo));
+	    assert(m_screen);
+	    size(w, h);
+	    damage();
+	}
+	else
+	{
+	    cout << "plane window only supports single call to resize" << endl;
+	}
     }
 
     void PlaneWindow::position(int x, int y)
