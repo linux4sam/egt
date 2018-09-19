@@ -187,7 +187,8 @@ int main(int argc, const char** argv)
     else if (argv[1] == string("hardware"))
 	window = new MyVideoWindow<HardwareVideo>(Size(960,540), argv[2]);
     else if (argv[1] == string("software"))
-	window = new MyVideoWindow<SoftwareVideo>(Size(320,192), argv[2]);
+//	window = new MyVideoWindow<SoftwareVideo>(Size(320,192), argv[2]);
+    window = new MyVideoWindow<SoftwareVideo>(Size(960,540), argv[2]);
     else
     {
 	cerr << "unknown type: " << argv[1] << endl;
