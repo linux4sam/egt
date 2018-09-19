@@ -249,6 +249,14 @@ namespace mui
 	    return Point(x() + w()/2, y() + h()/2);
 	}
 
+	Palette& palette()
+	{
+	    if (!m_palette.get())
+		m_palette.reset(new Palette(global_palette()));
+
+	    return *m_palette.get();
+	}
+
 	const Palette& palette() const
 	{
 	    if (m_palette.get())

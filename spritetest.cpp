@@ -25,6 +25,7 @@ int main()
 #endif
 
     SimpleWindow win;
+    win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
 
     StaticGrid grid(0,0,win.w(), win.h(), 2, 2, 10);
 

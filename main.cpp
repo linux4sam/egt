@@ -376,9 +376,7 @@ int main()
     };
 
     win3 = new SimpleWindow(Size(800,480));
-    Palette p(win3->palette());
-    p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    win3->set_palette(p);
+    win3->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
     PieChart pie2(Point(200,40), Size(400,400));
     win3->add(&pie2);
@@ -391,9 +389,7 @@ int main()
     pie2.data(data);
 
     win4 = new SimpleWindow(Size(800,480));
-    p = win4->palette();
-    p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    win4->set_palette(p);
+    win4->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
 #ifdef HAVE_KPLOT
     Chart chart1(Point(0,0),Size(800,480));

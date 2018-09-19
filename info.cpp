@@ -230,9 +230,7 @@ public:
     MainWindow(const Size& size)
 	: SimpleWindow(size)
     {
-	Palette p(palette());
-	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
-	set_palette(p);
+	palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 
 	StaticGrid grid(0, 60, 800, 330, 4, 2, 10);
 
@@ -277,9 +275,7 @@ public:
     ChildWindow(const Size& size)
 	: SimpleWindow(size)
     {
-	Palette p(palette());
-	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
-	set_palette(p);
+	palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 
 	Label* label = new Label(_("Blank Screen"), Point(0, 60), Size(800, 330));
 	add(label);

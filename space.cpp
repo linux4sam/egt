@@ -52,9 +52,7 @@ public:
     MyWindow()
 	: SimpleWindow()
     {
-	Palette p(palette());
-	p.set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-	set_palette(p);
+	palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     }
 
     int handle(int event)
