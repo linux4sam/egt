@@ -51,12 +51,14 @@ namespace mui
 	    : m_stop(false)
 	{
 	    m_thread = std::thread(&FlipThread::run, this);
-
+#if 0
 	    sched_param sch_params;
-	    sch_params.sched_priority = sched_get_priority_max(SCHED_FIFO);
-	    if(pthread_setschedparam(m_thread.native_handle(), SCHED_FIFO, &sch_params)) {
-		std::cerr << "Failed to set Thread scheduling : " << std::strerror(errno) << std::endl;
+	    sch_params.sched_priority = sched_get_priority_max(SCHED_RR);
+	    if (pthread_setschedparam(m_thread.native_handle(), SCHED_RR, &sch_params))
+	    {
+		std::cerr << "Failed to set thread scheduling : " << std::strerror(errno) << std::endl;
 	    }
+#endif
 	}
 
 	void run()
@@ -127,7 +129,7 @@ namespace mui
 
     void KMSOverlayScreen::schedule_flip()
     {
-#if 1
+#if 0
 	static FlipThread pool;
 	pool.enqueue(FlipJob(m_plane, m_index));
 #else
@@ -229,7 +231,7 @@ namespace mui
 
     void KMSScreen::schedule_flip()
     {
-#if 1
+#if 0
 	static FlipThread pool;
 	pool.enqueue(FlipJob(m_plane, m_index));
 #else
