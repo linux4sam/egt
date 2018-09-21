@@ -1,0 +1,35 @@
+/**
+
+ @page events Events
+
+This chapter discusses the event model and how to handle events.
+
+@section events_loop Event Loop
+
+The event loop is the inner loop of the framework. Its basic operations is as
+follows:
+
+@code
+while (true)
+{
+    wait for events
+    dispatch events
+    draw
+}
+@endcode
+
+It does this until the event loop is told to exit.
+
+@section events_model Event Model
+
+Every time a user touches the screen, clicks a button, or presses a key, an
+event is generated and sent to your application. Events can also come from other
+programs like the window manager and timers.
+
+Events are identified by the integer argument passed to a @p handle() method
+that overrides the Widget::handle() virtual method. Other information about the
+most recent event is stored in static locations and acquired by calling the
+functiosn related to the events as necessary. This static information remains
+valid until the next event is read method.
+
+*/

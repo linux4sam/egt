@@ -1,0 +1,18 @@
+/**
+
+ @page coord Coordinate System
+
+@section coord_intro Introduction
+
+MUI defines a mui::Point, mui::Size, mui::Rect, and several other classes for
+working with geometry.
+
+@image html coordsys.png
+@image latex coordsys.png "Coordinate System" width=8cm
+
+@section coord_radians Radians
+
+@image html radians.png
+@image latex radians.png "Radians" width=8cm
+
+*/

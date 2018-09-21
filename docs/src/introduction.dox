@@ -1,0 +1,44 @@
+/**
+
+ @page intro Introduction
+
+@section intro_what What is a toolkit?
+
+@image html high_level.png
+@image latex high_level.png "High level" width=8cm
+
+@section intro_history Architecture
+
+@image html architecture.png
+@image latex architecture.png "Architecture" width=8cm
+
+@section intro_inter Internationalization
+
+@section intro_local Localization
+
+@section intro_resources Resources
+
+Resources are a way of cataloging, distributing, and using asset data.  For
+example, image assets, icons, audio files, and video files.  Resources may be
+stored in the filesystem and loaded on demand, or they may be compiled into the
+application binary itself.
+
+@section intro_color Palette and Colors
+
+There is a single global palette.  All widgets use this palette by default.
+However, you can change the palette for any individual widget and it will only
+have an affect for that widget.  You can change the global palette and it will
+retroactively have an effect on any widget, as long as that widget does not have
+a custom palette assigned.
+
+@section intro_hierarchy Widget Hierarchy
+
+@section intro_fonts Fonts
+
+@section intro_drawing Drawing
+
+Widgets are essentially rectangles that are drawn.  The widget defines the content of what is drawn, but all that matters outside of the widget is the rectangle and its content.  That widget rectangle is directly drawn into a single global back buffer for the screen.  This is an internal buffer in memory.  This back buffer is continuously updated in place by redrawing damaged rectangles using the widgets that cover it.  When all of the rectangles have been drawn in a single iteration of the event loop, only the damaged region of that back buffer is then copied to a display buffer.  The display may actually have more than one buffer in order to handle double or tripple buffering.  So, when switching between these buffers the screen has to manage damaged regions for each of the buffers, to take into consideration that different buffers are used.
+
+@section intro_add Creating New Widgets
+
+*/

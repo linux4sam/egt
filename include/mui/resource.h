@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef RESOURCE_H
-#define RESOURCE_H
+#ifndef MUI_RESOURCE_H
+#define MUI_RESOURCE_H
 
 #include <cairo.h>
 
@@ -31,7 +31,7 @@ namespace mui
      * Read data from a resource.
      */
     bool read_resource(const char* name, unsigned char* data,
-		       unsigned int length, unsigned int offset = 0);
+                       unsigned int length, unsigned int offset = 0);
 
     /**
      * Helper function specifically for cairo's cairo_image_surface_create_from_png_stream().

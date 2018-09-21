@@ -2,13 +2,13 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef KMSSCREEN_H
-#define KMSSCREEN_H
+#ifndef MUI_KMSSCREEN_H
+#define MUI_KMSSCREEN_H
 
 #include "config.h"
-#include "mui/screen.h"
-#include "mui/window.h"
-#include "mui/geometry.h"
+#include <mui/screen.h>
+#include <mui/window.h>
+#include <mui/geometry.h>
 
 #ifdef HAVE_LIBPLANES
 #include <drm_fourcc.h>
@@ -27,34 +27,34 @@ namespace mui
     {
     public:
 
-	KMSOverlayScreen(struct plane_data* plane);
+        KMSOverlayScreen(struct plane_data* plane);
 
-	virtual void position(int x, int y);
-	virtual void scale(float scale);
-	virtual void set_pan_size(int width, int height);
-	virtual void set_pan_pos(int x, int y);
-	virtual float scale() const;
+        virtual void position(int x, int y);
+        virtual void scale(float scale);
+        virtual void set_pan_size(int width, int height);
+        virtual void set_pan_pos(int x, int y);
+        virtual float scale() const;
 
-	virtual int gem();
+        virtual int gem();
 
-	virtual void apply();
+        virtual void apply();
 
-	void* raw();
+        void* raw();
 
-	struct plane_data* s() const
-	{
-		return m_plane;
-	}
+        struct plane_data* s() const
+        {
+            return m_plane;
+        }
 
-	void schedule_flip();
+        void schedule_flip();
 
-	uint32_t index();
+        uint32_t index();
 
-	virtual ~KMSOverlayScreen();
+        virtual ~KMSOverlayScreen();
 
     protected:
-	struct plane_data* m_plane;
-	uint32_t m_index;
+        struct plane_data* m_plane;
+        uint32_t m_index;
     };
 
     /**
@@ -65,31 +65,31 @@ namespace mui
     class KMSScreen : public IScreen
     {
     public:
-	explicit KMSScreen(bool primary = true);
+        explicit KMSScreen(bool primary = true);
 
-	struct plane_data* allocate_overlay(const Size& size,
-					    uint32_t format = DRM_FORMAT_ARGB8888, bool heo = false);
+        struct plane_data* allocate_overlay(const Size& size,
+                                            uint32_t format = DRM_FORMAT_ARGB8888, bool heo = false);
 
-	/**
-	 *
-	 */
-	uint32_t count_planes(int type = DRM_PLANE_TYPE_OVERLAY);
+        /**
+         *
+         */
+        uint32_t count_planes(int type = DRM_PLANE_TYPE_OVERLAY);
 
-	virtual ~KMSScreen();
+        virtual ~KMSScreen();
 
-	static KMSScreen* instance();
+        static KMSScreen* instance();
 
-	void schedule_flip();
+        void schedule_flip();
 
-	uint32_t index();
+        uint32_t index();
 
     protected:
-	int m_fd;
-	struct kms_device* m_device;
-	struct plane_data* m_plane;
-	uint32_t m_index;
+        int m_fd;
+        struct kms_device* m_device;
+        struct plane_data* m_plane;
+        uint32_t m_index;
 
-	friend class KMSOverlayScreen;
+        friend class KMSOverlayScreen;
     };
 
 }

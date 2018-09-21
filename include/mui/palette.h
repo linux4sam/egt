@@ -2,10 +2,10 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef PALETTE_H
-#define PALETTE_H
+#ifndef MUI_PALETTE_H
+#define MUI_PALETTE_H
 
-#include "mui/color.h"
+#include <mui/color.h>
 #include <memory>
 #include <vector>
 
@@ -24,32 +24,32 @@ namespace mui
     {
     public:
 
-	enum ColorGroup
-	    {
-		GROUP_NORMAL = 0,
-		GROUP_ACTIVE,
-		GROUP_DISABLED
-	    };
+        enum ColorGroup
+        {
+            GROUP_NORMAL = 0,
+            GROUP_ACTIVE,
+            GROUP_DISABLED
+        };
 
-	enum ColorId
-	    {
-		BG = 0,
-		FG,
-		LIGHT,
-		DARK,
-		MID,
-		TEXT,
-		HIGHLIGHT,
-		BORDER
-	    };
+        enum ColorId
+        {
+            BG = 0,
+            FG,
+            LIGHT,
+            DARK,
+            MID,
+            TEXT,
+            HIGHLIGHT,
+            BORDER
+        };
 
-	const Color& color(ColorId id, ColorGroup group = GROUP_NORMAL) const;
+        const Color& color(ColorId id, ColorGroup group = GROUP_NORMAL) const;
 
-	void set(ColorId id, ColorGroup group, const Color& color);
+        void set(ColorId id, ColorGroup group, const Color& color);
 
     protected:
 
-	std::vector<std::vector<Color>> m_colors;
+        std::vector<std::vector<Color>> m_colors;
     };
 
     /**

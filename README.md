@@ -1,4 +1,9 @@
-# Minimal Toolkit and Graphics Framework
+![Microchip](docs/src/microchip_logo.png)
+
+# Microchip Graphics Toolkit
+
+MUI is a C++ GUI toolkit for Linux on Microchip AT91/SAMA5 parts.  MUI provides
+modern GUI functionality, look-and-feel, and performance.
 
 ## Features
 
@@ -13,53 +18,17 @@
 - Entire library and simple application in under 50K bytes.
 - Modern C++11 design and simplicity.
 
-## Todo
+## Dependencies
 
-Priority 1
-- Seperate logical and physical coordinates.
-- Architecture document for drawing system, widget relationships, and event handling.
-- Change all callbacks to std::function after performance analysis.
-- Wrap 2D graphics primitives to abstract widget drawing (prepare for different drawing libraries).
-- Investigate performance of cairo vs. libgd vs imlib2.
-- Identify a hard path to support 2D GPU under graphics primitives used.
-- Backbuffer all widgets and seperate damage() from redraw().
-- Setup global theme + individual widget theme for fonts, colors, etc.  Define pallete.
+- libplanes >= 1.0.0
+- libdrm >= 2.4.0
+- cJSON >= 1.6.0
+- lua >= 5.3.1
+- cairo >= 1.14.6
+- tslib >= 1.15
+- gstreamer >= 1.12
 
-Priority 2
-- API documentation.
-- Chart widgets (kplot is nice, but lacks bar charts): pie, bar, line, point (having working prototype of kplot).
-- XML loader and tool to create screens (find existing tool).
-- Do true double buffering on vsync for fbdev/drm backends.
-- JPEG/SVG support.
-- Message box widget.
-- Popup widget.
-- Radio widget.
-- More grid options.
-- Scroll wheel widget.
-- File open/save.
-- Scroll window.
+## License
 
-## Widgets
-- MessageBox
-- Popup
-- Radio
-- StaticGrid
-- ScrollWheel
-- Radial
-- SimpleText
-- ListBox
-- Label
-  - CheckBox
-- Button
-  - ImageButton
-- Image
-  - ImageLabel
-- File Open/Save
-- ScrolledWindow
-- Combo
-- Slider
-- ProgressBar
-  - LevelMeter
-  - AnalogMeter
-  - SpingProgress
-http://www.peteronion.org.uk/GtkExamples/GladeTutorials.html
+MUI is released under the terms of the `MIT` license. See the `COPYING`
+file for more information.

@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef X11SCREEN_H
-#define X11SCREEN_H
+#ifndef MUI_X11SCREEN_H
+#define MUI_X11SCREEN_H
 
 #ifdef HAVE_X11
 
@@ -20,17 +20,17 @@ namespace mui
     class X11Screen : public IScreen
     {
     public:
-	X11Screen(const Size& size = Size(1024,1024), bool borderless = false);
+        X11Screen(const Size& size = Size(1024, 1024), bool borderless = false);
 
-	void flip(const std::vector<Rect>& damage);
+        void flip(const std::vector<Rect>& damage);
 
-	virtual ~X11Screen();
+        virtual ~X11Screen();
 
     protected:
 
-	static void process(int fd, uint32_t mask, void *data);
+        static void process(int fd, uint32_t mask, void* data);
 
-	std::shared_ptr<X11Data> m_priv;
+        std::shared_ptr<X11Data> m_priv;
     };
 
 }

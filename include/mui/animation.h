@@ -2,10 +2,15 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef ANIMATION_H
-#define ANIMATION_H
+#ifndef MUI_ANIMATION_H
+#define MUI_ANIMATION_H
 
-#include "mui/timer.h"
+/**
+ * @file
+ * @brief Working with animations.
+ */
+
+#include <mui/timer.h>
 #include <cstdint>
 #include <chrono>
 #include <vector>
@@ -39,38 +44,38 @@ namespace mui
     {
     public:
 
-	/**
-	 *
-	 */
-	Animation(float start, float end, animation_callback callback,
-		  uint64_t duration, easing_func func = easing_linear,
-		  void* data = 0);
+        /**
+         *
+         */
+        Animation(float start, float end, animation_callback callback,
+                  uint64_t duration, easing_func func = easing_linear,
+                  void* data = 0);
 
-	float starting() const { return m_start; }
-	void starting(float start) { m_start = start; }
-	float ending() const { return m_end; }
-	void ending(float end) { m_end = end; }
-	void duration(float dur) { m_duration = dur; }
-	virtual void start();
-	virtual bool next();
-	virtual void stop();
-	bool running() const { return m_running; }
-	void set_easing_func(easing_func func);
-	void reverse(bool rev) { m_reverse = rev; }
+        float starting() const { return m_start; }
+        void starting(float start) { m_start = start; }
+        float ending() const { return m_end; }
+        void ending(float end) { m_end = end; }
+        void duration(float dur) { m_duration = dur; }
+        virtual void start();
+        virtual bool next();
+        virtual void stop();
+        bool running() const { return m_running; }
+        void set_easing_func(easing_func func);
+        void reverse(bool rev) { m_reverse = rev; }
 
     protected:
 
-	float m_start;
-	float m_end;
-	animation_callback m_callback;
-	easing_func m_easing;
-	float m_current;
-	uint64_t m_duration;
-	std::chrono::time_point<std::chrono::steady_clock> m_start_time;
-	std::chrono::time_point<std::chrono::steady_clock> m_stop_time;
-	bool m_running;
-	bool m_reverse;
-	void* m_data;
+        float m_start;
+        float m_end;
+        animation_callback m_callback;
+        easing_func m_easing;
+        float m_current;
+        uint64_t m_duration;
+        std::chrono::time_point<std::chrono::steady_clock> m_start_time;
+        std::chrono::time_point<std::chrono::steady_clock> m_stop_time;
+        bool m_running;
+        bool m_reverse;
+        void* m_data;
     };
 
     class Widget;
@@ -78,54 +83,54 @@ namespace mui
     class WidgetPositionAnimator : public Animation
     {
     public:
-	enum
-	{
-	    CORD_X,
-	    CORD_Y
-	};
+        enum
+        {
+            CORD_X,
+            CORD_Y
+        };
 
-	WidgetPositionAnimator(Widget* widget,
-			       int coordinate,
-			       int start, int end,
-			       uint64_t duration,
-			       easing_func func = easing_linear);
+        WidgetPositionAnimator(Widget* widget,
+                               int coordinate,
+                               int start, int end,
+                               uint64_t duration,
+                               easing_func func = easing_linear);
 
-	WidgetPositionAnimator(std::vector<Widget*> widgets,
-			       int coordinate,
-			       int start, int end,
-			       uint64_t duration,
-			       easing_func func = easing_linear);
+        WidgetPositionAnimator(std::vector<Widget*> widgets,
+                               int coordinate,
+                               int start, int end,
+                               uint64_t duration,
+                               easing_func func = easing_linear);
 
-	void start();
+        void start();
 
-	void reset();
+        void reset();
 
-	static void timer_callback(int fd, void* data);
+        static void timer_callback(int fd, void* data);
 
-	static void callback(float value, void* data);
+        static void callback(float value, void* data);
 
     protected:
-	std::vector<Widget*> m_widgets;
-	int m_fd;
-	int m_coord;
+        std::vector<Widget*> m_widgets;
+        int m_fd;
+        int m_coord;
     };
 
     class AnimationTimer : public PeriodicTimer
     {
     public:
-	AnimationTimer(int start, int end, uint64_t duration, easing_func func);
+        AnimationTimer(int start, int end, uint64_t duration, easing_func func);
 
-	void start();
+        void start();
 
-	virtual void step(int value) = 0;
+        virtual void step(int value) = 0;
 
     protected:
 
-	void timeout();
+        void timeout();
 
-	static void animation_callback(float value, void* data);
+        static void animation_callback(float value, void* data);
 
-	Animation m_animation;
+        Animation m_animation;
     };
 }
 

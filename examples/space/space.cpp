@@ -20,23 +20,23 @@ class MyImage : public Image
 {
 public:
     MyImage(int xspeed, int yspeed, const Point& point)
-	: Image("metalball.png", point.x, point.y),
-	  m_xspeed(xspeed),
-	  m_yspeed(yspeed)
+        : Image("metalball.png", point.x, point.y),
+          m_xspeed(xspeed),
+          m_yspeed(yspeed)
     {}
 
     bool animate()
     {
-	bool visible = Rect::is_intersect(Rect(Point(0,0),main_screen()->size()), box());
+        bool visible = Rect::is_intersect(Rect(Point(0, 0), main_screen()->size()), box());
 
-	if (visible)
-	{
-	    Point to(box().point());
-	    to += Point(m_xspeed, m_yspeed);
-	    move(to);
-	}
+        if (visible)
+        {
+            Point to(box().point());
+            to += Point(m_xspeed, m_yspeed);
+            move(to);
+        }
 
-	return visible;
+        return visible;
     }
 
 private:
@@ -49,60 +49,60 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow()
+        : SimpleWindow()
     {
-	palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     }
 
     int handle(int event)
     {
-	switch (event)
-	{
-	case EVT_MOUSE_MOVE:
-	    spawn(mouse_position());
-	    break;
-	}
+        switch (event)
+        {
+        case EVT_MOUSE_MOVE:
+            spawn(mouse_position());
+            break;
+        }
 
-	return SimpleWindow::handle(event);
+        return SimpleWindow::handle(event);
     }
 
     void spawn(const Point& p)
     {
-	std::default_random_engine e1(r());
-	std::uniform_int_distribution<int> speed_dist(-20, 20);
-	int xspeed = speed_dist(e1);
-	int yspeed = speed_dist(e1);
+        std::default_random_engine e1(r());
+        std::uniform_int_distribution<int> speed_dist(-20, 20);
+        int xspeed = speed_dist(e1);
+        int yspeed = speed_dist(e1);
 
-	std::uniform_real_distribution<float> size_dist(0.1, 1.0);
-	float size = size_dist(e1);
+        std::uniform_real_distribution<float> size_dist(0.1, 1.0);
+        float size = size_dist(e1);
 
-	// has to move at some speed
-	if (xspeed == 0 && yspeed == 0)
-	    xspeed = yspeed = 1;
+        // has to move at some speed
+        if (xspeed == 0 && yspeed == 0)
+            xspeed = yspeed = 1;
 
-	MyImage* image = new MyImage(xspeed, yspeed, p);
-	add(image);
-	image->scale(size,size);
-	image->move(p.x - image->box().w/2,
-		    p.y - image->box().h/2);
-	m_images.push_back(image);
+        MyImage* image = new MyImage(xspeed, yspeed, p);
+        add(image);
+        image->scale(size, size);
+        image->move(p.x - image->box().w / 2,
+                    p.y - image->box().h / 2);
+        m_images.push_back(image);
     }
 
     void animate()
     {
-	for (auto x = m_images.begin(); x != m_images.end();)
-	{
-	    if (!(*x)->animate())
-	    {
-		remove(*x);
-		delete *x;
-		x = m_images.erase(x);
-	    }
-	    else
-	    {
-		x++;
-	    }
-	}
+        for (auto x = m_images.begin(); x != m_images.end();)
+        {
+            if (!(*x)->animate())
+            {
+                remove(*x);
+                delete *x;
+                x = m_images.erase(x);
+            }
+            else
+            {
+                x++;
+            }
+        }
     }
 
 private:
@@ -121,22 +121,24 @@ int main()
     FrameBuffer fb("/dev/fb0");
 #endif
 #else
-    X11Screen screen(Size(800,480));
+    X11Screen screen(Size(800, 480));
 #endif
 
     MyWindow win;
     win.show();
 
     PeriodicTimer animatetimer(33);
-    animatetimer.add_handler([&win]() {
-	    win.animate();
-	});
+    animatetimer.add_handler([&win]()
+    {
+        win.animate();
+    });
     animatetimer.start();
 
     PeriodicTimer spawntimer(1000);
-    spawntimer.add_handler([&win]() {
-	    win.spawn(win.box().center());
-	});
+    spawntimer.add_handler([&win]()
+    {
+        win.spawn(win.box().center());
+    });
     spawntimer.start();
 
     return EventLoop::run();

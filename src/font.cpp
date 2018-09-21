@@ -8,16 +8,16 @@ namespace mui
 {
 
     Font::Font(const std::string& face, int size, int weight)
-	: m_face(face),
-	  m_size(size),
-	  m_weight(weight)
+        : m_face(face),
+          m_size(size),
+          m_weight(weight)
     {
     }
 
     Font::Font(int size)
-	: m_face("Arial"),
-	  m_size(size),
-	  m_weight(WEIGHT_BOLD)
+        : m_face(DEFAULT_FONT_FACE),
+          m_size(size),
+          m_weight(WEIGHT_BOLD)
     {
     }
 

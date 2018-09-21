@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef MUI_WINDOW_H
+#define MUI_WINDOW_H
 
 #include "config.h"
 #include "mui/widget.h"
@@ -28,81 +28,89 @@ namespace mui
     class SimpleWindow : public Widget
     {
     public:
-	SimpleWindow(const Size& size = Size(), uint32_t flags = FLAG_WINDOW_DEFAULT);
+        SimpleWindow(const Size& size = Size(), uint32_t flags = FLAG_WINDOW_DEFAULT);
 
-	void add(Widget* widget);
-	void remove(Widget* widget);
+        void add(Widget* widget);
+        void remove(Widget* widget);
 
-	virtual void enter()
-	{
-	    show();
-	    damage();
-	}
+        virtual void enter()
+        {
+            show();
+            damage();
+        }
 
-	virtual void exit()
-	{
-	    hide();
-	}
+        virtual void exit()
+        {
+            hide();
+        }
 
-	// why can't i see this from Widget::size()?
-	Size size() const { return m_box.size(); }
+        // why can't i see this from Widget::size()?
+        Size size() const
+        {
+            return m_box.size();
+        }
 
-	// unsupported
-	//virtual void position(int x, int y) {}
-	virtual void size(int w, int h) {}
-	virtual void resize(int w, int h) {}
+        // unsupported
+        //virtual void position(int x, int y) {}
+        virtual void size(int w, int h) {}
+        virtual void resize(int w, int h) {}
 
-	/**
-	 * Damage the rectangle of the entire widget.
-	 */
-	virtual	void damage();
+        /**
+         * Damage the rectangle of the entire widget.
+         */
+        virtual	void damage();
 
-	/**
-	 * Damage the specified rectangle of the widget.
-	 */
-	virtual void damage(const Rect& rect);
+        /**
+         * Damage the specified rectangle of the widget.
+         */
+        virtual void damage(const Rect& rect);
 
 #if 0
-	Rect to_screen(const Rect& rect)
-	{
-	    return Rect(x() + rect.x, y() + rect.y, rect.w, rect.h);
-	}
+        Rect to_screen(const Rect& rect)
+        {
+            return Rect(x() + rect.x, y() + rect.y, rect.w, rect.h);
+        }
 
-	Rect to_child(const Rect& rect)
-	{
-	    return Rect(rect.x - x(), rect.y - y(), rect.w, rect.h);
-	}
+        Rect to_child(const Rect& rect)
+        {
+            return Rect(rect.x - x(), rect.y - y(), rect.w, rect.h);
+        }
 #endif
 
-	virtual int handle(int event);
+        virtual int handle(int event);
 
-	virtual void draw();
+        virtual void draw();
 
-	virtual void draw(const Rect& rect);
+        virtual void draw(const Rect& rect);
 
-	template <class T>
-	T find_child(const std::string& name)
-	{
-	    auto i = std::find_if(m_children.begin(), m_children.end(),
-				  [&name](const Widget* obj) {
-				      return obj->name() == name;
-				  });
+        template <class T>
+        T find_child(const std::string& name)
+        {
+            auto i = std::find_if(m_children.begin(), m_children.end(),
+                                  [&name](const Widget * obj)
+            {
+                return obj->name() == name;
+            });
 
-	    // just return first one
-	    if (i != m_children.end())
-		return reinterpret_cast<T>(*i);
+            // just return first one
+            if (i != m_children.end())
+                return reinterpret_cast<T>(*i);
 
-	    return 0;
-	}
+            return 0;
+        }
 
     protected:
 
-	virtual IScreen* screen() { assert(m_screen); return m_screen; }
+        virtual IScreen* screen()
+        {
+            assert(m_screen);
+            return m_screen;
+        }
 
-	std::vector<Widget*> m_children;
-	std::vector<Rect> m_damage;
+        std::vector<Widget*> m_children;
+        std::vector<Rect> m_damage;
 
-	IScreen* m_screen;
+        IScreen* m_screen;
     };
 
     class KMSOverlayScreen;
@@ -116,32 +124,35 @@ namespace mui
     {
     public:
 
-	explicit PlaneWindow(const Size& size = Size(),
-			     uint32_t flags = FLAG_WINDOW_DEFAULT,
-			     uint32_t format = DEFAULT_FORMAT,
-			     bool heo = false);
+        explicit PlaneWindow(const Size& size = Size(),
+                             uint32_t flags = FLAG_WINDOW_DEFAULT,
+                             uint32_t format = DEFAULT_FORMAT,
+                             bool heo = false);
 
-	virtual void position(int x, int y);
-	virtual void move(int x, int y);
+        virtual void position(int x, int y);
+        virtual void move(int x, int y);
 
-	virtual void draw();
+        virtual void draw();
 
-	// why can't i see this from Widget::size()?
-	Size size() const { return m_box.size(); }
+        // why can't i see this from Widget::size()?
+        Size size() const
+        {
+            return m_box.size();
+        }
 
-	// not supported
-	virtual void size(int w, int h) {}
+        // not supported
+        virtual void size(int w, int h) {}
 
-	virtual void resize(int w, int h);
+        virtual void resize(int w, int h);
 
-	virtual void hide() { /** TODO: no way to hide. */  }
+        virtual void hide() { /** TODO: no way to hide. */  }
 
-	virtual ~PlaneWindow();
+        virtual ~PlaneWindow();
 
     protected:
-	uint32_t m_format;
-	bool m_dirty;
-	bool m_heo;
+        uint32_t m_format;
+        bool m_dirty;
+        bool m_heo;
     };
 
     SimpleWindow*& main_window();

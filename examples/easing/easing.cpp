@@ -21,7 +21,8 @@ using namespace mui;
 
 static Animation* animation = 0;
 
-static easing_func curves[] = {
+static easing_func curves[] =
+{
     easing_linear,
     easing_easy,
     easing_easy_slow,
@@ -36,7 +37,8 @@ static easing_func curves[] = {
     easing_boing
 };
 
-static vector<string> curves_names = {
+static vector<string> curves_names =
+{
     "linear",
     "easy",
     "easy slow",
@@ -55,16 +57,16 @@ class MyListBox : public ListBox
 {
 public:
     MyListBox(const std::vector<std::string>& items,
-	      const Point& point = Point(),
-	      const Size& size = Size())
-	: ListBox(items, point, size)
+              const Point& point = Point(),
+              const Size& size = Size())
+        : ListBox(items, point, size)
     {}
 
     void on_selected(int index)
     {
-	animation->stop();
-	animation->set_easing_func(curves[index]);
-	animation->start();
+        animation->stop();
+        animation->set_easing_func(curves[index]);
+        animation->start();
     }
 };
 
@@ -72,54 +74,54 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow()
+        : SimpleWindow()
     {}
 
     int load()
     {
-	Image* img = new Image("background.png");
-	double scale = (double)w() / (double)img->w();
-	add(img);
-	img->scale(scale,scale);
+        Image* img = new Image("background.png");
+        double scale = (double)w() / (double)img->w();
+        add(img);
+        img->scale(scale, scale);
 
-	MyListBox* list1 = new MyListBox(curves_names, Point(w()-100,0), Size(100,h()));
-	add(list1);
-	list1->selected(7);
+        MyListBox* list1 = new MyListBox(curves_names, Point(w() - 100, 0), Size(100, h()));
+        add(list1);
+        list1->selected(7);
 
 #ifndef USE_HARDWARE
-	m_box = new Image("ball.png");
-	add(m_box);
+        m_box = new Image("ball.png");
+        add(m_box);
 #else
-	Image* image = new Image("ball.png");
-	// There is a bug on 9x5 that if the plane is all the way out of view
-	// then it will cause glitches. So, we create the height (which will
-	// be invisible), to always keep a portion of the plane on screen
-	// alternate of making the plane the same exact size as the image.
-	m_box = new PlaneWindow(Size(100,200));
-	m_box->add(image);
-	m_box->show();
+        Image* image = new Image("ball.png");
+        // There is a bug on 9x5 that if the plane is all the way out of view
+        // then it will cause glitches. So, we create the height (which will
+        // be invisible), to always keep a portion of the plane on screen
+        // alternate of making the plane the same exact size as the image.
+        m_box = new PlaneWindow(Size(100, 200));
+        m_box->add(image);
+        m_box->show();
 #endif
-	m_box->position(w()/2 - m_box->w()/2, -110);
+        m_box->position(w() / 2 - m_box->w() / 2, -110);
 
-	return 0;
+        return 0;
     }
 
     void move_item(int x)
     {
-	int pos = x;
+        int pos = x;
 
-	Rect to(m_box->box());
-	to.y = pos;
-	bool visible = Rect::is_intersect(Rect::merge(to,m_box->box()), this->box());
+        Rect to(m_box->box());
+        to.y = pos;
+        bool visible = Rect::is_intersect(Rect::merge(to, m_box->box()), this->box());
 
-	if (visible)
-	{
-	    m_box->move(m_box->x(), pos);
-	}
-	else
-	{
-	    m_box->position(m_box->x(), pos);
-	}
+        if (visible)
+        {
+            m_box->move(m_box->x(), pos);
+        }
+        else
+        {
+            m_box->position(m_box->x(), pos);
+        }
     }
 
 private:
@@ -133,12 +135,12 @@ private:
 static struct ResetTimer : public Timer
 {
     ResetTimer()
-	: Timer(1000)
+        : Timer(1000)
     {}
 
     void timeout()
     {
-	animation->start();
+        animation->start();
     }
 
 } reset_timer;
@@ -146,15 +148,15 @@ static struct ResetTimer : public Timer
 static struct MyAnimationTimer : public PeriodicTimer
 {
     MyAnimationTimer()
-	: PeriodicTimer(30)
+        : PeriodicTimer(30)
     {}
 
     void timeout()
     {
-	if (animation->running())
-	    animation->next();
-	else
-	    reset_timer.start();
+        if (animation->running())
+            animation->next();
+        else
+            reset_timer.start();
     }
 
 } animation_timer;
@@ -169,33 +171,35 @@ int main()
     FrameBuffer fb("/dev/fb0");
 #endif
 #else
-    X11Screen screen(Size(800,480));
+    X11Screen screen(Size(800, 480));
 #endif
 
     MyWindow window;
 
-    animation = new Animation(-110, window.h()-100/*380*/, [](float value, void* data) {
-	    MyWindow* window = reinterpret_cast<MyWindow*>(data);
-	    window->move_item(value);
-	}, 2000, easing_linear, &window);
+    animation = new Animation(-110, window.h() - 100/*380*/, [](float value, void* data)
+    {
+        MyWindow* window = reinterpret_cast<MyWindow*>(data);
+        window->move_item(value);
+    }, 2000, easing_linear, &window);
 
     window.load();
 
     Label label1("CPU: 0%",
-		 Point(40, window.size().h-40),
-		 Size(100, 40),
-		 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+                 Point(40, window.size().h - 40),
+                 Size(100, 40),
+                 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
     label1.fgcolor(Color::WHITE);
     window.add(&label1);
 
-    Tools tools;
+    CPUMonitorUsage tools;
     PeriodicTimer cputimer(1000);
-    cputimer.add_handler([&label1,&tools]() {
-	    tools.updateCpuUsage();
-	    ostringstream ss;
-	    ss << "CPU: " << (int)tools.cpu_usage[0] << "%";
-	    label1.text(ss.str());
-	});
+    cputimer.add_handler([&label1, &tools]()
+    {
+        tools.update();
+        ostringstream ss;
+        ss << "CPU: " << (int)tools.cpu_usage[0] << "%";
+        label1.text(ss.str());
+    });
     cputimer.start();
 
     animation_timer.start();

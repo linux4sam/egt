@@ -13,32 +13,32 @@ namespace mui
 
     Point operator-(Point lhs, const Point& rhs)
     {
-	lhs -= rhs;
-	return lhs;
+        lhs -= rhs;
+        return lhs;
     }
 
     Point operator+(Point lhs, const Point& rhs)
     {
-	lhs += rhs;
-	return lhs;
+        lhs += rhs;
+        return lhs;
     }
 
     std::ostream& operator<<(std::ostream& os, const Point& point)
     {
-	os << point.x << "," << point.y;
-	return os;
+        os << point.x << "," << point.y;
+        return os;
     }
 
     std::ostream& operator<<(std::ostream& os, const Size& size)
     {
-	os << size.w << "," << size.h;
-	return os;
+        os << size.w << "," << size.h;
+        return os;
     }
 
     std::ostream& operator << (std::ostream& os, const Rect& rect)
     {
-	os << "[" << rect.x << "," << rect.y << " - " << rect.w << "," << rect.h << "]";
-	return os;
+        os << "[" << rect.x << "," << rect.y << " - " << rect.w << "," << rect.h << "]";
+        return os;
     }
 
 }

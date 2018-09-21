@@ -18,15 +18,15 @@ class MyWindow : public SimpleWindow
 {
 public:
     MyWindow()
-	: SimpleWindow(Size(), FLAG_NO_BACKGROUND),
-	  m_img("background.png")
+        : SimpleWindow(Size(), FLAG_NO_BACKGROUND),
+          m_img("background.png")
     {
-	add(&m_img);
-	if (m_img.w() != w())
-	{
-	    double scale = (double)w() / (double)m_img.w();
-	    m_img.scale(scale,scale);
-	}
+        add(&m_img);
+        if (m_img.w() != w())
+        {
+            double scale = (double)w() / (double)m_img.w();
+            m_img.scale(scale, scale);
+        }
     }
 
     Image m_img;
@@ -36,9 +36,9 @@ class FloatingBox
 {
 public:
     FloatingBox(Widget* widget, int mx, int my)
-	: m_widget(widget),
-	  m_mx(mx),
-	  m_my(my)
+        : m_widget(widget),
+          m_mx(mx),
+          m_my(my)
     {}
 
     /*
@@ -55,22 +55,22 @@ public:
 
     virtual void next_frame()
     {
-	int x = m_widget->x() + m_mx;
-	int y = m_widget->y() + m_my;
+        int x = m_widget->x() + m_mx;
+        int y = m_widget->y() + m_my;
 
-	if (x + m_widget->w() >= main_window()->size().w)
-	    m_mx *= -1;
+        if (x + m_widget->w() >= main_window()->size().w)
+            m_mx *= -1;
 
-	if (x < 0)
-	    m_mx *= -1;
+        if (x < 0)
+            m_mx *= -1;
 
-	if (y + m_widget->h() >= main_window()->size().h)
-	    m_my *= -1;
+        if (y + m_widget->h() >= main_window()->size().h)
+            m_my *= -1;
 
-	if (y < 0)
-	    m_my *= -1;
+        if (y < 0)
+            m_my *= -1;
 
-	m_widget->move(x, y);
+        m_widget->move(x, y);
     }
 
 protected:
@@ -91,7 +91,7 @@ int main()
     FrameBuffer fb("/dev/fb0");
 #endif
 #else
-    X11Screen screen(Size(800,480));
+    X11Screen screen(Size(800, 480));
 #endif
 
     MyWindow win;
@@ -99,27 +99,28 @@ int main()
 
     int f = 2;
 
-    vector<std::pair<int,int>> moveparms = {
-	std::make_pair(1 * f, 2 * f),
-	std::make_pair(3* f, -2 * f),
-	std::make_pair(-3 * f, 2 * f),
-	std::make_pair(-3 * f, 3 * f),
-	std::make_pair(2 * f, 3 * f),
-	std::make_pair(2 * f, 2 * f),
-	std::make_pair(4 * f, 2 * f),
-	std::make_pair(-4 * f, 2 * f),
+    vector<std::pair<int, int>> moveparms =
+    {
+        std::make_pair(1 * f, 2 * f),
+        std::make_pair(3 * f, -2 * f),
+        std::make_pair(-3 * f, 2 * f),
+        std::make_pair(-3 * f, 3 * f),
+        std::make_pair(2 * f, 3 * f),
+        std::make_pair(2 * f, 2 * f),
+        std::make_pair(4 * f, 2 * f),
+        std::make_pair(-4 * f, 2 * f),
     };
 
     uint32_t SOFT_COUNT = 5;
 
     // software
-    for (uint32_t x = 0; x < SOFT_COUNT;x++)
+    for (uint32_t x = 0; x < SOFT_COUNT; x++)
     {
-	stringstream os;
-	os << "_image" << x << ".png";
-	Image* image = new Image(os.str(), 100, 100);
-	boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
-	win.add(image);
+        stringstream os;
+        os << "_image" << x << ".png";
+        Image* image = new Image(os.str(), 100, 100);
+        boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
+        win.add(image);
     }
 
 #ifdef HAVE_LIBPLANES
@@ -132,57 +133,57 @@ int main()
     // hardware (or emulated)
     for (uint32_t x = SOFT_COUNT; x < SOFT_COUNT + total; x++)
     {
-	stringstream os;
-	os << "_image" << x << ".png";
-	Image* image = new Image(os.str(), 0, 0);
-	PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
-	plane->add(image);
-	plane->show();
-	plane->position(100,100);
-	boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
+        stringstream os;
+        os << "_image" << x << ".png";
+        Image* image = new Image(os.str(), 0, 0);
+        PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
+        plane->add(image);
+        plane->show();
+        plane->position(100, 100);
+        boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
     }
 #endif
 
     struct MoveTimer : public PeriodicTimer
     {
-	MoveTimer()
-	    : PeriodicTimer(33)
-	{}
+        MoveTimer()
+            : PeriodicTimer(33)
+        {}
 
-	void timeout()
-	{
-	    for (auto i : boxes)
-		i->next_frame();
-	}
+        void timeout()
+        {
+            for (auto i : boxes)
+                i->next_frame();
+        }
     } timer;
 
     timer.start();
 
     Label label1("CPU: -",
-		 Point(40, win.size().h-40),
-		 Size(100, 40),
-		 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+                 Point(40, win.size().h - 40),
+                 Size(100, 40),
+                 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
     label1.fgcolor(Color::WHITE);
     win.add(&label1);
 
     struct CPUTimer: public PeriodicTimer
     {
-	CPUTimer(Label& label)
-	    : PeriodicTimer(1000),
-	      m_label(label)
-	{}
+        CPUTimer(Label& label)
+            : PeriodicTimer(1000),
+              m_label(label)
+        {}
 
-	void timeout()
-	{
-	    m_tools.updateCpuUsage();
+        void timeout()
+        {
+            m_tools.update();
 
-	    ostringstream ss;
-	    ss << "CPU: " << (int)m_tools.cpu_usage[0] << "%";
-	    m_label.text(ss.str());
-	}
+            ostringstream ss;
+            ss << "CPU: " << (int)m_tools.cpu_usage[0] << "%";
+            m_label.text(ss.str());
+        }
 
-	Label& m_label;
-	Tools m_tools;
+        Label& m_label;
+        CPUMonitorUsage m_tools;
     };
 
     CPUTimer cputimer(label1);
