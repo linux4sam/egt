@@ -4,15 +4,15 @@
  */
 #include "button.h"
 #include "imagecache.h"
+#include "painter.h"
 
 using namespace std;
 
 namespace mui
 {
 
-    Button::Button(const string& label, const Point& point, const Size& size)
-        : Widget(point.x, point.y, size.w, size.h),
-          m_label(label)
+    Button::Button(const string& text, const Point& point, const Size& size)
+        : Label(text, point, size, ALIGN_CENTER)
     {}
 
     int Button::handle(int event)
@@ -48,12 +48,15 @@ namespace mui
 
     void Button::draw(const Rect& rect)
     {
+        Painter painter(screen()->context());
+
         // box
-        draw_gradient_box(box(), palette().color(Palette::BORDER),
-                          palette().color(Palette::HIGHLIGHT), active());
+        draw_gradient_box(box(), palette().color(Palette::BORDER), active());
 
         // text
-        draw_text(m_label, box());
+        painter.set_color(palette().color(Palette::TEXT));
+        painter.set_font(m_font);
+        painter.draw_text(box(), m_text, m_align, 5);
     }
 
     Button::~Button()
@@ -61,15 +64,16 @@ namespace mui
     }
 
     ImageButton::ImageButton(const string& image,
-                             const string& label,
+                             const string& text,
                              const Point& point,
                              const Size& size,
                              bool border)
-        : Button(label, point, size),
+        : Button(text, point, size),
           m_border(border),
-          m_image_align(ALIGN_CENTER),
-          m_label_align(ALIGN_CENTER | ALIGN_BOTTOM)
+          m_image_align(ALIGN_CENTER)
     {
+        set_label_align(ALIGN_CENTER | ALIGN_BOTTOM);
+
         if (!image.empty())
             set_image(image);
     }
@@ -77,26 +81,27 @@ namespace mui
     void ImageButton::set_image(const std::string& image)
     {
         m_image = image_cache.get(image, 1.0);
-        assert(m_image.get());
-        assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
 
+        //if (box().size().empty())
+        //{
         auto width = cairo_image_surface_get_width(m_image.get());
         auto height = cairo_image_surface_get_height(m_image.get());
         m_box.w = width;
         m_box.h = height;
+        //}
     }
 
     void ImageButton::draw(const Rect& rect)
     {
         if (m_border)
-            draw_gradient_box(box(), palette().color(Palette::BORDER), palette().color(Palette::HIGHLIGHT));
+            draw_gradient_box(box(), palette().color(Palette::BORDER));
 
         draw_image(m_image, m_image_align, 10, disabled());
 
-        if (!m_label.empty())
-            draw_text(m_label, box(), palette().color(Palette::TEXT),
-                      m_label_align, 10,
-                      m_font);
+        Painter painter(screen()->context());
+        painter.set_color(palette().color(Palette::TEXT));
+        painter.set_font(m_font);
+        painter.draw_text(box(), m_text, m_align, 5);
     }
 
     ImageButton::~ImageButton()

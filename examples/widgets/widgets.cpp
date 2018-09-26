@@ -15,13 +15,14 @@ using namespace mui;
 
 /**
  * On-screen keyboard.
+ * @todo This needs to be made an official widget.
  */
 class Keyboard : public PlaneWindow
 {
 public:
     Keyboard()
         : PlaneWindow(Size(800, 200)),
-          m_grid(0, 0, 800, 200, 10, 4, 5)
+          m_grid(Point(0, 0), Size(800, 200), 10, 4, 5)
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
@@ -48,12 +49,12 @@ public:
                 else
                     b = new Button(label);
 
-                add(b);
                 m_grid.add(b, c, r);
             }
         }
 
         m_grid.reposition();
+        add(&m_grid);
     }
 
 protected:
@@ -62,34 +63,31 @@ protected:
 
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen kms;
-    InputTslib input0("/dev/input/touchscreen0");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app;
 
-    SimpleWindow win1(Size(800, 480));
+    set_image_path("/root/mui/share/mui/");
+
+    Window win1(Size(800, 480));
 
     Label label1("left align", Point(100, 50), Size(200, 40), Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+    label1.flag_set(FLAG_BORDER);
     win1.add(&label1);
 
     Label label2("right align", Point(100, 100), Size(200, 40), Widget::ALIGN_RIGHT | Widget::ALIGN_CENTER);
+    label2.flag_set(FLAG_BORDER);
     win1.add(&label2);
 
     Label label3("top align", Point(100, 150), Size(200, 40), Widget::ALIGN_TOP | Widget::ALIGN_CENTER);
+    label3.flag_set(FLAG_BORDER);
     win1.add(&label3);
 
     Label label4("bottom align", Point(100, 200), Size(200, 40), Widget::ALIGN_BOTTOM | Widget::ALIGN_CENTER);
+    label4.flag_set(FLAG_BORDER);
     win1.add(&label4);
 
     Button btn1("button 1", Point(100, 250), Size(100, 40));
     win1.add(&btn1);
-    btn1.focus(true);
+    //btn1.focus(true);
 
     Slider slider1(0, 100, Point(100, 300), Size(200, 40));
     win1.add(&slider1);
@@ -97,10 +95,12 @@ int main()
     Slider slider2(0, 100, Point(10, 200), Size(40, 200), Slider::ORIENTATION_VERTICAL);
     win1.add(&slider2);
 
+#ifdef DEVELOPMENT
     Combo combo1("combo 1", Point(100, 350), Size(200, 40));
     win1.add(&combo1);
+#endif
 
-    SimpleText text1("text 1", Point(100, 400), Size(200, 40));
+    TextBox text1("text 1", Point(100, 400), Size(200, 40));
     win1.add(&text1);
 
     vector<string> items = { "item 1", "item 2", "item3" };
@@ -155,5 +155,5 @@ int main()
     //Keyboard keyboard;
     //keyboard.show();
 
-    return EventLoop::run();
+    return app.run();
 }

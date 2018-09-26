@@ -3,7 +3,6 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "geometry.h"
-
 #include <iostream>
 
 using namespace std;

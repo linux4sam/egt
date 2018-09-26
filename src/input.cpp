@@ -2,13 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+
 #include "event_loop.h"
 #include "geometry.h"
 #include "input.h"
-#ifdef HAVE_TSLIB
-#include "tslib.h"
-#endif
 #include "widget.h"
+#include "window.h"
 #include <cassert>
 #include <errno.h>
 #include <fcntl.h>
@@ -19,7 +18,9 @@
 #include <string>
 #include <sys/time.h>
 #include <unistd.h>
-#include "window.h"
+#ifdef HAVE_TSLIB
+#include "tslib.h"
+#endif
 
 using namespace std;
 
@@ -33,9 +34,23 @@ namespace mui
     }
 
     static int event_key;
-    int& key_position()
+    int& key_value()
     {
         return event_key;
+    }
+
+    void IInput::dispatch(int event)
+    {
+        for (auto& w : windows())
+        {
+            if (!w->visible())
+                continue;
+
+            if (!w->top_level())
+                continue;
+
+            w->handle(event);
+        }
     }
 
     InputEvDev::InputEvDev(const string& path)
@@ -112,13 +127,13 @@ namespace mui
                 case BTN_TOOL_LENS:
                     break;
                 case BTN_LEFT:
-                    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+                    dispatch(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
                     break;
                 case BTN_RIGHT:
-                    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+                    dispatch(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
                     break;
                 case BTN_MIDDLE:
-                    main_window()->handle(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+                    dispatch(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
                     break;
                 default:
                     int v = -1;
@@ -131,7 +146,7 @@ namespace mui
                     if (v != -1)
                     {
                         event_key = e->code;
-                        main_window()->handle(v);
+                        dispatch(v);
                     }
                 }
             }
@@ -140,14 +155,14 @@ namespace mui
         if (absolute_event)
         {
             pointer_abs_pos = Point(x, y);
-            main_window()->handle(EVT_MOUSE_MOVE);
+            dispatch(EVT_MOUSE_MOVE);
         }
         else
         {
             if (dx != 0 || dy != 0)
             {
                 pointer_abs_pos = Point(pointer_abs_pos.x + dx, pointer_abs_pos.y + dy);
-                main_window()->handle(EVT_MOUSE_MOVE);
+                dispatch(EVT_MOUSE_MOVE);
             }
         }
     }
@@ -252,7 +267,7 @@ namespace mui
                     {
                         pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
                         obj->m_active = false;
-                        main_window()->handle(EVT_MOUSE_UP);
+                        dispatch(EVT_MOUSE_UP);
                         DBG("mouse up " << pointer_abs_pos);
                     }
                     else
@@ -270,11 +285,11 @@ namespace mui
                         if ((last_down.tv_sec || last_down.tv_usec) &&
                             diff_ms(samp_mt[j][i].tv, last_down) < 200)
                         {
-                            main_window()->handle(EVT_MOUSE_DBLCLICK);
+                            dispatch(EVT_MOUSE_DBLCLICK);
                         }
                         else
                         {
-                            main_window()->handle(EVT_MOUSE_DOWN);
+                            dispatch(EVT_MOUSE_DOWN);
                             DBG("mouse down " << pointer_abs_pos);
                             obj->m_active = true;
                         }
@@ -288,7 +303,7 @@ namespace mui
         if (move)
         {
             DBG("mouse move " << pointer_abs_pos);
-            main_window()->handle(EVT_MOUSE_MOVE);
+            dispatch(EVT_MOUSE_MOVE);
         }
     }
 

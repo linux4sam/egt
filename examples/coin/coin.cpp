@@ -54,9 +54,11 @@ public:
           m_speed(speed),
           m_x(0),
           e1(r()),
-          m_grid1(new StaticGrid(0, 0, 200, 200, 4, 4, 0)),
-          m_grid2(new StaticGrid(0, 0, 132, 130, 3, 10, 0))
+          m_grid1(Point(0, 0), Size(200, 200), 4, 4, 0),
+          m_grid2(Point(0, 0), Size(132, 130), 3, 10, 0)
     {
+        add(&m_grid1);
+        add(&m_grid2);
         reset();
     }
 
@@ -143,7 +145,7 @@ public:
         {
             for (int r = 0; r < 4; r++)
             {
-                m_grid1->add(0, c, r);
+                m_grid1.add(0, c, r);
             }
         }
 
@@ -156,14 +158,14 @@ public:
             {
                 Image* block = new Image("coin_coin.png");
                 m_coins.push_back(block);
-                add(block);
-                m_grid1->add(block, c, r);
+                //add(block);
+                m_grid1.add(block, c, r);
             }
         }
 
         std::uniform_int_distribution<int> xdist(0, 600);
         std::uniform_int_distribution<int> ydist(0, 200);
-        m_grid1->position(xdist(e1), ydist(e1));
+        m_grid1.position(xdist(e1), ydist(e1));
     }
 
     void add_bricks()
@@ -172,7 +174,7 @@ public:
         {
             for (int r = 0; r < 10; r++)
             {
-                m_grid2->add(0, c, r);
+                m_grid2.add(0, c, r);
             }
         }
 
@@ -186,8 +188,8 @@ public:
             {
                 Image* block = new Image("coin_brick.png");
                 m_bricks.push_back(block);
-                add(block);
-                m_grid2->add(block, c, r);
+                //add(block);
+                m_grid2.add(block, c, r);
             }
         }
 
@@ -201,7 +203,7 @@ public:
         {
             conflict = false;
 
-            m_grid2->position(xdist(e1), ids[ydist(e1)]);
+            m_grid2.position(xdist(e1), ids[ydist(e1)]);
 
             for (auto coin : m_coins)
             {
@@ -232,8 +234,8 @@ protected:
     std::default_random_engine e1;
     std::vector<Image*> m_coins;
     std::vector<Image*> m_bricks;
-    StaticGrid* m_grid1;
-    StaticGrid* m_grid2;
+    StaticGrid m_grid1;
+    StaticGrid m_grid2;
 };
 
 class SceneLayer : public PlaneWindow
@@ -291,12 +293,12 @@ public:
     {}
 
 protected:
-    Image m_image;
+    Image& m_image;
     int m_speed;
     int m_x;
 };
 
-class MyWindow : public SimpleWindow
+class MyWindow : public Window
 {
 public:
 
@@ -324,15 +326,15 @@ public:
                             Point(5, 2),
                             Size(100, 40),
                             Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
-        m_label->fgcolor(Color::WHITE);
+        m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
         add(m_label);
 
         m_go = new Label("GAME OVER",
                          Point(0, 0),
                          Size(800, 480),
                          Widget::ALIGN_CENTER | Widget::ALIGN_TOP,
-                         Font("Arial Unicode", 32));
-        m_go->fgcolor(Color::RED);
+                         Font(32));
+        m_go->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::RED);
         add(m_go);
 
         reset_game();
@@ -354,10 +356,10 @@ public:
         {
             m_running = true;
 
-            if (key_position() == KEY_LEFT || key_position() == KEY_RIGHT)
+            if (key_value() == KEY_LEFT || key_value() == KEY_RIGHT)
             {
             }
-            else if (key_position() == KEY_UP)
+            else if (key_value() == KEY_UP)
             {
                 int y = m_mouse->y() - (event == EVT_KEY_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
@@ -365,7 +367,7 @@ public:
 
                 return 1;
             }
-            else if (key_position() == KEY_DOWN)
+            else if (key_value() == KEY_DOWN)
             {
                 int y = m_mouse->y() + (event == EVT_KEY_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
@@ -402,7 +404,7 @@ public:
             return 1;
         }
 
-        return SimpleWindow::handle(event);
+        return Window::handle(event);
     }
 
     void reset_game()
@@ -475,17 +477,9 @@ private:
 
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen screen;
-    InputTslib input0("/dev/input/touchscreen0");
-    InputEvDev input1("/dev/input/event3");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app;
+
+    set_image_path("/root/mui/share/mui/examples/coin/");
 
     MyWindow win;
     win.show();
@@ -497,5 +491,5 @@ int main()
     });
     animatetimer.start();
 
-    return EventLoop::run();
+    return app.run();
 }

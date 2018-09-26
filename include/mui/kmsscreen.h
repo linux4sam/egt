@@ -5,6 +5,11 @@
 #ifndef MUI_KMSSCREEN_H
 #define MUI_KMSSCREEN_H
 
+/**
+ * @file
+ * @brief Working with KMS screens.
+ */
+
 #include "config.h"
 #include <mui/screen.h>
 #include <mui/window.h>

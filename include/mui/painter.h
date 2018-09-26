@@ -21,6 +21,8 @@ namespace mui
         std::shared_ptr<cairo_t>;
 
     /**
+     * Drawing interface for graphics.
+     *
      * <https://www.cairographics.org/manual/index.html>
      */
     class Painter
@@ -37,23 +39,23 @@ namespace mui
 
         void end();
 
-        void set_color(const Color& color);
+        Painter& set_color(const Color& color);
 
-        void draw_rectangle(const Rect& rect);
+        Painter& draw_rectangle(const Rect& rect);
 
-        void draw_fillrectangle(const Rect& rect);
+        Painter& draw_fillrectangle(const Rect& rect);
 
-        void set_line_width(float width);
+        Painter& set_line_width(float width);
 
-        void draw_line(const Point& start, const Point& end);
+        Painter& draw_line(const Point& start, const Point& end);
 
-        void draw_line(const Point& start, const Point& end, float width);
+        Painter& draw_line(const Point& start, const Point& end, float width);
 
-        void draw_image(const Point& point, shared_cairo_surface_t surface, bool bw = false);
+        Painter& draw_image(const Point& point, shared_cairo_surface_t surface, bool bw = false);
 
-        void draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface);
+        Painter& draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface);
 
-        void draw_arc(const Point& point, float radius, float angle1, float angle2);
+        Painter& draw_arc(const Point& point, float radius, float angle1, float angle2);
 
         /*
           void stroke()
@@ -72,9 +74,20 @@ namespace mui
           }
         */
 
-        void set_font(const Font& font);
+        /**
+         * Set the active font.
+         */
+        Painter& set_font(const Font& font);
 
-        void draw_text(const Point& point, const std::string& str);
+        /**
+         * Draw text at the specified point.
+         */
+        Painter& draw_text(const Point& point, const std::string& str);
+
+        /**
+         * Draw text aligned inside the specified rectangle.
+         */
+        Painter& draw_text(const Rect& rect, const std::string& str, int align, int standoff = 5);
 
         shared_cairo_t context() const
         {
@@ -91,6 +104,7 @@ namespace mui
                                             int height,
                                             int dstx,
                                             int dsty);
+
 
     protected:
 

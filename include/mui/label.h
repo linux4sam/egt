@@ -10,25 +10,40 @@
 namespace mui
 {
 
+    /**
+     * A Label in its basic form is just some text.
+     *
+     * It handles no events, has a font and alignment, but otherwise is pretty
+     * basic.
+     */
     class Label : public Widget
     {
     public:
-        explicit Label(const std::string& text,
+        explicit Label(const std::string& text = std::string(),
                        const Point& point = Point(),
-                       const Size& size = Size(), int align = ALIGN_CENTER,
+                       const Size& size = Size(),
+                       int align = ALIGN_CENTER,
                        const Font& font = Font());
 
-        void text(const std::string& str);
+        /**
+         * Set the text of the label.
+         */
+        virtual void text(const std::string& str);
 
-        void fgcolor(const Color& color)
-        {
-            m_fgcolor = color;
-        }
+        /**
+         * Get the text of the label.
+         */
+        virtual const std::string& text() const { return m_text; }
 
-        void font(const Font& font)
-        {
-            m_font = font;
-        }
+        /**
+         * Set the font of the label.
+         */
+        virtual void font(const Font& font) { m_font = font; }
+
+        /**
+         * Set the alignment of the label.
+         */
+        virtual void align(uint32_t align) { m_align = align; }
 
         virtual void draw(const Rect& rect);
 
@@ -38,7 +53,6 @@ namespace mui
         int m_align;
         std::string m_text;
         Font m_font;
-        Color m_fgcolor;
     };
 
     /**
@@ -62,7 +76,7 @@ namespace mui
             m_checked = c;
         }
 
-        int handle(int event);
+        virtual int handle(int event);
 
         virtual void draw(const Rect& rect);
 
@@ -71,6 +85,9 @@ namespace mui
         bool m_checked;
     };
 
+    /**
+     * A Label widget that also contains an image.
+     */
     class ImageLabel : public Label
     {
     public:
@@ -83,6 +100,7 @@ namespace mui
         virtual void draw(const Rect& rect);
 
         virtual ~ImageLabel();
+
     protected:
         shared_cairo_surface_t m_image;
     };

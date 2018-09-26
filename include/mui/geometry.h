@@ -5,9 +5,15 @@
 #ifndef MUI_GEOMETRY_H
 #define MUI_GEOMETRY_H
 
+/**
+ * @file
+ * @brief Working with geometry.
+ */
+
 #include <iosfwd>
 #include <cassert>
 #include <algorithm>
+#include <cmath>
 
 namespace mui
 {
@@ -17,18 +23,15 @@ namespace mui
     class Point
     {
     public:
-        Point()
+        Point() noexcept
             : x(0),
               y(0)
         {}
 
-        explicit Point(int x_, int y_)
+        explicit Point(int x_, int y_) noexcept
             : x(x_),
               y(y_)
         {}
-
-        int x;
-        int y;
 
         Point& operator+=(const Point& rhs)
         {
@@ -43,6 +46,30 @@ namespace mui
             y -= rhs.y;
             return *this;
         }
+
+        /**
+         * If this point is the center of a circle, return a new point that is
+         * on the circumference of the circle at the specified angle.
+         */
+        template <class T>
+        T point_on_circumference(T radius, T angle)
+        {
+            return Point(x + radius * std::sin(angle),
+                         y - radius * std::cos(angle));
+        }
+
+        /**
+         * Return the angle from this point to get to another.
+         * @param point The other point.
+         */
+        template <class T>
+        T angle_to_point(const Point& point)
+        {
+            return std::atan2(point.x - x, y - point.y);
+        }
+
+        int x;
+        int y;
 
         friend Point operator-(Point lhs, const Point& rhs);
         friend Point operator+(Point lhs, const Point& rhs);
@@ -59,19 +86,27 @@ namespace mui
     class Size
     {
     public:
-        Size()
+        Size() noexcept
             : h(0),
               w(0)
         {}
 
-        explicit Size(int w_, int h_)
+        explicit Size(int w_, int h_) noexcept
             : h(h_),
               w(w_)
         {}
 
+        /**
+         * Returns true if the size has no width or height.
+         */
         inline bool empty() const
         {
-            return w == 0 || h == 0;
+            return w <= 0 || h <= 0;
+        }
+
+        inline void clear()
+        {
+            h = w = 0;
         }
 
         int h;
@@ -90,14 +125,14 @@ namespace mui
     class Rect
     {
     public:
-        Rect()
+        Rect() noexcept
             : x(0),
               y(0),
               w(0),
               h(0)
         {}
 
-        Rect(const Point& point, const Size& size)
+        Rect(const Point& point, const Size& size) noexcept
             : x(point.x),
               y(point.y),
               w(size.w),
@@ -107,7 +142,7 @@ namespace mui
             assert(h >= 0);
         }
 
-        Rect(int x_, int y_, int w_, int h_)
+        Rect(int x_, int y_, int w_, int h_) noexcept
             : x(x_),
               y(y_),
               w(w_),
@@ -116,11 +151,6 @@ namespace mui
             assert(w >= 0);
             assert(h >= 0);
         }
-
-        int x;
-        int y;
-        int w;
-        int h;
 
         int area() const
         {
@@ -167,9 +197,12 @@ namespace mui
             x = y = w = h = 0;
         }
 
+        /**
+         * Returns true if the rectangle has no width or height.
+         */
         inline bool empty() const
         {
-            return w == 0 || h == 0;
+            return w <= 0 || h <= 0;
         }
 
         inline bool operator==(const Rect& rhs) const
@@ -180,7 +213,7 @@ namespace mui
                    h == rhs.h;
         }
 
-        inline bool point_inside(const Point& point)
+        inline bool point_inside(const Point& point) const
         {
             return point_inside(point, *this);
         }
@@ -237,6 +270,11 @@ namespace mui
 
             return Rect(x, y, w, h);
         }
+
+        int x;
+        int y;
+        int w;
+        int h;
     };
 
     std::ostream& operator<<(std::ostream& os, const Rect& rect);

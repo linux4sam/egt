@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ * Joshua Henderson <joshua.henderson@microchip.com>
+ */
+#ifndef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "utils.h"
 #include <stdarg.h>
 #include <stdio.h>

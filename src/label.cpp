@@ -4,6 +4,7 @@
  */
 #include "label.h"
 #include "imagecache.h"
+#include "painter.h"
 
 using namespace std;
 
@@ -15,10 +16,8 @@ namespace mui
         : Widget(point.x, point.y, size.w, size.h),
           m_align(align),
           m_text(text),
-          m_font(font),
-          m_fgcolor(palette().color(Palette::TEXT))
-    {
-    }
+          m_font(font)
+    {}
 
     void Label::text(const std::string& str)
     {
@@ -31,7 +30,19 @@ namespace mui
 
     void Label::draw(const Rect& rect)
     {
-        draw_text(m_text, box(), m_fgcolor, m_align, 5, m_font);
+        Painter painter(screen()->context());
+
+        if (!is_flag_set(FLAG_NO_BACKGROUND))
+        {
+            if (is_flag_set(FLAG_BORDER))
+                draw_basic_box(box(), palette().color(Palette::BORDER), palette().color(Palette::BG));
+            else
+                draw_basic_box(box(), palette().color(Palette::BG), palette().color(Palette::BG));
+        }
+
+        painter.set_color(palette().color(Palette::TEXT));
+        painter.set_font(m_font);
+        painter.draw_text(box(), m_text, m_align, 5);
     }
 
     Label::~Label()
@@ -43,9 +54,7 @@ namespace mui
                        const Size& size)
         : Label(text, point, size),
           m_checked(false)
-    {
-
-    }
+    {}
 
     int CheckBox::handle(int event)
     {
@@ -93,8 +102,7 @@ namespace mui
         }
         else
         {
-            draw_gradient_box(r, palette().color(Palette::BORDER),
-                              palette().color(Palette::HIGHLIGHT));
+            draw_gradient_box(r, palette().color(Palette::BORDER));
         }
 
         // text
@@ -106,15 +114,14 @@ namespace mui
     }
 
     CheckBox::~CheckBox()
-    {
-    }
+    {}
 
     ImageLabel::ImageLabel(const std::string& image,
                            const std::string& text,
                            const Point& point,
                            const Size& size,
                            const Font& font)
-        : Label(text, point, size, ALIGN_CENTER, font)
+        : Label(text, point, size, ALIGN_LEFT | ALIGN_CENTER, font)
     {
         m_image = image_cache.get(image, 1.0);
         assert(m_image.get());
@@ -127,8 +134,12 @@ namespace mui
         draw_image(m_image, ALIGN_LEFT | ALIGN_CENTER);
 
         // text
+        //Label::draw(rect);
+
         auto width = cairo_image_surface_get_width(m_image.get());
-        draw_text(m_text, box(), m_fgcolor, ALIGN_LEFT | ALIGN_CENTER, width + 5, m_font);
+        draw_text(m_text, box(), palette().color(Palette::TEXT),
+                  ALIGN_LEFT | ALIGN_CENTER, width + 5, m_font);
+
     }
 
     ImageLabel::~ImageLabel()

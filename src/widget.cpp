@@ -2,40 +2,36 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "widget.h"
+#include "frame.h"
 #include "geometry.h"
+#include "imagecache.h"
 #include "input.h"
+#include "painter.h"
 #include "screen.h"
 #include "utils.h"
-#include <vector>
-#include <string>
-#include <cassert>
+#include "widget.h"
 #include <cairo.h>
-#include <iostream>
-#include "window.h"
-#include "painter.h"
-#include "resource.h"
-#include "imagecache.h"
-#include <sstream>
+#include <cassert>
+#include <string>
 
 using namespace std;
 
 namespace mui
 {
-    Widget::Widget(int x, int y, int w, int h, uint32_t flags)
+    Widget::Widget(int x, int y, int w, int h, uint32_t flags) noexcept
         : m_box(x, y, w, h),
+          m_parent(nullptr),
           m_visible(true),
           m_focus(false),
           m_active(false),
           m_disabled(false),
-          m_parent(0),
           m_flags(flags)
     {}
 
     int Widget::handle(int event)
     {
         // do nothing
-        return 0;
+        return EVT_NONE;
     }
 
     void Widget::position(int x, int y)
@@ -83,9 +79,12 @@ namespace mui
         parent()->damage(box());
     }
 
-    void Widget::draw_basic_box(const Rect& rect,
-                                const Color& border,
-                                const Color& bg)
+    IScreen* Widget::screen()
+    {
+        return parent()->screen();
+    }
+
+    void Widget::draw_basic_box(const Rect& rect, const Color& border, const Color& bg)
     {
         auto cr = screen()->context();
 
@@ -126,9 +125,7 @@ namespace mui
         cairo_restore(cr.get());
     }
 
-    void Widget::draw_gradient_box(const Rect& rect,
-                                   const Color& border,
-                                   const Color& bg,
+    void Widget::draw_gradient_box(const Rect& rect, const Color& border,
                                    bool active)
     {
         auto cr = screen()->context();
@@ -157,26 +154,26 @@ namespace mui
 
         if (!active)
         {
-            Color step = bg;
+            Color step = Color::WHITE;
             cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
-            step = bg.tint(.9);
+            step = Color::WHITE.tint(.9);
             cairo_pattern_add_color_stop_rgb(pat, 0.43, step.redf(), step.greenf(), step.bluef());
-            step = bg.tint(.82);
+            step = Color::WHITE.tint(.82);
             cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
-            step = bg.tint(.95);
+            step = Color::WHITE.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat, 1.0, step.redf(), step.greenf(), step.bluef());
 
             cairo_set_line_width(cr.get(), 1.0);
         }
         else
         {
-            Color step = bg;
+            Color step = Color::WHITE;
             cairo_pattern_add_color_stop_rgb(pat, 1, step.redf(), step.greenf(), step.bluef());
-            step = bg.tint(.9);
+            step = Color::WHITE.tint(.9);
             cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
-            step = bg.tint(.82);
+            step = Color::WHITE.tint(.82);
             cairo_pattern_add_color_stop_rgb(pat, 0.43, step.redf(), step.greenf(), step.bluef());
-            step = bg.tint(.95);
+            step = Color::WHITE.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
 
             cairo_set_line_width(cr.get(), 2.0);
@@ -195,6 +192,7 @@ namespace mui
 
         cairo_restore(cr.get());
     }
+
 
     void Widget::draw_text(const std::string& text, const Rect& rect,
                            const Color& color, int align, int standoff,
@@ -254,9 +252,34 @@ namespace mui
 #endif
     }
 
-    Widget::~Widget()
-    {}
+    Point Widget::screen_to_frame(const Point& p)
+    {
+        Point pp;
+        Widget* w = this;
+        while (w)
+        {
+            if (is_flag_set(FLAG_FRAME))
+            {
+                auto f = reinterpret_cast<Frame*>(w);
+                if (f->top_level() || f->is_flag_set(FLAG_PLANE_WINDOW))
+                {
+                    pp = f->box().point();
+                    break;
+                }
+            }
 
+            w = w->m_parent;
+        }
+        return p - pp;
+    }
+
+    Widget::~Widget()
+    {
+	if (m_parent)
+	    m_parent->remove(this);
+    }
+
+#ifdef DEVELOPMENT
     Combo::Combo(const string& label, const Point& point, const Size& size)
         : Widget(point.x, point.y, size.w, size.h),
           m_label(label)
@@ -337,14 +360,9 @@ namespace mui
 
         cairo_restore(cr.get());
 
-        assert(CAIRO_HAS_PNG_FUNCTIONS == 1);
-
         // images
-        auto up = shared_cairo_surface_t(cairo_image_surface_create_from_png("icons/bullet_arrow_up.png"), cairo_surface_destroy);
-        assert(cairo_surface_status(up.get()) == CAIRO_STATUS_SUCCESS);
-
-        auto down = shared_cairo_surface_t(cairo_image_surface_create_from_png("icons/bullet_arrow_down.png"), cairo_surface_destroy);
-        assert(cairo_surface_status(down.get()) == CAIRO_STATUS_SUCCESS);
+        auto up = image_cache.get("icons/bullet_arrow_up.png", 1.0);
+        auto down = image_cache.get("icons/bullet_arrow_down.png", 1.0);
 
         auto upwidth = cairo_image_surface_get_width(up.get());
         auto upheight = cairo_image_surface_get_height(up.get());
@@ -372,203 +390,14 @@ namespace mui
     Combo::~Combo()
     {
     }
+#endif
 
-    Slider::Slider(int min, int max, const Point& point,
-                   const Size& size, int orientation)
-        : Widget(point.x, point.y, size.w, size.h),
-          m_min(min),
-          m_max(max),
-          m_pos(min),
-          m_moving_x(0),
-          m_orientation(orientation)
-    {
-    }
-
-    int Slider::handle(int event)
-    {
-        switch (event)
-        {
-        case EVT_MOUSE_DOWN:
-        {
-            Rect bounding;
-
-            if (m_orientation == ORIENTATION_HORIZONTAL)
-            {
-                bounding = Rect(x() + normalize(m_pos) + 1,
-                                y() + 1,
-                                h() - 2,
-                                h() - 2);
-            }
-            else
-            {
-                bounding = Rect(x() + 1,
-                                y() + normalize(m_pos) + 1,
-                                w() - 2,
-                                w() - 2);
-            }
-
-            if (Rect::point_inside(screen_to_window(mouse_position()), bounding))
-            {
-                if (m_orientation == ORIENTATION_HORIZONTAL)
-                    m_moving_x = screen_to_window(mouse_position()).x;
-                else
-                    m_moving_x = screen_to_window(mouse_position()).y;
-                m_start_pos = position();
-                active(true);
-                return 1;
-            }
-
-            break;
-        }
-        case EVT_MOUSE_UP:
-            active(false);
-            return 1;
-        case EVT_MOUSE_MOVE:
-            if (active())
-            {
-                if (m_orientation == ORIENTATION_HORIZONTAL)
-                {
-                    int diff = screen_to_window(mouse_position()).x - m_moving_x;
-                    position(m_start_pos + denormalize(diff));
-                }
-                else
-                {
-                    int diff = screen_to_window(mouse_position()).y - m_moving_x;
-                    position(m_start_pos + denormalize(diff));
-                }
-                return 1;
-            }
-            break;
-        }
-
-        return Widget::handle(event);
-    }
-
-    void Slider::draw(const Rect& rect)
-    {
-        auto cr = screen()->context();
-
-        cairo_save(cr.get());
-
-        cairo_set_source_rgba(cr.get(),
-                              palette().color(Palette::HIGHLIGHT).redf(),
-                              palette().color(Palette::HIGHLIGHT).greenf(),
-                              palette().color(Palette::HIGHLIGHT).bluef(),
-                              palette().color(Palette::HIGHLIGHT).alphaf());
-
-        if (m_orientation == ORIENTATION_HORIZONTAL)
-        {
-            cairo_set_line_width(cr.get(), h() / 5.0);
-
-            // line
-            cairo_move_to(cr.get(), x(), y() + h() / 2);
-            cairo_line_to(cr.get(), x() + normalize(m_pos), y() + h() / 2);
-            cairo_stroke(cr.get());
-
-            cairo_set_source_rgba(cr.get(),
-                                  palette().color(Palette::BORDER).redf(),
-                                  palette().color(Palette::BORDER).greenf(),
-                                  palette().color(Palette::BORDER).bluef(),
-                                  palette().color(Palette::BORDER).alphaf());
-
-            cairo_move_to(cr.get(), x() + normalize(m_pos) + 1, y() + h() / 2);
-            cairo_line_to(cr.get(), x() + w(), y() + h() / 2);
-            cairo_stroke(cr.get());
-
-            // handle
-            draw_gradient_box(Rect(x() + normalize(m_pos) + 1,
-                                   y() + 1,
-                                   h() - 2,
-                                   h() - 2),
-                              palette().color(Palette::BORDER),
-                              palette().color(Palette::HIGHLIGHT));
-        }
-        else
-        {
-            cairo_set_line_width(cr.get(), w() / 5.0);
-
-            // line
-            cairo_move_to(cr.get(), x() + w() / 2, y() + h());
-            cairo_line_to(cr.get(), x() + w() / 2, y() + normalize(m_pos));
-            cairo_stroke(cr.get());
-
-            cairo_set_source_rgba(cr.get(),
-                                  palette().color(Palette::BORDER).redf(),
-                                  palette().color(Palette::BORDER).greenf(),
-                                  palette().color(Palette::BORDER).bluef(),
-                                  palette().color(Palette::BORDER).alphaf());
-
-            cairo_move_to(cr.get(), x() + w() / 2, y() + normalize(m_pos) + 1);
-            cairo_line_to(cr.get(), x() + w() / 2, y());
-            cairo_stroke(cr.get());
-
-            // handle
-            draw_gradient_box(Rect(x() + 1,
-                                   y() + normalize(m_pos) + 1,
-                                   w() - 2,
-                                   w() - 2),
-                              palette().color(Palette::BORDER),
-                              palette().color(Palette::HIGHLIGHT));
-        }
-
-        cairo_restore(cr.get());
-    }
-
-    Slider::~Slider()
-    {
-    }
-
-    SimpleText::SimpleText(const std::string& text, const Point& point, const Size& size)
-        : Widget(point.x, point.y, size.w, size.h),
-          m_text(text)
-    {}
-
-    int SimpleText::handle(int event)
-    {
-        switch (event)
-        {
-        case EVT_MOUSE_DOWN:
-            damage();
-            focus(true);
-            return 1;
-        case EVT_KEY_DOWN:
-            if (focus())
-            {
-                m_text.append(1, (char)key_position());
-                damage();
-                return 1;
-            }
-            break;
-        }
-
-        return Widget::handle(event);
-    }
-
-    void SimpleText::draw(const Rect& rect)
-    {
-        // box
-        draw_basic_box(box(), palette().color(Palette::BORDER),
-                       palette().color(Palette::HIGHLIGHT));
-
-        // text
-        draw_text(m_text, box(), palette().color(Palette::TEXT), ALIGN_CENTER | ALIGN_LEFT);
-    }
-
-    SimpleText::~SimpleText()
-    {
-    }
-
-
-
-    ListBox::ListBox(const std::vector<string>& items,
+    ListBox::ListBox(const item_array& items,
                      const Point& point,
                      const Size& size)
         : Widget(point.x, point.y, size.w, size.h),
-          m_items(items),
-          m_selected(0)
-    {
-
-    }
+          m_items(items)
+    {}
 
     Rect ListBox::item_rect(uint32_t index) const
     {
@@ -586,7 +415,7 @@ namespace mui
         {
             for (uint32_t i = 0; i < m_items.size(); i++)
             {
-                if (Rect::point_inside(screen_to_window(mouse_position()), item_rect(i)))
+                if (Rect::point_inside(screen_to_frame(mouse_position()), item_rect(i)))
                 {
                     if (m_selected != i)
                     {
@@ -623,20 +452,12 @@ namespace mui
             draw_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
         }
 #else
+        Painter painter(screen()->context());
         auto cr = screen()->context();
-
-        Font font;
-        cairo_text_extents_t textext;
-        cairo_select_font_face(cr.get(),
-                               font.face().c_str(),
-                               CAIRO_FONT_SLANT_NORMAL,
-                               CAIRO_FONT_WEIGHT_BOLD);
-        cairo_set_font_size(cr.get(), font.size());
-        cairo_text_extents(cr.get(), "a", &textext);
 
         draw_basic_box(Rect(x(), y(), w(), 40 * m_items.size()),
                        palette().color(Palette::BORDER),
-                       palette().color(Palette::HIGHLIGHT));
+                       palette().color(Palette::BG));
 
         if (!m_items.empty())
         {
@@ -645,7 +466,9 @@ namespace mui
 
             for (uint32_t i = 0; i < m_items.size(); i++)
             {
-                draw_text(m_items[i], item_rect(i), Color::BLACK, ALIGN_CENTER);
+                painter.set_color(palette().color(Palette::TEXT));
+                painter.set_font(m_font);
+                painter.draw_text(item_rect(i), m_items[i], ALIGN_CENTER);
             }
         }
 #endif
@@ -677,7 +500,7 @@ namespace mui
         switch (event)
         {
         case EVT_MOUSE_DOWN:
-            m_moving_x = screen_to_window(mouse_position()).y;
+            m_moving_x = screen_to_frame(mouse_position()).y;
             m_start_pos = position();
             active(true);
             return 1;
@@ -689,7 +512,7 @@ namespace mui
         case EVT_MOUSE_MOVE:
             if (active())
             {
-                int diff = screen_to_window(mouse_position()).y - m_moving_x;
+                int diff = screen_to_frame(mouse_position()).y - m_moving_x;
                 position(m_start_pos + diff);
             }
             break;

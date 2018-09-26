@@ -19,10 +19,10 @@
 using namespace std;
 using namespace mui;
 
-class MyImage : public Image
+class Bubble : public Image
 {
 public:
-    MyImage(int xspeed, int yspeed, const Point& point)
+    Bubble(int xspeed, int yspeed, const Point& point)
         : Image("smallbubble.png", point.x, point.y),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
@@ -65,13 +65,14 @@ private:
     float m_angle;
 };
 
-class MyWindow : public PlaneWindow
+class MainWindow : public Window
 {
 public:
-    MyWindow()
-        : PlaneWindow(Size(KMSScreen::instance()->size().w,
+    MainWindow()
+        : Window(Size(), FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND),
+/*PlaneWindow(Size(KMSScreen::instance()->size().w,
                            KMSScreen::instance()->size().h),
-                      FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, DRM_FORMAT_XRGB8888),
+                      FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, DRM_FORMAT_XRGB8888),*/
           e1(r())
     {
         Image* img = new Image("water_1080.png");
@@ -86,7 +87,8 @@ public:
                             Point(10, 10),
                             Size(100, 40),
                             Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
-        m_label->fgcolor(Color::WHITE);
+        m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);
     }
 
@@ -99,7 +101,7 @@ public:
             break;
         }
 
-        return SimpleWindow::handle(event);
+        return Window::handle(event);
     }
 
     void spawn(const Point& p)
@@ -118,7 +120,7 @@ public:
         if (yspeed == 0)
             yspeed = 1;
 
-        MyImage* image = new MyImage(xspeed, yspeed, p);
+        Bubble* image = new Bubble(xspeed, yspeed, p);
         add(image);
         image->scale(size, size);
         image->move(p.x - image->box().w / 2 + offset,
@@ -154,7 +156,7 @@ public:
         m_label->text(ss.str());
     }
 
-    vector<MyImage*> m_images;
+    vector<Bubble*> m_images;
     std::random_device r;
     std::default_random_engine e1;
     Label* m_label;
@@ -163,27 +165,26 @@ public:
 
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen screen(false);
-    InputTslib input0("/dev/input/touchscreen0");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app/*(false)*/;
 
-    MyWindow win;
+    set_image_path("/root/mui/share/mui/examples/water/");
+
+    MainWindow win;
     win.show();
 
-    HardwareSprite sprite1("fish.png", 252, 209, 8, 0, 0, 0, 0);
-    HardwareSprite sprite2("fish2.png", 100, 87, 6, 0, 0, 0, 0);
+    vector <ISpriteBase*> sprites;
 
+#ifdef SPRITE1
+    HardwareSprite sprite1("fish.png", 252, 209, 8, 0, 0, 0, 0);
     win.add(&sprite1);
+    sprites.push_back(&sprite1);
+#endif
+
+#ifdef SPRITE2
+    HardwareSprite sprite2("fish2.png", 100, 87, 6, 0, 0, 0, 0);
     win.add(&sprite2);
-    sprite1.show();
-    sprite2.show();
+    sprites.push_back(&sprite2);
+#endif
 
     PeriodicTimer animatetimer(33);
     animatetimer.add_handler([&win]()
@@ -193,16 +194,18 @@ int main()
     animatetimer.start();
 
     PeriodicTimer animatetimer2(100);
-    animatetimer2.add_handler([&sprite1, &sprite2]()
+    animatetimer2.add_handler([&sprites]()
     {
-        sprite1.advance();
-        sprite2.advance();
+        for (auto& sprite : sprites)
+            sprite->advance();
     });
     animatetimer2.start();
 
     PeriodicTimer spawntimer(1000);
     spawntimer.add_handler([&win]()
     {
+	if (win.m_images.size() > 30)
+	    return;
 
         static std::uniform_int_distribution<int> xoffset_dist(-win.w() / 2, win.w() / 2);
         int offset = xoffset_dist(win.e1);
@@ -219,10 +222,11 @@ int main()
     });
     spawntimer.start();
 
-#if 1
+#ifdef SPRITE1
     WidgetPositionAnimator a1 = WidgetPositionAnimator({&sprite1},
                                 WidgetPositionAnimator::CORD_X,
-                                -sprite1.size().w, screen.size().w,
+                                -sprite1.size().w,
+                                main_screen()->size().w,
                                 10000,
                                 easing_linear);
     a1.start();
@@ -240,10 +244,10 @@ int main()
     floattimer.start();
 #endif
 
-#if 1
+#ifdef SPRITE2
     WidgetPositionAnimator a2 = WidgetPositionAnimator({&sprite2},
                                 WidgetPositionAnimator::CORD_X,
-                                -sprite2.size().w, screen.size().w,
+                                -sprite2.size().w, main_screen()->size().w,
                                 12000,
                                 easing_linear);
     a2.start();
@@ -251,7 +255,6 @@ int main()
     PeriodicTimer floattimer2(1000 * 15);
     floattimer2.add_handler([&a2, &sprite2, &win]()
     {
-
         static std::uniform_int_distribution<int> yoffset_dist(0, win.h() - sprite2.size().h);
         int y = yoffset_dist(win.e1);
 
@@ -261,5 +264,5 @@ int main()
     floattimer2.start();
 #endif
 
-    return EventLoop::run();
+    return app.run();
 }

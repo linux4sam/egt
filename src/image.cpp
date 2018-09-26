@@ -43,17 +43,11 @@ namespace mui
 
     void Image::draw(const Rect& rect)
     {
-        // TODO: this needs to apply to all draw() calls.  Don't give a widget a
-        // rectangle that is outside of its own box.
-        //Rect r = Rect::intersect(rect, box());
-
         Painter painter(screen()->context());
         painter.draw_image(Rect(rect.point() - box().point(), rect.size()), rect.point(), m_image);
     }
 
     Image::~Image()
-    {
-
-    }
+    {}
 
 }

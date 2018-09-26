@@ -3,6 +3,10 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 
+#ifndef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <iostream>
 #include <map>
 #include <math.h>
@@ -14,11 +18,11 @@
 using namespace std;
 using namespace mui;
 
-class MyWindow : public SimpleWindow
+class MyWindow : public Window
 {
 public:
     MyWindow()
-        : SimpleWindow(Size(), FLAG_NO_BACKGROUND),
+        : Window(Size(), FLAG_NO_BACKGROUND),
           m_img("background.png")
     {
         add(&m_img);
@@ -83,16 +87,9 @@ static vector<FloatingBox*> boxes;
 
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen kms;
-    InputTslib input0("/dev/input/touchscreen0");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app;
+
+    set_image_path("/root/mui/share/mui/examples/floating/");
 
     MyWindow win;
     win.show();
@@ -111,7 +108,7 @@ int main()
         std::make_pair(-4 * f, 2 * f),
     };
 
-    uint32_t SOFT_COUNT = 5;
+    uint32_t SOFT_COUNT = 2;
 
     // software
     for (uint32_t x = 0; x < SOFT_COUNT; x++)
@@ -163,7 +160,10 @@ int main()
                  Point(40, win.size().h - 40),
                  Size(100, 40),
                  Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
-    label1.fgcolor(Color::WHITE);
+    label1.palette()
+    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+
     win.add(&label1);
 
     struct CPUTimer: public PeriodicTimer
@@ -189,7 +189,5 @@ int main()
     CPUTimer cputimer(label1);
     cputimer.start();
 
-    EventLoop::run();
-
-    return 0;
+    return app.run();
 }

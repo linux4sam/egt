@@ -15,7 +15,6 @@
 using namespace std;
 using namespace mui;
 
-
 template<class T>
 struct ShowAnimation : public AnimationTimer
 {
@@ -143,7 +142,7 @@ public:
                             Point(0, 0),
                             Size(100, 50),
                             Widget::ALIGN_CENTER);
-        m_label->fgcolor(Color::WHITE);
+        m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
         add(m_label);
     }
 
@@ -158,24 +157,13 @@ protected:
 
 int main(int argc, const char** argv)
 {
-#ifdef HAVE_X11
-    X11Screen screen(Size(800, 480));
-#else
-#ifdef HAVE_LIBPLANES
-    KMSScreen kms(false);
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#ifdef HAVE_TSLIB
-    InputTslib input0("/dev/input/touchscreen0");
-#endif
-#endif
-
     if (argc != 3)
     {
         cerr << argv[0] << " TYPE FILENAME" << endl;
         return 1;
     }
+
+    Application app(false);
 
     VideoWindow* window = 0;
     if (argv[1] == string("v4l2"))
@@ -187,64 +175,67 @@ int main(int argc, const char** argv)
     else if (argv[1] == string("hardware"))
         window = new MyVideoWindow<HardwareVideo>(Size(960, 540), argv[2]);
     else if (argv[1] == string("software"))
-        //	window = new MyVideoWindow<SoftwareVideo>(Size(320,192), argv[2]);
-        window = new MyVideoWindow<SoftwareVideo>(Size(960, 540), argv[2]);
+        window = new MyVideoWindow<SoftwareVideo>(Size(320, 192), argv[2]);
+    //window = new MyVideoWindow<SoftwareVideo>(Size(960, 540), argv[2]);
     else
     {
         cerr << "unknown type: " << argv[1] << endl;
         return 1;
     }
 
+    window->name("video");
+
 #if 1
+#ifdef FPS
     FpsWindow fpslabel;
     fpslabel.show();
+#endif
 
-    PlaneWindow ctrlwindow(Size(500, 80));
-
-    {
-        Palette p(ctrlwindow.palette());
-        p.set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
-        ctrlwindow.set_palette(p);
-    }
+    PlaneWindow ctrlwindow(Size(600, 80));
+    ctrlwindow.name("ctrl");
+    window->add(&ctrlwindow);
+    ctrlwindow.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
 
     ctrlwindow.position((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
                         KMSScreen::instance()->size().h - ctrlwindow.h());
-    window->add(&ctrlwindow);
 
     set_control_window(&ctrlwindow);
 
-    HorizontalPositioner grid(0, 0, 600, 80, 5, Widget::ALIGN_CENTER);
+    HorizontalPositioner grid(Point(0, 0), Size(600, 80), 5, Widget::ALIGN_CENTER);
+    grid.name("grid");
+    ctrlwindow.add(&grid);
 
     ImageButton* playbtn = new ImageButton(":play_png", "", Point(), Size(), false);
+    grid.add(playbtn);
+
     playbtn->add_handler([window](EventWidget * widget)
     {
         ImageButton* btn = dynamic_cast<ImageButton*>(widget);
         if (btn->active())
             window->unpause();
     });
-    ctrlwindow.add(playbtn);
-    grid.add(playbtn);
 
     ImageButton* pausebtn = new ImageButton(":pause_png", "", Point(), Size(), false);
+    grid.add(pausebtn);
     pausebtn->add_handler([window](EventWidget * widget)
     {
+        cout << "pause button" << endl;
         ImageButton* btn = dynamic_cast<ImageButton*>(widget);
         if (btn->active())
             window->pause();
     });
-    ctrlwindow.add(pausebtn);
-    grid.add(pausebtn);
 
     Slider* position = new Slider(0, 100, Point(), Size(150, 40), Slider::ORIENTATION_HORIZONTAL);
-    Palette p(position->palette());
-    p.set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
-    position->set_palette(p);
-    ctrlwindow.add(position);
-    position->disable(true);
     grid.add(position);
+    position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
+    position->disable(true);
 
     PeriodicTimer postimer(200);
-    postimer.add_handler([position, window, &fpslabel]()
+    postimer.add_handler([position, window
+#ifdef FPS
+                                    , &fpslabel
+#endif
+                                   ]()
     {
         if (window->duration())
         {
@@ -256,25 +247,25 @@ int main(int argc, const char** argv)
             position->position(0);
         }
 
+#ifdef FPS
         ostringstream ss;
         ss << "fps: " << window->fps();
         fpslabel.text(ss.str());
+#endif
     });
     postimer.start();
 
     ImageButton* volumei = new ImageButton(":volumeup_png", "", Point(), Size(), false);
-    ctrlwindow.add(volumei);
     grid.add(volumei);
 
     Slider* volume = new Slider(0, 100, Point(), Size(100, 20), Slider::ORIENTATION_HORIZONTAL);
+    grid.add(volume);
     volume->add_handler([window](EventWidget * widget)
     {
         Slider* slider = dynamic_cast<Slider*>(widget);
         window->set_volume(slider->position());
     });
-    ctrlwindow.add(volume);
     volume->position(50);
-    grid.add(volume);
 
     playbtn->disable(true);
     pausebtn->disable(false);
@@ -298,5 +289,7 @@ int main(int argc, const char** argv)
     ctrlwindow.show();
 #endif
 
-    return EventLoop::run();
+    window->show();
+
+    return app.run();
 }

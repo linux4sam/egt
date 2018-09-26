@@ -2,24 +2,21 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui.h>
-#include <math.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <iostream>
-#include <random>
-#include <cmath>
 #include <chrono>
+#include <cmath>
+#include <iostream>
+#include <mui/ui.h>
+#include <random>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace mui;
 
-class MyImage : public Image
+class Ball : public Image
 {
 public:
-    MyImage(int xspeed, int yspeed, const Point& point)
+    Ball(int xspeed, int yspeed, const Point& point)
         : Image("metalball.png", point.x, point.y),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
@@ -27,7 +24,7 @@ public:
 
     bool animate()
     {
-        bool visible = Rect::is_intersect(Rect(Point(0, 0), main_screen()->size()), box());
+        bool visible = Rect::is_intersect(parent()->box(), box());
 
         if (visible)
         {
@@ -45,11 +42,11 @@ private:
     float m_angle;
 };
 
-class MyWindow : public SimpleWindow
+class MainWindow : public Window
 {
 public:
-    MyWindow()
-        : SimpleWindow()
+    MainWindow()
+        : Window()
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     }
@@ -63,7 +60,7 @@ public:
             break;
         }
 
-        return SimpleWindow::handle(event);
+        return Window::handle(event);
     }
 
     void spawn(const Point& p)
@@ -80,7 +77,7 @@ public:
         if (xspeed == 0 && yspeed == 0)
             xspeed = yspeed = 1;
 
-        MyImage* image = new MyImage(xspeed, yspeed, p);
+        Ball* image = new Ball(xspeed, yspeed, p);
         add(image);
         image->scale(size, size);
         image->move(p.x - image->box().w / 2,
@@ -106,25 +103,17 @@ public:
     }
 
 private:
-    vector<MyImage*> m_images;
+    vector<Ball*> m_images;
     std::random_device r;
 };
 
-
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen kms;
-    InputTslib input0("/dev/input/touchscreen0");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app;
 
-    MyWindow win;
+    set_image_path("/root/mui/share/mui/examples/space/");
+
+    MainWindow win;
     win.show();
 
     PeriodicTimer animatetimer(33);
@@ -141,5 +130,5 @@ int main()
     });
     spawntimer.start();
 
-    return EventLoop::run();
+    return app.run();
 }

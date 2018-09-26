@@ -130,12 +130,15 @@ namespace mui
 
     void KMSOverlayScreen::schedule_flip()
     {
+        if (m_plane->buffer_count > 1)
+        {
 #if 0
-        static FlipThread pool;
-        pool.enqueue(FlipJob(m_plane, m_index));
+            static FlipThread pool;
+            pool.enqueue(FlipJob(m_plane, m_index));
 #else
-        plane_flip(m_plane, m_index);
+            plane_flip(m_plane, m_index);
 #endif
+        }
 
         if (++m_index >= m_plane->buffer_count)
             m_index = 0;
@@ -232,12 +235,16 @@ namespace mui
 
     void KMSScreen::schedule_flip()
     {
+        if (m_plane->buffer_count > 1)
+        {
 #if 0
-        static FlipThread pool;
-        pool.enqueue(FlipJob(m_plane, m_index));
+            static FlipThread pool;
+            pool.enqueue(FlipJob(m_plane, m_index));
 #else
-        plane_flip(m_plane, m_index);
+            plane_flip(m_plane, m_index);
 #endif
+        }
+
         if (++m_index >= m_plane->buffer_count)
             m_index = 0;
     }
@@ -262,6 +269,8 @@ namespace mui
 
         if (heo)
         {
+            cout << "heo plane requested" << endl;
+
             // TODO: need a better way to do this
             int index = 2;
             plane = plane_create2(m_device,

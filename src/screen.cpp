@@ -18,12 +18,7 @@ namespace mui
 
     static IScreen* the_screen = 0;
 
-    void set_main_screen(IScreen* screen)
-    {
-        the_screen = screen;
-    }
-
-    IScreen* main_screen()
+    IScreen*& main_screen()
     {
         return the_screen;
     }
@@ -75,7 +70,7 @@ namespace mui
         cairo_restore(m_cr.get());
     }
 
-    void IScreen::flip(const vector<Rect>& damage)
+    void IScreen::flip(const damage_array& damage)
     {
         static int envset = -1;
         if (envset < 0)
@@ -83,7 +78,7 @@ namespace mui
 
         if (!damage.empty())
         {
-            vector<Rect> olddamage = m_buffers[index()].damage;
+            damage_array olddamage = m_buffers[index()].damage;
 
             // save the damage to all buffers
             for (auto& b : m_buffers)
@@ -104,7 +99,7 @@ namespace mui
     }
 
     void IScreen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
-					     const vector<Rect>& olddamage)
+            const damage_array& olddamage)
     {
         cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
         cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
@@ -167,7 +162,7 @@ namespace mui
             format = CAIRO_FORMAT_RGB24;
             break;
         default:
-            assert(0);
+            //assert(0);
             break;
         }
 

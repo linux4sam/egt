@@ -18,6 +18,8 @@ namespace mui
     using shared_cairo_t =
         std::shared_ptr<cairo_t>;
 
+    void set_image_path(const std::string& path);
+
     /**
      * Internal image cache.
      *

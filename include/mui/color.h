@@ -11,6 +11,7 @@
  */
 
 #include <cstdint>
+#include <iosfwd>
 
 namespace mui
 {
@@ -24,28 +25,34 @@ namespace mui
 
         //@{
         /** @brief Pre-defined color. */
-        static Color BLACK;
-        static Color WHITE;
-        static Color RED;
-        static Color GREEN;
-        static Color BLUE;
-        static Color YELLOW;
-        static Color CYAN;
-        static Color MAGENTA;
-        static Color SILVER;
-        static Color GRAY;
-        static Color LIGHTGRAY;
-        static Color MAROON;
-        static Color OLIVE;
-        static Color PURPLE;
-        static Color TEAL;
-        static Color NAVY;
-        static Color ORANGE;
-        static Color AQUA;
-        static Color LIGHTBLUE;
+        static const Color TRANSPARENT;
+        static const Color BLACK;
+        static const Color WHITE;
+        static const Color RED;
+        static const Color GREEN;
+        static const Color BLUE;
+        static const Color YELLOW;
+        static const Color CYAN;
+        static const Color MAGENTA;
+        static const Color SILVER;
+        static const Color GRAY;
+        static const Color LIGHTGRAY;
+        static const Color MAROON;
+        static const Color OLIVE;
+        static const Color PURPLE;
+        static const Color TEAL;
+        static const Color NAVY;
+        static const Color ORANGE;
+        static const Color AQUA;
+        static const Color LIGHTBLUE;
         //@}
 
-        Color(uint32_t c = 0)
+        /**
+         * Create a color with the specified RGBA value.
+         *
+        * @param[in] c RGBA value.
+               */
+        Color(uint32_t c = 0) noexcept
         {
             m_r = (c >> 24) & 0xFF;
             m_g = (c >> 16) & 0xFF;
@@ -54,12 +61,14 @@ namespace mui
         }
 
         /**
-         * @param[in] r Red component in range 0 - 255.
+        * Create a color with the specified RGBA component values.
+         *
+        * @param[in] r Red component in range 0 - 255.
          * @param[in] g Green component in range 0 - 255.
          * @param[in] b Blue component in range 0 - 255.
          * @param[in] a Alpha component in range 0 - 255.
          */
-        explicit Color(uint32_t r, uint32_t g, uint32_t b, uint32_t a = 255)
+        explicit Color(uint32_t r, uint32_t g, uint32_t b, uint32_t a = 255) noexcept
             : m_r(r),
               m_g(g),
               m_b(b),
@@ -135,6 +144,18 @@ namespace mui
                    ((m_b * m_a / 255) & 0xff);
         }
 
+        Color& operator=(const Color&) = default;
+
+        Color& operator=(uint32_t c)
+        {
+            m_r = (c >> 24) & 0xFF;
+            m_g = (c >> 16) & 0xFF;
+            m_b = (c >> 8) & 0xFF;
+            m_a = c & 0xFF;
+
+            return *this;
+        }
+
     protected:
         uint32_t m_r;
         uint32_t m_g;
@@ -142,6 +163,7 @@ namespace mui
         uint32_t m_a;
     };
 
+    std::ostream& operator<<(std::ostream& os, const Color& color);
 }
 
 #endif

@@ -2,16 +2,28 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#include "config.h"
 #include "imagecache.h"
 #include "resource.h"
 #include "utils.h"
 #include <iostream>
 #include <sstream>
+#ifdef HAVE_LIBJPEG
+#include "cairo_jpg.h"
+#endif
+#include <cassert>
 
 using namespace std;
 
 namespace mui
 {
+
+    static string image_path = "./";
+    void set_image_path(const std::string& path)
+    {
+        image_path = path;
+    }
+
     shared_cairo_surface_t ImageCache::get(const std::string& filename,
                                            float hscale, float vscale, bool approximate)
     {
@@ -21,7 +33,7 @@ namespace mui
             vscale = ImageCache::round(vscale, 0.01);
         }
 
-        string name = id(filename, hscale, vscale);
+        const string name = id(filename, hscale, vscale);
 
         auto i = m_cache.find(name);
         if (i != m_cache.end())
@@ -33,6 +45,8 @@ namespace mui
 
         if (hscale == 1.0 && vscale == 1.0)
         {
+            assert(CAIRO_HAS_PNG_FUNCTIONS == 1);
+
             std::string::size_type i = filename.find(":");
             if (i == 0)
             {
@@ -45,8 +59,9 @@ namespace mui
             }
             else
             {
+                string name = image_path + filename;
                 image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_png(filename.c_str()),
+                            cairo_image_surface_create_from_png(name.c_str()),
                             cairo_surface_destroy);
             }
         }
@@ -62,6 +77,8 @@ namespace mui
                                   width * hscale,
                                   height * vscale);
         }
+
+        assert(cairo_surface_status(image.get()) == CAIRO_STATUS_SUCCESS);
 
         m_cache.insert(std::make_pair(name, image));
 

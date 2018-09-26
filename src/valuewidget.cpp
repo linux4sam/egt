@@ -41,8 +41,9 @@ namespace mui
             if (active())
             {
                 Point c = center();
-                float angle = atan2f(screen_to_window(mouse_position()).y - c.y,
-                                     screen_to_window(mouse_position()).x - c.x);
+                //float angle = atan2f(screen_to_window(mouse_position()).y - c.y,
+                //                     screen_to_window(mouse_position()).x - c.x);
+                float angle = c.angle_to_point<float>(mouse_position());
                 angle = angle * (180.0 / M_PI);
                 angle = (angle > 0.0 ? angle : (360.0 + angle));
                 angle = 180 - angle;
@@ -191,11 +192,18 @@ namespace mui
         cairo_set_source_rgb(cr.get(), 0, 0, 0);
         cairo_set_line_width(cr.get(), 1.0);
 
+        cairo_text_extents_t textext;
+        cairo_select_font_face(cr.get(), m_font.face().c_str(),
+                               CAIRO_FONT_SLANT_NORMAL,
+                               CAIRO_FONT_WEIGHT_BOLD);
+        cairo_set_font_size(cr.get(), m_font.size());
+        cairo_text_extents(cr.get(), "999", &textext);
+
         // Set origin as middle of bottom edge of the drawing area.
         // Window is not resizable so "magic numbers" will work here.
-        cairo_translate(cr.get(), x() + w() / 2, y() + h());
+        cairo_translate(cr.get(), x() + w() / 2, y() + h() - textext.height);
 
-        float hw = w() / 2.0 - 40.0;
+        float hw = w() / 2.0 - (textext.width * 2);
 
         // Draw the black radial scale marks and labels
         for (double marks = 0.0; marks <= 100.0; marks += 10.0)
@@ -212,9 +220,6 @@ namespace mui
             char text[10];
             sprintf(text, "%2.0f", marks);
 
-            cairo_text_extents_t textext;
-            cairo_select_font_face(cr.get(), "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-            cairo_set_font_size(cr.get(), 16);
             cairo_text_extents(cr.get(), text, &textext);
 
             int width = textext.width;
@@ -231,7 +236,8 @@ namespace mui
         // Retrieve the new slider value
         float value = this->value();
 
-        cairo_set_source_rgb(cr.get(), 1.0, 0, 0);
+        cairo_set_source_rgb(cr.get(), Color::RED.redf(),
+                             Color::RED.greenf(), Color::RED.bluef());
         cairo_set_line_width(cr.get(), 1.5);
 
         // Draw the meter pointer
@@ -280,4 +286,146 @@ namespace mui
         cairo_restore(cr.get());
     }
 
+    Slider::Slider(int min, int max, const Point& point,
+                   const Size& size, int orientation)
+        : Widget(point.x, point.y, size.w, size.h),
+          m_min(min),
+          m_max(max),
+          m_pos(min),
+          m_moving_x(0),
+          m_orientation(orientation)
+    {
+    }
+
+    int Slider::handle(int event)
+    {
+        switch (event)
+        {
+        case EVT_MOUSE_DOWN:
+        {
+            Rect bounding;
+
+            if (m_orientation == ORIENTATION_HORIZONTAL)
+            {
+                bounding = Rect(x() + normalize(m_pos) + 1,
+                                y() + 1,
+                                h() - 2,
+                                h() - 2);
+            }
+            else
+            {
+                bounding = Rect(x() + 1,
+                                y() + normalize(m_pos) + 1,
+                                w() - 2,
+                                w() - 2);
+            }
+
+            if (Rect::point_inside(screen_to_frame(mouse_position()), bounding))
+            {
+                if (m_orientation == ORIENTATION_HORIZONTAL)
+                    m_moving_x = screen_to_frame(mouse_position()).x;
+                else
+                    m_moving_x = screen_to_frame(mouse_position()).y;
+                m_start_pos = position();
+                active(true);
+                return 1;
+            }
+
+            break;
+        }
+        case EVT_MOUSE_UP:
+            active(false);
+            return 1;
+        case EVT_MOUSE_MOVE:
+            if (active())
+            {
+                if (m_orientation == ORIENTATION_HORIZONTAL)
+                {
+                    int diff = screen_to_frame(mouse_position()).x - m_moving_x;
+                    position(m_start_pos + denormalize(diff));
+                }
+                else
+                {
+                    int diff = screen_to_frame(mouse_position()).y - m_moving_x;
+                    position(m_start_pos + denormalize(diff));
+                }
+                return 1;
+            }
+            break;
+        }
+
+        return Widget::handle(event);
+    }
+
+    void Slider::draw(const Rect& rect)
+    {
+        auto cr = screen()->context();
+
+        cairo_save(cr.get());
+
+        cairo_set_source_rgba(cr.get(),
+                              palette().color(Palette::HIGHLIGHT).redf(),
+                              palette().color(Palette::HIGHLIGHT).greenf(),
+                              palette().color(Palette::HIGHLIGHT).bluef(),
+                              palette().color(Palette::HIGHLIGHT).alphaf());
+
+        if (m_orientation == ORIENTATION_HORIZONTAL)
+        {
+            cairo_set_line_width(cr.get(), h() / 5.0);
+
+            // line
+            cairo_move_to(cr.get(), x(), y() + h() / 2);
+            cairo_line_to(cr.get(), x() + normalize(m_pos), y() + h() / 2);
+            cairo_stroke(cr.get());
+
+            cairo_set_source_rgba(cr.get(),
+                                  palette().color(Palette::BORDER).redf(),
+                                  palette().color(Palette::BORDER).greenf(),
+                                  palette().color(Palette::BORDER).bluef(),
+                                  palette().color(Palette::BORDER).alphaf());
+
+            cairo_move_to(cr.get(), x() + normalize(m_pos) + 1, y() + h() / 2);
+            cairo_line_to(cr.get(), x() + w(), y() + h() / 2);
+            cairo_stroke(cr.get());
+
+            // handle
+            draw_gradient_box(Rect(x() + normalize(m_pos) + 1,
+                                   y() + 1,
+                                   h() - 2,
+                                   h() - 2),
+                              palette().color(Palette::BORDER));
+        }
+        else
+        {
+            cairo_set_line_width(cr.get(), w() / 5.0);
+
+            // line
+            cairo_move_to(cr.get(), x() + w() / 2, y() + h());
+            cairo_line_to(cr.get(), x() + w() / 2, y() + normalize(m_pos));
+            cairo_stroke(cr.get());
+
+            cairo_set_source_rgba(cr.get(),
+                                  palette().color(Palette::BORDER).redf(),
+                                  palette().color(Palette::BORDER).greenf(),
+                                  palette().color(Palette::BORDER).bluef(),
+                                  palette().color(Palette::BORDER).alphaf());
+
+            cairo_move_to(cr.get(), x() + w() / 2, y() + normalize(m_pos) + 1);
+            cairo_line_to(cr.get(), x() + w() / 2, y());
+            cairo_stroke(cr.get());
+
+            // handle
+            draw_gradient_box(Rect(x() + 1,
+                                   y() + normalize(m_pos) + 1,
+                                   w() - 2,
+                                   w() - 2),
+                              palette().color(Palette::BORDER));
+        }
+
+        cairo_restore(cr.get());
+    }
+
+    Slider::~Slider()
+    {
+    }
 }

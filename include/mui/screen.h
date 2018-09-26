@@ -5,10 +5,16 @@
 #ifndef MUI_SCREEN_H
 #define MUI_SCREEN_H
 
-#include "mui/color.h"
-#include "mui/geometry.h"
+/**
+ * @file
+ * @brief Working with screens.
+ */
+
+#include <mui/color.h>
+#include <mui/geometry.h>
 #include <cairo.h>
 #include <vector>
+#include <list>
 #include <memory>
 #include <drm_fourcc.h>
 
@@ -26,6 +32,8 @@ namespace mui
     class IScreen
     {
     public:
+        typedef std::list<Rect> damage_array;
+
         IScreen();
 
         virtual void blit(cairo_surface_t* surface,
@@ -36,7 +44,7 @@ namespace mui
 
         virtual void fill(const Color& color = Color::RED);
 
-        virtual void flip(const std::vector<Rect>& damage);
+        virtual void flip(const damage_array& damage);
 
         virtual void schedule_flip() {}
         virtual uint32_t index() { return 0; }
@@ -52,7 +60,7 @@ namespace mui
     protected:
 
         void init(void** ptr, uint32_t count, int w, int h,
-		  uint32_t f = DRM_FORMAT_ARGB8888);
+                  uint32_t f = DRM_FORMAT_ARGB8888);
 
         struct DisplayBuffer
         {
@@ -62,7 +70,7 @@ namespace mui
             /**
              * Each region that needs to be copied from the back buffer.
              */
-            std::vector<Rect> damage;
+            damage_array damage;
 
             void add_damage(const Rect& rect)
             {
@@ -98,7 +106,7 @@ namespace mui
         };
 
         void copy_to_buffer(DisplayBuffer& buffer);
-        void copy_to_buffer_greenscreen(DisplayBuffer& buffer, const std::vector<Rect>& olddamage);
+        void copy_to_buffer_greenscreen(DisplayBuffer& buffer, const damage_array& olddamage);
 
         shared_cairo_surface_t m_surface;
         shared_cairo_t m_cr;
@@ -123,8 +131,10 @@ namespace mui
         void* m_fb;
     };
 
-    IScreen* main_screen();
-    void set_main_screen(IScreen* screen);
+    /**
+     * Get a pointer to the main screen.
+     */
+    IScreen*& main_screen();
 }
 
 #endif

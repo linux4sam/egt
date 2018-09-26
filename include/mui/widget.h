@@ -62,9 +62,18 @@ namespace mui
         FLAG_WINDOW = (1 << 4),
 
         /**
+         * This is a frame window.
+         */
+        FLAG_FRAME = (1 << 5),
+
+        FLAG_BORDER = (1 << 6),
+
+        /**
          * Default window flags.
          */
         FLAG_WINDOW_DEFAULT = FLAG_WINDOW,
+
+        CUSTOM_WIDGET_FLAGS = 1000,
     };
 
     class Widget;
@@ -72,7 +81,7 @@ namespace mui
     class EventWidget
     {
     public:
-        EventWidget()
+        EventWidget() noexcept
         {}
 
         typedef std::function<void(EventWidget* widget)> handler_callback_t;
@@ -96,8 +105,17 @@ namespace mui
         std::vector<handler_callback_t> m_handlers;
     };
 
+    class Frame;
+
     /**
      * Base widget class.
+     *
+     * This is the base class for all widgets. A Widget is a thing, with a basic
+     *  set of properties.  In this case, it has a bounding rectagle,
+     * some flags, and some states - and these properties can be manipulated. A
+     * Widget can handle events, draw itself, and more.  However, the specifics
+     * of what it means to handle an event or draw the widget is implemented in
+     * classes that are derived from this one, like a Button.
      */
     class Widget : public EventWidget
     {
@@ -158,12 +176,12 @@ namespace mui
         /**
          * Construct a widget.
          */
-        Widget(int x = 0, int y = 0, int w = 0, int h = 0, uint32_t flags = 0);
+        Widget(int x = 0, int y = 0, int w = 0, int h = 0, uint32_t flags = 0) noexcept;
 
         /**
          * Draw the widget.
          *
-         * @note Do not call this directly.
+         * @warning Do not call this directly.
          */
         virtual void draw(const Rect& rect) = 0;
 
@@ -220,29 +238,41 @@ namespace mui
         /** @} */
 
         /**
-         * Hide the widget.  This will prevent draw() calls.
-         */
+         * Hide the widget.
+        *
+         * A widget that is not visible will receive no draw() calls.
+               */
         virtual void hide()
         {
-            if (!m_visible) return;
+            if (!m_visible)
+                return;
             m_visible = false;
             damage();
         }
 
         /**
-         * Show the widget.  This will allow draw() calls.
+         * Show the widget.
          */
         virtual void show()
         {
-            if (m_visible) return;
+            if (m_visible)
+                return;
             m_visible = true;
             damage();
         }
         virtual bool visible() const { return m_visible; }
 
+        /**
+         * Return true if the widget is in focus.
+         */
         virtual bool focus() const { return m_focus; }
         virtual void focus(bool value) { m_focus = value; }
 
+        /**
+         * Return true if the widget is active.
+         *
+         * The meaning of active is largely up to the derived implementation.
+         */
         virtual bool active() const { return m_active; }
         virtual void active(bool value) { m_active = value; }
 
@@ -267,7 +297,6 @@ namespace mui
          * Damage the box() of the widget.
          */
         virtual void damage();
-
         virtual void damage(const Rect& rect) {}
 
         /**
@@ -326,24 +355,55 @@ namespace mui
             m_palette.reset(new Palette(palette));
         }
 
-        Widget* parent()
+        Frame* parent()
         {
+#if 0
             // @todo This whole thing is bad. */
             if (!m_parent)
             {
                 std::cout << "bad parent pointer" << std::endl;
                 while (1);
             }
+#endif
             assert(m_parent);
             return m_parent;
         }
-        virtual IScreen* screen() { return parent()->screen(); }
 
+        const Frame* parent() const
+        {
+#if 0
+            // @todo This whole thing is bad. */
+            if (!m_parent)
+            {
+                std::cout << "bad parent pointer" << std::endl;
+                while (1);
+            }
+#endif
+            assert(m_parent);
+            return m_parent;
+        }
+
+        virtual IScreen* screen();
+
+        /**
+         * Test if the specified Widget flag(s) is/are set.
+         * @param flag Bitmask of flags.
+         */
         inline bool is_flag_set(uint32_t flag) const
         {
             return (m_flags & flag) == flag;
         }
+
+        /**
+         * Set the specified widget flags.
+         * @param flag Bitmask of flags.
+         */
         inline void flag_set(uint32_t flag) { m_flags |= flag; }
+
+        /**
+         * Clear, or unset, the specified widget flags.
+         * @param flag Bitmask of flags.
+         */
         inline void flag_clear(uint32_t flag) { m_flags &= ~flag; }
 
         /**
@@ -360,6 +420,7 @@ namespace mui
 
     protected:
 
+        /** @deprecated Use Painter */
         void draw_text(const std::string& text,
                        const Rect& rect,
                        const Color& color = Color::BLACK,
@@ -367,31 +428,73 @@ namespace mui
                        int standoff = 5,
                        const Font& font = Font());
 
+        /** @deprecated Use Painter */
         void draw_image(shared_cairo_surface_t image,
                         int align = ALIGN_CENTER, int standoff = 0, bool bw = false);
 
         void draw_basic_box(const Rect& rect,
                             const Color& border,
                             const Color& bg);
+
+        /** @deprecated Use Painter */
         void draw_gradient_box(const Rect& rect,
                                const Color& border,
-                               const Color& bg,
                                bool active = false);
 
-        Rect m_box;
-        bool m_visible;
-        bool m_focus;
-        bool m_active;
-        bool m_disabled;
-        Widget* m_parent;
-        uint32_t m_flags;
+        /**
+         * Convert screen coordinates to frame coordinates.
+         */
+        Point screen_to_frame(const Point& p);
 
-        inline Point screen_to_window(const Point& p)
-        {
-            return p - parent()->box().point();
-        }
+        /**
+         * Bounding box.
+         */
+        Rect m_box;
+
+        /**
+             * Pointer to this widget's parent.
+         *
+         * The parent is a Frame, which is capable of managing children.
+             */
+        Frame* m_parent;
 
     private:
+
+        /**
+         * When true, the widget is visible.
+         */
+        bool m_visible;
+
+        /**
+         * When true, the widget has focus.
+         */
+        bool m_focus;
+
+        /**
+         * When true, the widget is active.
+         *
+         * The active state of a widget is usually a momentary state, unlike
+         * focus, which exists until focu is changed. For example, when a button
+         * is currently being held down, it its implementation may consider this
+         * the active state and choose to draw the button diffeerently.
+         *
+         * This may change how the widget behaves or is draw.
+         */
+        bool m_active;
+
+        /**
+         * When true, the widget is disabled.
+         *
+         * Typically, when a widget is disabled it will not accept input.
+         *
+         * This may change how the widget behaves or is draw.
+         */
+        bool m_disabled;
+
+        /**
+         * Flags for the widget.
+         */
+        uint32_t m_flags;
 
         /**
          * Current palette for the widget.
@@ -402,20 +505,28 @@ namespace mui
         std::shared_ptr<Palette> m_palette;
 
         /**
-             * A user defined name for the widget.
-             */
+        * A user defined name for the widget.
+         */
         std::string m_name;
 
-        friend class SimpleWindow;
+        Widget(const Widget&) = delete;
+        Widget& operator=(const Widget&) = delete;
+
+        friend class Frame;
     };
 
+#ifdef DEVELOPMENT
+    /**
+     * Combo box widget.
+     */
     class Combo : public Widget
     {
     public:
-        Combo(const std::string& label, const Point& point = Point(),
+        Combo(const std::string& label = std::string(),
+              const Point& point = Point(),
               const Size& size = Size());
 
-        int handle(int event);
+        virtual int handle(int event);
 
         virtual void draw(const Rect& rect);
 
@@ -424,204 +535,41 @@ namespace mui
     protected:
         std::string m_label;
     };
-
-    /**
-     * @todo This shold be a ValueRangeWidget<int>.
-     */
-    class Slider : public Widget
-    {
-    public:
-        enum
-        {
-            ORIENTATION_HORIZONTAL,
-            ORIENTATION_VERTICAL,
-        };
-
-        Slider(int min, int max, const Point& point = Point(),
-               const Size& size = Size(),
-               int orientation = ORIENTATION_HORIZONTAL);
-
-        int handle(int event);
-
-        virtual void draw(const Rect& rect);
-
-        int position() const
-        {
-            return m_pos;
-        }
-
-        inline void position(int pos)
-        {
-            if (pos > m_max)
-            {
-                pos = m_max;
-            }
-            else if (pos < m_min)
-            {
-                pos = m_min;
-            }
-
-            if (pos != m_pos)
-            {
-                m_pos = pos;
-                damage();
-                invoke_handlers();
-            }
-        }
-
-        virtual ~Slider();
-
-    protected:
-
-        // position to offset
-        inline int normalize(int pos)
-        {
-            if (m_orientation == ORIENTATION_HORIZONTAL)
-            {
-                int dim = h();
-                return float(w() - dim) / float(m_max - m_min) * float(pos);
-            }
-            else
-            {
-                int dim = w();
-                return float(h() - dim) / float(m_max - m_min) * float(pos);
-            }
-        }
-
-        // offset to position
-        inline int denormalize(int diff)
-        {
-            if (m_orientation == ORIENTATION_HORIZONTAL)
-            {
-                int dim = h();
-                return float(m_max - m_min) / float(w() - dim) * float(diff);
-            }
-            else
-            {
-                int dim = w();
-                return float(m_max - m_min) / float(h() - dim) * float(diff);
-            }
-        }
-
-        int m_min;
-        int m_max;
-        int m_pos;
-        int m_moving_x;
-        int m_start_pos;
-        int m_orientation;
-    };
-
-    /**
-     * Input text box.
-     */
-    class SimpleText : public Widget
-    {
-    public:
-        SimpleText(const std::string& text = std::string(),
-                   const Point& point = Point(), const Size& size = Size());
-
-        int handle(int event);
-
-        virtual void draw(const Rect& rect);
-
-        virtual ~SimpleText();
-
-    protected:
-        std::string m_text;
-    };
+#endif
 
     class ListBox : public Widget
     {
     public:
-        ListBox(const std::vector<std::string>& items,
+        typedef std::vector<std::string> item_array;
+
+        ListBox(const item_array& items,
                 const Point& point = Point(),
                 const Size& size = Size());
+
+        /**
+         * Set the font of the items.
+         */
+        virtual void font(const Font& font) { m_font = font; }
 
         virtual int handle(int event);
 
         virtual void draw(const Rect& rect);
 
         void selected(uint32_t index);
-        uint32_t selected() const
-        {
-            return m_selected;
-        }
+
+        uint32_t selected() const { return m_selected; }
 
         virtual ~ListBox();
+
     protected:
 
         virtual void on_selected(int index) {}
 
         Rect item_rect(uint32_t index) const;
 
-        std::vector<std::string> m_items;
-        uint32_t m_selected;
-    };
-
-    class HorizontalPositioner : public Widget
-    {
-    public:
-        HorizontalPositioner(int x, int y, int w, int h, int border = 0, int align = ALIGN_CENTER)
-            : Widget(x, y, w, h),
-              m_border(border),
-              m_align(align)
-        {}
-
-        virtual void draw(const Rect& rect) {}
-        virtual void damage() {}
-
-        virtual void position(int x, int y)
-        {
-            Widget::position(x, y);
-            reposition();
-        }
-
-        virtual void size(int w, int h)
-        {
-            Widget::size(w, h);
-            reposition();
-        }
-
-        virtual void add(Widget* widget)
-        {
-            m_widgets.push_back(widget);
-        }
-
-        /**
-         * Reposition all child widgets.
-         */
-        virtual void reposition()
-        {
-            int offset = 0;
-            for (auto widget : m_widgets)
-            {
-                if (widget)
-                {
-                    Point p;
-                    if (m_align & ALIGN_CENTER)
-                    {
-                        p.y = y() + (h() / 2) - (widget->h() / 2);
-                    }
-
-                    if (m_align & ALIGN_TOP)
-                        p.y = y();
-                    if (m_align & ALIGN_BOTTOM)
-                        p.y = y() + h() - widget->h();
-
-                    widget->position(x() + offset + m_border, p.y);
-                    offset += (widget->w() + m_border);
-                }
-            }
-        }
-
-        virtual ~HorizontalPositioner()
-        {}
-
-    protected:
-        int m_border;
-        int m_align;
-
-        std::vector<Widget*> m_widgets;
+        item_array m_items;
+        uint32_t m_selected = { 0 };
+        Font m_font;
     };
 
 #ifdef DEVELOPMENT
@@ -655,6 +603,7 @@ namespace mui
 
     protected:
         std::vector<std::string> m_values;
+
         int m_pos;
         int m_moving_x;
         int m_start_pos;

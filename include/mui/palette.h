@@ -39,13 +39,14 @@ namespace mui
             DARK,
             MID,
             TEXT,
+            TEXTBG,
             HIGHLIGHT,
             BORDER
         };
 
         const Color& color(ColorId id, ColorGroup group = GROUP_NORMAL) const;
 
-        void set(ColorId id, ColorGroup group, const Color& color);
+        Palette& set(ColorId id, ColorGroup group, const Color& color);
 
     protected:
 

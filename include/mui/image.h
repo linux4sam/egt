@@ -5,11 +5,19 @@
 #ifndef MUI_IMAGE_H
 #define MUI_IMAGE_H
 
+/**
+ * @file
+ * @brief Working with images.
+ */
+
 #include <mui/widget.h>
 
 namespace mui
 {
 
+    /**
+     * Basic widget that displays an image.
+     */
     class Image : public Widget
     {
     public:
@@ -34,6 +42,7 @@ namespace mui
         {
             return m_hscale;
         }
+
         double vscale() const
         {
             return m_vscale;

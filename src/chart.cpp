@@ -84,29 +84,31 @@ namespace mui
     PieChart::PieChart(const Point& point,
                        const Size& size)
         : Widget(point.x, point.y, size.w, size.h)
-    {
-    }
-
-    static Color lightcolour()
-    {
-        static uint32_t index = 0;
-        static vector<Color> colors;
-        colors.push_back(Color::RED);
-        colors.push_back(Color::GREEN);
-        colors.push_back(Color::BLUE);
-        colors.push_back(Color::YELLOW);
-        colors.push_back(Color::CYAN);
-        colors.push_back(Color::MAGENTA);
-        colors.push_back(Color::SILVER);
-
-        if (++index > colors.size())
-            index = 0;
-
-        return colors[index];
-    }
+    {}
 
     void PieChart::draw(const Rect& rect)
     {
+        static const vector<Color> piecolors =
+        {
+            Color::RED,
+            Color::GREEN,
+            Color::BLUE,
+            Color::YELLOW,
+            Color::CYAN,
+            Color::MAGENTA,
+            Color::SILVER,
+            Color::GRAY,
+            Color::LIGHTGRAY,
+            Color::MAROON,
+            Color::OLIVE,
+            Color::PURPLE,
+            Color::TEAL,
+            Color::NAVY,
+            Color::ORANGE,
+            Color::AQUA,
+            Color::LIGHTBLUE,
+        };
+
         shared_cairo_t cr = screen()->context();
 
         cairo_save(cr.get());
@@ -114,11 +116,21 @@ namespace mui
         float to_angle = M_PI * 3 / 2;
         float from_angle = to_angle;
 
+        auto c = piecolors.begin();
+
         for (auto& i : m_data)
         {
             to_angle += 2 * M_PI * i.second;
-            Color color = lightcolour();
-            cairo_set_source_rgba(cr.get(), color.redf(), color.greenf(), color.bluef(), color.alphaf());
+
+            Color color = *c;
+            if (++c == piecolors.end())
+                c = piecolors.begin();
+
+            cairo_set_source_rgba(cr.get(),
+                                  color.redf(),
+                                  color.greenf(),
+                                  color.bluef(),
+                                  color.alphaf());
             cairo_move_to(cr.get(), x() + w() / 2, y() + h() / 2);
             cairo_arc(cr.get(), x() + w() / 2, y() + h() / 2, w()*.45, from_angle, to_angle);
             cairo_line_to(cr.get(), x() + w() / 2, y() + h() / 2);

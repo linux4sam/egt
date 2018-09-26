@@ -3,7 +3,7 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include <mui/ui.h>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <map>
 #include <vector>
@@ -27,18 +27,18 @@ static float sliding_scale(int win_w, int item_w, int item_pos,
 #define NUM_ITEMS 10
 
 class LauncherWindow;
-class MySimpleWindow;
+class ThermostatWindow;
 
 static LauncherWindow* win1;
-static MySimpleWindow* win2;
-static SimpleWindow* win3;
-static SimpleWindow* win4;
+static ThermostatWindow* win2;
+static Window* win3;
+static Window* win4;
 
 
 class MyImage : public Image
 {
 public:
-    MyImage(LauncherWindow* win, SimpleWindow* target, const string& filename, int x = 0, int y = 0)
+    MyImage(LauncherWindow* win, Window* target, const string& filename, int x = 0, int y = 0)
         : Image(filename, x, y),
           m_win(win),
           m_target(target),
@@ -85,12 +85,12 @@ public:
 
 private:
     LauncherWindow* m_win;
-    SimpleWindow* m_target;
+    Window* m_target;
     int m_fd;
     Animation m_animation;
 };
 
-class MySimpleWindow : public SimpleWindow
+class ThermostatWindow : public Window
 {
     WidgetPositionAnimator* m_a1;
     WidgetPositionAnimator* m_a2;
@@ -102,14 +102,14 @@ class MySimpleWindow : public SimpleWindow
     Label* l1;
 
 public:
-    MySimpleWindow(const Size& size)
-        : SimpleWindow(size)
+    ThermostatWindow(const Size& size = Size())
+        : Window(size)
     {
     }
 
     virtual void exit()
     {
-        SimpleWindow::exit();
+        Window::exit();
 
         m_a1->reset();
         m_a2->reset();
@@ -118,7 +118,7 @@ public:
 
     virtual void enter()
     {
-        SimpleWindow::enter();
+        Window::enter();
 
         m_a1->start();
         m_a2->start();
@@ -130,33 +130,6 @@ public:
         Image* img = new Image("background2.png");
         add(img);
 
-        il1 = new ImageLabel("day.png",
-                             "Day",
-                             Point(40, 150),
-                             Size(200, 64),
-                             mui::Font(32));
-        il1->fgcolor(Color(0x80808055));
-        add(il1);
-        il2 = new ImageLabel("night.png",
-                             "Night",
-                             Point(40, 214),
-                             Size(200, 64),
-                             mui::Font(32));
-        il2->fgcolor(Color(0x80808055));
-        add(il2);
-        il3 = new ImageLabel("vacation.png",
-                             "Vacation",
-                             Point(40, 278),
-                             Size(200, 64),
-                             mui::Font(32));
-        add(il3);
-
-        m_a1 = new WidgetPositionAnimator({il1, il2, il3},
-                                          WidgetPositionAnimator::CORD_X,
-                                          -200, 40,
-                                          1500,
-                                          easing_snap);
-
         Radial* radial1 = new Radial(Point(800 / 2 - 350 / 2, 480 / 2 - 350 / 2), Size(350, 350));
         add(radial1);
         radial1->label(" F");
@@ -166,6 +139,36 @@ public:
                                           WidgetPositionAnimator::CORD_Y,
                                           -350, 480 / 2 - 350 / 2,
                                           1000,
+                                          easing_snap);
+
+        il1 = new ImageLabel("day.png",
+                             "Day",
+                             Point(40, 150),
+                             Size(200, 64),
+                             mui::Font(32));
+        il1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color(0x80808055))
+        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        add(il1);
+        il2 = new ImageLabel("night.png",
+                             "Night",
+                             Point(40, 214),
+                             Size(200, 64),
+                             mui::Font(32));
+        il2->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color(0x80808055))
+        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        add(il2);
+        il3 = new ImageLabel("vacation.png",
+                             "Vacation",
+                             Point(40, 278),
+                             Size(200, 64),
+                             mui::Font(32));
+        il3->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        add(il3);
+
+        m_a1 = new WidgetPositionAnimator({il1, il2, il3},
+                                          WidgetPositionAnimator::CORD_X,
+                                          -200, 40,
+                                          1500,
                                           easing_snap);
 
         Slider* slider1 = new Slider(0, 100,
@@ -181,7 +184,8 @@ public:
                        ALIGN_CENTER,
                        mui::Font(16));
         add(l1);
-        l1->fgcolor(Color::GRAY);
+        l1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY)
+        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
         m_a3 = new WidgetPositionAnimator({slider1, l1},
                                           WidgetPositionAnimator::CORD_X,
@@ -197,12 +201,11 @@ public:
     }
 };
 
-class LauncherWindow : public SimpleWindow
+class LauncherWindow : public Window
 {
 public:
     LauncherWindow()
-        : SimpleWindow(Size(800, 480)),
-          m_moving(false)
+        : m_moving(false)
     {}
 
     virtual int load()
@@ -212,7 +215,7 @@ public:
 
         for (int t = 0; t < NUM_ITEMS; t++)
         {
-            SimpleWindow* win = 0;
+            Window* win = 0;
             switch (t)
             {
             case 0:
@@ -228,7 +231,7 @@ public:
 
             stringstream os;
             os << "_image" << t << ".png";
-            MyImage* box = new MyImage(this, (SimpleWindow*)win, os.str());
+            MyImage* box = new MyImage(this, (Window*)win, os.str());
             add(box);
 
             box->position(t * 200, (h() / 2) - (box->h() / 2));
@@ -245,7 +248,7 @@ public:
 
     int handle(int event)
     {
-        int ret = SimpleWindow::handle(event);
+        int ret = Window::handle(event);
         if (ret)
             return 1;
 
@@ -337,20 +340,13 @@ void MyImage::timer_callback(int fd, void* data)
 
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen kms;
-    InputTslib input0("/dev/input/touchscreen0");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app;
+
+    set_image_path("/root/mui/share/mui/examples/launcher/");
 
     win1 = new LauncherWindow;
 
-    win2 = new MySimpleWindow(Size(800, 480));
+    win2 = new ThermostatWindow;
     win2->load();
 
     struct MyButton : public Image
@@ -375,7 +371,7 @@ int main()
         }
     };
 
-    win3 = new SimpleWindow(Size(800, 480));
+    win3 = new Window();
     win3->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
     PieChart pie2(Point(200, 40), Size(400, 400));
@@ -388,7 +384,7 @@ int main()
     data.insert(make_pair("motorcycle", .10));
     pie2.data(data);
 
-    win4 = new SimpleWindow(Size(800, 480));
+    win4 = new Window();
     win4->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
 #ifdef HAVE_KPLOT
@@ -416,5 +412,5 @@ int main()
 
     win1->load();
 
-    return EventLoop::run();
+    return app.run();
 }

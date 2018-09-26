@@ -14,20 +14,11 @@ using namespace std;
 namespace mui
 {
 
-    shared_cairo_surface_t SpriteBase::surface() const
+    shared_cairo_surface_t ISpriteBase::surface() const
     {
-        int imagew = m_image.w();
-        int panx = m_strips[m_strip].framex + (m_index * m_frame.w);
-        int pany = m_strips[m_strip].framey;
-
-        // support sheets that have frames on multiple rows
-        if (panx + m_frame.w >= imagew)
-        {
-            int x = m_strips[m_strip].framex + (m_index * m_frame.w);
-
-            panx = (x % imagew);
-            pany = ((x / imagew) * m_strips[m_strip].framey) + (x / imagew) * m_frame.h;
-        }
+        int panx;
+        int pany;
+        get_frame_offsets(m_index, panx, pany);
 
         // cairo_surface_create_for_rectangle() would work here with one
         // exception - the resulting image has no width and height
@@ -51,7 +42,7 @@ namespace mui
                                    int frameh, int framecount, int framex,
                                    int framey, int x, int y)
         : PlaneWindow(Size(), FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND),
-          SpriteBase(filename, framew, frameh, framecount, framex, framey)
+          ISpriteBase(filename, framew, frameh, framecount, framex, framey)
     {
         add(&m_image);
 
@@ -74,21 +65,11 @@ namespace mui
         {
             m_index = index;
 
-            int imagew = m_image.w();
-            int panx = m_strips[m_strip].framex + (m_index * m_frame.w);
-            int pany = m_strips[m_strip].framey;
-
-            // support sheets that have frames on multiple rows
-            if (panx + m_frame.w >= imagew)
-            {
-                int x = m_strips[m_strip].framex + (m_index * m_frame.w);
-
-                panx = (x % imagew);
-                pany = ((x / imagew) * m_strips[m_strip].framey) + (x / imagew) * m_frame.h;
-            }
+            int panx;
+            int pany;
+            get_frame_offsets(m_index, panx, pany);
 
             KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
-
             plane_set_pan_pos(s->s(), panx, pany);
             plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
             plane_apply(s->s());
@@ -102,29 +83,20 @@ namespace mui
                                    int framecount, int framex, int framey,
                                    int x, int y)
         : Widget(x, y, framew, frameh),
-          SpriteBase(filename, framew, frameh, framecount, framex, framey)
+          ISpriteBase(filename, framew, frameh, framecount, framex, framey)
     {
         m_box = Rect(x, y, framew, frameh);
     }
 
     void SoftwareSprite::draw(const Rect& rect)
     {
-        int imagew = cairo_image_surface_get_width(m_image.surface().get());
-
-        int panx = m_strips[m_strip].framex + (m_index * m_frame.w);
-        int pany = m_strips[m_strip].framey;
-
-        // support sheets that have frames on multiple rows
-        if (panx + m_frame.w >= imagew)
-        {
-            int x = m_strips[m_strip].framex + (m_index * m_frame.w);
-
-            panx = (x % imagew);
-            pany = ((x / imagew) * m_strips[m_strip].framey) + (x / imagew) * m_frame.h;
-        }
+        int panx;
+        int pany;
+        get_frame_offsets(m_index, panx, pany);
 
         Painter painter(screen()->context());
-        painter.draw_image(Rect(panx, pany, m_frame.w, m_frame.h), box().point(), m_image.surface());
+        painter.draw_image(Rect(panx, pany, m_frame.w, m_frame.h),
+                           box().point(), m_image.surface());
     }
 
     void SoftwareSprite::show_frame(int index)

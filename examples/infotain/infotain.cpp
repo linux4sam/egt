@@ -2,17 +2,13 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui.h>
-#include <math.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <iostream>
 #include <chrono>
+#include <cmath>
 #include <iomanip>
-#include <libintl.h>
-#include <locale.h>
+#include <iostream>
+#include <mui/ui.h>
+#include <sstream>
+#include <string>
 
 using namespace std;
 using namespace mui;
@@ -22,8 +18,6 @@ class ChildWindow;
 
 MainWindow* win1;
 ChildWindow* win2;
-
-#define _(String) gettext(String)
 
 class MyButton : public ImageButton
 {
@@ -45,16 +39,16 @@ public:
         {
         case EVT_MOUSE_DOWN:
         {
-            if (main_window() == reinterpret_cast<SimpleWindow*>(win1))
+            if (main_window() == reinterpret_cast<Window*>(win1))
             {
                 main_window()->exit();
-                main_window() = reinterpret_cast<SimpleWindow*>(win2);
+                main_window() = reinterpret_cast<Window*>(win2);
                 main_window()->enter();
             }
             else
             {
                 main_window()->exit();
-                main_window() = reinterpret_cast<SimpleWindow*>(win1);
+                main_window() = reinterpret_cast<Window*>(win1);
                 main_window()->enter();
             }
             break;
@@ -82,16 +76,16 @@ public:
         {
         case EVT_MOUSE_DOWN:
         {
-            if (main_window() == reinterpret_cast<SimpleWindow*>(win1))
+            if (main_window() == reinterpret_cast<Window*>(win1))
             {
                 main_window()->exit();
-                main_window() = reinterpret_cast<SimpleWindow*>(win2);
+                main_window() = reinterpret_cast<Window*>(win2);
                 main_window()->enter();
             }
             else
             {
                 main_window()->exit();
-                main_window() = reinterpret_cast<SimpleWindow*>(win1);
+                main_window() = reinterpret_cast<Window*>(win1);
                 main_window()->enter();
             }
             break;
@@ -127,7 +121,7 @@ protected:
     Color m_color;
 };
 
-static void top_menu(SimpleWindow* win)
+static void top_menu(Window* win)
 {
 #if 0
     PlaneWindow plane(800, 60);
@@ -135,7 +129,7 @@ static void top_menu(SimpleWindow* win)
     plane.bgcolor(Color::BLACK);
     plane.active(true);
 
-    Image i1("res/home.png", 5, 5);
+    Image i1("home.png", 5, 5);
     plane.add(&i1);
 
     Label l1("12:05", Point(320, 0), Size(100, 60), Label::ALIGN_CENTER, Font("Arial", 32));
@@ -146,7 +140,7 @@ static void top_menu(SimpleWindow* win)
     l2.fgcolor(Color::WHITE);
     plane.add(&l2);
 
-    Image i2("res/wifi.png",
+    Image i2("wifi.png",
              800 - 80, 5);
     plane.add(&i2);
 #endif
@@ -154,11 +148,12 @@ static void top_menu(SimpleWindow* win)
     Box* box1 = new Box(0, 0, 800, 60, Color::BLACK);
     win->add(box1);
 
-    HomeImage* i1 = new HomeImage("res/home.png", 5, 5);
+    HomeImage* i1 = new HomeImage("home.png", 5, 5);
     win->add(i1);
 
-    Label* l1 = new Label("", Point(320, 0), Size(100, 60), Label::ALIGN_CENTER, mui::Font("Arial", 32));
-    l1->fgcolor(Color::WHITE);
+    Label* l1 = new Label("", Point(320, 0), Size(100, 60), Label::ALIGN_CENTER, Font(32));
+    l1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l1);
 
     struct TimeTimer : public PeriodicTimer
@@ -186,80 +181,71 @@ static void top_menu(SimpleWindow* win)
 
     timer->start();
 
-    Label* l2 = new Label("48°", Point(420, 0), Size(100, 60), Label::ALIGN_CENTER, mui::Font("Arial", 24));
-    l2->fgcolor(Color::WHITE);
+    Label* l2 = new Label("48°", Point(420, 0), Size(100, 60), Label::ALIGN_CENTER, Font(24));
+    l2->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l2);
 
-    Image* i2 = new Image("res/wifi.png", 800 - 50, 10);
+    Image* i2 = new Image("wifi.png", 800 - 50, 10);
     win->add(i2);
 }
 
-static void bottom_menu(SimpleWindow* win)
+static void bottom_menu(Window* win)
 {
     Box* box2 = new Box(0, 390, 800, 90, Color::LIGHTGRAY);
     win->add(box2);
 
-    StaticGrid grid2(0, 390, 800, 90, 5, 1, 0);
+    StaticGrid* grid2 = new StaticGrid(Point(0, 390), Size(800, 90), 5, 1, 0);
+    win->add(grid2);
 
-    MyButton* bb1 = new MyButton("res/audio_s.png", _("Audio"), 0, 0, false);
-    win->add(bb1);
-    grid2.add(bb1, 0, 0);
+    MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0, false);
+    grid2->add(bb1, 0, 0);
 
-    MyButton* bb2 = new MyButton("res/climate_s.png", _("Climate"), 0, 0, false);
-    win->add(bb2);
-    grid2.add(bb2, 1, 0);
+    MyButton* bb2 = new MyButton("climate_s.png", _("Climate"), 0, 0, false);
+    grid2->add(bb2, 1, 0);
 
-    MyButton* bb3 = new MyButton("res/navigation_s.png", _("Nav"), 0, 0, false);
-    win->add(bb3);
-    grid2.add(bb3, 2, 0);
+    MyButton* bb3 = new MyButton("navigation_s.png", _("Nav"), 0, 0, false);
+    grid2->add(bb3, 2, 0);
 
-    MyButton* bb4 = new MyButton("res/phone_s.png", _("Phone"), 0, 0, false);
-    win->add(bb4);
-    grid2.add(bb4, 3, 0);
+    MyButton* bb4 = new MyButton("phone_s.png", _("Phone"), 0, 0, false);
+    grid2->add(bb4, 3, 0);
 
-    MyButton* bb5 = new MyButton("res/apps_s.png", _("Apps"), 0, 0, false);
-    win->add(bb5);
-    grid2.add(bb5, 4, 0);
+    MyButton* bb5 = new MyButton("apps_s.png", _("Apps"), 0, 0, false);
+    grid2->add(bb5, 4, 0);
 
-    grid2.reposition();
+    grid2->reposition();
 }
 
-class MainWindow : public SimpleWindow
+class MainWindow : public Window
 {
 public:
     MainWindow(const Size& size)
-        : SimpleWindow(size)
+        : Window(size),
+          grid(Point(0, 60), Size(800, 330), 4, 2, 10)
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 
-        StaticGrid grid(0, 60, 800, 330, 4, 2, 10);
+        add(&grid);
 
-        MyButton* b1 = new MyButton("res/sound.png", _("Sound"));
-        add(b1);
+        MyButton* b1 = new MyButton("sound.png", _("Sound"));
         grid.add(b1, 0, 0);
 
-        MyButton* b2 = new MyButton("res/clock.png", _("Clock"));
-        add(b2);
+        MyButton* b2 = new MyButton("clock.png", _("Clock"));
         grid.add(b2, 1, 0);
 
-        MyButton* b3 = new MyButton("res/bluetooth.png", _("Bluetooth"));
-        add(b3);
+        MyButton* b3 = new MyButton("bluetooth.png", _("Bluetooth"));
         grid.add(b3, 2, 0);
 
-        MyButton* b4 = new MyButton("res/phone.png", _("Phone"));
-        add(b4);
+        MyButton* b4 = new MyButton("phone.png", _("Phone"));
         grid.add(b4, 3, 0);
 
-        MyButton* b5 = new MyButton("res/apps.png", _("Mobile Apps"));
-        add(b5);
+        MyButton* b5 = new MyButton("apps.png", _("Mobile Apps"));
         grid.add(b5, 0, 1);
 
-        MyButton* b6 = new MyButton("res/navigation.png", _("Navigation"));
-        add(b6);
+        MyButton* b6 = new MyButton("navigation.png", _("Navigation"));
         grid.add(b6, 1, 1);
 
-        MyButton* b7 = new MyButton("res/general.png", _("General"));
-        add(b7);
+        MyButton* b7 = new MyButton("general.png", _("General"));
         grid.add(b7, 2, 1);
 
         grid.reposition();
@@ -267,13 +253,15 @@ public:
         top_menu(this);
         bottom_menu(this);
     }
+
+    StaticGrid grid;
 };
 
-class ChildWindow : public SimpleWindow
+class ChildWindow : public Window
 {
 public:
     ChildWindow(const Size& size)
-        : SimpleWindow(size)
+        : Window(size)
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 
@@ -287,24 +275,14 @@ public:
 
 int main()
 {
-    setlocale(LC_ALL, "");
-    //bindtextdomain("info", ".");
-    textdomain("info");
+    Application app;
 
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen kms;
-    InputTslib input0("/dev/input/touchscreen0");
-#else
-    FrameBuffer fb("/dev/fb0");
-    //InputEvDev input1("/dev/input/event4");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    set_image_path("/root/mui/share/mui/examples/infotain/");
 
     win1 = new MainWindow(Size(800, 480));
     win2 = new ChildWindow(Size(800, 480));
+    /** @todo Broken. enter()/leave() not fully implemented. */
+    //win1->add(win2);
 
-    return EventLoop::run();
+    return app.run();
 }

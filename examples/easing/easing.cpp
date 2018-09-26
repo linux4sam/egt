@@ -2,6 +2,10 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <mui/ui.h>
 #include <math.h>
 #include <string>
@@ -70,11 +74,11 @@ public:
     }
 };
 
-class MyWindow : public SimpleWindow
+class MainWindow : public Window
 {
 public:
-    MyWindow()
-        : SimpleWindow()
+    MainWindow()
+        : Window()
     {}
 
     int load()
@@ -163,22 +167,15 @@ static struct MyAnimationTimer : public PeriodicTimer
 
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen kms;
-    InputTslib input0("/dev/input/touchscreen0");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app;
 
-    MyWindow window;
+    set_image_path("/root/mui/share/mui/examples/easing/");
+
+    MainWindow window;
 
     animation = new Animation(-110, window.h() - 100/*380*/, [](float value, void* data)
     {
-        MyWindow* window = reinterpret_cast<MyWindow*>(data);
+        MainWindow* window = reinterpret_cast<MainWindow*>(data);
         window->move_item(value);
     }, 2000, easing_linear, &window);
 
@@ -186,9 +183,9 @@ int main()
 
     Label label1("CPU: 0%",
                  Point(40, window.size().h - 40),
-                 Size(100, 40),
-                 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
-    label1.fgcolor(Color::WHITE);
+                 Size(100, 40));
+    label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     window.add(&label1);
 
     CPUMonitorUsage tools;
@@ -204,5 +201,5 @@ int main()
 
     animation_timer.start();
 
-    return EventLoop::run();
+    return app.run();
 }

@@ -160,6 +160,9 @@ namespace mui
         AnalogMeter(const Point& point = Point(), const Size& size = Size());
 
         virtual void draw(const Rect& rect);
+
+    protected:
+        Font m_font;
     };
 
     class SpinProgress : public ValueRangeWidget<int>
@@ -168,6 +171,89 @@ namespace mui
         SpinProgress(const Point& point = Point(), const Size& size = Size());
 
         virtual void draw(const Rect& rect);
+    };
+
+    /**
+    * @todo This should be a ValueRangeWidget<int>.
+    */
+    class Slider : public Widget
+    {
+    public:
+        enum
+        {
+            ORIENTATION_HORIZONTAL,
+            ORIENTATION_VERTICAL,
+        };
+
+        Slider(int min, int max, const Point& point = Point(),
+               const Size& size = Size(),
+               int orientation = ORIENTATION_HORIZONTAL);
+
+        virtual int handle(int event);
+
+        virtual void draw(const Rect& rect);
+
+        inline int position() const { return m_pos; }
+
+        inline void position(int pos)
+        {
+            if (pos > m_max)
+            {
+                pos = m_max;
+            }
+            else if (pos < m_min)
+            {
+                pos = m_min;
+            }
+
+            if (pos != m_pos)
+            {
+                m_pos = pos;
+                damage();
+                invoke_handlers();
+            }
+        }
+
+        virtual ~Slider();
+
+    protected:
+
+        // position to offset
+        inline int normalize(int pos)
+        {
+            if (m_orientation == ORIENTATION_HORIZONTAL)
+            {
+                int dim = h();
+                return float(w() - dim) / float(m_max - m_min) * float(pos);
+            }
+            else
+            {
+                int dim = w();
+                return float(h() - dim) / float(m_max - m_min) * float(pos);
+            }
+        }
+
+        // offset to position
+        inline int denormalize(int diff)
+        {
+            if (m_orientation == ORIENTATION_HORIZONTAL)
+            {
+                int dim = h();
+                return float(m_max - m_min) / float(w() - dim) * float(diff);
+            }
+            else
+            {
+                int dim = w();
+                return float(m_max - m_min) / float(h() - dim) * float(diff);
+            }
+        }
+
+        int m_min;
+        int m_max;
+        int m_pos;
+        int m_moving_x;
+        int m_start_pos;
+        int m_orientation;
     };
 
 }

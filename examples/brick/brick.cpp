@@ -11,24 +11,20 @@
 using namespace std;
 using namespace mui;
 
-class MyWindow : public SimpleWindow
+class GameWindow : public Window
 {
 public:
     static constexpr int ROWS = 2;
 
-    MyWindow()
-        : m_grid1(0, 30, KMSScreen::instance()->size().w, 80,
+    GameWindow()
+        : m_grid1(Point(0, 30), Size(KMSScreen::instance()->size().w, 80),
                   KMSScreen::instance()->size().w / 100, ROWS, 5),
-          m_grid2(0, 30 + 80 + 30, KMSScreen::instance()->size().w, 80,
+          m_grid2(Point(0, 30 + 80 + 30), Size(KMSScreen::instance()->size().w, 80),
                   KMSScreen::instance()->size().w / 100, ROWS, 5),
           m_ball("small_ball.png"),
           m_paddle("paddle.png"),
           m_running(false),
           e1(r())
-#ifdef INCLUDE_ANIMATION
-        , m_sprite1("firework.png", 100, 95, 46, 0, 0, 0, 0),
-          m_animatetimer(33)
-#endif
     {
         Image* background = new Image("brick_background.png");
         add(background);
@@ -39,6 +35,9 @@ public:
             background->scale(hscale, vscale);
         }
 
+        add(&m_grid1);
+        add(&m_grid2);
+
         for (int c = 0; c < KMSScreen::instance()->size().w / 100; c++)
         {
             for (int r = 0; r < ROWS; r++)
@@ -47,7 +46,6 @@ public:
                 ss << "brick" << r << ".png";
                 Image* block = new Image(ss.str());
                 m_blocks.push_back(block);
-                add(block);
                 m_grid1.add(block, c, r);
             }
         }
@@ -60,7 +58,6 @@ public:
                 ss << "brick" << r + 2 << ".png";
                 Image* block = new Image(ss.str());
                 m_blocks.push_back(block);
-                add(block);
                 m_grid2.add(block, c, r);
             }
         }
@@ -75,27 +72,14 @@ public:
                             Point(5, 2),
                             Size(100, 40),
                             Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
-        m_label->fgcolor(Color::WHITE);
+        m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);
 
         m_grid1.reposition();
         m_grid2.reposition();
 
         reset_game();
-
-#ifdef INCLUDE_ANIMATION
-        m_animatetimer.add_handler([this]()
-        {
-            if (m_sprite1.is_last_frame())
-            {
-                m_animatetimer.cancel();
-                m_sprite1.hide();
-                return;
-            }
-
-            m_sprite1.advance();
-        });
-#endif
     }
 
     int handle(int event)
@@ -105,11 +89,11 @@ public:
         case EVT_KEY_REPEAT:
         case EVT_KEY_DOWN:
         {
-            if (key_position() == KEY_LEFT || key_position() == KEY_RIGHT)
+            if (key_value() == KEY_LEFT || key_value() == KEY_RIGHT)
             {
                 int x;
                 m_running = true;
-                if (key_position() == KEY_LEFT)
+                if (key_value() == KEY_LEFT)
                     x = m_paddle.x() - (event == EVT_KEY_REPEAT ? 15 : 10);
                 else
                     x = m_paddle.x() + (event == EVT_KEY_REPEAT ? 15 : 10);
@@ -119,14 +103,14 @@ public:
 
                 return 1;
             }
-            else if (key_position() == KEY_UP)
+            else if (key_value() == KEY_UP)
             {
                 m_xspeed *= 1.5;
                 m_yspeed *= 1.5;
                 return 1;
             }
 
-            else if (key_position() == KEY_DOWN)
+            else if (key_value() == KEY_DOWN)
             {
                 m_xspeed *= .5;
                 m_yspeed *= .5;
@@ -142,7 +126,7 @@ public:
             return 1;
         }
 
-        return SimpleWindow::handle(event);
+        return Window::handle(event);
     }
 
     void reset_game()
@@ -195,14 +179,6 @@ public:
                 block->hide();
                 m_yspeed *= -1.0;
                 add_points(1);
-
-#ifdef INCLUDE_ANIMATION
-                m_sprite1.move(block->box().center().x - m_sprite1.w() / 2,
-                               block->box().center().y - m_sprite1.h() / 2);
-                m_sprite1.show();
-                m_animatetimer.start();
-#endif
-
                 break;
             }
         }
@@ -246,27 +222,15 @@ private:
     bool m_running;
     std::random_device r;
     std::default_random_engine e1;
-#ifdef INCLUDE_ANIMATION
-    HardwareSprite m_sprite1;
-    PeriodicTimer m_animatetimer;
-#endif
 };
 
 int main()
 {
-#ifdef HAVE_TSLIB
-#ifdef HAVE_LIBPLANES
-    KMSScreen screen;
-    InputTslib input0("/dev/input/touchscreen0");
-    InputEvDev input1("/dev/input/event2");
-#else
-    FrameBuffer fb("/dev/fb0");
-#endif
-#else
-    X11Screen screen(Size(800, 480));
-#endif
+    Application app;
 
-    MyWindow win;
+    set_image_path("/root/mui/share/mui/examples/brick/");
+
+    GameWindow win;
     win.show();
 
     PeriodicTimer animatetimer(33);
@@ -276,5 +240,5 @@ int main()
     });
     animatetimer.start();
 
-    return EventLoop::run();
+    return app.run();
 }

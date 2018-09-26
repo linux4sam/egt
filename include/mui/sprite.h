@@ -5,6 +5,11 @@
 #ifndef MUI_SPRITE_H
 #define MUI_SPRITE_H
 
+/**
+ * @file
+ * @brief Working with sprites.
+ */
+
 #include <mui/image.h>
 #include <mui/widget.h>
 #include <mui/window.h>
@@ -15,12 +20,12 @@ namespace mui
     /**
      * Base class for sprite functionality.
      */
-    class SpriteBase
+    class ISpriteBase
     {
     public:
-        SpriteBase(const std::string& filename, int framew, int frameh,
-                   int framecount, int framex = 0, int framey = 0,
-                   int x = 0, int y = 0)
+        ISpriteBase(const std::string& filename, int framew, int frameh,
+                    int framecount, int framex = 0, int framey = 0,
+                    int x = 0, int y = 0)
             : m_image(filename),
               m_filename(filename),
               m_frame(framew, frameh),
@@ -31,6 +36,9 @@ namespace mui
 
         virtual void show_frame(int index) = 0;
 
+        /**
+         * Get a copy of a surface for the current frame.
+         */
         virtual shared_cairo_surface_t surface() const;
 
         virtual void advance()
@@ -78,10 +86,27 @@ namespace mui
             return m_strips.size() - 1;
         }
 
-        virtual ~SpriteBase()
+        virtual ~ISpriteBase()
         {}
 
     protected:
+
+        virtual void get_frame_offsets(int index, int& panx, int& pany) const
+        {
+            int imagew = m_image.w();
+            panx = m_strips[m_strip].framex + (index * m_frame.w);
+            pany = m_strips[m_strip].framey;
+
+            // support sheets that have frames on multiple rows
+            if (panx + m_frame.w >= imagew)
+            {
+                int x = m_strips[m_strip].framex + (index * m_frame.w);
+
+                panx = (x % imagew);
+                pany = ((x / imagew) * m_strips[m_strip].framey) + (x / imagew) * m_frame.h;
+            }
+        }
+
         Image m_image;
         std::string m_filename;
         Size m_frame;
@@ -93,18 +118,14 @@ namespace mui
     /**
      * Sprite widget using hardware planes.
      */
-    class HardwareSprite : public PlaneWindow, public SpriteBase
+    class HardwareSprite : public PlaneWindow, public ISpriteBase
     {
     public:
         HardwareSprite(const std::string& filename, int framew, int frameh,
                        int framecount, int framex = 0, int framey = 0,
                        int x = 0, int y = 0);
 
-        virtual	void damage() {}
-
-        virtual void damage(const Rect& rect) {}
-
-        void show_frame(int index);
+        virtual void show_frame(int index);
 
         virtual ~HardwareSprite();
     };
@@ -112,7 +133,7 @@ namespace mui
     /**
      * Sprite widget using only software.
      */
-    class SoftwareSprite : public Widget, public SpriteBase
+    class SoftwareSprite : public Widget, public ISpriteBase
     {
     public:
         SoftwareSprite(const std::string& filename, int framew, int frameh,
@@ -121,7 +142,7 @@ namespace mui
 
         virtual void draw(const Rect& rect);
 
-        void show_frame(int index);
+        virtual void show_frame(int index);
 
         virtual ~SoftwareSprite();
     };

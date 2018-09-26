@@ -10,41 +10,38 @@ using namespace std;
 
 namespace mui
 {
-    static std::vector<SimpleWindow*> the_windows;
-    static SimpleWindow* the_window = 0;
+    static std::vector<Window*> the_windows;
+    static Window* the_window = nullptr;
 
-    SimpleWindow*& main_window()
+    Window*& main_window()
     {
         return the_window;
     }
 
-    std::vector<SimpleWindow*>& windows()
+    std::vector<Window*>& windows()
     {
         return the_windows;
     }
 
-    SimpleWindow::SimpleWindow(const Size& size, uint32_t flags)
-        : Widget(0, 0, size.w, size.h, flags)
+    Window::Window(const Size& size, uint32_t flags)
+        : Frame(Point(), size, flags)
     {
         cout << "new window " << size << endl;
         windows().push_back(this);
 
-        if (!the_window)
-        {
-            the_window = this;
-            show();
-        }
-        else
-        {
-            hide();
-        }
-
-        if (size.empty())
+        // if a window size is empty, or this window is the first window, it
+        // must be the size of the screen
+        if (!the_window || size.empty())
         {
             assert(main_screen());
 
             m_box.w = main_screen()->size().w;
             m_box.h = main_screen()->size().h;
+        }
+
+        if (!the_window)
+        {
+            the_window = this;
         }
 
         damage();
@@ -53,162 +50,14 @@ namespace mui
         m_screen = main_screen();
     }
 
-    void SimpleWindow::add(Widget* widget)
-    {
-        if (find(m_children.begin(), m_children.end(), widget) == m_children.end())
-        {
-            assert(!widget->m_parent);
-            widget->m_parent = this;
-            //widget->damage();
-            m_children.push_back(widget);
-        }
-    }
-
-    void SimpleWindow::remove(Widget* widget)
-    {
-        auto i = find(m_children.begin(), m_children.end(), widget);
-        if (i != m_children.end())
-        {
-            (*i)->damage();
-            m_children.erase(i);
-        }
-    }
-
-    void SimpleWindow::damage()
-    {
-        damage(m_box);
-    }
-
-    /**
-     * Mark the specified rect as a damaged area.
-     *
-     * This will merge the damaged area with any already existing damaged area that
-     * it overlaps with into a super rectangle. Then, the whole array has to be
-     * checked again to make sure the new rectangle doesn't conflict with another
-     * existing rectangle.
-     *
-     * It may be worth investigating if this is optimal instead of removing the
-     * overlap and still having two rectangles.  In some cases, this could result in
-     * significantly less pixels.
-     */
-    void SimpleWindow::damage(const Rect& rect)
-    {
-        if (!rect.empty())
-        {
-            for (auto i = m_damage.begin(); i != m_damage.end(); ++i)
-            {
-                if (*i == rect)
-                    return;
-
-                if (Rect::is_intersect(*i, rect))
-                {
-                    Rect super(Rect::merge(*i, rect));
-
-#if 1
-                    /*
-                     * if the area of the two rectangles minus their
-                     * intersection area is smaller than the area of the super
-                     * rectangle, then don't merge
-                     */
-                    Rect intersect(Rect::intersect(*i, rect));
-                    if (((*i).area() + rect.area() - intersect.area()) < super.area())
-                    {
-                        break;
-                    }
-#endif
-                    m_damage.erase(i);
-                    damage(super);
-                    return;
-                }
-            }
-
-            // if we get here, no intersect found so add it
-            m_damage.push_back(rect);
-        }
-    }
-
-    int SimpleWindow::handle(int event)
-    {
-        switch (event)
-        {
-        case EVT_MOUSE_DOWN:
-        case EVT_MOUSE_UP:
-        case EVT_MOUSE_MOVE:
-            for (auto& child : reverse_iterate(m_children))
-            {
-                if (child->disabled() && !child->active())
-                    continue;
-
-                Point pos = mouse_position() - box().point();
-                if (Rect::point_inside(pos, child->box()))
-                    if (child->handle(event))
-                        return 1;
-            }
-            break;
-        case EVT_KEY_DOWN:
-        case EVT_KEY_UP:
-            for (auto& child : reverse_iterate(m_children))
-            {
-                if (child->disabled())
-                    continue;
-
-                if (child->focus())
-                    if (child->handle(event))
-                        return 1;
-            }
-            break;
-        }
-
-        return Widget::handle(event);
-    }
-
-    void SimpleWindow::draw()
-    {
-        if (m_damage.empty())
-            return;
-
-        for (auto& damage : m_damage)
-        {
-            if (!is_flag_set(FLAG_NO_BACKGROUND))
-                screen()->rect(damage, palette().color(Palette::BG));
-
-            for (auto& child : m_children)
-            {
-                if (!child->visible())
-                    continue;
-
-                if (child->is_flag_set(FLAG_PLANE_WINDOW))
-                    continue;
-
-                if (Rect::is_intersect(damage, child->box()))
-                {
-                    // don't give a child a rectangle that is outside of its own box
-                    Rect r = Rect::intersect(damage, child->box());
-                    child->draw(r);
-                }
-            }
-        }
-
-        screen()->flip(m_damage);
-        m_damage.clear();
-    }
-
-    void SimpleWindow::draw(const Rect& rect)
-    {
-        draw();
-    }
-
 #ifdef HAVE_LIBPLANES
     PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format, bool heo)
-        : SimpleWindow(size, flags | FLAG_PLANE_WINDOW),
+        : Window(size, flags | FLAG_PLANE_WINDOW),
           m_format(format),
-          m_dirty(true),
           m_heo(heo)
     {
         // default plane windows to transparent
-        Palette p(palette());
-        p.set(Palette::BG, Palette::GROUP_NORMAL, Color(0, 0, 0, 0));
-        set_palette(p);
+        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
         assert(KMSScreen::instance());
 
@@ -256,50 +105,36 @@ namespace mui
         position(x, y);
     }
 
+    // damage to a plane window does not propagate up, unlike a normal frame
+    void PlaneWindow::damage(const Rect& rect)
+    {
+        if (rect.empty())
+            return;
+
+        m_dirty = true;
+
+        add_damage(rect);
+    }
+
     void PlaneWindow::draw()
     {
-        if (!m_screen)
-            return;
+        //std::cout << name() << " " << __PRETTY_FUNCTION__ << std::endl;
 
-        //if (m_dirty)
-        //{
-        KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        s->apply();
-        m_dirty = false;
-        //}
-
-        if (m_damage.empty())
-            return;
-
-        for (auto& damage : m_damage)
+        if (m_dirty)
         {
-            if (!is_flag_set(FLAG_NO_BACKGROUND))
-                screen()->rect(damage, palette().color(Palette::BG));
-
-            for (auto& child : m_children)
+            KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            if (s)
             {
-                if (!child->visible())
-                    continue;
-
-                if (child->is_flag_set(FLAG_PLANE_WINDOW))
-                    continue;
-
-                if (Rect::is_intersect(damage, child->box()))
-                {
-                    // don't give a child a rectangle that is outside of its own box
-                    Rect r = Rect::intersect(damage, child->box());
-                    child->draw(r);
-                }
+                s->apply();
+                m_dirty = false;
             }
         }
 
-        screen()->flip(m_damage);
-        m_damage.clear();
+        Window::do_draw();
     }
-
 #else
     PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format, bool heo)
-        : SimpleWindow(size, flags),
+        : Window(size, flags),
           m_dirty(true)
     {
 
@@ -307,17 +142,17 @@ namespace mui
 
     void PlaneWindow::position(int x, int y)
     {
-        SimpleWindow::position(x, y);
+        Window::position(x, y);
     }
 
     void PlaneWindow::move(int x, int y)
     {
-        SimpleWindow::move(x, y);
+        Window::move(x, y);
     }
 
     void PlaneWindow::draw()
     {
-        SimpleWindow::draw();
+        Window::draw();
     }
 #endif
 

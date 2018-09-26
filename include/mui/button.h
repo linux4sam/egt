@@ -10,29 +10,29 @@
  * @brief Working with buttons.
  */
 
-#include <mui/widget.h>
+#include <mui/label.h>
 
 namespace mui
 {
 
     /**
      * Basic button widget.
+     *
+     * Might seem odd that a button inherits from a Label.
      */
-    class Button : public Widget
+    class Button : public Label
     {
     public:
 
-        Button(const std::string& label, const Point& point = Point(),
+        Button(const std::string& text = std::string(),
+               const Point& point = Point(),
                const Size& size = Size());
 
-        int handle(int event);
+        virtual int handle(int event);
 
         virtual void draw(const Rect& rect);
 
         virtual ~Button();
-
-    protected:
-        std::string m_label;
     };
 
     /**
@@ -42,17 +42,12 @@ namespace mui
     {
     public:
         ImageButton(const std::string& image,
-                    const std::string& label = "",
+                    const std::string& text = "",
                     const Point& point = Point(),
                     const Size& size = Size(),
                     bool border = true);
 
         virtual void draw(const Rect& rect);
-
-        virtual void font(const Font& font)
-        {
-            m_font = font;
-        }
 
         virtual void set_image(const std::string& image);
 
@@ -63,17 +58,15 @@ namespace mui
 
         virtual void set_label_align(uint32_t align)
         {
-            m_label_align = align;
+            Label::align(align);
         }
 
         virtual ~ImageButton();
 
     protected:
         shared_cairo_surface_t m_image;
-        Font m_font;
         bool m_border;
         uint32_t m_image_align;
-        uint32_t m_label_align;
     };
 
 }

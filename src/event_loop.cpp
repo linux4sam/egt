@@ -125,7 +125,11 @@ namespace mui
 #endif
             for (auto& w : windows())
             {
-                if (w->visible())
+                if (!w->visible())
+                    continue;
+
+                // draw top level frames and plane frames
+                if (w->top_level() || w->is_flag_set(FLAG_PLANE_WINDOW))
                     w->draw();
             }
 
