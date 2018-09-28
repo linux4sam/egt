@@ -1,0 +1,53 @@
+## Notes
+
+- http://www.peteronion.org.uk/GtkExamples/GladeTutorials.html
+- https://github.com/rahra/cairo_jpg
+
+## Todo
+
+Priority 1
+- Seperate logical and physical coordinates.
+- All child coordinates need to have an origin in the parent frame.
+- Abstract out widget drawing implementation so that widget drawing can be themed.
+- Change all callbacks to std::function after performance analysis.
+- Move all 2D graphics drawing primitives into Painter.
+- Identify a hard path to support 2D GPU under graphics primitives used.
+- Backbuffer all widgets and seperate damage() from redraw(). Is this really a performance improvement?
+
+Priority 2
+- Add (zlib) compression to resources.  Likely want option to enable/disable it.
+- Make resources identifiable by original name.  Current nameing scheme stinks.
+- Chart widgets (kplot is nice, but lacks bar charts): pie, bar, line, point (having working prototype of kplot).
+- XML loader and tool to create screens (find existing tool).
+- JPEG support.
+- MIME support.
+- Popup widget.
+- Radio widget.
+- More grid options.
+- Scroll wheel widget.
+- File open/save.
+- Scroll window.
+
+## Widgets
+- MessageBox
+- Popup
+- Radio
+- StaticGrid
+- ScrollWheel
+- Radial
+- SimpleText
+- ListBox
+- Label
+  - CheckBox
+- Button
+  - ImageButton
+- Image
+  - ImageLabel
+- File Open/Save
+- ScrolledWindow
+- Combo
+- Slider
+- ProgressBar
+  - LevelMeter
+  - AnalogMeter
+  - SpingProgress
