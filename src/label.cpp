@@ -13,7 +13,7 @@ namespace mui
 
     Label::Label(const std::string& text, const Point& point, const Size& size,
                  int align, const Font& font)
-        : Widget(point.x, point.y, size.w, size.h),
+        : Widget(point, size),
           m_align(align),
           m_text(text),
           m_font(font)

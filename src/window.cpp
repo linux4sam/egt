@@ -63,11 +63,11 @@ namespace mui
 
         if (!size.empty())
         {
-            resize(this->w(), this->h());
+            resize(size);
         }
     }
 
-    void PlaneWindow::resize(int w, int h)
+    void PlaneWindow::resize(const Size& size)
     {
         // severe limitation that we can only size once
         // this is horrible: basically, only let the plane get allocated once,
@@ -75,9 +75,9 @@ namespace mui
         if (m_screen == main_screen())
         {
             m_screen = new KMSOverlayScreen(
-                KMSScreen::instance()->allocate_overlay(Size(w, h), m_format, m_heo));
+                KMSScreen::instance()->allocate_overlay(size, m_format, m_heo));
             assert(m_screen);
-            size(w, h);
+            this->size(size);
             damage();
         }
         else
@@ -86,23 +86,22 @@ namespace mui
         }
     }
 
-    void PlaneWindow::position(int x, int y)
+    void PlaneWindow::position(const Point& point)
     {
-        if (x != box().x || y != box().y)
+        if (point != box().point())
         {
             KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-            screen->position(x, y);
+            screen->position(point);
 
-            m_box.x = x;
-            m_box.y = y;
+            m_box.point(point);
 
             m_dirty = true;
         }
     }
 
-    void PlaneWindow::move(int x, int y)
+    void PlaneWindow::move(const Point& point)
     {
-        position(x, y);
+        position(point);
     }
 
     // damage to a plane window does not propagate up, unlike a normal frame
@@ -118,8 +117,6 @@ namespace mui
 
     void PlaneWindow::draw()
     {
-        //std::cout << name() << " " << __PRETTY_FUNCTION__ << std::endl;
-
         if (m_dirty)
         {
             KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
@@ -134,20 +131,19 @@ namespace mui
     }
 #else
     PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format, bool heo)
-        : Window(size, flags),
-          m_dirty(true)
+        : Window(size, flags)
     {
 
     }
 
-    void PlaneWindow::position(int x, int y)
+    void PlaneWindow::position(const Point& point)
     {
-        Window::position(x, y);
+        Window::position(point);
     }
 
-    void PlaneWindow::move(int x, int y)
+    void PlaneWindow::move(const Point& point)
     {
-        Window::move(x, y);
+        Window::move(point);
     }
 
     void PlaneWindow::draw()

@@ -66,6 +66,9 @@ namespace mui
          */
         FLAG_FRAME = (1 << 5),
 
+        /**
+         * Draw a border around the widget.
+         */
         FLAG_BORDER = (1 << 6),
 
         /**
@@ -175,8 +178,14 @@ namespace mui
 
         /**
          * Construct a widget.
-         */
-        Widget(int x = 0, int y = 0, int w = 0, int h = 0, uint32_t flags = 0) noexcept;
+	 *
+	 * @param[in] point Point to position the widget at.
+	 * @param[in] point Initial size of the widget.
+	 * @param[in] flags Widget flags.
+	 */
+        Widget(const Point& point = Point(),
+               const Size& size = Size(),
+               uint32_t flags = 0) noexcept;
 
         /**
          * Draw the widget.
@@ -188,6 +197,8 @@ namespace mui
         /**
          * Handle an event.
          *
+	 * Override this function in a derived class to handle events.
+	 *
          * Only the event ID is passed to this function. To get data associated
          * with the event, you have to call other functions.
          */
@@ -196,21 +207,13 @@ namespace mui
         /**
          * Set the position of the widget.
          */
-        virtual void position(int x, int y);
-        inline void position(const Point& point)
-        {
-            position(point.x, point.y);
-        }
+        virtual void position(const Point& point);
 
         /**
          * Set the size of the widget.
          * @{
          */
-        virtual void size(int w, int h);
-        inline void size(const Size& s)
-        {
-            size(s.w, s.h);
-        }
+        virtual void size(const Size& s);
         /** @} */
 
         /**
@@ -218,11 +221,7 @@ namespace mui
          * Resize the widget.
          * This will cause a redraw of the widget.
          */
-        virtual void resize(int w, int h);
-        inline void resize(const Size& s)
-        {
-            resize(s.w, s.h);
-        }
+        virtual void resize(const Size& s);
         /** @} */
 
         /**
@@ -230,18 +229,16 @@ namespace mui
          * Move the widget.
          * This will cause a redraw of the widget.
          */
-        virtual void move(int x, int y);
-        inline void move(const Point& point)
-        {
-            move(point.x, point.y);
-        }
+        virtual void move(const Point& point);
         /** @} */
 
         /**
          * Hide the widget.
-        *
+	 *
          * A widget that is not visible will receive no draw() calls.
-               */
+	 *
+	 * @note This changes the visible() property of the widget.
+	 */
         virtual void hide()
         {
             if (!m_visible)
@@ -252,6 +249,8 @@ namespace mui
 
         /**
          * Show the widget.
+	 *
+	 * @note This changes the visible() property of the widget.
          */
         virtual void show()
         {
@@ -260,12 +259,16 @@ namespace mui
             m_visible = true;
             damage();
         }
+
         virtual bool visible() const { return m_visible; }
 
         /**
          * Return true if the widget is in focus.
          */
         virtual bool focus() const { return m_focus; }
+	/**
+	 * Set the focus property of the widget.
+	 */
         virtual void focus(bool value) { m_focus = value; }
 
         /**
@@ -274,6 +277,9 @@ namespace mui
          * The meaning of active is largely up to the derived implementation.
          */
         virtual bool active() const { return m_active; }
+	/**
+	 * Set the active property of the widget.
+	 */
         virtual void active(bool value) { m_active = value; }
 
         /**
@@ -295,19 +301,25 @@ namespace mui
 
         /**
          * Damage the box() of the widget.
+	 *
+	 * @note This is just a utility wrapper around damage(box()) in most cases.
          */
         virtual void damage();
-        virtual void damage(const Rect& rect) {}
+
+	/**
+         * Damage the specified rectangle.
+	 */
+        virtual void damage(const Rect& rect);
 
         /**
          * Bounding box for the widgets.
          */
-        const Rect& box() const { return m_box; }
+        virtual const Rect& box() const { return m_box; }
 
         /**
          * Get the size of the widget.
          */
-        Size size() const { return m_box.size(); }
+        virtual Size size() const { return m_box.size(); }
 
         /**
          * @{

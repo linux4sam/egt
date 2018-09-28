@@ -39,7 +39,7 @@ class MyImage : public Image
 {
 public:
     MyImage(LauncherWindow* win, Window* target, const string& filename, int x = 0, int y = 0)
-        : Image(filename, x, y),
+        : Image(filename, Point(x, y)),
           m_win(win),
           m_target(target),
           m_fd(-1),
@@ -234,7 +234,7 @@ public:
             MyImage* box = new MyImage(this, (Window*)win, os.str());
             add(box);
 
-            box->position(t * 200, (h() / 2) - (box->h() / 2));
+            box->position(Point(t * 200, (h() / 2) - (box->h() / 2)));
             m_boxes[t] = box;
 
             scale_box(box, t * 200);
@@ -297,11 +297,11 @@ public:
             if (visible)
             {
                 scale_box(m_boxes[t], pos);
-                m_boxes[t]->move(pos, m_boxes[t]->y());
+                m_boxes[t]->move(Point(pos, m_boxes[t]->y()));
             }
             else
             {
-                m_boxes[t]->position(pos, m_boxes[t]->y());
+                m_boxes[t]->position(Point(pos, m_boxes[t]->y()));
             }
         }
     }
@@ -352,7 +352,7 @@ int main()
     struct MyButton : public Image
     {
         MyButton(const std::string& image, const Point& point = Point())
-            : Image(image, point.x, point.y)
+            : Image(image, point)
         {}
 
         int handle(int event)

@@ -23,7 +23,7 @@ class Bubble : public Image
 {
 public:
     Bubble(int xspeed, int yspeed, const Point& point)
-        : Image("smallbubble.png", point.x, point.y),
+        : Image("smallbubble.png", point),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}
@@ -36,8 +36,8 @@ public:
 
             m_image = image_cache.get(m_filename, hscale, vscale, true);
 
-            size(cairo_image_surface_get_width(m_image.get()),
-                 cairo_image_surface_get_height(m_image.get()));
+            size(Size(cairo_image_surface_get_width(m_image.get()),
+                      cairo_image_surface_get_height(m_image.get())));
             m_hscale = hscale;
             m_vscale = vscale;
 
@@ -70,9 +70,9 @@ class MainWindow : public Window
 public:
     MainWindow()
         : Window(Size(), FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND),
-/*PlaneWindow(Size(KMSScreen::instance()->size().w,
-                           KMSScreen::instance()->size().h),
-                      FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, DRM_FORMAT_XRGB8888),*/
+          /*PlaneWindow(Size(KMSScreen::instance()->size().w,
+                                     KMSScreen::instance()->size().h),
+                                FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, DRM_FORMAT_XRGB8888),*/
           e1(r())
     {
         Image* img = new Image("water_1080.png");
@@ -123,8 +123,8 @@ public:
         Bubble* image = new Bubble(xspeed, yspeed, p);
         add(image);
         image->scale(size, size);
-        image->move(p.x - image->box().w / 2 + offset,
-                    p.y - image->box().h / 2 + offset);
+        image->move(Point(p.x - image->box().w / 2 + offset,
+                          p.y - image->box().h / 2 + offset));
         m_images.push_back(image);
         objects_changed();
     }
@@ -204,8 +204,8 @@ int main()
     PeriodicTimer spawntimer(1000);
     spawntimer.add_handler([&win]()
     {
-	if (win.m_images.size() > 30)
-	    return;
+        if (win.m_images.size() > 30)
+            return;
 
         static std::uniform_int_distribution<int> xoffset_dist(-win.w() / 2, win.w() / 2);
         int offset = xoffset_dist(win.e1);

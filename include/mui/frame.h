@@ -24,13 +24,23 @@ namespace mui
      *
      * This involves everything from event handling down to widgets and drawing
      * children widgets.
+     *
+     * Child widget coordinates have an origin at the topleft of their parent
+     * frame.  In other words, child widgets are drawn respective to and inside
+     * their parent frame, not the screen.
      */
     class Frame : public Widget
     {
     public:
 
-        explicit Frame(const Point& point, const Size& size, uint32_t flags = FLAG_NO_BACKGROUND)
-            : Widget(point.x, point.y, size.w, size.h, flags | FLAG_FRAME)
+	/**
+	 * @param[in] point Point to position the widget at.
+	 * @param[in] point Initial size of the widget.
+	 * @param[in] flags Widget flags.
+	 */
+	explicit Frame(const Point& point, const Size& size,
+		       uint32_t flags = FLAG_NO_BACKGROUND)
+            : Widget(point, size, flags | FLAG_FRAME)
         {}
 
         virtual int handle(int event);
@@ -63,12 +73,12 @@ namespace mui
 
         /**
          * Find a child widget by name.
-        *
+	 *
          * @see Widget::name()
          *
-               * If you're trying to find a widget in the entire application, you need
-               * to start at any top level window. This function will only search down
-               * from where it's called.
+	 * If you're trying to find a widget in the entire application, you need
+	 * to start at any top level window. This function will only search down
+	 * from where it's called.
          */
         template <class T>
         T find_child(const std::string& name)

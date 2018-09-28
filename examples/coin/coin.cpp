@@ -74,7 +74,7 @@ public:
             bounce = true;
         }
 
-        position(m_x, 0);
+        position(Point(m_x, 0));
 
         return bounce;
     }
@@ -82,7 +82,7 @@ public:
     void restart()
     {
         m_x = w();
-        position(m_x, 0);
+        position(Point(m_x, 0));
     }
 
     bool collide(const Rect& rect, shared_cairo_surface_t image, uint32_t& points)
@@ -165,7 +165,7 @@ public:
 
         std::uniform_int_distribution<int> xdist(0, 600);
         std::uniform_int_distribution<int> ydist(0, 200);
-        m_grid1.position(xdist(e1), ydist(e1));
+        m_grid1.position(Point(xdist(e1), ydist(e1)));
     }
 
     void add_bricks()
@@ -203,7 +203,7 @@ public:
         {
             conflict = false;
 
-            m_grid2.position(xdist(e1), ids[ydist(e1)]);
+            m_grid2.position(Point(xdist(e1), ids[ydist(e1)]));
 
             for (auto coin : m_coins)
             {
@@ -250,14 +250,14 @@ public:
     {
         add(&image);
 
-        position(pos.x, pos.y);
+        position(pos);
 
         if (speed < 0)
             m_x = m_image.w() / 2;
 
         KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        screen->set_pan_size(size.w, size.h);
-        screen->set_pan_pos(m_x, 0);
+        screen->set_pan_size(size);
+        screen->set_pan_pos(Point(m_x, 0));
         screen->apply();
     }
 
@@ -283,7 +283,7 @@ public:
         }
 
         KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        screen->set_pan_pos(m_x, 0);
+        screen->set_pan_pos(Point(m_x, 0));
         screen->apply();
 
         return bounce;
@@ -316,7 +316,7 @@ public:
         m_obstacle = new ObstacleLayer(8);
         m_obstacle->show();
 
-        m_mouse = new HardwareSprite("coin_mouse.png", 120, 97, 2, 0, 0, w() / 2 - 120 / 2, h() / 2 - 97 / 2);
+        m_mouse = new HardwareSprite("coin_mouse.png", 120, 97, 2, 0, 0, Point(w() / 2 - 120 / 2, h() / 2 - 97 / 2));
         m_mouse->add_strip(8, 0, 97);
         m_mouse->add_strip(3, 240, 97);
         add(m_mouse);
@@ -363,7 +363,7 @@ public:
             {
                 int y = m_mouse->y() - (event == EVT_KEY_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
-                    m_mouse->move(m_mouse->x(), y);
+                    m_mouse->move(Point(m_mouse->x(), y));
 
                 return 1;
             }
@@ -371,7 +371,7 @@ public:
             {
                 int y = m_mouse->y() + (event == EVT_KEY_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
-                    m_mouse->move(m_mouse->x(), y);
+                    m_mouse->move(Point(m_mouse->x(), y));
 
                 return 1;
             }
@@ -389,7 +389,7 @@ public:
                     delta = 10;
                 int y = m_mouse->y() + delta;
                 if (y > 0 && y < h() + m_mouse->h())
-                    m_mouse->move(m_mouse->x(), y);
+                    m_mouse->move(Point(m_mouse->x(), y));
             }
             else if (mouse_position().y < m_mouse->box().center().y)
             {
@@ -398,7 +398,7 @@ public:
                     delta = 10;
                 int y = m_mouse->y() - delta;
                 if (y > 0 && y < h() + m_mouse->h())
-                    m_mouse->move(m_mouse->x(), y);
+                    m_mouse->move(Point(m_mouse->x(), y));
             }
 
             return 1;
@@ -412,7 +412,7 @@ public:
         m_go->show();
         m_points = 0;
         update_points(m_points);
-        m_mouse->move(w() / 2 - 120 / 2, h() / 2 - 97 / 2);
+        m_mouse->move(Point(w() / 2 - 120 / 2, h() / 2 - 97 / 2));
         m_mouse->set_strip(0);
         m_background->restart();
         m_background->reset();

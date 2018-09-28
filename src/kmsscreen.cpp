@@ -149,9 +149,9 @@ namespace mui
         return m_index;
     }
 
-    void KMSOverlayScreen::position(int x, int y)
+    void KMSOverlayScreen::position(const Point& point)
     {
-        plane_set_pos(m_plane, x, y);
+        plane_set_pos(m_plane, point.x, point.y);
     }
 
     void KMSOverlayScreen::scale(float scale)
@@ -159,14 +159,14 @@ namespace mui
         plane_set_scale(m_plane, scale);
     }
 
-    void KMSOverlayScreen::set_pan_size(int width, int height)
+    void KMSOverlayScreen::set_pan_size(const Size& size)
     {
-        plane_set_pan_size(m_plane, width, height);
+        plane_set_pan_size(m_plane, size.w, size.h);
     }
 
-    void KMSOverlayScreen::set_pan_pos(int x, int y)
+    void KMSOverlayScreen::set_pan_pos(const Point& point)
     {
-        plane_set_pan_pos(m_plane, x, y);
+        plane_set_pan_pos(m_plane, point.x, point.y);
     }
 
     float KMSOverlayScreen::scale() const

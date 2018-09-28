@@ -21,19 +21,19 @@ namespace mui
     class Image : public Widget
     {
     public:
-        Image(const std::string& filename, int x = 0, int y = 0);
+        Image(const std::string& filename, const Point& point = Point());
 
         virtual void draw(const Rect& rect);
 
         virtual void scale(double hscale, double vscale);
 
         // hmm, should resize really mean scale like this?
-        void resize(int w, int h)
+        virtual void resize(const Size& size)
         {
-            if (box().w != w || box().h != h)
+            if (box().size() != size)
             {
-                double hs = (double)box().w / (double)w;
-                double vs = (double)box().h / (double)h;
+                double hs = (double)box().w / (double)size.w;
+                double vs = (double)box().h / (double)size.h;
                 scale(hs, vs);
             }
         }
@@ -56,6 +56,9 @@ namespace mui
         virtual ~Image();
 
     protected:
+
+        Image() {}
+
         shared_cairo_surface_t m_image;
         std::string m_filename;
         double m_hscale;

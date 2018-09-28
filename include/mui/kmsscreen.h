@@ -34,10 +34,10 @@ namespace mui
 
         KMSOverlayScreen(struct plane_data* plane);
 
-        virtual void position(int x, int y);
+        virtual void position(const Point& point);
         virtual void scale(float scale);
-        virtual void set_pan_size(int width, int height);
-        virtual void set_pan_pos(int x, int y);
+        virtual void set_pan_size(const Size& size);
+        virtual void set_pan_pos(const Point& point);
         virtual float scale() const;
 
         virtual int gem();

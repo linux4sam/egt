@@ -18,8 +18,8 @@ using namespace std;
 
 namespace mui
 {
-    Widget::Widget(int x, int y, int w, int h, uint32_t flags) noexcept
-        : m_box(x, y, w, h),
+    Widget::Widget(const Point& point, const Size& size, uint32_t flags) noexcept
+        : m_box(point, size),
           m_parent(nullptr),
           m_visible(true),
           m_focus(false),
@@ -34,49 +34,51 @@ namespace mui
         return EVT_NONE;
     }
 
-    void Widget::position(int x, int y)
+    void Widget::position(const Point& point)
     {
-        if (x != box().x || y != box().y)
+        if (point != box().point())
         {
             damage();
-            m_box.x = x;
-            m_box.y = y;
+            m_box.point(point);
         }
     }
 
-    void Widget::size(int w, int h)
+    void Widget::size(const Size& size)
     {
-        if (w != box().w || h != box().h)
+        if (size != box().size())
         {
             damage();
-            m_box.w = w;
-            m_box.h = h;
+            m_box.size(size);
         }
     }
 
-    void Widget::resize(int w, int h)
+    void Widget::resize(const Size& size)
     {
-        if (w != box().w || h != box().h)
+        if (size != box().size())
         {
-            damage();
-            size(w, h);
+            this->size(size);
             damage();
         }
     }
 
-    void Widget::move(int x, int y)
+    void Widget::move(const Point& point)
     {
-        if (x != box().x || y != box().y)
+        if (point != box().point())
         {
-            damage();
-            position(x, y);
+            position(point);
             damage();
         }
     }
 
     void Widget::damage()
     {
-        parent()->damage(box());
+	damage(box());
+    }
+
+    void Widget::damage(const Rect& rect)
+    {
+	if (m_parent)
+            m_parent->damage(rect);
     }
 
     IScreen* Widget::screen()
@@ -275,8 +277,8 @@ namespace mui
 
     Widget::~Widget()
     {
-	if (m_parent)
-	    m_parent->remove(this);
+        if (m_parent)
+            m_parent->remove(this);
     }
 
 #ifdef DEVELOPMENT
@@ -395,7 +397,7 @@ namespace mui
     ListBox::ListBox(const item_array& items,
                      const Point& point,
                      const Size& size)
-        : Widget(point.x, point.y, size.w, size.h),
+        : Widget(point, size),
           m_items(items)
     {}
 

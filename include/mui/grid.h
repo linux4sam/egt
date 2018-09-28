@@ -30,15 +30,15 @@ namespace mui
               m_border(border)
         {}
 
-        virtual void position(int x, int y)
+        virtual void position(const Point& point)
         {
-            Frame::position(x, y);
+            Frame::position(point);
             reposition();
         }
 
-        virtual void size(int w, int h)
+        virtual void size(const Size& size)
         {
-            Frame::size(w, h);
+            Frame::size(size);
             reposition();
         }
 
@@ -90,8 +90,8 @@ namespace mui
                                                       cell.align);
 
                         // reposition/resize widget
-                        cell.widget->position(target.x, target.y);
-                        cell.widget->resize(target.w, target.h);
+                        cell.widget->position(target.point());
+                        cell.widget->resize(target.size());
                     }
                 }
             }
@@ -132,15 +132,15 @@ namespace mui
               m_align(align)
         {}
 
-        virtual void position(int x, int y)
+        virtual void position(const Point& point)
         {
-            Frame::position(x, y);
+            Frame::position(point);
             reposition();
         }
 
-        virtual void size(int w, int h)
+        virtual void size(const Size& size)
         {
-            Frame::size(w, h);
+            Frame::size(size);
             reposition();
         }
 
@@ -170,7 +170,7 @@ namespace mui
                     if (m_align & ALIGN_BOTTOM)
                         p.y = y() + h() - child->h();
 
-                    child->position(x() + offset + m_border, p.y);
+                    child->position(Point(x() + offset + m_border, p.y));
                     offset += (child->w() + m_border);
                 }
             }

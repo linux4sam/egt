@@ -288,7 +288,7 @@ namespace mui
 
     Slider::Slider(int min, int max, const Point& point,
                    const Size& size, int orientation)
-        : Widget(point.x, point.y, size.w, size.h),
+        : Widget(point, size),
           m_min(min),
           m_max(max),
           m_pos(min),

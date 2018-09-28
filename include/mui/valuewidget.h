@@ -19,7 +19,7 @@ namespace mui
     public:
 
         ValueWidget(const Point& point, const Size& size, T value = T())
-            : Widget(point.x, point.y, size.w, size.h),
+            : Widget(point, size),
               m_value(value)
         {}
 
@@ -81,7 +81,7 @@ namespace mui
 
         ValueRangeWidget(const Point& point, const Size& size, T min, T max,
                          T value = T())
-            : Widget(point.x, point.y, size.w, size.h),
+            : Widget(point, size),
               m_min(min),
               m_max(max),
               m_value(value)

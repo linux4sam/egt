@@ -22,13 +22,13 @@ int main()
     StaticGrid grid(Point(0, 0), Size(win.w(), win.h()), 2, 2, 10);
 
     HardwareSprite sprite1("walk.png", 75, 132, 8, 0, 0,
-                           main_screen()->size().w / 2 - 75,
-                           main_screen()->size().h / 2 - 132 / 2);
+                           Point(main_screen()->size().w / 2 - 75,
+                                 main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite1, 0, 1, StaticGrid::ALIGN_CENTER);
 
     SoftwareSprite sprite2("walk.png", 75, 132, 8, 0, 0,
-                           main_screen()->size().w / 2,
-                           main_screen()->size().h / 2 - 132 / 2);
+                           Point(main_screen()->size().w / 2,
+                                 main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite2, 1, 1, StaticGrid::ALIGN_CENTER);
 
     grid.add(new Label("Hardware", Point(100, 100)), 0, 0,

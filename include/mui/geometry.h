@@ -23,9 +23,8 @@ namespace mui
     class Point
     {
     public:
+
         Point() noexcept
-            : x(0),
-              y(0)
         {}
 
         explicit Point(int x_, int y_) noexcept
@@ -68,8 +67,18 @@ namespace mui
             return std::atan2(point.x - x, y - point.y);
         }
 
-        int x;
-        int y;
+        bool operator==(const Point& rhs) const
+        {
+            return x == rhs.x && y == rhs.y;
+        }
+
+        bool operator!=(const Point& rhs) const
+        {
+            return x != rhs.x || y != rhs.y;
+        }
+
+        int x {0};
+        int y {0};
 
         friend Point operator-(Point lhs, const Point& rhs);
         friend Point operator+(Point lhs, const Point& rhs);
@@ -86,9 +95,8 @@ namespace mui
     class Size
     {
     public:
+
         Size() noexcept
-            : h(0),
-              w(0)
         {}
 
         explicit Size(int w_, int h_) noexcept
@@ -109,8 +117,18 @@ namespace mui
             h = w = 0;
         }
 
-        int h;
-        int w;
+        bool operator==(const Size& rhs) const
+        {
+            return w == rhs.w && h == rhs.h;
+        }
+
+        bool operator!=(const Size& rhs) const
+        {
+            return w != rhs.w || h != rhs.h;
+        }
+
+        int h {0};
+        int w {0};
     };
 
     std::ostream& operator<<(std::ostream& os, const Size& size);
@@ -125,14 +143,11 @@ namespace mui
     class Rect
     {
     public:
+
         Rect() noexcept
-            : x(0),
-              y(0),
-              w(0),
-              h(0)
         {}
 
-        Rect(const Point& point, const Size& size) noexcept
+        explicit Rect(const Point& point, const Size& size) noexcept
             : x(point.x),
               y(point.y),
               w(size.w),
@@ -142,7 +157,7 @@ namespace mui
             assert(h >= 0);
         }
 
-        Rect(int x_, int y_, int w_, int h_) noexcept
+        explicit Rect(int x_, int y_, int w_, int h_) noexcept
             : x(x_),
               y(y_),
               w(w_),
@@ -167,9 +182,21 @@ namespace mui
             return Point(x, y);
         }
 
+        void point(const Point& p)
+        {
+            x = p.x;
+            y = p.y;
+        }
+
         Size size() const
         {
             return Size(w, h);
+        }
+
+        void size(const Size& s)
+        {
+            w = s.w;
+            h = s.h;
         }
 
         inline int top() const
@@ -212,6 +239,7 @@ namespace mui
                    w == rhs.w &&
                    h == rhs.h;
         }
+
 
         inline bool point_inside(const Point& point) const
         {
@@ -271,10 +299,10 @@ namespace mui
             return Rect(x, y, w, h);
         }
 
-        int x;
-        int y;
-        int w;
-        int h;
+        int x {0};
+        int y {0};
+        int w {0};
+        int h {0};
     };
 
     std::ostream& operator<<(std::ostream& os, const Rect& rect);

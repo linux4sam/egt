@@ -25,7 +25,7 @@ struct ShowAnimation : public AnimationTimer
 
     virtual void step(int value)
     {
-        m_widget->move(m_widget->x(), value);
+        m_widget->move(Point(m_widget->x(), value));
     }
 
     T* m_widget;
@@ -41,7 +41,7 @@ struct HideAnimation : public AnimationTimer
 
     virtual void step(int value)
     {
-        m_widget->move(m_widget->x(), value);
+        m_widget->move(Point(m_widget->x(), value));
     }
 
     T* m_widget;
@@ -68,7 +68,7 @@ public:
         if (m_fscale <= 0)
             m_fscale = 1.0;
 
-        T::move(0, 0);
+        T::move(Point(0, 0));
         T::scale(m_fscale);
         T::set_media(filename);
         T::play();
@@ -86,7 +86,7 @@ public:
         case EVT_MOUSE_DBLCLICK:
             if (T::scale() <= 1.0)
             {
-                T::move(0, 0);
+                T::move(Point(0, 0));
                 T::scale(m_fscale);
                 show->start();
             }
@@ -116,7 +116,7 @@ public:
             if (m_moving)
             {
                 Point diff = mouse_position() - m_starting_point;
-                T::move(m_position.x + diff.x, m_position.y + diff.y);
+                T::move(Point(m_position.x + diff.x, m_position.y + diff.y));
                 return 1;
             }
             break;
@@ -196,8 +196,8 @@ int main(int argc, const char** argv)
     window->add(&ctrlwindow);
     ctrlwindow.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
 
-    ctrlwindow.position((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
-                        KMSScreen::instance()->size().h - ctrlwindow.h());
+    ctrlwindow.position(Point((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
+                              KMSScreen::instance()->size().h - ctrlwindow.h()));
 
     set_control_window(&ctrlwindow);
 

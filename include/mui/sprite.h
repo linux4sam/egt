@@ -25,7 +25,7 @@ namespace mui
     public:
         ISpriteBase(const std::string& filename, int framew, int frameh,
                     int framecount, int framex = 0, int framey = 0,
-                    int x = 0, int y = 0)
+                    const Point& point = Point())
             : m_image(filename),
               m_filename(filename),
               m_frame(framew, frameh),
@@ -123,7 +123,7 @@ namespace mui
     public:
         HardwareSprite(const std::string& filename, int framew, int frameh,
                        int framecount, int framex = 0, int framey = 0,
-                       int x = 0, int y = 0);
+                       const Point& point = Point());
 
         virtual void show_frame(int index);
 
@@ -138,7 +138,7 @@ namespace mui
     public:
         SoftwareSprite(const std::string& filename, int framew, int frameh,
                        int framecount, int framex = 0, int framey = 0,
-                       int x = 0, int y = 0);
+                       const Point& point = Point());
 
         virtual void draw(const Rect& rect);
 

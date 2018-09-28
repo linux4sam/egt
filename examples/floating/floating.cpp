@@ -74,7 +74,7 @@ public:
         if (y < 0)
             m_my *= -1;
 
-        m_widget->move(x, y);
+        m_widget->move(Point(x, y));
     }
 
 protected:
@@ -115,7 +115,7 @@ int main()
     {
         stringstream os;
         os << "_image" << x << ".png";
-        Image* image = new Image(os.str(), 100, 100);
+        Image* image = new Image(os.str(), Point(100, 100));
         boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
         win.add(image);
     }
@@ -132,11 +132,11 @@ int main()
     {
         stringstream os;
         os << "_image" << x << ".png";
-        Image* image = new Image(os.str(), 0, 0);
+        Image* image = new Image(os.str());
         PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
         plane->add(image);
         plane->show();
-        plane->position(100, 100);
+        plane->position(Point(100, 100));
         boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
     }
 #endif

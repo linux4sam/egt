@@ -288,9 +288,9 @@ namespace mui
         for (auto& i : m_widgets)
         {
             if (m_coord == CORD_X)
-                i->move(m_start, i->y());
+                i->move(Point(m_start, i->y()));
             else
-                i->move(i->x(), m_start);
+                i->move(Point(i->x(), m_start));
         }
     }
 
@@ -313,9 +313,9 @@ namespace mui
         for (auto& i : a->m_widgets)
         {
             if (a->m_coord == CORD_X)
-                i->move(value, i->y());
+                i->move(Point(value, i->y()));
             else
-                i->move(i->x(), value);
+                i->move(Point(i->x(), value));
         }
     }
 

@@ -17,7 +17,7 @@ class Ball : public Image
 {
 public:
     Ball(int xspeed, int yspeed, const Point& point)
-        : Image("metalball.png", point.x, point.y),
+        : Image("metalball.png", point),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}
@@ -80,8 +80,8 @@ public:
         Ball* image = new Ball(xspeed, yspeed, p);
         add(image);
         image->scale(size, size);
-        image->move(p.x - image->box().w / 2,
-                    p.y - image->box().h / 2);
+        image->move(Point(p.x - image->box().w / 2,
+                          p.y - image->box().h / 2));
         m_images.push_back(image);
     }
 

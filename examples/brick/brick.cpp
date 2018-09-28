@@ -99,7 +99,7 @@ public:
                     x = m_paddle.x() + (event == EVT_KEY_REPEAT ? 15 : 10);
 
                 if (x > -m_paddle.w() && x < w())
-                    m_paddle.move(x, m_paddle.y());
+                    m_paddle.move(Point(x, m_paddle.y()));
 
                 return 1;
             }
@@ -122,7 +122,7 @@ public:
         case EVT_MOUSE_DOWN:
             m_running = true;
         case EVT_MOUSE_MOVE:
-            m_paddle.move(mouse_position().x - m_paddle.w() / 2, m_paddle.y());
+            m_paddle.move(Point(mouse_position().x - m_paddle.w() / 2, m_paddle.y()));
             return 1;
         }
 
@@ -134,8 +134,8 @@ public:
         for (auto block : m_blocks)
             block->show();
 
-        m_ball.move(w() / 2 - m_ball.w() / 2, h() - m_paddle.h() - 25 - m_ball.h() - 100);
-        m_paddle.move(w() / 2 - m_paddle.w() / 2, h() - m_paddle.h() - 25);
+        m_ball.move(Point(w() / 2 - m_ball.w() / 2, h() - m_paddle.h() - 25 - m_ball.h() - 100));
+        m_paddle.move(Point(w() / 2 - m_paddle.w() / 2, h() - m_paddle.h() - 25));
 
         std::uniform_real_distribution<float> speed_dist(2.0, 5.0);
         m_xspeed = speed_dist(e1);

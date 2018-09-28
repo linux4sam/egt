@@ -11,7 +11,7 @@ namespace mui
 {
 
     TextBox::TextBox(const std::string& text, const Point& point, const Size& size)
-        : Widget(point.x, point.y, size.w, size.h),
+        : Widget(point, size),
           m_text(text)
     {}
 

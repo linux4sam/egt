@@ -40,21 +40,21 @@ namespace mui
 
     HardwareSprite::HardwareSprite(const std::string& filename, int framew,
                                    int frameh, int framecount, int framex,
-                                   int framey, int x, int y)
+                                   int framey, const Point& point)
         : PlaneWindow(Size(), FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND),
           ISpriteBase(filename, framew, frameh, framecount, framex, framey)
     {
         add(&m_image);
 
-        resize(m_image.w(), m_image.h());
+        resize(m_image.size());
 
         KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
         plane_set_pan_pos(s->s(), m_strips[m_strip].framex, m_strips[m_strip].framey);
         plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
 
         // hack to change the size because the screen size and the box size are different
-        position(x, y);
-        m_box = Rect(x, y, framew, frameh);
+        position(point);
+        m_box = Rect(point.x, point.y, framew, frameh);
 
         damage();
     }
@@ -81,11 +81,11 @@ namespace mui
 
     SoftwareSprite::SoftwareSprite(const std::string& filename, int framew, int frameh,
                                    int framecount, int framex, int framey,
-                                   int x, int y)
-        : Widget(x, y, framew, frameh),
+                                   const Point& point)
+        : Widget(point, Size(framew, frameh)),
           ISpriteBase(filename, framew, frameh, framecount, framex, framey)
     {
-        m_box = Rect(x, y, framew, frameh);
+        m_box = Rect(point.x, point.y, framew, frameh);
     }
 
     void SoftwareSprite::draw(const Rect& rect)

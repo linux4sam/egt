@@ -105,7 +105,7 @@ public:
         m_box->add(image);
         m_box->show();
 #endif
-        m_box->position(w() / 2 - m_box->w() / 2, -110);
+        m_box->position(Point(w() / 2 - m_box->w() / 2, -110));
 
         return 0;
     }
@@ -120,11 +120,11 @@ public:
 
         if (visible)
         {
-            m_box->move(m_box->x(), pos);
+            m_box->move(Point(m_box->x(), pos));
         }
         else
         {
-            m_box->position(m_box->x(), pos);
+            m_box->position(Point(m_box->x(), pos));
         }
     }
 

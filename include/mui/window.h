@@ -67,9 +67,8 @@ namespace mui
     protected:
 
         // unsupported
-        //virtual void position(int x, int y) {}
-        virtual void size(int w, int h) {}
-        virtual void resize(int w, int h) {}
+        virtual void size(const Size& size) { /* Not supported yet. */ }
+        virtual void resize(const Size& size) { /* Not supported yet. */ }
 
         virtual IScreen* screen()
         {
@@ -105,21 +104,22 @@ namespace mui
 
         virtual void damage(const Rect& rect);
 
-        virtual void position(int x, int y);
-        virtual void move(int x, int y);
+        virtual void position(const Point& point);
+        virtual void move(const Point& point);
 
         virtual void draw();
 
+#if 0
         // why can't i see this from Widget::size()?
         Size size() const
         {
             return m_box.size();
         }
+#endif
 
         // not supported
-        virtual void size(int w, int h) {}
-
-        virtual void resize(int w, int h);
+        virtual void size(const Size& size) {}
+        virtual void resize(const Size& size);
 
         virtual void hide() { /** TODO: no way to hide. */  }
 

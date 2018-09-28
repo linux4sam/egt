@@ -67,7 +67,7 @@ public:
     HomeImage(const string& filename,
               int x = 0,
               int y = 0)
-        : Image(filename, x, y)
+        : Image(filename, Point(x, y))
     {}
 
     int handle(int event)
@@ -101,8 +101,8 @@ public:
 class Box : public Widget
 {
 public:
-    Box(int x, int y, int w, int h, const Color& color)
-        : Widget(x, y, w, h),
+    Box(const Point& point, const Size& size, const Color& color)
+        : Widget(point, size),
           m_color(color)
 
     {}
@@ -145,7 +145,7 @@ static void top_menu(Window* win)
     plane.add(&i2);
 #endif
 
-    Box* box1 = new Box(0, 0, 800, 60, Color::BLACK);
+    Box* box1 = new Box(Point(), Size(800, 60), Color::BLACK);
     win->add(box1);
 
     HomeImage* i1 = new HomeImage("home.png", 5, 5);
@@ -186,13 +186,13 @@ static void top_menu(Window* win)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l2);
 
-    Image* i2 = new Image("wifi.png", 800 - 50, 10);
+    Image* i2 = new Image("wifi.png", Point(800 - 50, 10));
     win->add(i2);
 }
 
 static void bottom_menu(Window* win)
 {
-    Box* box2 = new Box(0, 390, 800, 90, Color::LIGHTGRAY);
+    Box* box2 = new Box(Point(0, 390), Size(800, 90), Color::LIGHTGRAY);
     win->add(box2);
 
     StaticGrid* grid2 = new StaticGrid(Point(0, 390), Size(800, 90), 5, 1, 0);
