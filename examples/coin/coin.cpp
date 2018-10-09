@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/ui.h"
+#include "mui/ui"
 #include <iostream>
 #include <random>
 #include <sstream>
@@ -74,7 +74,7 @@ public:
             bounce = true;
         }
 
-        position(Point(m_x, 0));
+        move(Point(m_x, 0));
 
         return bounce;
     }
@@ -82,7 +82,7 @@ public:
     void restart()
     {
         m_x = w();
-        position(Point(m_x, 0));
+        move(Point(m_x, 0));
     }
 
     bool collide(const Rect& rect, shared_cairo_surface_t image, uint32_t& points)
@@ -165,7 +165,7 @@ public:
 
         std::uniform_int_distribution<int> xdist(0, 600);
         std::uniform_int_distribution<int> ydist(0, 200);
-        m_grid1.position(Point(xdist(e1), ydist(e1)));
+        m_grid1.move(Point(xdist(e1), ydist(e1)));
     }
 
     void add_bricks()
@@ -203,7 +203,7 @@ public:
         {
             conflict = false;
 
-            m_grid2.position(Point(xdist(e1), ids[ydist(e1)]));
+            m_grid2.move(Point(xdist(e1), ids[ydist(e1)]));
 
             for (auto coin : m_coins)
             {
@@ -250,7 +250,7 @@ public:
     {
         add(&image);
 
-        position(pos);
+        move(pos);
 
         if (speed < 0)
             m_x = m_image.w() / 2;

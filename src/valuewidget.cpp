@@ -3,6 +3,7 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "valuewidget.h"
+#include "painter.h"
 
 using namespace std;
 
@@ -43,7 +44,7 @@ namespace mui
                 Point c = center();
                 //float angle = atan2f(screen_to_window(mouse_position()).y - c.y,
                 //                     screen_to_window(mouse_position()).x - c.x);
-                float angle = c.angle_to_point<float>(mouse_position());
+                float angle = c.angle_to<float>(mouse_position());
                 angle = angle * (180.0 / M_PI);
                 angle = (angle > 0.0 ? angle : (360.0 + angle));
                 angle = 180 - angle;
@@ -63,7 +64,7 @@ namespace mui
         return degrees * (M_PI / 180.0);
     }
 
-    void Radial::draw(const Rect& rect)
+    void Radial::draw(Painter& painter, const Rect& rect)
     {
         float linew = 40;
 
@@ -82,7 +83,7 @@ namespace mui
 
         Point c = center();
 
-        auto cr = screen()->context();
+        auto cr = painter.context();
 
         cairo_save(cr.get());
 
@@ -107,7 +108,7 @@ namespace mui
         cairo_stroke(cr.get());
 
         string text = std::to_string(a) + m_label;
-        draw_text(text, box(), color2, ALIGN_CENTER, 0, Font(72));
+        painter.draw_text(text, box(), color2, ALIGN_CENTER, 0, Font(72));
 
         cairo_restore(cr.get());
     }
@@ -117,9 +118,9 @@ namespace mui
     {
     }
 
-    void ProgressBar::draw(const Rect& rect)
+    void ProgressBar::draw(Painter& painter, const Rect& rect)
     {
-        auto cr = screen()->context();
+        auto cr = painter.context();
 
         cairo_save(cr.get());
 
@@ -155,9 +156,9 @@ namespace mui
     {
     }
 
-    void LevelMeter::draw(const Rect& rect)
+    void LevelMeter::draw(Painter& painter, const Rect& rect)
     {
-        auto cr = screen()->context();
+        auto cr = painter.context();
 
         cairo_save(cr.get());
 
@@ -183,20 +184,18 @@ namespace mui
     {
     }
 
-    void AnalogMeter::draw(const Rect& rect)
+    void AnalogMeter::draw(Painter& painter, const Rect& rect)
     {
-        auto cr = screen()->context();
+        auto cr = painter.context();
 
         cairo_save(cr.get());
 
         cairo_set_source_rgb(cr.get(), 0, 0, 0);
         cairo_set_line_width(cr.get(), 1.0);
 
+        painter.set_font(m_font);
+
         cairo_text_extents_t textext;
-        cairo_select_font_face(cr.get(), m_font.face().c_str(),
-                               CAIRO_FONT_SLANT_NORMAL,
-                               CAIRO_FONT_WEIGHT_BOLD);
-        cairo_set_font_size(cr.get(), m_font.size());
         cairo_text_extents(cr.get(), "999", &textext);
 
         // Set origin as middle of bottom edge of the drawing area.
@@ -255,7 +254,7 @@ namespace mui
     {
     }
 
-    void SpinProgress::draw(const Rect& rect)
+    void SpinProgress::draw(Painter& painter, const Rect& rect)
     {
         float linew = 5;
 
@@ -267,7 +266,7 @@ namespace mui
 
         Point c = center();
 
-        auto cr = screen()->context();
+        auto cr = painter.context();
 
         cairo_save(cr.get());
 
@@ -357,9 +356,9 @@ namespace mui
         return Widget::handle(event);
     }
 
-    void Slider::draw(const Rect& rect)
+    void Slider::draw(Painter& painter, const Rect& rect)
     {
-        auto cr = screen()->context();
+        auto cr = painter.context();
 
         cairo_save(cr.get());
 
@@ -389,11 +388,11 @@ namespace mui
             cairo_stroke(cr.get());
 
             // handle
-            draw_gradient_box(Rect(x() + normalize(m_pos) + 1,
-                                   y() + 1,
-                                   h() - 2,
-                                   h() - 2),
-                              palette().color(Palette::BORDER));
+            painter.draw_gradient_box(Rect(x() + normalize(m_pos) + 1,
+                                           y() + 1,
+                                           h() - 2,
+                                           h() - 2),
+                                      palette().color(Palette::BORDER));
         }
         else
         {
@@ -415,11 +414,11 @@ namespace mui
             cairo_stroke(cr.get());
 
             // handle
-            draw_gradient_box(Rect(x() + 1,
-                                   y() + normalize(m_pos) + 1,
-                                   w() - 2,
-                                   w() - 2),
-                              palette().color(Palette::BORDER));
+            painter.draw_gradient_box(Rect(x() + 1,
+                                           y() + normalize(m_pos) + 1,
+                                           w() - 2,
+                                           w() - 2),
+                                      palette().color(Palette::BORDER));
         }
 
         cairo_restore(cr.get());

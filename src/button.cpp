@@ -46,12 +46,10 @@ namespace mui
         return Widget::handle(event);
     }
 
-    void Button::draw(const Rect& rect)
+    void Button::draw(Painter& painter, const Rect& rect)
     {
-        Painter painter(screen()->context());
-
         // box
-        draw_gradient_box(box(), palette().color(Palette::BORDER), active());
+        painter.draw_gradient_box(box(), palette().color(Palette::BORDER), active());
 
         // text
         painter.set_color(palette().color(Palette::TEXT));
@@ -91,14 +89,13 @@ namespace mui
         //}
     }
 
-    void ImageButton::draw(const Rect& rect)
+    void ImageButton::draw(Painter& painter, const Rect& rect)
     {
         if (m_border)
-            draw_gradient_box(box(), palette().color(Palette::BORDER));
+            painter.draw_gradient_box(box(), palette().color(Palette::BORDER));
 
-        draw_image(m_image, m_image_align, 10, disabled());
+        painter.draw_image(m_image, box(), m_image_align, 10, disabled());
 
-        Painter painter(screen()->context());
         painter.set_color(palette().color(Palette::TEXT));
         painter.set_font(m_font);
         painter.draw_text(box(), m_text, m_align, 5);

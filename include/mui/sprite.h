@@ -140,7 +140,7 @@ namespace mui
                        int framecount, int framex = 0, int framey = 0,
                        const Point& point = Point());
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual void show_frame(int index);
 

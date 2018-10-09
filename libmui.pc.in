@@ -8,3 +8,5 @@ Description: Microchip Graphics Toolkit
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -lmui
 Cflags: -I${includedir} -I${includedir}/mui
+Requires: @AX_PACKAGE_REQUIRES@
+Requires.private: @AX_PACKAGE_REQUIRES_PRIVATE@

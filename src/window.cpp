@@ -69,7 +69,7 @@ namespace mui
 
     void PlaneWindow::resize(const Size& size)
     {
-        // severe limitation that we can only size once
+        // severe limitation that we can only resize once
         // this is horrible: basically, only let the plane get allocated once,
         // but it starts at main_screen()
         if (m_screen == main_screen())
@@ -77,7 +77,7 @@ namespace mui
             m_screen = new KMSOverlayScreen(
                 KMSScreen::instance()->allocate_overlay(size, m_format, m_heo));
             assert(m_screen);
-            this->size(size);
+            m_box.size(size);
             damage();
         }
         else
@@ -86,7 +86,7 @@ namespace mui
         }
     }
 
-    void PlaneWindow::position(const Point& point)
+    void PlaneWindow::move(const Point& point)
     {
         if (point != box().point())
         {
@@ -97,11 +97,6 @@ namespace mui
 
             m_dirty = true;
         }
-    }
-
-    void PlaneWindow::move(const Point& point)
-    {
-        position(point);
     }
 
     // damage to a plane window does not propagate up, unlike a normal frame
@@ -134,11 +129,6 @@ namespace mui
         : Window(size, flags)
     {
 
-    }
-
-    void PlaneWindow::position(const Point& point)
-    {
-        Window::position(point);
     }
 
     void PlaneWindow::move(const Point& point)

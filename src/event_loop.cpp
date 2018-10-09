@@ -3,19 +3,18 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 
+#include "app.h"
 #include "event_loop.h"
 #include "widget.h"
 #include "window.h"
+#include <chrono>
+#include <numeric>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <sys/timerfd.h>
 #include <unistd.h>
-#include <chrono>
-#include <numeric>
 
 using namespace std;
-
-static int epoll_fd = -1;
 
 namespace mui
 {
@@ -25,6 +24,14 @@ namespace mui
         event_callback func;
         void* data;
     };
+
+    EventLoop::EventLoop()
+    {
+        init();
+    }
+
+    EventLoop::~EventLoop()
+    {}
 
     void EventLoop::init()
     {
@@ -47,8 +54,6 @@ namespace mui
 
     void EventLoop::add_fd(int fd, uint32_t mask, event_callback func, void* data)
     {
-        EventLoop::init();
-
         assert(fd >= 0);
 
         event_source* source;
@@ -77,8 +82,6 @@ namespace mui
 
     int EventLoop::wait(int timeout)
     {
-        EventLoop::init();
-
         struct epoll_event ep[32];
         event_source* source;
         int i, count;
@@ -112,8 +115,6 @@ namespace mui
 
     int EventLoop::run()
     {
-        EventLoop::init();
-
 #ifdef STATS
         vector<uint64_t> times;
 #endif
@@ -174,7 +175,7 @@ namespace mui
 
         delete tdata;
 
-        EventLoop::rem_fd(fd);
+        main_app().event().rem_fd(fd);
 
         close(fd);
     }

@@ -24,30 +24,60 @@ namespace mui
                      cairo_image_surface_get_height(m_image.get()));
     }
 
-    void Image::scale(double hscale, double vscale)
+    void Image::scale(double hscale, double vscale, bool approximate)
     {
         if (m_hscale != hscale || m_vscale != vscale)
         {
-            damage();
+            m_image = image_cache.get(m_filename, hscale, vscale, approximate);
 
-            m_image = image_cache.get(m_filename, hscale, vscale, false);
-
-            size(Size(cairo_image_surface_get_width(m_image.get()),
-                      cairo_image_surface_get_height(m_image.get())));
+            Widget::resize(Size(cairo_image_surface_get_width(m_image.get()),
+                                cairo_image_surface_get_height(m_image.get())));
             m_hscale = hscale;
             m_vscale = vscale;
-
-            damage();
         }
     }
 
-    void Image::draw(const Rect& rect)
+    void Image::draw(Painter& painter, const Rect& rect)
     {
-        Painter painter(screen()->context());
-        painter.draw_image(Rect(rect.point() - box().point(), rect.size()), rect.point(), m_image);
+        painter.draw_image(Rect(rect.point() - box().point(), rect.size()),
+                           rect.point(), m_image);
     }
 
     Image::~Image()
     {}
 
+    ImageText::ImageText(const std::string& image,
+                         const std::string& text,
+                         const Point& point,
+                         const Font& font)
+        : Image(image, point),
+          m_text(text),
+          m_font(font),
+          m_label(true)
+    {
+
+    }
+
+    void ImageText::draw(Painter& painter, const Rect& rect)
+    {
+        Image::draw(painter, rect);
+
+        if (m_label)
+            painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
+                              ALIGN_BOTTOM | ALIGN_CENTER, 0, m_font);
+
+    }
+
+    void ImageText::label_enabled(bool value)
+    {
+        if (m_label != value)
+        {
+            m_label = value;
+            damage();
+        }
+    }
+
+    ImageText::~ImageText()
+    {
+    }
 }

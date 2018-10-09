@@ -67,7 +67,6 @@ namespace mui
     protected:
 
         // unsupported
-        virtual void size(const Size& size) { /* Not supported yet. */ }
         virtual void resize(const Size& size) { /* Not supported yet. */ }
 
         virtual IScreen* screen()
@@ -104,22 +103,11 @@ namespace mui
 
         virtual void damage(const Rect& rect);
 
-        virtual void position(const Point& point);
+        virtual void resize(const Size& size);
+
         virtual void move(const Point& point);
 
         virtual void draw();
-
-#if 0
-        // why can't i see this from Widget::size()?
-        Size size() const
-        {
-            return m_box.size();
-        }
-#endif
-
-        // not supported
-        virtual void size(const Size& size) {}
-        virtual void resize(const Size& size);
 
         virtual void hide() { /** TODO: no way to hide. */  }
 
@@ -129,6 +117,21 @@ namespace mui
         uint32_t m_format;
         bool m_dirty = {true};
         bool m_heo;
+    };
+
+    class Popup : public PlaneWindow
+    {
+    public:
+        explicit Popup(const Size& size = Size(),
+                       const Point& point = Point())
+            : PlaneWindow(size)
+        {
+            move(point);
+        }
+
+        virtual void show()
+        {
+        }
     };
 
     Window*& main_window();

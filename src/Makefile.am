@@ -1,5 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/include/mui -I$(top_srcdir)/src/images/jpeg
+if HAVE_KPLOT
+AM_CXXFLAGS += -I$(top_srcdir)/src/kplot/
+endif
 
 lib_LTLIBRARIES = libmui.la
 libmui_la_CXXFLAGS = $(AM_CXXFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS)
@@ -35,6 +38,11 @@ widget.cpp \
 window.cpp \
 x11screen.cpp
 
+libmui_la_LIBADD =
+if HAVE_KPLOT
+libmui_la_LIBADD += libkplot.a
+endif
+
 if HAVE_LIBJPEG
 libmui_la_SOURCES += \
 images/jpeg/cairo_jpg.c \
@@ -66,7 +74,7 @@ $(top_srcdir)/include/mui/sprite.h \
 $(top_srcdir)/include/mui/text.h \
 $(top_srcdir)/include/mui/timer.h \
 $(top_srcdir)/include/mui/tools.h \
-$(top_srcdir)/include/mui/ui.h \
+$(top_srcdir)/include/mui/ui \
 $(top_srcdir)/include/mui/utils.h \
 $(top_srcdir)/include/mui/valuewidget.h \
 $(top_srcdir)/include/mui/video.h \
@@ -78,3 +86,48 @@ libmui_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = $(top_builddir)/libmui.pc
+
+if HAVE_KPLOT
+noinst_LIBRARIES = libkplot.a
+
+kplot/compat.h: kplot/compat.pre.h kplot/compat.post.h
+	( cat kplot/compat.pre.h ; \
+	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh kplot/compat.sh reallocarray ; \
+	  cat kplot/compat.post.h ; ) >$@
+
+libkplot_a_SOURCES = \
+kplot/compat.h \
+kplot/compat.post.h \
+kplot/compat.pre.h \
+kplot/colours.c \
+kplot/extern.h \
+kplot/kplot.h \
+kplot/array.c \
+kplot/border.c \
+kplot/bucket.c \
+kplot/buffer.c \
+kplot/draw.c \
+kplot/grid.c \
+kplot/hist.c \
+kplot/label.c \
+kplot/kdata.c \
+kplot/kplot.c \
+kplot/margin.c \
+kplot/mean.c \
+kplot/plotctx.c \
+kplot/reallocarray.c \
+kplot/stddev.c \
+kplot/test-reallocarray.c \
+kplot/tic.c \
+kplot/vector.c
+libkplot_a_CFLAGS = $(AM_CFLAGS) $(CAIRO_CFLAGS) -fPIC
+
+CLEANFILES = kplot/compat.h
+BUILT_SOURCES = kplot/compat.h
+
+dist-hook:
+	for file in $(BUILT_SOURCES) ; do \
+		rm -f $(distdir)/$$file ; \
+	done
+
+endif

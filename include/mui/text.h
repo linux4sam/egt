@@ -27,7 +27,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~TextBox();
 

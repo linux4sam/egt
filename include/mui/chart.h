@@ -10,16 +10,9 @@
  * @brief Working with charts.
  */
 
-#include <cairo.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#ifdef HAVE_KPLOT
-#include <kplot.h>
-#endif
+#include <map>
 #include <mui/widget.h>
 #include <vector>
-#include <map>
 
 namespace mui
 {
@@ -27,16 +20,30 @@ namespace mui
 #ifdef HAVE_KPLOT
     /**
      * Implements a basic line chart widget.
+     *
      */
-    class Chart : public Widget
+    class LineChart : public Widget
     {
     public:
-        Chart(const Point& point = Point(),
-              const Size& size = Size());
 
-        virtual void draw(const Rect& rect);
+        // this must mirror struct kpair
+        struct data_pair
+        {
+            double x;
+            double y;
 
-        virtual void data(std::vector<struct kpair> data)
+            bool operator==(const data_pair& rhs) const
+            {
+                return (x == rhs.x) && (y == rhs.y);
+            }
+        };
+
+        LineChart(const Point& point = Point(),
+                  const Size& size = Size());
+
+        virtual void draw(Painter& painter, const Rect& rect);
+
+        virtual void data(const std::vector<struct data_pair>& data)
         {
             if (m_data != data)
             {
@@ -44,9 +51,13 @@ namespace mui
                 damage();
             }
         }
+
+        virtual ~LineChart()
+        {}
+
     protected:
 
-        std::vector<struct kpair> m_data;
+        std::vector<struct data_pair> m_data;
     };
 #endif
 
@@ -59,7 +70,7 @@ namespace mui
         PieChart(const Point& point = Point(),
                  const Size& size = Size());
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual void data(const std::map<std::string, float>& data)
         {

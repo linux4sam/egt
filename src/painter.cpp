@@ -24,10 +24,20 @@ namespace mui
 
     void Painter::begin()
     {
-        cairo_save(m_cr.get());
+
     }
 
     void Painter::end()
+    {
+
+    }
+
+    void Painter::save()
+    {
+        cairo_save(m_cr.get());
+    }
+
+    void Painter::restore()
     {
         cairo_restore(m_cr.get());
     }
@@ -55,7 +65,7 @@ namespace mui
         return *this;
     }
 
-    Painter& Painter::draw_fillrectangle(const Rect& rect)
+    Painter& Painter::draw_fill(const Rect& rect)
     {
         cairo_rectangle(m_cr.get(),
                         rect.x,
@@ -70,6 +80,7 @@ namespace mui
     Painter& Painter::set_line_width(float width)
     {
         cairo_set_line_width(m_cr.get(), width);
+
         return *this;
     }
 
@@ -77,15 +88,7 @@ namespace mui
     {
         cairo_move_to(m_cr.get(), start.x, start.y);
         cairo_line_to(m_cr.get(), end.x, end.y);
-        return *this;
-    }
 
-    Painter& Painter::draw_line(const Point& start, const Point& end, float width)
-    {
-        set_line_width(width);
-        cairo_move_to(m_cr.get(), start.x, start.y);
-        cairo_line_to(m_cr.get(), end.x, end.y);
-        cairo_stroke(m_cr.get());
         return *this;
     }
 
@@ -95,11 +98,12 @@ namespace mui
         double h = cairo_image_surface_get_height(surface.get());
         cairo_set_source_surface(m_cr.get(), surface.get(), point.x, point.y);
         cairo_rectangle(m_cr.get(), point.x, point.y, w, h);
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
         cairo_fill(m_cr.get());
 
         if (bw)
         {
+            AutoSaveRestore sr(*this);
+
             cairo_set_source_rgb(m_cr.get(), 0, 0, 0);
             cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_HSL_COLOR);
             cairo_mask_surface(m_cr.get(),
@@ -107,6 +111,7 @@ namespace mui
                                point.x,
                                point.y);
         }
+
         return *this;
     }
 
@@ -116,17 +121,10 @@ namespace mui
      */
     Painter& Painter::draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface)
     {
-#if 1
         cairo_set_source_surface(m_cr.get(), surface.get(), point.x - rect.x, point.y - rect.y);
         cairo_rectangle(m_cr.get(), point.x, point.y, rect.w, rect.h);
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
         cairo_fill(m_cr.get());
-#else
-        cairo_set_source_surface(m_cr.get(), surface.get(), point.x, point.y);
-        cairo_rectangle(m_cr.get(), rect.x, rect.y, rect.w, rect.h);
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
-        cairo_fill(m_cr.get());
-#endif
+
         return *this;
     }
 
@@ -139,23 +137,31 @@ namespace mui
 
     Painter& Painter::set_font(const Font& font)
     {
+        cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
+        switch (font.weight())
+        {
+        case Font::WEIGHT_BOLD:
+            weight = CAIRO_FONT_WEIGHT_BOLD;
+            break;
+        }
+
+        cairo_font_slant_t slant = CAIRO_FONT_SLANT_NORMAL;
+        switch (font.slant())
+        {
+        case Font::SLANT_ITALIC:
+            slant = CAIRO_FONT_SLANT_ITALIC;
+            break;
+        case Font::SLANT_OBLIQUE:
+            slant = CAIRO_FONT_SLANT_OBLIQUE;
+            break;
+        }
+
         cairo_select_font_face(m_cr.get(),
                                font.face().c_str(),
-                               CAIRO_FONT_SLANT_NORMAL,
-                               CAIRO_FONT_WEIGHT_BOLD);
+                               slant,
+                               weight);
         cairo_set_font_size(m_cr.get(), font.size());
-        return *this;
-    }
 
-    Painter& Painter::draw_text(const Point& point, const std::string& str)
-    {
-        cairo_text_extents_t textext;
-        cairo_text_extents(m_cr.get(), str.c_str(), &textext);
-
-        cairo_move_to(m_cr.get(), point.x + textext.x_bearing,
-                      point.y - textext.y_bearing);
-        cairo_show_text(m_cr.get(), str.c_str());
-        cairo_stroke(m_cr.get());
         return *this;
     }
 
@@ -173,6 +179,155 @@ namespace mui
                       target.y - textext.y_bearing);
         cairo_show_text(m_cr.get(), str.c_str());
         cairo_stroke(m_cr.get());
+
+        return *this;
+    }
+
+    Painter& Painter::draw_basic_box(const Rect& rect, const Color& border, const Color& bg)
+    {
+        AutoSaveRestore sr(*this);
+
+        double rx = rect.x,
+               ry = rect.y,
+               width = rect.w,
+               height = rect.h,
+               aspect = 1.0,
+               corner_radius = 50/*height*/ / 10.0;
+
+        double radius = corner_radius / aspect;
+        double degrees = M_PI / 180.0;
+
+        cairo_new_sub_path(m_cr.get());
+        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
+        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+        cairo_close_path(m_cr.get());
+
+        cairo_set_source_rgba(m_cr.get(),
+                              bg.redf(),
+                              bg.greenf(),
+                              bg.bluef(),
+                              bg.alphaf());
+        cairo_fill_preserve(m_cr.get());
+
+        cairo_set_source_rgba(m_cr.get(),
+                              border.redf(),
+                              border.greenf(),
+                              border.bluef(),
+                              border.alphaf());
+        cairo_set_line_width(m_cr.get(), 1.0);
+        cairo_stroke(m_cr.get());
+
+        return *this;
+    }
+
+    Painter& Painter::draw_gradient_box(const Rect& rect, const Color& border,
+                                        bool active)
+    {
+        AutoSaveRestore sr(*this);
+
+        double rx = rect.x,
+               ry = rect.y,
+               width = rect.w,
+               height = rect.h,
+               aspect = 1.0,
+               corner_radius = 50 / 10.0;
+
+        double radius = corner_radius / aspect;
+        double degrees = M_PI / 180.0;
+
+        cairo_new_sub_path(m_cr.get());
+        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
+        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+        cairo_close_path(m_cr.get());
+
+        cairo_pattern_t* pat;
+        pat = cairo_pattern_create_linear(rx + width / 2, ry, rx + width / 2, ry + height);
+
+        if (!active)
+        {
+            Color step = Color::WHITE;
+            cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
+            step = Color::WHITE.tint(.9);
+            cairo_pattern_add_color_stop_rgb(pat, 0.43, step.redf(), step.greenf(), step.bluef());
+            step = Color::WHITE.tint(.82);
+            cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
+            step = Color::WHITE.tint(.95);
+            cairo_pattern_add_color_stop_rgb(pat, 1.0, step.redf(), step.greenf(), step.bluef());
+
+            cairo_set_line_width(m_cr.get(), 1.0);
+        }
+        else
+        {
+            Color step = Color::WHITE;
+            cairo_pattern_add_color_stop_rgb(pat, 1, step.redf(), step.greenf(), step.bluef());
+            step = Color::WHITE.tint(.9);
+            cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
+            step = Color::WHITE.tint(.82);
+            cairo_pattern_add_color_stop_rgb(pat, 0.43, step.redf(), step.greenf(), step.bluef());
+            step = Color::WHITE.tint(.95);
+            cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
+
+            cairo_set_line_width(m_cr.get(), 2.0);
+        }
+
+        cairo_set_source(m_cr.get(), pat);
+        cairo_fill_preserve(m_cr.get());
+
+        cairo_set_source_rgba(m_cr.get(),
+                              border.redf(),
+                              border.greenf(),
+                              border.bluef(),
+                              border.alphaf());
+        cairo_set_line_width(m_cr.get(), 1.0);
+        cairo_stroke(m_cr.get());
+
+        return *this;
+    }
+
+    Painter& Painter::draw_text(const std::string& text, const Rect& rect,
+                                const Color& color, int align, int margin,
+                                const Font& font)
+    {
+        AutoSaveRestore sr(*this);
+
+        set_font(font);
+
+        set_color(color);
+
+        draw_text(rect, text, align, margin);
+
+        return *this;
+    }
+
+    Painter& Painter::draw_image(shared_cairo_surface_t image,
+                                 const Rect& dest,
+                                 int align, int margin, bool bw)
+    {
+        auto width = cairo_image_surface_get_width(image.get());
+        auto height = cairo_image_surface_get_height(image.get());
+
+        Rect target = Widget::align_algorithm(Size(width, height), dest, align, margin);
+
+#if 0
+        draw_image(target.point(), image, bw);
+#else
+        paint_surface_with_drop_shadow(
+            image.get(),
+            5,
+            0.2,
+            0.4,
+            target.x,
+            target.y,
+            width,
+            height,
+            target.x,
+            target.y);
+#endif
+
         return *this;
     }
 
@@ -250,94 +405,5 @@ namespace mui
         cairo_set_source_surface(m_cr.get(), source_surface, dstx, dsty);
         cairo_paint(m_cr.get());
     }
-
-#if 0
-    void Painter::draw_border(const Rect& rect)
-    {
-        //auto cr = screen()->context();
-
-        //cairo_save(m_cr.get());
-
-        double rx = rect.x,
-               ry = rect.y,
-               width = rect.w,
-               height = rect.h,
-               aspect = 1.0,
-               corner_radius = 50/*height*/ / 10.0;
-
-        double radius = corner_radius / aspect;
-        double degrees = M_PI / 180.0;
-
-        cairo_new_sub_path(m_cr.get());
-        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
-        cairo_close_path(m_cr.get());
-
-        /*
-            cairo_set_source_rgba(m_cr.get(),
-                                  bg.redf(),
-                                  bg.greenf(),
-                                  bg.bluef(),
-                                  bg.alphaf());
-            cairo_fill_preserve(m_cr.get());
-        */
-
-        /*
-            cairo_set_source_rgba(m_cr.get(),
-                                  border.redf(),
-                                  border.greenf(),
-                                  border.bluef(),
-                                  border.alphaf());
-        */
-        cairo_set_line_width(m_cr.get(), 1.0);
-        cairo_stroke(m_cr.get());
-
-        //cairo_restore(m_cr.get());
-    }
-#endif
-
-#if 0
-    void Painter::draw_box(const Rect& rect)
-    {
-        double rx = rect.x,
-               ry = rect.y,
-               width = rect.w,
-               height = rect.h,
-               aspect = 1.0,
-               corner_radius = 50/*height*/ / 10.0;
-
-        double radius = corner_radius / aspect;
-        double degrees = M_PI / 180.0;
-
-        cairo_new_sub_path(cr.get());
-        cairo_arc(cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-        cairo_arc(cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-        cairo_arc(cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-        cairo_arc(cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
-        cairo_close_path(cr.get());
-
-        /*cairo_set_source_rgba(cr.get(),
-                              bg.redf(),
-                              bg.greenf(),
-                              bg.bluef(),
-                              bg.alphaf());
-        */
-        //cairo_fill_preserve(cr.get());
-        cairo_fill(cr.get());
-
-        /*
-            cairo_set_source_rgba(cr.get(),
-                                  border.redf(),
-                                  border.greenf(),
-                                  border.bluef(),
-                                  border.alphaf());
-            cairo_set_line_width(cr.get(), 1.0);
-            cairo_stroke(cr.get());
-        */
-    }
-#endif
-
 
 }

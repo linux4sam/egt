@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui.h>
+#include <mui/ui>
 #include <math.h>
 #include <string>
 #include <map>
@@ -196,8 +196,8 @@ int main(int argc, const char** argv)
     window->add(&ctrlwindow);
     ctrlwindow.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
 
-    ctrlwindow.position(Point((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
-                              KMSScreen::instance()->size().h - ctrlwindow.h()));
+    ctrlwindow.move(Point((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
+                          KMSScreen::instance()->size().h - ctrlwindow.h()));
 
     set_control_window(&ctrlwindow);
 

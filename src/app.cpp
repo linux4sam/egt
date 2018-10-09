@@ -17,9 +17,17 @@ using namespace std;
 
 namespace mui
 {
+    static Application* the_app = nullptr;
+    Application& main_app()
+    {
+        assert(the_app);
+        return *the_app;
+    }
 
     Application::Application(bool primary, const std::string& name)
     {
+        the_app = this;
+
         setlocale(LC_ALL, "");
         textdomain(name.c_str());
 
@@ -70,7 +78,7 @@ namespace mui
 
     int Application::run()
     {
-        return EventLoop::run();
+        return m_event.run();
     }
 
     Application::~Application()

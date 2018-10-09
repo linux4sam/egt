@@ -8,6 +8,7 @@
 #include <cmath>
 #include <iostream>
 #include <cassert>
+#include "app.h"
 
 using namespace std;
 
@@ -278,8 +279,8 @@ namespace mui
 
     void WidgetPositionAnimator::start()
     {
-        m_fd = EventLoop::start_periodic_timer(33,
-                                               WidgetPositionAnimator::timer_callback, this);
+        m_fd = main_app().event().start_periodic_timer(33,
+                WidgetPositionAnimator::timer_callback, this);
         Animation::start();
     }
 
@@ -300,7 +301,7 @@ namespace mui
         assert(a);
         if (!a->next())
         {
-            EventLoop::cancel_periodic_timer(a->m_fd);
+            main_app().event().cancel_periodic_timer(a->m_fd);
             a->m_fd = -1;
         }
     }

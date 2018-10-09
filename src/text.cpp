@@ -36,17 +36,17 @@ namespace mui
         return Widget::handle(event);
     }
 
-    void TextBox::draw(const Rect& rect)
+    void TextBox::draw(Painter& painter, const Rect& rect)
     {
         // box
-        draw_basic_box(box(),
-                       palette().color(Palette::BORDER),
-                       palette().color(Palette::TEXTBG));
+        painter.draw_basic_box(box(),
+                               palette().color(Palette::BORDER),
+                               palette().color(Palette::TEXTBG));
 
         // text
-        draw_text(m_text, box(),
-                  palette().color(Palette::TEXT),
-                  ALIGN_CENTER | ALIGN_LEFT);
+        painter.draw_text(m_text, box(),
+                          palette().color(Palette::TEXT),
+                          ALIGN_CENTER | ALIGN_LEFT);
     }
 
     TextBox::~TextBox()

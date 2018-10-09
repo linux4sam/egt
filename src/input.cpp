@@ -4,17 +4,18 @@
  */
 
 #include "event_loop.h"
+#include "app.h"
 #include "geometry.h"
 #include "input.h"
 #include "widget.h"
 #include "window.h"
 #include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/input.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
 #include <sys/time.h>
 #include <unistd.h>
@@ -58,7 +59,7 @@ namespace mui
     {
         m_fd = open(path.c_str(), O_RDONLY);
         if (m_fd >= 0)
-            EventLoop::add_fd(m_fd, EVENT_READABLE, InputEvDev::process);
+            main_app().event().add_fd(m_fd, EVENT_READABLE, InputEvDev::process);
         else
             ERR("could not open input device");
     }
@@ -176,7 +177,7 @@ namespace mui
 #ifdef HAVE_TSLIB
 
     static const int SLOTS = 1;
-    static const int SAMPLES = 20;
+    static const int SAMPLES = 40;
     static struct tsdev* ts;
     static struct ts_sample_mt** samp_mt;
     static struct timeval last_down = {0, 0};
@@ -204,7 +205,7 @@ namespace mui
                 }
             }
 
-            EventLoop::add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
+            main_app().event().add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
         }
         else
         {

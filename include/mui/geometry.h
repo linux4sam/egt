@@ -49,6 +49,9 @@ namespace mui
         /**
          * If this point is the center of a circle, return a new point that is
          * on the circumference of the circle at the specified angle.
+        *
+         * @param radius The radius of the circle.
+         * @param angle The angle in radians.
          */
         template <class T>
         T point_on_circumference(T radius, T angle)
@@ -59,12 +62,25 @@ namespace mui
 
         /**
          * Return the angle from this point to get to another.
+        *
          * @param point The other point.
          */
         template <class T>
-        T angle_to_point(const Point& point)
+        T angle_to(const Point& point)
         {
             return std::atan2(point.x - x, y - point.y);
+        }
+
+        /**
+         * Calculate the straight line distance to another point.
+        *
+         * @param point The other point.
+         */
+        template <class T>
+        T distance_to(const Point& point)
+        {
+            return std::sqrt(T((point.x - x) * (point.x - x)) +
+                             T((point.y - y) * (point.y - y)));
         }
 
         bool operator==(const Point& rhs) const
@@ -76,6 +92,7 @@ namespace mui
         {
             return x != rhs.x || y != rhs.y;
         }
+
 
         int x {0};
         int y {0};
@@ -90,7 +107,7 @@ namespace mui
     std::ostream& operator<<(std::ostream& os, const Point& point);
 
     /**
-     * Simple width,height size.
+     * Simple width and height size.
      */
     class Size
     {

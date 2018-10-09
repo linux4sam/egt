@@ -6,13 +6,14 @@
 #ifndef MUI_EVENT_LOOP_H
 #define MUI_EVENT_LOOP_H
 
-#include <stdint.h>
+#include <cstdint>
+#include <functional>
 
 namespace mui
 {
 
-    typedef void (*event_callback)(int fd, uint32_t mask, void* data);
-    typedef void (*timer_event_callback)(int fd, void* data);
+    typedef std::function<void (int fd, uint32_t mask, void* data)> event_callback;
+    typedef std::function<void (int fd, void* data)> timer_event_callback;
 
     enum
     {
@@ -24,27 +25,35 @@ namespace mui
     {
     public:
 
-        static void init();
+        EventLoop();
 
-        static void add_fd(int fd, uint32_t mask, event_callback func, void* data = 0);
+        ~EventLoop();
 
-        static void rem_fd(int fd);
+        void add_fd(int fd, uint32_t mask, event_callback func, void* data = 0);
 
-        static int wait(int timeout = -1);
+        void rem_fd(int fd);
 
-        static int run();
+        int wait(int timeout = -1);
 
-        static void quit();
+        int run();
 
-        static void close();
+        void quit();
 
-        static int start_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
+        void close();
 
-        static int start_periodic_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
+        int start_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
 
-        static void cancel_periodic_timer(int fd);
+        int start_periodic_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
 
-        static void add_idle_callback(event_callback func);
+        void cancel_periodic_timer(int fd);
+
+        void add_idle_callback(event_callback func);
+
+    protected:
+
+        void init();
+
+        int epoll_fd {-1};
     };
 
 }

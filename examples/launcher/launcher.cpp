@@ -2,59 +2,80 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui.h>
+#include <array>
 #include <cmath>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
+#include <cstdio>
 #include <iostream>
+#include <map>
+#include <memory>
+#include <mui/ui>
+#include <rapidxml.hpp>
+#include <rapidxml_utils.hpp>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace mui;
 
 static float sliding_scale(int win_w, int item_w, int item_pos,
-                           float min = 0.3, float max = 2.0)
+                           float min = 0.5, float max = 2.0)
 {
     float range = win_w / 2;
-    float delta = fabs(range - (item_pos + (item_w / 2)));
+    float delta = std::fabs(range - (item_pos + (item_w / 2)));
     float scale = 1.0 - (delta / range);
     if (scale < min || scale > max)
         return min;
     return scale;
 }
 
-#define NUM_ITEMS 10
+#if 0
+static std::string exec(const char* cmd)
+{
+    std::array<char, 128> buffer;
+    std::string result;
+    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    if (!pipe)
+        throw std::runtime_error("popen() failed!");
+    while (!feof(pipe.get()))
+    {
+        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+            result += buffer.data();
+    }
+    return result;
+}
+#endif
 
-class LauncherWindow;
-class ThermostatWindow;
+#define SPACE 250
 
-static LauncherWindow* win1;
-static ThermostatWindow* win2;
-static Window* win3;
-static Window* win4;
-
-
-class MyImage : public Image
+/*
+ *
+ */
+class LauncherItem : public ImageText
 {
 public:
-    MyImage(LauncherWindow* win, Window* target, const string& filename, int x = 0, int y = 0)
-        : Image(filename, Point(x, y)),
-          m_win(win),
-          m_target(target),
+    LauncherItem(int num, const string& name, const string& description,
+                 const string& image, const string& exec, int x = 0, int y = 0)
+        : ImageText(image, name, Point(x, y)),
+          m_num(num),
           m_fd(-1),
-          m_animation(0, 600, MyImage::animate, 1000, easing_snap, this)
-    {}
+          m_animation(0, 600, LauncherItem::animate, 1000, easing_snap, this),
+          m_name(name),
+          m_description(description),
+          m_exec(exec)
+    {
+        palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
+        Font newfont;
+        newfont.size(24);
+        font(newfont);
+    }
 
     static void animate(float value, void* data)
     {
-        MyImage* image = reinterpret_cast<MyImage*>(data);
-        assert(image);
-
-        image->scale(value, value);
+        LauncherItem* item = reinterpret_cast<LauncherItem*>(data);
+        assert(item);
+        item->scale(value, value);
     }
-
-    static void timer_callback(int fd, void* data);
 
     int handle(int event)
     {
@@ -64,184 +85,127 @@ public:
         {
             if (!m_animation.running())
             {
+#if 0
                 m_animation.set_easing_func(easing_snap);
                 m_animation.starting(hscale());
                 m_animation.ending(hscale() + 0.2);
                 m_animation.duration(500);
                 m_animation.start();
-                m_fd = EventLoop::start_periodic_timer(1, MyImage::timer_callback, this);
+                m_fd = EventLoop::start_periodic_timer(1, LauncherItem::timer_callback, this);
+#endif
                 return 1;
             }
 
             break;
         }
-        case EVT_MOUSE_UP:
-            //EventLoop::quit();
-            break;
         }
 
         return Image::handle(event);
     }
 
+    void scale_box(int pos)
+    {
+        auto c = center();
+        float s = sliding_scale(parent()->w(), w(), pos);
+        label_enabled(s > 0.9);
+        scale(s, s, true);
+        move_to_center(c);
+    }
+
+    static void timer_callback(int fd, void* data)
+    {
+        LauncherItem* item = reinterpret_cast<LauncherItem*>(data);
+        assert(item);
+
+        if (!item->m_animation.next())
+        {
+            item->scale_box(item->x());
+            main_app().event().cancel_periodic_timer(item->m_fd);
+
+            // TODO: exec
+        }
+    }
+
+    inline int num() const { return m_num; }
+
 private:
-    LauncherWindow* m_win;
-    Window* m_target;
+    int m_num;
     int m_fd;
     Animation m_animation;
+    string m_name;
+    string m_description;
+    string m_exec;
 };
 
-class ThermostatWindow : public Window
+#if 0
+static bool debounce_mouse(int delta)
 {
-    WidgetPositionAnimator* m_a1;
-    WidgetPositionAnimator* m_a2;
-    WidgetPositionAnimator* m_a3;
+    static Point pos;
+    bool res = false;
 
-    ImageLabel* il1;
-    ImageLabel* il2;
-    ImageLabel* il3;
-    Label* l1;
-
-public:
-    ThermostatWindow(const Size& size = Size())
-        : Window(size)
+    if (delta)
     {
+        if (std::abs(pos.x - mouse_position().x) > delta ||
+            std::abs(pos.y - mouse_position().y) > delta)
+        {
+            res = true;
+        }
     }
 
-    virtual void exit()
-    {
-        Window::exit();
+    pos = mouse_position();
 
-        m_a1->reset();
-        m_a2->reset();
-        m_a3->reset();
-    }
+    return res;;
+}
+#endif
 
-    virtual void enter()
-    {
-        Window::enter();
-
-        m_a1->start();
-        m_a2->start();
-        m_a3->start();
-    }
-
-    virtual int load()
-    {
-        Image* img = new Image("background2.png");
-        add(img);
-
-        Radial* radial1 = new Radial(Point(800 / 2 - 350 / 2, 480 / 2 - 350 / 2), Size(350, 350));
-        add(radial1);
-        radial1->label(" F");
-        radial1->value(300);
-
-        m_a2 = new WidgetPositionAnimator(radial1,
-                                          WidgetPositionAnimator::CORD_Y,
-                                          -350, 480 / 2 - 350 / 2,
-                                          1000,
-                                          easing_snap);
-
-        il1 = new ImageLabel("day.png",
-                             "Day",
-                             Point(40, 150),
-                             Size(200, 64),
-                             mui::Font(32));
-        il1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color(0x80808055))
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        add(il1);
-        il2 = new ImageLabel("night.png",
-                             "Night",
-                             Point(40, 214),
-                             Size(200, 64),
-                             mui::Font(32));
-        il2->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color(0x80808055))
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        add(il2);
-        il3 = new ImageLabel("vacation.png",
-                             "Vacation",
-                             Point(40, 278),
-                             Size(200, 64),
-                             mui::Font(32));
-        il3->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        add(il3);
-
-        m_a1 = new WidgetPositionAnimator({il1, il2, il3},
-                                          WidgetPositionAnimator::CORD_X,
-                                          -200, 40,
-                                          1500,
-                                          easing_snap);
-
-        Slider* slider1 = new Slider(0, 100,
-                                     Point(700, 100),
-                                     Size(50, 300),
-                                     Slider::ORIENTATION_VERTICAL);
-        add(slider1);
-        slider1->position(50);
-
-        l1 = new Label("Fan",
-                       Point(700, 390),
-                       Size(50, 64),
-                       ALIGN_CENTER,
-                       mui::Font(16));
-        add(l1);
-        l1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY)
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-
-        m_a3 = new WidgetPositionAnimator({slider1, l1},
-                                          WidgetPositionAnimator::CORD_X,
-                                          800, 700,
-                                          1500,
-                                          easing_snap);
-
-        m_a1->reset();
-        m_a2->reset();
-        m_a3->reset();
-
-        return 0;
-    }
-};
-
+/**
+ *
+ */
 class LauncherWindow : public Window
 {
 public:
     LauncherWindow()
-        : m_moving(false)
-    {}
-
-    virtual int load()
     {
-        Image* img = new Image("background.png");
-        add(img);
+        add(new Image("background.jpg"));
 
-        for (int t = 0; t < NUM_ITEMS; t++)
+        auto logo = new Image("logo.png");
+        add(logo);
+        logo->align(ALIGN_LEFT | ALIGN_TOP, 10);
+
+        auto settings = new Image("settings.png");
+        add(settings);
+        settings->align(ALIGN_RIGHT | ALIGN_TOP, 10);
+
+        add(&m_plane);
+        m_plane.resize(size());
+        m_plane.show();
+    }
+
+    virtual int load(const string& file)
+    {
+        rapidxml::file<> xml_file(file.c_str());
+        rapidxml::xml_document<> doc;
+        doc.parse<0>(xml_file.data());
+
+        int num = 0;
+        rapidxml::xml_node<>* root_node = doc.first_node("menu");
+        for (rapidxml::xml_node<>* node = root_node->first_node("item"); node; node = node->next_sibling())
         {
-            Window* win = 0;
-            switch (t)
-            {
-            case 0:
-                win = win2;
-                break;
-            case 1:
-                win = win3;
-                break;
-            case 2:
-                win = win4;
-                break;
-            }
+            string name = node->first_attribute("name")->value();
+            string description = node->first_node("description")->value();
+            string image = node->first_node("image")->value();
+            string exec = node->first_node("exec")->value();
 
-            stringstream os;
-            os << "_image" << t << ".png";
-            MyImage* box = new MyImage(this, (Window*)win, os.str());
-            add(box);
+            LauncherItem* box = new LauncherItem(num++, name, description, image, exec);
+            m_plane.add(box);
 
-            box->position(Point(t * 200, (h() / 2) - (box->h() / 2)));
-            m_boxes[t] = box;
+            box->move_to_center(Point(m_boxes.size() * SPACE, h() / 2));
+            box->scale_box(m_boxes.size() * SPACE - box->w() / 2);
 
-            scale_box(box, t * 200);
+            m_boxes.push_back(box);
         }
 
-        for (int t = 0; t < NUM_ITEMS; t++)
-            m_positions[t] = m_boxes[t]->x();
+        start_snap();
 
         return 0;
     }
@@ -259,158 +223,125 @@ public:
             {
                 m_moving = true;
                 m_moving_x = mouse_position().x;
-                for (int t = 0; t < NUM_ITEMS; t++)
-                    m_positions[t] = m_boxes[t]->x();
+                m_offset = m_boxes[0]->center().x;
+                //debounce_mouse(2);
             }
 
             return 1;
             break;
         case EVT_MOUSE_UP:
             m_moving = false;
+            start_snap();
+            //debounce_mouse(0);
             return 1;
             break;
         case EVT_MOUSE_MOVE:
-
+            //if (debounce_mouse(2))
+            //{
             if (m_moving)
             {
-                move();
+                move_boxes(mouse_position().x);
                 return 1;
             }
+            //}
             break;
         }
 
         return 0;
     }
 
-    void move()
+    void move_boxes(int x)
     {
-        int diff = mouse_position().x - m_moving_x;
+        auto diff = x - m_moving_x;
 
-        for (int t = 0; t < NUM_ITEMS; t++)
+        for (unsigned int t = 0; t < m_boxes.size(); t++)
         {
-            int pos = m_positions[t] + diff;
+            auto pos = m_offset + (m_boxes[t]->num() * SPACE) + diff;
 
             Rect to(m_boxes[t]->box());
             to.x = pos;
-            bool visible = Rect::is_intersect(Rect::merge(to, m_boxes[t]->box()), this->box());
 
+            bool visible = Rect::is_intersect(Rect::merge(to, m_boxes[t]->box()), this->box());
             if (visible)
             {
-                scale_box(m_boxes[t], pos);
-                m_boxes[t]->move(Point(pos, m_boxes[t]->y()));
+                m_boxes[t]->move_to_center(Point(pos, m_boxes[t]->center().y));
+                m_boxes[t]->scale_box(pos - m_boxes[t]->w() / 2);
             }
             else
             {
-                m_boxes[t]->position(Point(pos, m_boxes[t]->y()));
+                m_boxes[t]->move_to_center(Point(pos, m_boxes[t]->center().y));
             }
         }
     }
 
-    void scale_box(MyImage* image, int pos)
+    void start_snap()
     {
-        float scale = sliding_scale(this->w(), image->w(), pos);
-        image->scale(scale, scale);
+        if (m_animation)
+            delete m_animation;
+
+        auto center = box().center();
+        auto distance = w();
+
+        for (auto& box : m_boxes)
+        {
+            if (center.distance_to<int>(box->box().center()) < std::abs(distance))
+            {
+                distance = center.distance_to<int>(box->box().center());
+                if (center.x < box->box().center().x)
+                    distance *= -1;
+            }
+        }
+
+        m_animation = new Animation(0, distance, LauncherWindow::animate, 200,
+                                    easing_snap, this);
+        m_animation->start();
+        m_fd = main_app().event().start_periodic_timer(1, LauncherWindow::timer_callback, this);
+
+        m_moving_x = 0;
+        m_offset = m_boxes[0]->center().x;
+    }
+
+    static void animate(float value, void* data)
+    {
+        LauncherWindow* item = reinterpret_cast<LauncherWindow*>(data);
+        assert(item);
+        item->move_boxes(value);
+    }
+
+    static void timer_callback(int fd, void* data)
+    {
+        LauncherWindow* item = reinterpret_cast<LauncherWindow*>(data);
+        assert(item);
+
+        if (!item->m_animation->next())
+        {
+            main_app().event().cancel_periodic_timer(item->m_fd);
+
+            // TODO: exec
+        }
     }
 
 private:
-    bool m_moving;
-    int m_moving_x;
-    int m_positions[NUM_ITEMS];
-    MyImage* m_boxes[NUM_ITEMS];
+    PlaneWindow m_plane;
+    bool m_moving {false};
+    int m_moving_x {0};
+    int m_offset {0};
+    vector<LauncherItem*> m_boxes;
+    Animation* m_animation {nullptr};
+    int m_fd {-1};
 };
 
-void MyImage::timer_callback(int fd, void* data)
-{
-    MyImage* image = reinterpret_cast<MyImage*>(data);
-    assert(image);
-
-    if (!image->m_animation.next())
-    {
-        image->m_win->scale_box(image, image->x());
-        EventLoop::cancel_periodic_timer(image->m_fd);
-
-        if (image->m_target)
-        {
-            main_window()->exit();
-            main_window() = image->m_target;
-            main_window()->enter();
-        }
-    }
-}
+#define SHARED_PATH "/root/mui/share/mui/examples/launcher/"
 
 int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/launcher/");
+    set_image_path(SHARED_PATH);
 
-    win1 = new LauncherWindow;
-
-    win2 = new ThermostatWindow;
-    win2->load();
-
-    struct MyButton : public Image
-    {
-        MyButton(const std::string& image, const Point& point = Point())
-            : Image(image, point)
-        {}
-
-        int handle(int event)
-        {
-            switch (event)
-            {
-            case EVT_MOUSE_DOWN:
-            {
-                main_window()->exit();
-                main_window() = win1;
-                main_window()->enter();
-                return 1;
-            }
-            }
-            return Image::handle(event);
-        }
-    };
-
-    win3 = new Window();
-    win3->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-
-    PieChart pie2(Point(200, 40), Size(400, 400));
-    win3->add(&pie2);
-
-    std::map<std::string, float> data;
-    data.insert(make_pair("truck", .25));
-    data.insert(make_pair("car", .55));
-    data.insert(make_pair("bike", .10));
-    data.insert(make_pair("motorcycle", .10));
-    pie2.data(data);
-
-    win4 = new Window();
-    win4->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-
-#ifdef HAVE_KPLOT
-    Chart chart1(Point(0, 0), Size(800, 480));
-    win4->add(&chart1);
-    std::vector<struct kpair> data2;
-    for (int i = 0; i < 500; i++)
-    {
-        struct kpair p;
-        p.x = i;
-        p.y = sinf(float(i) / 10.);
-        data2.push_back(p);
-    }
-    chart1.data(data2);
-#endif
-
-    MyButton home1("home.png", Point(10, 10));
-    win1->add(&home1);
-    MyButton home2("home.png", Point(10, 10));
-    win2->add(&home2);
-    MyButton home3("home.png", Point(10, 10));
-    win3->add(&home3);
-    MyButton home4("home.png", Point(10, 10));
-    win4->add(&home4);
-
-    win1->load();
+    LauncherWindow win;
+    win.load(SHARED_PATH "menu.xml");
+    win.show();
 
     return app.run();
 }

@@ -6,6 +6,7 @@
 #include "event_loop.h"
 #include <cassert>
 #include <unistd.h>
+#include "app.h"
 
 namespace mui
 {
@@ -21,7 +22,7 @@ namespace mui
         //if (m_fd >= 0)
         //  cancel();
 
-        m_fd = EventLoop::start_timer(m_duration, Timer::timer_callback, this);
+        m_fd = main_app().event().start_timer(m_duration, Timer::timer_callback, this);
     }
 
     void Timer::start(uint64_t duration)
@@ -65,14 +66,14 @@ namespace mui
 
     void PeriodicTimer::start()
     {
-        m_fd = EventLoop::start_periodic_timer(m_duration, PeriodicTimer::timer_callback, this);
+        m_fd = main_app().event().start_periodic_timer(m_duration, PeriodicTimer::timer_callback, this);
     }
 
     void PeriodicTimer::cancel()
     {
         if (m_fd >= 0)
         {
-            EventLoop::cancel_periodic_timer(m_fd);
+            main_app().event().cancel_periodic_timer(m_fd);
             close(m_fd);
             m_fd = -1;
         }

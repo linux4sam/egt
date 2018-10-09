@@ -10,7 +10,7 @@
 #include <iostream>
 #include <map>
 #include <math.h>
-#include <mui/ui.h>
+#include <mui/ui>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -136,7 +136,7 @@ int main()
         PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
         plane->add(image);
         plane->show();
-        plane->position(Point(100, 100));
+        plane->move(Point(100, 100));
         boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
     }
 #endif

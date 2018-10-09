@@ -34,7 +34,17 @@ namespace mui
         {
             WEIGHT_NORMAL = 0,
             WEIGHT_BOLD = 1,
-            WEIGHT_ITALIC = 2
+        };
+
+
+        /**
+         * Font slants.
+         */
+        enum
+        {
+            SLANT_NORMAL = 0,
+            SLANT_ITALIC = 1,
+            SLANT_OBLIQUE = 2,
         };
 
         //@{
@@ -60,7 +70,7 @@ namespace mui
         /**
          * Create a font based on the supplied parameters.
          */
-        explicit Font(const std::string& face, int size, int weight);
+        explicit Font(const std::string& face, int size, int weight, int slant);
 
         /**
          * Create a font based on the global default font, but with the
@@ -85,9 +95,19 @@ namespace mui
         virtual int size() const { return m_size; }
 
         /**
+         * Set the size of the font.
+         */
+        virtual void size(int s) { m_size = s; }
+
+        /**
          * Get the weight of the font.
          */
         virtual int weight() const { return m_weight; }
+
+        /**
+         * Get the slant of the font.
+         */
+        virtual int slant() const { return m_slant; }
 
         virtual ~Font()
         {}
@@ -97,6 +117,7 @@ namespace mui
         std::string m_face;
         int m_size;
         int m_weight;
+        int m_slant;
     };
 
 }

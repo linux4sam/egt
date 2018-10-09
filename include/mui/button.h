@@ -30,7 +30,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~Button();
     };
@@ -47,7 +47,7 @@ namespace mui
                     const Size& size = Size(),
                     bool border = true);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual void set_image(const std::string& image);
 

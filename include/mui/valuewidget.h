@@ -64,7 +64,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
     protected:
         std::string m_label;
@@ -135,7 +135,7 @@ namespace mui
     public:
         ProgressBar(const Point& point = Point(), const Size& size = Size());
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
     };
 
     /**
@@ -146,7 +146,7 @@ namespace mui
     public:
         LevelMeter(const Point& point = Point(), const Size& size = Size());
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
     };
 
     /**
@@ -159,7 +159,7 @@ namespace mui
     public:
         AnalogMeter(const Point& point = Point(), const Size& size = Size());
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
     protected:
         Font m_font;
@@ -170,7 +170,7 @@ namespace mui
     public:
         SpinProgress(const Point& point = Point(), const Size& size = Size());
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
     };
 
     /**
@@ -191,7 +191,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         inline int position() const { return m_pos; }
 

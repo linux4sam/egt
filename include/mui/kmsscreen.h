@@ -10,7 +10,10 @@
  * @brief Working with KMS screens.
  */
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
 #include <mui/screen.h>
 #include <mui/window.h>
 #include <mui/geometry.h>

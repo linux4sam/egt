@@ -2,13 +2,16 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "chart.h"
+#include <cmath>
+#include <vector>
 #ifdef HAVE_KPLOT
 #include "kplot.h"
 #endif
-#include <iostream>
-#include <cmath>
-#include <vector>
 
 using namespace std;
 
@@ -20,24 +23,21 @@ namespace mui
         sprintf(b, "%.02f", v);
     }
 
-    Chart::Chart(const Point& point, const Size& size)
+    LineChart::LineChart(const Point& point, const Size& size)
         : Widget(point, size)
-    {
-    }
+    {}
 
-    void Chart::draw(const Rect& rect)
+    void LineChart::draw(Painter& painter, const Rect& rect)
     {
         struct kdata* d1;
         struct kplot* p;
 
-        d1 = kdata_array_alloc(&m_data[0], m_data.size());
+        d1 = kdata_array_alloc(reinterpret_cast<kpair*>(&m_data[0]), m_data.size());
         p = kplot_alloc(NULL);
         struct kplotcfg* cfg = kplot_get_plotcfg(p);
-        //cout << cfg->clrsz << endl;
-        //cfg->grid = 0;
         cfg->xticlabelfmt = xticlabelfmt;
         cfg->yticlabelfmt = xticlabelfmt;
-        Color tc(Color::GRAY);
+        auto tc = palette().color(Palette::BORDER);
         cfg->borderline.clr.type = KPLOTCTYPE_RGBA;
         cfg->borderline.clr.rgba[0] = tc.redf();
         cfg->borderline.clr.rgba[1] = tc.bluef();
@@ -69,7 +69,13 @@ namespace mui
 
         kplot_attach_data(p, d1, KPLOT_LINES, &dcfg);
 
-        cairo_set_source_rgb(cr.get(), 0, 0, 0);
+        auto bg = palette().color(Palette::BG);
+        cairo_set_source_rgba(cr.get(),
+                              bg.redf(),
+                              bg.greenf(),
+                              bg.bluef(),
+                              bg.alphaf());
+
         cairo_rectangle(cr.get(), x(), y(), w(), h());
         cairo_fill(cr.get());
         kplot_draw(p, w(), h(), cr.get());
@@ -85,7 +91,7 @@ namespace mui
         : Widget(point, size)
     {}
 
-    void PieChart::draw(const Rect& rect)
+    void PieChart::draw(Painter& painter, const Rect& rect)
     {
         static const vector<Color> piecolors =
         {
@@ -157,7 +163,6 @@ namespace mui
         }
 
         cairo_restore(cr.get());
-
     }
 
 }

@@ -6,9 +6,9 @@ endif
 SUBDIRS = $(OPTIONAL)
 
 AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include \
-	$(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS)
+	$(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) $(RAPIDXML_CFLAGS)
 
-LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) $(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS)
+LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) $(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) $(RAPIDXML_LIBS)
 
 #CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -flto -fwhole-program"
 #LDFLAGS="$LDFLAGS -flto -fwhole-program"
@@ -57,7 +57,9 @@ launcher_launcher_SOURCES = launcher/launcher.cpp
 launcher_launcher_CXXFLAGS = $(AM_CXXFLAGS)
 launcher_launcher_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
 launcher_launcherdir = $(prefix)/share/mui/examples/launcher
-launcher_launcher_DATA = $(wildcard $(top_srcdir)/examples/launcher/*.png)
+launcher_launcher_DATA = $(wildcard $(top_srcdir)/examples/launcher/*.png) \
+	$(top_srcdir)/examples/launcher/menu.xml \
+	$(top_srcdir)/examples/launcher/background.jpg
 launcher_launcher_LDFLAGS = $(AM_LDFLAGS)
 
 space_space_SOURCES = space/space.cpp

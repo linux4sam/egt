@@ -10,13 +10,12 @@
  * @brief Working with screens.
  */
 
-#include <mui/color.h>
-#include <mui/geometry.h>
 #include <cairo.h>
-#include <vector>
+#include <drm_fourcc.h>
 #include <list>
 #include <memory>
-#include <drm_fourcc.h>
+#include <mui/geometry.h>
+#include <vector>
 
 namespace mui
 {
@@ -36,26 +35,23 @@ namespace mui
 
         IScreen();
 
-        virtual void blit(cairo_surface_t* surface,
-                          int srcx, int srcy,
-                          int srcw, int srch,
-                          int dstx, int dsty,
-                          bool blend = true);
-
-        virtual void fill(const Color& color = Color::RED);
-
         virtual void flip(const damage_array& damage);
 
         virtual void schedule_flip() {}
-        virtual uint32_t index() { return 0; }
 
-        virtual void rect(const Rect& rect, const Color& color);
+        virtual uint32_t index() { return 0; }
 
         Size size() const { return m_size; }
 
         shared_cairo_t context() const { return m_cr; }
 
         virtual ~IScreen();
+
+        /**
+         * This function implements the algorithm for adding damages rectangles
+         * to a list.
+         */
+        static void damage_algorithm(IScreen::damage_array& damage, const Rect& rect);
 
     protected:
 
@@ -74,39 +70,16 @@ namespace mui
 
             void add_damage(const Rect& rect)
             {
-                if (!rect.empty())
-                {
-                    for (auto i = damage.begin(); i != damage.end(); ++i)
-                    {
-                        if (Rect::is_intersect(*i, rect))
-                        {
-                            Rect super(Rect::merge(*i, rect));
-#if 1
-                            /*
-                             * if the area of the two rectangles minus their
-                             * intersection area is smaller than the area of the super
-                             * rectangle, then don't merge
-                             */
-                            Rect intersect(Rect::intersect(*i, rect));
-                            if (((*i).area() + rect.area() - intersect.area()) < super.area())
-                            {
-                                break;
-                            }
-#endif
-                            damage.erase(i);
-                            add_damage(super);
-                            return;
-                        }
-                    }
+                if (rect.empty())
+                    return;
 
-                    // if we get here, no intersect found so add it
-                    damage.push_back(rect);
-                }
+                IScreen::damage_algorithm(damage, rect);
             }
         };
 
         void copy_to_buffer(DisplayBuffer& buffer);
-        void copy_to_buffer_greenscreen(DisplayBuffer& buffer, const damage_array& olddamage);
+        void copy_to_buffer_greenscreen(DisplayBuffer& buffer,
+                                        const damage_array& olddamage);
 
         shared_cairo_surface_t m_surface;
         shared_cairo_t m_cr;

@@ -3,7 +3,7 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include <mui/imagecache.h>
-#include <mui/ui.h>
+#include <mui/ui>
 #include <chrono>
 #include <cmath>
 #include <cstring>
@@ -27,23 +27,6 @@ public:
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}
-
-    void scale(double hscale, double vscale)
-    {
-        if (m_hscale != hscale || m_vscale != vscale)
-        {
-            damage();
-
-            m_image = image_cache.get(m_filename, hscale, vscale, true);
-
-            size(Size(cairo_image_surface_get_width(m_image.get()),
-                      cairo_image_surface_get_height(m_image.get())));
-            m_hscale = hscale;
-            m_vscale = vscale;
-
-            damage();
-        }
-    }
 
     bool animate()
     {
@@ -122,7 +105,7 @@ public:
 
         Bubble* image = new Bubble(xspeed, yspeed, p);
         add(image);
-        image->scale(size, size);
+        image->scale(size, size, true);
         image->move(Point(p.x - image->box().w / 2 + offset,
                           p.y - image->box().h / 2 + offset));
         m_images.push_back(image);

@@ -9,7 +9,13 @@
 #include <iostream>
 #include <sstream>
 #ifdef HAVE_LIBJPEG
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "cairo_jpg.h"
+#ifdef __cplusplus
+}
+#endif
 #endif
 #include <cassert>
 
@@ -52,17 +58,48 @@ namespace mui
             {
                 string name = filename;
                 name.erase(i, 1);
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_png_stream(
-                                read_resource_stream, (void*)name.c_str()),
-                            cairo_surface_destroy);
+
+                /**
+                 * @todo This should use MIME info and not filename.
+                 */
+                if (name.find(".png") != std::string::npos)
+                {
+                    image = shared_cairo_surface_t(
+                                cairo_image_surface_create_from_png_stream(
+                                    read_resource_stream, (void*)name.c_str()),
+                                cairo_surface_destroy);
+                }
+                else if (name.find(".jpg") != std::string::npos)
+                {
+                    image = shared_cairo_surface_t(
+                                cairo_image_surface_create_from_jpeg_stream(
+                                    read_resource_stream, (void*)name.c_str()),
+                                cairo_surface_destroy);
+                }
+                else
+                {
+                    assert(!"unsupported file type");
+                }
             }
             else
             {
                 string name = image_path + filename;
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_png(name.c_str()),
-                            cairo_surface_destroy);
+                if (name.find(".png") != std::string::npos)
+                {
+                    image = shared_cairo_surface_t(
+                                cairo_image_surface_create_from_png(name.c_str()),
+                                cairo_surface_destroy);
+                }
+                else if (name.find(".jpg") != std::string::npos)
+                {
+                    image = shared_cairo_surface_t(
+                                cairo_image_surface_create_from_jpeg(name.c_str()),
+                                cairo_surface_destroy);
+                }
+                else
+                {
+                    assert(!"unsupported file type");
+                }
             }
         }
         else

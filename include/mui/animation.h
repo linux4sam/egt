@@ -14,10 +14,15 @@
 #include <cstdint>
 #include <chrono>
 #include <vector>
+#include <functional>
 
 namespace mui
 {
 
+    /**
+     * Predefined easing functions.
+     * @{
+     */
     float easing_linear(float percent);
     float easing_easy(float percent);
     float easing_easy_slow(float percent);
@@ -30,9 +35,10 @@ namespace mui
     float easing_rubber(float percent);
     float easing_spring(float percent);
     float easing_boing(float percent);
+    /** @} */
 
-    typedef void (*animation_callback)(float value, void* data);
-    typedef float (*easing_func)(float percent);
+    typedef std::function<void (float value, void* data)> animation_callback;
+    typedef std::function<float (float percent)> easing_func;
 
     /**
      * Animation class with configurable easing function.
@@ -62,6 +68,8 @@ namespace mui
         bool running() const { return m_running; }
         void set_easing_func(easing_func func);
         void reverse(bool rev) { m_reverse = rev; }
+
+        virtual ~Animation() {}
 
     protected:
 

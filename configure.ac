@@ -50,7 +50,7 @@ MAYBE_WARN="-Wall -Wextra \
 -Wsign-compare -Werror-implicit-function-declaration \
 -Wpointer-arith -Wwrite-strings \
 -Wmissing-declarations \
--Wpacked \
+-Wpacked -Winline \
 -Wstrict-aliasing=2 -Winit-self \
 -Wno-unused-parameter \
 -Wno-attributes -Wno-long-long \
@@ -113,40 +113,48 @@ AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 #   AC_DEFINE(HAVE_X11, 1, [Have x11 support])
 #fi
 
-PKG_CHECK_MODULES(TSLIB, [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
+AX_PKG_CHECK_MODULES(TSLIB, [], [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
 if test "x${have_tslib}" = xyes; then
    AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
 fi
 
-PKG_CHECK_MODULES(GSTREAMER, [gstreamer-1.0 >= 1.12], [have_gstreamer=yes], [have_gstreamer=no])
+AX_PKG_CHECK_MODULES(GSTREAMER, [], [gstreamer-1.0 >= 1.12], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 
-PKG_CHECK_MODULES(LIBDRM, [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
      libdrm is a hard dependency, but a sufficient version was not found.])])
 
-PKG_CHECK_MODULES(CJSON, [libcjson >= 1.6.0], [], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES(CJSON, [], [libcjson >= 1.6.0], [], [AC_MSG_ERROR([
      cJSON is a hard dependency, but a sufficient version was not found.])])
 
-PKG_CHECK_MODULES(LUA, [lua >= 5.3.1], [], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES(LUA, [], [lua >= 5.3.1], [], [AC_MSG_ERROR([
      liblua is a hard dependency, but a sufficient version was not found.])])
 
-PKG_CHECK_MODULES(LIBPLANES, [libplanes >= 1.0.0], [have_libplanes=yes], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES(LIBPLANES, [], [libplanes >= 1.0.0], [have_libplanes=yes], [AC_MSG_ERROR([
      libplanes is a hard dependency, but a sufficient version was not found.])])
 if test "x${have_libplanes}" = xyes; then
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
 fi
 
-PKG_CHECK_MODULES(CAIRO, [cairo >= 1.14.6], [], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES(CAIRO, [], [cairo >= 1.14.6], [], [AC_MSG_ERROR([
      cairo is a hard dependency, but a sufficient version was not found.])])
 
-PKG_CHECK_MODULES(LIBJPEG, [libjpeg >= 0.28], [have_libjpeg=yes], [have_libjpeg=no])
+AX_PKG_CHECK_MODULES(LIBJPEG, [], [libjpeg >= 0.28], [have_libjpeg=yes], [have_libjpeg=no])
 AM_CONDITIONAL([HAVE_LIBJPEG], [test "x${have_libjpeg}" = xyes])
 if test "x${have_libjpeg}" = xyes; then
    AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
 fi
+
+AC_LANG_PUSH([C++])
+AC_CHECK_HEADERS([rapidxml.hpp], [], [AC_MSG_ERROR([
+     rapidxml is a hard dependency, but a sufficient version was not found.])])
+AC_LANG_POP([C++])
+
+AM_CONDITIONAL([HAVE_KPLOT], [test true])
+AC_DEFINE(HAVE_KPLOT, 1, [Have kplot support])
 
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE

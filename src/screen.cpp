@@ -2,14 +2,15 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#include "mui/color.h"
 #include "screen.h"
-#include <sys/mman.h>
 #include <cassert>
-#include <sys/ioctl.h>
 #include <fcntl.h>
-#include <linux/fb.h>
-#include <unistd.h>
 #include <iostream>
+#include <linux/fb.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -25,49 +26,6 @@ namespace mui
 
     IScreen::IScreen()
     {
-    }
-
-    void IScreen::blit(cairo_surface_t* surface, int srcx, int srcy, int srcw,
-                       int srch, int dstx, int dsty, bool blend)
-    {
-        cairo_save(m_cr.get());
-        cairo_set_source_surface(m_cr.get(), surface, dstx - srcx, dsty - srcy);
-        cairo_rectangle(m_cr.get(), dstx, dsty, srcw, srch);
-        if (blend)
-            cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
-        else
-            cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
-        cairo_fill(m_cr.get());
-        cairo_restore(m_cr.get());
-
-        assert(cairo_status(m_cr.get()) == CAIRO_STATUS_SUCCESS);
-    }
-
-    void IScreen::fill(const Color& color)
-    {
-        cairo_save(m_cr.get());
-        cairo_set_source_rgba(m_cr.get(),
-                              color.redf(),
-                              color.greenf(),
-                              color.bluef(),
-                              color.alphaf());
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
-        cairo_paint(m_cr.get());
-        cairo_restore(m_cr.get());
-    }
-
-    void IScreen::rect(const Rect& rect, const Color& color)
-    {
-        cairo_save(m_cr.get());
-        cairo_set_source_rgba(m_cr.get(),
-                              color.redf(),
-                              color.greenf(),
-                              color.bluef(),
-                              color.alphaf());
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
-        cairo_rectangle(m_cr.get(), rect.x, rect.y, rect.w, rect.h);
-        cairo_fill(m_cr.get());
-        cairo_restore(m_cr.get());
     }
 
     void IScreen::flip(const damage_array& damage)
@@ -139,6 +97,41 @@ namespace mui
     {
     }
 
+    void IScreen::damage_algorithm(IScreen::damage_array& damage, const Rect& rect)
+    {
+        for (auto i = damage.begin(); i != damage.end(); ++i)
+        {
+            // exact rectangle already exists; done
+            if (*i == rect)
+                return;
+
+            // if this rectangle intersects an existin rectangle, the merge
+            // the rectangles and re-add the super rectangle
+            if (Rect::is_intersect(*i, rect))
+            {
+                Rect super(Rect::merge(*i, rect));
+#if 0
+                /*
+                 * If the area of the two rectangles minus their
+                 * intersection area is smaller than the area of the super
+                 * rectangle, then don't merge
+                 */
+                Rect intersect(Rect::intersect(*i, rect));
+                if (((*i).area() + rect.area() - intersect.area()) < super.area())
+                {
+                    break;
+                }
+#endif
+                damage.erase(i);
+                IScreen::damage_algorithm(damage, super);
+                return;
+            }
+        }
+
+        // if we get here, no intersect found so add it
+        damage.push_back(rect);
+    }
+
     void IScreen::init(void** ptr, uint32_t count, int w, int h, uint32_t f)
     {
         cout << "screen " << w << "," << h << endl;
@@ -180,7 +173,8 @@ namespace mui
             buffer.cr = shared_cairo_t(cairo_create(buffer.surface.get()), cairo_destroy);
             assert(buffer.cr);
 
-            buffer.damage.push_back(Rect(0, 0, w, h));
+            //buffer.damage.push_back(Rect(0, 0, w, h));
+            buffer.damage.emplace_back(0, 0, w, h);
 
             m_buffers.push_back(buffer);
         }
@@ -192,6 +186,13 @@ namespace mui
 
         m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
         assert(m_cr);
+
+
+        cairo_font_options_t* cfo = cairo_font_options_create();
+        cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
+        cairo_set_font_options(m_cr.get(), cfo);
+        cairo_font_options_destroy(cfo);
+
 
         if (!the_screen)
             the_screen = this;

@@ -26,9 +26,9 @@ namespace mui
 
         /**
          * Start the timer.
-        *
+         *
          * @note Assumes a duration is set already.
-               */
+         */
         virtual void start();
 
         /**

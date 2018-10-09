@@ -3,7 +3,8 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "frame.h"
-#include <iostream>
+#include "mui/painter.h"
+#include "mui/screen.h"
 
 using namespace std;
 
@@ -108,34 +109,7 @@ namespace mui
 
         DBG(name() << " damage: " << rect);
 
-        for (auto i = m_damage.begin(); i != m_damage.end(); ++i)
-        {
-            if (*i == rect)
-                return;
-
-            if (Rect::is_intersect(*i, rect))
-            {
-                Rect super(Rect::merge(*i, rect));
-#if 1
-                /*
-                 * If the area of the two rectangles minus their
-                 * intersection area is smaller than the area of the super
-                 * rectangle, then don't merge
-                 */
-                Rect intersect(Rect::intersect(*i, rect));
-                if (((*i).area() + rect.area() - intersect.area()) < super.area())
-                {
-                    break;
-                }
-#endif
-                m_damage.erase(i);
-                damage(super);
-                return;
-            }
-        }
-
-        // if we get here, no intersect found so add it
-        m_damage.push_back(rect);
+        IScreen::damage_algorithm(m_damage, rect);
     }
 
     void Frame::damage(const Rect& rect)
@@ -157,7 +131,7 @@ namespace mui
      * @todo Must prevent any call to damage() while in a draw() call.
      * This will not work.
      */
-    void Frame::draw(const Rect& rect)
+    void Frame::draw(Painter& painter, const Rect& rect)
     {
         DBG(name() << " " << __PRETTY_FUNCTION__);
 
@@ -165,7 +139,10 @@ namespace mui
 
         if (!is_flag_set(FLAG_NO_BACKGROUND))
         {
-            screen()->rect(damage, palette().color(Palette::BG));
+            Painter::AutoSaveRestore sr(painter);
+            painter.set_color(palette().color(Palette::BG));
+            cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+            painter.draw_fill(damage);
         }
 
         for (auto& child : m_children)
@@ -182,7 +159,7 @@ namespace mui
             {
                 // don't give a child a rectangle that is outside of its own box
                 auto rect = Rect::intersect(damage, child->box());
-                child->draw(rect);
+                child->draw(painter, rect);
             }
         }
     }
@@ -196,11 +173,16 @@ namespace mui
 
         DBG(name() << " " << __PRETTY_FUNCTION__);
 
+        Painter painter(screen()->context());
+
         for (auto& damage : m_damage)
         {
             if (!is_flag_set(FLAG_NO_BACKGROUND))
             {
-                screen()->rect(damage, palette().color(Palette::BG));
+                Painter::AutoSaveRestore sr(painter);
+                painter.set_color(palette().color(Palette::BG));
+                cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+                painter.draw_fill(damage);
             }
 
             for (auto& child : m_children)
@@ -219,7 +201,11 @@ namespace mui
                 {
                     // don't give a child a rectangle that is outside of its own box
                     auto rect = Rect::intersect(damage, child->box());
-                    child->draw(rect);
+
+                    // should not be necessary
+                    //Painter::AutoSaveRestore sr(painter);
+
+                    child->draw(painter, rect);
                 }
             }
         }

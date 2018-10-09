@@ -15,14 +15,9 @@
 #include "config.h"
 #endif
 
-#include <cassert>
-#include <fcntl.h>
 #include <linux/input.h>
 #include <mui/geometry.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
-#include <unistd.h>
 
 namespace mui
 {

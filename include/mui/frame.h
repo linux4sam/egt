@@ -33,13 +33,13 @@ namespace mui
     {
     public:
 
-	/**
-	 * @param[in] point Point to position the widget at.
-	 * @param[in] point Initial size of the widget.
-	 * @param[in] flags Widget flags.
-	 */
-	explicit Frame(const Point& point, const Size& size,
-		       uint32_t flags = FLAG_NO_BACKGROUND)
+        /**
+         * @param[in] point Point to position the widget at.
+         * @param[in] point Initial size of the widget.
+         * @param[in] flags Widget flags.
+         */
+        explicit Frame(const Point& point, const Size& size,
+                       uint32_t flags = FLAG_NO_BACKGROUND)
             : Widget(point, size, flags | FLAG_FRAME)
         {}
 
@@ -73,13 +73,13 @@ namespace mui
 
         /**
          * Find a child widget by name.
-	 *
-         * @see Widget::name()
-         *
-	 * If you're trying to find a widget in the entire application, you need
-	 * to start at any top level window. This function will only search down
-	 * from where it's called.
-         */
+        *
+               * @see Widget::name()
+               *
+         * If you're trying to find a widget in the entire application, you need
+         * to start at any top level window. This function will only search down
+         * from where it's called.
+               */
         template <class T>
         T find_child(const std::string& name)
         {
@@ -131,7 +131,7 @@ namespace mui
          */
         virtual void damage(const Rect& rect);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         /**
          * @warning Do not call directly.

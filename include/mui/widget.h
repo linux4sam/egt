@@ -31,6 +31,8 @@ namespace mui
     using shared_cairo_t =
         std::shared_ptr<cairo_t>;
 
+    class Painter;
+
     enum
     {
         /**
@@ -87,7 +89,7 @@ namespace mui
         EventWidget() noexcept
         {}
 
-        typedef std::function<void(EventWidget* widget)> handler_callback_t;
+        typedef std::function<void (EventWidget* widget)> handler_callback_t;
 
         virtual void add_handler(handler_callback_t handler)
         {
@@ -124,8 +126,13 @@ namespace mui
     {
     public:
 
+        /**
+         * Alignment flags.
+         */
         enum
         {
+            /** No alignment. */
+            ALIGN_NONE = 0,
             /**
              * Center alignment is a weak alignment both horizontal and
              * vertical. To break one of those dimensions to another
@@ -152,8 +159,10 @@ namespace mui
          * @warning This is not for text. Only for origin at left,top.
          */
         static Rect align_algorithm(const Size& item, const Rect& bounding,
-                                    uint32_t align, int standoff = 0)
+                                    uint32_t align, int margin = 0)
         {
+            assert(align != ALIGN_NONE);
+
             if (align & ALIGN_EXPAND)
                 return bounding;
 
@@ -165,24 +174,24 @@ namespace mui
             }
 
             if (align & ALIGN_LEFT)
-                p.x = bounding.x + standoff;
+                p.x = bounding.x + margin;
             if (align & ALIGN_RIGHT)
-                p.x = bounding.x + bounding.w - item.w - standoff;
+                p.x = bounding.x + bounding.w - item.w - margin;
             if (align & ALIGN_TOP)
-                p.y = bounding.y + standoff;
+                p.y = bounding.y + margin;
             if (align & ALIGN_BOTTOM)
-                p.y = bounding.y + bounding.h - item.h - standoff;
+                p.y = bounding.y + bounding.h - item.h - margin;
 
             return Rect(p, item);
         }
 
         /**
          * Construct a widget.
-	 *
-	 * @param[in] point Point to position the widget at.
-	 * @param[in] point Initial size of the widget.
-	 * @param[in] flags Widget flags.
-	 */
+         *
+         * @param[in] point Point to position the widget at.
+         * @param[in] point Initial size of the widget.
+         * @param[in] flags Widget flags.
+         */
         Widget(const Point& point = Point(),
                const Size& size = Size(),
                uint32_t flags = 0) noexcept;
@@ -190,55 +199,64 @@ namespace mui
         /**
          * Draw the widget.
          *
+         * This is called by the internal code to cause a redraw of the widget.
+         * You must implement this function in a derived class to handle drawing
+         * the widget.
+         *
          * @warning Do not call this directly.
          */
-        virtual void draw(const Rect& rect) = 0;
+        virtual void draw(Painter& painter, const Rect& rect) = 0;
 
         /**
          * Handle an event.
+         * Override this function in a derived class to handle events.
          *
-	 * Override this function in a derived class to handle events.
-	 *
          * Only the event ID is passed to this function. To get data associated
          * with the event, you have to call other functions.
          */
         virtual int handle(int event);
 
         /**
-         * Set the position of the widget.
-         */
-        virtual void position(const Point& point);
-
-        /**
-         * Set the size of the widget.
-         * @{
-         */
-        virtual void size(const Size& s);
-        /** @} */
-
-        /**
-         * @{
          * Resize the widget.
-         * This will cause a redraw of the widget.
+         * Changes the width and height of the widget.
+         *
+         * @note This will cause a redraw of the widget.
          */
         virtual void resize(const Size& s);
-        /** @} */
 
         /**
-         * @{
          * Move the widget.
-         * This will cause a redraw of the widget.
+         * Changes the x and y position of the widget.
+         *
+         * @note This will cause a redraw of the widget.
          */
         virtual void move(const Point& point);
-        /** @} */
+
+        /**
+         * Move the widget to the specified center point.
+         * Changes the x and y position of the widget relative to the center point.
+         *
+         * @note This will cause a redraw of the widget.
+         */
+        virtual void move_to_center(const Point& point);
+
+        /**
+         * Change the box of the widget.
+         * This is the same as calling move() and resize() at the same time.
+         */
+        virtual void set_box(const Rect& rect)
+        {
+            move(rect.point());
+            resize(rect.size());
+        }
 
         /**
          * Hide the widget.
-	 *
+         *
          * A widget that is not visible will receive no draw() calls.
-	 *
-	 * @note This changes the visible() property of the widget.
-	 */
+         *
+         * @note This changes the visible() property of the widget.
+         */
         virtual void hide()
         {
             if (!m_visible)
@@ -249,8 +267,8 @@ namespace mui
 
         /**
          * Show the widget.
-	 *
-	 * @note This changes the visible() property of the widget.
+         *
+         * @note This changes the visible() property of the widget.
          */
         virtual void show()
         {
@@ -266,9 +284,10 @@ namespace mui
          * Return true if the widget is in focus.
          */
         virtual bool focus() const { return m_focus; }
-	/**
-	 * Set the focus property of the widget.
-	 */
+
+        /**
+         * Set the focus property of the widget.
+         */
         virtual void focus(bool value) { m_focus = value; }
 
         /**
@@ -277,9 +296,9 @@ namespace mui
          * The meaning of active is largely up to the derived implementation.
          */
         virtual bool active() const { return m_active; }
-	/**
-	 * Set the active property of the widget.
-	 */
+        /**
+         * Set the active property of the widget.
+         */
         virtual void active(bool value) { m_active = value; }
 
         /**
@@ -289,6 +308,7 @@ namespace mui
          * color scheme may change when a widget is disabled.
          */
         virtual bool disabled() const { return m_disabled; }
+
         /**
          * Set the disabled status of the widget.
          */
@@ -301,14 +321,14 @@ namespace mui
 
         /**
          * Damage the box() of the widget.
-	 *
-	 * @note This is just a utility wrapper around damage(box()) in most cases.
+         *
+         * @note This is just a utility wrapper around damage(box()) in most cases.
          */
         virtual void damage();
 
-	/**
+        /**
          * Damage the specified rectangle.
-	 */
+         */
         virtual void damage(const Rect& rect);
 
         /**
@@ -369,7 +389,7 @@ namespace mui
 
         Frame* parent()
         {
-#if 0
+#if 1
             // @todo This whole thing is bad. */
             if (!m_parent)
             {
@@ -383,7 +403,7 @@ namespace mui
 
         const Frame* parent() const
         {
-#if 0
+#if 1
             // @todo This whole thing is bad. */
             if (!m_parent)
             {
@@ -424,6 +444,18 @@ namespace mui
         const std::string& name() const { return m_name; }
 
         /**
+         * Align the widget.
+         *
+         * This will align the widget relative to the box of its parent widget.
+         */
+        void align(int a, int margin = 0);
+
+        /**
+         * Read the alignment of the widget.
+         */
+        inline int align() const { return m_align; }
+
+        /**
          * Set the name of the widget.
          */
         inline void name(const std::string& name) { m_name = name; }
@@ -431,27 +463,6 @@ namespace mui
         virtual ~Widget();
 
     protected:
-
-        /** @deprecated Use Painter */
-        void draw_text(const std::string& text,
-                       const Rect& rect,
-                       const Color& color = Color::BLACK,
-                       int align = ALIGN_CENTER,
-                       int standoff = 5,
-                       const Font& font = Font());
-
-        /** @deprecated Use Painter */
-        void draw_image(shared_cairo_surface_t image,
-                        int align = ALIGN_CENTER, int standoff = 0, bool bw = false);
-
-        void draw_basic_box(const Rect& rect,
-                            const Color& border,
-                            const Color& bg);
-
-        /** @deprecated Use Painter */
-        void draw_gradient_box(const Rect& rect,
-                               const Color& border,
-                               bool active = false);
 
         /**
          * Convert screen coordinates to frame coordinates.
@@ -464,23 +475,23 @@ namespace mui
         Rect m_box;
 
         /**
-             * Pointer to this widget's parent.
+         * Pointer to this widget's parent.
          *
          * The parent is a Frame, which is capable of managing children.
-             */
-        Frame* m_parent;
+         */
+        Frame* m_parent {nullptr};
 
     private:
 
         /**
          * When true, the widget is visible.
          */
-        bool m_visible;
+        bool m_visible {true};
 
         /**
          * When true, the widget has focus.
          */
-        bool m_focus;
+        bool m_focus {false};
 
         /**
          * When true, the widget is active.
@@ -492,7 +503,7 @@ namespace mui
          *
          * This may change how the widget behaves or is draw.
          */
-        bool m_active;
+        bool m_active {false};
 
         /**
          * When true, the widget is disabled.
@@ -501,12 +512,12 @@ namespace mui
          *
          * This may change how the widget behaves or is draw.
          */
-        bool m_disabled;
+        bool m_disabled {false};
 
         /**
          * Flags for the widget.
          */
-        uint32_t m_flags;
+        uint32_t m_flags {0};
 
         /**
          * Current palette for the widget.
@@ -517,9 +528,14 @@ namespace mui
         std::shared_ptr<Palette> m_palette;
 
         /**
-        * A user defined name for the widget.
+         * A user defined name for the widget.
          */
         std::string m_name;
+
+        /**
+         * Alignment hint for this widget within its parent.
+         */
+        int m_align {ALIGN_NONE};
 
         Widget(const Widget&) = delete;
         Widget& operator=(const Widget&) = delete;
@@ -540,7 +556,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~Combo();
 
@@ -565,7 +581,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         void selected(uint32_t index);
 
@@ -592,7 +608,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         int position() const
         {

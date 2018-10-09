@@ -5,7 +5,7 @@
 #include <chrono>
 #include <cmath>
 #include <iostream>
-#include <mui/ui.h>
+#include <mui/ui>
 #include <random>
 #include <string>
 #include <vector>
@@ -16,8 +16,8 @@ using namespace mui;
 class Ball : public Image
 {
 public:
-    Ball(int xspeed, int yspeed, const Point& point)
-        : Image("metalball.png", point),
+    Ball(int xspeed, int yspeed)
+        : Image("metalball.png"),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}
@@ -39,14 +39,31 @@ public:
 private:
     int m_xspeed;
     int m_yspeed;
-    float m_angle;
 };
+
+static bool debounce_mouse(int delta)
+{
+    static Point pos;
+    bool res = false;
+
+    if (delta)
+    {
+        if (std::abs(pos.x - mouse_position().x) > delta ||
+            std::abs(pos.y - mouse_position().y) > delta)
+        {
+            res = true;
+        }
+    }
+
+    pos = mouse_position();
+
+    return res;;
+}
 
 class MainWindow : public Window
 {
 public:
     MainWindow()
-        : Window()
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     }
@@ -56,7 +73,8 @@ public:
         switch (event)
         {
         case EVT_MOUSE_MOVE:
-            spawn(mouse_position());
+            if (debounce_mouse(5))
+                spawn(mouse_position());
             break;
         }
 
@@ -65,23 +83,18 @@ public:
 
     void spawn(const Point& p)
     {
-        std::default_random_engine e1(r());
-        std::uniform_int_distribution<int> speed_dist(-20, 20);
         int xspeed = speed_dist(e1);
         int yspeed = speed_dist(e1);
-
-        std::uniform_real_distribution<float> size_dist(0.1, 1.0);
         float size = size_dist(e1);
 
         // has to move at some speed
         if (xspeed == 0 && yspeed == 0)
             xspeed = yspeed = 1;
 
-        Ball* image = new Ball(xspeed, yspeed, p);
+        Ball* image = new Ball(xspeed, yspeed);
         add(image);
         image->scale(size, size);
-        image->move(Point(p.x - image->box().w / 2,
-                          p.y - image->box().h / 2));
+        image->move_to_center(p);
         m_images.push_back(image);
     }
 
@@ -103,8 +116,12 @@ public:
     }
 
 private:
-    vector<Ball*> m_images;
     std::random_device r;
+    std::default_random_engine e1 {r()};
+    std::uniform_int_distribution<int> speed_dist {-20, 20};
+    std::uniform_real_distribution<float> size_dist {0.1, 1.0};
+
+    vector<Ball*> m_images;
 };
 
 int main()

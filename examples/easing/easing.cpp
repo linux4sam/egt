@@ -6,7 +6,7 @@
 #include "config.h"
 #endif
 
-#include <mui/ui.h>
+#include <mui/ui>
 #include <math.h>
 #include <string>
 #include <map>
@@ -105,7 +105,7 @@ public:
         m_box->add(image);
         m_box->show();
 #endif
-        m_box->position(Point(w() / 2 - m_box->w() / 2, -110));
+        m_box->move(Point(w() / 2 - m_box->w() / 2, -110));
 
         return 0;
     }
@@ -124,7 +124,7 @@ public:
         }
         else
         {
-            m_box->position(Point(m_box->x(), pos));
+            m_box->move(Point(m_box->x(), pos));
         }
     }
 

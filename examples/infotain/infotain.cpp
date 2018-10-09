@@ -6,7 +6,8 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <mui/ui.h>
+#include <mui/ui>
+#include <mui/painter.h>
 #include <sstream>
 #include <string>
 
@@ -107,14 +108,17 @@ public:
 
     {}
 
-    virtual void draw(const Rect& rect)
+    virtual void draw(Painter& painter, const Rect& rect)
     {
         // TODO: this logic needs to be pushed up into draw() caller
         Rect i = rect;
         if (Rect::is_intersect(box(), rect))
             i = Rect::intersect(rect, box());
 
-        screen()->rect(i, m_color);
+        Painter::AutoSaveRestore sr(painter);
+        painter.set_color(m_color);
+        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+        painter.draw_fill(i);
     }
 
 protected:

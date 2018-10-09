@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/ui.h"
+#include "mui/ui"
 #include <iostream>
 #include <random>
 #include <sstream>

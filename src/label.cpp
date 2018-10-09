@@ -28,16 +28,14 @@ namespace mui
         }
     }
 
-    void Label::draw(const Rect& rect)
+    void Label::draw(Painter& painter, const Rect& rect)
     {
-        Painter painter(screen()->context());
-
         if (!is_flag_set(FLAG_NO_BACKGROUND))
         {
             if (is_flag_set(FLAG_BORDER))
-                draw_basic_box(box(), palette().color(Palette::BORDER), palette().color(Palette::BG));
+                painter.draw_basic_box(box(), palette().color(Palette::BORDER), palette().color(Palette::BG));
             else
-                draw_basic_box(box(), palette().color(Palette::BG), palette().color(Palette::BG));
+                painter.draw_basic_box(box(), palette().color(Palette::BG), palette().color(Palette::BG));
         }
 
         painter.set_color(palette().color(Palette::TEXT));
@@ -69,7 +67,7 @@ namespace mui
         return Widget::handle(event);
     }
 
-    void CheckBox::draw(const Rect& rect)
+    void CheckBox::draw(Painter& painter, const Rect& rect)
     {
         static const int STANDOFF = 5;
 
@@ -81,11 +79,11 @@ namespace mui
 
         if (checked())
         {
-            draw_basic_box(r, palette().color(Palette::BORDER),
-                           palette().color(Palette::HIGHLIGHT));
+            painter.draw_basic_box(r, palette().color(Palette::BORDER),
+                                   palette().color(Palette::HIGHLIGHT));
 
             static const int OFFSET = 5;
-            auto cr = screen()->context();
+            auto cr = painter.context();
 
             cairo_set_source_rgba(cr.get(),
                                   palette().color(Palette::DARK).redf(),
@@ -102,15 +100,15 @@ namespace mui
         }
         else
         {
-            draw_gradient_box(r, palette().color(Palette::BORDER));
+            painter.draw_gradient_box(r, palette().color(Palette::BORDER));
         }
 
         // text
-        draw_text(m_text,
-                  box(),
-                  palette().color(Palette::TEXT),
-                  ALIGN_LEFT | ALIGN_CENTER,
-                  h());
+        painter.draw_text(m_text,
+                          box(),
+                          palette().color(Palette::TEXT),
+                          ALIGN_LEFT | ALIGN_CENTER,
+                          h());
     }
 
     CheckBox::~CheckBox()
@@ -128,17 +126,17 @@ namespace mui
         assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
     }
 
-    void ImageLabel::draw(const Rect& rect)
+    void ImageLabel::draw(Painter& painter, const Rect& rect)
     {
         // image
-        draw_image(m_image, ALIGN_LEFT | ALIGN_CENTER);
+        painter.draw_image(m_image, box(), ALIGN_LEFT | ALIGN_CENTER);
 
         // text
         //Label::draw(rect);
 
         auto width = cairo_image_surface_get_width(m_image.get());
-        draw_text(m_text, box(), palette().color(Palette::TEXT),
-                  ALIGN_LEFT | ALIGN_CENTER, width + 5, m_font);
+        painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
+                          ALIGN_LEFT | ALIGN_CENTER, width + 5, m_font);
 
     }
 

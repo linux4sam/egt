@@ -6,6 +6,7 @@
 #define MUI_APP_H
 
 #include <string>
+#include <mui/event_loop.h>
 
 /**
  * @file
@@ -33,8 +34,15 @@ namespace mui
 
         virtual int run();
 
+        inline EventLoop& event() { return m_event; }
+
         virtual ~Application();
+
+    protected:
+        EventLoop m_event;
     };
+
+    Application& main_app();
 
 }
 

@@ -53,7 +53,7 @@ namespace mui
         plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
 
         // hack to change the size because the screen size and the box size are different
-        position(point);
+        move(point);
         m_box = Rect(point.x, point.y, framew, frameh);
 
         damage();
@@ -88,13 +88,12 @@ namespace mui
         m_box = Rect(point.x, point.y, framew, frameh);
     }
 
-    void SoftwareSprite::draw(const Rect& rect)
+    void SoftwareSprite::draw(Painter& painter, const Rect& rect)
     {
         int panx;
         int pany;
         get_frame_offsets(m_index, panx, pany);
 
-        Painter painter(screen()->context());
         painter.draw_image(Rect(panx, pany, m_frame.w, m_frame.h),
                            box().point(), m_image.surface());
     }

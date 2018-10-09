@@ -5,6 +5,11 @@
 #ifndef MUI_LABEL_H
 #define MUI_LABEL_H
 
+/**
+ * @file
+ * @brief Working with labels.
+ */
+
 #include <mui/widget.h>
 
 namespace mui
@@ -45,7 +50,7 @@ namespace mui
          */
         virtual void align(uint32_t align) { m_align = align; }
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~Label();
 
@@ -78,7 +83,7 @@ namespace mui
 
         virtual int handle(int event);
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~CheckBox();
     protected:
@@ -97,7 +102,7 @@ namespace mui
                    const Size& size = Size(),
                    const Font& font = Font());
 
-        virtual void draw(const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~ImageLabel();
 
