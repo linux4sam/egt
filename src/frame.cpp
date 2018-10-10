@@ -91,7 +91,7 @@ namespace mui
         case EVT_MOUSE_DOWN:
         case EVT_MOUSE_UP:
         case EVT_MOUSE_MOVE:
-            for (auto& child : reverse_iterate(m_children))
+            for (auto& child : detail::reverse_iterate(m_children))
             {
                 assert(child);
 
@@ -112,7 +112,7 @@ namespace mui
             break;
         case EVT_KEY_DOWN:
         case EVT_KEY_UP:
-            for (auto& child : reverse_iterate(m_children))
+            for (auto& child : detail::reverse_iterate(m_children))
             {
                 if (child->disabled())
                     continue;

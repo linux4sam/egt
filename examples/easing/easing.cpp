@@ -136,7 +136,7 @@ private:
 #endif
 };
 
-static struct ResetTimer : public Timer
+struct ResetTimer : public Timer
 {
     ResetTimer()
         : Timer(1000)
@@ -146,24 +146,25 @@ static struct ResetTimer : public Timer
     {
         animation->start();
     }
+};
 
-} reset_timer;
-
-static struct MyAnimationTimer : public PeriodicTimer
+struct MyAnimationTimer : public PeriodicTimer
 {
-    MyAnimationTimer()
-        : PeriodicTimer(30)
+    MyAnimationTimer(ResetTimer& reset)
+        : PeriodicTimer(30),
+          m_reset(reset)
     {}
 
     void timeout()
     {
         if (animation->running())
             animation->next();
-        else
-            reset_timer.start();
+        else if (!m_reset.running())
+            m_reset.start();
     }
 
-} animation_timer;
+    ResetTimer& m_reset;
+};
 
 int main()
 {
@@ -171,9 +172,12 @@ int main()
 
     set_image_path("/root/mui/share/mui/examples/easing/");
 
+    ResetTimer reset_timer;
+    MyAnimationTimer animation_timer(reset_timer);
+
     MainWindow window;
 
-    animation = new Animation(-110, window.h() - 100/*380*/, [](float value, void* data)
+    animation = new Animation(-110, window.h() - 100, [](float value, void* data)
     {
         MainWindow* window = reinterpret_cast<MainWindow*>(data);
         window->move_item(value);

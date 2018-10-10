@@ -1,6 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include
+AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include \
+	-I$(top_srcdir)/src/asio/asioi/include \
+	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
 bin_PROGRAMS = video
 

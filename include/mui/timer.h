@@ -5,12 +5,16 @@
 #ifndef MUI_TIMER_H
 #define MUI_TIMER_H
 
+#include "asio.hpp"
+#include <mui/utils.h>
 #include <cstdint>
-#include <vector>
 #include <functional>
+#include <vector>
 
 namespace mui
 {
+    // TODO: https://gist.github.com/tsaarni/bb0b8d1ca33e3a1bfea1
+
     /**
      * Timer callback function definition.
      */
@@ -19,10 +23,10 @@ namespace mui
     /**
      * Basic one shot timer.
      */
-    class Timer
+    class Timer : public detail::noncopyable
     {
     public:
-        Timer(uint64_t duration = 0);
+        explicit Timer(uint64_t duration = 0) noexcept;
 
         /**
          * Start the timer.
@@ -50,7 +54,16 @@ namespace mui
          * equivelant if you want callbacks to still be called.
          */
         virtual void timeout();
+
+        /**
+         * Return the current duration of the timer.
+         */
         inline uint64_t duration() const { return m_duration; }
+
+        /**
+         * Returns true if the timer is currently running.
+         */
+        inline bool running() const { return m_running; }
 
         void add_handler(timer_callback_t callback)
         {
@@ -61,11 +74,13 @@ namespace mui
 
     protected:
 
-        static void timer_callback(int fd, void* data);
+        void timer_callback(const asio::error_code& error);
 
-        int m_fd;
+        //asio::steady_timer m_timer;
+        asio::high_resolution_timer m_timer;
         uint64_t m_duration;
         std::vector<timer_callback_t> m_callbacks;
+        bool m_running { false};
     };
 
     /**
@@ -74,10 +89,18 @@ namespace mui
     class PeriodicTimer : public Timer
     {
     public:
-        PeriodicTimer(uint64_t period = 0);
+        explicit PeriodicTimer(uint64_t period = 0) noexcept;
+
         virtual void start();
-        virtual void cancel();
-        virtual ~PeriodicTimer();
+        virtual void start(uint64_t duration)
+        {
+            Timer::start(duration);
+        }
+        virtual ~PeriodicTimer() {}
+
+    protected:
+
+        void timer_callback(const asio::error_code& error);
     };
 
 }

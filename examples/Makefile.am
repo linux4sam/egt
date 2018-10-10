@@ -6,7 +6,9 @@ endif
 SUBDIRS = $(OPTIONAL)
 
 AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include \
-	$(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) $(RAPIDXML_CFLAGS)
+	$(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) $(RAPIDXML_CFLAGS) \
+	-I$(top_srcdir)/src/asio/asioi/include \
+	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
 LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) $(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) $(RAPIDXML_LIBS)
 
@@ -14,17 +16,18 @@ LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) $(LUA_LIBS)
 #LDFLAGS="$LDFLAGS -flto -fwhole-program"
 
 bin_PROGRAMS = \
+basic/basic \
 brick/brick \
 coin/coin \
 easing/easing \
 floating/floating \
+floating/floating \
+infotain/infotain \
 launcher/launcher \
 space/space \
 sprite/sprite \
 water/water \
-infotain/infotain \
-widgets/widgets \
-basic/basic
+widgets/widgets
 
 brick_brick_SOURCES = brick/brick.cpp
 brick_brick_CXXFLAGS = $(AM_CXXFLAGS)

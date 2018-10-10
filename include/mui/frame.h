@@ -97,9 +97,9 @@ namespace mui
 
             auto i = std::find_if(m_children.begin(), m_children.end(),
                                   [&name](const Widget * obj)
-                                  {
-                                      return obj->name() == name;
-                                  });
+            {
+                return obj->name() == name;
+            });
 
             // just return first one
             if (i != m_children.end())
@@ -107,9 +107,9 @@ namespace mui
 
             i = std::find_if(m_children.begin(), m_children.end(),
                              [&name](const Widget * obj)
-                             {
-                                 return obj->is_flag_set(FLAG_FRAME);
-                             });
+            {
+                return obj->is_flag_set(FLAG_FRAME);
+            });
 
             for (; i != m_children.end(); ++i)
             {

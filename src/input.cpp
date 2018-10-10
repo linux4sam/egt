@@ -58,18 +58,31 @@ namespace mui
     }
 
     InputEvDev::InputEvDev(const string& path)
-        : m_fd(-1)
+        : m_input(main_app().event().io()),
+          m_input_buf(sizeof(struct input_event) * 10)
     {
-        m_fd = open(path.c_str(), O_RDONLY);
-        if (m_fd >= 0)
-            main_app().event().add_fd(m_fd, EVENT_READABLE, InputEvDev::process);
-        else
-            ERR("could not open input device: " << path);
+        int fd = open(path.c_str(), O_RDONLY);
+        if (fd >= 0)
+        {
+            m_input.assign(fd);
+
+            asio::async_read(m_input, asio::buffer(m_input_buf.data(), m_input_buf.size()),
+                             std::bind(&InputEvDev::handle_read, this,
+                                       std::placeholders::_1,
+                                       std::placeholders::_2));
+        }
     }
 
-    void InputEvDev::process(int fd, uint32_t mask, void* data)
+    void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     {
-        struct input_event ev[8], *e, *end;
+        if (error)
+        {
+            cout << error << endl;
+            return;
+        }
+
+        struct input_event* ev = reinterpret_cast<struct input_event*>(m_input_buf.data());
+        struct input_event* e, *end;
 
         int dx = 0;
         int dy = 0;
@@ -77,14 +90,13 @@ namespace mui
         int y = 0;
         bool absolute_event = false;
 
-        int len = read(fd, &ev, sizeof(ev));
-        if (len < 0 || len % sizeof(e[0]) != 0)
+        if (length == 0 || length % sizeof(e[0]) != 0)
         {
             assert(0);
         }
 
         e = ev;
-        end = ev + (len / sizeof(e[0]));
+        end = ev + (length / sizeof(e[0]));
         for (e = ev; e < end; e++)
         {
             int value = e->value;
@@ -169,46 +181,60 @@ namespace mui
                 dispatch(EVT_MOUSE_MOVE);
             }
         }
+
+        asio::async_read(m_input, asio::buffer(m_input_buf.data(), m_input_buf.size()),
+                         std::bind(&InputEvDev::handle_read, this,
+                                   std::placeholders::_1,
+                                   std::placeholders::_2));
     }
 
     InputEvDev::~InputEvDev()
     {
-        if (m_fd >= 0)
-            close(m_fd);
     }
 
 #ifdef HAVE_TSLIB
 
     static const int SLOTS = 1;
-    static const int SAMPLES = 40;
-    static struct tsdev* ts;
-    static struct ts_sample_mt** samp_mt;
-    static struct timeval last_down = {0, 0};
+    static const int SAMPLES = 10;
+
+    namespace detail
+    {
+        struct tslibimpl
+        {
+            struct tsdev* ts;
+            struct ts_sample_mt** samp_mt;
+            struct timeval last_down = {0, 0};
+        };
+    }
 
     InputTslib::InputTslib(const string& path)
-        : m_fd(-1),
-          m_active(false)
+        : m_input(main_app().event().io()),
+          m_active(false),
+          m_impl(new detail::tslibimpl)
     {
         const int NONBLOCKING = 1;
-        ts = ts_setup(path.c_str(), NONBLOCKING);
+        m_impl->ts = ts_setup(path.c_str(), NONBLOCKING);
 
-        if (ts)
+        if (m_impl->ts)
         {
-            samp_mt = (struct ts_sample_mt**)malloc(SAMPLES * sizeof(struct ts_sample_mt*));
-            assert(samp_mt);
+            m_impl->samp_mt = (struct ts_sample_mt**)malloc(SAMPLES * sizeof(struct ts_sample_mt*));
+            assert(m_impl->samp_mt);
 
             for (int i = 0; i < SAMPLES; i++)
             {
-                samp_mt[i] = (struct ts_sample_mt*)calloc(SLOTS, sizeof(struct ts_sample_mt));
-                if (!samp_mt[i])
+                m_impl->samp_mt[i] = (struct ts_sample_mt*)calloc(SLOTS, sizeof(struct ts_sample_mt));
+                if (!m_impl->samp_mt[i])
                 {
-                    free(samp_mt);
-                    ts_close(ts);
+                    free(m_impl->samp_mt);
+                    ts_close(m_impl->ts);
                     assert(0);
                 }
             }
 
-            main_app().event().add_fd(ts_fd(ts), EVENT_READABLE, InputTslib::process, this);
+            m_input.assign(ts_fd(m_impl->ts));
+
+            asio::async_read(m_input, asio::null_buffers(),
+                             std::bind(&InputTslib::handle_read, this, std::placeholders::_1));
         }
         else
         {
@@ -222,25 +248,28 @@ namespace mui
                 (t1.tv_usec - t2.tv_usec)) / 1000;
     }
 
-    void InputTslib::process(int fd, uint32_t mask, void* data)
+    void InputTslib::handle_read(const asio::error_code& error)
     {
-        InputTslib* obj = reinterpret_cast<InputTslib*>(data);
-        int ret;
-        int i;
-        int j;
+        if (error)
+        {
+            cout << error << endl;
+            return;
+        }
 
-        ret = ts_read_mt(ts, samp_mt, SLOTS, SAMPLES);
+        struct ts_sample_mt** samp_mt = m_impl->samp_mt;
+
+        int ret = ts_read_mt(m_impl->ts, samp_mt, SLOTS, SAMPLES);
         if (ret < 0)
         {
-	    ERR("ts_read_mt");
+            ERR("ts_read_mt");
             return;
         }
 
         bool move = false;
 
-        for (j = 0; j < ret; j++)
+        for (int j = 0; j < ret; j++)
         {
-            for (i = 0; i < SLOTS; i++)
+            for (int i = 0; i < SLOTS; i++)
             {
 #ifdef TSLIB_MT_VALID
                 if (!(samp_mt[j][i].valid & TSLIB_MT_VALID))
@@ -265,12 +294,12 @@ namespace mui
                 if (samp_mt[j][i].x < 0 || samp_mt[j][i].y < 0)
                     continue;
 
-                if (obj->m_active)
+                if (m_active)
                 {
                     if (samp_mt[j][i].pen_down == 0)
                     {
                         pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
-                        obj->m_active = false;
+                        m_active = false;
                         dispatch(EVT_MOUSE_UP);
                         DBG("mouse up " << pointer_abs_pos);
                     }
@@ -286,8 +315,8 @@ namespace mui
                     {
                         pointer_abs_pos = Point(samp_mt[j][i].x, samp_mt[j][i].y);
 
-                        if ((last_down.tv_sec || last_down.tv_usec) &&
-                            diff_ms(samp_mt[j][i].tv, last_down) < 200)
+                        if ((m_impl->last_down.tv_sec || m_impl->last_down.tv_usec) &&
+                            diff_ms(samp_mt[j][i].tv, m_impl->last_down) < 200)
                         {
                             dispatch(EVT_MOUSE_DBLCLICK);
                         }
@@ -295,10 +324,10 @@ namespace mui
                         {
                             dispatch(EVT_MOUSE_DOWN);
                             DBG("mouse down " << pointer_abs_pos);
-                            obj->m_active = true;
+                            m_active = true;
                         }
 
-                        last_down = samp_mt[j][i].tv;
+                        m_impl->last_down = samp_mt[j][i].tv;
                     }
                 }
             }
@@ -309,11 +338,21 @@ namespace mui
             DBG("mouse move " << pointer_abs_pos);
             dispatch(EVT_MOUSE_MOVE);
         }
+
+        asio::async_read(m_input, asio::null_buffers(),
+                         std::bind(&InputTslib::handle_read, this, std::placeholders::_1));
     }
 
     InputTslib::~InputTslib()
     {
-        ts_close(ts);
+        ts_close(m_impl->ts);
+
+        for (int i = 0; i < SAMPLES; i++)
+        {
+            free(m_impl->samp_mt[i]);
+        }
+
+        free(m_impl->samp_mt);
     }
 #endif
 

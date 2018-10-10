@@ -255,9 +255,9 @@ namespace mui
         inline bool operator==(const Rect& rhs) const
         {
             return x == rhs.x &&
-                y == rhs.y &&
-                w == rhs.w &&
-                h == rhs.h;
+                   y == rhs.y &&
+                   w == rhs.w &&
+                   h == rhs.h;
         }
 
 

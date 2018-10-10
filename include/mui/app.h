@@ -27,9 +27,9 @@ namespace mui
     {
     public:
         /**
-        * @param name Application name.  This is used for several things,
+         * @param name Application name.  This is used for several things,
          *             including identifying the text domain used by gettext().
-               */
+         */
         Application(bool primary = true, const std::string& name = "mui");
 
         virtual int run();

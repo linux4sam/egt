@@ -15,7 +15,9 @@
 #include "config.h"
 #endif
 
+#include "asio.hpp"
 #include <linux/input.h>
+#include <memory>
 #include <mui/geometry.h>
 #include <string>
 
@@ -74,7 +76,7 @@ namespace mui
     };
 
     /**
-     *
+     * Handles reading input events from evdev devices.
      */
     class InputEvDev : public IInput
     {
@@ -85,12 +87,18 @@ namespace mui
         virtual ~InputEvDev();
 
     private:
-        static void process(int fd, uint32_t mask, void* data);
+        void handle_read(const asio::error_code& error, std::size_t length);
 
-        int m_fd;
+        asio::posix::stream_descriptor m_input;
+        std::vector<char> m_input_buf;
     };
 
 #ifdef HAVE_TSLIB
+    namespace detail
+    {
+        struct tslibimpl;
+    }
+
     class InputTslib : public IInput
     {
     public:
@@ -101,11 +109,15 @@ namespace mui
 
     private:
 
+        void handle_read(const asio::error_code& error);
+
         static void process(int fd, uint32_t mask, void* data);
         static void timer_callback(int fd, void* data);
 
-        int m_fd;
+        asio::posix::stream_descriptor m_input;
         bool m_active;
+
+        std::unique_ptr<detail::tslibimpl> m_impl;
     };
 #endif
 

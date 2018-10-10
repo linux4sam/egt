@@ -315,7 +315,7 @@ namespace mui
         plane_set_pos(plane, 0, 0);
 
         DBG("plane " << plane->index << " overlay dumb buffer " <<
-	    plane_width(plane) << "," << plane_height(plane));
+            plane_width(plane) << "," << plane_height(plane));
 
         return plane;
     }

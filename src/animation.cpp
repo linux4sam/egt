@@ -4,7 +4,6 @@
  */
 #include "mui/animation.h"
 #include "mui/app.h"
-#include "mui/event_loop.h"
 #include "mui/widget.h"
 #include <cassert>
 #include <cmath>
@@ -14,7 +13,7 @@ using namespace std;
 namespace mui
 {
     static inline float_t interpolate(easing_func easing, float_t percent, float_t start,
-                                    float_t end, bool reverse = false)
+                                      float_t end, bool reverse = false)
     {
         if (percent < 0.0f)
             return start;
@@ -228,7 +227,7 @@ namespace mui
         else
         {
             float_t percent = chrono::duration<float_t, milli>(now - m_start_time).count() /
-                            chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
+                              chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
             float_t result = interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
             if (!float_t_compare(result, m_current))
@@ -275,12 +274,12 @@ namespace mui
           m_widgets(widgets),
           m_coord(coordinate)
     {
+        m_timer.add_handler(std::bind(&WidgetPositionAnimator::timer_callback, this));
     }
 
     void WidgetPositionAnimator::start()
     {
-        m_fd = main_app().event().start_periodic_timer(33,
-                WidgetPositionAnimator::timer_callback, this);
+        m_timer.start(33);
         Animation::start();
     }
 
@@ -295,14 +294,11 @@ namespace mui
         }
     }
 
-    void WidgetPositionAnimator::timer_callback(int fd, void* data)
+    void WidgetPositionAnimator::timer_callback()
     {
-        WidgetPositionAnimator* a = reinterpret_cast<WidgetPositionAnimator*>(data);
-        assert(a);
-        if (!a->next())
+        if (!next())
         {
-            main_app().event().cancel_periodic_timer(a->m_fd);
-            a->m_fd = -1;
+            m_timer.cancel();
         }
     }
 

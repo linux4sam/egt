@@ -2,58 +2,64 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #ifndef MUI_EVENT_LOOP_H
 #define MUI_EVENT_LOOP_H
 
+/**
+ * @file
+ * @brief Working with event loops.
+ */
+
 #include <cstdint>
 #include <functional>
+#include <mui/utils.h>
+#include <memory>
+
+namespace asio
+{
+    class io_context;
+}
 
 namespace mui
 {
-
-    typedef std::function<void (int fd, uint32_t mask, void* data)> event_callback;
-    typedef std::function<void (int fd, void* data)> timer_event_callback;
-
-    enum
+    namespace detail
     {
-        EVENT_WRITEABLE = 1 << 0,
-        EVENT_READABLE = 1 << 1
-    };
+        struct eventloopimpl;
+    }
 
-    class EventLoop
+    /**
+     * Event callback function defitiion.
+     */
+    typedef std::function<void (int fd, uint32_t mask, void* data)> event_callback;
+
+    /**
+     *
+     */
+    class EventLoop : public detail::noncopyable
     {
     public:
 
-        EventLoop();
+        EventLoop() noexcept;
 
-        ~EventLoop();
+        asio::io_context& io();
 
-        void add_fd(int fd, uint32_t mask, event_callback func, void* data = 0);
+        virtual int wait();
 
-        void rem_fd(int fd);
+        virtual int run();
 
-        int wait(int timeout = -1);
+        virtual void quit();
 
-        int run();
+        virtual void close();
 
-        void quit();
-
-        void close();
-
-        int start_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
-
-        int start_periodic_timer(unsigned long milliseconds, timer_event_callback func, void* data = 0);
-
-        void cancel_periodic_timer(int fd);
-
+        /** @todo Not implemented. */
         void add_idle_callback(event_callback func);
+
+        virtual ~EventLoop();
 
     protected:
 
-        void init();
+        std::unique_ptr<detail::eventloopimpl> m_impl;
 
-        int epoll_fd {-1};
     };
 
 }

@@ -111,6 +111,7 @@ public:
         move_to_center(c);
     }
 
+#if 0
     static void timer_callback(int fd, void* data)
     {
         LauncherItem* item = reinterpret_cast<LauncherItem*>(data);
@@ -124,6 +125,7 @@ public:
             // TODO: exec
         }
     }
+#endif
 
     inline int num() const { return m_num; }
 
@@ -165,6 +167,8 @@ class LauncherWindow : public Window
 public:
     LauncherWindow()
     {
+        m_timer.add_handler(std::bind(&LauncherWindow::timer_callback, this));
+
         add(new Image("background.jpg"));
 
         auto logo = new Image("logo.png");
@@ -201,7 +205,7 @@ public:
             box->move_to_center(Point(m_boxes.size() * SPACE, h() / 2));
 
             // pre-seed the image cache
-            for (auto s = 0.5; s <= 2.0; s+=0.01)
+            for (auto s = 0.5; s <= 2.0; s += 0.01)
                 box->scale_box(s);
 
             box->scale_box(m_boxes.size() * SPACE - box->w() / 2);
@@ -283,6 +287,8 @@ public:
         if (m_animation)
             delete m_animation;
 
+        m_timer.cancel();
+
         auto center = box().center();
         auto distance = w();
 
@@ -299,7 +305,8 @@ public:
         m_animation = new Animation(0, distance, LauncherWindow::animate, 200,
                                     easing_snap, this);
         m_animation->start();
-        m_fd = main_app().event().start_periodic_timer(1, LauncherWindow::timer_callback, this);
+
+        m_timer.start(1);
 
         m_moving_x = 0;
         m_offset = m_boxes[0]->center().x;
@@ -312,14 +319,11 @@ public:
         item->move_boxes(value);
     }
 
-    static void timer_callback(int fd, void* data)
+    void timer_callback()
     {
-        LauncherWindow* item = reinterpret_cast<LauncherWindow*>(data);
-        assert(item);
-
-        if (!item->m_animation->next())
+        if (!m_animation->next())
         {
-            main_app().event().cancel_periodic_timer(item->m_fd);
+            m_timer.cancel();
 
             // TODO: exec
         }
@@ -332,7 +336,7 @@ private:
     int m_offset {0};
     vector<LauncherItem*> m_boxes;
     Animation* m_animation {nullptr};
-    int m_fd {-1};
+    PeriodicTimer m_timer;
 };
 
 #define SHARED_PATH "/root/mui/share/mui/examples/launcher/"

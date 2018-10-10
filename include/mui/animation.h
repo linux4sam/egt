@@ -116,14 +116,14 @@ namespace mui
 
         void reset();
 
-        static void timer_callback(int fd, void* data);
+        void timer_callback();
 
         static void callback(float_t value, void* data);
 
     protected:
         std::vector<Widget*> m_widgets;
-        int m_fd;
         int m_coord;
+        PeriodicTimer m_timer;
     };
 
     class AnimationTimer : public PeriodicTimer

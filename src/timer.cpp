@@ -11,18 +11,18 @@
 namespace mui
 {
 
-    Timer::Timer(uint64_t duration)
-        : m_fd(-1),
+    Timer::Timer(uint64_t duration) noexcept
+        : m_timer(main_app().event().io()),
           m_duration(duration)
     {
     }
 
     void Timer::start()
     {
-        //if (m_fd >= 0)
-        //  cancel();
-
-        m_fd = main_app().event().start_timer(m_duration, Timer::timer_callback, this);
+        m_timer.cancel();
+        m_timer.expires_from_now(asio::chrono::milliseconds(m_duration));
+        m_timer.async_wait(std::bind(&Timer::timer_callback, this, std::placeholders::_1));
+        m_running = true;
     }
 
     void Timer::start(uint64_t duration)
@@ -33,19 +33,17 @@ namespace mui
 
     void Timer::cancel()
     {
-        if (m_fd >= 0)
-        {
-            close(m_fd);
-            m_fd = -1;
-        }
+        m_timer.cancel();
     }
 
-    void Timer::timer_callback(int fd, void* data)
+    void Timer::timer_callback(const asio::error_code& error)
     {
-        Timer* timer = reinterpret_cast<Timer*>(data);
-        assert(timer);
+        m_running = false;
 
-        timer->timeout();
+        if (error)
+            return;
+
+        timeout();
     }
 
     void Timer::timeout()
@@ -59,29 +57,28 @@ namespace mui
         cancel();
     }
 
-    PeriodicTimer::PeriodicTimer(uint64_t duration)
+    PeriodicTimer::PeriodicTimer(uint64_t duration) noexcept
         : Timer(duration)
     {
     }
 
     void PeriodicTimer::start()
     {
-        m_fd = main_app().event().start_periodic_timer(m_duration, PeriodicTimer::timer_callback, this);
+        m_timer.cancel();
+        m_timer.expires_from_now(asio::chrono::milliseconds(m_duration));
+        m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this, std::placeholders::_1));
+        m_running = true;
     }
 
-    void PeriodicTimer::cancel()
+    void PeriodicTimer::timer_callback(const asio::error_code& error)
     {
-        if (m_fd >= 0)
-        {
-            main_app().event().cancel_periodic_timer(m_fd);
-            close(m_fd);
-            m_fd = -1;
-        }
-    }
+        m_running = false;
 
-    PeriodicTimer::~PeriodicTimer()
-    {
-        cancel();
+        if (error)
+            return;
+
+        start();
+        timeout();
     }
 
 }

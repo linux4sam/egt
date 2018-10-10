@@ -1,12 +1,18 @@
 AUTOMAKE_OPTIONS = subdir-objects
-AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg
+AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg \
+	-I$(top_srcdir)/src/asio/asioi/include \
+	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
+
 if HAVE_KPLOT
 AM_CXXFLAGS += -I$(top_srcdir)/src/kplot/
 endif
 
 lib_LTLIBRARIES = libmui.la
-libmui_la_CXXFLAGS = $(AM_CXXFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS)
-libmui_la_CFLAGS = $(AM_CFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(LIBJPEG_CFLAGS)
+libmui_la_CXXFLAGS = $(AM_CXXFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
+	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
+	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS)
+libmui_la_CFLAGS = $(AM_CFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
+	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(LIBJPEG_CFLAGS)
 
 libmui_la_SOURCES = \
 app.cpp \
