@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "text.h"
-#include "painter.h"
+#include "mui/text.h"
+#include "mui/painter.h"
 
 using namespace std;
 

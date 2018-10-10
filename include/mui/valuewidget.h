@@ -71,9 +71,9 @@ namespace mui
     };
 
     /**
-    * A widget that manages a value that must reside between a min and max
-    * value range.
-    */
+     * A widget that manages a value that must reside between a min and max
+     * value range.
+     */
     template<class T>
     class ValueRangeWidget : public Widget
     {
@@ -174,8 +174,8 @@ namespace mui
     };
 
     /**
-    * @todo This should be a ValueRangeWidget<int>.
-    */
+     * @todo This should be a ValueRangeWidget<int>.
+     */
     class Slider : public Widget
     {
     public:

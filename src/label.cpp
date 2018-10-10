@@ -2,9 +2,9 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "label.h"
-#include "imagecache.h"
-#include "painter.h"
+#include "mui/label.h"
+#include "mui/imagecache.h"
+#include "mui/painter.h"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ namespace mui
     Label::Label(const std::string& text, const Point& point, const Size& size,
                  int align, const Font& font)
         : Widget(point, size),
-          m_align(align),
+          m_text_align(align),
           m_text(text),
           m_font(font)
     {}
@@ -40,7 +40,7 @@ namespace mui
 
         painter.set_color(palette().color(Palette::TEXT));
         painter.set_font(m_font);
-        painter.draw_text(box(), m_text, m_align, 5);
+        painter.draw_text(box(), m_text, m_text_align, 5);
     }
 
     Label::~Label()

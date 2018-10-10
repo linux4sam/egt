@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "painter.h"
-#include "widget.h"
+#include "mui/painter.h"
+#include "mui/widget.h"
 
 namespace mui
 {
@@ -92,6 +92,13 @@ namespace mui
         return *this;
     }
 
+    Painter& Painter::draw_line(const Point& end)
+    {
+        cairo_line_to(m_cr.get(), end.x, end.y);
+
+        return *this;
+    }
+
     Painter& Painter::draw_image(const Point& point, shared_cairo_surface_t surface, bool bw)
     {
         double w = cairo_image_surface_get_width(surface.get());
@@ -116,8 +123,8 @@ namespace mui
     }
 
     /**
-     * @param rect The source rect to copy.
-     * @param point The destination point.
+     * @param[in] rect The source rect to copy.
+     * @param[in] point The destination point.
      */
     Painter& Painter::draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface)
     {
@@ -132,6 +139,7 @@ namespace mui
     {
         cairo_arc(m_cr.get(), point.x, point.y, radius, angle1, angle2);
         cairo_stroke(m_cr.get());
+
         return *this;
     }
 
@@ -192,16 +200,16 @@ namespace mui
                width = rect.w,
                height = rect.h,
                aspect = 1.0,
-               corner_radius = 50/*height*/ / 10.0;
+               corner_radius = 50.0 / 10.0;
 
         double radius = corner_radius / aspect;
         double degrees = M_PI / 180.0;
 
         cairo_new_sub_path(m_cr.get());
-        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
+        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90. * degrees, 180. * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
         cairo_close_path(m_cr.get());
 
         cairo_set_source_rgba(m_cr.get(),
@@ -232,16 +240,16 @@ namespace mui
                width = rect.w,
                height = rect.h,
                aspect = 1.0,
-               corner_radius = 50 / 10.0;
+               corner_radius = 50.0 / 10.0;
 
         double radius = corner_radius / aspect;
         double degrees = M_PI / 180.0;
 
         cairo_new_sub_path(m_cr.get());
-        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
+        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
+        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90. * degrees, 180. * degrees);
+        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
         cairo_close_path(m_cr.get());
 
         cairo_pattern_t* pat;
@@ -295,9 +303,7 @@ namespace mui
         AutoSaveRestore sr(*this);
 
         set_font(font);
-
         set_color(color);
-
         draw_text(rect, text, align, margin);
 
         return *this;
@@ -312,7 +318,7 @@ namespace mui
 
         Rect target = Widget::align_algorithm(Size(width, height), dest, align, margin);
 
-#if 0
+#if 1
         draw_image(target.point(), image, bw);
 #else
         paint_surface_with_drop_shadow(

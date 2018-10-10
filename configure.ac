@@ -50,13 +50,14 @@ MAYBE_WARN="-Wall -Wextra \
 -Wsign-compare -Werror-implicit-function-declaration \
 -Wpointer-arith -Wwrite-strings \
 -Wmissing-declarations \
--Wpacked -Winline \
+-Wpacked \
 -Wstrict-aliasing=2 -Winit-self \
 -Wno-unused-parameter \
 -Wno-attributes -Wno-long-long \
 -Wno-missing-field-initializers"
 
-# -Wswitch-enum
+#-Winline
+#-Wswitch-enum
 #-Wshadow
 
 # invalidate cached value if MAYBE_WARN has changed

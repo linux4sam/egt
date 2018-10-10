@@ -2,14 +2,14 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "frame.h"
-#include "geometry.h"
-#include "imagecache.h"
-#include "input.h"
-#include "painter.h"
-#include "screen.h"
-#include "utils.h"
-#include "widget.h"
+#include "mui/frame.h"
+#include "mui/geometry.h"
+#include "mui/imagecache.h"
+#include "mui/input.h"
+#include "mui/painter.h"
+#include "mui/screen.h"
+#include "mui/utils.h"
+#include "mui/widget.h"
 #include <cairo.h>
 #include <cassert>
 #include <string>

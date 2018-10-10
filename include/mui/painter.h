@@ -78,6 +78,8 @@ namespace mui
 
         Painter& set_line_width(float width);
 
+        Painter& draw_line(const Point& end);
+
         Painter& draw_line(const Point& start, const Point& end);
 
         Painter& draw_image(const Point& point, shared_cairo_surface_t surface, bool bw = false);

@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "valuewidget.h"
-#include "painter.h"
+#include "mui/valuewidget.h"
+#include "mui/painter.h"
 
 using namespace std;
 
@@ -209,11 +209,11 @@ namespace mui
         {
             // Draw the radial marks
             cairo_move_to(cr.get(),
-                          hw * cos(M_PI * marks * 0.01),
-                          -hw * sin(M_PI * marks * 0.01));
+                          hw * std::cos(M_PI * marks * 0.01),
+                          -hw * std::sin(M_PI * marks * 0.01));
             cairo_line_to(cr.get(),
-                          (hw + 10.0) * cos(M_PI * marks * 0.01),
-                          -(hw + 10.0) * sin(M_PI * marks * 0.01));
+                          (hw + 10.0) * std::cos(M_PI * marks * 0.01),
+                          -(hw + 10.0) * std::sin(M_PI * marks * 0.01));
 
             // Set the text to print
             char text[10];
@@ -225,8 +225,8 @@ namespace mui
             int height = textext.height;
             // Position the text at the end of the radial marks
             cairo_move_to(cr.get(),
-                          (-(hw + 30.0) * cos(M_PI * marks * 0.01)) - ((double)width / 2.0),
-                          (-(hw + 30.0) * sin(M_PI * marks * 0.01)) + ((double)height / 2.0));
+                          (-(hw + 30.0) * std::cos(M_PI * marks * 0.01)) - ((double)width / 2.0),
+                          (-(hw + 30.0) * std::sin(M_PI * marks * 0.01)) + ((double)height / 2.0));
 
             cairo_show_text(cr.get(), text);
         }
@@ -242,8 +242,8 @@ namespace mui
         // Draw the meter pointer
         cairo_move_to(cr.get(), 0.0, 0.0);
         cairo_line_to(cr.get(),
-                      -hw * cos(M_PI * value * 0.01),
-                      -hw * sin(M_PI * value * 0.01));
+                      -hw * std::cos(M_PI * value * 0.01),
+                      -hw * std::sin(M_PI * value * 0.01));
         cairo_stroke(cr.get());
 
         cairo_restore(cr.get());

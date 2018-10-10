@@ -23,7 +23,8 @@ space/space \
 sprite/sprite \
 water/water \
 infotain/infotain \
-widgets/widgets
+widgets/widgets \
+basic/basic
 
 brick_brick_SOURCES = brick/brick.cpp
 brick_brick_CXXFLAGS = $(AM_CXXFLAGS)
@@ -96,3 +97,8 @@ widgets_widgets_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
 widgets_widgetsdir = $(prefix)/share/mui/examples/widgets
 widgets_widgets_DATA = $(wildcard $(top_srcdir)/examples/widgets/*.png)
 widgets_widgets_LDFLAGS = $(AM_LDFLAGS)
+
+basic_basic_SOURCES = basic/basic.cpp
+basic_basic_CXXFLAGS = $(AM_CXXFLAGS)
+basic_basic_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+basic_basic_LDFLAGS = $(AM_LDFLAGS)

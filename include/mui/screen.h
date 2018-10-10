@@ -64,7 +64,7 @@ namespace mui
             shared_cairo_t cr;
 
             /**
-             * Each region that needs to be copied from the back buffer.
+             * Each rect that needs to be copied from the back buffer.
              */
             damage_array damage;
 
@@ -75,6 +75,8 @@ namespace mui
 
                 IScreen::damage_algorithm(damage, rect);
             }
+
+            inline ~DisplayBuffer() noexcept {}
         };
 
         void copy_to_buffer(DisplayBuffer& buffer);

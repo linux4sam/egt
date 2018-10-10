@@ -65,8 +65,7 @@ public:
           m_exec(exec)
     {
         palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-        Font newfont;
-        newfont.size(24);
+        Font newfont(24, Font::WEIGHT_BOLD);
         font(newfont);
     }
 
@@ -200,6 +199,11 @@ public:
             m_plane.add(box);
 
             box->move_to_center(Point(m_boxes.size() * SPACE, h() / 2));
+
+            // pre-seed the image cache
+            for (auto s = 0.5; s <= 2.0; s+=0.01)
+                box->scale_box(s);
+
             box->scale_box(m_boxes.size() * SPACE - box->w() / 2);
 
             m_boxes.push_back(box);

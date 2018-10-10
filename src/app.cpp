@@ -2,14 +2,14 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "app.h"
-#include "event_loop.h"
-#include "input.h"
-#include "kmsscreen.h"
+#include "mui/app.h"
+#include "mui/event_loop.h"
+#include "mui/input.h"
+#include "mui/kmsscreen.h"
 #include <libintl.h>
 #include <locale.h>
 

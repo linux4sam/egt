@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = subdir-objects
-AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/include/mui -I$(top_srcdir)/src/images/jpeg
+AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg
 if HAVE_KPLOT
 AM_CXXFLAGS += -I$(top_srcdir)/src/kplot/
 endif

@@ -2,12 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "imagecache.h"
-#include "painter.h"
-#include "sprite.h"
-#include "kmsscreen.h"
-#include "planes/plane.h"
+#include "mui/imagecache.h"
+#include "mui/kmsscreen.h"
+#include "mui/painter.h"
+#include "mui/sprite.h"
 #include <iostream>
+#include <planes/plane.h>
 
 using namespace std;
 

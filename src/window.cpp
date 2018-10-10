@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "kmsscreen.h"
-#include "window.h"
+#include "mui/kmsscreen.h"
+#include "mui/window.h"
 #include <algorithm>
 
 using namespace std;
@@ -26,7 +26,7 @@ namespace mui
     Window::Window(const Size& size, uint32_t flags)
         : Frame(Point(), size, flags)
     {
-        cout << "new window " << size << endl;
+        DBG("new window " << size);
         windows().push_back(this);
 
         // if a window size is empty, or this window is the first window, it
@@ -51,7 +51,8 @@ namespace mui
     }
 
 #ifdef HAVE_LIBPLANES
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format, bool heo)
+    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags,
+                             uint32_t format, bool heo)
         : Window(size, flags | FLAG_PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
@@ -82,7 +83,7 @@ namespace mui
         }
         else
         {
-            cout << "plane window only supports single call to resize" << endl;
+            ERR("plane window only supports single call to resize");
         }
     }
 
@@ -144,6 +145,7 @@ namespace mui
 
     PlaneWindow::~PlaneWindow()
     {
+        /** @todo Need to release plane. */
     }
 
 }

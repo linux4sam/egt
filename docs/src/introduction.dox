@@ -91,7 +91,7 @@ TODO
 - MUI_DEBUG
   Enable debug output for the framework.
 - MUI_BACKEND
-  Select what backend to use for rendering to the screen.
+  Select what backend to use for rendering to the screen. Examples include x11, kms, fbdev.
 
 @section intro_debug Debugging
 

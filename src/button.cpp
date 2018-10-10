@@ -2,18 +2,25 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "button.h"
-#include "imagecache.h"
-#include "painter.h"
+#include "mui/button.h"
+#include "mui/imagecache.h"
+#include "mui/painter.h"
 
 using namespace std;
 
 namespace mui
 {
+    static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
     Button::Button(const string& text, const Point& point, const Size& size)
         : Label(text, point, size, ALIGN_CENTER)
-    {}
+    {
+        if (size.empty())
+        {
+            /** @todo Smarter if we look at size of text and grow from default size. */
+            resize(DEFAULT_BUTTON_SIZE);
+        }
+    }
 
     int Button::handle(int event)
     {
@@ -54,7 +61,7 @@ namespace mui
         // text
         painter.set_color(palette().color(Palette::TEXT));
         painter.set_font(m_font);
-        painter.draw_text(box(), m_text, m_align, 5);
+        painter.draw_text(box(), m_text, m_text_align, 5);
     }
 
     Button::~Button()
@@ -98,7 +105,7 @@ namespace mui
 
         painter.set_color(palette().color(Palette::TEXT));
         painter.set_font(m_font);
-        painter.draw_text(box(), m_text, m_align, 5);
+        painter.draw_text(box(), m_text, m_text_align, 5);
     }
 
     ImageButton::~ImageButton()

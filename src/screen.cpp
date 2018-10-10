@@ -3,10 +3,10 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "mui/color.h"
-#include "screen.h"
+#include "mui/screen.h"
+#include "mui/utils.h"
 #include <cassert>
 #include <fcntl.h>
-#include <iostream>
 #include <linux/fb.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
@@ -134,7 +134,7 @@ namespace mui
 
     void IScreen::init(void** ptr, uint32_t count, int w, int h, uint32_t f)
     {
-        cout << "screen " << w << "," << h << endl;
+        DBG("screen " << w << "," << h);
 
         m_size = Size(w, h);
 
@@ -143,15 +143,15 @@ namespace mui
         switch (f)
         {
         case DRM_FORMAT_RGB565:
-            cout << "screen using RGB565 format" << endl;
+            DBG("screen using RGB565 format");
             format = CAIRO_FORMAT_RGB16_565;
             break;
         case DRM_FORMAT_ARGB8888:
-            cout << "screen using ARGB32 format" << endl;
+            DBG("screen using ARGB32 format");
             format = CAIRO_FORMAT_ARGB32;
             break;
         case DRM_FORMAT_XRGB8888:
-            cout << "screen using RGB24 format" << endl;
+            DBG("screen using RGB24 format");
             format = CAIRO_FORMAT_RGB24;
             break;
         default:
@@ -190,9 +190,12 @@ namespace mui
 
         cairo_font_options_t* cfo = cairo_font_options_create();
         cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
+        cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_SLIGHT);
         cairo_set_font_options(m_cr.get(), cfo);
         cairo_font_options_destroy(cfo);
 
+        cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_FAST);
+        cairo_set_tolerance(m_cr.get(), 1.0);
 
         if (!the_screen)
             the_screen = this;
@@ -206,7 +209,6 @@ namespace mui
         struct fb_fix_screeninfo fixinfo;
         struct fb_var_screeninfo varinfo;
 
-        cout << path << endl;
         m_fd = open(path.c_str(), O_RDWR);
         assert(m_fd >= 0);
 
@@ -216,7 +218,7 @@ namespace mui
         if (ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0)
             assert(0);
 
-        cout << "fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres << endl;
+        DBG("fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres);
 
         m_fb = mmap(NULL, fixinfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
         assert(m_fb != (void*) -1);

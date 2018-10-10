@@ -118,7 +118,7 @@ namespace mui
     private:
 
         // not allowed, use alternate add() method
-        virtual void add(Widget* widget) {}
+        virtual Widget* add(Widget* widget) { return widget; }
     };
 
     class HorizontalPositioner : public Frame

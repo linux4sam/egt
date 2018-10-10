@@ -3,10 +3,10 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 
-#include "app.h"
-#include "event_loop.h"
-#include "widget.h"
-#include "window.h"
+#include "mui/app.h"
+#include "mui/event_loop.h"
+#include "mui/widget.h"
+#include "mui/window.h"
 #include <chrono>
 #include <numeric>
 #include <sys/epoll.h>

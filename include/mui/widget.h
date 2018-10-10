@@ -38,8 +38,10 @@ namespace mui
         /**
          * Do not draw the background color.
          *
-         * The background color is usually drawn by default. The background will
-         * essentially be transparent.
+         * The background color is usually drawn by default. A background will
+         * not be drawn if this flag is set. If something else is not drawn,
+         * instead (like a child widget), this can result in unintended side
+         * effects.
          */
         FLAG_NO_BACKGROUND = (1 << 0),
 
@@ -77,8 +79,6 @@ namespace mui
          * Default window flags.
          */
         FLAG_WINDOW_DEFAULT = FLAG_WINDOW,
-
-        CUSTOM_WIDGET_FLAGS = 1000,
     };
 
     class Widget;
@@ -116,11 +116,11 @@ namespace mui
      * Base widget class.
      *
      * This is the base class for all widgets. A Widget is a thing, with a basic
-     *  set of properties.  In this case, it has a bounding rectagle,
+     * set of properties.  In this case, it has a bounding rectangle,
      * some flags, and some states - and these properties can be manipulated. A
      * Widget can handle events, draw itself, and more.  However, the specifics
      * of what it means to handle an event or draw the widget is implemented in
-     * classes that are derived from this one, like a Button.
+     * classes that are derived from this one, like a Button or a Label.
      */
     class Widget : public EventWidget
     {
@@ -154,9 +154,7 @@ namespace mui
 
         /**
          * Given an item size, and a bounding box, and an alignment parameter,
-         * return the rctangle the item box should be respositioned/resized to.
-         *
-         * @warning This is not for text. Only for origin at left,top.
+         * return the rectangle the item box should be move/resized to.
          */
         static Rect align_algorithm(const Size& item, const Rect& bounding,
                                     uint32_t align, int margin = 0)
@@ -167,6 +165,7 @@ namespace mui
                 return bounding;
 
             Point p;
+
             if (align & ALIGN_CENTER)
             {
                 p.x = bounding.x + (bounding.w / 2) - (item.w / 2);
@@ -213,6 +212,12 @@ namespace mui
          *
          * Only the event ID is passed to this function. To get data associated
          * with the event, you have to call other functions.
+         *
+         * The default implementation in the Widget class, will dispatch the
+         * event to any third party handleres that have been registered. What
+         * this means is if you expect other handlers to receive the events
+         * then this must be called from derived classes.  Or, manually call
+         * invoke_handlers().
          */
         virtual int handle(int event);
 
@@ -389,28 +394,12 @@ namespace mui
 
         Frame* parent()
         {
-#if 1
-            // @todo This whole thing is bad. */
-            if (!m_parent)
-            {
-                std::cout << "bad parent pointer" << std::endl;
-                while (1);
-            }
-#endif
             assert(m_parent);
             return m_parent;
         }
 
         const Frame* parent() const
         {
-#if 1
-            // @todo This whole thing is bad. */
-            if (!m_parent)
-            {
-                std::cout << "bad parent pointer" << std::endl;
-                while (1);
-            }
-#endif
             assert(m_parent);
             return m_parent;
         }
@@ -427,13 +416,13 @@ namespace mui
         }
 
         /**
-         * Set the specified widget flags.
+         * Set the specified widget flag(s).
          * @param flag Bitmask of flags.
          */
         inline void flag_set(uint32_t flag) { m_flags |= flag; }
 
         /**
-         * Clear, or unset, the specified widget flags.
+         * Clear, or unset, the specified widget flag(s).
          * @param flag Bitmask of flags.
          */
         inline void flag_clear(uint32_t flag) { m_flags &= ~flag; }
@@ -446,7 +435,7 @@ namespace mui
         /**
          * Align the widget.
          *
-         * This will align the widget relative to the box of its parent widget.
+         * This will align the widget relative to the box of its parent frame.
          */
         void align(int a, int margin = 0);
 
@@ -522,7 +511,7 @@ namespace mui
         /**
          * Current palette for the widget.
          *
-         * @note This should not accessed directly.  Always use the accessor
+         * @note This should not be accessed directly.  Always use the accessor
          * functions because this is not set until it is modified.
          */
         std::shared_ptr<Palette> m_palette;

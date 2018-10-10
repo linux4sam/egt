@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "video.h"
-#include "kmsscreen.h"
+#include "mui/video.h"
+#include "mui/kmsscreen.h"
 #include <string.h>
 #include <thread>
 #include <chrono>

@@ -2,9 +2,9 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "resource.h"
+#include "mui/resource.h"
+#include <cstring>
 #include <map>
-#include <string.h>
 #include <string>
 #include <cassert>
 

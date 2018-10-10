@@ -2,12 +2,17 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_CONFIG_H
 #include "config.h"
-#include "imagecache.h"
-#include "resource.h"
-#include "utils.h"
+#endif
+
+#include "mui/imagecache.h"
+#include "mui/resource.h"
+#include "mui/utils.h"
+#include <cassert>
 #include <iostream>
 #include <sstream>
+
 #ifdef HAVE_LIBJPEG
 #ifdef __cplusplus
 extern "C" {
@@ -17,7 +22,6 @@ extern "C" {
 }
 #endif
 #endif
-#include <cassert>
 
 using namespace std;
 

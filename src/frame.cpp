@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "frame.h"
+#include "mui/frame.h"
 #include "mui/painter.h"
 #include "mui/screen.h"
 
@@ -11,11 +11,11 @@ using namespace std;
 namespace mui
 {
 
-    void Frame::add(Widget* widget)
+    Widget* Frame::add(Widget* widget)
     {
         assert(widget);
         if (!widget)
-            return;
+            return nullptr;
 
         if (find(m_children.begin(), m_children.end(), widget) == m_children.end())
         {
@@ -27,6 +27,31 @@ namespace mui
             widget->damage();
             m_children.push_back(widget);
         }
+
+        return widget;
+    }
+
+    Widget* Frame::insert(Widget* widget, uint32_t index)
+    {
+        assert(widget);
+        if (!widget)
+            return nullptr;
+
+        if (find(m_children.begin(), m_children.end(), widget) == m_children.end())
+        {
+            // cannot already have a parent
+            assert(!widget->m_parent);
+
+            // note order here - set parent and then damage
+            widget->m_parent = this;
+
+            m_children.insert(m_children.begin() + index, widget);
+
+            // damage the whole frame
+            damage();
+        }
+
+        return widget;
     }
 
     void Frame::remove(Widget* widget)
@@ -187,8 +212,6 @@ namespace mui
 
             for (auto& child : m_children)
             {
-                assert(child);
-
                 if (!child->visible())
                     continue;
 
@@ -201,10 +224,6 @@ namespace mui
                 {
                     // don't give a child a rectangle that is outside of its own box
                     auto rect = Rect::intersect(damage, child->box());
-
-                    // should not be necessary
-                    //Painter::AutoSaveRestore sr(painter);
-
                     child->draw(painter, rect);
                 }
             }

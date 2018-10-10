@@ -2,11 +2,11 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "timer.h"
-#include "event_loop.h"
+#include "mui/app.h"
+#include "mui/event_loop.h"
+#include "mui/timer.h"
 #include <cassert>
 #include <unistd.h>
-#include "app.h"
 
 namespace mui
 {

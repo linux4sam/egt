@@ -6,20 +6,23 @@
 ## Todo
 
 Priority 1
-- Seperate logical and physical coordinates.
+- Convert event loop and timers to asio.
+- Pass parent to constructor of widgets as reference.
+- More work on Painter, and seperate our paint(), fill(), stroke() calls.
+- Fixup coordinate system (based on hierarchy) and come up with a logical coord. system.
 - All child coordinates need to have an origin in the parent frame.
+
+Priority 2
 - Abstract out widget drawing implementation so that widget drawing can be themed.
-- Change all callbacks to std::function after performance analysis.
 - Move all 2D graphics drawing primitives into Painter.
 - Identify a hard path to support 2D GPU under graphics primitives used.
 - Backbuffer all widgets and seperate damage() from redraw(). Is this really a performance improvement?
 
-Priority 2
+Priority 3
 - Add (zlib) compression to resources.  Likely want option to enable/disable it.
 - Make resources identifiable by original name.  Current nameing scheme stinks.
 - Chart widgets (kplot is nice, but lacks bar charts): pie, bar, line, point (having working prototype of kplot).
 - XML loader and tool to create screens (find existing tool).
-- JPEG support.
 - MIME support.
 - Popup widget.
 - Radio widget.

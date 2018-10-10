@@ -2,13 +2,18 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #ifndef MUI_UTILS_H
 #define MUI_UTILS_H
 
-#include <math.h>
+/**
+ * @file
+ * @brief Working with basic utilities.
+ */
+
+#include <cmath>
+#include <cstdlib>
 #include <functional>
-#include <stdlib.h>
+#include <iostream>
 
 namespace mui
 {

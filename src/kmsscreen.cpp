@@ -2,25 +2,26 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_CONFIG_H
 #include "config.h"
-#include <thread>
+#endif
 
 #ifdef HAVE_LIBPLANES
 
-#include "event_loop.h"
-#include "input.h"
-#include "kmsscreen.h"
-#include "planes/fb.h"
-#include "planes/kms.h"
-#include "planes/plane.h"
-#include "widget.h"
-#include "window.h"
+#include "mui/event_loop.h"
+#include "mui/input.h"
+#include "mui/kmsscreen.h"
+#include "mui/widget.h"
+#include "mui/window.h"
 #include <cairo.h>
 #include <condition_variable>
 #include <cstring>
 #include <deque>
 #include <drm_fourcc.h>
 #include <mutex>
+#include <planes/fb.h>
+#include <planes/kms.h>
+#include <planes/plane.h>
 #include <pthread.h>
 #include <thread>
 #include <xf86drm.h>
@@ -263,13 +264,13 @@ namespace mui
 
     struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format, bool heo)
     {
-        cout << "allocate plane " << size << endl;
+        DBG("allocate plane " << size);
 
         struct plane_data* plane = 0;
 
         if (heo)
         {
-            cout << "heo plane requested" << endl;
+            DBG("heo plane requested");
 
             // TODO: need a better way to do this
             int index = 2;
@@ -313,8 +314,8 @@ namespace mui
 
         plane_set_pos(plane, 0, 0);
 
-        cout << "plane " << plane->index << " overlay dumb buffer " <<
-             plane_width(plane) << "," << plane_height(plane) << endl;
+        DBG("plane " << plane->index << " overlay dumb buffer " <<
+	    plane_width(plane) << "," << plane_height(plane));
 
         return plane;
     }

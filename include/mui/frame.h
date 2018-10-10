@@ -7,10 +7,11 @@
 
 /**
  * @file
- * @brief Base class Frame definition.
+ * @brief Working with frames.
  */
 
 #include <mui/widget.h>
+#include <deque>
 
 namespace mui
 {
@@ -25,9 +26,9 @@ namespace mui
      * This involves everything from event handling down to widgets and drawing
      * children widgets.
      *
-     * Child widget coordinates have an origin at the topleft of their parent
+     * Child widget coordinates have an origin at the top left of their parent
      * frame.  In other words, child widgets are drawn respective to and inside
-     * their parent frame, not the screen.
+     * of their parent frame.
      */
     class Frame : public Widget
     {
@@ -51,7 +52,15 @@ namespace mui
          * The z-order of a widget is based on the order it is added.  First in
          * is bottom.
          */
-        virtual void add(Widget* widget);
+        virtual Widget* add(Widget* widget);
+
+        /**
+         * Insert a child widget at the specified index.
+         *
+         * The z-order of a widget is based on the order it is added.  First in
+         * is bottom.
+         */
+        virtual Widget* insert(Widget* widget, uint32_t index = 0);
 
         /**
          * Remove a child widget.
@@ -73,13 +82,13 @@ namespace mui
 
         /**
          * Find a child widget by name.
-        *
-               * @see Widget::name()
-               *
+         *
+         * @see Widget::name()
+         *
          * If you're trying to find a widget in the entire application, you need
-         * to start at any top level window. This function will only search down
+         * to start at any top level frame. This function will only search down
          * from where it's called.
-               */
+         */
         template <class T>
         T find_child(const std::string& name)
         {
@@ -88,9 +97,9 @@ namespace mui
 
             auto i = std::find_if(m_children.begin(), m_children.end(),
                                   [&name](const Widget * obj)
-            {
-                return obj->name() == name;
-            });
+                                  {
+                                      return obj->name() == name;
+                                  });
 
             // just return first one
             if (i != m_children.end())
@@ -98,9 +107,9 @@ namespace mui
 
             i = std::find_if(m_children.begin(), m_children.end(),
                              [&name](const Widget * obj)
-            {
-                return obj->is_flag_set(FLAG_FRAME);
-            });
+                             {
+                                 return obj->is_flag_set(FLAG_FRAME);
+                             });
 
             for (; i != m_children.end(); ++i)
             {
@@ -114,7 +123,7 @@ namespace mui
         }
 
         /**
-        * Damage the rectangle of the entire Frame.
+         * Damage the rectangle of the entire Frame.
          */
         virtual void damage()
         {
@@ -142,12 +151,27 @@ namespace mui
         {}
 
     protected:
-        typedef std::list<Widget*> children_array;
 
+        typedef std::deque<Widget*> children_array;
+
+        /**
+         * Add damage to the damage array.
+         */
         virtual void add_damage(const Rect& rect);
+
+        /**
+         * Perform the draw starting from this frame.
+         */
         virtual void do_draw();
 
+        /**
+         * Array of child widgets in the order they were added.
+         */
         children_array m_children;
+
+        /**
+         * The damage array for this frame.
+         */
         IScreen::damage_array m_damage;
     };
 

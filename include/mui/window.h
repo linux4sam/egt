@@ -114,9 +114,9 @@ namespace mui
         virtual ~PlaneWindow();
 
     protected:
-        uint32_t m_format;
-        bool m_dirty = {true};
-        bool m_heo;
+        uint32_t m_format {DEFAULT_FORMAT};
+        bool m_dirty {true};
+        bool m_heo {false};
     };
 
     class Popup : public PlaneWindow

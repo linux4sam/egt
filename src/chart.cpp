@@ -6,7 +6,7 @@
 #include "config.h"
 #endif
 
-#include "chart.h"
+#include "mui/chart.h"
 #include <cmath>
 #include <vector>
 #ifdef HAVE_KPLOT

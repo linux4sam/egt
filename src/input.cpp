@@ -2,13 +2,16 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include "event_loop.h"
-#include "app.h"
-#include "geometry.h"
-#include "input.h"
-#include "widget.h"
-#include "window.h"
+#include "mui/app.h"
+#include "mui/event_loop.h"
+#include "mui/geometry.h"
+#include "mui/input.h"
+#include "mui/widget.h"
+#include "mui/window.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -61,7 +64,7 @@ namespace mui
         if (m_fd >= 0)
             main_app().event().add_fd(m_fd, EVENT_READABLE, InputEvDev::process);
         else
-            ERR("could not open input device");
+            ERR("could not open input device: " << path);
     }
 
     void InputEvDev::process(int fd, uint32_t mask, void* data)
@@ -209,7 +212,7 @@ namespace mui
         }
         else
         {
-            cout << "error: ts device not found: " << path << endl;
+            ERR("ts device not found: " << path);
         }
     }
 
@@ -229,7 +232,7 @@ namespace mui
         ret = ts_read_mt(ts, samp_mt, SLOTS, SAMPLES);
         if (ret < 0)
         {
-            perror("ts_read_mt");
+	    ERR("ts_read_mt");
             return;
         }
 

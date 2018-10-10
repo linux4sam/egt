@@ -73,6 +73,9 @@ namespace mui
         static void dispatch(int event);
     };
 
+    /**
+     *
+     */
     class InputEvDev : public IInput
     {
     public:

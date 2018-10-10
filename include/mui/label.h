@@ -48,14 +48,14 @@ namespace mui
         /**
          * Set the alignment of the label.
          */
-        virtual void align(uint32_t align) { m_align = align; }
+        virtual void text_align(int align) { m_text_align = align; }
 
         virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~Label();
 
     protected:
-        int m_align;
+        int m_text_align;
         std::string m_text;
         Font m_font;
     };

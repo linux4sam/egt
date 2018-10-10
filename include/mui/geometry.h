@@ -17,6 +17,7 @@
 
 namespace mui
 {
+
     /**
      * Simple x,y coordinate.
      */
@@ -49,7 +50,7 @@ namespace mui
         /**
          * If this point is the center of a circle, return a new point that is
          * on the circumference of the circle at the specified angle.
-        *
+         *
          * @param radius The radius of the circle.
          * @param angle The angle in radians.
          */
@@ -62,7 +63,7 @@ namespace mui
 
         /**
          * Return the angle from this point to get to another.
-        *
+         *
          * @param point The other point.
          */
         template <class T>
@@ -73,7 +74,7 @@ namespace mui
 
         /**
          * Calculate the straight line distance to another point.
-        *
+         *
          * @param point The other point.
          */
         template <class T>
@@ -92,7 +93,6 @@ namespace mui
         {
             return x != rhs.x || y != rhs.y;
         }
-
 
         int x {0};
         int y {0};
@@ -123,6 +123,9 @@ namespace mui
 
         /**
          * Returns true if the size has no width or height.
+         *
+         * This is a special case, and is the default state of a Size. This can
+         * be used to determine if a size has not be set in many cases.
          */
         inline bool empty() const
         {
@@ -252,9 +255,9 @@ namespace mui
         inline bool operator==(const Rect& rhs) const
         {
             return x == rhs.x &&
-                   y == rhs.y &&
-                   w == rhs.w &&
-                   h == rhs.h;
+                y == rhs.y &&
+                w == rhs.w &&
+                h == rhs.h;
         }
 
 

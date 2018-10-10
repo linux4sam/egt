@@ -69,18 +69,28 @@ namespace mui
 
         /**
          * Create a font based on the supplied parameters.
+         *
+         * @param[in] face The face name of the font.
+         * @param[in] size The size of the font.
+         * @param[in] weight The weight of the font.
+         * @param[in] slant The slant of the font.
          */
         explicit Font(const std::string& face, int size, int weight, int slant);
 
         /**
          * Create a font based on the global default font, but with the
          * specified size.
+         *
+         * @param[in] face The face name of the font.
          */
         explicit Font(int size);
 
         /**
          * Create a font based on the global default font, but with the
          * specified size and weight.
+         *
+         * @param[in] size The size of the font.
+         * @param[in] weight The weight of the font.
          */
         explicit Font(int size, int weight);
 

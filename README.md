@@ -27,6 +27,8 @@ modern GUI functionality, look-and-feel, and performance.
 - cairo >= 1.14.6
 - tslib >= 1.15
 - gstreamer >= 1.12
+- libjpeg
+- rapidxml
 
 ## License
 
