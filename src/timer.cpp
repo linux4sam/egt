@@ -8,14 +8,15 @@
 #include <cassert>
 #include <unistd.h>
 
+using namespace std;
+
 namespace mui
 {
 
     Timer::Timer(uint64_t duration) noexcept
         : m_timer(main_app().event().io()),
           m_duration(duration)
-    {
-    }
+    {}
 
     void Timer::start()
     {
@@ -25,7 +26,7 @@ namespace mui
         m_running = true;
     }
 
-    void Timer::start(uint64_t duration)
+    void Timer::start_with_duration(uint64_t duration)
     {
         m_duration = duration;
         start();

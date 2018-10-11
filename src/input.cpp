@@ -43,8 +43,16 @@ namespace mui
         return event_key;
     }
 
+    static int event_button;
+    int& button_value()
+    {
+        return event_button;
+    }
+
     void IInput::dispatch(int event)
     {
+        DBG("event: " << event);
+
         for (auto& w : windows())
         {
             if (!w->visible())
@@ -195,7 +203,7 @@ namespace mui
 #ifdef HAVE_TSLIB
 
     static const int SLOTS = 1;
-    static const int SAMPLES = 10;
+    static const int SAMPLES = 20;
 
     namespace detail
     {
@@ -209,6 +217,7 @@ namespace mui
 
     InputTslib::InputTslib(const string& path)
         : m_input(main_app().event().io()),
+        //m_input(m_io),
           m_active(false),
           m_impl(new detail::tslibimpl)
     {
@@ -336,6 +345,10 @@ namespace mui
         if (move)
         {
             DBG("mouse move " << pointer_abs_pos);
+            //cout << "post" << endl;
+            //asio::post(main_app().event().io(),
+            //  std::bind(InputTslib::dispatch, EVT_MOUSE_MOVE)
+            //  );
             dispatch(EVT_MOUSE_MOVE);
         }
 

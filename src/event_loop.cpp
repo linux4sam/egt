@@ -7,6 +7,7 @@
 #include "mui/event_loop.h"
 #include "mui/widget.h"
 #include "mui/window.h"
+#include "mui/timer.h"
 #include <chrono>
 #include <deque>
 #include <numeric>
@@ -40,7 +41,22 @@ namespace mui
 
     int EventLoop::wait()
     {
-        return m_impl->m_io.run_one();
+#ifdef STATS2
+        auto start = chrono::steady_clock::now();
+#endif
+        //int ret = m_impl->m_io.run_one();
+        int ret = m_impl->m_io.run_for(std::chrono::milliseconds(1));
+        //int ret = m_impl->m_io.poll();
+        if (!ret)
+            invoke_idle_callbacks();
+
+#ifdef STATS2
+        auto end = chrono::steady_clock::now();
+        auto diff = end - start;
+
+        cout << "wait: " << chrono::duration<double, milli>(diff).count() << endl;
+#endif
+        return ret;
     }
 
     static bool do_quit = false;
@@ -51,8 +67,37 @@ namespace mui
         m_impl->m_io.stop();
     }
 
+    void EventLoop::draw()
+    {
+#ifdef STATS2
+        auto start = chrono::steady_clock::now();
+#endif
+        for (auto& w : windows())
+        {
+            if (!w->visible())
+                continue;
+
+            // draw top level frames and plane frames
+            if (w->top_level() || w->is_flag_set(FLAG_PLANE_WINDOW))
+                w->draw();
+        }
+#ifdef STATS2
+        auto end = chrono::steady_clock::now();
+        auto diff = end - start;
+
+        cout << "draw: " << chrono::duration<double, milli>(diff).count() << endl;
+#endif
+    }
+
     int EventLoop::run()
     {
+        PeriodicTimer drawtimer(30);
+        drawtimer.add_handler([this]()
+                         {
+                             draw();
+                         });
+        drawtimer.start();
+
 #ifdef STATS
         deque<uint64_t> times;
 #endif
@@ -63,15 +108,7 @@ namespace mui
             auto start = chrono::steady_clock::now();
 #endif
 
-            for (auto& w : windows())
-            {
-                if (!w->visible())
-                    continue;
-
-                // draw top level frames and plane frames
-                if (w->top_level() || w->is_flag_set(FLAG_PLANE_WINDOW))
-                    w->draw();
-            }
+            //draw();
 
             wait();
 
@@ -99,11 +136,17 @@ namespace mui
 
     }
 
-    static std::vector<event_callback> idle;
-
     void EventLoop::add_idle_callback(event_callback func)
     {
-        idle.push_back(func);
+        m_idle.push_back(func);
+    }
+
+    void EventLoop::invoke_idle_callbacks()
+    {
+        for (auto& i : m_idle)
+        {
+            i();
+        }
     }
 
     EventLoop::~EventLoop()

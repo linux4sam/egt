@@ -29,6 +29,7 @@ modern GUI functionality, look-and-feel, and performance.
 - gstreamer >= 1.12
 - libjpeg
 - rapidxml
+- libinput >= 1.8.2
 
 ## License
 

@@ -9,9 +9,11 @@
 #include "mui/app.h"
 #include "mui/event_loop.h"
 #include "mui/input.h"
+#include "mui/libinput.h"
 #include "mui/kmsscreen.h"
 #include <libintl.h>
 #include <locale.h>
+#include <thread>
 
 using namespace std;
 
@@ -71,9 +73,15 @@ namespace mui
         }
 
 #ifdef HAVE_TSLIB
-        new InputTslib("/dev/input/touchscreen0");
+        auto tslib = new InputTslib("/dev/input/touchscreen0");
+        //new std::thread([tslib](){
+        //      tslib->m_io.run();
+        //  });
 #endif
-        new InputEvDev("/dev/input/event2");
+        //new InputEvDev("/dev/input/event2");
+#ifdef HAVE_LIBINPUT
+        //new LibInput;
+#endif
     }
 
     int Application::run()

@@ -39,7 +39,7 @@ namespace mui
          * Start the timer with the specified duration.  This overwrites any
          * duration specified previously.
          */
-        virtual void start(uint64_t duration);
+        virtual void start_with_duration(uint64_t duration);
 
         /**
          * Cancel the timer.
@@ -76,8 +76,8 @@ namespace mui
 
         void timer_callback(const asio::error_code& error);
 
-        //asio::steady_timer m_timer;
-        asio::high_resolution_timer m_timer;
+        asio::steady_timer m_timer;
+        //asio::high_resolution_timer m_timer;
         uint64_t m_duration;
         std::vector<timer_callback_t> m_callbacks;
         bool m_running { false};
@@ -92,10 +92,10 @@ namespace mui
         explicit PeriodicTimer(uint64_t period = 0) noexcept;
 
         virtual void start();
-        virtual void start(uint64_t duration)
+	/*virtual void start_with_duration(uint64_t duration);
         {
             Timer::start(duration);
-        }
+	    }*/
         virtual ~PeriodicTimer() {}
 
     protected:

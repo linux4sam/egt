@@ -34,6 +34,8 @@ namespace mui
         EVT_MOUSE_DOWN = 1,
         EVT_MOUSE_UP,
         EVT_MOUSE_MOVE,
+	EVT_BUTTON_DOWN,
+        EVT_BUTTON_UP,
         EVT_MOUSE_DBLCLICK,
 
         /**
@@ -65,6 +67,13 @@ namespace mui
      * event.
      */
     int& key_value();
+
+    /**
+     * Global button value.
+     *
+     * BTN_LEFT, BTN_RIGHT, BTN_MIDDLE
+     */
+    int& button_value();
 
     /**
      * Base input class.
@@ -107,12 +116,11 @@ namespace mui
 
         virtual ~InputTslib();
 
+	//asio::io_context m_io;
+
     private:
 
         void handle_read(const asio::error_code& error);
-
-        static void process(int fd, uint32_t mask, void* data);
-        static void timer_callback(int fd, void* data);
 
         asio::posix::stream_descriptor m_input;
         bool m_active;

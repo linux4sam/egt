@@ -72,7 +72,7 @@ namespace mui
 
     void Frame::remove_all()
     {
-        for (auto i : m_children)
+        for (auto& i : m_children)
         {
             // note order here - damage and then unset parent
             i->damage();

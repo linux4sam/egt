@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg \
-	-I$(top_srcdir)/src/asio/asioi/include \
+	-I$(top_srcdir)/src/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
 if HAVE_KPLOT
@@ -10,9 +10,11 @@ endif
 lib_LTLIBRARIES = libmui.la
 libmui_la_CXXFLAGS = $(AM_CXXFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
-	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS)
+	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) \
+	$(LIBINPUT_CFLAGS)
 libmui_la_CFLAGS = $(AM_CFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
-	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(LIBJPEG_CFLAGS)
+	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
+	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS)
 
 libmui_la_SOURCES = \
 app.cpp \
@@ -29,6 +31,7 @@ imagecache.cpp \
 input.cpp \
 kmsscreen.cpp \
 label.cpp \
+libinput.cpp \
 painter.cpp \
 palette.cpp \
 resource.cpp \
@@ -70,6 +73,7 @@ $(top_srcdir)/include/mui/grid.h \
 $(top_srcdir)/include/mui/image.h \
 $(top_srcdir)/include/mui/imagecache.h \
 $(top_srcdir)/include/mui/input.h \
+$(top_srcdir)/include/mui/libinput.h \
 $(top_srcdir)/include/mui/kmsscreen.h \
 $(top_srcdir)/include/mui/label.h \
 $(top_srcdir)/include/mui/painter.h \

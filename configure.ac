@@ -119,6 +119,11 @@ if test "x${have_tslib}" = xyes; then
    AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
 fi
 
+AX_PKG_CHECK_MODULES(LIBINPUT, [], [libinput >= 1.8.2], [have_libinput=yes], [have_libinput=no])
+if test "x${have_libinput}" = xyes; then
+   AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
+fi
+
 AX_PKG_CHECK_MODULES(GSTREAMER, [], [gstreamer-1.0 >= 1.12], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
