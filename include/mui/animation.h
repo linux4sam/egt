@@ -18,7 +18,7 @@
 
 namespace mui
 {
-    typedef float float_t;
+    using float_t = float;
 
     /**
      * Predefined easing functions.
@@ -38,8 +38,8 @@ namespace mui
     float_t easing_boing(float_t percent);
     /** @} */
 
-    typedef std::function<void (float_t value, void* data)> animation_callback;
-    typedef std::function<float_t (float_t percent)> easing_func;
+    using animation_callback = std::function<void (float_t value, void* data)>;
+    using easing_func = std::function<float_t (float_t percent)>;
 
     /**
      * Animation class with configurable easing function.

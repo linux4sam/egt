@@ -152,7 +152,7 @@ namespace mui
 
     protected:
 
-        typedef std::deque<Widget*> children_array;
+        using children_array = std::deque<Widget*>;
 
         /**
          * Add damage to the damage array.

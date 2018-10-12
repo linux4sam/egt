@@ -169,14 +169,14 @@ int main()
     sprites.push_back(&sprite2);
 #endif
 
-    PeriodicTimer animatetimer(33);
+    PeriodicTimer animatetimer(std::chrono::milliseconds(30));
     animatetimer.add_handler([&win]()
     {
         win.animate();
     });
     animatetimer.start();
 
-    PeriodicTimer animatetimer2(100);
+    PeriodicTimer animatetimer2(std::chrono::milliseconds(100));
     animatetimer2.add_handler([&sprites]()
     {
         for (auto& sprite : sprites)
@@ -184,7 +184,7 @@ int main()
     });
     animatetimer2.start();
 
-    PeriodicTimer spawntimer(1000);
+    PeriodicTimer spawntimer(std::chrono::seconds(1));
     spawntimer.add_handler([&win]()
     {
         if (win.m_images.size() > 30)

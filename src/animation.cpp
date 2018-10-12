@@ -227,7 +227,7 @@ namespace mui
         else
         {
             float_t percent = chrono::duration<float_t, milli>(now - m_start_time).count() /
-                chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
+                              chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
             float_t result = interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
             if (!float_t_compare(result, m_current))
@@ -252,10 +252,10 @@ namespace mui
     }
 
     WidgetPositionAnimator::WidgetPositionAnimator(Widget* widget,
-                                                   int coordinate,
-                                                   int start, int end,
-                                                   uint64_t duration,
-                                                   easing_func func)
+            int coordinate,
+            int start, int end,
+            uint64_t duration,
+            easing_func func)
         : Animation(start, end, WidgetPositionAnimator::callback,
                     duration, func, this),
           m_coord(coordinate)
@@ -264,10 +264,10 @@ namespace mui
     }
 
     WidgetPositionAnimator::WidgetPositionAnimator(std::vector<Widget*> widgets,
-                                                   int coordinate,
-                                                   int start, int end,
-                                                   uint64_t duration,
-                                                   easing_func func)
+            int coordinate,
+            int start, int end,
+            uint64_t duration,
+            easing_func func)
         : Animation(start, end, WidgetPositionAnimator::callback,
                     duration, func, this),
           m_widgets(widgets),
@@ -278,7 +278,7 @@ namespace mui
 
     void WidgetPositionAnimator::start()
     {
-        m_timer.start_with_duration(30);
+        m_timer.start_with_duration(std::chrono::milliseconds(30));
         Animation::start();
     }
 
@@ -316,7 +316,7 @@ namespace mui
     }
 
     AnimationTimer::AnimationTimer(int start, int end, uint64_t duration, easing_func func)
-        : PeriodicTimer(30),
+        : PeriodicTimer(std::chrono::milliseconds(30)),
           m_animation(start, end, AnimationTimer::animation_callback,
                       duration, func, this)
     {}

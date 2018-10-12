@@ -233,7 +233,7 @@ int main()
     GameWindow win;
     win.show();
 
-    PeriodicTimer animatetimer(33);
+    PeriodicTimer animatetimer(std::chrono::milliseconds(30));
     animatetimer.add_handler([&win]()
     {
         win.animate();

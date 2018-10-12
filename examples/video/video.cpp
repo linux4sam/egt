@@ -230,7 +230,7 @@ int main(int argc, const char** argv)
     position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
     position->disable(true);
 
-    PeriodicTimer postimer(200);
+    PeriodicTimer postimer(std::chrono::milliseconds(200));
     postimer.add_handler([position, window
 #ifdef FPS
                                     , &fpslabel

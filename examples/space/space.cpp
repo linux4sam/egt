@@ -4,10 +4,8 @@
  */
 #include <chrono>
 #include <cmath>
-#include <iostream>
 #include <mui/ui>
 #include <random>
-#include <string>
 #include <vector>
 
 using namespace std;
@@ -83,6 +81,9 @@ public:
 
     void spawn(const Point& p)
     {
+        //if (m_images.size() > 30)
+        //    return;
+
         int xspeed = speed_dist(e1);
         int yspeed = speed_dist(e1);
         float size = size_dist(e1);
@@ -93,7 +94,7 @@ public:
 
         Ball* image = new Ball(xspeed, yspeed);
         add(image);
-        image->scale(size, size);
+        image->scale(size, size, true);
         image->move_to_center(p);
         m_images.push_back(image);
     }
@@ -133,14 +134,14 @@ int main()
     MainWindow win;
     win.show();
 
-    PeriodicTimer animatetimer(33);
+    PeriodicTimer animatetimer(std::chrono::milliseconds(30));
     animatetimer.add_handler([&win]()
     {
         win.animate();
     });
     animatetimer.start();
 
-    PeriodicTimer spawntimer(1000);
+    PeriodicTimer spawntimer(std::chrono::seconds(1));
     spawntimer.add_handler([&win]()
     {
         win.spawn(win.box().center());

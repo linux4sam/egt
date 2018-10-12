@@ -13,7 +13,18 @@ using namespace std;
 namespace mui
 {
 
+    /*
     Timer::Timer(uint64_t duration) noexcept
+        : m_timer(main_app().event().io()),
+          m_duration(duration)
+    {}
+    */
+
+    Timer::Timer() noexcept
+        : m_timer(main_app().event().io())
+    {}
+
+    Timer::Timer(std::chrono::milliseconds duration) noexcept
         : m_timer(main_app().event().io()),
           m_duration(duration)
     {}
@@ -21,12 +32,12 @@ namespace mui
     void Timer::start()
     {
         m_timer.cancel();
-        m_timer.expires_from_now(asio::chrono::milliseconds(m_duration));
+        m_timer.expires_from_now(m_duration);
         m_timer.async_wait(std::bind(&Timer::timer_callback, this, std::placeholders::_1));
         m_running = true;
     }
 
-    void Timer::start_with_duration(uint64_t duration)
+    void Timer::start_with_duration(std::chrono::milliseconds duration)
     {
         m_duration = duration;
         start();
@@ -49,6 +60,11 @@ namespace mui
 
     void Timer::timeout()
     {
+        invoke_handlers();
+    }
+
+    void Timer::invoke_handlers()
+    {
         for (auto& callback : m_callbacks)
             callback();
     }
@@ -58,15 +74,18 @@ namespace mui
         cancel();
     }
 
-    PeriodicTimer::PeriodicTimer(uint64_t duration) noexcept
-        : Timer(duration)
+    PeriodicTimer::PeriodicTimer() noexcept
+    {}
+
+    PeriodicTimer::PeriodicTimer(std::chrono::milliseconds period) noexcept
+        : Timer(period)
     {
     }
 
     void PeriodicTimer::start()
     {
         m_timer.cancel();
-        m_timer.expires_from_now(asio::chrono::milliseconds(m_duration));
+        m_timer.expires_from_now(m_duration);
         m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this, std::placeholders::_1));
         m_running = true;
     }

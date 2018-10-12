@@ -163,7 +163,7 @@ static void top_menu(Window* win)
     struct TimeTimer : public PeriodicTimer
     {
         TimeTimer(Label& label)
-            : PeriodicTimer(100),
+            : PeriodicTimer(std::chrono::milliseconds(100)),
               m_label(label)
         {}
 

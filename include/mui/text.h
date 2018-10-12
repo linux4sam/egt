@@ -11,6 +11,7 @@
  */
 
 #include <mui/widget.h>
+#include <string>
 
 namespace mui
 {
@@ -29,10 +30,38 @@ namespace mui
 
         virtual void draw(Painter& painter, const Rect& rect);
 
+        virtual void value(const std::string& text);
+
+        inline const std::string& value() const { return m_text; }
+
+        /**
+             * Set the font of the label.
+             */
+        virtual void font(const Font& font) { m_font = font; }
+
+        /**
+             * Set the alignment of the text.
+             */
+        virtual void text_align(int align) { m_text_align = align; }
+
         virtual ~TextBox();
 
     protected:
         std::string m_text;
+        int m_text_align {ALIGN_CENTER | ALIGN_LEFT};
+        Font m_font;
+    };
+
+    class MultilineTextBox : public TextBox
+    {
+    public:
+        MultilineTextBox(const std::string& text = std::string(),
+                         const Point& point = Point(),
+                         const Size& size = Size());
+
+        virtual void draw(Painter& painter, const Rect& rect);
+
+        virtual ~MultilineTextBox();
     };
 
 }

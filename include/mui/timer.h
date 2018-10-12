@@ -10,15 +10,13 @@
 #include <cstdint>
 #include <functional>
 #include <vector>
+#include <chrono>
 
 namespace mui
 {
     // TODO: https://gist.github.com/tsaarni/bb0b8d1ca33e3a1bfea1
 
-    /**
-     * Timer callback function definition.
-     */
-    typedef std::function<void()> timer_callback_t;
+    //using namespace std::chrono_literals;
 
     /**
      * Basic one shot timer.
@@ -26,7 +24,27 @@ namespace mui
     class Timer : public detail::noncopyable
     {
     public:
-        explicit Timer(uint64_t duration = 0) noexcept;
+
+        /**
+         * Timer callback function definition.
+         */
+        using timer_callback_t = std::function<void()>;
+
+        /**
+         * Construct a one-shot timer with the specified duration.
+         */
+        //explicit Timer(uint64_t duration = 0) noexcept;
+
+        explicit Timer() noexcept;
+        explicit Timer(std::chrono::milliseconds duration) noexcept;
+
+        /*
+        template <typename Rep, typename Period>
+               explicit Timer(std::chrono::duration<Rep, Period> duration) noexcept
+                   : m_duration(std::chrono::duration_cast<decltype(my_duration)>(duration))
+               {
+               }
+               */
 
         /**
          * Start the timer.
@@ -39,7 +57,7 @@ namespace mui
          * Start the timer with the specified duration.  This overwrites any
          * duration specified previously.
          */
-        virtual void start_with_duration(uint64_t duration);
+        virtual void start_with_duration(std::chrono::milliseconds duration);
 
         /**
          * Cancel the timer.
@@ -58,7 +76,7 @@ namespace mui
         /**
          * Return the current duration of the timer.
          */
-        inline uint64_t duration() const { return m_duration; }
+        inline std::chrono::milliseconds duration() const { return m_duration; }
 
         /**
          * Returns true if the timer is currently running.
@@ -74,11 +92,13 @@ namespace mui
 
     protected:
 
+        virtual void invoke_handlers();
+
         void timer_callback(const asio::error_code& error);
 
         asio::steady_timer m_timer;
-        //asio::high_resolution_timer m_timer;
-        uint64_t m_duration;
+        std::chrono::milliseconds m_duration{};
+        //uint64_t m_duration {0};
         std::vector<timer_callback_t> m_callbacks;
         bool m_running { false};
     };
@@ -89,13 +109,12 @@ namespace mui
     class PeriodicTimer : public Timer
     {
     public:
-        explicit PeriodicTimer(uint64_t period = 0) noexcept;
+        //        explicit PeriodicTimer(uint64_t period = 0) noexcept;
+        explicit PeriodicTimer() noexcept;
+        explicit PeriodicTimer(std::chrono::milliseconds period) noexcept;
 
         virtual void start();
-	/*virtual void start_with_duration(uint64_t duration);
-        {
-            Timer::start(duration);
-	    }*/
+
         virtual ~PeriodicTimer() {}
 
     protected:

@@ -73,7 +73,7 @@ namespace mui
         }
 
 #ifdef HAVE_TSLIB
-        auto tslib = new InputTslib("/dev/input/touchscreen0");
+        /*auto tslib =*/ new InputTslib("/dev/input/touchscreen0");
         //new std::thread([tslib](){
         //      tslib->m_io.run();
         //  });

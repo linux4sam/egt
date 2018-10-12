@@ -56,7 +56,9 @@ namespace mui
     void Button::draw(Painter& painter, const Rect& rect)
     {
         // box
-        painter.draw_gradient_box(box(), palette().color(Palette::BORDER), active());
+        painter.draw_gradient_box(box(), palette().color(Palette::BORDER),
+                                  active(),
+                                  palette().color(Palette::LIGHT));
 
         // text
         painter.set_color(palette().color(Palette::TEXT));

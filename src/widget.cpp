@@ -117,7 +117,7 @@ namespace mui
             m_parent->remove(this);
     }
 
-#ifdef DEVELOPMENT
+#ifdef MUI_EXPERIMENTAL
     Combo::Combo(const string& label, const Point& point, const Size& size)
         : Widget(point.x, point.y, size.w, size.h),
           m_label(label)
@@ -308,7 +308,7 @@ namespace mui
     {
     }
 
-#ifdef DEVELOPMENT
+#ifdef MUI_EXPERIMENTAL
     ScrollWheel::ScrollWheel(const Point& point, const Size& size)
         : Widget(point.x, point.y, size.w, size.h),
           m_pos(0),

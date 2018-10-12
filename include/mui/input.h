@@ -34,7 +34,7 @@ namespace mui
         EVT_MOUSE_DOWN = 1,
         EVT_MOUSE_UP,
         EVT_MOUSE_MOVE,
-	EVT_BUTTON_DOWN,
+        EVT_BUTTON_DOWN,
         EVT_BUTTON_UP,
         EVT_MOUSE_DBLCLICK,
 
@@ -116,7 +116,7 @@ namespace mui
 
         virtual ~InputTslib();
 
-	//asio::io_context m_io;
+        //asio::io_context m_io;
 
     private:
 

@@ -31,7 +31,7 @@ namespace mui
     /**
      * Event callback function defitiion.
      */
-    typedef std::function<void ()> event_callback;
+    using event_callback = std::function<void ()>;
 
     /**
      *
@@ -59,12 +59,12 @@ namespace mui
 
     protected:
 
-	virtual void draw();
-	void invoke_idle_callbacks();
+        virtual void draw();
+        void invoke_idle_callbacks();
 
         std::unique_ptr<detail::eventloopimpl> m_impl;
 
-	std::vector<event_callback> m_idle;
+        std::vector<event_callback> m_idle;
     };
 
 }

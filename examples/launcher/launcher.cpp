@@ -167,7 +167,8 @@ class LauncherWindow : public Window
 public:
     LauncherWindow()
     {
-        m_timer.add_handler(std::bind(&LauncherWindow::timer_callback, this));
+        //m_timer.add_handler(std::bind(&LauncherWindow::timer_callback, this));
+        main_app().event().add_idle_callback(std::bind(&LauncherWindow::timer_callback, this));
 
         add(new Image("background.jpg"));
 
@@ -287,7 +288,7 @@ public:
         if (m_animation)
             delete m_animation;
 
-        m_timer.cancel();
+        //m_timer.cancel();
 
         auto center = box().center();
         auto distance = w();
@@ -306,7 +307,7 @@ public:
                                     easing_snap, this);
         m_animation->start();
 
-        m_timer.start(1);
+        //m_timer.start_with_duration(30);
 
         m_moving_x = 0;
         m_offset = m_boxes[0]->center().x;
@@ -323,7 +324,7 @@ public:
     {
         if (!m_animation->next())
         {
-            m_timer.cancel();
+            //m_timer.cancel();
 
             // TODO: exec
         }
@@ -336,7 +337,7 @@ private:
     int m_offset {0};
     vector<LauncherItem*> m_boxes;
     Animation* m_animation {nullptr};
-    PeriodicTimer m_timer;
+    //PeriodicTimer m_timer;
 };
 
 #define SHARED_PATH "/root/mui/share/mui/examples/launcher/"

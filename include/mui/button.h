@@ -58,7 +58,7 @@ namespace mui
 
         virtual void set_label_align(uint32_t align)
         {
-            Label::align(align);
+            Label::text_align(align);
         }
 
         virtual ~ImageButton();

@@ -18,29 +18,29 @@ namespace mui
 
     // try to convert pointercal (generated with ts_calibrate) to libinput matrix
     // this is broken - doesn't work
-    static void tslib_pointercal_to_libinput(struct libinput_device *dev)
+    static void tslib_pointercal_to_libinput(struct libinput_device* dev)
     {
         //ENV{WL_CALIBRATION}="a/g b/g c/g d/g e/g f/g"
 
         float matrix[6];
         //libinput_device_config_calibration_get_matrix(dev, matrix);
-        float a,b,c,d,e,f,g,h,i;
+        float a, b, c, d, e, f, g, h, i;
 
         std::fstream file("/etc/pointercal", std::ios_base::in);
         file >> a >> b >> c >> d >> e >> f >> g >> h >> i;
 
         cout << "values: " << a << " " <<  b << " " << c << " " << d << " " <<
-            e << " " << f << " " << g << " " << h << " " << i << endl;
+             e << " " << f << " " << g << " " << h << " " << i << endl;
 
-        matrix[0] = a/g;
-        matrix[1] = b/g;
-        matrix[2] = c/g;
-        matrix[3] = d/g;
-        matrix[4] = e/g;
-        matrix[5] = f/g;
+        matrix[0] = a / g;
+        matrix[1] = b / g;
+        matrix[2] = c / g;
+        matrix[3] = d / g;
+        matrix[4] = e / g;
+        matrix[5] = f / g;
 
-        cout << matrix[0]<< " " <<  matrix[1] << " " << matrix[2] << endl;
-        cout << matrix[3]<< " " <<  matrix[4] << " " << matrix[5] << endl;
+        cout << matrix[0] << " " <<  matrix[1] << " " << matrix[2] << endl;
+        cout << matrix[3] << " " <<  matrix[4] << " " << matrix[5] << endl;
 
         //matrix[2] /= 800.;
         //matrix[5] /= 480.;
@@ -51,35 +51,38 @@ namespace mui
     }
 
     static int
-    open_restricted(const char *path, int flags, void *user_data)
+    open_restricted(const char* path, int flags, void* user_data)
     {
         int fd = open(path, flags);
         return fd < 0 ? -errno : fd;
     }
 
     static void
-    close_restricted(int fd, void *user_data)
+    close_restricted(int fd, void* user_data)
     {
         close(fd);
     }
 
-    static const struct libinput_interface interface = {
+    static const struct libinput_interface interface =
+    {
         .open_restricted = open_restricted,
         .close_restricted = close_restricted,
     };
 
-    static struct libinput* tools_open_udev(const char *seat, bool verbose, bool grab)
+    static struct libinput* tools_open_udev(const char* seat, bool verbose, bool grab)
     {
-        struct libinput *li;
-        struct udev *udev = udev_new();
+        struct libinput* li;
+        struct udev* udev = udev_new();
 
-        if (!udev) {
+        if (!udev)
+        {
             fprintf(stderr, "Failed to initialize udev\n");
             return NULL;
         }
 
         li = libinput_udev_create_context(&interface, &grab, udev);
-        if (!li) {
+        if (!li)
+        {
             fprintf(stderr, "Failed to initialize context from udev\n");
             goto out;
         }
@@ -89,14 +92,15 @@ namespace mui
         //  libinput_log_set_priority(li, LIBINPUT_LOG_PRIORITY_DEBUG);
         //}
 
-        if (libinput_udev_assign_seat(li, seat)) {
+        if (libinput_udev_assign_seat(li, seat))
+        {
             fprintf(stderr, "Failed to set seat\n");
             libinput_unref(li);
             li = NULL;
             goto out;
         }
 
-    out:
+out:
         udev_unref(udev);
         return li;
     }
@@ -173,7 +177,7 @@ namespace mui
         //point.y += libinput_event_pointer_get_dy_unaccelerated(p);
         //w->deltas[idx] = point;
         //w->ndeltas++;
-//#endif
+        //#endif
 
         //cout << x << "," << y << endl;
         //mouse_position() = Point(x, y);
@@ -191,7 +195,7 @@ namespace mui
 #if 0
         struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
         double x = libinput_event_pointer_get_absolute_x_transformed(p, w->width),
-            y = libinput_event_pointer_get_absolute_y_transformed(p, w->height);
+               y = libinput_event_pointer_get_absolute_y_transformed(p, w->height);
 
         w->absx = x;
         w->absy = y;
@@ -260,7 +264,7 @@ namespace mui
                                             LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL))
         {
             value = libinput_event_pointer_get_axis_value(p,
-                                                          LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL);
+                    LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL);
             w->vy += value;
             w->vy = clip(w->vy, 0, w->height);
         }
@@ -269,7 +273,7 @@ namespace mui
                                             LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL))
         {
             value = libinput_event_pointer_get_axis_value(p,
-                                                          LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL);
+                    LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL);
             w->hx += value;
             w->hx = clip(w->hx, 0, w->width);
         }
@@ -439,7 +443,7 @@ namespace mui
                 w->tool.x_up = x;
                 w->tool.y_up = y;
             }
-            /* fallthrough */
+        /* fallthrough */
         case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
             w->tool.x = x;
             w->tool.y = y;

@@ -133,7 +133,7 @@ namespace mui
     {
         if (m_plane->buffer_count > 1)
         {
-#if 1
+#if 0
             static FlipThread pool;
             pool.enqueue(FlipJob(m_plane, m_index));
 #else
@@ -238,7 +238,7 @@ namespace mui
     {
         if (m_plane->buffer_count > 1)
         {
-#if 1
+#if 0
             static FlipThread pool;
             pool.enqueue(FlipJob(m_plane, m_index));
 #else

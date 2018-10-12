@@ -3,15 +3,15 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 
+#include "asio.hpp"
 #include "mui/app.h"
 #include "mui/event_loop.h"
+#include "mui/timer.h"
 #include "mui/widget.h"
 #include "mui/window.h"
-#include "mui/timer.h"
 #include <chrono>
 #include <deque>
 #include <numeric>
-#include "asio.hpp"
 
 using namespace std;
 
@@ -91,11 +91,11 @@ namespace mui
 
     int EventLoop::run()
     {
-        PeriodicTimer drawtimer(30);
+        PeriodicTimer drawtimer(std::chrono::milliseconds(30));
         drawtimer.add_handler([this]()
-                         {
-                             draw();
-                         });
+        {
+            draw();
+        });
         drawtimer.start();
 
 #ifdef STATS
@@ -110,7 +110,11 @@ namespace mui
 
             //draw();
 
-            wait();
+            if (wait())
+            {
+                //drawtimer.start();
+                //draw();
+            }
 
 #ifdef STATS
             auto end = chrono::steady_clock::now();

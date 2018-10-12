@@ -139,7 +139,7 @@ private:
 struct ResetTimer : public Timer
 {
     ResetTimer()
-        : Timer(1000)
+        : Timer(std::chrono::seconds(1))
     {}
 
     void timeout()
@@ -151,7 +151,7 @@ struct ResetTimer : public Timer
 struct MyAnimationTimer : public PeriodicTimer
 {
     MyAnimationTimer(ResetTimer& reset)
-        : PeriodicTimer(30),
+        : PeriodicTimer(std::chrono::milliseconds(30)),
           m_reset(reset)
     {}
 
@@ -193,7 +193,7 @@ int main()
     window.add(&label1);
 
     CPUMonitorUsage tools;
-    PeriodicTimer cputimer(1000);
+    PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.add_handler([&label1, &tools]()
     {
         tools.update();

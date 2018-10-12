@@ -11,24 +11,22 @@
  */
 
 #include <mui/widget.h>
+#include <mui/frame.h>
 
 namespace mui
 {
 
     /**
+     * Grid widget positioning helper.
+     *
      * A static grid that does not perform any drawing, but controls the
-     * size and position of any widget added.
+     * size and position of any widget added into a grid.
      */
     class StaticGrid : public Frame
     {
     public:
         StaticGrid(const Point& point, const Size& size, int columns,
-                   int rows, int border = 0)
-            : Frame(point, size, FLAG_NO_BACKGROUND),
-              m_columns(columns),
-              m_rows(rows),
-              m_border(border)
-        {}
+                   int rows, int border = 0);
 
         virtual void move(const Point& point)
         {
@@ -42,78 +40,36 @@ namespace mui
             reposition();
         }
 
+        /**
+         * Add a widget to the grid into a specific cell with an optional
+         * alignment within the cell.
+         */
         virtual Widget* add(Widget* widget, int column, int row,
-                            uint32_t align = ALIGN_EXPAND)
-        {
-            Frame::add(widget);
+                            uint32_t align = ALIGN_EXPAND);
 
-            if (column >= (int)m_widgets.size())
-                m_widgets.resize(column + 1);
-
-            if (row >= (int)m_widgets[column].size())
-                m_widgets[column].resize(row + 1);
-
-            Cell cell;
-            cell.widget = widget;
-            cell.align = align;
-            m_widgets[column][row] = cell;
-
-            return widget;
-        }
-
-        virtual void remove(Widget* widget)
-        {
-            // TODO
-        }
+        virtual void remove(Widget* widget);
 
         /**
          * Reposition all child widgets.
          */
-        virtual void reposition()
-        {
-            for (int column = 0; column < (int)m_widgets.size(); column++)
-            {
-                for (int row = 0; row < (int)m_widgets[column].size(); row++)
-                {
-                    Cell& cell = m_widgets[column][row];
-                    if (cell.widget)
-                    {
-                        // find the rect for the cell
-                        int ix = x() + (column * (w() / m_columns)) + m_border;
-                        int iy = y() + (row * (h() / m_rows)) + m_border;
-                        int iw = (w() / m_columns) - (m_border * 2) - 1;
-                        int ih = (h() / m_rows) - (m_border * 2) - 1;
+        virtual void reposition();
 
-                        // get the aligning rect
-                        Rect target = align_algorithm(cell.widget->box().size(),
-                                                      Rect(ix, iy, iw, ih),
-                                                      cell.align);
-
-                        // reposition/resize widget
-                        cell.widget->move(target.point());
-                        cell.widget->resize(target.size());
-                    }
-                }
-            }
-        }
-
-        virtual ~StaticGrid()
-        {}
+        virtual ~StaticGrid();
 
     protected:
-        int m_columns;
-        int m_rows;
-        int m_border;
+        int m_columns {0};
+        int m_rows {0};
+        int m_border {0};
 
         struct Cell
         {
-            Widget* widget;
-            uint32_t align;
+            Widget* widget {nullptr};
+            uint32_t align {Widget::ALIGN_NONE};
         };
 
-        typedef std::vector<std::vector<Cell>> widget_array;
+        using cell_array = std::vector<std::vector<Cell>>;
 
-        widget_array m_widgets;
+        cell_array m_cells;
 
     private:
 
@@ -182,8 +138,8 @@ namespace mui
         {}
 
     protected:
-        int m_border;
-        int m_align;
+        int m_border {0};
+        int m_align {Widget::ALIGN_NONE};
     };
 
 }

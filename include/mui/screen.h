@@ -11,8 +11,8 @@
  */
 
 #include <cairo.h>
+#include <deque>
 #include <drm_fourcc.h>
-#include <list>
 #include <memory>
 #include <mui/geometry.h>
 #include <vector>
@@ -31,7 +31,7 @@ namespace mui
     class IScreen
     {
     public:
-        typedef std::list<Rect> damage_array;
+        using damage_array = std::deque<Rect>;
 
         IScreen();
 
@@ -51,7 +51,8 @@ namespace mui
          * This function implements the algorithm for adding damages rectangles
          * to a list.
          */
-        static void damage_algorithm(IScreen::damage_array& damage, const Rect& rect);
+        static void damage_algorithm(IScreen::damage_array& damage,
+                                     const Rect& rect);
 
     protected:
 

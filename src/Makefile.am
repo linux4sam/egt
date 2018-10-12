@@ -17,8 +17,8 @@ libmui_la_CFLAGS = $(AM_CFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS)
 
 libmui_la_SOURCES = \
-app.cpp \
 animation.cpp \
+app.cpp \
 button.cpp \
 chart.cpp \
 color.cpp \
@@ -26,6 +26,7 @@ event_loop.cpp \
 font.cpp \
 frame.cpp \
 geometry.cpp \
+grid.cpp \
 image.cpp \
 imagecache.cpp \
 input.cpp \
@@ -40,6 +41,7 @@ sprite.cpp \
 text.cpp \
 timer.cpp \
 tools.cpp \
+tslib.cpp \
 utils.cpp \
 valuewidget.cpp \
 video.cpp \

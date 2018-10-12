@@ -43,7 +43,7 @@ int main()
     sprite2.show();
     win.show();
 
-    PeriodicTimer animatetimer(100);
+    PeriodicTimer animatetimer(std::chrono::milliseconds(100));
     animatetimer.add_handler([&sprite1, &sprite2]()
     {
         sprite1.advance();

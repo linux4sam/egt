@@ -144,7 +144,7 @@ int main()
     struct MoveTimer : public PeriodicTimer
     {
         MoveTimer()
-            : PeriodicTimer(33)
+            : PeriodicTimer(std::chrono::milliseconds(30))
         {}
 
         void timeout()
@@ -169,7 +169,7 @@ int main()
     struct CPUTimer: public PeriodicTimer
     {
         CPUTimer(Label& label)
-            : PeriodicTimer(1000),
+            : PeriodicTimer(std::chrono::seconds(1)),
               m_label(label)
         {}
 

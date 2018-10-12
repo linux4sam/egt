@@ -231,7 +231,7 @@ namespace mui
     }
 
     Painter& Painter::draw_gradient_box(const Rect& rect, const Color& border,
-                                        bool active)
+                                        bool active, const Color& color)
     {
         AutoSaveRestore sr(*this);
 
@@ -257,26 +257,26 @@ namespace mui
 
         if (!active)
         {
-            Color step = Color::WHITE;
+            Color step = color;
             cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
-            step = Color::WHITE.tint(.9);
+            step = color.tint(.9);
             cairo_pattern_add_color_stop_rgb(pat, 0.43, step.redf(), step.greenf(), step.bluef());
-            step = Color::WHITE.tint(.82);
+            step = color.tint(.82);
             cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
-            step = Color::WHITE.tint(.95);
+            step = color.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat, 1.0, step.redf(), step.greenf(), step.bluef());
 
             cairo_set_line_width(m_cr.get(), 1.0);
         }
         else
         {
-            Color step = Color::WHITE;
+            Color step = color;
             cairo_pattern_add_color_stop_rgb(pat, 1, step.redf(), step.greenf(), step.bluef());
-            step = Color::WHITE.tint(.9);
+            step = color.tint(.9);
             cairo_pattern_add_color_stop_rgb(pat, 0.5, step.redf(), step.greenf(), step.bluef());
-            step = Color::WHITE.tint(.82);
+            step = color.tint(.82);
             cairo_pattern_add_color_stop_rgb(pat, 0.43, step.redf(), step.greenf(), step.bluef());
-            step = Color::WHITE.tint(.95);
+            step = color.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat, 0, step.redf(), step.greenf(), step.bluef());
 
             cairo_set_line_width(m_cr.get(), 2.0);

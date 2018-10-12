@@ -25,12 +25,6 @@
 
 namespace mui
 {
-    using shared_cairo_surface_t =
-        std::shared_ptr<cairo_surface_t>;
-
-    using shared_cairo_t =
-        std::shared_ptr<cairo_t>;
-
     class Painter;
 
     enum
@@ -89,7 +83,7 @@ namespace mui
         EventWidget() noexcept
         {}
 
-        typedef std::function<void (EventWidget* widget)> handler_callback_t;
+        using handler_callback_t = std::function<void (EventWidget* widget)>;
 
         virtual void add_handler(handler_callback_t handler)
         {
@@ -532,7 +526,7 @@ namespace mui
         friend class Frame;
     };
 
-#ifdef DEVELOPMENT
+#ifdef MUI_EXPERIMENTAL
     /**
      * Combo box widget.
      */
@@ -557,7 +551,7 @@ namespace mui
     class ListBox : public Widget
     {
     public:
-        typedef std::vector<std::string> item_array;
+        using item_array = std::vector<std::string>;
 
         ListBox(const item_array& items,
                 const Point& point = Point(),
@@ -589,7 +583,7 @@ namespace mui
         Font m_font;
     };
 
-#ifdef DEVELOPMENT
+#ifdef MUI_EXPERIMENTAL
     class ScrollWheel : public Widget
     {
     public:

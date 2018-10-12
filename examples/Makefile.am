@@ -22,6 +22,7 @@ LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 bin_PROGRAMS = \
 basic/basic \
 brick/brick \
+calc/calc \
 coin/coin \
 easing/easing \
 floating/floating \
@@ -39,6 +40,12 @@ brick_brick_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
 brick_brickdir = $(prefix)/share/mui/examples/brick
 brick_brick_DATA = $(wildcard $(top_srcdir)/examples/brick/*.png)
 brick_brick_LDFLAGS = $(AM_LDFLAGS)
+
+calc_calc_SOURCES = calc/calc.cpp
+calc_calc_CXXFLAGS = $(AM_CXXFLAGS)
+calc_calc_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+calc_calcdir = $(prefix)/share/mui/examples/calc
+calc_calc_LDFLAGS = $(AM_LDFLAGS)
 
 coin_coin_SOURCES = coin/coin.cpp
 coin_coin_CXXFLAGS = $(AM_CXXFLAGS)

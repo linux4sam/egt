@@ -5,16 +5,15 @@
 #ifndef MUI_PAINTER_H
 #define MUI_PAINTER_H
 
-#include <mui/font.h>
-#include <mui/palette.h>
-#include <mui/geometry.h>
-#include <mui/widget.h>
 #include <cairo.h>
 #include <memory>
+#include <mui/font.h>
+#include <mui/geometry.h>
+#include <mui/palette.h>
+#include <mui/widget.h>
 
 namespace mui
 {
-
     using shared_cairo_surface_t =
         std::shared_ptr<cairo_surface_t>;
 
@@ -140,7 +139,8 @@ namespace mui
 
         Painter& draw_gradient_box(const Rect& rect,
                                    const Color& border,
-                                   bool active = false);
+                                   bool active = false,
+                                   const Color& color = Color::WHITE);
         /**
          *@}
          */

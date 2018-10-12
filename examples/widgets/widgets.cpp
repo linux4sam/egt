@@ -61,6 +61,7 @@ protected:
     StaticGrid m_grid;
 };
 
+
 int main()
 {
     Application app;
@@ -143,7 +144,7 @@ int main()
     win1.add(&am1);
 
     CPUMonitorUsage tools;
-    PeriodicTimer cputimer(1000);
+    PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.add_handler([&tools, &lp1, &am1]()
     {
         tools.update();
