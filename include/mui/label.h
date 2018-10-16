@@ -27,7 +27,7 @@ namespace mui
         explicit Label(const std::string& text = std::string(),
                        const Point& point = Point(),
                        const Size& size = Size(),
-                       int align = ALIGN_CENTER,
+                       alignmask align = alignmask::CENTER,
                        const Font& font = Font());
 
         /**
@@ -48,14 +48,14 @@ namespace mui
         /**
          * Set the alignment of the label.
          */
-        virtual void text_align(int align) { m_text_align = align; }
+        virtual void text_align(alignmask align) { m_text_align = align; }
 
         virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~Label();
 
     protected:
-        int m_text_align;
+        alignmask m_text_align;
         std::string m_text;
         Font m_font;
     };
@@ -72,13 +72,24 @@ namespace mui
                  const Point& point = Point(),
                  const Size& size = Size());
 
-        bool checked() const
+        /**
+         * Return the boolean state of the checkbox.
+         */
+        inline bool checked() const
         {
             return m_checked;
         }
-        void checked(bool c)
+
+        /**
+         * Set the checked state of the checkbox.
+         */
+        void check(bool value)
         {
-            m_checked = c;
+            if (m_checked != value)
+            {
+                m_checked = value;
+                damage();
+            }
         }
 
         virtual int handle(int event);
@@ -86,8 +97,23 @@ namespace mui
         virtual void draw(Painter& painter, const Rect& rect);
 
         virtual ~CheckBox();
+
     protected:
         bool m_checked;
+    };
+
+    /**
+     * CheckBox with a boolean slider style interface.
+     */
+    class SlidingCheckBox : public CheckBox
+    {
+    public:
+        SlidingCheckBox(const Point& point = Point(),
+                        const Size& size = Size());
+
+        virtual void draw(Painter& painter, const Rect& rect);
+
+        virtual ~SlidingCheckBox();
     };
 
     /**

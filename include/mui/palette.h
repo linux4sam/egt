@@ -13,6 +13,8 @@ namespace mui
 {
 
     /**
+     * Color palette.
+     *
      * The color palette defines a bank of colors used. Each widget is capable
      * of optionally maintaining its own palette if one is explicitly set,
      * otherwise it will default to a reference of the global palette.

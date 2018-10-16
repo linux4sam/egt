@@ -16,6 +16,7 @@ using namespace std;
 namespace mui
 {
 
+#if 0
     // try to convert pointercal (generated with ts_calibrate) to libinput matrix
     // this is broken - doesn't work
     static void tslib_pointercal_to_libinput(struct libinput_device* dev)
@@ -49,10 +50,13 @@ namespace mui
         if (status != LIBINPUT_CONFIG_STATUS_SUCCESS)
             cout << "Failed to apply calibration.\n";
     }
+#endif
 
     static int
     open_restricted(const char* path, int flags, void* user_data)
     {
+        ignoreparam(user_data);
+
         int fd = open(path, flags);
         return fd < 0 ? -errno : fd;
     }
@@ -60,17 +64,19 @@ namespace mui
     static void
     close_restricted(int fd, void* user_data)
     {
+        ignoreparam(user_data);
         close(fd);
     }
 
     static const struct libinput_interface interface =
     {
-        .open_restricted = open_restricted,
-        .close_restricted = close_restricted,
+        open_restricted,
+        close_restricted,
     };
 
     static struct libinput* tools_open_udev(const char* seat, bool verbose, bool grab)
     {
+        ignoreparam(verbose);
         struct libinput* li;
         struct udev* udev = udev_new();
 
@@ -190,6 +196,8 @@ out:
 
     void LibInput::handle_event_absmotion(struct libinput_event* ev)
     {
+        ignoreparam(ev);
+
         cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
@@ -254,6 +262,7 @@ out:
 
     void LibInput::handle_event_axis(struct libinput_event* ev)
     {
+        ignoreparam(ev);
         cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
@@ -319,6 +328,7 @@ out:
 
     void LibInput::handle_event_swipe(struct libinput_event* ev)
     {
+        ignoreparam(ev);
         cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
@@ -354,6 +364,7 @@ out:
 
     void LibInput::handle_event_pinch(struct libinput_event* ev)
     {
+        ignoreparam(ev);
         cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
@@ -393,6 +404,7 @@ out:
 
     void LibInput::handle_event_tablet(struct libinput_event* ev)
     {
+        ignoreparam(ev);
         cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0

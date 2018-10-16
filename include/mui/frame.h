@@ -12,6 +12,7 @@
 
 #include <mui/widget.h>
 #include <deque>
+#include <string>
 
 namespace mui
 {
@@ -40,9 +41,7 @@ namespace mui
          * @param[in] flags Widget flags.
          */
         explicit Frame(const Point& point, const Size& size,
-                       uint32_t flags = FLAG_NO_BACKGROUND)
-            : Widget(point, size, flags | FLAG_FRAME)
-        {}
+                       widgetmask flags = widgetmask::FRAME /*widgetmask::NO_BACKGROUND*/);
 
         virtual int handle(int event);
 
@@ -108,7 +107,7 @@ namespace mui
             i = std::find_if(m_children.begin(), m_children.end(),
                              [&name](const Widget * obj)
             {
-                return obj->is_flag_set(FLAG_FRAME);
+                return obj->is_flag_set(widgetmask::FRAME);
             });
 
             for (; i != m_children.end(); ++i)
@@ -146,6 +145,11 @@ namespace mui
          * @warning Do not call directly.
          */
         virtual void draw();
+
+        /**
+         * Save the frame contents to a file.
+         */
+        void save_to_file(const std::string& filename);
 
         virtual ~Frame()
         {}

@@ -30,8 +30,8 @@ public:
              bool border = true)
         : ImageButton(filename, label, Point(x, y), Size(), border)
     {
-        set_image_align(ALIGN_CENTER | ALIGN_TOP);
-        set_label_align(ALIGN_CENTER | ALIGN_BOTTOM);
+        set_image_align(alignmask::CENTER | alignmask::TOP);
+        set_label_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
     int handle(int event)
@@ -112,8 +112,8 @@ public:
     {
         // TODO: this logic needs to be pushed up into draw() caller
         Rect i = rect;
-        if (Rect::is_intersect(box(), rect))
-            i = Rect::intersect(rect, box());
+        if (Rect::intersect(box(), rect))
+            i = Rect::intersection(rect, box());
 
         Painter::AutoSaveRestore sr(painter);
         painter.set_color(m_color);
@@ -155,7 +155,7 @@ static void top_menu(Window* win)
     HomeImage* i1 = new HomeImage("home.png", 5, 5);
     win->add(i1);
 
-    Label* l1 = new Label("", Point(320, 0), Size(100, 60), Label::ALIGN_CENTER, Font(32));
+    Label* l1 = new Label("", Point(320, 0), Size(100, 60), alignmask::CENTER, Font(32));
     l1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l1);
@@ -185,7 +185,7 @@ static void top_menu(Window* win)
 
     timer->start();
 
-    Label* l2 = new Label("48°", Point(420, 0), Size(100, 60), Label::ALIGN_CENTER, Font(24));
+    Label* l2 = new Label("48°", Point(420, 0), Size(100, 60), alignmask::CENTER, Font(24));
     l2->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l2);
@@ -285,8 +285,11 @@ int main()
 
     win1 = new MainWindow(Size(800, 480));
     win2 = new ChildWindow(Size(800, 480));
+
     /** @todo Broken. enter()/leave() not fully implemented. */
     //win1->add(win2);
+
+    win1->show();
 
     return app.run();
 }

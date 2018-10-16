@@ -41,7 +41,7 @@ namespace mui
     HardwareSprite::HardwareSprite(const std::string& filename, int framew,
                                    int frameh, int framecount, int framex,
                                    int framey, const Point& point)
-        : PlaneWindow(Size(), FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND),
+        : PlaneWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
           ISpriteBase(filename, framew, frameh, framecount, framex, framey)
     {
         add(&m_image);
@@ -90,6 +90,8 @@ namespace mui
 
     void SoftwareSprite::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         int panx;
         int pany;
         get_frame_offsets(m_index, panx, pany);

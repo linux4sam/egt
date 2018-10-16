@@ -52,10 +52,10 @@ MAYBE_WARN="-Wall -Wextra \
 -Wmissing-declarations \
 -Wpacked \
 -Wstrict-aliasing=2 -Winit-self \
--Wno-unused-parameter \
 -Wno-attributes -Wno-long-long \
 -Wno-missing-field-initializers"
 
+#-Wno-unused-parameter
 #-Winline
 #-Wswitch-enum
 #-Wshadow

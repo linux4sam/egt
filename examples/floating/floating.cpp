@@ -22,7 +22,7 @@ class MyWindow : public Window
 {
 public:
     MyWindow()
-        : Window(Size(), FLAG_NO_BACKGROUND),
+        : Window(Size(), widgetmask::NO_BACKGROUND),
           m_img("background.png")
     {
         add(&m_img);
@@ -159,7 +159,7 @@ int main()
     Label label1("CPU: -",
                  Point(40, win.size().h - 40),
                  Size(100, 40),
-                 Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+                 alignmask::LEFT | alignmask::CENTER);
     label1.palette()
     .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);

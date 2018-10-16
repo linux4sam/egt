@@ -6,12 +6,16 @@
 #define MUI_VALUEWIDGET_H
 
 #include <mui/widget.h>
+#include <string>
 
 namespace mui
 {
 
     /**
      * A widget that manages an unbounded value.
+     *
+     * While the value is technically unbounded, a type of bool will only allow
+     * a boolean value.
      */
     template<class T>
     class ValueWidget : public Widget
@@ -24,7 +28,7 @@ namespace mui
         {}
 
         /**
-         * Set value.
+         * Set the value.
          *
          * If this results in changing the value, it will damage() the widget.
          */
@@ -38,9 +42,9 @@ namespace mui
         }
 
         /**
-         * Get value.
+         * Get the value.
          */
-        T value() const { return m_value; }
+        inline T value() const { return m_value; }
 
         virtual ~ValueWidget()
         {}
@@ -65,6 +69,9 @@ namespace mui
         virtual int handle(int event);
 
         virtual void draw(Painter& painter, const Rect& rect);
+
+        virtual ~Radial()
+        {}
 
     protected:
         std::string m_label;
@@ -173,21 +180,21 @@ namespace mui
         virtual void draw(Painter& painter, const Rect& rect);
     };
 
+    enum orientation
+    {
+        HORIZONTAL,
+        VERTICAL,
+    };
+
     /**
      * @todo This should be a ValueRangeWidget<int>.
      */
     class Slider : public Widget
     {
     public:
-        enum
-        {
-            ORIENTATION_HORIZONTAL,
-            ORIENTATION_VERTICAL,
-        };
-
         Slider(int min, int max, const Point& point = Point(),
                const Size& size = Size(),
-               int orientation = ORIENTATION_HORIZONTAL);
+               orientation orient = orientation::HORIZONTAL);
 
         virtual int handle(int event);
 
@@ -210,7 +217,7 @@ namespace mui
             {
                 m_pos = pos;
                 damage();
-                invoke_handlers();
+                invoke_handlers(EVT_PROPERTY_CHANGE);
             }
         }
 
@@ -221,7 +228,7 @@ namespace mui
         // position to offset
         inline int normalize(int pos)
         {
-            if (m_orientation == ORIENTATION_HORIZONTAL)
+            if (m_orientation == orientation::HORIZONTAL)
             {
                 int dim = h();
                 return float(w() - dim) / float(m_max - m_min) * float(pos);
@@ -236,7 +243,7 @@ namespace mui
         // offset to position
         inline int denormalize(int diff)
         {
-            if (m_orientation == ORIENTATION_HORIZONTAL)
+            if (m_orientation == orientation::HORIZONTAL)
             {
                 int dim = h();
                 return float(m_max - m_min) / float(w() - dim) * float(diff);
@@ -253,7 +260,7 @@ namespace mui
         int m_pos;
         int m_moving_x;
         int m_start_pos;
-        int m_orientation;
+        orientation m_orientation;
     };
 
 }

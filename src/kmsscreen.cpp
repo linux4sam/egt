@@ -42,6 +42,16 @@ namespace mui
              plane_width(plane), plane_height(plane), plane_format(plane));
     }
 
+    void KMSOverlayScreen::hide()
+    {
+        plane_hide(m_plane);
+    }
+
+    void KMSOverlayScreen::show()
+    {
+        plane_apply(m_plane);
+    }
+
     void* KMSOverlayScreen::raw()
     {
         return m_plane->bufs[index()];

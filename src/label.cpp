@@ -12,7 +12,7 @@ namespace mui
 {
 
     Label::Label(const std::string& text, const Point& point, const Size& size,
-                 int align, const Font& font)
+                 alignmask align, const Font& font)
         : Widget(point, size),
           m_text_align(align),
           m_text(text),
@@ -30,9 +30,11 @@ namespace mui
 
     void Label::draw(Painter& painter, const Rect& rect)
     {
-        if (!is_flag_set(FLAG_NO_BACKGROUND))
+        ignoreparam(rect);
+
+        if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
-            if (is_flag_set(FLAG_BORDER))
+            if (is_flag_set(widgetmask::BORDER))
                 painter.draw_basic_box(box(), palette().color(Palette::BORDER), palette().color(Palette::BG));
             else
                 painter.draw_basic_box(box(), palette().color(Palette::BG), palette().color(Palette::BG));
@@ -59,8 +61,7 @@ namespace mui
         switch (event)
         {
         case EVT_MOUSE_DOWN:
-            damage();
-            checked(!checked());
+            check(!checked());
             return 1;
         }
 
@@ -69,6 +70,8 @@ namespace mui
 
     void CheckBox::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         static const int STANDOFF = 5;
 
         // image
@@ -107,11 +110,43 @@ namespace mui
         painter.draw_text(m_text,
                           box(),
                           palette().color(Palette::TEXT),
-                          ALIGN_LEFT | ALIGN_CENTER,
+                          alignmask::LEFT | alignmask::CENTER,
                           h());
     }
 
     CheckBox::~CheckBox()
+    {}
+
+    SlidingCheckBox::SlidingCheckBox(const Point& point,
+                                     const Size& size)
+        : CheckBox("", point, size)
+    {}
+
+    void SlidingCheckBox::draw(Painter& painter, const Rect& rect)
+    {
+        ignoreparam(rect);
+
+        painter.draw_basic_box(box(), palette().color(Palette::BORDER),
+                               palette().color(Palette::BG));
+
+        if (checked())
+        {
+            Rect rect = box();
+            rect.w /= 2;
+            rect.x += rect.w;
+            painter.draw_basic_box(rect, palette().color(Palette::BORDER),
+                                   palette().color(Palette::HIGHLIGHT));
+        }
+        else
+        {
+            Rect rect = box();
+            rect.w /= 2;
+            painter.draw_basic_box(rect, palette().color(Palette::BORDER),
+                                   palette().color(Palette::MID));
+        }
+    }
+
+    SlidingCheckBox::~SlidingCheckBox()
     {}
 
     ImageLabel::ImageLabel(const std::string& image,
@@ -119,7 +154,7 @@ namespace mui
                            const Point& point,
                            const Size& size,
                            const Font& font)
-        : Label(text, point, size, ALIGN_LEFT | ALIGN_CENTER, font)
+        : Label(text, point, size, alignmask::LEFT | alignmask::CENTER, font)
     {
         m_image = image_cache.get(image, 1.0);
         assert(m_image.get());
@@ -128,15 +163,17 @@ namespace mui
 
     void ImageLabel::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         // image
-        painter.draw_image(m_image, box(), ALIGN_LEFT | ALIGN_CENTER);
+        painter.draw_image(m_image, box(), alignmask::LEFT | alignmask::CENTER);
 
         // text
         //Label::draw(rect);
 
         auto width = cairo_image_surface_get_width(m_image.get());
         painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
-                          ALIGN_LEFT | ALIGN_CENTER, width + 5, m_font);
+                          alignmask::LEFT | alignmask::CENTER, width + 5, m_font);
 
     }
 

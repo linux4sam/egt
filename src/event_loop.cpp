@@ -78,7 +78,7 @@ namespace mui
                 continue;
 
             // draw top level frames and plane frames
-            if (w->top_level() || w->is_flag_set(FLAG_PLANE_WINDOW))
+            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
                 w->draw();
         }
 #ifdef STATS2

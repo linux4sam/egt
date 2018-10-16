@@ -32,7 +32,8 @@ launcher/launcher \
 space/space \
 sprite/sprite \
 water/water \
-widgets/widgets
+widgets/widgets \
+whiteboard/whiteboard
 
 brick_brick_SOURCES = brick/brick.cpp
 brick_brick_CXXFLAGS = $(AM_CXXFLAGS)
@@ -116,3 +117,8 @@ basic_basic_SOURCES = basic/basic.cpp
 basic_basic_CXXFLAGS = $(AM_CXXFLAGS)
 basic_basic_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
 basic_basic_LDFLAGS = $(AM_LDFLAGS)
+
+whiteboard_whiteboard_SOURCES = whiteboard/whiteboard.cpp
+whiteboard_whiteboard_CXXFLAGS = $(AM_CXXFLAGS)
+whiteboard_whiteboard_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+whiteboard_whiteboard_LDFLAGS = $(AM_LDFLAGS)

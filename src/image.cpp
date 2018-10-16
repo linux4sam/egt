@@ -64,7 +64,7 @@ namespace mui
 
         if (m_label)
             painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
-                              ALIGN_BOTTOM | ALIGN_CENTER, 0, m_font);
+                              alignmask::BOTTOM | alignmask::CENTER, 0, m_font);
 
     }
 

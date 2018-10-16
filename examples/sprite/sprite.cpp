@@ -24,17 +24,17 @@ int main()
     HardwareSprite sprite1("walk.png", 75, 132, 8, 0, 0,
                            Point(main_screen()->size().w / 2 - 75,
                                  main_screen()->size().h / 2 - 132 / 2));
-    grid.add(&sprite1, 0, 1, StaticGrid::ALIGN_CENTER);
+    grid.add(&sprite1, 0, 1, alignmask::CENTER);
 
     SoftwareSprite sprite2("walk.png", 75, 132, 8, 0, 0,
                            Point(main_screen()->size().w / 2,
                                  main_screen()->size().h / 2 - 132 / 2));
-    grid.add(&sprite2, 1, 1, StaticGrid::ALIGN_CENTER);
+    grid.add(&sprite2, 1, 1, alignmask::CENTER);
 
     grid.add(new Label("Hardware", Point(100, 100)), 0, 0,
-             StaticGrid::ALIGN_CENTER | StaticGrid::ALIGN_BOTTOM);
+             alignmask::CENTER | alignmask::BOTTOM);
     grid.add(new Label("Software", Point(200, 200)), 1, 0,
-             StaticGrid::ALIGN_CENTER | StaticGrid::ALIGN_BOTTOM);
+             alignmask::CENTER | alignmask::BOTTOM);
 
     grid.reposition();
     win.add(&grid);

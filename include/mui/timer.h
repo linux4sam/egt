@@ -16,10 +16,10 @@ namespace mui
 {
     // TODO: https://gist.github.com/tsaarni/bb0b8d1ca33e3a1bfea1
 
-    //using namespace std::chrono_literals;
-
     /**
      * Basic one shot timer.
+     *
+     * This is a timer that will fire once after the specified duration.
      */
     class Timer : public detail::noncopyable
     {
@@ -31,20 +31,22 @@ namespace mui
         using timer_callback_t = std::function<void()>;
 
         /**
+         * Construct a one-shot timer.
+        *
+         * The duration of the timer can be specified when calling
+         * start_with_duration() instead.
+               */
+        explicit Timer() noexcept;
+
+        /**
          * Construct a one-shot timer with the specified duration.
          */
-        //explicit Timer(uint64_t duration = 0) noexcept;
-
-        explicit Timer() noexcept;
         explicit Timer(std::chrono::milliseconds duration) noexcept;
 
-        /*
-        template <typename Rep, typename Period>
-               explicit Timer(std::chrono::duration<Rep, Period> duration) noexcept
-                   : m_duration(std::chrono::duration_cast<decltype(my_duration)>(duration))
-               {
-               }
-               */
+        /**
+             * Construct a one-shot timer with the specified duration.
+             */
+        explicit Timer(std::chrono::milliseconds duration, bool autostart);
 
         /**
          * Start the timer.
@@ -83,6 +85,9 @@ namespace mui
          */
         inline bool running() const { return m_running; }
 
+        /**
+         * Add a handler to be called with the timer times out.
+         */
         void add_handler(timer_callback_t callback)
         {
             m_callbacks.push_back(callback);
@@ -92,32 +97,53 @@ namespace mui
 
     protected:
 
+        /**
+         * Invoke any registered handlers.
+         */
         virtual void invoke_handlers();
 
-        void timer_callback(const asio::error_code& error);
-
         asio::steady_timer m_timer;
-        std::chrono::milliseconds m_duration{};
-        //uint64_t m_duration {0};
+        std::chrono::milliseconds m_duration {};
         std::vector<timer_callback_t> m_callbacks;
-        bool m_running { false};
+        bool m_running {false};
+
+    private:
+
+        void timer_callback(const asio::error_code& error);
     };
 
     /**
      * Periodic timer.
+     *
+     * This is a timer that will keep firing at the duration interval until it
+     * is stopped.
      */
     class PeriodicTimer : public Timer
     {
     public:
-        //        explicit PeriodicTimer(uint64_t period = 0) noexcept;
+        /**
+         * Construct a periodic timer.
+        *
+         * The duration of the timer can be specified when calling
+         * start_with_duration() instead.
+               */
         explicit PeriodicTimer() noexcept;
+
+        /**
+         * Construct a periodic timer with the specified duration.
+         */
         explicit PeriodicTimer(std::chrono::milliseconds period) noexcept;
+
+        /**
+             * Construct a periodic timer with the specified duration.
+             */
+        explicit PeriodicTimer(std::chrono::milliseconds period, bool autostart);
 
         virtual void start();
 
         virtual ~PeriodicTimer() {}
 
-    protected:
+    private:
 
         void timer_callback(const asio::error_code& error);
     };

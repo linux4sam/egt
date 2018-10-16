@@ -47,7 +47,9 @@ valuewidget.cpp \
 video.cpp \
 widget.cpp \
 window.cpp \
-x11screen.cpp
+x11screen.cpp \
+lua/script.h \
+lua/script.c
 
 libmui_la_LIBADD =
 if HAVE_KPLOT

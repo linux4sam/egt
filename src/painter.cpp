@@ -53,14 +53,13 @@ namespace mui
         return *this;
     }
 
-    Painter& Painter::draw_rectangle(const Rect& rect)
+    Painter& Painter::rectangle(const Rect& rect)
     {
         cairo_rectangle(m_cr.get(),
                         rect.x,
                         rect.y,
                         rect.w,
                         rect.h);
-        cairo_stroke(m_cr.get());
 
         return *this;
     }
@@ -84,7 +83,7 @@ namespace mui
         return *this;
     }
 
-    Painter& Painter::draw_line(const Point& start, const Point& end)
+    Painter& Painter::line(const Point& start, const Point& end)
     {
         cairo_move_to(m_cr.get(), start.x, start.y);
         cairo_line_to(m_cr.get(), end.x, end.y);
@@ -92,7 +91,7 @@ namespace mui
         return *this;
     }
 
-    Painter& Painter::draw_line(const Point& end)
+    Painter& Painter::line(const Point& end)
     {
         cairo_line_to(m_cr.get(), end.x, end.y);
 
@@ -173,7 +172,7 @@ namespace mui
         return *this;
     }
 
-    Painter& Painter::draw_text(const Rect& rect, const std::string& str, int align, int standoff)
+    Painter& Painter::draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff)
     {
         cairo_text_extents_t textext;
         cairo_text_extents(m_cr.get(), str.c_str(), &textext);
@@ -187,6 +186,13 @@ namespace mui
                       target.y - textext.y_bearing);
         cairo_show_text(m_cr.get(), str.c_str());
         cairo_stroke(m_cr.get());
+
+        return *this;
+    }
+
+    Painter& Painter::clip()
+    {
+        cairo_clip(m_cr.get());
 
         return *this;
     }
@@ -297,7 +303,7 @@ namespace mui
     }
 
     Painter& Painter::draw_text(const std::string& text, const Rect& rect,
-                                const Color& color, int align, int margin,
+                                const Color& color, alignmask align, int margin,
                                 const Font& font)
     {
         AutoSaveRestore sr(*this);
@@ -311,28 +317,27 @@ namespace mui
 
     Painter& Painter::draw_image(shared_cairo_surface_t image,
                                  const Rect& dest,
-                                 int align, int margin, bool bw)
+                                 alignmask align, int margin, bool bw)
     {
         auto width = cairo_image_surface_get_width(image.get());
         auto height = cairo_image_surface_get_height(image.get());
 
         Rect target = Widget::align_algorithm(Size(width, height), dest, align, margin);
 
-#if 1
-        draw_image(target.point(), image, bw);
-#else
-        paint_surface_with_drop_shadow(
-            image.get(),
-            5,
-            0.2,
-            0.4,
-            target.x,
-            target.y,
-            width,
-            height,
-            target.x,
-            target.y);
-#endif
+        if (true)
+            draw_image(target.point(), image, bw);
+        else
+            paint_surface_with_drop_shadow(
+                image.get(),
+                5,
+                0.2,
+                0.4,
+                /*target.x,
+                  target.y,
+                  width,
+                  height,*/
+                target.x,
+                target.y);
 
         return *this;
     }
@@ -357,10 +362,10 @@ namespace mui
             int shadow_offset,
             double shadow_alpha,
             double tint_alpha,
-            int srx,
+            /*int srx,
             int srcy,
             int width,
-            int height,
+            int height,*/
             int dstx,
             int dsty)
     {

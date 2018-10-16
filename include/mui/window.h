@@ -33,7 +33,7 @@ namespace mui
     {
     public:
         Window(const Size& size = Size(),
-               uint32_t flags = FLAG_WINDOW_DEFAULT);
+               widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
         virtual void enter()
         {
@@ -67,7 +67,7 @@ namespace mui
     protected:
 
         // unsupported
-        virtual void resize(const Size& size) { /* Not supported yet. */ }
+        virtual void resize(const Size& size) { ignoreparam(size); /* Not supported yet. */ }
 
         virtual IScreen* screen()
         {
@@ -92,7 +92,7 @@ namespace mui
     public:
 
         explicit PlaneWindow(const Size& size = Size(),
-                             uint32_t flags = FLAG_WINDOW_DEFAULT,
+                             widgetmask flags = widgetmask::WINDOW_DEFAULT,
                              uint32_t format = DEFAULT_FORMAT,
                              bool heo = false);
 
@@ -109,7 +109,9 @@ namespace mui
 
         virtual void draw();
 
-        virtual void hide() { /** TODO: no way to hide. */  }
+        virtual void show();
+
+        virtual void hide();
 
         virtual ~PlaneWindow();
 
@@ -119,18 +121,33 @@ namespace mui
         bool m_heo {false};
     };
 
-    class Popup : public PlaneWindow
+    /**
+     * Popup window.
+     */
+    template <class T>
+    class Popup : public T
     {
     public:
         explicit Popup(const Size& size = Size(),
                        const Point& point = Point())
-            : PlaneWindow(size)
+            : T(size)
         {
-            move(point);
+            this->move(point);
         }
 
-        virtual void show()
+        /**
+         * Show the window.
+         *
+         * @param[in] center Move the window to the center of the screen first.
+         */
+        virtual void show(bool center = false)
         {
+            if (center)
+            {
+                this->move_to_center(main_screen()->box().center());
+            }
+
+            T::show();
         }
     };
 

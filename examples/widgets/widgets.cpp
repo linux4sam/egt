@@ -17,14 +17,20 @@ using namespace mui;
  * On-screen keyboard.
  * @todo This needs to be made an official widget.
  */
-class Keyboard : public PlaneWindow
+template <class T>
+class Keyboard : public T
 {
 public:
     Keyboard()
-        : PlaneWindow(Size(800, 200)),
-          m_grid(Point(0, 0), Size(800, 200), 10, 4, 5)
+        : T(Size(800, 200)),
+          m_grid(Point(0, 0), Size(), 10, 4, 5)
     {
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+        this->add(&m_grid);
+        this->m_grid.align(alignmask::EXPAND);
+
+        //this->move(Point(0,280));
+
+        this->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
         vector<vector<string>> buttons =
         {
@@ -49,12 +55,11 @@ public:
                 else
                     b = new Button(label);
 
-                m_grid.add(b, c, r);
+                this->m_grid.add(b, c, r);
             }
         }
 
-        m_grid.reposition();
-        add(&m_grid);
+        this->m_grid.reposition();
     }
 
 protected:
@@ -68,67 +73,103 @@ int main()
 
     set_image_path("/root/mui/share/mui/");
 
-    Window win1(Size(800, 480));
+    Window win(Size(800, 480));
 
-    Label label1("left align", Point(100, 50), Size(200, 40), Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
-    label1.flag_set(FLAG_BORDER);
-    win1.add(&label1);
+    Label label1("left align", Point(100, 50), Size(200, 40), alignmask::LEFT | alignmask::CENTER);
+    label1.flag_set(widgetmask::BORDER);
+    win.add(&label1);
 
-    Label label2("right align", Point(100, 100), Size(200, 40), Widget::ALIGN_RIGHT | Widget::ALIGN_CENTER);
-    label2.flag_set(FLAG_BORDER);
-    win1.add(&label2);
+    Label label2("right align", Point(100, 100), Size(200, 40), alignmask::RIGHT | alignmask::CENTER);
+    label2.flag_set(widgetmask::BORDER);
+    win.add(&label2);
 
-    Label label3("top align", Point(100, 150), Size(200, 40), Widget::ALIGN_TOP | Widget::ALIGN_CENTER);
-    label3.flag_set(FLAG_BORDER);
-    win1.add(&label3);
+    Label label3("top align", Point(100, 150), Size(200, 40), alignmask::TOP | alignmask::CENTER);
+    label3.flag_set(widgetmask::BORDER);
+    win.add(&label3);
 
-    Label label4("bottom align", Point(100, 200), Size(200, 40), Widget::ALIGN_BOTTOM | Widget::ALIGN_CENTER);
-    label4.flag_set(FLAG_BORDER);
-    win1.add(&label4);
+    Label label4("bottom align", Point(100, 200), Size(200, 40), alignmask::BOTTOM | alignmask::CENTER);
+    label4.flag_set(widgetmask::BORDER);
+    win.add(&label4);
+
+    Popup<Window> popup(Size(100, 100));
+    popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
 
     Button btn1("button 1", Point(100, 250), Size(100, 40));
-    win1.add(&btn1);
-    //btn1.focus(true);
+    win.add(&btn1);
+
+    btn1.add_handler([&popup](EventWidget * widget, int event)
+    {
+        ignoreparam(widget);
+
+        if (event == EVT_MOUSE_DOWN)
+        {
+            if (popup.visible())
+                popup.hide();
+            else
+                popup.show(true);
+        }
+    });
+
+    Button btn2("button 2", Point(200, 250), Size(100, 40));
+    win.add(&btn2);
+
+    Keyboard<Window> keyboard;
+    btn2.add_handler([&keyboard](EventWidget * widget, int event)
+    {
+        ignoreparam(widget);
+
+        if (event == EVT_MOUSE_DOWN)
+        {
+            if (keyboard.visible())
+                keyboard.hide();
+            else
+                keyboard.show();
+        }
+    });
 
     Slider slider1(0, 100, Point(100, 300), Size(200, 40));
-    win1.add(&slider1);
+    win.add(&slider1);
 
-    Slider slider2(0, 100, Point(10, 200), Size(40, 200), Slider::ORIENTATION_VERTICAL);
-    win1.add(&slider2);
+    Slider slider2(0, 100, Point(10, 200), Size(40, 200), orientation::VERTICAL);
+    win.add(&slider2);
 
 #ifdef DEVELOPMENT
     Combo combo1("combo 1", Point(100, 350), Size(200, 40));
-    win1.add(&combo1);
+    win.add(&combo1);
 #endif
 
+    SlidingCheckBox sliding1(Point(100, 350), Size(200, 40));
+    win.add(&sliding1);
+
     TextBox text1("text 1", Point(100, 400), Size(200, 40));
-    win1.add(&text1);
+    win.add(&text1);
 
     vector<string> items = { "item 1", "item 2", "item3" };
     ListBox list1(items, Point(350, 50), Size(200, 200));
-    win1.add(&list1);
+    win.add(&list1);
     list1.selected(1);
 
     ImageLabel imagelabel1("icons/bug.png",
                            "Bug",
                            Point(350, 250),
                            Size(200, 40));
-    win1.add(&imagelabel1);
+    win.add(&imagelabel1);
 
     ImageLabel imagelabel2("icons/phone.png",
                            "Phone",
                            Point(350, 300),
                            Size(200, 40));
-    win1.add(&imagelabel2);
+    win.add(&imagelabel2);
 
     CheckBox checkbox1("checkbox 1", Point(350, 350), Size(200, 40));
-    win1.add(&checkbox1);
+    win.add(&checkbox1);
+    checkbox1.check(true);
 
     CheckBox checkbox2("checkbox 2", Point(350, 400), Size(200, 40));
-    win1.add(&checkbox2);
+    win.add(&checkbox2);
 
     PieChart pie1(Point(600, 50), Size(200, 200));
-    win1.add(&pie1);
+    win.add(&pie1);
 
     std::map<std::string, float> data;
     data.insert(make_pair("truck", .25));
@@ -138,10 +179,10 @@ int main()
     pie1.data(data);
 
     LevelMeter lp1(Point(600, 250), Size(50, 100));
-    win1.add(&lp1);
+    win.add(&lp1);
 
     AnalogMeter am1(Point(600, 280), Size(180, 180));
-    win1.add(&am1);
+    win.add(&am1);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
@@ -153,8 +194,19 @@ int main()
     });
     cputimer.start();
 
-    //Keyboard keyboard;
-    //keyboard.show();
+
+    /*
+    Timer timer(std::chrono::seconds(1), true);
+    timer.add_handler([&win]()
+                      {
+                          win.save_to_file(win.name() + ".png");
+                      });
+    */
+
+    win.add(&popup);
+    win.add(&keyboard);
+
+    win.show();
 
     return app.run();
 }

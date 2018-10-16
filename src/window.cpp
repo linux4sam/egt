@@ -23,8 +23,8 @@ namespace mui
         return the_windows;
     }
 
-    Window::Window(const Size& size, uint32_t flags)
-        : Frame(Point(), size, flags)
+    Window::Window(const Size& size, widgetmask flags)
+        : Frame(Point(), size, flags | widgetmask::WINDOW)
     {
         DBG("new window " << size);
         windows().push_back(this);
@@ -44,16 +44,17 @@ namespace mui
             the_window = this;
         }
 
-        damage();
+        hide();
+        //damage();
 
         // go ahead and pick up the default screen
         m_screen = main_screen();
     }
 
 #ifdef HAVE_LIBPLANES
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags,
+    PlaneWindow::PlaneWindow(const Size& size, widgetmask flags,
                              uint32_t format, bool heo)
-        : Window(size, flags | FLAG_PLANE_WINDOW),
+        : Window(size, flags | widgetmask::PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
     {
@@ -125,9 +126,34 @@ namespace mui
 
         Window::do_draw();
     }
+
+    void PlaneWindow::show()
+    {
+        KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+        if (s)
+        {
+            s->show();
+            m_dirty = true;
+        }
+
+        Window::show();
+    }
+
+    void PlaneWindow::hide()
+    {
+        KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+        if (s)
+        {
+            s->hide();
+            m_dirty = true;
+        }
+
+        Window::hide();
+        /** TODO: no way to hide. */
+    }
 #else
-    PlaneWindow::PlaneWindow(const Size& size, uint32_t flags, uint32_t format, bool heo)
-        : Window(size, flags)
+    PlaneWindow::PlaneWindow(const Size& size, widgetmask flags, uint32_t format, bool heo)
+        : Window(size, flags | widgetmask::WINDOW)
     {
 
     }

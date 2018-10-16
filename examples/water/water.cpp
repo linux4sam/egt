@@ -30,7 +30,7 @@ public:
 
     bool animate()
     {
-        bool visible = Rect::is_intersect(Rect(Point(0, 0), main_screen()->size()), box());
+        bool visible = Rect::intersect(Rect(Point(0, 0), main_screen()->size()), box());
 
         if (visible)
         {
@@ -52,7 +52,7 @@ class MainWindow : public Window
 {
 public:
     MainWindow()
-        : Window(Size(), FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND),
+        : Window(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
           /*PlaneWindow(Size(KMSScreen::instance()->size().w,
                                      KMSScreen::instance()->size().h),
                                 FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, DRM_FORMAT_XRGB8888),*/
@@ -69,7 +69,7 @@ public:
         m_label = new Label("Objects: 0",
                             Point(10, 10),
                             Size(100, 40),
-                            Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+                            alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);

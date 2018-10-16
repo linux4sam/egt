@@ -11,13 +11,13 @@ namespace mui
 {
     StaticGrid::StaticGrid(const Point& point, const Size& size, int columns,
                            int rows, int border)
-        : Frame(point, size, FLAG_NO_BACKGROUND),
+        : Frame(point, size, widgetmask::NO_BACKGROUND),
           m_columns(columns),
           m_rows(rows),
           m_border(border)
     {}
 
-    Widget* StaticGrid::add(Widget* widget, int column, int row, uint32_t align)
+    Widget* StaticGrid::add(Widget* widget, int column, int row, alignmask align)
     {
         Frame::add(widget);
 

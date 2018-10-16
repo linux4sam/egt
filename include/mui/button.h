@@ -51,12 +51,12 @@ namespace mui
 
         virtual void set_image(const std::string& image);
 
-        virtual void set_image_align(uint32_t align)
+        virtual void set_image_align(alignmask align)
         {
             m_image_align = align;
         }
 
-        virtual void set_label_align(uint32_t align)
+        virtual void set_label_align(alignmask align)
         {
             Label::text_align(align);
         }
@@ -66,7 +66,7 @@ namespace mui
     protected:
         shared_cairo_surface_t m_image;
         bool m_border;
-        uint32_t m_image_align;
+        alignmask m_image_align;
     };
 
 }

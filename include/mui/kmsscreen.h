@@ -43,6 +43,10 @@ namespace mui
         virtual void set_pan_pos(const Point& point);
         virtual float scale() const;
 
+        virtual void hide();
+
+        virtual void show();
+
         virtual int gem();
 
         virtual void apply();

@@ -25,10 +25,12 @@ namespace mui
     {
     public:
 
+        using dim_t = int;
+
         Point() noexcept
         {}
 
-        explicit Point(int x_, int y_) noexcept
+        explicit Point(dim_t x_, dim_t y_) noexcept
             : x(x_),
               y(y_)
         {}
@@ -80,8 +82,11 @@ namespace mui
         template <class T>
         T distance_to(const Point& point)
         {
-            return std::sqrt(T((point.x - x) * (point.x - x)) +
-                             T((point.y - y) * (point.y - y)));
+            /*
+              return std::sqrt(T((point.x - x) * (point.x - x)) +
+              T((point.y - y) * (point.y - y)));
+            */
+            return std::hypot(T(point.x - x), T(point.y - y));
         }
 
         bool operator==(const Point& rhs) const
@@ -94,8 +99,8 @@ namespace mui
             return x != rhs.x || y != rhs.y;
         }
 
-        int x {0};
-        int y {0};
+        dim_t x {0};
+        dim_t y {0};
 
         friend Point operator-(Point lhs, const Point& rhs);
         friend Point operator+(Point lhs, const Point& rhs);
@@ -113,10 +118,12 @@ namespace mui
     {
     public:
 
+        using dim_t = int;
+
         Size() noexcept
         {}
 
-        explicit Size(int w_, int h_) noexcept
+        explicit Size(dim_t w_, dim_t h_) noexcept
             : h(h_),
               w(w_)
         {}
@@ -147,8 +154,8 @@ namespace mui
             return w != rhs.w || h != rhs.h;
         }
 
-        int h {0};
-        int w {0};
+        dim_t h {0};
+        dim_t w {0};
     };
 
     std::ostream& operator<<(std::ostream& os, const Size& size);
@@ -164,6 +171,8 @@ namespace mui
     {
     public:
 
+        using dim_t = int;
+
         Rect() noexcept
         {}
 
@@ -177,7 +186,7 @@ namespace mui
             assert(h >= 0);
         }
 
-        explicit Rect(int x_, int y_, int w_, int h_) noexcept
+        explicit Rect(dim_t x_, dim_t y_, dim_t w_, dim_t h_) noexcept
             : x(x_),
               y(y_),
               w(w_),
@@ -187,16 +196,22 @@ namespace mui
             assert(h >= 0);
         }
 
-        int area() const
+        dim_t area() const
         {
             return w * h;
         }
 
+        /**
+         * Return the center point of the rectangle.
+         */
         Point center() const
         {
             return Point(x + (w / 2), y + (h / 2));
         }
 
+        /**
+         * Get the Point of the rectangle.
+         */
         Point point() const
         {
             return Point(x, y);
@@ -208,6 +223,9 @@ namespace mui
             y = p.y;
         }
 
+        /**
+         * Get the Size of the rectangle.
+         */
         Size size() const
         {
             return Size(w, h);
@@ -219,26 +237,41 @@ namespace mui
             h = s.h;
         }
 
-        inline int top() const
+        /**
+         * Get the top side of the rectangle.
+         */
+        inline dim_t top() const
         {
             return y;
         }
 
-        inline int left() const
+        /**
+         * Get the left side the rectangle.
+         */
+        inline dim_t left() const
         {
             return x;
         }
 
-        inline int bottom() const
+        /**
+         * Get the bottom side the rectangle.
+         */
+        inline dim_t bottom() const
         {
             return y + h;
         }
 
-        inline int right() const
+        /**
+         * Get the right side the rectangle.
+         */
+        inline dim_t right() const
         {
             return x + w;
         }
 
+        /**
+         * Clear the rectangle by giving it no with or height.
+         */
         inline void clear()
         {
             x = y = w = h = 0;
@@ -260,7 +293,6 @@ namespace mui
                    h == rhs.h;
         }
 
-
         inline bool point_inside(const Point& point) const
         {
             return point_inside(point, *this);
@@ -278,7 +310,7 @@ namespace mui
         /**
          * Determine if two rectangles intersect, or, overlap.
          */
-        static inline bool is_intersect(const Rect& lhs, const Rect& rhs)
+        static inline bool intersect(const Rect& lhs, const Rect& rhs)
         {
             return (lhs.x <= rhs.x + rhs.w && lhs.x + lhs.w >= rhs.x &&
                     lhs.y <= rhs.y + rhs.h && lhs.y + lhs.h >= rhs.y);
@@ -290,28 +322,30 @@ namespace mui
          */
         static inline Rect merge(const Rect& lhs, const Rect& rhs)
         {
-            int xmin = std::min(lhs.x, rhs.x);
-            int xmax = std::max(lhs.x + lhs.w + 1, rhs.x + rhs.w + 1);
-            int ymin = std::min(lhs.y, rhs.y);
-            int ymax = std::max(lhs.y + lhs.h + 1, rhs.y + rhs.h + 1);
+            dim_t xmin = std::min(lhs.x, rhs.x);
+            dim_t xmax = std::max(lhs.x + lhs.w + static_cast<dim_t>(1),
+                                  rhs.x + rhs.w + static_cast<dim_t>(1));
+            dim_t ymin = std::min(lhs.y, rhs.y);
+            dim_t ymax = std::max(lhs.y + lhs.h + static_cast<dim_t>(1),
+                                  rhs.y + rhs.h + static_cast<dim_t>(1));
 
             return Rect(xmin, ymin, xmax - xmin, ymax - ymin);
         }
 
-        inline Rect intersect(const Rect& rhs)
+        inline Rect intersection(const Rect& rhs)
         {
-            return intersect(*this, rhs);
+            return intersection(*this, rhs);
         }
 
         /**
          * Return the intersecting rectangle of two rectangles, if any.
          */
-        static inline Rect intersect(const Rect& lhs, const Rect& rhs)
+        static inline Rect intersection(const Rect& lhs, const Rect& rhs)
         {
-            int x = std::max(lhs.x, rhs.x);
-            int y = std::max(lhs.y, rhs.y);
-            int w = std::min(lhs.x + lhs.w, rhs.x + rhs.w) - x;
-            int h = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y;
+            dim_t x = std::max(lhs.x, rhs.x);
+            dim_t y = std::max(lhs.y, rhs.y);
+            dim_t w = std::min(lhs.x + lhs.w, rhs.x + rhs.w) - x;
+            dim_t h = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y;
 
             if (w < 0 || h < 0)
                 return Rect();
@@ -319,14 +353,44 @@ namespace mui
             return Rect(x, y, w, h);
         }
 
-        int x {0};
-        int y {0};
-        int w {0};
-        int h {0};
+        dim_t x {0};
+        dim_t y {0};
+        dim_t w {0};
+        dim_t h {0};
     };
 
     std::ostream& operator<<(std::ostream& os, const Rect& rect);
 
+    class Line
+    {
+    public:
+        using dim_t = int;
+
+        explicit Line(const Point& start, const Point& end)
+            : m_start(start),
+              m_end(end)
+        {}
+
+        inline Point start() const { return m_start; }
+        inline Point end() const { return m_end; }
+
+        /**
+         * Returns a rectangle containing the line.
+         */
+        inline Rect rect()
+        {
+            dim_t x = std::min(m_start.x, m_end.x);
+            dim_t y = std::min(m_start.y, m_end.y);
+            dim_t x2 = std::max(m_start.x, m_end.x);
+            dim_t y2 = std::max(m_start.y, m_end.y);
+
+            return Rect(x, y, x2 - x, y2 - y);
+        }
+
+    protected:
+        Point m_start;
+        Point m_end;
+    };
 }
 
 #endif

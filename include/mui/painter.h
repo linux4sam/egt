@@ -11,6 +11,7 @@
 #include <mui/geometry.h>
 #include <mui/palette.h>
 #include <mui/widget.h>
+#include <mui/utils.h>
 
 namespace mui
 {
@@ -20,15 +21,20 @@ namespace mui
     using shared_cairo_t =
         std::shared_ptr<cairo_t>;
 
+    using shared_cairo_pattern_t =
+        std::shared_ptr<cairo_pattern_t>;
+
     /**
      * Drawing interface for 2D graphics.
+     *
+     * This is the interface for all 2D drawing primitives.
      */
-    class Painter
+    class Painter : public detail::noncopyable
     {
     public:
 
         /**
-         * Scoped save() and restore() for a painter.
+         * Scoped save() and restore() for a Painter.
          *
          * You are encouraged to use this instead of manually calling save() and
          * restore().
@@ -71,15 +77,15 @@ namespace mui
 
         Painter& set_color(const Color& color);
 
-        Painter& draw_rectangle(const Rect& rect);
+        Painter& rectangle(const Rect& rect);
 
         Painter& draw_fill(const Rect& rect);
 
         Painter& set_line_width(float width);
 
-        Painter& draw_line(const Point& end);
+        Painter& line(const Point& end);
 
-        Painter& draw_line(const Point& start, const Point& end);
+        Painter& line(const Point& start, const Point& end);
 
         Painter& draw_image(const Point& point, shared_cairo_surface_t surface, bool bw = false);
 
@@ -87,12 +93,14 @@ namespace mui
 
         Painter& draw_arc(const Point& point, float radius, float angle1, float angle2);
 
-#if 0
+        Painter& clip();
+
         void stroke()
         {
             cairo_stroke(m_cr.get());
         }
 
+#if 0
         void paint()
         {
             cairo_paint(m_cr.get());
@@ -112,7 +120,7 @@ namespace mui
         /**
          * Draw text aligned inside the specified rectangle.
          */
-        Painter& draw_text(const Rect& rect, const std::string& str, int align, int standoff = 5);
+        Painter& draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff = 5);
 
         /**
          * @todo Special functions that do a lot, mostly implementing widget
@@ -123,13 +131,13 @@ namespace mui
         Painter& draw_text(const std::string& text,
                            const Rect& rect,
                            const Color& color = Color::BLACK,
-                           int align = Widget::ALIGN_CENTER,
+                           alignmask align = alignmask::CENTER,
                            int margin = 5,
                            const Font& font = Font());
 
         Painter& draw_image(shared_cairo_surface_t image,
                             const Rect& dest,
-                            int align = Widget::ALIGN_CENTER,
+                            alignmask align = alignmask::CENTER,
                             int margin = 0,
                             bool bw = false);
 
@@ -154,10 +162,10 @@ namespace mui
                                             int shadow_offset,
                                             double shadow_alpha,
                                             double tint_alpha,
-                                            int srx,
+                                            /*int srx,
                                             int srcy,
                                             int width,
-                                            int height,
+                                            int height,*/
                                             int dstx,
                                             int dsty);
 

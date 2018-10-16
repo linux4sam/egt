@@ -16,7 +16,7 @@ using namespace std;
 using namespace mui;
 
 template<class T>
-struct ShowAnimation : public AnimationTimer
+struct ShowAnimation : public experimental::AnimationTimer
 {
     ShowAnimation(T* widget)
         : AnimationTimer(480, 400, 1000, easing_rubber),
@@ -32,7 +32,7 @@ struct ShowAnimation : public AnimationTimer
 };
 
 template<class T>
-struct HideAnimation : public AnimationTimer
+struct HideAnimation : public experimental::AnimationTimer
 {
     HideAnimation(T* widget)
         : AnimationTimer(400, 480, 1000, easing_rubber),
@@ -136,12 +136,12 @@ class FpsWindow : public PlaneWindow
 public:
     FpsWindow()
         : PlaneWindow(Size(100, 50),
-                      FLAG_WINDOW_DEFAULT, DRM_FORMAT_ARGB8888)
+                      widgetmask::WINDOW_DEFAULT, DRM_FORMAT_ARGB8888)
     {
         m_label = new Label("FPS: 0",
                             Point(0, 0),
                             Size(100, 50),
-                            Widget::ALIGN_CENTER);
+                            alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
         add(m_label);
     }
@@ -201,15 +201,16 @@ int main(int argc, const char** argv)
 
     set_control_window(&ctrlwindow);
 
-    HorizontalPositioner grid(Point(0, 0), Size(600, 80), 5, Widget::ALIGN_CENTER);
+    HorizontalPositioner grid(Point(0, 0), Size(600, 80), 5, alignmask::CENTER);
     grid.name("grid");
     ctrlwindow.add(&grid);
 
     ImageButton* playbtn = new ImageButton(":play_png", "", Point(), Size(), false);
     grid.add(playbtn);
 
-    playbtn->add_handler([window](EventWidget * widget)
+    playbtn->add_handler([window](EventWidget * widget, int event)
     {
+        ignoreparam(event);
         ImageButton* btn = dynamic_cast<ImageButton*>(widget);
         if (btn->active())
             window->unpause();
@@ -217,15 +218,16 @@ int main(int argc, const char** argv)
 
     ImageButton* pausebtn = new ImageButton(":pause_png", "", Point(), Size(), false);
     grid.add(pausebtn);
-    pausebtn->add_handler([window](EventWidget * widget)
+    pausebtn->add_handler([window](EventWidget * widget, int event)
     {
+        ignoreparam(event);
         cout << "pause button" << endl;
         ImageButton* btn = dynamic_cast<ImageButton*>(widget);
         if (btn->active())
             window->pause();
     });
 
-    Slider* position = new Slider(0, 100, Point(), Size(150, 40), Slider::ORIENTATION_HORIZONTAL);
+    Slider* position = new Slider(0, 100, Point(), Size(150, 40), orientation::HORIZONTAL);
     grid.add(position);
     position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
     position->disable(true);
@@ -258,10 +260,11 @@ int main(int argc, const char** argv)
     ImageButton* volumei = new ImageButton(":volumeup_png", "", Point(), Size(), false);
     grid.add(volumei);
 
-    Slider* volume = new Slider(0, 100, Point(), Size(100, 20), Slider::ORIENTATION_HORIZONTAL);
+    Slider* volume = new Slider(0, 100, Point(), Size(100, 20), orientation::HORIZONTAL);
     grid.add(volume);
-    volume->add_handler([window](EventWidget * widget)
+    volume->add_handler([window](EventWidget * widget, int event)
     {
+        ignoreparam(event);
         Slider* slider = dynamic_cast<Slider*>(widget);
         window->set_volume(slider->position());
     });
@@ -270,8 +273,10 @@ int main(int argc, const char** argv)
     playbtn->disable(true);
     pausebtn->disable(false);
 
-    window->add_handler([window, playbtn, pausebtn](EventWidget * widget)
+    window->add_handler([window, playbtn, pausebtn](EventWidget * widget, int event)
     {
+        ignoreparam(widget);
+        ignoreparam(event);
         if (window->playing())
         {
             playbtn->disable(true);

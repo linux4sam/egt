@@ -27,53 +27,86 @@ namespace mui
 {
     class Painter;
 
-    enum
+    /**
+     * Flags used for various widget properties.
+     */
+    enum class widgetmask : uint32_t
     {
+        EMPTY = 0,
+
         /**
          * Do not draw the background color.
          *
          * The background color is usually drawn by default. A background will
          * not be drawn if this flag is set. If something else is not drawn,
          * instead (like a child widget), this can result in unintended side
-         * effects.
+         * effects. Not drawing a background is an optimization to reduce
+         * unecessary drawing.
          */
-        FLAG_NO_BACKGROUND = (1 << 0),
+        NO_BACKGROUND = (1 << 0),
 
         /**
          * This is an overlay plane window.
          */
-        FLAG_PLANE_WINDOW = (1 << 1),
+        PLANE_WINDOW = (1 << 1),
 
         /**
          * Don't draw any border.
          */
-        FLAG_NO_BORDER = (1 << 2),
+        NO_BORDER = (1 << 2),
 
         /**
          * Widget always requires a full redraw.
          */
-        FLAG_FULL_REDRAW = (1 << 3),
+        FULL_REDRAW = (1 << 3),
 
         /**
          * This is a window widget.
          */
-        FLAG_WINDOW = (1 << 4),
+        WINDOW = (1 << 4),
 
         /**
          * This is a frame window.
          */
-        FLAG_FRAME = (1 << 5),
+        FRAME = (1 << 5),
 
         /**
          * Draw a border around the widget.
          */
-        FLAG_BORDER = (1 << 6),
+        BORDER = (1 << 6),
 
         /**
          * Default window flags.
          */
-        FLAG_WINDOW_DEFAULT = FLAG_WINDOW,
+        WINDOW_DEFAULT = WINDOW,
     };
+
+    constexpr widgetmask operator&(widgetmask X, widgetmask Y)
+    {
+        return static_cast<widgetmask >(
+                   static_cast<uint32_t>(X) & static_cast<uint32_t>(Y));
+    }
+
+    constexpr widgetmask operator|(widgetmask X, widgetmask Y)
+    {
+        return static_cast<widgetmask >(
+                   static_cast<uint32_t>(X) | static_cast<uint32_t>(Y));
+    }
+
+    constexpr widgetmask operator^(widgetmask X, widgetmask Y)
+    {
+        return static_cast<widgetmask >(
+                   static_cast<uint32_t>(X) ^ static_cast<uint32_t>(Y));
+    }
+
+    constexpr widgetmask operator~(widgetmask X)
+    {
+        return static_cast<widgetmask >(~static_cast<uint32_t>(X));
+    }
+
+    widgetmask& operator&=(widgetmask& X, widgetmask Y);
+    widgetmask& operator|=(widgetmask& X, widgetmask Y);
+    widgetmask& operator^=(widgetmask& X, widgetmask Y);
 
     class Widget;
 
@@ -83,7 +116,7 @@ namespace mui
         EventWidget() noexcept
         {}
 
-        using handler_callback_t = std::function<void (EventWidget* widget)>;
+        using handler_callback_t = std::function<void (EventWidget* widget, int event)>;
 
         virtual void add_handler(handler_callback_t handler)
         {
@@ -95,14 +128,67 @@ namespace mui
 
     protected:
 
-        virtual void invoke_handlers()
+        virtual void invoke_handlers(int event)
         {
             for (auto x : m_handlers)
-                x(this);
+                x(this, event);
         }
 
         std::vector<handler_callback_t> m_handlers;
     };
+
+    /**
+     * Alignment flags.
+     */
+    enum class alignmask : uint32_t
+    {
+        /** No alignment. */
+        NONE = 0,
+        /**
+         * Center alignment is a weak alignment both horizontal and
+         * vertical. To break one of those dimensions to another
+         * alignment, specify it in addiiton to ALIGN_CENTER.  If both
+         * are broken, ALIGN_CENTER has no effect.
+         */
+        CENTER = (1 << 0),
+        /** Horizontal alignment. */
+        LEFT = (1 << 1),
+        /** Horizontal alignment. */
+        RIGHT = (1 << 2),
+        /** Vertical alignment. */
+        TOP = (1 << 3),
+        /** Vertical alignment. */
+        BOTTOM = (1 << 4),
+        /** Don't align, expand. */
+        EXPAND = (1 << 5),
+    };
+
+    constexpr alignmask operator&(alignmask X, alignmask Y)
+    {
+        return static_cast<alignmask >(
+                   static_cast<uint32_t>(X) & static_cast<uint32_t>(Y));
+    }
+
+    constexpr alignmask operator|(alignmask X, alignmask Y)
+    {
+        return static_cast<alignmask >(
+                   static_cast<uint32_t>(X) | static_cast<uint32_t>(Y));
+    }
+
+    constexpr alignmask operator^(alignmask X, alignmask Y)
+    {
+        return static_cast<alignmask >(
+                   static_cast<uint32_t>(X) ^ static_cast<uint32_t>(Y));
+    }
+
+    constexpr alignmask operator~(alignmask X)
+    {
+        return static_cast<alignmask >(~static_cast<uint32_t>(X));
+    }
+
+    alignmask& operator&=(alignmask& X, alignmask Y);
+    alignmask& operator|=(alignmask& X, alignmask Y);
+    alignmask& operator^=(alignmask& X, alignmask Y);
 
     class Frame;
 
@@ -121,58 +207,33 @@ namespace mui
     public:
 
         /**
-         * Alignment flags.
-         */
-        enum
-        {
-            /** No alignment. */
-            ALIGN_NONE = 0,
-            /**
-             * Center alignment is a weak alignment both horizontal and
-             * vertical. To break one of those dimensions to another
-             * alignment, specify it in addiiton to ALIGN_CENTER.  If both
-             * are broken, ALIGN_CENTER has no effect.
-             */
-            ALIGN_CENTER = (1 << 0),
-            /** Horizontal alignment. */
-            ALIGN_LEFT = (1 << 1),
-            /** Horizontal alignment. */
-            ALIGN_RIGHT = (1 << 2),
-            /** Vertical alignment. */
-            ALIGN_TOP = (1 << 3),
-            /** Vertical alignment. */
-            ALIGN_BOTTOM = (1 << 4),
-            /** Don't align, expand. */
-            ALIGN_EXPAND = (1 << 5),
-        };
-
-        /**
          * Given an item size, and a bounding box, and an alignment parameter,
          * return the rectangle the item box should be move/resized to.
          */
         static Rect align_algorithm(const Size& item, const Rect& bounding,
-                                    uint32_t align, int margin = 0)
+                                    alignmask align, int margin = 0)
         {
-            assert(align != ALIGN_NONE);
+            assert(align != alignmask::NONE);
 
-            if (align & ALIGN_EXPAND)
+            if ((align & alignmask::EXPAND) == alignmask::EXPAND)
                 return bounding;
 
             Point p;
 
-            if (align & ALIGN_CENTER)
+            if ((align & alignmask::CENTER) == alignmask::CENTER)
             {
                 p.x = bounding.x + (bounding.w / 2) - (item.w / 2);
                 p.y = bounding.y + (bounding.h / 2) - (item.h / 2);
             }
 
-            if (align & ALIGN_LEFT)
+            if ((align & alignmask::LEFT) == alignmask::LEFT)
                 p.x = bounding.x + margin;
-            if (align & ALIGN_RIGHT)
+            else if ((align & alignmask::RIGHT) == alignmask::RIGHT)
                 p.x = bounding.x + bounding.w - item.w - margin;
-            if (align & ALIGN_TOP)
+
+            if ((align & alignmask::TOP) == alignmask::TOP)
                 p.y = bounding.y + margin;
-            if (align & ALIGN_BOTTOM)
+            else if ((align & alignmask::BOTTOM) == alignmask::BOTTOM)
                 p.y = bounding.y + bounding.h - item.h - margin;
 
             return Rect(p, item);
@@ -187,7 +248,7 @@ namespace mui
          */
         Widget(const Point& point = Point(),
                const Size& size = Size(),
-               uint32_t flags = 0) noexcept;
+               widgetmask flags = widgetmask::EMPTY) noexcept;
 
         /**
          * Draw the widget.
@@ -404,7 +465,7 @@ namespace mui
          * Test if the specified Widget flag(s) is/are set.
          * @param flag Bitmask of flags.
          */
-        inline bool is_flag_set(uint32_t flag) const
+        inline bool is_flag_set(widgetmask flag) const
         {
             return (m_flags & flag) == flag;
         }
@@ -413,13 +474,13 @@ namespace mui
          * Set the specified widget flag(s).
          * @param flag Bitmask of flags.
          */
-        inline void flag_set(uint32_t flag) { m_flags |= flag; }
+        inline void flag_set(widgetmask flag) { m_flags |= flag; }
 
         /**
          * Clear, or unset, the specified widget flag(s).
          * @param flag Bitmask of flags.
          */
-        inline void flag_clear(uint32_t flag) { m_flags &= ~flag; }
+        inline void flag_clear(widgetmask flag) { m_flags &= ~flag; }
 
         /**
          * Get the name of the widget.
@@ -431,12 +492,12 @@ namespace mui
          *
          * This will align the widget relative to the box of its parent frame.
          */
-        void align(int a, int margin = 0);
+        void align(alignmask a, int margin = 0);
 
         /**
          * Read the alignment of the widget.
          */
-        inline int align() const { return m_align; }
+        inline alignmask align() const { return m_align; }
 
         /**
          * Set the name of the widget.
@@ -500,7 +561,7 @@ namespace mui
         /**
          * Flags for the widget.
          */
-        uint32_t m_flags {0};
+        widgetmask m_flags {widgetmask::EMPTY};
 
         /**
          * Current palette for the widget.
@@ -518,7 +579,7 @@ namespace mui
         /**
          * Alignment hint for this widget within its parent.
          */
-        int m_align {ALIGN_NONE};
+        alignmask m_align {alignmask::NONE};
 
         Widget(const Widget&) = delete;
         Widget& operator=(const Widget&) = delete;
@@ -526,27 +587,29 @@ namespace mui
         friend class Frame;
     };
 
-#ifdef MUI_EXPERIMENTAL
-    /**
-     * Combo box widget.
-     */
-    class Combo : public Widget
+    namespace experimental
     {
-    public:
-        Combo(const std::string& label = std::string(),
-              const Point& point = Point(),
-              const Size& size = Size());
 
-        virtual int handle(int event);
+        /**
+         * Combo box widget.
+         */
+        class Combo : public Widget
+        {
+        public:
+            Combo(const std::string& label = std::string(),
+                  const Point& point = Point(),
+                  const Size& size = Size());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+            virtual int handle(int event);
 
-        virtual ~Combo();
+            virtual void draw(Painter& painter, const Rect& rect);
 
-    protected:
-        std::string m_label;
-    };
-#endif
+            virtual ~Combo();
+
+        protected:
+            std::string m_label;
+        };
+    }
 
     class ListBox : public Widget
     {
@@ -574,7 +637,7 @@ namespace mui
 
     protected:
 
-        virtual void on_selected(int index) {}
+        virtual void on_selected(int index) {ignoreparam(index);}
 
         Rect item_rect(uint32_t index) const;
 
@@ -583,43 +646,46 @@ namespace mui
         Font m_font;
     };
 
-#ifdef MUI_EXPERIMENTAL
-    class ScrollWheel : public Widget
+    namespace experimental
     {
-    public:
-        ScrollWheel(const Point& point = Point(), const Size& size = Size());
 
-        virtual int handle(int event);
-
-        virtual void draw(Painter& painter, const Rect& rect);
-
-        int position() const
+        class ScrollWheel : public Widget
         {
-            return m_pos;
-        }
+        public:
+            ScrollWheel(const Point& point = Point(), const Size& size = Size());
 
-        inline void position(int pos)
-        {
-            if (pos < (int)m_values.size())
+            virtual int handle(int event);
+
+            virtual void draw(Painter& painter, const Rect& rect);
+
+            int position() const
             {
-                m_pos = pos;
-                damage();
+                return m_pos;
             }
-        }
 
-        void values(const std::vector<std::string>& v)
-        {
-            m_values = v;
-        }
+            inline void position(int pos)
+            {
+                if (pos < (int)m_values.size())
+                {
+                    m_pos = pos;
+                    damage();
+                }
+            }
 
-    protected:
-        std::vector<std::string> m_values;
+            void values(const std::vector<std::string>& v)
+            {
+                m_values = v;
+            }
 
-        int m_pos;
-        int m_moving_x;
-        int m_start_pos;
-    };
-#endif
+        protected:
+            std::vector<std::string> m_values;
+
+            int m_pos;
+            int m_moving_x;
+            int m_start_pos;
+        };
+    }
+
 }
 
 #endif

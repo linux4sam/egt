@@ -10,7 +10,8 @@ using namespace std;
 namespace mui
 {
 
-    TextBox::TextBox(const std::string& text, const Point& point, const Size& size)
+    TextBox::TextBox(const std::string& text, const Point& point,
+                     const Size& size)
         : Widget(point, size),
           m_text(text)
     {}
@@ -38,6 +39,8 @@ namespace mui
 
     void TextBox::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         // box
         painter.draw_basic_box(box(),
                                palette().color(Palette::BORDER),
@@ -60,16 +63,37 @@ namespace mui
         }
     }
 
+    void TextBox::append(const std::string& text)
+    {
+        if (!text.empty())
+        {
+            m_text += text;
+            damage();
+        }
+    }
+
+    void TextBox::clear()
+    {
+        if (!m_text.empty())
+        {
+            m_text.clear();
+            damage();
+        }
+    }
+
     TextBox::~TextBox()
     {
     }
 
-    MultilineTextBox::MultilineTextBox(const std::string& text, const Point& point, const Size& size)
+    MultilineTextBox::MultilineTextBox(const std::string& text,
+                                       const Point& point, const Size& size)
         : TextBox(text, point, size)
     {}
 
     void MultilineTextBox::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         // box
         painter.draw_basic_box(box(),
                                palette().color(Palette::BORDER),
@@ -104,6 +128,14 @@ namespace mui
                               m_font);
             linerect.y += linerect.h;
         }
+    }
+
+    std::string MultilineTextBox::last_line() const
+    {
+        std::stringstream ss(m_text);
+        std::string line;
+        while (std::getline(ss, line, '\n'));
+        return line;
     }
 
     MultilineTextBox::~MultilineTextBox()

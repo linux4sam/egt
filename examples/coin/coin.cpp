@@ -15,12 +15,12 @@ using namespace mui;
 static bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
                             const Rect& rhs, shared_cairo_surface_t rimage)
 {
-    if (Rect::is_intersect(lhs, rhs))
+    if (Rect::intersect(lhs, rhs))
     {
         unsigned int* ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
         unsigned int* rdata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(rimage.get()));
 
-        Rect i = Rect::intersect(lhs, rhs);
+        Rect i = Rect::intersection(lhs, rhs);
 
         for (int y = i.top(); y < i.bottom(); y++)
         {
@@ -50,7 +50,7 @@ class ObstacleLayer : public PlaneWindow
 {
 public:
     ObstacleLayer(int speed)
-        : PlaneWindow(Size(800, 480), FLAG_WINDOW_DEFAULT, DRM_FORMAT_ARGB8888/*RGB565*/),
+        : PlaneWindow(Size(800, 480), widgetmask::WINDOW_DEFAULT, DRM_FORMAT_ARGB8888/*RGB565*/),
           m_speed(speed),
           m_x(0),
           e1(r()),
@@ -209,7 +209,7 @@ public:
             {
                 for (auto brick : m_bricks)
                 {
-                    if (Rect::is_intersect(coin->box(), brick->box()))
+                    if (Rect::intersect(coin->box(), brick->box()))
                     {
                         conflict = true;
                         break;
@@ -243,7 +243,7 @@ class SceneLayer : public PlaneWindow
 public:
 
     SceneLayer(Image& image, const Point& pos, const Size& size, int speed)
-        : PlaneWindow(image.size(), FLAG_WINDOW_DEFAULT, DRM_FORMAT_RGB565),
+        : PlaneWindow(image.size(), widgetmask::WINDOW_DEFAULT, DRM_FORMAT_RGB565),
           m_image(image),
           m_speed(speed),
           m_x(0)
@@ -325,14 +325,14 @@ public:
         m_label = new Label("",
                             Point(5, 2),
                             Size(100, 40),
-                            Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+                            alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
         add(m_label);
 
         m_go = new Label("GAME OVER",
                          Point(0, 0),
                          Size(800, 480),
-                         Widget::ALIGN_CENTER | Widget::ALIGN_TOP,
+                         alignmask::CENTER | alignmask::TOP,
                          Font(32));
         m_go->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::RED);
         add(m_go);

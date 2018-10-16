@@ -29,6 +29,9 @@ namespace mui
 
     void LineChart::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(painter);
+        ignoreparam(rect);
+
         struct kdata* d1;
         struct kplot* p;
 
@@ -93,6 +96,9 @@ namespace mui
 
     void PieChart::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(painter);
+        ignoreparam(rect);
+
         static const vector<Color> piecolors =
         {
             Color::RED,

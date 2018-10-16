@@ -66,6 +66,8 @@ namespace mui
 
     void Radial::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         float linew = 40;
 
         Color color1(Color::LIGHTGRAY);
@@ -108,7 +110,7 @@ namespace mui
         cairo_stroke(cr.get());
 
         string text = std::to_string(a) + m_label;
-        painter.draw_text(text, box(), color2, ALIGN_CENTER, 0, Font(72));
+        painter.draw_text(text, box(), color2, alignmask::CENTER, 0, Font(72));
 
         cairo_restore(cr.get());
     }
@@ -120,6 +122,8 @@ namespace mui
 
     void ProgressBar::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         auto cr = painter.context();
 
         cairo_save(cr.get());
@@ -158,6 +162,8 @@ namespace mui
 
     void LevelMeter::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         auto cr = painter.context();
 
         cairo_save(cr.get());
@@ -186,6 +192,8 @@ namespace mui
 
     void AnalogMeter::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         auto cr = painter.context();
 
         cairo_save(cr.get());
@@ -256,6 +264,8 @@ namespace mui
 
     void SpinProgress::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         float linew = 5;
 
         Color color2(Color::ORANGE);
@@ -286,13 +296,13 @@ namespace mui
     }
 
     Slider::Slider(int min, int max, const Point& point,
-                   const Size& size, int orientation)
+                   const Size& size, orientation orient)
         : Widget(point, size),
           m_min(min),
           m_max(max),
           m_pos(min),
           m_moving_x(0),
-          m_orientation(orientation)
+          m_orientation(orient)
     {
     }
 
@@ -304,7 +314,7 @@ namespace mui
         {
             Rect bounding;
 
-            if (m_orientation == ORIENTATION_HORIZONTAL)
+            if (m_orientation == orientation::HORIZONTAL)
             {
                 bounding = Rect(x() + normalize(m_pos) + 1,
                                 y() + 1,
@@ -321,7 +331,7 @@ namespace mui
 
             if (Rect::point_inside(screen_to_frame(mouse_position()), bounding))
             {
-                if (m_orientation == ORIENTATION_HORIZONTAL)
+                if (m_orientation == orientation::HORIZONTAL)
                     m_moving_x = screen_to_frame(mouse_position()).x;
                 else
                     m_moving_x = screen_to_frame(mouse_position()).y;
@@ -338,7 +348,7 @@ namespace mui
         case EVT_MOUSE_MOVE:
             if (active())
             {
-                if (m_orientation == ORIENTATION_HORIZONTAL)
+                if (m_orientation == orientation::HORIZONTAL)
                 {
                     int diff = screen_to_frame(mouse_position()).x - m_moving_x;
                     position(m_start_pos + denormalize(diff));
@@ -358,6 +368,8 @@ namespace mui
 
     void Slider::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         auto cr = painter.context();
 
         cairo_save(cr.get());
@@ -368,7 +380,7 @@ namespace mui
                               palette().color(Palette::HIGHLIGHT).bluef(),
                               palette().color(Palette::HIGHLIGHT).alphaf());
 
-        if (m_orientation == ORIENTATION_HORIZONTAL)
+        if (m_orientation == orientation::HORIZONTAL)
         {
             cairo_set_line_width(cr.get(), h() / 5.0);
 

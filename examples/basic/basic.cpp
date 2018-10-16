@@ -11,7 +11,7 @@ int main()
     Application app;
 
     Window win;
-    win.add(new Button("Hello World"))->align(Label::ALIGN_CENTER);
+    win.add(new Button("Hello World"))->align(alignmask::CENTER);
     win.show();
 
     return app.run();

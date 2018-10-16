@@ -5,11 +5,21 @@
 #include "mui/frame.h"
 #include "mui/painter.h"
 #include "mui/screen.h"
+#include <sstream>
 
 using namespace std;
 
 namespace mui
 {
+    static uint32_t frame_id = 0;
+
+    Frame::Frame(const Point& point, const Size& size, widgetmask flags)
+        : Widget(point, size, flags | widgetmask::FRAME)
+    {
+        ostringstream ss;
+        ss << "frame" << frame_id++;
+        name(ss.str());
+    }
 
     Widget* Frame::add(Widget* widget)
     {
@@ -159,17 +169,31 @@ namespace mui
     void Frame::draw(Painter& painter, const Rect& rect)
     {
         DBG(name() << " " << __PRETTY_FUNCTION__);
-
-        Rect damage = rect;
-
-        if (!is_flag_set(FLAG_NO_BACKGROUND))
+#if 0
+        if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
             Painter::AutoSaveRestore sr(painter);
             painter.set_color(palette().color(Palette::BG));
             cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-            painter.draw_fill(damage);
+            painter.draw_fill(rect);
         }
+#else
+        Painter::AutoSaveRestore sr(painter);
+        painter.rectangle(rect);
+        painter.clip();
 
+        if (!is_flag_set(widgetmask::NO_BACKGROUND))
+        {
+            Painter::AutoSaveRestore sr(painter);
+            auto cr = painter.context();
+
+            cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+            painter.draw_basic_box(box(), palette().color(Palette::BORDER),
+                                   palette().color(Palette::BG));
+
+            //cairo_reset_clip(cr.get());
+        }
+#endif
         for (auto& child : m_children)
         {
             if (!child->visible())
@@ -177,14 +201,14 @@ namespace mui
 
             // don't draw plane frame as children - this is
             // specifically handled by event loop
-            if (child->is_flag_set(FLAG_PLANE_WINDOW))
+            if (child->is_flag_set(widgetmask::PLANE_WINDOW))
                 continue;
 
-            if (Rect::is_intersect(damage, child->box()))
+            if (Rect::intersect(rect, child->box()))
             {
                 // don't give a child a rectangle that is outside of its own box
-                auto rect = Rect::intersect(damage, child->box());
-                child->draw(painter, rect);
+                auto r = Rect::intersection(rect, child->box());
+                child->draw(painter, r);
             }
         }
     }
@@ -202,7 +226,9 @@ namespace mui
 
         for (auto& damage : m_damage)
         {
-            if (!is_flag_set(FLAG_NO_BACKGROUND))
+            draw(painter, damage);
+            /*
+            if (!is_flag_set(widgetmask::NO_BACKGROUND))
             {
                 Painter::AutoSaveRestore sr(painter);
                 painter.set_color(palette().color(Palette::BG));
@@ -217,16 +243,17 @@ namespace mui
 
                 // don't draw plane frame as children - this is
                 // specifically handled by event loop
-                if (child->is_flag_set(FLAG_PLANE_WINDOW))
+                if (child->is_flag_set(widgetmask::PLANE_WINDOW))
                     continue;
 
-                if (Rect::is_intersect(damage, child->box()))
+                if (Rect::intersect(damage, child->box()))
                 {
                     // don't give a child a rectangle that is outside of its own box
-                    auto rect = Rect::intersect(damage, child->box());
+                    auto rect = Rect::intersection(damage, child->box());
                     child->draw(painter, rect);
                 }
             }
+            */
         }
 
         screen()->flip(m_damage);
@@ -243,5 +270,19 @@ namespace mui
 
         do_draw();
     }
+
+    void Frame::save_to_file(const std::string& filename)
+    {
+        if (m_parent)
+        {
+            m_parent->draw();
+            return;
+        }
+
+        auto surface = cairo_get_target(screen()->context().get());
+        cairo_surface_write_to_png(surface, filename.c_str());
+    }
+
+
 
 }

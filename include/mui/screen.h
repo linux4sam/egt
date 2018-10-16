@@ -43,6 +43,8 @@ namespace mui
 
         Size size() const { return m_size; }
 
+        Rect box() const { return Rect(Point(), m_size); }
+
         shared_cairo_t context() const { return m_cr; }
 
         virtual ~IScreen();

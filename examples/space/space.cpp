@@ -22,7 +22,7 @@ public:
 
     bool animate()
     {
-        bool visible = Rect::is_intersect(parent()->box(), box());
+        bool visible = Rect::intersect(parent()->box(), box());
 
         if (visible)
         {

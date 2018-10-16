@@ -7,6 +7,7 @@
 
 #include <string>
 #include <mui/event_loop.h>
+#include <mui/utils.h>
 
 /**
  * @file
@@ -23,7 +24,7 @@ namespace mui
      * inputs, outputs, the event loop, and more. It also acts as sort of a
      * global accessor to get to some things because of this.
      */
-    class Application
+    class Application : public detail::noncopyable
     {
     public:
         /**

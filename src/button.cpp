@@ -13,7 +13,7 @@ namespace mui
     static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
     Button::Button(const string& text, const Point& point, const Size& size)
-        : Label(text, point, size, ALIGN_CENTER)
+        : Label(text, point, size, alignmask::CENTER)
     {
         if (size.empty())
         {
@@ -31,7 +31,7 @@ namespace mui
             {
                 damage();
                 active(true);
-                invoke_handlers();
+                invoke_handlers(event);
                 return 1;
             }
             break;
@@ -40,7 +40,7 @@ namespace mui
             {
                 damage();
                 active(false);
-                invoke_handlers();
+                invoke_handlers(event);
                 return 1;
             }
             break;
@@ -55,10 +55,13 @@ namespace mui
 
     void Button::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         // box
         painter.draw_gradient_box(box(), palette().color(Palette::BORDER),
                                   active(),
-                                  palette().color(Palette::LIGHT));
+                                  active() ? palette().color(Palette::LIGHT, Palette::GROUP_ACTIVE) :
+                                  palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
 
         // text
         painter.set_color(palette().color(Palette::TEXT));
@@ -77,9 +80,9 @@ namespace mui
                              bool border)
         : Button(text, point, size),
           m_border(border),
-          m_image_align(ALIGN_CENTER)
+          m_image_align(alignmask::CENTER)
     {
-        set_label_align(ALIGN_CENTER | ALIGN_BOTTOM);
+        set_label_align(alignmask::CENTER | alignmask::BOTTOM);
 
         if (!image.empty())
             set_image(image);
@@ -100,6 +103,8 @@ namespace mui
 
     void ImageButton::draw(Painter& painter, const Rect& rect)
     {
+        ignoreparam(rect);
+
         if (m_border)
             painter.draw_gradient_box(box(), palette().color(Palette::BORDER));
 

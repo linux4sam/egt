@@ -24,8 +24,7 @@ namespace mui
     {
     public:
         ISpriteBase(const std::string& filename, int framew, int frameh,
-                    int framecount, int framex = 0, int framey = 0,
-                    const Point& point = Point())
+                    int framecount, int framex = 0, int framey = 0)
             : m_image(filename),
               m_filename(filename),
               m_frame(framew, frameh),

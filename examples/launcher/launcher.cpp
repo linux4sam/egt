@@ -166,23 +166,40 @@ class LauncherWindow : public Window
 {
 public:
     LauncherWindow()
+        : m_popup(Size(200, 200))
     {
-        //m_timer.add_handler(std::bind(&LauncherWindow::timer_callback, this));
+        m_popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
+
         main_app().event().add_idle_callback(std::bind(&LauncherWindow::timer_callback, this));
 
         add(new Image("background.jpg"));
 
         auto logo = new Image("logo.png");
         add(logo);
-        logo->align(ALIGN_LEFT | ALIGN_TOP, 10);
+        logo->align(alignmask::LEFT | alignmask::TOP, 10);
 
-        auto settings = new Image("settings.png");
+        auto settings = new ImageButton("settings.png");
         add(settings);
-        settings->align(ALIGN_RIGHT | ALIGN_TOP, 10);
+        settings->align(alignmask::RIGHT | alignmask::TOP, 10);
+        settings->add_handler([this](EventWidget * widget, int event)
+        {
+            ignoreparam(widget);
 
+            cout << event << endl;
+            if (event == EVT_MOUSE_DOWN)
+            {
+                if (m_popup.visible())
+                    m_popup.hide();
+                else
+                    m_popup.show(true);
+            }
+        });
+
+#ifdef USE_PLANE_LAYER
         add(&m_plane);
         m_plane.resize(size());
         m_plane.show();
+#endif
     }
 
     virtual int load(const string& file)
@@ -201,7 +218,11 @@ public:
             string exec = node->first_node("exec")->value();
 
             LauncherItem* box = new LauncherItem(num++, name, description, image, exec);
+#ifdef USE_PLANE_LAYER
             m_plane.add(box);
+#else
+            add(box);
+#endif
 
             box->move_to_center(Point(m_boxes.size() * SPACE, h() / 2));
 
@@ -215,6 +236,9 @@ public:
         }
 
         start_snap();
+
+        // super nasty having to put this here
+        add(&m_popup);
 
         return 0;
     }
@@ -270,7 +294,7 @@ public:
             Rect to(m_boxes[t]->box());
             to.x = pos;
 
-            bool visible = Rect::is_intersect(Rect::merge(to, m_boxes[t]->box()), this->box());
+            bool visible = Rect::intersect(Rect::merge(to, m_boxes[t]->box()), this->box());
             if (visible)
             {
                 m_boxes[t]->move_to_center(Point(pos, m_boxes[t]->center().y));
@@ -287,8 +311,6 @@ public:
     {
         if (m_animation)
             delete m_animation;
-
-        //m_timer.cancel();
 
         auto center = box().center();
         auto distance = w();
@@ -307,8 +329,6 @@ public:
                                     easing_snap, this);
         m_animation->start();
 
-        //m_timer.start_with_duration(30);
-
         m_moving_x = 0;
         m_offset = m_boxes[0]->center().x;
     }
@@ -324,20 +344,20 @@ public:
     {
         if (!m_animation->next())
         {
-            //m_timer.cancel();
-
             // TODO: exec
         }
     }
 
 private:
+#ifdef USE_PLANE_LAYER
     PlaneWindow m_plane;
+#endif
     bool m_moving {false};
     int m_moving_x {0};
     int m_offset {0};
     vector<LauncherItem*> m_boxes;
     Animation* m_animation {nullptr};
-    //PeriodicTimer m_timer;
+    Popup<Window> m_popup;
 };
 
 #define SHARED_PATH "/root/mui/share/mui/examples/launcher/"

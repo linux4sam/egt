@@ -119,9 +119,9 @@ namespace mui
          */
         inline Color tint(float factor) const
         {
-            return Color(redf() + (255. - redf()) * factor,
-                         greenf() + (255. - greenf()) * factor,
-                         bluef() + (255. - bluef()) * factor,
+            return Color(redf() + ((255. - redf()) * factor),
+                         greenf() + ((255. - greenf()) * factor),
+                         bluef() + ((255. - bluef()) * factor),
                          alphaf());
         }
 

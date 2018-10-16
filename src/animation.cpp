@@ -31,26 +31,26 @@ namespace mui
     constexpr auto PI = float_t(3.14159265358979323846);
     constexpr auto NEGCOSPI = float_t(1.61803398874989);
 
-    float_t easing_linear(float_t percent)
+    float_t easing_linear(float_t p)
     {
-        return percent;
+        return p;
     }
 
-    float_t easing_easy(float_t percent)
+    float_t easing_easy(float_t p)
     {
-        return percent * percent * (3.0f - 2.0f * percent);
+        return p * p * (3.0f - 2.0f * p);
     }
 
-    float_t easing_easy_slow(float_t percent)
+    float_t easing_easy_slow(float_t p)
     {
-        percent = easing_easy(percent);
-        return percent * percent * (3.0f - 2.0f * percent);
+        p = easing_easy(p);
+        return p * p * (3.0f - 2.0f * p);
     }
 
-    float_t easing_extend(float_t percent)
+    float_t easing_extend(float_t p)
     {
-        percent = (percent * 1.4f) - 0.2f;
-        return 0.5f - std::cos(PI * percent) / NEGCOSPI;
+        p = (p * 1.4f) - 0.2f;
+        return 0.5f - std::cos(PI * p) / NEGCOSPI;
     }
 
     static inline float_t power(float_t base, float_t exponent)
@@ -63,64 +63,64 @@ namespace mui
         return std::exp(exponent * std::log(base));
     }
 
-    float_t easing_drop(float_t percent)
+    float_t easing_drop(float_t p)
     {
-        return percent * percent;
+        return p * p;
     }
 
-    float_t easing_drop_slow(float_t percent)
+    float_t easing_drop_slow(float_t p)
     {
-        return percent * percent * percent * percent * percent;
+        return p * p * p * p * p;
     }
 
-    float_t easing_snap(float_t percent)
+    float_t easing_snap(float_t p)
     {
-        percent = percent * percent;
-        percent = (percent * 1.4f) - 0.2f;
-        return 0.5f - std::cos(PI * percent) / NEGCOSPI;
+        p = p * p;
+        p = (p * 1.4f) - 0.2f;
+        return 0.5f - std::cos(PI * p) / NEGCOSPI;
     }
 
-    float_t easing_bounce(float_t percent)
+    float_t easing_bounce(float_t p)
     {
-        if (percent > 0.9f)
+        if (p > 0.9f)
         {
-            float_t result = percent - 0.95f;
+            float_t result = p - 0.95f;
             return 1.0f + result * result * 20.0f - (0.05f * 0.05f * 20.0f);
         }
-        else if (percent > 0.75f)
+        else if (p > 0.75f)
         {
-            float_t result = percent - 0.825f;
+            float_t result = p - 0.825f;
             return 1.0f + result * result * 16.0f - (0.075f * 0.075f * 16.0f);
         }
-        else if (percent > 0.5f)
+        else if (p > 0.5f)
         {
-            float_t result = percent - 0.625f;
+            float_t result = p - 0.625f;
             return 1.0f + result * result * 12.0f - (0.125f * 0.125f * 12.0f);
         }
 
-        percent = percent * 2.0f;
-        return percent * percent;
+        p = p * 2.0f;
+        return p * p;
     }
 
-    float_t easing_bouncy(float_t percent)
+    float_t easing_bouncy(float_t p)
     {
         float_t result = 1.0f;
         float_t scale = 5.0f;
         float_t start = 0.5f;
         float_t step = 0.2f;
 
-        if (percent < start)
+        if (p < start)
         {
-            result = percent / start;
+            result = p / start;
             return result * result;
         }
 
         while (step > 0.01f)
         {
-            if (percent < start + step)
+            if (p < start + step)
             {
                 step = step / 2.0f;
-                result = (percent - (start + step)) * scale;
+                result = (p - (start + step)) * scale;
                 result =  result * result;
                 result = result + 1.0f - power(step * scale, 2.0f);
                 break;
@@ -135,46 +135,202 @@ namespace mui
         return result;
     }
 
-    float_t easing_rubber(float_t percent)
+    float_t easing_rubber(float_t p)
     {
-        if (percent > 0.9f)
+        if (p > 0.9f)
         {
-            float_t result = percent - 0.95f;
+            float_t result = p - 0.95f;
             return 1.0f - result * result * 20.0f + (0.05f * 0.05f * 20.0f);
         }
-        else if (percent > 0.75f)
+        else if (p > 0.75f)
         {
-            float_t result = percent - 0.825f;
+            float_t result = p - 0.825f;
             return 1.0f + result * result * 18.0f - (0.075f * 0.075f * 18.0f);
         }
-        else if (percent > 0.5f)
+        else if (p > 0.5f)
         {
-            float_t result = percent - 0.625f;
+            float_t result = p - 0.625f;
             return 1.0f - result * result * 14.0f + (0.125f * 0.125f * 14.0f);
         }
 
-        percent = percent * 2.0f;
-        return percent * percent;
+        p = p * 2.0f;
+        return p * p;
     }
 
-    float_t easing_spring(float_t percent)
+    float_t easing_spring(float_t p)
     {
-        percent = percent * percent;
-        float_t result = std::sin(PI * percent * percent * 10.0f - PI / 2.0f) / 4.0f;
-        result = result * (1.0f - percent) + 1.0f;
-        if (percent < 0.3f)
-            result = result * easing_easy(percent / 0.3f);
+        p = p * p;
+        float_t result = std::sin(PI * p * p * 10.0f - PI / 2.0f) / 4.0f;
+        result = result * (1.0f - p) + 1.0f;
+        if (p < 0.3f)
+            result = result * easing_easy(p / 0.3f);
         return result;
     }
 
-    float_t easing_boing(float_t percent)
+    float_t easing_boing(float_t p)
     {
-        percent = power(percent, 1.5f);
-        float_t result = std::sin(PI * power(percent, 2.0f) * 20.0f - PI / 2.0f) / 4.0f;
-        result = result * (1.0f - percent) + 1.0f;
-        if (percent < 0.2f)
-            result = result * easing_easy(percent / 0.2f);
+        p = power(p, 1.5f);
+        float_t result = std::sin(PI * power(p, 2.0f) * 20.0f - PI / 2.0f) / 4.0f;
+        result = result * (1.0f - p) + 1.0f;
+        if (p < 0.2f)
+            result = result * easing_easy(p / 0.2f);
         return result;
+    }
+
+    float_t easing_quadratic_easein(float_t p)
+    {
+        return p * p;
+    }
+
+    float_t easing_quadratic_easeout(float_t p)
+    {
+        return -(p * (p - 2));
+    }
+
+    float_t easing_quadratic_easeinout(float_t p)
+    {
+        if (p < 0.5)
+        {
+            return 2 * p * p;
+        }
+        else
+        {
+            return (-2 * p * p) + (4 * p) - 1;
+        }
+    }
+
+    float_t easing_cubic_easein(float_t p)
+    {
+        return p * p * p;
+    }
+
+    float_t easing_cubic_easeout(float_t p)
+    {
+        float_t f = (p - 1);
+        return f * f * f + 1;
+    }
+
+    float_t easing_cubic_easeinout(float_t p)
+    {
+        if (p < 0.5)
+        {
+            return 4 * p * p * p;
+        }
+        else
+        {
+            float_t f = ((2 * p) - 2);
+            return 0.5 * f * f * f + 1;
+        }
+    }
+
+    float_t easing_quartic_easein(float_t p)
+    {
+        return p * p * p * p;
+    }
+
+    float_t easing_quartic_easeout(float_t p)
+    {
+        float_t f = (p - 1);
+        return f * f * f * (1 - p) + 1;
+    }
+
+    float_t easing_quartic_easeinout(float_t p)
+    {
+        if (p < 0.5)
+        {
+            return 8 * p * p * p * p;
+        }
+        else
+        {
+            float_t f = (p - 1);
+            return -8 * f * f * f * f + 1;
+        }
+    }
+
+    float_t easing_quintic_easein(float_t p)
+    {
+        return p * p * p * p * p;
+    }
+
+    float_t easing_quintic_easeout(float_t p)
+    {
+        float_t f = (p - 1);
+        return f * f * f * f * f + 1;
+    }
+
+    float_t easing_quintic_easeinout(float_t p)
+    {
+        if (p < 0.5)
+        {
+            return 16 * p * p * p * p * p;
+        }
+        else
+        {
+            float_t f = ((2 * p) - 2);
+            return  0.5 * f * f * f * f * f + 1;
+        }
+    }
+
+    float_t easing_sine_easein(float_t p)
+    {
+        return std::sin((p - 1) * M_PI_2) + 1;
+    }
+
+    float_t easing_sine_easeout(float_t p)
+    {
+        return std::sin(p * M_PI_2);
+    }
+
+    float_t easing_sine_easeinout(float_t p)
+    {
+        return 0.5 * (1 - std::cos(p * M_PI));
+    }
+
+    float_t easing_circular_easein(float_t p)
+    {
+        return 1 - std::sqrt(1 - (p * p));
+    }
+
+    float_t easing_circular_easeout(float_t p)
+    {
+        return std::sqrt((2 - p) * p);
+    }
+
+    float_t easing_circular_easeinout(float_t p)
+    {
+        if (p < 0.5)
+        {
+            return 0.5 * (1 - std::sqrt(1 - 4 * (p * p)));
+        }
+        else
+        {
+            return 0.5 * (std::sqrt(-((2 * p) - 3) * ((2 * p) - 1)) + 1);
+        }
+    }
+
+    float_t easing_exponential_easein(float_t p)
+    {
+        return (p == 0.0) ? p : std::pow(2, 10 * (p - 1));
+    }
+
+    float_t easing_exponential_easeout(float_t p)
+    {
+        return (p == 1.0) ? p : 1 - std::pow(2, -10 * p);
+    }
+
+    float_t easing_exponential_easeinout(float_t p)
+    {
+        if (p == 0.0 || p == 1.0)
+            return p;
+
+        if (p < 0.5)
+        {
+            return 0.5 * std::pow(2, (20 * p) - 10);
+        }
+        else
+        {
+            return -0.5 * std::pow(2, (-20 * p) + 10) + 1;
+        }
     }
 
     Animation::Animation(float_t start, float_t end,
@@ -251,96 +407,100 @@ namespace mui
         m_running = false;
     }
 
-    WidgetPositionAnimator::WidgetPositionAnimator(Widget* widget,
-            int coordinate,
-            int start, int end,
-            uint64_t duration,
-            easing_func func)
-        : Animation(start, end, WidgetPositionAnimator::callback,
-                    duration, func, this),
-          m_coord(coordinate)
+    namespace experimental
     {
-        m_widgets.push_back(widget);
-    }
-
-    WidgetPositionAnimator::WidgetPositionAnimator(std::vector<Widget*> widgets,
-            int coordinate,
-            int start, int end,
-            uint64_t duration,
-            easing_func func)
-        : Animation(start, end, WidgetPositionAnimator::callback,
-                    duration, func, this),
-          m_widgets(widgets),
-          m_coord(coordinate)
-    {
-        m_timer.add_handler(std::bind(&WidgetPositionAnimator::timer_callback, this));
-    }
-
-    void WidgetPositionAnimator::start()
-    {
-        m_timer.start_with_duration(std::chrono::milliseconds(30));
-        Animation::start();
-    }
-
-    void WidgetPositionAnimator::reset()
-    {
-        for (auto& i : m_widgets)
+        WidgetPositionAnimator::WidgetPositionAnimator(Widget* widget,
+                int coordinate,
+                int start, int end,
+                uint64_t duration,
+                easing_func func)
+            : Animation(start, end, WidgetPositionAnimator::callback,
+                        duration, func, this),
+              m_coord(coordinate)
         {
-            if (m_coord == CORD_X)
-                i->move(Point(m_start, i->y()));
-            else
-                i->move(Point(i->x(), m_start));
+            m_widgets.push_back(widget);
         }
-    }
 
-    void WidgetPositionAnimator::timer_callback()
-    {
-        if (!next())
+        WidgetPositionAnimator::WidgetPositionAnimator(std::vector<Widget*> widgets,
+                int coordinate,
+                int start, int end,
+                uint64_t duration,
+                easing_func func)
+            : Animation(start, end, WidgetPositionAnimator::callback,
+                        duration, func, this),
+              m_widgets(widgets),
+              m_coord(coordinate)
         {
-            m_timer.cancel();
+            m_timer.add_handler(std::bind(&WidgetPositionAnimator::timer_callback, this));
         }
-    }
 
-    void WidgetPositionAnimator::callback(float_t value, void* data)
-    {
-        WidgetPositionAnimator* a = reinterpret_cast<WidgetPositionAnimator*>(data);
-        assert(a);
-
-        for (auto& i : a->m_widgets)
+        void WidgetPositionAnimator::start()
         {
-            if (a->m_coord == CORD_X)
-                i->move(Point(value, i->y()));
-            else
-                i->move(Point(i->x(), value));
+            m_timer.start_with_duration(std::chrono::milliseconds(30));
+            Animation::start();
         }
-    }
 
-    AnimationTimer::AnimationTimer(int start, int end, uint64_t duration, easing_func func)
-        : PeriodicTimer(std::chrono::milliseconds(30)),
-          m_animation(start, end, AnimationTimer::animation_callback,
-                      duration, func, this)
-    {}
-
-    void AnimationTimer::start()
-    {
-        PeriodicTimer::start();
-        m_animation.start();
-    }
-
-    void AnimationTimer::timeout()
-    {
-        if (!m_animation.next())
+        void WidgetPositionAnimator::reset()
         {
-            PeriodicTimer::cancel();
+            for (auto& i : m_widgets)
+            {
+                if (m_coord == CORD_X)
+                    i->move(Point(m_start, i->y()));
+                else
+                    i->move(Point(i->x(), m_start));
+            }
         }
-    }
 
-    void AnimationTimer::animation_callback(float_t value, void* data)
-    {
-        AnimationTimer* a = reinterpret_cast<AnimationTimer*>(data);
-        assert(a);
+        void WidgetPositionAnimator::timer_callback()
+        {
+            if (!next())
+            {
+                m_timer.cancel();
+            }
+        }
 
-        a->step(value);
+        void WidgetPositionAnimator::callback(float_t value, void* data)
+        {
+            WidgetPositionAnimator* a = reinterpret_cast<WidgetPositionAnimator*>(data);
+            assert(a);
+
+            for (auto& i : a->m_widgets)
+            {
+                if (a->m_coord == CORD_X)
+                    i->move(Point(value, i->y()));
+                else
+                    i->move(Point(i->x(), value));
+            }
+        }
+
+        AnimationTimer::AnimationTimer(int start, int end, uint64_t duration, easing_func func)
+            : PeriodicTimer(std::chrono::milliseconds(30)),
+              m_animation(start, end, AnimationTimer::animation_callback,
+                          duration, func, this)
+        {}
+
+        void AnimationTimer::start()
+        {
+            PeriodicTimer::start();
+            m_animation.start();
+        }
+
+        void AnimationTimer::timeout()
+        {
+            if (!m_animation.next())
+            {
+                PeriodicTimer::cancel();
+            }
+        }
+
+        void AnimationTimer::animation_callback(float_t value, void* data)
+        {
+            AnimationTimer* a = reinterpret_cast<AnimationTimer*>(data);
+            assert(a);
+
+            a->step(value);
+        }
+
     }
 
 }

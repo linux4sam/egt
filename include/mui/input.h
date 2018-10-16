@@ -50,6 +50,8 @@ namespace mui
         EVT_KEY_DOWN,
         EVT_KEY_UP,
         EVT_KEY_REPEAT,
+
+        EVT_PROPERTY_CHANGE,
     };
 
     /**

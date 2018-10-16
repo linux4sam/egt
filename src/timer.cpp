@@ -5,20 +5,11 @@
 #include "mui/app.h"
 #include "mui/event_loop.h"
 #include "mui/timer.h"
-#include <cassert>
-#include <unistd.h>
 
 using namespace std;
 
 namespace mui
 {
-
-    /*
-    Timer::Timer(uint64_t duration) noexcept
-        : m_timer(main_app().event().io()),
-          m_duration(duration)
-    {}
-    */
 
     Timer::Timer() noexcept
         : m_timer(main_app().event().io())
@@ -28,6 +19,14 @@ namespace mui
         : m_timer(main_app().event().io()),
           m_duration(duration)
     {}
+
+    Timer::Timer(std::chrono::milliseconds duration, bool autostart)
+        : m_timer(main_app().event().io()),
+          m_duration(duration)
+    {
+        if (autostart)
+            start();
+    }
 
     void Timer::start()
     {
@@ -79,7 +78,13 @@ namespace mui
 
     PeriodicTimer::PeriodicTimer(std::chrono::milliseconds period) noexcept
         : Timer(period)
+    {}
+
+    PeriodicTimer::PeriodicTimer(std::chrono::milliseconds period, bool autostart)
+        : Timer(period)
     {
+        if (autostart)
+            start();
     }
 
     void PeriodicTimer::start()

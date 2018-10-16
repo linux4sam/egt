@@ -14,11 +14,19 @@
 #include <cstdlib>
 #include <functional>
 #include <iostream>
+#include <string>
 
 namespace mui
 {
+    template <typename T>
+    void ignoreparam(T&&)
+    {}
+
     namespace detail
     {
+        /**
+         *
+         */
         template <typename T>
         class reverse_range
         {
@@ -44,6 +52,9 @@ namespace mui
             return reverse_range<T>(x);
         }
 
+        /**
+         * Utility base class to make a derived class non-copyable.
+         */
         class noncopyable
         {
         public:
@@ -64,16 +75,24 @@ namespace mui
 #ifdef DEBUG
 #define DBG(x) do { std::cout << x << std::endl; } while (0)
 #else
-#define DBG(x) do {					\
-	extern int globalenvset;			\
-	if (globalenvset < 0)				\
-	    globalenvset = !!getenv("MUI_DEBUG");	\
-	if (globalenvset)				\
-	    std::cout << x << std::endl;		\
+#define DBG(x) do {                                     \
+        extern int globalenvset;                        \
+        if (globalenvset < 0)                           \
+            globalenvset = !!getenv("MUI_DEBUG");       \
+        if (globalenvset)                               \
+            std::cout << x << std::endl;                \
     } while(0)
 #endif
 
 #define ERR(x) do { std::cerr << x << std::endl; } while (0)
+
+    namespace experimental
+    {
+        /**
+         * Toy lua evaluation.
+         */
+        double lua_evaluate(const std::string& expr);
+    }
 
 }
 

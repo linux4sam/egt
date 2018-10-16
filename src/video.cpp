@@ -38,6 +38,8 @@ namespace mui
 
     gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     {
+        ignoreparam(bus);
+
         VideoWindow* _this = (VideoWindow*)data;
 
         switch (GST_MESSAGE_TYPE(message))
@@ -128,7 +130,7 @@ namespace mui
     }
 
     VideoWindow::VideoWindow(const Size& size, uint32_t format, bool heo)
-        : PlaneWindow(size, FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, format, heo),
+        : PlaneWindow(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo),
           m_video_pipeline(NULL),
           m_src(NULL),
           m_volume(NULL),
@@ -191,6 +193,9 @@ namespace mui
 
     bool VideoWindow::play(bool mute, int volume)
     {
+        ignoreparam(mute);
+        ignoreparam(volume);
+
         set_state(GST_STATE_PLAYING);
         return false;
     }
@@ -238,7 +243,7 @@ namespace mui
             volume = 100;
 
         g_object_set(m_volume, "volume", volume / 100.0, NULL);
-        invoke_handlers();
+        invoke_handlers(EVT_PROPERTY_CHANGE);
 
         return true;
     }
@@ -259,7 +264,7 @@ namespace mui
             return false;
 
         g_object_set(m_volume, "mute", mute, NULL);
-        invoke_handlers();
+        invoke_handlers(EVT_PROPERTY_CHANGE);
         return true;
     }
 
@@ -276,7 +281,7 @@ namespace mui
                 return false;
             }
 
-            invoke_handlers();
+            invoke_handlers(EVT_PROPERTY_CHANGE);
         }
         else
         {

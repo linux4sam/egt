@@ -56,6 +56,10 @@ namespace mui
         }
     }
 
+    /**
+     * @todo greenscreen is broken - does not cover all cases and getting it to
+     * work with flipping is difficult.
+     */
     void IScreen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
             const damage_array& olddamage)
     {
@@ -70,11 +74,12 @@ namespace mui
         Color color = Color::GREEN;
         cairo_set_source_rgb(buffer.cr.get(), color.redf(),
                              color.greenf(), color.bluef());
-        cairo_set_line_width(buffer.cr.get(), 1.0);
+        cairo_set_line_width(buffer.cr.get(), 4.0);
 
         for (const auto& d : buffer.damage)
             if (find(olddamage.begin(), olddamage.end(), d) != olddamage.end())
-                cairo_rectangle(buffer.cr.get(), d.x + 2, d.y + 2, d.w - 4, d.h - 4);
+                cairo_rectangle(buffer.cr.get(), d.x, d.y, d.w, d.h);
+        //cairo_rectangle(buffer.cr.get(), d.x + 2, d.y + 2, d.w - 4, d.h - 4);
 
         cairo_stroke(buffer.cr.get());
 
@@ -107,7 +112,7 @@ namespace mui
 
             // if this rectangle intersects an existin rectangle, the merge
             // the rectangles and re-add the super rectangle
-            if (Rect::is_intersect(*i, rect))
+            if (Rect::intersect(*i, rect))
             {
                 Rect super(Rect::merge(*i, rect));
 #if 0

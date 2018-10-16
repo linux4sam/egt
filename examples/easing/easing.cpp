@@ -116,7 +116,7 @@ public:
 
         Rect to(m_box->box());
         to.y = pos;
-        bool visible = Rect::is_intersect(Rect::merge(to, m_box->box()), this->box());
+        bool visible = Rect::intersect(Rect::merge(to, m_box->box()), this->box());
 
         if (visible)
         {
@@ -204,6 +204,8 @@ int main()
     cputimer.start();
 
     animation_timer.start();
+
+    window.show();
 
     return app.run();
 }

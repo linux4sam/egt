@@ -41,11 +41,20 @@ namespace mui
         }
 
         /**
+         * @todo This is excessive how this is implemented.
+         */
+        virtual void draw(Painter& painter, const Rect& rect)
+        {
+            reposition();
+            Frame::draw(painter, rect);
+        }
+
+        /**
          * Add a widget to the grid into a specific cell with an optional
          * alignment within the cell.
          */
         virtual Widget* add(Widget* widget, int column, int row,
-                            uint32_t align = ALIGN_EXPAND);
+                            alignmask align = alignmask::EXPAND);
 
         virtual void remove(Widget* widget);
 
@@ -64,7 +73,7 @@ namespace mui
         struct Cell
         {
             Widget* widget {nullptr};
-            uint32_t align {Widget::ALIGN_NONE};
+            alignmask align {alignmask::NONE};
         };
 
         using cell_array = std::vector<std::vector<Cell>>;
@@ -82,8 +91,8 @@ namespace mui
     public:
 
         HorizontalPositioner(const Point& point, const Size& size,
-                             int border = 0, int align = ALIGN_CENTER)
-            : Frame(point, size, FLAG_NO_BACKGROUND),
+                             int border = 0, alignmask align = alignmask::CENTER)
+            : Frame(point, size, widgetmask::NO_BACKGROUND),
               m_border(border),
               m_align(align)
         {}
@@ -116,14 +125,14 @@ namespace mui
                 if (child)
                 {
                     Point p;
-                    if (m_align & ALIGN_CENTER)
+                    if ((m_align & alignmask::CENTER) == alignmask::CENTER)
                     {
                         p.y = y() + (h() / 2) - (child->h() / 2);
                     }
 
-                    if (m_align & ALIGN_TOP)
+                    if ((m_align & alignmask::TOP) == alignmask::TOP)
                         p.y = y();
-                    if (m_align & ALIGN_BOTTOM)
+                    else if ((m_align & alignmask::BOTTOM) == alignmask::BOTTOM)
                         p.y = y() + h() - child->h();
 
                     child->move(Point(x() + offset + m_border, p.y));
@@ -139,7 +148,7 @@ namespace mui
 
     protected:
         int m_border {0};
-        int m_align {Widget::ALIGN_NONE};
+        alignmask m_align {alignmask::NONE};
     };
 
 }

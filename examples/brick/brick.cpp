@@ -71,7 +71,7 @@ public:
         m_label = new Label("-",
                             Point(5, 2),
                             Size(100, 40),
-                            Widget::ALIGN_LEFT | Widget::ALIGN_CENTER);
+                            alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);
@@ -174,7 +174,7 @@ public:
             if (!block->visible())
                 continue;
 
-            if (Rect::is_intersect(m_ball.box(), block->box()))
+            if (Rect::intersect(m_ball.box(), block->box()))
             {
                 block->hide();
                 m_yspeed *= -1.0;
@@ -184,7 +184,7 @@ public:
         }
 
         // hit paddle
-        if (Rect::is_intersect(m_ball.box(), m_paddle.box()))
+        if (Rect::intersect(m_ball.box(), m_paddle.box()))
         {
             m_yspeed *= -1.0;
         }
