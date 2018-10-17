@@ -451,7 +451,10 @@ cairo_surface_t *cairo_image_surface_create_from_jpeg(const char *filename)
 
    // read data
    if (read(infile, data, stat.st_size) < stat.st_size)
+   {
+      free(data);
       return cairo_image_surface_create(CAIRO_FORMAT_INVALID, 0, 0);
+   }
 
    close(infile);
 
