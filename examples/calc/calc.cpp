@@ -59,7 +59,7 @@ int main()
 
                 if (b->text() == "=")
                 {
-                    string line = replace_all(replace_all(text.last_line(), "x", "*"), "÷", "/");
+                    string line = detail::replace_all(detail::replace_all(text.last_line(), "x", "*"), "÷", "/");
                     if (!line.empty())
                     {
                         ostringstream ss;

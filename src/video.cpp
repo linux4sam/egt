@@ -24,7 +24,7 @@ static void init_thread()
     static bool init = false;
     if (!init)
     {
-        // cppcheck-supress unreadVariable
+        // cppcheck-suppress unreadVariable
         static std::thread t([]()
         {
             GMainLoop* mainloop = g_main_loop_new(NULL, FALSE);
@@ -37,269 +37,270 @@ static void init_thread()
 
 namespace mui
 {
-
-    gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
+    inline namespace v1
     {
-        ignoreparam(bus);
-
-        auto _this = reinterpret_cast<VideoWindow*>(data);
-
-        switch (GST_MESSAGE_TYPE(message))
+        gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
         {
-        case GST_MESSAGE_ERROR:
-        {
-            GError* error;
-            gchar* debug;
+            ignoreparam(bus);
 
-            gst_message_parse_error(message, &error, &debug);
-            cout << "error: " << error->message << endl;
-            g_error_free(error);
-            g_free(debug);
-            break;
-        }
-        case GST_MESSAGE_WARNING:
-            break;
-        case GST_MESSAGE_INFO:
-        {
-            if (!strncmp(GST_MESSAGE_SRC_NAME(message), PERF_NAME, 4))
+            auto _this = reinterpret_cast<VideoWindow*>(data);
+
+            switch (GST_MESSAGE_TYPE(message))
             {
-                GError* error = NULL;
-                gchar* debug = NULL;
-                gchar* fps = NULL;
+            case GST_MESSAGE_ERROR:
+            {
+                GError* error;
+                gchar* debug;
 
-                gst_message_parse_info(message, &error, &debug);
-                if (debug)
-                {
-                    fps = g_strrstr(debug, "fps: ") + 5;
-                    _this->m_fps = atoi(fps);
-                }
-
+                gst_message_parse_error(message, &error, &debug);
+                cout << "error: " << error->message << endl;
                 g_error_free(error);
                 g_free(debug);
+                break;
             }
-            break;
-        }
-        case GST_MESSAGE_CLOCK_PROVIDE:
-            DBG("GStreamer: Message CLOCK_PROVIDE");
-            break;
-        case GST_MESSAGE_CLOCK_LOST:
-            DBG("GStreamer: Message CLOCK_LOST");
-            break;
-        case GST_MESSAGE_NEW_CLOCK:
-            DBG("GStreamer: Message NEW_CLOCK");
-            break;
-        case GST_MESSAGE_EOS:
-        {
-            DBG("GStreamer: Message EOS");
-
-            _this->m_fps = 0;
-
-            // TODO: remove me, loop
-            gst_element_seek(_this->m_video_pipeline, 1.0, GST_FORMAT_TIME,
-                             GST_SEEK_FLAG_FLUSH,
-                             GST_SEEK_TYPE_SET, 0,
-                             GST_SEEK_TYPE_NONE, -1);
-
-            _this->set_state(GST_STATE_PLAYING);
-
-            break;
-        }
-        case GST_MESSAGE_ELEMENT:
-        {
-            const GstStructure* info = gst_message_get_structure(message);
-            if (gst_structure_has_name(info, PROGRESS_NAME))
+            case GST_MESSAGE_WARNING:
+                break;
+            case GST_MESSAGE_INFO:
             {
-                const GValue* vcurrent;
-                const GValue* vtotal;
+                if (!strncmp(GST_MESSAGE_SRC_NAME(message), PERF_NAME, 4))
+                {
+                    GError* error = NULL;
+                    gchar* debug = NULL;
+                    gchar* fps = NULL;
 
-                vtotal = gst_structure_get_value(info, "total");
-                _this->m_duration = g_value_get_int64(vtotal);
-                vcurrent = gst_structure_get_value(info, "current");
-                _this->m_position = g_value_get_int64(vcurrent);
+                    gst_message_parse_info(message, &error, &debug);
+                    if (debug)
+                    {
+                        fps = g_strrstr(debug, "fps: ") + 5;
+                        _this->m_fps = atoi(fps);
+                    }
+
+                    g_error_free(error);
+                    g_free(debug);
+                }
+                break;
             }
-            break;
-        }
-        default:
-            /* unhandled message */
-            break;
-        }
-
-        /* we want to be notified again the next time there is a message
-         * on the bus, so returning TRUE (FALSE means we want to stop watching
-         * for messages on the bus and our callback should not be called again)
-         */
-        return TRUE;
-    }
-
-    VideoWindow::VideoWindow(const Size& size, uint32_t format, bool heo)
-        : PlaneWindow(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
-    {
-        gst_init(NULL, NULL);
-        init_thread();
-    }
-
-    void VideoWindow::scale(float value)
-    {
-        KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        screen->scale(value);
-    }
-
-    float VideoWindow::scale() const
-    {
-        KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        return screen->scale();
-    }
-
-    void VideoWindow::draw()
-    {
-        // don't do any drawing to a window because we don't support video formats, only positioning
-        KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        s->apply();
-        m_dirty = false;
-        m_damage.clear();
-    }
-
-    void VideoWindow::destroyPipeline()
-    {
-        null();
-
-        if (m_volume)
-        {
-            g_object_unref(m_volume);
-            m_volume = NULL;
-        }
-
-        if (m_src)
-        {
-            g_object_unref(m_src);
-            m_src = NULL;
-        }
-
-        if (m_video_pipeline)
-        {
-            g_object_unref(m_video_pipeline);
-            m_video_pipeline = NULL;
-        }
-    }
-
-    VideoWindow::~VideoWindow()
-    {
-        destroyPipeline();
-    }
-
-    bool VideoWindow::play(bool mute, int volume)
-    {
-        ignoreparam(mute);
-        ignoreparam(volume);
-
-        set_state(GST_STATE_PLAYING);
-        return false;
-    }
-
-    bool VideoWindow::unpause()
-    {
-        set_state(GST_STATE_PLAYING);
-        return false;
-    }
-
-    bool VideoWindow::pause()
-    {
-        m_fps = 0;
-        set_state(GST_STATE_PAUSED);
-        return false;
-    }
-
-    bool VideoWindow::null()
-    {
-        m_fps = 0;
-        return set_state(GST_STATE_NULL);
-    }
-
-    bool VideoWindow::set_media(const string& uri)
-    {
-        m_filename = uri;
-
-        destroyPipeline();
-        createPipeline();
-        //g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
-        //g_object_set(m_src, "location", uri.c_str(), NULL);
-        g_object_set(m_src, "device", uri.c_str(), NULL);
-
-        return true;
-    }
-
-    bool VideoWindow::set_volume(int volume)
-    {
-        if (!m_volume)
-            return false;
-
-        if (volume < 1)
-            volume = 1;
-        if (volume > 100)
-            volume = 100;
-
-        g_object_set(m_volume, "volume", volume / 100.0, NULL);
-        invoke_handlers(EVT_PROPERTY_CHANGE);
-
-        return true;
-    }
-
-    int VideoWindow::get_volume() const
-    {
-        if (!m_volume)
-            return 0;
-
-        gdouble volume = 0;
-        g_object_get(m_volume, "volume", &volume, NULL);
-        return volume * 100.0;
-    }
-
-    bool VideoWindow::set_mute(bool mute)
-    {
-        if (!m_volume)
-            return false;
-
-        g_object_set(m_volume, "mute", mute, NULL);
-        invoke_handlers(EVT_PROPERTY_CHANGE);
-        return true;
-    }
-
-    bool VideoWindow::set_state(GstState state)
-    {
-        GstStateChangeReturn ret;
-
-        if (m_video_pipeline)
-        {
-            ret = gst_element_set_state(m_video_pipeline, state);
-            if (GST_STATE_CHANGE_FAILURE == ret)
+            case GST_MESSAGE_CLOCK_PROVIDE:
+                DBG("GStreamer: Message CLOCK_PROVIDE");
+                break;
+            case GST_MESSAGE_CLOCK_LOST:
+                DBG("GStreamer: Message CLOCK_LOST");
+                break;
+            case GST_MESSAGE_NEW_CLOCK:
+                DBG("GStreamer: Message NEW_CLOCK");
+                break;
+            case GST_MESSAGE_EOS:
             {
-                ERR("unable to set video pipeline to " << state);
+                DBG("GStreamer: Message EOS");
+
+                _this->m_fps = 0;
+
+                // TODO: remove me, loop
+                gst_element_seek(_this->m_video_pipeline, 1.0, GST_FORMAT_TIME,
+                                 GST_SEEK_FLAG_FLUSH,
+                                 GST_SEEK_TYPE_SET, 0,
+                                 GST_SEEK_TYPE_NONE, -1);
+
+                _this->set_state(GST_STATE_PLAYING);
+
+                break;
+            }
+            case GST_MESSAGE_ELEMENT:
+            {
+                const GstStructure* info = gst_message_get_structure(message);
+                if (gst_structure_has_name(info, PROGRESS_NAME))
+                {
+                    const GValue* vcurrent;
+                    const GValue* vtotal;
+
+                    vtotal = gst_structure_get_value(info, "total");
+                    _this->m_duration = g_value_get_int64(vtotal);
+                    vcurrent = gst_structure_get_value(info, "current");
+                    _this->m_position = g_value_get_int64(vcurrent);
+                }
+                break;
+            }
+            default:
+                /* unhandled message */
+                break;
+            }
+
+            /* we want to be notified again the next time there is a message
+             * on the bus, so returning TRUE (FALSE means we want to stop watching
+             * for messages on the bus and our callback should not be called again)
+             */
+            return TRUE;
+        }
+
+        VideoWindow::VideoWindow(const Size& size, uint32_t format, bool heo)
+            : PlaneWindow(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
+        {
+            gst_init(NULL, NULL);
+            init_thread();
+        }
+
+        void VideoWindow::scale(float value)
+        {
+            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            screen->scale(value);
+        }
+
+        float VideoWindow::scale() const
+        {
+            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            return screen->scale();
+        }
+
+        void VideoWindow::draw()
+        {
+            // don't do any drawing to a window because we don't support video formats, only positioning
+            KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            s->apply();
+            m_dirty = false;
+            m_damage.clear();
+        }
+
+        void VideoWindow::destroyPipeline()
+        {
+            null();
+
+            if (m_volume)
+            {
+                g_object_unref(m_volume);
+                m_volume = NULL;
+            }
+
+            if (m_src)
+            {
+                g_object_unref(m_src);
+                m_src = NULL;
+            }
+
+            if (m_video_pipeline)
+            {
+                g_object_unref(m_video_pipeline);
+                m_video_pipeline = NULL;
+            }
+        }
+
+        VideoWindow::~VideoWindow()
+        {
+            destroyPipeline();
+        }
+
+        bool VideoWindow::play(bool mute, int volume)
+        {
+            ignoreparam(mute);
+            ignoreparam(volume);
+
+            set_state(GST_STATE_PLAYING);
+            return false;
+        }
+
+        bool VideoWindow::unpause()
+        {
+            set_state(GST_STATE_PLAYING);
+            return false;
+        }
+
+        bool VideoWindow::pause()
+        {
+            m_fps = 0;
+            set_state(GST_STATE_PAUSED);
+            return false;
+        }
+
+        bool VideoWindow::null()
+        {
+            m_fps = 0;
+            return set_state(GST_STATE_NULL);
+        }
+
+        bool VideoWindow::set_media(const string& uri)
+        {
+            m_filename = uri;
+
+            destroyPipeline();
+            createPipeline();
+            //g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
+            //g_object_set(m_src, "location", uri.c_str(), NULL);
+            g_object_set(m_src, "device", uri.c_str(), NULL);
+
+            return true;
+        }
+
+        bool VideoWindow::set_volume(int volume)
+        {
+            if (!m_volume)
+                return false;
+
+            if (volume < 1)
+                volume = 1;
+            if (volume > 100)
+                volume = 100;
+
+            g_object_set(m_volume, "volume", volume / 100.0, NULL);
+            invoke_handlers(EVT_PROPERTY_CHANGE);
+
+            return true;
+        }
+
+        int VideoWindow::get_volume() const
+        {
+            if (!m_volume)
+                return 0;
+
+            gdouble volume = 0;
+            g_object_get(m_volume, "volume", &volume, NULL);
+            return volume * 100.0;
+        }
+
+        bool VideoWindow::set_mute(bool mute)
+        {
+            if (!m_volume)
+                return false;
+
+            g_object_set(m_volume, "mute", mute, NULL);
+            invoke_handlers(EVT_PROPERTY_CHANGE);
+            return true;
+        }
+
+        bool VideoWindow::set_state(GstState state)
+        {
+            GstStateChangeReturn ret;
+
+            if (m_video_pipeline)
+            {
+                ret = gst_element_set_state(m_video_pipeline, state);
+                if (GST_STATE_CHANGE_FAILURE == ret)
+                {
+                    ERR("unable to set video pipeline to " << state);
+                    return false;
+                }
+
+                invoke_handlers(EVT_PROPERTY_CHANGE);
+            }
+            else
+            {
                 return false;
             }
 
-            invoke_handlers(EVT_PROPERTY_CHANGE);
+            return true;
         }
-        else
+
+        bool VideoWindow::playing() const
         {
+            GstState state = GST_STATE_VOID_PENDING;
+
+            if (m_video_pipeline)
+            {
+                (void)gst_element_get_state(m_video_pipeline, &state,
+                                            NULL, GST_CLOCK_TIME_NONE);
+                return state == GST_STATE_PLAYING;
+            }
+
             return false;
         }
-
-        return true;
-    }
-
-    bool VideoWindow::playing() const
-    {
-        GstState state = GST_STATE_VOID_PENDING;
-
-        if (m_video_pipeline)
-        {
-            (void)gst_element_get_state(m_video_pipeline, &state,
-                                        NULL, GST_CLOCK_TIME_NONE);
-            return state == GST_STATE_PLAYING;
-        }
-
-        return false;
-    }
 
 
 #define HARDWAREPIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " caps=video/x-h264;audio/x-raw " \
@@ -310,77 +311,77 @@ namespace mui
     SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
     "alsasink async=false enable-last-sample=false sync=true"
 
-    HardwareVideo::HardwareVideo(const Size& size, uint32_t format)
-        : VideoWindow(size, format /*DRM_FORMAT_XRGB8888*/ /*DRM_FORMAT_YUYV*/, true)
-    {
-    }
-
-    bool HardwareVideo::createPipeline()
-    {
-        GError* error = NULL;
-        GstBus* bus;
-        //guint bus_watch_id;
-
-        KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        int _gem = screen->gem();
-
-        /* Make sure we don't leave orphan references */
-        destroyPipeline();
-
-        char buffer[2048];
-        sprintf(buffer, HARDWAREPIPE, w(), h(), _gem);
-
-        DBG("gem = " << _gem << " w()=" << w() << " h()=" << h());
-
-        string pipe(buffer);
-        DBG(pipe);
-
-        m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
-        if (!m_video_pipeline)
+        HardwareVideo::HardwareVideo(const Size& size, uint32_t format)
+            : VideoWindow(size, format /*DRM_FORMAT_XRGB8888*/ /*DRM_FORMAT_YUYV*/, true)
         {
-            m_video_pipeline = NULL;
-            ERR("failed to create video pipeline");
-            return false;
         }
 
-        m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-        if (!m_src)
+        bool HardwareVideo::createPipeline()
         {
-            m_src = NULL;
-            ERR("failed to get video src element");
-            return false;
+            GError* error = NULL;
+            GstBus* bus;
+            //guint bus_watch_id;
+
+            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            int _gem = screen->gem();
+
+            /* Make sure we don't leave orphan references */
+            destroyPipeline();
+
+            char buffer[2048];
+            sprintf(buffer, HARDWAREPIPE, w(), h(), _gem);
+
+            DBG("gem = " << _gem << " w()=" << w() << " h()=" << h());
+
+            string pipe(buffer);
+            DBG(pipe);
+
+            m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
+            if (!m_video_pipeline)
+            {
+                m_video_pipeline = NULL;
+                ERR("failed to create video pipeline");
+                return false;
+            }
+
+            m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
+            if (!m_src)
+            {
+                m_src = NULL;
+                ERR("failed to get video src element");
+                return false;
+            }
+
+            m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
+            if (!m_volume)
+            {
+                m_volume = NULL;
+                ERR("failed to get volume element");
+                return false;
+            }
+
+            bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
+            /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
+            gst_object_unref(bus);
+
+            return true;
         }
 
-        m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-        if (!m_volume)
+        HardwareVideo::~HardwareVideo()
         {
-            m_volume = NULL;
-            ERR("failed to get volume element");
-            return false;
+
         }
 
-        bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
-        /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
-        gst_object_unref(bus);
+        bool HardwareVideo::set_media(const string& uri)
+        {
+            m_filename = uri;
 
-        return true;
-    }
+            destroyPipeline();
+            createPipeline();
+            g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
 
-    HardwareVideo::~HardwareVideo()
-    {
-
-    }
-
-    bool HardwareVideo::set_media(const string& uri)
-    {
-        m_filename = uri;
-
-        destroyPipeline();
-        createPipeline();
-        g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
-
-        return true;
-    }
+            return true;
+        }
 
 #if 1
 
@@ -397,79 +398,79 @@ namespace mui
     "perf name=" PERF_NAME " ! " \
     "g1kmssink gem-name=%d sync=true"
 #define FORMAT DRM_FORMAT_YUYV
-    //#define FORMAT DRM_FORMAT_RGBA8888
+        //#define FORMAT DRM_FORMAT_RGBA8888
 
 #endif
 
-    V4L2HardwareVideo::V4L2HardwareVideo(const Size& size)
-        : HardwareVideo(size, FORMAT)
-    {
-    }
-
-    bool V4L2HardwareVideo::createPipeline()
-    {
-        GError* error = NULL;
-        GstBus* bus;
-        //guint bus_watch_id;
-
-        KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-        int _gem = screen->gem();
-
-        /* Make sure we don't leave orphan references */
-        destroyPipeline();
-
-        char buffer[2048];
-        sprintf(buffer, V4L2HARDWAREPIPE, w(), _gem);
-
-        string pipe(buffer);
-        DBG(pipe);
-
-        m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
-        if (!m_video_pipeline)
+        V4L2HardwareVideo::V4L2HardwareVideo(const Size& size)
+            : HardwareVideo(size, FORMAT)
         {
-            m_video_pipeline = NULL;
-            ERR("failed to create video pipeline");
-            return false;
         }
 
-        m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-        if (!m_src)
+        bool V4L2HardwareVideo::createPipeline()
         {
-            m_src = NULL;
-            ERR("failed to get video src element");
-            return false;
+            GError* error = NULL;
+            GstBus* bus;
+            //guint bus_watch_id;
+
+            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            int _gem = screen->gem();
+
+            /* Make sure we don't leave orphan references */
+            destroyPipeline();
+
+            char buffer[2048];
+            sprintf(buffer, V4L2HARDWAREPIPE, w(), _gem);
+
+            string pipe(buffer);
+            DBG(pipe);
+
+            m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
+            if (!m_video_pipeline)
+            {
+                m_video_pipeline = NULL;
+                ERR("failed to create video pipeline");
+                return false;
+            }
+
+            m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
+            if (!m_src)
+            {
+                m_src = NULL;
+                ERR("failed to get video src element");
+                return false;
+            }
+
+            m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
+            if (!m_volume)
+            {
+                ERR("failed to get volume element");
+            }
+
+            bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
+            /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
+            gst_object_unref(bus);
+
+            GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(m_video_pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
+
+            return true;
         }
 
-        m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-        if (!m_volume)
+        V4L2HardwareVideo::~V4L2HardwareVideo()
         {
-            ERR("failed to get volume element");
+
         }
 
-        bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
-        /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
-        gst_object_unref(bus);
+        bool V4L2HardwareVideo::set_media(const string& uri)
+        {
+            m_filename = uri;
 
-        GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(m_video_pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
+            destroyPipeline();
+            createPipeline();
+            g_object_set(m_src, "device", uri.c_str(), NULL);
 
-        return true;
-    }
-
-    V4L2HardwareVideo::~V4L2HardwareVideo()
-    {
-
-    }
-
-    bool V4L2HardwareVideo::set_media(const string& uri)
-    {
-        m_filename = uri;
-
-        destroyPipeline();
-        createPipeline();
-        g_object_set(m_src, "device", uri.c_str(), NULL);
-
-        return true;
-    }
+            return true;
+        }
 
 
 #define SINK_NAME "testsink"
@@ -482,228 +483,228 @@ namespace mui
     SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
     "alsasink async=false enable-last-sample=false sync=true"
 
-    GstFlowReturn SoftwareVideo::on_new_buffer_from_source(GstElement* elt, gpointer data)
-    {
-        auto _this = reinterpret_cast<SoftwareVideo*>(data);
+        GstFlowReturn SoftwareVideo::on_new_buffer_from_source(GstElement* elt, gpointer data)
+        {
+            auto _this = reinterpret_cast<SoftwareVideo*>(data);
 
 #if 0
-        GstCaps* caps = gst_pad_get_current_caps(GST_BASE_SINK_PAD(elt));
-        GstStructure* props = gst_caps_get_structure(caps, 0);
-        for (int x = 0; x < gst_structure_n_fields(props); x++)
-        {
-            const gchar* fieldname = gst_structure_nth_field_name(props, x);
-            if (g_strrstr(fieldname, "width"))
+            GstCaps* caps = gst_pad_get_current_caps(GST_BASE_SINK_PAD(elt));
+            GstStructure* props = gst_caps_get_structure(caps, 0);
+            for (int x = 0; x < gst_structure_n_fields(props); x++)
             {
-                gint width = 0;
-                if (gst_structure_get_int(props, fieldname, &width))
-                    cout << "width:" << width << endl;
+                const gchar* fieldname = gst_structure_nth_field_name(props, x);
+                if (g_strrstr(fieldname, "width"))
+                {
+                    gint width = 0;
+                    if (gst_structure_get_int(props, fieldname, &width))
+                        cout << "width:" << width << endl;
+                }
+                else if (g_strrstr(fieldname, "height"))
+                {
+                    gint height = 0;
+                    if (gst_structure_get_int(props, fieldname, &height))
+                        cout << "height:" << height << endl;
+                }
             }
-            else if (g_strrstr(fieldname, "height"))
-            {
-                gint height = 0;
-                if (gst_structure_get_int(props, fieldname, &height))
-                    cout << "height:" << height << endl;
-            }
-        }
 #endif
 
-        GstSample* sample;
+            GstSample* sample;
 
-        g_signal_emit_by_name(elt, "pull-sample", &sample);
+            g_signal_emit_by_name(elt, "pull-sample", &sample);
 
-        if (sample)
-        {
-            GstBuffer* buffer = gst_sample_get_buffer(sample);
-            GstMapInfo map;
-
-            if (gst_buffer_map(buffer, &map, GST_MAP_READ))
+            if (sample)
             {
-                KMSOverlayScreen* screen =
-                    reinterpret_cast<KMSOverlayScreen*>(_this->m_screen);
-                //cout << "frame size: " << map.size << endl;
-                memcpy(screen->raw(), map.data, map.size);
-                screen->schedule_flip();
-                gst_buffer_unmap(buffer, &map);
+                GstBuffer* buffer = gst_sample_get_buffer(sample);
+                GstMapInfo map;
+
+                if (gst_buffer_map(buffer, &map, GST_MAP_READ))
+                {
+                    KMSOverlayScreen* screen =
+                        reinterpret_cast<KMSOverlayScreen*>(_this->m_screen);
+                    //cout << "frame size: " << map.size << endl;
+                    memcpy(screen->raw(), map.data, map.size);
+                    screen->schedule_flip();
+                    gst_buffer_unmap(buffer, &map);
+                }
+
+                gst_sample_unref(sample);
             }
 
-            gst_sample_unref(sample);
+            return GST_FLOW_OK;
         }
 
-        return GST_FLOW_OK;
-    }
-
-    SoftwareVideo::SoftwareVideo(const Size& size, uint32_t format)
-        : VideoWindow(size, format),
-          m_appsink(NULL)
-    {
-    }
-
-    bool SoftwareVideo::createPipeline()
-    {
-        GError* error = NULL;
-        GstBus* bus;
-        //guint bus_watch_id;
-
-        /* Make sure we don't leave orphan references */
-        destroyPipeline();
-
-        char buffer[2048];
-        sprintf(buffer, SOFTWAREPIPE, w(), h());
-
-        string pipe(buffer);
-        DBG(pipe);
-
-        m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
-        if (!m_video_pipeline)
+        SoftwareVideo::SoftwareVideo(const Size& size, uint32_t format)
+            : VideoWindow(size, format),
+              m_appsink(NULL)
         {
-            m_video_pipeline = NULL;
-            ERR("failed to create video pipeline");
-            return false;
         }
 
-        m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-        if (!m_src)
+        bool SoftwareVideo::createPipeline()
         {
-            m_src = NULL;
-            ERR("failed to get video src element");
-            return false;
+            GError* error = NULL;
+            GstBus* bus;
+            //guint bus_watch_id;
+
+            /* Make sure we don't leave orphan references */
+            destroyPipeline();
+
+            char buffer[2048];
+            sprintf(buffer, SOFTWAREPIPE, w(), h());
+
+            string pipe(buffer);
+            DBG(pipe);
+
+            m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
+            if (!m_video_pipeline)
+            {
+                m_video_pipeline = NULL;
+                ERR("failed to create video pipeline");
+                return false;
+            }
+
+            m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
+            if (!m_src)
+            {
+                m_src = NULL;
+                ERR("failed to get video src element");
+                return false;
+            }
+
+            m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
+            if (!m_volume)
+            {
+                ERR("failed to get volume element");
+            }
+
+            m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
+            if (!m_appsink)
+            {
+                ERR("failed to get test sink element");
+                return false;
+            }
+
+            g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
+            g_signal_connect(m_appsink, "new-sample",
+                             G_CALLBACK(on_new_buffer_from_source), this);
+
+
+            bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
+            /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
+            gst_object_unref(bus);
+
+            return true;
         }
 
-        m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-        if (!m_volume)
+        void SoftwareVideo::destroyPipeline()
         {
-            ERR("failed to get volume element");
+            VideoWindow::destroyPipeline();
+
+            if (m_appsink)
+            {
+                g_object_unref(m_appsink);
+                m_appsink = NULL;
+            }
         }
 
-        m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
-        if (!m_appsink)
+        SoftwareVideo::~SoftwareVideo()
         {
-            ERR("failed to get test sink element");
-            return false;
+
         }
 
-        g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
-        g_signal_connect(m_appsink, "new-sample",
-                         G_CALLBACK(on_new_buffer_from_source), this);
-
-
-        bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
-        /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
-        gst_object_unref(bus);
-
-        return true;
-    }
-
-    void SoftwareVideo::destroyPipeline()
-    {
-        VideoWindow::destroyPipeline();
-
-        if (m_appsink)
+        bool SoftwareVideo::set_media(const string& uri)
         {
-            g_object_unref(m_appsink);
-            m_appsink = NULL;
+            m_filename = uri;
+
+            destroyPipeline();
+            createPipeline();
+            g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
+
+            return true;
         }
-    }
-
-    SoftwareVideo::~SoftwareVideo()
-    {
-
-    }
-
-    bool SoftwareVideo::set_media(const string& uri)
-    {
-        m_filename = uri;
-
-        destroyPipeline();
-        createPipeline();
-        g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
-
-        return true;
-    }
 
 
 #define V4L2SOFTWAREPIPE "v4l2src name=" SRC_NAME " ! video/x-raw,width=%d,framerate=15/1 ! " \
     "perf name=" PERF_NAME " ! " \
     "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME
 
-    V4L2SoftwareVideo::V4L2SoftwareVideo(const Size& size)
-        : SoftwareVideo(size, DRM_FORMAT_YUYV)
-    {
-    }
-
-    bool V4L2SoftwareVideo::createPipeline()
-    {
-        GError* error = NULL;
-        GstBus* bus;
-        //guint bus_watch_id;
-
-        /* Make sure we don't leave orphan references */
-        destroyPipeline();
-
-        char buffer[2048];
-        sprintf(buffer, V4L2SOFTWAREPIPE, w());
-
-        string pipe(buffer);
-        DBG(pipe);
-
-        m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
-        if (!m_video_pipeline)
+        V4L2SoftwareVideo::V4L2SoftwareVideo(const Size& size)
+            : SoftwareVideo(size, DRM_FORMAT_YUYV)
         {
-            m_video_pipeline = NULL;
-            ERR("failed to create video pipeline");
-            return false;
         }
 
-        m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-        if (!m_src)
+        bool V4L2SoftwareVideo::createPipeline()
         {
-            m_src = NULL;
-            ERR("failed to get video src element");
-            return false;
+            GError* error = NULL;
+            GstBus* bus;
+            //guint bus_watch_id;
+
+            /* Make sure we don't leave orphan references */
+            destroyPipeline();
+
+            char buffer[2048];
+            sprintf(buffer, V4L2SOFTWAREPIPE, w());
+
+            string pipe(buffer);
+            DBG(pipe);
+
+            m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
+            if (!m_video_pipeline)
+            {
+                m_video_pipeline = NULL;
+                ERR("failed to create video pipeline");
+                return false;
+            }
+
+            m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
+            if (!m_src)
+            {
+                m_src = NULL;
+                ERR("failed to get video src element");
+                return false;
+            }
+
+            m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
+            if (!m_volume)
+            {
+                ERR("failed to get volume element");
+            }
+
+            m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
+            if (!m_appsink)
+            {
+                ERR("failed to get test sink element");
+                return false;
+            }
+
+            g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
+            g_signal_connect(m_appsink, "new-sample",
+                             G_CALLBACK(on_new_buffer_from_source), this);
+
+
+            bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
+            /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
+            gst_object_unref(bus);
+
+            GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(m_video_pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
+
+            return true;
         }
 
-        m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-        if (!m_volume)
+        V4L2SoftwareVideo::~V4L2SoftwareVideo()
         {
-            ERR("failed to get volume element");
+
         }
 
-        m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
-        if (!m_appsink)
+        bool V4L2SoftwareVideo::set_media(const string& uri)
         {
-            ERR("failed to get test sink element");
-            return false;
+            m_filename = uri;
+
+            destroyPipeline();
+            createPipeline();
+            g_object_set(m_src, "device", uri.c_str(), NULL);
+
+            return true;
         }
-
-        g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
-        g_signal_connect(m_appsink, "new-sample",
-                         G_CALLBACK(on_new_buffer_from_source), this);
-
-
-        bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
-        /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
-        gst_object_unref(bus);
-
-        GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(m_video_pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
-
-        return true;
-    }
-
-    V4L2SoftwareVideo::~V4L2SoftwareVideo()
-    {
-
-    }
-
-    bool V4L2SoftwareVideo::set_media(const string& uri)
-    {
-        m_filename = uri;
-
-        destroyPipeline();
-        createPipeline();
-        g_object_set(m_src, "device", uri.c_str(), NULL);
-
-        return true;
-    }
 
 
 #define RAWSOFTWAREPIPE "filesrc name=" SRC_NAME " ! videoparse width=%d height=%d framerate=24/1 format=nv21 " \
@@ -712,80 +713,81 @@ namespace mui
     "perf name=" PERF_NAME " ! " \
     "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME
 
-    RawSoftwareVideo::RawSoftwareVideo(const Size& size)
-        : SoftwareVideo(size)
-    {}
+        RawSoftwareVideo::RawSoftwareVideo(const Size& size)
+            : SoftwareVideo(size)
+        {}
 
-    bool RawSoftwareVideo::createPipeline()
-    {
-        GError* error = NULL;
-        GstBus* bus;
-        //guint bus_watch_id;
-
-        /* Make sure we don't leave orphan references */
-        destroyPipeline();
-
-        char buffer[2048];
-        sprintf(buffer, RAWSOFTWAREPIPE, w(), h());
-
-        string pipe(buffer);
-        DBG(pipe);
-
-        m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
-        if (!m_video_pipeline)
+        bool RawSoftwareVideo::createPipeline()
         {
-            m_video_pipeline = NULL;
-            ERR("failed to create video pipeline");
-            return false;
+            GError* error = NULL;
+            GstBus* bus;
+            //guint bus_watch_id;
+
+            /* Make sure we don't leave orphan references */
+            destroyPipeline();
+
+            char buffer[2048];
+            sprintf(buffer, RAWSOFTWAREPIPE, w(), h());
+
+            string pipe(buffer);
+            DBG(pipe);
+
+            m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);
+            if (!m_video_pipeline)
+            {
+                m_video_pipeline = NULL;
+                ERR("failed to create video pipeline");
+                return false;
+            }
+
+            m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
+            if (!m_src)
+            {
+                m_src = NULL;
+                ERR("failed to get video src element");
+                return false;
+            }
+
+            m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
+            if (!m_volume)
+            {
+                ERR("failed to get volume element");
+            }
+
+            m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
+            if (!m_appsink)
+            {
+                ERR("failed to get test sink element");
+                return false;
+            }
+
+            g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
+            g_signal_connect(m_appsink, "new-sample",
+                             G_CALLBACK(on_new_buffer_from_source), this);
+
+
+            bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
+            /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
+            gst_object_unref(bus);
+
+            return true;
         }
 
-        m_src = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SRC_NAME);
-        if (!m_src)
+        RawSoftwareVideo::~RawSoftwareVideo()
         {
-            m_src = NULL;
-            ERR("failed to get video src element");
-            return false;
+
         }
 
-        m_volume = gst_bin_get_by_name(GST_BIN(m_video_pipeline), VOLUME_NAME);
-        if (!m_volume)
+        bool RawSoftwareVideo::set_media(const string& uri)
         {
-            ERR("failed to get volume element");
+            m_filename = uri;
+
+            destroyPipeline();
+            createPipeline();
+            g_object_set(m_src, "location", uri.c_str(), NULL);
+
+            return true;
         }
-
-        m_appsink = gst_bin_get_by_name(GST_BIN(m_video_pipeline), SINK_NAME);
-        if (!m_appsink)
-        {
-            ERR("failed to get test sink element");
-            return false;
-        }
-
-        g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
-        g_signal_connect(m_appsink, "new-sample",
-                         G_CALLBACK(on_new_buffer_from_source), this);
-
-
-        bus = gst_pipeline_get_bus(GST_PIPELINE(m_video_pipeline));
-        /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
-        gst_object_unref(bus);
-
-        return true;
-    }
-
-    RawSoftwareVideo::~RawSoftwareVideo()
-    {
-
-    }
-
-    bool RawSoftwareVideo::set_media(const string& uri)
-    {
-        m_filename = uri;
-
-        destroyPipeline();
-        createPipeline();
-        g_object_set(m_src, "location", uri.c_str(), NULL);
-
-        return true;
     }
 }
 

@@ -23,201 +23,204 @@
 
 namespace mui
 {
-    /**
-     * Hardware based video window.
-     */
-    class VideoWindow : public PlaneWindow
+    inline namespace v1
     {
-    public:
-
-        VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888, bool heo = false);
-
-        virtual void draw() override;
-
         /**
-         * @brief Sets the media file URI to the current pipeline
-         * @param uri file URI
-         * @return true if success
+         * Hardware based video window.
          */
-        virtual bool set_media(const std::string& uri);
-
-        /**
-         * @brief Send pipeline to play state
-         * @return true if success
-         */
-        virtual bool play(bool mute = false, int volume = 100);
-        virtual bool unpause();
-
-        /**
-         * @brief pause Send Pipeline to pause state
-         * @return true if success
-         */
-        virtual bool pause();
-
-        /**
-         * @brief null Send pipeline to null state
-         * @return true if success
-         */
-        virtual bool null();
-
-        /**
-         * @brief Adjusts the volume of the audio in the video being played
-         * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
-         * @return true if success
-         */
-        virtual bool set_volume(int volume);
-        virtual int get_volume() const;
-
-        /**
-         * @brief Mutes the audio of the video being played
-         * @param mute true if the audio is to be muted
-         * @return true if success
-         */
-        virtual bool set_mute(bool mute);
-
-        virtual void scale(float value);
-        virtual float scale() const;
-
-        virtual ~VideoWindow();
-
-        inline uint64_t position() const
+        class VideoWindow : public PlaneWindow
         {
-            return m_position;
-        }
-        inline uint64_t duration() const
-        {
-            return m_duration;
-        }
+        public:
 
-        virtual bool playing() const;
+            VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888, bool heo = false);
 
-        virtual uint32_t fps() const
-        {
-            return m_fps;
-        }
+            virtual void draw() override;
 
-    protected:
+            /**
+             * @brief Sets the media file URI to the current pipeline
+             * @param uri file URI
+             * @return true if success
+             */
+            virtual bool set_media(const std::string& uri);
 
-        virtual bool set_state(GstState state);
-        virtual bool createPipeline() = 0;
-        virtual void destroyPipeline();
+            /**
+             * @brief Send pipeline to play state
+             * @return true if success
+             */
+            virtual bool play(bool mute = false, int volume = 100);
+            virtual bool unpause();
 
-        static gboolean bus_callback(GstBus* bus,
-                                     GstMessage* message,
-                                     gpointer data);
+            /**
+             * @brief pause Send Pipeline to pause state
+             * @return true if success
+             */
+            virtual bool pause();
 
-        GstElement* m_video_pipeline {nullptr};
-        GstElement* m_src {nullptr};
-        GstElement* m_volume {nullptr};
-        gint64 m_position {0};
-        gint64 m_duration {0};
-        std::string m_filename;
-        int m_volume_value {100};
-        uint32_t m_fps {0};
-    };
+            /**
+             * @brief null Send pipeline to null state
+             * @return true if success
+             */
+            virtual bool null();
 
+            /**
+             * @brief Adjusts the volume of the audio in the video being played
+             * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
+             * @return true if success
+             */
+            virtual bool set_volume(int volume);
+            virtual int get_volume() const;
 
-    /**
-     * Video player window with hardware acceleration supported.
-     */
-    class HardwareVideo : public VideoWindow
-    {
-    public:
+            /**
+             * @brief Mutes the audio of the video being played
+             * @param mute true if the audio is to be muted
+             * @return true if success
+             */
+            virtual bool set_mute(bool mute);
 
-        HardwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUYV);
+            virtual void scale(float value);
+            virtual float scale() const;
+
+            virtual ~VideoWindow();
+
+            inline uint64_t position() const
+            {
+                return m_position;
+            }
+            inline uint64_t duration() const
+            {
+                return m_duration;
+            }
+
+            virtual bool playing() const;
+
+            virtual uint32_t fps() const
+            {
+                return m_fps;
+            }
+
+        protected:
+
+            virtual bool set_state(GstState state);
+            virtual bool createPipeline() = 0;
+            virtual void destroyPipeline();
+
+            static gboolean bus_callback(GstBus* bus,
+                                         GstMessage* message,
+                                         gpointer data);
+
+            GstElement* m_video_pipeline {nullptr};
+            GstElement* m_src {nullptr};
+            GstElement* m_volume {nullptr};
+            gint64 m_position {0};
+            gint64 m_duration {0};
+            std::string m_filename;
+            int m_volume_value {100};
+            uint32_t m_fps {0};
+        };
+
 
         /**
-         * @brief Sets the media file URI to the current pipeline
-         * @param uri file URI
-         * @return true if success
+         * Video player window with hardware acceleration supported.
          */
-        bool set_media(const std::string& uri) override;
+        class HardwareVideo : public VideoWindow
+        {
+        public:
 
-        virtual ~HardwareVideo();
+            HardwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUYV);
 
-    protected:
+            /**
+             * @brief Sets the media file URI to the current pipeline
+             * @param uri file URI
+             * @return true if success
+             */
+            bool set_media(const std::string& uri) override;
 
-        virtual bool createPipeline() override;
-    };
+            virtual ~HardwareVideo();
 
-    /**
-     * Video player window using only software.
-     */
-    class SoftwareVideo : public VideoWindow
-    {
-    public:
+        protected:
 
-        SoftwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUV420);
+            virtual bool createPipeline() override;
+        };
 
-        virtual bool set_media(const std::string& uri) override;
+        /**
+         * Video player window using only software.
+         */
+        class SoftwareVideo : public VideoWindow
+        {
+        public:
 
-        virtual ~SoftwareVideo();
+            SoftwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUV420);
 
-    protected:
+            virtual bool set_media(const std::string& uri) override;
 
-        virtual bool createPipeline() override;
-        virtual void destroyPipeline() override;
+            virtual ~SoftwareVideo();
 
-        static GstFlowReturn on_new_buffer_from_source(GstElement* elt,
-                gpointer data);
+        protected:
 
-        GstElement* m_appsink;
-    };
+            virtual bool createPipeline() override;
+            virtual void destroyPipeline() override;
 
-    /**
-     * Specialized SoftwareVideo window with support for a V4L2 source.
-     */
-    class V4L2SoftwareVideo : public SoftwareVideo
-    {
-    public:
+            static GstFlowReturn on_new_buffer_from_source(GstElement* elt,
+                    gpointer data);
 
-        explicit V4L2SoftwareVideo(const Size& size);
+            GstElement* m_appsink;
+        };
 
-        virtual bool set_media(const std::string& uri) override;
+        /**
+         * Specialized SoftwareVideo window with support for a V4L2 source.
+         */
+        class V4L2SoftwareVideo : public SoftwareVideo
+        {
+        public:
 
-        virtual ~V4L2SoftwareVideo();
+            explicit V4L2SoftwareVideo(const Size& size);
 
-    protected:
+            virtual bool set_media(const std::string& uri) override;
 
-        virtual bool createPipeline() override;
-    };
+            virtual ~V4L2SoftwareVideo();
 
-    /**
-     * Specialized HardwareVideo window with support for a V4L2 source.
-     */
-    class V4L2HardwareVideo : public HardwareVideo
-    {
-    public:
+        protected:
 
-        explicit V4L2HardwareVideo(const Size& size);
+            virtual bool createPipeline() override;
+        };
 
-        virtual bool set_media(const std::string& uri) override;
+        /**
+         * Specialized HardwareVideo window with support for a V4L2 source.
+         */
+        class V4L2HardwareVideo : public HardwareVideo
+        {
+        public:
 
-        virtual ~V4L2HardwareVideo();
+            explicit V4L2HardwareVideo(const Size& size);
 
-    protected:
+            virtual bool set_media(const std::string& uri) override;
 
-        virtual bool createPipeline() override;
-    };
+            virtual ~V4L2HardwareVideo();
 
-    /**
-     * Specialized SoftwareVideo window that only handles RAW video stream sources.
-     */
-    class RawSoftwareVideo : public SoftwareVideo
-    {
-    public:
+        protected:
 
-        explicit RawSoftwareVideo(const Size& size);
+            virtual bool createPipeline() override;
+        };
 
-        virtual bool set_media(const std::string& uri) override;
+        /**
+         * Specialized SoftwareVideo window that only handles RAW video stream sources.
+         */
+        class RawSoftwareVideo : public SoftwareVideo
+        {
+        public:
 
-        virtual ~RawSoftwareVideo();
+            explicit RawSoftwareVideo(const Size& size);
 
-    protected:
+            virtual bool set_media(const std::string& uri) override;
 
-        virtual bool createPipeline() override;
-    };
+            virtual ~RawSoftwareVideo();
 
+        protected:
+
+            virtual bool createPipeline() override;
+        };
+
+    }
 }
 
 #endif

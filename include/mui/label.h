@@ -28,7 +28,8 @@ namespace mui
                        const Point& point = Point(),
                        const Size& size = Size(),
                        alignmask align = alignmask::CENTER,
-                       const Font& font = Font());
+                       const Font& font = Font(),
+                       widgetmask flags = widgetmask::NO_BORDER) noexcept;
 
         /**
          * Set the text of the label.

@@ -74,20 +74,20 @@ int main()
 
     Window win(Size(800, 480));
 
-    Label label1("left align", Point(100, 50), Size(200, 40), alignmask::LEFT | alignmask::CENTER);
-    label1.flag_set(widgetmask::BORDER);
+    Label label1("left align", Point(100, 50), Size(200, 40),
+                 alignmask::LEFT | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label1);
 
-    Label label2("right align", Point(100, 100), Size(200, 40), alignmask::RIGHT | alignmask::CENTER);
-    label2.flag_set(widgetmask::BORDER);
+    Label label2("right align", Point(100, 100), Size(200, 40),
+                 alignmask::RIGHT | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label2);
 
-    Label label3("top align", Point(100, 150), Size(200, 40), alignmask::TOP | alignmask::CENTER);
-    label3.flag_set(widgetmask::BORDER);
+    Label label3("top align", Point(100, 150), Size(200, 40),
+                 alignmask::TOP | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label3);
 
-    Label label4("bottom align", Point(100, 200), Size(200, 40), alignmask::BOTTOM | alignmask::CENTER);
-    label4.flag_set(widgetmask::BORDER);
+    Label label4("bottom align", Point(100, 200), Size(200, 40),
+                 alignmask::BOTTOM | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label4);
 
     Popup<Window> popup(Size(100, 100));

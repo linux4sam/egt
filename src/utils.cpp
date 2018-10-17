@@ -8,37 +8,28 @@
 
 #include "mui/utils.h"
 #include "lua/script.h"
-#include <cstdarg>
-#include <cstdio>
-#include <cstdlib>
 
 namespace mui
 {
-
-    static int m_v = 0;
-
-    void LOG_VERBOSE(int verbose)
+    namespace detail
     {
-        m_v = verbose;
-    }
-
-    static int envset = -1;
-
-    void LOG(const char* format, ...)
-    {
-        if (envset < 0)
-            envset = !!getenv("MUI_DEBUG");
-
-        if (m_v || envset)
+        int& globalloglevel()
         {
-            va_list ap;
-            va_start(ap, format);
-            vfprintf(stderr, format, ap);
-            va_end(ap);
+            static int loglevel = getenv("MUI_DEBUG") ? std::atoi(getenv("MUI_DEBUG")) : 0;
+            return loglevel;
+        }
+
+        std::string replace_all(std::string str, const std::string& from, const std::string& to)
+        {
+            size_t start_pos = 0;
+            while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+            {
+                str.replace(start_pos, from.length(), to);
+                start_pos += to.length();
+            }
+            return str;
         }
     }
-
-    int globalenvset = -1;
 
     namespace experimental
     {
@@ -50,20 +41,20 @@ namespace mui
 
             if (!script_init(nullptr))
             {
-                LOG("can't init lua\n");
+                ERR("can't init lua");
                 return y;
             }
             cookie = script_load(expr.c_str(), &msg);
             if (msg)
             {
-                LOG("can't load expr: %s\n", msg);
+                ERR("can't load expr: " << msg);
                 goto error;
             }
 
             y = script_eval(cookie, &msg);
             if (msg)
             {
-                LOG("can't eval: %s\n", msg);
+                ERR("can't eval: " << msg);
                 goto error;
             }
 
@@ -74,16 +65,5 @@ error:
 
             return y;
         }
-    }
-
-    std::string replace_all(std::string str, const std::string& from, const std::string& to)
-    {
-        size_t start_pos = 0;
-        while ((start_pos = str.find(from, start_pos)) != std::string::npos)
-        {
-            str.replace(start_pos, from.length(), to);
-            start_pos += to.length();
-        }
-        return str;
     }
 }

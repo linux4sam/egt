@@ -21,6 +21,12 @@ namespace mui
         name(ss.str());
     }
 
+    Frame::Frame(Frame& parent, const Point& point, const Size& size, widgetmask flags)
+        : Frame(point, size, flags)
+    {
+        parent.add(this);
+    }
+
     Widget* Frame::add(Widget* widget)
     {
         assert(widget);

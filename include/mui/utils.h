@@ -16,6 +16,22 @@
 #include <iostream>
 #include <string>
 
+#ifdef DEBUG
+#define DBG(x) do { std::cout << x << std::endl; } while (0)
+#else
+#define DBG(x) do {                             \
+        if (mui::detail::globalloglevel() > 1)  \
+            std::cout << x << std::endl;        \
+    } while(0)
+#endif
+
+#define INFO(x) do {                            \
+        if (mui::detail::globalloglevel() > 0)  \
+            std::cout << x << std::endl;        \
+    } while(0)
+
+#define ERR(x) do { std::cerr << x << std::endl; } while (0)
+
 namespace mui
 {
     template <typename T>
@@ -24,9 +40,8 @@ namespace mui
 
     namespace detail
     {
-        /**
-         *
-         */
+        int& globalloglevel();
+
         template <typename T>
         class reverse_range
         {
@@ -65,26 +80,10 @@ namespace mui
             noncopyable(const noncopyable&) = delete;
             noncopyable& operator=(const noncopyable&) = delete;
         };
+
+        std::string replace_all(std::string str, const std::string& from,
+                                const std::string& to);
     }
-
-
-    void LOG_VERBOSE(int verbose);
-
-    extern void LOG(const char* format, ...);
-
-#ifdef DEBUG
-#define DBG(x) do { std::cout << x << std::endl; } while (0)
-#else
-#define DBG(x) do {                                     \
-        extern int globalenvset;                        \
-        if (globalenvset < 0)                           \
-            globalenvset = !!getenv("MUI_DEBUG");       \
-        if (globalenvset)                               \
-            std::cout << x << std::endl;                \
-    } while(0)
-#endif
-
-#define ERR(x) do { std::cerr << x << std::endl; } while (0)
 
     namespace experimental
     {
@@ -94,7 +93,6 @@ namespace mui
         double lua_evaluate(const std::string& expr);
     }
 
-    std::string replace_all(std::string str, const std::string& from, const std::string& to);
 }
 
 #endif

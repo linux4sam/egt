@@ -27,8 +27,8 @@ public:
              const string& label,
              int x = 0,
              int y = 0,
-             bool border = true)
-        : ImageButton(filename, label, Point(x, y), Size(), border)
+             widgetmask flags = widgetmask::NONE)
+        : ImageButton(filename, label, Point(x, y), Size(), flags)
     {
         set_image_align(alignmask::CENTER | alignmask::TOP);
         set_label_align(alignmask::CENTER | alignmask::BOTTOM);
@@ -202,19 +202,19 @@ static void bottom_menu(Window* win)
     StaticGrid* grid2 = new StaticGrid(Point(0, 390), Size(800, 90), 5, 1, 0);
     win->add(grid2);
 
-    MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0, false);
+    MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0, widgetmask::NO_BORDER);
     grid2->add(bb1, 0, 0);
 
-    MyButton* bb2 = new MyButton("climate_s.png", _("Climate"), 0, 0, false);
+    MyButton* bb2 = new MyButton("climate_s.png", _("Climate"), 0, 0, widgetmask::NO_BORDER);
     grid2->add(bb2, 1, 0);
 
-    MyButton* bb3 = new MyButton("navigation_s.png", _("Nav"), 0, 0, false);
+    MyButton* bb3 = new MyButton("navigation_s.png", _("Nav"), 0, 0, widgetmask::NO_BORDER);
     grid2->add(bb3, 2, 0);
 
-    MyButton* bb4 = new MyButton("phone_s.png", _("Phone"), 0, 0, false);
+    MyButton* bb4 = new MyButton("phone_s.png", _("Phone"), 0, 0, widgetmask::NO_BORDER);
     grid2->add(bb4, 3, 0);
 
-    MyButton* bb5 = new MyButton("apps_s.png", _("Apps"), 0, 0, false);
+    MyButton* bb5 = new MyButton("apps_s.png", _("Apps"), 0, 0, widgetmask::NO_BORDER);
     grid2->add(bb5, 4, 0);
 
     grid2->reposition();

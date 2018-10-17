@@ -32,7 +32,7 @@ namespace mui
      */
     enum class widgetmask : uint32_t
     {
-        EMPTY = 0,
+        NONE = 0,
 
         /**
          * Do not draw the background color.
@@ -69,11 +69,6 @@ namespace mui
          * This is a frame window.
          */
         FRAME = (1 << 5),
-
-        /**
-         * Draw a border around the widget.
-         */
-        BORDER = (1 << 6),
 
         /**
          * Default window flags.
@@ -248,7 +243,11 @@ namespace mui
          */
         Widget(const Point& point = Point(),
                const Size& size = Size(),
-               widgetmask flags = widgetmask::EMPTY) noexcept;
+               widgetmask flags = widgetmask::NONE) noexcept;
+
+        Widget(Frame& parent, const Point& point = Point(),
+               const Size& size = Size(),
+               widgetmask flags = widgetmask::NONE) noexcept;
 
         /**
          * Draw the widget.
@@ -561,7 +560,7 @@ namespace mui
         /**
          * Flags for the widget.
          */
-        widgetmask m_flags {widgetmask::EMPTY};
+        widgetmask m_flags {widgetmask::NONE};
 
         /**
          * Current palette for the widget.

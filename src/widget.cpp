@@ -65,6 +65,12 @@ namespace mui
         name(ss.str());
     }
 
+    Widget::Widget(Frame& parent, const Point& point, const Size& size, widgetmask flags) noexcept
+        : Widget(point, size, flags)
+    {
+        parent.add(this);
+    }
+
     int Widget::handle(int event)
     {
         ignoreparam(event);

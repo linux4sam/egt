@@ -12,8 +12,8 @@ namespace mui
 {
 
     Label::Label(const std::string& text, const Point& point, const Size& size,
-                 alignmask align, const Font& font)
-        : Widget(point, size),
+                 alignmask align, const Font& font, widgetmask flags) noexcept
+        : Widget(point, size, flags),
           m_text_align(align),
           m_text(text),
           m_font(font)
@@ -34,10 +34,12 @@ namespace mui
 
         if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
-            if (is_flag_set(widgetmask::BORDER))
-                painter.draw_basic_box(box(), palette().color(Palette::BORDER), palette().color(Palette::BG));
+            if (!is_flag_set(widgetmask::NO_BORDER))
+                painter.draw_basic_box(box(), palette().color(Palette::BORDER),
+                                       palette().color(Palette::BG));
             else
-                painter.draw_basic_box(box(), palette().color(Palette::BG), palette().color(Palette::BG));
+                painter.draw_basic_box(box(), palette().color(Palette::BG),
+                                       palette().color(Palette::BG));
         }
 
         painter.set_color(palette().color(Palette::TEXT));
@@ -46,8 +48,7 @@ namespace mui
     }
 
     Label::~Label()
-    {
-    }
+    {}
 
     CheckBox::CheckBox(const std::string& text,
                        const Point& point,

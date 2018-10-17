@@ -178,7 +178,7 @@ public:
         add(logo);
         logo->align(alignmask::LEFT | alignmask::TOP, 10);
 
-        auto settings = new ImageButton("settings.png");
+        auto settings = new ImageButton("settings.png", "", Point(), Size(), widgetmask::NO_BORDER);
         add(settings);
         settings->align(alignmask::RIGHT | alignmask::TOP, 10);
         settings->add_handler([this](EventWidget * widget, int event)

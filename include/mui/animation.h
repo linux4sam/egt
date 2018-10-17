@@ -23,8 +23,19 @@ namespace mui
     /**
      * Predefined easing functions.
      *
-     * All easing functions take a percent, and return a percent.
+     * All easing functions take a percent, and return a percent. You can easily
+     * create your own easing functions.  For example, the simplest of easing
+     * functions is a linear function that is implemented like so:
      *
+     * @begincode
+     * float_t easing_linear(float_t p)
+     * {
+     *     return p;
+     * }
+     * @endcode
+     *
+     * See <https://easings.net> for more information about other easing
+     * functions.
      * @{
      */
     float_t easing_linear(float_t p);
@@ -75,8 +86,15 @@ namespace mui
     /**
      * Animation class with configurable easing function.
      *
-     * See <https://easings.net> for more information about other easing
-     * functions.
+     * An animation is a containr that basically runs from a start value to an
+     * end value over a duration of time. For example, the first value of the
+     * animation will be the start value at duration 0 and the last value of the
+     * animation will be the end value at the duration total.
+     *
+     * What happens between the start of the duration and the end of the
+     * duration, relative to time, is dictated by what's called an easing
+     * function. In other words, the easing function controls the skew of the
+     * animation value relative to time.
      */
     class Animation
     {

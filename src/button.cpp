@@ -12,8 +12,9 @@ namespace mui
 {
     static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
-    Button::Button(const string& text, const Point& point, const Size& size)
-        : Label(text, point, size, alignmask::CENTER)
+    Button::Button(const string& text, const Point& point, const Size& size,
+                   widgetmask flags) noexcept
+        : Label(text, point, size, alignmask::CENTER, Font(), flags)
     {
         if (size.empty())
         {
@@ -77,9 +78,8 @@ namespace mui
                              const string& text,
                              const Point& point,
                              const Size& size,
-                             bool border)
-        : Button(text, point, size),
-          m_border(border),
+                             widgetmask flags) noexcept
+        : Button(text, point, size, flags),
           m_image_align(alignmask::CENTER)
     {
         set_label_align(alignmask::CENTER | alignmask::BOTTOM);
@@ -105,7 +105,7 @@ namespace mui
     {
         ignoreparam(rect);
 
-        if (m_border)
+        if (!is_flag_set(widgetmask::NO_BORDER))
             painter.draw_gradient_box(box(), palette().color(Palette::BORDER));
 
         painter.draw_image(m_image, box(), m_image_align, 10, disabled());

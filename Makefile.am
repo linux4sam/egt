@@ -15,8 +15,8 @@ clean-local:
 	rm -rf $(top_srcdir)/docs/latex
 
 style:
-	./scripts/style.sh --recursive examples/*.cpp
-	./scripts/style.sh include/mui/*.h src/*.cpp
+	./scripts/style.sh --recursive $(top_srcdir)/examples/*.cpp
+	./scripts/style.sh $(top_srcdir)/include/mui/*.h $(top_srcdir)/src/*.cpp
 
 private_icons = $(wildcard $(top_srcdir)/icons/*.png)
 
@@ -29,17 +29,18 @@ install-icons:
 install-data-local: install-icons
 
 CPPCHECK_CMD = ~/Downloads/cppcheck-1.85/cppcheck \
-    --inline-suppr \
-    -j 4 \
-    --force \
-    -I $(top_srcdir)/include \
-    --language=c++ \
-    --std=c++11 \
-    --template=gcc
+	--inline-suppr \
+	--error-exitcode=0 \
+	-j 4 \
+	--force \
+	-I $(top_srcdir)/include \
+	--language=c++ \
+	--std=c++11 \
+	--template=gcc
 
 CPPCHECK_DIRS = \
-include/mui/*.h \
-src/*.cpp
+$(top_srcdir)/include/mui/ \
+$(top_srcdir)/src/
 
 cppcheck:
 	$(CPPCHECK_CMD) --enable=all $(CPPCHECK_DIRS)

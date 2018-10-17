@@ -205,7 +205,7 @@ int main(int argc, const char** argv)
     grid.name("grid");
     ctrlwindow.add(&grid);
 
-    ImageButton* playbtn = new ImageButton(":play_png", "", Point(), Size(), false);
+    ImageButton* playbtn = new ImageButton(":play_png", "", Point(), Size(), widgetmask::NO_BORDER);
     grid.add(playbtn);
 
     playbtn->add_handler([window](EventWidget * widget, int event)
@@ -216,7 +216,7 @@ int main(int argc, const char** argv)
             window->unpause();
     });
 
-    ImageButton* pausebtn = new ImageButton(":pause_png", "", Point(), Size(), false);
+    ImageButton* pausebtn = new ImageButton(":pause_png", "", Point(), Size(), widgetmask::NO_BORDER);
     grid.add(pausebtn);
     pausebtn->add_handler([window](EventWidget * widget, int event)
     {
@@ -257,7 +257,7 @@ int main(int argc, const char** argv)
     });
     postimer.start();
 
-    ImageButton* volumei = new ImageButton(":volumeup_png", "", Point(), Size(), false);
+    ImageButton* volumei = new ImageButton(":volumeup_png", "", Point(), Size(), widgetmask::NO_BORDER);
     grid.add(volumei);
 
     Slider* volume = new Slider(0, 100, Point(), Size(100, 20), orientation::HORIZONTAL);

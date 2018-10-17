@@ -41,7 +41,10 @@ namespace mui
          * @param[in] flags Widget flags.
          */
         explicit Frame(const Point& point, const Size& size,
-                       widgetmask flags = widgetmask::FRAME /*widgetmask::NO_BACKGROUND*/);
+                       widgetmask flags = widgetmask::FRAME);
+
+        explicit Frame(Frame& parent, const Point& point, const Size& size,
+                       widgetmask flags = widgetmask::FRAME);
 
         virtual int handle(int event) override;
 

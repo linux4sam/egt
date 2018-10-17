@@ -26,7 +26,8 @@ namespace mui
 
         Button(const std::string& text = std::string(),
                const Point& point = Point(),
-               const Size& size = Size());
+               const Size& size = Size(),
+               widgetmask flags = widgetmask::NONE) noexcept;
 
         virtual int handle(int event) override;
 
@@ -45,7 +46,7 @@ namespace mui
                     const std::string& text = "",
                     const Point& point = Point(),
                     const Size& size = Size(),
-                    bool border = true);
+                    widgetmask flags = widgetmask::NONE) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -65,7 +66,6 @@ namespace mui
 
     protected:
         shared_cairo_surface_t m_image;
-        bool m_border;
         alignmask m_image_align;
     };
 
