@@ -33,7 +33,7 @@ namespace mui
             T& x;
 
         public:
-            reverse_range(T& x) : x(x) {}
+            explicit reverse_range(T& x) : x(x) {}
 
             auto begin() const -> decltype(this->x.rbegin())
             {
@@ -94,6 +94,7 @@ namespace mui
         double lua_evaluate(const std::string& expr);
     }
 
+    std::string replace_all(std::string str, const std::string& from, const std::string& to);
 }
 
 #endif

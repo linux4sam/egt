@@ -66,7 +66,6 @@ protected:
     StaticGrid m_grid;
 };
 
-
 int main()
 {
     Application app;
@@ -189,8 +188,8 @@ int main()
     cputimer.add_handler([&tools, &lp1, &am1]()
     {
         tools.update();
-        lp1.value(tools.cpu_usage[0]);
-        am1.value(tools.cpu_usage[0]);
+        lp1.value(tools.usage(0));
+        am1.value(tools.usage(0));
     });
     cputimer.start();
 

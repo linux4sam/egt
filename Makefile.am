@@ -27,3 +27,19 @@ install-icons:
 	done
 
 install-data-local: install-icons
+
+CPPCHECK_CMD = ~/Downloads/cppcheck-1.85/cppcheck \
+    --inline-suppr \
+    -j 4 \
+    --force \
+    -I $(top_srcdir)/include \
+    --language=c++ \
+    --std=c++11 \
+    --template=gcc
+
+CPPCHECK_DIRS = \
+include/mui/*.h \
+src/*.cpp
+
+cppcheck:
+	$(CPPCHECK_CMD) --enable=all $(CPPCHECK_DIRS)

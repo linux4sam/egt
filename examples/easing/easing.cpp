@@ -198,7 +198,7 @@ int main()
     {
         tools.update();
         ostringstream ss;
-        ss << "CPU: " << (int)tools.cpu_usage[0] << "%";
+        ss << "CPU: " << (int)tools.usage(0) << "%";
         label1.text(ss.str());
     });
     cputimer.start();

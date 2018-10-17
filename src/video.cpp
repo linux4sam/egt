@@ -24,11 +24,13 @@ static void init_thread()
     static bool init = false;
     if (!init)
     {
+        // cppcheck-supress unreadVariable
         static std::thread t([]()
         {
             GMainLoop* mainloop = g_main_loop_new(NULL, FALSE);
             g_main_loop_run(mainloop);
         });
+
         init = true;
     }
 }
@@ -40,7 +42,7 @@ namespace mui
     {
         ignoreparam(bus);
 
-        VideoWindow* _this = (VideoWindow*)data;
+        auto _this = reinterpret_cast<VideoWindow*>(data);
 
         switch (GST_MESSAGE_TYPE(message))
         {
@@ -130,13 +132,7 @@ namespace mui
     }
 
     VideoWindow::VideoWindow(const Size& size, uint32_t format, bool heo)
-        : PlaneWindow(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo),
-          m_video_pipeline(NULL),
-          m_src(NULL),
-          m_volume(NULL),
-          m_position(0),
-          m_duration(0),
-          m_fps(0)
+        : PlaneWindow(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
     {
         gst_init(NULL, NULL);
         init_thread();
@@ -488,7 +484,7 @@ namespace mui
 
     GstFlowReturn SoftwareVideo::on_new_buffer_from_source(GstElement* elt, gpointer data)
     {
-        SoftwareVideo* _this = (SoftwareVideo*)data;
+        auto _this = reinterpret_cast<SoftwareVideo*>(data);
 
 #if 0
         GstCaps* caps = gst_pad_get_current_caps(GST_BASE_SINK_PAD(elt));

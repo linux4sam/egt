@@ -42,11 +42,14 @@ namespace mui
             return;
 
         for (auto& x : m_cells)
-            std::remove_if(x.begin(), x.end(),
-                           [widget](const StaticGrid::Cell & cell)
         {
-            return cell.widget == widget;
-        });
+            auto i = std::remove_if(x.begin(), x.end(),
+                                    [widget](const StaticGrid::Cell & cell)
+            {
+                return cell.widget == widget;
+            });
+            x.erase(i, x.end());
+        }
 
         Frame::remove(widget);
     }

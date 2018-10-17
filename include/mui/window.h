@@ -47,7 +47,7 @@ namespace mui
         }
 
         // why can't i see this from Widget::size()?
-        Size size() const
+        virtual Size size() const override
         {
             return m_box.size();
         }
@@ -64,12 +64,19 @@ namespace mui
         }
 #endif
 
+        virtual ~Window()
+        {}
+
     protected:
 
         // unsupported
-        virtual void resize(const Size& size) { ignoreparam(size); /* Not supported yet. */ }
+        virtual void resize(const Size& size) override
+        {
+            ignoreparam(size);
+            /* Not supported yet. */
+        }
 
-        virtual IScreen* screen()
+        virtual IScreen* screen() override
         {
             assert(m_screen);
             return m_screen;
@@ -96,22 +103,22 @@ namespace mui
                              uint32_t format = DEFAULT_FORMAT,
                              bool heo = false);
 
-        virtual void damage()
+        virtual void damage() override
         {
             damage(m_box);
         }
 
-        virtual void damage(const Rect& rect);
+        virtual void damage(const Rect& rect) override;
 
-        virtual void resize(const Size& size);
+        virtual void resize(const Size& size) override;
 
-        virtual void move(const Point& point);
+        virtual void move(const Point& point) override;
 
-        virtual void draw();
+        virtual void draw() override;
 
-        virtual void show();
+        virtual void show() override;
 
-        virtual void hide();
+        virtual void hide() override;
 
         virtual ~PlaneWindow();
 

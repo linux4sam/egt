@@ -139,7 +139,7 @@ namespace mui
                                    uint64_t duration,
                                    easing_func func = easing_linear);
 
-            WidgetPositionAnimator(std::vector<Widget*> widgets,
+            WidgetPositionAnimator(const std::vector<Widget*>& widgets,
                                    int coordinate,
                                    int start, int end,
                                    uint64_t duration,

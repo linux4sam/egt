@@ -50,7 +50,7 @@ namespace mui
          */
         virtual void text_align(alignmask align) { m_text_align = align; }
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual ~Label();
 
@@ -92,9 +92,9 @@ namespace mui
             }
         }
 
-        virtual int handle(int event);
+        virtual int handle(int event) override;
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual ~CheckBox();
 
@@ -111,7 +111,7 @@ namespace mui
         SlidingCheckBox(const Point& point = Point(),
                         const Size& size = Size());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual ~SlidingCheckBox();
     };
@@ -128,7 +128,7 @@ namespace mui
                    const Size& size = Size(),
                    const Font& font = Font());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual ~ImageLabel();
 

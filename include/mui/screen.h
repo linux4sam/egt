@@ -101,7 +101,7 @@ namespace mui
     {
     public:
 
-        FrameBuffer(const std::string& path = "/dev/fb0");
+        explicit FrameBuffer(const std::string& path = "/dev/fb0");
         virtual ~FrameBuffer();
 
     protected:

@@ -93,7 +93,7 @@ namespace mui
     {
     public:
 
-        InputEvDev(const std::string& path);
+        explicit InputEvDev(const std::string& path);
 
         virtual ~InputEvDev();
 
@@ -114,7 +114,7 @@ namespace mui
     {
     public:
 
-        InputTslib(const std::string& path);
+        explicit InputTslib(const std::string& path);
 
         virtual ~InputTslib();
 

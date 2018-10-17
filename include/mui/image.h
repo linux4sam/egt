@@ -23,7 +23,7 @@ namespace mui
     public:
         explicit Image(const std::string& filename, const Point& point = Point());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**
          * Scale the image.
@@ -38,7 +38,7 @@ namespace mui
         virtual void scale(double hscale, double vscale, bool approximate = false);
 
         // hmm, should resize really mean scale like this?
-        virtual void resize(const Size& size)
+        virtual void resize(const Size& size) override
         {
             if (box().size() != size)
             {
@@ -58,10 +58,10 @@ namespace mui
 
     protected:
 
-        shared_cairo_surface_t m_image;
         std::string m_filename;
-        double m_hscale;
-        double m_vscale;
+        double m_hscale {1.0};
+        double m_vscale {1.0};
+        shared_cairo_surface_t m_image;
 
     private:
 
@@ -89,7 +89,7 @@ namespace mui
          */
         virtual void font(const Font& font) { m_font = font; }
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual void label_enabled(bool value);
 

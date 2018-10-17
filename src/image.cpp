@@ -13,11 +13,9 @@ namespace mui
 
     Image::Image(const string& filename, const Point& point)
         : m_filename(filename),
-          m_hscale(1.0),
-          m_vscale(1.0)
+          m_image(image_cache.get(filename, 1.0))
     {
-        m_image = image_cache.get(filename, 1.0);
-        assert(m_image.get());
+        assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
 
         m_box = Rect(point.x, point.y,
                      cairo_image_surface_get_width(m_image.get()),

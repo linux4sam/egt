@@ -75,7 +75,7 @@ namespace mui
             }
         }
 
-        virtual uint32_t add_strip(int framecount, int framex, int framey)
+        uint32_t add_strip(int framecount, int framex, int framey)
         {
             strip s;
             s.framecount = framecount;
@@ -124,7 +124,7 @@ namespace mui
                        int framecount, int framex = 0, int framey = 0,
                        const Point& point = Point());
 
-        virtual void show_frame(int index);
+        virtual void show_frame(int index) override;
 
         virtual ~HardwareSprite();
     };
@@ -139,9 +139,9 @@ namespace mui
                        int framecount, int framex = 0, int framey = 0,
                        const Point& point = Point());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
-        virtual void show_frame(int index);
+        virtual void show_frame(int index) override;
 
         virtual ~SoftwareSprite();
     };

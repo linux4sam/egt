@@ -41,7 +41,7 @@ namespace mui
          */
         struct AutoSaveRestore
         {
-            AutoSaveRestore(Painter& painter)
+            explicit AutoSaveRestore(Painter& painter)
                 : m_painter(painter)
             {
                 m_painter.save();
@@ -57,7 +57,7 @@ namespace mui
 
         Painter();
 
-        Painter(shared_cairo_t cr);
+        explicit Painter(shared_cairo_t cr);
 
         virtual ~Painter();
 

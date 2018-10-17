@@ -301,7 +301,6 @@ namespace mui
           m_min(min),
           m_max(max),
           m_pos(min),
-          m_moving_x(0),
           m_orientation(orient)
     {
     }

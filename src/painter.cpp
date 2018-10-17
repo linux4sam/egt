@@ -275,12 +275,10 @@ namespace mui
         }
         else
         {
-            Color step = color;
+            Color step = color.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat.get(), 1, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.9);
+            step = color;
             cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.82);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
             step = color.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
         }

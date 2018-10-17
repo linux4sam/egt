@@ -28,9 +28,9 @@ namespace mui
                const Point& point = Point(),
                const Size& size = Size());
 
-        virtual int handle(int event);
+        virtual int handle(int event) override;
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual ~Button();
     };
@@ -47,16 +47,16 @@ namespace mui
                     const Size& size = Size(),
                     bool border = true);
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
-        virtual void set_image(const std::string& image);
+        void set_image(const std::string& image);
 
-        virtual void set_image_align(alignmask align)
+        void set_image_align(alignmask align)
         {
             m_image_align = align;
         }
 
-        virtual void set_label_align(alignmask align)
+        void set_label_align(alignmask align)
         {
             Label::text_align(align);
         }

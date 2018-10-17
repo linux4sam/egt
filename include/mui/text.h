@@ -28,9 +28,9 @@ namespace mui
                 const Point& point = Point(),
                 const Size& size = Size());
 
-        virtual int handle(int event);
+        virtual int handle(int event) override;
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**
          * Set the text value.
@@ -82,7 +82,7 @@ namespace mui
                          const Point& point = Point(),
                          const Size& size = Size());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**
          * Get the last line of the text box.

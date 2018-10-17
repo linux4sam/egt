@@ -22,9 +22,7 @@ namespace mui
 
         CPUMonitorUsage();
 
-        virtual ~CPUMonitorUsage();
-
-        float cpu_usage[4];
+        float usage(unsigned int index = 0) const { return m_cpu_usage[index]; }
 
         /**
          * Update the CPU usage.
@@ -32,10 +30,13 @@ namespace mui
          */
         void update();
 
+        virtual ~CPUMonitorUsage();
+
     private:
 
-        float total_cpu_last_time[4];
-        float work_cpu_last_time[4];
+        float m_total_cpu_last_time[4] = {0};
+        float m_work_cpu_last_time[4] = {0};
+        float m_cpu_usage[4] = {0};
     };
 
 }

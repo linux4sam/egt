@@ -20,14 +20,6 @@ namespace mui
           m_duration(duration)
     {}
 
-    Timer::Timer(std::chrono::milliseconds duration, bool autostart)
-        : m_timer(main_app().event().io()),
-          m_duration(duration)
-    {
-        if (autostart)
-            start();
-    }
-
     void Timer::start()
     {
         m_timer.cancel();
@@ -76,22 +68,16 @@ namespace mui
     PeriodicTimer::PeriodicTimer() noexcept
     {}
 
-    PeriodicTimer::PeriodicTimer(std::chrono::milliseconds period) noexcept
-        : Timer(period)
+    PeriodicTimer::PeriodicTimer(std::chrono::milliseconds interval) noexcept
+        : Timer(interval)
     {}
-
-    PeriodicTimer::PeriodicTimer(std::chrono::milliseconds period, bool autostart)
-        : Timer(period)
-    {
-        if (autostart)
-            start();
-    }
 
     void PeriodicTimer::start()
     {
         m_timer.cancel();
         m_timer.expires_from_now(m_duration);
-        m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this, std::placeholders::_1));
+        m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this,
+                                     std::placeholders::_1));
         m_running = true;
     }
 

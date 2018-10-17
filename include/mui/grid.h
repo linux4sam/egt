@@ -25,38 +25,43 @@ namespace mui
     class StaticGrid : public Frame
     {
     public:
-        StaticGrid(const Point& point, const Size& size, int columns,
-                   int rows, int border = 0);
+        StaticGrid(const Point& point = Point(), const Size& size = Size(),
+                   int columns = 0, int rows = 0, int border = 0);
 
-        virtual void move(const Point& point)
+        virtual void move(const Point& point) override
         {
             Frame::move(point);
             reposition();
         }
 
-        virtual void resize(const Size& size)
+        virtual void resize(const Size& size) override
         {
             Frame::resize(size);
             reposition();
         }
 
+#if 0
         /**
          * @todo This is excessive how this is implemented.
          */
-        virtual void draw(Painter& painter, const Rect& rect)
+        virtual void draw(Painter& painter, const Rect& rect) override
         {
             reposition();
             Frame::draw(painter, rect);
         }
+#endif
 
         /**
          * Add a widget to the grid into a specific cell with an optional
          * alignment within the cell.
+         *
+         * This will automatically resize the grid to fit the widget as
+         * necessary.
          */
         virtual Widget* add(Widget* widget, int column, int row,
                             alignmask align = alignmask::EXPAND);
 
-        virtual void remove(Widget* widget);
+        virtual void remove(Widget* widget) override;
 
         /**
          * Reposition all child widgets.
@@ -72,6 +77,7 @@ namespace mui
 
         struct Cell
         {
+            // cppcheck-suppress unusedStructMember
             Widget* widget {nullptr};
             alignmask align {alignmask::NONE};
         };
@@ -83,7 +89,7 @@ namespace mui
     private:
 
         // not allowed, use alternate add() method
-        virtual Widget* add(Widget* widget) { return widget; }
+        virtual Widget* add(Widget* widget) override { return widget; }
     };
 
     class HorizontalPositioner : public Frame
@@ -97,13 +103,13 @@ namespace mui
               m_align(align)
         {}
 
-        virtual void move(const Point& point)
+        virtual void move(const Point& point) override
         {
             Frame::move(point);
             reposition();
         }
 
-        virtual void resize(const Size& size)
+        virtual void resize(const Size& size) override
         {
             Frame::resize(size);
             reposition();

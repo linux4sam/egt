@@ -43,7 +43,7 @@ namespace mui
         explicit Frame(const Point& point, const Size& size,
                        widgetmask flags = widgetmask::FRAME /*widgetmask::NO_BACKGROUND*/);
 
-        virtual int handle(int event);
+        virtual int handle(int event) override;
 
         /**
          * Add a child widget.
@@ -124,7 +124,7 @@ namespace mui
         /**
          * Damage the rectangle of the entire Frame.
          */
-        virtual void damage()
+        virtual void damage() override
         {
             damage(m_box);
         }
@@ -137,9 +137,9 @@ namespace mui
          * to be checked again to make sure the new rectangle doesn't conflict with
          * another existing rectangle.
          */
-        virtual void damage(const Rect& rect);
+        virtual void damage(const Rect& rect) override;
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**
          * @warning Do not call directly.

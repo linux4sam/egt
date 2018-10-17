@@ -231,7 +231,6 @@ int main()
     set_image_path("/root/mui/share/mui/examples/brick/");
 
     GameWindow win;
-    win.show();
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(30));
     animatetimer.add_handler([&win]()
@@ -239,6 +238,8 @@ int main()
         win.animate();
     });
     animatetimer.start();
+
+    win.show();
 
     return app.run();
 }

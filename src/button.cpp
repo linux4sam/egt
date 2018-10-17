@@ -60,7 +60,7 @@ namespace mui
         // box
         painter.draw_gradient_box(box(), palette().color(Palette::BORDER),
                                   active(),
-                                  active() ? palette().color(Palette::LIGHT, Palette::GROUP_ACTIVE) :
+                                  active() ? palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE) :
                                   palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
 
         // text

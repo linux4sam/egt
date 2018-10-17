@@ -50,9 +50,9 @@ namespace mui
         /**
          * Create a color with the specified RGBA value.
          *
-        * @param[in] c RGBA value.
-               */
-        Color(uint32_t c = 0) noexcept
+         * @param[in] c RGBA value.
+         */
+        explicit Color(uint32_t c = 0) noexcept
         {
             m_r = (c >> 24) & 0xFF;
             m_g = (c >> 16) & 0xFF;
@@ -61,9 +61,9 @@ namespace mui
         }
 
         /**
-        * Create a color with the specified RGBA component values.
+         * Create a color with the specified RGBA component values.
          *
-        * @param[in] r Red component in range 0 - 255.
+         * @param[in] r Red component in range 0 - 255.
          * @param[in] g Green component in range 0 - 255.
          * @param[in] b Blue component in range 0 - 255.
          * @param[in] a Alpha component in range 0 - 255.

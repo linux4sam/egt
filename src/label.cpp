@@ -154,10 +154,9 @@ namespace mui
                            const Point& point,
                            const Size& size,
                            const Font& font)
-        : Label(text, point, size, alignmask::LEFT | alignmask::CENTER, font)
+        : Label(text, point, size, alignmask::LEFT | alignmask::CENTER, font),
+          m_image(image_cache.get(image, 1.0))
     {
-        m_image = image_cache.get(image, 1.0);
-        assert(m_image.get());
         assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
     }
 

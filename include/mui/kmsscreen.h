@@ -35,7 +35,7 @@ namespace mui
     {
     public:
 
-        KMSOverlayScreen(struct plane_data* plane);
+        explicit KMSOverlayScreen(struct plane_data* plane);
 
         virtual void position(const Point& point);
         virtual void scale(float scale);
@@ -58,9 +58,9 @@ namespace mui
             return m_plane;
         }
 
-        void schedule_flip();
+        void schedule_flip() override;
 
-        uint32_t index();
+        uint32_t index() override;
 
         virtual ~KMSOverlayScreen();
 
@@ -91,9 +91,9 @@ namespace mui
 
         static KMSScreen* instance();
 
-        void schedule_flip();
+        void schedule_flip() override;
 
-        uint32_t index();
+        uint32_t index() override;
 
     protected:
         int m_fd;

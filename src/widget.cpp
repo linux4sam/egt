@@ -363,9 +363,7 @@ namespace mui
     namespace experimental
     {
         ScrollWheel::ScrollWheel(const Point& point, const Size& size)
-            : Widget(point, size),
-              m_pos(0),
-              m_moving_x(0)
+            : Widget(point, size)
         {}
 
         int ScrollWheel::handle(int event)

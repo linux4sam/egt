@@ -421,7 +421,7 @@ namespace mui
             m_widgets.push_back(widget);
         }
 
-        WidgetPositionAnimator::WidgetPositionAnimator(std::vector<Widget*> widgets,
+        WidgetPositionAnimator::WidgetPositionAnimator(const std::vector<Widget*>& widgets,
                 int coordinate,
                 int start, int end,
                 uint64_t duration,

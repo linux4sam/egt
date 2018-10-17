@@ -625,9 +625,9 @@ namespace mui
          */
         virtual void font(const Font& font) { m_font = font; }
 
-        virtual int handle(int event);
+        virtual int handle(int event) override;
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         void selected(uint32_t index);
 
@@ -680,9 +680,9 @@ namespace mui
         protected:
             std::vector<std::string> m_values;
 
-            int m_pos;
-            int m_moving_x;
-            int m_start_pos;
+            int m_pos {0};
+            int m_moving_x {0};
+            int m_start_pos {0};
         };
     }
 

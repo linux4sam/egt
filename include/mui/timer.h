@@ -7,8 +7,6 @@
 
 #include "asio.hpp"
 #include <mui/utils.h>
-#include <cstdint>
-#include <functional>
 #include <vector>
 #include <chrono>
 
@@ -32,21 +30,16 @@ namespace mui
 
         /**
          * Construct a one-shot timer.
-        *
+         *
          * The duration of the timer can be specified when calling
          * start_with_duration() instead.
-               */
+         */
         explicit Timer() noexcept;
 
         /**
          * Construct a one-shot timer with the specified duration.
          */
         explicit Timer(std::chrono::milliseconds duration) noexcept;
-
-        /**
-             * Construct a one-shot timer with the specified duration.
-             */
-        explicit Timer(std::chrono::milliseconds duration, bool autostart);
 
         /**
          * Start the timer.
@@ -123,23 +116,18 @@ namespace mui
     public:
         /**
          * Construct a periodic timer.
-        *
+         *
          * The duration of the timer can be specified when calling
          * start_with_duration() instead.
-               */
+         */
         explicit PeriodicTimer() noexcept;
 
         /**
          * Construct a periodic timer with the specified duration.
          */
-        explicit PeriodicTimer(std::chrono::milliseconds period) noexcept;
+        explicit PeriodicTimer(std::chrono::milliseconds interval) noexcept;
 
-        /**
-             * Construct a periodic timer with the specified duration.
-             */
-        explicit PeriodicTimer(std::chrono::milliseconds period, bool autostart);
-
-        virtual void start();
+        virtual void start() override;
 
         virtual ~PeriodicTimer() {}
 

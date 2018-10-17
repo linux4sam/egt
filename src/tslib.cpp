@@ -66,10 +66,10 @@ namespace mui
         }
     }
 
-    static inline int diff_ms(timeval t1, timeval t2)
+    static inline long long diff_ms(timeval t1, timeval t2)
     {
-        return (((t1.tv_sec - t2.tv_sec) * 1000000) +
-                (t1.tv_usec - t2.tv_usec)) / 1000;
+        return (((t1.tv_sec - t2.tv_sec) * 1000000ULL) +
+                (t1.tv_usec - t2.tv_usec)) / 1000ULL;
     }
 
     void InputTslib::handle_read(const asio::error_code& error)
@@ -182,6 +182,6 @@ namespace mui
 
         free(m_impl->samp_mt);
     }
-#endif
-
 }
+
+#endif

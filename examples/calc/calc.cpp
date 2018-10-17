@@ -10,21 +10,9 @@
 using namespace mui;
 using namespace std;
 
-static std::string replace_all(std::string str, const std::string& from, const std::string& to)
-{
-    size_t start_pos = 0;
-    while ((start_pos = str.find(from, start_pos)) != std::string::npos)
-    {
-        str.replace(start_pos, from.length(), to);
-        start_pos += to.length();
-    }
-    return str;
-}
-
 int main()
 {
     Application app;
-
     Window win;
 
     StaticGrid topgrid(Point(), Size(), 1, 2);
@@ -72,11 +60,14 @@ int main()
                 if (b->text() == "=")
                 {
                     string line = replace_all(replace_all(text.last_line(), "x", "*"), "÷", "/");
-                    ostringstream ss;
-                    ss << "\n= " <<
-                       experimental::lua_evaluate(line) <<
-                       "\n";
-                    text.append(ss.str());
+                    if (!line.empty())
+                    {
+                        ostringstream ss;
+                        ss << "\n= " <<
+                           experimental::lua_evaluate(line) <<
+                           "\n";
+                        text.append(ss.str());
+                    }
                 }
                 else if (b->text() == "C")
                 {
@@ -92,11 +83,14 @@ int main()
 
             if (label == "=")
             {
-                b->palette().set(Palette::LIGHT, Palette::GROUP_NORMAL, Color::BLUE);
-                b->palette().set(Palette::LIGHT, Palette::GROUP_ACTIVE, Color::RED);
+                //b->palette().set(Palette::LIGHT, Palette::GROUP_NORMAL, Color::BLUE);
+                //b->palette().set(Palette::LIGHT, Palette::GROUP_ACTIVE, Color::RED);
             }
         }
     }
+
+    topgrid.reposition();
+    buttongrid.reposition();
 
     win.show();
 

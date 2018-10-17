@@ -32,7 +32,7 @@ namespace mui
 
         VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888, bool heo = false);
 
-        virtual void draw();
+        virtual void draw() override;
 
         /**
          * @brief Sets the media file URI to the current pipeline
@@ -106,15 +106,14 @@ namespace mui
                                      GstMessage* message,
                                      gpointer data);
 
-        GstElement* m_video_pipeline;
-        GstElement* m_src;
-        GstElement* m_volume;
-        gint64 m_position;
-        gint64 m_duration;
+        GstElement* m_video_pipeline {nullptr};
+        GstElement* m_src {nullptr};
+        GstElement* m_volume {nullptr};
+        gint64 m_position {0};
+        gint64 m_duration {0};
         std::string m_filename;
-        int m_volume_value;
-        bool m_mute_value;
-        uint32_t m_fps;
+        int m_volume_value {100};
+        uint32_t m_fps {0};
     };
 
 
@@ -132,13 +131,13 @@ namespace mui
          * @param uri file URI
          * @return true if success
          */
-        bool set_media(const std::string& uri);
+        bool set_media(const std::string& uri) override;
 
         virtual ~HardwareVideo();
 
     protected:
 
-        virtual bool createPipeline();
+        virtual bool createPipeline() override;
     };
 
     /**
@@ -150,14 +149,14 @@ namespace mui
 
         SoftwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUV420);
 
-        virtual bool set_media(const std::string& uri);
+        virtual bool set_media(const std::string& uri) override;
 
         virtual ~SoftwareVideo();
 
     protected:
 
-        virtual bool createPipeline();
-        virtual void destroyPipeline();
+        virtual bool createPipeline() override;
+        virtual void destroyPipeline() override;
 
         static GstFlowReturn on_new_buffer_from_source(GstElement* elt,
                 gpointer data);
@@ -172,15 +171,15 @@ namespace mui
     {
     public:
 
-        V4L2SoftwareVideo(const Size& size);
+        explicit V4L2SoftwareVideo(const Size& size);
 
-        virtual bool set_media(const std::string& uri);
+        virtual bool set_media(const std::string& uri) override;
 
         virtual ~V4L2SoftwareVideo();
 
     protected:
 
-        virtual bool createPipeline();
+        virtual bool createPipeline() override;
     };
 
     /**
@@ -190,15 +189,15 @@ namespace mui
     {
     public:
 
-        V4L2HardwareVideo(const Size& size);
+        explicit V4L2HardwareVideo(const Size& size);
 
-        virtual bool set_media(const std::string& uri);
+        virtual bool set_media(const std::string& uri) override;
 
         virtual ~V4L2HardwareVideo();
 
     protected:
 
-        virtual bool createPipeline();
+        virtual bool createPipeline() override;
     };
 
     /**
@@ -208,15 +207,15 @@ namespace mui
     {
     public:
 
-        RawSoftwareVideo(const Size& size);
+        explicit RawSoftwareVideo(const Size& size);
 
-        virtual bool set_media(const std::string& uri);
+        virtual bool set_media(const std::string& uri) override;
 
         virtual ~RawSoftwareVideo();
 
     protected:
 
-        virtual bool createPipeline();
+        virtual bool createPipeline() override;
     };
 
 }

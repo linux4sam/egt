@@ -26,13 +26,12 @@ namespace mui
 
     void LOG(const char* format, ...)
     {
-        va_list ap;
-
         if (envset < 0)
             envset = !!getenv("MUI_DEBUG");
 
         if (m_v || envset)
         {
+            va_list ap;
             va_start(ap, format);
             vfprintf(stderr, format, ap);
             va_end(ap);
@@ -77,4 +76,14 @@ error:
         }
     }
 
+    std::string replace_all(std::string str, const std::string& from, const std::string& to)
+    {
+        size_t start_pos = 0;
+        while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+        {
+            str.replace(start_pos, from.length(), to);
+            start_pos += to.length();
+        }
+        return str;
+    }
 }

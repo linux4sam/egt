@@ -41,7 +41,7 @@ namespace mui
         LineChart(const Point& point = Point(),
                   const Size& size = Size());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual void data(const std::vector<struct data_pair>& data)
         {
@@ -70,7 +70,7 @@ namespace mui
         PieChart(const Point& point = Point(),
                  const Size& size = Size());
 
-        virtual void draw(Painter& painter, const Rect& rect);
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual void data(const std::map<std::string, float>& data)
         {

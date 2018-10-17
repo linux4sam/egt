@@ -3,12 +3,16 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "mui/palette.h"
+#include <cassert>
 
 namespace mui
 {
 
     const Color& Palette::color(ColorId id, ColorGroup group) const
     {
+        assert(group < m_colors.size());
+        assert(id < m_colors[group].size());
+
         return m_colors[group][id];
     }
 
