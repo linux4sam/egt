@@ -146,7 +146,7 @@ int main()
     vector<string> items = { "item 1", "item 2", "item3" };
     ListBox list1(items, Point(350, 50), Size(200, 200));
     win.add(&list1);
-    list1.selected(1);
+    list1.select(1);
 
     ImageLabel imagelabel1("icons/bug.png",
                            "Bug",

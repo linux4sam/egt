@@ -52,29 +52,10 @@ namespace mui
             return m_box.size();
         }
 
-#if 0
-        Rect to_screen(const Rect& rect)
-        {
-            return Rect(x() + rect.x, y() + rect.y, rect.w, rect.h);
-        }
-
-        Rect to_child(const Rect& rect)
-        {
-            return Rect(rect.x - x(), rect.y - y(), rect.w, rect.h);
-        }
-#endif
-
         virtual ~Window()
         {}
 
     protected:
-
-        // unsupported
-        virtual void resize(const Size& size) override
-        {
-            ignoreparam(size);
-            /* Not supported yet. */
-        }
 
         virtual IScreen* screen() override
         {
@@ -83,6 +64,14 @@ namespace mui
         }
 
         IScreen* m_screen;
+
+    private:
+
+        // unsupported
+        virtual void resize(const Size& size) override
+        {
+            ignoreparam(size);
+        }
     };
 
     class KMSOverlayScreen;
@@ -123,9 +112,12 @@ namespace mui
         virtual ~PlaneWindow();
 
     protected:
-        uint32_t m_format {DEFAULT_FORMAT};
-        bool m_dirty {true};
-        bool m_heo {false};
+        uint32_t m_format{DEFAULT_FORMAT};
+        bool m_dirty{true};
+        bool m_heo{false};
+
+    private:
+        void do_resize(const Size& size);
     };
 
     /**

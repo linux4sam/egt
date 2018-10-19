@@ -335,25 +335,21 @@ namespace mui
 
     Animation::Animation(float_t start, float_t end,
                          animation_callback callback,
-                         uint64_t duration,
-                         easing_func func,
-                         void* data)
+                         std::chrono::milliseconds duration,
+                         easing_func func)
         : m_start(start),
           m_end(end),
-          m_callback(callback),
           m_easing(func),
-          m_current(0),
-          m_duration(duration),
-          m_running(false),
-          m_reverse(false),
-          m_data(data)
+          m_duration(duration)
     {
+        if (callback)
+            add_callback(callback);
     }
 
     void Animation::start()
     {
         m_start_time = chrono::steady_clock::now();
-        m_stop_time = m_start_time + std::chrono::milliseconds(m_duration);
+        m_stop_time = m_start_time + m_duration;
         m_running = true;
     }
 
@@ -365,20 +361,20 @@ namespace mui
     bool Animation::next()
     {
         if (!running())
-            return true;
+            return false;
 
         auto now = chrono::steady_clock::now();
         if (now > m_stop_time)
         {
+            m_running = false;
             float_t result = m_end;
 
             if (!float_t_compare(result, m_current))
             {
                 m_current = m_end;
-                m_callback(m_current, m_data);
+                for (auto& callback : m_callbacks)
+                    callback(m_current);
             }
-
-            m_running = false;
         }
         else
         {
@@ -389,7 +385,8 @@ namespace mui
             if (!float_t_compare(result, m_current))
             {
                 m_current = result;
-                m_callback(m_current, m_data);
+                for (auto& callback : m_callbacks)
+                    callback(m_current);
             }
         }
 
@@ -409,98 +406,34 @@ namespace mui
 
     namespace experimental
     {
-        WidgetPositionAnimator::WidgetPositionAnimator(Widget* widget,
-                int coordinate,
-                int start, int end,
-                uint64_t duration,
-                easing_func func)
-            : Animation(start, end, WidgetPositionAnimator::callback,
-                        duration, func, this),
-              m_coord(coordinate)
+
+        AutoAnimation::AutoAnimation(float_t start, float_t end,
+                                     std::chrono::milliseconds duration,
+                                     easing_func func,
+                                     animation_callback callback)
+            : Animation(start, end, callback, duration, func),
+              m_timer(std::chrono::milliseconds(30))
         {
-            m_widgets.push_back(widget);
+            m_timer.add_handler([this]()
+            {
+                if (!next())
+                {
+                    m_timer.cancel();
+                }
+            });
         }
 
-        WidgetPositionAnimator::WidgetPositionAnimator(const std::vector<Widget*>& widgets,
-                int coordinate,
-                int start, int end,
-                uint64_t duration,
-                easing_func func)
-            : Animation(start, end, WidgetPositionAnimator::callback,
-                        duration, func, this),
-              m_widgets(widgets),
-              m_coord(coordinate)
+        void AutoAnimation::start()
         {
-            m_timer.add_handler(std::bind(&WidgetPositionAnimator::timer_callback, this));
-        }
-
-        void WidgetPositionAnimator::start()
-        {
-            m_timer.start_with_duration(std::chrono::milliseconds(30));
             Animation::start();
+            m_timer.start();
         }
 
-        void WidgetPositionAnimator::reset()
+        void AutoAnimation::stop()
         {
-            for (auto& i : m_widgets)
-            {
-                if (m_coord == CORD_X)
-                    i->move(Point(m_start, i->y()));
-                else
-                    i->move(Point(i->x(), m_start));
-            }
+            m_timer.cancel();
+            Animation::stop();
         }
-
-        void WidgetPositionAnimator::timer_callback()
-        {
-            if (!next())
-            {
-                m_timer.cancel();
-            }
-        }
-
-        void WidgetPositionAnimator::callback(float_t value, void* data)
-        {
-            WidgetPositionAnimator* a = reinterpret_cast<WidgetPositionAnimator*>(data);
-            assert(a);
-
-            for (auto& i : a->m_widgets)
-            {
-                if (a->m_coord == CORD_X)
-                    i->move(Point(value, i->y()));
-                else
-                    i->move(Point(i->x(), value));
-            }
-        }
-
-        AnimationTimer::AnimationTimer(int start, int end, uint64_t duration, easing_func func)
-            : PeriodicTimer(std::chrono::milliseconds(30)),
-              m_animation(start, end, AnimationTimer::animation_callback,
-                          duration, func, this)
-        {}
-
-        void AnimationTimer::start()
-        {
-            PeriodicTimer::start();
-            m_animation.start();
-        }
-
-        void AnimationTimer::timeout()
-        {
-            if (!m_animation.next())
-            {
-                PeriodicTimer::cancel();
-            }
-        }
-
-        void AnimationTimer::animation_callback(float_t value, void* data)
-        {
-            AnimationTimer* a = reinterpret_cast<AnimationTimer*>(data);
-            assert(a);
-
-            a->step(value);
-        }
-
     }
 
 }

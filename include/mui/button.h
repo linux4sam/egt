@@ -69,6 +69,42 @@ namespace mui
         alignmask m_image_align;
     };
 
+    namespace experimental
+    {
+
+        /**
+         * A special widget that has no content but receives events.
+         *
+         * This is an invisible widget that can be used to handle events, like
+         * input events.
+         */
+        class HotSpot : public Button
+        {
+        public:
+
+            HotSpot(const Point& point = Point(),
+                    const Size& size = Size(),
+                    widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept
+                : Button("", point, size, flags)
+            {
+                hide();
+            }
+
+            virtual void draw(Painter& painter, const Rect& rect) override
+            {
+                ignoreparam(painter);
+                ignoreparam(rect);
+            }
+
+            virtual ~HotSpot() {}
+
+        private:
+            virtual void show() {}
+        };
+
+    }
+
+
 }
 
 #endif

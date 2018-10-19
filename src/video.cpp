@@ -608,7 +608,7 @@ namespace mui
 
         SoftwareVideo::~SoftwareVideo()
         {
-
+            destroyPipeline();
         }
 
         bool SoftwareVideo::set_media(const string& uri)

@@ -25,6 +25,7 @@
 #include <mui/input.h>
 #include <mui/kmsscreen.h>
 #include <mui/label.h>
+#include <mui/list.h>
 #include <mui/palette.h>
 #include <mui/screen.h>
 #include <mui/sprite.h>

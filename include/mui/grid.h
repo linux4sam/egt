@@ -12,6 +12,7 @@
 
 #include <mui/widget.h>
 #include <mui/frame.h>
+#include <mui/utils.h>
 
 namespace mui
 {
@@ -40,16 +41,7 @@ namespace mui
             reposition();
         }
 
-#if 0
-        /**
-         * @todo This is excessive how this is implemented.
-         */
-        virtual void draw(Painter& painter, const Rect& rect) override
-        {
-            reposition();
-            Frame::draw(painter, rect);
-        }
-#endif
+        virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**
          * Add a widget to the grid into a specific cell with an optional
@@ -65,6 +57,9 @@ namespace mui
 
         /**
          * Reposition all child widgets.
+         *
+         * @note You should *not* have to manually call this under normal
+         * circumstances.
          */
         virtual void reposition();
 
@@ -105,12 +100,14 @@ namespace mui
 
         virtual void move(const Point& point) override
         {
+            DBG(__PRETTY_FUNCTION__);
             Frame::move(point);
             reposition();
         }
 
         virtual void resize(const Size& size) override
         {
+            DBG(__PRETTY_FUNCTION__);
             Frame::resize(size);
             reposition();
         }

@@ -59,7 +59,7 @@ public:
         : ImageText(image, name, Point(x, y)),
           m_num(num),
           m_fd(-1),
-          m_animation(0, 600, LauncherItem::animate, 1000, easing_snap, this),
+          m_animation(0, 600, std::bind(&LauncherItem::animate, this, std::placeholders::_1) , std::chrono::seconds(1), easing_snap),
           m_name(name),
           m_description(description),
           m_exec(exec)
@@ -69,11 +69,9 @@ public:
         font(newfont);
     }
 
-    static void animate(float value, void* data)
+    void animate(float value)
     {
-        LauncherItem* item = reinterpret_cast<LauncherItem*>(data);
-        assert(item);
-        item->scale(value, value);
+        scale(value, value);
     }
 
     int handle(int event)
@@ -166,7 +164,7 @@ class LauncherWindow : public Window
 {
 public:
     LauncherWindow()
-        : m_popup(Size(200, 200))
+        : m_popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2))
     {
         m_popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
 
@@ -185,7 +183,6 @@ public:
         {
             ignoreparam(widget);
 
-            cout << event << endl;
             if (event == EVT_MOUSE_DOWN)
             {
                 if (m_popup.visible())
@@ -325,19 +322,18 @@ public:
             }
         }
 
-        m_animation = new Animation(0, distance, LauncherWindow::animate, 200,
-                                    easing_snap, this);
+        m_animation = new Animation(0, distance,
+                                    std::bind(&LauncherWindow::animate, this, std::placeholders::_1),
+                                    std::chrono::milliseconds(200), easing_snap);
         m_animation->start();
 
         m_moving_x = 0;
         m_offset = m_boxes[0]->center().x;
     }
 
-    static void animate(float value, void* data)
+    void animate(float value)
     {
-        LauncherWindow* item = reinterpret_cast<LauncherWindow*>(data);
-        assert(item);
-        item->move_boxes(value);
+        move_boxes(value);
     }
 
     void timer_callback()

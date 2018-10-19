@@ -69,6 +69,8 @@ namespace mui
         int fd = open(path.c_str(), O_RDONLY);
         if (fd >= 0)
         {
+            INFO("input device: " << path);
+
             m_input.assign(fd);
 
             asio::async_read(m_input, asio::buffer(m_input_buf.data(), m_input_buf.size()),

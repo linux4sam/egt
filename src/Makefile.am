@@ -33,6 +33,9 @@ input.cpp \
 kmsscreen.cpp \
 label.cpp \
 libinput.cpp \
+list.cpp \
+lua/script.c \
+lua/script.h \
 painter.cpp \
 palette.cpp \
 resource.cpp \
@@ -47,9 +50,7 @@ valuewidget.cpp \
 video.cpp \
 widget.cpp \
 window.cpp \
-x11screen.cpp \
-lua/script.h \
-lua/script.c
+x11screen.cpp
 
 libmui_la_LIBADD =
 if HAVE_KPLOT
@@ -64,8 +65,8 @@ endif
 
 libmuiincludedir = ${includedir}/mui
 libmuiinclude_HEADERS = \
-$(top_srcdir)/include/mui/app.h \
 $(top_srcdir)/include/mui/animation.h \
+$(top_srcdir)/include/mui/app.h \
 $(top_srcdir)/include/mui/button.h \
 $(top_srcdir)/include/mui/chart.h \
 $(top_srcdir)/include/mui/color.h \
@@ -77,9 +78,10 @@ $(top_srcdir)/include/mui/grid.h \
 $(top_srcdir)/include/mui/image.h \
 $(top_srcdir)/include/mui/imagecache.h \
 $(top_srcdir)/include/mui/input.h \
-$(top_srcdir)/include/mui/libinput.h \
 $(top_srcdir)/include/mui/kmsscreen.h \
 $(top_srcdir)/include/mui/label.h \
+$(top_srcdir)/include/mui/libinput.h \
+$(top_srcdir)/include/mui/list.h \
 $(top_srcdir)/include/mui/painter.h \
 $(top_srcdir)/include/mui/palette.h \
 $(top_srcdir)/include/mui/resource.h \

@@ -247,5 +247,23 @@ int main()
     floattimer2.start();
 #endif
 
+    Label label1("CPU: 0%",
+                 Point(40, win.size().h - 40),
+                 Size(100, 40));
+    label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    win.add(&label1);
+
+    CPUMonitorUsage tools;
+    PeriodicTimer cputimer(std::chrono::seconds(1));
+    cputimer.add_handler([&label1, &tools]()
+    {
+        tools.update();
+        ostringstream ss;
+        ss << "CPU: " << (int)tools.usage(0) << "%";
+        label1.text(ss.str());
+    });
+    cputimer.start();
+
     return app.run();
 }

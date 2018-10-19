@@ -3,6 +3,7 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "mui/grid.h"
+#include "mui/painter.h"
 #include <algorithm>
 
 using namespace std;
@@ -11,11 +12,51 @@ namespace mui
 {
     StaticGrid::StaticGrid(const Point& point, const Size& size, int columns,
                            int rows, int border)
-        : Frame(point, size, widgetmask::NO_BACKGROUND),
+        : Frame(point, size, widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER),
           m_columns(columns),
           m_rows(rows),
           m_border(border)
-    {}
+    {
+        m_cells.resize(columns);
+        for (auto& x : m_cells)
+            x.resize(rows);
+    }
+
+    void StaticGrid::draw(Painter& painter, const Rect& rect)
+    {
+        if (m_border > 0)
+        {
+            if (!is_flag_set(widgetmask::NO_BORDER))
+            {
+                painter.set_color(palette().color(Palette::BORDER));
+                painter.set_line_width(m_border);
+
+                for (size_t column = 0; column < m_cells.size(); column++)
+                {
+                    for (size_t row = 0; row < m_cells[column].size(); row++)
+                    {
+                        // find the rect for the cell
+                        int ix = x() + (column * (w() / m_columns));
+                        int iy = y() + (row * (h() / m_rows));
+                        int iw = (w() / m_columns) - 1;
+                        int ih = (h() / m_rows) - 1;
+
+                        if (iw < 0)
+                            iw = 0;
+
+                        if (ih < 0)
+                            ih = 0;
+
+                        painter.rectangle(Rect(ix, iy, iw, ih));
+                    }
+                }
+
+                painter.stroke();
+            }
+        }
+
+        Frame::draw(painter, rect);
+    }
 
     Widget* StaticGrid::add(Widget* widget, int column, int row, alignmask align)
     {
@@ -31,6 +72,8 @@ namespace mui
         cell.widget = widget;
         cell.align = align;
         m_cells[column][row] = cell;
+
+        reposition();
 
         return widget;
     }
@@ -51,6 +94,8 @@ namespace mui
             x.erase(i, x.end());
         }
 
+        reposition();
+
         Frame::remove(widget);
     }
 
@@ -69,6 +114,12 @@ namespace mui
                     int iw = (w() / m_columns) - (m_border * 2) - 1;
                     int ih = (h() / m_rows) - (m_border * 2) - 1;
 
+                    if (iw < 0)
+                        iw = 0;
+
+                    if (ih < 0)
+                        ih = 0;
+
                     // get the aligning rect
                     Rect target = align_algorithm(cell.widget->box().size(),
                                                   Rect(ix, iy, iw, ih),
@@ -80,6 +131,8 @@ namespace mui
                 }
             }
         }
+
+        damage();
     }
 
     StaticGrid::~StaticGrid()

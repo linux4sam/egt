@@ -74,6 +74,19 @@ namespace mui
          */
         virtual void remove_all();
 
+        virtual bool focus() const override
+        {
+            return !!m_focus_widget;
+        }
+
+        virtual void focus(Widget* widget) override
+        {
+            if (m_parent)
+                m_parent->focus(widget);
+            else
+                m_focus_widget = widget;
+        }
+
         /**
          * Return true if this is a top level frame, with no parent.
          */
@@ -133,8 +146,6 @@ namespace mui
         }
 
         /**
-         * Mark the specified rect as a damaged area.
-         *
          * This will merge the damaged area with any already existing damaged area
          * that it overlaps with into a super rectangle. Then, the whole array has
          * to be checked again to make sure the new rectangle doesn't conflict with
@@ -180,6 +191,8 @@ namespace mui
          * The damage array for this frame.
          */
         IScreen::damage_array m_damage;
+
+        Widget* m_focus_widget{nullptr};
     };
 
 }

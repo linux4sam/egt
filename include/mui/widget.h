@@ -73,7 +73,7 @@ namespace mui
         /**
          * Default window flags.
          */
-        WINDOW_DEFAULT = WINDOW,
+        WINDOW_DEFAULT = WINDOW | NO_BORDER,
     };
 
     constexpr widgetmask operator&(widgetmask X, widgetmask Y)
@@ -282,6 +282,14 @@ namespace mui
          * @note This will cause a redraw of the widget.
          */
         virtual void resize(const Size& s);
+        inline void resizew(int w)
+        {
+            resize(Size(w, h()));
+        }
+        inline void resizeh(int h)
+        {
+            resize(Size(w(), h));
+        }
 
         /**
          * Move the widget.
@@ -290,6 +298,14 @@ namespace mui
          * @note This will cause a redraw of the widget.
          */
         virtual void move(const Point& point);
+        inline void movex(int x)
+        {
+            move(Point(x, y()));
+        }
+        inline void movey(int y)
+        {
+            move(Point(x(), y));
+        }
 
         /**
          * Move the widget to the specified center point.
@@ -337,6 +353,9 @@ namespace mui
             damage();
         }
 
+        /**
+         * Return true if the widget is visible.
+         */
         virtual bool visible() const { return m_visible; }
 
         /**
@@ -344,10 +363,15 @@ namespace mui
          */
         virtual bool focus() const { return m_focus; }
 
+        virtual void focus(Widget* widget)
+        {
+            ignoreparam(widget);
+        }
+
         /**
          * Set the focus property of the widget.
          */
-        virtual void focus(bool value) { m_focus = value; }
+        virtual void focus(bool value);
 
         /**
          * Return true if the widget is active.
@@ -358,7 +382,14 @@ namespace mui
         /**
          * Set the active property of the widget.
          */
-        virtual void active(bool value) { m_active = value; }
+        virtual void active(bool value)
+        {
+            if (m_active != value)
+            {
+                m_active = value;
+                damage();
+            }
+        }
 
         /**
          * Return the disabled status of the widget.
@@ -386,7 +417,9 @@ namespace mui
         virtual void damage();
 
         /**
-         * Damage the specified rectangle.
+         * Mark the specified rect as a damaged area.
+         *
+         * This call will propagate to a top level parent frame.
          */
         virtual void damage(const Rect& rect);
 
@@ -522,19 +555,19 @@ namespace mui
          *
          * The parent is a Frame, which is capable of managing children.
          */
-        Frame* m_parent {nullptr};
+        Frame* m_parent{nullptr};
 
     private:
 
         /**
          * When true, the widget is visible.
          */
-        bool m_visible {true};
+        bool m_visible{true};
 
         /**
          * When true, the widget has focus.
          */
-        bool m_focus {false};
+        bool m_focus{false};
 
         /**
          * When true, the widget is active.
@@ -546,7 +579,7 @@ namespace mui
          *
          * This may change how the widget behaves or is draw.
          */
-        bool m_active {false};
+        bool m_active{false};
 
         /**
          * When true, the widget is disabled.
@@ -555,12 +588,12 @@ namespace mui
          *
          * This may change how the widget behaves or is draw.
          */
-        bool m_disabled {false};
+        bool m_disabled{false};
 
         /**
          * Flags for the widget.
          */
-        widgetmask m_flags {widgetmask::NONE};
+        widgetmask m_flags{widgetmask::NONE};
 
         /**
          * Current palette for the widget.
@@ -578,7 +611,7 @@ namespace mui
         /**
          * Alignment hint for this widget within its parent.
          */
-        alignmask m_align {alignmask::NONE};
+        alignmask m_align{alignmask::NONE};
 
         Widget(const Widget&) = delete;
         Widget& operator=(const Widget&) = delete;
@@ -588,7 +621,6 @@ namespace mui
 
     namespace experimental
     {
-
         /**
          * Combo box widget.
          */
@@ -608,45 +640,6 @@ namespace mui
         protected:
             std::string m_label;
         };
-    }
-
-    class ListBox : public Widget
-    {
-    public:
-        using item_array = std::vector<std::string>;
-
-        ListBox(const item_array& items,
-                const Point& point = Point(),
-                const Size& size = Size());
-
-        /**
-         * Set the font of the items.
-         */
-        virtual void font(const Font& font) { m_font = font; }
-
-        virtual int handle(int event) override;
-
-        virtual void draw(Painter& painter, const Rect& rect) override;
-
-        void selected(uint32_t index);
-
-        uint32_t selected() const { return m_selected; }
-
-        virtual ~ListBox();
-
-    protected:
-
-        virtual void on_selected(int index) {ignoreparam(index);}
-
-        Rect item_rect(uint32_t index) const;
-
-        item_array m_items;
-        uint32_t m_selected = { 0 };
-        Font m_font;
-    };
-
-    namespace experimental
-    {
 
         class ScrollWheel : public Widget
         {
@@ -683,6 +676,7 @@ namespace mui
             int m_moving_x {0};
             int m_start_pos {0};
         };
+
     }
 
 }

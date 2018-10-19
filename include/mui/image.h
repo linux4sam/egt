@@ -21,7 +21,7 @@ namespace mui
     class Image : public Widget
     {
     public:
-        explicit Image(const std::string& filename, const Point& point = Point());
+        explicit Image(const std::string& filename, const Point& point = Point()) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

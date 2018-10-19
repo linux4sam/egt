@@ -89,25 +89,32 @@ namespace mui
             return std::hypot(T(point.x - x), T(point.y - y));
         }
 
-        bool operator==(const Point& rhs) const
-        {
-            return x == rhs.x && y == rhs.y;
-        }
-
-        bool operator!=(const Point& rhs) const
-        {
-            return x != rhs.x || y != rhs.y;
-        }
-
         dim_t x {0};
         dim_t y {0};
-
-        friend Point operator-(Point lhs, const Point& rhs);
-        friend Point operator+(Point lhs, const Point& rhs);
     };
 
-    Point operator-(Point lhs, const Point& rhs);
-    Point operator+(Point lhs, const Point& rhs);
+    inline bool operator==(const Point& lhs, const Point& rhs)
+    {
+        return lhs.x == rhs.x && lhs.y == rhs.y;
+    }
+
+    inline bool operator!=(const Point& lhs, const Point& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    inline Point operator-(Point lhs, const Point& rhs)
+    {
+        lhs -= rhs;
+        return lhs;
+    }
+
+    inline Point operator+(Point lhs, const Point& rhs)
+    {
+        lhs += rhs;
+        return lhs;
+    }
+
 
     std::ostream& operator<<(std::ostream& os, const Point& point);
 
@@ -144,19 +151,45 @@ namespace mui
             h = w = 0;
         }
 
-        bool operator==(const Size& rhs) const
+        Size& operator+=(const Size& rhs)
         {
-            return w == rhs.w && h == rhs.h;
+            w += rhs.w;
+            h += rhs.h;
+            return *this;
         }
 
-        bool operator!=(const Size& rhs) const
+        Size& operator-=(const Size& rhs)
         {
-            return w != rhs.w || h != rhs.h;
+            w -= rhs.w;
+            h -= rhs.h;
+            return *this;
         }
 
         dim_t h {0};
         dim_t w {0};
     };
+
+    inline bool operator==(const Size& lhs, const Size& rhs)
+    {
+        return lhs.w == rhs.w && rhs.h == rhs.h;
+    }
+
+    inline bool operator!=(const Size& lhs, const Size& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    inline Size operator-(Size lhs, const Size& rhs)
+    {
+        lhs -= rhs;
+        return lhs;
+    }
+
+    inline Size operator+(Size lhs, const Size& rhs)
+    {
+        lhs += rhs;
+        return lhs;
+    }
 
     std::ostream& operator<<(std::ostream& os, const Size& size);
 
@@ -196,7 +229,36 @@ namespace mui
             assert(h >= 0);
         }
 
-        dim_t area() const
+        Rect& operator+=(const Size& rhs)
+        {
+            w += rhs.w;
+            h += rhs.h;
+            return *this;
+        }
+
+        Rect& operator-=(const Size& rhs)
+        {
+            w -= rhs.w;
+            h -= rhs.h;
+            return *this;
+        }
+
+        Rect& operator+=(const Point& rhs)
+        {
+            x += rhs.x;
+            y += rhs.y;
+            return *this;
+        }
+
+        Rect& operator-=(const Point& rhs)
+        {
+            x -= rhs.x;
+            y -= rhs.y;
+            return *this;
+        }
+
+
+        inline dim_t area() const
         {
             return w * h;
         }
@@ -204,7 +266,7 @@ namespace mui
         /**
          * Return the center point of the rectangle.
          */
-        Point center() const
+        inline Point center() const
         {
             return Point(x + (w / 2), y + (h / 2));
         }
@@ -212,12 +274,12 @@ namespace mui
         /**
          * Get the Point of the rectangle.
          */
-        Point point() const
+        inline Point point() const
         {
             return Point(x, y);
         }
 
-        void point(const Point& p)
+        inline void point(const Point& p)
         {
             x = p.x;
             y = p.y;
@@ -226,12 +288,12 @@ namespace mui
         /**
          * Get the Size of the rectangle.
          */
-        Size size() const
+        inline Size size() const
         {
             return Size(w, h);
         }
 
-        void size(const Size& s)
+        inline void size(const Size& s)
         {
             w = s.w;
             h = s.h;
@@ -283,14 +345,6 @@ namespace mui
         inline bool empty() const
         {
             return w <= 0 || h <= 0;
-        }
-
-        inline bool operator==(const Rect& rhs) const
-        {
-            return x == rhs.x &&
-                   y == rhs.y &&
-                   w == rhs.w &&
-                   h == rhs.h;
         }
 
         inline bool point_inside(const Point& point) const
@@ -361,12 +415,37 @@ namespace mui
 
     std::ostream& operator<<(std::ostream& os, const Rect& rect);
 
+    inline Rect operator-(Rect lhs, const Size& rhs)
+    {
+        lhs.size(lhs.size() - rhs);
+        return lhs;
+    }
+
+    inline Rect operator+(Rect lhs, const Size& rhs)
+    {
+        lhs.size(lhs.size() + rhs);
+        return lhs;
+    }
+
+    inline bool operator==(const Rect& lhs, const Rect& rhs)
+    {
+        return lhs.x == rhs.x &&
+               lhs.y == rhs.y &&
+               lhs.w == rhs.w &&
+               lhs.h == rhs.h;
+    }
+
+    inline bool operator!=(const Rect& lhs, const Rect& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
     class Line
     {
     public:
         using dim_t = int;
 
-        explicit Line(const Point& start, const Point& end)
+        explicit Line(const Point& start, const Point& end) noexcept
             : m_start(start),
               m_end(end)
         {}

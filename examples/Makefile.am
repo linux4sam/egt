@@ -20,6 +20,7 @@ LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 #LDFLAGS="$LDFLAGS -flto -fwhole-program"
 
 bin_PROGRAMS = \
+animations/animations \
 basic/basic \
 brick/brick \
 calc/calc \
@@ -34,6 +35,13 @@ sprite/sprite \
 water/water \
 widgets/widgets \
 whiteboard/whiteboard
+
+animations_animations_SOURCES = animations/animations.cpp
+animations_animations_CXXFLAGS = $(AM_CXXFLAGS)
+animations_animations_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+animations_animationsdir = $(prefix)/share/mui/examples/animations
+animations_animations_DATA = $(wildcard $(top_srcdir)/examples/animations/*.png)
+animations_animations_LDFLAGS = $(AM_LDFLAGS)
 
 brick_brick_SOURCES = brick/brick.cpp
 brick_brick_CXXFLAGS = $(AM_CXXFLAGS)

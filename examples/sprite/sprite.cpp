@@ -31,12 +31,12 @@ int main()
                                  main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite2, 1, 1, alignmask::CENTER);
 
-    grid.add(new Label("Hardware", Point(100, 100)), 0, 0,
+    grid.add(new Label("Hardware"), 0, 0,
              alignmask::CENTER | alignmask::BOTTOM);
-    grid.add(new Label("Software", Point(200, 200)), 1, 0,
+    grid.add(new Label("Software"), 1, 0,
              alignmask::CENTER | alignmask::BOTTOM);
 
-    grid.reposition();
+    //grid.reposition();
     win.add(&grid);
 
     sprite1.show();

@@ -90,7 +90,7 @@ public:
 
         MyListBox* list1 = new MyListBox(curves_names, Point(w() - 100, 0), Size(100, h()));
         add(list1);
-        list1->selected(7);
+        list1->select(7);
 
 #ifndef USE_HARDWARE
         m_box = new Image("ball.png");
@@ -177,11 +177,10 @@ int main()
 
     MainWindow window;
 
-    animation = new Animation(-110, window.h() - 100, [](float value, void* data)
+    animation = new Animation(-110, window.h() - 100, [&window](float value)
     {
-        MainWindow* window = reinterpret_cast<MainWindow*>(data);
-        window->move_item(value);
-    }, 2000, easing_linear, &window);
+        window.move_item(value);
+    }, std::chrono::seconds(2), easing_linear);
 
     window.load();
 

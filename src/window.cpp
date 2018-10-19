@@ -65,11 +65,16 @@ namespace mui
 
         if (!size.empty())
         {
-            resize(size);
+            do_resize(size);
         }
     }
 
     void PlaneWindow::resize(const Size& size)
+    {
+        do_resize(size);
+    }
+
+    void PlaneWindow::do_resize(const Size& size)
     {
         // severe limitation that we can only resize once
         // this is horrible: basically, only let the plane get allocated once,

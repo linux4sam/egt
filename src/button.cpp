@@ -28,27 +28,15 @@ namespace mui
         switch (event)
         {
         case EVT_MOUSE_DOWN:
-            if (!active())
-            {
-                damage();
-                active(true);
-                invoke_handlers(event);
-                return 1;
-            }
-            break;
+            focus(true);
+            active(true);
+            invoke_handlers(event);
+            return 1;
         case EVT_MOUSE_UP:
-            if (active())
-            {
-                damage();
-                active(false);
-                invoke_handlers(event);
-                return 1;
-            }
-            break;
-        case EVT_MOUSE_MOVE:
-            break;
-        case EVT_KEY_DOWN:
-            break;
+            focus(false);
+            active(false);
+            invoke_handlers(event);
+            return 1;
         }
 
         return Widget::handle(event);

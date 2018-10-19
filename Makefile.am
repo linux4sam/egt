@@ -28,15 +28,18 @@ install-icons:
 
 install-data-local: install-icons
 
+
 CPPCHECK_CMD = ~/Downloads/cppcheck-1.85/cppcheck \
 	--inline-suppr \
 	--error-exitcode=0 \
 	-j 4 \
 	--force \
-	-I $(top_srcdir)/include \
 	--language=c++ \
 	--std=c++11 \
-	--template=gcc
+	--platform=unix32 \
+	--template=gcc \
+	-UTSLIB_MT_VALID \
+	-I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg
 
 CPPCHECK_DIRS = \
 $(top_srcdir)/include/mui/ \

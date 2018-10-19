@@ -10,18 +10,6 @@ using namespace std;
 namespace mui
 {
 
-    Point operator-(Point lhs, const Point& rhs)
-    {
-        lhs -= rhs;
-        return lhs;
-    }
-
-    Point operator+(Point lhs, const Point& rhs)
-    {
-        lhs += rhs;
-        return lhs;
-    }
-
     std::ostream& operator<<(std::ostream& os, const Point& point)
     {
         os << point.x << "," << point.y;
@@ -34,7 +22,7 @@ namespace mui
         return os;
     }
 
-    std::ostream& operator << (std::ostream& os, const Rect& rect)
+    std::ostream& operator<< (std::ostream& os, const Rect& rect)
     {
         os << "[" << rect.x << "," << rect.y << " - " << rect.w << "," << rect.h << "]";
         return os;

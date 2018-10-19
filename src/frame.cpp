@@ -11,7 +11,7 @@ using namespace std;
 
 namespace mui
 {
-    static uint32_t frame_id = 0;
+    static auto frame_id = 0;
 
     Frame::Frame(const Point& point, const Size& size, widgetmask flags)
         : Widget(point, size, flags | widgetmask::FRAME)
@@ -72,7 +72,6 @@ namespace mui
 
     void Frame::remove(Widget* widget)
     {
-        assert(widget);
         if (!widget)
             return;
 
@@ -102,16 +101,27 @@ namespace mui
     {
         DBG(name() << " handle: " << event);
 
+        // first, give the event to any focus widget
+        if (m_focus_widget)
+        {
+            if (m_focus_widget->handle(event))
+                return 1;
+        }
+
         switch (event)
         {
         case EVT_MOUSE_DOWN:
         case EVT_MOUSE_UP:
         case EVT_MOUSE_MOVE:
+        case EVT_BUTTON_DOWN:
+        case EVT_BUTTON_UP:
+        case EVT_MOUSE_DBLCLICK:
+        case EVT_KEY_DOWN:
+        case EVT_KEY_UP:
+        case EVT_KEY_REPEAT:
             for (auto& child : detail::reverse_iterate(m_children))
             {
-                assert(child);
-
-                if (child->disabled() /*&& !child->active()*/)
+                if (child->disabled())
                     continue;
 
                 /**
@@ -125,18 +135,7 @@ namespace mui
                     if (child->handle(event))
                         return 1;
             }
-            break;
-        case EVT_KEY_DOWN:
-        case EVT_KEY_UP:
-            for (auto& child : detail::reverse_iterate(m_children))
-            {
-                if (child->disabled())
-                    continue;
 
-                if (child->focus())
-                    if (child->handle(event))
-                        return 1;
-            }
             break;
         }
 
@@ -158,7 +157,7 @@ namespace mui
         if (rect.empty())
             return;
 
-        // damage propogates to top level frame
+        // damage propagates to top level frame
         if (m_parent)
         {
             m_parent->damage(rect);
@@ -175,31 +174,20 @@ namespace mui
     void Frame::draw(Painter& painter, const Rect& rect)
     {
         DBG(name() << " " << __PRETTY_FUNCTION__);
-#if 0
-        if (!is_flag_set(widgetmask::NO_BACKGROUND))
-        {
-            Painter::AutoSaveRestore sr(painter);
-            painter.set_color(palette().color(Palette::BG));
-            cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-            painter.draw_fill(rect);
-        }
-#else
-        Painter::AutoSaveRestore sr(painter);
-        painter.rectangle(rect);
-        painter.clip();
 
         if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
             Painter::AutoSaveRestore sr(painter);
             auto cr = painter.context();
 
+            painter.rectangle(rect);
+            painter.clip();
+
             cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
             painter.draw_basic_box(box(), palette().color(Palette::BORDER),
                                    palette().color(Palette::BG));
-
-            //cairo_reset_clip(cr.get());
         }
-#endif
+
         for (auto& child : m_children)
         {
             if (!child->visible())
@@ -212,6 +200,10 @@ namespace mui
 
             if (Rect::intersect(rect, child->box()))
             {
+                Painter::AutoSaveRestore sr(painter);
+                painter.rectangle(child->box());
+                painter.clip();
+
                 // don't give a child a rectangle that is outside of its own box
                 auto r = Rect::intersection(rect, child->box());
                 child->draw(painter, r);
@@ -279,16 +271,10 @@ namespace mui
 
     void Frame::save_to_file(const std::string& filename)
     {
-        if (m_parent)
-        {
-            m_parent->draw();
-            return;
-        }
+        // TODO: hmm, should this be redirected to parent()?
 
         auto surface = cairo_get_target(screen()->context().get());
         cairo_surface_write_to_png(surface, filename.c_str());
     }
-
-
 
 }

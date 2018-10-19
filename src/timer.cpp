@@ -36,6 +36,11 @@ namespace mui
 
     void Timer::cancel()
     {
+        do_cancel();
+    }
+
+    void Timer::do_cancel()
+    {
         m_timer.cancel();
     }
 
@@ -62,7 +67,7 @@ namespace mui
 
     Timer::~Timer()
     {
-        cancel();
+        do_cancel();
     }
 
     PeriodicTimer::PeriodicTimer() noexcept

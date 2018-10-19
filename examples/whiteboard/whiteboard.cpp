@@ -65,6 +65,8 @@ public:
                 damage();
             }
         });
+
+        //m_grid.reposition();
     }
 
     int handle(int event)
@@ -85,15 +87,24 @@ public:
         {
             if (m_down)
             {
-                Painter painter(screen()->context());
-                painter.set_line_width(2.0);
-                painter.set_color(m_color);
-                painter.line(m_last, mouse_position());
-                painter.stroke();
+                if (m_last != mouse_position())
+                {
+                    Line line = Line(m_last, mouse_position());
 
-                IScreen::damage_array damage;
-                damage.push_back(box());
-                screen()->flip(damage);
+                    Painter painter(screen()->context());
+                    painter.set_line_width(2.0);
+                    painter.set_color(m_color);
+                    painter.line(line.start(), line.end());
+                    painter.stroke();
+
+                    Rect r = line.rect();
+                    r += Size(4, 4);
+                    r -= Point(2, 2);
+
+                    IScreen::damage_array damage;
+                    damage.push_back(r);
+                    screen()->flip(damage);
+                }
             }
 
             m_last = mouse_position();

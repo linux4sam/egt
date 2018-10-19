@@ -103,6 +103,7 @@ namespace mui
     private:
 
         void timer_callback(const asio::error_code& error);
+        void do_cancel();
     };
 
     /**

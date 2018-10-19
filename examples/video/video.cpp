@@ -15,11 +15,12 @@
 using namespace std;
 using namespace mui;
 
+#if 0
 template<class T>
 struct ShowAnimation : public experimental::AnimationTimer
 {
     ShowAnimation(T* widget)
-        : AnimationTimer(480, 400, 1000, easing_rubber),
+        : AnimationTimer(480, 400, std::chrono::seconds(1), easing_rubber),
           m_widget(widget)
     {}
 
@@ -35,7 +36,7 @@ template<class T>
 struct HideAnimation : public experimental::AnimationTimer
 {
     HideAnimation(T* widget)
-        : AnimationTimer(400, 480, 1000, easing_rubber),
+        : AnimationTimer(400, 480, std::chrono::seconds(1), easing_rubber),
           m_widget(widget)
     {}
 
@@ -55,6 +56,7 @@ static void set_control_window(PlaneWindow* window)
     show = new ShowAnimation<PlaneWindow>(window);
     hide = new HideAnimation<PlaneWindow>(window);
 }
+#endif
 
 template <class T>
 class MyVideoWindow : public T
@@ -88,12 +90,16 @@ public:
             {
                 T::move(Point(0, 0));
                 T::scale(m_fscale);
+#if 0
                 show->start();
+#endif
             }
             else
             {
                 T::scale(1.0);
+#if 0
                 hide->start();
+#endif
             }
 
             return 1;
@@ -199,7 +205,9 @@ int main(int argc, const char** argv)
     ctrlwindow.move(Point((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
                           KMSScreen::instance()->size().h - ctrlwindow.h()));
 
+    #if 0
     set_control_window(&ctrlwindow);
+#endif
 
     HorizontalPositioner grid(Point(0, 0), Size(600, 80), 5, alignmask::CENTER);
     grid.name("grid");

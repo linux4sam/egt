@@ -41,6 +41,8 @@ namespace mui
 
         if (m_impl->ts)
         {
+            INFO("input device: " << path);
+
             m_impl->samp_mt = (struct ts_sample_mt**)malloc(SAMPLES * sizeof(struct ts_sample_mt*));
             assert(m_impl->samp_mt);
 
@@ -124,8 +126,8 @@ namespace mui
                     {
                         mouse_position() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
                         m_active = false;
-                        dispatch(EVT_MOUSE_UP);
                         DBG("mouse up " << mouse_position());
+                        dispatch(EVT_MOUSE_UP);
                     }
                     else
                     {
@@ -146,8 +148,8 @@ namespace mui
                         }
                         else
                         {
-                            dispatch(EVT_MOUSE_DOWN);
                             DBG("mouse down " << mouse_position());
+                            dispatch(EVT_MOUSE_DOWN);
                             m_active = true;
                         }
 

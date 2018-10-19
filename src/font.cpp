@@ -11,7 +11,8 @@ namespace mui
     const std::string Font::FACE_COURIER = "Courier Unicode";
 
     // default font, which should be unicode
-    static Font default_font = Font(Font::FACE_ARIAL, 16, Font::WEIGHT_NORMAL, Font::SLANT_NORMAL);
+    static Font default_font = Font(Font::FACE_ARIAL, 16, Font::WEIGHT_NORMAL,
+                                    Font::SLANT_NORMAL);
 
     void Font::set_default_font(const Font& font)
     {

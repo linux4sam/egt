@@ -16,11 +16,11 @@ using namespace std;
 
 namespace mui
 {
-
-    static IScreen* the_screen = 0;
+    static IScreen* the_screen = nullptr;
 
     IScreen*& main_screen()
     {
+        assert(the_screen);
         return the_screen;
     }
 
@@ -139,7 +139,7 @@ namespace mui
 
     void IScreen::init(void** ptr, uint32_t count, int w, int h, uint32_t f)
     {
-        DBG("screen " << w << "," << h);
+
 
         m_size = Size(w, h);
 
@@ -148,19 +148,19 @@ namespace mui
         switch (f)
         {
         case DRM_FORMAT_RGB565:
-            DBG("screen using RGB565 format");
+            INFO("screen " << w << "," << h << " format RGB565");
             format = CAIRO_FORMAT_RGB16_565;
             break;
         case DRM_FORMAT_ARGB8888:
-            DBG("screen using ARGB32 format");
+            INFO("screen " << w << "," << h << " format ARGB32");
             format = CAIRO_FORMAT_ARGB32;
             break;
         case DRM_FORMAT_XRGB8888:
-            DBG("screen using RGB24 format");
+            INFO("screen " << w << "," << h << " format RGB24");
             format = CAIRO_FORMAT_RGB24;
             break;
         default:
-            //assert(0);
+            INFO("screen " << w << "," << h << " format unknown");
             break;
         }
 

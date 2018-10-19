@@ -90,7 +90,7 @@ int main()
     }
 
     topgrid.reposition();
-    buttongrid.reposition();
+    //buttongrid.reposition();
 
     win.show();
 

@@ -14,7 +14,7 @@ using namespace mui;
 class Ball : public Image
 {
 public:
-    Ball(int xspeed, int yspeed)
+    Ball(int xspeed, int yspeed) noexcept
         : Image("metalball.png"),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
@@ -81,9 +81,6 @@ public:
 
     void spawn(const Point& p)
     {
-        //if (m_images.size() > 30)
-        //    return;
-
         int xspeed = speed_dist(e1);
         int yspeed = speed_dist(e1);
         float size = size_dist(e1);
@@ -147,6 +144,24 @@ int main()
         win.spawn(win.box().center());
     });
     spawntimer.start();
+
+    Label label1("CPU: 0%",
+                 Point(40, win.size().h - 40),
+                 Size(100, 40));
+    label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
+    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    win.add(&label1);
+
+    CPUMonitorUsage tools;
+    PeriodicTimer cputimer(std::chrono::seconds(1));
+    cputimer.add_handler([&label1, &tools]()
+    {
+        tools.update();
+        ostringstream ss;
+        ss << "CPU: " << (int)tools.usage(0) << "%";
+        label1.text(ss.str());
+    });
+    cputimer.start();
 
     return app.run();
 }

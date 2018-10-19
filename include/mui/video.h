@@ -60,7 +60,7 @@ namespace mui
              * @brief null Send pipeline to null state
              * @return true if success
              */
-            virtual bool null();
+            bool null();
 
             /**
              * @brief Adjusts the volume of the audio in the video being played
@@ -100,9 +100,9 @@ namespace mui
 
         protected:
 
-            virtual bool set_state(GstState state);
+            bool set_state(GstState state);
             virtual bool createPipeline() = 0;
-            virtual void destroyPipeline();
+            void destroyPipeline();
 
             static gboolean bus_callback(GstBus* bus,
                                          GstMessage* message,
@@ -116,6 +116,10 @@ namespace mui
             std::string m_filename;
             int m_volume_value {100};
             uint32_t m_fps {0};
+
+        private:
+
+
         };
 
 
@@ -158,7 +162,7 @@ namespace mui
         protected:
 
             virtual bool createPipeline() override;
-            virtual void destroyPipeline() override;
+            void destroyPipeline();
 
             static GstFlowReturn on_new_buffer_from_source(GstElement* elt,
                     gpointer data);
