@@ -391,7 +391,7 @@ cairo_surface_t *cairo_image_surface_create_from_jpeg_stream(cairo_read_func_t r
       data = tmp;
 
       // read bytes into buffer and check for error
-      rlen = read_func(closure, data + len, CAIRO_JPEG_IO_BLOCK_SIZE);
+      rlen = read_func(closure, (char*)data + len, CAIRO_JPEG_IO_BLOCK_SIZE);
 #ifdef USE_CAIRO_READ_FUNC_LEN_T
       // check for error
       if (rlen == -1)
