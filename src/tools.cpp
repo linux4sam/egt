@@ -7,6 +7,7 @@
 #include <fstream>
 #include <cstring>
 #include <sstream>
+#include <cassert>
 
 using namespace std;
 

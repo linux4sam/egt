@@ -126,7 +126,7 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/space/");
+    set_image_path("../share/mui/examples/space/");
 
     MainWindow win;
     win.show();
@@ -146,7 +146,7 @@ int main()
     spawntimer.start();
 
     Label label1("CPU: 0%",
-                 Point(40, win.size().h - 40),
+                 Point(10, win.size().h - 40),
                  Size(100, 40));
     label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);

@@ -8,13 +8,15 @@ SUBDIRS = $(OPTIONAL)
 AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include \
 	$(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) \
 	$(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) \
-	$(RAPIDXML_CFLAGS) $(LIBINPUT_CFLAGS) \
+	$(LIBINPUT_CFLAGS) \
 	-I$(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
+AM_LDFLAGS = -pthread
+
 LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 	$(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) \
-	$(RAPIDXML_LIBS) $(LIBINPUT_LIBS)
+	$(LIBINPUT_LIBS)
 
 #CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -flto -fwhole-program"
 #LDFLAGS="$LDFLAGS -flto -fwhole-program"
@@ -22,19 +24,32 @@ LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 bin_PROGRAMS = \
 animations/animations \
 basic/basic \
-brick/brick \
 calc/calc \
-coin/coin \
 easing/easing \
 floating/floating \
 floating/floating \
 infotain/infotain \
-launcher/launcher \
 space/space \
-sprite/sprite \
 water/water \
 widgets/widgets \
 whiteboard/whiteboard
+
+if HAVE_RAPIDXML_HPP
+bin_PROGRAMS += \
+launcher/launcher
+endif
+
+if HAVE_RAPIDXML_RAPIDXML_HPP
+bin_PROGRAMS += \
+launcher/launcher
+endif
+
+if HAVE_LIBPLANES
+bin_PROGRAMS += \
+coin/coin \
+sprite/sprite \
+brick/brick
+endif
 
 animations_animations_SOURCES = animations/animations.cpp
 animations_animations_CXXFLAGS = $(AM_CXXFLAGS)

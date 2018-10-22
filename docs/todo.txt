@@ -54,3 +54,11 @@ Priority 3
   - LevelMeter
   - AnalogMeter
   - SpingProgress
+
+Dependencies
+
+RapidXml
+http://rapidxml.sourceforge.net/manual.html
+
+
+sudo apt-get install librapidxml-dev liblua5.3-dev

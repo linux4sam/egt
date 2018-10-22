@@ -10,6 +10,12 @@
 #include "mui/event_loop.h"
 #include "mui/input.h"
 #include "mui/libinput.h"
+
+#ifdef HAVE_X11
+#include "mui/x11screen.h"
+#endif
+
+#include "mui/framebuffer.h"
 #include "mui/kmsscreen.h"
 #include <libintl.h>
 #include <locale.h>
@@ -53,6 +59,8 @@ namespace mui
         {
 #ifdef HAVE_LIBPLANES
             new KMSScreen(primary);
+#else
+            ignoreparam(primary);
 #endif
         }
 
@@ -73,14 +81,11 @@ namespace mui
         }
 
 #ifdef HAVE_TSLIB
-        /*auto tslib =*/ new InputTslib("/dev/input/touchscreen0");
-        //new std::thread([tslib](){
-        //      tslib->m_io.run();
-        //  });
+        new InputTslib("/dev/input/touchscreen0");
 #endif
         //new InputEvDev("/dev/input/event2");
 #ifdef HAVE_LIBINPUT
-        //new LibInput;
+        new LibInput;
 #endif
     }
 

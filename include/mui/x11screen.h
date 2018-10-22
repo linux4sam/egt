@@ -7,7 +7,8 @@
 
 #ifdef HAVE_X11
 
-#include "mui/screen.h"
+#include "asio.hpp"
+#include <mui/screen.h>
 #include <memory>
 
 namespace mui
@@ -22,15 +23,16 @@ namespace mui
     public:
         X11Screen(const Size& size = Size(1024, 1024), bool borderless = false);
 
-        void flip(const std::vector<Rect>& damage);
+        void flip(const damage_array& damage) override;
 
         virtual ~X11Screen();
 
     protected:
 
-        static void process(int fd, uint32_t mask, void* data);
+        void handle_read(const asio::error_code& error);
 
         std::shared_ptr<X11Data> m_priv;
+	asio::posix::stream_descriptor m_input;
     };
 
 }

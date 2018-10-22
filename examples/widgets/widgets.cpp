@@ -70,7 +70,7 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/");
+    set_image_path("../share/mui/");
 
     Window win(Size(800, 480));
 

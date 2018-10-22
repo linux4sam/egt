@@ -7,11 +7,16 @@
 #include "mui/libinput.h"
 #include <cassert>
 #include <fstream>
-#include <libinput.h>
-#include <libudev.h>
 #include <unistd.h>
 
+#ifdef HAVE_LIBINPUT
+#include <libinput.h>
+#include <libudev.h>
+#endif
+
 using namespace std;
+
+#ifdef HAVE_LIBINPUT
 
 namespace mui
 {
@@ -489,7 +494,7 @@ out:
         bool res = false;
         if (error)
         {
-            cout << error << endl;
+            ERR(error);
             return;
         }
 
@@ -570,3 +575,5 @@ out:
         libinput_unref(li);
     }
 }
+
+#endif

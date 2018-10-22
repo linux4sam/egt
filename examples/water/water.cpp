@@ -68,7 +68,7 @@ public:
 
         m_label = new Label("Objects: 0",
                             Point(10, 10),
-                            Size(100, 40),
+                            Size(150, 40),
                             alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
@@ -150,7 +150,7 @@ int main()
 {
     Application app/*(false)*/;
 
-    set_image_path("/root/mui/share/mui/examples/water/");
+    set_image_path("../share/mui/examples/water/");
 
     MainWindow win;
     win.show();
@@ -248,7 +248,7 @@ int main()
 #endif
 
     Label label1("CPU: 0%",
-                 Point(40, win.size().h - 40),
+                 Point(10, win.size().h - 40),
                  Size(100, 40));
     label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);

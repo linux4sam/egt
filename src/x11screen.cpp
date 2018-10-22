@@ -2,18 +2,22 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #ifdef HAVE_X11
 
-#include "event_loop.h"
-#include "input.h"
-#include "widget.h"
-#include "window.h"
-#include "x11screen.h"
+#include "mui/app.h"
+#include "mui/event_loop.h"
+#include "mui/input.h"
+#include "mui/widget.h"
+#include "mui/x11screen.h"
 #include <X11/Xatom.h>
+#include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <cairo-xlib.h>
 #include <cairo.h>
-#include <X11/Xlib.h>
 
 using namespace std;
 
@@ -27,13 +31,13 @@ namespace mui
     };
 
     X11Screen::X11Screen(const Size& size, bool borderless)
-        : m_priv(new X11Data)
+        : m_priv(new X11Data),
+          m_input(main_app().event().io())
     {
         m_priv->display = XOpenDisplay(NULL);
         assert(m_priv->display);
 
-        EventLoop::add_fd(ConnectionNumber(m_priv->display), EVENT_READABLE,
-                          X11Screen::process, this);
+        m_input.assign(ConnectionNumber(m_priv->display));
 
         int screen = DefaultScreen(m_priv->display);
         Window win = RootWindow(m_priv->display, screen);
@@ -43,6 +47,7 @@ namespace mui
                                              0, 0,
                                              size.w, size.h,
                                              0, 0, 0);
+        assert(m_priv->window);
 
         if (borderless)
         {
@@ -68,68 +73,82 @@ namespace mui
                      PointerMotionMask | Button1MotionMask | VisibilityChangeMask |
                      ColormapChangeMask);
 
-        init(0, size.w, size.h);
+        init(nullptr, 0, size.w, size.h);
+
+        // instead of using init() to create the buffer, create our own using cairo_xlib_surface_create
+        DisplayBuffer buffer;
+        buffer.surface =
+            shared_cairo_surface_t(cairo_xlib_surface_create(m_priv->display, m_priv->window,
+                                                             DefaultVisual(m_priv->display, screen),
+                                                             size.w, size.h),
+                                   cairo_surface_destroy);
+        cairo_xlib_surface_set_size(buffer.surface.get(), size.w, size.h);
+
+        buffer.cr = shared_cairo_t(cairo_create(buffer.surface.get()), cairo_destroy);
+        buffer.damage.emplace_back(0, 0, size.w, size.h);
+        m_buffers.push_back(buffer);
 
         XMapWindow(m_priv->display, m_priv->window);
-
-        m_surface_back = shared_cairo_surface_t(cairo_xlib_surface_create(m_priv->display, m_priv->window,
-                                                DefaultVisual(m_priv->display, screen),
-                                                size.w, size.h),
-                                                cairo_surface_destroy);
-        cairo_xlib_surface_set_size(m_surface_back.get(), size.w, size.h);
-
-        m_cr_back = shared_cairo_t(cairo_create(m_surface_back.get()), cairo_destroy);
-        assert(m_cr_back);
+        XFlush(m_priv->display);
+        XSync(m_priv->display, false);
 
         m_priv->wmDeleteMessage = XInternAtom(m_priv->display, "WM_DELETE_WINDOW", False);
         XSetWMProtocols(m_priv->display, m_priv->window, &m_priv->wmDeleteMessage, 1);
 
-        XFlush(m_priv->display);
+        // start the async read from the server
+        asio::async_read(m_input, asio::null_buffers(),
+                         std::bind(&X11Screen::handle_read, this, std::placeholders::_1));
     }
 
-    void X11Screen::flip(const vector<Rect>& damage)
+    void X11Screen::flip(const damage_array& damage)
     {
         IScreen::flip(damage);
         XFlush(m_priv->display);
+        XSync(m_priv->display, false);
     }
 
-    void X11Screen::process(int fd, uint32_t mask, void* data)
+    void X11Screen::handle_read(const asio::error_code& error)
     {
-        X11Screen* screen = reinterpret_cast<X11Screen*>(data);
-        assert(screen);
-
-        for (;;)
+        if (error)
         {
-            if (!XPending(screen->m_priv->display))
-                break;
+            ERR(error);
+            return;
+        }
 
+        while (XPending(m_priv->display))
+        {
             XEvent e;
-            XNextEvent(screen->m_priv->display, &e);
+            XNextEvent(m_priv->display, &e);
+
+            DBG("x11 event: " << e.type);
 
             switch (e.type)
             {
             case MapNotify:
+                break;
             case ConfigureNotify:
+                break;
             case Expose:
             {
-                vector<Rect> damage;
-                damage.push_back(Rect(0, 0, screen->size().w, screen->size().h));
-                screen->flip(damage);
+                damage_array damage;
+                damage.emplace_back(e.xexpose.x, e.xexpose.y,
+                                    e.xexpose.width, e.xexpose.height);
+                flip(damage);
                 break;
             }
             case ButtonPress:
                 mouse_position() = Point(e.xbutton.x, e.xbutton.y);
-                main_window()->handle(EVT_MOUSE_DOWN);
+                IInput::dispatch(EVT_MOUSE_DOWN);
                 break;
             case ButtonRelease:
                 mouse_position() = Point(e.xbutton.x, e.xbutton.y);
-                main_window()->handle(EVT_MOUSE_UP);
+                IInput::dispatch(EVT_MOUSE_UP);
                 break;
             case EnterNotify:
             case LeaveNotify:
             case MotionNotify:
                 mouse_position() = Point(e.xbutton.x, e.xbutton.y);
-                main_window()->handle(EVT_MOUSE_MOVE);
+                IInput::dispatch(EVT_MOUSE_MOVE);
                 break;
             case KeyPress:
             {
@@ -138,36 +157,37 @@ namespace mui
                 //XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
                 //cout << keybuf << endl;
 
-                key_position() = XLookupKeysym(&e.xkey, 0);
-                main_window()->handle(EVT_KEYDOWN);
+                key_value() = XLookupKeysym(&e.xkey, 0);
+                IInput::dispatch(EVT_KEY_DOWN);
                 break;
             }
             case KeyRelease:
             {
                 //char keybuf[8];
                 //KeySym key;
-
                 //XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
                 //cout << keybuf << endl;
 
-                key_position() = XLookupKeysym(&e.xkey, 0);
-                main_window()->handle(EVT_KEYUP);
+                key_value() = XLookupKeysym(&e.xkey, 0);
+                IInput::dispatch(EVT_KEY_UP);
                 break;
             }
             case ClientMessage:
-                if (e.xclient.data.l[0] == screen->m_priv->wmDeleteMessage)
-                    EventLoop::quit();
+                if ((int)e.xclient.data.l[0] == (int)m_priv->wmDeleteMessage)
+                    main_app().event().quit();
                 break;
             default:
-                dbg << "x11 event unhandled " << e.type << endl;
+                DBG("x11 unhandled event: " << e.type);
                 break;
             }
         }
+
+        asio::async_read(m_input, asio::null_buffers(),
+                         std::bind(&X11Screen::handle_read, this, std::placeholders::_1));
     }
 
     X11Screen::~X11Screen()
     {
-        EventLoop::rem_fd(ConnectionNumber(m_priv->display));
         XCloseDisplay(m_priv->display);
     }
 

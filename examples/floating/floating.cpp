@@ -89,7 +89,7 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/floating/");
+    set_image_path("../share/mui/examples/floating/");
 
     MyWindow win;
     win.show();
@@ -122,8 +122,6 @@ int main()
 
 #ifdef HAVE_LIBPLANES
     int total = KMSScreen::instance()->count_planes(DRM_PLANE_TYPE_OVERLAY);
-#else
-    int total = 3;
 #endif
 
 #ifdef HAVE_LIBPLANES
@@ -157,7 +155,7 @@ int main()
     timer.start();
 
     Label label1("CPU: -",
-                 Point(40, win.size().h - 40),
+                 Point(10, win.size().h - 40),
                  Size(100, 40),
                  alignmask::LEFT | alignmask::CENTER);
     label1.palette()

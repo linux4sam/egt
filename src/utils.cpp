@@ -7,7 +7,10 @@
 #endif
 
 #include "mui/utils.h"
+
+#ifdef HAVE_LUA
 #include "lua/script.h"
+#endif
 
 namespace mui
 {
@@ -33,11 +36,14 @@ namespace mui
 
     namespace experimental
     {
+
         double lua_evaluate(const std::string& expr)
         {
+            double y = 0.;
+#ifdef HAVE_LUA
             int cookie;
             char* msg = NULL;
-            double y = 0.;
+
 
             if (!script_init(nullptr))
             {
@@ -62,7 +68,7 @@ error:
             if (msg)
                 free(msg);
             script_unref(cookie);
-
+#endif
             return y;
         }
     }

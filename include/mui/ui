@@ -18,6 +18,7 @@
 #include <mui/event_loop.h>
 #include <mui/font.h>
 #include <mui/frame.h>
+#include <mui/framebuffer.h>
 #include <mui/geometry.h>
 #include <mui/grid.h>
 #include <mui/image.h>

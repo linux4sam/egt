@@ -108,11 +108,11 @@ AC_TYPE_UINT8_T
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 
-#PKG_CHECK_MODULES(X11, [x11 >= 1.6.5], [have_x11=yes], [AC_MSG_ERROR([
-#     x11 is a hard dependency, but a sufficient version was not found.])])
-#if test "x${have_x11}" = xyes; then
-#   AC_DEFINE(HAVE_X11, 1, [Have x11 support])
-#fi
+PKG_CHECK_MODULES(X11, [x11 >= 1.6.3], [have_x11=yes], [have_x11=no])
+AM_CONDITIONAL([HAVE_X11], [test "x${have_x11}" = xyes])
+if test "x${have_x11}" = xyes; then
+   AC_DEFINE(HAVE_X11, 1, [Have x11 support])
+fi
 
 AX_PKG_CHECK_MODULES(TSLIB, [], [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
 if test "x${have_tslib}" = xyes; then
@@ -133,14 +133,20 @@ AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 AX_PKG_CHECK_MODULES(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
      libdrm is a hard dependency, but a sufficient version was not found.])])
 
-AX_PKG_CHECK_MODULES(CJSON, [], [libcjson >= 1.6.0], [], [AC_MSG_ERROR([
-     cJSON is a hard dependency, but a sufficient version was not found.])])
+AX_PKG_CHECK_MODULES(LUA, [], [lua >= 5.3.0], [have_lua=yes], [have_lua=no])
+if test "x${have_lua}" = xno; then
+AX_PKG_CHECK_MODULES(LUA, [], [lua5.3], [have_lua=yes], [have_lua=no])
+fi
+AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
+if test "x${have_lua}" = xyes; then
+   AC_DEFINE(HAVE_LUA, 1, [Have lua support])
+fi
 
-AX_PKG_CHECK_MODULES(LUA, [], [lua >= 5.3.1], [], [AC_MSG_ERROR([
-     liblua is a hard dependency, but a sufficient version was not found.])])
+# remove when libplanes is fixed
+PKG_CHECK_MODULES(CJSON, [libcjson >= 1.6.0], [have_cjson=yes], [have_cjson=no])
 
-AX_PKG_CHECK_MODULES(LIBPLANES, [], [libplanes >= 1.0.0], [have_libplanes=yes], [AC_MSG_ERROR([
-     libplanes is a hard dependency, but a sufficient version was not found.])])
+AX_PKG_CHECK_MODULES(LIBPLANES, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
+AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
 if test "x${have_libplanes}" = xyes; then
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
 fi
@@ -155,8 +161,10 @@ if test "x${have_libjpeg}" = xyes; then
 fi
 
 AC_LANG_PUSH([C++])
-AC_CHECK_HEADERS([rapidxml.hpp], [], [AC_MSG_ERROR([
-     rapidxml is a hard dependency, but a sufficient version was not found.])])
+AC_CHECK_HEADERS([rapidxml/rapidxml.hpp], [have_rapidxml=yes], [have_rapidxml=no])
+AM_CONDITIONAL([HAVE_RAPIDXML_RAPIDXML_HPP], [test "x${have_rapidxml}" = xyes])
+AC_CHECK_HEADERS([rapidxml.hpp], [have_rapidxml=yes], [have_rapidxml=no])
+AM_CONDITIONAL([HAVE_RAPIDXML_HPP], [test "x${have_rapidxml}" = xyes])
 AC_LANG_POP([C++])
 
 AM_CONDITIONAL([HAVE_KPLOT], [test true])

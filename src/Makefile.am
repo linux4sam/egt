@@ -25,6 +25,7 @@ color.cpp \
 event_loop.cpp \
 font.cpp \
 frame.cpp \
+framebuffer.cpp \
 geometry.cpp \
 grid.cpp \
 image.cpp \
@@ -34,8 +35,6 @@ kmsscreen.cpp \
 label.cpp \
 libinput.cpp \
 list.cpp \
-lua/script.c \
-lua/script.h \
 painter.cpp \
 palette.cpp \
 resource.cpp \
@@ -51,6 +50,12 @@ video.cpp \
 widget.cpp \
 window.cpp \
 x11screen.cpp
+
+if HAVE_LUA
+libmui_la_SOURCES += \
+lua/script.c \
+lua/script.h
+endif
 
 libmui_la_LIBADD =
 if HAVE_KPLOT
@@ -73,6 +78,7 @@ $(top_srcdir)/include/mui/color.h \
 $(top_srcdir)/include/mui/event_loop.h \
 $(top_srcdir)/include/mui/font.h \
 $(top_srcdir)/include/mui/frame.h \
+$(top_srcdir)/include/mui/framebuffer.h \
 $(top_srcdir)/include/mui/geometry.h \
 $(top_srcdir)/include/mui/grid.h \
 $(top_srcdir)/include/mui/image.h \
@@ -107,8 +113,9 @@ if HAVE_KPLOT
 noinst_LIBRARIES = libkplot.a
 
 $(top_builddir)/external/kplot/compat.h: $(top_srcdir)/external/kplot/compat.pre.h $(top_srcdir)/external/kplot/compat.post.h
-	( cat $(top_srcdir)/external/kplot/compat.pre.h ; \
-	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh $(top_srcdir)/external/kplot/compat.sh reallocarray ; \
+	( mkdir -p $(top_builddir)/external/kplot/ ; \
+	  cat $(top_srcdir)/external/kplot/compat.pre.h ; \
+	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh $(top_builddir)/external/kplot/compat.sh reallocarray ; \
 	  cat $(top_srcdir)/external/kplot/compat.post.h ; ) >$@
 
 libkplot_a_SOURCES = \
@@ -136,10 +143,10 @@ $(top_srcdir)/external/kplot/stddev.c \
 $(top_srcdir)/external/kplot/test-reallocarray.c \
 $(top_srcdir)/external/kplot/tic.c \
 $(top_srcdir)/external/kplot/vector.c
-libkplot_a_CFLAGS = $(AM_CFLAGS) $(CAIRO_CFLAGS) -fPIC
+libkplot_a_CFLAGS = $(AM_CFLAGS) $(CAIRO_CFLAGS) -I$(top_builddir)/external/kplot -fPIC
 
-CLEANFILES = $(top_srcdir)/external/kplot/compat.h
-BUILT_SOURCES = $(top_srcdir)/external/kplot/compat.h
+CLEANFILES = $(top_builddir)/external/kplot/compat.h
+BUILT_SOURCES = $(top_builddir)/external/kplot/compat.h
 
 dist-hook:
 	for file in $(BUILT_SOURCES) ; do \

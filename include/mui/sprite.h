@@ -114,6 +114,7 @@ namespace mui
         uint32_t m_strip;
     };
 
+#ifdef HAVE_LIBPLANES
     /**
      * Sprite widget using hardware planes.
      */
@@ -128,6 +129,7 @@ namespace mui
 
         virtual ~HardwareSprite();
     };
+#endif
 
     /**
      * Sprite widget using only software.

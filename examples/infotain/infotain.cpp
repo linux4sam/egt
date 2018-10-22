@@ -281,7 +281,7 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/infotain/");
+    set_image_path("../share/mui/examples/infotain/");
 
     win1 = new MainWindow(Size(800, 480));
     win2 = new ChildWindow(Size(800, 480));

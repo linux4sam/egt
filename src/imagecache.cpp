@@ -73,6 +73,7 @@ namespace mui
                                     read_resource_stream, (void*)name.c_str()),
                                 cairo_surface_destroy);
                 }
+#ifdef HAVE_LIBJPEG
                 else if (name.find(".jpg") != std::string::npos)
                 {
                     image = shared_cairo_surface_t(
@@ -80,6 +81,7 @@ namespace mui
                                     read_resource_stream, (void*)name.c_str()),
                                 cairo_surface_destroy);
                 }
+#endif
                 else
                 {
                     assert(!"unsupported file type");
@@ -94,12 +96,14 @@ namespace mui
                                 cairo_image_surface_create_from_png(name.c_str()),
                                 cairo_surface_destroy);
                 }
+#ifdef HAVE_LIBJPEG
                 else if (name.find(".jpg") != std::string::npos)
                 {
                     image = shared_cairo_surface_t(
                                 cairo_image_surface_create_from_jpeg(name.c_str()),
                                 cairo_surface_destroy);
                 }
+#endif
                 else
                 {
                     assert(!"unsupported file type");

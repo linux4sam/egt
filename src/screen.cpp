@@ -20,7 +20,6 @@ namespace mui
 
     IScreen*& main_screen()
     {
-        assert(the_screen);
         return the_screen;
     }
 
@@ -34,7 +33,7 @@ namespace mui
         if (envset < 0)
             envset = !!getenv("MUI_GREENSCREEN");
 
-        if (!damage.empty())
+        if (!damage.empty() && index() < m_buffers.size())
         {
             damage_array olddamage = m_buffers[index()].damage;
 
@@ -58,7 +57,8 @@ namespace mui
 
     /**
      * @todo greenscreen is broken - does not cover all cases and getting it to
-     * work with flipping is difficult.
+     * work with flipping is difficult.  Should consider going to a single
+     * buffer for greenscreen.
      */
     void IScreen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
             const damage_array& olddamage)
@@ -139,8 +139,6 @@ namespace mui
 
     void IScreen::init(void** ptr, uint32_t count, int w, int h, uint32_t f)
     {
-
-
         m_size = Size(w, h);
 
         cairo_format_t format = CAIRO_FORMAT_ARGB32;
@@ -207,34 +205,5 @@ namespace mui
     }
 
     // https://github.com/toradex/cairo-fb-examples/blob/master/rectangles/rectangles.c
-
-    FrameBuffer::FrameBuffer(const string& path)
-        : m_fd(-1)
-    {
-        struct fb_fix_screeninfo fixinfo;
-        struct fb_var_screeninfo varinfo;
-
-        m_fd = open(path.c_str(), O_RDWR);
-        assert(m_fd >= 0);
-
-        if (ioctl(m_fd, FBIOGET_FSCREENINFO, &fixinfo) < 0)
-            assert(0);
-
-        if (ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0)
-            assert(0);
-
-        DBG("fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres);
-
-        m_fb = mmap(NULL, fixinfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
-        assert(m_fb != (void*) -1);
-
-        init(&m_fb, 1, varinfo.xres, varinfo.yres);
-    }
-
-    FrameBuffer::~FrameBuffer()
-    {
-        ::munmap(m_fb, 0);
-        ::close(m_fd);
-    }
 
 }

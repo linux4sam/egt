@@ -9,8 +9,13 @@
 #include <map>
 #include <memory>
 #include <mui/ui>
+#ifdef HAVE_RAPIDXML_RAPIDXML_HPP
+#include <rapidxml/rapidxml.hpp>
+#include <rapidxml/rapidxml_utils.hpp>
+#else
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
+#endif
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -170,7 +175,7 @@ public:
 
         main_app().event().add_idle_callback(std::bind(&LauncherWindow::timer_callback, this));
 
-        add(new Image("background.jpg"));
+        add(new Image("background.png"));
 
         auto logo = new Image("logo.png");
         add(logo);
@@ -324,7 +329,7 @@ public:
 
         m_animation = new Animation(0, distance,
                                     std::bind(&LauncherWindow::animate, this, std::placeholders::_1),
-                                    std::chrono::milliseconds(200), easing_snap);
+                                    std::chrono::milliseconds(200), easing_quintic_easein);
         m_animation->start();
 
         m_moving_x = 0;
@@ -356,7 +361,7 @@ private:
     Popup<Window> m_popup;
 };
 
-#define SHARED_PATH "/root/mui/share/mui/examples/launcher/"
+#define SHARED_PATH "../share/mui/examples/launcher/"
 
 int main()
 {

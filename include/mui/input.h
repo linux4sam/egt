@@ -83,7 +83,7 @@ namespace mui
      */
     class IInput
     {
-    protected:
+    public:
         static void dispatch(int event);
     };
 

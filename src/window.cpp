@@ -160,7 +160,18 @@ namespace mui
     PlaneWindow::PlaneWindow(const Size& size, widgetmask flags, uint32_t format, bool heo)
         : Window(size, flags | widgetmask::WINDOW)
     {
+        ignoreparam(format);
+        ignoreparam(heo);
+    }
 
+    void PlaneWindow::damage(const Rect& rect)
+    {
+        Window::damage(rect);
+    }
+
+    void PlaneWindow::resize(const Size& size)
+    {
+        ignoreparam(size);
     }
 
     void PlaneWindow::move(const Point& point)
@@ -171,6 +182,16 @@ namespace mui
     void PlaneWindow::draw()
     {
         Window::draw();
+    }
+
+    void PlaneWindow::show()
+    {
+        Window::show();
+    }
+
+    void PlaneWindow::hide()
+    {
+        Window::hide();
     }
 #endif
 

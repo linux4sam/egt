@@ -170,7 +170,7 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/easing/");
+    set_image_path("../share/mui/examples/easing/");
 
     ResetTimer reset_timer;
     MyAnimationTimer animation_timer(reset_timer);
@@ -185,7 +185,7 @@ int main()
     window.load();
 
     Label label1("CPU: 0%",
-                 Point(40, window.size().h - 40),
+                 Point(10, window.size().h - 40),
                  Size(100, 40));
     label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);

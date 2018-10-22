@@ -7,7 +7,9 @@
 #include "mui/painter.h"
 #include "mui/sprite.h"
 #include <iostream>
+#ifdef HAVE_LIBPLANES
 #include <planes/plane.h>
+#endif
 
 using namespace std;
 
@@ -38,6 +40,7 @@ namespace mui
         return copy;
     }
 
+#ifdef HAVE_LIBPLANES
     HardwareSprite::HardwareSprite(const std::string& filename, int framew,
                                    int frameh, int framecount, int framex,
                                    int framey, const Point& point)
@@ -78,6 +81,7 @@ namespace mui
 
     HardwareSprite::~HardwareSprite()
     {}
+#endif
 
     SoftwareSprite::SoftwareSprite(const std::string& filename, int framew, int frameh,
                                    int framecount, int framex, int framey,
