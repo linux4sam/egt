@@ -61,9 +61,8 @@ class MyListBox : public ListBox
 {
 public:
     MyListBox(const std::vector<std::string>& items,
-              const Point& point = Point(),
-              const Size& size = Size())
-        : ListBox(items, point, size)
+              const Rect& rect = Rect())
+        : ListBox(items, rect)
     {}
 
     void on_selected(int index)
@@ -88,7 +87,7 @@ public:
         add(img);
         img->scale(scale, scale);
 
-        MyListBox* list1 = new MyListBox(curves_names, Point(w() - 100, 0), Size(100, h()));
+        MyListBox* list1 = new MyListBox(curves_names, Rect(Point(w() - 100, 0), Size(100, h())));
         add(list1);
         list1->select(7);
 
@@ -185,8 +184,8 @@ int main()
     window.load();
 
     Label label1("CPU: 0%",
-                 Point(10, window.size().h - 40),
-                 Size(100, 40));
+                 Rect(Point(10, window.size().h - 40),
+                      Size(100, 40)));
     label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     window.add(&label1);

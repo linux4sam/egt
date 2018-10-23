@@ -22,8 +22,8 @@ namespace mui
     {
     public:
 
-        ValueWidget(const Point& point, const Size& size, T value = T())
-            : Widget(point, size),
+        ValueWidget(const Rect& rect, T value = T())
+            : Widget(rect),
               m_value(value)
         {}
 
@@ -59,7 +59,7 @@ namespace mui
     class Radial : public ValueWidget<float>
     {
     public:
-        Radial(const Point&, const Size& size);
+        Radial(const Rect& rect);
 
         void label(const std::string& label)
         {
@@ -86,9 +86,9 @@ namespace mui
     {
     public:
 
-        ValueRangeWidget(const Point& point, const Size& size, T min, T max,
+        ValueRangeWidget(const Rect& rect, T min, T max,
                          T value = T())
-            : Widget(point, size),
+            : Widget(rect),
               m_min(min),
               m_max(max),
               m_value(value)
@@ -140,7 +140,7 @@ namespace mui
     class ProgressBar : public ValueRangeWidget<int>
     {
     public:
-        ProgressBar(const Point& point = Point(), const Size& size = Size());
+        ProgressBar(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
     };
@@ -151,7 +151,7 @@ namespace mui
     class LevelMeter : public ValueRangeWidget<int>
     {
     public:
-        LevelMeter(const Point& point = Point(), const Size& size = Size());
+        LevelMeter(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
     };
@@ -164,7 +164,7 @@ namespace mui
     class AnalogMeter : public ValueRangeWidget<int>
     {
     public:
-        AnalogMeter(const Point& point = Point(), const Size& size = Size());
+        AnalogMeter(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
 
@@ -175,7 +175,7 @@ namespace mui
     class SpinProgress : public ValueRangeWidget<int>
     {
     public:
-        SpinProgress(const Point& point = Point(), const Size& size = Size());
+        SpinProgress(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
     };
@@ -192,8 +192,7 @@ namespace mui
     class Slider : public Widget
     {
     public:
-        Slider(int min, int max, const Point& point = Point(),
-               const Size& size = Size(),
+        Slider(int min, int max, const Rect& rect = Rect(),
                orientation orient = orientation::HORIZONTAL);
 
         virtual int handle(int event) override;

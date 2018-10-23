@@ -23,8 +23,8 @@ namespace mui
         sprintf(b, "%.02f", v);
     }
 
-    LineChart::LineChart(const Point& point, const Size& size)
-        : Widget(point, size)
+    LineChart::LineChart(const Rect& rect)
+        : Widget(rect)
     {}
 
     void LineChart::draw(Painter& painter, const Rect& rect)
@@ -89,9 +89,8 @@ namespace mui
     }
 #endif
 
-    PieChart::PieChart(const Point& point,
-                       const Size& size)
-        : Widget(point, size)
+    PieChart::PieChart(const Rect& rect)
+        : Widget(rect)
     {}
 
     void PieChart::draw(Painter& painter, const Rect& rect)

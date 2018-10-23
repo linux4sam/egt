@@ -10,28 +10,35 @@ using namespace std;
 namespace mui
 {
 
-    TextBox::TextBox(const std::string& text, const Point& point,
-                     const Size& size)
-        : Widget(point, size),
-          m_text(text)
-    {}
+    TextBox::TextBox(const std::string& text, const Rect& rect)
+        : Widget(rect),
+          m_text(text),
+          m_timer(std::chrono::seconds(1))
+    {
+        m_timer.add_handler(std::bind(&TextBox::cursor_timeout, this));
+    }
+
+
+    void TextBox::focus(bool value)
+    {
+        Widget::focus(value);
+
+        if (value)
+            start_cursor();
+        else
+            stop_cursor();
+    }
 
     int TextBox::handle(int event)
     {
         switch (event)
         {
         case EVT_MOUSE_DOWN:
-            damage();
-            focus(true);
             return 1;
         case EVT_KEY_DOWN:
-            if (focus())
-            {
-                m_text.append(1, (char)key_value());
-                damage();
-                return 1;
-            }
-            break;
+            m_text.append(1, (char)key_value());
+            damage();
+            return 1;
         }
 
         return Widget::handle(event);
@@ -47,11 +54,26 @@ namespace mui
                                palette().color(Palette::TEXTBG));
 
         // text
-        painter.draw_text(m_text, box(),
-                          palette().color(Palette::TEXT),
-                          m_text_align,
-                          5,
-                          m_font);
+        Rect bounding = painter.draw_text(m_text, box(),
+                                          palette().color(Palette::TEXT),
+                                          m_text_align,
+                                          5,
+                                          m_font);
+
+        if (Widget::focus() && m_cursor_state)
+        {
+            auto cr = painter.context();
+
+            cairo_text_extents_t textext;
+            cairo_text_extents(cr.get(), m_text.c_str(), &textext);
+
+            painter.set_color(palette().color(Palette::BORDER));
+            painter.set_line_width(2);
+
+            auto YOFF = 2;
+            painter.line(bounding.top_right() + Point(0, -YOFF), bounding.bottom_right() + Point(0, YOFF));
+            painter.stroke();
+        }
     }
 
     void TextBox::value(const std::string& text)
@@ -81,13 +103,33 @@ namespace mui
         }
     }
 
+    void TextBox::cursor_timeout()
+    {
+        m_cursor_state = !m_cursor_state;
+        damage();
+    }
+
+    void TextBox::start_cursor()
+    {
+        m_cursor_state = true;
+        m_timer.start();
+        damage();
+    }
+
+    void TextBox::stop_cursor()
+    {
+        m_cursor_state = false;
+        m_timer.cancel();
+        damage();
+    }
+
     TextBox::~TextBox()
     {
     }
 
     MultilineTextBox::MultilineTextBox(const std::string& text,
-                                       const Point& point, const Size& size)
-        : TextBox(text, point, size)
+                                       const Rect& rect)
+        : TextBox(text, rect)
     {}
 
     void MultilineTextBox::draw(Painter& painter, const Rect& rect)

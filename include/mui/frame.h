@@ -40,10 +40,10 @@ namespace mui
          * @param[in] point Initial size of the widget.
          * @param[in] flags Widget flags.
          */
-        explicit Frame(const Point& point, const Size& size,
+        explicit Frame(const Rect& rect,
                        widgetmask flags = widgetmask::FRAME);
 
-        explicit Frame(Frame& parent, const Point& point, const Size& size,
+        explicit Frame(Frame& parent, const Rect& rect,
                        widgetmask flags = widgetmask::FRAME);
 
         virtual int handle(int event) override;
@@ -53,11 +53,11 @@ namespace mui
          *
          * The z-order of a widget is based on the order it is added.  First in
          * is bottom.
-        *
+         *
          * @todo Create the idea of layers by moving m_children to a 2d array.
          * Then add a layer index (x-order) here to add widgets to different
          * layers for drawing.
-               */
+         */
         virtual Widget* add(Widget* widget);
 
         /**
@@ -78,17 +78,11 @@ namespace mui
          */
         virtual void remove_all();
 
+        virtual void focus(Widget* widget) override;
+
         virtual bool focus() const override
         {
             return !!m_focus_widget;
-        }
-
-        virtual void focus(Widget* widget) override
-        {
-            if (m_parent)
-                m_parent->focus(widget);
-            else
-                m_focus_widget = widget;
         }
 
         /**

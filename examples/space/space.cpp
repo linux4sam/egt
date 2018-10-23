@@ -146,8 +146,8 @@ int main()
     spawntimer.start();
 
     Label label1("CPU: 0%",
-                 Point(10, win.size().h - 40),
-                 Size(100, 40));
+                 Rect(Point(10, win.size().h - 40),
+                      Size(100, 40)));
     label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win.add(&label1);

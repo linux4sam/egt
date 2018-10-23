@@ -25,8 +25,7 @@ namespace mui
     {
     public:
         explicit Label(const std::string& text = std::string(),
-                       const Point& point = Point(),
-                       const Size& size = Size(),
+                       const Rect& rect = Rect(),
                        alignmask align = alignmask::CENTER,
                        const Font& font = Font(),
                        widgetmask flags = widgetmask::NO_BORDER) noexcept;
@@ -70,8 +69,7 @@ namespace mui
     {
     public:
         CheckBox(const std::string& text = std::string(),
-                 const Point& point = Point(),
-                 const Size& size = Size());
+                 const Rect& rect = Rect());
 
         /**
          * Return the boolean state of the checkbox.
@@ -109,8 +107,7 @@ namespace mui
     class SlidingCheckBox : public CheckBox
     {
     public:
-        SlidingCheckBox(const Point& point = Point(),
-                        const Size& size = Size());
+        SlidingCheckBox(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -125,8 +122,7 @@ namespace mui
     public:
         ImageLabel(const std::string& image,
                    const std::string& text = std::string(),
-                   const Point& point = Point(),
-                   const Size& size = Size(),
+                   const Rect& rect = Rect(),
                    const Font& font = Font());
 
         virtual void draw(Painter& painter, const Rect& rect) override;

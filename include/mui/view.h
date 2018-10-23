@@ -24,8 +24,7 @@ namespace mui
             VERTICAL
         };
 
-        ScrolledView(const Point& point = Point(),
-                     const Size& size = Size());
+        ScrolledView(const Rect& rect = Rect());
 
         virtual int handle(int event) override;
 

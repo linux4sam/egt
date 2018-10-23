@@ -2,18 +2,15 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/imagecache.h>
-#include <mui/ui>
 #include <chrono>
 #include <cmath>
 #include <cstring>
 #include <iostream>
 #include <map>
-#include <math.h>
+#include <mui/ui>
 #include <random>
 #include <sstream>
 #include <string>
-#include <thread>
 #include <vector>
 
 using namespace std;
@@ -67,8 +64,8 @@ public:
         }
 
         m_label = new Label("Objects: 0",
-                            Point(10, 10),
-                            Size(150, 40),
+                            Rect(Point(10, 10),
+                                 Size(150, 40)),
                             alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
@@ -155,7 +152,7 @@ int main()
     MainWindow win;
     win.show();
 
-    vector <ISpriteBase*> sprites;
+    vector<ISpriteBase*> sprites;
 
 #ifdef SPRITE1
     HardwareSprite sprite1("fish.png", 252, 209, 8, 0, 0, 0, 0);
@@ -248,8 +245,8 @@ int main()
 #endif
 
     Label label1("CPU: 0%",
-                 Point(10, win.size().h - 40),
-                 Size(100, 40));
+                 Rect(Point(10, win.size().h - 40),
+                      Size(100, 40)));
     label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win.add(&label1);

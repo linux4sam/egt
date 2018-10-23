@@ -155,8 +155,8 @@ int main()
     timer.start();
 
     Label label1("CPU: -",
-                 Point(10, win.size().h - 40),
-                 Size(100, 40),
+                 Rect(Point(10, win.size().h - 40),
+                      Size(100, 40)),
                  alignmask::LEFT | alignmask::CENTER);
     label1.palette()
     .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)

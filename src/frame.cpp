@@ -13,16 +13,16 @@ namespace mui
 {
     static auto frame_id = 0;
 
-    Frame::Frame(const Point& point, const Size& size, widgetmask flags)
-        : Widget(point, size, flags | widgetmask::FRAME)
+    Frame::Frame(const Rect& rect, widgetmask flags)
+        : Widget(rect, flags | widgetmask::FRAME)
     {
         ostringstream ss;
         ss << "frame" << frame_id++;
         name(ss.str());
     }
 
-    Frame::Frame(Frame& parent, const Point& point, const Size& size, widgetmask flags)
-        : Frame(point, size, flags)
+    Frame::Frame(Frame& parent, const Rect& rect, widgetmask flags)
+        : Frame(rect, flags)
     {
         parent.add(this);
     }
@@ -97,28 +97,43 @@ namespace mui
         m_children.clear();
     }
 
+    void Frame::focus(Widget* widget)
+    {
+        if (m_parent)
+            m_parent->focus(widget);
+        else if (m_focus_widget != widget)
+        {
+            if (widget)
+            {
+                // remove focus from existing focus widget
+                if (m_focus_widget)
+                    m_focus_widget->focus(false);
+
+                DBG(name() << " has new focus widget: " << widget->name());
+            }
+
+            m_focus_widget = widget;
+        }
+    }
+
     int Frame::handle(int event)
     {
         DBG(name() << " handle: " << event);
 
-        // first, give the event to any focus widget
-        if (m_focus_widget)
-        {
-            if (m_focus_widget->handle(event))
-                return 1;
-        }
-
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
         case EVT_MOUSE_UP:
-        case EVT_MOUSE_MOVE:
-        case EVT_BUTTON_DOWN:
-        case EVT_BUTTON_UP:
-        case EVT_MOUSE_DBLCLICK:
-        case EVT_KEY_DOWN:
         case EVT_KEY_UP:
         case EVT_KEY_REPEAT:
+        case EVT_BUTTON_UP:
+            // pair the EVT_MOUSE_UP event with the focus widget
+            if (m_focus_widget)
+                break;
+        case EVT_MOUSE_DOWN:
+        case EVT_MOUSE_MOVE:
+        case EVT_BUTTON_DOWN:
+        case EVT_MOUSE_DBLCLICK:
+        case EVT_KEY_DOWN:
             for (auto& child : detail::reverse_iterate(m_children))
             {
                 if (child->disabled())
@@ -127,11 +142,22 @@ namespace mui
                 Point pos = screen_to_frame(mouse_position());
 
                 if (Rect::point_inside(pos, child->box()))
+                {
                     if (child->handle(event))
+                    {
+                        child->focus(true);
                         return 1;
+                    }
+                }
             }
 
             break;
+        }
+
+        if (m_focus_widget)
+        {
+            if (m_focus_widget->handle(event))
+                return 1;
         }
 
         return Widget::handle(event);

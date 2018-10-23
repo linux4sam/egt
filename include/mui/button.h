@@ -25,8 +25,7 @@ namespace mui
     public:
 
         Button(const std::string& text = std::string(),
-               const Point& point = Point(),
-               const Size& size = Size(),
+               const Rect& rect = Rect(),
                widgetmask flags = widgetmask::NONE) noexcept;
 
         virtual int handle(int event) override;
@@ -44,8 +43,7 @@ namespace mui
     public:
         ImageButton(const std::string& image,
                     const std::string& text = "",
-                    const Point& point = Point(),
-                    const Size& size = Size(),
+                    const Rect& rect = Rect(),
                     widgetmask flags = widgetmask::NONE) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
@@ -65,6 +63,9 @@ namespace mui
         virtual ~ImageButton();
 
     protected:
+
+        void do_set_image(const std::string& image);
+
         shared_cairo_surface_t m_image;
         alignmask m_image_align;
     };
@@ -82,10 +83,9 @@ namespace mui
         {
         public:
 
-            HotSpot(const Point& point = Point(),
-                    const Size& size = Size(),
+            HotSpot(const Rect& rect = Rect(),
                     widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept
-                : Button("", point, size, flags)
+                : Button("", rect, flags)
             {
                 hide();
             }

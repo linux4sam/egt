@@ -28,7 +28,7 @@ public:
              int x = 0,
              int y = 0,
              widgetmask flags = widgetmask::NONE)
-        : ImageButton(filename, label, Point(x, y), Size(), flags)
+        : ImageButton(filename, label, Rect(Point(x, y), Size()), flags)
     {
         set_image_align(alignmask::CENTER | alignmask::TOP);
         set_label_align(alignmask::CENTER | alignmask::BOTTOM);
@@ -102,8 +102,8 @@ public:
 class Box : public Widget
 {
 public:
-    Box(const Point& point, const Size& size, const Color& color)
-        : Widget(point, size),
+    Box(const Rect& rect, const Color& color)
+        : Widget(rect),
           m_color(color)
 
     {}
@@ -149,13 +149,13 @@ static void top_menu(Window* win)
     plane.add(&i2);
 #endif
 
-    Box* box1 = new Box(Point(), Size(800, 60), Color::BLACK);
+    Box* box1 = new Box(Rect(Size(800, 60)), Color::BLACK);
     win->add(box1);
 
     HomeImage* i1 = new HomeImage("home.png", 5, 5);
     win->add(i1);
 
-    Label* l1 = new Label("", Point(320, 0), Size(100, 60), alignmask::CENTER, Font(32));
+    Label* l1 = new Label("", Rect(Point(320, 0), Size(100, 60)), alignmask::CENTER, Font(32));
     l1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l1);
@@ -185,7 +185,7 @@ static void top_menu(Window* win)
 
     timer->start();
 
-    Label* l2 = new Label("48°", Point(420, 0), Size(100, 60), alignmask::CENTER, Font(24));
+    Label* l2 = new Label("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::CENTER, Font(24));
     l2->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l2);
@@ -196,10 +196,10 @@ static void top_menu(Window* win)
 
 static void bottom_menu(Window* win)
 {
-    Box* box2 = new Box(Point(0, 390), Size(800, 90), Color::LIGHTGRAY);
+    Box* box2 = new Box(Rect(Point(0, 390), Size(800, 90)), Color::LIGHTGRAY);
     win->add(box2);
 
-    StaticGrid* grid2 = new StaticGrid(Point(0, 390), Size(800, 90), 5, 1, 0);
+    StaticGrid* grid2 = new StaticGrid(Rect(Point(0, 390), Size(800, 90)), 5, 1, 0);
     win->add(grid2);
 
     MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0, widgetmask::NO_BORDER);
@@ -225,7 +225,7 @@ class MainWindow : public Window
 public:
     MainWindow(const Size& size)
         : Window(size),
-          grid(Point(0, 60), Size(800, 330), 4, 2, 10)
+          grid(Rect(Point(0, 60), Size(800, 330)), 4, 2, 10)
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 
@@ -269,7 +269,7 @@ public:
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 
-        Label* label = new Label(_("Blank Screen"), Point(0, 60), Size(800, 330));
+        Label* label = new Label(_("Blank Screen"), Rect(Point(0, 60), Size(800, 330)));
         add(label);
 
         top_menu(this);

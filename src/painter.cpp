@@ -172,7 +172,7 @@ namespace mui
         return *this;
     }
 
-    Painter& Painter::draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff)
+    Rect Painter::draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff)
     {
         cairo_text_extents_t textext;
         cairo_text_extents(m_cr.get(), str.c_str(), &textext);
@@ -187,7 +187,21 @@ namespace mui
         cairo_show_text(m_cr.get(), str.c_str());
         cairo_stroke(m_cr.get());
 
-        return *this;
+        Rect bounding = target;
+        bounding.h = textext.height;
+        bounding.w = textext.width;
+        return bounding;
+    }
+
+    Rect Painter::draw_text(const std::string& text, const Rect& rect,
+                            const Color& color, alignmask align, int margin,
+                            const Font& font)
+    {
+        AutoSaveRestore sr(*this);
+
+        set_font(font);
+        set_color(color);
+        return draw_text(rect, text, align, margin);
     }
 
     Painter& Painter::clip()
@@ -293,19 +307,6 @@ namespace mui
                               border.alphaf());
         cairo_set_line_width(m_cr.get(), 1.0);
         cairo_stroke(m_cr.get());
-
-        return *this;
-    }
-
-    Painter& Painter::draw_text(const std::string& text, const Rect& rect,
-                                const Color& color, alignmask align, int margin,
-                                const Font& font)
-    {
-        AutoSaveRestore sr(*this);
-
-        set_font(font);
-        set_color(color);
-        draw_text(rect, text, align, margin);
 
         return *this;
     }

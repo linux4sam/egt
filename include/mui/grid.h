@@ -26,7 +26,7 @@ namespace mui
     class StaticGrid : public Frame
     {
     public:
-        StaticGrid(const Point& point = Point(), const Size& size = Size(),
+        StaticGrid(const Rect& rect = Rect(),
                    int columns = 1, int rows = 1, int border = 0);
 
         virtual void move(const Point& point) override
@@ -91,9 +91,9 @@ namespace mui
     {
     public:
 
-        HorizontalPositioner(const Point& point, const Size& size,
+        HorizontalPositioner(const Rect& rect,
                              int border = 0, alignmask align = alignmask::CENTER)
-            : Frame(point, size, widgetmask::NO_BACKGROUND),
+            : Frame(rect, widgetmask::NO_BACKGROUND),
               m_border(border),
               m_align(align)
         {}

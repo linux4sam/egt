@@ -11,9 +11,9 @@ using namespace std;
 namespace mui
 {
 
-    Label::Label(const std::string& text, const Point& point, const Size& size,
+    Label::Label(const std::string& text, const Rect& rect,
                  alignmask align, const Font& font, widgetmask flags) noexcept
-        : Widget(point, size, flags),
+        : Widget(rect, flags),
           m_text_align(align),
           m_text(text),
           m_font(font)
@@ -51,9 +51,8 @@ namespace mui
     {}
 
     CheckBox::CheckBox(const std::string& text,
-                       const Point& point,
-                       const Size& size)
-        : Label(text, point, size),
+                       const Rect& rect)
+        : Label(text, rect),
           m_checked(false)
     {}
 
@@ -118,9 +117,8 @@ namespace mui
     CheckBox::~CheckBox()
     {}
 
-    SlidingCheckBox::SlidingCheckBox(const Point& point,
-                                     const Size& size)
-        : CheckBox("", point, size)
+    SlidingCheckBox::SlidingCheckBox(const Rect& rect)
+        : CheckBox("", rect)
     {}
 
     void SlidingCheckBox::draw(Painter& painter, const Rect& rect)
@@ -152,10 +150,9 @@ namespace mui
 
     ImageLabel::ImageLabel(const std::string& image,
                            const std::string& text,
-                           const Point& point,
-                           const Size& size,
+                           const Rect& rect,
                            const Font& font)
-        : Label(text, point, size, alignmask::LEFT | alignmask::CENTER, font),
+        : Label(text, rect, alignmask::LEFT | alignmask::CENTER, font),
           m_image(image_cache.get(image, 1.0))
     {
         assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);

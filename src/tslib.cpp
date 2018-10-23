@@ -74,11 +74,17 @@ namespace mui
                 (t1.tv_usec - t2.tv_usec)) / 1000ULL;
     }
 
+    static bool delta(const Point& lhs, const Point& rhs, int d)
+    {
+        return (std::abs(lhs.x - rhs.x) >= d ||
+                std::abs(lhs.y - rhs.y) >= d);
+    }
+
     void InputTslib::handle_read(const asio::error_code& error)
     {
         if (error)
         {
-            cout << error << endl;
+            ERR(error);
             return;
         }
 
@@ -131,8 +137,12 @@ namespace mui
                     }
                     else
                     {
-                        mouse_position() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
-                        move = true;
+                        Point point(samp_mt[j][i].x, samp_mt[j][i].y);
+                        if (delta(mouse_position(), point, 5))
+                        {
+                            mouse_position() = point;
+                            move = true;
+                        }
                     }
                 }
                 else
@@ -162,10 +172,6 @@ namespace mui
         if (move)
         {
             DBG("mouse move " << mouse_position());
-            //cout << "post" << endl;
-            //asio::post(main_app().event().io(),
-            //  std::bind(InputTslib::dispatch, EVT_MOUSE_MOVE)
-            //  );
             dispatch(EVT_MOUSE_MOVE);
         }
 

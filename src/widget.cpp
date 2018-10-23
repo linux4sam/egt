@@ -56,8 +56,8 @@ namespace mui
 
     static auto widget_id = 0;
 
-    Widget::Widget(const Point& point, const Size& size, widgetmask flags) noexcept
-        : m_box(point, size),
+    Widget::Widget(const Rect& rect, widgetmask flags) noexcept
+        : m_box(rect),
           m_flags(flags)
     {
         ostringstream ss;
@@ -65,8 +65,8 @@ namespace mui
         name(ss.str());
     }
 
-    Widget::Widget(Frame& parent, const Point& point, const Size& size, widgetmask flags) noexcept
-        : Widget(point, size, flags)
+    Widget::Widget(Frame& parent, const Rect& rect, widgetmask flags) noexcept
+        : Widget(rect, flags)
     {
         parent.add(this);
     }
@@ -75,7 +75,6 @@ namespace mui
     {
         ignoreparam(event);
 
-        // eat the event if we are in focus
         if (focus())
             return 1;
 
@@ -185,8 +184,8 @@ namespace mui
     namespace experimental
     {
 
-        Combo::Combo(const string& label, const Point& point, const Size& size)
-            : Widget(point, size),
+        Combo::Combo(const string& label, const Rect& rect)
+            : Widget(rect),
               m_label(label)
         {
 
@@ -303,8 +302,8 @@ namespace mui
 
     namespace experimental
     {
-        ScrollWheel::ScrollWheel(const Point& point, const Size& size)
-            : Widget(point, size)
+        ScrollWheel::ScrollWheel(const Rect& rect)
+            : Widget(rect)
         {}
 
         int ScrollWheel::handle(int event)

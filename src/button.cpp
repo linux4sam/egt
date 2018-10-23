@@ -12,11 +12,11 @@ namespace mui
 {
     static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
-    Button::Button(const string& text, const Point& point, const Size& size,
+    Button::Button(const string& text, const Rect& rect,
                    widgetmask flags) noexcept
-        : Label(text, point, size, alignmask::CENTER, Font(), flags)
+        : Label(text, rect, alignmask::CENTER, Font(), flags)
     {
-        if (size.empty())
+        if (rect.size().empty())
         {
             /** @todo Smarter if we look at size of text and grow from default size. */
             resize(DEFAULT_BUTTON_SIZE);
@@ -30,12 +30,10 @@ namespace mui
         switch (event)
         {
         case EVT_MOUSE_DOWN:
-            focus(true);
             active(true);
             invoke_handlers(event);
             return 1;
         case EVT_MOUSE_UP:
-            focus(false);
             active(false);
             invoke_handlers(event);
             return 1;
@@ -66,29 +64,31 @@ namespace mui
 
     ImageButton::ImageButton(const string& image,
                              const string& text,
-                             const Point& point,
-                             const Size& size,
+                             const Rect& rect,
                              widgetmask flags) noexcept
-        : Button(text, point, size, flags),
+        : Button(text, rect, flags),
           m_image_align(alignmask::CENTER)
     {
         set_label_align(alignmask::CENTER | alignmask::BOTTOM);
 
         if (!image.empty())
-            set_image(image);
+            do_set_image(image);
     }
 
-    void ImageButton::set_image(const std::string& image)
+    void ImageButton::do_set_image(const std::string& image)
     {
         m_image = image_cache.get(image, 1.0);
 
-        //if (box().size().empty())
-        //{
         auto width = cairo_image_surface_get_width(m_image.get());
         auto height = cairo_image_surface_get_height(m_image.get());
         m_box.w = width;
         m_box.h = height;
-        //}
+    }
+
+    void ImageButton::set_image(const std::string& image)
+    {
+        do_set_image(image);
+        damage();
     }
 
     void ImageButton::draw(Painter& painter, const Rect& rect)
@@ -106,6 +106,5 @@ namespace mui
     }
 
     ImageButton::~ImageButton()
-    {
-    }
+    {}
 }

@@ -17,9 +17,9 @@ public:
     static constexpr int ROWS = 2;
 
     GameWindow()
-        : m_grid1(Point(0, 30), Size(KMSScreen::instance()->size().w, 80),
+        : m_grid1(Rect(Point(0, 30), Size(KMSScreen::instance()->size().w, 80)),
                   KMSScreen::instance()->size().w / 100, ROWS, 5),
-          m_grid2(Point(0, 30 + 80 + 30), Size(KMSScreen::instance()->size().w, 80),
+          m_grid2(Rect(Point(0, 30 + 80 + 30), Size(KMSScreen::instance()->size().w, 80)),
                   KMSScreen::instance()->size().w / 100, ROWS, 5),
           m_ball("small_ball.png"),
           m_paddle("paddle.png"),
@@ -69,8 +69,8 @@ public:
         m_ball.scale(hscale, vscale);
 
         m_label = new Label("-",
-                            Point(5, 2),
-                            Size(100, 40),
+                            Rect(Point(5, 2),
+                                 Size(100, 40)),
                             alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);

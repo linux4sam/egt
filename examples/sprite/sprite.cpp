@@ -19,7 +19,7 @@ int main()
     Window win;
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
 
-    StaticGrid grid(Point(0, 0), Size(win.w(), win.h()), 2, 2, 10);
+    StaticGrid grid(Rect(Size(win.w(), win.h())), 2, 2, 10);
 
     HardwareSprite sprite1("walk.png", 75, 132, 8, 0, 0,
                            Point(main_screen()->size().w / 2 - 75,

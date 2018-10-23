@@ -26,8 +26,7 @@ namespace mui
         using item_array = std::vector<std::string>;
 
         ListBox(const item_array& items,
-                const Point& point = Point(),
-                const Size& size = Size());
+                const Rect& rect = Rect());
 
         /**
          * Set the font of the items.

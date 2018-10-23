@@ -2,12 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/ui"
 #include <iostream>
+#include <mui/ui>
+#include <planes/plane.h>
 #include <random>
 #include <sstream>
 #include <vector>
-#include "planes/plane.h"
 
 using namespace std;
 using namespace mui;
@@ -54,8 +54,8 @@ public:
           m_speed(speed),
           m_x(0),
           e1(r()),
-          m_grid1(Point(0, 0), Size(200, 200), 4, 4, 0),
-          m_grid2(Point(0, 0), Size(132, 130), 3, 10, 0)
+          m_grid1(Rect(Point(0, 0), Size(200, 200)), 4, 4, 0),
+          m_grid2(Rect(Point(0, 0), Size(132, 130)), 3, 10, 0)
     {
         add(&m_grid1);
         add(&m_grid2);
@@ -323,15 +323,15 @@ public:
         m_mouse->show();
 
         m_label = new Label("",
-                            Point(5, 2),
-                            Size(100, 40),
+                            Rect(Point(5, 2),
+                                 Size(100, 40)),
                             alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
         add(m_label);
 
         m_go = new Label("GAME OVER",
-                         Point(0, 0),
-                         Size(800, 480),
+                         Rect(Point(0, 0),
+                              Size(800, 480)),
                          alignmask::CENTER | alignmask::TOP,
                          Font(32));
         m_go->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::RED);

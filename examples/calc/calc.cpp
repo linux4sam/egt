@@ -15,16 +15,16 @@ int main()
     Application app;
     Window win;
 
-    StaticGrid topgrid(Point(), Size(), 1, 2);
+    StaticGrid topgrid(Rect(), 1, 2);
     win.add(&topgrid);
     topgrid.align(alignmask::EXPAND);
 
-    MultilineTextBox text("", Point(), Size());
+    MultilineTextBox text("");
     topgrid.add(&text, 0, 0, alignmask::EXPAND);
     text.text_align(alignmask::CENTER | alignmask::RIGHT);
     text.font(Font(25));
 
-    StaticGrid buttongrid(Point(), Size(), 4, 5, 5);
+    StaticGrid buttongrid(Rect(), 4, 5, 5);
     topgrid.add(&buttongrid, 0, 1, alignmask::EXPAND);
     buttongrid.align(alignmask::EXPAND);
 
@@ -47,7 +47,7 @@ int main()
 
             Button* b;
 
-            b = new Button(label, Point(), Size(50, 50));
+            b = new Button(label, Rect(Size(50, 50)));
             b->font(Font(30, Font::WEIGHT_BOLD));
 
             b->add_handler([&text, b](EventWidget * widget, int event)

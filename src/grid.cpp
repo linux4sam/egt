@@ -10,9 +10,9 @@ using namespace std;
 
 namespace mui
 {
-    StaticGrid::StaticGrid(const Point& point, const Size& size, int columns,
+    StaticGrid::StaticGrid(const Rect& rect, int columns,
                            int rows, int border)
-        : Frame(point, size, widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER),
+        : Frame(rect, widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER),
           m_columns(columns),
           m_rows(rows),
           m_border(border)

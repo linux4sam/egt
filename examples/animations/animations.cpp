@@ -16,7 +16,7 @@ int main()
     Application app;
     Window win;
 
-    StaticGrid grid(Point(), win.size(), 3, 2, 5);
+    StaticGrid grid(Rect(win.size()), 3, 2, 5);
     grid.flag_clear(widgetmask::NO_BORDER);
     win.add(&grid);
 

@@ -241,12 +241,10 @@ namespace mui
          * @param[in] point Initial size of the widget.
          * @param[in] flags Widget flags.
          */
-        Widget(const Point& point = Point(),
-               const Size& size = Size(),
+        Widget(const Rect& rect = Rect(),
                widgetmask flags = widgetmask::NONE) noexcept;
 
-        Widget(Frame& parent, const Point& point = Point(),
-               const Size& size = Size(),
+        Widget(Frame& parent, const Rect& rect = Rect(),
                widgetmask flags = widgetmask::NONE) noexcept;
 
         /**
@@ -633,8 +631,7 @@ namespace mui
         {
         public:
             Combo(const std::string& label = std::string(),
-                  const Point& point = Point(),
-                  const Size& size = Size());
+                  const Rect& rect = Rect());
 
             virtual int handle(int event);
 
@@ -649,7 +646,7 @@ namespace mui
         class ScrollWheel : public Widget
         {
         public:
-            ScrollWheel(const Point& point = Point(), const Size& size = Size());
+            ScrollWheel(const Rect& rect = Rect());
 
             virtual int handle(int event);
 
@@ -677,9 +674,9 @@ namespace mui
         protected:
             std::vector<std::string> m_values;
 
-            int m_pos {0};
-            int m_moving_x {0};
-            int m_start_pos {0};
+            int m_pos{0};
+            int m_moving_x{0};
+            int m_start_pos{0};
         };
 
     }

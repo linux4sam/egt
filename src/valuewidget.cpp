@@ -10,8 +10,8 @@ using namespace std;
 namespace mui
 {
 
-    Radial::Radial(const Point& point, const Size& size)
-        : ValueWidget<float>(point, size, -1.0)
+    Radial::Radial(const Rect& rect)
+        : ValueWidget<float>(rect, -1.0)
     {}
 
     static int norm(float angle)
@@ -115,8 +115,8 @@ namespace mui
         cairo_restore(cr.get());
     }
 
-    ProgressBar::ProgressBar(const Point& point, const Size& size)
-        : ValueRangeWidget<int>(point, size, 0, 100, 0)
+    ProgressBar::ProgressBar(const Rect& rect)
+        : ValueRangeWidget<int>(rect, 0, 100, 0)
     {
     }
 
@@ -155,8 +155,8 @@ namespace mui
         cairo_restore(cr.get());
     }
 
-    LevelMeter::LevelMeter(const Point& point, const Size& size)
-        : ValueRangeWidget<int>(point, size, 0, 100, 0)
+    LevelMeter::LevelMeter(const Rect& rect)
+        : ValueRangeWidget<int>(rect, 0, 100, 0)
     {
     }
 
@@ -185,8 +185,8 @@ namespace mui
         cairo_restore(cr.get());
     }
 
-    AnalogMeter::AnalogMeter(const Point& point, const Size& size)
-        : ValueRangeWidget<int>(point, size, 0, 100, 0)
+    AnalogMeter::AnalogMeter(const Rect& rect)
+        : ValueRangeWidget<int>(rect, 0, 100, 0)
     {
     }
 
@@ -257,8 +257,8 @@ namespace mui
         cairo_restore(cr.get());
     }
 
-    SpinProgress::SpinProgress(const Point& point, const Size& size)
-        : ValueRangeWidget<int>(point, size, 0, 100, 0)
+    SpinProgress::SpinProgress(const Rect& rect)
+        : ValueRangeWidget<int>(rect, 0, 100, 0)
     {
     }
 
@@ -295,9 +295,8 @@ namespace mui
         cairo_restore(cr.get());
     }
 
-    Slider::Slider(int min, int max, const Point& point,
-                   const Size& size, orientation orient)
-        : Widget(point, size),
+    Slider::Slider(int min, int max, const Rect& rect, orientation orient)
+        : Widget(rect),
           m_min(min),
           m_max(max),
           m_pos(min),

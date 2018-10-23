@@ -50,6 +50,7 @@ int main()
     std::vector<std::string> files = glob(SHARED_PATH "*.png");
 
     Window win;
+    win.name("win");
     win.flag_set(widgetmask::NO_BORDER);
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
@@ -57,12 +58,13 @@ int main()
     win.add(&logo);
     logo.align(alignmask::LEFT | alignmask::TOP, 10);
 
-    ScrolledView view(Point(0, logo.h()), Size(win.size().w, win.size().h - logo.h()));
-    view.flag_set(widgetmask::NO_BACKGROUND);
+    ScrolledView view(Rect(0, logo.h(), win.size().w, win.size().h - logo.h()));
+    view.name("view");
     win.add(&view);
 
     /** @todo This is not respective parent coordinate for origin point. */
-    StaticGrid grid(Point(0, logo.h()), Size(files.size() / 2 * 150, view.h()), files.size() / 2, 2, 10);
+    StaticGrid grid(Rect(0, logo.h(), files.size() / 2 * 150, view.h()), files.size() / 2, 2, 10);
+    grid.name("grid");
     view.add(&grid);
 
     int column = 0;
@@ -85,16 +87,16 @@ int main()
     }
 
     Popup<Window> popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
-    win.add(&popup);
+    popup.name("popup");
 
-    ImageButton settings(SHARED_PATH "settings.png", "", Point(), Size(), widgetmask::NO_BORDER);
+    ImageButton settings(SHARED_PATH "settings.png", "", Rect(), widgetmask::NO_BORDER);
     win.add(&settings);
     settings.align(alignmask::RIGHT | alignmask::TOP, 10);
     settings.add_handler([&popup](EventWidget * widget, int event)
     {
         ignoreparam(widget);
 
-        if (event == EVT_MOUSE_DOWN)
+        if (event == EVT_MOUSE_UP)
         {
             if (popup.visible())
                 popup.hide();
@@ -102,6 +104,8 @@ int main()
                 popup.show(true);
         }
     });
+
+    win.add(&popup);
 
     win.show();
 

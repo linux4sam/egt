@@ -7,19 +7,18 @@
 
 namespace mui
 {
+    static auto ITEM_HEIGHT = 40;
 
     ListBox::ListBox(const item_array& items,
-                     const Point& point,
-                     const Size& size)
-        : Widget(point, size),
+                     const Rect& rect)
+        : Widget(rect),
           m_items(items)
     {}
 
     Rect ListBox::item_rect(uint32_t index) const
     {
-        int height = 40;
-        Rect r(box().x, box().y, box().w, height);
-        r.y += (height * index);
+        Rect r(box().x, box().y, box().w, ITEM_HEIGHT);
+        r.y += (r.h * index);
         return r;
     }
 
@@ -55,7 +54,7 @@ namespace mui
     {
         ignoreparam(rect);
 
-        painter.draw_basic_box(Rect(x(), y(), w(), 40 * m_items.size()),
+        painter.draw_basic_box(Rect(x(), y(), w(), ITEM_HEIGHT * m_items.size()),
                                palette().color(Palette::BORDER),
                                palette().color(Palette::BG));
 

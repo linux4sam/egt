@@ -89,8 +89,8 @@ namespace mui
             return std::hypot(T(point.x - x), T(point.y - y));
         }
 
-        dim_t x {0};
-        dim_t y {0};
+        dim_t x{0};
+        dim_t y{0};
     };
 
     inline bool operator==(const Point& lhs, const Point& rhs)
@@ -165,8 +165,8 @@ namespace mui
             return *this;
         }
 
-        dim_t h {0};
-        dim_t w {0};
+        dim_t h{0};
+        dim_t w{0};
     };
 
     inline bool operator==(const Size& lhs, const Size& rhs)
@@ -209,10 +209,25 @@ namespace mui
         Rect() noexcept
         {}
 
+        /**
+         * Construct a rectangle with an explicit point and size.
+         */
         explicit Rect(const Point& point, const Size& size) noexcept
             : x(point.x),
               y(point.y),
               w(size.w),
+              h(size.h)
+        {
+            assert(w >= 0);
+            assert(h >= 0);
+        }
+
+        /**
+         * Construct a rectangle with the specified size and the point being at
+         * the default origin 0,0.
+         */
+        explicit Rect(const Size& size) noexcept
+            : w(size.w),
               h(size.h)
         {
             assert(w >= 0);
@@ -331,6 +346,26 @@ namespace mui
             return x + w;
         }
 
+        inline Point top_left() const
+        {
+            return Point(left(), top());
+        }
+
+        inline Point top_right() const
+        {
+            return Point(right(), top());
+        }
+
+        inline Point bottom_left() const
+        {
+            return Point(left(), bottom());
+        }
+
+        inline Point bottom_right() const
+        {
+            return Point(right(), bottom());
+        }
+
         /**
          * Clear the rectangle by giving it no with or height.
          */
@@ -407,10 +442,10 @@ namespace mui
             return Rect(x, y, w, h);
         }
 
-        dim_t x {0};
-        dim_t y {0};
-        dim_t w {0};
-        dim_t h {0};
+        dim_t x{0};
+        dim_t y{0};
+        dim_t w{0};
+        dim_t h{0};
     };
 
     std::ostream& operator<<(std::ostream& os, const Rect& rect);

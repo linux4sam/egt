@@ -24,7 +24,7 @@ namespace mui
     }
 
     Window::Window(const Size& size, widgetmask flags)
-        : Frame(Point(), size, flags | widgetmask::WINDOW)
+        : Frame(Rect(size), flags | widgetmask::WINDOW)
     {
         DBG("new window " << size);
         windows().push_back(this);

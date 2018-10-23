@@ -129,7 +129,7 @@ namespace mui
         /**
          * Draw text aligned inside the specified rectangle.
          */
-        Painter& draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff = 5);
+        Rect draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff = 5);
 
         /**
          * @todo Special functions that do a lot, mostly implementing widget
@@ -137,12 +137,12 @@ namespace mui
          * class.
          *@{
          */
-        Painter& draw_text(const std::string& text,
-                           const Rect& rect,
-                           const Color& color = Color::BLACK,
-                           alignmask align = alignmask::CENTER,
-                           int margin = 5,
-                           const Font& font = Font());
+        Rect draw_text(const std::string& text,
+                       const Rect& rect,
+                       const Color& color = Color::BLACK,
+                       alignmask align = alignmask::CENTER,
+                       int margin = 5,
+                       const Font& font = Font());
 
         Painter& draw_image(shared_cairo_surface_t image,
                             const Rect& dest,

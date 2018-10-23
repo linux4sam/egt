@@ -23,7 +23,7 @@ class Keyboard : public T
 public:
     Keyboard()
         : T(Size(800, 200)),
-          m_grid(Point(0, 0), Size(), 10, 4, 5)
+          m_grid(Rect(), 10, 4, 5)
     {
         this->add(&m_grid);
         this->m_grid.align(alignmask::EXPAND);
@@ -74,26 +74,26 @@ int main()
 
     Window win(Size(800, 480));
 
-    Label label1("left align", Point(100, 50), Size(200, 40),
+    Label label1("left align", Rect(Point(100, 50), Size(200, 40)),
                  alignmask::LEFT | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label1);
 
-    Label label2("right align", Point(100, 100), Size(200, 40),
+    Label label2("right align", Rect(Point(100, 100), Size(200, 40)),
                  alignmask::RIGHT | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label2);
 
-    Label label3("top align", Point(100, 150), Size(200, 40),
+    Label label3("top align", Rect(Point(100, 150), Size(200, 40)),
                  alignmask::TOP | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label3);
 
-    Label label4("bottom align", Point(100, 200), Size(200, 40),
+    Label label4("bottom align", Rect(Point(100, 200), Size(200, 40)),
                  alignmask::BOTTOM | alignmask::CENTER, Font(), widgetmask::NONE);
     win.add(&label4);
 
     Popup<Window> popup(Size(100, 100));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
 
-    Button btn1("button 1", Point(100, 250), Size(100, 40));
+    Button btn1("button 1", Rect(Point(100, 250), Size(100, 40)));
     win.add(&btn1);
 
     btn1.add_handler([&popup](EventWidget * widget, int event)
@@ -109,7 +109,7 @@ int main()
         }
     });
 
-    Button btn2("button 2", Point(200, 250), Size(100, 40));
+    Button btn2("button 2", Rect(Point(200, 250), Size(100, 40)));
     win.add(&btn2);
 
     Keyboard<Window> keyboard;
@@ -126,48 +126,48 @@ int main()
         }
     });
 
-    Slider slider1(0, 100, Point(100, 300), Size(200, 40));
+    Slider slider1(0, 100, Rect(Point(100, 300), Size(200, 40)));
     win.add(&slider1);
 
-    Slider slider2(0, 100, Point(10, 200), Size(40, 200), orientation::VERTICAL);
+    Slider slider2(0, 100, Rect(Point(10, 200), Size(40, 200)), orientation::VERTICAL);
     win.add(&slider2);
 
 #ifdef DEVELOPMENT
-    Combo combo1("combo 1", Point(100, 350), Size(200, 40));
+    Combo combo1("combo 1", Rect(Point(100, 350), Size(200, 40)));
     win.add(&combo1);
 #endif
 
-    SlidingCheckBox sliding1(Point(100, 350), Size(200, 40));
+    SlidingCheckBox sliding1(Rect(Point(100, 350), Size(200, 40)));
     win.add(&sliding1);
 
-    TextBox text1("text 1", Point(100, 400), Size(200, 40));
+    TextBox text1("text 1", Rect(Point(100, 400), Size(200, 40)));
     win.add(&text1);
 
     vector<string> items = { "item 1", "item 2", "item3" };
-    ListBox list1(items, Point(350, 50), Size(200, 200));
+    ListBox list1(items, Rect(Point(350, 50), Size(200, 200)));
     win.add(&list1);
     list1.select(1);
 
     ImageLabel imagelabel1("icons/bug.png",
                            "Bug",
-                           Point(350, 250),
-                           Size(200, 40));
+                           Rect(Point(350, 250),
+                                Size(200, 40)));
     win.add(&imagelabel1);
 
     ImageLabel imagelabel2("icons/phone.png",
                            "Phone",
-                           Point(350, 300),
-                           Size(200, 40));
+                           Rect(Point(350, 300),
+                                Size(200, 40)));
     win.add(&imagelabel2);
 
-    CheckBox checkbox1("checkbox 1", Point(350, 350), Size(200, 40));
+    CheckBox checkbox1("checkbox 1", Rect(Point(350, 350), Size(200, 40)));
     win.add(&checkbox1);
     checkbox1.check(true);
 
-    CheckBox checkbox2("checkbox 2", Point(350, 400), Size(200, 40));
+    CheckBox checkbox2("checkbox 2", Rect(Point(350, 400), Size(200, 40)));
     win.add(&checkbox2);
 
-    PieChart pie1(Point(600, 50), Size(200, 200));
+    PieChart pie1(Rect(Point(600, 50), Size(200, 200)));
     win.add(&pie1);
 
     std::map<std::string, float> data;
@@ -177,10 +177,10 @@ int main()
     data.insert(make_pair("motorcycle", .10));
     pie1.data(data);
 
-    LevelMeter lp1(Point(600, 250), Size(50, 100));
+    LevelMeter lp1(Rect(Point(600, 250), Size(50, 100)));
     win.add(&lp1);
 
-    AnalogMeter am1(Point(600, 280), Size(180, 180));
+    AnalogMeter am1(Rect(Point(600, 280), Size(180, 180)));
     win.add(&am1);
 
     CPUMonitorUsage tools;

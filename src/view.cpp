@@ -10,11 +10,9 @@ using namespace std;
 namespace mui
 {
 
-    ScrolledView::ScrolledView(const Point& point,
-                               const Size& size)
-        : Frame(point, size)
-    {
-    }
+    ScrolledView::ScrolledView(const Rect& rect)
+        : Frame(rect, widgetmask::NO_BACKGROUND)
+    {}
 
     int ScrolledView::handle(int event)
     {
@@ -25,38 +23,31 @@ namespace mui
         switch (event)
         {
         case EVT_MOUSE_DOWN:
-            Widget::focus(true);
             m_moving = true;
             m_start_pos = mouse_position();
             m_start_offset = m_offset;
             return 1;
         case EVT_MOUSE_UP:
             m_moving = false;
-#if 0
-            // if the mouse has not really moved, then it was a select call
-            if (m_orientation == Orientation::HORIZONTAL)
-            {
-                if (std::abs(m_start_pos.x - mouse_position().x) < 20)
-                {
-                }
-            }
-#endif
-            Widget::focus(false);
             return 1;
         case EVT_MOUSE_MOVE:
             if (m_moving)
             {
                 if (m_orientation == Orientation::HORIZONTAL)
                 {
-                    position(m_start_offset + screen_to_frame(mouse_position()).x - m_start_pos.x);
+                    auto diff = screen_to_frame(mouse_position()).x - m_start_pos.x;
+                    position(m_start_offset + diff / 2);
                 }
                 else
                 {
-                    position(m_start_offset + screen_to_frame(mouse_position()).y - m_start_pos.y);
+                    auto diff = screen_to_frame(mouse_position()).y - m_start_pos.y;
+                    position(m_start_offset + diff / 2);
                 }
             }
             break;
         }
+
+        return ret;
     }
 
     void ScrolledView::draw(Painter& painter, const Rect& rect)

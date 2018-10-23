@@ -86,7 +86,7 @@ namespace mui
     SoftwareSprite::SoftwareSprite(const std::string& filename, int framew, int frameh,
                                    int framecount, int framex, int framey,
                                    const Point& point)
-        : Widget(point, Size(framew, frameh)),
+        : Widget(Rect(point, Size(framew, frameh))),
           ISpriteBase(filename, framew, frameh, framecount, framex, framey)
     {
         m_box = Rect(point.x, point.y, framew, frameh);

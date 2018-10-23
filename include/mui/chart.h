@@ -38,8 +38,7 @@ namespace mui
             }
         };
 
-        LineChart(const Point& point = Point(),
-                  const Size& size = Size());
+        LineChart(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -67,8 +66,7 @@ namespace mui
     class PieChart : public Widget
     {
     public:
-        PieChart(const Point& point = Point(),
-                 const Size& size = Size());
+        PieChart(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

@@ -18,7 +18,7 @@ public:
     MainWindow()
         : m_down(false),
           m_color(Color::RED),
-          m_grid(Point(), Size(100, 300), 1, 4, 5),
+          m_grid(Rect(Size(100, 300)), 1, 4, 5),
           m_red("Red"),
           m_blue("Blue"),
           m_green("Green"),

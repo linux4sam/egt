@@ -11,6 +11,7 @@
  */
 
 #include <mui/widget.h>
+#include <mui/timer.h>
 #include <string>
 
 namespace mui
@@ -25,12 +26,13 @@ namespace mui
     {
     public:
         TextBox(const std::string& text = std::string(),
-                const Point& point = Point(),
-                const Size& size = Size());
+                const Rect& rect = Rect());
 
         virtual int handle(int event) override;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
+
+        virtual void focus(bool value);
 
         /**
          * Set the text value.
@@ -65,9 +67,17 @@ namespace mui
         virtual ~TextBox();
 
     protected:
+        void start_cursor();
+        void stop_cursor();
+
         std::string m_text;
         alignmask m_text_align {alignmask::CENTER | alignmask::LEFT};
         Font m_font;
+        PeriodicTimer m_timer;
+
+    private:
+        void cursor_timeout();
+        bool m_cursor_state{false};
     };
 
     /**
@@ -79,8 +89,7 @@ namespace mui
     {
     public:
         MultilineTextBox(const std::string& text = std::string(),
-                         const Point& point = Point(),
-                         const Size& size = Size());
+                         const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

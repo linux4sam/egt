@@ -145,8 +145,7 @@ public:
                       widgetmask::WINDOW_DEFAULT, DRM_FORMAT_ARGB8888)
     {
         m_label = new Label("FPS: 0",
-                            Point(0, 0),
-                            Size(100, 50),
+                            Rect(Size(100, 50)),
                             alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
         add(m_label);
@@ -209,11 +208,11 @@ int main(int argc, const char** argv)
     set_control_window(&ctrlwindow);
 #endif
 
-    HorizontalPositioner grid(Point(0, 0), Size(600, 80), 5, alignmask::CENTER);
+    HorizontalPositioner grid(Rect(Size(600, 80)), 5, alignmask::CENTER);
     grid.name("grid");
     ctrlwindow.add(&grid);
 
-    ImageButton* playbtn = new ImageButton(":play_png", "", Point(), Size(), widgetmask::NO_BORDER);
+    ImageButton* playbtn = new ImageButton(":play_png", "", Rect(), widgetmask::NO_BORDER);
     grid.add(playbtn);
 
     playbtn->add_handler([window](EventWidget * widget, int event)
@@ -224,7 +223,7 @@ int main(int argc, const char** argv)
             window->unpause();
     });
 
-    ImageButton* pausebtn = new ImageButton(":pause_png", "", Point(), Size(), widgetmask::NO_BORDER);
+    ImageButton* pausebtn = new ImageButton(":pause_png", "", Rect(), widgetmask::NO_BORDER);
     grid.add(pausebtn);
     pausebtn->add_handler([window](EventWidget * widget, int event)
     {
@@ -235,7 +234,7 @@ int main(int argc, const char** argv)
             window->pause();
     });
 
-    Slider* position = new Slider(0, 100, Point(), Size(150, 40), orientation::HORIZONTAL);
+    Slider* position = new Slider(0, 100, Rect(Size(150, 40)), orientation::HORIZONTAL);
     grid.add(position);
     position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
     position->disable(true);
@@ -265,10 +264,10 @@ int main(int argc, const char** argv)
     });
     postimer.start();
 
-    ImageButton* volumei = new ImageButton(":volumeup_png", "", Point(), Size(), widgetmask::NO_BORDER);
+    ImageButton* volumei = new ImageButton(":volumeup_png", "", Rect(), widgetmask::NO_BORDER);
     grid.add(volumei);
 
-    Slider* volume = new Slider(0, 100, Point(), Size(100, 20), orientation::HORIZONTAL);
+    Slider* volume = new Slider(0, 100, Rect(Size(100, 20)), orientation::HORIZONTAL);
     grid.add(volume);
     volume->add_handler([window](EventWidget * widget, int event)
     {
