@@ -57,15 +57,15 @@ namespace mui
 
         Painter();
 
-	/**
-	 * @todo Painter needs to come from the Screen. This constructor should
-	 * be hidden and you should have to get a custom version of it from the
-	 * Screen for drawing. A default software/GPU painter can be created,
-	 * otherwise for something like X11 we should be using X11 to paint.
-	 *
-	 * Or maybe we leave this as it is and put the drawing abstraction under
-	 * cairo...
-	 */
+        /**
+         * @todo Painter needs to come from the Screen. This constructor should
+         * be hidden and you should have to get a custom version of it from the
+         * Screen for drawing. A default software/GPU painter can be created,
+         * otherwise for something like X11 we should be using X11 to paint.
+         *
+         * Or maybe we leave this as it is and put the drawing abstraction under
+         * cairo...
+         */
         explicit Painter(shared_cairo_t cr);
 
         virtual ~Painter();

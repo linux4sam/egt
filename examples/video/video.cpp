@@ -205,7 +205,7 @@ int main(int argc, const char** argv)
     ctrlwindow.move(Point((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
                           KMSScreen::instance()->size().h - ctrlwindow.h()));
 
-    #if 0
+#if 0
     set_control_window(&ctrlwindow);
 #endif
 

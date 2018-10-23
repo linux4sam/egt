@@ -239,9 +239,9 @@ namespace mui
                 }
             }
 
-	    /**
-	     * Remove a sub animation from the sequence.
-	     */
+            /**
+             * Remove a sub animation from the sequence.
+             */
             void remove(detail::IAnimation* animation)
             {
                 if (!animation)

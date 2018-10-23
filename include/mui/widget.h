@@ -434,6 +434,11 @@ namespace mui
         virtual Size size() const { return m_box.size(); }
 
         /**
+         * Get the origin point of the widget.
+         */
+        virtual Point point() const { return m_box.point(); }
+
+        /**
          * @{
          * Bounding box dimensions.
          */

@@ -79,8 +79,8 @@ namespace mui
         DisplayBuffer buffer;
         buffer.surface =
             shared_cairo_surface_t(cairo_xlib_surface_create(m_priv->display, m_priv->window,
-                                                             DefaultVisual(m_priv->display, screen),
-                                                             size.w, size.h),
+                                   DefaultVisual(m_priv->display, screen),
+                                   size.w, size.h),
                                    cairo_surface_destroy);
         cairo_xlib_surface_set_size(buffer.surface.get(), size.w, size.h);
 

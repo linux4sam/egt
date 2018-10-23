@@ -124,11 +124,6 @@ namespace mui
                 if (child->disabled())
                     continue;
 
-                /**
-                 * @todo Broken. Need to get everything converted to
-                 * coordinates of parent frame and away from screen
-                 * coordinates.
-                 */
                 Point pos = screen_to_frame(mouse_position());
 
                 if (Rect::point_inside(pos, child->box()))
@@ -225,33 +220,6 @@ namespace mui
         for (auto& damage : m_damage)
         {
             draw(painter, damage);
-            /*
-            if (!is_flag_set(widgetmask::NO_BACKGROUND))
-            {
-                Painter::AutoSaveRestore sr(painter);
-                painter.set_color(palette().color(Palette::BG));
-                cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-                painter.draw_fill(damage);
-            }
-
-            for (auto& child : m_children)
-            {
-                if (!child->visible())
-                    continue;
-
-                // don't draw plane frame as children - this is
-                // specifically handled by event loop
-                if (child->is_flag_set(widgetmask::PLANE_WINDOW))
-                    continue;
-
-                if (Rect::intersect(damage, child->box()))
-                {
-                    // don't give a child a rectangle that is outside of its own box
-                    auto rect = Rect::intersection(damage, child->box());
-                    child->draw(painter, rect);
-                }
-            }
-            */
         }
 
         screen()->flip(m_damage);

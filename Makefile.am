@@ -3,7 +3,7 @@ SUBDIRS = src examples scripts
 
 EXTRA_DIST = README.md COPYING docs/Doxyfile.in $(private_icons)
 
-.PHONY: docs style
+.PHONY: docs style cppcheck
 
 # consider doing a bit more for Doxygen
 # http://chris-miceli.blogspot.com/2011/01/integrating-doxygen-with-autotools.html

@@ -27,7 +27,7 @@ namespace mui
     {
     public:
         StaticGrid(const Point& point = Point(), const Size& size = Size(),
-                   int columns = 0, int rows = 0, int border = 0);
+                   int columns = 1, int rows = 1, int border = 0);
 
         virtual void move(const Point& point) override
         {

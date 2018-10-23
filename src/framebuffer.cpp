@@ -16,7 +16,7 @@ using namespace std;
 namespace mui
 {
 
-FrameBuffer::FrameBuffer(const string& path)
+    FrameBuffer::FrameBuffer(const string& path)
         : m_fd(-1)
     {
         struct fb_fix_screeninfo fixinfo;

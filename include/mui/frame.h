@@ -53,11 +53,11 @@ namespace mui
          *
          * The z-order of a widget is based on the order it is added.  First in
          * is bottom.
-	 *
-	 * @todo Create the idea of layers by moving m_children to a 2d array.
-	 * Then add a layer index (x-order) here to add widgets to different
-	 * layers for drawing.
-         */
+        *
+         * @todo Create the idea of layers by moving m_children to a 2d array.
+         * Then add a layer index (x-order) here to add widgets to different
+         * layers for drawing.
+               */
         virtual Widget* add(Widget* widget);
 
         /**

@@ -38,8 +38,8 @@ namespace mui
                         // find the rect for the cell
                         int ix = x() + (column * (w() / m_columns));
                         int iy = y() + (row * (h() / m_rows));
-                        int iw = (w() / m_columns) - 1;
-                        int ih = (h() / m_rows) - 1;
+                        int iw = (w() / m_columns);
+                        int ih = (h() / m_rows);
 
                         if (iw < 0)
                             iw = 0;
@@ -111,8 +111,8 @@ namespace mui
                     // find the rect for the cell
                     int ix = x() + (column * (w() / m_columns)) + m_border;
                     int iy = y() + (row * (h() / m_rows)) + m_border;
-                    int iw = (w() / m_columns) - (m_border * 2) - 1;
-                    int ih = (h() / m_rows) - (m_border * 2) - 1;
+                    int iw = (w() / m_columns) - (m_border * 2);
+                    int ih = (h() / m_rows) - (m_border * 2);
 
                     if (iw < 0)
                         iw = 0;
@@ -120,9 +120,11 @@ namespace mui
                     if (ih < 0)
                         ih = 0;
 
+                    Rect bounding(ix, iy, iw, ih);
+
                     // get the aligning rect
                     Rect target = align_algorithm(cell.widget->box().size(),
-                                                  Rect(ix, iy, iw, ih),
+                                                  bounding,
                                                   cell.align);
 
                     // reposition/resize widget

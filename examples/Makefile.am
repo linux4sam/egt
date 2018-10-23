@@ -27,7 +27,7 @@ basic/basic \
 calc/calc \
 easing/easing \
 floating/floating \
-floating/floating \
+gallery/gallery \
 infotain/infotain \
 space/space \
 water/water \
@@ -91,6 +91,15 @@ floating_floating_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
 floating_floatingdir = $(prefix)/share/mui/examples/floating
 floating_floating_DATA = $(wildcard $(top_srcdir)/examples/floating/*.png)
 floating_floating_LDFLAGS = $(AM_LDFLAGS)
+
+gallery_gallery_SOURCES = gallery/gallery.cpp
+gallery_gallery_CXXFLAGS = $(AM_CXXFLAGS)
+gallery_gallery_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+gallery_gallerydir = $(prefix)/share/mui/examples/gallery
+gallery_gallery_DATA = $(wildcard $(top_srcdir)/examples/gallery/*.png) \
+	$(wildcard $(top_srcdir)/examples/gallery/movies/*.png) \
+	$(wildcard $(top_srcdir)/examples/gallery/movies/*.jpg)
+gallery_gallery_LDFLAGS = $(AM_LDFLAGS)
 
 launcher_launcher_SOURCES = launcher/launcher.cpp
 launcher_launcher_CXXFLAGS = $(AM_CXXFLAGS)

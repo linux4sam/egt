@@ -32,7 +32,7 @@ namespace mui
         void handle_read(const asio::error_code& error);
 
         std::shared_ptr<X11Data> m_priv;
-	asio::posix::stream_descriptor m_input;
+        asio::posix::stream_descriptor m_input;
     };
 
 }

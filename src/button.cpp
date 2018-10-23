@@ -25,6 +25,8 @@ namespace mui
 
     int Button::handle(int event)
     {
+        DBG(name() << " handle: " << event);
+
         switch (event)
         {
         case EVT_MOUSE_DOWN:

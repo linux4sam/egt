@@ -64,7 +64,7 @@ public:
         : ImageText(image, name, Point(x, y)),
           m_num(num),
           m_fd(-1),
-          m_animation(0, 600, std::bind(&LauncherItem::animate, this, std::placeholders::_1) , std::chrono::seconds(1), easing_snap),
+          m_animation(0, 600, std::bind(&LauncherItem::animate, this, std::placeholders::_1), std::chrono::seconds(1), easing_snap),
           m_name(name),
           m_description(description),
           m_exec(exec)
@@ -210,9 +210,9 @@ public:
         rapidxml::xml_document<> doc;
         doc.parse<0>(xml_file.data());
 
-        int num = 0;
-        rapidxml::xml_node<>* root_node = doc.first_node("menu");
-        for (rapidxml::xml_node<>* node = root_node->first_node("item"); node; node = node->next_sibling())
+        auto num = 0;
+        auto root_node = doc.first_node("menu");
+        for (auto node = root_node->first_node("item"); node; node = node->next_sibling())
         {
             string name = node->first_attribute("name")->value();
             string description = node->first_node("description")->value();
@@ -247,7 +247,7 @@ public:
 
     int handle(int event)
     {
-        int ret = Window::handle(event);
+        auto ret = Window::handle(event);
         if (ret)
             return 1;
 

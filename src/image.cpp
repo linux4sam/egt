@@ -11,7 +11,7 @@ using namespace std;
 namespace mui
 {
 
-    Image::Image(const string& filename, const Point& point) noexcept
+    Image::Image(const string& filename, const Point& point)
         : m_filename(filename),
           m_image(image_cache.get(filename, 1.0))
     {
@@ -20,6 +20,8 @@ namespace mui
         m_box = Rect(point.x, point.y,
                      cairo_image_surface_get_width(m_image.get()),
                      cairo_image_surface_get_height(m_image.get()));
+
+        m_orig_size = m_box.size();
     }
 
     void Image::scale(double hscale, double vscale, bool approximate)

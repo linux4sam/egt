@@ -28,7 +28,7 @@ using namespace std;
 namespace mui
 {
 
-    static string image_path = "./";
+    static string image_path = "";
     void set_image_path(const std::string& path)
     {
         image_path = path;
@@ -90,6 +90,8 @@ namespace mui
             else
             {
                 string name = image_path + filename;
+                DBG("loading: " << name);
+
                 if (name.find(".png") != std::string::npos)
                 {
                     image = shared_cairo_surface_t(
@@ -123,7 +125,12 @@ namespace mui
                                   height * vscale);
         }
 
-        assert(cairo_surface_status(image.get()) == CAIRO_STATUS_SUCCESS);
+        if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
+        {
+            stringstream ss;
+            ss << "could not load image " << filename;
+            throw std::runtime_error(ss.str());
+        }
 
         m_cache.insert(std::make_pair(name, image));
 

@@ -49,7 +49,8 @@ valuewidget.cpp \
 video.cpp \
 widget.cpp \
 window.cpp \
-x11screen.cpp
+x11screen.cpp \
+view.cpp
 
 if HAVE_LUA
 libmui_la_SOURCES += \
@@ -102,7 +103,8 @@ $(top_srcdir)/include/mui/valuewidget.h \
 $(top_srcdir)/include/mui/video.h \
 $(top_srcdir)/include/mui/widget.h \
 $(top_srcdir)/include/mui/window.h \
-$(top_srcdir)/include/mui/x11screen.h
+$(top_srcdir)/include/mui/x11screen.h \
+$(top_srcdir)/include/mui/view.h
 
 libmui_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 
