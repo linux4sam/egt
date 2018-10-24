@@ -392,8 +392,8 @@ namespace mui
          */
         static inline bool point_inside(const Point& point, const Rect& rhs)
         {
-            return (point.x <= rhs.x + rhs.w && point.x >= rhs.x &&
-                    point.y <= rhs.y + rhs.h && point.y >= rhs.y);
+            return (point.x <= rhs.right() && point.x >= rhs.left() &&
+                    point.y <= rhs.bottom() && point.y >= rhs.top());
         }
 
         /**

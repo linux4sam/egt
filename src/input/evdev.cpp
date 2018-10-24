@@ -9,9 +9,9 @@
 #include "mui/app.h"
 #include "mui/event_loop.h"
 #include "mui/geometry.h"
-#include "mui/input.h"
 #include "mui/widget.h"
 #include "mui/window.h"
+#include "mui/utils.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -27,40 +27,6 @@ using namespace std;
 
 namespace mui
 {
-
-    static Point pointer_abs_pos;
-    Point& mouse_position()
-    {
-        return pointer_abs_pos;
-    }
-
-    static int event_key;
-    int& key_value()
-    {
-        return event_key;
-    }
-
-    static int event_button;
-    int& button_value()
-    {
-        return event_button;
-    }
-
-    void IInput::dispatch(int event)
-    {
-        DBG("event: " << event);
-
-        for (auto& w : windows())
-        {
-            if (!w->visible())
-                continue;
-
-            if (!w->top_level())
-                continue;
-
-            w->handle(event);
-        }
-    }
 
     InputEvDev::InputEvDev(const string& path)
         : m_input(main_app().event().io()),
@@ -84,7 +50,7 @@ namespace mui
     {
         if (error)
         {
-            cout << error << endl;
+            ERR(error);
             return;
         }
 
@@ -168,7 +134,7 @@ namespace mui
                         v = EVT_KEY_REPEAT;
                     if (v != -1)
                     {
-                        event_key = e->code;
+                        key_value() = e->code;
                         dispatch(v);
                     }
                 }
@@ -177,14 +143,14 @@ namespace mui
 
         if (absolute_event)
         {
-            pointer_abs_pos = Point(x, y);
+            mouse_position() = Point(x, y);
             dispatch(EVT_MOUSE_MOVE);
         }
         else
         {
             if (dx != 0 || dy != 0)
             {
-                pointer_abs_pos = Point(pointer_abs_pos.x + dx, pointer_abs_pos.y + dy);
+                mouse_position() = Point(mouse_position().x + dx, mouse_position().y + dy);
                 dispatch(EVT_MOUSE_MOVE);
             }
         }

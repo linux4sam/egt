@@ -46,6 +46,8 @@ namespace mui
             hide();
         }
 
+        virtual void show() override;
+
         // why can't i see this from Widget::size()?
         virtual Size size() const override
         {
@@ -143,7 +145,10 @@ namespace mui
         {
             if (center)
             {
-                this->move_to_center(main_screen()->box().center());
+                if (T::parent())
+                    this->move_to_center(T::parent()->box().center());
+                else
+                    this->move_to_center(main_screen()->box().center());
             }
 
             T::show();

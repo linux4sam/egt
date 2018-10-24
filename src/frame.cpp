@@ -145,7 +145,8 @@ namespace mui
                 {
                     if (child->handle(event))
                     {
-                        child->focus(true);
+                        if (event != EVT_MOUSE_MOVE)
+                            child->focus(true);
                         return 1;
                     }
                 }
@@ -156,8 +157,29 @@ namespace mui
 
         if (m_focus_widget)
         {
-            if (m_focus_widget->handle(event))
-                return 1;
+            switch (event)
+            {
+            case EVT_MOUSE_MOVE:
+            case EVT_MOUSE_DOWN:
+            //case EVT_MOUSE_UP:
+            //case EVT_BUTTON_UP:
+            case EVT_BUTTON_DOWN:
+                //case EVT_MOUSE_DBLCLICK:
+            {
+                Point pos = screen_to_frame(mouse_position());
+
+                if (Rect::point_inside(pos, m_focus_widget->box()))
+                {
+                    if (m_focus_widget->handle(event))
+                        return 1;
+                }
+                break;
+            }
+            default:
+                if (m_focus_widget->handle(event))
+                    return 1;
+                break;
+            }
         }
 
         return Widget::handle(event);

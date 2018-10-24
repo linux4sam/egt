@@ -168,6 +168,24 @@ namespace mui
 
     protected:
 
+        bool child_hit_test(const Point& point)
+        {
+            for (auto& child : m_children)
+            {
+                if (child->disabled())
+                    continue;
+
+                Point pos = screen_to_frame(point);
+
+                if (Rect::point_inside(pos, child->box()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         using children_array = std::deque<Widget*>;
 
         /**

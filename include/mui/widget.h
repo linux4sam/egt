@@ -76,32 +76,32 @@ namespace mui
         WINDOW_DEFAULT = WINDOW | NO_BORDER,
     };
 
-    constexpr widgetmask operator&(widgetmask X, widgetmask Y)
+    constexpr widgetmask operator&(widgetmask a, widgetmask b)
     {
         return static_cast<widgetmask >(
-                   static_cast<uint32_t>(X) & static_cast<uint32_t>(Y));
+                   static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
     }
 
-    constexpr widgetmask operator|(widgetmask X, widgetmask Y)
+    constexpr widgetmask operator|(widgetmask a, widgetmask b)
     {
         return static_cast<widgetmask >(
-                   static_cast<uint32_t>(X) | static_cast<uint32_t>(Y));
+                   static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
     }
 
-    constexpr widgetmask operator^(widgetmask X, widgetmask Y)
+    constexpr widgetmask operator^(widgetmask a, widgetmask b)
     {
         return static_cast<widgetmask >(
-                   static_cast<uint32_t>(X) ^ static_cast<uint32_t>(Y));
+                   static_cast<uint32_t>(a) ^ static_cast<uint32_t>(b));
     }
 
-    constexpr widgetmask operator~(widgetmask X)
+    constexpr widgetmask operator~(widgetmask a)
     {
-        return static_cast<widgetmask >(~static_cast<uint32_t>(X));
+        return static_cast<widgetmask >(~static_cast<uint32_t>(a));
     }
 
-    widgetmask& operator&=(widgetmask& X, widgetmask Y);
-    widgetmask& operator|=(widgetmask& X, widgetmask Y);
-    widgetmask& operator^=(widgetmask& X, widgetmask Y);
+    widgetmask& operator&=(widgetmask& a, widgetmask Y);
+    widgetmask& operator|=(widgetmask& a, widgetmask Y);
+    widgetmask& operator^=(widgetmask& a, widgetmask Y);
 
     class Widget;
 
@@ -158,32 +158,32 @@ namespace mui
         EXPAND = (1 << 5),
     };
 
-    constexpr alignmask operator&(alignmask X, alignmask Y)
+    constexpr alignmask operator&(alignmask a, alignmask b)
     {
         return static_cast<alignmask >(
-                   static_cast<uint32_t>(X) & static_cast<uint32_t>(Y));
+                   static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
     }
 
-    constexpr alignmask operator|(alignmask X, alignmask Y)
+    constexpr alignmask operator|(alignmask a, alignmask b)
     {
         return static_cast<alignmask >(
-                   static_cast<uint32_t>(X) | static_cast<uint32_t>(Y));
+                   static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
     }
 
-    constexpr alignmask operator^(alignmask X, alignmask Y)
+    constexpr alignmask operator^(alignmask a, alignmask b)
     {
         return static_cast<alignmask >(
-                   static_cast<uint32_t>(X) ^ static_cast<uint32_t>(Y));
+                   static_cast<uint32_t>(a) ^ static_cast<uint32_t>(b));
     }
 
-    constexpr alignmask operator~(alignmask X)
+    constexpr alignmask operator~(alignmask a)
     {
-        return static_cast<alignmask >(~static_cast<uint32_t>(X));
+        return static_cast<alignmask >(~static_cast<uint32_t>(a));
     }
 
-    alignmask& operator&=(alignmask& X, alignmask Y);
-    alignmask& operator|=(alignmask& X, alignmask Y);
-    alignmask& operator^=(alignmask& X, alignmask Y);
+    alignmask& operator&=(alignmask& a, alignmask b);
+    alignmask& operator|=(alignmask& a, alignmask b);
+    alignmask& operator^=(alignmask& a, alignmask b);
 
     class Frame;
 
@@ -484,13 +484,13 @@ namespace mui
 
         Frame* parent()
         {
-            assert(m_parent);
+            //assert(m_parent);
             return m_parent;
         }
 
         const Frame* parent() const
         {
-            assert(m_parent);
+            //assert(m_parent);
             return m_parent;
         }
 
@@ -533,6 +533,11 @@ namespace mui
          * Read the alignment of the widget.
          */
         inline alignmask align() const { return m_align; }
+
+        /**
+         * Return the alignment margin.
+         */
+        inline int margin() const { return m_margin; }
 
         /**
          * Set the name of the widget.
@@ -615,6 +620,8 @@ namespace mui
          * Alignment hint for this widget within its parent.
          */
         alignmask m_align{alignmask::NONE};
+
+        int m_margin{0};
 
         Widget(const Widget&) = delete;
         Widget& operator=(const Widget&) = delete;

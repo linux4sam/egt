@@ -47,8 +47,14 @@ namespace mui
             }
         }
 
+        /**
+         * Get the horizontal scale value.
+         */
         double hscale() const { return m_hscale; }
 
+        /**
+         * Get the vertical scale value.
+         */
         double vscale() const { return m_vscale; }
 
         shared_cairo_surface_t surface() const { return m_image; }
@@ -58,8 +64,8 @@ namespace mui
     protected:
 
         std::string m_filename;
-        double m_hscale {1.0};
-        double m_vscale {1.0};
+        double m_hscale{1.0};
+        double m_vscale{1.0};
         shared_cairo_surface_t m_image;
 
         /**

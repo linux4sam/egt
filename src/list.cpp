@@ -4,20 +4,32 @@
  */
 #include "mui/list.h"
 #include "mui/painter.h"
+#include "mui/frame.h"
 
 namespace mui
 {
     static auto ITEM_HEIGHT = 40;
 
+    /*
     ListBox::ListBox(const item_array& items,
                      const Rect& rect)
         : Widget(rect),
           m_items(items)
     {}
 
+    ListBox::ListBox(Frame& parent,
+                     const item_array& items,
+                     const Rect& rect)
+        : ListBox(items, rect)
+    {
+        parent.add(this);
+    }
+    */
+
     Rect ListBox::item_rect(uint32_t index) const
     {
-        Rect r(box().x, box().y, box().w, ITEM_HEIGHT);
+        Rect r(box());
+        r.h = ITEM_HEIGHT;
         r.y += (r.h * index);
         return r;
     }
@@ -28,17 +40,12 @@ namespace mui
         {
         case EVT_MOUSE_DOWN:
         {
+            Point mouse = screen_to_frame(mouse_position());
             for (size_t i = 0; i < m_items.size(); i++)
             {
-                if (Rect::point_inside(screen_to_frame(mouse_position()), item_rect(i)))
+                if (Rect::point_inside(mouse, item_rect(i)))
                 {
-                    if (m_selected != i)
-                    {
-                        m_selected = i;
-                        damage();
-                        on_selected(i);
-                    }
-
+                    select(i);
                     break;
                 }
             }
@@ -54,22 +61,15 @@ namespace mui
     {
         ignoreparam(rect);
 
-        painter.draw_basic_box(Rect(x(), y(), w(), ITEM_HEIGHT * m_items.size()),
+        painter.draw_basic_box(box() /*Rect(x(), y(), w(), ITEM_HEIGHT * m_items.size())*/,
                                palette().color(Palette::BORDER),
                                palette().color(Palette::BG));
 
-        if (!m_items.empty())
+        if (m_selected < m_items.size())
         {
-            painter.draw_basic_box(item_rect(m_selected),
-                                   palette().color(Palette::BORDER),
-                                   palette().color(Palette::HIGHLIGHT));
-
-            painter.set_color(palette().color(Palette::TEXT));
-            painter.set_font(m_font);
-
             for (size_t i = 0; i < m_items.size(); i++)
             {
-                painter.draw_text(item_rect(i), m_items[i], alignmask::CENTER);
+                m_items[i]->draw(painter, item_rect(i), m_selected == i);
             }
         }
     }
@@ -78,9 +78,10 @@ namespace mui
     {
         if (m_selected != index)
         {
-            damage(item_rect(m_selected));
+            //damage(item_rect(m_selected));
             m_selected = index;
-            damage(item_rect(m_selected));
+            //damage(item_rect(m_selected));
+            damage();
             on_selected(index);
         }
     }

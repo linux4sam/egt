@@ -18,40 +18,40 @@ using namespace std;
 
 namespace mui
 {
-    widgetmask& operator&=(widgetmask& X, widgetmask Y)
+    widgetmask& operator&=(widgetmask& a, widgetmask b)
     {
-        X = X & Y;
-        return X;
+        a = a & b;
+        return a;
     }
 
-    widgetmask& operator|=(widgetmask& X, widgetmask Y)
+    widgetmask& operator|=(widgetmask& a, widgetmask b)
     {
-        X = X | Y;
-        return X;
+        a = a | b;
+        return a;
     }
 
-    widgetmask& operator^=(widgetmask& X, widgetmask Y)
+    widgetmask& operator^=(widgetmask& a, widgetmask b)
     {
-        X = X ^ Y;
-        return X;
+        a = a ^ b;
+        return a;
     }
 
-    alignmask& operator&=(alignmask& X, alignmask Y)
+    alignmask& operator&=(alignmask& a, alignmask b)
     {
-        X = X & Y;
-        return X;
+        a = a & b;
+        return a;
     }
 
-    alignmask& operator|=(alignmask& X, alignmask Y)
+    alignmask& operator|=(alignmask& a, alignmask b)
     {
-        X = X | Y;
-        return X;
+        a = a | b;
+        return a;
     }
 
-    alignmask& operator^=(alignmask& X, alignmask Y)
+    alignmask& operator^=(alignmask& a, alignmask b)
     {
-        X = X ^ Y;
-        return X;
+        a = a ^ b;
+        return a;
     }
 
     static auto widget_id = 0;
@@ -142,13 +142,14 @@ namespace mui
 
     void Widget::align(alignmask a, int margin)
     {
-        if (m_align != a)
+        if (m_align != a || m_margin != margin)
         {
             m_align = a;
+            m_margin = margin;
 
             if (m_align != alignmask::NONE)
             {
-                auto r = align_algorithm(size(), parent()->box(), m_align, margin);
+                auto r = align_algorithm(size(), parent()->box(), m_align, m_margin);
                 set_box(r);
             }
         }
@@ -187,9 +188,7 @@ namespace mui
         Combo::Combo(const string& label, const Rect& rect)
             : Widget(rect),
               m_label(label)
-        {
-
-        }
+        {}
 
         int Combo::handle(int event)
         {

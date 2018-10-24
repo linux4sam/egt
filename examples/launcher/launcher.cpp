@@ -171,7 +171,8 @@ public:
     LauncherWindow()
         : m_popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2))
     {
-        m_popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
+        //m_popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
+        m_popup.add(new Button("Hello World"))->align(alignmask::CENTER);
 
         main_app().event().add_idle_callback(std::bind(&LauncherWindow::timer_callback, this));
 
@@ -247,42 +248,33 @@ public:
 
     int handle(int event)
     {
-        auto ret = Window::handle(event);
-        if (ret)
-            return 1;
-
         switch (event)
         {
         case EVT_MOUSE_DOWN:
             if (!m_moving)
             {
+                // hack
+                focus(nullptr);
+
                 m_moving = true;
                 m_moving_x = mouse_position().x;
                 m_offset = m_boxes[0]->center().x;
-                //debounce_mouse(2);
             }
-
-            return 1;
             break;
         case EVT_MOUSE_UP:
             m_moving = false;
             start_snap();
-            //debounce_mouse(0);
-            return 1;
             break;
         case EVT_MOUSE_MOVE:
-            //if (debounce_mouse(2))
-            //{
             if (m_moving)
             {
                 move_boxes(mouse_position().x);
                 return 1;
             }
-            //}
             break;
         }
 
-        return 0;
+        return Window::handle(event);
     }
 
     void move_boxes(int x)

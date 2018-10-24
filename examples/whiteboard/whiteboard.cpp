@@ -71,10 +71,6 @@ public:
 
     int handle(int event)
     {
-        int ret = Window::handle(event);
-        if (ret)
-            return ret;
-
         switch (event)
         {
         case EVT_MOUSE_DOWN:
@@ -116,7 +112,7 @@ public:
             break;
         }
 
-        return ret;
+        return Window::handle(event);
     }
 
     Point m_last;

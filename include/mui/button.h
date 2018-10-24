@@ -17,8 +17,6 @@ namespace mui
 
     /**
      * Basic button widget.
-     *
-     * Might seem odd that a button inherits from a Label.
      */
     class Button : public Label
     {

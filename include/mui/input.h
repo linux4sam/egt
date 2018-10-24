@@ -2,7 +2,6 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-
 #ifndef MUI_INPUT_H
 #define MUI_INPUT_H
 
@@ -111,6 +110,9 @@ namespace mui
         struct tslibimpl;
     }
 
+    /**
+     * Handles reading input from a tslib supported device.
+     */
     class InputTslib : public IInput
     {
     public:
@@ -119,16 +121,13 @@ namespace mui
 
         virtual ~InputTslib();
 
-        //asio::io_context m_io;
-
     private:
 
         void handle_read(const asio::error_code& error);
 
         asio::posix::stream_descriptor m_input;
-        bool m_active;
-
         std::unique_ptr<detail::tslibimpl> m_impl;
+        bool m_active{false};
     };
 #endif
 

@@ -32,8 +32,6 @@ namespace mui
 
     InputTslib::InputTslib(const string& path)
         : m_input(main_app().event().io()),
-          //m_input(m_io),
-          m_active(false),
           m_impl(new detail::tslibimpl)
     {
         const int NONBLOCKING = 1;

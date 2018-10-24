@@ -143,8 +143,12 @@ int main()
     TextBox text1("text 1", Rect(Point(100, 400), Size(200, 40)));
     win.add(&text1);
 
-    vector<string> items = { "item 1", "item 2", "item3" };
-    ListBox list1(items, Rect(Point(350, 50), Size(200, 200)));
+    vector<StringItem> names = { "item 1", "item 2", "item3" };
+    ListBox::item_array items;
+    items.resize(names.size());
+    transform(names.begin(), names.end(), items.begin(), [](const StringItem & v) { return new StringItem(v);});
+
+    ListBox list1(items, Rect(Point(350, 50), Size(50, 150)));
     win.add(&list1);
     list1.select(1);
 

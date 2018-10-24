@@ -41,7 +41,7 @@ static easing_func curves[] =
     easing_boing
 };
 
-static vector<string> curves_names =
+static vector<StringItem> curves_names =
 {
     "linear",
     "easy",
@@ -60,7 +60,7 @@ static vector<string> curves_names =
 class MyListBox : public ListBox
 {
 public:
-    MyListBox(const std::vector<std::string>& items,
+    MyListBox(const item_array& items,
               const Rect& rect = Rect())
         : ListBox(items, rect)
     {}
@@ -87,7 +87,10 @@ public:
         add(img);
         img->scale(scale, scale);
 
-        MyListBox* list1 = new MyListBox(curves_names, Rect(Point(w() - 100, 0), Size(100, h())));
+        MyListBox::item_array items;
+        items.resize(curves_names.size());
+        transform(curves_names.begin(), curves_names.end(), items.begin(), [](const StringItem & v) { return new StringItem(v);});
+        MyListBox* list1 = new MyListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
         add(list1);
         list1->select(7);
 

@@ -30,23 +30,35 @@ namespace mui
                        const Font& font = Font(),
                        widgetmask flags = widgetmask::NO_BORDER) noexcept;
 
+        explicit Label(Frame& parent,
+                       const std::string& text = std::string(),
+                       const Rect& rect = Rect(),
+                       alignmask align = alignmask::CENTER,
+                       const Font& font = Font(),
+                       widgetmask flags = widgetmask::NO_BORDER) noexcept;
+
         /**
          * Set the text of the label.
          */
         virtual void text(const std::string& str);
 
         /**
-         * Get the text of the label.
+         * Get the text of the Label.
          */
         virtual const std::string& text() const { return m_text; }
 
         /**
-         * Set the font of the label.
+         * Set the Font of the Label.
          */
         virtual void font(const Font& font) { m_font = font; }
 
         /**
-         * Set the alignment of the label.
+        * Get the Font of the Label.
+         */
+        virtual const Font& font() const { return m_font; }
+
+        /**
+         * Set the alignment of the Label.
          */
         virtual void text_align(alignmask align) { m_text_align = align; }
 

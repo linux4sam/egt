@@ -51,6 +51,20 @@ namespace mui
         m_screen = main_screen();
     }
 
+    void Window::show()
+    {
+        for (auto& child : m_children)
+        {
+            if (child->align() != alignmask::NONE)
+            {
+                auto r = align_algorithm(child->size(), child->parent()->box(), child->align(), child->margin());
+                child->set_box(r);
+            }
+        }
+
+        Widget::show();
+    }
+
 #ifdef HAVE_LIBPLANES
     PlaneWindow::PlaneWindow(const Size& size, widgetmask flags,
                              uint32_t format, bool heo)

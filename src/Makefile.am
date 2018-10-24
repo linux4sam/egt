@@ -30,10 +30,12 @@ geometry.cpp \
 grid.cpp \
 image.cpp \
 imagecache.cpp \
-input.cpp \
+input/evdev.cpp \
+input/input.cpp \
+input/libinput.cpp \
+input/tslib.cpp \
 kmsscreen.cpp \
 label.cpp \
-libinput.cpp \
 list.cpp \
 painter.cpp \
 palette.cpp \
@@ -43,14 +45,13 @@ sprite.cpp \
 text.cpp \
 timer.cpp \
 tools.cpp \
-tslib.cpp \
 utils.cpp \
 valuewidget.cpp \
 video.cpp \
+view.cpp \
 widget.cpp \
 window.cpp \
-x11screen.cpp \
-view.cpp
+x11screen.cpp
 
 if HAVE_LUA
 libmui_la_SOURCES += \

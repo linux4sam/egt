@@ -18,7 +18,7 @@ namespace mui
 {
 
     /**
-     * Grid widget positioning helper.
+     * Static grid organization for widgets.
      *
      * A static grid that does not perform any drawing, but controls the
      * size and position of any widget added into a grid.
@@ -66,20 +66,20 @@ namespace mui
         virtual ~StaticGrid();
 
     protected:
-        int m_columns {0};
-        int m_rows {0};
-        int m_border {0};
 
         struct Cell
         {
             // cppcheck-suppress unusedStructMember
-            Widget* widget {nullptr};
-            alignmask align {alignmask::NONE};
+            Widget* widget{nullptr};
+            alignmask align{alignmask::NONE};
         };
 
         using cell_array = std::vector<std::vector<Cell>>;
 
         cell_array m_cells;
+        int m_columns{0};
+        int m_rows{0};
+        int m_border{0};
 
     private:
 
@@ -150,7 +150,7 @@ namespace mui
         {}
 
     protected:
-        int m_border {0};
+        int m_border{0};
         alignmask m_align {alignmask::NONE};
     };
 

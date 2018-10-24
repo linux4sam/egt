@@ -62,7 +62,7 @@ int main()
     view.name("view");
     win.add(&view);
 
-    /** @todo This is not respective parent coordinate for origin point. */
+    /** @todo This is not respecting parent coordinate for origin point. */
     StaticGrid grid(Rect(0, logo.h(), files.size() / 2 * 150, view.h()), files.size() / 2, 2, 10);
     grid.name("grid");
     view.add(&grid);
@@ -88,6 +88,10 @@ int main()
 
     Popup<Window> popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
     popup.name("popup");
+    auto button = new Button("Hello World");
+    popup.add(button);
+    button->align(alignmask::CENTER);
+    button->name("hw");
 
     ImageButton settings(SHARED_PATH "settings.png", "", Rect(), widgetmask::NO_BORDER);
     win.add(&settings);

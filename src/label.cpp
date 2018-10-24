@@ -5,6 +5,7 @@
 #include "mui/label.h"
 #include "mui/imagecache.h"
 #include "mui/painter.h"
+#include "mui/frame.h"
 
 using namespace std;
 
@@ -18,6 +19,13 @@ namespace mui
           m_text(text),
           m_font(font)
     {}
+
+    Label::Label(Frame& parent, const std::string& text, const Rect& rect,
+                 alignmask align, const Font& font, widgetmask flags) noexcept
+        : Label(text, rect, align, font, flags)
+    {
+        parent.add(this);
+    }
 
     void Label::text(const std::string& str)
     {
