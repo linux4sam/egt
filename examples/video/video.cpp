@@ -215,22 +215,20 @@ int main(int argc, const char** argv)
     ImageButton* playbtn = new ImageButton(":play_png", "", Rect(), widgetmask::NO_BORDER);
     grid.add(playbtn);
 
-    playbtn->add_handler([window](EventWidget * widget, int event)
+    playbtn->on_event([playbtn, window](int event)
     {
         ignoreparam(event);
-        ImageButton* btn = dynamic_cast<ImageButton*>(widget);
-        if (btn->active())
+        if (playbtn->active())
             window->unpause();
     });
 
     ImageButton* pausebtn = new ImageButton(":pause_png", "", Rect(), widgetmask::NO_BORDER);
     grid.add(pausebtn);
-    pausebtn->add_handler([window](EventWidget * widget, int event)
+    pausebtn->on_event([pausebtn, window](int event)
     {
         ignoreparam(event);
         cout << "pause button" << endl;
-        ImageButton* btn = dynamic_cast<ImageButton*>(widget);
-        if (btn->active())
+        if (pausebtn->active())
             window->pause();
     });
 
@@ -240,11 +238,11 @@ int main(int argc, const char** argv)
     position->disable(true);
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
-    postimer.add_handler([position, window
+    postimer.on_timeout([position, window
 #ifdef FPS
-                                    , &fpslabel
+                                   , &fpslabel
 #endif
-                                   ]()
+                                  ]()
     {
         if (window->duration())
         {
@@ -269,20 +267,18 @@ int main(int argc, const char** argv)
 
     Slider* volume = new Slider(0, 100, Rect(Size(100, 20)), orientation::HORIZONTAL);
     grid.add(volume);
-    volume->add_handler([window](EventWidget * widget, int event)
+    volume->on_event([volume, window](int event)
     {
         ignoreparam(event);
-        Slider* slider = dynamic_cast<Slider*>(widget);
-        window->set_volume(slider->position());
+        window->set_volume(volume->position());
     });
     volume->position(50);
 
     playbtn->disable(true);
     pausebtn->disable(false);
 
-    window->add_handler([window, playbtn, pausebtn](EventWidget * widget, int event)
+    window->on_event([window, playbtn, pausebtn](int event)
     {
-        ignoreparam(widget);
         ignoreparam(event);
         if (window->playing())
         {

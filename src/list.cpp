@@ -10,22 +10,6 @@ namespace mui
 {
     static auto ITEM_HEIGHT = 40;
 
-    /*
-    ListBox::ListBox(const item_array& items,
-                     const Rect& rect)
-        : Widget(rect),
-          m_items(items)
-    {}
-
-    ListBox::ListBox(Frame& parent,
-                     const item_array& items,
-                     const Rect& rect)
-        : ListBox(items, rect)
-    {
-        parent.add(this);
-    }
-    */
-
     Rect ListBox::item_rect(uint32_t index) const
     {
         Rect r(box());

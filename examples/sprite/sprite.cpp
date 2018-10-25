@@ -44,7 +44,7 @@ int main()
     win.show();
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(100));
-    animatetimer.add_handler([&sprite1, &sprite2]()
+    animatetimer.on_timeout([&sprite1, &sprite2]()
     {
         sprite1.advance();
         sprite2.advance();

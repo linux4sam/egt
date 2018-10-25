@@ -21,13 +21,19 @@ namespace mui
         return pointer_abs_pos;
     }
 
-    static int event_key;
+    static int event_key_value{0};
     int& key_value()
     {
-        return event_key;
+        return event_key_value;
     }
 
-    static int event_button;
+    static int event_key_code{0};
+    int& key_code()
+    {
+        return event_key_code;
+    }
+
+    static int event_button{0};
     int& button_value()
     {
         return event_button;
@@ -37,6 +43,7 @@ namespace mui
     {
         DBG("event: " << event);
 
+        // first give event to any windos
         for (auto& w : windows())
         {
             if (!w->visible())
@@ -47,6 +54,10 @@ namespace mui
 
             w->handle(event);
         }
+
+        // then give it to any global input handlers
+        m_global_input.invoke_handlers(event);
     }
 
+    detail::Object IInput::m_global_input;
 }

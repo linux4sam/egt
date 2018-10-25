@@ -105,6 +105,9 @@ namespace mui
         {
             if (widget)
             {
+                if (widget->is_flag_set(widgetmask::NO_FOCUS))
+                    return;
+
                 // remove focus from existing focus widget
                 if (m_focus_widget)
                     m_focus_widget->focus(false);

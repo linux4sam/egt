@@ -20,6 +20,15 @@ namespace mui
      *
      * It handles no events, has a font and alignment, but otherwise is pretty
      * basic.
+     *
+     * @image html widget_label1.png
+     * @image latex widget_label1.png "widget_label1" height=10cm
+     * @image html widget_label2.png
+     * @image latex widget_label2.png "widget_label2" height=10cm
+     * @image html widget_label3.png
+     * @image latex widget_label3.png "widget_label3" height=10cm
+     * @image html widget_label4.png
+     * @image latex widget_label4.png "widget_label4" height=10cm
      */
     class Label : public Widget
     {
@@ -75,6 +84,11 @@ namespace mui
     /**
      * Boolean checkbox.
      *
+     * @image html widget_checkbox1.png
+     * @image latex widget_checkbox1.png "widget_checkbox1" height=10cm
+     * @image html widget_checkbox2.png
+     * @image latex widget_checkbox2.png "widget_checkbox2" height=10cm
+     *
      * @todo This should be a ValueWidget<bool>.
      */
     class CheckBox : public Label
@@ -115,11 +129,14 @@ namespace mui
 
     /**
      * CheckBox with a boolean slider style interface.
+     *
+     * @image html widget_slidingcheckbox.png
+     * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" height=10cm
      */
     class SlidingCheckBox : public CheckBox
     {
     public:
-        SlidingCheckBox(const Rect& rect = Rect());
+        explicit SlidingCheckBox(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -128,6 +145,11 @@ namespace mui
 
     /**
      * A Label widget that also contains an image.
+     *
+     * @image html widget_imagelabel1.png
+     * @image latex widget_imagelabel1.png "widget_imagelabel1" height=10cm
+     * @image html widget_imagelabel2.png
+     * @image latex widget_imagelabel2.png "widget_imagelabel2" height=10cm
      */
     class ImageLabel : public Label
     {

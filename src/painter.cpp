@@ -121,10 +121,6 @@ namespace mui
         return *this;
     }
 
-    /**
-     * @param[in] rect The source rect to copy.
-     * @param[in] point The destination point.
-     */
     Painter& Painter::draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface)
     {
         cairo_set_source_surface(m_cr.get(), surface.get(), point.x - rect.x, point.y - rect.y);

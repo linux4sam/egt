@@ -30,6 +30,7 @@ floating/floating \
 gallery/gallery \
 infotain/infotain \
 space/space \
+thermostat/thermostat \
 water/water \
 widgets/widgets \
 whiteboard/whiteboard
@@ -163,3 +164,10 @@ newsfeed_newsfeed_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
 newsfeed_newsfeeddir = $(prefix)/share/mui/examples/newsfeed
 newsfeed_newsfeed_DATA = $(wildcard $(top_srcdir)/examples/newsfeed/*.xml)
 newsfeed_newsfeed_LDFLAGS = $(AM_LDFLAGS)
+
+thermostat_thermostat_SOURCES = thermostat/thermostat.cpp
+thermostat_thermostat_CXXFLAGS = $(AM_CXXFLAGS)
+thermostat_thermostat_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+thermostat_thermostatdir = $(prefix)/share/mui/examples/thermostat
+thermostat_thermostat_DATA = $(wildcard $(top_srcdir)/examples/thermostat/*.png)
+thermostat_thermostat_LDFLAGS = $(AM_LDFLAGS)

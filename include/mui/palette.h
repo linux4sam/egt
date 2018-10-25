@@ -15,12 +15,13 @@ namespace mui
     /**
      * Color palette.
      *
-     * The color palette defines a bank of colors used. Each widget is capable
-     * of optionally maintaining its own palette if one is explicitly set,
-     * otherwise it will default to a reference of the global palette.
+     * The color palette defines a bank of colors used by widgets. Each widget
+     * is capable of optionally maintaining its own palette if one is explicitly
+     * set, otherwise the widget will default to a reference of the global
+     * palette.
      *
-     * The palette can be extended by simply inserting more groups and collor
-     * ids in the event widgets need to expand on the pre-defined colors.
+     * The palette can be extended by simply inserting more groups and color
+     * ids in the event the palette needs to be expanded to support more colors.
      */
     class Palette
     {

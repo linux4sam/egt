@@ -29,36 +29,32 @@ public:
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
 
         m_grid.add(&m_red, 0, 0);
-        m_red.add_handler([this](EventWidget * widget, int event)
+        m_red.on_event([this](int event)
         {
-            ignoreparam(widget);
             ignoreparam(event);
             if (event == EVT_MOUSE_DOWN)
                 m_color = Color::RED;
         });
 
         m_grid.add(&m_blue, 0, 1);
-        m_blue.add_handler([this](EventWidget * widget, int event)
+        m_blue.on_event([this](int event)
         {
-            ignoreparam(widget);
             ignoreparam(event);
             if (event == EVT_MOUSE_DOWN)
                 m_color = Color::BLUE;
         });
 
         m_grid.add(&m_green, 0, 2);
-        m_green.add_handler([this](EventWidget * widget, int event)
+        m_green.on_event([this](int event)
         {
-            ignoreparam(widget);
             ignoreparam(event);
             if (event == EVT_MOUSE_DOWN)
                 m_color = Color::GREEN;
         });
 
         m_grid.add(&m_clear, 0, 3);
-        m_clear.add_handler([this](EventWidget * widget, int event)
+        m_clear.on_event([this](int event)
         {
-            ignoreparam(widget);
             ignoreparam(event);
             if (event == EVT_MOUSE_DOWN)
             {

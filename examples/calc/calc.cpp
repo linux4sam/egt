@@ -50,10 +50,8 @@ int main()
             b = new Button(label, Rect(Size(50, 50)));
             b->font(Font(30, Font::WEIGHT_BOLD));
 
-            b->add_handler([&text, b](EventWidget * widget, int event)
+            b->on_event([&text, b](int event)
             {
-                ignoreparam(widget);
-
                 if (event != EVT_MOUSE_UP)
                     return;
 

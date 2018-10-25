@@ -78,6 +78,32 @@ namespace mui
         return widget;
     }
 
+    Widget* StaticGrid::add(Widget* widget, alignmask align)
+    {
+        for (auto& column : m_cells)
+        {
+            auto i = std::find_if(column.begin(), column.end(),
+                                  [](const Cell & cell)
+            {
+                return !cell.widget;
+            });
+
+            if (i != column.end())
+            {
+                i->widget = widget;
+                i->align = align;
+
+                Frame::add(widget);
+
+                reposition();
+
+                return widget;
+            }
+        }
+
+        return nullptr;
+    }
+
     void StaticGrid::remove(Widget* widget)
     {
         assert(widget);

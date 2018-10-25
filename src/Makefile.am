@@ -105,6 +105,7 @@ $(top_srcdir)/include/mui/video.h \
 $(top_srcdir)/include/mui/widget.h \
 $(top_srcdir)/include/mui/window.h \
 $(top_srcdir)/include/mui/x11screen.h \
+$(top_srcdir)/include/mui/object.h \
 $(top_srcdir)/include/mui/view.h
 
 libmui_la_LDFLAGS = -version-number 1:0:0 -no-undefined

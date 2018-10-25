@@ -11,7 +11,7 @@ using namespace std;
 namespace mui
 {
 
-    Image::Image(const string& filename, const Point& point)
+    Image::Image(const std::string& filename, const Point& point)
         : m_filename(filename),
           m_image(image_cache.get(filename, 1.0))
     {

@@ -12,6 +12,7 @@
 
 #include <mui/font.h>
 #include <mui/geometry.h>
+#include <mui/object.h>
 #include <mui/input.h>
 #include <mui/palette.h>
 #include <mui/screen.h>
@@ -71,6 +72,11 @@ namespace mui
         FRAME = (1 << 5),
 
         /**
+         * Don't allow the widget to have focus.
+         */
+        NO_FOCUS = (1 << 6),
+
+        /**
          * Default window flags.
          */
         WINDOW_DEFAULT = WINDOW | NO_BORDER,
@@ -104,33 +110,6 @@ namespace mui
     widgetmask& operator^=(widgetmask& a, widgetmask Y);
 
     class Widget;
-
-    class EventWidget
-    {
-    public:
-        EventWidget() noexcept
-        {}
-
-        using handler_callback_t = std::function<void (EventWidget* widget, int event)>;
-
-        virtual void add_handler(handler_callback_t handler)
-        {
-            m_handlers.push_back(handler);
-        }
-
-        virtual ~EventWidget()
-        {}
-
-    protected:
-
-        virtual void invoke_handlers(int event)
-        {
-            for (auto x : m_handlers)
-                x(this, event);
-        }
-
-        std::vector<handler_callback_t> m_handlers;
-    };
 
     /**
      * Alignment flags.
@@ -197,7 +176,7 @@ namespace mui
      * of what it means to handle an event or draw the widget is implemented in
      * classes that are derived from this one, like a Button or a Label.
      */
-    class Widget : public EventWidget
+    class Widget : public detail::Object
     {
     public:
 
@@ -237,24 +216,31 @@ namespace mui
         /**
          * Construct a widget.
          *
-         * @param[in] point Point to position the widget at.
-         * @param[in] point Initial size of the widget.
+         * @param[in] rect Initial rectangle of the Widget.
          * @param[in] flags Widget flags.
          */
         Widget(const Rect& rect = Rect(),
                widgetmask flags = widgetmask::NONE) noexcept;
 
+        /**
+             * Construct a widget.
+         *
+         * @param[in] parent Parent Frame of the widget.
+             * @param[in] rect Initial rectangle of the Widget.
+             * @param[in] flags Widget flags.
+         */
         Widget(Frame& parent, const Rect& rect = Rect(),
                widgetmask flags = widgetmask::NONE) noexcept;
 
         /**
          * Draw the widget.
          *
-         * This is called by the internal code to cause a redraw of the widget.
-         * You must implement this function in a derived class to handle drawing
-         * the widget.
+         * To change how a widget is drawn, this function can be overloaded and
+         * changed.
          *
-         * @warning Do not call this directly.
+         * @warning Normally this should not be called directly and instead the
+         * event loop will call this function with an already established
+         * Painter when the widget needs to be redrawn.
          */
         virtual void draw(Painter& painter, const Rect& rect) = 0;
 
@@ -296,14 +282,8 @@ namespace mui
          * @note This will cause a redraw of the widget.
          */
         virtual void move(const Point& point);
-        inline void movex(int x)
-        {
-            move(Point(x, y()));
-        }
-        inline void movey(int y)
-        {
-            move(Point(x(), y));
-        }
+        inline void movex(int x) { move(Point(x, y())); }
+        inline void movey(int y) { move(Point(x(), y)); }
 
         /**
          * Move the widget to the specified center point.
@@ -544,6 +524,11 @@ namespace mui
          */
         inline void name(const std::string& name) { m_name = name; }
 
+        /**
+         * Draw the widget to a file.
+         */
+        virtual void save_to_file(const std::string& filename);
+
         virtual ~Widget();
 
     protected:
@@ -640,9 +625,9 @@ namespace mui
             Combo(const std::string& label = std::string(),
                   const Rect& rect = Rect());
 
-            virtual int handle(int event);
+            virtual int handle(int event) override;
 
-            virtual void draw(Painter& painter, const Rect& rect);
+            virtual void draw(Painter& painter, const Rect& rect) override;
 
             virtual ~Combo();
 
@@ -653,11 +638,11 @@ namespace mui
         class ScrollWheel : public Widget
         {
         public:
-            ScrollWheel(const Rect& rect = Rect());
+            explicit ScrollWheel(const Rect& rect = Rect());
 
-            virtual int handle(int event);
+            virtual int handle(int event) override;
 
-            virtual void draw(Painter& painter, const Rect& rect);
+            virtual void draw(Painter& painter, const Rect& rect) override;
 
             int position() const
             {

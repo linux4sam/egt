@@ -485,7 +485,7 @@ int main()
     win.show();
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(30));
-    animatetimer.add_handler([&win]()
+    animatetimer.on_timeout([&win]()
     {
         win.animate();
     });

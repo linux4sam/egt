@@ -55,11 +55,14 @@ namespace mui
 
     /**
      * Radial dial widget that a user uses to select a value.
+     *
+     * @image html widget_radial.png
+     * @image latex widget_radial.png "widget_radial" height=10cm
      */
     class Radial : public ValueWidget<float>
     {
     public:
-        Radial(const Rect& rect);
+        explicit Radial(const Rect& rect);
 
         void label(const std::string& label)
         {
@@ -140,18 +143,21 @@ namespace mui
     class ProgressBar : public ValueRangeWidget<int>
     {
     public:
-        ProgressBar(const Rect& rect = Rect());
+        explicit ProgressBar(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
     };
 
     /**
      * Displays a level meter based on a value.
+     *
+     * @image html widget_levelmeter.png
+     * @image latex widget_levelmeter.png "widget_levelmeter" height=10cm
      */
     class LevelMeter : public ValueRangeWidget<int>
     {
     public:
-        LevelMeter(const Rect& rect = Rect());
+        explicit LevelMeter(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
     };
@@ -159,12 +165,15 @@ namespace mui
     /**
      * Displays an analog meter based on a value.
      *
+     * @image html widget_analogmeter.png
+     * @image latex widget_analogmeter.png "widget_analogmeter" height=10cm
+     *
      * <http://www.peteronion.org.uk/GtkExamples/GladeTutorials.html>
      */
     class AnalogMeter : public ValueRangeWidget<int>
     {
     public:
-        AnalogMeter(const Rect& rect = Rect());
+        explicit AnalogMeter(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
 
@@ -175,7 +184,7 @@ namespace mui
     class SpinProgress : public ValueRangeWidget<int>
     {
     public:
-        SpinProgress(const Rect& rect = Rect());
+        explicit SpinProgress(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
     };
@@ -187,7 +196,14 @@ namespace mui
     };
 
     /**
+     * This is a slider that can be used to select fro a range of values.
+     *
      * @todo This should be a ValueRangeWidget<int>.
+     *
+     * @image html widget_slider1.png
+     * @image latex widget_slider1.png "widget_slider1" height=10cm
+     * @image html widget_slider2.png
+     * @image latex widget_slider2.png "widget_slider2" height=10cm
      */
     class Slider : public Widget
     {

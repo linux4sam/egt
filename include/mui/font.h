@@ -81,7 +81,7 @@ namespace mui
          * Create a font based on the global default font, but with the
          * specified size.
          *
-         * @param[in] face The face name of the font.
+         * @param[in] size The size of the font.
          */
         explicit Font(int size);
 

@@ -19,26 +19,42 @@
 namespace mui
 {
 
+    /**
+     * An item in a ListBox.
+     */
     class ListBoxItem
     {
     public:
         virtual void draw(Painter& painter, const Rect& rect, bool selected)
         {
             if (selected)
+            {
                 painter.draw_basic_box(rect,
                                        global_palette().color(Palette::BORDER),
                                        global_palette().color(Palette::HIGHLIGHT));
+            }
         }
     };
 
+    /**
+     * A specialized ListBoxItem that holds a simple string.
+     */
     class StringItem : public ListBoxItem
     {
     public:
 
+        /**
+         * Construct a List item.
+         */
+        // cppcheck-suppress noExplicitConstructor
         StringItem(const char* text)
             : m_text(text)
         {}
 
+        /**
+         * Construct a List item.
+         */
+        // cppcheck-suppress noExplicitConstructor
         StringItem(const std::string& text)
             : m_text(text)
         {}
@@ -62,14 +78,18 @@ namespace mui
 
     protected:
 
-        StringItem() = delete;
-
         std::string m_text;
         Font m_font;
     };
 
     /**
      * ListBox that manages a selectable list of items.
+     *
+     * Items are derived from type ListBoxItem. Only one item may be selected at
+     * a time.
+     *
+     * @image html widget_listbox.png
+     * @image latex widget_listbox.png "widget_listbox" height=10cm
      */
     class ListBox : public Widget
     {

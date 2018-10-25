@@ -11,6 +11,7 @@
  */
 
 #include <mui/timer.h>
+#include <mui/utils.h>
 #include <chrono>
 #include <vector>
 #include <functional>
@@ -22,11 +23,11 @@ namespace mui
     /**
      * Predefined easing functions.
      *
-     * All easing functions take a percent, and return a percent. You can easily
-     * create your own easing functions.  For example, the simplest of easing
-     * functions is a linear function that is implemented like so:
+     * All easing functions take a percent time, and return a percent value. You
+     * can easily create your own easing functions.  For example, the simplest
+     * of easing functions is a linear function that is implemented like so:
      *
-     * @begincode
+     * @code
      * float_t easing_linear(float_t p)
      * {
      *     return p;
@@ -87,7 +88,7 @@ namespace mui
         /**
          * Base class for an animation.
          */
-        class IAnimation
+        class IAnimation : public detail::noncopyable
         {
         public:
 
@@ -147,15 +148,32 @@ namespace mui
     public:
 
         /**
+         * @param[in] start The starting value of the animation.
+         * @param[in] end The ending value of the animation.
          * @param[in] callback Called whenever the animation value changes. May be nullptr.
+         * @param[in] duration The duration of the animation.
+         * @param[in] func The easing function to use.
          */
         Animation(float_t start, float_t end, animation_callback callback,
                   std::chrono::milliseconds duration, easing_func func = easing_linear);
 
         float_t starting() const { return m_start; }
+
+        /**
+         * @note Calling this while running is undefined behavior.
+         */
         void starting(float_t start) { m_start = start; }
+
         float_t ending() const { return m_end; }
+
+        /**
+         * @note Calling this while running is undefined behavior.
+         */
         void ending(float_t end) { m_end = end; }
+
+        /**
+         * @note Calling this while running is undefined behavior.
+         */
         void duration(std::chrono::milliseconds dur) { m_duration = dur; }
 
         /**
@@ -176,8 +194,14 @@ namespace mui
          */
         virtual void stop() override;
 
-        // don't know if this is a good thing to have while running
+        /**
+         * @note Calling this while running is undefined behavior.
+         */
         void set_easing_func(easing_func func);
+
+        /**
+         * @note Calling this while running is undefined behavior.
+         */
         void reverse(bool rev) { m_reverse = rev; }
 
         virtual ~Animation() {}
@@ -358,30 +382,32 @@ namespace mui
         {
         public:
 
-            using property_callback = std::function<void (int v)>;
-
             PropertyAnimator(float start, float end,
                              std::chrono::milliseconds duration,
                              easing_func func = easing_linear)
                 : AutoAnimation(start, end, duration, func,
-                                std::bind(&PropertyAnimator::do_callback, this, std::placeholders::_1))
-            {
-            }
+                                std::bind(&PropertyAnimator::invoke_handlers,
+                                          this, std::placeholders::_1))
+            {}
 
-            void set_prop_callback(property_callback callback)
+            using property_callback_t = std::function<void (int v)>;
+
+            void on_change(property_callback_t callback)
             {
-                m_prop_callback = callback;
+                m_callbacks.push_back(callback);
             }
 
         protected:
 
-            void do_callback(float value)
+            void invoke_handlers(float value)
             {
-                if (m_prop_callback)
-                    m_prop_callback(value);
+                for (auto& callback : m_callbacks)
+                    callback(value);
             }
 
-            property_callback m_prop_callback{nullptr};
+            using callback_array = std::vector<property_callback_t>;
+
+            callback_array m_callbacks;
         };
 
     }

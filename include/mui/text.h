@@ -21,6 +21,9 @@ namespace mui
      * Input text box.
      *
      * This supports text on a single line.
+     *
+     * @image html widget_textbox.png
+     * @image latex widget_textbox.png "widget_txtbox" height=10cm
      */
     class TextBox : public Widget
     {
@@ -32,7 +35,7 @@ namespace mui
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
-        virtual void focus(bool value);
+        virtual void focus(bool value) override;
 
         /**
          * Set the text value.

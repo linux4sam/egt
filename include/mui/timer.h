@@ -18,6 +18,7 @@ namespace mui
      * Basic one shot timer.
      *
      * This is a timer that will fire once after the specified duration.
+     * To handle the timeout, call on_timeout with a callback.
      */
     class Timer : public detail::noncopyable
     {
@@ -79,9 +80,9 @@ namespace mui
         inline bool running() const { return m_running; }
 
         /**
-         * Add a handler to be called with the timer times out.
+         * Add a callback to be called with the timer times out.
          */
-        void add_handler(timer_callback_t callback)
+        void on_timeout(timer_callback_t callback)
         {
             m_callbacks.push_back(callback);
         }
@@ -95,10 +96,12 @@ namespace mui
          */
         virtual void invoke_handlers();
 
+        using callback_array = std::vector<timer_callback_t>;
+
         asio::steady_timer m_timer;
-        std::chrono::milliseconds m_duration {};
-        std::vector<timer_callback_t> m_callbacks;
-        bool m_running {false};
+        std::chrono::milliseconds m_duration{};
+        callback_array m_callbacks;
+        bool m_running{false};
 
     private:
 

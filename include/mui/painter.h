@@ -98,6 +98,11 @@ namespace mui
 
         Painter& draw_image(const Point& point, shared_cairo_surface_t surface, bool bw = false);
 
+        /**
+         * @param[in] rect The source rect to copy.
+         * @param[in] point The destination point.
+         * @param[in] surface The image surface to draw.
+         */
         Painter& draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface);
 
         Painter& draw_arc(const Point& point, float radius, float angle1, float angle2);

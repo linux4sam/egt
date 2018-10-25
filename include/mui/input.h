@@ -18,6 +18,7 @@
 #include <linux/input.h>
 #include <memory>
 #include <mui/geometry.h>
+#include <mui/object.h>
 #include <string>
 
 namespace mui
@@ -70,6 +71,8 @@ namespace mui
      */
     int& key_value();
 
+    int& key_code();
+
     /**
      * Global button value.
      *
@@ -84,6 +87,14 @@ namespace mui
     {
     public:
         static void dispatch(int event);
+
+        static detail::Object& global_input()
+        {
+            return m_global_input;
+        }
+
+    protected:
+        static detail::Object m_global_input;
     };
 
     /**

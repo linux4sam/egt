@@ -38,7 +38,7 @@ namespace mui
             }
         };
 
-        LineChart(const Rect& rect = Rect());
+        explicit LineChart(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -66,7 +66,7 @@ namespace mui
     class PieChart : public Widget
     {
     public:
-        PieChart(const Rect& rect = Rect());
+        explicit PieChart(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

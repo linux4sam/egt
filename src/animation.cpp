@@ -414,7 +414,7 @@ namespace mui
             : Animation(start, end, callback, duration, func),
               m_timer(std::chrono::milliseconds(30))
         {
-            m_timer.add_handler([this]()
+            m_timer.on_timeout([this]()
             {
                 if (!next())
                 {

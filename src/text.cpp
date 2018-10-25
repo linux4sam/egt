@@ -15,7 +15,7 @@ namespace mui
           m_text(text),
           m_timer(std::chrono::seconds(1))
     {
-        m_timer.add_handler(std::bind(&TextBox::cursor_timeout, this));
+        m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
     }
 
 
@@ -36,8 +36,21 @@ namespace mui
         case EVT_MOUSE_DOWN:
             return 1;
         case EVT_KEY_DOWN:
-            m_text.append(1, (char)key_value());
-            damage();
+            if (std::isalnum((char)key_value()))
+            {
+                m_text.append(1, (char)key_value());
+                damage();
+            }
+            else if (key_code() == KEY_BACKSPACE)
+            {
+                m_text.pop_back();
+                damage();
+            }
+            else
+            {
+                //cout << "unhandled key code " << key_code() << endl;
+                //cout << "unhandled key value " << key_value() << endl;
+            }
             return 1;
         }
 

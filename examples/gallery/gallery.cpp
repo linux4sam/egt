@@ -96,10 +96,8 @@ int main()
     ImageButton settings(SHARED_PATH "settings.png", "", Rect(), widgetmask::NO_BORDER);
     win.add(&settings);
     settings.align(alignmask::RIGHT | alignmask::TOP, 10);
-    settings.add_handler([&popup](EventWidget * widget, int event)
+    settings.on_event([&popup](int event)
     {
-        ignoreparam(widget);
-
         if (event == EVT_MOUSE_UP)
         {
             if (popup.visible())

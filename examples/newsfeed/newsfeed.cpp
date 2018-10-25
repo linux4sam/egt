@@ -14,6 +14,7 @@
 #include <string.h>
 #include <string>
 #include <vector>
+//#include <curl/curl.h>
 
 #ifdef HAVE_RAPIDXML_RAPIDXML_HPP
 #include <rapidxml/rapidxml.hpp>
@@ -28,44 +29,69 @@ using namespace mui;
 
 // pull feed from http://feeds.reuters.com/reuters/technologyNews
 
-#if 0
+#if 1
 class NewsItem : public ListBoxItem
 {
 public:
 
-    StringItem(const std::string& title, const std::string& description)
-        : m_title(title)
-          m_description(description)
-    {}
+    NewsItem(const std::string& title, const std::string& desc, const std::string& date)
+        : m_title(title),
+          m_desc(desc),
+          m_date(date),
+          m_grid(Rect(), 1, 2)
+    {
+        m_grid.add(&m_title, 0, 0);
+        m_grid.add(&m_desc, 0, 1);
+    }
 
     virtual void draw(Painter& painter, const Rect& rect, bool selected) override
     {
         ListBoxItem::draw(painter, rect, selected);
 
-        m_title.draw();
-        m_description.draw();
+        m_grid.set_box(rect);
+        m_grid.reposition();
+        m_grid.draw(painter, m_grid.box());
 
-        painter.set_color(global_palette().color(Palette::TEXT));
-        painter.set_font(m_font);
-        painter.draw_text(rect, m_text, alignmask::CENTER);
+        //m_title.draw(painter, m_title.box());
+        //m_description.draw(painter, m_desc.box());
     }
 
-    /**
-     * Set the font of the items.
-     */
-    virtual void font(const Font& font) { m_font = font; }
-
-    virtual ~StringItem()
+    virtual ~NewsItem()
     {}
 
 protected:
 
-    StringItem() = delete;
-
-    std::string m_title;
-    std::string m_description;
-    Font m_font;
+    Label m_title;
+    Label m_desc;
+    Label m_date;
+    StaticGrid m_grid;
 };
+#endif
+
+#if 0
+static void download()
+{
+    CURL* curl;
+    CURLcode res;
+
+    curl = curl_easy_init();
+    if (curl)
+    {
+        curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
+        /* example.com is redirected, so we tell libcurl to follow redirection */
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+        /* Perform the request, res will get the return code */
+        res = curl_easy_perform(curl);
+        /* Check for errors */
+        if (res != CURLE_OK)
+            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                    curl_easy_strerror(res));
+
+        /* always cleanup */
+        curl_easy_cleanup(curl);
+    }
+}
 #endif
 
 static int load(const string& file, ListBox& list)
@@ -81,6 +107,7 @@ static int load(const string& file, ListBox& list)
         string title;
         string description;
         string link;
+        string date;
 
         auto t = node->first_node("title");
         if (t)
@@ -94,13 +121,20 @@ static int load(const string& file, ListBox& list)
             description = d->first_node()->value();
         }
 
-        auto l = node->first_node("description");
+        auto p = node->first_node("pubDate");
+        if (p)
+        {
+            date = p->first_node()->value();
+        }
+
+        auto l = node->first_node("link");
         if (l)
         {
             link = l->first_node()->value();
         }
 
-        list.add_item(new StringItem(title));
+        //list.add_item(new StringItem(title));
+        list.add_item(new NewsItem(title, description, date));
     }
 
     return 0;

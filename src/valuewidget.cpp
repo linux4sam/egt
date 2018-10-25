@@ -9,22 +9,21 @@ using namespace std;
 
 namespace mui
 {
+    static inline double to_degrees(double radians)
+    {
+        return radians * (180.0 / M_PI);
+    }
+
+    static inline float to_radians(float zero, float degrees)
+    {
+        //degrees = 360.0 - degrees - zero;
+        degrees += zero;
+        return degrees * (M_PI / 180.0);
+    }
 
     Radial::Radial(const Rect& rect)
-        : ValueWidget<float>(rect, -1.0)
+        : ValueWidget<float>(rect, 90.0)
     {}
-
-    static int norm(float angle)
-    {
-        int a = (int)(angle / (M_PI / 180.0));
-        if (a > 180)
-            a -= 180;
-        else
-            a += 180;
-        if (a == 360)
-            a = 0;
-        return a;
-    }
 
     int Radial::handle(int event)
     {
@@ -42,13 +41,10 @@ namespace mui
             if (active())
             {
                 Point c = center();
-                //float angle = atan2f(screen_to_window(mouse_position()).y - c.y,
-                //                     screen_to_window(mouse_position()).x - c.x);
-                float angle = c.angle_to<float>(mouse_position());
-                angle = angle * (180.0 / M_PI);
-                angle = (angle > 0.0 ? angle : (360.0 + angle));
-                angle = 180 - angle;
-
+                float angle = c.angle_to<float>(screen_to_frame(mouse_position()));
+                angle = to_degrees(angle);
+                if (angle < 0)
+                    angle = angle + 360;
                 value(angle);
                 return 1;
             }
@@ -56,12 +52,6 @@ namespace mui
         }
 
         return Widget::handle(event);
-    }
-
-    static float radians(float zero, float degrees)
-    {
-        degrees = 360 - degrees - zero;
-        return degrees * (M_PI / 180.0);
     }
 
     void Radial::draw(Painter& painter, const Rect& rect)
@@ -74,13 +64,11 @@ namespace mui
         color1.alpha(0x55);
 
         float radius = w() / 2 - (linew / 2);
-        double angle1 = radians(180, 0);
-        double angle2 = radians(180, value());
-
-        int a = norm(angle2);
+        double angle1 = to_radians(-90, 0);
+        double angle2 = to_radians(-90, value());
 
         Color color2(Color::OLIVE);
-        if (a > 180)
+        if (value() > 180)
             color2 = Color::ORANGE;
 
         Point c = center();
@@ -96,11 +84,10 @@ namespace mui
                               color1.bluef(),
                               color1.alphaf());
         cairo_set_line_width(cr.get(), linew);
-
         cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
         cairo_stroke(cr.get());
 
-        // top position arc
+        // value arc
         cairo_set_source_rgb(cr.get(),
                              color2.redf(),
                              color2.greenf(),
@@ -109,7 +96,7 @@ namespace mui
         cairo_arc(cr.get(), c.x, c.y, radius, angle1, angle2);
         cairo_stroke(cr.get());
 
-        string text = std::to_string(a) + m_label;
+        string text = std::to_string((int)value()) + m_label;
         painter.draw_text(text, box(), color2, alignmask::CENTER, 0, Font(72));
 
         cairo_restore(cr.get());
@@ -271,8 +258,8 @@ namespace mui
         Color color2(Color::ORANGE);
 
         float radius = w() / 2 - (linew / 2);
-        double angle1 = radians(180, 0);
-        double angle2 = radians(180, value() / 100. * 360.);
+        double angle1 = to_radians(180, 0);
+        double angle2 = to_radians(180, value() / 100. * 360.);
 
         Point c = center();
 

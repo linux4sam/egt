@@ -28,16 +28,21 @@ public:
         this->add(&m_grid);
         this->m_grid.align(alignmask::EXPAND);
 
-        //this->move(Point(0,280));
+        /*
+        template <class T>
+            struct Key : public T
+        {
 
-        this->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+            unsigned int code;
+        };
+        */
 
         vector<vector<string>> buttons =
         {
             {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p" },
             {"", "a", "s", "d", "f", "g", "h", "j", "k", "l" },
-            {"icons/arrow_up.png", "z", "x", "c", "v", "b", "n", "m", "", "icons/shape_move_back.png"},
-            {"123", ",", "", "", "space", "", "", "", "", "."}
+            {"icons/arrow_up.png", "z", "x", "c", "v", "b", "n", "m", "", "icons/arrow_left.png"},
+            {"123", ",", "", "", "     ", "", "", "", "", "."}
         };
 
         for (size_t r = 0; r < buttons.size(); r++)
@@ -54,6 +59,23 @@ public:
                     b = new ImageButton(label);
                 else
                     b = new Button(label);
+
+                b->on_event([b](int event)
+                {
+                    if (!b->text().empty())
+                    {
+                        if (event == EVT_MOUSE_DOWN)
+                        {
+                            key_value() = b->text()[0];
+                            IInput::dispatch(EVT_KEY_DOWN);
+                        }
+                        else if (event == EVT_MOUSE_UP)
+                        {
+                            key_value() = b->text()[0];
+                            IInput::dispatch(EVT_KEY_UP);
+                        }
+                    }
+                });
 
                 this->m_grid.add(b, c, r);
             }
@@ -96,10 +118,8 @@ int main()
     Button btn1("button 1", Rect(Point(100, 250), Size(100, 40)));
     win.add(&btn1);
 
-    btn1.add_handler([&popup](EventWidget * widget, int event)
+    btn1.on_event([&popup](int event)
     {
-        ignoreparam(widget);
-
         if (event == EVT_MOUSE_DOWN)
         {
             if (popup.visible())
@@ -113,10 +133,8 @@ int main()
     win.add(&btn2);
 
     Keyboard<Window> keyboard;
-    btn2.add_handler([&keyboard](EventWidget * widget, int event)
+    btn2.on_event([&keyboard](int event)
     {
-        ignoreparam(widget);
-
         if (event == EVT_MOUSE_DOWN)
         {
             if (keyboard.visible())
@@ -142,13 +160,25 @@ int main()
 
     TextBox text1("text 1", Rect(Point(100, 400), Size(200, 40)));
     win.add(&text1);
+    // TODO: this is broken with keyboard and focus - get dups
+    IInput::global_input().on_event([&text1](int event)
+    {
+        switch (event)
+        {
+        case EVT_KEY_DOWN:
+        case EVT_KEY_UP:
+        case EVT_KEY_REPEAT:
+            text1.handle(event);
+            break;
+        }
+    });
 
     vector<StringItem> names = { "item 1", "item 2", "item3" };
     ListBox::item_array items;
     items.resize(names.size());
     transform(names.begin(), names.end(), items.begin(), [](const StringItem & v) { return new StringItem(v);});
 
-    ListBox list1(items, Rect(Point(350, 50), Size(50, 150)));
+    ListBox list1(items, Rect(Point(350, 50), Size(100, 40 * 3)));
     win.add(&list1);
     list1.select(1);
 
@@ -189,7 +219,7 @@ int main()
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
-    cputimer.add_handler([&tools, &lp1, &am1]()
+    cputimer.on_timeout([&tools, &lp1, &am1]()
     {
         tools.update();
         lp1.value(tools.usage(0));
@@ -197,19 +227,19 @@ int main()
     });
     cputimer.start();
 
-
-    /*
-    Timer timer(std::chrono::seconds(1), true);
-    timer.add_handler([&win]()
-                      {
-                          win.save_to_file(win.name() + ".png");
-                      });
-    */
-
     win.add(&popup);
     win.add(&keyboard);
 
     win.show();
+
+    asio::signal_set signals(app.event().io(), SIGQUIT);
+    signals.async_wait([&win](const asio::error_code & error, int signal_number)
+    {
+        ignoreparam(signal_number);
+        if (error)
+            return;
+        win.save_children_to_file();
+    });
 
     return app.run();
 }

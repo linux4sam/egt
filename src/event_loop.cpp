@@ -92,7 +92,7 @@ namespace mui
     int EventLoop::run()
     {
         PeriodicTimer drawtimer(std::chrono::milliseconds(30));
-        drawtimer.add_handler([this]()
+        drawtimer.on_timeout([this]()
         {
             draw();
         });

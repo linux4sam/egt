@@ -86,6 +86,7 @@ namespace mui
               return std::sqrt(T((point.x - x) * (point.x - x)) +
               T((point.y - y) * (point.y - y)));
             */
+            // maybe slower...
             return std::hypot(T(point.x - x), T(point.y - y));
         }
 

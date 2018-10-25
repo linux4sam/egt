@@ -57,7 +57,8 @@ namespace mui
         {
             if (child->align() != alignmask::NONE)
             {
-                auto r = align_algorithm(child->size(), child->parent()->box(), child->align(), child->margin());
+                auto r = align_algorithm(child->size(), child->parent()->box(),
+                                         child->align(), child->margin());
                 child->set_box(r);
             }
         }

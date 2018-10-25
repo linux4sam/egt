@@ -97,6 +97,12 @@ namespace mui
     {
         if (m_focus != value)
         {
+            if (value)
+            {
+                if (is_flag_set(widgetmask::NO_FOCUS))
+                    return;
+            }
+
             m_focus = value;
 
             if (m_parent)
@@ -174,6 +180,25 @@ namespace mui
             w = w->m_parent;
         }
         return p - pp;
+    }
+
+    void Widget::save_to_file(const std::string& filename)
+    {
+        auto surface = shared_cairo_surface_t(
+                           cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+                                   w(), h()),
+                           cairo_surface_destroy);
+
+        auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
+
+        // move origin
+        cairo_translate(cr.get(),
+                        -x(),
+                        -y());
+
+        Painter painter(cr);
+        draw(painter, box());
+        cairo_surface_write_to_png(surface.get(), filename.c_str());
     }
 
     Widget::~Widget()

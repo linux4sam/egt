@@ -36,15 +36,15 @@ namespace mui
         if (!p)
         {
             p = new Palette;
-            p->set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTGRAY);
+            p->set(Palette::BG, Palette::GROUP_NORMAL, Color(0xf1f1f1ff));
             p->set(Palette::FG, Palette::GROUP_NORMAL, Color::BLACK);
             p->set(Palette::LIGHT, Palette::GROUP_NORMAL, Color::WHITE);
             p->set(Palette::DARK, Palette::GROUP_NORMAL, Color::BLACK);
             p->set(Palette::MID, Palette::GROUP_NORMAL, Color::GRAY);
             p->set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK);
             p->set(Palette::TEXTBG, Palette::GROUP_NORMAL, Color::WHITE);
-            p->set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::ORANGE);
-            p->set(Palette::BORDER, Palette::GROUP_NORMAL, Color::GRAY);
+            p->set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color(0xe3edfaff));
+            p->set(Palette::BORDER, Palette::GROUP_NORMAL, Color(0xbfbfc0ff));
 
             p->set(Palette::BG, Palette::GROUP_DISABLED, Color::GRAY);
             p->set(Palette::FG, Palette::GROUP_DISABLED, Color::GRAY);
@@ -54,7 +54,7 @@ namespace mui
             p->set(Palette::TEXT, Palette::GROUP_DISABLED, Color::BLACK);
             p->set(Palette::TEXTBG, Palette::GROUP_DISABLED, Color::GRAY);
             p->set(Palette::HIGHLIGHT, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::BORDER, Palette::GROUP_DISABLED, Color::GRAY);
+            p->set(Palette::BORDER, Palette::GROUP_DISABLED, Color(0xbfbfc0ff));
 
             p->set(Palette::BG, Palette::GROUP_ACTIVE, Color::LIGHTGRAY);
             p->set(Palette::FG, Palette::GROUP_ACTIVE, Color::BLACK);
@@ -63,8 +63,9 @@ namespace mui
             p->set(Palette::MID, Palette::GROUP_ACTIVE, Color::GRAY);
             p->set(Palette::TEXT, Palette::GROUP_ACTIVE, Color::BLACK);
             p->set(Palette::TEXTBG, Palette::GROUP_ACTIVE, Color::WHITE);
-            p->set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color::ORANGE);
-            p->set(Palette::BORDER, Palette::GROUP_ACTIVE, Color::GRAY);
+            p->set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color(0xe3edfaff));
+            //p->set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color::ORANGE);
+            p->set(Palette::BORDER, Palette::GROUP_ACTIVE, Color(0xbfbfc0ff));
         }
 
         return *p;

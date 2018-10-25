@@ -12,18 +12,21 @@ using namespace std;
 
 namespace mui
 {
-    struct resource
+    namespace detail
     {
-        const unsigned char* data;
-        unsigned int len;
-        unsigned int index;
-    };
+        struct Resource
+        {
+            const unsigned char* data;
+            unsigned int len;
+            unsigned int index;
+        };
+    }
 
     /*
      * Because of static initialization order, make this a pointer and allocate
      * on demand instead of initializing statically.
      */
-    static std::map<std::string, struct resource>* resources = 0;
+    static std::map<std::string, detail::Resource>* resources = 0;
 
     cairo_status_t read_resource_stream(void* closure, unsigned char* data, unsigned int length)
     {
@@ -77,9 +80,9 @@ namespace mui
     void register_resource(const char* name, const unsigned char* data, unsigned int len)
     {
         if (!resources)
-            resources = new std::map<std::string, struct resource>();
+            resources = new std::map<std::string, detail::Resource>();
         assert(resources);
-        struct resource r = {data, len, 0};
+        detail::Resource r = {data, len, 0};
         resources->insert(std::make_pair(name, r));
     }
 

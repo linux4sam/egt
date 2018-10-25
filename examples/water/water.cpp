@@ -167,14 +167,14 @@ int main()
 #endif
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(30));
-    animatetimer.add_handler([&win]()
+    animatetimer.on_timeout([&win]()
     {
         win.animate();
     });
     animatetimer.start();
 
     PeriodicTimer animatetimer2(std::chrono::milliseconds(100));
-    animatetimer2.add_handler([&sprites]()
+    animatetimer2.on_timeout([&sprites]()
     {
         for (auto& sprite : sprites)
             sprite->advance();
@@ -182,7 +182,7 @@ int main()
     animatetimer2.start();
 
     PeriodicTimer spawntimer(std::chrono::seconds(1));
-    spawntimer.add_handler([&win]()
+    spawntimer.on_timeout([&win]()
     {
         if (win.m_images.size() > 30)
             return;
@@ -212,7 +212,7 @@ int main()
     a1.start();
 
     PeriodicTimer floattimer(1000 * 12);
-    floattimer.add_handler([&a1, &sprite1, &win]()
+    floattimer.on_timeout([&a1, &sprite1, &win]()
     {
 
         static std::uniform_int_distribution<int> yoffset_dist(0, win.h() - sprite1.size().h);
@@ -233,7 +233,7 @@ int main()
     a2.start();
 
     PeriodicTimer floattimer2(1000 * 15);
-    floattimer2.add_handler([&a2, &sprite2, &win]()
+    floattimer2.on_timeout([&a2, &sprite2, &win]()
     {
         static std::uniform_int_distribution<int> yoffset_dist(0, win.h() - sprite2.size().h);
         int y = yoffset_dist(win.e1);
@@ -253,7 +253,7 @@ int main()
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
-    cputimer.add_handler([&label1, &tools]()
+    cputimer.on_timeout([&label1, &tools]()
     {
         tools.update();
         ostringstream ss;

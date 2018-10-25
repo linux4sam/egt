@@ -53,6 +53,15 @@ namespace mui
         virtual Widget* add(Widget* widget, int column, int row,
                             alignmask align = alignmask::EXPAND);
 
+        /**
+             * Add a widget to the next empty cell.
+             *
+             * This will not automatically resize the grid to fit the widget as
+             * necessary.
+             */
+        virtual Widget* add(Widget* widget,
+                            alignmask align = alignmask::EXPAND);
+
         virtual void remove(Widget* widget) override;
 
         /**

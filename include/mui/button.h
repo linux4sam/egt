@@ -17,6 +17,9 @@ namespace mui
 
     /**
      * Basic button widget.
+     *
+     * @image html widget_button.png
+     * @image latex widget_button.png "widget_button" height=10cm
      */
     class Button : public Label
     {

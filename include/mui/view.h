@@ -24,7 +24,7 @@ namespace mui
             VERTICAL
         };
 
-        ScrolledView(const Rect& rect = Rect());
+        explicit ScrolledView(const Rect& rect = Rect());
 
         virtual int handle(int event) override;
 

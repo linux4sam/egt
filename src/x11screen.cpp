@@ -152,23 +152,38 @@ namespace mui
                 break;
             case KeyPress:
             {
-                //char keybuf[8];
-                //KeySym key;
-                //XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
-                //cout << keybuf << endl;
+                /*
+                char keybuf[8];
+                KeySym key;
+                XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
+                cout << keybuf << endl;
+                */
 
                 key_value() = XLookupKeysym(&e.xkey, 0);
+                //                key_code() = XKeysymToKeycode(e.xkey.keycode);
+                key_code() = XKeysymToKeycode(m_priv->display, key_value());
+                if (key_value() == XK_BackSpace)
+                    key_code() = KEY_BACKSPACE;
+
+
+
                 IInput::dispatch(EVT_KEY_DOWN);
                 break;
             }
             case KeyRelease:
             {
-                //char keybuf[8];
-                //KeySym key;
-                //XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
-                //cout << keybuf << endl;
+                /*
+                char keybuf[8];
+                KeySym key;
+                XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
+                cout << keybuf << endl;
+                */
 
                 key_value() = XLookupKeysym(&e.xkey, 0);
+                key_code() = XKeysymToKeycode(m_priv->display, key_value());
+                if (key_value() == XK_BackSpace)
+                    key_code() = KEY_BACKSPACE;
+
                 IInput::dispatch(EVT_KEY_UP);
                 break;
             }

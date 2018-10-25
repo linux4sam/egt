@@ -36,13 +36,21 @@ namespace mui
     public:
 
         /**
-         * @param[in] point Point to position the widget at.
-         * @param[in] point Initial size of the widget.
+         * Construct a Frame.
+         *
+         * @param[in] rect Initial rectangle of the Frame.
          * @param[in] flags Widget flags.
          */
         explicit Frame(const Rect& rect,
                        widgetmask flags = widgetmask::FRAME);
 
+        /**
+         * Construct a Frame.
+         *
+         * @param[in] parent Parent Frame of the Frame.
+         * @param[in] rect Initial rectangle of the Frame.
+         * @param[in] flags Widget flags.
+         */
         explicit Frame(Frame& parent, const Rect& rect,
                        widgetmask flags = widgetmask::FRAME);
 
@@ -159,9 +167,19 @@ namespace mui
         virtual void draw();
 
         /**
-         * Save the frame contents to a file.
+         * Save the entire frame surface to a file.
          */
-        void save_to_file(const std::string& filename);
+        virtual void save_to_file(const std::string& filename) override;
+
+        void save_children_to_file()
+        {
+            for (auto& child : m_children)
+            {
+                std::ostringstream ss;
+                ss << child->name() << ".png";
+                child->save_to_file(ss.str().c_str());
+            }
+        }
 
         virtual ~Frame()
         {}

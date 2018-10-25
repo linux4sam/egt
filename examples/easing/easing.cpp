@@ -195,7 +195,7 @@ int main()
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
-    cputimer.add_handler([&label1, &tools]()
+    cputimer.on_timeout([&label1, &tools]()
     {
         tools.update();
         ostringstream ss;

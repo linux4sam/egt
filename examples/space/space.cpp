@@ -41,6 +41,20 @@ private:
 
 static bool debounce_mouse(int delta)
 {
+    static std::chrono::time_point<std::chrono::steady_clock> last_time =
+        chrono::steady_clock::now();
+
+
+    if (chrono::duration<float_t, milli>(chrono::steady_clock::now() - last_time).count() > delta)
+    {
+        last_time =
+            chrono::steady_clock::now();
+        return true;
+    }
+
+    return false;
+
+#if 0
     static Point pos;
     bool res = false;
 
@@ -55,7 +69,8 @@ static bool debounce_mouse(int delta)
 
     pos = mouse_position();
 
-    return res;;
+    return res;
+#endif
 }
 
 class MainWindow : public Window
@@ -71,7 +86,7 @@ public:
         switch (event)
         {
         case EVT_MOUSE_MOVE:
-            if (debounce_mouse(5))
+            if (debounce_mouse(50))
                 spawn(mouse_position());
             break;
         }
@@ -132,14 +147,14 @@ int main()
     win.show();
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(30));
-    animatetimer.add_handler([&win]()
+    animatetimer.on_timeout([&win]()
     {
         win.animate();
     });
     animatetimer.start();
 
     PeriodicTimer spawntimer(std::chrono::seconds(1));
-    spawntimer.add_handler([&win]()
+    spawntimer.on_timeout([&win]()
     {
         win.spawn(win.box().center());
     });
@@ -154,7 +169,7 @@ int main()
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
-    cputimer.add_handler([&label1, &tools]()
+    cputimer.on_timeout([&label1, &tools]()
     {
         tools.update();
         ostringstream ss;
