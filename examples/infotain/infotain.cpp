@@ -34,11 +34,11 @@ public:
         set_label_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
         {
             if (main_window() == reinterpret_cast<Window*>(win1))
             {
@@ -54,7 +54,9 @@ public:
             }
             break;
         }
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
+            break;
+        default:
             break;
         }
 
@@ -71,11 +73,11 @@ public:
         : Image(filename, Point(x, y))
     {}
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
         {
             if (main_window() == reinterpret_cast<Window*>(win1))
             {
@@ -91,7 +93,9 @@ public:
             }
             break;
         }
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
+            break;
+        default:
             break;
         }
 
@@ -108,7 +112,7 @@ public:
 
     {}
 
-    virtual void draw(Painter& painter, const Rect& rect)
+    virtual void draw(Painter& painter, const Rect& rect) override
     {
         // TODO: this logic needs to be pushed up into draw() caller
         Rect i = rect;
@@ -162,12 +166,12 @@ static void top_menu(Window* win)
 
     struct TimeTimer : public PeriodicTimer
     {
-        TimeTimer(Label& label)
+        explicit TimeTimer(Label& label)
             : PeriodicTimer(std::chrono::milliseconds(100)),
               m_label(label)
         {}
 
-        void timeout()
+        void timeout() override
         {
             auto now = std::chrono::system_clock::now();
             time_t tt = std::chrono::system_clock::to_time_t(now);
@@ -223,7 +227,7 @@ static void bottom_menu(Window* win)
 class MainWindow : public Window
 {
 public:
-    MainWindow(const Size& size)
+    explicit MainWindow(const Size& size)
         : Window(size),
           grid(Rect(Point(0, 60), Size(800, 330)), 4, 2, 10)
     {
@@ -264,7 +268,7 @@ public:
 class ChildWindow : public Window
 {
 public:
-    ChildWindow(const Size& size)
+    explicit ChildWindow(const Size& size)
         : Window(size)
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);

@@ -240,7 +240,7 @@ namespace mui
                 volume = 100;
 
             g_object_set(m_volume, "volume", volume / 100.0, NULL);
-            invoke_handlers(EVT_PROPERTY_CHANGE);
+            invoke_handlers(eventid::PROPERTY_CHANGED);
 
             return true;
         }
@@ -261,7 +261,7 @@ namespace mui
                 return false;
 
             g_object_set(m_volume, "mute", mute, NULL);
-            invoke_handlers(EVT_PROPERTY_CHANGE);
+            invoke_handlers(eventid::PROPERTY_CHANGED);
             return true;
         }
 
@@ -278,7 +278,7 @@ namespace mui
                     return false;
                 }
 
-                invoke_handlers(EVT_PROPERTY_CHANGE);
+                invoke_handlers(eventid::PROPERTY_CHANGED);
             }
             else
             {

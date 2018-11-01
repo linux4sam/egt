@@ -85,7 +85,7 @@ public:
 
         switch (event)
         {
-        case EVT_MOUSE_DBLCLICK:
+        case eventid::MOUSE_DBLCLICK:
             if (T::scale() <= 1.0)
             {
                 T::move(Point(0, 0));
@@ -103,7 +103,7 @@ public:
             }
 
             return 1;
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
             if (T::scale() <= 1.0)
             {
                 if (!m_moving)
@@ -115,10 +115,10 @@ public:
             }
 
             return 1;
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
             m_moving = false;
             return 1;
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
             if (m_moving)
             {
                 Point diff = mouse_position() - m_starting_point;
@@ -168,7 +168,7 @@ int main(int argc, const char** argv)
         return 1;
     }
 
-    Application app(false);
+    Application app/*(false)*/;
 
     VideoWindow* window = 0;
     if (argv[1] == string("v4l2"))
@@ -215,7 +215,7 @@ int main(int argc, const char** argv)
     ImageButton* playbtn = new ImageButton(":play_png", "", Rect(), widgetmask::NO_BORDER);
     grid.add(playbtn);
 
-    playbtn->on_event([playbtn, window](int event)
+    playbtn->on_event([playbtn, window](eventid event)
     {
         ignoreparam(event);
         if (playbtn->active())
@@ -224,7 +224,7 @@ int main(int argc, const char** argv)
 
     ImageButton* pausebtn = new ImageButton(":pause_png", "", Rect(), widgetmask::NO_BORDER);
     grid.add(pausebtn);
-    pausebtn->on_event([pausebtn, window](int event)
+    pausebtn->on_event([pausebtn, window](eventid event)
     {
         ignoreparam(event);
         cout << "pause button" << endl;
@@ -267,7 +267,7 @@ int main(int argc, const char** argv)
 
     Slider* volume = new Slider(0, 100, Rect(Size(100, 20)), orientation::HORIZONTAL);
     grid.add(volume);
-    volume->on_event([volume, window](int event)
+    volume->on_event([volume, window](eventid event)
     {
         ignoreparam(event);
         window->set_volume(volume->position());
@@ -277,7 +277,7 @@ int main(int argc, const char** argv)
     playbtn->disable(true);
     pausebtn->disable(false);
 
-    window->on_event([window, playbtn, pausebtn](int event)
+    window->on_event([window, playbtn, pausebtn](eventid event)
     {
         ignoreparam(event);
         if (window->playing())

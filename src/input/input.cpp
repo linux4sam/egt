@@ -39,7 +39,7 @@ namespace mui
         return event_button;
     }
 
-    void IInput::dispatch(int event)
+    void IInput::dispatch(eventid event)
     {
         DBG("event: " << event);
 

@@ -257,7 +257,7 @@ namespace mui
          * then this must be called from derived classes.  Or, manually call
          * invoke_handlers().
          */
-        virtual int handle(int event);
+        virtual int handle(eventid event);
 
         /**
          * Resize the widget.
@@ -402,7 +402,7 @@ namespace mui
         virtual void damage(const Rect& rect);
 
         /**
-         * Bounding box for the widgets.
+         * Bounding box for the widget.
          */
         virtual const Rect& box() const { return m_box; }
 
@@ -460,6 +460,11 @@ namespace mui
         void set_palette(const Palette& palette)
         {
             m_palette.reset(new Palette(palette));
+        }
+
+        void reset_palette()
+        {
+            m_palette.reset();
         }
 
         Frame* parent()
@@ -537,6 +542,8 @@ namespace mui
          * Convert screen coordinates to frame coordinates.
          */
         Point screen_to_frame(const Point& p);
+
+        Rect screen_to_frame(const Rect& r);
 
         /**
          * Bounding box.
@@ -625,7 +632,7 @@ namespace mui
             Combo(const std::string& label = std::string(),
                   const Rect& rect = Rect());
 
-            virtual int handle(int event) override;
+            virtual int handle(eventid event) override;
 
             virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -640,7 +647,7 @@ namespace mui
         public:
             explicit ScrollWheel(const Rect& rect = Rect());
 
-            virtual int handle(int event) override;
+            virtual int handle(eventid event) override;
 
             virtual void draw(Painter& painter, const Rect& rect) override;
 

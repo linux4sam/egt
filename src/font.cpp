@@ -11,8 +11,8 @@ namespace mui
     const std::string Font::FACE_COURIER = "Courier Unicode";
 
     // default font, which should be unicode
-    static Font default_font = Font(Font::FACE_ARIAL, 16, Font::WEIGHT_NORMAL,
-                                    Font::SLANT_NORMAL);
+    static Font default_font = Font(Font::FACE_ARIAL, 16, Font::weightid::NORMAL,
+                                    Font::slantid::NORMAL);
 
     void Font::set_default_font(const Font& font)
     {
@@ -26,7 +26,7 @@ namespace mui
           m_slant(default_font.slant())
     {}
 
-    Font::Font(const std::string& face, int size, int weight, int slant)
+    Font::Font(const std::string& face, int size, weightid weight, slantid slant)
         : m_face(face),
           m_size(size),
           m_weight(weight),
@@ -40,7 +40,7 @@ namespace mui
           m_slant(default_font.slant())
     {}
 
-    Font::Font(int size, int weight)
+    Font::Font(int size, weightid weight)
         : m_face(default_font.face()),
           m_size(size),
           m_weight(weight),

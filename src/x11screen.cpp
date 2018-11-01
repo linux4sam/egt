@@ -138,17 +138,17 @@ namespace mui
             }
             case ButtonPress:
                 mouse_position() = Point(e.xbutton.x, e.xbutton.y);
-                IInput::dispatch(EVT_MOUSE_DOWN);
+                IInput::dispatch(eventid::MOUSE_DOWN);
                 break;
             case ButtonRelease:
                 mouse_position() = Point(e.xbutton.x, e.xbutton.y);
-                IInput::dispatch(EVT_MOUSE_UP);
+                IInput::dispatch(eventid::MOUSE_UP);
                 break;
             case EnterNotify:
             case LeaveNotify:
             case MotionNotify:
                 mouse_position() = Point(e.xbutton.x, e.xbutton.y);
-                IInput::dispatch(EVT_MOUSE_MOVE);
+                IInput::dispatch(eventid::MOUSE_MOVE);
                 break;
             case KeyPress:
             {
@@ -167,7 +167,7 @@ namespace mui
 
 
 
-                IInput::dispatch(EVT_KEY_DOWN);
+                IInput::dispatch(eventid::KEYBOARD_DOWN);
                 break;
             }
             case KeyRelease:
@@ -184,7 +184,7 @@ namespace mui
                 if (key_value() == XK_BackSpace)
                     key_code() = KEY_BACKSPACE;
 
-                IInput::dispatch(EVT_KEY_UP);
+                IInput::dispatch(eventid::KEYBOARD_UP);
                 break;
             }
             case ClientMessage:

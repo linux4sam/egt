@@ -23,6 +23,9 @@ namespace mui
     public:
         explicit Image(const std::string& filename, const Point& point = Point());
 
+        explicit Image(Frame& parent,
+                       const std::string& filename, const Point& point = Point());
+
         virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**

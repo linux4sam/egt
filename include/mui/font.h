@@ -30,21 +30,21 @@ namespace mui
         /**
          * Font weights.
          */
-        enum
+        enum class weightid
         {
-            WEIGHT_NORMAL = 0,
-            WEIGHT_BOLD = 1,
+            NORMAL = 0,
+            BOLD = 1,
         };
 
 
         /**
          * Font slants.
          */
-        enum
+        enum class slantid
         {
-            SLANT_NORMAL = 0,
-            SLANT_ITALIC = 1,
-            SLANT_OBLIQUE = 2,
+            NORMAL = 0,
+            ITALIC = 1,
+            OBLIQUE = 2,
         };
 
         //@{
@@ -75,7 +75,7 @@ namespace mui
          * @param[in] weight The weight of the font.
          * @param[in] slant The slant of the font.
          */
-        explicit Font(const std::string& face, int size, int weight, int slant);
+        explicit Font(const std::string& face, int size, weightid weight, slantid slant);
 
         /**
          * Create a font based on the global default font, but with the
@@ -92,7 +92,7 @@ namespace mui
          * @param[in] size The size of the font.
          * @param[in] weight The weight of the font.
          */
-        explicit Font(int size, int weight);
+        explicit Font(int size, weightid weight);
 
         /**
          * Get the face name the font.
@@ -112,12 +112,12 @@ namespace mui
         /**
          * Get the weight of the font.
          */
-        virtual int weight() const { return m_weight; }
+        virtual weightid weight() const { return m_weight; }
 
         /**
          * Get the slant of the font.
          */
-        virtual int slant() const { return m_slant; }
+        virtual slantid slant() const { return m_slant; }
 
         virtual ~Font()
         {}
@@ -126,8 +126,8 @@ namespace mui
 
         std::string m_face;
         int m_size;
-        int m_weight;
-        int m_slant;
+        weightid m_weight;
+        slantid m_slant;
     };
 
 }

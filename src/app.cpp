@@ -75,6 +75,7 @@ namespace mui
             new KMSScreen(primary);
 #elif defined(HAVE_X11)
             new X11Screen(Size(800, 480));
+            //new X11Screen(Size(1280, 1024));
 #else
             new FrameBuffer("/dev/fb0");
 #endif

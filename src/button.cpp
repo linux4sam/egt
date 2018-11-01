@@ -5,6 +5,7 @@
 #include "mui/button.h"
 #include "mui/imagecache.h"
 #include "mui/painter.h"
+#include "mui/frame.h"
 
 using namespace std;
 
@@ -13,8 +14,8 @@ namespace mui
     static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
     Button::Button(const string& text, const Rect& rect,
-                   widgetmask flags) noexcept
-        : Label(text, rect, alignmask::CENTER, Font(), flags)
+                   const Font& font, widgetmask flags) noexcept
+        : Label(text, rect, alignmask::CENTER, font, flags)
     {
         if (rect.size().empty())
         {
@@ -23,20 +24,29 @@ namespace mui
         }
     }
 
-    int Button::handle(int event)
+    Button::Button(Frame& parent, const string& text, const Rect& rect,
+                   const Font& font, widgetmask flags) noexcept
+        : Button(text, rect, font, flags)
+    {
+        parent.add(this);
+    }
+
+    int Button::handle(eventid event)
     {
         DBG(name() << " handle: " << event);
 
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
             active(true);
             invoke_handlers(event);
             return 1;
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
             active(false);
             invoke_handlers(event);
             return 1;
+        default:
+            break;
         }
 
         return Widget::handle(event);
@@ -66,7 +76,7 @@ namespace mui
                              const string& text,
                              const Rect& rect,
                              widgetmask flags) noexcept
-        : Button(text, rect, flags),
+        : Button(text, rect, Font(), flags),
           m_image_align(alignmask::CENTER)
     {
         set_label_align(alignmask::CENTER | alignmask::BOTTOM);
@@ -96,7 +106,10 @@ namespace mui
         ignoreparam(rect);
 
         if (!is_flag_set(widgetmask::NO_BORDER))
-            painter.draw_gradient_box(box(), palette().color(Palette::BORDER));
+            painter.draw_gradient_box(box(), palette().color(Palette::BORDER),
+                                      active(),
+                                      active() ? palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE) :
+                                      palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
 
         painter.draw_image(m_image, box(), m_image_align, 10, disabled());
 

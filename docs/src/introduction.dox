@@ -103,4 +103,22 @@ r
 bt
 @endcode
 
+@section intro_first First Application
+
+@code
+#include <mui/ui>
+
+int main()
+{
+    mui::Application app;
+
+    mui::Window window;
+    mui::Button button(window, "Hello World");
+    button.align(mui::alignmask::CENTER);
+    window.show();
+
+    return app.run();
+}
+@endcode
+
 */

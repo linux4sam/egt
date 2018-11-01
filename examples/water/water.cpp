@@ -40,9 +40,11 @@ public:
     }
 
 private:
+
+    Bubble() = delete;
+
     int m_xspeed;
     int m_yspeed;
-    float m_angle;
 };
 
 class MainWindow : public Window
@@ -72,12 +74,14 @@ public:
         add(m_label);
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
             spawn(mouse_position());
+            break;
+        default:
             break;
         }
 

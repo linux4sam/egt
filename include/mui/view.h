@@ -26,7 +26,7 @@ namespace mui
 
         explicit ScrolledView(const Rect& rect = Rect());
 
-        virtual int handle(int event) override;
+        virtual int handle(eventid event) override;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -36,11 +36,14 @@ namespace mui
 
         void position(int offset)
         {
+		if (offset <= 0 && -offset < box().w)
+		{
             if (m_offset != offset)
             {
                 m_offset = offset;
                 damage();
             }
+		}
         }
 
         int m_offset{0};

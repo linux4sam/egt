@@ -51,6 +51,11 @@ namespace mui
 
         Palette& set(ColorId id, ColorGroup group, const Color& color);
 
+        /**
+         * Reset known colors back to a default state.
+         */
+        void reset();
+
     protected:
 
         std::vector<std::vector<Color>> m_colors;

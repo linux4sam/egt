@@ -131,7 +131,7 @@ namespace mui
                         mouse_position() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
                         m_active = false;
                         DBG("mouse up " << mouse_position());
-                        dispatch(EVT_MOUSE_UP);
+                        dispatch(eventid::MOUSE_UP);
                     }
                     else
                     {
@@ -152,12 +152,12 @@ namespace mui
                         if ((m_impl->last_down.tv_sec || m_impl->last_down.tv_usec) &&
                             diff_ms(samp_mt[j][i].tv, m_impl->last_down) < 200)
                         {
-                            dispatch(EVT_MOUSE_DBLCLICK);
+                            dispatch(eventid::MOUSE_DBLCLICK);
                         }
                         else
                         {
                             DBG("mouse down " << mouse_position());
-                            dispatch(EVT_MOUSE_DOWN);
+                            dispatch(eventid::MOUSE_DOWN);
                             m_active = true;
                         }
 
@@ -170,7 +170,7 @@ namespace mui
         if (move)
         {
             DBG("mouse move " << mouse_position());
-            dispatch(EVT_MOUSE_MOVE);
+            dispatch(eventid::MOUSE_MOVE);
         }
 
         asio::async_read(m_input, asio::null_buffers(),

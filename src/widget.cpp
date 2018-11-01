@@ -71,15 +71,15 @@ namespace mui
         parent.add(this);
     }
 
-    int Widget::handle(int event)
+    int Widget::handle(eventid event)
     {
-        ignoreparam(event);
+        invoke_handlers(event);
 
         if (focus())
             return 1;
 
         // do nothing
-        return EVT_NONE;
+        return 0;
     }
 
     void Widget::move_to_center(const Point& point)
@@ -182,6 +182,12 @@ namespace mui
         return p - pp;
     }
 
+    Rect Widget::screen_to_frame(const Rect& r)
+    {
+        Point origin = screen_to_frame(r.point());
+        return Rect(origin, r.size());
+    }
+
     void Widget::save_to_file(const std::string& filename)
     {
         auto surface = shared_cairo_surface_t(
@@ -215,7 +221,7 @@ namespace mui
               m_label(label)
         {}
 
-        int Combo::handle(int event)
+        int Combo::handle(eventid event)
         {
             return Widget::handle(event);
         }
@@ -330,26 +336,28 @@ namespace mui
             : Widget(rect)
         {}
 
-        int ScrollWheel::handle(int event)
+        int ScrollWheel::handle(eventid event)
         {
             switch (event)
             {
-            case EVT_MOUSE_DOWN:
+            case eventid::MOUSE_DOWN:
                 m_moving_x = screen_to_frame(mouse_position()).y;
                 m_start_pos = position();
                 active(true);
                 return 1;
                 break;
-            case EVT_MOUSE_UP:
+            case eventid::MOUSE_UP:
                 active(false);
                 return 1;
                 break;
-            case EVT_MOUSE_MOVE:
+            case eventid::MOUSE_MOVE:
                 if (active())
                 {
                     int diff = screen_to_frame(mouse_position()).y - m_moving_x;
                     position(m_start_pos + diff);
                 }
+                break;
+            default:
                 break;
             }
 

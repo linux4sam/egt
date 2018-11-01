@@ -6,6 +6,7 @@
 #define MUI_VALUEWIDGET_H
 
 #include <mui/widget.h>
+#include <mui/painter.h>
 #include <string>
 
 namespace mui
@@ -38,6 +39,7 @@ namespace mui
             {
                 m_value = v;
                 damage();
+                invoke_handlers(eventid::PROPERTY_CHANGED);
             }
         }
 
@@ -51,33 +53,6 @@ namespace mui
 
     protected:
         T m_value;
-    };
-
-    /**
-     * Radial dial widget that a user uses to select a value.
-     *
-     * @image html widget_radial.png
-     * @image latex widget_radial.png "widget_radial" height=10cm
-     */
-    class Radial : public ValueWidget<float>
-    {
-    public:
-        explicit Radial(const Rect& rect);
-
-        void label(const std::string& label)
-        {
-            m_label = label;
-        }
-
-        virtual int handle(int event);
-
-        virtual void draw(Painter& painter, const Rect& rect);
-
-        virtual ~Radial()
-        {}
-
-    protected:
-        std::string m_label;
     };
 
     /**
@@ -117,6 +92,7 @@ namespace mui
             {
                 m_value = v;
                 damage();
+                invoke_handlers(eventid::PROPERTY_CHANGED);
             }
         }
 
@@ -135,6 +111,194 @@ namespace mui
         T m_min;
         T m_max;
         T m_value;
+    };
+
+    /**
+     * Radial dial widget that a user uses to select a value.
+     *
+     * @image html widget_radial.png
+     * @image latex widget_radial.png "widget_radial" height=10cm
+     */
+    template<class T>
+    class Radial : public ValueRangeWidget<T>
+    {
+    public:
+
+        Radial(const Rect& rect, T min, T max, T value = T())
+            : ValueRangeWidget<T>(rect, min, max, value)
+        {}
+
+        inline T value2() const
+        {
+            return m_value2;
+        }
+
+        inline void value2(T v)
+        {
+            if (v > this->m_max)
+                v = this->m_max;
+
+            if (v < this->m_min)
+                v = this->m_min;
+
+            if (v != this->m_value2)
+            {
+                this->m_value2 = v;
+                this->damage();
+                this->invoke_handlers(eventid::PROPERTY_CHANGED);
+            }
+        }
+
+        /**
+         * Set the center label text of the dial.
+         */
+        void text(const std::string& text)
+        {
+            m_text = text;
+        }
+
+        virtual int handle(eventid event) override
+        {
+            switch (event)
+            {
+            case eventid::MOUSE_DOWN:
+            {
+                this->active(true);
+                return 1;
+            }
+            case eventid::MOUSE_UP:
+            {
+                this->active(false);
+                return 1;
+            }
+            case eventid::MOUSE_MOVE:
+            {
+                if (this->active())
+                {
+                    auto angle = this->touch_to_degrees(this->screen_to_frame(mouse_position()));
+                    auto v = this->degrees_to_value(angle);
+                    this->value(v);
+
+                    return 1;
+                }
+                break;
+            }
+            default:
+                break;
+            }
+
+            return Widget::handle(event);
+        }
+
+        virtual void draw(Painter& painter, const Rect& rect) override
+        {
+            ignoreparam(rect);
+
+            auto v = this->value_to_degrees(this->value());
+            float linew = 40;
+
+            Color color1 = this->palette().color(Palette::BG);
+            color1.alpha(0x55);
+            Color color2 = this->palette().color(Palette::HIGHLIGHT);
+            Color color3 = this->palette().color(Palette::MID);
+
+            float radius = this->w() / 2 - (linew / 2);
+            double angle1 = to_radians<float>(-90, 0);
+            double angle2 = to_radians<float>(-90, v);
+
+            Point c = this->center();
+
+            auto cr = painter.context();
+
+            cairo_save(cr.get());
+
+            // bottom full circle
+            cairo_set_source_rgba(cr.get(),
+                                  color1.redf(),
+                                  color1.greenf(),
+                                  color1.bluef(),
+                                  color1.alphaf());
+            cairo_set_line_width(cr.get(), linew);
+            cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
+            cairo_stroke(cr.get());
+
+            // value arc
+            cairo_set_source_rgb(cr.get(),
+                                 color2.redf(),
+                                 color2.greenf(),
+                                 color2.bluef());
+            cairo_set_line_width(cr.get(), linew - (linew / 3));
+            cairo_arc(cr.get(), c.x, c.y, radius, angle1, angle2);
+            cairo_stroke(cr.get());
+
+            // handle
+            cairo_set_source_rgb(cr.get(),
+                                 color3.redf(),
+                                 color3.greenf(),
+                                 color3.bluef());
+            cairo_set_line_width(cr.get(), linew);
+            cairo_arc(cr.get(), c.x, c.y, radius, angle2 - 0.3, angle2);
+            cairo_stroke(cr.get());
+
+
+            // secondary value
+            Color color4 = Color::RED;
+            double angle3 = to_radians<float>(-90,
+                                              this->value_to_degrees(this->value2()));
+            cairo_set_source_rgb(cr.get(),
+                                 color4.redf(),
+                                 color4.greenf(),
+                                 color4.bluef());
+            cairo_set_line_width(cr.get(), linew);
+            cairo_arc(cr.get(), c.x, c.y, radius, angle3 - 0.01, angle3 + 0.01);
+            cairo_stroke(cr.get());
+
+            if (!m_text.empty())
+                painter.draw_text(m_text, this->box(), this->palette().color(Palette::TEXT),
+                                  alignmask::CENTER, 0, Font(72));
+
+            cairo_restore(cr.get());
+        }
+
+        virtual ~Radial()
+        {}
+
+    protected:
+
+        float touch_to_degrees(const Point& point)
+        {
+            const Point c = this->center();
+            float radians = c.angle_to<float>(point);
+            float angle = to_degrees(radians);
+            if (angle < 0)
+                angle = angle + 360.;
+            return angle;
+        }
+
+        /**
+         * Normalize a value to degrees.
+         */
+        float value_to_degrees(T value)
+        {
+            float n = (static_cast<float>(value) -
+                       static_cast<float>(this->m_min)) /
+                      (static_cast<float>(this->m_max) - static_cast<float>(this->m_min));
+            return n * 360.;
+        }
+
+        /**
+         * Normalize degrees to a value.
+         */
+        T degrees_to_value(float degrees)
+        {
+            float n = degrees / 360.;
+            return (n * (this->m_max - this->m_min)) + this->m_min;
+        }
+
+        std::string m_text;
+        T m_value2{};
+
+        Radial() = delete;
     };
 
     /**
@@ -211,7 +375,7 @@ namespace mui
         Slider(int min, int max, const Rect& rect = Rect(),
                orientation orient = orientation::HORIZONTAL);
 
-        virtual int handle(int event) override;
+        virtual int handle(eventid event) override;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -232,7 +396,7 @@ namespace mui
             {
                 m_pos = pos;
                 damage();
-                invoke_handlers(EVT_PROPERTY_CHANGE);
+                this->invoke_handlers(eventid::PROPERTY_CHANGED);
             }
         }
 
@@ -273,8 +437,8 @@ namespace mui
         int m_min;
         int m_max;
         int m_pos;
-        int m_moving_x {0};
-        int m_start_pos {0};
+        int m_moving_x{0};
+        int m_start_pos{0};
         orientation m_orientation;
     };
 

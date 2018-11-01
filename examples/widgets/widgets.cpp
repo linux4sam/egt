@@ -60,19 +60,19 @@ public:
                 else
                     b = new Button(label);
 
-                b->on_event([b](int event)
+                b->on_event([b](eventid event)
                 {
                     if (!b->text().empty())
                     {
-                        if (event == EVT_MOUSE_DOWN)
+                        if (event == eventid::MOUSE_DOWN)
                         {
                             key_value() = b->text()[0];
-                            IInput::dispatch(EVT_KEY_DOWN);
+                            IInput::dispatch(eventid::KEYBOARD_DOWN);
                         }
-                        else if (event == EVT_MOUSE_UP)
+                        else if (event == eventid::MOUSE_UP)
                         {
                             key_value() = b->text()[0];
-                            IInput::dispatch(EVT_KEY_UP);
+                            IInput::dispatch(eventid::KEYBOARD_UP);
                         }
                     }
                 });
@@ -118,9 +118,9 @@ int main()
     Button btn1("button 1", Rect(Point(100, 250), Size(100, 40)));
     win.add(&btn1);
 
-    btn1.on_event([&popup](int event)
+    btn1.on_event([&popup](eventid event)
     {
-        if (event == EVT_MOUSE_DOWN)
+        if (event == eventid::MOUSE_DOWN)
         {
             if (popup.visible())
                 popup.hide();
@@ -133,9 +133,9 @@ int main()
     win.add(&btn2);
 
     Keyboard<Window> keyboard;
-    btn2.on_event([&keyboard](int event)
+    btn2.on_event([&keyboard](eventid event)
     {
-        if (event == EVT_MOUSE_DOWN)
+        if (event == eventid::MOUSE_DOWN)
         {
             if (keyboard.visible())
                 keyboard.hide();
@@ -161,14 +161,16 @@ int main()
     TextBox text1("text 1", Rect(Point(100, 400), Size(200, 40)));
     win.add(&text1);
     // TODO: this is broken with keyboard and focus - get dups
-    IInput::global_input().on_event([&text1](int event)
+    IInput::global_input().on_event([&text1](eventid event)
     {
         switch (event)
         {
-        case EVT_KEY_DOWN:
-        case EVT_KEY_UP:
-        case EVT_KEY_REPEAT:
+        case eventid::KEYBOARD_DOWN:
+        case eventid::KEYBOARD_UP:
+        case eventid::KEYBOARD_REPEAT:
             text1.handle(event);
+            break;
+        default:
             break;
         }
     });

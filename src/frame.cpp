@@ -47,6 +47,12 @@ namespace mui
         return widget;
     }
 
+    Widget& Frame::add(Widget& widget)
+    {
+        add(&widget);
+        return widget;
+    }
+
     Widget* Frame::insert(Widget* widget, uint32_t index)
     {
         assert(widget);
@@ -119,27 +125,30 @@ namespace mui
         }
     }
 
-    int Frame::handle(int event)
+    int Frame::handle(eventid event)
     {
         DBG(name() << " handle: " << event);
 
         switch (event)
         {
-        case EVT_MOUSE_UP:
-        case EVT_KEY_UP:
-        case EVT_KEY_REPEAT:
-        case EVT_BUTTON_UP:
-            // pair the EVT_MOUSE_UP event with the focus widget
+        case eventid::MOUSE_UP:
+        case eventid::KEYBOARD_UP:
+        case eventid::KEYBOARD_REPEAT:
+        case eventid::BUTTON_UP:
+            // pair the eventid::MOUSE_UP event with the focus widget
             if (m_focus_widget)
                 break;
-        case EVT_MOUSE_DOWN:
-        case EVT_MOUSE_MOVE:
-        case EVT_BUTTON_DOWN:
-        case EVT_MOUSE_DBLCLICK:
-        case EVT_KEY_DOWN:
+        case eventid::MOUSE_DOWN:
+        case eventid::MOUSE_MOVE:
+        case eventid::BUTTON_DOWN:
+        case eventid::MOUSE_DBLCLICK:
+        case eventid::KEYBOARD_DOWN:
             for (auto& child : detail::reverse_iterate(m_children))
             {
                 if (child->disabled())
+                    continue;
+
+                if (!child->visible())
                     continue;
 
                 Point pos = screen_to_frame(mouse_position());
@@ -148,7 +157,7 @@ namespace mui
                 {
                     if (child->handle(event))
                     {
-                        if (event != EVT_MOUSE_MOVE)
+                        if (event != eventid::MOUSE_MOVE)
                             child->focus(true);
                         return 1;
                     }
@@ -156,18 +165,20 @@ namespace mui
             }
 
             break;
+        default:
+            break;
         }
 
         if (m_focus_widget)
         {
             switch (event)
             {
-            case EVT_MOUSE_MOVE:
-            case EVT_MOUSE_DOWN:
-            //case EVT_MOUSE_UP:
-            //case EVT_BUTTON_UP:
-            case EVT_BUTTON_DOWN:
-                //case EVT_MOUSE_DBLCLICK:
+            case eventid::MOUSE_MOVE:
+            case eventid::MOUSE_DOWN:
+            //case eventid::MOUSE_UP:
+            //case eventid::BUTTON_UP:
+            case eventid::BUTTON_DOWN:
+                //case eventid::MOUSE_DBLCLICK:
             {
                 Point pos = screen_to_frame(mouse_position());
 
@@ -230,7 +241,7 @@ namespace mui
             painter.clip();
 
             cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-            painter.draw_basic_box(box(), palette().color(Palette::BORDER),
+            painter.draw_basic_box(screen_to_frame(box()), palette().color(Palette::BORDER),
                                    palette().color(Palette::BG));
         }
 

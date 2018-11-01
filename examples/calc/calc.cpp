@@ -48,11 +48,11 @@ int main()
             Button* b;
 
             b = new Button(label, Rect(Size(50, 50)));
-            b->font(Font(30, Font::WEIGHT_BOLD));
+            b->font(Font(30, Font::weightid::BOLD));
 
-            b->on_event([&text, b](int event)
+            b->on_event([&text, b](eventid event)
             {
-                if (event != EVT_MOUSE_UP)
+                if (event != eventid::MOUSE_UP)
                     return;
 
                 if (b->text() == "=")

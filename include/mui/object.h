@@ -10,10 +10,47 @@
  * @brief Base object definition.
  */
 
-#include <memory>
+#include <functional>
+#include <cstdint>
+#include <vector>
 
 namespace mui
 {
+    /**
+     * Event identifiers.
+     */
+    enum class eventid
+    {
+        NONE,
+
+        MOUSE_DOWN,
+        MOUSE_UP,
+        MOUSE_MOVE,
+        BUTTON_DOWN,
+        BUTTON_UP,
+        MOUSE_DBLCLICK,
+
+        /**
+         * Sent when a widget gets focus.
+         */
+        ENTER,
+
+        /**
+         * Sent when a widget loses focus.
+         */
+        LEAVE,
+        KEYBOARD_DOWN,
+        KEYBOARD_UP,
+        KEYBOARD_REPEAT,
+
+        /**
+         * Called when a property changes.
+         */
+        PROPERTY_CHANGED,
+    };
+
+    std::ostream& operator<<(std::ostream& os, const eventid& event);
+
     namespace detail
     {
         /**
@@ -26,7 +63,7 @@ namespace mui
             Object() noexcept
             {}
 
-            using event_callback_t = std::function<void (int event)>;
+            using event_callback_t = std::function<void (eventid event)>;
 
             /**
              * Add a callback to be called when the widget receives an event.
@@ -39,7 +76,10 @@ namespace mui
             virtual ~Object()
             {}
 
-            virtual void invoke_handlers(int event)
+            /**
+             * Invoke all handlers with the specified event.
+             */
+            virtual void invoke_handlers(eventid event)
             {
                 // Hmm, this is not really respecting the return value of the handler
                 for (auto callback : m_callbacks)

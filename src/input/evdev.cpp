@@ -116,23 +116,23 @@ namespace mui
                 case BTN_TOOL_LENS:
                     break;
                 case BTN_LEFT:
-                    dispatch(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+                    dispatch(value ? eventid::MOUSE_DOWN : eventid::MOUSE_UP);
                     break;
                 case BTN_RIGHT:
-                    dispatch(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+                    dispatch(value ? eventid::MOUSE_DOWN : eventid::MOUSE_UP);
                     break;
                 case BTN_MIDDLE:
-                    dispatch(value ? EVT_MOUSE_DOWN : EVT_MOUSE_UP);
+                    dispatch(value ? eventid::MOUSE_DOWN : eventid::MOUSE_UP);
                     break;
                 default:
-                    int v = -1;
+                    eventid v = eventid::NONE;
                     if (value == 1)
-                        v = EVT_KEY_DOWN;
+                        v = eventid::KEYBOARD_DOWN;
                     else if (value == 0)
-                        v = EVT_KEY_UP;
+                        v = eventid::KEYBOARD_UP;
                     else if (value == 2)
-                        v = EVT_KEY_REPEAT;
-                    if (v != -1)
+                        v = eventid::KEYBOARD_REPEAT;
+                    if (v != eventid::NONE)
                     {
                         key_value() = e->code;
                         dispatch(v);
@@ -144,14 +144,14 @@ namespace mui
         if (absolute_event)
         {
             mouse_position() = Point(x, y);
-            dispatch(EVT_MOUSE_MOVE);
+            dispatch(eventid::MOUSE_MOVE);
         }
         else
         {
             if (dx != 0 || dy != 0)
             {
                 mouse_position() = Point(mouse_position().x + dx, mouse_position().y + dy);
-                dispatch(EVT_MOUSE_MOVE);
+                dispatch(eventid::MOUSE_MOVE);
             }
         }
 

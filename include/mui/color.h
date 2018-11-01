@@ -106,10 +106,10 @@ namespace mui
          */
         inline Color shade(float factor) const
         {
-            return Color(redf() * (1. - factor),
-                         greenf() * (1. - factor),
-                         bluef() * (1. - factor),
-                         alphaf());
+            return Color(red() * (1. - factor),
+                         green() * (1. - factor),
+                         blue() * (1. - factor),
+                         alpha());
         }
 
         /**
@@ -119,10 +119,10 @@ namespace mui
          */
         inline Color tint(float factor) const
         {
-            return Color(redf() + ((255. - redf()) * factor),
-                         greenf() + ((255. - greenf()) * factor),
-                         bluef() + ((255. - bluef()) * factor),
-                         alphaf());
+            return Color(red() + ((255. - red()) * factor),
+                         green() + ((255. - green()) * factor),
+                         blue() + ((255. - blue()) * factor),
+                         alpha());
         }
 
         /**

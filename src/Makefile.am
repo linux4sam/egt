@@ -35,6 +35,7 @@ input/input.cpp \
 input/libinput.cpp \
 input/tslib.cpp \
 kmsscreen.cpp \
+object.cpp \
 label.cpp \
 list.cpp \
 painter.cpp \
@@ -144,7 +145,6 @@ $(top_srcdir)/external/kplot/mean.c \
 $(top_srcdir)/external/kplot/plotctx.c \
 $(top_srcdir)/external/kplot/reallocarray.c \
 $(top_srcdir)/external/kplot/stddev.c \
-$(top_srcdir)/external/kplot/test-reallocarray.c \
 $(top_srcdir)/external/kplot/tic.c \
 $(top_srcdir)/external/kplot/vector.c
 libkplot_a_CFLAGS = $(AM_CFLAGS) $(CAIRO_CFLAGS) -I$(top_builddir)/external/kplot -fPIC

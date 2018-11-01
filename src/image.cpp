@@ -5,6 +5,7 @@
 #include "mui/image.h"
 #include "mui/imagecache.h"
 #include "mui/painter.h"
+#include "mui/frame.h"
 
 using namespace std;
 
@@ -22,6 +23,12 @@ namespace mui
                      cairo_image_surface_get_height(m_image.get()));
 
         m_orig_size = m_box.size();
+    }
+
+    Image::Image(Frame& parent, const std::string& filename, const Point& point)
+        : Image(filename, point)
+    {
+        parent.add(this);
     }
 
     void Image::scale(double hscale, double vscale, bool approximate)

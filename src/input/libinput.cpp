@@ -196,7 +196,7 @@ out:
         mouse_position().x += libinput_event_pointer_get_dx_unaccelerated(p);
         mouse_position().y += libinput_event_pointer_get_dy_unaccelerated(p);
 
-        dispatch(EVT_MOUSE_MOVE);
+        dispatch(eventid::MOUSE_MOVE);
     }
 
     void LibInput::handle_event_absmotion(struct libinput_event* ev)
@@ -231,7 +231,7 @@ out:
         switch (libinput_event_get_type(ev))
         {
         case LIBINPUT_EVENT_TOUCH_UP:
-            dispatch(EVT_MOUSE_UP);
+            dispatch(eventid::MOUSE_UP);
             break;
         case LIBINPUT_EVENT_TOUCH_DOWN:
         {
@@ -241,7 +241,7 @@ out:
             cout << x << "," << y << endl;
             mouse_position() = Point(x, y);
 
-            dispatch(EVT_MOUSE_DOWN);
+            dispatch(eventid::MOUSE_DOWN);
             break;
         }
         case LIBINPUT_EVENT_TOUCH_MOTION:
@@ -301,15 +301,15 @@ out:
         struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
         unsigned int key = libinput_event_keyboard_get_key(k);
 
-        int v = -1;
+        eventid v = eventid::NONE;
         if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_RELEASED)
-            v = EVT_KEY_UP;
+            v = eventid::KEYBOARD_UP;
         else if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_PRESSED)
-            v = EVT_KEY_DOWN;
+            v = eventid::KEYBOARD_DOWN;
         //else if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_REPEAT)
-        //  v = EVT_KEY_REPEAT;
+        //  v = eventid::KEYBOARD_REPEAT;
 
-        if (v != -1)
+        if (v != eventid::NONE)
         {
             key_value() = key;
             dispatch(v);
@@ -326,7 +326,7 @@ out:
 
         is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
 
-        dispatch(is_press ? EVT_BUTTON_DOWN : EVT_BUTTON_UP);
+        dispatch(is_press ? eventid::BUTTON_DOWN : eventid::BUTTON_UP);
 
         button_value() = button;
     }
@@ -564,7 +564,7 @@ out:
         }
 
         if (res)
-            dispatch(EVT_MOUSE_MOVE);
+            dispatch(eventid::MOUSE_MOVE);
 
         asio::async_read(m_input, asio::null_buffers(),
                          std::bind(&LibInput::handle_read, this, std::placeholders::_1));

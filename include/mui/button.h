@@ -27,9 +27,16 @@ namespace mui
 
         Button(const std::string& text = std::string(),
                const Rect& rect = Rect(),
+               const Font& font = Font(),
                widgetmask flags = widgetmask::NONE) noexcept;
 
-        virtual int handle(int event) override;
+        Button(Frame& parent,
+               const std::string& text = std::string(),
+               const Rect& rect = Rect(),
+               const Font& font = Font(),
+               widgetmask flags = widgetmask::NONE) noexcept;
+
+        virtual int handle(eventid event) override;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -86,7 +93,7 @@ namespace mui
 
             HotSpot(const Rect& rect = Rect(),
                     widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept
-                : Button("", rect, flags)
+                : Button("", rect, Font(), flags)
             {
                 hide();
             }
@@ -100,7 +107,7 @@ namespace mui
             virtual ~HotSpot() {}
 
         private:
-            virtual void show() {}
+            virtual void show() override {}
         };
 
     }

@@ -47,7 +47,7 @@ int main()
 {
     Application app;
 
-    std::vector<std::string> files = glob(SHARED_PATH "*.png");
+    std::vector<std::string> files = glob(SHARED_PATH "*trailer*.png");
 
     Window win;
     win.name("win");
@@ -58,55 +58,57 @@ int main()
     win.add(&logo);
     logo.align(alignmask::LEFT | alignmask::TOP, 10);
 
-    ScrolledView view(Rect(0, logo.h(), win.size().w, win.size().h - logo.h()));
-    view.name("view");
-    win.add(&view);
+    auto grid_height = (win.size().h - logo.h()) / 2;
+
+    ScrolledView view0(Rect(0, logo.h(), win.size().w, grid_height));
+    view0.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+    view0.name("view0");
+    win.add(&view0);
 
     /** @todo This is not respecting parent coordinate for origin point. */
-    StaticGrid grid(Rect(0, logo.h(), files.size() / 2 * 150, view.h()), files.size() / 2, 2, 10);
-    grid.name("grid");
-    view.add(&grid);
+    StaticGrid grid0(Rect(0, logo.h(), files.size() * 150, grid_height), files.size(), 1, 0);
+    grid0.name("grid0");
+    view0.add(&grid0);
 
-    int column = 0;
-    int row = 0;
     for (auto& file : files)
     {
-        if (file.find("logo.png") != string::npos)
-            continue;
+        grid0.add(new Image(file), alignmask::CENTER);
+    }
 
-        if (file.find("settings.png") != string::npos)
-            continue;
+    ScrolledView view1(Rect(0, logo.h() + grid_height, win.size().w, grid_height));
+    view1.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+    view1.name("view1");
+    win.add(&view1);
 
-        int r = (row++) % 2;
+    StaticGrid grid1(Rect(0, logo.h() + grid_height, files.size() * 150, grid_height), files.size(), 1, 0);
+    grid1.name("grid1");
+    view1.add(&grid1);
 
-        auto image = new Image(file);
-        grid.add(image, column, r, alignmask::CENTER);
-
-        if (r != 0)
-            column++;
+    for (auto& file : files)
+    {
+        grid1.add(new Image(file), alignmask::CENTER);
     }
 
     Popup<Window> popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
     popup.name("popup");
-    auto button = new Button("Hello World");
+    Button button("Hello World");
     popup.add(button);
-    button->align(alignmask::CENTER);
-    button->name("hw");
+    button.align(alignmask::CENTER);
+    button.name("hw");
 
     ImageButton settings(SHARED_PATH "settings.png", "", Rect(), widgetmask::NO_BORDER);
     win.add(&settings);
     settings.align(alignmask::RIGHT | alignmask::TOP, 10);
-    settings.on_event([&popup](int event)
-    {
-        if (event == EVT_MOUSE_UP)
-        {
-            if (popup.visible())
-                popup.hide();
-            else
-                popup.show(true);
-        }
-    });
-
+    settings.on_event([&popup](eventid event)
+                      {
+                          if (event == eventid::MOUSE_UP)
+                          {
+                              if (popup.visible())
+                                  popup.hide();
+                              else
+                                  popup.show(true);
+                          }
+                      });
     win.add(&popup);
 
     win.show();

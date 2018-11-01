@@ -12,9 +12,9 @@ using namespace mui;
 class ThermostatWindow : public Window
 {
 public:
-    ThermostatWindow(const Size& size = Size())
+    explicit ThermostatWindow(const Size& size = Size())
         : Window(size),
-          m_a1(-200, 40,
+          m_a1(-200, 20,
                std::chrono::milliseconds(1500),
                easing_snap),
           m_a2(-350, 480 / 2 - 350 / 2,
@@ -23,24 +23,31 @@ public:
           m_a3(800, 700,
                std::chrono::milliseconds(1500),
                easing_snap),
+          m_background(*this, "background.png"),
+          m_logo(*this, "logo.png"),
+          m_title(*this, "Living Room",
+                  Rect(Point(), Size(250, 64)),
+                  alignmask::CENTER,
+                  mui::Font(32, Font::weightid::BOLD)),
           m_radial1(Rect(Point(800 / 2 - 350 / 2,
                                480 / 2 - 350 / 2),
-                         Size(350, 350))),
+                         Size(350, 350)),
+                    0, 100),
           m_label1("day.png",
                    "Day",
                    Rect(Point(40, 150),
-                        Size(200, 64)),
-                   mui::Font(32)),
+                        Size(180, 64)),
+                   mui::Font(30)),
           m_label2("night.png",
                    "Night",
                    Rect(Point(40, 214),
-                        Size(200, 64)),
-                   mui::Font(32)),
+                        Size(180, 64)),
+                   mui::Font(30)),
           m_label3("vacation.png",
                    "Vacation",
                    Rect(Point(40, 278),
-                        Size(200, 64)),
-                   mui::Font(32)),
+                        Size(180, 64)),
+                   mui::Font(30)),
           m_label4("Fan",
                    Rect(Point(700, 390),
                         Size(50, 64)),
@@ -52,27 +59,83 @@ public:
                     orientation::VERTICAL)
 
     {
-        Image* img = new Image("background.png");
-        add(img);
+        m_logo.align(alignmask::LEFT | alignmask::TOP, 10);
+
+        m_title.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_title.align(alignmask::CENTER | alignmask::TOP, 10);
+
+        m_radial1.on_event([this](eventid event)
+        {
+            if (event == eventid::PROPERTY_CHANGED)
+            {
+                auto text = std::to_string((int)m_radial1.value()) + "°";
+                m_radial1.text(text);
+
+                if (m_radial1.value() > m_radial1.value2())
+                    m_radial1.palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::ORANGE);
+                else
+                    m_radial1.reset_palette();
+            }
+        });
 
         add(&m_radial1);
-        m_radial1.label(" F");
-        m_radial1.value(300);
+        m_radial1.value(73);
+        m_radial1.value2(65);
 
-        m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color(0x80808055))
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_label1.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(&m_label1);
 
-        m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color(0x80808055))
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_label2.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(&m_label2);
 
         m_label3.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(&m_label3);
 
+        m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+        m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+        m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+
+        m_label1.on_event([this](eventid event)
+        {
+            if (event == eventid::MOUSE_DOWN)
+            {
+                m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
+                m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label1.damage();
+                m_label2.damage();
+                m_label3.damage();
+            }
+        });
+
+        m_label2.on_event([this](eventid event)
+        {
+            if (event == eventid::MOUSE_DOWN)
+            {
+                m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
+                m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label1.damage();
+                m_label2.damage();
+                m_label3.damage();
+            }
+        });
+
+        m_label3.on_event([this](eventid event)
+        {
+            if (event == eventid::MOUSE_DOWN)
+            {
+                m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
+                m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label1.damage();
+                m_label2.damage();
+                m_label3.damage();
+            }
+        });
+
         add(&m_label4);
-        m_label4.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY)
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_label4.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
         add(&m_slider1);
         m_slider1.position(50);
@@ -81,7 +144,7 @@ public:
         m_a1.on_change(std::bind(&ImageLabel::movex, std::ref(m_label2), std::placeholders::_1));
         m_a1.on_change(std::bind(&ImageLabel::movex, std::ref(m_label3), std::placeholders::_1));
 
-        m_a2.on_change(std::bind(&Radial::movey, std::ref(m_radial1), std::placeholders::_1));
+        m_a2.on_change(std::bind(&Radial<int>::movey, std::ref(m_radial1), std::placeholders::_1));
 
         m_a3.on_change(std::bind(&Slider::movex, std::ref(m_slider1), std::placeholders::_1));
         m_a3.on_change(std::bind(&Label::movex, std::ref(m_label4), std::placeholders::_1));
@@ -101,7 +164,10 @@ protected:
     experimental::PropertyAnimator m_a1;
     experimental::PropertyAnimator m_a2;
     experimental::PropertyAnimator m_a3;
-    Radial m_radial1;
+    Image m_background;
+    Image m_logo;
+    Label m_title;
+    Radial<int> m_radial1;
     ImageLabel m_label1;
     ImageLabel m_label2;
     ImageLabel m_label3;

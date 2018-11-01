@@ -29,6 +29,71 @@ namespace mui
         return *this;
     }
 
+    void Palette::reset()
+    {
+#if 0
+        set(Palette::BG, Palette::GROUP_NORMAL, Color(0xf1f1f1ff));
+        set(Palette::FG, Palette::GROUP_NORMAL, Color::BLACK);
+        set(Palette::LIGHT, Palette::GROUP_NORMAL, Color::WHITE);
+        set(Palette::DARK, Palette::GROUP_NORMAL, Color::BLACK);
+        set(Palette::MID, Palette::GROUP_NORMAL, Color::GRAY);
+        set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK);
+        set(Palette::TEXTBG, Palette::GROUP_NORMAL, Color::WHITE);
+        set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color(0xe3edfaff));
+        set(Palette::BORDER, Palette::GROUP_NORMAL, Color(0xbfbfc0ff));
+
+        set(Palette::BG, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::FG, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::LIGHT, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::DARK, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::MID, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::TEXT, Palette::GROUP_DISABLED, Color::BLACK);
+        set(Palette::TEXTBG, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::HIGHLIGHT, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::BORDER, Palette::GROUP_DISABLED, Color(0xbfbfc0ff));
+
+        set(Palette::BG, Palette::GROUP_ACTIVE, Color::LIGHTGRAY);
+        set(Palette::FG, Palette::GROUP_ACTIVE, Color::BLACK);
+        set(Palette::LIGHT, Palette::GROUP_ACTIVE, Color::WHITE);
+        set(Palette::DARK, Palette::GROUP_ACTIVE, Color::BLACK);
+        set(Palette::MID, Palette::GROUP_ACTIVE, Color::GRAY);
+        set(Palette::TEXT, Palette::GROUP_ACTIVE, Color::BLACK);
+        set(Palette::TEXTBG, Palette::GROUP_ACTIVE, Color::WHITE);
+        set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color(0xe3edfaff));
+        set(Palette::BORDER, Palette::GROUP_ACTIVE, Color(0xbfbfc0ff));
+#else
+        set(Palette::BG, Palette::GROUP_NORMAL, Color(0xf1f1f1ff));
+        set(Palette::FG, Palette::GROUP_NORMAL, Color::BLACK);
+        set(Palette::LIGHT, Palette::GROUP_NORMAL, Color::WHITE);
+        set(Palette::DARK, Palette::GROUP_NORMAL, Color::BLACK);
+        set(Palette::MID, Palette::GROUP_NORMAL, Color::GRAY);
+        set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK);
+        set(Palette::TEXTBG, Palette::GROUP_NORMAL, Color::WHITE);
+        set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color(0x40a2fdff));
+        set(Palette::BORDER, Palette::GROUP_NORMAL, Color(0xbfbfc0ff));
+
+        set(Palette::BG, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::FG, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::LIGHT, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::DARK, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::MID, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::TEXT, Palette::GROUP_DISABLED, Color::BLACK);
+        set(Palette::TEXTBG, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::HIGHLIGHT, Palette::GROUP_DISABLED, Color::GRAY);
+        set(Palette::BORDER, Palette::GROUP_DISABLED, Color(0xbfbfc0ff));
+
+        set(Palette::BG, Palette::GROUP_ACTIVE, Color::LIGHTGRAY);
+        set(Palette::FG, Palette::GROUP_ACTIVE, Color::BLACK);
+        set(Palette::LIGHT, Palette::GROUP_ACTIVE, Color::WHITE);
+        set(Palette::DARK, Palette::GROUP_ACTIVE, Color::BLACK);
+        set(Palette::MID, Palette::GROUP_ACTIVE, Color::GRAY);
+        set(Palette::TEXT, Palette::GROUP_ACTIVE, Color::BLACK);
+        set(Palette::TEXTBG, Palette::GROUP_ACTIVE, Color::WHITE);
+        set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color(0xe3edfaff));
+        set(Palette::BORDER, Palette::GROUP_ACTIVE, Color(0xbfbfc0ff));
+#endif
+    }
+
     Palette& global_palette()
     {
         static Palette* p = nullptr;
@@ -36,36 +101,7 @@ namespace mui
         if (!p)
         {
             p = new Palette;
-            p->set(Palette::BG, Palette::GROUP_NORMAL, Color(0xf1f1f1ff));
-            p->set(Palette::FG, Palette::GROUP_NORMAL, Color::BLACK);
-            p->set(Palette::LIGHT, Palette::GROUP_NORMAL, Color::WHITE);
-            p->set(Palette::DARK, Palette::GROUP_NORMAL, Color::BLACK);
-            p->set(Palette::MID, Palette::GROUP_NORMAL, Color::GRAY);
-            p->set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK);
-            p->set(Palette::TEXTBG, Palette::GROUP_NORMAL, Color::WHITE);
-            p->set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color(0xe3edfaff));
-            p->set(Palette::BORDER, Palette::GROUP_NORMAL, Color(0xbfbfc0ff));
-
-            p->set(Palette::BG, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::FG, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::LIGHT, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::DARK, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::MID, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::TEXT, Palette::GROUP_DISABLED, Color::BLACK);
-            p->set(Palette::TEXTBG, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::HIGHLIGHT, Palette::GROUP_DISABLED, Color::GRAY);
-            p->set(Palette::BORDER, Palette::GROUP_DISABLED, Color(0xbfbfc0ff));
-
-            p->set(Palette::BG, Palette::GROUP_ACTIVE, Color::LIGHTGRAY);
-            p->set(Palette::FG, Palette::GROUP_ACTIVE, Color::BLACK);
-            p->set(Palette::LIGHT, Palette::GROUP_ACTIVE, Color::WHITE);
-            p->set(Palette::DARK, Palette::GROUP_ACTIVE, Color::BLACK);
-            p->set(Palette::MID, Palette::GROUP_ACTIVE, Color::GRAY);
-            p->set(Palette::TEXT, Palette::GROUP_ACTIVE, Color::BLACK);
-            p->set(Palette::TEXTBG, Palette::GROUP_ACTIVE, Color::WHITE);
-            p->set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color(0xe3edfaff));
-            //p->set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color::ORANGE);
-            p->set(Palette::BORDER, Palette::GROUP_ACTIVE, Color(0xbfbfc0ff));
+            p->reset();
         }
 
         return *p;

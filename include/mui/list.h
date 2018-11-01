@@ -25,15 +25,7 @@ namespace mui
     class ListBoxItem
     {
     public:
-        virtual void draw(Painter& painter, const Rect& rect, bool selected)
-        {
-            if (selected)
-            {
-                painter.draw_basic_box(rect,
-                                       global_palette().color(Palette::BORDER),
-                                       global_palette().color(Palette::HIGHLIGHT));
-            }
-        }
+        virtual void draw(Painter& painter, const Rect& rect, bool selected);
     };
 
     /**
@@ -125,7 +117,7 @@ namespace mui
             parent.add(this);
         }
 
-        virtual int handle(int event) override;
+        virtual int handle(eventid event) override;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

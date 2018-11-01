@@ -25,37 +25,6 @@ namespace mui
 {
 
     /**
-     * Event identifiers.
-     */
-    enum
-    {
-        EVT_NONE = 0,
-
-        EVT_MOUSE_DOWN = 1,
-        EVT_MOUSE_UP,
-        EVT_MOUSE_MOVE,
-        EVT_BUTTON_DOWN,
-        EVT_BUTTON_UP,
-        EVT_MOUSE_DBLCLICK,
-
-        /**
-         * Sent when a widget gets focus.
-         */
-        EVT_ENTER,
-
-        /**
-         * Sent when a widget loses focus.
-         */
-        EVT_LEAVE,
-
-        EVT_KEY_DOWN,
-        EVT_KEY_UP,
-        EVT_KEY_REPEAT,
-
-        EVT_PROPERTY_CHANGE,
-    };
-
-    /**
      * Global mouse position.
      *
      * Call this to retrieve the last mouse position, usually in response to a
@@ -86,7 +55,7 @@ namespace mui
     class IInput
     {
     public:
-        static void dispatch(int event);
+        static void dispatch(eventid event);
 
         static detail::Object& global_input()
         {

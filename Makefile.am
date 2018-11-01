@@ -43,7 +43,8 @@ CPPCHECK_CMD = ~/Downloads/cppcheck-1.85/cppcheck \
 
 CPPCHECK_DIRS = \
 $(top_srcdir)/include/mui/ \
-$(top_srcdir)/src/
+$(top_srcdir)/src/ \
+$(top_srcdir)/examples/
 
 cppcheck:
 	$(CPPCHECK_CMD) --enable=all $(CPPCHECK_DIRS)

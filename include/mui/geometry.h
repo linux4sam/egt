@@ -69,7 +69,7 @@ namespace mui
          * @param point The other point.
          */
         template <class T>
-        T angle_to(const Point& point)
+        T angle_to(const Point& point) const
         {
             return std::atan2(point.x - x, y - point.y);
         }
@@ -172,7 +172,7 @@ namespace mui
 
     inline bool operator==(const Size& lhs, const Size& rhs)
     {
-        return lhs.w == rhs.w && rhs.h == rhs.h;
+        return lhs.w == rhs.w && lhs.h == rhs.h;
     }
 
     inline bool operator!=(const Size& lhs, const Size& rhs)
@@ -506,6 +506,21 @@ namespace mui
         Point m_start;
         Point m_end;
     };
+
+    template <class T>
+    inline T to_degrees(T radians)
+    {
+        return radians * (180.0 / M_PI);
+    }
+
+    template <class T>
+    inline T to_radians(T zero, T degrees)
+    {
+        degrees += zero;
+        return degrees * (M_PI / 180.0);
+    }
+
+
 }
 
 #endif

@@ -4,15 +4,14 @@
  */
 #include <mui/ui>
 
-using namespace mui;
-
 int main()
 {
-    Application app;
+    mui::Application app;
 
-    Window win;
-    win.add(new Button("Hello World"))->align(alignmask::CENTER);
-    win.show();
+    mui::Window window;
+    mui::Button button(window, "Hello World");
+    button.align(mui::alignmask::CENTER);
+    window.show();
 
     return app.run();
 }

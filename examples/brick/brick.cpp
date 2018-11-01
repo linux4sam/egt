@@ -82,21 +82,21 @@ public:
         reset_game();
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_KEY_REPEAT:
-        case EVT_KEY_DOWN:
+        case eventid::KEYBOARD_REPEAT:
+        case eventid::KEYBOARD_DOWN:
         {
             if (key_value() == KEY_LEFT || key_value() == KEY_RIGHT)
             {
                 int x;
                 m_running = true;
                 if (key_value() == KEY_LEFT)
-                    x = m_paddle.x() - (event == EVT_KEY_REPEAT ? 15 : 10);
+                    x = m_paddle.x() - (event == eventid::KEYBOARD_REPEAT ? 15 : 10);
                 else
-                    x = m_paddle.x() + (event == EVT_KEY_REPEAT ? 15 : 10);
+                    x = m_paddle.x() + (event == eventid::KEYBOARD_REPEAT ? 15 : 10);
 
                 if (x > -m_paddle.w() && x < w())
                     m_paddle.move(Point(x, m_paddle.y()));
@@ -119,11 +119,13 @@ public:
 
             break;
         }
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
             m_running = true;
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
             m_paddle.move(Point(mouse_position().x - m_paddle.w() / 2, m_paddle.y()));
             return 1;
+        default:
+            break;
         }
 
         return Window::handle(event);

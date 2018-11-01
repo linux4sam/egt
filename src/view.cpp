@@ -14,7 +14,7 @@ namespace mui
         : Frame(rect, widgetmask::NO_BACKGROUND)
     {}
 
-    int ScrolledView::handle(int event)
+    int ScrolledView::handle(eventid event)
     {
         auto ret = Frame::handle(event);
         if (ret)
@@ -22,15 +22,15 @@ namespace mui
 
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
             m_moving = true;
             m_start_pos = mouse_position();
             m_start_offset = m_offset;
             return 1;
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
             m_moving = false;
             return 1;
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
             if (m_moving)
             {
                 if (m_orientation == Orientation::HORIZONTAL)
@@ -45,10 +45,22 @@ namespace mui
                 }
             }
             break;
+        default:
+            break;
         }
 
         return ret;
     }
+
+    #if 0
+    static void draw_scrollbar(Painter& painter, Orientation orientation,
+                               const Rect& box, int offset, int total)
+    {
+        painter.draw_gradient_box(box, palette().color(Palette::BORDER),
+                                  false,
+                                  palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
+    }
+    #endif
 
     void ScrolledView::draw(Painter& painter, const Rect& rect)
     {
@@ -70,6 +82,35 @@ namespace mui
             r.y -= m_offset;
 
         Frame::draw(painter, r);
+
+        auto HEIGHT = 5;
+
+        if (m_orientation == Orientation::HORIZONTAL)
+        {
+            Rect s = box();
+            s.y = box().y + box().h - HEIGHT - 2;
+            s.h = HEIGHT;
+
+            if (!is_flag_set(widgetmask::NO_BORDER))
+            {
+                s.x = std::abs(m_offset);
+                painter.draw_basic_box(s, palette().color(Palette::BORDER),
+                                       palette().color(Palette::BG));
+            }
+
+            s.w = float(box().w) / 4.;
+            s.x = std::abs(m_offset) + (float(std::abs(m_offset)) / float(box().w) *
+                                        (float(box().w) - s.w));
+
+            painter.draw_gradient_box(s, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::HIGHLIGHT));
+        }
+        else
+        {
+            // TODO
+        }
+
     }
 
     ScrolledView::~ScrolledView()

@@ -49,7 +49,7 @@ static bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
 class ObstacleLayer : public PlaneWindow
 {
 public:
-    ObstacleLayer(int speed)
+    explicit ObstacleLayer(int speed)
         : PlaneWindow(Size(800, 480), widgetmask::WINDOW_DEFAULT, DRM_FORMAT_ARGB8888/*RGB565*/),
           m_speed(speed),
           m_x(0),
@@ -347,12 +347,12 @@ public:
         m_label->text(ss.str());
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_KEY_REPEAT:
-        case EVT_KEY_DOWN:
+        case eventid::KEYBOARD_REPEAT:
+        case eventid::KEYBOARD_DOWN:
         {
             m_running = true;
 
@@ -361,7 +361,7 @@ public:
             }
             else if (key_value() == KEY_UP)
             {
-                int y = m_mouse->y() - (event == EVT_KEY_REPEAT ? 10 : 5);
+                int y = m_mouse->y() - (event == eventid::KEYBOARD_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
                     m_mouse->move(Point(m_mouse->x(), y));
 
@@ -369,7 +369,7 @@ public:
             }
             else if (key_value() == KEY_DOWN)
             {
-                int y = m_mouse->y() + (event == EVT_KEY_REPEAT ? 10 : 5);
+                int y = m_mouse->y() + (event == eventid::KEYBOARD_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
                     m_mouse->move(Point(m_mouse->x(), y));
 
@@ -378,7 +378,7 @@ public:
 
             break;
         }
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
 
             m_running = true;
 
@@ -402,6 +402,8 @@ public:
             }
 
             return 1;
+        default:
+            break;
         }
 
         return Window::handle(event);

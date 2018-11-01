@@ -65,7 +65,7 @@ public:
         : ListBox(items, rect)
     {}
 
-    void on_selected(int index)
+    void on_selected(int index) override
     {
         animation->stop();
         animation->set_easing_func(curves[index]);
@@ -132,9 +132,9 @@ public:
 
 private:
 #ifndef USE_HARDWARE
-    Image* m_box;
+    Image* m_box {nullptr};
 #else
-    PlaneWindow* m_box;
+    PlaneWindow* m_box {nullptr};
 #endif
 };
 
@@ -144,7 +144,7 @@ struct ResetTimer : public Timer
         : Timer(std::chrono::seconds(1))
     {}
 
-    void timeout()
+    void timeout() override
     {
         animation->start();
     }
@@ -152,12 +152,12 @@ struct ResetTimer : public Timer
 
 struct MyAnimationTimer : public PeriodicTimer
 {
-    MyAnimationTimer(ResetTimer& reset)
+    explicit MyAnimationTimer(ResetTimer& reset)
         : PeriodicTimer(std::chrono::milliseconds(30)),
           m_reset(reset)
     {}
 
-    void timeout()
+    void timeout() override
     {
         if (animation->running())
             animation->next();

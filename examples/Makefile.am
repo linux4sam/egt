@@ -156,6 +156,8 @@ basic_basic_LDFLAGS = $(AM_LDFLAGS)
 whiteboard_whiteboard_SOURCES = whiteboard/whiteboard.cpp
 whiteboard_whiteboard_CXXFLAGS = $(AM_CXXFLAGS)
 whiteboard_whiteboard_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+whiteboard_whiteboarddir = $(prefix)/share/mui/examples/whiteboard
+whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*.png)
 whiteboard_whiteboard_LDFLAGS = $(AM_LDFLAGS)
 
 newsfeed_newsfeed_SOURCES = newsfeed/newsfeed.cpp

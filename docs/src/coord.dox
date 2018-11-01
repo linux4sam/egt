@@ -7,8 +7,15 @@
 MUI defines a mui::Point, mui::Size, mui::Rect, and several other classes for
 working with geometry.
 
+The cordinate system defaults with an origin of 0,0 in the top left.  Positive X moves to the right, and positive Y moves down.
+
 @image html coordsys.png
 @image latex coordsys.png "Coordinate System" width=8cm
+
+There are three layers of coordinates.
+- Logical
+- Frame
+- Physical (or Screen)
 
 @section coord_radians Radians
 

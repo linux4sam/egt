@@ -145,7 +145,7 @@ int main()
             : PeriodicTimer(std::chrono::milliseconds(30))
         {}
 
-        void timeout()
+        void timeout() override
         {
             for (auto i : boxes)
                 i->next_frame();
@@ -164,27 +164,16 @@ int main()
 
     win.add(&label1);
 
-    struct CPUTimer: public PeriodicTimer
+    CPUMonitorUsage tools;
+    PeriodicTimer cputimer(std::chrono::seconds(1));
+    cputimer.on_timeout([&tools, &label1]()
     {
-        CPUTimer(Label& label)
-            : PeriodicTimer(std::chrono::seconds(1)),
-              m_label(label)
-        {}
+        tools.update();
 
-        void timeout()
-        {
-            m_tools.update();
-
-            ostringstream ss;
-            ss << "CPU: " << (int)m_tools.usage(0) << "%";
-            m_label.text(ss.str());
-        }
-
-        Label& m_label;
-        CPUMonitorUsage m_tools;
-    };
-
-    CPUTimer cputimer(label1);
+        ostringstream ss;
+        ss << "CPU: " << (int)tools.usage(0) << "%";
+        label1.text(ss.str());
+    });
     cputimer.start();
 
     return app.run();

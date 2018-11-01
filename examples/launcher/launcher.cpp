@@ -70,7 +70,7 @@ public:
           m_exec(exec)
     {
         palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-        Font newfont(24, Font::WEIGHT_BOLD);
+        Font newfont(24, Font::weightid::BOLD);
         font(newfont);
     }
 
@@ -79,11 +79,11 @@ public:
         scale(value, value);
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
         {
             if (!m_animation.running())
             {
@@ -100,6 +100,8 @@ public:
 
             break;
         }
+        default:
+            break;
         }
 
         return Image::handle(event);
@@ -185,9 +187,9 @@ public:
         auto settings = new ImageButton("settings.png", "", Rect(), widgetmask::NO_BORDER);
         add(settings);
         settings->align(alignmask::RIGHT | alignmask::TOP, 10);
-        settings->on_event([this](int event)
+        settings->on_event([this](eventid event)
         {
-            if (event == EVT_MOUSE_DOWN)
+            if (event == eventid::MOUSE_DOWN)
             {
                 if (m_popup.visible())
                     m_popup.hide();
@@ -244,11 +246,11 @@ public:
         return 0;
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
             if (!m_moving)
             {
                 // hack
@@ -259,16 +261,18 @@ public:
                 m_offset = m_boxes[0]->center().x;
             }
             break;
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
             m_moving = false;
             start_snap();
             break;
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
             if (m_moving)
             {
                 move_boxes(mouse_position().x);
                 return 1;
             }
+            break;
+        default:
             break;
         }
 

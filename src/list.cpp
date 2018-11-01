@@ -8,6 +8,17 @@
 
 namespace mui
 {
+    void ListBoxItem::draw(Painter& painter, const Rect& rect, bool selected)
+    {
+        if (selected)
+        {
+            painter.draw_gradient_box(rect,
+                                      global_palette().color(Palette::BORDER),
+                                      false,
+                                      global_palette().color(Palette::HIGHLIGHT));
+        }
+    }
+
     static auto ITEM_HEIGHT = 40;
 
     Rect ListBox::item_rect(uint32_t index) const
@@ -18,11 +29,11 @@ namespace mui
         return r;
     }
 
-    int ListBox::handle(int event)
+    int ListBox::handle(eventid event)
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
         {
             Point mouse = screen_to_frame(mouse_position());
             for (size_t i = 0; i < m_items.size(); i++)
@@ -36,6 +47,8 @@ namespace mui
 
             return 1;
         }
+        default:
+            break;
         }
 
         return Widget::handle(event);

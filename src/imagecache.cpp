@@ -66,7 +66,7 @@ namespace mui
                 /**
                  * @todo This should use MIME info and not filename.
                  */
-                if (name.find(".png") != std::string::npos)
+                if (name.find("png") != std::string::npos)
                 {
                     image = shared_cairo_surface_t(
                                 cairo_image_surface_create_from_png_stream(
@@ -74,7 +74,7 @@ namespace mui
                                 cairo_surface_destroy);
                 }
 #ifdef HAVE_LIBJPEG
-                else if (name.find(".jpg") != std::string::npos)
+                else if (name.find("jpg") != std::string::npos)
                 {
                     image = shared_cairo_surface_t(
                                 cairo_image_surface_create_from_jpeg_stream(
@@ -84,6 +84,7 @@ namespace mui
 #endif
                 else
                 {
+                    ERR("could not load file " << filename);
                     assert(!"unsupported file type");
                 }
             }
@@ -92,14 +93,14 @@ namespace mui
                 string name = image_path + filename;
                 DBG("loading: " << name);
 
-                if (name.find(".png") != std::string::npos)
+                if (name.find("png") != std::string::npos)
                 {
                     image = shared_cairo_surface_t(
                                 cairo_image_surface_create_from_png(name.c_str()),
                                 cairo_surface_destroy);
                 }
 #ifdef HAVE_LIBJPEG
-                else if (name.find(".jpg") != std::string::npos)
+                else if (name.find("jpg") != std::string::npos)
                 {
                     image = shared_cairo_surface_t(
                                 cairo_image_surface_create_from_jpeg(name.c_str()),
@@ -108,6 +109,7 @@ namespace mui
 #endif
                 else
                 {
+                    ERR("could not load file " << filename);
                     assert(!"unsupported file type");
                 }
             }

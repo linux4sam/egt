@@ -105,13 +105,15 @@ namespace mui
           m_checked(false)
     {}
 
-    int CheckBox::handle(int event)
+    int CheckBox::handle(eventid event)
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
             check(!checked());
             return 1;
+        default:
+            break;
         }
 
         return Widget::handle(event);
@@ -131,8 +133,9 @@ namespace mui
 
         if (checked())
         {
-            painter.draw_basic_box(r, palette().color(Palette::BORDER),
-                                   palette().color(Palette::HIGHLIGHT));
+            painter.draw_gradient_box(r, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::HIGHLIGHT));
 
             static const int OFFSET = 5;
             auto cr = painter.context();
@@ -182,15 +185,17 @@ namespace mui
             Rect rect = box();
             rect.w /= 2;
             rect.x += rect.w;
-            painter.draw_basic_box(rect, palette().color(Palette::BORDER),
-                                   palette().color(Palette::HIGHLIGHT));
+            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::HIGHLIGHT));
         }
         else
         {
             Rect rect = box();
             rect.w /= 2;
-            painter.draw_basic_box(rect, palette().color(Palette::BORDER),
-                                   palette().color(Palette::MID));
+            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::MID));
         }
     }
 

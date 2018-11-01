@@ -29,15 +29,16 @@ using namespace mui;
 
 // pull feed from http://feeds.reuters.com/reuters/technologyNews
 
-#if 1
 class NewsItem : public ListBoxItem
 {
 public:
 
-    NewsItem(const std::string& title, const std::string& desc, const std::string& date)
+    NewsItem(const std::string& title, const std::string& desc,
+             const std::string& date, const std::string& link)
         : m_title(title),
           m_desc(desc),
           m_date(date),
+          m_link(link),
           m_grid(Rect(), 1, 2)
     {
         m_grid.add(&m_title, 0, 0);
@@ -51,9 +52,6 @@ public:
         m_grid.set_box(rect);
         m_grid.reposition();
         m_grid.draw(painter, m_grid.box());
-
-        //m_title.draw(painter, m_title.box());
-        //m_description.draw(painter, m_desc.box());
     }
 
     virtual ~NewsItem()
@@ -61,12 +59,14 @@ public:
 
 protected:
 
+    NewsItem() = delete;
+
     Label m_title;
     Label m_desc;
     Label m_date;
+    Label m_link;
     StaticGrid m_grid;
 };
-#endif
 
 #if 0
 static void download()
@@ -134,7 +134,7 @@ static int load(const string& file, ListBox& list)
         }
 
         //list.add_item(new StringItem(title));
-        list.add_item(new NewsItem(title, description, date));
+        list.add_item(new NewsItem(title, description, date, link));
     }
 
     return 0;

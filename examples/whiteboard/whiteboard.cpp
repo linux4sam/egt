@@ -18,45 +18,44 @@ public:
     MainWindow()
         : m_down(false),
           m_color(Color::RED),
-          m_grid(Rect(Size(100, 300)), 1, 4, 5),
+          m_grid(Rect(Size(100, 400)), 1, 4, 5),
           m_red("Red"),
           m_blue("Blue"),
           m_green("Green"),
-          m_clear("Clear")
+          m_clear("clear.png")
     {
         add(&m_grid);
 
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
 
         m_grid.add(&m_red, 0, 0);
-        m_red.on_event([this](int event)
+        m_red.on_event([this](eventid event)
         {
-            ignoreparam(event);
-            if (event == EVT_MOUSE_DOWN)
+            if (event == eventid::MOUSE_DOWN)
                 m_color = Color::RED;
         });
 
         m_grid.add(&m_blue, 0, 1);
-        m_blue.on_event([this](int event)
+        m_blue.on_event([this](eventid event)
         {
             ignoreparam(event);
-            if (event == EVT_MOUSE_DOWN)
+            if (event == eventid::MOUSE_DOWN)
                 m_color = Color::BLUE;
         });
 
         m_grid.add(&m_green, 0, 2);
-        m_green.on_event([this](int event)
+        m_green.on_event([this](eventid event)
         {
             ignoreparam(event);
-            if (event == EVT_MOUSE_DOWN)
+            if (event == eventid::MOUSE_DOWN)
                 m_color = Color::GREEN;
         });
 
         m_grid.add(&m_clear, 0, 3);
-        m_clear.on_event([this](int event)
+        m_clear.on_event([this](eventid event)
         {
             ignoreparam(event);
-            if (event == EVT_MOUSE_DOWN)
+            if (event == eventid::MOUSE_DOWN)
             {
                 damage();
             }
@@ -65,17 +64,17 @@ public:
         //m_grid.reposition();
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
         {
             m_last = mouse_position();
             m_down = true;
             break;
         }
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
         {
             if (m_down)
             {
@@ -103,8 +102,10 @@ public:
 
             break;
         }
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
             m_down = false;
+            break;
+        default:
             break;
         }
 
@@ -118,12 +119,15 @@ public:
     Button m_red;
     Button m_blue;
     Button m_green;
-    Button m_clear;
+    ImageButton m_clear;
 };
 
 int main()
 {
     Application app;
+
+    set_image_path("../share/mui/examples/whiteboard/");
+
     MainWindow win;
     win.show();
 

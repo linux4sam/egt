@@ -54,7 +54,7 @@ namespace mui
         explicit Frame(Frame& parent, const Rect& rect,
                        widgetmask flags = widgetmask::FRAME);
 
-        virtual int handle(int event) override;
+        virtual int handle(eventid event) override;
 
         /**
          * Add a child widget.
@@ -67,6 +67,8 @@ namespace mui
          * layers for drawing.
          */
         virtual Widget* add(Widget* widget);
+
+        virtual Widget& add(Widget& widget);
 
         /**
          * Insert a child widget at the specified index.

@@ -190,7 +190,7 @@ namespace mui
         m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
         assert(m_cr);
 
-
+#if 1
         cairo_font_options_t* cfo = cairo_font_options_create();
         cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
         cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_SLIGHT);
@@ -198,7 +198,8 @@ namespace mui
         cairo_font_options_destroy(cfo);
 
         cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_FAST);
-        cairo_set_tolerance(m_cr.get(), 1.0);
+        //cairo_set_tolerance(m_cr.get(), 1.0);
+#endif
 
         if (!the_screen)
             the_screen = this;

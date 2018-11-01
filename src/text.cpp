@@ -29,13 +29,13 @@ namespace mui
             stop_cursor();
     }
 
-    int TextBox::handle(int event)
+    int TextBox::handle(eventid event)
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
             return 1;
-        case EVT_KEY_DOWN:
+        case eventid::KEYBOARD_DOWN:
             if (std::isalnum((char)key_value()))
             {
                 m_text.append(1, (char)key_value());
@@ -52,6 +52,8 @@ namespace mui
                 //cout << "unhandled key value " << key_value() << endl;
             }
             return 1;
+        default:
+            break;
         }
 
         return Widget::handle(event);

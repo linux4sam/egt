@@ -81,13 +81,15 @@ public:
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     }
 
-    int handle(int event)
+    int handle(eventid event) override
     {
         switch (event)
         {
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
             if (debounce_mouse(50))
                 spawn(mouse_position());
+            break;
+        default:
             break;
         }
 

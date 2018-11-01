@@ -9,98 +9,6 @@ using namespace std;
 
 namespace mui
 {
-    static inline double to_degrees(double radians)
-    {
-        return radians * (180.0 / M_PI);
-    }
-
-    static inline float to_radians(float zero, float degrees)
-    {
-        //degrees = 360.0 - degrees - zero;
-        degrees += zero;
-        return degrees * (M_PI / 180.0);
-    }
-
-    Radial::Radial(const Rect& rect)
-        : ValueWidget<float>(rect, 90.0)
-    {}
-
-    int Radial::handle(int event)
-    {
-        switch (event)
-        {
-        case EVT_MOUSE_DOWN:
-            active(true);
-            return 1;
-            break;
-        case EVT_MOUSE_UP:
-            active(false);
-            return 1;
-            break;
-        case EVT_MOUSE_MOVE:
-            if (active())
-            {
-                Point c = center();
-                float angle = c.angle_to<float>(screen_to_frame(mouse_position()));
-                angle = to_degrees(angle);
-                if (angle < 0)
-                    angle = angle + 360;
-                value(angle);
-                return 1;
-            }
-            break;
-        }
-
-        return Widget::handle(event);
-    }
-
-    void Radial::draw(Painter& painter, const Rect& rect)
-    {
-        ignoreparam(rect);
-
-        float linew = 40;
-
-        Color color1(Color::LIGHTGRAY);
-        color1.alpha(0x55);
-
-        float radius = w() / 2 - (linew / 2);
-        double angle1 = to_radians(-90, 0);
-        double angle2 = to_radians(-90, value());
-
-        Color color2(Color::OLIVE);
-        if (value() > 180)
-            color2 = Color::ORANGE;
-
-        Point c = center();
-
-        auto cr = painter.context();
-
-        cairo_save(cr.get());
-
-        // bottom full circle
-        cairo_set_source_rgba(cr.get(),
-                              color1.redf(),
-                              color1.greenf(),
-                              color1.bluef(),
-                              color1.alphaf());
-        cairo_set_line_width(cr.get(), linew);
-        cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
-        cairo_stroke(cr.get());
-
-        // value arc
-        cairo_set_source_rgb(cr.get(),
-                             color2.redf(),
-                             color2.greenf(),
-                             color2.bluef());
-        cairo_set_line_width(cr.get(), linew - (linew / 3));
-        cairo_arc(cr.get(), c.x, c.y, radius, angle1, angle2);
-        cairo_stroke(cr.get());
-
-        string text = std::to_string((int)value()) + m_label;
-        painter.draw_text(text, box(), color2, alignmask::CENTER, 0, Font(72));
-
-        cairo_restore(cr.get());
-    }
 
     ProgressBar::ProgressBar(const Rect& rect)
         : ValueRangeWidget<int>(rect, 0, 100, 0)
@@ -258,8 +166,8 @@ namespace mui
         Color color2(Color::ORANGE);
 
         float radius = w() / 2 - (linew / 2);
-        double angle1 = to_radians(180, 0);
-        double angle2 = to_radians(180, value() / 100. * 360.);
+        double angle1 = to_radians<float>(180, 0);
+        double angle2 = to_radians<float>(180, value() / 100. * 360.);
 
         Point c = center();
 
@@ -291,11 +199,11 @@ namespace mui
     {
     }
 
-    int Slider::handle(int event)
+    int Slider::handle(eventid event)
     {
         switch (event)
         {
-        case EVT_MOUSE_DOWN:
+        case eventid::MOUSE_DOWN:
         {
             Rect bounding;
 
@@ -327,24 +235,26 @@ namespace mui
 
             break;
         }
-        case EVT_MOUSE_UP:
+        case eventid::MOUSE_UP:
             active(false);
             return 1;
-        case EVT_MOUSE_MOVE:
+        case eventid::MOUSE_MOVE:
             if (active())
             {
                 if (m_orientation == orientation::HORIZONTAL)
                 {
-                    int diff = screen_to_frame(mouse_position()).x - m_moving_x;
+                    auto diff = screen_to_frame(mouse_position()).x - m_moving_x;
                     position(m_start_pos + denormalize(diff));
                 }
                 else
                 {
-                    int diff = screen_to_frame(mouse_position()).y - m_moving_x;
+                    auto diff = screen_to_frame(mouse_position()).y - m_moving_x;
                     position(m_start_pos + denormalize(diff));
                 }
                 return 1;
             }
+            break;
+        default:
             break;
         }
 
@@ -357,8 +267,6 @@ namespace mui
 
         auto cr = painter.context();
 
-        cairo_save(cr.get());
-
         cairo_set_source_rgba(cr.get(),
                               palette().color(Palette::HIGHLIGHT).redf(),
                               palette().color(Palette::HIGHLIGHT).greenf(),
@@ -367,6 +275,7 @@ namespace mui
 
         if (m_orientation == orientation::HORIZONTAL)
         {
+#if 1
             cairo_set_line_width(cr.get(), h() / 5.0);
 
             // line
@@ -383,7 +292,22 @@ namespace mui
             cairo_move_to(cr.get(), x() + normalize(m_pos) + 1, y() + h() / 2);
             cairo_line_to(cr.get(), x() + w(), y() + h() / 2);
             cairo_stroke(cr.get());
+#else
+            Line l1(Point(x(), y() + h() / 2), Point(x() + normalize(m_pos), y() + h() / 2));
+            Rect r1 = l1.rect();
 
+            painter.draw_gradient_box(r1, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::HIGHLIGHT));
+
+            Line l2(Point(x() + normalize(m_pos) + 1, y() + h() / 2),
+                    Point(x() + w(), y() + h() / 2));
+            Rect r2 = l2.rect();
+
+            painter.draw_gradient_box(r2, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::MID));
+#endif
             // handle
             painter.draw_gradient_box(Rect(x() + normalize(m_pos) + 1,
                                            y() + 1,
@@ -418,7 +342,7 @@ namespace mui
                                       palette().color(Palette::BORDER));
         }
 
-        cairo_restore(cr.get());
+        //cairo_restore(cr.get());
     }
 
     Slider::~Slider()

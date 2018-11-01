@@ -10,10 +10,9 @@
  * @brief Working with event loops.
  */
 
-#include <cstdint>
 #include <functional>
-#include <mui/utils.h>
 #include <memory>
+#include <mui/utils.h>
 #include <vector>
 
 namespace asio
