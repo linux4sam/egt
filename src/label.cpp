@@ -14,24 +14,43 @@ namespace mui
 
     Label::Label(const std::string& text, const Rect& rect,
                  alignmask align, const Font& font, widgetmask flags) noexcept
-        : Widget(rect, flags),
-          m_text_align(align),
-          m_text(text),
-          m_font(font)
-    {}
+    : TextWidget(text, rect, align, font, flags)
+    {
+
+    }
 
     Label::Label(Frame& parent, const std::string& text, const Rect& rect,
                  alignmask align, const Font& font, widgetmask flags) noexcept
         : Label(text, rect, align, font, flags)
     {
         parent.add(this);
+        first_resize();
+    }
+
+    void Label::first_resize()
+    {
+        if (box().size().empty())
+        {
+            if (!m_text.empty())
+            {
+                Painter painter(screen()->context());
+                painter.set_font(m_font);
+                Size s = painter.text_size(m_text);
+                resize(s);
+            }
+        }
     }
 
     void Label::text(const std::string& str)
     {
         if (m_text != str)
         {
+            bool doresize = m_text.empty();
             m_text = str;
+            if (doresize)
+            {
+                first_resize();
+            }
             damage();
         }
     }
@@ -207,7 +226,7 @@ namespace mui
                            const Rect& rect,
                            const Font& font)
         : Label(text, rect, alignmask::LEFT | alignmask::CENTER, font),
-          m_image(image_cache.get(image, 1.0))
+          m_image(detail::image_cache.get(image, 1.0))
     {
         assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
     }
@@ -219,13 +238,9 @@ namespace mui
         // image
         painter.draw_image(m_image, box(), alignmask::LEFT | alignmask::CENTER);
 
-        // text
-        //Label::draw(rect);
-
         auto width = cairo_image_surface_get_width(m_image.get());
         painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
                           alignmask::LEFT | alignmask::CENTER, width + 5, m_font);
-
     }
 
     ImageLabel::~ImageLabel()

@@ -10,10 +10,10 @@
  * @brief Base class Widget definition.
  */
 
-#include <mui/font.h>
 #include <mui/geometry.h>
 #include <mui/object.h>
 #include <mui/input.h>
+#include <mui/font.h>
 #include <mui/palette.h>
 #include <mui/screen.h>
 #include <mui/utils.h>
@@ -223,11 +223,11 @@ namespace mui
                widgetmask flags = widgetmask::NONE) noexcept;
 
         /**
-             * Construct a widget.
+         * Construct a widget.
          *
          * @param[in] parent Parent Frame of the widget.
-             * @param[in] rect Initial rectangle of the Widget.
-             * @param[in] flags Widget flags.
+         * @param[in] rect Initial rectangle of the Widget.
+         * @param[in] flags Widget flags.
          */
         Widget(Frame& parent, const Rect& rect = Rect(),
                widgetmask flags = widgetmask::NONE) noexcept;
@@ -266,11 +266,13 @@ namespace mui
          * @note This will cause a redraw of the widget.
          */
         virtual void resize(const Size& s);
-        inline void resizew(int w)
+
+        inline void width(int w)
         {
             resize(Size(w, h()));
         }
-        inline void resizeh(int h)
+
+        inline void height(int h)
         {
             resize(Size(w(), h));
         }
@@ -543,6 +545,9 @@ namespace mui
          */
         Point screen_to_frame(const Point& p);
 
+        /**
+         * Convert screen rectangle to frame coordinates.
+         */
         Rect screen_to_frame(const Rect& r);
 
         /**
@@ -619,6 +624,47 @@ namespace mui
         Widget& operator=(const Widget&) = delete;
 
         friend class Frame;
+    };
+
+    class TextWidget : public Widget
+    {
+    public:
+
+	    explicit TextWidget(const std::string& text = std::string(), const Rect& rect = Rect(),
+				alignmask align = alignmask::CENTER, const Font& font = Font(), widgetmask flags = widgetmask::NO_BORDER) noexcept;
+
+	            /**
+         * Set the text of the label.
+         */
+        virtual void text(const std::string& str);
+
+        /**
+         * Get the text of the Label.
+         */
+        virtual const std::string& get_text() const { return m_text; }
+
+        /**
+         * Set the Font of the Label.
+         */
+        virtual void font(const Font& font) { m_font = font; }
+
+        /**
+         * Get the Font of the Label.
+         */
+        virtual const Font& font() const { return m_font; }
+
+        /**
+         * Set the alignment of the Label.
+         */
+        void text_align(alignmask align) { m_text_align = align; }
+
+	virtual ~TextWidget()
+	{}
+
+    protected:
+	alignmask m_text_align;
+        std::string m_text;
+        Font m_font;
     };
 
     namespace experimental

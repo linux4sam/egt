@@ -27,6 +27,7 @@ font.cpp \
 frame.cpp \
 framebuffer.cpp \
 geometry.cpp \
+uiloader.cpp \
 grid.cpp \
 image.cpp \
 imagecache.cpp \
@@ -79,6 +80,7 @@ $(top_srcdir)/include/mui/button.h \
 $(top_srcdir)/include/mui/chart.h \
 $(top_srcdir)/include/mui/color.h \
 $(top_srcdir)/include/mui/event_loop.h \
+$(top_srcdir)/include/mui/uiloader.h \
 $(top_srcdir)/include/mui/font.h \
 $(top_srcdir)/include/mui/frame.h \
 $(top_srcdir)/include/mui/framebuffer.h \

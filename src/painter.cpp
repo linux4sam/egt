@@ -8,9 +8,6 @@
 namespace mui
 {
 
-    Painter::Painter()
-    {}
-
     Painter::Painter(shared_cairo_t cr)
         : m_cr(cr)
     {
@@ -204,6 +201,13 @@ namespace mui
         return draw_text(rect, text, align, margin);
     }
 
+    Size Painter::text_size(const std::string& text)
+    {
+        cairo_text_extents_t textext;
+        cairo_text_extents(m_cr.get(), text.c_str(), &textext);
+        return Size(textext.width, textext.height);
+    }
+
     Painter& Painter::clip()
     {
         cairo_clip(m_cr.get());
@@ -269,7 +273,7 @@ namespace mui
                aspect = 1.0,
                corner_radius = 50.0 / 10.0;
 
-                if (rect.w <= 10)
+        if (rect.w <= 10)
             corner_radius = rect.w / 2;
 
         if (rect.h <= 10)
@@ -336,7 +340,7 @@ namespace mui
                aspect = 1.0,
                corner_radius = 50.0 / 10.0;
 
-                if (rect.w <= 10)
+        if (rect.w <= 10)
             corner_radius = rect.w / 2;
 
         if (rect.h <= 10)

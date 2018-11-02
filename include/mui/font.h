@@ -99,6 +99,11 @@ namespace mui
          */
         const std::string& face() const { return m_face; }
 
+	/**
+	 * Set the face of the font.
+	 */
+	void face(const std::string& face) { m_face = face; }
+
         /**
          * Get the size of the font.
          */
@@ -113,6 +118,11 @@ namespace mui
          * Get the weight of the font.
          */
         virtual weightid weight() const { return m_weight; }
+
+	/**
+	 *
+	 */
+	virtual void weight(weightid w) { m_weight = w; }
 
         /**
          * Get the slant of the font.

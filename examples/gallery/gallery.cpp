@@ -75,12 +75,12 @@ int main()
         grid0.add(new Image(file), alignmask::CENTER);
     }
 
-    ScrolledView view1(Rect(0, logo.h() + grid_height, win.size().w, grid_height));
+    ScrolledView view1(Rect(0, logo.h() + grid_height + 1, win.size().w, grid_height));
     view1.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     view1.name("view1");
     win.add(&view1);
 
-    StaticGrid grid1(Rect(0, logo.h() + grid_height, files.size() * 150, grid_height), files.size(), 1, 0);
+    StaticGrid grid1(Rect(0, logo.h() + grid_height + 1, files.size() * 150, grid_height), files.size(), 1, 0);
     grid1.name("grid1");
     view1.add(&grid1);
 
@@ -100,15 +100,15 @@ int main()
     win.add(&settings);
     settings.align(alignmask::RIGHT | alignmask::TOP, 10);
     settings.on_event([&popup](eventid event)
-                      {
-                          if (event == eventid::MOUSE_UP)
-                          {
-                              if (popup.visible())
-                                  popup.hide();
-                              else
-                                  popup.show(true);
-                          }
-                      });
+    {
+        if (event == eventid::MOUSE_UP)
+        {
+            if (popup.visible())
+                popup.hide();
+            else
+                popup.show(true);
+        }
+    });
     win.add(&popup);
 
     win.show();

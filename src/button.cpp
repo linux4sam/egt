@@ -79,7 +79,7 @@ namespace mui
         : Button(text, rect, Font(), flags),
           m_image_align(alignmask::CENTER)
     {
-        set_label_align(alignmask::CENTER | alignmask::BOTTOM);
+        text_align(alignmask::CENTER | alignmask::BOTTOM);
 
         if (!image.empty())
             do_set_image(image);
@@ -87,7 +87,7 @@ namespace mui
 
     void ImageButton::do_set_image(const std::string& image)
     {
-        m_image = image_cache.get(image, 1.0);
+        m_image = detail::image_cache.get(image, 1.0);
 
         auto width = cairo_image_surface_get_width(m_image.get());
         auto height = cairo_image_surface_get_height(m_image.get());

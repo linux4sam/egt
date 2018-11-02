@@ -55,8 +55,6 @@ namespace mui
             Painter& m_painter;
         };
 
-        Painter();
-
         /**
          * @todo Painter needs to come from the Screen. This constructor should
          * be hidden and you should have to get a custom version of it from the
@@ -149,6 +147,8 @@ namespace mui
                        int margin = 5,
                        const Font& font = Font());
 
+        Size text_size(const std::string& text);
+
         Painter& draw_image(shared_cairo_surface_t image,
                             const Rect& dest,
                             alignmask align = alignmask::CENTER,
@@ -187,6 +187,10 @@ namespace mui
     protected:
 
         shared_cairo_t m_cr;
+
+    private:
+
+        Painter() = delete;
     };
 
 }

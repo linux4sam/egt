@@ -30,8 +30,8 @@ public:
              widgetmask flags = widgetmask::NONE)
         : ImageButton(filename, label, Rect(Point(x, y), Size()), flags)
     {
-        set_image_align(alignmask::CENTER | alignmask::TOP);
-        set_label_align(alignmask::CENTER | alignmask::BOTTOM);
+        image_align(alignmask::CENTER | alignmask::TOP);
+        text_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
     int handle(eventid event) override

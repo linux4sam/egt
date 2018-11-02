@@ -62,16 +62,16 @@ public:
 
                 b->on_event([b](eventid event)
                 {
-                    if (!b->text().empty())
+                    if (!b->get_text().empty())
                     {
                         if (event == eventid::MOUSE_DOWN)
                         {
-                            key_value() = b->text()[0];
+                            key_value() = b->get_text()[0];
                             IInput::dispatch(eventid::KEYBOARD_DOWN);
                         }
                         else if (event == eventid::MOUSE_UP)
                         {
-                            key_value() = b->text()[0];
+                            key_value() = b->get_text()[0];
                             IInput::dispatch(eventid::KEYBOARD_UP);
                         }
                     }

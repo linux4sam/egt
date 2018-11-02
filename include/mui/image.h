@@ -11,6 +11,7 @@
  */
 
 #include <mui/widget.h>
+#include <mui/font.h>
 
 namespace mui
 {

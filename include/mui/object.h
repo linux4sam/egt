@@ -81,7 +81,7 @@ namespace mui
              */
             virtual void invoke_handlers(eventid event)
             {
-                // Hmm, this is not really respecting the return value of the handler
+                // Hmm, this is not respecting the return value of the handler
                 for (auto callback : m_callbacks)
                     callback(event);
             }

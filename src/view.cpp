@@ -52,7 +52,7 @@ namespace mui
         return ret;
     }
 
-    #if 0
+#if 0
     static void draw_scrollbar(Painter& painter, Orientation orientation,
                                const Rect& box, int offset, int total)
     {
@@ -60,7 +60,7 @@ namespace mui
                                   false,
                                   palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
     }
-    #endif
+#endif
 
     void ScrolledView::draw(Painter& painter, const Rect& rect)
     {
@@ -83,10 +83,10 @@ namespace mui
 
         Frame::draw(painter, r);
 
-        auto HEIGHT = 5;
-
         if (m_orientation == Orientation::HORIZONTAL)
         {
+            auto HEIGHT = 5;
+
             Rect s = box();
             s.y = box().y + box().h - HEIGHT - 2;
             s.h = HEIGHT;

@@ -1,0 +1,14 @@
+<widgets>
+  <widget type="Window" name="window1">
+    <widget type="Button" name="button1">
+      <property name="text" value="Press Me" />
+      <property name="align" value="1" />
+    </widget>
+    <widget type="Label" name="label1">
+      <property name="text" value="Basic Demo" />
+      <property name="width" value="100" />
+      <property name="height" value="50" />
+      <property name="align" value="2" />
+    </widget>
+  </widget>
+</widgets>

@@ -57,7 +57,6 @@ public:
                     Rect(Point(700, 100),
                          Size(50, 300)),
                     orientation::VERTICAL)
-
     {
         m_logo.align(alignmask::LEFT | alignmask::TOP, 10);
 

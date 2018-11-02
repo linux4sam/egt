@@ -151,6 +151,8 @@ widgets_widgets_LDFLAGS = $(AM_LDFLAGS)
 basic_basic_SOURCES = basic/basic.cpp
 basic_basic_CXXFLAGS = $(AM_CXXFLAGS)
 basic_basic_LDADD = $(top_builddir)/src/libmui.la $(LDADD)
+basic_basicdir = $(prefix)/share/mui/examples/basic
+basic_basic_DATA = $(wildcard $(top_srcdir)/examples/basic/*.xml)
 basic_basic_LDFLAGS = $(AM_LDFLAGS)
 
 whiteboard_whiteboard_SOURCES = whiteboard/whiteboard.cpp

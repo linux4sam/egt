@@ -55,7 +55,7 @@ int main()
                 if (event != eventid::MOUSE_UP)
                     return;
 
-                if (b->text() == "=")
+                if (b->get_text() == "=")
                 {
                     string line = detail::replace_all(detail::replace_all(text.last_line(), "x", "*"), "÷", "/");
                     if (!line.empty())
@@ -67,13 +67,13 @@ int main()
                         text.append(ss.str());
                     }
                 }
-                else if (b->text() == "C")
+                else if (b->get_text() == "C")
                 {
                     text.clear();
                 }
                 else
                 {
-                    text.append(b->text());
+                    text.append(b->get_text());
                 }
             });
 

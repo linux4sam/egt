@@ -14,7 +14,7 @@ namespace mui
 
     Image::Image(const std::string& filename, const Point& point)
         : m_filename(filename),
-          m_image(image_cache.get(filename, 1.0))
+          m_image(detail::image_cache.get(filename, 1.0))
     {
         assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
 
@@ -35,7 +35,7 @@ namespace mui
     {
         if (m_hscale != hscale || m_vscale != vscale)
         {
-            m_image = image_cache.get(m_filename, hscale, vscale, approximate);
+            m_image = detail::image_cache.get(m_filename, hscale, vscale, approximate);
 
             Widget::resize(Size(cairo_image_surface_get_width(m_image.get()),
                                 cairo_image_surface_get_height(m_image.get())));
@@ -62,7 +62,6 @@ namespace mui
           m_font(font),
           m_label(true)
     {
-
     }
 
     void ImageText::draw(Painter& painter, const Rect& rect)
@@ -72,7 +71,6 @@ namespace mui
         if (m_label)
             painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
                               alignmask::BOTTOM | alignmask::CENTER, 0, m_font);
-
     }
 
     void ImageText::label_enabled(bool value)

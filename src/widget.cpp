@@ -213,6 +213,24 @@ namespace mui
             m_parent->remove(this);
     }
 
+    TextWidget::TextWidget(const std::string& text, const Rect& rect,
+                           alignmask align, const Font& font, widgetmask flags) noexcept
+        : Widget(rect, flags),
+          m_text_align(align),
+          m_text(text),
+          m_font(font)
+    {
+    }
+
+    void TextWidget::text(const std::string& str)
+    {
+        if (m_text != str)
+        {
+            m_text = str;
+            damage();
+        }
+    }
+
     namespace experimental
     {
 
@@ -297,8 +315,8 @@ namespace mui
             cairo_restore(cr.get());
 
             // images
-            auto up = image_cache.get("icons/bullet_arrow_up.png", 1.0);
-            auto down = image_cache.get("icons/bullet_arrow_down.png", 1.0);
+            auto up = detail::image_cache.get("icons/bullet_arrow_up.png", 1.0);
+            auto down = detail::image_cache.get("icons/bullet_arrow_down.png", 1.0);
 
 #if 0
             auto upwidth = cairo_image_surface_get_width(up.get());

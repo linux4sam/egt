@@ -36,14 +36,14 @@ namespace mui
 
         void position(int offset)
         {
-		if (offset <= 0 && -offset < box().w)
-		{
-            if (m_offset != offset)
+            if (offset <= 0 && -offset < box().w)
             {
-                m_offset = offset;
-                damage();
+                if (m_offset != offset)
+                {
+                    m_offset = offset;
+                    damage();
+                }
             }
-		}
         }
 
         int m_offset{0};

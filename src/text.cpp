@@ -10,9 +10,9 @@ using namespace std;
 namespace mui
 {
 
-    TextBox::TextBox(const std::string& text, const Rect& rect)
+    TextBox::TextBox(const std::string& str, const Rect& rect)
         : Widget(rect),
-          m_text(text),
+          m_text(str),
           m_timer(std::chrono::seconds(1))
     {
         m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
@@ -91,20 +91,20 @@ namespace mui
         }
     }
 
-    void TextBox::value(const std::string& text)
+    void TextBox::text(const std::string& str)
     {
-        if (m_text != text)
+        if (m_text != str)
         {
-            m_text = text;
+            m_text = str;
             damage();
         }
     }
 
-    void TextBox::append(const std::string& text)
+    void TextBox::append(const std::string& str)
     {
-        if (!text.empty())
+        if (!str.empty())
         {
-            m_text += text;
+            m_text += str;
             damage();
         }
     }
@@ -142,9 +142,9 @@ namespace mui
     {
     }
 
-    MultilineTextBox::MultilineTextBox(const std::string& text,
+    MultilineTextBox::MultilineTextBox(const std::string& str,
                                        const Rect& rect)
-        : TextBox(text, rect)
+        : TextBox(str, rect)
     {}
 
     void MultilineTextBox::draw(Painter& painter, const Rect& rect)

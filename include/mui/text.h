@@ -10,8 +10,9 @@
  * @brief Working with text input.
  */
 
-#include <mui/widget.h>
+#include <mui/font.h>
 #include <mui/timer.h>
+#include <mui/widget.h>
 #include <string>
 
 namespace mui
@@ -28,7 +29,7 @@ namespace mui
     class TextBox : public Widget
     {
     public:
-        TextBox(const std::string& text = std::string(),
+        TextBox(const std::string& str = std::string(),
                 const Rect& rect = Rect());
 
         virtual int handle(eventid event) override;
@@ -40,12 +41,12 @@ namespace mui
         /**
          * Set the text value.
          */
-        virtual void value(const std::string& text);
+        virtual void text(const std::string& str);
 
         /**
          * Append text to the existing contents.
          */
-        virtual void append(const std::string& text);
+        virtual void append(const std::string& str);
 
         /**
          * Clear the text value.
@@ -55,7 +56,9 @@ namespace mui
         /**
          * Get the value of the text.
          */
-        inline const std::string& value() const { return m_text; }
+        inline const std::string& text() const { return m_text; }
+
+	const Font& font() const { return m_font; }
 
         /**
          * Set the font of the label.
@@ -91,7 +94,7 @@ namespace mui
     class MultilineTextBox : public TextBox
     {
     public:
-        MultilineTextBox(const std::string& text = std::string(),
+        MultilineTextBox(const std::string& str = std::string(),
                          const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;

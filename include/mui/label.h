@@ -11,6 +11,7 @@
  */
 
 #include <mui/widget.h>
+#include <mui/font.h>
 
 namespace mui
 {
@@ -30,7 +31,7 @@ namespace mui
      * @image html widget_label4.png
      * @image latex widget_label4.png "widget_label4" height=10cm
      */
-    class Label : public Widget
+    class Label : public TextWidget
     {
     public:
         explicit Label(const std::string& text = std::string(),
@@ -49,36 +50,15 @@ namespace mui
         /**
          * Set the text of the label.
          */
-        virtual void text(const std::string& str);
-
-        /**
-         * Get the text of the Label.
-         */
-        virtual const std::string& text() const { return m_text; }
-
-        /**
-         * Set the Font of the Label.
-         */
-        virtual void font(const Font& font) { m_font = font; }
-
-        /**
-        * Get the Font of the Label.
-         */
-        virtual const Font& font() const { return m_font; }
-
-        /**
-         * Set the alignment of the Label.
-         */
-        virtual void text_align(alignmask align) { m_text_align = align; }
+        virtual void text(const std::string& str) override;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual ~Label();
 
     protected:
-        alignmask m_text_align;
-        std::string m_text;
-        Font m_font;
+
+        void first_resize();
     };
 
     /**

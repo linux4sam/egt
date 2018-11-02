@@ -58,16 +58,16 @@ namespace mui
 
         void set_image(const std::string& image);
 
-        void set_image_align(alignmask align)
+        void image_align(alignmask align)
         {
             m_image_align = align;
         }
-
+/*
         void set_label_align(alignmask align)
         {
             Label::text_align(align);
         }
-
+*/
         virtual ~ImageButton();
 
     protected:
