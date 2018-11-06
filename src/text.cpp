@@ -11,13 +11,11 @@ namespace mui
 {
 
     TextBox::TextBox(const std::string& str, const Rect& rect)
-        : Widget(rect),
-          m_text(str),
+        : TextWidget(str, rect),
           m_timer(std::chrono::seconds(1))
     {
         m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
     }
-
 
     void TextBox::focus(bool value)
     {
@@ -36,6 +34,7 @@ namespace mui
         case eventid::MOUSE_DOWN:
             return 1;
         case eventid::KEYBOARD_DOWN:
+
             if (std::isalnum((char)key_value()))
             {
                 m_text.append(1, (char)key_value());
@@ -46,11 +45,7 @@ namespace mui
                 m_text.pop_back();
                 damage();
             }
-            else
-            {
-                //cout << "unhandled key code " << key_code() << endl;
-                //cout << "unhandled key value " << key_value() << endl;
-            }
+
             return 1;
         default:
             break;
@@ -86,17 +81,9 @@ namespace mui
             painter.set_line_width(2);
 
             auto YOFF = 2;
-            painter.line(bounding.top_right() + Point(0, -YOFF), bounding.bottom_right() + Point(0, YOFF));
+            painter.line(bounding.top_right() + Point(0, -YOFF),
+                         bounding.bottom_right() + Point(0, YOFF));
             painter.stroke();
-        }
-    }
-
-    void TextBox::text(const std::string& str)
-    {
-        if (m_text != str)
-        {
-            m_text = str;
-            damage();
         }
     }
 
@@ -105,15 +92,6 @@ namespace mui
         if (!str.empty())
         {
             m_text += str;
-            damage();
-        }
-    }
-
-    void TextBox::clear()
-    {
-        if (!m_text.empty())
-        {
-            m_text.clear();
             damage();
         }
     }
@@ -139,8 +117,7 @@ namespace mui
     }
 
     TextBox::~TextBox()
-    {
-    }
+    {}
 
     MultilineTextBox::MultilineTextBox(const std::string& str,
                                        const Rect& rect)
@@ -198,4 +175,5 @@ namespace mui
     MultilineTextBox::~MultilineTextBox()
     {
     }
+
 }

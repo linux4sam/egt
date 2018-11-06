@@ -626,17 +626,31 @@ namespace mui
         friend class Frame;
     };
 
+    /**
+     * A widget that has text and properties associated with text.
+     *
+     * This is not meant to be used directly as it does not implement at least a
+     * draw() method.
+     */
     class TextWidget : public Widget
     {
     public:
 
-	    explicit TextWidget(const std::string& text = std::string(), const Rect& rect = Rect(),
-				alignmask align = alignmask::CENTER, const Font& font = Font(), widgetmask flags = widgetmask::NO_BORDER) noexcept;
+        explicit TextWidget(const std::string& text = std::string(),
+                            const Rect& rect = Rect(),
+                            alignmask align = alignmask::CENTER,
+                            const Font& font = Font(),
+                            widgetmask flags = widgetmask::NO_BORDER) noexcept;
 
-	            /**
+        /**
          * Set the text of the label.
          */
         virtual void text(const std::string& str);
+
+        /**
+         * Clear the text value.
+         */
+        virtual void clear();
 
         /**
          * Get the text of the Label.
@@ -658,11 +672,11 @@ namespace mui
          */
         void text_align(alignmask align) { m_text_align = align; }
 
-	virtual ~TextWidget()
-	{}
+        virtual ~TextWidget()
+        {}
 
     protected:
-	alignmask m_text_align;
+        alignmask m_text_align;
         std::string m_text;
         Font m_font;
     };

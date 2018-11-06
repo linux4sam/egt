@@ -222,6 +222,15 @@ namespace mui
     {
     }
 
+    void TextWidget::clear()
+    {
+        if (!m_text.empty())
+        {
+            m_text.clear();
+            damage();
+        }
+    }
+
     void TextWidget::text(const std::string& str)
     {
         if (m_text != str)

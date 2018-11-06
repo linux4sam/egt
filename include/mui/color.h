@@ -10,14 +10,19 @@
  * @brief Working with colors.
  */
 
+#include <algorithm>
 #include <cstdint>
 #include <iosfwd>
+#include <string>
 
 namespace mui
 {
 
     /**
      * RGBA color.
+     *
+     * This manages the definition of a color, internally stored as seperate
+     * red, gleen, blue, and alpha components.
      */
     class Color
     {
@@ -74,6 +79,19 @@ namespace mui
               m_b(b),
               m_a(a)
         {}
+
+        /**
+         * Create a Color with a hex CSS string.
+         *
+         * For example, the string #0074D9 can be used to specify a blue-like
+         * color.
+         */
+        static Color CSS(const std::string& hex)
+        {
+            std::string str = hex;
+            str.erase(std::remove(str.begin(), str.end(), '#'), str.end());
+            return Color((std::stoi(str, nullptr, 16) << 8) | 0xff);
+        }
 
         //@{
         /** @brief RGBA component values as a float from 0.0 to 1.0. */
@@ -157,10 +175,10 @@ namespace mui
         }
 
     protected:
-        uint32_t m_r;
-        uint32_t m_g;
-        uint32_t m_b;
-        uint32_t m_a;
+        uint32_t m_r{0};
+        uint32_t m_g{0};
+        uint32_t m_b{0};
+        uint32_t m_a{0};
     };
 
     std::ostream& operator<<(std::ostream& os, const Color& color);

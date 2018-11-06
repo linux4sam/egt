@@ -296,6 +296,7 @@ namespace mui
         }
 
         std::string m_text;
+
         T m_value2{};
 
         Radial() = delete;

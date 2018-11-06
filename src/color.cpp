@@ -31,6 +31,7 @@ namespace mui
     const Color Color::AQUA = Color(0x00ffffffUL);
     const Color Color::LIGHTBLUE = Color(0xadd8e6ffUL);
 
+
     std::ostream& operator<<(std::ostream& os, const Color& color)
     {
         os << "(" << color.red() << "," << color.green() << "," << color.blue() << "." << color.alpha() << ")";

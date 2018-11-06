@@ -62,12 +62,7 @@ namespace mui
         {
             m_image_align = align;
         }
-/*
-        void set_label_align(alignmask align)
-        {
-            Label::text_align(align);
-        }
-*/
+
         virtual ~ImageButton();
 
     protected:

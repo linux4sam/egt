@@ -316,9 +316,9 @@ public:
         m_obstacle = new ObstacleLayer(8);
         m_obstacle->show();
 
-        m_mouse = new HardwareSprite("coin_mouse.png", 120, 97, 2, 0, 0, Point(w() / 2 - 120 / 2, h() / 2 - 97 / 2));
-        m_mouse->add_strip(8, 0, 97);
-        m_mouse->add_strip(3, 240, 97);
+        m_mouse = new HardwareSprite("coin_mouse.png", Size(120, 97), 2, Point(0, 0), Point(w() / 2 - 120 / 2, h() / 2 - 97 / 2));
+        m_mouse->add_strip(8, Point(0, 97));
+        m_mouse->add_strip(3, Point(240, 97));
         add(m_mouse);
         m_mouse->show();
 

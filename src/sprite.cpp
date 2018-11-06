@@ -18,9 +18,7 @@ namespace mui
 
     shared_cairo_surface_t ISpriteBase::surface() const
     {
-        int panx;
-        int pany;
-        get_frame_offsets(m_index, panx, pany);
+        Point origin = get_frame_origin(m_index);
 
         // cairo_surface_create_for_rectangle() would work here with one
         // exception - the resulting image has no width and height
@@ -32,7 +30,7 @@ namespace mui
                                    cairo_surface_destroy);
 
         shared_cairo_t cr = shared_cairo_t(cairo_create(copy.get()), cairo_destroy);
-        cairo_set_source_surface(cr.get(), m_image.surface().get(), -panx, -pany);
+        cairo_set_source_surface(cr.get(), m_image.surface().get(), -origin.x, -origin.y);
         cairo_rectangle(cr.get(), 0, 0, m_frame.w, m_frame.h);
         cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
         cairo_fill(cr.get());
@@ -41,23 +39,24 @@ namespace mui
     }
 
 #ifdef HAVE_LIBPLANES
-    HardwareSprite::HardwareSprite(const std::string& filename, int framew,
-                                   int frameh, int framecount, int framex,
-                                   int framey, const Point& point)
-        : PlaneWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
-          ISpriteBase(filename, framew, frameh, framecount, framex, framey)
+    HardwareSprite::HardwareSprite(const std::string& filename, const Size& frame_size,
+                                   int framecount, const Point& frame_point,
+                                   const Point& point)
+        : PlaneWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND,
+                      DRM_FORMAT_ARGB8888),
+          ISpriteBase(filename, frame_size, framecount, frame_point)
     {
         add(&m_image);
 
         resize(m_image.size());
 
         KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
-        plane_set_pan_pos(s->s(), m_strips[m_strip].framex, m_strips[m_strip].framey);
+        plane_set_pan_pos(s->s(), m_strips[m_strip].point.x, m_strips[m_strip].point.y);
         plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
 
         // hack to change the size because the screen size and the box size are different
         move(point);
-        m_box = Rect(point.x, point.y, framew, frameh);
+        m_box = Rect(point, frame_size);
 
         damage();
     }
@@ -68,12 +67,10 @@ namespace mui
         {
             m_index = index;
 
-            int panx;
-            int pany;
-            get_frame_offsets(m_index, panx, pany);
+            Point origin = get_frame_origin(m_index);
 
             KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
-            plane_set_pan_pos(s->s(), panx, pany);
+            plane_set_pan_pos(s->s(), origin.x, origin.y);
             plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
             plane_apply(s->s());
         }
@@ -83,24 +80,22 @@ namespace mui
     {}
 #endif
 
-    SoftwareSprite::SoftwareSprite(const std::string& filename, int framew, int frameh,
-                                   int framecount, int framex, int framey,
+    SoftwareSprite::SoftwareSprite(const std::string& filename, const Size& frame_size,
+                                   int framecount, const Point& frame_point,
                                    const Point& point)
-        : Widget(Rect(point, Size(framew, frameh))),
-          ISpriteBase(filename, framew, frameh, framecount, framex, framey)
+        : Widget(Rect(point, frame_size)),
+          ISpriteBase(filename, frame_size, framecount, frame_point)
     {
-        m_box = Rect(point.x, point.y, framew, frameh);
+        m_box = Rect(point, frame_size);
     }
 
     void SoftwareSprite::draw(Painter& painter, const Rect& rect)
     {
         ignoreparam(rect);
 
-        int panx;
-        int pany;
-        get_frame_offsets(m_index, panx, pany);
+        Point origin = get_frame_origin(m_index);
 
-        painter.draw_image(Rect(panx, pany, m_frame.w, m_frame.h),
+        painter.draw_image(Rect(origin.x, origin.y, m_frame.w, m_frame.h),
                            box().point(), m_image.surface());
     }
 

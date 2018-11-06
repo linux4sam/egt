@@ -14,7 +14,7 @@ namespace mui
 
     Label::Label(const std::string& text, const Rect& rect,
                  alignmask align, const Font& font, widgetmask flags) noexcept
-    : TextWidget(text, rect, align, font, flags)
+        : TextWidget(text, rect, align, font, flags)
     {
 
     }

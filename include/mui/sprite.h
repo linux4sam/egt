@@ -23,16 +23,19 @@ namespace mui
     class ISpriteBase
     {
     public:
-        ISpriteBase(const std::string& filename, int framew, int frameh,
-                    int framecount, int framex = 0, int framey = 0)
+        ISpriteBase(const std::string& filename, const Size& frame_size,
+                    int framecount, const Point& frame_point)
             : m_image(filename),
               m_filename(filename),
-              m_frame(framew, frameh),
+              m_frame(frame_size),
               m_index(0)
         {
-            m_strip = add_strip(framecount, framex, framey);
+            m_strip = add_strip(framecount, frame_point);
         }
 
+        /**
+         * Jump to the specified frame index.
+         */
         virtual void show_frame(int index) = 0;
 
         /**
@@ -40,6 +43,9 @@ namespace mui
          */
         virtual shared_cairo_surface_t surface() const;
 
+        /**
+         * Advance to the next frame in the strip.
+         */
         virtual void advance()
         {
             int index = m_index;
@@ -49,11 +55,17 @@ namespace mui
             show_frame(index);
         }
 
+        /**
+         * Returns true if the current frame is the last frame.
+         */
         virtual bool is_last_frame() const
         {
             return m_index >= m_strips[m_strip].framecount - 1;
         }
 
+        /**
+         * Returns the number of frames in the current strip.
+         */
         virtual uint32_t frame_count() const
         {
             return m_strips[m_strip].framecount;
@@ -62,10 +74,12 @@ namespace mui
         struct strip
         {
             int framecount;
-            int framex;
-            int framey;
+            Point point;
         };
 
+        /**
+         * Change the strip to the specified id.
+         */
         virtual void set_strip(uint32_t id)
         {
             if (id < m_strips.size() && id != m_strip)
@@ -75,12 +89,14 @@ namespace mui
             }
         }
 
-        uint32_t add_strip(int framecount, int framex, int framey)
+        /**
+         * Add a new strip.
+         */
+        uint32_t add_strip(int framecount, const Point& point)
         {
             strip s;
             s.framecount = framecount;
-            s.framex = framex;
-            s.framey = framey;
+            s.point = point;
             m_strips.push_back(s);
             return m_strips.size() - 1;
         }
@@ -90,27 +106,34 @@ namespace mui
 
     protected:
 
-        virtual void get_frame_offsets(int index, int& panx, int& pany) const
+        /**
+         * Get the frame origin.
+         */
+        virtual Point get_frame_origin(int index) const
         {
-            int imagew = m_image.w();
-            panx = m_strips[m_strip].framex + (index * m_frame.w);
-            pany = m_strips[m_strip].framey;
+            Point origin;
+            auto imagew = m_image.w();
+            origin.x = m_strips[m_strip].point.x + (index * m_frame.w);
+            origin.y = m_strips[m_strip].point.y;
 
             // support sheets that have frames on multiple rows
-            if (panx + m_frame.w >= imagew)
+            if (origin.x + m_frame.w >= imagew)
             {
-                int x = m_strips[m_strip].framex + (index * m_frame.w);
+                int x = m_strips[m_strip].point.x + (index * m_frame.w);
 
-                panx = (x % imagew);
-                pany = ((x / imagew) * m_strips[m_strip].framey) + (x / imagew) * m_frame.h;
+                origin.x = (x % imagew);
+                origin.y = ((x / imagew) * m_strips[m_strip].point.y) + (x / imagew) * m_frame.h;
             }
+            return origin;
         }
+
+        using strip_array = std::vector<strip>;
 
         Image m_image;
         std::string m_filename;
         Size m_frame;
         int m_index;
-        std::vector<strip> m_strips;
+        strip_array m_strips;
         uint32_t m_strip;
     };
 
@@ -121,8 +144,8 @@ namespace mui
     class HardwareSprite : public PlaneWindow, public ISpriteBase
     {
     public:
-        HardwareSprite(const std::string& filename, int framew, int frameh,
-                       int framecount, int framex = 0, int framey = 0,
+        HardwareSprite(const std::string& filename, const Size& frame_size,
+                       int framecount, const Point& frame_point,
                        const Point& point = Point());
 
         virtual void show_frame(int index) override;
@@ -137,8 +160,8 @@ namespace mui
     class SoftwareSprite : public Widget, public ISpriteBase
     {
     public:
-        SoftwareSprite(const std::string& filename, int framew, int frameh,
-                       int framecount, int framex = 0, int framey = 0,
+        SoftwareSprite(const std::string& filename, const Size& frame_size,
+                       int framecount, const Point& frame_point,
                        const Point& point = Point());
 
         virtual void draw(Painter& painter, const Rect& rect) override;

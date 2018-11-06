@@ -54,11 +54,11 @@ namespace mui
                             alignmask align = alignmask::EXPAND);
 
         /**
-             * Add a widget to the next empty cell.
-             *
-             * This will not automatically resize the grid to fit the widget as
-             * necessary.
-             */
+         * Add a widget to the next empty cell.
+         *
+         * This will not automatically resize the grid to fit the widget as
+         * necessary.
+         */
         virtual Widget* add(Widget* widget,
                             alignmask align = alignmask::EXPAND);
 
@@ -109,14 +109,12 @@ namespace mui
 
         virtual void move(const Point& point) override
         {
-            DBG(__PRETTY_FUNCTION__);
             Frame::move(point);
             reposition();
         }
 
         virtual void resize(const Size& size) override
         {
-            DBG(__PRETTY_FUNCTION__);
             Frame::resize(size);
             reposition();
         }
@@ -160,7 +158,7 @@ namespace mui
 
     protected:
         int m_border{0};
-        alignmask m_align {alignmask::NONE};
+        alignmask m_align{alignmask::NONE};
     };
 
 }

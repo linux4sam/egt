@@ -14,29 +14,28 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/sprite/");
+    set_image_path("../share/mui/examples/sprite/");
 
     Window win;
-    win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
+    win.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
 
     StaticGrid grid(Rect(Size(win.w(), win.h())), 2, 2, 10);
 
-    HardwareSprite sprite1("walk.png", 75, 132, 8, 0, 0,
+    HardwareSprite sprite1("walk.png", Size(75, 132), 8, Point(0, 0),
                            Point(main_screen()->size().w / 2 - 75,
                                  main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite1, 0, 1, alignmask::CENTER);
 
-    SoftwareSprite sprite2("walk.png", 75, 132, 8, 0, 0,
+    SoftwareSprite sprite2("walk.png", Size(75, 132), 8, Point(0, 0),
                            Point(main_screen()->size().w / 2,
                                  main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite2, 1, 1, alignmask::CENTER);
 
-    grid.add(new Label("Hardware"), 0, 0,
+    grid.add(new Label("Hardware", Rect(0, 0, 100, 50)), 0, 0,
              alignmask::CENTER | alignmask::BOTTOM);
-    grid.add(new Label("Software"), 1, 0,
+    grid.add(new Label("Software", Rect(0, 0, 100, 50)), 1, 0,
              alignmask::CENTER | alignmask::BOTTOM);
 
-    //grid.reposition();
     win.add(&grid);
 
     sprite1.show();
