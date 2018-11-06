@@ -10,13 +10,13 @@
 #include <iostream>
 #include <map>
 #include <math.h>
-#include <mui/ui>
+#include <egt/ui>
 #include <sstream>
 #include <string>
 #include <vector>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 class MyWindow : public Window
 {
@@ -89,7 +89,7 @@ int main()
 {
     Application app;
 
-    set_image_path("../share/mui/examples/floating/");
+    set_image_path("../share/egt/examples/floating/");
 
     MyWindow win;
     win.show();

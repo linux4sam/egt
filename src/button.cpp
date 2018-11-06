@@ -2,14 +2,14 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/button.h"
-#include "mui/imagecache.h"
-#include "mui/painter.h"
-#include "mui/frame.h"
+#include "egt/button.h"
+#include "egt/imagecache.h"
+#include "egt/painter.h"
+#include "egt/frame.h"
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 

@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#ifndef MUI_LUA_SCRIPT_H
-#define MUI_LUA_SCRIPT_H
+#ifndef EGT_LUA_SCRIPT_H
+#define EGT_LUA_SCRIPT_H
 
 #include <lua.h>
 #include <lualib.h>

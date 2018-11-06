@@ -2,14 +2,14 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/frame.h"
-#include "mui/painter.h"
-#include "mui/screen.h"
+#include "egt/frame.h"
+#include "egt/painter.h"
+#include "egt/screen.h"
 #include <sstream>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     static auto frame_id = 0;
 

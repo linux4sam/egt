@@ -1,5 +1,5 @@
 AC_PREREQ([2.63])
-AC_INIT([mui],[1.0.0])
+AC_INIT([egt],[1.0.0])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([Makefile.am])
@@ -182,7 +182,7 @@ AC_CONFIG_FILES([Makefile
 	src/Makefile
 	examples/Makefile
 	scripts/Makefile
-	libmui.pc
+	libegt.pc
 	docs/Doxyfile
 	examples/video/Makefile])
 AC_OUTPUT

@@ -2,9 +2,9 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/color.h"
-#include "mui/screen.h"
-#include "mui/utils.h"
+#include "egt/color.h"
+#include "egt/screen.h"
+#include "egt/utils.h"
 #include <cassert>
 #include <fcntl.h>
 #include <linux/fb.h>
@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     static IScreen* the_screen = nullptr;
 
@@ -31,7 +31,7 @@ namespace mui
     {
         static int envset = -1;
         if (envset < 0)
-            envset = !!getenv("MUI_GREENSCREEN");
+            envset = !!getenv("EGT_GREENSCREEN");
 
         if (!damage.empty() && index() < m_buffers.size())
         {

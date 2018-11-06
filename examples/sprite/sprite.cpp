@@ -2,19 +2,36 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui>
+#include <egt/ui>
 #include <string>
 #include <iostream>
 #include <chrono>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 int main()
 {
+    const Color NAVY(Color::CSS("#001f3f"));
+    const Color BLUE(Color::CSS("#0074D9"));
+    const Color AQUA(Color::CSS("#7FDBFF"));
+    const Color TEAL(Color::CSS("#39CCCC"));
+    const Color OLIVE(Color::CSS("#3D9970"));
+    const Color GREEN(Color::CSS("#2ECC40"));
+    const Color LIME(Color::CSS("#01FF70"));
+    const Color YELLOW(Color::CSS("#FFDC00"));
+    const Color ORANGE(Color::CSS("#FF851B"));
+    const Color RED(Color::CSS("#FF4136"));
+    const Color MAROON(Color::CSS("#85144b"));
+    const Color FUCHSIA(Color::CSS("#F012BE"));
+    const Color PURPLE(Color::CSS("#B10DC9"));
+    const Color BLACK(Color::CSS("#111111"));
+    const Color GRAY(Color::CSS("#AAAAAA"));
+    const Color SILVER(Color::CSS("#DDDDDD"));
+
     Application app;
 
-    set_image_path("../share/mui/examples/sprite/");
+    set_image_path("../share/egt/examples/sprite/");
 
     Window win;
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);

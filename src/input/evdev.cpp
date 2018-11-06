@@ -6,12 +6,12 @@
 #include "config.h"
 #endif
 
-#include "mui/app.h"
-#include "mui/event_loop.h"
-#include "mui/geometry.h"
-#include "mui/widget.h"
-#include "mui/window.h"
-#include "mui/utils.h"
+#include "egt/app.h"
+#include "egt/event_loop.h"
+#include "egt/geometry.h"
+#include "egt/widget.h"
+#include "egt/window.h"
+#include "egt/utils.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -25,7 +25,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     InputEvDev::InputEvDev(const string& path)

@@ -2,21 +2,21 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/frame.h"
-#include "mui/geometry.h"
-#include "mui/imagecache.h"
-#include "mui/input.h"
-#include "mui/painter.h"
-#include "mui/screen.h"
-#include "mui/utils.h"
-#include "mui/widget.h"
+#include "egt/frame.h"
+#include "egt/geometry.h"
+#include "egt/imagecache.h"
+#include "egt/input.h"
+#include "egt/painter.h"
+#include "egt/screen.h"
+#include "egt/utils.h"
+#include "egt/widget.h"
 #include <cassert>
 #include <string>
 #include <sstream>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     widgetmask& operator&=(widgetmask& a, widgetmask b)
     {

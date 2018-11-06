@@ -2,12 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/view.h"
-#include "mui/painter.h"
+#include "egt/view.h"
+#include "egt/painter.h"
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     ScrolledView::ScrolledView(const Rect& rect)

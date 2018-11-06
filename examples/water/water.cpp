@@ -7,14 +7,14 @@
 #include <cstring>
 #include <iostream>
 #include <map>
-#include <mui/ui>
+#include <egt/ui>
 #include <random>
 #include <sstream>
 #include <string>
 #include <vector>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 class Bubble : public Image
 {
@@ -151,7 +151,7 @@ int main()
 {
     Application app/*(false)*/;
 
-    set_image_path("../share/mui/examples/water/");
+    set_image_path("../share/egt/examples/water/");
 
     MainWindow win;
     win.show();

@@ -3,9 +3,9 @@
 @image html microchip_logo.png
 @image latex microchip_logo.png "" width=4cm
 
-@mainpage MUI Programming Manual
+@mainpage EGT Programming Manual
 
-MUI is a C++ GUI toolkit for Linux on Microchip AT91/SAMA5 parts.  MUI provides
+EGT is a C++ GUI toolkit for Linux on Microchip AT91/SAMA5 parts.  EGT provides
 modern GUI functionality, look-and-feel, and performance.
 
 @subpage intro

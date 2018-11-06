@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ * Joshua Henderson <joshua.henderson@microchip.com>
+ */
+#ifndef EGT_UI_H
+#define EGT_UI_H
+
+/**
+ * @file
+ * @brief Single header to include basic and common functionality.
+ */
+
+#include <egt/animation.h>
+#include <egt/app.h>
+#include <egt/button.h>
+#include <egt/chart.h>
+#include <egt/color.h>
+//#include <egt/event_loop.h>
+#include <egt/font.h>
+#include <egt/frame.h>
+//#include <egt/framebuffer.h>
+#include <egt/geometry.h>
+#include <egt/grid.h>
+#include <egt/image.h>
+#include <egt/imagecache.h>
+#include <egt/input.h>
+#include <egt/kmsscreen.h>
+#include <egt/label.h>
+#include <egt/list.h>
+#include <egt/palette.h>
+//#include <egt/screen.h>
+#include <egt/sprite.h>
+#include <egt/text.h>
+#include <egt/timer.h>
+#include <egt/tools.h>
+#include <egt/valuewidget.h>
+#include <egt/video.h>
+#include <egt/widget.h>
+#include <egt/window.h>
+//#include <egt/x11screen.h>
+#include <egt/view.h>
+
+/**
+ * This is a wrapper around gettext.
+ * @todo Move me.
+ */
+#include <libintl.h>
+#include <locale.h>
+
+#define _(String) gettext(String)
+
+#endif

@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/video.h"
-#include "mui/kmsscreen.h"
+#include "egt/video.h"
+#include "egt/kmsscreen.h"
 #include <string.h>
 #include <thread>
 #include <chrono>
@@ -35,7 +35,7 @@ static void init_thread()
     }
 }
 
-namespace mui
+namespace egt
 {
     inline namespace v1
     {

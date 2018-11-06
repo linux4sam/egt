@@ -7,16 +7,16 @@ if HAVE_KPLOT
 AM_CXXFLAGS += -I$(top_srcdir)/external/kplot/
 endif
 
-lib_LTLIBRARIES = libmui.la
-libmui_la_CXXFLAGS = $(AM_CXXFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
+lib_LTLIBRARIES = libegt.la
+libegt_la_CXXFLAGS = $(AM_CXXFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
 	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) \
 	$(LIBINPUT_CFLAGS)
-libmui_la_CFLAGS = $(AM_CFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
+libegt_la_CFLAGS = $(AM_CFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
 	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS)
 
-libmui_la_SOURCES = \
+libegt_la_SOURCES = \
 animation.cpp \
 app.cpp \
 button.cpp \
@@ -56,65 +56,65 @@ window.cpp \
 x11screen.cpp
 
 if HAVE_LUA
-libmui_la_SOURCES += \
+libegt_la_SOURCES += \
 lua/script.c \
 lua/script.h
 endif
 
-libmui_la_LIBADD =
+libegt_la_LIBADD =
 if HAVE_KPLOT
-libmui_la_LIBADD += libkplot.a
+libegt_la_LIBADD += libkplot.a
 endif
 
 if HAVE_LIBJPEG
-libmui_la_SOURCES += \
+libegt_la_SOURCES += \
 images/jpeg/cairo_jpg.c \
 images/jpeg/cairo_jpg.h
 endif
 
-libmuiincludedir = ${includedir}/mui
-libmuiinclude_HEADERS = \
-$(top_srcdir)/include/mui/animation.h \
-$(top_srcdir)/include/mui/app.h \
-$(top_srcdir)/include/mui/button.h \
-$(top_srcdir)/include/mui/chart.h \
-$(top_srcdir)/include/mui/color.h \
-$(top_srcdir)/include/mui/event_loop.h \
-$(top_srcdir)/include/mui/uiloader.h \
-$(top_srcdir)/include/mui/font.h \
-$(top_srcdir)/include/mui/frame.h \
-$(top_srcdir)/include/mui/framebuffer.h \
-$(top_srcdir)/include/mui/geometry.h \
-$(top_srcdir)/include/mui/grid.h \
-$(top_srcdir)/include/mui/image.h \
-$(top_srcdir)/include/mui/imagecache.h \
-$(top_srcdir)/include/mui/input.h \
-$(top_srcdir)/include/mui/kmsscreen.h \
-$(top_srcdir)/include/mui/label.h \
-$(top_srcdir)/include/mui/libinput.h \
-$(top_srcdir)/include/mui/list.h \
-$(top_srcdir)/include/mui/painter.h \
-$(top_srcdir)/include/mui/palette.h \
-$(top_srcdir)/include/mui/resource.h \
-$(top_srcdir)/include/mui/screen.h \
-$(top_srcdir)/include/mui/sprite.h \
-$(top_srcdir)/include/mui/text.h \
-$(top_srcdir)/include/mui/timer.h \
-$(top_srcdir)/include/mui/tools.h \
-$(top_srcdir)/include/mui/ui \
-$(top_srcdir)/include/mui/utils.h \
-$(top_srcdir)/include/mui/valuewidget.h \
-$(top_srcdir)/include/mui/video.h \
-$(top_srcdir)/include/mui/widget.h \
-$(top_srcdir)/include/mui/window.h \
-$(top_srcdir)/include/mui/x11screen.h \
-$(top_srcdir)/include/mui/object.h \
-$(top_srcdir)/include/mui/view.h
+libegtincludedir = ${includedir}/egt
+libegtinclude_HEADERS = \
+$(top_srcdir)/include/egt/animation.h \
+$(top_srcdir)/include/egt/app.h \
+$(top_srcdir)/include/egt/button.h \
+$(top_srcdir)/include/egt/chart.h \
+$(top_srcdir)/include/egt/color.h \
+$(top_srcdir)/include/egt/event_loop.h \
+$(top_srcdir)/include/egt/uiloader.h \
+$(top_srcdir)/include/egt/font.h \
+$(top_srcdir)/include/egt/frame.h \
+$(top_srcdir)/include/egt/framebuffer.h \
+$(top_srcdir)/include/egt/geometry.h \
+$(top_srcdir)/include/egt/grid.h \
+$(top_srcdir)/include/egt/image.h \
+$(top_srcdir)/include/egt/imagecache.h \
+$(top_srcdir)/include/egt/input.h \
+$(top_srcdir)/include/egt/kmsscreen.h \
+$(top_srcdir)/include/egt/label.h \
+$(top_srcdir)/include/egt/libinput.h \
+$(top_srcdir)/include/egt/list.h \
+$(top_srcdir)/include/egt/painter.h \
+$(top_srcdir)/include/egt/palette.h \
+$(top_srcdir)/include/egt/resource.h \
+$(top_srcdir)/include/egt/screen.h \
+$(top_srcdir)/include/egt/sprite.h \
+$(top_srcdir)/include/egt/text.h \
+$(top_srcdir)/include/egt/timer.h \
+$(top_srcdir)/include/egt/tools.h \
+$(top_srcdir)/include/egt/ui \
+$(top_srcdir)/include/egt/utils.h \
+$(top_srcdir)/include/egt/valuewidget.h \
+$(top_srcdir)/include/egt/video.h \
+$(top_srcdir)/include/egt/widget.h \
+$(top_srcdir)/include/egt/window.h \
+$(top_srcdir)/include/egt/x11screen.h \
+$(top_srcdir)/include/egt/object.h \
+$(top_srcdir)/include/egt/view.h
 
-libmui_la_LDFLAGS = -version-number 1:0:0 -no-undefined
+libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 
 pkgconfigdir = @pkgconfigdir@
-pkgconfig_DATA = $(top_builddir)/libmui.pc
+pkgconfig_DATA = $(top_builddir)/libegt.pc
 
 if HAVE_KPLOT
 noinst_LIBRARIES = libkplot.a

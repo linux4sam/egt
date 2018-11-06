@@ -2,15 +2,15 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/animation.h"
-#include "mui/app.h"
-#include "mui/widget.h"
+#include "egt/animation.h"
+#include "egt/app.h"
+#include "egt/widget.h"
 #include <cassert>
 #include <cmath>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     static inline float_t interpolate(easing_func easing, float_t percent, float_t start,
                                       float_t end, bool reverse = false)

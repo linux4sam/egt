@@ -2,12 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/text.h"
-#include "mui/painter.h"
+#include "egt/text.h"
+#include "egt/painter.h"
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     TextBox::TextBox(const std::string& str, const Rect& rect)

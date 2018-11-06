@@ -8,7 +8,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <mui/ui>
+#include <egt/ui>
 #include <sstream>
 #include <stdexcept>
 #include <string.h>
@@ -25,7 +25,7 @@
 #endif
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 // pull feed from http://feeds.reuters.com/reuters/technologyNews
 
@@ -140,7 +140,7 @@ static int load(const string& file, ListBox& list)
     return 0;
 }
 
-#define SHARED_PATH "../share/mui/examples/newsfeed/"
+#define SHARED_PATH "../share/egt/examples/newsfeed/"
 
 int main()
 {

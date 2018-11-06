@@ -2,24 +2,24 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui>
-#include <mui/uiloader.h>
+#include <egt/ui>
+#include <egt/uiloader.h>
 
 #define USE_LOADER
-#define SHARED_PATH "../share/mui/examples/basic/"
+#define SHARED_PATH "../share/egt/examples/basic/"
 
 int main()
 {
-    mui::Application app;
+    egt::Application app;
 
 #ifdef USE_LOADER
-    mui::experimental::UiLoader loader;
+    egt::experimental::UiLoader loader;
     auto window = loader.load(SHARED_PATH "ui.xml");
     window->show();
 #else
-    mui::Window window;
-    mui::Button button(window, "Press Me");
-    button.align(mui::alignmask::CENTER);
+    egt::Window window;
+    egt::Button button(window, "Press Me");
+    button.align(egt::alignmask::CENTER);
     window.show();
 #endif
 

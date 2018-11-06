@@ -8,7 +8,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <mui/ui>
+#include <egt/ui>
 #ifdef HAVE_RAPIDXML_RAPIDXML_HPP
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
@@ -21,7 +21,7 @@
 #include <vector>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 static float sliding_scale(int win_w, int item_w, int item_pos,
                            float min = 0.5, float max = 2.0)
@@ -355,7 +355,7 @@ private:
     Popup<Window> m_popup;
 };
 
-#define SHARED_PATH "../share/mui/examples/launcher/"
+#define SHARED_PATH "../share/egt/examples/launcher/"
 
 int main()
 {

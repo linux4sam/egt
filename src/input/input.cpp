@@ -6,13 +6,13 @@
 #include "config.h"
 #endif
 
-#include "mui/input.h"
-#include "mui/window.h"
+#include "egt/input.h"
+#include "egt/window.h"
 #include <linux/input.h>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     static Point pointer_abs_pos;

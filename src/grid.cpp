@@ -2,13 +2,13 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/grid.h"
-#include "mui/painter.h"
+#include "egt/grid.h"
+#include "egt/painter.h"
 #include <algorithm>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     StaticGrid::StaticGrid(const Rect& rect, int columns,
                            int rows, int border)

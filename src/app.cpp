@@ -6,24 +6,24 @@
 #include "config.h"
 #endif
 
-#include "mui/app.h"
-#include "mui/event_loop.h"
-#include "mui/input.h"
-#include "mui/libinput.h"
+#include "egt/app.h"
+#include "egt/event_loop.h"
+#include "egt/input.h"
+#include "egt/libinput.h"
 
 #ifdef HAVE_X11
-#include "mui/x11screen.h"
+#include "egt/x11screen.h"
 #endif
 
-#include "mui/framebuffer.h"
-#include "mui/kmsscreen.h"
+#include "egt/framebuffer.h"
+#include "egt/kmsscreen.h"
 #include <libintl.h>
 #include <locale.h>
 #include <thread>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     static Application* the_app = nullptr;
     Application& main_app()
@@ -43,7 +43,7 @@ namespace mui
 
         if (backend.empty())
         {
-            const char* value = getenv("MUI_BACKEND");
+            const char* value = getenv("EGT_BACKEND");
             if (value)
                 backend = value;
         }

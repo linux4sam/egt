@@ -2,10 +2,10 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/painter.h"
-#include "mui/widget.h"
+#include "egt/painter.h"
+#include "egt/widget.h"
 
-namespace mui
+namespace egt
 {
 
     Painter::Painter(shared_cairo_t cr)

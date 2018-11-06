@@ -18,4 +18,4 @@ Makefile.in
 /ltmain.sh
 /missing
 /src/.libs
-/libmui.pc
+/libegt.pc

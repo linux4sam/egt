@@ -2,9 +2,9 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/app.h"
-#include "mui/event_loop.h"
-#include "mui/libinput.h"
+#include "egt/app.h"
+#include "egt/event_loop.h"
+#include "egt/libinput.h"
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
@@ -18,7 +18,7 @@ using namespace std;
 
 #ifdef HAVE_LIBINPUT
 
-namespace mui
+namespace egt
 {
 
 #if 0

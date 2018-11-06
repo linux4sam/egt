@@ -4,18 +4,18 @@
  */
 
 #include "asio.hpp"
-#include "mui/app.h"
-#include "mui/event_loop.h"
-#include "mui/timer.h"
-#include "mui/widget.h"
-#include "mui/window.h"
+#include "egt/app.h"
+#include "egt/event_loop.h"
+#include "egt/timer.h"
+#include "egt/widget.h"
+#include "egt/window.h"
 #include <chrono>
 #include <deque>
 #include <numeric>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     namespace detail
     {

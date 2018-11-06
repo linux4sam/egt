@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui>
+#include <egt/ui>
 #include <math.h>
 #include <string>
 #include <map>
@@ -11,7 +11,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 /**
  * On-screen keyboard.
@@ -92,7 +92,7 @@ int main()
 {
     Application app;
 
-    set_image_path("../share/mui/");
+    set_image_path("../share/egt/");
 
     Window win(Size(800, 480));
 

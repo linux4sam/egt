@@ -8,11 +8,11 @@
 
 #ifdef HAVE_X11
 
-#include "mui/app.h"
-#include "mui/event_loop.h"
-#include "mui/input.h"
-#include "mui/widget.h"
-#include "mui/x11screen.h"
+#include "egt/app.h"
+#include "egt/event_loop.h"
+#include "egt/input.h"
+#include "egt/widget.h"
+#include "egt/x11screen.h"
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -21,7 +21,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     struct X11Data
     {

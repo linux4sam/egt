@@ -2,10 +2,10 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/imagecache.h"
-#include "mui/kmsscreen.h"
-#include "mui/painter.h"
-#include "mui/sprite.h"
+#include "egt/imagecache.h"
+#include "egt/kmsscreen.h"
+#include "egt/painter.h"
+#include "egt/sprite.h"
 #include <iostream>
 #ifdef HAVE_LIBPLANES
 #include <planes/plane.h>
@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     shared_cairo_surface_t ISpriteBase::surface() const

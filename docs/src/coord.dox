@@ -4,7 +4,7 @@
 
 @section coord_intro Introduction
 
-MUI defines a mui::Point, mui::Size, mui::Rect, and several other classes for
+EGT defines a egt::Point, egt::Size, egt::Rect, and several other classes for
 working with geometry.
 
 The cordinate system defaults with an origin of 0,0 in the top left.  Positive X moves to the right, and positive Y moves down.

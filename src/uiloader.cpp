@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/ui"
-#include "mui/uiloader.h"
+#include "egt/ui"
+#include "egt/uiloader.h"
 
 #ifdef HAVE_RAPIDXML_RAPIDXML_HPP
 #include <rapidxml/rapidxml.hpp>
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     namespace experimental
     {
@@ -115,7 +115,45 @@ namespace mui
 
             return instance;
         }
+#if 0
+        template <>
+        static Widget* create_widget<StaticGrid*>(rapidxml::xml_node<>* node, Frame* parent)
+        {
+            auto instance = new StaticGrid;
 
+            if (parent)
+            {
+                parent->add(instance);
+            }
+
+            auto row = node->first_attribute("row");
+            auto column = node->first_attribute("column");
+            if (row || column)
+            {
+                parent->add(instance, std::stoi(row), std::stoi(column));
+            }
+            else
+            {
+                parent->add(instance);
+            }
+
+            auto name = node->first_attribute("name");
+            if (name)
+            {
+                instance->name(name->value());
+            }
+
+            for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling())
+            {
+                string name = prop->first_attribute("name")->value();
+                string value = prop->first_attribute("value")->value();
+
+                set_property<T*>(instance, name, value);
+            }
+
+            return instance;
+        }
+#endif
         using create_function = std::function<Widget*(rapidxml::xml_node<>* widget, Frame* parent)>;
 
         static const map<string, create_function> allocators =
@@ -124,6 +162,7 @@ namespace mui
             {"Window", create_widget<Window>},
             {"Label", create_widget<Label>},
             {"TextBox", create_widget<TextBox>},
+            {"StaticGrid", create_widget<StaticGrid>},
         };
 
         UiLoader::UiLoader()

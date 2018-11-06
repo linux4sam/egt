@@ -6,7 +6,7 @@
 #include "config.h"
 #endif
 
-#include <mui/ui>
+#include <egt/ui>
 #include <math.h>
 #include <string>
 #include <map>
@@ -17,7 +17,7 @@
 #include <cmath>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 #ifdef HAVE_LIBPLANES
 #define USE_HARDWARE
@@ -172,7 +172,7 @@ int main()
 {
     Application app;
 
-    set_image_path("../share/mui/examples/easing/");
+    set_image_path("../share/egt/examples/easing/");
 
     ResetTimer reset_timer;
     MyAnimationTimer animation_timer(reset_timer);

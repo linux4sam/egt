@@ -2,13 +2,13 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/kmsscreen.h"
-#include "mui/window.h"
+#include "egt/kmsscreen.h"
+#include "egt/window.h"
 #include <algorithm>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     static std::vector<Window*> the_windows;
     static Window* the_window = nullptr;

@@ -2,12 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/object.h"
+#include "egt/object.h"
 #include <iostream>
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     std::ostream& operator<<(std::ostream& os, const eventid& event)
     {

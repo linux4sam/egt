@@ -88,9 +88,9 @@ TODO
 
 @section intro_env Environment Variables
 
-- MUI_DEBUG
+- EGT_DEBUG
   Enable debug output for the framework.
-- MUI_BACKEND
+- EGT_BACKEND
   Select what backend to use for rendering to the screen. Examples include x11, kms, fbdev.
 
 @section intro_debug Debugging
@@ -106,15 +106,15 @@ bt
 @section intro_first First Application
 
 @code
-#include <mui/ui>
+#include <egt/ui>
 
 int main()
 {
-    mui::Application app;
+    egt::Application app;
 
-    mui::Window window;
-    mui::Button button(window, "Hello World");
-    button.align(mui::alignmask::CENTER);
+    egt::Window window;
+    egt::Button button(window, "Hello World");
+    button.align(egt::alignmask::CENTER);
     window.show();
 
     return app.run();

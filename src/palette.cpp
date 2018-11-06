@@ -2,10 +2,10 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/palette.h"
+#include "egt/palette.h"
 #include <cassert>
 
-namespace mui
+namespace egt
 {
 
     const Color& Palette::color(ColorId id, ColorGroup group) const

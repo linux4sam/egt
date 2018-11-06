@@ -16,7 +16,7 @@ clean-local:
 
 style:
 	./scripts/style.sh --recursive $(top_srcdir)/examples/*.cpp
-	./scripts/style.sh $(top_srcdir)/include/mui/*.h $(top_srcdir)/src/*.cpp
+	./scripts/style.sh $(top_srcdir)/include/egt/*.h $(top_srcdir)/src/*.cpp
 
 private_icons = $(wildcard $(top_srcdir)/icons/*.png)
 
@@ -42,7 +42,7 @@ CPPCHECK_CMD = ~/Downloads/cppcheck-1.85/cppcheck \
 	-I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg
 
 CPPCHECK_DIRS = \
-$(top_srcdir)/include/mui/ \
+$(top_srcdir)/include/egt/ \
 $(top_srcdir)/src/ \
 $(top_srcdir)/examples/
 

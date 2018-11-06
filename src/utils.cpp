@@ -6,19 +6,19 @@
 #include "config.h"
 #endif
 
-#include "mui/utils.h"
+#include "egt/utils.h"
 
 #ifdef HAVE_LUA
 #include "lua/script.h"
 #endif
 
-namespace mui
+namespace egt
 {
     namespace detail
     {
         int& globalloglevel()
         {
-            static int loglevel = getenv("MUI_DEBUG") ? std::atoi(getenv("MUI_DEBUG")) : 0;
+            static int loglevel = getenv("EGT_DEBUG") ? std::atoi(getenv("EGT_DEBUG")) : 0;
             return loglevel;
         }
 

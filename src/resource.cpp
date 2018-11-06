@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/resource.h"
+#include "egt/resource.h"
 #include <cstring>
 #include <map>
 #include <string>
@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     namespace detail
     {

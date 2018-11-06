@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui>
+#include <egt/ui>
 #include <math.h>
 #include <string>
 #include <map>
@@ -13,7 +13,7 @@
 #include <iomanip>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 #if 0
 template<class T>

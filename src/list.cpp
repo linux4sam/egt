@@ -2,11 +2,11 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/list.h"
-#include "mui/painter.h"
-#include "mui/frame.h"
+#include "egt/list.h"
+#include "egt/painter.h"
+#include "egt/frame.h"
 
-namespace mui
+namespace egt
 {
     void ListBoxItem::draw(Painter& painter, const Rect& rect, bool selected)
     {

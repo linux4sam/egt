@@ -8,7 +8,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
-#include <mui/ui>
+#include <egt/ui>
 #include <sstream>
 #include <stdexcept>
 #include <string.h>
@@ -16,7 +16,7 @@
 #include <vector>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 static std::vector<std::string> glob(const std::string& pattern)
 {
@@ -41,7 +41,7 @@ static std::vector<std::string> glob(const std::string& pattern)
     return filenames;
 }
 
-#define SHARED_PATH "../share/mui/examples/gallery/"
+#define SHARED_PATH "../share/egt/examples/gallery/"
 
 int main()
 {

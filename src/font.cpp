@@ -2,9 +2,9 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/font.h"
+#include "egt/font.h"
 
-namespace mui
+namespace egt
 {
     const std::string Font::FACE_ARIAL = "Arial Unicode";
     const std::string Font::FACE_TIMES = "Times Unicode";

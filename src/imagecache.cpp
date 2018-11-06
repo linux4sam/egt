@@ -6,9 +6,9 @@
 #include "config.h"
 #endif
 
-#include "mui/imagecache.h"
-#include "mui/resource.h"
-#include "mui/utils.h"
+#include "egt/imagecache.h"
+#include "egt/resource.h"
+#include "egt/utils.h"
 #include <cassert>
 #include <iostream>
 #include <sstream>
@@ -25,7 +25,7 @@ extern "C" {
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     static string image_path = "";

@@ -6,13 +6,13 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <mui/ui>
-#include <mui/painter.h>
+#include <egt/ui>
+#include <egt/painter.h>
 #include <sstream>
 #include <string>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 class MainWindow;
 class ChildWindow;
@@ -285,7 +285,7 @@ int main()
 {
     Application app;
 
-    set_image_path("../share/mui/examples/infotain/");
+    set_image_path("../share/egt/examples/infotain/");
 
     win1 = new MainWindow(Size(800, 480));
     win2 = new ChildWindow(Size(800, 480));

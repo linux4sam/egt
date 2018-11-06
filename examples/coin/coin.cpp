@@ -3,14 +3,14 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include <iostream>
-#include <mui/ui>
+#include <egt/ui>
 #include <planes/plane.h>
 #include <random>
 #include <sstream>
 #include <vector>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 static bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
                             const Rect& rhs, shared_cairo_surface_t rimage)
@@ -481,7 +481,7 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/coin/");
+    set_image_path("/root/egt/share/egt/examples/coin/");
 
     MyWindow win;
     win.show();

@@ -2,12 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui>
+#include <egt/ui>
 #include "asio.hpp"
 #include <iostream>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 class ThermostatWindow : public Window
 {
@@ -28,7 +28,7 @@ public:
           m_title(*this, "Living Room",
                   Rect(Point(), Size(250, 64)),
                   alignmask::CENTER,
-                  mui::Font(32, Font::weightid::BOLD)),
+                  egt::Font(32, Font::weightid::BOLD)),
           m_radial1(Rect(Point(800 / 2 - 350 / 2,
                                480 / 2 - 350 / 2),
                          Size(350, 350)),
@@ -37,22 +37,22 @@ public:
                    "Day",
                    Rect(Point(40, 150),
                         Size(180, 64)),
-                   mui::Font(30)),
+                   egt::Font(30)),
           m_label2("night.png",
                    "Night",
                    Rect(Point(40, 214),
                         Size(180, 64)),
-                   mui::Font(30)),
+                   egt::Font(30)),
           m_label3("vacation.png",
                    "Vacation",
                    Rect(Point(40, 278),
                         Size(180, 64)),
-                   mui::Font(30)),
+                   egt::Font(30)),
           m_label4("Fan",
                    Rect(Point(700, 390),
                         Size(50, 64)),
                    alignmask::CENTER,
-                   mui::Font(16)),
+                   egt::Font(16)),
           m_slider1(0, 100,
                     Rect(Point(700, 100),
                          Size(50, 300)),
@@ -178,7 +178,7 @@ int main()
 {
     Application app;
 
-    set_image_path("../share/mui/examples/thermostat/");
+    set_image_path("../share/egt/examples/thermostat/");
 
     ThermostatWindow win;
     win.show();

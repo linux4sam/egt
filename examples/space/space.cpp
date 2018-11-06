@@ -4,12 +4,12 @@
  */
 #include <chrono>
 #include <cmath>
-#include <mui/ui>
+#include <egt/ui>
 #include <random>
 #include <vector>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 class Ball : public Image
 {
@@ -143,7 +143,7 @@ int main()
 {
     Application app;
 
-    set_image_path("../share/mui/examples/space/");
+    set_image_path("../share/egt/examples/space/");
 
     MainWindow win;
     win.show();

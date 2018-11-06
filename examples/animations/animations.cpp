@@ -2,13 +2,13 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include <mui/ui>
-#include <mui/painter.h>
+#include <egt/ui>
+#include <egt/painter.h>
 #include <string>
 #include <vector>
 #include <sstream>
 
-using namespace mui;
+using namespace egt;
 using namespace std;
 
 int main()

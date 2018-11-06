@@ -2,14 +2,14 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/ui"
+#include "egt/ui"
 #include <iostream>
 #include <random>
 #include <sstream>
 #include <vector>
 
 using namespace std;
-using namespace mui;
+using namespace egt;
 
 class GameWindow : public Window
 {
@@ -230,7 +230,7 @@ int main()
 {
     Application app;
 
-    set_image_path("/root/mui/share/mui/examples/brick/");
+    set_image_path("/root/egt/share/egt/examples/brick/");
 
     GameWindow win;
 

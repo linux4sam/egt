@@ -2,13 +2,13 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/app.h"
-#include "mui/event_loop.h"
-#include "mui/timer.h"
+#include "egt/app.h"
+#include "egt/event_loop.h"
+#include "egt/timer.h"
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     Timer::Timer() noexcept

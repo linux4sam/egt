@@ -2,12 +2,12 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/valuewidget.h"
-#include "mui/painter.h"
+#include "egt/valuewidget.h"
+#include "egt/painter.h"
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     ProgressBar::ProgressBar(const Rect& rect)

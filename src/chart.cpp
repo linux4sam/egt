@@ -6,7 +6,7 @@
 #include "config.h"
 #endif
 
-#include "mui/chart.h"
+#include "egt/chart.h"
 #include <cmath>
 #include <vector>
 #ifdef HAVE_KPLOT
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 #ifdef HAVE_KPLOT
     static void xticlabelfmt(double v, char* b, size_t)

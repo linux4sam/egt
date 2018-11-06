@@ -1,6 +1,9 @@
 #!/bin/sh
 
 #
+# Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+# Joshua Henderson <joshua.henderson@microchip.com>
+#
 # Script to enforce the coding style of this project.
 #
 

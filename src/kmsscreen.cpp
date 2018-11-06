@@ -8,11 +8,11 @@
 
 #ifdef HAVE_LIBPLANES
 
-#include "mui/event_loop.h"
-#include "mui/input.h"
-#include "mui/kmsscreen.h"
-#include "mui/widget.h"
-#include "mui/window.h"
+#include "egt/event_loop.h"
+#include "egt/input.h"
+#include "egt/kmsscreen.h"
+#include "egt/widget.h"
+#include "egt/window.h"
 #include <cairo.h>
 #include <condition_variable>
 #include <cstring>
@@ -28,7 +28,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
     static KMSScreen* the_kms = 0;
 

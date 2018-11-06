@@ -2,8 +2,8 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "mui/framebuffer.h"
-#include "mui/utils.h"
+#include "egt/framebuffer.h"
+#include "egt/utils.h"
 #include <cassert>
 #include <fcntl.h>
 #include <linux/fb.h>
@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     FrameBuffer::FrameBuffer(const string& path)

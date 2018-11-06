@@ -6,15 +6,15 @@
 #include "config.h"
 #endif
 
-#include "mui/input.h"
-#include "mui/app.h"
+#include "egt/input.h"
+#include "egt/app.h"
 
 #ifdef HAVE_TSLIB
 #include "tslib.h"
 
 using namespace std;
 
-namespace mui
+namespace egt
 {
 
     static const int SLOTS = 1;

@@ -10,5 +10,19 @@
       <property name="height" value="50" />
       <property name="align" value="2" />
     </widget>
+
+    <widget type="StaticGrid" name="grid1">
+      <property name="width" value="100" />
+      <property name="height" value="100" />
+      <property name="columns" value="4" />
+      <property name="rows" value="4" />
+
+      <widget type="Label" name="label1" column="0" row="0">
+	<property name="text" value="0,0" />
+	<property name="align" value="2" />
+      </widget>
+
+    </widget>
+
   </widget>
 </widgets>
