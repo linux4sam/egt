@@ -134,7 +134,7 @@ namespace egt
                         v = eventid::KEYBOARD_REPEAT;
                     if (v != eventid::NONE)
                     {
-                        key_value() = e->code;
+                        event_key() = e->code;
                         dispatch(v);
                     }
                 }
@@ -143,14 +143,14 @@ namespace egt
 
         if (absolute_event)
         {
-            mouse_position() = Point(x, y);
+            event_mouse() = Point(x, y);
             dispatch(eventid::MOUSE_MOVE);
         }
         else
         {
             if (dx != 0 || dy != 0)
             {
-                mouse_position() = Point(mouse_position().x + dx, mouse_position().y + dy);
+                event_mouse() = Point(event_mouse().x + dx, event_mouse().y + dy);
                 dispatch(eventid::MOUSE_MOVE);
             }
         }

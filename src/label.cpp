@@ -62,11 +62,15 @@ namespace egt
         if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
             if (!is_flag_set(widgetmask::NO_BORDER))
-                painter.draw_basic_box(box(), palette().color(Palette::BORDER),
-                                       palette().color(Palette::BG));
+                painter.draw_box(box(),
+                                 palette().color(Palette::BORDER),
+                                 palette().color(Palette::BG),
+                                 Painter::boxtype::border);
             else
-                painter.draw_basic_box(box(), palette().color(Palette::BG),
-                                       palette().color(Palette::BG));
+                painter.draw_box(box(),
+                                 palette().color(Palette::BORDER),
+                                 palette().color(Palette::BG),
+                                 Painter::boxtype::flat);
         }
 
         painter.set_color(palette().color(Palette::TEXT));
@@ -152,18 +156,15 @@ namespace egt
 
         if (checked())
         {
-            painter.draw_gradient_box(r, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::HIGHLIGHT));
+            painter.draw_box(r,
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::HIGHLIGHT),
+                             Painter::boxtype::rounded_gradient);
 
             static const int OFFSET = 5;
             auto cr = painter.context();
 
-            cairo_set_source_rgba(cr.get(),
-                                  palette().color(Palette::DARK).redf(),
-                                  palette().color(Palette::DARK).greenf(),
-                                  palette().color(Palette::DARK).bluef(),
-                                  palette().color(Palette::DARK).alphaf());
+            painter.set_color(palette().color(Palette::DARK));
 
             cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
             cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
@@ -174,7 +175,10 @@ namespace egt
         }
         else
         {
-            painter.draw_gradient_box(r, palette().color(Palette::BORDER));
+            painter.draw_box(r,
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::BG),
+                             Painter::boxtype::rounded_border);
         }
 
         // text
@@ -196,25 +200,29 @@ namespace egt
     {
         ignoreparam(rect);
 
-        painter.draw_basic_box(box(), palette().color(Palette::BORDER),
-                               palette().color(Palette::BG));
+        painter.draw_box(box(),
+                         palette().color(Palette::BORDER),
+                         palette().color(Palette::BG),
+                         Painter::boxtype::rounded_border);
 
         if (checked())
         {
             Rect rect = box();
             rect.w /= 2;
             rect.x += rect.w;
-            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::HIGHLIGHT));
+            painter.draw_box(rect,
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::HIGHLIGHT),
+                             Painter::boxtype::rounded_gradient);
         }
         else
         {
             Rect rect = box();
             rect.w /= 2;
-            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::MID));
+            painter.draw_box(rect,
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::MID),
+                             Painter::boxtype::rounded_gradient);
         }
     }
 

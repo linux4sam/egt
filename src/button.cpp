@@ -57,10 +57,22 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_gradient_box(box(), palette().color(Palette::BORDER),
-                                  active(),
-                                  active() ? palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE) :
-                                  palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
+        if (!is_flag_set(widgetmask::NO_BORDER))
+        {
+            painter.draw_box(box(),
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::LIGHT, Palette::GROUP_NORMAL),
+                             Painter::boxtype::rounded_gradient,
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE),
+                             active());
+        }
+        else if (!is_flag_set(widgetmask::NO_BACKGROUND))
+        {
+            painter.draw_box(box(),
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::BG));
+        }
 
         // text
         painter.set_color(palette().color(Palette::TEXT));
@@ -85,14 +97,26 @@ namespace egt
             do_set_image(image);
     }
 
+    ImageButton::ImageButton(Frame& parent,
+                             const string& image,
+                             const string& text,
+                             const Rect& rect,
+                             widgetmask flags) noexcept
+        : ImageButton(image, text, rect, flags)
+    {
+        parent.add(this);
+    }
+
     void ImageButton::do_set_image(const std::string& image)
     {
         m_image = detail::image_cache.get(image, 1.0);
 
+#if 0
         auto width = cairo_image_surface_get_width(m_image.get());
         auto height = cairo_image_surface_get_height(m_image.get());
         m_box.w = width;
         m_box.h = height;
+#endif
     }
 
     void ImageButton::set_image(const std::string& image)
@@ -106,16 +130,30 @@ namespace egt
         ignoreparam(rect);
 
         if (!is_flag_set(widgetmask::NO_BORDER))
-            painter.draw_gradient_box(box(), palette().color(Palette::BORDER),
-                                      active(),
-                                      active() ? palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE) :
-                                      palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
+        {
+            painter.draw_box(box(),
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::LIGHT, Palette::GROUP_NORMAL),
+                             Painter::boxtype::rounded_gradient,
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE),
+                             active());
+        }
+        else if (!is_flag_set(widgetmask::NO_BACKGROUND))
+        {
+            painter.draw_box(box(),
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::BG));
+        }
 
-        painter.draw_image(m_image, box(), m_image_align, 10, disabled());
+        painter.draw_image(m_image, box(), m_image_align, 0, disabled());
 
-        painter.set_color(palette().color(Palette::TEXT));
-        painter.set_font(m_font);
-        painter.draw_text(box(), m_text, m_text_align, 5);
+        if (!m_text.empty())
+        {
+            painter.set_color(palette().color(Palette::TEXT));
+            painter.set_font(m_font);
+            painter.draw_text(box(), m_text, m_text_align, 5);
+        }
     }
 
     ImageButton::~ImageButton()

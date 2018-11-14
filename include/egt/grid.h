@@ -86,14 +86,7 @@ namespace egt
         using cell_array = std::vector<std::vector<Cell>>;
 
         cell_array m_cells;
-        int m_columns{0};
-        int m_rows{0};
         int m_border{0};
-
-    private:
-
-        // not allowed, use alternate add() method
-        virtual Widget* add(Widget* widget) override { return widget; }
     };
 
     class HorizontalPositioner : public Frame

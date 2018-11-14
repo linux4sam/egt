@@ -1,0 +1,16 @@
+/**
+
+ @page colors Palette and Colors
+
+There is a single global palette.  All widgets use this palette by default and
+before creating widgets, this palette can be changed.
+
+However, you can also change the palette for any individual widget and it will
+only have an affect for that widget.  You can change the global palette and it
+will retroactively have an effect on any widget, as long as that widget does not
+have a custom palette assigned.
+
+Changing any property of an individual widget's palette, results in that widget
+mainting its own complete palette.
+
+*/

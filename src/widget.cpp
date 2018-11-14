@@ -137,6 +137,10 @@ namespace egt
 
     void Widget::damage(const Rect& rect)
     {
+        // don't damage if not even visible
+        if (!visible())
+            return;
+
         if (m_parent)
             m_parent->damage(rect);
     }
@@ -368,7 +372,7 @@ namespace egt
             switch (event)
             {
             case eventid::MOUSE_DOWN:
-                m_moving_x = screen_to_frame(mouse_position()).y;
+                m_moving_x = screen_to_frame(event_mouse()).y;
                 m_start_pos = position();
                 active(true);
                 return 1;
@@ -380,7 +384,7 @@ namespace egt
             case eventid::MOUSE_MOVE:
                 if (active())
                 {
-                    int diff = screen_to_frame(mouse_position()).y - m_moving_x;
+                    int diff = screen_to_frame(event_mouse()).y - m_moving_x;
                     position(m_start_pos + diff);
                 }
                 break;

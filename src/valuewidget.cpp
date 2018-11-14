@@ -222,12 +222,12 @@ namespace egt
                                 w() - 2);
             }
 
-            if (Rect::point_inside(screen_to_frame(mouse_position()), bounding))
+            if (Rect::point_inside(screen_to_frame(event_mouse()), bounding))
             {
                 if (m_orientation == orientation::HORIZONTAL)
-                    m_moving_x = screen_to_frame(mouse_position()).x;
+                    m_moving_x = screen_to_frame(event_mouse()).x;
                 else
-                    m_moving_x = screen_to_frame(mouse_position()).y;
+                    m_moving_x = screen_to_frame(event_mouse()).y;
                 m_start_pos = position();
                 active(true);
                 return 1;
@@ -237,18 +237,23 @@ namespace egt
         }
         case eventid::MOUSE_UP:
             active(false);
+            if (m_invoke_pending)
+            {
+                m_invoke_pending = false;
+                this->invoke_handlers(eventid::PROPERTY_CHANGED);
+            }
             return 1;
         case eventid::MOUSE_MOVE:
             if (active())
             {
                 if (m_orientation == orientation::HORIZONTAL)
                 {
-                    auto diff = screen_to_frame(mouse_position()).x - m_moving_x;
+                    auto diff = screen_to_frame(event_mouse()).x - m_moving_x;
                     position(m_start_pos + denormalize(diff));
                 }
                 else
                 {
-                    auto diff = screen_to_frame(mouse_position()).y - m_moving_x;
+                    auto diff = screen_to_frame(event_mouse()).y - m_moving_x;
                     position(m_start_pos + denormalize(diff));
                 }
                 return 1;
@@ -275,7 +280,6 @@ namespace egt
 
         if (m_orientation == orientation::HORIZONTAL)
         {
-#if 1
             cairo_set_line_width(cr.get(), h() / 5.0);
 
             // line
@@ -292,28 +296,15 @@ namespace egt
             cairo_move_to(cr.get(), x() + normalize(m_pos) + 1, y() + h() / 2);
             cairo_line_to(cr.get(), x() + w(), y() + h() / 2);
             cairo_stroke(cr.get());
-#else
-            Line l1(Point(x(), y() + h() / 2), Point(x() + normalize(m_pos), y() + h() / 2));
-            Rect r1 = l1.rect();
 
-            painter.draw_gradient_box(r1, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::HIGHLIGHT));
-
-            Line l2(Point(x() + normalize(m_pos) + 1, y() + h() / 2),
-                    Point(x() + w(), y() + h() / 2));
-            Rect r2 = l2.rect();
-
-            painter.draw_gradient_box(r2, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::MID));
-#endif
             // handle
-            painter.draw_gradient_box(Rect(x() + normalize(m_pos) + 1,
-                                           y() + 1,
-                                           h() - 2,
-                                           h() - 2),
-                                      palette().color(Palette::BORDER));
+            painter.draw_box(Rect(x() + normalize(m_pos) + 1,
+                                  y() + 1,
+                                  h() - 2,
+                                  h() - 2),
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::HIGHLIGHT),
+                             Painter::boxtype::rounded_gradient);
         }
         else
         {
@@ -335,11 +326,13 @@ namespace egt
             cairo_stroke(cr.get());
 
             // handle
-            painter.draw_gradient_box(Rect(x() + 1,
-                                           y() + normalize(m_pos) + 1,
-                                           w() - 2,
-                                           w() - 2),
-                                      palette().color(Palette::BORDER));
+            painter.draw_box(Rect(x() + 1,
+                                  y() + normalize(m_pos) + 1,
+                                  w() - 2,
+                                  w() - 2),
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::HIGHLIGHT),
+                             Painter::boxtype::rounded_gradient);
         }
 
         //cairo_restore(cr.get());

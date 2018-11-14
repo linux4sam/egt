@@ -8,15 +8,24 @@
 
 namespace egt
 {
-    void ListBoxItem::draw(Painter& painter, const Rect& rect, bool selected)
+    void ListBoxItem::draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox)
     {
         if (selected)
         {
-            painter.draw_gradient_box(rect,
-                                      global_palette().color(Palette::BORDER),
-                                      false,
-                                      global_palette().color(Palette::HIGHLIGHT));
+            painter.draw_box(rect,
+                             listbox.palette().color(Palette::BORDER),
+                             listbox.palette().color(Palette::HIGHLIGHT),
+                             Painter::boxtype::rounded_gradient);
         }
+    }
+
+    void StringItem::draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox)
+    {
+        ListBoxItem::draw(painter, rect, selected, listbox);
+
+        painter.set_color(listbox.palette().color(Palette::TEXT));
+        painter.set_font(m_font);
+        painter.draw_text(rect, m_text, alignmask::CENTER);
     }
 
     static auto ITEM_HEIGHT = 40;
@@ -35,7 +44,7 @@ namespace egt
         {
         case eventid::MOUSE_DOWN:
         {
-            Point mouse = screen_to_frame(mouse_position());
+            Point mouse = screen_to_frame(event_mouse());
             for (size_t i = 0; i < m_items.size(); i++)
             {
                 if (Rect::point_inside(mouse, item_rect(i)))
@@ -58,15 +67,16 @@ namespace egt
     {
         ignoreparam(rect);
 
-        painter.draw_basic_box(box() /*Rect(x(), y(), w(), ITEM_HEIGHT * m_items.size())*/,
-                               palette().color(Palette::BORDER),
-                               palette().color(Palette::BG));
+        painter.draw_box(box(),
+                         palette().color(Palette::BORDER),
+                         palette().color(Palette::BG),
+                         Painter::boxtype::rounded_border);
 
         if (m_selected < m_items.size())
         {
             for (size_t i = 0; i < m_items.size(); i++)
             {
-                m_items[i]->draw(painter, item_rect(i), m_selected == i);
+                m_items[i]->draw(painter, item_rect(i), m_selected == i, *this);
             }
         }
     }
@@ -79,7 +89,8 @@ namespace egt
             m_selected = index;
             //damage(item_rect(m_selected));
             damage();
-            on_selected(index);
+            invoke_handlers(eventid::PROPERTY_CHANGED);
+            //on_selected(index);
         }
     }
 

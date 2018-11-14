@@ -37,11 +37,13 @@ int main()
     seq.add(&shrink_out);
 
     Label label("hello world");
+    label.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
     grid.add(&label, 0, 1);
 
+    auto orig = label.w();
     experimental::PropertyAnimator shrinkh_in(100, 10, std::chrono::seconds(1));
     shrinkh_in.on_change(std::bind(&Label::width, std::ref(label), std::placeholders::_1));
-    experimental::PropertyAnimator shrinkh_out(10, 100, std::chrono::seconds(1));
+    experimental::PropertyAnimator shrinkh_out(10, orig, std::chrono::seconds(1));
     shrinkh_out.on_change(std::bind(&Label::width, std::ref(label), std::placeholders::_1));
     seq.add(&shrinkh_in);
     seq.add(&shrinkh_out);

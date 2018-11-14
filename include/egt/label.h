@@ -93,6 +93,7 @@ namespace egt
             if (m_checked != value)
             {
                 m_checked = value;
+                invoke_handlers(eventid::PROPERTY_CHANGED);
                 damage();
             }
         }

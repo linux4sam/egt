@@ -356,10 +356,10 @@ public:
         {
             m_running = true;
 
-            if (key_value() == KEY_LEFT || key_value() == KEY_RIGHT)
+            if (event_key() == KEY_LEFT || event_key() == KEY_RIGHT)
             {
             }
-            else if (key_value() == KEY_UP)
+            else if (event_key() == KEY_UP)
             {
                 int y = m_mouse->y() - (event == eventid::KEYBOARD_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
@@ -367,7 +367,7 @@ public:
 
                 return 1;
             }
-            else if (key_value() == KEY_DOWN)
+            else if (event_key() == KEY_DOWN)
             {
                 int y = m_mouse->y() + (event == eventid::KEYBOARD_REPEAT ? 10 : 5);
                 if (y > 0 && y < h() + m_mouse->h())
@@ -382,18 +382,18 @@ public:
 
             m_running = true;
 
-            if (mouse_position().y > m_mouse->box().center().y)
+            if (event_mouse().y > m_mouse->box().center().y)
             {
-                int delta = mouse_position().y - m_mouse->box().center().y;
+                int delta = event_mouse().y - m_mouse->box().center().y;
                 if (delta > 10)
                     delta = 10;
                 int y = m_mouse->y() + delta;
                 if (y > 0 && y < h() + m_mouse->h())
                     m_mouse->move(Point(m_mouse->x(), y));
             }
-            else if (mouse_position().y < m_mouse->box().center().y)
+            else if (event_mouse().y < m_mouse->box().center().y)
             {
-                int delta = m_mouse->box().center().y - mouse_position().y;
+                int delta = m_mouse->box().center().y - event_mouse().y;
                 if (delta > 10)
                     delta = 10;
                 int y = m_mouse->y() - delta;

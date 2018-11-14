@@ -2,11 +2,10 @@
  * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
-#include "egt/video.h"
 #include "egt/kmsscreen.h"
-#include <string.h>
+#include "egt/video.h"
+#include <cstring>
 #include <thread>
-#include <chrono>
 
 #ifdef HAVE_GSTREAMER
 

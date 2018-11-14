@@ -65,8 +65,10 @@ public:
         : ListBox(items, rect)
     {}
 
-    void on_selected(int index) override
+    void select(uint32_t index) override
     {
+        ListBox::select(index);
+
         animation->stop();
         animation->set_easing_func(curves[index]);
         animation->start();
@@ -104,6 +106,8 @@ public:
         // be invisible), to always keep a portion of the plane on screen
         // alternate of making the plane the same exact size as the image.
         m_box = new PlaneWindow(Size(100, 200));
+        m_box->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_box->flag_set(widgetmask::NO_BACKGROUND);
         m_box->add(image);
         m_box->show();
 #endif

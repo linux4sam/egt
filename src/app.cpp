@@ -90,6 +90,14 @@ namespace egt
 #endif
     }
 
+    Application::Application(bool primary, const std::string& name,
+                             int argc, const char* argv)
+        : Application(primary, name)
+    {
+        ignoreparam(argc);
+        ignoreparam(argv);
+    }
+
     int Application::run()
     {
         return m_event.run();

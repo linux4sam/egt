@@ -32,12 +32,11 @@ namespace egt
         ignoreparam(painter);
         ignoreparam(rect);
 
-        struct kdata* d1;
         struct kplot* p;
 
-        d1 = kdata_array_alloc(reinterpret_cast<kpair*>(&m_data[0]), m_data.size());
         p = kplot_alloc(NULL);
         struct kplotcfg* cfg = kplot_get_plotcfg(p);
+        cfg->grid = m_grid;
         cfg->xticlabelfmt = xticlabelfmt;
         cfg->yticlabelfmt = xticlabelfmt;
         auto tc = palette().color(Palette::BORDER);
@@ -59,6 +58,7 @@ namespace egt
 
         struct kdatacfg	 dcfg;
         kdatacfg_defaults(&dcfg);
+        dcfg.line.sz = m_linewidth;
         dcfg.line.clr.type = KPLOTCTYPE_PATTERN;
         dcfg.line.clr.pattern =
             cairo_pattern_create_linear(0.0, 0.0, 600.0, 400.0);
@@ -70,7 +70,29 @@ namespace egt
         cairo_pattern_add_color_stop_rgb
         (dcfg.line.clr.pattern, 0.75, 0.0, 0.0, 1.0);
 
-        kplot_attach_data(p, d1, KPLOT_LINES, &dcfg);
+        for (auto& d : m_data)
+        {
+            struct kdata* d1 = kdata_array_alloc(reinterpret_cast<kpair*>(&d.data[0]), d.data.size());
+            switch (d.type)
+            {
+            case chart_type::points:
+                kplot_attach_data(p, d1, KPLOT_POINTS, &dcfg);
+                break;
+            case chart_type::marks:
+                kplot_attach_data(p, d1, KPLOT_MARKS, &dcfg);
+                break;
+            case chart_type::lines:
+                kplot_attach_data(p, d1, KPLOT_LINES, &dcfg);
+                break;
+            case chart_type::linespoints:
+                kplot_attach_data(p, d1, KPLOT_LINESPOINTS, &dcfg);
+                break;
+            case chart_type::linesmarks:
+                kplot_attach_data(p, d1, KPLOT_LINESMARKS, &dcfg);
+                break;
+            }
+            kdata_destroy(d1);
+        }
 
         auto bg = palette().color(Palette::BG);
         cairo_set_source_rgba(cr.get(),
@@ -81,9 +103,20 @@ namespace egt
 
         cairo_rectangle(cr.get(), x(), y(), w(), h());
         cairo_fill(cr.get());
-        kplot_draw(p, w(), h(), cr.get());
 
-        kdata_destroy(d1);
+        //#define TIME_DRAW
+#ifdef TIME_DRAW
+        auto start = chrono::steady_clock::now();
+#endif
+        kplot_draw(p, w(), h(), cr.get());
+#ifdef TIME_DRAW
+        auto end = chrono::steady_clock::now();
+        auto diff = end - start;
+
+        cout << "kplot_draw: " << chrono::duration<double, milli>(diff).count() << endl;
+#endif
+
+
         kplot_free(p);
         cairo_restore(cr.get());
     }
@@ -91,14 +124,8 @@ namespace egt
 
     PieChart::PieChart(const Rect& rect)
         : Widget(rect)
-    {}
-
-    void PieChart::draw(Painter& painter, const Rect& rect)
     {
-        ignoreparam(painter);
-        ignoreparam(rect);
-
-        static const vector<Color> piecolors =
+        static const vector<Color> default_colors =
         {
             Color::RED,
             Color::GREEN,
@@ -119,6 +146,18 @@ namespace egt
             Color::LIGHTBLUE,
         };
 
+        m_colors = default_colors;
+    }
+
+    void PieChart::draw(Painter& painter, const Rect& rect)
+    {
+        // keep everything square
+        int width = std::min(w(), h());
+        int height = std::min(w(), h());
+
+        ignoreparam(painter);
+        ignoreparam(rect);
+
         shared_cairo_t cr = screen()->context();
 
         cairo_save(cr.get());
@@ -126,29 +165,29 @@ namespace egt
         float to_angle = M_PI * 3 / 2;
         float from_angle = to_angle;
 
-        auto c = piecolors.begin();
+        auto c = m_colors.begin();
 
         for (auto& i : m_data)
         {
             to_angle += 2 * M_PI * i.second;
 
             Color color = *c;
-            if (++c == piecolors.end())
-                c = piecolors.begin();
+            if (++c == m_colors.end())
+                c = m_colors.begin();
 
             cairo_set_source_rgba(cr.get(),
                                   color.redf(),
                                   color.greenf(),
                                   color.bluef(),
                                   color.alphaf());
-            cairo_move_to(cr.get(), x() + w() / 2, y() + h() / 2);
-            cairo_arc(cr.get(), x() + w() / 2, y() + h() / 2, w()*.45, from_angle, to_angle);
-            cairo_line_to(cr.get(), x() + w() / 2, y() + h() / 2);
+            cairo_move_to(cr.get(), x() + width / 2, y() + height / 2);
+            cairo_arc(cr.get(), x() + width / 2, y() + height / 2, width * .45, from_angle, to_angle);
+            cairo_line_to(cr.get(), x() + width / 2, y() + height / 2);
             cairo_fill(cr.get());
             from_angle = to_angle;
         }
 
-        cairo_set_font_size(cr.get(), w() / 30);
+        cairo_set_font_size(cr.get(), width / 30);
         to_angle = M_PI * 3 / 2;
         from_angle = to_angle;
         for (auto& i : m_data)
@@ -158,8 +197,8 @@ namespace egt
 
             to_angle += 2 * M_PI * i.second;
             float label_angle = (from_angle + to_angle) / 2;
-            int label_x = w() / 2 * (1.0 + 0.7 * cosf(label_angle));
-            int label_y = h() / 2 * (1.0 + 0.7 * sinf(label_angle));
+            int label_x = width / 2 * (1.0 + 0.7 * std::cos(label_angle));
+            int label_y = height / 2 * (1.0 + 0.7 * std::sin(label_angle));
             cairo_set_source_rgb(cr.get(), 0, 0, 0);
             cairo_move_to(cr.get(), x() + label_x, y() + label_y);
             cairo_show_text(cr.get(), i.first.c_str());

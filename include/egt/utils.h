@@ -15,6 +15,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #ifdef DEBUG
 #define DBG(x) do { std::cout << x << std::endl; } while (0)
@@ -91,6 +92,8 @@ namespace egt
          * Toy lua evaluation.
          */
         double lua_evaluate(const std::string& expr);
+
+        std::vector<std::string> glob(const std::string& pattern);
     }
 
 }

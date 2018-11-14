@@ -1,0 +1,36 @@
+/**
+
+ @page debug Debugging
+
+There are several ways to debug EGT and EGT applications.
+
+
+@section debug_gdb GDB
+
+EGT uses asserts internally.  Make sure and compile the library without -DNDEBUG
+and then you can break on any assert using GDB to examine the callstack and the
+state of the application.
+
+@code
+break __assert_fail
+r
+...assert...
+bt
+@endcode
+
+
+@section debug_env Environment Variables
+
+By default, EGT will look at several runtime environment variables to change the
+operation of the library.  For example, you can change some configuration and
+set log levels using environment variables.
+
+@li <tt>EGT_DEBUG</tt>
+    <br>
+    Enable debug output for the framework.  The higher the number, the more output.
+
+@li <tt>EGT_BACKEND</tt>
+    <br>
+    Select what backend to use for rendering to the screen. Examples include x11, kms, fbdev.
+
+*/

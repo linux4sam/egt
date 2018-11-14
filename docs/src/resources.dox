@@ -1,0 +1,33 @@
+/**
+
+ @page resources Assets
+
+This chapter discusses assets and how to distribute and use them.
+
+Resources are a way of cataloging, distributing, and using asset data.  For
+example image assets, icons, audio files, and video files can be included as
+resources.  Resources may be stored in the filesystem and loaded on demand, or
+they may be compiled into the application binary itself by using the *mresg*
+command.
+
+@section resources_using Loading Resources
+
+To access a resource with a file path, specify an absolute or relative file path.
+
+@code
+auto play = Image("/some/path/play.png");
+@endcode
+
+@section resources_mresg Resource Generator
+
+This is a tool used to generate a resource file that contains the data of binary blobs of data that can then in turn directly be used in an application when, for example, refering an image.
+
+Instead of using a filesystem path to a file, prefix the path with a colon (":") to interpret the path as a resource.  Periods are replaced with underscores.
+
+@code
+auto play = Image(":play_png");
+@endcode
+
+
+
+*/

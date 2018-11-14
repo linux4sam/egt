@@ -109,7 +109,7 @@ public:
                 if (!m_moving)
                 {
                     m_moving = true;
-                    m_starting_point = mouse_position();
+                    m_starting_point = event_mouse();
                     m_position = Point(T::x(), T::y());
                 }
             }
@@ -121,7 +121,7 @@ public:
         case eventid::MOUSE_MOVE:
             if (m_moving)
             {
-                Point diff = mouse_position() - m_starting_point;
+                Point diff = event_mouse() - m_starting_point;
                 T::move(Point(m_position.x + diff.x, m_position.y + diff.y));
                 return 1;
             }

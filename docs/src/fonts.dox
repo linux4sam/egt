@@ -1,0 +1,19 @@
+/**
+
+ @page fonts Fonts
+
+This chapter discusses how to to use fonts.
+
+@section fonts_fontconfig Fontconfig
+
+<a href="https://www.freedesktop.org/wiki/Software/fontconfig/">Fontconfig</a> is a library for configuring and customizing font access.  This is the library EGT uses to discover fonts installed on the system automatically.
+
+@section fonts_freetype FreeType
+
+<a href="https://www.freetype.org/">FreeType</a> is a software font engine that is designed to be small, efficient, highly customizable, and portable while capable of producing high-quality output (glyph images). It can be used in graphics libraries, display servers, font conversion tools, text image generation tools, and many other products as well.  FreeType is used by EGT to render any font that is available and installed in the system.
+
+@section fonts_inter Internationalization
+
+Both Fontconfig and FreeType support international fonts in many various languages and EGT takes advantage of this and in turn provides complete internationalization support for rendered text.
+
+*/

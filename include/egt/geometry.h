@@ -402,8 +402,8 @@ namespace egt
          */
         static inline bool intersect(const Rect& lhs, const Rect& rhs)
         {
-            return (lhs.x <= rhs.x + rhs.w && lhs.x + lhs.w >= rhs.x &&
-                    lhs.y <= rhs.y + rhs.h && lhs.y + lhs.h >= rhs.y);
+            return (lhs.x < rhs.x + rhs.w && lhs.x + lhs.w > rhs.x &&
+                    lhs.y < rhs.y + rhs.h && lhs.y + lhs.h > rhs.y);
         }
 
         /**
@@ -505,6 +505,18 @@ namespace egt
     protected:
         Point m_start;
         Point m_end;
+    };
+
+    /** @todo Implement circle. */
+    class Circle
+    {
+
+    };
+
+    /** @todo Implement polygon. */
+    class Polygon
+    {
+
     };
 
     template <class T>

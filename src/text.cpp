@@ -10,8 +10,9 @@ using namespace std;
 namespace egt
 {
 
-    TextBox::TextBox(const std::string& str, const Rect& rect)
-        : TextWidget(str, rect),
+    TextBox::TextBox(const std::string& str, const Rect& rect,
+                     alignmask align)
+        : TextWidget(str, rect, align),
           m_timer(std::chrono::seconds(1))
     {
         m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
@@ -35,12 +36,12 @@ namespace egt
             return 1;
         case eventid::KEYBOARD_DOWN:
 
-            if (std::isalnum((char)key_value()))
+            if (std::isalnum((char)event_key()))
             {
-                m_text.append(1, (char)key_value());
+                m_text.append(1, (char)event_key());
                 damage();
             }
-            else if (key_code() == KEY_BACKSPACE)
+            else if (event_code() == KEY_BACKSPACE)
             {
                 m_text.pop_back();
                 damage();
@@ -59,9 +60,10 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_basic_box(box(),
-                               palette().color(Palette::BORDER),
-                               palette().color(Palette::TEXTBG));
+        painter.draw_box(box(),
+                         palette().color(Palette::BORDER),
+                         palette().color(Palette::TEXTBG),
+                         Painter::boxtype::rounded_border);
 
         // text
         Rect bounding = painter.draw_text(m_text, box(),
@@ -129,9 +131,10 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_basic_box(box(),
-                               palette().color(Palette::BORDER),
-                               palette().color(Palette::TEXTBG));
+        painter.draw_box(box(),
+                         palette().color(Palette::BORDER),
+                         palette().color(Palette::TEXTBG),
+                         Painter::boxtype::rounded_border);
 
         // text
         painter.set_font(m_font);

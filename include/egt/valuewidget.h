@@ -175,7 +175,7 @@ namespace egt
             {
                 if (this->active())
                 {
-                    auto angle = this->touch_to_degrees(this->screen_to_frame(mouse_position()));
+                    auto angle = this->touch_to_degrees(this->screen_to_frame(event_mouse()));
                     auto v = this->degrees_to_value(angle);
                     this->value(v);
 
@@ -380,8 +380,14 @@ namespace egt
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
+        /**
+         * Get the current position.
+         */
         inline int position() const { return m_pos; }
 
+        /**
+         * Change the current position.
+         */
         inline void position(int pos)
         {
             if (pos > m_max)
@@ -397,7 +403,12 @@ namespace egt
             {
                 m_pos = pos;
                 damage();
-                this->invoke_handlers(eventid::PROPERTY_CHANGED);
+
+                // live update to handlers?
+                if (false)
+                    this->invoke_handlers(eventid::PROPERTY_CHANGED);
+                else
+                    m_invoke_pending = true;
             }
         }
 
@@ -411,12 +422,12 @@ namespace egt
             if (m_orientation == orientation::HORIZONTAL)
             {
                 int dim = h();
-                return float(w() - dim) / float(m_max - m_min) * float(pos);
+                return float(w() - dim) / float(m_max - m_min) * float(pos - m_min);
             }
             else
             {
                 int dim = w();
-                return float(h() - dim) / float(m_max - m_min) * float(pos);
+                return float(h() - dim) / float(m_max - m_min) * float(pos - m_min);
             }
         }
 
@@ -441,6 +452,7 @@ namespace egt
         int m_moving_x{0};
         int m_start_pos{0};
         orientation m_orientation;
+        bool m_invoke_pending{false};
     };
 
 }

@@ -69,10 +69,13 @@ namespace egt
 
             Point origin = get_frame_origin(m_index);
 
-            KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
-            plane_set_pan_pos(s->s(), origin.x, origin.y);
-            plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
-            plane_apply(s->s());
+            if (visible())
+            {
+                KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
+                plane_set_pan_pos(s->s(), origin.x, origin.y);
+                plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
+                plane_apply(s->s());
+            }
         }
     }
 

@@ -23,6 +23,7 @@ namespace egt
     {
         NONE,
 
+        // Mouse events
         MOUSE_DOWN,
         MOUSE_UP,
         MOUSE_MOVE,
@@ -39,6 +40,8 @@ namespace egt
          * Sent when a widget loses focus.
          */
         LEAVE,
+
+        // Keyboard Events
         KEYBOARD_DOWN,
         KEYBOARD_UP,
         KEYBOARD_REPEAT,
@@ -73,9 +76,6 @@ namespace egt
                 m_callbacks.push_back(handler);
             }
 
-            virtual ~Object()
-            {}
-
             /**
              * Invoke all handlers with the specified event.
              */
@@ -85,6 +85,9 @@ namespace egt
                 for (auto callback : m_callbacks)
                     callback(event);
             }
+
+            virtual ~Object()
+            {}
 
         protected:
 

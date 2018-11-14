@@ -45,9 +45,9 @@ public:
         m_grid.add(&m_desc, 0, 1);
     }
 
-    virtual void draw(Painter& painter, const Rect& rect, bool selected) override
+    virtual void draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox) override
     {
-        ListBoxItem::draw(painter, rect, selected);
+        ListBoxItem::draw(painter, rect, selected, listbox);
 
         m_grid.set_box(rect);
         m_grid.reposition();

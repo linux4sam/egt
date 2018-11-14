@@ -1,7 +1,21 @@
 /**
 
-@image html microchip_logo.png
-@image latex microchip_logo.png "" width=4cm
+<TABLE CELLPADDING="8" CELLSPACING="0" WIDTH="100%" BORDER="0">
+<TR>
+  <TD>
+  <CENTER>
+    @image html logo.png
+    @image latex logo.png "" width=5cm
+  </CENTER>
+  </TD>
+  <TD>
+  <CENTER>
+    @image html microchip_logo.png
+    @image latex microchip_logo.png "" width=4cm
+  </CENTER>
+  </TD>
+</TR>
+</TABLE>
 
 @mainpage EGT Programming Manual
 
@@ -10,16 +24,24 @@ modern GUI functionality, look-and-feel, and performance.
 
 @subpage intro
 
-@subpage coord
+@subpage geometry
 
 @subpage events
 
-<TABLE BGCOLOR="#9f9f9f" CELLPADDING="8" CELLSPACING="0" SUMMARY="TITLE BAR" WIDTH="100%" BORDER="0">
-<TR>
-  <TD>
-    This software and manual are provided under the terms of the MIT License.
-  </TD>
-</TR>
-</TABLE>
+@subpage fonts
+
+@subpage draw
+
+@subpage local
+
+@subpage resources
+
+@subpage debug
+
+@subpage custom
+
+@subpage style
+
+This software and manual are provided under the terms of the MIT License.
 
 */

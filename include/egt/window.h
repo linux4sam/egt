@@ -10,7 +10,10 @@
  * @brief Working with windows.
  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <egt/frame.h>
 #include <vector>
 #include <list>

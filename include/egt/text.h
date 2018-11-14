@@ -30,7 +30,8 @@ namespace egt
     {
     public:
         TextBox(const std::string& str = std::string(),
-                const Rect& rect = Rect());
+                const Rect& rect = Rect(),
+                alignmask align = alignmask::CENTER | alignmask::LEFT);
 
         virtual int handle(eventid event) override;
 

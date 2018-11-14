@@ -22,10 +22,11 @@ namespace egt
     class Image : public Widget
     {
     public:
-        explicit Image(const std::string& filename, const Point& point = Point());
+        explicit Image(const std::string& filename,
+                       const Point& point = Point());
 
-        explicit Image(Frame& parent,
-                       const std::string& filename, const Point& point = Point());
+        Image(Frame& parent,
+              const std::string& filename, const Point& point = Point());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -39,7 +40,8 @@ namespace egt
          * @param[in] approximate Approximate the scale to increase image cache
          *            hit efficiency.
          */
-        virtual void scale(double hscale, double vscale, bool approximate = false);
+        virtual void scale(double hscale, double vscale,
+                           bool approximate = false);
 
         virtual void resize(const Size& size) override
         {

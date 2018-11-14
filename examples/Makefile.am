@@ -25,6 +25,8 @@ bin_PROGRAMS = \
 animations/animations \
 basic/basic \
 calc/calc \
+charts/charts \
+icon/icon \
 easing/easing \
 floating/floating \
 gallery/gallery \
@@ -32,8 +34,8 @@ infotain/infotain \
 space/space \
 thermostat/thermostat \
 water/water \
-widgets/widgets \
-whiteboard/whiteboard
+whiteboard/whiteboard \
+widgets/widgets
 
 if HAVE_RAPIDXML_HPP
 bin_PROGRAMS += \
@@ -73,6 +75,13 @@ calc_calc_CXXFLAGS = $(AM_CXXFLAGS)
 calc_calc_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 calc_calcdir = $(prefix)/share/egt/examples/calc
 calc_calc_LDFLAGS = $(AM_LDFLAGS)
+
+charts_charts_SOURCES = charts/charts.cpp
+charts_charts_CXXFLAGS = $(AM_CXXFLAGS)
+charts_charts_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+charts_chartsdir = $(prefix)/share/egt/examples/charts
+charts_charts_DATA = $(wildcard $(top_srcdir)/examples/charts/*.png)
+charts_charts_LDFLAGS = $(AM_LDFLAGS)
 
 coin_coin_SOURCES = coin/coin.cpp
 coin_coin_CXXFLAGS = $(AM_CXXFLAGS)
@@ -175,3 +184,10 @@ thermostat_thermostat_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 thermostat_thermostatdir = $(prefix)/share/egt/examples/thermostat
 thermostat_thermostat_DATA = $(wildcard $(top_srcdir)/examples/thermostat/*.png)
 thermostat_thermostat_LDFLAGS = $(AM_LDFLAGS)
+
+icon_icon_SOURCES = icon/icon.cpp
+icon_icon_CXXFLAGS = $(AM_CXXFLAGS)
+icon_icon_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+icon_icondir = $(prefix)/share/egt/examples/icon
+icon_icon_DATA = $(wildcard $(top_srcdir)/examples/icon/*.png)
+icon_icon_LDFLAGS = $(AM_LDFLAGS)

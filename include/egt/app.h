@@ -22,17 +22,19 @@ namespace egt
      *
      * This is basically just a helper class that does standard setup for
      * inputs, outputs, the event loop, and more. It also acts as sort of a
-     * global accessor to get to some things because of this.
+     * global accessor to get to these things because of this.
      */
     class Application : public detail::noncopyable
     {
     public:
         /**
-        * @param primary Is this the primary display aplication.
-               * @param name Application name.  This is used for several things,
-               *             including identifying the text domain used by gettext().
-               */
+         * @param primary Is this the primary display aplication.
+         * @param name Application name.  This is used for several things,
+         *             including identifying the text domain used by gettext().
+         */
         Application(bool primary = true, const std::string& name = "egt");
+
+        Application(bool primary, const std::string& name, int argc, const char* argv);
 
         virtual int run();
 
@@ -44,6 +46,9 @@ namespace egt
         EventLoop m_event;
     };
 
+    /**
+     * Reference to the main Application instance.
+     */
     Application& main_app();
 
 }

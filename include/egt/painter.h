@@ -69,70 +69,109 @@ namespace egt
         virtual ~Painter();
 
         /**
-         * @see AutoSaveRestore
-         */
-        void save();
+        * Save the state of the current context.
+         *
+               * @see AutoSaveRestore
+               */
+        virtual void save();
 
         /**
-         * @see AutoSaveRestore
+        * Restore the previous saved state of the current context.
+         *
+               * @see AutoSaveRestore
+               */
+        virtual void restore();
+
+        virtual void begin();
+
+        virtual void end();
+
+        /**
+         * Set the current color.
          */
-        void restore();
+        virtual Painter& set_color(const Color& color);
 
-        void begin();
+        /**
+         * Create a rectangle.
+         *
+         * @param[in] rect The rectangle.
+         */
+        virtual Painter& rectangle(const Rect& rect);
 
-        void end();
 
-        Painter& set_color(const Color& color);
+        virtual Painter& draw_fill(const Rect& rect);
 
-        Painter& rectangle(const Rect& rect);
+        /**
+         * Set the current line width.
+         *
+         * @param[in] width Line width.
+         */
+        virtual Painter& set_line_width(float width);
 
-        Painter& draw_fill(const Rect& rect);
+        /**
+         * Create a line from the current point to the specified point.
+         *
+         * @param[in] end End point.
+         */
+        virtual Painter& line(const Point& end);
 
-        Painter& set_line_width(float width);
+        /**
+         * Create a line from the specified start to end point.
+         *
+         * @param[in] start Start point.
+         * @param[in] end End point.
+         */
+        virtual Painter& line(const Point& start, const Point& end);
 
-        Painter& line(const Point& end);
-
-        Painter& line(const Point& start, const Point& end);
-
-        Painter& draw_image(const Point& point, shared_cairo_surface_t surface, bool bw = false);
+        /**
+         * Draw an image surface at the specified point.
+         */
+        virtual Painter& draw_image(const Point& point,
+                                    shared_cairo_surface_t surface, bool bw = false);
 
         /**
          * @param[in] rect The source rect to copy.
          * @param[in] point The destination point.
          * @param[in] surface The image surface to draw.
          */
-        Painter& draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface);
+        virtual Painter& draw_image(const Rect& rect, const Point& point,
+                                    shared_cairo_surface_t surface);
 
-        Painter& draw_arc(const Point& point, float radius, float angle1, float angle2);
+        virtual Painter& arc(const Point& point, float radius, float angle1,
+                             float angle2);
 
-        Painter& clip();
+        /**
+         * Draw an arc.
+         */
+        virtual Painter& draw_arc(const Point& point, float radius,
+                                  float angle1, float angle2);
 
-        void stroke()
+        virtual Painter& clip();
+
+        virtual void stroke()
         {
             cairo_stroke(m_cr.get());
         }
 
-#if 0
-        void paint()
+        virtual void paint()
         {
             cairo_paint(m_cr.get());
         }
 
-        void fill()
+        virtual void fill()
         {
             cairo_fill(m_cr.get());
         }
-#endif
 
         /**
          * Set the active font.
          */
-        Painter& set_font(const Font& font);
+        virtual Painter& set_font(const Font& font);
 
         /**
          * Draw text aligned inside the specified rectangle.
          */
-        Rect draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff = 5);
+        virtual Rect draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff = 5);
 
         /**
          * @todo Special functions that do a lot, mostly implementing widget
@@ -140,29 +179,38 @@ namespace egt
          * class.
          *@{
          */
-        Rect draw_text(const std::string& text,
-                       const Rect& rect,
-                       const Color& color = Color::BLACK,
-                       alignmask align = alignmask::CENTER,
-                       int margin = 5,
-                       const Font& font = Font());
+        virtual Rect draw_text(const std::string& text,
+                               const Rect& rect,
+                               const Color& color = Color::BLACK,
+                               alignmask align = alignmask::CENTER,
+                               int margin = 5,
+                               const Font& font = Font());
 
-        Size text_size(const std::string& text);
+        virtual Size text_size(const std::string& text);
 
-        Painter& draw_image(shared_cairo_surface_t image,
-                            const Rect& dest,
-                            alignmask align = alignmask::CENTER,
-                            int margin = 0,
-                            bool bw = false);
+        virtual Painter& draw_image(shared_cairo_surface_t image,
+                                    const Rect& dest,
+                                    alignmask align = alignmask::CENTER,
+                                    int margin = 0,
+                                    bool bw = false);
 
-        Painter& draw_basic_box(const Rect& rect,
-                                const Color& border,
-                                const Color& bg);
+        enum class boxtype
+        {
+            none,
+            flat,
+            border,
+            rounded_border,
+            rounded_gradient,
+        };
 
-        Painter& draw_gradient_box(const Rect& rect,
-                                   const Color& border,
-                                   bool active = false,
-                                   const Color& color = Color::WHITE);
+        virtual Painter& draw_box(const Rect& rect,
+                                  const Color& border,
+                                  const Color& bg,
+                                  boxtype type = boxtype::flat,
+                                  const Color& active_border = Color(),
+                                  const Color& active_bg = Color(),
+                                  bool active = false);
+
         /**
          *@}
          */
@@ -171,6 +219,36 @@ namespace egt
         {
             return m_cr;
         }
+
+    protected:
+
+        void draw_flat_box(const Rect& rect,
+                           const Color& border,
+                           const Color& bg,
+                           const Color& active_border,
+                           const Color& active_bg,
+                           bool active);
+
+        void draw_border_box(const Rect& rect,
+                             const Color& border,
+                             const Color& bg,
+                             const Color& active_border,
+                             const Color& active_bg,
+                             bool active);
+
+        void draw_rounded_border_box(const Rect& rect,
+                                     const Color& border,
+                                     const Color& bg,
+                                     const Color& active_border,
+                                     const Color& active_bg,
+                                     bool active);
+
+        void draw_rounded_gradient_box(const Rect& rect,
+                                       const Color& border,
+                                       const Color& bg,
+                                       const Color& active_border,
+                                       const Color& active_bg,
+                                       bool active);
 
         void paint_surface_with_drop_shadow(cairo_surface_t* source_surface,
                                             int shadow_offset,
@@ -183,8 +261,6 @@ namespace egt
                                             int dstx,
                                             int dsty);
 
-
-    protected:
 
         shared_cairo_t m_cr;
 

@@ -137,17 +137,17 @@ namespace egt
                 break;
             }
             case ButtonPress:
-                mouse_position() = Point(e.xbutton.x, e.xbutton.y);
+                event_mouse() = Point(e.xbutton.x, e.xbutton.y);
                 IInput::dispatch(eventid::MOUSE_DOWN);
                 break;
             case ButtonRelease:
-                mouse_position() = Point(e.xbutton.x, e.xbutton.y);
+                event_mouse() = Point(e.xbutton.x, e.xbutton.y);
                 IInput::dispatch(eventid::MOUSE_UP);
                 break;
             case EnterNotify:
             case LeaveNotify:
             case MotionNotify:
-                mouse_position() = Point(e.xbutton.x, e.xbutton.y);
+                event_mouse() = Point(e.xbutton.x, e.xbutton.y);
                 IInput::dispatch(eventid::MOUSE_MOVE);
                 break;
             case KeyPress:
@@ -159,11 +159,11 @@ namespace egt
                 cout << keybuf << endl;
                 */
 
-                key_value() = XLookupKeysym(&e.xkey, 0);
-                //                key_code() = XKeysymToKeycode(e.xkey.keycode);
-                key_code() = XKeysymToKeycode(m_priv->display, key_value());
-                if (key_value() == XK_BackSpace)
-                    key_code() = KEY_BACKSPACE;
+                event_key() = XLookupKeysym(&e.xkey, 0);
+                //                event_code() = XKeysymToKeycode(e.xkey.keycode);
+                event_code() = XKeysymToKeycode(m_priv->display, event_key());
+                if (event_key() == XK_BackSpace)
+                    event_code() = KEY_BACKSPACE;
 
 
 
@@ -179,10 +179,10 @@ namespace egt
                 cout << keybuf << endl;
                 */
 
-                key_value() = XLookupKeysym(&e.xkey, 0);
-                key_code() = XKeysymToKeycode(m_priv->display, key_value());
-                if (key_value() == XK_BackSpace)
-                    key_code() = KEY_BACKSPACE;
+                event_key() = XLookupKeysym(&e.xkey, 0);
+                event_code() = XKeysymToKeycode(m_priv->display, event_key());
+                if (event_key() == XK_BackSpace)
+                    event_code() = KEY_BACKSPACE;
 
                 IInput::dispatch(eventid::KEYBOARD_UP);
                 break;

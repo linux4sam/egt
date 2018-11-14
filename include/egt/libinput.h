@@ -29,7 +29,7 @@ namespace egt
     /**
      * Handles populating and reading input events from libinput.
      */
-    class LibInput : public IInput
+    class LibInput : public detail::IInput
     {
     public:
 

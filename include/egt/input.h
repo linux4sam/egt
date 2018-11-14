@@ -14,11 +14,11 @@
 #include "config.h"
 #endif
 
-#include "asio.hpp"
-#include <linux/input.h>
-#include <memory>
+#include <asio.hpp>
 #include <egt/geometry.h>
 #include <egt/object.h>
+#include <linux/input.h>
+#include <memory>
 #include <string>
 
 namespace egt
@@ -30,7 +30,14 @@ namespace egt
      * Call this to retrieve the last mouse position, usually in response to a
      * mouse event.
      */
-    Point& mouse_position();
+    Point& event_mouse();
+
+    /**
+     * Global button value.
+     *
+     * BTN_LEFT, BTN_RIGHT, BTN_MIDDLE
+     */
+    int& event_button();
 
     /**
      * Global key value.
@@ -38,38 +45,41 @@ namespace egt
      * Call this to retrieve the last key value, usually in response to a key
      * event.
      */
-    int& key_value();
-
-    int& key_code();
+    int& event_key();
 
     /**
-     * Global button value.
-     *
-     * BTN_LEFT, BTN_RIGHT, BTN_MIDDLE
+     * Global key code.
      */
-    int& button_value();
+    int& event_code();
 
-    /**
-     * Base input class.
-     */
-    class IInput
+    namespace detail
     {
-    public:
-        static void dispatch(eventid event);
-
-        static detail::Object& global_input()
+        /**
+         * Abstract input class.
+         */
+        class IInput
         {
-            return m_global_input;
-        }
+        public:
+            /**
+             * Dispatch the event globally.
+             */
+            static void dispatch(eventid event);
 
-    protected:
-        static detail::Object m_global_input;
-    };
+            static detail::Object& global_input()
+            {
+                return m_global_input;
+            }
+
+        protected:
+            static detail::Object m_global_input;
+        };
+
+    }
 
     /**
      * Handles reading input events from evdev devices.
      */
-    class InputEvDev : public IInput
+    class InputEvDev : public detail::IInput
     {
     public:
 
@@ -93,7 +103,7 @@ namespace egt
     /**
      * Handles reading input from a tslib supported device.
      */
-    class InputTslib : public IInput
+    class InputTslib : public detail::IInput
     {
     public:
 

@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "Ensemple Graphics Toolkit @PACKAGE_VERSION@"
+PROJECT_NAME           = "Ensemble Graphics Toolkit @PACKAGE_VERSION@"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -378,7 +378,7 @@ INLINE_GROUPED_CLASSES = NO
 # Man pages) or section (for LaTeX and RTF).
 # The default value is: NO.
 
-INLINE_SIMPLE_STRUCTS  = NO
+INLINE_SIMPLE_STRUCTS  = YES
 
 # When TYPEDEF_HIDES_STRUCT tag is enabled, a typedef of a struct, union, or
 # enum is documented as struct, union, or enum with the name of the typedef. So
@@ -661,7 +661,7 @@ SHOW_FILES             = YES
 # Folder Tree View (if specified).
 # The default value is: YES.
 
-SHOW_NAMESPACES        = YES
+SHOW_NAMESPACES        = NO
 
 # The FILE_VERSION_FILTER tag can be used to specify a program or script that
 # doxygen should invoke to get the current version for each file (typically from
@@ -773,8 +773,15 @@ WARN_LOGFILE           =
 
 INPUT = @top_srcdir@/docs/src/index.dox
 INPUT += @top_srcdir@/docs/src/introduction.dox
-INPUT += @top_srcdir@/docs/src/coord.dox
+INPUT += @top_srcdir@/docs/src/geometry.dox
 INPUT += @top_srcdir@/docs/src/events.dox
+INPUT += @top_srcdir@/docs/src/fonts.dox
+INPUT += @top_srcdir@/docs/src/draw.dox
+INPUT += @top_srcdir@/docs/src/localization.dox
+INPUT += @top_srcdir@/docs/src/resources.dox
+INPUT += @top_srcdir@/docs/src/debugging.dox
+INPUT += @top_srcdir@/docs/src/custom.dox
+INPUT += @top_srcdir@/docs/src/style.dox
 INPUT += @top_srcdir@/include @top_srcdir@/src
 
 # This tag can be used to specify the character encoding of the source files

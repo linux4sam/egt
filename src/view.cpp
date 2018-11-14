@@ -24,7 +24,7 @@ namespace egt
         {
         case eventid::MOUSE_DOWN:
             m_moving = true;
-            m_start_pos = mouse_position();
+            m_start_pos = event_mouse();
             m_start_offset = m_offset;
             return 1;
         case eventid::MOUSE_UP:
@@ -35,13 +35,13 @@ namespace egt
             {
                 if (m_orientation == Orientation::HORIZONTAL)
                 {
-                    auto diff = screen_to_frame(mouse_position()).x - m_start_pos.x;
-                    position(m_start_offset + diff / 2);
+                    auto diff = screen_to_frame(event_mouse()).x - m_start_pos.x;
+                    set_position(m_start_offset + diff / 2);
                 }
                 else
                 {
-                    auto diff = screen_to_frame(mouse_position()).y - m_start_pos.y;
-                    position(m_start_offset + diff / 2);
+                    auto diff = screen_to_frame(event_mouse()).y - m_start_pos.y;
+                    set_position(m_start_offset + diff / 2);
                 }
             }
             break;
@@ -85,32 +85,49 @@ namespace egt
 
         if (m_orientation == Orientation::HORIZONTAL)
         {
-            auto HEIGHT = 5;
+            auto HEIGHT = 4;
 
             Rect s = box();
-            s.y = box().y + box().h - HEIGHT - 2;
+            s.y = box().y + box().h - HEIGHT;
             s.h = HEIGHT;
 
             if (!is_flag_set(widgetmask::NO_BORDER))
             {
-                s.x = std::abs(m_offset);
-                painter.draw_basic_box(s, palette().color(Palette::BORDER),
-                                       palette().color(Palette::BG));
+                s.x = box().x + std::abs(m_offset);
+                //painter.draw_basic_box(s, palette().color(Palette::BORDER),
+                //                     palette().color(Palette::BG));
+
+                painter.set_line_width(1);
+                painter.set_color(palette().color(Palette::BORDER));
+                painter.line(s.bottom_left() - Point(0, HEIGHT / 2), s.bottom_right() - Point(0, HEIGHT / 2));
             }
 
-            s.w = float(box().w) / 4.;
-            s.x = std::abs(m_offset) + (float(std::abs(m_offset)) / float(box().w) *
-                                        (float(box().w) - s.w));
+            Rect super = super_rect();
 
-            painter.draw_gradient_box(s, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::HIGHLIGHT));
+            s.w = float(box().w) / 4.;
+            s.x = box().x + std::abs(m_offset) + (float(std::abs(m_offset)) / float(super.w) *
+                                                  (float(box().w) - s.w));
+
+            painter.draw_box(s,
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::HIGHLIGHT),
+                             Painter::boxtype::rounded_gradient);
         }
         else
         {
             // TODO
         }
 
+    }
+
+    Rect ScrolledView::super_rect() const
+    {
+        Rect result = box();
+        for (auto& child : m_children)
+        {
+            result = Rect::merge(result, child->box());
+        }
+        return result;
     }
 
     ScrolledView::~ScrolledView()

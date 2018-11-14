@@ -34,6 +34,20 @@ namespace egt
         start();
     }
 
+    void Timer::change_duration(std::chrono::milliseconds duration)
+    {
+        if (m_running)
+        {
+            cancel();
+            m_duration = duration;
+            start();
+        }
+        else
+        {
+            m_duration = duration;
+        }
+    }
+
     void Timer::cancel()
     {
         do_cancel();

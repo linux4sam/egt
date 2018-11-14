@@ -316,8 +316,9 @@ namespace egt
         {
             if (!m_visible)
                 return;
-            m_visible = false;
+            // careful attention to ordering
             damage();
+            m_visible = false;
         }
 
         /**
@@ -329,6 +330,7 @@ namespace egt
         {
             if (m_visible)
                 return;
+            // careful attention to ordering
             m_visible = true;
             damage();
         }

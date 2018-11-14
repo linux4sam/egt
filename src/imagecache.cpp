@@ -93,7 +93,11 @@ namespace egt
                 }
                 else
                 {
-                    string name = image_path + filename;
+                    string name;
+                    if (filename[0] == '/' || filename[0] == '.')
+                        name = filename;
+                    else
+                        name = image_path + filename;
                     DBG("loading: " << name);
 
                     if (name.find("png") != std::string::npos)

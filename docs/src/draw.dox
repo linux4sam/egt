@@ -1,0 +1,64 @@
+/**
+
+ @page draw Drawing
+
+This chapter discusses how drawing works and how rectangles are marked for
+redraw.
+
+@section draw_loop Rectangles and Event Propogation
+
+Each widget has a box(), which holds the bounding rectangle for the widget.
+This is the rectangle a widget is responsible for at some z-order level for
+what content should be placed there.
+
+Widgets are organized into a tree.  At the top of the tree there is a top level
+widget that is a special type of widget called a egt::Frame.  A egt::Frame
+widget is a composing widget, which is just another way of saying an
+egt::Frame can deal with zero or more children widgets inside of its box().
+
+Widgets are essentially rectangles that are drawn.  The widget defines the
+content of what is drawn, but all that matters to the widget is its rectangle
+and its content.  That widget rectangle is directly drawn into a single global
+back buffer for the screen.  This is an internal buffer in memory.  This back
+buffer is continuously updated in place by redrawing damaged rectangles using
+the widgets that cover it.  When all of the rectangles have been drawn in a
+single iteration of the egt::EventLoop, only the damaged region of that back
+buffer is then copied to a display buffer.  The display may actually have more
+than one buffer in order to handle double or tripple buffering.  So, when
+switching between these buffers the screen has to manage damaged regions for
+each of the buffers.
+
+Typically, drawing should only be done inside the draw() method of a widget.
+
+This means there are two flows up and down the widget hierarchy.  One is
+propogation of the damage rectangles, and the other is propogation of redrawing
+the damaged rectangles with the correct content.
+
+Damage propogates *up* in the tree.  If leaf node widget is damaged, it will
+ultimately report the damage rectangle to a egt::Frame which has a surface.
+This is usually the top level frame or the special plane frame.
+
+@image html widget_hierarchy_damage.png
+@image latex widget_hierarchy_damage.png "Damage" width=8cm
+
+Drawing goes the other way and is initiated by the egt::EventLoop.  The
+egt::EventLoop will call on all top level frames and special plane frames to
+redraw their damage regions.
+
+@image html widget_hierarchy_draw.png
+@image latex widget_hierarchy_draw.png "Draw" width=8cm
+
+@section draw_paint Painting
+
+When a widget is asked to draw, usually done in its draw() method, it
+does it by using egt::Painter.  egt::Painter is a simple 2D primitive graphics
+drawing API.  egt::Painter can be used to draw lines, and rectangles, fills,
+and fonts.  It even supports more complicated drawing like gradients and arcs.
+
+The backend used by egt::Painter is the excellent
+<a href="https://www.cairographics.org/">cairo graphics</a> library.  Which in
+turn uses <a href="http://www.pixman.org/">pixman</a> for optimized pixel
+manipulation.  Both cairo and pixman take advantage of hardware acceleration
+when possible.
+
+*/

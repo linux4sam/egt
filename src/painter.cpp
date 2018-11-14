@@ -11,12 +11,12 @@ namespace egt
     Painter::Painter(shared_cairo_t cr)
         : m_cr(cr)
     {
-        begin();
+        //begin();
     }
 
     Painter::~Painter()
     {
-        end();
+        //end();
     }
 
     void Painter::begin()
@@ -68,7 +68,7 @@ namespace egt
                         rect.y,
                         rect.w,
                         rect.h);
-        cairo_fill(m_cr.get());
+        fill();
 
         return *this;
     }
@@ -101,7 +101,7 @@ namespace egt
         double h = cairo_image_surface_get_height(surface.get());
         cairo_set_source_surface(m_cr.get(), surface.get(), point.x, point.y);
         cairo_rectangle(m_cr.get(), point.x, point.y, w, h);
-        cairo_fill(m_cr.get());
+        fill();
 
         if (bw)
         {
@@ -122,15 +122,22 @@ namespace egt
     {
         cairo_set_source_surface(m_cr.get(), surface.get(), point.x - rect.x, point.y - rect.y);
         cairo_rectangle(m_cr.get(), point.x, point.y, rect.w, rect.h);
-        cairo_fill(m_cr.get());
+        fill();
+
+        return *this;
+    }
+
+    Painter& Painter::arc(const Point& point, float radius, float angle1, float angle2)
+    {
+        cairo_arc(m_cr.get(), point.x, point.y, radius, angle1, angle2);
 
         return *this;
     }
 
     Painter& Painter::draw_arc(const Point& point, float radius, float angle1, float angle2)
     {
-        cairo_arc(m_cr.get(), point.x, point.y, radius, angle1, angle2);
-        cairo_stroke(m_cr.get());
+        arc(point, radius, angle1, angle2);
+        stroke();
 
         return *this;
     }
@@ -215,8 +222,73 @@ namespace egt
         return *this;
     }
 
-    Painter& Painter::draw_basic_box(const Rect& rect, const Color& border, const Color& bg)
+    Painter& Painter::draw_box(const Rect& rect,
+                               const Color& border,
+                               const Color& bg,
+                               boxtype type,
+                               const Color& active_border,
+                               const Color& active_bg,
+                               bool active)
     {
+        switch (type)
+        {
+        case boxtype::none:
+            break;
+        case boxtype::flat:
+            draw_flat_box(rect, border, bg, active_border, active_bg, active);
+            break;
+        case boxtype::border:
+            draw_border_box(rect, border, bg, active_border, active_bg, active);
+        case boxtype::rounded_border:
+            draw_rounded_border_box(rect, border, bg, active_border, active_bg, active);
+            break;
+        case boxtype::rounded_gradient:
+            draw_rounded_gradient_box(rect, border, bg, active_border, active_bg, active);
+            break;
+        }
+
+        return *this;
+    }
+
+    void Painter::draw_flat_box(const Rect& rect,
+                                const Color& border,
+                                const Color& bg,
+                                const Color& active_border,
+                                const Color& active_bg,
+                                bool active)
+    {
+        ignoreparam(border);
+        ignoreparam(active_border);
+
+        set_color(active ? active_bg : bg);
+        draw_fill(rect);
+    }
+
+    void Painter::draw_border_box(const Rect& rect,
+                                  const Color& border,
+                                  const Color& bg,
+                                  const Color& active_border,
+                                  const Color& active_bg,
+                                  bool active)
+    {
+        set_color(active ? active_bg : bg);
+        rectangle(rect);
+        cairo_fill_preserve(m_cr.get());
+
+        set_color(active ? active_border : border);
+        cairo_set_line_width(m_cr.get(), 1.0);
+        cairo_stroke(m_cr.get());
+    }
+
+    void Painter::draw_rounded_border_box(const Rect& rect,
+                                          const Color& border,
+                                          const Color& bg,
+                                          const Color& active_border,
+                                          const Color& active_bg,
+                                          bool active)
+    {
+        ignoreparam(active);
+
         AutoSaveRestore sr(*this);
 
         double rx = rect.x,
@@ -242,27 +314,20 @@ namespace egt
         cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
         cairo_close_path(m_cr.get());
 
-        cairo_set_source_rgba(m_cr.get(),
-                              bg.redf(),
-                              bg.greenf(),
-                              bg.bluef(),
-                              bg.alphaf());
+        set_color(active ? active_bg : bg);
         cairo_fill_preserve(m_cr.get());
 
-        cairo_set_source_rgba(m_cr.get(),
-                              border.redf(),
-                              border.greenf(),
-                              border.bluef(),
-                              border.alphaf());
+        set_color(active ? active_border : border);
         cairo_set_line_width(m_cr.get(), 1.0);
         cairo_stroke(m_cr.get());
-
-        return *this;
     }
 
-#if 0
-    Painter& Painter::draw_gradient_box(const Rect& rect, const Color& border,
-                                        bool active, const Color& color)
+    void Painter::draw_rounded_gradient_box(const Rect& rect,
+                                            const Color& border,
+                                            const Color& bg,
+                                            const Color& active_border,
+                                            const Color& active_bg,
+                                            bool active)
     {
         AutoSaveRestore sr(*this);
 
@@ -295,118 +360,32 @@ namespace egt
 
         if (!active)
         {
-            Color step = color;
+            Color step = bg;
             cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.9);
+            step = bg.shade(.1);
             cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.82);
+            step = bg.shade(.15);
             cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.95);
+            step = bg.shade(.18);
             cairo_pattern_add_color_stop_rgb(pat.get(), 1.0, step.redf(), step.greenf(), step.bluef());
         }
         else
         {
-            Color step = color.tint(.95);
+            Color step = active_bg.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat.get(), 1, step.redf(), step.greenf(), step.bluef());
-            step = color;
+            step = active_bg;
             cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.95);
+            step = active_bg.tint(.95);
             cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
         }
 
         cairo_set_source(m_cr.get(), pat.get());
         cairo_fill_preserve(m_cr.get());
 
-        cairo_set_source_rgba(m_cr.get(),
-                              border.redf(),
-                              border.greenf(),
-                              border.bluef(),
-                              border.alphaf());
+        set_color(active ? active_border : border);
         cairo_set_line_width(m_cr.get(), 1.0);
         cairo_stroke(m_cr.get());
-
-        return *this;
     }
-#else
-    Painter& Painter::draw_gradient_box(const Rect& rect, const Color& border,
-                                        bool active, const Color& color)
-    {
-        AutoSaveRestore sr(*this);
-
-        double rx = rect.x,
-               ry = rect.y,
-               width = rect.w,
-               height = rect.h,
-               aspect = 1.0,
-               corner_radius = 50.0 / 10.0;
-
-        if (rect.w <= 10)
-            corner_radius = rect.w / 2;
-
-        if (rect.h <= 10)
-            corner_radius = rect.h / 2;
-
-        double radius = corner_radius / aspect;
-        double degrees = M_PI / 180.0;
-
-        cairo_new_sub_path(m_cr.get());
-        cairo_arc(m_cr.get(), rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
-        cairo_arc(m_cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + height - radius, radius, 90. * degrees, 180. * degrees);
-        cairo_arc(m_cr.get(), rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
-        cairo_close_path(m_cr.get());
-
-        auto pat = shared_cairo_pattern_t(cairo_pattern_create_linear(rx + width / 2, ry,
-                                          rx + width / 2, ry + height),
-                                          cairo_pattern_destroy);
-
-        if (!active)
-        {
-#if 0
-            Color step = color;
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.5);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.9);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.9);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 1.0, step.redf(), step.greenf(), step.bluef());
-#endif
-#if 1
-            Color step = color;
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
-            step = color.shade(.1);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
-            step = color.shade(.15);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-            step = color.shade(.18);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 1.0, step.redf(), step.greenf(), step.bluef());
-#endif
-        }
-        else
-        {
-            Color step = color.tint(.95);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 1, step.redf(), step.greenf(), step.bluef());
-            step = color;
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-            step = color.tint(.95);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
-        }
-
-        cairo_set_source(m_cr.get(), pat.get());
-        cairo_fill_preserve(m_cr.get());
-
-        cairo_set_source_rgba(m_cr.get(),
-                              border.redf(),
-                              border.greenf(),
-                              border.bluef(),
-                              border.alphaf());
-        cairo_set_line_width(m_cr.get(), 1.0);
-        cairo_stroke(m_cr.get());
-
-        return *this;
-    }
-#endif
 
     Painter& Painter::draw_image(shared_cairo_surface_t image,
                                  const Rect& dest,

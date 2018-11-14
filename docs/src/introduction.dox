@@ -2,6 +2,14 @@
 
  @page intro Introduction
 
+@section intro_what_is_egt What is EGT?
+
+EGT is a C++ GUI toolkit for Linux on Microchip AT91/SAMA5 parts.  EGT provides
+modern GUI functionality, look-and-feel, and performance.
+
+EGT provides a consistent API and solution for working across all Microchip
+AT91/SAMA5 parts in order to build robust GUI based applications.
+
 @section intro_what What is a toolkit?
 
 @image html high_level.png
@@ -12,98 +20,11 @@
 @image html architecture.png
 @image latex architecture.png "Architecture" width=8cm
 
-@section intro_style Coding Style
-
-The coding style of the project mostly adhere's to the Allman style. Astyle is
-used to enforce this coding style with the scripts/style.sh script. This can be
-automatically executed for all of the source code by typing
-
-@code
-make style
-@endcode
-
-@section intro_inter Internationalization
-
-TODO
-
-@section intro_local Localization
-
-TODO
-
-@section intro_resources Resources
-
-Resources are a way of cataloging, distributing, and using asset data.  For
-example, image assets, icons, audio files, and video files.  Resources may be
-stored in the filesystem and loaded on demand, or they may be compiled into the
-application binary itself.
-
-@section intro_color Palette and Colors
-
-There is a single global palette.  All widgets use this palette by default.
-However, you can change the palette for any individual widget and it will only
-have an affect for that widget.  You can change the global palette and it will
-retroactively have an effect on any widget, as long as that widget does not have
-a custom palette assigned.
-
-@section intro_hierarchy Widget Hierarchy
-
-Widgets are organized into a tree.  At the top of the tree there is a top level
-widget, that is a special type of widget called a Frame.  A Frame widget is a
-composing widget, which is just a complicated way of saying a frame can deal
-with zero or more children widgets inside of its box.
-
-Damage propogates up in the tree.  If you damage a leaf node widget, it will
-ultimately report the damage region to a frame what has a surface.  This is
-usually the top level frame or the special plane frame.
-
-@image html widget_hierarchy_damage.png
-@image latex widget_hierarchy_damage.png "Damage" width=8cm
-
-Outside events, like input events, events are usually propogated from the top
-level widget down.  There are exceptions to this, for example, when a widget
-grabs the mouse of keyboard, then this natural flow is short circuited.
-
-@image html widget_hierarchy_event.png
-@image latex widget_hierarchy_event.png "Event" width=8cm
-
-Drawing is initiated by the event loop.  The event loop will draw all top level
-frames and special plane frames.
-
-@image html widget_hierarchy_draw.png
-@image latex widget_hierarchy_draw.png "Draw" width=8cm
-
-@section intro_fonts Fonts
-
-TODO
-
-@section intro_drawing Drawing
-
-Typically, drawing should only be done inside the draw() method of a widget.
-
-Widgets are essentially rectangles that are drawn.  The widget defines the content of what is drawn, but all that matters outside of the widget is the rectangle and its content.  That widget rectangle is directly drawn into a single global back buffer for the screen.  This is an internal buffer in memory.  This back buffer is continuously updated in place by redrawing damaged rectangles using the widgets that cover it.  When all of the rectangles have been drawn in a single iteration of the event loop, only the damaged region of that back buffer is then copied to a display buffer.  The display may actually have more than one buffer in order to handle double or tripple buffering.  So, when switching between these buffers the screen has to manage damaged regions for each of the buffers, to take into consideration that different buffers are used.
-
-@section intro_add Creating New Widgets
-
-TODO
-
-@section intro_env Environment Variables
-
-- EGT_DEBUG
-  Enable debug output for the framework.
-- EGT_BACKEND
-  Select what backend to use for rendering to the screen. Examples include x11, kms, fbdev.
-
-@section intro_debug Debugging
-
-GDB
-@code
-break __assert_fail
-r
-...assert...
-bt
-@endcode
-
 @section intro_first First Application
+
+The *examples* folder of the EGT project contains various examples.  This is the
+basic example which shows the minimum necessary to create a window with a button
+on it.
 
 @code
 #include <egt/ui>

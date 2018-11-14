@@ -79,7 +79,7 @@ public:
         switch (event)
         {
         case eventid::MOUSE_MOVE:
-            spawn(mouse_position());
+            spawn(event_mouse());
             break;
         default:
             break;

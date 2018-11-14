@@ -66,13 +66,13 @@ public:
                     {
                         if (event == eventid::MOUSE_DOWN)
                         {
-                            key_value() = b->get_text()[0];
-                            IInput::dispatch(eventid::KEYBOARD_DOWN);
+                            event_key() = b->get_text()[0];
+                            detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
                         }
                         else if (event == eventid::MOUSE_UP)
                         {
-                            key_value() = b->get_text()[0];
-                            IInput::dispatch(eventid::KEYBOARD_UP);
+                            event_key() = b->get_text()[0];
+                            detail::IInput::dispatch(eventid::KEYBOARD_UP);
                         }
                     }
                 });
@@ -132,7 +132,7 @@ int main()
     Button btn2("button 2", Rect(Point(200, 250), Size(100, 40)));
     win.add(&btn2);
 
-    Keyboard<Window> keyboard;
+    Keyboard<PlaneWindow> keyboard;
     btn2.on_event([&keyboard](eventid event)
     {
         if (event == eventid::MOUSE_DOWN)
@@ -161,7 +161,7 @@ int main()
     TextBox text1("text 1", Rect(Point(100, 400), Size(200, 40)));
     win.add(&text1);
     // TODO: this is broken with keyboard and focus - get dups
-    IInput::global_input().on_event([&text1](eventid event)
+    detail::IInput::global_input().on_event([&text1](eventid event)
     {
         switch (event)
         {

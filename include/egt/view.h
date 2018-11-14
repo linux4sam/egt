@@ -15,6 +15,12 @@
 namespace egt
 {
 
+    /**
+     * A ScrolledView is a sort of kitchen window. You can have a large surface
+     * area on the other side of the window, but you only see a small portion of
+     * it through the window.  The surface can be scrolled, or panned, to see
+     * the rest.
+     */
     class ScrolledView : public Frame
     {
     public:
@@ -30,13 +36,19 @@ namespace egt
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
-        virtual ~ScrolledView();
+        /**
+         * Get the position.
+         */
+        int position() const { return m_offset; }
 
-    protected:
-
-        void position(int offset)
+        /**
+         * Set the position.
+         */
+        void set_position(int offset)
         {
-            if (offset <= 0 && -offset < box().w)
+            Rect super = super_rect();
+
+            if (offset <= 0 && -offset < super.w)
             {
                 if (m_offset != offset)
                 {
@@ -45,6 +57,12 @@ namespace egt
                 }
             }
         }
+
+        virtual ~ScrolledView();
+
+    protected:
+
+        Rect super_rect() const;
 
         int m_offset{0};
         Orientation m_orientation{Orientation::HORIZONTAL};

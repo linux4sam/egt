@@ -64,3 +64,36 @@ http://rapidxml.sourceforge.net/manual.html
 
 
 sudo apt-get install librapidxml-dev liblua5.3-dev
+
+
+Actual Dependencies
+===================
+libstdc++.so
+libplanes.so
+libcairo.so
+libpixman-1.so
+libfontconfig.so
+libexpat.so
+libfreetype.so
+libpng16.so
+-lz
+libatomic.so
+libdrm.so
+libts.so
+-llua
+-lcjson
+libgstreamer-1.0.so
+libgmodule-2.0.so
+libgobject-2.0.so
+glib-2.0.so
+libffi.so
+libglib-2.0.so
+libpcre.so
+-lpthread
+libjpeg.so
+libinput.so
+libmtdev.so
+libudev.so
+libevdev.so
+-lrt
+-lm

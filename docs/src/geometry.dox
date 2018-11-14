@@ -1,11 +1,13 @@
 /**
 
- @page coord Coordinate System
+ @page geometry Geometry
 
-@section coord_intro Introduction
+This chapter discusses the coordinate system and how EGT deals with geometry.
 
-EGT defines a egt::Point, egt::Size, egt::Rect, and several other classes for
-working with geometry.
+@section geometry_coord Coordinate System
+
+EGT defines a egt::Point, egt::Size, egt::Rect, egt::Line, and several other
+classes for working with geometry.
 
 The cordinate system defaults with an origin of 0,0 in the top left.  Positive X moves to the right, and positive Y moves down.
 

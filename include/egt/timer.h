@@ -33,7 +33,7 @@ namespace egt
          * Construct a one-shot timer.
          *
          * The duration of the timer can be specified when calling
-         * start_with_duration() instead.
+         * start_with_duration() when using this constructor.
          */
         explicit Timer() noexcept;
 
@@ -54,6 +54,8 @@ namespace egt
          * duration specified previously.
          */
         virtual void start_with_duration(std::chrono::milliseconds duration);
+
+        virtual void change_duration(std::chrono::milliseconds duration);
 
         /**
          * Cancel the timer.

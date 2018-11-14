@@ -13,13 +13,20 @@ namespace egt
     StaticGrid::StaticGrid(const Rect& rect, int columns,
                            int rows, int border)
         : Frame(rect, widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER),
-          m_columns(columns),
-          m_rows(rows),
           m_border(border)
     {
         m_cells.resize(columns);
         for (auto& x : m_cells)
             x.resize(rows);
+    }
+
+    namespace detail
+    {
+        static inline int ceil(int x, int y)
+        {
+            //return x / y;
+            return (x + y - 1) / y;
+        }
     }
 
     void StaticGrid::draw(Painter& painter, const Rect& rect)
@@ -31,21 +38,24 @@ namespace egt
                 painter.set_color(palette().color(Palette::BORDER));
                 painter.set_line_width(m_border);
 
-                for (size_t column = 0; column < m_cells.size(); column++)
+                auto columns = m_cells.size();
+                for (size_t column = 0; column < columns; column++)
                 {
-                    for (size_t row = 0; row < m_cells[column].size(); row++)
+                    auto rows = m_cells[column].size();
+                    for (size_t row = 0; row < rows; row++)
                     {
                         // find the rect for the cell
-                        int ix = x() + (column * (w() / m_columns));
-                        int iy = y() + (row * (h() / m_rows));
-                        int iw = (w() / m_columns);
-                        int ih = (h() / m_rows);
+                        int iw = detail::ceil(w(), columns);
+                        int ih = detail::ceil(h(), rows);
 
                         if (iw < 0)
                             iw = 0;
 
                         if (ih < 0)
                             ih = 0;
+
+                        int ix = x() + (column * iw);
+                        int iy = y() + (row * ih);
 
                         painter.rectangle(Rect(ix, iy, iw, ih));
                     }
@@ -125,28 +135,43 @@ namespace egt
         Frame::remove(widget);
     }
 
+
+
+
     void StaticGrid::reposition()
     {
-        for (int column = 0; column < (int)m_cells.size(); column++)
+        int columns = m_cells.size();
+        for (int column = 0; column < columns; column++)
         {
-            for (int row = 0; row < (int)m_cells[column].size(); row++)
+            int rows = m_cells[column].size();
+            for (int row = 0; row < rows; row++)
             {
                 Cell& cell = m_cells[column][row];
                 if (cell.widget)
                 {
                     // find the rect for the cell
-                    int ix = x() + (column * (w() / m_columns)) + m_border;
-                    int iy = y() + (row * (h() / m_rows)) + m_border;
-                    int iw = (w() / m_columns) - (m_border * 2);
-                    int ih = (h() / m_rows) - (m_border * 2);
 
+                    int ix = x() + (column * (w() / columns)) + detail::ceil(m_border, 2);
+                    int iy = y() + (row * (h() / rows)) + detail::ceil(m_border, 2);
+                    int iw = (w() / columns) - (m_border);
+                    int ih = (h() / rows) - (m_border);
+                    /*
+                                        int iw = detail::ceil(w(), columns) - (m_border * 2);
+                                        int ih = detail::ceil(h(), rows) - (m_border * 2);
+                    */
                     if (iw < 0)
                         iw = 0;
 
                     if (ih < 0)
                         ih = 0;
+                    /*
+                                        int ix = x() + (column * iw) + m_border;
+                                        int iy = y() + (row * ih) + m_border;
+                    */
 
                     Rect bounding(ix, iy, iw, ih);
+
+                    //cout << bounding << endl;
 
                     // get the aligning rect
                     Rect target = align_algorithm(cell.widget->box().size(),

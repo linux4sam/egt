@@ -2,12 +2,12 @@
 
  @page events Events
 
-This chapter discusses the event model and how to handle events.
+This chapter discusses the event model and how events are handled.
 
 @section events_loop Event Loop
 
-The event loop is the inner loop of the framework. Its basic operations is as
-follows:
+The egt::EventLoop is the inner loop of the framework. Its basic operations is
+demonsrated with the following pseudocode:
 
 @code
 while (true)
@@ -18,18 +18,34 @@ while (true)
 }
 @endcode
 
-It does this until the event loop is told to exit.
+It does this until the event loop is told to exit, and int turn, this usually
+means the application exits.
 
-@section events_model Event Model
+@section events_prop Event Propogation
 
 Every time a user touches the screen, clicks a button, or presses a key, an
-event is generated and sent to your application. Events can also come from other
-programs like the window manager and timers.
+event is generated and sent to the event loop and then dispatched to appropriate
+handlers. Events can also come from other things like the window manager,
+timers, or networking sockets.
 
 Events are identified by the integer argument passed to a @p handle() method
 that overrides the Widget::handle() virtual method. Other information about the
 most recent event is stored in static locations and acquired by calling the
-functiosn related to the events as necessary. This static information remains
+functions related to the events as necessary. This static information remains
 valid until the next event is read method.
+
+Events are usually propogated from the top level widget down.  There are
+exceptions to this, for example, when a widget grabs the mouse of keyboard, then
+this natural flow is short circuited.
+
+@image html widget_hierarchy_event.png
+@image latex widget_hierarchy_event.png "Event" width=8cm
+
+@section events_handle Handling Events
+
+- egt::event_mouse()
+- egt::event_button()
+- egt::event_key()
+- egt::event_code()
 
 */

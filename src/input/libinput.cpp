@@ -191,10 +191,10 @@ out:
         //#endif
 
         //cout << x << "," << y << endl;
-        //mouse_position() = Point(x, y);
+        //event_mouse() = Point(x, y);
 
-        mouse_position().x += libinput_event_pointer_get_dx_unaccelerated(p);
-        mouse_position().y += libinput_event_pointer_get_dy_unaccelerated(p);
+        event_mouse().x += libinput_event_pointer_get_dx_unaccelerated(p);
+        event_mouse().y += libinput_event_pointer_get_dy_unaccelerated(p);
 
         dispatch(eventid::MOUSE_MOVE);
     }
@@ -239,7 +239,7 @@ out:
             double y = libinput_event_touch_get_y_transformed(t, 480);
 
             cout << x << "," << y << endl;
-            mouse_position() = Point(x, y);
+            event_mouse() = Point(x, y);
 
             dispatch(eventid::MOUSE_DOWN);
             break;
@@ -254,7 +254,7 @@ out:
 
             cout << x << "," << y << endl;
             cout << x2 << "," << y2 << endl;
-            mouse_position() = Point(x, y);
+            event_mouse() = Point(x, y);
             res = true;
             break;
         }
@@ -311,7 +311,7 @@ out:
 
         if (v != eventid::NONE)
         {
-            key_value() = key;
+            event_key() = key;
             dispatch(v);
         }
     }
@@ -328,7 +328,7 @@ out:
 
         dispatch(is_press ? eventid::BUTTON_DOWN : eventid::BUTTON_UP);
 
-        button_value() = button;
+        event_button() = button;
     }
 
     void LibInput::handle_event_swipe(struct libinput_event* ev)

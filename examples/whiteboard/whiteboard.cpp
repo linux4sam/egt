@@ -70,7 +70,7 @@ public:
         {
         case eventid::MOUSE_DOWN:
         {
-            m_last = mouse_position();
+            m_last = event_mouse();
             m_down = true;
             break;
         }
@@ -78,9 +78,9 @@ public:
         {
             if (m_down)
             {
-                if (m_last != mouse_position())
+                if (m_last != event_mouse())
                 {
-                    Line line = Line(m_last, mouse_position());
+                    Line line = Line(m_last, event_mouse());
 
                     Painter painter(screen()->context());
                     painter.set_line_width(2.0);
@@ -98,7 +98,7 @@ public:
                 }
             }
 
-            m_last = mouse_position();
+            m_last = event_mouse();
 
             break;
         }

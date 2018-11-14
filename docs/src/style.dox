@@ -1,0 +1,19 @@
+/**
+
+ @page style Coding Style
+
+The C++ coding style of the EGT project mostly adhere's to the Allman style with
+a couple exceptions.  This coding style is enforced throughout the codebase.
+
+Astyle is used to enforce this coding style with the *scripts/style.sh* script.
+This can be automatically executed for all of the source code with a make target
+by typing:
+
+@code
+make style
+@endcode
+
+Be careful not to abuse this and change coding style just for the fun of it,
+especially on source that you are not currentoly working on.
+
+*/

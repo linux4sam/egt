@@ -35,6 +35,8 @@ namespace egt
         {
             assert(main_screen());
 
+            m_box.x = 0;
+            m_box.y = 0;
             m_box.w = main_screen()->size().w;
             m_box.h = main_screen()->size().h;
         }
@@ -74,7 +76,7 @@ namespace egt
           m_heo(heo)
     {
         // default plane windows to transparent
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        //palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
         assert(KMSScreen::instance());
 

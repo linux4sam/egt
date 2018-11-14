@@ -18,6 +18,7 @@
 
 namespace egt
 {
+    class ListBox;
 
     /**
      * An item in a ListBox.
@@ -25,7 +26,7 @@ namespace egt
     class ListBoxItem
     {
     public:
-        virtual void draw(Painter& painter, const Rect& rect, bool selected);
+        virtual void draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox);
     };
 
     /**
@@ -51,18 +52,11 @@ namespace egt
             : m_text(text)
         {}
 
-        virtual void draw(Painter& painter, const Rect& rect, bool selected) override
-        {
-            ListBoxItem::draw(painter, rect, selected);
-
-            painter.set_color(global_palette().color(Palette::TEXT));
-            painter.set_font(m_font);
-            painter.draw_text(rect, m_text, alignmask::CENTER);
-        }
+        virtual void draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox) override;
 
         /**
-         * Set the font of the items.
-         */
+        * Set the font of the items.
+        */
         virtual void font(const Font& font) { m_font = font; }
 
         virtual ~StringItem()
@@ -131,9 +125,15 @@ namespace egt
          */
         virtual size_t count() const { return m_items.size(); }
 
-        uint32_t selected() const { return m_selected; }
+        /**
+         * Get the currently selected index.
+         */
+        virtual uint32_t selected() const { return m_selected; }
 
-        void add_item(ListBoxItem* item)
+        /**
+         * Add a new item to the end of the list.
+         */
+        virtual void add_item(ListBoxItem* item)
         {
             m_items.push_back(item);
         }
@@ -142,7 +142,7 @@ namespace egt
 
     protected:
 
-        virtual void on_selected(int index) {ignoreparam(index);}
+        //virtual void on_selected(int index) {ignoreparam(index);}
 
         Rect item_rect(uint32_t index) const;
 

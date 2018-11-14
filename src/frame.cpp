@@ -151,7 +151,7 @@ namespace egt
                 if (!child->visible())
                     continue;
 
-                Point pos = screen_to_frame(mouse_position());
+                Point pos = screen_to_frame(event_mouse());
 
                 if (Rect::point_inside(pos, child->box()))
                 {
@@ -180,7 +180,7 @@ namespace egt
             case eventid::BUTTON_DOWN:
                 //case eventid::MOUSE_DBLCLICK:
             {
-                Point pos = screen_to_frame(mouse_position());
+                Point pos = screen_to_frame(event_mouse());
 
                 if (Rect::point_inside(pos, m_focus_widget->box()))
                 {
@@ -241,8 +241,10 @@ namespace egt
             painter.clip();
 
             cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-            painter.draw_basic_box(screen_to_frame(box()), palette().color(Palette::BORDER),
-                                   palette().color(Palette::BG));
+            painter.draw_box(screen_to_frame(box()),
+                             palette().color(Palette::BORDER),
+                             palette().color(Palette::BG),
+                             Painter::boxtype::flat);
         }
 
         for (auto& child : m_children)
@@ -255,15 +257,33 @@ namespace egt
             if (child->is_flag_set(widgetmask::PLANE_WINDOW))
                 continue;
 
+
             if (Rect::intersect(rect, child->box()))
             {
                 Painter::AutoSaveRestore sr(painter);
                 painter.rectangle(child->box());
                 painter.clip();
 
+                //cout << "damage rect: " << rect << endl;
+                //cout << "child box: " << child->box() << endl;
+
                 // don't give a child a rectangle that is outside of its own box
                 auto r = Rect::intersection(rect, child->box());
+
+                //cout << "intersection: " << r << endl;
+
+                //#define TIME_DRAW
+#ifdef TIME_DRAW
+                auto start = chrono::steady_clock::now();
+#endif
                 child->draw(painter, r);
+
+#ifdef TIME_DRAW
+                auto end = chrono::steady_clock::now();
+                auto diff = end - start;
+
+                cout << child->name() << " draw: " << chrono::duration<double, milli>(diff).count() << endl;
+#endif
             }
         }
     }

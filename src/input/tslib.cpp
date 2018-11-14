@@ -128,17 +128,17 @@ namespace egt
                 {
                     if (samp_mt[j][i].pen_down == 0)
                     {
-                        mouse_position() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+                        event_mouse() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
                         m_active = false;
-                        DBG("mouse up " << mouse_position());
+                        DBG("mouse up " << event_mouse());
                         dispatch(eventid::MOUSE_UP);
                     }
                     else
                     {
                         Point point(samp_mt[j][i].x, samp_mt[j][i].y);
-                        if (delta(mouse_position(), point, 5))
+                        if (delta(event_mouse(), point, 5))
                         {
-                            mouse_position() = point;
+                            event_mouse() = point;
                             move = true;
                         }
                     }
@@ -147,7 +147,7 @@ namespace egt
                 {
                     if (samp_mt[j][i].pen_down == 1)
                     {
-                        mouse_position() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+                        event_mouse() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
 
                         if ((m_impl->last_down.tv_sec || m_impl->last_down.tv_usec) &&
                             diff_ms(samp_mt[j][i].tv, m_impl->last_down) < 200)
@@ -156,7 +156,7 @@ namespace egt
                         }
                         else
                         {
-                            DBG("mouse down " << mouse_position());
+                            DBG("mouse down " << event_mouse());
                             dispatch(eventid::MOUSE_DOWN);
                             m_active = true;
                         }
@@ -169,7 +169,7 @@ namespace egt
 
         if (move)
         {
-            DBG("mouse move " << mouse_position());
+            DBG("mouse move " << event_mouse());
             dispatch(eventid::MOUSE_MOVE);
         }
 

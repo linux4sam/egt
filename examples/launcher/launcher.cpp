@@ -151,14 +151,14 @@ static bool debounce_mouse(int delta)
 
     if (delta)
     {
-        if (std::abs(pos.x - mouse_position().x) > delta ||
-            std::abs(pos.y - mouse_position().y) > delta)
+        if (std::abs(pos.x - event_mouse().x) > delta ||
+            std::abs(pos.y - event_mouse().y) > delta)
         {
             res = true;
         }
     }
 
-    pos = mouse_position();
+    pos = event_mouse();
 
     return res;;
 }
@@ -186,6 +186,7 @@ public:
 
         auto settings = new ImageButton("settings.png", "", Rect(), widgetmask::NO_BORDER);
         add(settings);
+        settings->flag_set(widgetmask::NO_BACKGROUND);
         settings->align(alignmask::RIGHT | alignmask::TOP, 10);
         settings->on_event([this](eventid event)
         {
@@ -257,7 +258,7 @@ public:
                 focus(nullptr);
 
                 m_moving = true;
-                m_moving_x = mouse_position().x;
+                m_moving_x = event_mouse().x;
                 m_offset = m_boxes[0]->center().x;
             }
             break;
@@ -268,7 +269,7 @@ public:
         case eventid::MOUSE_MOVE:
             if (m_moving)
             {
-                move_boxes(mouse_position().x);
+                move_boxes(event_mouse().x);
                 return 1;
             }
             break;

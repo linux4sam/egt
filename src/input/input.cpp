@@ -14,31 +14,32 @@ using namespace std;
 
 namespace egt
 {
-
-    static Point pointer_abs_pos;
-    Point& mouse_position()
+    Point& event_mouse()
     {
+    static Point pointer_abs_pos;
         return pointer_abs_pos;
     }
 
-    static int event_key_value{0};
-    int& key_value()
+    int& event_key()
     {
-        return event_key_value;
+    static int event_event_key{0};
+        return event_event_key;
     }
 
-    static int event_key_code{0};
-    int& key_code()
+    int& event_code()
     {
-        return event_key_code;
+    static int event_event_code{0};
+        return event_event_code;
     }
 
-    static int event_button{0};
-    int& button_value()
+    int& event_button()
     {
-        return event_button;
+    static int event_button_value{0};
+        return event_button_value;
     }
 
+    namespace detail
+    {
     void IInput::dispatch(eventid event)
     {
         DBG("event: " << event);
@@ -58,6 +59,7 @@ namespace egt
         // then give it to any global input handlers
         m_global_input.invoke_handlers(event);
     }
+    }
 
-    detail::Object IInput::m_global_input;
+    detail::Object detail::IInput::m_global_input;
 }

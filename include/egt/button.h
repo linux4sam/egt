@@ -54,6 +54,12 @@ namespace egt
                     const Rect& rect = Rect(),
                     widgetmask flags = widgetmask::NONE) noexcept;
 
+        ImageButton(Frame& parent,
+                    const std::string& image,
+                    const std::string& text = "",
+                    const Rect& rect = Rect(),
+                    widgetmask flags = widgetmask::NONE) noexcept;
+
         virtual void draw(Painter& painter, const Rect& rect) override;
 
         void set_image(const std::string& image);

@@ -1,0 +1,55 @@
+/**
+
+ @page custom Creating New Widgets
+
+This chapter discusses how to extend and customize EGT.
+
+EGT is designed to support extension by way of custom widgets and functionality.  Essentially, to change the behavior or look and feel of an existing widget, create a derivd class of a a similar and existing widget and re-implement the functions that should be changed.  If you are creating a completely new type of widget, you would inherit directly from egt::Widget or one of the other base widget types.
+
+An example of this happening is fluent throught the EGT library itself.  For example, egt::CheckBox implements a standard traditional egt::CheckBox that shows a *X* when then egt::CheckBox is checked().  However, to change the look and keep the same logical operation, egt::SlidingCheckBox derives from egt::CheckBox and changes the draw() method.
+
+The new widget class looks like this:
+
+@code
+    class SlidingCheckBox : public CheckBox
+    {
+    public:
+        explicit SlidingCheckBox(const Rect& rect = Rect());
+
+        virtual void draw(Painter& painter, const Rect& rect) override;
+
+        virtual ~SlidingCheckBox();
+    };
+@endcode
+
+And the new draw() method looks like this.
+
+@code
+    void SlidingCheckBox::draw(Painter& painter, const Rect& rect)
+    {
+        ignoreparam(rect);
+
+        painter.draw_basic_box(box(), palette().color(Palette::BORDER),
+                               palette().color(Palette::BG));
+
+        if (checked())
+        {
+            Rect rect = box();
+            rect.w /= 2;
+            rect.x += rect.w;
+            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::HIGHLIGHT));
+        }
+        else
+        {
+            Rect rect = box();
+            rect.w /= 2;
+            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
+                                      false,
+                                      palette().color(Palette::MID));
+        }
+    }
+@endcode
+
+*/

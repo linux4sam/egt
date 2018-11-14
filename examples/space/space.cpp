@@ -60,14 +60,14 @@ static bool debounce_mouse(int delta)
 
     if (delta)
     {
-        if (std::abs(pos.x - mouse_position().x) > delta ||
-            std::abs(pos.y - mouse_position().y) > delta)
+        if (std::abs(pos.x - event_mouse().x) > delta ||
+            std::abs(pos.y - event_mouse().y) > delta)
         {
             res = true;
         }
     }
 
-    pos = mouse_position();
+    pos = event_mouse();
 
     return res;
 #endif
@@ -87,7 +87,7 @@ public:
         {
         case eventid::MOUSE_MOVE:
             if (debounce_mouse(50))
-                spawn(mouse_position());
+                spawn(event_mouse());
             break;
         default:
             break;
