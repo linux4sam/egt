@@ -89,47 +89,32 @@ namespace egt
 #endif
     }
 
-    int EventLoop::run()
+    int EventLoop::run(bool enable_fps)
     {
+        experimental::Fps fps;
+
+#if 0
         PeriodicTimer drawtimer(std::chrono::milliseconds(30));
-        drawtimer.on_timeout([this]()
+        drawtimer.on_timeout([this, &fps]()
         {
             draw();
         });
         drawtimer.start();
-
-#ifdef STATS
-        deque<uint64_t> times;
 #endif
+
         do_quit = false;
         while (!do_quit)
         {
-#ifdef STATS
-            auto start = chrono::steady_clock::now();
-#endif
+            wait();
+            draw();
 
-            //draw();
+            if (enable_fps)
+                fps.end_frame();
 
-            if (wait())
+            if (enable_fps && fps.ready())
             {
-                //drawtimer.start();
-                //draw();
+                cout << "fps: " << std::round(fps.fps()) << endl;
             }
-
-#ifdef STATS
-            auto end = chrono::steady_clock::now();
-            auto diff = end - start;
-            times.push_back(chrono::duration<double, milli>(diff).count());
-
-            static unsigned int COUNT = 50;
-            if (times.size() == COUNT)
-            {
-                auto avg = std::accumulate(times.begin(), times.end(), 0) / COUNT;
-                if (avg > 0)
-                    cout << 1000. / avg << " fps" << endl;
-                times.clear();
-            }
-#endif
         }
 
         return 0;

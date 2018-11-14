@@ -45,7 +45,7 @@ namespace egt
 
         virtual int wait();
 
-        virtual int run();
+        virtual int run(bool enable_fps = false);
 
         virtual void quit();
 

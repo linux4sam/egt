@@ -91,15 +91,39 @@ int main()
     sprite1.show();
     sprite2.show();
 
+    Label label2("FPS: -",
+                 Rect(Point(0, 40), Size(100, 40)),
+                 alignmask::CENTER);
+    label2.palette()
+    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
+    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+
 #define DEFAULT_MS_INTERVAL 100
 
+    experimental::Fps fps;
+    fps.start();
+
     PeriodicTimer animatetimer(std::chrono::milliseconds(DEFAULT_MS_INTERVAL));
-    animatetimer.on_timeout([&sprite1, &sprite2]()
-    {
+    animatetimer.on_timeout([&]() {
         if (sprite1.visible())
             sprite1.advance();
+
         if (sprite2.visible())
             sprite2.advance();
+
+        bool visible = sprite1.visible() || sprite2.visible();
+        if (visible)
+        {
+            fps.end_frame();
+
+            ostringstream ss;
+            ss << "FPS: " << std::round(fps.fps());
+            label2.text(ss.str());
+        }
+        else
+        {
+            label2.text("FPS: -");
+        }
     });
     animatetimer.start();
 
@@ -115,7 +139,7 @@ int main()
 
     win.show();
 
-    Popup<PlaneWindow> popup(Size(100, 40));
+    Popup<PlaneWindow> popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
     popup.name("popup");
@@ -128,6 +152,7 @@ int main()
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
     popup.add(&label1);
+    popup.add(&label2);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
