@@ -17,16 +17,19 @@ int main()
 
     StaticGrid topgrid(Rect(), 1, 2);
     win.add(&topgrid);
-    topgrid.align(alignmask::EXPAND);
+    topgrid.set_align(alignmask::EXPAND);
 
     MultilineTextBox text("");
     topgrid.add(&text, 0, 0, alignmask::EXPAND);
     text.text_align(alignmask::CENTER | alignmask::RIGHT);
-    text.font(Font(25));
+    text.set_font(Font(25));
+
+    Image logo("@microchip_logo_black.png");
+    win.add(&logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
     StaticGrid buttongrid(Rect(), 4, 5, 5);
     topgrid.add(&buttongrid, 0, 1, alignmask::EXPAND);
-    buttongrid.align(alignmask::EXPAND);
+    buttongrid.set_align(alignmask::EXPAND);
 
     vector<vector<string>> buttons =
     {
@@ -48,7 +51,7 @@ int main()
             Button* b;
 
             b = new Button(label, Rect(Size(50, 50)));
-            b->font(Font(30, Font::weightid::BOLD));
+            b->set_font(Font(30, Font::weightid::BOLD));
 
             b->on_event([&text, b](eventid event)
             {

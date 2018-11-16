@@ -50,7 +50,7 @@ namespace egt
         /**
          * Set the text of the label.
          */
-        virtual void text(const std::string& str) override;
+        virtual void set_text(const std::string& str) override;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -82,7 +82,7 @@ namespace egt
          */
         inline bool checked() const
         {
-            return m_checked;
+		return active();
         }
 
         /**
@@ -90,11 +90,10 @@ namespace egt
          */
         void check(bool value)
         {
-            if (m_checked != value)
+		if (active() != value)
             {
-                m_checked = value;
+		    set_active(value);
                 invoke_handlers(eventid::PROPERTY_CHANGED);
-                damage();
             }
         }
 
@@ -103,9 +102,6 @@ namespace egt
         virtual void draw(Painter& painter, const Rect& rect) override;
 
         virtual ~CheckBox();
-
-    protected:
-        bool m_checked;
     };
 
     /**

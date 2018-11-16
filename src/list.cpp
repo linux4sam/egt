@@ -12,10 +12,9 @@ namespace egt
     {
         if (selected)
         {
-            painter.draw_box(rect,
-                             listbox.palette().color(Palette::BORDER),
-                             listbox.palette().color(Palette::HIGHLIGHT),
-                             Painter::boxtype::rounded_gradient);
+            painter.draw_rounded_gradient_box(rect,
+                                              listbox.palette().color(Palette::BORDER),
+                                              listbox.palette().color(Palette::HIGHLIGHT));
         }
     }
 
@@ -67,10 +66,7 @@ namespace egt
     {
         ignoreparam(rect);
 
-        painter.draw_box(box(),
-                         palette().color(Palette::BORDER),
-                         palette().color(Palette::BG),
-                         Painter::boxtype::rounded_border);
+        painter.draw_box(*this, Painter::boxtype::rounded_borderfill);
 
         if (m_selected < m_items.size())
         {

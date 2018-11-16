@@ -50,6 +50,8 @@ namespace egt
 
         resize(m_image.size());
 
+        allocate_screen();
+
         KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
         plane_set_pan_pos(s->s(), m_strips[m_strip].point.x, m_strips[m_strip].point.y);
         plane_set_pan_size(s->s(), m_frame.w, m_frame.h);

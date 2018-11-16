@@ -138,17 +138,17 @@ namespace egt
             }
             case ButtonPress:
                 event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-                IInput::dispatch(eventid::MOUSE_DOWN);
+                detail::IInput::dispatch(eventid::MOUSE_DOWN);
                 break;
             case ButtonRelease:
                 event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-                IInput::dispatch(eventid::MOUSE_UP);
+                detail::IInput::dispatch(eventid::MOUSE_UP);
                 break;
             case EnterNotify:
             case LeaveNotify:
             case MotionNotify:
                 event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-                IInput::dispatch(eventid::MOUSE_MOVE);
+                detail::IInput::dispatch(eventid::MOUSE_MOVE);
                 break;
             case KeyPress:
             {
@@ -167,7 +167,7 @@ namespace egt
 
 
 
-                IInput::dispatch(eventid::KEYBOARD_DOWN);
+                detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
                 break;
             }
             case KeyRelease:
@@ -184,7 +184,7 @@ namespace egt
                 if (event_key() == XK_BackSpace)
                     event_code() = KEY_BACKSPACE;
 
-                IInput::dispatch(eventid::KEYBOARD_UP);
+                detail::IInput::dispatch(eventid::KEYBOARD_UP);
                 break;
             }
             case ClientMessage:

@@ -192,6 +192,34 @@ namespace egt
         return lhs;
     }
 
+    inline Size operator*(Size lhs, const Size& rhs)
+    {
+        lhs.w *= rhs.w;
+        lhs.h *= rhs.h;
+        return lhs;
+    }
+
+    inline Size operator*(Size lhs, float rhs)
+    {
+        lhs.w *= rhs;
+        lhs.h *= rhs;
+        return lhs;
+    }
+
+    inline Size operator/(Size lhs, const Size& rhs)
+    {
+        lhs.w /= rhs.w;
+        lhs.h /= rhs.h;
+        return lhs;
+    }
+
+    inline Size operator/(Size lhs, float rhs)
+    {
+        lhs.w /= rhs;
+        lhs.h /= rhs;
+        return lhs;
+    }
+
     std::ostream& operator<<(std::ostream& os, const Size& size);
 
     /**
@@ -460,6 +488,18 @@ namespace egt
     inline Rect operator+(Rect lhs, const Size& rhs)
     {
         lhs.size(lhs.size() + rhs);
+        return lhs;
+    }
+
+    inline Rect operator+(Rect lhs, const Point& rhs)
+    {
+        lhs.point(lhs.point() + rhs);
+        return lhs;
+    }
+
+    inline Rect operator-(Rect lhs, const Point& rhs)
+    {
+        lhs.point(lhs.point() - rhs);
         return lhs;
     }
 

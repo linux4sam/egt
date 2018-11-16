@@ -18,6 +18,7 @@
 #include <drm_fourcc.h>
 #endif
 #include <egt/window.h>
+#include <egt/planewindow.h>
 #include <gst/gst.h>
 #include <string>
 
@@ -48,13 +49,18 @@ namespace egt
              * @return true if success
              */
             virtual bool play(bool mute = false, int volume = 100);
-            virtual bool unpause();
 
             /**
              * @brief pause Send Pipeline to pause state
              * @return true if success
              */
             virtual bool pause();
+
+	    /**
+             * @brief unpause Send Pipeline to unpaused state
+             * @return true if success
+             */
+	    virtual bool unpause();
 
             /**
              * @brief null Send pipeline to null state

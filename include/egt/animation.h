@@ -154,9 +154,15 @@ namespace egt
          * @param[in] duration The duration of the animation.
          * @param[in] func The easing function to use.
          */
-        Animation(float_t start, float_t end, animation_callback callback,
-                  std::chrono::milliseconds duration, easing_func func = easing_linear);
+        Animation(float_t start,
+                  float_t end,
+                  animation_callback callback,
+                  std::chrono::milliseconds duration,
+                  easing_func func = easing_linear);
 
+        /**
+         * Get the starting value.
+         */
         float_t starting() const { return m_start; }
 
         /**
@@ -164,6 +170,9 @@ namespace egt
          */
         void starting(float_t start) { m_start = start; }
 
+        /**
+         * Get the ending value.
+         */
         float_t ending() const { return m_end; }
 
         /**
@@ -315,14 +324,11 @@ namespace egt
 
             virtual bool next() override
             {
-                DBG("seq next");
-
                 if (!running())
                     return true;
 
                 if (++m_current >= m_animations.size())
                 {
-                    DBG("seq finished");
                     m_running = false;
                     return m_running;
                 }
@@ -378,6 +384,11 @@ namespace egt
             PeriodicTimer m_timer;
         };
 
+        /**
+         * This as a utility class that makes animating a specific property of a
+         * widget easier.  Any property that matches
+         * PropertyAnimator::property_callback_t can be used.
+         */
         class PropertyAnimator : public AutoAnimation
         {
         public:
@@ -396,6 +407,9 @@ namespace egt
             {
                 m_callbacks.push_back(callback);
             }
+
+            ~PropertyAnimator()
+            {}
 
         protected:
 

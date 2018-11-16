@@ -13,6 +13,7 @@
 #include <egt/image.h>
 #include <egt/widget.h>
 #include <egt/window.h>
+#include <egt/planewindow.h>
 
 namespace egt
 {

@@ -52,13 +52,13 @@ namespace egt
         ImageButton(const std::string& image,
                     const std::string& text = "",
                     const Rect& rect = Rect(),
-                    widgetmask flags = widgetmask::NONE) noexcept;
+                    widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept;
 
         ImageButton(Frame& parent,
                     const std::string& image,
                     const std::string& text = "",
                     const Rect& rect = Rect(),
-                    widgetmask flags = widgetmask::NONE) noexcept;
+                    widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

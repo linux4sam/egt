@@ -18,7 +18,7 @@ namespace egt
     {
         ostringstream ss;
         ss << "frame" << frame_id++;
-        name(ss.str());
+        set_name(ss.str());
     }
 
     Frame::Frame(Frame& parent, const Rect& rect, widgetmask flags)
@@ -45,6 +45,21 @@ namespace egt
         }
 
         return widget;
+    }
+
+    void Frame::move(const Point& point)
+    {
+        if (point != box().point())
+        {
+            auto diff = point - m_box.point();
+
+            for (auto& i : m_children)
+            {
+                i->move(i->box().point() + diff);
+            }
+
+            Widget::move(point);
+        }
     }
 
     Widget& Frame::add(Widget& widget)
@@ -225,8 +240,7 @@ namespace egt
     }
 
     /**
-     * @todo Must prevent any call to damage() while in a draw() call.
-     * This will not work.
+     * @todo Prevent any call to damage() while in a draw() call.
      */
     void Frame::draw(Painter& painter, const Rect& rect)
     {
@@ -235,16 +249,15 @@ namespace egt
         if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
             Painter::AutoSaveRestore sr(painter);
-            auto cr = painter.context();
-
             painter.rectangle(rect);
             painter.clip();
 
-            cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-            painter.draw_box(screen_to_frame(box()),
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::BG),
-                             Painter::boxtype::flat);
+            if (!is_flag_set(widgetmask::TRANSPARENT_BACKGROUND))
+                cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+
+            painter.draw_box(*this,
+                             Painter::boxtype::fill,
+                             screen_to_frame(box()));
         }
 
         for (auto& child : m_children)
@@ -257,25 +270,20 @@ namespace egt
             if (child->is_flag_set(widgetmask::PLANE_WINDOW))
                 continue;
 
-
             if (Rect::intersect(rect, child->box()))
             {
                 Painter::AutoSaveRestore sr(painter);
                 painter.rectangle(child->box());
                 painter.clip();
 
-                //cout << "damage rect: " << rect << endl;
-                //cout << "child box: " << child->box() << endl;
-
                 // don't give a child a rectangle that is outside of its own box
                 auto r = Rect::intersection(rect, child->box());
 
-                //cout << "intersection: " << r << endl;
-
-                //#define TIME_DRAW
+//#define TIME_DRAW
 #ifdef TIME_DRAW
                 auto start = chrono::steady_clock::now();
 #endif
+
                 child->draw(painter, r);
 
 #ifdef TIME_DRAW

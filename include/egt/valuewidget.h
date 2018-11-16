@@ -163,12 +163,12 @@ namespace egt
             {
             case eventid::MOUSE_DOWN:
             {
-                this->active(true);
+                this->set_active(true);
                 return 1;
             }
             case eventid::MOUSE_UP:
             {
-                this->active(false);
+                this->set_active(false);
                 return 1;
             }
             case eventid::MOUSE_MOVE:
@@ -421,12 +421,20 @@ namespace egt
         {
             if (m_orientation == orientation::HORIZONTAL)
             {
-                int dim = h();
+                auto dim = w() / 6;
+                if (dim > h())
+                    dim = h();
+
+
                 return float(w() - dim) / float(m_max - m_min) * float(pos - m_min);
             }
             else
             {
-                int dim = w();
+                auto dim = h() / 6;
+                if (dim > w())
+                    dim = w();
+
+                pos = m_min + m_max - pos;
                 return float(h() - dim) / float(m_max - m_min) * float(pos - m_min);
             }
         }
@@ -436,12 +444,18 @@ namespace egt
         {
             if (m_orientation == orientation::HORIZONTAL)
             {
-                int dim = h();
+                auto dim = w() / 6;
+                if (dim > h())
+                    dim = h();
+
                 return float(m_max - m_min) / float(w() - dim) * float(diff);
             }
             else
             {
-                int dim = w();
+                auto dim = h() / 6;
+                if (dim > w())
+                    dim = w();
+
                 return float(m_max - m_min) / float(h() - dim) * float(diff);
             }
         }

@@ -7,10 +7,10 @@
 #include "config.h"
 #endif
 
+#include <cmath>
+#include <egt/ui>
 #include <iostream>
 #include <map>
-#include <math.h>
-#include <egt/ui>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -44,18 +44,6 @@ public:
           m_mx(mx),
           m_my(my)
     {}
-
-    /*
-      virtual void draw(const Rect& rect)
-      {
-      // TODO: this logic needs to be pushed up into draw() caller
-      Rect i = rect;
-      if (Rect::is_intersect(box(), rect))
-      i = Rect::intersect(rect, box());
-
-      screen()->rect(i, m_color);
-      }
-    */
 
     virtual void next_frame()
     {
@@ -141,20 +129,13 @@ int main()
     }
 #endif
 
-    struct MoveTimer : public PeriodicTimer
+    PeriodicTimer movetimer(std::chrono::milliseconds(30));
+    movetimer.on_timeout([&]()
     {
-        MoveTimer()
-            : PeriodicTimer(std::chrono::milliseconds(30))
-        {}
-
-        void timeout() override
-        {
-            for (auto i : boxes)
-                i->next_frame();
-        }
-    } timer;
-
-    timer.start();
+        for (auto i : boxes)
+            i->next_frame();
+    });
+    movetimer.start();
 
     Label label1("CPU: -",
                  Rect(Point(10, win.size().h - 40),
@@ -174,7 +155,7 @@ int main()
 
         ostringstream ss;
         ss << "CPU: " << (int)tools.usage(0) << "%";
-        label1.text(ss.str());
+        label1.set_text(ss.str());
     });
     cputimer.start();
 

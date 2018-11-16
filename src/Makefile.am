@@ -27,7 +27,6 @@ font.cpp \
 frame.cpp \
 framebuffer.cpp \
 geometry.cpp \
-uiloader.cpp \
 grid.cpp \
 image.cpp \
 imagecache.cpp \
@@ -36,17 +35,19 @@ input/input.cpp \
 input/libinput.cpp \
 input/tslib.cpp \
 kmsscreen.cpp \
-object.cpp \
 label.cpp \
 list.cpp \
+object.cpp \
 painter.cpp \
 palette.cpp \
+planewindow.cpp \
 resource.cpp \
 screen.cpp \
 sprite.cpp \
 text.cpp \
 timer.cpp \
 tools.cpp \
+uiloader.cpp \
 utils.cpp \
 valuewidget.cpp \
 video.cpp \
@@ -80,7 +81,6 @@ $(top_srcdir)/include/egt/button.h \
 $(top_srcdir)/include/egt/chart.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/event_loop.h \
-$(top_srcdir)/include/egt/uiloader.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
 $(top_srcdir)/include/egt/framebuffer.h \
@@ -93,8 +93,10 @@ $(top_srcdir)/include/egt/kmsscreen.h \
 $(top_srcdir)/include/egt/label.h \
 $(top_srcdir)/include/egt/libinput.h \
 $(top_srcdir)/include/egt/list.h \
+$(top_srcdir)/include/egt/object.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
+$(top_srcdir)/include/egt/planewindow.h \
 $(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sprite.h \
@@ -102,14 +104,14 @@ $(top_srcdir)/include/egt/text.h \
 $(top_srcdir)/include/egt/timer.h \
 $(top_srcdir)/include/egt/tools.h \
 $(top_srcdir)/include/egt/ui \
+$(top_srcdir)/include/egt/uiloader.h \
 $(top_srcdir)/include/egt/utils.h \
 $(top_srcdir)/include/egt/valuewidget.h \
 $(top_srcdir)/include/egt/video.h \
+$(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
 $(top_srcdir)/include/egt/window.h \
-$(top_srcdir)/include/egt/x11screen.h \
-$(top_srcdir)/include/egt/object.h \
-$(top_srcdir)/include/egt/view.h
+$(top_srcdir)/include/egt/x11screen.h
 
 libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 

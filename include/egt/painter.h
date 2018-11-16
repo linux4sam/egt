@@ -197,20 +197,17 @@ namespace egt
         enum class boxtype
         {
             none,
-            flat,
+            fill,
             border,
-            rounded_border,
+                rounded_border,
+            borderfill,
+            rounded_borderfill,
             rounded_gradient,
         };
 
-        virtual Painter& draw_box(const Rect& rect,
-                                  const Color& border,
-                                  const Color& bg,
-                                  boxtype type = boxtype::flat,
-                                  const Color& active_border = Color(),
-                                  const Color& active_bg = Color(),
-                                  bool active = false);
-
+        virtual Painter& draw_box(Widget& widget,
+				  boxtype type = boxtype::borderfill,
+				  const Rect& rect = Rect());
         /**
          *@}
          */
@@ -220,35 +217,27 @@ namespace egt
             return m_cr;
         }
 
-    protected:
-
-        void draw_flat_box(const Rect& rect,
-                           const Color& border,
-                           const Color& bg,
-                           const Color& active_border,
-                           const Color& active_bg,
-                           bool active);
+        void draw_fill_box(const Rect& rect,
+                           const Color& bg);
 
         void draw_border_box(const Rect& rect,
+                             const Color& border);
+
+	void draw_border_fill_box(const Rect& rect,
                              const Color& border,
-                             const Color& bg,
-                             const Color& active_border,
-                             const Color& active_bg,
-                             bool active);
+                             const Color& bg);
 
         void draw_rounded_border_box(const Rect& rect,
+                                     const Color& border);
+
+        void draw_rounded_borderfill_box(const Rect& rect,
                                      const Color& border,
-                                     const Color& bg,
-                                     const Color& active_border,
-                                     const Color& active_bg,
-                                     bool active);
+                                     const Color& bg);
 
         void draw_rounded_gradient_box(const Rect& rect,
                                        const Color& border,
-                                       const Color& bg,
-                                       const Color& active_border,
-                                       const Color& active_bg,
-                                       bool active);
+                                       const Color& bg);
+    protected:
 
         void paint_surface_with_drop_shadow(cairo_surface_t* source_surface,
                                             int shadow_offset,

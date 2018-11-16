@@ -151,9 +151,9 @@ public:
         add(m_label);
     }
 
-    void text(const std::string& str)
+    void set_text(const std::string& str)
     {
-        m_label->text(str);
+        m_label->set_text(str);
     }
 
 protected:
@@ -188,7 +188,7 @@ int main(int argc, const char** argv)
         return 1;
     }
 
-    window->name("video");
+    window->set_name("video");
 
 #if 1
 #ifdef FPS
@@ -197,7 +197,7 @@ int main(int argc, const char** argv)
 #endif
 
     PlaneWindow ctrlwindow(Size(600, 80));
-    ctrlwindow.name("ctrl");
+    ctrlwindow.set_name("ctrl");
     window->add(&ctrlwindow);
     ctrlwindow.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
 
@@ -209,7 +209,7 @@ int main(int argc, const char** argv)
 #endif
 
     HorizontalPositioner grid(Rect(Size(600, 80)), 5, alignmask::CENTER);
-    grid.name("grid");
+    grid.set_name("grid");
     ctrlwindow.add(&grid);
 
     ImageButton* playbtn = new ImageButton(":play_png", "", Rect(), widgetmask::NO_BORDER);
@@ -257,7 +257,7 @@ int main(int argc, const char** argv)
 #ifdef FPS
         ostringstream ss;
         ss << "fps: " << window->fps();
-        fpslabel.text(ss.str());
+        fpslabel.set_text(ss.str());
 #endif
     });
     postimer.start();

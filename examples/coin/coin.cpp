@@ -344,7 +344,7 @@ public:
     {
         ostringstream ss;
         ss << "Points: " << points;
-        m_label->text(ss.str());
+        m_label->set_text(ss.str());
     }
 
     int handle(eventid event) override

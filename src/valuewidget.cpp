@@ -91,9 +91,6 @@ namespace egt
 
         auto cr = painter.context();
 
-        cairo_save(cr.get());
-
-        cairo_set_source_rgb(cr.get(), 0, 0, 0);
         cairo_set_line_width(cr.get(), 1.0);
 
         painter.set_font(m_font);
@@ -101,16 +98,15 @@ namespace egt
         cairo_text_extents_t textext;
         cairo_text_extents(cr.get(), "999", &textext);
 
-        // Set origin as middle of bottom edge of the drawing area.
-        // Window is not resizable so "magic numbers" will work here.
         cairo_translate(cr.get(), x() + w() / 2, y() + h() - textext.height);
 
         float hw = w() / 2.0 - (textext.width * 2);
 
-        // Draw the black radial scale marks and labels
+        // scale marks and labels
         for (double marks = 0.0; marks <= 100.0; marks += 10.0)
         {
-            // Draw the radial marks
+            painter.set_color(palette().color(Palette::HIGHLIGHT));
+
             cairo_move_to(cr.get(),
                           hw * std::cos(M_PI * marks * 0.01),
                           -hw * std::sin(M_PI * marks * 0.01));
@@ -118,7 +114,10 @@ namespace egt
                           (hw + 10.0) * std::cos(M_PI * marks * 0.01),
                           -(hw + 10.0) * std::sin(M_PI * marks * 0.01));
 
-            // Set the text to print
+            cairo_stroke(cr.get());
+
+            painter.set_color(palette().color(Palette::TEXT));
+
             char text[10];
             sprintf(text, "%2.0f", marks);
 
@@ -126,30 +125,24 @@ namespace egt
 
             int width = textext.width;
             int height = textext.height;
-            // Position the text at the end of the radial marks
             cairo_move_to(cr.get(),
                           (-(hw + 30.0) * std::cos(M_PI * marks * 0.01)) - ((double)width / 2.0),
                           (-(hw + 30.0) * std::sin(M_PI * marks * 0.01)) + ((double)height / 2.0));
 
             cairo_show_text(cr.get(), text);
+            cairo_stroke(cr.get());
         }
-        cairo_stroke(cr.get());
 
-        // Retrieve the new slider value
         float value = this->value();
-
         cairo_set_source_rgb(cr.get(), Color::RED.redf(),
                              Color::RED.greenf(), Color::RED.bluef());
         cairo_set_line_width(cr.get(), 1.5);
 
-        // Draw the meter pointer
         cairo_move_to(cr.get(), 0.0, 0.0);
         cairo_line_to(cr.get(),
                       -hw * std::cos(M_PI * value * 0.01),
                       -hw * std::sin(M_PI * value * 0.01));
         cairo_stroke(cr.get());
-
-        cairo_restore(cr.get());
     }
 
     SpinProgress::SpinProgress(const Rect& rect)
@@ -229,14 +222,14 @@ namespace egt
                 else
                     m_moving_x = screen_to_frame(event_mouse()).y;
                 m_start_pos = position();
-                active(true);
+                set_active(true);
                 return 1;
             }
 
             break;
         }
         case eventid::MOUSE_UP:
-            active(false);
+            set_active(false);
             if (m_invoke_pending)
             {
                 m_invoke_pending = false;
@@ -254,7 +247,7 @@ namespace egt
                 else
                 {
                     auto diff = screen_to_frame(event_mouse()).y - m_moving_x;
-                    position(m_start_pos + denormalize(diff));
+                    position(m_start_pos - denormalize(diff));
                 }
                 return 1;
             }
@@ -280,7 +273,11 @@ namespace egt
 
         if (m_orientation == orientation::HORIZONTAL)
         {
-            cairo_set_line_width(cr.get(), h() / 5.0);
+            auto dim = w() / 6;
+            if (dim > h())
+                dim = h();
+
+            cairo_set_line_width(cr.get(), dim / 5.0);
 
             // line
             cairo_move_to(cr.get(), x(), y() + h() / 2);
@@ -298,17 +295,20 @@ namespace egt
             cairo_stroke(cr.get());
 
             // handle
-            painter.draw_box(Rect(x() + normalize(m_pos) + 1,
-                                  y() + 1,
-                                  h() - 2,
-                                  h() - 2),
+            painter.draw_rounded_gradient_box(Rect(x() + normalize(m_pos) + 1,
+                                  y() + h() / 2 - dim / 2 + 1,
+                                  dim - 2,
+                                  dim - 2),
                              palette().color(Palette::BORDER),
-                             palette().color(Palette::HIGHLIGHT),
-                             Painter::boxtype::rounded_gradient);
+                                              palette().color(Palette::HIGHLIGHT));
         }
         else
         {
-            cairo_set_line_width(cr.get(), w() / 5.0);
+            auto dim = h() / 6;
+            if (dim > w())
+                dim = w();
+
+            cairo_set_line_width(cr.get(), dim / 5.0);
 
             // line
             cairo_move_to(cr.get(), x() + w() / 2, y() + h());
@@ -326,16 +326,13 @@ namespace egt
             cairo_stroke(cr.get());
 
             // handle
-            painter.draw_box(Rect(x() + 1,
+            painter.draw_rounded_gradient_box(Rect(x() + w() / 2 - dim / 2 + 1,
                                   y() + normalize(m_pos) + 1,
-                                  w() - 2,
-                                  w() - 2),
+                                  dim - 2,
+                                  dim - 2),
                              palette().color(Palette::BORDER),
-                             palette().color(Palette::HIGHLIGHT),
-                             Painter::boxtype::rounded_gradient);
+                                              palette().color(Palette::HIGHLIGHT));
         }
-
-        //cairo_restore(cr.get());
     }
 
     Slider::~Slider()

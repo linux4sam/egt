@@ -34,14 +34,14 @@ namespace egt
             if (!m_text.empty())
             {
                 Painter painter(screen()->context());
-                painter.set_font(m_font);
+                painter.set_font(font());
                 Size s = painter.text_size(m_text);
                 resize(s);
             }
         }
     }
 
-    void Label::text(const std::string& str)
+    void Label::set_text(const std::string& str)
     {
         if (m_text != str)
         {
@@ -59,22 +59,13 @@ namespace egt
     {
         ignoreparam(rect);
 
-        if (!is_flag_set(widgetmask::NO_BACKGROUND))
-        {
-            if (!is_flag_set(widgetmask::NO_BORDER))
-                painter.draw_box(box(),
-                                 palette().color(Palette::BORDER),
-                                 palette().color(Palette::BG),
-                                 Painter::boxtype::border);
-            else
-                painter.draw_box(box(),
-                                 palette().color(Palette::BORDER),
-                                 palette().color(Palette::BG),
-                                 Painter::boxtype::flat);
-        }
+        if (is_flag_set(widgetmask::NO_BACKGROUND))
+            painter.draw_box(*this, Painter::boxtype::border);
+        else if (is_flag_set(widgetmask::NO_BORDER))
+            painter.draw_box(*this, Painter::boxtype::fill);
 
         painter.set_color(palette().color(Palette::TEXT));
-        painter.set_font(m_font);
+        painter.set_font(font());
         painter.draw_text(box(), m_text, m_text_align, 5);
 #if 0
         auto cr = painter.context();
@@ -124,9 +115,10 @@ namespace egt
 
     CheckBox::CheckBox(const std::string& text,
                        const Rect& rect)
-        : Label(text, rect),
-          m_checked(false)
-    {}
+        : Label(text, rect)
+    {
+        palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
+    }
 
     int CheckBox::handle(eventid event)
     {
@@ -156,16 +148,14 @@ namespace egt
 
         if (checked())
         {
-            painter.draw_box(r,
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::HIGHLIGHT),
-                             Painter::boxtype::rounded_gradient);
+            painter.draw_box(*this,
+                         Painter::boxtype::rounded_gradient,
+                         r);
 
+            // draw an "X"
             static const int OFFSET = 5;
             auto cr = painter.context();
-
             painter.set_color(palette().color(Palette::DARK));
-
             cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
             cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
             cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
@@ -175,10 +165,9 @@ namespace egt
         }
         else
         {
-            painter.draw_box(r,
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::BG),
-                             Painter::boxtype::rounded_border);
+            painter.draw_box(*this,
+                             Painter::boxtype::rounded_gradient,
+                             r);
         }
 
         // text
@@ -194,35 +183,32 @@ namespace egt
 
     SlidingCheckBox::SlidingCheckBox(const Rect& rect)
         : CheckBox("", rect)
-    {}
+    {
+        palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::BG));
+    }
 
     void SlidingCheckBox::draw(Painter& painter, const Rect& rect)
     {
         ignoreparam(rect);
 
-        painter.draw_box(box(),
-                         palette().color(Palette::BORDER),
-                         palette().color(Palette::BG),
-                         Painter::boxtype::rounded_border);
+        painter.draw_box(*this, Painter::boxtype::rounded_border);
 
         if (checked())
         {
             Rect rect = box();
             rect.w /= 2;
             rect.x += rect.w;
-            painter.draw_box(rect,
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::HIGHLIGHT),
-                             Painter::boxtype::rounded_gradient);
+            painter.draw_rounded_gradient_box(rect,
+                                              palette().color(Palette::BORDER),
+                                              palette().color(Palette::HIGHLIGHT));
         }
         else
         {
             Rect rect = box();
             rect.w /= 2;
-            painter.draw_box(rect,
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::MID),
-                             Painter::boxtype::rounded_gradient);
+            painter.draw_rounded_gradient_box(rect,
+                                              palette().color(Palette::BORDER),
+                                              palette().color(Palette::MID));
         }
     }
 
@@ -248,7 +234,7 @@ namespace egt
 
         auto width = cairo_image_surface_get_width(m_image.get());
         painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
-                          alignmask::LEFT | alignmask::CENTER, width + 5, m_font);
+                          alignmask::LEFT | alignmask::CENTER, width + 5, font());
     }
 
     ImageLabel::~ImageLabel()

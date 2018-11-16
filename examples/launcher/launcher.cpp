@@ -5,10 +5,12 @@
 #include <array>
 #include <cmath>
 #include <cstdio>
-#include <iostream>
-#include <map>
-#include <memory>
 #include <egt/ui>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <vector>
 #ifdef HAVE_RAPIDXML_RAPIDXML_HPP
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
@@ -16,15 +18,17 @@
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
 #endif
-#include <stdexcept>
-#include <string>
-#include <vector>
 
 using namespace std;
 using namespace egt;
 
+#define DO_SCALING
+
+/**
+ * Calculate a scale relative to how far something is the center.
+ */
 static float sliding_scale(int win_w, int item_w, int item_pos,
-                           float min = 0.5, float max = 2.0)
+                           float min = 0.5, float max = 1.0)
 {
     float range = win_w / 2;
     float delta = std::fabs(range - (item_pos + (item_w / 2)));
@@ -34,27 +38,32 @@ static float sliding_scale(int win_w, int item_w, int item_pos,
     return scale;
 }
 
-#if 0
-static std::string exec(const char* cmd)
+/**
+ * Execute a command.
+ */
+static std::string exec(const char* cmd, bool wait = false)
 {
     std::array<char, 128> buffer;
     std::string result;
     std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
     if (!pipe)
         throw std::runtime_error("popen() failed!");
-    while (!feof(pipe.get()))
+    if (wait)
     {
-        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-            result += buffer.data();
+        while (!feof(pipe.get()))
+        {
+            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+                result += buffer.data();
+        }
     }
+
     return result;
 }
-#endif
 
-#define SPACE 250
+#define ITEM_SPACE 250
 
 /*
- *
+ * A launcher menu item.
  */
 class LauncherItem : public ImageText
 {
@@ -63,8 +72,6 @@ public:
                  const string& image, const string& exec, int x = 0, int y = 0)
         : ImageText(image, name, Point(x, y)),
           m_num(num),
-          m_fd(-1),
-          m_animation(0, 600, std::bind(&LauncherItem::animate, this, std::placeholders::_1), std::chrono::seconds(1), easing_snap),
           m_name(name),
           m_description(description),
           m_exec(exec)
@@ -74,31 +81,24 @@ public:
         font(newfont);
     }
 
-    void animate(float value)
-    {
-        scale(value, value);
-    }
-
     int handle(eventid event) override
     {
         switch (event)
         {
-        case eventid::MOUSE_DOWN:
+        case eventid::MOUSE_UP:
         {
-            if (!m_animation.running())
-            {
-#if 0
-                m_animation.set_easing_func(easing_snap);
-                m_animation.starting(hscale());
-                m_animation.ending(hscale() + 0.2);
-                m_animation.duration(500);
-                m_animation.start();
-                m_fd = EventLoop::start_periodic_timer(1, LauncherItem::timer_callback, this);
-#endif
-                return 1;
-            }
+            main_app().event().quit();
 
-            break;
+#ifdef HAVE_LIBPLANES
+            // TODO: explicitly close KMS
+            if (KMSScreen::instance())
+                KMSScreen::instance()->close();
+#endif
+
+            string cmd = "../share/egt/examples/launcher/launch.sh " + m_exec + " &";
+            exec(cmd.c_str());
+
+            return 1;
         }
         default:
             break;
@@ -109,85 +109,48 @@ public:
 
     void scale_box(int pos)
     {
+#ifdef DO_SCALING
         auto c = center();
         float s = sliding_scale(parent()->w(), w(), pos);
         label_enabled(s > 0.9);
         scale(s, s, true);
         move_to_center(c);
-    }
-
-#if 0
-    static void timer_callback(int fd, void* data)
-    {
-        LauncherItem* item = reinterpret_cast<LauncherItem*>(data);
-        assert(item);
-
-        if (!item->m_animation.next())
-        {
-            item->scale_box(item->x());
-            main_app().event().cancel_periodic_timer(item->m_fd);
-
-            // TODO: exec
-        }
-    }
 #endif
+    }
 
     inline int num() const { return m_num; }
 
 private:
     int m_num;
-    int m_fd;
-    Animation m_animation;
     string m_name;
     string m_description;
     string m_exec;
 };
 
-#if 0
-static bool debounce_mouse(int delta)
-{
-    static Point pos;
-    bool res = false;
-
-    if (delta)
-    {
-        if (std::abs(pos.x - event_mouse().x) > delta ||
-            std::abs(pos.y - event_mouse().y) > delta)
-        {
-            res = true;
-        }
-    }
-
-    pos = event_mouse();
-
-    return res;;
-}
-#endif
-
 /**
- *
+ * Main launcher window.
  */
 class LauncherWindow : public Window
 {
 public:
     LauncherWindow()
-        : m_popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2))
+        : m_popup(main_screen()->size() / 2),
+          m_animation(0, 0, std::chrono::milliseconds(200),
+                      easing_quintic_easein)
     {
-        //m_popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
-        m_popup.add(new Button("Hello World"))->align(alignmask::CENTER);
+        m_animation.on_change(std::bind(&LauncherWindow::move_boxes, this,
+                                        std::placeholders::_1));
 
-        main_app().event().add_idle_callback(std::bind(&LauncherWindow::timer_callback, this));
+        m_popup.add(new Button("Hello World"))->set_align(alignmask::CENTER);
 
         add(new Image("background.png"));
 
-        auto logo = new Image("logo.png");
-        add(logo);
-        logo->align(alignmask::LEFT | alignmask::TOP, 10);
+        auto logo = new Image("@microchip_logo_white.png");
+        add(logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
-        auto settings = new ImageButton("settings.png", "", Rect(), widgetmask::NO_BORDER);
+        auto settings = new ImageButton("settings.png", "", Rect());
         add(settings);
-        settings->flag_set(widgetmask::NO_BACKGROUND);
-        settings->align(alignmask::RIGHT | alignmask::TOP, 10);
+        settings->set_align(alignmask::RIGHT | alignmask::TOP, 10);
         settings->on_event([this](eventid event)
         {
             if (event == eventid::MOUSE_DOWN)
@@ -206,37 +169,44 @@ public:
 #endif
     }
 
-    virtual int load(const string& file)
+    virtual int load(const std::string& expr)
     {
-        rapidxml::file<> xml_file(file.c_str());
-        rapidxml::xml_document<> doc;
-        doc.parse<0>(xml_file.data());
+        std::vector<std::string> files = experimental::glob(expr);
 
-        auto num = 0;
-        auto root_node = doc.first_node("menu");
-        for (auto node = root_node->first_node("item"); node; node = node->next_sibling())
+        for (auto& file : files)
         {
-            string name = node->first_attribute("name")->value();
-            string description = node->first_node("description")->value();
-            string image = node->first_node("image")->value();
-            string exec = node->first_node("exec")->value();
+            rapidxml::file<> xml_file(file.c_str());
+            rapidxml::xml_document<> doc;
+            doc.parse<0>(xml_file.data());
 
-            LauncherItem* box = new LauncherItem(num++, name, description, image, exec);
+            auto num = 0;
+            auto root_node = doc.first_node("menu");
+            for (auto node = root_node->first_node("item"); node; node = node->next_sibling())
+            {
+                string name = node->first_attribute("name")->value();
+                string description = node->first_node("description")->value();
+                string image = node->first_node("image")->value();
+                string exec = node->first_node("exec")->value();
+
+                LauncherItem* box = new LauncherItem(num++, name, description, image, exec);
 #ifdef USE_PLANE_LAYER
-            m_plane.add(box);
+                m_plane.add(box);
 #else
-            add(box);
+                add(box);
 #endif
 
-            box->move_to_center(Point(m_boxes.size() * SPACE, h() / 2));
+                box->move_to_center(Point(m_boxes.size() * ITEM_SPACE, h() / 2));
 
-            // pre-seed the image cache
-            for (auto s = 0.5; s <= 2.0; s += 0.01)
-                box->scale_box(s);
+#ifdef DO_SCALING
+                // pre-seed the image cache
+                for (auto s = 0.5; s <= 2.0; s += 0.01)
+                    box->scale_box(s);
+#endif
 
-            box->scale_box(m_boxes.size() * SPACE - box->w() / 2);
+                box->scale_box(m_boxes.size() * ITEM_SPACE - box->w() / 2);
 
-            m_boxes.push_back(box);
+                m_boxes.push_back(box);
+            }
         }
 
         start_snap();
@@ -284,30 +254,29 @@ public:
     {
         auto diff = x - m_moving_x;
 
-        for (unsigned int t = 0; t < m_boxes.size(); t++)
+        for (auto& box : m_boxes)
         {
-            auto pos = m_offset + (m_boxes[t]->num() * SPACE) + diff;
+            auto pos = m_offset + (box->num() * ITEM_SPACE) + diff;
 
-            Rect to(m_boxes[t]->box());
+            Rect to(box->box());
             to.x = pos;
 
-            bool visible = Rect::intersect(Rect::merge(to, m_boxes[t]->box()), this->box());
+            bool visible = Rect::intersect(Rect::merge(to, box->box()), this->box());
             if (visible)
             {
-                m_boxes[t]->move_to_center(Point(pos, m_boxes[t]->center().y));
-                m_boxes[t]->scale_box(pos - m_boxes[t]->w() / 2);
+                box->move_to_center(Point(pos, box->center().y));
+                box->scale_box(pos - box->w() / 2);
             }
             else
             {
-                m_boxes[t]->move_to_center(Point(pos, m_boxes[t]->center().y));
+                box->move_to_center(Point(pos, box->center().y));
             }
         }
     }
 
     void start_snap()
     {
-        if (m_animation)
-            delete m_animation;
+        m_animation.stop();
 
         auto center = box().center();
         auto distance = w();
@@ -322,26 +291,13 @@ public:
             }
         }
 
-        m_animation = new Animation(0, distance,
-                                    std::bind(&LauncherWindow::animate, this, std::placeholders::_1),
-                                    std::chrono::milliseconds(200), easing_quintic_easein);
-        m_animation->start();
+        m_animation.starting(0);
+        m_animation.ending(distance);
+        m_animation.duration(std::chrono::milliseconds(std::abs(distance)));
+        m_animation.start();
 
         m_moving_x = 0;
         m_offset = m_boxes[0]->center().x;
-    }
-
-    void animate(float value)
-    {
-        move_boxes(value);
-    }
-
-    void timer_callback()
-    {
-        if (!m_animation->next())
-        {
-            // TODO: exec
-        }
     }
 
 private:
@@ -349,11 +305,11 @@ private:
     PlaneWindow m_plane;
 #endif
     bool m_moving {false};
-    int m_moving_x {0};
-    int m_offset {0};
+    int m_moving_x{0};
+    int m_offset{0};
     vector<LauncherItem*> m_boxes;
-    Animation* m_animation {nullptr};
     Popup<Window> m_popup;
+    experimental::PropertyAnimator m_animation;
 };
 
 #define SHARED_PATH "../share/egt/examples/launcher/"
@@ -365,7 +321,7 @@ int main()
     set_image_path(SHARED_PATH);
 
     LauncherWindow win;
-    win.load(SHARED_PATH "menu.xml");
+    win.load(SHARED_PATH "*.xml");
     win.show();
 
     return app.run();

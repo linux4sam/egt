@@ -38,11 +38,11 @@ namespace egt
         switch (event)
         {
         case eventid::MOUSE_DOWN:
-            active(true);
+            set_active(true);
             invoke_handlers(event);
             return 1;
         case eventid::MOUSE_UP:
-            active(false);
+            set_active(false);
             invoke_handlers(event);
             return 1;
         default:
@@ -57,26 +57,22 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        if (!is_flag_set(widgetmask::NO_BORDER))
+        if (is_flag_set(widgetmask::NO_BORDER))
         {
-            painter.draw_box(box(),
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::LIGHT, Palette::GROUP_NORMAL),
-                             Painter::boxtype::rounded_gradient,
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE),
-                             active());
+            painter.draw_box(*this, Painter::boxtype::fill);
         }
-        else if (!is_flag_set(widgetmask::NO_BACKGROUND))
+        else if (is_flag_set(widgetmask::NO_BACKGROUND))
         {
-            painter.draw_box(box(),
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::BG));
+            painter.draw_box(*this, Painter::boxtype::border);
+        }
+        else
+        {
+            painter.draw_box(*this, Painter::boxtype::rounded_gradient);
         }
 
         // text
-        painter.set_color(palette().color(Palette::TEXT));
-        painter.set_font(m_font);
+        painter.set_color(palette().color(Palette::ColorId::TEXT));
+        painter.set_font(font());
         painter.draw_text(box(), m_text, m_text_align, 5);
     }
 
@@ -131,27 +127,20 @@ namespace egt
 
         if (!is_flag_set(widgetmask::NO_BORDER))
         {
-            painter.draw_box(box(),
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::LIGHT, Palette::GROUP_NORMAL),
-                             Painter::boxtype::rounded_gradient,
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE),
-                             active());
+            painter.draw_box(*this, Painter::boxtype::border);
         }
-        else if (!is_flag_set(widgetmask::NO_BACKGROUND))
+
+        if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
-            painter.draw_box(box(),
-                             palette().color(Palette::BORDER),
-                             palette().color(Palette::BG));
+            painter.draw_box(*this, Painter::boxtype::fill);
         }
 
         painter.draw_image(m_image, box(), m_image_align, 0, disabled());
 
         if (!m_text.empty())
         {
-            painter.set_color(palette().color(Palette::TEXT));
-            painter.set_font(m_font);
+            painter.set_color(palette().color(Palette::ColorId::TEXT));
+            painter.set_font(font());
             painter.draw_text(box(), m_text, m_text_align, 5);
         }
     }

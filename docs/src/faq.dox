@@ -1,0 +1,4 @@
+* I created my application and I just see a black screen.
+
+Make sure you call egt::Window::show() at least once somewheer in your
+application.

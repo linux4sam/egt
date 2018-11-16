@@ -76,6 +76,11 @@ namespace egt
          */
         NO_FOCUS = (1 << 6),
 
+                         /**
+                          * Enable transparent background.
+                          */
+                         TRANSPARENT_BACKGROUND = (1 << 7),
+
         /**
          * Default window flags.
          */
@@ -184,7 +189,7 @@ namespace egt
          * Given an item size, and a bounding box, and an alignment parameter,
          * return the rectangle the item box should be move/resized to.
          */
-        static Rect align_algorithm(const Size& item, const Rect& bounding,
+        static Rect align_algorithm(const Size& size, const Rect& bounding,
                                     alignmask align, int margin = 0)
         {
             assert(align != alignmask::NONE);
@@ -196,21 +201,21 @@ namespace egt
 
             if ((align & alignmask::CENTER) == alignmask::CENTER)
             {
-                p.x = bounding.x + (bounding.w / 2) - (item.w / 2);
-                p.y = bounding.y + (bounding.h / 2) - (item.h / 2);
+                p.x = bounding.x + (bounding.w / 2) - (size.w / 2);
+                p.y = bounding.y + (bounding.h / 2) - (size.h / 2);
             }
 
             if ((align & alignmask::LEFT) == alignmask::LEFT)
                 p.x = bounding.x + margin;
             else if ((align & alignmask::RIGHT) == alignmask::RIGHT)
-                p.x = bounding.x + bounding.w - item.w - margin;
+                p.x = bounding.x + bounding.w - size.w - margin;
 
             if ((align & alignmask::TOP) == alignmask::TOP)
                 p.y = bounding.y + margin;
             else if ((align & alignmask::BOTTOM) == alignmask::BOTTOM)
-                p.y = bounding.y + bounding.h - item.h - margin;
+                p.y = bounding.y + bounding.h - size.h - margin;
 
-            return Rect(p, item);
+            return Rect(p, size);
         }
 
         /**
@@ -267,12 +272,12 @@ namespace egt
          */
         virtual void resize(const Size& s);
 
-        inline void width(int w)
+        inline void set_width(int w)
         {
             resize(Size(w, h()));
         }
 
-        inline void height(int h)
+        inline void set_height(int h)
         {
             resize(Size(w(), h));
         }
@@ -284,8 +289,8 @@ namespace egt
          * @note This will cause a redraw of the widget.
          */
         virtual void move(const Point& point);
-        inline void movex(int x) { move(Point(x, y())); }
-        inline void movey(int y) { move(Point(x(), y)); }
+        inline void set_x(int x) { move(Point(x, y())); }
+        inline void set_y(int y) { move(Point(x(), y)); }
 
         /**
          * Move the widget to the specified center point.
@@ -364,7 +369,7 @@ namespace egt
         /**
          * Set the active property of the widget.
          */
-        virtual void active(bool value)
+        virtual void set_active(bool value)
         {
             if (m_active != value)
             {
@@ -436,7 +441,7 @@ namespace egt
         inline Point center() const { return box().center(); }
 
         /**
-         * Get the widget palette().
+         * Get the widget Palette.
          */
         Palette& palette()
         {
@@ -447,7 +452,7 @@ namespace egt
         }
 
         /**
-         * Get the widget palette().
+         * Get the widget Palette.
          */
         const Palette& palette() const
         {
@@ -458,8 +463,9 @@ namespace egt
         }
 
         /**
-         * Set the widget palette().
-         * @note This will overwrite the entire palette.
+         * Set the widget Palette.
+         *
+         * @note This will overwrite the entire widget Palette.
          */
         void set_palette(const Palette& palette)
         {
@@ -507,19 +513,14 @@ namespace egt
         inline void flag_clear(widgetmask flag) { m_flags &= ~flag; }
 
         /**
-         * Get the name of the widget.
-         */
-        const std::string& name() const { return m_name; }
-
-        /**
          * Align the widget.
          *
          * This will align the widget relative to the box of its parent frame.
          */
-        void align(alignmask a, int margin = 0);
+        void set_align(alignmask a, int margin = 0);
 
         /**
-         * Read the alignment of the widget.
+         * Get the alignment of the widget.
          */
         inline alignmask align() const { return m_align; }
 
@@ -529,9 +530,14 @@ namespace egt
         inline int margin() const { return m_margin; }
 
         /**
+         * Get the name of the widget.
+         */
+        const std::string& name() const { return m_name; }
+
+        /**
          * Set the name of the widget.
          */
-        inline void name(const std::string& name) { m_name = name; }
+        inline void set_name(const std::string& name) { m_name = name; }
 
         /**
          * Draw the widget to a file.
@@ -546,6 +552,8 @@ namespace egt
          * Convert screen coordinates to frame coordinates.
          */
         Point screen_to_frame(const Point& p);
+
+        virtual Point frame_to_screen(const Point& p);
 
         /**
          * Convert screen rectangle to frame coordinates.
@@ -647,7 +655,7 @@ namespace egt
         /**
          * Set the text of the label.
          */
-        virtual void text(const std::string& str);
+        virtual void set_text(const std::string& str);
 
         /**
          * Clear the text value.
@@ -660,27 +668,51 @@ namespace egt
         virtual const std::string& get_text() const { return m_text; }
 
         /**
-         * Set the Font of the Label.
-         */
-        virtual void font(const Font& font) { m_font = font; }
-
-        /**
-         * Get the Font of the Label.
-         */
-        virtual const Font& font() const { return m_font; }
-
-        /**
          * Set the alignment of the Label.
          */
         void text_align(alignmask align) { m_text_align = align; }
+
+        /**
+         * Get the widget Font.
+         */
+        Font& font()
+        {
+            if (!m_font.get())
+                m_font.reset(new Font(global_font()));
+
+            return *m_font.get();
+        }
+
+        /**
+         * Get the widget Font.
+         */
+        const Font& font() const
+        {
+            if (m_font.get())
+                return *m_font.get();
+
+            return global_font();
+        }
+
+        /**
+         * Set the widget Font.
+         *
+         * @note This will overwrite the entire widget Font.
+         */
+        void set_font(const Font& font)
+        {
+            m_font.reset(new Font(font));
+        }
 
         virtual ~TextWidget()
         {}
 
     protected:
-        alignmask m_text_align;
+        alignmask m_text_align{alignmask::CENTER};
         std::string m_text;
-        Font m_font;
+
+    private:
+        std::shared_ptr<Font> m_font;
     };
 
     namespace experimental

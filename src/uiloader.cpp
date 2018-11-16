@@ -23,15 +23,15 @@ namespace egt
         void set_widget_property(T instance, const string& name, const string& value)
         {
             if (name == "width")
-                instance->width(std::stoi(value));
+                instance->set_width(std::stoi(value));
             else if (name == "height")
-                instance->height(std::stoi(value));
+                instance->set_height(std::stoi(value));
             else if (name == "x")
-                instance->movex(std::stoi(value));
+                instance->set_x(std::stoi(value));
             else if (name == "y")
-                instance->movey(std::stoi(value));
+                instance->set_y(std::stoi(value));
             else if (name == "align")
-                instance->align((alignmask)std::stoi(value));
+                instance->set_align((alignmask)std::stoi(value));
             else if (name == "flags")
                 instance->flag_set((widgetmask)std::stoi(value));
         }
@@ -41,25 +41,25 @@ namespace egt
         {
             if (name == "text")
             {
-                instance->text(value);
+                instance->set_text(value);
             }
             else if (name == "fontface")
             {
                 Font font(instance->font());
                 font.face(value);
-                instance->font(font);
+                instance->set_font(font);
             }
             else if (name == "fontsize")
             {
                 Font font(instance->font());
                 font.size(std::stoi(value));
-                instance->font(font);
+                instance->set_font(font);
             }
             else if (name == "fontweight")
             {
                 Font font(instance->font());
                 font.weight((Font::weightid)std::stoi(value));
-                instance->font(font);
+                instance->set_font(font);
             }
         }
 
@@ -102,7 +102,7 @@ namespace egt
             auto name = node->first_attribute("name");
             if (name)
             {
-                instance->name(name->value());
+                instance->set_name(name->value());
             }
 
             for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling())

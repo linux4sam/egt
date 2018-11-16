@@ -77,24 +77,24 @@ int main()
 
 #ifdef HAVE_KPLOT
     LineChart line(Rect(10, 10, 600, 400));
-    line.name("linechart");
+    line.set_name("linechart");
     line.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     win.add(line);
 #endif
 
     CheckBox sin_checkbox("sin", Rect(Point(0, 410), Size(80, 40)));
     sin_checkbox.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-    sin_checkbox.name("sin");
+    sin_checkbox.set_name("sin");
     win.add(&sin_checkbox);
 
     CheckBox cos_checkbox("cos", Rect(Point(100, 410), Size(80, 40)));
     cos_checkbox.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-    cos_checkbox.name("cos");
+    cos_checkbox.set_name("cos");
     win.add(&cos_checkbox);
 
     CheckBox atan_checkbox("atan", Rect(Point(200, 410), Size(80, 40)));
     atan_checkbox.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-    atan_checkbox.name("atan");
+    atan_checkbox.set_name("atan");
     win.add(&atan_checkbox);
 
     auto handle_checkbox = [&](eventid event)
@@ -119,14 +119,13 @@ int main()
     cos_checkbox.check(true);
 
     Slider line_width(1, 10, Rect(Point(300, 410), Size(200, 40)));
-    line_width.name("line_width");
+    line_width.set_name("line_width");
     win.add(&line_width);
 
     line_width.on_event([&](eventid event)
     {
         if (event == eventid::PROPERTY_CHANGED)
         {
-            cout << "line changed" << endl;
             line.set_line_width(line_width.position());
         }
     });

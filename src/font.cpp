@@ -10,20 +10,11 @@ namespace egt
     const std::string Font::FACE_TIMES = "Times Unicode";
     const std::string Font::FACE_COURIER = "Courier Unicode";
 
-    // default font, which should be unicode
-    static Font default_font = Font(Font::FACE_ARIAL, 16, Font::weightid::NORMAL,
-                                    Font::slantid::NORMAL);
-
-    void Font::set_default_font(const Font& font)
-    {
-        default_font = font;
-    }
-
     Font::Font()
-        : m_face(default_font.face()),
-          m_size(default_font.size()),
-          m_weight(default_font.weight()),
-          m_slant(default_font.slant())
+        : m_face(global_font().face()),
+          m_size(global_font().size()),
+          m_weight(global_font().weight()),
+          m_slant(global_font().slant())
     {}
 
     Font::Font(const std::string& face, int size, weightid weight, slantid slant)
@@ -34,17 +25,29 @@ namespace egt
     {}
 
     Font::Font(int size)
-        : m_face(default_font.face()),
+        : m_face(global_font().face()),
           m_size(size),
-          m_weight(default_font.weight()),
-          m_slant(default_font.slant())
+          m_weight(global_font().weight()),
+          m_slant(global_font().slant())
     {}
 
     Font::Font(int size, weightid weight)
-        : m_face(default_font.face()),
+        : m_face(global_font().face()),
           m_size(size),
           m_weight(weight),
-          m_slant(default_font.slant())
+          m_slant(global_font().slant())
     {}
 
+    Font& global_font()
+    {
+        static Font* f = nullptr;
+
+        if (!f)
+        {
+            f = new Font(Font::FACE_ARIAL, 16, Font::weightid::NORMAL,
+                         Font::slantid::NORMAL);
+        }
+
+        return *f;
+    }
 }

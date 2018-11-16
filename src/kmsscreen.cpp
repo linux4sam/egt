@@ -341,10 +341,15 @@ namespace egt
         return total;
     }
 
-    KMSScreen::~KMSScreen()
+    void KMSScreen::close()
     {
         kms_device_close(m_device);
         drmClose(m_fd);
+    }
+
+    KMSScreen::~KMSScreen()
+    {
+        close();
     }
 
 }

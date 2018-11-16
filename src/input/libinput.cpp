@@ -141,10 +141,8 @@ out:
         else
             type = "removed";
 
-        printf("%s %-30s %s\n",
-               libinput_device_get_sysname(dev),
-               libinput_device_get_name(dev),
-               type);
+        cout << type << " " << libinput_device_get_sysname(dev) << " " <<
+            libinput_device_get_name(dev) << " " << endl;
 
         li = libinput_event_get_context(ev);
 

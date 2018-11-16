@@ -13,87 +13,13 @@
 using namespace std;
 using namespace egt;
 
-/**
- * On-screen keyboard.
- * @todo This needs to be made an official widget.
- */
-template <class T>
-class Keyboard : public T
-{
-public:
-    Keyboard()
-        : T(Size(800, 200)),
-          m_grid(Rect(), 10, 4, 5)
-    {
-        this->add(&m_grid);
-        this->m_grid.align(alignmask::EXPAND);
-
-        /*
-        template <class T>
-            struct Key : public T
-        {
-
-            unsigned int code;
-        };
-        */
-
-        vector<vector<string>> buttons =
-        {
-            {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p" },
-            {"", "a", "s", "d", "f", "g", "h", "j", "k", "l" },
-            {"icons/arrow_up.png", "z", "x", "c", "v", "b", "n", "m", "", "icons/arrow_left.png"},
-            {"123", ",", "", "", "     ", "", "", "", "", "."}
-        };
-
-        for (size_t r = 0; r < buttons.size(); r++)
-        {
-            for (size_t c = 0; c < buttons[r].size(); c++)
-            {
-                string label = buttons[r][c];
-                if (label.empty())
-                    continue;
-
-                Button* b;
-
-                if (label.find(".png") != string::npos)
-                    b = new ImageButton(label);
-                else
-                    b = new Button(label);
-
-                b->on_event([b](eventid event)
-                {
-                    if (!b->get_text().empty())
-                    {
-                        if (event == eventid::MOUSE_DOWN)
-                        {
-                            event_key() = b->get_text()[0];
-                            detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
-                        }
-                        else if (event == eventid::MOUSE_UP)
-                        {
-                            event_key() = b->get_text()[0];
-                            detail::IInput::dispatch(eventid::KEYBOARD_UP);
-                        }
-                    }
-                });
-
-                this->m_grid.add(b, c, r);
-            }
-        }
-
-        this->m_grid.reposition();
-    }
-
-protected:
-    StaticGrid m_grid;
-};
-
 int main()
 {
     Application app;
 
     set_image_path("../share/egt/");
 
+#if 0
     Window win(Size(800, 480));
 
     Label label1("left align", Rect(Point(100, 50), Size(200, 40)),
@@ -203,16 +129,6 @@ int main()
     CheckBox checkbox2("checkbox 2", Rect(Point(350, 400), Size(200, 40)));
     win.add(&checkbox2);
 
-    PieChart pie1(Rect(Point(600, 50), Size(200, 200)));
-    win.add(&pie1);
-
-    std::map<std::string, float> data;
-    data.insert(make_pair("truck", .25));
-    data.insert(make_pair("car", .55));
-    data.insert(make_pair("bike", .10));
-    data.insert(make_pair("motorcycle", .10));
-    pie1.data(data);
-
     LevelMeter lp1(Rect(Point(600, 250), Size(50, 100)));
     win.add(&lp1);
 
@@ -242,6 +158,122 @@ int main()
             return;
         win.save_children_to_file();
     });
+#endif
+
+    Window win;
+
+    StaticGrid grid0(Rect(Point(), Size(win.w() / 2, win.h())), 2, 10, 5);
+    win.add(&grid0);
+    //grid0.align(alignmask::EXPAND);
+
+    Label label1("left align", Rect(),
+                 alignmask::LEFT | alignmask::CENTER, Font(), widgetmask::NONE);
+    grid0.add(&label1);
+
+    Label label2("right align", Rect(),
+                 alignmask::RIGHT | alignmask::CENTER, Font(), widgetmask::NONE);
+    grid0.add(&label2);
+
+    Label label3("top align", Rect(),
+                 alignmask::TOP | alignmask::CENTER, Font(), widgetmask::NONE);
+    grid0.add(&label3);
+
+    Label label4("bottom align", Rect(),
+                 alignmask::BOTTOM | alignmask::CENTER, Font(), widgetmask::NONE);
+    grid0.add(&label4);
+
+    Button btn1("button 1", Rect(Point(), Size(100, 40)));
+    grid0.add(&btn1);
+
+#if 0
+    btn1.on_event([&popup](eventid event)
+    {
+
+        if (event == eventid::MOUSE_DOWN)
+        {
+            if (popup.visible())
+                popup.hide();
+            else
+                popup.show(true);
+        }
+
+    });
+#endif
+
+    Button btn2("button 2");
+    btn2.disable(true);
+    grid0.add(&btn2);
+
+    Slider slider1(0, 100);
+    slider1.position(50);
+    grid0.add(&slider1);
+
+    SlidingCheckBox sliding1;
+    grid0.add(&sliding1);
+
+    SlidingCheckBox sliding2;
+    sliding2.check(true);
+    grid0.add(&sliding2);
+
+    TextBox text1("text 1");
+    grid0.add(&text1);
+
+    TextBox text2("text 2 disabled");
+    text2.disable(true);
+    grid0.add(&text2);
+
+    // TODO: this is broken with keyboard and focus - get dups
+    detail::IInput::global_input().on_event([&text1](eventid event)
+    {
+        switch (event)
+        {
+        case eventid::KEYBOARD_DOWN:
+        case eventid::KEYBOARD_UP:
+        case eventid::KEYBOARD_REPEAT:
+            text1.handle(event);
+            break;
+        default:
+            break;
+        }
+    });
+
+    ImageLabel imagelabel1("icons/bug.png", "Bug");
+    grid0.add(&imagelabel1);
+
+    ImageLabel imagelabel2("icons/phone.png", "Phone");
+    grid0.add(&imagelabel2);
+
+    CheckBox checkbox1("checkbox 1");
+    grid0.add(&checkbox1);
+    checkbox1.check(true);
+
+    CheckBox checkbox2("checkbox 2");
+    grid0.add(&checkbox2);
+
+    StaticGrid grid1(Rect(Point(win.w() / 2, 0), Size(win.w() / 2, win.h())), 2, 3, 5);
+    win.add(&grid1);
+
+    LevelMeter lp1;
+    grid1.add(&lp1);
+
+    AnalogMeter am1;
+    grid1.add(&am1);
+
+    CPUMonitorUsage tools;
+    PeriodicTimer cputimer(std::chrono::seconds(1));
+    cputimer.on_timeout([&tools, &lp1, &am1]()
+    {
+        tools.update();
+        lp1.value(tools.usage(0));
+        am1.value(tools.usage(0));
+    });
+    cputimer.start();
+
+    Slider slider2(0, 100, Rect(), orientation::VERTICAL);
+    slider2.position(75);
+    grid1.add(&slider2);
+
+    win.show();
 
     return app.run();
 }

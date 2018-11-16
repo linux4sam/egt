@@ -16,6 +16,12 @@ namespace egt
           m_timer(std::chrono::seconds(1))
     {
         m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
+
+        palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
+        palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::LIGHT));
+
+        palette().set(Palette::BG, Palette::GROUP_DISABLED, palette().color(Palette::MID));
+        palette().set(Palette::TEXT, Palette::GROUP_DISABLED, palette().color(Palette::DARK));
     }
 
     void TextBox::focus(bool value)
@@ -60,17 +66,14 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_box(box(),
-                         palette().color(Palette::BORDER),
-                         palette().color(Palette::TEXTBG),
-                         Painter::boxtype::rounded_border);
+        painter.draw_box(*this, Painter::boxtype::rounded_border);
 
         // text
         Rect bounding = painter.draw_text(m_text, box(),
                                           palette().color(Palette::TEXT),
                                           m_text_align,
                                           5,
-                                          m_font);
+                                          font());
 
         if (Widget::focus() && m_cursor_state)
         {
@@ -131,13 +134,10 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_box(box(),
-                         palette().color(Palette::BORDER),
-                         palette().color(Palette::TEXTBG),
-                         Painter::boxtype::rounded_border);
+        painter.draw_box(*this, Painter::boxtype::rounded_border);
 
         // text
-        painter.set_font(m_font);
+        painter.set_font(font());
 
         auto cr = painter.context();
         cairo_text_extents_t textext;
@@ -162,7 +162,7 @@ namespace egt
                               palette().color(Palette::TEXT),
                               m_text_align,
                               5,
-                              m_font);
+                              font());
             linerect.y += linerect.h;
         }
     }

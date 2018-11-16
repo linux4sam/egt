@@ -110,7 +110,7 @@ namespace egt
              */
             void start()
             {
-		m_start = std::chrono::steady_clock::now();
+                m_start = std::chrono::steady_clock::now();
                 m_frames = 0;
             }
 

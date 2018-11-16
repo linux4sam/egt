@@ -28,6 +28,8 @@ using namespace std;
 namespace egt
 {
 
+    auto ICON_PATH = "../share/egt/icons/";
+
     static string image_path = "";
     void set_image_path(const std::string& path)
     {
@@ -60,11 +62,10 @@ namespace egt
             {
                 assert(CAIRO_HAS_PNG_FUNCTIONS == 1);
 
-                std::string::size_type i = filename.find(":");
-                if (i == 0)
+                if (filename.compare(0, 1, ":") == 0)
                 {
                     string name = filename;
-                    name.erase(i, 1);
+                    name.erase(0, 1);
 
                     /**
                      * @todo This should use MIME info and not filename.
@@ -82,6 +83,35 @@ namespace egt
                         image = shared_cairo_surface_t(
                                     cairo_image_surface_create_from_jpeg_stream(
                                         read_resource_stream, (void*)name.c_str()),
+                                    cairo_surface_destroy);
+                    }
+#endif
+                    else
+                    {
+                        ERR("could not load file " << filename);
+                        assert(!"unsupported file type");
+                    }
+                }
+                else if (filename.compare(0, 1, "@") == 0)
+                {
+                    string name = filename;
+                    name.erase(0, 1);
+                    name = ICON_PATH + name;
+
+                    /**
+                     * @todo This should use MIME info and not filename.
+                     */
+                    if (name.find("png") != std::string::npos)
+                    {
+                        image = shared_cairo_surface_t(
+                                    cairo_image_surface_create_from_png(name.c_str()),
+                                    cairo_surface_destroy);
+                    }
+#ifdef HAVE_LIBJPEG
+                    else if (name.find("jpg") != std::string::npos)
+                    {
+                        image = shared_cairo_surface_t(
+                                    cairo_image_surface_create_from_jpeg(name.c_str()),
                                     cairo_surface_destroy);
                     }
 #endif
@@ -137,7 +167,8 @@ namespace egt
             if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
             {
                 stringstream ss;
-                ss << "could not load image " << filename;
+                ss << cairo_status_to_string(cairo_surface_status(image.get()))
+                   << ": " << filename;
                 throw std::runtime_error(ss.str());
             }
 

@@ -137,7 +137,7 @@ public:
     {
         ostringstream ss;
         ss << "Objects: " << m_images.size();
-        m_label->text(ss.str());
+        m_label->set_text(ss.str());
     }
 
     vector<Bubble*> m_images;
@@ -262,7 +262,7 @@ int main()
         tools.update();
         ostringstream ss;
         ss << "CPU: " << (int)tools.usage(0) << "%";
-        label1.text(ss.str());
+        label1.set_text(ss.str());
     });
     cputimer.start();
 

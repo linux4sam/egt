@@ -55,14 +55,6 @@ namespace egt
         //@}
 
         /**
-         * Set the global default Font.
-         *
-         * Call this before allocating any Font directly or indirectly (i.e.
-         * with a Widget) to set the default font.
-         */
-        static void set_default_font(const Font& font);
-
-        /**
          * Create a font based on the global default font.
          */
         Font();
@@ -139,6 +131,14 @@ namespace egt
         weightid m_weight;
         slantid m_slant;
     };
+
+    /**
+     * Get/Set the global default Font.
+     *
+     * Call this before allocating any Font directly or indirectly (i.e.
+     * with a Widget) to set the default font.
+     */
+    Font& global_font();
 
 }
 

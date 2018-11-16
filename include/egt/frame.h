@@ -56,6 +56,8 @@ namespace egt
 
         virtual int handle(eventid event) override;
 
+	virtual void move(const Point& point);
+
         /**
          * Add a child widget.
          *

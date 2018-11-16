@@ -146,7 +146,7 @@ public:
 
         ostringstream ss;
         ss << "Points: " << m_points;
-        m_label->text(ss.str());
+        m_label->set_text(ss.str());
 
         m_running = false;
     }
@@ -157,7 +157,7 @@ public:
 
         ostringstream ss;
         ss << "Points: " << m_points;
-        m_label->text(ss.str());
+        m_label->set_text(ss.str());
     }
 
     void animate()

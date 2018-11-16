@@ -24,7 +24,7 @@ public:
                std::chrono::milliseconds(1500),
                easing_snap),
           m_background(*this, "background.png"),
-          m_logo(*this, "logo.png"),
+          m_logo(*this, "@microchip_logo_black.png"),
           m_title(*this, "Living Room",
                   Rect(Point(), Size(250, 64)),
                   alignmask::CENTER,
@@ -58,10 +58,10 @@ public:
                          Size(50, 300)),
                     orientation::VERTICAL)
     {
-        m_logo.align(alignmask::LEFT | alignmask::TOP, 10);
+        m_logo.set_align(alignmask::LEFT | alignmask::TOP, 10);
 
         m_title.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        m_title.align(alignmask::CENTER | alignmask::TOP, 10);
+        m_title.set_align(alignmask::CENTER | alignmask::TOP, 10);
 
         m_radial1.on_event([this](eventid event)
         {
@@ -139,14 +139,14 @@ public:
         add(&m_slider1);
         m_slider1.position(50);
 
-        m_a1.on_change(std::bind(&ImageLabel::movex, std::ref(m_label1), std::placeholders::_1));
-        m_a1.on_change(std::bind(&ImageLabel::movex, std::ref(m_label2), std::placeholders::_1));
-        m_a1.on_change(std::bind(&ImageLabel::movex, std::ref(m_label3), std::placeholders::_1));
+        m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label1), std::placeholders::_1));
+        m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label2), std::placeholders::_1));
+        m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label3), std::placeholders::_1));
 
-        m_a2.on_change(std::bind(&Radial<int>::movey, std::ref(m_radial1), std::placeholders::_1));
+        m_a2.on_change(std::bind(&Radial<int>::set_y, std::ref(m_radial1), std::placeholders::_1));
 
-        m_a3.on_change(std::bind(&Slider::movex, std::ref(m_slider1), std::placeholders::_1));
-        m_a3.on_change(std::bind(&Label::movex, std::ref(m_label4), std::placeholders::_1));
+        m_a3.on_change(std::bind(&Slider::set_x, std::ref(m_slider1), std::placeholders::_1));
+        m_a3.on_change(std::bind(&Label::set_x, std::ref(m_label4), std::placeholders::_1));
     }
 
     virtual void show() override

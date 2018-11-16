@@ -24,24 +24,20 @@ int main()
 
     auto NAV_WIDTH = 80;
 
-    ImageButton left(win, "arrow_left.png", "", Rect(0, 0, NAV_WIDTH, win.h()));
-    //left.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    //left.flag_set(widgetmask::NO_BORDER);
+    ImageButton left(win, "arrow_left.png", "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
+    left.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     left.image_align(alignmask::CENTER);
-    left.align(alignmask::LEFT);
+    left.set_align(alignmask::LEFT);
 
-    ImageButton right(win, "arrow_right.png", "", Rect(0, 0, NAV_WIDTH, win.h()));
-    //right.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    //right.flag_set(widgetmask::NO_BORDER);
+    ImageButton right(win, "arrow_right.png", "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
+    right.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     right.image_align(alignmask::CENTER);
-    right.align(alignmask::RIGHT);
+    right.set_align(alignmask::RIGHT);
 
     ScrolledView view0(Rect(NAV_WIDTH, 0, win.w() - (NAV_WIDTH * 2), win.h()));
     view0.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    view0.name("view0");
+    view0.set_name("view0");
     win.add(&view0);
-
-    cout << "view size: " << view0.box() << endl;
 
     experimental::PropertyAnimator swipe(0, 0, std::chrono::milliseconds(1000), easing_quintic_easein);
     swipe.on_change(std::bind(&ScrolledView::set_position, std::ref(view0), std::placeholders::_1));
@@ -55,7 +51,6 @@ int main()
             swipe.start();
         }
     });
-
 
     left.on_event([&](eventid event)
     {
@@ -71,10 +66,8 @@ int main()
 
     StaticGrid grid0(Rect(NAV_WIDTH, 0, files.size() / 6 * 160, win.h()), files.size() / 6, 6, 0);
     grid0.flag_set(widgetmask::NO_BORDER);
-    grid0.name("grid0");
+    grid0.set_name("grid0");
     view0.add(&grid0);
-
-    cout << "grid size: " << grid0.box() << endl;
 
     for (auto& file : files)
     {
@@ -93,7 +86,7 @@ int main()
     Popup<PlaneWindow> popup(Size(100, 40));
     popup.move(Point(win.w() - 100 - 10 - NAV_WIDTH, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
-    popup.name("popup");
+    popup.set_name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
@@ -112,7 +105,7 @@ int main()
 
         ostringstream ss;
         ss << "CPU: " << (int)tools.usage(0) << "%";
-        label1.text(ss.str());
+        label1.set_text(ss.str());
     });
     cputimer.start();
 

@@ -3,7 +3,7 @@
   <item name="Contacts">
     <description></description>
     <image>contacts.png</image>
-    <exec></exec>
+    <exec>./icon</exec>
   </item>
   <item name="Phone">
     <description></description>

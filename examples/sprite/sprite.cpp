@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <chrono>
+#include <iomanip>
 
 using namespace std;
 using namespace egt;
@@ -42,6 +43,8 @@ int main()
         img.scale(scale, scale);
     }
 
+    Image logo("@microchip_logo_white.png");
+    win.add(&logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
     StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), 2, 2, 10);
 
@@ -104,7 +107,8 @@ int main()
     fps.start();
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(DEFAULT_MS_INTERVAL));
-    animatetimer.on_timeout([&]() {
+    animatetimer.on_timeout([&]()
+    {
         if (sprite1.visible())
             sprite1.advance();
 
@@ -118,18 +122,18 @@ int main()
 
             ostringstream ss;
             ss << "FPS: " << std::round(fps.fps());
-            label2.text(ss.str());
+            label2.set_text(ss.str());
         }
         else
         {
-            label2.text("FPS: -");
+            label2.set_text("FPS: -");
         }
     });
     animatetimer.start();
 
     Slider slider1(10, 500, Rect(Point(win.h() - 40, 300), Size(win.w(), 40)));
     win.add(&slider1);
-    slider1.align(alignmask::CENTER | alignmask::BOTTOM);
+    slider1.set_align(alignmask::CENTER | alignmask::BOTTOM);
     slider1.position(DEFAULT_MS_INTERVAL);
     slider1.on_event([&](eventid event)
     {
@@ -142,7 +146,7 @@ int main()
     Popup<PlaneWindow> popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
-    popup.name("popup");
+    popup.set_name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
@@ -162,7 +166,7 @@ int main()
 
         ostringstream ss;
         ss << "CPU: " << (int)tools.usage(0) << "%";
-        label1.text(ss.str());
+        label1.set_text(ss.str());
     });
     cputimer.start();
 

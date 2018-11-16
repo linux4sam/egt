@@ -26,6 +26,7 @@ animations/animations \
 basic/basic \
 calc/calc \
 charts/charts \
+drag/drag \
 icon/icon \
 easing/easing \
 floating/floating \
@@ -121,6 +122,7 @@ launcher_launcher_DATA = $(wildcard $(top_srcdir)/examples/launcher/*.png) \
 	$(top_srcdir)/examples/launcher/menu.xml \
 	$(top_srcdir)/examples/launcher/background.jpg
 launcher_launcher_LDFLAGS = $(AM_LDFLAGS)
+launcher_launcher_SCRIPTS = $(wildcard $(top_srcdir)/examples/launcher/*.sh)
 
 space_space_SOURCES = space/space.cpp
 space_space_CXXFLAGS = $(AM_CXXFLAGS)
@@ -191,3 +193,10 @@ icon_icon_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 icon_icondir = $(prefix)/share/egt/examples/icon
 icon_icon_DATA = $(wildcard $(top_srcdir)/examples/icon/*.png)
 icon_icon_LDFLAGS = $(AM_LDFLAGS)
+
+drag_drag_SOURCES = drag/drag.cpp
+drag_drag_CXXFLAGS = $(AM_CXXFLAGS)
+drag_drag_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+drag_dragdir = $(prefix)/share/egt/examples/drag
+drag_drag_DATA = $(wildcard $(top_srcdir)/examples/drag/*.png)
+drag_drag_LDFLAGS = $(AM_LDFLAGS)

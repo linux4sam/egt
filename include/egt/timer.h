@@ -55,12 +55,12 @@ namespace egt
          */
         virtual void start_with_duration(std::chrono::milliseconds duration);
 
-	/**
-	 * Change the duration of the timer.
-	 *
-	 * This will stop the timer, change the duration, and restart the timer
-	 * with the new duration if the timer was alrady running.
-	 */
+        /**
+         * Change the duration of the timer.
+         *
+         * This will stop the timer, change the duration, and restart the timer
+         * with the new duration if the timer was alrady running.
+         */
         virtual void change_duration(std::chrono::milliseconds duration);
 
         /**

@@ -62,7 +62,7 @@ namespace egt
     {
         ostringstream ss;
         ss << "widget" << widget_id++;
-        name(ss.str());
+        set_name(ss.str());
     }
 
     Widget::Widget(Frame& parent, const Rect& rect, widgetmask flags) noexcept
@@ -150,7 +150,7 @@ namespace egt
         return parent()->screen();
     }
 
-    void Widget::align(alignmask a, int margin)
+    void Widget::set_align(alignmask a, int margin)
     {
         if (m_align != a || m_margin != margin)
         {
@@ -163,6 +163,13 @@ namespace egt
                 set_box(r);
             }
         }
+    }
+
+    Point Widget::frame_to_screen(const Point& p)
+    {
+        if (m_parent)
+            return parent()->frame_to_screen(p);
+        return p;
     }
 
     Point Widget::screen_to_frame(const Point& p)
@@ -221,9 +228,9 @@ namespace egt
                            alignmask align, const Font& font, widgetmask flags) noexcept
         : Widget(rect, flags),
           m_text_align(align),
-          m_text(text),
-          m_font(font)
+          m_text(text)
     {
+        set_font(font);
     }
 
     void TextWidget::clear()
@@ -235,7 +242,7 @@ namespace egt
         }
     }
 
-    void TextWidget::text(const std::string& str)
+    void TextWidget::set_text(const std::string& str)
     {
         if (m_text != str)
         {
@@ -374,11 +381,11 @@ namespace egt
             case eventid::MOUSE_DOWN:
                 m_moving_x = screen_to_frame(event_mouse()).y;
                 m_start_pos = position();
-                active(true);
+                set_active(true);
                 return 1;
                 break;
             case eventid::MOUSE_UP:
-                active(false);
+                set_active(false);
                 return 1;
                 break;
             case eventid::MOUSE_MOVE:

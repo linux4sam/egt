@@ -30,7 +30,7 @@ public:
              widgetmask flags = widgetmask::NONE)
         : ImageButton(filename, label, Rect(Point(x, y), Size()), flags)
     {
-        image_align(alignmask::CENTER | alignmask::TOP);
+        image_align(alignmask::CENTER);
         text_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
@@ -179,7 +179,7 @@ static void top_menu(Window* win)
 
             ostringstream ss;
             ss << local_tm.tm_hour << ":" << std::setfill('0') << std::setw(2) << local_tm.tm_min;
-            m_label.text(ss.str());
+            m_label.set_text(ss.str());
         }
 
         Label& m_label;

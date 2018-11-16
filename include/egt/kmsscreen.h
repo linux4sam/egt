@@ -95,6 +95,8 @@ namespace egt
 
         uint32_t index() override;
 
+        void close();
+
     protected:
         int m_fd;
         struct kms_device* m_device;
