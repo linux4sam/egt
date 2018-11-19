@@ -35,5 +35,5 @@ performance.
 
 ## License
 
-EGT is released under the terms of the `MIT` license. See the `COPYING`
+EGT is released under the terms of the `Apache 2` license. See the `COPYING`
 file for more information.
