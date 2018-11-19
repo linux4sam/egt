@@ -16,7 +16,7 @@ using namespace egt;
 static LineChart::data_array create_sin_data()
 {
     LineChart::data_array data;
-    for (float i = 0.; i < M_PI * 4; i += 0.3)
+    for (float i = 0.; i < M_PI * 4; i += 0.2)
     {
         LineChart::data_pair p;
         p.x = i;
@@ -29,7 +29,7 @@ static LineChart::data_array create_sin_data()
 static LineChart::data_array create_cos_data()
 {
     LineChart::data_array data;
-    for (float i = 0.; i < M_PI * 4; i += 0.3)
+    for (float i = 0.; i < M_PI * 4; i += 0.2)
     {
         LineChart::data_pair p;
         p.x = i;
@@ -43,7 +43,7 @@ static LineChart::data_array create_cos_data()
 static LineChart::data_array create_atan_data()
 {
     LineChart::data_array data;
-    for (float i = 0.; i < M_PI * 4; i += 0.3)
+    for (float i = 0.; i < M_PI * 4; i += 0.2)
     {
         LineChart::data_pair p;
         p.x = i;
