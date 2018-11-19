@@ -19,21 +19,21 @@ There are three coordinate systems in EGT:
 - Window
 
 @par
-The window coordinate system is what the widget hierchy sees as the root.  A Window manages a surface, so that overall surface has a coordinate system.
+The window coordinate system is what the widget hierarchy sees as the root.  A Window manages a surface, so that overall surface has a coordinate system.
 
 - Local/Widget
 
 @par
-The local coordinate system is how each widget sees itself, and in the case of a compositing widget like a frame, it's the relationship between the frame's box() and its child widgets.
+The local coordinate system is how each widget sees itself, and in the case of a composing widget like a frame, it's the relationship between the frame's box() and its child widgets.
 
 - Screen/Display
 
 @par
-The screen coordinate system represents the entire screen, irrelevent of content.  It's simply the resolution of the screen.  For example, mouse press events originate on the screen coordinate system.
+The screen coordinate system represents the entire screen, irrelevant of content.  It's simply the resolution of the screen.  For example, mouse press events originate on the screen coordinate system.
 
 @section coord_radians Radians and Degrees
 
-While most of the geometry related to EGT deals with rectangls, it is sometimes
+While most of the geometry related to EGT deals with rectangles, it is sometimes
 necessary to deal with arcs when drawing.
 
 @image html radians.png

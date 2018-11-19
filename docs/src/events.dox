@@ -7,7 +7,7 @@ This chapter discusses the event model and how events are handled.
 @section events_loop Event Loop
 
 The egt::EventLoop is the inner loop of the framework. Its basic operations is
-demonsrated with the following pseudocode:
+demonstrated with the following pseudo code:
 
 @code
 while (true)
@@ -21,7 +21,7 @@ while (true)
 It does this until the event loop is told to exit, and int turn, this usually
 means the application exits.
 
-The event loop in EGT is implmented with the <a href="https://think-async.com/">Asio</a> library.  Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.  Asio can be used as part of boost or standalone, and EGT comes with the standalone version.  Asio provides way more features than what is directly used by EGT.
+The event loop in EGT is implemented with the <a href="https://think-async.com/">Asio</a> library.  Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.  Asio can be used as part of boost or standalone, and EGT comes with the standalone version.  Asio provides way more features than what is directly used by EGT.
 
 @imageSize{asio.png,width:400px;}
 @image html asio.png
@@ -29,14 +29,14 @@ The event loop in EGT is implmented with the <a href="https://think-async.com/">
 
 EGT abstracts out any direct involvement with Asio, however, should you choose to use it directly it is available for use in, for example, networking and multithreaded applications.
 
-@section events_prop Event Propogation
+@section events_prop Event Propagation
 
 Every time a user touches the screen, clicks a button, or presses a key, an
 event is generated and sent to the event loop and then dispatched to appropriate
 handlers. Events can also come from other things like the window manager,
 timers, or networking sockets.
 
-Events are usually propogated from the top level widget down.  There are
+Events are usually propagated from the top level widget down.  There are
 exceptions to this, for example, when a widget grabs the mouse of keyboard, then
 this natural flow is short circuited.
 
@@ -86,7 +86,7 @@ of callbacks.
 
 @section events_timers Timers
 
-Timers are an intrensice part of the event loop.  There are two main classes for
+Timers are an intrinsic part of the event loop.  There are two main classes for
 working with timers: egt::Timer and egt::PeriodicTimer.
 
 Creating a timer is straightforward, and you can register any number of

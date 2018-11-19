@@ -161,9 +161,9 @@ public:
 
 protected:
 
-    experimental::PropertyAnimator m_a1;
-    experimental::PropertyAnimator m_a2;
-    experimental::PropertyAnimator m_a3;
+    PropertyAnimator m_a1;
+    PropertyAnimator m_a2;
+    PropertyAnimator m_a3;
     Image m_background;
     Image m_logo;
     Label m_title;

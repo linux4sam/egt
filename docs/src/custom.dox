@@ -11,7 +11,7 @@ functions that should be changed.  If you are creating a completely new type of
 widget, you would inherit directly from egt::Widget or one of the other base
 widget types.
 
-An example of this happening is fluent throught the EGT library itself.  For
+An example of this happening is fluent throughout the EGT library itself.  For
 example, egt::CheckBox implements a standard traditional egt::CheckBox that
 shows a *X* when then egt::CheckBox is checked().  However, to change the look
 and keep the same logical operation, egt::SlidingCheckBox derives from
@@ -32,7 +32,7 @@ something like this:
     };
 @endcode
 
-This new widget is basically a CheckBox, but we want to change how it looks and
+This new widget is basically a egt::CheckBox, but we want to change how it looks and
 operates. The new draw() method looks like this.
 
 @code

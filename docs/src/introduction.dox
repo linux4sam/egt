@@ -9,6 +9,8 @@ modern GUI functionality, look-and-feel, and performance. EGT provides a
 consistent API and solution for working across all Microchip AT91/SAMA5 parts in
 order to build robust GUI based applications.
 
+EGT takes advantage of and focuses on the C++11 standard.
+
 @section intro_what What is a toolkit?
 
 A toolkit (also known as a GUI framework) is used to construct graphical user
@@ -17,7 +19,7 @@ of features, properties, and methods that makes creating user interfaces easier.
 This can mean creating an API to the operating system or various system
 libraries.
 
-@imageSize{high_level.png,width:400px;}
+@imageSize{high_level.png,width:500px;}
 @image html high_level.png
 @image latex high_level.png "High level" width=8cm
 
@@ -26,7 +28,7 @@ libraries.
 The high level architecture of EGT is simple.  It's the middle layer between the
 application code and everything else.
 
-@imageSize{architecture.png,width:400px;}
+@imageSize{architecture.png,width:500px;}
 @image html architecture.png
 @image latex architecture.png "Architecture" width=8cm
 

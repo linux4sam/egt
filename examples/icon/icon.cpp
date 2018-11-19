@@ -40,7 +40,7 @@ int main()
     view0.set_name("view0");
     win.add(&view0);
 
-    experimental::PropertyAnimator swipe(0, 0, std::chrono::milliseconds(1000), easing_quintic_easein);
+    PropertyAnimator swipe(0, 0, std::chrono::milliseconds(1000), easing_quintic_easein);
     swipe.on_change(std::bind(&ScrolledView::set_position, std::ref(view0), std::placeholders::_1));
 
     right.on_event([&](eventid event)

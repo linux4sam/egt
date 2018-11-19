@@ -310,7 +310,7 @@ private:
     int m_offset{0};
     vector<LauncherItem*> m_boxes;
     Popup<Window> m_popup;
-    experimental::PropertyAnimator m_animation;
+    PropertyAnimator m_animation;
 };
 
 #define SHARED_PATH "../share/egt/examples/launcher/"

@@ -24,15 +24,15 @@ buffer is continuously updated in place by redrawing damaged rectangles using
 the widgets that cover it.  When all of the rectangles have been drawn in a
 single iteration of the egt::EventLoop, only the damaged region of that back
 buffer is then copied to a display buffer.  The display may actually have more
-than one buffer in order to handle double or tripple buffering.  So, when
+than one buffer in order to handle double or triple buffering.  So, when
 switching between these buffers the screen has to manage damaged regions for
 each of the buffers.
 
 This means there are two flows up and down the widget hierarchy.  One is
-propogation of the damage rectangles, and the other is propogation of redrawing
+propagation of the damage rectangles, and the other is propagation of redrawing
 the damaged rectangles with the correct content.
 
-Damage propogates *up* in the tree.  If leaf node widget is damaged, it will
+Damage propagates *up* in the tree.  If leaf node widget is damaged, it will
 ultimately report the damage rectangle to a egt::Frame which has a surface.
 This is usually the top level frame or the special plane frame.
 
@@ -55,7 +55,7 @@ is a simple 2D primitive graphics drawing API.  egt::Painter can be used to draw
 lines, and rectangles, fills, and fonts.  It even supports more complicated
 features drawing like gradients and arcs.
 
-The backend used by egt::Painter is the excellent
+The back-end used by egt::Painter is the excellent
 <a href="https://www.cairographics.org/">cairo graphics</a> library.  Which in
 turn uses <a href="http://www.pixman.org/">pixman</a> for optimized pixel
 manipulation.  Both cairo and pixman take advantage of hardware acceleration

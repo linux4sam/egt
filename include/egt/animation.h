@@ -230,202 +230,199 @@ namespace egt
 
     class Widget;
 
-    namespace experimental
+    /**
+     * Series of animations as a single animation.
+     *
+     * It's often useful to put together a series of animations into a
+     * sequence. This class manages a series of animations objects and runs
+     * them as one big animation. You can even add animation sequences to
+     * other animation sequences to build up complex sequences.
+     *
+     * You can skip the current sub-animation, you can restart to the
+     * beginning, of the sequence, or you can stop the entire thing.
+     */
+    class AnimationSequence : public detail::IAnimation
     {
+    public:
+
+        AnimationSequence()
+        {}
+
         /**
-         * Series of animations as a single animation.
-         *
-         * It's often useful to put together a series of animations into a
-         * sequence. This class manages a series of animations objects and runs
-         * them as one big animation. You can even add animation sequences to
-         * other animation sequences to build up complex sequences.
-         *
-         * You can skip the current sub-animation, you can restart to the
-         * beginning, of the sequence, or you can stop the entire thing.
+         * Add a sub animation to the sequence.
          */
-        class AnimationSequence : public detail::IAnimation
+        void add(detail::IAnimation* animation)
         {
-        public:
+            assert(animation);
+            if (!animation)
+                return;
 
-            AnimationSequence()
-            {}
-
-            /**
-             * Add a sub animation to the sequence.
-             */
-            void add(detail::IAnimation* animation)
+            auto i = find(m_animations.begin(), m_animations.end(), animation);
+            if (i == m_animations.end())
             {
-                assert(animation);
-                if (!animation)
-                    return;
-
-                auto i = find(m_animations.begin(), m_animations.end(), animation);
-                if (i == m_animations.end())
+                animation->add_callback([this, animation](float_t value)
                 {
-                    animation->add_callback([this, animation](float_t value)
-                    {
-                        ignoreparam(value);
+                    ignoreparam(value);
 
-                        if (!animation->running())
-                            next();
-                    });
-                    m_animations.push_back(animation);
-                }
+                    if (!animation->running())
+                        next();
+                });
+                m_animations.push_back(animation);
             }
+        }
 
-            /**
-             * Remove a sub animation from the sequence.
-             */
-            void remove(detail::IAnimation* animation)
+        /**
+         * Remove a sub animation from the sequence.
+         */
+        void remove(detail::IAnimation* animation)
+        {
+            if (!animation)
+                return;
+
+            auto i = find(m_animations.begin(), m_animations.end(), animation);
+            if (i != m_animations.end())
             {
-                if (!animation)
-                    return;
-
-                auto i = find(m_animations.begin(), m_animations.end(), animation);
-                if (i != m_animations.end())
-                {
-                    m_animations.erase(i);
-                }
+                m_animations.erase(i);
             }
+        }
 
-            /**
-             * Skip to the next sub animation in the sequence.
-             */
-            bool skip()
-            {
-                if (m_current >= m_animations.size())
-                    return false;
+        /**
+         * Skip to the next sub animation in the sequence.
+         */
+        bool skip()
+        {
+            if (m_current >= m_animations.size())
+                return false;
 
-                m_animations[m_current]->stop();
+            m_animations[m_current]->stop();
 
-                if (++m_current >= m_animations.size())
-                    return false;
+            if (++m_current >= m_animations.size())
+                return false;
 
-                m_animations[m_current]->start();
+            m_animations[m_current]->start();
 
+            return true;
+        }
+
+        virtual void reset()
+        {
+            // TODO
+        }
+
+        virtual void start() override
+        {
+            // TODO: this does not handle an already running sequence
+
+            if (m_current >= m_animations.size())
+                return;
+
+            m_animations[m_current]->start();
+
+            m_running = true;
+        }
+
+        virtual bool next() override
+        {
+            if (!running())
                 return true;
-            }
 
-            virtual void reset()
+            if (++m_current >= m_animations.size())
             {
-                // TODO
-            }
-
-            virtual void start() override
-            {
-                // TODO: this does not handle an already running sequence
-
-                if (m_current >= m_animations.size())
-                    return;
-
-                m_animations[m_current]->start();
-
-                m_running = true;
-            }
-
-            virtual bool next() override
-            {
-                if (!running())
-                    return true;
-
-                if (++m_current >= m_animations.size())
-                {
-                    m_running = false;
-                    return m_running;
-                }
-
-                m_animations[m_current]->start();
-
+                m_running = false;
                 return m_running;
             }
 
-            virtual void stop() override
-            {
-                if (m_current >= m_animations.size())
-                    return;
+            m_animations[m_current]->start();
 
-                m_animations[m_current]->stop();
+            return m_running;
+        }
 
-                m_running = false;
-            }
-
-            virtual ~AnimationSequence()
-            {}
-
-        protected:
-            using animation_array = std::vector<detail::IAnimation*>;
-
-            animation_array m_animations;
-            size_t m_current{0};
-        };
-
-        /**
-         * Animation object with built in timer.
-         *
-         * An Animation usually involves setting up a timer to run the animation
-         * at a periodic interval. This wraps an animation around a built in
-         * timer to run the animation.
-         */
-        class AutoAnimation : public Animation
+        virtual void stop() override
         {
-        public:
-            AutoAnimation(float_t start, float_t end,
-                          std::chrono::milliseconds duration,
-                          easing_func func = easing_linear,
-                          animation_callback callback = nullptr);
+            if (m_current >= m_animations.size())
+                return;
 
-            virtual void start() override;
-            virtual void stop() override;
+            m_animations[m_current]->stop();
 
-            virtual ~AutoAnimation()
-            {}
+            m_running = false;
+        }
 
-        protected:
+        virtual ~AnimationSequence()
+        {}
 
-            PeriodicTimer m_timer;
-        };
+    protected:
+        using animation_array = std::vector<detail::IAnimation*>;
 
-        /**
-         * This as a utility class that makes animating a specific property of a
-         * widget easier.  Any property that matches
-         * PropertyAnimator::property_callback_t can be used.
-         */
-        class PropertyAnimator : public AutoAnimation
+        animation_array m_animations;
+        size_t m_current{0};
+    };
+
+    /**
+     * Animation object with built in timer.
+     *
+     * An Animation usually involves setting up a timer to run the animation
+     * at a periodic interval. This wraps an animation around a built in
+     * timer to run the animation.
+     */
+    class AutoAnimation : public Animation
+    {
+    public:
+        AutoAnimation(float_t start, float_t end,
+                      std::chrono::milliseconds duration,
+                      easing_func func = easing_linear,
+                      animation_callback callback = nullptr);
+
+        virtual void start() override;
+        virtual void stop() override;
+
+        virtual ~AutoAnimation()
+        {}
+
+    protected:
+
+        PeriodicTimer m_timer;
+    };
+
+    /**
+     * This as a utility class that makes animating a specific property of a
+     * widget easier.  Any property that matches
+     * PropertyAnimator::property_callback_t can be used.
+     */
+    class PropertyAnimator : public AutoAnimation
+    {
+    public:
+
+        PropertyAnimator(float start, float end,
+                         std::chrono::milliseconds duration,
+                         easing_func func = easing_linear)
+            : AutoAnimation(start, end, duration, func,
+                            std::bind(&PropertyAnimator::invoke_handlers,
+                                      this, std::placeholders::_1))
+        {}
+
+        using property_callback_t = std::function<void (int v)>;
+
+        void on_change(property_callback_t callback)
         {
-        public:
+            m_callbacks.push_back(callback);
+        }
 
-            PropertyAnimator(float start, float end,
-                             std::chrono::milliseconds duration,
-                             easing_func func = easing_linear)
-                : AutoAnimation(start, end, duration, func,
-                                std::bind(&PropertyAnimator::invoke_handlers,
-                                          this, std::placeholders::_1))
-            {}
+        ~PropertyAnimator()
+        {}
 
-            using property_callback_t = std::function<void (int v)>;
+    protected:
 
-            void on_change(property_callback_t callback)
-            {
-                m_callbacks.push_back(callback);
-            }
+        void invoke_handlers(float value)
+        {
+            for (auto& callback : m_callbacks)
+                callback(value);
+        }
 
-            ~PropertyAnimator()
-            {}
+        using callback_array = std::vector<property_callback_t>;
 
-        protected:
+        callback_array m_callbacks;
+    };
 
-            void invoke_handlers(float value)
-            {
-                for (auto& callback : m_callbacks)
-                    callback(value);
-            }
-
-            using callback_array = std::vector<property_callback_t>;
-
-            callback_array m_callbacks;
-        };
-
-    }
 }
 
 #endif

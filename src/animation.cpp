@@ -405,36 +405,32 @@ namespace egt
         m_running = false;
     }
 
-    namespace experimental
+    AutoAnimation::AutoAnimation(float_t start, float_t end,
+                                 std::chrono::milliseconds duration,
+                                 easing_func func,
+                                 animation_callback callback)
+        : Animation(start, end, callback, duration, func),
+          m_timer(std::chrono::milliseconds(30))
     {
-
-        AutoAnimation::AutoAnimation(float_t start, float_t end,
-                                     std::chrono::milliseconds duration,
-                                     easing_func func,
-                                     animation_callback callback)
-            : Animation(start, end, callback, duration, func),
-              m_timer(std::chrono::milliseconds(30))
+        m_timer.on_timeout([this]()
         {
-            m_timer.on_timeout([this]()
+            if (!next())
             {
-                if (!next())
-                {
-                    m_timer.cancel();
-                }
-            });
-        }
+                m_timer.cancel();
+            }
+        });
+    }
 
-        void AutoAnimation::start()
-        {
-            Animation::start();
-            m_timer.start();
-        }
+    void AutoAnimation::start()
+    {
+        Animation::start();
+        m_timer.start();
+    }
 
-        void AutoAnimation::stop()
-        {
-            m_timer.cancel();
-            Animation::stop();
-        }
+    void AutoAnimation::stop()
+    {
+        m_timer.cancel();
+        Animation::stop();
     }
 
 }
