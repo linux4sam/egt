@@ -191,6 +191,7 @@ int main()
         if (error)
             return;
         win.save_children_to_file();
+        win.save_to_file();
     });
 
     return app.run();
