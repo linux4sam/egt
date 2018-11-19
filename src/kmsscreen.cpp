@@ -8,7 +8,7 @@
 
 #ifdef HAVE_LIBPLANES
 
-#include "egt/event_loop.h"
+#include "egt/eventloop.h"
 #include "egt/input.h"
 #include "egt/kmsscreen.h"
 #include "egt/widget.h"

@@ -3,7 +3,7 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 #include "egt/app.h"
-#include "egt/event_loop.h"
+#include "egt/eventloop.h"
 #include "egt/libinput.h"
 #include <cassert>
 #include <fstream>

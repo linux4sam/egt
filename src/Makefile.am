@@ -22,7 +22,7 @@ app.cpp \
 button.cpp \
 chart.cpp \
 color.cpp \
-event_loop.cpp \
+eventloop.cpp \
 font.cpp \
 frame.cpp \
 framebuffer.cpp \
@@ -80,7 +80,7 @@ $(top_srcdir)/include/egt/app.h \
 $(top_srcdir)/include/egt/button.h \
 $(top_srcdir)/include/egt/chart.h \
 $(top_srcdir)/include/egt/color.h \
-$(top_srcdir)/include/egt/event_loop.h \
+$(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
 $(top_srcdir)/include/egt/framebuffer.h \

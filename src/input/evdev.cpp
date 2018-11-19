@@ -7,7 +7,7 @@
 #endif
 
 #include "egt/app.h"
-#include "egt/event_loop.h"
+#include "egt/eventloop.h"
 #include "egt/geometry.h"
 #include "egt/widget.h"
 #include "egt/window.h"

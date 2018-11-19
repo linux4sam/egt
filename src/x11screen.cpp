@@ -9,7 +9,7 @@
 #ifdef HAVE_X11
 
 #include "egt/app.h"
-#include "egt/event_loop.h"
+#include "egt/eventloop.h"
 #include "egt/input.h"
 #include "egt/widget.h"
 #include "egt/x11screen.h"

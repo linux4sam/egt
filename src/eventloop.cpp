@@ -3,12 +3,12 @@
  * Joshua Henderson <joshua.henderson@microchip.com>
  */
 
-#include "asio.hpp"
 #include "egt/app.h"
-#include "egt/event_loop.h"
+#include "egt/eventloop.h"
 #include "egt/timer.h"
 #include "egt/widget.h"
 #include "egt/window.h"
+#include <asio.hpp>
 #include <chrono>
 #include <deque>
 #include <numeric>

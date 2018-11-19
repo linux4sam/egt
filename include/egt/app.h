@@ -6,7 +6,7 @@
 #define EGT_APP_H
 
 #include <string>
-#include <egt/event_loop.h>
+#include <egt/eventloop.h>
 #include <egt/utils.h>
 
 /**

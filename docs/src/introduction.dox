@@ -76,6 +76,8 @@ The *examples* folder of the EGT project contains various examples.  This is the
 basic example which shows the minimum necessary to create a window with a button
 on it.
 
+The include file <egt/ui> contains most basic functionality needed.
+
 @code
 #include <egt/ui>
 

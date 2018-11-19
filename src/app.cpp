@@ -7,7 +7,7 @@
 #endif
 
 #include "egt/app.h"
-#include "egt/event_loop.h"
+#include "egt/eventloop.h"
 #include "egt/framebuffer.h"
 #include "egt/input.h"
 #include "egt/kmsscreen.h"
