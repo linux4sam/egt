@@ -296,10 +296,10 @@ namespace egt
 
             // handle
             painter.draw_rounded_gradient_box(Rect(x() + normalize(m_pos) + 1,
-                                  y() + h() / 2 - dim / 2 + 1,
-                                  dim - 2,
-                                  dim - 2),
-                             palette().color(Palette::BORDER),
+                                                   y() + h() / 2 - dim / 2 + 1,
+                                                   dim - 2,
+                                                   dim - 2),
+                                              palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }
         else
@@ -327,10 +327,10 @@ namespace egt
 
             // handle
             painter.draw_rounded_gradient_box(Rect(x() + w() / 2 - dim / 2 + 1,
-                                  y() + normalize(m_pos) + 1,
-                                  dim - 2,
-                                  dim - 2),
-                             palette().color(Palette::BORDER),
+                                                   y() + normalize(m_pos) + 1,
+                                                   dim - 2,
+                                                   dim - 2),
+                                              palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }
     }

@@ -21,18 +21,20 @@ while (true)
 It does this until the event loop is told to exit, and int turn, this usually
 means the application exits.
 
+The event loop in EGT is implmented with the <a href="https://think-async.com/">Asio</a> library.  Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.  Asio can be used as part of boost or standalone, and EGT comes with the standalone version.  Asio provides way more features than what is directly used by EGT.
+
+@imageSize{asio.png,width:400px;}
+@image html asio.png
+@image latex asio.png "Asio" width=8cm
+
+EGT abstracts out any direct involvement with Asio, however, should you choose to use it directly it is available for use in, for example, networking and multithreaded applications.
+
 @section events_prop Event Propogation
 
 Every time a user touches the screen, clicks a button, or presses a key, an
 event is generated and sent to the event loop and then dispatched to appropriate
 handlers. Events can also come from other things like the window manager,
 timers, or networking sockets.
-
-Events are identified by the integer argument passed to a @p handle() method
-that overrides the Widget::handle() virtual method. Other information about the
-most recent event is stored in static locations and acquired by calling the
-functions related to the events as necessary. This static information remains
-valid until the next event is read method.
 
 Events are usually propogated from the top level widget down.  There are
 exceptions to this, for example, when a widget grabs the mouse of keyboard, then
@@ -41,11 +43,65 @@ this natural flow is short circuited.
 @image html widget_hierarchy_event.png
 @image latex widget_hierarchy_event.png "Event" width=8cm
 
-@section events_handle Handling Events
+@section events_data Event Data
+
+The following global functions contain more information about the event.
 
 - egt::event_mouse()
 - egt::event_button()
 - egt::event_key()
 - egt::event_code()
+
+@section events_handling Handling Events
+
+Events are identified by the egt::eventid argument passed to a @p handle() method
+that overrides the egt::Widget::handle() virtual method. Other information about
+the most recent event is stored in static locations and acquired by calling the
+functions related to the events as necessary. This static information remains
+valid until the next event is read method.
+
+When implementing a widget that needs to handle events, overriding the the
+egt::Widget::handle() virtual method is the expected method to handle events.
+However, when using a widget, it can be a burden to subclass every widget just
+to handle events.  So, to handle events when using a widget, the
+egt::Widget::on_event() method can be used to register a callback. A lambda
+function may also be used.
+
+@code
+ImageButton settings("@cog.png");
+settings.on_event([this](eventid event)
+{
+    if (event == eventid::MOUSE_DOWN)
+    {
+        if (m_popup.visible())
+            m_popup.hide();
+        else
+            m_popup.show(true);
+    }
+});
+@endcode
+
+egt::Widget::on_event() can be called any number of times to register any number
+of callbacks.
+
+@section events_timers Timers
+
+Timers are an intrensice part of the event loop.  There are two main classes for
+working with timers: egt::Timer and egt::PeriodicTimer.
+
+Creating a timer is straightforward, and you can register any number of
+callbacks with the egt::Timer::on_timeout() function of a egt::Timer or an
+egt::PeriodicTimer.
+
+@code
+PeriodicTimer timer(std::chrono::seconds(1));
+
+timer.on_timeout([]()
+{
+    cout << "timer fired" << endl;
+});
+
+timer.start();
+@endcode
 
 */

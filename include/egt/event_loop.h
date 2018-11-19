@@ -33,7 +33,7 @@ namespace egt
     using event_callback = std::function<void ()>;
 
     /**
-     *
+     * Event loop interface.
      */
     class EventLoop : public detail::noncopyable
     {
@@ -41,15 +41,29 @@ namespace egt
 
         EventLoop() noexcept;
 
+        /**
+         * Get a reference to the internal ASIO io_context object.
+         */
         asio::io_context& io();
 
+        /**
+         * Wait for an event to occure.
+         */
         virtual int wait();
 
+        /**
+         * Run the event loop.
+         *
+         * This will not return until quit is called.
+         */
         virtual int run(bool enable_fps = false);
 
+        /**
+         * Quit the event loop.
+         *
+         * This will cause the run() function to return.
+         */
         virtual void quit();
-
-        virtual void close();
 
         /** @todo Not implemented. */
         void add_idle_callback(event_callback func);

@@ -25,7 +25,8 @@ namespace egt
      * children.
      *
      * This involves everything from event handling down to widgets and drawing
-     * children widgets.
+     * children widgets. So, a frame is a special kind of widget that can
+     * compose other widgets.
      *
      * Child widget coordinates have an origin at the top left of their parent
      * frame.  In other words, child widgets are drawn respective to and inside
@@ -56,7 +57,7 @@ namespace egt
 
         virtual int handle(eventid event) override;
 
-	virtual void move(const Point& point);
+        virtual void move(const Point& point) override;
 
         /**
          * Add a child widget.
@@ -173,7 +174,7 @@ namespace egt
         /**
          * Save the entire frame surface to a file.
          */
-        virtual void save_to_file(const std::string& filename) override;
+        virtual void save_to_file(const std::string& filename = std::string()) override;
 
         void save_children_to_file()
         {

@@ -121,7 +121,7 @@ namespace egt
                  * intersection area is smaller than the area of the super
                  * rectangle, then don't merge
                  */
-                Rect intersect(Rect::intersect(*i, rect));
+                Rect intersect(Rect::intersection(*i, rect));
                 if (((*i).area() + rect.area() - intersect.area()) < super.area())
                 {
                     break;

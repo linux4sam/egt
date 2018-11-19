@@ -46,14 +46,7 @@ namespace egt
                              uint32_t format = DEFAULT_FORMAT,
                              bool heo = false);
 
-        virtual void damage() override
-        {
-            damage(m_box);
-        }
-
         virtual void damage(const Rect& rect) override;
-
-        virtual void resize(const Size& size) override;
 
         virtual void move(const Point& point) override;
 
@@ -66,14 +59,12 @@ namespace egt
         virtual ~PlaneWindow();
 
     protected:
-	void allocate_screen();
+        void allocate_screen();
+        void do_resize(const Size& size);
 
         uint32_t m_format{DEFAULT_FORMAT};
         bool m_dirty{true};
         bool m_heo{false};
-
-    private:
-        void do_resize(const Size& size);
     };
 
 }

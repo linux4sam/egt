@@ -76,10 +76,10 @@ namespace egt
          */
         NO_FOCUS = (1 << 6),
 
-                         /**
-                          * Enable transparent background.
-                          */
-                         TRANSPARENT_BACKGROUND = (1 << 7),
+        /**
+         * Enable transparent background.
+         */
+        TRANSPARENT_BACKGROUND = (1 << 7),
 
         /**
          * Default window flags.

@@ -2,26 +2,41 @@
 
  @page geometry Geometry
 
-This chapter discusses the coordinate system and how EGT deals with geometry.
+This chapter discusses the coordinate system and how to deal with geometry.
 
 @section geometry_coord Coordinate System
 
 EGT defines a egt::Point, egt::Size, egt::Rect, egt::Line, and several other
 classes for working with geometry.
 
-The cordinate system defaults with an origin of 0,0 in the top left.  Positive X moves to the right, and positive Y moves down.
+All coordinate systems in EGT default with an origin of 0,0 in the top left.
+Positive X moves to the right, and positive Y moves down.
 
 @image html coordsys.png
 @image latex coordsys.png "Coordinate System" width=8cm
 
-There are three layers of coordinates.
-- Logical
-- Frame
-- Physical (or Screen)
+There are three coordinate systems in EGT:
+- Window
 
-@section coord_radians Radians
+@par
+The window coordinate system is what the widget hierchy sees as the root.  A Window manages a surface, so that overall surface has a coordinate system.
+
+- Local/Widget
+
+@par
+The local coordinate system is how each widget sees itself, and in the case of a compositing widget like a frame, it's the relationship between the frame's box() and its child widgets.
+
+- Screen/Display
+
+@par
+The screen coordinate system represents the entire screen, irrelevent of content.  It's simply the resolution of the screen.  For example, mouse press events originate on the screen coordinate system.
+
+@section coord_radians Radians and Degrees
+
+While most of the geometry related to EGT deals with rectangls, it is sometimes
+necessary to deal with arcs when drawing.
 
 @image html radians.png
-@image latex radians.png "Radians" width=8cm
+@image latex radians.png "Radians and Degrees" width=8cm
 
 */

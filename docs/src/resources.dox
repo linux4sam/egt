@@ -18,6 +18,17 @@ To access a resource with a file path, specify an absolute or relative file path
 auto play = Image("/some/path/play.png");
 @endcode
 
+
+@section resources_icons EGT Icons
+
+EGT comes with a set of icons built in.  To access these icons, use the
+following syntax:
+
+@code
+auto bug = Image("@bug.png");
+@endcode
+
+
 @section resources_mresg Resource Generator
 
 This is a tool used to generate a resource file that contains the data of binary blobs of data that can then in turn directly be used in an application when, for example, refering an image.

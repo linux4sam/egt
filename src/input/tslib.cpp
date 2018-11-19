@@ -39,7 +39,7 @@ namespace egt
 
         if (m_impl->ts)
         {
-            INFO("input device: " << path);
+            INFO("added tslib " << path);
 
             m_impl->samp_mt = (struct ts_sample_mt**)malloc(SAMPLES * sizeof(struct ts_sample_mt*));
             assert(m_impl->samp_mt);

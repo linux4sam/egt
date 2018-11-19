@@ -108,9 +108,9 @@ namespace egt
             s.x = box().x + std::abs(m_offset) + (float(std::abs(m_offset)) / float(super.w) *
                                                   (float(box().w) - s.w));
 
-            painter.draw_box(*this,
-                             Painter::boxtype::rounded_gradient,
-                             s);
+            painter.draw_rounded_gradient_box(s,
+                                              palette().color(Palette::BORDER),
+                                              palette().color(Palette::HIGHLIGHT));
         }
         else
         {

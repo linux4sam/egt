@@ -279,7 +279,7 @@ namespace egt
                 // don't give a child a rectangle that is outside of its own box
                 auto r = Rect::intersection(rect, child->box());
 
-//#define TIME_DRAW
+                //#define TIME_DRAW
 #ifdef TIME_DRAW
                 auto start = chrono::steady_clock::now();
 #endif
@@ -330,9 +330,16 @@ namespace egt
     void Frame::save_to_file(const std::string& filename)
     {
         // TODO: hmm, should this be redirected to parent()?
+        string name = filename;
+        if (name.empty())
+        {
+            std::ostringstream ss;
+            ss << this->name() << ".png";
+            name = ss.str();
+        }
 
         auto surface = cairo_get_target(screen()->context().get());
-        cairo_surface_write_to_png(surface, filename.c_str());
+        cairo_surface_write_to_png(surface, name.c_str());
     }
 
 }

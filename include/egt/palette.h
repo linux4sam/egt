@@ -63,6 +63,8 @@ namespace egt
 
     /**
      * Get a reference to the global palette.
+     *
+     * @return Palette reference.
      */
     Palette& global_palette();
 

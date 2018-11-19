@@ -120,11 +120,6 @@ namespace egt
         return 0;
     }
 
-    void EventLoop::close()
-    {
-
-    }
-
     void EventLoop::add_idle_callback(event_callback func)
     {
         m_idle.push_back(func);

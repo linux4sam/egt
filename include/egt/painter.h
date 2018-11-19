@@ -199,15 +199,15 @@ namespace egt
             none,
             fill,
             border,
-                rounded_border,
+            rounded_border,
             borderfill,
             rounded_borderfill,
             rounded_gradient,
         };
 
         virtual Painter& draw_box(Widget& widget,
-				  boxtype type = boxtype::borderfill,
-				  const Rect& rect = Rect());
+                                  boxtype type = boxtype::borderfill,
+                                  const Rect& rect = Rect());
         /**
          *@}
          */
@@ -223,16 +223,16 @@ namespace egt
         void draw_border_box(const Rect& rect,
                              const Color& border);
 
-	void draw_border_fill_box(const Rect& rect,
-                             const Color& border,
-                             const Color& bg);
+        void draw_border_fill_box(const Rect& rect,
+                                  const Color& border,
+                                  const Color& bg);
 
         void draw_rounded_border_box(const Rect& rect,
                                      const Color& border);
 
         void draw_rounded_borderfill_box(const Rect& rect,
-                                     const Color& border,
-                                     const Color& bg);
+                                         const Color& border,
+                                         const Color& bg);
 
         void draw_rounded_gradient_box(const Rect& rect,
                                        const Color& border,

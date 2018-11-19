@@ -141,8 +141,8 @@ out:
         else
             type = "removed";
 
-        cout << type << " " << libinput_device_get_sysname(dev) << " " <<
-            libinput_device_get_name(dev) << " " << endl;
+        INFO(type << " " << libinput_device_get_sysname(dev) << " " <<
+             libinput_device_get_name(dev));
 
         li = libinput_event_get_context(ev);
 
@@ -151,8 +151,8 @@ out:
 
         if (libinput_event_get_type(ev) == LIBINPUT_EVENT_DEVICE_ADDED)
         {
+            // ignore calibratable devices (touchscreens)
             int ret = libinput_device_config_calibration_has_matrix(dev);
-
             if (ret)
             {
                 // disable device, can't calibrate
@@ -165,8 +165,6 @@ out:
 
     void LibInput::handle_event_motion(struct libinput_event* ev)
     {
-        cout << __PRETTY_FUNCTION__ << endl;
-
         struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
         //double dx = libinput_event_pointer_get_dx(p),
         //    dy = libinput_event_pointer_get_dy(p);
@@ -201,8 +199,6 @@ out:
     {
         ignoreparam(ev);
 
-        cout << __PRETTY_FUNCTION__ << endl;
-
 #if 0
         struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
         double x = libinput_event_pointer_get_absolute_x_transformed(p, w->width),
@@ -215,8 +211,6 @@ out:
 
     bool LibInput::handle_event_touch(struct libinput_event* ev)
     {
-        cout << __PRETTY_FUNCTION__ << endl;
-
         bool res = false;
 
         struct libinput_event_touch* t = libinput_event_get_touch_event(ev);
@@ -236,7 +230,6 @@ out:
             double x = libinput_event_touch_get_x_transformed(t, 800);
             double y = libinput_event_touch_get_y_transformed(t, 480);
 
-            cout << x << "," << y << endl;
             event_mouse() = Point(x, y);
 
             dispatch(eventid::MOUSE_DOWN);
@@ -247,11 +240,9 @@ out:
             double x = libinput_event_touch_get_x_transformed(t, 800);
             double y = libinput_event_touch_get_y_transformed(t, 480);
 
-            double x2 = libinput_event_touch_get_x(t);
-            double y2 = libinput_event_touch_get_y(t);
+            //double x2 = libinput_event_touch_get_x(t);
+            //double y2 = libinput_event_touch_get_y(t);
 
-            cout << x << "," << y << endl;
-            cout << x2 << "," << y2 << endl;
             event_mouse() = Point(x, y);
             res = true;
             break;
@@ -266,7 +257,6 @@ out:
     void LibInput::handle_event_axis(struct libinput_event* ev)
     {
         ignoreparam(ev);
-        cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
         struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
@@ -294,8 +284,6 @@ out:
 
     void LibInput::handle_event_keyboard(struct libinput_event* ev)
     {
-        cout << __PRETTY_FUNCTION__ << endl;
-
         struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
         unsigned int key = libinput_event_keyboard_get_key(k);
 
@@ -316,8 +304,6 @@ out:
 
     void LibInput::handle_event_button(struct libinput_event* ev)
     {
-        cout << __PRETTY_FUNCTION__ << endl;
-
         struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
         unsigned int button = libinput_event_pointer_get_button(p);
         int is_press;
@@ -332,7 +318,6 @@ out:
     void LibInput::handle_event_swipe(struct libinput_event* ev)
     {
         ignoreparam(ev);
-        cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
         struct libinput_event_gesture* g = libinput_event_get_gesture_event(ev);
@@ -368,7 +353,6 @@ out:
     void LibInput::handle_event_pinch(struct libinput_event* ev)
     {
         ignoreparam(ev);
-        cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
         struct libinput_event_gesture* g = libinput_event_get_gesture_event(ev);
@@ -408,7 +392,6 @@ out:
     void LibInput::handle_event_tablet(struct libinput_event* ev)
     {
         ignoreparam(ev);
-        cout << __PRETTY_FUNCTION__ << endl;
 
 #if 0
         struct libinput_event_tablet_tool* t = libinput_event_get_tablet_tool_event(ev);

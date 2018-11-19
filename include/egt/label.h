@@ -82,7 +82,7 @@ namespace egt
          */
         inline bool checked() const
         {
-		return active();
+            return active();
         }
 
         /**
@@ -90,9 +90,9 @@ namespace egt
          */
         void check(bool value)
         {
-		if (active() != value)
+            if (active() != value)
             {
-		    set_active(value);
+                set_active(value);
                 invoke_handlers(eventid::PROPERTY_CHANGED);
             }
         }

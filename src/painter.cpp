@@ -250,12 +250,12 @@ namespace egt
                                     widget.palette().color(Palette::BORDER, group));
         case boxtype::borderfill:
             draw_border_fill_box(box,
-                            widget.palette().color(Palette::BORDER, group),
-                            widget.palette().color(Palette::BG, group));
+                                 widget.palette().color(Palette::BORDER, group),
+                                 widget.palette().color(Palette::BG, group));
         case boxtype::rounded_borderfill:
             draw_rounded_borderfill_box(box,
-                                    widget.palette().color(Palette::BORDER, group),
-                                    widget.palette().color(Palette::BG, group));
+                                        widget.palette().color(Palette::BORDER, group),
+                                        widget.palette().color(Palette::BG, group));
             break;
         case boxtype::rounded_gradient:
             draw_rounded_gradient_box(box,
@@ -284,8 +284,8 @@ namespace egt
     }
 
     void Painter::draw_border_fill_box(const Rect& rect,
-                                  const Color& border,
-                                  const Color& bg)
+                                       const Color& border,
+                                       const Color& bg)
     {
         set_color(bg);
         rectangle(rect);
@@ -330,8 +330,8 @@ namespace egt
     }
 
     void Painter::draw_rounded_borderfill_box(const Rect& rect,
-                                          const Color& border,
-                                          const Color& bg)
+            const Color& border,
+            const Color& bg)
     {
         AutoSaveRestore sr(*this);
 
@@ -399,14 +399,14 @@ namespace egt
                                           rx + width / 2, ry + height),
                                           cairo_pattern_destroy);
 
-            Color step = bg;
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
-            step = bg.shade(.1);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
-            step = bg.shade(.15);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-            step = bg.shade(.18);
-            cairo_pattern_add_color_stop_rgb(pat.get(), 1.0, step.redf(), step.greenf(), step.bluef());
+        Color step = bg;
+        cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
+        step = bg.shade(.1);
+        cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
+        step = bg.shade(.15);
+        cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
+        step = bg.shade(.18);
+        cairo_pattern_add_color_stop_rgb(pat.get(), 1.0, step.redf(), step.greenf(), step.bluef());
 
         cairo_set_source(m_cr.get(), pat.get());
         cairo_fill_preserve(m_cr.get());

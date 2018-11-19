@@ -5,11 +5,11 @@
 This chapter discusses how drawing works and how rectangles are marked for
 redraw.
 
-@section draw_loop Rectangles and Event Propogation
+@section draw_loop Damaging and Drawing
 
 Each widget has a box(), which holds the bounding rectangle for the widget.
 This is the rectangle a widget is responsible for at some z-order level for
-what content should be placed there.
+what content should be placed inside that bounding box.
 
 Widgets are organized into a tree.  At the top of the tree there is a top level
 widget that is a special type of widget called a egt::Frame.  A egt::Frame
@@ -27,8 +27,6 @@ buffer is then copied to a display buffer.  The display may actually have more
 than one buffer in order to handle double or tripple buffering.  So, when
 switching between these buffers the screen has to manage damaged regions for
 each of the buffers.
-
-Typically, drawing should only be done inside the draw() method of a widget.
 
 This means there are two flows up and down the widget hierarchy.  One is
 propogation of the damage rectangles, and the other is propogation of redrawing
@@ -50,15 +48,31 @@ redraw their damage regions.
 
 @section draw_paint Painting
 
-When a widget is asked to draw, usually done in its draw() method, it
-does it by using egt::Painter.  egt::Painter is a simple 2D primitive graphics
-drawing API.  egt::Painter can be used to draw lines, and rectangles, fills,
-and fonts.  It even supports more complicated drawing like gradients and arcs.
+Typically, drawing should only be done inside the egt::Widget::draw() method.
+
+When a widget is asked to draw, it does it by using egt::Painter.  egt::Painter
+is a simple 2D primitive graphics drawing API.  egt::Painter can be used to draw
+lines, and rectangles, fills, and fonts.  It even supports more complicated
+features drawing like gradients and arcs.
 
 The backend used by egt::Painter is the excellent
 <a href="https://www.cairographics.org/">cairo graphics</a> library.  Which in
 turn uses <a href="http://www.pixman.org/">pixman</a> for optimized pixel
 manipulation.  Both cairo and pixman take advantage of hardware acceleration
 when possible.
+
+To use cairo directly in a egt::Widget::draw() method, get the cairo context by
+calling egt::Painter::context() and then call cairo function like normal.
+
+@code
+auto cr = painter.context();
+cairo_set_line_width(cr.get(), 1.0);
+cairo_stroke(cr.get());
+@endcode
+
+When using egt::Painter to draw, there are also several other very common
+properties and resources used.  For example, the palette() of the widget is
+usually referenced, along with its egt::Font when applicable, an also the
+use of egt::Color comes into play.
 
 */

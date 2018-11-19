@@ -48,7 +48,7 @@ namespace egt
     {
         add(&m_image);
 
-        resize(m_image.size());
+        do_resize(m_image.size());
 
         allocate_screen();
 
@@ -60,7 +60,7 @@ namespace egt
         move(point);
         m_box = Rect(point, frame_size);
 
-        damage();
+        damage(box());
     }
 
     void HardwareSprite::show_frame(int index)

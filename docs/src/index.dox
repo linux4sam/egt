@@ -1,21 +1,10 @@
 /**
 
-<TABLE CELLPADDING="8" CELLSPACING="0" WIDTH="100%" BORDER="0">
-<TR>
-  <TD>
-  <CENTER>
-    @image html logo.png
-    @image latex logo.png "" width=5cm
-  </CENTER>
-  </TD>
-  <TD>
-  <CENTER>
-    @image html microchip_logo.png
-    @image latex microchip_logo.png "" width=4cm
-  </CENTER>
-  </TD>
-</TR>
-</TABLE>
+@image html microchip_logo.png
+@image latex microchip_logo.png "" width=4cm
+
+@image html logo.png
+@image latex logo.png "" width=5cm
 
 @mainpage EGT Programming Manual
 
@@ -26,11 +15,15 @@ modern GUI functionality, look-and-feel, and performance.
 
 @subpage geometry
 
+@subpage colors
+
 @subpage events
 
 @subpage fonts
 
 @subpage draw
+
+@subpage animations
 
 @subpage local
 

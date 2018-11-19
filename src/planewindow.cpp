@@ -54,18 +54,13 @@ namespace egt
         m_screen = nullptr;
     }
 
-    void PlaneWindow::resize(const Size& size)
-    {
-        do_resize(size);
-    }
-
     void PlaneWindow::do_resize(const Size& size)
     {
         if (!size.empty())
         {
             m_box.size(size);
             m_dirty = true;
-            damage();
+            damage(box());
         }
     }
 
@@ -146,16 +141,22 @@ namespace egt
     {
         ignoreparam(format);
         ignoreparam(heo);
+
+        ostringstream ss;
+        ss << "planewindow" << planewindow_id++;
+        set_name(ss.str());
+    }
+
+    PlaneWindow::PlaneWindow(const Rect& rect, widgetmask flags,
+                             uint32_t format, bool heo)
+        : PlaneWindow(rect.size(), flags, format, heo)
+    {
+        m_box = rect;
     }
 
     void PlaneWindow::damage(const Rect& rect)
     {
         Window::damage(rect);
-    }
-
-    void PlaneWindow::resize(const Size& size)
-    {
-        ignoreparam(size);
     }
 
     void PlaneWindow::move(const Point& point)

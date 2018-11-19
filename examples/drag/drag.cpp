@@ -42,7 +42,7 @@ public:
 class FloatingBox : public Frame
 {
 public:
-    FloatingBox(const Rect& rect)
+    explicit FloatingBox(const Rect& rect)
         : Frame(rect),
           m_grip("grip.png"),
           m_arrows("arrows.png")
@@ -51,7 +51,7 @@ public:
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x526d7480));
 
         add(&m_grip);
-        m_grip.resize(Size(50,50));
+        m_grip.resize(Size(50, 50));
         m_grip.set_align(alignmask::RIGHT | alignmask::BOTTOM);
 
         add(&m_arrows);
@@ -73,7 +73,6 @@ public:
             m_starting = event_mouse();
             m_moving = true;
             return 1;
-            break;
         }
         case eventid::MOUSE_UP:
             m_moving = false;
@@ -109,10 +108,10 @@ int main()
 
     MainWindow win;
 
-    FloatingBox box1(Rect(win.w()/5, win.h()/3, win.w()/5, win.h()/3));
+    FloatingBox box1(Rect(win.w() / 5, win.h() / 3, win.w() / 5, win.h() / 3));
     win.add(&box1);
 
-    FloatingBox box2(Rect(win.w()/5 * 3, win.h()/3, win.w()/5, win.h()/3));
+    FloatingBox box2(Rect(win.w() / 5 * 3, win.h() / 3, win.w() / 5, win.h() / 3));
     win.add(&box2);
 
     win.show();
@@ -138,6 +137,16 @@ int main()
         label1.set_text(ss.str());
     });
     cputimer.start();
+
+    asio::signal_set signals(app.event().io(), SIGQUIT);
+    signals.async_wait([&win](const asio::error_code & error, int signal_number)
+    {
+        ignoreparam(signal_number);
+        if (error)
+            return;
+        win.save_children_to_file();
+        win.save_to_file();
+    });
 
     return app.run();
 }

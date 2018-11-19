@@ -149,8 +149,8 @@ namespace egt
         if (checked())
         {
             painter.draw_box(*this,
-                         Painter::boxtype::rounded_gradient,
-                         r);
+                             Painter::boxtype::rounded_gradient,
+                             r);
 
             // draw an "X"
             static const int OFFSET = 5;

@@ -228,7 +228,7 @@ TAB_SIZE               = 4
 # "Side Effects:". You can put \n's in the value part of an alias to insert
 # newlines.
 
-ALIASES                =
+ALIASES = imageSize{2}="\htmlonly <style>div.image img[src=\"\1\"]{\2}</style>\endhtmlonly"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
@@ -774,14 +774,17 @@ WARN_LOGFILE           =
 INPUT = @top_srcdir@/docs/src/index.dox
 INPUT += @top_srcdir@/docs/src/introduction.dox
 INPUT += @top_srcdir@/docs/src/geometry.dox
+INPUT += @top_srcdir@/docs/src/colors.dox
 INPUT += @top_srcdir@/docs/src/events.dox
 INPUT += @top_srcdir@/docs/src/fonts.dox
 INPUT += @top_srcdir@/docs/src/draw.dox
+INPUT += @top_srcdir@/docs/src/animation.dox
 INPUT += @top_srcdir@/docs/src/localization.dox
 INPUT += @top_srcdir@/docs/src/resources.dox
 INPUT += @top_srcdir@/docs/src/debugging.dox
 INPUT += @top_srcdir@/docs/src/custom.dox
 INPUT += @top_srcdir@/docs/src/style.dox
+INPUT += @top_srcdir@/docs/src/faq.dox
 INPUT += @top_srcdir@/include @top_srcdir@/src
 
 # This tag can be used to specify the character encoding of the source files

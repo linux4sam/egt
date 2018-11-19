@@ -56,11 +56,11 @@ namespace egt
              */
             virtual bool pause();
 
-	    /**
-             * @brief unpause Send Pipeline to unpaused state
-             * @return true if success
-             */
-	    virtual bool unpause();
+            /**
+                 * @brief unpause Send Pipeline to unpaused state
+                 * @return true if success
+                 */
+            virtual bool unpause();
 
             /**
              * @brief null Send pipeline to null state

@@ -5,20 +5,70 @@
 @section intro_what_is_egt What is EGT?
 
 EGT is a C++ GUI toolkit for Linux on Microchip AT91/SAMA5 parts.  EGT provides
-modern GUI functionality, look-and-feel, and performance.
-
-EGT provides a consistent API and solution for working across all Microchip
-AT91/SAMA5 parts in order to build robust GUI based applications.
+modern GUI functionality, look-and-feel, and performance. EGT provides a
+consistent API and solution for working across all Microchip AT91/SAMA5 parts in
+order to build robust GUI based applications.
 
 @section intro_what What is a toolkit?
 
+A toolkit (also known as a GUI framework) is used to construct graphical user
+interfaces (GUI) of programs.  It provides a consistent API and an organization
+of features, properties, and methods that makes creating user interfaces easier.
+This can mean creating an API to the operating system or various system
+libraries.
+
+@imageSize{high_level.png,width:400px;}
 @image html high_level.png
 @image latex high_level.png "High level" width=8cm
 
 @section intro_history Architecture
 
+The high level architecture of EGT is simple.  It's the middle layer between the
+application code and everything else.
+
+@imageSize{architecture.png,width:400px;}
 @image html architecture.png
 @image latex architecture.png "Architecture" width=8cm
+
+@section intro_building Building
+
+EGT uses the autotools for building on Linux platforms.
+
+To build for a PC, first, install dependencies:
+
+@code
+sudo apt-get install librapidxml-dev liblua5.3-dev libdrm-dev libinput-dev libcairo-dev libjpeg-dev
+@endcode
+
+Then build.
+
+@code
+git clone ssh://git@bitbucket.microchip.com/~c16205/egt.git
+cd egt
+git submodule init
+git submodule update
+./autogen.sh
+./configure --prefix=$HOME/egt_install
+make
+make install
+@endcode
+
+Then run.
+
+@code
+export LD_LIBRARY_PATH=$HOME/egt_install/lib
+cd $HOME/egt_install/bin
+./basic
+@endcode
+
+EGT also supports cross compilation for target systems. To cross compile, follow
+the standard instructions.
+
+@code
+./autogen.sh
+./configure --prefix=/nfsroot/root/egt/ --host=arm-buildroot-linux-gnueabi
+make
+@endcode
 
 @section intro_first First Application
 
@@ -41,5 +91,35 @@ int main()
     return app.run();
 }
 @endcode
+
+If you want to use a UI file instead.
+
+@code
+#include <egt/ui>
+#include <egt/uiloader.h>
+
+#define SHARED_PATH "../share/egt/examples/basic/"
+
+int main()
+{
+    egt::Application app;
+
+    egt::experimental::UiLoader loader;
+    auto window = loader.load(SHARED_PATH "ui.xml");
+    window->show();
+
+    return app.run();
+}
+@endcode
+
+@section intro_gendocs Generating this Documentation
+
+This documentation is generated with Doxygen, which is managed by the EGT build system.  To generate the documentation at any time run:
+
+@code
+make docs
+@endcode
+
+The resulting documentation will be in the *docs* folder.
 
 */

@@ -4,6 +4,12 @@
 
 This chapter discusses how to to use fonts.
 
+@section fonts_font Font Class
+
+The interface for working with fonts in EGT is the egt::Font class. This class
+handles properties related to working with fonts, but there are still some other
+libraries in play.
+
 @section fonts_fontconfig Fontconfig
 
 <a href="https://www.freedesktop.org/wiki/Software/fontconfig/">Fontconfig</a> is a library for configuring and customizing font access.  This is the library EGT uses to discover fonts installed on the system automatically.

@@ -27,7 +27,7 @@ namespace egt
         Window(const Size& size = Size(),
                widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
-	Window(const Rect& rect,
+        Window(const Rect& rect,
                widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
         virtual void enter()
@@ -43,17 +43,17 @@ namespace egt
 
         virtual void show() override;
 
-	/**
-	 * The buck stops on this call to Widget::screen() with a Window
-	 * because the Window contains the screen.
-	 */
+        /**
+         * The buck stops on this call to Widget::screen() with a Window
+         * because the Window contains the screen.
+         */
         virtual IScreen* screen() override
         {
             assert(m_screen);
             return m_screen;
         }
 
-	virtual ~Window()
+        virtual ~Window()
         {}
 
     protected:
