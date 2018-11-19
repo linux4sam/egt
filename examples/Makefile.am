@@ -6,6 +6,7 @@ endif
 SUBDIRS = $(OPTIONAL)
 
 AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include \
+	-I$(top_builddir)/include \
 	$(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) \
 	$(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) \
 	$(LIBINPUT_CFLAGS) \

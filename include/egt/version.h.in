@@ -1,0 +1,13 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ * Joshua Henderson <joshua.henderson@microchip.com>
+ */
+#ifndef EGT_VERSION_H
+#define EGT_VERSION_H
+
+/**
+ * EGT version string.
+ */
+#define EGT_VERSION "@PACKAGE_VERSION@"
+
+#endif

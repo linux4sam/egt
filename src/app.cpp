@@ -8,18 +8,18 @@
 
 #include "egt/app.h"
 #include "egt/event_loop.h"
+#include "egt/framebuffer.h"
 #include "egt/input.h"
+#include "egt/kmsscreen.h"
 #include "egt/libinput.h"
+#include "egt/version.h"
+#include <libintl.h>
+#include <locale.h>
+#include <thread>
 
 #ifdef HAVE_X11
 #include "egt/x11screen.h"
 #endif
-
-#include "egt/framebuffer.h"
-#include "egt/kmsscreen.h"
-#include <libintl.h>
-#include <locale.h>
-#include <thread>
 
 using namespace std;
 
@@ -34,6 +34,8 @@ namespace egt
 
     Application::Application(bool primary, const std::string& name)
     {
+        INFO("EGT Version " << EGT_VERSION);
+
         the_app = this;
 
         setlocale(LC_ALL, "");

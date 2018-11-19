@@ -184,5 +184,6 @@ AC_CONFIG_FILES([Makefile
 	scripts/Makefile
 	libegt.pc
 	docs/Doxyfile
+	include/egt/version.h
 	examples/video/Makefile])
 AC_OUTPUT

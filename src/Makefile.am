@@ -1,5 +1,5 @@
 #AUTOMAKE_OPTIONS = subdir-objects
-AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg \
+AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_builddir)/include -I$(top_srcdir)/src/images/jpeg \
 	-I$(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
@@ -162,3 +162,5 @@ dist-hook:
 	done
 
 endif
+
+EXTRA_DIST = $(top_srcdir)/include/egt/version.h.in
