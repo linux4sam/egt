@@ -492,6 +492,12 @@ namespace egt
 
         virtual IScreen* screen();
 
+	virtual shared_cairo_surface_t surface() const
+	{
+		/** @todo */
+		return nullptr;
+	}
+
         /**
          * Test if the specified Widget flag(s) is/are set.
          * @param flag Bitmask of flags.

@@ -43,7 +43,7 @@ namespace egt
         /**
          * Get a copy of a surface for the current frame.
          */
-        virtual shared_cairo_surface_t surface() const;
+        //virtual shared_cairo_surface_t surface() const;
 
         /**
          * Advance to the next frame in the strip.
@@ -152,6 +152,8 @@ namespace egt
 
         virtual void show_frame(int index) override;
 
+	virtual shared_cairo_surface_t surface() const;
+
         virtual ~HardwareSprite();
     };
 #endif
@@ -170,17 +172,10 @@ namespace egt
 
         virtual void show_frame(int index) override;
 
+	virtual shared_cairo_surface_t surface() const;
+
         virtual ~SoftwareSprite();
     };
-
-#if 0
-    template <class T>
-    class Sprite : public T
-    {
-    public:
-
-    };
-#endif
 
 }
 

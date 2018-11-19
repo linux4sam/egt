@@ -69,6 +69,8 @@ namespace egt
         /** @todo Not implemented. */
         void add_idle_callback(event_callback func);
 
+	void save_to_file();
+
         virtual ~EventLoop();
 
     protected:

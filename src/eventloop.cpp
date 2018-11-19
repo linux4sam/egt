@@ -6,6 +6,7 @@
 
 #include "egt/app.h"
 #include "egt/eventloop.h"
+#include "egt/painter.h"
 #include "egt/timer.h"
 #include "egt/widget.h"
 #include "egt/window.h"
@@ -66,6 +67,37 @@ namespace egt
     {
         do_quit = true;
         m_impl->m_io.stop();
+    }
+
+    void EventLoop::save_to_file()
+    {
+        string filename = "main-screen.png";
+
+        auto surface = shared_cairo_surface_t(
+            cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+                                       main_screen()->size().w, main_screen()->size().h),
+            cairo_surface_destroy);
+
+        auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
+
+        Painter painter(cr);
+
+        for (auto& w : windows())
+        {
+            if (!w->visible())
+                continue;
+
+            // draw top level frames and plane frames
+            if (w->top_level() && !w->is_flag_set(widgetmask::PLANE_WINDOW))
+                w->draw(painter, w->box());
+            else if (w->is_flag_set(widgetmask::PLANE_WINDOW))
+            {
+                if (w->surface())
+                    painter.draw_image(w->point(), w->surface());
+            }
+        }
+
+        cairo_surface_write_to_png(surface.get(), filename.c_str());
     }
 
     void EventLoop::draw()
