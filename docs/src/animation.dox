@@ -7,8 +7,8 @@ This chapter discusses how to to use animations.
 @section animations_classes Animation Classes
 
 EGT provides a variety of classes for working with animations.  The
-egt::SoftwareSprite and egt::HardwareSprite provide a way to animate sprite
-sheets and even different animation strips within the same sheet.  The
+egt::SoftwareSprite and egt::HardwareSprite classes provide a way to animate
+sprite sheets and even different strips within the same sheet.  The
 egt::Animation, egt::AnimationSequence, egt::AutoAnimation, and
 egt::PropertyAnimator all provide ways to animate almost anything.
 
