@@ -140,9 +140,9 @@ private:
     vector<Ball*> m_images;
 };
 
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
+    Application app(argc, argv);
 
     set_image_path("../share/egt/examples/space/");
 

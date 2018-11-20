@@ -5,6 +5,7 @@
  */
 #include "egt/painter.h"
 #include "egt/widget.h"
+#include <cairo.h>
 
 namespace egt
 {
@@ -96,11 +97,11 @@ namespace egt
         return *this;
     }
 
-    Painter& Painter::draw_image(const Point& point, shared_cairo_surface_t surface, bool bw)
+    Painter& Painter::draw_image(const Point& point, cairo_surface_t* surface, bool bw)
     {
-        double w = cairo_image_surface_get_width(surface.get());
-        double h = cairo_image_surface_get_height(surface.get());
-        cairo_set_source_surface(m_cr.get(), surface.get(), point.x, point.y);
+        double w = cairo_image_surface_get_width(surface);
+        double h = cairo_image_surface_get_height(surface);
+        cairo_set_source_surface(m_cr.get(), surface, point.x, point.y);
         cairo_rectangle(m_cr.get(), point.x, point.y, w, h);
         fill();
 
@@ -111,12 +112,17 @@ namespace egt
             cairo_set_source_rgb(m_cr.get(), 0, 0, 0);
             cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_HSL_COLOR);
             cairo_mask_surface(m_cr.get(),
-                               surface.get(),
+                               surface,
                                point.x,
                                point.y);
         }
 
         return *this;
+    }
+
+    Painter& Painter::draw_image(const Point& point, shared_cairo_surface_t surface, bool bw)
+    {
+        return draw_image(point, surface.get(), bw);
     }
 
     Painter& Painter::draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface)

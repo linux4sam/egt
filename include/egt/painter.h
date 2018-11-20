@@ -130,6 +130,9 @@ namespace egt
         virtual Painter& draw_image(const Point& point,
                                     shared_cairo_surface_t surface, bool bw = false);
 
+        virtual Painter& draw_image(const Point& point,
+                                    cairo_surface_t* surface, bool bw = false);
+
         /**
          * @param[in] rect The source rect to copy.
          * @param[in] point The destination point.

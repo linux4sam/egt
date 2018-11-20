@@ -54,9 +54,9 @@ static LineChart::data_array create_atan_data()
     return data;
 }
 
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
+    Application app(argc, argv);
 
     set_image_path("../share/egt/charts/");
 
@@ -77,7 +77,7 @@ int main()
     pie.data(data);
 
 #ifdef HAVE_KPLOT
-    LineChart line(Rect(10, 10, 600, 400));
+    LineChart line(Rect(50, 10, 600, 400));
     line.set_name("linechart");
     line.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     win.add(line);
@@ -191,16 +191,6 @@ int main()
     });
 
     win.show();
-
-    asio::signal_set signals(app.event().io(), SIGQUIT);
-    signals.async_wait([&win](const asio::error_code & error, int signal_number)
-    {
-        ignoreparam(signal_number);
-        if (error)
-            return;
-        win.save_children_to_file();
-        win.save_to_file();
-    });
 
     return app.run();
 }

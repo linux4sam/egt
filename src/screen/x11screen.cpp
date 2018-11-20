@@ -24,15 +24,18 @@ using namespace std;
 
 namespace egt
 {
+    namespace detail
+    {
     struct X11Data
     {
         Display* display;
         Drawable window;
         Atom wmDeleteMessage;
     };
+    }
 
     X11Screen::X11Screen(const Size& size, bool borderless)
-        : m_priv(new X11Data),
+        : m_priv(new detail::X11Data),
           m_input(main_app().event().io())
     {
         m_priv->display = XOpenDisplay(NULL);

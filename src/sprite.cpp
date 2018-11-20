@@ -17,44 +17,23 @@ using namespace std;
 namespace egt
 {
 
-    shared_cairo_surface_t HardwareSprite::surface() const
+    /**
+     * This pulls out a frame into its own surface.
+     */
+    static shared_cairo_surface_t frame_surface(const Rect& rect, const Image& image)
     {
-        Point origin = get_frame_origin(m_index);
-
         // cairo_surface_create_for_rectangle() would work here with one
         // exception - the resulting image has no width and height
 
         shared_cairo_surface_t copy =
             shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                                   m_frame.w,
-                                   m_frame.h),
+                                   rect.w,
+                                   rect.h),
                                    cairo_surface_destroy);
 
         shared_cairo_t cr = shared_cairo_t(cairo_create(copy.get()), cairo_destroy);
-        cairo_set_source_surface(cr.get(), m_image.surface().get(), -origin.x, -origin.y);
-        cairo_rectangle(cr.get(), 0, 0, m_frame.w, m_frame.h);
-        cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-        cairo_fill(cr.get());
-
-        return copy;
-    }
-
-    shared_cairo_surface_t SoftwareSprite::surface() const
-    {
-        Point origin = get_frame_origin(m_index);
-
-        // cairo_surface_create_for_rectangle() would work here with one
-        // exception - the resulting image has no width and height
-
-        shared_cairo_surface_t copy =
-            shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                                   m_frame.w,
-                                   m_frame.h),
-                                   cairo_surface_destroy);
-
-        shared_cairo_t cr = shared_cairo_t(cairo_create(copy.get()), cairo_destroy);
-        cairo_set_source_surface(cr.get(), m_image.surface().get(), -origin.x, -origin.y);
-        cairo_rectangle(cr.get(), 0, 0, m_frame.w, m_frame.h);
+        cairo_set_source_surface(cr.get(), image.surface().get(), -rect.x, -rect.y);
+        cairo_rectangle(cr.get(), 0, 0, rect.w, rect.h);
         cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
         cairo_fill(cr.get());
 
@@ -104,6 +83,17 @@ namespace egt
         }
     }
 
+    shared_cairo_surface_t HardwareSprite::surface() const
+    {
+        Point origin = get_frame_origin(m_index);
+        return frame_surface(Rect(origin, Size(m_frame.w, m_frame.h)), m_image);
+    }
+
+    void HardwareSprite::paint(Painter& painter)
+    {
+        painter.draw_image(point(), surface());
+    }
+
     HardwareSprite::~HardwareSprite()
     {}
 #endif
@@ -134,6 +124,17 @@ namespace egt
             m_index = index;
             damage();
         }
+    }
+
+    shared_cairo_surface_t SoftwareSprite::surface() const
+    {
+        Point origin = get_frame_origin(m_index);
+        return frame_surface(Rect(origin, Size(m_frame.w, m_frame.h)), m_image);
+    }
+
+    void SoftwareSprite::paint(Painter& painter)
+    {
+        painter.draw_image(point(), surface());
     }
 
     SoftwareSprite::~SoftwareSprite()

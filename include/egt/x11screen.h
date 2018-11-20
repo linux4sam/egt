@@ -8,13 +8,16 @@
 
 #ifdef HAVE_X11
 
-#include "asio.hpp"
+#include <asio.hpp>
 #include <egt/screen.h>
 #include <memory>
 
 namespace egt
 {
-    struct X11Data;
+    namespace detail
+    {
+        struct X11Data;
+    }
 
     /**
      * Screen in an X11 window.
@@ -22,9 +25,10 @@ namespace egt
     class X11Screen : public IScreen
     {
     public:
-        X11Screen(const Size& size = Size(1024, 1024), bool borderless = false);
 
-        void flip(const damage_array& damage) override;
+        X11Screen(const Size& size = Size(800, 480), bool borderless = false);
+
+        virtual void flip(const damage_array& damage) override;
 
         virtual ~X11Screen();
 
@@ -32,7 +36,7 @@ namespace egt
 
         void handle_read(const asio::error_code& error);
 
-        std::shared_ptr<X11Data> m_priv;
+        std::shared_ptr<detail::X11Data> m_priv;
         asio::posix::stream_descriptor m_input;
     };
 

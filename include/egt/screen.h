@@ -28,6 +28,8 @@ namespace egt
 
     /**
      * Base screen class.
+     *
+     * A screen manages a surface.
      */
     class IScreen
     {
@@ -36,22 +38,45 @@ namespace egt
 
         IScreen();
 
+        /**
+         * Perform a flip of the buffers.
+         *
+         * @note This will call schedule_flip() automatically.
+         */
         virtual void flip(const damage_array& damage);
 
+        /**
+         * Schedule a flip to occur later.
+         */
         virtual void schedule_flip() {}
 
+        /**
+         * If the screen implementation manages multiple buffers, this will
+         * return the index of the current buffer.
+         */
         virtual uint32_t index() { return 0; }
 
+        /**
+             * Size of the screen.
+             */
         Size size() const { return m_size; }
 
+        /**
+             * Bounding box for the screen.
+             */
         Rect box() const { return Rect(Point(), m_size); }
 
+        /**
+         * Get the context for the screen.
+         *
+         * Get the target surface from this using cairo_get_target().
+         */
         shared_cairo_t context() const { return m_cr; }
 
         virtual ~IScreen();
 
         /**
-         * This function implements the algorithm for adding damages rectangles
+         * This function implements the algorithm for adding damage rectangles
          * to a list.
          */
         static void damage_algorithm(IScreen::damage_array& damage,
@@ -89,7 +114,10 @@ namespace egt
 
         shared_cairo_surface_t m_surface;
         shared_cairo_t m_cr;
-        std::vector<DisplayBuffer> m_buffers;
+
+        using buffer_array = std::vector<DisplayBuffer>;
+
+        buffer_array m_buffers;
         Size m_size;
     };
 

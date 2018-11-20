@@ -29,13 +29,12 @@ namespace egt
     {
     public:
         /**
-         * @param primary Is this the primary display aplication.
+         * @param primary Is this the primary display application.
          * @param name Application name.  This is used for several things,
          *             including identifying the text domain used by gettext().
          */
-        Application(bool primary = true, const std::string& name = "egt");
-
-        Application(bool primary, const std::string& name, int argc, const char* argv);
+        Application(int argc = 0, const char** argv = nullptr,
+                    bool primary = true, const std::string& name = "egt");
 
         virtual int run();
 
@@ -45,6 +44,8 @@ namespace egt
 
     protected:
         EventLoop m_event;
+        int m_argc{0};
+        const char** m_argv{nullptr};
     };
 
     /**

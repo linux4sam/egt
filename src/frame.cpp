@@ -328,7 +328,7 @@ namespace egt
         do_draw();
     }
 
-    void Frame::save_to_file(const std::string& filename)
+    void Frame::paint_to_file(const std::string& filename)
     {
         // TODO: hmm, should this be redirected to parent()?
         string name = filename;
@@ -341,6 +341,22 @@ namespace egt
 
         auto surface = cairo_get_target(screen()->context().get());
         cairo_surface_write_to_png(surface, name.c_str());
+    }
+
+    void Frame::paint_children_to_file()
+    {
+        for (auto& child : m_children)
+        {
+            if (child->is_flag_set(widgetmask::FRAME))
+            {
+                auto frame = dynamic_cast<Frame*>(child);
+                frame->paint_children_to_file();
+            }
+            else
+            {
+                child->paint_to_file();
+            }
+        }
     }
 
 }

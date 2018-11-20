@@ -200,8 +200,28 @@ namespace egt
         return Rect(origin, r.size());
     }
 
-    void Widget::save_to_file(const std::string& filename)
+    void Widget::paint(Painter& painter)
     {
+        Painter::AutoSaveRestore sr(painter);
+
+        // move origin
+        cairo_translate(painter.context().get(),
+                        -x(),
+                        -y());
+
+        draw(painter, box());
+    }
+
+    void Widget::paint_to_file(const std::string& filename)
+    {
+        string name = filename;
+        if (name.empty())
+        {
+            std::ostringstream ss;
+            ss << this->name() << ".png";
+            name = ss.str();
+        }
+
         auto surface = shared_cairo_surface_t(
                            cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
                                    w(), h()),
@@ -209,14 +229,9 @@ namespace egt
 
         auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
 
-        // move origin
-        cairo_translate(cr.get(),
-                        -x(),
-                        -y());
-
         Painter painter(cr);
-        draw(painter, box());
-        cairo_surface_write_to_png(surface.get(), filename.c_str());
+        paint(painter);
+        cairo_surface_write_to_png(surface.get(), name.c_str());
     }
 
     Widget::~Widget()

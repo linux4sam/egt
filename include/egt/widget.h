@@ -492,12 +492,6 @@ namespace egt
 
         virtual IScreen* screen();
 
-	virtual shared_cairo_surface_t surface() const
-	{
-		/** @todo */
-		return nullptr;
-	}
-
         /**
          * Test if the specified Widget flag(s) is/are set.
          * @param flag Bitmask of flags.
@@ -546,10 +540,20 @@ namespace egt
          */
         inline void set_name(const std::string& name) { m_name = name; }
 
+
+        /**
+         * Paint the Widget using Painter.
+         *
+         * paint() is not part of the normal draw path.  This is a utility
+         * function to get the widget to draw its contents to another
+         * surface provided with a Painter.
+         */
+        virtual void paint(Painter& painter);
+
         /**
          * Draw the widget to a file.
          */
-        virtual void save_to_file(const std::string& filename);
+        virtual void paint_to_file(const std::string& filename = std::string());
 
         virtual ~Widget();
 

@@ -111,7 +111,7 @@ namespace egt
             if (*i == rect)
                 return;
 
-            // if this rectangle intersects an existin rectangle, the merge
+            // if this rectangle intersects an existing rectangle, then merge
             // the rectangles and re-add the super rectangle
             if (Rect::intersect(*i, rect))
             {
@@ -177,7 +177,6 @@ namespace egt
             buffer.cr = shared_cairo_t(cairo_create(buffer.surface.get()), cairo_destroy);
             assert(buffer.cr);
 
-            //buffer.damage.push_back(Rect(0, 0, w, h));
             buffer.damage.emplace_back(0, 0, w, h);
 
             m_buffers.push_back(buffer);
@@ -205,7 +204,5 @@ namespace egt
         if (!the_screen)
             the_screen = this;
     }
-
-    // https://github.com/toradex/cairo-fb-examples/blob/master/rectangles/rectangles.c
 
 }

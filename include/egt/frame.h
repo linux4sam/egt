@@ -168,24 +168,22 @@ namespace egt
         virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**
-         * @warning Do not call directly.
+         * Cause the frame to draw itself and al of its children.
+         *
+         * @warning Normally this should not be called directly and instead the
+         * event loop will call this function.
          */
         virtual void draw();
 
         /**
          * Save the entire frame surface to a file.
          */
-        virtual void save_to_file(const std::string& filename = std::string()) override;
+        virtual void paint_to_file(const std::string& filename = std::string()) override;
 
-        void save_children_to_file()
-        {
-            for (auto& child : m_children)
-            {
-                std::ostringstream ss;
-                ss << child->name() << ".png";
-                child->save_to_file(ss.str().c_str());
-            }
-        }
+        /**
+         * Paint individual children to file.
+         */
+        virtual void paint_children_to_file();
 
         virtual ~Frame()
         {}

@@ -148,9 +148,9 @@ public:
 };
 
 
-int main()
+int main(int argc, const char** argv)
 {
-    Application app/*(false)*/;
+    Application app(argc, argv);
 
     set_image_path("../share/egt/examples/water/");
 

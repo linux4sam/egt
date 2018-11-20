@@ -15,6 +15,7 @@
 #include <egt/widget.h>
 #include <egt/window.h>
 #include <egt/planewindow.h>
+#include <egt/painter.h>
 
 namespace egt
 {
@@ -152,7 +153,9 @@ namespace egt
 
         virtual void show_frame(int index) override;
 
-	virtual shared_cairo_surface_t surface() const;
+        virtual void paint(Painter& painter) override;
+
+        virtual shared_cairo_surface_t surface() const;
 
         virtual ~HardwareSprite();
     };
@@ -172,7 +175,9 @@ namespace egt
 
         virtual void show_frame(int index) override;
 
-	virtual shared_cairo_surface_t surface() const;
+        virtual void paint(Painter& painter) override;
+
+        virtual shared_cairo_surface_t surface() const;
 
         virtual ~SoftwareSprite();
     };

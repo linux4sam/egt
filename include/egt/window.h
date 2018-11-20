@@ -18,16 +18,32 @@ namespace egt
 {
 
     /**
-     * A window is a Frame Widget that is backed by a screen.
+     * A Window is a Frame Widget that contains and is backed by a Screen.
      *
-     * Any widget to be displayed, must be a child of a window.
+     * The first window created will automatically become the main window. It
+     * will also be forced to the size of the main_screen().  To change this,
+     * call set_main_window() on any Window instance.
+     *
+     * Any top level widget must be a Window.
      */
     class Window : public Frame
     {
     public:
+        /**
+         * Construct a Window.
+         *
+         * @param[in] size The size of the Window.  The origin will be default to 0,0.
+         * @param[in] flags Mask of widget flags.
+         */
         Window(const Size& size = Size(),
                widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
+        /**
+         * Construct a Window.
+         *
+         * @param[in] rect The rectangle for the Window.
+         * @param[in] flags Mask of widget flags.
+         */
         Window(const Rect& rect,
                widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
@@ -42,6 +58,11 @@ namespace egt
             hide();
         }
 
+        /**
+         * Change this Window to be the main Window.
+         */
+        virtual void set_main_window();
+
         virtual void show() override;
 
         /**
@@ -54,8 +75,7 @@ namespace egt
             return m_screen;
         }
 
-        virtual ~Window()
-        {}
+        virtual ~Window();
 
     protected:
 
@@ -104,7 +124,14 @@ namespace egt
         }
     };
 
+    /**
+     * Get a pointer reference to the main window.
+     */
     Window*& main_window();
+
+    /**
+     * Get the list of all currently allocated Windows.
+     */
     std::vector<Window*>& windows();
 }
 

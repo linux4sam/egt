@@ -25,7 +25,6 @@ color.cpp \
 eventloop.cpp \
 font.cpp \
 frame.cpp \
-framebuffer.cpp \
 geometry.cpp \
 grid.cpp \
 image.cpp \
@@ -34,7 +33,6 @@ input/evdev.cpp \
 input/input.cpp \
 input/libinput.cpp \
 input/tslib.cpp \
-kmsscreen.cpp \
 label.cpp \
 list.cpp \
 object.cpp \
@@ -42,7 +40,10 @@ painter.cpp \
 palette.cpp \
 planewindow.cpp \
 resource.cpp \
-screen.cpp \
+screen/framebuffer.cpp \
+screen/kmsscreen.cpp \
+screen/screen.cpp \
+screen/x11screen.cpp \
 sprite.cpp \
 text.cpp \
 timer.cpp \
@@ -53,8 +54,7 @@ valuewidget.cpp \
 video.cpp \
 view.cpp \
 widget.cpp \
-window.cpp \
-x11screen.cpp
+window.cpp
 
 if HAVE_LUA
 libegt_la_SOURCES += \

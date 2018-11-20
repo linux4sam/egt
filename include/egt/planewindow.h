@@ -57,6 +57,8 @@ namespace egt
 
         virtual void hide() override;
 
+        virtual void paint(Painter& painter) override;
+
         virtual ~PlaneWindow();
 
     protected:

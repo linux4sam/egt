@@ -11,9 +11,10 @@
 using namespace egt;
 using namespace std;
 
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
+    Application app(argc, argv);
+
     Window win;
 
     StaticGrid topgrid(Rect(), 1, 2);
@@ -95,16 +96,6 @@ int main()
     //buttongrid.reposition();
 
     win.show();
-
-    asio::signal_set signals(app.event().io(), SIGQUIT);
-    signals.async_wait([&win](const asio::error_code & error, int signal_number)
-    {
-        ignoreparam(signal_number);
-        if (error)
-            return;
-        win.save_children_to_file();
-                win.save_to_file();
-    });
 
     return app.run();
 }

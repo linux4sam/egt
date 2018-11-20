@@ -12,7 +12,7 @@
 using namespace std;
 using namespace egt;
 
-int main()
+int main(int argc, const char** argv)
 {
     const Color NAVY(Color::CSS("#001f3f"));
     const Color BLUE(Color::CSS("#0074D9"));
@@ -31,7 +31,7 @@ int main()
     const Color GRAY(Color::CSS("#AAAAAA"));
     const Color SILVER(Color::CSS("#DDDDDD"));
 
-    Application app;
+    Application app(argc, argv);
 
     set_image_path("../share/egt/examples/sprite/");
 
@@ -172,17 +172,6 @@ int main()
     cputimer.start();
 
     popup.show();
-
-    asio::signal_set signals(app.event().io(), SIGQUIT);
-    signals.async_wait([&win](const asio::error_code & error, int signal_number)
-    {
-        ignoreparam(signal_number);
-        if (error)
-            return;
-        win.save_children_to_file();
-        win.save_to_file();
-        main_app().event().save_to_file();
-    });
 
     return app.run();
 }

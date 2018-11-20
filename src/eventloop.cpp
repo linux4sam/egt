@@ -69,14 +69,18 @@ namespace egt
         m_impl->m_io.stop();
     }
 
-    void EventLoop::save_to_file()
+    void EventLoop::paint_to_file(const string& filename)
     {
-        string filename = "main-screen.png";
+        string name = filename;
+        if (name.empty())
+        {
+            name = "screen.png";
+        }
 
         auto surface = shared_cairo_surface_t(
-            cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                                       main_screen()->size().w, main_screen()->size().h),
-            cairo_surface_destroy);
+                           cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+                                   main_screen()->size().w, main_screen()->size().h),
+                           cairo_surface_destroy);
 
         auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
 
@@ -88,16 +92,11 @@ namespace egt
                 continue;
 
             // draw top level frames and plane frames
-            if (w->top_level() && !w->is_flag_set(widgetmask::PLANE_WINDOW))
-                w->draw(painter, w->box());
-            else if (w->is_flag_set(widgetmask::PLANE_WINDOW))
-            {
-                if (w->surface())
-                    painter.draw_image(w->point(), w->surface());
-            }
+            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+                w->paint(painter);
         }
 
-        cairo_surface_write_to_png(surface.get(), filename.c_str());
+        cairo_surface_write_to_png(surface.get(), name.c_str());
     }
 
     void EventLoop::draw()

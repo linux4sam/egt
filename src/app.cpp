@@ -17,6 +17,7 @@
 #include <libintl.h>
 #include <locale.h>
 #include <thread>
+#include <string>
 
 #ifdef HAVE_X11
 #include "egt/x11screen.h"
@@ -33,7 +34,9 @@ namespace egt
         return *the_app;
     }
 
-    Application::Application(bool primary, const std::string& name)
+    Application::Application(int argc, const char** argv, bool primary, const std::string& name)
+        : m_argc(argc),
+          m_argv(argv)
     {
         INFO("EGT Version " << EGT_VERSION);
 
@@ -93,16 +96,21 @@ namespace egt
 #endif
     }
 
-    Application::Application(bool primary, const std::string& name,
-                             int argc, const char* argv)
-        : Application(primary, name)
-    {
-        ignoreparam(argc);
-        ignoreparam(argv);
-    }
-
     int Application::run()
     {
+        if (m_argc)
+        {
+            asio::signal_set signals(event().io(), SIGQUIT);
+            signals.async_wait([this](const asio::error_code & error, int)
+            {
+                if (error)
+                    return;
+                event().paint_to_file(string(m_argv[0]) + ".png");
+            });
+
+            return m_event.run();
+        }
+
         return m_event.run();
     }
 

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/kmsscreen.h"
+#include "egt/painter.h"
 #include "egt/planewindow.h"
 #include <algorithm>
 
@@ -119,6 +120,14 @@ namespace egt
         }
     }
 
+    void PlaneWindow::paint(Painter& painter)
+    {
+        Painter::AutoSaveRestore sr(painter);
+
+        auto surface = cairo_get_target(screen()->context().get());
+        painter.draw_image(point(), surface);
+    }
+
     void PlaneWindow::show()
     {
         m_dirty = true;
@@ -168,6 +177,11 @@ namespace egt
     void PlaneWindow::draw()
     {
         Window::draw();
+    }
+
+    void PlaneWindow::paint(Painter& painter)
+    {
+        Window::paint(painter);
     }
 
     void PlaneWindow::show()

@@ -9,9 +9,9 @@
 #define USE_LOADER
 #define SHARED_PATH "../share/egt/examples/basic/"
 
-int main()
+int main(int argc, const char** argv)
 {
-    egt::Application app;
+    egt::Application app(argc, argv);
 
 #ifdef USE_LOADER
     egt::experimental::UiLoader loader;

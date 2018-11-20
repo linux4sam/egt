@@ -8,6 +8,7 @@
 #endif
 
 #include "egt/chart.h"
+#include "egt/painter.h"
 #include <cmath>
 #include <vector>
 #ifdef HAVE_KPLOT
@@ -30,8 +31,9 @@ namespace egt
 
     void LineChart::draw(Painter& painter, const Rect& rect)
     {
-        ignoreparam(painter);
         ignoreparam(rect);
+
+        Painter::AutoSaveRestore sr(painter);
 
         struct kplot* p;
 
@@ -53,9 +55,7 @@ namespace egt
         cfg->ticline.clr.rgba[2] = tc.greenf();
         cfg->ticline.clr.rgba[3] = tc.alphaf();
 
-        auto cr = screen()->context();
-
-        cairo_save(cr.get());
+        auto cr = painter.context();
 
         struct kdatacfg	 dcfg;
         kdatacfg_defaults(&dcfg);
@@ -117,9 +117,7 @@ namespace egt
         cout << "kplot_draw: " << chrono::duration<double, milli>(diff).count() << endl;
 #endif
 
-
         kplot_free(p);
-        cairo_restore(cr.get());
     }
 #endif
 
@@ -147,6 +145,7 @@ namespace egt
             Color::LIGHTBLUE,
         };
 
+        // cppcheck-suppress useInitializationList
         m_colors = default_colors;
     }
 

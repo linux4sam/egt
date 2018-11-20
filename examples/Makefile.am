@@ -28,12 +28,13 @@ basic/basic \
 calc/calc \
 charts/charts \
 drag/drag \
-icon/icon \
 easing/easing \
 floating/floating \
 gallery/gallery \
+icon/icon \
 infotain/infotain \
 space/space \
+squares/squares \
 thermostat/thermostat \
 water/water \
 whiteboard/whiteboard \
@@ -201,3 +202,8 @@ drag_drag_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 drag_dragdir = $(prefix)/share/egt/examples/drag
 drag_drag_DATA = $(wildcard $(top_srcdir)/examples/drag/*.png)
 drag_drag_LDFLAGS = $(AM_LDFLAGS)
+
+squares_squares_SOURCES = squares/squares.cpp
+squares_squares_CXXFLAGS = $(AM_CXXFLAGS)
+squares_squares_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+squares_squares_LDFLAGS = $(AM_LDFLAGS)
