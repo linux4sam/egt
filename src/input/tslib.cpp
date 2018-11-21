@@ -9,6 +9,7 @@
 
 #include "egt/input.h"
 #include "egt/app.h"
+#include <chrono>
 
 #ifdef HAVE_TSLIB
 #include "tslib.h"
@@ -27,7 +28,7 @@ namespace egt
         {
             struct tsdev* ts;
             struct ts_sample_mt** samp_mt;
-            struct timeval last_down = {0, 0};
+            std::chrono::time_point<std::chrono::steady_clock> last_down;
         };
     }
 
@@ -65,12 +66,6 @@ namespace egt
         {
             ERR("ts device not found: " << path);
         }
-    }
-
-    static inline long long diff_ms(timeval t1, timeval t2)
-    {
-        return (((t1.tv_sec - t2.tv_sec) * 1000000ULL) +
-                (t1.tv_usec - t2.tv_usec)) / 1000ULL;
     }
 
     static bool delta(const Point& lhs, const Point& rhs, int d)
@@ -150,8 +145,15 @@ namespace egt
                     {
                         event_mouse() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
 
-                        if ((m_impl->last_down.tv_sec || m_impl->last_down.tv_usec) &&
-                            diff_ms(samp_mt[j][i].tv, m_impl->last_down) < 200)
+                        std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> tv
+                        {
+                            std::chrono::milliseconds{samp_mt[j][i].tv.tv_sec * 1000 + samp_mt[j][i].tv.tv_usec / 1000}
+                        };
+
+                        auto DOUBLE_CLICK_DELTA = 300;
+
+                        if (m_impl->last_down.time_since_epoch().count() &&
+                            chrono::duration<double, milli>(tv - m_impl->last_down).count() < DOUBLE_CLICK_DELTA)
                         {
                             dispatch(eventid::MOUSE_DBLCLICK);
                         }
@@ -162,7 +164,7 @@ namespace egt
                             m_active = true;
                         }
 
-                        m_impl->last_down = samp_mt[j][i].tv;
+                        m_impl->last_down = tv;
                     }
                 }
             }

@@ -143,8 +143,6 @@ namespace egt
 
     protected:
 
-        //virtual void on_selected(int index) {ignoreparam(index);}
-
         Rect item_rect(uint32_t index) const;
 
         item_array m_items;

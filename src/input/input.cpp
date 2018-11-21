@@ -10,6 +10,7 @@
 #include "egt/input.h"
 #include "egt/window.h"
 #include <linux/input.h>
+#include <chrono>
 
 using namespace std;
 
@@ -41,8 +42,12 @@ namespace egt
 
     namespace detail
     {
+        static std::chrono::time_point<std::chrono::steady_clock> mouse_down_time;
+
         void IInput::dispatch(eventid event)
         {
+            auto now = chrono::steady_clock::now();
+
             DBG("event: " << event);
 
             // first give event to any windos
@@ -59,6 +64,22 @@ namespace egt
 
             // then give it to any global input handlers
             m_global_input.invoke_handlers(event);
+
+            // generate fake MOUSE_CLICK event
+            if (event == eventid::MOUSE_DOWN)
+                mouse_down_time = now;
+            else if (event == eventid::MOUSE_UP)
+            {
+                if (mouse_down_time.time_since_epoch().count())
+                {
+                    if (chrono::duration<float_t, milli>(now - mouse_down_time).count() < 1000)
+                    {
+                        IInput::dispatch(eventid::MOUSE_CLICK);
+                    }
+
+                    mouse_down_time = {};
+                }
+            }
         }
     }
 

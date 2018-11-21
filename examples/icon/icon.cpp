@@ -51,6 +51,7 @@ int main()
             swipe.ending(view0.position() - view0.w());
             swipe.start();
         }
+        return 0;
     });
 
     left.on_event([&](eventid event)
@@ -61,6 +62,7 @@ int main()
             swipe.ending(view0.position() + view0.w());
             swipe.start();
         }
+        return 0;
     });
 
     std::vector<std::string> files = experimental::glob("../share/egt/icons/*.png");

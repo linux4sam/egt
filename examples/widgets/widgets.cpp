@@ -223,11 +223,12 @@ int main(int argc, const char** argv)
         case eventid::KEYBOARD_DOWN:
         case eventid::KEYBOARD_UP:
         case eventid::KEYBOARD_REPEAT:
-            text1.handle(event);
+            return text1.handle(event);
             break;
         default:
             break;
         }
+        return 0;
     });
 
     ImageLabel imagelabel1("icons/bug.png", "Bug");

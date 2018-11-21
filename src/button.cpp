@@ -18,6 +18,8 @@ namespace egt
                    const Font& font, widgetmask flags) noexcept
         : Label(text, rect, alignmask::CENTER, font, flags)
     {
+        flag_set(widgetmask::CLICK_FOCUS);
+
         if (rect.size().empty())
         {
             /** @todo Smarter if we look at size of text and grow from default size. */
@@ -39,13 +41,15 @@ namespace egt
         switch (event)
         {
         case eventid::MOUSE_DOWN:
+        {
             set_active(true);
-            invoke_handlers(event);
-            return 1;
+            break;
+        }
         case eventid::MOUSE_UP:
+        {
             set_active(false);
-            invoke_handlers(event);
-            return 1;
+            break;
+        }
         default:
             break;
         }

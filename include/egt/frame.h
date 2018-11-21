@@ -92,11 +92,22 @@ namespace egt
          */
         virtual void remove_all();
 
-        virtual void focus(Widget* widget) override;
+        virtual void set_focus(Widget* widget);
 
         virtual bool focus() const override
         {
+            if (m_parent)
+                return m_parent->focus();
+
             return !!m_focus_widget;
+        }
+
+        virtual Widget* get_focus_widget() const
+        {
+            if (m_parent)
+                return m_parent->get_focus_widget();
+
+            return m_focus_widget;
         }
 
         /**

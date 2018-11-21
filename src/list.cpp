@@ -82,12 +82,9 @@ namespace egt
     {
         if (m_selected != index)
         {
-            //damage(item_rect(m_selected));
             m_selected = index;
-            //damage(item_rect(m_selected));
             damage();
             invoke_handlers(eventid::PROPERTY_CHANGED);
-            //on_selected(index);
         }
     }
 

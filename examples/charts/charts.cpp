@@ -110,6 +110,8 @@ int main(int argc, const char** argv)
             if (atan_checkbox.checked())
                 line.add_data(create_atan_data(), LineChart::chart_type::linespoints);
         }
+
+        return 0;
     };
 
     sin_checkbox.on_event(handle_checkbox);
@@ -129,6 +131,7 @@ int main(int argc, const char** argv)
         {
             line.set_line_width(line_width.position());
         }
+        return 0;
     });
 
     line_width.position(2);
@@ -152,6 +155,7 @@ int main(int argc, const char** argv)
                 flags |= LineChart::GRIDY;
             line.set_grid(flags);
         }
+        return 0;
     };
 
     gridx_checkbox.on_event(handle_grid_checkbox);
@@ -187,7 +191,11 @@ int main(int argc, const char** argv)
                 pie.show();
                 line.hide();
             }
+
+            return 1;
         }
+
+        return 0;
     });
 
     win.show();

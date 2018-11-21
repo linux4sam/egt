@@ -16,6 +16,8 @@ namespace egt
         : TextWidget(str, rect, align),
           m_timer(std::chrono::seconds(1))
     {
+        flag_set(widgetmask::CLICK_FOCUS);
+
         m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
 
         palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
@@ -25,14 +27,16 @@ namespace egt
         palette().set(Palette::TEXT, Palette::GROUP_DISABLED, palette().color(Palette::DARK));
     }
 
-    void TextBox::focus(bool value)
+    void TextBox::set_focus()
     {
-        Widget::focus(value);
+        start_cursor();
+        Widget::set_focus();
+    }
 
-        if (value)
-            start_cursor();
-        else
-            stop_cursor();
+    void TextBox::lost_focus()
+    {
+        stop_cursor();
+        Widget::lost_focus();
     }
 
     int TextBox::handle(eventid event)
@@ -40,6 +44,7 @@ namespace egt
         switch (event)
         {
         case eventid::MOUSE_DOWN:
+            set_focus();
             return 1;
         case eventid::KEYBOARD_DOWN:
 
@@ -76,7 +81,7 @@ namespace egt
                                           5,
                                           font());
 
-        if (Widget::focus() && m_cursor_state)
+        if (focus() && m_cursor_state)
         {
             auto cr = painter.context();
 
@@ -117,8 +122,8 @@ namespace egt
 
     void TextBox::stop_cursor()
     {
-        m_cursor_state = false;
         m_timer.cancel();
+        m_cursor_state = false;
         damage();
     }
 

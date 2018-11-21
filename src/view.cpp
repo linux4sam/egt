@@ -30,7 +30,7 @@ namespace egt
             return 1;
         case eventid::MOUSE_UP:
             m_moving = false;
-            return 1;
+            break;
         case eventid::MOUSE_MOVE:
             if (m_moving)
             {
@@ -44,24 +44,16 @@ namespace egt
                     auto diff = screen_to_frame(event_mouse()).y - m_start_pos.y;
                     set_position(m_start_offset + diff / 2);
                 }
+
+                return 1;
             }
             break;
         default:
             break;
         }
 
-        return ret;
+        return 0;
     }
-
-#if 0
-    static void draw_scrollbar(Painter& painter, Orientation orientation,
-                               const Rect& box, int offset, int total)
-    {
-        painter.draw_gradient_box(box, palette().color(Palette::BORDER),
-                                  false,
-                                  palette().color(Palette::LIGHT, Palette::GROUP_NORMAL));
-    }
-#endif
 
     void ScrolledView::draw(Painter& painter, const Rect& rect)
     {
@@ -95,8 +87,6 @@ namespace egt
             if (!is_flag_set(widgetmask::NO_BORDER))
             {
                 s.x = box().x + std::abs(m_offset);
-                //painter.draw_basic_box(s, palette().color(Palette::BORDER),
-                //                     palette().color(Palette::BG));
 
                 painter.set_line_width(1);
                 painter.set_color(palette().color(Palette::BORDER));

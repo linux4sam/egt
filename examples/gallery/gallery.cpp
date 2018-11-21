@@ -83,7 +83,9 @@ int main(int argc, const char** argv)
                 popup.hide();
             else
                 popup.show(true);
+            return 1;
         }
+        return 0;
     });
     win.add(&popup);
 

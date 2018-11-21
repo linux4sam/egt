@@ -262,6 +262,12 @@ namespace egt
         Painter() = delete;
     };
 
+    bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
+                         const Rect& rhs, shared_cairo_surface_t rimage);
+
+    bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
+                         const Point& rhs);
+
 }
 
 #endif

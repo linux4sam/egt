@@ -525,4 +525,56 @@ namespace egt
         cairo_paint(m_cr.get());
     }
 
+    bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
+                         const Rect& rhs, shared_cairo_surface_t rimage)
+    {
+        if (Rect::intersect(lhs, rhs))
+        {
+            unsigned int* ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
+            unsigned int* rdata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(rimage.get()));
+
+            Rect i = Rect::intersection(lhs, rhs);
+
+            for (int y = i.top(); y < i.bottom(); y++)
+            {
+                for (int x = i.left(); x < i.right(); x++)
+                {
+                    unsigned int l = ldata[(x - lhs.left()) + (y - lhs.top()) * lhs.w];
+                    unsigned int r = rdata[(x - rhs.left()) + (y - rhs.top()) * rhs.w];
+
+                    if ((l >> 24 & 0xff) && (r >> 24 & 0xff))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
+                         const Point& rhs)
+    {
+        if (Rect::intersect(lhs, rhs))
+        {
+            unsigned int* ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
+
+            for (int y = lhs.top(); y < lhs.bottom(); y++)
+            {
+                for (int x = lhs.left(); x < lhs.right(); x++)
+                {
+                    unsigned int l = ldata[(x - lhs.left()) + (y - lhs.top()) * lhs.w];
+
+                    if (l >> 24 & 0xff)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
 }

@@ -119,23 +119,18 @@ namespace egt
         m_children.clear();
     }
 
-    void Frame::focus(Widget* widget)
+    void Frame::set_focus(Widget* widget)
     {
         if (m_parent)
-            m_parent->focus(widget);
+            m_parent->set_focus(widget);
         else if (m_focus_widget != widget)
         {
             if (widget)
-            {
-                if (widget->is_flag_set(widgetmask::NO_FOCUS))
-                    return;
-
-                // remove focus from existing focus widget
-                if (m_focus_widget)
-                    m_focus_widget->focus(false);
-
                 DBG(name() << " has new focus widget: " << widget->name());
-            }
+            else
+                DBG(name() << " has no focus widget");
+            if (m_focus_widget)
+                m_focus_widget->lost_focus();
 
             m_focus_widget = widget;
         }
@@ -148,9 +143,10 @@ namespace egt
         switch (event)
         {
         case eventid::MOUSE_UP:
-        case eventid::KEYBOARD_UP:
-        case eventid::KEYBOARD_REPEAT:
-        case eventid::BUTTON_UP:
+            //case eventid::MOUSE_MOVE:
+            //case eventid::KEYBOARD_UP:
+            //case eventid::KEYBOARD_REPEAT:
+            //case eventid::BUTTON_UP:
             // pair the eventid::MOUSE_UP event with the focus widget
             if (m_focus_widget)
                 break;
@@ -171,12 +167,20 @@ namespace egt
 
                 if (Rect::point_inside(pos, child->box()))
                 {
-                    if (child->handle(event))
+                    auto ret = child->handle(event);
+
+                    if (event == eventid::MOUSE_DOWN &&
+                        child->is_flag_set(widgetmask::CLICK_FOCUS))
                     {
-                        if (event != eventid::MOUSE_MOVE)
-                            child->focus(true);
-                        return 1;
+                        set_focus(child);
                     }
+
+                    if (ret)
+                    {
+                        return ret;
+                    }
+
+                    //break;
                 }
             }
 
@@ -189,26 +193,34 @@ namespace egt
         {
             switch (event)
             {
-            case eventid::MOUSE_MOVE:
-            case eventid::MOUSE_DOWN:
-            //case eventid::MOUSE_UP:
+            case eventid::MOUSE_UP:
+            //case eventid::KEYBOARD_UP:
+            //case eventid::KEYBOARD_REPEAT:
             //case eventid::BUTTON_UP:
-            case eventid::BUTTON_DOWN:
+            case eventid::MOUSE_MOVE:
+                //case eventid::MOUSE_DOWN:
+                //case eventid::MOUSE_UP:
+                //case eventid::BUTTON_UP:
+                //case eventid::BUTTON_DOWN:
                 //case eventid::MOUSE_DBLCLICK:
             {
                 Point pos = screen_to_frame(event_mouse());
 
                 if (Rect::point_inside(pos, m_focus_widget->box()))
                 {
-                    if (m_focus_widget->handle(event))
-                        return 1;
+                    auto ret = m_focus_widget->handle(event);
+                    if (ret)
+                        return ret;
                 }
                 break;
             }
             default:
-                if (m_focus_widget->handle(event))
-                    return 1;
+            {
+                auto ret = m_focus_widget->handle(event);
+                if (ret)
+                    return ret;
                 break;
+            }
             }
         }
 

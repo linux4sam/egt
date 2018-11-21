@@ -4,11 +4,11 @@
 
 @section intro_what_is_egt What is EGT?
 
-EGT is a C++ GUI toolkit for Linux on Microchip AT91/SAMA5 parts.  EGT provides
-modern GUI functionality, look-and-feel, and performance while staying as close
-to the metal as possible. EGT provides a consistent API and solution for working
-across all Microchip AT91/SAMA5 parts in order to build robust GUI based
-applications.
+The Ensemble Graphics Toolkit (EGT) is a C++ GUI toolkit for Linux on Microchip
+AT91/SAMA5 parts.  EGT provides modern GUI functionality, look-and-feel, and
+performance while staying as close to the metal as possible. EGT provides a
+consistent API and solution for working across all Microchip AT91/SAMA5 parts in
+order to build robust GUI based applications.
 
 EGT takes advantage of and focuses on the C++11 standard.
 

@@ -75,7 +75,10 @@ public:
                     m_radial1.palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::ORANGE);
                 else
                     m_radial1.reset_palette();
+
+                return 1;
             }
+            return 0;
         });
 
         add(&m_radial1);
@@ -106,6 +109,8 @@ public:
                 m_label2.damage();
                 m_label3.damage();
             }
+
+            return 0;
         });
 
         m_label2.on_event([this](eventid event)
@@ -119,6 +124,8 @@ public:
                 m_label2.damage();
                 m_label3.damage();
             }
+
+            return 0;
         });
 
         m_label3.on_event([this](eventid event)
@@ -132,6 +139,8 @@ public:
                 m_label2.damage();
                 m_label3.damage();
             }
+
+            return 0;
         });
 
         add(&m_label4);

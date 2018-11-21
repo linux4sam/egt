@@ -28,7 +28,7 @@ namespace egt
     {
     public:
         StaticGrid(const Rect& rect = Rect(),
-                   int columns = 1, int rows = 1, int border = 0);
+                   int columns = 1, int rows = 1, int spacing = 0);
 
         virtual void move(const Point& point) override
         {
@@ -63,6 +63,8 @@ namespace egt
         virtual Widget* add(Widget* widget,
                             alignmask align = alignmask::EXPAND);
 
+        virtual Widget* get(const Point& point);
+
         virtual void remove(Widget* widget) override;
 
         /**
@@ -72,6 +74,16 @@ namespace egt
          * circumstances.
          */
         virtual void reposition();
+
+        int last_add_column() const
+        {
+            return m_last_add_column;
+        }
+
+        int last_add_row() const
+        {
+            return m_last_add_row;
+        }
 
         virtual ~StaticGrid();
 
@@ -87,7 +99,10 @@ namespace egt
         using cell_array = std::vector<std::vector<Cell>>;
 
         cell_array m_cells;
-        int m_border{0};
+        int m_spacing{0};
+
+        int m_last_add_column{0};
+        int m_last_add_row{0};
     };
 
     class HorizontalPositioner : public Frame
@@ -95,9 +110,9 @@ namespace egt
     public:
 
         HorizontalPositioner(const Rect& rect,
-                             int border = 0, alignmask align = alignmask::CENTER)
+                             int spacing = 0, alignmask align = alignmask::CENTER)
             : Frame(rect, widgetmask::NO_BACKGROUND),
-              m_border(border),
+              m_spacing(spacing),
               m_align(align)
         {}
 
@@ -121,7 +136,7 @@ namespace egt
             // align everything in center
             int width = 0;
             for (auto& child : m_children)
-                width += child->w() + m_border;
+                width += child->w() + m_spacing;
 
             int offset = w() / 2 - width / 2;
             for (auto& child : m_children)
@@ -139,8 +154,8 @@ namespace egt
                     else if ((m_align & alignmask::BOTTOM) == alignmask::BOTTOM)
                         p.y = y() + h() - child->h();
 
-                    child->move(Point(x() + offset + m_border, p.y));
-                    offset += (child->w() + m_border);
+                    child->move(Point(x() + offset + m_spacing, p.y));
+                    offset += (child->w() + m_spacing);
                 }
             }
 
@@ -151,8 +166,39 @@ namespace egt
         {}
 
     protected:
-        int m_border{0};
+        int m_spacing{0};
         alignmask m_align{alignmask::NONE};
+    };
+
+    class SelectableGrid : public StaticGrid
+    {
+    public:
+        SelectableGrid(const Rect& rect = Rect(),
+                       int columns = 1, int rows = 1, int spacing = 0)
+            : StaticGrid(rect, columns, rows, spacing)
+        {
+        }
+
+        virtual void draw(Painter& painter, const Rect& rect) override;
+
+        virtual Point selected() const
+        {
+            return Point(m_selected_column, m_selected_row);
+        }
+
+        virtual void select(int column, int row)
+        {
+            m_selected_column = column;
+            m_selected_row = row;
+            damage();
+        }
+
+        virtual ~SelectableGrid()
+        {}
+
+    protected:
+        int m_selected_column{0};
+        int m_selected_row{0};
     };
 
 }

@@ -19,42 +19,6 @@ using namespace std;
 
 namespace egt
 {
-    widgetmask& operator&=(widgetmask& a, widgetmask b)
-    {
-        a = a & b;
-        return a;
-    }
-
-    widgetmask& operator|=(widgetmask& a, widgetmask b)
-    {
-        a = a | b;
-        return a;
-    }
-
-    widgetmask& operator^=(widgetmask& a, widgetmask b)
-    {
-        a = a ^ b;
-        return a;
-    }
-
-    alignmask& operator&=(alignmask& a, alignmask b)
-    {
-        a = a & b;
-        return a;
-    }
-
-    alignmask& operator|=(alignmask& a, alignmask b)
-    {
-        a = a | b;
-        return a;
-    }
-
-    alignmask& operator^=(alignmask& a, alignmask b)
-    {
-        a = a ^ b;
-        return a;
-    }
-
     static auto widget_id = 0;
 
     Widget::Widget(const Rect& rect, widgetmask flags) noexcept
@@ -74,10 +38,9 @@ namespace egt
 
     int Widget::handle(eventid event)
     {
-        invoke_handlers(event);
-
-        if (focus())
-            return 1;
+        auto ret = invoke_handlers(event);
+        if (ret)
+            return ret;
 
         // do nothing
         return 0;
@@ -94,21 +57,14 @@ namespace egt
         }
     }
 
-    void Widget::focus(bool value)
+    bool Widget::focus() const
     {
-        if (m_focus != value)
-        {
-            if (value)
-            {
-                if (is_flag_set(widgetmask::NO_FOCUS))
-                    return;
-            }
+        return parent()->get_focus_widget() == this;
+    }
 
-            m_focus = value;
-
-            if (m_parent)
-                m_parent->focus(value ? this : nullptr);
-        }
+    void Widget::set_focus()
+    {
+        parent()->set_focus(this);
     }
 
     void Widget::resize(const Size& size)
@@ -233,6 +189,22 @@ namespace egt
         paint(painter);
         cairo_surface_write_to_png(surface.get(), name.c_str());
     }
+
+#if 0
+    shared_cairo_surface_t Widget::surface()
+    {
+        auto surface = shared_cairo_surface_t(
+                           cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+                                   w(), h()),
+                           cairo_surface_destroy);
+
+        auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
+
+        Painter painter(cr);
+        paint(painter);
+        return surface;
+    }
+#endif
 
     Widget::~Widget()
     {

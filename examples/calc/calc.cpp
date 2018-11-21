@@ -58,7 +58,7 @@ int main(int argc, const char** argv)
             b->on_event([&text, b](eventid event)
             {
                 if (event != eventid::MOUSE_UP)
-                    return;
+                    return 0;
 
                 if (b->get_text() == "=")
                 {
@@ -80,20 +80,15 @@ int main(int argc, const char** argv)
                 {
                     text.append(b->get_text());
                 }
+
+                return 0;
             });
 
             buttongrid.add(b, c, r, alignmask::EXPAND);
-
-            if (label == "=")
-            {
-                //b->palette().set(Palette::LIGHT, Palette::GROUP_NORMAL, Color::BLUE);
-                //b->palette().set(Palette::LIGHT, Palette::GROUP_ACTIVE, Color::RED);
-            }
         }
     }
 
     topgrid.reposition();
-    //buttongrid.reposition();
 
     win.show();
 

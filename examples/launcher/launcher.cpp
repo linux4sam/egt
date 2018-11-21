@@ -161,6 +161,7 @@ public:
                 else
                     m_popup.show(true);
             }
+            return 0;
         });
 
 #ifdef USE_PLANE_LAYER
@@ -226,7 +227,7 @@ public:
             if (!m_moving)
             {
                 // hack
-                focus(nullptr);
+                set_focus(nullptr);
 
                 m_moving = true;
                 m_moving_x = event_mouse().x;

@@ -12,9 +12,9 @@ using namespace std;
 namespace egt
 {
     StaticGrid::StaticGrid(const Rect& rect, int columns,
-                           int rows, int border)
+                           int rows, int spacing)
         : Frame(rect, widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER),
-          m_border(border)
+          m_spacing(spacing)
     {
         m_cells.resize(columns);
         for (auto& x : m_cells)
@@ -25,19 +25,41 @@ namespace egt
     {
         static inline int ceil(int x, int y)
         {
-            //return x / y;
             return (x + y - 1) / y;
         }
     }
 
+    /*
+     * Calculates the rectangle for a cell. This calculates the rectangle right
+     * down the center of any spacing if one exists.
+     */
+    static Rect cell_rect(int columns, int rows, int width, int height, int column, int row, int spacing)
+    {
+        auto inner_width = detail::ceil((width - ((columns + 1) * spacing)), columns);
+        auto inner_height = detail::ceil((height - ((rows + 1) * spacing)), rows);
+
+        auto ix = (column * spacing) + (column * inner_width) + detail::ceil(spacing, 2);
+        auto iy = (row * spacing) + (row * inner_height) + detail::ceil(spacing, 2);
+        auto iw = inner_width + spacing;
+        auto ih = inner_height + spacing;
+
+        if (iw < 0)
+            iw = 0;
+
+        if (ih < 0)
+            ih = 0;
+
+        return Rect(ix, iy, iw, ih);
+    }
+
     void StaticGrid::draw(Painter& painter, const Rect& rect)
     {
-        if (m_border > 0)
+        if (m_spacing > 0)
         {
             if (!is_flag_set(widgetmask::NO_BORDER))
             {
                 painter.set_color(palette().color(Palette::BORDER));
-                painter.set_line_width(m_border);
+                painter.set_line_width(m_spacing);
 
                 auto columns = m_cells.size();
                 for (size_t column = 0; column < columns; column++)
@@ -45,20 +67,11 @@ namespace egt
                     auto rows = m_cells[column].size();
                     for (size_t row = 0; row < rows; row++)
                     {
-                        // find the rect for the cell
-                        int iw = detail::ceil(w(), columns);
-                        int ih = detail::ceil(h(), rows);
+                        Rect rect = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
 
-                        if (iw < 0)
-                            iw = 0;
+                        rect += Point(x(), y());
 
-                        if (ih < 0)
-                            ih = 0;
-
-                        int ix = x() + (column * iw);
-                        int iy = y() + (row * ih);
-
-                        painter.rectangle(Rect(ix, iy, iw, ih));
+                        painter.rectangle(rect);
                     }
                 }
 
@@ -84,6 +97,9 @@ namespace egt
         cell.align = align;
         m_cells[column][row] = cell;
 
+        m_last_add_column = column;
+        m_last_add_row = row;
+
         reposition();
 
         return widget;
@@ -91,6 +107,7 @@ namespace egt
 
     Widget* StaticGrid::add(Widget* widget, alignmask align)
     {
+        int c = 0;
         for (auto& column : m_cells)
         {
             auto i = std::find_if(column.begin(), column.end(),
@@ -108,11 +125,21 @@ namespace egt
 
                 reposition();
 
+                m_last_add_column = c;
+                m_last_add_row = std::distance(column.begin(), i);
+
                 return widget;
             }
+
+            c++;
         }
 
         return nullptr;
+    }
+
+    Widget* StaticGrid::get(const Point& point)
+    {
+        return m_cells[point.x][point.y].widget;
     }
 
     void StaticGrid::remove(Widget* widget)
@@ -136,9 +163,6 @@ namespace egt
         Frame::remove(widget);
     }
 
-
-
-
     void StaticGrid::reposition()
     {
         int columns = m_cells.size();
@@ -150,29 +174,11 @@ namespace egt
                 Cell& cell = m_cells[column][row];
                 if (cell.widget)
                 {
-                    // find the rect for the cell
+                    Rect bounding = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
 
-                    int ix = x() + (column * (w() / columns)) + detail::ceil(m_border, 2);
-                    int iy = y() + (row * (h() / rows)) + detail::ceil(m_border, 2);
-                    int iw = (w() / columns) - (m_border);
-                    int ih = (h() / rows) - (m_border);
-                    /*
-                                        int iw = detail::ceil(w(), columns) - (m_border * 2);
-                                        int ih = detail::ceil(h(), rows) - (m_border * 2);
-                    */
-                    if (iw < 0)
-                        iw = 0;
-
-                    if (ih < 0)
-                        ih = 0;
-                    /*
-                                        int ix = x() + (column * iw) + m_border;
-                                        int iy = y() + (row * ih) + m_border;
-                    */
-
-                    Rect bounding(ix, iy, iw, ih);
-
-                    //cout << bounding << endl;
+                    bounding += Point(x(), y());
+                    bounding += Point(detail::ceil(m_spacing, 2), detail::ceil(m_spacing, 2));
+                    bounding -= Size(m_spacing, m_spacing);
 
                     // get the aligning rect
                     Rect target = align_algorithm(cell.widget->box().size(),
@@ -192,4 +198,29 @@ namespace egt
     StaticGrid::~StaticGrid()
     {}
 
+    void SelectableGrid::draw(Painter& painter, const Rect& rect)
+    {
+        if (m_spacing > 0)
+        {
+            painter.set_color(palette().color(Palette::HIGHLIGHT));
+            auto line_width = m_spacing / 2;
+            if (line_width <= 0)
+                line_width = m_spacing;
+            painter.set_line_width(line_width);
+
+            size_t column = m_selected_column;
+            size_t row = m_selected_row;
+            auto columns = m_cells.size();
+            auto rows = m_cells[column].size();
+
+            Rect rect = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
+
+            rect += Point(x(), y());
+
+            painter.rectangle(rect);
+            painter.stroke();
+        }
+
+        Frame::draw(painter, rect);
+    }
 }

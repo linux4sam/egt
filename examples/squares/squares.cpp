@@ -19,8 +19,8 @@ int main(int argc, const char** argv)
     const Color FUCHSIA(Color::CSS("#F012BE"));
 
     Label label("FPS: -",
-                 Rect(Point(0, 40), Size(100, 40)),
-                 alignmask::CENTER);
+                Rect(Point(0, 40), Size(100, 40)),
+                alignmask::CENTER);
     label.palette()
     .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
@@ -37,31 +37,31 @@ int main(int argc, const char** argv)
     auto HEIGHT = 100;
 
     const vector<Color> colors =
-        {
-            Color::RED,
-            Color::GREEN,
-            Color::BLUE,
-            Color::YELLOW,
-            Color::CYAN,
-            Color::MAGENTA,
-            Color::SILVER,
-            Color::GRAY,
-            Color::LIGHTGRAY,
-            Color::MAROON,
-            Color::OLIVE,
-            Color::PURPLE,
-            Color::TEAL,
-            Color::NAVY,
-            Color::ORANGE,
-            Color::AQUA,
-            Color::LIGHTBLUE,
-        };
+    {
+        Color::RED,
+        Color::GREEN,
+        Color::BLUE,
+        Color::YELLOW,
+        Color::CYAN,
+        Color::MAGENTA,
+        Color::SILVER,
+        Color::GRAY,
+        Color::LIGHTGRAY,
+        Color::MAROON,
+        Color::OLIVE,
+        Color::PURPLE,
+        Color::TEAL,
+        Color::NAVY,
+        Color::ORANGE,
+        Color::AQUA,
+        Color::LIGHTBLUE,
+    };
 
     std::random_device r;
     std::default_random_engine e1 {r()};
-    std::uniform_int_distribution<int> x_dist {0, win.w()-WIDTH};
-    std::uniform_int_distribution<int> y_dist {0, win.h()-HEIGHT};
-    std::uniform_int_distribution<int> color_dist {0, colors.size()-1};
+    std::uniform_int_distribution<int> x_dist {0, win.w() - WIDTH};
+    std::uniform_int_distribution<int> y_dist {0, win.h() - HEIGHT};
+    std::uniform_int_distribution<int> color_dist {0, colors.size() - 1};
 
     experimental::Fps fps;
     fps.start();

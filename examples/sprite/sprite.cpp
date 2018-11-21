@@ -76,6 +76,7 @@ int main(int argc, const char** argv)
             else
                 sprite1.hide();
         }
+        return 0;
     });
 
     software_checkbox.on_event([&](eventid event)
@@ -87,6 +88,7 @@ int main(int argc, const char** argv)
             else
                 sprite2.hide();
         }
+        return 0;
     });
 
 
@@ -140,6 +142,7 @@ int main(int argc, const char** argv)
     {
         if (event == eventid::PROPERTY_CHANGED)
             animatetimer.change_duration(std::chrono::milliseconds(slider1.position()));
+        return 0;
     });
 
     win.show();

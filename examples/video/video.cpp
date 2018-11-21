@@ -221,6 +221,7 @@ int main(int argc, const char** argv)
         ignoreparam(event);
         if (playbtn->active())
             window->unpause();
+        return 0;
     });
 
     ImageButton* pausebtn = new ImageButton(":pause_png", "", Rect(), widgetmask::NO_BORDER);
@@ -231,6 +232,7 @@ int main(int argc, const char** argv)
         cout << "pause button" << endl;
         if (pausebtn->active())
             window->pause();
+        return 0;
     });
 
     Slider* position = new Slider(0, 100, Rect(Size(150, 40)), orientation::HORIZONTAL);
@@ -272,6 +274,7 @@ int main(int argc, const char** argv)
     {
         ignoreparam(event);
         window->set_volume(volume->position());
+        return 0;
     });
     volume->position(50);
 
@@ -291,6 +294,7 @@ int main(int argc, const char** argv)
             playbtn->disable(false);
             pausebtn->disable(true);
         }
+        return 0;
     });
 
     grid.reposition();

@@ -17,7 +17,7 @@ int main()
     Application app;
     Window win;
 
-    StaticGrid grid(Rect(win.size()), 3, 2, 5);
+    StaticGrid grid(Rect(win.size()), 3, 2, 10);
     grid.flag_clear(widgetmask::NO_BORDER);
     win.add(&grid);
 
@@ -48,6 +48,10 @@ int main()
     shrinkh_out.on_change(std::bind(&Label::set_width, std::ref(label), std::placeholders::_1));
     seq.add(&shrinkh_in);
     seq.add(&shrinkh_out);
+
+    Label label2("hello world");
+    label2.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::GREEN);
+    grid.add(&label2, 1, 1);
 
     seq.start();
 

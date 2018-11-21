@@ -65,32 +65,31 @@ http://rapidxml.sourceforge.net/manual.html
 
 Actual Dependencies
 ===================
-libstdc++.so
-libplanes.so
-libcairo.so
-libpixman-1.so
-libfontconfig.so
-libexpat.so
-libfreetype.so
-libpng16.so
--lz
-libatomic.so
-libdrm.so
-libts.so
--llua
--lcjson
-libgstreamer-1.0.so
-libgmodule-2.0.so
-libgobject-2.0.so
-glib-2.0.so
-libffi.so
-libglib-2.0.so
-libpcre.so
--lpthread
-libjpeg.so
-libinput.so
-libmtdev.so
-libudev.so
-libevdev.so
--lrt
--lm
+libstdc++.so, [system]
+libplanes.so, MIT
+libcairo.so, LGPL-2.1 or MPL-1.1
+libpixman-1.so, MIT
+libfontconfig.so, fontconfig license
+libexpat.so, MIT
+libfreetype.so, Dual FTL/GPL-2.0+
+libpng16.so, libpng license
+libzlib, Zlib
+libatomic.so, [system]
+libdrm.so, MIT
+libts.so, LGPL-2.1+
+lua, MIT
+cjson, MIT
+libgstreamer-1.0.so, LGPL-2.0+/LGPL-2.1+
+libgmodule-2.0.so, LGPL-2.1+
+libgobject-2.0.so, LGPL-2.1+
+libffi.so, MIT
+libglib-2.0.so, LGPL-2.1+
+libpcre.so, BSD-3-Clause
+pthread, [system]
+libjpeg.so, jpeg-license (BSD-3-Clause-like)
+libinput.so, MIT
+libmtdev.so, MIT
+libudev.so, LGPL-2.1+
+libevdev.so, X11
+rt, [system]
+m, [system]

@@ -31,6 +31,7 @@ namespace egt
         BUTTON_DOWN,
         BUTTON_UP,
         MOUSE_DBLCLICK,
+        MOUSE_CLICK,
 
         /**
          * Sent when a widget gets focus.
@@ -67,7 +68,7 @@ namespace egt
             Object() noexcept
             {}
 
-            using event_callback_t = std::function<void (eventid event)>;
+            using event_callback_t = std::function<int (eventid event)>;
 
             /**
              * Add a callback to be called when the widget receives an event.
@@ -80,11 +81,17 @@ namespace egt
             /**
              * Invoke all handlers with the specified event.
              */
-            virtual void invoke_handlers(eventid event)
+            virtual int invoke_handlers(eventid event)
             {
                 // Hmm, this is not respecting the return value of the handler
                 for (auto callback : m_callbacks)
-                    callback(event);
+                {
+                    auto ret = callback(event);
+                    if (ret)
+                        return ret;
+                }
+
+                return 0;
             }
 
             virtual ~Object()

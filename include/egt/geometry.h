@@ -436,6 +436,15 @@ namespace egt
         }
 
         /**
+         * Determine if a point intersects with a rectangle.
+         */
+        static inline bool intersect(const Rect& lhs, const Point& rhs)
+        {
+            return (lhs.x < rhs.x && lhs.x + lhs.w > rhs.x &&
+                    lhs.y < rhs.y && lhs.y + lhs.h > rhs.y);
+        }
+
+        /**
          * Merge two rectangles together into one super rectangle that contains
          * them both.
          */
@@ -572,7 +581,6 @@ namespace egt
         degrees += zero;
         return degrees * (M_PI / 180.0);
     }
-
 
 }
 
