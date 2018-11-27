@@ -20,7 +20,7 @@ namespace egt
      * Basic button widget.
      *
      * @image html widget_button.png
-     * @image latex widget_button.png "widget_button" height=10cm
+     * @image latex widget_button.png "widget_button" width=5cm
      */
     class Button : public Label
     {

@@ -24,13 +24,13 @@ namespace egt
      * basic.
      *
      * @image html widget_label1.png
-     * @image latex widget_label1.png "widget_label1" height=10cm
+     * @image latex widget_label1.png "widget_label1" width=5cm
      * @image html widget_label2.png
-     * @image latex widget_label2.png "widget_label2" height=10cm
+     * @image latex widget_label2.png "widget_label2" width=5cm
      * @image html widget_label3.png
-     * @image latex widget_label3.png "widget_label3" height=10cm
+     * @image latex widget_label3.png "widget_label3" width=5cm
      * @image html widget_label4.png
-     * @image latex widget_label4.png "widget_label4" height=10cm
+     * @image latex widget_label4.png "widget_label4" width=5cm
      */
     class Label : public TextWidget
     {
@@ -66,9 +66,9 @@ namespace egt
      * Boolean checkbox.
      *
      * @image html widget_checkbox1.png
-     * @image latex widget_checkbox1.png "widget_checkbox1" height=10cm
+     * @image latex widget_checkbox1.png "widget_checkbox1" width=5cm
      * @image html widget_checkbox2.png
-     * @image latex widget_checkbox2.png "widget_checkbox2" height=10cm
+     * @image latex widget_checkbox2.png "widget_checkbox2" width=5cm
      *
      * @todo This should be a ValueWidget<bool>.
      */
@@ -109,7 +109,7 @@ namespace egt
      * CheckBox with a boolean slider style interface.
      *
      * @image html widget_slidingcheckbox.png
-     * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" height=10cm
+     * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" width=5cm
      */
     class SlidingCheckBox : public CheckBox
     {
@@ -125,9 +125,9 @@ namespace egt
      * A Label widget that also contains an image.
      *
      * @image html widget_imagelabel1.png
-     * @image latex widget_imagelabel1.png "widget_imagelabel1" height=10cm
+     * @image latex widget_imagelabel1.png "widget_imagelabel1" width=5cm
      * @image html widget_imagelabel2.png
-     * @image latex widget_imagelabel2.png "widget_imagelabel2" height=10cm
+     * @image latex widget_imagelabel2.png "widget_imagelabel2" width=5cm
      */
     class ImageLabel : public Label
     {

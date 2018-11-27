@@ -5,7 +5,6 @@
  */
 #include "egt/frame.h"
 #include "egt/geometry.h"
-#include "egt/imagecache.h"
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
@@ -236,123 +235,6 @@ namespace egt
         {
             m_text = str;
             damage();
-        }
-    }
-
-    namespace experimental
-    {
-
-        Combo::Combo(const string& label, const Rect& rect)
-            : Widget(rect),
-              m_label(label)
-        {}
-
-        int Combo::handle(eventid event)
-        {
-            return Widget::handle(event);
-        }
-
-        void Combo::draw(Painter& painter, const Rect& rect)
-        {
-            ignoreparam(rect);
-
-            Color white(Color::WHITE);
-
-            auto cr = painter.context();
-
-            cairo_save(cr.get());
-
-            // path
-            double rx = x(),
-                   ry = y(),
-                   width = w(),
-                   height = h(),
-                   aspect = 1.0,
-                   corner_radius = 50 / 10.0;
-
-            double radius = corner_radius / aspect;
-            double degrees = M_PI / 180.0;
-
-            cairo_new_sub_path(cr.get());
-            cairo_arc(cr.get(), rx + width - radius, ry + radius, radius, -90 * degrees, 0 * degrees);
-            cairo_arc(cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90 * degrees);
-            cairo_arc(cr.get(), rx + radius, ry + height - radius, radius, 90 * degrees, 180 * degrees);
-            cairo_arc(cr.get(), rx + radius, ry + radius, radius, 180 * degrees, 270 * degrees);
-            cairo_close_path(cr.get());
-
-            // fill
-            cairo_pattern_t* pat3;
-            pat3 = cairo_pattern_create_linear(x() + w() / 2, y(), x() + w() / 2, y() + h());
-
-            Color step = white;
-            cairo_pattern_add_color_stop_rgb(pat3, 0, step.redf(), step.greenf(), step.bluef());
-            step = white.tint(.9);
-            cairo_pattern_add_color_stop_rgb(pat3, 0.43, step.redf(), step.greenf(), step.bluef());
-            step = white.tint(.82);
-            cairo_pattern_add_color_stop_rgb(pat3, 0.5, step.redf(), step.greenf(), step.bluef());
-            step = white.tint(.95);
-            cairo_pattern_add_color_stop_rgb(pat3, 1.0, step.redf(), step.greenf(), step.bluef());
-
-            cairo_set_source(cr.get(), pat3);
-            cairo_fill_preserve(cr.get());
-            cairo_pattern_destroy(pat3);
-
-            // border
-            cairo_set_source_rgba(cr.get(),
-                                  palette().color(Palette::BORDER).redf(),
-                                  palette().color(Palette::BORDER).greenf(),
-                                  palette().color(Palette::BORDER).bluef(),
-                                  palette().color(Palette::BORDER).alphaf());
-            cairo_set_line_width(cr.get(), 1.0);
-            cairo_stroke(cr.get());
-
-            // text
-            painter.draw_text(m_label, box(), palette().color(Palette::TEXT), alignmask::LEFT | alignmask::CENTER);
-
-#if 0
-            // triangle
-            cairo_set_source_rgb(cr.get(), border.redf(), border.greenf(), border.bluef());
-            cairo_move_to(cr.get(), 240, 40);
-            cairo_line_to(cr.get(), 240, 160);
-            cairo_line_to(cr.get(), 350, 160);
-            cairo_close_path(cr.get());
-            cairo_stroke_preserve(cr.get());
-            cairo_fill(cr.get());
-#endif
-
-            cairo_restore(cr.get());
-
-            // images
-            auto up = detail::image_cache.get("icons/bullet_arrow_up.png", 1.0);
-            auto down = detail::image_cache.get("icons/bullet_arrow_down.png", 1.0);
-
-#if 0
-            auto upwidth = cairo_image_surface_get_width(up.get());
-            auto upheight = cairo_image_surface_get_height(up.get());
-            screen()->blit(up.get(),
-                           x() + w() - upwidth - 5,
-                           y() + 5,
-                           upwidth,
-                           upheight,
-                           x() + w() - upwidth - 5,
-                           y() + 5,
-                           true);
-
-            auto downwidth = cairo_image_surface_get_width(down.get());
-            auto downheight = cairo_image_surface_get_height(down.get());
-            screen()->blit(down.get(),
-                           x() + w() - downwidth - 5,
-                           y() + h() - downheight - 5,
-                           downwidth,
-                           downheight,
-                           x() + w() - downwidth - 5,
-                           y() + h() - downheight - 5,
-                           true);
-#endif
-        }
-
-        Combo::~Combo()
-        {
         }
     }
 

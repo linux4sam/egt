@@ -61,7 +61,7 @@ int main(int argc, const char** argv)
     std::default_random_engine e1 {r()};
     std::uniform_int_distribution<int> x_dist {0, win.w() - WIDTH};
     std::uniform_int_distribution<int> y_dist {0, win.h() - HEIGHT};
-    std::uniform_int_distribution<int> color_dist {0, colors.size() - 1};
+    std::uniform_int_distribution<int> color_dist {0, static_cast<int>(colors.size()) - 1};
 
     experimental::Fps fps;
     fps.start();

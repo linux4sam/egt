@@ -11,8 +11,7 @@ using namespace std;
 namespace egt
 {
 
-    TextBox::TextBox(const std::string& str, const Rect& rect,
-                     alignmask align)
+    TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align)
         : TextWidget(str, rect, align),
           m_timer(std::chrono::seconds(1))
     {
@@ -48,7 +47,7 @@ namespace egt
             return 1;
         case eventid::KEYBOARD_DOWN:
 
-            if (std::isalnum((char)event_key()))
+            if (std::isprint((char)event_key()))
             {
                 m_text.append(1, (char)event_key());
                 damage();
@@ -83,11 +82,6 @@ namespace egt
 
         if (focus() && m_cursor_state)
         {
-            auto cr = painter.context();
-
-            cairo_text_extents_t textext;
-            cairo_text_extents(cr.get(), m_text.c_str(), &textext);
-
             painter.set_color(palette().color(Palette::BORDER));
             painter.set_line_width(2);
 

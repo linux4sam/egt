@@ -16,6 +16,25 @@
 
 namespace egt
 {
+    class Window;
+
+    /**
+     * Get a pointer reference to the main window.
+     */
+    Window*& main_window();
+
+    /**
+     * Get a pointer reference to the modal window.
+     *
+     * The modal window is a single window that will receive all events. Only
+     * one window can be modal at any given time.
+     */
+    Window*& modal_window();
+
+    /**
+     * Get the list of all currently allocated Windows.
+     */
+    std::vector<Window*>& windows();
 
     /**
      * A Window is a Frame Widget that contains and is backed by a Screen.
@@ -122,17 +141,27 @@ namespace egt
 
             T::show();
         }
+
+        virtual void show_modal(bool center = false)
+        {
+            if (!modal_window())
+            {
+                modal_window() = this;
+                this->show(center);
+            }
+        }
+
+        virtual void hide() override
+        {
+            T::hide();
+
+            if (modal_window() == this)
+            {
+                modal_window() = nullptr;
+            }
+        }
     };
 
-    /**
-     * Get a pointer reference to the main window.
-     */
-    Window*& main_window();
-
-    /**
-     * Get the list of all currently allocated Windows.
-     */
-    std::vector<Window*>& windows();
 }
 
 #endif

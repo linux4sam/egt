@@ -60,7 +60,7 @@ int main(int argc, const char** argv)
                 if (event != eventid::MOUSE_UP)
                     return 0;
 
-                if (b->get_text() == "=")
+                if (b->text() == "=")
                 {
                     string line = detail::replace_all(detail::replace_all(text.last_line(), "x", "*"), "÷", "/");
                     if (!line.empty())
@@ -72,13 +72,13 @@ int main(int argc, const char** argv)
                         text.append(ss.str());
                     }
                 }
-                else if (b->get_text() == "C")
+                else if (b->text() == "C")
                 {
                     text.clear();
                 }
                 else
                 {
-                    text.append(b->get_text());
+                    text.append(b->text());
                 }
 
                 return 0;

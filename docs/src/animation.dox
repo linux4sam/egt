@@ -12,4 +12,19 @@ sprite sheets and even different strips within the same sheet.  The
 egt::Animation, egt::AnimationSequence, egt::AutoAnimation, and
 egt::PropertyAnimator all provide ways to animate almost anything.
 
+
+@section animations_easingfunctions Predefined Easing Functions.
+
+All easing functions take a percent time, and return a percent value. You
+can easily create your own easing functions.  For example, the simplest
+of easing functions is a linear function that is implemented like so:
+
+@code
+float_t easing_linear(float_t p)
+{
+    return p;
+}
+@endcode
+
+See <https://easings.net> for more information about other easing functions.
 */

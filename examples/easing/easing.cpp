@@ -66,9 +66,9 @@ public:
         : ListBox(items, rect)
     {}
 
-    void select(uint32_t index) override
+    void set_select(uint32_t index) override
     {
-        ListBox::select(index);
+        ListBox::set_select(index);
 
         animation->stop();
         animation->set_easing_func(curves[index]);
@@ -95,7 +95,7 @@ public:
         transform(curves_names.begin(), curves_names.end(), items.begin(), [](const StringItem & v) { return new StringItem(v);});
         MyListBox* list1 = new MyListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
         add(list1);
-        list1->select(7);
+        list1->set_select(7);
 
 #ifndef USE_HARDWARE
         m_box = new Image("ball.png");

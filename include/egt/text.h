@@ -25,7 +25,7 @@ namespace egt
      * This supports text on a single line.
      *
      * @image html widget_textbox.png
-     * @image latex widget_textbox.png "widget_txtbox" height=10cm
+     * @image latex widget_textbox.png "widget_txtbox" height=5cm
      */
     class TextBox : public TextWidget
     {

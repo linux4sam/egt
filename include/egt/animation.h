@@ -22,21 +22,7 @@ namespace egt
     using float_t = float;
 
     /**
-     * Predefined easing functions.
-     *
-     * All easing functions take a percent time, and return a percent value. You
-     * can easily create your own easing functions.  For example, the simplest
-     * of easing functions is a linear function that is implemented like so:
-     *
-     * @code
-     * float_t easing_linear(float_t p)
-     * {
-     *     return p;
-     * }
-     * @endcode
-     *
-     * See <https://easings.net> for more information about other easing
-     * functions.
+     * Predefined easing function.
      * @{
      */
     float_t easing_linear(float_t p);

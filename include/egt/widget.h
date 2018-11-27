@@ -285,6 +285,7 @@ namespace egt
             // careful attention to ordering
             damage();
             m_visible = false;
+            invoke_handlers(eventid::HIDE);
         }
 
         /**
@@ -299,6 +300,7 @@ namespace egt
             // careful attention to ordering
             m_visible = true;
             damage();
+            invoke_handlers(eventid::SHOW);
         }
 
         /**
@@ -642,7 +644,7 @@ public:
     /**
      * Get the text of the Label.
      */
-    virtual const std::string& get_text() const { return m_text; }
+    virtual const std::string& text() const { return m_text; }
 
     /**
      * Set the alignment of the Label.
@@ -694,25 +696,6 @@ private:
 
 namespace experimental
 {
-    /**
-     * Combo box widget.
-     */
-    class Combo : public Widget
-    {
-    public:
-        Combo(const std::string& label = std::string(),
-              const Rect& rect = Rect());
-
-        virtual int handle(eventid event) override;
-
-        virtual void draw(Painter& painter, const Rect& rect) override;
-
-        virtual ~Combo();
-
-    protected:
-        std::string m_label;
-    };
-
     class ScrollWheel : public Widget
     {
     public:

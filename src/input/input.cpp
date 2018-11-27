@@ -50,16 +50,24 @@ namespace egt
 
             DBG("event: " << event);
 
-            // first give event to any windos
-            for (auto& w : windows())
+            if (modal_window())
             {
-                if (!w->visible())
-                    continue;
+                // give event to the modal window
+                modal_window()->handle(event);
+            }
+            else
+            {
+                // give event to any top level and visible windows
+                for (auto& w : windows())
+                {
+                    if (!w->visible())
+                        continue;
 
-                if (!w->top_level())
-                    continue;
+                    if (!w->top_level())
+                        continue;
 
-                w->handle(event);
+                    w->handle(event);
+                }
             }
 
             // then give it to any global input handlers

@@ -52,11 +52,14 @@ namespace egt
     {
         if (point != box().point())
         {
-            auto diff = point - m_box.point();
-
-            for (auto& i : m_children)
+            //if (top_level())
             {
-                i->move(i->box().point() + diff);
+                auto diff = point - m_box.point();
+
+                for (auto& i : m_children)
+                {
+                    i->move(i->box().point() + diff);
+                }
             }
 
             Widget::move(point);
@@ -143,13 +146,13 @@ namespace egt
         switch (event)
         {
         case eventid::MOUSE_UP:
-            //case eventid::MOUSE_MOVE:
-            //case eventid::KEYBOARD_UP:
-            //case eventid::KEYBOARD_REPEAT:
-            //case eventid::BUTTON_UP:
-            // pair the eventid::MOUSE_UP event with the focus widget
-            if (m_focus_widget)
-                break;
+        //case eventid::MOUSE_MOVE:
+        //case eventid::KEYBOARD_UP:
+        //case eventid::KEYBOARD_REPEAT:
+        //case eventid::BUTTON_UP:
+        // pair the eventid::MOUSE_UP event with the focus widget
+        //if (m_focus_widget)
+        //  break;
         case eventid::MOUSE_DOWN:
         case eventid::MOUSE_MOVE:
         case eventid::BUTTON_DOWN:
@@ -189,6 +192,7 @@ namespace egt
             break;
         }
 
+#if 0
         if (m_focus_widget)
         {
             switch (event)
@@ -223,6 +227,7 @@ namespace egt
             }
             }
         }
+#endif
 
         return Widget::handle(event);
     }

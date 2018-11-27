@@ -186,7 +186,10 @@ namespace egt
     Rect Painter::draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff)
     {
         cairo_text_extents_t textext;
-        cairo_text_extents(m_cr.get(), str.c_str(), &textext);
+        if (!str.empty())
+            cairo_text_extents(m_cr.get(), str.c_str(), &textext);
+        else
+            cairo_text_extents(m_cr.get(), "I", &textext);
 
         Rect target = Widget::align_algorithm(Size(textext.width, textext.height),
                                               rect,

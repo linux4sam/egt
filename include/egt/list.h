@@ -76,7 +76,7 @@ namespace egt
      * a time.
      *
      * @image html widget_listbox.png
-     * @image latex widget_listbox.png "widget_listbox" height=10cm
+     * @image latex widget_listbox.png "widget_listbox" width=5cm
      */
     class ListBox : public Widget
     {
@@ -119,7 +119,7 @@ namespace egt
         /**
          * Select an item by index.
          */
-        virtual void select(uint32_t index);
+        virtual void set_select(uint32_t index);
 
         /**
          * Return the number of items in the list.
@@ -148,6 +148,41 @@ namespace egt
         item_array m_items;
         uint32_t m_selected{0};
     };
+
+    namespace experimental
+    {
+        /**
+         * Combo box widget.
+         */
+        class ComboBox : public TextWidget
+        {
+        public:
+            using item_array = std::vector<std::string>;
+
+            ComboBox(const item_array& items = item_array(),
+                     const Rect& rect = Rect(),
+                     alignmask align = alignmask::CENTER | alignmask::LEFT,
+                     const Font& font = Font(),
+                     widgetmask flags = widgetmask::NO_BORDER) noexcept;
+
+            virtual int handle(eventid event) override;
+
+            virtual void set_select(uint32_t index);
+
+            virtual uint32_t selected() const { return m_selected; }
+
+            virtual void draw(Painter& painter, const Rect& rect) override;
+
+            virtual ~ComboBox();
+
+        protected:
+            item_array m_items;
+            uint32_t m_selected{0};
+            Rect m_up_rect;
+            Rect m_down_rect;
+        };
+
+    }
 
 }
 

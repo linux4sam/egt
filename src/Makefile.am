@@ -20,6 +20,7 @@ libegt_la_SOURCES = \
 animation.cpp \
 app.cpp \
 button.cpp \
+canvas.cpp \
 chart.cpp \
 color.cpp \
 eventloop.cpp \
@@ -78,6 +79,7 @@ libegtinclude_HEADERS = \
 $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
 $(top_srcdir)/include/egt/button.h \
+$(top_srcdir)/include/egt/canvas.h \
 $(top_srcdir)/include/egt/chart.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/eventloop.h \

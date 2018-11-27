@@ -118,7 +118,7 @@ namespace egt
      * Radial dial widget that a user uses to select a value.
      *
      * @image html widget_radial.png
-     * @image latex widget_radial.png "widget_radial" height=10cm
+     * @image latex widget_radial.png "widget_radial" width=5cm
      */
     template<class T>
     class Radial : public ValueRangeWidget<T>
@@ -318,7 +318,7 @@ namespace egt
      * Displays a level meter based on a value.
      *
      * @image html widget_levelmeter.png
-     * @image latex widget_levelmeter.png "widget_levelmeter" height=10cm
+     * @image latex widget_levelmeter.png "widget_levelmeter" width=5cm
      */
     class LevelMeter : public ValueRangeWidget<int>
     {
@@ -332,9 +332,7 @@ namespace egt
      * Displays an analog meter based on a value.
      *
      * @image html widget_analogmeter.png
-     * @image latex widget_analogmeter.png "widget_analogmeter" height=10cm
-     *
-     * <http://www.peteronion.org.uk/GtkExamples/GladeTutorials.html>
+     * @image latex widget_analogmeter.png "widget_analogmeter" width=5cm
      */
     class AnalogMeter : public ValueRangeWidget<int>
     {
@@ -367,9 +365,9 @@ namespace egt
      * @todo This should be a ValueRangeWidget<int>.
      *
      * @image html widget_slider1.png
-     * @image latex widget_slider1.png "widget_slider1" height=10cm
+     * @image latex widget_slider1.png "widget_slider1" width=5cm
      * @image html widget_slider2.png
-     * @image latex widget_slider2.png "widget_slider2" height=10cm
+     * @image latex widget_slider2.png "widget_slider2" height=5cm
      */
     class Slider : public Widget
     {

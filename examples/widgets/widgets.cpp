@@ -18,27 +18,9 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv);
 
-    set_image_path("../share/egt/");
+    set_image_path("../share/egt/examples/widgets/");
 
 #if 0
-    Window win(Size(800, 480));
-
-    Label label1("left align", Rect(Point(100, 50), Size(200, 40)),
-                 alignmask::LEFT | alignmask::CENTER, Font(), widgetmask::NONE);
-    win.add(&label1);
-
-    Label label2("right align", Rect(Point(100, 100), Size(200, 40)),
-                 alignmask::RIGHT | alignmask::CENTER, Font(), widgetmask::NONE);
-    win.add(&label2);
-
-    Label label3("top align", Rect(Point(100, 150), Size(200, 40)),
-                 alignmask::TOP | alignmask::CENTER, Font(), widgetmask::NONE);
-    win.add(&label3);
-
-    Label label4("bottom align", Rect(Point(100, 200), Size(200, 40)),
-                 alignmask::BOTTOM | alignmask::CENTER, Font(), widgetmask::NONE);
-    win.add(&label4);
-
     Popup<Window> popup(Size(100, 100));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
 
@@ -55,102 +37,6 @@ int main(int argc, const char** argv)
                 popup.show(true);
         }
     });
-
-    Button btn2("button 2", Rect(Point(200, 250), Size(100, 40)));
-    win.add(&btn2);
-
-    Keyboard<PlaneWindow> keyboard;
-    btn2.on_event([&keyboard](eventid event)
-    {
-        if (event == eventid::MOUSE_DOWN)
-        {
-            if (keyboard.visible())
-                keyboard.hide();
-            else
-                keyboard.show();
-        }
-    });
-
-    Slider slider1(0, 100, Rect(Point(100, 300), Size(200, 40)));
-    win.add(&slider1);
-
-    Slider slider2(0, 100, Rect(Point(10, 200), Size(40, 200)), orientation::VERTICAL);
-    win.add(&slider2);
-
-#ifdef DEVELOPMENT
-    Combo combo1("combo 1", Rect(Point(100, 350), Size(200, 40)));
-    win.add(&combo1);
-#endif
-
-    SlidingCheckBox sliding1(Rect(Point(100, 350), Size(200, 40)));
-    win.add(&sliding1);
-
-    TextBox text1("text 1", Rect(Point(100, 400), Size(200, 40)));
-    win.add(&text1);
-    // TODO: this is broken with keyboard and focus - get dups
-    detail::IInput::global_input().on_event([&text1](eventid event)
-    {
-        switch (event)
-        {
-        case eventid::KEYBOARD_DOWN:
-        case eventid::KEYBOARD_UP:
-        case eventid::KEYBOARD_REPEAT:
-            text1.handle(event);
-            break;
-        default:
-            break;
-        }
-    });
-
-    vector<StringItem> names = { "item 1", "item 2", "item3" };
-    ListBox::item_array items;
-    items.resize(names.size());
-    transform(names.begin(), names.end(), items.begin(), [](const StringItem & v) { return new StringItem(v);});
-
-    ListBox list1(items, Rect(Point(350, 50), Size(100, 40 * 3)));
-    win.add(&list1);
-    list1.select(1);
-
-    ImageLabel imagelabel1("icons/bug.png",
-                           "Bug",
-                           Rect(Point(350, 250),
-                                Size(200, 40)));
-    win.add(&imagelabel1);
-
-    ImageLabel imagelabel2("icons/phone.png",
-                           "Phone",
-                           Rect(Point(350, 300),
-                                Size(200, 40)));
-    win.add(&imagelabel2);
-
-    CheckBox checkbox1("checkbox 1", Rect(Point(350, 350), Size(200, 40)));
-    win.add(&checkbox1);
-    checkbox1.check(true);
-
-    CheckBox checkbox2("checkbox 2", Rect(Point(350, 400), Size(200, 40)));
-    win.add(&checkbox2);
-
-    LevelMeter lp1(Rect(Point(600, 250), Size(50, 100)));
-    win.add(&lp1);
-
-    AnalogMeter am1(Rect(Point(600, 280), Size(180, 180)));
-    win.add(&am1);
-
-    CPUMonitorUsage tools;
-    PeriodicTimer cputimer(std::chrono::seconds(1));
-    cputimer.on_timeout([&tools, &lp1, &am1]()
-    {
-        tools.update();
-        lp1.value(tools.usage(0));
-        am1.value(tools.usage(0));
-    });
-    cputimer.start();
-
-    win.add(&popup);
-    win.add(&keyboard);
-
-    win.show();
-
 #endif
 
     Window win;
@@ -215,6 +101,7 @@ int main(int argc, const char** argv)
     text2.disable(true);
     grid0.add(&text2);
 
+#if 0
     // TODO: this is broken with keyboard and focus - get dups
     detail::IInput::global_input().on_event([&text1](eventid event)
     {
@@ -230,11 +117,12 @@ int main(int argc, const char** argv)
         }
         return 0;
     });
+#endif
 
-    ImageLabel imagelabel1("icons/bug.png", "Bug");
+    ImageLabel imagelabel1("@bug.png", "Bug");
     grid0.add(&imagelabel1);
 
-    ImageLabel imagelabel2("icons/phone.png", "Phone");
+    ImageLabel imagelabel2("@phone.png", "Phone");
     grid0.add(&imagelabel2);
 
     CheckBox checkbox1("checkbox 1");
@@ -243,6 +131,15 @@ int main(int argc, const char** argv)
 
     CheckBox checkbox2("checkbox 2");
     grid0.add(&checkbox2);
+
+    experimental::ComboBox::item_array combo_items =
+    {
+        "item 1",
+        "item 2",
+        "item 3",
+    };
+    experimental::ComboBox combo1(combo_items);
+    grid0.add(&combo1);
 
     StaticGrid grid1(Rect(Point(win.w() / 2, 0), Size(win.w() / 2, win.h())), 2, 3, 5);
     win.add(&grid1);

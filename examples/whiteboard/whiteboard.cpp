@@ -15,9 +15,11 @@ using namespace std;
 class ColorPickerWindow : public Popup<PlaneWindow>
 {
 public:
-    ColorPickerWindow()
+
+    explicit ColorPickerWindow(const Color& color)
         : Popup<PlaneWindow>(main_screen()->size() / 2),
-          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 5, 10)
+          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 5, 10),
+          m_color(color)
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
@@ -56,26 +58,79 @@ public:
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
+            if (c == m_color)
+                m_grid.select(column, row);
+
             color->on_event([this, column, row](eventid event)
             {
-                if (event == eventid::MOUSE_UP)
+                if (event == eventid::MOUSE_DOWN)
                 {
                     m_grid.select(column, row);
                     m_color = m_grid.get(m_grid.selected())->palette().color(Palette::BG);
                     this->hide();
-                    return 1;
                 }
-                else if (event == eventid::MOUSE_DOWN)
-                    return 1;
                 return 0;
             });
         }
     }
 
-    Color m_color{Color::RED};
+    const Color& color() const { return m_color; }
 
 protected:
     SelectableGrid m_grid;
+    Color m_color{Color::RED};
+};
+
+class WidthPickerWindow : public Popup<Window>
+{
+public:
+
+    explicit WidthPickerWindow(int width)
+        : Popup<Window>(main_screen()->size() / 2),
+          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 1, 10),
+          m_width(width)
+    {
+        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+
+        add(&m_grid);
+
+        const vector<int> widths =
+        {
+            1,
+            2,
+            5,
+            10
+        };
+
+        for (auto& w : widths)
+        {
+            auto width = new Label(std::to_string(w));
+
+            m_grid.add(width);
+            int column = m_grid.last_add_column();
+            int row = m_grid.last_add_row();
+
+            if (w == m_width)
+                m_grid.select(column, row);
+
+            width->on_event([this, column, row](eventid event)
+            {
+                if (event == eventid::MOUSE_DOWN)
+                {
+                    m_grid.select(column, row);
+                    m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
+                    this->hide();
+                }
+                return 0;
+            });
+        }
+    }
+
+    int width() const { return m_width; }
+
+protected:
+    SelectableGrid m_grid;
+    int m_width{2};
 };
 
 class MainWindow : public Window
@@ -84,37 +139,89 @@ public:
 
     MainWindow()
         : m_down(false),
-          m_grid(Rect(Size(100, 200)), 1, 2, 5),
+          m_grid(Rect(Size(100, 250)), 1, 4, 5),
           m_colorbtn("palette.png"),
-          m_clearbtn("clear.png")
+          m_fillbtn("fill.png"),
+          m_widthbtn("width.png"),
+          m_clearbtn("clear.png"),
+          m_penpicker(Color::BLUE),
+          m_fillpicker(Color::WHITE),
+          m_widthpicker(2),
+          m_canvas(screen()->size(), CAIRO_FORMAT_ARGB32)
     {
+        // don't draw background, we'll do it in draw()
+        flag_set(widgetmask::NO_BACKGROUND);
+
         add(&m_grid);
-        add(&m_colorpicker);
+        add(&m_penpicker);
+        add(&m_fillpicker);
+        add(&m_widthpicker);
 
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
-
-        m_grid.add(&m_colorbtn, 0, 0);
+        m_grid.add(&m_colorbtn);
         m_colorbtn.on_event([this](eventid event)
         {
             if (event == eventid::MOUSE_DOWN)
             {
-                m_colorpicker.show(true);
+                m_penpicker.show_modal(true);
                 return 1;
             }
             return 0;
         });
 
-        m_grid.add(&m_clearbtn, 0, 1);
+        m_grid.add(&m_fillbtn);
+        m_fillbtn.on_event([this](eventid event)
+        {
+            if (event == eventid::MOUSE_DOWN)
+            {
+                m_fillpicker.show_modal(true);
+                return 1;
+            }
+            return 0;
+        });
+
+        m_grid.add(&m_widthbtn);
+        m_widthbtn.on_event([this](eventid event)
+        {
+            if (event == eventid::MOUSE_DOWN)
+            {
+                m_widthpicker.show_modal(true);
+                return 1;
+            }
+            return 0;
+        });
+
+        m_grid.add(&m_clearbtn);
         m_clearbtn.on_event([this](eventid event)
         {
             ignoreparam(event);
             if (event == eventid::MOUSE_DOWN)
             {
+                clear();
                 damage();
                 return 1;
             }
             return 0;
         });
+
+        m_fillpicker.on_event([this](eventid event)
+        {
+            if (event == eventid::HIDE)
+            {
+                palette().set(Palette::BG, Palette::GROUP_NORMAL, m_fillpicker.color());
+                damage();
+            }
+            return 0;
+        });
+
+        clear();
+    }
+
+    void clear()
+    {
+        Painter painter(m_canvas.context());
+        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+        painter.set_color(Color::TRANSPARENT);
+        painter.draw_fill(box());
     }
 
     int handle(eventid event) override
@@ -137,29 +244,20 @@ public:
             {
                 if (m_last != event_mouse())
                 {
-#if 0
-                    for (auto& i : m_children)
-                    {
-                        if (alpha_collision(i->box(), i->surface(), event_mouse()))
-                            return 0;
-                    }
-#endif
+                    int width = m_widthpicker.width();
 
-                    Line line = Line(m_last, event_mouse());
-
-                    Painter painter(screen()->context());
-                    painter.set_line_width(2.0);
-                    painter.set_color(m_colorpicker.m_color);
+                    Line line(m_last, event_mouse());
+                    Painter painter(m_canvas.context());
+                    painter.set_line_width(width);
+                    painter.set_color(m_penpicker.color());
                     painter.line(line.start(), line.end());
                     painter.stroke();
 
+                    // damage only the rectangle containing the new line
                     Rect r = line.rect();
-                    r += Size(4, 4);
-                    r -= Point(2, 2);
-
-                    IScreen::damage_array damage;
-                    damage.push_back(r);
-                    screen()->flip(damage);
+                    r += Size(width * 2, width * 2);
+                    r -= Point(width, width);
+                    damage(r);
                 }
             }
 
@@ -177,12 +275,27 @@ public:
         return 0;
     }
 
+    void draw(Painter& painter, const Rect& rect) override
+    {
+        painter.set_color(palette().color(Palette::BG, Palette::GROUP_NORMAL));
+        painter.draw_fill(rect);
+
+        painter.draw_image(rect, rect.point(), m_canvas.surface());
+
+        Window::draw(painter, rect);
+    }
+
     Point m_last;
     bool m_down;
     StaticGrid m_grid;
     ImageButton m_colorbtn;
+    ImageButton m_fillbtn;
+    ImageButton m_widthbtn;
     ImageButton m_clearbtn;
-    ColorPickerWindow m_colorpicker;
+    ColorPickerWindow m_penpicker;
+    ColorPickerWindow m_fillpicker;
+    WidthPickerWindow m_widthpicker;
+    Canvas m_canvas;
 };
 
 int main(int argc, const char** argv)

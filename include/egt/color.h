@@ -87,7 +87,7 @@ namespace egt
          * For example, the string #0074D9 can be used to specify a blue-like
          * color.
          */
-        static Color CSS(const std::string& hex)
+        static inline Color CSS(const std::string& hex)
         {
             std::string str = hex;
             str.erase(std::remove(str.begin(), str.end(), '#'), str.end());
@@ -180,7 +180,22 @@ namespace egt
         uint32_t m_g{0};
         uint32_t m_b{0};
         uint32_t m_a{0};
+
+        friend bool operator==(const Color& lhs, const Color& rhs);
     };
+
+    inline bool operator==(const Color& lhs, const Color& rhs)
+    {
+        return lhs.m_r == rhs.m_r &&
+               lhs.m_g == rhs.m_g &&
+               lhs.m_b == rhs.m_b &&
+               lhs.m_a == rhs.m_a;
+    }
+
+    inline bool operator!=(const Color& lhs, const Color& rhs)
+    {
+        return !(lhs == rhs);
+    }
 
     std::ostream& operator<<(std::ostream& os, const Color& color);
 }

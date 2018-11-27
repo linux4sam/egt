@@ -241,6 +241,13 @@ namespace egt
         void draw_rounded_gradient_box(const Rect& rect,
                                        const Color& border,
                                        const Color& bg);
+
+        static inline Size surface_to_size(shared_cairo_surface_t surface)
+        {
+            return Size(cairo_image_surface_get_width(surface.get()),
+                        cairo_image_surface_get_height(surface.get()));
+        }
+
     protected:
 
         void paint_surface_with_drop_shadow(cairo_surface_t* source_surface,

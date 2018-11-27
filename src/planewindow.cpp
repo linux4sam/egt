@@ -47,9 +47,6 @@ namespace egt
         ss << "planewindow" << planewindow_id++;
         set_name(ss.str());
 
-        // default plane windows to transparent
-        //palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-
         m_box = rect;
         m_dirty = true;
 
@@ -147,7 +144,7 @@ namespace egt
     }
 #else
     PlaneWindow::PlaneWindow(const Size& size, widgetmask flags, uint32_t format, bool heo)
-        : Window(size, flags | widgetmask::WINDOW)
+        : Window(size, flags)
     {
         ignoreparam(format);
         ignoreparam(heo);

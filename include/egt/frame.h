@@ -18,7 +18,7 @@
 namespace egt
 {
     /**
-     * A frame is a widget that has children widgets.
+     * A Frame is a Widget that has children widgets.
      *
      * This base class basically contains the functionality for dealing with
      * children widgets.  A widget alone is a leaf node in the widget tree.

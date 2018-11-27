@@ -52,6 +52,9 @@ namespace egt
          * Called when a property changes.
          */
         PROPERTY_CHANGED,
+
+        HIDE,
+        SHOW,
     };
 
     std::ostream& operator<<(std::ostream& os, const eventid& event);

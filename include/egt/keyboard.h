@@ -65,16 +65,16 @@ namespace egt
 
                     b->on_event([b](eventid event)
                     {
-                        if (!b->get_text().empty())
+                        if (!b->text().empty())
                         {
                             if (event == eventid::MOUSE_DOWN)
                             {
-                                event_key() = b->get_text()[0];
+                                event_key() = b->text()[0];
                                 detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
                             }
                             else if (event == eventid::MOUSE_UP)
                             {
-                                event_key() = b->get_text()[0];
+                                event_key() = b->text()[0];
                                 detail::IInput::dispatch(eventid::KEYBOARD_UP);
                             }
                         }

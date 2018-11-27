@@ -14,11 +14,17 @@ namespace egt
 {
     static std::vector<Window*> the_windows;
     static Window* the_main_window = nullptr;
+    static Window* the_modal_window = nullptr;
     static auto window_id = 0;
 
     Window*& main_window()
     {
         return the_main_window;
+    }
+
+    Window*& modal_window()
+    {
+        return the_modal_window;
     }
 
     std::vector<Window*>& windows()
