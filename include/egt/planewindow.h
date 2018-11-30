@@ -51,7 +51,7 @@ namespace egt
 
         virtual void move(const Point& point) override;
 
-        virtual void draw() override;
+        virtual void top_draw() override;
 
         virtual void show() override;
 
@@ -62,6 +62,7 @@ namespace egt
         virtual ~PlaneWindow();
 
     protected:
+
         void allocate_screen();
         void do_resize(const Size& size);
 

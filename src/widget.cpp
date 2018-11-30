@@ -93,6 +93,9 @@ namespace egt
 
     void Widget::damage(const Rect& rect)
     {
+        if (rect.empty())
+            return;
+
         // don't damage if not even visible
         if (!visible())
             return;
@@ -115,43 +118,47 @@ namespace egt
 
             if (m_align != alignmask::NONE)
             {
-                auto r = align_algorithm(size(), parent()->box(), m_align, m_margin);
+                auto r = align_algorithm(size(), box_to_child(parent()->box()), m_align, m_margin);
                 set_box(r);
             }
         }
     }
 
-    Point Widget::frame_to_screen(const Point& p)
+    Rect Widget::box_to_child(const Rect& r)
     {
-        if (m_parent)
-            return parent()->frame_to_screen(p);
-        return p;
+        if (parent())
+            return Rect(Point(0, 0), r.size());
+
+        return r;
     }
 
-    Point Widget::screen_to_frame(const Point& p)
+    Rect Widget::to_child(const Rect& r)
     {
-        Point pp;
-        Widget* w = this;
-        while (w)
-        {
-            if (is_flag_set(widgetmask::FRAME))
-            {
-                auto f = reinterpret_cast<Frame*>(w);
-                if (f->top_level() || f->is_flag_set(widgetmask::PLANE_WINDOW))
-                {
-                    pp = f->box().point();
-                    break;
-                }
-            }
+        if (parent())
+            return Rect(parent()->box().point() - r.point(), r.size());
 
-            w = w->m_parent;
-        }
-        return p - pp;
+        return r;
     }
 
-    Rect Widget::screen_to_frame(const Rect& r)
+    Rect Widget::to_parent(const Rect& r)
     {
-        Point origin = screen_to_frame(r.point());
+        if (parent())
+            return Rect(parent()->box().point() + r.point(), r.size());
+
+        return r;
+    }
+
+    Point Widget::from_screen(const Point& p)
+    {
+        if (top_level())
+            return p;
+
+        return parent()->from_screen(p - box().point());
+    }
+
+    Rect Widget::from_screen(const Rect& r)
+    {
+        Point origin = from_screen(r.point());
         return Rect(origin, r.size());
     }
 
@@ -249,7 +256,7 @@ namespace egt
             switch (event)
             {
             case eventid::MOUSE_DOWN:
-                m_moving_x = screen_to_frame(event_mouse()).y;
+                m_moving_x = from_screen(event_mouse()).y;
                 m_start_pos = position();
                 set_active(true);
                 return 1;
@@ -261,7 +268,7 @@ namespace egt
             case eventid::MOUSE_MOVE:
                 if (active())
                 {
-                    int diff = screen_to_frame(event_mouse()).y - m_moving_x;
+                    int diff = from_screen(event_mouse()).y - m_moving_x;
                     position(m_start_pos + diff);
                 }
                 break;

@@ -58,8 +58,6 @@ namespace egt
 
         virtual int handle(eventid event) override;
 
-        virtual void move(const Point& point) override;
-
         /**
          * Add a child widget.
          *
@@ -72,6 +70,12 @@ namespace egt
          */
         virtual Widget* add(Widget* widget);
 
+        /**
+         * Add a child widget.
+         *
+         * The z-order of a widget is based on the order it is added.  First in
+         * is bottom.
+         */
         virtual Widget& add(Widget& widget);
 
         /**
@@ -92,7 +96,12 @@ namespace egt
          */
         virtual void remove_all();
 
-        virtual void set_focus(Widget* widget);
+        /**
+         * Set focus to the specified widget.
+         *
+         * @param[in] widget The widget that is in focus, or nullptr.
+         */
+        virtual void set_focus(Widget* widget = nullptr);
 
         virtual bool focus() const override
         {
@@ -113,7 +122,7 @@ namespace egt
         /**
          * Return true if this is a top level frame, with no parent.
          */
-        virtual bool top_level() const
+        virtual bool top_level() const override
         {
             return !m_parent;
         }
@@ -184,7 +193,12 @@ namespace egt
          * @warning Normally this should not be called directly and instead the
          * event loop will call this function.
          */
-        virtual void draw();
+        virtual void top_draw()
+        {
+            assert(0);
+        }
+
+        virtual void dump(int level = 0) override;
 
         /**
          * Save the entire frame surface to a file.
@@ -201,6 +215,8 @@ namespace egt
 
     protected:
 
+        virtual Point to_screen(const Point& p);
+
         bool child_hit_test(const Point& point)
         {
             for (auto& child : m_children)
@@ -208,7 +224,8 @@ namespace egt
                 if (child->disabled())
                     continue;
 
-                Point pos = screen_to_frame(point);
+                // TODO: should not take from_screen point
+                Point pos = from_screen(point);
 
                 if (Rect::point_inside(pos, child->box()))
                 {
@@ -225,11 +242,6 @@ namespace egt
          * Add damage to the damage array.
          */
         virtual void add_damage(const Rect& rect);
-
-        /**
-         * Perform the draw starting from this frame.
-         */
-        virtual void do_draw();
 
         /**
          * Array of child widgets in the order they were added.

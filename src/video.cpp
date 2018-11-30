@@ -151,7 +151,7 @@ namespace egt
             return screen->scale();
         }
 
-        void VideoWindow::draw()
+        void VideoWindow::top_draw()
         {
             // don't do any drawing to a window because we don't support video formats, only positioning
             KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);

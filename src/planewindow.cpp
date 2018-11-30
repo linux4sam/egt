@@ -27,9 +27,6 @@ namespace egt
         ss << "planewindow" << planewindow_id++;
         set_name(ss.str());
 
-        // default plane windows to transparent
-        //palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-
         do_resize(size);
 
         m_screen = nullptr;
@@ -75,12 +72,18 @@ namespace egt
     // damage to a plane window does not propagate up, unlike a normal frame
     void PlaneWindow::damage(const Rect& rect)
     {
-        if (rect.empty())
+        auto crect = Rect(rect.point() - box().point(), rect.size());
+
+        if (crect.empty())
+            return;
+
+        // don't damage if not even visible
+        if (!visible())
             return;
 
         m_dirty = true;
 
-        add_damage(rect);
+        add_damage(crect);
     }
 
     void PlaneWindow::allocate_screen()
@@ -92,7 +95,7 @@ namespace egt
         }
     }
 
-    void PlaneWindow::draw()
+    void PlaneWindow::top_draw()
     {
         if (!m_box.size().empty())
         {
@@ -171,9 +174,9 @@ namespace egt
         Window::move(point);
     }
 
-    void PlaneWindow::draw()
+    void PlaneWindow::top_draw()
     {
-        Window::draw();
+        Window::top_draw();
     }
 
     void PlaneWindow::paint(Painter& painter)

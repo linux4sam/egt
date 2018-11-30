@@ -71,6 +71,8 @@ namespace egt
 
         void paint_to_file(const std::string& filename = std::string());
 
+        void dump();
+
         virtual ~EventLoop();
 
     protected:

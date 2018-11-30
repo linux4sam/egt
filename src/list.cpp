@@ -45,7 +45,7 @@ namespace egt
         {
         case eventid::MOUSE_DOWN:
         {
-            Point mouse = screen_to_frame(event_mouse());
+            Point mouse = from_screen(event_mouse());
             for (size_t i = 0; i < m_items.size(); i++)
             {
                 if (Rect::point_inside(mouse, item_rect(i)))
@@ -114,7 +114,7 @@ namespace egt
             {
             case eventid::MOUSE_DOWN:
             {
-                Point mouse = screen_to_frame(event_mouse());
+                Point mouse = from_screen(event_mouse());
 
                 if (Rect::point_inside(mouse, m_down_rect))
                 {

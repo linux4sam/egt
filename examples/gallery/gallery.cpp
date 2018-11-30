@@ -39,8 +39,7 @@ int main(int argc, const char** argv)
     view0.set_name("view0");
     win.add(&view0);
 
-    /** @todo This is not respecting parent coordinate for origin point. */
-    StaticGrid grid0(Rect(0, logo.h(), files.size() * 150, grid_height), files.size(), 1, 0);
+    StaticGrid grid0(Rect(0, 0, files.size() * 150, grid_height), files.size(), 1, 0);
     grid0.set_name("grid0");
     view0.add(&grid0);
 
@@ -54,8 +53,7 @@ int main(int argc, const char** argv)
     view1.set_name("view1");
     win.add(&view1);
 
-    StaticGrid grid1(Rect(0, logo.h() + grid_height + 1, files.size() * 150, grid_height),
-                     files.size(), 1, 0);
+    StaticGrid grid1(Rect(0, 0, files.size() * 150, grid_height), files.size(), 1, 0);
     grid1.set_name("grid1");
     view1.add(&grid1);
 

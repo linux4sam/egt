@@ -36,12 +36,12 @@ namespace egt
             {
                 if (m_orientation == Orientation::HORIZONTAL)
                 {
-                    auto diff = screen_to_frame(event_mouse()).x - m_start_pos.x;
+                    auto diff = from_screen(event_mouse()).x - m_start_pos.x;
                     set_position(m_start_offset + diff / 2);
                 }
                 else
                 {
-                    auto diff = screen_to_frame(event_mouse()).y - m_start_pos.y;
+                    auto diff = from_screen(event_mouse()).y - m_start_pos.y;
                     set_position(m_start_offset + diff / 2);
                 }
 

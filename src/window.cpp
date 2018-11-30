@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/window.h"
+#include "egt/painter.h"
 #include <algorithm>
 #include <vector>
 #include <sstream>
@@ -86,19 +87,43 @@ namespace egt
         damage();
     }
 
-    void Window::show()
+    void Window::do_draw()
     {
-        for (auto& child : m_children)
+        // this is a top level frame, we will use our damage bookkeeping to
+        // draw what needs to be drawn
+        if (m_damage.empty())
+            return;
+
+        DBG(name() << " " << __PRETTY_FUNCTION__);
+
+        Painter painter(screen()->context());
+
+        for (auto& damage : m_damage)
         {
-            if (child->align() != alignmask::NONE)
-            {
-                auto r = align_algorithm(child->size(), child->parent()->box(),
-                                         child->align(), child->margin());
-                child->set_box(r);
-            }
+            draw(painter, damage);
         }
 
-        Widget::show();
+        screen()->flip(m_damage);
+        m_damage.clear();
+    }
+
+    /**
+     * damage rectangles propogate up the widget tree and stop at a top level
+     * widget, which can only be a window. As it propogates up, the damage
+     * rectangle origin changes value to respect the current frame.  When
+     * drawing those rectangles, as they propogate down the widget hierarchy
+     * the oposite change happens to the rectangle origin.
+     */
+
+    void Window::top_draw()
+    {
+        if (m_parent)
+        {
+            m_parent->top_draw();
+            return;
+        }
+
+        do_draw();
     }
 
     Window::~Window()

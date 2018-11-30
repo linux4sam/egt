@@ -238,7 +238,7 @@ int main(int argc, const char** argv)
     Slider* position = new Slider(0, 100, Rect(Size(150, 40)), orientation::HORIZONTAL);
     grid.add(position);
     position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
-    position->disable(true);
+    position->disable();
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
     postimer.on_timeout([position, window
@@ -278,21 +278,21 @@ int main(int argc, const char** argv)
     });
     volume->position(50);
 
-    playbtn->disable(true);
-    pausebtn->disable(false);
+    playbtn->disable();
+    pausebtn->enable();
 
     window->on_event([window, playbtn, pausebtn](eventid event)
     {
         ignoreparam(event);
         if (window->playing())
         {
-            playbtn->disable(true);
-            pausebtn->disable(false);
+            playbtn->disable();
+            pausebtn->enable();
         }
         else
         {
-            playbtn->disable(false);
-            pausebtn->disable(true);
+            playbtn->enable();
+            pausebtn->disable();
         }
         return 0;
     });

@@ -36,7 +36,7 @@ namespace egt
 
             VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888, bool heo = false);
 
-            virtual void draw() override;
+            virtual void top_draw() override;
 
             /**
              * @brief Sets the media file URI to the current pipeline

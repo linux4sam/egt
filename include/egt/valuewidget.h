@@ -176,7 +176,7 @@ namespace egt
             {
                 if (this->active())
                 {
-                    auto angle = this->touch_to_degrees(this->screen_to_frame(event_mouse()));
+                    auto angle = this->touch_to_degrees(this->from_screen(event_mouse()));
                     auto v = this->degrees_to_value(angle);
                     this->value(v);
 

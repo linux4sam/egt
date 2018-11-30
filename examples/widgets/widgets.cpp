@@ -80,7 +80,7 @@ int main(int argc, const char** argv)
 #endif
 
     Button btn2("button 2");
-    btn2.disable(true);
+    btn2.disable();
     grid0.add(&btn2);
 
     Slider slider1(0, 100);
@@ -98,7 +98,7 @@ int main(int argc, const char** argv)
     grid0.add(&text1);
 
     TextBox text2("text 2 disabled");
-    text2.disable(true);
+    text2.disable();
     grid0.add(&text2);
 
 #if 0

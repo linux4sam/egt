@@ -30,6 +30,7 @@ charts/charts \
 drag/drag \
 easing/easing \
 floating/floating \
+frames/frames \
 gallery/gallery \
 icon/icon \
 infotain/infotain \
@@ -207,3 +208,8 @@ squares_squares_SOURCES = squares/squares.cpp
 squares_squares_CXXFLAGS = $(AM_CXXFLAGS)
 squares_squares_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 squares_squares_LDFLAGS = $(AM_LDFLAGS)
+
+frames_frames_SOURCES = frames/frames.cpp
+frames_frames_CXXFLAGS = $(AM_CXXFLAGS)
+frames_frames_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+frames_frames_LDFLAGS = $(AM_LDFLAGS)

@@ -216,12 +216,12 @@ namespace egt
                                 w() - 2);
             }
 
-            if (Rect::point_inside(screen_to_frame(event_mouse()), bounding))
+            if (Rect::point_inside(from_screen(event_mouse()), bounding))
             {
                 if (m_orientation == orientation::HORIZONTAL)
-                    m_moving_x = screen_to_frame(event_mouse()).x;
+                    m_moving_x = from_screen(event_mouse()).x;
                 else
-                    m_moving_x = screen_to_frame(event_mouse()).y;
+                    m_moving_x = from_screen(event_mouse()).y;
                 m_start_pos = position();
                 set_active(true);
                 return 1;
@@ -242,12 +242,12 @@ namespace egt
             {
                 if (m_orientation == orientation::HORIZONTAL)
                 {
-                    auto diff = screen_to_frame(event_mouse()).x - m_moving_x;
+                    auto diff = from_screen(event_mouse()).x - m_moving_x;
                     position(m_start_pos + denormalize(diff));
                 }
                 else
                 {
-                    auto diff = screen_to_frame(event_mouse()).y - m_moving_x;
+                    auto diff = from_screen(event_mouse()).y - m_moving_x;
                     position(m_start_pos - denormalize(diff));
                 }
                 return 1;

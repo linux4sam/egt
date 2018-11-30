@@ -67,11 +67,8 @@ namespace egt
                     auto rows = m_cells[column].size();
                     for (size_t row = 0; row < rows; row++)
                     {
-                        Rect rect = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
-
-                        rect += Point(x(), y());
-
-                        painter.rectangle(rect);
+                        Rect r = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
+                        painter.rectangle(r);
                     }
                 }
 
@@ -176,7 +173,6 @@ namespace egt
                 {
                     Rect bounding = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
 
-                    bounding += Point(x(), y());
                     bounding += Point(detail::ceil(m_spacing, 2), detail::ceil(m_spacing, 2));
                     bounding -= Size(m_spacing, m_spacing);
 
@@ -214,9 +210,6 @@ namespace egt
             auto rows = m_cells[column].size();
 
             Rect rect = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
-
-            rect += Point(x(), y());
-
             painter.rectangle(rect);
             painter.stroke();
         }

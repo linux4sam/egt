@@ -48,24 +48,6 @@ namespace egt
         return widget;
     }
 
-    void Frame::move(const Point& point)
-    {
-        if (point != box().point())
-        {
-            //if (top_level())
-            {
-                auto diff = point - m_box.point();
-
-                for (auto& i : m_children)
-                {
-                    i->move(i->box().point() + diff);
-                }
-            }
-
-            Widget::move(point);
-        }
-    }
-
     Widget& Frame::add(Widget& widget)
     {
         add(&widget);
@@ -166,7 +148,7 @@ namespace egt
                 if (!child->visible())
                     continue;
 
-                Point pos = screen_to_frame(event_mouse());
+                Point pos = from_screen(event_mouse());
 
                 if (Rect::point_inside(pos, child->box()))
                 {
@@ -247,14 +229,59 @@ namespace egt
         if (rect.empty())
             return;
 
+        // don't damage if not even visible
+        if (!visible())
+            return;
+
         // damage propagates to top level frame
         if (m_parent)
         {
-            m_parent->damage(rect);
+            m_parent->damage(to_parent(rect));
             return;
         }
 
         add_damage(rect);
+    }
+
+    void Frame::dump(int level)
+    {
+        cout << std::string(level, ' ') << "Frame: " << name() <<
+             " " << box() << endl;
+
+        for (auto& child : m_children)
+        {
+            child->dump(level + 1);
+        }
+    }
+
+    Point Frame::to_screen(const Point& p)
+    {
+        Point pp;
+        Widget* w = this;
+        while (w)
+        {
+            if (w->is_flag_set(widgetmask::FRAME))
+            {
+                auto f = reinterpret_cast<Frame*>(w);
+
+                if (f->is_flag_set(widgetmask::PLANE_WINDOW))
+                {
+                    pp = Point();
+                    break;
+                }
+
+                if (f->top_level())
+                {
+                    pp = f->box().point();
+                    break;
+                }
+
+            }
+
+            w = w->m_parent;
+        }
+
+        return p - pp;
     }
 
     /**
@@ -262,20 +289,41 @@ namespace egt
      */
     void Frame::draw(Painter& painter, const Rect& rect)
     {
-        DBG(name() << " " << __PRETTY_FUNCTION__);
+        DBG(name() << " " << __PRETTY_FUNCTION__ << " " << rect);
+
+        Painter::AutoSaveRestore sr(painter);
 
         if (!is_flag_set(widgetmask::NO_BACKGROUND))
         {
             Painter::AutoSaveRestore sr(painter);
-            painter.rectangle(rect);
-            painter.clip();
 
             if (!is_flag_set(widgetmask::TRANSPARENT_BACKGROUND))
                 cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
 
             painter.draw_box(*this,
                              Painter::boxtype::fill,
-                             screen_to_frame(box()));
+                             rect);
+        }
+
+        //
+        // Origin change
+        //
+
+        auto cr = painter.context();
+        Rect crect;
+
+        if (!is_flag_set(widgetmask::PLANE_WINDOW))
+        {
+            Point origin = to_screen(box().point());
+            if (origin.x || origin.y)
+                cairo_translate(cr.get(),
+                                origin.x,
+                                origin.y);
+            crect = rect - origin;
+        }
+        else
+        {
+            crect = rect;
         }
 
         for (auto& child : m_children)
@@ -283,19 +331,20 @@ namespace egt
             if (!child->visible())
                 continue;
 
-            // don't draw plane frame as children - this is
+            // don't draw plane frame as child - this is
             // specifically handled by event loop
             if (child->is_flag_set(widgetmask::PLANE_WINDOW))
                 continue;
 
-            if (Rect::intersect(rect, child->box()))
+            if (Rect::intersect(crect, child->box()))
             {
+                // don't give a child a rectangle that is outside of its own box
+                auto r = Rect::intersection(crect, child->box());
+
                 Painter::AutoSaveRestore sr(painter);
-                painter.rectangle(child->box());
+                painter.rectangle(r);
                 painter.clip();
 
-                // don't give a child a rectangle that is outside of its own box
-                auto r = Rect::intersection(rect, child->box());
 
                 //#define TIME_DRAW
 #ifdef TIME_DRAW
@@ -312,37 +361,6 @@ namespace egt
 #endif
             }
         }
-    }
-
-    void Frame::do_draw()
-    {
-        // this is a top level frame, we will use our damage bookkeeping to
-        // draw what needs to be drawn
-        if (m_damage.empty())
-            return;
-
-        DBG(name() << " " << __PRETTY_FUNCTION__);
-
-        Painter painter(screen()->context());
-
-        for (auto& damage : m_damage)
-        {
-            draw(painter, damage);
-        }
-
-        screen()->flip(m_damage);
-        m_damage.clear();
-    }
-
-    void Frame::draw()
-    {
-        if (m_parent)
-        {
-            m_parent->draw();
-            return;
-        }
-
-        do_draw();
     }
 
     void Frame::paint_to_file(const std::string& filename)

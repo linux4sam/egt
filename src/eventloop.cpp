@@ -69,6 +69,16 @@ namespace egt
         m_impl->m_io.stop();
     }
 
+    void EventLoop::dump()
+    {
+        for (auto& w : windows())
+        {
+            // draw top level frames and plane frames
+            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+                w->dump();
+        }
+    }
+
     void EventLoop::paint_to_file(const string& filename)
     {
         string name = filename;
@@ -111,7 +121,7 @@ namespace egt
 
             // draw top level frames and plane frames
             if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
-                w->draw();
+                w->top_draw();
         }
 #ifdef STATS2
         auto end = chrono::steady_clock::now();

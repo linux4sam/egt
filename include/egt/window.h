@@ -48,6 +48,7 @@ namespace egt
     class Window : public Frame
     {
     public:
+
         /**
          * Construct a Window.
          *
@@ -69,7 +70,6 @@ namespace egt
         virtual void enter()
         {
             show();
-            damage();
         }
 
         virtual void exit()
@@ -82,8 +82,6 @@ namespace egt
          */
         virtual void set_main_window();
 
-        virtual void show() override;
-
         /**
          * The buck stops on this call to Widget::screen() with a Window
          * because the Window contains the screen.
@@ -94,9 +92,27 @@ namespace egt
             return m_screen;
         }
 
+        /**
+         * Cause the frame to draw itself and al of its children.
+         *
+         * @warning Normally this should not be called directly and instead the
+         * event loop will call this function.
+         */
+        virtual void top_draw() override;
+
         virtual ~Window();
 
     protected:
+
+        /**
+         * Perform the draw starting from this frame.
+         */
+        virtual void do_draw();
+
+        virtual bool have_screen() const override
+        {
+            return m_screen;
+        }
 
         IScreen* m_screen{nullptr};
 

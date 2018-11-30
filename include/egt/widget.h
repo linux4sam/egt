@@ -92,8 +92,6 @@ namespace egt
 
     ENABLE_BITMASK_OPERATORS(widgetmask)
 
-    class Widget;
-
     /**
      * Alignment flags.
      */
@@ -196,6 +194,9 @@ namespace egt
          * To change how a widget is drawn, this function can be overloaded and
          * changed.
          *
+         * @param[in] painter Instance of the Painter for the screen.
+         * @param[in] rect The rectangle to draw.
+         *
          * @warning Normally this should not be called directly and instead the
          * event loop will call this function with an already established
          * Painter when the widget needs to be redrawn.
@@ -214,21 +215,23 @@ namespace egt
          * this means is if you expect other handlers to receive the events
          * then this must be called from derived classes.  Or, manually call
          * Widget::invoke_handlers().
-        *
+         *
          * @return A return value of non-zero stops the propagation of the event.
-               */
+         */
         virtual int handle(eventid event);
 
         /**
          * Resize the widget.
          * Changes the width and height of the widget.
          *
+         * @param[in] s The new size of the Widget.
          * @note This will cause a redraw of the widget.
          */
         virtual void resize(const Size& s);
 
         /**
          * Change the width of the widget.
+         * @param[in] w The new width of the widget.
          */
         inline void set_width(int w)
         {
@@ -237,6 +240,7 @@ namespace egt
 
         /**
          * Change the height of the widget.
+         * @param[in] h The new height of the widget.
          */
         inline void set_height(int h)
         {
@@ -247,10 +251,19 @@ namespace egt
          * Move the widget.
          * Changes the x and y position of the widget.
          *
+         * @param[in] point The new origin point for the widget relative to its parent.
          * @note This will cause a redraw of the widget.
          */
         virtual void move(const Point& point);
+
+        /**
+         * @param[in] x The new origin X value for the widget relative to its parent.
+         */
         inline void set_x(int x) { move(Point(x, y())); }
+
+        /**
+         * @param[in] y The new origin Y value for the widget relative to its parent.
+         */
         inline void set_y(int y) { move(Point(x(), y)); }
 
         /**
@@ -313,426 +326,465 @@ namespace egt
          */
         virtual bool focus() const;
 
+        /**
+         * Called when the widget loses focus.
+         */
         virtual void lost_focus() {}
 
-#if 0
-        virtual void focus(Widget* widget)
+        /**
+         * Set the focus property of the widget.
+         */
+        virtual void set_focus();
+
+        /**
+         * Return true if the widget is active.
+         *
+         * The meaning of active is largely up to the derived implementation.
+         */
+        virtual bool active() const { return m_active; }
+
+        /**
+         * Set the active property of the widget.
+         */
+        virtual void set_active(bool value)
         {
-            parent()->focuset() == this;
-        }
-
-        ignoreparam(widget);
-    }
-#endif
-
-    /**
-     * Set the focus property of the widget.
-     */
-    virtual void set_focus();
-
-    /**
-     * Return true if the widget is active.
-     *
-     * The meaning of active is largely up to the derived implementation.
-     */
-    virtual bool active() const { return m_active; }
-    /**
-     * Set the active property of the widget.
-     */
-    virtual void set_active(bool value)
-    {
-        if (m_active != value)
-        {
-            m_active = value;
-            damage();
-        }
-    }
-
-    /**
-     * Return the disabled status of the widget.
-     *
-     * When a widget is disabled, it does not receive events. Also, the
-     * color scheme may change when a widget is disabled.
-     */
-    virtual bool disabled() const { return m_disabled; }
-
-    /**
-     * Set the disabled status of the widget.
-     */
-    virtual void disable(bool value)
-    {
-        if (m_disabled != value)
-            damage();
-        m_disabled = value;
-    }
-
-    /**
-     * Damage the box() of the widget.
-     *
-     * @note This is just a utility wrapper around damage(box()) in most cases.
-     */
-    virtual void damage();
-
-    /**
-     * Mark the specified rect as a damaged area.
-     *
-     * This call will propagate to a top level parent frame.
-     */
-    virtual void damage(const Rect& rect);
-
-    /**
-     * Bounding box for the widget.
-     */
-    virtual const Rect& box() const { return m_box; }
-
-    /**
-     * Get the size of the widget.
-     */
-    virtual Size size() const { return m_box.size(); }
-
-    /**
-     * Get the origin point of the widget.
-     */
-    virtual Point point() const { return m_box.point(); }
-
-    /**
-     * @{
-     * Bounding box dimensions.
-     */
-    inline int w() const { return m_box.w; }
-    inline int h() const { return m_box.h; }
-    inline int x() const { return m_box.x; }
-    inline int y() const { return m_box.y; }
-    /** @} */
-
-    /**
-     * Get the center point of the widget.
-     */
-    inline Point center() const { return box().center(); }
-
-    /**
-     * Get the widget Palette.
-     */
-    Palette& palette()
-    {
-        if (!m_palette.get())
-            m_palette.reset(new Palette(global_palette()));
-
-        return *m_palette.get();
-    }
-
-    /**
-     * Get the widget Palette.
-     */
-    const Palette& palette() const
-    {
-        if (m_palette.get())
-            return *m_palette.get();
-
-        return global_palette();
-    }
-
-    /**
-     * Set the widget Palette.
-     *
-     * @note This will overwrite the entire widget Palette.
-     */
-    void set_palette(const Palette& palette)
-    {
-        m_palette.reset(new Palette(palette));
-    }
-
-    void reset_palette()
-    {
-        m_palette.reset();
-    }
-
-    Frame* parent()
-    {
-        //assert(m_parent);
-        return m_parent;
-    }
-
-    const Frame* parent() const
-    {
-        //assert(m_parent);
-        return m_parent;
-    }
-
-    virtual IScreen* screen();
-
-    /**
-     * Test if the specified Widget flag(s) is/are set.
-     * @param flag Bitmask of flags.
-     */
-    inline bool is_flag_set(widgetmask flag) const
-    {
-        return (m_flags & flag) == flag;
-    }
-
-    /**
-     * Set the specified widget flag(s).
-     * @param flag Bitmask of flags.
-     */
-    inline void flag_set(widgetmask flag) { m_flags |= flag; }
-
-    /**
-     * Clear, or unset, the specified widget flag(s).
-     * @param flag Bitmask of flags.
-     */
-    inline void flag_clear(widgetmask flag) { m_flags &= ~flag; }
-
-    /**
-     * Align the widget.
-     *
-     * This will align the widget relative to the box of its parent frame.
-     */
-    void set_align(alignmask a, int margin = 0);
-
-    /**
-     * Get the alignment of the widget.
-     */
-    inline alignmask align() const { return m_align; }
-
-    /**
-     * Return the alignment margin.
-     */
-    inline int margin() const { return m_margin; }
-
-    /**
-     * Get the name of the widget.
-     */
-    const std::string& name() const { return m_name; }
-
-    /**
-     * Set the name of the widget.
-     */
-    inline void set_name(const std::string& name) { m_name = name; }
-
-
-    /**
-     * Paint the Widget using Painter.
-     *
-     * paint() is not part of the normal draw path.  This is a utility
-     * function to get the widget to draw its contents to another
-     * surface provided with a Painter.
-     */
-    virtual void paint(Painter& painter);
-
-    /**
-     * Draw the widget to a file.
-     */
-    virtual void paint_to_file(const std::string& filename = std::string());
-
-#if 0
-    virtual shared_cairo_surface_t surface();
-#endif
-
-    virtual ~Widget();
-
-protected:
-
-    /**
-     * Convert screen coordinates to frame coordinates.
-     */
-    Point screen_to_frame(const Point& p);
-
-    virtual Point frame_to_screen(const Point& p);
-
-    /**
-     * Convert screen rectangle to frame coordinates.
-     */
-    Rect screen_to_frame(const Rect& r);
-
-    /**
-     * Bounding box.
-     */
-    Rect m_box;
-
-    /**
-     * Pointer to this widget's parent.
-     *
-     * The parent is a Frame, which is capable of managing children.
-     */
-    Frame* m_parent{nullptr};
-
-private:
-
-    /**
-     * When true, the widget is visible.
-     */
-    bool m_visible{true};
-
-    /**
-     * When true, the widget is active.
-     *
-     * The active state of a widget is usually a momentary state, unlike
-     * focus, which exists until focu is changed. For example, when a button
-     * is currently being held down, it its implementation may consider this
-     * the active state and choose to draw the button diffeerently.
-     *
-     * This may change how the widget behaves or is draw.
-     */
-    bool m_active{false};
-
-    /**
-     * When true, the widget is disabled.
-     *
-     * Typically, when a widget is disabled it will not accept input.
-     *
-     * This may change how the widget behaves or is draw.
-     */
-    bool m_disabled{false};
-
-    /**
-     * Flags for the widget.
-     */
-    widgetmask m_flags{widgetmask::NONE};
-
-    /**
-     * Current palette for the widget.
-     *
-     * @note This should not be accessed directly.  Always use the accessor
-     * functions because this is not set until it is modified.
-     */
-    std::shared_ptr<Palette> m_palette;
-
-    /**
-     * A user defined name for the widget.
-     */
-    std::string m_name;
-
-    /**
-     * Alignment hint for this widget within its parent.
-     */
-    alignmask m_align{alignmask::NONE};
-
-    int m_margin{0};
-
-    Widget(const Widget&) = delete;
-    Widget& operator=(const Widget&) = delete;
-
-    friend class Frame;
-};
-
-/**
- * A widget that has text and properties associated with text.
- *
- * This is not meant to be used directly as it does not implement at least a
- * draw() method.
- */
-class TextWidget : public Widget
-{
-public:
-
-    explicit TextWidget(const std::string& text = std::string(),
-                        const Rect& rect = Rect(),
-                        alignmask align = alignmask::CENTER,
-                        const Font& font = Font(),
-                        widgetmask flags = widgetmask::NO_BORDER) noexcept;
-
-    /**
-     * Set the text of the label.
-     */
-    virtual void set_text(const std::string& str);
-
-    /**
-     * Clear the text value.
-     */
-    virtual void clear();
-
-    /**
-     * Get the text of the Label.
-     */
-    virtual const std::string& text() const { return m_text; }
-
-    /**
-     * Set the alignment of the Label.
-     */
-    void text_align(alignmask align) { m_text_align = align; }
-
-    /**
-     * Get the widget Font.
-     */
-    Font& font()
-    {
-        if (!m_font.get())
-            m_font.reset(new Font(global_font()));
-
-        return *m_font.get();
-    }
-
-    /**
-     * Get the widget Font.
-     */
-    const Font& font() const
-    {
-        if (m_font.get())
-            return *m_font.get();
-
-        return global_font();
-    }
-
-    /**
-     * Set the widget Font.
-     *
-     * @note This will overwrite the entire widget Font.
-     */
-    void set_font(const Font& font)
-    {
-        m_font.reset(new Font(font));
-    }
-
-    virtual ~TextWidget()
-    {}
-
-protected:
-    alignmask m_text_align{alignmask::CENTER};
-    std::string m_text;
-
-private:
-    std::shared_ptr<Font> m_font;
-};
-
-namespace experimental
-{
-    class ScrollWheel : public Widget
-    {
-    public:
-        explicit ScrollWheel(const Rect& rect = Rect());
-
-        virtual int handle(eventid event) override;
-
-        virtual void draw(Painter& painter, const Rect& rect) override;
-
-        int position() const
-        {
-            return m_pos;
-        }
-
-        inline void position(int pos)
-        {
-            if (pos < (int)m_values.size())
+            if (m_active != value)
             {
-                m_pos = pos;
+                m_active = value;
                 damage();
             }
         }
 
-        void values(const std::vector<std::string>& v)
+        /**
+         * Return the disabled status of the widget.
+         *
+         * When a widget is disabled, it does not receive events. Also, the
+         * color scheme may change when a widget is disabled.
+         */
+        virtual bool disabled() const { return m_disabled; }
+
+        /**
+         * Set the disabled status of the widget to true.
+         */
+        virtual void disable()
         {
-            m_values = v;
+            if (m_disabled != true)
+                damage();
+            m_disabled = true;
         }
 
-    protected:
-        std::vector<std::string> m_values;
+        /**
+         * Set the enable status of the widget to true.
+         */
+        virtual void enable()
+        {
+            if (m_disabled != false)
+                damage();
+            m_disabled = false;
+        }
 
-        int m_pos{0};
-        int m_moving_x{0};
-        int m_start_pos{0};
+        /**
+         * Damage the box() of the widget.
+         *
+         * @note This is just a utility wrapper around damage(box()) in most cases.
+         */
+        virtual void damage();
+
+        /**
+         * Mark the specified rect as a damaged area.
+         *
+         * This call will propagate to a top level parent frame.
+         *
+         * @param rect The rectangle to save for damage.
+         */
+        virtual void damage(const Rect& rect);
+
+        /**
+         * Bounding box for the widget.
+         */
+        virtual const Rect& box() const { return m_box; }
+
+        /**
+         * Get the size of the widget.
+         */
+        virtual Size size() const { return m_box.size(); }
+
+        /**
+         * Get the origin point of the widget.
+         */
+        virtual Point point() const { return m_box.point(); }
+
+        /**
+         * @{
+         * Bounding box dimensions.
+         */
+        inline int w() const { return m_box.w; }
+        inline int h() const { return m_box.h; }
+        inline int x() const { return m_box.x; }
+        inline int y() const { return m_box.y; }
+        /** @} */
+
+        /**
+         * Get the center point of the widget.
+         */
+        inline Point center() const { return box().center(); }
+
+        /**
+         * Get the widget Palette.
+         */
+        Palette& palette()
+        {
+            if (!m_palette.get())
+                m_palette.reset(new Palette(global_palette()));
+
+            return *m_palette.get();
+        }
+
+        /**
+         * Get the widget Palette.
+         */
+        const Palette& palette() const
+        {
+            if (m_palette.get())
+                return *m_palette.get();
+
+            return global_palette();
+        }
+
+        /**
+         * Set the widget Palette.
+         *
+         * @param palette The new palette to assign to the widget.
+         * @note This will overwrite the entire widget Palette.
+         */
+        void set_palette(const Palette& palette)
+        {
+            m_palette.reset(new Palette(palette));
+        }
+
+        /**
+         * Reset the widget's palette to a default state.
+         */
+        void reset_palette()
+        {
+            m_palette.reset();
+        }
+
+        /**
+         * Get a pointer to the parent Frame, or nullptr if none exists.
+         */
+        Frame* parent()
+        {
+            return m_parent;
+        }
+
+        /**
+         * Get a pointer to the parent Frame, or nullptr if none exists.
+         */
+        const Frame* parent() const
+        {
+            return m_parent;
+        }
+
+        /**
+         * Get a pointer to the IScreen instance, using using a parent as necessary.
+         */
+        virtual IScreen* screen();
+
+        /**
+         * Test if the specified Widget flag(s) is/are set.
+         * @param flag Bitmask of flags.
+         */
+        inline bool is_flag_set(widgetmask flag) const
+        {
+            return (m_flags & flag) == flag;
+        }
+
+        /**
+         * Set the specified widget flag(s).
+         * @param flag Bitmask of flags.
+         */
+        inline void flag_set(widgetmask flag) { m_flags |= flag; }
+
+        /**
+         * Clear, or unset, the specified widget flag(s).
+         * @param flag Bitmask of flags.
+         */
+        inline void flag_clear(widgetmask flag) { m_flags &= ~flag; }
+
+        /**
+         * Align the widget.
+         *
+         * This will align the widget relative to the box of its parent frame.
+         *
+         * @param[in] a The alignmask.
+         * @param[in] margin Optional margin size used for alignment.
+         */
+        virtual void set_align(alignmask a, int margin = 0);
+
+        /**
+         * Get the alignment of the widget.
+         */
+        inline alignmask align() const { return m_align; }
+
+        /**
+         * Return the alignment margin.
+         */
+        inline int margin() const { return m_margin; }
+
+        /**
+         * Get the name of the widget.
+         */
+        const std::string& name() const { return m_name; }
+
+        /**
+         * Set the name of the widget.
+         *
+         * @param[in] name Name to set for the widget.
+         */
+        inline void set_name(const std::string& name) { m_name = name; }
+
+
+        /**
+         * Paint the Widget using Painter.
+         *
+         * paint() is not part of the normal draw path.  This is a utility
+         * function to get the widget to draw its contents to another
+         * surface provided with a Painter.
+         */
+        virtual void paint(Painter& painter);
+
+        /**
+         * Draw the widget to a file.
+         *
+         * @param[in] filename Optional filename to save to.
+         */
+        virtual void paint_to_file(const std::string& filename = std::string());
+
+#if 0
+        virtual shared_cairo_surface_t surface();
+#endif
+
+        virtual void dump(int level = 0)
+        {
+            std::cout << std::string(level, ' ') << "Widget: " << name() <<
+                      " " << box() << std::endl;
+        }
+
+        virtual ~Widget();
+
+    protected:
+
+        Rect box_to_child(const Rect& r);
+        Rect to_child(const Rect& r);
+        Rect to_parent(const Rect& r);
+
+        virtual bool have_screen() const
+        {
+            return false;
+        }
+
+        virtual bool top_level() const { return false; }
+
+        /**
+         * Convert screen rectangle to frame coordinates.
+         */
+        Rect from_screen(const Rect& r);
+
+        /**
+         * Convert screen Point to frame Point.
+         */
+        Point from_screen(const Point& p);
+
+        /**
+         * Bounding box.
+         */
+        Rect m_box;
+
+        /**
+         * Pointer to this widget's parent.
+         *
+         * The parent is a Frame, which is capable of managing children.
+         */
+        Frame* m_parent{nullptr};
+
+    private:
+
+        /**
+         * When true, the widget is visible.
+         */
+        bool m_visible{true};
+
+        /**
+         * When true, the widget is active.
+         *
+         * The active state of a widget is usually a momentary state, unlike
+         * focus, which exists until focu is changed. For example, when a button
+         * is currently being held down, it its implementation may consider this
+         * the active state and choose to draw the button diffeerently.
+         *
+         * This may change how the widget behaves or is draw.
+         */
+        bool m_active{false};
+
+        /**
+         * When true, the widget is disabled.
+         *
+         * Typically, when a widget is disabled it will not accept input.
+         *
+         * This may change how the widget behaves or is draw.
+         */
+        bool m_disabled{false};
+
+        /**
+         * Flags for the widget.
+         */
+        widgetmask m_flags{widgetmask::NONE};
+
+        /**
+         * Current palette for the widget.
+         *
+         * @note This should not be accessed directly.  Always use the accessor
+         * functions because this is not set until it is modified.
+         */
+        std::shared_ptr<Palette> m_palette;
+
+        /**
+         * A user defined name for the widget.
+         */
+        std::string m_name;
+
+        /**
+         * Alignment hint for this widget within its parent.
+         */
+        alignmask m_align{alignmask::NONE};
+
+        int m_margin{0};
+
+        Widget(const Widget&) = delete;
+        Widget& operator=(const Widget&) = delete;
+
+        friend class Frame;
     };
 
-}
+    /**
+     * A widget that has text and properties associated with text.
+     *
+     * This is not meant to be used directly as it does not implement at least a
+     * draw() method.
+     */
+    class TextWidget : public Widget
+    {
+    public:
+
+        explicit TextWidget(const std::string& text = std::string(),
+                            const Rect& rect = Rect(),
+                            alignmask align = alignmask::CENTER,
+                            const Font& font = Font(),
+                            widgetmask flags = widgetmask::NO_BORDER) noexcept;
+
+        /**
+         * Set the text of the label.
+         */
+        virtual void set_text(const std::string& str);
+
+        /**
+         * Clear the text value.
+         */
+        virtual void clear();
+
+        /**
+         * Get the text of the Label.
+         */
+        virtual const std::string& text() const { return m_text; }
+
+        /**
+         * Set the alignment of the Label.
+         */
+        void text_align(alignmask align) { m_text_align = align; }
+
+        /**
+         * Get the widget Font.
+         */
+        Font& font()
+        {
+            if (!m_font.get())
+                m_font.reset(new Font(global_font()));
+
+            return *m_font.get();
+        }
+
+        /**
+         * Get the widget Font.
+         */
+        const Font& font() const
+        {
+            if (m_font.get())
+                return *m_font.get();
+
+            return global_font();
+        }
+
+        /**
+         * Set the widget Font.
+         *
+         * @note This will overwrite the entire widget Font.
+         */
+        void set_font(const Font& font)
+        {
+            m_font.reset(new Font(font));
+        }
+
+        virtual ~TextWidget()
+        {}
+
+    protected:
+        alignmask m_text_align{alignmask::CENTER};
+        std::string m_text;
+
+    private:
+        std::shared_ptr<Font> m_font;
+    };
+
+    namespace experimental
+    {
+        class ScrollWheel : public Widget
+        {
+        public:
+            explicit ScrollWheel(const Rect& rect = Rect());
+
+            virtual int handle(eventid event) override;
+
+            virtual void draw(Painter& painter, const Rect& rect) override;
+
+            int position() const
+            {
+                return m_pos;
+            }
+
+            inline void position(int pos)
+            {
+                if (pos < (int)m_values.size())
+                {
+                    m_pos = pos;
+                    damage();
+                }
+            }
+
+            void values(const std::vector<std::string>& v)
+            {
+                m_values = v;
+            }
+
+        protected:
+            std::vector<std::string> m_values;
+
+            int m_pos{0};
+            int m_moving_x{0};
+            int m_start_pos{0};
+        };
+
+    }
 
 
 }
