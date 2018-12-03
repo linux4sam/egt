@@ -137,11 +137,11 @@ int main(int argc, const char** argv)
     Slider slider1(10, 500, Rect(Point(win.h() - 40, 300), Size(win.w(), 40)));
     win.add(&slider1);
     slider1.set_align(alignmask::CENTER | alignmask::BOTTOM);
-    slider1.position(DEFAULT_MS_INTERVAL);
+    slider1.set_value(DEFAULT_MS_INTERVAL);
     slider1.on_event([&](eventid event)
     {
         if (event == eventid::PROPERTY_CHANGED)
-            animatetimer.change_duration(std::chrono::milliseconds(slider1.position()));
+            animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
         return 0;
     });
 

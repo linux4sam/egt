@@ -109,6 +109,8 @@ namespace egt
          */
         virtual Painter& set_line_width(float width);
 
+        virtual Painter& point(const Point& p);
+
         /**
          * Create a line from the current point to the specified point.
          *

@@ -129,12 +129,12 @@ int main(int argc, const char** argv)
     {
         if (event == eventid::PROPERTY_CHANGED)
         {
-            line.set_line_width(line_width.position());
+            line.set_line_width(line_width.value());
         }
         return 0;
     });
 
-    line_width.position(2);
+    line_width.set_value(2);
 
     CheckBox gridx_checkbox("grid X", Rect(Point(500, 410), Size(80, 40)));
     gridx_checkbox.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);

@@ -82,6 +82,13 @@ namespace egt
         return *this;
     }
 
+    Painter& Painter::point(const Point& p)
+    {
+        cairo_move_to(m_cr.get(), p.x, p.y);
+
+        return *this;
+    }
+
     Painter& Painter::line(const Point& start, const Point& end)
     {
         cairo_move_to(m_cr.get(), start.x, start.y);

@@ -116,12 +116,12 @@ namespace egt
             {
                 Point mouse = from_screen(event_mouse());
 
-                if (Rect::point_inside(mouse, m_down_rect))
+                if (Rect::point_inside(mouse, m_down_rect - box().point()))
                 {
                     if (m_selected > 0)
                         set_select(m_selected - 1);
                 }
-                else if (Rect::point_inside(mouse, m_up_rect))
+                else if (Rect::point_inside(mouse, m_up_rect - box().point()))
                 {
                     set_select(m_selected + 1);
                 }

@@ -34,7 +34,7 @@ namespace egt
          *
          * If this results in changing the value, it will damage() the widget.
          */
-        virtual void value(T v)
+        virtual void set_value(T v)
         {
             if (v != m_value)
             {
@@ -81,7 +81,7 @@ namespace egt
          *
          * If this results in changing the value, it will damage() the widget.
          */
-        virtual void value(T v)
+        virtual void set_value(T v)
         {
             if (v > m_max)
                 v = m_max;
@@ -134,7 +134,7 @@ namespace egt
             return m_value2;
         }
 
-        inline void value2(T v)
+        inline void set_value2(T v)
         {
             if (v > this->m_max)
                 v = this->m_max;
@@ -178,7 +178,7 @@ namespace egt
                 {
                     auto angle = this->touch_to_degrees(this->from_screen(event_mouse()));
                     auto v = this->degrees_to_value(angle);
-                    this->value(v);
+                    this->set_value(v);
 
                     return 1;
                 }
@@ -353,14 +353,14 @@ namespace egt
         virtual void draw(Painter& painter, const Rect& rect);
     };
 
-    enum orientation
+    enum class orientation
     {
         HORIZONTAL,
         VERTICAL,
     };
 
     /**
-     * This is a slider that can be used to select fro a range of values.
+     * This is a slider that can be used to select from a range of values.
      *
      * @todo This should be a ValueRangeWidget<int>.
      *
@@ -369,7 +369,7 @@ namespace egt
      * @image html widget_slider2.png
      * @image latex widget_slider2.png "widget_slider2" height=5cm
      */
-    class Slider : public Widget
+    class Slider : public ValueRangeWidget<int>
     {
     public:
         Slider(int min, int max, const Rect& rect = Rect(),
@@ -379,28 +379,17 @@ namespace egt
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
-        /**
-         * Get the current position.
-         */
-        inline int position() const { return m_pos; }
-
-        /**
-         * Change the current position.
-         */
-        inline void position(int pos)
+        virtual void set_value(int v) override
         {
-            if (pos > m_max)
-            {
-                pos = m_max;
-            }
-            else if (pos < m_min)
-            {
-                pos = m_min;
-            }
+            if (v > m_max)
+                v = m_max;
 
-            if (pos != m_pos)
+            if (v < m_min)
+                v = m_min;
+
+            if (v != m_value)
             {
-                m_pos = pos;
+                m_value = v;
                 damage();
 
                 // live update to handlers?
@@ -416,53 +405,40 @@ namespace egt
     protected:
 
         // position to offset
-        inline int normalize(int pos)
+        inline int normalize(int pos) const
         {
             if (m_orientation == orientation::HORIZONTAL)
             {
-                auto dim = w() / 6;
-                if (dim > h())
-                    dim = h();
-
-
+                auto dim = handle_dim();
                 return float(w() - dim) / float(m_max - m_min) * float(pos - m_min);
             }
             else
             {
-                auto dim = h() / 6;
-                if (dim > w())
-                    dim = w();
-
+                auto dim = handle_dim();
                 pos = m_min + m_max - pos;
                 return float(h() - dim) / float(m_max - m_min) * float(pos - m_min);
             }
         }
 
         // offset to position
-        inline int denormalize(int diff)
+        inline int denormalize(int diff) const
         {
             if (m_orientation == orientation::HORIZONTAL)
             {
-                auto dim = w() / 6;
-                if (dim > h())
-                    dim = h();
-
+                auto dim = handle_dim();
                 return float(m_max - m_min) / float(w() - dim) * float(diff);
             }
             else
             {
-                auto dim = h() / 6;
-                if (dim > w())
-                    dim = w();
-
+                auto dim = handle_dim();
                 return float(m_max - m_min) / float(h() - dim) * float(diff);
             }
         }
 
-        int m_min;
-        int m_max;
-        int m_pos;
-        int m_moving_x{0};
+        Rect handle_box() const;
+        int handle_dim() const;
+
+        int m_moving_offset{0};
         int m_start_pos{0};
         orientation m_orientation;
         bool m_invoke_pending{false};

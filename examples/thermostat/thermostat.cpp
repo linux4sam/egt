@@ -82,8 +82,8 @@ public:
         });
 
         add(&m_radial1);
-        m_radial1.value(73);
-        m_radial1.value2(65);
+        m_radial1.set_value(73);
+        m_radial1.set_value2(65);
 
         m_label1.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(&m_label1);
@@ -147,7 +147,7 @@ public:
         m_label4.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
         add(&m_slider1);
-        m_slider1.position(50);
+        m_slider1.set_value(50);
 
         m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label1), std::placeholders::_1));
         m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label2), std::placeholders::_1));

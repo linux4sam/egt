@@ -185,12 +185,55 @@ namespace egt
     }
 
     Slider::Slider(int min, int max, const Rect& rect, orientation orient)
-        : Widget(rect),
-          m_min(min),
-          m_max(max),
-          m_pos(min),
+        : ValueRangeWidget<int>(rect, min, max, min),
           m_orientation(orient)
     {
+    }
+
+    int Slider::handle_dim() const
+    {
+        if (m_orientation == orientation::HORIZONTAL)
+        {
+            auto dim = w() / 6;
+            if (dim > h())
+                dim = h();
+            return dim;
+        }
+        else
+        {
+            auto dim = h() / 6;
+            if (dim > w())
+                dim = w();
+            return dim;
+        }
+
+        assert(0);
+
+        return 0;
+    }
+
+    Rect Slider::handle_box() const
+    {
+        if (m_orientation == orientation::HORIZONTAL)
+        {
+            auto dim = handle_dim();
+            return Rect(x() + normalize(m_value) + 1,
+                        y() + h() / 2 - dim / 2 + 1,
+                        dim - 2,
+                        dim - 2);
+        }
+        else
+        {
+            auto dim = handle_dim();
+            return Rect(x() + w() / 2 - dim / 2 + 1,
+                        y() + normalize(m_value) + 1,
+                        dim - 2,
+                        dim - 2);
+        }
+
+        assert(0);
+
+        return Rect();
     }
 
     int Slider::handle(eventid event)
@@ -199,30 +242,13 @@ namespace egt
         {
         case eventid::MOUSE_DOWN:
         {
-            Rect bounding;
-
-            if (m_orientation == orientation::HORIZONTAL)
-            {
-                bounding = Rect(x() + normalize(m_pos) + 1,
-                                y() + 1,
-                                h() - 2,
-                                h() - 2);
-            }
-            else
-            {
-                bounding = Rect(x() + 1,
-                                y() + normalize(m_pos) + 1,
-                                w() - 2,
-                                w() - 2);
-            }
-
-            if (Rect::point_inside(from_screen(event_mouse()), bounding))
+            if (Rect::point_inside(from_screen(event_mouse()), handle_box() - box().point()))
             {
                 if (m_orientation == orientation::HORIZONTAL)
-                    m_moving_x = from_screen(event_mouse()).x;
+                    m_moving_offset = from_screen(event_mouse()).x;
                 else
-                    m_moving_x = from_screen(event_mouse()).y;
-                m_start_pos = position();
+                    m_moving_offset = from_screen(event_mouse()).y;
+                m_start_pos = value();
                 set_active(true);
                 return 1;
             }
@@ -242,13 +268,13 @@ namespace egt
             {
                 if (m_orientation == orientation::HORIZONTAL)
                 {
-                    auto diff = from_screen(event_mouse()).x - m_moving_x;
-                    position(m_start_pos + denormalize(diff));
+                    auto diff = from_screen(event_mouse()).x - m_moving_offset;
+                    set_value(m_start_pos + denormalize(diff));
                 }
                 else
                 {
-                    auto diff = from_screen(event_mouse()).y - m_moving_x;
-                    position(m_start_pos - denormalize(diff));
+                    auto diff = from_screen(event_mouse()).y - m_moving_offset;
+                    set_value(m_start_pos - denormalize(diff));
                 }
                 return 1;
             }
@@ -262,75 +288,42 @@ namespace egt
 
     void Slider::draw(Painter& painter, const Rect& rect)
     {
-        ignoreparam(rect);
+        DBG(name() << " " << __PRETTY_FUNCTION__ << " " << rect);
 
-        auto cr = painter.context();
+        auto dim = handle_dim();
 
-        cairo_set_source_rgba(cr.get(),
-                              palette().color(Palette::HIGHLIGHT).redf(),
-                              palette().color(Palette::HIGHLIGHT).greenf(),
-                              palette().color(Palette::HIGHLIGHT).bluef(),
-                              palette().color(Palette::HIGHLIGHT).alphaf());
+        painter.set_color(palette().color(Palette::HIGHLIGHT));
+        painter.set_line_width(dim / 5.0);
 
         if (m_orientation == orientation::HORIZONTAL)
         {
-            auto dim = w() / 6;
-            if (dim > h())
-                dim = h();
-
-            cairo_set_line_width(cr.get(), dim / 5.0);
-
             // line
-            cairo_move_to(cr.get(), x(), y() + h() / 2);
-            cairo_line_to(cr.get(), x() + normalize(m_pos), y() + h() / 2);
-            cairo_stroke(cr.get());
-
-            cairo_set_source_rgba(cr.get(),
-                                  palette().color(Palette::BORDER).redf(),
-                                  palette().color(Palette::BORDER).greenf(),
-                                  palette().color(Palette::BORDER).bluef(),
-                                  palette().color(Palette::BORDER).alphaf());
-
-            cairo_move_to(cr.get(), x() + normalize(m_pos) + 1, y() + h() / 2);
-            cairo_line_to(cr.get(), x() + w(), y() + h() / 2);
-            cairo_stroke(cr.get());
+            painter.line(Point(x(), y() + h() / 2),
+                         Point(x() + normalize(m_value), y() + h() / 2));
+            painter.stroke();
+            painter.set_color(palette().color(Palette::BORDER));
+            painter.line(Point(x() + normalize(m_value) + 1, y() + h() / 2),
+                         Point(x() + w(), y() + h() / 2));
+            painter.stroke();
 
             // handle
-            painter.draw_rounded_gradient_box(Rect(x() + normalize(m_pos) + 1,
-                                                   y() + h() / 2 - dim / 2 + 1,
-                                                   dim - 2,
-                                                   dim - 2),
+            painter.draw_rounded_gradient_box(handle_box(),
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }
         else
         {
-            auto dim = h() / 6;
-            if (dim > w())
-                dim = w();
-
-            cairo_set_line_width(cr.get(), dim / 5.0);
-
             // line
-            cairo_move_to(cr.get(), x() + w() / 2, y() + h());
-            cairo_line_to(cr.get(), x() + w() / 2, y() + normalize(m_pos));
-            cairo_stroke(cr.get());
-
-            cairo_set_source_rgba(cr.get(),
-                                  palette().color(Palette::BORDER).redf(),
-                                  palette().color(Palette::BORDER).greenf(),
-                                  palette().color(Palette::BORDER).bluef(),
-                                  palette().color(Palette::BORDER).alphaf());
-
-            cairo_move_to(cr.get(), x() + w() / 2, y() + normalize(m_pos) + 1);
-            cairo_line_to(cr.get(), x() + w() / 2, y());
-            cairo_stroke(cr.get());
+            painter.line(Point(x() + w() / 2, y() + h()),
+                         Point(x() + w() / 2, y() + normalize(m_value)));
+            painter.stroke();
+            painter.set_color(palette().color(Palette::BORDER));
+            painter.line(Point(x() + w() / 2, y() + normalize(m_value) + 1),
+                         Point(x() + w() / 2, y()));
+            painter.stroke();
 
             // handle
-            painter.draw_rounded_gradient_box(Rect(x() + w() / 2 - dim / 2 + 1,
-                                                   y() + normalize(m_pos) + 1,
-                                                   dim - 2,
-                                                   dim - 2),
+            painter.draw_rounded_gradient_box(handle_box(),
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }

@@ -250,11 +250,11 @@ int main(int argc, const char** argv)
         if (window->duration())
         {
             double v = (double)window->position() / (double)window->duration() * 100.;
-            position->position(v);
+            position->set_value(v);
         }
         else
         {
-            position->position(0);
+            position->set_value(0);
         }
 
 #ifdef FPS
@@ -273,10 +273,10 @@ int main(int argc, const char** argv)
     volume->on_event([volume, window](eventid event)
     {
         ignoreparam(event);
-        window->set_volume(volume->position());
+        window->set_volume(volume->value());
         return 0;
     });
-    volume->position(50);
+    volume->set_value(50);
 
     playbtn->disable();
     pausebtn->enable();

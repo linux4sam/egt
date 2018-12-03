@@ -84,7 +84,7 @@ int main(int argc, const char** argv)
     grid0.add(&btn2);
 
     Slider slider1(0, 100);
-    slider1.position(50);
+    slider1.set_value(50);
     grid0.add(&slider1);
 
     SlidingCheckBox sliding1;
@@ -155,16 +155,18 @@ int main(int argc, const char** argv)
     cputimer.on_timeout([&tools, &lp1, &am1]()
     {
         tools.update();
-        lp1.value(tools.usage(0));
-        am1.value(tools.usage(0));
+        lp1.set_value(tools.usage(0));
+        am1.set_value(tools.usage(0));
     });
     cputimer.start();
 
     Slider slider2(0, 100, Rect(), orientation::VERTICAL);
-    slider2.position(75);
+    slider2.set_value(75);
     grid1.add(&slider2);
 
     win.show();
+
+    app.event().dump();
 
     return app.run();
 }
