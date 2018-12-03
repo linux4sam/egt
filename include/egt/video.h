@@ -59,9 +59,9 @@ namespace egt
             virtual bool pause();
 
             /**
-                 * @brief unpause Send Pipeline to unpaused state
-                 * @return true if success
-                 */
+             * @brief unpause Send Pipeline to unpaused state
+             * @return true if success
+             */
             virtual bool unpause();
 
             /**
@@ -85,7 +85,7 @@ namespace egt
              */
             virtual bool set_mute(bool mute);
 
-            virtual void scale(float value);
+            virtual void set_scale(float value);
             virtual float scale() const;
 
             virtual ~VideoWindow();

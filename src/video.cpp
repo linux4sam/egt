@@ -141,7 +141,7 @@ namespace egt
             allocate_screen();
         }
 
-        void VideoWindow::scale(float value)
+        void VideoWindow::set_scale(float value)
         {
             KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
             assert(screen);

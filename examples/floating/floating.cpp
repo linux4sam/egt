@@ -103,7 +103,7 @@ int main(int argc, const char** argv)
     for (uint32_t x = 0; x < SOFT_COUNT; x++)
     {
         stringstream os;
-        os << "_image" << x << ".png";
+        os << "image" << x << ".png";
         Image* image = new Image(os.str(), Point(100, 100));
         boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
         win.add(image);
@@ -118,7 +118,7 @@ int main(int argc, const char** argv)
     for (uint32_t x = SOFT_COUNT; x < SOFT_COUNT + total; x++)
     {
         stringstream os;
-        os << "_image" << x << ".png";
+        os << "image" << x << ".png";
         Image* image = new Image(os.str());
         PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
         plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);

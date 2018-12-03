@@ -72,7 +72,7 @@ public:
             m_fscale = 1.0;
 
         T::move(Point(0, 0));
-        T::scale(m_fscale);
+        T::set_scale(m_fscale);
         T::set_media(filename);
         T::play();
         T::set_volume(50);
@@ -90,7 +90,7 @@ public:
             if (T::scale() <= 1.0)
             {
                 T::move(Point(0, 0));
-                T::scale(m_fscale);
+                T::set_scale(m_fscale);
 #if 0
                 show->start();
 #endif
