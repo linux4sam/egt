@@ -101,7 +101,7 @@ namespace egt
             return;
 
         if (m_parent)
-            m_parent->damage(rect);
+            m_parent->damage(to_parent(rect));
     }
 
     IScreen* Widget::screen()
