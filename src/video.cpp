@@ -132,30 +132,35 @@ namespace egt
             return TRUE;
         }
 
-        VideoWindow::VideoWindow(const Size& size, uint32_t format, bool heo)
+        VideoWindow::VideoWindow(const Size& size, pixel_format format, bool heo)
             : PlaneWindow(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
         {
             gst_init(NULL, NULL);
             init_thread();
+
+            allocate_screen();
         }
 
         void VideoWindow::scale(float value)
         {
-            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+            assert(screen);
             screen->scale(value);
         }
 
         float VideoWindow::scale() const
         {
-            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+            assert(screen);
             return screen->scale();
         }
 
         void VideoWindow::top_draw()
         {
             // don't do any drawing to a window because we don't support video formats, only positioning
-            KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(m_screen);
-            s->apply();
+            KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+            assert(screen);
+            screen->apply();
             m_dirty = false;
             m_damage.clear();
         }
@@ -311,8 +316,8 @@ namespace egt
     SRC_NAME ". ! queue ! audioconvert ! volume name=" VOLUME_NAME " ! " \
     "alsasink async=false enable-last-sample=false sync=true"
 
-        HardwareVideo::HardwareVideo(const Size& size, uint32_t format)
-            : VideoWindow(size, format /*DRM_FORMAT_XRGB8888*/ /*DRM_FORMAT_YUYV*/, true)
+        HardwareVideo::HardwareVideo(const Size& size, pixel_format format)
+            : VideoWindow(size, format, true)
         {
         }
 
@@ -322,7 +327,8 @@ namespace egt
             GstBus* bus;
             //guint bus_watch_id;
 
-            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+            assert(screen);
             int _gem = screen->gem();
 
             /* Make sure we don't leave orphan references */
@@ -389,7 +395,7 @@ namespace egt
     "jpegparse ! jpegdec ! video/x-raw,format=I420,framerate=30/1 ! " \
     "perf name=" PERF_NAME " ! " \
     "g1kmssink gem-name=%d"
-#define FORMAT DRM_FORMAT_YUV420
+#define FORMAT pixel_format::yuv420
 
 #else
 
@@ -397,7 +403,7 @@ namespace egt
     "jpegparse ! g1jpegdec ! video/x-raw,width=960,height=720,format=YUY2 ! " \
     "perf name=" PERF_NAME " ! " \
     "g1kmssink gem-name=%d sync=true"
-#define FORMAT DRM_FORMAT_YUYV
+#define FORMAT pixel_format::yuyv
         //#define FORMAT DRM_FORMAT_RGBA8888
 
 #endif
@@ -413,7 +419,8 @@ namespace egt
             GstBus* bus;
             //guint bus_watch_id;
 
-            KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+            KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+            assert(screen);
             int _gem = screen->gem();
 
             /* Make sure we don't leave orphan references */
@@ -519,8 +526,9 @@ namespace egt
 
                 if (gst_buffer_map(buffer, &map, GST_MAP_READ))
                 {
-                    KMSOverlayScreen* screen =
-                        reinterpret_cast<KMSOverlayScreen*>(_this->m_screen);
+                    KMSOverlay* screen =
+                        reinterpret_cast<KMSOverlay*>(_this->m_screen);
+                    assert(screen);
                     //cout << "frame size: " << map.size << endl;
                     memcpy(screen->raw(), map.data, map.size);
                     screen->schedule_flip();
@@ -533,7 +541,7 @@ namespace egt
             return GST_FLOW_OK;
         }
 
-        SoftwareVideo::SoftwareVideo(const Size& size, uint32_t format)
+        SoftwareVideo::SoftwareVideo(const Size& size, pixel_format format)
             : VideoWindow(size, format),
               m_appsink(NULL)
         {
@@ -628,7 +636,7 @@ namespace egt
     "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME
 
         V4L2SoftwareVideo::V4L2SoftwareVideo(const Size& size)
-            : SoftwareVideo(size, DRM_FORMAT_YUYV)
+            : SoftwareVideo(size, pixel_format::yuyv)
         {
         }
 
@@ -706,13 +714,6 @@ namespace egt
             return true;
         }
 
-
-#define RAWSOFTWAREPIPE "filesrc name=" SRC_NAME " ! videoparse width=%d height=%d framerate=24/1 format=nv21 " \
-    " ! autovideoconvert ! "						\
-    "progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " ! " \
-    "perf name=" PERF_NAME " ! " \
-    "appsink drop=true enable-last-sample=false caps=video/x-raw name=" SINK_NAME
-
         RawSoftwareVideo::RawSoftwareVideo(const Size& size)
             : SoftwareVideo(size)
         {}
@@ -726,10 +727,14 @@ namespace egt
             /* Make sure we don't leave orphan references */
             destroyPipeline();
 
-            char buffer[2048];
-            sprintf(buffer, RAWSOFTWAREPIPE, w(), h());
+            ostringstream ss;
+            ss << "filesrc name=" << SRC_NAME << " ! videoparse width=" << w() << " height=" << h() << " framerate=24/1 format=nv21 " \
+               " ! autovideoconvert ! "                                \
+               "progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " ! " \
+               "perf name=" << PERF_NAME << " ! "                      \
+               "appsink drop=true enable-last-sample=false caps=video/x-raw name=" << SINK_NAME;
 
-            string pipe(buffer);
+            string pipe(ss.str());
             DBG(pipe);
 
             m_video_pipeline = gst_parse_launch(pipe.c_str(), &error);

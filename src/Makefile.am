@@ -42,6 +42,7 @@ palette.cpp \
 planewindow.cpp \
 resource.cpp \
 screen/framebuffer.cpp \
+screen/kmsoverlay.cpp \
 screen/kmsscreen.cpp \
 screen/screen.cpp \
 screen/x11screen.cpp \
@@ -91,6 +92,7 @@ $(top_srcdir)/include/egt/grid.h \
 $(top_srcdir)/include/egt/image.h \
 $(top_srcdir)/include/egt/imagecache.h \
 $(top_srcdir)/include/egt/input.h \
+$(top_srcdir)/include/egt/kmsoverlay.h \
 $(top_srcdir)/include/egt/kmsscreen.h \
 $(top_srcdir)/include/egt/label.h \
 $(top_srcdir)/include/egt/libinput.h \

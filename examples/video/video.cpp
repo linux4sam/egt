@@ -67,7 +67,7 @@ public:
         : T(size),
           m_moving(false)
     {
-        m_fscale = (double)KMSScreen::instance()->size().w / (double)T::w();
+        m_fscale = (double)main_screen()->size().w / (double)T::w();
         if (m_fscale <= 0)
             m_fscale = 1.0;
 
@@ -143,7 +143,7 @@ class FpsWindow : public PlaneWindow
 public:
     FpsWindow()
         : PlaneWindow(Size(100, 50),
-                      widgetmask::WINDOW_DEFAULT, DRM_FORMAT_ARGB8888)
+                      widgetmask::WINDOW_DEFAULT, pixel_format::argb8888)
     {
         m_label = new Label("FPS: 0",
                             Rect(Size(100, 50)),
@@ -192,6 +192,7 @@ int main(int argc, const char** argv)
     window->set_name("video");
 
 #if 1
+    //#define FPS
 #ifdef FPS
     FpsWindow fpslabel;
     fpslabel.show();
@@ -202,8 +203,8 @@ int main(int argc, const char** argv)
     window->add(&ctrlwindow);
     ctrlwindow.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
 
-    ctrlwindow.move(Point((KMSScreen::instance()->size().w / 2) - (ctrlwindow.w() / 2),
-                          KMSScreen::instance()->size().h - ctrlwindow.h()));
+    ctrlwindow.move(Point((main_screen()->size().w / 2) - (ctrlwindow.w() / 2),
+                          main_screen()->size().h - ctrlwindow.h()));
 
 #if 0
     set_control_window(&ctrlwindow);
@@ -213,7 +214,8 @@ int main(int argc, const char** argv)
     grid.set_name("grid");
     ctrlwindow.add(&grid);
 
-    ImageButton* playbtn = new ImageButton(":play_png", "", Rect(), widgetmask::NO_BORDER);
+    ImageButton* playbtn = new ImageButton(":play_png", "", Rect(),
+                                           widgetmask::NO_BORDER | widgetmask::NO_BACKGROUND);
     grid.add(playbtn);
 
     playbtn->on_event([playbtn, window](eventid event)
@@ -224,12 +226,12 @@ int main(int argc, const char** argv)
         return 0;
     });
 
-    ImageButton* pausebtn = new ImageButton(":pause_png", "", Rect(), widgetmask::NO_BORDER);
+    ImageButton* pausebtn = new ImageButton(":pause_png", "", Rect(),
+                                            widgetmask::NO_BORDER | widgetmask::NO_BACKGROUND);
     grid.add(pausebtn);
     pausebtn->on_event([pausebtn, window](eventid event)
     {
         ignoreparam(event);
-        cout << "pause button" << endl;
         if (pausebtn->active())
             window->pause();
         return 0;
@@ -265,7 +267,8 @@ int main(int argc, const char** argv)
     });
     postimer.start();
 
-    ImageButton* volumei = new ImageButton(":volumeup_png", "", Rect(), widgetmask::NO_BORDER);
+    ImageButton* volumei = new ImageButton(":volumeup_png", "", Rect(),
+                                           widgetmask::NO_BORDER | widgetmask::NO_BACKGROUND);
     grid.add(volumei);
 
     Slider* volume = new Slider(0, 100, Rect(Size(100, 20)), orientation::HORIZONTAL);

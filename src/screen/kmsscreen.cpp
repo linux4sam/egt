@@ -33,31 +33,6 @@ namespace egt
 {
     static KMSScreen* the_kms = 0;
 
-    static const uint32_t NUM_OVERLAY_BUFFERS = 3;
-
-    KMSOverlayScreen::KMSOverlayScreen(struct plane_data* plane)
-        : m_plane(plane),
-          m_index(0)
-    {
-        init(plane->bufs, NUM_OVERLAY_BUFFERS,
-             plane_width(plane), plane_height(plane), plane_format(plane));
-    }
-
-    void KMSOverlayScreen::hide()
-    {
-        plane_hide(m_plane);
-    }
-
-    void KMSOverlayScreen::show()
-    {
-        plane_apply(m_plane);
-    }
-
-    void* KMSOverlayScreen::raw()
-    {
-        return m_plane->bufs[index()];
-    }
-
     struct FlipThread
     {
         FlipThread()
@@ -140,67 +115,6 @@ namespace egt
         uint32_t m_index;
     };
 
-    void KMSOverlayScreen::schedule_flip()
-    {
-        if (m_plane->buffer_count > 1)
-        {
-#if 0
-            static FlipThread pool;
-            pool.enqueue(FlipJob(m_plane, m_index));
-#else
-            plane_flip(m_plane, m_index);
-#endif
-        }
-
-        if (++m_index >= m_plane->buffer_count)
-            m_index = 0;
-    }
-
-    uint32_t KMSOverlayScreen::index()
-    {
-        return m_index;
-    }
-
-    void KMSOverlayScreen::position(const Point& point)
-    {
-        plane_set_pos(m_plane, point.x, point.y);
-    }
-
-    void KMSOverlayScreen::scale(float scale)
-    {
-        plane_set_scale(m_plane, scale);
-    }
-
-    void KMSOverlayScreen::set_pan_size(const Size& size)
-    {
-        plane_set_pan_size(m_plane, size.w, size.h);
-    }
-
-    void KMSOverlayScreen::set_pan_pos(const Point& point)
-    {
-        plane_set_pan_pos(m_plane, point.x, point.y);
-    }
-
-    float KMSOverlayScreen::scale() const
-    {
-        return m_plane->scale;
-    }
-
-    int KMSOverlayScreen::gem()
-    {
-        // TODO: array
-        return m_plane->gem_names[0];
-    }
-
-    void KMSOverlayScreen::apply()
-    {
-        plane_apply(m_plane);
-    }
-
-    KMSOverlayScreen::~KMSOverlayScreen()
-    {
-    }
-
     KMSScreen::KMSScreen(bool primary)
         : m_index(0)
     {
@@ -234,7 +148,7 @@ namespace egt
                 plane_height(m_plane));
 
             init(m_plane->bufs, NUM_PRIMARY_BUFFERS,
-                 plane_width(m_plane), plane_height(m_plane), format);
+                 plane_width(m_plane), plane_height(m_plane), detail::egt_format(format));
         }
         else
         {
@@ -273,7 +187,8 @@ namespace egt
 
     static vector<int> used;
 
-    struct plane_data* KMSScreen::allocate_overlay(const Size& size, uint32_t format, bool heo)
+    struct plane_data* KMSScreen::allocate_overlay(const Size& size,
+                                                   pixel_format format, bool heo)
     {
         DBG("allocate plane " << size);
 
@@ -290,8 +205,8 @@ namespace egt
                                   index,
                                   size.w,
                                   size.h,
-                                  format,
-                                  NUM_OVERLAY_BUFFERS);
+                                  detail::drm_format(format),
+                                  KMSOverlay::NUM_OVERLAY_BUFFERS);
             if (plane)
             {
                 used.push_back(index);
@@ -310,8 +225,8 @@ namespace egt
                                       index,
                                       size.w,
                                       size.h,
-                                      format,
-                                      NUM_OVERLAY_BUFFERS);
+                                      detail::drm_format(format),
+                                      KMSOverlay::NUM_OVERLAY_BUFFERS);
                 if (plane)
                 {
                     used.push_back(index);

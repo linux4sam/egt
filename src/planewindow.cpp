@@ -16,7 +16,7 @@ namespace egt
 
 #ifdef HAVE_LIBPLANES
     PlaneWindow::PlaneWindow(const Size& size, widgetmask flags,
-                             uint32_t format, bool heo)
+                             pixel_format format, bool heo)
         : Window(size, flags | widgetmask::PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
@@ -33,7 +33,7 @@ namespace egt
     }
 
     PlaneWindow::PlaneWindow(const Rect& rect, widgetmask flags,
-                             uint32_t format, bool heo)
+                             pixel_format format, bool heo)
         : Window(rect.size(), flags | widgetmask::PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
@@ -90,8 +90,9 @@ namespace egt
     {
         if (!m_screen)
         {
-            m_screen = new KMSOverlayScreen(
-                KMSScreen::instance()->allocate_overlay(box().size(), m_format, m_heo));
+            m_screen = new KMSOverlay(
+                KMSScreen::instance()->allocate_overlay(box().size(),
+                        m_format, m_heo));
         }
     }
 
@@ -105,7 +106,7 @@ namespace egt
 
                 if (visible())
                 {
-                    KMSOverlayScreen* s = dynamic_cast<KMSOverlayScreen*>(m_screen);
+                    KMSOverlay* s = dynamic_cast<KMSOverlay*>(m_screen);
                     assert(s);
                     if (s)
                     {
@@ -136,7 +137,7 @@ namespace egt
 
     void PlaneWindow::hide()
     {
-        KMSOverlayScreen* s = dynamic_cast<KMSOverlayScreen*>(m_screen);
+        KMSOverlay* s = dynamic_cast<KMSOverlay*>(m_screen);
         if (s)
         {
             s->hide();
@@ -146,7 +147,7 @@ namespace egt
         Window::hide();
     }
 #else
-    PlaneWindow::PlaneWindow(const Size& size, widgetmask flags, uint32_t format, bool heo)
+    PlaneWindow::PlaneWindow(const Size& size, widgetmask flags, pixel_format format, bool heo)
         : Window(size, flags)
     {
         ignoreparam(format);
@@ -158,7 +159,7 @@ namespace egt
     }
 
     PlaneWindow::PlaneWindow(const Rect& rect, widgetmask flags,
-                             uint32_t format, bool heo)
+                             pixel_format format, bool heo)
         : PlaneWindow(rect.size(), flags, format, heo)
     {
         m_box = rect;
@@ -172,6 +173,10 @@ namespace egt
     void PlaneWindow::move(const Point& point)
     {
         Window::move(point);
+    }
+
+    void PlaneWindow::allocate_screen()
+    {
     }
 
     void PlaneWindow::top_draw()

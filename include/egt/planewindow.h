@@ -17,13 +17,6 @@
 
 #include <egt/window.h>
 
-#ifdef HAVE_LIBPLANES
-#include <drm_fourcc.h>
-#define DEFAULT_FORMAT DRM_FORMAT_ARGB8888
-#else
-#define DEFAULT_FORMAT 0
-#endif
-
 namespace egt
 {
     /**
@@ -37,14 +30,16 @@ namespace egt
     {
     public:
 
+        constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
+
         explicit PlaneWindow(const Size& size = Size(),
                              widgetmask flags = widgetmask::WINDOW_DEFAULT,
-                             uint32_t format = DEFAULT_FORMAT,
+                             pixel_format format = DEFAULT_FORMAT,
                              bool heo = false);
 
         explicit PlaneWindow(const Rect& rect,
                              widgetmask flags = widgetmask::WINDOW_DEFAULT,
-                             uint32_t format = DEFAULT_FORMAT,
+                             pixel_format format = DEFAULT_FORMAT,
                              bool heo = false);
 
         virtual void damage(const Rect& rect) override;
@@ -66,7 +61,7 @@ namespace egt
         void allocate_screen();
         void do_resize(const Size& size);
 
-        uint32_t m_format{DEFAULT_FORMAT};
+        pixel_format m_format{DEFAULT_FORMAT};
         bool m_dirty{true};
         bool m_heo{false};
     };

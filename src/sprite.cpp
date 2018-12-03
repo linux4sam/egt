@@ -45,7 +45,7 @@ namespace egt
                                    int framecount, const Point& frame_point,
                                    const Point& point)
         : PlaneWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND,
-                      DRM_FORMAT_ARGB8888),
+                      pixel_format::argb8888),
           ISpriteBase(filename, frame_size, framecount, frame_point)
     {
         add(&m_image);
@@ -54,7 +54,7 @@ namespace egt
 
         allocate_screen();
 
-        KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
+        KMSOverlay* s = reinterpret_cast<KMSOverlay*>(screen());
         plane_set_pan_pos(s->s(), m_strips[m_strip].point.x, m_strips[m_strip].point.y);
         plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
 
@@ -75,7 +75,7 @@ namespace egt
 
             if (visible())
             {
-                KMSOverlayScreen* s = reinterpret_cast<KMSOverlayScreen*>(screen());
+                KMSOverlay* s = reinterpret_cast<KMSOverlay*>(screen());
                 plane_set_pan_pos(s->s(), origin.x, origin.y);
                 plane_set_pan_size(s->s(), m_frame.w, m_frame.h);
                 plane_apply(s->s());

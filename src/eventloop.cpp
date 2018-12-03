@@ -43,21 +43,21 @@ namespace egt
 
     int EventLoop::wait()
     {
-#ifdef STATS2
-        auto start = chrono::steady_clock::now();
-#endif
-        //int ret = m_impl->m_io.run_one();
-        int ret = m_impl->m_io.run_for(std::chrono::milliseconds(1));
-        //int ret = m_impl->m_io.poll();
+        int ret;
+
+        experimental::code_timer("wait: ", [&]()
+        {
+            //ret = m_impl->m_io.run_one();
+            ret = m_impl->m_io.run_one_for(std::chrono::milliseconds(30));
+            if (ret)
+                ret += m_impl->m_io.run_for(std::chrono::milliseconds(10));
+            //ret = m_impl->m_io.run_for(std::chrono::milliseconds(10));
+            //ret = m_impl->m_io.poll();
+        });
+
         if (!ret)
             invoke_idle_callbacks();
 
-#ifdef STATS2
-        auto end = chrono::steady_clock::now();
-        auto diff = end - start;
-
-        cout << "wait: " << chrono::duration<double, milli>(diff).count() << endl;
-#endif
         return ret;
     }
 
@@ -111,24 +111,18 @@ namespace egt
 
     void EventLoop::draw()
     {
-#ifdef STATS2
-        auto start = chrono::steady_clock::now();
-#endif
-        for (auto& w : windows())
+        experimental::code_timer("draw: ", [&]()
         {
-            if (!w->visible())
-                continue;
+            for (auto& w : windows())
+            {
+                if (!w->visible())
+                    continue;
 
-            // draw top level frames and plane frames
-            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
-                w->top_draw();
-        }
-#ifdef STATS2
-        auto end = chrono::steady_clock::now();
-        auto diff = end - start;
-
-        cout << "draw: " << chrono::duration<double, milli>(diff).count() << endl;
-#endif
+                // draw top level frames and plane frames
+                if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+                    w->top_draw();
+            }
+        });
     }
 
     int EventLoop::run(bool enable_fps)
@@ -144,18 +138,22 @@ namespace egt
         drawtimer.start();
 #endif
 
+        draw();
+
         do_quit = false;
         while (!do_quit)
         {
-            wait();
-            draw();
-
-            if (enable_fps)
-                fps.end_frame();
-
-            if (enable_fps && fps.ready())
+            if (wait())
             {
-                cout << "fps: " << std::round(fps.fps()) << endl;
+                draw();
+
+                if (enable_fps)
+                    fps.end_frame();
+
+                if (enable_fps && fps.ready())
+                {
+                    cout << "fps: " << std::round(fps.fps()) << endl;
+                }
             }
         }
 

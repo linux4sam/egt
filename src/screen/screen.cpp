@@ -7,16 +7,69 @@
 #include "egt/screen.h"
 #include "egt/utils.h"
 #include <cassert>
-#include <fcntl.h>
+#include <drm_fourcc.h>
 #include <linux/fb.h>
-#include <sys/ioctl.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#include <map>
 
 using namespace std;
 
 namespace egt
 {
+    namespace detail
+    {
+        static const map<pixel_format, uint32_t> drm_formats = {
+            {pixel_format::rgb565, DRM_FORMAT_RGB565},
+            {pixel_format::argb8888, DRM_FORMAT_ARGB8888},
+            {pixel_format::xrgb8888, DRM_FORMAT_XRGB8888},
+            {pixel_format::yuyv, DRM_FORMAT_YUYV},
+            {pixel_format::yuv420, DRM_FORMAT_YUV420},
+        };
+
+        static const map<pixel_format, cairo_format_t> cairo_formats = {
+            {pixel_format::rgb565, CAIRO_FORMAT_RGB16_565},
+            {pixel_format::argb8888, CAIRO_FORMAT_ARGB32},
+            {pixel_format::xrgb8888, CAIRO_FORMAT_RGB24},
+        };
+
+        cairo_format_t cairo_format(pixel_format format)
+        {
+            auto i = cairo_formats.find(format);
+            if (i != cairo_formats.end())
+                return i->second;
+
+            return CAIRO_FORMAT_INVALID;
+        }
+
+        uint32_t drm_format(pixel_format format)
+        {
+            auto i = drm_formats.find(format);
+            if (i != drm_formats.end())
+                return i->second;
+
+            return 0;
+        }
+
+        pixel_format egt_format(uint32_t format)
+        {
+            for (auto& i : drm_formats)
+                // cppcheck-suppress useStlAlgorithm
+                if (i.second == format)
+                    return i.first;
+
+            return pixel_format::invalid;
+        }
+
+        pixel_format egt_format(cairo_format_t format)
+        {
+            for (auto& i : cairo_formats)
+                // cppcheck-suppress useStlAlgorithm
+                if (i.second == format)
+                    return i.first;
+
+            return pixel_format::invalid;
+        }
+    }
+
     static IScreen* the_screen = nullptr;
 
     IScreen*& main_screen()
@@ -62,7 +115,7 @@ namespace egt
      * buffer for greenscreen.
      */
     void IScreen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
-            const damage_array& olddamage)
+                                             const damage_array& olddamage)
     {
         cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
         cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
@@ -138,40 +191,23 @@ namespace egt
         damage.push_back(rect);
     }
 
-    void IScreen::init(void** ptr, uint32_t count, int w, int h, uint32_t f)
+    void IScreen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
     {
         m_size = Size(w, h);
 
-        cairo_format_t format = CAIRO_FORMAT_ARGB32;
-
-        switch (f)
-        {
-        case DRM_FORMAT_RGB565:
-            INFO("screen " << w << "," << h << " format RGB565");
-            format = CAIRO_FORMAT_RGB16_565;
-            break;
-        case DRM_FORMAT_ARGB8888:
-            INFO("screen " << w << "," << h << " format ARGB32");
-            format = CAIRO_FORMAT_ARGB32;
-            break;
-        case DRM_FORMAT_XRGB8888:
-            INFO("screen " << w << "," << h << " format RGB24");
-            format = CAIRO_FORMAT_RGB24;
-            break;
-        default:
-            INFO("screen " << w << "," << h << " format unknown");
-            break;
-        }
+        cairo_format_t f = detail::cairo_format(format);
+        if (f == CAIRO_FORMAT_INVALID)
+            f = CAIRO_FORMAT_ARGB32;
 
         for (uint32_t x = 0; x < count; x++)
         {
             DisplayBuffer buffer;
             buffer.surface = shared_cairo_surface_t(
-                                 cairo_image_surface_create_for_data((unsigned char*)ptr[x],
-                                         format,
-                                         w, h,
-                                         cairo_format_stride_for_width(format, w)),
-                                 cairo_surface_destroy);
+                cairo_image_surface_create_for_data((unsigned char*)ptr[x],
+                                                    f,
+                                                    w, h,
+                                                    cairo_format_stride_for_width(f, w)),
+                cairo_surface_destroy);
             assert(buffer.surface);
 
             buffer.cr = shared_cairo_t(cairo_create(buffer.surface.get()), cairo_destroy);
@@ -182,7 +218,7 @@ namespace egt
             m_buffers.push_back(buffer);
         }
 
-        m_surface = shared_cairo_surface_t(cairo_image_surface_create(format, w, h),
+        m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, w, h),
                                            cairo_surface_destroy);
 
         assert(m_surface.get());

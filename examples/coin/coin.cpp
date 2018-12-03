@@ -22,7 +22,7 @@ class ObstacleLayer : public PlaneWindow
 {
 public:
     explicit ObstacleLayer(int speed)
-        : PlaneWindow(Size(800, 480), widgetmask::WINDOW_DEFAULT, DRM_FORMAT_ARGB8888/*RGB565*/),
+        : PlaneWindow(Size(800, 480), widgetmask::WINDOW_DEFAULT, pixel_format::argb8888),
           m_speed(speed),
           m_x(0),
           e1(r()),
@@ -215,7 +215,7 @@ class SceneLayer : public PlaneWindow
 public:
 
     SceneLayer(Image& image, const Point& pos, const Size& size, int speed)
-        : PlaneWindow(image.size(), widgetmask::WINDOW_DEFAULT, DRM_FORMAT_RGB565),
+        : PlaneWindow(image.size(), widgetmask::WINDOW_DEFAULT, pixel_format::rgb565),
           m_image(image),
           m_speed(speed),
           m_x(0)
@@ -227,7 +227,7 @@ public:
         if (speed < 0)
             m_x = m_image.w() / 2;
 
-        KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+        KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
         screen->set_pan_size(size);
         screen->set_pan_pos(Point(m_x, 0));
         screen->apply();
@@ -254,7 +254,7 @@ public:
             bounce = true;
         }
 
-        KMSOverlayScreen* screen = reinterpret_cast<KMSOverlayScreen*>(m_screen);
+        KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
         screen->set_pan_pos(Point(m_x, 0));
         screen->apply();
 

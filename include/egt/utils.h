@@ -151,6 +151,8 @@ namespace egt
             bool m_ready{false};
         };
 
+        void code_timer(const std::string& prefix, std::function<void ()> callback);
+
     }
 
 }

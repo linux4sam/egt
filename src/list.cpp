@@ -48,7 +48,7 @@ namespace egt
             Point mouse = from_screen(event_mouse());
             for (size_t i = 0; i < m_items.size(); i++)
             {
-                if (Rect::point_inside(mouse, item_rect(i)))
+                if (Rect::point_inside(mouse, item_rect(i) - box().point()))
                 {
                     set_select(i);
                     break;

@@ -13,7 +13,6 @@
 
 #include <cairo.h>
 #include <deque>
-#include <drm_fourcc.h>
 #include <memory>
 #include <egt/geometry.h>
 #include <vector>
@@ -27,9 +26,33 @@ namespace egt
         std::shared_ptr<cairo_t>;
 
     /**
+     * Supported pixel formats.
+     *
+     * @note Some backends may not support all formats.
+     */
+    enum class pixel_format
+    {
+        invalid,
+        rgb565,
+        argb8888,
+        xrgb8888,
+        yuyv,
+        nv21,
+        yuv420,
+    };
+
+    namespace detail
+    {
+        cairo_format_t cairo_format(pixel_format format);
+        uint32_t drm_format(pixel_format format);
+        pixel_format egt_format(uint32_t format);
+        pixel_format egt_format(cairo_format_t format);
+    }
+
+    /**
      * Base screen class.
      *
-     * A screen manages a surface.
+     * A screen manages one of more surfaces.
      */
     class IScreen
     {
@@ -57,13 +80,13 @@ namespace egt
         virtual uint32_t index() { return 0; }
 
         /**
-             * Size of the screen.
-             */
+         * Size of the screen.
+         */
         Size size() const { return m_size; }
 
         /**
-             * Bounding box for the screen.
-             */
+         * Bounding box for the screen.
+         */
         Rect box() const { return Rect(Point(), m_size); }
 
         /**
@@ -73,8 +96,6 @@ namespace egt
          */
         shared_cairo_t context() const { return m_cr; }
 
-        virtual ~IScreen();
-
         /**
          * This function implements the algorithm for adding damage rectangles
          * to a list.
@@ -82,10 +103,12 @@ namespace egt
         static void damage_algorithm(IScreen::damage_array& damage,
                                      const Rect& rect);
 
+        virtual ~IScreen();
+
     protected:
 
         void init(void** ptr, uint32_t count, int w, int h,
-                  uint32_t f = DRM_FORMAT_ARGB8888);
+                  pixel_format format = pixel_format::argb8888);
 
         struct DisplayBuffer
         {

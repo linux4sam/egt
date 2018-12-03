@@ -12,11 +12,13 @@
 #include <cstring>
 #include <sstream>
 #include <stdexcept>
-
+#include <chrono>
 
 #ifdef HAVE_LUA
 #include "lua/script.h"
 #endif
+
+using namespace std;
 
 namespace egt
 {
@@ -101,6 +103,21 @@ error:
             return filenames;
         }
 
+        //#define ENABLE_CODE_TIMER
+        void code_timer(const std::string& prefix, std::function<void ()> callback)
+        {
+#ifdef ENABLE_CODE_TIMER
+            auto start = chrono::steady_clock::now();
+#endif
+            callback();
+
+#ifdef ENABLE_CODE_TIMER
+            auto end = chrono::steady_clock::now();
+            auto diff = end - start;
+
+            cout << prefix << chrono::duration<double, milli>(diff).count() << endl;
+#endif
+        }
 
     }
 }

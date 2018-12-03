@@ -25,11 +25,12 @@ namespace egt
     {
     public:
 
-        explicit Canvas(const Size& size, cairo_format_t format = CAIRO_FORMAT_ARGB32);
+        explicit Canvas(const Size& size,
+                        cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
 
-        explicit Canvas(shared_cairo_surface_t surface);
+        explicit Canvas(shared_cairo_surface_t surface) noexcept;
 
-        Canvas(shared_cairo_surface_t surface, cairo_format_t format);
+        Canvas(shared_cairo_surface_t surface, cairo_format_t format) noexcept;
 
         /**
          * Get the context for the Canvas.

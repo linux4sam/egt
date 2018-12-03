@@ -105,17 +105,10 @@ namespace egt
         cairo_rectangle(cr.get(), x(), y(), w(), h());
         cairo_fill(cr.get());
 
-        //#define TIME_DRAW
-#ifdef TIME_DRAW
-        auto start = chrono::steady_clock::now();
-#endif
-        kplot_draw(p, w(), h(), cr.get());
-#ifdef TIME_DRAW
-        auto end = chrono::steady_clock::now();
-        auto diff = end - start;
-
-        cout << "kplot_draw: " << chrono::duration<double, milli>(diff).count() << endl;
-#endif
+        experimental::code_timer("kplot_draw: ", [&]()
+        {
+            kplot_draw(p, w(), h(), cr.get());
+        });
 
         kplot_free(p);
     }

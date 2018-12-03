@@ -487,7 +487,10 @@ namespace egt
         }
 
         /**
-         * Get a pointer to the IScreen instance, using using a parent as necessary.
+         * Get a pointer to the IScreen instance, using using a parent as
+         * necessary.
+         *
+         * @return An IScreen if available, or nullptr.
          */
         virtual IScreen* screen();
 

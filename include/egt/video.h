@@ -11,15 +11,14 @@
  * @brief Working with video output.
  */
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 #ifdef HAVE_GSTREAMER
 
-#ifdef HAVE_LIBPLANES
-#include <drm_fourcc.h>
-#endif
-#include <egt/window.h>
 #include <egt/planewindow.h>
+#include <egt/window.h>
 #include <gst/gst.h>
 #include <string>
 
@@ -34,7 +33,9 @@ namespace egt
         {
         public:
 
-            VideoWindow(const Size& size, uint32_t format = DRM_FORMAT_XRGB8888, bool heo = false);
+            VideoWindow(const Size& size,
+                        pixel_format format = pixel_format::xrgb8888,
+                        bool heo = false);
 
             virtual void top_draw() override;
 
@@ -126,7 +127,7 @@ namespace egt
 
         private:
 
-
+            VideoWindow() = delete;
         };
 
 
@@ -137,7 +138,7 @@ namespace egt
         {
         public:
 
-            HardwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUYV);
+            HardwareVideo(const Size& size, pixel_format format = pixel_format::yuyv);
 
             /**
              * @brief Sets the media file URI to the current pipeline
@@ -160,7 +161,7 @@ namespace egt
         {
         public:
 
-            SoftwareVideo(const Size& size, uint32_t format = DRM_FORMAT_YUV420);
+            SoftwareVideo(const Size& size, pixel_format format = pixel_format::yuv420);
 
             virtual bool set_media(const std::string& uri) override;
 

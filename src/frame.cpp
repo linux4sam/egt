@@ -341,24 +341,16 @@ namespace egt
                 // don't give a child a rectangle that is outside of its own box
                 auto r = Rect::intersection(crect, child->box());
 
+                // no matter what the child draws, clip the output to only the
+                // rectangle we care about updating
                 Painter::AutoSaveRestore sr(painter);
                 painter.rectangle(r);
                 painter.clip();
 
-
-                //#define TIME_DRAW
-#ifdef TIME_DRAW
-                auto start = chrono::steady_clock::now();
-#endif
-
-                child->draw(painter, r);
-
-#ifdef TIME_DRAW
-                auto end = chrono::steady_clock::now();
-                auto diff = end - start;
-
-                cout << child->name() << " draw: " << chrono::duration<double, milli>(diff).count() << endl;
-#endif
+                experimental::code_timer(child->name() + " draw: ", [&]()
+                {
+                    child->draw(painter, r);
+                });
             }
         }
     }
