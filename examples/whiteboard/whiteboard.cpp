@@ -249,6 +249,8 @@ public:
                     Line line(m_last, event_mouse());
                     Painter painter(m_canvas.context());
                     painter.set_line_width(width);
+                    auto cr = painter.context();
+                    cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
                     painter.set_color(m_penpicker.color());
                     painter.line(line.start(), line.end());
                     painter.stroke();

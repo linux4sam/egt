@@ -8,7 +8,6 @@
 #include "config.h"
 #endif
 
-#include <cmath>
 #include <egt/ui>
 #include <iostream>
 #include <map>
@@ -37,6 +36,52 @@ public:
     Image m_img;
 };
 
+class Draggable
+{
+public:
+
+    /**
+     * Start dragging.
+     *
+     * @param start The starting point from where the dragging diff() will
+     * be calculated relative to the current mouse position.
+     */
+    void start_drag(const Point& start)
+    {
+        m_starting_pos = start;
+        m_starting = event_mouse();
+        m_dragging = true;
+    }
+
+    /**
+     * Stop any active dragging state.
+     */
+    void stop_drag()
+    {
+        m_dragging = false;
+    }
+
+    /**
+     * Is dragging currently enabled?
+     */
+    bool dragging() const { return m_dragging; }
+
+    /**
+     * Get the difference between the current mouse position and the starting
+     * widget position.
+     */
+    Point diff()
+    {
+        auto diff = m_starting - event_mouse();
+        return m_starting_pos - diff;
+    }
+
+protected:
+    bool m_dragging{false};
+    Point m_starting;
+    Point m_starting_pos;
+};
+
 class FloatingBox
 {
 public:
@@ -44,32 +89,64 @@ public:
         : m_widget(widget),
           m_mx(mx),
           m_my(my)
-    {}
+    {
+        widget->on_event([this](eventid event)
+        {
+            switch (event)
+            {
+            case eventid::MOUSE_DOWN:
+            {
+                m_draggable.start_drag(m_widget->box().point());
+                return 1;
+            }
+            case eventid::MOUSE_UP:
+                m_draggable.stop_drag();
+                return 1;
+            case eventid::MOUSE_MOVE:
+                if (m_draggable.dragging())
+                {
+                    Rect dest(m_draggable.diff(), m_widget->box().size());
+                    if (main_window()->box().contains(dest))
+                        m_widget->move(m_draggable.diff());
+                    return 1;
+                }
+                break;
+            default:
+                break;
+            }
+
+            return 0;
+        });
+    }
 
     virtual void next_frame()
     {
-        int x = m_widget->x() + m_mx;
-        int y = m_widget->y() + m_my;
+        if (m_draggable.dragging())
+            return;
 
-        if (x + m_widget->w() >= main_window()->size().w)
-            m_mx *= -1;
+        auto p = Point(m_widget->x() + m_mx,
+                       m_widget->y() + m_my);
 
-        if (x < 0)
-            m_mx *= -1;
+        if (m_widget->box().right() >= main_window()->size().w)
+            m_mx = std::fabs(m_mx) * -1;
 
-        if (y + m_widget->h() >= main_window()->size().h)
-            m_my *= -1;
+        if (p.x < 0)
+            m_mx = std::fabs(m_mx);
 
-        if (y < 0)
-            m_my *= -1;
+        if (m_widget->box().bottom() >= main_window()->size().h)
+            m_my = std::fabs(m_my) * -1;
 
-        m_widget->move(Point(x, y));
+        if (p.y < 0)
+            m_my = std::fabs(m_my);
+
+        m_widget->move(p);
     }
 
 protected:
     Widget* m_widget;
     int m_mx;
     int m_my;
+    Draggable m_draggable;
 };
 
 static vector<FloatingBox*> boxes;
@@ -97,7 +174,11 @@ int main(int argc, const char** argv)
         std::make_pair(-4 * f, 2 * f),
     };
 
+#ifdef HAVE_LIBPLANES
     uint32_t SOFT_COUNT = 2;
+#else
+    uint32_t SOFT_COUNT = 4;
+#endif
 
     // software
     for (uint32_t x = 0; x < SOFT_COUNT; x++)
@@ -105,6 +186,7 @@ int main(int argc, const char** argv)
         stringstream os;
         os << "image" << x << ".png";
         Image* image = new Image(os.str(), Point(100, 100));
+        image->set_name("software " + os.str());
         boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
         win.add(image);
     }
@@ -120,6 +202,7 @@ int main(int argc, const char** argv)
         stringstream os;
         os << "image" << x << ".png";
         Image* image = new Image(os.str());
+        image->set_name("hardware " + os.str());
         PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
         plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         plane->flag_set(widgetmask::NO_BACKGROUND);
@@ -127,6 +210,7 @@ int main(int argc, const char** argv)
         plane->show();
         plane->move(Point(100, 100));
         boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
+        win.add(plane);
     }
 #endif
 

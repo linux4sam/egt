@@ -268,7 +268,7 @@ namespace egt
 
         float touch_to_degrees(const Point& point)
         {
-            const Point c = this->center();
+            const Point c = this->center() - this->box().point();
             float radians = c.angle_to<float>(point);
             float angle = to_degrees(radians);
             if (angle < 0)

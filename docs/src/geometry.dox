@@ -16,10 +16,10 @@ Positive X moves to the right, and positive Y moves down.
 @image latex coordsys.png "Coordinate System" width=8cm
 
 There are three coordinate systems in EGT:
-- Window
+- Frame/Window
 
 @par
-The window coordinate system is what the widget hierarchy sees as the root.  A Window manages a surface, so that overall surface has a coordinate system.
+The window coordinate system is what the widget sees itself relative to.  A Window manages a surface, so that overall surface has a coordinate system.
 
 - Local/Widget
 

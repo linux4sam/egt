@@ -481,6 +481,17 @@ namespace egt
             return Rect(x, y, w, h);
         }
 
+        /**
+             * Returns true if this rectangle contains the specified one.
+             */
+        inline bool contains(const Rect& rhs) const
+        {
+            return rhs.right() < right() &&
+                   rhs.bottom() < bottom() &&
+                   rhs.left() > left() &&
+                   rhs.top() > top();
+        }
+
         dim_t x{0};
         dim_t y{0};
         dim_t w{0};
