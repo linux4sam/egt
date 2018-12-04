@@ -16,7 +16,7 @@ clean-local:
 
 style:
 	./scripts/style.sh --recursive $(top_srcdir)/examples/*.cpp
-	./scripts/style.sh $(top_srcdir)/include/egt/*.h $(top_srcdir)/src/*.cpp $(top_srcdir)/src/input/*.cpp
+	./scripts/style.sh --recursive $(top_srcdir)/include/*.h
 
 private_icons = $(wildcard $(top_srcdir)/icons/*.png)
 

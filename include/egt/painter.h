@@ -152,6 +152,8 @@ namespace egt
         virtual Painter& draw_arc(const Point& point, float radius,
                                   float angle1, float angle2);
 
+        virtual Painter& circle(const Circle& circle);
+
         virtual Painter& clip();
 
         virtual void stroke()

@@ -156,6 +156,13 @@ namespace egt
         return *this;
     }
 
+    Painter& Painter::circle(const Circle& circle)
+    {
+        arc(circle.center, circle.radius, 0, 2 * M_PI);
+
+        return *this;
+    }
+
     Painter& Painter::set_font(const Font& font)
     {
         cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;

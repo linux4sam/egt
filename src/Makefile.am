@@ -84,6 +84,7 @@ $(top_srcdir)/include/egt/canvas.h \
 $(top_srcdir)/include/egt/chart.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/eventloop.h \
+$(top_srcdir)/include/egt/detail/floatingpoint.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
 $(top_srcdir)/include/egt/framebuffer.h \

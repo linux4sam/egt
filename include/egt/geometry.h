@@ -11,6 +11,7 @@
  * @brief Working with geometry.
  */
 
+#include <egt/detail/floatingpoint.h>
 #include <iosfwd>
 #include <cassert>
 #include <algorithm>
@@ -568,10 +569,47 @@ namespace egt
         Point m_end;
     };
 
-    /** @todo Implement circle. */
+    /**
+     * A basic circle with a center point and radius.
+     */
     class Circle
     {
+    public:
+        /**
+         * Construct a Circle object.
+         */
+        Circle(const Point& c = Point(), float r = 0.0f)
+            : center(c),
+              radius(r)
+        {
+        }
 
+        bool empty()
+        {
+            return radius < 0.0f ||
+                   detail::FloatingPoint<float>(radius).
+                   AlmostEquals(detail::FloatingPoint<float>(0.0f));
+        }
+
+        Point center;
+        float radius{0.0f};
+    };
+
+    class Arc : public Circle
+    {
+    public:
+        /**
+         * Construct Arc object.
+         */
+        Arc(const Point& c = Point(), float r = 0.0f, float a1 = 0.0f, float a2 = 0.0f)
+            : Circle(c, r),
+              angle1(a1),
+              angle2(a2)
+        {
+        }
+
+        float angle1;
+        float angle2;
     };
 
     /** @todo Implement polygon. */
