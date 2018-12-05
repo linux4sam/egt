@@ -10,11 +10,11 @@
 using namespace std;
 using namespace egt;
 
-class ThermostatWindow : public Window
+class ThermostatWindow : public TopWindow
 {
 public:
     explicit ThermostatWindow(const Size& size = Size())
-        : Window(size),
+        : TopWindow(size),
           m_a1(-200, 20,
                std::chrono::milliseconds(1500),
                easing_snap),
@@ -161,7 +161,7 @@ public:
 
     virtual void show() override
     {
-        Window::show();
+        TopWindow::show();
 
         m_a1.start();
         m_a2.start();

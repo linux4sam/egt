@@ -20,7 +20,7 @@ int main()
 
     set_image_path("../share/egt/examples/icon/");
 
-    Window win;
+    TopWindow win;
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
 
     auto NAV_WIDTH = 80;
@@ -86,7 +86,7 @@ int main()
 
     const Color FUCHSIA(Color::CSS("#F012BE"));
 
-    Popup<PlaneWindow> popup(Size(100, 40));
+    Popup<Window> popup(Size(100, 40));
     popup.move(Point(win.w() - 100 - 10 - NAV_WIDTH, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
     popup.set_name("popup");

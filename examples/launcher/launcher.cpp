@@ -131,7 +131,7 @@ private:
 /**
  * Main launcher window.
  */
-class LauncherWindow : public Window
+class LauncherWindow : public TopWindow
 {
 public:
     LauncherWindow()
@@ -163,12 +163,6 @@ public:
             }
             return 0;
         });
-
-#ifdef USE_PLANE_LAYER
-        add(&m_plane);
-        m_plane.resize(size());
-        m_plane.show();
-#endif
     }
 
     virtual int load(const std::string& expr)
@@ -191,12 +185,7 @@ public:
                 string exec = node->first_node("exec")->value();
 
                 LauncherItem* box = new LauncherItem(num++, name, description, image, exec);
-#ifdef USE_PLANE_LAYER
-                m_plane.add(box);
-#else
                 add(box);
-#endif
-
                 box->move_to_center(Point(m_boxes.size() * ITEM_SPACE, h() / 2));
 
 #ifdef DO_SCALING
@@ -249,7 +238,7 @@ public:
             break;
         }
 
-        return Window::handle(event);
+        return TopWindow::handle(event);
     }
 
     void move_boxes(int x)
@@ -303,9 +292,6 @@ public:
     }
 
 private:
-#ifdef USE_PLANE_LAYER
-    PlaneWindow m_plane;
-#endif
     bool m_moving {false};
     int m_moving_x{0};
     int m_offset{0};

@@ -133,7 +133,7 @@ namespace egt
         }
 
         VideoWindow::VideoWindow(const Size& size, pixel_format format, bool heo)
-            : PlaneWindow(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
+            : Window(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
         {
             gst_init(NULL, NULL);
             init_thread();

@@ -60,7 +60,7 @@ int main(int argc, const char** argv)
 
     set_image_path("../share/egt/charts/");
 
-    Window win;
+    TopWindow win;
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
     PieChart pie(Rect(10, 10, 600, 400));

@@ -115,45 +115,17 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        // TODO: this logic needs to be pushed up into draw() caller
-        Rect i = rect;
-        if (Rect::intersect(box(), rect))
-            i = Rect::intersection(rect, box());
-
-        Painter::AutoSaveRestore sr(painter);
         painter.set_color(m_color);
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-        painter.draw_fill(i);
+        painter.draw_fill(rect);
     }
 
 protected:
     Color m_color;
 };
 
-static void top_menu(Window* win)
+static void top_menu(BasicWindow* win)
 {
-#if 0
-    PlaneWindow plane(800, 60);
-    plane.position(0, 0);
-    plane.bgcolor(Color::BLACK);
-    plane.active(true);
-
-    Image i1("home.png", 5, 5);
-    plane.add(&i1);
-
-    Label l1("12:05", Point(320, 0), Size(100, 60), Label::ALIGN_CENTER, Font("Arial", 32));
-    l1.fgcolor(Color::WHITE);
-    plane.add(&l1);
-
-    Label l2("48°", Point(420, 0), Size(100, 60), Label::ALIGN_CENTER, Font("Arial", 24));
-    l2.fgcolor(Color::WHITE);
-    plane.add(&l2);
-
-    Image i2("wifi.png",
-             800 - 80, 5);
-    plane.add(&i2);
-#endif
-
     Box* box1 = new Box(Rect(Size(800, 60)), Color::BLACK);
     win->add(box1);
 
@@ -199,7 +171,7 @@ static void top_menu(Window* win)
     win->add(i2);
 }
 
-static void bottom_menu(Window* win)
+static void bottom_menu(BasicWindow* win)
 {
     Box* box2 = new Box(Rect(Point(0, 390), Size(800, 90)), Color::LIGHTGRAY);
     win->add(box2);
@@ -225,11 +197,11 @@ static void bottom_menu(Window* win)
     grid2->reposition();
 }
 
-class MainWindow : public Window
+class MainWindow : public TopWindow
 {
 public:
     explicit MainWindow(const Size& size)
-        : Window(size),
+        : TopWindow(size),
           grid(Rect(Point(0, 60), Size(800, 330)), 4, 2, 10)
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);

@@ -20,27 +20,39 @@
 namespace egt
 {
     /**
-     * A PlaneWindow uses a hardware overlay as a screen.
+     * A Window uses a hardware overlay as a screen.
      *
-     * PlaneWindow seperates "changing attributes" and "applying attributes".
+     * Window seperates "changing attributes" and "applying attributes".
      * This maps to the libplanes plane_apply() function. Which, is the same way
      * event handle() vs. draw() works in this toolkit.
      */
-    class PlaneWindow : public Window
+    class Window : public BasicWindow
     {
     public:
 
         constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
-        explicit PlaneWindow(const Size& size = Size(),
+        explicit Window(const Size& size = Size(),
                              widgetmask flags = widgetmask::WINDOW_DEFAULT,
                              pixel_format format = DEFAULT_FORMAT,
                              bool heo = false);
 
-        explicit PlaneWindow(const Rect& rect,
+        explicit Window(const Rect& rect,
                              widgetmask flags = widgetmask::WINDOW_DEFAULT,
                              pixel_format format = DEFAULT_FORMAT,
                              bool heo = false);
+
+	virtual void damage() override
+	{
+            BasicWindow::damage();
+	}
+
+        virtual IScreen* screen() override
+        {
+            allocate_screen();
+            assert(m_screen);
+            return m_screen;
+        }
 
         virtual void damage(const Rect& rect) override;
 
@@ -54,7 +66,7 @@ namespace egt
 
         virtual void paint(Painter& painter) override;
 
-        virtual ~PlaneWindow();
+        virtual ~Window();
 
     protected:
 

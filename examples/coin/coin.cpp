@@ -18,11 +18,11 @@ using namespace egt;
  *
  * It is the size of the screen and scrolls from right off-stage to left off-stage.
  */
-class ObstacleLayer : public PlaneWindow
+class ObstacleLayer : public Window
 {
 public:
     explicit ObstacleLayer(int speed)
-        : PlaneWindow(Size(800, 480), widgetmask::WINDOW_DEFAULT, pixel_format::argb8888),
+        : Window(Size(800, 480), widgetmask::WINDOW_DEFAULT, pixel_format::argb8888),
           m_speed(speed),
           m_x(0),
           e1(r()),
@@ -210,12 +210,12 @@ protected:
     StaticGrid m_grid2;
 };
 
-class SceneLayer : public PlaneWindow
+class SceneLayer : public Window
 {
 public:
 
     SceneLayer(Image& image, const Point& pos, const Size& size, int speed)
-        : PlaneWindow(image.size(), widgetmask::WINDOW_DEFAULT, pixel_format::rgb565),
+        : Window(image.size(), widgetmask::WINDOW_DEFAULT, pixel_format::rgb565),
           m_image(image),
           m_speed(speed),
           m_x(0)

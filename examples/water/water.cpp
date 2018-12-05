@@ -48,14 +48,11 @@ private:
     int m_yspeed;
 };
 
-class MainWindow : public Window
+class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : Window(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
-          /*PlaneWindow(Size(KMSScreen::instance()->size().w,
-                                     KMSScreen::instance()->size().h),
-                                FLAG_WINDOW_DEFAULT | FLAG_NO_BACKGROUND, DRM_FORMAT_XRGB8888),*/
+        : TopWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
           e1(r())
     {
         Image* img = new Image("water_1080.png");
@@ -86,7 +83,7 @@ public:
             break;
         }
 
-        return Window::handle(event);
+        return TopWindow::handle(event);
     }
 
     void spawn(const Point& p)

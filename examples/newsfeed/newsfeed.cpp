@@ -147,9 +147,10 @@ int main()
 {
     Application app;
 
-    Window win;
+    TopWindow win;
 
-    ListBox list(win, Rect(Point(), Size(win.w(), win.h())));
+    ListBox list(win);
+    list.set_align(alignmask::EXPAND);
 
     load(SHARED_PATH "feed.xml", list);
 

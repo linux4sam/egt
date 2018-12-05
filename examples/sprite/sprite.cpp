@@ -35,7 +35,7 @@ int main(int argc, const char** argv)
 
     set_image_path("../share/egt/examples/sprite/");
 
-    Window win;
+    TopWindow win;
     Image img("background.png");
     win.add(&img);
     if (img.h() != win.h())
@@ -147,7 +147,7 @@ int main(int argc, const char** argv)
 
     win.show();
 
-    Popup<PlaneWindow> popup(Size(100, 80));
+    Popup<Window> popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
     popup.set_name("popup");

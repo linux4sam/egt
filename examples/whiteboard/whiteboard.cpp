@@ -12,12 +12,12 @@
 using namespace egt;
 using namespace std;
 
-class ColorPickerWindow : public Popup<PlaneWindow>
+class ColorPickerWindow : public Popup<Window>
 {
 public:
 
     explicit ColorPickerWindow(const Color& color)
-        : Popup<PlaneWindow>(main_screen()->size() / 2),
+        : Popup<Window>(main_screen()->size() / 2),
           m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 5, 10),
           m_color(color)
     {
@@ -133,7 +133,7 @@ protected:
     int m_width{2};
 };
 
-class MainWindow : public Window
+class MainWindow : public TopWindow
 {
 public:
 
@@ -226,7 +226,7 @@ public:
 
     int handle(eventid event) override
     {
-        auto ret = Window::handle(event);
+        auto ret = TopWindow::handle(event);
         if (ret)
             return ret;
 
@@ -284,7 +284,7 @@ public:
 
         painter.draw_image(rect, rect.point(), m_canvas.surface());
 
-        Window::draw(painter, rect);
+        TopWindow::draw(painter, rect);
     }
 
     Point m_last;

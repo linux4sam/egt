@@ -18,11 +18,11 @@
 using namespace std;
 using namespace egt;
 
-class MyWindow : public Window
+class MyWindow : public TopWindow
 {
 public:
     MyWindow()
-        : Window(Size(), widgetmask::NO_BACKGROUND),
+        : TopWindow(Size(), widgetmask::NO_BACKGROUND),
           m_img("background.png")
     {
         add(&m_img);
@@ -203,7 +203,7 @@ int main(int argc, const char** argv)
         os << "image" << x << ".png";
         Image* image = new Image(os.str());
         image->set_name("hardware " + os.str());
-        PlaneWindow* plane = new PlaneWindow(Size(image->w(), image->h()));
+        auto plane = new Window(Size(image->w(), image->h()));
         plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         plane->flag_set(widgetmask::NO_BACKGROUND);
         plane->add(image);

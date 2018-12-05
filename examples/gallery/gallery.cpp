@@ -23,7 +23,7 @@ int main(int argc, const char** argv)
 
     std::vector<std::string> files = experimental::glob(SHARED_PATH "*trailer*.png");
 
-    Window win;
+    TopWindow win;
     win.set_name("win");
     win.flag_set(widgetmask::NO_BORDER);
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);

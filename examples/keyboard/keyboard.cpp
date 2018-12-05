@@ -20,9 +20,9 @@ int main(int argc, const char** argv)
 
     set_image_path("../share/egt/examples/keyboard/");
 
-    Window win;
+    TopWindow win;
 
-    Keyboard<PlaneWindow> keyboard;
+    Keyboard<Window> keyboard;
     keyboard.show();
 
     MultilineTextBox textbox(Rect(0, 0, 100, 100), alignmask::LEFT | alignmask::TOP);

@@ -20,30 +20,10 @@ int main(int argc, const char** argv)
 
     set_image_path("../share/egt/examples/widgets/");
 
-#if 0
-    Popup<Window> popup(Size(100, 100));
-    popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
-
-    Button btn1("button 1", Rect(Point(100, 250), Size(100, 40)));
-    win.add(&btn1);
-
-    btn1.on_event([&popup](eventid event)
-    {
-        if (event == eventid::MOUSE_DOWN)
-        {
-            if (popup.visible())
-                popup.hide();
-            else
-                popup.show(true);
-        }
-    });
-#endif
-
-    Window win;
+    TopWindow win;
 
     StaticGrid grid0(Rect(Point(), Size(win.w() / 2, win.h())), 2, 10, 5);
     win.add(&grid0);
-    //grid0.align(alignmask::EXPAND);
 
     Label label1("left align", Rect(),
                  alignmask::LEFT | alignmask::CENTER, Font(), widgetmask::NONE);
@@ -63,21 +43,6 @@ int main(int argc, const char** argv)
 
     Button btn1("button 1", Rect(Point(), Size(100, 40)));
     grid0.add(&btn1);
-
-#if 0
-    btn1.on_event([&popup](eventid event)
-    {
-
-        if (event == eventid::MOUSE_DOWN)
-        {
-            if (popup.visible())
-                popup.hide();
-            else
-                popup.show(true);
-        }
-
-    });
-#endif
 
     Button btn2("button 2");
     btn2.disable();
@@ -100,24 +65,6 @@ int main(int argc, const char** argv)
     TextBox text2("text 2 disabled");
     text2.disable();
     grid0.add(&text2);
-
-#if 0
-    // TODO: this is broken with keyboard and focus - get dups
-    detail::IInput::global_input().on_event([&text1](eventid event)
-    {
-        switch (event)
-        {
-        case eventid::KEYBOARD_DOWN:
-        case eventid::KEYBOARD_UP:
-        case eventid::KEYBOARD_REPEAT:
-            return text1.handle(event);
-            break;
-        default:
-            break;
-        }
-        return 0;
-    });
-#endif
 
     ImageLabel imagelabel1("@bug.png", "Bug");
     grid0.add(&imagelabel1);

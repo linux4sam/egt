@@ -29,7 +29,7 @@ namespace egt
         /**
          * Hardware based video window.
          */
-        class VideoWindow : public PlaneWindow
+        class VideoWindow : public Window
         {
         public:
 

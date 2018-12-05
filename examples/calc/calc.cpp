@@ -15,7 +15,7 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv);
 
-    Window win;
+    TopWindow win;
 
     StaticGrid topgrid(Rect(), 1, 2);
     win.add(&topgrid);

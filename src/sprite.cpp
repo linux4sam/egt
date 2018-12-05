@@ -44,7 +44,7 @@ namespace egt
     HardwareSprite::HardwareSprite(const std::string& filename, const Size& frame_size,
                                    int framecount, const Point& frame_point,
                                    const Point& point)
-        : PlaneWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND,
+        : Window(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND,
                       pixel_format::argb8888),
           ISpriteBase(filename, frame_size, framecount, frame_point)
     {

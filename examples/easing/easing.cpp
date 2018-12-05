@@ -76,11 +76,10 @@ public:
     }
 };
 
-class MainWindow : public Window
+class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : Window()
     {}
 
     int load()
@@ -92,55 +91,40 @@ public:
 
         MyListBox::item_array items;
         items.resize(curves_names.size());
-        transform(curves_names.begin(), curves_names.end(), items.begin(), [](const StringItem & v) { return new StringItem(v);});
+        transform(curves_names.begin(), curves_names.end(), items.begin(),
+                  [](const StringItem & v) { return new StringItem(v);});
         MyListBox* list1 = new MyListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
         add(list1);
         list1->set_select(7);
 
-#ifndef USE_HARDWARE
-        m_box = new Image("ball.png");
-        add(m_box);
-#else
         Image* image = new Image("ball.png");
         // There is a bug on 9x5 that if the plane is all the way out of view
         // then it will cause glitches. So, we create the height (which will
         // be invisible), to always keep a portion of the plane on screen
         // alternate of making the plane the same exact size as the image.
-        m_box = new PlaneWindow(Size(100, 200));
-        m_box->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+#ifdef USE_HARDWARE
+        m_box = new Window(Size(100, 200));
+#else
+        m_box = new BasicWindow(Size(100, 200));
+#endif
+        //m_box->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         m_box->flag_set(widgetmask::NO_BACKGROUND);
         m_box->add(image);
-        m_box->show();
-#endif
         m_box->move(Point(w() / 2 - m_box->w() / 2, -110));
+        m_box->show();
+
+        add(m_box);
 
         return 0;
     }
 
-    void move_item(int x)
+    void move_item(int y)
     {
-        int pos = x;
-
-        Rect to(m_box->box());
-        to.y = pos;
-        bool visible = Rect::intersect(Rect::merge(to, m_box->box()), this->box());
-
-        if (visible)
-        {
-            m_box->move(Point(m_box->x(), pos));
-        }
-        else
-        {
-            m_box->move(Point(m_box->x(), pos));
-        }
+        m_box->move(Point(m_box->x(), y));
     }
 
 private:
-#ifndef USE_HARDWARE
-    Image* m_box {nullptr};
-#else
-    PlaneWindow* m_box {nullptr};
-#endif
+    BasicWindow* m_box{nullptr};
 };
 
 struct ResetTimer : public Timer

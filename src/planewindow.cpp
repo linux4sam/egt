@@ -15,9 +15,9 @@ namespace egt
     static auto planewindow_id = 0;
 
 #ifdef HAVE_LIBPLANES
-    PlaneWindow::PlaneWindow(const Size& size, widgetmask flags,
+    Window::Window(const Size& size, widgetmask flags,
                              pixel_format format, bool heo)
-        : Window(size, flags | widgetmask::PLANE_WINDOW),
+        : BasicWindow(size, flags | widgetmask::PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
     {
@@ -32,9 +32,9 @@ namespace egt
         m_screen = nullptr;
     }
 
-    PlaneWindow::PlaneWindow(const Rect& rect, widgetmask flags,
+    Window::Window(const Rect& rect, widgetmask flags,
                              pixel_format format, bool heo)
-        : Window(rect.size(), flags | widgetmask::PLANE_WINDOW),
+        : BasicWindow(rect.size(), flags | widgetmask::PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
     {
@@ -50,7 +50,7 @@ namespace egt
         m_screen = nullptr;
     }
 
-    void PlaneWindow::do_resize(const Size& size)
+    void Window::do_resize(const Size& size)
     {
         if (!size.empty())
         {
@@ -60,7 +60,7 @@ namespace egt
         }
     }
 
-    void PlaneWindow::move(const Point& point)
+    void Window::move(const Point& point)
     {
         if (point != box().point())
         {
@@ -70,7 +70,7 @@ namespace egt
     }
 
     // damage to a plane window does not propagate up, unlike a normal frame
-    void PlaneWindow::damage(const Rect& rect)
+    void Window::damage(const Rect& rect)
     {
         auto crect = Rect(rect.point() - box().point(), rect.size());
 
@@ -86,7 +86,7 @@ namespace egt
         add_damage(crect);
     }
 
-    void PlaneWindow::allocate_screen()
+    void Window::allocate_screen()
     {
         if (!m_screen)
         {
@@ -96,7 +96,7 @@ namespace egt
         }
     }
 
-    void PlaneWindow::top_draw()
+    void Window::top_draw()
     {
         if (!m_box.size().empty())
         {
@@ -117,11 +117,11 @@ namespace egt
                 }
             }
 
-            Window::do_draw();
+            BasicWindow::do_draw();
         }
     }
 
-    void PlaneWindow::paint(Painter& painter)
+    void Window::paint(Painter& painter)
     {
         Painter::AutoSaveRestore sr(painter);
 
@@ -129,13 +129,13 @@ namespace egt
         painter.draw_image(point(), surface);
     }
 
-    void PlaneWindow::show()
+    void Window::show()
     {
         m_dirty = true;
-        Window::show();
+        BasicWindow::show();
     }
 
-    void PlaneWindow::hide()
+    void Window::hide()
     {
         KMSOverlay* s = dynamic_cast<KMSOverlay*>(m_screen);
         if (s)
@@ -144,63 +144,59 @@ namespace egt
             m_dirty = false;
         }
 
-        Window::hide();
+        BasicWindow::hide();
     }
 #else
-    PlaneWindow::PlaneWindow(const Size& size, widgetmask flags, pixel_format format, bool heo)
-        : Window(size, flags)
+    Window::Window(const Size& size, widgetmask flags, pixel_format format, bool heo)
+        : BasicWindow(size, flags)
     {
         ignoreparam(format);
         ignoreparam(heo);
-
-        ostringstream ss;
-        ss << "planewindow" << planewindow_id++;
-        set_name(ss.str());
     }
 
-    PlaneWindow::PlaneWindow(const Rect& rect, widgetmask flags,
+    Window::Window(const Rect& rect, widgetmask flags,
                              pixel_format format, bool heo)
-        : PlaneWindow(rect.size(), flags, format, heo)
+        : Window(rect.size(), flags, format, heo)
     {
         m_box = rect;
     }
 
-    void PlaneWindow::damage(const Rect& rect)
+    void Window::damage(const Rect& rect)
     {
-        Window::damage(rect);
+        BasicWindow::damage(rect);
     }
 
-    void PlaneWindow::move(const Point& point)
+    void Window::move(const Point& point)
     {
-        Window::move(point);
+        BasicWindow::move(point);
     }
 
-    void PlaneWindow::allocate_screen()
+    void Window::allocate_screen()
     {
     }
 
-    void PlaneWindow::top_draw()
+    void Window::top_draw()
     {
-        Window::top_draw();
+        BasicWindow::top_draw();
     }
 
-    void PlaneWindow::paint(Painter& painter)
+    void Window::paint(Painter& painter)
     {
-        Window::paint(painter);
+        BasicWindow::paint(painter);
     }
 
-    void PlaneWindow::show()
+    void Window::show()
     {
-        Window::show();
+        BasicWindow::show();
     }
 
-    void PlaneWindow::hide()
+    void Window::hide()
     {
-        Window::hide();
+        BasicWindow::hide();
     }
 #endif
 
-    PlaneWindow::~PlaneWindow()
+    Window::~Window()
     {
         /** @todo Need to release plane. */
     }

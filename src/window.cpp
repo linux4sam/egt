@@ -13,31 +13,31 @@ using namespace std;
 
 namespace egt
 {
-    static std::vector<Window*> the_windows;
-    static Window* the_main_window = nullptr;
-    static Window* the_modal_window = nullptr;
+    static std::vector<BasicWindow*> the_windows;
+    static BasicWindow* the_main_window = nullptr;
+    static BasicWindow* the_modal_window = nullptr;
     static auto window_id = 0;
 
-    Window*& main_window()
+    BasicWindow*& main_window()
     {
         return the_main_window;
     }
 
-    Window*& modal_window()
+    BasicWindow*& modal_window()
     {
         return the_modal_window;
     }
 
-    std::vector<Window*>& windows()
+    std::vector<BasicWindow*>& windows()
     {
         return the_windows;
     }
 
-    Window::Window(const Size& size, widgetmask flags)
+    BasicWindow::BasicWindow(const Size& size, widgetmask flags)
         : Frame(Rect(size), flags | widgetmask::WINDOW)
     {
         ostringstream ss;
-        ss << "window" << window_id++;
+        ss << "basicwindow" << window_id++;
         set_name(ss.str());
 
         DBG("new window " << name() << " " << size);
@@ -67,13 +67,13 @@ namespace egt
         m_screen = main_screen();
     }
 
-    Window::Window(const Rect& rect, widgetmask flags)
-        : Window(rect.size(), flags)
+    BasicWindow::BasicWindow(const Rect& rect, widgetmask flags)
+        : BasicWindow(rect.size(), flags)
     {
         move(rect.point());
     }
 
-    void Window::set_main_window()
+    void BasicWindow::set_main_window()
     {
         the_main_window = this;
 
@@ -87,7 +87,7 @@ namespace egt
         damage();
     }
 
-    void Window::do_draw()
+    void BasicWindow::do_draw()
     {
         // this is a top level frame, we will use our damage bookkeeping to
         // draw what needs to be drawn
@@ -115,7 +115,7 @@ namespace egt
      * the oposite change happens to the rectangle origin.
      */
 
-    void Window::top_draw()
+    void BasicWindow::top_draw()
     {
         if (m_parent)
         {
@@ -126,7 +126,7 @@ namespace egt
         do_draw();
     }
 
-    Window::~Window()
+    BasicWindow::~BasicWindow()
     {
         auto i = find(the_windows.begin(), the_windows.end(), this);
         if (i != the_windows.end())

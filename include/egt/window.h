@@ -16,12 +16,12 @@
 
 namespace egt
 {
-    class Window;
+    class BasicWindow;
 
     /**
      * Get a pointer reference to the main window.
      */
-    Window*& main_window();
+    BasicWindow*& main_window();
 
     /**
      * Get a pointer reference to the modal window.
@@ -29,42 +29,42 @@ namespace egt
      * The modal window is a single window that will receive all events. Only
      * one window can be modal at any given time.
      */
-    Window*& modal_window();
+    BasicWindow*& modal_window();
 
     /**
-     * Get the list of all currently allocated Windows.
+     * Get the list of all currently allocated BasicWindows.
      */
-    std::vector<Window*>& windows();
+    std::vector<BasicWindow*>& windows();
 
     /**
-     * A Window is a Frame Widget that contains and is backed by a Screen.
+     * A BasicWindow is a Frame Widget that contains and is backed by a Screen.
      *
      * The first window created will automatically become the main window. It
      * will also be forced to the size of the main_screen().  To change this,
-     * call set_main_window() on any Window instance.
+     * call set_main_window() on any BasicWindow instance.
      *
-     * Any top level widget must be a Window.
+     * Any top level widget must be a BasicWindow.
      */
-    class Window : public Frame
+    class BasicWindow : public Frame
     {
     public:
 
         /**
-         * Construct a Window.
+         * Construct a BasicWindow.
          *
-         * @param[in] size The size of the Window.  The origin will be default to 0,0.
+         * @param[in] size The size of the BasicWindow.  The origin will be default to 0,0.
          * @param[in] flags Mask of widget flags.
          */
-        Window(const Size& size = Size(),
+        BasicWindow(const Size& size = Size(),
                widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
         /**
-         * Construct a Window.
+         * Construct a BasicWindow.
          *
-         * @param[in] rect The rectangle for the Window.
+         * @param[in] rect The rectangle for the BasicWindow.
          * @param[in] flags Mask of widget flags.
          */
-        Window(const Rect& rect,
+        BasicWindow(const Rect& rect,
                widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
         virtual void enter()
@@ -78,13 +78,13 @@ namespace egt
         }
 
         /**
-         * Change this Window to be the main Window.
+         * Change this BasicWindow to be the main BasicWindow.
          */
         virtual void set_main_window();
 
         /**
-         * The buck stops on this call to Widget::screen() with a Window
-         * because the Window contains the screen.
+         * The buck stops on this call to Widget::screen() with a BasicWindow
+         * because the BasicWindow contains the screen.
          */
         virtual IScreen* screen() override
         {
@@ -100,7 +100,7 @@ namespace egt
          */
         virtual void top_draw() override;
 
-        virtual ~Window();
+        virtual ~BasicWindow();
 
     protected:
 
@@ -178,6 +178,7 @@ namespace egt
         }
     };
 
+    using TopWindow = BasicWindow;
 }
 
 #endif

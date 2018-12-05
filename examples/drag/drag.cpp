@@ -19,11 +19,11 @@
 using namespace std;
 using namespace egt;
 
-class MainWindow : public Window
+class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : Window(Size(), widgetmask::NO_BACKGROUND),
+        : TopWindow(Size(), widgetmask::NO_BACKGROUND),
           m_img("background.png")
     {
         add(&m_img);

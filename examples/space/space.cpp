@@ -74,7 +74,7 @@ static bool debounce_mouse(int delta)
 #endif
 }
 
-class MainWindow : public Window
+class MainWindow : public TopWindow
 {
 public:
     MainWindow()
@@ -94,7 +94,7 @@ public:
             break;
         }
 
-        return Window::handle(event);
+        return TopWindow::handle(event);
     }
 
     void spawn(const Point& p)

@@ -144,7 +144,7 @@ namespace egt
     /**
      * Sprite widget using hardware planes.
      */
-    class HardwareSprite : public PlaneWindow, public ISpriteBase
+    class HardwareSprite : public Window, public ISpriteBase
     {
     public:
         HardwareSprite(const std::string& filename, const Size& frame_size,

@@ -16,49 +16,6 @@
 using namespace std;
 using namespace egt;
 
-#if 0
-template<class T>
-struct ShowAnimation : public experimental::AnimationTimer
-{
-    ShowAnimation(T* widget)
-        : AnimationTimer(480, 400, std::chrono::seconds(1), easing_rubber),
-          m_widget(widget)
-    {}
-
-    virtual void step(int value)
-    {
-        m_widget->move(Point(m_widget->x(), value));
-    }
-
-    T* m_widget;
-};
-
-template<class T>
-struct HideAnimation : public experimental::AnimationTimer
-{
-    HideAnimation(T* widget)
-        : AnimationTimer(400, 480, std::chrono::seconds(1), easing_rubber),
-          m_widget(widget)
-    {}
-
-    virtual void step(int value)
-    {
-        m_widget->move(Point(m_widget->x(), value));
-    }
-
-    T* m_widget;
-};
-
-static ShowAnimation<PlaneWindow>* show;
-static HideAnimation<PlaneWindow>* hide;
-
-static void set_control_window(PlaneWindow* window)
-{
-    show = new ShowAnimation<PlaneWindow>(window);
-    hide = new HideAnimation<PlaneWindow>(window);
-}
-#endif
-
 template <class T>
 class MyVideoWindow : public T
 {
@@ -91,16 +48,10 @@ public:
             {
                 T::move(Point(0, 0));
                 T::set_scale(m_fscale);
-#if 0
-                show->start();
-#endif
             }
             else
             {
                 T::scale(1.0);
-#if 0
-                hide->start();
-#endif
             }
 
             return 1;
@@ -138,11 +89,11 @@ private:
     double m_fscale;
 };
 
-class FpsWindow : public PlaneWindow
+class FpsWindow : public Window
 {
 public:
     FpsWindow()
-        : PlaneWindow(Size(100, 50),
+        : Window(Size(100, 50),
                       widgetmask::WINDOW_DEFAULT, pixel_format::argb8888)
     {
         m_label = new Label("FPS: 0",
@@ -169,7 +120,7 @@ int main(int argc, const char** argv)
         return 1;
     }
 
-    Application app/*(false)*/;
+    Application app;
 
     VideoWindow* window = 0;
     if (argv[1] == string("v4l2"))
@@ -198,7 +149,7 @@ int main(int argc, const char** argv)
     fpslabel.show();
 #endif
 
-    PlaneWindow ctrlwindow(Size(600, 80));
+    Window ctrlwindow(Size(600, 80));
     ctrlwindow.set_name("ctrl");
     window->add(&ctrlwindow);
     ctrlwindow.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));

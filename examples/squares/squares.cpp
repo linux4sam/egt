@@ -14,7 +14,7 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv);
 
-    Window win;
+    TopWindow win;
 
     const Color FUCHSIA(Color::CSS("#F012BE"));
 
@@ -25,7 +25,7 @@ int main(int argc, const char** argv)
     .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
-    Popup<PlaneWindow> popup(Size(100, 80));
+    Popup<Window> popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
     popup.set_name("popup");

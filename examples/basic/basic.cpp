@@ -18,7 +18,7 @@ int main(int argc, const char** argv)
     auto window = loader.load(SHARED_PATH "ui.xml");
     window->show();
 #else
-    egt::Window window;
+    egt::TopWindow window;
     egt::Button button(window, "Press Me");
     button.align(egt::alignmask::CENTER);
     window.show();

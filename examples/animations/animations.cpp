@@ -15,7 +15,8 @@ using namespace std;
 int main()
 {
     Application app;
-    Window win;
+
+    TopWindow win;
 
     StaticGrid grid(Rect(win.size()), 3, 2, 10);
     grid.flag_clear(widgetmask::NO_BORDER);

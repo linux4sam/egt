@@ -102,8 +102,8 @@ namespace egt
         /**
          * Center alignment is a weak alignment both horizontal and
          * vertical. To break one of those dimensions to another
-         * alignment, specify it in addiiton to ALIGN_CENTER.  If both
-         * are broken, ALIGN_CENTER has no effect.
+         * alignment, specify it in addiiton to CENTER.  If both
+         * are broken, CENTER has no effect.
          */
         CENTER = (1 << 0),
         /** Horizontal alignment. */
