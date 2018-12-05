@@ -30,8 +30,11 @@ namespace egt
     class TextBox : public TextWidget
     {
     public:
-        TextBox(const std::string& str = std::string(),
+        TextBox(const std::string& str,
                 const Rect& rect = Rect(),
+                alignmask align = alignmask::CENTER | alignmask::LEFT);
+
+        TextBox(const Rect& rect = Rect(),
                 alignmask align = alignmask::CENTER | alignmask::LEFT);
 
         virtual int handle(eventid event) override;
@@ -68,10 +71,19 @@ namespace egt
     class MultilineTextBox : public TextBox
     {
     public:
-        MultilineTextBox(const std::string& str = std::string(),
-                         const Rect& rect = Rect());
+        MultilineTextBox(const std::string& str,
+                         const Rect& rect = Rect(),
+                         alignmask align = alignmask::CENTER | alignmask::LEFT);
+
+        MultilineTextBox(const Rect& rect = Rect(),
+                         alignmask align = alignmask::CENTER | alignmask::LEFT);
 
         virtual void draw(Painter& painter, const Rect& rect) override;
+
+        virtual void set_wrap(bool state)
+        {
+            m_wrap = state;
+        }
 
         /**
          * Get the last line of the text box.
@@ -79,6 +91,11 @@ namespace egt
         std::string last_line() const;
 
         virtual ~MultilineTextBox();
+
+    private:
+
+        /** @todo Not implemented. */
+        bool m_wrap{false};
     };
 
 }

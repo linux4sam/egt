@@ -20,6 +20,48 @@ namespace egt
 {
     static auto widget_id = 0;
 
+    Rect Widget::align_algorithm(const Size& size, const Rect& bounding,
+                                 alignmask align, int margin)
+    {
+        assert(align != alignmask::NONE);
+
+        if ((align & alignmask::EXPAND) == alignmask::EXPAND)
+            return bounding;
+
+        Point p;
+        auto nsize = size;
+
+        if ((align & alignmask::CENTER) == alignmask::CENTER)
+        {
+            p.x = bounding.x + (bounding.w / 2) - (size.w / 2);
+            p.y = bounding.y + (bounding.h / 2) - (size.h / 2);
+        }
+
+        if ((align & alignmask::LEFT) == alignmask::LEFT)
+            p.x = bounding.x + margin;
+        else if ((align & alignmask::RIGHT) == alignmask::RIGHT)
+            p.x = bounding.x + bounding.w - size.w - margin;
+
+        if ((align & alignmask::TOP) == alignmask::TOP)
+            p.y = bounding.y + margin;
+        else if ((align & alignmask::BOTTOM) == alignmask::BOTTOM)
+            p.y = bounding.y + bounding.h - size.h - margin;
+
+        if ((align & alignmask::EXPAND_HORIZONTAL) == alignmask::EXPAND_HORIZONTAL)
+        {
+            nsize.w = bounding.w;
+            p.x = bounding.x;
+        }
+
+        if ((align & alignmask::EXPAND_VERTICAL) == alignmask::EXPAND_VERTICAL)
+        {
+            nsize.h = bounding.h;
+            p.y = bounding.y;
+        }
+
+        return Rect(p, nsize);
+    }
+
     Widget::Widget(const Rect& rect, widgetmask flags) noexcept
         : m_box(rect),
           m_flags(flags)

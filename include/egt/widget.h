@@ -114,8 +114,12 @@ namespace egt
         TOP = (1 << 3),
         /** Vertical alignment. */
         BOTTOM = (1 << 4),
+        /** Expand only horizontally. */
+        EXPAND_HORIZONTAL = (1 << 5),
+        /** Expand only vertically. */
+        EXPAND_VERTICAL = (1 << 6),
         /** Don't align, expand. */
-        EXPAND = (1 << 5),
+        EXPAND = EXPAND_HORIZONTAL | EXPAND_VERTICAL,
     };
 
     ENABLE_BITMASK_OPERATORS(alignmask)
@@ -141,33 +145,7 @@ namespace egt
          * return the rectangle the item box should be move/resized to.
          */
         static Rect align_algorithm(const Size& size, const Rect& bounding,
-                                    alignmask align, int margin = 0)
-        {
-            assert(align != alignmask::NONE);
-
-            if ((align & alignmask::EXPAND) == alignmask::EXPAND)
-                return bounding;
-
-            Point p;
-
-            if ((align & alignmask::CENTER) == alignmask::CENTER)
-            {
-                p.x = bounding.x + (bounding.w / 2) - (size.w / 2);
-                p.y = bounding.y + (bounding.h / 2) - (size.h / 2);
-            }
-
-            if ((align & alignmask::LEFT) == alignmask::LEFT)
-                p.x = bounding.x + margin;
-            else if ((align & alignmask::RIGHT) == alignmask::RIGHT)
-                p.x = bounding.x + bounding.w - size.w - margin;
-
-            if ((align & alignmask::TOP) == alignmask::TOP)
-                p.y = bounding.y + margin;
-            else if ((align & alignmask::BOTTOM) == alignmask::BOTTOM)
-                p.y = bounding.y + bounding.h - size.h - margin;
-
-            return Rect(p, size);
-        }
+                                    alignmask align, int margin = 0);
 
         /**
          * Construct a widget.

@@ -26,6 +26,10 @@ namespace egt
         palette().set(Palette::TEXT, Palette::GROUP_DISABLED, palette().color(Palette::DARK));
     }
 
+    TextBox::TextBox(const Rect& rect, alignmask align)
+        : TextBox(std::string(), rect, align)
+    {}
+
     void TextBox::set_focus()
     {
         start_cursor();
@@ -71,7 +75,7 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_box(*this, Painter::boxtype::rounded_border);
+        painter.draw_box(*this, Painter::boxtype::rounded_borderfill);
 
         // text
         Rect bounding = painter.draw_text(m_text, box(),
@@ -125,8 +129,14 @@ namespace egt
     {}
 
     MultilineTextBox::MultilineTextBox(const std::string& str,
-                                       const Rect& rect)
-        : TextBox(str, rect)
+                                       const Rect& rect,
+                                       alignmask align)
+        : TextBox(str, rect, align)
+    {}
+
+    MultilineTextBox::MultilineTextBox(const Rect& rect,
+                                       alignmask align)
+        : MultilineTextBox(std::string(), rect, align)
     {}
 
     void MultilineTextBox::draw(Painter& painter, const Rect& rect)
@@ -134,7 +144,7 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_box(*this, Painter::boxtype::rounded_border);
+        painter.draw_box(*this, Painter::boxtype::rounded_borderfill);
 
         // text
         painter.set_font(font());

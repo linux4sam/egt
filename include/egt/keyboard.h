@@ -29,7 +29,7 @@ namespace egt
               m_grid(Rect(), 10, 4, 5)
         {
             this->add(&m_grid);
-            this->m_grid.align(alignmask::EXPAND);
+            this->m_grid.set_align(alignmask::EXPAND);
 
             /*
             template <class T>
@@ -44,7 +44,7 @@ namespace egt
             {
                 {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p" },
                 {"", "a", "s", "d", "f", "g", "h", "j", "k", "l" },
-                {"icons/arrow_up.png", "z", "x", "c", "v", "b", "n", "m", "", "icons/arrow_left.png"},
+                {"@arrow_up.png", "z", "x", "c", "v", "b", "n", "m", "", "@arrow_left.png"},
                 {"123", ",", "", "", "     ", "", "", "", "", "."}
             };
 
@@ -78,6 +78,8 @@ namespace egt
                                 detail::IInput::dispatch(eventid::KEYBOARD_UP);
                             }
                         }
+
+                        return 0;
                     });
 
                     this->m_grid.add(b, c, r);

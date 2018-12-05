@@ -34,6 +34,7 @@ frames/frames \
 gallery/gallery \
 icon/icon \
 infotain/infotain \
+keyboard/keyboard \
 space/space \
 squares/squares \
 thermostat/thermostat \
@@ -213,3 +214,8 @@ frames_frames_SOURCES = frames/frames.cpp
 frames_frames_CXXFLAGS = $(AM_CXXFLAGS)
 frames_frames_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 frames_frames_LDFLAGS = $(AM_LDFLAGS)
+
+keyboard_keyboard_SOURCES = keyboard/keyboard.cpp
+keyboard_keyboard_CXXFLAGS = $(AM_CXXFLAGS)
+keyboard_keyboard_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+keyboard_keyboard_LDFLAGS = $(AM_LDFLAGS)
