@@ -90,6 +90,7 @@ namespace egt
                 default:
                     assert(0);
                 }
+		break;
 
             case EV_ABS:
                 absolute_event = true;
@@ -102,6 +103,7 @@ namespace egt
                     y = (double)value;
                     break;
                 }
+		break;
 
             case EV_KEY:
                 switch (e->code)

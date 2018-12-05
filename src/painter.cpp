@@ -269,13 +269,16 @@ namespace egt
         case boxtype::border:
             draw_border_box(box,
                             widget.palette().color(Palette::BORDER, group));
+	    break;
         case boxtype::rounded_border:
             draw_rounded_border_box(box,
                                     widget.palette().color(Palette::BORDER, group));
+	    break;
         case boxtype::borderfill:
             draw_border_fill_box(box,
                                  widget.palette().color(Palette::BORDER, group),
                                  widget.palette().color(Palette::BG, group));
+	    break;
         case boxtype::rounded_borderfill:
             draw_rounded_borderfill_box(box,
                                         widget.palette().color(Palette::BORDER, group),
