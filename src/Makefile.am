@@ -114,6 +114,7 @@ $(top_srcdir)/include/egt/ui \
 $(top_srcdir)/include/egt/uiloader.h \
 $(top_srcdir)/include/egt/utils.h \
 $(top_srcdir)/include/egt/valuewidget.h \
+$(top_srcdir)/include/egt/version.h \
 $(top_srcdir)/include/egt/video.h \
 $(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
