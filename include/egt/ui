@@ -45,13 +45,4 @@
 #include <egt/version.h>
 #include <egt/view.h>
 
-/**
- * This is a wrapper around gettext.
- * @todo Move me.
- */
-#include <libintl.h>
-#include <locale.h>
-
-#define _(String) gettext(String)
-
 #endif

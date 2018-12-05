@@ -6,9 +6,11 @@
 #ifndef EGT_APP_H
 #define EGT_APP_H
 
-#include <string>
 #include <egt/eventloop.h>
 #include <egt/utils.h>
+#include <libintl.h>
+#include <locale.h>
+#include <string>
 
 /**
  * @file
@@ -52,6 +54,11 @@ namespace egt
      * Reference to the main Application instance.
      */
     Application& main_app();
+
+    /**
+     * This is a wrapper around gettext.
+     */
+    #define _(String) gettext(String)
 
 }
 
