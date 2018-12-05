@@ -79,6 +79,7 @@ libegtincludedir = ${includedir}/egt
 libegtinclude_HEADERS = \
 $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
+$(top_srcdir)/include/egt/bitmask.h \
 $(top_srcdir)/include/egt/button.h \
 $(top_srcdir)/include/egt/canvas.h \
 $(top_srcdir)/include/egt/chart.h \
@@ -93,6 +94,7 @@ $(top_srcdir)/include/egt/grid.h \
 $(top_srcdir)/include/egt/image.h \
 $(top_srcdir)/include/egt/imagecache.h \
 $(top_srcdir)/include/egt/input.h \
+$(top_srcdir)/include/egt/keyboard.h \
 $(top_srcdir)/include/egt/kmsoverlay.h \
 $(top_srcdir)/include/egt/kmsscreen.h \
 $(top_srcdir)/include/egt/label.h \
@@ -112,6 +114,7 @@ $(top_srcdir)/include/egt/ui \
 $(top_srcdir)/include/egt/uiloader.h \
 $(top_srcdir)/include/egt/utils.h \
 $(top_srcdir)/include/egt/valuewidget.h \
+$(top_srcdir)/include/egt/version.h \
 $(top_srcdir)/include/egt/video.h \
 $(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
