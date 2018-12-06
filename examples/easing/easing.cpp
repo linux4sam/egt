@@ -24,8 +24,6 @@ using namespace egt;
 #define USE_HARDWARE
 #endif
 
-static Animation* animation = 0;
-
 static easing_func curves[] =
 {
     easing_linear,
@@ -42,7 +40,7 @@ static easing_func curves[] =
     easing_boing
 };
 
-static vector<StringItem> curves_names =
+static vector<StringItem> curve_names =
 {
     "linear",
     "easy",
@@ -58,28 +56,14 @@ static vector<StringItem> curves_names =
     "boing"
 };
 
-class MyListBox : public ListBox
-{
-public:
-    MyListBox(const item_array& items,
-              const Rect& rect = Rect())
-        : ListBox(items, rect)
-    {}
-
-    void set_select(uint32_t index) override
-    {
-        ListBox::set_select(index);
-
-        animation->stop();
-        animation->set_easing_func(curves[index]);
-        animation->start();
-    }
-};
-
 class MainWindow : public TopWindow
 {
 public:
     MainWindow()
+        : TopWindow(),
+          m_seq(true),
+          m_animation(-110, h() - 100, std::chrono::seconds(2)),
+          m_delay(std::chrono::seconds(1))
     {}
 
     int load()
@@ -89,13 +73,24 @@ public:
         add(img);
         img->scale(scale, scale);
 
-        MyListBox::item_array items;
-        items.resize(curves_names.size());
-        transform(curves_names.begin(), curves_names.end(), items.begin(),
+        ListBox::item_array items;
+        items.resize(curve_names.size());
+        transform(curve_names.begin(), curve_names.end(), items.begin(),
         [](const StringItem & v) { return new StringItem(v);});
-        MyListBox* list1 = new MyListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
+        ListBox* list1 = new ListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
         add(list1);
-        list1->set_select(7);
+
+        list1->on_event([this, list1](eventid event)
+        {
+            if (event == eventid::PROPERTY_CHANGED)
+            {
+                m_seq.reset();
+                m_animation.set_easing_func(curves[list1->selected()]);
+                m_seq.start();
+            }
+
+            return 0;
+        });
 
         Image* image = new Image("ball.png");
         // There is a bug on 9x5 that if the plane is all the way out of view
@@ -115,46 +110,23 @@ public:
 
         add(m_box);
 
-        return 0;
-    }
+        m_animation.on_change(std::bind(&BasicWindow::set_y, m_box, std::placeholders::_1));
+        m_seq.add(&m_animation);
+        m_seq.add(&m_delay);
 
-    void move_item(int y)
-    {
-        m_box->move(Point(m_box->x(), y));
+        list1->set_select(7);
+
+        m_seq.start();
+
+        return 0;
     }
 
 private:
     BasicWindow* m_box{nullptr};
-};
 
-struct ResetTimer : public Timer
-{
-    ResetTimer()
-        : Timer(std::chrono::seconds(1))
-    {}
-
-    void timeout() override
-    {
-        animation->start();
-    }
-};
-
-struct MyAnimationTimer : public PeriodicTimer
-{
-    explicit MyAnimationTimer(ResetTimer& reset)
-        : PeriodicTimer(std::chrono::milliseconds(30)),
-          m_reset(reset)
-    {}
-
-    void timeout() override
-    {
-        if (animation->running())
-            animation->next();
-        else if (!m_reset.running())
-            m_reset.start();
-    }
-
-    ResetTimer& m_reset;
+    AnimationSequence m_seq;
+    PropertyAnimator m_animation;
+    AnimationDelay m_delay;
 };
 
 int main(int argc, const char** argv)
@@ -163,15 +135,7 @@ int main(int argc, const char** argv)
 
     set_image_path("../share/egt/examples/easing/");
 
-    ResetTimer reset_timer;
-    MyAnimationTimer animation_timer(reset_timer);
-
     MainWindow window;
-
-    animation = new Animation(-110, window.h() - 100, [&window](float value)
-    {
-        window.move_item(value);
-    }, std::chrono::seconds(2), easing_linear);
 
     window.load();
 
@@ -192,8 +156,6 @@ int main(int argc, const char** argv)
         label1.set_text(ss.str());
     });
     cputimer.start();
-
-    animation_timer.start();
 
     window.show();
 

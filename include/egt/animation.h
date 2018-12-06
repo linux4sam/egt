@@ -120,7 +120,7 @@ namespace egt
     /**
      * Animation class with configurable easing function.
      *
-     * An animation is a containr that basically runs from a start value to an
+     * An animation is a container that basically runs from a start value to an
      * end value over a duration of time. For example, the first value of the
      * animation will be the start value at duration 0 and the last value of the
      * animation will be the end value at the duration total.
@@ -129,6 +129,9 @@ namespace egt
      * duration, relative to time, is dictated by what's called an easing
      * function. In other words, the easing function controls the skew of the
      * animation value relative to time.
+     *
+     * Usually, this class will not be used directly and instead one of the
+     * helper classes derived from this are easier to use.
      */
     class Animation : public detail::IAnimation
     {
@@ -231,7 +234,8 @@ namespace egt
     {
     public:
 
-        AnimationSequence()
+        explicit AnimationSequence(bool loop = false) noexcept
+            : m_loop(loop)
         {}
 
         /**
@@ -292,7 +296,8 @@ namespace egt
 
         virtual void reset()
         {
-            // TODO
+            stop();
+            m_current = 0;
         }
 
         virtual void start() override
@@ -314,8 +319,15 @@ namespace egt
 
             if (++m_current >= m_animations.size())
             {
-                m_running = false;
-                return m_running;
+                if (m_loop)
+                {
+                    m_current = 0;
+                }
+                else
+                {
+                    m_running = false;
+                    return m_running;
+                }
             }
 
             m_animations[m_current]->start();
@@ -341,6 +353,7 @@ namespace egt
 
         animation_array m_animations;
         size_t m_current{0};
+        bool m_loop{false};
     };
 
     /**
@@ -407,6 +420,52 @@ namespace egt
         using callback_array = std::vector<property_callback_t>;
 
         callback_array m_callbacks;
+    };
+
+    class AnimationDelay : public detail::IAnimation
+    {
+    public:
+
+        explicit AnimationDelay(std::chrono::milliseconds duration) noexcept
+            : m_timer(duration)
+        {
+            m_timer.on_timeout([this]()
+            {
+                if (!next())
+                {
+                    m_timer.cancel();
+                }
+            });
+        }
+
+        virtual void start() override
+        {
+            m_timer.start();
+        }
+
+        virtual bool next() override
+        {
+            for (auto& callback : m_callbacks)
+                callback(0);
+
+            return false;
+        }
+
+        virtual void stop() override
+        {
+            m_timer.cancel();
+        }
+
+        virtual ~AnimationDelay()
+        {}
+
+    protected:
+
+        Timer m_timer;
+
+    private:
+
+        AnimationDelay() = delete;
     };
 
 }
