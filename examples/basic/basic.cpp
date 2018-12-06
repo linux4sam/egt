@@ -20,7 +20,7 @@ int main(int argc, const char** argv)
 #else
     egt::TopWindow window;
     egt::Button button(window, "Press Me");
-    button.align(egt::alignmask::CENTER);
+    button.set_align(egt::alignmask::CENTER);
     window.show();
 #endif
 
