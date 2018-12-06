@@ -108,6 +108,8 @@ error:
         {
 #ifdef ENABLE_CODE_TIMER
             auto start = chrono::steady_clock::now();
+#else
+            ignoreparam(prefix);
 #endif
             callback();
 

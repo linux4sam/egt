@@ -12,9 +12,10 @@ using namespace std;
 
 namespace egt
 {
-    static auto planewindow_id = 0;
 
 #ifdef HAVE_LIBPLANES
+    static auto planewindow_id = 0;
+
     Window::Window(const Size& size, widgetmask flags,
                              pixel_format format, bool heo)
         : BasicWindow(size, flags | widgetmask::PLANE_WINDOW),

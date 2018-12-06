@@ -58,7 +58,7 @@ namespace egt
     /**
      * This is a wrapper around gettext.
      */
-    #define _(String) gettext(String)
+#define _(String) gettext(String)
 
 }
 

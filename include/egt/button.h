@@ -100,7 +100,7 @@ namespace egt
                 hide();
             }
 
-            virtual void damage()
+            virtual void damage() override
             {}
 
             virtual void draw(Painter& painter, const Rect& rect) override
