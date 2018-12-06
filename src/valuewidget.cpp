@@ -238,6 +238,8 @@ namespace egt
 
     int Slider::handle(eventid event)
     {
+        auto ret = Widget::handle(event);
+
         switch (event)
         {
         case eventid::MOUSE_DOWN:
@@ -250,6 +252,7 @@ namespace egt
                     m_moving_offset = from_screen(event_mouse()).y;
                 m_start_pos = value();
                 set_active(true);
+                mouse_grab(this);
                 return 1;
             }
 
@@ -257,6 +260,7 @@ namespace egt
         }
         case eventid::MOUSE_UP:
             set_active(false);
+            mouse_grab(nullptr);
             if (m_invoke_pending)
             {
                 m_invoke_pending = false;
@@ -283,7 +287,7 @@ namespace egt
             break;
         }
 
-        return Widget::handle(event);
+        return ret;
     }
 
     void Slider::draw(Painter& painter, const Rect& rect)

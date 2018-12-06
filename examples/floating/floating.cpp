@@ -44,6 +44,8 @@ public:
           m_mx(mx),
           m_my(my)
     {
+        m_widget->flag_set(widgetmask::GRAB_MOUSE);
+
         widget->on_event([this](eventid event)
         {
             switch (event)

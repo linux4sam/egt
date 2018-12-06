@@ -127,7 +127,9 @@ namespace egt
 
         Radial(const Rect& rect, T min, T max, T value = T())
             : ValueRangeWidget<T>(rect, min, max, value)
-        {}
+        {
+            this->flag_set(widgetmask::GRAB_MOUSE);
+        }
 
         inline T value2() const
         {
@@ -160,6 +162,8 @@ namespace egt
 
         virtual int handle(eventid event) override
         {
+            auto ret = Widget::handle(event);
+
             switch (event)
             {
             case eventid::MOUSE_DOWN:
@@ -188,7 +192,7 @@ namespace egt
                 break;
             }
 
-            return Widget::handle(event);
+            return ret;
         }
 
         virtual void draw(Painter& painter, const Rect& rect) override

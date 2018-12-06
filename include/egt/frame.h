@@ -97,29 +97,6 @@ namespace egt
         virtual void remove_all();
 
         /**
-         * Set focus to the specified widget.
-         *
-         * @param[in] widget The widget that is in focus, or nullptr.
-         */
-        virtual void set_focus(Widget* widget = nullptr);
-
-        virtual bool focus() const override
-        {
-            if (m_parent)
-                return m_parent->focus();
-
-            return !!m_focus_widget;
-        }
-
-        virtual Widget* get_focus_widget() const
-        {
-            if (m_parent)
-                return m_parent->get_focus_widget();
-
-            return m_focus_widget;
-        }
-
-        /**
          * Return true if this is a top level frame, with no parent.
          */
         virtual bool top_level() const override
@@ -252,8 +229,6 @@ namespace egt
          * The damage array for this frame.
          */
         IScreen::damage_array m_damage;
-
-        Widget* m_focus_widget{nullptr};
     };
 
 }

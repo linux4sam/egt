@@ -104,42 +104,19 @@ namespace egt
         m_children.clear();
     }
 
-    void Frame::set_focus(Widget* widget)
-    {
-        if (m_parent)
-            m_parent->set_focus(widget);
-        else if (m_focus_widget != widget)
-        {
-            if (widget)
-                DBG(name() << " has new focus widget: " << widget->name());
-            else
-                DBG(name() << " has no focus widget");
-            if (m_focus_widget)
-                m_focus_widget->lost_focus();
-
-            m_focus_widget = widget;
-        }
-    }
-
     int Frame::handle(eventid event)
     {
-        DBG(name() << " handle: " << event);
+        auto ret = Widget::handle(event);
 
         switch (event)
         {
-        case eventid::MOUSE_UP:
-        //case eventid::MOUSE_MOVE:
-        //case eventid::KEYBOARD_UP:
-        //case eventid::KEYBOARD_REPEAT:
-        //case eventid::BUTTON_UP:
-        // pair the eventid::MOUSE_UP event with the focus widget
-        //if (m_focus_widget)
-        //  break;
         case eventid::MOUSE_DOWN:
+        case eventid::MOUSE_UP:
         case eventid::MOUSE_MOVE:
         case eventid::BUTTON_DOWN:
+        case eventid::BUTTON_UP:
         case eventid::MOUSE_DBLCLICK:
-        case eventid::KEYBOARD_DOWN:
+        case eventid::MOUSE_CLICK:
             for (auto& child : detail::reverse_iterate(m_children))
             {
                 if (child->disabled())
@@ -154,18 +131,10 @@ namespace egt
                 {
                     auto ret = child->handle(event);
 
-                    if (event == eventid::MOUSE_DOWN &&
-                        child->is_flag_set(widgetmask::CLICK_FOCUS))
-                    {
-                        set_focus(child);
-                    }
-
                     if (ret)
-                    {
                         return ret;
-                    }
 
-                    //break;
+                    break;
                 }
             }
 
@@ -174,44 +143,7 @@ namespace egt
             break;
         }
 
-#if 0
-        if (m_focus_widget)
-        {
-            switch (event)
-            {
-            case eventid::MOUSE_UP:
-            //case eventid::KEYBOARD_UP:
-            //case eventid::KEYBOARD_REPEAT:
-            //case eventid::BUTTON_UP:
-            case eventid::MOUSE_MOVE:
-                //case eventid::MOUSE_DOWN:
-                //case eventid::MOUSE_UP:
-                //case eventid::BUTTON_UP:
-                //case eventid::BUTTON_DOWN:
-                //case eventid::MOUSE_DBLCLICK:
-            {
-                Point pos = screen_to_frame(event_mouse());
-
-                if (Rect::point_inside(pos, m_focus_widget->box()))
-                {
-                    auto ret = m_focus_widget->handle(event);
-                    if (ret)
-                        return ret;
-                }
-                break;
-            }
-            default:
-            {
-                auto ret = m_focus_widget->handle(event);
-                if (ret)
-                    return ret;
-                break;
-            }
-            }
-        }
-#endif
-
-        return Widget::handle(event);
+        return ret;
     }
 
     void Frame::add_damage(const Rect& rect)

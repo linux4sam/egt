@@ -74,10 +74,7 @@ namespace egt
          */
         FRAME = (1 << 5),
 
-        /**
-         * Don't allow the widget to have focus.
-         */
-        CLICK_FOCUS = (1 << 6),
+        GRAB_MOUSE = (1 << 6),
 
         /**
          * Enable transparent background.
@@ -298,21 +295,6 @@ namespace egt
          * Return true if the widget is visible.
          */
         virtual bool visible() const { return m_visible; }
-
-        /**
-         * Return true if the widget is in focus.
-         */
-        virtual bool focus() const;
-
-        /**
-         * Called when the widget loses focus.
-         */
-        virtual void lost_focus() {}
-
-        /**
-         * Set the focus property of the widget.
-         */
-        virtual void set_focus();
 
         /**
          * Return true if the widget is active.

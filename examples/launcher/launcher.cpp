@@ -150,6 +150,7 @@ public:
         add(logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
         auto settings = new ImageButton("settings.png", "", Rect());
+        settings->flag_clear(widgetmask::GRAB_MOUSE);
         add(settings);
         settings->set_align(alignmask::RIGHT | alignmask::TOP, 10);
         settings->on_event([this](eventid event)
@@ -215,9 +216,6 @@ public:
         case eventid::MOUSE_DOWN:
             if (!m_moving)
             {
-                // hack
-                set_focus(nullptr);
-
                 m_moving = true;
                 m_moving_x = event_mouse().x;
                 m_offset = m_boxes[0]->center().x;

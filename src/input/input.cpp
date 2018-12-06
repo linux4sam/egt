@@ -40,6 +40,18 @@ namespace egt
         return event_button_value;
     }
 
+    static Widget* grab = nullptr;
+
+    Widget* mouse_grab()
+    {
+        return grab;
+    }
+
+    void mouse_grab(Widget* widget)
+    {
+        grab = widget;
+    }
+
     namespace detail
     {
         static std::chrono::time_point<std::chrono::steady_clock> mouse_down_time;
@@ -57,6 +69,19 @@ namespace egt
             }
             else
             {
+                if (mouse_grab() && (event == eventid::MOUSE_UP ||
+                                     event == eventid::MOUSE_DOWN ||
+                                     event == eventid::MOUSE_MOVE ||
+                                     event == eventid::BUTTON_DOWN ||
+                                     event == eventid::BUTTON_UP ||
+                                     event == eventid::MOUSE_DBLCLICK ||
+                                     event == eventid::MOUSE_CLICK))
+                {
+                    mouse_grab()->handle(event);
+                }
+                else
+                {
+
                 // give event to any top level and visible windows
                 for (auto& w : windows())
                 {
@@ -67,6 +92,7 @@ namespace egt
                         continue;
 
                     w->handle(event);
+                }
                 }
             }
 

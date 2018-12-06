@@ -41,6 +41,8 @@ namespace egt
 
     int ListBox::handle(eventid event)
     {
+        auto ret = Widget::handle(event);
+
         switch (event)
         {
         case eventid::MOUSE_DOWN:
@@ -61,7 +63,7 @@ namespace egt
             break;
         }
 
-        return Widget::handle(event);
+        return ret;
     }
 
     void ListBox::draw(Painter& painter, const Rect& rect)

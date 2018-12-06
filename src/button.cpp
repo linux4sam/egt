@@ -18,7 +18,7 @@ namespace egt
                    const Font& font, widgetmask flags) noexcept
         : Label(text, rect, alignmask::CENTER, font, flags)
     {
-        flag_set(widgetmask::CLICK_FOCUS);
+        flag_set(widgetmask::GRAB_MOUSE);
 
         if (rect.size().empty())
         {
@@ -36,7 +36,7 @@ namespace egt
 
     int Button::handle(eventid event)
     {
-        DBG(name() << " handle: " << event);
+        auto ret = Widget::handle(event);
 
         switch (event)
         {
@@ -54,7 +54,7 @@ namespace egt
             break;
         }
 
-        return Widget::handle(event);
+        return ret;
     }
 
     void Button::draw(Painter& painter, const Rect& rect)

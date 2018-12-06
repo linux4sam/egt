@@ -79,12 +79,28 @@ namespace egt
 
     int Widget::handle(eventid event)
     {
-        auto ret = invoke_handlers(event);
-        if (ret)
-            return ret;
+        DBG(name() << " handle: " << event);
 
-        // do nothing
-        return 0;
+        if (is_flag_set(widgetmask::GRAB_MOUSE))
+        {
+            switch (event)
+            {
+            case eventid::MOUSE_DOWN:
+            {
+                mouse_grab(this);
+                break;
+            }
+            case eventid::MOUSE_UP:
+            {
+                mouse_grab(nullptr);
+                break;
+            }
+            default:
+                break;
+            }
+        }
+
+        return invoke_handlers(event);
     }
 
     void Widget::move_to_center(const Point& point)
@@ -96,16 +112,6 @@ namespace egt
 
             move(pos);
         }
-    }
-
-    bool Widget::focus() const
-    {
-        return parent()->get_focus_widget() == this;
-    }
-
-    void Widget::set_focus()
-    {
-        parent()->set_focus(this);
     }
 
     void Widget::resize(const Size& size)

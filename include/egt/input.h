@@ -25,6 +25,8 @@
 namespace egt
 {
 
+    class Widget;
+
     /**
      * Global mouse position.
      *
@@ -52,6 +54,18 @@ namespace egt
      * Global key code.
      */
     int& event_code();
+
+    /**
+     * Get the current widget which has the mouse grabbed.
+     */
+    Widget* mouse_grab();
+
+    /**
+     * Set the current widget to grab the mouse.
+     *
+     * @param[in] widget The widget to grab all mouse events, or nullptr.
+     */
+    void mouse_grab(Widget* widget);
 
     namespace detail
     {

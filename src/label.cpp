@@ -118,11 +118,14 @@ namespace egt
                        const Rect& rect)
         : Label(text, rect)
     {
+        flag_set(widgetmask::GRAB_MOUSE);
         palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
     }
 
     int CheckBox::handle(eventid event)
     {
+        auto ret = Widget::handle(event);
+
         switch (event)
         {
         case eventid::MOUSE_DOWN:
@@ -132,7 +135,7 @@ namespace egt
             break;
         }
 
-        return Widget::handle(event);
+        return ret;
     }
 
     void CheckBox::draw(Painter& painter, const Rect& rect)
