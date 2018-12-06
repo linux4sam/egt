@@ -12,16 +12,16 @@
 using namespace std;
 using namespace egt;
 
-class GameWindow : public Window
+class GameWindow : public BasicWindow
 {
 public:
     static constexpr int ROWS = 2;
 
     GameWindow()
-        : m_grid1(Rect(Point(0, 30), Size(KMSScreen::instance()->size().w, 80)),
-                  KMSScreen::instance()->size().w / 100, ROWS, 5),
-          m_grid2(Rect(Point(0, 30 + 80 + 30), Size(KMSScreen::instance()->size().w, 80)),
-                  KMSScreen::instance()->size().w / 100, ROWS, 5),
+        : m_grid1(Rect(Point(0, 30), Size(w(), 80)),
+                  w() / 100, ROWS, 5),
+          m_grid2(Rect(Point(0, 30 + 80 + 30), Size(w(), 80)),
+                  w() / 100, ROWS, 5),
           m_ball("small_ball.png"),
           m_paddle("paddle.png"),
           m_running(false),
@@ -122,6 +122,7 @@ public:
         }
         case eventid::MOUSE_DOWN:
             m_running = true;
+            break;
         case eventid::MOUSE_MOVE:
             m_paddle.move(Point(event_mouse().x - m_paddle.w() / 2, m_paddle.y()));
             return 1;
@@ -129,7 +130,7 @@ public:
             break;
         }
 
-        return Window::handle(event);
+        return BasicWindow::handle(event);
     }
 
     void reset_game()
@@ -177,7 +178,7 @@ public:
             if (!block->visible())
                 continue;
 
-            if (Rect::intersect(m_ball.box(), block->box()))
+            if (Rect::intersect(m_ball.box(), block->to_parent(block->box())))
             {
                 block->hide();
                 m_yspeed *= -1.0;

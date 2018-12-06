@@ -536,16 +536,11 @@ namespace egt
 
         virtual ~Widget();
 
-    protected:
-
         Rect box_to_child(const Rect& r);
         Rect to_child(const Rect& r);
         Rect to_parent(const Rect& r);
 
-        virtual bool have_screen() const
-        {
-            return false;
-        }
+    protected:
 
         virtual bool top_level() const { return false; }
 

@@ -109,11 +109,6 @@ namespace egt
          */
         virtual void do_draw();
 
-        virtual bool have_screen() const override
-        {
-            return m_screen;
-        }
-
         IScreen* m_screen{nullptr};
 
     private:
