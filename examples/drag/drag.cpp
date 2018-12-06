@@ -70,19 +70,16 @@ public:
         {
         case eventid::MOUSE_DOWN:
         {
-            m_starting_pos = box().point();
-            m_starting = event_mouse();
-            m_moving = true;
+            m_drag.start_drag(box().point());
             return 1;
         }
         case eventid::MOUSE_UP:
-            m_moving = false;
+            m_drag.stop_drag();
             return 1;
         case eventid::MOUSE_MOVE:
-            if (m_moving)
+            if (m_drag.dragging())
             {
-                auto diff = m_starting - event_mouse();
-                move(m_starting_pos - diff);
+                move(m_drag.diff());
                 return 1;
             }
             break;
@@ -96,9 +93,7 @@ public:
 protected:
     Image m_grip;
     Image m_arrows;
-    bool m_moving{false};
-    Point m_starting;
-    Point m_starting_pos;
+    MouseDrag m_drag;
 };
 
 int main(int argc, const char** argv)

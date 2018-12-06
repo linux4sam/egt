@@ -36,52 +36,6 @@ public:
     Image m_img;
 };
 
-class Draggable
-{
-public:
-
-    /**
-     * Start dragging.
-     *
-     * @param start The starting point from where the dragging diff() will
-     * be calculated relative to the current mouse position.
-     */
-    void start_drag(const Point& start)
-    {
-        m_starting_pos = start;
-        m_starting = event_mouse();
-        m_dragging = true;
-    }
-
-    /**
-     * Stop any active dragging state.
-     */
-    void stop_drag()
-    {
-        m_dragging = false;
-    }
-
-    /**
-     * Is dragging currently enabled?
-     */
-    bool dragging() const { return m_dragging; }
-
-    /**
-     * Get the difference between the current mouse position and the starting
-     * widget position.
-     */
-    Point diff()
-    {
-        auto diff = m_starting - event_mouse();
-        return m_starting_pos - diff;
-    }
-
-protected:
-    bool m_dragging{false};
-    Point m_starting;
-    Point m_starting_pos;
-};
-
 class FloatingBox
 {
 public:
@@ -96,18 +50,18 @@ public:
             {
             case eventid::MOUSE_DOWN:
             {
-                m_draggable.start_drag(m_widget->box().point());
+                m_drag.start_drag(m_widget->box().point());
                 return 1;
             }
             case eventid::MOUSE_UP:
-                m_draggable.stop_drag();
+                m_drag.stop_drag();
                 return 1;
             case eventid::MOUSE_MOVE:
-                if (m_draggable.dragging())
+                if (m_drag.dragging())
                 {
-                    Rect dest(m_draggable.diff(), m_widget->box().size());
+                    Rect dest(m_drag.diff(), m_widget->box().size());
                     if (main_window()->box().contains(dest))
-                        m_widget->move(m_draggable.diff());
+                        m_widget->move(m_drag.diff());
                     return 1;
                 }
                 break;
@@ -121,7 +75,7 @@ public:
 
     virtual void next_frame()
     {
-        if (m_draggable.dragging())
+        if (m_drag.dragging())
             return;
 
         auto p = Point(m_widget->x() + m_mx,
@@ -146,7 +100,7 @@ protected:
     Widget* m_widget;
     int m_mx;
     int m_my;
-    Draggable m_draggable;
+    MouseDrag m_drag;
 };
 
 static vector<FloatingBox*> boxes;

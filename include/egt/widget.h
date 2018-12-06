@@ -770,6 +770,61 @@ namespace egt
 
     }
 
+    class MouseDrag
+    {
+    public:
+
+        /**
+         * Start dragging.
+         *
+         * @param start The starting point from where the dragging diff() will
+         * be calculated relative to the current mouse position.
+         */
+        void start_drag(const Point& start)
+        {
+            m_starting_pos = start;
+            m_starting = event_mouse();
+            m_dragging = true;
+        }
+
+        inline Point starting() const
+        {
+            return m_starting_pos;
+        }
+
+        inline Point mouse() const
+        {
+            return m_starting;
+        }
+
+        /**
+         * Stop any active dragging state.
+         */
+        void stop_drag()
+        {
+            m_dragging = false;
+        }
+
+        /**
+         * Is dragging currently enabled?
+         */
+        bool dragging() const { return m_dragging; }
+
+        /**
+         * Get the difference between the current mouse position and the starting
+         * widget position.
+         */
+        Point diff()
+        {
+            auto diff = m_starting - event_mouse();
+            return m_starting_pos - diff;
+        }
+
+    protected:
+        bool m_dragging{false};
+        Point m_starting;
+        Point m_starting_pos;
+    };
 
 }
 
