@@ -79,13 +79,13 @@ int main(int argc, const char** argv)
     CheckBox checkbox2("checkbox 2");
     grid0.add(&checkbox2);
 
-    experimental::ComboBox::item_array combo_items =
+    ComboBox::item_array combo_items =
     {
         "item 1",
         "item 2",
         "item 3",
     };
-    experimental::ComboBox combo1(combo_items);
+    ComboBox combo1(combo_items);
     grid0.add(&combo1);
 
     StaticGrid grid1(Rect(Point(win.w() / 2, 0), Size(win.w() / 2, win.h())), 2, 3, 5);
