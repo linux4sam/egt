@@ -537,7 +537,7 @@ out:
             case LIBINPUT_EVENT_TABLET_PAD_RING:
             case LIBINPUT_EVENT_TABLET_PAD_STRIP:
                 break;
-            case LIBINPUT_EVENT_SWITCH_TOGGLE:
+            default:
                 break;
             }
 
