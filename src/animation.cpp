@@ -5,6 +5,7 @@
  */
 #include "egt/animation.h"
 #include "egt/app.h"
+#include "egt/detail/floatingpoint.h"
 #include "egt/widget.h"
 #include <cassert>
 #include <cmath>
@@ -354,11 +355,6 @@ namespace egt
         m_running = true;
     }
 
-    inline static bool float_t_compare(float_t a, float_t b)
-    {
-        return std::fabs(a - b) < 1e-6f;
-    }
-
     bool Animation::next()
     {
         if (!running())
@@ -370,7 +366,8 @@ namespace egt
             m_running = false;
             float_t result = m_end;
 
-            if (!float_t_compare(result, m_current))
+            if (!detail::FloatingPoint<float_t>(result).
+                AlmostEquals(detail::FloatingPoint<float_t>(m_current)))
             {
                 m_current = m_end;
                 for (auto& callback : m_callbacks)
@@ -383,7 +380,8 @@ namespace egt
                               chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
             float_t result = interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
-            if (!float_t_compare(result, m_current))
+            if (!detail::FloatingPoint<float_t>(result).
+                AlmostEquals(detail::FloatingPoint<float_t>(m_current)))
             {
                 m_current = result;
                 for (auto& callback : m_callbacks)
