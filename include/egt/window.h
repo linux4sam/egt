@@ -56,7 +56,7 @@ namespace egt
          * @param[in] flags Mask of widget flags.
          */
         BasicWindow(const Size& size = Size(),
-               widgetmask flags = widgetmask::WINDOW_DEFAULT);
+                    widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
         /**
          * Construct a BasicWindow.
@@ -65,7 +65,7 @@ namespace egt
          * @param[in] flags Mask of widget flags.
          */
         BasicWindow(const Rect& rect,
-               widgetmask flags = widgetmask::WINDOW_DEFAULT);
+                    widgetmask flags = widgetmask::WINDOW_DEFAULT);
 
         virtual void enter()
         {
@@ -176,6 +176,10 @@ namespace egt
                 modal_window() = nullptr;
             }
         }
+
+        virtual ~Popup()
+        {}
+
     };
 
     using TopWindow = BasicWindow;

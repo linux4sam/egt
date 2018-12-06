@@ -92,7 +92,7 @@ public:
         MyListBox::item_array items;
         items.resize(curves_names.size());
         transform(curves_names.begin(), curves_names.end(), items.begin(),
-                  [](const StringItem & v) { return new StringItem(v);});
+        [](const StringItem & v) { return new StringItem(v);});
         MyListBox* list1 = new MyListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
         add(list1);
         list1->set_select(7);

@@ -94,7 +94,7 @@ class FpsWindow : public Window
 public:
     FpsWindow()
         : Window(Size(100, 50),
-                      widgetmask::WINDOW_DEFAULT, pixel_format::argb8888)
+                 widgetmask::WINDOW_DEFAULT, pixel_format::argb8888)
     {
         m_label = new Label("FPS: 0",
                             Rect(Size(100, 50)),

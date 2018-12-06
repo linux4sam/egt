@@ -312,6 +312,9 @@ namespace egt
         explicit ProgressBar(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
+
+        virtual ~ProgressBar()
+        {}
     };
 
     /**
@@ -326,6 +329,9 @@ namespace egt
         explicit LevelMeter(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
+
+        virtual ~LevelMeter()
+        {}
     };
 
     /**
@@ -341,6 +347,9 @@ namespace egt
 
         virtual void draw(Painter& painter, const Rect& rect);
 
+        virtual ~AnalogMeter()
+        {}
+
     protected:
         Font m_font;
     };
@@ -351,6 +360,9 @@ namespace egt
         explicit SpinProgress(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
+
+        virtual ~SpinProgress()
+        {}
     };
 
     enum class orientation
@@ -361,8 +373,6 @@ namespace egt
 
     /**
      * This is a slider that can be used to select from a range of values.
-     *
-     * @todo This should be a ValueRangeWidget<int>.
      *
      * @image html widget_slider1.png
      * @image latex widget_slider1.png "widget_slider1" width=5cm

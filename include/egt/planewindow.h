@@ -33,19 +33,19 @@ namespace egt
         constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
         explicit Window(const Size& size = Size(),
-                             widgetmask flags = widgetmask::WINDOW_DEFAULT,
-                             pixel_format format = DEFAULT_FORMAT,
-                             bool heo = false);
+                        widgetmask flags = widgetmask::WINDOW_DEFAULT,
+                        pixel_format format = DEFAULT_FORMAT,
+                        bool heo = false);
 
         explicit Window(const Rect& rect,
-                             widgetmask flags = widgetmask::WINDOW_DEFAULT,
-                             pixel_format format = DEFAULT_FORMAT,
-                             bool heo = false);
+                        widgetmask flags = widgetmask::WINDOW_DEFAULT,
+                        pixel_format format = DEFAULT_FORMAT,
+                        bool heo = false);
 
-	virtual void damage() override
-	{
+        virtual void damage() override
+        {
             BasicWindow::damage();
-	}
+        }
 
         virtual IScreen* screen() override
         {

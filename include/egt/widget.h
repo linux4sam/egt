@@ -757,6 +757,9 @@ namespace egt
                 m_values = v;
             }
 
+            virtual ~ScrollWheel()
+            {}
+
         protected:
             std::vector<std::string> m_values;
 
