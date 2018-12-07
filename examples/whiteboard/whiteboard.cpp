@@ -81,12 +81,12 @@ protected:
     Color m_color{Color::RED};
 };
 
-class WidthPickerWindow : public Popup<Window>
+class WidthPickerWindow : public Popup<BasicWindow>
 {
 public:
 
     explicit WidthPickerWindow(int width)
-        : Popup<Window>(main_screen()->size() / 2),
+        : Popup<BasicWindow>(main_screen()->size() / 2),
           m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 1, 10),
           m_width(width)
     {
