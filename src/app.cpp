@@ -100,6 +100,7 @@ namespace egt
     {
         if (m_argc)
         {
+            // catch SIGQUIT (Ctrl + \) and screenshot
             asio::signal_set signals(event().io(), SIGQUIT);
             signals.async_wait([this](const asio::error_code & error, int)
             {

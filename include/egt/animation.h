@@ -422,6 +422,9 @@ namespace egt
         callback_array m_callbacks;
     };
 
+    /**
+     * Simple delay, useful to insert a delay in an AnimationSequence.
+     */
     class AnimationDelay : public detail::IAnimation
     {
     public:
