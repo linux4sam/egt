@@ -102,7 +102,7 @@ protected:
     Widget* m_widget;
     int m_mx;
     int m_my;
-    MouseDrag m_drag;
+    detail::MouseDrag m_drag;
 };
 
 static vector<FloatingBox*> boxes;

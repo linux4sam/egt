@@ -11,8 +11,9 @@ using namespace std;
 namespace egt
 {
 
-    ProgressBar::ProgressBar(const Rect& rect)
-        : ValueRangeWidget<int>(rect, 0, 100, 0)
+    ProgressBar::ProgressBar(const Rect& rect,
+                             int min, int max, int value) noexcept
+        : ValueRangeWidget<int>(rect, min, max, value)
     {
     }
 
@@ -20,39 +21,16 @@ namespace egt
     {
         ignoreparam(rect);
 
-        auto cr = painter.context();
+        painter.draw_box(*this, Painter::boxtype::rounded_borderfill);
 
-        cairo_save(cr.get());
-
-        Color bg = palette().color(Palette::BG);
-        cairo_set_source_rgba(cr.get(),
-                              bg.redf(),
-                              bg.greenf(),
-                              bg.bluef(),
-                              bg.alphaf());
-        cairo_rectangle(cr.get(), x(), y(), w(), h());
-        cairo_fill(cr.get());
-
-        Color color = palette().color(Palette::HIGHLIGHT);
-        cairo_set_source_rgb(cr.get(), color.redf(), color.greenf(), color.bluef());
-        cairo_rectangle(cr.get(), x(),  y(), w() * value() / 100., h());
-        cairo_fill(cr.get());
-
-        cairo_rectangle(cr.get(), x(), y(), w(), h());
-        Color border = palette().color(Palette::BORDER);
-        cairo_set_source_rgba(cr.get(),
-                              border.redf(),
-                              border.greenf(),
-                              border.bluef(),
-                              border.alphaf());
-        cairo_set_line_width(cr.get(), 1.0);
-        cairo_stroke(cr.get());
-
-        cairo_restore(cr.get());
+        painter.draw_rounded_gradient_box(Rect(x(), y(), w() * value() / 100., h()),
+                                          Color::TRANSPARENT,
+                                          palette().color(Palette::HIGHLIGHT));
     }
 
-    LevelMeter::LevelMeter(const Rect& rect)
-        : ValueRangeWidget<int>(rect, 0, 100, 0)
+    LevelMeter::LevelMeter(const Rect& rect,
+                           int min, int max, int value) noexcept
+        : ValueRangeWidget<int>(rect, min, max, value)
     {
     }
 
@@ -60,25 +38,18 @@ namespace egt
     {
         ignoreparam(rect);
 
-        auto cr = painter.context();
-
-        cairo_save(cr.get());
-
         int limit = 20 - value() / 5;
         int barheight = h() / 20;
 
         for (int i = 0; i < 20; i++)
         {
             if (i > limit)
-                cairo_set_source_rgb(cr.get(), 0.6, 1.0, 0);
+                painter.set_color(palette().color(Palette::HIGHLIGHT));
             else
-                cairo_set_source_rgb(cr.get(), 0.2, 0.4, 0);
+                painter.set_color(palette().color(Palette::DARK));
 
-            cairo_rectangle(cr.get(), x(),  y() + i * barheight, w(), barheight - 2);
-            cairo_fill(cr.get());
+            painter.draw_fill(Rect(x(),  y() + i * barheight, w(), barheight - 2));
         }
-
-        cairo_restore(cr.get());
     }
 
     AnalogMeter::AnalogMeter(const Rect& rect)
@@ -146,8 +117,8 @@ namespace egt
         cairo_stroke(cr.get());
     }
 
-    SpinProgress::SpinProgress(const Rect& rect)
-        : ValueRangeWidget<int>(rect, 0, 100, 0)
+    SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
+        : ValueRangeWidget<int>(rect, min, max, value)
     {
     }
 
@@ -155,37 +126,24 @@ namespace egt
     {
         ignoreparam(rect);
 
+        auto dim = std::min(w(), h());
         float linew = 5;
-
-        Color color2(Color::ORANGE);
-
-        float radius = w() / 2 - (linew / 2);
+        float radius = dim / 2 - (linew / 2);
         double angle1 = to_radians<float>(180, 0);
         double angle2 = to_radians<float>(180, value() / 100. * 360.);
 
-        Point c = center();
+        painter.set_color(palette().color(Palette::BG));
+        painter.draw_fill(box());
 
-        auto cr = painter.context();
-
-        cairo_save(cr.get());
-
-        cairo_set_source_rgba(cr.get(), 0, 0, 0, 0);
-        cairo_rectangle(cr.get(), x(),  y(), w(), h());
-        cairo_fill(cr.get());
-
-        cairo_set_source_rgb(cr.get(),
-                             color2.redf(),
-                             color2.greenf(),
-                             color2.bluef());
-        cairo_set_line_width(cr.get(), linew - (linew / 3));
-        cairo_arc(cr.get(), c.x, c.y, radius, angle1, angle2);
-        cairo_stroke(cr.get());
-
-        cairo_restore(cr.get());
+        painter.set_color(palette().color(Palette::HIGHLIGHT));
+        painter.set_line_width(linew - (linew / 3));
+        painter.arc(center(), radius, angle1, angle2);
+        painter.stroke();
     }
 
-    Slider::Slider(int min, int max, const Rect& rect, orientation orient)
-        : ValueRangeWidget<int>(rect, min, max, min),
+    Slider::Slider(const Rect& rect, int min, int max, int value,
+                   orientation orient) noexcept
+        : ValueRangeWidget<int>(rect, min, max, value),
           m_orientation(orient)
     {
     }

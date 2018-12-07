@@ -93,7 +93,7 @@ public:
 protected:
     Image m_grip;
     Image m_arrows;
-    MouseDrag m_drag;
+    detail::MouseDrag m_drag;
 };
 
 int main(int argc, const char** argv)

@@ -14,7 +14,7 @@ namespace egt
 {
     static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
-    Button::Button(const string& text, const Rect& rect,
+    Button::Button(const std::string& text, const Rect& rect,
                    const Font& font, widgetmask flags) noexcept
         : Label(text, rect, alignmask::CENTER, font, flags)
     {
@@ -27,7 +27,7 @@ namespace egt
         }
     }
 
-    Button::Button(Frame& parent, const string& text, const Rect& rect,
+    Button::Button(Frame& parent, const std::string& text, const Rect& rect,
                    const Font& font, widgetmask flags) noexcept
         : Button(text, rect, font, flags)
     {
@@ -85,8 +85,8 @@ namespace egt
     {
     }
 
-    ImageButton::ImageButton(const string& image,
-                             const string& text,
+    ImageButton::ImageButton(const std::string& image,
+                             const std::string& text,
                              const Rect& rect,
                              widgetmask flags) noexcept
         : Button(text, rect, Font(), flags),
@@ -99,8 +99,8 @@ namespace egt
     }
 
     ImageButton::ImageButton(Frame& parent,
-                             const string& image,
-                             const string& text,
+                             const std::string& image,
+                             const std::string& text,
                              const Rect& rect,
                              widgetmask flags) noexcept
         : ImageButton(image, text, rect, flags)

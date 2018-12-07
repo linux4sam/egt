@@ -170,14 +170,17 @@ namespace egt
         alignmask m_align{alignmask::NONE};
     };
 
+    /**
+     * A StaticGrid where each item is visually selectable with a highlighted
+     * border.
+     */
     class SelectableGrid : public StaticGrid
     {
     public:
         SelectableGrid(const Rect& rect = Rect(),
                        int columns = 1, int rows = 1, int spacing = 0)
             : StaticGrid(rect, columns, rows, spacing)
-        {
-        }
+        {}
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

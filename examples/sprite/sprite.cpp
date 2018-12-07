@@ -134,7 +134,7 @@ int main(int argc, const char** argv)
     });
     animatetimer.start();
 
-    Slider slider1(10, 500, Rect(Point(win.h() - 40, 300), Size(win.w(), 40)));
+    Slider slider1(Rect(Point(win.h() - 40, 300), Size(win.w(), 40)), 10, 500, 10);
     win.add(&slider1);
     slider1.set_align(alignmask::CENTER | alignmask::BOTTOM);
     slider1.set_value(DEFAULT_MS_INTERVAL);

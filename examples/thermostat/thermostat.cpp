@@ -54,9 +54,9 @@ public:
                         Size(50, 64)),
                    alignmask::CENTER,
                    egt::Font(16)),
-          m_slider1(0, 100,
-                    Rect(Point(800, 100),
+          m_slider1(Rect(Point(800, 100),
                          Size(50, 300)),
+                    0, 100, 0,
                     orientation::VERTICAL)
     {
         m_logo.set_align(alignmask::LEFT | alignmask::TOP, 10);

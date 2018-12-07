@@ -31,8 +31,10 @@ namespace egt
     {
     public:
         /**
-         * @param primary Is this the primary display application.
-         * @param name Application name.  This is used for several things,
+         * @param[in] argc Aplication argument count.
+         * @param[in] argv Application argument array.
+         * @param[in] primary Is this the primary display application.
+         * @param[in] name Application name.  This is used for several things,
          *             including identifying the text domain used by gettext().
          */
         Application(int argc = 0, const char** argv = nullptr,

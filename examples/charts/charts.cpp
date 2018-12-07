@@ -121,7 +121,7 @@ int main(int argc, const char** argv)
     sin_checkbox.check(true);
     cos_checkbox.check(true);
 
-    Slider line_width(1, 10, Rect(Point(300, 410), Size(200, 40)));
+    Slider line_width(Rect(Point(300, 410), Size(200, 40)), 1, 10, 1);
     line_width.set_name("line_width");
     win.add(&line_width);
 

@@ -24,6 +24,10 @@ namespace egt
     {
     public:
 
+        /**
+         * @param[in] rect Rectangle for the widget.
+         * @param[in] value Current value in the range.
+         */
         ValueWidget(const Rect& rect, T value = T())
             : Widget(rect),
               m_value(value)
@@ -54,6 +58,8 @@ namespace egt
 
     protected:
         T m_value;
+
+        ValueWidget() = delete;
     };
 
     /**
@@ -65,8 +71,14 @@ namespace egt
     {
     public:
 
+        /**
+         * @param[in] rect Rectangle for the widget.
+         * @param[in] min Minimum value for the range.
+         * @param[in] max Maximum value in the range.
+         * @param[in] value Current value in the range.
+         */
         ValueRangeWidget(const Rect& rect, T min, T max,
-                         T value = T())
+                         T value = T()) noexcept
             : Widget(rect),
               m_min(min),
               m_max(max),
@@ -112,6 +124,8 @@ namespace egt
         T m_min;
         T m_max;
         T m_value;
+
+        ValueRangeWidget() = delete;
     };
 
     /**
@@ -125,6 +139,12 @@ namespace egt
     {
     public:
 
+        /**
+         * @param[in] rect Rectangle for the widget.
+         * @param[in] min Minimum value for the range.
+         * @param[in] max Maximum value in the range.
+         * @param[in] value Current value in the range.
+         */
         Radial(const Rect& rect, T min, T max, T value = T())
             : ValueRangeWidget<T>(rect, min, max, value)
         {
@@ -313,7 +333,15 @@ namespace egt
     class ProgressBar : public ValueRangeWidget<int>
     {
     public:
-        explicit ProgressBar(const Rect& rect = Rect());
+
+        /**
+         * @param[in] rect Rectangle for the widget.
+         * @param[in] min Minimum value for the range.
+         * @param[in] max Maximum value in the range.
+         * @param[in] value Current value in the range.
+         */
+        explicit ProgressBar(const Rect& rect = Rect(),
+                             int min = 0, int max = 100, int value = 0) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect);
 
@@ -330,7 +358,15 @@ namespace egt
     class LevelMeter : public ValueRangeWidget<int>
     {
     public:
-        explicit LevelMeter(const Rect& rect = Rect());
+
+        /**
+         * @param[in] rect Rectangle for the widget.
+         * @param[in] min Minimum value for the range.
+         * @param[in] max Maximum value in the range.
+         * @param[in] value Current value in the range.
+         */
+        explicit LevelMeter(const Rect& rect = Rect(),
+                            int min = 0, int max = 100, int value = 0) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect);
 
@@ -339,7 +375,7 @@ namespace egt
     };
 
     /**
-     * Displays an analog meter based on a value.
+     * Displays an analog meter based on a percentage value.
      *
      * @image html widget_analogmeter.png
      * @image latex widget_analogmeter.png "widget_analogmeter" width=5cm
@@ -347,6 +383,10 @@ namespace egt
     class AnalogMeter : public ValueRangeWidget<int>
     {
     public:
+
+        /**
+         * @param[in] rect Rectangle for the widget.
+         */
         explicit AnalogMeter(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect);
@@ -358,10 +398,21 @@ namespace egt
         Font m_font;
     };
 
+    /**
+     * Displays a spinning progress meter.
+     */
     class SpinProgress : public ValueRangeWidget<int>
     {
     public:
-        explicit SpinProgress(const Rect& rect = Rect());
+
+        /**
+         * @param[in] rect Rectangle for the widget.
+         * @param[in] min Minimum value for the range.
+         * @param[in] max Maximum value in the range.
+         * @param[in] value Current value in the range.
+         */
+        explicit SpinProgress(const Rect& rect = Rect(),
+                              int min = 0, int max = 100, int value = 0) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect);
 
@@ -386,8 +437,16 @@ namespace egt
     class Slider : public ValueRangeWidget<int>
     {
     public:
-        Slider(int min, int max, const Rect& rect = Rect(),
-               orientation orient = orientation::HORIZONTAL);
+
+        /**
+         * @param[in] rect Rectangle for the widget.
+         * @param[in] min Minimum value for the range.
+         * @param[in] max Maximum value in the range.
+         * @param[in] value Current value in the range.
+         * @param[in] orient Vertical or horizontal orientation.
+         */
+        Slider(const Rect& rect = Rect(), int min = 0, int max = 100, int value = 0,
+               orientation orient = orientation::HORIZONTAL) noexcept;
 
         virtual int handle(eventid event) override;
 

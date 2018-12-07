@@ -188,7 +188,7 @@ int main(int argc, const char** argv)
         return 0;
     });
 
-    Slider* position = new Slider(0, 100, Rect(Size(150, 40)), orientation::HORIZONTAL);
+    Slider* position = new Slider(Rect(Size(150, 40)), 0, 100, 0, orientation::HORIZONTAL);
     grid.add(position);
     position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
     position->disable();
@@ -222,7 +222,7 @@ int main(int argc, const char** argv)
                                            widgetmask::NO_BORDER | widgetmask::NO_BACKGROUND);
     grid.add(volumei);
 
-    Slider* volume = new Slider(0, 100, Rect(Size(100, 20)), orientation::HORIZONTAL);
+    Slider* volume = new Slider(Rect(Size(100, 20)), 0, 100, 0, orientation::HORIZONTAL);
     grid.add(volume);
     volume->on_event([volume, window](eventid event)
     {

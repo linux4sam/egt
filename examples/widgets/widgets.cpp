@@ -48,7 +48,7 @@ int main(int argc, const char** argv)
     btn2.disable();
     grid0.add(&btn2);
 
-    Slider slider1(0, 100);
+    Slider slider1;
     slider1.set_value(50);
     grid0.add(&slider1);
 
@@ -88,6 +88,12 @@ int main(int argc, const char** argv)
     ComboBox combo1(combo_items);
     grid0.add(&combo1);
 
+    SpinProgress spinprogress;
+    grid0.add(&spinprogress);
+
+    ProgressBar progressbar;
+    grid0.add(&progressbar);
+
     StaticGrid grid1(Rect(Point(win.w() / 2, 0), Size(win.w() / 2, win.h())), 2, 3, 5);
     win.add(&grid1);
 
@@ -99,15 +105,17 @@ int main(int argc, const char** argv)
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
-    cputimer.on_timeout([&tools, &lp1, &am1]()
+    cputimer.on_timeout([&]()
     {
         tools.update();
         lp1.set_value(tools.usage(0));
         am1.set_value(tools.usage(0));
+        progressbar.set_value(tools.usage(0));
+        spinprogress.set_value(tools.usage(0));
     });
     cputimer.start();
 
-    Slider slider2(0, 100, Rect(), orientation::VERTICAL);
+    Slider slider2(Rect(), 0, 100, 0, orientation::VERTICAL);
     slider2.set_value(75);
     grid1.add(&slider2);
 
