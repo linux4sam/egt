@@ -7,7 +7,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_SYSTEM
 PKG_PROG_PKG_CONFIG
 
-AM_INIT_AUTOMAKE([1.10 foreign])
+AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
 
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
@@ -188,6 +188,7 @@ AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([docs/Doxyfile])])
 
 AC_CONFIG_FILES([Makefile
 	src/Makefile
+	external/Makefile
 	examples/Makefile
 	scripts/Makefile
 	libegt.pc

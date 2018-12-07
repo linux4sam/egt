@@ -1,4 +1,3 @@
-#AUTOMAKE_OPTIONS = subdir-objects
 AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_builddir)/include -I$(top_srcdir)/src/images/jpeg \
 	-I$(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
@@ -67,7 +66,7 @@ endif
 
 libegt_la_LIBADD =
 if HAVE_KPLOT
-libegt_la_LIBADD += libkplot.a
+libegt_la_LIBADD += $(top_builddir)/external/libkplot.a
 endif
 
 if HAVE_LIBJPEG
@@ -78,6 +77,7 @@ endif
 
 libegtincludedir = ${includedir}/egt
 libegtinclude_HEADERS = \
+$(top_builddir)/include/egt/version.h \
 $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
 $(top_srcdir)/include/egt/bitmask.h \
@@ -127,49 +127,10 @@ libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = $(top_builddir)/libegt.pc
 
-if HAVE_KPLOT
-noinst_LIBRARIES = libkplot.a
-
-$(top_builddir)/external/kplot/compat.h: $(top_srcdir)/external/kplot/compat.pre.h $(top_srcdir)/external/kplot/compat.post.h
-	( mkdir -p $(top_builddir)/external/kplot/ ; \
-	  cat $(top_srcdir)/external/kplot/compat.pre.h ; \
-	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh $(top_builddir)/external/kplot/compat.sh reallocarray ; \
-	  cat $(top_srcdir)/external/kplot/compat.post.h ; ) >$@
-
-libkplot_a_SOURCES = \
-$(top_builddir)/external/kplot/compat.h \
-$(top_srcdir)/external/kplot/compat.post.h \
-$(top_srcdir)/external/kplot/compat.pre.h \
-$(top_srcdir)/external/kplot/colours.c \
-$(top_srcdir)/external/kplot/extern.h \
-$(top_srcdir)/external/kplot/kplot.h \
-$(top_srcdir)/external/kplot/array.c \
-$(top_srcdir)/external/kplot/border.c \
-$(top_srcdir)/external/kplot/bucket.c \
-$(top_srcdir)/external/kplot/buffer.c \
-$(top_srcdir)/external/kplot/draw.c \
-$(top_srcdir)/external/kplot/grid.c \
-$(top_srcdir)/external/kplot/hist.c \
-$(top_srcdir)/external/kplot/label.c \
-$(top_srcdir)/external/kplot/kdata.c \
-$(top_srcdir)/external/kplot/kplot.c \
-$(top_srcdir)/external/kplot/margin.c \
-$(top_srcdir)/external/kplot/mean.c \
-$(top_srcdir)/external/kplot/plotctx.c \
-$(top_srcdir)/external/kplot/reallocarray.c \
-$(top_srcdir)/external/kplot/stddev.c \
-$(top_srcdir)/external/kplot/tic.c \
-$(top_srcdir)/external/kplot/vector.c
-libkplot_a_CFLAGS = $(AM_CFLAGS) $(CAIRO_CFLAGS) -I$(top_builddir)/external/kplot -fPIC
-
-CLEANFILES = $(top_builddir)/external/kplot/compat.h
-BUILT_SOURCES = $(top_builddir)/external/kplot/compat.h
-
 dist-hook:
 	for file in $(BUILT_SOURCES) ; do \
 		rm -f $(distdir)/$$file ; \
 	done
 
-endif
-
+BUILT_SOURCES = $(top_builddir)/include/egt/version.h
 EXTRA_DIST = $(top_srcdir)/include/egt/version.h.in
