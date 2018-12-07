@@ -52,6 +52,27 @@ namespace egt
         grab = widget;
     }
 
+    static Widget* kfocus = nullptr;
+
+    void keyboard_focus(Widget* widget)
+    {
+        if (kfocus == widget)
+            return;
+
+        if (kfocus)
+            kfocus->on_lost_focus();
+
+        kfocus = widget;
+
+        if (widget)
+            widget->on_gain_focus();
+    }
+
+    Widget* keyboard_focus()
+    {
+        return kfocus;
+    }
+
     namespace detail
     {
         static std::chrono::time_point<std::chrono::steady_clock> mouse_down_time;
@@ -79,20 +100,26 @@ namespace egt
                 {
                     mouse_grab()->handle(event);
                 }
+                else if (keyboard_focus() && (event == eventid::KEYBOARD_DOWN ||
+                                              event == eventid::KEYBOARD_UP ||
+                                              event == eventid::KEYBOARD_REPEAT))
+                {
+                    keyboard_focus()->handle(event);
+                }
                 else
                 {
 
-                // give event to any top level and visible windows
-                for (auto& w : windows())
-                {
-                    if (!w->visible())
-                        continue;
+                    // give event to any top level and visible windows
+                    for (auto& w : windows())
+                    {
+                        if (!w->visible())
+                            continue;
 
-                    if (!w->top_level())
-                        continue;
+                        if (!w->top_level())
+                            continue;
 
-                    w->handle(event);
-                }
+                        w->handle(event);
+                    }
                 }
             }
 

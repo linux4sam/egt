@@ -41,9 +41,9 @@ namespace egt
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
-        virtual void set_focus();
+        virtual void on_gain_focus() override;
 
-        virtual void lost_focus();
+        virtual void on_lost_focus() override;
 
         /**
          * Append text to the existing contents.

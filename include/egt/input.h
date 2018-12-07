@@ -56,7 +56,7 @@ namespace egt
     int& event_code();
 
     /**
-     * Get the current widget which has the mouse grabbed.
+     * Get the current widget which has the mouse grabbed, or nullptr.
      */
     Widget* mouse_grab();
 
@@ -66,6 +66,19 @@ namespace egt
      * @param[in] widget The widget to grab all mouse events, or nullptr.
      */
     void mouse_grab(Widget* widget);
+
+    /**
+     * Set the keyboatd focus of a widget.
+     *
+     * This will result in calling on_gain_focus() for the new widget and
+     * on_lost_focus() for any previous widget.
+     */
+    void keyboard_focus(Widget* widget);
+
+    /**
+     * Get the current widget which has the keyboard focus, or nullptr.
+     */
+    Widget* keyboard_focus();
 
     namespace detail
     {

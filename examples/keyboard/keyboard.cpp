@@ -28,7 +28,9 @@ int main(int argc, const char** argv)
     MultilineTextBox textbox(Rect(0, 0, 100, 100), alignmask::LEFT | alignmask::TOP);
     win.add(textbox);
     textbox.set_align(alignmask::EXPAND_HORIZONTAL | alignmask::BOTTOM);
+    keyboard_focus(&textbox);
 
+#if 0
     // TODO: this is broken with keyboard and focus - get dups
     detail::IInput::global_input().on_event([&](eventid event)
     {
@@ -44,7 +46,7 @@ int main(int argc, const char** argv)
         }
         return 0;
     });
-
+#endif
 
     win.show();
 

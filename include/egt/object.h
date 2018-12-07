@@ -86,7 +86,6 @@ namespace egt
              */
             virtual int invoke_handlers(eventid event)
             {
-                // Hmm, this is not respecting the return value of the handler
                 for (auto callback : m_callbacks)
                 {
                     auto ret = callback(event);

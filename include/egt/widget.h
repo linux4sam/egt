@@ -534,11 +534,23 @@ namespace egt
                       " " << box() << std::endl;
         }
 
-        virtual ~Widget();
-
         Rect box_to_child(const Rect& r);
         Rect to_child(const Rect& r);
         Rect to_parent(const Rect& r);
+
+        virtual void on_gain_focus()
+        {
+            m_focus = true;
+        }
+
+        virtual void on_lost_focus()
+        {
+            m_focus = false;
+        }
+
+        virtual bool focus() const { return m_focus; }
+
+	virtual ~Widget();
 
     protected:
 
@@ -618,6 +630,8 @@ namespace egt
         alignmask m_align{alignmask::NONE};
 
         int m_margin{0};
+
+        bool m_focus{false};
 
         Widget(const Widget&) = delete;
         Widget& operator=(const Widget&) = delete;

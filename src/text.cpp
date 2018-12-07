@@ -28,14 +28,16 @@ namespace egt
         : TextBox(std::string(), rect, align)
     {}
 
-    void TextBox::set_focus()
+    void TextBox::on_gain_focus()
     {
         start_cursor();
+        Widget::on_gain_focus();
     }
 
-    void TextBox::lost_focus()
+    void TextBox::on_lost_focus()
     {
         stop_cursor();
+        Widget::on_lost_focus();
     }
 
     int TextBox::handle(eventid event)
@@ -43,7 +45,7 @@ namespace egt
         switch (event)
         {
         case eventid::MOUSE_DOWN:
-            set_focus();
+            keyboard_focus(this);
             return 1;
         case eventid::KEYBOARD_DOWN:
 
@@ -80,7 +82,7 @@ namespace egt
                                           5,
                                           font());
 
-        if (/*focus() &&*/ m_cursor_state)
+        if (focus() && m_cursor_state)
         {
             painter.set_color(palette().color(Palette::BORDER));
             painter.set_line_width(2);
