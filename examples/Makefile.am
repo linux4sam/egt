@@ -56,7 +56,6 @@ endif
 
 if HAVE_LIBPLANES
 bin_PROGRAMS += \
-coin/coin \
 sprite/sprite \
 brick/brick
 endif
@@ -87,13 +86,6 @@ charts_charts_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 charts_chartsdir = $(prefix)/share/egt/examples/charts
 dist_charts_charts_DATA = $(wildcard $(top_srcdir)/examples/charts/*.png)
 charts_charts_LDFLAGS = $(AM_LDFLAGS)
-
-coin_coin_SOURCES = coin/coin.cpp
-coin_coin_CXXFLAGS = $(AM_CXXFLAGS)
-coin_coin_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
-coin_coindir = $(prefix)/share/egt/examples/coin
-dist_coin_coin_DATA = $(wildcard $(top_srcdir)/examples/coin/*.png)
-coin_coin_LDFLAGS = $(AM_LDFLAGS)
 
 easing_easing_SOURCES = easing/easing.cpp
 easing_easing_CXXFLAGS = $(AM_CXXFLAGS)
