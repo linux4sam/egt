@@ -63,8 +63,7 @@ namespace egt
 
         auto cr = painter.context();
 
-        cairo_set_line_width(cr.get(), 1.0);
-
+        painter.set_line_width(1.0);
         painter.set_font(m_font);
 
         cairo_text_extents_t textext;

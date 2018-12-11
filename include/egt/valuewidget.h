@@ -452,6 +452,41 @@ namespace egt
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
+#define OPTIMIZE_SLIDER_DRAW
+#ifdef OPTIMIZE_SLIDER_DRAW
+        /**
+         * By default, damage() will damage the entire box.  However, this
+         * widget can display on a rectangle significantly less that its box().
+         */
+        virtual void damage() override
+        {
+            if (box().empty())
+                return;
+
+            auto handle = handle_box();
+
+            if (m_orientation == orientation::HORIZONTAL)
+            {
+                damage(Rect(x() - 1,
+                            handle.y - 1,
+                            w() + 2,
+                            handle.h + 2));
+            }
+            else
+            {
+                damage(Rect(handle.x  - 1,
+                            y() - 1,
+                            handle.w + 2,
+                            h() + 2));
+            }
+        }
+
+        virtual void damage(const Rect& rect) override
+        {
+            Widget::damage(rect);
+        }
+#endif
+
         virtual void set_value(int v) override
         {
             if (v > m_max)
