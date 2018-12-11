@@ -11,10 +11,6 @@
  * @brief Working with framebuffers.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <egt/screen.h>
 
 namespace egt

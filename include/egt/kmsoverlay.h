@@ -11,13 +11,7 @@
  * @brief Working with KMS screens.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <egt/screen.h>
-
-#ifdef HAVE_LIBPLANES
 
 struct plane_data;
 
@@ -68,7 +62,5 @@ namespace egt
     };
 
 }
-
-#endif
 
 #endif

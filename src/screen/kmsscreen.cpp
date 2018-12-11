@@ -246,12 +246,25 @@ namespace egt
         return plane;
     }
 
-    uint32_t KMSScreen::count_planes(int type)
+    uint32_t KMSScreen::count_planes(plane_type type)
     {
+        int drmtype = DRM_PLANE_TYPE_PRIMARY;
+        switch (type)
+        {
+        case plane_type::overlay:
+            drmtype = DRM_PLANE_TYPE_OVERLAY;
+            break;
+        case plane_type::cursor:
+            drmtype = DRM_PLANE_TYPE_CURSOR;
+            break;
+        default:
+            break;
+        }
+
         uint32_t total = 0;
         for (uint32_t x = 0; x < m_device->num_planes; x++)
         {
-            if ((int)m_device->planes[x]->type == type)
+            if ((int)m_device->planes[x]->type == drmtype)
                 total++;
         }
         return total;

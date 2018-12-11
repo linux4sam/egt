@@ -11,10 +11,6 @@
  * @brief Working with charts.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <egt/widget.h>
 #include <map>
 #include <vector>
@@ -22,7 +18,6 @@
 namespace egt
 {
 
-#ifdef HAVE_KPLOT
     /**
      * Implements a basic line chart widget.
      *
@@ -111,7 +106,6 @@ namespace egt
         float m_linewidth{1.0};
         uint32_t m_grid{0};
     };
-#endif
 
     /**
      * Pie chart widget.

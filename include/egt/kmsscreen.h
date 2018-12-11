@@ -11,17 +11,10 @@
  * @brief Working with KMS screens.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <egt/geometry.h>
 #include <egt/kmsoverlay.h>
 #include <egt/screen.h>
 #include <egt/window.h>
-
-#ifdef HAVE_LIBPLANES
-#include <planes/kms.h>
 
 struct plane_data;
 struct kms_device;
@@ -39,10 +32,17 @@ namespace egt
     public:
         explicit KMSScreen(bool primary = true);
 
+        enum class plane_type
+        {
+            overlay,
+            primary,
+            cursor
+        };
+
         /**
          *
          */
-        uint32_t count_planes(int type = DRM_PLANE_TYPE_OVERLAY);
+        uint32_t count_planes(plane_type type = plane_type::overlay);
 
         static KMSScreen* instance();
 
@@ -69,6 +69,5 @@ namespace egt
     };
 
 }
-#endif
 
 #endif

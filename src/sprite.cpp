@@ -3,6 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "egt/imagecache.h"
 #include "egt/kmsscreen.h"
 #include "egt/painter.h"

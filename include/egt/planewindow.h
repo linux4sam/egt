@@ -11,10 +11,6 @@
  * @brief Working with plane windows.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <egt/window.h>
 
 namespace egt

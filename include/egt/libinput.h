@@ -12,11 +12,7 @@
  * @brief Working with libinput devices.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include "asio.hpp"
+#include <asio.hpp>
 #include <linux/input.h>
 #include <egt/input.h>
 #include <memory>

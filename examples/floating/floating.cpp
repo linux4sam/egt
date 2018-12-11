@@ -148,7 +148,7 @@ int main(int argc, const char** argv)
     }
 
 #ifdef HAVE_LIBPLANES
-    int total = KMSScreen::instance()->count_planes(DRM_PLANE_TYPE_OVERLAY);
+    int total = KMSScreen::instance()->count_planes(KMSScreen::plane_type::overlay);
 #endif
 
 #ifdef HAVE_LIBPLANES

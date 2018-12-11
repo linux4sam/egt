@@ -6,8 +6,6 @@
 #ifndef EGT_X11SCREEN_H
 #define EGT_X11SCREEN_H
 
-#ifdef HAVE_X11
-
 #include <asio.hpp>
 #include <egt/screen.h>
 #include <memory>
@@ -41,7 +39,5 @@ namespace egt
     };
 
 }
-
-#endif
 
 #endif

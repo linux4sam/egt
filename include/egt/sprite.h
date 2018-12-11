@@ -140,7 +140,6 @@ namespace egt
         uint32_t m_strip;
     };
 
-#ifdef HAVE_LIBPLANES
     /**
      * Sprite widget using hardware planes.
      */
@@ -161,7 +160,6 @@ namespace egt
     protected:
         ImageLabel m_label;
     };
-#endif
 
     /**
      * Sprite widget using only software.

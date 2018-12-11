@@ -84,23 +84,26 @@ namespace egt
         template <class T>
         T distance_to(const Point& point)
         {
-            /*
-              return std::sqrt(T((point.x - x) * (point.x - x)) +
-              T((point.y - y) * (point.y - y)));
-            */
+#if 0
+            return std::sqrt(T((point.x - x) * (point.x - x)) +
+                             T((point.y - y) * (point.y - y)));
+#else
             // maybe slower...
             return std::hypot(T(point.x - x), T(point.y - y));
+#endif
         }
 
         dim_t x{0};
         dim_t y{0};
     };
 
+    /// Compares two @c Point objects for equality.
     inline bool operator==(const Point& lhs, const Point& rhs)
     {
         return lhs.x == rhs.x && lhs.y == rhs.y;
     }
 
+    /// Compares two @c Point objects for inequality.
     inline bool operator!=(const Point& lhs, const Point& rhs)
     {
         return !(lhs == rhs);
@@ -172,11 +175,13 @@ namespace egt
         dim_t w{0};
     };
 
+    /// Compares two @c Size objects for equality.
     inline bool operator==(const Size& lhs, const Size& rhs)
     {
         return lhs.w == rhs.w && lhs.h == rhs.h;
     }
 
+    /// Compares two @c Point objects for inequality.
     inline bool operator!=(const Size& lhs, const Size& rhs)
     {
         return !(lhs == rhs);
@@ -525,6 +530,7 @@ namespace egt
         return lhs;
     }
 
+    /// Compares two @c Rect objects for equality.
     inline bool operator==(const Rect& lhs, const Rect& rhs)
     {
         return lhs.x == rhs.x &&
@@ -533,6 +539,7 @@ namespace egt
                lhs.h == rhs.h;
     }
 
+    /// Compares two @c Rect objects for inequality.
     inline bool operator!=(const Rect& lhs, const Rect& rhs)
     {
         return !(lhs == rhs);

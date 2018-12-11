@@ -11,10 +11,6 @@
  * @brief Working with input devices.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <asio.hpp>
 #include <egt/geometry.h>
 #include <egt/object.h>
@@ -122,7 +118,6 @@ namespace egt
         std::vector<char> m_input_buf;
     };
 
-#ifdef HAVE_TSLIB
     namespace detail
     {
         struct tslibimpl;
@@ -147,7 +142,6 @@ namespace egt
         std::unique_ptr<detail::tslibimpl> m_impl;
         bool m_active{false};
     };
-#endif
 
 }
 
