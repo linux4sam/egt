@@ -22,12 +22,12 @@ public:
                   w() / 100, ROWS, 5),
           m_grid2(Rect(Point(0, 30 + 80 + 30), Size(w(), 80)),
                   w() / 100, ROWS, 5),
-          m_ball("small_ball.png"),
-          m_paddle("paddle.png"),
+          m_ball(Image("small_ball.png")),
+          m_paddle(Image("paddle.png")),
           m_running(false),
           e1(r())
     {
-        Image* background = new Image("brick_background.png");
+        auto background = new ImageLabel(Image("brick_background.png"));
         add(background);
         if (background->w() != w() || background->h() != h())
         {
@@ -45,7 +45,7 @@ public:
             {
                 ostringstream ss;
                 ss << "brick" << r << ".png";
-                Image* block = new Image(ss.str());
+                auto block = new ImageLabel(Image(ss.str()));
                 m_blocks.push_back(block);
                 m_grid1.add(block, c, r);
             }
@@ -57,7 +57,7 @@ public:
             {
                 ostringstream ss;
                 ss << "brick" << r + 2 << ".png";
-                Image* block = new Image(ss.str());
+                auto block = new ImageLabel(Image(ss.str()));
                 m_blocks.push_back(block);
                 m_grid2.add(block, c, r);
             }
@@ -216,11 +216,11 @@ private:
 
     StaticGrid m_grid1;
     StaticGrid m_grid2;
-    Image m_ball;
-    Image m_paddle;
+    ImageLabel m_ball;
+    ImageLabel m_paddle;
     float m_xspeed;
     float m_yspeed;
-    vector<Image*> m_blocks;
+    vector<ImageLabel*> m_blocks;
     Label* m_label;
     unsigned int m_points;
     bool m_running;

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/image.h"
 #include "egt/painter.h"
 #include "egt/widget.h"
 #include <cairo.h>
@@ -104,12 +105,13 @@ namespace egt
         return *this;
     }
 
-    Painter& Painter::draw_image(const Point& point, cairo_surface_t* surface, bool bw)
+    Painter& Painter::draw_image(const Point& point, const Image& image, bool bw)
     {
-        double w = cairo_image_surface_get_width(surface);
-        double h = cairo_image_surface_get_height(surface);
-        cairo_set_source_surface(m_cr.get(), surface, point.x, point.y);
-        cairo_rectangle(m_cr.get(), point.x, point.y, w, h);
+        if (image.empty())
+            return *this;
+
+        cairo_set_source_surface(m_cr.get(), image.surface().get(), point.x, point.y);
+        cairo_rectangle(m_cr.get(), point.x, point.y, image.size().w, image.size().h);
         fill();
 
         if (bw)
@@ -119,7 +121,7 @@ namespace egt
             cairo_set_source_rgb(m_cr.get(), 0, 0, 0);
             cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_HSL_COLOR);
             cairo_mask_surface(m_cr.get(),
-                               surface,
+                               image.surface().get(),
                                point.x,
                                point.y);
         }
@@ -127,16 +129,42 @@ namespace egt
         return *this;
     }
 
-    Painter& Painter::draw_image(const Point& point, shared_cairo_surface_t surface, bool bw)
+    Painter& Painter::draw_image(const Rect& rect, const Point& point, const Image& image)
     {
-        return draw_image(point, surface.get(), bw);
-    }
+                if (image.empty())
+            return *this;
 
-    Painter& Painter::draw_image(const Rect& rect, const Point& point, shared_cairo_surface_t surface)
-    {
-        cairo_set_source_surface(m_cr.get(), surface.get(), point.x - rect.x, point.y - rect.y);
+        cairo_set_source_surface(m_cr.get(), image.surface().get(),
+                                 point.x - rect.x, point.y - rect.y);
         cairo_rectangle(m_cr.get(), point.x, point.y, rect.w, rect.h);
         fill();
+
+        return *this;
+    }
+
+    Painter& Painter::draw_image(const Image& image,
+                                 const Rect& dest,
+                                 alignmask align, int margin, bool bw)
+    {
+        if (image.empty())
+            return *this;
+
+        Rect target = Widget::align_algorithm(image.size(), dest, align, margin);
+
+        if (true)
+            draw_image(target.point(), image, bw);
+        else
+            paint_surface_with_drop_shadow(
+                image.surface().get(),
+                5,
+                0.2,
+                0.4,
+                /*target.x,
+                  target.y,
+                  width,
+                  height,*/
+                target.x,
+                target.y);
 
         return *this;
     }
@@ -441,33 +469,6 @@ namespace egt
         set_color(border);
         cairo_set_line_width(m_cr.get(), 1.0);
         cairo_stroke(m_cr.get());
-    }
-
-    Painter& Painter::draw_image(shared_cairo_surface_t image,
-                                 const Rect& dest,
-                                 alignmask align, int margin, bool bw)
-    {
-        auto width = cairo_image_surface_get_width(image.get());
-        auto height = cairo_image_surface_get_height(image.get());
-
-        Rect target = Widget::align_algorithm(Size(width, height), dest, align, margin);
-
-        if (true)
-            draw_image(target.point(), image, bw);
-        else
-            paint_surface_with_drop_shadow(
-                image.get(),
-                5,
-                0.2,
-                0.4,
-                /*target.x,
-                  target.y,
-                  width,
-                  height,*/
-                target.x,
-                target.y);
-
-        return *this;
     }
 
     /* https://people.freedesktop.org/~joonas/shadow.c */

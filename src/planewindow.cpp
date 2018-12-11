@@ -126,8 +126,8 @@ namespace egt
     {
         Painter::AutoSaveRestore sr(painter);
 
-        auto surface = cairo_get_target(screen()->context().get());
-        painter.draw_image(point(), surface);
+        auto image = Image(cairo_get_target(screen()->context().get()));
+        painter.draw_image(point(), image);
     }
 
     void Window::show()

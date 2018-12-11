@@ -16,6 +16,8 @@
 
 namespace egt
 {
+    class Image;
+
     using shared_cairo_surface_t =
         std::shared_ptr<cairo_surface_t>;
 
@@ -130,10 +132,7 @@ namespace egt
          * Draw an image surface at the specified point.
          */
         virtual Painter& draw_image(const Point& point,
-                                    shared_cairo_surface_t surface, bool bw = false);
-
-        virtual Painter& draw_image(const Point& point,
-                                    cairo_surface_t* surface, bool bw = false);
+                                    const Image& image, bool bw = false);
 
         /**
          * @param[in] rect The source rect to copy.
@@ -141,7 +140,13 @@ namespace egt
          * @param[in] surface The image surface to draw.
          */
         virtual Painter& draw_image(const Rect& rect, const Point& point,
-                                    shared_cairo_surface_t surface);
+                                    const Image& image);
+
+        virtual Painter& draw_image(const Image& image,
+                                    const Rect& dest,
+                                    alignmask align = alignmask::CENTER,
+                                    int margin = 0,
+                                    bool bw = false);
 
         virtual Painter& arc(const Point& point, float radius, float angle1,
                              float angle2);
@@ -195,12 +200,6 @@ namespace egt
                                const Font& font = Font());
 
         virtual Size text_size(const std::string& text);
-
-        virtual Painter& draw_image(shared_cairo_surface_t image,
-                                    const Rect& dest,
-                                    alignmask align = alignmask::CENTER,
-                                    int margin = 0,
-                                    bool bw = false);
 
         enum class boxtype
         {

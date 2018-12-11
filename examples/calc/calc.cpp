@@ -23,10 +23,10 @@ int main(int argc, const char** argv)
 
     MultilineTextBox text("");
     topgrid.add(&text, 0, 0, alignmask::EXPAND);
-    text.text_align(alignmask::CENTER | alignmask::RIGHT);
+    text.set_text_align(alignmask::CENTER | alignmask::RIGHT);
     text.set_font(Font(25));
 
-    Image logo("@microchip_logo_black.png");
+    ImageLabel logo(Image("@microchip_logo_black.png"));
     win.add(&logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
     StaticGrid buttongrid(Rect(), 4, 5, 5);

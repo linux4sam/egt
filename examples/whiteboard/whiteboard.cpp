@@ -140,10 +140,10 @@ public:
     MainWindow()
         : m_down(false),
           m_grid(Rect(Size(100, 250)), 1, 4, 5),
-          m_colorbtn("palette.png"),
-          m_fillbtn("fill.png"),
-          m_widthbtn("width.png"),
-          m_clearbtn("clear.png"),
+          m_colorbtn(Image("palette.png")),
+          m_fillbtn(Image("fill.png")),
+          m_widthbtn(Image("width.png")),
+          m_clearbtn(Image("clear.png")),
           m_penpicker(Color::BLUE),
           m_fillpicker(Color::WHITE),
           m_widthpicker(2),
@@ -212,6 +212,9 @@ public:
             }
             return 0;
         });
+
+        auto logo = new ImageLabel(Image("@microchip_logo_black.png"));
+        add(logo)->set_align(alignmask::RIGHT | alignmask::TOP, 10);
 
         clear();
     }
@@ -282,7 +285,7 @@ public:
         painter.set_color(palette().color(Palette::BG, Palette::GROUP_NORMAL));
         painter.draw_fill(rect);
 
-        painter.draw_image(rect, rect.point(), m_canvas.surface());
+        painter.draw_image(rect, rect.point(), Image(m_canvas.surface()));
 
         TopWindow::draw(painter, rect);
     }

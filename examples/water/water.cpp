@@ -17,11 +17,11 @@
 using namespace std;
 using namespace egt;
 
-class Bubble : public Image
+class Bubble : public ImageLabel
 {
 public:
     Bubble(int xspeed, int yspeed, const Point& point)
-        : Image("smallbubble.png", point),
+        : ImageLabel(Image("smallbubble.png"), point),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}
@@ -55,7 +55,7 @@ public:
         : TopWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
           e1(r())
     {
-        Image* img = new Image("water_1080.png");
+        auto img = new ImageLabel(Image("water_1080.png"));
         add(img);
         if (img->h() != h())
         {

@@ -23,7 +23,7 @@ class MyWindow : public TopWindow
 public:
     MyWindow()
         : TopWindow(Size(), widgetmask::NO_BACKGROUND),
-          m_img("background.png")
+          m_img(Image("background.png"))
     {
         add(&m_img);
         if (m_img.w() != w())
@@ -33,7 +33,7 @@ public:
         }
     }
 
-    Image m_img;
+    ImageLabel m_img;
 };
 
 class FloatingBox
@@ -141,7 +141,7 @@ int main(int argc, const char** argv)
     {
         stringstream os;
         os << "image" << x << ".png";
-        Image* image = new Image(os.str(), Point(100, 100));
+        auto image = new ImageLabel(Image(os.str()));
         image->set_name("software " + os.str());
         boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
         win.add(image);
@@ -157,7 +157,7 @@ int main(int argc, const char** argv)
     {
         stringstream os;
         os << "image" << x << ".png";
-        Image* image = new Image(os.str());
+        auto image = new ImageLabel(Image(os.str()));
         image->set_name("hardware " + os.str());
         auto plane = new Window(Size(image->w(), image->h()));
         plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);

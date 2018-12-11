@@ -29,10 +29,10 @@ public:
              int x = 0,
              int y = 0,
              widgetmask flags = widgetmask::NONE)
-        : ImageButton(filename, label, Rect(Point(x, y), Size()), flags)
+        : ImageButton(Image(filename), label, Rect(Point(x, y), Size()), flags)
     {
         image_align(alignmask::CENTER);
-        text_align(alignmask::CENTER | alignmask::BOTTOM);
+        set_text_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
     int handle(eventid event) override
@@ -65,13 +65,13 @@ public:
     }
 };
 
-class HomeImage : public Image
+class HomeImage : public ImageLabel
 {
 public:
     HomeImage(const string& filename,
               int x = 0,
               int y = 0)
-        : Image(filename, Point(x, y))
+        : ImageLabel(Image(filename), Point(x, y))
     {}
 
     int handle(eventid event) override
@@ -100,7 +100,7 @@ public:
             break;
         }
 
-        return Image::handle(event);
+        return ImageLabel::handle(event);
     }
 };
 
@@ -167,7 +167,7 @@ static void top_menu(BasicWindow* win)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win->add(l2);
 
-    Image* i2 = new Image("wifi.png", Point(800 - 50, 10));
+    auto i2 = new ImageLabel(Image("wifi.png"), Point(800 - 50, 10));
     win->add(i2);
 }
 

@@ -550,7 +550,7 @@ namespace egt
 
         virtual bool focus() const { return m_focus; }
 
-	virtual ~Widget();
+        virtual ~Widget();
 
     protected:
 
@@ -673,7 +673,14 @@ namespace egt
         /**
          * Set the alignment of the Label.
          */
-        void text_align(alignmask align) { m_text_align = align; }
+        void set_text_align(alignmask align)
+	{
+            if (m_text_align != align)
+            {
+                m_text_align = align;
+                damage();
+            }
+	}
 
         /**
          * Get the widget Font.
@@ -705,6 +712,7 @@ namespace egt
         void set_font(const Font& font)
         {
             m_font.reset(new Font(font));
+            damage();
         }
 
         virtual ~TextWidget()

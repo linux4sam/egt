@@ -21,6 +21,8 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv);
 
+    set_image_path(SHARED_PATH);
+
     std::vector<std::string> files = experimental::glob(SHARED_PATH "*trailer*.png");
 
     TopWindow win;
@@ -28,7 +30,7 @@ int main(int argc, const char** argv)
     win.flag_set(widgetmask::NO_BORDER);
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
-    Image logo("@microchip_logo_white.png");
+    ImageLabel logo(Image("@microchip_logo_white.png"));
     win.add(&logo);
     logo.set_align(alignmask::LEFT | alignmask::TOP, 10);
 
@@ -45,7 +47,7 @@ int main(int argc, const char** argv)
 
     for (auto& file : files)
     {
-        grid0.add(new Image(file), alignmask::CENTER);
+        grid0.add(new ImageLabel(Image(file)), alignmask::CENTER);
     }
 
     ScrolledView view1(Rect(0, logo.h() + grid_height + 1, win.size().w, grid_height));
@@ -59,7 +61,7 @@ int main(int argc, const char** argv)
 
     for (auto& file : files)
     {
-        grid1.add(new Image(file), alignmask::CENTER);
+        grid1.add(new ImageLabel(Image(file)), alignmask::CENTER);
     }
 
     Popup<Window> popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
@@ -69,7 +71,7 @@ int main(int argc, const char** argv)
     button.set_align(alignmask::CENTER);
     button.set_name("hw");
 
-    ImageButton settings(SHARED_PATH "settings.png", "", Rect(), widgetmask::NO_BORDER);
+    ImageButton settings(Image("settings.png"), "", Rect(), widgetmask::NO_BORDER);
     win.add(&settings);
     settings.flag_set(widgetmask::NO_BACKGROUND);
     settings.set_align(alignmask::RIGHT | alignmask::TOP, 10);

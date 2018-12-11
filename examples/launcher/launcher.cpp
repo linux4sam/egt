@@ -66,20 +66,22 @@ static std::string exec(const char* cmd, bool wait = false)
 /*
  * A launcher menu item.
  */
-class LauncherItem : public ImageText
+class LauncherItem : public ImageLabel
 {
 public:
     LauncherItem(int num, const string& name, const string& description,
                  const string& image, const string& exec, int x = 0, int y = 0)
-        : ImageText(image, name, Point(x, y)),
+        : ImageLabel(Image(image), name, Point(x, y)),
           m_num(num),
           m_name(name),
           m_description(description),
           m_exec(exec)
     {
+        resize(size() + Size(0, 50));
         palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
         Font newfont(24, Font::weightid::BOLD);
-        font(newfont);
+        set_font(newfont);
+        set_text_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
     int handle(eventid event) override
@@ -105,7 +107,7 @@ public:
             break;
         }
 
-        return Image::handle(event);
+        return ImageLabel::handle(event);
     }
 
     void scale_box(int pos)
@@ -144,12 +146,12 @@ public:
 
         m_popup.add(new Button("Hello World"))->set_align(alignmask::CENTER);
 
-        add(new Image("background.png"));
+        add(new ImageLabel(Image("background.png")));
 
-        auto logo = new Image("@microchip_logo_white.png");
+        auto logo = new ImageLabel(Image("@microchip_logo_white.png"));
         add(logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
-        auto settings = new ImageButton("settings.png", "", Rect());
+        auto settings = new ImageButton(Image("settings.png"), "", Rect());
         settings->flag_clear(widgetmask::GRAB_MOUSE);
         add(settings);
         settings->set_align(alignmask::RIGHT | alignmask::TOP, 10);

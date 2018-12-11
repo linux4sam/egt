@@ -68,7 +68,7 @@ public:
 
     int load()
     {
-        Image* img = new Image("background.png");
+        auto img = new ImageLabel(Image("background.png"));
         double scale = (double)w() / (double)img->w();
         add(img);
         img->scale(scale, scale);
@@ -92,7 +92,7 @@ public:
             return 0;
         });
 
-        Image* image = new Image("ball.png");
+        auto image = new ImageLabel(Image("ball.png"));
         // There is a bug on 9x5 that if the plane is all the way out of view
         // then it will cause glitches. So, we create the height (which will
         // be invisible), to always keep a portion of the plane on screen

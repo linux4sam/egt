@@ -25,12 +25,12 @@ int main()
 
     auto NAV_WIDTH = 80;
 
-    ImageButton left(win, "arrow_left.png", "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
+    ImageButton left(win, Image("arrow_left.png"), "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
     left.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     left.image_align(alignmask::CENTER);
     left.set_align(alignmask::LEFT);
 
-    ImageButton right(win, "arrow_right.png", "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
+    ImageButton right(win, Image("arrow_right.png"), "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
     right.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
     right.image_align(alignmask::CENTER);
     right.set_align(alignmask::RIGHT);
@@ -75,7 +75,7 @@ int main()
     for (auto& file : files)
     {
         std::string basename = file.substr(file.find_last_of("/\\") + 1);
-        auto icon = new ImageButton(file, basename);
+        auto icon = new ImageButton(Image(file), basename);
         icon->flag_set(widgetmask::NO_BORDER);
         icon->flag_set(widgetmask::NO_BACKGROUND);
         icon->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK);

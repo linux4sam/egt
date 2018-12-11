@@ -11,25 +11,32 @@
  * @brief Working with images.
  */
 
-#include <egt/widget.h>
-#include <egt/font.h>
+#include <cairo.h>
+#include <egt/geometry.h>
+#include <egt/painter.h>
+#include <string>
 
 namespace egt
 {
-
     /**
-     * Basic widget that displays an image.
+     * Image used for drawing or displaying.
+     *
+     * This class by default shares the internal surface pointer with anything
+     * else using the surface.  To force this class to keep its own copy, call
+     * the copy() function.
+     *
+     * If a filename is used to contruct an Image, the detail::ImageCache class
+     * will be used.
      */
-    class Image : public Widget
+    class Image
     {
     public:
-        explicit Image(const std::string& filename,
-                       const Point& point = Point());
+        explicit Image(const std::string& filename = std::string(),
+                       double hscale = 1.0, double vscale = 1.0);
 
-        Image(Frame& parent,
-              const std::string& filename, const Point& point = Point());
+        explicit Image(shared_cairo_surface_t surface);
 
-        virtual void draw(Painter& painter, const Rect& rect) override;
+        explicit Image(cairo_surface_t* surface);
 
         /**
          * Scale the image.
@@ -44,9 +51,9 @@ namespace egt
         virtual void scale(double hscale, double vscale,
                            bool approximate = false);
 
-        virtual void resize(const Size& size) override
+        virtual void resize(const Size& size)
         {
-            if (box().size() != size)
+            if (this->size() != size)
             {
                 double hs = (double)size.w / (double)m_orig_size.w;
                 double vs = (double)size.h / (double)m_orig_size.h;
@@ -59,64 +66,73 @@ namespace egt
          */
         double hscale() const { return m_hscale; }
 
+        Size size() const
+        {
+            if (empty())
+                return Size();
+
+            return Size(cairo_image_surface_get_width(surface().get()),
+                        cairo_image_surface_get_height(surface().get()));
+        }
+
         /**
          * Get the vertical scale value.
          */
         double vscale() const { return m_vscale; }
 
-        shared_cairo_surface_t surface() const { return m_image; }
+        /**
+         * Returns true if no internal surface is set.
+         */
+        bool empty() const
+        {
+            return !surface();
+        }
+
+        shared_cairo_surface_t surface() const
+        {
+            if (m_surface_local.get())
+                return m_surface_local;
+            return m_surface;
+        }
+
+        Size size_orig() const { return m_orig_size; }
+
+        /**
+        * This function must be called any time the surface is going to be
+         * modified.  It's safe to call this function when not necessary, and in
+         * any event it will ensure this Image contains a unique copy of the
+               * surface.
+         */
+        virtual void copy();
 
         virtual ~Image();
 
     protected:
 
+        /**
+         * If a filename was used, the filename.
+         */
         std::string m_filename;
+
         double m_hscale{1.0};
         double m_vscale{1.0};
-        shared_cairo_surface_t m_image;
+
+        /**
+         * Shared surface pointer.
+         */
+        shared_cairo_surface_t m_surface;
+
+        /**
+         * Local surface pointer.
+         */
+        shared_cairo_surface_t m_surface_local;
 
         /**
          * Original image size, used for scaling through a resize() call.
          */
         Size m_orig_size;
-
-    private:
-
-        Image() = delete;
     };
 
-    /**
-     * @todo Very similar to ImageLabel, but works a bit different.  Need to reconcile.
-     */
-    class ImageText : public Image
-    {
-    public:
-        ImageText(const std::string& image,
-                  const std::string& text = std::string(),
-                  const Point& point = Point(),
-                  const Font& font = Font());
-
-        /**
-         * Get the text of the label.
-         */
-        virtual const std::string& text() const { return m_text; }
-
-        /**
-         * Set the font of the label.
-         */
-        virtual void font(const Font& font) { m_font = font; }
-
-        virtual void draw(Painter& painter, const Rect& rect) override;
-
-        virtual void label_enabled(bool value);
-
-        virtual ~ImageText();
-
-    protected:
-        std::string m_text;
-        Font m_font;
-        bool m_label;
-    };
 }
 
 #endif

@@ -85,21 +85,19 @@ namespace egt
     {
     }
 
-    ImageButton::ImageButton(const std::string& image,
+    ImageButton::ImageButton(const Image& image,
                              const std::string& text,
                              const Rect& rect,
                              widgetmask flags) noexcept
         : Button(text, rect, Font(), flags),
           m_image_align(alignmask::CENTER)
     {
-        text_align(alignmask::CENTER | alignmask::BOTTOM);
-
-        if (!image.empty())
-            do_set_image(image);
+        set_text_align(alignmask::CENTER | alignmask::BOTTOM);
+        do_set_image(image);
     }
 
     ImageButton::ImageButton(Frame& parent,
-                             const std::string& image,
+                             const Image& image,
                              const std::string& text,
                              const Rect& rect,
                              widgetmask flags) noexcept
@@ -108,19 +106,21 @@ namespace egt
         parent.add(this);
     }
 
-    void ImageButton::do_set_image(const std::string& image)
+    void ImageButton::do_set_image(const Image& image)
     {
-        m_image = detail::image_cache.get(image, 1.0);
-
+        if (!image.empty())
+        {
+            m_image = image;
 #if 0
-        auto width = cairo_image_surface_get_width(m_image.get());
-        auto height = cairo_image_surface_get_height(m_image.get());
-        m_box.w = width;
-        m_box.h = height;
+            auto width = cairo_image_surface_get_width(m_image.get());
+            auto height = cairo_image_surface_get_height(m_image.get());
+            m_box.w = width;
+            m_box.h = height;
 #endif
+        }
     }
 
-    void ImageButton::set_image(const std::string& image)
+    void ImageButton::set_image(const Image& image)
     {
         do_set_image(image);
         damage();

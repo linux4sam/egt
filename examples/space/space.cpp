@@ -12,11 +12,11 @@
 using namespace std;
 using namespace egt;
 
-class Ball : public Image
+class Ball : public ImageLabel
 {
 public:
     Ball(int xspeed, int yspeed) noexcept
-        : Image("metalball.png"),
+        : ImageLabel(Image("metalball.png")),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}

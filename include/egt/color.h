@@ -12,6 +12,7 @@
  */
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <iosfwd>
 #include <string>
@@ -66,6 +67,14 @@ namespace egt
             m_a = c & 0xFF;
         }
 
+        void setr(uint32_t c)
+        {
+            m_a = (c >> 24) & 0xFF;
+            m_r = (c >> 16) & 0xFF;
+            m_g = (c >> 8) & 0xFF;
+            m_b = c & 0xFF;
+        }
+
         /**
          * Create a color with the specified RGBA component values.
          *
@@ -94,6 +103,24 @@ namespace egt
             return Color((std::stoi(str, nullptr, 16) << 8) | 0xff);
         }
 
+        static inline Color hue(const Color& in, float h)
+        {
+            float u = std::cos(h * M_PI / 180);
+            float w = std::sin(h * M_PI / 180);
+
+            Color ret;
+            ret.red((.299 + .701 * u + .168 * w)*in.red()
+                    + (.587 - .587 * u + .330 * w)*in.green()
+                    + (.114 - .114 * u - .497 * w)*in.blue());
+            ret.green((.299 - .299 * u - .328 * w)*in.red()
+                      + (.587 + .413 * u + .035 * w)*in.green()
+                      + (.114 - .114 * u + .292 * w)*in.blue());
+            ret.blue((.299 - .3 * u + 1.25 * w)*in.red()
+                     + (.587 - .588 * u - 1.05 * w)*in.green()
+                     + (.114 + .886 * u - .203 * w)*in.blue());
+            return ret;
+        }
+
         //@{
         /** @brief RGBA component values as a float from 0.0 to 1.0. */
         inline float redf() const { return m_r / 255.; }
@@ -101,6 +128,11 @@ namespace egt
         inline float bluef() const { return m_b / 255.; }
         inline float alphaf() const { return m_a / 255.; }
         //@}
+
+        inline void redf(float v) { m_r = v; }
+        inline void greenf(float v) { m_g = v; }
+        inline void bluef(float v) { m_b = v; }
+        inline void alphaf(float v) { m_a  = v; }
 
         //@{
         /** @brief RGBA component values as value from 0 to 255. */

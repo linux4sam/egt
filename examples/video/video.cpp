@@ -165,7 +165,7 @@ int main(int argc, const char** argv)
     grid.set_name("grid");
     ctrlwindow.add(&grid);
 
-    ImageButton* playbtn = new ImageButton(":play_png", "", Rect(),
+    ImageButton* playbtn = new ImageButton(Image(":play_png"), "", Rect(),
                                            widgetmask::NO_BORDER | widgetmask::NO_BACKGROUND);
     grid.add(playbtn);
 
@@ -177,7 +177,7 @@ int main(int argc, const char** argv)
         return 0;
     });
 
-    ImageButton* pausebtn = new ImageButton(":pause_png", "", Rect(),
+    ImageButton* pausebtn = new ImageButton(Image(":pause_png"), "", Rect(),
                                             widgetmask::NO_BORDER | widgetmask::NO_BACKGROUND);
     grid.add(pausebtn);
     pausebtn->on_event([pausebtn, window](eventid event)
@@ -218,7 +218,7 @@ int main(int argc, const char** argv)
     });
     postimer.start();
 
-    ImageButton* volumei = new ImageButton(":volumeup_png", "", Rect(),
+    ImageButton* volumei = new ImageButton(Image(":volumeup_png"), "", Rect(),
                                            widgetmask::NO_BORDER | widgetmask::NO_BACKGROUND);
     grid.add(volumei);
 

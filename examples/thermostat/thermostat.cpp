@@ -24,8 +24,8 @@ public:
           m_a3(800, 700,
                std::chrono::milliseconds(1500),
                easing_snap),
-          m_background(*this, "background.png"),
-          m_logo(*this, "@microchip_logo_black.png"),
+          m_background(*this, Image("background.png")),
+          m_logo(*this, Image("@microchip_logo_black.png")),
           m_title(*this, "Living Room",
                   Rect(Point(), Size(250, 64)),
                   alignmask::CENTER,
@@ -34,17 +34,17 @@ public:
                                -350),
                          Size(350, 350)),
                     0, 100),
-          m_label1("day.png",
+          m_label1(Image("day.png"),
                    "Day",
                    Rect(Point(-200, 150),
                         Size(180, 64)),
                    egt::Font(30)),
-          m_label2("night.png",
+          m_label2(Image("night.png"),
                    "Night",
                    Rect(Point(-200, 214),
                         Size(180, 64)),
                    egt::Font(30)),
-          m_label3("vacation.png",
+          m_label3(Image("vacation.png"),
                    "Vacation",
                    Rect(Point(-200, 278),
                         Size(180, 64)),
@@ -173,8 +173,8 @@ protected:
     PropertyAnimator m_a1;
     PropertyAnimator m_a2;
     PropertyAnimator m_a3;
-    Image m_background;
-    Image m_logo;
+    ImageLabel m_background;
+    ImageLabel m_logo;
     Label m_title;
     Radial<int> m_radial1;
     ImageLabel m_label1;

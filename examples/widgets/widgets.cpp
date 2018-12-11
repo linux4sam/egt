@@ -66,10 +66,10 @@ int main(int argc, const char** argv)
     text2.disable();
     grid0.add(&text2);
 
-    ImageLabel imagelabel1("@bug.png", "Bug");
+    ImageLabel imagelabel1(Image("@bug.png"), "Bug");
     grid0.add(&imagelabel1);
 
-    ImageLabel imagelabel2("@phone.png", "Phone");
+    ImageLabel imagelabel2(Image("@phone.png"), "Phone");
     grid0.add(&imagelabel2);
 
     CheckBox checkbox1("checkbox 1");

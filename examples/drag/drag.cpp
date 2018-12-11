@@ -24,7 +24,7 @@ class MainWindow : public TopWindow
 public:
     MainWindow()
         : TopWindow(Size(), widgetmask::NO_BACKGROUND),
-          m_img("background.png")
+          m_img(Image("background.png"))
     {
         add(&m_img);
         if (m_img.w() != w())
@@ -33,11 +33,11 @@ public:
             m_img.scale(scale, scale);
         }
 
-        auto logo = new Image("@microchip_logo_white.png");
+        auto logo = new ImageLabel(Image("@microchip_logo_white.png"));
         add(logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
     }
 
-    Image m_img;
+    ImageLabel m_img;
 };
 
 class FloatingBox : public Frame
@@ -45,8 +45,8 @@ class FloatingBox : public Frame
 public:
     explicit FloatingBox(const Rect& rect)
         : Frame(rect),
-          m_grip("grip.png"),
-          m_arrows("arrows.png")
+          m_grip(Image("grip.png")),
+          m_arrows(Image("arrows.png"))
     {
         flag_set(widgetmask::TRANSPARENT_BACKGROUND);
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x526d7480));
@@ -91,8 +91,8 @@ public:
     }
 
 protected:
-    Image m_grip;
-    Image m_arrows;
+    ImageLabel m_grip;
+    ImageLabel m_arrows;
     detail::MouseDrag m_drag;
 };
 

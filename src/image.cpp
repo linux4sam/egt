@@ -5,85 +5,71 @@
  */
 #include "egt/image.h"
 #include "egt/imagecache.h"
-#include "egt/painter.h"
-#include "egt/frame.h"
+#include "egt/canvas.h"
 
 using namespace std;
 
 namespace egt
 {
 
-    Image::Image(const std::string& filename, const Point& point)
-        : m_filename(filename),
-          m_image(detail::image_cache.get(filename, 1.0))
+    Image::Image(const std::string& filename,
+                 double hscale, double vscale)
+        : m_filename(filename)
     {
-        assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
+        if (!filename.empty())
+        {
+            m_surface = detail::image_cache.get(filename, hscale, vscale);
+            assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
-        m_box = Rect(point.x, point.y,
-                     cairo_image_surface_get_width(m_image.get()),
-                     cairo_image_surface_get_height(m_image.get()));
-
-        m_orig_size = m_box.size();
+            m_orig_size = Size(cairo_image_surface_get_width(m_surface.get()),
+                               cairo_image_surface_get_height(m_surface.get()));
+        }
     }
 
-    Image::Image(Frame& parent, const std::string& filename, const Point& point)
-        : Image(filename, point)
+    Image::Image(shared_cairo_surface_t surface)
+        : m_surface(surface)
     {
-        parent.add(this);
+        assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
+
+        m_orig_size = Size(cairo_image_surface_get_width(m_surface.get()),
+                           cairo_image_surface_get_height(m_surface.get()));
+    }
+
+    Image::Image(cairo_surface_t* surface)
+        : m_surface(cairo_image_surface_create(cairo_image_surface_get_format(surface),
+                                               cairo_image_surface_get_width(surface),
+                                               cairo_image_surface_get_height(surface)),
+                    cairo_surface_destroy)
+    {
+        assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
+
+        m_orig_size = Size(cairo_image_surface_get_width(m_surface.get()),
+                           cairo_image_surface_get_height(m_surface.get()));
     }
 
     void Image::scale(double hscale, double vscale, bool approximate)
     {
+        if (m_filename.empty())
+            return;
+
         if (m_hscale != hscale || m_vscale != vscale)
         {
-            m_image = detail::image_cache.get(m_filename, hscale, vscale, approximate);
-
-            Widget::resize(Size(cairo_image_surface_get_width(m_image.get()),
-                                cairo_image_surface_get_height(m_image.get())));
+            m_surface = detail::image_cache.get(m_filename, hscale, vscale, approximate);
             m_hscale = hscale;
             m_vscale = vscale;
         }
     }
 
-    void Image::draw(Painter& painter, const Rect& rect)
+    void Image::copy()
     {
-        painter.draw_image(Rect(rect.point() - box().point(), rect.size()),
-                           rect.point(), m_image);
+        if (!m_surface_local.get())
+        {
+            auto canvas = Canvas(surface());
+            m_surface_local = canvas.surface();
+        }
     }
 
     Image::~Image()
     {}
 
-    ImageText::ImageText(const std::string& image,
-                         const std::string& text,
-                         const Point& point,
-                         const Font& font)
-        : Image(image, point),
-          m_text(text),
-          m_font(font),
-          m_label(true)
-    {
-    }
-
-    void ImageText::draw(Painter& painter, const Rect& rect)
-    {
-        Image::draw(painter, rect);
-
-        if (m_label)
-            painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
-                              alignmask::BOTTOM | alignmask::CENTER, 0, m_font);
-    }
-
-    void ImageText::label_enabled(bool value)
-    {
-        if (m_label != value)
-        {
-            m_label = value;
-            damage();
-        }
-    }
-
-    ImageText::~ImageText()
-    {
-    }
 }

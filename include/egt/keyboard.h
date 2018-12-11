@@ -59,7 +59,7 @@ namespace egt
                     Button* b;
 
                     if (label.find(".png") != std::string::npos)
-                        b = new ImageButton(label);
+                        b = new ImageButton(Image(label));
                     else
                         b = new Button(label);
 

@@ -50,20 +50,20 @@ namespace egt
     class ImageButton : public Button
     {
     public:
-        ImageButton(const std::string& image,
+        ImageButton(const Image& image,
                     const std::string& text = "",
                     const Rect& rect = Rect(),
                     widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept;
 
         ImageButton(Frame& parent,
-                    const std::string& image,
+                    const Image& image,
                     const std::string& text = "",
                     const Rect& rect = Rect(),
                     widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
-        void set_image(const std::string& image);
+        void set_image(const Image& image);
 
         void image_align(alignmask align)
         {
@@ -74,9 +74,9 @@ namespace egt
 
     protected:
 
-        void do_set_image(const std::string& image);
+        void do_set_image(const Image& image);
 
-        shared_cairo_surface_t m_image;
+        Image m_image;
         alignmask m_image_align;
     };
 

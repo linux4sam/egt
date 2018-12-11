@@ -19,8 +19,8 @@ namespace egt
 {
 
     /**
-             * Combo box widget.
-             */
+     * Combo box widget.
+     */
     class ComboBox : public TextWidget
     {
     public:

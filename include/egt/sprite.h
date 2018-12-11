@@ -12,10 +12,11 @@
  */
 
 #include <egt/image.h>
+#include <egt/label.h>
+#include <egt/painter.h>
+#include <egt/planewindow.h>
 #include <egt/widget.h>
 #include <egt/window.h>
-#include <egt/planewindow.h>
-#include <egt/painter.h>
 
 namespace egt
 {
@@ -26,13 +27,13 @@ namespace egt
     class ISpriteBase
     {
     public:
-        ISpriteBase(const std::string& filename, const Size& frame_size,
+        ISpriteBase(const Image& image, const Size& frame_size,
                     int framecount, const Point& frame_point)
-            : m_image(filename),
-              m_filename(filename),
+            : m_image(image),
               m_frame(frame_size),
               m_index(0)
         {
+		m_image.copy();
             m_strip = add_strip(framecount, frame_point);
         }
 
@@ -115,7 +116,7 @@ namespace egt
         virtual Point get_frame_origin(int index) const
         {
             Point origin;
-            auto imagew = m_image.w();
+            auto imagew = m_image.size().w;
             origin.x = m_strips[m_strip].point.x + (index * m_frame.w);
             origin.y = m_strips[m_strip].point.y;
 
@@ -133,7 +134,6 @@ namespace egt
         using strip_array = std::vector<strip>;
 
         Image m_image;
-        std::string m_filename;
         Size m_frame;
         int m_index;
         strip_array m_strips;
@@ -147,7 +147,7 @@ namespace egt
     class HardwareSprite : public Window, public ISpriteBase
     {
     public:
-        HardwareSprite(const std::string& filename, const Size& frame_size,
+        HardwareSprite(const Image& image, const Size& frame_size,
                        int framecount, const Point& frame_point,
                        const Point& point = Point());
 
@@ -158,6 +158,8 @@ namespace egt
         virtual shared_cairo_surface_t surface() const;
 
         virtual ~HardwareSprite();
+    protected:
+        ImageLabel m_label;
     };
 #endif
 
@@ -167,7 +169,7 @@ namespace egt
     class SoftwareSprite : public Widget, public ISpriteBase
     {
     public:
-        SoftwareSprite(const std::string& filename, const Size& frame_size,
+        SoftwareSprite(const Image& image, const Size& frame_size,
                        int framecount, const Point& frame_point,
                        const Point& point = Point());
 

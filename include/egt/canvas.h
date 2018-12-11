@@ -45,6 +45,9 @@ namespace egt
         virtual ~Canvas();
 
     protected:
+
+        void copy(shared_cairo_surface_t surface);
+
         shared_cairo_surface_t m_surface;
         shared_cairo_t m_cr;
 

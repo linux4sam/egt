@@ -17,7 +17,6 @@ namespace egt
                  alignmask align, const Font& font, widgetmask flags) noexcept
         : TextWidget(text, rect, align, font, flags)
     {
-
     }
 
     Label::Label(Frame& parent, const std::string& text, const Rect& rect,
@@ -219,14 +218,39 @@ namespace egt
     SlidingCheckBox::~SlidingCheckBox()
     {}
 
-    ImageLabel::ImageLabel(const std::string& image,
+    ImageLabel::ImageLabel(const Image& image,
                            const std::string& text,
                            const Rect& rect,
                            const Font& font)
         : Label(text, rect, alignmask::LEFT | alignmask::CENTER, font),
-          m_image(detail::image_cache.get(image, 1.0))
+          m_image(image)
     {
-        assert(cairo_surface_status(m_image.get()) == CAIRO_STATUS_SUCCESS);
+        if (rect.empty())
+            m_box = Rect(rect.point(), m_image.size());
+    }
+
+    ImageLabel::ImageLabel(const Image& image,
+                           const Point& point)
+        : ImageLabel(image, "", Rect(point, image.size()), Font())
+    {
+    }
+
+    ImageLabel::ImageLabel(const Image& image,
+                   const std::string& text,
+                   const Point& point,
+                   const Font& font)
+        : ImageLabel(image, text, Rect(point, image.size()), font)
+    {
+    }
+
+    ImageLabel::ImageLabel(Frame& parent,
+                           const Image& image,
+                           const std::string& text,
+                           const Rect& rect,
+                           const Font& font)
+        : ImageLabel(image, text, rect, font)
+    {
+        parent.add(this);
     }
 
     void ImageLabel::draw(Painter& painter, const Rect& rect)
@@ -234,11 +258,45 @@ namespace egt
         ignoreparam(rect);
 
         // image
-        painter.draw_image(m_image, box(), alignmask::LEFT | alignmask::CENTER);
+        Rect target = Widget::align_algorithm(m_image.size(), box(), m_text_align, 0);
+        painter.draw_image(target.point(), m_image);
 
-        auto width = cairo_image_surface_get_width(m_image.get());
-        painter.draw_text(m_text, box(), palette().color(Palette::TEXT),
-                          alignmask::LEFT | alignmask::CENTER, width + 5, font());
+        // text
+        if (m_label && !m_text.empty())
+        {
+            auto tbox = box();
+
+            if ((m_text_align & alignmask::LEFT) == alignmask::LEFT)
+            {
+                tbox += Point(m_image.size().w, 0);
+                tbox -= Size(m_image.size().w, 0);
+            }
+            else if ((m_text_align & alignmask::RIGHT) == alignmask::RIGHT)
+            {
+                tbox -= Size(m_image.size().w, 0);
+            }
+            else if ((m_text_align & alignmask::TOP) == alignmask::TOP)
+            {
+                tbox -= Size(0, m_image.size().h);
+            }
+            else if ((m_text_align & alignmask::BOTTOM) == alignmask::BOTTOM)
+            {
+                tbox += Point(0, m_image.size().h);
+                tbox -= Size(0, m_image.size().h);
+            }
+
+            painter.draw_text(m_text, tbox, palette().color(Palette::TEXT),
+                              m_text_align, 5, font());
+        }
+    }
+
+    void ImageLabel::label_enabled(bool value)
+    {
+        if (m_label != value)
+        {
+            m_label = value;
+            damage();
+        }
     }
 
     ImageLabel::~ImageLabel()

@@ -11,8 +11,9 @@
  * @brief Working with labels.
  */
 
-#include <egt/widget.h>
 #include <egt/font.h>
+#include <egt/image.h>
+#include <egt/widget.h>
 
 namespace egt
 {
@@ -124,6 +125,11 @@ namespace egt
     /**
      * A Label widget that also contains an image.
      *
+     * The interesting thing about this widget is the position of the text
+     * relative to the image.  Alignment of txt usually works relative to the
+     * bounding box of the widget.  However, in this case the text is bumped up
+     * against the image and aligned relative to the image instead.
+     *
      * @image html widget_imagelabel1.png
      * @image latex widget_imagelabel1.png "widget_imagelabel1" width=5cm
      * @image html widget_imagelabel2.png
@@ -132,17 +138,68 @@ namespace egt
     class ImageLabel : public Label
     {
     public:
-        ImageLabel(const std::string& image,
+        ImageLabel(const Image& image,
                    const std::string& text = std::string(),
                    const Rect& rect = Rect(),
                    const Font& font = Font());
 
+        ImageLabel(const Image& image,
+                   const std::string& text,
+                   const Point& point,
+                   const Font& font = Font());
+
+        ImageLabel(const Image& image,
+                   const Point& point);
+
+        ImageLabel(Frame& parent,
+                   const Image& image,
+                   const std::string& text = std::string(),
+                   const Rect& rect = Rect(),
+                   const Font& font = Font());
+
+        /**
+             * Scale the image.
+             *
+             * Change the size of the widget, similar to calling resize().
+             *
+             * @param[in] hscale Horizontal scale, with 1.0 being 100%.
+             * @param[in] vscale Vertical scale, with 1.0 being 100%.
+             * @param[in] approximate Approximate the scale to increase image cache
+             *            hit efficiency.
+             */
+        virtual void scale(double hscale, double vscale,
+                           bool approximate = false)
+        {
+            m_image.scale(hscale, vscale, approximate);
+            m_box = Rect(m_box.point(), m_image.size());
+        }
+
+        virtual void resize(const Size& size) override
+        {
+            if (m_text.empty())
+            {
+                if (this->size() != size)
+                {
+                    double hs = (double)size.w / (double)m_image.size_orig().w;
+                    double vs = (double)size.h / (double)m_image.size_orig().h;
+                    scale(hs, vs);
+                }
+            }
+            else
+            {
+                Widget::resize(size);
+            }
+        }
+
         virtual void draw(Painter& painter, const Rect& rect) override;
+
+        virtual void label_enabled(bool value);
 
         virtual ~ImageLabel();
 
     protected:
-        shared_cairo_surface_t m_image;
+        Image m_image;
+        bool m_label{true};
     };
 
 }

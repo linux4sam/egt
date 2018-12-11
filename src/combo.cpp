@@ -6,6 +6,7 @@
 #include "egt/combo.h"
 #include "egt/painter.h"
 #include "egt/frame.h"
+#include "egt/image.h"
 #include "egt/imagecache.h"
 
 namespace egt
@@ -82,8 +83,8 @@ ComboBox::ComboBox(const item_array& items,
             auto scale = static_cast<float>(upsize.w) /
                          static_cast<float>(Painter::surface_to_size(detail::image_cache.get("up.png")).w);
 
-            auto up = detail::image_cache.get("up.png", scale, scale);
-            auto down = detail::image_cache.get("down.png", scale, scale);
+            auto up = Image("up.png", scale, scale);
+            auto down = Image("down.png", scale, scale);
 
             m_up_rect = Rect(Point(x() + w() - upsize.w - downsize.w - OFFSET * 2,
                                    y() + OFFSET),

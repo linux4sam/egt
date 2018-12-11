@@ -41,15 +41,14 @@ namespace egt
     }
 
 #ifdef HAVE_LIBPLANES
-    HardwareSprite::HardwareSprite(const std::string& filename, const Size& frame_size,
+    HardwareSprite::HardwareSprite(const Image& image, const Size& frame_size,
                                    int framecount, const Point& frame_point,
                                    const Point& point)
         : Window(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND,
                       pixel_format::argb8888),
-          ISpriteBase(filename, frame_size, framecount, frame_point)
+          ISpriteBase(image, frame_size, framecount, frame_point),
+          m_label(*this, image)
     {
-        add(&m_image);
-
         do_resize(m_image.size());
 
         allocate_screen();
@@ -91,18 +90,18 @@ namespace egt
 
     void HardwareSprite::paint(Painter& painter)
     {
-        painter.draw_image(point(), surface());
+        painter.draw_image(point(), Image(surface()));
     }
 
     HardwareSprite::~HardwareSprite()
     {}
 #endif
 
-    SoftwareSprite::SoftwareSprite(const std::string& filename, const Size& frame_size,
+    SoftwareSprite::SoftwareSprite(const Image& image, const Size& frame_size,
                                    int framecount, const Point& frame_point,
                                    const Point& point)
         : Widget(Rect(point, frame_size)),
-          ISpriteBase(filename, frame_size, framecount, frame_point)
+          ISpriteBase(image, frame_size, framecount, frame_point)
     {
         m_box = Rect(point, frame_size);
     }
@@ -114,7 +113,7 @@ namespace egt
         Point origin = get_frame_origin(m_index);
 
         painter.draw_image(Rect(origin.x, origin.y, m_frame.w, m_frame.h),
-                           box().point(), m_image.surface());
+                           box().point(), m_image);
     }
 
     void SoftwareSprite::show_frame(int index)
@@ -134,7 +133,7 @@ namespace egt
 
     void SoftwareSprite::paint(Painter& painter)
     {
-        painter.draw_image(point(), surface());
+        painter.draw_image(point(), Image(surface()));
     }
 
     SoftwareSprite::~SoftwareSprite()

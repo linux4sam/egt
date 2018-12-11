@@ -36,7 +36,7 @@ int main(int argc, const char** argv)
     set_image_path("../share/egt/examples/sprite/");
 
     TopWindow win;
-    Image img("background.png");
+    ImageLabel img(Image("background.png"));
     win.add(&img);
     if (img.h() != win.h())
     {
@@ -44,17 +44,17 @@ int main(int argc, const char** argv)
         img.scale(scale, scale);
     }
 
-    Image logo("@microchip_logo_white.png");
+    ImageLabel logo(Image("@microchip_logo_white.png"));
     win.add(&logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
     StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), 2, 2, 10);
 
-    HardwareSprite sprite1("walk.png", Size(75, 132), 8, Point(0, 0),
+    HardwareSprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
                            Point(main_screen()->size().w / 2 - 75,
                                  main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite1, 0, 1, alignmask::CENTER);
 
-    SoftwareSprite sprite2("walk.png", Size(75, 132), 8, Point(0, 0),
+    SoftwareSprite sprite2(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
                            Point(main_screen()->size().w / 2,
                                  main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite2, 1, 1, alignmask::CENTER);
