@@ -50,7 +50,7 @@ int main(int argc, const char** argv)
 
     win.show();
 
-    app.event().dump();
+    app.dump(cout);
 
     return app.run();
 }

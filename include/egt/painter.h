@@ -72,17 +72,17 @@ namespace egt
         virtual ~Painter();
 
         /**
-        * Save the state of the current context.
+         * Save the state of the current context.
          *
-               * @see AutoSaveRestore
-               */
+         * @see AutoSaveRestore
+         */
         virtual void save();
 
         /**
-        * Restore the previous saved state of the current context.
+         * Restore the previous saved state of the current context.
          *
-               * @see AutoSaveRestore
-               */
+         * @see AutoSaveRestore
+         */
         virtual void restore();
 
         virtual void begin();

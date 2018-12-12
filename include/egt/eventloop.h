@@ -66,12 +66,13 @@ namespace egt
          */
         virtual void quit();
 
-        /** @todo Not implemented. */
+        /**
+         * Add a callback to be called any time the event loop is idle.
+         *
+         * This is useful for executing long running tasks that shold otherwise
+         * not impact any other event handling performance.
+         */
         void add_idle_callback(event_callback func);
-
-        void paint_to_file(const std::string& filename = std::string());
-
-        void dump();
 
         virtual ~EventLoop();
 

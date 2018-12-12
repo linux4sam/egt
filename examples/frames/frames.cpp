@@ -56,7 +56,7 @@ int main(int argc, const char** argv)
     win3.show();
     win4.show();
 
-    app.event().dump();
+    app.dump(cout);
 
     return app.run();
 }

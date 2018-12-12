@@ -8,6 +8,7 @@
 
 #include <egt/eventloop.h>
 #include <egt/utils.h>
+#include <iosfwd>
 #include <libintl.h>
 #include <locale.h>
 #include <string>
@@ -43,6 +44,18 @@ namespace egt
         virtual int run();
 
         inline EventLoop& event() { return m_event; }
+
+        /**
+         * Paint the entire screen to a file.
+         */
+        void paint_to_file(const std::string& filename = std::string());
+
+        /**
+         * Dump the widget hierarchy and properties to the specified ostream.
+         *
+         * app.dump(cout);
+         */
+        void dump(std::ostream& out);
 
         virtual ~Application();
 

@@ -13,11 +13,13 @@
 #include "egt/input.h"
 #include "egt/kmsscreen.h"
 #include "egt/libinput.h"
+#include "egt/painter.h"
 #include "egt/version.h"
 #include <libintl.h>
 #include <locale.h>
-#include <thread>
 #include <string>
+#include <thread>
+#include <iostream>
 
 #ifdef HAVE_X11
 #include "egt/x11screen.h"
@@ -106,13 +108,53 @@ namespace egt
             {
                 if (error)
                     return;
-                event().paint_to_file(string(m_argv[0]) + ".png");
+                this->paint_to_file(string(m_argv[0]) + ".png");
             });
 
             return m_event.run();
         }
 
         return m_event.run();
+    }
+
+    void Application::paint_to_file(const string& filename)
+    {
+        string name = filename;
+        if (name.empty())
+        {
+            name = "screen.png";
+        }
+
+        auto surface = shared_cairo_surface_t(
+                           cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+                                   main_screen()->size().w, main_screen()->size().h),
+                           cairo_surface_destroy);
+
+        auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
+
+        Painter painter(cr);
+
+        for (auto& w : windows())
+        {
+            if (!w->visible())
+                continue;
+
+            // draw top level frames and plane frames
+            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+                w->paint(painter);
+        }
+
+        cairo_surface_write_to_png(surface.get(), name.c_str());
+    }
+
+    void Application::dump(std::ostream& out)
+    {
+        for (auto& w : windows())
+        {
+            // draw top level frames and plane frames
+            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+                w->dump(out);
+        }
     }
 
     Application::~Application()

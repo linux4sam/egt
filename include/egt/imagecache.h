@@ -6,20 +6,14 @@
 #ifndef EGT_IMAGECACHE_H
 #define EGT_IMAGECACHE_H
 
-#include <cairo.h>
+#include <egt/painter.h>
+#include <egt/utils.h>
 #include <map>
 #include <memory>
-#include <egt/utils.h>
 #include <string>
 
 namespace egt
 {
-    using shared_cairo_surface_t =
-        std::shared_ptr<cairo_surface_t>;
-
-    using shared_cairo_t =
-        std::shared_ptr<cairo_t>;
-
     /**
      * Set the default relative image path.
      *

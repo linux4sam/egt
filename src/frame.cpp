@@ -7,6 +7,7 @@
 #include "egt/painter.h"
 #include "egt/screen.h"
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -175,14 +176,14 @@ namespace egt
         add_damage(rect);
     }
 
-    void Frame::dump(int level)
+    void Frame::dump(std::ostream& out, int level)
     {
-        cout << std::string(level, ' ') << "Frame: " << name() <<
+        out << std::string(level, ' ') << "Frame: " << name() <<
              " " << box() << endl;
 
         for (auto& child : m_children)
         {
-            child->dump(level + 1);
+            child->dump(out, level + 1);
         }
     }
 

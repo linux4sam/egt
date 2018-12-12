@@ -158,15 +158,15 @@ namespace egt
                    const Font& font = Font());
 
         /**
-             * Scale the image.
-             *
-             * Change the size of the widget, similar to calling resize().
-             *
-             * @param[in] hscale Horizontal scale, with 1.0 being 100%.
-             * @param[in] vscale Vertical scale, with 1.0 being 100%.
-             * @param[in] approximate Approximate the scale to increase image cache
-             *            hit efficiency.
-             */
+         * Scale the image.
+         *
+         * Change the size of the widget, similar to calling resize().
+         *
+         * @param[in] hscale Horizontal scale, with 1.0 being 100%.
+         * @param[in] vscale Vertical scale, with 1.0 being 100%.
+         * @param[in] approximate Approximate the scale to increase image cache
+         *            hit efficiency.
+         */
         virtual void scale(double hscale, double vscale,
                            bool approximate = false)
         {
@@ -190,6 +190,8 @@ namespace egt
                 Widget::resize(size);
             }
         }
+
+        const Image& image() const { return m_image; }
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 

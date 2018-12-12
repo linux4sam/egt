@@ -13,6 +13,7 @@
 #include <cassert>
 #include <string>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -259,6 +260,12 @@ namespace egt
         return surface;
     }
 #endif
+
+    void Widget::dump(std::ostream& out, int level)
+    {
+        out << std::string(level, ' ') << "Widget: " << name() <<
+            " " << box() << std::endl;
+    }
 
     Widget::~Widget()
     {

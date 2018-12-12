@@ -175,7 +175,7 @@ namespace egt
             assert(0);
         }
 
-        virtual void dump(int level = 0) override;
+        virtual void dump(std::ostream& out, int level = 0) override;
 
         /**
          * Save the entire frame surface to a file.

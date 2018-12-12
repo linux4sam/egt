@@ -22,7 +22,7 @@
 #include <egt/palette.h>
 #include <egt/screen.h>
 #include <egt/utils.h>
-#include <iostream>
+#include <iosfwd>
 #include <memory>
 #include <string>
 #include <vector>
@@ -528,11 +528,7 @@ namespace egt
         virtual shared_cairo_surface_t surface();
 #endif
 
-        virtual void dump(int level = 0)
-        {
-            std::cout << std::string(level, ' ') << "Widget: " << name() <<
-                      " " << box() << std::endl;
-        }
+        virtual void dump(std::ostream& out, int level = 0);
 
         Rect box_to_child(const Rect& r);
         Rect to_child(const Rect& r);
