@@ -59,10 +59,10 @@ namespace egt
          * @param angle The angle in radians.
          */
         template <class T>
-        T point_on_circumference(T radius, T angle)
+        Point point_on_circumference(T radius, T angle) const
         {
-            return Point(x + radius * std::sin(angle),
-                         y - radius * std::cos(angle));
+            return Point(x + radius * std::cos(angle),
+                         y + radius * std::sin(angle));
         }
 
         /**
@@ -82,7 +82,7 @@ namespace egt
          * @param point The other point.
          */
         template <class T>
-        T distance_to(const Point& point)
+        T distance_to(const Point& point) const
         {
 #if 0
             return std::sqrt(T((point.x - x) * (point.x - x)) +

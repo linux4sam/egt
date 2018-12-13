@@ -165,7 +165,7 @@ namespace egt
             return m_value2;
         }
 
-        inline void set_value2(T v)
+        virtual void set_value2(T v)
         {
             if (v > this->m_max)
                 v = this->m_max;
