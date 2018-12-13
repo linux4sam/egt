@@ -18,6 +18,7 @@ namespace egt
                    const Font& font, widgetmask flags) noexcept
         : Label(text, rect, alignmask::CENTER, font, flags)
     {
+        set_boxtype(Theme::boxtype::rounded_gradient);
         flag_set(widgetmask::GRAB_MOUSE);
 
         if (rect.size().empty())
@@ -61,19 +62,7 @@ namespace egt
     {
         ignoreparam(rect);
 
-        // box
-        if (is_flag_set(widgetmask::NO_BORDER))
-        {
-            painter.draw_box(*this, Painter::boxtype::fill);
-        }
-        else if (is_flag_set(widgetmask::NO_BACKGROUND))
-        {
-            painter.draw_box(*this, Painter::boxtype::border);
-        }
-        else
-        {
-            painter.draw_box(*this, Painter::boxtype::rounded_gradient);
-        }
+        draw_box(painter);
 
         // text
         painter.set_color(palette().color(Palette::ColorId::TEXT));
@@ -130,15 +119,7 @@ namespace egt
     {
         ignoreparam(rect);
 
-        if (!is_flag_set(widgetmask::NO_BORDER))
-        {
-            painter.draw_box(*this, Painter::boxtype::border);
-        }
-
-        if (!is_flag_set(widgetmask::NO_BACKGROUND))
-        {
-            painter.draw_box(*this, Painter::boxtype::fill);
-        }
+        draw_box(painter);
 
         painter.draw_image(m_image, box(), m_image_align, 0, disabled());
 

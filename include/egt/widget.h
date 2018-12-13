@@ -22,6 +22,7 @@
 #include <egt/palette.h>
 #include <egt/screen.h>
 #include <egt/utils.h>
+#include <egt/theme.h>
 #include <iosfwd>
 #include <memory>
 #include <string>
@@ -55,25 +56,22 @@ namespace egt
         PLANE_WINDOW = (1 << 1),
 
         /**
-         * Don't draw any border.
-         */
-        NO_BORDER = (1 << 2),
-
-        /**
-         * Widget always requires a full redraw.
-         */
-        FULL_REDRAW = (1 << 3),
-
-        /**
          * This is a window widget.
          */
         WINDOW = (1 << 4),
 
         /**
-         * This is a frame window.
+         * This is a frame.
          */
         FRAME = (1 << 5),
 
+        /**
+         * Grab elated mouse events.
+         *
+         * For example, if a button is pressed with the eventid::MOUSE_DOWN
+         * event, make sure the button gets subsequent mouse events, including
+         * the eventid::MOUSE_UP event.
+         */
         GRAB_MOUSE = (1 << 6),
 
         /**
@@ -84,7 +82,7 @@ namespace egt
         /**
          * Default window flags.
          */
-        WINDOW_DEFAULT = WINDOW | NO_BORDER,
+        WINDOW_DEFAULT = WINDOW,
     };
 
     ENABLE_BITMASK_OPERATORS(widgetmask)
@@ -507,7 +505,6 @@ namespace egt
          */
         inline void set_name(const std::string& name) { m_name = name; }
 
-
         /**
          * Paint the Widget using Painter.
          *
@@ -546,11 +543,39 @@ namespace egt
 
         virtual bool focus() const { return m_focus; }
 
+        /**
+         * Set the widget's theme to a new theme.
+         */
+        void set_theme(const Theme& theme)
+        {
+            m_theme.reset(new Theme(theme));
+        }
+
+        /**
+         * Reset the widget's theme to the default theme.
+         */
+        void reset_theme()
+        {
+            m_theme.reset();
+        }
+
+        void set_boxtype(const Theme::boxtype type)
+        {
+            /// @todo Need to damage?
+            m_boxtype = type;
+        }
+
         virtual ~Widget();
 
     protected:
 
         virtual bool top_level() const { return false; }
+
+        /**
+         * Helper function to draw this widget's box using the appropriate
+         * theme.
+         */
+        void draw_box(Painter& painter, const Rect& rect = Rect());
 
         /**
          * Convert screen rectangle to frame coordinates.
@@ -561,6 +586,17 @@ namespace egt
          * Convert screen Point to frame Point.
          */
         Point from_screen(const Point& p);
+
+	/**
+	 * Get the widget theme, or the default theme if none is set.
+	 */
+        Theme& theme()
+        {
+            if (m_theme.get())
+                return *m_theme.get();
+
+            return default_theme();
+        }
 
         /**
          * Bounding box.
@@ -629,6 +665,10 @@ namespace egt
 
         bool m_focus{false};
 
+        Theme::boxtype m_boxtype{Theme::boxtype::none};
+
+        std::shared_ptr<Theme> m_theme;
+
         Widget(const Widget&) = delete;
         Widget& operator=(const Widget&) = delete;
 
@@ -649,7 +689,7 @@ namespace egt
                             const Rect& rect = Rect(),
                             alignmask align = alignmask::CENTER,
                             const Font& font = Font(),
-                            widgetmask flags = widgetmask::NO_BORDER) noexcept;
+                            widgetmask flags = widgetmask::NONE) noexcept;
 
         /**
          * Set the text of the label.
@@ -670,13 +710,13 @@ namespace egt
          * Set the alignment of the Label.
          */
         void set_text_align(alignmask align)
-	{
+        {
             if (m_text_align != align)
             {
                 m_text_align = align;
                 damage();
             }
-	}
+        }
 
         /**
          * Get the widget Font.

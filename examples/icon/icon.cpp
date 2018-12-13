@@ -68,7 +68,6 @@ int main()
     std::vector<std::string> files = experimental::glob("../share/egt/icons/*.png");
 
     StaticGrid grid0(Rect(0, 0, files.size() / 6 * 160, win.h()), files.size() / 6, 6, 0);
-    grid0.flag_set(widgetmask::NO_BORDER);
     grid0.set_name("grid0");
     view0.add(&grid0);
 
@@ -76,7 +75,6 @@ int main()
     {
         std::string basename = file.substr(file.find_last_of("/\\") + 1);
         auto icon = new ImageButton(Image(file), basename);
-        icon->flag_set(widgetmask::NO_BORDER);
         icon->flag_set(widgetmask::NO_BACKGROUND);
         icon->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK);
         grid0.add(icon);

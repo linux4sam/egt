@@ -86,6 +86,7 @@ namespace egt
         explicit ListBox(const Rect& rect = Rect())
             : Widget(rect)
         {
+            set_boxtype(Theme::boxtype::rounded_borderfill);
         }
 
         explicit ListBox(Frame& parent,
@@ -147,6 +148,8 @@ namespace egt
 
         item_array m_items;
         uint32_t m_selected{0};
+
+        friend class ListBoxItem;
     };
 
 }

@@ -30,7 +30,7 @@ namespace egt
                  const Rect& rect = Rect(),
                  alignmask align = alignmask::CENTER | alignmask::LEFT,
                  const Font& font = Font(),
-                 widgetmask flags = widgetmask::NO_BORDER) noexcept;
+                 widgetmask flags = widgetmask::NONE) noexcept;
 
         virtual int handle(eventid event) override;
 

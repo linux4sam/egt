@@ -179,19 +179,19 @@ static void bottom_menu(BasicWindow* win)
     StaticGrid* grid2 = new StaticGrid(Rect(Point(0, 390), Size(800, 90)), 5, 1, 0);
     win->add(grid2);
 
-    MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0, widgetmask::NO_BORDER);
+    MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0);
     grid2->add(bb1, 0, 0);
 
-    MyButton* bb2 = new MyButton("climate_s.png", _("Climate"), 0, 0, widgetmask::NO_BORDER);
+    MyButton* bb2 = new MyButton("climate_s.png", _("Climate"), 0, 0);
     grid2->add(bb2, 1, 0);
 
-    MyButton* bb3 = new MyButton("navigation_s.png", _("Nav"), 0, 0, widgetmask::NO_BORDER);
+    MyButton* bb3 = new MyButton("navigation_s.png", _("Nav"), 0, 0);
     grid2->add(bb3, 2, 0);
 
-    MyButton* bb4 = new MyButton("phone_s.png", _("Phone"), 0, 0, widgetmask::NO_BORDER);
+    MyButton* bb4 = new MyButton("phone_s.png", _("Phone"), 0, 0);
     grid2->add(bb4, 3, 0);
 
-    MyButton* bb5 = new MyButton("apps_s.png", _("Apps"), 0, 0, widgetmask::NO_BORDER);
+    MyButton* bb5 = new MyButton("apps_s.png", _("Apps"), 0, 0);
     grid2->add(bb5, 4, 0);
 
     grid2->reposition();

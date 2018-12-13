@@ -53,13 +53,13 @@ namespace egt
         ImageButton(const Image& image,
                     const std::string& text = "",
                     const Rect& rect = Rect(),
-                    widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept;
+                    widgetmask flags = widgetmask::NONE) noexcept;
 
         ImageButton(Frame& parent,
                     const Image& image,
                     const std::string& text = "",
                     const Rect& rect = Rect(),
-                    widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept;
+                    widgetmask flags = widgetmask::NONE) noexcept;
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -94,7 +94,7 @@ namespace egt
         public:
 
             HotSpot(const Rect& rect = Rect(),
-                    widgetmask flags = widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER) noexcept
+                    widgetmask flags = widgetmask::NO_BACKGROUND) noexcept
                 : Button("", rect, Font(), flags)
             {
                 hide();

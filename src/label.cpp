@@ -17,6 +17,7 @@ namespace egt
                  alignmask align, const Font& font, widgetmask flags) noexcept
         : TextWidget(text, rect, align, font, flags)
     {
+        set_boxtype(Theme::boxtype::fill);
     }
 
     Label::Label(Frame& parent, const std::string& text, const Rect& rect,
@@ -59,10 +60,7 @@ namespace egt
     {
         ignoreparam(rect);
 
-        if (is_flag_set(widgetmask::NO_BACKGROUND))
-            painter.draw_box(*this, Painter::boxtype::border);
-        else if (is_flag_set(widgetmask::NO_BORDER))
-            painter.draw_box(*this, Painter::boxtype::fill);
+        draw_box(painter);
 
         painter.set_color(palette().color(Palette::TEXT));
         painter.set_font(font());
@@ -117,6 +115,7 @@ namespace egt
                        const Rect& rect)
         : Label(text, rect)
     {
+        set_boxtype(Theme::boxtype::rounded_gradient);
         flag_set(widgetmask::GRAB_MOUSE);
         palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
     }
@@ -151,9 +150,7 @@ namespace egt
 
         if (checked())
         {
-            painter.draw_box(*this,
-                             Painter::boxtype::rounded_gradient,
-                             r);
+            draw_box(painter, r);
 
             // draw an "X"
             static const int OFFSET = 5;
@@ -168,9 +165,7 @@ namespace egt
         }
         else
         {
-            painter.draw_box(*this,
-                             Painter::boxtype::rounded_gradient,
-                             r);
+            draw_box(painter, r);
         }
 
         // text
@@ -187,6 +182,7 @@ namespace egt
     SlidingCheckBox::SlidingCheckBox(const Rect& rect)
         : CheckBox("", rect)
     {
+        set_boxtype(Theme::boxtype::rounded_border);
         palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::BG));
     }
 
@@ -194,14 +190,15 @@ namespace egt
     {
         ignoreparam(rect);
 
-        painter.draw_box(*this, Painter::boxtype::rounded_border);
+        draw_box(painter);
 
         if (checked())
         {
             Rect rect = box();
             rect.w /= 2;
             rect.x += rect.w;
-            painter.draw_rounded_gradient_box(rect,
+            theme().draw_rounded_gradient_box(painter,
+                                               rect,
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }
@@ -209,7 +206,8 @@ namespace egt
         {
             Rect rect = box();
             rect.w /= 2;
-            painter.draw_rounded_gradient_box(rect,
+            theme().draw_rounded_gradient_box(painter,
+                                               rect,
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::MID));
         }
@@ -225,6 +223,8 @@ namespace egt
         : Label(text, rect, alignmask::LEFT | alignmask::CENTER, font),
           m_image(image)
     {
+        set_boxtype(Theme::boxtype::none);
+
         if (rect.empty())
             m_box = Rect(rect.point(), m_image.size());
     }
@@ -256,6 +256,8 @@ namespace egt
     void ImageLabel::draw(Painter& painter, const Rect& rect)
     {
         ignoreparam(rect);
+
+        draw_box(painter);
 
         // image
         Rect target = Widget::align_algorithm(m_image.size(), box(), m_text_align, 0);

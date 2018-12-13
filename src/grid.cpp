@@ -13,9 +13,12 @@ namespace egt
 {
     StaticGrid::StaticGrid(const Rect& rect, int columns,
                            int rows, int spacing)
-        : Frame(rect, widgetmask::NO_BACKGROUND | widgetmask::NO_BORDER),
+        : Frame(rect, widgetmask::NO_BACKGROUND),
           m_spacing(spacing)
     {
+        set_boxtype(Theme::boxtype::none);
+        palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+
         m_cells.resize(columns);
         for (auto& x : m_cells)
             x.resize(rows);
@@ -33,7 +36,8 @@ namespace egt
      * Calculates the rectangle for a cell. This calculates the rectangle right
      * down the center of any spacing if one exists.
      */
-    static Rect cell_rect(int columns, int rows, int width, int height, int column, int row, int spacing)
+    static Rect cell_rect(int columns, int rows, int width, int height,
+                          int column, int row, int spacing)
     {
         auto inner_width = detail::ceil((width - ((columns + 1) * spacing)), columns);
         auto inner_height = detail::ceil((height - ((rows + 1) * spacing)), rows);
@@ -56,7 +60,7 @@ namespace egt
     {
         if (m_spacing > 0)
         {
-            if (!is_flag_set(widgetmask::NO_BORDER))
+            if (palette().color(Palette::BORDER) != Color::TRANSPARENT)
             {
                 painter.set_color(palette().color(Palette::BORDER));
                 painter.set_line_width(m_spacing);

@@ -48,6 +48,7 @@ screen/screen.cpp \
 screen/x11screen.cpp \
 sprite.cpp \
 text.cpp \
+theme.cpp \
 timer.cpp \
 tools.cpp \
 uiloader.cpp \
@@ -110,6 +111,7 @@ $(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sprite.h \
 $(top_srcdir)/include/egt/text.h \
+$(top_srcdir)/include/egt/theme.h \
 $(top_srcdir)/include/egt/timer.h \
 $(top_srcdir)/include/egt/tools.h \
 $(top_srcdir)/include/egt/ui \

@@ -267,6 +267,14 @@ namespace egt
             " " << box() << std::endl;
     }
 
+    void Widget::draw_box(Painter& painter, const Rect& rect)
+    {
+        if (is_flag_set(widgetmask::NO_BACKGROUND))
+            return;
+
+        theme().draw_box(painter, *this, m_boxtype, rect);
+    }
+
     Widget::~Widget()
     {
         if (m_parent)

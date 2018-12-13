@@ -8,6 +8,7 @@
 
 #include <egt/widget.h>
 #include <egt/painter.h>
+#include <egt/frame.h>
 #include <string>
 
 namespace egt
@@ -40,6 +41,7 @@ namespace egt
          */
         virtual void set_value(T v)
         {
+            /// @todo Need to handle float comparison.
             if (v != m_value)
             {
                 m_value = v;
@@ -148,7 +150,14 @@ namespace egt
         Radial(const Rect& rect, T min, T max, T value = T())
             : ValueRangeWidget<T>(rect, min, max, value)
         {
+            this->set_boxtype(Theme::boxtype::none);
             this->flag_set(widgetmask::GRAB_MOUSE);
+        }
+
+        Radial(Frame& parent, const Rect& rect, T min, T max, T value = T())
+            : Radial<T>(rect, min, max, value)
+        {
+            parent.add(this);
         }
 
         inline T value2() const

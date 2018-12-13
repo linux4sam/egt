@@ -18,6 +18,8 @@ namespace egt
     Frame::Frame(const Rect& rect, widgetmask flags)
         : Widget(rect, flags | widgetmask::FRAME)
     {
+        set_boxtype(Theme::boxtype::fill);
+
         ostringstream ss;
         ss << "frame" << frame_id++;
         set_name(ss.str());
@@ -233,9 +235,7 @@ namespace egt
             if (!is_flag_set(widgetmask::TRANSPARENT_BACKGROUND))
                 cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
 
-            painter.draw_box(*this,
-                             Painter::boxtype::fill,
-                             rect);
+            draw_box(painter, rect);
         }
 
         //

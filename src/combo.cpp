@@ -20,6 +20,7 @@ ComboBox::ComboBox(const item_array& items,
             : TextWidget("", rect, align, font, flags),
               m_items(items)
         {
+            set_boxtype(Theme::boxtype::rounded_border);
             flag_set(widgetmask::GRAB_MOUSE);
             palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
             palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::LIGHT));
@@ -72,7 +73,7 @@ ComboBox::ComboBox(const item_array& items,
             ignoreparam(rect);
 
             // box
-            painter.draw_box(*this, Painter::boxtype::rounded_border);
+            draw_box(painter);
 
             // images
             auto OFFSET = 5;

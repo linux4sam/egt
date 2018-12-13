@@ -40,14 +40,14 @@ namespace egt
                        const Rect& rect = Rect(),
                        alignmask align = alignmask::CENTER,
                        const Font& font = Font(),
-                       widgetmask flags = widgetmask::NO_BORDER) noexcept;
+                       widgetmask flags = widgetmask::NONE) noexcept;
 
         explicit Label(Frame& parent,
                        const std::string& text = std::string(),
                        const Rect& rect = Rect(),
                        alignmask align = alignmask::CENTER,
                        const Font& font = Font(),
-                       widgetmask flags = widgetmask::NO_BORDER) noexcept;
+                       widgetmask flags = widgetmask::NONE) noexcept;
 
         /**
          * Set the text of the label.

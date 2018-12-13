@@ -15,15 +15,18 @@ namespace egt
                              int min, int max, int value) noexcept
         : ValueRangeWidget<int>(rect, min, max, value)
     {
+        set_boxtype(Theme::boxtype::rounded_borderfill);
     }
 
     void ProgressBar::draw(Painter& painter, const Rect& rect)
     {
         ignoreparam(rect);
 
-        painter.draw_box(*this, Painter::boxtype::rounded_borderfill);
+        draw_box(painter);
 
-        painter.draw_rounded_gradient_box(Rect(x(), y(), w() * value() / 100., h()),
+        /// @todo this divide by 100 is not respecting min/max range
+        theme().draw_rounded_gradient_box(painter,
+                                           Rect(x(), y(), w() * value() / 100., h()),
                                           Color::TRANSPARENT,
                                           palette().color(Palette::HIGHLIGHT));
     }
@@ -273,7 +276,7 @@ namespace egt
             painter.stroke();
 
             // handle
-            painter.draw_rounded_gradient_box(handle_box(),
+            theme().draw_rounded_gradient_box(painter, handle_box(),
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }
@@ -289,7 +292,7 @@ namespace egt
             painter.stroke();
 
             // handle
-            painter.draw_rounded_gradient_box(handle_box(),
+            theme().draw_rounded_gradient_box(painter, handle_box(),
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }

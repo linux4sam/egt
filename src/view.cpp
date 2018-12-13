@@ -84,14 +84,10 @@ namespace egt
             s.y = box().y + box().h - HEIGHT;
             s.h = HEIGHT;
 
-            if (!is_flag_set(widgetmask::NO_BORDER))
-            {
-                s.x = box().x + std::abs(m_offset);
-
-                painter.set_line_width(1);
-                painter.set_color(palette().color(Palette::BORDER));
-                painter.line(s.bottom_left() - Point(0, HEIGHT / 2), s.bottom_right() - Point(0, HEIGHT / 2));
-            }
+            s.x = box().x + std::abs(m_offset);
+            painter.set_line_width(1);
+            painter.set_color(palette().color(Palette::BORDER));
+            painter.line(s.bottom_left() - Point(0, HEIGHT / 2), s.bottom_right() - Point(0, HEIGHT / 2));
 
             Rect super = super_rect();
 
@@ -99,7 +95,8 @@ namespace egt
             s.x = box().x + std::abs(m_offset) + (float(std::abs(m_offset)) / float(super.w) *
                                                   (float(box().w) - s.w));
 
-            painter.draw_rounded_gradient_box(s,
+            theme().draw_rounded_gradient_box(painter,
+                                               s,
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }

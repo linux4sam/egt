@@ -27,7 +27,6 @@ int main(int argc, const char** argv)
 
     TopWindow win;
     win.set_name("win");
-    win.flag_set(widgetmask::NO_BORDER);
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
     ImageLabel logo(Image("@microchip_logo_white.png"));
@@ -71,7 +70,7 @@ int main(int argc, const char** argv)
     button.set_align(alignmask::CENTER);
     button.set_name("hw");
 
-    ImageButton settings(Image("settings.png"), "", Rect(), widgetmask::NO_BORDER);
+    ImageButton settings(Image("settings.png"), "", Rect());
     win.add(&settings);
     settings.flag_set(widgetmask::NO_BACKGROUND);
     settings.set_align(alignmask::RIGHT | alignmask::TOP, 10);

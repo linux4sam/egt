@@ -186,12 +186,6 @@ namespace egt
          */
         virtual Rect draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff = 5);
 
-        /**
-         * @todo Special functions that do a lot, mostly implementing widget
-         * theme. Seems as if this maybe needs to be broken out into a theme
-         * class.
-         *@{
-         */
         virtual Rect draw_text(const std::string& text,
                                const Rect& rect,
                                const Color& color = Color::BLACK,
@@ -201,49 +195,12 @@ namespace egt
 
         virtual Size text_size(const std::string& text);
 
-        enum class boxtype
-        {
-            none,
-            fill,
-            border,
-            rounded_border,
-            borderfill,
-            rounded_borderfill,
-            rounded_gradient,
-        };
 
-        virtual Painter& draw_box(Widget& widget,
-                                  boxtype type = boxtype::borderfill,
-                                  const Rect& rect = Rect());
-        /**
-         *@}
-         */
 
         shared_cairo_t context() const
         {
             return m_cr;
         }
-
-        void draw_fill_box(const Rect& rect,
-                           const Color& bg);
-
-        void draw_border_box(const Rect& rect,
-                             const Color& border);
-
-        void draw_border_fill_box(const Rect& rect,
-                                  const Color& border,
-                                  const Color& bg);
-
-        void draw_rounded_border_box(const Rect& rect,
-                                     const Color& border);
-
-        void draw_rounded_borderfill_box(const Rect& rect,
-                                         const Color& border,
-                                         const Color& bg);
-
-        void draw_rounded_gradient_box(const Rect& rect,
-                                       const Color& border,
-                                       const Color& bg);
 
         static inline Size surface_to_size(shared_cairo_surface_t surface)
         {

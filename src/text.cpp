@@ -15,6 +15,8 @@ namespace egt
         : TextWidget(str, rect, align),
           m_timer(std::chrono::seconds(1))
     {
+        set_boxtype(Theme::boxtype::rounded_borderfill);
+
         m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
 
         palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
@@ -73,7 +75,7 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_box(*this, Painter::boxtype::rounded_borderfill);
+        draw_box(painter);
 
         // text
         Rect bounding = painter.draw_text(m_text, box(),
@@ -142,7 +144,7 @@ namespace egt
         ignoreparam(rect);
 
         // box
-        painter.draw_box(*this, Painter::boxtype::rounded_borderfill);
+        draw_box(painter);
 
         // text
         painter.set_font(font());
