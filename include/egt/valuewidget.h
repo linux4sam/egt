@@ -231,16 +231,16 @@ namespace egt
             auto v = this->value_to_degrees(this->value());
             float linew = 40;
 
-            Color color1 = this->palette().color(Palette::BG);
+            auto color1 = this->palette().color(Palette::BG);
             color1.alpha(0x55);
-            Color color2 = this->palette().color(Palette::HIGHLIGHT);
-            Color color3 = this->palette().color(Palette::MID);
+            auto color2 = this->palette().color(Palette::HIGHLIGHT);
+            auto color3 = this->palette().color(Palette::MID);
 
             float radius = this->w() / 2 - (linew / 2);
-            double angle1 = to_radians<float>(-90, 0);
-            double angle2 = to_radians<float>(-90, v);
+	    float angle1 = to_radians<float>(-90, 0);
+            float angle2 = to_radians<float>(-90, v);
 
-            Point c = this->center();
+            auto c = this->center();
 
 	    Painter::AutoSaveRestore sr(painter);
 
@@ -263,8 +263,8 @@ namespace egt
             painter.stroke();
 
             // secondary value
-            Color color4 = Color::RED;
-            double angle3 = to_radians<float>(-90,
+            auto color4 = Color::RED;
+            float angle3 = to_radians<float>(-90,
                                               this->value_to_degrees(this->value2()));
             painter.set_color(color4);
             painter.set_line_width(linew);

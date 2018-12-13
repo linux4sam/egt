@@ -131,12 +131,11 @@ namespace egt
         auto dim = std::min(w(), h());
         float linew = dim / 10;
         float radius = dim / 2 - (linew / 2);
-        double angle1 = to_radians<float>(180, 0);
-        double angle2 = to_radians<float>(180, value() / 100. * 360.);
+        float angle1 = to_radians<float>(180, 0);
+        float angle2 = to_radians<float>(180, value() / 100. * 360.);
 
         painter.set_color(palette().color(Palette::BG));
         painter.draw_fill(box());
-
         painter.set_line_width(linew);
 
         painter.set_color(palette().color(Palette::MID));
