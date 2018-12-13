@@ -242,56 +242,38 @@ namespace egt
 
             Point c = this->center();
 
-            auto cr = painter.context();
-
-            cairo_save(cr.get());
+	    Painter::AutoSaveRestore sr(painter);
 
             // bottom full circle
-            cairo_set_source_rgba(cr.get(),
-                                  color1.redf(),
-                                  color1.greenf(),
-                                  color1.bluef(),
-                                  color1.alphaf());
-            cairo_set_line_width(cr.get(), linew);
-            cairo_arc(cr.get(), c.x, c.y, radius, 0, 2 * M_PI);
-            cairo_stroke(cr.get());
+            painter.set_color(color1);
+            painter.set_line_width(linew);
+            painter.arc(c, radius, 0, 2 * M_PI);
+            painter.stroke();
 
             // value arc
-            cairo_set_source_rgb(cr.get(),
-                                 color2.redf(),
-                                 color2.greenf(),
-                                 color2.bluef());
-            cairo_set_line_width(cr.get(), linew - (linew / 3));
-            cairo_arc(cr.get(), c.x, c.y, radius, angle1, angle2);
-            cairo_stroke(cr.get());
+            painter.set_color(color2);
+            painter.set_line_width(linew - (linew / 3));
+            painter.arc(c, radius, angle1, angle2);
+            painter.stroke();
 
             // handle
-            cairo_set_source_rgb(cr.get(),
-                                 color3.redf(),
-                                 color3.greenf(),
-                                 color3.bluef());
-            cairo_set_line_width(cr.get(), linew);
-            cairo_arc(cr.get(), c.x, c.y, radius, angle2 - 0.3, angle2);
-            cairo_stroke(cr.get());
-
+            painter.set_color(color3);
+            painter.set_line_width(linew);
+            painter.arc(c, radius, angle2 - 0.3, angle2);
+            painter.stroke();
 
             // secondary value
             Color color4 = Color::RED;
             double angle3 = to_radians<float>(-90,
                                               this->value_to_degrees(this->value2()));
-            cairo_set_source_rgb(cr.get(),
-                                 color4.redf(),
-                                 color4.greenf(),
-                                 color4.bluef());
-            cairo_set_line_width(cr.get(), linew);
-            cairo_arc(cr.get(), c.x, c.y, radius, angle3 - 0.01, angle3 + 0.01);
-            cairo_stroke(cr.get());
+            painter.set_color(color4);
+            painter.set_line_width(linew);
+            painter.arc(c, radius, angle3 - 0.01, angle3 + 0.01);
+            painter.stroke();
 
             if (!m_text.empty())
                 painter.draw_text(m_text, this->box(), this->palette().color(Palette::TEXT),
                                   alignmask::CENTER, 0, Font(72));
-
-            cairo_restore(cr.get());
         }
 
         virtual ~Radial()
