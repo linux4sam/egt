@@ -29,6 +29,11 @@ namespace egt
     unsigned int read_resource_length(const char* name);
 
     /**
+     * Get a pointer to the in-memory resource data.
+     */
+    const unsigned char* read_resource_data(const char* name);
+
+    /**
      * Read data from a resource.
      */
     bool read_resource(const char* name, unsigned char* data,

@@ -61,6 +61,21 @@ namespace egt
         return 0;
     }
 
+    const unsigned char* read_resource_data(const char* name)
+    {
+        if (resources)
+        {
+            string id = name;
+            auto i = resources->find(id);
+            if (i != resources->end())
+            {
+                return i->second.data;
+            }
+        }
+
+        return 0;
+    }
+
     bool read_resource(const char* name, unsigned char* data, unsigned int length, unsigned int offset)
     {
         if (resources)
