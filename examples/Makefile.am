@@ -25,6 +25,7 @@ LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 bin_PROGRAMS = \
 animations/animations \
 basic/basic \
+basicui/basicui \
 calc/calc \
 charts/charts \
 drag/drag \
@@ -159,7 +160,6 @@ basic_basic_SOURCES = basic/basic.cpp
 basic_basic_CXXFLAGS = $(AM_CXXFLAGS)
 basic_basic_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 basic_basicdir = $(prefix)/share/egt/examples/basic
-dist_basic_basic_DATA = $(wildcard $(top_srcdir)/examples/basic/*.xml)
 basic_basic_LDFLAGS = $(AM_LDFLAGS)
 
 whiteboard_whiteboard_SOURCES = whiteboard/whiteboard.cpp
@@ -211,3 +211,10 @@ keyboard_keyboard_SOURCES = keyboard/keyboard.cpp
 keyboard_keyboard_CXXFLAGS = $(AM_CXXFLAGS)
 keyboard_keyboard_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 keyboard_keyboard_LDFLAGS = $(AM_LDFLAGS)
+
+basicui_basicui_SOURCES = basicui/basicui.cpp
+basicui_basicui_CXXFLAGS = $(AM_CXXFLAGS)
+basicui_basicui_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+basicui_basicuidir = $(prefix)/share/egt/examples/basicui
+dist_basicui_basicui_DATA = $(wildcard $(top_srcdir)/examples/basicui/*.xml)
+basicui_basicui_LDFLAGS = $(AM_LDFLAGS)
