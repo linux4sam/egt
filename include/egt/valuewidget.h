@@ -338,6 +338,8 @@ namespace egt
 
         virtual ~ProgressBar()
         {}
+    protected:
+	Font m_dynamic_font;
     };
 
     /**
@@ -409,6 +411,9 @@ namespace egt
 
         virtual ~SpinProgress()
         {}
+
+    protected:
+	Font m_dynamic_font;
     };
 
     enum class orientation

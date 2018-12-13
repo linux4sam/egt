@@ -308,6 +308,32 @@ namespace egt
         }
     }
 
+    Font TextWidget::scale_font(const Size& target, const std::string& text, const Font& font)
+    {
+        auto surface = shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10),
+                                              cairo_surface_destroy);
+        auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
+        Painter painter(cr);
+
+        auto nfont = font;
+        while (true)
+        {
+            painter.set_font(nfont);
+
+            cairo_text_extents_t textext;
+            cairo_text_extents(cr.get(), text.c_str(), &textext);
+
+            if (textext.width - textext.x_bearing < target.w &&
+                textext.height - textext.y_bearing < target.h)
+                return nfont;
+
+            nfont.size(nfont.size()-1);
+            if (nfont.size() < 1)
+                return font;
+        }
+        return nfont;
+    }
+
     namespace experimental
     {
         ScrollWheel::ScrollWheel(const Rect& rect)

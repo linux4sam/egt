@@ -29,6 +29,11 @@ namespace egt
                                            Rect(x(), y(), w() * value() / 100., h()),
                                           Color::TRANSPARENT,
                                           palette().color(Palette::HIGHLIGHT));
+
+        string text = std::to_string(value()) + "%";
+        m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);
+        painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
+                          alignmask::CENTER, 0, m_dynamic_font);
     }
 
     LevelMeter::LevelMeter(const Rect& rect,
@@ -145,6 +150,11 @@ namespace egt
         painter.set_color(palette().color(Palette::HIGHLIGHT));
         painter.arc(center(), radius, angle1, angle2);
         painter.stroke();
+
+        string text = std::to_string(value());
+        m_dynamic_font = TextWidget::scale_font(Size(dim,dim) * 0.75, text, m_dynamic_font);
+        painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
+                          alignmask::CENTER, 0, m_dynamic_font);
     }
 
     Slider::Slider(const Rect& rect, int min, int max, int value,

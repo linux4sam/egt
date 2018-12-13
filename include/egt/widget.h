@@ -754,6 +754,12 @@ namespace egt
         virtual ~TextWidget()
         {}
 
+	/**
+	 * Given a Font, text, and a target Size, scale the font size so that
+	 * the text will will fit and return the new Font.
+	 */
+	static Font scale_font(const Size& target, const std::string& text, const Font& font);
+
     protected:
         alignmask m_text_align{alignmask::CENTER};
         std::string m_text;
