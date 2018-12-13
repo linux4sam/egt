@@ -233,12 +233,13 @@ namespace egt
         else
             cairo_text_extents(m_cr.get(), "I", &textext);
 
-        Rect target = Widget::align_algorithm(Size(textext.width, textext.height),
+        Rect target = Widget::align_algorithm(Size(textext.width,
+                                                   textext.height),
                                               rect,
                                               align,
                                               standoff);
 
-        cairo_move_to(m_cr.get(), target.x + textext.x_bearing,
+        cairo_move_to(m_cr.get(), target.x - textext.x_bearing,
                       target.y - textext.y_bearing);
         cairo_show_text(m_cr.get(), str.c_str());
         cairo_stroke(m_cr.get());
