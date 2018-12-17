@@ -220,10 +220,13 @@ namespace egt
                            const std::string& text,
                            const Rect& rect,
                            const Font& font)
-        : Label(text, rect, alignmask::LEFT | alignmask::CENTER, font),
+        : Label(text, rect, alignmask::RIGHT | alignmask::CENTER, font),
           m_image(image)
     {
         set_boxtype(Theme::boxtype::none);
+
+        if (text.empty())
+            set_image_align(alignmask::CENTER);
 
         if (rect.empty())
             m_box = Rect(rect.point(), m_image.size());
@@ -236,9 +239,9 @@ namespace egt
     }
 
     ImageLabel::ImageLabel(const Image& image,
-                   const std::string& text,
-                   const Point& point,
-                   const Font& font)
+                           const std::string& text,
+                           const Point& point,
+                           const Font& font)
         : ImageLabel(image, text, Rect(point, image.size()), font)
     {
     }
@@ -259,36 +262,47 @@ namespace egt
 
         draw_box(painter);
 
-        // image
-        Rect target = Widget::align_algorithm(m_image.size(), box(), m_text_align, 0);
-        painter.draw_image(target.point(), m_image);
-
-        // text
         if (m_label && !m_text.empty())
         {
-            auto tbox = box();
+            painter.set_font(font());
+            auto text_size = painter.text_size(m_text);
 
-            if ((m_text_align & alignmask::LEFT) == alignmask::LEFT)
-            {
-                tbox += Point(m_image.size().w, 0);
-                tbox -= Size(m_image.size().w, 0);
-            }
-            else if ((m_text_align & alignmask::RIGHT) == alignmask::RIGHT)
-            {
-                tbox -= Size(m_image.size().w, 0);
-            }
-            else if ((m_text_align & alignmask::TOP) == alignmask::TOP)
-            {
-                tbox -= Size(0, m_image.size().h);
-            }
-            else if ((m_text_align & alignmask::BOTTOM) == alignmask::BOTTOM)
-            {
-                tbox += Point(0, m_image.size().h);
-                tbox -= Size(0, m_image.size().h);
-            }
+            Rect tbox;
+            Rect ibox;
+
+            if (m_position_image_first)
+                Widget::double_align(box(),
+                                     m_image.size(), m_image_align, ibox,
+                                     text_size, m_text_align, tbox, 5);
+            else
+                Widget::double_align(box(),
+                                     text_size, m_text_align, tbox,
+                                     m_image.size(), m_image_align, ibox, 5);
+
+            painter.draw_image(ibox.point(), m_image);
 
             painter.draw_text(m_text, tbox, palette().color(Palette::TEXT),
-                              m_text_align, 5, font());
+                              alignmask::CENTER, 0, font());
+        }
+        else
+        {
+            Rect target = Widget::align_algorithm(m_image.size(), box(), m_image_align, 0);
+            painter.draw_image(target.point(), m_image);
+        }
+    }
+
+    void ImageLabel::set_image(const Image& image)
+    {
+        if (!image.empty())
+        {
+            m_image = image;
+#if 0
+            auto width = cairo_image_surface_get_width(m_image.get());
+            auto height = cairo_image_surface_get_height(m_image.get());
+            m_box.w = width;
+            m_box.h = height;
+#endif
+            damage();
         }
     }
 

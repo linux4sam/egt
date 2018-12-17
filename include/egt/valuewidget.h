@@ -237,12 +237,12 @@ namespace egt
             auto color3 = this->palette().color(Palette::MID);
 
             float radius = this->w() / 2 - (linew / 2);
-	    float angle1 = to_radians<float>(-90, 0);
+            float angle1 = to_radians<float>(-90, 0);
             float angle2 = to_radians<float>(-90, v);
 
             auto c = this->center();
 
-	    Painter::AutoSaveRestore sr(painter);
+            Painter::AutoSaveRestore sr(painter);
 
             // bottom full circle
             painter.set_color(color1);
@@ -265,7 +265,7 @@ namespace egt
             // secondary value
             auto color4 = Color::RED;
             float angle3 = to_radians<float>(-90,
-                                              this->value_to_degrees(this->value2()));
+                                             this->value_to_degrees(this->value2()));
             painter.set_color(color4);
             painter.set_line_width(linew);
             painter.arc(c, radius, angle3 - 0.01, angle3 + 0.01);
@@ -339,7 +339,7 @@ namespace egt
         virtual ~ProgressBar()
         {}
     protected:
-	Font m_dynamic_font;
+        Font m_dynamic_font;
     };
 
     /**
@@ -413,7 +413,7 @@ namespace egt
         {}
 
     protected:
-	Font m_dynamic_font;
+        Font m_dynamic_font;
     };
 
     enum class orientation

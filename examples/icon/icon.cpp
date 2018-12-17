@@ -27,12 +27,12 @@ int main()
 
     ImageButton left(win, Image("arrow_left.png"), "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
     left.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    left.image_align(alignmask::CENTER);
+    left.set_text_align(alignmask::CENTER);
     left.set_align(alignmask::LEFT);
 
     ImageButton right(win, Image("arrow_right.png"), "", Rect(0, 0, NAV_WIDTH, win.h()), widgetmask::NONE);
     right.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    right.image_align(alignmask::CENTER);
+    right.set_text_align(alignmask::CENTER);
     right.set_align(alignmask::RIGHT);
 
     ScrolledView view0(Rect(NAV_WIDTH, 0, win.w() - (NAV_WIDTH * 2), win.h()));

@@ -22,7 +22,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    StaticGrid grid0(Rect(Point(), Size(win.w() / 2, win.h())), 2, 10, 5);
+    StaticGrid grid0(Rect(Point(), Size(win.w() / 4 * 3, win.h())), 3, 10, 5);
     win.add(&grid0);
 
     Label label1("left align", Rect(),
@@ -66,11 +66,49 @@ int main(int argc, const char** argv)
     text2.disable();
     grid0.add(&text2);
 
-    ImageLabel imagelabel1(Image("@bug.png"), "Bug");
+    ImageLabel imagelabel0(Image("@bug.png"), "Bug");
+    grid0.add(&imagelabel0);
+
+    ImageLabel imagelabel1(Image("@phone.png"), "Phone");
     grid0.add(&imagelabel1);
+    imagelabel1.set_text_align(alignmask::CENTER);
 
     ImageLabel imagelabel2(Image("@phone.png"), "Phone");
     grid0.add(&imagelabel2);
+    imagelabel2.set_text_align(alignmask::CENTER | alignmask::RIGHT);
+
+    ImageLabel imagelabel3(Image("@phone.png"), "Phone");
+    grid0.add(&imagelabel3);
+    imagelabel3.set_text_align(alignmask::CENTER | alignmask::TOP);
+
+    ImageLabel imagelabel4(Image("@phone.png"), "Phone");
+    grid0.add(&imagelabel4);
+    imagelabel4.set_text_align(alignmask::CENTER | alignmask::BOTTOM);
+
+    ImageLabel imagelabel5(Image("@phone.png"));
+    grid0.add(&imagelabel5);
+
+    ImageButton imagebutton0(Image("@flag_red.png"), "Flag");
+    grid0.add(&imagebutton0);
+
+    ImageButton imagebutton1(Image("@flag_red.png"), "Flag");
+    grid0.add(&imagebutton1);
+    imagebutton1.set_text_align(alignmask::CENTER | alignmask::LEFT);
+
+    ImageButton imagebutton2(Image("@flag_red.png"), "Flag");
+    grid0.add(&imagebutton2);
+    imagebutton2.set_text_align(alignmask::CENTER | alignmask::RIGHT);
+
+    ImageButton imagebutton3(Image("@flag_red.png"), "Flag");
+    grid0.add(&imagebutton3);
+    imagebutton3.set_text_align(alignmask::CENTER | alignmask::TOP);
+
+    ImageButton imagebutton4(Image("@flag_red.png"), "Flag");
+    grid0.add(&imagebutton4);
+    imagebutton4.set_text_align(alignmask::CENTER | alignmask::BOTTOM);
+
+    ImageButton imagebutton5(Image("@flag_red.png"));
+    grid0.add(&imagebutton5);
 
     CheckBox checkbox1("checkbox 1");
     grid0.add(&checkbox1);
@@ -94,7 +132,7 @@ int main(int argc, const char** argv)
     ProgressBar progressbar;
     grid0.add(&progressbar);
 
-    StaticGrid grid1(Rect(Point(win.w() / 2, 0), Size(win.w() / 2, win.h())), 2, 3, 5);
+    StaticGrid grid1(Rect(Point(win.w() / 4 * 3, 0), Size(win.w() / 4 * 1, win.h())), 1, 3, 5);
     win.add(&grid1);
 
     LevelMeter lp1;

@@ -53,7 +53,7 @@ public:
         // secondary value
         auto color4 = Color::RED;
         float angle3 = to_radians<float>(-90,
-                                          this->value_to_degrees(this->value2()));
+                                         this->value_to_degrees(this->value2()));
         painter.set_color(color4);
         painter.set_line_width(linew * 2);
         painter.arc(c, radius, angle3 - 0.01, angle3 + 0.01);

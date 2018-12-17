@@ -60,7 +60,7 @@ public:
         if (img->h() != h())
         {
             double scale = (double)h() / (double)img->h();
-            img->scale(scale, scale);
+            img->scale_image(scale);
         }
 
         m_label = new Label("Objects: 0",
@@ -104,7 +104,7 @@ public:
 
         Bubble* image = new Bubble(xspeed, yspeed, p);
         add(image);
-        image->scale(size, size, true);
+        image->scale_image(size, true);
         image->move(Point(p.x - image->box().w / 2 + offset,
                           p.y - image->box().h / 2 + offset));
         m_images.push_back(image);

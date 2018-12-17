@@ -101,7 +101,7 @@ public:
     {
         int xspeed = speed_dist(e1);
         int yspeed = speed_dist(e1);
-        float size = size_dist(e1);
+        float scale = size_dist(e1);
 
         // has to move at some speed
         if (xspeed == 0 && yspeed == 0)
@@ -109,7 +109,7 @@ public:
 
         Ball* image = new Ball(xspeed, yspeed);
         add(image);
-        image->scale(size, size, true);
+        image->scale_image(scale, true);
         image->move_to_center(p);
         m_images.push_back(image);
     }

@@ -59,7 +59,11 @@ namespace egt
                     Button* b;
 
                     if (label.find(".png") != std::string::npos)
-                        b = new ImageButton(Image(label));
+                    {
+                        auto c = new ImageButton(Image(label));
+                        c->set_image_align(alignmask::CENTER);
+                        b = c;
+                    }
                     else
                         b = new Button(label);
 

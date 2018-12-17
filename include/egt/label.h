@@ -157,6 +157,10 @@ namespace egt
                    const Rect& rect = Rect(),
                    const Font& font = Font());
 
+        virtual void draw(Painter& painter, const Rect& rect) override;
+
+        virtual void set_image(const Image& image);
+
         /**
          * Scale the image.
          *
@@ -167,13 +171,19 @@ namespace egt
          * @param[in] approximate Approximate the scale to increase image cache
          *            hit efficiency.
          */
-        virtual void scale(double hscale, double vscale,
-                           bool approximate = false)
+        virtual void scale_image(double hscale, double vscale,
+                                 bool approximate = false)
         {
             m_image.scale(hscale, vscale, approximate);
             m_box = Rect(m_box.point(), m_image.size());
         }
 
+        virtual void scale_image(double s, bool approximate = false)
+        {
+            scale_image(s, s, approximate);
+        }
+
+#if 0
         virtual void resize(const Size& size) override
         {
             if (m_text.empty())
@@ -182,7 +192,7 @@ namespace egt
                 {
                     double hs = (double)size.w / (double)m_image.size_orig().w;
                     double vs = (double)size.h / (double)m_image.size_orig().h;
-                    scale(hs, vs);
+                    scale_image(hs, vs);
                 }
             }
             else
@@ -190,18 +200,39 @@ namespace egt
                 Widget::resize(size);
             }
         }
+#endif
 
         const Image& image() const { return m_image; }
 
-        virtual void draw(Painter& painter, const Rect& rect) override;
+        Image& image() { return m_image; }
 
         virtual void label_enabled(bool value);
+
+        virtual void set_image_align(alignmask align)
+        {
+            if (m_image_align != align)
+            {
+                m_image_align = align;
+                damage();
+            }
+        }
+
+        void set_position_image_first(bool value)
+        {
+            if (m_position_image_first != value)
+            {
+                m_position_image_first = value;
+                damage();
+            }
+        }
 
         virtual ~ImageLabel();
 
     protected:
         Image m_image;
         bool m_label{true};
+        alignmask m_image_align{alignmask::CENTER | alignmask::LEFT};
+        bool m_position_image_first{false};
     };
 
 }

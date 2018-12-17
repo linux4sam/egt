@@ -143,6 +143,17 @@ namespace egt
                                     alignmask align, int margin = 0);
 
         /**
+         * This is used for aligning two rectangles in a single widget.  For example,
+         * a widget that has both text and an image.  The first rectangle is aligned
+         * to the main rectangle.  The second rectangle is aligned relative to the
+         * first rectangle.
+         */
+        static void double_align(const Rect& main,
+                                 const Size& fsize, alignmask first_align, Rect& first,
+                                 const Size& ssize, alignmask second_align, Rect& second,
+                                 int margin = 0);
+
+        /**
          * Construct a widget.
          *
          * @param[in] rect Initial rectangle of the Widget.
@@ -587,9 +598,9 @@ namespace egt
          */
         Point from_screen(const Point& p);
 
-	/**
-	 * Get the widget theme, or the default theme if none is set.
-	 */
+        /**
+         * Get the widget theme, or the default theme if none is set.
+         */
         Theme& theme()
         {
             if (m_theme.get())
@@ -754,11 +765,11 @@ namespace egt
         virtual ~TextWidget()
         {}
 
-	/**
-	 * Given a Font, text, and a target Size, scale the font size so that
-	 * the text will will fit and return the new Font.
-	 */
-	static Font scale_font(const Size& target, const std::string& text, const Font& font);
+        /**
+         * Given a Font, text, and a target Size, scale the font size so that
+         * the text will will fit and return the new Font.
+         */
+        static Font scale_font(const Size& target, const std::string& text, const Font& font);
 
     protected:
         alignmask m_text_align{alignmask::CENTER};

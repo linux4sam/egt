@@ -323,6 +323,18 @@ namespace egt
         }
 
         /**
+         * Move the rectangle's center to the specified point.
+         */
+        inline void move_to_center(const Point& center)
+        {
+            Point pos(center.x - w / 2,
+                      center.y - h / 2);
+
+            x = pos.x;
+            y = pos.y;
+        }
+
+        /**
          * Get the Point of the rectangle.
          */
         inline Point point() const

@@ -71,7 +71,7 @@ public:
         auto img = new ImageLabel(Image("background.png"));
         double scale = (double)w() / (double)img->w();
         add(img);
-        img->scale(scale, scale);
+        img->scale_image(scale);
 
         ListBox::item_array items;
         items.resize(curve_names.size());

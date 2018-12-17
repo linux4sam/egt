@@ -116,7 +116,7 @@ public:
         auto c = center();
         float s = sliding_scale(parent()->w(), w(), pos);
         label_enabled(s > 0.9);
-        scale(s, s, true);
+        scale_image(s, true);
         move_to_center(c);
 #endif
     }

@@ -78,10 +78,10 @@ namespace egt
                              const std::string& text,
                              const Rect& rect,
                              widgetmask flags) noexcept
-        : Button(text, rect, Font(), flags),
-          m_image_align(alignmask::CENTER)
+    : Button(text, rect, Font(), flags)
     {
-        set_text_align(alignmask::CENTER | alignmask::BOTTOM);
+        if (text.empty())
+            set_image_align(alignmask::CENTER);
         do_set_image(image);
     }
 
@@ -106,13 +106,13 @@ namespace egt
             m_box.w = width;
             m_box.h = height;
 #endif
+            damage();
         }
     }
 
     void ImageButton::set_image(const Image& image)
     {
         do_set_image(image);
-        damage();
     }
 
     void ImageButton::draw(Painter& painter, const Rect& rect)
@@ -121,13 +121,32 @@ namespace egt
 
         draw_box(painter);
 
-        painter.draw_image(m_image, box(), m_image_align, 0, disabled());
-
         if (!m_text.empty())
         {
-            painter.set_color(palette().color(Palette::ColorId::TEXT));
             painter.set_font(font());
-            painter.draw_text(box(), m_text, m_text_align, 5);
+            auto text_size = painter.text_size(m_text);
+
+            Rect tbox;
+            Rect ibox;
+
+            if (m_position_image_first)
+                Widget::double_align(box(),
+                                     m_image.size(), m_image_align, ibox,
+                                     text_size, m_text_align, tbox, 5);
+            else
+                Widget::double_align(box(),
+                                     text_size, m_text_align, tbox,
+                                     m_image.size(), m_image_align, ibox, 5);
+
+            painter.draw_image(ibox.point(), m_image, disabled());
+
+            painter.draw_text(m_text, tbox, palette().color(Palette::TEXT),
+                              alignmask::CENTER, 0, font());
+        }
+        else
+        {
+            Rect target = Widget::align_algorithm(m_image.size(), box(), m_image_align, 0);
+            painter.draw_image(target.point(), m_image, disabled());
         }
     }
 

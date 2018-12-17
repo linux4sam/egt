@@ -41,7 +41,7 @@ int main(int argc, const char** argv)
     if (img.h() != win.h())
     {
         double scale = (double)win.h() / (double)img.h();
-        img.scale(scale, scale);
+        img.scale_image(scale);
     }
 
     ImageLabel logo(Image("@microchip_logo_white.png"));

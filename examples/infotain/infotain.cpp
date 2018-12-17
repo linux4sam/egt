@@ -31,7 +31,8 @@ public:
              widgetmask flags = widgetmask::NONE)
         : ImageButton(Image(filename), label, Rect(Point(x, y), Size()), flags)
     {
-        image_align(alignmask::CENTER);
+        set_position_image_first(true);
+        set_image_align(alignmask::CENTER);
         set_text_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
