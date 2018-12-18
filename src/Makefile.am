@@ -1,19 +1,29 @@
-AM_CXXFLAGS = $(WARN_CFLAGS) -I$(top_srcdir) -I$(top_srcdir)/include -I$(top_builddir)/include -I$(top_srcdir)/src/images/jpeg \
+CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/include \
+	-I$(top_builddir)/include \
+	-I$(top_srcdir)/src/images/jpeg \
 	-I$(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
+CUSTOM_CFLAGS = $(CUSTOM_CXXFLAGS)
+
 if HAVE_KPLOT
-AM_CXXFLAGS += -I$(top_srcdir)/external/kplot/
+CUSTOM_CXXFLAGS += -I$(top_srcdir)/external/kplot/
 endif
 
 lib_LTLIBRARIES = libegt.la
-libegt_la_CXXFLAGS = $(AM_CXXFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
+libegt_la_CXXFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
 	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) \
-	$(LIBINPUT_CFLAGS)
-libegt_la_CFLAGS = $(AM_CFLAGS) $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
+	$(LIBINPUT_CFLAGS) \
+	$(CUSTOM_CXXFLAGS) \
+	$(AM_CXXFLAGS)
+libegt_la_CFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
-	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS)
+	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS) \
+	$(CUSTOM_CFLAGS) \
+	$(AM_CFLAGS)
 
 libegt_la_SOURCES = \
 animation.cpp \

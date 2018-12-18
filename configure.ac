@@ -12,6 +12,10 @@ AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
+CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast"
+CFLAGS="$CFLAGS -Ofast"
+
+AC_DISABLE_STATIC
 AC_PROG_CXX
 AC_PROG_AWK
 AC_PROG_CC
@@ -20,7 +24,6 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
-CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -g"
 
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
