@@ -98,10 +98,10 @@ namespace egt
         Size size_orig() const { return m_orig_size; }
 
         /**
-        * This function must be called any time the surface is going to be
+         * This function must be called any time the surface is going to be
          * modified.  It's safe to call this function when not necessary, and in
          * any event it will ensure this Image contains a unique copy of the
-               * surface.
+         * surface.
          */
         virtual void copy();
 

@@ -415,7 +415,7 @@ namespace egt
         const Palette& palette() const
         {
             if (m_palette.get())
-                return *m_palette.get();
+                return *m_palette;
 
             return global_palette();
         }
@@ -604,7 +604,7 @@ namespace egt
         Theme& theme()
         {
             if (m_theme.get())
-                return *m_theme.get();
+                return *m_theme;
 
             return default_theme();
         }
@@ -660,7 +660,7 @@ namespace egt
          * @note This should not be accessed directly.  Always use the accessor
          * functions because this is not set until it is modified.
          */
-        std::shared_ptr<Palette> m_palette;
+        std::unique_ptr<Palette> m_palette;
 
         /**
          * A user defined name for the widget.
@@ -672,13 +672,25 @@ namespace egt
          */
         alignmask m_align{alignmask::NONE};
 
+	/**
+	 * Alignment margin.
+	 */
         int m_margin{0};
 
+	/**
+	 * Focus state.
+	 */
         bool m_focus{false};
 
         Theme::boxtype m_boxtype{Theme::boxtype::none};
 
-        std::shared_ptr<Theme> m_theme;
+	/**
+         * Current theme for the widget.
+         *
+         * @note This should not be accessed directly.  Always use the accessor
+         * functions because this is not set until it is modified.
+	 */
+        std::unique_ptr<Theme> m_theme;
 
         Widget(const Widget&) = delete;
         Widget& operator=(const Widget&) = delete;
