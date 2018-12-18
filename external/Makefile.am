@@ -1,5 +1,5 @@
 if HAVE_KPLOT
-noinst_LIBRARIES = libkplot.a
+noinst_LTLIBRARIES = libkplot.la
 
 $(top_builddir)/external/kplot/compat.h: $(top_srcdir)/external/kplot/compat.pre.h $(top_srcdir)/external/kplot/compat.post.h
 	( mkdir -p $(top_builddir)/external/kplot/ ; \
@@ -7,7 +7,7 @@ $(top_builddir)/external/kplot/compat.h: $(top_srcdir)/external/kplot/compat.pre
 	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh $(top_builddir)/external/kplot/compat.sh reallocarray ; \
 	  cat $(top_srcdir)/external/kplot/compat.post.h ; ) >$@
 
-libkplot_a_SOURCES = \
+libkplot_la_SOURCES = \
 $(top_builddir)/external/kplot/compat.h \
 kplot/compat.post.h \
 kplot/compat.pre.h \
@@ -32,7 +32,9 @@ kplot/stddev.c \
 kplot/tic.c \
 kplot/vector.c
 
-libkplot_a_CFLAGS = $(AM_CFLAGS) $(CAIRO_CFLAGS) -I$(top_builddir)/external/kplot -fPIC
+libkplot_la_CFLAGS = $(CAIRO_CFLAGS) \
+	-I$(top_builddir)/external/kplot \
+	$(AM_CFLAGS)
 
 CLEANFILES = $(top_builddir)/external/kplot/compat.h
 BUILT_SOURCES = $(top_builddir)/external/kplot/compat.h

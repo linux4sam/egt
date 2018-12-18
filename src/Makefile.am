@@ -67,7 +67,7 @@ endif
 
 libegt_la_LIBADD =
 if HAVE_KPLOT
-libegt_la_LIBADD += $(top_builddir)/external/libkplot.a
+libegt_la_LIBADD += $(top_builddir)/external/libkplot.la
 endif
 
 if HAVE_LIBJPEG
