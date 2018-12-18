@@ -226,7 +226,7 @@ cairo_status_t cairo_image_surface_write_to_jpeg_mem(cairo_surface_t *sfc, unsig
  */
 static cairo_status_t cj_write(void *closure, const unsigned char *data, unsigned int length)
 {
-   return write((intptr_t) closure, data, length) < length ?
+   return write((intptr_t) closure, data, length) < (ssize_t)length ?
       CAIRO_STATUS_WRITE_ERROR : CAIRO_STATUS_SUCCESS;
 }
 
@@ -391,7 +391,7 @@ cairo_surface_t *cairo_image_surface_create_from_jpeg_stream(cairo_read_func_t r
       data = tmp;
 
       // read bytes into buffer and check for error
-      rlen = read_func(closure, (char*)data + len, CAIRO_JPEG_IO_BLOCK_SIZE);
+      rlen = read_func(closure, (unsigned char*)data + len, CAIRO_JPEG_IO_BLOCK_SIZE);
 #ifdef USE_CAIRO_READ_FUNC_LEN_T
       // check for error
       if (rlen == -1)
