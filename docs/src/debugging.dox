@@ -18,6 +18,16 @@ r
 bt
 @endcode
 
+To catch when a C++ exception is thrown, before the stack starts unwinding, you
+can issue the following:
+
+@code
+catch throw
+r
+...exception thrown...
+bt
+@endcode
+
 
 @section debug_env Environment Variables
 
