@@ -16,6 +16,7 @@
 #include <egt/button.h>
 #include <egt/canvas.h>
 #include <egt/chart.h>
+#include <egt/checkbox.h>
 #include <egt/color.h>
 #include <egt/combo.h>
 //#include <egt/eventloop.h>

@@ -31,6 +31,7 @@ app.cpp \
 button.cpp \
 canvas.cpp \
 chart.cpp \
+checkbox.cpp \
 color.cpp \
 combo.cpp \
 eventloop.cpp \
@@ -95,6 +96,7 @@ $(top_srcdir)/include/egt/bitmask.h \
 $(top_srcdir)/include/egt/button.h \
 $(top_srcdir)/include/egt/canvas.h \
 $(top_srcdir)/include/egt/chart.h \
+$(top_srcdir)/include/egt/checkbox.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/combo.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
