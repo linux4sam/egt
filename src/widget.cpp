@@ -50,14 +50,14 @@ namespace egt
 
         if ((align & alignmask::EXPAND_HORIZONTAL) == alignmask::EXPAND_HORIZONTAL)
         {
-            nsize.w = bounding.w;
-            p.x = bounding.x;
+            nsize.w = bounding.w - margin * 2;
+            p.x = bounding.x + margin;
         }
 
         if ((align & alignmask::EXPAND_VERTICAL) == alignmask::EXPAND_VERTICAL)
         {
-            nsize.h = bounding.h;
-            p.y = bounding.y;
+            nsize.h = bounding.h - margin * 2;
+            p.y = bounding.y + margin;
         }
 
         return Rect(p, nsize);

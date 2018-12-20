@@ -110,21 +110,13 @@ namespace egt
         if (image.empty())
             return *this;
 
+        AutoSaveRestore sr(*this);
+
+        if (bw)
+            cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOFT_LIGHT);
         cairo_set_source_surface(m_cr.get(), image.surface().get(), point.x, point.y);
         cairo_rectangle(m_cr.get(), point.x, point.y, image.size().w, image.size().h);
         fill();
-
-        if (bw)
-        {
-            AutoSaveRestore sr(*this);
-
-            cairo_set_source_rgb(m_cr.get(), 0, 0, 0);
-            cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_HSL_COLOR);
-            cairo_mask_surface(m_cr.get(),
-                               image.surface().get(),
-                               point.x,
-                               point.y);
-        }
 
         return *this;
     }

@@ -672,24 +672,24 @@ namespace egt
          */
         alignmask m_align{alignmask::NONE};
 
-	/**
-	 * Alignment margin.
-	 */
+        /**
+         * Alignment margin.
+         */
         int m_margin{0};
 
-	/**
-	 * Focus state.
-	 */
+        /**
+         * Focus state.
+         */
         bool m_focus{false};
 
         Theme::boxtype m_boxtype{Theme::boxtype::none};
 
-	/**
+        /**
          * Current theme for the widget.
          *
          * @note This should not be accessed directly.  Always use the accessor
          * functions because this is not set until it is modified.
-	 */
+         */
         std::unique_ptr<Theme> m_theme;
 
         Widget(const Widget&) = delete;

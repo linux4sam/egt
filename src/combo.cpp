@@ -94,8 +94,8 @@ ComboBox::ComboBox(const item_array& items,
                                      y() + OFFSET),
                                downsize);
 
-            painter.draw_image(m_up_rect.point(), up);
-            painter.draw_image(m_down_rect.point(), down);
+            painter.draw_image(m_up_rect.point(), up, m_selected >= m_items.size()-1);
+            painter.draw_image(m_down_rect.point(), down, m_selected == 0);
 
             // text
             painter.set_color(palette().color(Palette::TEXT));
