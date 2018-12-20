@@ -25,9 +25,10 @@ namespace egt
 
     namespace detail
     {
-        static inline int ceil(int x, int y)
+        static inline int round(int x, int y)
         {
-            return (x + y - 1) / y;
+            //return (x + y - 1) / y;
+            return x  / y;
         }
     }
 
@@ -38,11 +39,11 @@ namespace egt
     static Rect cell_rect(int columns, int rows, int width, int height,
                           int column, int row, int spacing)
     {
-        auto inner_width = detail::ceil((width - ((columns + 1) * spacing)), columns);
-        auto inner_height = detail::ceil((height - ((rows + 1) * spacing)), rows);
+        auto inner_width = detail::round((width - ((columns + 1) * spacing)), columns);
+        auto inner_height = detail::round((height - ((rows + 1) * spacing)), rows);
 
-        auto ix = (column * spacing) + (column * inner_width) + detail::ceil(spacing, 2);
-        auto iy = (row * spacing) + (row * inner_height) + detail::ceil(spacing, 2);
+        auto ix = (column * spacing) + (column * inner_width) + detail::round(spacing, 2);
+        auto iy = (row * spacing) + (row * inner_height) + detail::round(spacing, 2);
         auto iw = inner_width + spacing;
         auto ih = inner_height + spacing;
 
@@ -176,7 +177,7 @@ namespace egt
                 {
                     Rect bounding = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
 
-                    bounding += Point(detail::ceil(m_spacing, 2), detail::ceil(m_spacing, 2));
+                    bounding += Point(detail::round(m_spacing, 2), detail::round(m_spacing, 2));
                     bounding -= Size(m_spacing, m_spacing);
 
                     // get the aligning rect
