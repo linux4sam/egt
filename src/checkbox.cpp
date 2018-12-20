@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/button.h"
 #include "egt/checkbox.h"
-#include "egt/label.h"
 #include "egt/painter.h"
 #include "egt/theme.h"
 
@@ -14,7 +14,7 @@ namespace egt
 {
     CheckBox::CheckBox(const std::string& text,
                        const Rect& rect)
-        : Label(text, rect)
+        : Button(text, rect)
     {
         set_boxtype(Theme::boxtype::rounded_gradient);
         flag_set(widgetmask::GRAB_MOUSE);

@@ -10,10 +10,13 @@
  * @file
  * @brief Working with checkboxes.
  */
-#include <egt/label.h>
+#include <egt/button.h>
 
 namespace egt
 {
+    class Rect;
+    class Painter;
+
     /**
      * Boolean checkbox.
      *
@@ -24,7 +27,7 @@ namespace egt
      *
      * @todo This should be a ValueWidget<bool>.
      */
-    class CheckBox : public Label
+    class CheckBox : public Button
     {
     public:
         CheckBox(const std::string& text = std::string(),
