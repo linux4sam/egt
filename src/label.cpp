@@ -151,6 +151,37 @@ namespace egt
         parent.add(this);
     }
 
+    void ImageLabel::scale_image(double hscale, double vscale,
+                                 bool approximate)
+    {
+        m_image.scale(hscale, vscale, approximate);
+        m_box = Rect(m_box.point(), m_image.size());
+    }
+
+    void ImageLabel::scale_image(double s, bool approximate)
+    {
+        scale_image(s, s, approximate);
+    }
+
+#if 0
+    void ImageLabel::resize(const Size& size) override
+    {
+        if (m_text.empty())
+        {
+            if (this->size() != size)
+            {
+                double hs = (double)size.w / (double)m_image.size_orig().w;
+                double vs = (double)size.h / (double)m_image.size_orig().h;
+                scale_image(hs, vs);
+            }
+        }
+        else
+        {
+            Widget::resize(size);
+        }
+    }
+#endif
+
     void ImageLabel::draw(Painter& painter, const Rect& rect)
     {
         ignoreparam(rect);

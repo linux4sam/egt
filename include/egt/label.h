@@ -11,12 +11,16 @@
  * @brief Working with labels.
  */
 
-#include <egt/font.h>
 #include <egt/image.h>
 #include <egt/widget.h>
 
 namespace egt
 {
+    class Font;
+    class Frame;
+    class Painter;
+    class Point;
+    class Rect;
 
     /**
      * A Label in its basic form is just some text.
@@ -113,34 +117,12 @@ namespace egt
          *            hit efficiency.
          */
         virtual void scale_image(double hscale, double vscale,
-                                 bool approximate = false)
-        {
-            m_image.scale(hscale, vscale, approximate);
-            m_box = Rect(m_box.point(), m_image.size());
-        }
+                                 bool approximate = false);
 
-        virtual void scale_image(double s, bool approximate = false)
-        {
-            scale_image(s, s, approximate);
-        }
+        virtual void scale_image(double s, bool approximate = false);
 
 #if 0
-        virtual void resize(const Size& size) override
-        {
-            if (m_text.empty())
-            {
-                if (this->size() != size)
-                {
-                    double hs = (double)size.w / (double)m_image.size_orig().w;
-                    double vs = (double)size.h / (double)m_image.size_orig().h;
-                    scale_image(hs, vs);
-                }
-            }
-            else
-            {
-                Widget::resize(size);
-            }
-        }
+        virtual void resize(const Size& size) override;
 #endif
 
         const Image& image() const { return m_image; }
