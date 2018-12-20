@@ -17,7 +17,6 @@ namespace egt
           m_spacing(spacing)
     {
         set_boxtype(Theme::boxtype::none);
-        palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
         m_cells.resize(columns);
         for (auto& x : m_cells)

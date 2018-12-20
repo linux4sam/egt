@@ -36,6 +36,9 @@ public:
             background->scale_image(hscale, vscale);
         }
 
+        m_grid1.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_grid2.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+
         add(&m_grid1);
         add(&m_grid2);
 
@@ -76,9 +79,6 @@ public:
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);
-
-        m_grid1.reposition();
-        m_grid2.reposition();
 
         reset_game();
     }

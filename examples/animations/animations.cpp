@@ -20,6 +20,7 @@ int main()
 
     StaticGrid grid(Rect(win.size()), 3, 2, 10);
     win.add(&grid);
+    grid.set_align(alignmask::EXPAND);
 
     AnimationSequence seq;
 

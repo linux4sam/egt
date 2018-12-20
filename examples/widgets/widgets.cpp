@@ -24,6 +24,8 @@ int main(int argc, const char** argv)
 
     StaticGrid grid0(Rect(Point(), Size(win.w() / 4 * 3, win.h())), 3, 10, 5);
     win.add(&grid0);
+    grid0.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    grid0.set_align(alignmask::LEFT | alignmask::EXPAND_VERTICAL);
 
     Label label1("left align", Rect(),
                  alignmask::LEFT | alignmask::CENTER, Font(), widgetmask::NONE);
@@ -134,6 +136,8 @@ int main(int argc, const char** argv)
 
     StaticGrid grid1(Rect(Point(win.w() / 4 * 3, 0), Size(win.w() / 4 * 1, win.h())), 1, 3, 5);
     win.add(&grid1);
+    grid1.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    grid1.set_align(alignmask::RIGHT | alignmask::EXPAND_VERTICAL);
 
     LevelMeter lp1;
     grid1.add(&lp1);

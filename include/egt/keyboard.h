@@ -30,6 +30,8 @@ namespace egt
         {
             this->add(&m_grid);
             this->m_grid.set_align(alignmask::EXPAND);
+            this->m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+
 
             /*
             template <class T>
