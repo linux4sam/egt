@@ -11,10 +11,14 @@
  * @brief Working with buttons.
  */
 
-#include <egt/label.h>
+#include <egt/image.h>
+#include <egt/widget.h>
 
 namespace egt
 {
+    class Font;
+    class Painter;
+    class Rect;
 
     /**
      * Basic button widget.
@@ -22,7 +26,7 @@ namespace egt
      * @image html widget_button.png
      * @image latex widget_button.png "widget_button" width=5cm
      */
-    class Button : public Label
+    class Button : public TextWidget
     {
     public:
 

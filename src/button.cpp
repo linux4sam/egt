@@ -7,6 +7,7 @@
 #include "egt/imagecache.h"
 #include "egt/painter.h"
 #include "egt/frame.h"
+#include "egt/widget.h"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ namespace egt
 
     Button::Button(const std::string& text, const Rect& rect,
                    const Font& font, widgetmask flags) noexcept
-        : Label(text, rect, alignmask::CENTER, font, flags)
+        : TextWidget(text, rect, alignmask::CENTER, font, flags)
     {
         set_boxtype(Theme::boxtype::rounded_gradient);
         flag_set(widgetmask::GRAB_MOUSE);
