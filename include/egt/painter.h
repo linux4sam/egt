@@ -148,14 +148,12 @@ namespace egt
                                     int margin = 0,
                                     bool bw = false);
 
-        virtual Painter& arc(const Point& point, float radius, float angle1,
-                             float angle2);
+        virtual Painter& arc(const Arc& arc);
 
         /**
          * Draw an arc.
          */
-        virtual Painter& draw_arc(const Point& point, float radius,
-                                  float angle1, float angle2);
+        virtual Painter& draw_arc(const Arc& arc);
 
         virtual Painter& circle(const Circle& circle);
 

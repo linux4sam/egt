@@ -161,16 +161,17 @@ namespace egt
         return *this;
     }
 
-    Painter& Painter::arc(const Point& point, float radius, float angle1, float angle2)
+    Painter& Painter::arc(const Arc& arc)
     {
-        cairo_arc(m_cr.get(), point.x, point.y, radius, angle1, angle2);
+        cairo_arc(m_cr.get(), arc.center.x, arc.center.y,
+                  arc.radius, arc.angle1, arc.angle2);
 
         return *this;
     }
 
-    Painter& Painter::draw_arc(const Point& point, float radius, float angle1, float angle2)
+    Painter& Painter::draw_arc(const Arc& arc)
     {
-        arc(point, radius, angle1, angle2);
+        this->arc(arc);
         stroke();
 
         return *this;
@@ -178,7 +179,7 @@ namespace egt
 
     Painter& Painter::circle(const Circle& circle)
     {
-        arc(circle.center, circle.radius, 0, 2 * M_PI);
+        arc(circle);
 
         return *this;
     }

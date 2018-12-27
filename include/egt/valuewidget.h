@@ -247,19 +247,19 @@ namespace egt
             // bottom full circle
             painter.set_color(color1);
             painter.set_line_width(linew);
-            painter.arc(c, radius, 0, 2 * M_PI);
+            painter.arc(Arc(c, radius, 0, 2 * M_PI));
             painter.stroke();
 
             // value arc
             painter.set_color(color2);
             painter.set_line_width(linew - (linew / 3));
-            painter.arc(c, radius, angle1, angle2);
+            painter.arc(Arc(c, radius, angle1, angle2));
             painter.stroke();
 
             // handle
             painter.set_color(color3);
             painter.set_line_width(linew);
-            painter.arc(c, radius, angle2 - 0.3, angle2);
+            painter.arc(Arc(c, radius, angle2 - 0.3, angle2));
             painter.stroke();
 
             // secondary value
@@ -268,7 +268,7 @@ namespace egt
                                              this->value_to_degrees(this->value2()));
             painter.set_color(color4);
             painter.set_line_width(linew);
-            painter.arc(c, radius, angle3 - 0.01, angle3 + 0.01);
+            painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
             painter.stroke();
 
             if (!m_text.empty())

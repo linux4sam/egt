@@ -41,13 +41,13 @@ public:
         // value arc
         painter.set_color(color2);
         painter.set_line_width(linew);
-        painter.arc(c, radius, angle1, angle2);
+        painter.arc(Arc(c, radius, angle1, angle2));
         painter.stroke();
 
         // handle
         painter.set_color(color3);
         auto hp = c.point_on_circumference(radius, angle2);
-        painter.arc(hp, handle_radius, 0., (float)(2 * M_PI));
+        painter.arc(Arc(hp, handle_radius, 0., (float)(2 * M_PI)));
         painter.fill();
 
         // secondary value
@@ -56,7 +56,7 @@ public:
                                          this->value_to_degrees(this->value2()));
         painter.set_color(color4);
         painter.set_line_width(linew * 2);
-        painter.arc(c, radius, angle3 - 0.01, angle3 + 0.01);
+        painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
         painter.stroke();
 
         if (!m_text.empty())

@@ -148,7 +148,7 @@ namespace egt
         painter.stroke();
 
         painter.set_color(palette().color(Palette::HIGHLIGHT));
-        painter.arc(center(), radius, angle1, angle2);
+        painter.arc(Arc(center(), radius, angle1, angle2));
         painter.stroke();
 
         string text = std::to_string(value());
