@@ -19,7 +19,6 @@
 
 namespace egt
 {
-
     /**
      * Simple x,y coordinate.
      */
@@ -588,18 +587,37 @@ namespace egt
         Point m_end;
     };
 
+    class Arc
+    {
+    public:
+        /**
+         * Construct Arc object.
+         */
+        Arc(const Point& c = Point(), float r = 0.0f, float a1 = 0.0f, float a2 = 0.0f)
+            : center(c),
+              radius(r),
+              angle1(a1),
+              angle2(a2)
+        {
+        }
+
+        Point center;
+        float radius{0.0f};
+        float angle1;
+        float angle2;
+    };
+
     /**
      * A basic circle with a center point and radius.
      */
-    class Circle
+    class Circle : public Arc
     {
     public:
         /**
          * Construct a Circle object.
          */
         Circle(const Point& c = Point(), float r = 0.0f)
-            : center(c),
-              radius(r)
+            : Arc(c, r, 0.0f, 2 * M_PI)
         {
         }
 
@@ -609,26 +627,6 @@ namespace egt
                    detail::FloatingPoint<float>(radius).
                    AlmostEquals(detail::FloatingPoint<float>(0.0f));
         }
-
-        Point center;
-        float radius{0.0f};
-    };
-
-    class Arc : public Circle
-    {
-    public:
-        /**
-         * Construct Arc object.
-         */
-        Arc(const Point& c = Point(), float r = 0.0f, float a1 = 0.0f, float a2 = 0.0f)
-            : Circle(c, r),
-              angle1(a1),
-              angle2(a2)
-        {
-        }
-
-        float angle1;
-        float angle2;
     };
 
     /** @todo Implement polygon. */
