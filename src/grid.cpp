@@ -72,6 +72,7 @@ namespace egt
                     for (size_t row = 0; row < rows; row++)
                     {
                         Rect r = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
+                        r += point();
                         painter.rectangle(r);
                     }
                 }
