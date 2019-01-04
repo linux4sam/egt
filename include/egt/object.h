@@ -14,6 +14,7 @@
 #include <functional>
 #include <cstdint>
 #include <vector>
+#include <unordered_set>
 
 namespace egt
 {
@@ -61,6 +62,14 @@ namespace egt
 
     namespace detail
     {
+        struct eventid_hash
+        {
+            std::size_t operator()(eventid const& s) const noexcept
+            {
+                return std::hash<int> {}(static_cast<int>(s));
+            }
+        };
+
         /**
          * Base object class with fundamental properties.
          */
@@ -73,12 +82,14 @@ namespace egt
 
             using event_callback_t = std::function<int (eventid event)>;
 
+            using mask_type = std::unordered_set<eventid, eventid_hash>;
+
             /**
              * Add a callback to be called when the widget receives an event.
              */
-            virtual void on_event(event_callback_t handler)
+            virtual void on_event(event_callback_t handler, mask_type mask = mask_type())
             {
-                m_callbacks.push_back(handler);
+                m_callbacks.push_back({handler, mask});
             }
 
             /**
@@ -88,9 +99,13 @@ namespace egt
             {
                 for (auto callback : m_callbacks)
                 {
-                    auto ret = callback(event);
-                    if (ret)
-                        return ret;
+                    if (callback.mask.empty() ||
+                        callback.mask.find(event) != callback.mask.end())
+                    {
+                        auto ret = callback.callback(event);
+                        if (ret)
+                            return ret;
+                    }
                 }
 
                 return 0;
@@ -101,7 +116,13 @@ namespace egt
 
         protected:
 
-            using callback_array = std::vector<event_callback_t>;
+            struct callback_meta
+            {
+                event_callback_t callback;
+                mask_type mask;
+            };
+
+            using callback_array = std::vector<callback_meta>;
 
             callback_array m_callbacks;
         };

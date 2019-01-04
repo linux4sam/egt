@@ -158,60 +158,58 @@ public:
         add(&m_widthpicker);
 
         m_grid.add(&m_colorbtn);
-        m_colorbtn.on_event([this](eventid event)
+        m_colorbtn.on_event([this](eventid)
         {
-            if (event == eventid::MOUSE_DOWN)
-            {
-                m_penpicker.show_modal(true);
-                return 1;
-            }
-            return 0;
-        });
+            m_penpicker.show_modal(true);
+            return 1;
+        }, {eventid::MOUSE_DOWN});
+
+        m_colorbtn.on_event([this](eventid)
+        {
+            m_penpicker.show_modal(true);
+            return 1;
+        }, {eventid::MOUSE_DOWN});
+
+        m_colorbtn.on_event([this](eventid)
+        {
+            m_penpicker.show_modal(true);
+            return 1;
+        }, {eventid::MOUSE_DOWN});
+
+        m_colorbtn.on_event([this](eventid)
+        {
+            m_penpicker.show_modal(true);
+            return 1;
+        }, {eventid::MOUSE_DOWN});
 
         m_grid.add(&m_fillbtn);
-        m_fillbtn.on_event([this](eventid event)
+        m_fillbtn.on_event([this](eventid)
         {
-            if (event == eventid::MOUSE_DOWN)
-            {
-                m_fillpicker.show_modal(true);
-                return 1;
-            }
-            return 0;
-        });
+            m_fillpicker.show_modal(true);
+            return 1;
+        }, {eventid::MOUSE_DOWN});
 
         m_grid.add(&m_widthbtn);
-        m_widthbtn.on_event([this](eventid event)
+        m_widthbtn.on_event([this](eventid)
         {
-            if (event == eventid::MOUSE_DOWN)
-            {
-                m_widthpicker.show_modal(true);
-                return 1;
-            }
-            return 0;
-        });
+            m_widthpicker.show_modal(true);
+            return 1;
+        }, {eventid::MOUSE_DOWN});
 
         m_grid.add(&m_clearbtn);
-        m_clearbtn.on_event([this](eventid event)
+        m_clearbtn.on_event([this](eventid)
         {
-            ignoreparam(event);
-            if (event == eventid::MOUSE_DOWN)
-            {
-                clear();
-                damage();
-                return 1;
-            }
-            return 0;
-        });
+            clear();
+            damage();
+            return 1;
+        }, {eventid::MOUSE_DOWN});
 
-        m_fillpicker.on_event([this](eventid event)
+        m_fillpicker.on_event([this](eventid)
         {
-            if (event == eventid::HIDE)
-            {
-                palette().set(Palette::BG, Palette::GROUP_NORMAL, m_fillpicker.color());
-                damage();
-            }
+            palette().set(Palette::BG, Palette::GROUP_NORMAL, m_fillpicker.color());
+            damage();
             return 0;
-        });
+        }, {eventid::HIDE});
 
         auto logo = new ImageLabel(Image("@microchip_logo_black.png"));
         add(logo)->set_align(alignmask::RIGHT | alignmask::TOP, 10);
