@@ -83,20 +83,12 @@ namespace egt
                     w->top_draw();
             }
         });
+
     }
 
     int EventLoop::run(bool enable_fps)
     {
         experimental::Fps fps;
-
-#if 0
-        PeriodicTimer drawtimer(std::chrono::milliseconds(30));
-        drawtimer.on_timeout([this, &fps]()
-        {
-            draw();
-        });
-        drawtimer.start();
-#endif
 
         draw();
 

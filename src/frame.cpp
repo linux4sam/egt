@@ -239,7 +239,7 @@ namespace egt
         }
 
         //
-        // Origin change
+        // Origin about to change
         //
 
         auto cr = painter.context();
