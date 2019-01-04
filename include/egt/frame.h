@@ -94,7 +94,7 @@ namespace egt
         /**
          * Remove all child widgets.
          */
-        virtual void remove_all();
+        void remove_all();
 
         /**
          * Return true if this is a top level frame, with no parent.
@@ -187,8 +187,7 @@ namespace egt
          */
         virtual void paint_children_to_file();
 
-        virtual ~Frame()
-        {}
+        virtual ~Frame();
 
     protected:
 

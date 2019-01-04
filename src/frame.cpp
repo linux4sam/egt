@@ -319,4 +319,9 @@ namespace egt
         }
     }
 
+    Frame::~Frame()
+    {
+        remove_all();
+    }
+
 }
