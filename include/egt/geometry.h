@@ -499,8 +499,8 @@ namespace egt
         }
 
         /**
-             * Returns true if this rectangle contains the specified one.
-             */
+        * Returns true if this rectangle contains the specified one.
+         */
         inline bool contains(const Rect& rhs) const
         {
             return rhs.right() < right() &&

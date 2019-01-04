@@ -137,7 +137,7 @@ namespace egt
         /**
          * @param[in] rect The source rect to copy.
          * @param[in] point The destination point.
-         * @param[in] surface The image surface to draw.
+         * @param[in] image The image surface to draw.
          */
         virtual Painter& draw_image(const Rect& rect, const Point& point,
                                     const Image& image);
