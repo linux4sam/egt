@@ -16,10 +16,8 @@ using namespace std;
 using namespace egt;
 
 class MainWindow;
-class ChildWindow;
 
 MainWindow* win1;
-ChildWindow* win2;
 
 class MyButton : public ImageButton
 {
@@ -35,35 +33,6 @@ public:
         set_image_align(alignmask::CENTER);
         set_text_align(alignmask::CENTER | alignmask::BOTTOM);
     }
-
-    int handle(eventid event) override
-    {
-        switch (event)
-        {
-        case eventid::MOUSE_DOWN:
-        {
-            if (main_window() == reinterpret_cast<Window*>(win1))
-            {
-                main_window()->exit();
-                main_window() = reinterpret_cast<Window*>(win2);
-                main_window()->enter();
-            }
-            else
-            {
-                main_window()->exit();
-                main_window() = reinterpret_cast<Window*>(win1);
-                main_window()->enter();
-            }
-            break;
-        }
-        case eventid::MOUSE_UP:
-            break;
-        default:
-            break;
-        }
-
-        return ImageButton::handle(event);
-    }
 };
 
 class HomeImage : public ImageLabel
@@ -75,34 +44,6 @@ public:
         : ImageLabel(Image(filename), Point(x, y))
     {}
 
-    int handle(eventid event) override
-    {
-        switch (event)
-        {
-        case eventid::MOUSE_DOWN:
-        {
-            if (main_window() == reinterpret_cast<Window*>(win1))
-            {
-                main_window()->exit();
-                main_window() = reinterpret_cast<Window*>(win2);
-                main_window()->enter();
-            }
-            else
-            {
-                main_window()->exit();
-                main_window() = reinterpret_cast<Window*>(win1);
-                main_window()->enter();
-            }
-            break;
-        }
-        case eventid::MOUSE_UP:
-            break;
-        default:
-            break;
-        }
-
-        return ImageLabel::handle(event);
-    }
 };
 
 class Box : public Widget
@@ -174,10 +115,9 @@ static void top_menu(BasicWindow* win)
 
 static void bottom_menu(BasicWindow* win)
 {
-    Box* box2 = new Box(Rect(Point(0, 390), Size(800, 90)), Color::LIGHTGRAY);
-    win->add(box2);
+    StaticGrid* grid2 = new StaticGrid(Rect(Point(0, 390), Size(800, 90)), 5, 1, 4);
+    grid2->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
-    StaticGrid* grid2 = new StaticGrid(Rect(Point(0, 390), Size(800, 90)), 5, 1, 0);
     win->add(grid2);
 
     MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0);
@@ -194,8 +134,6 @@ static void bottom_menu(BasicWindow* win)
 
     MyButton* bb5 = new MyButton("apps_s.png", _("Apps"), 0, 0);
     grid2->add(bb5, 4, 0);
-
-    grid2->reposition();
 }
 
 class MainWindow : public TopWindow
@@ -207,52 +145,36 @@ public:
     {
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
 
+        grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+
         add(&grid);
 
         MyButton* b1 = new MyButton("sound.png", _("Sound"));
-        grid.add(b1, 0, 0);
+        grid.add(b1);
 
         MyButton* b2 = new MyButton("clock.png", _("Clock"));
-        grid.add(b2, 1, 0);
+        grid.add(b2);
 
         MyButton* b3 = new MyButton("bluetooth.png", _("Bluetooth"));
-        grid.add(b3, 2, 0);
+        grid.add(b3);
 
         MyButton* b4 = new MyButton("phone.png", _("Phone"));
-        grid.add(b4, 3, 0);
+        grid.add(b4);
 
         MyButton* b5 = new MyButton("apps.png", _("Mobile Apps"));
-        grid.add(b5, 0, 1);
+        grid.add(b5);
 
         MyButton* b6 = new MyButton("navigation.png", _("Navigation"));
-        grid.add(b6, 1, 1);
+        grid.add(b6);
 
         MyButton* b7 = new MyButton("general.png", _("General"));
-        grid.add(b7, 2, 1);
-
-        grid.reposition();
+        grid.add(b7);
 
         top_menu(this);
         bottom_menu(this);
     }
 
     StaticGrid grid;
-};
-
-class ChildWindow : public Window
-{
-public:
-    explicit ChildWindow(const Size& size)
-        : Window(size)
-    {
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
-
-        Label* label = new Label(_("Blank Screen"), Rect(Point(0, 60), Size(800, 330)));
-        add(label);
-
-        top_menu(this);
-        bottom_menu(this);
-    }
 };
 
 int main(int argc, const char** argv)
@@ -262,12 +184,10 @@ int main(int argc, const char** argv)
     set_image_path("../share/egt/examples/infotain/");
 
     win1 = new MainWindow(Size(800, 480));
-    win2 = new ChildWindow(Size(800, 480));
-
-    /** @todo Broken. enter()/leave() not fully implemented. */
-    //win1->add(win2);
 
     win1->show();
+
+    app.dump(cout);
 
     return app.run();
 }
