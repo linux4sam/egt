@@ -152,6 +152,8 @@ public:
         // don't draw background, we'll do it in draw()
         flag_set(widgetmask::NO_BACKGROUND);
 
+        m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+
         add(&m_grid);
         add(&m_penpicker);
         add(&m_fillpicker);
