@@ -68,8 +68,9 @@ public:
 
     int load()
     {
-        auto img = new ImageLabel(Image("background.png"));
-        double scale = (double)w() / (double)img->w();
+        auto i = Image("background.png");
+        auto img = new ImageLabel(i);
+        double scale = (double)w() / (double)i.size().w;
         add(img);
         img->scale_image(scale);
 

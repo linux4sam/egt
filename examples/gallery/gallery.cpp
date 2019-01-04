@@ -72,7 +72,7 @@ int main(int argc, const char** argv)
 
     ImageButton settings(Image("settings.png"), "", Rect());
     win.add(&settings);
-    settings.flag_set(widgetmask::NO_BACKGROUND);
+    settings.set_boxtype(Theme::boxtype::none);
     settings.set_align(alignmask::RIGHT | alignmask::TOP, 10);
     settings.on_event([&popup](eventid event)
     {

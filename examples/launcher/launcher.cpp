@@ -23,8 +23,9 @@
 using namespace std;
 using namespace egt;
 
-#define DO_SCALING
+//#define DO_SCALING
 
+#ifdef DO_SCALING
 /**
  * Calculate a scale relative to how far something is the center.
  */
@@ -38,6 +39,7 @@ static float sliding_scale(int win_w, int item_w, int item_pos,
         return min;
     return scale;
 }
+#endif
 
 /**
  * Execute a command.
@@ -71,16 +73,14 @@ class LauncherItem : public ImageLabel
 public:
     LauncherItem(int num, const string& name, const string& description,
                  const string& image, const string& exec, int x = 0, int y = 0)
-        : ImageLabel(Image(image), name, Point(x, y)),
+        : ImageLabel(Image(image), name, Point(x, y), Font(24, Font::weightid::BOLD)),
           m_num(num),
           m_name(name),
           m_description(description),
           m_exec(exec)
     {
-        resize(size() + Size(0, 50));
         palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-        Font newfont(24, Font::weightid::BOLD);
-        set_font(newfont);
+        set_image_align(alignmask::CENTER | alignmask::TOP);
         set_text_align(alignmask::CENTER | alignmask::BOTTOM);
     }
 
@@ -112,6 +112,8 @@ public:
 
     void scale_box(int pos)
     {
+        ignoreparam(pos);
+
 #ifdef DO_SCALING
         auto c = center();
         float s = sliding_scale(parent()->w(), w(), pos);
@@ -154,6 +156,7 @@ public:
         auto settings = new ImageButton(Image("settings.png"), "", Rect());
         settings->flag_clear(widgetmask::GRAB_MOUSE);
         add(settings);
+        settings->set_boxtype(Theme::boxtype::none);
         settings->set_align(alignmask::RIGHT | alignmask::TOP, 10);
         settings->on_event([this](eventid event)
         {

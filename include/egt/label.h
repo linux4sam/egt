@@ -49,8 +49,14 @@ namespace egt
                            widgetmask flags = widgetmask::NONE) noexcept;
 
             explicit Label(Frame& parent,
-                           const std::string& text = std::string(),
+                           const std::string& text,
                            const Rect& rect = Rect(),
+                           alignmask align = alignmask::CENTER,
+                           const Font& font = Font(),
+                           widgetmask flags = widgetmask::NONE) noexcept;
+
+            explicit Label(Frame& parent,
+                           const std::string& text = std::string(),
                            alignmask align = alignmask::CENTER,
                            const Font& font = Font(),
                            widgetmask flags = widgetmask::NONE) noexcept;
@@ -66,7 +72,9 @@ namespace egt
 
         protected:
 
-            void first_resize();
+            virtual void set_parent(Frame* parent) override;
+
+            virtual void first_resize();
         };
 
         /**
@@ -154,6 +162,8 @@ namespace egt
             virtual ~ImageLabel();
 
         protected:
+            virtual void first_resize() override;
+
             Image m_image;
             bool m_label{true};
             alignmask m_image_align{alignmask::CENTER | alignmask::LEFT};

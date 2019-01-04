@@ -39,14 +39,8 @@ namespace egt
 
         if (find(m_children.begin(), m_children.end(), widget) == m_children.end())
         {
-            // cannot already have a parent
-            assert(!widget->m_parent);
-
-            // note order here - set parent and then damage
-            widget->m_parent = this;
-            widget->damage();
             m_children.push_back(widget);
-
+            widget->set_parent(this);
             // ensure alignment is set now
             widget->set_align(widget->align(), widget->margin());
         }

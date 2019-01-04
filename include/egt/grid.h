@@ -54,6 +54,12 @@ namespace egt
              *
              * This will automatically resize the grid to fit the widget as
              * necessary.
+             *
+             * @param widget The widget to add, or nullptr.
+             * @param column The column index.
+             * @param row The row index.
+             * @param align Align the widget in the cell by calling set_align() on
+             *              the widget with this value.
              */
             virtual Widget* add(Widget* widget, int column, int row,
                                 alignmask align = alignmask::EXPAND);
@@ -63,6 +69,10 @@ namespace egt
              *
              * This will not automatically resize the grid to fit the widget as
              * necessary.
+             *
+             * @param widget The widget to add, or nullptr.
+             * @param align Align the widget in the cell by calling set_align() on
+             *              the widget with this value.
              */
             virtual Widget* add(Widget* widget,
                                 alignmask align = alignmask::EXPAND);
@@ -97,7 +107,6 @@ namespace egt
             {
                 // cppcheck-suppress unusedStructMember
                 Widget* widget{nullptr};
-                alignmask align{alignmask::NONE};
             };
 
             using cell_array = std::vector<std::vector<Cell>>;

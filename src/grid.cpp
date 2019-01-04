@@ -109,7 +109,8 @@ namespace egt
 
             Cell cell;
             cell.widget = widget;
-            cell.align = align;
+            if (widget)
+                widget->set_align(align);
             m_cells[column][row] = cell;
 
             m_last_add_column = column;
@@ -134,9 +135,11 @@ namespace egt
                 if (i != column.end())
                 {
                     i->widget = widget;
-                    i->align = align;
 
                     Frame::add(widget);
+
+                    if (widget)
+                        widget->set_align(align);
 
                     reposition();
 
@@ -203,7 +206,7 @@ namespace egt
                         // get the aligning rect
                         Rect target = align_algorithm(cell.widget->box().size(),
                                                       bounding,
-                                                      cell.align);
+                                                      cell.widget->align());
 
                         // reposition/resize widget
                         cell.widget->move(target.point());

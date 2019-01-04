@@ -12,6 +12,7 @@ using namespace std;
 
 namespace egt
 {
+    static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
 
     Label::Label(const std::string& text, const Rect& rect,
                  alignmask align, const Font& font, widgetmask flags) noexcept
@@ -25,21 +26,13 @@ namespace egt
         : Label(text, rect, align, font, flags)
     {
         parent.add(this);
-        first_resize();
     }
 
-    void Label::first_resize()
+    Label::Label(Frame& parent, const std::string& text,
+                 alignmask align, const Font& font, widgetmask flags) noexcept
+        : Label(parent, text, Rect(), align, font, flags)
     {
-        if (box().size().empty())
-        {
-            if (!m_text.empty())
-            {
-                Painter painter(screen()->context());
-                painter.set_font(font());
-                Size s = painter.text_size(m_text);
-                resize(s);
-            }
-        }
+
     }
 
     void Label::set_text(const std::string& str)
@@ -111,6 +104,29 @@ namespace egt
     Label::~Label()
     {}
 
+    void Label::set_parent(Frame* parent)
+    {
+        TextWidget::set_parent(parent);
+        first_resize();
+    }
+
+    void Label::first_resize()
+    {
+        if (box().size().empty())
+        {
+            if (!m_text.empty())
+            {
+                auto s = text_size();
+                s += Size(5, 5);
+                resize(s);
+            }
+            else
+            {
+                resize(DEFAULT_LABEL_SIZE);
+            }
+        }
+    }
+
     ImageLabel::ImageLabel(const Image& image,
                            const std::string& text,
                            const Rect& rect,
@@ -122,14 +138,11 @@ namespace egt
 
         if (text.empty())
             set_image_align(alignmask::CENTER);
-
-        if (rect.empty())
-            m_box = Rect(rect.point(), m_image.size());
     }
 
     ImageLabel::ImageLabel(const Image& image,
                            const Point& point)
-        : ImageLabel(image, "", Rect(point, image.size()), Font())
+        : ImageLabel(image, "", Rect(point, Size(0, 0)), Font())
     {
     }
 
@@ -137,7 +150,7 @@ namespace egt
                            const std::string& text,
                            const Point& point,
                            const Font& font)
-        : ImageLabel(image, text, Rect(point, image.size()), font)
+        : ImageLabel(image, text, Rect(point, Size(0, 0)), font)
     {
     }
 
@@ -188,10 +201,9 @@ namespace egt
 
         draw_box(painter);
 
-        if (m_label && !m_text.empty())
+        if (!m_text.empty())
         {
-            painter.set_font(font());
-            auto text_size = painter.text_size(m_text);
+            auto text_size = this->text_size();
 
             Rect tbox;
             Rect ibox;
@@ -207,8 +219,11 @@ namespace egt
 
             painter.draw_image(ibox.point(), m_image);
 
-            painter.draw_text(m_text, tbox, palette().color(Palette::TEXT),
-                              alignmask::CENTER, 0, font());
+            if (m_label)
+            {
+                painter.draw_text(m_text, tbox, palette().color(Palette::TEXT),
+                                  alignmask::CENTER, 0, font());
+            }
         }
         else
         {
@@ -243,6 +258,36 @@ namespace egt
 
     ImageLabel::~ImageLabel()
     {
+    }
+
+    void ImageLabel::first_resize()
+    {
+        if (box().size().empty())
+        {
+            if (!m_text.empty())
+            {
+                auto text_size = this->text_size();
+
+                Rect tbox;
+                Rect ibox;
+
+                if (m_position_image_first)
+                    Widget::double_align(box(),
+                                         m_image.size(), m_image_align, ibox,
+                                         text_size, m_text_align, tbox, 5);
+                else
+                    Widget::double_align(box(),
+                                         text_size, m_text_align, tbox,
+                                         m_image.size(), m_image_align, ibox, 5);
+
+                auto s = Rect::merge(tbox, ibox);
+                resize(s.size() + Size(10, 10));
+            }
+            else
+            {
+                resize(m_image.size());
+            }
+        }
     }
 
 }

@@ -186,15 +186,24 @@ namespace egt
             /**
              * Draw the widget.
              *
+             * @param[in] painter Instance of the Painter for the screen.
+             * @param[in] rect The rectangle to draw.
+             *
              * To change how a widget is drawn, this function can be overloaded and
              * changed.
              *
-             * @param[in] painter Instance of the Painter for the screen.
-             * @param[in] rect The rectangle to draw.
+             * To optimize drawing, a widget may use the @b rect parameter to limit
+             * what needs to be redrawn, which may be smaler than the widget's box(),
+             * but will never be outside of the widget's box().
+             *
+             * Painter will always be supplied in a default state to this function,
+             * so there is no need to do any cleanup or state saving inside this
+             * draw() function.
              *
              * @warning Normally this should not be called directly and instead the
              * event loop will call this function with an already established
              * Painter when the widget needs to be redrawn.
+             *
              */
             virtual void draw(Painter& painter, const Rect& rect) = 0;
 
@@ -531,6 +540,15 @@ namespace egt
              */
             Theme& theme();
 
+            virtual void set_parent(Frame* parent)
+            {
+                // cannot already have a parent
+                assert(!m_parent);
+
+                m_parent = parent;
+                damage();
+            }
+
             /**
              * Bounding box.
              */
@@ -706,6 +724,9 @@ namespace egt
             static Font scale_font(const Size& target, const std::string& text, const Font& font);
 
         protected:
+
+            Size text_size();
+
             alignmask m_text_align{alignmask::CENTER};
             std::string m_text;
 

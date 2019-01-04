@@ -10,6 +10,7 @@
 #include "egt/screen.h"
 #include "egt/utils.h"
 #include "egt/widget.h"
+#include "egt/canvas.h"
 #include <cassert>
 #include <string>
 #include <sstream>
@@ -335,6 +336,7 @@ namespace egt
 
         IScreen* Widget::screen()
         {
+            assert(m_parent);
             return parent()->screen();
         }
 
@@ -349,6 +351,8 @@ namespace egt
 
             if (m_align != alignmask::NONE)
             {
+                assert(m_parent);
+
                 auto r = align_algorithm(size(), box_to_child(parent()->box()), m_align, m_margin);
                 set_box(r);
             }
@@ -551,6 +555,19 @@ namespace egt
                     return font;
             }
             return nfont;
+        }
+
+        Size TextWidget::text_size()
+        {
+            if (m_parent)
+            {
+                Canvas canvas(Size(100, 100));
+                Painter painter(canvas.context());
+                painter.set_font(font());
+                return painter.text_size(m_text);
+            }
+
+            return Size();
         }
 
         namespace experimental

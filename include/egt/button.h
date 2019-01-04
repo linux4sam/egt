@@ -40,8 +40,13 @@ namespace egt
                    widgetmask flags = widgetmask::NONE) noexcept;
 
             Button(Frame& parent,
+                   const std::string& text,
+                   const Rect& rect,
+                   const Font& font = Font(),
+                   widgetmask flags = widgetmask::NONE) noexcept;
+
+            Button(Frame& parent,
                    const std::string& text = std::string(),
-                   const Rect& rect = Rect(),
                    const Font& font = Font(),
                    widgetmask flags = widgetmask::NONE) noexcept;
 
@@ -61,11 +66,18 @@ namespace egt
 
             virtual ~Button();
 
+        protected:
+
+            virtual void set_parent(Frame* parent) override;
+
+            virtual void first_resize();
+
         private:
 
             bool m_checked{false};
 
-            ButtonGroup *m_group{nullptr};
+            ButtonGroup* m_group{nullptr};
+
 
             friend ButtonGroup;
         };
@@ -138,6 +150,8 @@ namespace egt
             virtual ~ImageButton();
 
         protected:
+
+            virtual void first_resize() override;
 
             void do_set_image(const Image& image);
 

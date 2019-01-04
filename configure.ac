@@ -12,8 +12,8 @@ AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast"
-CFLAGS="$CFLAGS -Ofast"
+CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -g"
+CFLAGS="$CFLAGS -Ofast -g"
 
 AC_DISABLE_STATIC
 AC_PROG_CXX

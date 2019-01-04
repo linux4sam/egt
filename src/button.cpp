@@ -23,12 +23,6 @@ namespace egt
         {
             set_boxtype(Theme::boxtype::rounded_gradient);
             flag_set(widgetmask::GRAB_MOUSE);
-
-            if (rect.size().empty())
-            {
-                /** @todo Smarter if we look at size of text and grow from default size. */
-                resize(DEFAULT_BUTTON_SIZE);
-            }
         }
 
         Button::Button(Frame& parent, const std::string& text, const Rect& rect,
@@ -36,6 +30,12 @@ namespace egt
             : Button(text, rect, font, flags)
         {
             parent.add(this);
+        }
+
+        Button::Button(Frame& parent, const std::string& text,
+                       const Font& font, widgetmask flags) noexcept
+            : Button(parent, text, Rect(), font, flags)
+        {
         }
 
         int Button::handle(eventid event)
@@ -101,6 +101,29 @@ namespace egt
                 m_group->remove(*this);
         }
 
+        void Button::set_parent(Frame* parent)
+        {
+            TextWidget::set_parent(parent);
+            first_resize();
+        }
+
+        void Button::first_resize()
+        {
+            if (box().size().empty())
+            {
+                if (!m_text.empty())
+                {
+                    auto s = text_size();
+                    s += Size(10, 10);
+                    resize(s);
+                }
+                else
+                {
+                    resize(DEFAULT_BUTTON_SIZE);
+                }
+            }
+        }
+
         ImageButton::ImageButton(const Image& image,
                                  const std::string& text,
                                  const Rect& rect,
@@ -150,8 +173,7 @@ namespace egt
 
             if (!m_text.empty())
             {
-                painter.set_font(font());
-                auto text_size = painter.text_size(m_text);
+                auto text_size = this->text_size();
 
                 Rect tbox;
                 Rect ibox;
@@ -180,5 +202,34 @@ namespace egt
         ImageButton::~ImageButton()
         {}
 
+        void ImageButton::first_resize()
+        {
+            if (box().size().empty())
+            {
+                if (!m_text.empty())
+                {
+                    auto text_size = this->text_size();
+
+                    Rect tbox;
+                    Rect ibox;
+
+                    if (m_position_image_first)
+                        Widget::double_align(box(),
+                                             m_image.size(), m_image_align, ibox,
+                                             text_size, m_text_align, tbox, 5);
+                    else
+                        Widget::double_align(box(),
+                                             text_size, m_text_align, tbox,
+                                             m_image.size(), m_image_align, ibox, 5);
+
+                    auto s = Rect::merge(tbox, ibox);
+                    resize(s.size() + Size(10, 10));
+                }
+                else
+                {
+                    resize(m_image.size());
+                }
+            }
+        }
     }
 }

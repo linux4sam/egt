@@ -58,5 +58,7 @@ int main()
 
     win.show();
 
+    app.dump(cout);
+
     return app.run();
 }
