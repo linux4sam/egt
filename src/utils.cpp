@@ -103,22 +103,19 @@ error:
             return filenames;
         }
 
-        //#define ENABLE_CODE_TIMER
-        void code_timer(const std::string& prefix, std::function<void ()> callback)
+        void code_timer(bool enable, const std::string& prefix, std::function<void ()> callback)
         {
-#ifdef ENABLE_CODE_TIMER
             auto start = chrono::steady_clock::now();
-#else
-            ignoreparam(prefix);
-#endif
+
             callback();
 
-#ifdef ENABLE_CODE_TIMER
-            auto end = chrono::steady_clock::now();
-            auto diff = end - start;
+            if (enable)
+            {
+                auto end = chrono::steady_clock::now();
+                auto diff = end - start;
 
-            cout << prefix << chrono::duration<double, milli>(diff).count() << endl;
-#endif
+                cout << prefix << chrono::duration<double, milli>(diff).count() << endl;
+            }
         }
 
     }

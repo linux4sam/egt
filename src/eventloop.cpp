@@ -45,7 +45,7 @@ namespace egt
     {
         int ret;
 
-        experimental::code_timer("wait: ", [&]()
+        experimental::code_timer(false, "wait: ", [&]()
         {
             //ret = m_impl->m_io.run_one();
             ret = m_impl->m_io.run_one_for(std::chrono::milliseconds(30));
@@ -71,7 +71,7 @@ namespace egt
 
     void EventLoop::draw()
     {
-        experimental::code_timer("draw: ", [&]()
+        experimental::code_timer(false, "draw: ", [&]()
         {
             for (auto& w : windows())
             {

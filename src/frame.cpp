@@ -280,7 +280,7 @@ namespace egt
                 painter.rectangle(r);
                 painter.clip();
 
-                experimental::code_timer(child->name() + " draw: ", [&]()
+                experimental::code_timer(false, child->name() + " draw: ", [&]()
                 {
                     child->draw(painter, r);
                 });

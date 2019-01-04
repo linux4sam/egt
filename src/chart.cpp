@@ -105,7 +105,7 @@ namespace egt
         cairo_rectangle(cr.get(), x(), y(), w(), h());
         cairo_fill(cr.get());
 
-        experimental::code_timer("kplot_draw: ", [&]()
+        experimental::code_timer(false, "kplot_draw: ", [&]()
         {
             kplot_draw(p, w(), h(), cr.get());
         });
