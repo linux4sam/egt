@@ -788,7 +788,7 @@ namespace egt
         std::string m_text;
 
     private:
-        std::shared_ptr<Font> m_font;
+        std::unique_ptr<Font> m_font;
     };
 
     namespace experimental
