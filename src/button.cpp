@@ -38,7 +38,7 @@ namespace egt
 
     int Button::handle(eventid event)
     {
-        auto ret = Widget::handle(event);
+        auto ret = TextWidget::handle(event);
 
         switch (event)
         {
