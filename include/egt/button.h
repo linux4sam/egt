@@ -98,7 +98,7 @@ namespace egt
 
             Image& image() { return m_image; }
 
-            virtual void set_image_align(alignmask align)
+            void set_image_align(alignmask align)
             {
                 if (m_image_align != align)
                 {
