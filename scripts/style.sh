@@ -29,4 +29,4 @@ OPTIONS="--style=allman \
 --attach-closing-while \
 --indent=spaces=4"
 
-~/Downloads/astyle/astyle ${OPTIONS} $@
+astyle ${OPTIONS} $@
