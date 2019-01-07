@@ -61,7 +61,7 @@ namespace egt
             cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
             cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
             cairo_line_to(cr.get(), r.x + OFFSET, r.y + r.h - OFFSET);
-            cairo_set_line_width(cr.get(), 2.0);
+            painter.set_line_width(2.0);
             cairo_stroke(cr.get());
         }
         else

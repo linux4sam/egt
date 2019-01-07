@@ -178,7 +178,7 @@ namespace egt
         cairo_fill_preserve(cr.get());
 
         painter.set_color(border);
-        cairo_set_line_width(cr.get(), 1.0);
+        painter.set_line_width(1.0);
         cairo_stroke(cr.get());
     }
 
@@ -231,7 +231,7 @@ namespace egt
         cairo_fill_preserve(cr.get());
 
         painter.set_color(border);
-        cairo_set_line_width(cr.get(), 1.0);
+        painter.set_line_width(1.0);
         cairo_stroke(cr.get());
     }
 }

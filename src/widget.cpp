@@ -451,7 +451,7 @@ namespace egt
             cairo_text_extents(cr.get(), "a", &textext);
 
             painter.set_color(border);
-            cairo_set_line_width(cr.get(), 3.0);
+            painter.set_line_width(3.0);
             cairo_move_to(cr.get(), x(), y());
             cairo_line_to(cr.get(), x(), y() + h());
             cairo_move_to(cr.get(), x() + w(), y());

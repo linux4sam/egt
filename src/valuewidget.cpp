@@ -114,7 +114,7 @@ namespace egt
 
         float value = this->value();
         painter.set_color(Color::RED);
-        cairo_set_line_width(cr.get(), 1.5);
+        painter.set_line_width(1.5);
 
         cairo_move_to(cr.get(), 0.0, 0.0);
         cairo_line_to(cr.get(),
