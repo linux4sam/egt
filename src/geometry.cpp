@@ -10,23 +10,25 @@ using namespace std;
 
 namespace egt
 {
-
-    std::ostream& operator<<(std::ostream& os, const Point& point)
+    inline namespace v1
     {
-        os << point.x << "," << point.y;
-        return os;
-    }
+        std::ostream& operator<<(std::ostream& os, const Point& point)
+        {
+            os << point.x << "," << point.y;
+            return os;
+        }
 
-    std::ostream& operator<<(std::ostream& os, const Size& size)
-    {
-        os << size.w << "," << size.h;
-        return os;
-    }
+        std::ostream& operator<<(std::ostream& os, const Size& size)
+        {
+            os << size.w << "," << size.h;
+            return os;
+        }
 
-    std::ostream& operator<< (std::ostream& os, const Rect& rect)
-    {
-        os << "[" << rect.x << "," << rect.y << " - " << rect.w << "," << rect.h << "]";
-        return os;
-    }
+        std::ostream& operator<< (std::ostream& os, const Rect& rect)
+        {
+            os << "[" << rect.x << "," << rect.y << " - " << rect.w << "," << rect.h << "]";
+            return os;
+        }
 
+    }
 }

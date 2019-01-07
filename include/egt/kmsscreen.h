@@ -21,53 +21,55 @@ struct kms_device;
 
 namespace egt
 {
-
-    /**
-     * Screen in an KMS dumb buffer.
-     *
-     * This uses libplanes to modeset and configure planes.
-     */
-    class KMSScreen : public IScreen
+    inline namespace v1
     {
-    public:
-        explicit KMSScreen(bool primary = true);
-
-        enum class plane_type
+        /**
+         * Screen in an KMS dumb buffer.
+         *
+         * This uses libplanes to modeset and configure planes.
+         */
+        class KMSScreen : public IScreen
         {
-            overlay,
-            primary,
-            cursor
+        public:
+            explicit KMSScreen(bool primary = true);
+
+            enum class plane_type
+            {
+                overlay,
+                primary,
+                cursor
+            };
+
+            /**
+             *
+             */
+            uint32_t count_planes(plane_type type = plane_type::overlay);
+
+            static KMSScreen* instance();
+
+            void schedule_flip() override;
+
+            uint32_t index() override;
+
+            void close();
+
+            virtual ~KMSScreen();
+
+            struct plane_data* allocate_overlay(const Size& size,
+                                                pixel_format format = pixel_format::argb8888,
+                                                bool heo = false);
+
+        protected:
+
+            int m_fd;
+            struct kms_device* m_device;
+            struct plane_data* m_plane;
+            uint32_t m_index;
+
+            friend class KMSOverlay;
         };
 
-        /**
-         *
-         */
-        uint32_t count_planes(plane_type type = plane_type::overlay);
-
-        static KMSScreen* instance();
-
-        void schedule_flip() override;
-
-        uint32_t index() override;
-
-        void close();
-
-        virtual ~KMSScreen();
-
-        struct plane_data* allocate_overlay(const Size& size,
-                                            pixel_format format = pixel_format::argb8888,
-                                            bool heo = false);
-
-    protected:
-
-        int m_fd;
-        struct kms_device* m_device;
-        struct plane_data* m_plane;
-        uint32_t m_index;
-
-        friend class KMSOverlay;
-    };
-
+    }
 }
 
 #endif

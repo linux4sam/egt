@@ -44,9 +44,7 @@ fi
 set -e
 
 cat <<EOF > "$output"
-namespace egt {
-
-void register_resource(const char* name, const unsigned char* data, unsigned int len);
+#include <egt/resource.h>
 
 namespace resource {
 EOF
@@ -73,13 +71,12 @@ for f in $@
 do
     filename=$(basename "$f")
     name=$(echo "$filename" | sed "s/\./_/")
-    echo "        register_resource(\"${name}\", ${name}, ${name}_len);" >> "$output"
+    echo "        egt::register_resource(\"${name}\", ${name}, ${name}_len);" >> "$output"
 done
 
 cat <<EOF >> "$output"
     }
 } ignore;
 
-}
 }
 EOF

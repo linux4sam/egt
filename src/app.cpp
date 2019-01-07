@@ -29,135 +29,139 @@ using namespace std;
 
 namespace egt
 {
-    static Application* the_app = nullptr;
-    Application& main_app()
+    inline namespace v1
     {
-        assert(the_app);
-        return *the_app;
-    }
-
-    Application::Application(int argc, const char** argv, bool primary, const std::string& name)
-        : m_argc(argc),
-          m_argv(argv)
-    {
-        INFO("EGT Version " << EGT_VERSION);
-
-        the_app = this;
-
-        setlocale(LC_ALL, "");
-        textdomain(name.c_str());
-
-        static string backend;
-
-        if (backend.empty())
+        static Application* the_app = nullptr;
+        Application& main_app()
         {
-            const char* value = getenv("EGT_BACKEND");
-            if (value)
-                backend = value;
+            assert(the_app);
+            return *the_app;
         }
 
-        if (backend == "x11")
+        Application::Application(int argc, const char** argv, bool primary, const std::string& name)
+            : m_argc(argc),
+              m_argv(argv)
         {
+            INFO("EGT Version " << EGT_VERSION);
+
+            the_app = this;
+
+            setlocale(LC_ALL, "");
+            textdomain(name.c_str());
+
+            static string backend;
+
+            if (backend.empty())
+            {
+                const char* value = getenv("EGT_BACKEND");
+                if (value)
+                    backend = value;
+            }
+
+            if (backend == "x11")
+            {
 #ifdef HAVE_X11
-            new X11Screen(Size(800, 480));
+                new X11Screen(Size(800, 480));
 #endif
-        }
+            }
 
-        if (backend == "kms")
-        {
+            if (backend == "kms")
+            {
 #ifdef HAVE_LIBPLANES
-            new KMSScreen(primary);
+                new KMSScreen(primary);
 #else
-            ignoreparam(primary);
+                ignoreparam(primary);
 #endif
-        }
+            }
 
-        if (backend == "fbdev")
-        {
-            new FrameBuffer("/dev/fb0");
-        }
+            if (backend == "fbdev")
+            {
+                new FrameBuffer("/dev/fb0");
+            }
 
-        if (backend.empty())
-        {
+            if (backend.empty())
+            {
 #ifdef HAVE_LIBPLANES
-            new KMSScreen(primary);
+                new KMSScreen(primary);
 #elif defined(HAVE_X11)
-            new X11Screen(Size(800, 480));
-            //new X11Screen(Size(1280, 1024));
+                new X11Screen(Size(800, 480));
+                //new X11Screen(Size(1280, 1024));
 #else
-            new FrameBuffer("/dev/fb0");
+                new FrameBuffer("/dev/fb0");
 #endif
-        }
+            }
 
 #ifdef HAVE_TSLIB
-        new InputTslib("/dev/input/touchscreen0");
+            new InputTslib("/dev/input/touchscreen0");
 #endif
-        //new InputEvDev("/dev/input/event2");
+            //new InputEvDev("/dev/input/event2");
 #ifdef HAVE_LIBINPUT
-        new LibInput;
+            new LibInput;
 #endif
-    }
+        }
 
-    int Application::run()
-    {
-        if (m_argc)
+        int Application::run()
         {
-            // catch SIGQUIT (Ctrl + \) and screenshot
-            asio::signal_set signals(event().io(), SIGQUIT);
-            signals.async_wait([this](const asio::error_code & error, int)
+            if (m_argc)
             {
-                if (error)
-                    return;
-                this->paint_to_file(string(m_argv[0]) + ".png");
-            });
+                // catch SIGQUIT (Ctrl + \) and screenshot
+                asio::signal_set signals(event().io(), SIGQUIT);
+                signals.async_wait([this](const asio::error_code & error, int)
+                {
+                    if (error)
+                        return;
+                    this->paint_to_file(string(m_argv[0]) + ".png");
+                });
+
+                return m_event.run();
+            }
 
             return m_event.run();
         }
 
-        return m_event.run();
-    }
-
-    void Application::paint_to_file(const string& filename)
-    {
-        string name = filename;
-        if (name.empty())
+        void Application::paint_to_file(const string& filename)
         {
-            name = "screen.png";
+            string name = filename;
+            if (name.empty())
+            {
+                name = "screen.png";
+            }
+
+            auto surface = shared_cairo_surface_t(
+                               cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+                                       main_screen()->size().w, main_screen()->size().h),
+                               cairo_surface_destroy);
+
+            auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
+
+            Painter painter(cr);
+
+            for (auto& w : windows())
+            {
+                if (!w->visible())
+                    continue;
+
+                // draw top level frames and plane frames
+                if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+                    w->paint(painter);
+            }
+
+            cairo_surface_write_to_png(surface.get(), name.c_str());
         }
 
-        auto surface = shared_cairo_surface_t(
-                           cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                                   main_screen()->size().w, main_screen()->size().h),
-                           cairo_surface_destroy);
-
-        auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
-
-        Painter painter(cr);
-
-        for (auto& w : windows())
+        void Application::dump(std::ostream& out)
         {
-            if (!w->visible())
-                continue;
-
-            // draw top level frames and plane frames
-            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
-                w->paint(painter);
+            for (auto& w : windows())
+            {
+                // draw top level frames and plane frames
+                if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+                    w->dump(out);
+            }
         }
 
-        cairo_surface_write_to_png(surface.get(), name.c_str());
-    }
-
-    void Application::dump(std::ostream& out)
-    {
-        for (auto& w : windows())
+        Application::~Application()
         {
-            // draw top level frames and plane frames
-            if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
-                w->dump(out);
         }
-    }
 
-    Application::~Application()
-    {
     }
 }

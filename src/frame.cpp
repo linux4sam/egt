@@ -181,7 +181,7 @@ namespace egt
     void Frame::dump(std::ostream& out, int level)
     {
         out << std::string(level, ' ') << "Frame: " << name() <<
-             " " << box() << endl;
+            " " << box() << endl;
 
         for (auto& child : m_children)
         {

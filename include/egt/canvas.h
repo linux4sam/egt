@@ -17,44 +17,47 @@
 
 namespace egt
 {
-
-    /**
-     * A Canvas manages its own surface and drawing context.
-     */
-    class Canvas
+    inline namespace v1
     {
-    public:
-
-        explicit Canvas(const Size& size,
-                        cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
-
-        explicit Canvas(shared_cairo_surface_t surface) noexcept;
-
-        Canvas(shared_cairo_surface_t surface, cairo_format_t format) noexcept;
-
         /**
-         * Get the context for the Canvas.
+         * A Canvas manages its own surface and drawing context.
          */
-        shared_cairo_t context() const { return m_cr; }
+        class Canvas
+        {
+        public:
 
-        /**
-         * Get the surface for the Canvas.
-         */
-        shared_cairo_surface_t surface() const { return m_surface; }
+            explicit Canvas(const Size& size,
+                            cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
 
-        virtual ~Canvas();
+            explicit Canvas(shared_cairo_surface_t surface) noexcept;
 
-    protected:
+            Canvas(shared_cairo_surface_t surface, cairo_format_t format) noexcept;
 
-        void copy(shared_cairo_surface_t surface);
+            /**
+             * Get the context for the Canvas.
+             */
+            shared_cairo_t context() const { return m_cr; }
 
-        shared_cairo_surface_t m_surface;
-        shared_cairo_t m_cr;
+            /**
+             * Get the surface for the Canvas.
+             */
+            shared_cairo_surface_t surface() const { return m_surface; }
 
-    private:
+            virtual ~Canvas();
 
-        Canvas() = delete;
-    };
+        protected:
+
+            void copy(shared_cairo_surface_t surface);
+
+            shared_cairo_surface_t m_surface;
+            shared_cairo_t m_cr;
+
+        private:
+
+            Canvas() = delete;
+        };
+
+    }
 }
 
 #endif

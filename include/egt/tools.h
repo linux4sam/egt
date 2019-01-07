@@ -13,33 +13,35 @@
 
 namespace egt
 {
-
-    /**
-     * Monitor CPU usage of the system.
-     */
-    class CPUMonitorUsage
+    inline namespace v1
     {
-    public:
-
-        CPUMonitorUsage();
-
-        double usage(unsigned int index = 0) const { return m_cpu_usage[index]; }
-
         /**
-         * Update the CPU usage.
-         * The value is stored in the public cpu_usage array
+         * Monitor CPU usage of the system.
          */
-        void update();
+        class CPUMonitorUsage
+        {
+        public:
 
-        virtual ~CPUMonitorUsage();
+            CPUMonitorUsage();
 
-    private:
+            double usage(unsigned int index = 0) const { return m_cpu_usage[index]; }
 
-        double m_total_cpu_last_time[4] = {0};
-        double m_work_cpu_last_time[4] = {0};
-        double m_cpu_usage[4] = {0};
-    };
+            /**
+             * Update the CPU usage.
+             * The value is stored in the public cpu_usage array
+             */
+            void update();
 
+            virtual ~CPUMonitorUsage();
+
+        private:
+
+            double m_total_cpu_last_time[4] = {0};
+            double m_work_cpu_last_time[4] = {0};
+            double m_cpu_usage[4] = {0};
+        };
+
+    }
 }
 
 #endif

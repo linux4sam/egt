@@ -14,63 +14,66 @@
 
 namespace egt
 {
-    /**
-     * Set the default relative image path.
-     *
-     * The default image path is the current working directly.  To change this,
-     * call this function with a new path.
-     */
-    void set_image_path(const std::string& path);
-
-    namespace detail
+    inline namespace v1
     {
-
         /**
-         * Internal image cache.
+         * Set the default relative image path.
          *
-         * Provides an in-memory cache for images based on filename and scale. This
-         * prevents multiple attempts at loading the same file as well as rescaling
-         * the image to the same scale multiple times.
-         *
-         * This is a tradeoff in consuming more memory instead of possibly
-         * constantly reloading or scaling the same image.
+         * The default image path is the current working directly.  To change this,
+         * call this function with a new path.
          */
-        class ImageCache : public detail::noncopyable
+        void set_image_path(const std::string& path);
+
+        namespace detail
         {
-        public:
 
             /**
-             * Get an image surface.
+             * Internal image cache.
+             *
+             * Provides an in-memory cache for images based on filename and scale. This
+             * prevents multiple attempts at loading the same file as well as rescaling
+             * the image to the same scale multiple times.
+             *
+             * This is a tradeoff in consuming more memory instead of possibly
+             * constantly reloading or scaling the same image.
              */
-            shared_cairo_surface_t get(const std::string& filename,
-                                       float hscale = 1.0, float vscale = 1.0,
-                                       bool approximate = true);
+            class ImageCache : public detail::noncopyable
+            {
+            public:
+
+                /**
+                 * Get an image surface.
+                 */
+                shared_cairo_surface_t get(const std::string& filename,
+                                           float hscale = 1.0, float vscale = 1.0,
+                                           bool approximate = true);
+
+                /**
+                 * Clear the image cache.
+                 */
+                void clear();
+
+            protected:
+
+                static float round(float v, float fraction);
+
+                std::string id(const std::string& filename, float hscale, float vscale);
+
+                static shared_cairo_surface_t scale_surface(shared_cairo_surface_t old_surface,
+                        int old_width, int old_height,
+                        int new_width, int new_height);
+
+                std::map<std::string, shared_cairo_surface_t> m_cache;
+            };
 
             /**
-             * Clear the image cache.
+             * Global image cache instance.
              */
-            void clear();
+            extern ImageCache image_cache;
 
-        protected:
-
-            static float round(float v, float fraction);
-
-            std::string id(const std::string& filename, float hscale, float vscale);
-
-            static shared_cairo_surface_t scale_surface(shared_cairo_surface_t old_surface,
-                    int old_width, int old_height,
-                    int new_width, int new_height);
-
-            std::map<std::string, shared_cairo_surface_t> m_cache;
-        };
-
-        /**
-         * Global image cache instance.
-         */
-        extern ImageCache image_cache;
+        }
 
     }
-
 }
 
 #endif

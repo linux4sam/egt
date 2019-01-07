@@ -16,89 +16,91 @@
 
 namespace egt
 {
-
-    /**
-     * On-screen keyboard.
-     */
-    template <class T>
-    class Keyboard : public T
+    inline namespace v1
     {
-    public:
-        Keyboard()
-            : T(Size(800, 200)),
-              m_grid(Rect(), 10, 4, 5)
+        /**
+         * On-screen keyboard.
+         */
+        template <class T>
+        class Keyboard : public T
         {
-            this->add(&m_grid);
-            this->m_grid.set_align(alignmask::EXPAND);
-            this->m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-
-
-            /*
-            template <class T>
-                struct Key : public T
+        public:
+            Keyboard()
+                : T(Size(800, 200)),
+                  m_grid(Rect(), 10, 4, 5)
             {
+                this->add(&m_grid);
+                this->m_grid.set_align(alignmask::EXPAND);
+                this->m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
-                unsigned int code;
-            };
-            */
 
-            std::vector<std::vector<std::string>> buttons =
-            {
-                {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p" },
-                {"", "a", "s", "d", "f", "g", "h", "j", "k", "l" },
-                {"@arrow_up.png", "z", "x", "c", "v", "b", "n", "m", "", "@arrow_left.png"},
-                {"123", ",", "", "", "     ", "", "", "", "", "."}
-            };
-
-            for (size_t r = 0; r < buttons.size(); r++)
-            {
-                for (size_t c = 0; c < buttons[r].size(); c++)
+                /*
+                template <class T>
+                    struct Key : public T
                 {
-                    std::string label = buttons[r][c];
-                    if (label.empty())
-                        continue;
 
-                    Button* b;
+                    unsigned int code;
+                };
+                */
 
-                    if (label.find(".png") != std::string::npos)
+                std::vector<std::vector<std::string>> buttons =
+                {
+                    {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p" },
+                    {"", "a", "s", "d", "f", "g", "h", "j", "k", "l" },
+                    {"@arrow_up.png", "z", "x", "c", "v", "b", "n", "m", "", "@arrow_left.png"},
+                    {"123", ",", "", "", "     ", "", "", "", "", "."}
+                };
+
+                for (size_t r = 0; r < buttons.size(); r++)
+                {
+                    for (size_t c = 0; c < buttons[r].size(); c++)
                     {
-                        auto c = new ImageButton(Image(label));
-                        c->set_image_align(alignmask::CENTER);
-                        b = c;
-                    }
-                    else
-                        b = new Button(label);
+                        std::string label = buttons[r][c];
+                        if (label.empty())
+                            continue;
 
-                    b->on_event([b](eventid event)
-                    {
-                        if (!b->text().empty())
+                        Button* b;
+
+                        if (label.find(".png") != std::string::npos)
                         {
-                            if (event == eventid::MOUSE_DOWN)
-                            {
-                                event_key() = b->text()[0];
-                                detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
-                            }
-                            else if (event == eventid::MOUSE_UP)
-                            {
-                                event_key() = b->text()[0];
-                                detail::IInput::dispatch(eventid::KEYBOARD_UP);
-                            }
+                            auto c = new ImageButton(Image(label));
+                            c->set_image_align(alignmask::CENTER);
+                            b = c;
                         }
+                        else
+                            b = new Button(label);
 
-                        return 0;
-                    });
+                        b->on_event([b](eventid event)
+                        {
+                            if (!b->text().empty())
+                            {
+                                if (event == eventid::MOUSE_DOWN)
+                                {
+                                    event_key() = b->text()[0];
+                                    detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
+                                }
+                                else if (event == eventid::MOUSE_UP)
+                                {
+                                    event_key() = b->text()[0];
+                                    detail::IInput::dispatch(eventid::KEYBOARD_UP);
+                                }
+                            }
 
-                    this->m_grid.add(b, c, r);
+                            return 0;
+                        });
+
+                        this->m_grid.add(b, c, r);
+                    }
                 }
+
+                this->m_grid.reposition();
             }
 
-            this->m_grid.reposition();
-        }
+        protected:
+            StaticGrid m_grid;
+        };
 
-    protected:
-        StaticGrid m_grid;
-    };
-
+    }
 }
 
 #endif

@@ -49,7 +49,7 @@ namespace egt
                                    int framecount, const Point& frame_point,
                                    const Point& point)
         : Window(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND,
-                      pixel_format::argb8888),
+                 pixel_format::argb8888),
           ISpriteBase(image, frame_size, framecount, frame_point),
           m_label(*this, image)
     {

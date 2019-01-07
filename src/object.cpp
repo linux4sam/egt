@@ -10,9 +10,12 @@ using namespace std;
 
 namespace egt
 {
-    std::ostream& operator<<(std::ostream& os, const eventid& event)
+    inline namespace v1
     {
-        os << (int) event;
-        return os;
+        std::ostream& operator<<(std::ostream& os, const eventid& event)
+        {
+            os << (int) event;
+            return os;
+        }
     }
 }

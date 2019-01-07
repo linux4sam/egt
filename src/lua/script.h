@@ -15,14 +15,14 @@ extern "C" {
 #endif
 
 int script_init(lua_State* newstate);
-int script_load(const char *expr, char **pmsg);
-double script_eval(int cookie, char **pmsg);
+int script_load(const char* expr, char** pmsg);
+double script_eval(int cookie, char** pmsg);
 void script_unref(int cookie);
-void script_setvar(const char *name, double value);
-double script_getvar(const char *name);
+void script_setvar(const char* name, double value);
+double script_getvar(const char* name);
 
 typedef int (*SCRIPT_CALLBACK)(lua_State*);
-void script_setfunc(const char *name, SCRIPT_CALLBACK callback);
+void script_setfunc(const char* name, SCRIPT_CALLBACK callback);
 
 #ifdef __cplusplus
 }

@@ -22,7 +22,7 @@ namespace egt
     static auto planewindow_id = 0;
 
     Window::Window(const Size& size, widgetmask flags,
-                             pixel_format format, bool heo)
+                   pixel_format format, bool heo)
         : BasicWindow(size, flags | widgetmask::PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
@@ -39,7 +39,7 @@ namespace egt
     }
 
     Window::Window(const Rect& rect, widgetmask flags,
-                             pixel_format format, bool heo)
+                   pixel_format format, bool heo)
         : BasicWindow(rect.size(), flags | widgetmask::PLANE_WINDOW),
           m_format(format),
           m_heo(heo)
@@ -161,7 +161,7 @@ namespace egt
     }
 
     Window::Window(const Rect& rect, widgetmask flags,
-                             pixel_format format, bool heo)
+                   pixel_format format, bool heo)
         : Window(rect.size(), flags, format, heo)
     {
         m_box = rect;

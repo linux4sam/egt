@@ -96,7 +96,7 @@ namespace egt
                                                   (float(box().w) - s.w));
 
             theme().draw_rounded_gradient_box(painter,
-                                               s,
+                                              s,
                                               palette().color(Palette::BORDER),
                                               palette().color(Palette::HIGHLIGHT));
         }

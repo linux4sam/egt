@@ -14,67 +14,71 @@
 
 namespace egt
 {
-    class Rect;
-    class Painter;
-
-    /**
-     * Boolean checkbox.
-     *
-     * @image html widget_checkbox1.png
-     * @image latex widget_checkbox1.png "widget_checkbox1" width=5cm
-     * @image html widget_checkbox2.png
-     * @image latex widget_checkbox2.png "widget_checkbox2" width=5cm
-     *
-     * @todo This should be a ValueWidget<bool>.
-     */
-    class CheckBox : public Button
+    inline namespace v1
     {
-    public:
-        CheckBox(const std::string& text = std::string(),
-                 const Rect& rect = Rect());
+        class Rect;
+        class Painter;
 
         /**
-         * Return the boolean state of the checkbox.
+         * Boolean checkbox.
+         *
+         * @image html widget_checkbox1.png
+         * @image latex widget_checkbox1.png "widget_checkbox1" width=5cm
+         * @image html widget_checkbox2.png
+         * @image latex widget_checkbox2.png "widget_checkbox2" width=5cm
+         *
+         * @todo This should be a ValueWidget<bool>.
          */
-        inline bool checked() const
+        class CheckBox : public Button
         {
-            return active();
-        }
+        public:
+            CheckBox(const std::string& text = std::string(),
+                     const Rect& rect = Rect());
 
-        /**
-         * Set the checked state of the checkbox.
-         */
-        void check(bool value)
-        {
-            if (active() != value)
+            /**
+             * Return the boolean state of the checkbox.
+             */
+            inline bool checked() const
             {
-                set_active(value);
-                invoke_handlers(eventid::PROPERTY_CHANGED);
+                return active();
             }
-        }
 
-        virtual int handle(eventid event) override;
+            /**
+             * Set the checked state of the checkbox.
+             */
+            void check(bool value)
+            {
+                if (active() != value)
+                {
+                    set_active(value);
+                    invoke_handlers(eventid::PROPERTY_CHANGED);
+                }
+            }
 
-        virtual void draw(Painter& painter, const Rect& rect) override;
+            virtual int handle(eventid event) override;
 
-        virtual ~CheckBox();
-    };
+            virtual void draw(Painter& painter, const Rect& rect) override;
 
-    /**
-     * CheckBox with a boolean slider style interface.
-     *
-     * @image html widget_slidingcheckbox.png
-     * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" width=5cm
-     */
-    class SlidingCheckBox : public CheckBox
-    {
-    public:
-        explicit SlidingCheckBox(const Rect& rect = Rect());
+            virtual ~CheckBox();
+        };
 
-        virtual void draw(Painter& painter, const Rect& rect) override;
+        /**
+         * CheckBox with a boolean slider style interface.
+         *
+         * @image html widget_slidingcheckbox.png
+         * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" width=5cm
+         */
+        class SlidingCheckBox : public CheckBox
+        {
+        public:
+            explicit SlidingCheckBox(const Rect& rect = Rect());
 
-        virtual ~SlidingCheckBox();
-    };
+            virtual void draw(Painter& painter, const Rect& rect) override;
+
+            virtual ~SlidingCheckBox();
+        };
+
+    }
 }
 
 #endif

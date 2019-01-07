@@ -188,7 +188,7 @@ namespace egt
     static vector<int> used;
 
     struct plane_data* KMSScreen::allocate_overlay(const Size& size,
-                                                   pixel_format format, bool heo)
+            pixel_format format, bool heo)
     {
         DBG("allocate plane " << size);
 

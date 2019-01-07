@@ -20,61 +20,64 @@
 
 namespace egt
 {
-
-    /**
-     * Defines an application.
-     *
-     * This is basically just a helper class that does standard setup for
-     * inputs, outputs, the event loop, and more. It also acts as sort of a
-     * global accessor to get to these things because of this.
-     */
-    class Application : public detail::noncopyable
+    inline namespace v1
     {
-    public:
-        /**
-         * @param[in] argc Aplication argument count.
-         * @param[in] argv Application argument array.
-         * @param[in] primary Is this the primary display application.
-         * @param[in] name Application name.  This is used for several things,
-         *             including identifying the text domain used by gettext().
-         */
-        Application(int argc = 0, const char** argv = nullptr,
-                    bool primary = true, const std::string& name = "egt");
-
-        virtual int run();
-
-        inline EventLoop& event() { return m_event; }
 
         /**
-         * Paint the entire screen to a file.
-         */
-        void paint_to_file(const std::string& filename = std::string());
-
-        /**
-         * Dump the widget hierarchy and properties to the specified ostream.
+         * Defines an application.
          *
-         * app.dump(cout);
+         * This is basically just a helper class that does standard setup for
+         * inputs, outputs, the event loop, and more. It also acts as sort of a
+         * global accessor to get to these things because of this.
          */
-        void dump(std::ostream& out);
+        class Application : public detail::noncopyable
+        {
+        public:
+            /**
+             * @param[in] argc Aplication argument count.
+             * @param[in] argv Application argument array.
+             * @param[in] primary Is this the primary display application.
+             * @param[in] name Application name.  This is used for several things,
+             *             including identifying the text domain used by gettext().
+             */
+            Application(int argc = 0, const char** argv = nullptr,
+                        bool primary = true, const std::string& name = "egt");
 
-        virtual ~Application();
+            virtual int run();
 
-    protected:
-        EventLoop m_event;
-        int m_argc{0};
-        const char** m_argv{nullptr};
-    };
+            inline EventLoop& event() { return m_event; }
 
-    /**
-     * Reference to the main Application instance.
-     */
-    Application& main_app();
+            /**
+             * Paint the entire screen to a file.
+             */
+            void paint_to_file(const std::string& filename = std::string());
 
-    /**
-     * This is a wrapper around gettext.
-     */
+            /**
+             * Dump the widget hierarchy and properties to the specified ostream.
+             *
+             * app.dump(cout);
+             */
+            void dump(std::ostream& out);
+
+            virtual ~Application();
+
+        protected:
+            EventLoop m_event;
+            int m_argc{0};
+            const char** m_argv{nullptr};
+        };
+
+        /**
+         * Reference to the main Application instance.
+         */
+        Application& main_app();
+
+        /**
+         * This is a wrapper around gettext.
+         */
 #define _(String) gettext(String)
 
+    }
 }
 
 #endif

@@ -15,63 +15,66 @@
 
 namespace egt
 {
-
-    /**
-     * A ScrolledView is a sort of kitchen window. You can have a large surface
-     * area on the other side of the window, but you only see a small portion of
-     * it through the window.  The surface can be scrolled, or panned, to see
-     * the rest.
-     */
-    class ScrolledView : public Frame
+    inline namespace v1
     {
-    public:
-        enum class Orientation
-        {
-            HORIZONTAL,
-            VERTICAL
-        };
-
-        explicit ScrolledView(const Rect& rect = Rect());
-
-        virtual int handle(eventid event) override;
-
-        virtual void draw(Painter& painter, const Rect& rect) override;
 
         /**
-         * Get the position.
+         * A ScrolledView is a sort of kitchen window. You can have a large surface
+         * area on the other side of the window, but you only see a small portion of
+         * it through the window.  The surface can be scrolled, or panned, to see
+         * the rest.
          */
-        int position() const { return m_offset; }
-
-        /**
-         * Set the position.
-         */
-        void set_position(int offset)
+        class ScrolledView : public Frame
         {
-            Rect super = super_rect();
-
-            if (offset <= 0 && -offset < super.w)
+        public:
+            enum class Orientation
             {
-                if (m_offset != offset)
+                HORIZONTAL,
+                VERTICAL
+            };
+
+            explicit ScrolledView(const Rect& rect = Rect());
+
+            virtual int handle(eventid event) override;
+
+            virtual void draw(Painter& painter, const Rect& rect) override;
+
+            /**
+             * Get the position.
+             */
+            int position() const { return m_offset; }
+
+            /**
+             * Set the position.
+             */
+            void set_position(int offset)
+            {
+                Rect super = super_rect();
+
+                if (offset <= 0 && -offset < super.w)
                 {
-                    m_offset = offset;
-                    damage();
+                    if (m_offset != offset)
+                    {
+                        m_offset = offset;
+                        damage();
+                    }
                 }
             }
-        }
 
-        virtual ~ScrolledView();
+            virtual ~ScrolledView();
 
-    protected:
+        protected:
 
-        Rect super_rect() const;
+            Rect super_rect() const;
 
-        int m_offset{0};
-        Orientation m_orientation{Orientation::HORIZONTAL};
-        bool m_moving{false};
-        Point m_start_pos;
-        int m_start_offset{0};
-    };
+            int m_offset{0};
+            Orientation m_orientation{Orientation::HORIZONTAL};
+            bool m_moving{false};
+            Point m_start_pos;
+            int m_start_offset{0};
+        };
 
+    }
 }
 
 #endif

@@ -11,8 +11,9 @@
 
 namespace egt
 {
-
-ComboBox::ComboBox(const item_array& items,
+    inline namespace v1
+    {
+        ComboBox::ComboBox(const item_array& items,
                            const Rect& rect,
                            alignmask align,
                            const Font& font,
@@ -94,7 +95,7 @@ ComboBox::ComboBox(const item_array& items,
                                      y() + OFFSET),
                                downsize);
 
-            painter.draw_image(m_up_rect.point(), up, m_selected >= m_items.size()-1);
+            painter.draw_image(m_up_rect.point(), up, m_selected >= m_items.size() - 1);
             painter.draw_image(m_down_rect.point(), down, m_selected == 0);
 
             // text
@@ -109,4 +110,5 @@ ComboBox::ComboBox(const item_array& items,
         {
         }
 
+    }
 }

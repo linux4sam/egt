@@ -26,7 +26,7 @@ namespace egt
 
         /// @todo this divide by 100 is not respecting min/max range
         theme().draw_rounded_gradient_box(painter,
-                                           Rect(x(), y(), w() * value() / 100., h()),
+                                          Rect(x(), y(), w() * value() / 100., h()),
                                           Color::TRANSPARENT,
                                           palette().color(Palette::HIGHLIGHT));
 
@@ -151,7 +151,7 @@ namespace egt
         painter.stroke();
 
         string text = std::to_string(value());
-        m_dynamic_font = TextWidget::scale_font(Size(dim,dim) * 0.75, text, m_dynamic_font);
+        m_dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, m_dynamic_font);
         painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
                           alignmask::CENTER, 0, m_dynamic_font);
     }

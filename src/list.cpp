@@ -15,8 +15,8 @@ namespace egt
         if (selected)
         {
             listbox.theme().draw_rounded_gradient_box(painter, rect,
-                                              listbox.palette().color(Palette::BORDER),
-                                              listbox.palette().color(Palette::HIGHLIGHT));
+                    listbox.palette().color(Palette::BORDER),
+                    listbox.palette().color(Palette::HIGHLIGHT));
         }
     }
 

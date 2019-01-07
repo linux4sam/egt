@@ -15,20 +15,24 @@
 
 namespace egt
 {
-    class Widget;
-
-    namespace experimental
+    inline namespace v1
     {
-        class UiLoader
+        class Widget;
+
+        namespace experimental
         {
-        public:
+            class UiLoader
+            {
+            public:
 
-            UiLoader();
+                UiLoader();
 
-            virtual Widget* load(const std::string& file);
+                virtual Widget* load(const std::string& file);
 
-            virtual ~UiLoader();
-        };
+                virtual ~UiLoader();
+            };
+        }
+
     }
 }
 

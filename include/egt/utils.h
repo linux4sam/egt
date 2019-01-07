@@ -37,124 +37,127 @@
 
 namespace egt
 {
-    template <typename T>
-    void ignoreparam(T&&)
-    {}
-
-    namespace detail
+    inline namespace v1
     {
-        int& globalloglevel();
-
         template <typename T>
-        class reverse_range
+        void ignoreparam(T&&)
+        {}
+
+        namespace detail
         {
-            T& x;
+            int& globalloglevel();
 
-        public:
-            explicit reverse_range(T& x) : x(x) {}
-
-            auto begin() const -> decltype(this->x.rbegin())
+            template <typename T>
+            class reverse_range
             {
-                return x.rbegin();
+                T& x;
+
+            public:
+                explicit reverse_range(T& x) : x(x) {}
+
+                auto begin() const -> decltype(this->x.rbegin())
+                {
+                    return x.rbegin();
+                }
+
+                auto end() const -> decltype(this->x.rend())
+                {
+                    return x.rend();
+                }
+            };
+
+            template <typename T>
+            reverse_range<T> reverse_iterate(T& x)
+            {
+                return reverse_range<T>(x);
             }
 
-            auto end() const -> decltype(this->x.rend())
+            /**
+             * Utility base class to make a derived class non-copyable.
+             */
+            class noncopyable
             {
-                return x.rend();
-            }
-        };
+            public:
+                noncopyable() = default;
+                ~noncopyable() = default;
 
-        template <typename T>
-        reverse_range<T> reverse_iterate(T& x)
-        {
-            return reverse_range<T>(x);
+            private:
+                noncopyable(const noncopyable&) = delete;
+                noncopyable& operator=(const noncopyable&) = delete;
+            };
+
+            std::string replace_all(std::string str, const std::string& from,
+                                    const std::string& to);
         }
 
-        /**
-         * Utility base class to make a derived class non-copyable.
-         */
-        class noncopyable
+        namespace experimental
         {
-        public:
-            noncopyable() = default;
-            ~noncopyable() = default;
-
-        private:
-            noncopyable(const noncopyable&) = delete;
-            noncopyable& operator=(const noncopyable&) = delete;
-        };
-
-        std::string replace_all(std::string str, const std::string& from,
-                                const std::string& to);
-    }
-
-    namespace experimental
-    {
-        /**
-         * Toy lua evaluation.
-         */
-        double lua_evaluate(const std::string& expr);
-
-        std::vector<std::string> glob(const std::string& pattern);
-
-        class Fps
-        {
-        public:
-
-            Fps()
-            {
-                start();
-            }
-
             /**
-             * Start/reset the counter.
+             * Toy lua evaluation.
              */
-            void start()
-            {
-                m_start = std::chrono::steady_clock::now();
-                m_frames = 0;
-            }
+            double lua_evaluate(const std::string& expr);
 
-            /**
-             * Call at the end of every frame.
-             */
-            void end_frame()
-            {
-                m_frames++;
+            std::vector<std::string> glob(const std::string& pattern);
 
-                auto now = std::chrono::steady_clock::now();
-                auto diff = std::chrono::duration<double>(now - m_start).count();
-                if (diff > 1.0)
+            class Fps
+            {
+            public:
+
+                Fps()
                 {
-                    m_fps = m_frames / diff;
-                    m_ready = true;
                     start();
                 }
-            }
 
-            bool ready() const { return m_ready && m_frames > 0; }
+                /**
+                 * Start/reset the counter.
+                 */
+                void start()
+                {
+                    m_start = std::chrono::steady_clock::now();
+                    m_frames = 0;
+                }
 
-            /**
-             * Retrieve the current FPS value.
-             */
-            float fps()
-            {
-                m_ready = false;
-                return m_fps;
-            }
+                /**
+                 * Call at the end of every frame.
+                 */
+                void end_frame()
+                {
+                    m_frames++;
+
+                    auto now = std::chrono::steady_clock::now();
+                    auto diff = std::chrono::duration<double>(now - m_start).count();
+                    if (diff > 1.0)
+                    {
+                        m_fps = m_frames / diff;
+                        m_ready = true;
+                        start();
+                    }
+                }
+
+                bool ready() const { return m_ready && m_frames > 0; }
+
+                /**
+                 * Retrieve the current FPS value.
+                 */
+                float fps()
+                {
+                    m_ready = false;
+                    return m_fps;
+                }
 
 
-        protected:
-            std::chrono::time_point<std::chrono::steady_clock> m_start{};
-            uint64_t m_frames{0};
-            float m_fps{0.};
-            bool m_ready{false};
-        };
+            protected:
+                std::chrono::time_point<std::chrono::steady_clock> m_start{};
+                uint64_t m_frames{0};
+                float m_fps{0.};
+                bool m_ready{false};
+            };
 
-        void code_timer(bool enable, const std::string& prefix, std::function<void ()> callback);
+            void code_timer(bool enable, const std::string& prefix, std::function<void ()> callback);
+
+        }
 
     }
-
 }
 
 #endif
