@@ -14,9 +14,16 @@ clean-local:
 	rm -rf $(top_srcdir)/docs/html
 	rm -rf $(top_srcdir)/docs/latex
 
+ASTYLE_WILDCARDS = \
+"$(top_srcdir)/examples/\*.cpp" \
+"$(top_srcdir)/include/egt/\*.h" \
+"$(top_srcdir)/src/\*.c" \
+"$(top_srcdir)/src/\*.cpp" \
+"$(top_srcdir)/src/\*.h"
+
 style:
-	./scripts/style.sh --recursive $(top_srcdir)/examples/*.cpp
-	./scripts/style.sh --recursive $(top_srcdir)/include/*.h
+	./scripts/style.sh --recursive $(ASTYLE_WILDCARDS) \
+		--exclude=images/jpeg -i
 
 private_icons = $(wildcard $(top_srcdir)/icons/*.png)
 
