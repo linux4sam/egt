@@ -113,8 +113,7 @@ namespace egt
         }
 
         float value = this->value();
-        cairo_set_source_rgb(cr.get(), Color::RED.redf(),
-                             Color::RED.greenf(), Color::RED.bluef());
+        painter.set_color(Color::RED);
         cairo_set_line_width(cr.get(), 1.5);
 
         cairo_move_to(cr.get(), 0.0, 0.0);

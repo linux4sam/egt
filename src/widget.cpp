@@ -450,7 +450,7 @@ namespace egt
             cairo_set_font_size(cr.get(), 16);
             cairo_text_extents(cr.get(), "a", &textext);
 
-            cairo_set_source_rgb(cr.get(), border.redf(), border.greenf(), border.bluef());
+            painter.set_color(border);
             cairo_set_line_width(cr.get(), 3.0);
             cairo_move_to(cr.get(), x(), y());
             cairo_line_to(cr.get(), x(), y() + h());
@@ -458,7 +458,7 @@ namespace egt
             cairo_line_to(cr.get(), x() + w(), y() + h());
             cairo_stroke(cr.get());
 
-            cairo_set_source_rgba(cr.get(), glass.redf(), glass.greenf(), glass.bluef(), glass.alphaf());
+            painter.set_color(glass);
             cairo_rectangle(cr.get(), x(),  y() - textext.height + (1 * h() / 3), w(), (1 * h() / 3));
             cairo_fill(cr.get());
 

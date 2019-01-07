@@ -96,11 +96,7 @@ namespace egt
         }
 
         auto bg = palette().color(Palette::BG);
-        cairo_set_source_rgba(cr.get(),
-                              bg.redf(),
-                              bg.greenf(),
-                              bg.bluef(),
-                              bg.alphaf());
+        painter.set_color(bg);
 
         cairo_rectangle(cr.get(), x(), y(), w(), h());
         cairo_fill(cr.get());
@@ -168,11 +164,7 @@ namespace egt
             if (++c == m_colors.end())
                 c = m_colors.begin();
 
-            cairo_set_source_rgba(cr.get(),
-                                  color.redf(),
-                                  color.greenf(),
-                                  color.bluef(),
-                                  color.alphaf());
+            painter.set_color(color);
             cairo_move_to(cr.get(), x() + width / 2, y() + height / 2);
             cairo_arc(cr.get(), x() + width / 2, y() + height / 2, width * .45, from_angle, to_angle);
             cairo_line_to(cr.get(), x() + width / 2, y() + height / 2);
@@ -192,7 +184,7 @@ namespace egt
             float label_angle = (from_angle + to_angle) / 2;
             int label_x = width / 2 * (1.0 + 0.7 * std::cos(label_angle));
             int label_y = height / 2 * (1.0 + 0.7 * std::sin(label_angle));
-            cairo_set_source_rgb(cr.get(), 0, 0, 0);
+            painter.set_color(Color::BLACK);
             cairo_move_to(cr.get(), x() + label_x, y() + label_y);
             cairo_show_text(cr.get(), i.first.c_str());
             cairo_fill(cr.get());
