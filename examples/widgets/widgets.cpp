@@ -119,6 +119,16 @@ int main(int argc, const char** argv)
     CheckBox checkbox2("checkbox 2");
     grid0.add(&checkbox2);
 
+    CheckBox checkbox3("checkbox 3");
+    grid0.add(&checkbox3);
+    checkbox3.check(true);
+
+    ButtonGroup group;
+    group.add(checkbox1);
+    group.add(checkbox2);
+    group.add(checkbox3);
+    group.remove(checkbox3);
+
     ComboBox::item_array combo_items =
     {
         "item 1",
