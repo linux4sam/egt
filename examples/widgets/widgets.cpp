@@ -114,20 +114,29 @@ int main(int argc, const char** argv)
 
     CheckBox checkbox1("checkbox 1");
     grid0.add(&checkbox1);
-    checkbox1.check(true);
 
     CheckBox checkbox2("checkbox 2");
     grid0.add(&checkbox2);
 
     CheckBox checkbox3("checkbox 3");
     grid0.add(&checkbox3);
-    checkbox3.check(true);
 
-    ButtonGroup group;
-    group.add(checkbox1);
-    group.add(checkbox2);
-    group.add(checkbox3);
-    group.remove(checkbox3);
+    ButtonGroup checkbox_group(true, false);
+    checkbox_group.add(checkbox1);
+    checkbox_group.add(checkbox2);
+    checkbox_group.add(checkbox3);
+    checkbox_group.remove(checkbox3);
+
+    RadioBox radiobox1("radiobox 1");
+    grid0.add(&radiobox1);
+
+    RadioBox radiobox2("radiobox 2");
+    grid0.add(&radiobox2);
+    radiobox2.check(true);
+
+    ButtonGroup radiobox_group(true);
+    radiobox_group.add(radiobox1);
+    radiobox_group.add(radiobox2);
 
     ComboBox::item_array combo_items =
     {
