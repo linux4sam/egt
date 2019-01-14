@@ -202,6 +202,69 @@ namespace egt
             }
         }
 
+        void Widget::set_box(const Rect& rect)
+        {
+            move(rect.point());
+            resize(rect.size());
+        }
+
+        void Widget::hide()
+        {
+            if (!m_visible)
+                return;
+            // careful attention to ordering
+            damage();
+            m_visible = false;
+            invoke_handlers(eventid::HIDE);
+        }
+
+        void Widget::show()
+        {
+            if (m_visible)
+                return;
+            // careful attention to ordering
+            m_visible = true;
+            damage();
+            invoke_handlers(eventid::SHOW);
+        }
+
+        bool Widget::visible() const
+        {
+            return m_visible;
+        }
+
+        bool Widget::active() const {
+            return m_active;
+        }
+
+        void Widget::set_active(bool value)
+        {
+            if (m_active != value)
+            {
+                m_active = value;
+                damage();
+            }
+        }
+
+        bool Widget::disabled() const
+        {
+            return m_disabled;
+        }
+
+        void Widget::disable()
+        {
+            if (m_disabled != true)
+                damage();
+            m_disabled = true;
+        }
+
+        void Widget::enable()
+        {
+            if (m_disabled != false)
+                damage();
+            m_disabled = false;
+        }
+
         void Widget::damage()
         {
             damage(box());
@@ -218,6 +281,57 @@ namespace egt
 
             if (m_parent)
                 m_parent->damage(to_parent(rect));
+        }
+
+        const Rect& Widget::box() const
+        {
+            return m_box;
+        }
+
+        Size Widget::size() const
+        {
+            return m_box.size();
+        }
+
+        Point Widget::point() const
+        {
+            return m_box.point();
+        }
+
+        Palette& Widget::palette()
+        {
+            if (!m_palette.get())
+                m_palette.reset(new Palette(global_palette()));
+
+            return *m_palette.get();
+        }
+
+        const Palette& Widget::palette() const
+        {
+            if (m_palette.get())
+                return *m_palette;
+
+            return global_palette();
+        }
+
+        void Widget::set_palette(const Palette& palette)
+        {
+            m_palette.reset(new Palette(palette));
+        }
+
+        void Widget::reset_palette()
+        {
+            m_palette.reset();
+        }
+
+        Frame* Widget::parent()
+        {
+            return m_parent;
+        }
+
+        const Frame* Widget::parent() const
+        {
+            return m_parent;
         }
 
         IScreen* Widget::screen()
@@ -278,6 +392,11 @@ namespace egt
             return Rect(origin, r.size());
         }
 
+        const std::string& Widget::name() const
+        {
+            return m_name;
+        }
+
         void Widget::paint(Painter& painter)
         {
             Painter::AutoSaveRestore sr(painter);
@@ -334,12 +453,45 @@ namespace egt
                 " " << box() << std::endl;
         }
 
+        void Widget::on_gain_focus()
+        {
+            m_focus = true;
+        }
+
+        void Widget::on_lost_focus()
+        {
+            m_focus = false;
+        }
+
+        void Widget::set_theme(const Theme& theme)
+        {
+            m_theme.reset(new Theme(theme));
+        }
+
+        void Widget::reset_theme()
+        {
+            m_theme.reset();
+        }
+
+        void Widget::set_boxtype(const Theme::boxtype type)
+        {
+            m_boxtype = type;
+        }
+
         void Widget::draw_box(Painter& painter, const Rect& rect)
         {
             if (is_flag_set(widgetmask::NO_BACKGROUND))
                 return;
 
             theme().draw_box(painter, *this, m_boxtype, rect);
+        }
+
+        Theme& Widget::theme()
+        {
+            if (m_theme.get())
+                return *m_theme;
+
+            return default_theme();
         }
 
         Widget::~Widget()

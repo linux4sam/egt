@@ -219,19 +219,13 @@ namespace egt
              * Change the width of the widget.
              * @param[in] w The new width of the widget.
              */
-            inline void set_width(int w)
-            {
-                resize(Size(w, h()));
-            }
+            inline void set_width(int w) { resize(Size(w, h())); }
 
             /**
              * Change the height of the widget.
              * @param[in] h The new height of the widget.
              */
-            inline void set_height(int h)
-            {
-                resize(Size(w(), h));
-            }
+            void set_height(int h) { resize(Size(w(), h)); }
 
             /**
              * Move the widget.
@@ -264,11 +258,7 @@ namespace egt
              * Change the box of the widget.
              * This is the same as calling move() and resize() at the same time.
              */
-            virtual void set_box(const Rect& rect)
-            {
-                move(rect.point());
-                resize(rect.size());
-            }
+            virtual void set_box(const Rect& rect);
 
             /**
              * Hide the widget.
@@ -277,54 +267,31 @@ namespace egt
              *
              * @note This changes the visible() property of the widget.
              */
-            virtual void hide()
-            {
-                if (!m_visible)
-                    return;
-                // careful attention to ordering
-                damage();
-                m_visible = false;
-                invoke_handlers(eventid::HIDE);
-            }
+            virtual void hide();
 
             /**
              * Show the widget.
              *
              * @note This changes the visible() property of the widget.
              */
-            virtual void show()
-            {
-                if (m_visible)
-                    return;
-                // careful attention to ordering
-                m_visible = true;
-                damage();
-                invoke_handlers(eventid::SHOW);
-            }
+            virtual void show();
 
             /**
              * Return true if the widget is visible.
              */
-            virtual bool visible() const { return m_visible; }
+            virtual bool visible() const;
 
             /**
              * Return true if the widget is active.
              *
              * The meaning of active is largely up to the derived implementation.
              */
-            virtual bool active() const { return m_active; }
+            virtual bool active() const;
 
             /**
              * Set the active property of the widget.
              */
-            virtual void set_active(bool value)
-            {
-                if (m_active != value)
-                {
-                    m_active = value;
-                    damage();
-                }
-            }
+            virtual void set_active(bool value);
 
             /**
              * Return the disabled status of the widget.
@@ -332,27 +299,17 @@ namespace egt
              * When a widget is disabled, it does not receive events. Also, the
              * color scheme may change when a widget is disabled.
              */
-            virtual bool disabled() const { return m_disabled; }
+            virtual bool disabled() const;
 
             /**
              * Set the disabled status of the widget to true.
              */
-            virtual void disable()
-            {
-                if (m_disabled != true)
-                    damage();
-                m_disabled = true;
-            }
+            virtual void disable();
 
             /**
              * Set the enable status of the widget to true.
              */
-            virtual void enable()
-            {
-                if (m_disabled != false)
-                    damage();
-                m_disabled = false;
-            }
+            virtual void enable();
 
             /**
              * Damage the box() of the widget.
@@ -373,17 +330,17 @@ namespace egt
             /**
              * Bounding box for the widget.
              */
-            virtual const Rect& box() const { return m_box; }
+            virtual const Rect& box() const;
 
             /**
              * Get the size of the widget.
              */
-            virtual Size size() const { return m_box.size(); }
+            virtual Size size() const;
 
             /**
              * Get the origin point of the widget.
              */
-            virtual Point point() const { return m_box.point(); }
+            virtual Point point() const;
 
             /**
              * @{
@@ -403,24 +360,12 @@ namespace egt
             /**
              * Get the widget Palette.
              */
-            Palette& palette()
-            {
-                if (!m_palette.get())
-                    m_palette.reset(new Palette(global_palette()));
-
-                return *m_palette.get();
-            }
+            Palette& palette();
 
             /**
              * Get the widget Palette.
              */
-            const Palette& palette() const
-            {
-                if (m_palette.get())
-                    return *m_palette;
-
-                return global_palette();
-            }
+            const Palette& palette() const;
 
             /**
              * Set the widget Palette.
@@ -428,34 +373,22 @@ namespace egt
              * @param palette The new palette to assign to the widget.
              * @note This will overwrite the entire widget Palette.
              */
-            void set_palette(const Palette& palette)
-            {
-                m_palette.reset(new Palette(palette));
-            }
+            void set_palette(const Palette& palette);
 
             /**
              * Reset the widget's palette to a default state.
              */
-            void reset_palette()
-            {
-                m_palette.reset();
-            }
+            void reset_palette();
 
             /**
              * Get a pointer to the parent Frame, or nullptr if none exists.
              */
-            Frame* parent()
-            {
-                return m_parent;
-            }
+            Frame* parent();
 
             /**
              * Get a pointer to the parent Frame, or nullptr if none exists.
              */
-            const Frame* parent() const
-            {
-                return m_parent;
-            }
+            const Frame* parent() const;
 
             /**
              * Get a pointer to the IScreen instance, using using a parent as
@@ -509,7 +442,7 @@ namespace egt
             /**
              * Get the name of the widget.
              */
-            const std::string& name() const { return m_name; }
+            const std::string& name() const;
 
             /**
              * Set the name of the widget.
@@ -544,39 +477,23 @@ namespace egt
             Rect to_child(const Rect& r);
             Rect to_parent(const Rect& r);
 
-            virtual void on_gain_focus()
-            {
-                m_focus = true;
-            }
+            virtual void on_gain_focus();
 
-            virtual void on_lost_focus()
-            {
-                m_focus = false;
-            }
+            virtual void on_lost_focus();
 
             virtual bool focus() const { return m_focus; }
 
             /**
              * Set the widget's theme to a new theme.
              */
-            void set_theme(const Theme& theme)
-            {
-                m_theme.reset(new Theme(theme));
-            }
+            void set_theme(const Theme& theme);
 
             /**
              * Reset the widget's theme to the default theme.
              */
-            void reset_theme()
-            {
-                m_theme.reset();
-            }
+            void reset_theme();
 
-            void set_boxtype(const Theme::boxtype type)
-            {
-                /// @todo Need to damage?
-                m_boxtype = type;
-            }
+            void set_boxtype(const Theme::boxtype type);
 
             virtual ~Widget();
 
@@ -603,13 +520,7 @@ namespace egt
             /**
              * Get the widget theme, or the default theme if none is set.
              */
-            Theme& theme()
-            {
-                if (m_theme.get())
-                    return *m_theme;
-
-                return default_theme();
-            }
+            Theme& theme();
 
             /**
              * Bounding box.
