@@ -25,7 +25,7 @@ AM_LDFLAGS = -pthread
 
 LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 	$(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) \
-	$(LIBINPUT_LIBS)
+	$(LIBINPUT_LIBS) $(MAGIC_LIB)
 
 #CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -flto -fwhole-program"
 #LDFLAGS="$LDFLAGS -flto -fwhole-program"
