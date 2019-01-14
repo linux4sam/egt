@@ -52,6 +52,7 @@ object.cpp \
 painter.cpp \
 palette.cpp \
 planewindow.cpp \
+radiobox.cpp \
 resource.cpp \
 screen/framebuffer.cpp \
 screen/kmsoverlay.cpp \
@@ -121,6 +122,7 @@ $(top_srcdir)/include/egt/object.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
 $(top_srcdir)/include/egt/planewindow.h \
+$(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sprite.h \

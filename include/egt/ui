@@ -35,6 +35,7 @@
 #include <egt/list.h>
 #include <egt/palette.h>
 #include <egt/planewindow.h>
+#include <egt/radiobox.h>
 //#include <egt/screen.h>
 #include <egt/sprite.h>
 #include <egt/text.h>
