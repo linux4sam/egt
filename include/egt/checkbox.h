@@ -35,26 +35,6 @@ namespace egt
             CheckBox(const std::string& text = std::string(),
                      const Rect& rect = Rect());
 
-            /**
-             * Return the boolean state of the checkbox.
-             */
-            inline bool checked() const
-            {
-                return active();
-            }
-
-            /**
-             * Set the checked state of the checkbox.
-             */
-            void check(bool value)
-            {
-                if (active() != value)
-                {
-                    set_active(value);
-                    invoke_handlers(eventid::PROPERTY_CHANGED);
-                }
-            }
-
             virtual int handle(eventid event) override;
 
             virtual void draw(Painter& painter, const Rect& rect) override;

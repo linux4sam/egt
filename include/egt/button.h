@@ -48,7 +48,21 @@ namespace egt
 
             virtual void draw(Painter& painter, const Rect& rect) override;
 
+            /**
+             * Return the boolean checked state of the a button.
+             */
+            virtual bool checked() const;
+
+            /**
+             * Set checked state of the button.
+             */
+            virtual void check(bool value);
+
             virtual ~Button();
+
+        private:
+
+            bool m_checked{false};
         };
 
         /**

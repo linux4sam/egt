@@ -73,6 +73,21 @@ namespace egt
             painter.draw_text(box(), m_text, m_text_align, 5);
         }
 
+        bool Button::checked() const
+        {
+            return m_checked;
+        }
+
+        void Button::check(bool value)
+        {
+            if (m_checked != value)
+            {
+                m_checked = value;
+                damage();
+                invoke_handlers(eventid::PROPERTY_CHANGED);
+            }
+        }
+
         Button::~Button()
         {
         }
