@@ -14,6 +14,7 @@
 #include <egt/animation.h>
 #include <egt/app.h>
 #include <egt/button.h>
+#include <egt/buttongroup.h>
 #include <egt/canvas.h>
 #include <egt/chart.h>
 #include <egt/checkbox.h>

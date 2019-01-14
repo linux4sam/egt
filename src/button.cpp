@@ -83,13 +83,22 @@ namespace egt
             if (m_checked != value)
             {
                 m_checked = value;
-                damage();
-                invoke_handlers(eventid::PROPERTY_CHANGED);
+                if (m_group)
+                    m_group->checked_state_change(*this, value);
+
+                /* Check if the button group has not cancelled the change. */
+                if (m_checked == value)
+                {
+                    damage();
+                    invoke_handlers(eventid::PROPERTY_CHANGED);
+                }
             }
         }
 
         Button::~Button()
         {
+            if (m_group)
+                m_group->remove(*this);
         }
 
         ImageButton::ImageButton(const Image& image,

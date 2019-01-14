@@ -29,6 +29,7 @@ libegt_la_SOURCES = \
 animation.cpp \
 app.cpp \
 button.cpp \
+buttongroup.cpp \
 canvas.cpp \
 chart.cpp \
 checkbox.cpp \
@@ -94,6 +95,7 @@ $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
 $(top_srcdir)/include/egt/bitmask.h \
 $(top_srcdir)/include/egt/button.h \
+$(top_srcdir)/include/egt/buttongroup.h \
 $(top_srcdir)/include/egt/canvas.h \
 $(top_srcdir)/include/egt/chart.h \
 $(top_srcdir)/include/egt/checkbox.h \

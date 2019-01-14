@@ -11,6 +11,7 @@
  * @brief Working with buttons.
  */
 
+#include <egt/buttongroup.h>
 #include <egt/image.h>
 #include <egt/widget.h>
 
@@ -63,6 +64,10 @@ namespace egt
         private:
 
             bool m_checked{false};
+
+            ButtonGroup *m_group{nullptr};
+
+            friend ButtonGroup;
         };
 
         /**
