@@ -13,6 +13,7 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
+#include <magic.h>
 
 #ifdef HAVE_LIBJPEG
 #ifdef __cplusplus
@@ -69,10 +70,11 @@ namespace egt
                         string name = filename;
                         name.erase(0, 1);
 
-                        /**
-                         * @todo This should use MIME info and not filename.
-                         */
-                        if (name.find("png") != std::string::npos)
+                        auto mimetype = get_mime_type(read_resource_data(name.c_str()),
+                                                      read_resource_length(name.c_str()));
+                        DBG("mimetype of " << name << " is " << mimetype);
+
+                        if (mimetype == "image/png")
                         {
                             image = shared_cairo_surface_t(
                                         cairo_image_surface_create_from_png_stream(
@@ -80,7 +82,7 @@ namespace egt
                                         cairo_surface_destroy);
                         }
 #ifdef HAVE_LIBJPEG
-                        else if (name.find("jpg") != std::string::npos)
+                        else if (mimetype == "image/jpeg")
                         {
                             image = shared_cairo_surface_t(
                                         cairo_image_surface_create_from_jpeg_stream(
@@ -90,8 +92,8 @@ namespace egt
 #endif
                         else
                         {
-                            ERR("could not load file " << filename);
-                            assert(!"unsupported file type");
+                            ERR("could not load resource " << name);
+                            throw std::runtime_error("unsupported file type");
                         }
                     }
                     else if (filename.compare(0, 1, "@") == 0)
@@ -100,17 +102,17 @@ namespace egt
                         name.erase(0, 1);
                         name = ICON_PATH + name;
 
-                        /**
-                         * @todo This should use MIME info and not filename.
-                         */
-                        if (name.find("png") != std::string::npos)
+                        auto mimetype = get_mime_type(name);
+                        DBG("mimetype of " << name << " is " << mimetype);
+
+                        if (mimetype == "image/png")
                         {
                             image = shared_cairo_surface_t(
                                         cairo_image_surface_create_from_png(name.c_str()),
                                         cairo_surface_destroy);
                         }
 #ifdef HAVE_LIBJPEG
-                        else if (name.find("jpg") != std::string::npos)
+                        else if (mimetype == "image/jpeg")
                         {
                             image = shared_cairo_surface_t(
                                         cairo_image_surface_create_from_jpeg(name.c_str()),
@@ -119,8 +121,8 @@ namespace egt
 #endif
                         else
                         {
-                            ERR("could not load file " << filename);
-                            assert(!"unsupported file type");
+                            ERR("could not load file " << name);
+                            throw std::runtime_error("unsupported file type");
                         }
                     }
                     else
@@ -132,14 +134,17 @@ namespace egt
                             name = image_path + filename;
                         DBG("loading: " << name);
 
-                        if (name.find("png") != std::string::npos)
+                        auto mimetype = get_mime_type(name);
+                        DBG("mimetype of " << name << " is " << mimetype);
+
+                        if (mimetype == "image/png")
                         {
                             image = shared_cairo_surface_t(
                                         cairo_image_surface_create_from_png(name.c_str()),
                                         cairo_surface_destroy);
                         }
 #ifdef HAVE_LIBJPEG
-                        else if (name.find("jpg") != std::string::npos)
+                        else if (mimetype == "image/jpeg")
                         {
                             image = shared_cairo_surface_t(
                                         cairo_image_surface_create_from_jpeg(name.c_str()),
@@ -148,8 +153,8 @@ namespace egt
 #endif
                         else
                         {
-                            ERR("could not load file " << filename);
-                            assert(!"unsupported file type");
+                            ERR("could not load file " << name);
+                            throw std::runtime_error("unsupported file type");
                         }
                     }
                 }
@@ -231,10 +236,47 @@ namespace egt
                 return new_surface;
             }
 
+            std::string ImageCache::get_mime_type(const void* buffer, size_t length)
+            {
+                magic_t magic = magic_open(MAGIC_MIME_TYPE);
+                string result;
+
+                if (magic)
+                {
+                    if (!magic_load(magic, NULL))
+                    {
+                        auto mime = magic_buffer(magic, buffer, length);
+                        if (mime)
+                            result = mime;
+                    }
+
+                    magic_close(magic);
+                }
+
+                return result;
+            }
+
+            std::string ImageCache::get_mime_type(const std::string& filename)
+            {
+                magic_t magic = magic_open(MAGIC_MIME_TYPE);
+                string result;
+
+                if (magic)
+                {
+                    if (!magic_load(magic, NULL))
+                    {
+                        auto mime = magic_file(magic, filename.c_str());
+                        if (mime)
+                            result = mime;
+                    }
+
+                    magic_close(magic);
+                }
+
+                return result;
+            }
 
             ImageCache image_cache;
-
         }
-
     }
 }

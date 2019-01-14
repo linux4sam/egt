@@ -63,6 +63,16 @@ namespace egt
                         int old_width, int old_height,
                         int new_width, int new_height);
 
+                /**
+                 * Return the mimetype string for a filename.
+                 */
+                static std::string get_mime_type(const std::string& filename);
+
+                /**
+                 * Return the mimetype string for a buffer.
+                 */
+                static std::string get_mime_type(const void* buffer, size_t length);
+
                 std::map<std::string, shared_cairo_surface_t> m_cache;
             };
 
