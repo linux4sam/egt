@@ -163,6 +163,15 @@ if test "x${have_libjpeg}" = xyes; then
    AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
 fi
 
+AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic], [
+  AC_MSG_ERROR([required library libmagic not found])
+])
+
+AC_CHECK_HEADER([magic.h],
+  [AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])],
+  [AC_MSG_ERROR([required header magic.h not found])
+])
+
 AC_LANG_PUSH([C++])
 AC_CHECK_HEADERS([rapidxml/rapidxml.hpp], [have_rapidxml=yes], [have_rapidxml=no])
 AM_CONDITIONAL([HAVE_RAPIDXML_RAPIDXML_HPP], [test "x${have_rapidxml}" = xyes])
