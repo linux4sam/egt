@@ -79,7 +79,7 @@ namespace egt
             /**
              * Global image cache instance.
              */
-            extern ImageCache image_cache;
+            ImageCache& image_cache();
 
         }
 

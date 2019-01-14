@@ -18,7 +18,7 @@ namespace egt
     {
         if (!filename.empty())
         {
-            m_surface = detail::image_cache.get(filename, hscale, vscale);
+            m_surface = detail::image_cache().get(filename, hscale, vscale);
             assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
             m_orig_size = Size(cairo_image_surface_get_width(m_surface.get()),
@@ -54,7 +54,7 @@ namespace egt
 
         if (m_hscale != hscale || m_vscale != vscale)
         {
-            m_surface = detail::image_cache.get(m_filename, hscale, vscale, approximate);
+            m_surface = detail::image_cache().get(m_filename, hscale, vscale, approximate);
             m_hscale = hscale;
             m_vscale = vscale;
         }

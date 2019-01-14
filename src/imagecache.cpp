@@ -276,7 +276,11 @@ namespace egt
                 return result;
             }
 
-            ImageCache image_cache;
+            ImageCache& image_cache()
+            {
+                static ImageCache cache;
+                return cache;
+            }
         }
     }
 }

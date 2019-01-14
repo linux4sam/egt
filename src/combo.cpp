@@ -83,7 +83,7 @@ namespace egt
             auto downsize = Size(h() - OFFSET * 2, h() - OFFSET * 2);
 
             auto scale = static_cast<float>(upsize.w) /
-                         static_cast<float>(Painter::surface_to_size(detail::image_cache.get("up.png")).w);
+                         static_cast<float>(Painter::surface_to_size(detail::image_cache().get("up.png")).w);
 
             auto up = Image("up.png", scale, scale);
             auto down = Image("down.png", scale, scale);
