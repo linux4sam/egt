@@ -121,6 +121,15 @@ namespace egt
 
         ENABLE_BITMASK_OPERATORS(alignmask)
 
+        /**
+         * Generic orientation flags.
+         */
+        enum class orientation
+        {
+            HORIZONTAL,
+            VERTICAL,
+        };
+
         class Frame;
 
         /**

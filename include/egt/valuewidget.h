@@ -417,12 +417,6 @@ namespace egt
             Font m_dynamic_font;
         };
 
-        enum class orientation
-        {
-            HORIZONTAL,
-            VERTICAL,
-        };
-
         /**
          * This is a slider that can be used to select from a range of values.
          *

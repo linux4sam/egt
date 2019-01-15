@@ -13,6 +13,8 @@ namespace egt
 {
     inline namespace v1
     {
+        static auto staticgrid_id = 0;
+
         StaticGrid::StaticGrid(const Rect& rect, int columns,
                                int rows, int spacing)
             : Frame(rect, widgetmask::NO_BACKGROUND),
@@ -23,6 +25,15 @@ namespace egt
             m_cells.resize(columns);
             for (auto& x : m_cells)
                 x.resize(rows);
+
+            ostringstream ss;
+            ss << "StaticGrid" << staticgrid_id++;
+            set_name(ss.str());
+        }
+
+        StaticGrid::StaticGrid(int columns, int rows, int spacing)
+            : StaticGrid(Rect(), columns, rows, spacing)
+        {
         }
 
         namespace detail
@@ -169,6 +180,9 @@ namespace egt
 
         void StaticGrid::reposition()
         {
+            if (size().empty())
+                return;
+
             int columns = m_cells.size();
             for (int column = 0; column < columns; column++)
             {
@@ -182,6 +196,9 @@ namespace egt
 
                         bounding += Point(detail::round(m_spacing, 2), detail::round(m_spacing, 2));
                         bounding -= Size(m_spacing, m_spacing);
+
+                        if (bounding.size().empty())
+                            continue;
 
                         // get the aligning rect
                         Rect target = align_algorithm(cell.widget->box().size(),

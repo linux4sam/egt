@@ -45,7 +45,7 @@ namespace egt
              * @param[in] rect Initial rectangle of the Frame.
              * @param[in] flags Widget flags.
              */
-            explicit Frame(const Rect& rect,
+            explicit Frame(const Rect& rect = Rect(),
                            widgetmask flags = widgetmask::FRAME);
 
             /**
@@ -188,6 +188,15 @@ namespace egt
              * Paint individual children to file.
              */
             virtual void paint_children_to_file();
+
+            virtual void resize(const Size& s) override
+            {
+                Widget::resize(s);
+                for (auto& child : m_children)
+                {
+                    child->set_align(child->align(), child->margin());
+                }
+            }
 
             virtual ~Frame();
 

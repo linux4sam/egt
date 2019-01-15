@@ -26,10 +26,8 @@ namespace egt
         Rect Widget::align_algorithm(const Size& size, const Rect& bounding,
                                      alignmask align, int margin)
         {
-            assert(align != alignmask::NONE);
-
-            if ((align & alignmask::EXPAND) == alignmask::EXPAND)
-                return bounding;
+            if (align == alignmask::NONE)
+                return Rect(bounding.point(), size);
 
             Point p;
             auto nsize = size;
@@ -233,7 +231,8 @@ namespace egt
             return m_visible;
         }
 
-        bool Widget::active() const {
+        bool Widget::active() const
+        {
             return m_active;
         }
 
@@ -341,16 +340,17 @@ namespace egt
 
         void Widget::set_align(alignmask a, int margin)
         {
-            if (m_align != a || m_margin != margin)
-            {
-                m_align = a;
-                m_margin = margin;
+            m_align = a;
+            m_margin = margin;
 
-                if (m_align != alignmask::NONE)
-                {
-                    auto r = align_algorithm(size(), box_to_child(parent()->box()), m_align, m_margin);
-                    set_box(r);
-                }
+            // can't go any further, but keep the alignment setting
+            if (!parent())
+                return;
+
+            if (m_align != alignmask::NONE)
+            {
+                auto r = align_algorithm(size(), box_to_child(parent()->box()), m_align, m_margin);
+                set_box(r);
             }
         }
 

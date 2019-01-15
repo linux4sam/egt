@@ -33,9 +33,11 @@
 #include <egt/kmsscreen.h>
 #include <egt/label.h>
 #include <egt/list.h>
+#include <egt/notebook.h>
 #include <egt/palette.h>
 #include <egt/planewindow.h>
 #include <egt/radiobox.h>
+#include <egt/sizer.h>
 //#include <egt/screen.h>
 #include <egt/sprite.h>
 #include <egt/text.h>

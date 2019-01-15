@@ -11,9 +11,10 @@
  * @brief Working with grids.
  */
 
-#include <egt/widget.h>
 #include <egt/frame.h>
 #include <egt/utils.h>
+#include <egt/widget.h>
+#include <vector>
 
 namespace egt
 {
@@ -28,8 +29,10 @@ namespace egt
         class StaticGrid : public Frame
         {
         public:
-            StaticGrid(const Rect& rect = Rect(),
+            StaticGrid(const Rect& rect,
                        int columns = 1, int rows = 1, int spacing = 0);
+
+            StaticGrid(int columns = 1, int rows = 1, int spacing = 0);
 
             virtual void move(const Point& point) override
             {
@@ -106,6 +109,40 @@ namespace egt
             int m_last_add_row{0};
         };
 
+        /**
+         * A StaticGrid where each item is visually selectable with a highlighted
+         * border.
+         */
+        class SelectableGrid : public StaticGrid
+        {
+        public:
+            SelectableGrid(const Rect& rect = Rect(),
+                           int columns = 1, int rows = 1, int spacing = 0)
+                : StaticGrid(rect, columns, rows, spacing)
+            {}
+
+            virtual void draw(Painter& painter, const Rect& rect) override;
+
+            virtual Point selected() const
+            {
+                return Point(m_selected_column, m_selected_row);
+            }
+
+            virtual void select(int column, int row)
+            {
+                m_selected_column = column;
+                m_selected_row = row;
+                damage();
+            }
+
+            virtual ~SelectableGrid()
+            {}
+
+        protected:
+            int m_selected_column{0};
+            int m_selected_row{0};
+        };
+
         class HorizontalPositioner : public Frame
         {
         public:
@@ -171,39 +208,6 @@ namespace egt
             alignmask m_align{alignmask::NONE};
         };
 
-        /**
-         * A StaticGrid where each item is visually selectable with a highlighted
-         * border.
-         */
-        class SelectableGrid : public StaticGrid
-        {
-        public:
-            SelectableGrid(const Rect& rect = Rect(),
-                           int columns = 1, int rows = 1, int spacing = 0)
-                : StaticGrid(rect, columns, rows, spacing)
-            {}
-
-            virtual void draw(Painter& painter, const Rect& rect) override;
-
-            virtual Point selected() const
-            {
-                return Point(m_selected_column, m_selected_row);
-            }
-
-            virtual void select(int column, int row)
-            {
-                m_selected_column = column;
-                m_selected_row = row;
-                damage();
-            }
-
-            virtual ~SelectableGrid()
-            {}
-
-        protected:
-            int m_selected_column{0};
-            int m_selected_row{0};
-        };
     }
 }
 

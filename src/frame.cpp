@@ -46,6 +46,9 @@ namespace egt
             widget->m_parent = this;
             widget->damage();
             m_children.push_back(widget);
+
+            // ensure alignment is set now
+            widget->set_align(widget->align(), widget->margin());
         }
 
         return widget;

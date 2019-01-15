@@ -48,6 +48,7 @@ input/libinput.cpp \
 input/tslib.cpp \
 label.cpp \
 list.cpp \
+notebook.cpp \
 object.cpp \
 painter.cpp \
 palette.cpp \
@@ -124,6 +125,7 @@ $(top_srcdir)/include/egt/palette.h \
 $(top_srcdir)/include/egt/planewindow.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/resource.h \
+$(top_srcdir)/include/egt/sizer.h \
 $(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sprite.h \
 $(top_srcdir)/include/egt/text.h \
