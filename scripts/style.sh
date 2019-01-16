@@ -12,7 +12,6 @@ set -x
 
 OPTIONS="--style=allman \
 --suffix=none \
---indent-namespaces
 --unpad-paren \
 --pad-comma \
 --pad-oper \

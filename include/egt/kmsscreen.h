@@ -21,55 +21,55 @@ struct kms_device;
 
 namespace egt
 {
-    inline namespace v1
+inline namespace v1
+{
+/**
+ * Screen in an KMS dumb buffer.
+ *
+ * This uses libplanes to modeset and configure planes.
+ */
+class KMSScreen : public IScreen
+{
+public:
+    explicit KMSScreen(bool primary = true);
+
+    enum class plane_type
     {
-        /**
-         * Screen in an KMS dumb buffer.
-         *
-         * This uses libplanes to modeset and configure planes.
-         */
-        class KMSScreen : public IScreen
-        {
-        public:
-            explicit KMSScreen(bool primary = true);
+        overlay,
+        primary,
+        cursor
+    };
 
-            enum class plane_type
-            {
-                overlay,
-                primary,
-                cursor
-            };
+    /**
+     *
+     */
+    uint32_t count_planes(plane_type type = plane_type::overlay);
 
-            /**
-             *
-             */
-            uint32_t count_planes(plane_type type = plane_type::overlay);
+    static KMSScreen* instance();
 
-            static KMSScreen* instance();
+    void schedule_flip() override;
 
-            void schedule_flip() override;
+    uint32_t index() override;
 
-            uint32_t index() override;
+    void close();
 
-            void close();
+    virtual ~KMSScreen();
 
-            virtual ~KMSScreen();
+    struct plane_data* allocate_overlay(const Size& size,
+                                        pixel_format format = pixel_format::argb8888,
+                                        bool heo = false);
 
-            struct plane_data* allocate_overlay(const Size& size,
-                                                pixel_format format = pixel_format::argb8888,
-                                                bool heo = false);
+protected:
 
-        protected:
+    int m_fd;
+    struct kms_device* m_device;
+    struct plane_data* m_plane;
+    uint32_t m_index;
 
-            int m_fd;
-            struct kms_device* m_device;
-            struct plane_data* m_plane;
-            uint32_t m_index;
+    friend class KMSOverlay;
+};
 
-            friend class KMSOverlay;
-        };
-
-    }
+}
 }
 
 #endif

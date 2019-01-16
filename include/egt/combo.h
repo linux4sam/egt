@@ -17,40 +17,40 @@
 
 namespace egt
 {
-    inline namespace v1
-    {
-        /**
-         * Combo box widget.
-         */
-        class ComboBox : public TextWidget
-        {
-        public:
-            using item_array = std::vector<std::string>;
+inline namespace v1
+{
+/**
+ * Combo box widget.
+ */
+class ComboBox : public TextWidget
+{
+public:
+    using item_array = std::vector<std::string>;
 
-            ComboBox(const item_array& items = item_array(),
-                     const Rect& rect = Rect(),
-                     alignmask align = alignmask::CENTER | alignmask::LEFT,
-                     const Font& font = Font(),
-                     widgetmask flags = widgetmask::NONE) noexcept;
+    ComboBox(const item_array& items = item_array(),
+             const Rect& rect = Rect(),
+             alignmask align = alignmask::CENTER | alignmask::LEFT,
+             const Font& font = Font(),
+             widgetmask flags = widgetmask::NONE) noexcept;
 
-            virtual int handle(eventid event) override;
+    virtual int handle(eventid event) override;
 
-            virtual void set_select(uint32_t index);
+    virtual void set_select(uint32_t index);
 
-            virtual uint32_t selected() const { return m_selected; }
+    virtual uint32_t selected() const { return m_selected; }
 
-            virtual void draw(Painter& painter, const Rect& rect) override;
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
-            virtual ~ComboBox();
+    virtual ~ComboBox();
 
-        protected:
-            item_array m_items;
-            uint32_t m_selected{0};
-            Rect m_up_rect;
-            Rect m_down_rect;
-        };
+protected:
+    item_array m_items;
+    uint32_t m_selected{0};
+    Rect m_up_rect;
+    Rect m_down_rect;
+};
 
-    }
+}
 }
 
 #endif

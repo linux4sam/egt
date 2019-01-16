@@ -15,27 +15,27 @@
 
 namespace egt
 {
-    inline namespace v1
-    {
-        /**
-         * Screen on a fbdev framebuffer.
-         *
-         * The framebuffer is internaly mmap()'ed and directly accessible.
-         */
-        class FrameBuffer : public IScreen
-        {
-        public:
+inline namespace v1
+{
+/**
+ * Screen on a fbdev framebuffer.
+ *
+ * The framebuffer is internaly mmap()'ed and directly accessible.
+ */
+class FrameBuffer : public IScreen
+{
+public:
 
-            explicit FrameBuffer(const std::string& path = "/dev/fb0");
+    explicit FrameBuffer(const std::string& path = "/dev/fb0");
 
-            virtual ~FrameBuffer();
+    virtual ~FrameBuffer();
 
-        protected:
-            int m_fd{-1};
-            void* m_fb{nullptr};
-        };
+protected:
+    int m_fd{-1};
+    void* m_fb{nullptr};
+};
 
-    }
+}
 }
 
 #endif

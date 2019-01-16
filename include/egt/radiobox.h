@@ -14,27 +14,27 @@
 
 namespace egt
 {
-    inline namespace v1
-    {
-        class Rect;
-        class Painter;
+inline namespace v1
+{
+class Rect;
+class Painter;
 
-        /**
-         * Boolean RadioBox.
-         */
-        class RadioBox : public Button
-        {
-        public:
-            RadioBox(const std::string& text = std::string(),
-                     const Rect& rect = Rect());
+/**
+ * Boolean RadioBox.
+ */
+class RadioBox : public Button
+{
+public:
+    RadioBox(const std::string& text = std::string(),
+             const Rect& rect = Rect());
 
-            virtual int handle(eventid event) override;
+    virtual int handle(eventid event) override;
 
-            virtual void draw(Painter& painter, const Rect& rect) override;
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
-            virtual ~RadioBox();
-        };
-    }
+    virtual ~RadioBox();
+};
+}
 }
 
 #endif

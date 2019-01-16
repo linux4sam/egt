@@ -12,35 +12,35 @@
 
 namespace egt
 {
-    inline namespace v1
-    {
-        namespace detail
-        {
-            struct X11Data;
-        }
+inline namespace v1
+{
+namespace detail
+{
+struct X11Data;
+}
 
-        /**
-         * Screen in an X11 window.
-         */
-        class X11Screen : public IScreen
-        {
-        public:
+/**
+ * Screen in an X11 window.
+ */
+class X11Screen : public IScreen
+{
+public:
 
-            X11Screen(const Size& size = Size(800, 480), bool borderless = false);
+    X11Screen(const Size& size = Size(800, 480), bool borderless = false);
 
-            virtual void flip(const damage_array& damage) override;
+    virtual void flip(const damage_array& damage) override;
 
-            virtual ~X11Screen();
+    virtual ~X11Screen();
 
-        protected:
+protected:
 
-            void handle_read(const asio::error_code& error);
+    void handle_read(const asio::error_code& error);
 
-            std::shared_ptr<detail::X11Data> m_priv;
-            asio::posix::stream_descriptor m_input;
-        };
+    std::shared_ptr<detail::X11Data> m_priv;
+    asio::posix::stream_descriptor m_input;
+};
 
-    }
+}
 }
 
 #endif

@@ -18,77 +18,77 @@
 
 namespace asio
 {
-    class io_context;
+class io_context;
 }
 
 namespace egt
 {
-    inline namespace v1
-    {
-        namespace detail
-        {
-            struct eventloopimpl;
-        }
+inline namespace v1
+{
+namespace detail
+{
+struct eventloopimpl;
+}
 
-        /**
-         * Event callback function defitiion.
-         */
-        using event_callback = std::function<void ()>;
+/**
+ * Event callback function defitiion.
+ */
+using event_callback = std::function<void ()>;
 
-        /**
-         * Event loop interface.
-         */
-        class EventLoop : public detail::noncopyable
-        {
-        public:
+/**
+ * Event loop interface.
+ */
+class EventLoop : public detail::noncopyable
+{
+public:
 
-            EventLoop() noexcept;
+    EventLoop() noexcept;
 
-            /**
-             * Get a reference to the internal ASIO io_context object.
-             */
-            asio::io_context& io();
+    /**
+     * Get a reference to the internal ASIO io_context object.
+     */
+    asio::io_context& io();
 
-            /**
-             * Wait for an event to occure.
-             */
-            virtual int wait();
+    /**
+     * Wait for an event to occure.
+     */
+    virtual int wait();
 
-            /**
-             * Run the event loop.
-             *
-             * This will not return until quit is called.
-             */
-            virtual int run(bool enable_fps = false);
+    /**
+     * Run the event loop.
+     *
+     * This will not return until quit is called.
+     */
+    virtual int run(bool enable_fps = false);
 
-            /**
-             * Quit the event loop.
-             *
-             * This will cause the run() function to return.
-             */
-            virtual void quit();
+    /**
+     * Quit the event loop.
+     *
+     * This will cause the run() function to return.
+     */
+    virtual void quit();
 
-            /**
-             * Add a callback to be called any time the event loop is idle.
-             *
-             * This is useful for executing long running tasks that shold otherwise
-             * not impact any other event handling performance.
-             */
-            void add_idle_callback(event_callback func);
+    /**
+     * Add a callback to be called any time the event loop is idle.
+     *
+     * This is useful for executing long running tasks that shold otherwise
+     * not impact any other event handling performance.
+     */
+    void add_idle_callback(event_callback func);
 
-            virtual ~EventLoop();
+    virtual ~EventLoop();
 
-        protected:
+protected:
 
-            virtual void draw();
-            void invoke_idle_callbacks();
+    virtual void draw();
+    void invoke_idle_callbacks();
 
-            std::unique_ptr<detail::eventloopimpl> m_impl;
+    std::unique_ptr<detail::eventloopimpl> m_impl;
 
-            std::vector<event_callback> m_idle;
-        };
+    std::vector<event_callback> m_idle;
+};
 
-    }
+}
 }
 
 #endif
