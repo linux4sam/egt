@@ -12,11 +12,13 @@
  */
 
 #include <string>
+#include <iosfwd>
 
 namespace egt
 {
 inline namespace v1
 {
+
 /**
  * Manages a single font and properties of a font.
  *
@@ -49,12 +51,10 @@ public:
         OBLIQUE = 2,
     };
 
-    //@{
-    /** @brief Pre-defined font faces. */
-    static const std::string FACE_ARIAL;
-    static const std::string FACE_TIMES;
-    static const std::string FACE_COURIER;
-    //@}
+    static const std::string DEFAULT_FACE;
+    static const weightid DEFAULT_WEIGHT;
+    static const int DEFAULT_SIZE;
+    static const slantid DEFAULT_SLANT;
 
     /**
      * Create a font based on the global default font.
@@ -134,13 +134,7 @@ protected:
     slantid m_slant;
 };
 
-/**
- * Get/Set the global default Font.
- *
- * Call this before allocating any Font directly or indirectly (i.e.
- * with a Widget) to set the default font.
- */
-Font& global_font();
+std::ostream& operator<<(std::ostream& os, const Font& font);
 
 }
 }

@@ -8,6 +8,7 @@
 #include "egt/painter.h"
 #include "egt/frame.h"
 #include "egt/widget.h"
+#include "egt/theme.h"
 
 using namespace std;
 
@@ -17,11 +18,15 @@ inline namespace v1
 {
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
+template<>
+Drawable<Button>::draw_t Drawer<Button>::m_drawable = Button::default_draw;
+
 Button::Button(const std::string& text, const Rect& rect,
                const Font& font, widgetmask flags) noexcept
     : TextWidget(text, rect, alignmask::CENTER, font, flags)
 {
     set_boxtype(Theme::boxtype::rounded_gradient);
+    palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::HIGHLIGHT));
     flag_set(widgetmask::GRAB_MOUSE);
 }
 
@@ -63,14 +68,19 @@ int Button::handle(eventid event)
 
 void Button::draw(Painter& painter, const Rect& rect)
 {
+    Drawer<Button>::draw(*this, painter, rect);
+}
+
+void Button::default_draw(Button& widget, Painter& painter, const Rect& rect)
+{
     ignoreparam(rect);
 
-    draw_box(painter);
+    widget.draw_box(painter);
 
     // text
-    painter.set_color(palette().color(Palette::ColorId::TEXT));
-    painter.set_font(font());
-    painter.draw_text(box(), m_text, m_text_align, 5);
+    painter.set_color(widget.palette().color(Palette::ColorId::TEXT));
+    painter.set_font(widget.font());
+    painter.draw_text(widget.box(), widget.text(), widget.text_align(), 5);
 }
 
 bool Button::checked() const
@@ -124,6 +134,9 @@ void Button::first_resize()
     }
 }
 
+template<>
+Drawable<ImageButton>::draw_t Drawer<ImageButton>::m_drawable = ImageButton::default_draw;
+
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
                          const Rect& rect,
@@ -167,35 +180,41 @@ void ImageButton::set_image(const Image& image)
 
 void ImageButton::draw(Painter& painter, const Rect& rect)
 {
+    Drawer<ImageButton>::draw(*this, painter, rect);
+}
+
+void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect& rect)
+{
     ignoreparam(rect);
 
-    draw_box(painter);
+    widget.draw_box(painter);
 
-    if (!m_text.empty())
+    if (!widget.text().empty())
     {
-        auto text_size = this->text_size();
+        auto text_size = widget.text_size();
 
         Rect tbox;
         Rect ibox;
 
-        if (m_position_image_first)
-            Widget::double_align(box(),
-                                 m_image.size(), m_image_align, ibox,
-                                 text_size, m_text_align, tbox, 5);
+        if (widget.m_position_image_first)
+            Widget::double_align(widget.box(),
+                                 widget.image().size(), widget.image_align(), ibox,
+                                 text_size, widget.text_align(), tbox, 5);
         else
-            Widget::double_align(box(),
-                                 text_size, m_text_align, tbox,
-                                 m_image.size(), m_image_align, ibox, 5);
+            Widget::double_align(widget.box(),
+                                 text_size, widget.text_align(), tbox,
+                                 widget.image().size(), widget.image_align(), ibox, 5);
 
-        painter.draw_image(ibox.point(), m_image, disabled());
+        painter.draw_image(ibox.point(), widget.image(), widget.disabled());
 
-        painter.draw_text(m_text, tbox, palette().color(Palette::TEXT),
-                          alignmask::CENTER, 0, font());
+        painter.draw_text(widget.text(), tbox, widget.palette().color(Palette::TEXT),
+                          alignmask::CENTER, 0, widget.font());
     }
     else
     {
-        Rect target = Widget::align_algorithm(m_image.size(), box(), m_image_align, 0);
-        painter.draw_image(target.point(), m_image, disabled());
+        Rect target = Widget::align_algorithm(widget.image().size(), widget.box(),
+                                              widget.image_align(), 0);
+        painter.draw_image(target.point(), widget.image(), widget.disabled());
     }
 }
 
@@ -231,5 +250,6 @@ void ImageButton::first_resize()
         }
     }
 }
+
 }
 }

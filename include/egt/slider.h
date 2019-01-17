@@ -36,6 +36,17 @@ public:
         ROUND_HANDLE = 1 << 2,
         SHOW_LABELS = 1 << 3,
         SHOW_LABEL = 1 << 4,
+
+        /**
+         * Horizontal slider origin (value min()), is to the left. Vertical is at
+         * the bottom. Setting this flag will flip this origin.
+         */
+        ORIGIN_OPPOSITE = 1 << 5,
+
+        /**
+         *
+         */
+        CONSISTENT_LINE = 1 << 6,
     };
 
     /**
@@ -78,7 +89,7 @@ public:
 
         auto handle = handle_box();
 
-        if (m_orientation == orientation::HORIZONTAL)
+        if (m_orient == orientation::HORIZONTAL)
         {
             damage(Rect(x() - 1,
                         handle.y - 1,
@@ -136,19 +147,19 @@ public:
 
 protected:
 
-    // value to offset
+    /// Convert a value to an offset.
     inline int to_offset(int value) const
     {
-        if (m_orientation == orientation::HORIZONTAL)
+        if (m_orient == orientation::HORIZONTAL)
             return egt::detail::normalize<float>(value, m_min, m_max, 0, w() - handle_width());
         else
             return egt::detail::normalize<float>(value, m_min, m_max, 0, h() - handle_height());
     }
 
-    // offset to value
+    /// Convert an offset to value.
     inline int to_value(int offset) const
     {
-        if (m_orientation == orientation::HORIZONTAL)
+        if (m_orient == orientation::HORIZONTAL)
             return egt::detail::normalize<float>(offset, 0, w() - handle_width(), m_min, m_max);
         else
             return egt::detail::normalize<float>(offset, 0, h() - handle_height(), m_min, m_max);
@@ -159,9 +170,11 @@ protected:
     Rect handle_box() const;
     Rect handle_box(int value) const;
 
-    void draw_label(Painter& painter, int value);
+    virtual void draw_label(Painter& painter, int value);
+    virtual void draw_handle(Painter& painter);
+    virtual void draw_line(Painter& painter, float xp, float yp);
 
-    orientation m_orientation;
+    orientation m_orient;
     bool m_invoke_pending{false};
 
     flags m_slider_flags{flags::RECTANGLE_HANDLE};

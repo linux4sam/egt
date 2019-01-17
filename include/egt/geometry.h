@@ -471,11 +471,11 @@ public:
     static inline Rect merge(const Rect& lhs, const Rect& rhs)
     {
         dim_t xmin = std::min(lhs.x, rhs.x);
-        dim_t xmax = std::max(lhs.x + lhs.w + static_cast<dim_t>(1),
-                              rhs.x + rhs.w + static_cast<dim_t>(1));
+        dim_t xmax = std::max(lhs.x + lhs.w,
+                              rhs.x + rhs.w);
         dim_t ymin = std::min(lhs.y, rhs.y);
-        dim_t ymax = std::max(lhs.y + lhs.h + static_cast<dim_t>(1),
-                              rhs.y + rhs.h + static_cast<dim_t>(1));
+        dim_t ymax = std::max(lhs.y + lhs.h,
+                              rhs.y + rhs.h);
 
         return Rect(xmin, ymin, xmax - xmin, ymax - ymin);
     }

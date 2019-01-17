@@ -14,6 +14,7 @@
 #include <egt/buttongroup.h>
 #include <egt/image.h>
 #include <egt/widget.h>
+#include <egt/theme.h>
 
 namespace egt
 {
@@ -54,6 +55,8 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    static void default_draw(Button& widget, Painter& painter, const Rect& rect);
+
     /**
      * Return the boolean checked state of the a button.
      */
@@ -78,7 +81,6 @@ private:
 
     ButtonGroup* m_group{nullptr};
 
-
     friend ButtonGroup;
 };
 
@@ -100,6 +102,8 @@ public:
                 widgetmask flags = widgetmask::NONE) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
 
     virtual void set_image(const Image& image);
 
@@ -137,6 +141,8 @@ public:
             damage();
         }
     }
+
+    alignmask image_align() const { return m_image_align; }
 
     void set_position_image_first(bool value)
     {

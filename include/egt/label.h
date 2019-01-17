@@ -42,11 +42,11 @@ class Rect;
 class Label : public TextWidget
 {
 public:
-    explicit Label(const std::string& text = std::string(),
-                   const Rect& rect = Rect(),
-                   alignmask align = alignmask::CENTER,
-                   const Font& font = Font(),
-                   widgetmask flags = widgetmask::NONE) noexcept;
+    Label(const std::string& text = std::string(),
+          const Rect& rect = Rect(),
+          alignmask align = alignmask::CENTER,
+          const Font& font = Font(),
+          widgetmask flags = widgetmask::NONE) noexcept;
 
     explicit Label(Frame& parent,
                    const std::string& text,
@@ -67,6 +67,8 @@ public:
     virtual void set_text(const std::string& str) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    static void default_draw(Label& widget, Painter& painter, const Rect& rect);
 
     virtual ~Label();
 
@@ -113,6 +115,8 @@ public:
                const Font& font = Font());
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    static void default_draw(ImageLabel& widget, Painter& painter, const Rect& rect);
 
     virtual void set_image(const Image& image);
 
@@ -165,7 +169,7 @@ protected:
     virtual void first_resize() override;
 
     Image m_image;
-    bool m_label{true};
+    bool m_show_label{true};
     alignmask m_image_align{alignmask::CENTER | alignmask::LEFT};
     bool m_position_image_first{false};
 };

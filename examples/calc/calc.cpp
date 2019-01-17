@@ -18,6 +18,7 @@ int main(int argc, const char** argv)
     TopWindow win;
 
     StaticGrid topgrid(Rect(), 1, 2);
+    topgrid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     win.add(&topgrid);
     topgrid.set_align(alignmask::EXPAND);
 
@@ -30,6 +31,7 @@ int main(int argc, const char** argv)
     win.add(&logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
     StaticGrid buttongrid(Rect(), 4, 5, 5);
+    buttongrid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
     topgrid.add(&buttongrid, 0, 1, alignmask::EXPAND);
     buttongrid.set_align(alignmask::EXPAND);
 

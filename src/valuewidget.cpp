@@ -30,9 +30,8 @@ void ProgressBar::draw(Painter& painter, const Rect& rect)
     auto width = egt::detail::normalize<float>(value(), m_min, m_max, 0, w());
 
     theme().draw_rounded_gradient_box(painter,
-                                         Rect(x(), y(), width, h()),
-                                         Color::TRANSPARENT,
-                                         palette().color(Palette::HIGHLIGHT));
+                                      Rect(x(), y(), width, h()),
+                                      palette().color(Palette::HIGHLIGHT));
 
     string text = std::to_string(value()) + "%";
     m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);

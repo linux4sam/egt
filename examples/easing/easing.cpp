@@ -40,7 +40,7 @@ static easing_func curves[] =
     easing_boing
 };
 
-static vector<StringItem> curve_names =
+static vector<std::string> curve_names =
 {
     "linear",
     "easy",
@@ -77,7 +77,7 @@ public:
         ListBox::item_array items;
         items.resize(curve_names.size());
         transform(curve_names.begin(), curve_names.end(), items.begin(),
-        [](const StringItem & v) { return new StringItem(v);});
+        [](const std::string & v) { return new StringItem(v);});
         ListBox* list1 = new ListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
         add(list1);
 

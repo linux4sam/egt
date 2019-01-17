@@ -16,6 +16,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
  * A widget that manages an unbounded value.
  *

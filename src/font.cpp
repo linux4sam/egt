@@ -4,20 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/font.h"
+#include <iostream>
 
 namespace egt
 {
 inline namespace v1
 {
-const std::string Font::FACE_ARIAL = "Arial Unicode";
-const std::string Font::FACE_TIMES = "Times Unicode";
-const std::string Font::FACE_COURIER = "Courier Unicode";
+
+const std::string Font::DEFAULT_FACE = "Arial Unicode";
+const Font::weightid Font::DEFAULT_WEIGHT = Font::weightid::NORMAL;
+const int Font::DEFAULT_SIZE = 18;
+const Font::slantid Font::DEFAULT_SLANT = Font::slantid::NORMAL;
 
 Font::Font()
-    : m_face(global_font().face()),
-      m_size(global_font().size()),
-      m_weight(global_font().weight()),
-      m_slant(global_font().slant())
+    : m_face(DEFAULT_FACE),
+      m_size(DEFAULT_SIZE),
+      m_weight(DEFAULT_WEIGHT),
+      m_slant(DEFAULT_SLANT)
 {}
 
 Font::Font(const std::string& face, int size, weightid weight, slantid slant)
@@ -28,30 +31,24 @@ Font::Font(const std::string& face, int size, weightid weight, slantid slant)
 {}
 
 Font::Font(int size)
-    : m_face(global_font().face()),
+    : m_face(DEFAULT_FACE),
       m_size(size),
-      m_weight(global_font().weight()),
-      m_slant(global_font().slant())
+      m_weight(DEFAULT_WEIGHT),
+      m_slant(DEFAULT_SLANT)
 {}
 
 Font::Font(int size, weightid weight)
-    : m_face(global_font().face()),
+    : m_face(DEFAULT_FACE),
       m_size(size),
       m_weight(weight),
-      m_slant(global_font().slant())
+      m_slant(DEFAULT_SLANT)
 {}
 
-Font& global_font()
+std::ostream& operator<<(std::ostream& os, const Font& font)
 {
-    static Font* f = nullptr;
-
-    if (!f)
-    {
-        f = new Font(Font::FACE_ARIAL, 16, Font::weightid::NORMAL,
-                     Font::slantid::NORMAL);
-    }
-
-    return *f;
+    os << font.face() << ", " << font.size() << ", " <<
+       static_cast<int>(font.weight()) << ", " << static_cast<int>(font.slant());
+    return os;
 }
 
 }

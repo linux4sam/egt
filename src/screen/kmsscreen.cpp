@@ -190,7 +190,7 @@ static vector<int> used;
 struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         pixel_format format, bool heo)
 {
-    DBG("allocate plane " << size);
+    DBG("allocate plane " << size << " " << static_cast<int>(format));
 
     struct plane_data* plane = 0;
 

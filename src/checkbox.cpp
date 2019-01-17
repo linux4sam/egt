@@ -19,7 +19,7 @@ CheckBox::CheckBox(const std::string& text,
                    const Rect& rect)
     : Button(text, rect)
 {
-    set_boxtype(Theme::boxtype::rounded_gradient);
+    set_boxtype(Theme::boxtype::border);
     flag_set(widgetmask::GRAB_MOUSE);
     palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
 }
@@ -59,12 +59,12 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
         // draw an "X"
         static const int OFFSET = 5;
         auto cr = painter.context();
-        painter.set_color(palette().color(Palette::DARK));
+        painter.set_color(palette().color(Palette::HIGHLIGHT));
         cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
         cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
         cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
         cairo_line_to(cr.get(), r.x + OFFSET, r.y + r.h - OFFSET);
-        painter.set_line_width(2.0);
+        painter.set_line_width(3.0);
         cairo_stroke(cr.get());
     }
     else
@@ -103,7 +103,6 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
         rect.x += rect.w;
         theme().draw_rounded_gradient_box(painter,
                                           rect,
-                                          palette().color(Palette::BORDER),
                                           palette().color(Palette::HIGHLIGHT));
     }
     else
@@ -112,8 +111,7 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
         rect.w /= 2;
         theme().draw_rounded_gradient_box(painter,
                                           rect,
-                                          palette().color(Palette::BORDER),
-                                          palette().color(Palette::MID));
+                                          palette().color(Palette::HIGHLIGHT));
     }
 }
 

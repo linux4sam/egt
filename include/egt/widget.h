@@ -20,8 +20,8 @@
 #include <egt/input.h>
 #include <egt/object.h>
 #include <egt/palette.h>
-#include <egt/screen.h>
 #include <egt/theme.h>
+#include <egt/screen.h>
 #include <egt/utils.h>
 #include <iosfwd>
 #include <memory>
@@ -515,14 +515,18 @@ public:
     virtual Point from_screen_back(const Point& p);
 
     /**
-     * Get the widget theme, or the default theme if none is set.
+     * Called when the widget gains focus.
      */
-    Theme& theme();
-
     virtual void on_gain_focus();
 
+    /**
+     * Called when the widget loses focus.
+     */
     virtual void on_lost_focus();
 
+    /**
+     * Get the current focus state of the widget.
+     */
     virtual bool focus() const { return m_focus; }
 
     /**
@@ -537,17 +541,22 @@ public:
 
     void set_boxtype(const Theme::boxtype type);
 
+    /**
+     * Get the widget theme, or the default theme if none is set.
+     */
+    Theme& theme();
+
     virtual ~Widget();
-
-protected:
-
-    virtual bool top_level() const { return false; }
 
     /**
      * Helper function to draw this widget's box using the appropriate
      * theme.
      */
     void draw_box(Painter& painter, const Rect& rect = Rect());
+
+protected:
+
+    virtual bool top_level() const { return false; }
 
     virtual void set_parent(Frame* parent)
     {
@@ -665,6 +674,7 @@ public:
 
     /**
      * Set the text of the label.
+     * @param str The text string to set.
      */
     virtual void set_text(const std::string& str);
 
@@ -690,13 +700,15 @@ public:
         }
     }
 
+    alignmask text_align() const { return m_text_align; }
+
     /**
      * Get the widget Font.
      */
     Font& font()
     {
         if (!m_font.get())
-            m_font.reset(new Font(global_font()));
+            m_font.reset(new Font);
 
         return *m_font.get();
     }
@@ -706,10 +718,10 @@ public:
      */
     const Font& font() const
     {
-        if (m_font.get())
-            return *m_font.get();
+        if (!m_font.get())
+            m_font.reset(new Font);
 
-        return global_font();
+        return *m_font.get();
     }
 
     /**
@@ -740,7 +752,7 @@ protected:
     std::string m_text;
 
 private:
-    std::unique_ptr<Font> m_font;
+    mutable std::unique_ptr<Font> m_font;
 };
 
 namespace experimental

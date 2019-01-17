@@ -48,6 +48,7 @@ public:
 
     /**
      * Append text to the existing contents.
+     * @param str The text string to append.
      */
     virtual void append(const std::string& str);
 

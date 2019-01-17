@@ -15,15 +15,15 @@ TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align)
     : TextWidget(str, rect, align),
       m_timer(std::chrono::seconds(1))
 {
-    set_boxtype(Theme::boxtype::rounded_borderfill);
+    set_boxtype(Theme::boxtype::borderfill);
 
     m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
 
-    palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
-    palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::LIGHT));
+    //palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
+    //palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::LIGHT));
 
-    palette().set(Palette::BG, Palette::GROUP_DISABLED, palette().color(Palette::MID));
-    palette().set(Palette::TEXT, Palette::GROUP_DISABLED, palette().color(Palette::DARK));
+    //palette().set(Palette::BG, Palette::GROUP_DISABLED, palette().color(Palette::MID));
+    //palette().set(Palette::TEXT, Palette::GROUP_DISABLED, palette().color(Palette::DARK));
 }
 
 TextBox::TextBox(const Rect& rect, alignmask align)
@@ -78,8 +78,9 @@ void TextBox::draw(Painter& painter, const Rect& rect)
     draw_box(painter);
 
     // text
+    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
     Rect bounding = painter.draw_text(m_text, box(),
-                                      palette().color(Palette::TEXT),
+                                      palette().color(Palette::TEXT, group),
                                       m_text_align,
                                       5,
                                       font());

@@ -13,6 +13,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 RadioBox::RadioBox(const std::string& text,
                    const Rect& rect)
     : Button(text, rect)
@@ -46,31 +47,14 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
     Point center(x() + h() / 2, y() + h() / 2);
     float radius = (h() - STANDOFF * 2) / 2;
 
-    auto pat = shared_cairo_pattern_t(cairo_pattern_create_linear(x() + h() / 2,
-                                      y(),
-                                      x() + h() / 2,
-                                      y() + h()),
-                                      cairo_pattern_destroy);
-    Color step = palette().color(Palette::BG);
-    cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
-    step = palette().color(Palette::BG).shade(.1);
-    cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
-    step = palette().color(Palette::BG).shade(.15);
-    cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
-    step = palette().color(Palette::BG).shade(.18);
-    cairo_pattern_add_color_stop_rgb(pat.get(), 1.0, step.redf(), step.greenf(), step.bluef());
-
     painter.circle(Circle(center, radius));
-    auto cr = painter.context();
-    cairo_set_source(cr.get(), pat.get());
-    cairo_fill_preserve(cr.get());
-    painter.set_color(palette().color(Palette::BG));
+    painter.set_color(palette().color(Palette::HIGHLIGHT));
+
     painter.set_line_width(1.0);
     painter.stroke();
 
     if (checked())
     {
-        painter.set_color(Color::BLACK);
         painter.circle(Circle(center, radius / 2));
         painter.fill();
     }
@@ -85,5 +69,6 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
 
 RadioBox::~RadioBox()
 {}
+
 }
 }

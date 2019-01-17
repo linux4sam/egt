@@ -11,113 +11,49 @@
  * @brief ListBox definition.
  */
 
-#include <egt/widget.h>
-#include <egt/painter.h>
-#include <egt/palette.h>
 #include <egt/frame.h>
+#include <egt/label.h>
+#include <egt/sizer.h>
+#include <egt/view.h>
+#include <sstream>
 #include <vector>
 
 namespace egt
 {
 inline namespace v1
 {
-class ListBox;
 
-/**
- * An item in a ListBox.
- */
-class ListBoxItem
-{
-public:
-    virtual void draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox);
-};
-
-/**
- * A specialized ListBoxItem that holds a simple string.
- */
-class StringItem : public ListBoxItem
-{
-public:
-
-    /**
-     * Construct a List item.
-     */
-    // cppcheck-suppress noExplicitConstructor
-    StringItem(const char* text)
-        : m_text(text)
-    {}
-
-    /**
-     * Construct a List item.
-     */
-    // cppcheck-suppress noExplicitConstructor
-    StringItem(const std::string& text)
-        : m_text(text)
-    {}
-
-    virtual void draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox) override;
-
-    /**
-    * Set the font of the items.
-    */
-    virtual void font(const Font& font) { m_font = font; }
-
-    virtual ~StringItem()
-    {}
-
-protected:
-
-    std::string m_text;
-    Font m_font;
-};
+using StringItem = egt::Label;
 
 /**
  * ListBox that manages a selectable list of items.
  *
- * Items are derived from type ListBoxItem. Only one item may be selected at
- * a time.
+ * Only one item may be selected at a time.
  *
  * @image html widget_listbox.png
  * @image latex widget_listbox.png "widget_listbox" width=5cm
  */
-class ListBox : public Widget
+class ListBox : public Frame
 {
 public:
-    using item_array = std::vector<ListBoxItem*>;
 
-    explicit ListBox(const Rect& rect = Rect())
-        : Widget(rect)
-    {
-        set_boxtype(Theme::boxtype::rounded_borderfill);
-    }
+    using item_array = std::vector<Widget*>;
+
+    explicit ListBox(const Rect& rect = Rect());
 
     explicit ListBox(Frame& parent,
-                     const Rect& rect = Rect())
-        : ListBox(rect)
-    {
-        parent.add(this);
-    }
+                     const Rect& rect = Rect());
 
-    template<class T>
-    explicit ListBox(const std::vector<T>& items,
-                     const Rect& rect = Rect())
-        : ListBox(rect)
-    {
-        std::copy(items.begin(), items.end(), back_inserter(m_items));
-    }
+    explicit ListBox(const item_array& items,
+                     const Rect& rect = Rect());
 
-    template<class T>
-    explicit ListBox(Frame& parent,
-                     const std::vector<T>& items,
-                     const Rect& rect = Rect())
-        : ListBox(items, rect)
-    {
-        parent.add(this);
-    }
+    ListBox(Frame& parent,
+            const item_array& items,
+            const Rect& rect = Rect());
 
     virtual int handle(eventid event) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    virtual Rect child_area() const override;
 
     /**
      * Select an item by index.
@@ -127,7 +63,7 @@ public:
     /**
      * Return the number of items in the list.
      */
-    virtual size_t count() const { return m_items.size(); }
+    virtual size_t count() const { return m_sizer.count_children(); }
 
     /**
      * Get the currently selected index.
@@ -137,10 +73,12 @@ public:
     /**
      * Add a new item to the end of the list.
      */
-    virtual void add_item(ListBoxItem* item)
-    {
-        m_items.push_back(item);
-    }
+    virtual void add_item(Widget* item);
+
+    /**
+     * Remove an item from the list.
+     */
+    virtual void remove_item(Widget* widget);
 
     static inline size_t item_height()
     {
@@ -153,10 +91,9 @@ protected:
 
     Rect item_rect(uint32_t index) const;
 
-    item_array m_items;
     uint32_t m_selected{0};
-
-    friend class ListBoxItem;
+    ScrolledView m_view;
+    OrientationPositioner m_sizer;
 };
 
 }

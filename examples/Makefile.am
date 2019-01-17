@@ -53,14 +53,12 @@ widgets/widgets
 
 if HAVE_RAPIDXML_HPP
 bin_PROGRAMS += \
-launcher/launcher \
-newsfeed/newsfeed
+launcher/launcher
 endif
 
 if HAVE_RAPIDXML_RAPIDXML_HPP
 bin_PROGRAMS += \
-launcher/launcher \
-newsfeed/newsfeed
+launcher/launcher
 endif
 
 if HAVE_LIBPLANES

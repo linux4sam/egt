@@ -12,6 +12,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 std::ostream& operator<<(std::ostream& os, const Point& point)
 {
     os << point.x << "," << point.y;

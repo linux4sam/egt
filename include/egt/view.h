@@ -28,16 +28,16 @@ inline namespace v1
  * it through the window.  The surface can be scrolled, or panned, in a single
  * orientation to see the rest.
  *
- * This is used internally by Widgets, but can also be used directly.  For
- * example, if ther are too many elements in a ListBox to be displayed due
- * to the size of the widget, the View usage in a ListBox makes the list
- * scrollable.
+ * This is used internally by Widgets, but can also be used directly.
  */
 class ScrolledView : public Frame
 {
 public:
 
-    explicit ScrolledView(const Rect& rect = Rect());
+    explicit ScrolledView(const Rect& rect = Rect(),
+                          orientation orient = orientation::HORIZONTAL);
+
+    explicit ScrolledView(orientation orient);
 
     virtual int handle(eventid event) override;
 
@@ -45,22 +45,34 @@ public:
 
     virtual void resize(const Size& size) override;
 
+    virtual Rect child_area() const override;
+
     /**
-     * Get the position.
+     * Get the current offset.
+     *
+     * @note The offset moves in the negative direction from zero.
      */
-    int position() const { return m_offset; }
+    int offset() const { return m_offset; }
 
     /**
      * Set the position.
      */
-    virtual void set_position(int offset);
+    virtual void set_offset(int offset);
+
+    virtual bool scrollable() const;
 
     virtual ~ScrolledView();
 
 protected:
 
+    /**
+     * Return the super rectangle that includes all of the child widgets.
+     */
     Rect super_rect() const;
 
+    /**
+     * Resize the slider whenever the size of this changes.
+     */
     void resize_slider();
 
     /**
@@ -69,12 +81,14 @@ protected:
     int m_offset{0};
 
     /**
-     * The orientation of the scroll.
-     * @todo Only horizontal is currently implemented.
+     * Slider shown when scrollable.
      */
-    orientation m_orientation{orientation::HORIZONTAL};
-
     Slider m_slider;
+
+    /**
+     * The orientation of the scroll.
+     */
+    orientation m_orient{orientation::HORIZONTAL};
 
     using Swipe = detail::MouseGesture<int>;
 

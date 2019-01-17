@@ -5,6 +5,8 @@
  */
 #include "egt/view.h"
 #include "egt/painter.h"
+#include "egt/detail/math.h"
+#include <sstream>
 
 using namespace std;
 
@@ -13,13 +15,52 @@ namespace egt
 inline namespace v1
 {
 
-ScrolledView::ScrolledView(const Rect& rect)
-    : Frame(rect, widgetmask::NO_BACKGROUND),
-      m_slider(0, 100, 0, orientation::HORIZONTAL)
+// orientation to size dimension
+static inline int o2d(orientation o, const Size& size)
 {
+    return (o == orientation::HORIZONTAL) ? size.w : size.h;
+}
+
+// orientation to size dimension
+static inline int o2d(orientation o, const Rect& rect)
+{
+    return o2d(o, rect.size());
+}
+
+// orientation to point axis
+static inline int o2p(orientation o, const Point& point)
+{
+    return (o == orientation::HORIZONTAL) ? point.x : point.y;
+}
+
+ScrolledView::ScrolledView(const Rect& rect, orientation orient)
+    : Frame(rect, widgetmask::NO_BACKGROUND),
+      m_slider(0, 100, 0, orient),
+      m_orient(orient)
+{
+    static auto scrolledview_id = 0;
+    std::ostringstream ss;
+    ss << "ScrolledView" << scrolledview_id++;
+    set_name(ss.str());
+
+    if (orient == orientation::VERTICAL)
+        m_slider.slider_flags(Slider::flags::RECTANGLE_HANDLE |
+                              Slider::flags::ORIGIN_OPPOSITE |
+                              Slider::flags::CONSISTENT_LINE);
+    else
+        m_slider.slider_flags(Slider::flags::RECTANGLE_HANDLE |
+                              Slider::flags::CONSISTENT_LINE);
+
     resize_slider();
 
+    flag_set(widgetmask::GRAB_MOUSE);
+
     // TODO: handle slider events for moving the view
+}
+
+ScrolledView::ScrolledView(orientation orient)
+    : ScrolledView(Rect(), orient)
+{
 }
 
 int ScrolledView::handle(eventid event)
@@ -28,29 +69,31 @@ int ScrolledView::handle(eventid event)
     switch (mouse)
     {
     case Swipe::mouse_event::done:
+        return 1;
     case Swipe::mouse_event::none:
         break;
     case Swipe::mouse_event::start:
         m_mouse.start(m_offset);
         return 1;
     case Swipe::mouse_event::drag:
-        if (m_orientation == orientation::HORIZONTAL)
-        {
-            auto diff = from_screen(event_mouse()).x - m_mouse.mouse_start().x;
-            set_position(m_mouse.start_value() + diff / 2);
-        }
-        else
-        {
-            auto diff = from_screen(event_mouse()).y - m_mouse.mouse_start().y;
-            set_position(m_mouse.start_value() + diff / 2);
-        }
+    {
+        auto diff = o2p(m_orient, event_mouse()) -
+                    o2p(m_orient, m_mouse.mouse_start());
+        set_offset(m_mouse.start_value() + diff);
         return 1;
+    }
     case Swipe::mouse_event::click:
         break;
     }
 
     auto ret = Frame::handle(event);
     return ret;
+}
+
+bool ScrolledView::scrollable() const
+{
+    Rect super = super_rect();
+    return o2d(m_orient, super) > o2d(m_orient, size());
 }
 
 void ScrolledView::draw(Painter& painter, const Rect& rect)
@@ -61,33 +104,39 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     // change the origin to the offset
-    if (m_orientation == orientation::HORIZONTAL)
+    if (m_orient == orientation::HORIZONTAL)
         cairo_translate(cr.get(), m_offset, 0);
     else
         cairo_translate(cr.get(), 0, m_offset);
 
     Rect r = box();
-    if (m_orientation == orientation::HORIZONTAL)
+    if (m_orient == orientation::HORIZONTAL)
         r.x -= m_offset;
     else
         r.y -= m_offset;
 
     Frame::draw(painter, r);
 
-    Rect super = super_rect();
-    bool draw_slider = false;
-
-    if (m_orientation == orientation::HORIZONTAL)
-        draw_slider = super.w > size().w;
-    else
-        draw_slider = super.h > size().h;
-
-    if (draw_slider)
+    if (scrollable())
+    {
         if (Rect::intersect(m_slider.box(), r))
             m_slider.draw(painter, Rect::intersection(m_slider.box(), r));
+    }
 }
 
-auto SLIDER_DIM = 20;
+auto SLIDER_DIM = 10;
+
+Rect ScrolledView::child_area() const
+{
+    // reserve the slider area to keep away from children
+    if (!scrollable())
+        return box();
+
+    if (m_orient == orientation::HORIZONTAL)
+        return box() - Size(0, SLIDER_DIM);
+
+    return box() - Size(SLIDER_DIM, 0);
+}
 
 void ScrolledView::resize(const Size& size)
 {
@@ -98,7 +147,7 @@ void ScrolledView::resize(const Size& size)
 void ScrolledView::resize_slider()
 {
     auto b = box();
-    if (m_orientation == orientation::HORIZONTAL)
+    if (m_orient == orientation::HORIZONTAL)
     {
         b.x += std::abs(m_offset);
         b.y = b.y + b.h - SLIDER_DIM;
@@ -117,7 +166,7 @@ void ScrolledView::resize_slider()
 
 Rect ScrolledView::super_rect() const
 {
-    Rect result = box();
+    Rect result;
     for (auto& child : m_children)
     {
         result = Rect::merge(result, child->box());
@@ -125,28 +174,26 @@ Rect ScrolledView::super_rect() const
     return result;
 }
 
-void ScrolledView::set_position(int offset)
+void ScrolledView::set_offset(int offset)
 {
-    Rect super = super_rect();
-
-    if (offset <= 0 && -offset < super.w)
+    if (scrollable())
     {
+        Rect super = super_rect();
+        auto offset_max = o2d(m_orient, super) - o2d(m_orient, box());
+        if (offset > 0)
+            offset = 0;
+        else if (-offset > offset_max)
+            offset = -offset_max;
+
         if (m_offset != offset)
         {
             m_offset = offset;
 
-            Rect super = super_rect();
-            float v;
-            if (m_orientation == orientation::HORIZONTAL)
-            {
-                v = std::abs(m_offset) / static_cast<float>(super.w) * 100.;
-            }
-            else
-            {
-                v = std::abs(m_offset) / static_cast<float>(super.h) * 100.;
-            }
+            auto slider_value =
+                egt::detail::normalize<float>(std::abs(m_offset), 0, offset_max,
+                                              0, 100);
 
-            m_slider.set_value(v);
+            m_slider.set_value(slider_value);
             resize_slider();
 
             damage();

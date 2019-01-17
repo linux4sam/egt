@@ -12,7 +12,6 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
-#include "egt/widget.h"
 #include "egt/x11screen.h"
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>

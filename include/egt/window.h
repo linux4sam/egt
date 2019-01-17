@@ -46,6 +46,9 @@ std::vector<BasicWindow*>& windows();
  * call set_main_window() on any BasicWindow instance.
  *
  * Any top level widget must be a BasicWindow.
+ *
+ * Windows, unlike other basic widgets, are hidden by default. They will always
+ * require a call to show().
  */
 class BasicWindow : public Frame
 {

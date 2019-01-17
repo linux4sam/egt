@@ -54,29 +54,6 @@ Widget& Frame::add(Widget& widget)
     return widget;
 }
 
-Widget* Frame::insert(Widget* widget, uint32_t index)
-{
-    assert(widget);
-    if (!widget)
-        return nullptr;
-
-    if (find(m_children.begin(), m_children.end(), widget) == m_children.end())
-    {
-        // cannot already have a parent
-        assert(!widget->m_parent);
-
-        // note order here - set parent and then damage
-        widget->m_parent = this;
-
-        m_children.insert(m_children.begin() + index, widget);
-
-        // damage the whole frame
-        damage();
-    }
-
-    return widget;
-}
-
 void Frame::remove(Widget* widget)
 {
     if (!widget)

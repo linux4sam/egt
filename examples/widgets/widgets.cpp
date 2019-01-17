@@ -165,6 +165,15 @@ struct TextPage : public NotebookTab
         auto text2 = new TextBox("text 2 disabled");
         text2->disable();
         grid0->add(text2);
+
+        auto text3 = new TextBox("text 3");
+        text3->set_boxtype(Theme::boxtype::bottom_border);
+        grid0->add(text3);
+
+        auto text4 = new TextBox("text 4");
+        text4->set_boxtype(Theme::boxtype::bottom_border);
+        text4->disable();
+        grid0->add(text4);
     }
 };
 
@@ -264,19 +273,57 @@ struct ComboPage : public NotebookTab
 {
     ComboPage()
     {
-        auto grid0 = new StaticGrid(3, 10, 5);
-        grid0->set_align(alignmask::EXPAND);
-        grid0->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        add(grid0);
+        auto hsizer1 = new BoxSizer(orientation::HORIZONTAL, 10);
+        hsizer1->set_align(alignmask::EXPAND);
+        add(hsizer1);
 
-        ComboBox::item_array combo_items =
+        auto grid0 = new StaticGrid(Rect(0, 0, 200, 0), 1, 10, 5);
+        grid0->set_align(alignmask::EXPAND_VERTICAL);
+        grid0->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        hsizer1->add(grid0);
+
         {
-            "item 1",
-            "item 2",
-            "item 3",
-        };
-        auto combo1 = new ComboBox(combo_items);
-        grid0->add(combo1);
+            ComboBox::item_array combo_items;
+            for (auto x = 0; x < 5; x++)
+                combo_items.push_back("item " + std::to_string(x));
+            auto combo1 = new ComboBox(combo_items);
+            grid0->add(combo1);
+
+            auto combo2 = new ComboBox(combo_items);
+            combo2->disable();
+            grid0->add(combo2);
+        }
+
+        {
+            ComboBox::item_array combo_items;
+            for (auto x = 0; x < 25; x++)
+                combo_items.push_back("item " + std::to_string(x));
+            auto combo3 = new ComboBox(combo_items);
+            grid0->add(combo3);
+        }
+    }
+};
+
+struct ListPage : public NotebookTab
+{
+    ListPage()
+    {
+        auto hsizer1 = new BoxSizer(orientation::HORIZONTAL, 10);
+        hsizer1->set_align(alignmask::EXPAND);
+        add(hsizer1);
+
+        auto list0 = new ListBox(Rect(0, 0, 200, 0));
+        for (auto x = 0; x < 25; x++)
+            list0->add_item(new StringItem("item " + std::to_string(x)));
+        list0->set_align(alignmask::EXPAND_VERTICAL | alignmask::LEFT);
+        hsizer1->add(list0);
+
+
+        auto list1 = new ListBox(Rect(0, 0, 200, 300));
+        for (auto x = 0; x < 5; x++)
+            list1->add_item(new StringItem("item " + std::to_string(x)));
+        list1->set_align(alignmask::LEFT);
+        hsizer1->add(list1);
     }
 };
 
@@ -291,7 +338,7 @@ int main(int argc, const char** argv)
     win.add(&vsizer);
 
     StaticGrid grid(Rect(Point(), Size(0, win.h() * 0.10)), 3, 1, 10);
-    grid.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
+    grid.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0xed2924ff));
     grid.set_boxtype(Theme::boxtype::fill);
     grid.flag_clear(widgetmask::NO_BACKGROUND);
     grid.set_align(alignmask::EXPAND_HORIZONTAL);
@@ -313,7 +360,8 @@ int main(int argc, const char** argv)
     list.add_item(new StringItem("Progress"));
     list.add_item(new StringItem("Sliders"));
     list.add_item(new StringItem("Meters"));
-    list.add_item(new StringItem("Combo & List"));
+    list.add_item(new StringItem("ComboBox"));
+    list.add_item(new StringItem("ListBox"));
 
     list.set_align(alignmask::EXPAND_VERTICAL | alignmask::LEFT);
     hsizer.add(&list);
@@ -329,6 +377,7 @@ int main(int argc, const char** argv)
     notebook.add(new SliderPage());
     notebook.add(new MeterPage());
     notebook.add(new ComboPage());
+    notebook.add(new ListPage());
 
     list.on_event([&notebook, &list](eventid event)
     {

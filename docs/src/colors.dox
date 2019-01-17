@@ -24,4 +24,16 @@ other words, as long as the widget's palette has not been changed.  Changing any
 property of an individual widget's palette, results in that widget
 maintaining its own complete and independent palette from the global palette.
 
+@section colors_themes Widget Themes
+
+EGT does not use native style widgets by default.  It defines the look and feel
+of its own widgets.  The look and feel of these widgets can be extended
+or changed in several ways.
+
+1. The first method is to register a new draw function for a specific widget
+   type.  This will make the new draw function apply to any widget of the same
+   type.
+2. The second method is to derive from an existing widget and create a new
+   widget type, with a new default draw function.
+
 */

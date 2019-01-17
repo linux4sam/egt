@@ -55,12 +55,12 @@ palette.cpp \
 planewindow.cpp \
 radiobox.cpp \
 resource.cpp \
-slider.cpp \
 screen/framebuffer.cpp \
 screen/kmsoverlay.cpp \
 screen/kmsscreen.cpp \
 screen/screen.cpp \
 screen/x11screen.cpp \
+slider.cpp \
 sprite.cpp \
 text.cpp \
 theme.cpp \
@@ -129,9 +129,9 @@ $(top_srcdir)/include/egt/palette.h \
 $(top_srcdir)/include/egt/planewindow.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/resource.h \
+$(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sizer.h \
 $(top_srcdir)/include/egt/slider.h \
-$(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sprite.h \
 $(top_srcdir)/include/egt/text.h \
 $(top_srcdir)/include/egt/theme.h \

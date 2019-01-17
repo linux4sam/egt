@@ -81,14 +81,6 @@ public:
     virtual Widget& add(Widget& widget);
 
     /**
-     * Insert a child widget at the specified index.
-     *
-     * The z-order of a widget is based on the order it is added.  First in
-     * is bottom.
-     */
-    virtual Widget* insert(Widget* widget, uint32_t index = 0);
-
-    /**
      * Remove a child widget.
      */
     virtual void remove(Widget* widget);
@@ -97,6 +89,13 @@ public:
      * Remove all child widgets.
      */
     void remove_all();
+
+    inline size_t count_children() const { return m_children.size(); }
+
+    Widget* child_at(size_t index)
+    {
+        return m_children[index];
+    }
 
     /**
      * Return true if this is a top level frame, with no parent.
@@ -189,9 +188,20 @@ public:
      */
     virtual void paint_children_to_file();
 
-    virtual void resize(const Size& s) override
+    virtual void resize(const Size& size) override
     {
-        Widget::resize(s);
+        Widget::resize(size);
+        realign_children();
+    }
+
+    virtual void show() override
+    {
+        realign_children();
+        Widget::show();
+    }
+
+    void realign_children()
+    {
         for (auto& child : m_children)
         {
             child->set_align(child->align(), child->margin());
@@ -206,6 +216,18 @@ public:
     Rect to_child(const Rect& r)
     {
         return r - box().point();
+    }
+
+    /**
+     * Return the area that children are allowed to be positioned into.
+     *
+     * In most cases, box() is the same as child_area(). However, some frames
+     * reserve an area for themselves, and only allow their children to be
+     * positioned in the rest.
+     */
+    virtual Rect child_area() const
+    {
+        return box();
     }
 
     virtual ~Frame();

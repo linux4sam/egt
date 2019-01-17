@@ -279,6 +279,7 @@ void Widget::damage(const Rect& rect)
     if (!visible())
         return;
 
+    // damage propagates to top level frame
     if (m_parent)
         m_parent->damage(to_parent(rect));
 }
@@ -353,7 +354,11 @@ void Widget::set_align(alignmask a, int margin)
     {
         assert(m_parent);
 
-        auto r = align_algorithm(size(), parent()->to_child(parent()->box()), m_align, m_margin);
+        auto bounding = parent()->to_child(parent()->child_area());
+        if (bounding.empty())
+            return;
+
+        auto r = align_algorithm(size(), bounding, m_align, m_margin);
         set_box(r);
     }
 }
@@ -497,7 +502,7 @@ Theme& Widget::theme()
     if (m_theme.get())
         return *m_theme;
 
-    return default_theme();
+    return global_theme();
 }
 
 Widget::~Widget()

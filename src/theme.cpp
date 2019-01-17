@@ -12,14 +12,27 @@ namespace egt
 {
 inline namespace v1
 {
-Theme& default_theme()
-{
-    static Theme* the_theme = nullptr;
-    if (!the_theme)
-        the_theme = new Theme();
 
-    return *the_theme;
+static Theme* g_theme = nullptr;
+
+Theme& global_theme()
+{
+    if (!g_theme)
+        g_theme = new Theme();
+
+    return *g_theme;
 }
+
+void set_global_theme(Theme* theme)
+{
+    if (g_theme)
+        delete g_theme;
+
+    g_theme = theme;
+}
+
+float Theme::DEFAULT_ROUNDED_RADIUS = 6.0;
+float Theme::DEFAULT_BORDER_WIDTH = 2.0;
 
 void Theme::draw_box(Painter& painter,
                      Widget& widget,
@@ -48,6 +61,11 @@ void Theme::draw_box(Painter& painter,
                         box,
                         widget.palette().color(Palette::BORDER, group));
         break;
+    case boxtype::bottom_border:
+        draw_bottom_border_box(painter,
+                               box,
+                               widget.palette().color(Palette::BORDER, group));
+        break;
     case boxtype::rounded_border:
         draw_rounded_border_box(painter,
                                 box,
@@ -59,6 +77,11 @@ void Theme::draw_box(Painter& painter,
                              widget.palette().color(Palette::BORDER, group),
                              widget.palette().color(Palette::BG, group));
         break;
+    case boxtype::rounded_fill:
+        draw_rounded_fill_box(painter,
+                              box,
+                              widget.palette().color(Palette::BG, group));
+        break;
     case boxtype::rounded_borderfill:
         draw_rounded_borderfill_box(painter,
                                     box,
@@ -68,8 +91,13 @@ void Theme::draw_box(Painter& painter,
     case boxtype::rounded_gradient:
         draw_rounded_gradient_box(painter,
                                   box,
-                                  widget.palette().color(Palette::BORDER, group),
                                   widget.palette().color(Palette::BG, group));
+        break;
+    case boxtype::rounded_border_gradient:
+        draw_rounded_border_gradient_box(painter,
+                                         box,
+                                         widget.palette().color(Palette::BORDER, group),
+                                         widget.palette().color(Palette::BG, group));
         break;
     }
 }
@@ -86,9 +114,33 @@ void Theme::draw_border_box(Painter& painter,
                             const Rect& rect,
                             const Color& border)
 {
-    painter.rectangle(rect);
+    double rx = rect.x + DEFAULT_BORDER_WIDTH / 2.,
+           ry = rect.y + DEFAULT_BORDER_WIDTH / 2.,
+           width = rect.w - DEFAULT_BORDER_WIDTH,
+           height = rect.h - DEFAULT_BORDER_WIDTH;
+
+    auto r = Rect(rx, ry, width, height);
+
+    painter.rectangle(r);
     painter.set_color(border);
-    painter.set_line_width(1.0);
+    painter.set_line_width(DEFAULT_BORDER_WIDTH);
+    painter.stroke();
+}
+
+void Theme::draw_bottom_border_box(Painter& painter,
+                                   const Rect& rect,
+                                   const Color& border)
+{
+    double rx = rect.x + DEFAULT_BORDER_WIDTH / 2.,
+           ry = rect.y + DEFAULT_BORDER_WIDTH / 2.,
+           width = rect.w - DEFAULT_BORDER_WIDTH,
+           height = rect.h - DEFAULT_BORDER_WIDTH;
+
+    auto r = Rect(rx, ry, width, height);
+
+    painter.line(r.bottom_left(), r.bottom_right());
+    painter.set_color(border);
+    painter.set_line_width(DEFAULT_BORDER_WIDTH);
     painter.stroke();
 }
 
@@ -97,13 +149,19 @@ void Theme::draw_border_fill_box(Painter& painter,
                                  const Color& border,
                                  const Color& bg)
 {
+    double rx = rect.x + DEFAULT_BORDER_WIDTH / 2.,
+           ry = rect.y + DEFAULT_BORDER_WIDTH / 2.,
+           width = rect.w - DEFAULT_BORDER_WIDTH,
+           height = rect.h - DEFAULT_BORDER_WIDTH;
+
+
     auto cr = painter.context();
     painter.set_color(bg);
-    painter.rectangle(rect);
+    painter.rectangle(Rect(rx, ry, width, height));
     cairo_fill_preserve(cr.get());
 
     painter.set_color(border);
-    painter.set_line_width(1.0);
+    painter.set_line_width(DEFAULT_BORDER_WIDTH);
     painter.stroke();
 }
 
@@ -113,18 +171,12 @@ void Theme::draw_rounded_border_box(Painter& painter,
 {
     Painter::AutoSaveRestore sr(painter);
 
-    double rx = rect.x,
-           ry = rect.y,
-           width = rect.w,
-           height = rect.h,
+    double rx = rect.x + DEFAULT_BORDER_WIDTH / 2.,
+           ry = rect.y + DEFAULT_BORDER_WIDTH / 2.,
+           width = rect.w - DEFAULT_BORDER_WIDTH,
+           height = rect.h - DEFAULT_BORDER_WIDTH,
            aspect = 1.0,
-           corner_radius = 5.0;
-
-    if (rect.w <= 10)
-        corner_radius = rect.w / 2;
-
-    if (rect.h <= 10)
-        corner_radius = rect.h / 2;
+           corner_radius = DEFAULT_ROUNDED_RADIUS;
 
     double radius = corner_radius / aspect;
     double degrees = M_PI / 180.0;
@@ -139,7 +191,7 @@ void Theme::draw_rounded_border_box(Painter& painter,
     cairo_close_path(cr.get());
 
     painter.set_color(border);
-    painter.set_line_width(1.0);
+    painter.set_line_width(DEFAULT_BORDER_WIDTH);
     painter.stroke();
 }
 
@@ -150,12 +202,12 @@ void Theme::draw_rounded_borderfill_box(Painter& painter,
 {
     Painter::AutoSaveRestore sr(painter);
 
-    double rx = rect.x,
-           ry = rect.y,
-           width = rect.w,
-           height = rect.h,
+    double rx = rect.x + DEFAULT_BORDER_WIDTH / 2.,
+           ry = rect.y + DEFAULT_BORDER_WIDTH / 2.,
+           width = rect.w - DEFAULT_BORDER_WIDTH,
+           height = rect.h - DEFAULT_BORDER_WIDTH,
            aspect = 1.0,
-           corner_radius = 5.0;
+           corner_radius = DEFAULT_ROUNDED_RADIUS;
 
     if (rect.w <= 10)
         corner_radius = rect.w / 2;
@@ -179,14 +231,13 @@ void Theme::draw_rounded_borderfill_box(Painter& painter,
     cairo_fill_preserve(cr.get());
 
     painter.set_color(border);
-    painter.set_line_width(1.0);
+    painter.set_line_width(DEFAULT_BORDER_WIDTH);
     cairo_stroke(cr.get());
 }
 
-void Theme::draw_rounded_gradient_box(Painter& painter,
-                                      const Rect& rect,
-                                      const Color& border,
-                                      const Color& bg)
+void Theme::draw_rounded_fill_box(Painter& painter,
+                                  const Rect& rect,
+                                  const Color& bg)
 {
     Painter::AutoSaveRestore sr(painter);
 
@@ -195,13 +246,43 @@ void Theme::draw_rounded_gradient_box(Painter& painter,
            width = rect.w,
            height = rect.h,
            aspect = 1.0,
-           corner_radius = 5.0;
+           corner_radius = DEFAULT_ROUNDED_RADIUS;
 
     if (rect.w <= 10)
         corner_radius = rect.w / 2;
 
     if (rect.h <= 10)
         corner_radius = rect.h / 2;
+
+    double radius = corner_radius / aspect;
+    double degrees = M_PI / 180.0;
+
+    auto cr = painter.context();
+
+    cairo_new_sub_path(cr.get());
+    cairo_arc(cr.get(), rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
+    cairo_arc(cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
+    cairo_arc(cr.get(), rx + radius, ry + height - radius, radius, 90. * degrees, 180. * degrees);
+    cairo_arc(cr.get(), rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
+    cairo_close_path(cr.get());
+
+    painter.set_color(bg);
+    cairo_fill(cr.get());
+}
+
+void Theme::draw_rounded_border_gradient_box(Painter& painter,
+        const Rect& rect,
+        const Color& border,
+        const Color& bg)
+{
+    Painter::AutoSaveRestore sr(painter);
+
+    double rx = rect.x + DEFAULT_BORDER_WIDTH / 2.,
+           ry = rect.y + DEFAULT_BORDER_WIDTH / 2.,
+           width = rect.w - DEFAULT_BORDER_WIDTH,
+           height = rect.h - DEFAULT_BORDER_WIDTH,
+           aspect = 1.0,
+           corner_radius = DEFAULT_ROUNDED_RADIUS;
 
     double radius = corner_radius / aspect;
     double degrees = M_PI / 180.0;
@@ -232,8 +313,51 @@ void Theme::draw_rounded_gradient_box(Painter& painter,
     cairo_fill_preserve(cr.get());
 
     painter.set_color(border);
-    painter.set_line_width(1.0);
+    painter.set_line_width(DEFAULT_BORDER_WIDTH);
     cairo_stroke(cr.get());
+}
+
+
+void Theme::draw_rounded_gradient_box(Painter& painter,
+                                      const Rect& rect,
+                                      const Color& bg)
+{
+    Painter::AutoSaveRestore sr(painter);
+
+    double rx = rect.x,
+           ry = rect.y,
+           width = rect.w,
+           height = rect.h,
+           aspect = 1.0,
+           corner_radius = DEFAULT_ROUNDED_RADIUS;
+
+    double radius = corner_radius / aspect;
+    double degrees = M_PI / 180.0;
+
+    auto cr = painter.context();
+
+    cairo_new_sub_path(cr.get());
+    cairo_arc(cr.get(), rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
+    cairo_arc(cr.get(), rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
+    cairo_arc(cr.get(), rx + radius, ry + height - radius, radius, 90. * degrees, 180. * degrees);
+    cairo_arc(cr.get(), rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
+    cairo_close_path(cr.get());
+
+    auto pat = shared_cairo_pattern_t(cairo_pattern_create_linear(rx + width / 2, ry,
+                                      rx + width / 2, ry + height),
+                                      cairo_pattern_destroy);
+
+    Color step = bg;
+    cairo_pattern_add_color_stop_rgb(pat.get(), 0, step.redf(), step.greenf(), step.bluef());
+    step = bg.shade(.1);
+    cairo_pattern_add_color_stop_rgb(pat.get(), 0.43, step.redf(), step.greenf(), step.bluef());
+    step = bg.shade(.15);
+    cairo_pattern_add_color_stop_rgb(pat.get(), 0.5, step.redf(), step.greenf(), step.bluef());
+    step = bg;
+    cairo_pattern_add_color_stop_rgb(pat.get(), 1.0, step.redf(), step.greenf(), step.bluef());
+
+    cairo_set_source(cr.get(), pat.get());
+    cairo_fill(cr.get());
 }
 
 }

@@ -26,19 +26,29 @@ class ComboBox;
 namespace detail
 {
 
-class ComboBoxPopup : public Popup<egt::BasicWindow>
+using ComboBoxPopupBase = Popup<egt::BasicWindow>;
+//using ComboBoxPopupBase = Popup<egt::Window>;
+
+class ComboBoxPopup : public ComboBoxPopupBase
 {
 public:
     explicit ComboBoxPopup(ComboBox& parent);
 
     virtual int handle(eventid event) override;
 
+    virtual void show(bool center = false) override;
+
     virtual ~ComboBoxPopup()
     {}
 
 protected:
 
+    void smart_pos();
+
     ListBox m_list;
+    ComboBox& m_parent;
+
+    friend class egt::ComboBox;
 };
 
 }

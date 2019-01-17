@@ -17,6 +17,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 class BoxSizer : public Frame
 {
 public:
@@ -130,6 +131,101 @@ protected:
     orientation m_orient{orientation::HORIZONTAL};
 };
 
+class OrientationPositioner : public Frame
+{
+public:
+
+    OrientationPositioner(orientation orient = orientation::HORIZONTAL, int spacing = 0)
+        : Frame(Rect(), widgetmask::NO_BACKGROUND),
+          m_spacing(spacing),
+          m_orient(orient)
+    {
+        static auto orientationpositioner_id = 0;
+        std::ostringstream ss;
+        ss << "OrientationPositioner" << orientationpositioner_id++;
+        set_name(ss.str());
+
+        if (m_orient == orientation::HORIZONTAL)
+        {
+            set_align(alignmask::EXPAND_VERTICAL);
+        }
+        else
+        {
+            set_align(alignmask::EXPAND_HORIZONTAL);
+        }
+    }
+
+    virtual void move(const Point& point) override
+    {
+        Frame::move(point);
+        reposition();
+    }
+
+    virtual void resize(const Size& size) override
+    {
+        auto forced = Rect::merge(Rect(Point(), size), super_rect());
+        Frame::resize(forced.size());
+        reposition();
+    }
+
+    virtual Widget* add(Widget* widget) override
+    {
+        auto ret = Frame::add(widget);
+        if (ret)
+            reposition();
+        return ret;
+    }
+
+    virtual void remove(Widget* widget) override
+    {
+        Frame::remove(widget);
+        reposition();
+    }
+
+    /**
+     * Reposition all child widgets.
+     */
+    virtual void reposition()
+    {
+        if (box().size().empty())
+            return;
+
+        auto target = box().point() + Point(m_spacing, m_spacing);
+        if (m_orient == orientation::HORIZONTAL)
+        {
+            for (auto& child : m_children)
+            {
+                child->move(target);
+                target += Point(child->size().w + m_spacing, 0);
+            }
+        }
+        else
+        {
+            for (auto& child : m_children)
+            {
+                child->move(target);
+                target += Point(0, child->size().h + m_spacing);
+            }
+        }
+
+        damage();
+    }
+
+    Rect super_rect() const
+    {
+        Rect result;
+        for (auto& child : m_children)
+            result = Rect::merge(result, child->box());
+        return result;
+    }
+
+    virtual ~OrientationPositioner()
+    {}
+
+protected:
+    int m_spacing{0};
+    orientation m_orient{orientation::HORIZONTAL};
+};
 
 }
 }

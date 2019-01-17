@@ -3,16 +3,21 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/label.h"
-#include "egt/imagecache.h"
-#include "egt/painter.h"
 #include "egt/frame.h"
+#include "egt/imagecache.h"
+#include "egt/label.h"
+#include "egt/painter.h"
 
 using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
 static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
+
+template<>
+Drawable<Label>::draw_t Drawer<Label>::m_drawable = Label::default_draw;
 
 Label::Label(const std::string& text, const Rect& rect,
              alignmask align, const Font& font, widgetmask flags) noexcept
@@ -51,58 +56,20 @@ void Label::set_text(const std::string& str)
 
 void Label::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
-
-    draw_box(painter);
-
-    painter.set_color(palette().color(Palette::TEXT));
-    painter.set_font(font());
-    painter.draw_text(box(), m_text, m_text_align, 5);
-#if 0
-    auto cr = painter.context();
-    cairo_text_extents_t textext;
-    cairo_text_extents(cr.get(), "A", &textext);
-
-    std::stringstream ss;//(m_text_wrapped);
-
-    size_t n = 0;
-    for (size_t i = 0; i < m_text.size(); i++)
-    {
-        if (i % int(box().w / textext.width) == 0)
-        {
-            n++;
-            ss << '\n';
-        }
-        ss << m_text[i];
-    }
-
-    //std::stringstream ss(m_text_wrapped);
-    std::string line;
-
-    Rect linerect = box();
-    linerect.y += textext.height / 3;
-    linerect.h = textext.height + textext.height / 3;
-
-    //size_t n = std::count(ss.str().begin(), ss.str().end(), '\n');
-    size_t lines = box().h / linerect.h;
-
-    while (std::getline(ss, line, '\n'))
-    {
-        if (n-- >= lines)
-            continue;
-
-        painter.draw_text(line, linerect,
-                          palette().color(Palette::TEXT),
-                          m_text_align,
-                          5,
-                          m_font);
-        linerect.y += linerect.h;
-    }
-#endif
+    Drawer<Label>::draw(*this, painter, rect);
 }
 
-Label::~Label()
-{}
+void Label::default_draw(Label& widget, Painter& painter, const Rect& rect)
+{
+    ignoreparam(rect);
+
+    widget.draw_box(painter);
+
+    painter.set_color(widget.palette().color(Palette::TEXT,
+                      widget.active() ? Palette::GROUP_ACTIVE : Palette::GROUP_NORMAL));
+    painter.set_font(widget.font());
+    painter.draw_text(widget.box(), widget.text(), widget.text_align(), 5);
+}
 
 void Label::set_parent(Frame* parent)
 {
@@ -126,6 +93,12 @@ void Label::first_resize()
         }
     }
 }
+
+Label::~Label()
+{}
+
+template<>
+Drawable<ImageLabel>::draw_t Drawer<ImageLabel>::m_drawable = ImageLabel::default_draw;
 
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
@@ -200,38 +173,44 @@ void ImageLabel::resize(const Size& size) override
 
 void ImageLabel::draw(Painter& painter, const Rect& rect)
 {
+    Drawer<ImageLabel>::draw(*this, painter, rect);
+}
+
+void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& rect)
+{
     ignoreparam(rect);
 
-    draw_box(painter);
+    widget.draw_box(painter);
 
-    if (!m_text.empty())
+    if (!widget.text().empty())
     {
-        auto text_size = this->text_size();
+        auto text_size = widget.text_size();
 
         Rect tbox;
         Rect ibox;
 
-        if (m_position_image_first)
-            Widget::double_align(box(),
-                                 m_image.size(), m_image_align, ibox,
-                                 text_size, m_text_align, tbox, 5);
+        if (widget.m_position_image_first)
+            Widget::double_align(widget.box(),
+                                 widget.m_image.size(), widget.m_image_align, ibox,
+                                 text_size, widget.m_text_align, tbox, 5);
         else
-            Widget::double_align(box(),
-                                 text_size, m_text_align, tbox,
-                                 m_image.size(), m_image_align, ibox, 5);
+            Widget::double_align(widget.box(),
+                                 text_size, widget.text_align(), tbox,
+                                 widget.m_image.size(), widget.m_image_align, ibox, 5);
 
-        painter.draw_image(ibox.point(), m_image);
+        painter.draw_image(ibox.point(), widget.m_image);
 
-        if (m_label)
+        if (widget.m_show_label)
         {
-            painter.draw_text(m_text, tbox, palette().color(Palette::TEXT),
-                              alignmask::CENTER, 0, font());
+            painter.draw_text(widget.m_text, tbox, widget.palette().color(Palette::TEXT),
+                              alignmask::CENTER, 0, widget.font());
         }
     }
     else
     {
-        Rect target = Widget::align_algorithm(m_image.size(), box(), m_image_align, 0);
-        painter.draw_image(target.point(), m_image);
+        Rect target = Widget::align_algorithm(widget.m_image.size(),
+                                              widget.box(), widget.m_image_align, 0);
+        painter.draw_image(target.point(), widget.m_image);
     }
 }
 
@@ -252,9 +231,9 @@ void ImageLabel::set_image(const Image& image)
 
 void ImageLabel::label_enabled(bool value)
 {
-    if (m_label != value)
+    if (m_show_label != value)
     {
-        m_label = value;
+        m_show_label = value;
         damage();
     }
 }
@@ -293,4 +272,5 @@ void ImageLabel::first_resize()
     }
 }
 
+}
 }

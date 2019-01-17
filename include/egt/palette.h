@@ -44,6 +44,7 @@ public:
         DARK,
         MID,
         TEXT,
+        TEXT_INVERT,
         TEXTBG,
         HIGHLIGHT,
         BORDER

@@ -8,25 +8,83 @@
 #include "egt/frame.h"
 #include "egt/imagecache.h"
 
+using namespace std;
+
 namespace egt
 {
-void ListBoxItem::draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox)
+
+ListBox::ListBox(const Rect& rect)
+    : Frame(rect),
+      m_view(rect, orientation::VERTICAL),
+      m_sizer(orientation::VERTICAL)
 {
-    if (selected)
+    static auto listbox_id = 0;
+
+    std::ostringstream ss;
+    ss << "ListBox" << listbox_id++;
+    set_name(ss.str());
+
+    set_boxtype(Theme::boxtype::borderfill);
+
+    m_view.set_align(alignmask::EXPAND);
+    add(&m_view);
+
+    m_sizer.set_align(alignmask::EXPAND);
+    m_view.add(&m_sizer);
+
+    flag_set(widgetmask::GRAB_MOUSE);
+}
+
+ListBox::ListBox(Frame& parent,
+                 const Rect& rect)
+    : ListBox(rect)
+{
+    parent.add(this);
+}
+
+ListBox::ListBox(const item_array& items,
+                 const Rect& rect)
+    : ListBox(rect)
+{
+    for (auto i : items)
+        add_item(i);
+}
+
+ListBox::ListBox(Frame& parent,
+                 const item_array& items,
+                 const Rect& rect)
+    : ListBox(items, rect)
+{
+    parent.add(this);
+}
+
+void ListBox::add_item(Widget* widget)
+{
+    auto ret = m_sizer.add(widget);
+    if (ret)
     {
-        listbox.theme().draw_rounded_gradient_box(painter, rect,
-                listbox.palette().color(Palette::BORDER),
-                listbox.palette().color(Palette::HIGHLIGHT));
+        widget->resize(Size(0, item_height()));
+        widget->set_align(alignmask::EXPAND_HORIZONTAL);
+
+        if (m_sizer.count_children() == 1)
+        {
+            m_selected = 0;
+            m_sizer.child_at(m_selected)->set_active(true);
+        }
     }
 }
 
-void StringItem::draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox)
+void ListBox::remove_item(Widget* widget)
 {
-    ListBoxItem::draw(painter, rect, selected, listbox);
+    m_sizer.remove(widget);
 
-    painter.set_color(listbox.palette().color(Palette::TEXT));
-    painter.set_font(m_font);
-    painter.draw_text(rect, m_text, alignmask::CENTER);
+    if (m_selected >= m_sizer.count_children())
+    {
+        if (m_sizer.count_children())
+            set_select(m_sizer.count_children() - 1);
+        else
+            m_selected = 0;
+    }
 }
 
 Rect ListBox::item_rect(uint32_t index) const
@@ -34,19 +92,22 @@ Rect ListBox::item_rect(uint32_t index) const
     Rect r(box());
     r.h = item_height();
     r.y += (r.h * index);
+    r.y += m_view.offset();
     return r;
 }
 
 int ListBox::handle(eventid event)
 {
-    auto ret = Widget::handle(event);
+    auto ret = Frame::handle(event);
+    if (ret)
+        return ret;
 
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
+    case eventid::MOUSE_UP:
     {
         Point mouse = from_screen(event_mouse());
-        for (size_t i = 0; i < m_items.size(); i++)
+        for (size_t i = 0; i < m_sizer.count_children(); i++)
         {
             if (Rect::point_inside(mouse, item_rect(i)))
             {
@@ -64,29 +125,29 @@ int ListBox::handle(eventid event)
     return ret;
 }
 
-void ListBox::draw(Painter& painter, const Rect& rect)
-{
-    ignoreparam(rect);
-
-    draw_box(painter);
-
-    if (m_selected < m_items.size())
-    {
-        for (size_t i = 0; i < m_items.size(); i++)
-        {
-            m_items[i]->draw(painter, item_rect(i), m_selected == i, *this);
-        }
-    }
-}
-
 void ListBox::set_select(uint32_t index)
 {
     if (m_selected != index)
     {
-        m_selected = index;
-        damage();
-        invoke_handlers(eventid::PROPERTY_CHANGED);
+        if (index < m_sizer.count_children())
+        {
+            if (m_sizer.count_children() > m_selected)
+                m_sizer.child_at(m_selected)->set_active(false);
+            m_selected = index;
+            if (m_sizer.count_children() > m_selected)
+                m_sizer.child_at(m_selected)->set_active(true);
+
+            damage();
+            invoke_handlers(eventid::PROPERTY_CHANGED);
+        }
     }
+}
+
+Rect ListBox::child_area() const
+{
+    auto b = box() - Size(Theme::DEFAULT_BORDER_WIDTH * 2, Theme::DEFAULT_BORDER_WIDTH * 2);
+    b += Point(Theme::DEFAULT_BORDER_WIDTH, Theme::DEFAULT_BORDER_WIDTH);
+    return b;
 }
 
 ListBox::~ListBox()

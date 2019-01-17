@@ -30,7 +30,7 @@ using namespace egt;
 
 // pull feed from http://feeds.reuters.com/reuters/technologyNews
 
-class NewsItem : public ListBoxItem
+class NewsItem : public Widget
 {
 public:
 

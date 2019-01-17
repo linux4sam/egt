@@ -39,14 +39,14 @@ int main(int argc, const char** argv)
     win.add(&view0);
 
     PropertyAnimator swipe(0, 0, std::chrono::milliseconds(1000), easing_quintic_easein);
-    swipe.on_change(std::bind(&ScrolledView::set_position, std::ref(view0), std::placeholders::_1));
+    swipe.on_change(std::bind(&ScrolledView::set_offset, std::ref(view0), std::placeholders::_1));
 
     right.on_event([&](eventid event)
     {
         if (event == eventid::MOUSE_DOWN)
         {
-            swipe.starting(view0.position());
-            swipe.ending(view0.position() - view0.w());
+            swipe.starting(view0.offset());
+            swipe.ending(view0.offset() - view0.w());
             swipe.start();
         }
         return 0;
@@ -56,8 +56,8 @@ int main(int argc, const char** argv)
     {
         if (event == eventid::MOUSE_DOWN)
         {
-            swipe.starting(view0.position());
-            swipe.ending(view0.position() + view0.w());
+            swipe.starting(view0.offset());
+            swipe.ending(view0.offset() + view0.w());
             swipe.start();
         }
         return 0;

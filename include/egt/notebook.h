@@ -18,12 +18,18 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
  * A single tab in a Notebook.
  */
 class NotebookTab : public Frame
 {
 public:
+
+    NotebookTab()
+    {
+        set_boxtype(Theme::boxtype::fill);
+    }
 
     /**
      * @return true if allowed to leave, false otherwise.
