@@ -11,7 +11,9 @@
  * @brief ComboBox definition.
  */
 
+#include <egt/list.h>
 #include <egt/widget.h>
+#include <egt/planewindow.h>
 #include <vector>
 #include <string>
 
@@ -19,6 +21,28 @@ namespace egt
 {
 inline namespace v1
 {
+class ComboBox;
+
+namespace detail
+{
+
+class ComboBoxPopup : public Popup<egt::BasicWindow>
+{
+public:
+    ComboBoxPopup(ComboBox& parent);
+
+    virtual ~ComboBoxPopup()
+    {
+    }
+
+protected:
+
+    ListBox m_list;
+};
+
+}
+
+
 /**
  * Combo box widget.
  */
@@ -39,15 +63,23 @@ public:
 
     virtual uint32_t selected() const { return m_selected; }
 
+    virtual void resize(const Size& s) override;
+
+    virtual void move(const Point& point) override;
+
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    virtual void set_parent(Frame* parent) override;
 
     virtual ~ComboBox();
 
 protected:
     item_array m_items;
     uint32_t m_selected{0};
-    Rect m_up_rect;
     Rect m_down_rect;
+    detail::ComboBoxPopup m_popup;
+
+    friend class detail::ComboBoxPopup;
 };
 
 }

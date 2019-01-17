@@ -495,6 +495,15 @@ public:
     Rect to_child(const Rect& r);
     Rect to_parent(const Rect& r);
 
+    /**
+     * Convert a local point to the coordinate system of the screen.
+     *
+     * In other words, work towards the entire screen so we can get
+     * this point relative to the origin of the screen.
+     */
+    Point to_screen(const Point& p);
+    virtual Point to_screen_back(const Point& p);
+
     virtual void on_gain_focus();
 
     virtual void on_lost_focus();

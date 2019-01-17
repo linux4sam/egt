@@ -142,6 +142,11 @@ public:
         m_items.push_back(item);
     }
 
+    static inline size_t item_height()
+    {
+        return 40;
+    }
+
     virtual ~ListBox();
 
 protected:

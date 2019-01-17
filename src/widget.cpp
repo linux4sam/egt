@@ -382,12 +382,34 @@ Rect Widget::to_parent(const Rect& r)
     return r;
 }
 
+Point Widget::to_screen_back(const Point& p)
+{
+    if (top_level())
+        return box().point() + p;
+
+    if (parent())
+        return parent()->to_screen_back(box().point() + p);
+
+    return p;
+}
+
+Point Widget::to_screen(const Point& p)
+{
+    if (parent())
+        return parent()->to_screen_back(p);
+
+    return p;
+}
+
 Point Widget::from_screen(const Point& p)
 {
     if (top_level())
-        return p;
+        return p - box().point();
 
-    return parent()->from_screen(p - box().point());
+    if (parent())
+        return parent()->from_screen(p - box().point());
+
+    return p;
 }
 
 Rect Widget::from_screen(const Rect& r)

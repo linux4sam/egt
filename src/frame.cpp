@@ -186,7 +186,7 @@ void Frame::dump(std::ostream& out, int level)
     }
 }
 
-Point Frame::to_screen(const Point& p)
+Point Frame::to_panel(const Point& p)
 {
     Point pp;
     Widget* w = this;
@@ -244,7 +244,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     if (!is_flag_set(widgetmask::PLANE_WINDOW))
     {
-        Point origin = to_screen(box().point());
+        Point origin = to_panel(box().point());
         if (origin.x || origin.y)
             cairo_translate(cr.get(),
                             origin.x,
@@ -256,8 +256,44 @@ void Frame::draw(Painter& painter, const Rect& rect)
         crect = rect;
     }
 
+    // OK, nasty - doing two loops: one for non windows, then for windows
+
     for (auto& child : m_children)
     {
+        if (child->is_flag_set(widgetmask::WINDOW))
+            continue;
+
+        if (!child->visible())
+            continue;
+
+        // don't draw plane frame as child - this is
+        // specifically handled by event loop
+        if (child->is_flag_set(widgetmask::PLANE_WINDOW))
+            continue;
+
+        if (Rect::intersect(crect, child->box()))
+        {
+            // don't give a child a rectangle that is outside of its own box
+            auto r = Rect::intersection(crect, child->box());
+
+            // no matter what the child draws, clip the output to only the
+            // rectangle we care about updating
+            Painter::AutoSaveRestore sr(painter);
+            painter.rectangle(r);
+            painter.clip();
+
+            experimental::code_timer(false, child->name() + " draw: ", [&]()
+            {
+                child->draw(painter, r);
+            });
+        }
+    }
+
+    for (auto& child : m_children)
+    {
+        if (!child->is_flag_set(widgetmask::WINDOW))
+            continue;
+
         if (!child->visible())
             continue;
 

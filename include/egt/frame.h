@@ -200,9 +200,15 @@ public:
 
     virtual ~Frame();
 
-protected:
+    /**
+     * Convert a local point to the coordinate system of the current panel.
+     *
+     * In other words, work towards a parent that has the panel so we can get
+     * this point relative to the origin of the panel we are drawing to.
+     */
+    virtual Point to_panel(const Point& p);
 
-    virtual Point to_screen(const Point& p);
+protected:
 
     bool child_hit_test(const Point& point)
     {

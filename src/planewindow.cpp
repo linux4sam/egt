@@ -116,7 +116,7 @@ void Window::top_draw()
                 assert(s);
                 if (s)
                 {
-                    s->position(box().point());
+                    s->position(to_screen(box().point()));
                     s->apply();
                     m_dirty = false;
                 }

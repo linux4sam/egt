@@ -112,7 +112,7 @@ void IInput::dispatch(eventid event)
         {
 
             // give event to any top level and visible windows
-            for (auto& w : windows())
+            for (auto& w : detail::reverse_iterate(windows()))
             {
                 if (!w->visible())
                     continue;

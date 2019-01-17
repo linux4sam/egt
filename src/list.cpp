@@ -29,12 +29,10 @@ void StringItem::draw(Painter& painter, const Rect& rect, bool selected, ListBox
     painter.draw_text(rect, m_text, alignmask::CENTER);
 }
 
-static auto ITEM_HEIGHT = 40;
-
 Rect ListBox::item_rect(uint32_t index) const
 {
     Rect r(box());
-    r.h = ITEM_HEIGHT;
+    r.h = item_height();
     r.y += (r.h * index);
     return r;
 }
@@ -50,7 +48,7 @@ int ListBox::handle(eventid event)
         Point mouse = from_screen(event_mouse());
         for (size_t i = 0; i < m_items.size(); i++)
         {
-            if (Rect::point_inside(mouse, item_rect(i) - box().point()))
+            if (Rect::point_inside(mouse, item_rect(i)))
             {
                 set_select(i);
                 break;

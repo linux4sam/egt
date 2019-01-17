@@ -102,6 +102,8 @@ public:
      */
     virtual void top_draw() override;
 
+    virtual void resize(const Size& size) override;
+
     virtual ~BasicWindow();
 
 protected:
@@ -115,11 +117,6 @@ protected:
 
 private:
 
-    // unsupported
-    virtual void resize(const Size& size) override
-    {
-        ignoreparam(size);
-    }
 };
 
 
