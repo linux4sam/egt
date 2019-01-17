@@ -41,8 +41,34 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
         ignoreparam(event);
         parent.set_select(m_list.selected());
         hide();
+
         return 1;
     }, {eventid::PROPERTY_CHANGED});
+}
+
+int ComboBoxPopup::handle(eventid event)
+{
+    auto ret = Popup<BasicWindow>::handle(event);
+
+    switch (event)
+    {
+    case eventid::MOUSE_DOWN:
+    {
+        Point mouse = from_screen(event_mouse());
+
+        if (!Rect::point_inside(mouse, box()))
+        {
+            // if any mouse click happens outside of us, hide
+            hide();
+        }
+
+        break;
+    }
+    default:
+        break;
+    }
+
+    return ret;
 }
 
 }
@@ -78,10 +104,9 @@ int ComboBox::handle(eventid event)
     {
         Point mouse = from_screen(event_mouse());
 
-        if (Rect::point_inside(mouse, m_down_rect - box().point()))
+        if (Rect::point_inside(mouse, box()))
         {
             m_popup.move(CSWITCH(box().point() + Point(0, size().h + POPUP_OFFSET)));
-
             m_popup.show_modal();
         }
 
@@ -138,9 +163,9 @@ void ComboBox::draw(Painter& painter, const Rect& rect)
 
     auto down = Image("down.png", scale, scale);
 
-    m_down_rect = Rect(Point(x() + w() - downsize.w - OFFSET,
-                             y() + OFFSET),
-                       downsize);
+    auto m_down_rect = Rect(Point(x() + w() - downsize.w - OFFSET,
+                                  y() + OFFSET),
+                            downsize);
 
     painter.draw_image(m_down_rect.point(), down);
 

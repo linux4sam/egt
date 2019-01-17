@@ -31,9 +31,10 @@ class ComboBoxPopup : public Popup<egt::BasicWindow>
 public:
     ComboBoxPopup(ComboBox& parent);
 
+    virtual int handle(eventid event) override;
+
     virtual ~ComboBoxPopup()
-    {
-    }
+    {}
 
 protected:
 
@@ -76,7 +77,6 @@ public:
 protected:
     item_array m_items;
     uint32_t m_selected{0};
-    Rect m_down_rect;
     detail::ComboBoxPopup m_popup;
 
     friend class detail::ComboBoxPopup;
