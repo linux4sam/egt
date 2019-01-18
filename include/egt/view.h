@@ -12,6 +12,7 @@
  */
 
 #include <egt/frame.h>
+#include <egt/slider.h>
 
 namespace egt
 {
@@ -41,6 +42,8 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    virtual void resize(const Size& size) override;
+
     /**
      * Get the position.
      */
@@ -49,25 +52,15 @@ public:
     /**
      * Set the position.
      */
-    void set_position(int offset)
-    {
-        Rect super = super_rect();
-
-        if (offset <= 0 && -offset < super.w)
-        {
-            if (m_offset != offset)
-            {
-                m_offset = offset;
-                damage();
-            }
-        }
-    }
+    virtual void set_position(int offset);
 
     virtual ~ScrolledView();
 
 protected:
 
     Rect super_rect() const;
+
+    void resize_slider();
 
     /**
      * Current offset of the view.
@@ -87,6 +80,8 @@ protected:
     bool m_moving{false};
     Point m_start_pos;
     int m_start_offset{0};
+
+    Slider m_slider;
 };
 
 }

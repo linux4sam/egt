@@ -55,6 +55,7 @@ palette.cpp \
 planewindow.cpp \
 radiobox.cpp \
 resource.cpp \
+slider.cpp \
 screen/framebuffer.cpp \
 screen/kmsoverlay.cpp \
 screen/kmsscreen.cpp \
@@ -104,6 +105,7 @@ $(top_srcdir)/include/egt/checkbox.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/combo.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
+$(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
@@ -126,6 +128,7 @@ $(top_srcdir)/include/egt/planewindow.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/sizer.h \
+$(top_srcdir)/include/egt/slider.h \
 $(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sprite.h \
 $(top_srcdir)/include/egt/text.h \
