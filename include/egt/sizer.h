@@ -80,7 +80,7 @@ public:
                 child->move(target.point());
                 child->resize(target.size());
 
-                bounding += Point(0, target.point().y + target.size().h + m_spacing);
+                bounding += Point(0, target.size().h + m_spacing);
                 bounding -= Size(0, target.size().h);
             }
 
@@ -99,7 +99,7 @@ public:
                 child->move(target.point());
                 child->resize(target.size());
 
-                bounding += Point(target.point().x + target.size().w + m_spacing, 0);
+                bounding += Point(target.size().w + m_spacing, 0);
                 bounding -= Size(target.size().w, 0);
             }
         }
