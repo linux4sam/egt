@@ -34,7 +34,7 @@ int ScrolledView::handle(eventid event)
     case eventid::MOUSE_MOVE:
         if (m_moving)
         {
-            if (m_orientation == Orientation::HORIZONTAL)
+            if (m_orientation == orientation::HORIZONTAL)
             {
                 auto diff = from_screen(event_mouse()).x - m_start_pos.x;
                 set_position(m_start_offset + diff / 2);
@@ -63,20 +63,20 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     // change the origin to the offset
-    if (m_orientation == Orientation::HORIZONTAL)
+    if (m_orientation == orientation::HORIZONTAL)
         cairo_translate(cr.get(), m_offset, 0);
     else
         cairo_translate(cr.get(), 0, m_offset);
 
     Rect r = box();
-    if (m_orientation == Orientation::HORIZONTAL)
+    if (m_orientation == orientation::HORIZONTAL)
         r.x -= m_offset;
     else
         r.y -= m_offset;
 
     Frame::draw(painter, r);
 
-    if (m_orientation == Orientation::HORIZONTAL)
+    if (m_orientation == orientation::HORIZONTAL)
     {
         auto HEIGHT = 4;
 
