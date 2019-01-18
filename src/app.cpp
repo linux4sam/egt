@@ -47,6 +47,7 @@ Application::Application(int argc, const char** argv, bool primary, const std::s
     the_app = this;
 
     setlocale(LC_ALL, "");
+    bindtextdomain(name.c_str(), ".");
     textdomain(name.c_str());
 
     static string backend;

@@ -205,5 +205,6 @@ AC_CONFIG_FILES([Makefile
 	scripts/Makefile
 	libegt.pc
 	include/egt/version.h
-	examples/video/Makefile])
+	examples/video/Makefile
+	examples/i18n/Makefile])
 AC_OUTPUT

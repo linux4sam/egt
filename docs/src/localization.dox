@@ -10,29 +10,38 @@ This chapter discusses how to make use of localization support in EGT.
 
 @see <https://fedoraproject.org/wiki/How_to_do_I18N_through_gettext>
 
+@see examples/i18n
+
+To create a .po(Portable Object) file
 @code
-#include <libintl.h>
-#include <locale.h>
-#include <iostream>
-int main()
-{
-    setlocale(LC_ALL, "");
-    bindtextdomain("i18nexample", ".");
-    textdomain( "i18nexample");
-    std::cout << gettext("hello, world!") << std::endl;
-}
+make build-po
 @endcode
 
+If new strings added, update the existing .po file
 @code
-g++ -o i18nexample i18nexample.cxx
-xgettext --package-name i18nexample --package-version 1.2 --default-domain i18nexample --output i18nexample.pot i18nexample.cxx
-msginit --no-translator --locale es_MX --output-file i18nexample_spanish.po --input i18nexample.pot
-sed --in-place i18nexample_spanish.po --expression='/"hello, world!"/,/#: / s/""/"hola mundo"/'
-mkdir --parents ./es_MX.utf8/LC_MESSAGES
-msgfmt --check --verbose --output-file ./es_MX.utf8/LC_MESSAGES/i18nexample.mo i18nexample_spanish.po
-LANGUAGE=es_MX.utf8 ./i18nexample
+make build-merge-po
 @endcode
 
+Use a text editor to open the .po file and add translations to all the strings
+Also, set charset as UTF-8
+@code
+vi es.po
+
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Hello World!"
+mgsstr "Hola Mundo!"
+@endcode
+
+Generate a .mo(machine readable) file from .po
+@code
+make
+@endcode
+
+set LANGUAGE environment variable and run
+@code
+LANGUAGE=es.utf8 ./i18n
+@endcode
 
 @note In buildroot, you have to enable the locales you want to add a new text domain for:
 
