@@ -48,7 +48,22 @@ public:
     virtual Widget* add(Widget* widget) override
     {
         Frame::add(widget);
-        reposition();
+
+        if (m_orient == orientation::HORIZONTAL)
+        {
+            auto w = box().size().w;
+            auto h = std::max(widget->box().size().h + 2 * m_spacing, box().size().h);
+
+            resize(Size(w, h));
+        }
+        else
+        {
+            auto w = std::max(widget->box().size().w + 2 * m_spacing, box().size().w);
+            auto h = box().size().h;
+
+            resize(Size(w, h));
+        }
+
         return widget;
     }
 
