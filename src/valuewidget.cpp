@@ -5,6 +5,7 @@
  */
 #include "egt/valuewidget.h"
 #include "egt/painter.h"
+#include "egt/detail/math.h"
 
 using namespace std;
 
@@ -26,11 +27,12 @@ void ProgressBar::draw(Painter& painter, const Rect& rect)
 
     draw_box(painter);
 
-    /// @todo this divide by 100 is not respecting min/max range
+    auto width = egt::detail::normalize<float>(value(), m_min, m_max, 0, w());
+
     theme().draw_rounded_gradient_box(painter,
-                                      Rect(x(), y(), w() * value() / 100., h()),
-                                      Color::TRANSPARENT,
-                                      palette().color(Palette::HIGHLIGHT));
+                                         Rect(x(), y(), width, h()),
+                                         Color::TRANSPARENT,
+                                         palette().color(Palette::HIGHLIGHT));
 
     string text = std::to_string(value()) + "%";
     m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);
