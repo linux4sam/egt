@@ -30,7 +30,7 @@ Rect Widget::align_algorithm(const Size& size, const Rect& bounding,
     if (align == alignmask::NONE)
         return Rect(bounding.point(), size);
 
-    Point p;
+    auto p = bounding.point();
     auto nsize = size;
 
     if ((align & alignmask::CENTER) == alignmask::CENTER)
