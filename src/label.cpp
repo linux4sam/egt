@@ -136,6 +136,9 @@ ImageLabel::ImageLabel(const Image& image,
 {
     set_boxtype(Theme::boxtype::none);
 
+    if (rect.empty())
+        m_box.size(image.size());
+
     if (text.empty())
         set_image_align(alignmask::CENTER);
 }
