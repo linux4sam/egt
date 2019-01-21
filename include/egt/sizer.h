@@ -69,7 +69,7 @@ public:
 
     virtual void remove(Widget* widget) override
     {
-        Frame::add(widget);
+        Frame::remove(widget);
         reposition();
     }
 
