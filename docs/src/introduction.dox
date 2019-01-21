@@ -40,7 +40,7 @@ EGT uses the autotools for building on Linux platforms.
 To build for a PC, first, install dependencies:
 
 @code
-sudo apt-get install librapidxml-dev liblua5.3-dev libdrm-dev libinput-dev libcairo-dev libjpeg-dev
+sudo apt-get install librapidxml-dev liblua5.3-dev libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev
 @endcode
 
 Then build.
