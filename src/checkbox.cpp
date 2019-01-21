@@ -14,6 +14,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 CheckBox::CheckBox(const std::string& text,
                    const Rect& rect)
     : Button(text, rect)
@@ -82,14 +83,14 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
 CheckBox::~CheckBox()
 {}
 
-SlidingCheckBox::SlidingCheckBox(const Rect& rect)
+ToggleBox::ToggleBox(const Rect& rect)
     : CheckBox("", rect)
 {
     set_boxtype(Theme::boxtype::rounded_border);
     palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::BG));
 }
 
-void SlidingCheckBox::draw(Painter& painter, const Rect& rect)
+void ToggleBox::draw(Painter& painter, const Rect& rect)
 {
     ignoreparam(rect);
 
@@ -116,7 +117,8 @@ void SlidingCheckBox::draw(Painter& painter, const Rect& rect)
     }
 }
 
-SlidingCheckBox::~SlidingCheckBox()
+ToggleBox::~ToggleBox()
 {}
+
 }
 }

@@ -14,21 +14,21 @@ widget types.
 An example of this happening is fluent throughout the EGT library itself.  For
 example, egt::CheckBox implements a standard traditional egt::CheckBox that
 shows a *X* when then egt::CheckBox is checked().  However, to change the look
-and keep the same logical operation, egt::SlidingCheckBox derives from
+and keep the same logical operation, egt::ToggleBox derives from
 egt::CheckBox and changes the draw() method.
 
 The new widget class that only intends to change the look of a widget would look
 something like this:
 
 @code
-    class SlidingCheckBox : public CheckBox
+    class ToggleBox : public CheckBox
     {
     public:
-        explicit SlidingCheckBox(const Rect& rect = Rect());
+        explicit ToggleBox(const Rect& rect = Rect());
 
         virtual void draw(Painter& painter, const Rect& rect) override;
 
-        virtual ~SlidingCheckBox();
+        virtual ~ToggleBox();
     };
 @endcode
 
@@ -36,7 +36,7 @@ This new widget is basically a egt::CheckBox, but we want to change how it looks
 operates. The new draw() method looks like this.
 
 @code
-    void SlidingCheckBox::draw(Painter& painter, const Rect& rect)
+    void ToggleBox::draw(Painter& painter, const Rect& rect)
     {
         ignoreparam(rect);
 

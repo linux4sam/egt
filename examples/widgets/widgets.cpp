@@ -64,12 +64,12 @@ struct CheckBoxPage : public NotebookTab
         grid0->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(grid0);
 
-        auto sliding1 = new SlidingCheckBox;
-        grid0->add(sliding1);
+        auto toggle1 = new ToggleBox;
+        grid0->add(toggle1);
 
-        auto sliding2 = new SlidingCheckBox;
-        sliding2->check(true);
-        grid0->add(sliding2);
+        auto toggle2 = new ToggleBox;
+        toggle2->check(true);
+        grid0->add(toggle2);
 
         auto checkbox1 = new CheckBox("checkbox 1");
         grid0->add(checkbox1);

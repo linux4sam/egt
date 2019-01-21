@@ -16,6 +16,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 class Rect;
 class Painter;
 
@@ -48,14 +49,14 @@ public:
  * @image html widget_slidingcheckbox.png
  * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" width=5cm
  */
-class SlidingCheckBox : public CheckBox
+class ToggleBox : public CheckBox
 {
 public:
-    explicit SlidingCheckBox(const Rect& rect = Rect());
+    explicit ToggleBox(const Rect& rect = Rect());
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~SlidingCheckBox();
+    virtual ~ToggleBox();
 };
 
 }
