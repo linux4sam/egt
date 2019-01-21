@@ -7,7 +7,7 @@
 
 int main(int argc, const char** argv)
 {
-    egt::Application app(argc, argv, true, "i18n");
+    egt::Application app(argc, argv, "i18n");
 
     egt::TopWindow window;
     egt::Button button(window, gettext("Hello World"));

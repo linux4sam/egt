@@ -303,16 +303,12 @@ private:
     PropertyAnimator m_animation;
 };
 
-#define SHARED_PATH "../share/egt/examples/launcher/"
-
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path(SHARED_PATH);
+    Application app(argc, argv, "launcher");
 
     LauncherWindow win;
-    win.load(SHARED_PATH "*.xml");
+    win.load(detail::exe_pwd() + "/../share/egt/examples/launcher/*.xml");
     win.show();
 
     return app.run();

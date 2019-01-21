@@ -12,9 +12,9 @@
 using namespace egt;
 using namespace std;
 
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
+    Application app(argc, argv, "animations");
 
     TopWindow win;
 

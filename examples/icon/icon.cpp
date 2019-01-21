@@ -14,11 +14,9 @@
 using namespace std;
 using namespace egt;
 
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
-
-    set_image_path("../share/egt/examples/icon/");
+    Application app(argc, argv, "icon");
 
     TopWindow win;
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);

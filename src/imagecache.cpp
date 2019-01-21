@@ -31,12 +31,24 @@ namespace egt
 {
 inline namespace v1
 {
-auto ICON_PATH = "../share/egt/icons/";
+auto ICON_PATH = detail::exe_pwd() + "/../share/egt/icons/";
 
 static string image_path = "";
 void set_image_path(const std::string& path)
 {
     image_path = path;
+}
+
+/**
+ * First look in PWD and then default to image_path + filename.
+ */
+static string resolve_filepath(const string& filename)
+{
+    struct stat buf;
+    if (!stat(filename.c_str(), &buf))
+        return filename;
+
+    return image_path + filename;
 }
 
 namespace detail
@@ -131,7 +143,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             if (filename[0] == '/' || filename[0] == '.')
                 name = filename;
             else
-                name = image_path + filename;
+                name = resolve_filepath(filename);
             DBG("loading: " << name);
 
             auto mimetype = get_mime_type(name);

@@ -141,18 +141,16 @@ static int load(const string& file, ListBox& list)
     return 0;
 }
 
-#define SHARED_PATH "../share/egt/examples/newsfeed/"
-
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
+    Application app(argc, argv, "newsfeed");
 
     TopWindow win;
 
     ListBox list(win);
     list.set_align(alignmask::EXPAND);
 
-    load(SHARED_PATH "feed.xml", list);
+    load(detail::exe_pwd() + "/../share/egt/examples/newsfeed/feed.xml", list);
 
     win.show();
 

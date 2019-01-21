@@ -14,12 +14,15 @@
 #include "egt/kmsscreen.h"
 #include "egt/libinput.h"
 #include "egt/painter.h"
+#include "egt/imagecache.h"
+#include "egt/utils.h"
 #include "egt/version.h"
+#include <iostream>
 #include <libintl.h>
+#include <linux/limits.h>
 #include <locale.h>
 #include <string>
 #include <thread>
-#include <iostream>
 
 #ifdef HAVE_X11
 #include "egt/x11screen.h"
@@ -38,7 +41,7 @@ Application& main_app()
     return *the_app;
 }
 
-Application::Application(int argc, const char** argv, bool primary, const std::string& name)
+Application::Application(int argc, const char** argv, const std::string& name, bool primary)
     : m_argc(argc),
       m_argv(argv)
 {
@@ -46,8 +49,10 @@ Application::Application(int argc, const char** argv, bool primary, const std::s
 
     the_app = this;
 
+    set_image_path(detail::exe_pwd() + "/../share/egt/examples/" + name + "/");
+
     setlocale(LC_ALL, "");
-    bindtextdomain(name.c_str(), ".");
+    bindtextdomain(name.c_str(), (detail::exe_pwd() + "/../share/locale/").c_str());
     textdomain(name.c_str());
 
     static string backend;

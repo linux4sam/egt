@@ -41,7 +41,7 @@ public:
      *             including identifying the text domain used by gettext().
      */
     Application(int argc = 0, const char** argv = nullptr,
-                bool primary = true, const std::string& name = "egt");
+                const std::string& name = "egt", bool primary = true);
 
     virtual int run();
 

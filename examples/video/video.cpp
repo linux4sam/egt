@@ -120,7 +120,7 @@ int main(int argc, const char** argv)
         return 1;
     }
 
-    Application app;
+    Application app(argc, argv, "video");
 
     VideoWindow* window = 0;
     if (argv[1] == string("v4l2"))

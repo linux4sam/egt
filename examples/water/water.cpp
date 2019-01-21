@@ -147,9 +147,7 @@ public:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/water/");
+    Application app(argc, argv, "water");
 
     MainWindow win;
     win.show();

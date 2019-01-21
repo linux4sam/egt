@@ -252,9 +252,7 @@ protected:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/thermostat/");
+    Application app(argc, argv, "thermostat");
 
     ThermostatWindow win;
     win.show();

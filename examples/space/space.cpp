@@ -142,9 +142,7 @@ private:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/space/");
+    Application app(argc, argv, "space");
 
     MainWindow win;
     win.show();

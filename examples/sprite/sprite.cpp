@@ -31,9 +31,7 @@ int main(int argc, const char** argv)
     const Color GRAY(Color::CSS("#AAAAAA"));
     const Color SILVER(Color::CSS("#DDDDDD"));
 
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/sprite/");
+    Application app(argc, argv, "sprite");
 
     TopWindow win;
     ImageLabel img(Image("background.png"));

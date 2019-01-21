@@ -230,9 +230,7 @@ private:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/brick/");
+    Application app(argc, argv, "brick");
 
     GameWindow win;
 

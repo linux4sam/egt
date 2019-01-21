@@ -15,15 +15,13 @@
 using namespace std;
 using namespace egt;
 
-#define SHARED_PATH "../share/egt/examples/gallery/"
+#define SHARED_PATH detail::exe_pwd() + "/../share/egt/examples/gallery/"
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    Application app(argc, argv, "gallery");
 
-    set_image_path(SHARED_PATH);
-
-    std::vector<std::string> files = experimental::glob(SHARED_PATH "*trailer*.png");
+    std::vector<std::string> files = experimental::glob(SHARED_PATH + "*trailer*.png");
 
     TopWindow win;
     win.set_name("win");

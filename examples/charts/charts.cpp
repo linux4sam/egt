@@ -60,9 +60,7 @@ static LineChart::data_array create_atan_data()
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/charts/");
+    Application app(argc, argv, "charts");
 
     TopWindow win;
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);

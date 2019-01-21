@@ -98,9 +98,7 @@ protected:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/drag/");
+    Application app(argc, argv, "drag");
 
     MainWindow win;
 

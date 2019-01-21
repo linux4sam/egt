@@ -179,9 +179,7 @@ public:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/infotain/");
+    Application app(argc, argv, "infotain");
 
     win1 = new MainWindow(Size(800, 480));
 

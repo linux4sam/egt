@@ -305,9 +305,7 @@ public:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/whiteboard/");
+    Application app(argc, argv, "whiteboard");
 
     MainWindow win;
     win.show();

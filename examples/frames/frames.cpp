@@ -16,7 +16,7 @@ using namespace egt;
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    Application app(argc, argv, "frames");
 
     TopWindow win0;
 

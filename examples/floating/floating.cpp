@@ -109,9 +109,7 @@ static vector<FloatingBox*> boxes;
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/floating/");
+    Application app(argc, argv, "floating");
 
     MyWindow win;
     win.show();

@@ -8,11 +8,14 @@
 #endif
 
 #include "egt/utils.h"
-#include <glob.h>
+#include <chrono>
 #include <cstring>
+#include <glob.h>
+#include <libgen.h>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
-#include <chrono>
+#include <unistd.h>
 
 #ifdef HAVE_LUA
 #include "lua/script.h"
@@ -26,6 +29,7 @@ inline namespace v1
 {
 namespace detail
 {
+
 int& globalloglevel()
 {
     static int loglevel = getenv("EGT_DEBUG") ? std::atoi(getenv("EGT_DEBUG")) : 0;
@@ -42,6 +46,23 @@ std::string replace_all(std::string str, const std::string& from, const std::str
     }
     return str;
 }
+
+static std::string dirname(const std::string& path)
+{
+    unique_ptr<char> p(strdup(path.c_str()));
+    auto dir = ::dirname(p.get());
+    return std::string(dir);
+}
+
+std::string exe_pwd()
+{
+    char path[PATH_MAX];
+    auto size = readlink("/proc/self/exe", path, sizeof(path));
+    if (size <= 0)
+        return std::string();
+    return dirname(std::string(path, size));
+}
+
 }
 
 namespace experimental

@@ -132,9 +132,7 @@ private:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
-
-    set_image_path("../share/egt/examples/easing/");
+    Application app(argc, argv, "easing");
 
     MainWindow window;
 
