@@ -21,8 +21,8 @@
 #include <egt/object.h>
 #include <egt/palette.h>
 #include <egt/screen.h>
-#include <egt/utils.h>
 #include <egt/theme.h>
+#include <egt/utils.h>
 #include <iosfwd>
 #include <memory>
 #include <string>

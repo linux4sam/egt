@@ -3,8 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_MATH_H
-#define EGT_MATH_H
+#ifndef EGT_DETAIL_MATH_H
+#define EGT_DETAIL_MATH_H
+
+#include <cassert>
 
 namespace egt
 {
@@ -29,8 +31,9 @@ namespace detail
 template<class T>
 T normalize(T value, T min, T max, T target_min, T target_max)
 {
-    return ((value - min) / (max - min)) *
-           (target_max - target_min) + target_min;
+    auto r = ((value - min) / (max - min)) *
+             (target_max - target_min) + target_min;
+    return r;
 }
 
 }

@@ -6,8 +6,10 @@
 #ifndef EGT_SLIDERWIDGET_H
 #define EGT_SLIDERWIDGET_H
 
-#include <egt/valuewidget.h>
+#include <cassert>
+#include <egt/bitmask.h>
 #include <egt/detail/math.h>
+#include <egt/valuewidget.h>
 
 namespace egt
 {
@@ -25,6 +27,15 @@ inline namespace v1
 class Slider : public ValueRangeWidget<int>
 {
 public:
+
+    enum class flags
+    {
+        RECTANGLE_HANDLE = 1 << 0,
+        SQUARE_HANDLE = 1 << 1,
+        ROUND_HANDLE = 1 << 2,
+        SHOW_LABELS = 1 << 3,
+        SHOW_LABEL = 1 << 4,
+    };
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -56,6 +67,14 @@ public:
         if (box().empty())
             return;
 
+        // can't optimize without more work below to include label - SHOW_LABEL
+        // moves as well
+        if (is_set(flags::SHOW_LABEL))
+        {
+            Widget::damage();
+            return;
+        }
+
         auto handle = handle_box();
 
         if (m_orientation == orientation::HORIZONTAL)
@@ -80,17 +99,19 @@ public:
     }
 #endif
 
-    virtual void set_value(int v) override
+    virtual void set_value(int value) override
     {
-        if (v > m_max)
-            v = m_max;
+        assert(m_max > m_min);
 
-        if (v < m_min)
-            v = m_min;
+        if (value > m_max)
+            value = m_max;
 
-        if (v != m_value)
+        if (value < m_min)
+            value = m_min;
+
+        if (value != m_value)
         {
-            m_value = v;
+            m_value = value;
             damage();
 
             // live update to handlers?
@@ -101,36 +122,60 @@ public:
         }
     }
 
+    inline void slider_flags(flags flags)
+    {
+        if (flags != m_slider_flags)
+        {
+            m_slider_flags = flags;
+            damage();
+        }
+    }
+
     virtual ~Slider();
 
 protected:
 
-    // position to offset
-    inline int normalize(int pos) const
+    // value to offset
+    inline int to_offset(int value) const
     {
         if (m_orientation == orientation::HORIZONTAL)
-            return egt::detail::normalize<float>(pos, m_min, m_max, 0, w() - handle_dim());
+            return egt::detail::normalize<float>(value, m_min, m_max, 0, w() - handle_width());
         else
-            return egt::detail::normalize<float>(pos, m_min, m_max, 0, h() - handle_dim());
+            return egt::detail::normalize<float>(value, m_min, m_max, 0, h() - handle_height());
     }
 
-    // offset to position
-    inline int denormalize(int offset) const
+    // offset to value
+    inline int to_value(int offset) const
     {
         if (m_orientation == orientation::HORIZONTAL)
-            return egt::detail::normalize<float>(offset, 0, w() - handle_dim(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, w() - handle_width(), m_min, m_max);
         else
-            return egt::detail::normalize<float>(offset, 0, h() - handle_dim(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, h() - handle_height(), m_min, m_max);
     }
 
+    int handle_width() const;
+    int handle_height() const;
     Rect handle_box() const;
-    int handle_dim() const;
+    Rect handle_box(int value) const;
+
+    void draw_label(Painter& painter, int value);
 
     int m_moving_offset{0};
     int m_start_pos{0};
     orientation m_orientation;
     bool m_invoke_pending{false};
+
+    flags m_slider_flags{flags::RECTANGLE_HANDLE};
+
+    inline bool is_set(flags flag) const;
 };
+
+ENABLE_BITMASK_OPERATORS(Slider::flags)
+
+bool Slider::is_set(flags flag) const
+{
+    return ((m_slider_flags & flag) == flag);
+}
 
 }
 }

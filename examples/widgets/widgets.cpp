@@ -191,17 +191,45 @@ struct SliderPage : public NotebookTab
 {
     SliderPage()
     {
-        auto hsizer = new BoxSizer(orientation::HORIZONTAL, 10);
-        hsizer->set_align(alignmask::EXPAND);
-        add(hsizer);
+        auto vsizer = new BoxSizer(orientation::VERTICAL, 0);
+        vsizer->set_align(alignmask::EXPAND);
+        add(vsizer);
 
-        auto slider1 = new Slider(Rect(0, 0, 200, 50));
+        auto hsizer1 = new BoxSizer(orientation::HORIZONTAL, 10);
+        hsizer1->set_align(alignmask::EXPAND_HORIZONTAL);
+        vsizer->add(hsizer1);
+
+        auto slider1 = new Slider(Rect(0, 0, 200, 80));
         slider1->set_value(50);
-        hsizer->add(slider1);
+        hsizer1->add(slider1);
 
-        auto slider2 = new Slider(Rect(0, 0, 50, 200), 0, 100, 0, orientation::VERTICAL);
+        auto slider2 = new Slider(Rect(0, 0, 80, 200), 0, 100, 0, orientation::VERTICAL);
         slider2->set_value(75);
-        hsizer->add(slider2);
+        hsizer1->add(slider2);
+
+        auto slider3 = new Slider(Rect(0, 0, 200, 80));
+        slider3->set_value(50);
+        slider3->slider_flags(Slider::flags::ROUND_HANDLE | Slider::flags::SHOW_LABEL);
+        hsizer1->add(slider3);
+
+        auto hsizer2 = new BoxSizer(orientation::HORIZONTAL, 10);
+        hsizer2->set_align(alignmask::EXPAND_HORIZONTAL);
+        vsizer->add(hsizer2);
+
+        auto slider4 = new Slider(Rect(0, 0, 80, 200), 0, 100, 0, orientation::VERTICAL);
+        slider4->set_value(75);
+        slider4->slider_flags(Slider::flags::ROUND_HANDLE);
+        slider4->disable();
+        hsizer2->add(slider4);
+
+        auto slider5 = new Slider(Rect(0, 0, 80, 200), 100, 200, 150, orientation::VERTICAL);
+        slider5->set_value(180);
+        slider5->slider_flags(Slider::flags::SQUARE_HANDLE | Slider::flags::SHOW_LABELS);
+        hsizer2->add(slider5);
+
+        auto slider6 = new Slider(Rect(0, 0, 200, 80), 100, 200, 150);
+        slider6->slider_flags(Slider::flags::RECTANGLE_HANDLE | Slider::flags::SHOW_LABELS);
+        hsizer2->add(slider6);
     }
 };
 

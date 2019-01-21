@@ -6,6 +6,7 @@
 #ifndef EGT_VALUEWIDGET_H
 #define EGT_VALUEWIDGET_H
 
+#include <cassert>
 #include <egt/widget.h>
 #include <egt/painter.h>
 #include <egt/frame.h>
@@ -86,7 +87,15 @@ public:
           m_min(min),
           m_max(max),
           m_value(value)
-    {}
+    {
+        assert(m_max > m_min);
+
+        if (m_value > m_max)
+            m_value = m_max;
+
+        if (m_value < m_min)
+            m_value = m_min;
+    }
 
     /**
      * Set value.
@@ -96,21 +105,26 @@ public:
      *
      * If this results in changing the value, it will damage() the widget.
      */
-    virtual void set_value(T v)
+    virtual void set_value(T value)
     {
-        if (v > m_max)
-            v = m_max;
+        assert(m_max > m_min);
 
-        if (v < m_min)
-            v = m_min;
+        if (value > m_max)
+            value = m_max;
 
-        if (v != m_value)
+        if (value < m_min)
+            value = m_min;
+
+        if (value != m_value)
         {
-            m_value = v;
+            m_value = value;
             damage();
             invoke_handlers(eventid::PROPERTY_CHANGED);
         }
     }
+
+    inline T min() const { return m_min; }
+    inline T max() const { return m_max; }
 
     /**
      * Get the current value.
@@ -168,6 +182,8 @@ public:
 
     virtual void set_value2(T v)
     {
+        assert(this->m_max > this->m_min);
+
         if (v > this->m_max)
             v = this->m_max;
 
