@@ -26,7 +26,7 @@ std::ostream& operator<<(std::ostream& os, const Size& size)
 
 std::ostream& operator<< (std::ostream& os, const Rect& rect)
 {
-    os << "[" << rect.x << "," << rect.y << " - " << rect.w << "," << rect.h << "]";
+    os << rect.tostring();
     return os;
 }
 

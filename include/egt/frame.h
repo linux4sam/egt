@@ -198,6 +198,16 @@ public:
         }
     }
 
+    Point to_child(const Point& p)
+    {
+        return p - box().point();
+    }
+
+    Rect to_child(const Rect& r)
+    {
+        return r - box().point();
+    }
+
     virtual ~Frame();
 
     /**

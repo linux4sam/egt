@@ -511,6 +511,12 @@ public:
                rhs.top() > top();
     }
 
+    inline std::string tostring() const
+    {
+        return "[" + std::to_string(x) + "," + std::to_string(y) +
+               " - " + std::to_string(w) + "," + std::to_string(h) + "]";
+    }
+
     dim_t x{0};
     dim_t y{0};
     dim_t w{0};

@@ -353,44 +353,25 @@ void Widget::set_align(alignmask a, int margin)
     {
         assert(m_parent);
 
-        auto r = align_algorithm(size(), box_to_child(parent()->box()), m_align, m_margin);
+        auto r = align_algorithm(size(), parent()->to_child(parent()->box()), m_align, m_margin);
         set_box(r);
     }
-}
-
-Rect Widget::box_to_child(const Rect& r)
-{
-    if (parent())
-        return Rect(Point(0, 0), r.size());
-
-    return r;
-}
-
-Rect Widget::to_child(const Rect& r)
-{
-    if (parent())
-        return Rect(parent()->box().point() - r.point(), r.size());
-
-    return r;
 }
 
 Rect Widget::to_parent(const Rect& r)
 {
     if (parent())
-        return Rect(parent()->box().point() + r.point(), r.size());
+        return r + parent()->box().point();
 
     return r;
 }
 
 Point Widget::to_screen_back(const Point& p)
 {
-    if (top_level())
-        return box().point() + p;
-
     if (parent())
         return parent()->to_screen_back(box().point() + p);
 
-    return p;
+    return box().point() + p;
 }
 
 Point Widget::to_screen(const Point& p)
@@ -401,21 +382,20 @@ Point Widget::to_screen(const Point& p)
     return p;
 }
 
-Point Widget::from_screen(const Point& p)
+Point Widget::from_screen_back(const Point& p)
 {
-    if (top_level())
-        return p - box().point();
-
     if (parent())
-        return parent()->from_screen(p - box().point());
+        return parent()->from_screen_back(p - box().point());
 
-    return p;
+    return p - box().point();
 }
 
-Rect Widget::from_screen(const Rect& r)
+Point Widget::from_screen(const Point& p)
 {
-    Point origin = from_screen(r.point());
-    return Rect(origin, r.size());
+    if (parent())
+        return parent()->from_screen_back(p);
+
+    return p;
 }
 
 const std::string& Widget::name() const

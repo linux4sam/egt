@@ -491,8 +491,9 @@ public:
 
     virtual void dump(std::ostream& out, int level = 0);
 
-    Rect box_to_child(const Rect& r);
-    Rect to_child(const Rect& r);
+    /**
+     * Convert a child rectangle to a parent rectangle.
+     */
     Rect to_parent(const Rect& r);
 
     /**
@@ -501,8 +502,22 @@ public:
      * In other words, work towards the entire screen so we can get
      * this point relative to the origin of the screen.
      */
-    Point to_screen(const Point& p);
+    virtual Point to_screen(const Point& p);
     virtual Point to_screen_back(const Point& p);
+
+    /**
+     * Convert a screen point to a local point.
+     *
+     * In other words, walk towards the current widget to we can
+     * get a point relative to the widget's own box.
+     */
+    virtual Point from_screen(const Point& p);
+    virtual Point from_screen_back(const Point& p);
+
+    /**
+     * Get the widget theme, or the default theme if none is set.
+     */
+    Theme& theme();
 
     virtual void on_gain_focus();
 
@@ -533,21 +548,6 @@ protected:
      * theme.
      */
     void draw_box(Painter& painter, const Rect& rect = Rect());
-
-    /**
-     * Convert screen rectangle to frame coordinates.
-     */
-    Rect from_screen(const Rect& r);
-
-    /**
-     * Convert screen Point to frame Point.
-     */
-    Point from_screen(const Point& p);
-
-    /**
-     * Get the widget theme, or the default theme if none is set.
-     */
-    Theme& theme();
 
     virtual void set_parent(Frame* parent)
     {

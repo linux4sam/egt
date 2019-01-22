@@ -125,7 +125,7 @@ int Frame::handle(eventid event)
             if (!child->visible())
                 continue;
 
-            Point pos = from_screen(event_mouse());
+            Point pos = to_child(from_screen(event_mouse()));
 
             if (Rect::point_inside(pos, child->box()))
             {
