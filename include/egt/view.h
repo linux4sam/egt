@@ -11,6 +11,7 @@
  * @brief View definition.
  */
 
+#include <egt/detail/mousegesture.h>
 #include <egt/frame.h>
 #include <egt/slider.h>
 
@@ -73,15 +74,11 @@ protected:
      */
     orientation m_orientation{orientation::HORIZONTAL};
 
-    /**
-     * Are we currently scrolling.
-     * @todo Replace implementation with class MouseDrag.
-     */
-    bool m_moving{false};
-    Point m_start_pos;
-    int m_start_offset{0};
-
     Slider m_slider;
+
+    using Swipe = detail::MouseGesture<int>;
+
+    Swipe m_mouse;
 };
 
 }

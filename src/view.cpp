@@ -24,42 +24,33 @@ ScrolledView::ScrolledView(const Rect& rect)
 
 int ScrolledView::handle(eventid event)
 {
-    auto ret = Frame::handle(event);
-    if (ret)
-        return ret;
-
-    switch (event)
+    auto mouse = m_mouse.handle(event);
+    switch (mouse)
     {
-    case eventid::MOUSE_DOWN:
-        m_moving = true;
-        m_start_pos = event_mouse();
-        m_start_offset = m_offset;
+    case Swipe::mouse_event::done:
+    case Swipe::mouse_event::none:
+        break;
+    case Swipe::mouse_event::start:
+        m_mouse.start(m_offset);
         return 1;
-    case eventid::MOUSE_UP:
-        m_moving = false;
-        break;
-    case eventid::MOUSE_MOVE:
-        if (m_moving)
+    case Swipe::mouse_event::drag:
+        if (m_orientation == orientation::HORIZONTAL)
         {
-            if (m_orientation == orientation::HORIZONTAL)
-            {
-                auto diff = from_screen(event_mouse()).x - m_start_pos.x;
-                set_position(m_start_offset + diff / 2);
-            }
-            else
-            {
-                auto diff = from_screen(event_mouse()).y - m_start_pos.y;
-                set_position(m_start_offset + diff / 2);
-            }
-
-            return 1;
+            auto diff = from_screen(event_mouse()).x - m_mouse.mouse_start().x;
+            set_position(m_mouse.start_value() + diff / 2);
         }
-        break;
-    default:
+        else
+        {
+            auto diff = from_screen(event_mouse()).y - m_mouse.mouse_start().y;
+            set_position(m_mouse.start_value() + diff / 2);
+        }
+        return 1;
+    case Swipe::mouse_event::click:
         break;
     }
 
-    return 0;
+    auto ret = Frame::handle(event);
+    return ret;
 }
 
 void ScrolledView::draw(Painter& painter, const Rect& rect)

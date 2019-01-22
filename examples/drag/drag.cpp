@@ -9,6 +9,7 @@
 #endif
 
 #include <cmath>
+#include <egt/detail/mousegesture.h>
 #include <egt/ui>
 #include <iostream>
 #include <map>
@@ -62,38 +63,36 @@ public:
 
     virtual int handle(eventid event) override
     {
+        auto mouse = m_mouse.handle(event);
+        switch (mouse)
+        {
+        case Swipe::mouse_event::done:
+        case Swipe::mouse_event::none:
+            break;
+        case Swipe::mouse_event::start:
+            m_mouse.start(box().point());
+            return 1;
+        case Swipe::mouse_event::drag:
+        {
+            auto diff = m_mouse.mouse_start() - event_mouse();
+            move(m_mouse.start_value() - diff);
+            return 1;
+        }
+        case Swipe::mouse_event::click:
+            break;
+        }
+
         auto ret = Frame::handle(event);
-        if (ret)
-            return ret;
-
-        switch (event)
-        {
-        case eventid::MOUSE_DOWN:
-        {
-            m_drag.start_drag(box().point());
-            return 1;
-        }
-        case eventid::MOUSE_UP:
-            m_drag.stop_drag();
-            return 1;
-        case eventid::MOUSE_MOVE:
-            if (m_drag.dragging())
-            {
-                move(m_drag.diff());
-                return 1;
-            }
-            break;
-        default:
-            break;
-        }
-
-        return 0;
+        return ret;
     }
 
 protected:
     ImageLabel m_grip;
     ImageLabel m_arrows;
-    detail::MouseDrag m_drag;
+
+    using Swipe = detail::MouseGesture<Point>;
+
+    Swipe m_mouse;
 };
 
 int main(int argc, const char** argv)

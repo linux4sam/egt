@@ -106,6 +106,7 @@ $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/combo.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
 $(top_srcdir)/include/egt/detail/math.h \
+$(top_srcdir)/include/egt/detail/mousegesture.h \
 $(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \

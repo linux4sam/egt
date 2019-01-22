@@ -18,6 +18,7 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
     : ValueRangeWidget<int>(rect, min, max, value),
       m_orientation(orient)
 {
+    flag_set(widgetmask::GRAB_MOUSE);
 }
 
 Slider::Slider(int min, int max, int value,
@@ -144,51 +145,36 @@ int Slider::handle(eventid event)
 {
     auto ret = Widget::handle(event);
 
-    switch (event)
+    auto mouse = m_mouse.handle(event);
+    switch (mouse)
     {
-    case eventid::MOUSE_DOWN:
-    {
-        if (Rect::point_inside(from_screen(event_mouse()), handle_box() - box().point()))
-        {
-            if (m_orientation == orientation::HORIZONTAL)
-                m_moving_offset = from_screen(event_mouse()).x;
-            else
-                m_moving_offset = from_screen(event_mouse()).y;
-            m_start_pos = to_offset(value());
-            set_active(true);
-            mouse_grab(this);
-            return 1;
-        }
-
+    case Swipe::mouse_event::none:
         break;
-    }
-    case eventid::MOUSE_UP:
+    case Swipe::mouse_event::start:
+        m_mouse.start(to_offset(m_value));
+        set_active(true);
+        return 1;
+    case Swipe::mouse_event::click:
+    case Swipe::mouse_event::done:
         set_active(false);
-        mouse_grab(nullptr);
         if (m_invoke_pending)
         {
             m_invoke_pending = false;
             this->invoke_handlers(eventid::PROPERTY_CHANGED);
         }
         return 1;
-    case eventid::MOUSE_MOVE:
-        if (active())
+    case Swipe::mouse_event::drag:
+        if (m_orientation == orientation::HORIZONTAL)
         {
-            if (m_orientation == orientation::HORIZONTAL)
-            {
-                auto diff = from_screen(event_mouse()).x - m_moving_offset;
-                set_value(to_value(m_start_pos + diff));
-            }
-            else
-            {
-                auto diff = from_screen(event_mouse()).y - m_moving_offset;
-                set_value(to_value(m_start_pos - diff));
-            }
-            return 1;
+            auto diff = event_mouse() - m_mouse.mouse_start();
+            set_value(to_value(m_mouse.start_value() + diff.x));
         }
-        break;
-    default:
-        break;
+        else
+        {
+            auto diff = event_mouse() - m_mouse.mouse_start();
+            set_value(to_value(m_mouse.start_value() - diff.y));
+        }
+        return 1;
     }
 
     return ret;

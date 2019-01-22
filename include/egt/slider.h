@@ -9,6 +9,7 @@
 #include <cassert>
 #include <egt/bitmask.h>
 #include <egt/detail/math.h>
+#include <egt/detail/mousegesture.h>
 #include <egt/valuewidget.h>
 
 namespace egt
@@ -160,12 +161,14 @@ protected:
 
     void draw_label(Painter& painter, int value);
 
-    int m_moving_offset{0};
-    int m_start_pos{0};
     orientation m_orientation;
     bool m_invoke_pending{false};
 
     flags m_slider_flags{flags::RECTANGLE_HANDLE};
+
+    using Swipe = detail::MouseGesture<int>;
+
+    Swipe m_mouse;
 
     inline bool is_set(flags flag) const;
 };

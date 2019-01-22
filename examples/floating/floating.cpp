@@ -9,6 +9,7 @@
 #endif
 
 #include <egt/ui>
+#include <egt/detail/mousegesture.h>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -48,26 +49,25 @@ public:
 
         widget->on_event([this](eventid event)
         {
-            switch (event)
+            auto mouse = m_mouse.handle(event);
+            switch (mouse)
             {
-            case eventid::MOUSE_DOWN:
+            case Swipe::mouse_event::done:
+            case Swipe::mouse_event::none:
+                break;
+            case Swipe::mouse_event::start:
+                m_mouse.start(m_widget->box().point());
+                return 1;
+            case Swipe::mouse_event::drag:
             {
-                m_drag.start_drag(m_widget->box().point());
+                auto diff = m_mouse.start_value() -
+                            (m_mouse.mouse_start() - event_mouse());
+                Rect dest(diff, m_widget->box().size());
+                if (main_window()->box().contains(dest))
+                    m_widget->move(diff);
                 return 1;
             }
-            case eventid::MOUSE_UP:
-                m_drag.stop_drag();
-                return 1;
-            case eventid::MOUSE_MOVE:
-                if (m_drag.dragging())
-                {
-                    Rect dest(m_drag.diff(), m_widget->box().size());
-                    if (main_window()->box().contains(dest))
-                        m_widget->move(m_drag.diff());
-                    return 1;
-                }
-                break;
-            default:
+            case Swipe::mouse_event::click:
                 break;
             }
 
@@ -77,7 +77,7 @@ public:
 
     virtual void next_frame()
     {
-        if (m_drag.dragging())
+        if (m_mouse.dragging())
             return;
 
         auto p = Point(m_widget->x() + m_mx,
@@ -102,7 +102,10 @@ protected:
     Widget* m_widget;
     int m_mx;
     int m_my;
-    detail::MouseDrag m_drag;
+
+    using Swipe = detail::MouseGesture<Point>;
+
+    Swipe m_mouse;
 };
 
 static vector<FloatingBox*> boxes;
