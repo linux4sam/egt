@@ -24,6 +24,8 @@ i18n_LDFLAGS = $(AM_LDFLAGS)
 
 LINGUAS = de es fr zh
 
+EXTRA_DIST = de.po es.po fr.po zh.po
+
 localedir = $(datadir)/locale
 
 install-data-local: install-i18n-catalogs
