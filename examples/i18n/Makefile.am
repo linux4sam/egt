@@ -59,18 +59,18 @@ build-mo: build-mo.stamp
 build-mo.stamp:
 	$(MRESG_V_GEN)for i in $(LINGUAS); do \
 	    $(MKDIR) $$i.utf8/LC_MESSAGES; \
-	    $(MSGFMT) --output-file $$i.utf8/LC_MESSAGES/i18n.mo $$i.po; \
+	    $(MSGFMT) --output-file $$i.utf8/LC_MESSAGES/i18n.mo $(top_srcdir)/examples/i18n/$$i.po; \
 	done
 	@echo Timestamp > $@
 
 build-merge-po: build-pot
 	$(MRESG_V_GEN)for i in $(LINGUAS); do \
-	    if [ -f $$i.po ]; then $(MSGMERGE) $$i.po i18n.pot > $$i.new && mv $$i.new $$i.po; else cp i18n.pot $$i.po; fi \
+	    if [ -f $(top_srcdir)/examples/i18n/$$i.po ]; then $(MSGMERGE) $(top_srcdir)/examples/i18n/$$i.po i18n.pot > $$i.new && mv $$i.new $(top_srcdir)/examples/i18n/$$i.po; else cp i18n.pot $(top_srcdir)/examples/i18n/$$i.po; fi \
 	done
 
 build-po: build-pot
 	$(MRESG_V_GEN)for i in $(LINGUAS); do \
-	    $(MSGINIT) --locale $$i --output-file $$i.po --input i18n.pot; \
+	    $(MSGINIT) --locale $$i --output-file $(top_srcdir)/examples/i18n/$$i.po --input i18n.pot; \
 	done
 	rm -f build-mo.stamp
 
