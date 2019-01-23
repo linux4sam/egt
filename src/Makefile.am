@@ -122,6 +122,7 @@ $(top_srcdir)/include/egt/kmsscreen.h \
 $(top_srcdir)/include/egt/label.h \
 $(top_srcdir)/include/egt/libinput.h \
 $(top_srcdir)/include/egt/list.h \
+$(top_srcdir)/include/egt/notebook.h \
 $(top_srcdir)/include/egt/object.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
