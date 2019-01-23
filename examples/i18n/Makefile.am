@@ -31,12 +31,12 @@ install-data-local: install-i18n-catalogs
 install-i18n-catalogs:
 	$(MRESG_V_GEN)for i in $(LINGUAS) ; do \
 	    $(mkinstalldirs) $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES ; \
-	    $(INSTALL_DATA) $(top_builddir)/$$i.utf8/LC_MESSAGES/i18n.mo $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES/i18n.mo ; \
+	    $(INSTALL_DATA) $$i.utf8/LC_MESSAGES/i18n.mo $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES/i18n.mo ; \
 	done
 
 clean-local:
 	$(MRESG_V_GEN)for i in $(LINGUAS) ; do \
-	    rm -rf $(top_builddir)/$$i.utf8 ; \
+	    rm -rf $$i.utf8 ; \
 	done
 
 uninstall-local:
@@ -56,8 +56,8 @@ CLEANFILES = build-mo.stamp i18n.pot
 build-mo: build-mo.stamp
 build-mo.stamp:
 	$(MRESG_V_GEN)for i in $(LINGUAS); do \
-	    $(MKDIR) $(top_builddir)/$$i.utf8/LC_MESSAGES; \
-	    $(MSGFMT) --output-file $(top_builddir)/$$i.utf8/LC_MESSAGES/i18n.mo $$i.po; \
+	    $(MKDIR) $$i.utf8/LC_MESSAGES; \
+	    $(MSGFMT) --output-file $$i.utf8/LC_MESSAGES/i18n.mo $$i.po; \
 	done
 	@echo Timestamp > $@
 
