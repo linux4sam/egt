@@ -51,7 +51,7 @@ public:
     Slider(int min, int max, int value,
            orientation orient = orientation::HORIZONTAL) noexcept;
 
-    Slider(orientation orient) noexcept;
+    explicit Slider(orientation orient) noexcept;
 
     virtual int handle(eventid event) override;
 

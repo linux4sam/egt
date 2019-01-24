@@ -29,7 +29,7 @@ namespace detail
 class ComboBoxPopup : public Popup<egt::BasicWindow>
 {
 public:
-    ComboBoxPopup(ComboBox& parent);
+    explicit ComboBoxPopup(ComboBox& parent);
 
     virtual int handle(eventid event) override;
 
