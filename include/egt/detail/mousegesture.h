@@ -45,8 +45,6 @@ public:
      */
     mouse_event handle(eventid event)
     {
-        static const auto DRAG_ENABLE_DISTANCE = 10;
-
         switch (event)
         {
         case eventid::MOUSE_DOWN:
@@ -79,7 +77,9 @@ public:
             {
                 if (!m_dragging)
                 {
-                    if (std::abs(m_mouse_start_pos.distance_to<int>(event_mouse()) >= DRAG_ENABLE_DISTANCE))
+                    static const auto DRAG_ENABLE_DISTANCE = 10;
+                    auto distance = std::abs(m_mouse_start_pos.distance_to<int>(event_mouse()));
+                    if (distance >= DRAG_ENABLE_DISTANCE)
                     {
                         m_dragging = true;
                     }
