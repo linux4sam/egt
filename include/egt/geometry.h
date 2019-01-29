@@ -11,11 +11,12 @@
  * @brief Working with geometry.
  */
 
+#include <algorithm>
+#include <cassert>
+#include <cmath>
 #include <egt/detail/floatingpoint.h>
 #include <iosfwd>
-#include <cassert>
-#include <algorithm>
-#include <cmath>
+#include <string>
 
 namespace egt
 {
