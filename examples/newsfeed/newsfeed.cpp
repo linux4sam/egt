@@ -15,7 +15,10 @@
 #include <string.h>
 #include <string>
 #include <vector>
-//#include <curl/curl.h>
+#define USE_LIBCURL
+#ifdef USE_LIBCURL
+#include <curl/curl.h>
+#endif
 
 #ifdef HAVE_RAPIDXML_RAPIDXML_HPP
 #include <rapidxml/rapidxml.hpp>
@@ -28,31 +31,20 @@
 using namespace std;
 using namespace egt;
 
-// pull feed from http://feeds.reuters.com/reuters/technologyNews
-
-class NewsItem : public Widget
+class NewsItem : public StaticGrid
 {
 public:
 
     NewsItem(const std::string& title, const std::string& desc,
              const std::string& date, const std::string& link)
-        : m_title(title),
+        : StaticGrid(Rect(), 1, 2),
+          m_title(title),
           m_desc(desc),
           m_date(date),
-          m_link(link),
-          m_grid(Rect(), 1, 2)
+          m_link(link)
     {
-        m_grid.add(&m_title, 0, 0);
-        m_grid.add(&m_desc, 0, 1);
-    }
-
-    virtual void draw(Painter& painter, const Rect& rect, bool selected, ListBox& listbox) override
-    {
-        ListBoxItem::draw(painter, rect, selected, listbox);
-
-        m_grid.set_box(rect);
-        m_grid.reposition();
-        m_grid.draw(painter, m_grid.box());
+        add(&m_title, 0, 0);
+        add(&m_date, 0, 1);
     }
 
     virtual ~NewsItem()
@@ -66,21 +58,28 @@ protected:
     Label m_desc;
     Label m_date;
     Label m_link;
-    StaticGrid m_grid;
 };
 
-#if 0
-static void download()
+#ifdef USE_LIBCURL
+static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
 {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+static string download(const std::string& url)
+{
+    string readBuffer;
     CURL* curl;
     CURLcode res;
 
     curl = curl_easy_init();
     if (curl)
     {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
-        /* example.com is redirected, so we tell libcurl to follow redirection */
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
@@ -92,6 +91,8 @@ static void download()
         /* always cleanup */
         curl_easy_cleanup(curl);
     }
+
+    return readBuffer;
 }
 #endif
 
@@ -134,7 +135,6 @@ static int load(const string& file, ListBox& list)
             link = l->first_node()->value();
         }
 
-        //list.add_item(new StringItem(title));
         list.add_item(new NewsItem(title, description, date, link));
     }
 
@@ -150,7 +150,18 @@ int main(int argc, const char** argv)
     ListBox list(win);
     list.set_align(alignmask::EXPAND);
 
+#ifdef USE_LIBCURL
+    string data = download("http://feeds.reuters.com/reuters/technologyNews");
+    if (!data.empty())
+    {
+        std::ofstream out("dynfeed.xml");
+        out << data;
+        out.close();
+        load("dynfeed.xml", list);
+    }
+#else
     load(detail::exe_pwd() + "/../share/egt/examples/newsfeed/feed.xml", list);
+#endif
 
     win.show();
 

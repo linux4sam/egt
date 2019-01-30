@@ -53,12 +53,14 @@ widgets/widgets
 
 if HAVE_RAPIDXML_HPP
 bin_PROGRAMS += \
-launcher/launcher
+launcher/launcher \
+newsfeed/newsfeed
 endif
 
 if HAVE_RAPIDXML_RAPIDXML_HPP
 bin_PROGRAMS += \
-launcher/launcher
+launcher/launcher \
+newsfeed/newsfeed
 endif
 
 if HAVE_LIBPLANES
@@ -176,8 +178,8 @@ dist_whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*
 whiteboard_whiteboard_LDFLAGS = $(AM_LDFLAGS)
 
 newsfeed_newsfeed_SOURCES = newsfeed/newsfeed.cpp
-newsfeed_newsfeed_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-newsfeed_newsfeed_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+newsfeed_newsfeed_CXXFLAGS = $(CUSTOM_CXXFLAGS)  $(LIBCURL_CFLAGS) $(AM_CXXFLAGS)
+newsfeed_newsfeed_LDADD = $(top_builddir)/src/libegt.la $(LDADD) $(LIBCURL_LIBS)
 newsfeed_newsfeeddir = $(prefix)/share/egt/examples/newsfeed
 dist_newsfeed_newsfeed_DATA = $(wildcard $(top_srcdir)/examples/newsfeed/*.xml)
 newsfeed_newsfeed_LDFLAGS = $(AM_LDFLAGS)
