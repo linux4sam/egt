@@ -22,6 +22,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
  * Simple x,y coordinate.
  */
@@ -68,7 +69,7 @@ public:
     }
 
     /**
-     * Return the angle from this point to get to another.
+     * Return the angle in radians from this point to get to another.
      *
      * @param point The other point.
      */
@@ -123,11 +124,10 @@ inline Point operator+(Point lhs, const Point& rhs)
     return lhs;
 }
 
-
 std::ostream& operator<<(std::ostream& os, const Point& point);
 
 /**
- * Simple width and height size.
+ * Simple width and height.
  */
 class Size
 {
@@ -358,6 +358,9 @@ public:
         return Size(w, h);
     }
 
+    /**
+     * Set the Size of the rectangle.
+     */
     inline void size(const Size& s)
     {
         w = s.w;
@@ -396,21 +399,35 @@ public:
         return x + w;
     }
 
+    /**
+     * Get the top left point of the rectangle.
+     *
+     * @note This is usually the origin/point of the rectangle.
+     */
     inline Point top_left() const
     {
         return Point(left(), top());
     }
 
+    /**
+     * Get the top right point of the rectangle.
+     */
     inline Point top_right() const
     {
         return Point(right(), top());
     }
 
+    /**
+     * Get the bottom left point of the rectangle.
+     */
     inline Point bottom_left() const
     {
         return Point(left(), bottom());
     }
 
+    /**
+     * Get the bottom right point of the rectangle.
+     */
     inline Point bottom_right() const
     {
         return Point(right(), bottom());
@@ -432,6 +449,10 @@ public:
         return w <= 0 || h <= 0;
     }
 
+    /**
+     * Returns true if the specified point is inside the rectangle.
+     * @param point The point to test.
+     */
     inline bool point_inside(const Point& point) const
     {
         return point_inside(point, *this);

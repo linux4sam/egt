@@ -8,6 +8,7 @@
 
 #include <egt/geometry.h>
 #include <egt/input.h>
+#include <egt/utils.h>
 
 /**
  * @file
@@ -23,7 +24,9 @@ namespace detail
 /**
  * Basic class for interpreting mouse events.
  *
- * For now, this only supports click and drag events.
+ * For now, this only supports click and drag events. The premise behind this
+ * class is to interpret raw mouse events and turn them into higher level
+ * meaning.
  */
 template<class T>
 class MouseGesture
@@ -49,6 +52,7 @@ public:
         {
         case eventid::MOUSE_DOWN:
         {
+            DBG("MouseGesture: start");
             return mouse_event::start;
         }
         case eventid::MOUSE_UP:
@@ -61,10 +65,12 @@ public:
 
                 if (dragging)
                 {
+                    DBG("MouseGesture: done");
                     return mouse_event::done;
                 }
                 else
                 {
+                    DBG("MouseGesture: click");
                     return mouse_event::click;
                 }
             }
@@ -87,6 +93,7 @@ public:
 
                 if (m_dragging)
                 {
+                    DBG("MouseGesture: drag");
                     return mouse_event::drag;
                 }
             }
@@ -111,6 +118,8 @@ public:
         m_mouse_start_pos = event_mouse();
         m_active = true;
         m_dragging = false;
+
+        DBG("MouseGesture: active");
     }
 
     inline const T& start_value() const

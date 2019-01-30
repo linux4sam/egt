@@ -55,7 +55,10 @@ public:
     /**
      * Dump the widget hierarchy and properties to the specified ostream.
      *
+     * Example:
+     * @code
      * app.dump(cout);
+     * @endcode
      */
     void dump(std::ostream& out);
 
