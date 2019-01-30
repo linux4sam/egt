@@ -18,7 +18,6 @@ inline namespace v1
 static std::vector<BasicWindow*> the_windows;
 static BasicWindow* the_main_window = nullptr;
 static BasicWindow* the_modal_window = nullptr;
-static auto window_id = 0;
 
 BasicWindow*& main_window()
 {
@@ -38,8 +37,10 @@ std::vector<BasicWindow*>& windows()
 BasicWindow::BasicWindow(const Size& size, widgetmask flags)
     : Frame(Rect(size), flags | widgetmask::WINDOW)
 {
+    static auto window_id = 0;
+
     ostringstream ss;
-    ss << "basicwindow" << window_id++;
+    ss << "BasicWindow" << window_id++;
     set_name(ss.str());
 
     DBG("new window " << name() << " " << size);

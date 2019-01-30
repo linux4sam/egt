@@ -19,6 +19,12 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
       m_orient(orient)
 {
     flag_set(widgetmask::GRAB_MOUSE);
+
+    static auto slider_id = 0;
+
+    ostringstream ss;
+    ss << "Slider" << slider_id++;
+    set_name(ss.str());
 }
 
 Slider::Slider(int min, int max, int value,

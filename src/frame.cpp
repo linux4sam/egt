@@ -13,15 +13,15 @@ using namespace std;
 
 namespace egt
 {
-static auto frame_id = 0;
-
 Frame::Frame(const Rect& rect, widgetmask flags)
     : Widget(rect, flags | widgetmask::FRAME)
 {
     set_boxtype(Theme::boxtype::fill);
 
+    static auto frame_id = 0;
+
     ostringstream ss;
-    ss << "frame" << frame_id++;
+    ss << "Frame" << frame_id++;
     set_name(ss.str());
 }
 

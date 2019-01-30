@@ -22,8 +22,6 @@ namespace egt
 {
 inline namespace v1
 {
-static auto widget_id = 0;
-
 Rect Widget::align_algorithm(const Size& size, const Rect& bounding,
                              alignmask align, int margin)
 {
@@ -133,8 +131,10 @@ Widget::Widget(const Rect& rect, widgetmask flags) noexcept
     : m_box(rect),
       m_flags(flags)
 {
+    static auto widget_id = 0;
+
     ostringstream ss;
-    ss << "widget" << widget_id++;
+    ss << "Widget" << widget_id++;
     set_name(ss.str());
 }
 

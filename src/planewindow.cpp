@@ -30,7 +30,7 @@ Window::Window(const Size& size, widgetmask flags,
     assert(KMSScreen::instance());
 
     ostringstream ss;
-    ss << "planewindow" << planewindow_id++;
+    ss << "Window" << planewindow_id++;
     set_name(ss.str());
 
     do_resize(size);
@@ -47,7 +47,7 @@ Window::Window(const Rect& rect, widgetmask flags,
     assert(KMSScreen::instance());
 
     ostringstream ss;
-    ss << "planewindow" << planewindow_id++;
+    ss << "Window" << planewindow_id++;
     set_name(ss.str());
 
     m_box = rect;
