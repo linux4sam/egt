@@ -66,6 +66,14 @@ void Notebook::remove(Widget* widget)
     m_cells.erase(i, m_cells.end());
 
     Frame::remove(widget);
+
+    if (m_current_index >= static_cast<int>(m_cells.size()))
+    {
+        if (m_cells.size())
+            set_select(m_cells.size() - 1);
+        else
+            m_current_index = -1;
+    }
 }
 
 void Notebook::set_select(uint32_t index)
@@ -75,14 +83,17 @@ void Notebook::set_select(uint32_t index)
 
     if (static_cast<int>(index) != m_current_index)
     {
-        if (m_cells[m_current_index].widget->leave())
+        if (index < m_cells.size())
         {
-            m_cells[m_current_index].widget->hide();
-            m_current_index = index;
-            m_cells[m_current_index].widget->enter();
-            m_cells[m_current_index].widget->show();
+            if (m_cells[m_current_index].widget->leave())
+            {
+                m_cells[m_current_index].widget->hide();
+                m_current_index = index;
+                m_cells[m_current_index].widget->enter();
+                m_cells[m_current_index].widget->show();
 
-            invoke_handlers(eventid::PROPERTY_CHANGED);
+                invoke_handlers(eventid::PROPERTY_CHANGED);
+            }
         }
     }
 }
