@@ -22,9 +22,12 @@ class BoxSizer : public Frame
 {
 public:
 
-    BoxSizer(orientation orient = orientation::HORIZONTAL, int spacing = 0)
-        : Frame(Rect(), widgetmask::NO_BACKGROUND),
+    BoxSizer(orientation orient = orientation::HORIZONTAL, int spacing = 0,
+             int hmargin = 0, int vmargin = 0)
+        : Frame(Rect(Point(), Size(2 * hmargin, 2 * vmargin)), widgetmask::NO_BACKGROUND),
           m_spacing(spacing),
+          m_hmargin(hmargin),
+          m_vmargin(vmargin),
           m_orient(orient)
     {
         static auto boxsizer_id = 0;
@@ -52,15 +55,19 @@ public:
 
         if (m_orient == orientation::HORIZONTAL)
         {
-            auto w = box().size().w;
-            auto h = std::max(widget->box().size().h + 2 * m_spacing, box().size().h);
+            auto w = box().size().w + widget->box().size().w;
+            if (count_children() > 1)
+                w += m_spacing;
+            auto h = std::max(widget->box().size().h, box().size().h);
 
             resize(Size(w, h));
         }
         else
         {
-            auto w = std::max(widget->box().size().w + 2 * m_spacing, box().size().w);
-            auto h = box().size().h;
+            auto w = std::max(widget->box().size().w, box().size().w);
+            auto h = box().size().h + widget->box().size().h;
+            if (count_children() > 1)
+                h += m_spacing;
 
             resize(Size(w, h));
         }
@@ -82,9 +89,11 @@ public:
         if (box().size().empty())
             return;
 
+        Rect bounding = Rect(Point(m_hmargin, m_vmargin),
+                             box().size() - Size(2 * m_hmargin, 2 * m_vmargin));
+
         if (m_orient == orientation::VERTICAL)
         {
-            Rect bounding = Rect(Point(m_spacing, m_spacing), box().size() - Size(m_spacing, m_spacing));
             for (auto& child : m_children)
             {
                 Rect target = align_algorithm(child->box().size(),
@@ -103,7 +112,6 @@ public:
         }
         else
         {
-            Rect bounding = Rect(Point(m_spacing, m_spacing), box().size() - Size(m_spacing, m_spacing));
             for (auto& child : m_children)
             {
                 Rect target = align_algorithm(child->box().size(),
@@ -128,6 +136,8 @@ public:
 
 protected:
     int m_spacing{0};
+    int m_hmargin{0};
+    int m_vmargin{0};
     orientation m_orient{orientation::HORIZONTAL};
 };
 
