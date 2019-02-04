@@ -63,9 +63,13 @@ HardwareSprite::HardwareSprite(const Image& image, const Size& frame_size,
 
     // hack to change the size because the screen size and the box size are different
     move(point);
-    m_box = Rect(point, frame_size);
+    do_resize(frame_size);
+}
 
-    damage(box());
+void HardwareSprite::draw(Painter& painter, const Rect& rect)
+{
+    for (auto& child : m_children)
+        child->draw(painter, rect);
 }
 
 void HardwareSprite::show_frame(int index)

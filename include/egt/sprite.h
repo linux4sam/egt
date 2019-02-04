@@ -153,6 +153,8 @@ public:
 
     virtual void show_frame(int index) override;
 
+    virtual void draw(Painter& painter, const Rect& rect) override;
+
     virtual void paint(Painter& painter) override;
 
     virtual shared_cairo_surface_t surface() const;
