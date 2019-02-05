@@ -579,12 +579,12 @@ protected:
      */
     Frame* m_parent{nullptr};
 
-private:
-
     /**
      * When true, the widget is visible.
      */
     bool m_visible{true};
+
+private:
 
     /**
      * When true, the widget is active.

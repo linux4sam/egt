@@ -41,11 +41,11 @@ public:
     ImageLabel m_img;
 };
 
-class FloatingBox : public Frame
+class FloatingBox : public Window
 {
 public:
     explicit FloatingBox(const Rect& rect)
-        : Frame(rect),
+        : Window(rect),
           m_grip(Image("grip.png")),
           m_arrows(Image("arrows.png"))
     {
@@ -82,7 +82,7 @@ public:
             break;
         }
 
-        auto ret = Frame::handle(event);
+        auto ret = Window::handle(event);
         return ret;
     }
 
@@ -108,6 +108,8 @@ int main(int argc, const char** argv)
     win.add(&box2);
 
     win.show();
+    box1.show();
+    box2.show();
 
     Label label1("CPU: -",
                  Rect(Point(10, win.size().h - 40),

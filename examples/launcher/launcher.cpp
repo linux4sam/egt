@@ -299,7 +299,7 @@ private:
     int m_moving_x{0};
     int m_offset{0};
     vector<LauncherItem*> m_boxes;
-    Popup<Window> m_popup;
+    Popup m_popup;
     PropertyAnimator m_animation;
 };
 

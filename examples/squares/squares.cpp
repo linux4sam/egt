@@ -25,12 +25,12 @@ int main(int argc, const char** argv)
     .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
-    Popup<Window> popup(Size(100, 80));
+    Popup popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
     popup.set_name("popup");
-
     popup.add(label);
+    win.add(&popup);
     popup.show();
 
     default_dim_type WIDTH = 100;

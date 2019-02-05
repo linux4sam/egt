@@ -14,12 +14,8 @@
 using namespace std;
 using namespace egt;
 
-#define SOFTWARE
-#ifdef SOFTWARE
-using WindowType = BasicWindow;
-#else
+
 using WindowType = Window;
-#endif
 
 int main(int argc, const char** argv)
 {
@@ -67,7 +63,6 @@ int main(int argc, const char** argv)
     win2.move(Point(50, 50));
     win2.add(new Label(win2.box().tostring(), Rect(0, 0, 100, 50)))->set_align(alignmask::CENTER | alignmask::BOTTOM);
 
-#ifdef SOFTWARE
     WindowType win3(Size(200, 200));
     win3.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::GREEN);
     win3.add(new Label("win3", Rect(0, 0, 50, 50)))->set_align(a);
@@ -81,15 +76,12 @@ int main(int argc, const char** argv)
     win4.set_name("purple");
     win3.add(&win4);
     win4.move(Point(50, 50));
-#endif
 
     win0.show();
     win1.show();
     win2.show();
-#ifdef SOFTWARE
     win3.show();
     win4.show();
-#endif
 
     app.dump(cout);
 

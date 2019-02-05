@@ -24,7 +24,7 @@ namespace detail
 {
 
 ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
-    : ComboBoxPopupBase(Size(parent.size().w, ListBox::item_height())),
+    : Popup(Size(parent.size().w, ListBox::item_height())),
       m_parent(parent)
 {
     for (auto& item : parent.m_items)
@@ -70,12 +70,12 @@ void ComboBoxPopup::smart_pos()
 void ComboBoxPopup::show(bool center)
 {
     smart_pos();
-    ComboBoxPopupBase::show(center);
+    Popup::show(center);
 }
 
 int ComboBoxPopup::handle(eventid event)
 {
-    auto ret = ComboBoxPopupBase::handle(event);
+    auto ret = Popup::handle(event);
 
     switch (event)
     {

@@ -149,8 +149,8 @@ void IScreen::copy_to_buffer(DisplayBuffer& buffer)
     cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
     cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
 
-    for (const auto& d : buffer.damage)
-        cairo_rectangle(buffer.cr.get(), d.x, d.y, d.w, d.h);
+    for (const auto& rect : buffer.damage)
+        cairo_rectangle(buffer.cr.get(), rect.x, rect.y, rect.w, rect.h);
 
     cairo_fill(buffer.cr.get());
     cairo_surface_flush(buffer.surface.get());

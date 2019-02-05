@@ -12,18 +12,27 @@
  */
 
 #include <egt/frame.h>
-#include <vector>
+#include <egt/detail/windowimpl.h>
+#include <memory>
 
 namespace egt
 {
 inline namespace v1
 {
+
+namespace detail
+{
 class BasicWindow;
+class BasicTopWindow;
+class PlaneWindow;
+}
+
+class Window;
 
 /**
  * Get a pointer reference to the main window.
  */
-BasicWindow*& main_window();
+Window*& main_window();
 
 /**
  * Get a pointer reference to the modal window.
@@ -31,155 +40,165 @@ BasicWindow*& main_window();
  * The modal window is a single window that will receive all events. Only
  * one window can be modal at any given time.
  */
-BasicWindow*& modal_window();
+Window*& modal_window();
 
 /**
  * Get the list of all currently allocated BasicWindows.
  */
-std::vector<BasicWindow*>& windows();
+std::vector<Window*>& windows();
 
 /**
- * A BasicWindow is a Frame Widget that contains and is backed by a Screen.
+ * Window interface.
  *
- * The first window created will automatically become the main window. It
- * will also be forced to the size of the main_screen().  To change this,
- * call set_main_window() on any BasicWindow instance.
+ * A Window is a Frame that manages and draws to a Screen.
  *
- * Any top level widget must be a BasicWindow.
- *
- * Windows, unlike other basic widgets, are hidden by default. They will always
- * require a call to show().
+ * This class acts as normal Frame/Widget put punts many operations to a
+ * dynamically selected backend to work with the screen.
  */
-class BasicWindow : public Frame
+class Window : public Frame
 {
 public:
+    constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
-    /**
-     * Construct a BasicWindow.
-     *
-     * @param[in] size The size of the BasicWindow.  The origin will be default to 0,0.
-     * @param[in] flags Mask of widget flags.
-     */
-    BasicWindow(const Size& size = Size(),
-                widgetmask flags = widgetmask::WINDOW_DEFAULT);
+    Window(const Rect& rect,
+           widgetmask flags = widgetmask::WINDOW_DEFAULT,
+           pixel_format format = DEFAULT_FORMAT, bool heo = false);
 
-    /**
-     * Construct a BasicWindow.
-     *
-     * @param[in] rect The rectangle for the BasicWindow.
-     * @param[in] flags Mask of widget flags.
-     */
-    BasicWindow(const Rect& rect,
-                widgetmask flags = widgetmask::WINDOW_DEFAULT);
+    Window(const Size& size = Size(),
+           widgetmask flags = widgetmask::WINDOW_DEFAULT,
+           pixel_format format = DEFAULT_FORMAT, bool heo = false)
+        : Window(Rect(Point(), size), flags, format, heo)
+    {}
 
-    virtual void enter()
+    virtual void damage() override
     {
-        show();
+        Frame::damage();
     }
 
-    virtual void exit()
+    virtual void damage(const Rect& rect) override
     {
-        hide();
+        m_impl->damage(rect);
     }
 
     /**
-     * Change this BasicWindow to be the main BasicWindow.
-     */
-    virtual void set_main_window();
-
-    /**
-     * The buck stops on this call to Widget::screen() with a BasicWindow
-     * because the BasicWindow contains the screen.
+     * The buck stops on this call to Widget::screen() with a Window
+     * because the Window contains the screen.
      */
     virtual IScreen* screen() override
     {
-        assert(m_screen);
-        return m_screen;
+        return m_impl->screen();
     }
 
-    /**
-     * Cause the frame to draw itself and al of its children.
-     *
-     * @warning Normally this should not be called directly and instead the
-     * event loop will call this function.
-     */
-    virtual void top_draw() override;
-
-    virtual void resize(const Size& size) override;
-
-    virtual ~BasicWindow();
-
-protected:
-
-    /**
-     * Perform the draw starting from this frame.
-     */
-    virtual void do_draw();
-
-    IScreen* m_screen{nullptr};
-
-private:
-
-};
-
-
-/**
- * Popup window.
- */
-template <class T>
-class Popup : public T
-{
-public:
-    explicit Popup(const Size& size = Size(),
-                   const Point& point = Point())
-        : T(size)
+    virtual void move(const Point& point) override
     {
-        this->move(point);
+        m_impl->move(point);
     }
 
-    /**
-     * Show the window.
-     *
-     * @param[in] center Move the window to the center of the screen first.
-     */
-    virtual void show(bool center = false)
+    virtual void show() override
     {
-        if (center)
-        {
-            if (T::parent())
-                this->move_to_center(T::parent()->box().center());
-            else
-                this->move_to_center(main_screen()->box().center());
-        }
-
-        T::show();
-    }
-
-    virtual void show_modal(bool center = false)
-    {
-        if (!modal_window())
-        {
-            modal_window() = this;
-            this->show(center);
-        }
+        m_impl->show();
     }
 
     virtual void hide() override
     {
-        T::hide();
-
-        if (modal_window() == this)
-        {
-            modal_window() = nullptr;
-        }
+        m_impl->hide();
     }
 
-    virtual ~Popup()
-    {}
+    virtual void resize(const Size& size) override;
 
+    virtual void paint(Painter& painter) override
+    {
+        m_impl->paint(painter);
+    }
+
+    /*
+     * Damage rectangles propogate up the widget tree and stop at a top level
+     * widget, which can only be a window. As it propogates up, the damage
+     * rectangle origin changes value to respect the current frame.  When
+     * drawing those rectangles, as they propogate down the widget hierarchy
+     * the opposite change happens to the rectangle origin.
+     */
+    virtual void top_draw() override
+    {
+        m_impl->top_draw();
+    }
+
+    /**
+     * Perform the actual drawing.  Allocate the Painter and call draw() on each
+     * child.
+     */
+    virtual void do_draw();
+
+    virtual ~Window();
+
+protected:
+
+    virtual void allocate_screen()
+    {
+        m_impl->allocate_screen();
+    }
+
+    /**
+     * Select and allocate the backend implementation for the window.
+     */
+    void create_impl(const Rect& rect,
+                     pixel_format format = pixel_format::argb8888,
+                     bool heo = false);
+
+    virtual void default_damage(const Rect& rect)
+    {
+        Frame::damage(rect);
+    }
+
+    virtual void default_resize(const Size& size)
+    {
+        Frame::resize(size);
+    }
+
+    virtual void default_move(const Point& point)
+    {
+        Frame::move(point);
+    }
+
+    virtual void default_top_draw()
+    {
+        if (m_parent)
+        {
+            m_parent->top_draw();
+            return;
+        }
+
+        do_draw();
+    }
+
+    virtual void default_show()
+    {
+        Frame::show();
+    }
+
+    virtual void default_hide()
+    {
+        Frame::hide();
+    }
+
+    virtual void default_paint(Painter& painter)
+    {
+        Frame::paint(painter);
+    }
+
+    std::unique_ptr<detail::WindowImpl> m_impl;
+
+    /**
+     * Change this window as the main window.
+     */
+    void set_main_window();
+
+    friend class detail::WindowImpl;
+    friend class detail::PlaneWindow;
+    friend class detail::BasicTopWindow;
 };
 
-using TopWindow = BasicWindow;
+using TopWindow = Window;
 
 }
 }

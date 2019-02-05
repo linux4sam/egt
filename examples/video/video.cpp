@@ -121,6 +121,7 @@ int main(int argc, const char** argv)
     }
 
     Application app(argc, argv, "video");
+    TopWindow win;
 
     VideoWindow* window = 0;
     if (argv[1] == string("v4l2"))
@@ -141,6 +142,7 @@ int main(int argc, const char** argv)
     }
 
     window->set_name("video");
+    win.add(window);
 
 #if 1
     //#define FPS

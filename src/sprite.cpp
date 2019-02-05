@@ -53,7 +53,7 @@ HardwareSprite::HardwareSprite(const Image& image, const Size& frame_size,
       ISpriteBase(image, frame_size, framecount, frame_point),
       m_label(*this, image)
 {
-    do_resize(m_image.size());
+    resize(m_image.size());
 
     allocate_screen();
 
@@ -63,7 +63,7 @@ HardwareSprite::HardwareSprite(const Image& image, const Size& frame_size,
 
     // hack to change the size because the screen size and the box size are different
     move(point);
-    do_resize(frame_size);
+    m_box.size(frame_size);
 }
 
 void HardwareSprite::draw(Painter& painter, const Rect& rect)

@@ -145,7 +145,7 @@ int main(int argc, const char** argv)
 
     win.show();
 
-    Popup<Window> popup(Size(100, 80));
+    Popup popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
     popup.set_name("popup");

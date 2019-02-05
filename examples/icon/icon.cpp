@@ -82,7 +82,7 @@ int main(int argc, const char** argv)
 
     const Color FUCHSIA(Color::CSS("#F012BE"));
 
-    Popup<Window> popup(Size(100, 40));
+    Popup popup(Size(100, 40));
     popup.move(Point(win.w() - 100 - 10 - NAV_WIDTH, 10));
     popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
     popup.set_name("popup");
@@ -93,7 +93,7 @@ int main(int argc, const char** argv)
     label1.palette()
     .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
     .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-
+    win.add(&popup);
     popup.add(&label1);
 
     CPUMonitorUsage tools;

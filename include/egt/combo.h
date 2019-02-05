@@ -13,7 +13,7 @@
 
 #include <egt/list.h>
 #include <egt/widget.h>
-#include <egt/planewindow.h>
+#include <egt/popup.h>
 #include <vector>
 #include <string>
 
@@ -26,10 +26,7 @@ class ComboBox;
 namespace detail
 {
 
-using ComboBoxPopupBase = Popup<egt::BasicWindow>;
-//using ComboBoxPopupBase = Popup<egt::Window>;
-
-class ComboBoxPopup : public ComboBoxPopupBase
+class ComboBoxPopup : public Popup
 {
 public:
     explicit ComboBoxPopup(ComboBox& parent);

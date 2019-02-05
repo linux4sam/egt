@@ -166,7 +166,7 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
-     * Cause the frame to draw itself and al of its children.
+     * Cause the frame to draw itself and all of its children.
      *
      * @warning Normally this should not be called directly and instead the
      * event loop will call this function.
@@ -263,11 +263,13 @@ protected:
 
     using children_array = std::deque<Widget*>;
 
+    //TODO
+public:
     /**
      * Add damage to the damage array.
      */
     virtual void add_damage(const Rect& rect);
-
+protected:
     /**
      * Array of child widgets in the order they were added.
      */

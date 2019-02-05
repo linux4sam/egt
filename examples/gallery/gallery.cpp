@@ -61,7 +61,7 @@ int main(int argc, const char** argv)
         grid1.add(new ImageLabel(Image(file)), alignmask::CENTER);
     }
 
-    Popup<Window> popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
+    Popup popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
     popup.set_name("popup");
     Button button("Hello World");
     popup.add(button);

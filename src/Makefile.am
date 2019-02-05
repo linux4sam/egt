@@ -35,6 +35,8 @@ chart.cpp \
 checkbox.cpp \
 color.cpp \
 combo.cpp \
+detail/basicwindow.cpp \
+detail/windowimpl.cpp \
 eventloop.cpp \
 font.cpp \
 frame.cpp \
@@ -52,12 +54,9 @@ notebook.cpp \
 object.cpp \
 painter.cpp \
 palette.cpp \
-planewindow.cpp \
 radiobox.cpp \
 resource.cpp \
 screen/framebuffer.cpp \
-screen/kmsoverlay.cpp \
-screen/kmsscreen.cpp \
 screen/screen.cpp \
 screen/x11screen.cpp \
 slider.cpp \
@@ -73,6 +72,13 @@ video.cpp \
 view.cpp \
 widget.cpp \
 window.cpp
+
+if HAVE_LIBPLANES
+libegt_la_SOURCES += \
+detail/planewindow.cpp \
+screen/kmsoverlay.cpp \
+screen/kmsscreen.cpp
+endif
 
 if HAVE_LUA
 libegt_la_SOURCES += \
@@ -105,8 +111,10 @@ $(top_srcdir)/include/egt/checkbox.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/combo.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
+$(top_srcdir)/include/egt/detail/basicwindow.h \
 $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \
+$(top_srcdir)/include/egt/detail/planewindow.h \
 $(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
@@ -126,7 +134,7 @@ $(top_srcdir)/include/egt/notebook.h \
 $(top_srcdir)/include/egt/object.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
-$(top_srcdir)/include/egt/planewindow.h \
+$(top_srcdir)/include/egt/popup.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/screen.h \

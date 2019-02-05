@@ -17,7 +17,6 @@
 
 #ifdef HAVE_GSTREAMER
 
-#include <egt/planewindow.h>
 #include <egt/window.h>
 #include <gst/gst.h>
 #include <string>
@@ -86,7 +85,7 @@ public:
     virtual bool set_mute(bool mute);
 
     virtual void set_scale(float value);
-    virtual float scale() const;
+    virtual float scale();
 
     virtual ~VideoWindow();
 

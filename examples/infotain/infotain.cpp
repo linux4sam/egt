@@ -66,7 +66,7 @@ protected:
     Color m_color;
 };
 
-static void top_menu(BasicWindow* win)
+static void top_menu(Window* win)
 {
     Box* box1 = new Box(Rect(Size(800, 60)), Color::BLACK);
     win->add(box1);
@@ -113,7 +113,7 @@ static void top_menu(BasicWindow* win)
     win->add(i2);
 }
 
-static void bottom_menu(BasicWindow* win)
+static void bottom_menu(Window* win)
 {
     StaticGrid* grid2 = new StaticGrid(Rect(Point(0, 390), Size(800, 90)), 5, 1, 4);
     grid2->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);

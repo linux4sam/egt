@@ -143,14 +143,14 @@ VideoWindow::VideoWindow(const Size& size, pixel_format format, bool heo)
 
 void VideoWindow::set_scale(float value)
 {
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(this->screen());
     assert(screen);
     screen->scale(value);
 }
 
-float VideoWindow::scale() const
+float VideoWindow::scale()
 {
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(this->screen());
     assert(screen);
     return screen->scale();
 }
@@ -158,10 +158,9 @@ float VideoWindow::scale() const
 void VideoWindow::top_draw()
 {
     // don't do any drawing to a window because we don't support video formats, only positioning
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(this->screen());
     assert(screen);
     screen->apply();
-    m_dirty = false;
     m_damage.clear();
 }
 
@@ -327,7 +326,7 @@ bool HardwareVideo::createPipeline()
     GstBus* bus;
     //guint bus_watch_id;
 
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(this->screen());
     assert(screen);
     int _gem = screen->gem();
 
@@ -419,7 +418,7 @@ bool V4L2HardwareVideo::createPipeline()
     GstBus* bus;
     //guint bus_watch_id;
 
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_screen);
+    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(this->screen());
     assert(screen);
     int _gem = screen->gem();
 
@@ -527,7 +526,7 @@ GstFlowReturn SoftwareVideo::on_new_buffer_from_source(GstElement* elt, gpointer
         if (gst_buffer_map(buffer, &map, GST_MAP_READ))
         {
             KMSOverlay* screen =
-                reinterpret_cast<KMSOverlay*>(_this->m_screen);
+                reinterpret_cast<KMSOverlay*>(_this->screen());
             assert(screen);
             //cout << "frame size: " << map.size << endl;
             memcpy(screen->raw(), map.data, map.size);

@@ -20,10 +20,6 @@
 using namespace std;
 using namespace egt;
 
-#ifdef HAVE_LIBPLANES
-#define USE_HARDWARE
-#endif
-
 static easing_func curves[] =
 {
     easing_linear,
@@ -98,11 +94,8 @@ public:
         // then it will cause glitches. So, we create the height (which will
         // be invisible), to always keep a portion of the plane on screen
         // alternate of making the plane the same exact size as the image.
-#ifdef USE_HARDWARE
         m_box = new Window(Size(100, 200));
-#else
-        m_box = new BasicWindow(Size(100, 200));
-#endif
+
         //m_box->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         m_box->flag_set(widgetmask::NO_BACKGROUND);
         m_box->add(image);
@@ -111,7 +104,7 @@ public:
 
         add(m_box);
 
-        m_animation.on_change(std::bind(&BasicWindow::set_y, m_box, std::placeholders::_1));
+        m_animation.on_change(std::bind(&Window::set_y, m_box, std::placeholders::_1));
         m_seq.add(&m_animation);
         m_seq.add(&m_delay);
 
@@ -123,7 +116,7 @@ public:
     }
 
 private:
-    BasicWindow* m_box{nullptr};
+    Window* m_box{nullptr};
 
     AnimationSequence m_seq;
     PropertyAnimator m_animation;

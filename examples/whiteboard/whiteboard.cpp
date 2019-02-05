@@ -12,12 +12,12 @@
 using namespace egt;
 using namespace std;
 
-class ColorPickerWindow : public Popup<Window>
+class ColorPickerWindow : public Popup
 {
 public:
 
     explicit ColorPickerWindow(const Color& color)
-        : Popup<Window>(main_screen()->size() / 2),
+        : Popup(main_screen()->size() / 2),
           m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 5, 10),
           m_color(color)
     {
@@ -81,12 +81,12 @@ protected:
     Color m_color{Color::RED};
 };
 
-class WidthPickerWindow : public Popup<BasicWindow>
+class WidthPickerWindow : public Popup
 {
 public:
 
     explicit WidthPickerWindow(int width)
-        : Popup<BasicWindow>(main_screen()->size() / 2),
+        : Popup(main_screen()->size() / 2),
           m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 1, 10),
           m_width(width)
     {

@@ -14,7 +14,7 @@
 #include <egt/image.h>
 #include <egt/label.h>
 #include <egt/painter.h>
-#include <egt/planewindow.h>
+#include <egt/detail/planewindow.h>
 #include <egt/widget.h>
 #include <egt/window.h>
 #include <vector>
@@ -131,7 +131,6 @@ protected:
             origin.y = ((x / imagew) * m_strips[m_strip].point.y) + (x / imagew) * m_frame.h;
         }
 
-	std::cout << origin << std::endl;
         return origin;
     }
 

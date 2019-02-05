@@ -12,7 +12,7 @@
 using namespace std;
 using namespace egt;
 
-class GameWindow : public BasicWindow
+class GameWindow : public Window
 {
 public:
     static constexpr int ROWS = 2;
@@ -130,7 +130,7 @@ public:
             break;
         }
 
-        return BasicWindow::handle(event);
+        return Window::handle(event);
     }
 
     void reset_game()
