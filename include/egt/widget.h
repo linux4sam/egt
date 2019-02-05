@@ -237,13 +237,13 @@ public:
      * Change the width of the widget.
      * @param[in] w The new width of the widget.
      */
-    inline void set_width(int w) { resize(Size(w, h())); }
+    inline void set_width(default_dim_type w) { resize(Size(w, h())); }
 
     /**
      * Change the height of the widget.
      * @param[in] h The new height of the widget.
      */
-    void set_height(int h) { resize(Size(w(), h)); }
+    void set_height(default_dim_type h) { resize(Size(w(), h)); }
 
     /**
      * Move the widget.
@@ -257,12 +257,12 @@ public:
     /**
      * @param[in] x The new origin X value for the widget relative to its parent.
      */
-    inline void set_x(int x) { move(Point(x, y())); }
+    inline void set_x(default_dim_type x) { move(Point(x, y())); }
 
     /**
      * @param[in] y The new origin Y value for the widget relative to its parent.
      */
-    inline void set_y(int y) { move(Point(x(), y)); }
+    inline void set_y(default_dim_type y) { move(Point(x(), y)); }
 
     /**
      * Move the widget to the specified center point.
@@ -364,10 +364,10 @@ public:
      * @{
      * Bounding box dimensions.
      */
-    inline int w() const { return m_box.w; }
-    inline int h() const { return m_box.h; }
-    inline int x() const { return m_box.x; }
-    inline int y() const { return m_box.y; }
+    inline default_dim_type w() const { return m_box.w; }
+    inline default_dim_type h() const { return m_box.h; }
+    inline default_dim_type x() const { return m_box.x; }
+    inline default_dim_type y() const { return m_box.y; }
     /** @} */
 
     /**

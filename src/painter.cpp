@@ -358,8 +358,8 @@ bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
         {
             for (int x = i.left(); x < i.right(); x++)
             {
-                unsigned int l = ldata[(x - lhs.left()) + (y - lhs.top()) * lhs.w];
-                unsigned int r = rdata[(x - rhs.left()) + (y - rhs.top()) * rhs.w];
+                unsigned int l = ldata[static_cast<uint32_t>((x - lhs.left()) + (y - lhs.top()) * lhs.w)];
+                unsigned int r = rdata[static_cast<uint32_t>((x - rhs.left()) + (y - rhs.top()) * rhs.w)];
 
                 if ((l >> 24 & 0xff) && (r >> 24 & 0xff))
                 {
@@ -383,7 +383,7 @@ bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
         {
             for (int x = lhs.left(); x < lhs.right(); x++)
             {
-                unsigned int l = ldata[(x - lhs.left()) + (y - lhs.top()) * lhs.w];
+                uint32_t l = ldata[static_cast<uint32_t>((x - lhs.left()) + (y - lhs.top()) * lhs.w)];
 
                 if (l >> 24 & 0xff)
                 {

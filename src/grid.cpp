@@ -38,7 +38,7 @@ StaticGrid::StaticGrid(int columns, int rows, int spacing)
 
 namespace detail
 {
-static inline int round(int x, int y)
+static inline default_dim_type round(default_dim_type x, default_dim_type y)
 {
     //return (x + y - 1) / y;
     return x  / y;
@@ -49,7 +49,7 @@ static inline int round(int x, int y)
  * Calculates the rectangle for a cell. This calculates the rectangle right
  * down the center of any spacing if one exists.
  */
-static Rect cell_rect(int columns, int rows, int width, int height,
+static Rect cell_rect(int columns, int rows, default_dim_type width, default_dim_type height,
                       int column, int row, int spacing)
 {
     auto inner_width = detail::round((width - ((columns + 1) * spacing)), columns);

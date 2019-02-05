@@ -53,8 +53,8 @@ void ComboBoxPopup::smart_pos()
         auto ss = main_screen()->size();
         auto origin = to_screen(box().point());
         auto height =
-            std::min((ss.h - origin.y) / ListBox::item_height(),
-                     m_list.count()) * ListBox::item_height();
+            std::min(static_cast<default_dim_type>((ss.h - origin.y) / ListBox::item_height()),
+                     static_cast<default_dim_type>(m_list.count())) * ListBox::item_height();
 
         // hack because list child area is smaller by this much
         height += Theme::DEFAULT_BORDER_WIDTH * 3;

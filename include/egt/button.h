@@ -12,9 +12,10 @@
  */
 
 #include <egt/buttongroup.h>
+#include <egt/geometry.h>
 #include <egt/image.h>
-#include <egt/widget.h>
 #include <egt/theme.h>
+#include <egt/widget.h>
 
 namespace egt
 {
@@ -23,7 +24,6 @@ inline namespace v1
 
 class Font;
 class Painter;
-class Rect;
 
 /**
  * Basic button widget.

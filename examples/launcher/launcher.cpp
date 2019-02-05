@@ -287,7 +287,7 @@ public:
 
         m_animation.starting(0);
         m_animation.ending(distance);
-        m_animation.duration(std::chrono::milliseconds(std::abs(distance)));
+        m_animation.duration(std::chrono::milliseconds(static_cast<uint32_t>(std::abs(distance))));
         m_animation.start();
 
         m_moving_x = 0;

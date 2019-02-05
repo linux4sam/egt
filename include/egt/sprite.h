@@ -17,6 +17,7 @@
 #include <egt/planewindow.h>
 #include <egt/widget.h>
 #include <egt/window.h>
+#include <vector>
 
 namespace egt
 {
@@ -122,13 +123,15 @@ protected:
         origin.y = m_strips[m_strip].point.y;
 
         // support sheets that have frames on multiple rows
-        if (origin.x + m_frame.w >= imagew)
+        if (origin.x + m_frame.w > imagew)
         {
-            int x = m_strips[m_strip].point.x + (index * m_frame.w);
+            auto x = m_strips[m_strip].point.x + (index * m_frame.w);
 
-            origin.x = (x % imagew);
+            origin.x = (static_cast<uint32_t>(x) % static_cast<uint32_t>(imagew));
             origin.y = ((x / imagew) * m_strips[m_strip].point.y) + (x / imagew) * m_frame.h;
         }
+
+	std::cout << origin << std::endl;
         return origin;
     }
 

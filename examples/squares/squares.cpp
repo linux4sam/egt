@@ -33,8 +33,8 @@ int main(int argc, const char** argv)
     popup.add(label);
     popup.show();
 
-    auto WIDTH = 100;
-    auto HEIGHT = 100;
+    default_dim_type WIDTH = 100;
+    default_dim_type HEIGHT = 100;
 
     const vector<Color> colors =
     {
@@ -59,8 +59,8 @@ int main(int argc, const char** argv)
 
     std::random_device r;
     std::default_random_engine e1 {r()};
-    std::uniform_int_distribution<int> x_dist {0, win.w() - WIDTH};
-    std::uniform_int_distribution<int> y_dist {0, win.h() - HEIGHT};
+    std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.w() - WIDTH)};
+    std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.h() - HEIGHT)};
     std::uniform_int_distribution<int> color_dist {0, static_cast<int>(colors.size()) - 1};
 
     experimental::Fps fps;

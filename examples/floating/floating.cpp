@@ -40,7 +40,7 @@ public:
 class FloatingBox
 {
 public:
-    FloatingBox(Widget* widget, int mx, int my)
+    FloatingBox(Widget* widget, default_dim_type mx, default_dim_type my)
         : m_widget(widget),
           m_mx(mx),
           m_my(my)
@@ -100,8 +100,8 @@ public:
 
 protected:
     Widget* m_widget;
-    int m_mx;
-    int m_my;
+    default_dim_type m_mx;
+    default_dim_type m_my;
 
     using Swipe = detail::MouseGesture<Point>;
 
@@ -117,9 +117,9 @@ int main(int argc, const char** argv)
     MyWindow win;
     win.show();
 
-    int f = 2;
+    default_dim_type f = 2;
 
-    vector<std::pair<int, int>> moveparms =
+    vector<std::pair<default_dim_type, default_dim_type>> moveparms =
     {
         std::make_pair(1 * f, 2 * f),
         std::make_pair(3 * f, -2 * f),

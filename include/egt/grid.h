@@ -181,11 +181,11 @@ public:
     virtual void reposition()
     {
         // align everything in center
-        int width = 0;
+        default_dim_type width = 0;
         for (auto& child : m_children)
             width += child->w() + m_spacing;
 
-        int offset = w() / 2 - width / 2;
+        default_dim_type offset = w() / 2 - width / 2;
         for (auto& child : m_children)
         {
             if (child)

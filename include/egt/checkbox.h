@@ -17,7 +17,6 @@ namespace egt
 inline namespace v1
 {
 
-class Rect;
 class Painter;
 
 /**

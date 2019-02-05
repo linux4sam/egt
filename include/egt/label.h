@@ -21,8 +21,6 @@ inline namespace v1
 class Font;
 class Frame;
 class Painter;
-class Point;
-class Rect;
 
 /**
  * A Label in its basic form is just some text.

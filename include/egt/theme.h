@@ -23,7 +23,6 @@ inline namespace v1
 
 class Widget;
 class Painter;
-class Rect;
 
 /**
  * Drawable function object.
