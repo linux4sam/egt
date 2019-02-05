@@ -11,9 +11,9 @@
  * @brief Working with themes.
  */
 
-#include <egt/geometry.h>
 #include <egt/palette.h>
-#include <egt/font.h>
+#include <egt/geometry.h>
+#include <functional>
 #include <iostream>
 
 namespace egt
@@ -23,12 +23,13 @@ inline namespace v1
 
 class Widget;
 class Painter;
+class Rect;
 
 /**
  * Drawable function object.
  *
- * This class defines what is necessary to impletent the draw() function of a
- * widget.
+ * This class defines what is necessary to implement the draw() function of a
+ * widget type.
  */
 template<class T>
 class Drawable
@@ -49,10 +50,13 @@ public:
 /**
  * Manager of the Drawable for each widget type.
  *
+ * The Button draw() method calls the drawable like:
  * @code
  * Drawer<Button>::draw(*this, painter, rect);
  * @endcode
  *
+ *
+ * Observing code can change the Button Drawable by calling:
  * @code
  * Drawer<Button>::set_draw([](Button & widget, Painter & painter, const Rect & rect)
  * {
