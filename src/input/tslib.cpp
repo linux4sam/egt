@@ -50,7 +50,7 @@ InputTslib::InputTslib(const string& path)
         for (int i = 0; i < SAMPLES; i++)
         {
             m_impl->samp_mt[i] = (struct ts_sample_mt*)calloc(SLOTS, sizeof(struct ts_sample_mt));
-            if (!m_impl->samp_mt[i])
+            if (unlikely(!m_impl->samp_mt[i]))
             {
                 free(m_impl->samp_mt);
                 ts_close(m_impl->ts);
@@ -86,7 +86,7 @@ void InputTslib::handle_read(const asio::error_code& error)
     struct ts_sample_mt** samp_mt = m_impl->samp_mt;
 
     int ret = ts_read_mt(m_impl->ts, samp_mt, SLOTS, SAMPLES);
-    if (ret < 0)
+    if (unlikely(ret < 0))
     {
         ERR("ts_read_mt");
         return;
@@ -99,10 +99,10 @@ void InputTslib::handle_read(const asio::error_code& error)
         for (int i = 0; i < SLOTS; i++)
         {
 #ifdef TSLIB_MT_VALID
-            if (!(samp_mt[j][i].valid & TSLIB_MT_VALID))
+            if (unlikely(!(samp_mt[j][i].valid & TSLIB_MT_VALID)))
                 continue;
 #else
-            if (samp_mt[j][i].valid < 1)
+            if (unlikely(samp_mt[j][i].valid < 1))
                 continue;
 #endif
 
@@ -118,7 +118,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                    samp_mt[j][i].distance,
                    samp_mt[j][i].pen_down);
 #endif
-            if (samp_mt[j][i].x < 0 || samp_mt[j][i].y < 0)
+            if (unlikely(samp_mt[j][i].x < 0 || samp_mt[j][i].y < 0))
                 continue;
 
             if (m_active)

@@ -128,7 +128,7 @@ int Frame::handle(eventid event)
 
 void Frame::add_damage(const Rect& rect)
 {
-    if (rect.empty())
+    if (unlikely(rect.empty()))
         return;
 
     DBG(name() << " damage: " << rect);
@@ -138,7 +138,7 @@ void Frame::add_damage(const Rect& rect)
 
 void Frame::damage(const Rect& rect)
 {
-    if (rect.empty())
+    if (unlikely(rect.empty()))
         return;
 
     // don't damage if not even visible

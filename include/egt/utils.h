@@ -35,6 +35,9 @@
 
 #define ERR(x) do { std::cerr << x << std::endl; } while (0)
 
+#define likely(x)       __builtin_expect((x),1)
+#define unlikely(x)     __builtin_expect((x),0)
+
 namespace egt
 {
 inline namespace v1

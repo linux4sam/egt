@@ -65,7 +65,7 @@ Window::Window(const Rect& rect,
 
 void Window::do_draw()
 {
-    if (m_damage.empty())
+    if (unlikely(m_damage.empty()))
         return;
 
     DBG(name() << " " << __PRETTY_FUNCTION__);
@@ -84,7 +84,7 @@ void Window::do_draw()
 void Window::resize(const Size& size)
 {
     // cannot resize if we are screen
-    if (the_main_window == this)
+    if (unlikely(the_main_window == this))
         return;
 
     m_impl->resize(size);

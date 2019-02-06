@@ -22,10 +22,11 @@ namespace egt
 {
 inline namespace v1
 {
+
 Rect Widget::align_algorithm(const Size& size, const Rect& bounding,
                              alignmask align, int margin)
 {
-    if (align == alignmask::NONE)
+    if (unlikely(align == alignmask::NONE))
         return Rect(bounding.point(), size);
 
     auto p = bounding.point();
@@ -253,14 +254,14 @@ bool Widget::disabled() const
 
 void Widget::disable()
 {
-    if (m_disabled != true)
+    if (!m_disabled)
         damage();
     m_disabled = true;
 }
 
 void Widget::enable()
 {
-    if (m_disabled != false)
+    if (m_disabled)
         damage();
     m_disabled = false;
 }
@@ -272,7 +273,7 @@ void Widget::damage()
 
 void Widget::damage(const Rect& rect)
 {
-    if (rect.empty())
+    if (unlikely(rect.empty()))
         return;
 
     // don't damage if not even visible
