@@ -9,8 +9,8 @@
 
 #include "egt/input.h"
 #include "egt/window.h"
-#include <linux/input.h>
 #include <chrono>
+#include <linux/input.h>
 
 using namespace std;
 
@@ -110,7 +110,6 @@ void IInput::dispatch(eventid event)
         }
         else
         {
-
             // give event to any top level and visible windows
             for (auto& w : detail::reverse_iterate(windows()))
             {

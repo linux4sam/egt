@@ -46,33 +46,39 @@ public:
           m_my(my)
     {
         m_widget->flag_set(widgetmask::GRAB_MOUSE);
+        m_mouse.on_async_event(std::bind(&FloatingBox::on_mouse_event, this, std::placeholders::_1));
 
         widget->on_event([this](eventid event)
         {
-            auto mouse = m_mouse.handle(event);
-            switch (mouse)
-            {
-            case Swipe::mouse_event::done:
-            case Swipe::mouse_event::none:
-                break;
-            case Swipe::mouse_event::start:
-                m_mouse.start(m_widget->box().point());
-                return 1;
-            case Swipe::mouse_event::drag:
-            {
-                auto diff = m_mouse.start_value() -
-                            (m_mouse.mouse_start() - event_mouse());
-                Rect dest(diff, m_widget->box().size());
-                if (main_window()->box().contains(dest))
-                    m_widget->move(diff);
-                return 1;
-            }
-            case Swipe::mouse_event::click:
-                break;
-            }
-
-            return 0;
+            return m_mouse.handle(event);
         });
+    }
+
+    using Swipe = detail::MouseGesture<Point>;
+
+    virtual void on_mouse_event(Swipe::mouse_event event)
+    {
+        switch (event)
+        {
+        case Swipe::mouse_event::drag_done:
+        case Swipe::mouse_event::none:
+            break;
+        case Swipe::mouse_event::start:
+            m_mouse.start(m_widget->box().point());
+            break;
+        case Swipe::mouse_event::drag:
+        {
+            auto diff = m_mouse.start_value() -
+                        (m_mouse.mouse_start() - event_mouse());
+            Rect dest(diff, m_widget->box().size());
+            if (main_window()->box().contains(dest))
+                m_widget->move(diff);
+            break;
+        }
+        case Swipe::mouse_event::click:
+        case Swipe::mouse_event::long_click:
+            break;
+        }
     }
 
     virtual void next_frame()
@@ -102,8 +108,6 @@ protected:
     Widget* m_widget;
     default_dim_type m_mx;
     default_dim_type m_my;
-
-    using Swipe = detail::MouseGesture<Point>;
 
     Swipe m_mouse;
 };

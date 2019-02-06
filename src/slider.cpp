@@ -19,6 +19,7 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
       m_orient(orient)
 {
     flag_set(widgetmask::GRAB_MOUSE);
+    m_mouse.on_async_event(std::bind(&Slider::on_mouse_event, this, std::placeholders::_1));
 
     static auto slider_id = 0;
 
@@ -155,28 +156,26 @@ Rect Slider::handle_box(int value) const
     }
 }
 
-int Slider::handle(eventid event)
+void Slider::on_mouse_event(Swipe::mouse_event event)
 {
-    auto ret = Widget::handle(event);
-
-    auto mouse = m_mouse.handle(event);
-    switch (mouse)
+    switch (event)
     {
     case Swipe::mouse_event::none:
         break;
     case Swipe::mouse_event::start:
         m_mouse.start(to_offset(m_value));
         set_active(true);
-        return 1;
+        break;
     case Swipe::mouse_event::click:
-    case Swipe::mouse_event::done:
+    case Swipe::mouse_event::long_click:
+    case Swipe::mouse_event::drag_done:
         set_active(false);
         if (m_invoke_pending)
         {
             m_invoke_pending = false;
             this->invoke_handlers(eventid::PROPERTY_CHANGED);
         }
-        return 1;
+        break;
     case Swipe::mouse_event::drag:
         if (m_orient == orientation::HORIZONTAL)
         {
@@ -188,10 +187,14 @@ int Slider::handle(eventid event)
             auto diff = event_mouse() - m_mouse.mouse_start();
             set_value(to_value(m_mouse.start_value() - diff.y));
         }
-        return 1;
+        break;
     }
+}
 
-    return ret;
+int Slider::handle(eventid event)
+{
+    m_mouse.handle(event);
+    return Widget::handle(event);
 }
 
 void Slider::draw_label(Painter& painter, int value)

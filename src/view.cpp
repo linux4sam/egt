@@ -36,7 +36,8 @@ static inline int o2p(orientation o, const Point& point)
 ScrolledView::ScrolledView(const Rect& rect, orientation orient)
     : Frame(rect, widgetmask::NO_BACKGROUND),
       m_slider(0, 100, 0, orient),
-      m_orient(orient)
+      m_orient(orient),
+      m_mouse(false, true)
 {
     static auto scrolledview_id = 0;
     std::ostringstream ss;
@@ -53,7 +54,7 @@ ScrolledView::ScrolledView(const Rect& rect, orientation orient)
 
     resize_slider();
 
-    flag_set(widgetmask::GRAB_MOUSE);
+    m_mouse.on_async_event(std::bind(&ScrolledView::on_mouse_event, this, std::placeholders::_1));
 
     // TODO: handle slider events for moving the view
 }
@@ -63,31 +64,33 @@ ScrolledView::ScrolledView(orientation orient)
 {
 }
 
-int ScrolledView::handle(eventid event)
+void ScrolledView::on_mouse_event(Swipe::mouse_event event)
 {
-    auto mouse = m_mouse.handle(event);
-    switch (mouse)
+    switch (event)
     {
-    case Swipe::mouse_event::done:
-        return 1;
+    case Swipe::mouse_event::drag_done:
+        break;
     case Swipe::mouse_event::none:
         break;
     case Swipe::mouse_event::start:
         m_mouse.start(m_offset);
-        return 1;
+        break;
     case Swipe::mouse_event::drag:
     {
         auto diff = o2p(m_orient, event_mouse()) -
                     o2p(m_orient, m_mouse.mouse_start());
         set_offset(m_mouse.start_value() + diff);
-        return 1;
-    }
-    case Swipe::mouse_event::click:
         break;
     }
+    case Swipe::mouse_event::click:
+    case Swipe::mouse_event::long_click:
+        break;
+    }
+}
 
-    auto ret = Frame::handle(event);
-    return ret;
+int ScrolledView::handle(eventid event)
+{
+    return Frame::handle(event) || m_mouse.handle(event);
 }
 
 bool ScrolledView::scrollable() const

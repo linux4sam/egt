@@ -13,6 +13,7 @@ using namespace std;
 
 namespace egt
 {
+
 Frame::Frame(const Rect& rect, widgetmask flags)
     : Widget(rect, flags | widgetmask::FRAME)
 {
@@ -94,6 +95,7 @@ int Frame::handle(eventid event)
     case eventid::BUTTON_UP:
     case eventid::MOUSE_DBLCLICK:
     case eventid::MOUSE_CLICK:
+    {
         for (auto& child : detail::reverse_iterate(m_children))
         {
             if (child->disabled())
@@ -116,6 +118,7 @@ int Frame::handle(eventid event)
         }
 
         break;
+    }
     default:
         break;
     }

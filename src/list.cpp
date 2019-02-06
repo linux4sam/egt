@@ -31,8 +31,6 @@ ListBox::ListBox(const Rect& rect)
 
     m_sizer.set_align(alignmask::EXPAND);
     m_view.add(&m_sizer);
-
-    flag_set(widgetmask::GRAB_MOUSE);
 }
 
 ListBox::ListBox(Frame& parent,

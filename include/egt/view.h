@@ -92,6 +92,8 @@ protected:
 
     using Swipe = detail::MouseGesture<int>;
 
+    void on_mouse_event(Swipe::mouse_event event);
+
     Swipe m_mouse;
 };
 

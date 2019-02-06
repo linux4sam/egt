@@ -49,6 +49,9 @@ public:
           m_grip(Image("grip.png")),
           m_arrows(Image("arrows.png"))
     {
+        flag_set(widgetmask::GRAB_MOUSE);
+        m_mouse.on_async_event(std::bind(&FloatingBox::on_mouse_event, this, std::placeholders::_1));
+
         flag_set(widgetmask::TRANSPARENT_BACKGROUND);
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x526d7480));
 
@@ -61,36 +64,39 @@ public:
         m_arrows.set_align(alignmask::CENTER);
     }
 
-    virtual int handle(eventid event) override
+    using Swipe = detail::MouseGesture<Point>;
+
+    void on_mouse_event(Swipe::mouse_event event)
     {
-        auto mouse = m_mouse.handle(event);
-        switch (mouse)
+        switch (event)
         {
-        case Swipe::mouse_event::done:
+        case Swipe::mouse_event::drag_done:
         case Swipe::mouse_event::none:
             break;
         case Swipe::mouse_event::start:
             m_mouse.start(box().point());
-            return 1;
+            break;
         case Swipe::mouse_event::drag:
         {
             auto diff = m_mouse.mouse_start() - event_mouse();
             move(m_mouse.start_value() - diff);
-            return 1;
-        }
-        case Swipe::mouse_event::click:
             break;
         }
+        case Swipe::mouse_event::click:
+        case Swipe::mouse_event::long_click:
+            break;
+        }
+    }
 
-        auto ret = Window::handle(event);
-        return ret;
+    virtual int handle(eventid event) override
+    {
+        m_mouse.handle(event);
+        return Window::handle(event);
     }
 
 protected:
     ImageLabel m_grip;
     ImageLabel m_arrows;
-
-    using Swipe = detail::MouseGesture<Point>;
 
     Swipe m_mouse;
 };
