@@ -13,6 +13,8 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
 
 Frame::Frame(const Rect& rect, widgetmask flags)
     : Widget(rect, flags | widgetmask::FRAME)
@@ -337,4 +339,5 @@ Frame::~Frame()
     remove_all();
 }
 
+}
 }
