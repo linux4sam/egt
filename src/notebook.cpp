@@ -6,6 +6,7 @@
 
 #include "egt/notebook.h"
 #include <algorithm>
+#include <sstream>
 
 using namespace std;
 
@@ -13,13 +14,13 @@ namespace egt
 {
 inline namespace v1
 {
-static auto notebook_id = 0;
 
 Notebook::Notebook(const Rect& rect)
     : Frame(rect, widgetmask::NO_BACKGROUND)
 {
     set_boxtype(Theme::boxtype::none);
 
+    static auto notebook_id = 0;
     ostringstream ss;
     ss << "Notebook" << notebook_id++;
     set_name(ss.str());
