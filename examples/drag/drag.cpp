@@ -61,6 +61,7 @@ public:
 
         add(&m_arrows);
         m_arrows.resize(box().size() / 2);
+        m_arrows.image().resize(box().size() / 2);
         m_arrows.set_align(alignmask::CENTER);
     }
 
