@@ -55,3 +55,7 @@ $(top_srcdir)/examples/
 
 cppcheck:
 	$(CPPCHECK_CMD) --enable=all $(CPPCHECK_DIRS)
+
+lc:
+	find $(top_srcdir)/include/ $(top_srcdir)/src/ $(top_srcdir)/examples/ \
+		-name '*.h' -o -name '*.c' -o -name '*.cpp' | xargs wc -l
