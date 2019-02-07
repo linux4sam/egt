@@ -10,11 +10,11 @@
 using namespace std;
 using namespace egt;
 
-class TempRadial : public Radial<int>
+class TempRadial : public Radial
 {
 public:
     TempRadial(Frame& parent, const Rect& rect, int min, int max, int value = 0)
-        : Radial<int>(parent, rect, min, max, value)
+        : Radial(parent, rect, min, max, value)
     {}
 
     virtual void draw(Painter& painter, const Rect& rect) override
@@ -219,7 +219,7 @@ public:
         m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label2), std::placeholders::_1));
         m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label3), std::placeholders::_1));
 
-        m_a2.on_change(std::bind(&Radial<int>::set_y, std::ref(m_radial1), std::placeholders::_1));
+        m_a2.on_change(std::bind(&Radial::set_y, std::ref(m_radial1), std::placeholders::_1));
 
         m_a3.on_change(std::bind(&Slider::set_x, std::ref(m_slider1), std::placeholders::_1));
         m_a3.on_change(std::bind(&Label::set_x, std::ref(m_label4), std::placeholders::_1));
