@@ -177,6 +177,21 @@ struct TextPage : public NotebookTab
     }
 };
 
+template<class T>
+static void demo_up_down_animator(T* widget)
+{
+    auto animationup = new PropertyAnimator(0, 100, std::chrono::seconds(5), easing_circular_easein);
+    animationup->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+
+    auto animationdown = new PropertyAnimator(100, 0, std::chrono::seconds(5), easing_circular_easeout);
+    animationdown->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+
+    auto animation = new AnimationSequence(true);
+    animation->add(animationup);
+    animation->add(animationdown);
+    animation->start();
+}
+
 struct ProgressPage : public NotebookTab
 {
     ProgressPage()
@@ -187,12 +202,13 @@ struct ProgressPage : public NotebookTab
         add(grid0);
 
         auto spinprogress = new SpinProgress;
-        spinprogress->set_value(50);
         grid0->add(spinprogress);
 
         auto progressbar = new ProgressBar;
-        progressbar->set_value(50);
         grid0->add(progressbar);
+
+        demo_up_down_animator(spinprogress);
+        demo_up_down_animator(progressbar);
     }
 };
 
@@ -257,15 +273,15 @@ struct MeterPage : public NotebookTab
         auto am1 = new AnalogMeter;
         grid0->add(am1);
 
-        auto tools = new CPUMonitorUsage;
-        auto cputimer = new PeriodicTimer(std::chrono::seconds(1));
-        cputimer->on_timeout([tools, lp1, am1]()
-        {
-            tools->update();
-            lp1->set_value(tools->usage(0));
-            am1->set_value(tools->usage(0));
-        });
-        cputimer->start();
+        auto r1 = new Radial(Rect(), 0, 100, 0);
+        r1->set_radial_flags({Radial::radial_flags::primary_value,
+                              Radial::radial_flags::text_value,
+                              Radial::radial_flags::primary_handle});
+        grid0->add(r1);
+
+        demo_up_down_animator(lp1);
+        demo_up_down_animator(am1);
+        demo_up_down_animator(r1);
     }
 };
 
