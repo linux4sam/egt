@@ -18,9 +18,6 @@ inline namespace v1
 {
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
-template<>
-Drawable<Button>::draw_t Drawer<Button>::m_drawable = Button::default_draw;
-
 Button::Button(const std::string& text, const Rect& rect,
                const Font& font, widgetmask flags) noexcept
     : TextWidget(text, rect, alignmask::CENTER, font, flags)
@@ -133,9 +130,6 @@ void Button::first_resize()
         }
     }
 }
-
-template<>
-Drawable<ImageButton>::draw_t Drawer<ImageButton>::m_drawable = ImageButton::default_draw;
 
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,

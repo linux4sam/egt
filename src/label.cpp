@@ -16,9 +16,6 @@ inline namespace v1
 {
 static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
 
-template<>
-Drawable<Label>::draw_t Drawer<Label>::m_drawable = Label::default_draw;
-
 Label::Label(const std::string& text, const Rect& rect,
              alignmask align, const Font& font, widgetmask flags) noexcept
     : TextWidget(text, rect, align, font, flags)
@@ -96,9 +93,6 @@ void Label::first_resize()
 
 Label::~Label()
 {}
-
-template<>
-Drawable<ImageLabel>::draw_t Drawer<ImageLabel>::m_drawable = ImageLabel::default_draw;
 
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,

@@ -89,7 +89,7 @@ private:
 };
 
 template<class T>
-typename Drawable<T>::draw_t Drawer<T>::m_drawable;
+typename Drawable<T>::draw_t Drawer<T>::m_drawable = T::default_draw;
 
 class Color;
 
