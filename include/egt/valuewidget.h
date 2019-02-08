@@ -184,7 +184,7 @@ public:
     explicit ProgressBar(const Rect& rect = Rect(),
                          int min = 0, int max = 100, int value = 0) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect);
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
     virtual ~ProgressBar()
     {}
@@ -211,7 +211,7 @@ public:
     explicit LevelMeter(const Rect& rect = Rect(),
                         int min = 0, int max = 100, int value = 0) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect);
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
     virtual ~LevelMeter()
     {}
@@ -232,7 +232,7 @@ public:
      */
     explicit AnalogMeter(const Rect& rect = Rect());
 
-    virtual void draw(Painter& painter, const Rect& rect);
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
     virtual ~AnalogMeter()
     {}
@@ -257,7 +257,7 @@ public:
     explicit SpinProgress(const Rect& rect = Rect(),
                           int min = 0, int max = 100, int value = 0) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect);
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
     virtual ~SpinProgress()
     {}
