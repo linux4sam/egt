@@ -27,6 +27,13 @@ int main(int argc, const char** argv)
     win.set_name("win");
     win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
 
+    SoftwareVideo player(Size(320, 192));
+    player.set_volume(50);
+
+    auto fullscale = (double)main_screen()->size().w / (double)player.w();
+    if (fullscale <= 0)
+        fullscale = 1.0;
+
     ImageLabel logo(Image("@microchip_logo_white.png"));
     win.add(&logo);
     logo.set_align(alignmask::LEFT | alignmask::TOP, 10);
@@ -42,9 +49,30 @@ int main(int argc, const char** argv)
     grid0.set_name("grid0");
     view0.add(&grid0);
 
+    PropertyAnimatorType<float> animator(1.0, fullscale, std::chrono::milliseconds(800));
+    bool videoshown = false;
+
     for (auto& file : files)
     {
-        grid0.add(new ImageLabel(Image(file)), alignmask::CENTER);
+        auto l = new ImageButton(Image(file));
+        l->set_boxtype(Theme::boxtype::none);
+        l->flag_clear(widgetmask::GRAB_MOUSE);
+        l->on_event([&player, file, &animator, &videoshown](eventid)
+        {
+            cout << "playing " << file << ".avi" << endl;
+            player.set_media(file + ".avi");
+            player.play();
+            player.show();
+            videoshown = true;
+
+            animator.clear_change_callbacks();
+            animator.on_change(std::bind(&SoftwareVideo::set_scale, std::ref(player), std::placeholders::_1));
+            animator.start();
+
+            return 0;
+        }, {eventid::POINTER_CLICK});
+
+        grid0.add(l, alignmask::CENTER);
     }
 
     ScrolledView view1(Rect(0, logo.h() + grid_height + 1, win.size().w, grid_height));
@@ -58,7 +86,25 @@ int main(int argc, const char** argv)
 
     for (auto& file : files)
     {
-        grid1.add(new ImageLabel(Image(file)), alignmask::CENTER);
+        auto l = new ImageButton(Image(file));
+        l->set_boxtype(Theme::boxtype::none);
+        l->flag_clear(widgetmask::GRAB_MOUSE);
+        l->on_event([&player, file, &animator, &videoshown](eventid)
+        {
+            cout << "playing " << file << ".avi" << endl;
+            player.set_media(file + ".avi");
+            player.play();
+            player.show();
+            videoshown = true;
+
+            animator.clear_change_callbacks();
+            animator.on_change(std::bind(&SoftwareVideo::set_scale, std::ref(player), std::placeholders::_1));
+            animator.start();
+
+            return 0;
+        }, {eventid::POINTER_CLICK});
+
+        grid1.add(l, alignmask::CENTER);
     }
 
     Popup popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
@@ -72,21 +118,31 @@ int main(int argc, const char** argv)
     win.add(&settings);
     settings.set_boxtype(Theme::boxtype::none);
     settings.set_align(alignmask::RIGHT | alignmask::TOP, 10);
-    settings.on_event([&popup](eventid event)
+    settings.on_event([&popup](eventid)
     {
-        if (event == eventid::MOUSE_UP)
+        if (popup.visible())
+            popup.hide();
+        else
+            popup.show(true);
+        return 1;
+    }, {eventid::POINTER_CLICK});
+    win.add(&popup);
+
+    win.add(&player);
+
+    win.show();
+
+    detail::IInput::global_input().on_event([&player, &videoshown](eventid)
+    {
+        if (videoshown)
         {
-            if (popup.visible())
-                popup.hide();
-            else
-                popup.show(true);
+            player.pause();
+            player.hide();
+            videoshown = false;
             return 1;
         }
         return 0;
-    });
-    win.add(&popup);
-
-    win.show();
+    }, {eventid::POINTER_CLICK});
 
     return app.run();
 }

@@ -40,7 +40,6 @@ drag/drag \
 easing/easing \
 floating/floating \
 frames/frames \
-gallery/gallery \
 icon/icon \
 infotain/infotain \
 keyboard/keyboard \
@@ -71,7 +70,8 @@ endif
 
 if HAVE_GSTREAMER
 bin_PROGRAMS += \
-audioplayer/audioplayer
+audioplayer/audioplayer \
+gallery/gallery
 endif
 
 animations_animations_SOURCES = animations/animations.cpp

@@ -389,31 +389,37 @@ protected:
  * widget easier.  Any property that matches
  * PropertyAnimator::property_callback_t can be used.
  */
-class PropertyAnimator : public AutoAnimation
+template <class T>
+class PropertyAnimatorType : public AutoAnimation
 {
 public:
 
-    PropertyAnimator(float start, float end,
-                     std::chrono::milliseconds duration,
-                     easing_func func = easing_linear)
+    PropertyAnimatorType(T start = T(), T end = T(),
+                         std::chrono::milliseconds duration = std::chrono::milliseconds(),
+                         easing_func func = easing_linear)
         : AutoAnimation(start, end, duration, func,
-                        std::bind(&PropertyAnimator::invoke_handlers,
+                        std::bind(&PropertyAnimatorType<T>::invoke_handlers,
                                   this, std::placeholders::_1))
     {}
 
-    using property_callback_t = std::function<void (int v)>;
+    using property_callback_t = std::function<void (T v)>;
 
     void on_change(property_callback_t callback)
     {
         m_callbacks.push_back(callback);
     }
 
-    ~PropertyAnimator()
+    void clear_change_callbacks()
+    {
+        m_callbacks.clear();
+    }
+
+    ~PropertyAnimatorType()
     {}
 
 protected:
 
-    void invoke_handlers(float value)
+    void invoke_handlers(T value)
     {
         for (auto& callback : m_callbacks)
             callback(value);
@@ -423,6 +429,8 @@ protected:
 
     callback_array m_callbacks;
 };
+
+using PropertyAnimator = PropertyAnimatorType<int>;
 
 /**
  * Simple delay, useful to insert a delay in an AnimationSequence.
