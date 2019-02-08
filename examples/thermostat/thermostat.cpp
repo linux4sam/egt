@@ -10,68 +10,6 @@
 using namespace std;
 using namespace egt;
 
-class TempRadial : public Radial
-{
-public:
-    TempRadial(Frame& parent, const Rect& rect, int min, int max, int value = 0)
-        : Radial(parent, rect, min, max, value)
-    {}
-
-    virtual void draw(Painter& painter, const Rect& rect) override
-    {
-        ignoreparam(rect);
-
-        auto v = this->value_to_degrees(this->value());
-        float linew = 10;
-        float handle_radius = 20;
-
-        auto color1 = this->palette().color(Palette::BG);
-        color1.alpha(0x55);
-        auto color2 = this->palette().color(Palette::HIGHLIGHT);
-        auto color3 = this->palette().color(Palette::MID);
-
-        float radius = this->w() / 2 - handle_radius - linew;
-        float angle1 = to_radians<float>(-90, 0);
-        float angle2 = to_radians<float>(-90, v);
-
-        auto c = this->center();
-
-        Painter::AutoSaveRestore sr(painter);
-
-        // value arc
-        painter.set_color(color2);
-        painter.set_line_width(linew);
-        painter.arc(Arc(c, radius, angle1, angle2));
-        painter.stroke();
-
-        // handle
-        painter.set_color(color3);
-        auto hp = c.point_on_circumference(radius, angle2);
-        painter.arc(Arc(hp, handle_radius, 0., (float)(2 * M_PI)));
-        painter.fill();
-
-        // secondary value
-        auto color4 = Color::RED;
-        float angle3 = to_radians<float>(-90,
-                                         this->value_to_degrees(this->value2()));
-        painter.set_color(color4);
-        painter.set_line_width(linew * 2);
-        painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
-        painter.stroke();
-
-        if (!m_text.empty())
-            painter.draw_text(m_text, this->box(), this->palette().color(Palette::TEXT),
-                              alignmask::CENTER, 0, Font(72));
-
-        string current = "Current " + std::to_string(value2()) + "°";
-        painter.draw_text(current, this->box(), this->palette().color(Palette::TEXT),
-                          alignmask::CENTER | alignmask::BOTTOM, 80, Font(24));
-    }
-
-    virtual ~TempRadial()
-    {
-    }
-};
 
 
 class ThermostatWindow : public TopWindow
@@ -242,7 +180,7 @@ protected:
     ImageLabel m_background;
     ImageLabel m_logo;
     Label m_title;
-    TempRadial m_radial1;
+    Radial m_radial1;
     ImageLabel m_label1;
     ImageLabel m_label2;
     ImageLabel m_label3;
@@ -252,6 +190,57 @@ protected:
 
 int main(int argc, const char** argv)
 {
+    Drawer<Radial>::set_draw([](Radial & widget, Painter & painter, const Rect & rect)
+    {
+        ignoreparam(rect);
+
+        auto v = widget.value_to_degrees(widget.value());
+        float linew = 10;
+        float handle_radius = 20;
+
+        auto color1 = widget.palette().color(Palette::BG);
+        color1.alpha(0x55);
+        auto color2 = widget.palette().color(Palette::HIGHLIGHT);
+        auto color3 = widget.palette().color(Palette::MID);
+
+        float radius = widget.w() / 2 - handle_radius - linew;
+        float angle1 = to_radians<float>(-90, 0);
+        float angle2 = to_radians<float>(-90, v);
+
+        auto c = widget.center();
+
+        Painter::AutoSaveRestore sr(painter);
+
+        // value arc
+        painter.set_color(color2);
+        painter.set_line_width(linew);
+        painter.arc(Arc(c, radius, angle1, angle2));
+        painter.stroke();
+
+        // handle
+        painter.set_color(color3);
+        auto hp = c.point_on_circumference(radius, angle2);
+        painter.arc(Arc(hp, handle_radius, 0., (float)(2 * M_PI)));
+        painter.fill();
+
+        // secondary value
+        auto color4 = Color::RED;
+        float angle3 = to_radians<float>(-90,
+                                         widget.value_to_degrees(widget.value2()));
+        painter.set_color(color4);
+        painter.set_line_width(linew * 2);
+        painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
+        painter.stroke();
+
+        if (!widget.text().empty())
+            painter.draw_text(widget.text(), widget.box(), widget.palette().color(Palette::TEXT),
+                              alignmask::CENTER, 0, Font(72));
+
+        string current = "Current " + std::to_string(widget.value2()) + "°";
+        painter.draw_text(current, widget.box(), widget.palette().color(Palette::TEXT),
+                          alignmask::CENTER | alignmask::BOTTOM, 80, Font(24));
+    });
+
     Application app(argc, argv, "thermostat");
 
     ThermostatWindow win;

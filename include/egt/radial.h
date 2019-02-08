@@ -35,7 +35,8 @@ public:
         primary_value,
         primary_handle,
         secondary_value,
-        text
+        text,
+        text_value
     };
 
     /**
@@ -124,21 +125,27 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
+        Drawer<RadialType<T>>::draw(*this, painter, rect);
+    }
+
+    static void default_draw(RadialType<T>& widget, Painter& painter, const Rect& rect)
+    {
         ignoreparam(rect);
 
-        auto v = this->value_to_degrees(this->value());
-        float linew = 40;
+        auto v = widget.value_to_degrees(widget.value());
 
-        auto color1 = this->palette().color(Palette::MID);
-        auto color2 = this->palette().color(Palette::HIGHLIGHT);
-        auto color3 = this->palette().color(Palette::DARK);
-        auto color4 = this->palette().color(Palette::HIGHLIGHT);
+        auto color1 = widget.palette().color(Palette::MID);
+        auto color2 = widget.palette().color(Palette::HIGHLIGHT);
+        auto color3 = widget.palette().color(Palette::DARK);
+        auto color4 = widget.palette().color(Palette::HIGHLIGHT);
 
-        float radius = this->w() / 2 - (linew / 2);
+        float smalldim = std::min(widget.w(), widget.h());
+        float linew = smalldim / 10;
+        float radius = smalldim / 2 - (linew / 2);
         float angle1 = to_radians<float>(-90, 0);
         float angle2 = to_radians<float>(-90, v);
 
-        auto c = this->center();
+        auto c = widget.center();
 
         // bottom full circle
         painter.set_color(color1);
@@ -146,7 +153,7 @@ public:
         painter.arc(Arc(c, radius, 0, 2 * M_PI));
         painter.stroke();
 
-        if (m_rflags.find(radial_flags::primary_value) != m_rflags.end())
+        if (widget.m_rflags.find(radial_flags::primary_value) != widget.m_rflags.end())
         {
             // value arc
             painter.set_color(color2);
@@ -155,7 +162,7 @@ public:
             painter.stroke();
         }
 
-        if (m_rflags.find(radial_flags::primary_handle) != m_rflags.end())
+        if (widget.m_rflags.find(radial_flags::primary_handle) != widget.m_rflags.end())
         {
             // handle
             painter.set_color(color3);
@@ -164,22 +171,28 @@ public:
             painter.stroke();
         }
 
-        if (m_rflags.find(radial_flags::secondary_value) != m_rflags.end())
+        if (widget.m_rflags.find(radial_flags::secondary_value) != widget.m_rflags.end())
         {
             // secondary value
             float angle3 = to_radians<float>(-90,
-                                             this->value_to_degrees(this->value2()));
+                                             widget.value_to_degrees(widget.value2()));
             painter.set_color(color4);
             painter.set_line_width(linew);
             painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
             painter.stroke();
         }
 
-        if (m_rflags.find(radial_flags::text) != m_rflags.end())
+        if (widget.m_rflags.find(radial_flags::text) != widget.m_rflags.end())
         {
-            if (!m_text.empty())
-                painter.draw_text(m_text, this->box(), this->palette().color(Palette::TEXT),
+            if (!widget.m_text.empty())
+                painter.draw_text(widget.m_text, widget.box(), widget.palette().color(Palette::TEXT),
                                   alignmask::CENTER, 0, Font(72));
+        }
+        else if (widget.m_rflags.find(radial_flags::text_value) != widget.m_rflags.end())
+        {
+            auto text = std::to_string(widget.value());
+            painter.draw_text(text, widget.box(), widget.palette().color(Palette::TEXT),
+                              alignmask::CENTER, 0, Font(72));
         }
     }
 
@@ -187,13 +200,14 @@ public:
 
     void set_radial_flags(flag_array flags)
     {
-        m_rflags = flags;
+        if (m_rflags != flags)
+        {
+            m_rflags = flags;
+            this->damage();
+        }
     }
 
-    virtual ~RadialType()
-    {}
-
-protected:
+    virtual const std::string& text() const { return m_text; }
 
     float touch_to_degrees(const Point& point)
     {
@@ -224,6 +238,11 @@ protected:
         float n = degrees / 360.;
         return (n * (this->m_max - this->m_min)) + this->m_min;
     }
+
+    virtual ~RadialType()
+    {}
+
+protected:
 
     std::string m_text;
 
