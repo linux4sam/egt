@@ -110,8 +110,10 @@ public:
     }
 #endif
 
-    virtual void set_value(int value) override
+    virtual int set_value(int value) override
     {
+        int orig = m_value;
+
         assert(m_max > m_min);
 
         if (value > m_max)
@@ -131,6 +133,8 @@ public:
             else
                 m_invoke_pending = true;
         }
+
+        return orig;
     }
 
     inline void slider_flags(flags flags)

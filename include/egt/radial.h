@@ -104,17 +104,16 @@ public:
             this->set_active(false);
             return 1;
         }
-        case eventid::RAW_POINTER_MOVE:
+        case eventid::POINTER_CLICK:
+        case eventid::POINTER_DRAG:
         {
-            if (this->active())
-            {
-                auto angle = this->touch_to_degrees(this->from_screen(event_mouse()));
-                auto v = this->degrees_to_value(angle);
-                this->set_value(v);
+            auto angle = this->touch_to_degrees(this->from_screen(event_mouse()));
+            auto v = this->degrees_to_value(angle);
+            auto orig = this->set_value(v);
+            if (orig != v)
+                this->invoke_handlers(eventid::INPUT_PROPERTY_CHANGED);
 
-                return 1;
-            }
-            break;
+            return 1;
         }
         default:
             break;
@@ -140,8 +139,6 @@ public:
         float angle2 = to_radians<float>(-90, v);
 
         auto c = this->center();
-
-        Painter::AutoSaveRestore sr(painter);
 
         // bottom full circle
         painter.set_color(color1);

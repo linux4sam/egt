@@ -69,6 +69,11 @@ sprite/sprite \
 brick/brick
 endif
 
+if HAVE_GSTREAMER
+bin_PROGRAMS += \
+audioplayer/audioplayer
+endif
+
 animations_animations_SOURCES = animations/animations.cpp
 animations_animations_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 animations_animations_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
@@ -226,3 +231,10 @@ basicui_basicui_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 basicui_basicuidir = $(prefix)/share/egt/examples/basicui
 dist_basicui_basicui_DATA = $(wildcard $(top_srcdir)/examples/basicui/*.xml)
 basicui_basicui_LDFLAGS = $(AM_LDFLAGS)
+
+audioplayer_audioplayer_SOURCES = audioplayer/audioplayer.cpp
+audioplayer_audioplayer_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+audioplayer_audioplayer_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+audioplayer_audioplayerdir = $(prefix)/share/egt/examples/audioplayer
+dist_audioplayer_audioplayer_DATA = $(wildcard $(top_srcdir)/examples/audioplayer/*.png)
+audioplayer_audioplayer_LDFLAGS = $(AM_LDFLAGS)

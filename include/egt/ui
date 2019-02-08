@@ -13,6 +13,7 @@
 
 #include <egt/animation.h>
 #include <egt/app.h>
+#include <egt/audio.h>
 #include <egt/button.h>
 #include <egt/buttongroup.h>
 #include <egt/canvas.h>

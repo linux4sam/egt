@@ -39,6 +39,7 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
         MAPITEM(eventid::KEYBOARD_UP);
         MAPITEM(eventid::KEYBOARD_REPEAT);
         MAPITEM(eventid::PROPERTY_CHANGED);
+        MAPITEM(eventid::INPUT_PROPERTY_CHANGED);
         MAPITEM(eventid::HIDE);
         MAPITEM(eventid::SHOW);
     }

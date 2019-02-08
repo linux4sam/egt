@@ -106,8 +106,10 @@ public:
      *
      * If this results in changing the value, it will damage() the widget.
      */
-    virtual void set_value(T value)
+    virtual T set_value(T value)
     {
+        T orig = m_value;
+
         assert(m_max > m_min);
 
         if (value > m_max)
@@ -122,10 +124,30 @@ public:
             damage();
             invoke_handlers(eventid::PROPERTY_CHANGED);
         }
+
+        return orig;
     }
 
     inline T min() const { return m_min; }
     inline T max() const { return m_max; }
+
+    virtual void set_min(T v)
+    {
+        if (m_min != v)
+        {
+            m_min = v;
+            damage();
+        }
+    }
+
+    virtual void set_max(T v)
+    {
+        if (m_max != v)
+        {
+            m_max = v;
+            damage();
+        }
+    }
 
     /**
      * Get the current value.

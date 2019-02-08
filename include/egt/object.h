@@ -61,6 +61,7 @@ enum class eventid
      * Called when a property changes.
      */
     PROPERTY_CHANGED,
+    INPUT_PROPERTY_CHANGED,
 
     HIDE,
     SHOW,

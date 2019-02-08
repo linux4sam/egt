@@ -28,6 +28,7 @@ libegt_la_CFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 libegt_la_SOURCES = \
 animation.cpp \
 app.cpp \
+audio.cpp \
 button.cpp \
 buttongroup.cpp \
 canvas.cpp \
@@ -103,6 +104,7 @@ libegtinclude_HEADERS = \
 $(top_builddir)/include/egt/version.h \
 $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
+$(top_srcdir)/include/egt/audio.h \
 $(top_srcdir)/include/egt/bitmask.h \
 $(top_srcdir)/include/egt/button.h \
 $(top_srcdir)/include/egt/buttongroup.h \
