@@ -15,7 +15,7 @@
 #include <egt/geometry.h>
 #include <egt/image.h>
 #include <egt/theme.h>
-#include <egt/widget.h>
+#include <egt/textwidget.h>
 
 namespace egt
 {

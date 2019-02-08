@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/valuewidget.h"
-#include "egt/painter.h"
 #include "egt/detail/math.h"
+#include "egt/painter.h"
+#include "egt/textwidget.h"
+#include "egt/valuewidget.h"
 
 using namespace std;
 

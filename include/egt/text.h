@@ -13,7 +13,7 @@
 
 #include <egt/font.h>
 #include <egt/timer.h>
-#include <egt/widget.h>
+#include <egt/textwidget.h>
 #include <string>
 
 namespace egt

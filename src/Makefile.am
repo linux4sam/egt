@@ -64,6 +64,7 @@ screen/x11screen.cpp \
 slider.cpp \
 sprite.cpp \
 text.cpp \
+textwidget.cpp \
 theme.cpp \
 timer.cpp \
 tools.cpp \
@@ -145,6 +146,7 @@ $(top_srcdir)/include/egt/sizer.h \
 $(top_srcdir)/include/egt/slider.h \
 $(top_srcdir)/include/egt/sprite.h \
 $(top_srcdir)/include/egt/text.h \
+$(top_srcdir)/include/egt/textwidget.h \
 $(top_srcdir)/include/egt/theme.h \
 $(top_srcdir)/include/egt/timer.h \
 $(top_srcdir)/include/egt/tools.h \

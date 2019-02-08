@@ -12,7 +12,7 @@
  */
 
 #include <egt/image.h>
-#include <egt/widget.h>
+#include <egt/textwidget.h>
 
 namespace egt
 {

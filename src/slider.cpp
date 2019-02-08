@@ -5,6 +5,7 @@
  */
 #include "egt/slider.h"
 #include "egt/painter.h"
+#include "egt/textwidget.h"
 
 using namespace std;
 
