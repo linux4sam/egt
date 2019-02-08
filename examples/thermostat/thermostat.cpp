@@ -166,7 +166,7 @@ public:
 
         m_label1.on_event([this](eventid event)
         {
-            if (event == eventid::MOUSE_DOWN)
+            if (event == eventid::POINTER_CLICK)
             {
                 m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
                 m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
@@ -181,7 +181,7 @@ public:
 
         m_label2.on_event([this](eventid event)
         {
-            if (event == eventid::MOUSE_DOWN)
+            if (event == eventid::POINTER_CLICK)
             {
                 m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
                 m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
@@ -196,7 +196,7 @@ public:
 
         m_label3.on_event([this](eventid event)
         {
-            if (event == eventid::MOUSE_DOWN)
+            if (event == eventid::POINTER_CLICK)
             {
                 m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
                 m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);

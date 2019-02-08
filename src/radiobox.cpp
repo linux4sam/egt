@@ -28,7 +28,7 @@ int RadioBox::handle(eventid event)
 
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
+    case eventid::POINTER_CLICK:
         check(!checked());
         return 1;
     default:

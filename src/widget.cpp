@@ -153,12 +153,12 @@ int Widget::handle(eventid event)
     {
         switch (event)
         {
-        case eventid::MOUSE_DOWN:
+        case eventid::RAW_POINTER_DOWN:
         {
             mouse_grab(this);
             break;
         }
-        case eventid::MOUSE_UP:
+        case eventid::RAW_POINTER_UP:
         {
             mouse_grab(nullptr);
             break;
@@ -588,17 +588,17 @@ int ScrollWheel::handle(eventid event)
 {
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
+    case eventid::RAW_POINTER_DOWN:
         m_moving_x = from_screen(event_mouse()).y;
         m_start_pos = position();
         set_active(true);
         return 1;
         break;
-    case eventid::MOUSE_UP:
+    case eventid::RAW_POINTER_UP:
         set_active(false);
         return 1;
         break;
-    case eventid::MOUSE_MOVE:
+    case eventid::RAW_POINTER_MOVE:
         if (active())
         {
             int diff = from_screen(event_mouse()).y - m_moving_x;

@@ -128,7 +128,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                     event_mouse() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
                     m_active = false;
                     DBG("mouse up " << event_mouse());
-                    dispatch(eventid::MOUSE_UP);
+                    dispatch(eventid::RAW_POINTER_UP);
                 }
                 else
                 {
@@ -156,12 +156,12 @@ void InputTslib::handle_read(const asio::error_code& error)
                     if (m_impl->last_down.time_since_epoch().count() &&
                         chrono::duration<double, milli>(tv - m_impl->last_down).count() < DOUBLE_CLICK_DELTA)
                     {
-                        dispatch(eventid::MOUSE_DBLCLICK);
+                        dispatch(eventid::POINTER_DBLCLICK);
                     }
                     else
                     {
                         DBG("mouse down " << event_mouse());
-                        dispatch(eventid::MOUSE_DOWN);
+                        dispatch(eventid::RAW_POINTER_DOWN);
                         m_active = true;
                     }
 
@@ -174,7 +174,7 @@ void InputTslib::handle_read(const asio::error_code& error)
     if (move)
     {
         DBG("mouse move " << event_mouse());
-        dispatch(eventid::MOUSE_MOVE);
+        dispatch(eventid::RAW_POINTER_MOVE);
     }
 
     asio::async_read(m_input, asio::null_buffers(),

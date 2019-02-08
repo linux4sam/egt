@@ -143,47 +143,30 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ButtonPress:
             event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-            detail::IInput::dispatch(eventid::MOUSE_DOWN);
+            detail::IInput::dispatch(eventid::RAW_POINTER_DOWN);
             break;
         case ButtonRelease:
             event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-            detail::IInput::dispatch(eventid::MOUSE_UP);
+            detail::IInput::dispatch(eventid::RAW_POINTER_UP);
             break;
         case EnterNotify:
         case LeaveNotify:
         case MotionNotify:
             event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-            detail::IInput::dispatch(eventid::MOUSE_MOVE);
+            detail::IInput::dispatch(eventid::RAW_POINTER_MOVE);
             break;
         case KeyPress:
         {
-            /*
-            char keybuf[8];
-            KeySym key;
-            XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
-            cout << keybuf << endl;
-            */
-
             event_key() = XLookupKeysym(&e.xkey, 0);
-            //                event_code() = XKeysymToKeycode(e.xkey.keycode);
             event_code() = XKeysymToKeycode(m_priv->display, event_key());
             if (event_key() == XK_BackSpace)
                 event_code() = KEY_BACKSPACE;
-
-
 
             detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
             break;
         }
         case KeyRelease:
         {
-            /*
-            char keybuf[8];
-            KeySym key;
-            XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
-            cout << keybuf << endl;
-            */
-
             event_key() = XLookupKeysym(&e.xkey, 0);
             event_code() = XKeysymToKeycode(m_priv->display, event_key());
             if (event_key() == XK_BackSpace)

@@ -27,14 +27,20 @@ enum class eventid
 {
     NONE,
 
-    // Mouse events
-    MOUSE_DOWN,
-    MOUSE_UP,
-    MOUSE_MOVE,
-    BUTTON_DOWN,
-    BUTTON_UP,
-    MOUSE_DBLCLICK,
-    MOUSE_CLICK,
+    // Raw Pointer events
+    RAW_POINTER_DOWN,
+    RAW_POINTER_UP,
+    RAW_POINTER_MOVE,
+
+    // Pointer events
+    POINTER_CLICK,
+    POINTER_DBLCLICK,
+    POINTER_HOLD,
+    POINTER_DRAG_START,
+    POINTER_DRAG,
+    POINTER_DRAG_STOP,
+    POINTER_BUTTON_DOWN,
+    POINTER_BUTTON_UP,
 
     /**
      * Sent when a widget gets focus.

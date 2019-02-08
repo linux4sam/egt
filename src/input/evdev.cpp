@@ -119,13 +119,13 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             case BTN_TOOL_LENS:
                 break;
             case BTN_LEFT:
-                dispatch(value ? eventid::MOUSE_DOWN : eventid::MOUSE_UP);
+                dispatch(value ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
                 break;
             case BTN_RIGHT:
-                dispatch(value ? eventid::MOUSE_DOWN : eventid::MOUSE_UP);
+                dispatch(value ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
                 break;
             case BTN_MIDDLE:
-                dispatch(value ? eventid::MOUSE_DOWN : eventid::MOUSE_UP);
+                dispatch(value ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
                 break;
             default:
                 eventid v = eventid::NONE;
@@ -147,14 +147,14 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     if (absolute_event)
     {
         event_mouse() = Point(x, y);
-        dispatch(eventid::MOUSE_MOVE);
+        dispatch(eventid::RAW_POINTER_MOVE);
     }
     else
     {
         if (dx != 0 || dy != 0)
         {
             event_mouse() = Point(event_mouse().x + dx, event_mouse().y + dy);
-            dispatch(eventid::MOUSE_MOVE);
+            dispatch(eventid::RAW_POINTER_MOVE);
         }
     }
 

@@ -83,6 +83,7 @@ public:
         reset_game();
     }
 
+    // TODO: convert this to use POINTER_DRAG events
     int handle(eventid event) override
     {
         switch (event)
@@ -120,10 +121,10 @@ public:
 
             break;
         }
-        case eventid::MOUSE_DOWN:
+        case eventid::RAW_POINTER_DOWN:
             m_running = true;
             break;
-        case eventid::MOUSE_MOVE:
+        case eventid::RAW_POINTER_MOVE:
             m_paddle.move(Point(event_mouse().x - m_paddle.w() / 2, m_paddle.y()));
             return 1;
         default:

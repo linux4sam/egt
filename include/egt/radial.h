@@ -94,17 +94,17 @@ public:
 
         switch (event)
         {
-        case eventid::MOUSE_DOWN:
+        case eventid::RAW_POINTER_DOWN:
         {
             this->set_active(true);
             return 1;
         }
-        case eventid::MOUSE_UP:
+        case eventid::RAW_POINTER_UP:
         {
             this->set_active(false);
             return 1;
         }
-        case eventid::MOUSE_MOVE:
+        case eventid::RAW_POINTER_MOVE:
         {
             if (this->active())
             {

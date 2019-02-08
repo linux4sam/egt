@@ -79,7 +79,7 @@ int ComboBoxPopup::handle(eventid event)
 
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
+    case eventid::POINTER_CLICK:
     {
         Point mouse = from_screen(event_mouse());
 
@@ -127,7 +127,7 @@ int ComboBox::handle(eventid event)
 
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
+    case eventid::POINTER_CLICK:
     {
         Point mouse = from_screen(event_mouse());
 

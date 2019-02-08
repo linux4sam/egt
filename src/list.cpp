@@ -102,7 +102,7 @@ int ListBox::handle(eventid event)
 
     switch (event)
     {
-    case eventid::MOUSE_UP:
+    case eventid::POINTER_CLICK:
     {
         Point mouse = from_screen(event_mouse());
         for (size_t i = 0; i < m_sizer.count_children(); i++)

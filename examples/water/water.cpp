@@ -76,7 +76,7 @@ public:
     {
         switch (event)
         {
-        case eventid::MOUSE_MOVE:
+        case eventid::RAW_POINTER_MOVE:
             spawn(event_mouse());
             break;
         default:

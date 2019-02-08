@@ -9,7 +9,6 @@
 #endif
 
 #include <cmath>
-#include <egt/detail/mousegesture.h>
 #include <egt/ui>
 #include <iostream>
 #include <map>
@@ -50,7 +49,6 @@ public:
           m_arrows(Image("arrows.png"))
     {
         flag_set(widgetmask::GRAB_MOUSE);
-        m_mouse.on_async_event(std::bind(&FloatingBox::on_mouse_event, this, std::placeholders::_1));
 
         flag_set(widgetmask::TRANSPARENT_BACKGROUND);
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x526d7480));
@@ -65,41 +63,30 @@ public:
         m_arrows.set_align(alignmask::CENTER);
     }
 
-    using Swipe = detail::MouseGesture<Point>;
-
-    void on_mouse_event(Swipe::mouse_event event)
+    virtual int handle(eventid event) override
     {
         switch (event)
         {
-        case Swipe::mouse_event::drag_done:
-        case Swipe::mouse_event::none:
+        case eventid::POINTER_DRAG_START:
+            m_start_point = box().point();
             break;
-        case Swipe::mouse_event::start:
-            m_mouse.start(box().point());
-            break;
-        case Swipe::mouse_event::drag:
+        case eventid::POINTER_DRAG:
         {
-            auto diff = m_mouse.mouse_start() - event_mouse();
-            move(m_mouse.start_value() - diff);
+            auto diff = event_mouse_drag_start() - event_mouse();
+            move(m_start_point - diff);
             break;
         }
-        case Swipe::mouse_event::click:
-        case Swipe::mouse_event::long_click:
+        default:
             break;
         }
-    }
 
-    virtual int handle(eventid event) override
-    {
-        m_mouse.handle(event);
         return Window::handle(event);
     }
 
 protected:
     ImageLabel m_grip;
     ImageLabel m_arrows;
-
-    Swipe m_mouse;
+    Point m_start_point;
 };
 
 int main(int argc, const char** argv)

@@ -11,7 +11,6 @@
  * @brief View definition.
  */
 
-#include <egt/detail/mousegesture.h>
 #include <egt/frame.h>
 #include <egt/slider.h>
 
@@ -90,11 +89,7 @@ protected:
      */
     orientation m_orient{orientation::HORIZONTAL};
 
-    using Swipe = detail::MouseGesture<int>;
-
-    void on_mouse_event(Swipe::mouse_event event);
-
-    Swipe m_mouse;
+    int m_start_offset{0};
 };
 
 }

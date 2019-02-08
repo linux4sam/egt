@@ -19,7 +19,6 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
       m_orient(orient)
 {
     flag_set(widgetmask::GRAB_MOUSE);
-    m_mouse.on_async_event(std::bind(&Slider::on_mouse_event, this, std::placeholders::_1));
 
     static auto slider_id = 0;
 
@@ -156,19 +155,14 @@ Rect Slider::handle_box(int value) const
     }
 }
 
-void Slider::on_mouse_event(Swipe::mouse_event event)
+int Slider::handle(eventid event)
 {
     switch (event)
     {
-    case Swipe::mouse_event::none:
-        break;
-    case Swipe::mouse_event::start:
-        m_mouse.start(to_offset(m_value));
+    case eventid::RAW_POINTER_DOWN:
         set_active(true);
         break;
-    case Swipe::mouse_event::click:
-    case Swipe::mouse_event::long_click:
-    case Swipe::mouse_event::drag_done:
+    case eventid::RAW_POINTER_UP:
         set_active(false);
         if (m_invoke_pending)
         {
@@ -176,24 +170,25 @@ void Slider::on_mouse_event(Swipe::mouse_event event)
             this->invoke_handlers(eventid::PROPERTY_CHANGED);
         }
         break;
-    case Swipe::mouse_event::drag:
+    case eventid::POINTER_DRAG_START:
+        m_start_offset = to_offset(m_value);
+        break;
+    case eventid::POINTER_DRAG:
         if (m_orient == orientation::HORIZONTAL)
         {
-            auto diff = event_mouse() - m_mouse.mouse_start();
-            set_value(to_value(m_mouse.start_value() + diff.x));
+            auto diff = event_mouse() - event_mouse_drag_start();
+            set_value(to_value(m_start_offset + diff.x));
         }
         else
         {
-            auto diff = event_mouse() - m_mouse.mouse_start();
-            set_value(to_value(m_mouse.start_value() - diff.y));
+            auto diff = event_mouse() - event_mouse_drag_start();
+            set_value(to_value(m_start_offset - diff.y));
         }
         break;
+    default:
+        break;
     }
-}
 
-int Slider::handle(eventid event)
-{
-    m_mouse.handle(event);
     return Widget::handle(event);
 }
 

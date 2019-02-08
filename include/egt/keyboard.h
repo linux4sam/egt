@@ -74,12 +74,12 @@ public:
                 {
                     if (!b->text().empty())
                     {
-                        if (event == eventid::MOUSE_DOWN)
+                        if (event == eventid::RAW_POINTER_DOWN)
                         {
                             event_key() = b->text()[0];
                             detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
                         }
-                        else if (event == eventid::MOUSE_UP)
+                        else if (event == eventid::RAW_POINTER_UP)
                         {
                             event_key() = b->text()[0];
                             detail::IInput::dispatch(eventid::KEYBOARD_UP);

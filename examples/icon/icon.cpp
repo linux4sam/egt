@@ -43,7 +43,7 @@ int main(int argc, const char** argv)
 
     right.on_event([&](eventid event)
     {
-        if (event == eventid::MOUSE_DOWN)
+        if (event == eventid::POINTER_CLICK)
         {
             swipe.starting(view0.offset());
             swipe.ending(view0.offset() - view0.w());
@@ -54,7 +54,7 @@ int main(int argc, const char** argv)
 
     left.on_event([&](eventid event)
     {
-        if (event == eventid::MOUSE_DOWN)
+        if (event == eventid::POINTER_CLICK)
         {
             swipe.starting(view0.offset());
             swipe.ending(view0.offset() + view0.w());

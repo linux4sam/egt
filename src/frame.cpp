@@ -90,13 +90,17 @@ int Frame::handle(eventid event)
 
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
-    case eventid::MOUSE_UP:
-    case eventid::MOUSE_MOVE:
-    case eventid::BUTTON_DOWN:
-    case eventid::BUTTON_UP:
-    case eventid::MOUSE_DBLCLICK:
-    case eventid::MOUSE_CLICK:
+    case eventid::RAW_POINTER_DOWN:
+    case eventid::RAW_POINTER_UP:
+    case eventid::RAW_POINTER_MOVE:
+    case eventid::POINTER_CLICK:
+    case eventid::POINTER_DBLCLICK:
+    case eventid::POINTER_HOLD:
+    case eventid::POINTER_DRAG_START:
+    case eventid::POINTER_DRAG:
+    case eventid::POINTER_DRAG_STOP:
+    case eventid::POINTER_BUTTON_DOWN:
+    case eventid::POINTER_BUTTON_UP:
     {
         for (auto& child : detail::reverse_iterate(m_children))
         {

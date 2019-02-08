@@ -46,7 +46,7 @@ int TextBox::handle(eventid event)
 {
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
+    case eventid::POINTER_CLICK:
         keyboard_focus(this);
         return 1;
     case eventid::KEYBOARD_DOWN:

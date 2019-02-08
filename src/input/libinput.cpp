@@ -197,7 +197,7 @@ void LibInput::handle_event_motion(struct libinput_event* ev)
     event_mouse().x += libinput_event_pointer_get_dx_unaccelerated(p);
     event_mouse().y += libinput_event_pointer_get_dy_unaccelerated(p);
 
-    dispatch(eventid::MOUSE_MOVE);
+    dispatch(eventid::RAW_POINTER_MOVE);
 }
 
 void LibInput::handle_event_absmotion(struct libinput_event* ev)
@@ -228,7 +228,7 @@ bool LibInput::handle_event_touch(struct libinput_event* ev)
     switch (libinput_event_get_type(ev))
     {
     case LIBINPUT_EVENT_TOUCH_UP:
-        dispatch(eventid::MOUSE_UP);
+        dispatch(eventid::POINTER_BUTTON_UP);
         break;
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
@@ -237,7 +237,7 @@ bool LibInput::handle_event_touch(struct libinput_event* ev)
 
         event_mouse() = Point(x, y);
 
-        dispatch(eventid::MOUSE_DOWN);
+        dispatch(eventid::POINTER_BUTTON_DOWN);
         break;
     }
     case LIBINPUT_EVENT_TOUCH_MOTION:
@@ -315,7 +315,7 @@ void LibInput::handle_event_button(struct libinput_event* ev)
 
     is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
 
-    dispatch(is_press ? eventid::BUTTON_DOWN : eventid::BUTTON_UP);
+    dispatch(is_press ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
 
     event_button() = button;
 }
@@ -550,7 +550,7 @@ void LibInput::handle_read(const asio::error_code& error)
     }
 
     if (res)
-        dispatch(eventid::MOUSE_MOVE);
+        dispatch(eventid::RAW_POINTER_MOVE);
 
     asio::async_read(m_input, asio::null_buffers(),
                      std::bind(&LibInput::handle_read, this, std::placeholders::_1));

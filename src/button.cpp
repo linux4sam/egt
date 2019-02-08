@@ -49,12 +49,12 @@ int Button::handle(eventid event)
 
     switch (event)
     {
-    case eventid::MOUSE_DOWN:
+    case eventid::RAW_POINTER_DOWN:
     {
         set_active(true);
         break;
     }
-    case eventid::MOUSE_UP:
+    case eventid::RAW_POINTER_UP:
     {
         set_active(false);
         break;

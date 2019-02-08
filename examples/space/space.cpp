@@ -86,7 +86,7 @@ public:
     {
         switch (event)
         {
-        case eventid::MOUSE_MOVE:
+        case eventid::RAW_POINTER_MOVE:
             if (debounce_mouse(50))
                 spawn(event_mouse());
             break;

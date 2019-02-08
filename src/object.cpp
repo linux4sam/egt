@@ -22,13 +22,17 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
     {
 #define MAPITEM(p) strings[p] = #p
         MAPITEM(eventid::NONE);
-        MAPITEM(eventid::MOUSE_DOWN);
-        MAPITEM(eventid::MOUSE_UP);
-        MAPITEM(eventid::MOUSE_MOVE);
-        MAPITEM(eventid::BUTTON_DOWN);
-        MAPITEM(eventid::BUTTON_UP);
-        MAPITEM(eventid::MOUSE_DBLCLICK);
-        MAPITEM(eventid::MOUSE_CLICK);
+        MAPITEM(eventid::RAW_POINTER_DOWN);
+        MAPITEM(eventid::RAW_POINTER_UP);
+        MAPITEM(eventid::RAW_POINTER_MOVE);
+        MAPITEM(eventid::POINTER_CLICK);
+        MAPITEM(eventid::POINTER_DBLCLICK);
+        MAPITEM(eventid::POINTER_HOLD);
+        MAPITEM(eventid::POINTER_DRAG_START);
+        MAPITEM(eventid::POINTER_DRAG);
+        MAPITEM(eventid::POINTER_DRAG_STOP);
+        MAPITEM(eventid::POINTER_BUTTON_DOWN);
+        MAPITEM(eventid::POINTER_BUTTON_UP);
         MAPITEM(eventid::ENTER);
         MAPITEM(eventid::LEAVE);
         MAPITEM(eventid::KEYBOARD_DOWN);

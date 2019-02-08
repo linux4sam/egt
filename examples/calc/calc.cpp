@@ -59,7 +59,7 @@ int main(int argc, const char** argv)
 
             b->on_event([&text, b](eventid event)
             {
-                if (event != eventid::MOUSE_UP)
+                if (event != eventid::POINTER_CLICK)
                     return 0;
 
                 if (b->text() == "=")

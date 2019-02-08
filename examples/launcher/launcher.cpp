@@ -88,7 +88,7 @@ public:
     {
         switch (event)
         {
-        case eventid::MOUSE_UP:
+        case eventid::POINTER_CLICK:
         {
             main_app().event().quit();
 
@@ -160,7 +160,7 @@ public:
         settings->set_align(alignmask::RIGHT | alignmask::TOP, 10);
         settings->on_event([this](eventid event)
         {
-            if (event == eventid::MOUSE_DOWN)
+            if (event == eventid::POINTER_CLICK)
             {
                 if (m_popup.visible())
                     m_popup.hide();
@@ -218,7 +218,7 @@ public:
     {
         switch (event)
         {
-        case eventid::MOUSE_DOWN:
+        case eventid::RAW_POINTER_DOWN:
             if (!m_moving)
             {
                 m_moving = true;
@@ -226,11 +226,11 @@ public:
                 m_offset = m_boxes[0]->center().x;
             }
             break;
-        case eventid::MOUSE_UP:
+        case eventid::RAW_POINTER_UP:
             m_moving = false;
             start_snap();
             break;
-        case eventid::MOUSE_MOVE:
+        case eventid::RAW_POINTER_MOVE:
             if (m_moving)
             {
                 move_boxes(event_mouse().x);

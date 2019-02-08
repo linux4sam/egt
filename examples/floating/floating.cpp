@@ -9,7 +9,6 @@
 #endif
 
 #include <egt/ui>
-#include <egt/detail/mousegesture.h>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -46,44 +45,39 @@ public:
           m_my(my)
     {
         m_widget->flag_set(widgetmask::GRAB_MOUSE);
-        m_mouse.on_async_event(std::bind(&FloatingBox::on_mouse_event, this, std::placeholders::_1));
-
-        widget->on_event([this](eventid event)
-        {
-            return m_mouse.handle(event);
-        });
+        widget->on_event(std::bind(&FloatingBox::handle, this, std::placeholders::_1));
     }
 
-    using Swipe = detail::MouseGesture<Point>;
-
-    virtual void on_mouse_event(Swipe::mouse_event event)
+    virtual int handle(eventid event)
     {
         switch (event)
         {
-        case Swipe::mouse_event::drag_done:
-        case Swipe::mouse_event::none:
+        case eventid::POINTER_DRAG_START:
+            m_start_point = m_widget->box().point();
+            m_dragging = true;
             break;
-        case Swipe::mouse_event::start:
-            m_mouse.start(m_widget->box().point());
+        case eventid::POINTER_DRAG_STOP:
+            m_dragging = false;
             break;
-        case Swipe::mouse_event::drag:
+        case eventid::POINTER_DRAG:
         {
-            auto diff = m_mouse.start_value() -
-                        (m_mouse.mouse_start() - event_mouse());
+            auto diff = m_start_point -
+                        (event_mouse_drag_start() - event_mouse());
             Rect dest(diff, m_widget->box().size());
             if (main_window()->box().contains(dest))
                 m_widget->move(diff);
             break;
         }
-        case Swipe::mouse_event::click:
-        case Swipe::mouse_event::long_click:
+        default:
             break;
         }
+
+        return 0;
     }
 
     virtual void next_frame()
     {
-        if (m_mouse.dragging())
+        if (m_dragging)
             return;
 
         auto p = Point(m_widget->x() + m_mx,
@@ -108,8 +102,8 @@ protected:
     Widget* m_widget;
     default_dim_type m_mx;
     default_dim_type m_my;
-
-    Swipe m_mouse;
+    Point m_start_point;
+    bool m_dragging{false};
 };
 
 static vector<FloatingBox*> boxes;

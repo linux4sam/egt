@@ -9,7 +9,6 @@
 #include <cassert>
 #include <egt/bitmask.h>
 #include <egt/detail/math.h>
-#include <egt/detail/mousegesture.h>
 #include <egt/valuewidget.h>
 
 namespace egt
@@ -179,13 +178,9 @@ protected:
 
     flags m_slider_flags{flags::RECTANGLE_HANDLE};
 
-    using Swipe = detail::MouseGesture<int>;
-
-    void on_mouse_event(Swipe::mouse_event event);
-
-    Swipe m_mouse;
-
     inline bool is_set(flags flag) const;
+
+    int m_start_offset{0};
 };
 
 ENABLE_BITMASK_OPERATORS(Slider::flags)

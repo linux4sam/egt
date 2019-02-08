@@ -63,7 +63,7 @@ public:
 
             color->on_event([this, column, row](eventid event)
             {
-                if (event == eventid::MOUSE_DOWN)
+                if (event == eventid::POINTER_CLICK)
                 {
                     m_grid.select(column, row);
                     m_color = m_grid.get(m_grid.selected())->palette().color(Palette::BG);
@@ -115,7 +115,7 @@ public:
 
             width->on_event([this, column, row](eventid event)
             {
-                if (event == eventid::MOUSE_DOWN)
+                if (event == eventid::POINTER_CLICK)
                 {
                     m_grid.select(column, row);
                     m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
@@ -164,39 +164,39 @@ public:
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::MOUSE_DOWN});
+        }, {eventid::POINTER_CLICK});
 
         m_colorbtn.on_event([this](eventid)
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::MOUSE_DOWN});
+        }, {eventid::POINTER_CLICK});
 
         m_colorbtn.on_event([this](eventid)
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::MOUSE_DOWN});
+        }, {eventid::POINTER_CLICK});
 
         m_colorbtn.on_event([this](eventid)
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::MOUSE_DOWN});
+        }, {eventid::POINTER_CLICK});
 
         m_grid.add(&m_fillbtn);
         m_fillbtn.on_event([this](eventid)
         {
             m_fillpicker.show_modal(true);
             return 1;
-        }, {eventid::MOUSE_DOWN});
+        }, {eventid::POINTER_CLICK});
 
         m_grid.add(&m_widthbtn);
         m_widthbtn.on_event([this](eventid)
         {
             m_widthpicker.show_modal(true);
             return 1;
-        }, {eventid::MOUSE_DOWN});
+        }, {eventid::POINTER_CLICK});
 
         m_grid.add(&m_clearbtn);
         m_clearbtn.on_event([this](eventid)
@@ -204,7 +204,7 @@ public:
             clear();
             damage();
             return 1;
-        }, {eventid::MOUSE_DOWN});
+        }, {eventid::POINTER_CLICK});
 
         m_fillpicker.on_event([this](eventid)
         {
@@ -227,6 +227,7 @@ public:
         painter.draw_fill(box());
     }
 
+    // TODO: convert this to use POINTER_DRAG events
     int handle(eventid event) override
     {
         auto ret = TopWindow::handle(event);
@@ -235,13 +236,13 @@ public:
 
         switch (event)
         {
-        case eventid::MOUSE_DOWN:
+        case eventid::RAW_POINTER_DOWN:
         {
             m_last = event_mouse();
             m_down = true;
             return 1;
         }
-        case eventid::MOUSE_MOVE:
+        case eventid::RAW_POINTER_MOVE:
         {
             if (m_down)
             {
@@ -270,7 +271,7 @@ public:
 
             return 1;
         }
-        case eventid::MOUSE_UP:
+        case eventid::RAW_POINTER_UP:
             m_down = false;
             return 1;
         default:

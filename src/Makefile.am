@@ -36,6 +36,7 @@ checkbox.cpp \
 color.cpp \
 combo.cpp \
 detail/basicwindow.cpp \
+detail/mousegesture.cpp \
 detail/windowimpl.cpp \
 eventloop.cpp \
 font.cpp \

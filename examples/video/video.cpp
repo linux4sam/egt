@@ -43,7 +43,7 @@ public:
 
         switch (event)
         {
-        case eventid::MOUSE_DBLCLICK:
+        case eventid::POINTER_DBLCLICK:
             if (T::scale() <= 1.0)
             {
                 T::move(Point(0, 0));
@@ -55,7 +55,7 @@ public:
             }
 
             return 1;
-        case eventid::MOUSE_DOWN:
+        case eventid::RAW_POINTER_DOWN:
             if (T::scale() <= 1.0)
             {
                 if (!m_moving)
@@ -67,10 +67,10 @@ public:
             }
 
             return 1;
-        case eventid::MOUSE_UP:
+        case eventid::RAW_POINTER_UP:
             m_moving = false;
             return 1;
-        case eventid::MOUSE_MOVE:
+        case eventid::RAW_POINTER_MOVE:
             if (m_moving)
             {
                 Point diff = event_mouse() - m_starting_point;

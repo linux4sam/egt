@@ -24,6 +24,11 @@ Point& event_mouse()
     return pointer_abs_pos;
 }
 
+Point event_mouse_drag_start()
+{
+    return detail::IInput::m_mouse->mouse_start();
+}
+
 int& event_key()
 {
     static int event_event_key{0};
@@ -77,42 +82,75 @@ Widget* keyboard_focus()
 
 namespace detail
 {
-static std::chrono::time_point<std::chrono::steady_clock> mouse_down_time;
+detail::MouseGesture* IInput::m_mouse = nullptr;
 
 void IInput::dispatch(eventid event)
 {
-    auto now = chrono::steady_clock::now();
+    // hack
+    if (!m_mouse)
+    {
+        m_mouse = new MouseGesture;
+        m_mouse->on_async_event(IInput::dispatch);
+    }
 
-    DBG("event: " << event);
+    auto eevent = m_mouse->handle(event);
+
+    DBG("input event: " << event);
+    if (eevent != eventid::NONE)
+        DBG("input event: " << eevent);
+
+    // then give it to any global input handlers
+    if (m_global_input.invoke_handlers(event))
+        return;
+    if (eevent != eventid::NONE)
+        if (m_global_input.invoke_handlers(eevent))
+            return;
+
 
     if (modal_window())
     {
+        auto target = modal_window();
         // give event to the modal window
-        modal_window()->handle(event);
+        target->handle(event);
+        if (eevent != eventid::NONE)
+            target->handle(eevent);
     }
     else
     {
-        if (mouse_grab() && (event == eventid::MOUSE_UP ||
-                             event == eventid::MOUSE_DOWN ||
-                             event == eventid::MOUSE_MOVE ||
-                             event == eventid::BUTTON_DOWN ||
-                             event == eventid::BUTTON_UP ||
-                             event == eventid::MOUSE_DBLCLICK ||
-                             event == eventid::MOUSE_CLICK))
+        if (mouse_grab() && (event == eventid::RAW_POINTER_DOWN ||
+                             event == eventid::RAW_POINTER_UP ||
+                             event == eventid::RAW_POINTER_MOVE ||
+                             event == eventid::POINTER_CLICK ||
+                             event == eventid::POINTER_DBLCLICK ||
+                             event == eventid::POINTER_HOLD ||
+                             event == eventid::POINTER_DRAG_START ||
+                             event == eventid::POINTER_DRAG ||
+                             event == eventid::POINTER_DRAG_STOP ||
+                             event == eventid::POINTER_BUTTON_DOWN ||
+                             event == eventid::POINTER_BUTTON_UP))
         {
-            mouse_grab()->handle(event);
+            auto target = mouse_grab();
+            target->handle(event);
+            if (eevent != eventid::NONE)
+                target->handle(eevent);
         }
         else if (keyboard_focus() && (event == eventid::KEYBOARD_DOWN ||
                                       event == eventid::KEYBOARD_UP ||
                                       event == eventid::KEYBOARD_REPEAT))
         {
-            keyboard_focus()->handle(event);
+            auto target = keyboard_focus();
+            target->handle(event);
+            if (event != eventid::NONE)
+                target->handle(eevent);
         }
         else
         {
             // give event to any top level and visible windows
             for (auto& w : detail::reverse_iterate(windows()))
             {
+                if (w->disabled())
+                    continue;
+
                 if (!w->visible())
                     continue;
 
@@ -120,28 +158,12 @@ void IInput::dispatch(eventid event)
                     continue;
 
                 w->handle(event);
+                if (eevent != eventid::NONE)
+                    w->handle(eevent);
             }
         }
     }
 
-    // then give it to any global input handlers
-    m_global_input.invoke_handlers(event);
-
-    // generate fake MOUSE_CLICK event
-    if (event == eventid::MOUSE_DOWN)
-        mouse_down_time = now;
-    else if (event == eventid::MOUSE_UP)
-    {
-        if (mouse_down_time.time_since_epoch().count())
-        {
-            if (chrono::duration<float_t, milli>(now - mouse_down_time).count() < 1000)
-            {
-                IInput::dispatch(eventid::MOUSE_CLICK);
-            }
-
-            mouse_down_time = {};
-        }
-    }
 }
 }
 

@@ -12,6 +12,7 @@
  */
 
 #include <asio.hpp>
+#include <egt/detail/mousegesture.h>
 #include <egt/geometry.h>
 #include <egt/object.h>
 #include <linux/input.h>
@@ -31,6 +32,8 @@ class Widget;
  * mouse event.
  */
 Point& event_mouse();
+
+Point event_mouse_drag_start();
 
 /**
  * Global button value.
@@ -97,6 +100,10 @@ public:
 
 protected:
     static detail::Object m_global_input;
+
+    static detail::MouseGesture* m_mouse;
+
+    friend Point egt::event_mouse_drag_start();
 };
 
 }

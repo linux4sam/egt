@@ -36,7 +36,7 @@ int main(int argc, const char** argv)
             auto p = win1.from_screen(event_mouse());
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;
-        }, {eventid::MOUSE_MOVE});
+        }, {eventid::RAW_POINTER_MOVE});
         label->set_align(a);
         win1.add(label);
     }
@@ -55,7 +55,7 @@ int main(int argc, const char** argv)
             auto p = win2.from_screen(event_mouse());
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;
-        }, {eventid::MOUSE_MOVE});
+        }, {eventid::RAW_POINTER_MOVE});
         label->set_align(a);
         win2.add(label);
     }
