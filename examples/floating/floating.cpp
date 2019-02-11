@@ -52,6 +52,10 @@ public:
     {
         switch (event)
         {
+        case eventid::POINTER_DBLCLICK:
+            m_mx *= -1;
+            m_my *= -1;
+            break;
         case eventid::POINTER_DRAG_START:
             m_start_point = m_widget->box().point();
             m_dragging = true;
