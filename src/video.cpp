@@ -3,8 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/app.h"
 #include "egt/kmsscreen.h"
 #include "egt/video.h"
+#include <asio.hpp>
 #include <cstring>
 #include <thread>
 
@@ -19,11 +21,19 @@ using namespace std;
 #define PROGRESS_NAME "progress"
 #define VOLUME_NAME "volume"
 
-static void init_thread()
+namespace egt
+{
+inline namespace v1
+{
+namespace detail
+{
+void init_gst_thread()
 {
     static bool init = false;
     if (!init)
     {
+        gst_init(NULL, NULL);
+
         // cppcheck-suppress unreadVariable
         static std::thread t([]()
         {
@@ -34,11 +44,8 @@ static void init_thread()
         init = true;
     }
 }
+}
 
-namespace egt
-{
-inline namespace v1
-{
 gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
     ignoreparam(bus);
@@ -135,8 +142,7 @@ gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 VideoWindow::VideoWindow(const Size& size, pixel_format format, bool heo)
     : Window(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
 {
-    gst_init(NULL, NULL);
-    init_thread();
+    detail::init_gst_thread();
 
     allocate_screen();
 }

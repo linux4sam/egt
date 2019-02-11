@@ -25,6 +25,11 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+void init_gst_thread();
+}
+
 /**
  * Hardware based video window.
  */
