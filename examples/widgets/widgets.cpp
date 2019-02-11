@@ -268,6 +268,7 @@ struct MeterPage : public NotebookTab
         add(grid0);
 
         auto lp1 = new LevelMeter;
+        lp1->set_num_bars(8);
         grid0->add(lp1);
 
         auto am1 = new AnalogMeter;

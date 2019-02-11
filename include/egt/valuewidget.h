@@ -213,8 +213,25 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    virtual void set_num_bars(uint32_t bars)
+    {
+        m_num_bars = bars;
+    }
+
+    virtual uint32_t num_bars() const
+    {
+        return m_num_bars;
+    }
+
     virtual ~LevelMeter()
     {}
+
+protected:
+
+    /**
+     * The number of bars to display.
+     */
+    uint32_t m_num_bars{10};
 };
 
 /**

@@ -48,19 +48,21 @@ LevelMeter::LevelMeter(const Rect& rect,
 
 void LevelMeter::draw(Painter& painter, const Rect& rect)
 {
+    auto BAR_SPACING = 2;
+
     ignoreparam(rect);
 
-    int limit = 20 - value() / 5;
-    int barheight = h() / 20;
+    auto limit = egt::detail::normalize<float>(value(), m_min, m_max, m_num_bars, 0);
+    auto barheight = h() / m_num_bars;
 
-    for (int i = 0; i < 20; i++)
+    for (uint32_t i = 0; i < m_num_bars; i++)
     {
-        if (i > limit)
+        if (i >= limit)
             painter.set_color(palette().color(Palette::HIGHLIGHT));
         else
             painter.set_color(palette().color(Palette::DARK));
 
-        painter.draw_fill(Rect(x(),  y() + i * barheight, w(), barheight - 2));
+        painter.draw_fill(Rect(x(),  y() + i * barheight, w(), barheight - BAR_SPACING));
     }
 }
 
