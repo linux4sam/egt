@@ -70,6 +70,9 @@ public:
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);
+
+        m_sprite = new SoftwareSprite(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
+        add(m_sprite);
     }
 
     int handle(eventid event) override
@@ -142,6 +145,7 @@ public:
     std::random_device r;
     std::default_random_engine e1;
     Label* m_label;
+    SoftwareSprite* m_sprite;
 };
 
 
@@ -165,6 +169,8 @@ int main(int argc, const char** argv)
     win.add(&sprite2);
     sprites.push_back(&sprite2);
 #endif
+
+    sprites.push_back(win.m_sprite);
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(30));
     animatetimer.on_timeout([&win]()
