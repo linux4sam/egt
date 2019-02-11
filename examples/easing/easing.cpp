@@ -33,7 +33,14 @@ static easing_func curves[] =
     easing_bouncy,
     easing_rubber,
     easing_spring,
-    easing_boing
+    easing_boing,
+    easing_quadratic_easeinout,
+    easing_cubic_easeinout,
+    easing_quartic_easeinout,
+    easing_quintic_easeinout,
+    easing_sine_easeinout,
+    easing_circular_easeinout,
+    easing_exponential_easeinout,
 };
 
 static vector<std::string> curve_names =
@@ -49,7 +56,14 @@ static vector<std::string> curve_names =
     "bouncy",
     "rubber",
     "spring",
-    "boing"
+    "boing",
+    "quadratic",
+    "cubic",
+    "quartic",
+    "quintic",
+    "sine",
+    "circular",
+    "exponential",
 };
 
 class MainWindow : public TopWindow
@@ -74,7 +88,8 @@ public:
         items.resize(curve_names.size());
         transform(curve_names.begin(), curve_names.end(), items.begin(),
         [](const std::string & v) { return new StringItem(v);});
-        ListBox* list1 = new ListBox(items, Rect(Point(w() - 100, 0), Size(100, h())));
+        ListBox* list1 = new ListBox(items, Rect(Point(0, 0), Size(150, 0)));
+        list1->set_align(alignmask::EXPAND_VERTICAL | alignmask::RIGHT);
         add(list1);
 
         list1->on_event([this, list1](eventid event)
@@ -95,8 +110,6 @@ public:
         // be invisible), to always keep a portion of the plane on screen
         // alternate of making the plane the same exact size as the image.
         m_box = new Window(Size(100, 200));
-
-        //m_box->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         m_box->flag_set(widgetmask::NO_BACKGROUND);
         m_box->add(image);
         m_box->move(Point(w() / 2 - m_box->w() / 2, -110));
