@@ -38,7 +38,7 @@ public:
     PointType() noexcept
     {}
 
-    explicit PointType(dim_t x_, dim_t y_) noexcept
+    PointType(dim_t x_, dim_t y_) noexcept
         : x(x_),
           y(y_)
     {}
@@ -520,19 +520,19 @@ public:
      * Merge two rectangles together into one super rectangle that contains
      * them both.
      */
-    static inline RectType<dim_t> merge(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
+    static inline RectType<dim_t> merge(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs) noexcept
     {
-        dim_t xmin = std::min(lhs.x, rhs.x);
-        dim_t xmax = std::max(lhs.x + lhs.w,
-                              rhs.x + rhs.w);
-        dim_t ymin = std::min(lhs.y, rhs.y);
-        dim_t ymax = std::max(lhs.y + lhs.h,
-                              rhs.y + rhs.h);
+        auto xmin = std::min(lhs.x, rhs.x);
+        auto xmax = std::max(lhs.x + lhs.w,
+                             rhs.x + rhs.w);
+        auto ymin = std::min(lhs.y, rhs.y);
+        auto ymax = std::max(lhs.y + lhs.h,
+                             rhs.y + rhs.h);
 
         return RectType<dim_t>(xmin, ymin, xmax - xmin, ymax - ymin);
     }
 
-    inline RectType<dim_t> intersection(const RectType<dim_t>& rhs)
+    inline RectType<dim_t> intersection(const RectType<dim_t>& rhs) noexcept
     {
         return intersection(*this, rhs);
     }
@@ -540,12 +540,12 @@ public:
     /**
      * Return the intersecting rectangle of two rectangles, if any.
      */
-    static inline RectType<dim_t> intersection(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
+    static inline RectType<dim_t> intersection(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs) noexcept
     {
-        dim_t x = std::max(lhs.x, rhs.x);
-        dim_t y = std::max(lhs.y, rhs.y);
-        dim_t w = std::min(lhs.x + lhs.w, rhs.x + rhs.w) - x;
-        dim_t h = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y;
+        auto x = std::max(lhs.x, rhs.x);
+        auto y = std::max(lhs.y, rhs.y);
+        auto w = std::min(lhs.x + lhs.w, rhs.x + rhs.w) - x;
+        auto h = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y;
 
         if (w < 0 || h < 0)
             return RectType<dim_t>();
@@ -650,10 +650,10 @@ public:
      */
     inline Rect rect()
     {
-        dim_t x = std::min(m_start.x, m_end.x);
-        dim_t y = std::min(m_start.y, m_end.y);
-        dim_t x2 = std::max(m_start.x, m_end.x);
-        dim_t y2 = std::max(m_start.y, m_end.y);
+        auto x = std::min(m_start.x, m_end.x);
+        auto y = std::min(m_start.y, m_end.y);
+        auto x2 = std::max(m_start.x, m_end.x);
+        auto y2 = std::max(m_start.y, m_end.y);
 
         return Rect(x, y, x2 - x, y2 - y);
     }
@@ -665,6 +665,9 @@ protected:
 
 using Line = LineType<>;
 
+/**
+ * An Arc consists of a radius and two angles.
+ */
 template<class dim_t = default_dim_type>
 class ArcType
 {
