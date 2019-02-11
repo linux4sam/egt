@@ -71,6 +71,10 @@ struct CheckBoxPage : public NotebookTab
         toggle2->check(true);
         grid0->add(toggle2);
 
+        auto toggle3 = new ToggleBox;
+        toggle3->disable();
+        grid0->add(toggle3);
+
         auto checkbox1 = new CheckBox("checkbox 1");
         grid0->add(checkbox1);
 
@@ -80,10 +84,15 @@ struct CheckBoxPage : public NotebookTab
         auto checkbox3 = new CheckBox("checkbox 3");
         grid0->add(checkbox3);
 
+        auto checkbox4 = new CheckBox("checkbox 4");
+        checkbox4->disable();
+        grid0->add(checkbox4);
+
         auto checkbox_group = new ButtonGroup(true, false);
         checkbox_group->add(*checkbox1);
         checkbox_group->add(*checkbox2);
         checkbox_group->add(*checkbox3);
+        checkbox_group->add(*checkbox4);
         checkbox_group->remove(*checkbox3);
 
         auto radiobox1 = new RadioBox("radiobox 1");
@@ -93,10 +102,14 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(radiobox2);
         radiobox2->check(true);
 
+        auto radiobox3 = new RadioBox("radiobox 3");
+        grid0->add(radiobox3);
+        radiobox3->disable();
+
         auto radiobox_group = new ButtonGroup(true);
         radiobox_group->add(*radiobox1);
         radiobox_group->add(*radiobox2);
-
+        radiobox_group->add(*radiobox3);
     }
 };
 

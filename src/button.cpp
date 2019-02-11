@@ -74,8 +74,14 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect& rect)
 
     widget.draw_box(painter);
 
+    auto group = Palette::GROUP_NORMAL;
+    if (widget.disabled())
+        group = Palette::GROUP_DISABLED;
+    else if (widget.active())
+        group = Palette::GROUP_ACTIVE;
+
     // text
-    painter.set_color(widget.palette().color(Palette::ColorId::TEXT));
+    painter.set_color(widget.palette().color(Palette::ColorId::TEXT_INVERT, group));
     painter.set_font(widget.font());
     painter.draw_text(widget.box(), widget.text(), widget.text_align(), 5);
 }
@@ -183,6 +189,12 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
     widget.draw_box(painter);
 
+    auto group = Palette::GROUP_NORMAL;
+    if (widget.disabled())
+        group = Palette::GROUP_DISABLED;
+    else if (widget.active())
+        group = Palette::GROUP_ACTIVE;
+
     if (!widget.text().empty())
     {
         auto text_size = widget.text_size();
@@ -201,7 +213,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
         painter.draw_image(ibox.point(), widget.image(), widget.disabled());
 
-        painter.draw_text(widget.text(), tbox, widget.palette().color(Palette::TEXT),
+        painter.draw_text(widget.text(), tbox, widget.palette().color(Palette::TEXT_INVERT, group),
                           alignmask::CENTER, 0, widget.font());
     }
     else

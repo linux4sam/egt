@@ -47,8 +47,10 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
     Point center(x() + h() / 2, y() + h() / 2);
     float radius = (h() - STANDOFF * 2) / 2;
 
+    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
+
     painter.circle(Circle(center, radius));
-    painter.set_color(palette().color(Palette::HIGHLIGHT));
+    painter.set_color(palette().color(Palette::HIGHLIGHT, group));
 
     painter.set_line_width(1.0);
     painter.stroke();
@@ -62,7 +64,7 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
     // text
     painter.draw_text(m_text,
                       box(),
-                      palette().color(Palette::TEXT),
+                      palette().color(Palette::TEXT, group),
                       alignmask::LEFT | alignmask::CENTER,
                       h());
 }

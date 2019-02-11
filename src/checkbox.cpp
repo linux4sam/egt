@@ -52,6 +52,8 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
            h() - STANDOFF * 2,
            h() - STANDOFF * 2);
 
+    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
+
     if (checked())
     {
         draw_box(painter, r);
@@ -59,7 +61,7 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
         // draw an "X"
         static const int OFFSET = 5;
         auto cr = painter.context();
-        painter.set_color(palette().color(Palette::HIGHLIGHT));
+        painter.set_color(palette().color(Palette::HIGHLIGHT, group));
         cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
         cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
         cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
@@ -75,7 +77,7 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
     // text
     painter.draw_text(m_text,
                       box(),
-                      palette().color(Palette::TEXT),
+                      palette().color(Palette::TEXT, group),
                       alignmask::LEFT | alignmask::CENTER,
                       h());
 }
@@ -96,6 +98,8 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
 
     draw_box(painter);
 
+    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
+
     if (checked())
     {
         Rect rect = box();
@@ -103,7 +107,7 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
         rect.x += rect.w;
         theme().draw_rounded_gradient_box(painter,
                                           rect,
-                                          palette().color(Palette::HIGHLIGHT));
+                                          palette().color(Palette::HIGHLIGHT, group));
     }
     else
     {
@@ -111,7 +115,7 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
         rect.w /= 2;
         theme().draw_rounded_gradient_box(painter,
                                           rect,
-                                          palette().color(Palette::HIGHLIGHT));
+                                          palette().color(Palette::HIGHLIGHT, group));
     }
 }
 

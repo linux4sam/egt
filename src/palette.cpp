@@ -50,18 +50,18 @@ void Palette::reset()
     set(Palette::DARK, Palette::GROUP_DISABLED, Color::GRAY);
     set(Palette::MID, Palette::GROUP_DISABLED, Color::GRAY);
     set(Palette::TEXT, Palette::GROUP_DISABLED, Color(0x9b9b9dff));
-    set(Palette::TEXT_INVERT, Palette::GROUP_DISABLED, Color(0x9b9b9dff));
+    set(Palette::TEXT_INVERT, Palette::GROUP_DISABLED, Color::BLACK);
     set(Palette::TEXTBG, Palette::GROUP_DISABLED, Color(0xd1d2d4ff));
     set(Palette::HIGHLIGHT, Palette::GROUP_DISABLED, Color(0xd1d2d4ff));
     set(Palette::BORDER, Palette::GROUP_DISABLED, Color(0x9c9d9dff));
 
-    set(Palette::BG, Palette::GROUP_ACTIVE, Color(0xed2924ff));
+    set(Palette::BG, Palette::GROUP_ACTIVE, Color(0xc1222bff));
     set(Palette::FG, Palette::GROUP_ACTIVE, Color::BLACK);
     set(Palette::LIGHT, Palette::GROUP_ACTIVE, Color::WHITE);
     set(Palette::DARK, Palette::GROUP_ACTIVE, Color::BLACK);
     set(Palette::MID, Palette::GROUP_ACTIVE, Color::GRAY);
     set(Palette::TEXT, Palette::GROUP_ACTIVE, Color::BLACK);
-    set(Palette::TEXT_INVERT, Palette::GROUP_ACTIVE, Color::BLACK);
+    set(Palette::TEXT_INVERT, Palette::GROUP_ACTIVE, Color::WHITE);
     set(Palette::TEXTBG, Palette::GROUP_ACTIVE, Color::WHITE);
     set(Palette::HIGHLIGHT, Palette::GROUP_ACTIVE, Color(0xe3edfaff));
     set(Palette::BORDER, Palette::GROUP_ACTIVE, Color(0xbfbfc0ff));
