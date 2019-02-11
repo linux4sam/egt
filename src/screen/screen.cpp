@@ -192,7 +192,7 @@ void IScreen::damage_algorithm(IScreen::damage_array& damage, const Rect& rect)
     }
 
     // if we get here, no intersect found so add it
-    damage.push_back(rect);
+    damage.emplace_back(rect);
 }
 
 void IScreen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
@@ -219,7 +219,7 @@ void IScreen::init(void** ptr, uint32_t count, int w, int h, pixel_format format
 
         buffer.damage.emplace_back(0, 0, w, h);
 
-        m_buffers.push_back(buffer);
+        m_buffers.emplace_back(buffer);
     }
 
     m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, w, h),
