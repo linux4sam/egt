@@ -5,8 +5,9 @@
  */
 #include "egt/detail/math.h"
 #include "egt/painter.h"
+#include "egt/progressbar.h"
 #include "egt/textwidget.h"
-#include "egt/valuewidget.h"
+#include <string>
 
 using namespace std;
 
@@ -28,7 +29,7 @@ void ProgressBar::draw(Painter& painter, const Rect& rect)
 
     draw_box(painter);
 
-    auto width = egt::detail::normalize<float>(value(), m_min, m_max, 0, w());
+    auto width = detail::normalize<float>(value(), m_min, m_max, 0, w());
 
     theme().draw_rounded_gradient_box(painter,
                                       Rect(x(), y(), width, h()),
@@ -36,6 +37,39 @@ void ProgressBar::draw(Painter& painter, const Rect& rect)
 
     string text = std::to_string(value()) + "%";
     m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);
+    painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
+                      alignmask::CENTER, 0, m_dynamic_font);
+}
+
+SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
+    : ValueRangeWidget<int>(rect, min, max, value)
+{
+}
+
+void SpinProgress::draw(Painter& painter, const Rect& rect)
+{
+    ignoreparam(rect);
+
+    auto dim = std::min(w(), h());
+    float linew = dim / 10;
+    float radius = dim / 2 - (linew / 2);
+    float angle1 = detail::to_radians<float>(180, 0);
+    float angle2 = detail::to_radians<float>(180, value() / 100. * 360.);
+
+    painter.set_color(palette().color(Palette::BG));
+    painter.draw_fill(box());
+    painter.set_line_width(linew);
+
+    painter.set_color(palette().color(Palette::MID));
+    painter.circle(Circle(center(), radius));
+    painter.stroke();
+
+    painter.set_color(palette().color(Palette::HIGHLIGHT));
+    painter.arc(Arc(center(), radius, angle1, angle2));
+    painter.stroke();
+
+    string text = std::to_string(value());
+    m_dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, m_dynamic_font);
     painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
                       alignmask::CENTER, 0, m_dynamic_font);
 }
@@ -127,39 +161,6 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
                   -hw * std::cos(M_PI * value * 0.01),
                   -hw * std::sin(M_PI * value * 0.01));
     cairo_stroke(cr.get());
-}
-
-SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
-    : ValueRangeWidget<int>(rect, min, max, value)
-{
-}
-
-void SpinProgress::draw(Painter& painter, const Rect& rect)
-{
-    ignoreparam(rect);
-
-    auto dim = std::min(w(), h());
-    float linew = dim / 10;
-    float radius = dim / 2 - (linew / 2);
-    float angle1 = detail::to_radians<float>(180, 0);
-    float angle2 = detail::to_radians<float>(180, value() / 100. * 360.);
-
-    painter.set_color(palette().color(Palette::BG));
-    painter.draw_fill(box());
-    painter.set_line_width(linew);
-
-    painter.set_color(palette().color(Palette::MID));
-    painter.circle(Circle(center(), radius));
-    painter.stroke();
-
-    painter.set_color(palette().color(Palette::HIGHLIGHT));
-    painter.arc(Arc(center(), radius, angle1, angle2));
-    painter.stroke();
-
-    string text = std::to_string(value());
-    m_dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, m_dynamic_font);
-    painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
-                      alignmask::CENTER, 0, m_dynamic_font);
 }
 
 }

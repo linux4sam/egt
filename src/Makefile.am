@@ -56,6 +56,7 @@ notebook.cpp \
 object.cpp \
 painter.cpp \
 palette.cpp \
+progressbar.cpp \
 radiobox.cpp \
 resource.cpp \
 screen/framebuffer.cpp \
@@ -70,7 +71,6 @@ timer.cpp \
 tools.cpp \
 uiloader.cpp \
 utils.cpp \
-valuewidget.cpp \
 video.cpp \
 view.cpp \
 widget.cpp \
@@ -139,6 +139,7 @@ $(top_srcdir)/include/egt/object.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
 $(top_srcdir)/include/egt/popup.h \
+$(top_srcdir)/include/egt/progressbar.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/screen.h \
