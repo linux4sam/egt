@@ -36,7 +36,7 @@ install-icons:
 install-data-local: install-icons
 
 
-CPPCHECK_CMD = ~/Downloads/cppcheck-1.85/cppcheck \
+CPPCHECK_CMD = cppcheck \
 	--inline-suppr \
 	--error-exitcode=0 \
 	-j 4 \

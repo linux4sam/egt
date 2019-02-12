@@ -135,7 +135,6 @@ PieChart::PieChart(const Rect& rect)
         Color::LIGHTBLUE,
     };
 
-    // cppcheck-suppress useInitializationList
     m_colors = default_colors;
 }
 
