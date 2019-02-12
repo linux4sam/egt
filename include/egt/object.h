@@ -20,6 +20,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
  * Event identifiers.
  */
@@ -27,12 +28,18 @@ enum class eventid
 {
     NONE,
 
-    // Raw Pointer events
+    //@{
+    /**
+     * @brief Raw pointer events.
+     * It's usually preferred to use the normal pointer evemts instead.
+     */
     RAW_POINTER_DOWN,
     RAW_POINTER_UP,
     RAW_POINTER_MOVE,
+    //@}
 
-    // Pointer events
+    //@{
+    /** @brief Pointer events. */
     POINTER_CLICK,
     POINTER_DBLCLICK,
     POINTER_HOLD,
@@ -41,6 +48,7 @@ enum class eventid
     POINTER_DRAG_STOP,
     POINTER_BUTTON_DOWN,
     POINTER_BUTTON_UP,
+    //@}
 
     /**
      * Sent when a widget gets focus.
@@ -52,10 +60,12 @@ enum class eventid
      */
     LEAVE,
 
-    // Keyboard Events
+    //@{
+    /** @brief Keyboard event. */
     KEYBOARD_DOWN,
     KEYBOARD_UP,
     KEYBOARD_REPEAT,
+    //@}
 
     /**
      * Called when a property changes.
