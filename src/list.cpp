@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/list.h"
-#include "egt/painter.h"
 #include "egt/frame.h"
 #include "egt/imagecache.h"
+#include "egt/input.h"
+#include "egt/list.h"
+#include "egt/painter.h"
 
 using namespace std;
 

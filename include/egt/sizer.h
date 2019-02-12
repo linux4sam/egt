@@ -12,6 +12,7 @@
  */
 
 #include <egt/frame.h>
+#include <sstream>
 
 namespace egt
 {

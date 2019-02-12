@@ -6,6 +6,7 @@
 #include "egt/grid.h"
 #include "egt/painter.h"
 #include <algorithm>
+#include <sstream>
 
 using namespace std;
 

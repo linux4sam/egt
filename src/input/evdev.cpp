@@ -10,9 +10,10 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/geometry.h"
+#include "egt/input.h"
+#include "egt/utils.h"
 #include "egt/widget.h"
 #include "egt/window.h"
-#include "egt/utils.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>

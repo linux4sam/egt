@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/view.h"
-#include "egt/painter.h"
 #include "egt/detail/math.h"
+#include "egt/input.h"
+#include "egt/painter.h"
+#include "egt/view.h"
 #include <sstream>
 
 using namespace std;

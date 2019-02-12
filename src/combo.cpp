@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/combo.h"
-#include "egt/painter.h"
 #include "egt/frame.h"
 #include "egt/image.h"
 #include "egt/imagecache.h"
+#include "egt/input.h"
+#include "egt/painter.h"
 #include "egt/window.h"
 #include <iostream>
 

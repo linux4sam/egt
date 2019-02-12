@@ -12,8 +12,11 @@
 #include "egt/utils.h"
 #include <cassert>
 #include <iostream>
-#include <sstream>
 #include <magic.h>
+#include <sstream>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #ifdef HAVE_LIBJPEG
 #ifdef __cplusplus

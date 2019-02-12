@@ -17,11 +17,10 @@
 #include <egt/bitmask.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
-#include <egt/input.h>
 #include <egt/object.h>
 #include <egt/palette.h>
-#include <egt/theme.h>
 #include <egt/screen.h>
+#include <egt/theme.h>
 #include <egt/utils.h>
 #include <iosfwd>
 #include <memory>
@@ -68,7 +67,7 @@ enum class widgetmask : uint32_t
     FRAME = (1 << 5),
 
     /**
-     * Grab elated mouse events.
+     * Grab related mouse events.
      *
      * For example, if a button is pressed with the eventid::MOUSE_DOWN
      * event, make sure the button gets subsequent mouse events, including

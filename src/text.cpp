@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/text.h"
+#include "egt/input.h"
 #include "egt/painter.h"
+#include "egt/text.h"
 
 using namespace std;
 

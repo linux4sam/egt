@@ -6,6 +6,7 @@
 #include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
+#include "egt/input.h"
 #include <sstream>
 #include <iostream>
 

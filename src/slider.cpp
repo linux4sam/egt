@@ -3,9 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/slider.h"
+#include "egt/input.h"
 #include "egt/painter.h"
+#include "egt/slider.h"
 #include "egt/textwidget.h"
+#include <sstream>
 
 using namespace std;
 
