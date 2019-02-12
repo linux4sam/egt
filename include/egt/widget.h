@@ -132,6 +132,27 @@ enum class orientation
 
 class Frame;
 
+namespace detail
+{
+/**
+ * Given an item size, and a bounding box, and an alignment parameter,
+ * return the rectangle the item box should be move/resized to.
+ */
+Rect align_algorithm(const Size& size, const Rect& bounding,
+                     alignmask align, int margin = 0);
+
+/**
+ * This is used for aligning two rectangles in a single widget.  For example,
+ * a widget that has both text and an image.  The first rectangle is aligned
+ * to the main rectangle.  The second rectangle is aligned relative to the
+ * first rectangle.
+ */
+void double_align(const Rect& main,
+                  const Size& fsize, alignmask first_align, Rect& first,
+                  const Size& ssize, alignmask second_align, Rect& second,
+                  int margin = 0);
+}
+
 /**
  * Base widget class.
  *
@@ -145,24 +166,6 @@ class Frame;
 class Widget : public detail::Object
 {
 public:
-
-    /**
-     * Given an item size, and a bounding box, and an alignment parameter,
-     * return the rectangle the item box should be move/resized to.
-     */
-    static Rect align_algorithm(const Size& size, const Rect& bounding,
-                                alignmask align, int margin = 0);
-
-    /**
-     * This is used for aligning two rectangles in a single widget.  For example,
-     * a widget that has both text and an image.  The first rectangle is aligned
-     * to the main rectangle.  The second rectangle is aligned relative to the
-     * first rectangle.
-     */
-    static void double_align(const Rect& main,
-                             const Size& fsize, alignmask first_align, Rect& first,
-                             const Size& ssize, alignmask second_align, Rect& second,
-                             int margin = 0);
 
     /**
      * Construct a widget.

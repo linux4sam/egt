@@ -96,10 +96,10 @@ public:
         {
             for (auto& child : m_children)
             {
-                Rect target = align_algorithm(child->box().size(),
-                                              bounding,
-                                              child->align(),
-                                              child->margin());
+                Rect target = detail::align_algorithm(child->box().size(),
+                                                      bounding,
+                                                      child->align(),
+                                                      child->margin());
 
                 // reposition/resize widget
                 child->move(target.point());
@@ -114,10 +114,10 @@ public:
         {
             for (auto& child : m_children)
             {
-                Rect target = align_algorithm(child->box().size(),
-                                              bounding,
-                                              child->align(),
-                                              child->margin());
+                Rect target = detail::align_algorithm(child->box().size(),
+                                                      bounding,
+                                                      child->align(),
+                                                      child->margin());
 
                 // reposition/resize widget
                 child->move(target.point());

@@ -184,11 +184,11 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
         Rect ibox;
 
         if (widget.m_position_image_first)
-            Widget::double_align(widget.box(),
+            detail::double_align(widget.box(),
                                  widget.m_image.size(), widget.m_image_align, ibox,
                                  text_size, widget.m_text_align, tbox, 5);
         else
-            Widget::double_align(widget.box(),
+            detail::double_align(widget.box(),
                                  text_size, widget.text_align(), tbox,
                                  widget.m_image.size(), widget.m_image_align, ibox, 5);
 
@@ -202,7 +202,7 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
     }
     else
     {
-        Rect target = Widget::align_algorithm(widget.m_image.size(),
+        Rect target = detail::align_algorithm(widget.m_image.size(),
                                               widget.box(), widget.m_image_align, 0);
         painter.draw_image(target.point(), widget.m_image);
     }
@@ -248,11 +248,11 @@ void ImageLabel::first_resize()
             Rect ibox;
 
             if (m_position_image_first)
-                Widget::double_align(box(),
+                detail::double_align(box(),
                                      m_image.size(), m_image_align, ibox,
                                      text_size, m_text_align, tbox, 5);
             else
-                Widget::double_align(box(),
+                detail::double_align(box(),
                                      text_size, m_text_align, tbox,
                                      m_image.size(), m_image_align, ibox, 5);
 

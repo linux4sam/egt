@@ -204,9 +204,9 @@ void StaticGrid::reposition()
                     continue;
 
                 // get the aligning rect
-                Rect target = align_algorithm(cell.widget->box().size(),
-                                              bounding,
-                                              cell.widget->align());
+                Rect target = detail::align_algorithm(cell.widget->box().size(),
+                                                      bounding,
+                                                      cell.widget->align());
 
                 // reposition/resize widget
                 cell.widget->move(target.point());

@@ -23,8 +23,10 @@ namespace egt
 inline namespace v1
 {
 
-Rect Widget::align_algorithm(const Size& size, const Rect& bounding,
-                             alignmask align, int margin)
+namespace detail
+{
+Rect align_algorithm(const Size& size, const Rect& bounding,
+                     alignmask align, int margin)
 {
     if (unlikely(align == alignmask::NONE))
         return Rect(bounding.point(), size);
@@ -63,13 +65,13 @@ Rect Widget::align_algorithm(const Size& size, const Rect& bounding,
     return Rect(p, nsize);
 }
 
-void Widget::double_align(const Rect& main,
-                          const Size& fsize, alignmask first_align, Rect& first,
-                          const Size& ssize, alignmask second_align, Rect& second,
-                          int margin)
+void double_align(const Rect& main,
+                  const Size& fsize, alignmask first_align, Rect& first,
+                  const Size& ssize, alignmask second_align, Rect& second,
+                  int margin)
 {
-    auto ftarget = Widget::align_algorithm(fsize, main, first_align, margin);
-    auto starget = Widget::align_algorithm(ssize, main, second_align, margin);
+    auto ftarget = detail::align_algorithm(fsize, main, first_align, margin);
+    auto starget = detail::align_algorithm(ssize, main, second_align, margin);
 
     if ((second_align & alignmask::CENTER) == alignmask::CENTER)
     {
@@ -126,6 +128,7 @@ void Widget::double_align(const Rect& main,
 
     first = ftarget;
     second = starget;
+}
 }
 
 Widget::Widget(const Rect& rect, widgetmask flags) noexcept
@@ -359,7 +362,7 @@ void Widget::set_align(alignmask a, int margin)
         if (bounding.empty())
             return;
 
-        auto r = align_algorithm(size(), bounding, m_align, m_margin);
+        auto r = detail::align_algorithm(size(), bounding, m_align, m_margin);
         set_box(r);
     }
 }

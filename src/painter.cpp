@@ -142,7 +142,7 @@ Painter& Painter::draw_image(const Image& image,
     if (image.empty())
         return *this;
 
-    Rect target = Widget::align_algorithm(image.size(), dest, align, margin);
+    Rect target = detail::align_algorithm(image.size(), dest, align, margin);
 
     if (true)
         draw_image(target.point(), image, bw);
@@ -227,7 +227,7 @@ Rect Painter::draw_text(const Rect& rect, const std::string& str, alignmask alig
     else
         cairo_text_extents(m_cr.get(), "I", &textext);
 
-    Rect target = Widget::align_algorithm(Size(textext.width,
+    Rect target = detail::align_algorithm(Size(textext.width,
                                           textext.height),
                                           rect,
                                           align,
