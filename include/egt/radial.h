@@ -198,7 +198,7 @@ public:
 
     using flag_array = std::unordered_set<radial_flags, detail::flags_hash<T>>;
 
-    void set_radial_flags(flag_array flags)
+    void set_radial_flags(const flag_array& flags)
     {
         if (m_rflags != flags)
         {
