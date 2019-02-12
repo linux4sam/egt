@@ -22,7 +22,7 @@ namespace egt
 inline namespace v1
 {
 /**
- * RGBA color.
+ * 32 bit RGBA color.
  *
  * This manages the definition of a color, internally stored as seperate
  * red, gleen, blue, and alpha components.
@@ -68,14 +68,6 @@ public:
         m_a = c & 0xFF;
     }
 
-    void setr(uint32_t c)
-    {
-        m_a = (c >> 24) & 0xFF;
-        m_r = (c >> 16) & 0xFF;
-        m_g = (c >> 8) & 0xFF;
-        m_b = c & 0xFF;
-    }
-
     /**
      * Create a color with the specified RGBA component values.
      *
@@ -90,6 +82,11 @@ public:
           m_b(b),
           m_a(a)
     {}
+
+    Color(const Color&) noexcept = default;
+    Color(Color&&) noexcept = default;
+    Color& operator=(const Color&) noexcept = default;
+    Color& operator=(Color&&) noexcept = default;
 
     /**
      * Create a Color with a hex CSS string.
@@ -123,20 +120,23 @@ public:
     }
 
     //@{
-    /** @brief RGBA component values as a float from 0.0 to 1.0. */
+    /** @brief RGBA component value as a float from 0.0 to 1.0. */
     inline float redf() const { return m_r / 255.; }
     inline float greenf() const { return m_g / 255.; }
     inline float bluef() const { return m_b / 255.; }
     inline float alphaf() const { return m_a / 255.; }
     //@}
 
+    //@{
+    /** @brief Set RGBA component value as a float from 0.0 to 1.0. */
     inline void redf(float v) { m_r = v; }
     inline void greenf(float v) { m_g = v; }
     inline void bluef(float v) { m_b = v; }
     inline void alphaf(float v) { m_a  = v; }
+    //@}
 
     //@{
-    /** @brief RGBA component values as value from 0 to 255. */
+    /** @brief RGBA component value as value from 0 to 255. */
     inline uint32_t red() const { return m_r; }
     inline uint32_t green() const { return m_g; }
     inline uint32_t blue() const { return m_b; }
@@ -144,7 +144,7 @@ public:
     //@}
 
     //@{
-    /** @brief Set RGBA component values individually from 0 to 255. */
+    /** @brief Set RGBA component value individually from 0 to 255. */
     inline void red(uint32_t r) { m_r = r; }
     inline void green(uint32_t g) { m_g = g; }
     inline void blue(uint32_t b) { m_b = b; }
@@ -155,6 +155,8 @@ public:
      * Create a shade (darker) color based off this color given a factor.
      *
      * The smaller the factor, the darker the shade.
+     *
+     * @param[in] factor Value from 0.0 to 1.0.
      */
     inline Color shade(float factor) const
     {
@@ -168,6 +170,8 @@ public:
      * Create a tint (lighter) color based off this color given a factor.
      *
      * The greater the factor the lighter the tint.
+     *
+     * @param[in] factor Value from 0.0 to 1.0.
      */
     inline Color tint(float factor) const
     {
@@ -180,7 +184,7 @@ public:
     /**
      * Return a 32 bit ARGB pixel value for this color.
      */
-    inline uint32_t pixel() const
+    inline uint32_t pixel_argb() const
     {
         return m_a << 24 | m_r << 16 | m_g << 8 | m_b;
     }
@@ -188,15 +192,13 @@ public:
     /**
      * Return a 32 bit ARGB pre-multipled alpha pixel value for this color.
      */
-    inline uint32_t prepixel() const
+    inline uint32_t prepixel_argb() const
     {
         return (m_a << 24) |
                (((m_r * m_a / 255) & 0xff) << 16) |
                (((m_g * m_a / 255) & 0xff) << 8) |
                ((m_b * m_a / 255) & 0xff);
     }
-
-    Color& operator=(const Color&) = default;
 
     Color& operator=(uint32_t c)
     {
