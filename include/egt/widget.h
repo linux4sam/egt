@@ -246,7 +246,7 @@ public:
      * Change the height of the widget.
      * @param[in] h The new height of the widget.
      */
-    void set_height(default_dim_type h) { resize(Size(w(), h)); }
+    inline void set_height(default_dim_type h) { resize(Size(w(), h)); }
 
     /**
      * Move the widget.
