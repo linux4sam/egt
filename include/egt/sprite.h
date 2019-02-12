@@ -11,180 +11,90 @@
  * @brief Working with sprites.
  */
 
-#include <egt/image.h>
-#include <egt/label.h>
-#include <egt/painter.h>
-#include <egt/detail/planewindow.h>
-#include <egt/widget.h>
+#include <egt/detail/spriteimpl.h>
 #include <egt/window.h>
-#include <vector>
+#include <memory>
 
 namespace egt
 {
 inline namespace v1
 {
+class Painter;
+class Image;
+
+namespace detail
+{
+class SoftwareSprite;
+class HardwareSprite;
+}
+
 /**
- * Base class for sprite functionality.
+ * Sprite
+ *
+ *
  */
-class ISpriteBase
+class Sprite : public Window
 {
 public:
-    ISpriteBase(const Image& image, const Size& frame_size,
-                int framecount, const Point& frame_point)
-        : m_image(image),
-          m_frame(frame_size),
-          m_index(0)
-    {
-        m_image.copy();
-        m_strip = add_strip(framecount, frame_point);
-    }
+    Sprite(const Image& image, const Size& frame_size,
+           int framecount, const Point& frame_point,
+           const Point& point = Point());
 
-    /**
-     * Jump to the specified frame index.
-     */
-    virtual void show_frame(int index) = 0;
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
-    /**
-     * Get a copy of a surface for the current frame.
-     */
-    //virtual shared_cairo_surface_t surface() const;
+    virtual void show_frame(int index);
+
+    virtual void paint(Painter& painter) override;
+
+    virtual shared_cairo_surface_t surface() const;
 
     /**
      * Advance to the next frame in the strip.
      */
-    virtual void advance()
-    {
-        int index = m_index;
-        if (++index >= m_strips[m_strip].framecount)
-            index = 0;
-
-        show_frame(index);
-    }
+    virtual void advance();
 
     /**
      * Returns true if the current frame is the last frame.
      */
-    virtual bool is_last_frame() const
-    {
-        return m_index >= m_strips[m_strip].framecount - 1;
-    }
+    virtual bool is_last_frame() const;
 
     /**
      * Returns the number of frames in the current strip.
      */
-    virtual uint32_t frame_count() const
-    {
-        return m_strips[m_strip].framecount;
-    }
-
-    struct strip
-    {
-        int framecount;
-        Point point;
-    };
+    virtual uint32_t frame_count() const;
 
     /**
      * Change the strip to the specified id.
      */
-    virtual void set_strip(uint32_t id)
-    {
-        if (id < m_strips.size() && id != m_strip)
-        {
-            m_strip = id;
-            m_index = 0;
-        }
-    }
+    virtual void set_strip(uint32_t id);
 
     /**
      * Add a new strip.
      */
-    uint32_t add_strip(int framecount, const Point& point)
-    {
-        strip s;
-        s.framecount = framecount;
-        s.point = point;
-        m_strips.push_back(s);
-        return m_strips.size() - 1;
-    }
+    virtual uint32_t add_strip(int framecount, const Point& point);
 
-    virtual ~ISpriteBase()
+    virtual ~Sprite()
     {}
 
 protected:
 
-    /**
-     * Get the frame origin.
-     */
-    virtual Point get_frame_origin(int index) const
+    virtual void allocate_screen() override
     {
-        Point origin;
-        auto imagew = m_image.size().w;
-        origin.x = m_strips[m_strip].point.x + (index * m_frame.w);
-        origin.y = m_strips[m_strip].point.y;
-
-        // support sheets that have frames on multiple rows
-        if (origin.x + m_frame.w > imagew)
-        {
-            auto x = m_strips[m_strip].point.x + (index * m_frame.w);
-
-            origin.x = (static_cast<uint32_t>(x) % static_cast<uint32_t>(imagew));
-            origin.y = ((x / imagew) * m_strips[m_strip].point.y) + (x / imagew) * m_frame.h;
-        }
-
-        return origin;
+        Window::allocate_screen();
     }
 
-    using strip_array = std::vector<strip>;
+    void create_impl(const Image& image, const Size& frame_size,
+                     int framecount, const Point& frame_point);
 
-    Image m_image;
-    Size m_frame;
-    int m_index;
-    strip_array m_strips;
-    uint32_t m_strip;
-};
+    std::unique_ptr<detail::SpriteImpl> m_simpl;
 
-/**
- * Sprite widget using hardware planes.
- */
-class HardwareSprite : public Window, public ISpriteBase
-{
-public:
-    HardwareSprite(const Image& image, const Size& frame_size,
-                   int framecount, const Point& frame_point,
-                   const Point& point = Point());
+    friend class detail::SpriteImpl;
+    friend class detail::SoftwareSprite;
+    friend class detail::HardwareSprite;
 
-    virtual void show_frame(int index) override;
+private:
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
-
-    virtual void paint(Painter& painter) override;
-
-    virtual shared_cairo_surface_t surface() const;
-
-    virtual ~HardwareSprite();
-protected:
-    ImageLabel m_label;
-};
-
-/**
- * Sprite widget using only software.
- */
-class SoftwareSprite : public Widget, public ISpriteBase
-{
-public:
-    SoftwareSprite(const Image& image, const Size& frame_size,
-                   int framecount, const Point& frame_point,
-                   const Point& point = Point());
-
-    virtual void draw(Painter& painter, const Rect& rect) override;
-
-    virtual void show_frame(int index) override;
-
-    virtual void paint(Painter& painter) override;
-
-    virtual shared_cairo_surface_t surface() const;
-
-    virtual ~SoftwareSprite();
+    Sprite() = delete;
 };
 
 }

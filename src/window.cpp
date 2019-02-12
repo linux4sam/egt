@@ -115,9 +115,10 @@ void Window::create_impl(const Rect& rect,
         m_box = rect;
 
 #ifdef HAVE_LIBPLANES
+        bool force_basic = (rect.size().w > 1000 || rect.size().h > 1000);
         static uint32_t count = 0;
         auto s = dynamic_cast<KMSScreen*>(main_screen());
-        if (count++ < s->count_planes(KMSScreen::plane_type::overlay))
+        if (!force_basic && count++ < s->count_planes(KMSScreen::plane_type::overlay))
         {
             DBG(name() << " backend is PlaneWindow");
             m_impl.reset(new detail::PlaneWindow(this, format, heo));

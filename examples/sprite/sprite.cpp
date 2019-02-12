@@ -47,14 +47,14 @@ int main(int argc, const char** argv)
 
     StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), 2, 2);
 
-    HardwareSprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
-                           Point(main_screen()->size().w / 2 - 75,
-                                 main_screen()->size().h / 2 - 132 / 2));
+    Sprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
+                   Point(main_screen()->size().w / 2 - 75,
+                         main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite1, 0, 1, alignmask::CENTER);
 
-    SoftwareSprite sprite2(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
-                           Point(main_screen()->size().w / 2,
-                                 main_screen()->size().h / 2 - 132 / 2));
+    Sprite sprite2(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
+                   Point(main_screen()->size().w / 2,
+                         main_screen()->size().h / 2 - 132 / 2));
     grid.add(&sprite2, 1, 1, alignmask::CENTER);
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
@@ -172,6 +172,7 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
+    win.add(&popup);
     popup.show();
 
     return app.run();

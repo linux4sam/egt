@@ -55,7 +55,7 @@ public:
         : TopWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
           e1(r())
     {
-        auto img = new ImageLabel(Image("water_1080.png"));
+        auto img = new ImageLabel(Image("water.png"));
         add(img);
         if (img->h() != h())
         {
@@ -71,8 +71,9 @@ public:
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);
 
-        m_sprite = new SoftwareSprite(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
+        m_sprite = new Sprite(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
         add(m_sprite);
+        m_sprite->show();
     }
 
     int handle(eventid event) override
@@ -132,8 +133,6 @@ public:
         }
     }
 
-    //private:
-
     void objects_changed()
     {
         ostringstream ss;
@@ -145,7 +144,7 @@ public:
     std::random_device r;
     std::default_random_engine e1;
     Label* m_label;
-    SoftwareSprite* m_sprite;
+    Sprite* m_sprite;
 };
 
 
@@ -154,19 +153,22 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "water");
 
     MainWindow win;
-    win.show();
 
-    vector<ISpriteBase*> sprites;
+    vector<Sprite*> sprites;
 
+#define SPRITE1
 #ifdef SPRITE1
-    HardwareSprite sprite1("fish.png", 252, 209, 8, 0, 0, 0, 0);
+    Sprite sprite1(Image("fish.png"), Size(252, 209), 8, Point(0, 0));
     win.add(&sprite1);
+    sprite1.show();
     sprites.push_back(&sprite1);
 #endif
 
+#define SPRITE2
 #ifdef SPRITE2
-    HardwareSprite sprite2("fish2.png", 100, 87, 6, 0, 0, 0, 0);
+    Sprite sprite2(Image("fish2.png"), Size(100, 87), 6, Point(0, 0));
     win.add(&sprite2);
+    sprite2.show();
     sprites.push_back(&sprite2);
 #endif
 
@@ -209,42 +211,39 @@ int main(int argc, const char** argv)
     spawntimer.start();
 
 #ifdef SPRITE1
-    WidgetPositionAnimator a1 = WidgetPositionAnimator({&sprite1},
-                                WidgetPositionAnimator::CORD_X,
-                                -sprite1.size().w,
-                                main_screen()->size().w,
-                                10000,
-                                easing_linear);
+    PropertyAnimator a1(-sprite1.size().w, main_screen()->size().w,
+                        std::chrono::milliseconds(10000),
+                        easing_linear);
+    a1.on_change(std::bind(&Sprite::set_x, std::ref(sprite1), std::placeholders::_1));
     a1.start();
 
-    PeriodicTimer floattimer(1000 * 12);
+    PeriodicTimer floattimer(std::chrono::milliseconds(1000 * 12));
     floattimer.on_timeout([&a1, &sprite1, &win]()
     {
 
         static std::uniform_int_distribution<int> yoffset_dist(0, win.h() - sprite1.size().h);
         int y = yoffset_dist(win.e1);
 
-        sprite1.move(-sprite1.size().w, y);
+        sprite1.move(Point(-sprite1.size().w, y));
         a1.start();
     });
     floattimer.start();
 #endif
 
 #ifdef SPRITE2
-    WidgetPositionAnimator a2 = WidgetPositionAnimator({&sprite2},
-                                WidgetPositionAnimator::CORD_X,
-                                -sprite2.size().w, main_screen()->size().w,
-                                12000,
-                                easing_linear);
+    PropertyAnimator a2(-sprite2.size().w, main_screen()->size().w,
+                        std::chrono::milliseconds(12000),
+                        easing_linear);
+    a2.on_change(std::bind(&Sprite::set_x, std::ref(sprite2), std::placeholders::_1));
     a2.start();
 
-    PeriodicTimer floattimer2(1000 * 15);
+    PeriodicTimer floattimer2(std::chrono::milliseconds(1000 * 15));
     floattimer2.on_timeout([&a2, &sprite2, &win]()
     {
         static std::uniform_int_distribution<int> yoffset_dist(0, win.h() - sprite2.size().h);
         int y = yoffset_dist(win.e1);
 
-        sprite2.move(-sprite2.size().w, y);
+        sprite2.move(Point(-sprite2.size().w, y));
         a2.start();
     });
     floattimer2.start();
@@ -267,6 +266,8 @@ int main(int argc, const char** argv)
         label1.set_text(ss.str());
     });
     cputimer.start();
+
+    win.show();
 
     return app.run();
 }
