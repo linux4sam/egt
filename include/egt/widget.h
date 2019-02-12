@@ -19,7 +19,6 @@
 #include <egt/geometry.h>
 #include <egt/object.h>
 #include <egt/palette.h>
-#include <egt/screen.h>
 #include <egt/theme.h>
 #include <egt/utils.h>
 #include <iosfwd>
@@ -31,7 +30,10 @@ namespace egt
 {
 inline namespace v1
 {
+
 class Painter;
+class Frame;
+class IScreen;
 
 /**
  * Flags used for various widget properties.
@@ -128,29 +130,6 @@ enum class orientation
     HORIZONTAL,
     VERTICAL,
 };
-
-class Frame;
-
-namespace detail
-{
-/**
- * Given an item size, and a bounding box, and an alignment parameter,
- * return the rectangle the item box should be move/resized to.
- */
-Rect align_algorithm(const Size& size, const Rect& bounding,
-                     alignmask align, int margin = 0);
-
-/**
- * This is used for aligning two rectangles in a single widget.  For example,
- * a widget that has both text and an image.  The first rectangle is aligned
- * to the main rectangle.  The second rectangle is aligned relative to the
- * first rectangle.
- */
-void double_align(const Rect& main,
-                  const Size& fsize, alignmask first_align, Rect& first,
-                  const Size& ssize, alignmask second_align, Rect& second,
-                  int margin = 0);
-}
 
 /**
  * Base widget class.
@@ -657,6 +636,29 @@ private:
 
     friend class Frame;
 };
+
+namespace detail
+{
+
+/**
+ * Given an item size, and a bounding box, and an alignment parameter,
+ * return the rectangle the item box should be move/resized to.
+ */
+Rect align_algorithm(const Size& size, const Rect& bounding,
+                     alignmask align, int margin = 0);
+
+/**
+ * This is used for aligning two rectangles in a single widget.  For example,
+ * a widget that has both text and an image.  The first rectangle is aligned
+ * to the main rectangle.  The second rectangle is aligned relative to the
+ * first rectangle.
+ */
+void double_align(const Rect& main,
+                  const Size& fsize, alignmask first_align, Rect& first,
+                  const Size& ssize, alignmask second_align, Rect& second,
+                  int margin = 0);
+
+}
 
 }
 }

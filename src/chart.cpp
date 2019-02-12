@@ -9,6 +9,7 @@
 
 #include "egt/chart.h"
 #include "egt/painter.h"
+#include "egt/screen.h"
 #include <cmath>
 #include <vector>
 #ifdef HAVE_KPLOT

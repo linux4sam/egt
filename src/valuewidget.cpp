@@ -141,8 +141,8 @@ void SpinProgress::draw(Painter& painter, const Rect& rect)
     auto dim = std::min(w(), h());
     float linew = dim / 10;
     float radius = dim / 2 - (linew / 2);
-    float angle1 = to_radians<float>(180, 0);
-    float angle2 = to_radians<float>(180, value() / 100. * 360.);
+    float angle1 = detail::to_radians<float>(180, 0);
+    float angle2 = detail::to_radians<float>(180, value() / 100. * 360.);
 
     painter.set_color(palette().color(Palette::BG));
     painter.draw_fill(box());

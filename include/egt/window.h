@@ -11,8 +11,9 @@
  * @brief Working with windows.
  */
 
-#include <egt/frame.h>
 #include <egt/detail/windowimpl.h>
+#include <egt/frame.h>
+#include <egt/screen.h>
 #include <memory>
 
 namespace egt

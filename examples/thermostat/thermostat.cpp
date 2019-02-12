@@ -204,8 +204,8 @@ int main(int argc, const char** argv)
         auto color3 = widget.palette().color(Palette::MID);
 
         float radius = widget.w() / 2 - handle_radius - linew;
-        float angle1 = to_radians<float>(-90, 0);
-        float angle2 = to_radians<float>(-90, v);
+        float angle1 = detail::to_radians<float>(-90, 0);
+        float angle2 = detail::to_radians<float>(-90, v);
 
         auto c = widget.center();
 
@@ -225,8 +225,8 @@ int main(int argc, const char** argv)
 
         // secondary value
         auto color4 = Color::RED;
-        float angle3 = to_radians<float>(-90,
-                                         widget.value_to_degrees(widget.value2()));
+        float angle3 = detail::to_radians<float>(-90,
+                       widget.value_to_degrees(widget.value2()));
         painter.set_color(color4);
         painter.set_line_width(linew * 2);
         painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));

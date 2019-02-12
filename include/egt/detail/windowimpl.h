@@ -6,6 +6,8 @@
 #ifndef EGT_DETAIL_WINDOWIMPL_H
 #define EGT_DETAIL_WINDOWIMPL_H
 
+#include <egt/geometry.h>
+
 namespace egt
 {
 inline namespace v1

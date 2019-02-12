@@ -12,6 +12,7 @@
  */
 
 #include <egt/widget.h>
+#include <egt/screen.h>
 #include <deque>
 #include <string>
 

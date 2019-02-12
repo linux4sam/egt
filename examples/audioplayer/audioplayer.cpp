@@ -143,8 +143,8 @@ int main(int argc, const char** argv)
         float smalldim = std::min(widget.w(), widget.h());
         float linew = smalldim / 10;
         float radius = (smalldim / 2) - (linew * 2);
-        float angle1 = to_radians<float>(-90, 0);
-        float angle2 = to_radians<float>(-90, v);
+        float angle1 = detail::to_radians<float>(-90, 0);
+        float angle2 = detail::to_radians<float>(-90, v);
 
         auto c = widget.center();
 

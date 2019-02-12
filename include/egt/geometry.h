@@ -723,19 +723,6 @@ public:
 
 using Circle = CircleType<>;
 
-template <class T>
-inline T to_degrees(T radians)
-{
-    return radians * (180.0 / M_PI);
-}
-
-template <class T>
-inline T to_radians(T zero, T degrees)
-{
-    degrees += zero;
-    return degrees * (M_PI / 180.0);
-}
-
 }
 }
 

@@ -7,6 +7,7 @@
 #define EGT_DETAIL_MATH_H
 
 #include <cassert>
+#include <cmath>
 
 namespace egt
 {
@@ -14,6 +15,7 @@ inline namespace v1
 {
 namespace detail
 {
+
 /**
  * Normalize a value, given its min and max, to a different target min and
  * max.
@@ -34,6 +36,25 @@ T normalize(T value, T min, T max, T target_min, T target_max)
     auto r = ((value - min) / (max - min)) *
              (target_max - target_min) + target_min;
     return r;
+}
+
+/**
+ * Convert from radians to degrees.
+ */
+template <class T>
+inline T to_degrees(T radians)
+{
+    return radians * (180.0 / M_PI);
+}
+
+/**
+ * Convert from degrees to radians.
+ */
+template <class T>
+inline T to_radians(T zero, T degrees)
+{
+    degrees += zero;
+    return degrees * (M_PI / 180.0);
 }
 
 }

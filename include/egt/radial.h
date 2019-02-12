@@ -142,8 +142,8 @@ public:
         float smalldim = std::min(widget.w(), widget.h());
         float linew = smalldim / 10;
         float radius = smalldim / 2 - (linew / 2);
-        float angle1 = to_radians<float>(-90, 0);
-        float angle2 = to_radians<float>(-90, v);
+        float angle1 = detail::to_radians<float>(-90, 0);
+        float angle2 = detail::to_radians<float>(-90, v);
 
         auto c = widget.center();
 
@@ -174,8 +174,8 @@ public:
         if (widget.m_rflags.find(radial_flags::secondary_value) != widget.m_rflags.end())
         {
             // secondary value
-            float angle3 = to_radians<float>(-90,
-                                             widget.value_to_degrees(widget.value2()));
+            float angle3 = detail::to_radians<float>(-90,
+                           widget.value_to_degrees(widget.value2()));
             painter.set_color(color4);
             painter.set_line_width(linew);
             painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
@@ -207,13 +207,16 @@ public:
         }
     }
 
+    /**
+     * Get the current text of the radial.
+     */
     virtual const std::string& text() const { return m_text; }
 
     float touch_to_degrees(const Point& point)
     {
         const Point c = this->center();
         float radians = c.angle_to<float>(point);
-        float angle = to_degrees(radians);
+        float angle = detail::to_degrees(radians);
         if (angle < 0)
             angle = angle + 360.;
         return angle;
