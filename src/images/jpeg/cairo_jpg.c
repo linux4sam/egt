@@ -146,8 +146,9 @@ cairo_status_t cairo_image_surface_write_to_jpeg_mem(cairo_surface_t *sfc, unsig
       // create a similar surface with a proper format if supplied input format
       // does not fulfill the requirements
       double x1, y1, x2, y2;
+      cairo_t *ctx;
       other = sfc;
-      cairo_t *ctx = cairo_create(other);
+      ctx = cairo_create(other);
       // get extents of original surface
       cairo_clip_extents(ctx, &x1, &y1, &x2, &y2);
       cairo_destroy(ctx);

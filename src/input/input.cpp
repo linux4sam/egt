@@ -97,7 +97,9 @@ void IInput::dispatch(eventid event)
 
     DBG("input event: " << event);
     if (eevent != eventid::NONE)
+    {
         DBG("input event: " << eevent);
+    }
 
     // then give it to any global input handlers
     if (m_global_input.invoke_handlers(event))

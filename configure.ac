@@ -12,8 +12,7 @@ AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -g"
-CFLAGS="$CFLAGS -Ofast -g"
+CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic"
 
 AC_DISABLE_STATIC
 AC_PROG_CXX
@@ -96,6 +95,21 @@ AC_SUBST(WARN_CFLAGS)
 # Checks for header files.
 AC_PATH_X
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h])
+
+AC_ARG_ENABLE([debug],
+  [AS_HELP_STRING([--disable-debug], [build without debugging support [default=yes]])],
+  [enable_debug=no], [ ])
+
+if test "$enable_debug" = "no" ; then
+  AC_MSG_NOTICE([Disabling debugging])
+  #CFLAGS=["`echo $CFLAGS' ' | $SED -e 's/-g[0-9] //g' -e 's/-g //g'`"]
+  #CXXFLAGS=["`echo $CXXFLAGS' ' | $SED -e 's/-g[0-9] //g' -e 's/-g //g'`"]
+  CFLAGS="$CFLAGS -DNDEBUG -Ofast"
+  CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast"
+else
+  CXXFLAGS="$CXXFLAGS -O0"
+  CFLAGS="$CFLAGS -O0"
+fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL

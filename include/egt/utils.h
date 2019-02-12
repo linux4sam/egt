@@ -21,6 +21,8 @@
 
 #ifdef DEBUG
 #define DBG(x) do { std::cout << x << std::endl; } while (0)
+#elif defined(NDEBUG)
+#define DBG(x)
 #else
 #define DBG(x) do {                             \
         if (egt::detail::globalloglevel() > 1)  \
