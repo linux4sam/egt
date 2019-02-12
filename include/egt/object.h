@@ -101,12 +101,12 @@ public:
 
     using event_callback_t = std::function<int (eventid event)>;
 
-    using mask_type = std::unordered_set<eventid, eventid_hash>;
+    using filter_type = std::unordered_set<eventid, eventid_hash>;
 
     /**
      * Add a callback to be called when the widget receives an event.
      */
-    virtual void on_event(event_callback_t handler, mask_type mask = mask_type())
+    virtual void on_event(event_callback_t handler, filter_type mask = filter_type())
     {
         m_callbacks.push_back({handler, mask});
     }
@@ -138,7 +138,7 @@ protected:
     struct callback_meta
     {
         event_callback_t callback;
-        mask_type mask;
+        filter_type mask;
     };
 
     using callback_array = std::vector<callback_meta>;
