@@ -527,13 +527,18 @@ public:
      */
     Theme& theme();
 
-    virtual ~Widget();
-
     /**
      * Helper function to draw this widget's box using the appropriate
      * theme.
      */
     void draw_box(Painter& painter, const Rect& rect = Rect());
+
+    virtual void zorder_down();
+
+    virtual void zorder_up();
+
+    virtual ~Widget();
+
 
 protected:
 

@@ -509,6 +509,18 @@ Theme& Widget::theme()
     return global_theme();
 }
 
+void Widget::zorder_down()
+{
+    if (m_parent)
+        m_parent->zorder_down(this);
+}
+
+void Widget::zorder_up()
+{
+    if (m_parent)
+        m_parent->zorder_up(this);
+}
+
 Widget::~Widget()
 {
     if (m_parent)

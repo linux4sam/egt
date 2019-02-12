@@ -231,8 +231,6 @@ public:
         return box();
     }
 
-    virtual ~Frame();
-
     /**
      * Convert a local point to the coordinate system of the current panel.
      *
@@ -241,6 +239,47 @@ public:
      */
     virtual Point to_panel(const Point& p);
 
+    virtual void zorder_down() override
+    {
+        Widget::zorder_down();
+    }
+
+    virtual void zorder_up() override
+    {
+        Widget::zorder_up();
+    }
+
+    virtual void zorder_down(Widget* widget)
+    {
+        auto i = std::find(m_children.begin(), m_children.end(), widget);
+        if (i != m_children.end())
+        {
+            auto to = std::prev(i);
+            if (to != m_children.end())
+            {
+                (*i)->damage();
+                (*to)->damage();
+                std::iter_swap(i, to);
+            }
+        }
+    }
+
+    virtual void zorder_up(Widget* widget)
+    {
+        auto i = std::find(m_children.begin(), m_children.end(), widget);
+        if (i != m_children.end())
+        {
+            auto to = std::next(i);
+            if (to != m_children.end())
+            {
+                (*i)->damage();
+                (*to)->damage();
+                std::iter_swap(i, to);
+            }
+        }
+    }
+
+    virtual ~Frame();
 protected:
 
     bool child_hit_test(const Point& point)
