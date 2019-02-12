@@ -658,49 +658,6 @@ private:
     friend class Frame;
 };
 
-namespace experimental
-{
-class ScrollWheel : public Widget
-{
-public:
-    explicit ScrollWheel(const Rect& rect = Rect());
-
-    virtual int handle(eventid event) override;
-
-    virtual void draw(Painter& painter, const Rect& rect) override;
-
-    int position() const
-    {
-        return m_pos;
-    }
-
-    inline void position(int pos)
-    {
-        if (pos < (int)m_values.size())
-        {
-            m_pos = pos;
-            damage();
-        }
-    }
-
-    void values(const std::vector<std::string>& v)
-    {
-        m_values = v;
-    }
-
-    virtual ~ScrollWheel()
-    {}
-
-protected:
-    std::vector<std::string> m_values;
-
-    int m_pos{0};
-    int m_moving_x{0};
-    int m_start_pos{0};
-};
-
-}
-
 }
 }
 
