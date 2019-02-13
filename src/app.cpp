@@ -43,7 +43,8 @@ Application& main_app()
 
 Application::Application(int argc, const char** argv, const std::string& name, bool primary)
     : m_argc(argc),
-      m_argv(argv)
+      m_argv(argv),
+      m_signals(event().io(), SIGUSR1, SIGUSR2)
 {
     INFO("EGT Version " << EGT_VERSION);
 
@@ -106,21 +107,29 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 #endif
 }
 
+void Application::signal_handler(const asio::error_code& error, int signum)
+{
+    if (error)
+        return;
+
+    if (signum == SIGUSR1)
+        dump(cout);
+    else if (signum == SIGUSR2)
+    {
+        if (m_argc)
+            paint_to_file(string(m_argv[0]) + ".png");
+        else
+            paint_to_file();
+    }
+
+    m_signals.async_wait(std::bind(&Application::signal_handler, this,
+                                   std::placeholders::_1, std::placeholders::_2));
+}
+
 int Application::run()
 {
-    if (m_argc)
-    {
-        // catch SIGQUIT (Ctrl + \) and screenshot
-        asio::signal_set signals(event().io(), SIGQUIT);
-        signals.async_wait([this](const asio::error_code & error, int)
-        {
-            if (error)
-                return;
-            this->paint_to_file(string(m_argv[0]) + ".png");
-        });
-
-        return m_event.run();
-    }
+    m_signals.async_wait(std::bind(&Application::signal_handler, this,
+                                   std::placeholders::_1, std::placeholders::_2));
 
     return m_event.run();
 }

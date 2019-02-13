@@ -418,7 +418,5 @@ int main(int argc, const char** argv)
 
     win.show();
 
-    app.dump(cout);
-
     return app.run();
 }

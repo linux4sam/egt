@@ -6,6 +6,7 @@
 #ifndef EGT_APP_H
 #define EGT_APP_H
 
+#include <asio.hpp>
 #include <egt/eventloop.h>
 #include <egt/utils.h>
 #include <iosfwd>
@@ -65,9 +66,12 @@ public:
     virtual ~Application();
 
 protected:
+    void signal_handler(const asio::error_code& error, int signum);
+
     EventLoop m_event;
     int m_argc{0};
     const char** m_argv{nullptr};
+    asio::signal_set m_signals;
 };
 
 /**

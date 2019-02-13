@@ -185,7 +185,5 @@ int main(int argc, const char** argv)
 
     win1->show();
 
-    app.dump(cout);
-
     return app.run();
 }
