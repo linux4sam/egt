@@ -213,10 +213,7 @@ Sprite::Sprite(const Image& image, const Size& frame_size,
 {widgetflag::NO_BACKGROUND},
 pixel_format::argb8888)
 {
-    static auto window_id = 0;
-    ostringstream ss;
-    ss << "Sprite" << window_id++;
-    set_name(ss.str());
+    set_name("Sprite" + std::to_string(m_widgetid));
 
     create_impl(image, frame_size, framecount, frame_point);
 }

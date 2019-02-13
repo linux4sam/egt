@@ -21,6 +21,8 @@ Label::Label(const std::string& text, const Rect& rect,
              const widgetflags& flags) noexcept
     : TextWidget(text, rect, align, font, flags)
 {
+    set_name("Label" + std::to_string(m_widgetid));
+
     set_boxtype(Theme::boxtype::fill);
 }
 
@@ -104,6 +106,8 @@ ImageLabel::ImageLabel(const Image& image,
     : Label(text, rect, alignmask::RIGHT | alignmask::CENTER, font),
       m_image(image)
 {
+    set_name("ImageLabel" + std::to_string(m_widgetid));
+
     set_boxtype(Theme::boxtype::none);
 
     if (rect.empty())

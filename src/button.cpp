@@ -22,6 +22,8 @@ Button::Button(const std::string& text, const Rect& rect,
                const Font& font, const widgetflags& flags) noexcept
     : TextWidget(text, rect, alignmask::CENTER, font, flags)
 {
+    set_name("Button" + std::to_string(m_widgetid));
+
     set_boxtype(Theme::boxtype::rounded_gradient);
     palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::HIGHLIGHT));
     set_flag(widgetflag::GRAB_MOUSE);
@@ -143,6 +145,8 @@ ImageButton::ImageButton(const Image& image,
                          const widgetflags& flags) noexcept
     : Button(text, rect, Font(), flags)
 {
+    set_name("ImageButton" + std::to_string(m_widgetid));
+
     if (text.empty())
         set_image_align(alignmask::CENTER);
     do_set_image(image);

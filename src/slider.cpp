@@ -7,7 +7,6 @@
 #include "egt/painter.h"
 #include "egt/slider.h"
 #include "egt/textwidget.h"
-#include <sstream>
 
 using namespace std;
 
@@ -21,13 +20,9 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
     : ValueRangeWidget<int>(rect, min, max, value),
       m_orient(orient)
 {
+    set_name("Slider" + std::to_string(m_widgetid));
+
     set_flag(widgetflag::GRAB_MOUSE);
-
-    static auto slider_id = 0;
-
-    ostringstream ss;
-    ss << "Slider" << slider_id++;
-    set_name(ss.str());
 }
 
 Slider::Slider(int min, int max, int value,

@@ -6,7 +6,6 @@
 #include "egt/grid.h"
 #include "egt/painter.h"
 #include <algorithm>
-#include <sstream>
 
 using namespace std;
 
@@ -14,22 +13,19 @@ namespace egt
 {
 inline namespace v1
 {
-static auto staticgrid_id = 0;
 
 StaticGrid::StaticGrid(const Rect& rect, int columns,
                        int rows, int spacing)
     : Frame(rect, {widgetflag::NO_BACKGROUND}),
 m_spacing(spacing)
 {
+    set_name("StaticGrid" + std::to_string(m_widgetid));
+
     set_boxtype(Theme::boxtype::none);
 
     m_cells.resize(columns);
     for (auto& x : m_cells)
         x.resize(rows);
-
-    ostringstream ss;
-    ss << "StaticGrid" << staticgrid_id++;
-    set_name(ss.str());
 }
 
 StaticGrid::StaticGrid(int columns, int rows, int spacing)

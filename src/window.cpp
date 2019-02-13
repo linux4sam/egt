@@ -48,12 +48,9 @@ Window::Window(const Rect& rect,
                bool heo)
     : Frame(rect, flags)
 {
-    set_flag(widgetflag::WINDOW);
+    set_name("Window" + std::to_string(m_widgetid));
 
-    static auto window_id = 0;
-    ostringstream ss;
-    ss << "Window" << window_id++;
-    set_name(ss.str());
+    set_flag(widgetflag::WINDOW);
 
     // by default, windows are hidden
     m_visible = false;

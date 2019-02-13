@@ -493,6 +493,11 @@ protected:
      */
     bool m_visible{true};
 
+    /**
+     * Unique ID of this widget.
+     */
+    int m_widgetid{0};
+
 private:
 
     /**

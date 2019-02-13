@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/frame.h"
+#include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
-#include "egt/input.h"
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -20,15 +21,10 @@ inline namespace v1
 Frame::Frame(const Rect& rect, const widgetflags& flags)
     : Widget(rect, flags)
 {
+    set_name("Frame" + std::to_string(m_widgetid));
+
     set_flag(widgetflag::FRAME);
-
     set_boxtype(Theme::boxtype::fill);
-
-    static auto frame_id = 0;
-
-    ostringstream ss;
-    ss << "Frame" << frame_id++;
-    set_name(ss.str());
 }
 
 Frame::Frame(Frame& parent, const Rect& rect, const widgetflags& flags)
@@ -166,7 +162,7 @@ void Frame::damage(const Rect& rect)
 
 void Frame::dump(std::ostream& out, int level)
 {
-    out << std::string(level, ' ') << "Frame: " << name() <<
+    out << std::string(level, ' ') << name() <<
         " " << box() << " " << m_flags << endl;
 
     for (auto& child : m_children)

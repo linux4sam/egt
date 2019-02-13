@@ -28,6 +28,8 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
     : Popup(Size(parent.size().w, ListBox::item_height())),
       m_parent(parent)
 {
+    set_name("ComboBoxPopup" + std::to_string(m_widgetid));
+
     for (auto& item : parent.m_items)
         m_list.add_item(new StringItem(item));
 
@@ -110,6 +112,8 @@ ComboBox::ComboBox(const item_array& items,
       m_items(items),
       m_popup(*this)
 {
+    set_name("ComboBox" + std::to_string(m_widgetid));
+
     set_boxtype(Theme::boxtype::border);
     set_flag(widgetflag::GRAB_MOUSE);
     palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));

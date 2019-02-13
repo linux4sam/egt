@@ -131,15 +131,14 @@ void double_align(const Rect& main,
 }
 }
 
+static auto global_widget_id = 0;
+
 Widget::Widget(const Rect& rect, const widgetflags& flags) noexcept
     : m_box(rect),
+      m_widgetid(global_widget_id++),
       m_flags(flags)
 {
-    static auto widget_id = 0;
-
-    ostringstream ss;
-    ss << "Widget" << widget_id++;
-    set_name(ss.str());
+    set_name("Widget" + std::to_string(m_widgetid));
 }
 
 Widget::Widget(Frame& parent, const Rect& rect, const widgetflags& flags) noexcept
@@ -464,7 +463,7 @@ shared_cairo_surface_t Widget::surface()
 
 void Widget::dump(std::ostream& out, int level)
 {
-    out << std::string(level, ' ') << "Widget: " << name() <<
+    out << std::string(level, ' ') << name() <<
         " " << box() << " " << m_flags << std::endl;
 }
 

@@ -18,6 +18,8 @@ RadioBox::RadioBox(const std::string& text,
                    const Rect& rect)
     : Button(text, rect)
 {
+    set_name("RadioBox" + std::to_string(m_widgetid));
+
     set_flag(widgetflag::GRAB_MOUSE);
     palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
 }

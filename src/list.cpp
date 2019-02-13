@@ -19,11 +19,7 @@ ListBox::ListBox(const Rect& rect)
       m_view(rect, orientation::VERTICAL),
       m_sizer(orientation::VERTICAL)
 {
-    static auto listbox_id = 0;
-
-    std::ostringstream ss;
-    ss << "ListBox" << listbox_id++;
-    set_name(ss.str());
+    set_name("ListBox" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::borderfill);
 

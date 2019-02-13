@@ -39,10 +39,7 @@ ScrolledView::ScrolledView(const Rect& rect, orientation orient)
 m_slider(0, 100, 0, orient),
 m_orient(orient)
 {
-    static auto scrolledview_id = 0;
-    std::ostringstream ss;
-    ss << "ScrolledView" << scrolledview_id++;
-    set_name(ss.str());
+    set_name("ScrolledView" + std::to_string(m_widgetid));
 
     if (orient == orientation::VERTICAL)
         m_slider.slider_flags(Slider::flags::RECTANGLE_HANDLE |

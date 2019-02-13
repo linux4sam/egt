@@ -31,11 +31,7 @@ public:
     m_vmargin(vmargin),
     m_orient(orient)
     {
-        static auto boxsizer_id = 0;
-
-        std::ostringstream ss;
-        ss << "BoxSizer" << boxsizer_id++;
-        set_name(ss.str());
+        set_name("BoxSizer" + std::to_string(m_widgetid));
     }
 
     virtual void move(const Point& point) override
@@ -151,10 +147,7 @@ public:
     m_spacing(spacing),
     m_orient(orient)
     {
-        static auto orientationpositioner_id = 0;
-        std::ostringstream ss;
-        ss << "OrientationPositioner" << orientationpositioner_id++;
-        set_name(ss.str());
+        set_name("OrientationPositioner" + std::to_string(m_widgetid));
 
         if (m_orient == orientation::HORIZONTAL)
         {

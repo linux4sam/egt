@@ -16,6 +16,8 @@ TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align)
     : TextWidget(str, rect, align),
       m_timer(std::chrono::seconds(1))
 {
+    set_name("TextBox" + std::to_string(m_widgetid));
+
     set_boxtype(Theme::boxtype::borderfill);
 
     m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
@@ -134,7 +136,9 @@ MultilineTextBox::MultilineTextBox(const std::string& str,
                                    const Rect& rect,
                                    alignmask align)
     : TextBox(str, rect, align)
-{}
+{
+    set_name("MultilineTextBox" + std::to_string(m_widgetid));
+}
 
 MultilineTextBox::MultilineTextBox(const Rect& rect,
                                    alignmask align)

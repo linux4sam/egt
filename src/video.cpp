@@ -147,6 +147,8 @@ VideoWindow::VideoWindow(const Size& size, pixel_format format, bool heo)
 {
     detail::init_gst_thread();
 
+    set_name("VideoWindow" + std::to_string(m_widgetid));
+
     allocate_screen();
 }
 
