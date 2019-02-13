@@ -21,6 +21,7 @@ int main(int argc, const char** argv)
     TopWindow win;
 
     Keyboard<Window> keyboard;
+    win.add(&keyboard);
     keyboard.show();
 
     MultilineTextBox textbox(Rect(0, 0, 100, 100), alignmask::LEFT | alignmask::TOP);
