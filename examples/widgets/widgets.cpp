@@ -229,11 +229,11 @@ struct SliderPage : public NotebookTab
 {
     SliderPage()
     {
-        auto vsizer = new BoxSizer(orientation::VERTICAL, 0);
+        auto vsizer = new BoxSizer(orientation::VERTICAL, 10, 10, 10);
         vsizer->set_align(alignmask::EXPAND);
         add(vsizer);
 
-        auto hsizer1 = new BoxSizer(orientation::HORIZONTAL, 10, 10, 10);
+        auto hsizer1 = new BoxSizer(orientation::HORIZONTAL, 10, 10, 0);
         hsizer1->set_align(alignmask::EXPAND_HORIZONTAL);
         vsizer->add(hsizer1);
 
@@ -250,7 +250,7 @@ struct SliderPage : public NotebookTab
         slider3->slider_flags(Slider::flags::ROUND_HANDLE | Slider::flags::SHOW_LABEL);
         hsizer1->add(slider3);
 
-        auto hsizer2 = new BoxSizer(orientation::HORIZONTAL, 10, 10, 10);
+        auto hsizer2 = new BoxSizer(orientation::HORIZONTAL, 10, 10, 0);
         hsizer2->set_align(alignmask::EXPAND_HORIZONTAL);
         vsizer->add(hsizer2);
 
