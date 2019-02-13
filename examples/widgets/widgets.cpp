@@ -167,10 +167,15 @@ struct TextPage : public NotebookTab
 {
     TextPage()
     {
-        auto grid0 = new StaticGrid(3, 10, 5);
+        auto grid1 = new StaticGrid(2, 1, 5);
+        grid1->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        grid1->set_align(alignmask::EXPAND);
+        add(grid1);
+
+        auto grid0 = new StaticGrid(1, 10, 5);
         grid0->set_align(alignmask::EXPAND);
         grid0->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        add(grid0);
+        grid1->add(grid0);
 
         auto text1 = new TextBox("text 1");
         grid0->add(text1);
@@ -187,6 +192,10 @@ struct TextPage : public NotebookTab
         text4->set_boxtype(Theme::boxtype::bottom_border);
         text4->disable();
         grid0->add(text4);
+
+        auto text5 = new MultilineTextBox("Multiline\nText", Rect(), alignmask::LEFT | alignmask::TOP);
+        grid1->set_align(alignmask::EXPAND);
+        grid1->add(text5);
     }
 };
 
