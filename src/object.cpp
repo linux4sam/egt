@@ -42,6 +42,7 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
         MAPITEM(eventid::INPUT_PROPERTY_CHANGED);
         MAPITEM(eventid::HIDE);
         MAPITEM(eventid::SHOW);
+#undef MAPITEM
     }
 
     os << strings[event];
