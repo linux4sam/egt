@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/canvas.h"
 #include "egt/frame.h"
 #include "egt/geometry.h"
 #include "egt/input.h"
@@ -10,11 +11,10 @@
 #include "egt/screen.h"
 #include "egt/utils.h"
 #include "egt/widget.h"
-#include "egt/canvas.h"
 #include <cassert>
-#include <string>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -131,7 +131,7 @@ void double_align(const Rect& main,
 }
 }
 
-Widget::Widget(const Rect& rect, widgetmask flags) noexcept
+Widget::Widget(const Rect& rect, const widgetflags& flags) noexcept
     : m_box(rect),
       m_flags(flags)
 {
@@ -142,7 +142,7 @@ Widget::Widget(const Rect& rect, widgetmask flags) noexcept
     set_name(ss.str());
 }
 
-Widget::Widget(Frame& parent, const Rect& rect, widgetmask flags) noexcept
+Widget::Widget(Frame& parent, const Rect& rect, const widgetflags& flags) noexcept
     : Widget(rect, flags)
 {
     parent.add(this);
@@ -152,7 +152,7 @@ int Widget::handle(eventid event)
 {
     DBG(name() << " handle: " << event);
 
-    if (is_flag_set(widgetmask::GRAB_MOUSE))
+    if (is_flag_set(widgetflag::GRAB_MOUSE))
     {
         switch (event)
         {
@@ -465,7 +465,7 @@ shared_cairo_surface_t Widget::surface()
 void Widget::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << "Widget: " << name() <<
-        " " << box() << std::endl;
+        " " << box() << " " << m_flags << std::endl;
 }
 
 void Widget::on_gain_focus()
@@ -495,7 +495,7 @@ void Widget::set_boxtype(const Theme::boxtype type)
 
 void Widget::draw_box(Painter& painter, const Rect& rect)
 {
-    if (is_flag_set(widgetmask::NO_BACKGROUND))
+    if (is_flag_set(widgetflag::NO_BACKGROUND))
         return;
 
     theme().draw_box(painter, *this, m_boxtype, rect);

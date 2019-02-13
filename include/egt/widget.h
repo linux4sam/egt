@@ -14,13 +14,13 @@
 #include <cairo.h>
 #include <cassert>
 #include <cstdint>
-#include <egt/bitmask.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/object.h>
 #include <egt/palette.h>
 #include <egt/theme.h>
 #include <egt/utils.h>
+#include <egt/widgetflags.h>
 #include <iosfwd>
 #include <memory>
 #include <string>
@@ -34,102 +34,6 @@ inline namespace v1
 class Painter;
 class Frame;
 class IScreen;
-
-/**
- * Flags used for various widget properties.
- */
-enum class widgetmask : uint32_t
-{
-    NONE = 0,
-
-    /**
-     * Do not draw the background color.
-     *
-     * The background color is usually drawn by default. A background will
-     * not be drawn if this flag is set. If something else is not drawn,
-     * instead (like a child widget), this can result in unintended side
-     * effects. Not drawing a background is an optimization to reduce
-     * unecessary drawing.
-     */
-    NO_BACKGROUND = (1 << 0),
-
-    /**
-     * This is an overlay plane window.
-     */
-    PLANE_WINDOW = (1 << 1),
-
-    /**
-     * This is a window widget.
-     */
-    WINDOW = (1 << 4),
-
-    /**
-     * This is a frame.
-     */
-    FRAME = (1 << 5),
-
-    /**
-     * Grab related mouse events.
-     *
-     * For example, if a button is pressed with the eventid::MOUSE_DOWN
-     * event, make sure the button gets subsequent mouse events, including
-     * the eventid::MOUSE_UP event.
-     */
-    GRAB_MOUSE = (1 << 6),
-
-    /**
-     * Enable transparent background.
-     */
-    TRANSPARENT_BACKGROUND = (1 << 7),
-
-    /**
-     * Default window flags.
-     */
-    WINDOW_DEFAULT = WINDOW,
-};
-
-ENABLE_BITMASK_OPERATORS(widgetmask)
-
-/**
- * Alignment flags.
- */
-enum class alignmask : uint32_t
-{
-    /** No alignment. */
-    NONE = 0,
-    /**
-     * Center alignment is a weak alignment both horizontal and
-     * vertical. To break one of those dimensions to another
-     * alignment, specify it in addiiton to CENTER.  If both
-     * are broken, CENTER has no effect.
-     */
-    CENTER = (1 << 0),
-    /** Horizontal alignment. */
-    LEFT = (1 << 1),
-    /** Horizontal alignment. */
-    RIGHT = (1 << 2),
-    /** Vertical alignment. */
-    TOP = (1 << 3),
-    /** Vertical alignment. */
-    BOTTOM = (1 << 4),
-    /** Expand only horizontally. */
-    EXPAND_HORIZONTAL = (1 << 5),
-    /** Expand only vertically. */
-    EXPAND_VERTICAL = (1 << 6),
-    /** Don't align, expand. */
-    EXPAND = EXPAND_HORIZONTAL | EXPAND_VERTICAL,
-};
-
-ENABLE_BITMASK_OPERATORS(alignmask)
-
-/**
- * Generic orientation flags.
- */
-enum class orientation
-{
-    HORIZONTAL,
-    VERTICAL,
-};
 
 /**
  * Base widget class.
@@ -152,7 +56,7 @@ public:
      * @param[in] flags Widget flags.
      */
     Widget(const Rect& rect = Rect(),
-           widgetmask flags = widgetmask::NONE) noexcept;
+           const widgetflags& flags = widgetflags()) noexcept;
 
     /**
      * Construct a widget.
@@ -162,7 +66,7 @@ public:
      * @param[in] flags Widget flags.
      */
     Widget(Frame& parent, const Rect& rect = Rect(),
-           widgetmask flags = widgetmask::NONE) noexcept;
+           const widgetflags& flags = widgetflags()) noexcept;
 
     /**
      * Draw the widget.
@@ -398,25 +302,43 @@ public:
     virtual IScreen* screen();
 
     /**
-     * Test if the specified Widget flag(s) is/are set.
-     * @param flag Bitmask of flags.
+     * Test if the specified Widget flag is set.
+     * @param flag The flag to test.
      */
-    inline bool is_flag_set(widgetmask flag) const
+    inline bool is_flag_set(widgetflag flag) const
     {
-        return (m_flags & flag) == flag;
+        return m_flags.find(flag) != m_flags.end();
     }
 
     /**
-     * Set the specified widget flag(s).
-     * @param flag Bitmask of flags.
+     * Test if the specified Widget flags are set.
+     * @param flags The flags to test.
      */
-    inline void flag_set(widgetmask flag) { m_flags |= flag; }
+    inline bool is_flag_set(widgetflags flags) const
+    {
+        for (auto& flag : flags)
+            if (!is_flag_set(flag))
+                return false;
+        return !m_flags.empty() && !flags.empty();
+    }
+
+    /**
+     * Set the specified widget flag.
+     * @param flag The flag to set.
+     */
+    inline void set_flag(widgetflag flag) { m_flags.insert(flag); }
+
+    /**
+     * Set the specified widget flags.
+     * @param flags Flags to set.
+     */
+    inline void set_flag(widgetflags flags) { m_flags.insert(flags.begin(), flags.end()); }
 
     /**
      * Clear, or unset, the specified widget flag(s).
      * @param flag Bitmask of flags.
      */
-    inline void flag_clear(widgetmask flag) { m_flags &= ~flag; }
+    inline void clear_flag(widgetflag flag) { m_flags.erase(m_flags.find(flag)); }
 
     /**
      * Align the widget.
@@ -596,7 +518,7 @@ private:
     /**
      * Flags for the widget.
      */
-    widgetmask m_flags{widgetmask::NONE};
+    widgetflags m_flags{};
 
     /**
      * Current palette for the widget.

@@ -63,7 +63,7 @@ public:
              const Rect& rect = Rect(),
              alignmask align = alignmask::CENTER | alignmask::LEFT,
              const Font& font = Font(),
-             widgetmask flags = widgetmask::NONE) noexcept;
+             const widgetflags& flags = widgetflags()) noexcept;
 
     virtual int handle(eventid event) override;
 

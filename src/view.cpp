@@ -35,9 +35,9 @@ static inline int o2p(orientation o, const Point& point)
 }
 
 ScrolledView::ScrolledView(const Rect& rect, orientation orient)
-    : Frame(rect, widgetmask::NO_BACKGROUND),
-      m_slider(0, 100, 0, orient),
-      m_orient(orient)
+    : Frame(rect, {widgetflag::NO_BACKGROUND}),
+m_slider(0, 100, 0, orient),
+m_orient(orient)
 {
     static auto scrolledview_id = 0;
     std::ostringstream ss;

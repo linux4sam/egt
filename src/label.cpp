@@ -17,21 +17,24 @@ inline namespace v1
 static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
 
 Label::Label(const std::string& text, const Rect& rect,
-             alignmask align, const Font& font, widgetmask flags) noexcept
+             alignmask align, const Font& font,
+             const widgetflags& flags) noexcept
     : TextWidget(text, rect, align, font, flags)
 {
     set_boxtype(Theme::boxtype::fill);
 }
 
 Label::Label(Frame& parent, const std::string& text, const Rect& rect,
-             alignmask align, const Font& font, widgetmask flags) noexcept
+             alignmask align, const Font& font,
+             const widgetflags& flags) noexcept
     : Label(text, rect, align, font, flags)
 {
     parent.add(this);
 }
 
 Label::Label(Frame& parent, const std::string& text,
-             alignmask align, const Font& font, widgetmask flags) noexcept
+             alignmask align, const Font& font,
+             const widgetflags& flags) noexcept
     : Label(parent, text, Rect(), align, font, flags)
 {
 

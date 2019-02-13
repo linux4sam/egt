@@ -62,11 +62,11 @@ public:
     constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
     Window(const Rect& rect,
-           widgetmask flags = widgetmask::WINDOW_DEFAULT,
+           const widgetflags& flags = widgetflags(),
            pixel_format format = DEFAULT_FORMAT, bool heo = false);
 
     Window(const Size& size = Size(),
-           widgetmask flags = widgetmask::WINDOW_DEFAULT,
+           const widgetflags& flags = widgetflags(),
            pixel_format format = DEFAULT_FORMAT, bool heo = false)
         : Window(Rect(Point(), size), flags, format, heo)
     {}

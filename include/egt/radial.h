@@ -49,7 +49,7 @@ public:
         : ValueRangeWidget<T>(rect, min, max, value)
     {
         this->set_boxtype(Theme::boxtype::none);
-        this->flag_set(widgetmask::GRAB_MOUSE);
+        this->set_flag(widgetflag::GRAB_MOUSE);
     }
 
     RadialType(Frame& parent, const Rect& rect, T min, T max, T value = T())

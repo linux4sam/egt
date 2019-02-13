@@ -38,18 +38,18 @@ public:
     Button(const std::string& text = std::string(),
            const Rect& rect = Rect(),
            const Font& font = Font(),
-           widgetmask flags = widgetmask::NONE) noexcept;
+           const widgetflags& flags = widgetflags()) noexcept;
 
     Button(Frame& parent,
            const std::string& text,
            const Rect& rect,
            const Font& font = Font(),
-           widgetmask flags = widgetmask::NONE) noexcept;
+           const widgetflags& flags = widgetflags()) noexcept;
 
     Button(Frame& parent,
            const std::string& text = std::string(),
            const Font& font = Font(),
-           widgetmask flags = widgetmask::NONE) noexcept;
+           const widgetflags& flags = widgetflags()) noexcept;
 
     virtual int handle(eventid event) override;
 
@@ -93,13 +93,13 @@ public:
     ImageButton(const Image& image,
                 const std::string& text = "",
                 const Rect& rect = Rect(),
-                widgetmask flags = widgetmask::NONE) noexcept;
+                const widgetflags& flags = widgetflags()) noexcept;
 
     ImageButton(Frame& parent,
                 const Image& image,
                 const std::string& text = "",
                 const Rect& rect = Rect(),
-                widgetmask flags = widgetmask::NONE) noexcept;
+                const widgetflags& flags = widgetflags()) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -180,7 +180,7 @@ class HotSpot : public Button
 public:
 
     HotSpot(const Rect& rect = Rect(),
-            widgetmask flags = widgetmask::NO_BACKGROUND) noexcept
+            const widgetflags& flags = {widgetflag::NO_BACKGROUND}) noexcept
         : Button("", rect, Font(), flags)
     {
         hide();

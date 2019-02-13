@@ -154,7 +154,7 @@ public:
         add(logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
 
         auto settings = new ImageButton(Image("settings.png"), "", Rect());
-        settings->flag_clear(widgetmask::GRAB_MOUSE);
+        settings->clear_flag(widgetflag::GRAB_MOUSE);
         add(settings);
         settings->set_boxtype(Theme::boxtype::none);
         settings->set_align(alignmask::RIGHT | alignmask::TOP, 10);

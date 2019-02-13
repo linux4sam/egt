@@ -158,9 +158,9 @@ public:
 
     HorizontalPositioner(const Rect& rect,
                          int spacing = 0, alignmask align = alignmask::CENTER)
-        : Frame(rect, widgetmask::NO_BACKGROUND),
-          m_spacing(spacing),
-          m_align(align)
+        : Frame(rect, {widgetflag::NO_BACKGROUND}),
+    m_spacing(spacing),
+    m_align(align)
     {}
 
     virtual void move(const Point& point) override

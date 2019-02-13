@@ -25,11 +25,11 @@ public:
 
     BoxSizer(orientation orient = orientation::HORIZONTAL, int spacing = 0,
              int hmargin = 0, int vmargin = 0)
-        : Frame(Rect(Point(), Size(2 * hmargin, 2 * vmargin)), widgetmask::NO_BACKGROUND),
-          m_spacing(spacing),
-          m_hmargin(hmargin),
-          m_vmargin(vmargin),
-          m_orient(orient)
+        : Frame(Rect(Point(), Size(2 * hmargin, 2 * vmargin)), {widgetflag::NO_BACKGROUND}),
+    m_spacing(spacing),
+    m_hmargin(hmargin),
+    m_vmargin(vmargin),
+    m_orient(orient)
     {
         static auto boxsizer_id = 0;
 
@@ -147,9 +147,9 @@ class OrientationPositioner : public Frame
 public:
 
     OrientationPositioner(orientation orient = orientation::HORIZONTAL, int spacing = 0)
-        : Frame(Rect(), widgetmask::NO_BACKGROUND),
-          m_spacing(spacing),
-          m_orient(orient)
+        : Frame(Rect(), {widgetflag::NO_BACKGROUND}),
+    m_spacing(spacing),
+    m_orient(orient)
     {
         static auto orientationpositioner_id = 0;
         std::ostringstream ss;

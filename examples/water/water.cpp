@@ -52,8 +52,8 @@ class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : TopWindow(Size(), widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND),
-          e1(r())
+        : TopWindow(Size(), {widgetflag::NO_BACKGROUND}),
+    e1(r())
     {
         auto img = new ImageLabel(Image("water.png"));
         add(img);

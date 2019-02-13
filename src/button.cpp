@@ -19,23 +19,23 @@ inline namespace v1
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
 Button::Button(const std::string& text, const Rect& rect,
-               const Font& font, widgetmask flags) noexcept
+               const Font& font, const widgetflags& flags) noexcept
     : TextWidget(text, rect, alignmask::CENTER, font, flags)
 {
     set_boxtype(Theme::boxtype::rounded_gradient);
     palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::HIGHLIGHT));
-    flag_set(widgetmask::GRAB_MOUSE);
+    set_flag(widgetflag::GRAB_MOUSE);
 }
 
 Button::Button(Frame& parent, const std::string& text, const Rect& rect,
-               const Font& font, widgetmask flags) noexcept
+               const Font& font, const widgetflags& flags) noexcept
     : Button(text, rect, font, flags)
 {
     parent.add(this);
 }
 
 Button::Button(Frame& parent, const std::string& text,
-               const Font& font, widgetmask flags) noexcept
+               const Font& font, const widgetflags& flags) noexcept
     : Button(parent, text, Rect(), font, flags)
 {
 }
@@ -140,7 +140,7 @@ void Button::first_resize()
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
                          const Rect& rect,
-                         widgetmask flags) noexcept
+                         const widgetflags& flags) noexcept
     : Button(text, rect, Font(), flags)
 {
     if (text.empty())
@@ -152,7 +152,7 @@ ImageButton::ImageButton(Frame& parent,
                          const Image& image,
                          const std::string& text,
                          const Rect& rect,
-                         widgetmask flags) noexcept
+                         const widgetflags& flags) noexcept
     : ImageButton(image, text, rect, flags)
 {
     parent.add(this);

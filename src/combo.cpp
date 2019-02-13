@@ -105,13 +105,13 @@ ComboBox::ComboBox(const item_array& items,
                    const Rect& rect,
                    alignmask align,
                    const Font& font,
-                   widgetmask flags) noexcept
+                   const widgetflags& flags) noexcept
     : TextWidget("", rect, align, font, flags),
       m_items(items),
       m_popup(*this)
 {
     set_boxtype(Theme::boxtype::border);
-    flag_set(widgetmask::GRAB_MOUSE);
+    set_flag(widgetflag::GRAB_MOUSE);
     palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
     palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::LIGHT));
 }

@@ -123,19 +123,19 @@ struct LabelPage : public NotebookTab
         add(grid0);
 
         auto label1 = new Label("left align", Rect(),
-                                alignmask::LEFT | alignmask::CENTER, Font(), widgetmask::NONE);
+                                alignmask::LEFT | alignmask::CENTER, Font());
         grid0->add(label1);
 
         auto label2 = new Label("right align", Rect(),
-                                alignmask::RIGHT | alignmask::CENTER, Font(), widgetmask::NONE);
+                                alignmask::RIGHT | alignmask::CENTER, Font());
         grid0->add(label2);
 
         auto label3 = new Label("top align", Rect(),
-                                alignmask::TOP | alignmask::CENTER, Font(), widgetmask::NONE);
+                                alignmask::TOP | alignmask::CENTER, Font());
         grid0->add(label3);
 
         auto label4 = new Label("bottom align", Rect(),
-                                alignmask::BOTTOM | alignmask::CENTER, Font(), widgetmask::NONE);
+                                alignmask::BOTTOM | alignmask::CENTER, Font());
         grid0->add(label4);
 
         auto imagelabel0 = new ImageLabel(Image("@bug.png"), "Bug");
@@ -370,7 +370,7 @@ int main(int argc, const char** argv)
     StaticGrid grid(Rect(Point(), Size(0, win.h() * 0.10)), 3, 1, 10);
     grid.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0xed2924ff));
     grid.set_boxtype(Theme::boxtype::fill);
-    grid.flag_clear(widgetmask::NO_BACKGROUND);
+    grid.clear_flag(widgetflag::NO_BACKGROUND);
     grid.set_align(alignmask::EXPAND_HORIZONTAL);
 
     ImageLabel logo(Image("@microchip_logo_white.png"));

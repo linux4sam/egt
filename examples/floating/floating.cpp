@@ -22,8 +22,8 @@ class MyWindow : public TopWindow
 {
 public:
     MyWindow()
-        : TopWindow(Size(), widgetmask::NO_BACKGROUND),
-          m_img(Image("background.png"))
+        : TopWindow(Size(), {widgetflag::NO_BACKGROUND}),
+    m_img(Image("background.png"))
     {
         add(&m_img);
         if (m_img.w() != w())
@@ -44,7 +44,7 @@ public:
           m_mx(mx),
           m_my(my)
     {
-        m_widget->flag_set(widgetmask::GRAB_MOUSE);
+        m_widget->set_flag(widgetflag::GRAB_MOUSE);
         widget->on_event(std::bind(&FloatingBox::handle, this, std::placeholders::_1));
     }
 
@@ -164,7 +164,7 @@ int main(int argc, const char** argv)
         image->set_name("hardware " + os.str());
         auto plane = new Window(Size(image->w(), image->h()));
         plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        plane->flag_set(widgetmask::NO_BACKGROUND);
+        plane->set_flag(widgetflag::NO_BACKGROUND);
         plane->add(image);
         plane->show();
         plane->move(Point(100, 100));

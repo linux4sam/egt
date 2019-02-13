@@ -74,6 +74,7 @@ utils.cpp \
 video.cpp \
 view.cpp \
 widget.cpp \
+widgetflags.cpp \
 window.cpp
 
 if HAVE_LIBPLANES
@@ -159,6 +160,7 @@ $(top_srcdir)/include/egt/valuewidget.h \
 $(top_srcdir)/include/egt/video.h \
 $(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
+$(top_srcdir)/include/egt/widgetflags.h \
 $(top_srcdir)/include/egt/window.h \
 $(top_srcdir)/include/egt/x11screen.h
 

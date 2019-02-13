@@ -61,7 +61,7 @@ public:
                     0, 100, 0,
                     orientation::VERTICAL)
     {
-        flag_set(widgetmask::NO_BACKGROUND);
+        set_flag(widgetflag::NO_BACKGROUND);
 
         m_logo.set_align(alignmask::LEFT | alignmask::TOP, 10);
 

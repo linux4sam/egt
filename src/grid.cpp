@@ -18,8 +18,8 @@ static auto staticgrid_id = 0;
 
 StaticGrid::StaticGrid(const Rect& rect, int columns,
                        int rows, int spacing)
-    : Frame(rect, widgetmask::NO_BACKGROUND),
-      m_spacing(spacing)
+    : Frame(rect, {widgetflag::NO_BACKGROUND}),
+m_spacing(spacing)
 {
     set_boxtype(Theme::boxtype::none);
 

@@ -94,7 +94,7 @@ class FpsWindow : public Window
 public:
     FpsWindow()
         : Window(Size(100, 50),
-                 widgetmask::WINDOW_DEFAULT, pixel_format::argb8888)
+                 widgetflags(), pixel_format::argb8888)
     {
         m_label = new Label("FPS: 0",
                             Rect(Size(100, 50)),
@@ -168,7 +168,7 @@ int main(int argc, const char** argv)
     ctrlwindow.add(&grid);
 
     ImageButton* playbtn = new ImageButton(Image(":play_png"), "", Rect(),
-                                           widgetmask::NO_BACKGROUND);
+    {widgetflag::NO_BACKGROUND});
     grid.add(playbtn);
 
     playbtn->on_event([playbtn, window](eventid event)
@@ -180,7 +180,7 @@ int main(int argc, const char** argv)
     });
 
     ImageButton* pausebtn = new ImageButton(Image(":pause_png"), "", Rect(),
-                                            widgetmask::NO_BACKGROUND);
+    {widgetflag::NO_BACKGROUND});
     grid.add(pausebtn);
     pausebtn->on_event([pausebtn, window](eventid event)
     {
@@ -221,7 +221,7 @@ int main(int argc, const char** argv)
     postimer.start();
 
     ImageButton* volumei = new ImageButton(Image(":volumeup_png"), "", Rect(),
-                                           widgetmask::NO_BACKGROUND);
+    {widgetflag::NO_BACKGROUND});
     grid.add(volumei);
 
     Slider* volume = new Slider(Rect(Size(100, 20)), 0, 100, 0, orientation::HORIZONTAL);

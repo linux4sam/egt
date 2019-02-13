@@ -17,9 +17,11 @@ namespace egt
 inline namespace v1
 {
 
-Frame::Frame(const Rect& rect, widgetmask flags)
-    : Widget(rect, flags | widgetmask::FRAME)
+Frame::Frame(const Rect& rect, const widgetflags& flags)
+    : Widget(rect, flags)
 {
+    set_flag(widgetflag::FRAME);
+
     set_boxtype(Theme::boxtype::fill);
 
     static auto frame_id = 0;
@@ -29,7 +31,7 @@ Frame::Frame(const Rect& rect, widgetmask flags)
     set_name(ss.str());
 }
 
-Frame::Frame(Frame& parent, const Rect& rect, widgetmask flags)
+Frame::Frame(Frame& parent, const Rect& rect, const widgetflags& flags)
     : Frame(rect, flags)
 {
     parent.add(this);
@@ -165,7 +167,7 @@ void Frame::damage(const Rect& rect)
 void Frame::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << "Frame: " << name() <<
-        " " << box() << endl;
+        " " << box() << " " << m_flags << endl;
 
     for (auto& child : m_children)
     {
@@ -179,11 +181,11 @@ Point Frame::to_panel(const Point& p)
     Widget* w = this;
     while (w)
     {
-        if (w->is_flag_set(widgetmask::FRAME))
+        if (w->is_flag_set(widgetflag::FRAME))
         {
             auto f = reinterpret_cast<Frame*>(w);
 
-            if (f->is_flag_set(widgetmask::PLANE_WINDOW))
+            if (f->is_flag_set(widgetflag::PLANE_WINDOW))
             {
                 pp = Point();
                 break;
@@ -212,11 +214,11 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     Painter::AutoSaveRestore sr(painter);
 
-    if (!is_flag_set(widgetmask::NO_BACKGROUND))
+    if (!is_flag_set(widgetflag::NO_BACKGROUND))
     {
         Painter::AutoSaveRestore sr(painter);
 
-        if (!is_flag_set(widgetmask::TRANSPARENT_BACKGROUND))
+        if (!is_flag_set(widgetflag::TRANSPARENT_BACKGROUND))
             cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
 
         draw_box(painter, rect);
@@ -229,7 +231,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
     Rect crect;
 
-    if (!is_flag_set(widgetmask::PLANE_WINDOW))
+    if (!is_flag_set(widgetflag::PLANE_WINDOW))
     {
         Point origin = to_panel(box().point());
         if (origin.x || origin.y)
@@ -247,7 +249,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     for (auto& child : m_children)
     {
-        if (child->is_flag_set(widgetmask::WINDOW))
+        if (child->is_flag_set(widgetflag::WINDOW))
             continue;
 
         if (!child->visible())
@@ -255,7 +257,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
         // don't draw plane frame as child - this is
         // specifically handled by event loop
-        if (child->is_flag_set(widgetmask::PLANE_WINDOW))
+        if (child->is_flag_set(widgetflag::PLANE_WINDOW))
             continue;
 
         if (Rect::intersect(crect, child->box()))
@@ -278,7 +280,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     for (auto& child : m_children)
     {
-        if (!child->is_flag_set(widgetmask::WINDOW))
+        if (!child->is_flag_set(widgetflag::WINDOW))
             continue;
 
         if (!child->visible())
@@ -286,7 +288,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
         // don't draw plane frame as child - this is
         // specifically handled by event loop
-        if (child->is_flag_set(widgetmask::PLANE_WINDOW))
+        if (child->is_flag_set(widgetflag::PLANE_WINDOW))
             continue;
 
         if (Rect::intersect(crect, child->box()))
@@ -327,7 +329,7 @@ void Frame::paint_children_to_file()
 {
     for (auto& child : m_children)
     {
-        if (child->is_flag_set(widgetmask::FRAME))
+        if (child->is_flag_set(widgetflag::FRAME))
         {
             auto frame = dynamic_cast<Frame*>(child);
             frame->paint_children_to_file();

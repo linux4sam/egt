@@ -16,7 +16,7 @@ inline namespace v1
 {
 
 Notebook::Notebook(const Rect& rect)
-    : Frame(rect, widgetmask::NO_BACKGROUND)
+    : Frame(rect, {widgetflag::NO_BACKGROUND})
 {
     set_boxtype(Theme::boxtype::none);
 

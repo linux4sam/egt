@@ -20,7 +20,7 @@ CheckBox::CheckBox(const std::string& text,
     : Button(text, rect)
 {
     set_boxtype(Theme::boxtype::border);
-    flag_set(widgetmask::GRAB_MOUSE);
+    set_flag(widgetflag::GRAB_MOUSE);
     palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
 }
 

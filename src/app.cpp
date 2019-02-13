@@ -148,7 +148,7 @@ void Application::paint_to_file(const string& filename)
             continue;
 
         // draw top level frames and plane frames
-        if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+        if (w->top_level() || w->is_flag_set(widgetflag::PLANE_WINDOW))
             w->paint(painter);
     }
 
@@ -160,7 +160,7 @@ void Application::dump(std::ostream& out)
     for (auto& w : windows())
     {
         // draw top level frames and plane frames
-        if (w->top_level() || w->is_flag_set(widgetmask::PLANE_WINDOW))
+        if (w->top_level() || w->is_flag_set(widgetflag::PLANE_WINDOW))
             w->dump(out);
     }
 }

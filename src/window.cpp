@@ -43,11 +43,13 @@ std::vector<Window*>& windows()
 }
 
 Window::Window(const Rect& rect,
-               widgetmask flags,
+               const widgetflags& flags,
                pixel_format format,
                bool heo)
-    : Frame(rect, flags | widgetmask::WINDOW)
+    : Frame(rect, flags)
 {
+    set_flag(widgetflag::WINDOW);
+
     static auto window_id = 0;
     ostringstream ss;
     ss << "Window" << window_id++;
@@ -122,7 +124,7 @@ void Window::create_impl(const Rect& rect,
         {
             DBG(name() << " backend is PlaneWindow");
             m_impl.reset(new detail::PlaneWindow(this, format, heo));
-            flag_set(widgetmask::PLANE_WINDOW);
+            set_flag(widgetflag::PLANE_WINDOW);
         }
         else
 #endif

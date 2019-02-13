@@ -23,8 +23,8 @@ class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : TopWindow(Size(), widgetmask::NO_BACKGROUND),
-          m_img(Image("background.png"))
+        : TopWindow(Size(), {widgetflag::NO_BACKGROUND}),
+    m_img(Image("background.png"))
     {
         add(&m_img);
         if (m_img.w() != w())
@@ -48,9 +48,7 @@ public:
           m_grip(Image("grip.png")),
           m_arrows(Image("arrows.png"))
     {
-        flag_set(widgetmask::GRAB_MOUSE);
-
-        flag_set(widgetmask::TRANSPARENT_BACKGROUND);
+        set_flag({widgetflag::GRAB_MOUSE, widgetflag::TRANSPARENT_BACKGROUND});
         palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x526d7480));
 
         add(&m_grip);

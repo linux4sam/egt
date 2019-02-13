@@ -110,7 +110,7 @@ public:
         // be invisible), to always keep a portion of the plane on screen
         // alternate of making the plane the same exact size as the image.
         m_box = new Window(Size(100, 200));
-        m_box->flag_set(widgetmask::NO_BACKGROUND);
+        m_box->set_flag(widgetflag::NO_BACKGROUND);
         m_box->add(image);
         m_box->move(Point(w() / 2 - m_box->w() / 2, -110));
         m_box->show();

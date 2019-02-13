@@ -56,7 +56,7 @@ int main(int argc, const char** argv)
     {
         auto l = new ImageButton(Image(file));
         l->set_boxtype(Theme::boxtype::none);
-        l->flag_clear(widgetmask::GRAB_MOUSE);
+        l->clear_flag(widgetflag::GRAB_MOUSE);
         l->on_event([&player, file, &animator, &videoshown](eventid)
         {
             cout << "playing " << file << ".avi" << endl;
@@ -88,7 +88,7 @@ int main(int argc, const char** argv)
     {
         auto l = new ImageButton(Image(file));
         l->set_boxtype(Theme::boxtype::none);
-        l->flag_clear(widgetmask::GRAB_MOUSE);
+        l->clear_flag(widgetflag::GRAB_MOUSE);
         l->on_event([&player, file, &animator, &videoshown](eventid)
         {
             cout << "playing " << file << ".avi" << endl;

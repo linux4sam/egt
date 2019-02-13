@@ -26,7 +26,7 @@ public:
              const string& label,
              int x = 0,
              int y = 0,
-             widgetmask flags = widgetmask::NONE)
+             widgetflags flags = widgetflags())
         : ImageButton(Image(filename), label, Rect(Point(x, y), Size()), flags)
     {
         set_position_image_first(true);

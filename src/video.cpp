@@ -143,7 +143,7 @@ gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 }
 
 VideoWindow::VideoWindow(const Size& size, pixel_format format, bool heo)
-    : Window(size, widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND, format, heo)
+    : Window(size, {widgetflag::NO_BACKGROUND}, format, heo)
 {
     detail::init_gst_thread();
 

@@ -210,8 +210,8 @@ Sprite::Sprite(const Image& image, const Size& frame_size,
                int framecount, const Point& frame_point,
                const Point& point)
     : Window(Rect(point, image.size() /*frame_size*/),
-             widgetmask::WINDOW_DEFAULT | widgetmask::NO_BACKGROUND,
-             pixel_format::argb8888)
+{widgetflag::NO_BACKGROUND},
+pixel_format::argb8888)
 {
     static auto window_id = 0;
     ostringstream ss;
@@ -271,7 +271,7 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
                          int framecount, const Point& frame_point)
 {
 #ifdef HAVE_LIBPLANES
-    if (is_flag_set(widgetmask::PLANE_WINDOW))
+    if (is_flag_set(widgetflag::PLANE_WINDOW))
         m_simpl.reset(new detail::HardwareSprite(*this, image, frame_size, framecount, frame_point));
     else
 #endif

@@ -44,20 +44,20 @@ public:
           const Rect& rect = Rect(),
           alignmask align = alignmask::CENTER,
           const Font& font = Font(),
-          widgetmask flags = widgetmask::NONE) noexcept;
+          const widgetflags& flags = widgetflags()) noexcept;
 
     explicit Label(Frame& parent,
                    const std::string& text,
                    const Rect& rect = Rect(),
                    alignmask align = alignmask::CENTER,
                    const Font& font = Font(),
-                   widgetmask flags = widgetmask::NONE) noexcept;
+                   const widgetflags& flags = widgetflags()) noexcept;
 
     explicit Label(Frame& parent,
                    const std::string& text = std::string(),
                    alignmask align = alignmask::CENTER,
                    const Font& font = Font(),
-                   widgetmask flags = widgetmask::NONE) noexcept;
+                   const widgetflags& flags = widgetflags()) noexcept;
 
     /**
      * Set the text of the label.

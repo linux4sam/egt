@@ -21,7 +21,7 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
     : ValueRangeWidget<int>(rect, min, max, value),
       m_orient(orient)
 {
-    flag_set(widgetmask::GRAB_MOUSE);
+    set_flag(widgetflag::GRAB_MOUSE);
 
     static auto slider_id = 0;
 
