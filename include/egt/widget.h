@@ -75,10 +75,11 @@ public:
      * @param[in] rect The rectangle to draw.
      *
      * To change how a widget is drawn, this function can be overloaded and
-     * changed.
+     * changed in a derived class, or it can be changed dynamically with the
+     * theme.
      *
      * To optimize drawing, a widget may use the @b rect parameter to limit
-     * what needs to be redrawn, which may be smaler than the widget's box(),
+     * what needs to be redrawn, which may be smaller than the widget's box(),
      * but will never be outside of the widget's box().
      *
      * Painter will always be supplied in a default state to this function,
@@ -87,7 +88,7 @@ public:
      *
      * @warning Normally this should not be called directly and instead the
      * event loop will call this function with an already established
-     * Painter when the widget needs to be redrawn.
+     * Painter when the widget needs to be drawn.
      *
      */
     virtual void draw(Painter& painter, const Rect& rect) = 0;
@@ -132,6 +133,7 @@ public:
 
     /**
      * Move the widget.
+     *
      * Changes the x and y position of the widget.
      *
      * @param[in] point The new origin point for the widget relative to its parent.
@@ -388,10 +390,9 @@ public:
      */
     virtual void paint_to_file(const std::string& filename = std::string());
 
-#if 0
-    virtual shared_cairo_surface_t surface();
-#endif
-
+    /**
+     * Dump the state of the widget to the specified ostream.
+     */
     virtual void dump(std::ostream& out, int level = 0);
 
     /**
