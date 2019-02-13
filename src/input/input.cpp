@@ -56,6 +56,14 @@ Widget* mouse_grab()
 
 void mouse_grab(Widget* widget)
 {
+    if (widget)
+    {
+        DBG("mouse grab by " << widget->name());
+    }
+    else if (grab)
+    {
+        DBG("mouse release by " << grab->name());
+    }
     grab = widget;
 }
 

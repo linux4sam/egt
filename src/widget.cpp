@@ -158,12 +158,12 @@ int Widget::handle(eventid event)
         case eventid::RAW_POINTER_DOWN:
         {
             mouse_grab(this);
-            break;
+            return 1;
         }
         case eventid::RAW_POINTER_UP:
         {
             mouse_grab(nullptr);
-            break;
+            return 1;
         }
         default:
             break;

@@ -210,7 +210,7 @@ public:
         {
             palette().set(Palette::BG, Palette::GROUP_NORMAL, m_fillpicker.color());
             damage();
-            return 0;
+            return 1;
         }, {eventid::HIDE});
 
         auto logo = new ImageLabel(Image("@microchip_logo_black.png"));
