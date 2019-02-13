@@ -21,12 +21,10 @@ std::ostream& operator<<(std::ostream& os, const widgetflags& flags)
     if (strings.empty())
     {
 #define MAPITEM(p) strings[p] = #p
-        MAPITEM(widgetflag::NO_BACKGROUND);
         MAPITEM(widgetflag::PLANE_WINDOW);
         MAPITEM(widgetflag::WINDOW);
         MAPITEM(widgetflag::FRAME);
         MAPITEM(widgetflag::GRAB_MOUSE);
-        MAPITEM(widgetflag::TRANSPARENT_BACKGROUND);
         MAPITEM(widgetflag::WINDOW_DEFAULT);
 #undef MAPITEM
     }

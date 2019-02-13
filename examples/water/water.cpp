@@ -52,9 +52,11 @@ class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : TopWindow(Size(), {widgetflag::NO_BACKGROUND}),
-    e1(r())
+        : TopWindow(Size()),
+          e1(r())
     {
+        set_boxtype(Theme::boxtype::none);
+
         auto img = new ImageLabel(Image("water.png"));
         add(img);
         if (img->h() != h())

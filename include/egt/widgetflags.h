@@ -27,17 +27,6 @@ inline namespace v1
 enum class widgetflag : uint32_t
 {
     /**
-     * Do not draw the background color.
-     *
-     * The background color is usually drawn by default. A background will
-     * not be drawn if this flag is set. If something else is not drawn,
-     * instead (like a child widget), this can result in unintended side
-     * effects. Not drawing a background is an optimization to reduce
-     * unecessary drawing.
-     */
-    NO_BACKGROUND,
-
-    /**
      * This is an overlay plane window.
      */
     PLANE_WINDOW,
@@ -60,11 +49,6 @@ enum class widgetflag : uint32_t
      * the eventid::MOUSE_UP event.
      */
     GRAB_MOUSE,
-
-    /**
-     * Enable transparent background.
-     */
-    TRANSPARENT_BACKGROUND,
 
     /**
      * Default window flags.

@@ -180,9 +180,10 @@ class HotSpot : public Button
 public:
 
     HotSpot(const Rect& rect = Rect(),
-            const widgetflags& flags = {widgetflag::NO_BACKGROUND}) noexcept
+            const widgetflags& flags = widgetflags()) noexcept
         : Button("", rect, Font(), flags)
     {
+        set_boxtype(Theme::boxtype::none);
         hide();
     }
 

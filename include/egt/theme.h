@@ -111,6 +111,7 @@ public:
     {
         none,
         fill,
+        fillsolid,
         border,
         bottom_border,
         rounded_border,
@@ -131,7 +132,8 @@ public:
 
     virtual void draw_fill_box(Painter& painter,
                                const Rect& rect,
-                               const Color& bg);
+                               const Color& bg,
+                               bool solid = false);
 
     virtual void draw_border_box(Painter& painter,
                                  const Rect& rect,

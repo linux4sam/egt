@@ -16,8 +16,8 @@ inline namespace v1
 
 StaticGrid::StaticGrid(const Rect& rect, int columns,
                        int rows, int spacing)
-    : Frame(rect, {widgetflag::NO_BACKGROUND}),
-m_spacing(spacing)
+    : Frame(rect),
+      m_spacing(spacing)
 {
     set_name("StaticGrid" + std::to_string(m_widgetid));
 

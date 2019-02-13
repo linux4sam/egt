@@ -22,9 +22,10 @@ class MyWindow : public TopWindow
 {
 public:
     MyWindow()
-        : TopWindow(Size(), {widgetflag::NO_BACKGROUND}),
-    m_img(Image("background.png"))
+        : TopWindow(Size()),
+          m_img(Image("background.png"))
     {
+        set_boxtype(Theme::boxtype::none);
         add(&m_img);
         if (m_img.w() != w())
         {
@@ -164,7 +165,7 @@ int main(int argc, const char** argv)
         image->set_name("hardware " + os.str());
         auto plane = new Window(Size(image->w(), image->h()));
         plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        plane->set_flag(widgetflag::NO_BACKGROUND);
+        plane->set_boxtype(Theme::boxtype::none);
         plane->add(image);
         plane->show();
         plane->move(Point(100, 100));

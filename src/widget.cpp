@@ -494,7 +494,7 @@ void Widget::set_boxtype(const Theme::boxtype type)
 
 void Widget::draw_box(Painter& painter, const Rect& rect)
 {
-    if (is_flag_set(widgetflag::NO_BACKGROUND))
+    if (m_boxtype == Theme::boxtype::none)
         return;
 
     theme().draw_box(painter, *this, m_boxtype, rect);

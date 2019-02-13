@@ -370,7 +370,6 @@ int main(int argc, const char** argv)
     StaticGrid grid(Rect(Point(), Size(0, win.h() * 0.10)), 3, 1, 10);
     grid.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0xed2924ff));
     grid.set_boxtype(Theme::boxtype::fill);
-    grid.clear_flag(widgetflag::NO_BACKGROUND);
     grid.set_align(alignmask::EXPAND_HORIZONTAL);
 
     ImageLabel logo(Image("@microchip_logo_white.png"));

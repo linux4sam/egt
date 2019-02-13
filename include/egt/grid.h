@@ -158,10 +158,12 @@ public:
 
     HorizontalPositioner(const Rect& rect,
                          int spacing = 0, alignmask align = alignmask::CENTER)
-        : Frame(rect, {widgetflag::NO_BACKGROUND}),
-    m_spacing(spacing),
-    m_align(align)
-    {}
+        : Frame(rect),
+          m_spacing(spacing),
+          m_align(align)
+    {
+        set_boxtype(Theme::boxtype::none);
+    }
 
     virtual void move(const Point& point) override
     {

@@ -73,8 +73,8 @@ int main(int argc, const char** argv)
     {
         std::string basename = file.substr(file.find_last_of("/\\") + 1);
         auto icon = new ImageButton(Image(file), basename);
-        icon->set_flag(widgetflag::NO_BACKGROUND);
-        icon->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK);
+        icon->set_boxtype(Theme::boxtype::none);
+        icon->palette().set(Palette::TEXT_INVERT, Palette::GROUP_NORMAL, Color::BLACK);
         grid0.add(icon);
     }
 

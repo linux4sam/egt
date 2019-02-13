@@ -16,7 +16,7 @@ inline namespace v1
 {
 
 Notebook::Notebook(const Rect& rect)
-    : Frame(rect, {widgetflag::NO_BACKGROUND})
+    : Frame(rect)
 {
     set_name("Notebook" + std::to_string(m_widgetid));
 

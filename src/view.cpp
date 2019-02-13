@@ -35,11 +35,12 @@ static inline int o2p(orientation o, const Point& point)
 }
 
 ScrolledView::ScrolledView(const Rect& rect, orientation orient)
-    : Frame(rect, {widgetflag::NO_BACKGROUND}),
-m_slider(0, 100, 0, orient),
-m_orient(orient)
+    : Frame(rect),
+      m_slider(0, 100, 0, orient),
+      m_orient(orient)
 {
     set_name("ScrolledView" + std::to_string(m_widgetid));
+    set_boxtype(Theme::boxtype::none);
 
     if (orient == orientation::VERTICAL)
         m_slider.slider_flags(Slider::flags::RECTANGLE_HANDLE |

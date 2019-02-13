@@ -28,7 +28,8 @@ public:
 
     NotebookTab()
     {
-        set_boxtype(Theme::boxtype::fill);
+        set_name("NotebookTab" + std::to_string(m_widgetid));
+        set_boxtype(Theme::boxtype::fillsolid);
     }
 
     /**

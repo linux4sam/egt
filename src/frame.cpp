@@ -24,7 +24,7 @@ Frame::Frame(const Rect& rect, const widgetflags& flags)
     set_name("Frame" + std::to_string(m_widgetid));
 
     set_flag(widgetflag::FRAME);
-    set_boxtype(Theme::boxtype::fill);
+    set_boxtype(Theme::boxtype::none);
 }
 
 Frame::Frame(Frame& parent, const Rect& rect, const widgetflags& flags)
@@ -210,15 +210,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     Painter::AutoSaveRestore sr(painter);
 
-    if (!is_flag_set(widgetflag::NO_BACKGROUND))
-    {
-        Painter::AutoSaveRestore sr(painter);
-
-        if (!is_flag_set(widgetflag::TRANSPARENT_BACKGROUND))
-            cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-
-        draw_box(painter, rect);
-    }
+    draw_box(painter, rect);
 
     //
     // Origin about to change

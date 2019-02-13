@@ -56,6 +56,12 @@ void Theme::draw_box(Painter& painter,
                       box,
                       widget.palette().color(Palette::BG, group));
         break;
+    case boxtype::fillsolid:
+        draw_fill_box(painter,
+                      box,
+                      widget.palette().color(Palette::BG, group),
+                      true);
+        break;
     case boxtype::border:
         draw_border_box(painter,
                         box,
@@ -104,10 +110,20 @@ void Theme::draw_box(Painter& painter,
 
 void Theme::draw_fill_box(Painter& painter,
                           const Rect& rect,
-                          const Color& bg)
+                          const Color& bg,
+                          bool solid)
 {
     painter.set_color(bg);
-    painter.draw_fill(rect);
+    if (solid)
+    {
+        Painter::AutoSaveRestore sr(painter);
+        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+        painter.draw_fill(rect);
+    }
+    else
+    {
+        painter.draw_fill(rect);
+    }
 }
 
 void Theme::draw_border_box(Painter& painter,

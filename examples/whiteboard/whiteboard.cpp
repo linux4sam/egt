@@ -150,7 +150,7 @@ public:
           m_canvas(screen()->size(), CAIRO_FORMAT_ARGB32)
     {
         // don't draw background, we'll do it in draw()
-        set_flag(widgetflag::NO_BACKGROUND);
+        set_boxtype(Theme::boxtype::none);
 
         m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 

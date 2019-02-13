@@ -51,6 +51,7 @@ Window::Window(const Rect& rect,
     set_name("Window" + std::to_string(m_widgetid));
 
     set_flag(widgetflag::WINDOW);
+    set_boxtype(Theme::boxtype::fillsolid);
 
     // by default, windows are hidden
     m_visible = false;

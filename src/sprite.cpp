@@ -209,12 +209,10 @@ SoftwareSprite::~SoftwareSprite()
 Sprite::Sprite(const Image& image, const Size& frame_size,
                int framecount, const Point& frame_point,
                const Point& point)
-    : Window(Rect(point, image.size() /*frame_size*/),
-{widgetflag::NO_BACKGROUND},
-pixel_format::argb8888)
+    : Window(Rect(point, image.size()), widgetflags(), pixel_format::argb8888)
 {
     set_name("Sprite" + std::to_string(m_widgetid));
-
+    set_boxtype(Theme::boxtype::none);
     create_impl(image, frame_size, framecount, frame_point);
 }
 
