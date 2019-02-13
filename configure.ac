@@ -111,6 +111,11 @@ else
   CFLAGS="$CFLAGS -O0"
 fi
 
+AC_ARG_ENABLE([examples],
+  [AS_HELP_STRING([--disable-examples], [don't build examples [default=no]])],
+  [enable_examples=no], [enable_examples=yes])
+AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x${enable_examples}" != xno])
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
 AC_C_INLINE

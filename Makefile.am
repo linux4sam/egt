@@ -1,5 +1,8 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = external src examples scripts
+SUBDIRS = scripts external src
+if ENABLE_EXAMPLES
+SUBDIRS += examples
+endif
 
 EXTRA_DIST = README.md COPYING docs/Doxyfile.in $(private_icons)
 
