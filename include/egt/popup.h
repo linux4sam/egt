@@ -8,7 +8,7 @@
 
 /**
  * @file
- * @brief Working with popups.
+ * @brief Working with popup windows.
  */
 
 #include <egt/window.h>
@@ -21,7 +21,7 @@ inline namespace v1
 /**
  * Popup window.
  */
-template <class T = Window>
+template <class T>
 class PopupType : public T
 {
 public:
@@ -74,7 +74,7 @@ public:
 
 };
 
-using Popup = PopupType<>;
+using Popup = PopupType<Window>;
 
 }
 }
