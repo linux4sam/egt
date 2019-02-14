@@ -11,7 +11,9 @@
 #include "egt/resource.h"
 #include "egt/utils.h"
 #include <cassert>
+#ifdef HAVE_LIBMAGIC
 #include <magic.h>
+#endif
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -273,8 +275,9 @@ ImageCache::scale_surface(shared_cairo_surface_t old_surface,
 
 std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 {
-    magic_t magic = magic_open(MAGIC_MIME_TYPE);
     string result;
+#ifdef HAVE_LIBMAGIC
+    magic_t magic = magic_open(MAGIC_MIME_TYPE);
 
     if (magic)
     {
@@ -287,14 +290,15 @@ std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 
         magic_close(magic);
     }
-
+#endif
     return result;
 }
 
 std::string ImageCache::get_mime_type(const std::string& filename)
 {
-    magic_t magic = magic_open(MAGIC_MIME_TYPE);
     string result;
+#ifdef HAVE_LIBMAGIC
+    magic_t magic = magic_open(MAGIC_MIME_TYPE);
 
     if (magic)
     {
@@ -307,7 +311,12 @@ std::string ImageCache::get_mime_type(const std::string& filename)
 
         magic_close(magic);
     }
-
+#else
+    if (filename.find("png") != std::string::npos)
+        result = "image/png";
+    else if (filename.find("jpg") != std::string::npos)
+        result = "image/jpeg";
+#endif
     return result;
 }
 

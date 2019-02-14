@@ -188,14 +188,16 @@ if test "x${have_libcurl}" = xyes; then
    AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
 fi
 
-AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic], [
-  AC_MSG_ERROR([required library libmagic not found])
-])
+AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
 
 AC_CHECK_HEADER([magic.h],
-  [AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])],
-  [AC_MSG_ERROR([required header magic.h not found])
+  [],
+  [have_libmagic=no
 ])
+AM_CONDITIONAL([HAVE_LIBMAGIC], [test "x${have_libmagic}" = xyes])
+if test "x${have_libmagic}" = xyes; then
+   AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])
+fi
 
 AC_LANG_PUSH([C++])
 AC_CHECK_HEADERS([rapidxml/rapidxml.hpp], [have_rapidxml=yes], [have_rapidxml=no])
