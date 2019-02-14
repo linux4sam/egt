@@ -182,8 +182,11 @@ if test "x${have_libjpeg}" = xyes; then
    AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
 fi
 
-AX_PKG_CHECK_MODULES(LIBCURL, [], [libcurl >= 4.5], [], [AC_MSG_ERROR([
-     libcurl is a hard dependency, but a sufficient version was not found.])])
+AX_PKG_CHECK_MODULES(LIBCURL, [], [libcurl >= 4.5], [have_libcurl=yes], [have_libcurl=no])
+AM_CONDITIONAL([HAVE_LIBCURL], [test "x${have_libcurl}" = xyes])
+if test "x${have_libcurl}" = xyes; then
+   AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
+fi
 
 AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic], [
   AC_MSG_ERROR([required library libmagic not found])
