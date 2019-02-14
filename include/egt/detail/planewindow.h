@@ -21,11 +21,12 @@ namespace detail
 {
 
 /**
- * A PlaneWindow uses a hardware overlay as a screen.
+ * A PlaneWindow backend uses a hardware overlay as a Screen.
  *
- * Window seperates "changing attributes" and "applying attributes".
+ * PlaneWindow seperates "changing attributes" and "applying attributes".
  * This maps to the libplanes plane_apply() function. Which, is the same way
- * event handle() vs. draw() works in this toolkit.
+ * event handle() vs. draw() works in this toolkit. This is done as an
+ * optimization to queue applying changes to a plane.
  */
 class PlaneWindow : public BasicWindow
 {
@@ -33,7 +34,7 @@ public:
 
     explicit PlaneWindow(Window* interface,
                          pixel_format format = pixel_format::argb8888,
-                         bool heo = false);
+                         windowhint hint = windowhint::automatic);
 
     virtual void resize(const Size& size) override;
 
@@ -55,11 +56,21 @@ public:
 
 protected:
 
-    void do_resize(const Size& size);
-
+    /**
+     * The requested pixel format for the plane.
+     */
     pixel_format m_format{pixel_format::argb8888};
+
+    /**
+     * The requested window hint for allocating the plane.
+     */
+    windowhint m_hint{windowhint::automatic};
+
+    /**
+     * When true, we have settings that need to be flushed to the plane
+     * in top_draw().
+     */
     bool m_dirty{true};
-    bool m_heo{false};
 };
 
 }

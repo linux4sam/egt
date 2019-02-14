@@ -19,6 +19,8 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
 /**
  * A screen backed by an overlay plane.
  */
@@ -30,8 +32,9 @@ public:
 
     explicit KMSOverlay(struct plane_data* plane);
 
-    virtual void position(const Point& point);
-    virtual void scale(float scale);
+    virtual void resize(const Size& size);
+    virtual void set_position(const Point& point);
+    virtual void set_scale(float scale);
     virtual void set_pan_size(const Size& size);
     virtual void set_pan_pos(const Point& point);
     virtual float scale() const;
@@ -62,6 +65,7 @@ protected:
     uint32_t m_index;
 };
 
+}
 }
 }
 

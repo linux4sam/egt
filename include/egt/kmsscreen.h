@@ -41,7 +41,7 @@ public:
     };
 
     /**
-     *
+     * Count the number of planes with a specific type.
      */
     uint32_t count_planes(plane_type type = plane_type::overlay);
 
@@ -53,11 +53,11 @@ public:
 
     void close();
 
-    virtual ~KMSScreen();
-
     struct plane_data* allocate_overlay(const Size& size,
                                         pixel_format format = pixel_format::argb8888,
-                                        bool heo = false);
+                                        windowhint hint = windowhint::automatic);
+
+    virtual ~KMSScreen();
 
 protected:
 
@@ -66,7 +66,7 @@ protected:
     struct plane_data* m_plane;
     uint32_t m_index;
 
-    friend class KMSOverlay;
+    friend class detail::KMSOverlay;
 };
 
 }

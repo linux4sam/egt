@@ -21,12 +21,7 @@ namespace detail
 {
 
 /**
- * A BasicWindow is a Frame Widget that contains and is backed by a Screen.
- *
- * Any top level widget must be a BasicWindow.
- *
- * Windows, unlike other basic widgets, are hidden by default. They will always
- * require a call to show().
+ * The BasicWindow backend uses software to create a Screen.
  */
 class BasicWindow : public detail::WindowImpl
 {

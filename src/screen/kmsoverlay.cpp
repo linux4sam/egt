@@ -8,6 +8,7 @@
 #endif
 
 #include "egt/kmsoverlay.h"
+#include "egt/utils.h"
 
 #ifdef HAVE_LIBPLANES
 #include <planes/fb.h>
@@ -20,13 +21,34 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
 
 KMSOverlay::KMSOverlay(struct plane_data* plane)
     : m_plane(plane),
       m_index(0)
 {
-    init(plane->bufs, NUM_OVERLAY_BUFFERS,
-         plane_width(plane), plane_height(plane), detail::egt_format(plane_format(plane)));
+    assert(plane);
+    if (plane)
+    {
+        init(plane->bufs, NUM_OVERLAY_BUFFERS,
+             plane_width(plane), plane_height(plane), detail::egt_format(plane_format(plane)));
+    }
+}
+
+void KMSOverlay::resize(const Size& size)
+{
+    auto ret = plane_fb_reallocate(m_plane,
+                                   size.w, size.h, plane_format(m_plane));
+    assert(!ret);
+    if (!ret)
+    {
+        plane_fb_map(m_plane);
+
+        init(m_plane->bufs, NUM_OVERLAY_BUFFERS,
+             plane_width(m_plane), plane_height(m_plane),
+             detail::egt_format(plane_format(m_plane)));
+    }
 }
 
 void KMSOverlay::hide()
@@ -65,12 +87,22 @@ uint32_t KMSOverlay::index()
     return m_index;
 }
 
-void KMSOverlay::position(const Point& point)
+void KMSOverlay::set_position(const Point& point)
 {
+    /*
+     * The hardware planes (maybe driver issue) are sensitive to being moved out
+     * of the screen further than their width/height in some cases.
+     *
+     * So, if we are moving further than necessary, just limit the movement.
+     * You can't visually tell because the plane is off the screen anyway.
+     */
+
+    /// @todo implement fix to above problem
+
     plane_set_pos(m_plane, point.x, point.y);
 }
 
-void KMSOverlay::scale(float scale)
+void KMSOverlay::set_scale(float scale)
 {
     plane_set_scale(m_plane, scale);
 }
@@ -105,6 +137,7 @@ KMSOverlay::~KMSOverlay()
 {
 }
 
+}
 }
 }
 

@@ -185,63 +185,167 @@ KMSScreen* KMSScreen::instance()
     return the_kms;
 }
 
-static vector<int> used;
+struct planeid
+{
+    int index;
+    int type;
+
+    planeid(int i, int t)
+        : index(i), type(t)
+    {}
+};
+
+inline bool operator==(const planeid& lhs, const planeid& rhs)
+{
+    return lhs.type == rhs.type &&
+           lhs.index == rhs.index;
+}
+
+static vector<planeid> used;
 
 struct plane_data* KMSScreen::allocate_overlay(const Size& size,
-        pixel_format format, bool heo)
+        pixel_format format,
+        windowhint hint)
 {
-    DBG("allocate plane " << size << " " << format);
+    DBG("allocate plane of size " << size << " " << format << " " << hint);
+    struct plane_data* plane = nullptr;
 
-    struct plane_data* plane = 0;
+    if (hint == windowhint::software)
+        return plane;
 
-    if (heo)
+    if (hint == windowhint::overlay)
     {
-        DBG("heo plane requested");
-
-        // TODO: need a better way to do this
-        int index = 2;
-        plane = plane_create2(m_device,
-                              DRM_PLANE_TYPE_OVERLAY,
-                              index,
-                              size.w,
-                              size.h,
-                              detail::drm_format(format),
-                              KMSOverlay::NUM_OVERLAY_BUFFERS);
-        if (plane)
+        int count = count_planes(plane_type::overlay);
+        for (auto i = count - 1; i >= 0; i--)
         {
-            used.push_back(index);
-        }
-    }
-    else
-    {
-        // brute force: find something that will work
-        for (int index = 2; index >= 0; index--)
-        {
-            if (find(used.begin(), used.end(), index) != used.end())
+            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
+            if (find(used.begin(), used.end(), id) != used.end())
                 continue;
 
             plane = plane_create2(m_device,
                                   DRM_PLANE_TYPE_OVERLAY,
-                                  index,
+                                  i,
                                   size.w,
                                   size.h,
                                   detail::drm_format(format),
-                                  KMSOverlay::NUM_OVERLAY_BUFFERS);
+                                  detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
             if (plane)
             {
-                used.push_back(index);
+                used.push_back(id);
+                break;
+            }
+        }
+    }
+    else if (hint == windowhint::heo_overlay)
+    {
+        /// @todo No explicit way to choose HEO plane. Just depending on the
+        /// requiring the HEO plane for now even though that is not the only
+        /// thing different about an HEO plane.  For example, HEO planes are
+        /// scaleable and normal planes are not.
+        int count = count_planes(plane_type::overlay);
+        for (auto i = count - 1; i >= 0; i--)
+        {
+            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
+            if (find(used.begin(), used.end(), id) != used.end())
+                continue;
+
+            plane = plane_create2(m_device,
+                                  DRM_PLANE_TYPE_OVERLAY,
+                                  i,
+                                  size.w,
+                                  size.h,
+                                  detail::drm_format(format),
+                                  detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
+            if (plane)
+            {
+                used.push_back(id);
+                break;
+            }
+        }
+    }
+    else if (hint == windowhint::cursor_overlay)
+    {
+        int count = count_planes(plane_type::cursor);
+        for (auto i = 0; i < count; i++)
+        {
+            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
+            if (find(used.begin(), used.end(), id) != used.end())
+                continue;
+
+            plane = plane_create2(m_device,
+                                  DRM_PLANE_TYPE_CURSOR,
+                                  i,
+                                  size.w,
+                                  size.h,
+                                  detail::drm_format(format),
+                                  1);
+            if (plane)
+            {
+                used.push_back(id);
+                break;
+            }
+        }
+
+        if (!plane)
+        {
+            int count = count_planes(plane_type::overlay);
+            for (auto i = 0; i < count; i++)
+            {
+                auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
+                if (find(used.begin(), used.end(), id) != used.end())
+                    continue;
+
+                plane = plane_create2(m_device,
+                                      DRM_PLANE_TYPE_OVERLAY,
+                                      i,
+                                      size.w,
+                                      size.h,
+                                      detail::drm_format(format),
+                                      detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
+                if (plane)
+                {
+                    used.push_back(id);
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!plane)
+    {
+        int count = count_planes(plane_type::overlay);
+        for (auto i = count - 1; i >= 0; i--)
+        {
+
+            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
+            if (find(used.begin(), used.end(), id) != used.end())
+                continue;
+
+            plane = plane_create2(m_device,
+                                  DRM_PLANE_TYPE_OVERLAY,
+                                  i,
+                                  size.w,
+                                  size.h,
+                                  detail::drm_format(format),
+                                  detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
+            if (plane)
+            {
+                used.push_back(id);
                 break;
             }
         }
     }
 
-    assert(plane);
-    plane_fb_map(plane);
+    if (plane)
+    {
+        plane_fb_map(plane);
 
-    plane_set_pos(plane, 0, 0);
+        plane_set_pos(plane, 0, 0);
 
-    DBG("plane " << plane->index << " overlay dumb buffer " <<
-        plane_width(plane) << "," << plane_height(plane));
+        DBG("allocated plane index " << plane->index << " [" <<
+            plane_width(plane) << "," << plane_height(plane) << "] " <<
+            format << " " << plane->type);
+    }
 
     return plane;
 }

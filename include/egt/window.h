@@ -13,7 +13,9 @@
 
 #include <egt/detail/windowimpl.h>
 #include <egt/frame.h>
+#include <egt/image.h>
 #include <egt/screen.h>
+#include <iosfwd>
 #include <memory>
 
 namespace egt
@@ -48,10 +50,45 @@ Window*& modal_window();
  */
 std::vector<Window*>& windows();
 
+enum class windowhint
+{
+    /**
+     * Allow automatic detection of the window type to create.
+     */
+    automatic,
+
+    /**
+     * Request a software only implementation.
+     */
+    software,
+
+    /**
+     * Request an overlay plane.
+     */
+    overlay,
+
+    /**
+     * Request specifically an heo overlay plane.
+     */
+    heo_overlay,
+
+    /**
+     * Request a cursor overlay plane.
+     */
+    cursor_overlay,
+};
+
+std::ostream& operator<<(std::ostream& os, const windowhint& event);
+
 /**
  * Window interface.
  *
- * A Window is a Frame that manages and draws to a Screen.
+ * A Window is a Frame that optionally manages and draws to a Screen. If the
+ * Window does not have a screen itself, it will refer to its parent for the
+ * Screen.
+ *
+ * Windows, unlike other basic widgets, are hidden by default. Windows always
+ * require a call to show() before they will be drawn.
  *
  * This class acts as normal Frame/Widget put punts many operations to a
  * dynamically selected backend to work with the screen.
@@ -63,12 +100,14 @@ public:
 
     Window(const Rect& rect,
            const widgetflags& flags = widgetflags(),
-           pixel_format format = DEFAULT_FORMAT, bool heo = false);
+           pixel_format format = DEFAULT_FORMAT,
+           windowhint hint = windowhint::automatic);
 
     Window(const Size& size = Size(),
            const widgetflags& flags = widgetflags(),
-           pixel_format format = DEFAULT_FORMAT, bool heo = false)
-        : Window(Rect(Point(), size), flags, format, heo)
+           pixel_format format = DEFAULT_FORMAT,
+           windowhint hint = windowhint::automatic)
+        : Window(Rect(Point(), size), flags, format, hint)
     {}
 
     virtual void damage() override
@@ -152,8 +191,8 @@ protected:
      * Select and allocate the backend implementation for the window.
      */
     void create_impl(const Rect& rect,
-                     pixel_format format = pixel_format::argb8888,
-                     bool heo = false);
+                     pixel_format format,
+                     windowhint hint);
 
     virtual void default_damage(const Rect& rect)
     {

@@ -23,13 +23,14 @@ namespace detail
 {
 
 PlaneWindow::PlaneWindow(Window* interface,
-                         pixel_format format, bool heo)
+                         pixel_format format, windowhint hint)
     : BasicWindow(interface),
       m_format(format),
-      m_heo(heo)
+      m_hint(hint)
 {
     assert(KMSScreen::instance());
     m_screen = nullptr;
+    allocate_screen();
 }
 
 void PlaneWindow::resize(const Size& size)
@@ -38,8 +39,18 @@ void PlaneWindow::resize(const Size& size)
 
     if (!size.empty() && m_interface->m_box.size() != size)
     {
+        if (m_screen)
+        {
+            auto screen = dynamic_cast<KMSOverlay*>(m_screen);
+            assert(screen);
+            if (screen)
+            {
+                screen->resize(size);
+            }
+        }
+
         m_interface->m_box.size(size);
-        m_dirty = true;
+        m_interface->damage();
     }
 }
 
@@ -75,9 +86,13 @@ void PlaneWindow::allocate_screen()
 {
     if (!m_screen)
     {
-        m_screen = new KMSOverlay(
-            KMSScreen::instance()->allocate_overlay(m_interface->box().size(),
-                    m_format, m_heo));
+        assert(!m_interface->box().size().empty());
+
+        auto plane = KMSScreen::instance()->allocate_overlay(m_interface->box().size(),
+                     m_format, m_hint);
+        if (!plane)
+            throw std::runtime_error("failed to allocate plane");
+        m_screen = new KMSOverlay(plane);
     }
 }
 
@@ -97,7 +112,7 @@ void PlaneWindow::top_draw()
                 assert(s);
                 if (s)
                 {
-                    s->position(m_interface->to_screen(m_interface->box().point()));
+                    s->set_position(m_interface->to_screen(m_interface->box().point()));
                     s->apply();
                     m_dirty = false;
                 }

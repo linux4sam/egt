@@ -39,7 +39,7 @@ public:
 
     VideoWindow(const Size& size,
                 pixel_format format = pixel_format::xrgb8888,
-                bool heo = false);
+                windowhint hint = windowhint::overlay);
 
     virtual void top_draw() override;
 

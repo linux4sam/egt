@@ -222,6 +222,8 @@ void IScreen::init(void** ptr, uint32_t count, int w, int h, pixel_format format
     if (f == CAIRO_FORMAT_INVALID)
         f = CAIRO_FORMAT_ARGB32;
 
+    m_buffers.clear();
+
     for (uint32_t x = 0; x < count; x++)
     {
         DisplayBuffer buffer;

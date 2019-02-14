@@ -13,8 +13,9 @@
 #include "egt/kmsscreen.h"
 #include "egt/window.h"
 #include <algorithm>
-#include <sstream>
 #include <vector>
+#include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -42,10 +43,28 @@ std::vector<Window*>& windows()
     return the_windows;
 }
 
+std::ostream& operator<<(std::ostream& os, const windowhint& event)
+{
+    static std::map<windowhint, std::string> strings;
+    if (strings.empty())
+    {
+#define MAPITEM(p) strings[p] = #p
+        MAPITEM(windowhint::automatic);
+        MAPITEM(windowhint::software);
+        MAPITEM(windowhint::overlay);
+        MAPITEM(windowhint::heo_overlay);
+        MAPITEM(windowhint::cursor_overlay);
+#undef MAPITEM
+    }
+
+    os << strings[event];
+    return os;
+}
+
 Window::Window(const Rect& rect,
                const widgetflags& flags,
                pixel_format format,
-               bool heo)
+               windowhint hint)
     : Frame(rect, flags)
 {
     set_name("Window" + std::to_string(m_widgetid));
@@ -57,7 +76,7 @@ Window::Window(const Rect& rect,
     set_flag(widgetflag::INVISIBLE);
 
     // create the window implementation
-    create_impl(box(), format, heo);
+    create_impl(box(), format, hint);
 
     // save off the new window to the window list
     windows().push_back(this);
@@ -93,47 +112,77 @@ void Window::resize(const Size& size)
 
 void Window::create_impl(const Rect& rect,
                          pixel_format format,
-                         bool heo)
+                         windowhint hint)
 {
     ignoreparam(format);
-    ignoreparam(heo);
+    ignoreparam(hint);
 
     assert(main_screen());
 
     if (!the_main_window)
     {
         the_main_window = this;
-
-        m_box.x = 0;
-        m_box.y = 0;
-        m_box.w = main_screen()->size().w;
-        m_box.h = main_screen()->size().h;
-
+        m_box = main_screen()->box();
         m_impl.reset(new detail::BasicTopWindow(this));
     }
     else
     {
         m_box = rect;
 
+        try
+        {
+            switch (hint)
+            {
+            case windowhint::software:
+                m_impl.reset(new detail::BasicWindow(this));
+                break;
+            case windowhint::overlay:
+            case windowhint::heo_overlay:
+            case windowhint::cursor_overlay:
 #ifdef HAVE_LIBPLANES
-        bool force_basic = (rect.size().w > 1000 || rect.size().h > 1000);
-        static uint32_t count = 0;
-        auto s = dynamic_cast<KMSScreen*>(main_screen());
-        if (!force_basic && count++ < s->count_planes(KMSScreen::plane_type::overlay))
-        {
-            DBG(name() << " backend is PlaneWindow");
-            m_impl.reset(new detail::PlaneWindow(this, format, heo));
-            set_flag(widgetflag::PLANE_WINDOW);
-        }
-        else
+                m_impl.reset(new detail::PlaneWindow(this, format, hint));
+                set_flag(widgetflag::PLANE_WINDOW);
 #endif
+                break;
+            default:
+                break;
+            }
+        }
+        catch (std::exception& e)
         {
-            DBG(name() << " backend is BasicWindow");
-            m_impl.reset(new detail::BasicWindow(this));
+            DBG(e.what());
+        }
+
+        if (!m_impl)
+        {
+#ifdef HAVE_LIBPLANES
+            try
+            {
+                m_impl.reset(new detail::PlaneWindow(this, format, hint));
+                set_flag(widgetflag::PLANE_WINDOW);
+            }
+            catch (std::exception& e)
+            {
+                DBG(e.what());
+#endif
+
+                m_impl.reset(new detail::BasicWindow(this));
+#ifdef HAVE_LIBPLANES
+            }
+#endif
         }
     }
 
     assert(m_impl);
+
+    if (is_flag_set(widgetflag::PLANE_WINDOW))
+    {
+        DBG(name() << " backend is PlaneWindow");
+    }
+    else
+    {
+        DBG(name() << " backend is BasicWindow");
+    }
 }
 
 void Window::set_main_window()
@@ -142,10 +191,7 @@ void Window::set_main_window()
 
     assert(main_screen());
 
-    m_box.x = 0;
-    m_box.y = 0;
-    m_box.w = main_screen()->size().w;
-    m_box.h = main_screen()->size().h;
+    m_box = main_screen()->box();
 
     damage();
 }
