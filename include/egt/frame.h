@@ -252,15 +252,12 @@ public:
     virtual void zorder_down(Widget* widget)
     {
         auto i = std::find(m_children.begin(), m_children.end(), widget);
-        if (i != m_children.end())
+        if (i != m_children.end() && i != m_children.begin())
         {
             auto to = std::prev(i);
-            if (to != m_children.end())
-            {
-                (*i)->damage();
-                (*to)->damage();
-                std::iter_swap(i, to);
-            }
+            (*i)->damage();
+            (*to)->damage();
+            std::iter_swap(i, to);
         }
     }
 
