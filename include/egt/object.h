@@ -46,8 +46,6 @@ enum class eventid
     POINTER_DRAG_START,
     POINTER_DRAG,
     POINTER_DRAG_STOP,
-    POINTER_BUTTON_DOWN,
-    POINTER_BUTTON_UP,
     //@}
 
     /**

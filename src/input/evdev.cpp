@@ -120,13 +120,13 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             case BTN_TOOL_LENS:
                 break;
             case BTN_LEFT:
-                dispatch(value ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
+                dispatch(value ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
                 break;
             case BTN_RIGHT:
-                dispatch(value ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
+                dispatch(value ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
                 break;
             case BTN_MIDDLE:
-                dispatch(value ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
+                dispatch(value ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
                 break;
             default:
                 eventid v = eventid::NONE;

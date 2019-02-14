@@ -228,7 +228,7 @@ bool LibInput::handle_event_touch(struct libinput_event* ev)
     switch (libinput_event_get_type(ev))
     {
     case LIBINPUT_EVENT_TOUCH_UP:
-        dispatch(eventid::POINTER_BUTTON_UP);
+        dispatch(eventid::RAW_POINTER_UP);
         break;
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
@@ -237,7 +237,7 @@ bool LibInput::handle_event_touch(struct libinput_event* ev)
 
         event_mouse() = Point(x, y);
 
-        dispatch(eventid::POINTER_BUTTON_DOWN);
+        dispatch(eventid::RAW_POINTER_DOWN);
         break;
     }
     case LIBINPUT_EVENT_TOUCH_MOTION:
@@ -315,7 +315,7 @@ void LibInput::handle_event_button(struct libinput_event* ev)
 
     is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
 
-    dispatch(is_press ? eventid::POINTER_BUTTON_DOWN : eventid::POINTER_BUTTON_UP);
+    dispatch(is_press ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
 
     event_button() = button;
 }

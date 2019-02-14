@@ -31,8 +31,6 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
         MAPITEM(eventid::POINTER_DRAG_START);
         MAPITEM(eventid::POINTER_DRAG);
         MAPITEM(eventid::POINTER_DRAG_STOP);
-        MAPITEM(eventid::POINTER_BUTTON_DOWN);
-        MAPITEM(eventid::POINTER_BUTTON_UP);
         MAPITEM(eventid::ENTER);
         MAPITEM(eventid::LEAVE);
         MAPITEM(eventid::KEYBOARD_DOWN);

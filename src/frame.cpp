@@ -98,8 +98,6 @@ int Frame::handle(eventid event)
     case eventid::POINTER_DRAG_START:
     case eventid::POINTER_DRAG:
     case eventid::POINTER_DRAG_STOP:
-    case eventid::POINTER_BUTTON_DOWN:
-    case eventid::POINTER_BUTTON_UP:
     {
         for (auto& child : detail::reverse_iterate(m_children))
         {

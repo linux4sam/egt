@@ -135,9 +135,7 @@ void IInput::dispatch(eventid event)
                              event == eventid::POINTER_HOLD ||
                              event == eventid::POINTER_DRAG_START ||
                              event == eventid::POINTER_DRAG ||
-                             event == eventid::POINTER_DRAG_STOP ||
-                             event == eventid::POINTER_BUTTON_DOWN ||
-                             event == eventid::POINTER_BUTTON_UP))
+                             event == eventid::POINTER_DRAG_STOP))
         {
             auto target = mouse_grab();
             target->handle(event);
