@@ -38,6 +38,7 @@
 #include <egt/progressbar.h>
 #include <egt/radial.h>
 #include <egt/radiobox.h>
+#include <egt/sideboard.h>
 #include <egt/sizer.h>
 #include <egt/sprite.h>
 #include <egt/text.h>

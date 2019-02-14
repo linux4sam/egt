@@ -157,6 +157,7 @@ $(top_srcdir)/include/egt/progressbar.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/screen.h \
+$(top_srcdir)/include/egt/sideboard.h \
 $(top_srcdir)/include/egt/sizer.h \
 $(top_srcdir)/include/egt/slider.h \
 $(top_srcdir)/include/egt/sprite.h \

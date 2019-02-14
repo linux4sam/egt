@@ -205,6 +205,11 @@ public:
      */
     void reverse(bool rev) { m_reverse = rev; }
 
+    inline float_t current() const
+    {
+        return m_current;
+    }
+
     virtual ~Animation() {}
 
 protected:
