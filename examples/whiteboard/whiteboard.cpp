@@ -154,6 +154,11 @@ public:
 
         m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
+        m_colorbtn.set_boxtype(Theme::boxtype::none);
+        m_fillbtn.set_boxtype(Theme::boxtype::none);
+        m_widthbtn.set_boxtype(Theme::boxtype::none);
+        m_clearbtn.set_boxtype(Theme::boxtype::none);
+
         add(&m_grid);
         add(&m_penpicker);
         add(&m_fillpicker);
