@@ -17,6 +17,25 @@ namespace egt
 {
 inline namespace v1
 {
+std::ostream& operator<<(std::ostream& os, const pixel_format& format)
+{
+    static std::map<pixel_format, std::string> strings;
+    if (strings.empty())
+    {
+#define MAPITEM(p) strings[p] = #p
+        MAPITEM(pixel_format::invalid);
+        MAPITEM(pixel_format::rgb565);
+        MAPITEM(pixel_format::argb8888);
+        MAPITEM(pixel_format::yuyv);
+        MAPITEM(pixel_format::nv21);
+        MAPITEM(pixel_format::yuv420);
+#undef MAPITEM
+    }
+
+    os << strings[format];
+    return os;
+}
+
 namespace detail
 {
 static const map<pixel_format, uint32_t> drm_formats =

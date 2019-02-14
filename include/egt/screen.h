@@ -16,6 +16,7 @@
 #include <memory>
 #include <egt/geometry.h>
 #include <vector>
+#include <iosfwd>
 
 namespace egt
 {
@@ -42,6 +43,8 @@ enum class pixel_format
     nv21,
     yuv420,
 };
+
+std::ostream& operator<<(std::ostream& os, const pixel_format& format);
 
 namespace detail
 {
