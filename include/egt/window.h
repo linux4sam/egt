@@ -247,7 +247,20 @@ protected:
     friend class detail::BasicTopWindow;
 };
 
-using TopWindow = Window;
+class TopWindow : public Window
+{
+public:
+    using Window::Window;
+
+    virtual void show_cursor(const Image& image = Image("@cursor.png"));
+    virtual void hide_cursor();
+
+protected:
+
+    virtual int handle_mouse(eventid event);
+
+    std::unique_ptr<Window> m_cursor;
+};
 
 }
 }

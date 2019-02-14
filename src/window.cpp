@@ -9,8 +9,10 @@
 
 #include "egt/detail/basicwindow.h"
 #include "egt/detail/planewindow.h"
-#include "egt/painter.h"
+#include "egt/input.h"
 #include "egt/kmsscreen.h"
+#include "egt/label.h"
+#include "egt/painter.h"
 #include "egt/window.h"
 #include <algorithm>
 #include <vector>
@@ -214,6 +216,74 @@ Window::~Window()
             break;
         }
     }
+}
+
+struct CursorWindow : public Window
+{
+    explicit CursorWindow(const Image& image)
+        : Window(image.size(), widgetflags(), pixel_format::argb8888, windowhint::cursor_overlay),
+          m_label(image)
+    {
+        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        set_boxtype(Theme::boxtype::fill);
+        m_label.set_boxtype(Theme::boxtype::none);
+        add(&m_label);
+    }
+
+    virtual int handle(eventid) override
+    {
+        return 0;
+    }
+
+    virtual ~CursorWindow()
+    {}
+
+    ImageLabel m_label;
+};
+
+void TopWindow::hide_cursor()
+{
+    if (m_cursor)
+        m_cursor->hide();
+}
+
+void TopWindow::show_cursor(const Image& image)
+{
+    m_cursor.reset(new CursorWindow(image));
+    m_cursor->move(main_screen()->box().center());
+    add(m_cursor.get());
+    m_cursor->show();
+
+    /// @todo how to cleanup if destructed?
+    detail::IInput::global_input().on_event(
+        std::bind(&TopWindow::handle_mouse, this, std::placeholders::_1),
+    {eventid::RAW_POINTER_DOWN, eventid::RAW_POINTER_UP, eventid::RAW_POINTER_MOVE});
+}
+
+int TopWindow::handle_mouse(eventid event)
+{
+    if (m_cursor)
+    {
+        switch (event)
+        {
+        case eventid::RAW_POINTER_DOWN:
+        case eventid::RAW_POINTER_UP:
+        case eventid::RAW_POINTER_MOVE:
+        {
+            auto p = event_mouse();
+
+            // don't let the cursor go off the screen
+            if (main_screen()->box().contains(Rect(p, m_cursor->size())))
+                m_cursor->move(p);
+
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    return 0;
 }
 
 }

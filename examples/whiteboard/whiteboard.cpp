@@ -314,6 +314,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "whiteboard");
 
     MainWindow win;
+    win.show_cursor(Image("@pencil.png"));
     win.show();
 
     return app.run();
