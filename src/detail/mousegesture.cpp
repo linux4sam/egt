@@ -39,10 +39,12 @@ eventid MouseGesture::handle(eventid event)
     switch (event)
     {
     case eventid::RAW_POINTER_DOWN:
+    case eventid::POINTER_BUTTON_DOWN:
     {
         start();
         break;
     }
+    case eventid::POINTER_BUTTON_UP:
     case eventid::RAW_POINTER_UP:
     {
         if (m_active)
