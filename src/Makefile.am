@@ -72,7 +72,6 @@ textwidget.cpp \
 theme.cpp \
 timer.cpp \
 tools.cpp \
-uiloader.cpp \
 utils.cpp \
 video.cpp \
 view.cpp \
@@ -91,6 +90,16 @@ if HAVE_LUA
 libegt_la_SOURCES += \
 lua/script.c \
 lua/script.h
+endif
+
+if HAVE_RAPIDXML_HPP
+libegt_la_SOURCES += \
+uiloader.cpp
+endif
+
+if HAVE_RAPIDXML_RAPIDXML_HPP
+libegt_la_SOURCES += \
+uiloader.cpp
 endif
 
 libegt_la_LIBADD =
