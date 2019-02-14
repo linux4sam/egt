@@ -194,7 +194,7 @@ int main(int argc, const char** argv)
     Slider* position = new Slider(Rect(Size(150, 40)), 0, 100, 0, orientation::HORIZONTAL);
     grid.add(position);
     position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
-    position->disable();
+    position->readonly();
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
     postimer.on_timeout([position, window

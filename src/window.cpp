@@ -54,9 +54,9 @@ Window::Window(const Rect& rect,
     set_boxtype(Theme::boxtype::fillsolid);
 
     // by default, windows are hidden
-    m_visible = false;
+    set_flag(widgetflag::INVISIBLE);
 
-    // create_impl the window implementation
+    // create the window implementation
     create_impl(box(), format, heo);
 
     // save off the new window to the window list
@@ -87,7 +87,8 @@ void Window::resize(const Size& size)
     if (unlikely(the_main_window == this))
         return;
 
-    m_impl->resize(size);
+    if (m_impl)
+        m_impl->resize(size);
 }
 
 void Window::create_impl(const Rect& rect,
@@ -132,7 +133,7 @@ void Window::create_impl(const Rect& rect,
         }
     }
 
-    assert(m_impl.get());
+    assert(m_impl);
 }
 
 void Window::set_main_window()

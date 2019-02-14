@@ -78,7 +78,8 @@ public:
 
     virtual void damage(const Rect& rect) override
     {
-        m_impl->damage(rect);
+        if (m_impl)
+            m_impl->damage(rect);
     }
 
     /**
@@ -87,29 +88,35 @@ public:
      */
     virtual IScreen* screen() override
     {
-        return m_impl->screen();
+        if (m_impl)
+            return m_impl->screen();
+        return nullptr;
     }
 
     virtual void move(const Point& point) override
     {
-        m_impl->move(point);
+        if (m_impl)
+            m_impl->move(point);
     }
 
     virtual void show() override
     {
-        m_impl->show();
+        if (m_impl)
+            m_impl->show();
     }
 
     virtual void hide() override
     {
-        m_impl->hide();
+        if (m_impl)
+            m_impl->hide();
     }
 
     virtual void resize(const Size& size) override;
 
     virtual void paint(Painter& painter) override
     {
-        m_impl->paint(painter);
+        if (m_impl)
+            m_impl->paint(painter);
     }
 
     /*
@@ -121,7 +128,8 @@ public:
      */
     virtual void top_draw() override
     {
-        m_impl->top_draw();
+        if (m_impl)
+            m_impl->top_draw();
     }
 
     /**
@@ -136,7 +144,8 @@ protected:
 
     virtual void allocate_screen()
     {
-        m_impl->allocate_screen();
+        if (m_impl)
+            m_impl->allocate_screen();
     }
 
     /**

@@ -212,60 +212,76 @@ void Widget::set_box(const Rect& rect)
 
 void Widget::hide()
 {
-    if (!m_visible)
+    if (is_flag_set(widgetflag::INVISIBLE))
         return;
     // careful attention to ordering
     damage();
-    m_visible = false;
+    set_flag(widgetflag::INVISIBLE);
     invoke_handlers(eventid::HIDE);
 }
 
 void Widget::show()
 {
-    if (m_visible)
+    if (!is_flag_set(widgetflag::INVISIBLE))
         return;
     // careful attention to ordering
-    m_visible = true;
+    clear_flag(widgetflag::INVISIBLE);
     damage();
     invoke_handlers(eventid::SHOW);
 }
 
 bool Widget::visible() const
 {
-    return m_visible;
+    return !is_flag_set(widgetflag::INVISIBLE);
 }
 
 bool Widget::active() const
 {
-    return m_active;
+    return is_flag_set(widgetflag::ACTIVE);
 }
 
 void Widget::set_active(bool value)
 {
-    if (m_active != value)
+    if (is_flag_set(widgetflag::ACTIVE) != value)
     {
-        m_active = value;
+        value ? set_flag(widgetflag::ACTIVE) : clear_flag(widgetflag::ACTIVE);
+        damage();
+    }
+}
+
+bool Widget::readonly() const
+{
+    return is_flag_set(widgetflag::READONLY);
+}
+
+void Widget::set_readonly(bool value)
+{
+    if (is_flag_set(widgetflag::READONLY) != value)
+    {
+        value ? set_flag(widgetflag::READONLY) : clear_flag(widgetflag::READONLY);
         damage();
     }
 }
 
 bool Widget::disabled() const
 {
-    return m_disabled;
+    return is_flag_set(widgetflag::DISABLED);
 }
 
 void Widget::disable()
 {
-    if (!m_disabled)
-        damage();
-    m_disabled = true;
+    if (is_flag_set(widgetflag::DISABLED))
+        return;
+    damage();
+    set_flag(widgetflag::DISABLED);
 }
 
 void Widget::enable()
 {
-    if (m_disabled)
-        damage();
-    m_disabled = false;
+    if (!is_flag_set(widgetflag::DISABLED))
+        return;
+    damage();
+    clear_flag(widgetflag::DISABLED);
 }
 
 void Widget::damage()
@@ -485,11 +501,6 @@ void Widget::set_theme(const Theme& theme)
 void Widget::reset_theme()
 {
     m_theme.reset();
-}
-
-void Widget::set_boxtype(const Theme::boxtype type)
-{
-    m_boxtype = type;
 }
 
 void Widget::draw_box(Painter& painter, const Rect& rect)

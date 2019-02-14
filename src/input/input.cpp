@@ -158,13 +158,16 @@ void IInput::dispatch(eventid event)
             // give event to any top level and visible windows
             for (auto& w : detail::reverse_iterate(windows()))
             {
+                if (!w->top_level())
+                    continue;
+
+                if (w->readonly())
+                    continue;
+
                 if (w->disabled())
                     continue;
 
                 if (!w->visible())
-                    continue;
-
-                if (!w->top_level())
                     continue;
 
                 w->handle(event);

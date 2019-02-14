@@ -103,6 +103,9 @@ int Frame::handle(eventid event)
     {
         for (auto& child : detail::reverse_iterate(m_children))
         {
+            if (child->readonly())
+                continue;
+
             if (child->disabled())
                 continue;
 

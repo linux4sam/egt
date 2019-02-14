@@ -24,8 +24,11 @@ std::ostream& operator<<(std::ostream& os, const widgetflags& flags)
         MAPITEM(widgetflag::PLANE_WINDOW);
         MAPITEM(widgetflag::WINDOW);
         MAPITEM(widgetflag::FRAME);
+        MAPITEM(widgetflag::DISABLED);
+        MAPITEM(widgetflag::READONLY);
+        MAPITEM(widgetflag::ACTIVE);
+        MAPITEM(widgetflag::INVISIBLE);
         MAPITEM(widgetflag::GRAB_MOUSE);
-        MAPITEM(widgetflag::WINDOW_DEFAULT);
 #undef MAPITEM
     }
 

@@ -52,7 +52,7 @@ ScrolledView::ScrolledView(const Rect& rect, orientation orient)
 
     resize_slider();
 
-    // TODO: handle slider events for moving the view
+    m_slider.set_flag(widgetflag::READONLY);
 }
 
 ScrolledView::ScrolledView(orientation orient)

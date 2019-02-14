@@ -199,6 +199,16 @@ public:
     virtual void set_active(bool value);
 
     /**
+    * Return true if the widget is readonly.
+    */
+    virtual bool readonly() const;
+
+    /**
+     * Set the readonly property of the widget.
+     */
+    virtual void set_readonly(bool value);
+
+    /**
      * Return the disabled status of the widget.
      *
      * When a widget is disabled, it does not receive events. Also, the
@@ -443,7 +453,14 @@ public:
      */
     void reset_theme();
 
-    void set_boxtype(const Theme::boxtype type);
+    /**
+     * Set the boxtype of the widget.
+     */
+    inline void set_boxtype(const Theme::boxtype& type)
+    {
+        if (detail::change_if_diff<>(m_boxtype, type))
+            damage();
+    }
 
     /**
      * Get the widget theme, or the default theme if none is set.
@@ -488,10 +505,6 @@ protected:
      */
     Frame* m_parent{nullptr};
 
-    /**
-     * When true, the widget is visible.
-     */
-    bool m_visible{true};
 
     /**
      * Unique ID of this widget.
@@ -499,27 +512,6 @@ protected:
     int m_widgetid{0};
 
 private:
-
-    /**
-     * When true, the widget is active.
-     *
-     * The active state of a widget is usually a momentary state, unlike
-     * focus, which exists until focu is changed. For example, when a button
-     * is currently being held down, it its implementation may consider this
-     * the active state and choose to draw the button diffeerently.
-     *
-     * This may change how the widget behaves or is draw.
-     */
-    bool m_active{false};
-
-    /**
-     * When true, the widget is disabled.
-     *
-     * Typically, when a widget is disabled it will not accept input.
-     *
-     * This may change how the widget behaves or is draw.
-     */
-    bool m_disabled{false};
 
     /**
      * Flags for the widget.
