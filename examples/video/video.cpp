@@ -148,6 +148,7 @@ int main(int argc, const char** argv)
     //#define FPS
 #ifdef FPS
     FpsWindow fpslabel;
+    win.add(&fpslabel);
     fpslabel.show();
 #endif
 
