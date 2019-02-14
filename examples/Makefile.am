@@ -34,6 +34,7 @@ bin_PROGRAMS = \
 animations/animations \
 basic/basic \
 basicui/basicui \
+boards/boards \
 calc/calc \
 charts/charts \
 drag/drag \
@@ -244,3 +245,10 @@ audioplayer_audioplayer_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 audioplayer_audioplayerdir = $(prefix)/share/egt/examples/audioplayer
 dist_audioplayer_audioplayer_DATA = $(wildcard $(top_srcdir)/examples/audioplayer/*.png)
 audioplayer_audioplayer_LDFLAGS = $(AM_LDFLAGS)
+
+boards_boards_SOURCES = boards/boards.cpp
+boards_boards_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+boards_boards_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+boards_boardsdir = $(prefix)/share/egt/examples/boards
+dist_boards_boards_DATA = $(wildcard $(top_srcdir)/examples/boards/*.png)
+boards_boards_LDFLAGS = $(AM_LDFLAGS)
