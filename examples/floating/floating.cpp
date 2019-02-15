@@ -134,35 +134,28 @@ int main(int argc, const char** argv)
         std::make_pair(-4 * f, 2 * f),
     };
 
-#ifdef HAVE_LIBPLANES
-    uint32_t SOFT_COUNT = 2;
-#else
-    uint32_t SOFT_COUNT = 4;
-#endif
+    auto image_index = 0;
+
+    const auto SOFT_COUNT = 2;
 
     // software
-    for (uint32_t x = 0; x < SOFT_COUNT; x++)
+    for (auto x = 0; x < SOFT_COUNT; x++)
     {
         stringstream os;
-        os << "image" << x << ".png";
+        os << "image" << image_index++ << ".png";
         auto image = new ImageLabel(Image(os.str()));
-        image->set_name("software " + os.str());
         boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
         win.add(image);
     }
 
-#ifdef HAVE_LIBPLANES
-    int total = KMSScreen::instance()->count_planes(KMSScreen::plane_type::overlay);
-#endif
+    const auto SOFTHARD_COUNT = 2;
 
-#ifdef HAVE_LIBPLANES
     // hardware (or emulated)
-    for (uint32_t x = SOFT_COUNT; x < SOFT_COUNT + total; x++)
+    for (auto x = 0; x < SOFTHARD_COUNT; x++)
     {
         stringstream os;
-        os << "image" << x << ".png";
+        os << "image" << image_index++ << ".png";
         auto image = new ImageLabel(Image(os.str()));
-        image->set_name("hardware " + os.str());
         auto plane = new Window(Size(image->w(), image->h()));
         plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         plane->set_boxtype(Theme::boxtype::none);
@@ -172,7 +165,6 @@ int main(int argc, const char** argv)
         boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
         win.add(plane);
     }
-#endif
 
     PeriodicTimer movetimer(std::chrono::milliseconds(30));
     movetimer.on_timeout([&]()
