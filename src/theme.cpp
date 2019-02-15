@@ -135,6 +135,9 @@ void Theme::draw_border_box(Painter& painter,
            width = rect.w - DEFAULT_BORDER_WIDTH,
            height = rect.h - DEFAULT_BORDER_WIDTH;
 
+    if (width < 0 || height < 0)
+        return;
+
     auto r = Rect(rx, ry, width, height);
 
     painter.rectangle(r);
@@ -151,6 +154,9 @@ void Theme::draw_bottom_border_box(Painter& painter,
            ry = rect.y + DEFAULT_BORDER_WIDTH / 2.,
            width = rect.w - DEFAULT_BORDER_WIDTH,
            height = rect.h - DEFAULT_BORDER_WIDTH;
+
+    if (width < 0 || height < 0)
+        return;
 
     auto r = Rect(rx, ry, width, height);
 
@@ -170,6 +176,8 @@ void Theme::draw_border_fill_box(Painter& painter,
            width = rect.w - DEFAULT_BORDER_WIDTH,
            height = rect.h - DEFAULT_BORDER_WIDTH;
 
+    if (width < 0 || height < 0)
+        return;
 
     auto cr = painter.context();
     painter.set_color(bg);
@@ -193,6 +201,9 @@ void Theme::draw_rounded_border_box(Painter& painter,
            height = rect.h - DEFAULT_BORDER_WIDTH,
            aspect = 1.0,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
+
+    if (width < 0 || height < 0)
+        return;
 
     double radius = corner_radius / aspect;
     double degrees = M_PI / 180.0;
@@ -224,6 +235,9 @@ void Theme::draw_rounded_borderfill_box(Painter& painter,
            height = rect.h - DEFAULT_BORDER_WIDTH,
            aspect = 1.0,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
+
+    if (width < 0 || height < 0)
+        return;
 
     if (rect.w <= 10)
         corner_radius = rect.w / 2;
@@ -264,6 +278,9 @@ void Theme::draw_rounded_fill_box(Painter& painter,
            aspect = 1.0,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
 
+    if (width < 0 || height < 0)
+        return;
+
     if (rect.w <= 10)
         corner_radius = rect.w / 2;
 
@@ -299,6 +316,9 @@ void Theme::draw_rounded_border_gradient_box(Painter& painter,
            height = rect.h - DEFAULT_BORDER_WIDTH,
            aspect = 1.0,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
+
+    if (width < 0 || height < 0)
+        return;
 
     double radius = corner_radius / aspect;
     double degrees = M_PI / 180.0;
@@ -346,6 +366,9 @@ void Theme::draw_rounded_gradient_box(Painter& painter,
            height = rect.h,
            aspect = 1.0,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
+
+    if (width < 0 || height < 0)
+        return;
 
     double radius = corner_radius / aspect;
     double degrees = M_PI / 180.0;
