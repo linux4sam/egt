@@ -20,11 +20,17 @@ using namespace egt;
 class Bubble : public ImageLabel
 {
 public:
-    Bubble(int xspeed, int yspeed, const Point& point)
+    Bubble(int xspeed, int yspeed, const Point& point) noexcept
         : ImageLabel(Image("smallbubble.png"), point),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}
+
+    Bubble(const Bubble&) = default;
+    Bubble(Bubble&&) = default;
+    Bubble& operator=(const Bubble&) = default;
+    Bubble& operator=(Bubble&&) = default;
+    virtual ~Bubble() = default;
 
     bool animate()
     {
@@ -108,12 +114,12 @@ public:
         if (yspeed == 0)
             yspeed = 1;
 
-        Bubble* image = new Bubble(xspeed, yspeed, p);
+        m_images.emplace_back(xspeed, yspeed, p);
+        auto& image = m_images.back();
         add(image);
-        image->scale_image(size, true);
-        image->move(Point(p.x - image->box().w / 2 + offset,
-                          p.y - image->box().h / 2 + offset));
-        m_images.push_back(image);
+        image.scale_image(size, true);
+        image.move(Point(p.x - image.box().w / 2 + offset,
+                         p.y - image.box().h / 2 + offset));
         objects_changed();
     }
 
@@ -121,10 +127,9 @@ public:
     {
         for (auto x = m_images.begin(); x != m_images.end();)
         {
-            if (!(*x)->animate())
+            auto& image = *x;
+            if (!image.animate())
             {
-                remove(*x);
-                delete *x;
                 x = m_images.erase(x);
                 objects_changed();
             }
@@ -142,7 +147,7 @@ public:
         m_label->set_text(ss.str());
     }
 
-    vector<Bubble*> m_images;
+    vector<Bubble> m_images;
     std::random_device r;
     std::default_random_engine e1;
     Label* m_label;

@@ -69,7 +69,4 @@ void Image::copy()
     }
 }
 
-Image::~Image()
-{}
-
 }

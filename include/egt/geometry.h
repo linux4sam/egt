@@ -43,6 +43,12 @@ public:
           y(y_)
     {}
 
+    PointType<dim_t>(const PointType<dim_t>&) = default;
+    PointType<dim_t>(PointType<dim_t>&&) = default;
+    PointType<dim_t>& operator=(const PointType<dim_t>&) = default;
+    PointType<dim_t>& operator=(PointType<dim_t>&&) = default;
+    ~PointType<dim_t>() = default;
+
     PointType<dim_t>& operator+=(const PointType<dim_t>& rhs)
     {
         x += rhs.x;
@@ -157,6 +163,12 @@ public:
         : h(h_),
           w(w_)
     {}
+
+    SizeType<dim_t>(const SizeType<dim_t>&) = default;
+    SizeType<dim_t>(SizeType<dim_t>&&) = default;
+    SizeType<dim_t>& operator=(const SizeType<dim_t>&) = default;
+    SizeType<dim_t>& operator=(SizeType<dim_t>&&) = default;
+    ~SizeType<dim_t>() = default;
 
     /**
      * Returns true if the size has no width or height.
@@ -312,6 +324,12 @@ public:
         assert(w >= 0);
         assert(h >= 0);
     }
+
+    RectType<dim_t>(const RectType<dim_t>&) = default;
+    RectType<dim_t>(RectType<dim_t>&&) = default;
+    RectType<dim_t>& operator=(const RectType<dim_t>&) = default;
+    RectType<dim_t>& operator=(RectType<dim_t>&&) = default;
+    ~RectType<dim_t>() = default;
 
     RectType<dim_t>& operator+=(const SizeType<dim_t>& rhs)
     {

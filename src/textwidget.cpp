@@ -23,6 +23,47 @@ TextWidget::TextWidget(const std::string& text, const Rect& rect,
     set_font(font);
 }
 
+TextWidget::TextWidget(const TextWidget& rhs) noexcept
+    : Widget(rhs),
+      m_text_align(rhs.m_text_align),
+      m_text(rhs.m_text)
+{
+    if (rhs.m_font)
+        m_font.reset(new Font(*rhs.m_font.get()));
+}
+
+TextWidget::TextWidget(TextWidget&& rhs) noexcept
+    : Widget(std::move(rhs)),
+      m_text_align(std::move(rhs.m_text_align)),
+      m_text(std::move(rhs.m_text))
+{
+    //cout << __PRETTY_FUNCTION__ << endl;
+
+    if (rhs.m_font)
+        m_font.reset(rhs.m_font.release());
+}
+
+TextWidget& TextWidget::operator=(const TextWidget& rhs) noexcept
+{
+    Widget::operator=(rhs);
+    if (rhs.m_font)
+        m_font.reset(new Font(*rhs.m_font.get()));
+
+    return *this;
+}
+
+TextWidget& TextWidget::operator=(TextWidget&& rhs) noexcept
+{
+    //cout << __PRETTY_FUNCTION__ << endl;
+
+    Widget::operator=(std::move(rhs));
+
+    if (rhs.m_font)
+        m_font.reset(rhs.m_font.release());
+
+    return *this;
+}
+
 void TextWidget::clear()
 {
     if (!m_text.empty())
@@ -67,14 +108,14 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
     return nfont;
 }
 
-Size TextWidget::text_size()
+Size TextWidget::text_size(const std::string& text)
 {
     if (m_parent)
     {
         Canvas canvas(Size(100, 100));
         Painter painter(canvas.context());
         painter.set_font(font());
-        return painter.text_size(m_text);
+        return painter.text_size(text);
     }
 
     return Size();

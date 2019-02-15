@@ -21,6 +21,12 @@ public:
           m_yspeed(yspeed)
     {}
 
+    Ball(const Ball&) = default;
+    Ball(Ball&&) = default;
+    Ball& operator=(const Ball&) = default;
+    Ball& operator=(Ball&&) = default;
+    virtual ~Ball() = default;
+
     bool animate()
     {
         bool visible = Rect::intersect(parent()->box(), box());
@@ -36,6 +42,9 @@ public:
     }
 
 private:
+
+    Ball() = delete;
+
     int m_xspeed;
     int m_yspeed;
 };
@@ -99,29 +108,28 @@ public:
 
     void spawn(const Point& p)
     {
-        int xspeed = speed_dist(e1);
-        int yspeed = speed_dist(e1);
-        float scale = size_dist(e1);
+        auto xspeed = speed_dist(e1);
+        auto yspeed = speed_dist(e1);
+        auto scale = size_dist(e1);
 
         // has to move at some speed
         if (xspeed == 0 && yspeed == 0)
             xspeed = yspeed = 1;
 
-        Ball* image = new Ball(xspeed, yspeed);
+        m_images.emplace_back(xspeed, yspeed);
+        auto& image = m_images.back();
         add(image);
-        image->scale_image(scale, true);
-        image->move_to_center(p);
-        m_images.push_back(image);
+        image.scale_image(scale, true);
+        image.move_to_center(p);
     }
 
     void animate()
     {
         for (auto x = m_images.begin(); x != m_images.end();)
         {
-            if (!(*x)->animate())
+            auto& image = *x;
+            if (!image.animate())
             {
-                remove(*x);
-                delete *x;
                 x = m_images.erase(x);
             }
             else
@@ -132,12 +140,12 @@ public:
     }
 
 private:
+    vector<Ball> m_images;
+
     std::random_device r;
     std::default_random_engine e1 {r()};
     std::uniform_int_distribution<int> speed_dist {-20, 20};
     std::uniform_real_distribution<float> size_dist {0.1, 1.0};
-
-    vector<Ball*> m_images;
 };
 
 int main(int argc, const char** argv)

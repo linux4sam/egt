@@ -357,7 +357,6 @@ struct ListPage : public NotebookTab
         list0->set_align(alignmask::EXPAND_VERTICAL | alignmask::LEFT);
         hsizer1->add(list0);
 
-
         auto list1 = new ListBox(Rect(0, 0, 200, 300));
         for (auto x = 0; x < 5; x++)
             list1->add_item(new StringItem("item " + std::to_string(x)));

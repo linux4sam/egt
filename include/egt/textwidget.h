@@ -12,6 +12,7 @@
  */
 
 #include <egt/widget.h>
+#include <string>
 
 namespace egt
 {
@@ -33,6 +34,14 @@ public:
                         alignmask align = alignmask::CENTER,
                         const Font& font = Font(),
                         const widgetflags& flags = widgetflags()) noexcept;
+
+    TextWidget(const TextWidget& rhs) noexcept;
+
+    TextWidget(TextWidget&& rhs) noexcept;
+
+    TextWidget& operator=(const TextWidget& rhs) noexcept;
+
+    TextWidget& operator=(TextWidget&& rhs) noexcept;
 
     /**
      * Set the text of the label.
@@ -97,8 +106,7 @@ public:
         damage();
     }
 
-    virtual ~TextWidget()
-    {}
+    virtual ~TextWidget() = default;
 
     /**
      * Given a Font, text, and a target Size, scale the font size so that
@@ -108,9 +116,16 @@ public:
 
 protected:
 
-    Size text_size();
+    /**
+     * Get the size of the text.
+     */
+    Size text_size(const std::string& text);
 
     alignmask m_text_align{alignmask::CENTER};
+
+    /**
+     * The text.
+     */
     std::string m_text;
 
 private:

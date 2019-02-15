@@ -40,6 +40,11 @@ public:
 
     explicit Image(cairo_surface_t* surface);
 
+    Image(const Image&) = default;
+    Image(Image&&) = default;
+    Image& operator=(const Image&) = default;
+    Image& operator=(Image&&) = default;
+
     /**
      * Scale the image.
      *
@@ -107,7 +112,7 @@ public:
      */
     virtual void copy();
 
-    virtual ~Image();
+    virtual ~Image() = default;
 
 protected:
 

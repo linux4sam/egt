@@ -128,7 +128,7 @@ void Button::first_resize()
     {
         if (!m_text.empty())
         {
-            auto s = text_size();
+            auto s = text_size(m_text);
             s += Size(10, 10);
             resize(s);
         }
@@ -201,7 +201,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
     if (!widget.text().empty())
     {
-        auto text_size = widget.text_size();
+        auto text_size = widget.text_size(widget.text());
 
         Rect tbox;
         Rect ibox;
@@ -237,7 +237,7 @@ void ImageButton::first_resize()
     {
         if (!m_text.empty())
         {
-            auto text_size = this->text_size();
+            auto text_size = this->text_size(m_text);
 
             Rect tbox;
             Rect ibox;

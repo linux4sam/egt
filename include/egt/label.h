@@ -59,6 +59,11 @@ public:
                    const Font& font = Font(),
                    const widgetflags& flags = widgetflags()) noexcept;
 
+    Label(const Label&) = default;
+    Label(Label&&) = default;
+    Label& operator=(const Label&) = default;
+    Label& operator=(Label&&) = default;
+
     /**
      * Set the text of the label.
      */
@@ -68,7 +73,7 @@ public:
 
     static void default_draw(Label& widget, Painter& painter, const Rect& rect);
 
-    virtual ~Label();
+    virtual ~Label() = default;
 
 protected:
 
@@ -96,21 +101,29 @@ public:
     ImageLabel(const Image& image,
                const std::string& text = std::string(),
                const Rect& rect = Rect(),
-               const Font& font = Font());
+               const Font& font = Font()) noexcept;
 
     ImageLabel(const Image& image,
                const std::string& text,
                const Point& point,
-               const Font& font = Font());
+               const Font& font = Font()) noexcept;
 
     ImageLabel(const Image& image,
-               const Point& point);
+               const Point& point) noexcept;
 
     ImageLabel(Frame& parent,
                const Image& image,
                const std::string& text = std::string(),
                const Rect& rect = Rect(),
-               const Font& font = Font());
+               const Font& font = Font()) noexcept;
+
+    ImageLabel(const ImageLabel& rhs) noexcept;
+
+    ImageLabel(ImageLabel&& rhs) noexcept;
+
+    ImageLabel& operator=(const ImageLabel& rhs) noexcept;
+
+    ImageLabel& operator=(ImageLabel&& rhs) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -161,7 +174,7 @@ public:
         }
     }
 
-    virtual ~ImageLabel();
+    virtual ~ImageLabel() = default;
 
 protected:
     virtual void first_resize() override;

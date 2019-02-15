@@ -68,6 +68,14 @@ public:
     Widget(Frame& parent, const Rect& rect = Rect(),
            const widgetflags& flags = widgetflags()) noexcept;
 
+    Widget(const Widget& rhs) noexcept;
+
+    Widget(Widget&& rhs) noexcept;
+
+    Widget& operator=(const Widget& rhs) noexcept;
+
+    Widget& operator=(Widget&& rhs) noexcept;
+
     /**
      * Draw the widget.
      *
@@ -477,8 +485,9 @@ public:
 
     virtual void zorder_up();
 
-    virtual ~Widget();
+    void detatch();
 
+    virtual ~Widget() noexcept;
 
 protected:
 
@@ -555,9 +564,6 @@ private:
      * functions because this is not set until it is modified.
      */
     std::unique_ptr<Theme> m_theme;
-
-    Widget(const Widget&) = delete;
-    Widget& operator=(const Widget&) = delete;
 
     friend class Frame;
 };

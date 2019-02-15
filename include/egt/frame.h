@@ -316,6 +316,9 @@ protected:
      * The damage array for this frame.
      */
     IScreen::damage_array m_damage;
+
+    Frame(const Frame&) = delete;
+    Frame& operator=(const Frame&) = delete;
 };
 
 }

@@ -85,7 +85,7 @@ void Label::first_resize()
     {
         if (!m_text.empty())
         {
-            auto s = text_size();
+            auto s = text_size(m_text);
             s += Size(5, 5);
             resize(s);
         }
@@ -96,13 +96,10 @@ void Label::first_resize()
     }
 }
 
-Label::~Label()
-{}
-
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       const Font& font)
+                       const Font& font) noexcept
     : Label(text, rect, alignmask::RIGHT | alignmask::CENTER, font),
       m_image(image)
 {
@@ -118,7 +115,7 @@ ImageLabel::ImageLabel(const Image& image,
 }
 
 ImageLabel::ImageLabel(const Image& image,
-                       const Point& point)
+                       const Point& point) noexcept
     : ImageLabel(image, "", Rect(point, Size(0, 0)), Font())
 {
 }
@@ -126,7 +123,7 @@ ImageLabel::ImageLabel(const Image& image,
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
                        const Point& point,
-                       const Font& font)
+                       const Font& font) noexcept
     : ImageLabel(image, text, Rect(point, Size(0, 0)), font)
 {
 }
@@ -135,10 +132,57 @@ ImageLabel::ImageLabel(Frame& parent,
                        const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       const Font& font)
+                       const Font& font) noexcept
     : ImageLabel(image, text, rect, font)
 {
     parent.add(this);
+}
+
+ImageLabel::ImageLabel(const ImageLabel& rhs) noexcept
+    : Label(rhs),
+      m_image(rhs.m_image),
+      m_show_label(rhs.m_show_label),
+      m_image_align(rhs.m_image_align),
+      m_position_image_first(rhs.m_position_image_first)
+
+{
+
+}
+
+ImageLabel::ImageLabel(ImageLabel&& rhs) noexcept
+    : Label(std::move(rhs)),
+      m_image(std::move(rhs.m_image)),
+      m_show_label(std::move(rhs.m_show_label)),
+      m_image_align(std::move(rhs.m_image_align)),
+      m_position_image_first(std::move(rhs.m_position_image_first))
+{
+    //cout << __PRETTY_FUNCTION__ << endl;
+}
+
+ImageLabel& ImageLabel::operator=(const ImageLabel& rhs) noexcept
+{
+    Label::operator=(rhs);
+
+    m_image = rhs.m_image;
+    m_show_label = rhs.m_show_label;
+    m_image_align = rhs.m_image_align;
+    m_position_image_first = rhs.m_position_image_first;
+
+    return *this;
+}
+
+ImageLabel& ImageLabel::operator=(ImageLabel&& rhs) noexcept
+{
+    //cout << __PRETTY_FUNCTION__ << endl;
+
+    Label::operator=(std::move(rhs));
+
+    m_image = std::move(rhs.m_image);
+    m_show_label = std::move(rhs.m_show_label);
+    m_image_align = std::move(rhs.m_image_align);
+    m_position_image_first = std::move(rhs.m_position_image_first);
+
+    return *this;
 }
 
 void ImageLabel::scale_image(double hscale, double vscale,
@@ -185,7 +229,7 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
     if (!widget.text().empty())
     {
-        auto text_size = widget.text_size();
+        auto text_size = widget.text_size(widget.text());
 
         Rect tbox;
         Rect ibox;
@@ -239,17 +283,13 @@ void ImageLabel::label_enabled(bool value)
     }
 }
 
-ImageLabel::~ImageLabel()
-{
-}
-
 void ImageLabel::first_resize()
 {
     if (box().size().empty())
     {
         if (!m_text.empty())
         {
-            auto text_size = this->text_size();
+            auto text_size = this->text_size(m_text);
 
             Rect tbox;
             Rect ibox;

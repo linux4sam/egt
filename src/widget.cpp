@@ -147,6 +147,94 @@ Widget::Widget(Frame& parent, const Rect& rect, const widgetflags& flags) noexce
     parent.add(this);
 }
 
+Widget::Widget(const Widget& rhs) noexcept
+    : m_box(rhs.m_box),
+      m_widgetid(global_widget_id++),
+      m_flags(rhs.m_flags),
+      m_align(rhs.m_align),
+      m_margin(rhs.m_margin),
+      m_boxtype(rhs.m_boxtype)
+{
+    /// @todo Handle m_focus
+
+    set_name("Widget" + std::to_string(m_widgetid));
+
+    if (rhs.m_palette)
+        m_palette.reset(new Palette(*rhs.m_palette.get()));
+    if (rhs.m_theme)
+        m_theme.reset(new Theme(*rhs.m_theme.get()));
+
+    if (rhs.m_parent)
+        rhs.m_parent->add(this);
+}
+
+Widget::Widget(Widget&& rhs) noexcept
+    : m_box(std::move(rhs.m_box)),
+      m_widgetid(std::move(rhs.m_widgetid)),
+      m_flags(std::move(rhs.m_flags)),
+      m_palette(std::move(rhs.m_palette)),
+      m_name(std::move(rhs.m_name)),
+      m_align(std::move(rhs.m_align)),
+      m_margin(std::move(rhs.m_margin)),
+      m_boxtype(std::move(rhs.m_boxtype)),
+      m_theme(std::move(rhs.m_theme))
+{
+    /// @todo Handle m_focus
+
+    if (rhs.m_palette)
+        m_palette.reset(rhs.m_palette.release());
+    if (rhs.m_theme)
+        m_theme.reset(rhs.m_theme.release());
+
+    if (rhs.m_parent)
+        rhs.m_parent->add(this);
+}
+
+Widget& Widget::operator=(const Widget& rhs) noexcept
+{
+    detatch();
+
+    m_box = rhs.m_box;
+    m_flags = rhs.m_flags;
+    m_align = rhs.m_align;
+    m_margin = rhs.m_margin;
+    m_boxtype = rhs.m_boxtype;
+
+    /// @todo Handle m_focus
+
+    if (rhs.m_palette)
+        m_palette.reset(new Palette(*rhs.m_palette.get()));
+    if (rhs.m_theme)
+        m_theme.reset(new Theme(*rhs.m_theme.get()));
+
+    if (rhs.m_parent)
+        rhs.m_parent->add(this);
+
+    return *this;
+}
+
+Widget& Widget::operator=(Widget&& rhs) noexcept
+{
+    detatch();
+
+    m_box = std::move(rhs.m_box);
+    m_widgetid = std::move(rhs.m_widgetid);
+    m_flags = std::move(rhs.m_flags);
+    m_palette = std::move(rhs.m_palette);
+    m_name = std::move(rhs.m_name);
+    m_align = std::move(rhs.m_align);
+    m_margin = std::move(rhs.m_margin);
+    m_boxtype = std::move(rhs.m_boxtype);
+    m_theme = std::move(rhs.m_theme);
+
+    /// @todo Handle m_focus
+
+    if (rhs.m_parent)
+        rhs.m_parent->add(this);
+
+    return *this;
+}
+
 int Widget::handle(eventid event)
 {
     DBG(name() << " handle: " << event);
@@ -531,10 +619,18 @@ void Widget::zorder_up()
         m_parent->zorder_up(this);
 }
 
-Widget::~Widget()
+void Widget::detatch()
 {
     if (m_parent)
+    {
         m_parent->remove(this);
+        m_parent = nullptr;
+    }
+}
+
+Widget::~Widget() noexcept
+{
+    detatch();
 }
 
 }
