@@ -169,7 +169,7 @@ void Application::dump(std::ostream& out)
     for (auto& w : windows())
     {
         // draw top level frames and plane frames
-        if (w->top_level() || w->is_flag_set(widgetflag::PLANE_WINDOW))
+        if (w->top_level())
             w->dump(out);
     }
 }
