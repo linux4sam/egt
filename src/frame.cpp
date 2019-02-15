@@ -118,8 +118,6 @@ int Frame::handle(eventid event)
 
                 if (ret)
                     return ret;
-
-                break;
             }
         }
 
