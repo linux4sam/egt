@@ -92,6 +92,11 @@ namespace detail
 {
 detail::MouseGesture* IInput::m_mouse = nullptr;
 
+/**
+ * @todo No mouse positions should be allowed off the screen box().  This is
+ * possible with some input devices currentl and we need to limit.  Be careful
+ * not to drop events (like pointer up) when correcting.
+ */
 void IInput::dispatch(eventid event)
 {
     // hack
