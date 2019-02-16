@@ -39,7 +39,9 @@ public:
 
         if (!title.empty())
         {
-            auto label = new Label(caption);
+            auto label = make_shared<Label>(caption);
+            m_store.push_back(label);
+
             label->set_align(alignmask::EXPAND_HORIZONTAL);
             m_vsizer.add(label);
         }
@@ -47,7 +49,9 @@ public:
 
     void add_group(const std::string& caption)
     {
-        auto label = new Label(caption);
+        auto label = make_shared<Label>(caption);
+        m_store.push_back(label);
+
         label->font().size(label->font().size() + 5);
         label->font().weight(weightid::BOLD);
         label->set_align(alignmask::EXPAND);
@@ -58,9 +62,12 @@ public:
     {
         widget->set_align(alignmask::EXPAND);
 
+        auto label = make_shared<Label>(name);
+        m_store.push_back(label);
+
         auto grid = new StaticGrid(Rect(Point(), Size(0, 50), 1, 2);
                                    grid->set_align(alignmask::EXPAND_HORIZONTAL);
-                                   grid->add(new Label(name));
+                                   grid->add(label);
                                    grid->add(widget);
                                    m_vsizer.add(grid);
     }
@@ -74,6 +81,7 @@ public:
 protected:
 
     BoxSizer m_vsizer;
+    std::vector<std::shared_ptr<Widget>> m_store;
 };
 
 }
