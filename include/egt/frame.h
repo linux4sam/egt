@@ -79,7 +79,25 @@ public:
      * The z-order of a widget is based on the order it is added.  First in
      * is bottom.
      */
-    virtual Widget& add(Widget& widget);
+    Widget& add(Widget& widget)
+    {
+        add(&widget);
+        return widget;
+    }
+
+    template<class T>
+    Widget& add(std::shared_ptr<T>& widget)
+    {
+        add(widget.get());
+        return *widget;
+    }
+
+    template<class T>
+    Widget& add(std::unique_ptr<T>& widget)
+    {
+        add(widget.get());
+        return *widget;
+    }
 
     /**
      * Remove a child widget.
@@ -277,6 +295,7 @@ public:
     }
 
     virtual ~Frame();
+
 protected:
 
     bool child_hit_test(const Point& point)
@@ -298,8 +317,6 @@ protected:
         return false;
     }
 
-    using children_array = std::deque<Widget*>;
-
     //TODO
 public:
     /**
@@ -307,6 +324,9 @@ public:
      */
     virtual void add_damage(const Rect& rect);
 protected:
+
+    using children_array = std::deque<Widget*>;
+
     /**
      * Array of child widgets in the order they were added.
      */

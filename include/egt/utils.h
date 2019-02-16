@@ -11,13 +11,14 @@
  * @brief Working with basic utilities.
  */
 
+#include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
-#include <chrono>
 
 #ifdef DEBUG
 #define DBG(x) do { std::cout << x << std::endl; } while (0)
@@ -47,6 +48,12 @@ inline namespace v1
 template <typename T>
 void ignoreparam(T&&)
 {}
+
+template<typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&& ... args)
+{
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
 
 namespace detail
 {

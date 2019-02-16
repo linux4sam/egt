@@ -35,7 +35,6 @@ Frame::Frame(Frame& parent, const Rect& rect, const widgetflags& flags)
 
 Widget* Frame::add(Widget* widget)
 {
-    assert(widget);
     if (!widget)
         return nullptr;
 
@@ -47,12 +46,6 @@ Widget* Frame::add(Widget* widget)
         widget->set_align(widget->align(), widget->margin());
     }
 
-    return widget;
-}
-
-Widget& Frame::add(Widget& widget)
-{
-    add(&widget);
     return widget;
 }
 
@@ -115,7 +108,6 @@ int Frame::handle(eventid event)
             if (Rect::point_inside(pos, child->box()))
             {
                 auto ret = child->handle(event);
-
                 if (ret)
                     return ret;
             }

@@ -63,23 +63,23 @@ public:
     {
         set_boxtype(Theme::boxtype::none);
 
-        auto img = new ImageLabel(Image("water.png"));
-        add(img);
-        if (img->h() != h())
+        m_background = make_unique<ImageLabel>(Image("water.png"));
+        add(m_background);
+        if (m_background->h() != h())
         {
-            double scale = (double)h() / (double)img->h();
-            img->scale_image(scale);
+            double scale = (double)h() / (double)m_background->h();
+            m_background->scale_image(scale);
         }
 
-        m_label = new Label("Objects: 0",
-                            Rect(Point(10, 10),
-                                 Size(150, 40)),
-                            alignmask::LEFT | alignmask::CENTER);
+        m_label = make_unique<Label>("Objects: 0",
+                                     Rect(Point(10, 10),
+                                          Size(150, 40)),
+                                     alignmask::LEFT | alignmask::CENTER);
         m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
         .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
         add(m_label);
 
-        m_sprite = new Sprite(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
+        m_sprite = make_unique<Sprite>(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
         add(m_sprite);
         m_sprite->show();
     }
@@ -100,14 +100,9 @@ public:
 
     void spawn(const Point& p)
     {
-        static std::uniform_int_distribution<int> speed_dist(-20, -1);
         int xspeed = 0;
         int yspeed = speed_dist(e1);
-
-        static std::uniform_int_distribution<int> offset_dist(-20, 20);
         int offset = offset_dist(e1);
-
-        static std::uniform_real_distribution<float> size_dist(0.1, 1.0);
         float size = size_dist(e1);
 
         // has to move at some speed
@@ -148,12 +143,16 @@ public:
     }
 
     vector<Bubble> m_images;
+    unique_ptr<ImageLabel> m_background;
+    unique_ptr<Label> m_label;
+    unique_ptr<Sprite> m_sprite;
+
     std::random_device r;
     std::default_random_engine e1;
-    Label* m_label;
-    Sprite* m_sprite;
+    std::uniform_int_distribution<int> speed_dist{-20, -1};
+    std::uniform_int_distribution<int> offset_dist{-20, 20};
+    std::uniform_real_distribution<float> size_dist{0.1, 1.0};
 };
-
 
 int main(int argc, const char** argv)
 {
@@ -179,7 +178,7 @@ int main(int argc, const char** argv)
     sprites.push_back(&sprite2);
 #endif
 
-    sprites.push_back(win.m_sprite);
+    sprites.push_back(win.m_sprite.get());
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(30));
     animatetimer.on_timeout([&win]()
