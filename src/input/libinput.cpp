@@ -553,7 +553,7 @@ void LibInput::handle_read(const asio::error_code& error)
         dispatch(eventid::RAW_POINTER_MOVE);
 
     asio::async_read(m_input, asio::null_buffers(),
-                     std::bind(&LibInput::handle_read, this, std::placeholders::_1));
+                     main_app().event().queue().wrap(detail::priorities::moderate, std::bind(&LibInput::handle_read, this, std::placeholders::_1)));
 }
 
 LibInput::~LibInput()

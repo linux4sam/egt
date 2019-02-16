@@ -178,7 +178,7 @@ void InputTslib::handle_read(const asio::error_code& error)
     }
 
     asio::async_read(m_input, asio::null_buffers(),
-                     std::bind(&InputTslib::handle_read, this, std::placeholders::_1));
+                     main_app().event().queue().wrap(detail::priorities::moderate, std::bind(&InputTslib::handle_read, this, std::placeholders::_1)));
 }
 
 InputTslib::~InputTslib()

@@ -45,16 +45,22 @@ asio::io_context& EventLoop::io()
 
 int EventLoop::wait()
 {
-    int ret;
+    int ret = 0;
 
     experimental::code_timer(false, "wait: ", [&]()
     {
-        //ret = m_impl->m_io.run_one();
-        ret = m_impl->m_io.run_one_for(std::chrono::milliseconds(30));
+        ret = m_impl->m_io.run_one();
         if (ret)
-            ret += m_impl->m_io.run_for(std::chrono::milliseconds(10));
-        //ret = m_impl->m_io.run_for(std::chrono::milliseconds(10));
-        //ret = m_impl->m_io.poll();
+        {
+            // hmm, libinput async_read will always return something on poll_one()
+            // until we have satisfied the handler, so we have to give up at
+            // some point
+            int count = 10;
+            while (m_impl->m_io.poll_one() && count--)
+                ;
+
+            m_queue.execute_all();
+        }
     });
 
     if (!ret)

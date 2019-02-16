@@ -11,9 +11,10 @@
  * @brief Working with event loops.
  */
 
+#include <egt/detail/priorityqueue.h>
+#include <egt/utils.h>
 #include <functional>
 #include <memory>
-#include <egt/utils.h>
 #include <vector>
 
 namespace asio
@@ -76,6 +77,8 @@ public:
      */
     void add_idle_callback(event_callback func);
 
+    inline detail::handler_priority_queue& queue() { return m_queue; }
+
     virtual ~EventLoop();
 
 protected:
@@ -86,7 +89,10 @@ protected:
     std::unique_ptr<detail::eventloopimpl> m_impl;
 
     std::vector<event_callback> m_idle;
+
+    detail::handler_priority_queue m_queue;
 };
+
 
 }
 }
