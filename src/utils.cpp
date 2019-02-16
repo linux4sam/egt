@@ -8,7 +8,6 @@
 #endif
 
 #include "egt/utils.h"
-#include <chrono>
 #include <cstring>
 #include <glob.h>
 #include <libgen.h>
@@ -124,21 +123,6 @@ std::vector<std::string> glob(const std::string& pattern)
     globfree(&glob_result);
 
     return filenames;
-}
-
-void code_timer(bool enable, const std::string& prefix, std::function<void ()> callback)
-{
-    auto start = chrono::steady_clock::now();
-
-    callback();
-
-    if (enable)
-    {
-        auto end = chrono::steady_clock::now();
-        auto diff = end - start;
-
-        cout << prefix << chrono::duration<double, milli>(diff).count() << endl;
-    }
 }
 
 }

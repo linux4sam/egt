@@ -180,7 +180,32 @@ protected:
     bool m_ready{false};
 };
 
-void code_timer(bool enable, const std::string& prefix, std::function<void ()> callback);
+#ifdef NDEBUG
+inline void code_timer(bool, const std::string&, std::function<void ()> callback)
+{
+    callback();
+}
+#else
+inline void code_timer(bool enable, const std::string& prefix, std::function<void ()> callback)
+{
+    if (enable)
+    {
+        auto start = std::chrono::steady_clock::now();
+
+        callback();
+
+        auto end = std::chrono::steady_clock::now();
+        auto diff = end - start;
+
+        std::cout << prefix <<
+                  std::chrono::duration<double, std::milli>(diff).count() << std::endl;
+    }
+    else
+    {
+        callback();
+    }
+}
+#endif
 
 }
 
