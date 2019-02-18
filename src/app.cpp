@@ -36,6 +36,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 static Application* the_app = nullptr;
 Application& main_app()
 {
@@ -49,6 +50,9 @@ Application::Application(int argc, const char** argv, const std::string& name, b
       m_signals(event().io(), SIGUSR1, SIGUSR2)
 {
     INFO("EGT Version " << EGT_VERSION);
+
+    if (the_app)
+        throw std::runtime_error("Already an Application instance created.");
 
     the_app = this;
 
@@ -174,10 +178,6 @@ void Application::dump(std::ostream& out)
         if (w->top_level())
             w->dump(out);
     }
-}
-
-Application::~Application()
-{
 }
 
 }

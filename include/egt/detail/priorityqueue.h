@@ -11,14 +11,9 @@
 #ifndef EGT_PRIORITYQUEUE_H
 #define EGT_PRIORITYQUEUE_H
 
-/**
- * @file
- * @brief Event loop priority queue.
- */
-
+#include <asio.hpp>
 #include <functional>
 #include <queue>
-#include <asio.hpp>
 
 namespace egt
 {

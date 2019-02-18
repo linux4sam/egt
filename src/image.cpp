@@ -11,6 +11,8 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
 
 Image::Image(const std::string& filename,
              double hscale, double vscale)
@@ -69,4 +71,5 @@ void Image::copy()
     }
 }
 
+}
 }

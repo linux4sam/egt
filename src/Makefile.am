@@ -37,7 +37,9 @@ chart.cpp \
 checkbox.cpp \
 color.cpp \
 combo.cpp \
+detail/alignment.cpp \
 detail/basicwindow.cpp \
+detail/collision.cpp \
 detail/mousegesture.cpp \
 detail/windowimpl.cpp \
 eventloop.cpp \
@@ -127,7 +129,9 @@ $(top_srcdir)/include/egt/chart.h \
 $(top_srcdir)/include/egt/checkbox.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/combo.h \
+$(top_srcdir)/include/egt/detail/alignment.h \
 $(top_srcdir)/include/egt/detail/basicwindow.h \
+$(top_srcdir)/include/egt/detail/collision.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
 $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \

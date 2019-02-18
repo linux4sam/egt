@@ -11,6 +11,7 @@
  * @brief Working with sizers.
  */
 
+#include "egt/detail/alignment.h"
 #include <egt/frame.h>
 #include <sstream>
 
@@ -19,6 +20,9 @@ namespace egt
 inline namespace v1
 {
 
+/**
+ * A sizer that positions and sizes child widgets in a horizontal or vertical path.
+ */
 class BoxSizer : public Frame
 {
 public:
@@ -231,6 +235,84 @@ public:
 protected:
     int m_spacing{0};
     orientation m_orient{orientation::HORIZONTAL};
+};
+
+/**
+ * A positioner that will organize widgets in a horizontal row.
+ */
+class HorizontalPositioner : public Frame
+{
+public:
+
+    HorizontalPositioner(const Rect& rect,
+                         int spacing = 0, alignmask align = alignmask::CENTER)
+        : Frame(rect),
+          m_spacing(spacing),
+          m_align(align)
+    {
+        set_boxtype(Theme::boxtype::none);
+    }
+
+    virtual void move(const Point& point) override
+    {
+        Frame::move(point);
+        reposition();
+    }
+
+    virtual void resize(const Size& size) override
+    {
+        Frame::resize(size);
+        reposition();
+    }
+
+    /**
+     * Reposition all child widgets.
+     */
+    virtual void reposition()
+    {
+        // align everything in center
+        default_dim_type width = 0;
+        for (auto& child : m_children)
+            width += child->w() + m_spacing;
+
+        default_dim_type offset = w() / 2 - width / 2;
+        for (auto& child : m_children)
+        {
+            if (child)
+            {
+                Point p;
+                if ((m_align & alignmask::CENTER) == alignmask::CENTER)
+                {
+                    p.y = y() + (h() / 2) - (child->h() / 2);
+                }
+
+                if ((m_align & alignmask::TOP) == alignmask::TOP)
+                    p.y = y();
+                else if ((m_align & alignmask::BOTTOM) == alignmask::BOTTOM)
+                    p.y = y() + h() - child->h();
+
+                child->move(Point(x() + offset + m_spacing, p.y));
+                offset += (child->w() + m_spacing);
+            }
+        }
+
+        damage();
+    }
+
+    virtual ~HorizontalPositioner()
+    {}
+
+protected:
+
+    /**
+     * The spacing to use between widgets.
+     */
+    int m_spacing{0};
+
+    /**
+     * The align mask to control how children widgets are positioned.
+     */
+    alignmask m_align{alignmask::NONE};
 };
 
 }

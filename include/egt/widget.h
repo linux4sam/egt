@@ -426,7 +426,6 @@ public:
      * this point relative to the origin of the display.
      */
     virtual DisplayPoint to_display(const Point& p);
-    virtual DisplayPoint to_display_back(const Point& p);
 
     /**
      * Convert a display point to a local point.
@@ -435,7 +434,6 @@ public:
      * get a point relative to the widget's own box.
      */
     virtual Point from_display(const DisplayPoint& p);
-    virtual Point from_display_back(const DisplayPoint& p);
 
     /**
      * Called when the widget gains focus.
@@ -482,18 +480,35 @@ public:
      */
     void draw_box(Painter& painter, const Rect& rect = Rect());
 
+    /**
+     * Move this widgets zorder down relative to other widgets with the same
+     * parent.
+     */
     virtual void zorder_down();
 
+    /**
+     * Move this widgets zorder uprelative to other widgets with the same
+     * parent.
+     */
     virtual void zorder_up();
 
+    /**
+     * Detatch this widget from its parent.
+     */
     void detatch();
 
     virtual ~Widget() noexcept;
 
 protected:
 
+    /**
+     * Is this widget a top level widget?
+     */
     virtual bool top_level() const { return false; }
 
+    /**
+     * Set this widget's parent.
+     */
     virtual void set_parent(Frame* parent)
     {
         // cannot already have a parent
@@ -522,6 +537,9 @@ protected:
     int m_widgetid{0};
 
 private:
+
+    DisplayPoint to_display_back(const Point& p);
+    Point from_display_back(const DisplayPoint& p);
 
     /**
      * Flags for the widget.
@@ -556,6 +574,9 @@ private:
      */
     bool m_focus{false};
 
+    /**
+     * The boxtype of the widget.
+     */
     Theme::boxtype m_boxtype{Theme::boxtype::none};
 
     /**
@@ -568,29 +589,6 @@ private:
 
     friend class Frame;
 };
-
-namespace detail
-{
-
-/**
- * Given an item size, and a bounding box, and an alignment parameter,
- * return the rectangle the item box should be move/resized to.
- */
-Rect align_algorithm(const Size& size, const Rect& bounding,
-                     alignmask align, int margin = 0);
-
-/**
- * This is used for aligning two rectangles in a single widget.  For example,
- * a widget that has both text and an image.  The first rectangle is aligned
- * to the main rectangle.  The second rectangle is aligned relative to the
- * first rectangle.
- */
-void double_align(const Rect& main,
-                  const Size& fsize, alignmask first_align, Rect& first,
-                  const Size& ssize, alignmask second_align, Rect& second,
-                  int margin = 0);
-
-}
 
 }
 }

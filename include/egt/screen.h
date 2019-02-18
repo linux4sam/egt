@@ -62,6 +62,10 @@ pixel_format egt_format(cairo_format_t format);
 class Screen
 {
 public:
+
+    /**
+     * Type used for damage arrays.
+     */
     using damage_array = std::deque<Rect>;
 
     Screen();

@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page colors Palette and Colors
@@ -6,17 +7,17 @@ This chapter discusses how to to use colors and palettes.
 
 @section colors_classes Color and Palette Classes
 
-egt::Color and egt::Palette are used for managing colors and palettes of colors.
+Color and Palette are used for managing colors and palettes of colors.
 
 @section colors_global The Global Palette
 
 There is a single global palette accessible directly with the function
-egt::global_palette().  All widgets use this palette by default and
+global_palette().  All widgets use this palette by default and
 before creating widgets, this palette can be changed.
 
 However, you can also change the palette for any individual widget and it will
 only have an affect for that widget. The local palette for a widget is
-accessible with the egt::Widget::palette() function.
+accessible with the Widget::palette() function.
 
 If you change the global palette, it will retroactively have an effect on any
 widget, as long as that widget does not have a custom palette assigned.  In
@@ -37,3 +38,4 @@ or changed in several ways.
    widget type, with a new default draw function.
 
 */
+}}

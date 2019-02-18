@@ -20,9 +20,9 @@ namespace detail
  * Normalize a value, given its min and max, to a different target min and
  * max.
  *
- * @param value The value between @min and @max.
- * @param min The minimum @value.
- * @param max The maximum @value.
+ * @param value The value between min and max.
+ * @param min The minimum value.
+ * @param max The maximum value.
  * @param target_min The minimum of the range of your desired target scaling.
  * @param target_max The maximum of the range of your desired target scaling.
  *

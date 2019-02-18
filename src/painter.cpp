@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/alignment.h"
 #include "egt/image.h"
 #include "egt/painter.h"
 #include "egt/widget.h"
@@ -12,25 +13,10 @@ namespace egt
 {
 inline namespace v1
 {
+
 Painter::Painter(shared_cairo_t cr)
     : m_cr(cr)
 {
-    //begin();
-}
-
-Painter::~Painter()
-{
-    //end();
-}
-
-void Painter::begin()
-{
-
-}
-
-void Painter::end()
-{
-
 }
 
 void Painter::save()
@@ -342,58 +328,6 @@ void Painter::paint_surface_with_drop_shadow(cairo_surface_t* source_surface,
     /* Paint the image itself to cr. */
     cairo_set_source_surface(m_cr.get(), source_surface, dstx, dsty);
     cairo_paint(m_cr.get());
-}
-
-bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
-                     const Rect& rhs, shared_cairo_surface_t rimage)
-{
-    if (Rect::intersect(lhs, rhs))
-    {
-        unsigned int* ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
-        unsigned int* rdata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(rimage.get()));
-
-        Rect i = Rect::intersection(lhs, rhs);
-
-        for (int y = i.top(); y < i.bottom(); y++)
-        {
-            for (int x = i.left(); x < i.right(); x++)
-            {
-                unsigned int l = ldata[static_cast<uint32_t>((x - lhs.left()) + (y - lhs.top()) * lhs.w)];
-                unsigned int r = rdata[static_cast<uint32_t>((x - rhs.left()) + (y - rhs.top()) * rhs.w)];
-
-                if ((l >> 24 & 0xff) && (r >> 24 & 0xff))
-                {
-                    return true;
-                }
-            }
-        }
-    }
-
-    return false;
-}
-
-bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
-                     const Point& rhs)
-{
-    if (Rect::intersect(lhs, rhs))
-    {
-        unsigned int* ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
-
-        for (int y = lhs.top(); y < lhs.bottom(); y++)
-        {
-            for (int x = lhs.left(); x < lhs.right(); x++)
-            {
-                uint32_t l = ldata[static_cast<uint32_t>((x - lhs.left()) + (y - lhs.top()) * lhs.w)];
-
-                if (l >> 24 & 0xff)
-                {
-                    return true;
-                }
-            }
-        }
-    }
-
-    return false;
 }
 
 }

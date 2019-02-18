@@ -6,8 +6,8 @@
 #ifndef EGT_SPRITEIMPL_H
 #define EGT_SPRITEIMPL_H
 
-#include "egt/geometry.h"
-#include "egt/image.h"
+#include <egt/geometry.h>
+#include <egt/image.h>
 #include <vector>
 
 namespace egt
@@ -51,7 +51,7 @@ public:
      */
     virtual void advance()
     {
-        int index = m_index;
+        auto index = m_index;
         if (++index >= m_strips[m_strip].framecount)
             index = 0;
 
@@ -104,10 +104,7 @@ public:
         return m_strips.size() - 1;
     }
 
-
-
-    virtual ~SpriteImpl()
-    {}
+    virtual ~SpriteImpl() = default;
 
 protected:
 
@@ -133,13 +130,32 @@ protected:
         return origin;
     }
 
+    /**
+     * The sprite sheet image.
+     */
+    Image m_image;
+
+    /**
+     * The size of an individual frame.
+     */
+    Size m_frame;
+
+    /**
+     * The current frame index.
+     */
+    int m_index{-1};
+
     using strip_array = std::vector<strip>;
 
-    Image m_image;
-    Size m_frame;
-    int m_index;
+    /**
+     * Configuration for each of the available strips.
+     */
     strip_array m_strips;
-    uint32_t m_strip;
+
+    /**
+     * The current strip being used.
+     */
+    uint32_t m_strip{0};
 };
 
 }

@@ -1,4 +1,42 @@
-* I created my application and I just see a black screen.
+namespace egt { inline namespace v1 {
+/**
 
-Make sure you call egt::Window::show() at least once somewheer in your
-application.
+ @page faq FAQ and Developer Notes
+
+@section faq_black Black Screen
+
+If you see a black screen when you run your applicaiton, make sure you call
+Window::show() at least once somewhere in your application.
+
+@section faq_threads Thread Safety
+
+The EGT API is not thread safe.  The thread the main EventLoop is
+started on, usually through Application::run(), must not be directly
+accessed by a seperate thread.  This means any widgets or windows that are
+managed by that main thread should not be accessed by another thread.
+
+However, EGT defines a solution to easily use multiple threads and interact with
+the API in a thread safe manner through the event loop and Asio.  To call a
+function in the EGT API from another thread, you must post or dispatch a call to
+the EventLoop like so:
+
+To change the position of a button from another thread, the folowing can be
+done.
+
+@code{.cpp}
+asio::post(main_app().event().io(), std::bind(&Button::set_x, button, 5));
+@endcode
+
+To run any code you want from another thread on the EventLoop thread, post() a
+lamba or function.
+
+@code{.cpp}
+asio::post(main_app().event().io(),
+    []()
+    {
+        ...
+    });
+@endcode
+
+*/
+}}

@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page resources Assets
@@ -10,11 +11,11 @@ resources.  Resources may be stored in the filesystem and loaded on demand, or
 they may be compiled into the application binary itself by using the *mresg*
 command.
 
-@section resources_using Loading Resources
+@section resources_using Resources
 
 To access a resource with a file path, specify an absolute or relative file path.
 
-@code
+@code{.cpp}
 auto play = Image("/some/path/play.png");
 @endcode
 
@@ -24,7 +25,7 @@ auto play = Image("/some/path/play.png");
 EGT comes with a set of icons built in.  To access these icons, use the
 following syntax:
 
-@code
+@code{.cpp}
 auto bug = Image("@bug.png");
 @endcode
 
@@ -35,10 +36,11 @@ This is a tool used to generate a resource file that contains the data of binary
 
 Instead of using a filesystem path to a file, prefix the path with a colon (":") to interpret the path as a resource.  Periods are replaced with underscores.
 
-@code
+@code{.cpp}
 auto play = Image(":play_png");
 @endcode
 
 
 
 */
+}}

@@ -235,8 +235,7 @@ struct CursorWindow : public Window
         return 0;
     }
 
-    virtual ~CursorWindow()
-    {}
+    virtual ~CursorWindow() = default;
 
     ImageLabel m_label;
 };

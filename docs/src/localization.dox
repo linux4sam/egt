@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page local Localization
@@ -13,18 +14,18 @@ This chapter discusses how to make use of localization support in EGT.
 @see examples/i18n
 
 To create a .po(Portable Object) file
-@code
+@code{.sh}
 make build-po
 @endcode
 
 If new strings added, update the existing .po file
-@code
+@code{.sh}
 make build-merge-po
 @endcode
 
 Use a text editor to open the .po file and add translations to all the strings
 Also, set charset as UTF-8
-@code
+@code{.sh}
 vi es.po
 
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +35,12 @@ mgsstr "Hola Mundo!"
 @endcode
 
 Generate a .mo(machine readable) file from .po
-@code
+@code{.sh}
 make
 @endcode
 
 set LANGUAGE environment variable and run
-@code
+@code{.sh}
 LANGUAGE=es.utf8 ./i18n
 @endcode
 
@@ -48,3 +49,4 @@ LANGUAGE=es.utf8 ./i18n
     Symbol: BR2_GENERATE_LOCALE [=en_US es_MX]
 
 */
+}}

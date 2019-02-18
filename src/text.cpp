@@ -11,6 +11,8 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
 
 TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align)
     : TextWidget(str, rect, align),
@@ -195,4 +197,5 @@ MultilineTextBox::~MultilineTextBox()
 {
 }
 
+}
 }

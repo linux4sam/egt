@@ -25,6 +25,9 @@ inline namespace v1
 {
 class Widget;
 
+/**
+ * Definitions for pointer buttons.
+ */
 enum class pointer_button
 {
     none,
@@ -34,6 +37,9 @@ enum class pointer_button
     touch
 };
 
+/**
+ * Current event state for pointer.
+ */
 struct Pointer
 {
     /**
@@ -52,6 +58,9 @@ struct Pointer
     DisplayPoint drag_start;
 };
 
+/**
+ * Current event state for keyboard.
+ */
 struct Keys
 {
     /**
@@ -139,16 +148,19 @@ protected:
     Keys m_keys;
 };
 
+/**
+ * Information about the current outstanding event.
+ */
 namespace event
 {
 
 /**
- * @brief Get the event Pointer object.
+ * Get the event Pointer object.
  */
 inline const Pointer& pointer() { return Input::current().pointer(); }
 
 /**
- * @brief Get the event Keys object.
+ * Get the event Keys object.
  */
 inline const Keys& keys() { return Input::current().keys(); }
 

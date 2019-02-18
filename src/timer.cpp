@@ -11,6 +11,8 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
 
 Timer::Timer() noexcept
     : m_timer(main_app().event().io())
@@ -112,4 +114,5 @@ void PeriodicTimer::timer_callback(const asio::error_code& error)
     timeout();
 }
 
+}
 }

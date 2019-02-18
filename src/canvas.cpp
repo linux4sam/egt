@@ -7,6 +7,8 @@
 
 namespace egt
 {
+inline namespace v1
+{
 
 Canvas::Canvas(const Size& size, cairo_format_t format) noexcept
     : m_surface(cairo_image_surface_create(format, size.w, size.h),
@@ -47,4 +49,5 @@ Canvas::~Canvas()
 {
 }
 
+}
 }

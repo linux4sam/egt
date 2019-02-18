@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/alignment.h"
 #include "egt/frame.h"
 #include "egt/imagecache.h"
 #include "egt/label.h"

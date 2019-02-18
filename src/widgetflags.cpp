@@ -8,8 +8,6 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

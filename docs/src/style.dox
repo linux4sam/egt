@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page style Coding Style
@@ -9,7 +10,7 @@ Astyle is used to enforce this coding style with the *scripts/style.sh* script.
 This can be automatically executed for all of the source code with a make target
 by typing:
 
-@code
+@code{.sh}
 make style
 @endcode
 
@@ -17,3 +18,4 @@ Be careful not to abuse this and change coding style just for the fun of it,
 especially on source that you are not currentoly working on.
 
 */
+}}

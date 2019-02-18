@@ -655,6 +655,9 @@ inline bool operator!=(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
 
 using Rect = RectType<>;
 
+/**
+ * A line, with a starting and ending point.
+ */
 template<class dim_t = default_dim_type>
 class LineType
 {

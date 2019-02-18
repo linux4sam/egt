@@ -44,8 +44,18 @@ public:
     Application(int argc = 0, const char** argv = nullptr,
                 const std::string& name = "egt", bool primary = true);
 
+    /**
+     * Run the application.
+     *
+     * This will initialize the application and start running the event loop.
+     * This function will block until the event loop is told to exit, possibly
+     * with a call to EventLoop::quit().
+     */
     virtual int run();
 
+    /**
+     * Get a reference to the internal eventloop of the application.
+     */
     inline EventLoop& event() { return m_event; }
 
     /**
@@ -63,15 +73,21 @@ public:
      */
     void dump(std::ostream& out);
 
-    virtual ~Application();
+    virtual ~Application() = default;
 
 protected:
-    void signal_handler(const asio::error_code& error, int signum);
 
     EventLoop m_event;
     int m_argc{0};
     const char** m_argv{nullptr};
     asio::signal_set m_signals;
+
+private:
+
+    /**
+     * Signal handler to handle some default signals to the application.
+     */
+    void signal_handler(const asio::error_code& error, int signum);
 };
 
 /**

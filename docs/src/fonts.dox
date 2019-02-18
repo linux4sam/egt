@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page fonts Fonts
@@ -6,7 +7,7 @@ This chapter discusses how to to use fonts.
 
 @section fonts_font Font Class
 
-The interface for working with fonts in EGT is the egt::Font class. This class
+The interface for working with fonts in EGT is the Font class. This class
 handles properties related to working with fonts, but there are still some other
 libraries in play.
 
@@ -29,3 +30,4 @@ simple, of text handling dirctly in cairo, see the following description:
 <https://www.cairographics.org/tutorial/#L1understandingtext>
 
 */
+}}

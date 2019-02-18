@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page custom Creating New Widgets
@@ -64,3 +65,4 @@ operates. The new draw() method looks like this.
 @endcode
 
 */
+}}

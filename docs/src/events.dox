@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page events Events
@@ -6,10 +7,10 @@ This chapter discusses the event model and how events are handled.
 
 @section events_loop Event Loop
 
-The egt::EventLoop is the inner loop of the framework. Its basic operations is
+The EventLoop is the inner loop of the framework. Its basic operations is
 demonstrated with the following pseudo code:
 
-@code
+@code{.cpp}
 while (true)
 {
     wait for events
@@ -54,27 +55,25 @@ this natural flow is short circuited.
 
 The following global functions contain more information about the event.
 
-- egt::event_mouse()
-- egt::event_button()
-- egt::event_key()
-- egt::event_code()
+- event::pointer()
+- event::keys()
 
 @section events_handling Handling Events
 
-Events are identified by the egt::eventid argument passed to a @p handle() method
-that overrides the egt::Widget::handle() virtual method. Other information about
+Events are identified by the eventid argument passed to a @p handle() method
+that overrides the Widget::handle() virtual method. Other information about
 the most recent event is stored in static locations and acquired by calling the
 functions related to the events as necessary. This static information remains
 valid until the next event is read method.
 
 When implementing a widget that needs to handle events, overriding the the
-egt::Widget::handle() virtual method is the expected method to handle events.
+Widget::handle() virtual method is the expected method to handle events.
 However, when using a widget, it can be a burden to subclass every widget just
 to handle events.  So, to handle events when using a widget, the
-egt::Widget::on_event() method can be used to register a callback. A lambda
+Widget::on_event() method can be used to register a callback. A lambda
 function may also be used.
 
-@code
+@code{.cpp}
 ImageButton settings("@cog.png");
 settings.on_event([this](eventid event)
 {
@@ -85,22 +84,38 @@ settings.on_event([this](eventid event)
         else
             m_popup.show(true);
     }
+    return 0;
 });
 @endcode
 
-egt::Widget::on_event() can be called any number of times to register any number
+Another variation of the Object::on_event() function allows for specifying
+what events to filter.
+
+@code{.cpp}
+ImageButton settings("@cog.png");
+settings.on_event([this](eventid)
+{
+    if (m_popup.visible())
+        m_popup.hide();
+    else
+        m_popup.show(true);
+    return 0;
+}, {eventid::MOUSE_DOWN});
+@endcode
+
+Widget::on_event() can be called any number of times to register any number
 of callbacks.
 
 @section events_timers Timers
 
 Timers are an intrinsic part of the event loop.  There are two main classes for
-working with timers: egt::Timer and egt::PeriodicTimer.
+working with timers: Timer and PeriodicTimer.
 
 Creating a timer is straightforward, and you can register any number of
-callbacks with the egt::Timer::on_timeout() function of a egt::Timer or an
-egt::PeriodicTimer.
+callbacks with the Timer::on_timeout() function of a Timer or a
+PeriodicTimer.
 
-@code
+@code{.cpp}
 PeriodicTimer timer(std::chrono::seconds(1));
 
 timer.on_timeout([]()
@@ -112,3 +127,4 @@ timer.start();
 @endcode
 
 */
+}}

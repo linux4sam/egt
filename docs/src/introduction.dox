@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page intro Introduction
@@ -39,14 +40,14 @@ EGT uses the autotools for building on Linux platforms.
 
 To build for a PC, first, install dependencies:
 
-@code
+@code{.sh}
 sudo apt-get install librapidxml-dev liblua5.3-dev libdrm-dev libinput-dev \
     libcairo-dev libjpeg-dev libmagic-dev libcurl4-openssl-dev
 @endcode
 
 Then build.
 
-@code
+@code{.sh}
 git clone ssh://git@bitbucket.microchip.com/~c16205/egt.git
 cd egt
 git submodule init
@@ -59,7 +60,7 @@ make install
 
 Then run.
 
-@code
+@code{.sh}
 export LD_LIBRARY_PATH=$HOME/egt_install/lib
 cd $HOME/egt_install/bin
 ./basic
@@ -68,11 +69,20 @@ cd $HOME/egt_install/bin
 EGT also supports cross compilation for target systems. To cross compile, follow
 the standard instructions.
 
-@code
+@code{.sh}
 ./autogen.sh
 ./configure --prefix=/nfsroot/root/egt/ --host=arm-buildroot-linux-gnueabi
 make
 @endcode
+
+You can run "./configure --help" to see more options.  Some nonstandard
+options are listed here.
+
+@par --disable-debug
+build without debugging support [default=yes]
+
+@par --disable-examples
+don't build examples [default=no]
 
 @section intro_first First Application
 
@@ -82,16 +92,18 @@ on it.
 
 The include file <egt/ui> contains most basic functionality needed.
 
-@code
+@code{.cpp}
 #include <egt/ui>
+
+using namespace egt;
 
 int main()
 {
-    egt::Application app;
+    Application app;
 
-    egt::Window window;
-    egt::Button button(window, "Hello World");
-    button.align(egt::alignmask::CENTER);
+    Window window;
+    Button button(window, "Hello World");
+    button.align(alignmask::CENTER);
     window.show();
 
     return app.run();
@@ -100,18 +112,18 @@ int main()
 
 If you want to use a UI file instead.
 
-@code
+@code{.cpp}
 #include <egt/ui>
 #include <egt/uiloader.h>
 
-#define SHARED_PATH "../share/egt/examples/basic/"
+using namespace egt;
 
 int main()
 {
-    egt::Application app;
+    Application app;
 
-    egt::experimental::UiLoader loader;
-    auto window = loader.load(SHARED_PATH "ui.xml");
+    experimental::UiLoader loader;
+    auto window = loader.load("ui.xml");
     window->show();
 
     return app.run();
@@ -122,10 +134,11 @@ int main()
 
 This documentation is generated with Doxygen, which is managed by the EGT build system.  To generate the documentation at any time run:
 
-@code
+@code{.sh}
 make docs
 @endcode
 
 The resulting documentation will be in the *docs* folder.
 
 */
+}}

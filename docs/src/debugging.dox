@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page debug Debugging
@@ -48,22 +49,31 @@ set log levels using environment variables.
 Cairo comes with a nifty trace tool that will allow you to log any cairo library
 calls to a file.  It works sort of like strace or ftrace.
 
-@code
+@code{.sh}
 sudo apt install cairo-perf-utils
 @endcode
 
 Then, run any application with the tool and it will log to a trace file in the
 same directory by default.
 
-@code
+@code{.sh}
 cairo-trace ./thermostat
 @endcode
 
 Additionally, you can replay the trace against several backends to see which one
 performs better.
 
-@code
+@code{.sh}
 cairo-perf-trace thermostat.26611.trace
 @endcode
 
+@section debug_tree Dump Widget Tree
+
+@todo
+
+@section debug_screenshot Save Screenshot
+
+@todo
+
 */
+}}

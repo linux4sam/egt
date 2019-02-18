@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
  @page draw Drawing
@@ -7,40 +8,41 @@ redraw.
 
 @section draw_loop Damaging and Drawing
 
-Each widget has a box(), which holds the bounding rectangle for the widget.
-This is the rectangle a widget is responsible for at some z-order level for
-what content should be placed inside that bounding box.
+Each Widget has a Widget::box(), which holds the bounding
+rectangle for the widget. This is the rectangle a widget is responsible for at
+some z-order level for what content should be placed inside that bounding box.
 
 Widgets are organized into a tree.  At the top of the tree there is a top level
-widget that is a special type of widget called a egt::Frame.  A egt::Frame
-widget is a composing widget, which is just another way of saying an
-egt::Frame can deal with zero or more children widgets inside of its box().
+widget that is a special type of widget called a Window.  A
+Window is a Frame widget, which is a composing widget.  This
+is just another way of saying an Frame can deal with zero or more
+children widgets inside of its Widget::box().
 
 Widgets are essentially rectangles that are drawn.  The widget defines the
 content of what is drawn, but all that matters to the widget is its rectangle
-and its content.  That widget rectangle is directly drawn into a single global
-back buffer for the screen.  This is an internal buffer in memory.  This back
-buffer is continuously updated in place by redrawing damaged rectangles using
-the widgets that cover it.  When all of the rectangles have been drawn in a
-single iteration of the egt::EventLoop, only the damaged region of that back
-buffer is then copied to a display buffer.  The display may actually have more
-than one buffer in order to handle double or triple buffering.  So, when
-switching between these buffers the screen has to manage damaged regions for
-each of the buffers.
+of content.  That widget rectangle is directly drawn into a single global
+back buffer for the Screen.  This is an internal buffer in memory.
+This back buffer is continuously updated in place by redrawing damaged
+rectangles using the widgets that cover it.  When all of the rectangles have
+been drawn in a single iteration of the EventLoop, only the damaged
+region of that back buffer is then copied to a display buffer.  The
+Screen may actually have more than one buffer in order to handle double
+or triple buffering.  So, when switching between these buffers the screen has to
+manage damaged regions for each of the buffers.
 
 This means there are two flows up and down the widget hierarchy.  One is
 propagation of the damage rectangles, and the other is propagation of redrawing
 the damaged rectangles with the correct content.
 
 Damage propagates *up* in the tree.  If leaf node widget is damaged, it will
-ultimately report the damage rectangle to a egt::Frame which has a surface.
+ultimately report the damage rectangle to a Frame which has a surface.
 This is usually the top level frame or the special plane frame.
 
 @image html widget_hierarchy_damage.png
 @image latex widget_hierarchy_damage.png "Damage" width=8cm
 
-Drawing goes the other way and is initiated by the egt::EventLoop.  The
-egt::EventLoop will call on all top level frames and special plane frames to
+Drawing goes the other way and is initiated by the EventLoop.  The
+EventLoop will call on all top level frames and special plane frames to
 redraw their damage regions.
 
 @image html widget_hierarchy_draw.png
@@ -48,31 +50,32 @@ redraw their damage regions.
 
 @section draw_paint Painting
 
-Typically, drawing should only be done inside the egt::Widget::draw() method.
+Typically, drawing should only be done inside the Widget::draw() method.
 
-When a widget is asked to draw, it does it by using egt::Painter.  egt::Painter
-is a simple 2D primitive graphics drawing API.  egt::Painter can be used to draw
+When a widget is asked to draw, it does it by using Painter.  Painter
+is a simple 2D primitive graphics drawing API.  Painter can be used to draw
 lines, and rectangles, fills, and fonts.  It even supports more complicated
 features drawing like gradients and arcs.
 
-The back-end used by egt::Painter is the excellent
+The back-end used by Painter is the excellent
 <a href="https://www.cairographics.org/">cairo graphics</a> library.  Which in
 turn uses <a href="http://www.pixman.org/">pixman</a> for optimized pixel
 manipulation.  Both cairo and pixman take advantage of hardware acceleration
 when possible.
 
-To use cairo directly in a egt::Widget::draw() method, get the cairo context by
-calling egt::Painter::context() and then call cairo function like normal.
+To use cairo directly in a Widget::draw() method, get the cairo context by
+calling Painter::context() and then call cairo function like normal.
 
-@code
+@code{.cpp}
 auto cr = painter.context();
 cairo_set_line_width(cr.get(), 1.0);
 cairo_stroke(cr.get());
 @endcode
 
-When using egt::Painter to draw, there are also several other very common
-properties and resources used.  For example, the palette() of the widget is
-usually referenced, along with its egt::Font when applicable, an also the
-use of egt::Color comes into play.
+When using Painter to draw, there are also several other very common
+properties and resources used.  For example, the Widget::palette() of
+the widget is usually referenced, along with its Font when applicable,
+and also the use of Color comes into play.
 
 */
+}}

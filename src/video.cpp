@@ -125,8 +125,8 @@ gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer da
             vcurrent = gst_structure_get_value(info, "current");
             _this->m_position = g_value_get_int64(vcurrent);
 
-            main_app().event().io().post(std::bind(&VideoWindow::invoke_handlers,
-                                                   _this, eventid::PROPERTY_CHANGED));
+            asio::post(main_app().event().io(), std::bind(&VideoWindow::invoke_handlers,
+                       _this, eventid::PROPERTY_CHANGED));
         }
         break;
     }

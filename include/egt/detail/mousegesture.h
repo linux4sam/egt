@@ -53,8 +53,6 @@ public:
 
     /**
      * Start.
-     *
-     * @param start The starting value to save.
      */
     virtual void start();
 

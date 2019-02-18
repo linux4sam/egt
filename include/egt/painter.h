@@ -72,8 +72,6 @@ public:
      */
     explicit Painter(shared_cairo_t cr);
 
-    virtual ~Painter();
-
     /**
      * Save the state of the current context.
      *
@@ -87,10 +85,6 @@ public:
      * @see AutoSaveRestore
      */
     virtual void restore();
-
-    virtual void begin();
-
-    virtual void end();
 
     /**
      * Set the current color.
@@ -197,17 +191,24 @@ public:
     virtual Size text_size(const std::string& text);
 
 
-
+    /**
+     * Get the current underlying context the painter is using.
+     */
     shared_cairo_t context() const
     {
         return m_cr;
     }
 
+    /**
+     * Get a Size from a surface.
+     */
     static inline Size surface_to_size(shared_cairo_surface_t surface)
     {
         return Size(cairo_image_surface_get_width(surface.get()),
                     cairo_image_surface_get_height(surface.get()));
     }
+
+    virtual ~Painter() = default;
 
 protected:
 
@@ -229,12 +230,6 @@ private:
 
     Painter() = delete;
 };
-
-bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
-                     const Rect& rhs, shared_cairo_surface_t rimage);
-
-bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
-                     const Point& rhs);
 
 }
 }

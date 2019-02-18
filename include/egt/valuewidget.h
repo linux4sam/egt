@@ -125,9 +125,19 @@ public:
         return orig;
     }
 
+    /**
+     * Get the min value.
+     */
     inline T min() const { return m_min; }
+
+    /**
+     * Get the max value.
+     */
     inline T max() const { return m_max; }
 
+    /**
+     * Set the min value.
+     */
     virtual void set_min(T v)
     {
         if (m_min != v)
@@ -137,6 +147,9 @@ public:
         }
     }
 
+    /**
+     * Set the max value.
+     */
     virtual void set_max(T v)
     {
         if (m_max != v)
@@ -158,8 +171,19 @@ public:
     {}
 
 protected:
+    /**
+     * The min value.
+     */
     T m_min;
+
+    /**
+     * The max value.
+     */
     T m_max;
+
+    /**
+     * The current value.
+     */
     T m_value;
 
     ValueRangeWidget() = delete;

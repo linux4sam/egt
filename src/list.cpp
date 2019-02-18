@@ -13,6 +13,8 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
 
 ListBox::ListBox(const Rect& rect)
     : Frame(rect),
@@ -149,4 +151,5 @@ ListBox::~ListBox()
 {
 }
 
+}
 }

@@ -24,7 +24,8 @@ inline namespace v1
 using float_t = float;
 
 /**
- * Predefined easing function.
+ * @defgroup EasingFunctions Easing Functions
+ * @brief Predefined easing function.
  * @{
  */
 float_t easing_linear(float_t p);

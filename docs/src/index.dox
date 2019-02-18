@@ -1,3 +1,4 @@
+namespace egt { inline namespace v1 {
 /**
 
 @image html microchip_logo.png
@@ -35,6 +36,9 @@ modern GUI functionality, look-and-feel, and performance.
 
 @subpage style
 
+@subpage faq
+
 This software and manual are provided under the terms of the Apache 2 License.
 
 */
+}}
