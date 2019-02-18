@@ -89,7 +89,7 @@ public:
         switch (event)
         {
         case eventid::RAW_POINTER_MOVE:
-            spawn(event_mouse());
+            spawn(from_display(event::pointer().point));
             break;
         default:
             break;

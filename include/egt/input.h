@@ -25,35 +25,134 @@ inline namespace v1
 {
 class Widget;
 
+enum class pointer_button
+{
+    none,
+    left,
+    middle,
+    right,
+    touch
+};
+
+struct Pointer
+{
+    /**
+     * Mouse position in display coordinates.
+     */
+    DisplayPoint point;
+
+    /**
+     * Pointer button value.
+     */
+    pointer_button button{pointer_button::none};
+
+    /**
+     * The mouse point where eventid POINTER_DRAG_START occured.
+     */
+    DisplayPoint drag_start;
+};
+
+struct Keys
+{
+    /**
+     * Key value.
+     */
+    int key;
+
+    /**
+     * Key code.
+     */
+    int code;
+};
+
 /**
- * Global mouse position.
+ * Base Input device class.
  *
- * Call this to retrieve the last mouse position, usually in response to a
- * mouse event.
+ * This is an abstract class that must be derived from in order to
+ * generate input events.
  */
-Point& event_mouse();
+class Input
+{
+public:
 
-Point event_mouse_drag_start();
+    Input();
+
+    static inline detail::Object& global_input()
+    {
+        return m_global_handler;
+    }
+
+    static inline Input& current()
+    {
+        if (m_current_input)
+            return *m_current_input;
+
+        static Input nullinput;
+        return nullinput;
+    }
+
+    /**
+     * Get the Pointer object for this input.
+     */
+    inline const Pointer& pointer() const { return m_pointer; }
+
+    /**
+     * Get the Keys object for this input.
+     */
+    inline const Keys& keys() const { return m_keys; }
+
+    virtual ~Input() = default;
+
+protected:
+
+    /**
+     * Dispatch an event from this input.
+     */
+    virtual void dispatch(eventid event);
+
+    /**
+     * This is the single global input handler.  Anything can attach to this
+     * object and receive all events unfiltered.
+     *
+     * This can be useful for debugging, or simply capturing any events.
+     */
+    static detail::Object m_global_handler;
+
+    /**
+     * Global current event input.
+     */
+    static Input* m_current_input;
+
+    /**
+     * The mouse gesture handler for this input.
+     */
+    std::unique_ptr<detail::MouseGesture> m_mouse;
+
+    /**
+     * Pointer object for this input.
+     */
+    Pointer m_pointer;
+
+    /**
+     * Keys object for this input.
+     */
+    Keys m_keys;
+};
+
+namespace event
+{
 
 /**
- * Global button value.
- *
- * BTN_LEFT, BTN_RIGHT, BTN_MIDDLE
+ * @brief Get the event Pointer object.
  */
-int& event_button();
+inline const Pointer& pointer() { return Input::current().pointer(); }
 
 /**
- * Global key value.
- *
- * Call this to retrieve the last key value, usually in response to a key
- * event.
+ * @brief Get the event Keys object.
  */
-int& event_key();
+inline const Keys& keys() { return Input::current().keys(); }
 
-/**
- * Global key code.
- */
-int& event_code();
+}
 
 /**
  * Get the current widget which has the mouse grabbed, or nullptr.
@@ -68,7 +167,7 @@ Widget* mouse_grab();
 void mouse_grab(Widget* widget);
 
 /**
- * Set the keyboatd focus of a widget.
+ * Set the keyboard focus of a widget.
  *
  * This will result in calling on_gain_focus() for the new widget and
  * on_lost_focus() for any previous widget.
@@ -79,77 +178,6 @@ void keyboard_focus(Widget* widget);
  * Get the current widget which has the keyboard focus, or nullptr.
  */
 Widget* keyboard_focus();
-
-namespace detail
-{
-/**
- * Abstract input class.
- */
-class IInput
-{
-public:
-    /**
-     * Dispatch the event globally.
-     */
-    static void dispatch(eventid event);
-
-    static detail::Object& global_input()
-    {
-        return m_global_input;
-    }
-
-protected:
-    static detail::Object m_global_input;
-
-    static detail::MouseGesture* m_mouse;
-
-    friend Point egt::event_mouse_drag_start();
-};
-
-}
-
-/**
- * Handles reading input events from evdev devices.
- */
-class InputEvDev : public detail::IInput
-{
-public:
-
-    explicit InputEvDev(const std::string& path);
-
-    virtual ~InputEvDev();
-
-private:
-    void handle_read(const asio::error_code& error, std::size_t length);
-
-    asio::posix::stream_descriptor m_input;
-    std::vector<char> m_input_buf;
-};
-
-namespace detail
-{
-struct tslibimpl;
-}
-
-/**
- * Handles reading input from a tslib supported device.
- */
-class InputTslib : public detail::IInput
-{
-public:
-
-    explicit InputTslib(const std::string& path);
-
-    virtual ~InputTslib();
-
-private:
-
-    void handle_read(const asio::error_code& error);
-
-    asio::posix::stream_descriptor m_input;
-    std::unique_ptr<detail::tslibimpl> m_impl;
-    bool m_active{false};
-};
 
 }
 }

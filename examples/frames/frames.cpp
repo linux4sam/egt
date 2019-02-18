@@ -33,7 +33,7 @@ int main(int argc, const char** argv)
         win1.on_event([&win1, label](eventid event)
         {
             ignoreparam(event);
-            auto p = win1.from_screen(event_mouse());
+            auto p = win1.from_display(event::pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;
         }, {eventid::RAW_POINTER_MOVE});
@@ -52,7 +52,7 @@ int main(int argc, const char** argv)
         win2.on_event([&win2, label](eventid event)
         {
             ignoreparam(event);
-            auto p = win2.from_screen(event_mouse());
+            auto p = win2.from_display(event::pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;
         }, {eventid::RAW_POINTER_MOVE});

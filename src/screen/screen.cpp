@@ -93,18 +93,18 @@ pixel_format egt_format(cairo_format_t format)
 }
 }
 
-static IScreen* the_screen = nullptr;
+static Screen* the_screen = nullptr;
 
-IScreen*& main_screen()
+Screen*& main_screen()
 {
     return the_screen;
 }
 
-IScreen::IScreen()
+Screen::Screen()
 {
 }
 
-void IScreen::flip(const damage_array& damage)
+void Screen::flip(const damage_array& damage)
 {
     static int envset = -1;
     if (envset < 0)
@@ -137,8 +137,8 @@ void IScreen::flip(const damage_array& damage)
  * work with flipping is difficult.  Should consider going to a single
  * buffer for greenscreen.
  */
-void IScreen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
-        const damage_array& olddamage)
+void Screen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
+                                        const damage_array& olddamage)
 {
     cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
     cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
@@ -163,7 +163,7 @@ void IScreen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
     cairo_surface_flush(buffer.surface.get());
 }
 
-void IScreen::copy_to_buffer(DisplayBuffer& buffer)
+void Screen::copy_to_buffer(DisplayBuffer& buffer)
 {
     cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
     cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
@@ -175,11 +175,11 @@ void IScreen::copy_to_buffer(DisplayBuffer& buffer)
     cairo_surface_flush(buffer.surface.get());
 }
 
-IScreen::~IScreen()
+Screen::~Screen()
 {
 }
 
-void IScreen::damage_algorithm(IScreen::damage_array& damage, const Rect& rect)
+void Screen::damage_algorithm(Screen::damage_array& damage, const Rect& rect)
 {
     for (auto i = damage.begin(); i != damage.end(); ++i)
     {
@@ -205,7 +205,7 @@ void IScreen::damage_algorithm(IScreen::damage_array& damage, const Rect& rect)
             }
 #endif
             damage.erase(i);
-            IScreen::damage_algorithm(damage, super);
+            Screen::damage_algorithm(damage, super);
             return;
         }
     }
@@ -214,7 +214,7 @@ void IScreen::damage_algorithm(IScreen::damage_array& damage, const Rect& rect)
     damage.emplace_back(rect);
 }
 
-void IScreen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
+void Screen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
 {
     m_size = Size(w, h);
 

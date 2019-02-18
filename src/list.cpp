@@ -101,7 +101,7 @@ int ListBox::handle(eventid event)
     {
     case eventid::POINTER_CLICK:
     {
-        Point mouse = from_screen(event_mouse());
+        Point mouse = from_display(event::pointer().point);
         for (size_t i = 0; i < m_sizer.count_children(); i++)
         {
             if (Rect::point_inside(mouse, item_rect(i)))

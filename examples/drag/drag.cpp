@@ -72,8 +72,8 @@ public:
             break;
         case eventid::POINTER_DRAG:
         {
-            auto diff = event_mouse_drag_start() - event_mouse();
-            move(m_start_point - diff);
+            auto diff = event::pointer().drag_start - event::pointer().point;
+            move(m_start_point - Point(diff.x, diff.y));
             break;
         }
         default:

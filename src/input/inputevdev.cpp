@@ -8,12 +8,12 @@
 #endif
 
 #include "egt/app.h"
-#include "egt/eventloop.h"
+//#include "egt/eventloop.h"
 #include "egt/geometry.h"
-#include "egt/input.h"
+#include "egt/inputevdev.h"
 #include "egt/utils.h"
-#include "egt/widget.h"
-#include "egt/window.h"
+//#include "egt/widget.h"
+//#include "egt/window.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -28,6 +28,8 @@
 using namespace std;
 
 namespace egt
+{
+inline namespace v1
 {
 
 InputEvDev::InputEvDev(const string& path)
@@ -138,7 +140,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                     v = eventid::KEYBOARD_REPEAT;
                 if (v != eventid::NONE)
                 {
-                    event_key() = e->code;
+                    m_keys.key = e->code;
                     dispatch(v);
                 }
             }
@@ -147,14 +149,14 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
 
     if (absolute_event)
     {
-        event_mouse() = Point(x, y);
+        m_pointer.point = DisplayPoint(x, y);
         dispatch(eventid::RAW_POINTER_MOVE);
     }
     else
     {
         if (dx != 0 || dy != 0)
         {
-            event_mouse() = Point(event_mouse().x + dx, event_mouse().y + dy);
+            m_pointer.point = DisplayPoint(m_pointer.point.x + dx, m_pointer.point.y + dy);
             dispatch(eventid::RAW_POINTER_MOVE);
         }
     }
@@ -169,4 +171,5 @@ InputEvDev::~InputEvDev()
 {
 }
 
+}
 }

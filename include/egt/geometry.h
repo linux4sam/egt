@@ -25,10 +25,16 @@ inline namespace v1
 
 using default_dim_type = int;
 
+enum class compatible
+{
+    normal,
+    display,
+};
+
 /**
  * Simple x,y coordinate.
  */
-template <class dim_t = default_dim_type>
+template <class dim_t, compatible dim_c>
 class PointType
 {
 public:
@@ -43,20 +49,20 @@ public:
           y(y_)
     {}
 
-    PointType<dim_t>(const PointType<dim_t>&) = default;
-    PointType<dim_t>(PointType<dim_t>&&) = default;
-    PointType<dim_t>& operator=(const PointType<dim_t>&) = default;
-    PointType<dim_t>& operator=(PointType<dim_t>&&) = default;
-    ~PointType<dim_t>() = default;
+    PointType<dim_t, dim_c>(const PointType<dim_t, dim_c>&) = default;
+    PointType<dim_t, dim_c>(PointType<dim_t, dim_c>&&) = default;
+    PointType<dim_t, dim_c>& operator=(const PointType<dim_t, dim_c>&) = default;
+    PointType<dim_t, dim_c>& operator=(PointType<dim_t, dim_c>&&) = default;
+    ~PointType<dim_t, dim_c>() = default;
 
-    PointType<dim_t>& operator+=(const PointType<dim_t>& rhs)
+    PointType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
     {
         x += rhs.x;
         y += rhs.y;
         return *this;
     }
 
-    PointType<dim_t>& operator-=(const PointType<dim_t>& rhs)
+    PointType<dim_t, dim_c>& operator-=(const PointType<dim_t, dim_c>& rhs)
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -71,7 +77,7 @@ public:
      * @param angle The angle in radians.
      */
     template <class T>
-    PointType<dim_t> point_on_circumference(T radius, T angle) const
+    PointType<dim_t, dim_c> point_on_circumference(T radius, T angle) const
     {
         return PointType(x + radius * std::cos(angle),
                          y + radius * std::sin(angle));
@@ -83,7 +89,7 @@ public:
      * @param point The other point.
      */
     template <class T>
-    T angle_to(const PointType<dim_t>& point) const
+    T angle_to(const PointType<dim_t, dim_c>& point) const
     {
         return std::atan2(point.x - x, y - point.y);
     }
@@ -94,7 +100,7 @@ public:
      * @param point The other point.
      */
     template <class T>
-    T distance_to(const PointType<dim_t>& point) const
+    T distance_to(const PointType<dim_t, dim_c>& point) const
     {
 #if 0
         return std::sqrt(T((point.x - x) * (point.x - x)) +
@@ -110,41 +116,42 @@ public:
 };
 
 /// Compares two @c PointType objects for equality.
-template<class dim_t>
-inline bool operator==(const PointType<dim_t>& lhs, const PointType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline bool operator==(const PointType<dim_t, dim_c>& lhs, const PointType<dim_t, dim_c>& rhs)
 {
     return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
 /// Compares two @c PointType objects for inequality.
-template<class dim_t>
-inline bool operator!=(const PointType<dim_t>& lhs, const PointType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline bool operator!=(const PointType<dim_t, dim_c>& lhs, const PointType<dim_t, dim_c>& rhs)
 {
     return !(lhs == rhs);
 }
 
-template<class dim_t>
-inline PointType<dim_t> operator-(PointType<dim_t> lhs, const PointType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline PointType<dim_t, dim_c> operator-(PointType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t>
-inline PointType<dim_t> operator+(PointType<dim_t> lhs, const PointType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline PointType<dim_t, dim_c> operator+(PointType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t>
-std::ostream& operator<<(std::ostream& os, const PointType<dim_t>& point)
+template<class dim_t, compatible dim_c>
+std::ostream& operator<<(std::ostream& os, const PointType<dim_t, dim_c>& point)
 {
     os << point.x << "," << point.y;
     return os;
 }
 
-using Point = PointType<>;
+using Point = PointType<default_dim_type, compatible::normal>;
+using DisplayPoint = PointType<default_dim_type, compatible::display>;
 
 /**
  * Simple width and height.
@@ -211,7 +218,7 @@ inline bool operator==(const SizeType<dim_t>& lhs, const SizeType<dim_t>& rhs)
     return lhs.w == rhs.w && lhs.h == rhs.h;
 }
 
-/// Compares two @c PointType objects for inequality.
+/// Compares two @c SizeType objects for inequality.
 template<class dim_t>
 inline bool operator!=(const SizeType<dim_t>& lhs, const SizeType<dim_t>& rhs)
 {
@@ -293,7 +300,7 @@ public:
     /**
      * Construct a rectangle with an explicit point and size.
      */
-    explicit RectType(const PointType<dim_t>& point, const SizeType<dim_t>& size) noexcept
+    explicit RectType(const Point& point, const SizeType<dim_t>& size) noexcept
         : x(point.x),
           y(point.y),
           w(size.w),
@@ -345,14 +352,14 @@ public:
         return *this;
     }
 
-    RectType<dim_t>& operator+=(const PointType<dim_t>& rhs)
+    RectType<dim_t>& operator+=(const Point& rhs)
     {
         x += rhs.x;
         y += rhs.y;
         return *this;
     }
 
-    RectType<dim_t>& operator-=(const PointType<dim_t>& rhs)
+    RectType<dim_t>& operator-=(const Point& rhs)
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -368,18 +375,18 @@ public:
     /**
      * Return the center point of the rectangle.
      */
-    inline PointType<dim_t> center() const
+    inline Point center() const
     {
-        return PointType<dim_t>(x + (w / 2), y + (h / 2));
+        return Point(x + (w / 2), y + (h / 2));
     }
 
     /**
      * Move the rectangle's center to the specified point.
      */
-    inline void move_to_center(const PointType<dim_t>& center)
+    inline void move_to_center(const Point& center)
     {
-        PointType<dim_t> pos(center.x - w / 2,
-                             center.y - h / 2);
+        Point pos(center.x - w / 2,
+                  center.y - h / 2);
 
         x = pos.x;
         y = pos.y;
@@ -388,12 +395,12 @@ public:
     /**
      * Get the PointType of the rectangle.
      */
-    inline PointType<dim_t> point() const
+    inline Point point() const
     {
-        return PointType<dim_t>(x, y);
+        return Point(x, y);
     }
 
-    inline void point(const PointType<dim_t>& p)
+    inline void point(const Point& p)
     {
         x = p.x;
         y = p.y;
@@ -453,33 +460,33 @@ public:
      *
      * @note This is usually the origin/point of the rectangle.
      */
-    inline PointType<dim_t> top_left() const
+    inline Point top_left() const
     {
-        return PointType<dim_t>(left(), top());
+        return Point(left(), top());
     }
 
     /**
      * Get the top right point of the rectangle.
      */
-    inline PointType<dim_t> top_right() const
+    inline Point top_right() const
     {
-        return PointType<dim_t>(right(), top());
+        return Point(right(), top());
     }
 
     /**
      * Get the bottom left point of the rectangle.
      */
-    inline PointType<dim_t> bottom_left() const
+    inline Point bottom_left() const
     {
-        return PointType<dim_t>(left(), bottom());
+        return Point(left(), bottom());
     }
 
     /**
      * Get the bottom right point of the rectangle.
      */
-    inline PointType<dim_t> bottom_right() const
+    inline Point bottom_right() const
     {
-        return PointType<dim_t>(right(), bottom());
+        return Point(right(), bottom());
     }
 
     /**
@@ -502,7 +509,7 @@ public:
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
      */
-    inline bool point_inside(const PointType<dim_t>& point) const
+    inline bool point_inside(const Point& point) const
     {
         return point_inside(point, *this);
     }
@@ -510,7 +517,7 @@ public:
     /**
      * Determine if the specified point is inside of the rectangle.
      */
-    static inline bool point_inside(const PointType<dim_t>& point, const RectType<dim_t>& rhs)
+    static inline bool point_inside(const Point& point, const RectType<dim_t>& rhs)
     {
         return (point.x <= rhs.right() && point.x >= rhs.left() &&
                 point.y <= rhs.bottom() && point.y >= rhs.top());
@@ -528,7 +535,7 @@ public:
     /**
      * Determine if a point intersects with a rectangle.
      */
-    static inline bool intersect(const RectType<dim_t>& lhs, const PointType<dim_t>& rhs)
+    static inline bool intersect(const RectType<dim_t>& lhs, const Point& rhs)
     {
         return (lhs.x < rhs.x && lhs.x + lhs.w > rhs.x &&
                 lhs.y < rhs.y && lhs.y + lhs.h > rhs.y);
@@ -616,14 +623,14 @@ inline RectType<dim_t> operator+(RectType<dim_t> lhs, const SizeType<dim_t>& rhs
 }
 
 template<class dim_t>
-inline RectType<dim_t> operator+(RectType<dim_t> lhs, const PointType<dim_t>& rhs)
+inline RectType<dim_t> operator+(RectType<dim_t> lhs, const Point& rhs)
 {
     lhs.point(lhs.point() + rhs);
     return lhs;
 }
 
 template<class dim_t>
-inline RectType<dim_t> operator-(RectType<dim_t> lhs, const PointType<dim_t>& rhs)
+inline RectType<dim_t> operator-(RectType<dim_t> lhs, const Point& rhs)
 {
     lhs.point(lhs.point() - rhs);
     return lhs;
@@ -655,13 +662,13 @@ public:
 
     using dim_type = dim_t;
 
-    explicit LineType(const PointType<dim_t>& start, const PointType<dim_t>& end) noexcept
+    explicit LineType(const Point& start, const Point& end) noexcept
         : m_start(start),
           m_end(end)
     {}
 
-    inline PointType<dim_t> start() const { return m_start; }
-    inline PointType<dim_t> end() const { return m_end; }
+    inline Point start() const { return m_start; }
+    inline Point end() const { return m_end; }
 
     /**
      * Returns a rectangle containing the line.
@@ -677,8 +684,8 @@ public:
     }
 
 protected:
-    PointType<dim_t> m_start;
-    PointType<dim_t> m_end;
+    Point m_start;
+    Point m_end;
 };
 
 using Line = LineType<>;
@@ -696,7 +703,7 @@ public:
     /**
      * Construct Arc object.
      */
-    ArcType(const PointType<dim_t>& c = PointType<dim_t>(), float r = 0.0f,
+    ArcType(const Point& c = Point(), float r = 0.0f,
             float a1 = 0.0f, float a2 = 0.0f)
         : center(c),
           radius(r),
@@ -705,7 +712,7 @@ public:
     {
     }
 
-    PointType<dim_t> center;
+    Point center;
     float radius{0.0f};
     float angle1;
     float angle2;
@@ -726,7 +733,7 @@ public:
     /**
      * Construct a Circle object.
      */
-    CircleType(const PointType<dim_t>& c = PointType<dim_t>(), float r = 0.0f)
+    CircleType(const Point& c = Point(), float r = 0.0f)
         : Arc(c, r, 0.0f, 2 * M_PI)
     {
     }

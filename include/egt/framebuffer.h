@@ -22,7 +22,7 @@ inline namespace v1
  *
  * The framebuffer is internaly mmap()'ed and directly accessible.
  */
-class FrameBuffer : public IScreen
+class FrameBuffer : public Screen
 {
 public:
 

@@ -70,7 +70,7 @@ eventid MouseGesture::handle(eventid event)
             if (!m_dragging)
             {
                 static const auto DRAG_ENABLE_DISTANCE = 10;
-                auto distance = std::abs(m_mouse_start_pos.distance_to<int>(event_mouse()));
+                auto distance = std::abs(m_mouse_start_pos.distance_to<int>(event::pointer().point));
                 if (distance >= DRAG_ENABLE_DISTANCE)
                 {
                     m_dragging = true;
@@ -100,7 +100,7 @@ eventid MouseGesture::handle(eventid event)
 void MouseGesture::start()
 {
     m_long_click_timer.start_with_duration(std::chrono::milliseconds(500));
-    m_mouse_start_pos = event_mouse();
+    m_mouse_start_pos = event::pointer().point;
     m_active = true;
     m_dragging = false;
 }

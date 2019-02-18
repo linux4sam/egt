@@ -91,11 +91,11 @@ public:
         case eventid::KEYBOARD_REPEAT:
         case eventid::KEYBOARD_DOWN:
         {
-            if (event_key() == KEY_LEFT || event_key() == KEY_RIGHT)
+            if (event::keys().key == KEY_LEFT || event::keys().key == KEY_RIGHT)
             {
                 int x;
                 m_running = true;
-                if (event_key() == KEY_LEFT)
+                if (event::keys().key == KEY_LEFT)
                     x = m_paddle.x() - (event == eventid::KEYBOARD_REPEAT ? 15 : 10);
                 else
                     x = m_paddle.x() + (event == eventid::KEYBOARD_REPEAT ? 15 : 10);
@@ -105,14 +105,14 @@ public:
 
                 return 1;
             }
-            else if (event_key() == KEY_UP)
+            else if (event::keys().key == KEY_UP)
             {
                 m_xspeed *= 1.5;
                 m_yspeed *= 1.5;
                 return 1;
             }
 
-            else if (event_key() == KEY_DOWN)
+            else if (event::keys().key == KEY_DOWN)
             {
                 m_xspeed *= .5;
                 m_yspeed *= .5;
@@ -125,7 +125,7 @@ public:
             m_running = true;
             break;
         case eventid::RAW_POINTER_MOVE:
-            m_paddle.move(Point(event_mouse().x - m_paddle.w() / 2, m_paddle.y()));
+            m_paddle.move(Point(event::pointer().point.x - m_paddle.w() / 2, m_paddle.y()));
             return 1;
         default:
             break;

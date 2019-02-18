@@ -58,7 +58,7 @@ public:
      */
     virtual void start();
 
-    inline Point mouse_start() const
+    inline DisplayPoint mouse_start() const
     {
         return m_mouse_start_pos;
     }
@@ -98,7 +98,7 @@ protected:
     /**
      * The starting position of the mouse.
      */
-    Point m_mouse_start_pos;
+    DisplayPoint m_mouse_start_pos;
 
     using callback_array = std::vector<mouse_callback_t>;
 

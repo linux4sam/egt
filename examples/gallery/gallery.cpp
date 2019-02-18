@@ -132,7 +132,7 @@ int main(int argc, const char** argv)
 
     win.show();
 
-    detail::IInput::global_input().on_event([&player, &videoshown](eventid)
+    Input::global_input().on_event([&player, &videoshown](eventid)
     {
         if (videoshown)
         {

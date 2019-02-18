@@ -87,7 +87,7 @@ uint32_t KMSOverlay::index()
     return m_index;
 }
 
-void KMSOverlay::set_position(const Point& point)
+void KMSOverlay::set_position(const DisplayPoint& point)
 {
     /*
      * The hardware planes (maybe driver issue) are sensitive to being moved out

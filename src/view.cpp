@@ -29,7 +29,8 @@ static inline int o2d(orientation o, const Rect& rect)
 }
 
 // orientation to point axis
-static inline int o2p(orientation o, const Point& point)
+template<class T>
+static inline int o2p(orientation o, const T& point)
 {
     return (o == orientation::HORIZONTAL) ? point.x : point.y;
 }
@@ -69,8 +70,8 @@ int ScrolledView::handle(eventid event)
         break;
     case eventid::POINTER_DRAG:
     {
-        auto diff = o2p(m_orient, event_mouse()) -
-                    o2p(m_orient, event_mouse_drag_start());
+        auto diff = o2p(m_orient, event::pointer().point) -
+                    o2p(m_orient, event::pointer().drag_start);
         set_offset(m_start_offset + diff);
         break;
     }

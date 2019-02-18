@@ -84,7 +84,7 @@ std::ostream& operator<<(std::ostream& os, const windowhint& event);
  * Window interface.
  *
  * A Window is a Frame that optionally manages and draws to a Screen. If the
- * Window does not have a screen itself, it will refer to its parent for the
+ * Window does not have a Screen itself, it will refer to its parent for the
  * Screen.
  *
  * Windows, unlike other basic widgets, are hidden by default. Windows always
@@ -125,7 +125,7 @@ public:
      * The buck stops on this call to Widget::screen() with a Window
      * because the Window contains the screen.
      */
-    virtual IScreen* screen() override
+    virtual Screen* screen() override
     {
         if (m_impl)
             return m_impl->screen();

@@ -103,7 +103,7 @@ int Frame::handle(eventid event)
             if (!child->visible())
                 continue;
 
-            Point pos = to_child(from_screen(event_mouse()));
+            Point pos = to_child(from_display(event::pointer().point));
 
             if (Rect::point_inside(pos, child->box()))
             {
@@ -129,7 +129,7 @@ void Frame::add_damage(const Rect& rect)
 
     DBG(name() << " damage: " << rect);
 
-    IScreen::damage_algorithm(m_damage, rect);
+    Screen::damage_algorithm(m_damage, rect);
 }
 
 void Frame::damage(const Rect& rect)

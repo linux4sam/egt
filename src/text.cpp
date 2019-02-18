@@ -54,12 +54,12 @@ int TextBox::handle(eventid event)
         return 1;
     case eventid::KEYBOARD_DOWN:
 
-        if (std::isprint((char)event_key()))
+        if (std::isprint((char)event::keys().key))
         {
-            m_text.append(1, (char)event_key());
+            m_text.append(1, (char)event::keys().key);
             damage();
         }
-        else if (event_code() == KEY_BACKSPACE)
+        else if (event::keys().code == KEY_BACKSPACE)
         {
             m_text.pop_back();
             damage();

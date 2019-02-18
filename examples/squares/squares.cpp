@@ -79,7 +79,7 @@ int main(int argc, const char** argv)
         ss << "FPS: " << std::round(fps.fps());
         label.set_text(ss.str());
 
-        IScreen::damage_array damage;
+        Screen::damage_array damage;
         damage.push_back(rect);
         win.screen()->flip(damage);
 

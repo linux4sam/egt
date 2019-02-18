@@ -28,7 +28,7 @@ inline namespace v1
  *
  * This uses libplanes to modeset and configure planes.
  */
-class KMSScreen : public IScreen
+class KMSScreen : public Screen
 {
 public:
     explicit KMSScreen(bool primary = true);

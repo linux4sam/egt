@@ -8,6 +8,7 @@
 
 #include <asio.hpp>
 #include <egt/screen.h>
+#include <egt/input.h>
 #include <memory>
 
 namespace egt
@@ -22,7 +23,7 @@ struct X11Data;
 /**
  * Screen in an X11 window.
  */
-class X11Screen : public IScreen
+class X11Screen : public Screen
 {
 public:
 
@@ -38,6 +39,14 @@ protected:
 
     std::shared_ptr<detail::X11Data> m_priv;
     asio::posix::stream_descriptor m_input;
+
+    struct X11Input : public Input
+    {
+        using Input::Input;
+        friend class X11Screen;
+    };
+
+    X11Input m_in;
 };
 
 }

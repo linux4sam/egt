@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef EGT_LIBINPUT_H
-#define EGT_LIBINPUT_H
+#ifndef EGT_INPUTLIBINPUT_H
+#define EGT_INPUTLIBINPUT_H
 
 /**
  * @file
@@ -24,16 +24,17 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
  * Handles populating and reading input events from libinput.
  */
-class LibInput : public detail::IInput
+class InputLibInput : public Input
 {
 public:
 
-    LibInput();
+    InputLibInput();
 
-    virtual ~LibInput();
+    virtual ~InputLibInput();
 
 private:
 

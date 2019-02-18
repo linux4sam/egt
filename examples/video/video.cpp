@@ -61,7 +61,7 @@ public:
                 if (!m_moving)
                 {
                     m_moving = true;
-                    m_starting_point = event_mouse();
+                    m_starting_point = event::pointer().point;
                     m_position = Point(T::x(), T::y());
                 }
             }
@@ -73,7 +73,7 @@ public:
         case eventid::RAW_POINTER_MOVE:
             if (m_moving)
             {
-                Point diff = event_mouse() - m_starting_point;
+                auto diff = event::pointer().point - m_starting_point;
                 T::move(Point(m_position.x + diff.x, m_position.y + diff.y));
                 return 1;
             }
@@ -84,7 +84,7 @@ public:
 
 private:
     bool m_moving;
-    Point m_starting_point;
+    DisplayPoint m_starting_point;
     Point m_position;
     double m_fscale;
 };

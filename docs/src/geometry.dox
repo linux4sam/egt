@@ -15,21 +15,17 @@ Positive X moves to the right, and positive Y moves down.
 @image html coordsys.png
 @image latex coordsys.png "Coordinate System" width=8cm
 
-There are three coordinate systems in EGT:
-- Frame/Window
+There are two coordinate systems in EGT that have different origins:
+
+- Widget
 
 @par
-The window coordinate system is what the widget sees itself relative to.  A Window manages a surface, so that overall surface has a coordinate system.
+The widget coordinate system is how each widget sees itself.  The origin is always relative to its parent.
 
-- Local/Widget
-
-@par
-The local coordinate system is how each widget sees itself, and in the case of a composing widget like a frame, it's the relationship between the frame's box() and its child widgets.
-
-- Screen/Display
+- Display
 
 @par
-The screen coordinate system represents the entire screen, irrelevant of content.  It's simply the resolution of the screen.  For example, mouse press events originate on the screen coordinate system.
+The display coordinate system represents the entire display, irrelevant of content.  It's simply the resolution of the display.  For example, mouse press events originate on the display coordinate system.
 
 @section coord_radians Radians and Degrees
 

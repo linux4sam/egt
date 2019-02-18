@@ -13,7 +13,7 @@ namespace egt
 inline namespace v1
 {
 
-class IScreen;
+class Screen;
 class Painter;
 class Window;
 
@@ -34,7 +34,7 @@ public:
     explicit WindowImpl(Window* interface);
 
     virtual void damage(const Rect& rect);
-    virtual IScreen* screen();
+    virtual Screen* screen();
     virtual void resize(const Size& size);
     virtual void move(const Point& point);
     virtual void top_draw();
@@ -48,7 +48,7 @@ public:
 
 protected:
 
-    IScreen* m_screen{nullptr};
+    Screen* m_screen{nullptr};
     Window* m_interface;
 
     WindowImpl() = delete;

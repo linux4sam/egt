@@ -255,7 +255,7 @@ void TopWindow::show_cursor(const Image& image)
     m_cursor->show();
 
     /// @todo how to cleanup if destructed?
-    detail::IInput::global_input().on_event(
+    Input::global_input().on_event(
         std::bind(&TopWindow::handle_mouse, this, std::placeholders::_1),
     {eventid::RAW_POINTER_DOWN, eventid::RAW_POINTER_UP, eventid::RAW_POINTER_MOVE});
 }
@@ -270,11 +270,11 @@ int TopWindow::handle_mouse(eventid event)
         case eventid::RAW_POINTER_UP:
         case eventid::RAW_POINTER_MOVE:
         {
-            auto p = event_mouse();
+            auto p = event::pointer().point;
 
             // don't let the cursor go off the screen
-            if (main_screen()->box().contains(Rect(p, m_cursor->size())))
-                m_cursor->move(p);
+            if (main_screen()->box().contains(Rect(Point(p.x, p.y), m_cursor->size())))
+                m_cursor->move(Point(p.x, p.y));
 
             break;
         }

@@ -16,6 +16,7 @@
 #include <cstdint>
 #include <egt/font.h>
 #include <egt/geometry.h>
+#include <egt/input.h>
 #include <egt/object.h>
 #include <egt/palette.h>
 #include <egt/theme.h>
@@ -33,7 +34,7 @@ inline namespace v1
 
 class Painter;
 class Frame;
-class IScreen;
+class Screen;
 
 /**
  * Base widget class.
@@ -314,12 +315,12 @@ public:
     const Frame* parent() const;
 
     /**
-     * Get a pointer to the IScreen instance, using using a parent as
+     * Get a pointer to the Screen instance, using using a parent as
      * necessary.
      *
-     * @return An IScreen if available, or nullptr.
+     * @return An Screen if available, or nullptr.
      */
-    virtual IScreen* screen();
+    virtual Screen* screen();
 
     /**
      * Test if the specified Widget flag is set.
@@ -419,22 +420,22 @@ public:
     Rect to_parent(const Rect& r);
 
     /**
-     * Convert a local point to the coordinate system of the screen.
+     * Convert a local point to the coordinate system of the display.
      *
-     * In other words, work towards the entire screen so we can get
-     * this point relative to the origin of the screen.
+     * In other words, work towards the entire display so we can get
+     * this point relative to the origin of the display.
      */
-    virtual Point to_screen(const Point& p);
-    virtual Point to_screen_back(const Point& p);
+    virtual DisplayPoint to_display(const Point& p);
+    virtual DisplayPoint to_display_back(const Point& p);
 
     /**
-     * Convert a screen point to a local point.
+     * Convert a display point to a local point.
      *
      * In other words, walk towards the current widget to we can
      * get a point relative to the widget's own box.
      */
-    virtual Point from_screen(const Point& p);
-    virtual Point from_screen_back(const Point& p);
+    virtual Point from_display(const DisplayPoint& p);
+    virtual Point from_display_back(const DisplayPoint& p);
 
     /**
      * Called when the widget gains focus.

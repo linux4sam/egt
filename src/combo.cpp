@@ -54,7 +54,7 @@ void ComboBoxPopup::smart_pos()
     if (main_screen())
     {
         auto ss = main_screen()->size();
-        auto origin = to_screen(box().point());
+        auto origin = to_display(box().point());
         auto height =
             std::min(static_cast<default_dim_type>((ss.h - origin.y) / ListBox::item_height()),
                      static_cast<default_dim_type>(m_list.count())) * ListBox::item_height();
@@ -84,7 +84,7 @@ int ComboBoxPopup::handle(eventid event)
     {
     case eventid::POINTER_CLICK:
     {
-        Point mouse = from_screen(event_mouse());
+        Point mouse = from_display(event::pointer().point);
 
         if (!Rect::point_inside(mouse, box()))
         {
@@ -134,7 +134,7 @@ int ComboBox::handle(eventid event)
     {
     case eventid::POINTER_CLICK:
     {
-        Point mouse = from_screen(event_mouse());
+        Point mouse = from_display(event::pointer().point);
 
         if (Rect::point_inside(mouse, box()))
         {

@@ -12,6 +12,7 @@
  */
 
 #include <egt/screen.h>
+#include <egt/input.h>
 
 struct plane_data;
 
@@ -24,7 +25,7 @@ namespace detail
 /**
  * A screen backed by an overlay plane.
  */
-class KMSOverlay : public IScreen
+class KMSOverlay : public Screen
 {
 public:
 
@@ -33,7 +34,7 @@ public:
     explicit KMSOverlay(struct plane_data* plane);
 
     virtual void resize(const Size& size);
-    virtual void set_position(const Point& point);
+    virtual void set_position(const DisplayPoint& point);
     virtual void set_scale(float scale);
     virtual void set_pan_size(const Size& size);
     virtual void set_pan_pos(const Point& point);

@@ -442,7 +442,7 @@ const Frame* Widget::parent() const
     return m_parent;
 }
 
-IScreen* Widget::screen()
+Screen* Widget::screen()
 {
     assert(m_parent);
     return parent()->screen();
@@ -478,36 +478,39 @@ Rect Widget::to_parent(const Rect& r)
     return r;
 }
 
-Point Widget::to_screen_back(const Point& p)
+DisplayPoint Widget::to_display_back(const Point& p)
 {
-    if (parent())
-        return parent()->to_screen_back(box().point() + p);
+    auto calc = box().point() + p;
 
-    return box().point() + p;
+    if (parent())
+        return parent()->to_display_back(calc);
+
+
+    return DisplayPoint(calc.x, calc.y);
 }
 
-Point Widget::to_screen(const Point& p)
+DisplayPoint Widget::to_display(const Point& p)
 {
     if (parent())
-        return parent()->to_screen_back(p);
+        return parent()->to_display_back(p);
 
-    return p;
+    return DisplayPoint(p.x, p.y);
 }
 
-Point Widget::from_screen_back(const Point& p)
+Point Widget::from_display_back(const DisplayPoint& p)
 {
     if (parent())
-        return parent()->from_screen_back(p - box().point());
+        return parent()->from_display_back(p - DisplayPoint(box().point().x, box().point().y));
 
-    return p - box().point();
+    return Point(p.x, p.y) - box().point();
 }
 
-Point Widget::from_screen(const Point& p)
+Point Widget::from_display(const DisplayPoint& p)
 {
     if (parent())
-        return parent()->from_screen_back(p);
+        return parent()->from_display_back(p);
 
-    return p;
+    return Point(p.x, p.y);
 }
 
 const std::string& Widget::name() const

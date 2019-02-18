@@ -305,10 +305,7 @@ protected:
             if (child->disabled())
                 continue;
 
-            // TODO: should not take from_screen point
-            Point pos = from_screen(point);
-
-            if (Rect::point_inside(pos, child->box()))
+            if (Rect::point_inside(point, child->box()))
             {
                 return true;
             }
@@ -335,7 +332,7 @@ protected:
     /**
      * The damage array for this frame.
      */
-    IScreen::damage_array m_damage;
+    Screen::damage_array m_damage;
 
     Frame(const Frame&) = delete;
     Frame& operator=(const Frame&) = delete;

@@ -18,93 +18,22 @@ namespace egt
 {
 inline namespace v1
 {
-Point& event_mouse()
+
+Input::Input()
+    : m_mouse(new detail::MouseGesture)
 {
-    static Point pointer_abs_pos;
-    return pointer_abs_pos;
+    m_mouse->on_async_event(std::bind(&Input::dispatch,
+                                      this, std::placeholders::_1));
 }
-
-Point event_mouse_drag_start()
-{
-    return detail::IInput::m_mouse->mouse_start();
-}
-
-int& event_key()
-{
-    static int event_event_key{0};
-    return event_event_key;
-}
-
-int& event_code()
-{
-    static int event_event_code{0};
-    return event_event_code;
-}
-
-int& event_button()
-{
-    static int event_button_value{0};
-    return event_button_value;
-}
-
-static Widget* grab = nullptr;
-
-Widget* mouse_grab()
-{
-    return grab;
-}
-
-void mouse_grab(Widget* widget)
-{
-    if (widget)
-    {
-        DBG("mouse grab by " << widget->name());
-    }
-    else if (grab)
-    {
-        DBG("mouse release by " << grab->name());
-    }
-    grab = widget;
-}
-
-static Widget* kfocus = nullptr;
-
-void keyboard_focus(Widget* widget)
-{
-    if (kfocus == widget)
-        return;
-
-    if (kfocus)
-        kfocus->on_lost_focus();
-
-    kfocus = widget;
-
-    if (widget)
-        widget->on_gain_focus();
-}
-
-Widget* keyboard_focus()
-{
-    return kfocus;
-}
-
-namespace detail
-{
-detail::MouseGesture* IInput::m_mouse = nullptr;
 
 /**
  * @todo No mouse positions should be allowed off the screen box().  This is
  * possible with some input devices currentl and we need to limit.  Be careful
  * not to drop events (like pointer up) when correcting.
  */
-void IInput::dispatch(eventid event)
+void Input::dispatch(eventid event)
 {
-    // hack
-    if (!m_mouse)
-    {
-        m_mouse = new MouseGesture;
-        m_mouse->on_async_event(IInput::dispatch);
-    }
+    m_current_input = this;
 
     auto eevent = m_mouse->handle(event);
 
@@ -112,13 +41,15 @@ void IInput::dispatch(eventid event)
     if (eevent != eventid::NONE)
     {
         DBG("input event: " << eevent);
+        if (eevent == eventid::POINTER_DRAG_START)
+            m_pointer.drag_start = m_mouse->mouse_start();
     }
 
     // then give it to any global input handlers
-    if (m_global_input.invoke_handlers(event))
+    if (m_global_handler.invoke_handlers(event))
         return;
     if (eevent != eventid::NONE)
-        if (m_global_input.invoke_handlers(eevent))
+        if (m_global_handler.invoke_handlers(eevent))
             return;
 
 
@@ -181,8 +112,52 @@ void IInput::dispatch(eventid event)
     }
 
 }
+
+Input* Input::m_current_input = nullptr;
+detail::Object Input::m_global_handler;
+
+namespace detail
+{
+static Widget* grab = nullptr;
+static Widget* kfocus = nullptr;
 }
 
-detail::Object detail::IInput::m_global_input;
+Widget* mouse_grab()
+{
+    return detail::grab;
+}
+
+void mouse_grab(Widget* widget)
+{
+    if (widget)
+    {
+        DBG("mouse grab by " << widget->name());
+    }
+    else if (detail::grab)
+    {
+        DBG("mouse release by " << detail::grab->name());
+    }
+    detail::grab = widget;
+}
+
+void keyboard_focus(Widget* widget)
+{
+    if (detail::kfocus == widget)
+        return;
+
+    if (detail::kfocus)
+        detail::kfocus->on_lost_focus();
+
+    detail::kfocus = widget;
+
+    if (widget)
+        widget->on_gain_focus();
+}
+
+Widget* keyboard_focus()
+{
+    return detail::kfocus;
+}
+
 }
 }

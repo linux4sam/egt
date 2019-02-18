@@ -66,11 +66,11 @@ public:
             break;
         case eventid::POINTER_DRAG:
         {
-            auto diff = m_start_point -
-                        (event_mouse_drag_start() - event_mouse());
-            Rect dest(diff, m_widget->box().size());
+            auto diff = (event::pointer().drag_start - event::pointer().point);
+            auto fromstart = m_start_point - Point(diff.x, diff.y);
+            Rect dest(fromstart, m_widget->box().size());
             if (main_window()->box().contains(dest))
-                m_widget->move(diff);
+                m_widget->move(fromstart);
             break;
         }
         default:

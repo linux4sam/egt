@@ -10,11 +10,13 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/framebuffer.h"
-#include "egt/input.h"
-#include "egt/kmsscreen.h"
-#include "egt/libinput.h"
-#include "egt/painter.h"
 #include "egt/imagecache.h"
+#include "egt/input.h"
+#include "egt/inputevdev.h"
+#include "egt/inputlibinput.h"
+#include "egt/inputtslib.h"
+#include "egt/kmsscreen.h"
+#include "egt/painter.h"
 #include "egt/utils.h"
 #include "egt/version.h"
 #include <iostream>
@@ -103,7 +105,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 #endif
     //new InputEvDev("/dev/input/event2");
 #ifdef HAVE_LIBINPUT
-    new LibInput;
+    new InputLibInput;
 #endif
 }
 

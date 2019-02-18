@@ -59,12 +59,12 @@ pixel_format egt_format(cairo_format_t format);
  *
  * A screen manages one of more surfaces.
  */
-class IScreen
+class Screen
 {
 public:
     using damage_array = std::deque<Rect>;
 
-    IScreen();
+    Screen();
 
     /**
      * Perform a flip of the buffers.
@@ -105,10 +105,10 @@ public:
      * This function implements the algorithm for adding damage rectangles
      * to a list.
      */
-    static void damage_algorithm(IScreen::damage_array& damage,
+    static void damage_algorithm(Screen::damage_array& damage,
                                  const Rect& rect);
 
-    virtual ~IScreen();
+    virtual ~Screen();
 
 protected:
 
@@ -130,7 +130,7 @@ protected:
             if (rect.empty())
                 return;
 
-            IScreen::damage_algorithm(damage, rect);
+            Screen::damage_algorithm(damage, rect);
         }
 
         inline ~DisplayBuffer() noexcept {}
@@ -152,7 +152,7 @@ protected:
 /**
  * Get a pointer to the main screen.
  */
-IScreen*& main_screen();
+Screen*& main_screen();
 
 }
 }

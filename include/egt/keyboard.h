@@ -70,19 +70,19 @@ public:
                 else
                     b = new Button(label);
 
-                b->on_event([b](eventid event)
+                b->on_event([this, b](eventid event)
                 {
                     if (!b->text().empty())
                     {
                         if (event == eventid::RAW_POINTER_DOWN)
                         {
-                            event_key() = b->text()[0];
-                            detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
+                            m_in.m_keys.key = b->text()[0];
+                            m_in.dispatch(eventid::KEYBOARD_DOWN);
                         }
                         else if (event == eventid::RAW_POINTER_UP)
                         {
-                            event_key() = b->text()[0];
-                            detail::IInput::dispatch(eventid::KEYBOARD_UP);
+                            m_in.m_keys.key = b->text()[0];
+                            m_in.dispatch(eventid::KEYBOARD_UP);
                         }
                     }
 
@@ -97,6 +97,15 @@ public:
     }
 
 protected:
+
+    struct KeyboardInput : public Input
+    {
+        using Input::Input;
+        friend class Keyboard;
+    };
+
+    KeyboardInput m_in;
+
     StaticGrid m_grid;
 };
 

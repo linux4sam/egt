@@ -108,7 +108,7 @@ public:
         case eventid::POINTER_CLICK:
         case eventid::POINTER_DRAG:
         {
-            auto angle = this->touch_to_degrees(this->from_screen(event_mouse()));
+            auto angle = this->touch_to_degrees(this->from_display(event::pointer().point));
             auto v = this->degrees_to_value(angle);
             auto orig = this->set_value(v);
             if (orig != v)

@@ -29,7 +29,7 @@ void WindowImpl::damage(const Rect& rect)
     m_interface->default_damage(rect);
 }
 
-IScreen* WindowImpl::screen()
+Screen* WindowImpl::screen()
 {
     assert(m_screen);
     return m_screen;

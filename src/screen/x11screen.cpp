@@ -107,7 +107,7 @@ X11Screen::X11Screen(const Size& size, bool borderless)
 
 void X11Screen::flip(const damage_array& damage)
 {
-    IScreen::flip(damage);
+    Screen::flip(damage);
     XFlush(m_priv->display);
     XSync(m_priv->display, false);
 }
@@ -142,37 +142,37 @@ void X11Screen::handle_read(const asio::error_code& error)
             break;
         }
         case ButtonPress:
-            event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-            detail::IInput::dispatch(eventid::RAW_POINTER_DOWN);
+            m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
+            m_in.dispatch(eventid::RAW_POINTER_DOWN);
             break;
         case ButtonRelease:
-            event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-            detail::IInput::dispatch(eventid::RAW_POINTER_UP);
+            m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
+            m_in.dispatch(eventid::RAW_POINTER_UP);
             break;
         case EnterNotify:
         case LeaveNotify:
         case MotionNotify:
-            event_mouse() = Point(e.xbutton.x, e.xbutton.y);
-            detail::IInput::dispatch(eventid::RAW_POINTER_MOVE);
+            m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
+            m_in.dispatch(eventid::RAW_POINTER_MOVE);
             break;
         case KeyPress:
         {
-            event_key() = XLookupKeysym(&e.xkey, 0);
-            event_code() = XKeysymToKeycode(m_priv->display, event_key());
-            if (event_key() == XK_BackSpace)
-                event_code() = KEY_BACKSPACE;
+            m_in.m_keys.key = XLookupKeysym(&e.xkey, 0);
+            m_in.m_keys.code = XKeysymToKeycode(m_priv->display, m_in.m_keys.key);
+            if (m_in.m_keys.key == XK_BackSpace)
+                m_in.m_keys.code = KEY_BACKSPACE;
 
-            detail::IInput::dispatch(eventid::KEYBOARD_DOWN);
+            m_in.dispatch(eventid::KEYBOARD_DOWN);
             break;
         }
         case KeyRelease:
         {
-            event_key() = XLookupKeysym(&e.xkey, 0);
-            event_code() = XKeysymToKeycode(m_priv->display, event_key());
-            if (event_key() == XK_BackSpace)
-                event_code() = KEY_BACKSPACE;
+            m_in.m_keys.key = XLookupKeysym(&e.xkey, 0);
+            m_in.m_keys.code = XKeysymToKeycode(m_priv->display, m_in.m_keys.key);
+            if (m_in.m_keys.key == XK_BackSpace)
+                m_in.m_keys.code = KEY_BACKSPACE;
 
-            detail::IInput::dispatch(eventid::KEYBOARD_UP);
+            m_in.dispatch(eventid::KEYBOARD_UP);
             break;
         }
         case ClientMessage:

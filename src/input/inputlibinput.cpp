@@ -9,7 +9,7 @@
 
 #include "egt/app.h"
 #include "egt/eventloop.h"
-#include "egt/libinput.h"
+#include "egt/inputlibinput.h"
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
@@ -122,7 +122,7 @@ out:
 }
 
 
-LibInput::LibInput()
+InputLibInput::InputLibInput()
     : m_input(main_app().event().io())
 {
     const char* seat_or_device = "seat0";
@@ -136,7 +136,7 @@ LibInput::LibInput()
     handle_read(asio::error_code());
 }
 
-void LibInput::handle_event_device_notify(struct libinput_event* ev)
+void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
 {
     struct libinput_device* dev = libinput_event_get_device(ev);
     const char* type;
@@ -168,7 +168,7 @@ void LibInput::handle_event_device_notify(struct libinput_event* ev)
     }
 }
 
-void LibInput::handle_event_motion(struct libinput_event* ev)
+void InputLibInput::handle_event_motion(struct libinput_event* ev)
 {
     struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
     //double dx = libinput_event_pointer_get_dx(p),
@@ -192,15 +192,15 @@ void LibInput::handle_event_motion(struct libinput_event* ev)
     //#endif
 
     //cout << x << "," << y << endl;
-    //event_mouse() = Point(x, y);
+    //m_pointer.point = Point(x, y);
 
-    event_mouse().x += libinput_event_pointer_get_dx_unaccelerated(p);
-    event_mouse().y += libinput_event_pointer_get_dy_unaccelerated(p);
+    m_pointer.point.x += libinput_event_pointer_get_dx_unaccelerated(p);
+    m_pointer.point.y += libinput_event_pointer_get_dy_unaccelerated(p);
 
     dispatch(eventid::RAW_POINTER_MOVE);
 }
 
-void LibInput::handle_event_absmotion(struct libinput_event* ev)
+void InputLibInput::handle_event_absmotion(struct libinput_event* ev)
 {
     ignoreparam(ev);
 
@@ -214,7 +214,7 @@ void LibInput::handle_event_absmotion(struct libinput_event* ev)
 #endif
 }
 
-bool LibInput::handle_event_touch(struct libinput_event* ev)
+bool InputLibInput::handle_event_touch(struct libinput_event* ev)
 {
     bool res = false;
 
@@ -235,7 +235,7 @@ bool LibInput::handle_event_touch(struct libinput_event* ev)
         double x = libinput_event_touch_get_x_transformed(t, 800);
         double y = libinput_event_touch_get_y_transformed(t, 480);
 
-        event_mouse() = Point(x, y);
+        m_pointer.point = DisplayPoint(x, y);
 
         dispatch(eventid::RAW_POINTER_DOWN);
         break;
@@ -248,7 +248,7 @@ bool LibInput::handle_event_touch(struct libinput_event* ev)
         //double x2 = libinput_event_touch_get_x(t);
         //double y2 = libinput_event_touch_get_y(t);
 
-        event_mouse() = Point(x, y);
+        m_pointer.point = DisplayPoint(x, y);
         res = true;
         break;
     }
@@ -259,7 +259,7 @@ bool LibInput::handle_event_touch(struct libinput_event* ev)
     return res;
 }
 
-void LibInput::handle_event_axis(struct libinput_event* ev)
+void InputLibInput::handle_event_axis(struct libinput_event* ev)
 {
     ignoreparam(ev);
 
@@ -287,7 +287,7 @@ void LibInput::handle_event_axis(struct libinput_event* ev)
 #endif
 }
 
-void LibInput::handle_event_keyboard(struct libinput_event* ev)
+void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
 {
     struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
     unsigned int key = libinput_event_keyboard_get_key(k);
@@ -302,25 +302,40 @@ void LibInput::handle_event_keyboard(struct libinput_event* ev)
 
     if (v != eventid::NONE)
     {
-        event_key() = key;
+        m_keys.key = key;
         dispatch(v);
     }
 }
 
-void LibInput::handle_event_button(struct libinput_event* ev)
+void InputLibInput::handle_event_button(struct libinput_event* ev)
 {
     struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
     unsigned int button = libinput_event_pointer_get_button(p);
     int is_press;
 
+    switch (button)
+    {
+    case BTN_LEFT:
+        m_pointer.button = pointer_button::left;
+        break;
+    case BTN_MIDDLE:
+        m_pointer.button = pointer_button::middle;
+        break;
+    case BTN_RIGHT:
+        m_pointer.button = pointer_button::right;
+        break;
+    default:
+        /* Other buttons not handled. */
+        /* For compatibility reasons, all additional buttons go after the old 4-7 scroll ones */
+        m_pointer.button = pointer_button::none;
+        break;
+    }
+
     is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
-
     dispatch(is_press ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
-
-    event_button() = button;
 }
 
-void LibInput::handle_event_swipe(struct libinput_event* ev)
+void InputLibInput::handle_event_swipe(struct libinput_event* ev)
 {
     ignoreparam(ev);
 
@@ -355,7 +370,7 @@ void LibInput::handle_event_swipe(struct libinput_event* ev)
 #endif
 }
 
-void LibInput::handle_event_pinch(struct libinput_event* ev)
+void InputLibInput::handle_event_pinch(struct libinput_event* ev)
 {
     ignoreparam(ev);
 
@@ -394,7 +409,7 @@ void LibInput::handle_event_pinch(struct libinput_event* ev)
 #endif
 }
 
-void LibInput::handle_event_tablet(struct libinput_event* ev)
+void InputLibInput::handle_event_tablet(struct libinput_event* ev)
 {
     ignoreparam(ev);
 
@@ -475,7 +490,7 @@ void LibInput::handle_event_tablet(struct libinput_event* ev)
 #endif
 }
 
-void LibInput::handle_read(const asio::error_code& error)
+void InputLibInput::handle_read(const asio::error_code& error)
 {
     bool res = false;
     if (error)
@@ -553,10 +568,10 @@ void LibInput::handle_read(const asio::error_code& error)
         dispatch(eventid::RAW_POINTER_MOVE);
 
     asio::async_read(m_input, asio::null_buffers(),
-                     main_app().event().queue().wrap(detail::priorities::moderate, std::bind(&LibInput::handle_read, this, std::placeholders::_1)));
+                     main_app().event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));
 }
 
-LibInput::~LibInput()
+InputLibInput::~InputLibInput()
 {
     libinput_unref(li);
 }

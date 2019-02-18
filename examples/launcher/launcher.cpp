@@ -222,7 +222,7 @@ public:
             if (!m_moving)
             {
                 m_moving = true;
-                m_moving_x = event_mouse().x;
+                m_moving_x = event::pointer().point.x;
                 m_offset = m_boxes[0]->center().x;
             }
             break;
@@ -233,7 +233,7 @@ public:
         case eventid::RAW_POINTER_MOVE:
             if (m_moving)
             {
-                move_boxes(event_mouse().x);
+                move_boxes(event::pointer().point.x);
                 return 1;
             }
             break;

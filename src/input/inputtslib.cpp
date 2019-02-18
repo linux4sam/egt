@@ -7,7 +7,7 @@
 #include "config.h"
 #endif
 
-#include "egt/input.h"
+#include "egt/inputtslib.h"
 #include "egt/app.h"
 #include <chrono>
 
@@ -69,7 +69,7 @@ InputTslib::InputTslib(const string& path)
     }
 }
 
-static bool delta(const Point& lhs, const Point& rhs, int d)
+static bool delta(const DisplayPoint& lhs, const DisplayPoint& rhs, int d)
 {
     return (std::abs(lhs.x - rhs.x) >= d ||
             std::abs(lhs.y - rhs.y) >= d);
@@ -125,17 +125,19 @@ void InputTslib::handle_read(const asio::error_code& error)
             {
                 if (samp_mt[j][i].pen_down == 0)
                 {
-                    event_mouse() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+                    m_pointer.point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
+                    m_pointer.button = pointer_button::touch;
                     m_active = false;
-                    DBG("mouse up " << event_mouse());
+                    DBG("mouse up " << m_pointer.point);
                     dispatch(eventid::RAW_POINTER_UP);
                 }
                 else
                 {
-                    Point point(samp_mt[j][i].x, samp_mt[j][i].y);
-                    if (delta(event_mouse(), point, 5))
+                    DisplayPoint point(samp_mt[j][i].x, samp_mt[j][i].y);
+                    if (delta(m_pointer.point, point, 5))
                     {
-                        event_mouse() = point;
+                        m_pointer.point = point;
+                        m_pointer.button = pointer_button::touch;
                         move = true;
                     }
                 }
@@ -144,7 +146,8 @@ void InputTslib::handle_read(const asio::error_code& error)
             {
                 if (samp_mt[j][i].pen_down == 1)
                 {
-                    event_mouse() = Point(samp_mt[j][i].x, samp_mt[j][i].y);
+                    m_pointer.point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
+                    m_pointer.button = pointer_button::touch;
 
                     std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> tv
                     {
@@ -160,7 +163,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                     }
                     else
                     {
-                        DBG("mouse down " << event_mouse());
+                        DBG("mouse down " << m_pointer.point);
                         dispatch(eventid::RAW_POINTER_DOWN);
                         m_active = true;
                     }
@@ -173,7 +176,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 
     if (move)
     {
-        DBG("mouse move " << event_mouse());
+        DBG("mouse move " << m_pointer.point);
         dispatch(eventid::RAW_POINTER_MOVE);
     }
 

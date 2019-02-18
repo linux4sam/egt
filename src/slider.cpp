@@ -174,12 +174,12 @@ int Slider::handle(eventid event)
     case eventid::POINTER_DRAG:
         if (m_orient == orientation::HORIZONTAL)
         {
-            auto diff = event_mouse() - event_mouse_drag_start();
+            auto diff = event::pointer().point - event::pointer().drag_start;
             set_value(to_value(m_start_offset + diff.x));
         }
         else
         {
-            auto diff = event_mouse() - event_mouse_drag_start();
+            auto diff = event::pointer().point - event::pointer().drag_start;
             set_value(to_value(m_start_offset - diff.y));
         }
         break;

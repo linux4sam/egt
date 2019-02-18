@@ -243,19 +243,20 @@ public:
         {
         case eventid::RAW_POINTER_DOWN:
         {
-            m_last = event_mouse();
+            m_last = from_display(event::pointer().point);
             m_down = true;
             return 1;
         }
         case eventid::RAW_POINTER_MOVE:
         {
+            auto mouse = from_display(event::pointer().point);
             if (m_down)
             {
-                if (m_last != event_mouse())
+                if (m_last != mouse)
                 {
                     int width = m_widthpicker.width();
 
-                    Line line(m_last, event_mouse());
+                    Line line(m_last, mouse);
                     Painter painter(m_canvas.context());
                     painter.set_line_width(width);
                     auto cr = painter.context();
@@ -272,7 +273,7 @@ public:
                 }
             }
 
-            m_last = event_mouse();
+            m_last = mouse;
 
             return 1;
         }

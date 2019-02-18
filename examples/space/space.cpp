@@ -97,7 +97,7 @@ public:
         {
         case eventid::RAW_POINTER_MOVE:
             if (debounce_mouse(50))
-                spawn(event_mouse());
+                spawn(from_display(event::pointer().point));
             break;
         default:
             break;
