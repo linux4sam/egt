@@ -138,8 +138,7 @@ class MainWindow : public TopWindow
 public:
 
     MainWindow()
-        : m_down(false),
-          m_grid(Rect(Size(100, 250)), 1, 4, 5),
+        : m_grid(Rect(Size(100, 250)), 1, 4, 5),
           m_colorbtn(Image("palette.png")),
           m_fillbtn(Image("fill.png")),
           m_widthbtn(Image("width.png")),
@@ -229,10 +228,9 @@ public:
         Painter painter(m_canvas.context());
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
         painter.set_color(Color::TRANSPARENT);
-        painter.draw_fill(box());
+        painter.paint();
     }
 
-    // TODO: convert this to use POINTER_DRAG events
     int handle(eventid event) override
     {
         auto ret = TopWindow::handle(event);
@@ -241,45 +239,37 @@ public:
 
         switch (event)
         {
-        case eventid::RAW_POINTER_DOWN:
-        {
+        case eventid::POINTER_DRAG_START:
             m_last = from_display(event::pointer().point);
-            m_down = true;
-            return 1;
-        }
-        case eventid::RAW_POINTER_MOVE:
+            break;
+        case eventid::POINTER_DRAG:
         {
             auto mouse = from_display(event::pointer().point);
-            if (m_down)
+
+            if (m_last != mouse)
             {
-                if (m_last != mouse)
-                {
-                    int width = m_widthpicker.width();
+                int width = m_widthpicker.width();
 
-                    Line line(m_last, mouse);
-                    Painter painter(m_canvas.context());
-                    painter.set_line_width(width);
-                    auto cr = painter.context();
-                    cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
-                    painter.set_color(m_penpicker.color());
-                    painter.line(line.start(), line.end());
-                    painter.stroke();
+                Line line(m_last, mouse);
+                Painter painter(m_canvas.context());
+                painter.set_line_width(width);
+                auto cr = painter.context();
+                cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
+                painter.set_color(m_penpicker.color());
+                painter.line(line.start(), line.end());
+                painter.stroke();
 
-                    // damage only the rectangle containing the new line
-                    Rect r = line.rect();
-                    r += Size(width * 2, width * 2);
-                    r -= Point(width, width);
-                    damage(r);
-                }
+                // damage only the rectangle containing the new line
+                Rect r = line.rect();
+                r += Size(width * 2, width * 2);
+                r -= Point(width, width);
+                damage(r);
             }
 
             m_last = mouse;
 
-            return 1;
+            break;
         }
-        case eventid::RAW_POINTER_UP:
-            m_down = false;
-            return 1;
         default:
             break;
         }
@@ -298,7 +288,6 @@ public:
     }
 
     Point m_last;
-    bool m_down;
     StaticGrid m_grid;
     ImageButton m_colorbtn;
     ImageButton m_fillbtn;
