@@ -98,6 +98,8 @@ protected:
      * Keys object for this input.
      */
     Keys m_keys;
+
+    bool m_dispatching{false};
 };
 
 /**
