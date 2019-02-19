@@ -181,7 +181,11 @@ Screen::~Screen()
 
 void Screen::damage_algorithm(Screen::damage_array& damage, const Rect& rect)
 {
-    for (auto i = damage.begin(); i != damage.end(); ++i)
+    if (rect.empty())
+        return;
+
+    // work backwards for a stronger hit chance for existing rectangles
+    for (auto i = damage.rbegin(); i != damage.rend(); ++i)
     {
         // exact rectangle already exists; done
         if (*i == rect)
@@ -192,19 +196,7 @@ void Screen::damage_algorithm(Screen::damage_array& damage, const Rect& rect)
         if (Rect::intersect(*i, rect))
         {
             Rect super(Rect::merge(*i, rect));
-#if 0
-            /*
-             * If the area of the two rectangles minus their
-             * intersection area is smaller than the area of the super
-             * rectangle, then don't merge
-             */
-            Rect intersect(Rect::intersection(*i, rect));
-            if (((*i).area() + rect.area() - intersect.area()) < super.area())
-            {
-                break;
-            }
-#endif
-            damage.erase(i);
+            damage.erase(std::next(i).base());
             Screen::damage_algorithm(damage, super);
             return;
         }
