@@ -45,9 +45,5 @@ void Canvas::copy(shared_cairo_surface_t surface)
     cairo_restore(m_cr.get());
 }
 
-Canvas::~Canvas()
-{
-}
-
 }
 }
