@@ -8,12 +8,9 @@
 #endif
 
 #include "egt/app.h"
-//#include "egt/eventloop.h"
 #include "egt/geometry.h"
-#include "egt/inputevdev.h"
+#include "egt/detail/input/inputevdev.h"
 #include "egt/utils.h"
-//#include "egt/widget.h"
-//#include "egt/window.h"
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -30,6 +27,8 @@ using namespace std;
 namespace egt
 {
 inline namespace v1
+{
+namespace detail
 {
 
 InputEvDev::InputEvDev(const string& path)
@@ -171,5 +170,6 @@ InputEvDev::~InputEvDev()
 {
 }
 
+}
 }
 }

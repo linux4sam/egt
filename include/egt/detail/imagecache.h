@@ -16,6 +16,9 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+
 /**
  * Set the default relative image path.
  *
@@ -23,9 +26,6 @@ inline namespace v1
  * call this function with a new path.
  */
 void set_image_path(const std::string& path);
-
-namespace detail
-{
 
 /**
  * Internal image cache.

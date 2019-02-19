@@ -31,7 +31,7 @@ int main(int argc, const char** argv)
 
 #if 0
     // TODO: this is broken with keyboard and focus - get dups
-    detail::IInput::global_input().on_event([&](eventid event)
+    Input::global_input().on_event([&](eventid event)
     {
         switch (event)
         {

@@ -6,6 +6,7 @@
 #include <array>
 #include <cmath>
 #include <cstdio>
+#include <egt/detail/screen/kmsscreen.h>
 #include <egt/ui>
 #include <iostream>
 #include <memory>
@@ -94,8 +95,8 @@ public:
 
 #ifdef HAVE_LIBPLANES
             // TODO: explicitly close KMS
-            if (KMSScreen::instance())
-                KMSScreen::instance()->close();
+            if (detail::KMSScreen::instance())
+                detail::KMSScreen::instance()->close();
 #endif
 
             string cmd = "../share/egt/examples/launcher/launch.sh " + m_exec + " &";

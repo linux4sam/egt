@@ -18,7 +18,6 @@ inline namespace v1
 namespace detail
 {
 struct X11Data;
-}
 
 /**
  * Screen in an X11 window.
@@ -28,6 +27,8 @@ class X11Screen : public Screen
 public:
 
     X11Screen(const Size& size = Size(800, 480), bool borderless = false);
+
+    virtual void schedule_flip() {}
 
     virtual void flip(const damage_array& damage) override;
 
@@ -49,6 +50,7 @@ protected:
     X11Input m_in;
 };
 
+}
 }
 }
 

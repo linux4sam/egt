@@ -21,15 +21,14 @@
 #include <egt/checkbox.h>
 #include <egt/color.h>
 #include <egt/combo.h>
+#include <egt/event.h>
 #include <egt/font.h>
 #include <egt/frame.h>
 #include <egt/geometry.h>
 #include <egt/grid.h>
 #include <egt/image.h>
-#include <egt/imagecache.h>
 #include <egt/input.h>
 #include <egt/keyboard.h>
-#include <egt/kmsscreen.h>
 #include <egt/label.h>
 #include <egt/list.h>
 #include <egt/notebook.h>
@@ -44,6 +43,7 @@
 #include <egt/text.h>
 #include <egt/timer.h>
 #include <egt/tools.h>
+#include <egt/types.h>
 #include <egt/valuewidget.h>
 #include <egt/version.h>
 #include <egt/video.h>

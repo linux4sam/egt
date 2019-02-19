@@ -7,7 +7,7 @@
 #include "config.h"
 #endif
 
-#include "egt/inputtslib.h"
+#include "egt/detail/input/inputtslib.h"
 #include "egt/app.h"
 #include <chrono>
 
@@ -20,18 +20,18 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+
 static const int SLOTS = 1;
 static const int SAMPLES = 20;
 
-namespace detail
-{
 struct tslibimpl
 {
     struct tsdev* ts;
     struct ts_sample_mt** samp_mt;
     std::chrono::time_point<std::chrono::steady_clock> last_down;
 };
-}
 
 InputTslib::InputTslib(const string& path)
     : m_input(main_app().event().io()),
@@ -196,6 +196,7 @@ InputTslib::~InputTslib()
     free(m_impl->samp_mt);
 }
 
+}
 }
 }
 

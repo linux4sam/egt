@@ -12,7 +12,7 @@
  */
 
 #include <egt/geometry.h>
-#include <egt/kmsoverlay.h>
+#include <egt/detail/screen/kmsoverlay.h>
 #include <egt/screen.h>
 #include <egt/window.h>
 
@@ -23,6 +23,9 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+
 /**
  * Screen in an KMS dumb buffer.
  *
@@ -69,6 +72,7 @@ protected:
     friend class detail::KMSOverlay;
 };
 
+}
 }
 }
 

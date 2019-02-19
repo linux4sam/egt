@@ -17,7 +17,7 @@
 
 #ifdef HAVE_GSTREAMER
 
-#include "egt/object.h"
+#include <egt/detail/object.h>
 #include <gst/gst.h>
 #include <string>
 

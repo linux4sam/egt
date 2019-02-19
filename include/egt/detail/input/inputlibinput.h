@@ -24,6 +24,8 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
 
 /**
  * Handles populating and reading input events from libinput.
@@ -56,6 +58,7 @@ private:
     struct libinput* li;
 };
 
+}
 }
 }
 

@@ -7,14 +7,12 @@
 #include "config.h"
 #endif
 
+#include "egt/detail/imagecache.h"
+#include "egt/detail/screen/kmsscreen.h"
 #include "egt/image.h"
-#include "egt/imagecache.h"
-#include "egt/kmsscreen.h"
 #include "egt/label.h"
 #include "egt/painter.h"
 #include "egt/sprite.h"
-#include <sstream>
-#include <vector>
 #ifdef HAVE_LIBPLANES
 #include <planes/plane.h>
 #endif

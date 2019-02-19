@@ -10,9 +10,9 @@
 #ifdef HAVE_X11
 
 #include "egt/app.h"
+#include "egt/detail/screen/x11screen.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
-#include "egt/x11screen.h"
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -27,13 +27,13 @@ inline namespace v1
 {
 namespace detail
 {
+
 struct X11Data
 {
     Display* display;
     Drawable window;
     Atom wmDeleteMessage;
 };
-}
 
 X11Screen::X11Screen(const Size& size, bool borderless)
     : m_priv(new detail::X11Data),
@@ -194,6 +194,7 @@ X11Screen::~X11Screen()
     XCloseDisplay(m_priv->display);
 }
 
+}
 }
 }
 

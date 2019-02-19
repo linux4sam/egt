@@ -7,8 +7,8 @@
 #include "config.h"
 #endif
 
-#include "egt/imagecache.h"
-#include "egt/resource.h"
+#include "egt/detail/imagecache.h"
+#include "egt/detail/resource.h"
 #include "egt/utils.h"
 #include <cassert>
 #ifdef HAVE_LIBMAGIC
@@ -37,6 +37,9 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+
 auto ICON_PATH = detail::exe_pwd() + "/../share/egt/icons/";
 
 static string image_path = "";
@@ -56,9 +59,6 @@ static string resolve_filepath(const string& filename)
 
     return image_path + filename;
 }
-
-namespace detail
-{
 
 shared_cairo_surface_t ImageCache::get(const std::string& filename,
                                        float hscale, float vscale, bool approximate)

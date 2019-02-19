@@ -9,9 +9,9 @@
 
 #ifdef HAVE_LIBPLANES
 
+#include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
-#include "egt/kmsscreen.h"
 #include "egt/widget.h"
 #include "egt/window.h"
 #include <cairo.h>
@@ -31,6 +31,11 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
+namespace detail
+{
+
 static KMSScreen* the_kms = 0;
 
 struct FlipThread
@@ -386,4 +391,7 @@ KMSScreen::~KMSScreen()
 }
 
 }
+}
+}
+
 #endif

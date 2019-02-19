@@ -8,7 +8,7 @@
 
 #include <chrono>
 #include <egt/geometry.h>
-#include <egt/object.h>
+#include <egt/event.h>
 #include <egt/timer.h>
 #include <egt/utils.h>
 #include <string>

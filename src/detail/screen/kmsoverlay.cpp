@@ -7,7 +7,7 @@
 #include "config.h"
 #endif
 
-#include "egt/kmsoverlay.h"
+#include "egt/detail/screen/kmsoverlay.h"
 #include "egt/utils.h"
 
 #ifdef HAVE_LIBPLANES

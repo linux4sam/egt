@@ -14,10 +14,10 @@
 #include <cairo.h>
 #include <cassert>
 #include <cstdint>
+#include <egt/detail/object.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/input.h>
-#include <egt/object.h>
 #include <egt/palette.h>
 #include <egt/theme.h>
 #include <egt/utils.h>

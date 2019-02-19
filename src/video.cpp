@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/app.h"
-#include "egt/kmsscreen.h"
+#include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
 #include <asio.hpp>
 #include <cstring>

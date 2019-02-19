@@ -17,11 +17,9 @@ namespace egt
 {
 inline namespace v1
 {
-
 namespace detail
 {
 struct tslibimpl;
-}
 
 /**
  * Handles reading input from a tslib supported device.
@@ -39,10 +37,11 @@ private:
     void handle_read(const asio::error_code& error);
 
     asio::posix::stream_descriptor m_input;
-    std::unique_ptr<detail::tslibimpl> m_impl;
+    std::unique_ptr<tslibimpl> m_impl;
     bool m_active{false};
 };
 
+}
 }
 }
 

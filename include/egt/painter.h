@@ -7,12 +7,12 @@
 #define EGT_PAINTER_H
 
 #include <cairo.h>
-#include <memory>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
-#include <egt/widget.h>
+#include <egt/types.h>
 #include <egt/utils.h>
+#include <egt/widget.h>
 
 namespace egt
 {
@@ -20,15 +20,6 @@ inline namespace v1
 {
 
 class Image;
-
-using shared_cairo_surface_t =
-    std::shared_ptr<cairo_surface_t>;
-
-using shared_cairo_t =
-    std::shared_ptr<cairo_t>;
-
-using shared_cairo_pattern_t =
-    std::shared_ptr<cairo_pattern_t>;
 
 /**
  * Drawing interface for 2D graphics.

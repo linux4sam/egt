@@ -5,8 +5,8 @@
  */
 #include "egt/button.h"
 #include "egt/detail/alignment.h"
+#include "egt/detail/imagecache.h"
 #include "egt/frame.h"
-#include "egt/imagecache.h"
 #include "egt/painter.h"
 #include "egt/theme.h"
 #include "egt/widget.h"

@@ -20,6 +20,8 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
 
 /**
  * Handles reading input events from evdev devices.
@@ -39,6 +41,7 @@ private:
     std::vector<char> m_input_buf;
 };
 
+}
 }
 }
 

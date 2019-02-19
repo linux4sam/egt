@@ -11,10 +11,10 @@
  * @brief Working with input devices.
  */
 
-#include <asio.hpp>
 #include <egt/detail/mousegesture.h>
+#include <egt/detail/object.h>
+#include <egt/event.h>
 #include <egt/geometry.h>
-#include <egt/object.h>
 #include <linux/input.h>
 #include <memory>
 #include <string>
@@ -23,56 +23,8 @@ namespace egt
 {
 inline namespace v1
 {
+
 class Widget;
-
-/**
- * Definitions for pointer buttons.
- */
-enum class pointer_button
-{
-    none,
-    left,
-    middle,
-    right,
-    touch
-};
-
-/**
- * Current event state for pointer.
- */
-struct Pointer
-{
-    /**
-     * Mouse position in display coordinates.
-     */
-    DisplayPoint point;
-
-    /**
-     * Pointer button value.
-     */
-    pointer_button button{pointer_button::none};
-
-    /**
-     * The mouse point where eventid POINTER_DRAG_START occured.
-     */
-    DisplayPoint drag_start;
-};
-
-/**
- * Current event state for keyboard.
- */
-struct Keys
-{
-    /**
-     * Key value.
-     */
-    int key;
-
-    /**
-     * Key code.
-     */
-    int code;
-};
 
 /**
  * Base Input device class.
@@ -147,24 +99,6 @@ protected:
      */
     Keys m_keys;
 };
-
-/**
- * Information about the current outstanding event.
- */
-namespace event
-{
-
-/**
- * Get the event Pointer object.
- */
-inline const Pointer& pointer() { return Input::current().pointer(); }
-
-/**
- * Get the event Keys object.
- */
-inline const Keys& keys() { return Input::current().keys(); }
-
-}
 
 /**
  * Get the current widget which has the mouse grabbed, or nullptr.

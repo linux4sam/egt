@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/framebuffer.h"
+#include "egt/detail/screen/framebuffer.h"
 #include "egt/utils.h"
 #include <cassert>
 #include <fcntl.h>
@@ -15,6 +15,10 @@
 using namespace std;
 
 namespace egt
+{
+inline namespace v1
+{
+namespace detail
 {
 
 FrameBuffer::FrameBuffer(const string& path)
@@ -49,4 +53,6 @@ FrameBuffer::~FrameBuffer()
         ::close(m_fd);
 }
 
+}
+}
 }

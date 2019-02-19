@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/object.h"
+#include "egt/event.h"
+#include "egt/input.h"
 #include <iostream>
 #include <map>
 #include <string>
-
-using namespace std;
 
 namespace egt
 {
@@ -45,6 +44,21 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
 
     os << strings[event];
     return os;
+}
+
+namespace event
+{
+
+const Pointer& pointer()
+{
+    return Input::current().pointer();
+}
+
+const Keys& keys()
+{
+    return Input::current().keys();
+}
+
 }
 
 }

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/resource.h"
+#include "egt/detail/resource.h"
 #include <cstring>
 #include <map>
 #include <string>
@@ -23,7 +23,6 @@ struct Resource
     unsigned int len;
     unsigned int index;
 };
-}
 
 /*
  * Because of static initialization order, make this a pointer and allocate
@@ -115,5 +114,6 @@ void unregister_resource(const char* name)
     }
 }
 
+}
 }
 }

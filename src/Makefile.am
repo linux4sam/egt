@@ -40,33 +40,33 @@ combo.cpp \
 detail/alignment.cpp \
 detail/basicwindow.cpp \
 detail/collision.cpp \
+detail/imagecache.cpp \
+detail/input/inputevdev.cpp \
+detail/input/inputlibinput.cpp \
+detail/input/inputtslib.cpp \
 detail/mousegesture.cpp \
+detail/resource.cpp \
+detail/screen/framebuffer.cpp \
+detail/screen/x11screen.cpp \
 detail/windowimpl.cpp \
+event.cpp \
 eventloop.cpp \
 font.cpp \
 frame.cpp \
 geometry.cpp \
 grid.cpp \
 image.cpp \
-imagecache.cpp \
 images/bmp/cairo_bmp.c \
 images/bmp/cairo_bmp.h \
-input/input.cpp \
-input/inputevdev.cpp \
-input/inputlibinput.cpp \
-input/inputtslib.cpp \
+input.cpp \
 label.cpp \
 list.cpp \
 notebook.cpp \
-object.cpp \
 painter.cpp \
 palette.cpp \
 progressbar.cpp \
 radiobox.cpp \
-resource.cpp \
-screen/framebuffer.cpp \
-screen/screen.cpp \
-screen/x11screen.cpp \
+screen.cpp \
 slider.cpp \
 sprite.cpp \
 text.cpp \
@@ -84,8 +84,8 @@ window.cpp
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \
 detail/planewindow.cpp \
-screen/kmsoverlay.cpp \
-screen/kmsscreen.cpp
+detail/screen/kmsoverlay.cpp \
+detail/screen/kmsscreen.cpp
 endif
 
 if HAVE_LUA
@@ -133,35 +133,37 @@ $(top_srcdir)/include/egt/detail/alignment.h \
 $(top_srcdir)/include/egt/detail/basicwindow.h \
 $(top_srcdir)/include/egt/detail/collision.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
+$(top_srcdir)/include/egt/detail/imagecache.h \
+$(top_srcdir)/include/egt/detail/input/inputevdev.h \
+$(top_srcdir)/include/egt/detail/input/inputlibinput.h \
+$(top_srcdir)/include/egt/detail/input/inputtslib.h \
 $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \
+$(top_srcdir)/include/egt/detail/object.h \
 $(top_srcdir)/include/egt/detail/planewindow.h \
+$(top_srcdir)/include/egt/detail/resource.h \
+$(top_srcdir)/include/egt/detail/screen/framebuffer.h \
+$(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
+$(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
+$(top_srcdir)/include/egt/detail/screen/x11screen.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
+$(top_srcdir)/include/egt/event.h \
 $(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
-$(top_srcdir)/include/egt/framebuffer.h \
 $(top_srcdir)/include/egt/geometry.h \
 $(top_srcdir)/include/egt/grid.h \
 $(top_srcdir)/include/egt/image.h \
-$(top_srcdir)/include/egt/imagecache.h \
 $(top_srcdir)/include/egt/input.h \
-$(top_srcdir)/include/egt/inputevdev.h \
-$(top_srcdir)/include/egt/inputlibinput.h \
-$(top_srcdir)/include/egt/inputtslib.h \
 $(top_srcdir)/include/egt/keyboard.h \
-$(top_srcdir)/include/egt/kmsoverlay.h \
-$(top_srcdir)/include/egt/kmsscreen.h \
 $(top_srcdir)/include/egt/label.h \
 $(top_srcdir)/include/egt/list.h \
 $(top_srcdir)/include/egt/notebook.h \
-$(top_srcdir)/include/egt/object.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
 $(top_srcdir)/include/egt/popup.h \
 $(top_srcdir)/include/egt/progressbar.h \
 $(top_srcdir)/include/egt/radiobox.h \
-$(top_srcdir)/include/egt/resource.h \
 $(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sideboard.h \
 $(top_srcdir)/include/egt/sizer.h \
@@ -172,6 +174,7 @@ $(top_srcdir)/include/egt/textwidget.h \
 $(top_srcdir)/include/egt/theme.h \
 $(top_srcdir)/include/egt/timer.h \
 $(top_srcdir)/include/egt/tools.h \
+$(top_srcdir)/include/egt/types.h \
 $(top_srcdir)/include/egt/ui \
 $(top_srcdir)/include/egt/uiloader.h \
 $(top_srcdir)/include/egt/utils.h \
@@ -180,8 +183,8 @@ $(top_srcdir)/include/egt/video.h \
 $(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
 $(top_srcdir)/include/egt/widgetflags.h \
-$(top_srcdir)/include/egt/window.h \
-$(top_srcdir)/include/egt/x11screen.h
+$(top_srcdir)/include/egt/window.h
+
 
 libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 

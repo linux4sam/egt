@@ -9,15 +9,15 @@
 
 #include "egt/detail/basicwindow.h"
 #include "egt/detail/planewindow.h"
+#include "egt/detail/screen/kmsscreen.h"
 #include "egt/input.h"
-#include "egt/kmsscreen.h"
 #include "egt/label.h"
 #include "egt/painter.h"
 #include "egt/window.h"
 #include <algorithm>
-#include <vector>
 #include <iostream>
 #include <map>
+#include <vector>
 
 using namespace std;
 

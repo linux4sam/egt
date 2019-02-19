@@ -9,7 +9,7 @@
 
 #include "egt/app.h"
 #include "egt/eventloop.h"
-#include "egt/inputlibinput.h"
+#include "egt/detail/input/inputlibinput.h"
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
@@ -24,6 +24,10 @@ using namespace std;
 #ifdef HAVE_LIBINPUT
 
 namespace egt
+{
+inline namespace v1
+{
+namespace detail
 {
 
 #if 0
@@ -574,6 +578,9 @@ void InputLibInput::handle_read(const asio::error_code& error)
 InputLibInput::~InputLibInput()
 {
     libinput_unref(li);
+}
+
+}
 }
 }
 

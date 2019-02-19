@@ -8,14 +8,13 @@
 #endif
 
 #include "egt/app.h"
+#include "egt/detail/imagecache.h"
+#include "egt/detail/input/inputevdev.h"
+#include "egt/detail/input/inputlibinput.h"
+#include "egt/detail/input/inputtslib.h"
+#include "egt/detail/screen/framebuffer.h"
+#include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
-#include "egt/framebuffer.h"
-#include "egt/imagecache.h"
-#include "egt/input.h"
-#include "egt/inputevdev.h"
-#include "egt/inputlibinput.h"
-#include "egt/inputtslib.h"
-#include "egt/kmsscreen.h"
 #include "egt/painter.h"
 #include "egt/utils.h"
 #include "egt/version.h"
@@ -27,7 +26,7 @@
 #include <thread>
 
 #ifdef HAVE_X11
-#include "egt/x11screen.h"
+#include "egt/detail/screen/x11screen.h"
 #endif
 
 using namespace std;
@@ -56,7 +55,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
     the_app = this;
 
-    set_image_path(detail::exe_pwd() + "/../share/egt/examples/" + name + "/");
+    detail::set_image_path(detail::exe_pwd() + "/../share/egt/examples/" + name + "/");
 
     setlocale(LC_ALL, "");
     bindtextdomain(name.c_str(), (detail::exe_pwd() + "/../share/locale/").c_str());
@@ -74,14 +73,14 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     if (backend == "x11")
     {
 #ifdef HAVE_X11
-        new X11Screen(Size(800, 480));
+        new detail::X11Screen(Size(800, 480));
 #endif
     }
 
     if (backend == "kms")
     {
 #ifdef HAVE_LIBPLANES
-        new KMSScreen(primary);
+        new detail::KMSScreen(primary);
 #else
         ignoreparam(primary);
 #endif
@@ -89,27 +88,27 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
     if (backend == "fbdev")
     {
-        new FrameBuffer("/dev/fb0");
+        new detail::FrameBuffer("/dev/fb0");
     }
 
     if (backend.empty())
     {
 #ifdef HAVE_LIBPLANES
-        new KMSScreen(primary);
+        new detail::KMSScreen(primary);
 #elif defined(HAVE_X11)
-        new X11Screen(Size(800, 480));
+        new detail::X11Screen(Size(800, 480));
         //new X11Screen(Size(1280, 1024));
 #else
-        new FrameBuffer("/dev/fb0");
+        new detail::FrameBuffer("/dev/fb0");
 #endif
     }
 
 #ifdef HAVE_TSLIB
-    new InputTslib("/dev/input/touchscreen0");
+    new detail::InputTslib("/dev/input/touchscreen0");
 #endif
-    //new InputEvDev("/dev/input/event2");
+    //new detail::InputEvDev("/dev/input/event2");
 #ifdef HAVE_LIBINPUT
-    new InputLibInput;
+    new detail::InputLibInput;
 #endif
 }
 

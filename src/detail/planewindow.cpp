@@ -7,10 +7,10 @@
 #include "config.h"
 #endif
 
-#include "egt/image.h"
-#include "egt/kmsscreen.h"
-#include "egt/painter.h"
 #include "egt/detail/planewindow.h"
+#include "egt/detail/screen/kmsscreen.h"
+#include "egt/image.h"
+#include "egt/painter.h"
 #include <algorithm>
 
 using namespace std;

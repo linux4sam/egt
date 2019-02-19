@@ -12,6 +12,8 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
 
 /**
  * Register a resource as raw data.
@@ -47,6 +49,7 @@ bool read_resource(const char* name, unsigned char* data,
  */
 cairo_status_t read_resource_stream(void* closure, unsigned char* data, unsigned int length);
 
+}
 }
 }
 

@@ -26,6 +26,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 namespace detail
 {
 struct eventloopimpl;

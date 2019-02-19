@@ -15,6 +15,7 @@
 #include <deque>
 #include <memory>
 #include <egt/geometry.h>
+#include <egt/types.h>
 #include <vector>
 #include <iosfwd>
 
@@ -22,11 +23,6 @@ namespace egt
 {
 inline namespace v1
 {
-using shared_cairo_surface_t =
-    std::shared_ptr<cairo_surface_t>;
-
-using shared_cairo_t =
-    std::shared_ptr<cairo_t>;
 
 /**
  * Supported pixel formats.
@@ -55,9 +51,10 @@ pixel_format egt_format(cairo_format_t format);
 }
 
 /**
- * Base screen class.
+ * A Screen manages one of more buffers that make up a surface.
  *
- * A screen manages one of more surfaces.
+ * @warning A Screen is not necissarily the same resolution and orientation of
+ * the Display.
  */
 class Screen
 {
@@ -80,7 +77,7 @@ public:
     /**
      * Schedule a flip to occur later.
      */
-    virtual void schedule_flip() {}
+    virtual void schedule_flip()  = 0;
 
     /**
      * If the screen implementation manages multiple buffers, this will

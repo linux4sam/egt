@@ -17,16 +17,22 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+
 /**
  * Screen on a fbdev framebuffer.
  *
- * The framebuffer is internaly mmap()'ed and directly accessible.
+ * The framebuffer is internaly mmap()'ed and directly accessible.  The
+ * framebuffer does not manage multiple buffers.
  */
 class FrameBuffer : public Screen
 {
 public:
 
     explicit FrameBuffer(const std::string& path = "/dev/fb0");
+
+    virtual void schedule_flip() override {}
 
     virtual ~FrameBuffer();
 
@@ -35,6 +41,7 @@ protected:
     void* m_fb{nullptr};
 };
 
+}
 }
 }
 

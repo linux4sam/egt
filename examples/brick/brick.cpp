@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/ui"
+#include <egt/detail/screen/kmsscreen.h>
+#include <egt/ui>
 #include <iostream>
 #include <random>
 #include <sstream>
@@ -42,7 +43,7 @@ public:
         add(&m_grid1);
         add(&m_grid2);
 
-        for (int c = 0; c < KMSScreen::instance()->size().w / 100; c++)
+        for (int c = 0; c < detail::KMSScreen::instance()->size().w / 100; c++)
         {
             for (int r = 0; r < ROWS; r++)
             {
@@ -54,7 +55,7 @@ public:
             }
         }
 
-        for (int c = 0; c < KMSScreen::instance()->size().w / 100; c++)
+        for (int c = 0; c < detail::KMSScreen::instance()->size().w / 100; c++)
         {
             for (int r = 0; r < ROWS; r++)
             {
