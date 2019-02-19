@@ -11,12 +11,13 @@
 #include "egt/resource.h"
 #include "egt/utils.h"
 #include <cassert>
-#include <iostream>
 #include <magic.h>
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include "cairo_bmp.h"
 
 #ifdef HAVE_LIBJPEG
 #ifdef __cplusplus
@@ -105,6 +106,13 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                             cairo_surface_destroy);
             }
 #endif
+            else if (mimetype == "image/x-ms-bmp")
+            {
+                image = shared_cairo_surface_t(
+                            cairo_image_surface_create_from_bmp_stream(
+                                read_resource_stream, (void*)name.c_str()),
+                            cairo_surface_destroy);
+            }
             else
             {
                 ERR("could not load resource " << name);
@@ -134,6 +142,12 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                             cairo_surface_destroy);
             }
 #endif
+            else if (mimetype == "image/x-ms-bmp")
+            {
+                image = shared_cairo_surface_t(
+                            cairo_image_surface_create_from_bmp(name.c_str()),
+                            cairo_surface_destroy);
+            }
             else
             {
                 ERR("could not load file " << name);
@@ -166,6 +180,12 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                             cairo_surface_destroy);
             }
 #endif
+            else if (mimetype == "image/x-ms-bmp")
+            {
+                image = shared_cairo_surface_t(
+                            cairo_image_surface_create_from_bmp(name.c_str()),
+                            cairo_surface_destroy);
+            }
             else
             {
                 ERR("could not load file " << name);

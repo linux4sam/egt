@@ -2,6 +2,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
+	-I$(top_srcdir)/src/images/bmp \
 	-I$(top_srcdir)/src/images/jpeg \
 	-I$(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
@@ -46,6 +47,8 @@ geometry.cpp \
 grid.cpp \
 image.cpp \
 imagecache.cpp \
+images/bmp/cairo_bmp.c \
+images/bmp/cairo_bmp.h \
 input/evdev.cpp \
 input/input.cpp \
 input/libinput.cpp \
