@@ -30,6 +30,11 @@ PlaneWindow::PlaneWindow(Window* interface,
 {
     assert(KMSScreen::instance());
     m_screen = nullptr;
+
+    // hack to force some size
+    if (m_interface->m_box.size().empty())
+        m_interface->m_box.size(Size(32, 32));
+
     allocate_screen();
 }
 
