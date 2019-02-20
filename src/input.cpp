@@ -43,6 +43,15 @@ void Input::dispatch(eventid event)
 
     m_current_input = this;
 
+    if (event == eventid::KEYBOARD_DOWN)
+    {
+        m_keys.states[m_keys.code] = true;
+    }
+    else if (event == eventid::KEYBOARD_UP)
+    {
+        m_keys.states[m_keys.code] = false;
+    }
+
     auto eevent = m_mouse->handle(event);
 
     DBG("input event: " << event);

@@ -11,7 +11,9 @@
  * @brief Event types.
  */
 
+#include <array>
 #include <egt/geometry.h>
+#include <egt/keycode.h>
 #include <iosfwd>
 
 namespace egt
@@ -122,6 +124,11 @@ struct Keys
      * Key code.
      */
     int code;
+
+    /**
+     * Boolean state of every key code.
+     */
+    std::array<bool, 256> states{};
 };
 
 /**

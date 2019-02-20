@@ -7,15 +7,15 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_X11
-
+#include "detail/screen/keysym_to_unicode.h"
+#include "detail/screen/keyboard_code_conversion_x.h"
+#include "detail/screen/x11wrap.h"
 #include "egt/app.h"
 #include "egt/detail/screen/x11screen.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
-#include <X11/Xatom.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+#include "egt/keycode.h"
+#include "egt/utils.h"
 #include <cairo-xlib.h>
 #include <cairo.h>
 
@@ -156,23 +156,14 @@ void X11Screen::handle_read(const asio::error_code& error)
             m_in.dispatch(eventid::RAW_POINTER_MOVE);
             break;
         case KeyPress:
-        {
-            m_in.m_keys.key = XLookupKeysym(&e.xkey, 0);
-            m_in.m_keys.code = XKeysymToKeycode(m_priv->display, m_in.m_keys.key);
-            if (m_in.m_keys.key == XK_BackSpace)
-                m_in.m_keys.code = KEY_BACKSPACE;
-
-            m_in.dispatch(eventid::KEYBOARD_DOWN);
-            break;
-        }
         case KeyRelease:
         {
-            m_in.m_keys.key = XLookupKeysym(&e.xkey, 0);
-            m_in.m_keys.code = XKeysymToKeycode(m_priv->display, m_in.m_keys.key);
-            if (m_in.m_keys.key == XK_BackSpace)
-                m_in.m_keys.code = KEY_BACKSPACE;
+            KeySym keysym = NoSymbol;
+            XLookupString(&e.xkey, NULL, 0, &keysym, NULL);
+            m_in.m_keys.key = detail::GetUnicodeCharacterFromXKeySym(keysym);
+            m_in.m_keys.code = detail::KeyboardCodeFromXKeyEvent(&e);
 
-            m_in.dispatch(eventid::KEYBOARD_UP);
+            m_in.dispatch(e.type == KeyPress ? eventid::KEYBOARD_DOWN : eventid::KEYBOARD_UP);
             break;
         }
         case ClientMessage:
@@ -197,5 +188,3 @@ X11Screen::~X11Screen()
 }
 }
 }
-
-#endif

@@ -11,6 +11,14 @@
 using namespace egt;
 using namespace std;
 
+static std::string last_line(const string& str)
+{
+    std::stringstream ss(str);
+    std::string line;
+    while (std::getline(ss, line, '\n'));
+    return line;
+}
+
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "calc");
@@ -22,7 +30,8 @@ int main(int argc, const char** argv)
     win.add(&topgrid);
     topgrid.set_align(alignmask::EXPAND);
 
-    MultilineTextBox text("");
+    TextBox text("");
+    text.set_text_flag(TextBox::flag::multiline);
     topgrid.add(&text, 0, 0, alignmask::EXPAND);
     text.set_text_align(alignmask::CENTER | alignmask::RIGHT);
     text.set_font(Font(25));
@@ -64,7 +73,7 @@ int main(int argc, const char** argv)
 
                 if (b->text() == "=")
                 {
-                    string line = detail::replace_all(detail::replace_all(text.last_line(), "x", "*"), "÷", "/");
+                    string line = detail::replace_all(detail::replace_all(last_line(text.text()), "x", "*"), "÷", "/");
                     if (!line.empty())
                     {
                         ostringstream ss;

@@ -24,28 +24,11 @@ int main(int argc, const char** argv)
     win.add(&keyboard);
     keyboard.show();
 
-    MultilineTextBox textbox(Rect(0, 0, 100, 100), alignmask::LEFT | alignmask::TOP);
+    TextBox textbox(Rect(0, 0, 100, 100), alignmask::LEFT | alignmask::TOP);
+    textbox.set_text_flag(TextBox::flag::multiline);
     win.add(textbox);
     textbox.set_align(alignmask::EXPAND_HORIZONTAL | alignmask::BOTTOM);
     keyboard_focus(&textbox);
-
-#if 0
-    // TODO: this is broken with keyboard and focus - get dups
-    Input::global_input().on_event([&](eventid event)
-    {
-        switch (event)
-        {
-        case eventid::KEYBOARD_DOWN:
-        case eventid::KEYBOARD_UP:
-        case eventid::KEYBOARD_REPEAT:
-            return textbox.handle(event);
-            break;
-        default:
-            break;
-        }
-        return 0;
-    });
-#endif
 
     win.show();
 

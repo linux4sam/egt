@@ -47,7 +47,6 @@ detail/input/inputtslib.cpp \
 detail/mousegesture.cpp \
 detail/resource.cpp \
 detail/screen/framebuffer.cpp \
-detail/screen/x11screen.cpp \
 detail/windowimpl.cpp \
 event.cpp \
 eventloop.cpp \
@@ -145,7 +144,6 @@ $(top_srcdir)/include/egt/detail/resource.h \
 $(top_srcdir)/include/egt/detail/screen/framebuffer.h \
 $(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
 $(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
-$(top_srcdir)/include/egt/detail/screen/x11screen.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
 $(top_srcdir)/include/egt/event.h \
 $(top_srcdir)/include/egt/eventloop.h \
@@ -185,6 +183,18 @@ $(top_srcdir)/include/egt/widget.h \
 $(top_srcdir)/include/egt/widgetflags.h \
 $(top_srcdir)/include/egt/window.h
 
+if HAVE_X11
+libegt_la_SOURCES += \
+detail/screen/keysym_to_unicode.cpp \
+detail/screen/keysym_to_unicode.h \
+detail/screen/keyboard_code_conversion_x.h \
+detail/screen/keyboard_code_conversion_x.cpp \
+detail/screen/x11screen.cpp \
+detail/screen/x11wrap.h
+
+libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/detail/screen/x11screen.h
+endif
 
 libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 

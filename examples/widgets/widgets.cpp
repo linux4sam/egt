@@ -193,7 +193,8 @@ struct TextPage : public NotebookTab
         text4->disable();
         grid0->add(text4);
 
-        auto text5 = new MultilineTextBox("Multiline\nText", Rect(), alignmask::LEFT | alignmask::TOP);
+        auto text5 = new TextBox("Multiline\nText", Rect(), alignmask::LEFT | alignmask::TOP);
+        text5->set_text_flag(TextBox::flag::multiline);
         grid1->set_align(alignmask::EXPAND);
         grid1->add(text5);
     }

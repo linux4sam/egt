@@ -33,16 +33,6 @@ public:
         this->m_grid.set_align(alignmask::EXPAND);
         this->m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
 
-
-        /*
-        template <class T>
-            struct Key : public T
-        {
-
-            unsigned int code;
-        };
-        */
-
         std::vector<std::vector<std::string>> buttons =
         {
             {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p" },
@@ -76,12 +66,16 @@ public:
                     {
                         if (event == eventid::RAW_POINTER_DOWN)
                         {
+                            // hack: ascii characters translate directly
                             m_in.m_keys.key = b->text()[0];
+                            m_in.m_keys.code = 0;
                             m_in.dispatch(eventid::KEYBOARD_DOWN);
                         }
                         else if (event == eventid::RAW_POINTER_UP)
                         {
+                            // hack: ascii characters translate directly
                             m_in.m_keys.key = b->text()[0];
+                            m_in.m_keys.code = 0;
                             m_in.dispatch(eventid::KEYBOARD_UP);
                         }
                     }
