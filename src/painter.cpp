@@ -77,21 +77,6 @@ Painter& Painter::point(const Point& p)
     return *this;
 }
 
-Painter& Painter::line(const Point& start, const Point& end)
-{
-    cairo_move_to(m_cr.get(), start.x, start.y);
-    cairo_line_to(m_cr.get(), end.x, end.y);
-
-    return *this;
-}
-
-Painter& Painter::line(const Point& end)
-{
-    cairo_line_to(m_cr.get(), end.x, end.y);
-
-    return *this;
-}
-
 Painter& Painter::draw_image(const Point& point, const Image& image, bool bw)
 {
     if (image.empty())
@@ -231,13 +216,12 @@ Rect Painter::draw_text(const Rect& rect, const std::string& str, alignmask alig
 }
 
 Rect Painter::draw_text(const std::string& text, const Rect& rect,
-                        const Color& color, alignmask align, int margin,
+                        alignmask align, int margin,
                         const Font& font)
 {
     AutoSaveRestore sr(*this);
 
     set_font(font);
-    set_color(color);
     return draw_text(rect, text, align, margin);
 }
 

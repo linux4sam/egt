@@ -106,7 +106,12 @@ public:
      *
      * @param[in] end End point.
      */
-    virtual Painter& line(const Point& end);
+    template<class T>
+    Painter& line(const T& end)
+    {
+        cairo_line_to(m_cr.get(), end.x, end.y);
+        return *this;
+    }
 
     /**
      * Create a line from the specified start to end point.
@@ -114,7 +119,13 @@ public:
      * @param[in] start Start point.
      * @param[in] end End point.
      */
-    virtual Painter& line(const Point& start, const Point& end);
+    template<class T>
+    Painter& line(const T& start, const T& end)
+    {
+        cairo_move_to(m_cr.get(), start.x, start.y);
+        cairo_line_to(m_cr.get(), end.x, end.y);
+        return *this;
+    }
 
     /**
      * Draw an image surface at the specified point.
@@ -174,7 +185,6 @@ public:
 
     virtual Rect draw_text(const std::string& text,
                            const Rect& rect,
-                           const Color& color = Color::BLACK,
                            alignmask align = alignmask::CENTER,
                            int margin = 5,
                            const Font& font = Font());

@@ -75,9 +75,9 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
     }
 
     // text
+    painter.set_color(palette().color(Palette::TEXT, group));
     painter.draw_text(m_text,
                       box(),
-                      palette().color(Palette::TEXT, group),
                       alignmask::LEFT | alignmask::CENTER,
                       h());
 }

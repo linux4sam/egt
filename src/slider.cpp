@@ -202,9 +202,9 @@ void Slider::draw_label(Painter& painter, int value)
     auto text = std::to_string(value);
     auto font = TextWidget::scale_font(b.size(), text, Font());
 
+    painter.set_color(palette().color(Palette::HIGHLIGHT, disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL));
     painter.draw_text(text,
                       b,
-                      palette().color(Palette::HIGHLIGHT, disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL),
                       alignmask::CENTER,
                       5,
                       font);

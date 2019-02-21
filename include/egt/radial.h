@@ -185,13 +185,17 @@ public:
         if (widget.m_rflags.find(radial_flags::text) != widget.m_rflags.end())
         {
             if (!widget.m_text.empty())
-                painter.draw_text(widget.m_text, widget.box(), widget.palette().color(Palette::TEXT),
+            {
+                painter.set_color(widget.palette().color(Palette::TEXT));
+                painter.draw_text(widget.m_text, widget.box(),
                                   alignmask::CENTER, 0, Font(72));
+            }
         }
         else if (widget.m_rflags.find(radial_flags::text_value) != widget.m_rflags.end())
         {
             auto text = std::to_string(widget.value());
-            painter.draw_text(text, widget.box(), widget.palette().color(Palette::TEXT),
+            painter.set_color(widget.palette().color(Palette::TEXT));
+            painter.draw_text(text, widget.box(),
                               alignmask::CENTER, 0, Font(72));
         }
     }

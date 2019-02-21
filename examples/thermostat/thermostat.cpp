@@ -233,11 +233,15 @@ int main(int argc, const char** argv)
         painter.stroke();
 
         if (!widget.text().empty())
-            painter.draw_text(widget.text(), widget.box(), widget.palette().color(Palette::TEXT),
+        {
+            painter.set_color(widget.palette().color(Palette::TEXT));
+            painter.draw_text(widget.text(), widget.box(),
                               alignmask::CENTER, 0, Font(72));
+        }
 
         string current = "Current " + std::to_string(widget.value2()) + "°";
-        painter.draw_text(current, widget.box(), widget.palette().color(Palette::TEXT),
+        painter.set_color(widget.palette().color(Palette::TEXT));
+        painter.draw_text(current, widget.box(),
                           alignmask::CENTER | alignmask::BOTTOM, 80, Font(24));
     });
 

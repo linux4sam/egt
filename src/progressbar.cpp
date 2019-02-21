@@ -37,7 +37,8 @@ void ProgressBar::draw(Painter& painter, const Rect& rect)
 
     string text = std::to_string(value()) + "%";
     m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);
-    painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
+    painter.set_color(this->palette().color(Palette::TEXT));
+    painter.draw_text(text, this->box(),
                       alignmask::CENTER, 0, m_dynamic_font);
 }
 
@@ -70,7 +71,8 @@ void SpinProgress::draw(Painter& painter, const Rect& rect)
 
     string text = std::to_string(value());
     m_dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, m_dynamic_font);
-    painter.draw_text(text, this->box(), this->palette().color(Palette::TEXT),
+    painter.set_color(this->palette().color(Palette::TEXT));
+    painter.draw_text(text, this->box(),
                       alignmask::CENTER, 0, m_dynamic_font);
 }
 

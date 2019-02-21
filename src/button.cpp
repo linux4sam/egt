@@ -218,8 +218,8 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
         painter.draw_image(ibox.point(), widget.image(), widget.disabled());
 
-        painter.draw_text(widget.text(), tbox, widget.palette().color(Palette::TEXT_INVERT, group),
-                          alignmask::CENTER, 0, widget.font());
+        painter.set_color(widget.palette().color(Palette::TEXT_INVERT, group));
+        painter.draw_text(widget.text(), tbox, alignmask::CENTER, 0, widget.font());
     }
     else
     {

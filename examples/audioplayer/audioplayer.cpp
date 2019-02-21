@@ -168,8 +168,8 @@ int main(int argc, const char** argv)
             p -= Point(s.w, 0);
 
         painter.set_font(Font());
+        painter.set_color(Color::WHITE);
         painter.draw_text(text, Rect(p, s),
-                          Color::WHITE,
                           alignmask::CENTER, 0, Font());
 
     });

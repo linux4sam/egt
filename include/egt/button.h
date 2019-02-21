@@ -55,6 +55,9 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    /**
+     * Default draw method for the button.
+     */
     static void default_draw(Button& widget, Painter& painter, const Rect& rect);
 
     /**
@@ -73,12 +76,21 @@ protected:
 
     virtual void set_parent(Frame* parent) override;
 
+    /**
+     * Perform a special first resize of the button.
+     */
     virtual void first_resize();
 
 private:
 
+    /**
+     * Is the button currently checked?
+     */
     bool m_checked{false};
 
+    /**
+     * Pointer to the group this button is a part of.
+     */
     ButtonGroup* m_group{nullptr};
 
     friend ButtonGroup;

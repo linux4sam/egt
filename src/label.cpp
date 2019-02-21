@@ -248,7 +248,8 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
         if (widget.m_show_label)
         {
-            painter.draw_text(widget.m_text, tbox, widget.palette().color(Palette::TEXT),
+            painter.set_color(widget.palette().color(Palette::TEXT));
+            painter.draw_text(widget.m_text, tbox,
                               alignmask::CENTER, 0, widget.font());
         }
     }
