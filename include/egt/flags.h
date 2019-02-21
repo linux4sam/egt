@@ -6,6 +6,7 @@
 #ifndef EGT_FLAGS_H
 #define EGT_FLAGS_H
 
+#include <egt/detail/object.h>
 #include <unordered_set>
 
 namespace egt
@@ -17,7 +18,7 @@ inline namespace v1
  * @brief Utility class for managing a set of flags.
  */
 template <class T>
-class Flags
+class Flags : public detail::Object
 {
 public:
 
@@ -59,28 +60,43 @@ public:
     /**
      * Set the specified flag.
      * @param flag The flag to set.
+     * @return True if a new item was added.
      */
-    inline void set(T flag)
+    inline bool set(T flag)
     {
-        m_flags.insert(flag);
+        auto p = m_flags.insert(flag);
+        if (p.second)
+            invoke_handlers(eventid::property_changed);
+        return p.second;
     }
 
     /**
      * Set the specified textbox flags.
      * @param flags Flags to set.
+     * @return True if a new item was added.
      */
-    inline void set(flags flags)
+    inline bool set(flags flags)
     {
-        m_flags.insert(flags.begin(), flags.end());
+        bool inserted = false;
+        for (auto& flag : flags)
+            if (set(flag))
+                inserted = true;
+        if (inserted)
+            invoke_handlers(eventid::property_changed);
+        return inserted;
     }
 
     /**
      * Clear, or unset, the specified flag.
      * @param flag Flag to clear.
+     * @return True if the flag was deleted.
      */
-    inline void clear(T flag)
+    inline bool clear(T flag)
     {
-        m_flags.erase(m_flags.find(flag));
+        auto inserted = m_flags.erase(flag);
+        if (inserted)
+            invoke_handlers(eventid::property_changed);
+        return inserted;
     }
 
     /**
