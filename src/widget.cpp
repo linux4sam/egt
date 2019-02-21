@@ -132,6 +132,18 @@ int Widget::handle(eventid event)
 {
     DBG(name() << " handle: " << event);
 
+    switch (event)
+    {
+    case eventid::on_gain_focus:
+        m_focus = true;
+        break;
+    case eventid::on_lost_focus:
+        m_focus = false;
+        break;
+    default:
+        break;
+    }
+
     if (flags().is_set(Widget::flag::grab_mouse))
     {
         switch (event)
@@ -465,16 +477,6 @@ void Widget::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << name() <<
         " " << box() << " " << m_widget_flags << std::endl;
-}
-
-void Widget::on_gain_focus()
-{
-    m_focus = true;
-}
-
-void Widget::on_lost_focus()
-{
-    m_focus = false;
 }
 
 void Widget::set_theme(const Theme& theme)

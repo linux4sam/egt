@@ -164,12 +164,12 @@ void keyboard_focus(Widget* widget)
         return;
 
     if (detail::kfocus)
-        detail::kfocus->on_lost_focus();
+        detail::kfocus->handle(eventid::on_lost_focus);
 
     detail::kfocus = widget;
 
     if (widget)
-        widget->on_gain_focus();
+        widget->handle(eventid::on_gain_focus);
 }
 
 Widget* keyboard_focus()

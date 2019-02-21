@@ -83,6 +83,9 @@ public:
         m_flags.erase(m_flags.find(flag));
     }
 
+    /**
+     * Get the flags set.
+     */
     inline const flags& get() const
     {
         return m_flags;

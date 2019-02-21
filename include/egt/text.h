@@ -70,10 +70,6 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void on_gain_focus() override;
-
-    virtual void on_lost_focus() override;
-
     virtual void set_text(const std::string& str) override;
 
     virtual void clear() override;

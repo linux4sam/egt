@@ -34,22 +34,16 @@ TextBox::TextBox(const Rect& rect, alignmask align, const flags_type::flags& fla
     : TextBox(std::string(), rect, align, flags)
 {}
 
-void TextBox::on_gain_focus()
-{
-    show_cursor();
-    Widget::on_gain_focus();
-}
-
-void TextBox::on_lost_focus()
-{
-    hide_cursor();
-    Widget::on_lost_focus();
-}
-
 int TextBox::handle(eventid event)
 {
     switch (event)
     {
+    case eventid::on_gain_focus:
+        show_cursor();
+        break;
+    case eventid::on_lost_focus:
+        hide_cursor();
+        break;
     case eventid::pointer_click:
         keyboard_focus(this);
         return 1;

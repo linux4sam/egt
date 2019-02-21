@@ -39,6 +39,8 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
         MAPITEM(eventid::input_property_changed);
         MAPITEM(eventid::hide);
         MAPITEM(eventid::show);
+        MAPITEM(eventid::on_gain_focus);
+        MAPITEM(eventid::on_lost_focus);
 #undef MAPITEM
     }
 

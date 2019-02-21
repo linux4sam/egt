@@ -117,8 +117,8 @@ void mouse_grab(Widget* widget);
 /**
  * Set the keyboard focus of a widget.
  *
- * This will result in calling on_gain_focus() for the new widget and
- * on_lost_focus() for any previous widget.
+ * This will result in calling eventid::on_gain_focus for the new widget and
+ * eventid::on_lost_focus for any previous widget.
  */
 void keyboard_focus(Widget* widget);
 

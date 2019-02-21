@@ -477,16 +477,6 @@ public:
     virtual Point from_display(const DisplayPoint& p);
 
     /**
-     * Called when the widget gains focus.
-     */
-    virtual void on_gain_focus();
-
-    /**
-     * Called when the widget loses focus.
-     */
-    virtual void on_lost_focus();
-
-    /**
      * Get the current focus state of the widget.
      */
     virtual bool focus() const { return m_focus; }
