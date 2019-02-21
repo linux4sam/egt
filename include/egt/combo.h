@@ -61,9 +61,9 @@ public:
 
     ComboBox(const item_array& items = item_array(),
              const Rect& rect = Rect(),
-             alignmask align = alignmask::CENTER | alignmask::LEFT,
+             alignmask align = alignmask::center | alignmask::left,
              const Font& font = Font(),
-             const widgetflags& flags = widgetflags()) noexcept;
+             const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     virtual int handle(eventid event) override;
 

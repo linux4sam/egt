@@ -64,27 +64,27 @@ struct LinePage : public NotebookTab
 #ifdef HAVE_KPLOT
         auto line = new LineChart(Rect(50, 10, 600, 400));
         line->set_name("linechart");
-        line->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+        line->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
         add(line);
 
         auto sin_checkbox = new CheckBox("sin", Rect(Point(0, 410), Size(80, 40)));
-        sin_checkbox->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
+        sin_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         sin_checkbox->set_name("sin");
         add(sin_checkbox);
 
         auto cos_checkbox = new CheckBox("cos", Rect(Point(100, 410), Size(80, 40)));
-        cos_checkbox->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
+        cos_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         cos_checkbox->set_name("cos");
         add(cos_checkbox);
 
         auto atan_checkbox = new CheckBox("atan", Rect(Point(200, 410), Size(80, 40)));
-        atan_checkbox->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
+        atan_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         atan_checkbox->set_name("atan");
         add(atan_checkbox);
 
         auto handle_checkbox = [line, sin_checkbox, cos_checkbox, atan_checkbox](eventid event)
         {
-            if (event == eventid::PROPERTY_CHANGED)
+            if (event == eventid::property_changed)
             {
                 line->clear();
                 if (sin_checkbox->checked())
@@ -111,7 +111,7 @@ struct LinePage : public NotebookTab
 
         line_width->on_event([line, line_width](eventid event)
         {
-            if (event == eventid::PROPERTY_CHANGED)
+            if (event == eventid::property_changed)
             {
                 line->set_line_width(line_width->value());
             }
@@ -121,16 +121,16 @@ struct LinePage : public NotebookTab
         line_width->set_value(2);
 
         auto gridx_checkbox = new CheckBox("grid X", Rect(Point(500, 410), Size(80, 40)));
-        gridx_checkbox->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
+        gridx_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(gridx_checkbox);
 
         auto gridy_checkbox = new CheckBox("grid Y", Rect(Point(600, 410), Size(80, 40)));
-        gridy_checkbox->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
+        gridy_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(gridy_checkbox);
 
         auto handle_grid_checkbox = [gridx_checkbox, gridy_checkbox, line](eventid event)
         {
-            if (event == eventid::PROPERTY_CHANGED)
+            if (event == eventid::property_changed)
             {
                 uint32_t flags = 0;
                 if (gridx_checkbox->checked())
@@ -169,24 +169,24 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "charts");
 
-    global_palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    global_palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-    global_palette().set(Palette::TEXT, Palette::GROUP_ACTIVE, Color::BLACK);
+    global_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    global_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+    global_palette().set(Palette::ColorId::text, Palette::GroupId::active, Palette::black);
 
     TopWindow win;
 
-    BoxSizer hsizer(orientation::HORIZONTAL);
-    hsizer.set_align(alignmask::EXPAND);
+    BoxSizer hsizer(orientation::horizontal);
+    hsizer.set_align(alignmask::expand);
     win.add(&hsizer);
 
     ListBox list(Rect(Point(), Size(win.w() * 0.15, 0)));
-    list.set_align(alignmask::EXPAND_VERTICAL | alignmask::LEFT);
+    list.set_align(alignmask::expand_vertical | alignmask::left);
     list.add_item(new StringItem("Line"));
     list.add_item(new StringItem("Pie"));
     hsizer.add(&list);
 
     Notebook notebook;
-    notebook.set_align(alignmask::EXPAND);
+    notebook.set_align(alignmask::expand);
     hsizer.add(&notebook);
     notebook.add(new LinePage());
     notebook.add(new PiePage());
@@ -196,7 +196,7 @@ int main(int argc, const char** argv)
         ignoreparam(event);
         notebook.set_select(list.selected());
         return 1;
-    }, {eventid::PROPERTY_CHANGED});
+    }, {eventid::property_changed});
 
     win.show();
 

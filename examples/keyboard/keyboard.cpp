@@ -24,10 +24,10 @@ int main(int argc, const char** argv)
     win.add(&keyboard);
     keyboard.show();
 
-    TextBox textbox(Rect(0, 0, 100, 100), alignmask::LEFT | alignmask::TOP);
-    textbox.set_text_flag(TextBox::flag::multiline);
+    TextBox textbox(Rect(0, 0, 100, 100), alignmask::left | alignmask::top);
+    textbox.text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
     win.add(textbox);
-    textbox.set_align(alignmask::EXPAND_HORIZONTAL | alignmask::BOTTOM);
+    textbox.set_align(alignmask::expand_horizontal | alignmask::bottom);
     keyboard_focus(&textbox);
 
     win.show();

@@ -63,7 +63,7 @@ public:
      *              the widget with this value.
      */
     virtual Widget* add(Widget* widget, int column, int row,
-                        alignmask align = alignmask::EXPAND);
+                        alignmask align = alignmask::expand);
 
     /**
      * Add a widget to the next empty cell.
@@ -76,7 +76,7 @@ public:
      *              the widget with this value.
      */
     virtual Widget* add(Widget* widget,
-                        alignmask align = alignmask::EXPAND);
+                        alignmask align = alignmask::expand);
 
     /**
      * Get a widget at he specified row and column.

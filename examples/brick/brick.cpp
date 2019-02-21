@@ -37,8 +37,8 @@ public:
             background->scale_image(hscale, vscale);
         }
 
-        m_grid1.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        m_grid2.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_grid1.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        m_grid2.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
         add(&m_grid1);
         add(&m_grid2);
@@ -76,9 +76,9 @@ public:
         m_label = new Label("-",
                             Rect(Point(5, 2),
                                  Size(100, 40)),
-                            alignmask::LEFT | alignmask::CENTER);
-        m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+                            alignmask::left | alignmask::center);
+        m_label->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+        .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(m_label);
 
         reset_game();
@@ -89,17 +89,17 @@ public:
     {
         switch (event)
         {
-        case eventid::KEYBOARD_REPEAT:
-        case eventid::KEYBOARD_DOWN:
+        case eventid::keyboard_repeat:
+        case eventid::keyboard_down:
         {
             if (event::keys().key == KEY_LEFT || event::keys().key == KEY_RIGHT)
             {
                 int x;
                 m_running = true;
                 if (event::keys().key == KEY_LEFT)
-                    x = m_paddle.x() - (event == eventid::KEYBOARD_REPEAT ? 15 : 10);
+                    x = m_paddle.x() - (event == eventid::keyboard_repeat ? 15 : 10);
                 else
-                    x = m_paddle.x() + (event == eventid::KEYBOARD_REPEAT ? 15 : 10);
+                    x = m_paddle.x() + (event == eventid::keyboard_repeat ? 15 : 10);
 
                 if (x > -m_paddle.w() && x < w())
                     m_paddle.move(Point(x, m_paddle.y()));
@@ -122,10 +122,10 @@ public:
 
             break;
         }
-        case eventid::RAW_POINTER_DOWN:
+        case eventid::raw_pointer_down:
             m_running = true;
             break;
-        case eventid::RAW_POINTER_MOVE:
+        case eventid::raw_pointer_move:
             m_paddle.move(Point(event::pointer().point.x - m_paddle.w() / 2, m_paddle.y()));
             return 1;
         default:

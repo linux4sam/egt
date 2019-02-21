@@ -34,7 +34,7 @@ class ScrolledView : public Frame
 public:
 
     explicit ScrolledView(const Rect& rect = Rect(),
-                          orientation orient = orientation::HORIZONTAL);
+                          orientation orient = orientation::horizontal);
 
     explicit ScrolledView(orientation orient);
 
@@ -87,7 +87,7 @@ protected:
     /**
      * The orientation of the scroll.
      */
-    orientation m_orient{orientation::HORIZONTAL};
+    orientation m_orient{orientation::horizontal};
 
     int m_start_offset{0};
 };

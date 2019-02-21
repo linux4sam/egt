@@ -45,7 +45,7 @@ public:
           m_mx(mx),
           m_my(my)
     {
-        m_widget->set_flag(widgetflag::GRAB_MOUSE);
+        m_widget->flags().set(Widget::flag::grab_mouse);
         widget->on_event(std::bind(&FloatingBox::handle, this, std::placeholders::_1));
     }
 
@@ -53,18 +53,18 @@ public:
     {
         switch (event)
         {
-        case eventid::POINTER_DBLCLICK:
+        case eventid::pointer_dblclick:
             m_mx *= -1;
             m_my *= -1;
             break;
-        case eventid::POINTER_DRAG_START:
+        case eventid::pointer_drag_start:
             m_start_point = m_widget->box().point();
             m_dragging = true;
             break;
-        case eventid::POINTER_DRAG_STOP:
+        case eventid::pointer_drag_stop:
             m_dragging = false;
             break;
-        case eventid::POINTER_DRAG:
+        case eventid::pointer_drag:
         {
             auto diff = (event::pointer().drag_start - event::pointer().point);
             auto fromstart = m_start_point - Point(diff.x, diff.y);
@@ -157,7 +157,7 @@ int main(int argc, const char** argv)
         os << "image" << image_index++ << ".png";
         auto image = new ImageLabel(Image(os.str()));
         auto plane = new Window(Size(image->w(), image->h()));
-        plane->palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        plane->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         plane->set_boxtype(Theme::boxtype::none);
         plane->add(image);
         plane->show();
@@ -177,10 +177,10 @@ int main(int argc, const char** argv)
     Label label1("CPU: -",
                  Rect(Point(10, win.size().h - 40),
                       Size(100, 40)),
-                 alignmask::LEFT | alignmask::CENTER);
+                 alignmask::left | alignmask::center);
     label1.palette()
-    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
     win.add(&label1);
 

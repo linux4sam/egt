@@ -21,6 +21,7 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
  * 32 bit RGBA color.
  *
@@ -30,30 +31,6 @@ inline namespace v1
 class Color
 {
 public:
-
-    //@{
-    /** @brief Pre-defined color. */
-    static const Color TRANSPARENT;
-    static const Color BLACK;
-    static const Color WHITE;
-    static const Color RED;
-    static const Color GREEN;
-    static const Color BLUE;
-    static const Color YELLOW;
-    static const Color CYAN;
-    static const Color MAGENTA;
-    static const Color SILVER;
-    static const Color GRAY;
-    static const Color LIGHTGRAY;
-    static const Color MAROON;
-    static const Color OLIVE;
-    static const Color PURPLE;
-    static const Color TEAL;
-    static const Color NAVY;
-    static const Color ORANGE;
-    static const Color AQUA;
-    static const Color LIGHTBLUE;
-    //@}
 
     /**
      * Create a color with the specified RGBA value.

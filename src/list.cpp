@@ -18,17 +18,17 @@ inline namespace v1
 
 ListBox::ListBox(const Rect& rect)
     : Frame(rect),
-      m_view(rect, orientation::VERTICAL),
-      m_sizer(orientation::VERTICAL)
+      m_view(rect, orientation::vertical),
+      m_sizer(orientation::vertical)
 {
     set_name("ListBox" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::borderfill);
 
-    m_view.set_align(alignmask::EXPAND);
+    m_view.set_align(alignmask::expand);
     add(&m_view);
 
-    m_sizer.set_align(alignmask::EXPAND);
+    m_sizer.set_align(alignmask::expand);
     m_view.add(&m_sizer);
 }
 
@@ -61,7 +61,7 @@ void ListBox::add_item(Widget* widget)
     if (ret)
     {
         widget->resize(Size(0, item_height()));
-        widget->set_align(alignmask::EXPAND_HORIZONTAL);
+        widget->set_align(alignmask::expand_horizontal);
 
         if (m_sizer.count_children() == 1)
         {
@@ -101,7 +101,7 @@ int ListBox::handle(eventid event)
 
     switch (event)
     {
-    case eventid::POINTER_CLICK:
+    case eventid::pointer_click:
     {
         Point mouse = from_display(event::pointer().point);
         for (size_t i = 0; i < m_sizer.count_children(); i++)
@@ -135,7 +135,7 @@ void ListBox::set_select(uint32_t index)
                 m_sizer.child_at(m_selected)->set_active(true);
 
             damage();
-            invoke_handlers(eventid::PROPERTY_CHANGED);
+            invoke_handlers(eventid::property_changed);
         }
     }
 }

@@ -25,7 +25,7 @@ MouseGesture::MouseGesture()
     m_long_click_timer.on_timeout([this]()
     {
         stop();
-        invoke_handlers(eventid::POINTER_HOLD);
+        invoke_handlers(eventid::pointer_hold);
     });
 }
 
@@ -38,12 +38,12 @@ eventid MouseGesture::handle(eventid event)
 {
     switch (event)
     {
-    case eventid::RAW_POINTER_DOWN:
+    case eventid::raw_pointer_down:
     {
         start();
         break;
     }
-    case eventid::RAW_POINTER_UP:
+    case eventid::raw_pointer_up:
     {
         if (m_active)
         {
@@ -53,16 +53,16 @@ eventid MouseGesture::handle(eventid event)
 
             if (dragging)
             {
-                return eventid::POINTER_DRAG_STOP;
+                return eventid::pointer_drag_stop;
             }
             else
             {
-                return eventid::POINTER_CLICK;
+                return eventid::pointer_click;
             }
         }
         break;
     }
-    case eventid::RAW_POINTER_MOVE:
+    case eventid::raw_pointer_move:
     {
         if (m_active)
         {
@@ -83,9 +83,9 @@ eventid MouseGesture::handle(eventid event)
             }
 
             if (dragging_started)
-                return eventid::POINTER_DRAG_START;
+                return eventid::pointer_drag_start;
             if (m_dragging)
-                return eventid::POINTER_DRAG;
+                return eventid::pointer_drag;
         }
 
         break;
@@ -94,7 +94,7 @@ eventid MouseGesture::handle(eventid event)
         break;
     }
 
-    return eventid::NONE;
+    return eventid::none;
 }
 
 void MouseGesture::start()

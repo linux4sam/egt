@@ -20,8 +20,8 @@ RadioBox::RadioBox(const std::string& text,
 {
     set_name("RadioBox" + std::to_string(m_widgetid));
 
-    set_flag(widgetflag::GRAB_MOUSE);
-    palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
+    flags().set(Widget::flag::grab_mouse);
+    palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::highlight));
 }
 
 int RadioBox::handle(eventid event)
@@ -30,7 +30,7 @@ int RadioBox::handle(eventid event)
 
     switch (event)
     {
-    case eventid::POINTER_CLICK:
+    case eventid::pointer_click:
         check(!checked());
         return 1;
     default:
@@ -49,10 +49,10 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
     Point center(x() + h() / 2, y() + h() / 2);
     float radius = (h() - STANDOFF * 2) / 2;
 
-    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
+    auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
 
     painter.circle(Circle(center, radius));
-    painter.set_color(palette().color(Palette::HIGHLIGHT, group));
+    painter.set_color(palette().color(Palette::ColorId::highlight, group));
 
     painter.set_line_width(1.0);
     painter.stroke();
@@ -64,10 +64,10 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
     }
 
     // text
-    painter.set_color(palette().color(Palette::TEXT, group));
+    painter.set_color(palette().color(Palette::ColorId::text, group));
     painter.draw_text(m_text,
                       box(),
-                      alignmask::LEFT | alignmask::CENTER,
+                      alignmask::left | alignmask::center,
                       h());
 }
 

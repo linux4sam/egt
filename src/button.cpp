@@ -20,25 +20,25 @@ inline namespace v1
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
 Button::Button(const std::string& text, const Rect& rect,
-               const Font& font, const widgetflags& flags) noexcept
-    : TextWidget(text, rect, alignmask::CENTER, font, flags)
+               const Font& font, const Widget::flags_type& flags) noexcept
+    : TextWidget(text, rect, alignmask::center, font, flags)
 {
     set_name("Button" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::rounded_gradient);
-    palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::HIGHLIGHT));
-    set_flag(widgetflag::GRAB_MOUSE);
+    palette().set(Palette::ColorId::bg, Palette::GroupId::normal, palette().color(Palette::ColorId::highlight));
+    ncflags().set(Widget::flag::grab_mouse);
 }
 
 Button::Button(Frame& parent, const std::string& text, const Rect& rect,
-               const Font& font, const widgetflags& flags) noexcept
+               const Font& font, const Widget::flags_type& flags) noexcept
     : Button(text, rect, font, flags)
 {
     parent.add(this);
 }
 
 Button::Button(Frame& parent, const std::string& text,
-               const Font& font, const widgetflags& flags) noexcept
+               const Font& font, const Widget::flags_type& flags) noexcept
     : Button(parent, text, Rect(), font, flags)
 {
 }
@@ -49,12 +49,12 @@ int Button::handle(eventid event)
 
     switch (event)
     {
-    case eventid::RAW_POINTER_DOWN:
+    case eventid::raw_pointer_down:
     {
         set_active(true);
         break;
     }
-    case eventid::RAW_POINTER_UP:
+    case eventid::raw_pointer_up:
     {
         set_active(false);
         break;
@@ -77,14 +77,14 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect& rect)
 
     widget.draw_box(painter);
 
-    auto group = Palette::GROUP_NORMAL;
+    auto group = Palette::GroupId::normal;
     if (widget.disabled())
-        group = Palette::GROUP_DISABLED;
+        group = Palette::GroupId::disabled;
     else if (widget.active())
-        group = Palette::GROUP_ACTIVE;
+        group = Palette::GroupId::active;
 
     // text
-    painter.set_color(widget.palette().color(Palette::ColorId::TEXT_INVERT, group));
+    painter.set_color(widget.palette().color(Palette::ColorId::text_invert, group));
     painter.set_font(widget.font());
     painter.draw_text(widget.box(), widget.text(), widget.text_align(), 5);
 }
@@ -106,7 +106,7 @@ void Button::check(bool value)
         if (m_checked == value)
         {
             damage();
-            invoke_handlers(eventid::PROPERTY_CHANGED);
+            invoke_handlers(eventid::property_changed);
         }
     }
 }
@@ -143,13 +143,13 @@ void Button::first_resize()
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
                          const Rect& rect,
-                         const widgetflags& flags) noexcept
+                         const Widget::flags_type& flags) noexcept
     : Button(text, rect, Font(), flags)
 {
     set_name("ImageButton" + std::to_string(m_widgetid));
 
     if (text.empty())
-        set_image_align(alignmask::CENTER);
+        set_image_align(alignmask::center);
     do_set_image(image);
 }
 
@@ -157,7 +157,7 @@ ImageButton::ImageButton(Frame& parent,
                          const Image& image,
                          const std::string& text,
                          const Rect& rect,
-                         const widgetflags& flags) noexcept
+                         const Widget::flags_type& flags) noexcept
     : ImageButton(image, text, rect, flags)
 {
     parent.add(this);
@@ -194,11 +194,11 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
     widget.draw_box(painter);
 
-    auto group = Palette::GROUP_NORMAL;
+    auto group = Palette::GroupId::normal;
     if (widget.disabled())
-        group = Palette::GROUP_DISABLED;
+        group = Palette::GroupId::disabled;
     else if (widget.active())
-        group = Palette::GROUP_ACTIVE;
+        group = Palette::GroupId::active;
 
     if (!widget.text().empty())
     {
@@ -218,8 +218,8 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
         painter.draw_image(ibox.point(), widget.image(), widget.disabled());
 
-        painter.set_color(widget.palette().color(Palette::TEXT_INVERT, group));
-        painter.draw_text(widget.text(), tbox, alignmask::CENTER, 0, widget.font());
+        painter.set_color(widget.palette().color(Palette::ColorId::text_invert, group));
+        painter.draw_text(widget.text(), tbox, alignmask::center, 0, widget.font());
     }
     else
     {

@@ -33,7 +33,7 @@ public:
 
     Form(const std::string& title)
         : Frame(),
-          m_vsizer(orientation::VERTICAL)
+          m_vsizer(orientation::vertical)
     {
         add(&vsizer);
 
@@ -42,7 +42,7 @@ public:
             auto label = make_shared<Label>(caption);
             m_store.push_back(label);
 
-            label->set_align(alignmask::EXPAND_HORIZONTAL);
+            label->set_align(alignmask::expand_horizontal);
             m_vsizer.add(label);
         }
     }
@@ -54,19 +54,19 @@ public:
 
         label->font().size(label->font().size() + 5);
         label->font().weight(weightid::BOLD);
-        label->set_align(alignmask::EXPAND);
+        label->set_align(alignmask::expand);
         m_vsizer.add(label);
     }
 
     void add_option(const std::string& name, Widget& widget)
     {
-        widget->set_align(alignmask::EXPAND);
+        widget->set_align(alignmask::expand);
 
         auto label = make_shared<Label>(name);
         m_store.push_back(label);
 
         auto grid = new StaticGrid(Rect(Point(), Size(0, 50), 1, 2);
-                                   grid->set_align(alignmask::EXPAND_HORIZONTAL);
+                                   grid->set_align(alignmask::expand_horizontal);
                                    grid->add(label);
                                    grid->add(widget);
                                    m_vsizer.add(grid);
@@ -74,7 +74,7 @@ public:
 
     void add_option(Widget& widget)
     {
-        widget->set_align(alignmask::EXPAND);
+        widget->set_align(alignmask::expand);
         m_vsizer.add(widget);
     }
 

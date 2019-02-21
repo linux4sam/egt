@@ -89,12 +89,12 @@ public:
         transform(curve_names.begin(), curve_names.end(), items.begin(),
         [](const std::string & v) { return new StringItem(v);});
         ListBox* list1 = new ListBox(items, Rect(Point(0, 0), Size(150, 0)));
-        list1->set_align(alignmask::EXPAND_VERTICAL | alignmask::RIGHT);
+        list1->set_align(alignmask::expand_vertical | alignmask::right);
         add(list1);
 
         list1->on_event([this, list1](eventid event)
         {
-            if (event == eventid::PROPERTY_CHANGED)
+            if (event == eventid::property_changed)
             {
                 m_seq.reset();
                 m_animation.set_easing_func(curves[list1->selected()]);
@@ -147,8 +147,8 @@ int main(int argc, const char** argv)
     Label label1("CPU: 0%",
                  Rect(Point(10, window.size().h - 40),
                       Size(100, 40)));
-    label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     window.add(&label1);
 
     CPUMonitorUsage tools;

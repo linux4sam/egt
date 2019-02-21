@@ -21,28 +21,28 @@ public:
           m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 5, 10),
           m_color(color)
     {
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
 
         add(&m_grid);
 
         const vector<Color> colors =
         {
-            Color::RED,
-            Color::GREEN,
-            Color::BLUE,
-            Color::YELLOW,
-            Color::CYAN,
-            Color::MAGENTA,
-            Color::SILVER,
-            Color::GRAY,
-            Color::LIGHTGRAY,
-            Color::MAROON,
-            Color::OLIVE,
-            Color::PURPLE,
-            Color::TEAL,
-            Color::NAVY,
-            Color::ORANGE,
-            Color::BLACK,
+            Palette::red,
+            Palette::green,
+            Palette::blue,
+            Palette::yellow,
+            Palette::cyan,
+            Palette::magenta,
+            Palette::silver,
+            Palette::gray,
+            Palette::lightgray,
+            Palette::maroon,
+            Palette::olive,
+            Palette::purple,
+            Palette::teal,
+            Palette::navy,
+            Palette::orange,
+            Palette::black,
             Color::CSS("#F012BE"),
             Color::CSS("#7FDBFF"),
             Color::CSS("#01FF70"),
@@ -52,7 +52,7 @@ public:
         for (auto& c : colors)
         {
             auto color = new Label("");
-            color->palette().set(Palette::BG, Palette::GROUP_NORMAL, c);
+            color->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, c);
 
             m_grid.add(color);
             int column = m_grid.last_add_column();
@@ -63,10 +63,10 @@ public:
 
             color->on_event([this, column, row](eventid event)
             {
-                if (event == eventid::POINTER_CLICK)
+                if (event == eventid::pointer_click)
                 {
                     m_grid.select(column, row);
-                    m_color = m_grid.get(m_grid.selected())->palette().color(Palette::BG);
+                    m_color = m_grid.get(m_grid.selected())->palette().color(Palette::ColorId::bg);
                     this->hide();
                 }
                 return 0;
@@ -78,7 +78,7 @@ public:
 
 protected:
     SelectableGrid m_grid;
-    Color m_color{Color::RED};
+    Color m_color{Palette::red};
 };
 
 class WidthPickerWindow : public Popup
@@ -90,7 +90,7 @@ public:
           m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 1, 10),
           m_width(width)
     {
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
 
         add(&m_grid);
 
@@ -115,7 +115,7 @@ public:
 
             width->on_event([this, column, row](eventid event)
             {
-                if (event == eventid::POINTER_CLICK)
+                if (event == eventid::pointer_click)
                 {
                     m_grid.select(column, row);
                     m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
@@ -143,15 +143,15 @@ public:
           m_fillbtn(Image("fill.png")),
           m_widthbtn(Image("width.png")),
           m_clearbtn(Image("clear.png")),
-          m_penpicker(Color::BLUE),
-          m_fillpicker(Color::WHITE),
+          m_penpicker(Palette::blue),
+          m_fillpicker(Palette::white),
           m_widthpicker(2),
           m_canvas(screen()->size(), CAIRO_FORMAT_ARGB32)
     {
         // don't draw background, we'll do it in draw()
         set_boxtype(Theme::boxtype::none);
 
-        m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
         m_colorbtn.set_boxtype(Theme::boxtype::none);
         m_fillbtn.set_boxtype(Theme::boxtype::none);
@@ -168,39 +168,39 @@ public:
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
         m_colorbtn.on_event([this](eventid)
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
         m_colorbtn.on_event([this](eventid)
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
         m_colorbtn.on_event([this](eventid)
         {
             m_penpicker.show_modal(true);
             return 1;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
         m_grid.add(&m_fillbtn);
         m_fillbtn.on_event([this](eventid)
         {
             m_fillpicker.show_modal(true);
             return 1;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
         m_grid.add(&m_widthbtn);
         m_widthbtn.on_event([this](eventid)
         {
             m_widthpicker.show_modal(true);
             return 1;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
         m_grid.add(&m_clearbtn);
         m_clearbtn.on_event([this](eventid)
@@ -208,17 +208,17 @@ public:
             clear();
             damage();
             return 1;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
         m_fillpicker.on_event([this](eventid)
         {
-            palette().set(Palette::BG, Palette::GROUP_NORMAL, m_fillpicker.color());
+            palette().set(Palette::ColorId::bg, Palette::GroupId::normal, m_fillpicker.color());
             damage();
             return 1;
-        }, {eventid::HIDE});
+        }, {eventid::hide});
 
         auto logo = new ImageLabel(Image("@microchip_logo_black.png"));
-        add(logo)->set_align(alignmask::RIGHT | alignmask::TOP, 10);
+        add(logo)->set_align(alignmask::right | alignmask::top, 10);
 
         clear();
     }
@@ -227,7 +227,7 @@ public:
     {
         Painter painter(m_canvas.context());
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-        painter.set_color(Color::TRANSPARENT);
+        painter.set_color(Palette::transparent);
         painter.paint();
     }
 
@@ -239,10 +239,10 @@ public:
 
         switch (event)
         {
-        case eventid::POINTER_DRAG_START:
+        case eventid::pointer_drag_start:
             m_last = from_display(event::pointer().point);
             break;
-        case eventid::POINTER_DRAG:
+        case eventid::pointer_drag:
         {
             auto mouse = from_display(event::pointer().point);
 
@@ -279,7 +279,7 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override
     {
-        painter.set_color(palette().color(Palette::BG, Palette::GROUP_NORMAL));
+        painter.set_color(palette().color(Palette::ColorId::bg, Palette::GroupId::normal));
         painter.draw_fill(rect);
 
         painter.draw_image(rect, rect.point(), Image(m_canvas.surface()));

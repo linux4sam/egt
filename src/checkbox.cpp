@@ -20,8 +20,8 @@ CheckBox::CheckBox(const std::string& text,
     : Button(text, rect)
 {
     set_boxtype(Theme::boxtype::border);
-    set_flag(widgetflag::GRAB_MOUSE);
-    palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::HIGHLIGHT));
+    flags().set(Widget::flag::grab_mouse);
+    palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::highlight));
 }
 
 int CheckBox::handle(eventid event)
@@ -30,7 +30,7 @@ int CheckBox::handle(eventid event)
 
     switch (event)
     {
-    case eventid::POINTER_CLICK:
+    case eventid::pointer_click:
         check(!checked());
         return 1;
     default:
@@ -52,7 +52,7 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
            h() - STANDOFF * 2,
            h() - STANDOFF * 2);
 
-    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
+    auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
 
     if (checked())
     {
@@ -61,7 +61,7 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
         // draw an "X"
         static const int OFFSET = 5;
         auto cr = painter.context();
-        painter.set_color(palette().color(Palette::HIGHLIGHT, group));
+        painter.set_color(palette().color(Palette::ColorId::highlight, group));
         cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
         cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
         cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
@@ -75,10 +75,10 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
     }
 
     // text
-    painter.set_color(palette().color(Palette::TEXT, group));
+    painter.set_color(palette().color(Palette::ColorId::text, group));
     painter.draw_text(m_text,
                       box(),
-                      alignmask::LEFT | alignmask::CENTER,
+                      alignmask::left | alignmask::center,
                       h());
 }
 
@@ -89,7 +89,7 @@ ToggleBox::ToggleBox(const Rect& rect)
     : CheckBox("", rect)
 {
     set_boxtype(Theme::boxtype::rounded_border);
-    palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::BG));
+    palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::bg));
 }
 
 void ToggleBox::draw(Painter& painter, const Rect& rect)
@@ -98,7 +98,7 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
 
     draw_box(painter);
 
-    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
+    auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
 
     if (checked())
     {
@@ -107,7 +107,7 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
         rect.x += rect.w;
         theme().draw_rounded_gradient_box(painter,
                                           rect,
-                                          palette().color(Palette::HIGHLIGHT, group));
+                                          palette().color(Palette::ColorId::highlight, group));
     }
     else
     {
@@ -115,7 +115,7 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
         rect.w /= 2;
         theme().draw_rounded_gradient_box(painter,
                                           rect,
-                                          palette().color(Palette::HIGHLIGHT, group));
+                                          palette().color(Palette::ColorId::highlight, group));
     }
 }
 

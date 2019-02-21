@@ -207,7 +207,7 @@ SoftwareSprite::~SoftwareSprite()
 Sprite::Sprite(const Image& image, const Size& frame_size,
                int framecount, const Point& frame_point,
                const Point& point)
-    : Window(Rect(point, image.size()), widgetflags(), pixel_format::argb8888)
+    : Window(Rect(point, image.size()), Widget::flags_type(), pixel_format::argb8888)
 {
     set_name("Sprite" + std::to_string(m_widgetid));
     set_boxtype(Theme::boxtype::none);
@@ -264,7 +264,7 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
                          int framecount, const Point& frame_point)
 {
 #ifdef HAVE_LIBPLANES
-    if (is_flag_set(widgetflag::PLANE_WINDOW))
+    if (flags().is_set(Widget::flag::plane_window))
         m_simpl.reset(new detail::HardwareSprite(*this, image, frame_size, framecount, frame_point));
     else
 #endif

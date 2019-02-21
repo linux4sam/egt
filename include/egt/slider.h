@@ -9,6 +9,7 @@
 #include <cassert>
 #include <egt/bitmask.h>
 #include <egt/detail/math.h>
+#include <egt/flags.h>
 #include <egt/valuewidget.h>
 
 namespace egt
@@ -28,25 +29,44 @@ class Slider : public ValueRangeWidget<int>
 {
 public:
 
-    enum class flags
+    enum class flag
     {
-        RECTANGLE_HANDLE = 1 << 0,
-        SQUARE_HANDLE = 1 << 1,
-        ROUND_HANDLE = 1 << 2,
-        SHOW_LABELS = 1 << 3,
-        SHOW_LABEL = 1 << 4,
+        /**
+         * Draw a rectangle handle.
+         */
+        rectangle_handle,
+        /**
+         * Draw a square handle.
+         */
+        square_handle,
+        /**
+         * Draw a round handle.
+         */
+        round_handle,
+
+        /**
+         * Show range labels.
+         */
+        show_labels,
+
+        /**
+         * Show value label.
+         */
+        show_label,
 
         /**
          * Horizontal slider origin (value min()), is to the left. Vertical is at
          * the bottom. Setting this flag will flip this origin.
          */
-        ORIGIN_OPPOSITE = 1 << 5,
+        origin_opposite,
 
         /**
          *
          */
-        CONSISTENT_LINE = 1 << 6,
+        consistent_line,
     };
+
+    using flags_type = Flags<Slider::flag>;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -56,10 +76,10 @@ public:
      * @param[in] orient Vertical or horizontal orientation.
      */
     Slider(const Rect& rect = Rect(), int min = 0, int max = 100, int value = 0,
-           orientation orient = orientation::HORIZONTAL) noexcept;
+           orientation orient = orientation::horizontal) noexcept;
 
     Slider(int min, int max, int value,
-           orientation orient = orientation::HORIZONTAL) noexcept;
+           orientation orient = orientation::horizontal) noexcept;
 
     explicit Slider(orientation orient) noexcept;
 
@@ -80,7 +100,7 @@ public:
 
         // can't optimize without more work below to include label - SHOW_LABEL
         // moves as well
-        if (is_set(flags::SHOW_LABEL))
+        if (slider_flags().is_set(flag::show_label))
         {
             Widget::damage();
             return;
@@ -88,7 +108,7 @@ public:
 
         auto handle = handle_box();
 
-        if (m_orient == orientation::HORIZONTAL)
+        if (m_orient == orientation::horizontal)
         {
             damage(Rect(x() - 1,
                         handle.y - 1,
@@ -129,7 +149,7 @@ public:
 
             // live update to handlers?
             if (false)
-                this->invoke_handlers(eventid::PROPERTY_CHANGED);
+                this->invoke_handlers(eventid::property_changed);
             else
                 m_invoke_pending = true;
         }
@@ -137,23 +157,18 @@ public:
         return orig;
     }
 
-    inline void slider_flags(flags flags)
-    {
-        if (flags != m_slider_flags)
-        {
-            m_slider_flags = flags;
-            damage();
-        }
-    }
+    inline const flags_type& slider_flags() const { return m_slider_flags; }
 
-    virtual ~Slider();
+    inline flags_type& slider_flags() { return m_slider_flags; }
+
+    virtual ~Slider() = default;
 
 protected:
 
     /// Convert a value to an offset.
     inline int to_offset(int value) const
     {
-        if (m_orient == orientation::HORIZONTAL)
+        if (m_orient == orientation::horizontal)
             return egt::detail::normalize<float>(value, m_min, m_max, 0, w() - handle_width());
         else
             return egt::detail::normalize<float>(value, m_min, m_max, 0, h() - handle_height());
@@ -162,7 +177,7 @@ protected:
     /// Convert an offset to value.
     inline int to_value(int offset) const
     {
-        if (m_orient == orientation::HORIZONTAL)
+        if (m_orient == orientation::horizontal)
             return egt::detail::normalize<float>(offset, 0, w() - handle_width(), m_min, m_max);
         else
             return egt::detail::normalize<float>(offset, 0, h() - handle_height(), m_min, m_max);
@@ -180,19 +195,13 @@ protected:
     orientation m_orient;
     bool m_invoke_pending{false};
 
-    flags m_slider_flags{flags::RECTANGLE_HANDLE};
-
-    inline bool is_set(flags flag) const;
+    /**
+     * Slider flags.
+     */
+    flags_type m_slider_flags;
 
     int m_start_offset{0};
 };
-
-ENABLE_BITMASK_OPERATORS(Slider::flags)
-
-bool Slider::is_set(flags flag) const
-{
-    return ((m_slider_flags & flag) == flag);
-}
 
 }
 }

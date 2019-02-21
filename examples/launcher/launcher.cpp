@@ -80,16 +80,16 @@ public:
           m_description(description),
           m_exec(exec)
     {
-        palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
-        set_image_align(alignmask::CENTER | alignmask::TOP);
-        set_text_align(alignmask::CENTER | alignmask::BOTTOM);
+        palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        set_image_align(alignmask::center | alignmask::top);
+        set_text_align(alignmask::center | alignmask::bottom);
     }
 
     int handle(eventid event) override
     {
         switch (event)
         {
-        case eventid::POINTER_CLICK:
+        case eventid::pointer_click:
         {
             main_app().event().quit();
 
@@ -147,21 +147,21 @@ public:
         m_animation.on_change(std::bind(&LauncherWindow::move_boxes, this,
                                         std::placeholders::_1));
 
-        m_popup.add(new Button("Hello World"))->set_align(alignmask::CENTER);
+        m_popup.add(new Button("Hello World"))->set_align(alignmask::center);
 
         add(new ImageLabel(Image("background.png")));
 
         auto logo = new ImageLabel(Image("@microchip_logo_white.png"));
-        add(logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
+        add(logo)->set_align(alignmask::left | alignmask::top, 10);
 
         auto settings = new ImageButton(Image("settings.png"), "", Rect());
-        settings->clear_flag(widgetflag::GRAB_MOUSE);
+        settings->flags().clear(Widget::flag::grab_mouse);
         add(settings);
         settings->set_boxtype(Theme::boxtype::none);
-        settings->set_align(alignmask::RIGHT | alignmask::TOP, 10);
+        settings->set_align(alignmask::right | alignmask::top, 10);
         settings->on_event([this](eventid event)
         {
-            if (event == eventid::POINTER_CLICK)
+            if (event == eventid::pointer_click)
             {
                 if (m_popup.visible())
                     m_popup.hide();
@@ -219,7 +219,7 @@ public:
     {
         switch (event)
         {
-        case eventid::RAW_POINTER_DOWN:
+        case eventid::raw_pointer_down:
             if (!m_moving)
             {
                 m_moving = true;
@@ -227,11 +227,11 @@ public:
                 m_offset = m_boxes[0]->center().x;
             }
             break;
-        case eventid::RAW_POINTER_UP:
+        case eventid::raw_pointer_up:
             m_moving = false;
             start_snap();
             break;
-        case eventid::RAW_POINTER_MOVE:
+        case eventid::raw_pointer_move:
             if (m_moving)
             {
                 move_boxes(event::pointer().point.x);

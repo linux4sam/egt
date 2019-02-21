@@ -11,6 +11,7 @@
  * @brief Working with text input.
  */
 
+#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/textwidget.h>
 #include <egt/timer.h>
@@ -54,24 +55,16 @@ public:
         word_wrap,
     };
 
-    struct textbox_flags_hash
-    {
-        std::size_t operator()(flag const& s) const noexcept
-        {
-            return std::hash<int> {}(static_cast<int>(s));
-        }
-    };
-
-    using flags = std::unordered_set<flag, TextBox::textbox_flags_hash>;
+    using flags_type = Flags<flag>;
 
     TextBox(const std::string& str,
             const Rect& rect = Rect(),
-            alignmask align = alignmask::CENTER | alignmask::LEFT,
-            const flags& flags = flags());
+            alignmask align = alignmask::center | alignmask::left,
+            const flags_type::flags& flags = flags_type::flags());
 
     TextBox(const Rect& rect = Rect(),
-            alignmask align = alignmask::CENTER | alignmask::LEFT,
-            const flags& flags = flags());
+            alignmask align = alignmask::center | alignmask::left,
+            const flags_type::flags& flags = flags_type::flags());
 
     virtual int handle(eventid event) override;
 
@@ -86,43 +79,14 @@ public:
     virtual void clear() override;
 
     /**
-     * Test if the specified textbox flag is set.
-     * @param flag The flag to test.
+     * Get a const ref of the flags.
      */
-    inline bool is_text_flag_set(flag flag) const
-    {
-        return m_text_flags.find(flag) != m_text_flags.end();
-    }
+    inline const flags_type& text_flags() const { return m_text_flags; }
 
     /**
-     * Test if the specified txtbox flags are set.
-     * @param flags The flags to test.
+     * Get a modifiable ref of the flags.
      */
-    inline bool is_text_flag_set(flags flags) const
-    {
-        for (auto& flag : flags)
-            if (!is_text_flag_set(flag))
-                return false;
-        return !m_text_flags.empty() && !flags.empty();
-    }
-
-    /**
-     * Set the specified txtbox flag.
-     * @param flag The flag to set.
-     */
-    inline void set_text_flag(flag flag) { m_text_flags.insert(flag); }
-
-    /**
-     * Set the specified textbox flags.
-     * @param flags Flags to set.
-     */
-    inline void set_txt_flag(flags flags) { m_text_flags.insert(flags.begin(), flags.end()); }
-
-    /**
-     * Clear, or unset, the specified textbox flag(s).
-     * @param flag Bitmask of flags.
-     */
-    inline void clear_text_flag(flag flag) { m_text_flags.erase(m_text_flags.find(flag)); }
+    inline flags_type& text_flags() { return m_text_flags; }
 
     /**
      * Move the cursor to the end and insert.
@@ -270,7 +234,7 @@ private:
     /**
      * TextBox flags.
      */
-    flags m_text_flags;
+    flags_type m_text_flags;
 };
 
 }

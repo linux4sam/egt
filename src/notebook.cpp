@@ -33,7 +33,7 @@ NotebookTab* Notebook::add(NotebookTab* widget)
     m_cells.push_back(cell);
 
     widget->resize(size());
-    widget->set_align(alignmask::EXPAND);
+    widget->set_align(alignmask::expand);
 
     Frame::add(widget);
 
@@ -90,7 +90,7 @@ void Notebook::set_select(uint32_t index)
                 m_cells[m_current_index].widget->enter();
                 m_cells[m_current_index].widget->show();
 
-                invoke_handlers(eventid::PROPERTY_CHANGED);
+                invoke_handlers(eventid::property_changed);
             }
         }
     }

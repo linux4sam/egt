@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/widget.h"
 #include "egt/widgetflags.h"
 #include <map>
 #include <iostream>
@@ -13,25 +14,26 @@ namespace egt
 inline namespace v1
 {
 
-std::ostream& operator<<(std::ostream& os, const widgetflags& flags)
+std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
 {
-    static std::map<widgetflag, std::string> strings;
+    static std::map<Widget::flag, std::string> strings;
     if (strings.empty())
     {
 #define MAPITEM(p) strings[p] = #p
-        MAPITEM(widgetflag::PLANE_WINDOW);
-        MAPITEM(widgetflag::WINDOW);
-        MAPITEM(widgetflag::FRAME);
-        MAPITEM(widgetflag::DISABLED);
-        MAPITEM(widgetflag::READONLY);
-        MAPITEM(widgetflag::ACTIVE);
-        MAPITEM(widgetflag::INVISIBLE);
-        MAPITEM(widgetflag::GRAB_MOUSE);
+        MAPITEM(Widget::flag::plane_window);
+        MAPITEM(Widget::flag::window);
+        MAPITEM(Widget::flag::frame);
+        MAPITEM(Widget::flag::disabled);
+        MAPITEM(Widget::flag::readonly);
+        MAPITEM(Widget::flag::active);
+        MAPITEM(Widget::flag::invisible);
+        MAPITEM(Widget::flag::grab_mouse);
 #undef MAPITEM
     }
 
     bool first = true;
-    for (auto& flag : flags)
+    auto f = flags.get();
+    for (auto& flag : f)
     {
         if (first)
             first = false;
@@ -39,6 +41,27 @@ std::ostream& operator<<(std::ostream& os, const widgetflags& flags)
             os << " | ";
         os << strings[flag];
     }
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const Widget::flag& flag)
+{
+    static std::map<Widget::flag, std::string> strings;
+    if (strings.empty())
+    {
+#define MAPITEM(p) strings[p] = #p
+        MAPITEM(Widget::flag::plane_window);
+        MAPITEM(Widget::flag::window);
+        MAPITEM(Widget::flag::frame);
+        MAPITEM(Widget::flag::disabled);
+        MAPITEM(Widget::flag::readonly);
+        MAPITEM(Widget::flag::active);
+        MAPITEM(Widget::flag::invisible);
+        MAPITEM(Widget::flag::grab_mouse);
+#undef MAPITEM
+    }
+
+    os << strings[flag];
     return os;
 }
 

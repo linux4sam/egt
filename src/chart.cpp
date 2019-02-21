@@ -45,7 +45,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
     cfg->grid = m_grid;
     cfg->xticlabelfmt = xticlabelfmt;
     cfg->yticlabelfmt = xticlabelfmt;
-    auto tc = palette().color(Palette::BORDER);
+    auto tc = palette().color(Palette::ColorId::border);
     cfg->borderline.clr.type = KPLOTCTYPE_RGBA;
     cfg->borderline.clr.rgba[0] = tc.redf();
     cfg->borderline.clr.rgba[1] = tc.bluef();
@@ -98,7 +98,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
         kdata_destroy(d1);
     }
 
-    auto bg = palette().color(Palette::BG);
+    auto bg = palette().color(Palette::ColorId::bg);
     painter.set_color(bg);
 
     cairo_rectangle(cr.get(), x(), y(), w(), h());
@@ -120,23 +120,23 @@ PieChart::PieChart(const Rect& rect)
 
     static const vector<Color> default_colors =
     {
-        Color::RED,
-        Color::GREEN,
-        Color::BLUE,
-        Color::YELLOW,
-        Color::CYAN,
-        Color::MAGENTA,
-        Color::SILVER,
-        Color::GRAY,
-        Color::LIGHTGRAY,
-        Color::MAROON,
-        Color::OLIVE,
-        Color::PURPLE,
-        Color::TEAL,
-        Color::NAVY,
-        Color::ORANGE,
-        Color::AQUA,
-        Color::LIGHTBLUE,
+        Palette::red,
+        Palette::green,
+        Palette::blue,
+        Palette::yellow,
+        Palette::cyan,
+        Palette::magenta,
+        Palette::silver,
+        Palette::gray,
+        Palette::lightgray,
+        Palette::maroon,
+        Palette::olive,
+        Palette::purple,
+        Palette::teal,
+        Palette::navy,
+        Palette::orange,
+        Palette::aqua,
+        Palette::lightblue,
     };
 
     m_colors = default_colors;
@@ -188,7 +188,7 @@ void PieChart::draw(Painter& painter, const Rect& rect)
         float label_angle = (from_angle + to_angle) / 2;
         int label_x = width / 2 * (1.0 + 0.7 * std::cos(label_angle));
         int label_y = height / 2 * (1.0 + 0.7 * std::sin(label_angle));
-        painter.set_color(Color::BLACK);
+        painter.set_color(Palette::black);
         cairo_move_to(cr.get(), x() + label_x, y() + label_y);
         cairo_show_text(cr.get(), i.first.c_str());
         cairo_fill(cr.get());

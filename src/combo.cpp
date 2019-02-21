@@ -29,7 +29,7 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
     for (auto& item : parent.m_items)
         m_list.add_item(new StringItem(item));
 
-    m_list.set_align(alignmask::EXPAND);
+    m_list.set_align(alignmask::expand);
 
     add(&m_list);
 
@@ -40,7 +40,7 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
         hide();
 
         return 1;
-    }, {eventid::PROPERTY_CHANGED});
+    }, {eventid::property_changed});
 }
 
 void ComboBoxPopup::smart_pos()
@@ -78,7 +78,7 @@ int ComboBoxPopup::handle(eventid event)
 
     switch (event)
     {
-    case eventid::POINTER_CLICK:
+    case eventid::pointer_click:
     {
         Point mouse = from_display(event::pointer().point);
 
@@ -103,7 +103,7 @@ ComboBox::ComboBox(const item_array& items,
                    const Rect& rect,
                    alignmask align,
                    const Font& font,
-                   const widgetflags& flags) noexcept
+                   const Widget::flags_type& flags) noexcept
     : TextWidget("", rect, align, font, flags),
       m_items(items),
       m_popup(*this)
@@ -111,9 +111,9 @@ ComboBox::ComboBox(const item_array& items,
     set_name("ComboBox" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::border);
-    set_flag(widgetflag::GRAB_MOUSE);
-    palette().set(Palette::BG, Palette::GROUP_NORMAL, palette().color(Palette::LIGHT));
-    palette().set(Palette::BG, Palette::GROUP_ACTIVE, palette().color(Palette::LIGHT));
+    ncflags().set(Widget::flag::grab_mouse);
+    palette().set(Palette::ColorId::bg, Palette::GroupId::normal, palette().color(Palette::ColorId::light));
+    palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::light));
 }
 
 void ComboBox::set_parent(Frame* parent)
@@ -128,7 +128,7 @@ int ComboBox::handle(eventid event)
 
     switch (event)
     {
-    case eventid::POINTER_CLICK:
+    case eventid::pointer_click:
     {
         Point mouse = from_display(event::pointer().point);
 
@@ -154,7 +154,7 @@ void ComboBox::set_select(uint32_t index)
         {
             m_selected = index;
             damage();
-            invoke_handlers(eventid::PROPERTY_CHANGED);
+            invoke_handlers(eventid::property_changed);
         }
     }
 }
@@ -191,7 +191,7 @@ void ComboBox::draw(Painter& painter, const Rect& rect)
 
     // draw a down arrow
     auto cr = painter.context();
-    painter.set_color(palette().color(Palette::HIGHLIGHT, disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL));
+    painter.set_color(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
     cairo_move_to(cr.get(), m_down_rect.x + OFFSET, m_down_rect.y + m_down_rect.h / 3);
     cairo_line_to(cr.get(), m_down_rect.x + m_down_rect.w / 2, m_down_rect.y + (m_down_rect.h / 3 * 2));
     cairo_line_to(cr.get(), m_down_rect.x + m_down_rect.w - OFFSET, m_down_rect.y + m_down_rect.h / 3);
@@ -199,7 +199,7 @@ void ComboBox::draw(Painter& painter, const Rect& rect)
     cairo_stroke(cr.get());
 
     // text
-    painter.set_color(palette().color(Palette::TEXT, disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL));
+    painter.set_color(palette().color(Palette::ColorId::text, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
     painter.set_font(font());
     auto textbox = box();
     textbox -= Size(m_down_rect.w, 0);

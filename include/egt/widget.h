@@ -15,6 +15,7 @@
 #include <cassert>
 #include <cstdint>
 #include <egt/detail/object.h>
+#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/input.h>
@@ -51,13 +52,76 @@ class Widget : public detail::Object
 public:
 
     /**
+    * Flags used for various widget properties.
+    */
+    enum class flag
+    {
+        /**
+         * This is an overlay plane window.
+         */
+        plane_window,
+
+        /**
+         * This is a window widget.
+         */
+        window,
+
+        /**
+         * This is a frame.
+         */
+        frame,
+
+        /**
+         * When set, the widget is disabled.
+         *
+         * Typically, when a widget is disabled it will not accept input.
+         *
+         * This may change how the widget behaves or is draw.
+         */
+        disabled,
+
+        /**
+         * When set, the widget will not receive input events.
+         */
+        readonly,
+
+        /**
+         * When true, the widget is active.
+         *
+         * The active state of a widget is usually a momentary state, unlike
+         * focus, which exists until focu is changed. For example, when a button
+         * is currently being held down, it its implementation may consider this
+         * the active state and choose to draw the button diffeerently.
+         *
+         * This may change how the widget behaves or is draw.
+         */
+        active,
+
+        /**
+         * When set, the widget is not visible.
+         */
+        invisible,
+
+        /**
+         * Grab related mouse events.
+         *
+         * For example, if a button is pressed with the eventid::MOUSE_DOWN
+         * event, make sure the button gets subsequent mouse events, including
+         * the eventid::MOUSE_UP event.
+         */
+        grab_mouse,
+    };
+
+    using flags_type = Flags<flag>;
+
+    /**
      * Construct a widget.
      *
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
     Widget(const Rect& rect = Rect(),
-           const widgetflags& flags = widgetflags()) noexcept;
+           const flags_type& flags = flags_type()) noexcept;
 
     /**
      * Construct a widget.
@@ -67,7 +131,7 @@ public:
      * @param[in] flags Widget flags.
      */
     Widget(Frame& parent, const Rect& rect = Rect(),
-           const widgetflags& flags = widgetflags()) noexcept;
+           const flags_type& flags = flags_type()) noexcept;
 
     Widget(const Widget& rhs) noexcept;
 
@@ -323,43 +387,20 @@ public:
     virtual Screen* screen();
 
     /**
-     * Test if the specified Widget flag is set.
-     * @param flag The flag to test.
+     * Get a const ref of the flags.
      */
-    inline bool is_flag_set(widgetflag flag) const
-    {
-        return m_flags.find(flag) != m_flags.end();
-    }
+    inline const flags_type& flags() const { return m_widget_flags; }
 
     /**
-     * Test if the specified Widget flags are set.
-     * @param flags The flags to test.
+     * Get a modifiable ref of the flags.
      */
-    inline bool is_flag_set(widgetflags flags) const
-    {
-        for (auto& flag : flags)
-            if (!is_flag_set(flag))
-                return false;
-        return !m_flags.empty() && !flags.empty();
-    }
+    inline flags_type& flags() { return m_widget_flags; }
 
     /**
-     * Set the specified widget flag.
-     * @param flag The flag to set.
+     * @todo Need a better solution to force non-const call of flags() when
+     * necessary.
      */
-    inline void set_flag(widgetflag flag) { m_flags.insert(flag); }
-
-    /**
-     * Set the specified widget flags.
-     * @param flags Flags to set.
-     */
-    inline void set_flag(widgetflags flags) { m_flags.insert(flags.begin(), flags.end()); }
-
-    /**
-     * Clear, or unset, the specified widget flag(s).
-     * @param flag Bitmask of flags.
-     */
-    inline void clear_flag(widgetflag flag) { m_flags.erase(m_flags.find(flag)); }
+    inline flags_type& ncflags() { return m_widget_flags; }
 
     /**
      * Align the widget.
@@ -544,7 +585,7 @@ private:
     /**
      * Flags for the widget.
      */
-    widgetflags m_flags{};
+    flags_type m_widget_flags{};
 
     /**
      * Current palette for the widget.
@@ -562,7 +603,7 @@ private:
     /**
      * Alignment hint for this widget within its parent.
      */
-    alignmask m_align{alignmask::NONE};
+    alignmask m_align{alignmask::none};
 
     /**
      * Alignment margin.
@@ -589,6 +630,9 @@ private:
 
     friend class Frame;
 };
+
+std::ostream& operator<<(std::ostream& os, const Widget::flag& flag);
+std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags);
 
 }
 }

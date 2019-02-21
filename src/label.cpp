@@ -19,7 +19,7 @@ static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
 
 Label::Label(const std::string& text, const Rect& rect,
              alignmask align, const Font& font,
-             const widgetflags& flags) noexcept
+             const Widget::flags_type& flags) noexcept
     : TextWidget(text, rect, align, font, flags)
 {
     set_name("Label" + std::to_string(m_widgetid));
@@ -29,7 +29,7 @@ Label::Label(const std::string& text, const Rect& rect,
 
 Label::Label(Frame& parent, const std::string& text, const Rect& rect,
              alignmask align, const Font& font,
-             const widgetflags& flags) noexcept
+             const Widget::flags_type& flags) noexcept
     : Label(text, rect, align, font, flags)
 {
     parent.add(this);
@@ -37,7 +37,7 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
 
 Label::Label(Frame& parent, const std::string& text,
              alignmask align, const Font& font,
-             const widgetflags& flags) noexcept
+             const Widget::flags_type& flags) noexcept
     : Label(parent, text, Rect(), align, font, flags)
 {
 
@@ -68,8 +68,8 @@ void Label::default_draw(Label& widget, Painter& painter, const Rect& rect)
 
     widget.draw_box(painter);
 
-    painter.set_color(widget.palette().color(Palette::TEXT,
-                      widget.active() ? Palette::GROUP_ACTIVE : Palette::GROUP_NORMAL));
+    painter.set_color(widget.palette().color(Palette::ColorId::text,
+                      widget.active() ? Palette::GroupId::active : Palette::GroupId::normal));
     painter.set_font(widget.font());
     painter.draw_text(widget.box(), widget.text(), widget.text_align(), 5);
 }
@@ -101,7 +101,7 @@ ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
                        const Rect& rect,
                        const Font& font) noexcept
-    : Label(text, rect, alignmask::RIGHT | alignmask::CENTER, font),
+    : Label(text, rect, alignmask::right | alignmask::center, font),
       m_image(image)
 {
     set_name("ImageLabel" + std::to_string(m_widgetid));
@@ -112,7 +112,7 @@ ImageLabel::ImageLabel(const Image& image,
         m_box.size(image.size());
 
     if (text.empty())
-        m_image_align = alignmask::CENTER;
+        m_image_align = alignmask::center;
 }
 
 ImageLabel::ImageLabel(const Image& image,
@@ -248,9 +248,9 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
         if (widget.m_show_label)
         {
-            painter.set_color(widget.palette().color(Palette::TEXT));
+            painter.set_color(widget.palette().color(Palette::ColorId::text));
             painter.draw_text(widget.m_text, tbox,
-                              alignmask::CENTER, 0, widget.font());
+                              alignmask::center, 0, widget.font());
         }
     }
     else

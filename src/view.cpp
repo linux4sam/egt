@@ -19,7 +19,7 @@ inline namespace v1
 // orientation to size dimension
 static inline int o2d(orientation o, const Size& size)
 {
-    return (o == orientation::HORIZONTAL) ? size.w : size.h;
+    return (o == orientation::horizontal) ? size.w : size.h;
 }
 
 // orientation to size dimension
@@ -32,7 +32,7 @@ static inline int o2d(orientation o, const Rect& rect)
 template<class T>
 static inline int o2p(orientation o, const T& point)
 {
-    return (o == orientation::HORIZONTAL) ? point.x : point.y;
+    return (o == orientation::horizontal) ? point.x : point.y;
 }
 
 ScrolledView::ScrolledView(const Rect& rect, orientation orient)
@@ -43,17 +43,17 @@ ScrolledView::ScrolledView(const Rect& rect, orientation orient)
     set_name("ScrolledView" + std::to_string(m_widgetid));
     set_boxtype(Theme::boxtype::none);
 
-    if (orient == orientation::VERTICAL)
-        m_slider.slider_flags(Slider::flags::RECTANGLE_HANDLE |
-                              Slider::flags::ORIGIN_OPPOSITE |
-                              Slider::flags::CONSISTENT_LINE);
+    if (orient == orientation::vertical)
+        m_slider.slider_flags().set({Slider::flag::rectangle_handle,
+                                     Slider::flag::origin_opposite,
+                                     Slider::flag::consistent_line});
     else
-        m_slider.slider_flags(Slider::flags::RECTANGLE_HANDLE |
-                              Slider::flags::CONSISTENT_LINE);
+        m_slider.slider_flags().set({Slider::flag::rectangle_handle,
+                                     Slider::flag::consistent_line});
 
     resize_slider();
 
-    m_slider.set_flag(widgetflag::READONLY);
+    m_slider.flags().set(Widget::flag::readonly);
 }
 
 ScrolledView::ScrolledView(orientation orient)
@@ -65,10 +65,10 @@ int ScrolledView::handle(eventid event)
 {
     switch (event)
     {
-    case eventid::POINTER_DRAG_START:
+    case eventid::pointer_drag_start:
         m_start_offset = m_offset;
         break;
-    case eventid::POINTER_DRAG:
+    case eventid::pointer_drag:
     {
         auto diff = o2p(m_orient, event::pointer().point) -
                     o2p(m_orient, event::pointer().drag_start);
@@ -96,13 +96,13 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     // change the origin to the offset
-    if (m_orient == orientation::HORIZONTAL)
+    if (m_orient == orientation::horizontal)
         cairo_translate(cr.get(), m_offset, 0);
     else
         cairo_translate(cr.get(), 0, m_offset);
 
     Rect r = box();
-    if (m_orient == orientation::HORIZONTAL)
+    if (m_orient == orientation::horizontal)
         r.x -= m_offset;
     else
         r.y -= m_offset;
@@ -124,7 +124,7 @@ Rect ScrolledView::child_area() const
     if (!scrollable())
         return box();
 
-    if (m_orient == orientation::HORIZONTAL)
+    if (m_orient == orientation::horizontal)
         return box() - Size(0, SLIDER_DIM);
 
     return box() - Size(SLIDER_DIM, 0);
@@ -139,7 +139,7 @@ void ScrolledView::resize(const Size& size)
 void ScrolledView::resize_slider()
 {
     auto b = box();
-    if (m_orient == orientation::HORIZONTAL)
+    if (m_orient == orientation::horizontal)
     {
         b.x += std::abs(m_offset);
         b.y = b.y + b.h - SLIDER_DIM;

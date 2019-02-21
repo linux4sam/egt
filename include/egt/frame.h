@@ -47,7 +47,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Frame(const Rect& rect = Rect(),
-                   const widgetflags& flags = widgetflags());
+                   const Widget::flags_type& flags = Widget::flags_type());
 
     /**
      * Construct a Frame.
@@ -57,7 +57,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Frame(Frame& parent, const Rect& rect,
-                   const widgetflags& flags = widgetflags());
+                   const Widget::flags_type& flags = Widget::flags_type());
 
     virtual int handle(eventid event) override;
 
@@ -152,7 +152,7 @@ public:
         i = std::find_if(m_children.begin(), m_children.end(),
                          [&name](const Widget * obj)
         {
-            return obj->is_flag_set(widgetflag::FRAME);
+            return obj->flags().is_set(Widget::flag::frame);
         });
 
         for (; i != m_children.end(); ++i)

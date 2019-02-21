@@ -15,35 +15,35 @@ namespace detail
 Rect align_algorithm(const Size& size, const Rect& bounding,
                      alignmask align, int margin)
 {
-    if (unlikely(align == alignmask::NONE))
+    if (unlikely(align == alignmask::none))
         return Rect(bounding.point(), size);
 
     auto p = bounding.point();
     auto nsize = size;
 
-    if ((align & alignmask::CENTER) == alignmask::CENTER)
+    if ((align & alignmask::center) == alignmask::center)
     {
         p.x = bounding.x + (bounding.w / 2) - (size.w / 2);
         p.y = bounding.y + (bounding.h / 2) - (size.h / 2);
     }
 
-    if ((align & alignmask::LEFT) == alignmask::LEFT)
+    if ((align & alignmask::left) == alignmask::left)
         p.x = bounding.x + margin;
-    else if ((align & alignmask::RIGHT) == alignmask::RIGHT)
+    else if ((align & alignmask::right) == alignmask::right)
         p.x = bounding.x + bounding.w - size.w - margin;
 
-    if ((align & alignmask::TOP) == alignmask::TOP)
+    if ((align & alignmask::top) == alignmask::top)
         p.y = bounding.y + margin;
-    else if ((align & alignmask::BOTTOM) == alignmask::BOTTOM)
+    else if ((align & alignmask::bottom) == alignmask::bottom)
         p.y = bounding.y + bounding.h - size.h - margin;
 
-    if ((align & alignmask::EXPAND_HORIZONTAL) == alignmask::EXPAND_HORIZONTAL)
+    if ((align & alignmask::expand_horizontal) == alignmask::expand_horizontal)
     {
         nsize.w = bounding.w - margin * 2;
         p.x = bounding.x + margin;
     }
 
-    if ((align & alignmask::EXPAND_VERTICAL) == alignmask::EXPAND_VERTICAL)
+    if ((align & alignmask::expand_vertical) == alignmask::expand_vertical)
     {
         nsize.h = bounding.h - margin * 2;
         p.y = bounding.y + margin;
@@ -60,7 +60,7 @@ void double_align(const Rect& main,
     auto ftarget = detail::align_algorithm(fsize, main, first_align, margin);
     auto starget = detail::align_algorithm(ssize, main, second_align, margin);
 
-    if ((second_align & alignmask::CENTER) == alignmask::CENTER)
+    if ((second_align & alignmask::center) == alignmask::center)
     {
         starget.move_to_center(ftarget.center());
     }
@@ -71,7 +71,7 @@ void double_align(const Rect& main,
      * going out of bounds of the main rectangle, move both inside the
      * rectangle.
      */
-    if ((second_align & alignmask::LEFT) == alignmask::LEFT)
+    if ((second_align & alignmask::left) == alignmask::left)
     {
         starget.x = ftarget.x - starget.w - margin;
         if (starget.x - margin < main.x)
@@ -81,7 +81,7 @@ void double_align(const Rect& main,
             ftarget.x += diff;
         }
     }
-    else if ((second_align & alignmask::RIGHT) == alignmask::RIGHT)
+    else if ((second_align & alignmask::right) == alignmask::right)
     {
         starget.x = ftarget.right() + margin;
         if (starget.right() + margin > main.right())
@@ -92,7 +92,7 @@ void double_align(const Rect& main,
         }
     }
 
-    if ((second_align & alignmask::TOP) == alignmask::TOP)
+    if ((second_align & alignmask::top) == alignmask::top)
     {
         starget.y = ftarget.y - starget.h - margin;
         if (starget.y - margin < main.y)
@@ -102,7 +102,7 @@ void double_align(const Rect& main,
             ftarget.y += diff;
         }
     }
-    else if ((second_align & alignmask::BOTTOM) == alignmask::BOTTOM)
+    else if ((second_align & alignmask::bottom) == alignmask::bottom)
     {
         starget.y = ftarget.bottom() + margin;
         if (starget.bottom() + margin > main.bottom())

@@ -44,7 +44,7 @@ public:
                        easing_func open_func = easing_cubic_easeinout,
                        std::chrono::milliseconds close_duration = std::chrono::milliseconds(1000),
                        easing_func close_func = easing_circular_easeinout)
-        : Window(main_screen()->size(),  widgetflags(), pixel_format::rgb565),
+        : Window(main_screen()->size(),  Widget::flags_type(), pixel_format::rgb565),
           m_side_flags(f)
     {
         m_oanim.duration(open_duration);
@@ -110,7 +110,7 @@ public:
 
         switch (event)
         {
-        case eventid::POINTER_CLICK:
+        case eventid::pointer_click:
         {
             if (m_dir)
                 close();

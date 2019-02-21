@@ -201,7 +201,7 @@ void InputLibInput::handle_event_motion(struct libinput_event* ev)
     m_pointer.point.x += libinput_event_pointer_get_dx_unaccelerated(p);
     m_pointer.point.y += libinput_event_pointer_get_dy_unaccelerated(p);
 
-    dispatch(eventid::RAW_POINTER_MOVE);
+    dispatch(eventid::raw_pointer_move);
 }
 
 void InputLibInput::handle_event_absmotion(struct libinput_event* ev)
@@ -232,7 +232,7 @@ bool InputLibInput::handle_event_touch(struct libinput_event* ev)
     switch (libinput_event_get_type(ev))
     {
     case LIBINPUT_EVENT_TOUCH_UP:
-        dispatch(eventid::RAW_POINTER_UP);
+        dispatch(eventid::raw_pointer_up);
         break;
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
@@ -241,7 +241,7 @@ bool InputLibInput::handle_event_touch(struct libinput_event* ev)
 
         m_pointer.point = DisplayPoint(x, y);
 
-        dispatch(eventid::RAW_POINTER_DOWN);
+        dispatch(eventid::raw_pointer_down);
         break;
     }
     case LIBINPUT_EVENT_TOUCH_MOTION:
@@ -296,15 +296,15 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
     struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
     unsigned int key = libinput_event_keyboard_get_key(k);
 
-    eventid v = eventid::NONE;
+    eventid v = eventid::none;
     if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_RELEASED)
-        v = eventid::KEYBOARD_UP;
+        v = eventid::keyboard_up;
     else if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_PRESSED)
-        v = eventid::KEYBOARD_DOWN;
+        v = eventid::keyboard_down;
     //else if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_REPEAT)
-    //  v = eventid::KEYBOARD_REPEAT;
+    //  v = eventid::keyboard_repeat;
 
-    if (v != eventid::NONE)
+    if (v != eventid::none)
     {
         m_keys.key = key;
         dispatch(v);
@@ -336,7 +336,7 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
     }
 
     is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
-    dispatch(is_press ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
+    dispatch(is_press ? eventid::raw_pointer_down : eventid::raw_pointer_up);
 }
 
 void InputLibInput::handle_event_swipe(struct libinput_event* ev)
@@ -569,7 +569,7 @@ void InputLibInput::handle_read(const asio::error_code& error)
     }
 
     if (res)
-        dispatch(eventid::RAW_POINTER_MOVE);
+        dispatch(eventid::raw_pointer_move);
 
     asio::async_read(m_input, asio::null_buffers(),
                      main_app().event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));

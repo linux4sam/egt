@@ -147,7 +147,7 @@ int Application::run()
         }
 
         return 0;
-    }, {eventid::KEYBOARD_DOWN});
+    }, {eventid::keyboard_down});
 
     return m_event.run();
 }
@@ -175,7 +175,7 @@ void Application::paint_to_file(const string& filename)
             continue;
 
         // draw top level frames and plane frames
-        if (w->top_level() || w->is_flag_set(widgetflag::PLANE_WINDOW))
+        if (w->top_level() || w->flags().is_set(Widget::flag::plane_window))
             w->paint(painter);
     }
 

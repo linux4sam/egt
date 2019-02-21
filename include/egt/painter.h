@@ -143,7 +143,7 @@ public:
 
     virtual Painter& draw_image(const Image& image,
                                 const Rect& dest,
-                                alignmask align = alignmask::CENTER,
+                                alignmask align = alignmask::center,
                                 int margin = 0,
                                 bool bw = false);
 
@@ -185,7 +185,7 @@ public:
 
     virtual Rect draw_text(const std::string& text,
                            const Rect& rect,
-                           alignmask align = alignmask::CENTER,
+                           alignmask align = alignmask::center,
                            int margin = 5,
                            const Font& font = Font());
 

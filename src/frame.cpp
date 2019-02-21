@@ -18,16 +18,16 @@ namespace egt
 inline namespace v1
 {
 
-Frame::Frame(const Rect& rect, const widgetflags& flags)
+Frame::Frame(const Rect& rect, const Widget::flags_type& flags)
     : Widget(rect, flags)
 {
     set_name("Frame" + std::to_string(m_widgetid));
 
-    set_flag(widgetflag::FRAME);
+    ncflags().set(Widget::flag::frame);
     set_boxtype(Theme::boxtype::none);
 }
 
-Frame::Frame(Frame& parent, const Rect& rect, const widgetflags& flags)
+Frame::Frame(Frame& parent, const Rect& rect, const Widget::flags_type& flags)
     : Frame(rect, flags)
 {
     parent.add(this);
@@ -82,15 +82,15 @@ int Frame::handle(eventid event)
 
     switch (event)
     {
-    case eventid::RAW_POINTER_DOWN:
-    case eventid::RAW_POINTER_UP:
-    case eventid::RAW_POINTER_MOVE:
-    case eventid::POINTER_CLICK:
-    case eventid::POINTER_DBLCLICK:
-    case eventid::POINTER_HOLD:
-    case eventid::POINTER_DRAG_START:
-    case eventid::POINTER_DRAG:
-    case eventid::POINTER_DRAG_STOP:
+    case eventid::raw_pointer_down:
+    case eventid::raw_pointer_up:
+    case eventid::raw_pointer_move:
+    case eventid::pointer_click:
+    case eventid::pointer_dblclick:
+    case eventid::pointer_hold:
+    case eventid::pointer_drag_start:
+    case eventid::pointer_drag:
+    case eventid::pointer_drag_stop:
     {
         for (auto& child : detail::reverse_iterate(m_children))
         {
@@ -154,7 +154,7 @@ void Frame::damage(const Rect& rect)
 void Frame::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << name() <<
-        " " << box() << " " << m_flags << endl;
+        " " << box() << " " << flags() << endl;
 
     for (auto& child : m_children)
     {
@@ -168,11 +168,11 @@ Point Frame::to_panel(const Point& p)
     Widget* w = this;
     while (w)
     {
-        if (w->is_flag_set(widgetflag::FRAME))
+        if (w->flags().is_set(Widget::flag::frame))
         {
             auto f = reinterpret_cast<Frame*>(w);
 
-            if (f->is_flag_set(widgetflag::PLANE_WINDOW))
+            if (f->flags().is_set(Widget::flag::plane_window))
             {
                 pp = Point();
                 break;
@@ -210,7 +210,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
     Rect crect;
 
-    if (!is_flag_set(widgetflag::PLANE_WINDOW))
+    if (!flags().is_set(Widget::flag::plane_window))
     {
         Point origin = to_panel(box().point());
         if (origin.x || origin.y)
@@ -228,7 +228,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     for (auto& child : m_children)
     {
-        if (child->is_flag_set(widgetflag::WINDOW))
+        if (child->flags().is_set(Widget::flag::window))
             continue;
 
         if (!child->visible())
@@ -236,7 +236,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
         // don't draw plane frame as child - this is
         // specifically handled by event loop
-        if (child->is_flag_set(widgetflag::PLANE_WINDOW))
+        if (child->flags().is_set(Widget::flag::plane_window))
             continue;
 
         if (Rect::intersect(crect, child->box()))
@@ -259,7 +259,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     for (auto& child : m_children)
     {
-        if (!child->is_flag_set(widgetflag::WINDOW))
+        if (!child->flags().is_set(Widget::flag::window))
             continue;
 
         if (!child->visible())
@@ -267,7 +267,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
         // don't draw plane frame as child - this is
         // specifically handled by event loop
-        if (child->is_flag_set(widgetflag::PLANE_WINDOW))
+        if (child->flags().is_set(Widget::flag::plane_window))
             continue;
 
         if (Rect::intersect(crect, child->box()))
@@ -308,7 +308,7 @@ void Frame::paint_children_to_file()
 {
     for (auto& child : m_children)
     {
-        if (child->is_flag_set(widgetflag::FRAME))
+        if (child->flags().is_set(Widget::flag::frame))
         {
             auto frame = dynamic_cast<Frame*>(child);
             frame->paint_children_to_file();

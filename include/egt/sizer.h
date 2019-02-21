@@ -27,7 +27,7 @@ class BoxSizer : public Frame
 {
 public:
 
-    BoxSizer(orientation orient = orientation::HORIZONTAL, int spacing = 0,
+    BoxSizer(orientation orient = orientation::horizontal, int spacing = 0,
              int hmargin = 0, int vmargin = 0)
         : Frame(Rect(Point(), Size(2 * hmargin, 2 * vmargin))),
           m_spacing(spacing),
@@ -55,7 +55,7 @@ public:
     {
         Frame::add(widget);
 
-        if (m_orient == orientation::HORIZONTAL)
+        if (m_orient == orientation::horizontal)
         {
             auto w = box().size().w + widget->box().size().w;
             if (count_children() > 1)
@@ -94,7 +94,7 @@ public:
         Rect bounding = Rect(Point(m_hmargin, m_vmargin),
                              box().size() - Size(2 * m_hmargin, 2 * m_vmargin));
 
-        if (m_orient == orientation::VERTICAL)
+        if (m_orient == orientation::vertical)
         {
             for (auto& child : m_children)
             {
@@ -140,14 +140,14 @@ protected:
     int m_spacing{0};
     int m_hmargin{0};
     int m_vmargin{0};
-    orientation m_orient{orientation::HORIZONTAL};
+    orientation m_orient{orientation::horizontal};
 };
 
 class OrientationPositioner : public Frame
 {
 public:
 
-    OrientationPositioner(orientation orient = orientation::HORIZONTAL, int spacing = 0)
+    OrientationPositioner(orientation orient = orientation::horizontal, int spacing = 0)
         : Frame(Rect()),
           m_spacing(spacing),
           m_orient(orient)
@@ -155,13 +155,13 @@ public:
         set_boxtype(Theme::boxtype::none);
         set_name("OrientationPositioner" + std::to_string(m_widgetid));
 
-        if (m_orient == orientation::HORIZONTAL)
+        if (m_orient == orientation::horizontal)
         {
-            set_align(alignmask::EXPAND_VERTICAL);
+            set_align(alignmask::expand_vertical);
         }
         else
         {
-            set_align(alignmask::EXPAND_HORIZONTAL);
+            set_align(alignmask::expand_horizontal);
         }
     }
 
@@ -201,7 +201,7 @@ public:
             return;
 
         auto target = box().point() + Point(m_spacing, m_spacing);
-        if (m_orient == orientation::HORIZONTAL)
+        if (m_orient == orientation::horizontal)
         {
             for (auto& child : m_children)
             {
@@ -234,7 +234,7 @@ public:
 
 protected:
     int m_spacing{0};
-    orientation m_orient{orientation::HORIZONTAL};
+    orientation m_orient{orientation::horizontal};
 };
 
 /**
@@ -245,7 +245,7 @@ class HorizontalPositioner : public Frame
 public:
 
     HorizontalPositioner(const Rect& rect,
-                         int spacing = 0, alignmask align = alignmask::CENTER)
+                         int spacing = 0, alignmask align = alignmask::center)
         : Frame(rect),
           m_spacing(spacing),
           m_align(align)
@@ -281,14 +281,14 @@ public:
             if (child)
             {
                 Point p;
-                if ((m_align & alignmask::CENTER) == alignmask::CENTER)
+                if ((m_align & alignmask::center) == alignmask::center)
                 {
                     p.y = y() + (h() / 2) - (child->h() / 2);
                 }
 
-                if ((m_align & alignmask::TOP) == alignmask::TOP)
+                if ((m_align & alignmask::top) == alignmask::top)
                     p.y = y();
-                else if ((m_align & alignmask::BOTTOM) == alignmask::BOTTOM)
+                else if ((m_align & alignmask::bottom) == alignmask::bottom)
                     p.y = y() + h() - child->h();
 
                 child->move(Point(x() + offset + m_spacing, p.y));
@@ -312,7 +312,7 @@ protected:
     /**
      * The align mask to control how children widgets are positioned.
      */
-    alignmask m_align{alignmask::NONE};
+    alignmask m_align{alignmask::none};
 };
 
 }

@@ -43,31 +43,31 @@ int main(int argc, const char** argv)
     }
 
     ImageLabel logo(Image("@microchip_logo_white.png"));
-    win.add(&logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
+    win.add(&logo)->set_align(alignmask::left | alignmask::top, 10);
 
     StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), 2, 2);
 
     Sprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
                    Point(main_screen()->size().w / 2 - 75,
                          main_screen()->size().h / 2 - 132 / 2));
-    grid.add(&sprite1, 0, 1, alignmask::CENTER);
+    grid.add(&sprite1, 0, 1, alignmask::center);
 
     Sprite sprite2(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
                    Point(main_screen()->size().w / 2,
                          main_screen()->size().h / 2 - 132 / 2));
-    grid.add(&sprite2, 1, 1, alignmask::CENTER);
+    grid.add(&sprite2, 1, 1, alignmask::center);
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
-    grid.add(&hardware_checkbox, 0, 0, alignmask::CENTER);
+    grid.add(&hardware_checkbox, 0, 0, alignmask::center);
     hardware_checkbox.check(true);
 
     CheckBox software_checkbox("Software", Rect(Point(0, 0), Size(120, 40)));
-    grid.add(&software_checkbox, 1, 0, alignmask::CENTER);
+    grid.add(&software_checkbox, 1, 0, alignmask::center);
     software_checkbox.check(true);
 
     hardware_checkbox.on_event([&](eventid event)
     {
-        if (event == eventid::PROPERTY_CHANGED)
+        if (event == eventid::property_changed)
         {
             if (hardware_checkbox.checked())
                 sprite1.show();
@@ -79,7 +79,7 @@ int main(int argc, const char** argv)
 
     software_checkbox.on_event([&](eventid event)
     {
-        if (event == eventid::PROPERTY_CHANGED)
+        if (event == eventid::property_changed)
         {
             if (software_checkbox.checked())
                 sprite2.show();
@@ -97,10 +97,10 @@ int main(int argc, const char** argv)
 
     Label label2("FPS: -",
                  Rect(Point(0, 40), Size(100, 40)),
-                 alignmask::CENTER);
+                 alignmask::center);
     label2.palette()
-    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
 #define DEFAULT_MS_INTERVAL 100
 
@@ -134,11 +134,11 @@ int main(int argc, const char** argv)
 
     Slider slider1(Rect(Point(win.h() - 40, 300), Size(win.w(), 40)), 10, 500, 10);
     win.add(&slider1);
-    slider1.set_align(alignmask::CENTER | alignmask::BOTTOM);
+    slider1.set_align(alignmask::center | alignmask::bottom);
     slider1.set_value(DEFAULT_MS_INTERVAL);
     slider1.on_event([&](eventid event)
     {
-        if (event == eventid::PROPERTY_CHANGED)
+        if (event == eventid::property_changed)
             animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
         return 0;
     });
@@ -147,15 +147,15 @@ int main(int argc, const char** argv)
 
     Popup popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
-    popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
+    popup.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
     popup.set_name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
-                 alignmask::CENTER);
+                 alignmask::center);
     label1.palette()
-    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
     popup.add(&label1);
     popup.add(&label2);

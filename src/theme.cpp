@@ -41,11 +41,11 @@ void Theme::draw_box(Painter& painter,
 {
     Rect box = rect.empty() ? widget.box() : rect;
 
-    Palette::ColorGroup group = Palette::GROUP_NORMAL;
+    Palette::GroupId group = Palette::GroupId::normal;
     if (widget.disabled())
-        group = Palette::GROUP_DISABLED;
+        group = Palette::GroupId::disabled;
     else if (widget.active())
-        group = Palette::GROUP_ACTIVE;
+        group = Palette::GroupId::active;
 
     switch (type)
     {
@@ -54,56 +54,56 @@ void Theme::draw_box(Painter& painter,
     case boxtype::fill:
         draw_fill_box(painter,
                       box,
-                      widget.palette().color(Palette::BG, group));
+                      widget.palette().color(Palette::ColorId::bg, group));
         break;
     case boxtype::fillsolid:
         draw_fill_box(painter,
                       box,
-                      widget.palette().color(Palette::BG, group),
+                      widget.palette().color(Palette::ColorId::bg, group),
                       true);
         break;
     case boxtype::border:
         draw_border_box(painter,
                         box,
-                        widget.palette().color(Palette::BORDER, group));
+                        widget.palette().color(Palette::ColorId::border, group));
         break;
     case boxtype::bottom_border:
         draw_bottom_border_box(painter,
                                box,
-                               widget.palette().color(Palette::BORDER, group));
+                               widget.palette().color(Palette::ColorId::border, group));
         break;
     case boxtype::rounded_border:
         draw_rounded_border_box(painter,
                                 box,
-                                widget.palette().color(Palette::BORDER, group));
+                                widget.palette().color(Palette::ColorId::border, group));
         break;
     case boxtype::borderfill:
         draw_border_fill_box(painter,
                              box,
-                             widget.palette().color(Palette::BORDER, group),
-                             widget.palette().color(Palette::BG, group));
+                             widget.palette().color(Palette::ColorId::border, group),
+                             widget.palette().color(Palette::ColorId::bg, group));
         break;
     case boxtype::rounded_fill:
         draw_rounded_fill_box(painter,
                               box,
-                              widget.palette().color(Palette::BG, group));
+                              widget.palette().color(Palette::ColorId::bg, group));
         break;
     case boxtype::rounded_borderfill:
         draw_rounded_borderfill_box(painter,
                                     box,
-                                    widget.palette().color(Palette::BORDER, group),
-                                    widget.palette().color(Palette::BG, group));
+                                    widget.palette().color(Palette::ColorId::border, group),
+                                    widget.palette().color(Palette::ColorId::bg, group));
         break;
     case boxtype::rounded_gradient:
         draw_rounded_gradient_box(painter,
                                   box,
-                                  widget.palette().color(Palette::BG, group));
+                                  widget.palette().color(Palette::ColorId::bg, group));
         break;
     case boxtype::rounded_border_gradient:
         draw_rounded_border_gradient_box(painter,
                                          box,
-                                         widget.palette().color(Palette::BORDER, group),
-                                         widget.palette().color(Palette::BG, group));
+                                         widget.palette().color(Palette::ColorId::border, group),
+                                         widget.palette().color(Palette::ColorId::bg, group));
         break;
     }
 }

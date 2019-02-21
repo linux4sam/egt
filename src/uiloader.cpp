@@ -40,7 +40,7 @@ void set_widget_property(T instance, const string& name, const string& value)
     else if (name == "align")
         instance->set_align((alignmask)std::stoi(value));
     else if (name == "flags")
-        instance->set_flag((widgetflag)std::stoi(value));
+        instance->flags().set((Widget::flag)std::stoi(value));
 }
 
 template <class T>

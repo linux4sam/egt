@@ -46,7 +46,7 @@ public:
         {
             m_value = v;
             damage();
-            invoke_handlers(eventid::PROPERTY_CHANGED);
+            invoke_handlers(eventid::property_changed);
         }
     }
 
@@ -119,7 +119,7 @@ public:
         {
             m_value = value;
             damage();
-            invoke_handlers(eventid::PROPERTY_CHANGED);
+            invoke_handlers(eventid::property_changed);
         }
 
         return orig;

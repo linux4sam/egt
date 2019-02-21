@@ -30,7 +30,7 @@ public:
           m_logo(*this, Image("@microchip_logo_black.png")),
           m_title(*this, "Living Room",
                   Rect(Point(), Size(250, 64)),
-                  alignmask::CENTER,
+                  alignmask::center,
                   egt::Font(32, Font::weightid::BOLD)),
           m_radial1(*this, Rect(Point(w() / 2 - 350 / 2,
                                       -350),
@@ -54,29 +54,29 @@ public:
           m_label4("Fan",
                    Rect(Point(800, 390),
                         Size(50, 64)),
-                   alignmask::CENTER,
+                   alignmask::center,
                    egt::Font(16)),
           m_slider1(Rect(Point(800, 100),
                          Size(50, 300)),
                     0, 100, 0,
-                    orientation::VERTICAL)
+                    orientation::vertical)
     {
         set_boxtype(Theme::boxtype::none);
 
-        m_logo.set_align(alignmask::LEFT | alignmask::TOP, 10);
+        m_logo.set_align(alignmask::left | alignmask::top, 10);
 
-        m_title.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
-        m_title.set_align(alignmask::CENTER | alignmask::TOP, 10);
+        m_title.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+        m_title.set_align(alignmask::center | alignmask::top, 10);
 
         m_radial1.on_event([this](eventid event)
         {
-            if (event == eventid::PROPERTY_CHANGED)
+            if (event == eventid::property_changed)
             {
                 auto text = std::to_string((int)m_radial1.value()) + "°";
                 m_radial1.text(text);
 
                 if (m_radial1.value() > m_radial1.value2())
-                    m_radial1.palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::ORANGE);
+                    m_radial1.palette().set(Palette::ColorId::highlight, Palette::GroupId::normal, Palette::orange);
                 else
                     m_radial1.reset_palette();
 
@@ -89,26 +89,26 @@ public:
         m_radial1.set_value(73);
         m_radial1.set_value2(65);
 
-        m_label1.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_label1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(&m_label1);
 
-        m_label2.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_label2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(&m_label2);
 
-        m_label3.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_label3.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(&m_label3);
 
-        m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
-        m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
-        m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+        m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+        m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+        m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
 
         m_label1.on_event([this](eventid event)
         {
-            if (event == eventid::POINTER_CLICK)
+            if (event == eventid::pointer_click)
             {
-                m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
-                m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
-                m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
+                m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+                m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
                 m_label1.damage();
                 m_label2.damage();
                 m_label3.damage();
@@ -119,11 +119,11 @@ public:
 
         m_label2.on_event([this](eventid event)
         {
-            if (event == eventid::POINTER_CLICK)
+            if (event == eventid::pointer_click)
             {
-                m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
-                m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
-                m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
+                m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+                m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
                 m_label1.damage();
                 m_label2.damage();
                 m_label3.damage();
@@ -134,11 +134,11 @@ public:
 
         m_label3.on_event([this](eventid event)
         {
-            if (event == eventid::POINTER_CLICK)
+            if (event == eventid::pointer_click)
             {
-                m_label3.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, global_palette().color(Palette::HIGHLIGHT));
-                m_label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
-                m_label2.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::GRAY);
+                m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
+                m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+                m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
                 m_label1.damage();
                 m_label2.damage();
                 m_label3.damage();
@@ -148,7 +148,7 @@ public:
         });
 
         add(&m_label4);
-        m_label4.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        m_label4.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
         add(&m_slider1);
         m_slider1.set_value(50);
@@ -198,10 +198,10 @@ int main(int argc, const char** argv)
         float linew = 10;
         float handle_radius = 20;
 
-        auto color1 = widget.palette().color(Palette::BG);
+        auto color1 = widget.palette().color(Palette::ColorId::bg);
         color1.alpha(0x55);
-        auto color2 = widget.palette().color(Palette::HIGHLIGHT);
-        auto color3 = widget.palette().color(Palette::MID);
+        auto color2 = widget.palette().color(Palette::ColorId::highlight);
+        auto color3 = widget.palette().color(Palette::ColorId::mid);
 
         float radius = widget.w() / 2 - handle_radius - linew;
         float angle1 = detail::to_radians<float>(-90, 0);
@@ -224,7 +224,7 @@ int main(int argc, const char** argv)
         painter.fill();
 
         // secondary value
-        auto color4 = Color::RED;
+        auto color4 = Palette::red;
         float angle3 = detail::to_radians<float>(-90,
                        widget.value_to_degrees(widget.value2()));
         painter.set_color(color4);
@@ -234,15 +234,15 @@ int main(int argc, const char** argv)
 
         if (!widget.text().empty())
         {
-            painter.set_color(widget.palette().color(Palette::TEXT));
+            painter.set_color(widget.palette().color(Palette::ColorId::text));
             painter.draw_text(widget.text(), widget.box(),
-                              alignmask::CENTER, 0, Font(72));
+                              alignmask::center, 0, Font(72));
         }
 
         string current = "Current " + std::to_string(widget.value2()) + "°";
-        painter.set_color(widget.palette().color(Palette::TEXT));
+        painter.set_color(widget.palette().color(Palette::ColorId::text));
         painter.draw_text(current, widget.box(),
-                          alignmask::CENTER | alignmask::BOTTOM, 80, Font(24));
+                          alignmask::center | alignmask::bottom, 80, Font(24));
     });
 
     Application app(argc, argv, "thermostat");

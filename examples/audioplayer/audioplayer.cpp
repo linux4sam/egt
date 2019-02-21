@@ -21,7 +21,7 @@ public:
           m_play(Image("play.png")),
           m_next(Image("next.png"))
     {
-        set_align(alignmask::CENTER);
+        set_align(alignmask::center);
 
         add(&m_previous);
         add(&m_play);
@@ -51,7 +51,7 @@ public:
             m_background.scale_image(scale);
         }
 
-        m_dial.set_align(alignmask::EXPAND);
+        m_dial.set_align(alignmask::expand);
         add(&m_controls);
 
         m_controls.m_play.on_event([this](eventid)
@@ -68,19 +68,19 @@ public:
             }
 
             return 0;
-        }, {eventid::POINTER_CLICK});
+        }, {eventid::pointer_click});
 
-        m_logo.set_align(alignmask::LEFT | alignmask::TOP, 10);
+        m_logo.set_align(alignmask::left | alignmask::top, 10);
 
         m_dial.on_event([this](eventid)
         {
             m_player.seek(m_dial.value());
             return 0;
-        }, {eventid::INPUT_PROPERTY_CHANGED});
+        }, {eventid::input_property_changed});
 
         add(&m_dial);
 
-        m_dial.set_radial_flags({Radial::radial_flags::primary_value});
+        m_dial.radial_flags().set({Radial::flag::primary_value});
 
         m_player.on_event([this](eventid)
         {
@@ -96,7 +96,7 @@ public:
             }
 
             return 0;
-        }, {eventid::PROPERTY_CHANGED});
+        }, {eventid::property_changed});
 
         m_player.set_media("/root/concerto.mp3");
     }
@@ -137,8 +137,8 @@ int main(int argc, const char** argv)
 
         auto v = widget.value_to_degrees(widget.value());
 
-        auto color1 = widget.palette().color(Palette::MID);
-        auto color2 = widget.palette().color(Palette::HIGHLIGHT);
+        auto color1 = widget.palette().color(Palette::ColorId::mid);
+        auto color2 = widget.palette().color(Palette::ColorId::highlight);
 
         float smalldim = std::min(widget.w(), widget.h());
         float linew = smalldim / 10;
@@ -168,9 +168,9 @@ int main(int argc, const char** argv)
             p -= Point(s.w, 0);
 
         painter.set_font(Font());
-        painter.set_color(Color::WHITE);
+        painter.set_color(Palette::white);
         painter.draw_text(text, Rect(p, s),
-                          alignmask::CENTER, 0, Font());
+                          alignmask::center, 0, Font());
 
     });
 

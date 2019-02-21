@@ -20,7 +20,7 @@ int main(int argc, const char** argv)
 
     StaticGrid grid(Rect(win.size()), 3, 2, 10);
     win.add(&grid);
-    grid.set_align(alignmask::EXPAND);
+    grid.set_align(alignmask::expand);
 
     AnimationSequence seq;
 
@@ -39,7 +39,7 @@ int main(int argc, const char** argv)
     seq.add(&shrink_out);
 
     Label label("hello world");
-    label.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
+    label.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
     grid.add(&label, 0, 1);
 
     auto orig = label.w();
@@ -51,7 +51,7 @@ int main(int argc, const char** argv)
     seq.add(&shrinkh_out);
 
     Label label2("hello world");
-    label2.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::GREEN);
+    label2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
     grid.add(&label2, 1, 1);
 
     seq.start();

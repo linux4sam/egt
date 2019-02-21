@@ -148,7 +148,7 @@ int main(int argc, const char** argv)
     TopWindow win;
 
     ListBox list(win);
-    list.set_align(alignmask::EXPAND);
+    list.set_align(alignmask::expand);
 
 #ifdef USE_LIBCURL
     string data = download("http://feeds.reuters.com/reuters/technologyNews");

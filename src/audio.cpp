@@ -81,7 +81,7 @@ gboolean AudioPlayer::bus_callback(GstBus* bus, GstMessage* message, gpointer da
             _this->m_position = g_value_get_int64(vcurrent);
 
             main_app().event().io().post(std::bind(&AudioPlayer::invoke_handlers,
-                                                   _this, eventid::PROPERTY_CHANGED));
+                                                   _this, eventid::property_changed));
         }
         break;
     }
@@ -179,7 +179,7 @@ bool AudioPlayer::set_volume(int volume)
         volume = 100;
 
     g_object_set(m_volume, "volume", volume / 100.0, NULL);
-    invoke_handlers(eventid::PROPERTY_CHANGED);
+    invoke_handlers(eventid::property_changed);
 
     return true;
 }
@@ -200,7 +200,7 @@ bool AudioPlayer::set_mute(bool mute)
         return false;
 
     g_object_set(m_volume, "mute", mute, NULL);
-    invoke_handlers(eventid::PROPERTY_CHANGED);
+    invoke_handlers(eventid::property_changed);
     return true;
 }
 
@@ -218,7 +218,7 @@ bool AudioPlayer::set_state(GstState state)
         }
 
         main_app().event().io().post(std::bind(&AudioPlayer::invoke_handlers,
-                                               this, eventid::PROPERTY_CHANGED));
+                                               this, eventid::property_changed));
     }
     else
     {

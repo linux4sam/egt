@@ -8,7 +8,7 @@
 
 #include <egt/color.h>
 #include <memory>
-#include <vector>
+#include <map>
 
 namespace egt
 {
@@ -29,30 +29,55 @@ class Palette
 {
 public:
 
-    enum ColorGroup
+    //@{
+    /** @brief Pre-defined color. */
+    static const Color transparent;
+    static const Color black;
+    static const Color white;
+    static const Color red;
+    static const Color green;
+    static const Color blue;
+    static const Color yellow;
+    static const Color cyan;
+    static const Color magenta;
+    static const Color silver;
+    static const Color gray;
+    static const Color lightgray;
+    static const Color maroon;
+    static const Color olive;
+    static const Color purple;
+    static const Color teal;
+    static const Color navy;
+    static const Color orange;
+    static const Color aqua;
+    static const Color lightblue;
+    //@}
+
+
+    enum class GroupId
     {
-        GROUP_NORMAL = 0,
-        GROUP_ACTIVE,
-        GROUP_DISABLED
+        normal,
+        active,
+        disabled
     };
 
-    enum ColorId
+    enum class ColorId
     {
-        BG = 0,
-        FG,
-        LIGHT,
-        DARK,
-        MID,
-        TEXT,
-        TEXT_INVERT,
-        TEXTBG,
-        HIGHLIGHT,
-        BORDER
+        bg,
+        fg,
+        light,
+        dark,
+        mid,
+        text,
+        text_invert,
+        textbg,
+        highlight,
+        border
     };
 
-    const Color& color(ColorId id, ColorGroup group = GROUP_NORMAL) const;
+    const Color& color(ColorId id, GroupId group = GroupId::normal) const;
 
-    Palette& set(ColorId id, ColorGroup group, const Color& color);
+    Palette& set(ColorId id, GroupId group, const Color& color);
 
     /**
      * Reset known colors back to a default state.
@@ -61,7 +86,7 @@ public:
 
 protected:
 
-    std::vector<std::vector<Color>> m_colors;
+    std::map<GroupId, std::map<ColorId, Color>> m_colors;
 };
 
 /**

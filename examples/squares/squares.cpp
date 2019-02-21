@@ -20,14 +20,14 @@ int main(int argc, const char** argv)
 
     Label label("FPS: -",
                 Rect(Point(0, 40), Size(100, 40)),
-                alignmask::CENTER);
+                alignmask::center);
     label.palette()
-    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
     Popup popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
-    popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
+    popup.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
     popup.set_name("popup");
     popup.add(label);
     win.add(&popup);
@@ -38,23 +38,23 @@ int main(int argc, const char** argv)
 
     const vector<Color> colors =
     {
-        Color::RED,
-        Color::GREEN,
-        Color::BLUE,
-        Color::YELLOW,
-        Color::CYAN,
-        Color::MAGENTA,
-        Color::SILVER,
-        Color::GRAY,
-        Color::LIGHTGRAY,
-        Color::MAROON,
-        Color::OLIVE,
-        Color::PURPLE,
-        Color::TEAL,
-        Color::NAVY,
-        Color::ORANGE,
-        Color::AQUA,
-        Color::LIGHTBLUE,
+        Palette::red,
+        Palette::green,
+        Palette::blue,
+        Palette::yellow,
+        Palette::cyan,
+        Palette::magenta,
+        Palette::silver,
+        Palette::gray,
+        Palette::lightgray,
+        Palette::maroon,
+        Palette::olive,
+        Palette::purple,
+        Palette::teal,
+        Palette::navy,
+        Palette::orange,
+        Palette::aqua,
+        Palette::lightblue,
     };
 
     std::random_device r;

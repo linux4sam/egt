@@ -20,25 +20,25 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
     if (strings.empty())
     {
 #define MAPITEM(p) strings[p] = #p
-        MAPITEM(eventid::NONE);
-        MAPITEM(eventid::RAW_POINTER_DOWN);
-        MAPITEM(eventid::RAW_POINTER_UP);
-        MAPITEM(eventid::RAW_POINTER_MOVE);
-        MAPITEM(eventid::POINTER_CLICK);
-        MAPITEM(eventid::POINTER_DBLCLICK);
-        MAPITEM(eventid::POINTER_HOLD);
-        MAPITEM(eventid::POINTER_DRAG_START);
-        MAPITEM(eventid::POINTER_DRAG);
-        MAPITEM(eventid::POINTER_DRAG_STOP);
-        MAPITEM(eventid::ENTER);
-        MAPITEM(eventid::LEAVE);
-        MAPITEM(eventid::KEYBOARD_DOWN);
-        MAPITEM(eventid::KEYBOARD_UP);
-        MAPITEM(eventid::KEYBOARD_REPEAT);
-        MAPITEM(eventid::PROPERTY_CHANGED);
-        MAPITEM(eventid::INPUT_PROPERTY_CHANGED);
-        MAPITEM(eventid::HIDE);
-        MAPITEM(eventid::SHOW);
+        MAPITEM(eventid::none);
+        MAPITEM(eventid::raw_pointer_down);
+        MAPITEM(eventid::raw_pointer_up);
+        MAPITEM(eventid::raw_pointer_move);
+        MAPITEM(eventid::pointer_click);
+        MAPITEM(eventid::pointer_dblclick);
+        MAPITEM(eventid::pointer_hold);
+        MAPITEM(eventid::pointer_drag_start);
+        MAPITEM(eventid::pointer_drag);
+        MAPITEM(eventid::pointer_drag_stop);
+        MAPITEM(eventid::enter);
+        MAPITEM(eventid::leave);
+        MAPITEM(eventid::keyboard_down);
+        MAPITEM(eventid::keyboard_up);
+        MAPITEM(eventid::keyboard_repeat);
+        MAPITEM(eventid::property_changed);
+        MAPITEM(eventid::input_property_changed);
+        MAPITEM(eventid::hide);
+        MAPITEM(eventid::show);
 #undef MAPITEM
     }
 

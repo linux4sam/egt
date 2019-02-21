@@ -26,12 +26,12 @@ public:
              const string& label,
              int x = 0,
              int y = 0,
-             widgetflags flags = widgetflags())
+             Widget::flags_type flags = Widget::flags_type())
         : ImageButton(Image(filename), label, Rect(Point(x, y), Size()), flags)
     {
         set_position_image_first(true);
-        set_image_align(alignmask::CENTER);
-        set_text_align(alignmask::CENTER | alignmask::BOTTOM);
+        set_image_align(alignmask::center);
+        set_text_align(alignmask::center | alignmask::bottom);
     }
 };
 
@@ -68,15 +68,15 @@ protected:
 
 static void top_menu(Window* win)
 {
-    Box* box1 = new Box(Rect(Size(800, 60)), Color::BLACK);
+    Box* box1 = new Box(Rect(Size(800, 60)), Palette::black);
     win->add(box1);
 
     HomeImage* i1 = new HomeImage("home.png", 5, 5);
     win->add(i1);
 
-    Label* l1 = new Label("", Rect(Point(320, 0), Size(100, 60)), alignmask::CENTER, Font(32));
-    l1->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    Label* l1 = new Label("", Rect(Point(320, 0), Size(100, 60)), alignmask::center, Font(32));
+    l1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     win->add(l1);
 
     struct TimeTimer : public PeriodicTimer
@@ -104,9 +104,9 @@ static void top_menu(Window* win)
 
     timer->start();
 
-    Label* l2 = new Label("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::CENTER, Font(24));
-    l2->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    Label* l2 = new Label("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::center, Font(24));
+    l2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     win->add(l2);
 
     auto i2 = new ImageLabel(Image("wifi.png"), Point(800 - 50, 10));
@@ -116,7 +116,7 @@ static void top_menu(Window* win)
 static void bottom_menu(Window* win)
 {
     StaticGrid* grid2 = new StaticGrid(Rect(Point(0, 390), Size(800, 90)), 5, 1, 4);
-    grid2->palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    grid2->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
     win->add(grid2);
 
@@ -143,9 +143,9 @@ public:
         : TopWindow(size),
           grid(Rect(Point(0, 60), Size(800, 330)), 4, 2, 10)
     {
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::LIGHTBLUE);
+        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::lightblue);
 
-        grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
         add(&grid);
 

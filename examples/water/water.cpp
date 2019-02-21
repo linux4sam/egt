@@ -74,9 +74,9 @@ public:
         m_label = make_unique<Label>("Objects: 0",
                                      Rect(Point(10, 10),
                                           Size(150, 40)),
-                                     alignmask::LEFT | alignmask::CENTER);
-        m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-        .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+                                     alignmask::left | alignmask::center);
+        m_label->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+        .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(m_label);
 
         m_sprite = make_unique<Sprite>(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
@@ -88,7 +88,7 @@ public:
     {
         switch (event)
         {
-        case eventid::RAW_POINTER_MOVE:
+        case eventid::raw_pointer_move:
             spawn(from_display(event::pointer().point));
             break;
         default:
@@ -258,8 +258,8 @@ int main(int argc, const char** argv)
     Label label1("CPU: 0%",
                  Rect(Point(10, win.size().h - 40),
                       Size(100, 40)));
-    label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     win.add(&label1);
 
     CPUMonitorUsage tools;

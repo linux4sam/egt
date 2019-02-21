@@ -99,12 +99,12 @@ public:
     constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
     Window(const Rect& rect,
-           const widgetflags& flags = widgetflags(),
+           const Widget::flags_type& flags = Widget::flags_type(),
            pixel_format format = DEFAULT_FORMAT,
            windowhint hint = windowhint::automatic);
 
     Window(const Size& size = Size(),
-           const widgetflags& flags = widgetflags(),
+           const Widget::flags_type& flags = Widget::flags_type(),
            pixel_format format = DEFAULT_FORMAT,
            windowhint hint = windowhint::automatic)
         : Window(Rect(Point(), size), flags, format, hint)

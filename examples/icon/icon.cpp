@@ -19,22 +19,22 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "icon");
 
     TopWindow win;
-    win.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::WHITE);
+    win.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::white);
 
     auto NAV_WIDTH = 80;
 
     ImageButton left(win, Image("arrow_left.png"), "", Rect(0, 0, NAV_WIDTH, win.h()));
-    left.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    left.set_text_align(alignmask::CENTER);
-    left.set_align(alignmask::LEFT);
+    left.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    left.set_text_align(alignmask::center);
+    left.set_align(alignmask::left);
 
     ImageButton right(win, Image("arrow_right.png"), "", Rect(0, 0, NAV_WIDTH, win.h()));
-    right.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
-    right.set_text_align(alignmask::CENTER);
-    right.set_align(alignmask::RIGHT);
+    right.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    right.set_text_align(alignmask::center);
+    right.set_align(alignmask::right);
 
     ScrolledView view0(Rect(NAV_WIDTH, 0, win.w() - (NAV_WIDTH * 2), win.h()));
-    view0.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+    view0.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
     view0.set_name("view0");
     win.add(&view0);
 
@@ -43,7 +43,7 @@ int main(int argc, const char** argv)
 
     right.on_event([&](eventid event)
     {
-        if (event == eventid::POINTER_CLICK)
+        if (event == eventid::pointer_click)
         {
             swipe.starting(view0.offset());
             swipe.ending(view0.offset() - view0.w());
@@ -54,7 +54,7 @@ int main(int argc, const char** argv)
 
     left.on_event([&](eventid event)
     {
-        if (event == eventid::POINTER_CLICK)
+        if (event == eventid::pointer_click)
         {
             swipe.starting(view0.offset());
             swipe.ending(view0.offset() + view0.w());
@@ -74,7 +74,7 @@ int main(int argc, const char** argv)
         std::string basename = file.substr(file.find_last_of("/\\") + 1);
         auto icon = new ImageButton(Image(file), basename);
         icon->set_boxtype(Theme::boxtype::none);
-        icon->palette().set(Palette::TEXT_INVERT, Palette::GROUP_NORMAL, Color::BLACK);
+        icon->palette().set(Palette::ColorId::text_invert, Palette::GroupId::normal, Palette::black);
         grid0.add(icon);
     }
 
@@ -84,15 +84,15 @@ int main(int argc, const char** argv)
 
     Popup popup(Size(100, 40));
     popup.move(Point(win.w() - 100 - 10 - NAV_WIDTH, 10));
-    popup.palette().set(Palette::BG, Palette::GROUP_NORMAL, FUCHSIA);
+    popup.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
     popup.set_name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
-                 alignmask::CENTER);
+                 alignmask::center);
     label1.palette()
-    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::BLACK)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     win.add(&popup);
     popup.add(&label1);
 

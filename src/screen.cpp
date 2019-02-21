@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/color.h"
+#include "egt/palette.h"
 #include "egt/screen.h"
 #include "egt/utils.h"
 #include <cassert>
@@ -148,7 +149,7 @@ void Screen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
 
     cairo_fill(buffer.cr.get());
 
-    Color color = Color::GREEN;
+    Color color = Palette::green;
     cairo_set_source_rgb(buffer.cr.get(), color.redf(),
                          color.greenf(), color.bluef());
     cairo_set_line_width(buffer.cr.get(), 4.0);

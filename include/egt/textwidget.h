@@ -31,9 +31,9 @@ public:
 
     explicit TextWidget(const std::string& text = std::string(),
                         const Rect& rect = Rect(),
-                        alignmask align = alignmask::CENTER,
+                        alignmask align = alignmask::center,
                         const Font& font = Font(),
-                        const widgetflags& flags = widgetflags()) noexcept;
+                        const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     TextWidget(const TextWidget& rhs) noexcept;
 
@@ -121,7 +121,7 @@ protected:
      */
     Size text_size(const std::string& text);
 
-    alignmask m_text_align{alignmask::CENTER};
+    alignmask m_text_align{alignmask::center};
 
     /**
      * The text.

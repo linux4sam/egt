@@ -88,14 +88,14 @@ class MainWindow : public TopWindow
 public:
     MainWindow()
     {
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLACK);
+        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
     }
 
     int handle(eventid event) override
     {
         switch (event)
         {
-        case eventid::RAW_POINTER_MOVE:
+        case eventid::raw_pointer_move:
             if (debounce_mouse(50))
                 spawn(from_display(event::pointer().point));
             break;
@@ -172,8 +172,8 @@ int main(int argc, const char** argv)
     Label label1("CPU: 0%",
                  Rect(Point(10, win.size().h - 40),
                       Size(100, 40)));
-    label1.palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     win.add(&label1);
 
     CPUMonitorUsage tools;

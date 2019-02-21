@@ -143,17 +143,17 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ButtonPress:
             m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
-            m_in.dispatch(eventid::RAW_POINTER_DOWN);
+            m_in.dispatch(eventid::raw_pointer_down);
             break;
         case ButtonRelease:
             m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
-            m_in.dispatch(eventid::RAW_POINTER_UP);
+            m_in.dispatch(eventid::raw_pointer_up);
             break;
         case EnterNotify:
         case LeaveNotify:
         case MotionNotify:
             m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
-            m_in.dispatch(eventid::RAW_POINTER_MOVE);
+            m_in.dispatch(eventid::raw_pointer_move);
             break;
         case KeyPress:
         case KeyRelease:
@@ -163,7 +163,7 @@ void X11Screen::handle_read(const asio::error_code& error)
             m_in.m_keys.key = detail::GetUnicodeCharacterFromXKeySym(keysym);
             m_in.m_keys.code = detail::KeyboardCodeFromXKeyEvent(&e);
 
-            m_in.dispatch(e.type == KeyPress ? eventid::KEYBOARD_DOWN : eventid::KEYBOARD_UP);
+            m_in.dispatch(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up);
             break;
         }
         case ClientMessage:

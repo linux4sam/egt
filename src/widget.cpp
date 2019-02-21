@@ -26,15 +26,15 @@ inline namespace v1
 
 static auto global_widget_id = 0;
 
-Widget::Widget(const Rect& rect, const widgetflags& flags) noexcept
+Widget::Widget(const Rect& rect, const Widget::flags_type& flags) noexcept
     : m_box(rect),
       m_widgetid(global_widget_id++),
-      m_flags(flags)
+      m_widget_flags(flags)
 {
     set_name("Widget" + std::to_string(m_widgetid));
 }
 
-Widget::Widget(Frame& parent, const Rect& rect, const widgetflags& flags) noexcept
+Widget::Widget(Frame& parent, const Rect& rect, const Widget::flags_type& flags) noexcept
     : Widget(rect, flags)
 {
     parent.add(this);
@@ -43,7 +43,7 @@ Widget::Widget(Frame& parent, const Rect& rect, const widgetflags& flags) noexce
 Widget::Widget(const Widget& rhs) noexcept
     : m_box(rhs.m_box),
       m_widgetid(global_widget_id++),
-      m_flags(rhs.m_flags),
+      m_widget_flags(rhs.m_widget_flags),
       m_align(rhs.m_align),
       m_margin(rhs.m_margin),
       m_boxtype(rhs.m_boxtype)
@@ -64,7 +64,7 @@ Widget::Widget(const Widget& rhs) noexcept
 Widget::Widget(Widget&& rhs) noexcept
     : m_box(std::move(rhs.m_box)),
       m_widgetid(std::move(rhs.m_widgetid)),
-      m_flags(std::move(rhs.m_flags)),
+      m_widget_flags(std::move(rhs.m_widget_flags)),
       m_palette(std::move(rhs.m_palette)),
       m_name(std::move(rhs.m_name)),
       m_align(std::move(rhs.m_align)),
@@ -88,7 +88,7 @@ Widget& Widget::operator=(const Widget& rhs) noexcept
     detatch();
 
     m_box = rhs.m_box;
-    m_flags = rhs.m_flags;
+    m_widget_flags = rhs.m_widget_flags;
     m_align = rhs.m_align;
     m_margin = rhs.m_margin;
     m_boxtype = rhs.m_boxtype;
@@ -112,7 +112,7 @@ Widget& Widget::operator=(Widget&& rhs) noexcept
 
     m_box = std::move(rhs.m_box);
     m_widgetid = std::move(rhs.m_widgetid);
-    m_flags = std::move(rhs.m_flags);
+    m_widget_flags = std::move(rhs.m_widget_flags);
     m_palette = std::move(rhs.m_palette);
     m_name = std::move(rhs.m_name);
     m_align = std::move(rhs.m_align);
@@ -132,16 +132,16 @@ int Widget::handle(eventid event)
 {
     DBG(name() << " handle: " << event);
 
-    if (is_flag_set(widgetflag::GRAB_MOUSE))
+    if (flags().is_set(Widget::flag::grab_mouse))
     {
         switch (event)
         {
-        case eventid::RAW_POINTER_DOWN:
+        case eventid::raw_pointer_down:
         {
             mouse_grab(this);
             break;
         }
-        case eventid::RAW_POINTER_UP:
+        case eventid::raw_pointer_up:
         {
             mouse_grab(nullptr);
             break;
@@ -193,76 +193,76 @@ void Widget::set_box(const Rect& rect)
 
 void Widget::hide()
 {
-    if (is_flag_set(widgetflag::INVISIBLE))
+    if (flags().is_set(Widget::flag::invisible))
         return;
     // careful attention to ordering
     damage();
-    set_flag(widgetflag::INVISIBLE);
-    invoke_handlers(eventid::HIDE);
+    flags().set(Widget::flag::invisible);
+    invoke_handlers(eventid::hide);
 }
 
 void Widget::show()
 {
-    if (!is_flag_set(widgetflag::INVISIBLE))
+    if (!flags().is_set(Widget::flag::invisible))
         return;
     // careful attention to ordering
-    clear_flag(widgetflag::INVISIBLE);
+    flags().clear(Widget::flag::invisible);
     damage();
-    invoke_handlers(eventid::SHOW);
+    invoke_handlers(eventid::show);
 }
 
 bool Widget::visible() const
 {
-    return !is_flag_set(widgetflag::INVISIBLE);
+    return !flags().is_set(Widget::flag::invisible);
 }
 
 bool Widget::active() const
 {
-    return is_flag_set(widgetflag::ACTIVE);
+    return flags().is_set(Widget::flag::active);
 }
 
 void Widget::set_active(bool value)
 {
-    if (is_flag_set(widgetflag::ACTIVE) != value)
+    if (flags().is_set(Widget::flag::active) != value)
     {
-        value ? set_flag(widgetflag::ACTIVE) : clear_flag(widgetflag::ACTIVE);
+        value ? flags().set(Widget::flag::active) : flags().clear(Widget::flag::active);
         damage();
     }
 }
 
 bool Widget::readonly() const
 {
-    return is_flag_set(widgetflag::READONLY);
+    return flags().is_set(Widget::flag::readonly);
 }
 
 void Widget::set_readonly(bool value)
 {
-    if (is_flag_set(widgetflag::READONLY) != value)
+    if (flags().is_set(Widget::flag::readonly) != value)
     {
-        value ? set_flag(widgetflag::READONLY) : clear_flag(widgetflag::READONLY);
+        value ? flags().set(Widget::flag::readonly) : flags().clear(Widget::flag::readonly);
         damage();
     }
 }
 
 bool Widget::disabled() const
 {
-    return is_flag_set(widgetflag::DISABLED);
+    return flags().is_set(Widget::flag::disabled);
 }
 
 void Widget::disable()
 {
-    if (is_flag_set(widgetflag::DISABLED))
+    if (flags().is_set(Widget::flag::disabled))
         return;
     damage();
-    set_flag(widgetflag::DISABLED);
+    flags().set(Widget::flag::disabled);
 }
 
 void Widget::enable()
 {
-    if (!is_flag_set(widgetflag::DISABLED))
+    if (!flags().is_set(Widget::flag::disabled))
         return;
     damage();
-    clear_flag(widgetflag::DISABLED);
+    flags().clear(Widget::flag::disabled);
 }
 
 void Widget::damage()
@@ -350,7 +350,7 @@ void Widget::set_align(alignmask a, int margin)
     if (!parent())
         return;
 
-    if (m_align != alignmask::NONE)
+    if (m_align != alignmask::none)
     {
         assert(m_parent);
 
@@ -464,7 +464,7 @@ shared_cairo_surface_t Widget::surface()
 void Widget::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << name() <<
-        " " << box() << " " << m_flags << std::endl;
+        " " << box() << " " << m_widget_flags << std::endl;
 }
 
 void Widget::on_gain_focus()

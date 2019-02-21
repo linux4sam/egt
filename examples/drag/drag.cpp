@@ -35,7 +35,7 @@ public:
         }
 
         auto logo = new ImageLabel(Image("@microchip_logo_white.png"));
-        add(logo)->set_align(alignmask::LEFT | alignmask::TOP, 10);
+        add(logo)->set_align(alignmask::left | alignmask::top, 10);
     }
 
     ImageLabel m_img;
@@ -49,28 +49,28 @@ public:
           m_grip(Image("grip.png")),
           m_arrows(Image("arrows.png"))
     {
-        set_flag(widgetflag::GRAB_MOUSE);
+        flags().set(Widget::flag::grab_mouse);
         set_boxtype(Theme::boxtype::fill);
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x526d7480));
+        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x526d7480));
 
         add(&m_grip);
         m_grip.resize(Size(50, 50));
-        m_grip.set_align(alignmask::RIGHT | alignmask::BOTTOM);
+        m_grip.set_align(alignmask::right | alignmask::bottom);
 
         add(&m_arrows);
         m_arrows.resize(box().size() / 2);
         m_arrows.image().resize(box().size() / 2);
-        m_arrows.set_align(alignmask::CENTER);
+        m_arrows.set_align(alignmask::center);
     }
 
     virtual int handle(eventid event) override
     {
         switch (event)
         {
-        case eventid::POINTER_DRAG_START:
+        case eventid::pointer_drag_start:
             m_start_point = box().point();
             break;
-        case eventid::POINTER_DRAG:
+        case eventid::pointer_drag:
         {
             auto diff = event::pointer().drag_start - event::pointer().point;
             move(m_start_point - Point(diff.x, diff.y));
@@ -108,10 +108,10 @@ int main(int argc, const char** argv)
     Label label1("CPU: -",
                  Rect(Point(10, win.size().h - 40),
                       Size(100, 40)),
-                 alignmask::LEFT | alignmask::CENTER);
+                 alignmask::left | alignmask::center);
     label1.palette()
-    .set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE)
-    .set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
     win.add(&label1);
 

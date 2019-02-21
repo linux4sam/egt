@@ -42,22 +42,22 @@ class Label : public TextWidget
 public:
     Label(const std::string& text = std::string(),
           const Rect& rect = Rect(),
-          alignmask align = alignmask::CENTER,
+          alignmask align = alignmask::center,
           const Font& font = Font(),
-          const widgetflags& flags = widgetflags()) noexcept;
+          const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     explicit Label(Frame& parent,
                    const std::string& text,
                    const Rect& rect = Rect(),
-                   alignmask align = alignmask::CENTER,
+                   alignmask align = alignmask::center,
                    const Font& font = Font(),
-                   const widgetflags& flags = widgetflags()) noexcept;
+                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     explicit Label(Frame& parent,
                    const std::string& text = std::string(),
-                   alignmask align = alignmask::CENTER,
+                   alignmask align = alignmask::center,
                    const Font& font = Font(),
-                   const widgetflags& flags = widgetflags()) noexcept;
+                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     Label(const Label&) = default;
     Label(Label&&) = default;
@@ -181,7 +181,7 @@ protected:
 
     Image m_image;
     bool m_show_label{true};
-    alignmask m_image_align{alignmask::CENTER | alignmask::LEFT};
+    alignmask m_image_align{alignmask::center | alignmask::left};
     bool m_position_image_first{false};
 };
 

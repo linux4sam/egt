@@ -26,53 +26,53 @@ inline namespace v1
  */
 enum class eventid
 {
-    NONE,
+    none,
 
     //@{
     /**
      * @brief Raw pointer events.
      * It's usually preferred to use the normal pointer evemts instead.
      */
-    RAW_POINTER_DOWN,
-    RAW_POINTER_UP,
-    RAW_POINTER_MOVE,
+    raw_pointer_down,
+    raw_pointer_up,
+    raw_pointer_move,
     //@}
 
     //@{
     /** @brief Pointer events. */
-    POINTER_CLICK,
-    POINTER_DBLCLICK,
-    POINTER_HOLD,
-    POINTER_DRAG_START,
-    POINTER_DRAG,
-    POINTER_DRAG_STOP,
+    pointer_click,
+    pointer_dblclick,
+    pointer_hold,
+    pointer_drag_start,
+    pointer_drag,
+    pointer_drag_stop,
     //@}
 
     /**
      * Sent when a widget gets focus.
      */
-    ENTER,
+    enter,
 
     /**
      * Sent when a widget loses focus.
      */
-    LEAVE,
+    leave,
 
     //@{
     /** @brief Keyboard event. */
-    KEYBOARD_DOWN,
-    KEYBOARD_UP,
-    KEYBOARD_REPEAT,
+    keyboard_down,
+    keyboard_up,
+    keyboard_repeat,
     //@}
 
     /**
      * Called when a property changes.
      */
-    PROPERTY_CHANGED,
-    INPUT_PROPERTY_CHANGED,
+    property_changed,
+    input_property_changed,
 
-    HIDE,
-    SHOW,
+    hide,
+    show,
 };
 
 std::ostream& operator<<(std::ostream& os, const eventid& event);

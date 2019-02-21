@@ -30,8 +30,8 @@ public:
           m_grid(Rect(), 10, 4, 5)
     {
         this->add(&m_grid);
-        this->m_grid.set_align(alignmask::EXPAND);
-        this->m_grid.palette().set(Palette::BORDER, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        this->m_grid.set_align(alignmask::expand);
+        this->m_grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
         std::vector<std::vector<std::string>> buttons =
         {
@@ -54,7 +54,7 @@ public:
                 if (label.find(".png") != std::string::npos)
                 {
                     auto c = new ImageButton(Image(label));
-                    c->set_image_align(alignmask::CENTER);
+                    c->set_image_align(alignmask::center);
                     b = c;
                 }
                 else
@@ -64,19 +64,19 @@ public:
                 {
                     if (!b->text().empty())
                     {
-                        if (event == eventid::RAW_POINTER_DOWN)
+                        if (event == eventid::raw_pointer_down)
                         {
                             // hack: ascii characters translate directly
                             m_in.m_keys.key = b->text()[0];
                             m_in.m_keys.code = 0;
-                            m_in.dispatch(eventid::KEYBOARD_DOWN);
+                            m_in.dispatch(eventid::keyboard_down);
                         }
-                        else if (event == eventid::RAW_POINTER_UP)
+                        else if (event == eventid::raw_pointer_up)
                         {
                             // hack: ascii characters translate directly
                             m_in.m_keys.key = b->text()[0];
                             m_in.m_keys.code = 0;
-                            m_in.dispatch(eventid::KEYBOARD_UP);
+                            m_in.dispatch(eventid::keyboard_up);
                         }
                     }
 

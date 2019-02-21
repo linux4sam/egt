@@ -43,7 +43,7 @@ public:
 
         switch (event)
         {
-        case eventid::POINTER_DBLCLICK:
+        case eventid::pointer_dblclick:
             if (T::scale() <= 1.0)
             {
                 T::move(Point(0, 0));
@@ -55,7 +55,7 @@ public:
             }
 
             return 1;
-        case eventid::RAW_POINTER_DOWN:
+        case eventid::raw_pointer_down:
             if (T::scale() <= 1.0)
             {
                 if (!m_moving)
@@ -67,10 +67,10 @@ public:
             }
 
             return 1;
-        case eventid::RAW_POINTER_UP:
+        case eventid::raw_pointer_up:
             m_moving = false;
             return 1;
-        case eventid::RAW_POINTER_MOVE:
+        case eventid::raw_pointer_move:
             if (m_moving)
             {
                 auto diff = event::pointer().point - m_starting_point;
@@ -94,12 +94,12 @@ class FpsWindow : public Window
 public:
     FpsWindow()
         : Window(Size(100, 50),
-                 widgetflags(), pixel_format::argb8888)
+                 Widget::flags_type(), pixel_format::argb8888)
     {
         m_label = new Label("FPS: 0",
                             Rect(Size(100, 50)),
-                            alignmask::CENTER);
-        m_label->palette().set(Palette::TEXT, Palette::GROUP_NORMAL, Color::WHITE);
+                            alignmask::center);
+        m_label->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(m_label);
     }
 
@@ -155,7 +155,7 @@ int main(int argc, const char** argv)
     Window ctrlwindow(Size(600, 80));
     ctrlwindow.set_name("ctrl");
     window->add(&ctrlwindow);
-    ctrlwindow.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color(0x80808055));
+    ctrlwindow.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x80808055));
 
     ctrlwindow.move(Point((main_screen()->size().w / 2) - (ctrlwindow.w() / 2),
                           main_screen()->size().h - ctrlwindow.h()));
@@ -164,7 +164,7 @@ int main(int argc, const char** argv)
     set_control_window(&ctrlwindow);
 #endif
 
-    HorizontalPositioner grid(Rect(Size(600, 80)), 5, alignmask::CENTER);
+    HorizontalPositioner grid(Rect(Size(600, 80)), 5, alignmask::center);
     grid.set_name("grid");
     ctrlwindow.add(&grid);
 
@@ -191,9 +191,9 @@ int main(int argc, const char** argv)
         return 0;
     });
 
-    Slider* position = new Slider(Rect(Size(150, 40)), 0, 100, 0, orientation::HORIZONTAL);
+    Slider* position = new Slider(Rect(Size(150, 40)), 0, 100, 0, orientation::horizontal);
     grid.add(position);
-    position->palette().set(Palette::HIGHLIGHT, Palette::GROUP_NORMAL, Color::BLUE);
+    position->palette().set(Palette::ColorId::highlight, Palette::GroupId::normal, Palette::blue);
     position->readonly();
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
@@ -225,7 +225,7 @@ int main(int argc, const char** argv)
     volumei->set_boxtype(Theme::boxtype::none);
     grid.add(volumei);
 
-    Slider* volume = new Slider(Rect(Size(100, 20)), 0, 100, 0, orientation::HORIZONTAL);
+    Slider* volume = new Slider(Rect(Size(100, 20)), 0, 100, 0, orientation::horizontal);
     grid.add(volume);
     volume->on_event([volume, window](eventid event)
     {

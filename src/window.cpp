@@ -64,18 +64,18 @@ std::ostream& operator<<(std::ostream& os, const windowhint& event)
 }
 
 Window::Window(const Rect& rect,
-               const widgetflags& flags,
+               const Widget::flags_type& flags,
                pixel_format format,
                windowhint hint)
     : Frame(rect, flags)
 {
     set_name("Window" + std::to_string(m_widgetid));
 
-    set_flag(widgetflag::WINDOW);
+    ncflags().set(Widget::flag::window);
     set_boxtype(Theme::boxtype::fillsolid);
 
     // by default, windows are hidden
-    set_flag(widgetflag::INVISIBLE);
+    ncflags().set(Widget::flag::invisible);
 
     // create the window implementation
     create_impl(box(), format, hint);
@@ -143,7 +143,7 @@ void Window::create_impl(const Rect& rect,
             case windowhint::cursor_overlay:
 #ifdef HAVE_LIBPLANES
                 m_impl.reset(new detail::PlaneWindow(this, format, hint));
-                set_flag(widgetflag::PLANE_WINDOW);
+                flags().set(Widget::flag::plane_window);
 #endif
                 break;
             default:
@@ -161,7 +161,7 @@ void Window::create_impl(const Rect& rect,
             try
             {
                 m_impl.reset(new detail::PlaneWindow(this, format, hint));
-                set_flag(widgetflag::PLANE_WINDOW);
+                flags().set(Widget::flag::plane_window);
             }
             catch (std::exception& e)
             {
@@ -177,7 +177,7 @@ void Window::create_impl(const Rect& rect,
 
     assert(m_impl);
 
-    if (is_flag_set(widgetflag::PLANE_WINDOW))
+    if (flags().is_set(Widget::flag::plane_window))
     {
         DBG(name() << " backend is PlaneWindow");
     }
@@ -221,10 +221,10 @@ Window::~Window()
 struct CursorWindow : public Window
 {
     explicit CursorWindow(const Image& image)
-        : Window(image.size(), widgetflags(), pixel_format::argb8888, windowhint::cursor_overlay),
+        : Window(image.size(), Widget::flags_type(), pixel_format::argb8888, windowhint::cursor_overlay),
           m_label(image)
     {
-        palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::TRANSPARENT);
+        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         set_boxtype(Theme::boxtype::fill);
         m_label.set_boxtype(Theme::boxtype::none);
         add(&m_label);
@@ -256,7 +256,7 @@ void TopWindow::show_cursor(const Image& image)
     /// @todo how to cleanup if destructed?
     Input::global_input().on_event(
         std::bind(&TopWindow::handle_mouse, this, std::placeholders::_1),
-    {eventid::RAW_POINTER_DOWN, eventid::RAW_POINTER_UP, eventid::RAW_POINTER_MOVE});
+    {eventid::raw_pointer_down, eventid::raw_pointer_up, eventid::raw_pointer_move});
 }
 
 int TopWindow::handle_mouse(eventid event)
@@ -265,9 +265,9 @@ int TopWindow::handle_mouse(eventid event)
     {
         switch (event)
         {
-        case eventid::RAW_POINTER_DOWN:
-        case eventid::RAW_POINTER_UP:
-        case eventid::RAW_POINTER_MOVE:
+        case eventid::raw_pointer_down:
+        case eventid::raw_pointer_up:
+        case eventid::raw_pointer_move:
         {
             auto p = event::pointer().point;
 

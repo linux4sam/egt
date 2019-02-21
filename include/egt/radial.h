@@ -6,18 +6,13 @@
 #ifndef EGT_RADIAL_H
 #define EGT_RADIAL_H
 
+#include <egt/flags.h>
 #include <egt/valuewidget.h>
 
 namespace egt
 {
 inline namespace v1
 {
-
-namespace detail
-{
-template<class T>
-struct flags_hash;
-}
 
 /**
  * Radial dial widget that a user uses to select a value.
@@ -30,7 +25,7 @@ class RadialType : public ValueRangeWidget<T>
 {
 public:
 
-    enum class radial_flags
+    enum class flag
     {
         primary_value,
         primary_handle,
@@ -38,6 +33,8 @@ public:
         text,
         text_value
     };
+
+    using flags_type = Flags<flag>;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -49,7 +46,12 @@ public:
         : ValueRangeWidget<T>(rect, min, max, value)
     {
         this->set_boxtype(Theme::boxtype::none);
-        this->set_flag(widgetflag::GRAB_MOUSE);
+        this->flags().set(Widget::flag::grab_mouse);
+
+        this->radial_flags().set({flag::primary_value,
+                                  flag::primary_handle,
+                                  flag::secondary_value,
+                                  flag::text});
     }
 
     RadialType(Frame& parent, const Rect& rect, T min, T max, T value = T())
@@ -57,6 +59,16 @@ public:
     {
         parent.add(this);
     }
+
+    /**
+     * Get a const ref of the flags.
+     */
+    inline const flags_type& radial_flags() const { return m_radial_flags; }
+
+    /**
+     * Get a modifiable ref of the flags.
+     */
+    inline flags_type& radial_flags() { return m_radial_flags; }
 
     inline T value2() const
     {
@@ -77,7 +89,7 @@ public:
         {
             this->m_value2 = v;
             this->damage();
-            this->invoke_handlers(eventid::PROPERTY_CHANGED);
+            this->invoke_handlers(eventid::property_changed);
         }
     }
 
@@ -95,24 +107,24 @@ public:
 
         switch (event)
         {
-        case eventid::RAW_POINTER_DOWN:
+        case eventid::raw_pointer_down:
         {
             this->set_active(true);
             return 1;
         }
-        case eventid::RAW_POINTER_UP:
+        case eventid::raw_pointer_up:
         {
             this->set_active(false);
             return 1;
         }
-        case eventid::POINTER_CLICK:
-        case eventid::POINTER_DRAG:
+        case eventid::pointer_click:
+        case eventid::pointer_drag:
         {
             auto angle = this->touch_to_degrees(this->from_display(event::pointer().point));
             auto v = this->degrees_to_value(angle);
             auto orig = this->set_value(v);
             if (orig != v)
-                this->invoke_handlers(eventid::INPUT_PROPERTY_CHANGED);
+                this->invoke_handlers(eventid::input_property_changed);
 
             return 1;
         }
@@ -134,10 +146,10 @@ public:
 
         auto v = widget.value_to_degrees(widget.value());
 
-        auto color1 = widget.palette().color(Palette::MID);
-        auto color2 = widget.palette().color(Palette::HIGHLIGHT);
-        auto color3 = widget.palette().color(Palette::DARK);
-        auto color4 = widget.palette().color(Palette::HIGHLIGHT);
+        auto color1 = widget.palette().color(Palette::ColorId::mid);
+        auto color2 = widget.palette().color(Palette::ColorId::highlight);
+        auto color3 = widget.palette().color(Palette::ColorId::dark);
+        auto color4 = widget.palette().color(Palette::ColorId::highlight);
 
         float smalldim = std::min(widget.w(), widget.h());
         float linew = smalldim / 10;
@@ -153,7 +165,7 @@ public:
         painter.arc(Arc(c, radius, 0, 2 * M_PI));
         painter.stroke();
 
-        if (widget.m_rflags.find(radial_flags::primary_value) != widget.m_rflags.end())
+        if (widget.radial_flags().is_set(flag::primary_value))
         {
             // value arc
             painter.set_color(color2);
@@ -162,7 +174,7 @@ public:
             painter.stroke();
         }
 
-        if (widget.m_rflags.find(radial_flags::primary_handle) != widget.m_rflags.end())
+        if (widget.radial_flags().is_set(flag::primary_handle))
         {
             // handle
             painter.set_color(color3);
@@ -171,7 +183,7 @@ public:
             painter.stroke();
         }
 
-        if (widget.m_rflags.find(radial_flags::secondary_value) != widget.m_rflags.end())
+        if (widget.radial_flags().is_set(flag::secondary_value))
         {
             // secondary value
             float angle3 = detail::to_radians<float>(-90,
@@ -182,32 +194,21 @@ public:
             painter.stroke();
         }
 
-        if (widget.m_rflags.find(radial_flags::text) != widget.m_rflags.end())
+        if (widget.radial_flags().is_set(flag::text))
         {
             if (!widget.m_text.empty())
             {
-                painter.set_color(widget.palette().color(Palette::TEXT));
+                painter.set_color(widget.palette().color(Palette::ColorId::text));
                 painter.draw_text(widget.m_text, widget.box(),
-                                  alignmask::CENTER, 0, Font(72));
+                                  alignmask::center, 0, Font(72));
             }
         }
-        else if (widget.m_rflags.find(radial_flags::text_value) != widget.m_rflags.end())
+        else if (widget.radial_flags().is_set(flag::text_value))
         {
             auto text = std::to_string(widget.value());
-            painter.set_color(widget.palette().color(Palette::TEXT));
+            painter.set_color(widget.palette().color(Palette::ColorId::text));
             painter.draw_text(text, widget.box(),
-                              alignmask::CENTER, 0, Font(72));
-        }
-    }
-
-    using flag_array = std::unordered_set<radial_flags, detail::flags_hash<T>>;
-
-    void set_radial_flags(const flag_array& flags)
-    {
-        if (m_rflags != flags)
-        {
-            m_rflags = flags;
-            this->damage();
+                              alignmask::center, 0, Font(72));
         }
     }
 
@@ -257,23 +258,11 @@ protected:
 
     RadialType() = delete;
 
-    flag_array m_rflags{radial_flags::primary_value,
-                   radial_flags::primary_handle,
-                   radial_flags::secondary_value,
-                   radial_flags::text};
+    /**
+     * Radial flags.
+     */
+    flags_type m_radial_flags;
 };
-
-namespace detail
-{
-template<class T>
-struct flags_hash
-{
-    std::size_t operator()(typename RadialType<T>::radial_flags const& s) const noexcept
-    {
-        return std::hash<int> {}(static_cast<int>(s));
-    }
-};
-}
 
 using Radial = RadialType<>;
 

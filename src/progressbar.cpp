@@ -33,13 +33,13 @@ void ProgressBar::draw(Painter& painter, const Rect& rect)
 
     theme().draw_rounded_gradient_box(painter,
                                       Rect(x(), y(), width, h()),
-                                      palette().color(Palette::HIGHLIGHT));
+                                      palette().color(Palette::ColorId::highlight));
 
     string text = std::to_string(value()) + "%";
     m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);
-    painter.set_color(this->palette().color(Palette::TEXT));
+    painter.set_color(this->palette().color(Palette::ColorId::text));
     painter.draw_text(text, this->box(),
-                      alignmask::CENTER, 0, m_dynamic_font);
+                      alignmask::center, 0, m_dynamic_font);
 }
 
 SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
@@ -57,23 +57,23 @@ void SpinProgress::draw(Painter& painter, const Rect& rect)
     float angle1 = detail::to_radians<float>(180, 0);
     float angle2 = detail::to_radians<float>(180, value() / 100. * 360.);
 
-    painter.set_color(palette().color(Palette::BG));
+    painter.set_color(palette().color(Palette::ColorId::bg));
     painter.draw_fill(box());
     painter.set_line_width(linew);
 
-    painter.set_color(palette().color(Palette::MID));
+    painter.set_color(palette().color(Palette::ColorId::mid));
     painter.circle(Circle(center(), radius));
     painter.stroke();
 
-    painter.set_color(palette().color(Palette::HIGHLIGHT));
+    painter.set_color(palette().color(Palette::ColorId::highlight));
     painter.arc(Arc(center(), radius, angle1, angle2));
     painter.stroke();
 
     string text = std::to_string(value());
     m_dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, m_dynamic_font);
-    painter.set_color(this->palette().color(Palette::TEXT));
+    painter.set_color(this->palette().color(Palette::ColorId::text));
     painter.draw_text(text, this->box(),
-                      alignmask::CENTER, 0, m_dynamic_font);
+                      alignmask::center, 0, m_dynamic_font);
 }
 
 LevelMeter::LevelMeter(const Rect& rect,
@@ -94,9 +94,9 @@ void LevelMeter::draw(Painter& painter, const Rect& rect)
     for (uint32_t i = 0; i < m_num_bars; i++)
     {
         if (i >= limit)
-            painter.set_color(palette().color(Palette::HIGHLIGHT));
+            painter.set_color(palette().color(Palette::ColorId::highlight));
         else
-            painter.set_color(palette().color(Palette::DARK));
+            painter.set_color(palette().color(Palette::ColorId::dark));
 
         painter.draw_fill(Rect(x(),  y() + i * barheight, w(), barheight - BAR_SPACING));
     }
@@ -126,7 +126,7 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
     // scale marks and labels
     for (double marks = 0.0; marks <= 100.0; marks += 10.0)
     {
-        painter.set_color(palette().color(Palette::HIGHLIGHT));
+        painter.set_color(palette().color(Palette::ColorId::highlight));
 
         cairo_move_to(cr.get(),
                       hw * std::cos(M_PI * marks * 0.01),
@@ -137,7 +137,7 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
 
         cairo_stroke(cr.get());
 
-        painter.set_color(palette().color(Palette::TEXT));
+        painter.set_color(palette().color(Palette::ColorId::text));
 
         char text[10];
         sprintf(text, "%2.0f", marks);
@@ -155,7 +155,7 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
     }
 
     float value = this->value();
-    painter.set_color(Color::RED);
+    painter.set_color(Palette::red);
     painter.set_line_width(1.5);
 
     cairo_move_to(cr.get(), 0.0, 0.0);

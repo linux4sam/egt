@@ -23,10 +23,10 @@ int main(int argc, const char** argv)
 
     TopWindow win0;
 
-    auto a = alignmask::TOP | alignmask::CENTER;
+    auto a = alignmask::top | alignmask::center;
 
     WindowType win1(Size(400, 400));
-    win1.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::RED);
+    win1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
     win1.set_name("red");
     {
         auto label = new Label("x,y", Rect(0, 0, 100, 50));
@@ -36,16 +36,16 @@ int main(int argc, const char** argv)
             auto p = win1.from_display(event::pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;
-        }, {eventid::RAW_POINTER_MOVE});
+        }, {eventid::raw_pointer_move});
         label->set_align(a);
         win1.add(label);
     }
     win0.add(&win1);
     win1.move(Point(50, 50));
-    win1.add(new Label(win1.box().tostring(), Rect(0, 0, 100, 50)))->set_align(alignmask::CENTER | alignmask::BOTTOM);
+    win1.add(new Label(win1.box().tostring(), Rect(0, 0, 100, 50)))->set_align(alignmask::center | alignmask::bottom);
 
     WindowType win2(Size(300, 300));
-    win2.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::BLUE);
+    win2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::blue);
     win2.set_name("blue");
     {
         auto label = new Label("x,y", Rect(0, 0, 100, 50));
@@ -55,23 +55,23 @@ int main(int argc, const char** argv)
             auto p = win2.from_display(event::pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;
-        }, {eventid::RAW_POINTER_MOVE});
+        }, {eventid::raw_pointer_move});
         label->set_align(a);
         win2.add(label);
     }
     win1.add(&win2);
     win2.move(Point(50, 50));
-    win2.add(new Label(win2.box().tostring(), Rect(0, 0, 100, 50)))->set_align(alignmask::CENTER | alignmask::BOTTOM);
+    win2.add(new Label(win2.box().tostring(), Rect(0, 0, 100, 50)))->set_align(alignmask::center | alignmask::bottom);
 
     WindowType win3(Size(200, 200));
-    win3.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::GREEN);
+    win3.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
     win3.add(new Label("win3", Rect(0, 0, 50, 50)))->set_align(a);
     win3.set_name("green");
     win2.add(&win3);
     win3.move(Point(50, 50));
 
     WindowType win4(Size(100, 100));
-    win4.palette().set(Palette::BG, Palette::GROUP_NORMAL, Color::PURPLE);
+    win4.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::purple);
     win4.add(new Label("win4", Rect(0, 0, 50, 50)))->set_align(a);
     win4.set_name("purple");
     win3.add(&win4);

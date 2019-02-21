@@ -38,18 +38,18 @@ public:
     Button(const std::string& text = std::string(),
            const Rect& rect = Rect(),
            const Font& font = Font(),
-           const widgetflags& flags = widgetflags()) noexcept;
+           const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     Button(Frame& parent,
            const std::string& text,
            const Rect& rect,
            const Font& font = Font(),
-           const widgetflags& flags = widgetflags()) noexcept;
+           const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     Button(Frame& parent,
            const std::string& text = std::string(),
            const Font& font = Font(),
-           const widgetflags& flags = widgetflags()) noexcept;
+           const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     virtual int handle(eventid event) override;
 
@@ -105,13 +105,13 @@ public:
     ImageButton(const Image& image,
                 const std::string& text = "",
                 const Rect& rect = Rect(),
-                const widgetflags& flags = widgetflags()) noexcept;
+                const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     ImageButton(Frame& parent,
                 const Image& image,
                 const std::string& text = "",
                 const Rect& rect = Rect(),
-                const widgetflags& flags = widgetflags()) noexcept;
+                const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -174,7 +174,7 @@ protected:
     void do_set_image(const Image& image);
 
     Image m_image;
-    alignmask m_image_align{alignmask::CENTER | alignmask::LEFT};
+    alignmask m_image_align{alignmask::center | alignmask::left};
     bool m_position_image_first{false};
 };
 
@@ -192,7 +192,7 @@ class HotSpot : public Button
 public:
 
     HotSpot(const Rect& rect = Rect(),
-            const widgetflags& flags = widgetflags()) noexcept
+            const Widget::flags_type& flags = Widget::flags_type()) noexcept
         : Button("", rect, Font(), flags)
     {
         set_boxtype(Theme::boxtype::none);

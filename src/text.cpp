@@ -16,7 +16,7 @@ inline namespace v1
 {
 
 TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align,
-                 const flags& flags)
+                 const flags_type::flags& flags)
     : TextWidget(str, rect, align),
       m_timer(std::chrono::seconds(1)),
       m_text_flags(flags)
@@ -30,7 +30,7 @@ TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align,
     cursor_set_end();
 }
 
-TextBox::TextBox(const Rect& rect, alignmask align, const flags& flags)
+TextBox::TextBox(const Rect& rect, alignmask align, const flags_type::flags& flags)
     : TextBox(std::string(), rect, align, flags)
 {}
 
@@ -50,10 +50,10 @@ int TextBox::handle(eventid event)
 {
     switch (event)
     {
-    case eventid::POINTER_CLICK:
+    case eventid::pointer_click:
         keyboard_focus(this);
         return 1;
-    case eventid::KEYBOARD_DOWN:
+    case eventid::keyboard_down:
         return handle_key(event);
     default:
         break;
@@ -85,7 +85,7 @@ int TextBox::handle_key(eventid event)
     }
     case EKEY_RETURN:
     {
-        if (is_text_flag_set(flag::multiline))
+        if (text_flags().is_set(flag::multiline))
             insert("\n");
         break;
     }
@@ -101,7 +101,7 @@ int TextBox::handle_key(eventid event)
     }
     case EKEY_UP:
     {
-        if (is_text_flag_set(flag::multiline))
+        if (text_flags().is_set(flag::multiline))
         {
             // TODO
         }
@@ -109,7 +109,7 @@ int TextBox::handle_key(eventid event)
     }
     case EKEY_DOWN:
     {
-        if (is_text_flag_set(flag::multiline))
+        if (text_flags().is_set(flag::multiline))
         {
             // TODO
         }
@@ -143,7 +143,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
 {
     ignoreparam(rect);
 
-    auto group = disabled() ? Palette::GROUP_DISABLED : Palette::GROUP_NORMAL;
+    auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
 
     // box
     draw_box(painter);
@@ -169,7 +169,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
     {
         if (focus() && m_cursor_state)
         {
-            painter.set_color(palette().color(Palette::BORDER));
+            painter.set_color(palette().color(Palette::ColorId::border));
             painter.set_line_width(2);
 
             auto YOFF = 2.;
@@ -221,7 +221,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
                 draw_cursor();
         }
 
-        if (*ch == '\n' && is_text_flag_set(flag::multiline))
+        if (*ch == '\n' && text_flags().is_set(flag::multiline))
         {
             // newline
             offset.x = box().x + m_text_margin;
@@ -230,7 +230,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
         else if (std::isprint(*ch))
         {
             // sent font color
-            painter.set_color(palette().color(Palette::TEXT, group));
+            painter.set_color(palette().color(Palette::ColorId::text, group));
 
             if (text_flags().is_set(flag::multiline) &&
                 text_flags().is_set(flag::word_wrap))

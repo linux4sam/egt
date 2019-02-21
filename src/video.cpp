@@ -126,7 +126,7 @@ gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer da
             _this->m_position = g_value_get_int64(vcurrent);
 
             asio::post(main_app().event().io(), std::bind(&VideoWindow::invoke_handlers,
-                       _this, eventid::PROPERTY_CHANGED));
+                       _this, eventid::property_changed));
         }
         break;
     }
@@ -143,7 +143,7 @@ gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 }
 
 VideoWindow::VideoWindow(const Size& size, pixel_format format, windowhint hint)
-    : Window(size, widgetflags(), format, hint)
+    : Window(size, Widget::flags_type(), format, hint)
 {
     detail::init_gst_thread();
 
@@ -255,7 +255,7 @@ bool VideoWindow::set_volume(int volume)
         volume = 100;
 
     g_object_set(m_volume, "volume", volume / 100.0, NULL);
-    invoke_handlers(eventid::PROPERTY_CHANGED);
+    invoke_handlers(eventid::property_changed);
 
     return true;
 }
@@ -276,7 +276,7 @@ bool VideoWindow::set_mute(bool mute)
         return false;
 
     g_object_set(m_volume, "mute", mute, NULL);
-    invoke_handlers(eventid::PROPERTY_CHANGED);
+    invoke_handlers(eventid::property_changed);
     return true;
 }
 
@@ -293,7 +293,7 @@ bool VideoWindow::set_state(GstState state)
             return false;
         }
 
-        invoke_handlers(eventid::PROPERTY_CHANGED);
+        invoke_handlers(eventid::property_changed);
     }
     else
     {

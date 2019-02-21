@@ -121,23 +121,23 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             case BTN_TOOL_LENS:
                 break;
             case BTN_LEFT:
-                dispatch(value ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
+                dispatch(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
                 break;
             case BTN_RIGHT:
-                dispatch(value ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
+                dispatch(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
                 break;
             case BTN_MIDDLE:
-                dispatch(value ? eventid::RAW_POINTER_DOWN : eventid::RAW_POINTER_UP);
+                dispatch(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
                 break;
             default:
-                eventid v = eventid::NONE;
+                eventid v = eventid::none;
                 if (value == 1)
-                    v = eventid::KEYBOARD_DOWN;
+                    v = eventid::keyboard_down;
                 else if (value == 0)
-                    v = eventid::KEYBOARD_UP;
+                    v = eventid::keyboard_up;
                 else if (value == 2)
-                    v = eventid::KEYBOARD_REPEAT;
-                if (v != eventid::NONE)
+                    v = eventid::keyboard_repeat;
+                if (v != eventid::none)
                 {
                     m_keys.key = e->code;
                     dispatch(v);
@@ -149,14 +149,14 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     if (absolute_event)
     {
         m_pointer.point = DisplayPoint(x, y);
-        dispatch(eventid::RAW_POINTER_MOVE);
+        dispatch(eventid::raw_pointer_move);
     }
     else
     {
         if (dx != 0 || dy != 0)
         {
             m_pointer.point = DisplayPoint(m_pointer.point.x + dx, m_pointer.point.y + dy);
-            dispatch(eventid::RAW_POINTER_MOVE);
+            dispatch(eventid::raw_pointer_move);
         }
     }
 
