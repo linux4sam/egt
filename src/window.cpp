@@ -218,6 +218,9 @@ Window::~Window()
     }
 }
 
+/**
+ * @brief Basic implementation of a pointer cursor.
+ */
 struct CursorWindow : public Window
 {
     explicit CursorWindow(const Image& image)

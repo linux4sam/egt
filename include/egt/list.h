@@ -25,9 +25,10 @@ inline namespace v1
 using StringItem = egt::Label;
 
 /**
- * ListBox that manages a selectable list of items.
+ * @brief ListBox that manages a selectable list of items.
  *
- * Only one item may be selected at a time.
+ * Only one item may be selected at a time. The items are based on Widget, so
+ * any widget can be used.
  *
  * @image html widget_listbox.png
  * @image latex widget_listbox.png "widget_listbox" width=5cm

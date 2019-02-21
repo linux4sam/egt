@@ -21,7 +21,7 @@ namespace egt
 inline namespace v1
 {
 /**
- * A Frame is a Widget that has children widgets.
+ * @brief A Frame is a Widget that has children widgets.
  *
  * This base class basically contains the functionality for dealing with
  * children widgets.  A widget alone is a leaf node in the widget tree.

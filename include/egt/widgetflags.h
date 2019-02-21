@@ -22,7 +22,7 @@ inline namespace v1
 {
 
 /**
- * Alignment flags.
+ * @brief Alignment flags.
  */
 enum class alignmask : uint32_t
 {
@@ -54,7 +54,7 @@ enum class alignmask : uint32_t
 ENABLE_BITMASK_OPERATORS(alignmask)
 
 /**
- * Generic orientation flags.
+ * @brief Generic orientation flags.
  */
 enum class orientation
 {

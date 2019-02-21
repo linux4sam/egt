@@ -14,8 +14,9 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
- * Color palette.
+ * @brief Color palette.
  *
  * The color palette defines a bank of colors used by widgets. Each widget
  * is capable of optionally maintaining its own palette if one is explicitly

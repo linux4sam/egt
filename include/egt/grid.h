@@ -22,7 +22,7 @@ inline namespace v1
 {
 
 /**
- * Static grid organization for widgets.
+ * @brief Static grid organization for widgets.
  *
  * A static grid that does not perform any drawing, but controls the
  * size and position of any widget added into a grid.
@@ -127,6 +127,8 @@ protected:
 };
 
 /**
+ * @brief StaticGrid with selectable cells.
+ *
  * A StaticGrid where each item is visually selectable with a highlighted
  * border.
  */

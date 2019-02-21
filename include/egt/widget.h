@@ -38,7 +38,7 @@ class Frame;
 class Screen;
 
 /**
- * Base widget class.
+ * @brief Base Widget class.
  *
  * This is the base class for all widgets. A Widget is a thing, with a basic
  * set of properties.  In this case, it has a bounding rectangle,

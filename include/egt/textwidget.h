@@ -20,7 +20,7 @@ inline namespace v1
 {
 
 /**
- * A widget that has text and properties associated with text.
+ * @brief A widget with text and properties.
  *
  * This is not meant to be used directly as it does not implement at least a
  * draw() method.

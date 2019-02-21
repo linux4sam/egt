@@ -23,7 +23,7 @@ inline namespace v1
 {
 
 /**
- * 32 bit RGBA color.
+ * @brief 32 bit RGBA color.
  *
  * This manages the definition of a color, internally stored as seperate
  * red, gleen, blue, and alpha components.

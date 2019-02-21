@@ -21,12 +21,14 @@ inline namespace v1
 class Button;
 
 /**
- * Button group.
+ * @brief Button group.
  *
  * Several buttons can be added to a group. A button must belong to
  * only one group.
+ *
  * If the group is exclusive, only one button in the group can have its
  * checked state to true.
+ *
  * If the group is imperative, it ensures that at least one button is
  * checked.
  */

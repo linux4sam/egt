@@ -27,7 +27,7 @@ inline namespace v1
 class Widget;
 
 /**
- * Base Input device class.
+ * @brief Base Input device class.
  *
  * This is an abstract class that must be derived from in order to
  * generate input events.

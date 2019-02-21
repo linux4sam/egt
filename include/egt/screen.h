@@ -25,7 +25,7 @@ inline namespace v1
 {
 
 /**
- * Supported pixel formats.
+ * @brief Supported pixel formats.
  *
  * @note Some backends may not support all formats.
  */
@@ -42,6 +42,12 @@ enum class pixel_format
 
 std::ostream& operator<<(std::ostream& os, const pixel_format& format);
 
+/**
+ * @brief Hidden detail namespace.
+ *
+ * The detail namespace is considered unstable and private to EGT. use at your
+ * own risk.
+ */
 namespace detail
 {
 cairo_format_t cairo_format(pixel_format format);
@@ -51,7 +57,7 @@ pixel_format egt_format(cairo_format_t format);
 }
 
 /**
- * A Screen manages one of more buffers that make up a surface.
+ * @brief Manages one of more buffers that make up a surface.
  *
  * @warning A Screen is not necissarily the same resolution and orientation of
  * the Display.

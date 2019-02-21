@@ -26,7 +26,7 @@ class Font;
 class Painter;
 
 /**
- * Basic button widget.
+ * @brief Basic button widget.
  *
  * @image html widget_button.png
  * @image latex widget_button.png "widget_button" width=5cm
@@ -97,7 +97,7 @@ private:
 };
 
 /**
- * A button widget that can have an image and/or a label on it.
+ * @brief A button widget that can have an image and/or a label on it.
  */
 class ImageButton : public Button
 {
@@ -178,11 +178,16 @@ protected:
     bool m_position_image_first{false};
 };
 
+/**
+ * @brief Experimental namespace.
+ *
+ * This namespace contains unstable, broken, or otherwise incomplete things.
+ */
 namespace experimental
 {
 
 /**
- * A special widget that has no content but receives events.
+ * @brief A special widget that has no content but receives events.
  *
  * This is an invisible widget that can be used to handle events, like
  * input events.

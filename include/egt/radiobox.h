@@ -19,7 +19,7 @@ inline namespace v1
 class Painter;
 
 /**
- * Boolean RadioBox.
+ * @brief Boolean RadioBox.
  */
 class RadioBox : public Button
 {
@@ -31,7 +31,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~RadioBox();
+    virtual ~RadioBox() = default;
 };
 
 }

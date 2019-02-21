@@ -14,7 +14,7 @@ inline namespace v1
 {
 
 /**
- * This is a utility class for managing a set of flags.
+ * @brief Utility class for managing a set of flags.
  */
 template <class T>
 class Flags

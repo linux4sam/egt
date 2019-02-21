@@ -71,8 +71,5 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
                       h());
 }
 
-RadioBox::~RadioBox()
-{}
-
 }
 }

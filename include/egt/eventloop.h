@@ -38,7 +38,7 @@ struct eventloopimpl;
 using event_callback = std::function<void ()>;
 
 /**
- * Event loop interface.
+ * @brief Event loop interface.
  */
 class EventLoop : public detail::noncopyable
 {

@@ -50,6 +50,9 @@ Window*& modal_window();
  */
 std::vector<Window*>& windows();
 
+/**
+ * @brief Hint used for configuring Window backends.
+ */
 enum class windowhint
 {
     /**
@@ -81,7 +84,7 @@ enum class windowhint
 std::ostream& operator<<(std::ostream& os, const windowhint& event);
 
 /**
- * Window interface.
+ * @brief A Window is a Widget that handles drawing to a Screen.
  *
  * A Window is a Frame that optionally manages and draws to a Screen. If the
  * Window does not have a Screen itself, it will refer to its parent for the
@@ -247,6 +250,11 @@ protected:
     friend class detail::BasicTopWindow;
 };
 
+/**
+ * @brief Top level Window.
+ *
+ * This could also be calld the main Window.
+ */
 class TopWindow : public Window
 {
 public:

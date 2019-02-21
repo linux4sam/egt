@@ -18,8 +18,9 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
- * On-screen keyboard.
+ * @brief On-screen keyboard.
  */
 template <class T>
 class Keyboard : public T

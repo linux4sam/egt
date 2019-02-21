@@ -20,7 +20,7 @@ inline namespace v1
 {
 
 /**
- * Manages a single font and properties of a font.
+ * @brief Manages a font and properties of a font.
  *
  * A Font consists of a type face, a size, and a weight. The font face must
  * be installed on the system in order to use it.  Usually, if the specified

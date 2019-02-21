@@ -20,7 +20,7 @@ inline namespace v1
 class Painter;
 
 /**
- * Boolean checkbox.
+ * @brief Boolean checkbox.
  *
  * @image html widget_checkbox1.png
  * @image latex widget_checkbox1.png "widget_checkbox1" width=5cm
@@ -43,7 +43,7 @@ public:
 };
 
 /**
- * CheckBox with a boolean slider style interface.
+ * @brief CheckBox with a boolean slider style interface.
  *
  * @image html widget_slidingcheckbox.png
  * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" width=5cm

@@ -7,7 +7,6 @@
 #define EGT_SLIDERWIDGET_H
 
 #include <cassert>
-#include <egt/bitmask.h>
 #include <egt/detail/math.h>
 #include <egt/flags.h>
 #include <egt/valuewidget.h>
@@ -18,7 +17,7 @@ inline namespace v1
 {
 
 /**
- * This is a slider that can be used to select value from a range.
+ * @brief This is a slider that can be used to select value from a range.
  *
  * @image html widget_slider1.png
  * @image latex widget_slider1.png "widget_slider1" width=5cm

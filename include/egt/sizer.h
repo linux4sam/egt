@@ -21,7 +21,7 @@ inline namespace v1
 {
 
 /**
- * A sizer that positions and sizes child widgets in a horizontal or vertical path.
+ * @brief Positions and sizes widgets by orientation.
  */
 class BoxSizer : public Frame
 {
@@ -143,6 +143,9 @@ protected:
     orientation m_orient{orientation::horizontal};
 };
 
+/**
+ * @brief Positions widgets based on an orientation.
+ */
 class OrientationPositioner : public Frame
 {
 public:
@@ -238,7 +241,7 @@ protected:
 };
 
 /**
- * A positioner that will organize widgets in a horizontal row.
+ * @brief Positions Widgets horizontally.
  */
 class HorizontalPositioner : public Frame
 {

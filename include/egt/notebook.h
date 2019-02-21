@@ -20,7 +20,7 @@ inline namespace v1
 {
 
 /**
- * A single tab in a Notebook.
+ * @brief A single layer of a Notebook.
  */
 class NotebookTab : public Frame
 {
@@ -52,7 +52,7 @@ public:
 };
 
 /**
- * Allows a collection of NotebookTab widgets to be shown one at a time.
+ * @brief Allows a collection of NotebookTab widgets to be shown one at a time.
  */
 class Notebook : public Frame
 {

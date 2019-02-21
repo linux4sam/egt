@@ -15,10 +15,11 @@ namespace egt
 {
 inline namespace v1
 {
-// TODO: https://gist.github.com/tsaarni/bb0b8d1ca33e3a1bfea1
+
+/** @todo TODO: https://gist.github.com/tsaarni/bb0b8d1ca33e3a1bfea1 */
 
 /**
- * Basic one shot timer.
+ * @brief Basic one shot timer.
  *
  * This is a timer that will fire once after the specified duration.
  * To handle the timeout, call on_timeout with a callback.
@@ -121,7 +122,7 @@ private:
 };
 
 /**
- * Periodic timer.
+ * @brief Periodic timer.
  *
  * This is a timer that will keep firing at the duration interval until it
  * is stopped.

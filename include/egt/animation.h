@@ -25,7 +25,7 @@ using float_t = float;
 
 /**
  * @defgroup EasingFunctions Easing Functions
- * @brief Predefined easing function.
+ * @brief Predefined animation easing functions.
  * @{
  */
 float_t easing_linear(float_t p);
@@ -75,8 +75,9 @@ using easing_func = std::function<float_t (float_t percent)>;
 
 namespace detail
 {
+
 /**
- * Base class for an animation.
+ * @brief Base class for an animation.
  */
 class IAnimation : public detail::noncopyable
 {
@@ -121,7 +122,7 @@ protected:
 }
 
 /**
- * Animation class with configurable easing function.
+ * @brief Animation class with configurable easing function.
  *
  * An animation is a container that basically runs from a start value to an
  * end value over a duration of time. For example, the first value of the
@@ -228,7 +229,7 @@ protected:
 class Widget;
 
 /**
- * Series of animations as a single animation.
+ * @brief Series of animations as a single animation.
  *
  * It's often useful to put together a series of animations into a
  * sequence. This class manages a series of animations objects and runs
@@ -365,7 +366,7 @@ protected:
 };
 
 /**
- * Animation object with built in timer.
+ * @brief Animation object with built in timer.
  *
  * An Animation usually involves setting up a timer to run the animation
  * at a periodic interval. This wraps an animation around a built in
@@ -391,6 +392,8 @@ protected:
 };
 
 /**
+ * @brief Animates a property of a widget.
+ *
  * This as a utility class that makes animating a specific property of a
  * widget easier.  Any property that matches
  * PropertyAnimator::property_callback_t can be used.
@@ -439,7 +442,7 @@ protected:
 using PropertyAnimator = PropertyAnimatorType<int>;
 
 /**
- * Simple delay, useful to insert a delay in an AnimationSequence.
+ * @brief Simple delay, useful to insert a delay in an AnimationSequence.
  */
 class AnimationDelay : public detail::IAnimation
 {

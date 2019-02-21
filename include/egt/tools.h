@@ -7,7 +7,7 @@
 #define EGT_TOOLS_H
 
 /**
- * @file tools.h
+ * @file
  * @brief Collection of various tools.
  */
 
@@ -15,8 +15,9 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
- * Monitor CPU usage of the system.
+ * @brief Monitor CPU usage of the system.
  */
 class CPUMonitorUsage
 {

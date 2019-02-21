@@ -20,8 +20,9 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
- * Image used for drawing or displaying.
+ * @brief Image resource used for drawing or displaying.
  *
  * This class by default shares the internal surface pointer with anything
  * else using the surface.  To force this class to keep its own copy, call

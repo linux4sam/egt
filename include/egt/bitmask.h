@@ -17,6 +17,10 @@ namespace egt
 {
 inline namespace v1
 {
+
+/**
+ * @private
+ */
 template<typename T>
 struct EnableBitMaskOperators : std::false_type
 {};

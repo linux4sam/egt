@@ -24,7 +24,7 @@ inline namespace v1
 {
 
 /**
- * Input text box.
+ * @brief Input text box.
  *
  * Supported Features:
  * - Text entry
@@ -32,7 +32,7 @@ inline namespace v1
  * - Selection Copy/Delete
  * - Multiline
  *
- * @note Right now this is limited to english. Support for full UTF-8 encoding
+ * @note Right now this is limited to English. Support for full UTF-8 encoding
  * requires some additional changes.
  *
  * @image html widget_textbox.png
@@ -167,7 +167,7 @@ public:
     /**
      * Get, or copy, the selected text.
      *
-     * @param The selected text, or an empty string if there is no selection.
+     * @return The selected text, or an empty string if there is no selection.
      */
     std::string get_selected_text() const;
 

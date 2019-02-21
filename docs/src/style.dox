@@ -6,9 +6,9 @@ namespace egt { inline namespace v1 {
 The C++ coding style of the EGT project mostly adhere's to the Allman style with
 a couple exceptions.  This coding style is enforced throughout the codebase.
 
-Astyle is used to enforce this coding style with the *scripts/style.sh* script.
-This can be automatically executed for all of the source code with a make target
-by typing:
+<a href="http://astyle.sourceforge.net/">Astyle</a> is used to enforce this
+coding style with the *scripts/style.sh* script. This can be automatically
+executed for all of the source code with a make target by typing:
 
 @code{.sh}
 make style

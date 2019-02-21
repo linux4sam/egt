@@ -19,8 +19,9 @@ namespace egt
 {
 inline namespace v1
 {
+
 /**
- * Implements a basic line chart widget.
+ * @brief Line chart widget.
  *
  */
 class LineChart : public Widget
@@ -42,7 +43,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    enum class chart_type : uint32_t
+    enum class chart_type
     {
         points,
         marks,
@@ -109,7 +110,7 @@ protected:
 };
 
 /**
- * Pie chart widget.
+ * @brief Pie chart widget.
  */
 class PieChart : public Widget
 {

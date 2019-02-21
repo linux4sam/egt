@@ -19,7 +19,7 @@ inline namespace v1
 {
 
 /**
- * Popup window.
+ * @brief Popup Window.
  */
 template <class T>
 class PopupType : public T

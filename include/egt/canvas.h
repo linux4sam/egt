@@ -21,7 +21,7 @@ inline namespace v1
 {
 
 /**
- * A Canvas manages its own surface and context.
+ * @brief A Canvas manages its own surface and context.
  *
  * This can be created and directly draw to with Painter.
  *

@@ -25,7 +25,7 @@ class Widget;
 class Painter;
 
 /**
- * Drawable function object.
+ * @brief Drawable function object.
  *
  * This class defines what is necessary to implement the draw() function of a
  * widget type.
@@ -47,7 +47,7 @@ public:
 };
 
 /**
- * Manager of the Drawable for each widget type.
+ * @brief Manager of the Drawable for each widget type.
  *
  * The Button draw() method calls the drawable like:
  * @code
@@ -94,6 +94,8 @@ typename Drawable<T>::draw_t Drawer<T>::m_drawable = T::default_draw;
 class Color;
 
 /**
+ * @brief Customizable characteristics for drawing widgets.
+ *
  * Theme implements common charactistics of drawing widgets, used mostly
  * by the theme.
  *

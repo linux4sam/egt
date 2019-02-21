@@ -22,7 +22,7 @@ inline namespace v1
 {
 
 /**
- * Event identifiers.
+ * @brief Event identifiers.
  */
 enum class eventid
 {
@@ -88,7 +88,7 @@ enum class eventid
 std::ostream& operator<<(std::ostream& os, const eventid& event);
 
 /**
- * Definitions for pointer buttons.
+ * @brief Definitions for pointer buttons.
  */
 enum class pointer_button
 {
@@ -100,7 +100,7 @@ enum class pointer_button
 };
 
 /**
- * Current event state for pointer.
+ * @brief Current event state for pointer.
  */
 struct Pointer
 {
@@ -121,7 +121,7 @@ struct Pointer
 };
 
 /**
- * Current event state for keyboard.
+ * @brief Current event state for keyboard.
  */
 struct Keys
 {
@@ -142,7 +142,7 @@ struct Keys
 };
 
 /**
- * Information about the current outstanding event.
+ * @brief Information about the current outstanding event.
  */
 namespace event
 {

@@ -20,7 +20,7 @@ inline namespace v1
 {
 
 /**
- * A scrollable view.
+ * @brief A scrollable view.
  *
  * A ScrolledView is a sort of kitchen window. You can have a large surface
  * area on the other side of the window, but you only see a small portion of
@@ -89,6 +89,9 @@ protected:
      */
     orientation m_orient{orientation::horizontal};
 
+    /**
+     * Starting offset for the drag.
+     */
     int m_start_offset{0};
 };
 

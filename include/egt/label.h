@@ -23,7 +23,7 @@ class Frame;
 class Painter;
 
 /**
- * A Label in its basic form is just some text.
+ * @brief A Label of text.
  *
  * It handles no events, has a font and alignment, but otherwise is pretty
  * basic.
@@ -83,7 +83,7 @@ protected:
 };
 
 /**
- * A Label widget that also contains an image.
+ * @brief Label that also contains an Image.
  *
  * The interesting thing about this widget is the position of the text
  * relative to the image.  Alignment of txt usually works relative to the

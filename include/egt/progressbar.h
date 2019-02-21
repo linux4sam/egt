@@ -14,8 +14,8 @@ inline namespace v1
 {
 
 /**
-* Displays a progress bar based on a value.
-*/
+ * @brief Displays a progress bar based on a value.
+ */
 class ProgressBar : public ValueRangeWidget<int>
 {
 public:
@@ -38,7 +38,7 @@ protected:
 };
 
 /**
- * Displays a spinning progress meter.
+ * @brief Displays a spinning progress meter.
  */
 class SpinProgress : public ValueRangeWidget<int>
 {
@@ -63,7 +63,7 @@ protected:
 };
 
 /**
- * Displays a level meter based on a value.
+ * @brief Displays a level meter based on a value.
  *
  * @image html widget_levelmeter.png
  * @image latex widget_levelmeter.png "widget_levelmeter" width=5cm
@@ -105,7 +105,7 @@ protected:
 };
 
 /**
- * Displays an analog meter based on a percentage value.
+ * @brief Displays an analog meter based on a percentage value.
  *
  * @image html widget_analogmeter.png
  * @image latex widget_analogmeter.png "widget_analogmeter" width=5cm

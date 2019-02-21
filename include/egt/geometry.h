@@ -32,7 +32,7 @@ enum class compatible
 };
 
 /**
- * Simple x,y coordinate.
+ * @brief Simple x,y coordinate.
  */
 template <class dim_t, compatible dim_c>
 class PointType
@@ -154,7 +154,7 @@ using Point = PointType<default_dim_type, compatible::normal>;
 using DisplayPoint = PointType<default_dim_type, compatible::display>;
 
 /**
- * Simple width and height.
+ * @brief Simple width and height.
  */
 template<class dim_t = default_dim_type>
 class SizeType
@@ -281,7 +281,7 @@ std::ostream& operator<<(std::ostream& os, const SizeType<dim_t>& size)
 using Size = SizeType<>;
 
 /**
- * A rectangle.
+ * @brief A rectangle.
  *
  * A point and a size.
  *
@@ -656,7 +656,7 @@ inline bool operator!=(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
 using Rect = RectType<>;
 
 /**
- * A line, with a starting and ending point.
+ * @brief A line, with a starting and ending point.
  */
 template<class dim_t = default_dim_type>
 class LineType
@@ -694,7 +694,7 @@ protected:
 using Line = LineType<>;
 
 /**
- * An Arc consists of a radius and two angles.
+ * @brief An Arc consists of a radius and two angles.
  */
 template<class dim_t = default_dim_type>
 class ArcType
@@ -724,7 +724,7 @@ public:
 using Arc = ArcType<>;
 
 /**
- * A basic circle with a center point and radius.
+ * @brief A basic circle with a center point and radius.
  */
 template<class dim_t = default_dim_type>
 class CircleType : public ArcType<dim_t>

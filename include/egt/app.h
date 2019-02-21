@@ -19,13 +19,19 @@
  * @brief Working with app.
  */
 
+/**
+ * @brief EGT framework namespace.
+ */
 namespace egt
 {
+/**
+ * @brief Inline version 1 namespace.
+ */
 inline namespace v1
 {
 
 /**
- * Defines an application.
+ * @brief Application definition.
  *
  * This is basically just a helper class that does standard setup for
  * inputs, outputs, the event loop, and more. It also acts as sort of a

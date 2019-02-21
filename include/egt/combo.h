@@ -26,6 +26,9 @@ class ComboBox;
 namespace detail
 {
 
+/**
+ * @brief Popup class used by ComboBox.
+ */
 class ComboBoxPopup : public Popup
 {
 public:
@@ -50,9 +53,11 @@ protected:
 
 }
 
-
 /**
- * Combo box widget.
+ * @brief Combo box widget.
+ *
+ * This manages a list of selectable items, but otherwise just shows only what
+ * is selected.
  */
 class ComboBox : public TextWidget
 {
