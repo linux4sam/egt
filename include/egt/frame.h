@@ -64,20 +64,21 @@ public:
     /**
      * Add a child widget.
      *
+     * The inverse of this call is Frame::remove().
+     *
      * The z-order of a widget is based on the order it is added.  First in
-     * is bottom.
+     * is bottom, or zorder 0.
      *
      * @todo Create the idea of layers by moving m_children to a 2d array.
      * Then add a layer index (x-order) here to add widgets to different
      * layers for drawing.
+     *
+     * @todo Must make sure not adding "this."
      */
     virtual Widget* add(Widget* widget);
 
     /**
-     * Add a child widget.
-     *
-     * The z-order of a widget is based on the order it is added.  First in
-     * is bottom.
+     * Add a child widget overload.
      */
     Widget& add(Widget& widget)
     {
@@ -85,6 +86,9 @@ public:
         return widget;
     }
 
+    /**
+     * Add a child widget overload.
+     */
     template<class T>
     Widget& add(std::shared_ptr<T>& widget)
     {
@@ -92,6 +96,9 @@ public:
         return *widget;
     }
 
+    /**
+     * Add a child widget overload.
+     */
     template<class T>
     Widget& add(std::unique_ptr<T>& widget)
     {
@@ -101,6 +108,8 @@ public:
 
     /**
      * Remove a child widget.
+     *
+     * The inverse of this call is Frame::add().
      */
     virtual void remove(Widget* widget);
 
@@ -125,11 +134,11 @@ public:
     }
 
     /**
-     * Find a child widget by name.
+     * Find a child Widget in the entire tree by name.
      *
      * @see Widget::name()
      *
-     * If you're trying to find a widget in the entire application, you need
+     * If you're trying to find a Widget in the entire application, you need
      * to start at any top level frame. This function will only search down
      * from where it's called.
      */

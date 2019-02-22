@@ -76,7 +76,7 @@ public:
          *
          * Typically, when a widget is disabled it will not accept input.
          *
-         * This may change how the widget behaves or is draw.
+         * This may change how the widget behaves or is drawn.
          */
         disabled,
 

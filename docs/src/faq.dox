@@ -38,5 +38,9 @@ asio::post(main_app().event().io(),
     });
 @endcode
 
+@section faq_lifetime Object Lifetime
+
+@todo
+
 */
 }}

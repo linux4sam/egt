@@ -7,7 +7,7 @@ This chapter discusses the event model and how events are handled.
 
 @section events_loop Event Loop
 
-The EventLoop is the inner loop of the framework. Its basic operations is
+The EventLoop is the inner loop of the framework. Its basic operation is
 demonstrated with the following pseudo code:
 
 @code{.cpp}
@@ -20,7 +20,8 @@ while (true)
 @endcode
 
 It does this until the event loop is told to exit, and in turn, this usually
-means the application exits.
+means the application exits.  For example, a call to EventLoop::quit() would
+cause the event loop to exit.
 
 The event loop in EGT is implemented with the
 <a href="https://think-async.com/">Asio</a> library.  Asio is a cross-platform
