@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 if HAVE_GSTREAMER
 OPTIONAL = video
 endif
-SUBDIRS = $(OPTIONAL) i18n
+SUBDIRS = $(OPTIONAL) i18n resource
 
 CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir) \
