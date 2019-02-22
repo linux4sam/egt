@@ -167,9 +167,12 @@ public:
         for (; i != m_children.end(); ++i)
         {
             auto frame = dynamic_cast<Frame*>(*i);
-            auto w = frame->find_child<T>(name);
-            if (w)
-                return w;
+	    if (frame)
+	    {
+                auto w = frame->find_child<T>(name);
+                if (w)
+                    return w;
+	    }
         }
 
         return nullptr;
