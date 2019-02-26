@@ -140,13 +140,16 @@ $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \
 $(top_srcdir)/include/egt/detail/object.h \
 $(top_srcdir)/include/egt/detail/planewindow.h \
+$(top_srcdir)/include/egt/detail/priorityqueue.h \
 $(top_srcdir)/include/egt/detail/resource.h \
 $(top_srcdir)/include/egt/detail/screen/framebuffer.h \
 $(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
 $(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
+$(top_srcdir)/include/egt/detail/windowimpl.h \
 $(top_srcdir)/include/egt/event.h \
 $(top_srcdir)/include/egt/eventloop.h \
+$(top_srcdir)/include/egt/flags.h \
 $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
 $(top_srcdir)/include/egt/geometry.h \
@@ -154,6 +157,7 @@ $(top_srcdir)/include/egt/grid.h \
 $(top_srcdir)/include/egt/image.h \
 $(top_srcdir)/include/egt/input.h \
 $(top_srcdir)/include/egt/keyboard.h \
+$(top_srcdir)/include/egt/keycode.h \
 $(top_srcdir)/include/egt/label.h \
 $(top_srcdir)/include/egt/list.h \
 $(top_srcdir)/include/egt/notebook.h \
@@ -161,6 +165,7 @@ $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
 $(top_srcdir)/include/egt/popup.h \
 $(top_srcdir)/include/egt/progressbar.h \
+$(top_srcdir)/include/egt/radial.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/screen.h \
 $(top_srcdir)/include/egt/sideboard.h \
