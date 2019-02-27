@@ -11,6 +11,7 @@
  * @brief Common types.
  */
 
+#include <cairo.h>
 #include <memory>
 
 namespace egt
@@ -26,6 +27,17 @@ using shared_cairo_t =
 
 using shared_cairo_pattern_t =
     std::shared_ptr<cairo_pattern_t>;
+
+namespace detail
+{
+struct cairo_t_deleter
+{
+    void operator()(cairo_t* cr) { cairo_destroy(cr); }
+};
+}
+
+using unique_cairo_t =
+    std::unique_ptr<cairo_t, detail::cairo_t_deleter>;
 
 }
 }
