@@ -29,7 +29,7 @@ int main(int argc, const char** argv)
     win1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
     win1.set_name("red");
     {
-        auto label = new Label("x,y", Rect(0, 0, 100, 50));
+        auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
         win1.on_event([&win1, label](eventid event)
         {
             ignoreparam(event);
@@ -40,15 +40,17 @@ int main(int argc, const char** argv)
         label->set_align(a);
         win1.add(label);
     }
-    win0.add(&win1);
+    win0.add(win1);
     win1.move(Point(50, 50));
-    win1.add(new Label(win1.box().tostring(), Rect(0, 0, 100, 50)))->set_align(alignmask::center | alignmask::bottom);
+    auto l1 = make_shared<Label>(win1.box().tostring(), Rect(0, 0, 100, 50));
+    l1->set_align(alignmask::center | alignmask::bottom);
+    win1.add(l1);
 
     WindowType win2(Size(300, 300));
     win2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::blue);
     win2.set_name("blue");
     {
-        auto label = new Label("x,y", Rect(0, 0, 100, 50));
+        auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
         win2.on_event([&win2, label](eventid event)
         {
             ignoreparam(event);
@@ -59,22 +61,28 @@ int main(int argc, const char** argv)
         label->set_align(a);
         win2.add(label);
     }
-    win1.add(&win2);
+    win1.add(win2);
     win2.move(Point(50, 50));
-    win2.add(new Label(win2.box().tostring(), Rect(0, 0, 100, 50)))->set_align(alignmask::center | alignmask::bottom);
+    auto l2 = make_shared<Label>(win2.box().tostring(), Rect(0, 0, 100, 50));
+    l2->set_align(alignmask::center | alignmask::bottom);
+    win2.add(l2);
 
     WindowType win3(Size(200, 200));
     win3.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
-    win3.add(new Label("win3", Rect(0, 0, 50, 50)))->set_align(a);
+    auto l3 = make_shared<Label>("win3", Rect(0, 0, 50, 50));
+    l3->set_align(a);
+    win3.add(l3);
     win3.set_name("green");
-    win2.add(&win3);
+    win2.add(win3);
     win3.move(Point(50, 50));
 
     WindowType win4(Size(100, 100));
     win4.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::purple);
-    win4.add(new Label("win4", Rect(0, 0, 50, 50)))->set_align(a);
+    auto l4 = make_shared<Label>("win4", Rect(0, 0, 50, 50));
+    l4->set_align(a);
+    win4.add(l4);
     win4.set_name("purple");
-    win3.add(&win4);
+    win3.add(win4);
     win4.move(Point(50, 50));
 
     win0.show();

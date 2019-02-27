@@ -31,39 +31,60 @@ class StaticGrid : public Frame
 {
 public:
     StaticGrid(const Rect& rect,
-               int columns = 1, int rows = 1, int spacing = 0);
+               int columns = 1, int rows = 1, int spacing = 0) noexcept;
 
-    StaticGrid(int columns = 1, int rows = 1, int spacing = 0);
+    StaticGrid(int columns = 1, int rows = 1, int spacing = 0) noexcept;
 
-    virtual void move(const Point& point) override
+    StaticGrid(const StaticGrid& rhs) noexcept
+        : Frame(rhs),
+          m_cells(rhs.m_cells),
+          m_spacing(rhs.m_spacing),
+          m_last_add_column(rhs.m_last_add_column),
+          m_last_add_row(rhs.m_last_add_row)
     {
-        Frame::move(point);
-        reposition();
+        // fix our own pointers after deep copy of children
+        for (size_t x = 0; x < m_children.size(); ++x)
+        {
+            for (auto& column : m_cells)
+            {
+                std::replace(column.begin(), column.end(),
+                             rhs.m_children[x].get(), m_children[x].get());
+            }
+        }
     }
 
-    virtual void resize(const Size& size) override
+    StaticGrid(StaticGrid&& rhs) = delete;
+
+    StaticGrid& operator=(const StaticGrid& rhs) noexcept
     {
-        Frame::resize(size);
-        reposition();
+        Frame::operator=(rhs);
+
+        m_cells = rhs.m_cells;
+        m_spacing = rhs.m_spacing;
+        m_last_add_column = rhs.m_last_add_column;
+        m_last_add_row = rhs.m_last_add_row;
+
+        // fix our own pointers after deep copy of children
+        for (size_t x = 0; x < m_children.size(); ++x)
+        {
+            for (auto& column : m_cells)
+            {
+                std::replace(column.begin(), column.end(),
+                             rhs.m_children[x].get(), m_children[x].get());
+            }
+        }
+
+        return *this;
+    }
+
+    StaticGrid& operator=(StaticGrid&& rhs) noexcept = delete;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<StaticGrid>(*this).release());
     }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
-
-    /**
-     * Add a widget to the grid into a specific cell with an optional
-     * alignment within the cell.
-     *
-     * This will automatically resize the grid to fit the widget as
-     * necessary.
-     *
-     * @param widget The widget to add, or nullptr.
-     * @param column The column index.
-     * @param row The row index.
-     * @param align Align the widget in the cell by calling set_align() on
-     *              the widget with this value.
-     */
-    virtual Widget* add(Widget* widget, int column, int row,
-                        alignmask align = alignmask::expand);
 
     /**
      * Add a widget to the next empty cell.
@@ -75,8 +96,43 @@ public:
      * @param align Align the widget in the cell by calling set_align() on
      *              the widget with this value.
      */
-    virtual Widget* add(Widget* widget,
-                        alignmask align = alignmask::expand);
+    virtual void add(const std::shared_ptr<Widget>& widget) override;
+
+    /** @todo Why is this not inherited from Frame::add()? */
+    virtual void add(Widget& widget) override
+    {
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}));
+    }
+
+    /**
+     * Add a widget to the grid into a specific cell.
+     *
+     * This will automatically resize the grid to fit the widget as
+     * necessary.
+     *
+     * @param widget The widget to add, or nullptr.
+     * @param column The column index.
+     * @param row The row index.
+     * @param align Align the widget in the cell by calling set_align() on
+     *              the widget with this value.
+     *
+     * @todo remove align off both of the add() functions here. This is an
+     * API inconsistency and align needs to be controlled on the widget itself
+     * and not always overwritten or set again here. Which begs the question:
+     * what should the align default be or do we default to size of widget?
+     */
+    virtual void add(const std::shared_ptr<Widget>& widget, int column, int row);
+
+    virtual void add(Widget& widget, int column, int row)
+    {
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}), column, row);
+    }
 
     /**
      * Get a widget at he specified row and column.
@@ -97,6 +153,12 @@ public:
      */
     virtual void reposition();
 
+    virtual void layout() override
+    {
+        //Frame::layout();
+        reposition();
+    }
+
     int last_add_column() const
     {
         return m_last_add_column;
@@ -107,17 +169,11 @@ public:
         return m_last_add_row;
     }
 
-    virtual ~StaticGrid();
+    virtual ~StaticGrid() noexcept;
 
 protected:
 
-    struct Cell
-    {
-        // cppcheck-suppress unusedStructMember
-        Widget* widget{nullptr};
-    };
-
-    using cell_array = std::vector<std::vector<Cell>>;
+    using cell_array = std::vector<std::vector<Widget*>>;
 
     cell_array m_cells;
     int m_spacing{0};

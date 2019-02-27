@@ -29,6 +29,11 @@ class LineChart : public Widget
 public:
     explicit LineChart(const Rect& rect = Rect());
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<LineChart>(*this).release());
+    }
+
     // this must mirror struct kpair
     struct data_pair
     {
@@ -93,8 +98,7 @@ public:
         damage();
     }
 
-    virtual ~LineChart()
-    {}
+    virtual ~LineChart() = default;
 
 protected:
 
@@ -117,6 +121,11 @@ class PieChart : public Widget
 public:
     explicit PieChart(const Rect& rect = Rect());
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<PieChart>(*this).release());
+    }
+
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     using data_array = std::map<std::string, float>;
@@ -132,6 +141,8 @@ public:
             damage();
         }
     }
+
+    virtual ~PieChart() noexcept = default;
 
 protected:
     data_array m_data;

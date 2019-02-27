@@ -24,7 +24,7 @@ inline namespace v1
  * This is a timer that will fire once after the specified duration.
  * To handle the timeout, call on_timeout with a callback.
  */
-class Timer : public detail::noncopyable
+class Timer
 {
 public:
 
@@ -45,6 +45,10 @@ public:
      * Construct a one-shot timer with the specified duration.
      */
     explicit Timer(std::chrono::milliseconds duration) noexcept;
+
+    Timer(const Timer& rhs) noexcept;
+
+    Timer& operator=(const Timer& rhs) noexcept;
 
     /**
      * Start the timer.
@@ -99,7 +103,7 @@ public:
         m_callbacks.push_back(callback);
     }
 
-    virtual ~Timer();
+    virtual ~Timer() noexcept;
 
 protected:
 
@@ -143,9 +147,12 @@ public:
      */
     explicit PeriodicTimer(std::chrono::milliseconds interval) noexcept;
 
+    PeriodicTimer(const PeriodicTimer&) = default;
+    PeriodicTimer& operator=(const PeriodicTimer&) = default;
+
     virtual void start() override;
 
-    virtual ~PeriodicTimer() {}
+    virtual ~PeriodicTimer() noexcept = default;
 
 private:
 

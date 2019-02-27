@@ -12,10 +12,11 @@
  */
 
 #include <egt/list.h>
-#include <egt/widget.h>
 #include <egt/popup.h>
-#include <vector>
+#include <egt/widget.h>
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace egt
 {
@@ -45,7 +46,7 @@ protected:
 
     void smart_pos();
 
-    ListBox m_list;
+    std::shared_ptr<ListBox> m_list;
     ComboBox& m_parent;
 
     friend class egt::ComboBox;
@@ -72,6 +73,11 @@ public:
 
     virtual int handle(eventid event) override;
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<ComboBox>(*this).release());
+    }
+
     virtual void set_select(uint32_t index);
 
     virtual uint32_t selected() const { return m_selected; }
@@ -89,7 +95,7 @@ public:
 protected:
     item_array m_items;
     uint32_t m_selected{0};
-    detail::ComboBoxPopup m_popup;
+    std::shared_ptr<detail::ComboBoxPopup> m_popup;
 
     friend class detail::ComboBoxPopup;
 };

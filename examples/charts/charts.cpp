@@ -62,22 +62,22 @@ struct LinePage : public NotebookTab
     LinePage()
     {
 #ifdef HAVE_KPLOT
-        auto line = new LineChart(Rect(50, 10, 600, 400));
+        auto line = std::make_shared<LineChart>(Rect(50, 10, 600, 400));
         line->set_name("linechart");
         line->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
         add(line);
 
-        auto sin_checkbox = new CheckBox("sin", Rect(Point(0, 410), Size(80, 40)));
+        auto sin_checkbox = std::make_shared<CheckBox>("sin", Rect(Point(0, 410), Size(80, 40)));
         sin_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         sin_checkbox->set_name("sin");
         add(sin_checkbox);
 
-        auto cos_checkbox = new CheckBox("cos", Rect(Point(100, 410), Size(80, 40)));
+        auto cos_checkbox = std::make_shared<CheckBox>("cos", Rect(Point(100, 410), Size(80, 40)));
         cos_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         cos_checkbox->set_name("cos");
         add(cos_checkbox);
 
-        auto atan_checkbox = new CheckBox("atan", Rect(Point(200, 410), Size(80, 40)));
+        auto atan_checkbox = std::make_shared<CheckBox>("atan", Rect(Point(200, 410), Size(80, 40)));
         atan_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         atan_checkbox->set_name("atan");
         add(atan_checkbox);
@@ -105,7 +105,7 @@ struct LinePage : public NotebookTab
         sin_checkbox->check(true);
         cos_checkbox->check(true);
 
-        auto line_width = new Slider(Rect(Point(300, 410), Size(200, 40)), 1, 10, 1);
+        auto line_width = std::make_shared<Slider>(Rect(Point(300, 410), Size(200, 40)), 1, 10, 1);
         line_width->set_name("line_width");
         add(line_width);
 
@@ -120,11 +120,11 @@ struct LinePage : public NotebookTab
 
         line_width->set_value(2);
 
-        auto gridx_checkbox = new CheckBox("grid X", Rect(Point(500, 410), Size(80, 40)));
+        auto gridx_checkbox = std::make_shared<CheckBox>("grid X", Rect(Point(500, 410), Size(80, 40)));
         gridx_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(gridx_checkbox);
 
-        auto gridy_checkbox = new CheckBox("grid Y", Rect(Point(600, 410), Size(80, 40)));
+        auto gridy_checkbox = std::make_shared<CheckBox>("grid Y", Rect(Point(600, 410), Size(80, 40)));
         gridy_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(gridy_checkbox);
 
@@ -152,7 +152,7 @@ struct PiePage : public NotebookTab
 {
     PiePage()
     {
-        auto pie = new PieChart(Rect(10, 10, 600, 400));
+        auto pie = std::make_shared<PieChart>(Rect(10, 10, 600, 400));
         std::map<std::string, float> data;
         data.insert(make_pair("truck", .25));
         data.insert(make_pair("car", .55));
@@ -177,19 +177,19 @@ int main(int argc, const char** argv)
 
     BoxSizer hsizer(orientation::horizontal);
     hsizer.set_align(alignmask::expand);
-    win.add(&hsizer);
+    win.add(hsizer);
 
     ListBox list(Rect(Point(), Size(win.w() * 0.15, 0)));
     list.set_align(alignmask::expand_vertical | alignmask::left);
-    list.add_item(new StringItem("Line"));
-    list.add_item(new StringItem("Pie"));
-    hsizer.add(&list);
+    list.add_item(make_shared<StringItem>("Line"));
+    list.add_item(make_shared<StringItem>("Pie"));
+    hsizer.add(list);
 
     Notebook notebook;
     notebook.set_align(alignmask::expand);
-    hsizer.add(&notebook);
-    notebook.add(new LinePage());
-    notebook.add(new PiePage());
+    hsizer.add(notebook);
+    notebook.add(make_shared<LinePage>());
+    notebook.add(make_shared<PiePage>());
 
     list.on_event([&](eventid event)
     {

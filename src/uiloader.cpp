@@ -98,9 +98,9 @@ void set_property<TextBox*>(TextBox* instance, const string& name, const string&
 }
 
 template <class T>
-static Widget* create_widget(rapidxml::xml_node<>* node, Frame* parent)
+static shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, shared_ptr<Frame> parent)
 {
-    auto instance = new T;
+    auto instance = make_shared<T>();
     if (parent)
     {
         parent->add(instance);
@@ -117,51 +117,13 @@ static Widget* create_widget(rapidxml::xml_node<>* node, Frame* parent)
         string name = prop->first_attribute("name")->value();
         string value = prop->first_attribute("value")->value();
 
-        set_property<T*>(instance, name, value);
+        set_property<T*>(instance.get(), name, value);
     }
 
-    return instance;
+    return static_pointer_cast<Widget>(instance);
 }
-#if 0
-template <>
-static Widget* create_widget<StaticGrid*>(rapidxml::xml_node<>* node, Frame* parent)
-{
-    auto instance = new StaticGrid;
 
-    if (parent)
-    {
-        parent->add(instance);
-    }
-
-    auto row = node->first_attribute("row");
-    auto column = node->first_attribute("column");
-    if (row || column)
-    {
-        parent->add(instance, std::stoi(row), std::stoi(column));
-    }
-    else
-    {
-        parent->add(instance);
-    }
-
-    auto name = node->first_attribute("name");
-    if (name)
-    {
-        instance->name(name->value());
-    }
-
-    for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling())
-    {
-        string name = prop->first_attribute("name")->value();
-        string value = prop->first_attribute("value")->value();
-
-        set_property<T*>(instance, name, value);
-    }
-
-    return instance;
-}
-#endif
-using create_function = std::function<Widget*(rapidxml::xml_node<>* widget, Frame* parent)>;
+using create_function = std::function<shared_ptr<Widget>(rapidxml::xml_node<>* widget, shared_ptr<Frame> parent)>;
 
 static const map<string, create_function> allocators =
 {
@@ -175,9 +137,9 @@ static const map<string, create_function> allocators =
 UiLoader::UiLoader()
 {}
 
-static Widget* parse_widget(rapidxml::xml_node<>* node, Frame* parent = nullptr)
+static shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node, shared_ptr<Frame> parent = nullptr)
 {
-    Widget* result = nullptr;
+    shared_ptr<Widget> result;
     string ttype;
 
     auto type = node->first_attribute("type");
@@ -198,13 +160,13 @@ static Widget* parse_widget(rapidxml::xml_node<>* node, Frame* parent = nullptr)
 
     for (auto child = node->first_node("widget"); child; child = child->next_sibling())
     {
-        parse_widget(child, dynamic_cast<Frame*>(result));
+        parse_widget(child, dynamic_pointer_cast<Frame>(result));
     }
 
     return result;
 }
 
-Widget* UiLoader::load(const std::string& file)
+shared_ptr<Widget> UiLoader::load(const std::string& file)
 {
     rapidxml::file<> xml_file(file.c_str());
     rapidxml::xml_document<> doc;
@@ -218,7 +180,7 @@ Widget* UiLoader::load(const std::string& file)
         return parse_widget(widget);
     }
 
-    return nullptr;
+    return shared_ptr<Widget>();
 }
 
 UiLoader::~UiLoader()

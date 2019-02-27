@@ -17,8 +17,6 @@ using namespace egt;
 
 class MainWindow;
 
-MainWindow* win1;
-
 class MyButton : public ImageButton
 {
 public:
@@ -40,24 +38,16 @@ class MainWindow : public TopWindow
 public:
     explicit MainWindow(const Size& size)
         : TopWindow(size),
-          grid(Rect(Point(0, 0), Size(800, 480)), 2, 2, 10)
+          grid(2, 2, 10)
     {
         grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
-        add(&grid);
+        add(expand(grid));
 
-        MyButton* b1 = new MyButton("image1.png", _("PNG-filename"));
-        grid.add(b1);
-
-        MyButton* b2 = new MyButton(":image2_png", _("PNG-stream"));
-        grid.add(b2);
-
-        MyButton* b3 = new MyButton("image3.bmp", _("BMP-filename"));
-        grid.add(b3);
-
-        MyButton* b4 = new MyButton(":image4_bmp", _("BMP-stream"));
-        grid.add(b4);
-
+        grid.add(expand(make_shared<MyButton>("image1.png", _("PNG-filename"))));
+        grid.add(expand(make_shared<MyButton>(":image2_png", _("PNG-stream"))));
+        grid.add(expand(make_shared<MyButton>("image3.bmp", _("BMP-filename"))));
+        grid.add(expand(make_shared<MyButton>(":image4_bmp", _("BMP-stream"))));
     }
 
     StaticGrid grid;
@@ -67,9 +57,9 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "resource");
 
-    win1 = new MainWindow(Size(800, 480));
+    MainWindow win1(Size(800, 480));
 
-    win1->show();
+    win1.show();
 
     return app.run();
 }

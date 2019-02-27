@@ -30,7 +30,7 @@ int main(int argc, const char** argv)
     popup.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
     popup.set_name("popup");
     popup.add(label);
-    win.add(&popup);
+    win.add(popup);
     popup.show();
 
     default_dim_type WIDTH = 100;

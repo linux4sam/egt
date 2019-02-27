@@ -18,25 +18,25 @@ inline namespace v1
 
 ListBox::ListBox(const Rect& rect)
     : Frame(rect),
-      m_view(rect, orientation::vertical),
-      m_sizer(orientation::vertical)
+      m_view(make_shared<ScrolledView>(rect, orientation::vertical)),
+      m_sizer(make_shared<OrientationPositioner>(orientation::vertical))
 {
     set_name("ListBox" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::borderfill);
 
-    m_view.set_align(alignmask::expand);
-    add(&m_view);
+    m_view->set_align(alignmask::expand);
+    add(m_view);
 
-    m_sizer.set_align(alignmask::expand);
-    m_view.add(&m_sizer);
+    m_sizer->set_align(alignmask::expand);
+    m_view->add(m_sizer);
 }
 
 ListBox::ListBox(Frame& parent,
                  const Rect& rect)
     : ListBox(rect)
 {
-    parent.add(this);
+    parent.add(*this);
 }
 
 ListBox::ListBox(const item_array& items,
@@ -52,33 +52,31 @@ ListBox::ListBox(Frame& parent,
                  const Rect& rect)
     : ListBox(items, rect)
 {
-    parent.add(this);
+    parent.add(*this);
 }
 
-void ListBox::add_item(Widget* widget)
+void ListBox::add_item(const std::shared_ptr<Widget>& widget)
 {
-    auto ret = m_sizer.add(widget);
-    if (ret)
-    {
-        widget->resize(Size(0, item_height()));
-        widget->set_align(alignmask::expand_horizontal);
+    m_sizer->add(widget);
 
-        if (m_sizer.count_children() == 1)
-        {
-            m_selected = 0;
-            m_sizer.child_at(m_selected)->set_active(true);
-        }
+    widget->resize(Size(0, item_height()));
+    widget->set_align(alignmask::expand_horizontal);
+
+    if (m_sizer->count_children() == 1)
+    {
+        m_selected = 0;
+        m_sizer->child_at(m_selected)->set_active(true);
     }
 }
 
 void ListBox::remove_item(Widget* widget)
 {
-    m_sizer.remove(widget);
+    m_sizer->remove(widget);
 
-    if (m_selected >= m_sizer.count_children())
+    if (m_selected >= m_sizer->count_children())
     {
-        if (m_sizer.count_children())
-            set_select(m_sizer.count_children() - 1);
+        if (m_sizer->count_children())
+            set_select(m_sizer->count_children() - 1);
         else
             m_selected = 0;
     }
@@ -89,7 +87,7 @@ Rect ListBox::item_rect(uint32_t index) const
     Rect r(box());
     r.h = item_height();
     r.y += (r.h * index);
-    r.y += m_view.offset();
+    r.y += m_view->offset();
     return r;
 }
 
@@ -104,7 +102,7 @@ int ListBox::handle(eventid event)
     case eventid::pointer_click:
     {
         Point mouse = from_display(event::pointer().point);
-        for (size_t i = 0; i < m_sizer.count_children(); i++)
+        for (size_t i = 0; i < m_sizer->count_children(); i++)
         {
             if (Rect::point_inside(mouse, item_rect(i)))
             {
@@ -126,13 +124,13 @@ void ListBox::set_select(uint32_t index)
 {
     if (m_selected != index)
     {
-        if (index < m_sizer.count_children())
+        if (index < m_sizer->count_children())
         {
-            if (m_sizer.count_children() > m_selected)
-                m_sizer.child_at(m_selected)->set_active(false);
+            if (m_sizer->count_children() > m_selected)
+                m_sizer->child_at(m_selected)->set_active(false);
             m_selected = index;
-            if (m_sizer.count_children() > m_selected)
-                m_sizer.child_at(m_selected)->set_active(true);
+            if (m_sizer->count_children() > m_selected)
+                m_sizer->child_at(m_selected)->set_active(true);
 
             damage();
             invoke_handlers(eventid::property_changed);

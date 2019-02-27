@@ -43,8 +43,8 @@ public:
           m_date(date),
           m_link(link)
     {
-        add(&m_title, 0, 0);
-        add(&m_date, 0, 1);
+        add(expand(m_title), 0, 0);
+        add(expand(m_date), 0, 1);
     }
 
     virtual ~NewsItem()
@@ -135,7 +135,7 @@ static int load(const string& file, ListBox& list)
             link = l->first_node()->value();
         }
 
-        list.add_item(new NewsItem(title, description, date, link));
+        list.add_item(make_shared<NewsItem>(title, description, date, link));
     }
 
     return 0;

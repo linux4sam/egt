@@ -35,7 +35,7 @@ int main(int argc, const char** argv)
         fullscale = 1.0;
 
     ImageLabel logo(Image("@microchip_logo_white.png"));
-    win.add(&logo);
+    win.add(logo);
     logo.set_align(alignmask::left | alignmask::top, 10);
 
     auto grid_height = (win.size().h - logo.h()) / 2;
@@ -43,18 +43,18 @@ int main(int argc, const char** argv)
     ScrolledView view0(Rect(0, logo.h(), win.size().w, grid_height));
     view0.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
     view0.set_name("view0");
-    win.add(&view0);
+    win.add(view0);
 
     StaticGrid grid0(Rect(0, 0, files.size() * 150, grid_height), files.size(), 1, 0);
     grid0.set_name("grid0");
-    view0.add(&grid0);
+    view0.add(grid0);
 
     PropertyAnimatorType<float> animator(1.0, fullscale, std::chrono::milliseconds(800));
     bool videoshown = false;
 
     for (auto& file : files)
     {
-        auto l = new ImageButton(Image(file));
+        auto l = make_shared<ImageButton>(Image(file));
         l->set_boxtype(Theme::boxtype::none);
         l->flags().clear(Widget::flag::grab_mouse);
         l->on_event([&player, file, &animator, &videoshown](eventid)
@@ -72,21 +72,22 @@ int main(int argc, const char** argv)
             return 0;
         }, {eventid::pointer_click});
 
-        grid0.add(l, alignmask::center);
+        l->set_align(alignmask::center);
+        grid0.add(l);
     }
 
     ScrolledView view1(Rect(0, logo.h() + grid_height + 1, win.size().w, grid_height));
     view1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
     view1.set_name("view1");
-    win.add(&view1);
+    win.add(view1);
 
     StaticGrid grid1(Rect(0, 0, files.size() * 150, grid_height), files.size(), 1, 0);
     grid1.set_name("grid1");
-    view1.add(&grid1);
+    view1.add(grid1);
 
     for (auto& file : files)
     {
-        auto l = new ImageButton(Image(file));
+        auto l = make_shared<ImageButton>(Image(file));
         l->set_boxtype(Theme::boxtype::none);
         l->flags().clear(Widget::flag::grab_mouse);
         l->on_event([&player, file, &animator, &videoshown](eventid)
@@ -104,7 +105,8 @@ int main(int argc, const char** argv)
             return 0;
         }, {eventid::pointer_click});
 
-        grid1.add(l, alignmask::center);
+        l->set_align(alignmask::center);
+        grid1.add(l);
     }
 
     Popup popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
@@ -115,7 +117,7 @@ int main(int argc, const char** argv)
     button.set_name("hw");
 
     ImageButton settings(Image("settings.png"), "", Rect());
-    win.add(&settings);
+    win.add(settings);
     settings.set_boxtype(Theme::boxtype::none);
     settings.set_align(alignmask::right | alignmask::top, 10);
     settings.on_event([&popup](eventid)
@@ -126,9 +128,9 @@ int main(int argc, const char** argv)
             popup.show(true);
         return 1;
     }, {eventid::pointer_click});
-    win.add(&popup);
+    win.add(popup);
 
-    win.add(&player);
+    win.add(player);
 
     win.show();
 

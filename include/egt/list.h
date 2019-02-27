@@ -37,7 +37,7 @@ class ListBox : public Frame
 {
 public:
 
-    using item_array = std::vector<Widget*>;
+    using item_array = std::vector<std::shared_ptr<Widget>>;
 
     explicit ListBox(const Rect& rect = Rect());
 
@@ -63,7 +63,7 @@ public:
     /**
      * Return the number of items in the list.
      */
-    virtual size_t count() const { return m_sizer.count_children(); }
+    virtual size_t count() const { return m_sizer->count_children(); }
 
     /**
      * Get the currently selected index.
@@ -73,7 +73,7 @@ public:
     /**
      * Add a new item to the end of the list.
      */
-    virtual void add_item(Widget* item);
+    virtual void add_item(const std::shared_ptr<Widget>& item);
 
     /**
      * Remove an item from the list.
@@ -92,8 +92,8 @@ protected:
     Rect item_rect(uint32_t index) const;
 
     uint32_t m_selected{0};
-    ScrolledView m_view;
-    OrientationPositioner m_sizer;
+    std::shared_ptr<ScrolledView> m_view;
+    std::shared_ptr<OrientationPositioner> m_sizer;
 };
 
 }

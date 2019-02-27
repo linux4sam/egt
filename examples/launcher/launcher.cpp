@@ -147,14 +147,17 @@ public:
         m_animation.on_change(std::bind(&LauncherWindow::move_boxes, this,
                                         std::placeholders::_1));
 
-        m_popup.add(new Button("Hello World"))->set_align(alignmask::center);
+        auto hello = make_shared<Button>("Hello World");
+        hello->set_align(alignmask::center);
+        m_popup.add(hello);
 
-        add(new ImageLabel(Image("background.png")));
+        add(make_shared<ImageLabel>(Image("background.png")));
 
-        auto logo = new ImageLabel(Image("@microchip_logo_white.png"));
-        add(logo)->set_align(alignmask::left | alignmask::top, 10);
+        auto logo = std::make_shared<ImageLabel>(Image("@microchip_logo_white.png"));
+        logo->set_align(alignmask::left | alignmask::top, 10);
+        add(logo);
 
-        auto settings = new ImageButton(Image("settings.png"), "", Rect());
+        auto settings = std::make_shared<ImageButton>(Image("settings.png"), "", Rect());
         settings->flags().clear(Widget::flag::grab_mouse);
         add(settings);
         settings->set_boxtype(Theme::boxtype::none);
@@ -191,7 +194,7 @@ public:
                 string image = node->first_node("image")->value();
                 string exec = node->first_node("exec")->value();
 
-                LauncherItem* box = new LauncherItem(num++, name, description, image, exec);
+                auto box = make_shared<LauncherItem>(num++, name, description, image, exec);
                 add(box);
                 box->move_to_center(Point(m_boxes.size() * ITEM_SPACE, h() / 2));
 
@@ -210,7 +213,7 @@ public:
         start_snap();
 
         // super nasty having to put this here
-        add(&m_popup);
+        add(m_popup);
 
         return 0;
     }
@@ -299,7 +302,7 @@ private:
     bool m_moving {false};
     int m_moving_x{0};
     int m_offset{0};
-    vector<LauncherItem*> m_boxes;
+    vector<shared_ptr<LauncherItem>> m_boxes;
     Popup m_popup;
     PropertyAnimator m_animation;
 };

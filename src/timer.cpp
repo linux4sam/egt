@@ -23,6 +23,27 @@ Timer::Timer(std::chrono::milliseconds duration) noexcept
       m_duration(duration)
 {}
 
+Timer::Timer(const Timer& rhs) noexcept
+    : m_timer(main_app().event().io()),
+      m_duration(rhs.m_duration),
+      m_running(false)
+{
+    // m_callbacks not copied
+}
+
+Timer& Timer::operator=(const Timer& rhs) noexcept
+{
+
+    if (&rhs != this)
+    {
+        m_duration = rhs.m_duration;
+        // m_callbacks not copied
+        m_running = false;
+    }
+
+    return *this;
+}
+
 void Timer::start()
 {
     m_timer.cancel();
@@ -82,7 +103,7 @@ void Timer::invoke_handlers()
         callback();
 }
 
-Timer::~Timer()
+Timer::~Timer() noexcept
 {
     do_cancel();
 }

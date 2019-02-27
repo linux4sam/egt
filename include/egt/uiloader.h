@@ -11,6 +11,7 @@
  * @brief UI XML loader.
  */
 
+#include <memory>
 #include <string>
 
 namespace egt
@@ -27,7 +28,7 @@ public:
 
     UiLoader();
 
-    virtual Widget* load(const std::string& file);
+    virtual std::shared_ptr<Widget> load(const std::string& file);
 
     virtual ~UiLoader();
 };

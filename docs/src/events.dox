@@ -90,7 +90,7 @@ settings.on_event([this](eventid event)
 @endcode
 
 Another variation of the Object::on_event() function allows for specifying
-what events to filter.
+what events to filter as a second parameter.
 
 @code{.cpp}
 ImageButton settings("@cog.png");

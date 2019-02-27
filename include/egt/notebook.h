@@ -32,6 +32,11 @@ public:
         set_boxtype(Theme::boxtype::fillsolid);
     }
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<NotebookTab>(*this).release());
+    }
+
     /**
      * @return true if allowed to leave, false otherwise.
      */
@@ -47,8 +52,7 @@ public:
     {
     }
 
-    virtual ~NotebookTab()
-    {}
+    virtual ~NotebookTab() = default;
 };
 
 /**
@@ -59,7 +63,15 @@ class Notebook : public Frame
 public:
     explicit Notebook(const Rect& rect = Rect());
 
-    virtual NotebookTab* add(NotebookTab* widget);
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<Notebook>(*this).release());
+    }
+
+    /**
+     * @todo This should explicitly only allow NotebookTab widgets.
+     */
+    virtual void add(const std::shared_ptr<Widget>& widget) override;
 
     virtual void remove(Widget* widget) override;
 
@@ -72,7 +84,7 @@ protected:
     struct Cell
     {
         // cppcheck-suppress unusedStructMember
-        NotebookTab* widget{nullptr};
+        std::shared_ptr<NotebookTab> widget;
         std::string name;
     };
 
@@ -81,14 +93,6 @@ protected:
     cell_array m_cells;
 
     int m_current_index{-1};
-
-private:
-    virtual Widget* add(Widget* widget) override
-    {
-        ignoreparam(widget);
-        return nullptr;
-    }
-
 };
 
 }

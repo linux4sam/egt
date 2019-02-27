@@ -12,6 +12,7 @@
  */
 
 #include <egt/grid.h>
+#include <memory>
 #include <vector>
 
 namespace egt
@@ -30,8 +31,7 @@ public:
         : T(Size(800, 200)),
           m_grid(Rect(), 10, 4, 5)
     {
-        this->add(&m_grid);
-        this->m_grid.set_align(alignmask::expand);
+        this->add(expand(m_grid));
         this->m_grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
         std::vector<std::vector<std::string>> buttons =
@@ -50,16 +50,16 @@ public:
                 if (label.empty())
                     continue;
 
-                Button* b;
+                std::shared_ptr<Button> b;
 
                 if (label.find(".png") != std::string::npos)
                 {
-                    auto c = new ImageButton(Image(label));
+                    auto c = std::make_shared<ImageButton>(Image(label));
                     c->set_image_align(alignmask::center);
                     b = c;
                 }
                 else
-                    b = new Button(label);
+                    b = std::make_shared<Button>(label);
 
                 b->on_event([this, b](eventid event)
                 {
@@ -84,7 +84,7 @@ public:
                     return 0;
                 });
 
-                this->m_grid.add(b, c, r);
+                this->m_grid.add(expand(b), c, r);
             }
         }
 

@@ -26,10 +26,10 @@ If you are new to EGT, please start with the @subpage intro "introduction".
 @li @subpage animations
 @li @subpage local
 @li @subpage resources
+@li @subpage topics
 @li @subpage debug
 @li @subpage custom
 @li @subpage style
-@li @subpage faq
 
 This software and manual are provided under the terms of the Apache 2 License.
 

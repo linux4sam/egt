@@ -85,18 +85,18 @@ public:
             return 0;
         });
 
-        add(&m_radial1);
+        add(m_radial1);
         m_radial1.set_value(73);
         m_radial1.set_value2(65);
 
         m_label1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        add(&m_label1);
+        add(m_label1);
 
         m_label2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        add(&m_label2);
+        add(m_label2);
 
         m_label3.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        add(&m_label3);
+        add(m_label3);
 
         m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
         m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
@@ -147,10 +147,10 @@ public:
             return 0;
         });
 
-        add(&m_label4);
+        add(m_label4);
         m_label4.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
-        add(&m_slider1);
+        add(m_slider1);
         m_slider1.set_value(50);
 
         m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label1), std::placeholders::_1));

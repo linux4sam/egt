@@ -1,0 +1,99 @@
+namespace egt { inline namespace v1 {
+/**
+
+ @page topics Developer Topics
+
+@section topics_black Black Screen
+
+If you see a black screen when you run your application, make sure you call
+Window::show() at least once somewhere in your application.
+
+@section topics_threads Thread Safety
+
+The EGT API is not thread safe.  The thread the main EventLoop is
+started on, usually through Application::run(), must not be directly
+accessed by a seperate thread.  This means any widgets or windows that are
+managed by that main thread should not be accessed by another thread.
+
+However, EGT defines a solution to easily use multiple threads and interact with
+the API in a thread safe manner through the event loop and Asio.  To call a
+function in the EGT API from another thread, you must post or dispatch a call to
+the EventLoop like so:
+
+To change the position of a button from another thread, the folowing can be
+done.
+
+@code{.cpp}
+asio::post(main_app().event().io(), std::bind(&Button::set_x, button, 5));
+@endcode
+
+To run any code you want from another thread on the EventLoop thread, post() a
+lamba or function.
+
+@code{.cpp}
+asio::post(main_app().event().io(),
+    []()
+    {
+        ...
+    });
+@endcode
+
+@section topics_lifetime Widget Lifetime
+
+Everything is on the stack.
+
+@code{.cpp}
+int main(int argc, const char** argv)
+{
+    Application app(argc, argv);
+
+    TopWindow window;
+    Button button(window, "Press Me");
+    button.set_align(alignmask::center);
+    window.show();
+
+    return app.run();
+}
+@endcode
+
+Have EGT manage the lifetime of widgets.
+
+@code{.cpp}
+void add_buttons_to_window(Window& win)
+{
+    win.add(make_shared<Button>("button 1", Rect(Point(), Size(100, 40))));
+    win.add(make_shared<Button>("button 2"));
+}
+
+int main(int argc, const char** argv)
+{
+    TopWindow win;
+    ...
+    add_buttons_to_window(win);
+    ...
+    return app.run()
+}
+@endcode
+
+Keep widgets around based on the scope of its owning object.
+
+@code{.cpp}
+class MyWindow : public TopWindow
+{
+public:
+    explicit MyWindow(const Size& size)
+        : TopWindow(size),
+          m_grid(Rect(Point(0, 60), Size(800, 330)), 4, 2, 10)
+    {
+        add(m_grid);
+    }
+
+    virtual ~MyWindow() = default;
+
+protected:
+    StaticGrid m_grid;
+};
+@endcode
+
+*/
+}}

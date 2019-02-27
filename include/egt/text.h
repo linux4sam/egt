@@ -57,14 +57,25 @@ public:
 
     using flags_type = Flags<flag>;
 
+    TextBox() noexcept;
+
     TextBox(const std::string& str,
             const Rect& rect = Rect(),
             alignmask align = alignmask::center | alignmask::left,
-            const flags_type::flags& flags = flags_type::flags());
+            const flags_type::flags& flags = flags_type::flags()) noexcept;
 
-    TextBox(const Rect& rect = Rect(),
+    TextBox(const Rect& rect,
             alignmask align = alignmask::center | alignmask::left,
-            const flags_type::flags& flags = flags_type::flags());
+            const flags_type::flags& flags = flags_type::flags()) noexcept;
+
+    TextBox(const TextBox&) noexcept;
+
+    TextBox& operator=(const TextBox&) noexcept;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<TextBox>(*this).release());
+    }
 
     virtual int handle(eventid event) override;
 
@@ -176,7 +187,7 @@ public:
      */
     void delete_selection();
 
-    virtual ~TextBox() = default;
+    virtual ~TextBox() noexcept = default;
 
 protected:
 

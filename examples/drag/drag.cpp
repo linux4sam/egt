@@ -27,15 +27,16 @@ public:
           m_img(Image("background.png"))
     {
         set_boxtype(Theme::boxtype::none);
-        add(&m_img);
+        add(m_img);
         if (m_img.w() != w())
         {
             double scale = (double)w() / (double)m_img.w();
             m_img.scale_image(scale);
         }
 
-        auto logo = new ImageLabel(Image("@microchip_logo_white.png"));
-        add(logo)->set_align(alignmask::left | alignmask::top, 10);
+        auto logo = make_shared<ImageLabel>(Image("@microchip_logo_white.png"));
+        logo->set_align(alignmask::left | alignmask::top, 10);
+        add(logo);
     }
 
     ImageLabel m_img;
@@ -53,11 +54,11 @@ public:
         set_boxtype(Theme::boxtype::fill);
         palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x526d7480));
 
-        add(&m_grip);
+        add(m_grip);
         m_grip.resize(Size(50, 50));
         m_grip.set_align(alignmask::right | alignmask::bottom);
 
-        add(&m_arrows);
+        add(m_arrows);
         m_arrows.resize(box().size() / 2);
         m_arrows.image().resize(box().size() / 2);
         m_arrows.set_align(alignmask::center);
@@ -96,10 +97,10 @@ int main(int argc, const char** argv)
     MainWindow win;
 
     FloatingBox box1(Rect(win.w() / 5, win.h() / 3, win.w() / 5, win.h() / 3));
-    win.add(&box1);
+    win.add(box1);
 
     FloatingBox box2(Rect(win.w() / 5 * 3, win.h() / 3, win.w() / 5, win.h() / 3));
-    win.add(&box2);
+    win.add(box2);
 
     win.show();
     box1.show();
@@ -113,7 +114,7 @@ int main(int argc, const char** argv)
     .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
-    win.add(&label1);
+    win.add(label1);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

@@ -26,7 +26,7 @@ public:
           m_img(Image("background.png"))
     {
         set_boxtype(Theme::boxtype::none);
-        add(&m_img);
+        add(m_img);
         if (m_img.w() != w())
         {
             double scale = (double)w() / (double)m_img.w();
@@ -40,7 +40,7 @@ public:
 class FloatingBox
 {
 public:
-    FloatingBox(Widget* widget, default_dim_type mx, default_dim_type my)
+    FloatingBox(shared_ptr<Widget> widget, default_dim_type mx, default_dim_type my)
         : m_widget(widget),
           m_mx(mx),
           m_my(my)
@@ -104,14 +104,14 @@ public:
     }
 
 protected:
-    Widget* m_widget;
+    shared_ptr<Widget> m_widget;
     default_dim_type m_mx;
     default_dim_type m_my;
     Point m_start_point;
     bool m_dragging{false};
 };
 
-static vector<FloatingBox*> boxes;
+static vector<shared_ptr<FloatingBox>> boxes;
 
 int main(int argc, const char** argv)
 {
@@ -143,8 +143,8 @@ int main(int argc, const char** argv)
     {
         stringstream os;
         os << "image" << image_index++ << ".png";
-        auto image = new ImageLabel(Image(os.str()));
-        boxes.push_back(new FloatingBox(image, moveparms[x].first, moveparms[x].second));
+        auto image = make_shared<ImageLabel>(Image(os.str()));
+        boxes.push_back(make_shared<FloatingBox>(image, moveparms[x].first, moveparms[x].second));
         win.add(image);
     }
 
@@ -155,14 +155,14 @@ int main(int argc, const char** argv)
     {
         stringstream os;
         os << "image" << image_index++ << ".png";
-        auto image = new ImageLabel(Image(os.str()));
-        auto plane = new Window(Size(image->w(), image->h()));
+        auto image = make_shared<ImageLabel>(Image(os.str()));
+        auto plane = make_shared<Window>(Size(image->w(), image->h()));
         plane->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         plane->set_boxtype(Theme::boxtype::none);
         plane->add(image);
         plane->show();
         plane->move(Point(100, 100));
-        boxes.push_back(new FloatingBox(plane, moveparms[x].first, moveparms[x].second));
+        boxes.push_back(make_shared<FloatingBox>(plane, moveparms[x].first, moveparms[x].second));
         win.add(plane);
     }
 
@@ -182,7 +182,7 @@ int main(int argc, const char** argv)
     .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
-    win.add(&label1);
+    win.add(label1);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

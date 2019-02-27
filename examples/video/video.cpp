@@ -94,11 +94,11 @@ class FpsWindow : public Window
 public:
     FpsWindow()
         : Window(Size(100, 50),
-                 Widget::flags_type(), pixel_format::argb8888)
+                 Widget::flags_type(), pixel_format::argb8888),
+          m_label(make_shared<Label>("FPS: 0",
+                                     Rect(Size(100, 50)),
+                                     alignmask::center))
     {
-        m_label = new Label("FPS: 0",
-                            Rect(Size(100, 50)),
-                            alignmask::center);
         m_label->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(m_label);
     }
@@ -108,8 +108,7 @@ public:
         m_label->set_text(str);
     }
 
-protected:
-    Label* m_label;
+    shared_ptr<Label> m_label;
 };
 
 int main(int argc, const char** argv)
@@ -123,18 +122,18 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "video");
     TopWindow win;
 
-    VideoWindow* window = 0;
+    shared_ptr<VideoWindow> window;
     if (argv[1] == string("v4l2"))
-        window = new MyVideoWindow<V4L2SoftwareVideo>(Size(960, 720), argv[2]);
+        window = make_shared<MyVideoWindow<V4L2SoftwareVideo>>(Size(960, 720), argv[2]);
     else if (argv[1] == string("v4l2h"))
-        window = new MyVideoWindow<V4L2HardwareVideo>(Size(960, 720), argv[2]);
+        window = make_shared<MyVideoWindow<V4L2HardwareVideo>>(Size(960, 720), argv[2]);
     else if (argv[1] == string("raw"))
-        window = new MyVideoWindow<RawSoftwareVideo>(Size(320, 192), argv[2]);
+        window = make_shared<MyVideoWindow<RawSoftwareVideo>>(Size(320, 192), argv[2]);
     else if (argv[1] == string("hardware"))
-        window = new MyVideoWindow<HardwareVideo>(Size(960, 540), argv[2]);
+        window = make_shared<MyVideoWindow<HardwareVideo>>(Size(960, 540), argv[2]);
     else if (argv[1] == string("software"))
-        window = new MyVideoWindow<SoftwareVideo>(Size(320, 192), argv[2]);
-    //window = new MyVideoWindow<SoftwareVideo>(Size(960, 540), argv[2]);
+        window = make_shared<MyVideoWindow<SoftwareVideo>>(Size(320, 192), argv[2]);
+    //window = make_shared<MyVideoWindow<SoftwareVideo>>(Size(960, 540), argv[2]);
     else
     {
         cerr << "unknown type: " << argv[1] << endl;
@@ -153,64 +152,57 @@ int main(int argc, const char** argv)
 #endif
 
     Window ctrlwindow(Size(600, 80));
-    ctrlwindow.set_name("ctrl");
-    window->add(&ctrlwindow);
+    window->add(ctrlwindow);
     ctrlwindow.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x80808055));
 
     ctrlwindow.move(Point((main_screen()->size().w / 2) - (ctrlwindow.w() / 2),
                           main_screen()->size().h - ctrlwindow.h()));
 
-#if 0
-    set_control_window(&ctrlwindow);
-#endif
-
     HorizontalPositioner grid(Rect(Size(600, 80)), 5, alignmask::center);
     grid.set_name("grid");
-    ctrlwindow.add(&grid);
+    ctrlwindow.add(grid);
 
-    ImageButton* playbtn = new ImageButton(Image(":play_png"));
-    playbtn->set_boxtype(Theme::boxtype::none);
+    ImageButton playbtn(Image(":play_png"));
+    playbtn.set_boxtype(Theme::boxtype::none);
     grid.add(playbtn);
 
-    playbtn->on_event([playbtn, window](eventid event)
+    playbtn.on_event([&playbtn, window](eventid)
     {
-        ignoreparam(event);
-        if (playbtn->active())
+        if (playbtn.active())
             window->unpause();
         return 0;
     });
 
-    ImageButton* pausebtn = new ImageButton(Image(":pause_png"));
-    pausebtn->set_boxtype(Theme::boxtype::none);
+    ImageButton pausebtn(Image(":pause_png"));
+    pausebtn.set_boxtype(Theme::boxtype::none);
     grid.add(pausebtn);
-    pausebtn->on_event([pausebtn, window](eventid event)
+    pausebtn.on_event([&pausebtn, window](eventid)
     {
-        ignoreparam(event);
-        if (pausebtn->active())
+        if (pausebtn.active())
             window->pause();
         return 0;
     });
 
-    Slider* position = new Slider(Rect(Size(150, 40)), 0, 100, 0, orientation::horizontal);
+    Slider position(Rect(Size(150, 40)), 0, 100, 0, orientation::horizontal);
     grid.add(position);
-    position->palette().set(Palette::ColorId::highlight, Palette::GroupId::normal, Palette::blue);
-    position->readonly();
+    position.palette().set(Palette::ColorId::highlight, Palette::GroupId::normal, Palette::blue);
+    position.readonly();
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
-    postimer.on_timeout([position, window
+    postimer.on_timeout([&position, window
 #ifdef FPS
-                                   , &fpslabel
+                                    , &fpslabel
 #endif
-                                  ]()
+                                   ]()
     {
         if (window->duration())
         {
             double v = (double)window->position() / (double)window->duration() * 100.;
-            position->set_value(v);
+            position.set_value(v);
         }
         else
         {
-            position->set_value(0);
+            position.set_value(0);
         }
 
 #ifdef FPS
@@ -221,35 +213,33 @@ int main(int argc, const char** argv)
     });
     postimer.start();
 
-    ImageButton* volumei = new ImageButton(Image(":volumeup_png"));
-    volumei->set_boxtype(Theme::boxtype::none);
+    ImageButton volumei(Image(":volumeup_png"));
+    volumei.set_boxtype(Theme::boxtype::none);
     grid.add(volumei);
 
-    Slider* volume = new Slider(Rect(Size(100, 20)), 0, 100, 0, orientation::horizontal);
+    Slider volume(Rect(Size(100, 20)), 0, 100, 0, orientation::horizontal);
     grid.add(volume);
-    volume->on_event([volume, window](eventid event)
+    volume.on_event([&volume, window](eventid)
     {
-        ignoreparam(event);
-        window->set_volume(volume->value());
+        window->set_volume(volume.value());
         return 0;
     });
-    volume->set_value(50);
+    volume.set_value(50);
 
-    playbtn->disable();
-    pausebtn->enable();
+    playbtn.disable();
+    pausebtn.enable();
 
-    window->on_event([window, playbtn, pausebtn](eventid event)
+    window->on_event([window, &playbtn, &pausebtn](eventid)
     {
-        ignoreparam(event);
         if (window->playing())
         {
-            playbtn->disable();
-            pausebtn->enable();
+            playbtn.disable();
+            pausebtn.enable();
         }
         else
         {
-            playbtn->enable();
-            pausebtn->disable();
+            playbtn.enable();
+            pausebtn.disable();
         }
         return 0;
     });

@@ -23,9 +23,9 @@ public:
     {
         set_align(alignmask::center);
 
-        add(&m_previous);
-        add(&m_play);
-        add(&m_next);
+        add(expand(m_previous));
+        add(expand(m_play));
+        add(expand(m_next));
 
         for (auto& child : m_children)
             child->set_boxtype(Theme::boxtype::none);
@@ -52,7 +52,7 @@ public:
         }
 
         m_dial.set_align(alignmask::expand);
-        add(&m_controls);
+        add(m_controls);
 
         m_controls.m_play.on_event([this](eventid)
         {
@@ -78,7 +78,7 @@ public:
             return 0;
         }, {eventid::input_property_changed});
 
-        add(&m_dial);
+        add(m_dial);
 
         m_dial.radial_flags().set({Radial::flag::primary_value});
 

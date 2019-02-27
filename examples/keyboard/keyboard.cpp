@@ -21,13 +21,12 @@ int main(int argc, const char** argv)
     TopWindow win;
 
     Keyboard<Window> keyboard;
-    win.add(&keyboard);
+    win.add(keyboard);
     keyboard.show();
 
     TextBox textbox(Rect(0, 0, 100, 100), alignmask::left | alignmask::top);
     textbox.text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
-    win.add(textbox);
-    textbox.set_align(alignmask::expand_horizontal | alignmask::bottom);
+    win.add(expand_horizontal(bottom(textbox)));
     keyboard_focus(&textbox);
 
     win.show();

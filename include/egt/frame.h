@@ -11,9 +11,11 @@
  * @brief Working with frames.
  */
 
-#include <egt/widget.h>
-#include <egt/screen.h>
 #include <deque>
+#include <egt/screen.h>
+#include <egt/widget.h>
+#include <exception>
+#include <memory>
 #include <string>
 
 namespace egt
@@ -47,7 +49,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Frame(const Rect& rect = Rect(),
-                   const Widget::flags_type& flags = Widget::flags_type());
+                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     /**
      * Construct a Frame.
@@ -57,12 +59,28 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Frame(Frame& parent, const Rect& rect,
-                   const Widget::flags_type& flags = Widget::flags_type());
+                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+
+    Frame(const Frame& rhs) noexcept;
+
+    Frame(Frame&& rhs) noexcept;
+
+    Frame& operator=(const Frame& rhs) noexcept;
+
+    Frame& operator=(Frame&& rhs) noexcept;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<Frame>(*this).release());
+    }
 
     virtual int handle(eventid event) override;
 
     /**
      * Add a child widget.
+     *
+     * This will take a reference to the shared_ptr and manage the lifetime of
+     * the widget.
      *
      * The inverse of this call is Frame::remove().
      *
@@ -72,38 +90,56 @@ public:
      * @todo Create the idea of layers by moving m_children to a 2d array.
      * Then add a layer index (x-order) here to add widgets to different
      * layers for drawing.
+     */
+    virtual void add(const std::shared_ptr<Widget>& widget)
+    {
+        if (!widget)
+            return;
+
+        if (widget.get() == this)
+            throw std::runtime_error("cannot add a widget to itself");
+
+        auto i = std::find_if(m_children.begin(), m_children.end(),
+                              [&widget](const std::shared_ptr<Widget>& ptr)
+        {
+            return ptr.get() == widget.get();
+        });
+
+        if (i == m_children.end())
+        {
+            widget->set_parent(this);
+            widget->set_align(widget->align(), widget->margin());
+            m_children.push_back(widget);
+        }
+    }
+
+    /**
+     * Utility wrapper around add()
+     */
+    template<class T>
+    void add(const std::shared_ptr<T>& widget)
+    {
+        auto p = std::dynamic_pointer_cast<Widget>(widget);
+        add(p);
+    }
+
+    /**
+     * Add a child widget.
      *
-     * @todo Must make sure not adding "this."
+     * Adds a reference to a widget instance that the caller will manage.
+     *
+     * The inverse of this call is Frame::remove().
+     *
+     * @warning This does not manage the lifetime of Widget. It is up to the
+     * caller to make sure this Widget is available for as long as the instance
+     * of this class is around.
      */
-    virtual Widget* add(Widget* widget);
-
-    /**
-     * Add a child widget overload.
-     */
-    Widget& add(Widget& widget)
+    virtual void add(Widget& widget)
     {
-        add(&widget);
-        return widget;
-    }
-
-    /**
-     * Add a child widget overload.
-     */
-    template<class T>
-    Widget& add(std::shared_ptr<T>& widget)
-    {
-        add(widget.get());
-        return *widget;
-    }
-
-    /**
-     * Add a child widget overload.
-     */
-    template<class T>
-    Widget& add(std::unique_ptr<T>& widget)
-    {
-        add(widget.get());
-        return *widget;
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}));
     }
 
     /**
@@ -122,7 +158,7 @@ public:
 
     Widget* child_at(size_t index)
     {
-        return m_children[index];
+        return m_children[index].get();
     }
 
     /**
@@ -149,7 +185,7 @@ public:
             return nullptr;
 
         auto i = std::find_if(m_children.begin(), m_children.end(),
-                              [&name](const Widget * obj)
+                              [&name](const std::shared_ptr<Widget>& obj)
         {
             return obj->name() == name;
         });
@@ -159,7 +195,7 @@ public:
             return reinterpret_cast<T>(*i);
 
         i = std::find_if(m_children.begin(), m_children.end(),
-                         [&name](const Widget * obj)
+                         [&name](const std::shared_ptr<Widget>& obj)
         {
             return obj->flags().is_set(Widget::flag::frame);
         });
@@ -167,12 +203,12 @@ public:
         for (; i != m_children.end(); ++i)
         {
             auto frame = dynamic_cast<Frame*>(*i);
-	    if (frame)
-	    {
+            if (frame)
+            {
                 auto w = frame->find_child<T>(name);
                 if (w)
                     return w;
-	    }
+            }
         }
 
         return nullptr;
@@ -222,20 +258,26 @@ public:
     virtual void resize(const Size& size) override
     {
         Widget::resize(size);
-        realign_children();
+        layout();
     }
 
     virtual void show() override
     {
-        realign_children();
+        layout();
         Widget::show();
     }
 
-    void realign_children()
+    virtual void layout()
     {
         for (auto& child : m_children)
         {
             child->set_align(child->align(), child->margin());
+
+            if (child->flags().is_set(Widget::flag::frame))
+            {
+                auto frame = dynamic_cast<Frame*>(child.get());
+                frame->layout();
+            }
         }
     }
 
@@ -281,7 +323,11 @@ public:
 
     virtual void zorder_down(Widget* widget)
     {
-        auto i = std::find(m_children.begin(), m_children.end(), widget);
+        auto i = std::find_if(m_children.begin(), m_children.end(),
+                              [widget](const std::shared_ptr<Widget>& ptr)
+        {
+            return ptr.get() == widget;
+        });
         if (i != m_children.end() && i != m_children.begin())
         {
             auto to = std::prev(i);
@@ -293,7 +339,11 @@ public:
 
     virtual void zorder_up(Widget* widget)
     {
-        auto i = std::find(m_children.begin(), m_children.end(), widget);
+        auto i = std::find_if(m_children.begin(), m_children.end(),
+                              [widget](const std::shared_ptr<Widget>& ptr)
+        {
+            return ptr.get() == widget;
+        });
         if (i != m_children.end())
         {
             auto to = std::next(i);
@@ -306,7 +356,7 @@ public:
         }
     }
 
-    virtual ~Frame();
+    virtual ~Frame() noexcept;
 
 protected:
 
@@ -334,7 +384,7 @@ public:
     virtual void add_damage(const Rect& rect);
 protected:
 
-    using children_array = std::deque<Widget*>;
+    using children_array = std::deque<std::shared_ptr<Widget>>;
 
     /**
      * Array of child widgets in the order they were added.
@@ -346,8 +396,6 @@ protected:
      */
     Screen::damage_array m_damage;
 
-    Frame(const Frame&) = delete;
-    Frame& operator=(const Frame&) = delete;
 };
 
 }

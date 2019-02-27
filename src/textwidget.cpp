@@ -29,37 +29,14 @@ TextWidget::TextWidget(const TextWidget& rhs) noexcept
       m_text(rhs.m_text)
 {
     if (rhs.m_font)
-        m_font.reset(new Font(*rhs.m_font.get()));
-}
-
-TextWidget::TextWidget(TextWidget&& rhs) noexcept
-    : Widget(std::move(rhs)),
-      m_text_align(std::move(rhs.m_text_align)),
-      m_text(std::move(rhs.m_text))
-{
-    //cout << __PRETTY_FUNCTION__ << endl;
-
-    if (rhs.m_font)
-        m_font.reset(rhs.m_font.release());
+        m_font = make_unique<Font>(*rhs.m_font.get());
 }
 
 TextWidget& TextWidget::operator=(const TextWidget& rhs) noexcept
 {
     Widget::operator=(rhs);
     if (rhs.m_font)
-        m_font.reset(new Font(*rhs.m_font.get()));
-
-    return *this;
-}
-
-TextWidget& TextWidget::operator=(TextWidget&& rhs) noexcept
-{
-    //cout << __PRETTY_FUNCTION__ << endl;
-
-    Widget::operator=(std::move(rhs));
-
-    if (rhs.m_font)
-        m_font.reset(rhs.m_font.release());
+        m_font = make_unique<Font>(*rhs.m_font.get());
 
     return *this;
 }

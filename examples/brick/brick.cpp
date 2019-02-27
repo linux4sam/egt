@@ -28,7 +28,7 @@ public:
           m_running(false),
           e1(r())
     {
-        auto background = new ImageLabel(Image("brick_background.png"));
+        auto background = make_shared<ImageLabel>(Image("brick_background.png"));
         add(background);
         if (background->w() != w() || background->h() != h())
         {
@@ -40,8 +40,8 @@ public:
         m_grid1.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         m_grid2.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
-        add(&m_grid1);
-        add(&m_grid2);
+        add(m_grid1);
+        add(m_grid2);
 
         for (int c = 0; c < detail::KMSScreen::instance()->size().w / 100; c++)
         {
@@ -49,9 +49,9 @@ public:
             {
                 ostringstream ss;
                 ss << "brick" << r << ".png";
-                auto block = new ImageLabel(Image(ss.str()));
+                auto block = make_shared<ImageLabel>(Image(ss.str()));
                 m_blocks.push_back(block);
-                m_grid1.add(block, c, r);
+                m_grid1.add(expand(block), c, r);
             }
         }
 
@@ -61,23 +61,23 @@ public:
             {
                 ostringstream ss;
                 ss << "brick" << r + 2 << ".png";
-                auto block = new ImageLabel(Image(ss.str()));
+                auto block = make_shared<ImageLabel>(Image(ss.str()));
                 m_blocks.push_back(block);
-                m_grid2.add(block, c, r);
+                m_grid2.add(expand(block), c, r);
             }
         }
 
-        add(&m_paddle);
-        add(&m_ball);
+        add(m_paddle);
+        add(m_ball);
         double hscale = (double)w() / (double)background->w() * 0.5;
         double vscale = (double)h() / (double)background->h() * 0.5;
         m_ball.scale_image(hscale, vscale);
 
-        m_label = new Label("-",
-                            Rect(Point(5, 2),
-                                 Size(100, 40)),
-                            alignmask::left | alignmask::center);
-        m_label->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+        m_label = Label("-",
+                        Rect(Point(5, 2),
+                             Size(100, 40)),
+                        alignmask::left | alignmask::center);
+        m_label.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
         .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(m_label);
 
@@ -150,7 +150,7 @@ public:
 
         ostringstream ss;
         ss << "Points: " << m_points;
-        m_label->set_text(ss.str());
+        m_label.set_text(ss.str());
 
         m_running = false;
     }
@@ -161,7 +161,7 @@ public:
 
         ostringstream ss;
         ss << "Points: " << m_points;
-        m_label->set_text(ss.str());
+        m_label.set_text(ss.str());
     }
 
     void animate()
@@ -222,8 +222,8 @@ private:
     ImageLabel m_paddle;
     float m_xspeed;
     float m_yspeed;
-    vector<ImageLabel*> m_blocks;
-    Label* m_label;
+    vector<shared_ptr<ImageLabel>> m_blocks;
+    Label m_label;
     unsigned int m_points;
     bool m_running;
     std::random_device r;

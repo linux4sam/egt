@@ -79,7 +79,7 @@ public:
     int load()
     {
         auto i = Image("background.png");
-        auto img = new ImageLabel(i);
+        auto img = make_shared<ImageLabel>(i);
         double scale = (double)w() / (double)i.size().w;
         add(img);
         img->scale_image(scale);
@@ -87,29 +87,25 @@ public:
         ListBox::item_array items;
         items.resize(curve_names.size());
         transform(curve_names.begin(), curve_names.end(), items.begin(),
-        [](const std::string & v) { return new StringItem(v);});
-        ListBox* list1 = new ListBox(items, Rect(Point(0, 0), Size(150, 0)));
+        [](const std::string & v) { return make_shared<StringItem>(v);});
+        auto list1 = make_shared<ListBox>(items, Rect(Point(0, 0), Size(150, 0)));
         list1->set_align(alignmask::expand_vertical | alignmask::right);
         add(list1);
 
-        list1->on_event([this, list1](eventid event)
+        list1->on_event([this, list1](eventid)
         {
-            if (event == eventid::property_changed)
-            {
-                m_seq.reset();
-                m_animation.set_easing_func(curves[list1->selected()]);
-                m_seq.start();
-            }
-
+            m_seq.reset();
+            m_animation.set_easing_func(curves[list1->selected()]);
+            m_seq.start();
             return 0;
-        });
+        }, {eventid::property_changed});
 
-        auto image = new ImageLabel(Image("ball.png"));
+        auto image = std::make_shared<ImageLabel>(Image("ball.png"));
         // There is a bug on 9x5 that if the plane is all the way out of view
         // then it will cause glitches. So, we create the height (which will
         // be invisible), to always keep a portion of the plane on screen
         // alternate of making the plane the same exact size as the image.
-        m_box = new Window(Size(100, 200));
+        m_box = make_shared<Window>(Size(100, 200));
         m_box->set_boxtype(Theme::boxtype::none);
         m_box->add(image);
         m_box->move(Point(w() / 2 - m_box->w() / 2, -110));
@@ -118,8 +114,8 @@ public:
         add(m_box);
 
         m_animation.on_change(std::bind(&Window::set_y, m_box, std::placeholders::_1));
-        m_seq.add(&m_animation);
-        m_seq.add(&m_delay);
+        m_seq.add(m_animation);
+        m_seq.add(m_delay);
 
         list1->set_select(7);
 
@@ -129,7 +125,7 @@ public:
     }
 
 private:
-    Window* m_box{nullptr};
+    shared_ptr<Window> m_box;
 
     AnimationSequence m_seq;
     PropertyAnimator m_animation;
@@ -149,7 +145,7 @@ int main(int argc, const char** argv)
                       Size(100, 40)));
     label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-    window.add(&label1);
+    window.add(label1);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

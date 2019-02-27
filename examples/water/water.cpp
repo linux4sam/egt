@@ -63,7 +63,7 @@ public:
     {
         set_boxtype(Theme::boxtype::none);
 
-        m_background = make_unique<ImageLabel>(Image("water.png"));
+        m_background = make_shared<ImageLabel>(Image("water.png"));
         add(m_background);
         if (m_background->h() != h())
         {
@@ -71,7 +71,7 @@ public:
             m_background->scale_image(scale);
         }
 
-        m_label = make_unique<Label>("Objects: 0",
+        m_label = make_shared<Label>("Objects: 0",
                                      Rect(Point(10, 10),
                                           Size(150, 40)),
                                      alignmask::left | alignmask::center);
@@ -79,7 +79,7 @@ public:
         .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(m_label);
 
-        m_sprite = make_unique<Sprite>(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
+        m_sprite = make_shared<Sprite>(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
         add(m_sprite);
         m_sprite->show();
     }
@@ -143,9 +143,9 @@ public:
     }
 
     vector<Bubble> m_images;
-    unique_ptr<ImageLabel> m_background;
-    unique_ptr<Label> m_label;
-    unique_ptr<Sprite> m_sprite;
+    shared_ptr<ImageLabel> m_background;
+    shared_ptr<Label> m_label;
+    shared_ptr<Sprite> m_sprite;
 
     std::random_device r;
     std::default_random_engine e1;
@@ -165,7 +165,7 @@ int main(int argc, const char** argv)
 #define SPRITE1
 #ifdef SPRITE1
     Sprite sprite1(Image("fish.png"), Size(252, 209), 8, Point(0, 0));
-    win.add(&sprite1);
+    win.add(sprite1);
     sprite1.show();
     sprites.push_back(&sprite1);
 #endif
@@ -173,7 +173,7 @@ int main(int argc, const char** argv)
 #define SPRITE2
 #ifdef SPRITE2
     Sprite sprite2(Image("fish2.png"), Size(100, 87), 6, Point(0, 0));
-    win.add(&sprite2);
+    win.add(sprite2);
     sprite2.show();
     sprites.push_back(&sprite2);
 #endif
@@ -260,7 +260,7 @@ int main(int argc, const char** argv)
                       Size(100, 40)));
     label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-    win.add(&label1);
+    win.add(label1);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

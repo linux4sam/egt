@@ -59,10 +59,10 @@ public:
                    const Font& font = Font(),
                    const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
-    Label(const Label&) = default;
-    Label(Label&&) = default;
-    Label& operator=(const Label&) = default;
-    Label& operator=(Label&&) = default;
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<Label>(*this).release());
+    }
 
     /**
      * Set the text of the label.
@@ -117,13 +117,10 @@ public:
                const Rect& rect = Rect(),
                const Font& font = Font()) noexcept;
 
-    ImageLabel(const ImageLabel& rhs) noexcept;
-
-    ImageLabel(ImageLabel&& rhs) noexcept;
-
-    ImageLabel& operator=(const ImageLabel& rhs) noexcept;
-
-    ImageLabel& operator=(ImageLabel&& rhs) noexcept;
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<ImageLabel>(*this).release());
+    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

@@ -23,7 +23,7 @@ public:
     {
         palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
 
-        add(&m_grid);
+        add(m_grid);
 
         const vector<Color> colors =
         {
@@ -51,10 +51,10 @@ public:
 
         for (auto& c : colors)
         {
-            auto color = new Label("");
+            auto color = make_shared<Label>("");
             color->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, c);
 
-            m_grid.add(color);
+            m_grid.add(expand(color));
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
@@ -92,7 +92,7 @@ public:
     {
         palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
 
-        add(&m_grid);
+        add(m_grid);
 
         const vector<int> widths =
         {
@@ -104,9 +104,9 @@ public:
 
         for (auto& w : widths)
         {
-            auto width = new Label(std::to_string(w));
+            auto width = make_shared<Label>(std::to_string(w));
 
-            m_grid.add(width);
+            m_grid.add(expand(width));
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
@@ -158,12 +158,12 @@ public:
         m_widthbtn.set_boxtype(Theme::boxtype::none);
         m_clearbtn.set_boxtype(Theme::boxtype::none);
 
-        add(&m_grid);
-        add(&m_penpicker);
-        add(&m_fillpicker);
-        add(&m_widthpicker);
+        add(m_grid);
+        add(m_penpicker);
+        add(m_fillpicker);
+        add(m_widthpicker);
 
-        m_grid.add(&m_colorbtn);
+        m_grid.add(expand(m_colorbtn));
         m_colorbtn.on_event([this](eventid)
         {
             m_penpicker.show_modal(true);
@@ -188,21 +188,21 @@ public:
             return 1;
         }, {eventid::pointer_click});
 
-        m_grid.add(&m_fillbtn);
+        m_grid.add(expand(m_fillbtn));
         m_fillbtn.on_event([this](eventid)
         {
             m_fillpicker.show_modal(true);
             return 1;
         }, {eventid::pointer_click});
 
-        m_grid.add(&m_widthbtn);
+        m_grid.add(expand(m_widthbtn));
         m_widthbtn.on_event([this](eventid)
         {
             m_widthpicker.show_modal(true);
             return 1;
         }, {eventid::pointer_click});
 
-        m_grid.add(&m_clearbtn);
+        m_grid.add(expand(m_clearbtn));
         m_clearbtn.on_event([this](eventid)
         {
             clear();
@@ -217,8 +217,9 @@ public:
             return 1;
         }, {eventid::hide});
 
-        auto logo = new ImageLabel(Image("@microchip_logo_black.png"));
-        add(logo)->set_align(alignmask::right | alignmask::top, 10);
+        auto logo = make_shared<ImageLabel>(Image("@microchip_logo_black.png"));
+        logo->set_align(alignmask::right | alignmask::top, 10);
+        add(logo);
 
         clear();
     }

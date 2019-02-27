@@ -11,11 +11,12 @@
  * @brief Working with animations.
  */
 
+#include <chrono>
 #include <egt/timer.h>
 #include <egt/utils.h>
-#include <chrono>
-#include <vector>
 #include <functional>
+#include <memory>
+#include <vector>
 
 namespace egt
 {
@@ -247,22 +248,38 @@ public:
         : m_loop(loop)
     {}
 
+    virtual void add(detail::IAnimation& animation)
+    {
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        add(std::shared_ptr<detail::IAnimation>(&animation, [](detail::IAnimation*) {}));
+    }
+
+    template<class T>
+    void add(std::shared_ptr<T> animation)
+    {
+        add(std::dynamic_pointer_cast<detail::IAnimation>(animation));
+    }
+
     /**
      * Add a sub animation to the sequence.
      */
-    void add(detail::IAnimation* animation)
+    virtual void add(std::shared_ptr<detail::IAnimation> animation)
     {
-        assert(animation);
         if (!animation)
             return;
 
-        auto i = find(m_animations.begin(), m_animations.end(), animation);
+        auto i = std::find_if(m_animations.begin(), m_animations.end(),
+                              [animation](const std::shared_ptr<detail::IAnimation>& ptr)
+        {
+            return ptr.get() == animation.get();
+        });
+
         if (i == m_animations.end())
         {
-            animation->add_callback([this, animation](float_t value)
+            animation->add_callback([this, animation](float_t)
             {
-                ignoreparam(value);
-
                 if (!animation->running())
                     next();
             });
@@ -278,7 +295,11 @@ public:
         if (!animation)
             return;
 
-        auto i = find(m_animations.begin(), m_animations.end(), animation);
+        auto i = std::find_if(m_animations.begin(), m_animations.end(),
+                              [animation](const std::shared_ptr<detail::IAnimation>& ptr)
+        {
+            return ptr.get() == animation;
+        });
         if (i != m_animations.end())
         {
             m_animations.erase(i);
@@ -358,7 +379,7 @@ public:
     {}
 
 protected:
-    using animation_array = std::vector<detail::IAnimation*>;
+    using animation_array = std::vector<std::shared_ptr<detail::IAnimation>>;
 
     animation_array m_animations;
     size_t m_current{0};

@@ -142,6 +142,11 @@ public:
     Widget& operator=(Widget&& rhs) noexcept;
 
     /**
+     * Perform a deep copy clone of the widget.
+     */
+    virtual std::unique_ptr<Widget> clone() = 0;
+
+    /**
      * Draw the widget.
      *
      * @param[in] painter Instance of the Painter for the screen.
@@ -560,7 +565,6 @@ protected:
      * The parent is a Frame, which is capable of managing children.
      */
     Frame* m_parent{nullptr};
-
 
     /**
      * Unique ID of this widget.

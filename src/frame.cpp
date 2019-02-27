@@ -18,7 +18,7 @@ namespace egt
 inline namespace v1
 {
 
-Frame::Frame(const Rect& rect, const Widget::flags_type& flags)
+Frame::Frame(const Rect& rect, const Widget::flags_type& flags) noexcept
     : Widget(rect, flags)
 {
     set_name("Frame" + std::to_string(m_widgetid));
@@ -27,26 +27,56 @@ Frame::Frame(const Rect& rect, const Widget::flags_type& flags)
     set_boxtype(Theme::boxtype::none);
 }
 
-Frame::Frame(Frame& parent, const Rect& rect, const Widget::flags_type& flags)
-    : Frame(rect, flags)
+Frame::Frame(const Frame& rhs) noexcept
+    : Widget(rhs),
+      m_damage(rhs.m_damage)
 {
-    parent.add(this);
+    // perform deep copy of all children
+    for (auto& child : rhs.m_children)
+    {
+        m_children.push_back(child->clone());
+        m_children.back()->m_parent = this;
+    }
 }
 
-Widget* Frame::add(Widget* widget)
+Frame::Frame(Frame&& rhs) noexcept
+    : Widget(std::move(rhs)),
+      m_children(std::move(rhs.m_children)),
+      m_damage(std::move(rhs.m_damage))
 {
-    if (!widget)
-        return nullptr;
+    for (auto& child : m_children)
+        child->m_parent = this;
+}
 
-    if (find(m_children.begin(), m_children.end(), widget) == m_children.end())
+Frame& Frame::operator=(const Frame& rhs) noexcept
+{
+    if (&rhs != this)
     {
-        m_children.push_back(widget);
-        widget->set_parent(this);
-        // ensure alignment is set now
-        widget->set_align(widget->align(), widget->margin());
-    }
+        Widget::operator=(rhs);
 
-    return widget;
+        m_damage = rhs.m_damage;
+
+        // perform deep copy of all children
+        for (auto& child : rhs.m_children)
+        {
+            m_children.push_back(child->clone());
+            m_children.back()->m_parent = this;
+        }
+    }
+    return *this;
+}
+
+Frame& Frame::operator=(Frame&& rhs) noexcept
+{
+    Widget::operator=(std::move(rhs));
+
+    m_children = std::move(rhs.m_children);
+    m_damage = std::move(rhs.m_damage);
+
+    for (auto& child : m_children)
+        child->m_parent = this;
+
+    return *this;
 }
 
 void Frame::remove(Widget* widget)
@@ -54,13 +84,21 @@ void Frame::remove(Widget* widget)
     if (!widget)
         return;
 
-    auto i = find(m_children.begin(), m_children.end(), widget);
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const std::shared_ptr<Widget>& ptr)
+    {
+        return ptr.get() == widget;
+    });
     if (i != m_children.end())
     {
         // note order here - damage and then unset parent
         (*i)->damage();
         (*i)->m_parent = nullptr;
         m_children.erase(i);
+    }
+    else if (widget->m_parent == this)
+    {
+        widget->m_parent = nullptr;
     }
 }
 
@@ -310,7 +348,7 @@ void Frame::paint_children_to_file()
     {
         if (child->flags().is_set(Widget::flag::frame))
         {
-            auto frame = dynamic_cast<Frame*>(child);
+            auto frame = std::dynamic_pointer_cast<Frame>(child);
             frame->paint_children_to_file();
         }
         else
@@ -320,7 +358,7 @@ void Frame::paint_children_to_file()
     }
 }
 
-Frame::~Frame()
+Frame::~Frame() noexcept
 {
     remove_all();
 }

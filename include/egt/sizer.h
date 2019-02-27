@@ -39,19 +39,12 @@ public:
         set_boxtype(Theme::boxtype::none);
     }
 
-    virtual void move(const Point& point) override
+    virtual void add(Widget& widget) override
     {
-        Frame::move(point);
-        reposition();
+        Frame::add(widget);
     }
 
-    virtual void resize(const Size& size) override
-    {
-        Frame::resize(size);
-        reposition();
-    }
-
-    virtual Widget* add(Widget* widget) override
+    virtual void add(const std::shared_ptr<Widget>& widget) override
     {
         Frame::add(widget);
 
@@ -73,13 +66,17 @@ public:
 
             resize(Size(w, h));
         }
-
-        return widget;
     }
 
     virtual void remove(Widget* widget) override
     {
         Frame::remove(widget);
+        reposition();
+    }
+
+    virtual void layout() override
+    {
+        Frame::layout();
         reposition();
     }
 
@@ -181,12 +178,10 @@ public:
         reposition();
     }
 
-    virtual Widget* add(Widget* widget) override
+    virtual void add(const std::shared_ptr<Widget>& widget) override
     {
-        auto ret = Frame::add(widget);
-        if (ret)
-            reposition();
-        return ret;
+        Frame::add(widget);
+        reposition();
     }
 
     virtual void remove(Widget* widget) override
@@ -224,6 +219,12 @@ public:
         damage();
     }
 
+    virtual void layout() override
+    {
+        Frame::layout();
+        reposition();
+    }
+
     Rect super_rect() const
     {
         Rect result;
@@ -254,18 +255,6 @@ public:
           m_align(align)
     {
         set_boxtype(Theme::boxtype::none);
-    }
-
-    virtual void move(const Point& point) override
-    {
-        Frame::move(point);
-        reposition();
-    }
-
-    virtual void resize(const Size& size) override
-    {
-        Frame::resize(size);
-        reposition();
     }
 
     /**
@@ -302,8 +291,13 @@ public:
         damage();
     }
 
-    virtual ~HorizontalPositioner()
-    {}
+    virtual void layout() override
+    {
+        Frame::layout();
+        reposition();
+    }
+
+    virtual ~HorizontalPositioner() = default;
 
 protected:
 

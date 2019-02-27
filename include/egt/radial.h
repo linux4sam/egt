@@ -57,7 +57,12 @@ public:
     RadialType(Frame& parent, const Rect& rect, T min, T max, T value = T())
         : RadialType<T>(rect, min, max, value)
     {
-        parent.add(this);
+        parent.add(*this);
+    }
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<RadialType<T>>(*this).release());
     }
 
     /**

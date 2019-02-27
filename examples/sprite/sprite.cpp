@@ -35,7 +35,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
     ImageLabel img(Image("background.png"));
-    win.add(&img);
+    win.add(img);
     if (img.h() != win.h())
     {
         double scale = (double)win.h() / (double)img.h();
@@ -43,26 +43,27 @@ int main(int argc, const char** argv)
     }
 
     ImageLabel logo(Image("@microchip_logo_white.png"));
-    win.add(&logo)->set_align(alignmask::left | alignmask::top, 10);
+    logo.set_align(alignmask::left | alignmask::top, 10);
+    win.add(logo);
 
     StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), 2, 2);
 
     Sprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
                    Point(main_screen()->size().w / 2 - 75,
                          main_screen()->size().h / 2 - 132 / 2));
-    grid.add(&sprite1, 0, 1, alignmask::center);
+    grid.add(center(sprite1), 0, 1);
 
     Sprite sprite2(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
                    Point(main_screen()->size().w / 2,
                          main_screen()->size().h / 2 - 132 / 2));
-    grid.add(&sprite2, 1, 1, alignmask::center);
+    grid.add(center(sprite2), 1, 1);
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
-    grid.add(&hardware_checkbox, 0, 0, alignmask::center);
+    grid.add(center(hardware_checkbox), 0, 0);
     hardware_checkbox.check(true);
 
     CheckBox software_checkbox("Software", Rect(Point(0, 0), Size(120, 40)));
-    grid.add(&software_checkbox, 1, 0, alignmask::center);
+    grid.add(center(software_checkbox), 1, 0);
     software_checkbox.check(true);
 
     hardware_checkbox.on_event([&](eventid event)
@@ -90,7 +91,7 @@ int main(int argc, const char** argv)
     });
 
 
-    win.add(&grid);
+    win.add(grid);
 
     sprite1.show();
     sprite2.show();
@@ -133,8 +134,7 @@ int main(int argc, const char** argv)
     animatetimer.start();
 
     Slider slider1(Rect(Point(win.h() - 40, 300), Size(win.w(), 40)), 10, 500, 10);
-    win.add(&slider1);
-    slider1.set_align(alignmask::center | alignmask::bottom);
+    win.add(bottom(center(slider1)));
     slider1.set_value(DEFAULT_MS_INTERVAL);
     slider1.on_event([&](eventid event)
     {
@@ -157,8 +157,8 @@ int main(int argc, const char** argv)
     .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
-    popup.add(&label1);
-    popup.add(&label2);
+    popup.add(label1);
+    popup.add(label2);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
@@ -172,7 +172,7 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
-    win.add(&popup);
+    win.add(popup);
     popup.show();
 
     return app.run();

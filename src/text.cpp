@@ -15,8 +15,20 @@ namespace egt
 inline namespace v1
 {
 
+TextBox::TextBox() noexcept
+    : m_timer(std::chrono::seconds(1))
+{
+    set_name("TextBox" + std::to_string(m_widgetid));
+
+    set_boxtype(Theme::boxtype::borderfill);
+
+    m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
+
+    cursor_set_end();
+}
+
 TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align,
-                 const flags_type::flags& flags)
+                 const flags_type::flags& flags) noexcept
     : TextWidget(str, rect, align),
       m_timer(std::chrono::seconds(1)),
       m_text_flags(flags)
@@ -30,9 +42,40 @@ TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align,
     cursor_set_end();
 }
 
-TextBox::TextBox(const Rect& rect, alignmask align, const flags_type::flags& flags)
+TextBox::TextBox(const Rect& rect, alignmask align, const flags_type::flags& flags) noexcept
     : TextBox(std::string(), rect, align, flags)
 {}
+
+TextBox::TextBox(const TextBox& rhs) noexcept
+    : TextWidget(rhs),
+      m_timer(std::chrono::seconds(1)),
+      m_cursor_pos(rhs.m_cursor_pos),
+      m_select_start(rhs.m_select_start),
+      m_select_len(rhs.m_select_len),
+      m_cursor_state(rhs.m_cursor_state),
+      m_text_flags(rhs.m_text_flags)
+{
+    m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
+}
+
+TextBox& TextBox::operator=(const TextBox& rhs) noexcept
+{
+    if (&rhs != this)
+    {
+        TextWidget::operator=(rhs);
+
+        m_cursor_pos = rhs.m_cursor_pos;
+        m_select_start = rhs.m_select_start;
+        m_select_len = rhs.m_select_len;
+        m_cursor_state = rhs.m_cursor_state;
+        m_text_flags = rhs.m_text_flags;
+        m_text_flags = rhs.m_text_flags;
+
+        m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
+    }
+
+    return *this;
+}
 
 int TextBox::handle(eventid event)
 {

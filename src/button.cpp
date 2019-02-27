@@ -34,7 +34,7 @@ Button::Button(Frame& parent, const std::string& text, const Rect& rect,
                const Font& font, const Widget::flags_type& flags) noexcept
     : Button(text, rect, font, flags)
 {
-    parent.add(this);
+    parent.add(*this);
 }
 
 Button::Button(Frame& parent, const std::string& text,
@@ -130,7 +130,7 @@ void Button::first_resize()
         if (!m_text.empty())
         {
             auto s = text_size(m_text);
-            s += Size(10, 10);
+            s += Size(40, 40);
             resize(s);
         }
         else
@@ -160,7 +160,7 @@ ImageButton::ImageButton(Frame& parent,
                          const Widget::flags_type& flags) noexcept
     : ImageButton(image, text, rect, flags)
 {
-    parent.add(this);
+    parent.add(*this);
 }
 
 void ImageButton::do_set_image(const Image& image)
@@ -230,7 +230,9 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 }
 
 ImageButton::~ImageButton()
-{}
+{
+
+}
 
 void ImageButton::first_resize()
 {

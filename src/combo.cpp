@@ -9,6 +9,7 @@
 #include "egt/image.h"
 #include "egt/painter.h"
 #include "egt/window.h"
+#include <memory>
 
 namespace egt
 {
@@ -22,21 +23,25 @@ namespace detail
 
 ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
     : Popup(Size(parent.size().w, ListBox::item_height())),
+      m_list(std::make_shared<ListBox>()),
       m_parent(parent)
 {
     set_name("ComboBoxPopup" + std::to_string(m_widgetid));
 
     for (auto& item : parent.m_items)
-        m_list.add_item(new StringItem(item));
+    {
+        auto p = std::make_shared<StringItem>(item);
+        m_list->add_item(p);
+    }
 
-    m_list.set_align(alignmask::expand);
+    m_list->set_align(alignmask::expand);
 
-    add(&m_list);
+    add(m_list);
 
-    m_list.on_event([this, &parent](eventid event)
+    m_list->on_event([this, &parent](eventid event)
     {
         ignoreparam(event);
-        parent.set_select(m_list.selected());
+        parent.set_select(m_list->selected());
         hide();
 
         return 1;
@@ -53,7 +58,7 @@ void ComboBoxPopup::smart_pos()
         auto origin = to_display(box().point());
         auto height =
             std::min(static_cast<default_dim_type>((ss.h - origin.y) / ListBox::item_height()),
-                     static_cast<default_dim_type>(m_list.count())) * ListBox::item_height();
+                     static_cast<default_dim_type>(m_list->count())) * ListBox::item_height();
 
         // hack because list child area is smaller by this much
         height += Theme::DEFAULT_BORDER_WIDTH * 3;
@@ -106,7 +111,7 @@ ComboBox::ComboBox(const item_array& items,
                    const Widget::flags_type& flags) noexcept
     : TextWidget("", rect, align, font, flags),
       m_items(items),
-      m_popup(*this)
+      m_popup(new detail::ComboBoxPopup(*this))
 {
     set_name("ComboBox" + std::to_string(m_widgetid));
 
@@ -119,7 +124,7 @@ ComboBox::ComboBox(const item_array& items,
 void ComboBox::set_parent(Frame* parent)
 {
     TextWidget::set_parent(parent);
-    parent->add(&m_popup);
+    parent->add(m_popup);
 }
 
 int ComboBox::handle(eventid event)
@@ -134,7 +139,7 @@ int ComboBox::handle(eventid event)
 
         if (Rect::point_inside(mouse, box()))
         {
-            m_popup.show_modal();
+            m_popup->show_modal();
         }
 
         break;
@@ -163,16 +168,16 @@ void ComboBox::resize(const Size& s)
 {
     TextWidget::resize(s);
 
-    if (m_popup.visible())
-        m_popup.smart_pos();
+    if (m_popup->visible())
+        m_popup->smart_pos();
 }
 
 void ComboBox::move(const Point& point)
 {
     TextWidget::move(point);
 
-    if (m_popup.visible())
-        m_popup.smart_pos();
+    if (m_popup->visible())
+        m_popup->smart_pos();
 }
 
 void ComboBox::draw(Painter& painter, const Rect& rect)

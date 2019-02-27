@@ -23,16 +23,12 @@ Notebook::Notebook(const Rect& rect)
     set_boxtype(Theme::boxtype::none);
 }
 
-NotebookTab* Notebook::add(NotebookTab* widget)
+void Notebook::add(const std::shared_ptr<Widget>& widget)
 {
-    if (!widget)
-        return widget;
-
     Cell cell;
-    cell.widget = widget;
+    cell.widget = std::dynamic_pointer_cast<NotebookTab>(widget);
     m_cells.push_back(cell);
 
-    widget->resize(size());
     widget->set_align(alignmask::expand);
 
     Frame::add(widget);
@@ -46,8 +42,6 @@ NotebookTab* Notebook::add(NotebookTab* widget)
     {
         widget->hide();
     }
-
-    return widget;
 }
 
 void Notebook::remove(Widget* widget)
@@ -59,7 +53,7 @@ void Notebook::remove(Widget* widget)
     auto i = std::remove_if(m_cells.begin(), m_cells.end(),
                             [widget](const Notebook::Cell & cell)
     {
-        return cell.widget == widget;
+        return cell.widget.get() == widget;
     });
     m_cells.erase(i, m_cells.end());
 

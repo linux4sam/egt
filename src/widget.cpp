@@ -37,28 +37,25 @@ Widget::Widget(const Rect& rect, const Widget::flags_type& flags) noexcept
 Widget::Widget(Frame& parent, const Rect& rect, const Widget::flags_type& flags) noexcept
     : Widget(rect, flags)
 {
-    parent.add(this);
+    parent.add(*this);
 }
 
 Widget::Widget(const Widget& rhs) noexcept
     : m_box(rhs.m_box),
-      m_widgetid(global_widget_id++),
+      m_widgetid(rhs.m_widgetid),
       m_widget_flags(rhs.m_widget_flags),
+      m_name(rhs.m_name),
       m_align(rhs.m_align),
       m_margin(rhs.m_margin),
       m_boxtype(rhs.m_boxtype)
 {
-    /// @todo Handle m_focus
-
-    set_name("Widget" + std::to_string(m_widgetid));
-
     if (rhs.m_palette)
         m_palette.reset(new Palette(*rhs.m_palette.get()));
     if (rhs.m_theme)
         m_theme.reset(new Theme(*rhs.m_theme.get()));
 
     if (rhs.m_parent)
-        rhs.m_parent->add(this);
+        rhs.m_parent->add(*this);
 }
 
 Widget::Widget(Widget&& rhs) noexcept
@@ -72,44 +69,37 @@ Widget::Widget(Widget&& rhs) noexcept
       m_boxtype(std::move(rhs.m_boxtype)),
       m_theme(std::move(rhs.m_theme))
 {
-    /// @todo Handle m_focus
-
-    if (rhs.m_palette)
-        m_palette.reset(rhs.m_palette.release());
-    if (rhs.m_theme)
-        m_theme.reset(rhs.m_theme.release());
-
     if (rhs.m_parent)
-        rhs.m_parent->add(this);
+        rhs.m_parent->add(*this);
 }
 
 Widget& Widget::operator=(const Widget& rhs) noexcept
 {
-    detatch();
+    if (&rhs != this)
+    {
+        m_widgetid = rhs.m_widgetid;
+        m_name = rhs.m_name;
+        m_box = rhs.m_box;
+        m_widget_flags = rhs.m_widget_flags;
+        m_align = rhs.m_align;
+        m_margin = rhs.m_margin;
+        m_boxtype = rhs.m_boxtype;
 
-    m_box = rhs.m_box;
-    m_widget_flags = rhs.m_widget_flags;
-    m_align = rhs.m_align;
-    m_margin = rhs.m_margin;
-    m_boxtype = rhs.m_boxtype;
-
-    /// @todo Handle m_focus
-
-    if (rhs.m_palette)
-        m_palette.reset(new Palette(*rhs.m_palette.get()));
-    if (rhs.m_theme)
-        m_theme.reset(new Theme(*rhs.m_theme.get()));
+        if (rhs.m_palette)
+            m_palette.reset(new Palette(*rhs.m_palette.get()));
+        if (rhs.m_theme)
+            m_theme.reset(new Theme(*rhs.m_theme.get()));
+    }
 
     if (rhs.m_parent)
-        rhs.m_parent->add(this);
+        rhs.m_parent->add(*this);
 
     return *this;
 }
 
 Widget& Widget::operator=(Widget&& rhs) noexcept
 {
-    detatch();
-
+    m_parent = nullptr;
     m_box = std::move(rhs.m_box);
     m_widgetid = std::move(rhs.m_widgetid);
     m_widget_flags = std::move(rhs.m_widget_flags);
@@ -120,10 +110,8 @@ Widget& Widget::operator=(Widget&& rhs) noexcept
     m_boxtype = std::move(rhs.m_boxtype);
     m_theme = std::move(rhs.m_theme);
 
-    /// @todo Handle m_focus
-
     if (rhs.m_parent)
-        rhs.m_parent->add(this);
+        rhs.m_parent->add(*this);
 
     return *this;
 }
@@ -476,7 +464,10 @@ shared_cairo_surface_t Widget::surface()
 void Widget::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << name() <<
-        " " << box() << " " << m_widget_flags << std::endl;
+        " " << box() << " " << m_widget_flags;
+    if (m_parent)
+        out << " parent: " << m_parent->name();
+    out << std::endl;
 }
 
 void Widget::set_theme(const Theme& theme)

@@ -16,7 +16,7 @@ inline namespace v1
 {
 
 StaticGrid::StaticGrid(const Rect& rect, int columns,
-                       int rows, int spacing)
+                       int rows, int spacing) noexcept
     : Frame(rect),
       m_spacing(spacing)
 {
@@ -24,12 +24,16 @@ StaticGrid::StaticGrid(const Rect& rect, int columns,
 
     set_boxtype(Theme::boxtype::none);
 
+    /*
+     * The grid size is set here.  Every column should be the same size.  Don't
+     * delete from the column vectors.  Only set empty cells to nullptr.
+     */
     m_cells.resize(columns);
     for (auto& x : m_cells)
-        x.resize(rows);
+        x.resize(rows, nullptr);
 }
 
-StaticGrid::StaticGrid(int columns, int rows, int spacing)
+StaticGrid::StaticGrid(int columns, int rows, int spacing) noexcept
     : StaticGrid(Rect(), columns, rows, spacing)
 {
 }
@@ -95,7 +99,39 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
     Frame::draw(painter, rect);
 }
 
-Widget* StaticGrid::add(Widget* widget, int column, int row, alignmask align)
+void StaticGrid::add(const std::shared_ptr<Widget>& widget)
+{
+    if (!widget)
+        return;
+
+    int c = 0;
+    for (auto& column : m_cells)
+    {
+        auto i = std::find_if(column.begin(), column.end(),
+                              [](const Widget * widget)
+        {
+            return !widget;
+        });
+
+        if (i != column.end())
+        {
+            *i = widget.get();
+
+            Frame::add(widget);
+
+            reposition();
+
+            m_last_add_column = c;
+            m_last_add_row = std::distance(column.begin(), i);
+
+            break;
+        }
+
+        c++;
+    }
+}
+
+void StaticGrid::add(const std::shared_ptr<Widget>& widget, int column, int row)
 {
     Frame::add(widget);
 
@@ -103,59 +139,22 @@ Widget* StaticGrid::add(Widget* widget, int column, int row, alignmask align)
         m_cells.resize(column + 1);
 
     if (row >= (int)m_cells[column].size())
-        m_cells[column].resize(row + 1);
+    {
+        for (auto& column : m_cells)
+            column.resize(row + 1, nullptr);
+    }
 
-    Cell cell;
-    cell.widget = widget;
-    if (widget)
-        widget->set_align(align);
-    m_cells[column][row] = cell;
+    m_cells[column][row] = widget.get();
 
     m_last_add_column = column;
     m_last_add_row = row;
 
     reposition();
-
-    return widget;
-}
-
-Widget* StaticGrid::add(Widget* widget, alignmask align)
-{
-    int c = 0;
-    for (auto& column : m_cells)
-    {
-        auto i = std::find_if(column.begin(), column.end(),
-                              [](const Cell & cell)
-        {
-            return !cell.widget;
-        });
-
-        if (i != column.end())
-        {
-            i->widget = widget;
-
-            Frame::add(widget);
-
-            if (widget)
-                widget->set_align(align);
-
-            reposition();
-
-            m_last_add_column = c;
-            m_last_add_row = std::distance(column.begin(), i);
-
-            return widget;
-        }
-
-        c++;
-    }
-
-    return nullptr;
 }
 
 Widget* StaticGrid::get(const Point& point)
 {
-    return m_cells[point.x][point.y].widget;
+    return m_cells[point.x][point.y];
 }
 
 void StaticGrid::remove(Widget* widget)
@@ -164,14 +163,18 @@ void StaticGrid::remove(Widget* widget)
     if (!widget)
         return;
 
+    auto predicate = [widget](const Widget * ptr)
+    {
+        return ptr == widget;
+    };
+
     for (auto& x : m_cells)
     {
-        auto i = std::remove_if(x.begin(), x.end(),
-                                [widget](const StaticGrid::Cell & cell)
+        for (auto i = std::find_if(x.begin(), x.end(), predicate); i != x.end();
+             i = std::find_if(x.begin(), x.end(), predicate))
         {
-            return cell.widget == widget;
-        });
-        x.erase(i, x.end());
+            *i = nullptr;
+        }
     }
 
     reposition();
@@ -184,14 +187,14 @@ void StaticGrid::reposition()
     if (size().empty())
         return;
 
-    int columns = m_cells.size();
-    for (int column = 0; column < columns; column++)
+    auto columns = m_cells.size();
+    for (size_t column = 0; column < columns; column++)
     {
-        int rows = m_cells[column].size();
-        for (int row = 0; row < rows; row++)
+        auto rows = m_cells[column].size();
+        for (size_t row = 0; row < rows; row++)
         {
-            Cell& cell = m_cells[column][row];
-            if (cell.widget)
+            Widget* widget = m_cells[column][row];
+            if (widget)
             {
                 Rect bounding = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
 
@@ -202,13 +205,13 @@ void StaticGrid::reposition()
                     continue;
 
                 // get the aligning rect
-                Rect target = detail::align_algorithm(cell.widget->box().size(),
+                Rect target = detail::align_algorithm(widget->box().size(),
                                                       bounding,
-                                                      cell.widget->align());
+                                                      widget->align());
 
                 // reposition/resize widget
-                cell.widget->move(target.point());
-                cell.widget->resize(target.size());
+                widget->move(target.point());
+                widget->resize(target.size());
             }
         }
     }
@@ -216,8 +219,9 @@ void StaticGrid::reposition()
     damage();
 }
 
-StaticGrid::~StaticGrid()
-{}
+StaticGrid::~StaticGrid() noexcept
+{
+}
 
 void SelectableGrid::draw(Painter& painter, const Rect& rect)
 {

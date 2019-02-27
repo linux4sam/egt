@@ -37,11 +37,7 @@ public:
 
     TextWidget(const TextWidget& rhs) noexcept;
 
-    TextWidget(TextWidget&& rhs) noexcept;
-
     TextWidget& operator=(const TextWidget& rhs) noexcept;
-
-    TextWidget& operator=(TextWidget&& rhs) noexcept;
 
     /**
      * Set the text of the label.
@@ -106,7 +102,7 @@ public:
         damage();
     }
 
-    virtual ~TextWidget() = default;
+    virtual ~TextWidget() noexcept = default;
 
     /**
      * Given a Font, text, and a target Size, scale the font size so that

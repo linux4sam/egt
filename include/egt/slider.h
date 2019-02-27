@@ -160,6 +160,11 @@ public:
 
     inline flags_type& slider_flags() { return m_slider_flags; }
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<Slider>(*this).release());
+    }
+
     virtual ~Slider() = default;
 
 protected:

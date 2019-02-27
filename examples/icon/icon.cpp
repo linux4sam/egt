@@ -36,7 +36,7 @@ int main(int argc, const char** argv)
     ScrolledView view0(Rect(NAV_WIDTH, 0, win.w() - (NAV_WIDTH * 2), win.h()));
     view0.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
     view0.set_name("view0");
-    win.add(&view0);
+    win.add(view0);
 
     PropertyAnimator swipe(0, 0, std::chrono::milliseconds(1000), easing_quintic_easein);
     swipe.on_change(std::bind(&ScrolledView::set_offset, std::ref(view0), std::placeholders::_1));
@@ -67,12 +67,12 @@ int main(int argc, const char** argv)
 
     StaticGrid grid0(Rect(0, 0, files.size() / 6 * 160, win.h()), files.size() / 6, 6, 0);
     grid0.set_name("grid0");
-    view0.add(&grid0);
+    view0.add(grid0);
 
     for (auto& file : files)
     {
         std::string basename = file.substr(file.find_last_of("/\\") + 1);
-        auto icon = new ImageButton(Image(file), basename);
+        auto icon = make_shared<ImageButton>(Image(file), basename);
         icon->set_boxtype(Theme::boxtype::none);
         icon->palette().set(Palette::ColorId::text_invert, Palette::GroupId::normal, Palette::black);
         grid0.add(icon);
@@ -93,8 +93,8 @@ int main(int argc, const char** argv)
     label1.palette()
     .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-    win.add(&popup);
-    popup.add(&label1);
+    win.add(popup);
+    popup.add(label1);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

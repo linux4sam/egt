@@ -29,6 +29,11 @@ public:
     explicit ProgressBar(const Rect& rect = Rect(),
                          int min = 0, int max = 100, int value = 0) noexcept;
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<ProgressBar>(*this).release());
+    }
+
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     virtual ~ProgressBar()
@@ -52,6 +57,11 @@ public:
      */
     explicit SpinProgress(const Rect& rect = Rect(),
                           int min = 0, int max = 100, int value = 0) noexcept;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<SpinProgress>(*this).release());
+    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -80,6 +90,11 @@ public:
      */
     explicit LevelMeter(const Rect& rect = Rect(),
                         int min = 0, int max = 100, int value = 0) noexcept;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<LevelMeter>(*this).release());
+    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -118,6 +133,11 @@ public:
      * @param[in] rect Rectangle for the widget.
      */
     explicit AnalogMeter(const Rect& rect = Rect());
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<AnalogMeter>(*this).release());
+    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

@@ -52,7 +52,7 @@ redraw their damage regions.
 
 Typically, drawing should only be done inside the Widget::draw() method.
 
-When a widget is asked to draw, it does it by using Painter.  Painter
+When a Widget is asked to draw, it does it by using Painter.  Painter
 is a simple 2D primitive graphics drawing API.  Painter can be used to draw
 lines, and rectangles, fills, and fonts.  It even supports more complicated
 features drawing like gradients and arcs.
@@ -62,6 +62,10 @@ The back-end used by Painter is the excellent
 turn uses <a href="http://www.pixman.org/">pixman</a> for optimized pixel
 manipulation.  Both cairo and pixman take advantage of hardware acceleration
 when possible.
+
+If you are not familiar with cairo, the
+<a href="https://www.cairographics.org/tutorial/">Cairo Tutorial</a> information
+is very helpful to understand the basics.
 
 To use cairo directly in a Widget::draw() method, get the cairo context by
 calling Painter::context() and then call cairo function like normal.

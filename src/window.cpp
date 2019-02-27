@@ -225,12 +225,12 @@ struct CursorWindow : public Window
 {
     explicit CursorWindow(const Image& image)
         : Window(image.size(), Widget::flags_type(), pixel_format::argb8888, windowhint::cursor_overlay),
-          m_label(image)
+          m_label(new ImageLabel(image))
     {
         palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         set_boxtype(Theme::boxtype::fill);
-        m_label.set_boxtype(Theme::boxtype::none);
-        add(&m_label);
+        m_label->set_boxtype(Theme::boxtype::none);
+        add(m_label);
     }
 
     virtual int handle(eventid) override
@@ -240,7 +240,7 @@ struct CursorWindow : public Window
 
     virtual ~CursorWindow() = default;
 
-    ImageLabel m_label;
+    std::shared_ptr<ImageLabel> m_label;
 };
 
 void TopWindow::hide_cursor()
@@ -253,7 +253,7 @@ void TopWindow::show_cursor(const Image& image)
 {
     m_cursor.reset(new CursorWindow(image));
     m_cursor->move(main_screen()->box().center());
-    add(m_cursor.get());
+    add(m_cursor);
     m_cursor->show();
 
     /// @todo how to cleanup if destructed?

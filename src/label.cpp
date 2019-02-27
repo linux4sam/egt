@@ -32,7 +32,7 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
              const Widget::flags_type& flags) noexcept
     : Label(text, rect, align, font, flags)
 {
-    parent.add(this);
+    parent.add(*this);
 }
 
 Label::Label(Frame& parent, const std::string& text,
@@ -136,54 +136,7 @@ ImageLabel::ImageLabel(Frame& parent,
                        const Font& font) noexcept
     : ImageLabel(image, text, rect, font)
 {
-    parent.add(this);
-}
-
-ImageLabel::ImageLabel(const ImageLabel& rhs) noexcept
-    : Label(rhs),
-      m_image(rhs.m_image),
-      m_show_label(rhs.m_show_label),
-      m_image_align(rhs.m_image_align),
-      m_position_image_first(rhs.m_position_image_first)
-
-{
-
-}
-
-ImageLabel::ImageLabel(ImageLabel&& rhs) noexcept
-    : Label(std::move(rhs)),
-      m_image(std::move(rhs.m_image)),
-      m_show_label(std::move(rhs.m_show_label)),
-      m_image_align(std::move(rhs.m_image_align)),
-      m_position_image_first(std::move(rhs.m_position_image_first))
-{
-    //cout << __PRETTY_FUNCTION__ << endl;
-}
-
-ImageLabel& ImageLabel::operator=(const ImageLabel& rhs) noexcept
-{
-    Label::operator=(rhs);
-
-    m_image = rhs.m_image;
-    m_show_label = rhs.m_show_label;
-    m_image_align = rhs.m_image_align;
-    m_position_image_first = rhs.m_position_image_first;
-
-    return *this;
-}
-
-ImageLabel& ImageLabel::operator=(ImageLabel&& rhs) noexcept
-{
-    //cout << __PRETTY_FUNCTION__ << endl;
-
-    Label::operator=(std::move(rhs));
-
-    m_image = std::move(rhs.m_image);
-    m_show_label = std::move(rhs.m_show_label);
-    m_image_align = std::move(rhs.m_image_align);
-    m_position_image_first = std::move(rhs.m_position_image_first);
-
-    return *this;
+    parent.add(*this);
 }
 
 void ImageLabel::scale_image(double hscale, double vscale,

@@ -113,6 +113,12 @@ public:
         : Window(Rect(Point(), size), flags, format, hint)
     {}
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        /// @todo Windows are not cloneable
+        throw std::runtime_error("windows are not cloneable");
+    }
+
     virtual void damage() override
     {
         Frame::damage();
@@ -267,7 +273,7 @@ protected:
 
     virtual int handle_mouse(eventid event);
 
-    std::unique_ptr<Window> m_cursor;
+    std::shared_ptr<Window> m_cursor;
 };
 
 }

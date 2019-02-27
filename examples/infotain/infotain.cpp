@@ -17,7 +17,7 @@ using namespace egt;
 
 class MainWindow;
 
-MainWindow* win1;
+shared_ptr<MainWindow> win1;
 
 class MyButton : public ImageButton
 {
@@ -62,19 +62,24 @@ public:
         painter.draw_fill(rect);
     }
 
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<Box>(*this).release());
+    }
+
 protected:
     Color m_color;
 };
 
 static void top_menu(Window* win)
 {
-    Box* box1 = new Box(Rect(Size(800, 60)), Palette::black);
+    auto box1 = std::make_shared<Box>(Rect(Size(800, 60)), Palette::black);
     win->add(box1);
 
-    HomeImage* i1 = new HomeImage("home.png", 5, 5);
+    auto i1 = std::make_shared<HomeImage>("home.png", 5, 5);
     win->add(i1);
 
-    Label* l1 = new Label("", Rect(Point(320, 0), Size(100, 60)), alignmask::center, Font(32));
+    auto l1 = std::make_shared<Label>("", Rect(Point(320, 0), Size(100, 60)), alignmask::center, Font(32));
     l1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     win->add(l1);
@@ -100,40 +105,40 @@ static void top_menu(Window* win)
         Label& m_label;
     };
 
-    TimeTimer* timer = new TimeTimer(*l1);
+    auto timer = std::make_shared<TimeTimer>(*l1);
 
     timer->start();
 
-    Label* l2 = new Label("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::center, Font(24));
+    auto l2 = std::make_shared<Label>("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::center, Font(24));
     l2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
     win->add(l2);
 
-    auto i2 = new ImageLabel(Image("wifi.png"), Point(800 - 50, 10));
+    auto i2 = std::make_shared<ImageLabel>(Image("wifi.png"), Point(800 - 50, 10));
     win->add(i2);
 }
 
 static void bottom_menu(Window* win)
 {
-    StaticGrid* grid2 = new StaticGrid(Rect(Point(0, 390), Size(800, 90)), 5, 1, 4);
+    auto grid2 = std::make_shared<StaticGrid>(Rect(Point(0, 390), Size(800, 90)), 5, 1, 4);
     grid2->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
     win->add(grid2);
 
-    MyButton* bb1 = new MyButton("audio_s.png", _("Audio"), 0, 0);
-    grid2->add(bb1, 0, 0);
+    auto bb1 = std::make_shared<MyButton>("audio_s.png", _("Audio"), 0, 0);
+    grid2->add(expand(bb1), 0, 0);
 
-    MyButton* bb2 = new MyButton("climate_s.png", _("Climate"), 0, 0);
-    grid2->add(bb2, 1, 0);
+    auto bb2 = std::make_shared<MyButton>("climate_s.png", _("Climate"), 0, 0);
+    grid2->add(expand(bb2), 1, 0);
 
-    MyButton* bb3 = new MyButton("navigation_s.png", _("Nav"), 0, 0);
-    grid2->add(bb3, 2, 0);
+    auto bb3 = std::make_shared<MyButton>("navigation_s.png", _("Nav"), 0, 0);
+    grid2->add(expand(bb3), 2, 0);
 
-    MyButton* bb4 = new MyButton("phone_s.png", _("Phone"), 0, 0);
-    grid2->add(bb4, 3, 0);
+    auto bb4 = std::make_shared<MyButton>("phone_s.png", _("Phone"), 0, 0);
+    grid2->add(expand(bb4), 3, 0);
 
-    MyButton* bb5 = new MyButton("apps_s.png", _("Apps"), 0, 0);
-    grid2->add(bb5, 4, 0);
+    auto bb5 = std::make_shared<MyButton>("apps_s.png", _("Apps"), 0, 0);
+    grid2->add(expand(bb5), 4, 0);
 }
 
 class MainWindow : public TopWindow
@@ -147,28 +152,28 @@ public:
 
         grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
-        add(&grid);
+        add(grid);
 
-        MyButton* b1 = new MyButton("sound.png", _("Sound"));
-        grid.add(b1);
+        auto b1 = std::make_shared<MyButton>("sound.png", _("Sound"));
+        grid.add(expand(b1));
 
-        MyButton* b2 = new MyButton("clock.png", _("Clock"));
-        grid.add(b2);
+        auto b2 = std::make_shared<MyButton>("clock.png", _("Clock"));
+        grid.add(expand(b2));
 
-        MyButton* b3 = new MyButton("bluetooth.png", _("Bluetooth"));
-        grid.add(b3);
+        auto b3 = std::make_shared<MyButton>("bluetooth.png", _("Bluetooth"));
+        grid.add(expand(b3));
 
-        MyButton* b4 = new MyButton("phone.png", _("Phone"));
-        grid.add(b4);
+        auto b4 = std::make_shared<MyButton>("phone.png", _("Phone"));
+        grid.add(expand(b4));
 
-        MyButton* b5 = new MyButton("apps.png", _("Mobile Apps"));
-        grid.add(b5);
+        auto b5 = std::make_shared<MyButton>("apps.png", _("Mobile Apps"));
+        grid.add(expand(b5));
 
-        MyButton* b6 = new MyButton("navigation.png", _("Navigation"));
-        grid.add(b6);
+        auto b6 = std::make_shared<MyButton>("navigation.png", _("Navigation"));
+        grid.add(expand(b6));
 
-        MyButton* b7 = new MyButton("general.png", _("General"));
-        grid.add(b7);
+        auto b7 = std::make_shared<MyButton>("general.png", _("General"));
+        grid.add(expand(b7));
 
         top_menu(this);
         bottom_menu(this);
@@ -181,7 +186,7 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "infotain");
 
-    win1 = new MainWindow(Size(800, 480));
+    win1 = make_shared<MainWindow>(Size(800, 480));
 
     win1->show();
 

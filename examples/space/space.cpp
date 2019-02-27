@@ -29,6 +29,8 @@ public:
 
     bool animate()
     {
+        assert(parent());
+
         bool visible = Rect::intersect(parent()->box(), box());
 
         if (visible)
@@ -118,23 +120,23 @@ public:
 
         m_images.emplace_back(xspeed, yspeed);
         auto& image = m_images.back();
-        add(image);
         image.scale_image(scale, true);
         image.move_to_center(p);
+        add(image);
     }
 
     void animate()
     {
-        for (auto x = m_images.begin(); x != m_images.end();)
+        for (auto i = m_images.begin(); i != m_images.end();)
         {
-            auto& image = *x;
+            auto& image = *i;
             if (!image.animate())
             {
-                x = m_images.erase(x);
+                i = m_images.erase(i);
             }
             else
             {
-                x++;
+                ++i;
             }
         }
     }
@@ -174,7 +176,7 @@ int main(int argc, const char** argv)
                       Size(100, 40)));
     label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-    win.add(&label1);
+    win.add(label1);
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
