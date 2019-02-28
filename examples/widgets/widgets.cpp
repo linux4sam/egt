@@ -83,7 +83,8 @@ struct CheckBoxPage : public NotebookTab
         checkbox4->disable();
         grid0->add(expand(checkbox4));
 
-        auto checkbox_group = std::make_shared<ButtonGroup>(true, false);
+        /// @todo leak
+        auto checkbox_group = new ButtonGroup(true, false);
         checkbox_group->add(*checkbox1);
         checkbox_group->add(*checkbox2);
         checkbox_group->add(*checkbox3);
@@ -101,7 +102,8 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(expand(radiobox3));
         radiobox3->disable();
 
-        auto radiobox_group = std::make_shared<ButtonGroup>(true);
+        /// @todo leak
+        auto radiobox_group = new ButtonGroup(true);
         radiobox_group->add(*radiobox1);
         radiobox_group->add(*radiobox2);
         radiobox_group->add(*radiobox3);
