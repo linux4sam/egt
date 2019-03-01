@@ -11,7 +11,6 @@
  * @brief Working with audio.
  */
 
-
 /**
  * @defgroup media Images and Video
  * Image and video related classes.

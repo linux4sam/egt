@@ -20,3 +20,5 @@ Makefile.in
 .libs
 /libegt.pc
 TAGS
+*.gcno
+*.gcda

@@ -1,5 +1,4 @@
-CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
-	-I$(top_srcdir) \
+CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
 	-I$(top_srcdir)/src/images/bmp \
@@ -7,25 +6,27 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/utfcpp/source
 
-CUSTOM_CFLAGS = $(CUSTOM_CXXFLAGS)
-
 AM_CPPFLAGS = -DDATADIR=\"$(datadir)\"
 
 if HAVE_KPLOT
-CUSTOM_CXXFLAGS += -I$(top_srcdir)/external/kplot/
+CUSTOM_FLAGS += -I$(top_srcdir)/external/kplot/
 endif
 
 lib_LTLIBRARIES = libegt.la
-libegt_la_CXXFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
-	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
-	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) $(LIBRSVG_CFLAGS) \
-	$(LIBINPUT_CFLAGS) \
-	$(CUSTOM_CXXFLAGS) \
+libegt_la_CXXFLAGS = \
+	$(CUSTOM_FLAGS) \
+	@LIBEGT_EXTRA_CXXFLAGS@ \
+	$(CODE_COVERAGE_CXXFLAGS) \
 	$(AM_CXXFLAGS)
-libegt_la_CFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
-	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
-	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS) $(LIBRSVG_CFLAGS) \
-	$(CUSTOM_CFLAGS) \
+libegt_la_CPPFLAGS = \
+	$(CUSTOM_FLAGS) \
+	@LIBEGT_EXTRA_CXXFLAGS@ \
+	$(CODE_COVERAGE_CPPFLAGS) \
+	$(AM_CPPFLAGS)
+libegt_la_CFLAGS = \
+	$(CUSTOM_FLAGS) \
+	@LIBEGT_EXTRA_CFLAGS@ \
+	$(CODE_COVERAGE_CFLAGS) \
 	$(AM_CFLAGS)
 
 libegt_la_SOURCES = \
@@ -91,15 +92,15 @@ lua/script.c \
 lua/script.h
 endif
 
-libegt_la_LIBADD =
-if HAVE_KPLOT
-libegt_la_LIBADD += $(top_builddir)/external/libkplot.la
-endif
-
 if HAVE_LIBJPEG
 libegt_la_SOURCES += \
 images/jpeg/cairo_jpg.c \
 images/jpeg/cairo_jpg.h
+endif
+
+libegt_la_LIBADD = $(CODE_COVERAGE_LDFLAGS)
+if HAVE_KPLOT
+libegt_la_LIBADD += $(top_builddir)/external/libkplot.la
 endif
 
 libegtincludedir = ${includedir}
@@ -238,7 +239,7 @@ nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/svg.h
 endif
 
-libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
+libegt_la_LDFLAGS = @LIBEGT_EXTRA_LDFLAGS@ -version-number 1:0:0 -no-undefined
 
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = $(top_builddir)/libegt.pc

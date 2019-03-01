@@ -1,7 +1,7 @@
 CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
-	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
+	-isystem $(top_srcdir)/external/rapidxml \
 	$(LIBPLANES_CFLAGS) \
 	$(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) \
@@ -12,14 +12,13 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	$(LIBJPEG_CFLAGS) \
 	$(LIBINPUT_CFLAGS) \
 	$(LIBCURL_CFLAGS) \
-	-isystem $(top_srcdir)/external/rapidxml \
 	$(LIBRSVG_CFLAGS) \
-	-isystem $(top_srcdir)/external/Box2D \
-	-isystem $(top_srcdir)/external/Chipmunk2D/include
+	$(CODE_COVERAGE_CXXFLAGS)
 
-LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
+CUSTOM_LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 	$(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) \
-	$(LIBINPUT_LIBS) $(MAGIC_LIB) $(LIBRSVG_LIBS) $(LIBCURL_LIBS)
+	$(LIBINPUT_LIBS) $(MAGIC_LIB) $(LIBRSVG_LIBS) $(LIBCURL_LIBS) \
+	$(CODE_COVERAGE_LDFLAGS)
 
 AM_LDFLAGS = -pthread
 
@@ -38,7 +37,7 @@ CLEANFILES = $(BUILT_SOURCES)
 resource_SOURCES = resource.cpp
 nodist_resource_SOURCES = $(BUILT_SOURCES)
 resource_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-resource_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+resource_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 resourcedir = $(prefix)/share/egt/examples/resource
 resource_DATA = $(wildcard $(top_srcdir)/examples/resource/*.png *.bmp)
 resource_LDFLAGS = $(AM_LDFLAGS)
