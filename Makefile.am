@@ -62,3 +62,7 @@ cppcheck:
 lc:
 	find $(top_srcdir)/include/ $(top_srcdir)/src/ $(top_srcdir)/examples/ \
 		-name '*.h' -o -name '*.c' -o -name '*.cpp' | xargs wc -l
+
+cloc:
+	cloc --by-file `find $(top_srcdir)/include/ $(top_srcdir)/src/ $(top_srcdir)/examples/ -name '*.h' -o -name '*.c' -o -name '*.cpp'`
+	cloc `find $(top_srcdir)/include/ $(top_srcdir)/src/ $(top_srcdir)/examples/ -name '*.h' -o -name '*.c' -o -name '*.cpp'`
