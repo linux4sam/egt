@@ -200,6 +200,17 @@ if test "x${have_libmagic}" = xyes; then
    AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])
 fi
 
+SAVED_LDFLAGS="${LDFLAGS}"
+
+AC_CHECK_LIB([stdc++fs], [main], [have_libstdcppfs=yes], [have_libstdcppfs=no])
+AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
+if test "x${have_libstdcppfs}" = xyes;
+then
+   LDFLAGS="${SAVED_LDFLAGS} -lstdc++fs"
+   AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
+fi
+
+
 AC_LANG_PUSH([C++])
 AC_CHECK_HEADERS([rapidxml/rapidxml.hpp], [have_rapidxml=yes], [have_rapidxml=no])
 AM_CONDITIONAL([HAVE_RAPIDXML_RAPIDXML_HPP], [test "x${have_rapidxml}" = xyes])
