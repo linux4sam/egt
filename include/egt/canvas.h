@@ -38,6 +38,9 @@ public:
     explicit Canvas(const Size& size,
                     cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
 
+    explicit Canvas(const SizeF& size,
+                    cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
+
     /**
      * Construct a canvas with an already existing surface.
      *

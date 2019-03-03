@@ -19,13 +19,13 @@ endif
 lib_LTLIBRARIES = libegt.la
 libegt_la_CXXFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
-	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) \
+	$(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) $(LIBRSVG_CFLAGS) \
 	$(LIBINPUT_CFLAGS) \
 	$(CUSTOM_CXXFLAGS) \
 	$(AM_CXXFLAGS)
 libegt_la_CFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 	$(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) \
-	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS) \
+	$(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS) $(LIBRSVG_CFLAGS) \
 	$(CUSTOM_CFLAGS) \
 	$(AM_CFLAGS)
 
@@ -207,6 +207,14 @@ filedialog.cpp
 
 nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/filedialog.h
+endif
+
+if HAVE_LIBRSVG
+libegt_la_SOURCES += \
+detail/svg.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/detail/svg.h
 endif
 
 libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined

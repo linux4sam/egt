@@ -183,6 +183,12 @@ if test "x${have_libcurl}" = xyes; then
    AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
 fi
 
+AX_PKG_CHECK_MODULES(LIBRSVG, [], [librsvg-2.0], [have_librsvg=yes], [have_librsvg=no])
+AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
+if test "x${have_librsvg}" = xyes; then
+   AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
+fi
+
 AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
 
 AC_CHECK_HEADER([magic.h],

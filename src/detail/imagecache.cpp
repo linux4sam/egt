@@ -10,6 +10,7 @@
 #include "egt/detail/imagecache.h"
 #include "egt/detail/resource.h"
 #include "egt/utils.h"
+#include "egt/canvas.h"
 #include <cassert>
 #ifdef HAVE_LIBMAGIC
 #include <magic.h>
@@ -341,6 +342,7 @@ ImageCache& image_cache()
     static ImageCache cache;
     return cache;
 }
+
 }
 }
 }

@@ -22,6 +22,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	$(LIBJPEG_CFLAGS) \
 	$(LIBINPUT_CFLAGS) \
 	-isystem $(top_srcdir)/external/rapidxml \
+	$(LIBRSVG_CFLAGS) \
 	-isystem $(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
@@ -29,7 +30,7 @@ AM_LDFLAGS = -pthread
 
 LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 	$(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) \
-	$(LIBINPUT_LIBS) $(MAGIC_LIB)
+	$(LIBINPUT_LIBS) $(MAGIC_LIB) $(LIBRSVG_LIBS)
 
 #CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -flto -fwhole-program"
 #LDFLAGS="$LDFLAGS -flto -fwhole-program"

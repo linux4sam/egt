@@ -17,6 +17,13 @@ Canvas::Canvas(const Size& size, cairo_format_t format) noexcept
 {
 }
 
+Canvas::Canvas(const SizeF& size, cairo_format_t format) noexcept
+    : m_surface(cairo_image_surface_create(format, size.w, size.h),
+                cairo_surface_destroy),
+      m_cr(cairo_create(m_surface.get()), cairo_destroy)
+{
+}
+
 Canvas::Canvas(shared_cairo_surface_t surface) noexcept
     : Canvas(surface, cairo_image_surface_get_format(surface.get()))
 {

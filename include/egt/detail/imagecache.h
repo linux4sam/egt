@@ -90,7 +90,6 @@ protected:
 ImageCache& image_cache();
 
 }
-
 }
 }
 
