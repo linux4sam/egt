@@ -22,6 +22,7 @@ inline namespace v1
 namespace detail
 {
 
+#ifdef USE_PRIORITY_QUEUE
 enum class priorities
 {
     low = 0,
@@ -43,17 +44,16 @@ public:
         while (!m_handlers.empty())
         {
             queued_handler handler = m_handlers.top();
-            handler.execute();
             m_handlers.pop();
-
+            handler.execute();
         }
     }
 
     template <typename Handler>
-    class wrapped_handler
+    class WrappedHandler
     {
     public:
-        wrapped_handler(PriorityQueue& q, priorities p, Handler h)
+        WrappedHandler(PriorityQueue& q, priorities p, Handler h)
             : queue_(q), m_priority(p), handler_(h)
         {
         }
@@ -81,9 +81,9 @@ public:
     };
 
     template <typename Handler>
-    wrapped_handler<Handler> wrap(priorities priority, Handler handler)
+    WrappedHandler<Handler> wrap(priorities priority, Handler handler)
     {
-        return wrapped_handler<Handler>(*this, priority, handler);
+        return WrappedHandler<Handler>(*this, priority, handler);
     }
 
 private:
@@ -117,10 +117,12 @@ private:
 
 template <typename Function, typename Handler>
 void asio_handler_invoke(Function f,
-                         PriorityQueue::wrapped_handler<Handler>* h)
+                         PriorityQueue::WrappedHandler<Handler>* h)
 {
     h->queue_.add(h->m_priority, std::forward<Function>(f));
 }
+
+#endif
 
 }
 }

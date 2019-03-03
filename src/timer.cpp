@@ -48,10 +48,15 @@ void Timer::start()
 {
     m_timer.cancel();
     m_timer.expires_from_now(m_duration);
+#ifdef USE_PRIORITY_QUEUE
     m_timer.async_wait(
         main_app().event().queue().wrap(detail::priorities::high,
                                         std::bind(&Timer::timer_callback, this,
                                                 std::placeholders::_1)));
+#else
+    m_timer.async_wait(std::bind(&Timer::timer_callback, this,
+                                 std::placeholders::_1));
+#endif
     m_running = true;
 }
 
@@ -131,8 +136,13 @@ void PeriodicTimer::start()
 {
     m_timer.cancel();
     m_timer.expires_from_now(m_duration);
+#ifdef USE_PRIORITY_QUEUE
     m_timer.async_wait(main_app().event().queue().wrap(detail::priorities::high, std::bind(&PeriodicTimer::timer_callback, this,
                        std::placeholders::_1)));
+#else
+    m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this,
+                                 std::placeholders::_1));
+#endif
     m_running = true;
 }
 

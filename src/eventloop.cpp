@@ -58,8 +58,9 @@ int EventLoop::wait()
             int count = 10;
             while (m_impl->m_io.poll_one() && count--)
                 ;
-
+#ifdef USE_PRIORITY_QUEUE
             m_queue.execute_all();
+#endif
         }
     });
 

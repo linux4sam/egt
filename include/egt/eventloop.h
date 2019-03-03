@@ -78,7 +78,9 @@ public:
      */
     void add_idle_callback(event_callback func);
 
+#ifdef USE_PRIORITY_QUEUE
     inline detail::PriorityQueue& queue() { return m_queue; }
+#endif
 
     virtual ~EventLoop();
 
@@ -91,7 +93,9 @@ protected:
 
     std::vector<event_callback> m_idle;
 
+#ifdef USE_PRIORITY_QUEUE
     detail::PriorityQueue m_queue;
+#endif
 };
 
 

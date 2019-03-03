@@ -571,8 +571,13 @@ void InputLibInput::handle_read(const asio::error_code& error)
     if (res)
         dispatch(eventid::raw_pointer_move);
 
+#ifdef USE_PRIORITY_QUEUE
     asio::async_read(m_input, asio::null_buffers(),
                      main_app().event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));
+#else
+    asio::async_read(m_input, asio::null_buffers(),
+                     std::bind(&InputLibInput::handle_read, this, std::placeholders::_1));
+#endif
 }
 
 InputLibInput::~InputLibInput()
