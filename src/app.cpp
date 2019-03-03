@@ -16,6 +16,7 @@
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
 #include "egt/painter.h"
+#include "egt/timer.h"
 #include "egt/utils.h"
 #include "egt/version.h"
 #include <iostream>
@@ -204,6 +205,8 @@ void Application::dump(std::ostream& out)
         if (w->top_level())
             w->dump(out);
     }
+
+    dump_timers(out);
 }
 
 }

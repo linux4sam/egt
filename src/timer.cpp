@@ -6,6 +6,8 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/timer.h"
+#include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -14,26 +16,41 @@ namespace egt
 inline namespace v1
 {
 
+static vector<Timer*> timers;
+
+void dump_timers(ostream& out)
+{
+    for (auto& timer : timers)
+    {
+        out << "Timer duration(" << timer->duration().count() << " ms) " <<
+            (timer->running() ? "running" : "idle") << endl;
+    }
+}
+
 Timer::Timer() noexcept
     : m_timer(main_app().event().io())
-{}
+{
+    timers.push_back(this);
+}
 
 Timer::Timer(std::chrono::milliseconds duration) noexcept
     : m_timer(main_app().event().io()),
       m_duration(duration)
-{}
+{
+    timers.push_back(this);
+}
 
 Timer::Timer(const Timer& rhs) noexcept
     : m_timer(main_app().event().io()),
       m_duration(rhs.m_duration),
       m_running(false)
 {
+    timers.push_back(this);
     // m_callbacks not copied
 }
 
 Timer& Timer::operator=(const Timer& rhs) noexcept
 {
-
     if (&rhs != this)
     {
         m_duration = rhs.m_duration;
@@ -46,8 +63,11 @@ Timer& Timer::operator=(const Timer& rhs) noexcept
 
 void Timer::start()
 {
-    m_timer.cancel();
+    // error::operation_aborted occures when expires_from_now() is called on the
+    // timer while it is pending, we handle this ourselves with m_running
+    m_running = false;
     m_timer.expires_from_now(m_duration);
+    m_running = true;
 #ifdef USE_PRIORITY_QUEUE
     m_timer.async_wait(
         main_app().event().queue().wrap(detail::priorities::high,
@@ -57,7 +77,6 @@ void Timer::start()
     m_timer.async_wait(std::bind(&Timer::timer_callback, this,
                                  std::placeholders::_1));
 #endif
-    m_running = true;
 }
 
 void Timer::start_with_duration(std::chrono::milliseconds duration)
@@ -92,19 +111,14 @@ void Timer::do_cancel()
 
 void Timer::timer_callback(const asio::error_code& error)
 {
-    /*
-     * If the timer has already expired, but it has not yet had a
-     * chance to be handled, any handlers may still be called after this
-     * function is invoked.  So, if we were cancelled, don't pass the call
-     * along.
-     */
+    ignoreparam(error);
+
+    // it is possible to call cancel() and have this handeler still called
+    // which creates a sort of race condition, so we stop an actual
+    // callback from propigating if m_running is false
     if (m_running)
     {
         m_running = false;
-
-        if (error)
-            return;
-
         timeout();
     }
 }
@@ -123,6 +137,10 @@ void Timer::invoke_handlers()
 Timer::~Timer() noexcept
 {
     do_cancel();
+
+    auto i = std::find(timers.begin(), timers.end(), this);
+    if (i != timers.end())
+        timers.erase(i);
 }
 
 PeriodicTimer::PeriodicTimer() noexcept
@@ -134,8 +152,12 @@ PeriodicTimer::PeriodicTimer(std::chrono::milliseconds interval) noexcept
 
 void PeriodicTimer::start()
 {
-    m_timer.cancel();
+    // error::operation_aborted occures when expires_from_now() is called on the
+    // timer while it is pending, we handle this ourselves with m_running
+    m_running = false;
     m_timer.expires_from_now(m_duration);
+    m_running = true;
+
 #ifdef USE_PRIORITY_QUEUE
     m_timer.async_wait(main_app().event().queue().wrap(detail::priorities::high, std::bind(&PeriodicTimer::timer_callback, this,
                        std::placeholders::_1)));
@@ -143,18 +165,21 @@ void PeriodicTimer::start()
     m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this,
                                  std::placeholders::_1));
 #endif
-    m_running = true;
+
 }
 
 void PeriodicTimer::timer_callback(const asio::error_code& error)
 {
-    m_running = false;
+    ignoreparam(error);
 
-    if (error)
-        return;
-
-    start();
-    timeout();
+    // it is possible to call cancel() and have this handeler still called
+    // which creates a sort of race condition, so we stop an actual
+    // callback from propigating if m_running is false
+    if (m_running)
+    {
+        start();
+        timeout();
+    }
 }
 
 }

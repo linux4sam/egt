@@ -7,14 +7,17 @@
 #define EGT_TIMER_H
 
 #include <asio.hpp>
-#include <egt/utils.h>
-#include <vector>
 #include <chrono>
+#include <egt/utils.h>
+#include <iosfwd>
+#include <vector>
 
 namespace egt
 {
 inline namespace v1
 {
+
+void dump_timers(std::ostream& out);
 
 /**
  * @brief Basic one shot timer.
@@ -151,9 +154,24 @@ protected:
 
     using callback_array = std::vector<timer_callback_t>;
 
+    /**
+     * ASIO timer object.
+     */
     asio::steady_timer m_timer;
+
+    /**
+     * The duration of the timer.
+     */
     std::chrono::milliseconds m_duration{};
+
+    /**
+     * Array of registered callbacks.
+     */
     callback_array m_callbacks;
+
+    /**
+     * When true, currently running.
+     */
     bool m_running{false};
 
 private:
