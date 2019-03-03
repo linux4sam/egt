@@ -75,6 +75,13 @@ public:
         return *this;
     }
 
+    PointType<dim_t, dim_c>& operator/=(const PointType<dim_t, dim_c>& rhs)
+    {
+        x /= rhs.x;
+        y /= rhs.y;
+        return *this;
+    }
+
     /**
      * If this point is the center of a circle, return a new point that is
      * on the circumference of the circle at the specified angle.
@@ -150,6 +157,13 @@ inline PointType<dim_t, dim_c> operator+(PointType<dim_t, dim_c> lhs, const Poin
 }
 
 template<class dim_t, compatible dim_c>
+inline PointType<dim_t, dim_c> operator/(PointType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+{
+    lhs /= rhs;
+    return lhs;
+}
+
+template<class dim_t, compatible dim_c>
 std::ostream& operator<<(std::ostream& os, const PointType<dim_t, dim_c>& point)
 {
     os << point.x << "," << point.y;
@@ -157,6 +171,7 @@ std::ostream& operator<<(std::ostream& os, const PointType<dim_t, dim_c>& point)
 }
 
 using Point = PointType<default_dim_type, compatible::normal>;
+using PointF = PointType<float, compatible::normal>;
 using DisplayPoint = PointType<default_dim_type, compatible::display>;
 
 /**
@@ -286,6 +301,7 @@ std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
 }
 
 using Size = SizeType<default_dim_type, compatible::normal>;
+using SizeF = SizeType<float, compatible::normal>;
 using Tuple = SizeType<int, compatible::tuple>;
 
 /**
