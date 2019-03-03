@@ -63,6 +63,8 @@ public:
      */
     shared_cairo_surface_t surface() const { return m_surface; }
 
+    Size size() const;
+
     virtual ~Canvas() = default;
 
 protected:

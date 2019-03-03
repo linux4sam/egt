@@ -34,6 +34,14 @@ Canvas::Canvas(shared_cairo_surface_t surface, cairo_format_t format) noexcept
     copy(surface);
 }
 
+Size Canvas::size() const
+{
+    assert(m_surface.get());
+
+    return Size(cairo_image_surface_get_width(m_surface.get()),
+                cairo_image_surface_get_height(m_surface.get()));
+}
+
 void Canvas::copy(shared_cairo_surface_t surface)
 {
     cairo_save(m_cr.get());
