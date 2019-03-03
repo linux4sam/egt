@@ -363,7 +363,7 @@ bool Animation::next()
         return false;
 
     auto now = chrono::steady_clock::now();
-    if (now > m_stop_time)
+    if (now >= m_stop_time)
     {
         m_running = false;
         float_t result = m_end;

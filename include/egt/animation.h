@@ -278,12 +278,12 @@ public:
 
         if (i == m_animations.end())
         {
+            m_animations.push_back(animation);
             animation->add_callback([this, animation](float_t)
             {
                 if (!animation->running())
                     next();
             });
-            m_animations.push_back(animation);
         }
     }
 
@@ -355,6 +355,7 @@ public:
             }
             else
             {
+                m_current = 0;
                 m_running = false;
                 return m_running;
             }
