@@ -53,7 +53,8 @@ widgets/widgets
 
 if HAVE_RAPIDXML_HPP
 bin_PROGRAMS += \
-launcher/launcher
+launcher/launcher \
+basicui/basicui
 if HAVE_LIBCURL
 bin_PROGRAMS += \
 newsfeed/newsfeed
@@ -62,7 +63,8 @@ endif
 
 if HAVE_RAPIDXML_RAPIDXML_HPP
 bin_PROGRAMS += \
-launcher/launcher
+launcher/launcher \
+basicui/basicui
 if HAVE_LIBCURL
 bin_PROGRAMS += \
 newsfeed/newsfeed
