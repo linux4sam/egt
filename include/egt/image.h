@@ -34,12 +34,15 @@ inline namespace v1
 class Image
 {
 public:
-    explicit Image(const std::string& filename = std::string(),
-                   double hscale = 1.0, double vscale = 1.0);
+    // cppcheck-suppress noExplicitConstructor
+    Image(const std::string& filename = std::string(),
+          double hscale = 1.0, double vscale = 1.0);
 
-    explicit Image(shared_cairo_surface_t surface);
+    // cppcheck-suppress noExplicitConstructor
+    Image(shared_cairo_surface_t surface);
 
-    explicit Image(cairo_surface_t* surface);
+    // cppcheck-suppress noExplicitConstructor
+    Image(cairo_surface_t* surface);
 
     Image(const Image&) = default;
     Image(Image&&) = default;
