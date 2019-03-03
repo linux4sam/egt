@@ -61,15 +61,15 @@ public:
      */
     void clear();
 
+    static shared_cairo_surface_t scale_surface(shared_cairo_surface_t old_surface,
+            float old_width, float old_height,
+            float new_width, float new_height);
+
 protected:
 
     static float round(float v, float fraction);
 
     std::string id(const std::string& filename, float hscale, float vscale);
-
-    static shared_cairo_surface_t scale_surface(shared_cairo_surface_t old_surface,
-            int old_width, int old_height,
-            int new_width, int new_height);
 
     /**
      * Return the mimetype string for a filename.

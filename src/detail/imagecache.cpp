@@ -257,8 +257,8 @@ string ImageCache::id(const string& filename, float hscale, float vscale)
 
 shared_cairo_surface_t
 ImageCache::scale_surface(shared_cairo_surface_t old_surface,
-                          int old_width, int old_height,
-                          int new_width, int new_height)
+                          float old_width, float old_height,
+                          float new_width, float new_height)
 {
     auto new_surface = shared_cairo_surface_t(
                            cairo_surface_create_similar(old_surface.get(),
@@ -271,8 +271,8 @@ ImageCache::scale_surface(shared_cairo_surface_t old_surface,
 
     /* Scale *before* setting the source surface (1) */
     cairo_scale(cr.get(),
-                (double)new_width / old_width,
-                (double)new_height / old_height);
+                new_width / old_width,
+                new_height / old_height);
     cairo_set_source_surface(cr.get(), old_surface.get(), 0, 0);
 
     /* To avoid getting the edge pixels blended with 0 alpha, which would
