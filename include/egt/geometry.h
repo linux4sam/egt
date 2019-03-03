@@ -688,6 +688,7 @@ inline bool operator!=(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, 
 }
 
 using Rect = RectType<default_dim_type, compatible::normal>;
+using RectF = RectType<float, compatible::normal>;
 
 /**
  * @brief A line, with a starting and ending point.

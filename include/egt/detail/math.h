@@ -38,6 +38,34 @@ T normalize(T value, T min, T max, T target_min, T target_max)
     return r;
 }
 
+template<class T>
+T mmod(T a, T n)
+{
+    return a - std::floor(a / n) * n;
+}
+
+template<class T>
+T angle_diff(T angle_start, T angle_stop, bool clockwise = true)
+{
+    if (clockwise)
+    {
+        angle_stop -= angle_start;
+        if (angle_stop < 0.0)
+            angle_stop += 360.;
+        return angle_stop;
+    }
+
+    angle_stop -= angle_start;
+    return mmod(360. - angle_stop, 360.);
+}
+
+template<class T>
+T normalize_to_angle(T value, T min, T max, T angle_start, T angle_stop, bool clockwise = true)
+{
+    auto v = normalize<T>(value, min, max, 0, angle_diff(angle_start, angle_stop, clockwise));
+    return clockwise ? angle_start + v : angle_start - v;
+}
+
 /**
  * Convert from radians to degrees.
  */

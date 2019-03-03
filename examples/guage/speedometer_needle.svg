@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   viewBox="0 0 467.19527 376.04652"
+   version="1.1"
+   sodipodi:docname="speedometer_needle.svg"
+   width="467.19528"
+   height="376.04651"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     id="namedview328"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="2.0754644"
+     inkscape:cx="255.71508"
+     inkscape:cy="209.41695"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs6">
+    <linearGradient
+       id="linearGradient5296">
+      <stop
+         id="stop5298"
+         offset="0" />
+      <stop
+         id="stop5306"
+         offset=".92" />
+      <stop
+         id="stop5304"
+         stop-color="#4d4d4d"
+         offset=".96" />
+      <stop
+         id="stop5300"
+         offset="1" />
+    </linearGradient>
+    <filter
+       id="filter4025"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur4027"
+         stdDeviation="2.4399419" />
+    </filter>
+    <filter
+       id="filter4125"
+       height="1.2542"
+       width="1.1878"
+       y="-0.12707999"
+       x="-0.093900003"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur4127"
+         stdDeviation="18.205449" />
+    </filter>
+    <radialGradient
+       id="radialGradient4298"
+       gradientUnits="userSpaceOnUse"
+       cy="737.28003"
+       cx="3219.2"
+       gradientTransform="matrix(0.99668,-0.5853,0.036573,0.062279,-17.136,2596.9)"
+       r="151.45">
+      <stop
+         id="stop4031"
+         stop-color="#cc2929"
+         offset="0" />
+      <stop
+         id="stop4033"
+         stop-color="#ff3433"
+         offset="1" />
+    </radialGradient>
+    <clipPath
+       id="clipPath3227"
+       clipPathUnits="userSpaceOnUse">
+      <path
+         id="path3229"
+         d="m 2364.5,456.48 a 92.044,92.044 0 0 1 143.26,18.645 l -78.993,47.245 z"
+         transform="matrix(4.1841,-0.35869,0.35869,4.1841,-7276.6,-471.07)"
+         inkscape:connector-curvature="0"
+         style="fill:none;stroke:#000000;stroke-width:0.23813" />
+    </clipPath>
+    <filter
+       id="filter4386"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur4388"
+         stdDeviation="7.087174" />
+    </filter>
+    <filter
+       id="filter4829"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur4831"
+         stdDeviation="6.996816" />
+    </filter>
+    <filter
+       id="filter5024"
+       height="1.5707"
+       width="1.2629"
+       y="-0.28534999"
+       x="-0.13146"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur5026"
+         stdDeviation="3.2568975" />
+    </filter>
+    <filter
+       id="filter5061"
+       height="1.7148"
+       width="1.2406"
+       y="-0.35738999"
+       x="-0.12029"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur5063"
+         stdDeviation="3.3068835" />
+    </filter>
+    <filter
+       id="filter5077"
+       height="1.36"
+       width="1.36"
+       y="-0.18000001"
+       x="-0.18000001"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur5079"
+         stdDeviation="57.355934" />
+    </filter>
+    <filter
+       id="filter5081"
+       height="1.36"
+       width="1.36"
+       y="-0.18000001"
+       x="-0.18000001"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur5083"
+         stdDeviation="57.355934" />
+    </filter>
+    <filter
+       id="filter5257"
+       height="1.2498"
+       width="1.1903"
+       y="-0.12489"
+       x="-0.095135003"
+       style="color-interpolation-filters:sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur5259"
+         stdDeviation="17.89099" />
+    </filter>
+    <radialGradient
+       id="radialGradient5302"
+       xlink:href="#linearGradient5296"
+       gradientUnits="userSpaceOnUse"
+       cy="752.98999"
+       cx="635.96997"
+       gradientTransform="matrix(1,0,0,0.99997,0,0.025769)"
+       r="453.97" />
+    <radialGradient
+       id="radialGradient5912"
+       xlink:href="#linearGradient5296"
+       gradientUnits="userSpaceOnUse"
+       cy="752.98999"
+       cx="635.96997"
+       gradientTransform="matrix(1,0,0,0.99997,774.33,-295.912)"
+       r="453.97" />
+  </defs>
+  <g
+     id="g651"
+     transform="rotate(31,1232.2786,-2068.528)">
+    <path
+       id="path5002"
+       d="m 2017.6,860.75 c 0,211.18 -171.19,382.37 -382.37,382.37 -211.18,0 -382.37,-171.19 -382.37,-382.37 0,-211.18 171.19,-382.37 382.37,-382.37 211.18,0 382.37,171.19 382.37,382.37 z"
+       transform="matrix(0.12005,0,0,0.12005,1213.953,350.623)"
+       inkscape:connector-curvature="0"
+       style="fill:#0080ff;filter:url(#filter5081)" />
+    <g
+       id="g5006"
+       transform="rotate(-0.44455664,-47945.188,214902.21)">
+      <path
+         id="path5008"
+         d="m 3078.4,852.52 -10.663,-18.268 294.82,-166.3 c 6.3881,-2.7547 11.217,6.2246 5.6221,9.6318 z"
+         inkscape:connector-curvature="0"
+         style="fill:#ff3433;filter:url(#filter4025)" />
+      <path
+         id="path5010"
+         d="m 3078.4,852.52 -10.663,-18.268 294.82,-166.3 c 6.3881,-2.7547 11.217,6.2246 5.6221,9.6318 z"
+         style="fill:url(#radialGradient4298)"
+         inkscape:connector-curvature="0" />
+    </g>
+    <path
+       style="stroke-width:0.10521"
+       id="path5012"
+       d="m 1450.9247,453.97251 c 0,22.21825 -18.0109,40.22915 -40.2292,40.22915 -22.2182,0 -40.2291,-18.0109 -40.2291,-40.22915 0,-22.21825 18.0109,-40.22915 40.2291,-40.22915 22.2183,0 40.2292,18.0109 40.2292,40.22915 z"
+       inkscape:connector-curvature="0" />
+  </g>
+  <metadata
+     id="metadata325">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title></dc:title>
+        <dc:date>2013-09-08T16:49:44</dc:date>
+        <dc:description>A pair of meters - km/h and mph.</dc:description>
+        <dc:source>https://openclipart.org/detail/183217/speedometers-by-gustavorezende-183217</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>gustavorezende</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>car</rdf:li>
+            <rdf:li>fast</rdf:li>
+            <rdf:li>gauge</rdf:li>
+            <rdf:li>measurement</rdf:li>
+            <rdf:li>pointer</rdf:li>
+            <rdf:li>speedometers</rdf:li>
+            <rdf:li>tool</rdf:li>
+            <rdf:li>vehicle</rdf:li>
+            <rdf:li>velocity</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

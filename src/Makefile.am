@@ -59,6 +59,7 @@ font.cpp \
 frame.cpp \
 geometry.cpp \
 grid.cpp \
+guage.cpp \
 image.cpp \
 images/bmp/cairo_bmp.c \
 images/bmp/cairo_bmp.h \
@@ -142,6 +143,7 @@ $(top_srcdir)/include/egt/font.h \
 $(top_srcdir)/include/egt/frame.h \
 $(top_srcdir)/include/egt/geometry.h \
 $(top_srcdir)/include/egt/grid.h \
+$(top_srcdir)/include/egt/guage.h \
 $(top_srcdir)/include/egt/image.h \
 $(top_srcdir)/include/egt/input.h \
 $(top_srcdir)/include/egt/keyboard.h \
