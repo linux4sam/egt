@@ -62,14 +62,13 @@ X11Screen::X11Screen(const Size& size, bool borderless)
         XSetWindowBorder(m_priv->display, m_priv->window, 0);
     }
 
-    XStoreName(m_priv->display, m_priv->window, "ui");
+    XStoreName(m_priv->display, m_priv->window, "EGT");
 
-    XSizeHints* sh = XAllocSizeHints();//std::unique_ptr<XSizeHints, decltype(&::Xfree)>(XAllocSizeHints(), ::XFree);
+    auto sh = unique_ptr<XSizeHints, decltype(&::XFree)>(XAllocSizeHints(), ::XFree);
     sh->flags = PMinSize | PMaxSize;
     sh->min_width = sh->max_width = size.w;
     sh->min_height = sh->max_height = size.h;
-    XSetWMNormalHints(m_priv->display, m_priv->window, sh);
-    XFree(sh);
+    XSetWMNormalHints(m_priv->display, m_priv->window, sh.get());
 
     XSelectInput(m_priv->display, m_priv->window,
                  ExposureMask | KeyPressMask | ButtonPress |
