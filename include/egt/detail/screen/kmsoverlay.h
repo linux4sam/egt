@@ -22,6 +22,7 @@ inline namespace v1
 {
 namespace detail
 {
+
 /**
  * A screen backed by an overlay plane.
  */

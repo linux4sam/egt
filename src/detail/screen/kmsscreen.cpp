@@ -7,8 +7,6 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_LIBPLANES
-
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
@@ -393,5 +391,3 @@ KMSScreen::~KMSScreen()
 }
 }
 }
-
-#endif

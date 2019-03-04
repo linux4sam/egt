@@ -10,7 +10,6 @@
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/utils.h"
 
-#ifdef HAVE_LIBPLANES
 #include <planes/fb.h>
 #include <planes/kms.h>
 #include <planes/plane.h>
@@ -140,5 +139,3 @@ KMSOverlay::~KMSOverlay()
 }
 }
 }
-
-#endif

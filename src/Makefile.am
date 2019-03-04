@@ -82,13 +82,6 @@ widget.cpp \
 widgetflags.cpp \
 window.cpp
 
-if HAVE_LIBPLANES
-libegt_la_SOURCES += \
-detail/planewindow.cpp \
-detail/screen/kmsoverlay.cpp \
-detail/screen/kmsscreen.cpp
-endif
-
 if HAVE_LUA
 libegt_la_SOURCES += \
 lua/script.c \
@@ -141,12 +134,9 @@ $(top_srcdir)/include/egt/detail/input/inputtslib.h \
 $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \
 $(top_srcdir)/include/egt/detail/object.h \
-$(top_srcdir)/include/egt/detail/planewindow.h \
 $(top_srcdir)/include/egt/detail/priorityqueue.h \
 $(top_srcdir)/include/egt/detail/resource.h \
 $(top_srcdir)/include/egt/detail/screen/framebuffer.h \
-$(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
-$(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
 $(top_srcdir)/include/egt/detail/windowimpl.h \
 $(top_srcdir)/include/egt/event.h \
@@ -189,6 +179,18 @@ $(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
 $(top_srcdir)/include/egt/widgetflags.h \
 $(top_srcdir)/include/egt/window.h
+
+if HAVE_LIBPLANES
+libegt_la_SOURCES += \
+detail/planewindow.cpp \
+detail/screen/kmsoverlay.cpp \
+detail/screen/kmsscreen.cpp
+
+libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
+$(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
+$(top_srcdir)/include/egt/detail/planewindow.h
+endif
 
 if HAVE_X11
 libegt_la_SOURCES += \

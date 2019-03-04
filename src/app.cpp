@@ -19,6 +19,7 @@
 #include "egt/timer.h"
 #include "egt/utils.h"
 #include "egt/version.h"
+#include "egt/window.h"
 #include <iostream>
 #include <libintl.h>
 #include <linux/limits.h>
