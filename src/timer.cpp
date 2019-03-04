@@ -106,16 +106,18 @@ void Timer::cancel()
 
 void Timer::do_cancel()
 {
+    m_running = false;
     m_timer.cancel();
 }
 
 void Timer::timer_callback(const asio::error_code& error)
 {
-    ignoreparam(error);
+    if (error)
+        return;
 
-    // it is possible to call cancel() and have this handeler still called
+    // it is possible to call cancel() and have this handler still called
     // which creates a sort of race condition, so we stop an actual
-    // callback from propigating if m_running is false
+    // callback from continuing if m_running is false
     if (m_running)
     {
         m_running = false;
@@ -170,11 +172,12 @@ void PeriodicTimer::start()
 
 void PeriodicTimer::timer_callback(const asio::error_code& error)
 {
-    ignoreparam(error);
+    if (error)
+        return;
 
-    // it is possible to call cancel() and have this handeler still called
+    // it is possible to call cancel() and have this handler still called
     // which creates a sort of race condition, so we stop an actual
-    // callback from propigating if m_running is false
+    // callback from continuing if m_running is false
     if (m_running)
     {
         start();
