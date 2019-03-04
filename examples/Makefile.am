@@ -1,7 +1,10 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
+OPTIONAL =
 if HAVE_GSTREAMER
-OPTIONAL = video
+if HAVE_LIBPLANES
+OPTIONAL += video
+endif
 endif
 SUBDIRS = $(OPTIONAL) i18n resource
 
