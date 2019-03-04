@@ -366,15 +366,9 @@ bool Animation::next()
     if (now >= m_stop_time)
     {
         m_running = false;
-        float_t result = m_end;
-
-        if (!detail::FloatingPoint<float_t>(result).
-            AlmostEquals(detail::FloatingPoint<float_t>(m_current)))
-        {
-            m_current = m_end;
-            for (auto& callback : m_callbacks)
-                callback(m_current);
-        }
+        m_current = m_end;
+        for (auto& callback : m_callbacks)
+            callback(m_current);
     }
     else
     {
@@ -416,7 +410,7 @@ AutoAnimation::AutoAnimation(float_t start, float_t end,
     {
         if (!next())
         {
-            m_timer.cancel();
+            stop();
         }
     });
 }

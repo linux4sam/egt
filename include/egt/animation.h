@@ -109,8 +109,7 @@ public:
         m_callbacks.push_back(callback);
     }
 
-    virtual ~IAnimation()
-    {}
+    virtual ~IAnimation() = default;
 
 protected:
     /**
@@ -227,8 +226,6 @@ protected:
     bool m_reverse{false};
 };
 
-class Widget;
-
 /**
  * @brief Series of animations as a single animation.
  *
@@ -279,8 +276,10 @@ public:
         if (i == m_animations.end())
         {
             m_animations.push_back(animation);
+
             animation->add_callback([this, animation](float_t)
             {
+                // when the animation ever completes, we go next
                 if (!animation->running())
                     next();
             });
@@ -347,6 +346,9 @@ public:
         if (!running())
             return true;
 
+        if (m_animations[m_current]->running())
+            return false;
+
         if (++m_current >= m_animations.size())
         {
             if (m_loop)
@@ -376,8 +378,7 @@ public:
         m_running = false;
     }
 
-    virtual ~AnimationSequence()
-    {}
+    virtual ~AnimationSequence() = default;
 
 protected:
     using animation_array = std::vector<std::shared_ptr<detail::IAnimation>>;
@@ -405,8 +406,7 @@ public:
     virtual void start() override;
     virtual void stop() override;
 
-    virtual ~AutoAnimation()
-    {}
+    virtual ~AutoAnimation() = default;
 
 protected:
 
@@ -445,8 +445,7 @@ public:
         m_callbacks.clear();
     }
 
-    ~PropertyAnimatorType()
-    {}
+    virtual ~PropertyAnimatorType() = default;
 
 protected:
 
@@ -477,7 +476,7 @@ public:
         {
             if (!next())
             {
-                m_timer.cancel();
+                stop();
             }
         });
     }
@@ -500,8 +499,7 @@ public:
         m_timer.cancel();
     }
 
-    virtual ~AnimationDelay()
-    {}
+    virtual ~AnimationDelay() = default;
 
 protected:
 
