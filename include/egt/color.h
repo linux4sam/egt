@@ -60,10 +60,18 @@ public:
           m_a(a)
     {}
 
-    Color(const Color&) noexcept = default;
-    Color(Color&&) noexcept = default;
-    Color& operator=(const Color&) noexcept = default;
-    Color& operator=(Color&&) noexcept = default;
+    /**
+     * Create a color from float values.
+     */
+    static inline Color from_float(float r, float g, float b, float a = 1.0)
+    {
+        Color result;
+        result.redf(r);
+        result.greenf(g);
+        result.bluef(b);
+        result.alphaf(a);
+        return result;
+    }
 
     /**
      * Create a Color with a hex CSS string.
@@ -106,10 +114,10 @@ public:
 
     //@{
     /** @brief Set RGBA component value as a float from 0.0 to 1.0. */
-    inline void redf(float v) { m_r = v; }
-    inline void greenf(float v) { m_g = v; }
-    inline void bluef(float v) { m_b = v; }
-    inline void alphaf(float v) { m_a  = v; }
+    inline void redf(float v) { m_r = v * 255.; }
+    inline void greenf(float v) { m_g = v * 255.; }
+    inline void bluef(float v) { m_b = v * 255.; }
+    inline void alphaf(float v) { m_a  = v * 255.; }
     //@}
 
     //@{
