@@ -28,6 +28,7 @@ std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
         MAPITEM(Widget::flag::active);
         MAPITEM(Widget::flag::invisible);
         MAPITEM(Widget::flag::grab_mouse);
+        MAPITEM(Widget::flag::no_clip);
 #undef MAPITEM
     }
 

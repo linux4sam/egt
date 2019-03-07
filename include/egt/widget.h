@@ -110,6 +110,13 @@ public:
          * the eventid::MOUSE_UP event.
          */
         grab_mouse,
+
+        /**
+         * Don't clip the child to drawing only in its box.
+         *
+         * Use this with caution, it's probably not what you want.
+         */
+        no_clip,
     };
 
     using flags_type = Flags<flag>;
