@@ -92,7 +92,24 @@ void EventLoop::draw()
                 w->top_draw();
         }
     });
+}
 
+int EventLoop::step()
+{
+    int ret = 0;
+    int count = 10;
+    while (count--)
+    {
+        auto r = m_impl->m_io.poll_one();
+        if (!r)
+            break;
+        ret += r;
+    }
+
+    if (ret)
+        draw();
+
+    return ret;
 }
 
 int EventLoop::run(bool enable_fps)

@@ -63,6 +63,8 @@ public:
      */
     virtual int run(bool enable_fps = false);
 
+    virtual int step();
+
     /**
      * Quit the event loop.
      *
