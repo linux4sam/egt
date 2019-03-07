@@ -93,13 +93,15 @@ void Window::do_draw()
 
     Painter painter(screen()->context());
 
-    for (auto& damage : m_damage)
+    auto d = m_damage;
+    m_damage.clear();
+
+    for (auto& damage : d)
     {
         draw(painter, damage);
     }
 
-    screen()->flip(m_damage);
-    m_damage.clear();
+    screen()->flip(d);
 }
 
 void Window::resize(const Size& size)
