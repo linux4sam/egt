@@ -48,6 +48,7 @@ icon/icon \
 infotain/infotain \
 keyboard/keyboard \
 space/space \
+sprite/sprite \
 squares/squares \
 thermostat/thermostat \
 water/water \
@@ -76,7 +77,6 @@ endif
 
 if HAVE_LIBPLANES
 bin_PROGRAMS += \
-sprite/sprite \
 brick/brick
 endif
 
