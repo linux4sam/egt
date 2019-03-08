@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <asio.hpp>
+#include <egt/detail/imagecache.h>
 #include <egt/ui>
 #include <iomanip>
 #include <iostream>
@@ -98,7 +99,7 @@ public:
             return 0;
         }, {eventid::property_changed});
 
-        m_player.set_media("/root/concerto.mp3");
+        m_player.set_media(detail::resolve_file_path("concerto.mp3"));
     }
 
 protected:
