@@ -403,7 +403,7 @@ public:
      */
     inline Point center() const
     {
-        return Point(x + (w / 2), y + (h / 2));
+        return Point(x + (w / 2.), y + (h / 2.));
     }
 
     /**
@@ -411,11 +411,19 @@ public:
      */
     inline void move_to_center(const Point& center)
     {
-        Point pos(center.x - w / 2,
-                  center.y - h / 2);
+        Point pos(center.x - w / 2.,
+                  center.y - h / 2.);
 
         x = pos.x;
         y = pos.y;
+    }
+
+    inline void grow_around_center(dim_t value)
+    {
+        x -= value / 2.;
+        y -= value / 2.;
+        w += value;
+        h += value;
     }
 
     /**
@@ -779,6 +787,13 @@ public:
         return this->radius < 0.0f ||
                detail::FloatingPoint<float>(this->radius).
                AlmostEquals(detail::FloatingPoint<float>(0.0f));
+    }
+
+    Rect rect() const
+    {
+        Rect r(this->center, Size());
+        r.grow_around_center(this->radius);
+        return r;
     }
 };
 
