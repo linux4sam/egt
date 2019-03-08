@@ -781,6 +781,7 @@ INPUT += @top_srcdir@/docs/src/fonts.dox
 INPUT += @top_srcdir@/docs/src/draw.dox
 INPUT += @top_srcdir@/docs/src/animation.dox
 INPUT += @top_srcdir@/docs/src/localization.dox
+INPUT += @top_srcdir@/docs/src/media.dox
 INPUT += @top_srcdir@/docs/src/resources.dox
 INPUT += @top_srcdir@/docs/src/topics.dox
 INPUT += @top_srcdir@/docs/src/debugging.dox

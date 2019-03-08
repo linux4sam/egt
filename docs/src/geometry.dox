@@ -3,44 +3,47 @@ namespace egt { inline namespace v1 {
 
  @page geometry Geometry
 
-This chapter discusses the coordinate system and how to deal with geometry.
+This chapter discusses the coordinate system and how to deal with geometry in EGT.
 
 @section geometry_coord Coordinate System
 
-EGT defines a Point, Size, Rect, Line,
-Arc, and Circle along with several other classes for working
-with geometry.
+EGT defines a Point, Size, Rect, Line, Arc, and Circle along with several other
+classes for working with geometry.
 
 All coordinate systems in EGT default with an origin of 0,0 in the top left.
-Positive X moves to the right, and positive Y moves down.
+Positive X moves to the right, and positive Y moves down.  EGT does not
+currently support the idea of transforming this coordinate system, or seperating
+user from device coordinates, but it can be done at the painter level by
+individual widgets for drawing purposes.
 
 @image html coordsys.png
 @image latex coordsys.png "Coordinate System" width=8cm
 
-There are two coordinate systems in EGT that have different origins:
+There are two coordinate system origins in EGT:
 
 - Widget
 
 @par
-The widget coordinate system is how each widget sees itself.  The origin is
-always relative to its parent.
+The widget origin is how each widget sees itself.  The origin is always relative
+to its parent.
 
 - Display
 
 @par
-The display coordinate system represents the entire display, irrelevant of
-content.  It's simply the resolution of the display.  For example, mouse press
-events originate on the display coordinate system.
+The display origin represents the entire display, irrelevant of content.  It's
+simply the resolution of the display.  For example, mouse press events originate
+relative to the display origin.
 
 To help stop any ambiguity between the different coordinate systems, there are
 two predefined Point types.  One is Point and the other is
 DisplayPoint.  While the interface of these two types is completely
-identical, they are not compatible types.
+identical, they are not compatible C++ types.
 
 @section coord_radians Radians and Degrees
 
 While most of the geometry related to EGT deals with rectangles, it is sometimes
-necessary to deal with arcs when drawing.
+necessary to deal with arcs when drawing.  The following unit circle is used
+when dealing with degrees or radians.
 
 @image html radians.png
 @image latex radians.png "Radians and Degrees" width=8cm

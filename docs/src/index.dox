@@ -26,6 +26,7 @@ If you are new to EGT, please start with the @subpage intro "Introduction".
 @li @subpage draw
 @li @subpage animations
 @li @subpage local
+@li @subpage media
 @li @subpage resources
 @li @subpage topics
 @li @subpage debug

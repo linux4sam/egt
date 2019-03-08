@@ -1,0 +1,50 @@
+namespace egt { inline namespace v1 {
+/**
+
+ @page media Media
+
+This chapter discusses media formats directly supported by EGT.
+
+@section media_intro Supported Media Formats
+
+While EGT has direct and indirect support for many image, video, and audio
+formats, in some cases using third party libraries, this does not mean any other
+format cannot be converted into a format useable by EGT by a user.
+
+@section media_image Image Formats
+
+The following image formats are directly supported by EGT:
+- PNG
+- JPEG
+- BMP
+- SVG
+
+@section media_video Video Formats
+
+The following video stream formats are directly supported by EGT:
+- Uncompressed YUV
+- MPEG1
+- MPEG2
+- MPEG4
+- H.264 (limited)
+- VP8 (limited)
+- VP9 (limited)
+
+@section media_svg Working with SVG (Vector Graphics) Files
+
+Scalable Vector Graphics (SVG) is an XML-based vector image format for
+two-dimensional graphics with support for interactivity and animation. The SVG
+specification is an open standard developed by the World Wide Web Consortium
+(W3C) since 1999. SVG images and their behaviors are defined in XML text files.
+
+EGT can load SVG files using the third party library
+<a href="https://github.com/GNOME/librsvg">librsvg</a>.  On top of that,
+this library provides the ability to load objects by id from SVG files.  What
+this means is a graphic designer can create an SVG file and give each component
+of the UI a unique ID.  Then, an EGT programmer can individually load these
+components and assign them to widgets and create logic around these components
+from a single SVG file.  It's an easy and natural way to add logic to what is
+otherwise just a single UI file by using EGT.
+
+*/
+}}

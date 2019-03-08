@@ -1,7 +1,7 @@
 namespace egt { inline namespace v1 {
 /**
 
- @page colors Palette and Colors
+ @page colors Theme, Palette, and Colors
 
 This chapter discusses how to to use colors and palettes.
 
