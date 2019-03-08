@@ -17,5 +17,5 @@ Makefile.in
 /libtool
 /ltmain.sh
 /missing
-/src/.libs
+.libs
 /libegt.pc
