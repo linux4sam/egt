@@ -79,50 +79,43 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
     static string backend;
 
+    const char* value = getenv("EGT_BACKEND");
+    if (value)
+        backend = value;
+
+    // try to choose a sane default
     if (backend.empty())
     {
-        const char* value = getenv("EGT_BACKEND");
-        if (value)
-            backend = value;
-    }
-
-    if (backend == "x11")
-    {
-#ifdef HAVE_X11
-        new detail::X11Screen(Size(800, 480));
-#endif
-    }
-
-    if (backend == "kms")
-    {
-#ifdef HAVE_LIBPLANES
-        new detail::KMSScreen(primary);
-#else
-        ignoreparam(primary);
-#endif
-    }
-
-    if (backend == "fbdev")
-    {
-        new detail::FrameBuffer("/dev/fb0");
-    }
-
-    if (backend.empty())
-    {
-#ifdef HAVE_LIBPLANES
-        new detail::KMSScreen(primary);
+#if defined(HAVE_LIBPLANES)
+        backend = "kms";
 #elif defined(HAVE_X11)
-        new detail::X11Screen(Size(800, 480));
-        //new X11Screen(Size(1280, 1024));
+        backend = "x11";
 #else
-        new detail::FrameBuffer("/dev/fb0");
+        backend = "fbdev";
 #endif
     }
+
+#ifdef HAVE_X11
+    if (backend == "x11")
+        new detail::X11Screen(Size(800, 480));
+    else
+#endif
+#ifdef HAVE_LIBPLANES
+    if (backend == "kms")
+        new detail::KMSScreen(primary);
+    else
+#endif
+    if (backend == "fbdev")
+        new detail::FrameBuffer("/dev/fb0");
+    else
+        throw std::runtime_error("backend not available");
 
 #ifdef HAVE_TSLIB
     new detail::InputTslib("/dev/input/touchscreen0");
 #endif
+
     //new detail::InputEvDev("/dev/input/event2");
+
 #ifdef HAVE_LIBINPUT
     new detail::InputLibInput;
 #endif
