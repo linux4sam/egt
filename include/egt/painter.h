@@ -80,17 +80,12 @@ public:
     /**
      * Set the current color.
      */
-    virtual Painter& set_color(const Color& color);
+    virtual Painter& set(const Color& color);
 
     /**
-     * Create a rectangle.
-     *
-     * @param[in] rect The rectangle.
+     * Set the active font.
      */
-    virtual Painter& rectangle(const Rect& rect);
-
-
-    virtual Painter& draw_fill(const Rect& rect);
+    virtual Painter& set(const Font& font);
 
     /**
      * Set the current line width.
@@ -99,99 +94,94 @@ public:
      */
     virtual Painter& set_line_width(float width);
 
-    virtual Painter& point(const Point& p);
-
     /**
-     * Create a line from the current point to the specified point.
+     * Move to a point.
      *
-     * @param[in] end End point.
+     * @param[in] point The point.
      */
     template<class T>
-    Painter& line(const T& end)
+    Painter& draw(const PointType<T, compatible::normal>& p)
     {
-        cairo_line_to(m_cr.get(), end.x, end.y);
+        cairo_move_to(m_cr.get(), p.x, p.y);
+
         return *this;
     }
 
     /**
-     * Create a line from the specified start to end point.
+     * Create a line from the start point to the end point.
      *
-     * @param[in] start Start point.
-     * @param[in] end End point.
+     * @param[in] start The point.
+     * @param[in] end The point.
      */
     template<class T>
-    Painter& line(const T& start, const T& end)
+    Painter& draw(const T& start, const T& end)
     {
         cairo_move_to(m_cr.get(), start.x, start.y);
         cairo_line_to(m_cr.get(), end.x, end.y);
+
+        return *this;
+    }
+
+    /**
+     * Create a rectangle.
+     *
+     * @param[in] rect The rectangle.
+     */
+    template<class T>
+    Painter& draw(const RectType<T>& rect)
+    {
+        cairo_rectangle(m_cr.get(),
+                        rect.x,
+                        rect.y,
+                        rect.w,
+                        rect.h);
+
+        return *this;
+    }
+
+    /**
+     * Create an arc.
+     *
+     * @param[in] arc The arc.
+     */
+    template<class T>
+    Painter& draw(const ArcType<T>& arc)
+    {
+        cairo_arc(m_cr.get(), arc.center.x, arc.center.y,
+                  arc.radius, arc.angle1, arc.angle2);
+
         return *this;
     }
 
     /**
      * Draw an image surface at the specified point.
      */
-    virtual Painter& draw_image(const Point& point,
-                                const Image& image, bool bw = false);
+    virtual Painter& draw(const Image& image);
 
     /**
      * @param[in] rect The source rect to copy.
      * @param[in] point The destination point.
      * @param[in] image The image surface to draw.
      */
-    virtual Painter& draw_image(const Rect& rect, const Point& point,
-                                const Image& image);
-
-    virtual Painter& draw_image(const Image& image,
-                                const Rect& dest,
-                                alignmask align = alignmask::center,
-                                int margin = 0,
-                                bool bw = false);
-
-    virtual Painter& arc(const Arc& arc);
+    virtual Painter& draw(const Rect& rect,
+                          const Image& image);
 
     /**
-     * Draw an arc.
+     * Draw text inside the specified rectangle.
      */
-    virtual Painter& draw_arc(const Arc& arc);
-
-    virtual Painter& circle(const Circle& circle);
+    virtual Painter& draw(const std::string& str);
 
     virtual Painter& clip();
 
-    virtual void stroke()
-    {
-        cairo_stroke(m_cr.get());
-    }
+    virtual Painter& fill();
 
-    virtual void paint()
-    {
-        cairo_paint(m_cr.get());
-    }
+    virtual Painter& paint();
 
-    virtual void fill()
-    {
-        cairo_fill(m_cr.get());
-    }
-
-    /**
-     * Set the active font.
-     */
-    virtual Painter& set_font(const Font& font);
-
-    /**
-     * Draw text aligned inside the specified rectangle.
-     */
-    virtual Rect draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff = 5);
-
-    virtual Rect draw_text(const std::string& text,
-                           const Rect& rect,
-                           alignmask align = alignmask::center,
-                           int margin = 5,
-                           const Font& font = Font());
+    virtual Painter& stroke();
 
     virtual Size text_size(const std::string& text);
 
-
+    virtual double font_height();
     /**
      * Get the current underlying context the painter is using.
      */
@@ -217,10 +207,6 @@ protected:
                                         int shadow_offset,
                                         double shadow_alpha,
                                         double tint_alpha,
-                                        /*int srx,
-                                        int srcy,
-                                        int width,
-                                        int height,*/
                                         int dstx,
                                         int dsty);
 

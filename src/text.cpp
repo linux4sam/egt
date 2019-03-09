@@ -188,10 +188,8 @@ void TextBox::draw(Painter& painter, const Rect& rect)
     // text
     auto cr = painter.context();
 
-    painter.set_font(font());
-
-    cairo_font_extents_t fe;
-    cairo_font_extents(cr.get(), &fe);
+    painter.set(font());
+    auto height = painter.font_height();
 
     using FontPoint = PointType<float, compatible::normal>;
     FontPoint offset(box().x, box().y);
@@ -206,12 +204,12 @@ void TextBox::draw(Painter& painter, const Rect& rect)
     {
         if (focus() && m_cursor_state)
         {
-            painter.set_color(palette().color(Palette::ColorId::border));
+            painter.set(palette().color(Palette::ColorId::border));
             painter.set_line_width(2);
 
             auto YOFF = 2.;
-            painter.line(offset + FontPoint(0, -YOFF),
-                         offset + FontPoint(0, fe.height) + FontPoint(0, YOFF));
+            painter.draw(offset + FontPoint(0, -YOFF),
+                         offset + FontPoint(0, height) + FontPoint(0, YOFF));
             painter.stroke();
         }
     };
@@ -262,12 +260,12 @@ void TextBox::draw(Painter& painter, const Rect& rect)
         {
             // newline
             offset.x = box().x + m_text_margin;
-            offset.y += line_spacing + fe.height;
+            offset.y += line_spacing + height;
         }
         else if (std::isprint(*ch))
         {
             // sent font color
-            painter.set_color(palette().color(Palette::ColorId::text, group));
+            painter.set(palette().color(Palette::ColorId::text, group));
 
             if (text_flags().is_set(flag::multiline) &&
                 text_flags().is_set(flag::word_wrap))
@@ -280,20 +278,16 @@ void TextBox::draw(Painter& painter, const Rect& rect)
                     {
                         // newline
                         offset.x = box().x + m_text_margin;
-                        offset.y += line_spacing + fe.height;
+                        offset.y += line_spacing + height;
                     }
                 }
             }
 
             std::string text(1, *ch);
-
+            painter.draw(offset);
+            painter.draw(text);
             cairo_text_extents_t te;
             cairo_text_extents(cr.get(), text.c_str(), &te);
-
-            cairo_move_to(cr.get(), offset.x - te.x_bearing,
-                          offset.y - fe.descent + fe.height);
-            cairo_show_text(cr.get(), text.c_str());
-
             offset.x += te.x_advance;
         }
 

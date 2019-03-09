@@ -149,15 +149,15 @@ int main(int argc, const char** argv)
         auto c = widget.center();
 
         // bottom full circle
-        painter.set_color(color1);
+        painter.set(color1);
         painter.set_line_width(linew);
-        painter.arc(Arc(c, radius, 0, 2 * M_PI));
+        painter.draw(Arc(c, radius, 0, 2 * M_PI));
         painter.stroke();
 
         // value arc
-        painter.set_color(color2);
+        painter.set(color2);
         painter.set_line_width(linew - (linew / 3));
-        painter.arc(Arc(c, radius, angle1, angle2));
+        painter.draw(Arc(c, radius, angle1, angle2));
         painter.stroke();
 
         auto p = c.point_on_circumference(radius + linew, angle2);
@@ -167,11 +167,10 @@ int main(int argc, const char** argv)
         if (angle2 > 1.5)
             p -= Point(s.w, 0);
 
-        painter.set_font(Font());
-        painter.set_color(Palette::white);
-        painter.draw_text(text, Rect(p, s),
-                          alignmask::center, 0, Font());
-
+        painter.set(Font());
+        painter.set(Palette::white);
+        painter.draw(p);
+        painter.draw(text);
     });
 
     Application app(argc, argv, "audioplayer");

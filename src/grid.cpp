@@ -77,7 +77,7 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
     {
         if (palette().color(Palette::ColorId::border) != Palette::transparent)
         {
-            painter.set_color(palette().color(Palette::ColorId::border));
+            painter.set(palette().color(Palette::ColorId::border));
             painter.set_line_width(m_spacing);
 
             auto columns = m_cells.size();
@@ -88,7 +88,7 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
                 {
                     Rect r = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
                     r += point();
-                    painter.rectangle(r);
+                    painter.draw(r);
                 }
             }
 
@@ -227,7 +227,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
 {
     if (m_spacing > 0)
     {
-        painter.set_color(palette().color(Palette::ColorId::highlight));
+        painter.set(palette().color(Palette::ColorId::highlight));
         auto line_width = m_spacing / 2;
         if (line_width <= 0)
             line_width = m_spacing;
@@ -239,7 +239,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
         auto rows = m_cells[column].size();
 
         Rect rect = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
-        painter.rectangle(rect);
+        painter.draw(rect);
         painter.stroke();
     }
 

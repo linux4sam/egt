@@ -84,9 +84,16 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect& rect)
         group = Palette::GroupId::active;
 
     // text
-    painter.set_color(widget.palette().color(Palette::ColorId::text_invert, group));
-    painter.set_font(widget.font());
-    painter.draw_text(widget.box(), widget.text(), widget.text_align(), 5);
+    painter.set(widget.palette().color(Palette::ColorId::text_invert, group));
+    painter.set(widget.font());
+
+    auto text_size = widget.text_size(widget.text());
+    Rect target = detail::align_algorithm(text_size,
+                                          widget.box(),
+                                          widget.text_align(),
+                                          5);
+    painter.draw(target.point());
+    painter.draw(widget.text());
 }
 
 bool Button::checked() const
@@ -216,16 +223,22 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                                  text_size, widget.text_align(), tbox,
                                  widget.image().size(), widget.image_align(), ibox, 5);
 
-        painter.draw_image(ibox.point(), widget.image(), widget.disabled());
+        //image
+        painter.draw(ibox.point());
+        painter.draw(widget.image());
 
-        painter.set_color(widget.palette().color(Palette::ColorId::text_invert, group));
-        painter.draw_text(widget.text(), tbox, alignmask::center, 0, widget.font());
+        //text
+        painter.set(widget.palette().color(Palette::ColorId::text_invert, group));
+        painter.set(widget.font());
+        painter.draw(tbox.point());
+        painter.draw(widget.text());
     }
     else
     {
         Rect target = detail::align_algorithm(widget.image().size(), widget.box(),
                                               widget.image_align(), 0);
-        painter.draw_image(target.point(), widget.image(), widget.disabled());
+        painter.draw(target.point());
+        painter.draw(widget.image());
     }
 }
 

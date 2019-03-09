@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/alignment.h"
 #include "egt/button.h"
 #include "egt/radiobox.h"
 #include "egt/painter.h"
@@ -51,24 +52,27 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
 
     auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
 
-    painter.circle(Circle(center, radius));
-    painter.set_color(palette().color(Palette::ColorId::highlight, group));
+    painter.draw(Arc(center, radius, 0.0f, 2 * M_PI));
+    painter.set(palette().color(Palette::ColorId::highlight, group));
 
     painter.set_line_width(1.0);
     painter.stroke();
 
     if (checked())
     {
-        painter.circle(Circle(center, radius / 2));
+        painter.draw(Arc(center, radius / 2, 0.0f, 2 * M_PI));
         painter.fill();
     }
 
     // text
-    painter.set_color(palette().color(Palette::ColorId::text, group));
-    painter.draw_text(m_text,
-                      box(),
-                      alignmask::left | alignmask::center,
-                      h());
+    painter.set(palette().color(Palette::ColorId::text, group));
+    painter.set(font());
+
+    auto size = text_size(m_text);
+    Rect target = detail::align_algorithm(size, box(), alignmask::left | alignmask::center, h());
+
+    painter.draw(target.point());
+    painter.draw(m_text);
 }
 
 }

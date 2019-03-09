@@ -151,7 +151,8 @@ shared_cairo_surface_t HardwareSprite::surface() const
 
 void HardwareSprite::paint(Painter& painter)
 {
-    painter.draw_image(m_interface.point(), Image(surface()));
+    painter.draw(m_interface.point());
+    painter.draw(Image(surface()));
 }
 
 HardwareSprite::~HardwareSprite()
@@ -173,9 +174,8 @@ void SoftwareSprite::draw(Painter& painter, const Rect& rect)
     ignoreparam(rect);
 
     Point origin = get_frame_origin(m_index);
-
-    painter.draw_image(Rect(origin.x, origin.y, m_frame.w, m_frame.h),
-                       m_interface.box().point(), m_image);
+    painter.draw(m_interface.box().point());
+    painter.draw(Rect(origin.x, origin.y, m_frame.w, m_frame.h), m_image);
 }
 
 void SoftwareSprite::show_frame(int index)
@@ -195,7 +195,9 @@ shared_cairo_surface_t SoftwareSprite::surface() const
 
 void SoftwareSprite::paint(Painter& painter)
 {
-    painter.draw_image(m_interface.point(), Image(surface()));
+    auto cr = painter.context();
+    cairo_move_to(cr.get(), m_interface.point().x, m_interface.point().y);
+    painter.draw(Image(surface()));
 }
 
 SoftwareSprite::~SoftwareSprite()

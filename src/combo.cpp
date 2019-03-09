@@ -196,7 +196,7 @@ void ComboBox::draw(Painter& painter, const Rect& rect)
 
     // draw a down arrow
     auto cr = painter.context();
-    painter.set_color(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+    painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
     cairo_move_to(cr.get(), m_down_rect.x + OFFSET, m_down_rect.y + m_down_rect.h / 3);
     cairo_line_to(cr.get(), m_down_rect.x + m_down_rect.w / 2, m_down_rect.y + (m_down_rect.h / 3 * 2));
     cairo_line_to(cr.get(), m_down_rect.x + m_down_rect.w - OFFSET, m_down_rect.y + m_down_rect.h / 3);
@@ -204,11 +204,19 @@ void ComboBox::draw(Painter& painter, const Rect& rect)
     cairo_stroke(cr.get());
 
     // text
-    painter.set_color(palette().color(Palette::ColorId::text, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-    painter.set_font(font());
     auto textbox = box();
     textbox -= Size(m_down_rect.w, 0);
-    painter.draw_text(textbox, m_items[m_selected], m_text_align, 5);
+
+    painter.set(palette().color(Palette::ColorId::text, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+    painter.set(font());
+
+    auto size = text_size(m_items[m_selected]);
+    textbox = detail::align_algorithm(size,
+                                      textbox,
+                                      m_text_align,
+                                      5);
+    painter.draw(textbox.point());
+    painter.draw(m_items[m_selected]);
 }
 
 ComboBox::~ComboBox()

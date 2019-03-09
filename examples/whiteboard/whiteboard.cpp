@@ -228,7 +228,7 @@ public:
     {
         Painter painter(m_canvas.context());
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-        painter.set_color(Palette::transparent);
+        painter.set(Palette::transparent);
         painter.paint();
     }
 
@@ -256,8 +256,8 @@ public:
                 painter.set_line_width(width);
                 auto cr = painter.context();
                 cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
-                painter.set_color(m_penpicker.color());
-                painter.line(line.start(), line.end());
+                painter.set(m_penpicker.color());
+                painter.draw(line.start(), line.end());
                 painter.stroke();
 
                 // damage only the rectangle containing the new line
@@ -280,10 +280,12 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override
     {
-        painter.set_color(palette().color(Palette::ColorId::bg, Palette::GroupId::normal));
-        painter.draw_fill(rect);
+        painter.set(palette().color(Palette::ColorId::bg, Palette::GroupId::normal));
+        painter.draw(rect);
+        painter.fill();
 
-        painter.draw_image(rect, rect.point(), Image(m_canvas.surface()));
+        painter.draw(rect.point());
+        painter.draw(rect, Image(m_canvas.surface()));
 
         TopWindow::draw(painter, rect);
     }

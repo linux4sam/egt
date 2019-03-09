@@ -99,7 +99,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
     }
 
     auto bg = palette().color(Palette::ColorId::bg);
-    painter.set_color(bg);
+    painter.set(bg);
 
     cairo_rectangle(cr.get(), x(), y(), w(), h());
     cairo_fill(cr.get());
@@ -168,7 +168,7 @@ void PieChart::draw(Painter& painter, const Rect& rect)
         if (++c == m_colors.end())
             c = m_colors.begin();
 
-        painter.set_color(color);
+        painter.set(color);
         cairo_move_to(cr.get(), x() + width / 2, y() + height / 2);
         cairo_arc(cr.get(), x() + width / 2, y() + height / 2, width * .45, from_angle, to_angle);
         cairo_line_to(cr.get(), x() + width / 2, y() + height / 2);
@@ -188,7 +188,7 @@ void PieChart::draw(Painter& painter, const Rect& rect)
         float label_angle = (from_angle + to_angle) / 2;
         int label_x = width / 2 * (1.0 + 0.7 * std::cos(label_angle));
         int label_y = height / 2 * (1.0 + 0.7 * std::sin(label_angle));
-        painter.set_color(Palette::black);
+        painter.set(Palette::black);
         cairo_move_to(cr.get(), x() + label_x, y() + label_y);
         cairo_show_text(cr.get(), i.first.c_str());
         cairo_fill(cr.get());

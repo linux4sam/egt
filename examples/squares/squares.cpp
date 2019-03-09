@@ -72,8 +72,9 @@ int main(int argc, const char** argv)
         Rect rect(x_dist(e1), y_dist(e1), WIDTH, HEIGHT);
 
         Painter painter(win.screen()->context());
-        painter.set_color(colors[color_dist(e1)]);
-        painter.draw_fill(rect);
+        painter.set(colors[color_dist(e1)]);
+        painter.draw(rect);
+        painter.fill();
 
         ostringstream ss;
         ss << "FPS: " << std::round(fps.fps());

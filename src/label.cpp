@@ -68,10 +68,18 @@ void Label::default_draw(Label& widget, Painter& painter, const Rect& rect)
 
     widget.draw_box(painter);
 
-    painter.set_color(widget.palette().color(Palette::ColorId::text,
-                      widget.active() ? Palette::GroupId::active : Palette::GroupId::normal));
-    painter.set_font(widget.font());
-    painter.draw_text(widget.box(), widget.text(), widget.text_align(), 5);
+    // text
+    painter.set(widget.palette().color(Palette::ColorId::text,
+                                       widget.active() ? Palette::GroupId::active : Palette::GroupId::normal));
+    painter.set(widget.font());
+
+    auto text_size = widget.text_size(widget.text());
+    Rect target = detail::align_algorithm(text_size,
+                                          widget.box(),
+                                          widget.text_align(),
+                                          5);
+    painter.draw(target.point());
+    painter.draw(widget.text());
 }
 
 void Label::set_parent(Frame* parent)
@@ -197,20 +205,23 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
                                  text_size, widget.text_align(), tbox,
                                  widget.m_image.size(), widget.m_image_align, ibox, 5);
 
-        painter.draw_image(ibox.point(), widget.m_image);
+        painter.draw(ibox.point());
+        painter.draw(widget.m_image);
 
         if (widget.m_show_label)
         {
-            painter.set_color(widget.palette().color(Palette::ColorId::text));
-            painter.draw_text(widget.m_text, tbox,
-                              alignmask::center, 0, widget.font());
+            painter.set(widget.palette().color(Palette::ColorId::text));
+            painter.set(widget.font());
+            painter.draw(tbox.point());
+            painter.draw(widget.m_text);
         }
     }
     else
     {
         Rect target = detail::align_algorithm(widget.m_image.size(),
                                               widget.box(), widget.m_image_align, 0);
-        painter.draw_image(target.point(), widget.m_image);
+        painter.draw(target.point());
+        painter.draw(widget.m_image);
     }
 }
 

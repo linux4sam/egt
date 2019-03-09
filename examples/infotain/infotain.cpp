@@ -57,9 +57,10 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        painter.set_color(m_color);
+        painter.set(m_color);
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-        painter.draw_fill(rect);
+        painter.draw(rect);
+        painter.fill();
     }
 
     virtual std::unique_ptr<Widget> clone() override

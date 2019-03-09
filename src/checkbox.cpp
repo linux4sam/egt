@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/alignment.h"
 #include "egt/button.h"
 #include "egt/checkbox.h"
 #include "egt/painter.h"
@@ -61,7 +62,7 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
         // draw an "X"
         static const int OFFSET = 5;
         auto cr = painter.context();
-        painter.set_color(palette().color(Palette::ColorId::highlight, group));
+        painter.set(palette().color(Palette::ColorId::highlight, group));
         cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
         cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
         cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
@@ -75,11 +76,16 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
     }
 
     // text
-    painter.set_color(palette().color(Palette::ColorId::text, group));
-    painter.draw_text(m_text,
-                      box(),
-                      alignmask::left | alignmask::center,
-                      h());
+    painter.set(palette().color(Palette::ColorId::text, group));
+    painter.set(font());
+
+    auto size = text_size(m_text);
+    Rect target = detail::align_algorithm(size,
+                                          box(),
+                                          alignmask::left | alignmask::center,
+                                          h());
+    painter.draw(target.point());
+    painter.draw(m_text);
 }
 
 CheckBox::~CheckBox()

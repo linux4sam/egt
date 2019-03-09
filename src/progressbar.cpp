@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/alignment.h"
 #include "egt/detail/math.h"
 #include "egt/painter.h"
 #include "egt/progressbar.h"
@@ -37,9 +38,15 @@ void ProgressBar::draw(Painter& painter, const Rect& rect)
 
     string text = std::to_string(value()) + "%";
     m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);
-    painter.set_color(this->palette().color(Palette::ColorId::text));
-    painter.draw_text(text, this->box(),
-                      alignmask::center, 0, m_dynamic_font);
+
+    painter.set(this->palette().color(Palette::ColorId::text));
+    painter.set(m_dynamic_font);
+
+    auto text_size = painter.text_size(text);
+    Rect target = detail::align_algorithm(text_size, box(), alignmask::center);
+
+    painter.draw(target.point());
+    painter.draw(text);
 }
 
 SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
@@ -57,23 +64,31 @@ void SpinProgress::draw(Painter& painter, const Rect& rect)
     float angle1 = detail::to_radians<float>(180, 0);
     float angle2 = detail::to_radians<float>(180, value() / 100. * 360.);
 
-    painter.set_color(palette().color(Palette::ColorId::bg));
-    painter.draw_fill(box());
+    painter.set(palette().color(Palette::ColorId::bg));
+    painter.draw(box());
+    painter.fill();
     painter.set_line_width(linew);
 
-    painter.set_color(palette().color(Palette::ColorId::mid));
-    painter.circle(Circle(center(), radius));
+    painter.set(palette().color(Palette::ColorId::mid));
+    painter.draw(Arc(center(), radius, 0.0f, 2 * M_PI));
     painter.stroke();
 
-    painter.set_color(palette().color(Palette::ColorId::highlight));
-    painter.arc(Arc(center(), radius, angle1, angle2));
+    painter.set(palette().color(Palette::ColorId::highlight));
+    painter.draw(Arc(center(), radius, angle1, angle2));
     painter.stroke();
 
     string text = std::to_string(value());
     m_dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, m_dynamic_font);
-    painter.set_color(this->palette().color(Palette::ColorId::text));
-    painter.draw_text(text, this->box(),
-                      alignmask::center, 0, m_dynamic_font);
+    painter.set(this->palette().color(Palette::ColorId::text));
+    painter.set(m_dynamic_font);
+
+    auto text_size = painter.text_size(text);
+    Rect target = detail::align_algorithm(text_size,
+                                          this->box(),
+                                          alignmask::center,
+                                          0);
+    painter.draw(target.point());
+    painter.draw(text);
 }
 
 LevelMeter::LevelMeter(const Rect& rect,
@@ -94,11 +109,12 @@ void LevelMeter::draw(Painter& painter, const Rect& rect)
     for (uint32_t i = 0; i < m_num_bars; i++)
     {
         if (i >= limit)
-            painter.set_color(palette().color(Palette::ColorId::highlight));
+            painter.set(palette().color(Palette::ColorId::highlight));
         else
-            painter.set_color(palette().color(Palette::ColorId::dark));
+            painter.set(palette().color(Palette::ColorId::dark));
 
-        painter.draw_fill(Rect(x(),  y() + i * barheight, w(), barheight - BAR_SPACING));
+        painter.draw(Rect(x(),  y() + i * barheight, w(), barheight - BAR_SPACING));
+        painter.fill();
     }
 }
 
@@ -114,7 +130,7 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     painter.set_line_width(1.0);
-    painter.set_font(m_font);
+    painter.set(m_font);
 
     cairo_text_extents_t textext;
     cairo_text_extents(cr.get(), "999", &textext);
@@ -126,7 +142,7 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
     // scale marks and labels
     for (double marks = 0.0; marks <= 100.0; marks += 10.0)
     {
-        painter.set_color(palette().color(Palette::ColorId::highlight));
+        painter.set(palette().color(Palette::ColorId::highlight));
 
         cairo_move_to(cr.get(),
                       hw * std::cos(M_PI * marks * 0.01),
@@ -137,7 +153,7 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
 
         cairo_stroke(cr.get());
 
-        painter.set_color(palette().color(Palette::ColorId::text));
+        painter.set(palette().color(Palette::ColorId::text));
 
         char text[10];
         sprintf(text, "%2.0f", marks);
@@ -155,7 +171,7 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
     }
 
     float value = this->value();
-    painter.set_color(Palette::red);
+    painter.set(Palette::red);
     painter.set_line_width(1.5);
 
     cairo_move_to(cr.get(), 0.0, 0.0);

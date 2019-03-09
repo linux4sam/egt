@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <egt/detail/alignment.h>
 #include <asio.hpp>
 #include <egt/ui>
 #include <iostream>
@@ -212,37 +213,54 @@ int main(int argc, const char** argv)
         Painter::AutoSaveRestore sr(painter);
 
         // value arc
-        painter.set_color(color2);
+        painter.set(color2);
         painter.set_line_width(linew);
-        painter.arc(Arc(c, radius, angle1, angle2));
+        painter.draw(Arc(c, radius, angle1, angle2));
         painter.stroke();
 
         // handle
-        painter.set_color(color3);
+        painter.set(color3);
         auto hp = c.point_on_circumference(radius, angle2);
-        painter.arc(Arc(hp, handle_radius, 0., (float)(2 * M_PI)));
+        painter.draw(Arc(hp, handle_radius, 0., (float)(2 * M_PI)));
         painter.fill();
 
         // secondary value
         auto color4 = Palette::red;
         float angle3 = detail::to_radians<float>(-90,
                        widget.value_to_degrees(widget.value2()));
-        painter.set_color(color4);
+        painter.set(color4);
         painter.set_line_width(linew * 2);
-        painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
+        painter.draw(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
         painter.stroke();
 
+        //text
         if (!widget.text().empty())
         {
-            painter.set_color(widget.palette().color(Palette::ColorId::text));
-            painter.draw_text(widget.text(), widget.box(),
-                              alignmask::center, 0, Font(72));
+            painter.set(widget.palette().color(Palette::ColorId::text));
+            painter.set(Font(72));
+
+            auto text_size = painter.text_size(widget.text());
+            Rect target = detail::align_algorithm(text_size,
+                                                  widget.box(),
+                                                  alignmask::center,
+                                                  0);
+            painter.draw(target.point());
+            painter.draw(widget.text());
         }
 
         string current = "Current " + std::to_string(widget.value2()) + "°";
-        painter.set_color(widget.palette().color(Palette::ColorId::text));
-        painter.draw_text(current, widget.box(),
-                          alignmask::center | alignmask::bottom, 80, Font(24));
+
+        painter.set(widget.palette().color(Palette::ColorId::text));
+        painter.set(Font(24));
+
+        auto txt_size = painter.text_size(current);
+        Rect tbox = detail::align_algorithm(txt_size,
+                                            widget.box(),
+                                            alignmask::center | alignmask::bottom,
+                                            80);
+        painter.draw(tbox.point());
+        painter.draw(current);
+
     });
 
     Application app(argc, argv, "thermostat");

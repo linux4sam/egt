@@ -29,7 +29,7 @@ void Painter::restore()
     cairo_restore(m_cr.get());
 }
 
-Painter& Painter::set_color(const Color& color)
+Painter& Painter::set(const Color& color)
 {
     cairo_set_source_rgba(m_cr.get(),
                           color.redf(),
@@ -40,123 +40,7 @@ Painter& Painter::set_color(const Color& color)
     return *this;
 }
 
-Painter& Painter::rectangle(const Rect& rect)
-{
-    cairo_rectangle(m_cr.get(),
-                    rect.x,
-                    rect.y,
-                    rect.w,
-                    rect.h);
-
-    return *this;
-}
-
-Painter& Painter::draw_fill(const Rect& rect)
-{
-    cairo_rectangle(m_cr.get(),
-                    rect.x,
-                    rect.y,
-                    rect.w,
-                    rect.h);
-    fill();
-
-    return *this;
-}
-
-Painter& Painter::set_line_width(float width)
-{
-    cairo_set_line_width(m_cr.get(), width);
-
-    return *this;
-}
-
-Painter& Painter::point(const Point& p)
-{
-    cairo_move_to(m_cr.get(), p.x, p.y);
-
-    return *this;
-}
-
-Painter& Painter::draw_image(const Point& point, const Image& image, bool bw)
-{
-    if (image.empty())
-        return *this;
-
-    AutoSaveRestore sr(*this);
-
-    if (bw)
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOFT_LIGHT);
-    cairo_set_source_surface(m_cr.get(), image.surface().get(), point.x, point.y);
-    cairo_rectangle(m_cr.get(), point.x, point.y, image.size().w, image.size().h);
-    fill();
-
-    return *this;
-}
-
-Painter& Painter::draw_image(const Rect& rect, const Point& point, const Image& image)
-{
-    if (image.empty())
-        return *this;
-
-    cairo_set_source_surface(m_cr.get(), image.surface().get(),
-                             point.x - rect.x, point.y - rect.y);
-    cairo_rectangle(m_cr.get(), point.x, point.y, rect.w, rect.h);
-    fill();
-
-    return *this;
-}
-
-Painter& Painter::draw_image(const Image& image,
-                             const Rect& dest,
-                             alignmask align, int margin, bool bw)
-{
-    if (image.empty())
-        return *this;
-
-    Rect target = detail::align_algorithm(image.size(), dest, align, margin);
-
-    if (true)
-        draw_image(target.point(), image, bw);
-    else
-        paint_surface_with_drop_shadow(
-            image.surface().get(),
-            5,
-            0.2,
-            0.4,
-            /*target.x,
-              target.y,
-              width,
-              height,*/
-            target.x,
-            target.y);
-
-    return *this;
-}
-
-Painter& Painter::arc(const Arc& arc)
-{
-    cairo_arc(m_cr.get(), arc.center.x, arc.center.y,
-              arc.radius, arc.angle1, arc.angle2);
-
-    return *this;
-}
-
-Painter& Painter::draw_arc(const Arc& arc)
-{
-    this->arc(arc);
-    stroke();
-
-    return *this;
-}
-
-Painter& Painter::circle(const Circle& circle)
-{
-    arc(circle);
-
-    return *this;
-}
-
-Painter& Painter::set_font(const Font& font)
+Painter& Painter::set(const Font& font)
 {
     cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
     switch (font.weight())
@@ -190,39 +74,76 @@ Painter& Painter::set_font(const Font& font)
     return *this;
 }
 
-Rect Painter::draw_text(const Rect& rect, const std::string& str, alignmask align, int standoff)
+Painter& Painter::set_line_width(float width)
 {
+    cairo_set_line_width(m_cr.get(), width);
+
+    return *this;
+}
+
+Painter& Painter::draw(const Image& image)
+{
+    double x, y;
+
+    if (image.empty())
+        return *this;
+
+    AutoSaveRestore sr(*this);
+
+    if (!cairo_has_current_point(m_cr.get()))
+        return *this;
+
+    cairo_get_current_point(m_cr.get(), &x, &y);
+    cairo_set_source_surface(m_cr.get(), image.surface().get(), x, y);
+    cairo_rectangle(m_cr.get(), x, y, image.size().w, image.size().h);
+    fill();
+
+    return *this;
+}
+
+Painter& Painter::draw(const Rect& rect, const Image& image)
+{
+    double x, y;
+
+    if (image.empty())
+        return *this;
+
+    if (!cairo_has_current_point(m_cr.get()))
+        return *this;
+
+    cairo_get_current_point(m_cr.get(), &x, &y);
+    cairo_set_source_surface(m_cr.get(), image.surface().get(),
+                             x - rect.x, y - rect.y);
+    cairo_rectangle(m_cr.get(), x, y, rect.w, rect.h);
+    fill();
+
+    return *this;
+}
+
+Painter& Painter::draw(const std::string& str)
+{
+    double x, y;
+    cairo_font_extents_t fe;
     cairo_text_extents_t textext;
+
+    cairo_font_extents(m_cr.get(), &fe);
+
     if (!str.empty())
         cairo_text_extents(m_cr.get(), str.c_str(), &textext);
     else
         cairo_text_extents(m_cr.get(), "I", &textext);
 
-    Rect target = detail::align_algorithm(Size(textext.width,
-                                          textext.height),
-                                          rect,
-                                          align,
-                                          standoff);
+    if (!cairo_has_current_point(m_cr.get()))
+        return *this;
 
-    cairo_move_to(m_cr.get(), target.x - textext.x_bearing,
-                  target.y - textext.y_bearing);
+    cairo_get_current_point(m_cr.get(), &x, &y);
+    cairo_move_to(m_cr.get(), x - textext.x_bearing,
+                  y - fe.descent + fe.height);
     cairo_show_text(m_cr.get(), str.c_str());
     cairo_stroke(m_cr.get());
+    cairo_move_to(m_cr.get(), x, y);
 
-    Rect bounding = target;
-    bounding.h = textext.height;
-    bounding.w = textext.width;
-    return bounding;
-}
-
-Rect Painter::draw_text(const std::string& text, const Rect& rect,
-                        alignmask align, int margin,
-                        const Font& font)
-{
-    AutoSaveRestore sr(*this);
-
-    set_font(font);
-    return draw_text(rect, text, align, margin);
+    return *this;
 }
 
 Size Painter::text_size(const std::string& text)
@@ -232,9 +153,38 @@ Size Painter::text_size(const std::string& text)
     return Size(textext.width, textext.height);
 }
 
+double Painter::font_height()
+{
+    cairo_font_extents_t fe;
+    cairo_font_extents(m_cr.get(), &fe);
+
+    return fe.height;
+}
+
 Painter& Painter::clip()
 {
     cairo_clip(m_cr.get());
+
+    return *this;
+}
+
+Painter& Painter::fill()
+{
+    cairo_fill(m_cr.get());
+
+    return *this;
+}
+
+Painter& Painter::paint()
+{
+    cairo_paint(m_cr.get());
+
+    return *this;
+}
+
+Painter& Painter::stroke()
+{
+    cairo_stroke(m_cr.get());
 
     return *this;
 }

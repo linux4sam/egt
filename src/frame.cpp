@@ -285,7 +285,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
             Painter::AutoSaveRestore sr(painter);
-            painter.rectangle(r);
+            painter.draw(r);
             painter.clip();
 
             experimental::code_timer(false, child->name() + " draw: ", [&]()
@@ -316,7 +316,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
             Painter::AutoSaveRestore sr(painter);
-            painter.rectangle(r);
+            painter.draw(r);
             painter.clip();
 
             experimental::code_timer(false, child->name() + " draw: ", [&]()

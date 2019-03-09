@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/alignment.h"
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/slider.h"
@@ -204,12 +205,16 @@ void Slider::draw_label(Painter& painter, int value)
     auto text = std::to_string(value);
     auto font = TextWidget::scale_font(b.size(), text, Font());
 
-    painter.set_color(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-    painter.draw_text(text,
-                      b,
-                      alignmask::center,
-                      5,
-                      font);
+    painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+    painter.set(font);
+
+    auto text_size = painter.text_size(text);
+    Rect target = detail::align_algorithm(text_size,
+                                          b,
+                                          alignmask::center,
+                                          5);
+    painter.draw(target.point());
+    painter.draw(text);
 }
 
 void Slider::draw_handle(Painter& painter)
@@ -219,8 +224,8 @@ void Slider::draw_handle(Painter& painter)
 
     if (slider_flags().is_set(flag::round_handle))
     {
-        painter.set_color(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-        painter.circle(Circle(handle.center(), dim / 2.));
+        painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+        painter.draw(Arc(handle.center(), dim / 2., 0.0f, 2 * M_PI));
         painter.fill();
     }
     else
@@ -235,7 +240,7 @@ void Slider::draw(Painter& painter, const Rect& rect)
 {
     ignoreparam(rect);
 
-    painter.set_color(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+    painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
 
     auto yp = y() + h() / 2.;
     auto xp = x() + w() / 2.;
@@ -317,17 +322,17 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
 
     if (slider_flags().is_set(flag::consistent_line))
     {
-        painter.set_color(palette().color(Palette::ColorId::mid, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-        painter.line(a1, b2);
+        painter.set(palette().color(Palette::ColorId::mid, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+        painter.draw(a1, b2);
         painter.stroke();
     }
     else
     {
-        painter.set_color(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-        painter.line(a1, a2);
+        painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+        painter.draw(a1, a2);
         painter.stroke();
-        painter.set_color(palette().color(Palette::ColorId::mid, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-        painter.line(b1, b2);
+        painter.set(palette().color(Palette::ColorId::mid, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+        painter.draw(b1, b2);
         painter.stroke();
     }
 }

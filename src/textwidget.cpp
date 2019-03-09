@@ -69,7 +69,7 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
     auto nfont = font;
     while (true)
     {
-        painter.set_font(nfont);
+        painter.set(nfont);
 
         cairo_text_extents_t textext;
         cairo_text_extents(cr.get(), text.c_str(), &textext);
@@ -91,7 +91,7 @@ Size TextWidget::text_size(const std::string& text)
     {
         Canvas canvas(Size(100, 100));
         Painter painter(canvas.context());
-        painter.set_font(font());
+        painter.set(font());
         return painter.text_size(text);
     }
 

@@ -165,26 +165,26 @@ public:
         auto c = widget.center();
 
         // bottom full circle
-        painter.set_color(color1);
+        painter.set(color1);
         painter.set_line_width(linew);
-        painter.arc(Arc(c, radius, 0, 2 * M_PI));
+        painter.draw(Arc(c, radius, 0, 2 * M_PI));
         painter.stroke();
 
         if (widget.radial_flags().is_set(flag::primary_value))
         {
             // value arc
-            painter.set_color(color2);
+            painter.set(color2);
             painter.set_line_width(linew - (linew / 3));
-            painter.arc(Arc(c, radius, angle1, angle2));
+            painter.draw(Arc(c, radius, angle1, angle2));
             painter.stroke();
         }
 
         if (widget.radial_flags().is_set(flag::primary_handle))
         {
             // handle
-            painter.set_color(color3);
+            painter.set(color3);
             painter.set_line_width(linew);
-            painter.arc(Arc(c, radius, angle2 - 0.3, angle2));
+            painter.draw(Arc(c, radius, angle2 - 0.3, angle2));
             painter.stroke();
         }
 
@@ -193,9 +193,9 @@ public:
             // secondary value
             float angle3 = detail::to_radians<float>(-90,
                            widget.value_to_degrees(widget.value2()));
-            painter.set_color(color4);
+            painter.set(color4);
             painter.set_line_width(linew);
-            painter.arc(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
+            painter.draw(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
             painter.stroke();
         }
 
@@ -203,17 +203,28 @@ public:
         {
             if (!widget.m_text.empty())
             {
-                painter.set_color(widget.palette().color(Palette::ColorId::text));
-                painter.draw_text(widget.m_text, widget.box(),
-                                  alignmask::center, 0, Font(72));
+                painter.set(widget.palette().color(Palette::ColorId::text));
+                painter.set(Font(72));
+
+                auto size = painter.text_size(widget.m_text);
+                Rect target = detail::align_algorithm(size, widget.box(), alignmask::center, 0);
+
+                painter.draw(target.point());
+                painter.draw(widget.m_text);
             }
         }
         else if (widget.radial_flags().is_set(flag::text_value))
         {
             auto text = std::to_string(widget.value());
-            painter.set_color(widget.palette().color(Palette::ColorId::text));
-            painter.draw_text(text, widget.box(),
-                              alignmask::center, 0, Font(72));
+
+            painter.set(widget.palette().color(Palette::ColorId::text));
+            painter.set(Font(72));
+
+            auto size = painter.text_size(text);
+            Rect target = detail::align_algorithm(size, widget.box(), alignmask::center, 0);
+
+            painter.draw(target.point());
+            painter.draw(text);
         }
     }
 
