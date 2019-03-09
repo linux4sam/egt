@@ -11,6 +11,7 @@
 #include <cstring>
 #include <glob.h>
 #include <libgen.h>
+#include <linux/limits.h>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
