@@ -89,19 +89,19 @@ void Window::do_draw()
     if (unlikely(m_damage.empty()))
         return;
 
+    // bookeeping to make sure we don't damage() in draw()
+    m_in_draw = true;
+    detail::scope_exit reset([this]() { m_in_draw = false; });
+
     DBG(name() << " " << __PRETTY_FUNCTION__);
 
     Painter painter(screen()->context());
 
-    auto d = m_damage;
-    m_damage.clear();
-
-    for (auto& damage : d)
-    {
+    for (auto& damage : m_damage)
         draw(painter, damage);
-    }
 
-    screen()->flip(d);
+    screen()->flip(m_damage);
+    m_damage.clear();
 }
 
 void Window::resize(const Size& size)

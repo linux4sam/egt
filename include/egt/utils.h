@@ -115,6 +115,32 @@ inline bool change_if_diff(T& old, const T& to)
     return false;
 }
 
+template<>
+inline bool change_if_diff(float& old, const float& to)
+{
+    if (std::fabs(old - to) < .00001)
+    {
+        old = to;
+        return true;
+    }
+
+    return false;
+}
+
+struct scope_exit
+{
+    explicit scope_exit(std::function<void()> f) noexcept
+        : f_(std::move(f))
+    {}
+
+    ~scope_exit()
+    {
+        if (f_)
+            f_();
+    }
+    std::function<void()> f_;
+};
+
 }
 
 namespace experimental

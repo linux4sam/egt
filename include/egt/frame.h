@@ -392,6 +392,7 @@ protected:
      */
     Screen::damage_array m_damage;
 
+    bool m_in_draw{false};
 };
 
 }

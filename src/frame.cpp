@@ -162,6 +162,11 @@ int Frame::handle(eventid event)
 
 void Frame::add_damage(const Rect& rect)
 {
+    // not allowed to damage in draw()
+    assert(!m_in_draw);
+    if (m_in_draw)
+	return;
+
     if (unlikely(rect.empty()))
         return;
 
