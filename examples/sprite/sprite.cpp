@@ -46,7 +46,7 @@ int main(int argc, const char** argv)
     logo.set_align(alignmask::left | alignmask::top, 10);
     win.add(logo);
 
-    StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), 2, 2);
+    StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), Tuple(2, 2));
 
     Sprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
                    Point(main_screen()->size().w / 2 - 75,

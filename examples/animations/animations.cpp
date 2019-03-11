@@ -18,7 +18,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    StaticGrid grid(Rect(win.size()), 3, 2, 10);
+    StaticGrid grid(Rect(win.size()), Tuple(3, 2), 10);
     win.add(expand(grid));
 
     AnimationSequence seq;

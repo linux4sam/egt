@@ -29,7 +29,7 @@ inline namespace v1
 
 namespace detail
 {
-struct eventloopimpl;
+struct EventLoopImpl;
 }
 
 /**
@@ -78,7 +78,7 @@ public:
      */
     void add_idle_callback(event_callback func);
 
-    inline detail::handler_priority_queue& queue() { return m_queue; }
+    inline detail::PriorityQueue& queue() { return m_queue; }
 
     virtual ~EventLoop();
 
@@ -87,11 +87,11 @@ protected:
     virtual void draw();
     void invoke_idle_callbacks();
 
-    std::unique_ptr<detail::eventloopimpl> m_impl;
+    std::unique_ptr<detail::EventLoopImpl> m_impl;
 
     std::vector<event_callback> m_idle;
 
-    detail::handler_priority_queue m_queue;
+    detail::PriorityQueue m_queue;
 };
 
 

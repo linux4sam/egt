@@ -96,8 +96,7 @@ public:
         : Window(Size(100, 50),
                  Widget::flags_type(), pixel_format::argb8888),
           m_label(make_shared<Label>("FPS: 0",
-                                     Rect(Size(100, 50)),
-                                     alignmask::center))
+                                     Rect(Size(100, 50))))
     {
         m_label->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(m_label);

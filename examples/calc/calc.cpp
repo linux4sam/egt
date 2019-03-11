@@ -25,7 +25,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    StaticGrid topgrid(Rect(), 1, 2);
+    StaticGrid topgrid(Tuple(1, 2));
     topgrid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
     win.add(expand(topgrid));
 
@@ -39,7 +39,7 @@ int main(int argc, const char** argv)
     logo.set_align(alignmask::left | alignmask::top, 10);
     win.add(logo);
 
-    StaticGrid buttongrid(Rect(), 4, 5, 5);
+    StaticGrid buttongrid(Tuple(4, 5), 5);
     buttongrid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
     topgrid.add(expand(buttongrid), 0, 1);
 

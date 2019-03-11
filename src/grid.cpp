@@ -15,8 +15,8 @@ namespace egt
 inline namespace v1
 {
 
-StaticGrid::StaticGrid(const Rect& rect, int columns,
-                       int rows, int spacing) noexcept
+StaticGrid::StaticGrid(const Rect& rect, const Tuple& size,
+                       int spacing) noexcept
     : Frame(rect),
       m_spacing(spacing)
 {
@@ -28,14 +28,27 @@ StaticGrid::StaticGrid(const Rect& rect, int columns,
      * The grid size is set here.  Every column should be the same size.  Don't
      * delete from the column vectors.  Only set empty cells to nullptr.
      */
-    m_cells.resize(columns);
+    m_cells.resize(size.w);
     for (auto& x : m_cells)
-        x.resize(rows, nullptr);
+        x.resize(size.h, nullptr);
 }
 
-StaticGrid::StaticGrid(int columns, int rows, int spacing) noexcept
-    : StaticGrid(Rect(), columns, rows, spacing)
+StaticGrid::StaticGrid(const Tuple& size, int spacing) noexcept
+    : StaticGrid(Rect(), size, spacing)
 {
+}
+
+StaticGrid::StaticGrid(Frame& parent, const Rect& rect, const Tuple& size,
+                       int spacing) noexcept
+    : StaticGrid(rect, size, spacing)
+{
+    parent.add(*this);
+}
+
+StaticGrid::StaticGrid(Frame& parent, const Tuple& size, int spacing) noexcept
+    : StaticGrid(size, spacing)
+{
+    parent.add(*this);
 }
 
 namespace detail
@@ -217,10 +230,6 @@ void StaticGrid::reposition()
     }
 
     damage();
-}
-
-StaticGrid::~StaticGrid() noexcept
-{
 }
 
 void SelectableGrid::draw(Painter& painter, const Rect& rect)

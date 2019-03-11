@@ -16,46 +16,51 @@ namespace egt
 inline namespace v1
 {
 
-ListBox::ListBox(const Rect& rect)
+ListBox::ListBox(const item_array& items) noexcept
+    : ListBox(items, Rect())
+{
+}
+
+ListBox::ListBox(const Rect& rect) noexcept
+    : ListBox(item_array(), rect)
+{
+}
+
+ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
     : Frame(rect),
-      m_view(make_shared<ScrolledView>(rect, orientation::vertical)),
-      m_sizer(make_shared<OrientationPositioner>(orientation::vertical))
+      m_view(make_shared<ScrolledView>(*this, rect, orientation::vertical)),
+      m_sizer(make_shared<OrientationPositioner>(*m_view.get(), orientation::vertical))
 {
     set_name("ListBox" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::borderfill);
 
     m_view->set_align(alignmask::expand);
-    add(m_view);
 
     m_sizer->set_align(alignmask::expand);
-    m_view->add(m_sizer);
+
+    for (auto& i : items)
+        add_item_private(i);
 }
 
-ListBox::ListBox(Frame& parent,
-                 const Rect& rect)
-    : ListBox(rect)
+ListBox:: ListBox(Frame& parent, const item_array& items) noexcept
+    : ListBox(items)
 {
     parent.add(*this);
 }
 
-ListBox::ListBox(const item_array& items,
-                 const Rect& rect)
-    : ListBox(rect)
-{
-    for (auto i : items)
-        add_item(i);
-}
-
-ListBox::ListBox(Frame& parent,
-                 const item_array& items,
-                 const Rect& rect)
+ListBox::ListBox(Frame& parent, const item_array& items, const Rect& rect) noexcept
     : ListBox(items, rect)
 {
     parent.add(*this);
 }
 
 void ListBox::add_item(const std::shared_ptr<Widget>& widget)
+{
+    add_item_private(widget);
+}
+
+void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
 {
     m_sizer->add(widget);
 

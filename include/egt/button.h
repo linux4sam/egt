@@ -12,17 +12,17 @@
  */
 
 #include <egt/buttongroup.h>
+#include <egt/frame.h>
 #include <egt/geometry.h>
 #include <egt/image.h>
-#include <egt/theme.h>
 #include <egt/textwidget.h>
+#include <egt/theme.h>
 
 namespace egt
 {
 inline namespace v1
 {
 
-class Font;
 class Painter;
 
 /**
@@ -35,21 +35,29 @@ class Button : public TextWidget
 {
 public:
 
-    Button(const std::string& text = std::string(),
-           const Rect& rect = Rect(),
-           const Font& font = Font(),
-           const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+    /**
+     * @param[in] text The text to display.
+     */
+    explicit Button(const std::string& text = std::string()) noexcept;
 
-    Button(Frame& parent,
-           const std::string& text,
-           const Rect& rect,
-           const Font& font = Font(),
-           const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+    /**
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
+    Button(const std::string& text, const Rect& rect) noexcept;
 
-    Button(Frame& parent,
-           const std::string& text = std::string(),
-           const Font& font = Font(),
-           const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     */
+    explicit Button(Frame& parent, const std::string& text = std::string()) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
+    Button(Frame& parent, const std::string& text, const Rect& rect) noexcept;
 
     virtual std::unique_ptr<Widget> clone() override
     {
@@ -109,14 +117,12 @@ class ImageButton : public Button
 public:
     ImageButton(const Image& image,
                 const std::string& text = "",
-                const Rect& rect = Rect(),
-                const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+                const Rect& rect = Rect()) noexcept;
 
     ImageButton(Frame& parent,
                 const Image& image,
                 const std::string& text = "",
-                const Rect& rect = Rect(),
-                const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+                const Rect& rect = Rect()) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -202,28 +208,33 @@ namespace experimental
  * This is an invisible widget that can be used to handle events, like
  * input events.
  */
-class HotSpot : public Button
+class HotSpot : public Widget
 {
 public:
 
-    HotSpot(const Rect& rect = Rect(),
-            const Widget::flags_type& flags = Widget::flags_type()) noexcept
-        : Button("", rect, Font(), flags)
+    explicit HotSpot(const Rect& rect = Rect()) noexcept
+        : Widget(rect)
     {
         set_boxtype(Theme::boxtype::none);
         hide();
     }
 
+    explicit HotSpot(Frame& parent, const Rect& rect = Rect()) noexcept
+        : HotSpot(rect)
+    {
+        parent.add(*this);
+    }
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<HotSpot>(*this).release());
+    }
+
     virtual void damage() override
     {}
 
-    virtual void draw(Painter& painter, const Rect& rect) override
-    {
-        ignoreparam(painter);
-        ignoreparam(rect);
-    }
-
-    virtual ~HotSpot() {}
+    virtual void draw(Painter&, const Rect&) override
+    {}
 
 private:
     virtual void show() override {}

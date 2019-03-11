@@ -21,7 +21,7 @@ class Bubble : public ImageLabel
 {
 public:
     Bubble(int xspeed, int yspeed, const Point& point) noexcept
-        : ImageLabel(Image("smallbubble.png"), point),
+        : ImageLabel(Image("smallbubble.png"), "", Rect(point, Size())),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {}

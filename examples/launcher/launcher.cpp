@@ -74,7 +74,11 @@ class LauncherItem : public ImageLabel
 public:
     LauncherItem(int num, const string& name, const string& description,
                  const string& image, const string& exec, int x = 0, int y = 0)
-        : ImageLabel(Image(image), name, Point(x, y), Font(24, Font::weightid::BOLD)),
+        : ImageLabel(Image(image),
+                     name,
+                     Rect(Point(x, y), Size()),
+                     alignmask::center,
+                     Font(24, Font::weightid::BOLD)),
           m_num(num),
           m_name(name),
           m_description(description),

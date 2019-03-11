@@ -16,13 +16,42 @@ namespace egt
 inline namespace v1
 {
 
-/** @todo TODO: https://gist.github.com/tsaarni/bb0b8d1ca33e3a1bfea1 */
-
 /**
  * @brief Basic one shot timer.
  *
  * This is a timer that will fire once after the specified duration.
  * To handle the timeout, call on_timeout with a callback.
+ *
+ * There are two main use cases for this class.  One, is you can derive from
+ * this class and overload the Timer::timeout() member function.
+ *
+ * @code{.cpp}
+ * struct MyTimer : public Timer
+ * {
+ *     MyTimer()
+ *         : Timer(std::chrono::milliseconds(100))
+ *     {}
+ *
+ *     void timeout() override
+ *     {
+ *         Timer::timeout();
+ *         ...
+ *     }
+ * };
+ * MyTimer timer;
+ * timer.start();
+ * @endcode
+ *
+ * The other way is to create an instance of this class and connect a
+ * handler by calling Timer::on_timeout().
+ *
+ * @code{.cpp}
+ * Timer timer(std::chrono::milliseconds(100));
+ * timer.on_timeout([]() {
+ *     ...
+ * });
+ * timer.start();
+ * @endcode
  */
 class Timer
 {
@@ -46,8 +75,14 @@ public:
      */
     explicit Timer(std::chrono::milliseconds duration) noexcept;
 
+    /**
+     * @warning Any handlers registered with on_timeout will not be copied.
+     */
     Timer(const Timer& rhs) noexcept;
 
+    /**
+     * @warning Any handlers registered with on_timeout will not be copied.
+     */
     Timer& operator=(const Timer& rhs) noexcept;
 
     /**
@@ -72,7 +107,7 @@ public:
     virtual void change_duration(std::chrono::milliseconds duration);
 
     /**
-     * Cancel the timer.
+     * Cancel, or stop, the timer.
      */
     virtual void cancel();
 
@@ -96,7 +131,9 @@ public:
     inline bool running() const { return m_running; }
 
     /**
-     * Add a callback to be called with the timer times out.
+     * Add a handler callback to be called with the timer times out.
+     *
+     * This function can be called any number of times to add handlers.
      */
     void on_timeout(timer_callback_t callback)
     {
@@ -129,7 +166,9 @@ private:
  * @brief Periodic timer.
  *
  * This is a timer that will keep firing at the duration interval until it
- * is stopped.
+ * is stopped by calling cancel().
+ *
+ * @see Timer
  */
 class PeriodicTimer : public Timer
 {

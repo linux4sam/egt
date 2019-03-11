@@ -104,12 +104,19 @@ int ComboBoxPopup::handle(eventid event)
 
 }
 
+ComboBox::ComboBox(const item_array& items) noexcept
+    : ComboBox(items, Rect())
+{
+}
+
+ComboBox::ComboBox(const Rect& rect) noexcept
+    : ComboBox(item_array(), rect)
+{
+}
+
 ComboBox::ComboBox(const item_array& items,
-                   const Rect& rect,
-                   alignmask align,
-                   const Font& font,
-                   const Widget::flags_type& flags) noexcept
-    : TextWidget("", rect, align, font, flags),
+                   const Rect& rect) noexcept
+    : TextWidget("", rect, alignmask::left | alignmask::center),
       m_items(items),
       m_popup(new detail::ComboBoxPopup(*this))
 {
@@ -119,6 +126,18 @@ ComboBox::ComboBox(const item_array& items,
     ncflags().set(Widget::flag::grab_mouse);
     palette().set(Palette::ColorId::bg, Palette::GroupId::normal, palette().color(Palette::ColorId::light));
     palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::light));
+}
+
+ComboBox::ComboBox(Frame& parent, const item_array& items) noexcept
+    : ComboBox(items)
+{
+    parent.add(*this);
+}
+
+ComboBox::ComboBox(Frame& parent, const item_array& items, const Rect& rect) noexcept
+    : ComboBox(items, rect)
+{
+    parent.add(*this);
 }
 
 void ComboBox::set_parent(Frame* parent)

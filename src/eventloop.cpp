@@ -23,9 +23,9 @@ inline namespace v1
 {
 namespace detail
 {
-struct eventloopimpl
+struct EventLoopImpl
 {
-    eventloopimpl()
+    EventLoopImpl()
         : m_work(m_io)
     {}
 
@@ -35,7 +35,7 @@ struct eventloopimpl
 }
 
 EventLoop::EventLoop() noexcept
-    : m_impl(new detail::eventloopimpl)
+    : m_impl(new detail::EventLoopImpl)
 {}
 
 asio::io_context& EventLoop::io()

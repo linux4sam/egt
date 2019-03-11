@@ -23,9 +23,8 @@ public:
     MyButton(const string& filename,
              const string& label,
              int x = 0,
-             int y = 0,
-             Widget::flags_type flags = Widget::flags_type())
-        : ImageButton(Image(filename), label, Rect(Point(x, y), Size()), flags)
+             int y = 0)
+        : ImageButton(Image(filename), label, Rect(Point(x, y), Size()))
     {
         set_position_image_first(true);
         set_image_align(alignmask::center);
@@ -38,7 +37,7 @@ class MainWindow : public TopWindow
 public:
     explicit MainWindow(const Size& size)
         : TopWindow(size),
-          grid(2, 2, 10)
+          grid(Tuple(2, 2), 10)
     {
         grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 

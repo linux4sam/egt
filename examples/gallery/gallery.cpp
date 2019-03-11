@@ -45,7 +45,7 @@ int main(int argc, const char** argv)
     view0.set_name("view0");
     win.add(view0);
 
-    StaticGrid grid0(Rect(0, 0, files.size() * 150, grid_height), files.size(), 1, 0);
+    StaticGrid grid0(Rect(0, 0, files.size() * 150, grid_height), Tuple(files.size(), 1));
     grid0.set_name("grid0");
     view0.add(grid0);
 
@@ -81,7 +81,7 @@ int main(int argc, const char** argv)
     view1.set_name("view1");
     win.add(view1);
 
-    StaticGrid grid1(Rect(0, 0, files.size() * 150, grid_height), files.size(), 1, 0);
+    StaticGrid grid1(Rect(0, 0, files.size() * 150, grid_height), Tuple(files.size(), 1));
     grid1.set_name("grid1");
     view1.add(grid1);
 

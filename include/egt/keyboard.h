@@ -29,7 +29,7 @@ class Keyboard : public T
 public:
     Keyboard()
         : T(Size(800, 200)),
-          m_grid(Rect(), 10, 4, 5)
+          m_grid(Tuple(10, 4), 5)
     {
         this->add(expand(m_grid));
         this->m_grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);

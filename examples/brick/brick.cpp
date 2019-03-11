@@ -19,10 +19,10 @@ public:
     static constexpr int ROWS = 2;
 
     GameWindow()
-        : m_grid1(Rect(Point(0, 30), Size(w(), 80)),
-                  w() / 100, ROWS, 5),
-          m_grid2(Rect(Point(0, 30 + 80 + 30), Size(w(), 80)),
-                  w() / 100, ROWS, 5),
+        : m_grid1(*this, Rect(Point(0, 30), Size(w(), 80)),
+                  Tuple(w() / 100, ROWS), 5),
+          m_grid2(*this, Rect(Point(0, 30 + 80 + 30), Size(w(), 80)),
+                  Tuple(w() / 100, ROWS), 5),
           m_ball(Image("small_ball.png")),
           m_paddle(Image("paddle.png")),
           m_running(false),
@@ -39,9 +39,6 @@ public:
 
         m_grid1.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         m_grid2.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-
-        add(m_grid1);
-        add(m_grid2);
 
         for (int c = 0; c < detail::KMSScreen::instance()->size().w / 100; c++)
         {

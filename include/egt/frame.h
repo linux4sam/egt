@@ -43,8 +43,6 @@ class Frame : public Widget
 public:
 
     /**
-     * Construct a Frame.
-     *
      * @param[in] rect Initial rectangle of the Frame.
      * @param[in] flags Widget flags.
      */
@@ -52,8 +50,6 @@ public:
                    const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
     /**
-     * Construct a Frame.
-     *
      * @param[in] parent Parent Frame of the Frame.
      * @param[in] rect Initial rectangle of the Frame.
      * @param[in] flags Widget flags.

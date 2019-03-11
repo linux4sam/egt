@@ -26,133 +26,125 @@ public:
                easing_snap),
           m_a3(800, 700,
                std::chrono::milliseconds(1500),
-               easing_snap),
-          m_background(*this, Image("background.png")),
-          m_logo(*this, Image("@microchip_logo_black.png")),
-          m_title(*this, "Living Room",
-                  Rect(Point(), Size(250, 64)),
-                  alignmask::center,
-                  egt::Font(32, Font::weightid::BOLD)),
-          m_radial1(*this, Rect(Point(w() / 2 - 350 / 2,
-                                      -350),
-                                Size(350, 350)),
-                    0, 100),
-          m_label1(Image("day.png"),
-                   "Day",
-                   Rect(Point(-200, 150),
-                        Size(180, 64)),
-                   egt::Font(30)),
-          m_label2(Image("night.png"),
-                   "Night",
-                   Rect(Point(-200, 214),
-                        Size(180, 64)),
-                   egt::Font(30)),
-          m_label3(Image("vacation.png"),
-                   "Vacation",
-                   Rect(Point(-200, 278),
-                        Size(180, 64)),
-                   egt::Font(30)),
-          m_label4("Fan",
-                   Rect(Point(800, 390),
-                        Size(50, 64)),
-                   alignmask::center,
-                   egt::Font(16)),
-          m_slider1(Rect(Point(800, 100),
-                         Size(50, 300)),
-                    0, 100, 0,
-                    orientation::vertical)
+               easing_snap)
     {
         set_boxtype(Theme::boxtype::none);
 
-        m_logo.set_align(alignmask::left | alignmask::top, 10);
+        make_shared<ImageLabel>(*this, Image("background.png"));
+        auto m_logo = make_shared<ImageLabel>(*this, Image("@microchip_logo_black.png"));
+        m_logo->set_align(alignmask::left | alignmask::top, 10);
 
-        m_title.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        m_title.set_align(alignmask::center | alignmask::top, 10);
+        auto m_title = make_shared<Label>(*this, "Living Room",
+                                          Size(250, 64),
+                                          alignmask::center,
+                                          egt::Font(32, Font::weightid::BOLD));
+        m_title->palette().set(Palette::ColorId::bg, Palette::GroupId::normal,
+                               Palette::transparent);
+        m_title->set_align(alignmask::center | alignmask::top, 10);
 
-        m_radial1.on_event([this](eventid event)
+        auto m_radial1 = make_shared<Radial>(*this, Rect(Point(w() / 2 - 350 / 2,
+                                             -350),
+                                             Size(350, 350)),
+                                             0, 100);
+
+        m_radial1->on_event([m_radial1](eventid)
         {
-            if (event == eventid::property_changed)
-            {
-                auto text = std::to_string((int)m_radial1.value()) + "°";
-                m_radial1.text(text);
+            auto text = std::to_string((int)m_radial1->value()) + "°";
+            m_radial1->text(text);
 
-                if (m_radial1.value() > m_radial1.value2())
-                    m_radial1.palette().set(Palette::ColorId::highlight, Palette::GroupId::normal, Palette::orange);
-                else
-                    m_radial1.reset_palette();
+            if (m_radial1->value() > m_radial1->value2())
+                m_radial1->palette().set(Palette::ColorId::highlight,
+                                         Palette::GroupId::normal, Palette::orange);
+            else
+                m_radial1->reset_palette();
 
-                return 1;
-            }
-            return 0;
-        });
+            return 1;
+        }, {eventid::property_changed});
 
-        add(m_radial1);
-        m_radial1.set_value(73);
-        m_radial1.set_value2(65);
+        m_radial1->set_value(73);
+        m_radial1->set_value2(65);
 
-        m_label1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        add(m_label1);
+        auto m_label1 = make_shared<ImageLabel>(*this,
+                                                Image("day.png"),
+                                                "Day",
+                                                Rect(Point(-200, 150),
+                                                        Size(180, 64)),
+                                                alignmask::center,
+                                                egt::Font(30));
+        m_label1->palette().set(Palette::ColorId::bg,
+                                Palette::GroupId::normal, Palette::transparent);
+        m_label1->palette().set(Palette::ColorId::text,
+                                Palette::GroupId::normal, Palette::gray);
 
-        m_label2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        add(m_label2);
+        auto m_label2 = make_shared<ImageLabel>(*this,
+                                                Image("night.png"),
+                                                "Night",
+                                                Rect(Point(-200, 214),
+                                                        Size(180, 64)),
+                                                alignmask::center,
+                                                egt::Font(30));
+        m_label2->palette().set(Palette::ColorId::bg,
+                                Palette::GroupId::normal, Palette::transparent);
+        m_label2->palette().set(Palette::ColorId::text,
+                                Palette::GroupId::normal, Palette::gray);
 
-        m_label3.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        add(m_label3);
+        auto m_label3 = make_shared<ImageLabel>(*this,
+                                                Image("vacation.png"),
+                                                "Vacation",
+                                                Rect(Point(-200, 278),
+                                                        Size(180, 64)),
+                                                alignmask::center,
+                                                egt::Font(30));
+        m_label3->palette().set(Palette::ColorId::bg,
+                                Palette::GroupId::normal, Palette::transparent);
+        m_label3->palette().set(Palette::ColorId::text,
+                                Palette::GroupId::normal, Palette::gray);
 
-        m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-        m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-        m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+        auto m_label4 = make_shared<Label>(*this, "Fan",
+                                           Rect(Point(800, 390),
+                                                Size(50, 64)),
+                                           alignmask::center,
+                                           egt::Font(16));
+        m_label4->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 
-        m_label1.on_event([this](eventid event)
+        auto m_slider1 = make_shared<Slider>(*this, Rect(Point(800, 100),
+                                             Size(50, 300)),
+                                             0, 100, 0,
+                                             orientation::vertical);
+        m_slider1->set_value(50);
+
+        m_label1->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            if (event == eventid::pointer_click)
-            {
-                m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
-                m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-                m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-                m_label1.damage();
-                m_label2.damage();
-                m_label3.damage();
-            }
-
+            m_label1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
+            m_label2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label3->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label1->damage();
+            m_label2->damage();
+            m_label3->damage();
             return 0;
-        });
+        }, {eventid::pointer_click});
 
-        m_label2.on_event([this](eventid event)
+        m_label2->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            if (event == eventid::pointer_click)
-            {
-                m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
-                m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-                m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-                m_label1.damage();
-                m_label2.damage();
-                m_label3.damage();
-            }
-
+            m_label2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
+            m_label1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label3->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label1->damage();
+            m_label2->damage();
+            m_label3->damage();
             return 0;
-        });
+        }, {eventid::pointer_click});
 
-        m_label3.on_event([this](eventid event)
+        m_label3->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            if (event == eventid::pointer_click)
-            {
-                m_label3.palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
-                m_label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-                m_label2.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-                m_label1.damage();
-                m_label2.damage();
-                m_label3.damage();
-            }
-
+            m_label3->palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
+            m_label1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label1->damage();
+            m_label2->damage();
+            m_label3->damage();
             return 0;
-        });
-
-        add(m_label4);
-        m_label4.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-
-        add(m_slider1);
-        m_slider1.set_value(50);
+        }, {eventid::pointer_click});
 
         m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label1), std::placeholders::_1));
         m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label2), std::placeholders::_1));
@@ -178,15 +170,6 @@ protected:
     PropertyAnimator m_a1;
     PropertyAnimator m_a2;
     PropertyAnimator m_a3;
-    ImageLabel m_background;
-    ImageLabel m_logo;
-    Label m_title;
-    Radial m_radial1;
-    ImageLabel m_label1;
-    ImageLabel m_label2;
-    ImageLabel m_label3;
-    Label m_label4;
-    Slider m_slider1;
 };
 
 int main(int argc, const char** argv)

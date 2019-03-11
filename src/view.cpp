@@ -61,6 +61,18 @@ ScrolledView::ScrolledView(orientation orient)
 {
 }
 
+ScrolledView::ScrolledView(Frame& parent, const Rect& rect, orientation orient)
+    : ScrolledView(rect, orient)
+{
+    parent.add(*this);
+}
+
+ScrolledView::ScrolledView(Frame& parent, orientation orient)
+    : ScrolledView(orient)
+{
+    parent.add(*this);
+}
+
 int ScrolledView::handle(eventid event)
 {
     switch (event)
@@ -191,10 +203,6 @@ void ScrolledView::set_offset(int offset)
             damage();
         }
     }
-}
-
-ScrolledView::~ScrolledView()
-{
 }
 
 }

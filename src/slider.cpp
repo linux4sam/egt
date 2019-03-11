@@ -8,6 +8,7 @@
 #include "egt/painter.h"
 #include "egt/slider.h"
 #include "egt/textwidget.h"
+#include "egt/frame.h"
 
 using namespace std;
 
@@ -28,15 +29,24 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
     slider_flags().set(flag::rectangle_handle);
 }
 
-Slider::Slider(int min, int max, int value,
-               orientation orient) noexcept
+Slider::Slider(int min, int max, int value, orientation orient) noexcept
     : Slider(Rect(), min, max, value, orient)
 {
 }
 
-Slider::Slider(orientation orient) noexcept
-    : Slider(Rect(), 0, 100, 0, orient)
-{}
+Slider::Slider(Frame& parent, const Rect& rect, int min, int max, int value,
+               orientation orient) noexcept
+    : Slider(rect, min, max, value, orient)
+{
+    parent.add(*this);
+}
+
+Slider::Slider(Frame& parent, int min, int max, int value,
+               orientation orient) noexcept
+    : Slider(Rect(), min, max, value, orient)
+{
+    parent.add(*this);
+}
 
 int Slider::handle_width() const
 {

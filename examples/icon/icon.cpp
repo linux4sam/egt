@@ -65,7 +65,7 @@ int main(int argc, const char** argv)
 
     std::vector<std::string> files = experimental::glob("../share/egt/icons/*.png");
 
-    StaticGrid grid0(Rect(0, 0, files.size() / 6 * 160, win.h()), files.size() / 6, 6, 0);
+    StaticGrid grid0(Rect(0, 0, files.size() / 6 * 160, win.h()), Tuple(files.size() / 6, 6));
     grid0.set_name("grid0");
     view0.add(grid0);
 

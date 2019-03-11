@@ -40,24 +40,46 @@ class Painter;
 class Label : public TextWidget
 {
 public:
+
+    /**
+     * @param[in] text The text to display.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
     Label(const std::string& text = std::string(),
-          const Rect& rect = Rect(),
           alignmask align = alignmask::center,
-          const Font& font = Font(),
-          const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+          const Font& font = Font()) noexcept;
 
-    explicit Label(Frame& parent,
-                   const std::string& text,
-                   const Rect& rect = Rect(),
-                   alignmask align = alignmask::center,
-                   const Font& font = Font(),
-                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+    /**
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
+    Label(const std::string& text, const Rect& rect,
+          alignmask align = alignmask::center,
+          const Font& font = Font()) noexcept;
 
-    explicit Label(Frame& parent,
-                   const std::string& text = std::string(),
-                   alignmask align = alignmask::center,
-                   const Font& font = Font(),
-                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
+    Label(Frame& parent, const std::string& text = std::string(),
+          alignmask align = alignmask::center,
+          const Font& font = Font()) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
+    Label(Frame& parent, const std::string& text, const Rect& rect,
+          alignmask align = alignmask::center,
+          const Font& font = Font()) noexcept;
 
     virtual std::unique_ptr<Widget> clone() override
     {
@@ -98,23 +120,52 @@ protected:
 class ImageLabel : public Label
 {
 public:
-    ImageLabel(const Image& image,
+
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
+    ImageLabel(const Image& image = Image(),
                const std::string& text = std::string(),
-               const Rect& rect = Rect(),
+               alignmask align = alignmask::right | alignmask::center,
                const Font& font = Font()) noexcept;
 
-    ImageLabel(const Image& image,
-               const std::string& text,
-               const Point& point,
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
+    ImageLabel(const Image& image, const std::string& text, const Rect& rect,
+               alignmask align = alignmask::right | alignmask::center,
                const Font& font = Font()) noexcept;
 
-    ImageLabel(const Image& image,
-               const Point& point) noexcept;
-
-    ImageLabel(Frame& parent,
-               const Image& image,
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
+    ImageLabel(Frame& parent, const Image& image = Image(),
                const std::string& text = std::string(),
-               const Rect& rect = Rect(),
+               alignmask align = alignmask::right | alignmask::center,
+               const Font& font = Font()) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] align Alignment for the text.
+     * @param[in] font The Font to use.
+     */
+    ImageLabel(Frame& parent, const Image& image, const std::string& text,
+               const Rect& rect,
+               alignmask align = alignmask::right | alignmask::center,
                const Font& font = Font()) noexcept;
 
     virtual std::unique_ptr<Widget> clone() override
@@ -126,6 +177,9 @@ public:
 
     static void default_draw(ImageLabel& widget, Painter& painter, const Rect& rect);
 
+    /**
+     * Set a new Image.
+     */
     virtual void set_image(const Image& image);
 
     /**
@@ -174,6 +228,7 @@ public:
     virtual ~ImageLabel() = default;
 
 protected:
+
     virtual void first_resize() override;
 
     Image m_image;

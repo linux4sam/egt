@@ -19,9 +19,14 @@ inline namespace v1
 {
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
 
-Button::Button(const std::string& text, const Rect& rect,
-               const Font& font, const Widget::flags_type& flags) noexcept
-    : TextWidget(text, rect, alignmask::center, font, flags)
+Button::Button(const std::string& text) noexcept
+    : Button(text, Rect())
+{
+
+}
+
+Button::Button(const std::string& text, const Rect& rect) noexcept
+    : TextWidget(text, rect, alignmask::center)
 {
     set_name("Button" + std::to_string(m_widgetid));
 
@@ -30,17 +35,16 @@ Button::Button(const std::string& text, const Rect& rect,
     ncflags().set(Widget::flag::grab_mouse);
 }
 
-Button::Button(Frame& parent, const std::string& text, const Rect& rect,
-               const Font& font, const Widget::flags_type& flags) noexcept
-    : Button(text, rect, font, flags)
+Button::Button(Frame& parent, const std::string& text) noexcept
+    : Button(text)
 {
     parent.add(*this);
 }
 
-Button::Button(Frame& parent, const std::string& text,
-               const Font& font, const Widget::flags_type& flags) noexcept
-    : Button(parent, text, Rect(), font, flags)
+Button::Button(Frame& parent, const std::string& text, const Rect& rect) noexcept
+    : Button(text, rect)
 {
+    parent.add(*this);
 }
 
 int Button::handle(eventid event)
@@ -149,9 +153,8 @@ void Button::first_resize()
 
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
-                         const Rect& rect,
-                         const Widget::flags_type& flags) noexcept
-    : Button(text, rect, Font(), flags)
+                         const Rect& rect) noexcept
+    : Button(text, rect)
 {
     set_name("ImageButton" + std::to_string(m_widgetid));
 
@@ -163,9 +166,8 @@ ImageButton::ImageButton(const Image& image,
 ImageButton::ImageButton(Frame& parent,
                          const Image& image,
                          const std::string& text,
-                         const Rect& rect,
-                         const Widget::flags_type& flags) noexcept
-    : ImageButton(image, text, rect, flags)
+                         const Rect& rect) noexcept
+    : ImageButton(image, text, rect)
 {
     parent.add(*this);
 }

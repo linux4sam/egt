@@ -18,11 +18,11 @@ struct ButtonPage : public NotebookTab
 {
     ButtonPage()
     {
-        auto grid0 = make_shared<StaticGrid>(3, 10, 5);
+        auto grid0 = make_shared<StaticGrid>(Tuple(3, 10), 5);
         grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
-        grid0->add(expand(make_shared<Button>("button 1", Rect(Point(), Size(100, 40)))));
+        grid0->add(expand(make_shared<Button>("button 1", Size(100, 40))));
 
         auto btn2 = make_shared<Button>("button 2");
         btn2->disable();
@@ -55,7 +55,7 @@ struct CheckBoxPage : public NotebookTab
 {
     CheckBoxPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(3, 10, 5);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
         grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
@@ -114,7 +114,7 @@ struct LabelPage : public NotebookTab
 {
     LabelPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(3, 10, 5);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
         grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
@@ -162,11 +162,11 @@ struct TextPage : public NotebookTab
 {
     TextPage()
     {
-        auto grid1 = std::make_shared<StaticGrid>(2, 1, 5);
+        auto grid1 = std::make_shared<StaticGrid>(Tuple(2, 1), 5);
         grid1->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid1));
 
-        auto grid0 = std::make_shared<StaticGrid>(1, 10, 5);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(1, 10), 5);
         grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         grid1->add(expand(grid0));
 
@@ -212,7 +212,7 @@ struct ProgressPage : public NotebookTab
 {
     ProgressPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(3, 10, 5);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
         grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
@@ -276,7 +276,7 @@ struct MeterPage : public NotebookTab
 {
     MeterPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(3, 3, 10);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 3), 10);
         grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
@@ -306,7 +306,7 @@ struct ComboPage : public NotebookTab
         auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, 10, 10, 10);
         add(expand(hsizer1));
 
-        auto grid0 = std::make_shared<StaticGrid>(Rect(0, 0, 200, 0), 1, 10, 5);
+        auto grid0 = std::make_shared<StaticGrid>(Rect(0, 0, 200, 0), Tuple(1, 10), 5);
         grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         hsizer1->add(expand_vertical(grid0));
 
@@ -361,7 +361,7 @@ int main(int argc, const char** argv)
     BoxSizer vsizer(orientation::vertical);
     win.add(expand(vsizer));
 
-    auto grid = make_shared<StaticGrid>(Rect(Point(), Size(0, win.h() * 0.10)), 3, 1, 10);
+    auto grid = make_shared<StaticGrid>(Size(0, win.h() * 0.10), Tuple(3, 1), 10);
     grid->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0xed2924ff));
     grid->set_boxtype(Theme::boxtype::fill);
 
@@ -373,7 +373,7 @@ int main(int argc, const char** argv)
     auto hsizer = make_shared<BoxSizer>(orientation::horizontal);
     vsizer.add(expand(hsizer));
 
-    auto list = make_shared<ListBox>(Rect(Point(), Size(win.w() * 0.15, 0)));
+    auto list = make_shared<ListBox>(Size(win.w() * 0.15, 0));
     list->add_item(make_shared<StringItem>("Buttons"));
     list->add_item(make_shared<StringItem>("Text"));
     list->add_item(make_shared<StringItem>("CheckBox"));

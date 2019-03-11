@@ -39,17 +39,39 @@ public:
 
     using item_array = std::vector<std::shared_ptr<Widget>>;
 
-    explicit ListBox(const Rect& rect = Rect());
+    /**
+     * @param[in] items Array of items to insert into the list.
+     */
+    explicit ListBox(const item_array& items = item_array()) noexcept;
 
-    explicit ListBox(Frame& parent,
-                     const Rect& rect = Rect());
+    /**
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit ListBox(const Rect& rect) noexcept;
 
-    explicit ListBox(const item_array& items,
-                     const Rect& rect = Rect());
+    /**
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Rectangle for the widget.
+     */
+    ListBox(const item_array& items, const Rect& rect) noexcept;
 
-    ListBox(Frame& parent,
-            const item_array& items,
-            const Rect& rect = Rect());
+    /**
+    * @param[in] parent The parent Frame.
+    * @param[in] items Array of items to insert into the list.
+    */
+    explicit ListBox(Frame& parent, const item_array& items = item_array()) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Rectangle for the widget.
+     */
+    ListBox(Frame& parent, const item_array& items, const Rect& rect) noexcept;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<ListBox>(*this).release());
+    }
 
     virtual int handle(eventid event) override;
 
@@ -94,6 +116,10 @@ protected:
     uint32_t m_selected{0};
     std::shared_ptr<ScrolledView> m_view;
     std::shared_ptr<OrientationPositioner> m_sizer;
+
+private:
+
+    void add_item_private(const std::shared_ptr<Widget>& item);
 };
 
 }

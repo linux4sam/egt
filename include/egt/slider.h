@@ -15,6 +15,7 @@ namespace egt
 {
 inline namespace v1
 {
+class Frame;
 
 /**
  * @brief This is a slider that can be used to select value from a range.
@@ -34,10 +35,12 @@ public:
          * Draw a rectangle handle.
          */
         rectangle_handle,
+
         /**
          * Draw a square handle.
          */
         square_handle,
+
         /**
          * Draw a round handle.
          */
@@ -60,7 +63,7 @@ public:
         origin_opposite,
 
         /**
-         *
+         * Solid color line.
          */
         consistent_line,
     };
@@ -74,13 +77,43 @@ public:
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal orientation.
      */
-    Slider(const Rect& rect = Rect(), int min = 0, int max = 100, int value = 0,
+    Slider(const Rect& rect, int min = 0, int max = 100, int value = 0,
            orientation orient = orientation::horizontal) noexcept;
 
-    Slider(int min, int max, int value,
+    /**
+     * @param[in] min Minimum value for the range.
+     * @param[in] max Maximum value in the range.
+     * @param[in] value Current value in the range.
+     * @param[in] orient Vertical or horizontal orientation.
+     */
+    Slider(int min = 0, int max = 100, int value = 0,
            orientation orient = orientation::horizontal) noexcept;
 
-    explicit Slider(orientation orient) noexcept;
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] min Minimum value for the range.
+     * @param[in] max Maximum value in the range.
+     * @param[in] value Current value in the range.
+     * @param[in] orient Vertical or horizontal orientation.
+     */
+    Slider(Frame& parent, const Rect& rect, int min = 0, int max = 100, int value = 0,
+           orientation orient = orientation::horizontal) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] min Minimum value for the range.
+     * @param[in] max Maximum value in the range.
+     * @param[in] value Current value in the range.
+     * @param[in] orient Vertical or horizontal orientation.
+     */
+    Slider(Frame& parent, int min = 0, int max = 100, int value = 0,
+           orientation orient = orientation::horizontal) noexcept;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<Slider>(*this).release());
+    }
 
     virtual int handle(eventid event) override;
 
@@ -160,11 +193,6 @@ public:
 
     inline flags_type& slider_flags() { return m_slider_flags; }
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Slider>(*this).release());
-    }
-
     virtual ~Slider() = default;
 
 protected:
@@ -196,7 +224,7 @@ protected:
     virtual void draw_handle(Painter& painter);
     virtual void draw_line(Painter& painter, float xp, float yp);
 
-    orientation m_orient;
+    orientation m_orient{orientation::horizontal};
     bool m_invoke_pending{false};
 
     /**

@@ -18,7 +18,7 @@ public:
 
     explicit ColorPickerWindow(const Color& color)
         : Popup(main_screen()->size() / 2),
-          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 5, 10),
+          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), Tuple(4, 5), 10),
           m_color(color)
     {
         palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
@@ -87,7 +87,7 @@ public:
 
     explicit WidthPickerWindow(int width)
         : Popup(main_screen()->size() / 2),
-          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), 4, 1, 10),
+          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), Tuple(4, 1), 10),
           m_width(width)
     {
         palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
@@ -138,7 +138,7 @@ class MainWindow : public TopWindow
 public:
 
     MainWindow()
-        : m_grid(Rect(Size(100, 250)), 1, 4, 5),
+        : m_grid(Rect(Size(100, 250)), Tuple(1, 4), 5),
           m_colorbtn(Image("palette.png")),
           m_fillbtn(Image("fill.png")),
           m_widthbtn(Image("width.png")),

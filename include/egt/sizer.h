@@ -27,9 +27,15 @@ class BoxSizer : public Frame
 {
 public:
 
-    BoxSizer(orientation orient = orientation::horizontal, int spacing = 0,
-             int hmargin = 0, int vmargin = 0)
-        : Frame(Rect(Point(), Size(2 * hmargin, 2 * vmargin))),
+    /**
+     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] spacing Spacing between positioning.
+     * @param[in] hmargin Horizontal margin.
+     * @param[in] vmargin Vertical margin.
+     */
+    explicit BoxSizer(orientation orient = orientation::horizontal, int spacing = 0,
+                      int hmargin = 0, int vmargin = 0)
+        : Frame(Size(2 * hmargin, 2 * vmargin)),
           m_spacing(spacing),
           m_hmargin(hmargin),
           m_vmargin(vmargin),
@@ -37,6 +43,25 @@ public:
     {
         set_name("BoxSizer" + std::to_string(m_widgetid));
         set_boxtype(Theme::boxtype::none);
+    }
+
+    /**
+    * @param[in] parent The parent Frame.
+     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] spacing Spacing between positioning.
+     * @param[in] hmargin Horizontal margin.
+     * @param[in] vmargin Vertical margin.
+     */
+    BoxSizer(Frame& parent, orientation orient = orientation::horizontal, int spacing = 0,
+             int hmargin = 0, int vmargin = 0)
+        : BoxSizer(orient, spacing, hmargin, vmargin)
+    {
+        parent.add(*this);
+    }
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<BoxSizer>(*this).release());
     }
 
     virtual void add(Widget& widget) override
@@ -147,7 +172,12 @@ class OrientationPositioner : public Frame
 {
 public:
 
-    OrientationPositioner(orientation orient = orientation::horizontal, int spacing = 0)
+    /**
+    * @param[in] orient Vertical or horizontal orientation.
+    * @param[in] spacing Spacing between positioning.
+    */
+    explicit OrientationPositioner(orientation orient = orientation::horizontal,
+                                   int spacing = 0) noexcept
         : Frame(Rect()),
           m_spacing(spacing),
           m_orient(orient)
@@ -165,6 +195,23 @@ public:
         }
     }
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] spacing Spacing between positioning.
+     */
+    explicit OrientationPositioner(Frame& parent,
+                                   orientation orient = orientation::horizontal, int spacing = 0) noexcept
+        : OrientationPositioner(orient, spacing)
+    {
+        parent.add(*this);
+    }
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<OrientationPositioner>(*this).release());
+    }
+
     virtual void move(const Point& point) override
     {
         Frame::move(point);
@@ -173,7 +220,7 @@ public:
 
     virtual void resize(const Size& size) override
     {
-        auto forced = Rect::merge(Rect(Point(), size), super_rect());
+        auto forced = Rect::merge(size, super_rect());
         Frame::resize(forced.size());
         reposition();
     }
@@ -243,11 +290,17 @@ protected:
 
 /**
  * @brief Positions Widgets horizontally.
+ * @deprecated This will be removed.
  */
 class HorizontalPositioner : public Frame
 {
 public:
 
+    /**
+    * @param[in] rect Rectangle for the widget.
+    * @param[in] spacing Spacing between positioning.
+    * @param[in] align Alignment for the child widgets.
+    */
     HorizontalPositioner(const Rect& rect,
                          int spacing = 0, alignmask align = alignmask::center)
         : Frame(rect),
@@ -255,6 +308,24 @@ public:
           m_align(align)
     {
         set_boxtype(Theme::boxtype::none);
+    }
+
+    /**
+    * @param[in] parent The parent Frame.
+    * @param[in] rect Rectangle for the widget.
+    * @param[in] spacing Spacing between positioning.
+    * @param[in] align Alignment for the child widgets.
+    */
+    HorizontalPositioner(Frame& parent, const Rect& rect,
+                         int spacing = 0, alignmask align = alignmask::center)
+        : HorizontalPositioner(rect, spacing, align)
+    {
+        parent.add(*this);
+    }
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<HorizontalPositioner>(*this).release());
     }
 
     /**

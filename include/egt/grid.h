@@ -30,10 +30,37 @@ inline namespace v1
 class StaticGrid : public Frame
 {
 public:
-    StaticGrid(const Rect& rect,
-               int columns = 1, int rows = 1, int spacing = 0) noexcept;
 
-    StaticGrid(int columns = 1, int rows = 1, int spacing = 0) noexcept;
+    /**
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] size Rows and columns.
+     * @param[in] spacing Amount of spacing to put between cells.
+     */
+    StaticGrid(const Rect& rect, const Tuple& size = Tuple(1, 1),
+               int spacing = 0) noexcept;
+
+    /**
+     * @param[in] size Rows and columns.
+     * @param[in] spacing Amount of spacing to put between cells.
+     */
+    StaticGrid(const Tuple& size = Tuple(1, 1), int spacing = 0) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] size Rows and columns.
+     * @param[in] spacing Amount of spacing to put between cells.
+     */
+    StaticGrid(Frame& parent, const Rect& rect, const Tuple& size = Tuple(1, 1),
+               int spacing = 0) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] size Rows and columns.
+     * @param[in] spacing Amount of spacing to put between cells.
+     */
+    StaticGrid(Frame& parent, const Tuple& size = Tuple(1, 1),
+               int spacing = 0) noexcept;
 
     StaticGrid(const StaticGrid& rhs) noexcept
         : Frame(rhs),
@@ -93,8 +120,6 @@ public:
      * necessary.
      *
      * @param widget The widget to add, or nullptr.
-     * @param align Align the widget in the cell by calling set_align() on
-     *              the widget with this value.
      */
     virtual void add(const std::shared_ptr<Widget>& widget) override;
 
@@ -116,8 +141,6 @@ public:
      * @param widget The widget to add, or nullptr.
      * @param column The column index.
      * @param row The row index.
-     * @param align Align the widget in the cell by calling set_align() on
-     *              the widget with this value.
      *
      * @todo remove align off both of the add() functions here. This is an
      * API inconsistency and align needs to be controlled on the widget itself
@@ -169,7 +192,7 @@ public:
         return m_last_add_row;
     }
 
-    virtual ~StaticGrid() noexcept;
+    virtual ~StaticGrid() noexcept = default;
 
 protected:
 
@@ -191,10 +214,13 @@ protected:
 class SelectableGrid : public StaticGrid
 {
 public:
-    SelectableGrid(const Rect& rect = Rect(),
-                   int columns = 1, int rows = 1, int spacing = 0)
-        : StaticGrid(rect, columns, rows, spacing)
-    {}
+
+    using StaticGrid::StaticGrid;
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<SelectableGrid>(*this).release());
+    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -210,8 +236,7 @@ public:
         damage();
     }
 
-    virtual ~SelectableGrid()
-    {}
+    virtual ~SelectableGrid() noexcept = default;
 
 protected:
     int m_selected_column{0};

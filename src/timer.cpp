@@ -48,7 +48,10 @@ void Timer::start()
 {
     m_timer.cancel();
     m_timer.expires_from_now(m_duration);
-    m_timer.async_wait(main_app().event().queue().wrap(detail::priorities::high, std::bind(&Timer::timer_callback, this, std::placeholders::_1)));
+    m_timer.async_wait(
+        main_app().event().queue().wrap(detail::priorities::high,
+                                        std::bind(&Timer::timer_callback, this,
+                                                std::placeholders::_1)));
     m_running = true;
 }
 
@@ -84,12 +87,21 @@ void Timer::do_cancel()
 
 void Timer::timer_callback(const asio::error_code& error)
 {
-    m_running = false;
+    /*
+     * If the timer has already expired, but it has not yet had a
+     * chance to be handled, any handlers may still be called after this
+     * function is invoked.  So, if we were cancelled, don't pass the call
+     * along.
+     */
+    if (m_running)
+    {
+        m_running = false;
 
-    if (error)
-        return;
+        if (error)
+            return;
 
-    timeout();
+        timeout();
+    }
 }
 
 void Timer::timeout()

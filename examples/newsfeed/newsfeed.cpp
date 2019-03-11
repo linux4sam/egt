@@ -37,7 +37,7 @@ public:
 
     NewsItem(const std::string& title, const std::string& desc,
              const std::string& date, const std::string& link)
-        : StaticGrid(Rect(), 1, 2),
+        : StaticGrid(Tuple(1, 2)),
           m_title(title),
           m_desc(desc),
           m_date(date),

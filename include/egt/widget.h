@@ -38,13 +38,13 @@ class Frame;
 class Screen;
 
 /**
- * @brief Base Widget class.
+ * Base Widget class.
  *
- * This is the base class for all widgets. A Widget is a thing, with a basic
- * set of properties.  In this case, it has a bounding rectangle,
+ * This is the base class for all widgets. A Widget is a thing, a UI component,
+ * with a basic set of properties.  In this case, it has a bounding rectangle,
  * some flags, and some states - and these properties can be manipulated. A
  * Widget can handle events, draw itself, and more.  However, the specifics
- * of what it means to handle an event or draw the widget is implemented in
+ * of what it means to handle an event or draw the Widget is implemented in
  * classes that are derived from this one, like a Button or a Label.
  */
 class Widget : public detail::Object
@@ -52,8 +52,8 @@ class Widget : public detail::Object
 public:
 
     /**
-    * Flags used for various widget properties.
-    */
+     * Common flags used for various widget properties.
+     */
     enum class flag
     {
         /**
@@ -115,8 +115,6 @@ public:
     using flags_type = Flags<flag>;
 
     /**
-     * Construct a widget.
-     *
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
@@ -124,8 +122,6 @@ public:
            const flags_type& flags = flags_type()) noexcept;
 
     /**
-     * Construct a widget.
-     *
      * @param[in] parent Parent Frame of the widget.
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
@@ -142,21 +138,18 @@ public:
     Widget& operator=(Widget&& rhs) noexcept;
 
     /**
-     * Perform a deep copy clone of the widget.
+     * Perform a deep copy of the widget.
      */
     virtual std::unique_ptr<Widget> clone() = 0;
 
     /**
      * Draw the widget.
      *
-     * @param[in] painter Instance of the Painter for the screen.
-     * @param[in] rect The rectangle to draw.
-     *
      * To change how a widget is drawn, this function can be overloaded and
      * changed in a derived class, or it can be changed dynamically with the
-     * theme.
+     * Theme.
      *
-     * To optimize drawing, a widget may use the @b rect parameter to limit
+     * To optimize drawing, a Widget may use the Rect parameter to limit
      * what needs to be redrawn, which may be smaller than the widget's box(),
      * but will never be outside of the widget's box().
      *
@@ -165,8 +158,11 @@ public:
      * draw() function.
      *
      * @warning Normally this should not be called directly and instead the
-     * event loop will call this function with an already established
-     * Painter when the widget needs to be drawn.
+     * EventLoop will call this function with an already established
+     * Painter when the Widget needs to be drawn.
+     *
+     * @param[in] painter Instance of the Painter for the Screen.
+     * @param[in] rect The rectangle to draw.
      *
      */
     virtual void draw(Painter& painter, const Rect& rect) = 0;
@@ -190,6 +186,7 @@ public:
 
     /**
      * Resize the widget.
+     *
      * Changes the width and height of the widget.
      *
      * @param[in] s The new size of the Widget.
@@ -199,6 +196,7 @@ public:
 
     /**
      * Change the width of the widget.
+     *
      * @param[in] w The new width of the widget.
      */
     inline void set_width(default_dim_type w) { resize(Size(w, h())); }
@@ -220,17 +218,22 @@ public:
     virtual void move(const Point& point);
 
     /**
+     * Set the x coordinate of the box.
+     *
      * @param[in] x The new origin X value for the widget relative to its parent.
      */
     inline void set_x(default_dim_type x) { move(Point(x, y())); }
 
     /**
+     * Set the y coordinate of the box.
+     *
      * @param[in] y The new origin Y value for the widget relative to its parent.
      */
     inline void set_y(default_dim_type y) { move(Point(x(), y)); }
 
     /**
      * Move the widget to the specified center point.
+     *
      * Changes the x and y position of the widget relative to the center point.
      *
      * @note This will cause a redraw of the widget.
@@ -277,8 +280,8 @@ public:
     virtual void set_active(bool value);
 
     /**
-    * Return true if the widget is readonly.
-    */
+     * Return true if the widget is readonly.
+     */
     virtual bool readonly() const;
 
     /**
@@ -307,14 +310,14 @@ public:
     /**
      * Damage the box() of the widget.
      *
-     * @note This is just a utility wrapper around damage(box()) in most cases.
+     * This is the same as calling damage(box()) in most cases.
      */
     virtual void damage();
 
     /**
-     * Mark the specified rect as a damaged area.
+     * Mark the specified rect as a damaged area of the widget.
      *
-     * This call will propagate to a top level parent frame.
+     * This call will propagate to a top level parent frame that owns a Screen.
      *
      * @param rect The rectangle to save for damage.
      */
@@ -326,12 +329,14 @@ public:
     virtual const Rect& box() const;
 
     /**
-     * Get the size of the widget.
+     * Get the size of the Widget.
+     * @see Widget::box()
      */
     virtual Size size() const;
 
     /**
-     * Get the origin point of the widget.
+     * Get the origin point of the Widget.
+     * @see Widget::box()
      */
     virtual Point point() const;
 
@@ -456,30 +461,13 @@ public:
     virtual void paint_to_file(const std::string& filename = std::string());
 
     /**
-     * Dump the state of the widget to the specified ostream.
+     * Dump the state of the Widget.
+     *
+     * Dump the state of the Widget to the specified ostream.
+     * @param[in,out] out The output stream.
+     * @param[in] level Indentation level.
      */
     virtual void dump(std::ostream& out, int level = 0);
-
-    /**
-     * Convert a child rectangle to a parent rectangle.
-     */
-    Rect to_parent(const Rect& r);
-
-    /**
-     * Convert a local point to the coordinate system of the display.
-     *
-     * In other words, work towards the entire display so we can get
-     * this point relative to the origin of the display.
-     */
-    virtual DisplayPoint to_display(const Point& p);
-
-    /**
-     * Convert a display point to a local point.
-     *
-     * In other words, walk towards the current widget to we can
-     * get a point relative to the widget's own box.
-     */
-    virtual Point from_display(const DisplayPoint& p);
 
     /**
      * Get the current focus state of the widget.
@@ -492,7 +480,7 @@ public:
     void set_theme(const Theme& theme);
 
     /**
-     * Reset the widget's theme to the default theme.
+     * Reset the widget's Theme to the default Theme.
      */
     void reset_theme();
 
@@ -506,15 +494,9 @@ public:
     }
 
     /**
-     * Get the widget theme, or the default theme if none is set.
+     * Get the Widget Theme, or the default Theme if none is set.
      */
     Theme& theme();
-
-    /**
-     * Helper function to draw this widget's box using the appropriate
-     * theme.
-     */
-    void draw_box(Painter& painter, const Rect& rect = Rect());
 
     /**
      * Move this widgets zorder down relative to other widgets with the same
@@ -533,9 +515,36 @@ public:
      */
     void detatch();
 
+    /**
+    * Convert a child rectangle to a parent rectangle.
+    */
+    Rect to_parent(const Rect& r);
+
+    /**
+     * Convert a local point to the coordinate system of the display.
+     *
+     * In other words, work towards the entire display so we can get
+     * this point relative to the origin of the display.
+     */
+    virtual DisplayPoint to_display(const Point& p);
+
+    /**
+     * Convert a display point to a local point.
+     *
+     * In other words, walk towards the current widget to we can
+     * get a point relative to the widget's own box.
+     */
+    virtual Point from_display(const DisplayPoint& p);
+
     virtual ~Widget() noexcept;
 
 protected:
+
+    /**
+     * Helper function to draw this widget's box using the appropriate
+     * theme.
+     */
+    void draw_box(Painter& painter, const Rect& rect = Rect());
 
     /**
      * Is this widget a top level widget?

@@ -65,11 +65,34 @@ class ComboBox : public TextWidget
 public:
     using item_array = std::vector<std::string>;
 
-    ComboBox(const item_array& items = item_array(),
-             const Rect& rect = Rect(),
-             alignmask align = alignmask::center | alignmask::left,
-             const Font& font = Font(),
-             const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+    /**
+     * @param[in] items Array of items to insert into the list.
+     */
+    explicit ComboBox(const item_array& items = item_array()) noexcept;
+
+    /**
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit ComboBox(const Rect& rect) noexcept;
+
+    /**
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Rectangle for the widget.
+     */
+    ComboBox(const item_array& items, const Rect& rect) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] items Array of items to insert into the list.
+     */
+    explicit ComboBox(Frame& parent, const item_array& items = item_array()) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Rectangle for the widget.
+     */
+    ComboBox(Frame& parent, const item_array& items, const Rect& rect) noexcept;
 
     virtual int handle(eventid event) override;
 

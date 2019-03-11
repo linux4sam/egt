@@ -30,9 +30,8 @@ int main(int argc, const char** argv)
     win1.set_name("red");
     {
         auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
-        win1.on_event([&win1, label](eventid event)
+        win1.on_event([&win1, label](eventid)
         {
-            ignoreparam(event);
             auto p = win1.from_display(event::pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;
@@ -51,9 +50,8 @@ int main(int argc, const char** argv)
     win2.set_name("blue");
     {
         auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
-        win2.on_event([&win2, label](eventid event)
+        win2.on_event([&win2, label](eventid)
         {
-            ignoreparam(event);
             auto p = win2.from_display(event::pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
             return 0;

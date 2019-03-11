@@ -29,7 +29,7 @@ enum class priorities
     high = 100,
 };
 
-class handler_priority_queue
+class PriorityQueue
 {
 public:
 
@@ -53,7 +53,7 @@ public:
     class wrapped_handler
     {
     public:
-        wrapped_handler(handler_priority_queue& q, priorities p, Handler h)
+        wrapped_handler(PriorityQueue& q, priorities p, Handler h)
             : queue_(q), m_priority(p), handler_(h)
         {
         }
@@ -75,7 +75,7 @@ public:
             handler_(arg1, arg2);
         }
 
-        handler_priority_queue& queue_;
+        PriorityQueue& queue_;
         priorities m_priority;
         Handler handler_;
     };
@@ -117,7 +117,7 @@ private:
 
 template <typename Function, typename Handler>
 void asio_handler_invoke(Function f,
-                         handler_priority_queue::wrapped_handler<Handler>* h)
+                         PriorityQueue::wrapped_handler<Handler>* h)
 {
     h->queue_.add(h->m_priority, std::forward<Function>(f));
 }

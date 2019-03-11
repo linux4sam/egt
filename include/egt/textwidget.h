@@ -32,8 +32,7 @@ public:
     explicit TextWidget(const std::string& text = std::string(),
                         const Rect& rect = Rect(),
                         alignmask align = alignmask::center,
-                        const Font& font = Font(),
-                        const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+                        const Font& font = Font()) noexcept;
 
     TextWidget(const TextWidget& rhs) noexcept;
 

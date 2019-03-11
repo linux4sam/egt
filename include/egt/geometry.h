@@ -33,6 +33,7 @@ enum class compatible
 {
     normal,
     display,
+    tuple,
 };
 
 /**
@@ -162,7 +163,7 @@ using DisplayPoint = PointType<default_dim_type, compatible::display>;
  * @brief Simple width and height.
  * @ingroup geometry
  */
-template<class dim_t = default_dim_type>
+template<class dim_t, compatible dim_c = compatible::normal>
 class SizeType
 {
 public:
@@ -177,11 +178,11 @@ public:
           w(w_)
     {}
 
-    SizeType<dim_t>(const SizeType<dim_t>&) = default;
-    SizeType<dim_t>(SizeType<dim_t>&&) = default;
-    SizeType<dim_t>& operator=(const SizeType<dim_t>&) = default;
-    SizeType<dim_t>& operator=(SizeType<dim_t>&&) = default;
-    ~SizeType<dim_t>() = default;
+    SizeType<dim_t, dim_c>(const SizeType<dim_t, dim_c>&) = default;
+    SizeType<dim_t, dim_c>(SizeType<dim_t, dim_c>&&) = default;
+    SizeType<dim_t, dim_c>& operator=(const SizeType<dim_t, dim_c>&) = default;
+    SizeType<dim_t, dim_c>& operator=(SizeType<dim_t, dim_c>&&) = default;
+    ~SizeType<dim_t, dim_c>() = default;
 
     /**
      * Returns true if the size has no width or height.
@@ -199,14 +200,14 @@ public:
         h = w = 0;
     }
 
-    SizeType<dim_t>& operator+=(const SizeType<dim_t>& rhs)
+    SizeType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)
     {
         w += rhs.w;
         h += rhs.h;
         return *this;
     }
 
-    SizeType<dim_t>& operator-=(const SizeType<dim_t>& rhs)
+    SizeType<dim_t, dim_c>& operator-=(const SizeType<dim_t, dim_c>& rhs)
     {
         w -= rhs.w;
         h -= rhs.h;
@@ -218,73 +219,74 @@ public:
 };
 
 /// Compares two @c SizeType objects for equality.
-template<class dim_t>
-inline bool operator==(const SizeType<dim_t>& lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline bool operator==(const SizeType<dim_t, dim_c>& lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     return lhs.w == rhs.w && lhs.h == rhs.h;
 }
 
 /// Compares two @c SizeType objects for inequality.
-template<class dim_t>
-inline bool operator!=(const SizeType<dim_t>& lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline bool operator!=(const SizeType<dim_t, dim_c>& lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     return !(lhs == rhs);
 }
 
-template<class dim_t>
-inline SizeType<dim_t> operator-(SizeType<dim_t> lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline SizeType<dim_t, dim_c> operator-(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t>
-inline SizeType<dim_t> operator+(SizeType<dim_t> lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline SizeType<dim_t, dim_c> operator+(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t>
-inline SizeType<dim_t> operator*(SizeType<dim_t> lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     lhs.w *= rhs.w;
     lhs.h *= rhs.h;
     return lhs;
 }
 
-template<class dim_t>
-inline SizeType<dim_t> operator*(SizeType<dim_t> lhs, float rhs)
+template<class dim_t, compatible dim_c>
+inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, float rhs)
 {
     lhs.w *= rhs;
     lhs.h *= rhs;
     return lhs;
 }
 
-template<class dim_t>
-inline SizeType<dim_t> operator/(SizeType<dim_t> lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     lhs.w /= rhs.w;
     lhs.h /= rhs.h;
     return lhs;
 }
 
-template<class dim_t>
-inline SizeType<dim_t> operator/(SizeType<dim_t> lhs, float rhs)
+template<class dim_t, compatible dim_c>
+inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, float rhs)
 {
     lhs.w /= rhs;
     lhs.h /= rhs;
     return lhs;
 }
 
-template<class dim_t>
-std::ostream& operator<<(std::ostream& os, const SizeType<dim_t>& size)
+template<class dim_t, compatible dim_c>
+std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
 {
     os << size.w << "," << size.h;
     return os;
 }
 
-using Size = SizeType<>;
+using Size = SizeType<default_dim_type, compatible::normal>;
+using Tuple = SizeType<int, compatible::tuple>;
 
 /**
  * @brief A rectangle.
@@ -294,7 +296,7 @@ using Size = SizeType<>;
  *
  * All rectangle points are at the top left.
  */
-template<class dim_t = default_dim_type>
+template<class dim_t, compatible dim_c = compatible::normal>
 class RectType
 {
 public:
@@ -307,7 +309,7 @@ public:
     /**
      * Construct a rectangle with an explicit point and size.
      */
-    explicit RectType(const Point& point, const SizeType<dim_t>& size) noexcept
+    explicit RectType(const Point& point, const SizeType<dim_t, dim_c>& size) noexcept
         : x(point.x),
           y(point.y),
           w(size.w),
@@ -321,7 +323,8 @@ public:
      * Construct a rectangle with the specified size and the point being at
      * the default origin 0,0.
      */
-    explicit RectType(const SizeType<dim_t>& size) noexcept
+    // cppcheck-suppress noExplicitConstructor
+    RectType(const SizeType<dim_t, dim_c>& size) noexcept
         : w(size.w),
           h(size.h)
     {
@@ -329,7 +332,7 @@ public:
         assert(h >= 0);
     }
 
-    explicit RectType(dim_t x_, dim_t y_, dim_t w_, dim_t h_) noexcept
+    RectType(dim_t x_, dim_t y_, dim_t w_, dim_t h_) noexcept
         : x(x_),
           y(y_),
           w(w_),
@@ -339,34 +342,34 @@ public:
         assert(h >= 0);
     }
 
-    RectType<dim_t>(const RectType<dim_t>&) = default;
-    RectType<dim_t>(RectType<dim_t>&&) = default;
-    RectType<dim_t>& operator=(const RectType<dim_t>&) = default;
-    RectType<dim_t>& operator=(RectType<dim_t>&&) = default;
-    ~RectType<dim_t>() = default;
+    RectType<dim_t, dim_c>(const RectType<dim_t, dim_c>&) = default;
+    RectType<dim_t, dim_c>(RectType<dim_t, dim_c>&&) = default;
+    RectType<dim_t, dim_c>& operator=(const RectType<dim_t, dim_c>&) = default;
+    RectType<dim_t, dim_c>& operator=(RectType<dim_t, dim_c>&&) = default;
+    ~RectType<dim_t, dim_c>() = default;
 
-    RectType<dim_t>& operator+=(const SizeType<dim_t>& rhs)
+    RectType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)
     {
         w += rhs.w;
         h += rhs.h;
         return *this;
     }
 
-    RectType<dim_t>& operator-=(const SizeType<dim_t>& rhs)
+    RectType<dim_t, dim_c>& operator-=(const SizeType<dim_t, dim_c>& rhs)
     {
         w -= rhs.w;
         h -= rhs.h;
         return *this;
     }
 
-    RectType<dim_t>& operator+=(const Point& rhs)
+    RectType<dim_t, dim_c>& operator+=(const Point& rhs)
     {
         x += rhs.x;
         y += rhs.y;
         return *this;
     }
 
-    RectType<dim_t>& operator-=(const Point& rhs)
+    RectType<dim_t, dim_c>& operator-=(const Point& rhs)
     {
         x -= rhs.x;
         y -= rhs.y;
@@ -416,15 +419,15 @@ public:
     /**
      * Get the SizeType of the rectangle.
      */
-    inline SizeType<dim_t> size() const
+    inline SizeType<dim_t, dim_c> size() const
     {
-        return SizeType<dim_t>(w, h);
+        return SizeType<dim_t, dim_c>(w, h);
     }
 
     /**
      * Set the SizeType of the rectangle.
      */
-    inline void size(const SizeType<dim_t>& s)
+    inline void size(const SizeType<dim_t, dim_c>& s)
     {
         w = s.w;
         h = s.h;
@@ -524,7 +527,7 @@ public:
     /**
      * Determine if the specified point is inside of the rectangle.
      */
-    static inline bool point_inside(const Point& point, const RectType<dim_t>& rhs)
+    static inline bool point_inside(const Point& point, const RectType<dim_t, dim_c>& rhs)
     {
         return (point.x <= rhs.right() && point.x >= rhs.left() &&
                 point.y <= rhs.bottom() && point.y >= rhs.top());
@@ -533,7 +536,7 @@ public:
     /**
      * Determine if two rectangles intersect, or, overlap.
      */
-    static inline bool intersect(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
+    static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
     {
         return (lhs.x < rhs.x + rhs.w && lhs.x + lhs.w > rhs.x &&
                 lhs.y < rhs.y + rhs.h && lhs.y + lhs.h > rhs.y);
@@ -542,7 +545,7 @@ public:
     /**
      * Determine if a point intersects with a rectangle.
      */
-    static inline bool intersect(const RectType<dim_t>& lhs, const Point& rhs)
+    static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const Point& rhs)
     {
         return (lhs.x < rhs.x && lhs.x + lhs.w > rhs.x &&
                 lhs.y < rhs.y && lhs.y + lhs.h > rhs.y);
@@ -552,7 +555,7 @@ public:
      * Merge two rectangles together into one super rectangle that contains
      * them both.
      */
-    static inline RectType<dim_t> merge(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs) noexcept
+    static inline RectType<dim_t, dim_c> merge(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs) noexcept
     {
         auto xmin = std::min(lhs.x, rhs.x);
         auto xmax = std::max(lhs.x + lhs.w,
@@ -561,10 +564,10 @@ public:
         auto ymax = std::max(lhs.y + lhs.h,
                              rhs.y + rhs.h);
 
-        return RectType<dim_t>(xmin, ymin, xmax - xmin, ymax - ymin);
+        return RectType<dim_t, dim_c>(xmin, ymin, xmax - xmin, ymax - ymin);
     }
 
-    inline RectType<dim_t> intersection(const RectType<dim_t>& rhs) noexcept
+    inline RectType<dim_t, dim_c> intersection(const RectType<dim_t, dim_c>& rhs) noexcept
     {
         return intersection(*this, rhs);
     }
@@ -572,7 +575,7 @@ public:
     /**
      * Return the intersecting rectangle of two rectangles, if any.
      */
-    static inline RectType<dim_t> intersection(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs) noexcept
+    static inline RectType<dim_t, dim_c> intersection(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs) noexcept
     {
         auto x = std::max(lhs.x, rhs.x);
         auto y = std::max(lhs.y, rhs.y);
@@ -580,15 +583,15 @@ public:
         auto h = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y;
 
         if (w < 0 || h < 0)
-            return RectType<dim_t>();
+            return RectType<dim_t, dim_c>();
 
-        return RectType<dim_t>(x, y, w, h);
+        return RectType<dim_t, dim_c>(x, y, w, h);
     }
 
     /**
     * Returns true if this rectangle contains the specified one.
      */
-    inline bool contains(const RectType<dim_t>& rhs) const
+    inline bool contains(const RectType<dim_t, dim_c>& rhs) const
     {
         return rhs.right() < right() &&
                rhs.bottom() < bottom() &&
@@ -608,44 +611,44 @@ public:
     dim_t h{0};
 };
 
-template<class dim_t>
-std::ostream& operator<<(std::ostream& os, const RectType<dim_t>& rect)
+template<class dim_t, compatible dim_c>
+std::ostream& operator<<(std::ostream& os, const RectType<dim_t, dim_c>& rect)
 {
     os << rect.tostring();
     return os;
 }
 
-template<class dim_t>
-inline RectType<dim_t> operator-(RectType<dim_t> lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     lhs.size(lhs.size() - rhs);
     return lhs;
 }
 
-template<class dim_t>
-inline RectType<dim_t> operator+(RectType<dim_t> lhs, const SizeType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     lhs.size(lhs.size() + rhs);
     return lhs;
 }
 
-template<class dim_t>
-inline RectType<dim_t> operator+(RectType<dim_t> lhs, const Point& rhs)
+template<class dim_t, compatible dim_c>
+inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const Point& rhs)
 {
     lhs.point(lhs.point() + rhs);
     return lhs;
 }
 
-template<class dim_t>
-inline RectType<dim_t> operator-(RectType<dim_t> lhs, const Point& rhs)
+template<class dim_t, compatible dim_c>
+inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const Point& rhs)
 {
     lhs.point(lhs.point() - rhs);
     return lhs;
 }
 
 /// Compares two @c Rect objects for equality.
-template<class dim_t>
-inline bool operator==(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline bool operator==(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
 {
     return lhs.x == rhs.x &&
            lhs.y == rhs.y &&
@@ -654,19 +657,19 @@ inline bool operator==(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
 }
 
 /// Compares two @c Rect objects for inequality.
-template<class dim_t>
-inline bool operator!=(const RectType<dim_t>& lhs, const RectType<dim_t>& rhs)
+template<class dim_t, compatible dim_c>
+inline bool operator!=(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
 {
     return !(lhs == rhs);
 }
 
-using Rect = RectType<>;
+using Rect = RectType<default_dim_type, compatible::normal>;
 
 /**
  * @brief A line, with a starting and ending point.
  * @ingroup geometry
  */
-template<class dim_t = default_dim_type>
+template<class dim_t>
 class LineType
 {
 public:
@@ -699,13 +702,13 @@ protected:
     Point m_end;
 };
 
-using Line = LineType<>;
+using Line = LineType<default_dim_type>;
 
 /**
  * @brief An Arc consists of a radius and two angles.
  * @ingroup geometry
  */
-template<class dim_t = default_dim_type>
+template<class dim_t>
 class ArcType
 {
 public:
@@ -734,13 +737,13 @@ public:
  * @brief Arc
  * This is an Arc.
  */
-using Arc = ArcType<>;
+using Arc = ArcType<default_dim_type>;
 
 /**
  * @brief A basic circle with a center point and radius.
  * @ingroup geometry
  */
-template<class dim_t = default_dim_type>
+template<class dim_t>
 class CircleType : public ArcType<dim_t>
 {
 public:
@@ -763,7 +766,7 @@ public:
     }
 };
 
-using Circle = CircleType<>;
+using Circle = CircleType<default_dim_type>;
 
 }
 }

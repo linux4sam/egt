@@ -33,10 +33,36 @@ class ScrolledView : public Frame
 {
 public:
 
+    /**
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] orient Vertical or horizontal orientation.
+     */
     explicit ScrolledView(const Rect& rect = Rect(),
                           orientation orient = orientation::horizontal);
 
+    /**
+     * @param[in] orient Vertical or horizontal orientation.
+     */
     explicit ScrolledView(orientation orient);
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] orient Vertical or horizontal orientation.
+     */
+    explicit ScrolledView(Frame& parent, const Rect& rect = Rect(),
+                          orientation orient = orientation::horizontal);
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] orient Vertical or horizontal orientation.
+     */
+    explicit ScrolledView(Frame& parent, orientation orient);
+
+    virtual std::unique_ptr<Widget> clone() override
+    {
+        return std::unique_ptr<Widget>(make_unique<ScrolledView>(*this).release());
+    }
 
     virtual int handle(eventid event) override;
 
@@ -60,7 +86,7 @@ public:
 
     virtual bool scrollable() const;
 
-    virtual ~ScrolledView();
+    virtual ~ScrolledView() noexcept = default;
 
 protected:
 

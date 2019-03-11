@@ -15,8 +15,8 @@ inline namespace v1
 {
 
 TextWidget::TextWidget(const std::string& text, const Rect& rect,
-                       alignmask align, const Font& font, const Widget::flags_type& flags) noexcept
-    : Widget(rect, flags),
+                       alignmask align, const Font& font) noexcept
+    : Widget(rect),
       m_text_align(align),
       m_text(text)
 {
