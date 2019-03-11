@@ -51,17 +51,17 @@ public:
 
         for (auto& c : colors)
         {
-            auto color = make_shared<Label>("");
-            color->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, c);
+            auto color_label = make_shared<Label>("");
+            color_label->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, c);
 
-            m_grid.add(expand(color));
+            m_grid.add(expand(color_label));
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
             if (c == m_color)
                 m_grid.select(column, row);
 
-            color->on_event([this, column, row](eventid event)
+            color_label->on_event([this, column, row](eventid event)
             {
                 if (event == eventid::pointer_click)
                 {
@@ -104,16 +104,16 @@ public:
 
         for (auto& w : widths)
         {
-            auto width = make_shared<Label>(std::to_string(w));
+            auto width_label = make_shared<Label>(std::to_string(w));
 
-            m_grid.add(expand(width));
+            m_grid.add(expand(width_label));
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
             if (w == m_width)
                 m_grid.select(column, row);
 
-            width->on_event([this, column, row](eventid event)
+            width_label->on_event([this, column, row](eventid event)
             {
                 if (event == eventid::pointer_click)
                 {
