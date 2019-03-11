@@ -114,10 +114,10 @@ static shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, shared_ptr<F
 
     for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling())
     {
-        string name = prop->first_attribute("name")->value();
-        string value = prop->first_attribute("value")->value();
+        string pname = prop->first_attribute("name")->value();
+        string pvalue = prop->value();
 
-        set_property<T*>(instance.get(), name, value);
+        set_property<T*>(instance.get(), pname, pvalue);
     }
 
     return static_pointer_cast<Widget>(instance);

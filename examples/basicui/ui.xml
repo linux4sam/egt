@@ -1,30 +1,14 @@
 <widgets>
   <widget type="Window" name="window1">
     <widget type="Button" name="button1">
-      <property name="text" value="Press Me" />
-      <property name="align" value="1" />
+      <property name="text">Press Me</property>
+      <property name="align">1</property>
     </widget>
     <widget type="Label" name="label1">
-      <property name="text" value="Basic Demo" />
-      <property name="width" value="100" />
-      <property name="height" value="50" />
-      <property name="align" value="2" />
+      <property name="text">Basic Demo</property>
+      <property name="width">100</property>
+      <property name="height">50"</property>
+      <property name="align">2</property>
     </widget>
-
-    <!--
-    <widget type="StaticGrid" name="grid1">
-      <property name="width" value="100" />
-      <property name="height" value="100" />
-      <property name="columns" value="4" />
-      <property name="rows" value="4" />
-
-      <widget type="Label" name="label1" column="0" row="0">
-	<property name="text" value="0,0" />
-	<property name="align" value="2" />
-      </widget>
-
-    </widget>
-    -->
-
   </widget>
 </widgets>
