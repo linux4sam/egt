@@ -12,7 +12,6 @@
 #include <glob.h>
 #include <libgen.h>
 #include <limits.h>
-#include <linux/limits.h>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
@@ -50,18 +49,26 @@ std::string replace_all(std::string str, const std::string& from, const std::str
 
 static std::string dirname(const std::string& path)
 {
-    unique_ptr<char> p(strdup(path.c_str()));
+    unique_ptr<char, decltype(std::free)*> p(strdup(path.c_str()), std::free);
     auto dir = ::dirname(p.get());
     return std::string(dir);
 }
 
+static std::string readlink(const std::string& path)
+{
+    char buff[PATH_MAX];
+    ssize_t len = ::readlink(path.c_str(), buff, sizeof(buff) - 1);
+    if (len != -1)
+    {
+        buff[len] = '\0';
+        return std::string(buff);
+    }
+    return std::string();
+}
+
 std::string exe_pwd()
 {
-    char path[PATH_MAX];
-    auto size = readlink("/proc/self/exe", path, sizeof(path));
-    if (size <= 0)
-        return std::string();
-    return dirname(std::string(path, size));
+    return dirname(std::string(readlink("/proc/self/exe")));
 }
 
 }
