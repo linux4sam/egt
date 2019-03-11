@@ -54,9 +54,9 @@ public:
 
                 if (label.find(".png") != std::string::npos)
                 {
-                    auto c = std::make_shared<ImageButton>(Image(label));
-                    c->set_image_align(alignmask::center);
-                    b = c;
+                    auto l = std::make_shared<ImageButton>(Image(label));
+                    l->set_image_align(alignmask::center);
+                    b = l;
                 }
                 else
                     b = std::make_shared<Button>(label);
