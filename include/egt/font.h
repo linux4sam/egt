@@ -88,6 +88,8 @@ public:
      */
     explicit Font(int size, weightid weight);
 
+    explicit Font(weightid weight);
+
     /**
      * Get the face name the font.
      */
