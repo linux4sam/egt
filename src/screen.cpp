@@ -8,7 +8,9 @@
 #include "egt/screen.h"
 #include "egt/utils.h"
 #include <cassert>
+#ifdef HAVE_LIBDRM
 #include <drm_fourcc.h>
+#endif
 #include <linux/fb.h>
 #include <map>
 
@@ -41,11 +43,19 @@ namespace detail
 {
 static const map<pixel_format, uint32_t> drm_formats =
 {
+#ifdef HAVE_LIBDRM
     {pixel_format::rgb565, DRM_FORMAT_RGB565},
     {pixel_format::argb8888, DRM_FORMAT_ARGB8888},
     {pixel_format::xrgb8888, DRM_FORMAT_XRGB8888},
     {pixel_format::yuyv, DRM_FORMAT_YUYV},
     {pixel_format::yuv420, DRM_FORMAT_YUV420},
+#else
+    {pixel_format::rgb565, 0},
+    {pixel_format::argb8888, 1},
+    {pixel_format::xrgb8888, 2},
+    {pixel_format::yuyv, 3},
+    {pixel_format::yuv420, 4},
+#endif
 };
 
 static const map<pixel_format, cairo_format_t> cairo_formats =

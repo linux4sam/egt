@@ -153,9 +153,6 @@ if test "x${have_gstreamer}" = xyes; then
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 
-AX_PKG_CHECK_MODULES(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
-     libdrm is a hard dependency, but a sufficient version was not found.])])
-
 AX_PKG_CHECK_MODULES(LUA, [], [lua >= 5.3.0], [have_lua=yes], [have_lua=no])
 if test "x${have_lua}" = xno; then
 AX_PKG_CHECK_MODULES(LUA, [], [lua5.3], [have_lua=yes], [have_lua=no])
@@ -171,6 +168,9 @@ PKG_CHECK_MODULES(CJSON, [libcjson >= 1.6.0], [have_cjson=yes], [have_cjson=no])
 AX_PKG_CHECK_MODULES(LIBPLANES, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
 if test "x${have_libplanes}" = xyes; then
+   AX_PKG_CHECK_MODULES(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
+     libdrm is a hard dependency, but a sufficient version was not found.])])
+
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
 fi
 
