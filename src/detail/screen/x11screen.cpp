@@ -142,10 +142,23 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ButtonPress:
             m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
+            if (e.xbutton.button == Button1)
+                m_in.m_pointer.button = pointer_button::left;
+            else if (e.xbutton.button == Button2)
+                m_in.m_pointer.button = pointer_button::middle;
+            else if (e.xbutton.button == Button3)
+                m_in.m_pointer.button = pointer_button::right;
+
             m_in.dispatch(eventid::raw_pointer_down);
             break;
         case ButtonRelease:
             m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
+            if (e.xbutton.button == Button1)
+                m_in.m_pointer.button = pointer_button::left;
+            else if (e.xbutton.button == Button2)
+                m_in.m_pointer.button = pointer_button::middle;
+            else if (e.xbutton.button == Button3)
+                m_in.m_pointer.button = pointer_button::right;
             m_in.dispatch(eventid::raw_pointer_up);
             break;
         case EnterNotify:
