@@ -30,23 +30,21 @@ AC_SUBST(pkgconfigdir)
 
 AC_USE_SYSTEM_EXTENSIONS
 
-dnl ===========================================================================
-dnl check compiler flags
-AC_DEFUN([LIBDRM_CC_TRY_FLAG], [
+AC_DEFUN([EGT_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
 
-  libdrm_save_CFLAGS="$CFLAGS"
+  egt_save_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS $1"
 
-  AC_COMPILE_IFELSE([AC_LANG_SOURCE([ ])], [libdrm_cc_flag=yes], [libdrm_cc_flag=no])
-  CFLAGS="$libdrm_save_CFLAGS"
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([ ])], [egt_cc_flag=yes], [egt_cc_flag=no])
+  CFLAGS="$egt_save_CFLAGS"
 
-  if test "x$libdrm_cc_flag" = "xyes"; then
+  if test "x$egt_cc_flag" = "xyes"; then
     ifelse([$2], , :, [$2])
   else
     ifelse([$3], , :, [$3])
   fi
-  AC_MSG_RESULT([$libdrm_cc_flag])
+  AC_MSG_RESULT([$egt_cc_flag])
 ])
 
 MAYBE_WARN="-Wall -Wextra \
@@ -56,18 +54,15 @@ MAYBE_WARN="-Wall -Wextra \
 -Wpacked \
 -Wstrict-aliasing=2 -Winit-self \
 -Wno-attributes -Wno-long-long \
--Wno-missing-field-initializers"
-
-#-Wno-unused-parameter
-#-Winline
-#-Wswitch-enum
-#-Wshadow
+-Wno-missing-field-initializers \
+-Wno-unused-parameter \
+-Winline"
 
 # invalidate cached value if MAYBE_WARN has changed
-if test "x$libdrm_cv_warn_maybe" != "x$MAYBE_WARN"; then
-	unset libdrm_cv_warn_cflags
+if test "x$egt_cv_warn_maybe" != "x$MAYBE_WARN"; then
+	unset egt_cv_warn_cflags
 fi
-AC_CACHE_CHECK([for supported warning flags], libdrm_cv_warn_cflags, [
+AC_CACHE_CHECK([for supported warning flags], egt_cv_warn_cflags, [
 	echo
 	WARN_CFLAGS=""
 
@@ -83,14 +78,14 @@ AC_CACHE_CHECK([for supported warning flags], libdrm_cv_warn_cflags, [
 	# last.
 
 	for W in $MAYBE_WARN; do
-		LIBDRM_CC_TRY_FLAG([$W], [WARN_CFLAGS="$WARN_CFLAGS $W"])
+		EGT_CC_TRY_FLAG([$W], [WARN_CFLAGS="$WARN_CFLAGS $W"])
 	done
 
-	libdrm_cv_warn_cflags=$WARN_CFLAGS
-	libdrm_cv_warn_maybe=$MAYBE_WARN
+	egt_cv_warn_cflags=$WARN_CFLAGS
+	egt_cv_warn_maybe=$MAYBE_WARN
 
 	AC_MSG_CHECKING([which warning flags were supported])])
-WARN_CFLAGS="$libdrm_cv_warn_cflags"
+WARN_CFLAGS="$egt_cv_warn_cflags"
 AC_SUBST(WARN_CFLAGS)
 
 # Checks for header files.
