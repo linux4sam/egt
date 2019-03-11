@@ -18,7 +18,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
 	$(LIBJPEG_CFLAGS) \
 	$(LIBINPUT_CFLAGS) \
-	-I$(top_srcdir)/external/asio/asio/include \
+	-isystem $(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
 AM_LDFLAGS = -pthread

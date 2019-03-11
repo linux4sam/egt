@@ -4,7 +4,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_builddir)/include \
 	-I$(top_srcdir)/src/images/bmp \
 	-I$(top_srcdir)/src/images/jpeg \
-	-I$(top_srcdir)/external/asio/asio/include \
+	-isystem $(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
 CUSTOM_CFLAGS = $(CUSTOM_CXXFLAGS)

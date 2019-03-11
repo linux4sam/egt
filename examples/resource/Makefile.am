@@ -2,7 +2,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
-	-I$(top_srcdir)/external/asio/asio/include \
+	-isystem $(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
 AM_LDFLAGS = -pthread
