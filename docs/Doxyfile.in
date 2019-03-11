@@ -177,7 +177,7 @@ SHORT_NAMES            = NO
 # description.)
 # The default value is: NO.
 
-JAVADOC_AUTOBRIEF      = NO
+JAVADOC_AUTOBRIEF      = YES
 
 # If the QT_AUTOBRIEF tag is set to YES then doxygen will interpret the first
 # line (until the first dot) of a Qt-style comment as the brief description. If
@@ -773,6 +773,7 @@ WARN_LOGFILE           =
 
 INPUT = @top_srcdir@/docs/src/index.dox
 INPUT += @top_srcdir@/docs/src/introduction.dox
+INPUT += @top_srcdir@/docs/src/started.dox
 INPUT += @top_srcdir@/docs/src/geometry.dox
 INPUT += @top_srcdir@/docs/src/colors.dox
 INPUT += @top_srcdir@/docs/src/events.dox
@@ -784,7 +785,6 @@ INPUT += @top_srcdir@/docs/src/resources.dox
 INPUT += @top_srcdir@/docs/src/topics.dox
 INPUT += @top_srcdir@/docs/src/debugging.dox
 INPUT += @top_srcdir@/docs/src/custom.dox
-INPUT += @top_srcdir@/docs/src/style.dox
 INPUT += @top_srcdir@/include @top_srcdir@/src
 
 # This tag can be used to specify the character encoding of the source files
