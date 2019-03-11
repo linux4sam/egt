@@ -196,9 +196,9 @@ public:
                 string name = node->first_attribute("name")->value();
                 string description = node->first_node("description")->value();
                 string image = node->first_node("image")->value();
-                string exec = node->first_node("exec")->value();
+                string cmd = node->first_node("exec")->value();
 
-                auto box = make_shared<LauncherItem>(num++, name, description, image, exec);
+                auto box = make_shared<LauncherItem>(num++, name, description, image, cmd);
                 add(box);
                 box->move_to_center(Point(m_boxes.size() * ITEM_SPACE, h() / 2));
 

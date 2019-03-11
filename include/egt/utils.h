@@ -62,19 +62,19 @@ int& globalloglevel();
 template <typename T>
 class reverse_range
 {
-    T& x;
+    T& m_x;
 
 public:
-    explicit reverse_range(T& x) : x(x) {}
+    explicit reverse_range(T& x) : m_x(x) {}
 
-    auto begin() const -> decltype(this->x.rbegin())
+    auto begin() const -> decltype(this->m_x.rbegin())
     {
-        return x.rbegin();
+        return m_x.rbegin();
     }
 
-    auto end() const -> decltype(this->x.rend())
+    auto end() const -> decltype(this->m_x.rend())
     {
-        return x.rend();
+        return m_x.rend();
     }
 };
 

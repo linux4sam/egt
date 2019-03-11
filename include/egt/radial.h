@@ -215,16 +215,16 @@ public:
         }
         else if (widget.radial_flags().is_set(flag::text_value))
         {
-            auto text = std::to_string(widget.value());
+            auto txt = std::to_string(widget.value());
 
             painter.set(widget.palette().color(Palette::ColorId::text));
             painter.set(Font(72));
 
-            auto size = painter.text_size(text);
+            auto size = painter.text_size(txt);
             Rect target = detail::align_algorithm(size, widget.box(), alignmask::center, 0);
 
             painter.draw(target.point());
-            painter.draw(text);
+            painter.draw(txt);
         }
     }
 

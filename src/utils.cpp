@@ -99,6 +99,8 @@ error:
     if (msg)
         free(msg);
     script_unref(cookie);
+#else
+    ignoreparam(expr);
 #endif
     return y;
 }

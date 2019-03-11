@@ -145,9 +145,9 @@ int Frame::handle(eventid event)
 
             if (Rect::point_inside(pos, child->box()))
             {
-                auto ret = child->handle(event);
-                if (ret)
-                    return ret;
+                auto cret = child->handle(event);
+                if (cret)
+                    return cret;
             }
         }
 
@@ -284,7 +284,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
-            Painter::AutoSaveRestore sr(painter);
+            Painter::AutoSaveRestore sr2(painter);
             painter.draw(r);
             painter.clip();
 
@@ -315,7 +315,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
-            Painter::AutoSaveRestore sr(painter);
+            Painter::AutoSaveRestore sr2(painter);
             painter.draw(r);
             painter.clip();
 

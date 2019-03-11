@@ -155,7 +155,7 @@ protected:
 
     constexpr static const auto HANDLE_WIDTH = 50;
 
-    inline bool is_set(flags flag) const;
+    inline bool is_set(flags f) const;
 
     /**
      * Sideboard flags.
@@ -180,9 +180,9 @@ protected:
 
 ENABLE_BITMASK_OPERATORS(SideBoard::flags)
 
-bool SideBoard::is_set(flags flag) const
+bool SideBoard::is_set(flags f) const
 {
-    return ((m_side_flags & flag) == flag);
+    return ((m_side_flags & f) == f);
 }
 
 }

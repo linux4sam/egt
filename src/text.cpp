@@ -69,7 +69,6 @@ TextBox& TextBox::operator=(const TextBox& rhs) noexcept
         m_select_len = rhs.m_select_len;
         m_cursor_state = rhs.m_cursor_state;
         m_text_flags = rhs.m_text_flags;
-        m_text_flags = rhs.m_text_flags;
 
         m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
     }

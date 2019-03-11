@@ -122,8 +122,8 @@ public:
 #define OPTIMIZE_SLIDER_DRAW
 #ifdef OPTIMIZE_SLIDER_DRAW
     /**
-     * By default, damage() will damage the entire box.  However, this
-     * widget can display on a rectangle significantly less that its box().
+     * By default, damage() will damage the entire box().  However, this
+     * widget can damage a rectangle significantly less than its box().
      */
     virtual void damage() override
     {
@@ -138,20 +138,20 @@ public:
             return;
         }
 
-        auto handle = handle_box();
+        auto handlerect = handle_box();
 
         if (m_orient == orientation::horizontal)
         {
             damage(Rect(x() - 1,
-                        handle.y - 1,
+                        handlerect.y - 1,
                         w() + 2,
-                        handle.h + 2));
+                        handlerect.h + 2));
         }
         else
         {
-            damage(Rect(handle.x  - 1,
+            damage(Rect(handlerect.x  - 1,
                         y() - 1,
-                        handle.w + 2,
+                        handlerect.w + 2,
                         h() + 2));
         }
     }

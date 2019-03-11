@@ -47,12 +47,12 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
 
     static const int STANDOFF = 5;
 
-    Point center(x() + h() / 2, y() + h() / 2);
+    Point centerpoint(x() + h() / 2, y() + h() / 2);
     float radius = (h() - STANDOFF * 2) / 2;
 
     auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
 
-    painter.draw(Arc(center, radius, 0.0f, 2 * M_PI));
+    painter.draw(Circle(centerpoint, radius));
     painter.set(palette().color(Palette::ColorId::highlight, group));
 
     painter.set_line_width(1.0);
@@ -60,7 +60,7 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
 
     if (checked())
     {
-        painter.draw(Arc(center, radius / 2, 0.0f, 2 * M_PI));
+        painter.draw(Circle(centerpoint, radius / 2));
         painter.fill();
     }
 

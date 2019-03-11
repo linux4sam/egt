@@ -98,10 +98,8 @@ ToggleBox::ToggleBox(const Rect& rect)
     palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::bg));
 }
 
-void ToggleBox::draw(Painter& painter, const Rect& rect)
+void ToggleBox::draw(Painter& painter, const Rect&)
 {
-    ignoreparam(rect);
-
     draw_box(painter);
 
     auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;

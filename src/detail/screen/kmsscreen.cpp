@@ -293,8 +293,8 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
 
         if (!plane)
         {
-            int count = count_planes(plane_type::overlay);
-            for (auto i = 0; i < count; i++)
+            int cnt = count_planes(plane_type::overlay);
+            for (auto i = 0; i < cnt; i++)
             {
                 auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
                 if (find(used.begin(), used.end(), id) != used.end())

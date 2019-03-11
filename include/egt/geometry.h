@@ -577,15 +577,15 @@ public:
      */
     static inline RectType<dim_t, dim_c> intersection(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs) noexcept
     {
-        auto x = std::max(lhs.x, rhs.x);
-        auto y = std::max(lhs.y, rhs.y);
-        auto w = std::min(lhs.x + lhs.w, rhs.x + rhs.w) - x;
-        auto h = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y;
+        auto x0 = std::max(lhs.x, rhs.x);
+        auto y0 = std::max(lhs.y, rhs.y);
+        auto w0 = std::min(lhs.x + lhs.w, rhs.x + rhs.w) - x0;
+        auto h0 = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y0;
 
-        if (w < 0 || h < 0)
+        if (w0 < 0 || h0 < 0)
             return RectType<dim_t, dim_c>();
 
-        return RectType<dim_t, dim_c>(x, y, w, h);
+        return RectType<dim_t, dim_c>(x0, y0, w0, h0);
     }
 
     /**

@@ -121,9 +121,9 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget)
     for (auto& column : m_cells)
     {
         auto i = std::find_if(column.begin(), column.end(),
-                              [](const Widget * widget)
+                              [](const Widget * w)
         {
-            return !widget;
+            return !w;
         });
 
         if (i != column.end())
@@ -153,8 +153,8 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget, int column, int row)
 
     if (row >= (int)m_cells[column].size())
     {
-        for (auto& column : m_cells)
-            column.resize(row + 1, nullptr);
+        for (auto& c : m_cells)
+            c.resize(row + 1, nullptr);
     }
 
     m_cells[column][row] = widget.get();
@@ -247,8 +247,8 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
         auto columns = m_cells.size();
         auto rows = m_cells[column].size();
 
-        Rect rect = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
-        painter.draw(rect);
+        Rect r = cell_rect(columns, rows, w(), h(), column, row, m_spacing);
+        painter.draw(r);
         painter.stroke();
     }
 

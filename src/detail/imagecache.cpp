@@ -89,9 +89,9 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         vscale = ImageCache::round(vscale, 0.01);
     }
 
-    const string name = id(filename, hscale, vscale);
+    const string nameid = id(filename, hscale, vscale);
 
-    auto i = m_cache.find(name);
+    auto i = m_cache.find(nameid);
     if (i != m_cache.end())
         return i->second;
 
@@ -232,7 +232,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         throw std::runtime_error(ss.str());
     }
 
-    m_cache.insert(std::make_pair(name, image));
+    m_cache.insert(std::make_pair(nameid, image));
 
     return image;
 }

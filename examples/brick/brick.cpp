@@ -26,7 +26,7 @@ public:
           m_ball(Image("small_ball.png")),
           m_paddle(Image("paddle.png")),
           m_running(false),
-          e1(r())
+          e1(random())
     {
         auto background = make_shared<ImageLabel>(Image("brick_background.png"));
         add(background);
@@ -223,7 +223,7 @@ private:
     Label m_label;
     unsigned int m_points;
     bool m_running;
-    std::random_device r;
+    std::random_device random;
     std::default_random_engine e1;
 };
 
