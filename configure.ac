@@ -229,13 +229,18 @@ AC_FUNC_ALLOCA
 LT_PREREQ([2.2])
 LT_INIT()
 
-AC_CHECK_PROGS([DOXYGEN], [doxygen])
-if test -z "$DOXYGEN";
-   then AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
-fi
+AC_PATH_PROG([ASTYLE_BIN], [astyle])
+AM_CONDITIONAL([HAVE_ASTYLE_BIN], [test -n "$ASTYLE_BIN"])
 
-AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
-AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([docs/Doxyfile])])
+AC_PATH_PROG([CLOC_BIN], [cloc])
+AM_CONDITIONAL([HAVE_CLOC_BIN], [test -n "$CLOC_BIN"])
+
+AC_PATH_PROG([CPPCHECK_BIN], [cppcheck])
+AM_CONDITIONAL([HAVE_CPPCHECK_BIN], [test -n "$CPPCHECK_BIN"])
+
+AC_PATH_PROG([DOXYGEN_BIN], [doxygen])
+AM_CONDITIONAL([HAVE_DOXYGEN_BIN], [test -n "$DOXYGEN_BIN"])
+AM_COND_IF([HAVE_DOXYGEN_BIN], [AC_CONFIG_FILES([docs/Doxyfile])])
 
 AC_CONFIG_FILES([Makefile
 	src/Makefile

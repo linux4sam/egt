@@ -6,11 +6,10 @@ endif
 
 EXTRA_DIST = README.md COPYING docs/Doxyfile.in $(private_icons)
 
-.PHONY: docs style cppcheck
-
-if HAVE_DOXYGEN
+if HAVE_DOXYGEN_BIN
+.PHONY: docs
 docs: docs/Doxyfile
-	@cd docs && $(DOXYGEN)
+	@cd docs && $(DOXYGEN_BIN)
 endif
 
 clean-local:
@@ -24,9 +23,11 @@ ASTYLE_WILDCARDS = \
 "$(top_srcdir)/src/\*.cpp" \
 "$(top_srcdir)/src/\*.h"
 
+if HAVE_ASTYLE_BIN
 style:
 	./scripts/style.sh --recursive $(ASTYLE_WILDCARDS) \
 		--exclude=images/jpeg -i
+endif
 
 private_icons = $(wildcard $(top_srcdir)/icons/*.png)
 
@@ -38,8 +39,7 @@ install-icons:
 
 install-data-local: install-icons
 
-
-CPPCHECK_CMD = cppcheck \
+CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--inline-suppr \
 	--error-exitcode=0 \
 	-j 4 \
@@ -56,13 +56,19 @@ $(top_srcdir)/include/egt/ \
 $(top_srcdir)/src/ \
 $(top_srcdir)/examples/
 
+if HAVE_CPPCHECK_BIN
 cppcheck:
 	$(CPPCHECK_CMD) --enable=all $(CPPCHECK_DIRS)
+endif
 
 lc:
 	find $(top_srcdir)/include/ $(top_srcdir)/src/ $(top_srcdir)/examples/ \
 		-name '*.h' -o -name '*.c' -o -name '*.cpp' | xargs wc -l
 
+if HAVE_CLOC_BIN
 cloc:
-	cloc --by-file `find $(top_srcdir)/include/ $(top_srcdir)/src/ $(top_srcdir)/examples/ -name '*.h' -o -name '*.c' -o -name '*.cpp'`
-	cloc `find $(top_srcdir)/include/ $(top_srcdir)/src/ $(top_srcdir)/examples/ -name '*.h' -o -name '*.c' -o -name '*.cpp'`
+	$(CLOC_BIN) --by-file `find $(top_srcdir)/include/ $(top_srcdir)/src/ \
+		$(top_srcdir)/examples/ -name '*.h' -o -name '*.c' -o -name '*.cpp'`
+	$(CLOC_BIN) `find $(top_srcdir)/include/ $(top_srcdir)/src/ \
+		$(top_srcdir)/examples/ -name '*.h' -o -name '*.c' -o -name '*.cpp'`
+endif
