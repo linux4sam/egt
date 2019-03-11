@@ -61,10 +61,8 @@ void TextWidget::set_text(const std::string& str)
 
 Font TextWidget::scale_font(const Size& target, const std::string& text, const Font& font)
 {
-    auto surface = shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10),
-                                          cairo_surface_destroy);
-    auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
-    Painter painter(cr);
+    Canvas canvas(Size(10, 10));
+    Painter painter(canvas.context());
 
     auto nfont = font;
     while (true)
@@ -72,7 +70,7 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
         painter.set(nfont);
 
         cairo_text_extents_t textext;
-        cairo_text_extents(cr.get(), text.c_str(), &textext);
+        cairo_text_extents(painter.context().get(), text.c_str(), &textext);
 
         if (textext.width - textext.x_bearing < target.w &&
             textext.height - textext.y_bearing < target.h)
@@ -87,15 +85,10 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
 
 Size TextWidget::text_size(const std::string& text)
 {
-    if (m_parent)
-    {
-        Canvas canvas(Size(100, 100));
-        Painter painter(canvas.context());
-        painter.set(font());
-        return painter.text_size(text);
-    }
-
-    return Size();
+    Canvas canvas(Size(100, 100));
+    Painter painter(canvas.context());
+    painter.set(font());
+    return painter.text_size(text);
 }
 
 }
