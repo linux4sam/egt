@@ -52,9 +52,9 @@ void TextWidget::clear()
 
 void TextWidget::set_text(const std::string& str)
 {
-    if (m_text != str)
+    if (detail::change_if_diff<>(m_text, str))
     {
-        m_text = str;
+        invoke_handlers(eventid::property_changed);
         damage();
     }
 }

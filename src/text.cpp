@@ -329,6 +329,7 @@ size_t TextBox::insert(const std::string& str)
         m_text.insert(m_cursor_pos, str);
         cursor_forward(str.size());
         clear_selection();
+        invoke_handlers(eventid::property_changed);
         damage();
     }
 
@@ -420,6 +421,7 @@ void TextBox::delete_selection()
         m_text.erase(m_select_start, m_select_len);
         cursor_set(m_select_start);
         clear_selection();
+        invoke_handlers(eventid::property_changed);
         damage();
     }
 }
