@@ -222,20 +222,23 @@ void ComboBox::draw(Painter& painter, const Rect& rect)
     painter.set_line_width(3.0);
     cairo_stroke(cr.get());
 
-    // text
-    auto textbox = box();
-    textbox -= Size(m_down_rect.w, 0);
+    if (m_selected < m_items.size())
+    {
+	// text
+	auto textbox = box();
+	textbox -= Size(m_down_rect.w, 0);
 
-    painter.set(palette().color(Palette::ColorId::text, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-    painter.set(font());
+	painter.set(palette().color(Palette::ColorId::text, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+	painter.set(font());
 
-    auto size = text_size(m_items[m_selected]);
-    textbox = detail::align_algorithm(size,
-                                      textbox,
-                                      m_text_align,
-                                      5);
-    painter.draw(textbox.point());
-    painter.draw(m_items[m_selected]);
+	auto size = text_size(m_items[m_selected]);
+	textbox = detail::align_algorithm(size,
+					  textbox,
+					  m_text_align,
+					  5);
+	painter.draw(textbox.point());
+	painter.draw(m_items[m_selected]);
+    }
 }
 
 ComboBox::~ComboBox()
