@@ -38,6 +38,7 @@ animations/animations \
 basic/basic \
 basicui/basicui \
 boards/boards \
+brick/brick \
 calc/calc \
 charts/charts \
 drag/drag \
@@ -73,11 +74,6 @@ if HAVE_LIBCURL
 bin_PROGRAMS += \
 newsfeed/newsfeed
 endif
-endif
-
-if HAVE_LIBPLANES
-bin_PROGRAMS += \
-brick/brick
 endif
 
 if HAVE_GSTREAMER

@@ -102,14 +102,11 @@ int main(int argc, const char** argv)
     FloatingBox box2(Rect(win.w() / 5 * 3, win.h() / 3, win.w() / 5, win.h() / 3));
     win.add(box2);
 
-    win.show();
     box1.show();
     box2.show();
 
-    Label label1("CPU: -",
-                 Rect(Point(10, win.size().h - 40),
-                      Size(100, 40)),
-                 alignmask::left | alignmask::center);
+    Label label1("CPU: ----", Rect(), alignmask::left | alignmask::center);
+    label1.set_align(alignmask::left | alignmask::bottom);
     label1.palette()
     .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
@@ -127,6 +124,8 @@ int main(int argc, const char** argv)
         label1.set_text(ss.str());
     });
     cputimer.start();
+
+    win.show();
 
     return app.run();
 }
