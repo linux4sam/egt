@@ -181,11 +181,10 @@ public:
 
     virtual Size text_size(const std::string& text);
 
-    virtual double font_height();
     /**
      * Get the current underlying context the painter is using.
      */
-    shared_cairo_t context() const
+    inline shared_cairo_t context() const
     {
         return m_cr;
     }

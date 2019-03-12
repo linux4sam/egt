@@ -189,7 +189,8 @@ void TextBox::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     painter.set(font());
-    auto height = painter.font_height();
+    cairo_font_extents_t fe;
+    cairo_font_extents(cr.get(), &fe);
 
     using FontPoint = PointType<float, compatible::normal>;
     FontPoint offset(box().x, box().y);
@@ -209,7 +210,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
 
             auto YOFF = 2.;
             painter.draw(offset + FontPoint(0, -YOFF),
-                         offset + FontPoint(0, height) + FontPoint(0, YOFF));
+                         offset + FontPoint(0, fe.height) + FontPoint(0, YOFF));
             painter.stroke();
         }
     };
@@ -260,7 +261,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
         {
             // newline
             offset.x = box().x + m_text_margin;
-            offset.y += line_spacing + height;
+            offset.y += line_spacing + fe.height;
         }
         else if (std::isprint(*ch))
         {
@@ -278,16 +279,16 @@ void TextBox::draw(Painter& painter, const Rect& rect)
                     {
                         // newline
                         offset.x = box().x + m_text_margin;
-                        offset.y += line_spacing + height;
+                        offset.y += line_spacing + fe.height;
                     }
                 }
             }
 
             std::string text(1, *ch);
-            painter.draw(offset);
-            painter.draw(text);
             cairo_text_extents_t te;
             cairo_text_extents(cr.get(), text.c_str(), &te);
+            painter.draw(Point(offset.x, offset.y + te.y_bearing - fe.descent + fe.height));
+            painter.draw(text);
             offset.x += te.x_advance;
         }
 

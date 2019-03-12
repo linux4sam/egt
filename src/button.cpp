@@ -90,8 +90,8 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect& rect)
     auto text_size = widget.text_size(widget.text());
     Rect target = detail::align_algorithm(text_size,
                                           widget.box(),
-                                          widget.text_align(),
-                                          5);
+                                          widget.text_align());
+
     painter.draw(target.point());
     painter.draw(widget.text());
 }

@@ -122,23 +122,22 @@ Painter& Painter::draw(const Rect& rect, const Image& image)
 
 Painter& Painter::draw(const std::string& str)
 {
+    if (str.empty())
+        return *this;
+
     double x, y;
     cairo_font_extents_t fe;
     cairo_text_extents_t textext;
 
     cairo_font_extents(m_cr.get(), &fe);
-
-    if (!str.empty())
-        cairo_text_extents(m_cr.get(), str.c_str(), &textext);
-    else
-        cairo_text_extents(m_cr.get(), "I", &textext);
+    cairo_text_extents(m_cr.get(), str.c_str(), &textext);
 
     if (!cairo_has_current_point(m_cr.get()))
         return *this;
 
     cairo_get_current_point(m_cr.get(), &x, &y);
     cairo_move_to(m_cr.get(), x - textext.x_bearing,
-                  y - fe.descent + fe.height);
+                  y - textext.y_bearing);
     cairo_show_text(m_cr.get(), str.c_str());
     cairo_stroke(m_cr.get());
     cairo_move_to(m_cr.get(), x, y);
@@ -151,14 +150,6 @@ Size Painter::text_size(const std::string& text)
     cairo_text_extents_t textext;
     cairo_text_extents(m_cr.get(), text.c_str(), &textext);
     return Size(textext.width, textext.height);
-}
-
-double Painter::font_height()
-{
-    cairo_font_extents_t fe;
-    cairo_font_extents(m_cr.get(), &fe);
-
-    return fe.height;
 }
 
 Painter& Painter::clip()
