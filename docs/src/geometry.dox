@@ -12,7 +12,7 @@ classes for working with geometry.
 
 All coordinate systems in EGT default with an origin of 0,0 in the top left.
 Positive X moves to the right, and positive Y moves down.  EGT does not
-currently support the idea of transforming this coordinate system, or seperating
+currently support the idea of transforming this coordinate system, or separating
 user from device coordinates, but it can be done at the painter level by
 individual widgets for drawing purposes.
 

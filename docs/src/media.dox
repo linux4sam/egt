@@ -9,7 +9,7 @@ This chapter discusses media formats directly supported by EGT.
 
 While EGT has direct and indirect support for many image, video, and audio
 formats, in some cases using third party libraries, this does not mean any other
-format cannot be converted into a format useable by EGT by a user.
+format cannot be converted into a format usable by EGT by a user.
 
 @section media_image Image Formats
 

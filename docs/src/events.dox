@@ -36,7 +36,7 @@ Asio provides way more features than what is directly used by EGT.
 
 EGT abstracts out any direct involvement with Asio, however, should you choose
 to use it directly it is available for use in, for example, networking and
-multithreaded applications.
+multi-threaded applications.
 
 @section events_prop Event Propagation
 

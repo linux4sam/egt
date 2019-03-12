@@ -12,7 +12,7 @@ Window::show() at least once somewhere in your application.
 
 The EGT API is not thread safe.  The thread the main EventLoop is
 started on, usually through Application::run(), must not be directly
-accessed by a seperate thread.  This means any widgets or windows that are
+accessed by a separate thread.  This means any widgets or windows that are
 managed by that main thread should not be accessed by another thread.
 
 However, EGT defines a solution to easily use multiple threads and interact with
@@ -20,7 +20,7 @@ the API in a thread safe manner through the event loop and Asio.  To call a
 function in the EGT API from another thread, you must post or dispatch a call to
 the EventLoop like so:
 
-To change the position of a button from another thread, the folowing can be
+To change the position of a button from another thread, the following can be
 done.
 
 @code{.cpp}

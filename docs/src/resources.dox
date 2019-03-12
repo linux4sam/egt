@@ -15,7 +15,7 @@ command.
 
 If an absolute file path is used, noting extra will happen.  That file path will
 attempt to be accessed. However, if a relative path is given then a search will
-happened by calling detail::resolve_file_path().  This function wil search any
+happened by calling detail::resolve_file_path().  This function will search any
 directory registered with detail::add_search_path().  The default paths setup
 are searched in the following order:
 
@@ -44,15 +44,16 @@ auto bug = Image("@bug.png");
 
 @section resources_mresg Resource Generator
 
-This is a tool used to generate a resource file that contains the data of binary blobs of data that can then in turn directly be used in an application when, for example, refering an image.
+This is a tool used to generate a resource file that contains the data of binary
+blobs of data that can then in turn directly be used in an application when, for
+example, referring an image.
 
-Instead of using a filesystem path to a file, prefix the path with a colon (":") to interpret the path as a resource.  Periods are replaced with underscores.
+Instead of using a filesystem path to a file, prefix the path with a colon (":")
+to interpret the path as a resource.  Periods are replaced with underscores.
 
 @code{.cpp}
 auto play = Image(":play_png");
 @endcode
-
-
 
 */
 }}
