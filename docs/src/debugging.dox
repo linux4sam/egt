@@ -29,6 +29,11 @@ r
 bt
 @endcode
 
+Running GDB right in the build directory.
+
+@code
+libtool --mode=execute gdb basic
+@endcode
 
 @section debug_env Environment Variables
 
