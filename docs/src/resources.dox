@@ -1,7 +1,7 @@
 namespace egt { inline namespace v1 {
 /**
 
- @page resources Assets
+ @page resources Resources
 
 This chapter discusses assets and how to distribute and use them.
 
@@ -10,6 +10,18 @@ example image assets, icons, audio files, and video files can be included as
 resources.  Resources may be stored in the filesystem and loaded on demand, or
 they may be compiled into the application binary itself by using the *mresg*
 command.
+
+@section resources_paths File Paths
+
+If an absolute file path is used, noting extra will happen.  That file path will
+attempt to be accessed. However, if a relative path is given then a search will
+happened by calling detail::resolve_file_path().  This function wil search any
+directory registered with detail::add_search_path().  The default paths setup
+are searched in the following order:
+
+- Data install path.
+- EXE directory.
+- EGT icon path.
 
 @section resources_using Resources
 

@@ -20,12 +20,20 @@ namespace detail
 {
 
 /**
- * Set the default relative image path.
+ * Add a search path for files.
  *
- * The default image path is the current working directly.  To change this,
- * call this function with a new path.
+ * Any actual filepath used, for example when loading images, will be searched
+ * for relative to any added path here.
  */
-void set_image_path(const std::string& path);
+void add_search_path(const std::string& path);
+
+/**
+ * Given a file path, try to find it relate to any added search paths.
+ *
+ * @return The full path to the file if found, or a path to a file that doesn't
+ *         exist.
+ */
+std::string resolve_file_path(const std::string& filename);
 
 /**
  * Internal image cache.

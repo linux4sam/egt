@@ -17,6 +17,7 @@
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <vector>
 #include <unistd.h>
 
 #include "cairo_bmp.h"
@@ -40,24 +41,43 @@ inline namespace v1
 namespace detail
 {
 
-auto ICON_PATH = detail::exe_pwd() + "/../share/egt/icons/";
+static vector<string> image_paths;
 
-static string image_path = "";
-void set_image_path(const std::string& path)
+void add_search_path(const std::string& path)
 {
-    image_path = path;
+    if (path.empty())
+        return;
+
+    auto newpath = path;
+
+    if (*newpath.rbegin() != '/')
+        newpath += '/';
+
+    if (find(image_paths.begin(), image_paths.end(), newpath) == image_paths.end())
+        image_paths.push_back(newpath);
 }
 
-/**
- * First look in PWD and then default to image_path + filename.
- */
-static string resolve_filepath(const string& filename)
+std::string resolve_file_path(const std::string& filename)
 {
-    struct stat buf;
-    if (!stat(filename.c_str(), &buf))
+    if (filename.empty())
         return filename;
 
-    return image_path + filename;
+    // we don't resolve absolute paths
+    if (filename[0] == '/')
+        return filename;
+
+    for (auto& path : image_paths)
+    {
+        auto test = path + filename;
+        struct stat buf;
+        if (!stat(test.c_str(), &buf))
+        {
+            DBG("found file " << test);
+            return test;
+        }
+    }
+
+    return filename;
 }
 
 shared_cairo_surface_t ImageCache::get(const std::string& filename,
@@ -125,7 +145,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         {
             string name = filename;
             name.erase(0, 1);
-            name = ICON_PATH + name;
+            name = resolve_file_path(name);
 
             auto mimetype = get_mime_type(name);
             DBG("mimetype of " << name << " is " << mimetype);
@@ -158,11 +178,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         }
         else
         {
-            string name;
-            if (filename[0] == '/' || filename[0] == '.')
-                name = filename;
-            else
-                name = resolve_filepath(filename);
+            string name = resolve_file_path(filename);
             DBG("loading: " << name);
 
             auto mimetype = get_mime_type(name);

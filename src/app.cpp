@@ -55,7 +55,21 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
     the_app = this;
 
-    detail::set_image_path(detail::exe_pwd() + "/../share/egt/examples/" + name + "/");
+    // first search install path
+    detail::add_search_path(std::string(DATADIR));
+    if (!name.empty())
+    {
+        // examples install path
+        detail::add_search_path(std::string(DATADIR) + "/examples/" + name);
+        detail::add_search_path(detail::exe_pwd() + "/../share/egt/examples/" + name);
+    }
+    // then go to exe pwd
+    detail::add_search_path(detail::exe_pwd());
+    // then go to icons
+    detail::add_search_path(std::string(DATADIR) + "/icons");
+    detail::add_search_path(detail::exe_pwd() + "/../share/egt/icons");
+    detail::add_search_path(detail::exe_pwd() + "/../../../icons");
+    detail::add_search_path(detail::exe_pwd() + "/../../icons");
 
     setlocale(LC_ALL, "");
     bindtextdomain(name.c_str(), (detail::exe_pwd() + "/../share/locale/").c_str());

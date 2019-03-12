@@ -9,6 +9,8 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 
 CUSTOM_CFLAGS = $(CUSTOM_CXXFLAGS)
 
+AM_CPPFLAGS = -DDATADIR=\"$(datadir)\"
+
 if HAVE_KPLOT
 CUSTOM_CXXFLAGS += -I$(top_srcdir)/external/kplot/
 endif
