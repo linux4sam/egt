@@ -16,7 +16,16 @@ This project and everyone participating in it is governed by the
 [EGT Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to
 uphold this code of conduct.
 
-## Development Tools
+## Development Tools Packages
+
+There are some extra tools that you can install with your distribution package
+manager.
+
+```sh
+sudo apt-get install cloc doxygen
+```
+
+## Extra Development Tools
 
 We like to stay on a recent version of development tools, so while these tools
 are probably packaged for your distribution, there is a chance they are old.
@@ -85,3 +94,14 @@ especially on source that you are not currentoly working on.
 
 - Limit the first line to 72 characters or less
 - Include a Signed-off-by: line near the end.
+
+## Generating Documentation
+
+This documentation is generated with Doxygen, which is managed by the EGT build
+system.  To generate the documentation at any time run:
+
+```sh
+make docs
+```
+
+The resulting documentation will be in the *docs* folder.

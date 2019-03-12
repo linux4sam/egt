@@ -106,16 +106,5 @@ int main()
 }
 @endcode
 
-@section started_gendocs Generating this Documentation
-
-This documentation is generated with Doxygen, which is managed by the EGT build
-system.  To generate the documentation at any time run:
-
-@code{.sh}
-make docs
-@endcode
-
-The resulting documentation will be in the *docs* folder.
-
 */
 }}
