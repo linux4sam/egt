@@ -13,7 +13,6 @@
 
 #include <egt/animation.h>
 #include <egt/app.h>
-#include <egt/audio.h>
 #include <egt/button.h>
 #include <egt/buttongroup.h>
 #include <egt/canvas.h>
@@ -50,10 +49,11 @@
 #include <egt/types.h>
 #include <egt/valuewidget.h>
 #include <egt/version.h>
-#include <egt/video.h>
 #include <egt/view.h>
 #include <egt/widget.h>
 #include <egt/window.h>
 
+@include_audio@
+@include_video@
 
 #endif

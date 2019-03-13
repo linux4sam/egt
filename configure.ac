@@ -145,6 +145,8 @@ fi
 AX_PKG_CHECK_MODULES(GSTREAMER, [], [gstreamer-1.0 >= 1.12 gstreamer-plugins-base-1.0], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
+   AC_SUBST(include_video, ["#include <egt/video.h>"])
+   AC_SUBST(include_audio, ["#include <egt/audio.h>"])
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 
@@ -242,6 +244,7 @@ AC_CONFIG_FILES([Makefile
 	examples/Makefile
 	scripts/Makefile
 	libegt.pc
+	include/egt/ui
 	include/egt/version.h
 	examples/i18n/Makefile
 	examples/resource/Makefile
