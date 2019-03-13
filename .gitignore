@@ -19,3 +19,4 @@ Makefile.in
 /missing
 .libs
 /libegt.pc
+TAGS
