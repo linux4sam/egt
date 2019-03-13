@@ -109,8 +109,8 @@ images/jpeg/cairo_jpg.c \
 images/jpeg/cairo_jpg.h
 endif
 
-libegtincludedir = ${includedir}/egt
-libegtinclude_HEADERS = \
+libegtincludedir = ${includedir}
+nobase_libegtinclude_HEADERS = \
 $(top_builddir)/include/egt/version.h \
 $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
@@ -186,7 +186,7 @@ detail/planewindow.cpp \
 detail/screen/kmsoverlay.cpp \
 detail/screen/kmsscreen.cpp
 
-libegtinclude_HEADERS += \
+nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
 $(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
 $(top_srcdir)/include/egt/detail/planewindow.h
@@ -201,7 +201,7 @@ detail/screen/keyboard_code_conversion_x.cpp \
 detail/screen/x11screen.cpp \
 detail/screen/x11wrap.h
 
-libegtinclude_HEADERS += \
+nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/screen/x11screen.h
 endif
 
