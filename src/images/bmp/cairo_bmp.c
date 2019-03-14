@@ -21,6 +21,9 @@
 
 #include "cairo_bmp.h"
 #define BMP_HEADER_OFFSET 138
+#define BMP_WIDTH_OFFSET 18
+#define BMP_HEIGHT_OFFSET 22
+#define BMP_BITS_OFFSET 28
 
 /*! This function reads an BMP image from a stream and creates a Cairo image
  * surface.
@@ -46,9 +49,18 @@ cairo_surface_t* cairo_image_surface_create_from_bmp_stream(cairo_read_func_t re
         return cairo_image_surface_create(CAIRO_FORMAT_INVALID, 0, 0);
 
     // extract image height, width and bitsperpixel from header
-    int width = *(int*)&info[18];
-    int height = *(int*)&info[22];
-    short bits = *(short*)&info[28];
+    int width = (info[BMP_WIDTH_OFFSET]
+                 | (int)info[BMP_WIDTH_OFFSET + 1] << 8
+                 | (int)info[BMP_WIDTH_OFFSET + 2] << 16
+                 | (int)info[BMP_WIDTH_OFFSET + 3] << 24);
+
+    int height = (info[BMP_HEIGHT_OFFSET]
+                  | (int)info[BMP_HEIGHT_OFFSET + 1] << 8
+                  | (int)info[BMP_HEIGHT_OFFSET + 2] << 16
+                  | (int)info[BMP_HEIGHT_OFFSET + 3] << 24);
+
+    short bits = (info[BMP_BITS_OFFSET]
+                  | (int)info[BMP_BITS_OFFSET + 1] << 8);
 
     // calculate stride, size
     int stride = cairo_format_stride_for_width(format, width);
