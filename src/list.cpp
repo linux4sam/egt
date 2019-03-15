@@ -74,6 +74,11 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
     }
 }
 
+Widget* ListBox::get_item(uint32_t index)
+{
+    return m_sizer->child_at(index);
+}
+
 void ListBox::remove_item(Widget* widget)
 {
     m_sizer->remove(widget);
@@ -141,6 +146,11 @@ void ListBox::set_select(uint32_t index)
             invoke_handlers(eventid::property_changed);
         }
     }
+}
+
+void ListBox::clear()
+{
+    m_sizer->remove_all();
 }
 
 Rect ListBox::child_area() const

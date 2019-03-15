@@ -98,9 +98,19 @@ public:
     virtual void add_item(const std::shared_ptr<Widget>& item);
 
     /**
+     * Get the currently selected index item from list.
+     */
+    virtual Widget* get_item(uint32_t index);
+
+    /**
      * Remove an item from the list.
      */
     virtual void remove_item(Widget* widget);
+
+    /**
+     * Remove all items from the list.
+     */
+    virtual void clear();
 
     static inline size_t item_height()
     {
