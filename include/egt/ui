@@ -21,7 +21,9 @@
 #include <egt/checkbox.h>
 #include <egt/color.h>
 #include <egt/combo.h>
+#include <egt/dialog.h>
 #include <egt/event.h>
+#include <egt/filedialog.h>
 #include <egt/font.h>
 #include <egt/frame.h>
 #include <egt/geometry.h>
@@ -51,5 +53,6 @@
 #include <egt/view.h>
 #include <egt/widget.h>
 #include <egt/window.h>
+
 
 #endif

@@ -72,6 +72,11 @@ gallery/gallery
 endif
 endif
 
+if HAVE_EXPERIMENTAL_FILESYSTEM
+bin_PROGRAMS += \
+dialog/dialog
+endif
+
 animations_animations_SOURCES = animations/animations.cpp
 animations_animations_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 animations_animations_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
@@ -244,3 +249,9 @@ boards_boards_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 boards_boardsdir = $(prefix)/share/egt/examples/boards
 dist_boards_boards_DATA = $(wildcard $(top_srcdir)/examples/boards/*.png)
 boards_boards_LDFLAGS = $(AM_LDFLAGS)
+
+dialog_dialog_SOURCES = dialog/dialog.cpp
+dialog_dialog_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+dialog_dialog_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
+dialog_dialogdir = $(prefix)/share/egt/examples/dialog
+dialog_dialog_LDFLAGS = $(AM_LDFLAGS)
