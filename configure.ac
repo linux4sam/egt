@@ -142,7 +142,7 @@ if test "x${have_libinput}" = xyes; then
    AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
 fi
 
-AX_PKG_CHECK_MODULES(GSTREAMER, [], [gstreamer-1.0 >= 1.12], [have_gstreamer=yes], [have_gstreamer=no])
+AX_PKG_CHECK_MODULES(GSTREAMER, [], [gstreamer-1.0 >= 1.12 gstreamer-plugins-base-1.0], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
 fi
