@@ -197,6 +197,14 @@ nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/screen/x11screen.h
 endif
 
+if HAVE_EXPERIMENTAL_FILESYSTEM
+libegt_la_SOURCES += \
+filedialog.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/filedialog.h
+endif
+
 libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 
 pkgconfigdir = @pkgconfigdir@
