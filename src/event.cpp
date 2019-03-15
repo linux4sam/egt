@@ -41,6 +41,8 @@ std::ostream& operator<<(std::ostream& os, const eventid& event)
         MAPITEM(eventid::show);
         MAPITEM(eventid::on_gain_focus);
         MAPITEM(eventid::on_lost_focus);
+        MAPITEM(eventid::event1);
+        MAPITEM(eventid::event2);
 #undef MAPITEM
     }
 

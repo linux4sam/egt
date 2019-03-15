@@ -40,6 +40,7 @@ chart.cpp \
 checkbox.cpp \
 color.cpp \
 combo.cpp \
+dialog.cpp \
 detail/alignment.cpp \
 detail/basicwindow.cpp \
 detail/collision.cpp \
@@ -115,6 +116,7 @@ $(top_srcdir)/include/egt/chart.h \
 $(top_srcdir)/include/egt/checkbox.h \
 $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/combo.h \
+$(top_srcdir)/include/egt/dialog.h \
 $(top_srcdir)/include/egt/detail/alignment.h \
 $(top_srcdir)/include/egt/detail/basicwindow.h \
 $(top_srcdir)/include/egt/detail/collision.h \

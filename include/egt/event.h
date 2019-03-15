@@ -83,6 +83,9 @@ enum class eventid
      * Called when the widget loses focus.
      */
     on_lost_focus,
+
+    event1,
+    event2,
 };
 
 std::ostream& operator<<(std::ostream& os, const eventid& event);
