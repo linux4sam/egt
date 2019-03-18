@@ -44,7 +44,6 @@ Widget::Widget(const Widget& rhs) noexcept
     : m_box(rhs.m_box),
       m_widgetid(rhs.m_widgetid),
       m_widget_flags(rhs.m_widget_flags),
-      m_name(rhs.m_name),
       m_align(rhs.m_align),
       m_margin(rhs.m_margin),
       m_boxtype(rhs.m_boxtype)
@@ -63,7 +62,6 @@ Widget::Widget(Widget&& rhs) noexcept
       m_widgetid(std::move(rhs.m_widgetid)),
       m_widget_flags(std::move(rhs.m_widget_flags)),
       m_palette(std::move(rhs.m_palette)),
-      m_name(std::move(rhs.m_name)),
       m_align(std::move(rhs.m_align)),
       m_margin(std::move(rhs.m_margin)),
       m_boxtype(std::move(rhs.m_boxtype)),
@@ -78,7 +76,6 @@ Widget& Widget::operator=(const Widget& rhs) noexcept
     if (&rhs != this)
     {
         m_widgetid = rhs.m_widgetid;
-        m_name = rhs.m_name;
         m_box = rhs.m_box;
         m_widget_flags = rhs.m_widget_flags;
         m_align = rhs.m_align;
@@ -104,7 +101,6 @@ Widget& Widget::operator=(Widget&& rhs) noexcept
     m_widgetid = std::move(rhs.m_widgetid);
     m_widget_flags = std::move(rhs.m_widget_flags);
     m_palette = std::move(rhs.m_palette);
-    m_name = std::move(rhs.m_name);
     m_align = std::move(rhs.m_align);
     m_margin = std::move(rhs.m_margin);
     m_boxtype = std::move(rhs.m_boxtype);
@@ -404,11 +400,6 @@ Point Widget::from_display(const DisplayPoint& p)
         return parent()->from_display_back(p);
 
     return Point(p.x, p.y);
-}
-
-const std::string& Widget::name() const
-{
-    return m_name;
 }
 
 void Widget::paint(Painter& painter)

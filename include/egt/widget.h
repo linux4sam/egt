@@ -440,18 +440,6 @@ public:
     inline int margin() const { return m_margin; }
 
     /**
-     * Get the name of the widget.
-     */
-    const std::string& name() const;
-
-    /**
-     * Set the name of the widget.
-     *
-     * @param[in] name Name to set for the widget.
-     */
-    inline void set_name(const std::string& name) { m_name = name; }
-
-    /**
      * Paint the Widget using Painter.
      *
      * paint() is not part of the normal draw path.  This is a utility
@@ -604,11 +592,6 @@ private:
      * functions because this is not set until it is modified.
      */
     std::unique_ptr<Palette> m_palette;
-
-    /**
-     * A user defined name for the widget.
-     */
-    std::string m_name;
 
     /**
      * Alignment hint for this widget within its parent.

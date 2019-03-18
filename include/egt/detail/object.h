@@ -11,11 +11,12 @@
  * @brief Base object definition.
  */
 
+#include <cstdint>
 #include <egt/event.h>
 #include <functional>
-#include <cstdint>
-#include <vector>
+#include <string>
 #include <unordered_set>
+#include <vector>
 
 namespace egt
 {
@@ -41,6 +42,18 @@ public:
 
     Object() noexcept
     {}
+
+    /**
+     * Get the name of the Object.
+     */
+    inline const std::string& name() const { return m_name; }
+
+    /**
+     * Set the name of the Object.
+     *
+     * @param[in] name Name to set for the Object.
+     */
+    inline void set_name(const std::string& name) { m_name = name; }
 
     using event_callback_t = std::function<int (eventid event)>;
 
@@ -87,6 +100,11 @@ protected:
     using callback_array = std::vector<callback_meta>;
 
     callback_array m_callbacks;
+
+    /**
+     * A user defined name for the Object.
+     */
+    std::string m_name;
 };
 
 }
