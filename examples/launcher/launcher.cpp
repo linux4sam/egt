@@ -10,6 +10,7 @@
 #include <array>
 #include <cmath>
 #include <cstdio>
+#include <egt/detail/filesystem.h>
 #include <egt/detail/screen/kmsscreen.h>
 #include <egt/ui>
 #include <iostream>

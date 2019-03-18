@@ -5,10 +5,11 @@
  */
 #include <cmath>
 #include <cstdio>
+#include <egt/detail/filesystem.h>
+#include <egt/ui>
 #include <iostream>
 #include <map>
 #include <memory>
-#include <egt/ui>
 #include <string>
 #include <vector>
 

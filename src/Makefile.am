@@ -48,6 +48,7 @@ detail/imagecache.cpp \
 detail/input/inputevdev.cpp \
 detail/input/inputlibinput.cpp \
 detail/input/inputtslib.cpp \
+detail/filesystem.cpp \
 detail/mousegesture.cpp \
 detail/resource.cpp \
 detail/screen/framebuffer.cpp \
@@ -125,6 +126,7 @@ $(top_srcdir)/include/egt/detail/imagecache.h \
 $(top_srcdir)/include/egt/detail/input/inputevdev.h \
 $(top_srcdir)/include/egt/detail/input/inputlibinput.h \
 $(top_srcdir)/include/egt/detail/input/inputtslib.h \
+$(top_srcdir)/include/egt/detail/filesystem.h \
 $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \
 $(top_srcdir)/include/egt/detail/object.h \

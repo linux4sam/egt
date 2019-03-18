@@ -101,8 +101,6 @@ private:
 std::string replace_all(std::string str, const std::string& from,
                         const std::string& to);
 
-std::string exe_pwd();
-
 template<class T>
 inline bool change_if_diff(T& old, const T& to)
 {

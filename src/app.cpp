@@ -8,6 +8,7 @@
 #endif
 
 #include "egt/app.h"
+#include "egt/detail/filesystem.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/input/inputevdev.h"
 #include "egt/detail/input/inputlibinput.h"
