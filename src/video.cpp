@@ -46,6 +46,8 @@ void init_gst_thread()
 }
 }
 
+#ifdef HAVE_LIBPLANES
+
 gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
     ignoreparam(bus);
@@ -802,6 +804,8 @@ bool RawSoftwareVideo::set_media(const string& uri)
 
     return true;
 }
+
+#endif
 }
 }
 

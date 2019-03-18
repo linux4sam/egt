@@ -78,8 +78,11 @@ endif
 
 if HAVE_GSTREAMER
 bin_PROGRAMS += \
-audioplayer/audioplayer \
+audioplayer/audioplayer
+if HAVE_LIBPLANES
+bin_PROGRAMS += \
 gallery/gallery
+endif
 endif
 
 animations_animations_SOURCES = animations/animations.cpp
