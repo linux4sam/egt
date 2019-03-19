@@ -101,14 +101,14 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     else
 #endif
 #ifdef HAVE_LIBPLANES
-    if (backend == "kms")
-        new detail::KMSScreen(primary);
-    else
+        if (backend == "kms")
+            new detail::KMSScreen(primary);
+        else
 #endif
-    if (backend == "fbdev")
-        new detail::FrameBuffer("/dev/fb0");
-    else
-        throw std::runtime_error("backend not available");
+            if (backend == "fbdev")
+                new detail::FrameBuffer("/dev/fb0");
+            else
+                throw std::runtime_error("backend not available");
 
 #ifdef HAVE_TSLIB
     new detail::InputTslib("/dev/input/touchscreen0");

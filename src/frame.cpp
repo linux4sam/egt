@@ -165,7 +165,7 @@ void Frame::add_damage(const Rect& rect)
     // not allowed to damage in draw()
     assert(!m_in_draw);
     if (m_in_draw)
-	return;
+        return;
 
     if (unlikely(rect.empty()))
         return;
@@ -293,11 +293,11 @@ void Frame::draw(Painter& painter, const Rect& rect)
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
             Painter::AutoSaveRestore sr2(painter);
-	    if (!child->flags().is_set(Widget::flag::no_clip))
-	    {
-		painter.draw(r);
-		painter.clip();
-	    }
+            if (!child->flags().is_set(Widget::flag::no_clip))
+            {
+                painter.draw(r);
+                painter.clip();
+            }
 
             experimental::code_timer(false, child->name() + " draw: ", [&]()
             {
@@ -329,8 +329,8 @@ void Frame::draw(Painter& painter, const Rect& rect)
             Painter::AutoSaveRestore sr2(painter);
             if (!child->flags().is_set(Widget::flag::no_clip))
             {
-		painter.draw(r);
-		painter.clip();
+                painter.draw(r);
+                painter.clip();
             }
 
             experimental::code_timer(false, child->name() + " draw: ", [&]()
