@@ -9,14 +9,8 @@
 
 #include "egt/ui"
 #include "egt/uiloader.h"
-
-#ifdef HAVE_RAPIDXML_RAPIDXML_HPP
-#include <rapidxml/rapidxml.hpp>
-#include <rapidxml/rapidxml_utils.hpp>
-#else
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
-#endif
 
 using namespace std;
 

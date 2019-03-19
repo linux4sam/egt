@@ -55,4 +55,5 @@ EXTRA_DIST = \
 	$(wildcard asio/asio/include/*/*.ipp) \
 	$(wildcard asio/asio/include/*/*/*.ipp) \
 	$(wildcard asio/asio/include/*/*/*/*.ipp) \
-	$(wildcard asio/asio/include/*/*/*/*/*.ipp)
+	$(wildcard asio/asio/include/*/*/*/*/*.ipp) \
+	rapidxml

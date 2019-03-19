@@ -206,13 +206,6 @@ then
 fi
 
 
-AC_LANG_PUSH([C++])
-AC_CHECK_HEADERS([rapidxml/rapidxml.hpp], [have_rapidxml=yes], [have_rapidxml=no])
-AM_CONDITIONAL([HAVE_RAPIDXML_RAPIDXML_HPP], [test "x${have_rapidxml}" = xyes])
-AC_CHECK_HEADERS([rapidxml.hpp], [have_rapidxml=yes], [have_rapidxml=no])
-AM_CONDITIONAL([HAVE_RAPIDXML_HPP], [test "x${have_rapidxml}" = xyes])
-AC_LANG_POP([C++])
-
 AM_CONDITIONAL([HAVE_KPLOT], [test true])
 AC_DEFINE(HAVE_KPLOT, 1, [Have kplot support])
 

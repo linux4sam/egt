@@ -21,6 +21,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
 	$(LIBJPEG_CFLAGS) \
 	$(LIBINPUT_CFLAGS) \
+	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
@@ -48,6 +49,7 @@ frames/frames \
 icon/icon \
 infotain/infotain \
 keyboard/keyboard \
+launcher/launcher \
 space/space \
 sprite/sprite \
 squares/squares \
@@ -56,24 +58,9 @@ water/water \
 whiteboard/whiteboard \
 widgets/widgets
 
-if HAVE_RAPIDXML_HPP
-bin_PROGRAMS += \
-launcher/launcher \
-basicui/basicui
 if HAVE_LIBCURL
 bin_PROGRAMS += \
 newsfeed/newsfeed
-endif
-endif
-
-if HAVE_RAPIDXML_RAPIDXML_HPP
-bin_PROGRAMS += \
-launcher/launcher \
-basicui/basicui
-if HAVE_LIBCURL
-bin_PROGRAMS += \
-newsfeed/newsfeed
-endif
 endif
 
 if HAVE_GSTREAMER

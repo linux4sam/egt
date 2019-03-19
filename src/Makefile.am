@@ -4,6 +4,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_builddir)/include \
 	-I$(top_srcdir)/src/images/bmp \
 	-I$(top_srcdir)/src/images/jpeg \
+	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/asio/asio/include \
 	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
 
@@ -75,6 +76,7 @@ textwidget.cpp \
 theme.cpp \
 timer.cpp \
 tools.cpp \
+uiloader.cpp \
 utils.cpp \
 video.cpp \
 view.cpp \
@@ -86,16 +88,6 @@ if HAVE_LUA
 libegt_la_SOURCES += \
 lua/script.c \
 lua/script.h
-endif
-
-if HAVE_RAPIDXML_HPP
-libegt_la_SOURCES += \
-uiloader.cpp
-endif
-
-if HAVE_RAPIDXML_RAPIDXML_HPP
-libegt_la_SOURCES += \
-uiloader.cpp
 endif
 
 libegt_la_LIBADD =
