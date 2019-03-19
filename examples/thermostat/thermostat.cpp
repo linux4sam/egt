@@ -37,7 +37,7 @@ public:
         auto m_title = make_shared<Label>(*this, "Living Room",
                                           Size(250, 64),
                                           alignmask::center,
-                                          egt::Font(32, Font::weightid::BOLD));
+                                          egt::Font(32, Font::weightid::bold));
         m_title->palette().set(Palette::ColorId::bg, Palette::GroupId::normal,
                                Palette::transparent);
         m_title->set_align(alignmask::center | alignmask::top, 10);

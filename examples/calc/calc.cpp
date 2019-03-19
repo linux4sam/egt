@@ -61,7 +61,7 @@ int main(int argc, const char** argv)
                 continue;
 
             auto b = make_shared<Button>(label, Rect(Size(50, 50)));
-            b->set_font(Font(30, Font::weightid::BOLD));
+            b->set_font(Font(30, Font::weightid::bold));
 
             b->on_event([&text, b](eventid event)
             {

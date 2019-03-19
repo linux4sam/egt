@@ -82,7 +82,7 @@ public:
                      name,
                      Rect(Point(x, y), Size()),
                      alignmask::center,
-                     Font(24, Font::weightid::BOLD)),
+                     Font(24, Font::weightid::bold)),
           m_num(num),
           m_name(name),
           m_description(description),

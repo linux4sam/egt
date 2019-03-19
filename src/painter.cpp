@@ -45,9 +45,9 @@ Painter& Painter::set(const Font& font)
     cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
     switch (font.weight())
     {
-    case Font::weightid::NORMAL:
+    case Font::weightid::normal:
         break;
-    case Font::weightid::BOLD:
+    case Font::weightid::bold:
         weight = CAIRO_FONT_WEIGHT_BOLD;
         break;
     }
@@ -55,12 +55,12 @@ Painter& Painter::set(const Font& font)
     cairo_font_slant_t slant = CAIRO_FONT_SLANT_NORMAL;
     switch (font.slant())
     {
-    case Font::slantid::NORMAL:
+    case Font::slantid::normal:
         break;
-    case Font::slantid::ITALIC:
+    case Font::slantid::italic:
         slant = CAIRO_FONT_SLANT_ITALIC;
         break;
-    case Font::slantid::OBLIQUE:
+    case Font::slantid::oblique:
         slant = CAIRO_FONT_SLANT_OBLIQUE;
         break;
     }

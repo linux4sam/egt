@@ -36,8 +36,8 @@ public:
      */
     enum class weightid
     {
-        NORMAL = 0,
-        BOLD = 1,
+        normal = 0,
+        bold = 1,
     };
 
 
@@ -46,9 +46,9 @@ public:
      */
     enum class slantid
     {
-        NORMAL = 0,
-        ITALIC = 1,
-        OBLIQUE = 2,
+        normal = 0,
+        italic = 1,
+        oblique = 2,
     };
 
     static const std::string DEFAULT_FACE;

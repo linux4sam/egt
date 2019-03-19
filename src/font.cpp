@@ -12,9 +12,9 @@ inline namespace v1
 {
 
 const std::string Font::DEFAULT_FACE = "Arial Unicode";
-const Font::weightid Font::DEFAULT_WEIGHT = Font::weightid::NORMAL;
+const Font::weightid Font::DEFAULT_WEIGHT = Font::weightid::normal;
 const int Font::DEFAULT_SIZE = 18;
-const Font::slantid Font::DEFAULT_SLANT = Font::slantid::NORMAL;
+const Font::slantid Font::DEFAULT_SLANT = Font::slantid::normal;
 
 Font::Font()
     : m_face(DEFAULT_FACE),
