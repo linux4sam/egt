@@ -76,3 +76,18 @@ cloc:
 	$(CLOC_BIN) `find $(top_srcdir)/include/ $(top_srcdir)/src/ \
 		$(top_srcdir)/examples/ -name '*.h' -o -name '*.c' -o -name '*.cpp'`
 endif
+
+MAINTAINERCLEANFILES = \
+Makefile.in \
+aclocal.m4 \
+config.h.in \
+configure \
+depcomp \
+install-sh \
+missing \
+config.guess \
+config.rpath \
+compile \
+config.h.in~ \
+config.sub \
+ltmain.sh
