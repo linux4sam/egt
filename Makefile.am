@@ -31,8 +31,12 @@ endif
 
 private_icons = $(wildcard $(top_srcdir)/icons/*.png)
 
+install_verbose = $(install_verbose_@AM_V@)
+install_verbose_ = $(install_verbose_@AM_DEFAULT_V@)
+install_verbose_0 = @echo INSTALL $@;
+
 install-icons:
-	for icon in $(private_icons); do \
+	$(install_verbose)for icon in $(private_icons); do \
 		mkdir -p $(DESTDIR)$(pkgdatadir)/icons/; \
 		$(INSTALL_DATA) $(srcdir)/$$icon $(DESTDIR)$(pkgdatadir)/icons/; \
 	done
