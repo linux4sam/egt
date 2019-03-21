@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
-#include <math.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
 #include <iostream>
+#include <map>
+#include <math.h>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace egt;
@@ -186,9 +187,22 @@ struct TextPage : public NotebookTab
         text4->disable();
         grid0->add(expand(text4));
 
-        auto text5 = std::make_shared<TextBox>("Multiline\nText", Rect(), alignmask::left | alignmask::top);
-        text5->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
-        grid1->add(expand(text5));
+        auto text5 = std::make_shared<TextBox>("all characters allowed");
+        text5->add_validator_function([this](std::string s) { return true; });
+        text5->enable_input_validation();
+        grid0->add(expand(text5));
+
+        auto text6 = std::make_shared<TextBox>("abc123 only");
+        text6->add_validator_function([this](std::string s)
+        {
+            return std::regex_match(s, regex("[abc123]*"));
+        });
+        text6->enable_input_validation();
+        grid0->add(expand(text6));
+
+        auto text7 = std::make_shared<TextBox>("Multiline\nText", Rect(), alignmask::left | alignmask::top);
+        text7->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
+        grid1->add(expand(text7));
     }
 };
 

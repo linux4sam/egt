@@ -324,6 +324,10 @@ size_t TextBox::append(const std::string& str)
 
 size_t TextBox::insert(const std::string& str)
 {
+    if (m_validate_input)
+        if (!validate_input(str))
+            return 0;
+
     if (!str.empty())
     {
         m_text.insert(m_cursor_pos, str);
@@ -424,6 +428,34 @@ void TextBox::delete_selection()
         invoke_handlers(eventid::property_changed);
         damage();
     }
+}
+
+void TextBox::enable_input_validation()
+{
+    m_validate_input = true;
+}
+
+void TextBox::disable_input_validation()
+{
+    m_validate_input = true;
+}
+
+void TextBox::add_validator_function(validator_callback_t callback)
+{
+    m_validator_callbacks.push_back(callback);
+}
+
+bool TextBox::validate_input(const std::string& str)
+{
+    for (auto callback : m_validator_callbacks)
+    {
+        auto valid = callback(str);
+        if (!valid)
+            return false;
+
+    }
+
+    return true;
 }
 
 void TextBox::cursor_timeout()

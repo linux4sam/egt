@@ -57,6 +57,8 @@ public:
 
     using flags_type = Flags<flag>;
 
+    using validator_callback_t = std::function<bool(std::string)>;
+
     TextBox() noexcept;
 
     TextBox(const std::string& str,
@@ -187,9 +189,27 @@ public:
      */
     void delete_selection();
 
+    /**
+     * Enable validation of the input. Invoke the validator callbacks. If one of
+     * them returns false, the input is rejected.
+     */
+    void enable_input_validation();
+
+    /**
+     * Disable validation of the input.
+     */
+    void disable_input_validation();
+
+    /**
+     * Add a callback to be invoked to validate the input.
+     */
+    void add_validator_function(validator_callback_t callback);
+
     virtual ~TextBox() noexcept = default;
 
 protected:
+
+    using validator_callback_array = std::vector<validator_callback_t>;
 
     /**
      * Show/enable the visibility of the cursor.
@@ -205,6 +225,11 @@ protected:
      * Process key events.
      */
     int handle_key(eventid event);
+
+    /**
+     * Validate the input against the validator pattern.
+     */
+    bool validate_input(const std::string& str);
 
     /**
      * Timer for blinking the cursor.
@@ -225,6 +250,16 @@ protected:
      * Selection length.
      */
     size_t m_select_len{0};
+
+    /**
+     * Validation of the input.
+     */
+    bool m_validate_input{false};
+
+    /**
+     * Callbacks invoked to validate the input.
+     */
+    validator_callback_array m_validator_callbacks;
 
 private:
 
