@@ -51,6 +51,13 @@ Font::Font(weightid weight)
       m_slant(DEFAULT_SLANT)
 {}
 
+Font::Font(slantid slant)
+    : m_face(DEFAULT_FACE),
+      m_size(DEFAULT_SIZE),
+      m_weight(DEFAULT_WEIGHT),
+      m_slant(slant)
+{}
+
 std::ostream& operator<<(std::ostream& os, const Font& font)
 {
     os << font.face() << ", " << font.size() << ", " <<

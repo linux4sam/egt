@@ -90,6 +90,8 @@ public:
 
     explicit Font(weightid weight);
 
+    explicit Font(slantid slant);
+
     /**
      * Get the face name the font.
      */
@@ -125,8 +127,7 @@ public:
      */
     virtual slantid slant() const { return m_slant; }
 
-    virtual ~Font()
-    {}
+    virtual ~Font() = default;
 
 protected:
 
@@ -137,6 +138,20 @@ protected:
 };
 
 std::ostream& operator<<(std::ostream& os, const Font& font);
+
+inline bool operator==(const Font& lhs, const Font& rhs)
+{
+    return lhs.face() == rhs.face() &&
+           lhs.size() == rhs.size() &&
+           lhs.weight() == rhs.weight() &&
+           lhs.slant() == rhs.slant();
+
+}
+
+inline bool operator!=(const Font& lhs, const Font& rhs)
+{
+    return !(lhs == rhs);
+}
 
 }
 }
