@@ -130,6 +130,10 @@ public:
     template<class T>
     Painter& draw(const RectType<T>& rect)
     {
+        //assert(!rect.empty());
+        if (rect.empty())
+            return *this;
+
         cairo_rectangle(m_cr.get(),
                         rect.x,
                         rect.y,
@@ -147,6 +151,10 @@ public:
     template<class T>
     Painter& draw(const ArcType<T>& arc)
     {
+        //assert(!arc.empty());
+        if (arc.empty())
+            return *this;
+
         cairo_arc(m_cr.get(), arc.center.x, arc.center.y,
                   arc.radius, arc.angle1, arc.angle2);
 

@@ -752,6 +752,13 @@ public:
     {
     }
 
+    inline bool empty() const
+    {
+        return this->radius <= 0.0f ||
+               detail::FloatingPoint<float>(this->radius).
+               AlmostEquals(detail::FloatingPoint<float>(0.0f));
+    }
+
     Point center;
     float radius{0.0f};
     float angle1;

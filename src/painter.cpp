@@ -3,10 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/detail/alignment.h"
 #include "egt/image.h"
 #include "egt/painter.h"
-#include "egt/widget.h"
 #include <cairo.h>
 
 namespace egt
@@ -83,8 +81,7 @@ Painter& Painter::set_line_width(float width)
 
 Painter& Painter::draw(const Image& image)
 {
-    double x, y;
-
+    assert(!image.empty());
     if (image.empty())
         return *this;
 
@@ -93,9 +90,12 @@ Painter& Painter::draw(const Image& image)
     if (!cairo_has_current_point(m_cr.get()))
         return *this;
 
+    double x, y;
     cairo_get_current_point(m_cr.get(), &x, &y);
     cairo_set_source_surface(m_cr.get(), image.surface().get(), x, y);
     cairo_rectangle(m_cr.get(), x, y, image.size().w, image.size().h);
+
+    /// @todo no fill here
     fill();
 
     return *this;
@@ -115,6 +115,8 @@ Painter& Painter::draw(const Rect& rect, const Image& image)
     cairo_set_source_surface(m_cr.get(), image.surface().get(),
                              x - rect.x, y - rect.y);
     cairo_rectangle(m_cr.get(), x, y, rect.w, rect.h);
+
+    /// @todo no fill here
     fill();
 
     return *this;
@@ -124,6 +126,8 @@ Painter& Painter::draw(const std::string& str)
 {
     if (str.empty())
         return *this;
+
+    AutoSaveRestore sr(*this);
 
     double x, y;
     cairo_font_extents_t fe;
@@ -140,7 +144,6 @@ Painter& Painter::draw(const std::string& str)
                   y - textext.y_bearing);
     cairo_show_text(m_cr.get(), str.c_str());
     cairo_stroke(m_cr.get());
-    cairo_move_to(m_cr.get(), x, y);
 
     return *this;
 }
