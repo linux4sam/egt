@@ -221,7 +221,10 @@ void Widget::set_active(bool value)
 {
     if (flags().is_set(Widget::flag::active) != value)
     {
-        value ? flags().set(Widget::flag::active) : flags().clear(Widget::flag::active);
+        if (value)
+            flags().set(Widget::flag::active);
+        else
+            flags().clear(Widget::flag::active);
         damage();
     }
 }
@@ -235,7 +238,10 @@ void Widget::set_readonly(bool value)
 {
     if (flags().is_set(Widget::flag::readonly) != value)
     {
-        value ? flags().set(Widget::flag::readonly) : flags().clear(Widget::flag::readonly);
+        if (value)
+            flags().set(Widget::flag::readonly);
+        else
+            flags().clear(Widget::flag::readonly);
         damage();
     }
 }
