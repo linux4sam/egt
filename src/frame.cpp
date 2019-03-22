@@ -172,10 +172,7 @@ void Frame::add_damage(const Rect& rect)
 
     DBG(name() << " damage: " << rect);
 
-    // no rects outside of our box()
-    auto r = Rect::intersection(rect, box());
-
-    Screen::damage_algorithm(m_damage, r);
+    Screen::damage_algorithm(m_damage, rect);
 }
 
 void Frame::damage(const Rect& rect)
