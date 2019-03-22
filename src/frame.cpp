@@ -200,9 +200,15 @@ void Frame::dump(std::ostream& out, int level)
         " " << box() << " " << flags() << endl;
 
     for (auto& child : m_children)
-    {
         child->dump(out, level + 1);
-    }
+}
+
+void Frame::walk(walk_callback_t callback, int level)
+{
+    callback(this, level);
+
+    for (auto& child : m_children)
+        child->walk(callback, level + 1);
 }
 
 Point Frame::to_panel(const Point& p)

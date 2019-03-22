@@ -462,9 +462,13 @@ void Widget::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << name() <<
         " " << box() << " " << m_widget_flags;
-    if (m_parent)
-        out << " parent: " << m_parent->name();
+    out << " align(" << (int)align() << ")";
     out << std::endl;
+}
+
+void Widget::walk(walk_callback_t callback, int level)
+{
+    callback(this, level);
 }
 
 void Widget::set_theme(const Theme& theme)

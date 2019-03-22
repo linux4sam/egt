@@ -464,6 +464,10 @@ public:
      */
     virtual void dump(std::ostream& out, int level = 0);
 
+    using walk_callback_t = std::function<void(Widget* widget, int level)>;
+
+    virtual void walk(walk_callback_t callback, int level = 0);
+
     /**
      * Get the current focus state of the widget.
      */
