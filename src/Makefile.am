@@ -135,6 +135,7 @@ $(top_srcdir)/include/egt/detail/object.h \
 $(top_srcdir)/include/egt/detail/priorityqueue.h \
 $(top_srcdir)/include/egt/detail/resource.h \
 $(top_srcdir)/include/egt/detail/screen/framebuffer.h \
+$(top_srcdir)/include/egt/detail/serialize.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
 $(top_srcdir)/include/egt/detail/string.h \
 $(top_srcdir)/include/egt/detail/windowimpl.h \
