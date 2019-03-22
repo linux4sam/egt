@@ -48,6 +48,7 @@ icon/icon \
 infotain/infotain \
 keyboard/keyboard \
 launcher/launcher \
+sizers/sizers \
 space/space \
 sprite/sprite \
 squares/squares \
@@ -273,3 +274,8 @@ dash_dash_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 dash_dashdir = $(prefix)/share/egt/examples/dash
 dist_dash_dash_DATA = $(wildcard $(top_srcdir)/examples/dash/*.svg)
 dash_dash_LDFLAGS = $(AM_LDFLAGS)
+
+sizers_sizers_SOURCES = sizers/sizers.cpp
+sizers_sizers_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+sizers_sizers_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+sizers_sizers_LDFLAGS = $(AM_LDFLAGS)
