@@ -29,6 +29,8 @@ public:
     explicit ProgressBar(const Rect& rect = Rect(),
                          int min = 0, int max = 100, int value = 0) noexcept;
 
+    /// @todo Constructors
+
     virtual std::unique_ptr<Widget> clone() override
     {
         return std::unique_ptr<Widget>(make_unique<ProgressBar>(*this).release());
@@ -57,6 +59,8 @@ public:
      */
     explicit SpinProgress(const Rect& rect = Rect(),
                           int min = 0, int max = 100, int value = 0) noexcept;
+
+    /// @todo Constructors
 
     virtual std::unique_ptr<Widget> clone() override
     {
@@ -90,6 +94,8 @@ public:
      */
     explicit LevelMeter(const Rect& rect = Rect(),
                         int min = 0, int max = 100, int value = 0) noexcept;
+
+    /// @todo Constructors
 
     virtual std::unique_ptr<Widget> clone() override
     {
@@ -133,6 +139,8 @@ public:
      * @param[in] rect Rectangle for the widget.
      */
     explicit AnalogMeter(const Rect& rect = Rect());
+
+    /// @todo Constructors
 
     virtual std::unique_ptr<Widget> clone() override
     {

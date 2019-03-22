@@ -40,6 +40,7 @@ public:
         double x;
         double y;
 
+        /// @todo float comparison
         bool operator==(const data_pair& rhs) const
         {
             return (x == rhs.x) && (y == rhs.y);
