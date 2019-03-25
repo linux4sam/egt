@@ -325,7 +325,7 @@ public:
     /**
      * Construct a rectangle with an explicit point and size.
      */
-    explicit RectType(const Point& point, const SizeType<dim_t, dim_c>& size) noexcept
+    explicit RectType(const PointType<dim_t>& point, const SizeType<dim_t, dim_c>& size) noexcept
         : x(point.x),
           y(point.y),
           w(size.w),
