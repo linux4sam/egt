@@ -55,7 +55,8 @@ MAYBE_WARN="-Wall -Wextra \
 -Wstrict-aliasing=2 -Winit-self \
 -Wno-attributes -Wno-long-long \
 -Wno-missing-field-initializers \
--Wno-unused-parameter"
+-Wno-unused-parameter \
+-Wno-psabi" # no warnings about gcc abi changes
 
 # invalidate cached value if MAYBE_WARN has changed
 if test "x$egt_cv_warn_maybe" != "x$MAYBE_WARN"; then
