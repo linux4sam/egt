@@ -158,6 +158,7 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
     //tools_device_apply_config(libinput_event_get_device(ev),
     //			  &w->options);
 
+#if 0
     if (libinput_event_get_type(ev) == LIBINPUT_EVENT_DEVICE_ADDED)
     {
         // ignore calibratable devices (touchscreens)
@@ -170,6 +171,7 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
             //tslib_pointercal_to_libinput(dev);
         }
     }
+#endif
 }
 
 void InputLibInput::handle_event_motion(struct libinput_event* ev)
