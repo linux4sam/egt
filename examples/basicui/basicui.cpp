@@ -9,7 +9,7 @@
 
 int main(int argc, const char** argv)
 {
-    egt::Application app(argc, argv);
+    egt::Application app(argc, argv, "basicui");
 
     egt::experimental::UiLoader loader;
     auto window = loader.load(egt::detail::resolve_file_path("ui.xml"));

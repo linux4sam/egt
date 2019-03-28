@@ -28,7 +28,7 @@ static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max, s
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    Application app(argc, argv, "guage");
 
     TopWindow win;
     win.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::gray);
