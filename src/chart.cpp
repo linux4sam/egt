@@ -20,6 +20,9 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
+
 #ifdef HAVE_KPLOT
 static void xticlabelfmt(double v, char* b, size_t)
 {
@@ -198,4 +201,5 @@ void PieChart::draw(Painter& painter, const Rect& rect)
     cairo_restore(cr.get());
 }
 
+}
 }
