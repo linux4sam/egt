@@ -366,6 +366,73 @@ struct ListPage : public NotebookTab
     }
 };
 
+struct ScrollwheelPage : public NotebookTab
+{
+    ScrollwheelPage()
+    {
+        auto hsizer1 =
+            std::make_shared<BoxSizer>(orientation::horizontal, 10, 10, 10);
+        add(expand(hsizer1));
+
+        auto scrollwheel_day =
+            std::make_shared<Scrollwheel>(Rect(0, 0, 50, 75), 1, 31, 1);
+
+        std::vector<std::string> months = { "January", "February", "March",
+            "April", "May", "June", "July", "August", "September", "October",
+            "November", "December" };
+        auto scrollwheel_month =
+            std::make_shared<Scrollwheel>(Rect(0, 0, 200, 75), months);
+        scrollwheel_month->add_item("");
+
+        auto scrollwheel_year =
+            std::make_shared<Scrollwheel>(Rect(0, 0, 100, 75),
+                                          1900, 2019, 1, true);
+
+        auto label_day =
+            std::make_shared<Label>(Label(scrollwheel_day->get_value(),
+                                          Rect(0, 0, 50, 30)));
+
+        auto label_month =
+            std::make_shared<Label>(Label(scrollwheel_month->get_value(),
+                                          Rect(0, 0, 100, 30)));
+
+        auto label_year =
+            std::make_shared<Label>(Label(scrollwheel_year->get_value(),
+                                          Rect(0, 0, 75, 30)));
+
+        scrollwheel_day->on_event([label_day, scrollwheel_day](eventid event)
+        {
+            label_day->set_text(scrollwheel_day->get_value());
+
+            return 0;
+        }, {eventid::property_changed});
+
+        scrollwheel_month->on_event([label_month, scrollwheel_month](eventid event)
+        {
+            label_month->set_text(scrollwheel_month->get_value());
+
+            return 0;
+        }, {eventid::property_changed});
+
+        scrollwheel_year->on_event([label_year, scrollwheel_year](eventid event)
+        {
+            label_year->set_text(scrollwheel_year->get_value());
+
+            return 0;
+        }, {eventid::property_changed});
+
+        hsizer1->add(scrollwheel_day);
+        hsizer1->add(scrollwheel_month);
+        hsizer1->add(scrollwheel_year);
+
+        hsizer1->add(label_day);
+        hsizer1->add(label_month);
+        hsizer1->add(label_year);
+
+        scrollwheel_month->set_index(4);
+    }
+};
+
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "widgets");
@@ -397,6 +464,7 @@ int main(int argc, const char** argv)
     list->add_item(make_shared<StringItem>("Meters"));
     list->add_item(make_shared<StringItem>("ComboBox"));
     list->add_item(make_shared<StringItem>("ListBox"));
+    list->add_item(make_shared<StringItem>("Scrollwheel"));
     list->set_align(alignmask::expand_vertical | alignmask::left);
     hsizer->add(list);
 
@@ -410,6 +478,7 @@ int main(int argc, const char** argv)
     notebook->add(make_shared<MeterPage>());
     notebook->add(make_shared<ComboPage>());
     notebook->add(make_shared<ListPage>());
+    notebook->add(make_shared<ScrollwheelPage>());
     hsizer->add(expand(notebook));
 
     list->on_event([&notebook, &list](eventid)

@@ -72,6 +72,7 @@ palette.cpp \
 progressbar.cpp \
 radiobox.cpp \
 screen.cpp \
+scrollwheel.cpp \
 slider.cpp \
 sprite.cpp \
 text.cpp \
@@ -158,6 +159,7 @@ $(top_srcdir)/include/egt/progressbar.h \
 $(top_srcdir)/include/egt/radial.h \
 $(top_srcdir)/include/egt/radiobox.h \
 $(top_srcdir)/include/egt/screen.h \
+$(top_srcdir)/include/egt/scrollwheel.h \
 $(top_srcdir)/include/egt/sideboard.h \
 $(top_srcdir)/include/egt/sizer.h \
 $(top_srcdir)/include/egt/slider.h \
