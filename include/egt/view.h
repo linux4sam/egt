@@ -206,6 +206,8 @@ protected:
      * Width/height of the slider when shown.
      */
     default_dim_type m_slider_dim{8};
+
+    bool m_update{false};
 };
 
 }

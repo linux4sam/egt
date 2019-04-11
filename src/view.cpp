@@ -63,67 +63,70 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     if (!m_canvas)
         return;
 
-    //
-    // All children are drawn to the internal m_canvas.  Then, the proper part
-    // of the canvas is drawn based on of the m_offset.
-    //
-
-    Painter cpainter(m_canvas->context());
-
-    Rect crect = to_child(super_rect());
-
-    if (boxtype() != Theme::boxtype::none)
+    if (!m_update)
     {
-        Palette::GroupId group = Palette::GroupId::normal;
-        if (disabled())
-            group = Palette::GroupId::disabled;
-        else if (active())
-            group = Palette::GroupId::active;
+        //
+        // All children are drawn to the internal m_canvas.  Then, the proper part
+        // of the canvas is drawn based on of the m_offset.
+        //
+        Painter cpainter(m_canvas->context());
 
-        theme().draw_box(cpainter,
-                         boxtype(),
-                         crect,
-                         color(Palette::ColorId::border, group),
-                         color(Palette::ColorId::bg, group),
-                         border(),
-                         margin());
-    }
+        Rect crect = to_child(super_rect());
 
-    for (auto& child : m_children)
-    {
-        if (!child->visible())
-            continue;
-
-        // don't draw plane frame as child - this is
-        // specifically handled by event loop
-        if (child->flags().is_set(Widget::flag::plane_window))
-            continue;
-
-        if (child->box().intersect(crect))
+        if (boxtype() != Theme::boxtype::none)
         {
-            // don't give a child a rectangle that is outside of its own box
-            const auto r = Rect::intersection(crect, child->box());
-            if (r.empty())
+            Palette::GroupId group = Palette::GroupId::normal;
+            if (disabled())
+                group = Palette::GroupId::disabled;
+            else if (active())
+                group = Palette::GroupId::active;
+
+            theme().draw_box(cpainter,
+                             boxtype(),
+                             crect /*m_canvas->size()*//*to_child(box())*/,
+                             color(Palette::ColorId::border, group),
+                             color(Palette::ColorId::bg, group),
+                             border(),
+                             margin());
+        }
+
+        for (auto& child : m_children)
+        {
+            if (!child->visible())
                 continue;
 
+            // don't draw plane frame as child - this is
+            // specifically handled by event loop
+            if (child->flags().is_set(Widget::flag::plane_window))
+                continue;
+
+            if (child->box().intersect(crect))
             {
-                // no matter what the child draws, clip the output to only the
-                // rectangle we care about updating
-                Painter::AutoSaveRestore sr2(cpainter);
-                if (!child->flags().is_set(Widget::flag::no_clip))
+                // don't give a child a rectangle that is outside of its own box
+                const auto r = Rect::intersection(crect, child->box());
+                if (r.empty())
+                    continue;
+
                 {
-                    cpainter.draw(r);
-                    cpainter.clip();
+                    // no matter what the child draws, clip the output to only the
+                    // rectangle we care about updating
+                    Painter::AutoSaveRestore sr2(cpainter);
+                    if (!child->flags().is_set(Widget::flag::no_clip))
+                    {
+                        cpainter.draw(r);
+                        cpainter.clip();
+                    }
+
+                    experimental::code_timer(false, child->name() + " draw: ", [&]()
+                    {
+                        child->draw(cpainter, r);
+                    });
                 }
 
-                experimental::code_timer(false, child->name() + " draw: ", [&]()
-                {
-                    child->draw(cpainter, r);
-                });
+                special_child_draw(cpainter, child.get());
             }
-
-            special_child_draw(cpainter, child.get());
         }
+
     }
 
     // change origin to paint canvas area and sliders
@@ -155,6 +158,8 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
         m_hslider.draw(painter, rect);
     if (vscrollable())
         m_vslider.draw(painter, rect);
+
+    m_update = false;
 }
 
 void ScrolledView::resize(const Size& size)
@@ -261,6 +266,7 @@ void ScrolledView::set_offset(Point offset)
         if (detail::change_if_diff<>(m_offset, offset))
         {
             update_sliders();
+            m_update = true;
             damage();
         }
     }
