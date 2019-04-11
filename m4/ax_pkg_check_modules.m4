@@ -52,16 +52,18 @@
 
 #serial 4
 
-AC_DEFUN([AX_PKG_CHECK_MODULES],[
+AC_DEFUN([AX_PKG_CHECK_MODULES2],[
     m4_define([ax_package_requires],
               [m4_default_quoted([$6],[AX_PACKAGE_REQUIRES])])
     m4_define([ax_package_requires_private],
               [m4_default_quoted([$7],[AX_PACKAGE_REQUIRES_PRIVATE])])
 
-    ax_package_requires="$[]ax_package_requires m4_normalize($2)"
-    ax_package_requires_private="$[]ax_package_requires_private m4_normalize($3)"
-
-    PKG_CHECK_MODULES([$1],[$2 $3],[$4],[$5])
+    # only set requires if successsfully found
+    PKG_CHECK_MODULES([$1],[$2 $3],[
+        $4
+    	ax_package_requires="$[]ax_package_requires m4_normalize($2)"
+	ax_package_requires_private="$[]ax_package_requires_private m4_normalize($3)"
+    ],[$5])
 
     # Substitute output.
     AC_SUBST(ax_package_requires)

@@ -126,23 +126,23 @@ AC_TYPE_UINT8_T
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 
-PKG_CHECK_MODULES(X11, [x11 >= 1.6.3], [have_x11=yes], [have_x11=no])
+AX_PKG_CHECK_MODULES2(X11, [x11 >= 1.6.3], [], [have_x11=yes], [have_x11=no])
 AM_CONDITIONAL([HAVE_X11], [test "x${have_x11}" = xyes])
 if test "x${have_x11}" = xyes; then
    AC_DEFINE(HAVE_X11, 1, [Have x11 support])
 fi
 
-AX_PKG_CHECK_MODULES(TSLIB, [], [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
+AX_PKG_CHECK_MODULES2(TSLIB, [tslib >= 1.15], [], [have_tslib=yes], [have_tslib=no])
 if test "x${have_tslib}" = xyes; then
    AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
 fi
 
-AX_PKG_CHECK_MODULES(LIBINPUT, [], [libinput >= 1.6.3], [have_libinput=yes], [have_libinput=no])
+AX_PKG_CHECK_MODULES2(LIBINPUT, [libinput >= 1.6.3], [], [have_libinput=yes], [have_libinput=no])
 if test "x${have_libinput}" = xyes; then
    AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
 fi
 
-AX_PKG_CHECK_MODULES(GSTREAMER, [], [gstreamer-1.0 >= 1.12 gstreamer-plugins-base-1.0], [have_gstreamer=yes], [have_gstreamer=no])
+AX_PKG_CHECK_MODULES2(GSTREAMER, [], [gstreamer-1.0 >= 1.12 gstreamer-plugins-base-1.0], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
    AC_SUBST(include_video, ["#include <egt/video.h>"])
@@ -150,9 +150,9 @@ if test "x${have_gstreamer}" = xyes; then
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 
-AX_PKG_CHECK_MODULES(LUA, [], [lua >= 5.3.0], [have_lua=yes], [have_lua=no])
+AX_PKG_CHECK_MODULES2(LUA, [lua >= 5.3.0], [], [have_lua=yes], [have_lua=no])
 if test "x${have_lua}" = xno; then
-AX_PKG_CHECK_MODULES(LUA, [], [lua5.3], [have_lua=yes], [have_lua=no])
+AX_PKG_CHECK_MODULES2(LUA, [lua5.3], [], [have_lua=yes], [have_lua=no])
 fi
 AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
 if test "x${have_lua}" = xyes; then
@@ -162,31 +162,31 @@ fi
 # remove when libplanes is fixed
 PKG_CHECK_MODULES(CJSON, [libcjson >= 1.6.0], [have_cjson=yes], [have_cjson=no])
 
-AX_PKG_CHECK_MODULES(LIBPLANES, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
+AX_PKG_CHECK_MODULES2(LIBPLANES, [libplanes >= 1.0.0], [], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
 if test "x${have_libplanes}" = xyes; then
-   AX_PKG_CHECK_MODULES(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
+   AX_PKG_CHECK_MODULES2(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
      libdrm is a hard dependency, but a sufficient version was not found.])])
    AC_DEFINE(HAVE_LIBDRM, 1, [Have libdrm support])
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
 fi
 
-AX_PKG_CHECK_MODULES(CAIRO, [], [cairo >= 1.14.6], [], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES2(CAIRO, [cairo >= 1.14.6], [], [], [AC_MSG_ERROR([
      cairo is a hard dependency, but a sufficient version was not found.])])
 
-AX_PKG_CHECK_MODULES(LIBJPEG, [], [libjpeg >= 0.28], [have_libjpeg=yes], [have_libjpeg=no])
+AX_PKG_CHECK_MODULES2(LIBJPEG, [libjpeg], [], [have_libjpeg=yes], [have_libjpeg=no])
 AM_CONDITIONAL([HAVE_LIBJPEG], [test "x${have_libjpeg}" = xyes])
 if test "x${have_libjpeg}" = xyes; then
    AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
 fi
 
-AX_PKG_CHECK_MODULES(LIBCURL, [], [libcurl >= 4.5], [have_libcurl=yes], [have_libcurl=no])
+AX_PKG_CHECK_MODULES2(LIBCURL, [libcurl >= 4.5], [], [have_libcurl=yes], [have_libcurl=no])
 AM_CONDITIONAL([HAVE_LIBCURL], [test "x${have_libcurl}" = xyes])
 if test "x${have_libcurl}" = xyes; then
    AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
 fi
 
-AX_PKG_CHECK_MODULES(LIBRSVG, [], [librsvg-2.0], [have_librsvg=yes], [have_librsvg=no])
+AX_PKG_CHECK_MODULES2(LIBRSVG, [librsvg-2.0], [], [have_librsvg=yes], [have_librsvg=no])
 AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
 if test "x${have_librsvg}" = xyes; then
    AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
@@ -212,7 +212,6 @@ then
    LDFLAGS="${SAVED_LDFLAGS} -lstdc++fs"
    AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
 fi
-
 
 AM_CONDITIONAL([HAVE_KPLOT], [test true])
 AC_DEFINE(HAVE_KPLOT, 1, [Have kplot support])
