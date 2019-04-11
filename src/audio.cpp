@@ -7,7 +7,7 @@
 #include "egt/audio.h"
 #include "egt/utils.h"
 #include "egt/video.h"
-#include <asio.hpp>
+#include <egt/asio.hpp>
 #include <cstring>
 #include <thread>
 

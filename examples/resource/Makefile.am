@@ -2,8 +2,24 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
-	-isystem $(top_srcdir)/external/asio/asio/include \
-	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
+	$(LIBPLANES_CFLAGS) \
+	$(CAIRO_CFLAGS) \
+	$(LIBDRM_CFLAGS) \
+	$(TSLIB_CFLAGS) \
+	$(LUA_CFLAGS) \
+	$(CJSON_CFLAGS) \
+	$(GSTREAMER_CFLAGS) \
+	$(LIBJPEG_CFLAGS) \
+	$(LIBINPUT_CFLAGS) \
+	$(LIBCURL_CFLAGS) \
+	-isystem $(top_srcdir)/external/rapidxml \
+	$(LIBRSVG_CFLAGS) \
+	-isystem $(top_srcdir)/external/Box2D \
+	-isystem $(top_srcdir)/external/Chipmunk2D/include
+
+LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
+	$(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) \
+	$(LIBINPUT_LIBS) $(MAGIC_LIB) $(LIBRSVG_LIBS) $(LIBCURL_LIBS)
 
 AM_LDFLAGS = -pthread
 
@@ -21,8 +37,8 @@ CLEANFILES = $(BUILT_SOURCES)
 
 resource_SOURCES = resource.cpp
 nodist_resource_SOURCES = $(BUILT_SOURCES)
-resource_CXXFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) $(LIBDRM_CFLAGS) $(TSLIB_CFLAGS) $(LUA_CFLAGS) $(CJSON_CFLAGS) $(GSTREAMER_CFLAGS) $(LIBJPEG_CFLAGS) $(LIBINPUT_CFLAGS) $(LIBRSVG_CFLAGS) $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-resource_LDADD = $(top_builddir)/src/libegt.la $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) $(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) $(LIBINPUT_LIBS) $(LIBRSVG_LIBS)
+resource_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+resource_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 resourcedir = $(prefix)/share/egt/examples/resource
 resource_DATA = $(wildcard $(top_srcdir)/examples/resource/*.png *.bmp)
 resource_LDFLAGS = $(AM_LDFLAGS)

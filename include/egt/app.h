@@ -6,7 +6,7 @@
 #ifndef EGT_APP_H
 #define EGT_APP_H
 
-#include <asio.hpp>
+#include <egt/asio.hpp>
 #include <egt/eventloop.h>
 #include <egt/utils.h>
 #include <iosfwd>

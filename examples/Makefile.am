@@ -21,16 +21,15 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	$(GSTREAMER_CFLAGS) \
 	$(LIBJPEG_CFLAGS) \
 	$(LIBINPUT_CFLAGS) \
+	$(LIBCURL_CFLAGS) \
 	-isystem $(top_srcdir)/external/rapidxml \
-	$(LIBRSVG_CFLAGS) \
-	-isystem $(top_srcdir)/external/asio/asio/include \
-	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
+	$(LIBRSVG_CFLAGS)
 
 AM_LDFLAGS = -pthread
 
 LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 	$(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) \
-	$(LIBINPUT_LIBS) $(MAGIC_LIB) $(LIBRSVG_LIBS)
+	$(LIBINPUT_LIBS) $(MAGIC_LIB) $(LIBRSVG_LIBS) $(LIBCURL_LIBS)
 
 #CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -Ofast -flto -fwhole-program"
 #LDFLAGS="$LDFLAGS -flto -fwhole-program"
@@ -193,8 +192,8 @@ dist_whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*
 whiteboard_whiteboard_LDFLAGS = $(AM_LDFLAGS)
 
 newsfeed_newsfeed_SOURCES = newsfeed/newsfeed.cpp
-newsfeed_newsfeed_CXXFLAGS = $(CUSTOM_CXXFLAGS)  $(LIBCURL_CFLAGS) $(AM_CXXFLAGS)
-newsfeed_newsfeed_LDADD = $(top_builddir)/src/libegt.la $(LDADD) $(LIBCURL_LIBS)
+newsfeed_newsfeed_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+newsfeed_newsfeed_LDADD = $(top_builddir)/src/libegt.la $(LDADD)
 newsfeed_newsfeeddir = $(prefix)/share/egt/examples/newsfeed
 dist_newsfeed_newsfeed_DATA = $(wildcard $(top_srcdir)/examples/newsfeed/*.xml)
 newsfeed_newsfeed_LDFLAGS = $(AM_LDFLAGS)

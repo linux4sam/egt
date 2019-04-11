@@ -53,7 +53,11 @@ CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--platform=unix32 \
 	--template=gcc \
 	-UTSLIB_MT_VALID \
-	-I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg
+	-I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg \
+	--config-exclude=include/egt/asio/ \
+	--config-exclude=include/egt/asio.hpp \
+	--suppress=*:asio*:* \
+	-i include/egt/asio/
 
 CPPCHECK_DIRS = \
 $(top_srcdir)/include/egt/ \

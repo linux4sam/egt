@@ -6,7 +6,7 @@
 #ifndef EGT_TIMER_H
 #define EGT_TIMER_H
 
-#include <asio.hpp>
+#include <egt/asio.hpp>
 #include <chrono>
 #include <egt/utils.h>
 #include <iosfwd>

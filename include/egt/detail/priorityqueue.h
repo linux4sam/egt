@@ -11,7 +11,7 @@
 #ifndef EGT_PRIORITYQUEUE_H
 #define EGT_PRIORITYQUEUE_H
 
-#include <asio.hpp>
+#include <egt/asio.hpp>
 #include <functional>
 #include <queue>
 

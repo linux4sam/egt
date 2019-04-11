@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/detail/alignment.h>
-#include <asio.hpp>
 #include <egt/ui>
 #include <iostream>
 

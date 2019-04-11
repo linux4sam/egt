@@ -4,9 +4,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_builddir)/include \
 	-I$(top_srcdir)/src/images/bmp \
 	-I$(top_srcdir)/src/images/jpeg \
-	-isystem $(top_srcdir)/external/rapidxml \
-	-isystem $(top_srcdir)/external/asio/asio/include \
-	-DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE
+	-isystem $(top_srcdir)/external/rapidxml
 
 CUSTOM_CFLAGS = $(CUSTOM_CXXFLAGS)
 
@@ -177,6 +175,18 @@ $(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
 $(top_srcdir)/include/egt/widgetflags.h \
 $(top_srcdir)/include/egt/window.h
+
+nobase_libegtinclude_HEADERS += \
+	$(top_srcdir)/include/egt/asio.hpp \
+	$(wildcard $(top_srcdir)/include/egt/asio/*.hpp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*.hpp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*.hpp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*.hpp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*/*.hpp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*.ipp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*.ipp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*.ipp) \
+	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*/*.ipp)
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \

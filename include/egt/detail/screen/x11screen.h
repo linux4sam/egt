@@ -6,7 +6,7 @@
 #ifndef EGT_X11SCREEN_H
 #define EGT_X11SCREEN_H
 
-#include <asio.hpp>
+#include <egt/asio.hpp>
 #include <egt/screen.h>
 #include <egt/input.h>
 #include <memory>

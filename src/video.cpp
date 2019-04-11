@@ -6,7 +6,7 @@
 #include "egt/app.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
-#include <asio.hpp>
+#include <egt/asio.hpp>
 #include <cstring>
 #include <thread>
 

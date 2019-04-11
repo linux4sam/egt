@@ -1,6 +1,3 @@
 [submodule "external/kplot"]
 	path = external/kplot
 	url = https://github.com/kristapsdz/kplot.git
-[submodule "external/asio"]
-	path = external/asio
-	url = https://github.com/chriskohlhoff/asio.git
