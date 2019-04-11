@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
+#include <egt/detail/filesystem.h>
 #include <math.h>
 #include <string>
 #include <map>
@@ -63,7 +64,7 @@ int main(int argc, const char** argv)
         return 0;
     });
 
-    std::vector<std::string> files = experimental::glob("../share/egt/icons/*.png");
+    std::vector<std::string> files = detail::glob("../share/egt/icons/*.png");
 
     StaticGrid grid0(Rect(0, 0, files.size() / 6 * 160, win.h()), Tuple(files.size() / 6, 6));
     grid0.set_name("grid0");

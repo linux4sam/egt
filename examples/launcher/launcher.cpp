@@ -186,7 +186,7 @@ public:
 
     virtual int load(const std::string& expr)
     {
-        std::vector<std::string> files = experimental::glob(expr);
+        std::vector<std::string> files = detail::glob(expr);
 
         for (auto& file : files)
         {

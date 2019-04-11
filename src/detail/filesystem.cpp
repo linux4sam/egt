@@ -6,11 +6,13 @@
 #include "egt/detail/filesystem.h"
 #include <cstring>
 #include <fstream>
+#include <glob.h>
 #include <iostream>
 #include <iterator>
 #include <libgen.h>
 #include <limits.h>
 #include <memory>
+#include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -85,6 +87,29 @@ std::string readlink(const std::string& path)
 std::string exe_pwd()
 {
     return extract_dirname(std::string(readlink("/proc/self/exe")));
+}
+
+std::vector<std::string> glob(const std::string& pattern)
+{
+    glob_t glob_result;
+    memset(&glob_result, 0, sizeof(glob_result));
+
+    int return_value = glob(pattern.c_str(), GLOB_TILDE, NULL, &glob_result);
+    if (return_value != 0)
+    {
+        globfree(&glob_result);
+        std::stringstream ss;
+        ss << "glob() failed: " << return_value << std::endl;
+        throw std::runtime_error(ss.str());
+    }
+
+    std::vector<std::string> filenames;
+    for (size_t i = 0; i < glob_result.gl_pathc; ++i)
+        filenames.push_back(std::string(glob_result.gl_pathv[i]));
+
+    globfree(&glob_result);
+
+    return filenames;
 }
 
 }

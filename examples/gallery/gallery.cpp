@@ -22,7 +22,7 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "gallery");
 
-    std::vector<std::string> files = experimental::glob(SHARED_PATH + "*trailer*.png");
+    std::vector<std::string> files = detail::glob(SHARED_PATH + "*trailer*.png");
 
     TopWindow win;
     win.set_name("win");

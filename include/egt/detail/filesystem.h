@@ -57,6 +57,11 @@ std::string readlink(const std::string& path);
  */
 std::string exe_pwd();
 
+/**
+ * Given a a glob pattern, return a vector of matching pathnames.
+ */
+std::vector<std::string> glob(const std::string& pattern);
+
 }
 }
 }

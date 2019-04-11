@@ -50,6 +50,7 @@ detail/filesystem.cpp \
 detail/mousegesture.cpp \
 detail/resource.cpp \
 detail/screen/framebuffer.cpp \
+detail/string.cpp \
 detail/windowimpl.cpp \
 event.cpp \
 eventloop.cpp \
@@ -133,6 +134,7 @@ $(top_srcdir)/include/egt/detail/priorityqueue.h \
 $(top_srcdir)/include/egt/detail/resource.h \
 $(top_srcdir)/include/egt/detail/screen/framebuffer.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
+$(top_srcdir)/include/egt/detail/string.h \
 $(top_srcdir)/include/egt/detail/windowimpl.h \
 $(top_srcdir)/include/egt/event.h \
 $(top_srcdir)/include/egt/eventloop.h \
