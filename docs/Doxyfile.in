@@ -786,6 +786,7 @@ INPUT += @top_srcdir@/docs/src/resources.dox
 INPUT += @top_srcdir@/docs/src/topics.dox
 INPUT += @top_srcdir@/docs/src/debugging.dox
 INPUT += @top_srcdir@/docs/src/custom.dox
+INPUT += @top_srcdir@/docs/src/eclipse.dox
 INPUT += @top_srcdir@/include @top_srcdir@/src
 
 # This tag can be used to specify the character encoding of the source files
