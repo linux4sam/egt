@@ -22,13 +22,16 @@ The following image formats are directly supported by EGT:
 @section media_video Video Formats
 
 The following video stream formats are directly supported by EGT:
-- Uncompressed YUV
-- MPEG1
-- MPEG2
-- MPEG4
-- H.264 (limited)
-- VP8 (limited)
-- VP9 (limited)
+
+Format           | Support
+---------------- | -------------
+Uncompressed YUV | All
+MPEG1            | All
+MPEG2            | All
+MPEG4            | All
+H.264            | SAMA5D4
+VP8              | SAMA5D4
+VP9              | SAMA5D4
 
 @section media_svg Working with SVG (Vector Graphics) Files
 

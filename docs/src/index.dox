@@ -1,21 +1,17 @@
 namespace egt { inline namespace v1 {
 /**
 
-@mainpage EGT Programming Manual
+@mainpage EGT Programmer's Manual
 
 @image html microchip_logo.png
-@image latex microchip_logo.png "" width=3.175cm
 
 @image html logo.png
-@image latex logo.png "" width=3.96875cm
 
 The Ensemble Graphics Toolkit (EGT) is a C++ GUI Linux toolkit for
 <a href="http://www.microchip.com">Microchip</a> AT91/SAMA5 processors.  EGT
 provides modern GUI functionality, look-and-feel, and maximizes performance.
 
 If you are new to EGT, please start with the @subpage intro "Introduction".
-
-@section Programming Manual
 
 @li @subpage intro
 @li @subpage started
