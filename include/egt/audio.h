@@ -11,20 +11,25 @@
  * @brief Working with audio.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
-#ifdef HAVE_GSTREAMER
+/**
+ * @defgroup media Images and Video
+ * Image and video related classes.
+ */
 
 #include <egt/detail/object.h>
-#include <gst/gst.h>
+#include <memory>
 #include <string>
 
 namespace egt
 {
 inline namespace v1
 {
+
+namespace detail
+{
+struct AudioPlayerImpl;
+}
 
 /**
  * Audio player.
@@ -80,18 +85,12 @@ public:
     /**
      * Get the current position of the audio stream.
      */
-    inline uint64_t position() const
-    {
-        return m_position;
-    }
+    uint64_t position() const;
 
     /**
      * Get the duration of the audio stream.
      */
-    inline uint64_t duration() const
-    {
-        return m_duration;
-    }
+    uint64_t duration() const;
 
     /**
      * Seek to a position.
@@ -117,11 +116,6 @@ protected:
     bool null();
 
     /**
-     * Set the current state of the stream.
-     */
-    virtual bool set_state(GstState state);
-
-    /**
      * Create the pipeline.
      */
     virtual bool createPipeline();
@@ -131,22 +125,13 @@ protected:
      */
     void destroyPipeline();
 
-    static gboolean bus_callback(GstBus* bus,
-                                 GstMessage* message,
-                                 gpointer data);
-
-    GstElement* m_audio_pipeline {nullptr};
-    GstElement* m_src {nullptr};
-    GstElement* m_volume {nullptr};
-    gint64 m_position {0};
-    gint64 m_duration {0};
-    std::string m_filename;
-    int m_volume_value {100};
+    /**
+     * Implementation pointer.
+     */
+    std::unique_ptr<detail::AudioPlayerImpl> m_impl;
 };
 
 }
 }
-
-#endif
 
 #endif

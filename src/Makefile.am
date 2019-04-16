@@ -31,7 +31,6 @@ libegt_la_CFLAGS = $(LIBPLANES_CFLAGS) $(CAIRO_CFLAGS) \
 libegt_la_SOURCES = \
 animation.cpp \
 app.cpp \
-audio.cpp \
 button.cpp \
 buttongroup.cpp \
 canvas.cpp \
@@ -81,7 +80,6 @@ timer.cpp \
 tools.cpp \
 uiloader.cpp \
 utils.cpp \
-video.cpp \
 view.cpp \
 widget.cpp \
 widgetflags.cpp \
@@ -109,7 +107,6 @@ nobase_libegtinclude_HEADERS = \
 $(top_builddir)/include/egt/version.h \
 $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
-$(top_srcdir)/include/egt/audio.h \
 $(top_srcdir)/include/egt/bitmask.h \
 $(top_srcdir)/include/egt/button.h \
 $(top_srcdir)/include/egt/buttongroup.h \
@@ -173,7 +170,6 @@ $(top_srcdir)/include/egt/ui \
 $(top_srcdir)/include/egt/uiloader.h \
 $(top_srcdir)/include/egt/utils.h \
 $(top_srcdir)/include/egt/valuewidget.h \
-$(top_srcdir)/include/egt/video.h \
 $(top_srcdir)/include/egt/view.h \
 $(top_srcdir)/include/egt/widget.h \
 $(top_srcdir)/include/egt/widgetflags.h \
@@ -190,6 +186,16 @@ nobase_libegtinclude_HEADERS += \
 	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*.ipp) \
 	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*.ipp) \
 	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*/*.ipp)
+
+if HAVE_GSTREAMER
+libegt_la_SOURCES += \
+audio.cpp \
+video.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/audio.h \
+$(top_srcdir)/include/egt/video.h
+endif
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \

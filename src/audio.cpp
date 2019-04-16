@@ -7,8 +7,9 @@
 #include "egt/audio.h"
 #include "egt/utils.h"
 #include "egt/video.h"
-#include <egt/asio.hpp>
 #include <cstring>
+#include <egt/asio.hpp>
+#include <gst/gst.h>
 #include <thread>
 
 #ifdef HAVE_GSTREAMER
@@ -23,12 +24,60 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
 
-gboolean AudioPlayer::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
+struct AudioPlayerImpl
+{
+    AudioPlayerImpl(AudioPlayer& player)
+        : player(player)
+    {}
+
+    /**
+     * Set the current state of the stream.
+     */
+    bool set_state(AudioPlayer* player, GstState state)
+    {
+        GstStateChangeReturn ret;
+
+        if (m_audio_pipeline)
+        {
+            ret = gst_element_set_state(m_audio_pipeline, state);
+            if (GST_STATE_CHANGE_FAILURE == ret)
+            {
+                ERR("unable to set audio pipeline to " << state);
+                return false;
+            }
+
+            main_app().event().io().post(std::bind(&AudioPlayer::invoke_handlers,
+                                                   player, eventid::property_changed));
+        }
+        else
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    AudioPlayer& player;
+    GstElement* m_audio_pipeline {nullptr};
+    GstElement* m_src {nullptr};
+    GstElement* m_volume {nullptr};
+    gint64 m_position {0};
+    gint64 m_duration {0};
+    std::string m_filename;
+    int m_volume_value {100};
+};
+
+}
+
+static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
     ignoreparam(bus);
 
-    auto _this = reinterpret_cast<AudioPlayer*>(data);
+    auto impl = reinterpret_cast<detail::AudioPlayerImpl*>(data);
 
     switch (GST_MESSAGE_TYPE(message))
     {
@@ -60,11 +109,11 @@ gboolean AudioPlayer::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         DBG("GStreamer: Message EOS");
 
-        gst_element_seek(_this->m_audio_pipeline, 1.0, GST_FORMAT_TIME,
+        gst_element_seek(impl->m_audio_pipeline, 1.0, GST_FORMAT_TIME,
                          GST_SEEK_FLAG_FLUSH,
                          GST_SEEK_TYPE_SET, 0,
                          GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
-        _this->pause();
+        impl->player.pause();
         break;
     }
     case GST_MESSAGE_ELEMENT:
@@ -76,12 +125,12 @@ gboolean AudioPlayer::bus_callback(GstBus* bus, GstMessage* message, gpointer da
             const GValue* vtotal;
 
             vtotal = gst_structure_get_value(info, "total");
-            _this->m_duration = g_value_get_int64(vtotal);
+            impl->m_duration = g_value_get_int64(vtotal);
             vcurrent = gst_structure_get_value(info, "current");
-            _this->m_position = g_value_get_int64(vcurrent);
+            impl->m_position = g_value_get_int64(vcurrent);
 
             main_app().event().io().post(std::bind(&AudioPlayer::invoke_handlers,
-                                                   _this, eventid::property_changed));
+                                                   &impl->player, eventid::property_changed));
         }
         break;
     }
@@ -98,31 +147,32 @@ gboolean AudioPlayer::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 }
 
 AudioPlayer::AudioPlayer()
+    : m_impl(new detail::AudioPlayerImpl(*this))
 {
     detail::init_gst_thread();
 }
 
 void AudioPlayer::destroyPipeline()
 {
-    if (m_audio_pipeline)
-        (void)gst_element_set_state(m_audio_pipeline, GST_STATE_NULL);
+    if (m_impl->m_audio_pipeline)
+        (void)gst_element_set_state(m_impl->m_audio_pipeline, GST_STATE_NULL);
 
-    if (m_volume)
+    if (m_impl->m_volume)
     {
-        g_object_unref(m_volume);
-        m_volume = NULL;
+        g_object_unref(m_impl->m_volume);
+        m_impl->m_volume = NULL;
     }
 
-    if (m_src)
+    if (m_impl->m_src)
     {
-        g_object_unref(m_src);
-        m_src = NULL;
+        g_object_unref(m_impl->m_src);
+        m_impl->m_src = NULL;
     }
 
-    if (m_audio_pipeline)
+    if (m_impl->m_audio_pipeline)
     {
-        g_object_unref(m_audio_pipeline);
-        m_audio_pipeline = NULL;
+        g_object_unref(m_impl->m_audio_pipeline);
+        m_impl->m_audio_pipeline = NULL;
     }
 }
 
@@ -136,41 +186,41 @@ bool AudioPlayer::play(bool mute, int volume)
     ignoreparam(mute);
     ignoreparam(volume);
 
-    set_state(GST_STATE_PLAYING);
+    m_impl->set_state(this, GST_STATE_PLAYING);
     return false;
 }
 
 bool AudioPlayer::unpause()
 {
-    set_state(GST_STATE_PLAYING);
+    m_impl->set_state(this, GST_STATE_PLAYING);
     return false;
 }
 
 bool AudioPlayer::pause()
 {
-    set_state(GST_STATE_PAUSED);
+    m_impl->set_state(this, GST_STATE_PAUSED);
     return false;
 }
 
 bool AudioPlayer::null()
 {
-    return set_state(GST_STATE_NULL);
+    return m_impl->set_state(this, GST_STATE_NULL);
 }
 
 bool AudioPlayer::set_media(const string& uri)
 {
-    m_filename = uri;
+    m_impl->m_filename = uri;
 
     destroyPipeline();
     createPipeline();
-    g_object_set(m_src, "uri", (string("file://") + uri).c_str(), NULL);
+    g_object_set(m_impl->m_src, "uri", (string("file://") + uri).c_str(), NULL);
 
     return true;
 }
 
 bool AudioPlayer::set_volume(int volume)
 {
-    if (!m_volume)
+    if (!m_impl->m_volume)
         return false;
 
     if (volume < 1)
@@ -178,7 +228,7 @@ bool AudioPlayer::set_volume(int volume)
     if (volume > 100)
         volume = 100;
 
-    g_object_set(m_volume, "volume", volume / 100.0, NULL);
+    g_object_set(m_impl->m_volume, "volume", volume / 100.0, NULL);
     invoke_handlers(eventid::property_changed);
 
     return true;
@@ -186,55 +236,41 @@ bool AudioPlayer::set_volume(int volume)
 
 int AudioPlayer::get_volume() const
 {
-    if (!m_volume)
+    if (!m_impl->m_volume)
         return 0;
 
     gdouble volume = 0;
-    g_object_get(m_volume, "volume", &volume, NULL);
+    g_object_get(m_impl->m_volume, "volume", &volume, NULL);
     return volume * 100.0;
 }
 
 bool AudioPlayer::set_mute(bool mute)
 {
-    if (!m_volume)
+    if (!m_impl->m_volume)
         return false;
 
-    g_object_set(m_volume, "mute", mute, NULL);
+    g_object_set(m_impl->m_volume, "mute", mute, NULL);
     invoke_handlers(eventid::property_changed);
     return true;
 }
 
-bool AudioPlayer::set_state(GstState state)
+uint64_t AudioPlayer::position() const
 {
-    GstStateChangeReturn ret;
+    return m_impl->m_position;
+}
 
-    if (m_audio_pipeline)
-    {
-        ret = gst_element_set_state(m_audio_pipeline, state);
-        if (GST_STATE_CHANGE_FAILURE == ret)
-        {
-            ERR("unable to set audio pipeline to " << state);
-            return false;
-        }
-
-        main_app().event().io().post(std::bind(&AudioPlayer::invoke_handlers,
-                                               this, eventid::property_changed));
-    }
-    else
-    {
-        return false;
-    }
-
-    return true;
+uint64_t AudioPlayer::duration() const
+{
+    return m_impl->m_duration;
 }
 
 bool AudioPlayer::playing() const
 {
     GstState state = GST_STATE_VOID_PENDING;
 
-    if (m_audio_pipeline)
+    if (m_impl->m_audio_pipeline)
     {
-        (void)gst_element_get_state(m_audio_pipeline, &state,
+        (void)gst_element_get_state(m_impl->m_audio_pipeline, &state,
                                     NULL, GST_CLOCK_TIME_NONE);
         return state == GST_STATE_PLAYING;
     }
@@ -249,9 +285,9 @@ inline uint64_t sec_to_nsec(uint64_t s)
 
 void AudioPlayer::seek(uint64_t pos)
 {
-    if (m_audio_pipeline)
+    if (m_impl->m_audio_pipeline)
     {
-        gst_element_seek(m_audio_pipeline, 1.0, GST_FORMAT_TIME,
+        gst_element_seek(m_impl->m_audio_pipeline, 1.0, GST_FORMAT_TIME,
                          GST_SEEK_FLAG_FLUSH,
                          GST_SEEK_TYPE_SET, sec_to_nsec(pos),
                          GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
@@ -279,32 +315,29 @@ bool AudioPlayer::createPipeline()
     string pipe(buffer);
     DBG(pipe);
 
-    m_audio_pipeline = gst_parse_launch(pipe.c_str(), &error);
-    if (!m_audio_pipeline)
+    m_impl->m_audio_pipeline = gst_parse_launch(pipe.c_str(), &error);
+    if (!m_impl->m_audio_pipeline)
     {
-        m_audio_pipeline = NULL;
         ERR("failed to create audio pipeline");
         return false;
     }
 
-    m_src = gst_bin_get_by_name(GST_BIN(m_audio_pipeline), SRC_NAME);
-    if (!m_src)
+    m_impl->m_src = gst_bin_get_by_name(GST_BIN(m_impl->m_audio_pipeline), SRC_NAME);
+    if (!m_impl->m_src)
     {
-        m_src = NULL;
         ERR("failed to get audio src element");
         return false;
     }
 
-    m_volume = gst_bin_get_by_name(GST_BIN(m_audio_pipeline), VOLUME_NAME);
-    if (!m_volume)
+    m_impl->m_volume = gst_bin_get_by_name(GST_BIN(m_impl->m_audio_pipeline), VOLUME_NAME);
+    if (!m_impl->m_volume)
     {
-        m_volume = NULL;
         ERR("failed to get volume element");
         return false;
     }
 
-    bus = gst_pipeline_get_bus(GST_PIPELINE(m_audio_pipeline));
-    /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, this);
+    bus = gst_pipeline_get_bus(GST_PIPELINE(m_impl->m_audio_pipeline));
+    /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, m_impl.get());
     gst_object_unref(bus);
 
     return true;
