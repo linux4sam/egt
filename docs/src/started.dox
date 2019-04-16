@@ -6,7 +6,7 @@ namespace egt { inline namespace v1 {
 @section started_fetching Fetching Source
 
 @code{.sh}
-git clone https://bitbucket.microchip.com/scm/linux4sam/egt.git
+git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
 @endcode
 
 @section started_building Building
@@ -24,10 +24,8 @@ sudo apt-get install librapidxml-dev liblua5.3-dev libdrm-dev libinput-dev \
 Then build.
 
 @code{.sh}
-git clone https://bitbucket.microchip.com/scm/linux4sam/egt.git
+git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
 cd egt
-git submodule init
-git submodule update
 ./autogen.sh
 ./configure --prefix=$HOME/egt_install
 make
