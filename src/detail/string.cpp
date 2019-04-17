@@ -29,6 +29,27 @@ std::string replace_all(std::string str, const std::string& from, const std::str
     return str;
 }
 
+std::string rtrim(const std::string& source, const std::string& t)
+{
+    string str = source;
+    return str.erase(str.find_last_not_of(t) + 1) ;
+}
+
+std::string ltrim(const std::string& source, const std::string& t)
+{
+    string str = source;
+    return str.erase(0, source.find_first_not_of(t)) ;
+}
+
+std::string trim(const std::string& source, const std::string& t)
+{
+    if (source.empty())
+        return source;
+
+    string str = source;
+    return ltrim(rtrim(str, t), t);
+}
+
 }
 }
 }
