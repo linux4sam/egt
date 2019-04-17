@@ -82,6 +82,28 @@ inline T to_radians(T zero, T degrees)
 }
 
 }
+
+template<class T>
+struct Ratio
+{
+    Ratio(T value, int ratio)
+        : m_value(value),
+          m_ratio(ratio)
+    {
+    }
+
+    operator T() const
+    {
+        return static_cast<double>(m_value) *
+               (static_cast<double>(m_ratio) / 100.);
+    }
+
+protected:
+    T m_value;
+    int m_ratio;
+};
+
+
 }
 }
 
