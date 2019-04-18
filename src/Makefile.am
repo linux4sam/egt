@@ -171,17 +171,9 @@ $(top_srcdir)/include/egt/widget.h \
 $(top_srcdir)/include/egt/widgetflags.h \
 $(top_srcdir)/include/egt/window.h
 
-nobase_libegtinclude_HEADERS += \
-	$(top_srcdir)/include/egt/asio.hpp \
-	$(wildcard $(top_srcdir)/include/egt/asio/*.hpp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*.hpp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*.hpp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*.hpp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*/*.hpp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*.ipp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*.ipp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*.ipp) \
-	$(wildcard $(top_srcdir)/include/egt/asio/*/*/*/*/*.ipp)
+include Makefile.asio
+
+nobase_libegtinclude_HEADERS += $(ASIO_SOURCE_FILES)
 
 if HAVE_GSTREAMER
 libegt_la_SOURCES += \
