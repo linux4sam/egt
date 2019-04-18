@@ -14,12 +14,13 @@
 #include <map>
 #include <memory>
 #include <egt/ui>
+#include <egt/detail/filesystem.h>
 #include <sstream>
 #include <stdexcept>
 #include <string.h>
 #include <string>
 #include <vector>
-#define USE_LIBCURL
+
 #ifdef USE_LIBCURL
 #include <curl/curl.h>
 #endif
