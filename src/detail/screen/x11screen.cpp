@@ -108,7 +108,6 @@ void X11Screen::flip(const damage_array& damage)
 {
     Screen::flip(damage);
     XFlush(m_priv->display);
-    XSync(m_priv->display, false);
 }
 
 void X11Screen::handle_read(const asio::error_code& error)
