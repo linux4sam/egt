@@ -11,7 +11,7 @@
  * @brief Working with sizers.
  */
 
-#include "egt/detail/alignment.h"
+#include <egt/detail/alignment.h>
 #include <egt/frame.h>
 #include <sstream>
 
