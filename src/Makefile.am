@@ -99,6 +99,7 @@ endif
 
 libegtincludedir = ${includedir}
 nobase_libegtinclude_HEADERS = \
+$(top_builddir)/include/egt/ui \
 $(top_builddir)/include/egt/version.h \
 $(top_srcdir)/include/egt/animation.h \
 $(top_srcdir)/include/egt/app.h \
@@ -249,5 +250,5 @@ dist-hook:
 		rm -f $(distdir)/$$file ; \
 	done
 
-BUILT_SOURCES = $(top_builddir)/include/egt/version.h
-EXTRA_DIST = $(top_srcdir)/include/egt/version.h.in
+BUILT_SOURCES = $(top_builddir)/include/egt/version.h $(top_builddir)/include/egt/ui
+EXTRA_DIST = $(top_srcdir)/include/egt/version.h.in $(top_srcdir)/include/egt/ui.in
