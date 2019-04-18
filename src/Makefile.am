@@ -6,7 +6,7 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/utfcpp/source
 
-AM_CPPFLAGS = -DDATADIR=\"$(datadir)\"
+AM_CXXFLAGS = -DDATADIR=\"$(datadir)\"
 
 if HAVE_KPLOT
 CUSTOM_FLAGS += -I$(top_srcdir)/external/kplot/

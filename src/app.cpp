@@ -70,7 +70,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     detail::add_search_path(detail::exe_pwd());
     // then go to icons
     detail::add_search_path(std::string(DATADIR) + "/icons");
-    detail::add_search_path(detail::exe_pwd() + "/../share/egt/icons");
+    detail::add_search_path(detail::exe_pwd() + "/../share/libegt/icons");
     detail::add_search_path(detail::exe_pwd() + "/../../../icons");
     detail::add_search_path(detail::exe_pwd() + "/../../icons");
 
