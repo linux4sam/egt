@@ -47,13 +47,4 @@ dist-hook:
 endif
 
 EXTRA_DIST = \
-	$(wildcard asio/asio/include/*.hpp) \
-	$(wildcard asio/asio/include/*/*.hpp) \
-	$(wildcard asio/asio/include/*/*/*.hpp) \
-	$(wildcard asio/asio/include/*/*/*/*.hpp) \
-	$(wildcard asio/asio/include/*/*/*/*/*.hpp) \
-	$(wildcard asio/asio/include/*/*.ipp) \
-	$(wildcard asio/asio/include/*/*/*.ipp) \
-	$(wildcard asio/asio/include/*/*/*/*.ipp) \
-	$(wildcard asio/asio/include/*/*/*/*/*.ipp) \
 	rapidxml
