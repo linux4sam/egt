@@ -125,26 +125,26 @@ AC_TYPE_UINT8_T
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 
-AX_PKG_CHECK_MODULES2(X11, [], [x11 >= 1.6.3], [have_x11=yes], [have_x11=no])
+AX_PKG_CHECK_MODULES2(X11, [x11 >= 1.6.3], [], [have_x11=yes], [have_x11=no])
 AM_CONDITIONAL([HAVE_X11], [test "x${have_x11}" = xyes])
 if test "x${have_x11}" = xyes; then
    AC_DEFINE(HAVE_X11, 1, [Have x11 support])
-   LIBEGT_EXTRA_CXXFLAGS="$X11_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$X11_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${X11_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${X11_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(TSLIB, [], [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
+AX_PKG_CHECK_MODULES2(TSLIB, [tslib >= 1.15], [], [have_tslib=yes], [have_tslib=no])
 if test "x${have_tslib}" = xyes; then
    AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
-   LIBEGT_EXTRA_CXXFLAGS="$TSLIB_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$TSLIB_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${TSLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${TSLIB_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(LIBINPUT, [libinput >= 1.6.3], [], [have_libinput=yes], [have_libinput=no])
 if test "x${have_libinput}" = xyes; then
    AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
-   LIBEGT_EXTRA_CXXFLAGS="$LIBINPUT_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$LIBINPUT_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${LIBINPUT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(GSTREAMER, [gstreamer-1.0 >= 1.12 gstreamer-plugins-base-1.0], [], [have_gstreamer=yes], [have_gstreamer=no])
@@ -152,62 +152,63 @@ if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
    AC_SUBST(include_video, ["#include <egt/video.h>"])
    AC_SUBST(include_audio, ["#include <egt/audio.h>"])
-   LIBEGT_EXTRA_CXXFLAGS="$GSTREAMER_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 
-AX_PKG_CHECK_MODULES2(LUA, [], [lua >= 5.3.0], [have_lua=yes], [have_lua=no])
+AX_PKG_CHECK_MODULES2(LUA, [lua >= 5.3.0], [], [have_lua=yes], [have_lua=no])
 if test "x${have_lua}" = xno; then
-   AX_PKG_CHECK_MODULES2(LUA, [], [lua5.3], [have_lua=yes], [have_lua=no])
+AX_PKG_CHECK_MODULES2(LUA, [lua5.3], [], [have_lua=yes], [have_lua=no])
 fi
 AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
 if test "x${have_lua}" = xyes; then
    AC_DEFINE(HAVE_LUA, 1, [Have lua support])
-   LIBEGT_EXTRA_CXXFLAGS="$LUA_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$LUA_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LUA_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-# only used by examples
-PKG_CHECK_MODULES(JSONCPP, [jsoncpp], [have_jsoncpp=yes], [have_jsoncpp=no])
-if test "x${have_jsoncpp}" = xyes; then
-   AC_DEFINE(HAVE_JSONCPP, 1, [Have jsoncpp support])
-fi
-AM_CONDITIONAL([HAVE_JSONCPP], [test "x${have_jsoncpp}" = xyes])
+# remove when libplanes is fixed
+PKG_CHECK_MODULES(CJSON, [libcjson >= 1.6.0], [have_cjson=yes], [have_cjson=no])
 
-AX_PKG_CHECK_MODULES2(LIBPLANES, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
+AX_PKG_CHECK_MODULES2(LIBPLANES, [libplanes >= 1.0.0], [], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
 if test "x${have_libplanes}" = xyes; then
+   AX_PKG_CHECK_MODULES2(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
+     libdrm is a hard dependency, but a sufficient version was not found.])])
+   AC_DEFINE(HAVE_LIBDRM, 1, [Have libdrm support])
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
-   LIBEGT_EXTRA_CXXFLAGS="$LIBPLANES_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$LIBPLANES_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${LIBPLANES_CFLAGS} ${LIBDRM_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBPLANES_LDFLAGS} ${LIBDRM_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(CAIRO, [cairo >= 1.14.6], [], [], [AC_MSG_ERROR([
      cairo is a hard dependency, but a sufficient version was not found.])])
-LIBEGT_EXTRA_CXXFLAGS="$CAIRO_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
+LIBEGT_EXTRA_CXXFLAGS="${CAIRO_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+LIBEGT_EXTRA_LDFLAGS="${CAIRO_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 
-AX_PKG_CHECK_MODULES2(LIBJPEG, [], [libjpeg], [have_libjpeg=yes], [have_libjpeg=no])
+AX_PKG_CHECK_MODULES2(LIBJPEG, [libjpeg], [], [have_libjpeg=yes], [have_libjpeg=no])
 AM_CONDITIONAL([HAVE_LIBJPEG], [test "x${have_libjpeg}" = xyes])
 if test "x${have_libjpeg}" = xyes; then
    AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
-   LIBEGT_EXTRA_CXXFLAGS="$LIBJPEG_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$LIBJPEG_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${LIBJPEG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBJPEG_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(LIBCURL, [], [libcurl >= 4.5], [have_libcurl=yes], [have_libcurl=no])
+AX_PKG_CHECK_MODULES2(LIBCURL, [libcurl >= 4.5], [], [have_libcurl=yes], [have_libcurl=no])
 AM_CONDITIONAL([HAVE_LIBCURL], [test "x${have_libcurl}" = xyes])
 if test "x${have_libcurl}" = xyes; then
    AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
-   LIBEGT_EXTRA_CXXFLAGS="$LIBCURL_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$LIBCURL_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${LIBCURL_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(LIBRSVG, [], [librsvg-2.0], [have_librsvg=yes], [have_librsvg=no])
+AX_PKG_CHECK_MODULES2(LIBRSVG, [librsvg-2.0], [], [have_librsvg=yes], [have_librsvg=no])
 AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
 if test "x${have_librsvg}" = xyes; then
    AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
-   LIBEGT_EXTRA_CXXFLAGS="$LIBRSVG_CFLAGS $LIBEGT_EXTRA_CXXFLAGS"
-   LIBEGT_EXTRA_LDFLAGS="$LIBRSVG_LIBS $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_CXXFLAGS="${LIBRSVG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
@@ -218,7 +219,7 @@ AC_CHECK_HEADER([magic.h],
 AM_CONDITIONAL([HAVE_LIBMAGIC], [test "x${have_libmagic}" = xyes])
 if test "x${have_libmagic}" = xyes; then
    AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])
-   LIBEGT_EXTRA_LDFLAGS="$MAGIC_LIB $LIBEGT_EXTRA_LDFLAGS"
+   LIBEGT_EXTRA_LDFLAGS="${MAGIC_LIB} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 SAVED_LDFLAGS="${LDFLAGS}"
@@ -235,9 +236,9 @@ AM_CONDITIONAL([HAVE_KPLOT], [test true])
 AC_DEFINE(HAVE_KPLOT, 1, [Have kplot support])
 
 # Subst LIBEGT_EXTRA_CFLAGS & CXXFLAGS & LDFLAGS
-AC_SUBST([LIBEGT_EXTRA_CFLAGS])
-AC_SUBST([LIBEGT_EXTRA_CXXFLAGS])
-AC_SUBST([LIBEGT_EXTRA_LDFLAGS])
+AC_SUBST(LIBEGT_EXTRA_CFLAGS)
+AC_SUBST(LIBEGT_EXTRA_CXXFLAGS)
+AC_SUBST(LIBEGT_EXTRA_LDFLAGS)
 
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE

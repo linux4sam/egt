@@ -92,7 +92,13 @@ lua/script.c \
 lua/script.h
 endif
 
-libegt_la_LIBADD = @LIBEGT_EXTRA_LDFLAGS@ $(CODE_COVERAGE_LDFLAGS)
+if HAVE_LIBJPEG
+libegt_la_SOURCES += \
+images/jpeg/cairo_jpg.c \
+images/jpeg/cairo_jpg.h
+endif
+
+libegt_la_LIBADD = $(CODE_COVERAGE_LDFLAGS)
 if HAVE_KPLOT
 libegt_la_LIBADD += $(top_builddir)/external/libkplot.la
 endif
@@ -197,12 +203,6 @@ $(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
 $(top_srcdir)/include/egt/detail/planewindow.h
 endif
 
-if HAVE_LIBJPEG
-libegt_la_SOURCES += \
-images/jpeg/cairo_jpg.c \
-images/jpeg/cairo_jpg.h
-endif
-
 if HAVE_X11
 libegt_la_SOURCES += \
 detail/screen/keysym_to_unicode.cpp \
@@ -232,7 +232,7 @@ nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/svg.h
 endif
 
-libegt_la_LDFLAGS = -version-number 1:0:0 -no-undefined
+libegt_la_LDFLAGS = @LIBEGT_EXTRA_LDFLAGS@ -version-number 1:0:0 -no-undefined
 
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = $(top_builddir)/libegt.pc
