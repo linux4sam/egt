@@ -347,5 +347,59 @@ Finally in the Console, see the traces of EGT application running on target
 @image html eclipse/eclipse_run_finish.png "Run finish"
 @image latex eclipse/eclipse_run_finish.png "Run finish"
 
+@section eclipse_debug Debug EGT application remotely
+
+This section describes how to debug EGT Project using a
+Buildroot toolchain in Eclipse.
+
+Buildroot setup
+
+As a preliminary step, you also need to ensure that gdbserver is
+present on your target. if gdbserver not preset, then enable following
+options in buildroot menuconfig:
+
+1. Toolchain -> Build gdb server for the Target
+2. Toolchain -> Build gdb for the Host
+3. Target packages -> Debugging, profiling and benchmark -> gdb
+4. Target packages -> Debugging, profiling and benchmark -> gdbserver
+
+To get a nice debugging experience, you may want Buildroot to build
+the libraries with debugging symbols. To do so, enable the
+Build options -> build packages with debugging symbols option.
+
+Launch remote debug
+
+Click on the debug button in the toolbar and select EGTProject launcher you
+created in above section.
+
+@imageSize{eclipse_debuger_launch.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_debuger_launch.png "Select debug launcher"
+@image latex eclipse/eclipse_debuger_launch.png "Select debug launcher"
+
+Click on Yes in Confirm perspective switch dialog.
+
+@imageSize{eclipse_confirm_dialog.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_confirm_dialog.png  "Confirm debug dialog"
+@image latex eclipse/eclipse_confirm_dialog.png "Confirm debug dialog"
+
+Eclipse will switch automatically to Debug perspective window and debugger
+stops on the main function of the application and you can see variable
+values or change variable values from the Variables view window.
+
+@imageSize{eclipse_debug_window.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_debug_window.png "Eclipse debug Window"
+@image latex eclipse/eclipse_debug_window.png "Eclipse debug Window"
+
+To add breakpoints from editor, you can double click on the left side
+of a editor or by right clicking left side of editor and click a "Add
+breakpoint" from a context menu.
+
+@imageSize{eclipse_debug_add_bp.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_debug_add_bp.png "Set brakpoint in Eclipse editor"
+@image latex eclipse/eclipse_debug_add_bp.png "Set brakpoint in Eclipse editor"
+
+Using Debug control buttons in the toolbar, you can control the debuger
+to Resume, Treminate, Step into or step over.
+
 */
 }}
