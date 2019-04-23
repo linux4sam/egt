@@ -394,5 +394,158 @@ breakpoint" from a context menu.
 Using Debug control buttons in the toolbar, you can control the debuger
 to Resume, Treminate, Step into or step over.
 
+@section eclipse_host_libegt Build, Execute & Debug EGT on Host Machine
+
+This sections describes how to build a standalone EGT library and its example applications
+on Host Machine in Eclipse using Autotools.
+
+Fetching Source
+
+@code{.sh}
+git clone https://bitbucket.microchip.com/scm/linux4sam/egt.git
+cd egt
+git submodule init
+git submodule update
+@endcode
+
+Create a new CPP Project:
+
+@imageSize{eclipse_new_cpp_project.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_new_cpp_project.png "Create new cpp project"
+@image latex eclipse/eclipse_new_cpp_project.png "Create new cpp project"
+
+In "C++ Project" window, follow below steps:
+
+1. Set the project name.
+2. uncheck default location
+3. Set location to absolute path of git clone EGT directory
+4. select "GNU Autotools Empty project" type
+5. Select "GNU Autotools Toolschain" and Cick on Finish button.
+
+@imageSize{eclipse_host_create_cpp_project.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_create_cpp_project.png  "Eclipse create new cpp project"
+@image latex eclipse/eclipse_host_create_cpp_project.png "Eclipse create new cpp project"
+
+Invoke Autoreconf tool by Right-click on your project in the eclipse explorer view and select Invoke Autotools- > Invoke
+Autoreconf. This operation will call the autotools to generate the configure script from configure.ac and Makefile.in
+from Makefile.am. This operation has to be done again if you make changes to configure.ac or Makefile.am.
+
+@imageSize{eclipse_host_invoke_autoreconf.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_invoke_autoreconf.png  "Eclipse invoke autoreconf"
+@image latex eclipse/eclipse_host_invoke_autoreconf.png "Eclipse invoke autoreconf"
+
+Set the "-i -v -f" option to autoreconf command in a opened dialog.This tells autoreconf to automatically install some
+additional scripts and files that are needed for correct operation of configure script.
+
+@imageSize{eclipse_host_autoreconf_args.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_autoreconf_args.png  "Eclipse set autoreconf arguments"
+@image latex eclipse/eclipse_host_autoreconf_args.png "Eclipse set autoreconf arguments"
+
+Now we can see in the console that autoreconf command finished successfully. configure and Makefile.in files have
+generated in the project folder.
+
+@imageSize{eclipse_host_autoreconf_success.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_autoreconf_success.png "Eclipse autoreconf done"
+@image latex eclipse/eclipse_host_autoreconf_success.png "Eclipse autoreconf done"
+
+Reconfigure project will call configure script and you can set additional arguments your confugure scripts by
+righ clicking and selecting properties in your libegt project.
+
+@imageSize{eclipse_host_reconfigure.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_reconfigure.png  "Eclipse Reconfigure project"
+@image latex eclipse/eclipse_host_reconfigure.png "Eclipse Reconfigure project"
+
+In the console, we can see operation finished successfully and Makefile's generated.
+
+@imageSize{eclipse_host_reconfigure_done.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_reconfigure_done.png  "Eclipse Reconfigure Done"
+@image latex eclipse/eclipse_host_reconfigure_done.png "Eclipse Reconfigure Done"
+
+To build the libegt project (Ctrl-b) or select Project->"build all" option and observe build messages in Console.
+
+@imageSize{eclipse_host_buildall.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_buildall.png  "Eclipse Build libegt Project"
+@image latex eclipse/eclipse_host_buildall.png "Eclipse Build libegt Project"
+
+Execute EGT application
+
+In the below steps we are using EGT basic application to execute on host machine:
+
+1. From Project Explorer, expand example/basic folder.
+2. Right click on example/basic/basic file and select Run As -> Run Configuration.
+3. In Run Configuration window, create a new launcher on Right Click "C/C++ Application"
+4. In Main Tab, click Browse and select egt/example/basic/basic file.
+5. Click on Run Button to start executing EGT Basic example application.
+
+@imageSize{eclipse_host_Run.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_Run.png "Eclipse Run EGT Example Application"
+@image latex eclipse/eclipse_host_Run.png "Eclipse Run EGT Example Application"
+
+A new EGT windows pop up running EGT Basic example application.
+
+@imageSize{eclipse_host_basic_example.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_basic_example.png "Eclipse Basic Example Demo"
+@image latex eclipse/eclipse_host_basic_example.png "Eclipse Basic Example Demo"
+
+Set Environment Variable.
+
+Before we start debugging the application, we need to set environment variable LD_LIBRARY_PATH
+pointing to libegt.so folder (i.e. <egt>/src/.libs/)
+
+1. Go to Project properties by right clicking egt project from Project Explorer.
+2. In Project properties window, Expand "C/C++ Build" and Select "Environment"
+3. Add a New Environment variable with Name "LD_LIBRARY_PATH" and set value to <egt>/src/.libs/ folder.
+4. Cick Ok and again OK to close the Project properties window.
+
+@imageSize{eclipse_host_set_env.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_set_env.png "Eclipse set environment variable"
+@image latex eclipse/eclipse_host_set_env.png "Eclipse set environment variable"
+
+Debugging EGT application
+
+In the below steps we are using EGT basic application to debug on host machine:
+
+From menu toolsbar selcet Run->Debug.
+
+@imageSize{eclipse_host_debug_run.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_debug_run.png  "Eclipse select Run->debug"
+@image latex eclipse/eclipse_host_debug_run.png "Eclipse select Run->debug"
+
+Select the application to debug from "Local Application Window" and Cick OK.
+
+@imageSize{eclipse_host_debug_app.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_debug_app.png "Eclipse select application to debug"
+@image latex eclipse/eclipse_host_debug_app.png "Eclipse select application to debug"
+
+From Launch Debug Configuration Selection window, select "gdbserver" and Click OK.
+
+@imageSize{eclipse_host_debug_select_gdbserver.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_debug_select_gdbserver.png "Eclipse select gdbserver"
+@image latex eclipse/eclipse_host_debug_select_gdbserver.png "Eclipse select gdbserver"
+
+Click on Yes in Confirm perspective switch dialog.
+
+@imageSize{eclipse_confirm_dialog.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_confirm_dialog.png "Confirm debug dialog"
+@image latex eclipse/eclipse_confirm_dialog.png "Confirm debug dialog"
+
+Eclipse will switch automatically to Debug perspective window and debugger
+stops on the main function of the application and you can see variable
+values or change variable values from the Variables view window.
+
+@imageSize{eclipse_host_debug_window.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_debug_window.png "Eclipse debug Window"
+@image latex eclipse/eclipse_host_debug_window.png "Eclipse debug Window"
+
+To add breakpoints from editor, you can double click on the left side
+of a editor or by right clicking left side of editor and click a "Add
+breakpoint" from a context menu.
+
+@imageSize{eclipse_host_debug_add_bp.png,max-width:90%;height:auto;}
+@image html eclipse/eclipse_host_debug_add_bp.png "Set brakpoint in Eclipse editor"
+@image latex eclipse/eclipse_host_debug_add_bp.png "Set brakpoint in Eclipse editor"
+
+Using Debug control buttons in the toolbar, you can control the debuger
+to Resume, Treminate, Step into or step over.
 */
 }}
