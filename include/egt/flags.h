@@ -115,6 +115,20 @@ protected:
     flags m_flags;
 };
 
+template<class T>
+inline Flags<T> operator+(Flags<T> lhs, const T& rhs)
+{
+    lhs.set(rhs);
+    return lhs;
+}
+
+template<class T>
+inline Flags<T> operator-(Flags<T> lhs, const T& rhs)
+{
+    lhs.clear(rhs);
+    return lhs;
+}
+
 }
 }
 

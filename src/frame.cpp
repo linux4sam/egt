@@ -19,11 +19,10 @@ inline namespace v1
 {
 
 Frame::Frame(const Rect& rect, const Widget::flags_type& flags) noexcept
-    : Widget(rect, flags)
+    : Widget(rect, flags + Widget::flag::frame)
 {
     set_name("Frame" + std::to_string(m_widgetid));
 
-    ncflags().set(Widget::flag::frame);
     set_boxtype(Theme::boxtype::none);
 }
 
