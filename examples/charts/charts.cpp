@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <egt/ui>
 #include <cmath>
 #include <string>
@@ -61,7 +57,6 @@ struct LinePage : public NotebookTab
 {
     LinePage()
     {
-#ifdef HAVE_KPLOT
         auto line = std::make_shared<LineChart>(Rect(50, 10, 600, 400));
         line->set_name("linechart");
         line->instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
@@ -144,7 +139,6 @@ struct LinePage : public NotebookTab
 
         gridx_checkbox->on_event(handle_grid_checkbox);
         gridy_checkbox->on_event(handle_grid_checkbox);
-#endif
     }
 };
 

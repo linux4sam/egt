@@ -3,18 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/chart.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
 #include <cmath>
 #include <vector>
-#ifdef HAVE_KPLOT
 #include "kplot.h"
-#endif
 
 using namespace std;
 
@@ -23,7 +17,6 @@ namespace egt
 inline namespace v1
 {
 
-#ifdef HAVE_KPLOT
 static void xticlabelfmt(double v, char* b, size_t len)
 {
     snprintf(b, len, "%.02f", v);
@@ -115,7 +108,6 @@ void LineChart::draw(Painter& painter, const Rect& rect)
 
     kplot_free(p);
 }
-#endif
 
 PieChart::PieChart(const Rect& rect)
     : Widget(rect)

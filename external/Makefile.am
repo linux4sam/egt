@@ -1,4 +1,3 @@
-if HAVE_KPLOT
 noinst_LTLIBRARIES = libkplot.la
 
 $(top_builddir)/external/kplot/compat.h: $(top_srcdir)/external/kplot/compat.pre.h $(top_srcdir)/external/kplot/compat.post.h
@@ -43,8 +42,6 @@ dist-hook:
 	for file in $(BUILT_SOURCES) ; do \
 		rm -f $(distdir)/$$file ; \
 	done
-
-endif
 
 EXTRA_DIST = \
 	rapidxml \

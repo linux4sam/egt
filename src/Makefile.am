@@ -5,13 +5,10 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir)/src/images/jpeg \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/utfcpp/source \
-	-isystem $(top_srcdir)/external/layout
+	-isystem $(top_srcdir)/external/layout \
+	-isystem $(top_srcdir)/external/kplot
 
 AM_CXXFLAGS = -DDATADIR=\"$(datadir)\"
-
-if HAVE_KPLOT
-CUSTOM_FLAGS += -I$(top_srcdir)/external/kplot/
-endif
 
 lib_LTLIBRARIES = libegt.la
 libegt_la_CXXFLAGS = \
@@ -105,9 +102,7 @@ images/jpeg/cairo_jpg.h
 endif
 
 libegt_la_LIBADD = $(CODE_COVERAGE_LDFLAGS)
-if HAVE_KPLOT
 libegt_la_LIBADD += $(top_builddir)/external/libkplot.la
-endif
 
 libegtincludedir = ${includedir}
 nobase_libegtinclude_HEADERS = \
