@@ -65,12 +65,6 @@ public:
             float old_width, float old_height,
             float new_width, float new_height);
 
-protected:
-
-    static float round(float v, float fraction);
-
-    std::string id(const std::string& filename, float hscale, float vscale);
-
     /**
      * Return the mimetype string for a filename.
      */
@@ -80,6 +74,12 @@ protected:
      * Return the mimetype string for a buffer.
      */
     static std::string get_mime_type(const void* buffer, size_t length);
+
+protected:
+
+    static float round(float v, float fraction);
+
+    std::string id(const std::string& filename, float hscale, float vscale);
 
     std::map<std::string, shared_cairo_surface_t> m_cache;
 };

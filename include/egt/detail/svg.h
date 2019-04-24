@@ -21,11 +21,11 @@ namespace detail
  * Load an SVG file into a surface.
  *
  * @param[in] filename The path of the SVG file.
- * @param[in] size The size of the surface to create and rasterize to.
+ * @param[in] size Optional size of the surface to create and rasterize to.
  * @param[in] id Optional object id to load from within the SVG file.
  */
 shared_cairo_surface_t load_svg(const std::string& filename,
-                                const SizeF& size,
+                                const SizeF& size = SizeF(),
                                 const std::string& id = std::string());
 
 }

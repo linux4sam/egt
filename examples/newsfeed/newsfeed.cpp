@@ -3,106 +3,120 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <cmath>
-#include <cstdio>
-#include <glob.h>
-#include <iostream>
-#include <map>
-#include <memory>
-#include <egt/ui>
 #include <egt/detail/filesystem.h>
-#include <sstream>
-#include <stdexcept>
-#include <string.h>
-#include <string>
-#include <vector>
-
-#ifdef USE_LIBCURL
-#include <curl/curl.h>
-#endif
-
-#ifdef HAVE_RAPIDXML_RAPIDXML_HPP
-#include <rapidxml/rapidxml.hpp>
-#include <rapidxml/rapidxml_utils.hpp>
-#else
+#include <egt/detail/imagecache.h>
+#include <egt/detail/string.h>
+#include <egt/network/http.h>
+#include <egt/ui>
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
-#endif
+#include <sstream>
+#include <string>
 
 using namespace std;
 using namespace egt;
+using namespace egt::experimental;
+using namespace egt::detail;
 
-class NewsItem : public StaticGrid
+using download_callback = std::function<void(const HttpClientRequest::buffer_type& data)>;
+
+static void download(const std::string& url, download_callback callback)
+{
+    cout << "request " << url << endl;
+
+    auto filename = detail::extract_filename(url);
+    if (!filename.empty() && detail::exists(filename))
+    {
+        callback(detail::read_file(filename));
+        return;
+    }
+
+    // TODO: memory leak
+    HttpClientRequest* session = new HttpClientRequest(url);
+    session->start([filename, callback](const std::string & url, HttpClientRequest::buffer_type && html)
+    {
+
+        if (!filename.empty())
+        {
+            std::ofstream out(filename, std::ofstream::binary |
+                              std::ofstream::trunc | std::ofstream::out);
+            out.write(html.data(), html.size());
+            out.close();
+        }
+
+        callback(html);
+    });
+}
+
+class NewsItem : public VerticalBoxSizer
 {
 public:
 
     NewsItem(const std::string& title, const std::string& desc,
-             const std::string& date, const std::string& link)
-        : StaticGrid(Tuple(1, 2)),
-          m_title(title),
-          m_desc(desc),
-          m_date(date),
-          m_link(link)
+             const std::string& date, const std::string& link,
+             const std::string& image)
+        : VerticalBoxSizer(justification::start),
+          m_line(*this),
+          m_title(*this, truncate(title, 80)),
+          m_date(*this, date),
+          m_desc(*this, truncate(desc, 80)),
+          m_link(*this, truncate(link, 80))
     {
-        add(expand(m_title), 0, 0);
-        add(expand(m_date), 0, 1);
+        m_title.set_font(Font(20, Font::weightid::bold));
+        m_date.set_font(Font(Font::slantid::oblique));
+        m_link.set_font(Font(10));
+        m_link.instance_palette().set(Palette::ColorId::label_text, Palette::blue);
+
+        set_align(alignmask::expand_horizontal);
+
+        if (!image.empty())
+        {
+            download(image, [this, image](const HttpClientRequest::buffer_type & data)
+            {
+                // this is silly, we have the data passed as data but still load from file
+
+                auto filename = detail::extract_filename(image);
+                if (!filename.empty())
+                {
+                    auto surface = detail::image_cache().get(filename);
+                    if (surface)
+                    {
+                        assert(!m_image);
+                        m_image = make_shared<ImageLabel>(surface);
+                        this->add(m_image);
+                    }
+                }
+            });
+        }
+
+        m_line.set_padding(10);
+        expand_horizontal(m_line);
+        //expand_horizontal(m_title);
+        //expand_horizontal(m_date);
+        //expand_horizontal(m_desc);
+        //expand_horizontal(m_link);
     }
 
-    virtual ~NewsItem()
-    {}
+    virtual ~NewsItem() = default;
 
 protected:
 
     NewsItem() = delete;
-
+    LineWidget m_line;
     Label m_title;
-    Label m_desc;
     Label m_date;
+    Label m_desc;
     Label m_link;
+    shared_ptr<ImageLabel> m_image;
 };
 
-#ifdef USE_LIBCURL
-static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
+template<class T>
+static int load(const string& file, T& list)
 {
-    static_cast<std::string*>(userp)->append(static_cast<char*>(contents), size * nmemb);
-    return size * nmemb;
-}
+    list.remove_all();
 
-static string download(const std::string& url)
-{
-    string readBuffer;
-    CURL* curl;
-    CURLcode res;
+    auto total = 10;
 
-    curl = curl_easy_init();
-    if (curl)
-    {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-
-        /* Perform the request, res will get the return code */
-        res = curl_easy_perform(curl);
-        /* Check for errors */
-        if (res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                    curl_easy_strerror(res));
-
-        /* always cleanup */
-        curl_easy_cleanup(curl);
-    }
-
-    return readBuffer;
-}
-#endif
-
-static int load(const string& file, ListBox& list)
-{
     rapidxml::file<> xml_file(file.c_str());
     rapidxml::xml_document<> doc;
     doc.parse<0>(xml_file.data());
@@ -115,32 +129,37 @@ static int load(const string& file, ListBox& list)
         string description;
         string link;
         string date;
+        string image;
 
         auto t = node->first_node("title");
         if (t)
-        {
             title = t->first_node()->value();
-        }
 
         auto d = node->first_node("description");
         if (d)
         {
             description = d->first_node()->value();
+            if (description == "null")
+                description.clear();
         }
 
         auto p = node->first_node("pubDate");
         if (p)
-        {
             date = p->first_node()->value();
-        }
 
         auto l = node->first_node("link");
         if (l)
-        {
             link = l->first_node()->value();
-        }
 
-        list.add_item(make_shared<NewsItem>(title, description, date, link));
+        auto i = node->first_node("image");
+        if (i)
+            image = i->first_node()->value();
+
+        auto item = make_shared<NewsItem>(title, description, date, link, image);
+        list.add(item);
+
+        if (--total == 0)
+            break;
     }
 
     return 0;
@@ -148,27 +167,35 @@ static int load(const string& file, ListBox& list)
 
 int main(int argc, const char** argv)
 {
+    string url = "https://www.microchip.com/RSS/Recent-AppNotes.xml";
+    if (argc >= 2)
+        url = argv[1];
+
     Application app(argc, argv, "newsfeed");
 
     TopWindow win;
 
-    ListBox list(win);
-    list.set_align(alignmask::expand);
+    ScrolledView view(win, ScrolledView::policy::never);
+    expand(view);
 
-#ifdef USE_LIBCURL
-    string data = download("http://feeds.reuters.com/reuters/technologyNews");
-    if (!data.empty())
-    {
-        std::ofstream out("dynfeed.xml");
-        out << data;
-        out.close();
-        load("dynfeed.xml", list);
-    }
-#else
-    load(detail::exe_pwd() + "/../share/egt/examples/newsfeed/feed.xml", list);
-#endif
+    VerticalBoxSizer list(view);
+    expand_horizontal(list);
+
+    auto item = make_shared<Label>("Loading " + url);
+    list.add(item);
 
     win.show();
+
+    download(url, [&list](const HttpClientRequest::buffer_type & data)
+    {
+        if (!data.empty())
+        {
+            std::ofstream out("dynfeed.xml");
+            out.write(data.data(), data.size());
+            out.close();
+            load("dynfeed.xml", list);
+        }
+    });
 
     return app.run();
 }

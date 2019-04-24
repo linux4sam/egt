@@ -33,10 +33,14 @@ shared_cairo_surface_t load_svg(const string& filename,
     RsvgDimensionData dim;
     rsvg_handle_get_dimensions(rsvg.get(), &dim);
 
-    Canvas canvas(size);
+    auto s = size;
+    if (s.empty())
+        s = SizeF(dim.width, dim.height);
+
+    Canvas canvas(s);
     auto cr = canvas.context();
 
-    auto scaled = size / SizeF(dim.width, dim.height);
+    auto scaled = s / SizeF(dim.width, dim.height);
 
     /* Scale *before* setting the source surface (1) */
     cairo_scale(cr.get(),

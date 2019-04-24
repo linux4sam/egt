@@ -7,14 +7,13 @@
 #include "config.h"
 #endif
 
-#include "cairo_bmp.h"
 #include "egt/canvas.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/resource.h"
 #include "egt/utils.h"
+#include "images/bmp/cairo_bmp.h"
 #include <cassert>
 #include <sstream>
-#include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -28,10 +27,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "cairo_jpg.h"
+#include "images/jpeg/cairo_jpg.h"
 #ifdef __cplusplus
 }
 #endif
+#endif
+
+#ifdef HAVE_LIBRSVG
+#include "egt/detail/svg.h"
 #endif
 
 using namespace std;
@@ -172,6 +175,12 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                             cairo_image_surface_create_from_bmp(name.c_str()),
                             cairo_surface_destroy);
             }
+#ifdef HAVE_LIBRSVG
+            else if (mimetype == "image/svg+xml")
+            {
+                image = load_svg(name);
+            }
+#endif
             else
             {
                 ERR("could not load file " << name);
@@ -206,6 +215,12 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                             cairo_image_surface_create_from_bmp(name.c_str()),
                             cairo_surface_destroy);
             }
+#ifdef HAVE_LIBRSVG
+            else if (mimetype == "image/svg+xml")
+            {
+                image = load_svg(name);
+            }
+#endif
             else
             {
                 ERR("could not load file " << name);

@@ -25,7 +25,7 @@
 #include <unistd.h>
 #include <cairo.h>
 
-#include "cairo_bmp.h"
+#include "images/bmp/cairo_bmp.h"
 #define BMP_HEADER_OFFSET 138
 #define BMP_WIDTH_OFFSET 18
 #define BMP_HEIGHT_OFFSET 22

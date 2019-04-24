@@ -33,7 +33,7 @@
 #include <cairo.h>
 #include <jpeglib.h>
 
-#include "cairo_jpg.h"
+#include "images/jpeg/cairo_jpg.h"
 
 /*! Macro to activate main() function. This is only used for testing. Comment
  * it out (#undef) if you link this file to your own program.
