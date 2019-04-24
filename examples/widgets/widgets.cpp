@@ -378,8 +378,9 @@ struct ScrollwheelPage : public NotebookTab
             std::make_shared<Scrollwheel>(Rect(0, 0, 50, 75), 1, 31, 1);
 
         std::vector<std::string> months = { "January", "February", "March",
-            "April", "May", "June", "July", "August", "September", "October",
-            "November", "December" };
+                                            "April", "May", "June", "July", "August", "September", "October",
+                                            "November", "December"
+                                          };
         auto scrollwheel_month =
             std::make_shared<Scrollwheel>(Rect(0, 0, 200, 75), months);
         scrollwheel_month->add_item("");

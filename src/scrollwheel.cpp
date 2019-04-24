@@ -45,7 +45,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
       m_button_down(make_shared<ImageButton>(Image("@arrow_down.png"))),
       m_label(make_shared<Label>())
 {
-    for (int i = min; i <= max; i+=step)
+    for (int i = min; i <= max; i += step)
         m_items.push_back(std::to_string(i));
 
     init(reversed);
