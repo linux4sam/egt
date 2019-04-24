@@ -66,6 +66,7 @@ images/bmp/cairo_bmp.h \
 input.cpp \
 label.cpp \
 list.cpp \
+network/http.cpp \
 notebook.cpp \
 painter.cpp \
 palette.cpp \
@@ -151,6 +152,7 @@ $(top_srcdir)/include/egt/keyboard.h \
 $(top_srcdir)/include/egt/keycode.h \
 $(top_srcdir)/include/egt/label.h \
 $(top_srcdir)/include/egt/list.h \
+$(top_srcdir)/include/egt/network/http.h \
 $(top_srcdir)/include/egt/notebook.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
