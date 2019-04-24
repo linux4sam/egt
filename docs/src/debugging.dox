@@ -5,12 +5,14 @@ namespace egt { inline namespace v1 {
 
 There are several ways to debug EGT and EGT applications.
 
+See @subpage environ for information about environment variables that may be
+useful for debugging.
 
 @section debug_gdb GDB
 
 EGT uses asserts internally.  Make sure and compile the library without -DNDEBUG
 and then you can break on any assert using GDB to examine the callstack and the
-state of the application.
+state of the application.  EGT will compile with asserts enabled by default.
 
 @code
 break __assert_fail
@@ -35,21 +37,7 @@ Running GDB right in the build directory.
 libtool --mode=execute gdb basic
 @endcode
 
-@section debug_env Environment Variables
-
-By default, EGT will look at several runtime environment variables to change the
-operation of the library.  For example, you can change some configuration and
-set log levels using environment variables.
-
-@li <tt>EGT_DEBUG</tt>
-    <br>
-    Enable debug output for the framework.  The higher the number, the more output.
-
-@li <tt>EGT_BACKEND</tt>
-    <br>
-    Select what backend to use for rendering to the screen. Examples include x11, kms, fbdev.
-
-@section debug_cairo
+@section debug_cairo Debugging Cairo
 
 Cairo comes with a nifty trace tool that will allow you to log any cairo library
 calls to a file.  It works sort of like strace or ftrace.
@@ -62,7 +50,7 @@ Then, run any application with the tool and it will log to a trace file in the
 same directory by default.
 
 @code{.sh}
-cairo-trace ./thermostat
+cairo-trace ./basic
 @endcode
 
 Additionally, you can replay the trace against several backends to see which one

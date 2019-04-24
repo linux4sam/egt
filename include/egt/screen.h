@@ -122,6 +122,7 @@ protected:
     void init(void** ptr, uint32_t count, int w, int h,
               pixel_format format = pixel_format::argb8888);
 
+    /// @private
     struct DisplayBuffer
     {
         shared_cairo_surface_t surface;

@@ -81,6 +81,7 @@ public:
 
 protected:
 
+    /// @private
     struct Cell
     {
         // cppcheck-suppress unusedStructMember

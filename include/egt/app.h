@@ -25,7 +25,7 @@
 namespace egt
 {
 /**
- * @brief Inline version 1 namespace.
+ * @brief EGT API version 1 namespace.
  */
 inline namespace v1
 {

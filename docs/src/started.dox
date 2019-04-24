@@ -3,7 +3,19 @@ namespace egt { inline namespace v1 {
 
  @page started Getting Started
 
+There are various was to get started with EGT depending on your requirements.
+
+If you are building EGT on a PC you can start by just fetching the source of the
+EGT project.  If you are developing for and deploying to a target board, the
+easiest way to work with EGT is part of a buildroot SDK which already includes
+a cross compiler and all of the necessary dependencies and tools.
+
+Also, see @subpage eclipse for how to setup the Eclipse IDE for host or cross
+compiling.
+
 @section started_fetching Fetching Source
+
+To simply fetch the source:
 
 @code{.sh}
 git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
@@ -11,7 +23,7 @@ git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
 
 @section started_building Building
 
-EGT uses the autotools, like autoconf and automake, for building on Linux
+EGT uses the GNU autotools, like autoconf and automake, for building on Linux
 platforms.
 
 To build for a PC, first, install dependencies:
@@ -27,21 +39,20 @@ Then build.
 git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
 cd egt
 ./autogen.sh
-./configure --prefix=$HOME/egt_install
+./configure
 make
-make install
 @endcode
 
 Then run.
 
 @code{.sh}
-export LD_LIBRARY_PATH=$HOME/egt_install/lib
-cd $HOME/egt_install/bin
+cd examples/basic
 ./basic
 @endcode
 
-EGT also supports cross compilation for target systems. To cross compile, follow
-the standard instructions.
+EGT also supports cross compilation for target systems. If you already have a
+cross compiler available with dependent libraries available, add it to your
+PATH and follow the standard instructions.
 
 @code{.sh}
 ./autogen.sh
@@ -49,7 +60,7 @@ the standard instructions.
 make
 @endcode
 
-You can run "./configure --help" to see more options.  Some nonstandard
+You can run "./configure --help" to see more options.  Some non-standard
 options are listed here.
 
 @par --disable-debug
@@ -57,6 +68,24 @@ build without debugging support [default=yes]
 
 @par --disable-examples
 don't build examples [default=no]
+
+@section started_buildroot Cross Compiling With Buildroot
+
+We provide EGT as part of the <a href="https://bitbucket.microchip.com/projects/LINUX4SAM/repos/buildroot-external-microchip/browse">buildroot-external-microchip</a> project. To build a
+complete SDK and target filesystem for a board follow the instructions found at:
+
+Follow the README.md instructions for that project with the following versions.
+
+@code{.sh}
+git clone https://bitbucket.microchip.com/scm/linux4sam/buildroot-external-microchip.git -b egt_devel
+git clone git clone https://git.buildroot.net/buildroot -b 2019.02
+cd buildroot
+BR2_EXTERNAL=../buildroot-external-microchip/ make sam9x60ek_egt_defconfig
+make
+@endcode
+
+See the configs directory in the buildroot-external-microchip project for
+alternate EGT defconfigs.
 
 @section started_first First Application
 
@@ -69,15 +98,13 @@ The include file <egt/ui> contains most basic functionality needed.
 @code{.cpp}
 #include <egt/ui>
 
-using namespace egt;
-
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
+    egt::Application app(argc, argv);
 
-    TopWindow window;
-    Button button(window, "Hello World");
-    button.align(alignmask::center);
+    egt::TopWindow window;
+    egt::Button button(window, "Press Me");
+    button.set_align(egt::alignmask::center);
     window.show();
 
     return app.run();
@@ -90,13 +117,11 @@ If you want to use a UI file instead.
 #include <egt/ui>
 #include <egt/uiloader.h>
 
-using namespace egt;
-
-int main()
+int main(int argc, const char** argv)
 {
-    Application app;
+    egt::Application app(argc, argv);
 
-    experimental::UiLoader loader;
+    egt::experimental::UiLoader loader;
     auto window = loader.load("ui.xml");
     window->show();
 

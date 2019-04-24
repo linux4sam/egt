@@ -1,0 +1,19 @@
+namespace egt { inline namespace v1 {
+/**
+
+ @page environ Environment Variables
+
+By default, EGT will look at several runtime environment variables to change the
+operation of the library.  For example, you can change some configuration and
+set log levels using environment variables.
+
+@li <tt>EGT_DEBUG</tt>
+    <br>
+    Enable debug output for the framework.  The higher the number, the more output.
+
+@li <tt>EGT_BACKEND</tt>
+    <br>
+    Select what backend to use for rendering to the screen. Examples include x11, kms, fbdev.
+
+*/
+}}

@@ -6,8 +6,7 @@ namespace egt { inline namespace v1 {
 @section eclipse_Integration Eclipse Integration
 
 Integration with Eclipse simplifies the compilation, remote execution
-and remote debugging of EGT applications using EGT Library built in
-Buildroot system.
+and remote debugging of EGT applications.
 
 The typical usage model of our EGT integration with Eclipse would be:
 
@@ -25,7 +24,9 @@ for developing EGT application and Buildroot integration.
 @section eclipse_installation Eclipse Installation
 
 Download Eclipse IDE for C/C++ Developers (Luna 4.4) from
+
 <http://www.eclipse.org/downloads/packages/release/luna/r/eclipse-ide-cc-developers>
+
 and follow below steps for installation.
 
 Extract the eclipse-cpp-luna-R-linux-gtk-x86_64.tar.gz to folder /opt
@@ -73,14 +74,14 @@ For eclipse icon to be displayed in dash, eclipse icon can be added as
 sudo cp /opt/eclipse/icon.xpm /usr/share/pixmaps/eclipse.xpm
 @endcode
 
-Eclipse need to have either OpenJDK or Sun Java installed to be able to
+Eclipse needs to have either OpenJDK or Sun Java installed to be able to
 run eclipse and here is a simple example of installing Open JDK 1.6:
 
 @code{.sh}
 sudo apt-get install openjdk-6-jdk
 @endcode
 
-@section eclipse_buildroot_setup Buildroot setup
+@section eclipse_buildroot_setup Buildroot Setup
 
 The Eclipse Buildroot plugin discovers the available Buildroot toolchains
 by reading a file named .buildroot-eclipse.toolchains which is generated
@@ -88,14 +89,14 @@ in the user home directory. This file does not have to be written manually.
 Buildroot will automatically add all the generated toolchains into this
 file by enabling BR2_ECLIPSE_REGISTER option in make menuconfig.
 
-go into the toolchain package and select “Register toolchain with Eclipse Buildroot plug-in”
+Go into the toolchain package and select “Register toolchain with Eclipse Buildroot plug-in”
 as show in below.
 
 @imageSize{eclipse_buildroot_toolchain.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_buildroot_toolchain.png "Buildroot setup"
 @image latex eclipse/eclipse_buildroot_toolchain.png "Buildroot setup"
 
-@section eclipse_buildroot_plugin Install Eclipse Buildroot plugin
+@section eclipse_buildroot_plugin Install Eclipse Buildroot Plugin
 
 In Eclipse, Go to the Help menu and select Install new software:
 
@@ -170,7 +171,7 @@ When the user selects a toolchain for its project:
    target and create Remote Debug configurations which point automatically on the correct cross-debugger.
 
 Create a new cpp file basic.cpp and copy below lines to basic.cpp file
-@code{.sh}
+@code{.cpp}
 #include <egt/ui>
 
 int main(int argc, const char** argv)
@@ -267,7 +268,7 @@ To build the project (Ctrl-b) or select Project->build all option.
 @image html eclipse/eclipse_build_success.png "Build project"
 @image latex eclipse/eclipse_build_success.png "Build project"
 
-@section eclipse_execute_egt  Executing EGT application on Target remotely
+@section eclipse_execute_egt  Executing EGT application on Target Remotely
 
 This tutorial describes how to execute a remote EGT application using a Buildroot
 toolchain in Eclipse.Since Eclipse will transfer the application binary using SSH
@@ -340,7 +341,7 @@ Finally in the Console, see the traces of EGT application running on target
 @image html eclipse/eclipse_run_finish.png "Run finish"
 @image latex eclipse/eclipse_run_finish.png "Run finish"
 
-@section eclipse_debug Debug EGT application remotely
+@section eclipse_debug Debug EGT Application Remotely
 
 This section describes how to debug EGT Project using a
 Buildroot toolchain in Eclipse.

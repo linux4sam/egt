@@ -822,6 +822,7 @@ INPUT += @top_srcdir@/docs/src/localization.dox
 INPUT += @top_srcdir@/docs/src/media.dox
 INPUT += @top_srcdir@/docs/src/resources.dox
 INPUT += @top_srcdir@/docs/src/topics.dox
+INPUT += @top_srcdir@/docs/src/environ.dox
 INPUT += @top_srcdir@/docs/src/debugging.dox
 INPUT += @top_srcdir@/docs/src/custom.dox
 INPUT += @top_srcdir@/docs/src/eclipse.dox

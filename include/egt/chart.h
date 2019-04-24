@@ -34,14 +34,14 @@ public:
         return std::unique_ptr<Widget>(make_unique<LineChart>(*this).release());
     }
 
-    // this must mirror struct kpair
-    struct data_pair
+    // this must mirror struct kpair internally
+    struct DataPair
     {
         double x;
         double y;
 
-        /// @todo float comparison
-        bool operator==(const data_pair& rhs) const
+        /// @todo float comparison not supported here
+        bool operator==(const DataPair& rhs) const
         {
             return (x == rhs.x) && (y == rhs.y);
         }
@@ -58,7 +58,7 @@ public:
         linesmarks
     };
 
-    using data_array = std::vector<struct data_pair>;
+    using data_array = std::vector<struct DataPair>;
 
     virtual void add_data(const data_array& data, chart_type type = chart_type::lines)
     {
@@ -103,6 +103,7 @@ public:
 
 protected:
 
+    /// @private
     struct data_set
     {
         chart_type type;

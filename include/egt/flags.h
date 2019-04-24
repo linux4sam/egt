@@ -22,6 +22,7 @@ class Flags : public detail::Object
 {
 public:
 
+    /// @private
     struct flags_hash
     {
         std::size_t operator()(T const& s) const noexcept

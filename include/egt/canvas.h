@@ -21,12 +21,19 @@ inline namespace v1
 {
 
 /**
- * @brief A Canvas manages its own surface and context.
+ * @brief Manages a unique drawing surface and context.
  *
- * This can be created and directly draw to with Painter.
+ * This can be created and directly drawn to with Painter.
  *
- * This is useful, for example, if a widget needs a temporary or intermediate
+ * This is useful, for example, if you need a temporary or intermediate
  * buffer for drawing to.
+ *
+ * @code{.cpp}
+ * Canvas canvas(Size(100,100));
+ * Painter painter(canvas.context());
+ * ...
+ * @endcode
+ *
  */
 class Canvas
 {
@@ -34,6 +41,8 @@ public:
 
     /**
      * Construct a canvas with the specified format and size.
+     *
+     * @todo This needs to be modified to use pixel_format instead of cairo_format_t.
      */
     explicit Canvas(const Size& size,
                     cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
@@ -66,6 +75,9 @@ public:
      */
     shared_cairo_surface_t surface() const { return m_surface; }
 
+    /**
+     * Get the size of the surface.
+     */
     Size size() const;
 
     virtual ~Canvas() = default;

@@ -167,6 +167,7 @@ protected:
 
 /**
  * @brief Positions widgets based on an orientation.
+ * @deprecated This will be removed.
  */
 class OrientationPositioner : public Frame
 {

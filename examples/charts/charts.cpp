@@ -23,7 +23,7 @@ static LineChart::data_array create_sin_data()
     LineChart::data_array data;
     for (float i = 0.; i < M_PI * 4; i += 0.2)
     {
-        LineChart::data_pair p;
+        LineChart::DataPair p;
         p.x = i;
         p.y = std::sin(i);
         data.push_back(p);
@@ -36,7 +36,7 @@ static LineChart::data_array create_cos_data()
     LineChart::data_array data;
     for (float i = 0.; i < M_PI * 4; i += 0.2)
     {
-        LineChart::data_pair p;
+        LineChart::DataPair p;
         p.x = i;
         p.y = std::cos(i);
         data.push_back(p);
@@ -49,7 +49,7 @@ static LineChart::data_array create_atan_data()
     LineChart::data_array data;
     for (float i = 0.; i < M_PI * 4; i += 0.2)
     {
-        LineChart::data_pair p;
+        LineChart::DataPair p;
         p.x = i;
         p.y = std::atan(i);
         data.push_back(p);

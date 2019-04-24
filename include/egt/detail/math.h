@@ -83,6 +83,9 @@ inline T to_radians(T zero, T degrees)
 
 }
 
+/**
+ * Creates and stores a simple ratio value.
+ */
 template<class T>
 struct Ratio
 {
