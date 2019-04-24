@@ -1,0 +1,91 @@
+namespace egt { inline namespace v1 {
+/**
+
+ @page layout Layout
+
+This chapter discusses laying out widgets in the UI.
+
+Before diving into this, make sure you understand @subpage geometry "Geometry"
+semantics in EGT.
+
+@section layout_box The Widget Box
+
+Understanding the widget box is an important concept not only when it comes to
+understand how widgets are drawn, but also in understanding position and layout.
+
+Each widget has a @b box.  This is a Rect that has an origin and a width and
+height.  When drawing or performing layout, this is the box that is used or
+@b owned by the widget.  By default, when a Widget is told to draw, the Painter
+will be clipped to the widget's box.
+
+Each widget also has a margin, border, and padding @b width. These are intrinsic
+properties that are used when drawing a widget.  How each of these properties
+applies visually is very similar to CSS constructs and is demonstrated with the
+following diagram.
+
+@image html layout.png
+@image latex layout.png "Layout" width=8cm
+
+In the case of a background color, it goes to the inside edge of the border.
+
+@image html layout2.png
+@image latex layout2.png "Layout Fill" width=8cm
+
+The widget box itself has no width.  If any of the other properties like margin,
+border, or padding are set to zero they have no width.
+
+@section layout_intro Layout
+
+There are two main ways to layout widgets:
+- Fixed
+- Fluid
+
+@p Fixed
+
+The first is absolute position and sizing.  This is limiting and less preferred
+because it hard codes a layout to a specific display resolution and is otherwise
+not fluid when manipulating the layout by adding or removing widgets later
+during development or even dynamically at run-time.  This can easily be
+cumbersome, but it's precise and works.  The only thing used to do position and
+size with this method is whatever the box() of each widget says. This means that
+you must explicitly construct or set the size and position of each widget
+manually with the proper size and position.  However, what tends to happen is
+the developer ends up doing the same calculations that could otherwise be
+specified simpler with the fluid method.
+
+@p Fluid
+
+The second method is automatic, or fluid, position and sizing based on rules
+that take into account various properties of widgets.  The result is the box()
+of the widget is automatically changed, instead of being directly set. This
+constraint-based approach to design allows you to build user interfaces that
+dynamically respond to both internal and external changes.
+
+Each widget has an alignment setting. Each widget also has a min_size_hint() to
+bound the smallest size the widget can be.
+
+If a widget has an alignment value of alignmask::none, the default, whatever
+size it has will be used, while still taking the min_size_hint() into account.
+
+If the alignment value of the widget is not alignmask::none, the size of the
+widget will be automatically calculated based on several other properties,
+usually based on some ratio in relation to the widget's parent.
+
+@section layout_widgets Layout Components
+
+EGT provides several widgets like BoxSizer and StaticGrid to help with automatic
+layout based on constraints or ratios.
+
+@section layout_zorder Z-order
+
+The z-order of widgets is the order in which they are drawn.  Widgets are drawn
+from the bottom up.  By default, widgets are drawn in the order in which they
+are added to Frame.
+
+If you add() a Label, and then add() a background ImageLabel that covers the
+entire Window, you will not see the label unless the background image is
+transparent. To change this, you have to fix the z-order of the widgets by
+either lowering the ImageLabel or raising the Label.
+
+*/
+}}
