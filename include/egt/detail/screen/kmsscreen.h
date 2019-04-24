@@ -26,6 +26,8 @@ inline namespace v1
 namespace detail
 {
 
+struct planeid;
+
 /**
  * Screen in an KMS dumb buffer.
  *
@@ -64,10 +66,11 @@ public:
 
 protected:
 
-    int m_fd;
-    struct kms_device* m_device;
-    struct plane_data* m_plane;
-    uint32_t m_index;
+    int m_fd{-1};
+    struct kms_device* m_device {nullptr};
+    struct plane_data* m_plane {nullptr};
+    uint32_t m_index{0};
+    static std::vector<planeid> m_used;
 
     friend class detail::KMSOverlay;
 };

@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "detail/screen/keysym_to_unicode.h"
 #include "detail/screen/keyboard_code_conversion_x.h"
 #include "detail/screen/x11wrap.h"
@@ -40,7 +36,8 @@ X11Screen::X11Screen(const Size& size, bool borderless)
       m_input(main_app().event().io())
 {
     m_priv->display = XOpenDisplay(NULL);
-    assert(m_priv->display);
+    if (!m_priv->display)
+        throw std::runtime_error("unable to connect to X11 display");
 
     m_input.assign(ConnectionNumber(m_priv->display));
 
@@ -52,7 +49,8 @@ X11Screen::X11Screen(const Size& size, bool borderless)
                                          0, 0,
                                          size.w, size.h,
                                          0, 0, 0);
-    assert(m_priv->window);
+    if (!m_priv->window)
+        throw std::runtime_error("unable to connect to X11 window");
 
     if (borderless)
     {

@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
@@ -118,16 +114,17 @@ struct FlipJob
     uint32_t m_index;
 };
 
+std::vector<planeid> KMSScreen::m_used;
+
 KMSScreen::KMSScreen(bool primary)
-    : m_index(0)
 {
     m_fd = drmOpen("atmel-hlcdc", NULL);
-    assert(m_fd >= 0);
+    if (m_fd < 0)
+        throw std::runtime_error("unable to open DRM driver");
 
     m_device = kms_device_open(m_fd);
-    assert(m_device);
-
-    //kms_device_dump(m_device);
+    if (!m_device)
+        throw std::runtime_error("unable to open KMS device");
 
     if (primary)
     {
@@ -141,10 +138,10 @@ KMSScreen::KMSScreen(bool primary)
                                 m_device->screens[0]->height,
                                 format,
                                 NUM_PRIMARY_BUFFERS);
+        if (!m_plane)
+            throw std::runtime_error("unable to create primary plane");
 
-        assert(m_plane);
         plane_fb_map(m_plane);
-
         plane_apply(m_plane);
 
         DBG("primary plane dumb buffer " << plane_width(m_plane) << "," <<
@@ -204,8 +201,6 @@ inline bool operator==(const planeid& lhs, const planeid& rhs)
            lhs.index == rhs.index;
 }
 
-static vector<planeid> used;
-
 struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         pixel_format format,
         windowhint hint)
@@ -222,7 +217,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         for (auto i = count - 1; i >= 0; i--)
         {
             auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-            if (find(used.begin(), used.end(), id) != used.end())
+            if (find(m_used.begin(), m_used.end(), id) != m_used.end())
                 continue;
 
             plane = plane_create2(m_device,
@@ -234,7 +229,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                   detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
             if (plane)
             {
-                used.push_back(id);
+                m_used.push_back(id);
                 break;
             }
         }
@@ -249,7 +244,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         for (auto i = count - 1; i >= 0; i--)
         {
             auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-            if (find(used.begin(), used.end(), id) != used.end())
+            if (find(m_used.begin(), m_used.end(), id) != m_used.end())
                 continue;
 
             plane = plane_create2(m_device,
@@ -261,7 +256,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                   detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
             if (plane)
             {
-                used.push_back(id);
+                m_used.push_back(id);
                 break;
             }
         }
@@ -272,7 +267,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         for (auto i = 0; i < count; i++)
         {
             auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-            if (find(used.begin(), used.end(), id) != used.end())
+            if (find(m_used.begin(), m_used.end(), id) != m_used.end())
                 continue;
 
             plane = plane_create2(m_device,
@@ -284,7 +279,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                   1);
             if (plane)
             {
-                used.push_back(id);
+                m_used.push_back(id);
                 break;
             }
         }
@@ -295,7 +290,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
             for (auto i = 0; i < cnt; i++)
             {
                 auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-                if (find(used.begin(), used.end(), id) != used.end())
+                if (find(m_used.begin(), m_used.end(), id) != m_used.end())
                     continue;
 
                 plane = plane_create2(m_device,
@@ -307,7 +302,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                       detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
                 if (plane)
                 {
-                    used.push_back(id);
+                    m_used.push_back(id);
                     break;
                 }
             }
@@ -321,7 +316,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         {
 
             auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-            if (find(used.begin(), used.end(), id) != used.end())
+            if (find(m_used.begin(), m_used.end(), id) != m_used.end())
                 continue;
 
             plane = plane_create2(m_device,
@@ -333,7 +328,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                   detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
             if (plane)
             {
-                used.push_back(id);
+                m_used.push_back(id);
                 break;
             }
         }
@@ -379,8 +374,10 @@ uint32_t KMSScreen::count_planes(plane_type type)
 
 void KMSScreen::close()
 {
-    kms_device_close(m_device);
-    drmClose(m_fd);
+    if (m_device)
+        kms_device_close(m_device);
+    if (m_fd >= 0)
+        drmClose(m_fd);
 }
 
 KMSScreen::~KMSScreen()

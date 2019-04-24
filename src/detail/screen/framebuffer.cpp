@@ -31,10 +31,14 @@ FrameBuffer::FrameBuffer(const string& path)
         throw std::runtime_error(("could not open device: " + path).c_str());
 
     if (::ioctl(m_fd, FBIOGET_FSCREENINFO, &fixinfo) < 0)
+    {
         assert(0);
+    }
 
     if (::ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0)
+    {
         assert(0);
+    }
 
     DBG("fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres);
 
