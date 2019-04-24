@@ -19,6 +19,10 @@ div.contents, div.searchresults {
     padding-bottom: 70px;
 }
 
+div.fragment {
+    padding: 5px;
+}
+
 #projectlogo {
     text-align: left;
 }
