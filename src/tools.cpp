@@ -14,6 +14,8 @@ using namespace std;
 
 namespace egt
 {
+inline namespace v1
+{
 
 CPUMonitorUsage::CPUMonitorUsage()
 {}
@@ -63,4 +65,5 @@ void CPUMonitorUsage::update()
 CPUMonitorUsage::~CPUMonitorUsage()
 {}
 
+}
 }
