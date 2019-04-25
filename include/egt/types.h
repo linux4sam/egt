@@ -30,6 +30,7 @@ using shared_cairo_pattern_t =
 
 namespace detail
 {
+/// @private
 struct cairo_t_deleter
 {
     void operator()(cairo_t* cr) { cairo_destroy(cr); }

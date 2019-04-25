@@ -26,6 +26,12 @@ inline namespace v1
  *
  * A static grid that does not perform any drawing, but controls the
  * size and position of any widget added into a grid.
+ *
+ * Every cell in a grid is the same size. The size of the grid and each cell is
+ * established, and then the widgets are aligned within each cell according to
+ * widget alignment and padding.
+ *
+ * @ingroup sizers
  */
 class StaticGrid : public Frame
 {
@@ -210,6 +216,8 @@ protected:
  *
  * A StaticGrid where each item is visually selectable with a highlighted
  * border.
+ *
+ * @ingroup sizers
  */
 class SelectableGrid : public StaticGrid
 {

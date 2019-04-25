@@ -28,6 +28,8 @@ class Painter;
  * @image latex widget_checkbox2.png "widget_checkbox2" width=5cm
  *
  * @todo This should be a ValueWidget<bool>.
+ *
+ * @ingroup controls
  */
 class CheckBox : public Button
 {

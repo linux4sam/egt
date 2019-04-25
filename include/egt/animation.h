@@ -25,7 +25,12 @@ inline namespace v1
 using float_t = float;
 
 /**
- * @defgroup EasingFunctions Easing Functions
+* @defgroup animation Animation
+* Animation related classes.
+*/
+
+/**
+ * @defgroup easing_functions Animation Easing Functions
  * @brief Predefined animation easing functions.
  * @{
  */
@@ -136,6 +141,8 @@ protected:
  *
  * Usually, this class will not be used directly and instead one of the
  * helper classes derived from this are easier to use.
+ *
+ * @ingroup animation
  */
 class Animation : public detail::IAnimation
 {
@@ -236,6 +243,8 @@ protected:
  *
  * You can skip the current sub-animation, you can restart to the
  * beginning, of the sequence, or you can stop the entire thing.
+ *
+ * @ingroup animation
  */
 class AnimationSequence : public detail::IAnimation
 {
@@ -394,6 +403,8 @@ protected:
  * An Animation usually involves setting up a timer to run the animation
  * at a periodic interval. This wraps an animation around a built in
  * timer to run the animation.
+ *
+ * @ingroup animation
  */
 class AutoAnimation : public Animation
 {
@@ -419,6 +430,8 @@ protected:
  * This as a utility class that makes animating a specific property of a
  * widget easier.  Any property that matches
  * PropertyAnimator::property_callback_t can be used.
+ *
+ * @ingroup animation
  */
 template <class T>
 class PropertyAnimatorType : public AutoAnimation
@@ -464,6 +477,8 @@ using PropertyAnimator = PropertyAnimatorType<int>;
 
 /**
  * @brief Simple delay, useful to insert a delay in an AnimationSequence.
+ *
+ * @ingroup animation
  */
 class AnimationDelay : public detail::IAnimation
 {

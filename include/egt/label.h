@@ -36,6 +36,8 @@ class Painter;
  * @image latex widget_label3.png "widget_label3" width=5cm
  * @image html widget_label4.png
  * @image latex widget_label4.png "widget_label4" width=5cm
+ *
+ * @ingroup controls
  */
 class Label : public TextWidget
 {
@@ -116,6 +118,8 @@ protected:
  * @image latex widget_imagelabel1.png "widget_imagelabel1" width=5cm
  * @image html widget_imagelabel2.png
  * @image latex widget_imagelabel2.png "widget_imagelabel2" width=5cm
+ *
+ * @ingroup controls
  */
 class ImageLabel : public Label
 {

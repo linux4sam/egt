@@ -24,6 +24,8 @@ class Frame;
  * @image latex widget_slider1.png "widget_slider1" width=5cm
  * @image html widget_slider2.png
  * @image latex widget_slider2.png "widget_slider2" height=5cm
+ *
+ * @ingroup controls
  */
 class Slider : public ValueRangeWidget<int>
 {

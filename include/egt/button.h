@@ -26,7 +26,14 @@ inline namespace v1
 class Painter;
 
 /**
+ * @defgroup controls Controls
+ * User interface control widgets.
+ */
+
+/**
  * @brief Basic button widget.
+ *
+ * @ingroup controls
  *
  * @image html widget_button.png
  * @image latex widget_button.png "widget_button" width=5cm
@@ -69,7 +76,7 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
-     * Default draw method for the button.
+     * Default draw method for the Button.
      */
     static void default_draw(Button& widget, Painter& painter, const Rect& rect);
 
@@ -111,6 +118,8 @@ private:
 
 /**
  * @brief A button widget that can have an image and/or a label on it.
+ *
+ * @ingroup controls
  */
 class ImageButton : public Button
 {

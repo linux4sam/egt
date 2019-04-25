@@ -19,6 +19,8 @@ inline namespace v1
  *
  * @image html widget_radial.png
  * @image latex widget_radial.png "widget_radial" width=5cm
+ *
+ * @ingroup controls
  */
 template<class T = int>
 class RadialType : public ValueRangeWidget<T>

@@ -20,6 +20,8 @@ class Painter;
 
 /**
  * @brief Boolean RadioBox.
+ *
+ * @ingroup controls
  */
 class RadioBox : public Button
 {

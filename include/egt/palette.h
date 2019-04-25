@@ -6,6 +6,11 @@
 #ifndef EGT_PALETTE_H
 #define EGT_PALETTE_H
 
+/**
+ * @file
+ * @brief Color Palette definition.
+ */
+
 #include <egt/color.h>
 #include <memory>
 #include <map>
@@ -18,10 +23,8 @@ inline namespace v1
 /**
  * @brief Color palette.
  *
- * The color palette defines a bank of colors used by widgets. Each widget
- * is capable of optionally maintaining its own palette if one is explicitly
- * set, otherwise the widget will default to a reference of the global
- * palette.
+ * The color Palette defines a bank of colors used by the Theme, and ultimately
+ * widgets.
  *
  * The palette can be extended by simply inserting more groups and color
  * ids in the event the palette needs to be expanded to support more colors.

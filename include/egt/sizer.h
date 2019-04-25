@@ -21,7 +21,21 @@ inline namespace v1
 {
 
 /**
+ * @defgroup sizers Sizing and Positioning
+ * Sizing and positioning widgets.
+ */
+
+/**
  * @brief Positions and sizes widgets by orientation.
+ *
+ * BoxSizer will position widgets added to it in a horizontal or vertical
+ * orientation. The BoxSizer can be homogeneous, which means all widgets will be
+ * given equal space, or not.  Also, space can be specified that should be
+ * between each widget.
+ *
+ * An added Widget's minimum_size_hint() will be used.
+ *
+ * @ingroup sizers
  */
 class BoxSizer : public Frame
 {

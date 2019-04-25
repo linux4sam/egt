@@ -16,6 +16,10 @@ namespace egt
 {
 inline namespace v1
 {
+/**
+ * @defgroup timers Timers
+ * Timer related widgets.
+ */
 
 void dump_timers(std::ostream& out);
 
@@ -55,6 +59,8 @@ void dump_timers(std::ostream& out);
  * });
  * timer.start();
  * @endcode
+ *
+ * @ingroup timers
  */
 class Timer
 {
@@ -187,6 +193,8 @@ private:
  * is stopped by calling cancel().
  *
  * @see Timer
+ *
+ * @ingroup timers
  */
 class PeriodicTimer : public Timer
 {

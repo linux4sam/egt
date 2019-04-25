@@ -27,16 +27,15 @@ inline namespace v1
  * @brief Input text box.
  *
  * Supported Features:
- * - Text entry
+ * - UTF-8 encoding
  * - Cursor movement
  * - Selection Copy/Delete
  * - Multiline
  *
- * @note Right now this is limited to English. Support for full UTF-8 encoding
- * requires some additional changes.
- *
  * @image html widget_textbox.png
  * @image latex widget_textbox.png "widget_txtbox" height=5cm
+ *
+ * @ingroup controls
  */
 class TextBox : public TextWidget
 {

@@ -22,7 +22,13 @@ inline namespace v1
 {
 
 /**
+ * @defgroup events Events
+ * Event related functionality.
+ */
+
+/**
  * @brief Event identifiers.
+ * @ingroup events
  */
 enum class eventid
 {
@@ -104,6 +110,7 @@ enum class pointer_button
 
 /**
  * @brief Current event state for pointer.
+ * @ingroup events
  */
 struct Pointer
 {
@@ -153,11 +160,13 @@ namespace event
 
 /**
  * Get the event Pointer object.
+ * @ingroup events
  */
 const Pointer& pointer();
 
 /**
  * Get the event Keys object.
+ * @ingroup events
  */
 const Keys& keys();
 

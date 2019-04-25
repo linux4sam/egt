@@ -57,6 +57,8 @@ public:
 
 /**
  * @brief Allows a collection of NotebookTab widgets to be shown one at a time.
+ *
+ * @ingroup controls
  */
 class Notebook : public Frame
 {

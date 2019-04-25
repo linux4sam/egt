@@ -16,6 +16,11 @@
  * Image and video related classes.
  */
 
+/**
+ * @defgroup media Images and Video
+ * Image and video related classes.
+ */
+
 #include <egt/detail/object.h>
 #include <memory>
 #include <string>
@@ -32,6 +37,8 @@ struct AudioPlayerImpl;
 
 /**
  * Audio player.
+ *
+ * @ingroup media
  */
 class AudioPlayer : public detail::Object
 {

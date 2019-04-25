@@ -25,13 +25,15 @@ inline namespace v1
 using StringItem = egt::Label;
 
 /**
- * @brief ListBox that manages a selectable list of items.
+ * @brief ListBox that manages a selectable list of widgets.
  *
  * Only one item may be selected at a time. The items are based on Widget, so
- * any widget can be used.
+ * any Widget can be used.
  *
  * @image html widget_listbox.png
  * @image latex widget_listbox.png "widget_listbox" width=5cm
+ *
+ * @ingroup controls
  */
 class ListBox : public Frame
 {
@@ -56,9 +58,9 @@ public:
     ListBox(const item_array& items, const Rect& rect) noexcept;
 
     /**
-    * @param[in] parent The parent Frame.
-    * @param[in] items Array of items to insert into the list.
-    */
+     * @param[in] parent The parent Frame.
+     * @param[in] items Array of items to insert into the list.
+     */
     explicit ListBox(Frame& parent, const item_array& items = item_array()) noexcept;
 
     /**

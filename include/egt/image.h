@@ -30,6 +30,8 @@ inline namespace v1
  *
  * If a filename is used to contruct an Image, the detail::ImageCache class
  * will be used.
+ *
+ * @ingroup media
  */
 class Image
 {

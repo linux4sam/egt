@@ -35,6 +35,8 @@ public:
     /**
      * Create a color with the specified RGBA value.
      *
+     * 0xrrggbbaa
+     *
      * @param[in] c RGBA value.
      */
     explicit Color(uint32_t c = 0) noexcept

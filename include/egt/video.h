@@ -137,6 +137,8 @@ private:
 
 /**
  * Video player window with hardware acceleration supported.
+ *
+ * @ingroup media
  */
 class HardwareVideo : public VideoWindow
 {
@@ -160,6 +162,8 @@ protected:
 
 /**
  * Video player window using only software.
+ *
+ * @ingroup media
  */
 class SoftwareVideo : public VideoWindow
 {
@@ -184,6 +188,8 @@ protected:
 
 /**
  * Specialized SoftwareVideo window with support for a V4L2 source.
+ *
+ * @ingroup media
  */
 class V4L2SoftwareVideo : public SoftwareVideo
 {
@@ -202,6 +208,8 @@ protected:
 
 /**
  * Specialized HardwareVideo window with support for a V4L2 source.
+ *
+ * @ingroup media
  */
 class V4L2HardwareVideo : public HardwareVideo
 {
@@ -220,6 +228,8 @@ protected:
 
 /**
  * Specialized SoftwareVideo window that only handles RAW video stream sources.
+ *
+ * @ingroup media
  */
 class RawSoftwareVideo : public SoftwareVideo
 {

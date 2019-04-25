@@ -59,6 +59,8 @@ protected:
  *
  * This manages a list of selectable items, but otherwise just shows only what
  * is selected.
+ *
+ * @ingroup controls
  */
 class ComboBox : public TextWidget
 {
