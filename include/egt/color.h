@@ -15,7 +15,9 @@
 #include <cmath>
 #include <cstdint>
 #include <iosfwd>
+#include <map>
 #include <string>
+#include <vector>
 
 namespace egt
 {
@@ -39,13 +41,13 @@ public:
      *
      * @param[in] c RGBA value.
      */
-    explicit Color(uint32_t c = 0) noexcept
-    {
-        m_r = (c >> 24) & 0xFF;
-        m_g = (c >> 16) & 0xFF;
-        m_b = (c >> 8) & 0xFF;
-        m_a = c & 0xFF;
-    }
+    // cppcheck-suppress noExplicitConstructor
+    constexpr Color(uint32_t c = 0) noexcept
+        : m_r((c >> 24) & 0xff),
+          m_g((c >> 16) & 0xff),
+          m_b((c >> 8) & 0xff),
+          m_a(c & 0xff)
+    {}
 
     /**
      * Create a color with the specified RGBA component values.
@@ -55,12 +57,17 @@ public:
      * @param[in] b Blue component in range 0 - 255.
      * @param[in] a Alpha component in range 0 - 255.
      */
-    explicit Color(uint32_t r, uint32_t g, uint32_t b, uint32_t a = 255) noexcept
-        : m_r(r),
-          m_g(g),
-          m_b(b),
-          m_a(a)
+    constexpr explicit Color(uint32_t r, uint32_t g, uint32_t b, uint32_t a = 255) noexcept
+        : m_r(r & 0xff),
+          m_g(g & 0xff),
+          m_b(b & 0xff),
+          m_a(a & 0xff)
     {}
+
+    constexpr static inline Color rgb(uint32_t c)
+    {
+        return Color(c << 8 | 0xff);
+    }
 
     /**
      * Create a color from float values.
@@ -90,8 +97,8 @@ public:
 
     static inline Color hue(const Color& in, float h)
     {
-        float u = std::cos(h * M_PI / 180);
-        float w = std::sin(h * M_PI / 180);
+        auto u = std::cos(h * M_PI / 180.);
+        auto w = std::sin(h * M_PI / 180.);
 
         Color ret;
         ret.red((.299 + .701 * u + .168 * w)*in.red()
@@ -132,10 +139,10 @@ public:
 
     //@{
     /** @brief Set RGBA component value individually from 0 to 255. */
-    inline void red(uint32_t r) { m_r = r; }
-    inline void green(uint32_t g) { m_g = g; }
-    inline void blue(uint32_t b) { m_b = b; }
-    inline void alpha(uint32_t a) { m_a = a; }
+    inline void red(uint32_t r) { m_r = r & 0xff; }
+    inline void green(uint32_t g) { m_g = g & 0xff; }
+    inline void blue(uint32_t b) { m_b = b & 0xff; }
+    inline void alpha(uint32_t a) { m_a = a & 0xff; }
     //@}
 
     /**
@@ -173,7 +180,10 @@ public:
      */
     inline uint32_t pixel_argb() const
     {
-        return m_a << 24 | m_r << 16 | m_g << 8 | m_b;
+        return (m_a & 0xff) << 24 |
+               (m_r & 0xff) << 16 |
+               (m_g & 0xff) << 8 |
+               (m_b & 0xff);
     }
 
     /**
@@ -181,7 +191,7 @@ public:
      */
     inline uint32_t prepixel_argb() const
     {
-        return (m_a << 24) |
+        return ((m_a & 0xff) << 24) |
                (((m_r * m_a / 255) & 0xff) << 16) |
                (((m_g * m_a / 255) & 0xff) << 8) |
                ((m_b * m_a / 255) & 0xff);
@@ -189,10 +199,10 @@ public:
 
     Color& operator=(uint32_t c)
     {
-        m_r = (c >> 24) & 0xFF;
-        m_g = (c >> 16) & 0xFF;
-        m_b = (c >> 8) & 0xFF;
-        m_a = c & 0xFF;
+        m_r = (c >> 24) & 0xff;
+        m_g = (c >> 16) & 0xff;
+        m_b = (c >> 8) & 0xff;
+        m_a = c & 0xff;
 
         return *this;
     }
@@ -220,6 +230,50 @@ inline bool operator!=(const Color& lhs, const Color& rhs)
 }
 
 std::ostream& operator<<(std::ostream& os, const Color& color);
+
+/**
+ * A Pattern which can store a single Color or color steps used for a gradient.
+ */
+struct Pattern
+{
+    Pattern()
+    {}
+
+    // cppcheck-suppress noExplicitConstructor
+    Pattern(const Color& color)
+    {
+        m_steps.insert(std::make_pair(0.f, color));
+    }
+
+    Color color() const
+    {
+        if (m_steps.size())
+            return m_steps.begin()->second;
+
+        return Color();
+    }
+
+    explicit Pattern(const std::vector<std::pair<float, Color>>& steps)
+    {
+        for (auto& s : steps)
+            m_steps.insert(s);
+    }
+
+    Pattern& step(float offset, const Color& color)
+    {
+        m_steps.insert(std::make_pair(offset, color));
+        return *this;
+    }
+
+    const std::map<float, Color>& steps() const
+    {
+        return m_steps;
+    }
+
+protected:
+
+    std::map<float, Color> m_steps;
+};
 
 }
 }
