@@ -45,6 +45,10 @@ install-data-local: install-icons
 
 CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--inline-suppr \
+	--suppress=*:*asio/* \
+	--config-exclude=include/egt/asio/ \
+	--config-exclude=include/egt/asio.hpp \
+	--config-exclude=include/egt/detail/floatingpoint.h \
 	--error-exitcode=0 \
 	-j 4 \
 	--force \
@@ -53,11 +57,7 @@ CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--platform=unix32 \
 	--template=gcc \
 	-UTSLIB_MT_VALID \
-	-I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg \
-	--config-exclude=include/egt/asio/ \
-	--config-exclude=include/egt/asio.hpp \
-	--suppress=*:asio*:* \
-	-i include/egt/asio/
+	-I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg
 
 CPPCHECK_DIRS = \
 $(top_srcdir)/include/egt/ \

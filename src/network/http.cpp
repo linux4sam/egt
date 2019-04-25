@@ -51,11 +51,6 @@ public:
         assert(i != HttpClientRequestManager::Instance()->m_sockets.end());
 
         HttpClientRequest* session = i->second;
-
-        assert(session);
-        assert(session->impl());
-        assert(session->impl()->socket);
-
         session->impl()->last_event = what;
 
         if (what == CURL_POLL_REMOVE)
@@ -146,10 +141,6 @@ public:
         {
             if (!session->impl())
                 return;
-
-            assert(session);
-            assert(session->impl());
-            assert(session->impl()->socket);
 
             if (what == CURL_POLL_IN && (session->impl()->last_event & CURL_POLL_IN))
             {

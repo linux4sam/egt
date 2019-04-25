@@ -29,7 +29,7 @@ namespace detail
 
 struct AudioPlayerImpl
 {
-    AudioPlayerImpl(AudioPlayer& player)
+    explicit AudioPlayerImpl(AudioPlayer& player)
         : player(player)
     {}
 

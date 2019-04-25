@@ -8,7 +8,7 @@
 #endif
 
 #include <egt/ui>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <map>
 #include <vector>

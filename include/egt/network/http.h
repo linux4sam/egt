@@ -49,7 +49,7 @@ public:
     /**
      * Create a request for the specified URL.
      */
-    HttpClientRequest(const std::string& url);
+    explicit HttpClientRequest(const std::string& url);
 
     /**
      * Start the download.

@@ -37,9 +37,9 @@ class VideoWindow : public Window
 {
 public:
 
-    VideoWindow(const Size& size,
-                pixel_format format = pixel_format::xrgb8888,
-                windowhint hint = windowhint::overlay);
+    explicit VideoWindow(const Size& size,
+                         pixel_format format = pixel_format::xrgb8888,
+                         windowhint hint = windowhint::overlay);
 
     virtual void top_draw() override;
 
@@ -142,7 +142,7 @@ class HardwareVideo : public VideoWindow
 {
 public:
 
-    HardwareVideo(const Size& size, pixel_format format = pixel_format::yuyv);
+    explicit HardwareVideo(const Size& size, pixel_format format = pixel_format::yuyv);
 
     /**
      * @brief Sets the media file URI to the current pipeline
@@ -165,7 +165,7 @@ class SoftwareVideo : public VideoWindow
 {
 public:
 
-    SoftwareVideo(const Size& size, pixel_format format = pixel_format::yuv420);
+    explicit SoftwareVideo(const Size& size, pixel_format format = pixel_format::yuv420);
 
     virtual bool set_media(const std::string& uri) override;
 
