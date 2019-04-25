@@ -50,7 +50,7 @@ public:
     PointType() noexcept
     {}
 
-    PointType(dim_t x_, dim_t y_) noexcept
+    constexpr PointType(dim_t x_, dim_t y_) noexcept
         : x(x_),
           y(y_)
     {}
@@ -115,13 +115,7 @@ public:
     template <class T>
     T distance_to(const PointType<dim_t, dim_c>& point) const
     {
-#if 0
-        return std::sqrt(T((point.x - x) * (point.x - x)) +
-                         T((point.y - y) * (point.y - y)));
-#else
-        // maybe slower...
         return std::hypot(T(point.x - x), T(point.y - y));
-#endif
     }
 
     dim_t x{0};
@@ -188,7 +182,7 @@ public:
     SizeType() noexcept
     {}
 
-    explicit SizeType(dim_t w_, dim_t h_) noexcept
+    constexpr explicit SizeType(dim_t w_, dim_t h_) noexcept
         : h(h_),
           w(w_)
     {}
@@ -226,6 +220,20 @@ public:
     {
         w -= rhs.w;
         h -= rhs.h;
+        return *this;
+    }
+
+    SizeType<dim_t, dim_c>& operator*=(const SizeType<dim_t, dim_c>& rhs)
+    {
+        w *= rhs.w;
+        h *= rhs.h;
+        return *this;
+    }
+
+    SizeType<dim_t, dim_c>& operator/=(const SizeType<dim_t, dim_c>& rhs)
+    {
+        w /= rhs.w;
+        h /= rhs.h;
         return *this;
     }
 
@@ -392,7 +400,6 @@ public:
         return *this;
     }
 
-
     inline dim_t area() const
     {
         return w * h;
@@ -424,6 +431,14 @@ public:
         y -= value / 2.;
         w += value;
         h += value;
+    }
+
+    inline void shrink_around_center(dim_t value)
+    {
+        x += value / 2.;
+        y += value / 2.;
+        w -= value;
+        h -= value;
     }
 
     /**
@@ -790,14 +805,7 @@ public:
     {
     }
 
-    bool empty()
-    {
-        return this->radius < 0.0f ||
-               detail::FloatingPoint<float>(this->radius).
-               AlmostEquals(detail::FloatingPoint<float>(0.0f));
-    }
-
-    Rect rect() const
+    inline Rect rect() const
     {
         Rect r(this->center, Size());
         r.grow_around_center(this->radius);
