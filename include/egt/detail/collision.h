@@ -7,7 +7,7 @@
 #define EGT_COLLISION_H
 
 #include <egt/geometry.h>
-#include <egt/painter.h>
+#include <egt/types.h>
 
 namespace egt
 {
