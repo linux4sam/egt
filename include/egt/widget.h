@@ -89,9 +89,9 @@ public:
          * When true, the widget is active.
          *
          * The active state of a widget is usually a momentary state, unlike
-         * focus, which exists until focu is changed. For example, when a button
+         * focus, which exists until focus is changed. For example, when a button
          * is currently being held down, it its implementation may consider this
-         * the active state and choose to draw the button diffeerently.
+         * the active state and choose to draw the button differently.
          *
          * This may change how the widget behaves or is draw.
          */
@@ -182,7 +182,7 @@ public:
      * with the event, you have to call other functions.
      *
      * The default implementation in the Widget class, will dispatch the
-     * event to any third party handleres that have been registered. What
+     * event to any third party handlers that have been registered. What
      * this means is if you expect other handlers to receive the events
      * then this must be called from derived classes.  Or, manually call
      * Widget::invoke_handlers().
@@ -504,13 +504,13 @@ public:
     virtual void zorder_down();
 
     /**
-     * Move this widgets zorder uprelative to other widgets with the same
+     * Move this widgets zorder up relative to other widgets with the same
      * parent.
      */
     virtual void zorder_up();
 
     /**
-     * Detatch this widget from its parent.
+     * Detach this widget from its parent.
      */
     void detatch();
 

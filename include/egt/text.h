@@ -33,7 +33,7 @@ inline namespace v1
  * - Multiline
  *
  * @image html widget_textbox.png
- * @image latex widget_textbox.png "widget_txtbox" height=5cm
+ * @image latex widget_textbox.png "Widget Textbox" height=5cm
  *
  * @ingroup controls
  */
@@ -163,7 +163,7 @@ public:
     /**
      * Set the selection of text.
      *
-     * @param pos The starting posiiton.
+     * @param pos The starting position.
      * @param length The length of the selection.
      */
     void set_selection(size_t pos, size_t length);

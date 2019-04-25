@@ -212,7 +212,7 @@ AC_OUTPUT
 @image latex eclipse/eclipse_new_configure.png "Create configure.ac file"
 
 Create a new Makefile.am file. As your project extends, you may create additional Makefile.am files in
-subdirectories of your project.
+sub directories of your project.
 @code{.sh}
 bin_PROGRAMS=basic
 
@@ -279,7 +279,7 @@ Buildroot offers you two choices:
 1. The Dropbear package can be enabled in Networking applications -> dropbear.
 2. The full-blown SSH implementation, OpenSSH, which can be enabled in Networking applications -> openssh.
 
-Most SSH servers do not allow to log in as root with an empty password. To set the root password is to login
+Most SSH servers do not allow to log in as root with an empty password. To set the root password login
 on the target board then type:
 
 @code{.sh}
@@ -389,11 +389,11 @@ of a editor or by right clicking left side of editor and click a "Add
 breakpoint" from a context menu.
 
 @imageSize{eclipse_debug_add_bp.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_debug_add_bp.png "Set brakpoint in Eclipse editor"
-@image latex eclipse/eclipse_debug_add_bp.png "Set brakpoint in Eclipse editor"
+@image html eclipse/eclipse_debug_add_bp.png "Set breakpoint in Eclipse editor"
+@image latex eclipse/eclipse_debug_add_bp.png "Set breakpoint in Eclipse editor"
 
 Using Debug control buttons in the toolbar, you can control the debuger
-to Resume, Treminate, Step into or step over.
+to Resume, Terminate, Step into or step over.
 
 @section eclipse_host_libegt Build, Execute & Debug EGT on Host Machine
 
@@ -418,10 +418,10 @@ Create a new CPP Project:
 In "C++ Project" window, follow below steps:
 
 1. Set the project name.
-2. uncheck default location
+2. Uncheck default location
 3. Set location to absolute path of git clone EGT directory
-4. select "GNU Autotools Empty project" type
-5. Select "GNU Autotools Toolschain" and Cick on Finish button.
+4. Select "GNU Autotools Empty project" type
+5. Select "GNU Autotools Toolchain" and Click on Finish button.
 
 @imageSize{eclipse_host_create_cpp_project.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_create_cpp_project.png  "Eclipse create new cpp project"
@@ -449,8 +449,8 @@ generated in the project folder.
 @image html eclipse/eclipse_host_autoreconf_success.png "Eclipse autoreconf done"
 @image latex eclipse/eclipse_host_autoreconf_success.png "Eclipse autoreconf done"
 
-Reconfigure project will call configure script and you can set additional arguments your confugure scripts by
-righ clicking and selecting properties in your libegt project.
+Reconfigure project will call configure script and you can set additional arguments your configure scripts by
+right clicking and selecting properties in your libegt project.
 
 @imageSize{eclipse_host_reconfigure.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_reconfigure.png  "Eclipse Reconfigure project"
@@ -496,7 +496,7 @@ pointing to libegt.so folder (i.e. <egt>/src/.libs/)
 1. Go to Project properties by right clicking egt project from Project Explorer.
 2. In Project properties window, Expand "C/C++ Build" and Select "Environment"
 3. Add a New Environment variable with Name "LD_LIBRARY_PATH" and set value to <egt>/src/.libs/ folder.
-4. Cick Ok and again OK to close the Project properties window.
+4. Click OK and again OK to close the Project properties window.
 
 @imageSize{eclipse_host_set_env.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_set_env.png "Eclipse set environment variable"
@@ -506,13 +506,13 @@ Debugging EGT application
 
 In the below steps we are using EGT basic application to debug on host machine:
 
-From menu toolsbar selcet Run->Debug.
+From menu toolbar select Run->Debug.
 
 @imageSize{eclipse_host_debug_run.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_debug_run.png  "Eclipse select Run->debug"
 @image latex eclipse/eclipse_host_debug_run.png "Eclipse select Run->debug"
 
-Select the application to debug from "Local Application Window" and Cick OK.
+Select the application to debug from "Local Application Window" and Click OK.
 
 @imageSize{eclipse_host_debug_app.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_debug_app.png "Eclipse select application to debug"
@@ -543,10 +543,10 @@ of a editor or by right clicking left side of editor and click a "Add
 breakpoint" from a context menu.
 
 @imageSize{eclipse_host_debug_add_bp.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_host_debug_add_bp.png "Set brakpoint in Eclipse editor"
-@image latex eclipse/eclipse_host_debug_add_bp.png "Set brakpoint in Eclipse editor"
+@image html eclipse/eclipse_host_debug_add_bp.png "Set breakpoint in Eclipse editor"
+@image latex eclipse/eclipse_host_debug_add_bp.png "Set breakpoint in Eclipse editor"
 
 Using Debug control buttons in the toolbar, you can control the debuger
-to Resume, Treminate, Step into or step over.
+to Resume, Terminate, Step into or step over.
 */
 }}
