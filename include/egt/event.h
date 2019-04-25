@@ -31,7 +31,7 @@ enum class eventid
     //@{
     /**
      * @brief Raw pointer events.
-     * It's usually preferred to use the normal pointer evemts instead.
+     * It's usually preferred to use the normal pointer events instead.
      */
     raw_pointer_down,
     raw_pointer_up,
@@ -125,6 +125,7 @@ struct Pointer
 
 /**
  * @brief Current event state for keyboard.
+ * @ingroup events
  */
 struct Keys
 {

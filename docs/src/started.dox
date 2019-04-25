@@ -63,16 +63,18 @@ make
 You can run "./configure --help" to see more options.  Some non-standard
 options are listed here.
 
-@par --disable-debug
+@par `--disable-debug`
 build without debugging support [default=yes]
 
-@par --disable-examples
+@par `--disable-examples`
 don't build examples [default=no]
 
 @section started_buildroot Cross Compiling With Buildroot
 
 We provide EGT as part of the <a href="https://bitbucket.microchip.com/projects/LINUX4SAM/repos/buildroot-external-microchip/browse">buildroot-external-microchip</a> project. To build a
 complete SDK and target filesystem for a board follow the instructions found at:
+
+https://bitbucket.microchip.com/scm/linux4sam/buildroot-external-microchip.git
 
 Follow the README.md instructions for that project with the following versions.
 
