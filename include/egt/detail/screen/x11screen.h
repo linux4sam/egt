@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_X11SCREEN_H
-#define EGT_X11SCREEN_H
+#ifndef EGT_DETAIL_SCREEN_X11SCREEN_H
+#define EGT_DETAIL_SCREEN_X11SCREEN_H
 
 #include <egt/asio.hpp>
 #include <egt/screen.h>

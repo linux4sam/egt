@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_INPUTTSLIB_H
-#define EGT_INPUTTSLIB_H
+#ifndef EGT_DETAIL_INPUT_INPUTTSLIB_H
+#define EGT_DETAIL_INPUT_INPUTTSLIB_H
 
 /**
  * @file

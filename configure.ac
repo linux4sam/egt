@@ -134,6 +134,7 @@ if test "x${have_x11}" = xyes; then
 fi
 
 AX_PKG_CHECK_MODULES2(TSLIB, [tslib >= 1.15], [], [have_tslib=yes], [have_tslib=no])
+AM_CONDITIONAL([HAVE_TSLIB], [test "x${have_tslib}" = xyes])
 if test "x${have_tslib}" = xyes; then
    AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
    LIBEGT_EXTRA_CXXFLAGS="${TSLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
@@ -141,6 +142,7 @@ if test "x${have_tslib}" = xyes; then
 fi
 
 AX_PKG_CHECK_MODULES2(LIBINPUT, [libinput >= 1.6.3], [], [have_libinput=yes], [have_libinput=no])
+AM_CONDITIONAL([HAVE_LIBINPUT], [test "x${have_libinput}" = xyes])
 if test "x${have_libinput}" = xyes; then
    AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
    LIBEGT_EXTRA_CXXFLAGS="${LIBINPUT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
@@ -199,6 +201,7 @@ AX_PKG_CHECK_MODULES2(LIBCURL, [libcurl >= 4.5], [], [have_libcurl=yes], [have_l
 AM_CONDITIONAL([HAVE_LIBCURL], [test "x${have_libcurl}" = xyes])
 if test "x${have_libcurl}" = xyes; then
    AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
+   AC_SUBST(include_http, ["#include <egt/network/http.h>"])
    LIBEGT_EXTRA_CXXFLAGS="${LIBCURL_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
    LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
@@ -273,3 +276,40 @@ AC_CONFIG_FILES([Makefile
 	examples/resource/Makefile
 	examples/video/Makefile])
 AC_OUTPUT
+
+dnl report how we have been configured
+echo
+echo "Configured EGT ${PACKAGE_VERSION} for \`${host}'"
+echo
+echo "Compile:"
+echo "  Debug                  ${enable_debug:-yes}"
+echo "  Examples               ${enable_examples}"
+echo
+
+echo "Display:"
+echo "  DRM/KMS                ${have_libplanes:-no}"
+echo "  X11                    ${have_x11:-no}"
+echo "  fbdev                  yes"
+echo
+
+echo "Input:"
+echo "  libinput               ${have_libinput:-no}"
+echo "  tslib                  ${have_tslib:-no}"
+echo "  evdev                  yes"
+echo "  X11                    ${have_x11:-no}"
+echo
+
+echo "Media:"
+echo "  gstreamer              ${have_gstreamer:-no}"
+echo "  SVG                    ${have_librsvg:-no}"
+echo "  JPEG                   ${have_libjpeg:-no}"
+echo "  PNG                    yes"
+echo "  BMP                    yes"
+echo
+
+echo "Features:"
+echo "  Networking             ${have_libcurl:-no}"
+echo "  libmagic               ${have_libmagic:-no (mime type detection disabled)}"
+echo "  LUA                    ${have_lua:-no}"
+echo "  C++17 Filesystem       ${have_libstdcppfs:-no}"
+echo

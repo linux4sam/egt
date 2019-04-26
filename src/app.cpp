@@ -11,8 +11,6 @@
 #include "egt/detail/filesystem.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/input/inputevdev.h"
-#include "egt/detail/input/inputlibinput.h"
-#include "egt/detail/input/inputtslib.h"
 #include "egt/detail/screen/framebuffer.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
@@ -30,6 +28,14 @@
 
 #ifdef HAVE_X11
 #include "egt/detail/screen/x11screen.h"
+#endif
+
+#ifdef HAVE_LIBINPUT
+#include "egt/detail/input/inputlibinput.h"
+#endif
+
+#ifdef HAVE_TSLIB
+#include "egt/detail/input/inputtslib.h"
 #endif
 
 using namespace std;

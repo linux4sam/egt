@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef EGT_INPUTLIBINPUT_H
-#define EGT_INPUTLIBINPUT_H
+#ifndef EGT_DETAIL_INPUT_INPUTLIBINPUT_H
+#define EGT_DETAIL_INPUT_INPUTLIBINPUT_H
 
 /**
  * @file
@@ -15,7 +15,6 @@
 #include <egt/asio.hpp>
 #include <linux/input.h>
 #include <egt/input.h>
-#include <memory>
 
 struct libinput;
 struct libinput_event;

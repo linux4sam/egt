@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_SPRITEIMPL_H
-#define EGT_SPRITEIMPL_H
+#ifndef EGT_DETAIL_SPRITEIMPL_H
+#define EGT_DETAIL_SPRITEIMPL_H
 
 #include <egt/geometry.h>
 #include <egt/image.h>

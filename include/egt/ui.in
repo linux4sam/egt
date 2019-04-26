@@ -56,5 +56,6 @@
 
 @include_audio@
 @include_video@
+@include_http@
 
 #endif

@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_FRAMEBUFFER_H
-#define EGT_FRAMEBUFFER_H
+#ifndef EGT_DETAIL_SCREEN_FRAMEBUFFER_H
+#define EGT_DETAIL_SCREEN_FRAMEBUFFER_H
 
 /**
  * @file

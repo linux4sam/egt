@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_OBJECT_H
-#define EGT_OBJECT_H
+#ifndef EGT_DETAIL_OBJECT_H
+#define EGT_DETAIL_OBJECT_H
 
 /**
  * @file

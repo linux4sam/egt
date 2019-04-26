@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_ALIGNMENT_H
-#define EGT_ALIGNMENT_H
+#ifndef EGT_DETAIL_ALIGNMENT_H
+#define EGT_DETAIL_ALIGNMENT_H
 
 /**
  * @file

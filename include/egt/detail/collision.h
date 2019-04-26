@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_COLLISION_H
-#define EGT_COLLISION_H
+#ifndef EGT_DETAIL_COLLISION_H
+#define EGT_DETAIL_COLLISION_H
 
 #include <egt/geometry.h>
 #include <egt/types.h>

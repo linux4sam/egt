@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_IMAGECACHE_H
-#define EGT_IMAGECACHE_H
+#ifndef EGT_DETAIL_IMAGECACHE_H
+#define EGT_DETAIL_IMAGECACHE_H
 
 #include <egt/painter.h>
 #include <egt/utils.h>

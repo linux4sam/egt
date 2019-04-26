@@ -31,8 +31,8 @@
 //
 // This header file declares functions and macros used internally by
 // Google Test.  They are subject to change without notice.
-#ifndef EGT_FLOATINGPOINT_H
-#define EGT_FLOATINGPOINT_H
+#ifndef EGT_DETAIL_FLOATINGPOINT_H
+#define EGT_DETAIL_FLOATINGPOINT_H
 
 #include <cstddef>
 #include <limits>

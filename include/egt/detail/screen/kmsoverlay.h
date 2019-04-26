@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_KMSOVERLAY_H
-#define EGT_KMSOVERLAY_H
+#ifndef EGT_DETAIL_SCREEN_KMSOVERLAY_H
+#define EGT_DETAIL_SCREEN_KMSOVERLAY_H
 
 /**
  * @file

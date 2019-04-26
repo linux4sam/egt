@@ -3,16 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include "egt/detail/input/inputtslib.h"
 #include "egt/app.h"
+#include "egt/detail/input/inputtslib.h"
 #include <chrono>
-
-#ifdef HAVE_TSLIB
-#include "tslib.h"
+#include <tslib.h>
 
 using namespace std;
 
@@ -204,5 +198,3 @@ InputTslib::~InputTslib()
 }
 }
 }
-
-#endif

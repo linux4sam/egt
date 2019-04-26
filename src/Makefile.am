@@ -45,8 +45,6 @@ detail/basicwindow.cpp \
 detail/collision.cpp \
 detail/imagecache.cpp \
 detail/input/inputevdev.cpp \
-detail/input/inputlibinput.cpp \
-detail/input/inputtslib.cpp \
 detail/filesystem.cpp \
 detail/mousegesture.cpp \
 detail/resource.cpp \
@@ -66,7 +64,6 @@ images/bmp/cairo_bmp.h \
 input.cpp \
 label.cpp \
 list.cpp \
-network/http.cpp \
 notebook.cpp \
 painter.cpp \
 palette.cpp \
@@ -126,8 +123,6 @@ $(top_srcdir)/include/egt/detail/collision.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
 $(top_srcdir)/include/egt/detail/imagecache.h \
 $(top_srcdir)/include/egt/detail/input/inputevdev.h \
-$(top_srcdir)/include/egt/detail/input/inputlibinput.h \
-$(top_srcdir)/include/egt/detail/input/inputtslib.h \
 $(top_srcdir)/include/egt/detail/filesystem.h \
 $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \
@@ -153,7 +148,6 @@ $(top_srcdir)/include/egt/keyboard.h \
 $(top_srcdir)/include/egt/keycode.h \
 $(top_srcdir)/include/egt/label.h \
 $(top_srcdir)/include/egt/list.h \
-$(top_srcdir)/include/egt/network/http.h \
 $(top_srcdir)/include/egt/notebook.h \
 $(top_srcdir)/include/egt/painter.h \
 $(top_srcdir)/include/egt/palette.h \
@@ -185,6 +179,22 @@ $(top_srcdir)/include/egt/window.h
 include Makefile.asio
 
 nobase_libegtinclude_HEADERS += $(ASIO_SOURCE_FILES)
+
+if HAVE_TSLIB
+libegt_la_SOURCES += \
+detail/input/inputtslib.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/detail/input/inputtslib.h
+endif
+
+if HAVE_LIBINPUT
+libegt_la_SOURCES += \
+detail/input/inputlibinput.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/detail/input/inputlibinput.h
+endif
 
 if HAVE_GSTREAMER
 libegt_la_SOURCES += \
@@ -219,6 +229,13 @@ detail/screen/x11wrap.h
 
 nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/screen/x11screen.h
+endif
+
+if HAVE_LIBCURL
+libegt_la_SOURCES += network/http.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/network/http.h
 endif
 
 if HAVE_EXPERIMENTAL_FILESYSTEM

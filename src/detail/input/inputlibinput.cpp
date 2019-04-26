@@ -3,25 +3,16 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/detail/input/inputlibinput.h"
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
-
-#ifdef HAVE_LIBINPUT
 #include <libinput.h>
 #include <libudev.h>
-#endif
 
 using namespace std;
-
-#ifdef HAVE_LIBINPUT
 
 namespace egt
 {
@@ -590,5 +581,3 @@ InputLibInput::~InputLibInput()
 }
 }
 }
-
-#endif
