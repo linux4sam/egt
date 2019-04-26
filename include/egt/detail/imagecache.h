@@ -22,13 +22,13 @@ namespace detail
 /**
  * Add a search path for files.
  *
- * Any actual filepath used, for example when loading images, will be searched
+ * Any actual file path used, for example when loading images, will be searched
  * for relative to any added path here.
  */
 void add_search_path(const std::string& path);
 
 /**
- * Given a file path, try to find it relate to any added search paths.
+ * Given a file path, try to find it related to any added search paths.
  *
  * @return The full path to the file if found, or a path to a file that doesn't
  *         exist.

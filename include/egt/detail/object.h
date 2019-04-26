@@ -86,8 +86,7 @@ public:
         return 0;
     }
 
-    virtual ~Object()
-    {}
+    virtual ~Object() = default;
 
 protected:
 

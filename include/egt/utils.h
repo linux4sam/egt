@@ -121,18 +121,26 @@ inline bool change_if_diff(float& old, const float& to)
     return false;
 }
 
+/**
+ * Utility to run a callback std::function when this object goes out of scope.
+ *
+ * This can be used to run a function when an instance of a scope_exit goes out
+ * of scope or is deleted.
+ */
 struct scope_exit
 {
     explicit scope_exit(std::function<void()> f) noexcept
-        : f_(std::move(f))
+        : m_f(std::move(f))
     {}
 
     ~scope_exit()
     {
-        if (f_)
-            f_();
+        if (m_f)
+            m_f();
     }
-    std::function<void()> f_;
+
+protected:
+    std::function<void()> m_f;
 };
 
 }
