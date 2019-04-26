@@ -97,7 +97,7 @@ public:
     /**
      * Move to a point.
      *
-     * @param[in] point The point.
+     * @param[in] p The point.
      */
     template<class T>
     Painter& draw(const PointType<T, compatible::normal>& p)
@@ -168,7 +168,6 @@ public:
 
     /**
      * @param[in] rect The source rect to copy.
-     * @param[in] point The destination point.
      * @param[in] image The image surface to draw.
      */
     virtual Painter& draw(const Rect& rect,

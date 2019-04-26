@@ -93,16 +93,16 @@ Go into the toolchain package and select “Register toolchain with Eclipse Buil
 as show in below.
 
 @imageSize{eclipse_buildroot_toolchain.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_buildroot_toolchain.png "Buildroot setup"
-@image latex eclipse/eclipse_buildroot_toolchain.png "Buildroot setup"
+@image html eclipse/eclipse_buildroot_toolchain.png "Buildroot Setup"
+@image latex eclipse/eclipse_buildroot_toolchain.png "Buildroot Setup"
 
 @section eclipse_buildroot_plugin Install Eclipse Buildroot Plugin
 
 In Eclipse, Go to the Help menu and select Install new software:
 
 @imageSize{eclipse_buildroot_plugin1.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_buildroot_plugin1.png "Eclipse Install new software"
-@image latex eclipse/eclipse_buildroot_plugin1.png "Eclipse Install new software"
+@image html eclipse/eclipse_buildroot_plugin1.png "Eclipse install new software"
+@image latex eclipse/eclipse_buildroot_plugin1.png "Eclipse install new software"
 
 Add a new update-site https://buildroot.org/downloads/eclipse/
 
@@ -381,8 +381,8 @@ stops on the main function of the application and you can see variable
 values or change variable values from the Variables view window.
 
 @imageSize{eclipse_debug_window.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_debug_window.png "Eclipse debug Window"
-@image latex eclipse/eclipse_debug_window.png "Eclipse debug Window"
+@image html eclipse/eclipse_debug_window.png "Eclipse debug window"
+@image latex eclipse/eclipse_debug_window.png "Eclipse debug window"
 
 To add breakpoints from editor, you can double click on the left side
 of a editor or by right clicking left side of editor and click a "Add
@@ -453,20 +453,20 @@ Reconfigure project will call configure script and you can set additional argume
 right clicking and selecting properties in your libegt project.
 
 @imageSize{eclipse_host_reconfigure.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_host_reconfigure.png  "Eclipse Reconfigure project"
-@image latex eclipse/eclipse_host_reconfigure.png "Eclipse Reconfigure project"
+@image html eclipse/eclipse_host_reconfigure.png  "Eclipse reconfigure project"
+@image latex eclipse/eclipse_host_reconfigure.png "Eclipse reconfigure project"
 
 In the console, we can see operation finished successfully and Makefile's generated.
 
 @imageSize{eclipse_host_reconfigure_done.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_host_reconfigure_done.png  "Eclipse Reconfigure Done"
-@image latex eclipse/eclipse_host_reconfigure_done.png "Eclipse Reconfigure Done"
+@image html eclipse/eclipse_host_reconfigure_done.png  "Eclipse reconfigure done"
+@image latex eclipse/eclipse_host_reconfigure_done.png "Eclipse reconfigure done"
 
 To build the libegt project (Ctrl-b) or select Project->"build all" option and observe build messages in Console.
 
 @imageSize{eclipse_host_buildall.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_host_buildall.png  "Eclipse Build libegt Project"
-@image latex eclipse/eclipse_host_buildall.png "Eclipse Build libegt Project"
+@image html eclipse/eclipse_host_buildall.png  "Eclipse build libegt project"
+@image latex eclipse/eclipse_host_buildall.png "Eclipse build libegt project"
 
 Execute EGT application
 
@@ -479,23 +479,23 @@ In the below steps we are using EGT basic application to execute on host machine
 5. Click on Run Button to start executing EGT Basic example application.
 
 @imageSize{eclipse_host_Run.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_host_Run.png "Eclipse Run EGT Example Application"
-@image latex eclipse/eclipse_host_Run.png "Eclipse Run EGT Example Application"
+@image html eclipse/eclipse_host_Run.png "Eclipse run EGT example application"
+@image latex eclipse/eclipse_host_Run.png "Eclipse run EGT example application"
 
 A new EGT windows pop up running EGT Basic example application.
 
 @imageSize{eclipse_host_basic_example.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_host_basic_example.png "Eclipse Basic Example Demo"
-@image latex eclipse/eclipse_host_basic_example.png "Eclipse Basic Example Demo"
+@image html eclipse/eclipse_host_basic_example.png "Eclipse basic example demo"
+@image latex eclipse/eclipse_host_basic_example.png "Eclipse basic example demo"
 
 Set Environment Variable.
 
 Before we start debugging the application, we need to set environment variable LD_LIBRARY_PATH
-pointing to libegt.so folder (i.e. <egt>/src/.libs/)
+pointing to libegt.so folder (i.e. src/.libs/)
 
 1. Go to Project properties by right clicking egt project from Project Explorer.
 2. In Project properties window, Expand "C/C++ Build" and Select "Environment"
-3. Add a New Environment variable with Name "LD_LIBRARY_PATH" and set value to <egt>/src/.libs/ folder.
+3. Add a New Environment variable with Name "LD_LIBRARY_PATH" and set value to src/.libs/ folder.
 4. Click OK and again OK to close the Project properties window.
 
 @imageSize{eclipse_host_set_env.png,max-width:90%;height:auto;}
@@ -509,8 +509,8 @@ In the below steps we are using EGT basic application to debug on host machine:
 From menu toolbar select Run->Debug.
 
 @imageSize{eclipse_host_debug_run.png,max-width:90%;height:auto;}
-@image html eclipse/eclipse_host_debug_run.png  "Eclipse select Run->debug"
-@image latex eclipse/eclipse_host_debug_run.png "Eclipse select Run->debug"
+@image html eclipse/eclipse_host_debug_run.png  "Eclipse select run->debug"
+@image latex eclipse/eclipse_host_debug_run.png "Eclipse select run->debug"
 
 Select the application to debug from "Local Application Window" and Click OK.
 

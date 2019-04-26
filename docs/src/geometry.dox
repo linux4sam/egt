@@ -16,8 +16,8 @@ currently support the idea of transforming this coordinate system, or separating
 user from device coordinates, but it can be done at the painter level by
 individual widgets for drawing purposes.
 
-@image html coordsys.png
-@image latex coordsys.png "Coordinate System" width=8cm
+@image html coordsys.png "Coordinate system"
+@image latex coordsys.png "Coordinate system" width=8cm
 
 There are two coordinate system origins in EGT:
 
@@ -45,7 +45,7 @@ While most of the geometry related to EGT deals with rectangles, it is sometimes
 necessary to deal with arcs when drawing.  The following unit circle is used
 when dealing with degrees or radians.
 
-@image html radians.png
+@image html radians.png "Radians and Degrees"
 @image latex radians.png "Radians and Degrees" width=8cm
 
 */

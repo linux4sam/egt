@@ -38,14 +38,14 @@ Damage propagates *up* in the tree.  If leaf node widget is damaged, it will
 ultimately report the damage rectangle to a Frame which has a surface.
 This is usually the top level frame or the special plane frame.
 
-@image html widget_hierarchy_damage.png
+@image html widget_hierarchy_damage.png "Damage"
 @image latex widget_hierarchy_damage.png "Damage" width=8cm
 
 Drawing goes the other way and is initiated by the EventLoop.  The
 EventLoop will call on all top level frames and special plane frames to
 redraw their damage regions.
 
-@image html widget_hierarchy_draw.png
+@image html widget_hierarchy_draw.png "Draw"
 @image latex widget_hierarchy_draw.png "Draw" width=8cm
 
 @section draw_paint Painting

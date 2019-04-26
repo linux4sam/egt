@@ -17,7 +17,7 @@ even different strips within the same sheet.
 
 @section animations_easingfunctions Predefined Easing Functions
 
-There are quite a few predefined @ref EasingFunctions in EGT, but it is also
+There are quite a few predefined @see easing_functions in EGT, but it is also
 possible to define your own.  When creating any animation, you can pass a custom
 easing function or select one of the predefined ones.
 
