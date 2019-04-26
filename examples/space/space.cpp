@@ -189,5 +189,14 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
-    return app.run();
+    try
+    {
+        return app.run();
+    }
+    catch (std::exception& e)
+    {
+        cerr << e.what() << endl;
+    }
+
+    return 1;
 }
