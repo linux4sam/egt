@@ -32,23 +32,25 @@ enum class alignmask : uint32_t
     /**
      * Center alignment is a weak alignment both horizontal and
      * vertical. To break one of those dimensions to another
-     * alignment, specify it in addiiton to CENTER.  If both
-     * are broken, CENTER has no effect.
+     * alignment, specify it in addiiton to center.  If both
+     * are broken, center has no effect.
      */
-    center = (1 << 0),
+    center_horizontal = (1 << 0),
+    center_vertical = (1 << 1),
+    center = center_horizontal | center_vertical,
     /** Horizontal alignment. */
-    left = (1 << 1),
+    left = (1 << 2),
     /** Horizontal alignment. */
-    right = (1 << 2),
+    right = (1 << 3),
     /** Vertical alignment. */
-    top = (1 << 3),
+    top = (1 << 4),
     /** Vertical alignment. */
-    bottom = (1 << 4),
+    bottom = (1 << 5),
     /** Expand only horizontally. */
-    expand_horizontal = (1 << 5),
+    expand_horizontal = (1 << 6),
     /** Expand only vertically. */
-    expand_vertical = (1 << 6),
-    /** Don't align, expand. */
+    expand_vertical = (1 << 7),
+    /** Expand vertically and horizontally. */
     expand = expand_horizontal | expand_vertical,
 };
 
@@ -250,6 +252,15 @@ enum class orientation
 {
     horizontal,
     vertical,
+    flex,
+};
+
+enum class justification
+{
+    start,
+    middle,
+    end,
+    justify
 };
 
 }

@@ -60,14 +60,20 @@ public:
 
     TextBox() noexcept;
 
+    /// @todo These constructors are not consistent
+
     TextBox(const std::string& str,
-            const Rect& rect = Rect(),
+            const Rect& rect,
             alignmask align = alignmask::center | alignmask::left,
             const flags_type::flags& flags = flags_type::flags()) noexcept;
 
-    TextBox(const Rect& rect,
-            alignmask align = alignmask::center | alignmask::left,
-            const flags_type::flags& flags = flags_type::flags()) noexcept;
+    explicit TextBox(const std::string& str,
+                     alignmask align = alignmask::center | alignmask::left,
+                     const flags_type::flags& flags = flags_type::flags()) noexcept;
+
+    explicit TextBox(const Rect& rect,
+                     alignmask align = alignmask::center | alignmask::left,
+                     const flags_type::flags& flags = flags_type::flags()) noexcept;
 
     TextBox(const TextBox&) noexcept;
 
@@ -85,6 +91,10 @@ public:
     virtual void set_text(const std::string& str) override;
 
     virtual void clear() override;
+
+    virtual void set_max_length(size_t len);
+
+    inline size_t max_length() const { return m_max_len;}
 
     /**
      * Get a const ref of the flags.
@@ -237,11 +247,13 @@ protected:
 
     /**
      * The current position of the cursor.
+     * This is a utf-8 offset.
      */
     size_t m_cursor_pos{0};
 
     /**
      * Selection start position.
+     * This is a utf-8 offset.
      */
     size_t m_select_start{0};
 
@@ -276,6 +288,11 @@ private:
      * TextBox flags.
      */
     flags_type m_text_flags;
+
+    /**
+     * Maximum text length, or zero.
+     */
+    size_t m_max_len{0};
 };
 
 }

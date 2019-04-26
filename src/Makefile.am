@@ -4,7 +4,8 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir)/src/images/bmp \
 	-I$(top_srcdir)/src/images/jpeg \
 	-isystem $(top_srcdir)/external/rapidxml \
-	-isystem $(top_srcdir)/external/utfcpp/source
+	-isystem $(top_srcdir)/external/utfcpp/source \
+	-isystem $(top_srcdir)/external/layout
 
 AM_CXXFLAGS = -DDATADIR=\"$(datadir)\"
 
@@ -43,9 +44,10 @@ dialog.cpp \
 detail/alignment.cpp \
 detail/basicwindow.cpp \
 detail/collision.cpp \
+detail/filesystem.cpp \
 detail/imagecache.cpp \
 detail/input/inputevdev.cpp \
-detail/filesystem.cpp \
+detail/layout.cpp \
 detail/mousegesture.cpp \
 detail/resource.cpp \
 detail/screen/framebuffer.cpp \
@@ -134,6 +136,7 @@ $(top_srcdir)/include/egt/detail/serialize.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
 $(top_srcdir)/include/egt/detail/string.h \
 $(top_srcdir)/include/egt/detail/windowimpl.h \
+$(top_srcdir)/include/egt/detail/layout.h \
 $(top_srcdir)/include/egt/event.h \
 $(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/flags.h \

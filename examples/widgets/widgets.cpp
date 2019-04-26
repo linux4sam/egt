@@ -200,7 +200,8 @@ struct TextPage : public NotebookTab
         text6->enable_input_validation();
         grid0->add(expand(text6));
 
-        auto text7 = std::make_shared<TextBox>("Multiline\nText", Rect(), alignmask::left | alignmask::top);
+        auto text7 = std::make_shared<TextBox>(u8"This is a utf-8 \u2190\u2191\u2192\u2193\nMulti-line\nTextBox", Rect(), alignmask::left | alignmask::top);
+        text7->set_selection(2, 5);
         text7->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
         grid1->add(expand(text7));
     }
