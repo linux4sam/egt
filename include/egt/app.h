@@ -79,6 +79,8 @@ public:
      */
     void dump(std::ostream& out);
 
+    std::vector<std::pair<std::string, std::string>> get_input_devices();
+
     virtual ~Application() = default;
 
 protected:
@@ -87,6 +89,7 @@ protected:
     int m_argc{0};
     const char** m_argv{nullptr};
     asio::signal_set m_signals;
+    std::vector<std::pair<std::string, std::string>> m_input_devices;
 
 private:
 

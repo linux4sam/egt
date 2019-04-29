@@ -13,6 +13,7 @@
 #include "egt/detail/input/inputevdev.h"
 #include "egt/detail/screen/framebuffer.h"
 #include "egt/detail/screen/kmsscreen.h"
+#include "egt/detail/string.h"
 #include "egt/eventloop.h"
 #include "egt/painter.h"
 #include "egt/timer.h"
@@ -117,11 +118,36 @@ Application::Application(int argc, const char** argv, const std::string& name, b
             else
                 throw std::runtime_error("backend not available");
 
-#ifdef HAVE_TSLIB
-    new detail::InputTslib("/dev/input/touchscreen0");
-#endif
+    const char* tmp = getenv("EGT_INPUT_DEVICES");
 
-    //new detail::InputEvDev("/dev/input/event2");
+    if (tmp)
+    {
+        string env_val = string(tmp);
+        vector<string> inputs;
+
+        detail::tokenize(env_val, ';', inputs);
+
+        for (auto& input : inputs)
+        {
+            vector<string> tokens;
+            detail::tokenize(input, ':', tokens);
+            m_input_devices.push_back(pair<string, string>(tokens.front(), tokens.back()));
+        }
+    }
+
+    for (auto& device : m_input_devices)
+    {
+        if (device.first == "tslib")
+        {
+#ifdef HAVE_TSLIB
+            new detail::InputTslib(device.second);
+#endif
+        }
+        else if (device.first == "evdev")
+        {
+            new detail::InputEvDev(device.second);
+        }
+    }
 
 #ifdef HAVE_LIBINPUT
     new detail::InputLibInput;
@@ -208,6 +234,11 @@ void Application::dump(std::ostream& out)
     }
 
     dump_timers(out);
+}
+
+vector<pair<string, string>> Application::get_input_devices()
+{
+    return m_input_devices;
 }
 
 }

@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace egt
 {
@@ -59,6 +60,11 @@ std::string format(T value, int precision = 2)
     stream << std::fixed << std::setprecision(2) << value;
     return stream.str();
 }
+
+/**
+ * @brief Tokenize a std::string
+ */
+void tokenize(std::string str, char delimiter, std::vector<std::string>& tokens);
 
 }
 }

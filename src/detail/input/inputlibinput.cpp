@@ -7,6 +7,7 @@
 #include "egt/eventloop.h"
 #include "egt/screen.h"
 #include "egt/detail/input/inputlibinput.h"
+#include "egt/detail/string.h"
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
@@ -111,20 +112,22 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
 
     li = libinput_event_get_context(ev);
 
-#if 0
-    if (libinput_event_get_type(ev) == LIBINPUT_EVENT_DEVICE_ADDED)
+    // if the device is handled by another backend, disable libinput events
+    for (auto& device : main_app().get_input_devices())
     {
-        // ignore calibratable devices (touchscreens)
-        int ret = libinput_device_config_calibration_has_matrix(dev);
-        if (ret)
-        {
-            // disable device, can't calibrate
-            libinput_device_config_send_events_set_mode(dev, LIBINPUT_CONFIG_SEND_EVENTS_DISABLED);
+        vector<string> tokens;
+        detail::tokenize(device.second, '/', tokens);
 
-            //tslib_pointercal_to_libinput(dev);
+        if (tokens.back() == libinput_device_get_sysname(dev))
+        {
+            if (device.first != "libinput")
+            {
+                libinput_device_config_send_events_set_mode(dev,
+                        LIBINPUT_CONFIG_SEND_EVENTS_DISABLED);
+                return;
+            }
         }
     }
-#endif
 }
 
 void InputLibInput::handle_event_touch(struct libinput_event* ev)
