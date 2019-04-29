@@ -43,6 +43,9 @@ class Label : public TextWidget
 {
 public:
 
+
+    static const alignmask default_align;
+
     /**
      * @param[in] text The text to display.
      * @param[in] align Alignment for the text.

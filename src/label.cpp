@@ -17,6 +17,8 @@ inline namespace v1
 {
 static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
 
+const alignmask Label::default_align = alignmask::center | alignmask::left;
+
 Label::Label(const std::string& text, alignmask align, const Font& font) noexcept
     : Label(text, Rect(), align, font)
 {
