@@ -33,7 +33,7 @@ H.264            | SAMA5D4
 VP8              | SAMA5D4
 VP9              | SAMA5D4
 
-@section media_svg Working with SVG (Vector Graphics) Files
+@section media_svg Working with SVG (Scalable Vector Graphics) Files
 
 Scalable Vector Graphics (SVG) is an XML-based vector image format for
 two-dimensional graphics with support for interactivity and animation. The SVG
