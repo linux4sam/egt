@@ -152,8 +152,6 @@ fi
 AX_PKG_CHECK_MODULES2(GSTREAMER, [gstreamer-1.0 >= 1.12 gstreamer-plugins-base-1.0], [], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
-   AC_SUBST(include_video, ["#include <egt/video.h>"])
-   AC_SUBST(include_audio, ["#include <egt/audio.h>"])
    LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
    LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
@@ -234,6 +232,24 @@ then
    LDFLAGS="${SAVED_LDFLAGS} -lstdc++fs"
    AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
 fi
+
+if test "x${have_gstreamer}" = xyes; then
+   AC_SUBST(include_audio, ["#include <egt/audio.h>"])
+   if test "x${have_libplanes}" = xyes; then
+      AC_SUBST(include_video, ["#include <egt/video.h>"])
+   fi
+fi
+AM_CONDITIONAL([HAVE_VIDEO_SUPPORT], [test "x${have_libplanes}" = xyes && test "x${have_gstreamer}" = xyes])
+
+# only used by examples
+PKG_CHECK_MODULES(JSONCPP, [jsoncpp], [have_jsoncpp=yes], [have_jsoncpp=no])
+if test "x${have_jsoncpp}" = xyes; then
+   AC_DEFINE(HAVE_JSONCPP, 1, [Have jsoncpp support])
+fi
+AM_CONDITIONAL([HAVE_JSONCPP], [test "x${have_jsoncpp}" = xyes])
+
+AM_CONDITIONAL([HAVE_BOX2D], [test true])
+AC_DEFINE(HAVE_BOX2D, 1, [Have Box2D support])
 
 AM_CONDITIONAL([HAVE_KPLOT], [test true])
 AC_DEFINE(HAVE_KPLOT, 1, [Have kplot support])

@@ -11,6 +11,7 @@
  * @brief On-screen Keyboard.
  */
 
+#include <egt/button.h>
 #include <egt/grid.h>
 #include <memory>
 #include <vector>

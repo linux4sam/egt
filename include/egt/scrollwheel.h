@@ -12,6 +12,7 @@
  *
  */
 
+#include <egt/button.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <string>

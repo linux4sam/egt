@@ -6,13 +6,10 @@
 #include "egt/app.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
-#include <egt/asio.hpp>
 #include <cstring>
-#include <thread>
-
-#ifdef HAVE_GSTREAMER
-
+#include <egt/asio.hpp>
 #include <gst/app/gstappsink.h>
+#include <thread>
 
 using namespace std;
 
@@ -45,8 +42,6 @@ void init_gst_thread()
     }
 }
 }
-
-#ifdef HAVE_LIBPLANES
 
 gboolean VideoWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
@@ -805,8 +800,5 @@ bool RawSoftwareVideo::set_media(const string& uri)
     return true;
 }
 
-#endif
 }
 }
-
-#endif

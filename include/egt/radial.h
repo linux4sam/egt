@@ -6,7 +6,10 @@
 #ifndef EGT_RADIAL_H
 #define EGT_RADIAL_H
 
+#include <egt/detail/math.h>
 #include <egt/flags.h>
+#include <egt/frame.h>
+#include <egt/painter.h>
 #include <egt/valuewidget.h>
 
 namespace egt

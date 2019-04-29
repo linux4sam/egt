@@ -201,11 +201,17 @@ endif
 
 if HAVE_GSTREAMER
 libegt_la_SOURCES += \
-audio.cpp \
+audio.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/audio.h
+endif
+
+if HAVE_VIDEO_SUPPORT
+libegt_la_SOURCES += \
 video.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/audio.h \
 $(top_srcdir)/include/egt/video.h
 endif
 

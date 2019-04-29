@@ -11,12 +11,6 @@
  * @brief Working with video output.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef HAVE_GSTREAMER
-
 #include <egt/window.h>
 #include <gst/gst.h>
 #include <string>
@@ -248,7 +242,5 @@ protected:
 
 }
 }
-
-#endif
 
 #endif

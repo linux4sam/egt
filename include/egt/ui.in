@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_UI_H
-#define EGT_UI_H
+#ifndef EGT_UI
+#define EGT_UI
 
 /**
  * @file
@@ -24,6 +24,7 @@
 #include <egt/event.h>
 #include <egt/filedialog.h>
 #include <egt/font.h>
+#include <egt/form.h>
 #include <egt/frame.h>
 #include <egt/geometry.h>
 #include <egt/grid.h>
@@ -43,6 +44,7 @@
 #include <egt/scrollwheel.h>
 #include <egt/sideboard.h>
 #include <egt/sizer.h>
+#include <egt/slider.h>
 #include <egt/sprite.h>
 #include <egt/text.h>
 #include <egt/timer.h>
@@ -51,7 +53,6 @@
 #include <egt/valuewidget.h>
 #include <egt/version.h>
 #include <egt/view.h>
-#include <egt/widget.h>
 #include <egt/window.h>
 
 @include_audio@

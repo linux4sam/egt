@@ -7,12 +7,7 @@
 #include "egt/audio.h"
 #include "egt/utils.h"
 #include "egt/video.h"
-#include <cstring>
-#include <egt/asio.hpp>
 #include <gst/gst.h>
-#include <thread>
-
-#ifdef HAVE_GSTREAMER
 
 using namespace std;
 
@@ -345,5 +340,3 @@ bool AudioPlayer::createPipeline()
 
 }
 }
-
-#endif
