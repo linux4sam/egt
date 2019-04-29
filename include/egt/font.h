@@ -61,6 +61,8 @@ public:
      */
     Font();
 
+    explicit Font(const std::string& face, int size);
+
     /**
      * Create a font based on the supplied parameters.
      *
