@@ -3,13 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/ui"
 #include "egt/uiloader.h"
 #include <rapidxml.hpp>
+#include <rapidxml_print.hpp>
 #include <rapidxml_utils.hpp>
 
 using namespace std;

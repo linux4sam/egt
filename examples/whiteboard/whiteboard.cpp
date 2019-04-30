@@ -18,11 +18,11 @@ public:
 
     explicit ColorPickerWindow(const Color& color)
         : Popup(main_screen()->size() / 2),
-          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), Tuple(4, 5), 10),
+          m_grid(Tuple(4, 5), 10),
           m_color(color)
     {
-        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
-
+        expand(m_grid);
+        instance_palette().set(Palette::ColorId::bg, Palette::black);
         add(m_grid);
 
         const vector<Color> colors =
@@ -51,8 +51,9 @@ public:
 
         for (auto& c : colors)
         {
-            auto color_label = make_shared<Label>("");
-            color_label->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, c);
+            auto color_label = make_shared<RectangleWidget>();
+
+            color_label->instance_palette().set(Palette::ColorId::button_bg, Palette::GroupId::normal, c);
 
             m_grid.add(expand(color_label));
             int column = m_grid.last_add_column();
@@ -63,14 +64,10 @@ public:
 
             color_label->on_event([this, column, row](eventid event)
             {
-                if (event == eventid::pointer_click)
-                {
-                    m_grid.select(column, row);
-                    m_color = m_grid.get(m_grid.selected())->palette().color(Palette::ColorId::bg);
-                    this->hide();
-                }
+                m_color = m_grid.get(m_grid.selected())->palette().color(Palette::ColorId::button_bg).color();
+                this->hide();
                 return 0;
-            });
+            }, {eventid::pointer_click});
         }
     }
 
@@ -87,11 +84,11 @@ public:
 
     explicit WidthPickerWindow(int width)
         : Popup(main_screen()->size() / 2),
-          m_grid(Rect(Point(0, 0), main_screen()->size() / 2), Tuple(4, 1), 10),
+          m_grid(Tuple(4, 1), 10),
           m_width(width)
     {
-        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
-
+        expand(m_grid);
+        instance_palette().set(Palette::ColorId::bg, Palette::black);
         add(m_grid);
 
         const vector<int> widths =
@@ -104,7 +101,8 @@ public:
 
         for (auto& w : widths)
         {
-            auto width_label = make_shared<Label>(std::to_string(w));
+            auto width_label = make_shared<Label>(std::to_string(w), alignmask::center);
+            width_label->instance_palette().set(Palette::ColorId::label_text, Palette::white);
 
             m_grid.add(expand(width_label));
             int column = m_grid.last_add_column();
@@ -115,14 +113,10 @@ public:
 
             width_label->on_event([this, column, row](eventid event)
             {
-                if (event == eventid::pointer_click)
-                {
-                    m_grid.select(column, row);
-                    m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
-                    this->hide();
-                }
+                m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
+                this->hide();
                 return 0;
-            });
+            }, {eventid::pointer_click});
         }
     }
 
@@ -138,8 +132,7 @@ class MainWindow : public TopWindow
 public:
 
     MainWindow()
-        : m_grid(Rect(Size(100, 250)), Tuple(1, 4), 5),
-          m_colorbtn(Image("palette.png")),
+        : m_colorbtn(Image("palette.png")),
           m_fillbtn(Image("fill.png")),
           m_widthbtn(Image("width.png")),
           m_clearbtn(Image("clear.png")),
@@ -150,25 +143,30 @@ public:
     {
         // don't draw background, we'll do it in draw()
         set_boxtype(Theme::boxtype::none);
+        instance_palette().set(Palette::ColorId::bg, Palette::white);
 
-        m_grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        m_grid = make_shared<VerticalBoxSizer>(*this);
+        //m_grid->set_margin(10);
+        top(left(m_grid));
 
         m_colorbtn.set_boxtype(Theme::boxtype::none);
         m_fillbtn.set_boxtype(Theme::boxtype::none);
         m_widthbtn.set_boxtype(Theme::boxtype::none);
         m_clearbtn.set_boxtype(Theme::boxtype::none);
 
-        add(m_grid);
+        m_colorbtn.set_image_align(alignmask::expand);
+        m_fillbtn.set_image_align(alignmask::expand);
+        m_widthbtn.set_image_align(alignmask::expand);
+        m_clearbtn.set_image_align(alignmask::expand);
+
         add(m_penpicker);
         add(m_fillpicker);
         add(m_widthpicker);
 
-        m_grid.add(expand(m_colorbtn));
-        m_colorbtn.on_event([this](eventid)
-        {
-            m_penpicker.show_modal(true);
-            return 1;
-        }, {eventid::pointer_click});
+        m_grid->add(m_colorbtn);
+        m_grid->add(m_fillbtn);
+        m_grid->add(m_widthbtn);
+        m_grid->add(m_clearbtn);
 
         m_colorbtn.on_event([this](eventid)
         {
@@ -188,21 +186,25 @@ public:
             return 1;
         }, {eventid::pointer_click});
 
-        m_grid.add(expand(m_fillbtn));
+        m_colorbtn.on_event([this](eventid)
+        {
+            m_penpicker.show_modal(true);
+            return 1;
+        }, {eventid::pointer_click});
+
         m_fillbtn.on_event([this](eventid)
         {
             m_fillpicker.show_modal(true);
             return 1;
         }, {eventid::pointer_click});
 
-        m_grid.add(expand(m_widthbtn));
+
         m_widthbtn.on_event([this](eventid)
         {
             m_widthpicker.show_modal(true);
             return 1;
         }, {eventid::pointer_click});
 
-        m_grid.add(expand(m_clearbtn));
         m_clearbtn.on_event([this](eventid)
         {
             clear();
@@ -212,13 +214,14 @@ public:
 
         m_fillpicker.on_event([this](eventid)
         {
-            palette().set(Palette::ColorId::bg, Palette::GroupId::normal, m_fillpicker.color());
+            instance_palette().set(Palette::ColorId::bg, m_fillpicker.color());
             damage();
             return 1;
         }, {eventid::hide});
 
         auto logo = make_shared<ImageLabel>(Image("@microchip_logo_black.png"));
-        logo->set_align(alignmask::right | alignmask::top, 10);
+        logo->set_align(alignmask::right | alignmask::top);
+        logo->set_margin(10);
         add(logo);
 
         clear();
@@ -280,7 +283,7 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override
     {
-        painter.set(palette().color(Palette::ColorId::bg, Palette::GroupId::normal));
+        painter.set(palette().color(Palette::ColorId::bg).color());
         painter.draw(rect);
         painter.fill();
 
@@ -291,7 +294,7 @@ public:
     }
 
     Point m_last;
-    StaticGrid m_grid;
+    shared_ptr<VerticalBoxSizer> m_grid;
     ImageButton m_colorbtn;
     ImageButton m_fillbtn;
     ImageButton m_widthbtn;

@@ -14,7 +14,7 @@ namespace egt
 inline namespace v1
 {
 
-std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
+static const std::map<Widget::flag, std::string>& flag_strings()
 {
     static std::map<Widget::flag, std::string> strings;
     if (strings.empty())
@@ -29,8 +29,15 @@ std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
         MAPITEM(Widget::flag::invisible);
         MAPITEM(Widget::flag::grab_mouse);
         MAPITEM(Widget::flag::no_clip);
+        MAPITEM(Widget::flag::no_layout);
 #undef MAPITEM
     }
+    return strings;
+}
+
+std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
+{
+    auto strings = flag_strings();
 
     bool first = true;
     auto f = flags.get();
@@ -47,20 +54,7 @@ std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
 
 std::ostream& operator<<(std::ostream& os, const Widget::flag& flag)
 {
-    static std::map<Widget::flag, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(Widget::flag::plane_window);
-        MAPITEM(Widget::flag::window);
-        MAPITEM(Widget::flag::frame);
-        MAPITEM(Widget::flag::disabled);
-        MAPITEM(Widget::flag::readonly);
-        MAPITEM(Widget::flag::active);
-        MAPITEM(Widget::flag::invisible);
-        MAPITEM(Widget::flag::grab_mouse);
-#undef MAPITEM
-    }
+    auto strings = flag_strings();
 
     os << strings[flag];
     return os;

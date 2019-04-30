@@ -21,12 +21,11 @@ Dialog::Dialog(const Rect& rect)
     set_name("Dialog" + std::to_string(m_widgetid));
 
     m_vsizer->set_align(alignmask::expand);
-    m_grid->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+    m_grid->instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
     add(m_vsizer);
 
     m_grid->set_align(alignmask::bottom | alignmask::right);
-    m_grid->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-    m_grid->set_boxtype(Theme::boxtype::rounded_border);
+    m_grid->set_boxtype(Theme::boxtype::blank_rounded);
 
     m_button1->set_align(alignmask::center);
     m_grid->add(expand(m_button1));

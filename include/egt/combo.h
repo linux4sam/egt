@@ -39,8 +39,7 @@ public:
 
     virtual void show(bool center = false) override;
 
-    virtual ~ComboBoxPopup()
-    {}
+    virtual ~ComboBoxPopup() = default;
 
 protected:
 
@@ -103,9 +102,11 @@ public:
         return std::unique_ptr<Widget>(make_unique<ComboBox>(*this).release());
     }
 
-    virtual void set_select(uint32_t index);
+    virtual void set_select(size_t index);
 
-    virtual uint32_t selected() const { return m_selected; }
+    virtual size_t selected() const { return m_selected; }
+
+    virtual std::string item(size_t index) const { return m_items[index]; }
 
     virtual void resize(const Size& s) override;
 
@@ -113,13 +114,25 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    /**
+     * Default draw method for the ComboBox.
+     */
+    static void default_draw(ComboBox& widget, Painter& painter, const Rect& rect);
+
+    inline size_t item_count() const
+    {
+        return m_items.size();
+    }
+
     virtual void set_parent(Frame* parent) override;
 
-    virtual ~ComboBox();
+    virtual Size min_size_hint() const override;
+
+    virtual ~ComboBox() = default;
 
 protected:
     item_array m_items;
-    uint32_t m_selected{0};
+    size_t m_selected{0};
     std::shared_ptr<detail::ComboBoxPopup> m_popup;
 
     friend class detail::ComboBoxPopup;

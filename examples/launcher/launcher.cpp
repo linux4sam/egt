@@ -89,7 +89,7 @@ public:
           m_description(description),
           m_exec(exec)
     {
-        palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         set_image_align(alignmask::center | alignmask::top);
         set_text_align(alignmask::center | alignmask::bottom);
     }
@@ -163,14 +163,16 @@ public:
         add(make_shared<ImageLabel>(Image("background.png")));
 
         auto logo = std::make_shared<ImageLabel>(Image("@microchip_logo_white.png"));
-        logo->set_align(alignmask::left | alignmask::top, 10);
+        logo->set_align(alignmask::left | alignmask::top);
+        logo->set_margin(10);
         add(logo);
 
         auto settings = std::make_shared<ImageButton>(Image("settings.png"), "", Rect());
         settings->flags().clear(Widget::flag::grab_mouse);
         add(settings);
         settings->set_boxtype(Theme::boxtype::none);
-        settings->set_align(alignmask::right | alignmask::top, 10);
+        settings->set_align(alignmask::right | alignmask::top);
+        settings->set_margin(10);
         settings->on_event([this](eventid event)
         {
             if (event == eventid::pointer_click)

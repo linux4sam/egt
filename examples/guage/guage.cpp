@@ -31,10 +31,10 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "guage");
 
     TopWindow win;
-    win.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::gray);
+    win.instance_palette().set(Palette::ColorId::bg, Palette::gray);
 
     StaticGrid grid(Tuple(2, 2));
-    grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+    grid.instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
     win.add(expand(grid));
 
     Guage guage;

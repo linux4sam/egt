@@ -41,7 +41,14 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~CheckBox();
+    /**
+     * Default draw method for the CheckBox.
+     */
+    static void default_draw(CheckBox& widget, Painter& painter, const Rect& rect);
+
+    virtual Size min_size_hint() const override;
+
+    virtual ~CheckBox() = default;
 };
 
 /**
@@ -57,7 +64,32 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~ToggleBox();
+    /**
+     * Default draw method for the CheckBox.
+     */
+    static void default_draw(ToggleBox& widget, Painter& painter, const Rect& rect);
+
+    virtual Size min_size_hint() const override;
+
+    void set_text(const std::string& on_text,
+                  const std::string& off_text)
+    {
+        bool on = detail::change_if_diff<>(m_on_text, on_text);
+        bool off = detail::change_if_diff<>(m_off_text, off_text);
+
+        if (on || off)
+            damage();
+    }
+
+    inline const std::string& on_text() const { return m_on_text; }
+    inline const std::string& off_text() const { return m_off_text; }
+
+    virtual ~ToggleBox() = default;
+
+protected:
+
+    std::string m_off_text;
+    std::string m_on_text;
 };
 
 }

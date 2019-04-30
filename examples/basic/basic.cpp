@@ -11,7 +11,7 @@ int main(int argc, const char** argv)
 
     egt::TopWindow window;
     egt::Button button(window, "Press Me");
-    button.set_align(egt::alignmask::center);
+    center(button);
     window.show();
 
     return app.run();

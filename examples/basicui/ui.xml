@@ -2,13 +2,7 @@
   <widget type="Window" name="window1">
     <widget type="Button" name="button1">
       <property name="text">Press Me</property>
-      <property name="align">1</property>
-    </widget>
-    <widget type="Label" name="label1">
-      <property name="text">Basic Demo</property>
-      <property name="width">100</property>
-      <property name="height">50"</property>
-      <property name="align">2</property>
+      <property name="align">3</property>
     </widget>
   </widget>
 </widgets>

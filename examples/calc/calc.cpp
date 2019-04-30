@@ -25,47 +25,93 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "calc");
 
     TopWindow win;
+    win.instance_palette().set(Palette::ColorId::bg, Palette::black);
 
-    StaticGrid topgrid(Tuple(1, 2));
-    topgrid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-    win.add(expand(topgrid));
+    VerticalBoxSizer vsizer;
+    win.add(expand(vsizer));
+
+    ImageLabel elogo(Image("@egt_logo_small_white.png"));
+    elogo.set_margin(10);
+    vsizer.add(elogo);
 
     TextBox text("");
     text.text_flags().set(TextBox::flag::multiline);
-    topgrid.add(expand(text), 0, 0);
     text.set_text_align(alignmask::center | alignmask::right);
     text.set_font(Font(25));
-
-    ImageLabel logo(Image("@microchip_logo_black.png"));
-    logo.set_align(alignmask::left | alignmask::top, 10);
-    win.add(logo);
-
-    StaticGrid buttongrid(Tuple(4, 5), 5);
-    buttongrid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-    topgrid.add(expand(buttongrid), 0, 1);
+    text.instance_palette().set(Palette::ColorId::bg, Color(0x272727ff));
+    text.instance_palette().set(Palette::ColorId::text, Palette::white);
+    vsizer.add(expand(text));
 
     vector<vector<string>> buttons =
     {
         {"(", ")", "%", "C"},
-        {"7", "8", "9", "÷"},
+        {"7", "8", "9", "/"},
         {"4", "5", "6", "x"},
         {"1", "2", "3", "-"},
         {"0", ".", "=", "+"},
     };
 
+    vector<vector<pair<Palette::ColorId, Color>>> colors =
+    {
+        {
+            make_pair(Palette::ColorId::button_bg, Palette::gray),
+            make_pair(Palette::ColorId::button_bg, Palette::gray),
+            make_pair(Palette::ColorId::button_bg, Palette::gray),
+            make_pair(Palette::ColorId::button_bg, Palette::orange)
+        },
+
+        {
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::orange)
+        },
+
+        {
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::orange)
+        },
+
+        {
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::orange)
+        },
+
+        {
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::lightgray),
+            make_pair(Palette::ColorId::button_bg, Palette::blue),
+            make_pair(Palette::ColorId::button_bg, Palette::orange)
+        },
+    };
+
     for (size_t r = 0; r < buttons.size(); r++)
     {
+        auto line_sizer = make_shared<BoxSizer>(orientation::horizontal, justification::middle);
+        vsizer.add(line_sizer);
+        line_sizer->set_height(60);
+        expand_horizontal(line_sizer);
+
         for (size_t c = 0; c < buttons[r].size(); c++)
         {
             string label = buttons[r][c];
             if (label.empty())
                 continue;
 
-            auto b = make_shared<Button>(label, Rect(Size(50, 50)));
-            b->set_font(Font(30, Font::weightid::bold));
+            auto b = make_shared<Button>(*line_sizer, label, Rect(Size(60, 60)));
+            b->set_border(1);
+            b->set_font(Font(25, Font::weightid::bold));
+            b->instance_palette().set(colors[r][c].first, colors[r][c].second);
+            b->instance_palette().set(Palette::ColorId::border, Palette::gray);
 
             b->on_event([&text, b](eventid event)
             {
+                static bool do_clear = false;
+
                 if (event != eventid::pointer_click)
                     return 0;
 
@@ -80,6 +126,7 @@ int main(int argc, const char** argv)
                            "\n";
                         text.append(ss.str());
                     }
+                    do_clear = true;
                 }
                 else if (b->text() == "C")
                 {
@@ -87,17 +134,18 @@ int main(int argc, const char** argv)
                 }
                 else
                 {
+                    if (do_clear)
+                    {
+                        text.clear();
+                        do_clear = false;
+                    }
                     text.append(b->text());
                 }
 
                 return 0;
             });
-
-            buttongrid.add(expand(b), c, r);
         }
     }
-
-    topgrid.reposition();
 
     win.show();
 

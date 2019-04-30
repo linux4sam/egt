@@ -33,7 +33,7 @@ public:
           m_grid(Tuple(10, 4), 5)
     {
         this->add(expand(m_grid));
-        this->m_grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        this->m_grid.instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
         std::vector<std::vector<std::string>> buttons =
         {

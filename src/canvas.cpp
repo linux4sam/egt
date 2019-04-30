@@ -43,7 +43,8 @@ Canvas::Canvas(shared_cairo_surface_t surface, cairo_format_t format) noexcept
 
 Size Canvas::size() const
 {
-    assert(m_surface.get());
+    if (!m_surface)
+        return Size(0, 0);
 
     return Size(cairo_image_surface_get_width(m_surface.get()),
                 cairo_image_surface_get_height(m_surface.get()));

@@ -21,164 +21,214 @@ ProgressBar::ProgressBar(const Rect& rect,
                          int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
-    set_boxtype(Theme::boxtype::rounded_borderfill);
+    set_boxtype(Theme::boxtype::blank);
+    set_border(theme().default_border());
 }
 
 void ProgressBar::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    Drawer<ProgressBar>::draw(*this, painter, rect);
+}
 
-    draw_box(painter);
+void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect&)
+{
+    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    auto width = detail::normalize<float>(value(), m_min, m_max, 0, w());
+    auto b = widget.content_area();
+    auto width = detail::normalize<float>(widget.value(), widget.min(), widget.max(), 0, b.w);
 
-    theme().draw_rounded_gradient_box(painter,
-                                      Rect(x(), y(), width, h()),
-                                      palette().color(Palette::ColorId::highlight));
+    if (width)
+    {
+        widget.theme().draw_box(painter,
+                                Theme::boxtype::blank,
+                                Rect(b.x, b.y, width, b.h),
+                                Color(),
+                                widget.color(Palette::ColorId::button_bg));
+    }
 
-    string text = std::to_string(value()) + "%";
-    m_dynamic_font = TextWidget::scale_font(box().size() * 0.75, text, m_dynamic_font);
+    string text = std::to_string(widget.value()) + "%";
+    /// @todo font
+    auto dynamic_font = TextWidget::scale_font(b.size() * 0.75, text, Font());
 
-    painter.set(this->palette().color(Palette::ColorId::text));
-    painter.set(m_dynamic_font);
-
-    auto text_size = painter.text_size(text);
-    Rect target = detail::align_algorithm(text_size, box(), alignmask::center);
-
+    painter.set(widget.color(Palette::ColorId::label_text).color());
+    painter.set(dynamic_font);
+    auto size = painter.text_size(text);
+    auto target = detail::align_algorithm(size, b, alignmask::center);
     painter.draw(target.point());
-    painter.draw(text);
+    painter.draw(text, true);
+}
+
+static const auto DEFAULT_PROGRESSBAR_SIZE = Size(200, 30);
+
+Size ProgressBar::min_size_hint() const
+{
+    return DEFAULT_PROGRESSBAR_SIZE + Widget::min_size_hint();
 }
 
 SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
+    set_boxtype(Theme::boxtype::blank);
 }
 
 void SpinProgress::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    Drawer<SpinProgress>::draw(*this, painter, rect);
+}
 
-    auto dim = std::min(w(), h());
+void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Rect&)
+{
+    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
+
+    auto b = widget.content_area();
+
+    auto dim = std::min(b.w, b.h);
     float linew = dim / 10;
     float radius = dim / 2 - (linew / 2);
     float angle1 = detail::to_radians<float>(180, 0);
-    float angle2 = detail::to_radians<float>(180, value() / 100. * 360.);
+    float angle2 = detail::to_radians<float>(180, widget.value() / 100. * 360.);
 
-    painter.set(palette().color(Palette::ColorId::bg));
-    painter.draw(box());
-    painter.fill();
     painter.set_line_width(linew);
-
-    painter.set(palette().color(Palette::ColorId::mid));
-    painter.draw(Arc(center(), radius, 0.0f, 2 * M_PI));
+    painter.set(widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
+    painter.draw(Arc(widget.center(), radius, 0.0f, 2 * M_PI));
     painter.stroke();
 
-    painter.set(palette().color(Palette::ColorId::highlight));
-    painter.draw(Arc(center(), radius, angle1, angle2));
+    painter.set(widget.color(Palette::ColorId::button_fg).color());
+    painter.draw(Arc(widget.center(), radius, angle1, angle2));
     painter.stroke();
 
-    string text = std::to_string(value());
-    m_dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, m_dynamic_font);
-    painter.set(this->palette().color(Palette::ColorId::text));
-    painter.set(m_dynamic_font);
-
-    auto text_size = painter.text_size(text);
-    Rect target = detail::align_algorithm(text_size,
-                                          this->box(),
-                                          alignmask::center,
-                                          0);
+    string text = std::to_string(widget.value());
+    /// @todo font
+    auto dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, Font());
+    painter.set(dynamic_font);
+    painter.set(widget.color(Palette::ColorId::text).color());
+    auto size = painter.text_size(text);
+    auto target = detail::align_algorithm(size, b, alignmask::center);
     painter.draw(target.point());
     painter.draw(text);
+}
+
+static const auto DEFAULT_SPINPROGRESS_SIZE = Size(100, 100);
+
+Size SpinProgress::min_size_hint() const
+{
+    return DEFAULT_SPINPROGRESS_SIZE + Widget::min_size_hint();
 }
 
 LevelMeter::LevelMeter(const Rect& rect,
                        int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
+    set_boxtype(Theme::boxtype::blank);
+    set_padding(2);
 }
 
 void LevelMeter::draw(Painter& painter, const Rect& rect)
 {
-    auto BAR_SPACING = 2;
+    Drawer<LevelMeter>::draw(*this, painter, rect);
+}
 
-    ignoreparam(rect);
+void LevelMeter::default_draw(LevelMeter& widget, Painter& painter, const Rect&)
+{
+    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    auto limit = egt::detail::normalize<float>(value(), m_min, m_max, m_num_bars, 0);
-    auto barheight = h() / m_num_bars;
+    auto b = widget.content_area();
 
-    for (uint32_t i = 0; i < m_num_bars; i++)
+    auto limit = egt::detail::normalize<float>(widget.value(), widget.min(),
+                 widget.max(), widget.num_bars(), 0);
+    auto barheight = b.h / widget.num_bars();
+
+    for (size_t i = 0; i < widget.num_bars(); i++)
     {
+        auto color = widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled);
         if (i >= limit)
-            painter.set(palette().color(Palette::ColorId::highlight));
-        else
-            painter.set(palette().color(Palette::ColorId::dark));
+            color = widget.color(Palette::ColorId::button_fg);
 
-        painter.draw(Rect(x(),  y() + i * barheight, w(), barheight - BAR_SPACING));
-        painter.fill();
+        Rect rect(b.x,  b.y + i * barheight, b.w, barheight - widget.padding());
+
+        widget.theme().draw_box(painter,
+                                Theme::boxtype::blank,
+                                rect,
+                                widget.color(Palette::ColorId::border),
+                                color);
     }
 }
 
-AnalogMeter::AnalogMeter(const Rect& rect)
-    : ValueRangeWidget<int>(rect, 0, 100, 0)
+static const auto DEFAULT_LEVELMETER_SIZE = Size(40, 100);
+
+Size LevelMeter::min_size_hint() const
 {
+    return DEFAULT_LEVELMETER_SIZE + Widget::min_size_hint();
+}
+
+AnalogMeter::AnalogMeter(const Rect& rect)
+    : ValueRangeWidget<float>(rect, 0, 100, 0)
+{
+    set_boxtype(Theme::boxtype::blank);
 }
 
 void AnalogMeter::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    Drawer<AnalogMeter>::draw(*this, painter, rect);
+}
 
-    auto cr = painter.context();
+void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect&)
+{
+    /// @todo This needs to support setting font.
 
-    painter.set_line_width(1.0);
-    painter.set(m_font);
+    static const auto tick_width = 1.0;
 
-    cairo_text_extents_t textext;
-    cairo_text_extents(cr.get(), "999", &textext);
+    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    cairo_translate(cr.get(), x() + w() / 2, y() + h() - textext.height);
+    auto b = widget.content_area();
+    painter.set_line_width(tick_width);
+    painter.set(Font());
+    auto text_size = painter.text_size("999");
 
-    float hw = w() / 2.0 - (textext.width * 2);
+    auto cr = painter.context().get();
+    cairo_translate(cr, b.center().x, b.y + b.h - text_size.h);
 
-    // scale marks and labels
-    for (double marks = 0.0; marks <= 100.0; marks += 10.0)
+    auto dim = std::min(b.w / 2, b.h);
+    float hw = dim - (text_size.w * 2.0);
+
+    // ticks and labels
+    for (float tick = 0.0; tick <= 100.0; tick += 10.0)
     {
-        painter.set(palette().color(Palette::ColorId::highlight));
+        auto xangle = std::cos(M_PI * tick * 0.01);
+        auto yangle = std::sin(M_PI * tick * 0.01);
+        painter.set(widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
+        painter.draw(Point(hw * xangle,
+                           -hw * yangle),
+                     Point((hw + 10.0) * xangle,
+                           -(hw + 10.0) * yangle));
+        painter.stroke();
 
-        cairo_move_to(cr.get(),
-                      hw * std::cos(M_PI * marks * 0.01),
-                      -hw * std::sin(M_PI * marks * 0.01));
-        cairo_line_to(cr.get(),
-                      (hw + 10.0) * std::cos(M_PI * marks * 0.01),
-                      -(hw + 10.0) * std::sin(M_PI * marks * 0.01));
-
-        cairo_stroke(cr.get());
-
-        painter.set(palette().color(Palette::ColorId::text));
-
+        painter.set(widget.color(Palette::ColorId::text).color());
         char text[10];
-        sprintf(text, "%2.0f", marks);
-
-        cairo_text_extents(cr.get(), text, &textext);
-
-        int width = textext.width;
-        int height = textext.height;
-        cairo_move_to(cr.get(),
-                      (-(hw + 30.0) * std::cos(M_PI * marks * 0.01)) - ((double)width / 2.0),
-                      (-(hw + 30.0) * std::sin(M_PI * marks * 0.01)) + ((double)height / 2.0));
-
-        cairo_show_text(cr.get(), text);
-        cairo_stroke(cr.get());
+        sprintf(text, "%2.0f", tick);
+        auto size = painter.text_size(text);
+        painter.draw(Point(-(hw + 30.0) * xangle - size.w / 2.0,
+                           -(hw + 30.0) * yangle - size.h / 2.0));
+        painter.draw(text);
+        painter.stroke();
     }
 
-    float value = this->value();
-    painter.set(Palette::red);
-    painter.set_line_width(1.5);
+    // needle
+    painter.set(widget.color(Palette::ColorId::button_fg).color());
+    painter.set_line_width(tick_width * 2.0);
+    painter.draw(Point(),
+                 Point((-hw - 15.0) * std::cos(M_PI * widget.value() * 0.01),
+                       (-hw - 15.0) * std::sin(M_PI * widget.value() * 0.01)));
+    painter.stroke();
+    painter.draw(Circle(Point(), 5));
+    painter.fill();
+}
 
-    cairo_move_to(cr.get(), 0.0, 0.0);
-    cairo_line_to(cr.get(),
-                  -hw * std::cos(M_PI * value * 0.01),
-                  -hw * std::sin(M_PI * value * 0.01));
-    cairo_stroke(cr.get());
+static const auto DEFAULT_ANALOGMETER_SIZE = Size(200, 100);
+
+Size AnalogMeter::min_size_hint() const
+{
+    return DEFAULT_ANALOGMETER_SIZE + Widget::min_size_hint();
 }
 
 }

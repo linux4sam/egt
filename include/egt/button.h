@@ -90,6 +90,8 @@ public:
      */
     virtual void check(bool value);
 
+    virtual Size min_size_hint() const override;
+
     virtual ~Button();
 
 protected:
@@ -124,9 +126,9 @@ private:
 class ImageButton : public Button
 {
 public:
-    ImageButton(const Image& image,
-                const std::string& text = "",
-                const Rect& rect = Rect()) noexcept;
+    explicit ImageButton(const Image& image,
+                         const std::string& text = "",
+                         const Rect& rect = Rect()) noexcept;
 
     ImageButton(Frame& parent,
                 const Image& image,

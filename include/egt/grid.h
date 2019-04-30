@@ -40,38 +40,39 @@ public:
     /**
      * @param[in] rect Rectangle for the widget.
      * @param[in] size Rows and columns.
-     * @param[in] spacing Amount of spacing to put between cells.
+     * @param[in] border Border width. @see Widget::set_border().
      */
-    StaticGrid(const Rect& rect, const Tuple& size = Tuple(1, 1),
-               int spacing = 0) noexcept;
+    explicit StaticGrid(const Rect& rect, const Tuple& size = Tuple(1, 1),
+                        default_dim_type border = 0) noexcept;
 
     /**
      * @param[in] size Rows and columns.
-     * @param[in] spacing Amount of spacing to put between cells.
+     * @param[in] border Border width. @see Widget::set_border().
      */
-    StaticGrid(const Tuple& size = Tuple(1, 1), int spacing = 0) noexcept;
+    StaticGrid(const Tuple& size = Tuple(1, 1),
+               default_dim_type border = 0) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the widget.
      * @param[in] size Rows and columns.
-     * @param[in] spacing Amount of spacing to put between cells.
+     * @param[in] border Border width. @see Widget::set_border().
      */
-    StaticGrid(Frame& parent, const Rect& rect, const Tuple& size = Tuple(1, 1),
-               int spacing = 0) noexcept;
+    StaticGrid(Frame& parent, const Rect& rect,
+               const Tuple& size = Tuple(1, 1),
+               default_dim_type border = 0) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] size Rows and columns.
-     * @param[in] spacing Amount of spacing to put between cells.
+     * @param[in] border Border width. @see Widget::set_border().
      */
-    StaticGrid(Frame& parent, const Tuple& size = Tuple(1, 1),
-               int spacing = 0) noexcept;
+    explicit StaticGrid(Frame& parent, const Tuple& size = Tuple(1, 1),
+                        default_dim_type border = 0) noexcept;
 
     StaticGrid(const StaticGrid& rhs) noexcept
         : Frame(rhs),
           m_cells(rhs.m_cells),
-          m_spacing(rhs.m_spacing),
           m_last_add_column(rhs.m_last_add_column),
           m_last_add_row(rhs.m_last_add_row)
     {
@@ -93,7 +94,6 @@ public:
         Frame::operator=(rhs);
 
         m_cells = rhs.m_cells;
-        m_spacing = rhs.m_spacing;
         m_last_add_column = rhs.m_last_add_column;
         m_last_add_row = rhs.m_last_add_row;
 
@@ -184,6 +184,15 @@ public:
 
     virtual void layout() override
     {
+        if (!visible())
+            return;
+
+        if (m_in_layout)
+            return;
+
+        m_in_layout = true;
+        detail::scope_exit reset([this]() { m_in_layout = false; });
+
         //Frame::layout();
         reposition();
     }
@@ -198,6 +207,16 @@ public:
         return m_last_add_row;
     }
 
+    virtual Rect content_area() const override
+    {
+        // we don't include border, grid handles that itself
+        auto moat = margin() + padding();
+        auto b = box();
+        b += Point(moat, moat);
+        b -= Size(2. * moat, 2. * moat);
+        return b;
+    }
+
     virtual ~StaticGrid() noexcept = default;
 
 protected:
@@ -205,10 +224,9 @@ protected:
     using cell_array = std::vector<std::vector<Widget*>>;
 
     cell_array m_cells;
-    int m_spacing{0};
-
     int m_last_add_column{0};
     int m_last_add_row{0};
+    bool m_column_priority{false};
 };
 
 /**
@@ -237,11 +255,18 @@ public:
         return Point(m_selected_column, m_selected_row);
     }
 
+    virtual int handle(eventid event) override;
+
     virtual void select(int column, int row)
     {
-        m_selected_column = column;
-        m_selected_row = row;
-        damage();
+        /// TODO: make sure column and row are valid
+
+        bool c = detail::change_if_diff<>(m_selected_column, column);
+        bool r = detail::change_if_diff<>(m_selected_row, row);
+        if (c || r)
+        {
+            damage();
+        }
     }
 
     virtual ~SelectableGrid() noexcept = default;

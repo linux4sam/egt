@@ -43,7 +43,6 @@ class Label : public TextWidget
 {
 public:
 
-
     static const alignmask default_align;
 
     /**
@@ -51,8 +50,9 @@ public:
      * @param[in] align Alignment for the text.
      * @param[in] font The Font to use.
      */
+    /// @todo All uses of Font() below are not using the theme font
     Label(const std::string& text = std::string(),
-          alignmask align = alignmask::center,
+          alignmask align = default_align,
           const Font& font = Font()) noexcept;
 
     /**
@@ -62,7 +62,7 @@ public:
      * @param[in] font The Font to use.
      */
     Label(const std::string& text, const Rect& rect,
-          alignmask align = alignmask::center,
+          alignmask align = default_align,
           const Font& font = Font()) noexcept;
 
     /**
@@ -71,9 +71,9 @@ public:
      * @param[in] align Alignment for the text.
      * @param[in] font The Font to use.
      */
-    Label(Frame& parent, const std::string& text = std::string(),
-          alignmask align = alignmask::center,
-          const Font& font = Font()) noexcept;
+    explicit Label(Frame& parent, const std::string& text = std::string(),
+                   alignmask align = default_align,
+                   const Font& font = Font()) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -83,7 +83,7 @@ public:
      * @param[in] font The Font to use.
      */
     Label(Frame& parent, const std::string& text, const Rect& rect,
-          alignmask align = alignmask::center,
+          alignmask align = default_align,
           const Font& font = Font()) noexcept;
 
     virtual std::unique_ptr<Widget> clone() override
@@ -99,6 +99,8 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     static void default_draw(Label& widget, Painter& painter, const Rect& rect);
+
+    virtual Size min_size_hint() const override;
 
     virtual ~Label() = default;
 
@@ -157,10 +159,10 @@ public:
      * @param[in] align Alignment for the text.
      * @param[in] font The Font to use.
      */
-    ImageLabel(Frame& parent, const Image& image = Image(),
-               const std::string& text = std::string(),
-               alignmask align = alignmask::right | alignmask::center,
-               const Font& font = Font()) noexcept;
+    explicit ImageLabel(Frame& parent, const Image& image = Image(),
+                        const std::string& text = std::string(),
+                        alignmask align = alignmask::right | alignmask::center,
+                        const Font& font = Font()) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -189,10 +191,41 @@ public:
      */
     virtual void set_image(const Image& image);
 
+    const Image& image() const { return m_image; }
+
+    /** @deprecated */
+    Image& image() { return m_image; }
+
+    virtual void label_enabled(bool value);
+
+    virtual void set_image_align(alignmask align)
+    {
+        if (detail::change_if_diff<>(m_image_align, align))
+            damage();
+    }
+
+    void set_position_image_first(bool value)
+    {
+        if (detail::change_if_diff<>(m_position_image_first, value))
+            damage();
+    }
+
+    virtual Size min_size_hint() const override
+    {
+        // if we are expanding the image, don't use it for min size hint
+        if ((m_image_align & alignmask::expand_horizontal) == alignmask::expand_horizontal ||
+            (m_image_align & alignmask::expand_vertical) == alignmask::expand_vertical)
+            return Widget::min_size_hint();
+
+        return m_image.size() + Widget::min_size_hint();
+    }
+
+    virtual ~ImageLabel() = default;
+
+protected:
+
     /**
      * Scale the image.
-     *
-     * Change the size of the widget, similar to calling resize().
      *
      * @param[in] hscale Horizontal scale, with 1.0 being 100%.
      * @param[in] vscale Vertical scale, with 1.0 being 100%.
@@ -203,38 +236,6 @@ public:
                              bool approximate = false);
 
     virtual void scale_image(double s, bool approximate = false);
-
-#if 0
-    virtual void resize(const Size& size) override;
-#endif
-
-    const Image& image() const { return m_image; }
-
-    Image& image() { return m_image; }
-
-    virtual void label_enabled(bool value);
-
-    virtual void set_image_align(alignmask align)
-    {
-        if (m_image_align != align)
-        {
-            m_image_align = align;
-            damage();
-        }
-    }
-
-    void set_position_image_first(bool value)
-    {
-        if (m_position_image_first != value)
-        {
-            m_position_image_first = value;
-            damage();
-        }
-    }
-
-    virtual ~ImageLabel() = default;
-
-protected:
 
     virtual void first_resize() override;
 

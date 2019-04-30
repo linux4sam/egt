@@ -23,15 +23,12 @@ class MyWindow : public TopWindow
 public:
     MyWindow()
         : TopWindow(Size()),
-          m_img(Image("background.png"))
+          m_img(*this, Image("background.png"))
     {
         set_boxtype(Theme::boxtype::none);
-        add(m_img);
-        if (m_img.w() != w())
-        {
-            double scale = (double)w() / (double)m_img.w();
-            m_img.scale_image(scale);
-        }
+
+        m_img.set_align(alignmask::expand);
+        m_img.set_image_align(alignmask::expand);
     }
 
     ImageLabel m_img;
@@ -45,6 +42,7 @@ public:
           m_mx(mx),
           m_my(my)
     {
+        m_widget->flags().set(Widget::flag::no_layout);
         m_widget->flags().set(Widget::flag::grab_mouse);
         widget->on_event(std::bind(&FloatingBox::handle, this, std::placeholders::_1));
     }
@@ -157,7 +155,7 @@ int main(int argc, const char** argv)
         os << "image" << image_index++ << ".png";
         auto image = make_shared<ImageLabel>(Image(os.str()));
         auto plane = make_shared<Window>(Size(image->w(), image->h()));
-        plane->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+        plane->instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         plane->set_boxtype(Theme::boxtype::none);
         plane->add(image);
         plane->show();
@@ -174,15 +172,10 @@ int main(int argc, const char** argv)
     });
     movetimer.start();
 
-    Label label1("CPU: -",
-                 Rect(Point(10, win.size().h - 40),
-                      Size(100, 40)),
-                 alignmask::left | alignmask::center);
-    label1.palette()
-    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-
-    win.add(label1);
+    Label label1("CPU: ----");
+    label1.instance_palette()
+    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+    win.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

@@ -44,9 +44,9 @@ public:
     {
         auto i = Image("background.png");
         auto img = make_shared<ImageLabel>(i);
-        double scale = (double)w() / (double)i.size().w;
+        img->set_align(alignmask::expand);
+        img->set_image_align(alignmask::expand);
         add(img);
-        img->scale_image(scale);
 
         ListBox::item_array items;
         items.resize(easing_functions.size());
@@ -94,12 +94,10 @@ int main(int argc, const char** argv)
 
     MainWindow window;
 
-    Label label1("CPU: 0%",
-                 Rect(Point(10, window.size().h - 40),
-                      Size(100, 40)));
-    label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-    window.add(label1);
+    Label label1("CPU: ----");
+    label1.instance_palette().set(Palette::ColorId::label_text, Palette::white)
+    .set(Palette::ColorId::label_bg, Palette::transparent);
+    window.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

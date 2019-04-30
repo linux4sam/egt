@@ -64,21 +64,21 @@ struct LinePage : public NotebookTab
 #ifdef HAVE_KPLOT
         auto line = std::make_shared<LineChart>(Rect(50, 10, 600, 400));
         line->set_name("linechart");
-        line->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+        line->instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
         add(line);
 
         auto sin_checkbox = std::make_shared<CheckBox>("sin", Rect(Point(0, 410), Size(80, 40)));
-        sin_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        sin_checkbox->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         sin_checkbox->set_name("sin");
         add(sin_checkbox);
 
         auto cos_checkbox = std::make_shared<CheckBox>("cos", Rect(Point(100, 410), Size(80, 40)));
-        cos_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        cos_checkbox->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         cos_checkbox->set_name("cos");
         add(cos_checkbox);
 
         auto atan_checkbox = std::make_shared<CheckBox>("atan", Rect(Point(200, 410), Size(80, 40)));
-        atan_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        atan_checkbox->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         atan_checkbox->set_name("atan");
         add(atan_checkbox);
 
@@ -121,11 +121,11 @@ struct LinePage : public NotebookTab
         line_width->set_value(2);
 
         auto gridx_checkbox = std::make_shared<CheckBox>("grid X", Rect(Point(500, 410), Size(80, 40)));
-        gridx_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        gridx_checkbox->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(gridx_checkbox);
 
         auto gridy_checkbox = std::make_shared<CheckBox>("grid Y", Rect(Point(600, 410), Size(80, 40)));
-        gridy_checkbox->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        gridy_checkbox->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         add(gridy_checkbox);
 
         auto handle_grid_checkbox = [gridx_checkbox, gridy_checkbox, line](eventid event)
@@ -169,9 +169,9 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "charts");
 
-    global_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
-    global_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
-    global_palette().set(Palette::ColorId::text, Palette::GroupId::active, Palette::black);
+    global_theme().palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    global_theme().palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+    global_theme().palette().set(Palette::ColorId::text, Palette::GroupId::active, Palette::black);
 
     TopWindow win;
 

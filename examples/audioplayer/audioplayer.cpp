@@ -46,11 +46,8 @@ public:
           m_logo(*this, Image("@microchip_logo_black.png")),
           m_dial(*this, Rect(), 0, 100, 0)
     {
-        if (m_background.h() != h())
-        {
-            double scale = (double)h() / (double)m_background.h();
-            m_background.scale_image(scale);
-        }
+        m_background.set_align(alignmask::expand);
+        m_background.set_image_align(alignmask::expand);
 
         m_dial.set_align(alignmask::expand);
         add(m_controls);
@@ -71,7 +68,8 @@ public:
             return 0;
         }, {eventid::pointer_click});
 
-        m_logo.set_align(alignmask::left | alignmask::top, 10);
+        m_logo.set_align(alignmask::left | alignmask::top);
+        m_logo.set_margin(10);
 
         m_dial.on_event([this](eventid)
         {
@@ -138,8 +136,8 @@ int main(int argc, const char** argv)
 
         auto v = widget.value_to_degrees(widget.value());
 
-        auto color1 = widget.palette().color(Palette::ColorId::mid);
-        auto color2 = widget.palette().color(Palette::ColorId::highlight);
+        auto color1 = widget.palette().color(Palette::ColorId::button_fg).color();
+        auto color2 = widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
 
         float smalldim = std::min(widget.w(), widget.h());
         float linew = smalldim / 10;

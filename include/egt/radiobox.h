@@ -33,6 +33,13 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    /**
+     * Default draw method for the RadioBox.
+     */
+    static void default_draw(RadioBox& widget, Painter& painter, const Rect& rect);
+
+    virtual Size min_size_hint() const override;
+
     virtual ~RadioBox() = default;
 };
 

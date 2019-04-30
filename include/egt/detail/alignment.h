@@ -24,9 +24,27 @@ namespace detail
 /**
  * Given an item size, and a bounding box, and an alignment parameter,
  * return the rectangle the item box should be move/resized to.
+ *
+ * @param[in] orig The default rect to use.
+ * @param[in] bounding The bounding box to position inside of.
+ * @param[in] align The alignment setting to use for positioning.
+ * @param[in] padding Padding to use when positioning.
+ *
+ * @todo Add padding and border in addition to margin.
  */
-Rect align_algorithm(const Size& size, const Rect& bounding,
-                     alignmask align, int margin = 0);
+Rect align_algorithm(const Rect& orig, const Rect& bounding,
+                     alignmask align, default_dim_type padding = 0,
+                     default_dim_type horizontal_ratio = 0,
+                     default_dim_type vertical_ratio = 0,
+                     default_dim_type xratio = 0,
+                     default_dim_type yratio = 0);
+
+Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
+                           alignmask align, default_dim_type padding = 0,
+                           default_dim_type horizontal_ratio = 0,
+                           default_dim_type vertical_ratio = 0,
+                           default_dim_type xratio = 0,
+                           default_dim_type yratio = 0);
 
 /**
  * This is used for aligning two rectangles in a single widget.  For example,
@@ -37,7 +55,7 @@ Rect align_algorithm(const Size& size, const Rect& bounding,
 void double_align(const Rect& main,
                   const Size& fsize, alignmask first_align, Rect& first,
                   const Size& ssize, alignmask second_align, Rect& second,
-                  int margin = 0);
+                  default_dim_type padding = 0);
 
 }
 }

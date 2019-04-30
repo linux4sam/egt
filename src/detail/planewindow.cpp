@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/detail/planewindow.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/image.h"
@@ -107,12 +103,12 @@ void PlaneWindow::top_draw()
     {
         DBG(m_interface->name() << " " << __PRETTY_FUNCTION__);
 
-        if (m_dirty)
+        if (m_interface->visible())
         {
-            allocate_screen();
-
-            if (m_interface->visible())
+            if (m_dirty)
             {
+                allocate_screen();
+
                 KMSOverlay* s = dynamic_cast<KMSOverlay*>(m_screen);
                 assert(s);
                 if (s)
@@ -122,9 +118,9 @@ void PlaneWindow::top_draw()
                     m_dirty = false;
                 }
             }
-        }
 
-        m_interface->do_draw();
+            m_interface->do_draw();
+        }
     }
 }
 

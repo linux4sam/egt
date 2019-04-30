@@ -3,13 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
-#ifndef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <cmath>
 #include <egt/ui>
+#include <egt/detail/math.h>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -18,24 +14,22 @@
 
 using namespace std;
 using namespace egt;
+using namespace egt::detail;
 
 class MainWindow : public TopWindow
 {
 public:
     MainWindow()
         : TopWindow(Size()),
-          m_img(Image("background.png"))
+          m_img(*this, Image("background.png"))
     {
         set_boxtype(Theme::boxtype::none);
-        add(m_img);
-        if (m_img.w() != w())
-        {
-            double scale = (double)w() / (double)m_img.w();
-            m_img.scale_image(scale);
-        }
+        m_img.set_align(alignmask::expand);
+        m_img.set_image_align(alignmask::expand);
 
         auto logo = make_shared<ImageLabel>(Image("@microchip_logo_white.png"));
-        logo->set_align(alignmask::left | alignmask::top, 10);
+        logo->set_align(alignmask::left | alignmask::top);
+        logo->set_margin(10);
         add(logo);
     }
 
@@ -51,8 +45,8 @@ public:
           m_arrows(Image("arrows.png"))
     {
         flags().set(Widget::flag::grab_mouse);
-        set_boxtype(Theme::boxtype::fill);
-        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x526d7480));
+        set_boxtype(Theme::boxtype::blank);
+        instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x526d7480));
 
         add(m_grip);
         m_grip.resize(Size(50, 50));
@@ -96,10 +90,16 @@ int main(int argc, const char** argv)
 
     MainWindow win;
 
-    FloatingBox box1(Rect(win.w() / 5, win.h() / 3, win.w() / 5, win.h() / 3));
+    FloatingBox box1(Rect(Ratio<int>(win.w(), 20),
+                          Ratio<int>(win.h(), 20),
+                          Ratio<int>(win.w(), 20),
+                          Ratio<int>(win.w(), 20)));
     win.add(box1);
 
-    FloatingBox box2(Rect(win.w() / 5 * 3, win.h() / 3, win.w() / 5, win.h() / 3));
+    FloatingBox box2(Rect(Ratio<int>(win.w(), 20) * 3,
+                          Ratio<int>(win.h(), 20),
+                          Ratio<int>(win.w(), 20),
+                          Ratio<int>(win.w(), 20)));
     win.add(box2);
 
     box1.show();
@@ -107,7 +107,7 @@ int main(int argc, const char** argv)
 
     Label label1("CPU: ----", Rect(), alignmask::left | alignmask::center);
     label1.set_align(alignmask::left | alignmask::bottom);
-    label1.palette()
+    label1.instance_palette()
     .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
 

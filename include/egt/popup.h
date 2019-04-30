@@ -69,8 +69,7 @@ public:
         }
     }
 
-    virtual ~PopupType()
-    {}
+    virtual ~PopupType() = default;
 
 };
 

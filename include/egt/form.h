@@ -13,6 +13,7 @@
 
 #include <egt/frame.h>
 #include <egt/grid.h>
+#include <egt/label.h>
 #include <egt/sizer.h>
 #include <memory>
 
@@ -46,7 +47,10 @@ public:
             auto label = std::make_shared<Label>(title,
                                                  alignmask::center,
                                                  Font(Font::weightid::bold));
-            label->font().size(label->font().size() + 5);
+            label->set_font(Font(label->font().face(),
+                                 label->font().size() + 4,
+                                 label->font().weight(),
+                                 label->font().slant()));
             label->set_align(alignmask::expand_horizontal);
             m_vsizer.add(label);
         }
@@ -61,7 +65,10 @@ public:
     virtual void add_group(const std::string& caption)
     {
         auto label = std::make_shared<Label>(caption);
-        label->font().weight(Font::weightid::bold);
+        label->set_font(Font(label->font().face(),
+                             label->font().size(),
+                             Font::weightid::bold,
+                             label->font().slant()));
         label->set_align(alignmask::expand_horizontal);
         label->set_text_align(alignmask::bottom | alignmask::left);
         m_vsizer.add(label);
@@ -82,7 +89,8 @@ public:
         label->set_align(alignmask::expand);
         label->set_text_align(alignmask::center | alignmask::left);
         auto grid = std::make_shared<StaticGrid>(Tuple(2, 1));
-        grid->resize(Size(0, 20));
+        grid->set_margin(2); /// @todo Not working
+        grid->resize(Size(0, widget->min_size_hint().h));
         grid->set_align(alignmask::expand_horizontal);
         grid->add(label);
         grid->add(widget);
@@ -94,7 +102,8 @@ public:
     {
         widget->set_align(alignmask::expand);
         auto grid = std::make_shared<StaticGrid>(Tuple(1, 1));
-        grid->resize(Size(0, 20));
+        grid->set_margin(2); /// @todo Not working
+        grid->resize(Size(0, widget->min_size_hint().h));
         grid->set_align(alignmask::expand_horizontal);
         grid->add(widget);
         m_vsizer.add(grid);

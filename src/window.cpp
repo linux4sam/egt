@@ -72,7 +72,9 @@ Window::Window(const Rect& rect,
     set_name("Window" + std::to_string(m_widgetid));
 
     ncflags().set(Widget::flag::window);
-    set_boxtype(Theme::boxtype::fillsolid);
+
+    // windows are not transparent by default
+    set_boxtype(Theme::boxtype::solid | Theme::boxtype::fill);
 
     // by default, windows are hidden
     ncflags().set(Widget::flag::invisible);
@@ -86,7 +88,7 @@ Window::Window(const Rect& rect,
 
 void Window::do_draw()
 {
-    if (unlikely(m_damage.empty()))
+    if (m_damage.empty())
         return;
 
     // bookeeping to make sure we don't damage() in draw()
@@ -229,10 +231,11 @@ struct CursorWindow : public Window
         : Window(image.size(), Widget::flags_type(), pixel_format::argb8888, windowhint::cursor_overlay),
           m_label(new ImageLabel(image))
     {
-        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+        instance_palette().set(Palette::ColorId::bg, Palette::transparent);
         set_boxtype(Theme::boxtype::fill);
         m_label->set_boxtype(Theme::boxtype::none);
         add(m_label);
+        flags().set(Widget::flag::no_layout);
     }
 
     virtual int handle(eventid) override

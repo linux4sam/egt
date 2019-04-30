@@ -29,7 +29,9 @@ public:
     NotebookTab()
     {
         set_name("NotebookTab" + std::to_string(m_widgetid));
-        set_boxtype(Theme::boxtype::fillsolid);
+
+        // tabs are not transparent by default
+        set_boxtype(Theme::boxtype::blank | Theme::boxtype::solid);
     }
 
     virtual std::unique_ptr<Widget> clone() override

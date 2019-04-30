@@ -71,23 +71,12 @@ public:
     /**
      * Get the widget Font.
      */
-    Font& font()
-    {
-        if (!m_font.get())
-            m_font.reset(new Font);
-
-        return *m_font.get();
-    }
-
-    /**
-     * Get the widget Font.
-     */
     const Font& font() const
     {
-        if (!m_font.get())
-            m_font.reset(new Font);
+        if (m_font)
+            return *m_font.get();
 
-        return *m_font.get();
+        return theme().font();
     }
 
     /**
@@ -99,6 +88,7 @@ public:
     {
         m_font.reset(new Font(font));
         damage();
+        parent_layout();
     }
 
     virtual ~TextWidget() noexcept = default;
@@ -114,7 +104,7 @@ protected:
     /**
      * Get the size of the text.
      */
-    Size text_size(const std::string& text);
+    Size text_size(const std::string& text) const;
 
     alignmask m_text_align{alignmask::center};
 

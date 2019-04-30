@@ -45,11 +45,14 @@ Widget::Widget(const Widget& rhs) noexcept
       m_widgetid(rhs.m_widgetid),
       m_widget_flags(rhs.m_widget_flags),
       m_align(rhs.m_align),
+      m_padding(rhs.m_padding),
+      m_border(rhs.m_border),
       m_margin(rhs.m_margin),
       m_boxtype(rhs.m_boxtype)
 {
     if (rhs.m_palette)
         m_palette.reset(new Palette(*rhs.m_palette.get()));
+
     if (rhs.m_theme)
         m_theme.reset(new Theme(*rhs.m_theme.get()));
 
@@ -63,6 +66,8 @@ Widget::Widget(Widget&& rhs) noexcept
       m_widget_flags(std::move(rhs.m_widget_flags)),
       m_palette(std::move(rhs.m_palette)),
       m_align(std::move(rhs.m_align)),
+      m_padding(std::move(rhs.m_padding)),
+      m_border(std::move(rhs.m_border)),
       m_margin(std::move(rhs.m_margin)),
       m_boxtype(std::move(rhs.m_boxtype)),
       m_theme(std::move(rhs.m_theme))
@@ -79,6 +84,8 @@ Widget& Widget::operator=(const Widget& rhs) noexcept
         m_box = rhs.m_box;
         m_widget_flags = rhs.m_widget_flags;
         m_align = rhs.m_align;
+        m_padding = rhs.m_padding;
+        m_border = rhs.m_border;
         m_margin = rhs.m_margin;
         m_boxtype = rhs.m_boxtype;
 
@@ -86,10 +93,11 @@ Widget& Widget::operator=(const Widget& rhs) noexcept
             m_palette.reset(new Palette(*rhs.m_palette.get()));
         if (rhs.m_theme)
             m_theme.reset(new Theme(*rhs.m_theme.get()));
-    }
 
-    if (rhs.m_parent)
-        rhs.m_parent->add(*this);
+        if (rhs.m_parent)
+            rhs.m_parent->add(*this);
+
+    }
 
     return *this;
 }
@@ -101,7 +109,10 @@ Widget& Widget::operator=(Widget&& rhs) noexcept
     m_widgetid = std::move(rhs.m_widgetid);
     m_widget_flags = std::move(rhs.m_widget_flags);
     m_palette = std::move(rhs.m_palette);
+    m_name = std::move(rhs.m_name);
     m_align = std::move(rhs.m_align);
+    m_padding = std::move(rhs.m_padding);
+    m_border = std::move(rhs.m_border);
     m_margin = std::move(rhs.m_margin);
     m_boxtype = std::move(rhs.m_boxtype);
     m_theme = std::move(rhs.m_theme);
@@ -168,7 +179,15 @@ void Widget::resize(const Size& size)
         damage();
         m_box.size(size);
         damage();
+        parent_layout();
     }
+}
+
+void Widget::scale(int hratio, int vratio)
+{
+    Size size(static_cast<float>(w()) * (static_cast<float>(hratio) / 100.),
+              static_cast<float>(h()) * (static_cast<float>(vratio) / 100.));
+    resize(size);
 }
 
 void Widget::move(const Point& point)
@@ -178,6 +197,9 @@ void Widget::move(const Point& point)
         damage();
         m_box.point(point);
         damage();
+
+        /// @todo this is too expensive for animations
+        parent_layout();
     }
 }
 
@@ -283,7 +305,7 @@ void Widget::damage(const Rect& rect)
 
     // damage propagates to top level frame
     if (m_parent)
-        m_parent->damage(to_parent(rect));
+        m_parent->damage_from_child(to_parent(rect));
 }
 
 const Rect& Widget::box() const
@@ -293,33 +315,34 @@ const Rect& Widget::box() const
 
 Size Widget::size() const
 {
-    return m_box.size();
+    return box().size();
 }
 
 Point Widget::point() const
 {
-    return m_box.point();
+    return box().point();
 }
 
-Palette& Widget::palette()
+Palette& Widget::instance_palette()
 {
-    if (!m_palette.get())
-        m_palette.reset(new Palette(global_palette()));
+    if (!m_palette)
+        m_palette.reset(new Palette(palette()));
 
     return *m_palette.get();
 }
 
 const Palette& Widget::palette() const
 {
-    if (m_palette.get())
-        return *m_palette;
+    if (m_palette)
+        return *m_palette.get();
 
-    return global_palette();
+    return theme().palette();
 }
 
 void Widget::set_palette(const Palette& palette)
 {
     m_palette.reset(new Palette(palette));
+    damage();
 }
 
 void Widget::reset_palette()
@@ -343,32 +366,16 @@ Screen* Widget::screen()
     return parent()->screen();
 }
 
-void Widget::set_align(alignmask a, int margin)
+void Widget::set_align(alignmask a)
 {
-    m_align = a;
-    m_margin = margin;
-
-    // can't go any further, but keep the alignment setting
-    if (!parent())
-        return;
-
-    if (m_align != alignmask::none)
-    {
-        assert(m_parent);
-
-        auto bounding = parent()->to_child(parent()->child_area());
-        if (bounding.empty())
-            return;
-
-        auto r = detail::align_algorithm(size(), bounding, m_align, m_margin);
-        set_box(r);
-    }
+    if (detail::change_if_diff<>(m_align, a))
+        parent_layout();
 }
 
-Rect Widget::to_parent(const Rect& r)
+Point Widget::to_parent(const Point& r) const
 {
     if (parent())
-        return r + parent()->box().point();
+        return r + parent()->point();
 
     return r;
 }
@@ -442,26 +449,11 @@ void Widget::paint_to_file(const std::string& filename)
     cairo_surface_write_to_png(surface.get(), name.c_str());
 }
 
-#if 0
-shared_cairo_surface_t Widget::surface()
-{
-    auto surface = shared_cairo_surface_t(
-                       cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               w(), h()),
-                       cairo_surface_destroy);
-
-    auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
-
-    Painter painter(cr);
-    paint(painter);
-    return surface;
-}
-#endif
-
 void Widget::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << name() <<
         " " << box() << " " << m_widget_flags;
+    out << " box(" << margin() << "," << padding() << "," << border() << ")";
     out << " align(" << (int)align() << ")";
     out << std::endl;
 }
@@ -481,18 +473,19 @@ void Widget::reset_theme()
     m_theme.reset();
 }
 
-void Widget::draw_box(Painter& painter, const Rect& rect)
+void Widget::draw_box(Painter& painter, Palette::ColorId bg,
+                      Palette::ColorId border) const
 {
-    if (m_boxtype == Theme::boxtype::none)
-        return;
-
-    theme().draw_box(painter, *this, m_boxtype, rect);
+    theme().draw_box(painter, *this, bg, border);
 }
 
-Theme& Widget::theme()
+const Theme& Widget::theme() const
 {
     if (m_theme.get())
-        return *m_theme;
+        return *m_theme.get();
+
+    if (parent())
+        return parent()->theme();
 
     return global_theme();
 }
@@ -521,6 +514,18 @@ void Widget::detatch()
 Widget::~Widget() noexcept
 {
     detatch();
+}
+
+void Widget::parent_layout()
+{
+    if (!visible())
+        return;
+
+    if (flags().is_set(Widget::flag::no_layout))
+        return;
+
+    if (parent())
+        parent()->layout();
 }
 
 }

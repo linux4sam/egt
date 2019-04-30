@@ -33,11 +33,11 @@ namespace detail
  */
 struct OstreamWidgetSerializer
 {
-    OstreamWidgetSerializer(std::ostream& o)
+    explicit OstreamWidgetSerializer(std::ostream& o)
         : out(o)
     {}
 
-    void add(Widget* widget, int level)
+    bool add(Widget* widget, int level)
     {
         out << std::string(level, ' ') << widget->name() <<
             " " << widget->box() << " " << widget->flags();
@@ -89,7 +89,7 @@ struct XmlWidgetSerializer
         return node;
     }
 
-    void add(Widget* widget, int level)
+    bool add(Widget* widget, int level)
     {
         if (level < static_cast<int>(stack.size()) - 1)
             stack.pop_back();
@@ -121,6 +121,8 @@ struct XmlWidgetSerializer
 
         stack.back()->append_node(child);
         stack.push_back(child);
+
+        return true;
     }
 
     void write(const std::string& filename)

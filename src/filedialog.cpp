@@ -145,8 +145,8 @@ FileOpenDialog::FileOpenDialog(const std::string& title, const Rect& rect)
     set_name("FileOpenDialog" + std::to_string(m_widgetid));
 
     m_grid->set_align(alignmask::bottom | alignmask::right);
-    m_grid->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-    m_grid->set_boxtype(Theme::boxtype::rounded_border);
+    m_grid->instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+    m_grid->set_boxtype(Theme::boxtype::blank_rounded);
     m_vsizer->add(m_grid);
 
     m_okay->set_align(alignmask::center);
@@ -205,13 +205,13 @@ FileSaveDialog::FileSaveDialog(const std::string& title, const Rect& rect)
       m_cancel(std::make_shared<Button>("Cancel"))
 {
     m_grid->set_align(alignmask::bottom);
-    m_grid->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-    m_grid->set_boxtype(Theme::boxtype::rounded_border);
+    m_grid->instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+    m_grid->set_boxtype(Theme::boxtype::blank_rounded);
     m_vsizer->add(m_grid);
 
     m_hpositioner->set_align(alignmask::bottom | alignmask::left);
-    m_hpositioner->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-    m_hpositioner->set_boxtype(Theme::boxtype::rounded_border);
+    m_hpositioner->instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+    m_hpositioner->set_boxtype(Theme::boxtype::blank_rounded);
     m_grid->add(m_hpositioner);
 
     m_fileselect_box->set_align(alignmask::left | alignmask:: center);

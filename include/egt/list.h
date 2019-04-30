@@ -22,7 +22,52 @@ namespace egt
 inline namespace v1
 {
 
-using StringItem = egt::Label;
+/**
+ * @brief ListBox string helper.
+ *
+ * Light wrapper around a Label to make each item in the ListBox a little bit
+ * bigger.
+ */
+struct StringItem : public Label
+{
+    StringItem(const std::string& text = std::string(),
+               alignmask align = alignmask::center,
+               const Font& font = Font()) noexcept
+        : Label(text, align, font)
+    {
+        set_boxtype(Theme::boxtype::blank);
+    }
+
+    StringItem(const std::string& text, const Rect& rect,
+               alignmask align = alignmask::center,
+               const Font& font = Font()) noexcept
+        : Label(text, rect, align, font)
+    {
+        set_boxtype(Theme::boxtype::blank);
+    }
+
+    explicit StringItem(Frame& parent, const std::string& text = std::string(),
+                        alignmask align = alignmask::center,
+                        const Font& font = Font()) noexcept
+        : Label(parent, text, align, font)
+    {
+        set_boxtype(Theme::boxtype::blank);
+    }
+
+    StringItem(Frame& parent, const std::string& text, const Rect& rect,
+               alignmask align = alignmask::center,
+               const Font& font = Font()) noexcept
+        : Label(parent, text, rect, align, font)
+    {
+        set_boxtype(Theme::boxtype::blank);
+    }
+
+    virtual Size min_size_hint() const override
+    {
+        return Size(100, 40);
+    }
+
+};
 
 /**
  * @brief ListBox that manages a selectable list of widgets.
@@ -77,8 +122,6 @@ public:
 
     virtual int handle(eventid event) override;
 
-    virtual Rect child_area() const override;
-
     /**
      * Select an item by index.
      */
@@ -114,20 +157,32 @@ public:
      */
     virtual void clear();
 
-    static inline size_t item_height()
+    virtual void layout() override
     {
-        return 40;
+        if (m_sizer)
+            m_sizer->layout();
     }
 
-    virtual ~ListBox();
+    virtual void resize(const Size& s) override
+    {
+        if (s != size())
+        {
+            Frame::resize(s);
+            if (m_sizer)
+            {
+                auto carea = content_area();
+                if (!carea.empty())
+                    m_sizer->set_box(to_child(carea));
+            }
+        }
+    }
+
+    virtual ~ListBox() = default;
 
 protected:
 
-    Rect item_rect(uint32_t index) const;
-
     uint32_t m_selected{0};
-    std::shared_ptr<ScrolledView> m_view;
-    std::shared_ptr<OrientationPositioner> m_sizer;
+    std::shared_ptr<BoxSizer> m_sizer;
 
 private:
 

@@ -30,17 +30,13 @@ public:
     {
         auto background = make_shared<ImageLabel>(Image("brick_background.png"));
         add(background);
-        if (background->w() != w() || background->h() != h())
-        {
-            double hscale = (double)w() / (double)background->w();
-            double vscale = (double)h() / (double)background->h();
-            background->scale_image(hscale, vscale);
-        }
+        background->set_align(alignmask::expand);
+        background->set_image_align(alignmask::expand);
 
         add(m_grid1);
         add(m_grid2);
-        m_grid1.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-        m_grid2.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        m_grid1.instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        m_grid2.instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
 
         for (int c = 0; c < w() / 100; c++)
         {
@@ -67,14 +63,13 @@ public:
         }
 
         add(m_paddle);
-        add(m_ball);
-        double hscale = (double)w() / (double)background->w() * 0.5;
-        double vscale = (double)h() / (double)background->h() * 0.5;
-        m_ball.scale_image(hscale, vscale);
 
-        m_label = Label("-", Rect(),
-                        alignmask::left | alignmask::center);
-        m_label.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+        m_ball.resize(Size(Ratio<int>(w(), 5), Ratio<int>(w(), 5)));
+        m_ball.set_image_align(alignmask::expand);
+        add(m_ball);
+
+        m_label = Label("-", alignmask::left | alignmask::center);
+        m_label.instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
         .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
         add(top(left(m_label)));
 

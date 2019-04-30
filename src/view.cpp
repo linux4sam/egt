@@ -15,131 +15,166 @@ namespace egt
 {
 inline namespace v1
 {
-
-// orientation to size dimension
-static inline int o2d(orientation o, const Size& size)
+ScrolledView::ScrolledView(policy horizontal_policy,
+                           policy vertical_policy)
+    : ScrolledView(Rect(), horizontal_policy, vertical_policy)
 {
-    return (o == orientation::horizontal) ? size.w : size.h;
 }
 
-// orientation to size dimension
-static inline int o2d(orientation o, const Rect& rect)
-{
-    return o2d(o, rect.size());
-}
-
-// orientation to point axis
-template<class T>
-static inline int o2p(orientation o, const T& point)
-{
-    return (o == orientation::horizontal) ? point.x : point.y;
-}
-
-ScrolledView::ScrolledView(const Rect& rect, orientation orient)
+ScrolledView::ScrolledView(const Rect& rect,
+                           policy horizontal_policy,
+                           policy vertical_policy)
     : Frame(rect),
-      m_slider(0, 100, 0, orient),
-      m_orient(orient)
+      m_hslider(0, 100, 0, orientation::horizontal),
+      m_vslider(0, 100, 0, orientation::vertical),
+      m_horizontal_policy(horizontal_policy),
+      m_vertical_policy(vertical_policy)
 {
     set_name("ScrolledView" + std::to_string(m_widgetid));
-    set_boxtype(Theme::boxtype::none);
+    set_boxtype(Theme::boxtype::blank);
 
-    if (orient == orientation::vertical)
-        m_slider.slider_flags().set({Slider::flag::rectangle_handle,
-                                     Slider::flag::origin_opposite,
-                                     Slider::flag::consistent_line});
-    else
-        m_slider.slider_flags().set({Slider::flag::rectangle_handle,
-                                     Slider::flag::consistent_line});
+    m_hslider.slider_flags().set({Slider::flag::rectangle_handle,
+                                  Slider::flag::consistent_line});
+
+    m_vslider.slider_flags().set({Slider::flag::rectangle_handle,
+                                  Slider::flag::origin_opposite,
+                                  Slider::flag::consistent_line});
 
     resize_slider();
-
-    m_slider.flags().set(Widget::flag::readonly);
 }
 
-ScrolledView::ScrolledView(orientation orient)
-    : ScrolledView(Rect(), orient)
-{
-}
-
-ScrolledView::ScrolledView(Frame& parent, const Rect& rect, orientation orient)
-    : ScrolledView(rect, orient)
+ScrolledView::ScrolledView(Frame& parent, const Rect& rect,
+                           policy horizontal_policy,
+                           policy vertical_policy)
+    : ScrolledView(rect, horizontal_policy, vertical_policy)
 {
     parent.add(*this);
 }
 
-ScrolledView::ScrolledView(Frame& parent, orientation orient)
-    : ScrolledView(orient)
+ScrolledView::ScrolledView(Frame& parent,
+                           policy horizontal_policy,
+                           policy vertical_policy)
+    : ScrolledView(horizontal_policy, vertical_policy)
 {
     parent.add(*this);
-}
-
-int ScrolledView::handle(eventid event)
-{
-    switch (event)
-    {
-    case eventid::pointer_drag_start:
-        m_start_offset = m_offset;
-        break;
-    case eventid::pointer_drag:
-    {
-        auto diff = o2p(m_orient, event::pointer().point) -
-                    o2p(m_orient, event::pointer().drag_start);
-        set_offset(m_start_offset + diff);
-        break;
-    }
-    default:
-        break;
-    }
-
-    return Frame::handle(event);
-}
-
-bool ScrolledView::scrollable() const
-{
-    Rect super = super_rect();
-    return o2d(m_orient, super) > o2d(m_orient, size());
 }
 
 void ScrolledView::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    if (!m_canvas)
+        return;
+
+    //
+    // All children are drawn to the internal m_canvas.  Then, the proper part
+    // of the canvas is drawn based on of the m_offset.
+    //
+
+    Painter cpainter(m_canvas->context());
+
+    Rect crect = to_child(super_rect());
+
+    if (boxtype() != Theme::boxtype::none)
+    {
+        Palette::GroupId group = Palette::GroupId::normal;
+        if (disabled())
+            group = Palette::GroupId::disabled;
+        else if (active())
+            group = Palette::GroupId::active;
+
+        theme().draw_box(cpainter,
+                         boxtype(),
+                         crect /*m_canvas->size()*//*to_child(box())*/,
+                         palette().color(Palette::ColorId::border, group),
+                         palette().color(Palette::ColorId::bg, group),
+                         border(),
+                         margin());
+    }
+
+    for (auto& child : m_children)
+    {
+        if (!child->visible())
+            continue;
+
+        // don't draw plane frame as child - this is
+        // specifically handled by event loop
+        if (child->flags().is_set(Widget::flag::plane_window))
+            continue;
+
+        if (Rect::intersect(crect, child->box()))
+        {
+            // don't give a child a rectangle that is outside of its own box
+            const auto r = Rect::intersection(crect, child->box());
+            if (r.empty())
+                continue;
+
+            {
+                // no matter what the child draws, clip the output to only the
+                // rectangle we care about updating
+                Painter::AutoSaveRestore sr2(cpainter);
+                if (!child->flags().is_set(Widget::flag::no_clip))
+                {
+                    cpainter.draw(r);
+                    cpainter.clip();
+                }
+
+                experimental::code_timer(false, child->name() + " draw: ", [&]()
+                {
+                    child->draw(cpainter, r);
+                });
+            }
+
+            special_child_draw(cpainter, child.get());
+        }
+    }
+
+    // change origin to paint canvas area and sliders
 
     Painter::AutoSaveRestore sr(painter);
-    auto cr = painter.context();
 
-    // change the origin to the offset
-    if (m_orient == orientation::horizontal)
-        cairo_translate(cr.get(), m_offset, 0);
-    else
-        cairo_translate(cr.get(), 0, m_offset);
-
-    Rect r = box();
-    if (m_orient == orientation::horizontal)
-        r.x -= m_offset;
-    else
-        r.y -= m_offset;
-
-    Frame::draw(painter, r);
-
-    if (scrollable())
+    Point origin = point();
+    if (origin.x || origin.y)
     {
-        if (Rect::intersect(m_slider.box(), r))
-            m_slider.draw(painter, Rect::intersection(m_slider.box(), r));
+        //
+        // Origin about to change
+        //
+        auto cr = painter.context();
+        cairo_translate(cr.get(),
+                        origin.x,
+                        origin.y);
     }
+
+    //cairo_surface_write_to_png(m_canvas->surface().get(), "canvas.png");
+
+    // limit to content area
+    const auto mrect = Rect::intersection(to_child(box()), to_child(content_area()));
+
+    cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+    cairo_set_source_surface(painter.context().get(), m_canvas->surface().get(),
+                             m_offset.x, m_offset.y);
+    cairo_rectangle(painter.context().get(),
+                    mrect.point().x, mrect.point().y, mrect.w, mrect.h);
+    painter.fill();
+
+    if (hscrollable())
+        m_hslider.draw(painter, rect);
+    if (vscrollable())
+        m_vslider.draw(painter, rect);
 }
 
-auto SLIDER_DIM = 10;
+/// @todo Hardcoded value
+const auto SLIDER_DIM = 10;
 
-Rect ScrolledView::child_area() const
+Rect ScrolledView::content_area() const
 {
-    // reserve the slider area to keep away from children
-    if (!scrollable())
-        return box();
+    auto b = Frame::content_area();
 
-    if (m_orient == orientation::horizontal)
-        return box() - Size(0, SLIDER_DIM);
+    if (hscrollable())
+        b -= Size(0, SLIDER_DIM);
 
-    return box() - Size(SLIDER_DIM, 0);
+    if (vscrollable())
+        b -= Size(SLIDER_DIM, 0);
+
+    return b;
 }
 
 void ScrolledView::resize(const Size& size)
@@ -150,59 +185,146 @@ void ScrolledView::resize(const Size& size)
 
 void ScrolledView::resize_slider()
 {
-    auto b = box();
-    if (m_orient == orientation::horizontal)
+    if (hscrollable())
     {
-        b.x += std::abs(m_offset);
+        auto b = box();
         b.y = b.y + b.h - SLIDER_DIM;
         b.h = SLIDER_DIM;
-    }
-    else
-    {
-        b.x = b.x + b.w - SLIDER_DIM;
-        b.y += std::abs(m_offset);
-        b.w = SLIDER_DIM;
+
+        if (vscrollable())
+            b.w -= SLIDER_DIM;
+
+        m_hslider.move(b.point() - point());
+        m_hslider.resize(b.size());
     }
 
-    m_slider.move(b.point());
-    m_slider.resize(b.size());
+    if (vscrollable())
+    {
+        auto b = box();
+        b.x = b.x + b.w - SLIDER_DIM;
+        b.w = SLIDER_DIM;
+
+        if (hscrollable())
+            b.h -= SLIDER_DIM;
+
+        m_vslider.move(b.point() - point());
+        m_vslider.resize(b.size());
+    }
 }
 
 Rect ScrolledView::super_rect() const
 {
-    Rect result;
+    Rect result = box();
     for (auto& child : m_children)
     {
-        result = Rect::merge(result, child->box());
+        result = Rect::merge(result, child->to_parent(child->box()));
     }
     return result;
 }
 
-void ScrolledView::set_offset(int offset)
+void ScrolledView::set_offset(Point offset)
 {
-    if (scrollable())
+    if (hscrollable() || vscrollable())
     {
-        Rect super = super_rect();
-        auto offset_max = o2d(m_orient, super) - o2d(m_orient, box());
-        if (offset > 0)
-            offset = 0;
-        else if (-offset > offset_max)
-            offset = -offset_max;
+        auto super = super_rect();
+        auto offset_max = Point(super.w - content_area().w,
+                                super.h - content_area().h);
+        if (offset.x > 0)
+            offset.x = 0;
+        else if (-offset.x > offset_max.x)
+            offset.x = -offset_max.x;
 
-        if (m_offset != offset)
+        if (offset.y > 0)
+            offset.y = 0;
+        else if (-offset.y > offset_max.y)
+            offset.y = -offset_max.y;
+
+        if (detail::change_if_diff<>(m_offset, offset))
         {
-            m_offset = offset;
-
-            auto slider_value =
-                egt::detail::normalize<float>(std::abs(m_offset), 0, offset_max,
-                                              0, 100);
-
-            m_slider.set_value(slider_value);
-            resize_slider();
-
+            update_sliders();
             damage();
         }
     }
+}
+
+void ScrolledView::update_sliders()
+{
+    auto super = super_rect();
+    auto offset_max = Point(super.w - content_area().w,
+                            super.h - content_area().h);
+
+    auto hslider_value =
+        egt::detail::normalize<float>(std::abs(m_offset.x), 0, offset_max.x, 0, 100);
+    if (m_hslider.set_value(hslider_value) != hslider_value)
+        damage();
+
+    auto vslider_value =
+        egt::detail::normalize<float>(std::abs(m_offset.y), 0, offset_max.y, 0, 100);
+    if (m_vslider.set_value(vslider_value) != vslider_value)
+        damage();
+}
+
+int ScrolledView::handle(eventid event)
+{
+#if 1
+    switch (event)
+    {
+    case eventid::pointer_drag_start:
+        m_start_offset = m_offset;
+        break;
+    case eventid::pointer_drag:
+    {
+        auto diff = event::pointer().point -
+                    event::pointer().drag_start;
+        set_offset(m_start_offset + Point(diff.x, diff.y));
+        break;
+    }
+    default:
+        break;
+    }
+#endif
+    auto ret = Widget::handle(event);
+
+    switch (event)
+    {
+    case eventid::raw_pointer_down:
+    case eventid::raw_pointer_up:
+    case eventid::raw_pointer_move:
+    case eventid::pointer_click:
+    case eventid::pointer_dblclick:
+    case eventid::pointer_hold:
+    case eventid::pointer_drag_start:
+    case eventid::pointer_drag:
+    case eventid::pointer_drag_stop:
+    {
+        for (auto& child : detail::reverse_iterate(m_children))
+        {
+            if (child->readonly())
+                continue;
+
+            if (child->disabled())
+                continue;
+
+            if (!child->visible())
+                continue;
+
+            Point pos = to_child(from_display(event::pointer().point));
+
+            if (Rect::point_inside(pos, child->box() + m_offset))
+            {
+                auto cret = child->handle(event);
+                if (cret)
+                    return cret;
+            }
+        }
+
+        break;
+    }
+    default:
+        break;
+    }
+
+    return ret;
 }
 
 }

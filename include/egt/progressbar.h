@@ -40,10 +40,14 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~ProgressBar()
-    {}
-protected:
-    Font m_dynamic_font;
+    /**
+     * Default draw method for the ProgressBar.
+     */
+    static void default_draw(ProgressBar& widget, Painter& painter, const Rect& rect);
+
+    virtual Size min_size_hint() const override;
+
+    virtual ~ProgressBar() = default;
 };
 
 /**
@@ -73,11 +77,14 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~SpinProgress()
-    {}
+    /**
+     * Default draw method for the SpinProgress.
+     */
+    static void default_draw(SpinProgress& widget, Painter& painter, const Rect& rect);
 
-protected:
-    Font m_dynamic_font;
+    virtual Size min_size_hint() const override;
+
+    virtual ~SpinProgress() = default;
 };
 
 /**
@@ -110,25 +117,31 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void set_num_bars(uint32_t bars)
+    /**
+     * Default draw method for the LevelMeter.
+     */
+    static void default_draw(LevelMeter& widget, Painter& painter, const Rect& rect);
+
+    virtual void set_num_bars(size_t bars)
     {
         m_num_bars = bars;
     }
 
-    virtual uint32_t num_bars() const
+    virtual size_t num_bars() const
     {
         return m_num_bars;
     }
 
-    virtual ~LevelMeter()
-    {}
+    virtual Size min_size_hint() const override;
+
+    virtual ~LevelMeter() = default;
 
 protected:
 
     /**
      * The number of bars to display.
      */
-    uint32_t m_num_bars{10};
+    size_t m_num_bars{10};
 };
 
 /**
@@ -139,7 +152,7 @@ protected:
  *
  * @ingroup controls
  */
-class AnalogMeter : public ValueRangeWidget<int>
+class AnalogMeter : public ValueRangeWidget<float>
 {
 public:
 
@@ -157,11 +170,14 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~AnalogMeter()
-    {}
+    /**
+     * Default draw method for the AnalogMeter.
+     */
+    static void default_draw(AnalogMeter& widget, Painter& painter, const Rect& rect);
 
-protected:
-    Font m_font;
+    virtual Size min_size_hint() const override;
+
+    virtual ~AnalogMeter() = default;
 };
 
 

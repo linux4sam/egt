@@ -42,6 +42,8 @@ void Notebook::add(const std::shared_ptr<Widget>& widget)
     {
         widget->hide();
     }
+
+    layout();
 }
 
 void Notebook::remove(Widget* widget)

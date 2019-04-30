@@ -79,8 +79,8 @@ public:
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal orientation.
      */
-    Slider(const Rect& rect, int min = 0, int max = 100, int value = 0,
-           orientation orient = orientation::horizontal) noexcept;
+    explicit Slider(const Rect& rect, int min = 0, int max = 100, int value = 0,
+                    orientation orient = orientation::horizontal) noexcept;
 
     /**
      * @param[in] min Minimum value for the range.
@@ -109,8 +109,8 @@ public:
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal orientation.
      */
-    Slider(Frame& parent, int min = 0, int max = 100, int value = 0,
-           orientation orient = orientation::horizontal) noexcept;
+    explicit Slider(Frame& parent, int min = 0, int max = 100, int value = 0,
+                    orientation orient = orientation::horizontal) noexcept;
 
     virtual std::unique_ptr<Widget> clone() override
     {
@@ -121,7 +121,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-#define OPTIMIZE_SLIDER_DRAW
+    //#define OPTIMIZE_SLIDER_DRAW
 #ifdef OPTIMIZE_SLIDER_DRAW
     /**
      * By default, damage() will damage the entire box().  However, this
@@ -129,7 +129,9 @@ public:
      */
     virtual void damage() override
     {
-        if (box().empty())
+        auto b = content_area();
+
+        if (b.empty())
             return;
 
         // can't optimize without more work below to include label - SHOW_LABEL
@@ -144,17 +146,17 @@ public:
 
         if (m_orient == orientation::horizontal)
         {
-            damage(Rect(x() - 1,
+            damage(Rect(b.x - 1,
                         handlerect.y - 1,
-                        w() + 2,
+                        b.w + 2,
                         handlerect.h + 2));
         }
         else
         {
             damage(Rect(handlerect.x  - 1,
-                        y() - 1,
+                        b.y - 1,
                         handlerect.w + 2,
-                        h() + 2));
+                        b.h + 2));
         }
     }
 
@@ -176,9 +178,8 @@ public:
         if (value < m_min)
             value = m_min;
 
-        if (value != m_value)
+        if (detail::change_if_diff<>(m_value, value))
         {
-            m_value = value;
             damage();
 
             // live update to handlers?
@@ -202,19 +203,21 @@ protected:
     /// Convert a value to an offset.
     inline int to_offset(int value) const
     {
+        auto b = content_area();
         if (m_orient == orientation::horizontal)
-            return egt::detail::normalize<float>(value, m_min, m_max, 0, w() - handle_width());
+            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.w - handle_width());
         else
-            return egt::detail::normalize<float>(value, m_min, m_max, 0, h() - handle_height());
+            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.h - handle_height());
     }
 
     /// Convert an offset to value.
     inline int to_value(int offset) const
     {
+        auto b = content_area();
         if (m_orient == orientation::horizontal)
-            return egt::detail::normalize<float>(offset, 0, w() - handle_width(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, b.w - handle_width(), m_min, m_max);
         else
-            return egt::detail::normalize<float>(offset, 0, h() - handle_height(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, b.h - handle_height(), m_min, m_max);
     }
 
     int handle_width() const;

@@ -36,14 +36,12 @@ int main(int argc, const char** argv)
     TopWindow win;
     ImageLabel img(Image("background.png"));
     win.add(img);
-    if (img.h() != win.h())
-    {
-        double scale = (double)win.h() / (double)img.h();
-        img.scale_image(scale);
-    }
+    img.set_align(alignmask::expand);
+    img.set_image_align(alignmask::expand);
 
     ImageLabel logo(Image("@microchip_logo_white.png"));
-    logo.set_align(alignmask::left | alignmask::top, 10);
+    logo.set_align(alignmask::left | alignmask::top);
+    logo.set_margin(10);
     win.add(logo);
 
     StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), Tuple(2, 2));
@@ -99,9 +97,9 @@ int main(int argc, const char** argv)
     Label label2("FPS: -",
                  Rect(Point(0, 40), Size(100, 40)),
                  alignmask::center);
-    label2.palette()
-    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+    label2.instance_palette()
+    .set(Palette::ColorId::text, Palette::black)
+    .set(Palette::ColorId::bg, Palette::transparent);
 
 #define DEFAULT_MS_INTERVAL 100
 
@@ -147,15 +145,15 @@ int main(int argc, const char** argv)
 
     Popup popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
-    popup.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
+    popup.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
     popup.set_name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
                  alignmask::center);
-    label1.palette()
-    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+    label1.instance_palette()
+    .set(Palette::ColorId::text, Palette::black)
+    .set(Palette::ColorId::bg, Palette::transparent);
 
     popup.add(label1);
     popup.add(label2);

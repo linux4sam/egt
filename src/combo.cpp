@@ -16,13 +16,14 @@ namespace egt
 inline namespace v1
 {
 
-auto POPUP_OFFSET = 5;
+static const auto POPUP_OFFSET = 5;
+static const auto DEFAULT_COMBOBOX_SIZE = Size(200, 30);
 
 namespace detail
 {
 
 ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
-    : Popup(Size(parent.size().w, ListBox::item_height())),
+    : Popup(Size(parent.size().w, 40)),
       m_list(std::make_shared<ListBox>()),
       m_parent(parent)
 {
@@ -50,18 +51,20 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 
 void ComboBoxPopup::smart_pos()
 {
-    move(m_parent.box().point() + Point(0, m_parent.size().h + POPUP_OFFSET));
+    auto origin = m_parent.to_display(m_parent.box().point());
+
+    auto real = origin + DisplayPoint(0, m_parent.size().h + POPUP_OFFSET);
+    move(Point(real.x, real.y));
 
     if (main_screen())
     {
         auto ss = main_screen()->size();
-        auto origin = to_display(box().point());
         auto height =
-            std::min(static_cast<default_dim_type>((ss.h - origin.y) / ListBox::item_height()),
-                     static_cast<default_dim_type>(m_list->count())) * ListBox::item_height();
+            std::min(static_cast<default_dim_type>((ss.h - origin.y) / 40),
+                     static_cast<default_dim_type>(m_list->count())) * 40;
 
         // hack because list child area is smaller by this much
-        height += Theme::DEFAULT_BORDER_WIDTH * 3;
+        height += 2.0 * 3.0;
 
         resize(Size(m_parent.size().w, height));
     }
@@ -114,6 +117,12 @@ ComboBox::ComboBox(const Rect& rect) noexcept
 {
 }
 
+/**
+ * @todo ComboBox needs the ability to update list, and this needs to
+ * be propigated to ComboBoxPopup, which right now won't because it only
+ * happens in constructor.
+ */
+
 ComboBox::ComboBox(const item_array& items,
                    const Rect& rect) noexcept
     : TextWidget("", rect, alignmask::left | alignmask::center),
@@ -122,10 +131,11 @@ ComboBox::ComboBox(const item_array& items,
 {
     set_name("ComboBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::border);
+    set_boxtype(Theme::boxtype::blank_rounded);
+    set_padding(5);
+    set_border(theme().default_border());
+
     ncflags().set(Widget::flag::grab_mouse);
-    palette().set(Palette::ColorId::bg, Palette::GroupId::normal, palette().color(Palette::ColorId::light));
-    palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::light));
 }
 
 ComboBox::ComboBox(Frame& parent, const item_array& items) noexcept
@@ -143,7 +153,11 @@ ComboBox::ComboBox(Frame& parent, const item_array& items, const Rect& rect) noe
 void ComboBox::set_parent(Frame* parent)
 {
     TextWidget::set_parent(parent);
-    parent->add(m_popup);
+
+    /// @todo unsafe to be using main_window() here
+    main_window()->add(m_popup);
+
+    m_popup->set_special_child_draw_callback(parent->special_child_draw_callback());
 }
 
 int ComboBox::handle(eventid event)
@@ -170,7 +184,7 @@ int ComboBox::handle(eventid event)
     return ret;
 }
 
-void ComboBox::set_select(uint32_t index)
+void ComboBox::set_select(size_t index)
 {
     if (m_selected != index)
     {
@@ -199,50 +213,56 @@ void ComboBox::move(const Point& point)
         m_popup->smart_pos();
 }
 
-void ComboBox::draw(Painter& painter, const Rect& rect)
+Size ComboBox::min_size_hint() const
 {
-    ignoreparam(rect);
-
-    static const int OFFSET = 5;
-
-    // box
-    draw_box(painter);
-
-    Rect m_down_rect(x() + w() - h() + OFFSET * 2,
-                     y(),
-                     h() - OFFSET * 2,
-                     h());
-
-    // draw a down arrow
-    auto cr = painter.context();
-    painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-    cairo_move_to(cr.get(), m_down_rect.x + OFFSET, m_down_rect.y + m_down_rect.h / 3);
-    cairo_line_to(cr.get(), m_down_rect.x + m_down_rect.w / 2, m_down_rect.y + (m_down_rect.h / 3 * 2));
-    cairo_line_to(cr.get(), m_down_rect.x + m_down_rect.w - OFFSET, m_down_rect.y + m_down_rect.h / 3);
-    painter.set_line_width(3.0);
-    cairo_stroke(cr.get());
-
-    if (m_selected < m_items.size())
+    if (!m_text.empty())
     {
-        // text
-        auto textbox = box();
-        textbox -= Size(m_down_rect.w, 0);
-
-        painter.set(palette().color(Palette::ColorId::text, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-        painter.set(font());
-
-        auto size = text_size(m_items[m_selected]);
-        textbox = detail::align_algorithm(size,
-                                          textbox,
-                                          m_text_align,
-                                          5);
-        painter.draw(textbox.point());
-        painter.draw(m_items[m_selected]);
+        auto s = text_size(m_text);
+        s *= Size(1, 3);
+        s += Size(s.w / 2 + 5, 0);
+        return s + Widget::min_size_hint();
     }
+
+    return DEFAULT_COMBOBOX_SIZE + Widget::min_size_hint();
 }
 
-ComboBox::~ComboBox()
+void ComboBox::draw(Painter& painter, const Rect& rect)
 {
+    Drawer<ComboBox>::draw(*this, painter, rect);
+}
+
+void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& rect)
+{
+    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
+
+    auto b = widget.content_area();
+    auto handle_dim = std::min(b.w, b.h);
+    auto handle = Rect(b.top_right() - Point(handle_dim, 0), Size(handle_dim, handle_dim));
+    auto text = Rect(b.point(), b.size() - Size(handle.size().w, 0));
+
+    // draw a down arrow
+    painter.set(widget.color(Palette::ColorId::button_fg).color());
+    auto cr = painter.context().get();
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    painter.draw(Point(handle.x, handle.y + handle.h / 3.),
+                 Point(handle.x + handle.w / 2., handle.y + (handle.h / 3. * 2.)));
+    painter.draw(Point(handle.x + handle.w / 2., handle.y + (handle.h / 3. * 2.)),
+                 Point(handle.x + handle.w, handle.y + handle.h / 3.));
+    painter.set_line_width(widget.theme().default_border());
+    painter.stroke();
+
+    if (widget.selected() < widget.item_count())
+    {
+        // text
+        painter.set(widget.color(Palette::ColorId::text).color());
+        painter.set(widget.font());
+        auto size = painter.text_size(widget.item(widget.selected()));
+        auto target = detail::align_algorithm(size,
+                                              text,
+                                              widget.text_align());
+        painter.draw(target.point());
+        painter.draw(widget.item(widget.selected()));
+    }
 }
 
 }

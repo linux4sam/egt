@@ -24,6 +24,8 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
 {
     set_name("Slider" + std::to_string(m_widgetid));
 
+    set_boxtype(Theme::boxtype::blank);
+
     flags().set(Widget::flag::grab_mouse);
 
     slider_flags().set(flag::rectangle_handle);
@@ -50,8 +52,10 @@ Slider::Slider(Frame& parent, int min, int max, int value,
 
 int Slider::handle_width() const
 {
-    auto width = w();
-    auto height = h();
+    auto b = content_area();
+
+    auto width = b.w;
+    auto height = b.h;
 
     if (slider_flags().is_set(flag::show_labels) ||
         slider_flags().is_set(flag::show_label))
@@ -81,8 +85,10 @@ int Slider::handle_width() const
 
 int Slider::handle_height() const
 {
-    auto width = w();
-    auto height = h();
+    auto b = content_area();
+
+    auto width = b.w;
+    auto height = b.h;
 
     if (slider_flags().is_set(flag::show_labels) ||
         slider_flags().is_set(flag::show_label))
@@ -117,48 +123,49 @@ Rect Slider::handle_box() const
 
 Rect Slider::handle_box(int value) const
 {
+    auto b = content_area();
     auto dimw = handle_width();
     auto dimh = handle_height();
 
     if (m_orient == orientation::horizontal)
     {
-        auto xv = x() + to_offset(value);
+        auto xv = b.x + to_offset(value);
         if (slider_flags().is_set(flag::origin_opposite))
-            xv = x() + w() - to_offset(value) - dimw;
+            xv = b.x + b.w - to_offset(value) - dimw;
 
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
             return Rect(xv,
-                        y() + h() / 4 - dimh / 2 + h() / 2,
+                        b.y + b.h / 4 - dimh / 2 + b.h / 2,
                         dimw,
                         dimh);
         }
         else
         {
             return Rect(xv,
-                        y() + h() / 2 - dimh / 2,
+                        b.y + b.h / 2 - dimh / 2,
                         dimw,
                         dimh);
         }
     }
     else
     {
-        auto yv = y() + h() - to_offset(value) - dimh;
+        auto yv = b.y + b.h - to_offset(value) - dimh;
         if (slider_flags().is_set(flag::origin_opposite))
-            yv = y() + to_offset(value);
+            yv = b.y + to_offset(value);
 
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
-            return Rect(x() + w() / 4 - dimw / 2 + w() / 2,
+            return Rect(b.x + b.w / 4 - dimw / 2 + b.w / 2,
                         yv,
                         dimw,
                         dimh);
         }
         else
         {
-            return Rect(x() + w() / 2 - dimw / 2,
+            return Rect(b.x + b.w / 2 - dimw / 2,
                         yv,
                         dimw,
                         dimh);
@@ -205,22 +212,23 @@ int Slider::handle(eventid event)
 
 void Slider::draw_label(Painter& painter, int value)
 {
-    auto b = handle_box(value);
+    auto b = content_area();
+    auto handle = handle_box(value);
 
     if (m_orient == orientation::horizontal)
-        b -= Point(0, h() / 2.);
+        handle -= Point(0, b.h / 2.);
     else
-        b -= Point(w() / 2., 0);
+        handle -= Point(b.w / 2., 0);
 
     auto text = std::to_string(value);
-    auto font = TextWidget::scale_font(b.size(), text, Font());
+    auto font = TextWidget::scale_font(handle.size(), text, Font());
 
-    painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+    painter.set(color(Palette::ColorId::text).color());
     painter.set(font);
 
     auto text_size = painter.text_size(text);
     Rect target = detail::align_algorithm(text_size,
-                                          b,
+                                          handle,
                                           alignmask::center,
                                           5);
     painter.draw(target.point());
@@ -230,37 +238,38 @@ void Slider::draw_label(Painter& painter, int value)
 void Slider::draw_handle(Painter& painter)
 {
     auto handle = handle_box();
-    auto dim = std::min(handle.w, handle.h);
+    //auto dim = std::min(handle.w, handle.h);
 
     if (slider_flags().is_set(flag::round_handle))
     {
-        painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-        painter.draw(Arc(handle.center(), dim / 2., 0.0f, 2 * M_PI));
-        painter.fill();
+        theme().draw_circle(painter,
+                            Theme::boxtype::blank_rounded,
+                            handle,
+                            color(Palette::ColorId::border),
+                            color(Palette::ColorId::button_bg));
     }
     else
     {
-        theme().draw_rounded_fill_box(painter, handle,
-                                      palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-
+        theme().draw_box(painter,
+                         Theme::boxtype::blank_rounded,
+                         handle,
+                         color(Palette::ColorId::border),
+                         color(Palette::ColorId::button_bg));
     }
 }
 
-void Slider::draw(Painter& painter, const Rect& rect)
+void Slider::draw(Painter& painter, const Rect&)
 {
-    ignoreparam(rect);
-
-    painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
-
-    auto yp = y() + h() / 2.;
-    auto xp = x() + w() / 2.;
+    auto b = content_area();
+    auto yp = b.y + b.h / 2.;
+    auto xp = b.x + b.w / 2.;
 
     if (m_orient == orientation::horizontal)
     {
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
-            yp += h() / 4.;
+            yp += b.h / 4.;
 
             if (slider_flags().is_set(flag::show_label))
             {
@@ -279,7 +288,7 @@ void Slider::draw(Painter& painter, const Rect& rect)
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
-            xp += w() / 4.;
+            xp += b.w / 4.;
 
             if (slider_flags().is_set(flag::show_label))
             {
@@ -304,6 +313,7 @@ void Slider::draw(Painter& painter, const Rect& rect)
 
 void Slider::draw_line(Painter& painter, float xp, float yp)
 {
+    auto b = content_area();
     auto handle = handle_box();
 
     Point a1;
@@ -313,35 +323,35 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
 
     if (m_orient == orientation::horizontal)
     {
-        a1 = Point(x(), yp);
+        a1 = Point(b.x, yp);
         a2 = Point(handle.x, yp);
-        b1 = Point(handle.x + handle.w, yp);
-        b2 = Point(x() + w(), yp);
+        b1 = Point(handle.x /*+ handle.w*/, yp);
+        b2 = Point(b.x + b.w, yp);
 
         painter.set_line_width(handle.h / 5.0);
     }
     else
     {
-        a1 = Point(xp, y() + h());
-        a2 = Point(xp, handle.y + handle.h);
+        a1 = Point(xp, b.y + b.h);
+        a2 = Point(xp, handle.y /*+ handle.h*/);
         b1 = Point(xp, handle.y);
-        b2 = Point(xp, y());
+        b2 = Point(xp, b.y);
 
         painter.set_line_width(handle.w / 5.0);
     }
 
     if (slider_flags().is_set(flag::consistent_line))
     {
-        painter.set(palette().color(Palette::ColorId::mid, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+        painter.set(palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
         painter.draw(a1, b2);
         painter.stroke();
     }
     else
     {
-        painter.set(palette().color(Palette::ColorId::highlight, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+        painter.set(color(Palette::ColorId::button_fg).color());
         painter.draw(a1, a2);
         painter.stroke();
-        painter.set(palette().color(Palette::ColorId::mid, disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal));
+        painter.set(palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
         painter.draw(b1, b2);
         painter.stroke();
     }

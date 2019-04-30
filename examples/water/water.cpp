@@ -24,7 +24,9 @@ public:
         : ImageLabel(Image("smallbubble.png"), "", Rect(point, Size())),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
-    {}
+    {
+        flags().set(Widget::flag::no_layout);
+    }
 
     Bubble(const Bubble&) = default;
     Bubble(Bubble&&) = default;
@@ -65,21 +67,19 @@ public:
 
         m_background = make_shared<ImageLabel>(Image("water.png"));
         add(m_background);
-        if (m_background->h() != h())
-        {
-            double scale = (double)h() / (double)m_background->h();
-            m_background->scale_image(scale);
-        }
+        m_background->set_align(alignmask::expand);
+        m_background->set_image_align(alignmask::expand);
 
         m_label = make_shared<Label>("Objects: 0",
                                      Rect(Point(10, 10),
                                           Size(150, 40)),
                                      alignmask::left | alignmask::center);
-        m_label->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+        m_label->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
         .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-        add(m_label);
+        add(top(left(m_label)));
 
         m_sprite = make_shared<Sprite>(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
+        m_sprite->flags().set(Widget::flag::no_layout);
         add(m_sprite);
         m_sprite->show();
     }
@@ -100,10 +100,10 @@ public:
 
     void spawn(const Point& p)
     {
-        int xspeed = 0;
-        int yspeed = speed_dist(e1);
-        int offset = offset_dist(e1);
-        float size = size_dist(e1);
+        auto xspeed = 0;
+        auto yspeed = speed_dist(e1);
+        auto offset = offset_dist(e1);
+        auto size = size_dist(e1);
 
         // has to move at some speed
         if (yspeed == 0)
@@ -112,7 +112,8 @@ public:
         m_images.emplace_back(xspeed, yspeed, p);
         auto& image = m_images.back();
         add(image);
-        image.scale_image(size, true);
+        image.set_image_align(alignmask::expand);
+        image.scale(size);
         image.move(Point(p.x - image.box().w / 2 + offset,
                          p.y - image.box().h / 2 + offset));
         objects_changed();
@@ -151,7 +152,7 @@ public:
     std::default_random_engine e1;
     std::uniform_int_distribution<int> speed_dist{-20, -1};
     std::uniform_int_distribution<int> offset_dist{-20, 20};
-    std::uniform_real_distribution<float> size_dist{0.1, 1.0};
+    std::uniform_int_distribution<int> size_dist{10, 100};
 };
 
 int main(int argc, const char** argv)
@@ -165,6 +166,7 @@ int main(int argc, const char** argv)
 #define SPRITE1
 #ifdef SPRITE1
     Sprite sprite1(Image("fish.png"), Size(252, 209), 8, Point(0, 0));
+    sprite1.flags().set(Widget::flag::no_layout);
     win.add(sprite1);
     sprite1.show();
     sprites.push_back(&sprite1);
@@ -173,6 +175,7 @@ int main(int argc, const char** argv)
 #define SPRITE2
 #ifdef SPRITE2
     Sprite sprite2(Image("fish2.png"), Size(100, 87), 6, Point(0, 0));
+    sprite2.flags().set(Widget::flag::no_layout);
     win.add(sprite2);
     sprite2.show();
     sprites.push_back(&sprite2);
@@ -255,12 +258,11 @@ int main(int argc, const char** argv)
     floattimer2.start();
 #endif
 
-    Label label1("CPU: 0%",
-                 Rect(Point(10, win.size().h - 40),
-                      Size(100, 40)));
-    label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-    win.add(label1);
+    Label label1("CPU: ----");
+    label1.instance_palette()
+    .set(Palette::ColorId::text, Palette::white)
+    .set(Palette::ColorId::bg, Palette::transparent);
+    win.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

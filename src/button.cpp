@@ -17,7 +17,7 @@ namespace egt
 {
 inline namespace v1
 {
-static const auto DEFAULT_BUTTON_SIZE = Size(100, 50);
+static const auto DEFAULT_BUTTON_SIZE = Size(100, 30);
 
 Button::Button(const std::string& text) noexcept
     : Button(text, Rect())
@@ -30,8 +30,9 @@ Button::Button(const std::string& text, const Rect& rect) noexcept
 {
     set_name("Button" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::rounded_gradient);
-    palette().set(Palette::ColorId::bg, Palette::GroupId::normal, palette().color(Palette::ColorId::highlight));
+    set_boxtype(Theme::boxtype::blank_rounded);
+    set_padding(5);
+
     ncflags().set(Widget::flag::grab_mouse);
 }
 
@@ -75,27 +76,19 @@ void Button::draw(Painter& painter, const Rect& rect)
     Drawer<Button>::draw(*this, painter, rect);
 }
 
-void Button::default_draw(Button& widget, Painter& painter, const Rect& rect)
+void Button::default_draw(Button& widget, Painter& painter, const Rect&)
 {
-    ignoreparam(rect);
+    widget.draw_box(painter, Palette::ColorId::button_bg, Palette::ColorId::border);
 
-    widget.draw_box(painter);
-
-    auto group = Palette::GroupId::normal;
-    if (widget.disabled())
-        group = Palette::GroupId::disabled;
-    else if (widget.active())
-        group = Palette::GroupId::active;
+    const auto b = widget.content_area();
 
     // text
-    painter.set(widget.palette().color(Palette::ColorId::text_invert, group));
+    painter.set(widget.color(Palette::ColorId::button_text).color());
     painter.set(widget.font());
-
-    auto text_size = widget.text_size(widget.text());
-    Rect target = detail::align_algorithm(text_size,
-                                          widget.box(),
+    auto size = painter.text_size(widget.text());
+    Rect target = detail::align_algorithm(size,
+                                          b,
                                           widget.text_align());
-
     painter.draw(target.point());
     painter.draw(widget.text());
 }
@@ -134,20 +127,24 @@ void Button::set_parent(Frame* parent)
     first_resize();
 }
 
+Size Button::min_size_hint() const
+{
+    if (!m_text.empty())
+    {
+        auto s = text_size(m_text);
+        s *= Size(1, 3);
+        s += Size(s.w / 2 + 5, 0);
+        return s + Widget::min_size_hint();
+    }
+
+    return DEFAULT_BUTTON_SIZE + Widget::min_size_hint();
+}
+
 void Button::first_resize()
 {
     if (box().size().empty())
     {
-        if (!m_text.empty())
-        {
-            auto s = text_size(m_text);
-            s += Size(40, 40);
-            resize(s);
-        }
-        else
-        {
-            resize(DEFAULT_BUTTON_SIZE);
-        }
+        resize(min_size_hint());
     }
 }
 
@@ -201,13 +198,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 {
     ignoreparam(rect);
 
-    widget.draw_box(painter);
-
-    auto group = Palette::GroupId::normal;
-    if (widget.disabled())
-        group = Palette::GroupId::disabled;
-    else if (widget.active())
-        group = Palette::GroupId::active;
+    widget.draw_box(painter, Palette::ColorId::button_bg, Palette::ColorId::border);
 
     if (!widget.text().empty())
     {
@@ -230,7 +221,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
         painter.draw(widget.image());
 
         //text
-        painter.set(widget.palette().color(Palette::ColorId::text_invert, group));
+        painter.set(widget.color(Palette::ColorId::button_text).color());
         painter.set(widget.font());
         painter.draw(tbox.point());
         painter.draw(widget.text());
@@ -238,7 +229,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     else
     {
         Rect target = detail::align_algorithm(widget.image().size(), widget.box(),
-                                              widget.image_align(), 0);
+                                              widget.image_align());
         painter.draw(target.point());
         painter.draw(widget.image());
     }

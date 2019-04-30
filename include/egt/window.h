@@ -101,10 +101,10 @@ class Window : public Frame
 public:
     constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
-    Window(const Rect& rect,
-           const Widget::flags_type& flags = Widget::flags_type(),
-           pixel_format format = DEFAULT_FORMAT,
-           windowhint hint = windowhint::automatic);
+    explicit Window(const Rect& rect,
+                    const Widget::flags_type& flags = Widget::flags_type(),
+                    pixel_format format = DEFAULT_FORMAT,
+                    windowhint hint = windowhint::automatic);
 
     Window(const Size& size = Size(),
            const Widget::flags_type& flags = Widget::flags_type(),
@@ -141,10 +141,22 @@ public:
         return nullptr;
     }
 
-    virtual void move(const Point& point) override
+    virtual bool has_screen() const override
     {
         if (m_impl)
-            m_impl->move(point);
+            return m_impl->has_screen();
+        return false;
+    }
+
+    virtual void move(const Point& point) override
+    {
+        if (point != box().point())
+        {
+            if (m_impl)
+                m_impl->move(point);
+
+            parent_layout();
+        }
     }
 
     virtual void show() override

@@ -11,6 +11,7 @@
  * @brief View definition.
  */
 
+#include <egt/canvas.h>
 #include <egt/frame.h>
 #include <egt/slider.h>
 
@@ -33,31 +34,47 @@ class ScrolledView : public Frame
 {
 public:
 
-    /**
-     * @param[in] rect Rectangle for the widget.
-     * @param[in] orient Vertical or horizontal orientation.
-     */
-    explicit ScrolledView(const Rect& rect = Rect(),
-                          orientation orient = orientation::horizontal);
+    enum class policy
+    {
+        never,
+        always,
+        as_needed
+    };
 
     /**
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] horizontal_policy Horizontal slider policy.
+     * @param[in] vertical_policy Vertical slider policy.
      */
-    explicit ScrolledView(orientation orient);
+    explicit ScrolledView(policy horizontal_policy = policy::as_needed,
+                          policy vertical_policy = policy::as_needed);
+
+    /**
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] horizontal_policy Horizontal slider policy.
+     * @param[in] vertical_policy Vertical slider policy.
+     */
+    explicit ScrolledView(const Rect& rect,
+                          policy horizontal_policy = policy::as_needed,
+                          policy vertical_policy = policy::as_needed);
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the widget.
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] horizontal_policy Horizontal slider policy.
+     * @param[in] vertical_policy Vertical slider policy.
      */
-    explicit ScrolledView(Frame& parent, const Rect& rect = Rect(),
-                          orientation orient = orientation::horizontal);
+    explicit ScrolledView(Frame& parent, const Rect& rect,
+                          policy horizontal_policy = policy::as_needed,
+                          policy vertical_policy = policy::as_needed);
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] horizontal_policy Horizontal slider policy.
+     * @param[in] vertical_policy Vertical slider policy.
      */
-    explicit ScrolledView(Frame& parent, orientation orient);
+    explicit ScrolledView(Frame& parent,
+                          policy horizontal_policy = policy::as_needed,
+                          policy vertical_policy = policy::as_needed);
 
     virtual std::unique_ptr<Widget> clone() override
     {
@@ -70,25 +87,105 @@ public:
 
     virtual void resize(const Size& size) override;
 
-    virtual Rect child_area() const override;
+    virtual Rect content_area() const override;
+
+    virtual void layout() override
+    {
+        Frame::layout();
+
+        bool hold = hscrollable();
+        bool vold = vscrollable();
+
+        update_scrollable();
+
+        if (hold != hscrollable() || vold != vscrollable())
+        {
+            resize_slider();
+            damage();
+        }
+
+        update_sliders();
+
+        auto s = super_rect().size();
+
+        if (!m_canvas || m_canvas->size() != s)
+        {
+            m_canvas.reset(new Canvas(s));
+            damage();
+        }
+    }
+
+    virtual void damage() override
+    {
+        damage(box());
+    }
+
+    virtual void damage(const Rect& rect) override
+    {
+        Frame::damage(box());
+    }
+
+    virtual void damage_from_child(const Rect& rect) override
+    {
+        damage(rect + m_offset);
+    }
 
     /**
      * Get the current offset.
      *
      * @note The offset moves in the negative direction from zero.
      */
-    int offset() const { return m_offset; }
+    inline Point offset() const { return m_offset; }
 
     /**
      * Set the position.
      */
-    virtual void set_offset(int offset);
+    virtual void set_offset(Point offset);
 
-    virtual bool scrollable() const;
+    inline void set_hoffset(int offset)
+    {
+        set_offset(Point(offset, m_offset.y));
+    }
+
+    inline void set_voffset(int offset)
+    {
+        set_offset(Point(m_offset.x, offset));
+    }
 
     virtual ~ScrolledView() noexcept = default;
 
 protected:
+
+    inline bool hscrollable() const
+    {
+        return m_hscrollable;
+    }
+
+    inline bool vscrollable() const
+    {
+        return m_vscrollable;
+    }
+
+    void update_scrollable()
+    {
+        auto super = super_rect();
+
+        m_hscrollable = (m_horizontal_policy == policy::always) ||
+                        (m_horizontal_policy == policy::as_needed && super.w > content_area().w);
+        m_vscrollable = (m_vertical_policy == policy::always) ||
+                        (m_vertical_policy == policy::as_needed && super.h > content_area().h);
+
+        if (super.w <= content_area().w)
+            m_offset.x = 0;
+
+        if (super.h <= content_area().h)
+            m_offset.y = 0;
+    }
+
+    void update_sliders();
+
+    bool m_hscrollable{false};
+    bool m_vscrollable{false};
 
     /**
      * Return the super rectangle that includes all of the child widgets.
@@ -103,22 +200,23 @@ protected:
     /**
      * Current offset of the view.
      */
-    int m_offset{0};
+    Point m_offset;
 
     /**
      * Slider shown when scrollable.
      */
-    Slider m_slider;
-
-    /**
-     * The orientation of the scroll.
-     */
-    orientation m_orient{orientation::horizontal};
+    Slider m_hslider;
+    Slider m_vslider;
 
     /**
      * Starting offset for the drag.
      */
-    int m_start_offset{0};
+    Point m_start_offset;
+
+    policy m_horizontal_policy{policy::as_needed};
+    policy m_vertical_policy{policy::as_needed};
+
+    std::shared_ptr<Canvas> m_canvas;
 };
 
 }

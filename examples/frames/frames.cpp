@@ -22,11 +22,12 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "frames");
 
     TopWindow win0;
+    win0.flags().set(Widget::flag::no_layout);
 
     auto a = alignmask::top | alignmask::center;
 
     WindowType win1(Size(400, 400));
-    win1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
+    win1.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
     win1.set_name("red");
     {
         auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
@@ -46,7 +47,7 @@ int main(int argc, const char** argv)
     win1.add(l1);
 
     WindowType win2(Size(300, 300));
-    win2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::blue);
+    win2.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::blue);
     win2.set_name("blue");
     {
         auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
@@ -66,7 +67,7 @@ int main(int argc, const char** argv)
     win2.add(l2);
 
     WindowType win3(Size(200, 200));
-    win3.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
+    win3.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
     auto l3 = make_shared<Label>("win3", Rect(0, 0, 50, 50));
     l3->set_align(a);
     win3.add(l3);
@@ -75,7 +76,7 @@ int main(int argc, const char** argv)
     win3.move(Point(50, 50));
 
     WindowType win4(Size(100, 100));
-    win4.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::purple);
+    win4.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::purple);
     auto l4 = make_shared<Label>("win4", Rect(0, 0, 50, 50));
     l4->set_align(a);
     win4.add(l4);

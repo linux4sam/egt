@@ -10,8 +10,6 @@
 using namespace std;
 using namespace egt;
 
-
-
 class ThermostatWindow : public TopWindow
 {
 public:
@@ -29,17 +27,24 @@ public:
     {
         set_boxtype(Theme::boxtype::none);
 
-        make_shared<ImageLabel>(*this, Image("background.png"));
-        auto m_logo = make_shared<ImageLabel>(*this, Image("@microchip_logo_black.png"));
-        m_logo->set_align(alignmask::left | alignmask::top, 10);
+        auto background = make_shared<ImageLabel>(Image("background.png"));
+        background->set_align(alignmask::expand);
+        background->set_image_align(alignmask::expand);
+        add(background);
 
-        auto m_title = make_shared<Label>(*this, "Living Room",
+        auto m_logo = make_shared<ImageLabel>(*this, Image("@microchip_logo_black.png"));
+        m_logo->set_align(alignmask::left | alignmask::top);
+        m_logo->set_margin(10);
+
+        auto m_title = make_shared<Label>("Living Room",
                                           Size(250, 64),
                                           alignmask::center,
                                           egt::Font(32, Font::weightid::bold));
-        m_title->palette().set(Palette::ColorId::bg, Palette::GroupId::normal,
-                               Palette::transparent);
-        m_title->set_align(alignmask::center | alignmask::top, 10);
+        m_title->instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal,
+                                        Palette::transparent);
+        m_title->set_align(alignmask::center | alignmask::top);
+        m_title->set_margin(10);
+        add(m_title);
 
         auto m_radial1 = make_shared<Radial>(*this, Rect(Point(w() / 2 - 350 / 2,
                                              -350),
@@ -52,8 +57,7 @@ public:
             m_radial1->text(text);
 
             if (m_radial1->value() > m_radial1->value2())
-                m_radial1->palette().set(Palette::ColorId::highlight,
-                                         Palette::GroupId::normal, Palette::orange);
+                m_radial1->instance_palette().set(Palette::ColorId::button_bg, Palette::orange);
             else
                 m_radial1->reset_palette();
 
@@ -70,10 +74,8 @@ public:
                                                         Size(180, 64)),
                                                 alignmask::center,
                                                 egt::Font(30));
-        m_label1->palette().set(Palette::ColorId::bg,
-                                Palette::GroupId::normal, Palette::transparent);
-        m_label1->palette().set(Palette::ColorId::text,
-                                Palette::GroupId::normal, Palette::gray);
+        m_label1->instance_palette().set(Palette::ColorId::bg, Palette::transparent);
+        m_label1->instance_palette().set(Palette::ColorId::text, Palette::gray);
 
         auto m_label2 = make_shared<ImageLabel>(*this,
                                                 Image("night.png"),
@@ -82,10 +84,8 @@ public:
                                                         Size(180, 64)),
                                                 alignmask::center,
                                                 egt::Font(30));
-        m_label2->palette().set(Palette::ColorId::bg,
-                                Palette::GroupId::normal, Palette::transparent);
-        m_label2->palette().set(Palette::ColorId::text,
-                                Palette::GroupId::normal, Palette::gray);
+        m_label2->instance_palette().set(Palette::ColorId::bg, Palette::transparent);
+        m_label2->instance_palette().set(Palette::ColorId::text, Palette::gray);
 
         auto m_label3 = make_shared<ImageLabel>(*this,
                                                 Image("vacation.png"),
@@ -94,17 +94,17 @@ public:
                                                         Size(180, 64)),
                                                 alignmask::center,
                                                 egt::Font(30));
-        m_label3->palette().set(Palette::ColorId::bg,
-                                Palette::GroupId::normal, Palette::transparent);
-        m_label3->palette().set(Palette::ColorId::text,
-                                Palette::GroupId::normal, Palette::gray);
+        m_label3->instance_palette().set(Palette::ColorId::bg,
+                                         Palette::GroupId::normal, Palette::transparent);
+        m_label3->instance_palette().set(Palette::ColorId::text,
+                                         Palette::GroupId::normal, Palette::gray);
 
         auto m_label4 = make_shared<Label>(*this, "Fan",
                                            Rect(Point(800, 390),
                                                 Size(50, 64)),
                                            alignmask::center,
                                            egt::Font(16));
-        m_label4->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+        m_label4->instance_palette().set(Palette::ColorId::bg, Palette::transparent);
 
         auto m_slider1 = make_shared<Slider>(*this, Rect(Point(800, 100),
                                              Size(50, 300)),
@@ -114,9 +114,9 @@ public:
 
         m_label1->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            m_label1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
-            m_label2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-            m_label3->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label1->instance_palette().set(Palette::ColorId::label_text, Palette::orange);
+            m_label2->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
+            m_label3->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
             m_label1->damage();
             m_label2->damage();
             m_label3->damage();
@@ -125,9 +125,9 @@ public:
 
         m_label2->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            m_label2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
-            m_label1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-            m_label3->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label2->instance_palette().set(Palette::ColorId::label_text, Palette::orange);
+            m_label1->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
+            m_label3->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
             m_label1->damage();
             m_label2->damage();
             m_label3->damage();
@@ -136,23 +136,23 @@ public:
 
         m_label3->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            m_label3->palette().set(Palette::ColorId::text, Palette::GroupId::normal, global_palette().color(Palette::ColorId::highlight));
-            m_label1->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
-            m_label2->palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::gray);
+            m_label3->instance_palette().set(Palette::ColorId::label_text, Palette::orange);
+            m_label1->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
+            m_label2->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
             m_label1->damage();
             m_label2->damage();
             m_label3->damage();
             return 0;
         }, {eventid::pointer_click});
 
-        m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label1), std::placeholders::_1));
-        m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label2), std::placeholders::_1));
-        m_a1.on_change(std::bind(&ImageLabel::set_x, std::ref(m_label3), std::placeholders::_1));
+        m_a1.on_change(std::bind(&ImageLabel::set_x, m_label1, std::placeholders::_1));
+        m_a1.on_change(std::bind(&ImageLabel::set_x, m_label2, std::placeholders::_1));
+        m_a1.on_change(std::bind(&ImageLabel::set_x, m_label3, std::placeholders::_1));
 
-        m_a2.on_change(std::bind(&Radial::set_y, std::ref(m_radial1), std::placeholders::_1));
+        m_a2.on_change(std::bind(&Radial::set_y, m_radial1, std::placeholders::_1));
 
-        m_a3.on_change(std::bind(&Slider::set_x, std::ref(m_slider1), std::placeholders::_1));
-        m_a3.on_change(std::bind(&Label::set_x, std::ref(m_label4), std::placeholders::_1));
+        m_a3.on_change(std::bind(&Slider::set_x, m_slider1, std::placeholders::_1));
+        m_a3.on_change(std::bind(&Label::set_x, m_label4, std::placeholders::_1));
     }
 
     virtual void show() override
@@ -181,10 +181,8 @@ int main(int argc, const char** argv)
         float linew = 10;
         float handle_radius = 20;
 
-        auto color1 = widget.palette().color(Palette::ColorId::bg);
-        color1.alpha(0x55);
-        auto color2 = widget.palette().color(Palette::ColorId::highlight);
-        auto color3 = widget.palette().color(Palette::ColorId::mid);
+        auto color2 = widget.palette().color(Palette::ColorId::button_bg).color();
+        auto color3 = widget.palette().color(Palette::ColorId::button_fg).color();
 
         float radius = widget.w() / 2 - handle_radius - linew;
         float angle1 = detail::to_radians<float>(-90, 0);
@@ -218,7 +216,7 @@ int main(int argc, const char** argv)
         //text
         if (!widget.text().empty())
         {
-            painter.set(widget.palette().color(Palette::ColorId::text));
+            painter.set(widget.palette().color(Palette::ColorId::text).color());
             painter.set(Font(72));
 
             auto text_size = painter.text_size(widget.text());
@@ -232,7 +230,7 @@ int main(int argc, const char** argv)
 
         string current = "Current " + std::to_string(widget.value2()) + "°";
 
-        painter.set(widget.palette().color(Palette::ColorId::text));
+        painter.set(widget.palette().color(Palette::ColorId::text).color());
         painter.set(Font(24));
 
         auto txt_size = painter.text_size(current);

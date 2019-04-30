@@ -14,8 +14,12 @@ namespace egt
 {
 inline namespace v1
 {
+class Frame;
+
 namespace detail
 {
+
+void flex_layout(Frame* frame, int max_level);
 
 struct LayoutRect
 {

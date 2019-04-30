@@ -214,6 +214,8 @@ public:
      */
     void add_validator_function(validator_callback_t callback);
 
+    virtual Size min_size_hint() const override;
+
     virtual ~TextBox() noexcept = default;
 
 protected:

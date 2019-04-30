@@ -83,12 +83,12 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
     return nfont;
 }
 
-Size TextWidget::text_size(const std::string& text)
+Size TextWidget::text_size(const std::string& text) const
 {
     Canvas canvas(Size(100, 100));
     Painter painter(canvas.context());
-    painter.set(font());
-    return painter.text_size(text);
+    painter.set(this->font());
+    return painter.font_size(text);
 }
 
 }

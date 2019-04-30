@@ -26,7 +26,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
     win.set_name("win");
-    win.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    win.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
 
     SoftwareVideo player(Size(320, 192));
     player.set_volume(50);
@@ -37,12 +37,13 @@ int main(int argc, const char** argv)
 
     ImageLabel logo(Image("@microchip_logo_white.png"));
     win.add(logo);
-    logo.set_align(alignmask::left | alignmask::top, 10);
+    logo.set_align(alignmask::left | alignmask::top);
+    logo.set_margin(10);
 
     auto grid_height = (win.size().h - logo.h()) / 2;
 
     ScrolledView view0(Rect(0, logo.h(), win.size().w, grid_height));
-    view0.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    view0.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
     view0.set_name("view0");
     win.add(view0);
 
@@ -78,7 +79,7 @@ int main(int argc, const char** argv)
     }
 
     ScrolledView view1(Rect(0, logo.h() + grid_height + 1, win.size().w, grid_height));
-    view1.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    view1.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
     view1.set_name("view1");
     win.add(view1);
 
@@ -120,7 +121,8 @@ int main(int argc, const char** argv)
     ImageButton settings(Image("settings.png"), "", Rect());
     win.add(settings);
     settings.set_boxtype(Theme::boxtype::none);
-    settings.set_align(alignmask::right | alignmask::top, 10);
+    settings.set_align(alignmask::right | alignmask::top);
+    settings.set_margin(10);
     settings.on_event([&popup](eventid)
     {
         if (popup.visible())

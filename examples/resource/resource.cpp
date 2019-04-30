@@ -39,7 +39,7 @@ public:
         : TopWindow(size),
           grid(Tuple(2, 2), 10)
     {
-        grid.palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        grid.instance_palette().set(Palette::ColorId::border, Palette::transparent);
 
         add(expand(grid));
 

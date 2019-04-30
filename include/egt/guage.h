@@ -24,19 +24,17 @@ class Guage;
 class GuageLayer
 {
 public:
-    GuageLayer(const Image& image)
+    explicit GuageLayer(const Image& image)
         : m_image(image)
-    {
-    }
+    {}
 
-    inline Size size() const
-    {
-        return m_image.size();
-    }
+    inline Size size() const { return m_image.size(); }
 
     virtual void draw(Painter& painter);
 
-    bool visible() const { return m_visible; }
+    inline bool visible() const { return m_visible; }
+
+    inline void toggle_visible() { set_visible(!m_visible); }
 
     void set_visible(bool visible);
 

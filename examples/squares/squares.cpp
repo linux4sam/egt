@@ -18,18 +18,15 @@ int main(int argc, const char** argv)
 
     const Color FUCHSIA(Color::CSS("#F012BE"));
 
-    Label label("FPS: -",
-                Rect(Point(0, 40), Size(100, 40)),
-                alignmask::center);
-    label.palette()
-    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+    Label label("FPS: ---");
+    label.instance_palette()
+    .set(Palette::ColorId::text, Palette::black)
+    .set(Palette::ColorId::bg, Palette::transparent);
 
     Popup popup(Size(100, 80));
-    popup.move(Point(win.w() - 100 - 10, 10));
-    popup.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
-    popup.set_name("popup");
+    popup.instance_palette().set(Palette::ColorId::bg, FUCHSIA);
     popup.add(label);
+    top(right(popup));
     win.add(popup);
     popup.show();
 

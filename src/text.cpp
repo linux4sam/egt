@@ -28,7 +28,10 @@ TextBox::TextBox() noexcept
 {
     set_name("TextBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::borderfill);
+    set_border(theme().default_border());
+    set_boxtype(Theme::boxtype::blank_rounded);
+    set_padding(5);
+    set_text_align(alignmask::center | alignmask::left);
 
     m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
 
@@ -48,7 +51,10 @@ TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align,
 {
     set_name("TextBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::borderfill);
+    set_border(theme().default_border());
+    set_boxtype(Theme::boxtype::blank_rounded);
+    set_padding(5);
+    set_text_align(alignmask::center | alignmask::left);
 
     m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
 
@@ -195,17 +201,10 @@ using utf8_iterator = utf8::unchecked::iterator<std::string::iterator>;
 
 void TextBox::draw(Painter& painter, const Rect&)
 {
-    auto b = box();
-    b.shrink_around_center(5);
-
-    auto group = Palette::GroupId::normal;
-    if (disabled())
-        group = Palette::GroupId::disabled;
-    else if (active())
-        group = Palette::GroupId::active;
+    auto b = content_area();
 
     // box
-    draw_box(painter);
+    draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
     auto cr = painter.context();
 
@@ -217,7 +216,7 @@ void TextBox::draw(Painter& painter, const Rect&)
     {
         if (focus() && m_cursor_state)
         {
-            painter.set(Palette::red);
+            painter.set(palette().color(Palette::ColorId::cursor).color());
             painter.set_line_width(2);
 
             auto YOFF = 2.;
@@ -296,13 +295,13 @@ void TextBox::draw(Painter& painter, const Rect&)
                 auto rect = RectF(p2, s);
                 if (!rect.empty())
                 {
-                    painter.set(Palette::aqua);
+                    painter.set(color(Palette::ColorId::text_highlight).color());
                     painter.draw(rect);
                     painter.fill();
                 }
             }
 
-            painter.set(palette().color(Palette::ColorId::text, group));
+            painter.set(color(Palette::ColorId::text).color());
             painter.draw(p);
             painter.draw((char*)text.c_str());
         }
@@ -554,6 +553,22 @@ void TextBox::hide_cursor()
     m_timer.cancel();
     m_cursor_state = false;
     damage();
+}
+
+static const auto DEFAULT_TEXTBOX_SIZE = Size(100, 50);
+
+/// @todo this is not an acceptabe computation,
+/// especially for multiline text
+Size TextBox::min_size_hint() const
+{
+    if (!m_text.empty())
+    {
+        auto s = text_size(m_text);
+        s += Widget::min_size_hint();
+        return s;
+    }
+
+    return DEFAULT_TEXTBOX_SIZE + Widget::min_size_hint();
 }
 
 }

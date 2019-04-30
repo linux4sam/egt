@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/alignment.h"
+#include "egt/detail/layout.h"
 #include "egt/button.h"
 #include "egt/checkbox.h"
 #include "egt/painter.h"
@@ -20,9 +21,13 @@ CheckBox::CheckBox(const std::string& text,
                    const Rect& rect)
     : Button(text, rect)
 {
-    set_boxtype(Theme::boxtype::border);
+    set_name("CheckBox" + std::to_string(m_widgetid));
+
+    set_boxtype(Theme::boxtype::blank);
+    set_padding(5);
+    set_text_align(alignmask::left | alignmask::center);
+
     flags().set(Widget::flag::grab_mouse);
-    palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::highlight));
 }
 
 int CheckBox::handle(eventid event)
@@ -43,88 +48,166 @@ int CheckBox::handle(eventid event)
 
 void CheckBox::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    Drawer<CheckBox>::draw(*this, painter, rect);
+}
 
-    static const int STANDOFF = 5;
+void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& rect)
+{
+    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    // image
-    Rect r(x() + STANDOFF,
-           y() + STANDOFF,
-           h() - STANDOFF * 2,
-           h() - STANDOFF * 2);
+    auto b = widget.content_area();
 
-    auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
+    painter.set(widget.font());
+    auto text_size = painter.text_size(widget.text());
 
-    if (checked())
+    vector<detail::LayoutRect> rects;
+
+    rects.emplace_back(0,
+                       Rect(0, 0, std::min(b.w - text_size.w - widget.padding(), b.h), std::min(b.w - text_size.w - widget.padding(), b.h)),
+                       0, 0, widget.padding() / 2);
+    rects.emplace_back(0,
+                       Rect(0, 0, text_size.w, text_size.h),
+                       widget.padding() / 2);
+
+    detail::flex_layout(b, rects, justification::start, orientation::horizontal);
+
+    auto handle = rects[0].rect + b.point();
+    auto text = rects[1].rect + b.point();
+
+    if (widget.checked())
     {
-        draw_box(painter, r);
+        auto fgborder = widget.theme().default_border();
+
+        widget.theme().draw_box(painter, Theme::boxtype::blank, handle,
+                                widget.color(Palette::ColorId::button_fg),
+                                widget.color(Palette::ColorId::bg),
+                                fgborder);
 
         // draw an "X"
-        static const int OFFSET = 5;
-        auto cr = painter.context();
-        painter.set(palette().color(Palette::ColorId::highlight, group));
-        cairo_move_to(cr.get(), r.x + OFFSET, r.y + OFFSET);
-        cairo_line_to(cr.get(), r.x + r.w - OFFSET, r.y + r.h - OFFSET);
-        cairo_move_to(cr.get(), r.x + r.w - OFFSET, r.y + OFFSET);
-        cairo_line_to(cr.get(), r.x + OFFSET, r.y + r.h - OFFSET);
-        painter.set_line_width(3.0);
-        cairo_stroke(cr.get());
+        auto cr = painter.context().get();
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+        painter.set(widget.color(Palette::ColorId::button_fg).color());
+        painter.draw(handle.top_left() + Point(fgborder, fgborder), handle.bottom_right() - Point(fgborder, fgborder));
+        painter.draw(handle.top_right() + Point(-fgborder, fgborder), handle.bottom_left() + Point(fgborder, -fgborder));
+        painter.set_line_width(widget.theme().default_border());
+        painter.stroke();
     }
     else
     {
-        draw_box(painter, r);
+        widget.theme().draw_box(painter, Theme::boxtype::blank, handle,
+                                widget.color(Palette::ColorId::button_fg),
+                                widget.color(Palette::ColorId::bg),
+                                widget.theme().default_border());
     }
 
     // text
-    painter.set(palette().color(Palette::ColorId::text, group));
-    painter.set(font());
-
-    auto size = text_size(m_text);
+    painter.set(widget.color(Palette::ColorId::text).color());
+    auto size = painter.text_size(widget.text());
     Rect target = detail::align_algorithm(size,
-                                          box(),
-                                          alignmask::left | alignmask::center,
-                                          h());
+                                          text,
+                                          widget.text_align());
     painter.draw(target.point());
-    painter.draw(m_text);
+    painter.draw(widget.text());
 }
 
-CheckBox::~CheckBox()
-{}
+Size CheckBox::min_size_hint() const
+{
+    if (!m_text.empty())
+    {
+        auto s = text_size(m_text);
+        //s *= Size(1, 3);
+        s += Size(s.w / 2 + 5, 0);
+        return s + Widget::min_size_hint();
+    }
+
+    return Size(100, 30) + Widget::min_size_hint();
+}
 
 ToggleBox::ToggleBox(const Rect& rect)
     : CheckBox("", rect)
 {
-    set_boxtype(Theme::boxtype::rounded_border);
-    palette().set(Palette::ColorId::bg, Palette::GroupId::active, palette().color(Palette::ColorId::bg));
+    set_name("ToggleBox" + std::to_string(m_widgetid));
+
+    set_boxtype(Theme::boxtype::blank_rounded);
+    set_border(theme().default_border());
 }
 
-void ToggleBox::draw(Painter& painter, const Rect&)
+void ToggleBox::draw(Painter& painter, const Rect& rect)
 {
-    draw_box(painter);
+    Drawer<ToggleBox>::draw(*this, painter, rect);
+}
 
-    auto group = disabled() ? Palette::GroupId::disabled : Palette::GroupId::normal;
+void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& rect)
+{
+    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    if (checked())
+    auto b = widget.content_area();
+
+    if (widget.checked())
     {
-        Rect rect = box();
+        Rect rect = b;
         rect.w /= 2;
         rect.x += rect.w;
-        theme().draw_rounded_gradient_box(painter,
-                                          rect,
-                                          palette().color(Palette::ColorId::highlight, group));
+        widget.theme().draw_box(painter,
+                                Theme::boxtype::blank_rounded,
+                                rect,
+                                widget.color(Palette::ColorId::border),
+                                widget.color(Palette::ColorId::button_bg));
     }
     else
     {
-        Rect rect = box();
+        Rect rect = b;
         rect.w /= 2;
-        theme().draw_rounded_gradient_box(painter,
-                                          rect,
-                                          palette().color(Palette::ColorId::highlight, group));
+        widget.theme().draw_box(painter,
+                                Theme::boxtype::blank_rounded,
+                                rect,
+                                widget.palette().color(Palette::ColorId::border, Palette::GroupId::disabled),
+                                widget.palette().color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
     }
+
+    if (!widget.on_text().empty())
+    {
+        Rect rect = b;
+        rect.w /= 2;
+        rect.x += rect.w;
+
+        if (widget.checked())
+            painter.set(widget.color(Palette::ColorId::button_text).color());
+        else
+            painter.set(widget.palette().color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
+        painter.set(widget.font());
+        auto size = painter.text_size(widget.on_text());
+        Rect target = detail::align_algorithm(size,
+                                              rect,
+                                              alignmask::center);
+        painter.draw(target.point());
+        painter.draw(widget.on_text());
+    }
+
+    if (!widget.off_text().empty())
+    {
+        Rect rect = b;
+        rect.w /= 2;
+
+        if (widget.checked())
+            painter.set(widget.palette().color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+        else
+            painter.set(widget.palette().color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
+        painter.set(widget.font());
+        auto size = painter.text_size(widget.off_text());
+        Rect target = detail::align_algorithm(size,
+                                              rect,
+                                              alignmask::center);
+        painter.draw(target.point());
+        painter.draw(widget.off_text());
+    }
+
 }
 
-ToggleBox::~ToggleBox()
-{}
+Size ToggleBox::min_size_hint() const
+{
+    return Size(100, 30) + Widget::min_size_hint();
+}
 
 }
 }

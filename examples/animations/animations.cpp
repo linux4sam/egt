@@ -27,7 +27,7 @@ int main(int argc, const char** argv)
     in.on_change(std::bind(&StaticGrid::set_width, std::ref(grid), std::placeholders::_1));
     seq.add(in);
 
-    Button button("hello world");
+    Button button("button");
     grid.add(expand(button), 0, 0);
 
     PropertyAnimator shrink_in(100, 10, std::chrono::seconds(1));
@@ -37,9 +37,9 @@ int main(int argc, const char** argv)
     seq.add(shrink_in);
     seq.add(shrink_out);
 
-    Label label("hello world");
-    label.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
-    grid.add(expand(label), 0, 1);
+    Label label("label");
+    label.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
+    grid.add(center(label), 0, 1);
 
     auto orig = label.w();
     PropertyAnimator shrinkh_in(100, 10, std::chrono::seconds(1));
@@ -50,7 +50,7 @@ int main(int argc, const char** argv)
     seq.add(shrinkh_out);
 
     Label label2("hello world");
-    label2.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
+    label2.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
     grid.add(expand(label2), 1, 1);
 
     seq.start();

@@ -148,8 +148,7 @@ public:
         m_dir = true;
     }
 
-    virtual ~SideBoard()
-    {}
+    virtual ~SideBoard() = default;
 
 protected:
 

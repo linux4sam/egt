@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/layout.h"
 #include "egt/frame.h"
 #include "egt/input.h"
 #include "egt/painter.h"
@@ -94,6 +95,7 @@ void Frame::remove(Widget* widget)
         (*i)->damage();
         (*i)->m_parent = nullptr;
         m_children.erase(i);
+        layout();
     }
     else if (widget->m_parent == this)
     {
@@ -111,6 +113,7 @@ void Frame::remove_all()
     }
 
     m_children.clear();
+    layout();
 }
 
 int Frame::handle(eventid event)
@@ -161,17 +164,27 @@ int Frame::handle(eventid event)
 
 void Frame::add_damage(const Rect& rect)
 {
-    // not allowed to damage in draw()
-    assert(!m_in_draw);
-    if (m_in_draw)
+    // if we get here, we must have a screen
+    assert(has_screen());
+    if (!has_screen())
         return;
 
     if (unlikely(rect.empty()))
         return;
 
+    // not allowed to damage() in draw()
+    assert(!m_in_draw);
+    if (m_in_draw)
+        return;
+
     DBG(name() << " damage: " << rect);
 
-    Screen::damage_algorithm(m_damage, rect);
+    // No damage outside of our box().  There are cases where this is expected,
+    // for example, when a widget is halfway off the screen. So, we truncate the
+    // to just the part we care about.
+    auto r = Rect::intersection(rect, to_child(box()));
+
+    Screen::damage_algorithm(m_damage, r);
 }
 
 void Frame::damage(const Rect& rect)
@@ -183,10 +196,13 @@ void Frame::damage(const Rect& rect)
     if (!visible())
         return;
 
-    // damage propagates to top level frame
-    if (m_parent)
+    // damage propagates up to frame with screen
+    if (!has_screen())
     {
-        m_parent->damage(to_parent(rect));
+        if (parent())
+            parent()->damage_from_child(to_parent(rect));
+
+        // have no parent or screen - nowhere to put damage
         return;
     }
 
@@ -204,7 +220,8 @@ void Frame::dump(std::ostream& out, int level)
 
 void Frame::walk(walk_callback_t callback, int level)
 {
-    callback(this, level);
+    if (!callback(this, level))
+        return;
 
     for (auto& child : m_children)
         child->walk(callback, level + 1);
@@ -212,65 +229,79 @@ void Frame::walk(walk_callback_t callback, int level)
 
 Point Frame::to_panel(const Point& p)
 {
-    Point pp;
-    Widget* w = this;
-    while (w)
-    {
-        if (w->flags().is_set(Widget::flag::frame))
-        {
-            auto f = reinterpret_cast<Frame*>(w);
+    if (has_screen())
+        return p - point();
 
-            if (f->flags().is_set(Widget::flag::plane_window))
-            {
-                pp = Point();
-                break;
-            }
+    if (parent())
+        return parent()->to_panel(p - point());
 
-            if (f->top_level())
-            {
-                pp = f->box().point();
-                break;
-            }
-
-        }
-
-        w = w->m_parent;
-    }
-
-    return p - pp;
+    return p;
 }
 
-/**
- * @todo Prevent any call to damage() while in a draw() call.
- */
 void Frame::draw(Painter& painter, const Rect& rect)
 {
     DBG(name() << " " << __PRETTY_FUNCTION__ << " " << rect);
 
     Painter::AutoSaveRestore sr(painter);
 
-    draw_box(painter, rect);
+    // child rect
+    Rect crect = rect;
 
-    //
-    // Origin about to change
-    //
-
-    auto cr = painter.context();
-    Rect crect;
-
-    if (!flags().is_set(Widget::flag::plane_window))
+    // if this frame does not have a screen, it means the damage rect is in
+    // cordinates of some parent frame, so we have to adjust the physical origin
+    // and take it into account when looking at children, who's coordinates are
+    // respective of this frame
+    if (!has_screen())
     {
-        Point origin = to_panel(box().point());
+        Point origin = point();
         if (origin.x || origin.y)
+        {
+            //
+            // Origin about to change
+            //
+            auto cr = painter.context();
             cairo_translate(cr.get(),
                             origin.x,
                             origin.y);
-        crect = rect - origin;
+        }
+
+        // adjust our child rect for comparison's below
+        crect -= origin;
     }
-    else
+
+
+
+    if (!flags().is_set(Widget::flag::no_clip))
     {
-        crect = rect;
+        // clip the damage rectangle, otherwise we will draw this whole frame
+        // and then only draw the children inside the actual damage rect, which
+        // will cover them
+        painter.draw(crect);
+        painter.clip();
     }
+
+    // draw our frame box, but now that the physical origin has possibly changed
+    // and our box() is relative to our parent, we have to adjust to our local
+    // origin
+    if (boxtype() != Theme::boxtype::none)
+    {
+        Palette::GroupId group = Palette::GroupId::normal;
+        if (disabled())
+            group = Palette::GroupId::disabled;
+        else if (active())
+            group = Palette::GroupId::active;
+
+        theme().draw_box(painter,
+                         boxtype(),
+                         to_child(box()),
+                         palette().color(Palette::ColorId::border, group),
+                         palette().color(Palette::ColorId::bg, group),
+                         border(),
+                         margin());
+    }
+
+    // keep the crect inside our content area
+    crect = Rect::intersection(crect, to_child(content_area()));
 
     // OK, nasty - doing two loops: one for non windows, then for windows
 
@@ -291,20 +322,26 @@ void Frame::draw(Painter& painter, const Rect& rect)
         {
             // don't give a child a rectangle that is outside of its own box
             auto r = Rect::intersection(crect, child->box());
+            if (r.empty())
+                continue;
 
-            // no matter what the child draws, clip the output to only the
-            // rectangle we care about updating
-            Painter::AutoSaveRestore sr2(painter);
-            if (!child->flags().is_set(Widget::flag::no_clip))
             {
-                painter.draw(r);
-                painter.clip();
+                // no matter what the child draws, clip the output to only the
+                // rectangle we care about updating
+                Painter::AutoSaveRestore sr2(painter);
+                if (!child->flags().is_set(Widget::flag::no_clip))
+                {
+                    painter.draw(r);
+                    painter.clip();
+                }
+
+                experimental::code_timer(false, child->name() + " draw: ", [&]()
+                {
+                    child->draw(painter, r);
+                });
             }
 
-            experimental::code_timer(false, child->name() + " draw: ", [&]()
-            {
-                child->draw(painter, r);
-            });
+            special_child_draw(painter, child.get());
         }
     }
 
@@ -325,6 +362,8 @@ void Frame::draw(Painter& painter, const Rect& rect)
         {
             // don't give a child a rectangle that is outside of its own box
             auto r = Rect::intersection(crect, child->box());
+            if (r.empty())
+                continue;
 
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
@@ -345,7 +384,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
 void Frame::paint_to_file(const std::string& filename)
 {
-    // TODO: hmm, should this be redirected to parent()?
+    /// @todo should this be redirected to parent()?
     string name = filename;
     if (name.empty())
     {
@@ -370,6 +409,63 @@ void Frame::paint_children_to_file()
         else
         {
             child->paint_to_file();
+        }
+    }
+}
+
+void Frame::layout()
+{
+    if (!visible())
+        return;
+
+    // we cannot layout with no space
+    if (size().empty())
+        return;
+
+    if (m_in_layout)
+        return;
+
+    m_in_layout = true;
+    detail::scope_exit reset([this]() { m_in_layout = false; });
+
+    auto area = content_area();
+
+    for (auto& child : m_children)
+    {
+        //
+        // first directly align the child, then if it is a frame, tell the
+        // frame to layout().
+        //
+        if (child->align() != alignmask::none)
+        {
+
+            auto bounding = to_child(area);
+            if (bounding.empty())
+                return;
+
+            auto min = child->box();
+#if 1
+            if (min.w < child->min_size_hint().w)
+                min.w = child->min_size_hint().w;
+            if (min.h < child->min_size_hint().h)
+                min.h = child->min_size_hint().h;
+#endif
+
+            auto r = detail::align_algorithm(min,
+                                             bounding,
+                                             child->align(),
+                                             0,
+                                             child->horizontal_ratio(),
+                                             child->vertical_ratio(),
+                                             child->xratio(),
+                                             child->yratio());
+            child->set_box(r);
+        }
+
+        if (child->flags().is_set(Widget::flag::frame))
+        {
+            auto frame = dynamic_cast<Frame*>(child.get());
+            frame->layout();
         }
     }
 }

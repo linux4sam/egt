@@ -19,7 +19,9 @@ public:
         : ImageLabel(Image("metalball.png")),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
-    {}
+    {
+        flags().set(Widget::flag::no_layout);
+    }
 
     Ball(const Ball&) = default;
     Ball(Ball&&) = default;
@@ -35,7 +37,7 @@ public:
 
         if (visible)
         {
-            Point to(box().point());
+            Point to(point());
             to += Point(m_xspeed, m_yspeed);
             move(to);
         }
@@ -90,7 +92,7 @@ class MainWindow : public TopWindow
 public:
     MainWindow()
     {
-        palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+        instance_palette().set(Palette::ColorId::bg, Palette::black);
     }
 
     int handle(eventid event) override
@@ -120,7 +122,8 @@ public:
 
         m_images.emplace_back(xspeed, yspeed);
         auto& image = m_images.back();
-        image.scale_image(scale, true);
+        image.scale(scale);
+        image.set_image_align(alignmask::expand);
         image.move_to_center(p);
         add(image);
     }
@@ -147,7 +150,7 @@ private:
     std::random_device r;
     std::default_random_engine e1 {r()};
     std::uniform_int_distribution<int> speed_dist {-20, 20};
-    std::uniform_real_distribution<float> size_dist {0.1, 1.0};
+    std::uniform_int_distribution<int> size_dist {10, 100};
 };
 
 int main(int argc, const char** argv)
@@ -167,16 +170,14 @@ int main(int argc, const char** argv)
     PeriodicTimer spawntimer(std::chrono::seconds(1));
     spawntimer.on_timeout([&win]()
     {
-        win.spawn(win.box().center());
+        win.spawn(win.center());
     });
     spawntimer.start();
 
-    Label label1("CPU: 0%",
-                 Rect(Point(10, win.size().h - 40),
-                      Size(100, 40)));
-    label1.palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
+    Label label1("CPU: ----");
+    label1.instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
     .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
-    win.add(label1);
+    win.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));

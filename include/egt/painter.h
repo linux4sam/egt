@@ -7,12 +7,15 @@
 #define EGT_PAINTER_H
 
 #include <cairo.h>
+#include <cassert>
+#include <egt/color.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
-#include <egt/palette.h>
 #include <egt/types.h>
 #include <egt/utils.h>
-#include <egt/widget.h>
+
+#include <iostream>
+using namespace std;
 
 namespace egt
 {
@@ -100,9 +103,9 @@ public:
      * @param[in] p The point.
      */
     template<class T>
-    Painter& draw(const PointType<T, compatible::normal>& p)
+    Painter& draw(const PointType<T, compatible::normal>& point)
     {
-        cairo_move_to(m_cr.get(), p.x, p.y);
+        cairo_move_to(m_cr.get(), point.x, point.y);
 
         return *this;
     }
@@ -176,7 +179,7 @@ public:
     /**
      * Draw text inside the specified rectangle.
      */
-    virtual Painter& draw(const std::string& str);
+    virtual Painter& draw(const std::string& str, bool difference = false);
 
     virtual Painter& clip();
 
@@ -187,6 +190,8 @@ public:
     virtual Painter& stroke();
 
     virtual Size text_size(const std::string& text);
+
+    virtual Size font_size(const std::string& text);
 
     /**
      * Get the current underlying context the painter is using.

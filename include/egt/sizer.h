@@ -13,7 +13,6 @@
 
 #include <egt/detail/alignment.h>
 #include <egt/frame.h>
-#include <sstream>
 
 namespace egt
 {
@@ -43,32 +42,25 @@ public:
 
     /**
      * @param[in] orient Vertical or horizontal orientation.
-     * @param[in] spacing Spacing between positioning.
-     * @param[in] hmargin Horizontal margin.
-     * @param[in] vmargin Vertical margin.
+     * @param[in] justify Justification of child widgets.
      */
-    explicit BoxSizer(orientation orient = orientation::horizontal, int spacing = 0,
-                      int hmargin = 0, int vmargin = 0)
-        : Frame(Size(2 * hmargin, 2 * vmargin)),
-          m_spacing(spacing),
-          m_hmargin(hmargin),
-          m_vmargin(vmargin),
-          m_orient(orient)
+    explicit BoxSizer(orientation orient = orientation::horizontal,
+                      justification justify = justification::middle)
+        : m_orient(orient),
+          m_justify(justify)
     {
         set_name("BoxSizer" + std::to_string(m_widgetid));
-        set_boxtype(Theme::boxtype::none);
     }
 
     /**
-    * @param[in] parent The parent Frame.
+     * @param[in] parent The parent Frame.
      * @param[in] orient Vertical or horizontal orientation.
-     * @param[in] spacing Spacing between positioning.
-     * @param[in] hmargin Horizontal margin.
-     * @param[in] vmargin Vertical margin.
+     * @param[in] justify Justification of child widgets.
      */
-    BoxSizer(Frame& parent, orientation orient = orientation::horizontal, int spacing = 0,
-             int hmargin = 0, int vmargin = 0)
-        : BoxSizer(orient, spacing, hmargin, vmargin)
+    explicit BoxSizer(Frame& parent,
+                      orientation orient = orientation::horizontal,
+                      justification justify = justification::middle)
+        : BoxSizer(orient, justify)
     {
         parent.add(*this);
     }
@@ -78,107 +70,87 @@ public:
         return std::unique_ptr<Widget>(make_unique<BoxSizer>(*this).release());
     }
 
-    virtual void add(Widget& widget) override
+    virtual void layout() override;
+
+    inline justification justify() const { return m_justify; }
+
+    inline void set_justify(justification justify)
     {
-        Frame::add(widget);
-    }
-
-    virtual void add(const std::shared_ptr<Widget>& widget) override
-    {
-        Frame::add(widget);
-
-        if (m_orient == orientation::horizontal)
+        if (detail::change_if_diff<>(m_justify, justify))
         {
-            auto w = box().size().w + widget->box().size().w;
-            if (count_children() > 1)
-                w += m_spacing;
-            auto h = std::max(widget->box().size().h, box().size().h);
-
-            resize(Size(w, h));
-        }
-        else
-        {
-            auto w = std::max(widget->box().size().w, box().size().w);
-            auto h = box().size().h + widget->box().size().h;
-            if (count_children() > 1)
-                h += m_spacing;
-
-            resize(Size(w, h));
+            layout();
         }
     }
 
-    virtual void remove(Widget* widget) override
-    {
-        Frame::remove(widget);
-        reposition();
-    }
+    orientation orient() const { return m_orient; }
 
-    virtual void layout() override
-    {
-        Frame::layout();
-        reposition();
-    }
-
-    /**
-     * Reposition all child widgets.
-     */
-    virtual void reposition()
-    {
-        if (box().size().empty())
-            return;
-
-        Rect bounding = Rect(Point(m_hmargin, m_vmargin),
-                             box().size() - Size(2 * m_hmargin, 2 * m_vmargin));
-
-        if (m_orient == orientation::vertical)
-        {
-            for (auto& child : m_children)
-            {
-                Rect target = detail::align_algorithm(child->box().size(),
-                                                      bounding,
-                                                      child->align(),
-                                                      child->margin());
-
-                // reposition/resize widget
-                child->move(target.point());
-                child->resize(target.size());
-
-                bounding += Point(0, target.size().h + m_spacing);
-                bounding -= Size(0, target.size().h);
-            }
-
-        }
-        else
-        {
-            for (auto& child : m_children)
-            {
-                Rect target = detail::align_algorithm(child->box().size(),
-                                                      bounding,
-                                                      child->align(),
-                                                      child->margin());
-
-                // reposition/resize widget
-                child->move(target.point());
-                child->resize(target.size());
-
-                bounding += Point(target.size().w + m_spacing, 0);
-                bounding -= Size(target.size().w, 0);
-            }
-        }
-
-        damage();
-    }
-
-    virtual ~BoxSizer()
-    {}
+    virtual ~BoxSizer() noexcept = default;
 
 protected:
-    int m_spacing{0};
-    int m_hmargin{0};
-    int m_vmargin{0};
+
+    Size super_rect() const
+    {
+        Rect result = size();
+        for (auto& child : m_children)
+            result = Rect::merge(result, child->box());
+        return result.size();
+    }
+
     orientation m_orient{orientation::horizontal};
+    justification m_justify{justification::start};
 };
 
+/**
+ * @ingroup sizers
+ */
+class HorizontalBoxSizer : public BoxSizer
+{
+public:
+    explicit HorizontalBoxSizer(justification justify = justification::middle)
+        : BoxSizer(orientation::horizontal, justify)
+    {}
+    explicit HorizontalBoxSizer(Frame& parent, justification justify = justification::middle)
+        : BoxSizer(parent, orientation::horizontal, justify)
+    {}
+
+    virtual ~HorizontalBoxSizer() = default;
+};
+
+/**
+ * @ingroup sizers
+ */
+class VerticalBoxSizer : public BoxSizer
+{
+public:
+    explicit VerticalBoxSizer(justification justify = justification::middle)
+        : BoxSizer(orientation::vertical, justify)
+    {}
+
+    explicit VerticalBoxSizer(Frame& parent, justification justify = justification::middle)
+        : BoxSizer(parent, orientation::vertical, justify)
+    {}
+
+    virtual ~VerticalBoxSizer() = default;
+};
+
+/**
+ * @ingroup sizers
+ */
+class FlexBoxSizer : public BoxSizer
+{
+public:
+    explicit FlexBoxSizer(justification justify = justification::middle)
+        : BoxSizer(orientation::flex, justify)
+    {}
+    explicit FlexBoxSizer(Frame& parent, justification justify = justification::middle)
+        : BoxSizer(parent, orientation::flex, justify)
+    {}
+
+    virtual ~FlexBoxSizer() = default;
+};
+
+
+#if 1
 /**
  * @brief Positions widgets based on an orientation.
  * @deprecated This will be removed.
@@ -197,7 +169,6 @@ public:
           m_spacing(spacing),
           m_orient(orient)
     {
-        set_boxtype(Theme::boxtype::none);
         set_name("OrientationPositioner" + std::to_string(m_widgetid));
 
         if (m_orient == orientation::horizontal)
@@ -260,7 +231,9 @@ public:
         if (box().size().empty())
             return;
 
-        auto target = box().point() + Point(m_spacing, m_spacing);
+        auto bounding = to_child(content_area());
+
+        auto target = bounding.point() + Point(m_spacing, m_spacing);
         if (m_orient == orientation::horizontal)
         {
             for (auto& child : m_children)
@@ -283,8 +256,8 @@ public:
 
     virtual void layout() override
     {
-        Frame::layout();
         reposition();
+        //Frame::layout();
     }
 
     Rect super_rect() const
@@ -316,8 +289,8 @@ public:
     * @param[in] spacing Spacing between positioning.
     * @param[in] align Alignment for the child widgets.
     */
-    HorizontalPositioner(const Rect& rect,
-                         int spacing = 0, alignmask align = alignmask::center)
+    explicit HorizontalPositioner(const Rect& rect,
+                                  int spacing = 0, alignmask align = alignmask::center)
         : Frame(rect),
           m_spacing(spacing),
           m_align(align)
@@ -379,8 +352,8 @@ public:
 
     virtual void layout() override
     {
-        Frame::layout();
         reposition();
+        //Frame::layout();
     }
 
     virtual ~HorizontalPositioner() = default;
@@ -397,6 +370,7 @@ protected:
      */
     alignmask m_align{alignmask::none};
 };
+#endif
 
 }
 }

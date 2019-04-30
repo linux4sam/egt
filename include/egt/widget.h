@@ -117,6 +117,11 @@ public:
          * Use this with caution, it's probably not what you want.
          */
         no_clip,
+
+        no_base_translate,
+
+        no_layout,
+        layout_break,
     };
 
     using flags_type = Flags<flag>;
@@ -133,8 +138,8 @@ public:
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
-    Widget(Frame& parent, const Rect& rect = Rect(),
-           const flags_type& flags = flags_type()) noexcept;
+    explicit Widget(Frame& parent, const Rect& rect = Rect(),
+                    const flags_type& flags = flags_type()) noexcept;
 
     Widget(const Widget& rhs) noexcept;
 
@@ -200,6 +205,29 @@ public:
      * @note This will cause a redraw of the widget.
      */
     virtual void resize(const Size& s);
+
+    /**
+     * Scale the current size of the Widget given the ratio.
+     *
+     * There is no automatic undo for this operation.  Each call to this function
+     * uses the current size of the widget.
+     *
+     * @param[in] hratio Horizontal ratio of w().
+     * @param[in] vratio Vertical ratio of h().
+     *
+     * @see Widget::resize()
+     */
+    virtual void scale(int hratio, int vratio);
+
+    /**
+     * @param[in] ratio Horizontal and vertical ratio of size().
+     *
+     * @see Widget::scale()
+     */
+    inline void scale(int ratio)
+    {
+        scale(ratio, ratio);
+    }
 
     /**
      * Change the width of the widget.
@@ -273,6 +301,14 @@ public:
      * Return true if the widget is visible.
      */
     virtual bool visible() const;
+
+    inline void toggle_visible()
+    {
+        if (visible())
+            hide();
+        else
+            show();
+    }
 
     /**
      * Return true if the widget is active.
@@ -365,7 +401,7 @@ public:
     /**
      * Get the widget Palette.
      */
-    Palette& palette();
+    Palette& instance_palette();
 
     /**
      * Get the widget Palette.
@@ -425,9 +461,8 @@ public:
      * This will align the widget relative to the box of its parent frame.
      *
      * @param[in] a The alignmask.
-     * @param[in] margin Optional margin size used for alignment.
      */
-    virtual void set_align(alignmask a, int margin = 0);
+    virtual void set_align(alignmask a);
 
     /**
      * Get the alignment of the widget.
@@ -435,9 +470,102 @@ public:
     inline alignmask align() const { return m_align; }
 
     /**
-     * Return the alignment margin.
+     * Set the alignment padding.
      */
-    inline int margin() const { return m_margin; }
+    inline void set_padding(default_dim_type padding)
+    {
+        if (detail::change_if_diff<>(m_padding, padding))
+        {
+            damage();
+            layout();
+        }
+    }
+
+    /**
+     * Return the alignment padding.
+     */
+    inline default_dim_type padding() const { return m_padding; }
+
+    inline void set_margin(default_dim_type margin)
+    {
+        if (detail::change_if_diff<>(m_margin, margin))
+        {
+            damage();
+            layout();
+        }
+    }
+
+    inline default_dim_type margin() const { return m_margin; }
+
+    inline void set_border(default_dim_type border)
+    {
+        if (detail::change_if_diff<>(m_border, border))
+        {
+            damage();
+            layout();
+        }
+    }
+
+    inline default_dim_type border() const { return m_border; }
+
+    inline void set_ratio(default_dim_type ratio)
+    {
+        set_ratio(ratio, ratio);
+    }
+
+    inline void set_ratio(default_dim_type horizontal,
+                          default_dim_type vertical)
+    {
+        auto a = detail::change_if_diff<>(m_horizontal_ratio, horizontal);
+        auto b = detail::change_if_diff<>(m_vertical_ratio, vertical);
+        if (a || b)
+            parent_layout();
+    }
+
+    inline void set_vertical_ratio(default_dim_type vertical)
+    {
+        if (detail::change_if_diff<>(m_vertical_ratio, vertical))
+            parent_layout();
+    }
+
+    inline default_dim_type vertical_ratio() const { return m_vertical_ratio; }
+
+    inline void set_horizontal_ratio(default_dim_type horizontal)
+    {
+        if (detail::change_if_diff<>(m_horizontal_ratio, horizontal))
+            parent_layout();
+    }
+
+    inline default_dim_type horizontal_ratio() const { return m_horizontal_ratio; }
+
+    inline void set_yratio(default_dim_type yratio)
+    {
+        if (detail::change_if_diff<>(m_yratio, yratio))
+            parent_layout();
+    }
+
+    inline default_dim_type yratio() const { return m_yratio; }
+
+    inline void set_xratio(default_dim_type xratio)
+    {
+        if (detail::change_if_diff<>(m_xratio, xratio))
+            parent_layout();
+    }
+
+    inline default_dim_type xratio() const { return m_xratio; }
+
+    /**
+     * Get a minimum size hint for the Widget.
+     *
+     * This is used by sizers to pick minimum and default dimensions when no
+     * other force is used.
+     */
+    virtual Size min_size_hint() const
+    {
+        return Size(margin() * 2, margin() * 2) +
+               Size(border() * 2, border() * 2) +
+               Size(padding() * 2, padding() * 2);
+    }
 
     /**
      * Paint the Widget using Painter.
@@ -464,8 +592,14 @@ public:
      */
     virtual void dump(std::ostream& out, int level = 0);
 
-    using walk_callback_t = std::function<void(Widget* widget, int level)>;
+    using walk_callback_t = std::function<bool(Widget* widget, int level)>;
 
+    /**
+     * Walk the Widget tree and call @b callback with each Widget.
+     *
+     * @param callback Function to call for each widget.
+     * @param level The current level of the widget hierarchy.
+     */
     virtual void walk(walk_callback_t callback, int level = 0);
 
     /**
@@ -492,10 +626,20 @@ public:
             damage();
     }
 
+    inline Theme::boxtype boxtype() const
+    {
+        return m_boxtype;
+    }
+
     /**
-     * Get the Widget Theme, or the default Theme if none is set.
+     * Get the Widget Theme.
+     *
+     * If a custom theme was set for the instance, it will be returned.
+     * Otherwise, if this widget has a parent it will return the first parent in
+     * the widget hierarchy that has a theme.  If no theme is found, the default
+     * global theme will be returned.
      */
-    Theme& theme();
+    const Theme& theme() const;
 
     /**
      * Move this widgets zorder down relative to other widgets with the same
@@ -515,9 +659,17 @@ public:
     void detatch();
 
     /**
-    * Convert a child rectangle to a parent rectangle.
+    * Convert a point with a local origin to a parent origin.
     */
-    Rect to_parent(const Rect& r);
+    Point to_parent(const Point& r) const;
+
+    /**
+     * @see Widget::to_parent().
+     */
+    inline Rect to_parent(const Rect& r) const
+    {
+        return Rect(to_parent(r.point()), r.size());
+    }
 
     /**
      * Convert a local point to the coordinate system of the display.
@@ -535,15 +687,50 @@ public:
      */
     virtual Point from_display(const DisplayPoint& p);
 
-    virtual ~Widget() noexcept;
+    /**
+     * Return the area that content is allowed to be positioned into.
+     *
+     * In most cases, the normal box() area needs to be shrunk by the
+     * margin + padding + border.  However, some widgets reserve more for
+     * themselves, and only allow their children to be positioned in the
+     * rest.
+     */
+    virtual Rect content_area() const
+    {
+        auto moat = margin() + padding() + border();
+        auto b = box();
+        b += Point(moat, moat);
+        b -= Size(2. * moat, 2. * moat);
+        return b;
+    }
 
-protected:
+    Palette::pattern_type color(Palette::ColorId id)
+    {
+        Palette::GroupId group = Palette::GroupId::normal;
+        if (disabled())
+            group = Palette::GroupId::disabled;
+        else if (active())
+            group = Palette::GroupId::active;
+
+        return palette().color(id, group);
+    }
+
+    /**
+     * Perform layout of the widget.
+     */
+    virtual void layout()
+    {}
+
+    virtual ~Widget() noexcept;
 
     /**
      * Helper function to draw this widget's box using the appropriate
      * theme.
      */
-    void draw_box(Painter& painter, const Rect& rect = Rect());
+    void draw_box(Painter& painter, Palette::ColorId bg,
+                  Palette::ColorId border) const;
+
+protected:
 
     /**
      * Is this widget a top level widget?
@@ -558,8 +745,11 @@ protected:
         // cannot already have a parent
         assert(!m_parent);
 
-        m_parent = parent;
-        damage();
+        if (!m_parent)
+        {
+            m_parent = parent;
+            damage();
+        }
     }
 
     /**
@@ -579,6 +769,8 @@ protected:
      */
     int m_widgetid{0};
 
+    void parent_layout();
+
 private:
 
     DisplayPoint to_display_back(const Point& p);
@@ -590,7 +782,7 @@ private:
     flags_type m_widget_flags{};
 
     /**
-     * Current palette for the widget.
+     * Instance palette for the widget.
      *
      * @note This should not be accessed directly.  Always use the accessor
      * functions because this is not set until it is modified.
@@ -603,9 +795,33 @@ private:
     alignmask m_align{alignmask::none};
 
     /**
+     * Alignment padding.
+     */
+    default_dim_type m_padding{0};
+
+    /**
+     * Alignment border.
+     */
+    default_dim_type m_border{0};
+
+    /**
      * Alignment margin.
      */
-    int m_margin{0};
+    default_dim_type m_margin{0};
+
+    default_dim_type m_xratio{0};
+
+    default_dim_type m_yratio{0};
+
+    /**
+     * Horizontal alignment ratio.
+     */
+    default_dim_type m_horizontal_ratio{0};
+
+    /**
+     * Vertical alignment ratio.
+     */
+    default_dim_type m_vertical_ratio{0};
 
     /**
      * Focus state.
@@ -618,7 +834,7 @@ private:
     Theme::boxtype m_boxtype{Theme::boxtype::none};
 
     /**
-     * Current theme for the widget.
+     * Instance theme for the widget.
      *
      * @note This should not be accessed directly.  Always use the accessor
      * functions because this is not set until it is modified.

@@ -14,6 +14,7 @@
 #include <deque>
 #include <egt/screen.h>
 #include <egt/widget.h>
+#include <egt/detail/alignment.h>
 #include <exception>
 #include <memory>
 #include <string>
@@ -104,8 +105,9 @@ public:
         if (i == m_children.end())
         {
             widget->set_parent(this);
-            widget->set_align(widget->align(), widget->margin());
             m_children.push_back(widget);
+            layout();
+            //parent_layout();
         }
     }
 
@@ -226,6 +228,11 @@ public:
      */
     virtual void damage(const Rect& rect) override;
 
+    virtual void damage_from_child(const Rect& rect)
+    {
+        damage(rect);
+    }
+
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -253,52 +260,36 @@ public:
      */
     virtual void paint_children_to_file();
 
-    virtual void resize(const Size& size) override
-    {
-        Widget::resize(size);
-        layout();
-    }
-
     virtual void show() override
     {
-        layout();
+        if (visible())
+            return;
+
         Widget::show();
-    }
-
-    virtual void layout()
-    {
-        for (auto& child : m_children)
-        {
-            child->set_align(child->align(), child->margin());
-
-            if (child->flags().is_set(Widget::flag::frame))
-            {
-                auto frame = dynamic_cast<Frame*>(child.get());
-                frame->layout();
-            }
-        }
-    }
-
-    Point to_child(const Point& p)
-    {
-        return p - box().point();
-    }
-
-    Rect to_child(const Rect& r)
-    {
-        return r - box().point();
+        layout();
     }
 
     /**
-     * Return the area that children are allowed to be positioned into.
-     *
-     * In most cases, box() is the same as child_area(). However, some frames
-     * reserve an area for themselves, and only allow their children to be
-     * positioned in the rest.
+     * @note Remember that when overriding this function as a Frame, you must call
+     * layout on each child Frame to propogate the layout.
      */
-    virtual Rect child_area() const
+    virtual void layout() override;
+
+    /**
+     * Convert a point with an origin of the current frame to child origin.
+     */
+    virtual Point to_child(const Point& p) const
     {
-        return box();
+        return p - point();
+    }
+
+    /**
+     * @see Frame::to_child();
+     */
+    inline Rect to_child(Rect rect) const
+    {
+        rect.point(to_child(rect.point()));
+        return rect;
     }
 
     /**
@@ -354,33 +345,78 @@ public:
         }
     }
 
+    virtual Widget* child_hit_test(const DisplayPoint& point)
+    {
+        for (auto& child : detail::reverse_iterate(m_children))
+        {
+            Point pos = to_child(from_display(point));
+            if (Rect::point_inside(pos, child->box()))
+            {
+                if (child->flags().is_set(Widget::flag::frame))
+                {
+                    auto frame = static_cast<Frame*>(child.get());
+                    return frame->child_hit_test(point);
+                }
+                else
+                    return child.get();
+            }
+        }
+
+        Point pos = from_display(point);
+        if (Rect::point_inside(pos, box()))
+            return this;
+
+        return nullptr;
+    }
+
+    /**
+     * Add damage to the damage array.
+     *
+     * Damage rects added here must have origin at point() of this frame. This
+     * is done for several reasons, including if this frame is moved, all of the
+     * damage rects are still valid.
+     */
+    virtual void add_damage(const Rect& rect);
+
+    using special_child_draw_callback_t = std::function<void(Painter& painter, Widget* widget)>;
+
+    inline special_child_draw_callback_t special_child_draw_callback() const
+    {
+        return m_special_child_draw_callback;
+    }
+
+    inline void set_special_child_draw_callback(special_child_draw_callback_t func)
+    {
+        m_special_child_draw_callback = func;
+    }
+
+    inline void special_child_draw(Painter& painter, Widget* widget)
+    {
+        if (m_special_child_draw_callback)
+            m_special_child_draw_callback(painter, widget);
+        else if (parent())
+            parent()->special_child_draw(painter, widget);
+    }
+
+    virtual bool has_screen() const { return false; }
+
+    virtual Frame* find_screen()
+    {
+        if (has_screen())
+            return this;
+
+        if (parent())
+            return parent()->find_screen();
+
+        return nullptr;
+
+    }
+
     virtual ~Frame() noexcept;
 
 protected:
 
-    bool child_hit_test(const Point& point)
-    {
-        for (auto& child : m_children)
-        {
-            if (child->disabled())
-                continue;
-
-            if (Rect::point_inside(point, child->box()))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    //TODO
-public:
-    /**
-     * Add damage to the damage array.
-     */
-    virtual void add_damage(const Rect& rect);
-protected:
+    special_child_draw_callback_t m_special_child_draw_callback;
 
     using children_array = std::deque<std::shared_ptr<Widget>>;
 
@@ -395,6 +431,7 @@ protected:
     Screen::damage_array m_damage;
 
     bool m_in_draw{false};
+    bool m_in_layout{false};
 };
 
 }

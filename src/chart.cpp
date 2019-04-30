@@ -33,22 +33,31 @@ LineChart::LineChart(const Rect& rect)
     : Widget(rect)
 {
     set_name("LineChart" + std::to_string(m_widgetid));
+
+    set_boxtype(Theme::boxtype::blank);
 }
 
 void LineChart::draw(Painter& painter, const Rect& rect)
 {
     ignoreparam(rect);
 
+    draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
+
     Painter::AutoSaveRestore sr(painter);
 
-    struct kplot* p;
+    const auto b = content_area();
 
-    p = kplot_alloc(NULL);
+    auto cr = painter.context();
+    cairo_translate(cr.get(),
+                    b.x,
+                    b.y);
+
+    struct kplot* p = kplot_alloc(NULL);
     struct kplotcfg* cfg = kplot_get_plotcfg(p);
     cfg->grid = m_grid;
     cfg->xticlabelfmt = xticlabelfmt;
     cfg->yticlabelfmt = xticlabelfmt;
-    auto tc = palette().color(Palette::ColorId::border);
+    auto tc = palette().color(Palette::ColorId::border).color();
     cfg->borderline.clr.type = KPLOTCTYPE_RGBA;
     cfg->borderline.clr.rgba[0] = tc.redf();
     cfg->borderline.clr.rgba[1] = tc.bluef();
@@ -61,14 +70,12 @@ void LineChart::draw(Painter& painter, const Rect& rect)
     cfg->ticline.clr.rgba[2] = tc.greenf();
     cfg->ticline.clr.rgba[3] = tc.alphaf();
 
-    auto cr = painter.context();
-
-    struct kdatacfg	 dcfg;
+    struct kdatacfg dcfg;
     kdatacfg_defaults(&dcfg);
     dcfg.line.sz = m_linewidth;
     dcfg.line.clr.type = KPLOTCTYPE_PATTERN;
     dcfg.line.clr.pattern =
-        cairo_pattern_create_linear(0.0, 0.0, 600.0, 400.0);
+        cairo_pattern_create_linear(0.0, 0.0, b.w, b.h);
 
     cairo_pattern_add_color_stop_rgb
     (dcfg.line.clr.pattern, 0.25, 1.0, 0.0, 0.0);
@@ -101,15 +108,9 @@ void LineChart::draw(Painter& painter, const Rect& rect)
         kdata_destroy(d1);
     }
 
-    auto bg = palette().color(Palette::ColorId::bg);
-    painter.set(bg);
-
-    cairo_rectangle(cr.get(), x(), y(), w(), h());
-    cairo_fill(cr.get());
-
     experimental::code_timer(false, "kplot_draw: ", [&]()
     {
-        kplot_draw(p, w(), h(), cr.get());
+        kplot_draw(p, b.w, b.h, cr.get());
     });
 
     kplot_free(p);
@@ -120,6 +121,8 @@ PieChart::PieChart(const Rect& rect)
     : Widget(rect)
 {
     set_name("PieChart" + std::to_string(m_widgetid));
+
+    set_boxtype(Theme::boxtype::blank);
 
     static const vector<Color> default_colors =
     {
@@ -147,34 +150,38 @@ PieChart::PieChart(const Rect& rect)
 
 void PieChart::draw(Painter& painter, const Rect& rect)
 {
-    // keep everything square
-    int width = std::min(w(), h());
-    int height = std::min(w(), h());
-
-    ignoreparam(painter);
     ignoreparam(rect);
 
-    shared_cairo_t cr = screen()->context();
+    draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    cairo_save(cr.get());
+    const auto b = content_area();
+
+    Painter::AutoSaveRestore sr(painter);
+    auto cr = painter.context();
 
     float to_angle = M_PI * 3 / 2;
     float from_angle = to_angle;
 
-    auto c = m_colors.begin();
+    // keep everything square
+    auto width = std::min(b.w, b.h);
+    auto height = std::min(b.w, b.h);
+
+    auto c = b.center();
+
+    auto colorit = m_colors.begin();
 
     for (auto& i : m_data)
     {
         to_angle += 2 * M_PI * i.second;
 
-        Color color = *c;
-        if (++c == m_colors.end())
-            c = m_colors.begin();
+        Color color = *colorit;
+        if (++colorit == m_colors.end())
+            colorit = m_colors.begin();
 
         painter.set(color);
-        cairo_move_to(cr.get(), x() + width / 2, y() + height / 2);
-        cairo_arc(cr.get(), x() + width / 2, y() + height / 2, width * .45, from_angle, to_angle);
-        cairo_line_to(cr.get(), x() + width / 2, y() + height / 2);
+        cairo_move_to(cr.get(), c.x, c.y);
+        cairo_arc(cr.get(), c.x, c.y, width * .45, from_angle, to_angle);
+        cairo_line_to(cr.get(), c.x, c.y);
         cairo_fill(cr.get());
         from_angle = to_angle;
     }
@@ -192,13 +199,11 @@ void PieChart::draw(Painter& painter, const Rect& rect)
         int label_x = width / 2 * (1.0 + 0.7 * std::cos(label_angle));
         int label_y = height / 2 * (1.0 + 0.7 * std::sin(label_angle));
         painter.set(Palette::black);
-        cairo_move_to(cr.get(), x() + label_x, y() + label_y);
+        cairo_move_to(cr.get(), c.x - width / 2 + label_x, c.y - height / 2 + label_y);
         cairo_show_text(cr.get(), i.first.c_str());
         cairo_fill(cr.get());
         from_angle = to_angle;
     }
-
-    cairo_restore(cr.get());
 }
 
 }

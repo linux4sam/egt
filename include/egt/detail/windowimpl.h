@@ -42,6 +42,10 @@ public:
     virtual void hide();
     virtual void paint(Painter& painter);
     virtual void allocate_screen() {}
+    inline bool has_screen() const
+    {
+        return m_screen != nullptr;
+    }
 
     virtual ~WindowImpl()
     {}

@@ -31,7 +31,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "dash");
 
     TopWindow win;
-    win.palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color::CSS("1b1d43"));
+    win.instance_palette().set(Palette::ColorId::bg, Color::CSS("1b1d43"));
 
     auto f = 1.50375;
 
@@ -53,7 +53,7 @@ int main(int argc, const char** argv)
     PeriodicTimer right_timer(std::chrono::milliseconds(1500));
     right_timer.on_timeout([right_blink]()
     {
-        right_blink->set_visible(!right_blink->visible());
+        right_blink->toggle_visible();
     });
     right_timer.start();
 
@@ -67,7 +67,7 @@ int main(int argc, const char** argv)
     PeriodicTimer left_timer(std::chrono::milliseconds(1000));
     left_timer.on_timeout([left_blink]()
     {
-        left_blink->set_visible(!left_blink->visible());
+        left_blink->toggle_visible();
     });
     left_timer.start();
 
@@ -81,7 +81,7 @@ int main(int argc, const char** argv)
     PeriodicTimer brights_timer(std::chrono::seconds(5));
     brights_timer.on_timeout([brights]()
     {
-        brights->set_visible(!brights->visible());
+        brights->toggle_visible();
     });
     brights_timer.start();
 

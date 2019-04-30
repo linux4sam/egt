@@ -25,7 +25,7 @@ inline namespace v1
  *
  * @ingroup controls
  */
-template<class T = int>
+template<class T>
 class RadialType : public ValueRangeWidget<T>
 {
 public:
@@ -47,10 +47,10 @@ public:
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
      */
-    RadialType(const Rect& rect, T min, T max, T value = T())
+    RadialType(const Rect& rect = Rect(), T min = 0, T max = 100, T value = 0)
         : ValueRangeWidget<T>(rect, min, max, value)
     {
-        this->set_boxtype(Theme::boxtype::none);
+        this->set_boxtype(Theme::boxtype::blank);
         this->flags().set(Widget::flag::grab_mouse);
 
         this->radial_flags().set({flag::primary_value,
@@ -59,7 +59,7 @@ public:
                                   flag::text});
     }
 
-    RadialType(Frame& parent, const Rect& rect, T min, T max, T value = T())
+    explicit RadialType(Frame& parent, const Rect& rect = Rect(), T min = 0, T max = 100, T value = 0)
         : RadialType<T>(rect, min, max, value)
     {
         parent.add(*this);
@@ -154,20 +154,24 @@ public:
     {
         ignoreparam(rect);
 
-        auto v = widget.value_to_degrees(widget.value());
+        widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-        auto color1 = widget.palette().color(Palette::ColorId::mid);
-        auto color2 = widget.palette().color(Palette::ColorId::highlight);
-        auto color3 = widget.palette().color(Palette::ColorId::dark);
-        auto color4 = widget.palette().color(Palette::ColorId::highlight);
+        const auto b = widget.content_area();
 
-        float smalldim = std::min(widget.w(), widget.h());
+        const auto v = widget.value_to_degrees(widget.value());
+
+        auto color1 = widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
+        auto color2 = widget.palette().color(Palette::ColorId::button_fg).color();
+        auto color3 = widget.palette().color(Palette::ColorId::button_bg).color();
+        auto color4 = widget.palette().color(Palette::ColorId::button_fg).color();
+
+        float smalldim = std::min(b.w, b.h);
         float linew = smalldim / 10;
         float radius = smalldim / 2 - (linew / 2);
         float angle1 = detail::to_radians<float>(-90, 0);
         float angle2 = detail::to_radians<float>(-90, v);
 
-        auto c = widget.center();
+        auto c = b.center();
 
         // bottom full circle
         painter.set(color1);
@@ -208,11 +212,11 @@ public:
         {
             if (!widget.m_text.empty())
             {
-                painter.set(widget.palette().color(Palette::ColorId::text));
+                painter.set(widget.palette().color(Palette::ColorId::text).color());
                 painter.set(Font(72));
 
                 auto size = painter.text_size(widget.m_text);
-                Rect target = detail::align_algorithm(size, widget.box(), alignmask::center, 0);
+                Rect target = detail::align_algorithm(size, b, alignmask::center, 0);
 
                 painter.draw(target.point());
                 painter.draw(widget.m_text);
@@ -222,11 +226,11 @@ public:
         {
             auto txt = std::to_string(widget.value());
 
-            painter.set(widget.palette().color(Palette::ColorId::text));
+            painter.set(widget.palette().color(Palette::ColorId::text).color());
             painter.set(Font(72));
 
             auto size = painter.text_size(txt);
-            Rect target = detail::align_algorithm(size, widget.box(), alignmask::center, 0);
+            Rect target = detail::align_algorithm(size, b, alignmask::center, 0);
 
             painter.draw(target.point());
             painter.draw(txt);
@@ -240,7 +244,8 @@ public:
 
     float touch_to_degrees(const Point& point)
     {
-        const Point c = this->center();
+        const auto b = this->content_area();
+        const Point c = b.center();
         float radians = c.angle_to<float>(point);
         float angle = detail::to_degrees(radians);
         if (angle < 0)
@@ -268,8 +273,7 @@ public:
         return (n * (this->m_max - this->m_min)) + this->m_min;
     }
 
-    virtual ~RadialType()
-    {}
+    virtual ~RadialType() = default;
 
 protected:
 
@@ -277,15 +281,13 @@ protected:
 
     T m_value2{};
 
-    RadialType() = delete;
-
     /**
      * Radial flags.
      */
     flags_type m_radial_flags;
 };
 
-using Radial = RadialType<>;
+using Radial = RadialType<int>;
 
 }
 }

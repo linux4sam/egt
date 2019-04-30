@@ -20,7 +20,6 @@ struct ButtonPage : public NotebookTab
     ButtonPage()
     {
         auto grid0 = make_shared<StaticGrid>(Tuple(3, 10), 5);
-        grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
         grid0->add(expand(make_shared<Button>("button 1", Size(100, 40))));
@@ -57,10 +56,10 @@ struct CheckBoxPage : public NotebookTab
     CheckBoxPage()
     {
         auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
-        grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
         auto toggle1 = std::make_shared<ToggleBox>();
+        toggle1->set_text("On", "Off");
         grid0->add(expand(toggle1));
 
         auto toggle2 = std::make_shared<ToggleBox>();
@@ -116,45 +115,64 @@ struct LabelPage : public NotebookTab
     LabelPage()
     {
         auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
-        grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
-        auto label1 = std::make_shared<Label>("left align", Rect(),
-                                              alignmask::left | alignmask::center, Font());
+        auto label1 = std::make_shared<Label>("left align",
+                                              alignmask::left | alignmask::center);
+        label1->set_boxtype(Theme::boxtype::blank);
+        label1->set_border(1);
         grid0->add(expand(label1));
 
-        auto label2 = std::make_shared<Label>("right align", Rect(),
-                                              alignmask::right | alignmask::center, Font());
+        auto label2 = std::make_shared<Label>("right align",
+                                              alignmask::right | alignmask::center);
+        label2->set_boxtype(Theme::boxtype::blank);
+        label2->set_border(1);
         grid0->add(expand(label2));
 
-        auto label3 = std::make_shared<Label>("top align", Rect(),
-                                              alignmask::top | alignmask::center, Font());
+        auto label3 = std::make_shared<Label>("top align",
+                                              alignmask::top | alignmask::center);
+        label3->set_boxtype(Theme::boxtype::blank);
+        label3->set_border(1);
         grid0->add(expand(label3));
 
-        auto label4 = std::make_shared<Label>("bottom align", Rect(),
-                                              alignmask::bottom | alignmask::center, Font());
+        auto label4 = std::make_shared<Label>("bottom align",
+                                              alignmask::bottom | alignmask::center);
+        label4->set_boxtype(Theme::boxtype::blank);
+        label4->set_border(1);
         grid0->add(expand(label4));
 
         auto imagelabel0 = std::make_shared<ImageLabel>(Image("@bug.png"), "Bug");
+        imagelabel0->set_boxtype(Theme::boxtype::blank);
+        imagelabel0->set_border(1);
         grid0->add(expand(imagelabel0));
 
         auto imagelabel1 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
+        imagelabel1->set_boxtype(Theme::boxtype::blank);
+        imagelabel1->set_border(1);
         grid0->add(expand(imagelabel1));
         imagelabel1->set_text_align(alignmask::center);
 
         auto imagelabel2 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
+        imagelabel2->set_boxtype(Theme::boxtype::blank);
+        imagelabel2->set_border(1);
         grid0->add(expand(imagelabel2));
         imagelabel2->set_text_align(alignmask::center | alignmask::right);
 
         auto imagelabel3 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
-        grid0->add(imagelabel3);
+        imagelabel3->set_boxtype(Theme::boxtype::blank);
+        imagelabel3->set_border(1);
+        grid0->add(expand(imagelabel3));
         imagelabel3->set_text_align(alignmask::center | alignmask::top);
 
         auto imagelabel4 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
+        imagelabel4->set_boxtype(Theme::boxtype::blank);
+        imagelabel4->set_border(1);
         grid0->add(expand(imagelabel4));
         imagelabel4->set_text_align(alignmask::center | alignmask::bottom);
 
         auto imagelabel5 = std::make_shared<ImageLabel>(Image("@phone.png"));
+        imagelabel5->set_boxtype(Theme::boxtype::blank);
+        imagelabel5->set_border(1);
         grid0->add(expand(imagelabel5));
     }
 };
@@ -164,11 +182,9 @@ struct TextPage : public NotebookTab
     TextPage()
     {
         auto grid1 = std::make_shared<StaticGrid>(Tuple(2, 1), 5);
-        grid1->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid1));
 
         auto grid0 = std::make_shared<StaticGrid>(Tuple(1, 10), 5);
-        grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         grid1->add(expand(grid0));
 
         auto text1 = std::make_shared<TextBox>("text 1");
@@ -178,12 +194,13 @@ struct TextPage : public NotebookTab
         text2->disable();
         grid0->add(expand(text2));
 
-        auto text3 = std::make_shared<TextBox>("text 3");
-        text3->set_boxtype(Theme::boxtype::bottom_border);
+        auto text3 = std::make_shared<TextBox>("right aligned text");
+        text3->set_boxtype(Theme::boxtype::fill | Theme::boxtype::border_bottom);
+        text3->set_text_align(alignmask::right);
         grid0->add(expand(text3));
 
         auto text4 = std::make_shared<TextBox>("text 4");
-        text4->set_boxtype(Theme::boxtype::bottom_border);
+        text4->set_boxtype(Theme::boxtype::fill | Theme::boxtype::border_bottom);
         text4->disable();
         grid0->add(expand(text4));
 
@@ -227,8 +244,7 @@ struct ProgressPage : public NotebookTab
 {
     ProgressPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
-        grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(2, 8), 5);
         add(expand(grid0));
 
         auto spinprogress = std::make_shared<SpinProgress>();
@@ -246,12 +262,8 @@ struct SliderPage : public NotebookTab
 {
     SliderPage()
     {
-        auto vsizer = std::make_shared<BoxSizer>(orientation::vertical, 10, 10, 10);
-        add(expand(vsizer));
-
-        auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, 10, 10, 0);
-        hsizer1->set_align(alignmask::expand_horizontal);
-        vsizer->add(hsizer1);
+        auto hsizer1 = std::make_shared<BoxSizer>(orientation::flex);
+        add(expand(hsizer1));
 
         auto slider1 = std::make_shared<Slider>(Rect(0, 0, 200, 80));
         slider1->set_value(50);
@@ -266,24 +278,20 @@ struct SliderPage : public NotebookTab
         slider3->slider_flags().set({Slider::flag::round_handle, Slider::flag::show_label});
         hsizer1->add(slider3);
 
-        auto hsizer2 = std::make_shared<BoxSizer>(orientation::horizontal, 10, 10, 0);
-        hsizer2->set_align(alignmask::expand_horizontal);
-        vsizer->add(hsizer2);
-
         auto slider4 = std::make_shared<Slider>(Rect(0, 0, 80, 200), 0, 100, 0, orientation::vertical);
         slider4->set_value(75);
         slider4->slider_flags().set({Slider::flag::round_handle});
         slider4->disable();
-        hsizer2->add(slider4);
+        hsizer1->add(slider4);
 
         auto slider5 = std::make_shared<Slider>(Rect(0, 0, 80, 200), 100, 200, 150, orientation::vertical);
         slider5->set_value(180);
         slider5->slider_flags().set({Slider::flag::square_handle, Slider::flag::show_labels});
-        hsizer2->add(slider5);
+        hsizer1->add(slider5);
 
         auto slider6 = std::make_shared<Slider>(Rect(0, 0, 200, 80), 100, 200, 150);
         slider6->slider_flags().set({Slider::flag::rectangle_handle, Slider::flag::show_labels});
-        hsizer2->add(slider6);
+        hsizer1->add(slider6);
     }
 };
 
@@ -292,11 +300,10 @@ struct MeterPage : public NotebookTab
     MeterPage()
     {
         auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 3), 10);
-        grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
         add(expand(grid0));
 
         auto lp1 = std::make_shared<LevelMeter>();
-        lp1->set_num_bars(8);
+        lp1->set_num_bars(10);
         grid0->add(expand(lp1));
 
         auto am1 = std::make_shared<AnalogMeter>();
@@ -318,23 +325,19 @@ struct ComboPage : public NotebookTab
 {
     ComboPage()
     {
-        auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, 10, 10, 10);
-        add(expand(hsizer1));
-
-        auto grid0 = std::make_shared<StaticGrid>(Rect(0, 0, 200, 0), Tuple(1, 10), 5);
-        grid0->palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-        hsizer1->add(expand_vertical(grid0));
+        auto grid = std::make_shared<StaticGrid>(Tuple(1, 3));
+        add(expand(grid));
 
         {
             ComboBox::item_array combo_items;
             for (auto x = 0; x < 5; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo1 = std::make_shared<ComboBox>(combo_items);
-            grid0->add(expand(combo1));
+            grid->add(combo1);
 
             auto combo2 = std::make_shared<ComboBox>(combo_items);
             combo2->disable();
-            grid0->add(expand(combo2));
+            grid->add(combo2);
         }
 
         {
@@ -342,7 +345,7 @@ struct ComboPage : public NotebookTab
             for (auto x = 0; x < 25; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo3 = std::make_shared<ComboBox>(combo_items);
-            grid0->add(expand(combo3));
+            grid->add(combo3);
         }
     }
 };
@@ -351,7 +354,7 @@ struct ListPage : public NotebookTab
 {
     ListPage()
     {
-        auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, 10, 10, 10);
+        auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, justification::middle);
         add(expand(hsizer1));
 
         auto list0 = std::make_shared<ListBox>(Rect(0, 0, 200, 0));
@@ -372,7 +375,7 @@ struct ScrollwheelPage : public NotebookTab
     ScrollwheelPage()
     {
         auto hsizer1 =
-            std::make_shared<BoxSizer>(orientation::horizontal, 10, 10, 10);
+            std::make_shared<BoxSizer>(orientation::horizontal);
         add(expand(hsizer1));
 
         auto scrollwheel_day =
@@ -441,47 +444,44 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    BoxSizer vsizer(orientation::vertical);
-    win.add(expand(vsizer));
+    VerticalBoxSizer vsizer(win);
+    expand(vsizer);
 
-    auto grid = make_shared<StaticGrid>(Size(0, win.h() * 0.10), Tuple(3, 1), 10);
-    grid->palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0xed2924ff));
-    grid->set_boxtype(Theme::boxtype::fill);
+    auto logo = make_shared<ImageLabel>(Image("@egt_logo_black.png"));
+    logo->set_margin(5);
+    logo->set_align(alignmask::center_horizontal);
+    vsizer.add(logo);
 
-    auto logo = make_shared<ImageLabel>(Image("@microchip_logo_white.png"));
-    grid->add(logo, 1, 0);
-
-    vsizer.add(expand_horizontal(grid));
-
-    auto hsizer = make_shared<BoxSizer>(orientation::horizontal);
+    BoxSizer hsizer(orientation::horizontal);
     vsizer.add(expand(hsizer));
 
-    auto list = make_shared<ListBox>(Size(win.w() * 0.15, 0));
-    list->add_item(make_shared<StringItem>("Buttons"));
-    list->add_item(make_shared<StringItem>("Text"));
-    list->add_item(make_shared<StringItem>("CheckBox"));
-    list->add_item(make_shared<StringItem>("Label"));
-    list->add_item(make_shared<StringItem>("Progress"));
-    list->add_item(make_shared<StringItem>("Sliders"));
-    list->add_item(make_shared<StringItem>("Meters"));
-    list->add_item(make_shared<StringItem>("ComboBox"));
-    list->add_item(make_shared<StringItem>("ListBox"));
-    list->add_item(make_shared<StringItem>("Scrollwheel"));
-    list->set_align(alignmask::expand_vertical | alignmask::left);
-    hsizer->add(list);
+    auto list = make_shared<ListBox>();
+    list->resize(Size(150, 0));
 
     auto notebook = make_shared<Notebook>();
-    notebook->add(make_shared<ButtonPage>());
-    notebook->add(make_shared<TextPage>());
-    notebook->add(make_shared<CheckBoxPage>());
-    notebook->add(make_shared<LabelPage>());
-    notebook->add(make_shared<ProgressPage>());
-    notebook->add(make_shared<SliderPage>());
-    notebook->add(make_shared<MeterPage>());
-    notebook->add(make_shared<ComboPage>());
-    notebook->add(make_shared<ListPage>());
-    notebook->add(make_shared<ScrollwheelPage>());
-    hsizer->add(expand(notebook));
+
+    map<string, shared_ptr<NotebookTab>> pages =
+    {
+        {"Buttons", make_shared<ButtonPage>()},
+        {"Text", make_shared<TextPage>()},
+        {"CheckBox", make_shared<CheckBoxPage>()},
+        {"Label", make_shared<LabelPage>()},
+        {"Progress", make_shared<ProgressPage>()},
+        {"Sliders", make_shared<SliderPage>()},
+        {"Meters", make_shared<MeterPage>()},
+        {"ComboBox", make_shared<ComboPage>()},
+        {"ListBox", make_shared<ListPage>()},
+        {"Scrollwheel", make_shared<ScrollwheelPage>()},
+    };
+
+    for (auto& i : pages)
+    {
+        list->add_item(make_shared<StringItem>(i.first));
+        notebook->add(i.second);
+    }
+
+    hsizer.add(expand_vertical(list));
+    hsizer.add(expand(notebook));
 
     list->on_event([&notebook, &list](eventid)
     {

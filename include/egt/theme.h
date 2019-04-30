@@ -11,10 +11,12 @@
  * @brief Working with themes.
  */
 
-#include <egt/palette.h>
+#include <egt/bitmask.h>
+#include <egt/font.h>
 #include <egt/geometry.h>
+#include <egt/palette.h>
 #include <functional>
-#include <iostream>
+#include <memory>
 
 namespace egt
 {
@@ -106,76 +108,128 @@ class Theme
 {
 public:
 
+    using pattern_type = Pattern;
+
     /**
      * Box types used to characterize how a widget's box should be draw.
      */
-    enum class boxtype
+    enum class boxtype : uint32_t
     {
-        none,
-        fill,
-        fillsolid,
-        border,
-        bottom_border,
-        rounded_border,
-        borderfill,
-        rounded_borderfill,
-        rounded_fill,
-        rounded_gradient,
-        rounded_border_gradient,
+        none = 0,
+
+        /**
+         * Overwrite and don't blend.
+         * @note This is the same as CAIRO_OPERATOR_SOURCE.
+         */
+        solid = 1 << 0,
+
+        // type of fill, if none is set, no fill will be done
+        fill = 1 << 1,
+
+        // type of border, border will always be drawn if border_width > 0
+        border_rounded = 1 << 2,
+        border_bottom = 1 << 3,
+
+        // useful pre-defines
+        blank = fill,
+        blank_rounded = fill | border_rounded,
     };
 
     static float DEFAULT_ROUNDED_RADIUS;
-    static float DEFAULT_BORDER_WIDTH;
 
+    Theme();
+
+    Theme(const Theme& rhs)
+    {
+        if (rhs.m_palette)
+            m_palette.reset(new Palette(*rhs.m_palette.get()));
+
+        if (rhs.m_font)
+            m_font.reset(new Font(*rhs.m_font.get()));
+    }
+
+    Palette& palette()
+    {
+        assert(m_palette);
+        return *m_palette.get();
+    }
+
+    const Palette& palette() const
+    {
+        assert(m_palette);
+        return *m_palette.get();
+    }
+
+    Font& font()
+    {
+        assert(m_font);
+        return *m_font.get();
+    }
+
+    const Font& font() const
+    {
+        assert(m_font);
+        return *m_font.get();
+    }
+
+    /**
+     * Draw a box using properties directly from the widget.
+     */
     virtual void draw_box(Painter& painter,
-                          Widget& widget,
-                          boxtype type = boxtype::borderfill,
-                          const Rect& rect = Rect());
+                          const Widget& widget,
+                          Palette::ColorId bg,
+                          Palette::ColorId border) const;
 
-    virtual void draw_fill_box(Painter& painter,
-                               const Rect& rect,
-                               const Color& bg,
-                               bool solid = false);
+    /**
+     * Draw a box specifying the properties directly.
+     */
+    virtual void draw_box(Painter& painter,
+                          boxtype type,
+                          const Rect& rect,
+                          const pattern_type& border,
+                          const pattern_type& bg,
+                          default_dim_type border_width = 0,
+                          default_dim_type margin_width = 0) const;
 
-    virtual void draw_border_box(Painter& painter,
-                                 const Rect& rect,
-                                 const Color& border);
+    virtual void draw_circle(Painter& painter,
+                             boxtype type,
+                             const Rect& rect,
+                             const pattern_type& border,
+                             const pattern_type& bg,
+                             default_dim_type border_width = 0,
+                             default_dim_type margin_width = 0) const;
 
-    virtual void draw_bottom_border_box(Painter& painter,
-                                        const Rect& rect,
-                                        const Color& border);
+    virtual default_dim_type default_border() const
+    {
+        return 2;
+    }
 
-    virtual void draw_border_fill_box(Painter& painter,
-                                      const Rect& rect,
-                                      const Color& border,
-                                      const Color& bg);
+    virtual void apply()
+    {
+        init_palette();
+        init_draw();
+    }
 
-    virtual void draw_rounded_border_box(Painter& painter,
-                                         const Rect& rect,
-                                         const Color& border);
+    virtual ~Theme() = default;
 
-    virtual void draw_rounded_borderfill_box(Painter& painter,
-            const Rect& rect,
-            const Color& border,
-            const Color& bg);
+protected:
 
-    virtual void draw_rounded_fill_box(Painter& painter,
-                                       const Rect& rect,
-                                       const Color& bg);
+    /**
+     * Palette instance used by the theme.
+     */
+    std::unique_ptr<Palette> m_palette;
 
-    virtual void draw_rounded_gradient_box(Painter& painter,
-                                           const Rect& rect,
-                                           const Color& bg);
+    /**
+     * Default font instance used by the theme.
+     */
+    std::unique_ptr<Font> m_font;
 
-    virtual void draw_rounded_border_gradient_box(Painter& painter,
-            const Rect& rect,
-            const Color& border,
-            const Color& bg);
+    virtual void init_palette();
 
-    virtual ~Theme()
-    {}
-
+    virtual void init_draw();
 };
+
+ENABLE_BITMASK_OPERATORS(Theme::boxtype)
 
 /**
  * Get the global theme.
@@ -186,6 +240,11 @@ public:
  */
 Theme& global_theme();
 
+/**
+ * Set the global theme.
+ *
+ * @note This will destroy any pre-existing theme instance.
+ */
 void set_global_theme(Theme* theme);
 
 }

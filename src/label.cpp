@@ -29,7 +29,8 @@ Label::Label(const std::string& text, const Rect& rect, alignmask align, const F
 {
     set_name("Label" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill);
+    set_boxtype(Theme::boxtype::none);
+    set_padding(5);
 }
 
 Label::Label(Frame& parent, const std::string& text, alignmask align, const Font& font) noexcept
@@ -68,18 +69,16 @@ void Label::default_draw(Label& widget, Painter& painter, const Rect& rect)
 {
     ignoreparam(rect);
 
-    widget.draw_box(painter);
+    widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 
-    // text
-    painter.set(widget.palette().color(Palette::ColorId::text,
-                                       widget.active() ? Palette::GroupId::active : Palette::GroupId::normal));
+    const auto b = widget.content_area();
+
+    painter.set(widget.color(Palette::ColorId::label_text).color());
     painter.set(widget.font());
-
-    auto text_size = widget.text_size(widget.text());
-    Rect target = detail::align_algorithm(text_size,
-                                          widget.box(),
-                                          widget.text_align(),
-                                          5);
+    const auto size = painter.text_size(widget.text());
+    const auto target = detail::align_algorithm(size,
+                        b,
+                        widget.text_align());
     painter.draw(target.point());
     painter.draw(widget.text());
 }
@@ -90,20 +89,23 @@ void Label::set_parent(Frame* parent)
     first_resize();
 }
 
+Size Label::min_size_hint() const
+{
+    if (!m_text.empty())
+    {
+        auto s = text_size(m_text);
+        s += Widget::min_size_hint();
+        return s;
+    }
+
+    return DEFAULT_LABEL_SIZE;
+}
+
 void Label::first_resize()
 {
     if (box().size().empty())
     {
-        if (!m_text.empty())
-        {
-            auto s = text_size(m_text);
-            s += Size(5, 5);
-            resize(s);
-        }
-        else
-        {
-            resize(DEFAULT_LABEL_SIZE);
-        }
+        resize(min_size_hint());
     }
 }
 
@@ -125,7 +127,7 @@ ImageLabel::ImageLabel(const Image& image,
 {
     set_name("ImageLabel" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::none);
+    set_padding(0);
 
     if (rect.empty())
         m_box.size(image.size());
@@ -159,32 +161,13 @@ void ImageLabel::scale_image(double hscale, double vscale,
                              bool approximate)
 {
     m_image.scale(hscale, vscale, approximate);
-    m_box = Rect(m_box.point(), m_image.size());
+    //m_box = Rect(m_box.point(), m_image.size());
 }
 
 void ImageLabel::scale_image(double s, bool approximate)
 {
     scale_image(s, s, approximate);
 }
-
-#if 0
-void ImageLabel::resize(const Size& size) override
-{
-    if (m_text.empty())
-    {
-        if (this->size() != size)
-        {
-            double hs = (double)size.w / (double)m_image.size_orig().w;
-            double vs = (double)size.h / (double)m_image.size_orig().h;
-            scale_image(hs, vs);
-        }
-    }
-    else
-    {
-        Widget::resize(size);
-    }
-}
-#endif
 
 void ImageLabel::draw(Painter& painter, const Rect& rect)
 {
@@ -195,30 +178,32 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 {
     ignoreparam(rect);
 
-    widget.draw_box(painter);
+    widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
+
+    const auto b = widget.content_area();
 
     if (!widget.text().empty())
     {
-        auto text_size = widget.text_size(widget.text());
+        const auto text_size = widget.text_size(widget.text());
 
         Rect tbox;
         Rect ibox;
 
         if (widget.m_position_image_first)
-            detail::double_align(widget.box(),
+            detail::double_align(b,
                                  widget.m_image.size(), widget.m_image_align, ibox,
-                                 text_size, widget.m_text_align, tbox, 5);
+                                 text_size, widget.m_text_align, tbox, 0);
         else
-            detail::double_align(widget.box(),
+            detail::double_align(b,
                                  text_size, widget.text_align(), tbox,
-                                 widget.m_image.size(), widget.m_image_align, ibox, 5);
+                                 widget.m_image.size(), widget.m_image_align, ibox, 0);
 
         painter.draw(ibox.point());
         painter.draw(widget.m_image);
 
         if (widget.m_show_label)
         {
-            painter.set(widget.palette().color(Palette::ColorId::text));
+            painter.set(widget.color(Palette::ColorId::label_text).color());
             painter.set(widget.font());
             painter.draw(tbox.point());
             painter.draw(widget.m_text);
@@ -226,8 +211,14 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
     }
     else
     {
-        Rect target = detail::align_algorithm(widget.m_image.size(),
-                                              widget.box(), widget.m_image_align, 0);
+        const auto target = detail::align_algorithm(widget.m_image.size(),
+                            b,
+                            widget.m_image_align);
+
+        const auto hs = (double)target.w / (double)widget.image().size_orig().w;
+        const auto vs = (double)target.h / (double)widget.image().size_orig().h;
+        widget.scale_image(hs, vs);
+
         painter.draw(target.point());
         painter.draw(widget.m_image);
     }
@@ -263,7 +254,7 @@ void ImageLabel::first_resize()
     {
         if (!m_text.empty())
         {
-            auto text_size = this->text_size(m_text);
+            const auto text_size = this->text_size(m_text);
 
             Rect tbox;
             Rect ibox;
@@ -277,7 +268,7 @@ void ImageLabel::first_resize()
                                      text_size, m_text_align, tbox,
                                      m_image.size(), m_image_align, ibox, 5);
 
-            auto s = Rect::merge(tbox, ibox);
+            const auto s = Rect::merge(tbox, ibox);
             resize(s.size() + Size(10, 10));
         }
         else
