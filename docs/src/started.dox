@@ -80,8 +80,8 @@ Follow the README.md instructions for that project with the following versions.
 
 @code{.sh}
 git clone https://bitbucket.microchip.com/scm/linux4sam/buildroot-external-microchip.git -b egt_devel
-git clone git clone https://git.buildroot.net/buildroot -b 2019.02
-cd buildroot
+git clone https://bitbucket.microchip.com/scm/linux4sam/buildroot-at91.git -b egt_devel
+cd buildroot-at91
 BR2_EXTERNAL=../buildroot-external-microchip/ make sam9x60ek_egt_defconfig
 make
 @endcode
