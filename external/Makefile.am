@@ -47,4 +47,7 @@ dist-hook:
 endif
 
 EXTRA_DIST = \
-	rapidxml
+	rapidxml \
+	layout \
+	kplot/compat.sh \
+	utfcpp

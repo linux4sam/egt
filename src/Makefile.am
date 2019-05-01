@@ -141,6 +141,7 @@ $(top_srcdir)/include/egt/event.h \
 $(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/flags.h \
 $(top_srcdir)/include/egt/font.h \
+$(top_srcdir)/include/egt/form.h \
 $(top_srcdir)/include/egt/frame.h \
 $(top_srcdir)/include/egt/geometry.h \
 $(top_srcdir)/include/egt/grid.h \
