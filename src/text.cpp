@@ -245,7 +245,7 @@ void TextBox::draw(Painter& painter, const Rect&)
             std::string text(ch.base(), ch2.base());
 
             cairo_text_extents_t te;
-            cairo_text_extents(cr.get(), (char*)text.c_str(), &te);
+            cairo_text_extents(cr.get(), text.c_str(), &te);
             detail::LayoutRect r;
             r.behave = behave;
             r.rect = Rect(0, 0, te.x_advance, fe.height);
@@ -279,18 +279,18 @@ void TextBox::draw(Painter& painter, const Rect&)
             utf8::unchecked::advance(ch2, 1);
             std::string text(ch.base(), ch2.base());
             cairo_text_extents_t te;
-            cairo_text_extents(cr.get(), (char*)text.c_str(), &te);
+            cairo_text_extents(cr.get(), text.c_str(), &te);
 
-            auto p = PointF((float)b.x + (float)r->rect.x + te.x_bearing,
-                            (float)b.y + (float)r->rect.y + te.y_bearing - fe.descent + fe.height);
+            auto p = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + te.x_bearing,
+                            static_cast<float>(b.y) + static_cast<float>(r->rect.y) + te.y_bearing - fe.descent + fe.height);
 
 
             auto s = SizeF(r->rect.w, r->rect.h);
 
             if (pos >= m_select_start && pos < m_select_start + m_select_len)
             {
-                auto p2 = PointF((float)b.x + (float)r->rect.x,
-                                 (float)b.y + (float)r->rect.y);
+                auto p2 = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x),
+                                 static_cast<float>(b.y) + static_cast<float>(r->rect.y));
 
                 auto rect = RectF(p2, s);
                 if (!rect.empty())
@@ -303,7 +303,7 @@ void TextBox::draw(Painter& painter, const Rect&)
 
             painter.set(color(Palette::ColorId::text).color());
             painter.draw(p);
-            painter.draw((char*)text.c_str());
+            painter.draw(text);
         }
         else
         {

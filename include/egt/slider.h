@@ -10,6 +10,7 @@
 #include <egt/detail/math.h>
 #include <egt/flags.h>
 #include <egt/valuewidget.h>
+#include <memory>
 
 namespace egt
 {

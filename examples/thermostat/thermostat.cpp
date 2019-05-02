@@ -53,7 +53,7 @@ public:
 
         m_radial1->on_event([m_radial1](eventid)
         {
-            auto text = std::to_string((int)m_radial1->value()) + "°";
+            auto text = std::to_string(static_cast<int>(m_radial1->value())) + "°";
             m_radial1->text(text);
 
             if (m_radial1->value() > m_radial1->value2())
@@ -201,7 +201,7 @@ int main(int argc, const char** argv)
         // handle
         painter.set(color3);
         auto hp = c.point_on_circumference(radius, angle2);
-        painter.draw(Arc(hp, handle_radius, 0., (float)(2 * M_PI)));
+        painter.draw(Arc(hp, handle_radius, 0., static_cast<float>(2 * detail::pi())));
         painter.fill();
 
         // secondary value

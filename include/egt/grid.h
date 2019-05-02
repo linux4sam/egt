@@ -14,6 +14,7 @@
 #include <egt/frame.h>
 #include <egt/utils.h>
 #include <egt/widget.h>
+#include <memory>
 #include <vector>
 
 namespace egt
@@ -193,7 +194,6 @@ public:
         m_in_layout = true;
         detail::scope_exit reset([this]() { m_in_layout = false; });
 
-        //Frame::layout();
         reposition();
     }
 

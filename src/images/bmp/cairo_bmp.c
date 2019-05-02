@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 /*! This file contains two functions for reading BMP files to Cairo image surfaces.
  *
  * All prototypes are defined in cairo_bmp.h All functions and their parameters

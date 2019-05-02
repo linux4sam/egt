@@ -15,6 +15,7 @@
 #include <egt/detail/screen/kmsoverlay.h>
 #include <egt/screen.h>
 #include <egt/window.h>
+#include <vector>
 
 struct plane_data;
 struct kms_device;

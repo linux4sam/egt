@@ -35,7 +35,6 @@ public:
 
     using pattern_type = Pattern;
 
-
     /**
      * @{
      * @brief Pre-defined color.
@@ -43,15 +42,15 @@ public:
      */
     constexpr static Color transparent = Color(0x00000000);
     constexpr static Color aliceblue = Color::rgb(0xf0f8ff);
-    constexpr static Color antiquewhite	= Color::rgb(0xfaebd7);
-    constexpr static Color aqua	= Color::rgb(0x00ffff);
+    constexpr static Color antiquewhite = Color::rgb(0xfaebd7);
+    constexpr static Color aqua = Color::rgb(0x00ffff);
     constexpr static Color aquamarine = Color::rgb(0x7fffd4);
     constexpr static Color azure = Color::rgb(0xf0ffff);
     constexpr static Color beige = Color::rgb(0xf5f5dc);
     constexpr static Color bisque = Color::rgb(0xffe4c4);
     constexpr static Color black = Color::rgb(0x000000);
     constexpr static Color blanchedalmond = Color::rgb(0xffebcd);
-    constexpr static Color blue	= Color::rgb(0x0000ff);
+    constexpr static Color blue = Color::rgb(0x0000ff);
     constexpr static Color blueviolet = Color::rgb(0x8a2be2);
     constexpr static Color brown = Color::rgb(0xa52a2a);
     constexpr static Color burlywood = Color::rgb(0xdeb887);
@@ -62,7 +61,7 @@ public:
     constexpr static Color cornflowerblue = Color::rgb(0x6495ed);
     constexpr static Color cornsilk = Color::rgb(0xfff8dc);
     constexpr static Color crimson = Color::rgb(0xdc143c);
-    constexpr static Color cyan	= Color::rgb(0x00ffff);
+    constexpr static Color cyan = Color::rgb(0x00ffff);
     constexpr static Color darkblue = Color::rgb(0x00008b);
     constexpr static Color darkcyan = Color::rgb(0x008b8b);
     constexpr static Color darkgoldenrod = Color::rgb(0xb8860b);
@@ -93,12 +92,12 @@ public:
     constexpr static Color fuchsia = Color::rgb(0xff00ff);
     constexpr static Color gainsboro = Color::rgb(0xdcdcdc);
     constexpr static Color ghostwhite = Color::rgb(0xf8f8ff);
-    constexpr static Color gold	= Color::rgb(0xffd700);
+    constexpr static Color gold = Color::rgb(0xffd700);
     constexpr static Color goldenrod = Color::rgb(0xdaa520);
-    constexpr static Color gray	= Color::rgb(0x808080);
+    constexpr static Color gray = Color::rgb(0x808080);
     constexpr static Color green = Color::rgb(0x008000);
     constexpr static Color greenyellow = Color::rgb(0xadff2f);
-    constexpr static Color grey	= Color::rgb(0x808080);
+    constexpr static Color grey = Color::rgb(0x808080);
     constexpr static Color honeydew = Color::rgb(0xf0fff0);
     constexpr static Color hotpink = Color::rgb(0xff69b4);
     constexpr static Color indianred = Color::rgb(0xcd5c5c);
@@ -108,42 +107,42 @@ public:
     constexpr static Color lavender = Color::rgb(0xe6e6fa);
     constexpr static Color lavenderblush = Color::rgb(0xfff0f5);
     constexpr static Color lawngreen = Color::rgb(0x7cfc00);
-    constexpr static Color lemonchiffon	= Color::rgb(0xfffacd);
+    constexpr static Color lemonchiffon = Color::rgb(0xfffacd);
     constexpr static Color lightblue = Color::rgb(0xadd8e6);
     constexpr static Color lightcoral = Color::rgb(0xf08080);
     constexpr static Color lightcyan = Color::rgb(0xe0ffff);
-    constexpr static Color lightgoldenrodyellow	= Color::rgb(0xfafad2);
+    constexpr static Color lightgoldenrodyellow = Color::rgb(0xfafad2);
     constexpr static Color lightgray = Color::rgb(0xd3d3d3);
     constexpr static Color lightgreen = Color::rgb(0x90ee90);
     constexpr static Color lightgrey = Color::rgb(0xd3d3d3);
     constexpr static Color lightpink = Color::rgb(0xffb6c1);
     constexpr static Color lightsalmon = Color::rgb(0xffa07a);
     constexpr static Color lightseagreen = Color::rgb(0x20b2aa);
-    constexpr static Color lightskyblue	= Color::rgb(0x87cefa);
+    constexpr static Color lightskyblue = Color::rgb(0x87cefa);
     constexpr static Color lightslategray = Color::rgb(0x778899);
     constexpr static Color lightslategrey = Color::rgb(0x778899);
     constexpr static Color lightsteelblue = Color::rgb(0xb0c4de);
-    constexpr static Color lightyellow	= Color::rgb(0xffffe0);
-    constexpr static Color lime	= Color::rgb(0x00ff00);
+    constexpr static Color lightyellow  = Color::rgb(0xffffe0);
+    constexpr static Color lime = Color::rgb(0x00ff00);
     constexpr static Color limegreen = Color::rgb(0x32cd32);
     constexpr static Color linen = Color::rgb(0xfaf0e6);
     constexpr static Color magenta = Color::rgb(0xff00ff);
     constexpr static Color maroon = Color::rgb(0x800000);
     constexpr static Color mediumaquamarine = Color::rgb(0x66cdaa);
     constexpr static Color mediumblue = Color::rgb(0x0000cd);
-    constexpr static Color mediumorchid	= Color::rgb(0xba55d3);
-    constexpr static Color mediumpurple	= Color::rgb(0x9370db);
+    constexpr static Color mediumorchid = Color::rgb(0xba55d3);
+    constexpr static Color mediumpurple = Color::rgb(0x9370db);
     constexpr static Color mediumseagreen = Color::rgb(0x3cb371);
     constexpr static Color mediumslateblue = Color::rgb(0x7b68ee);
     constexpr static Color mediumspringgreen = Color::rgb(0x00fa9a);
     constexpr static Color mediumturquoise = Color::rgb(0x48d1cc);
     constexpr static Color mediumvioletred = Color::rgb(0xc71585);
-    constexpr static Color midnightblue	= Color::rgb(0x191970);
+    constexpr static Color midnightblue = Color::rgb(0x191970);
     constexpr static Color mintcream = Color::rgb(0xf5fffa);
     constexpr static Color mistyrose = Color::rgb(0xffe4e1);
     constexpr static Color moccasin = Color::rgb(0xffe4b5);
     constexpr static Color navajowhite = Color::rgb(0xffdead);
-    constexpr static Color navy	= Color::rgb(0x000080);
+    constexpr static Color navy = Color::rgb(0x000080);
     constexpr static Color oldlace = Color::rgb(0xfdf5e6);
     constexpr static Color olive = Color::rgb(0x808000);
     constexpr static Color olivedrab = Color::rgb(0x6b8e23);
@@ -156,12 +155,12 @@ public:
     constexpr static Color palevioletred = Color::rgb(0xdb7093);
     constexpr static Color papayawhip = Color::rgb(0xffefd5);
     constexpr static Color peachpuff = Color::rgb(0xffdab9);
-    constexpr static Color peru	= Color::rgb(0xcd853f);
-    constexpr static Color pink	= Color::rgb(0xffc0cb);
-    constexpr static Color plum	= Color::rgb(0xdda0dd);
+    constexpr static Color peru = Color::rgb(0xcd853f);
+    constexpr static Color pink = Color::rgb(0xffc0cb);
+    constexpr static Color plum = Color::rgb(0xdda0dd);
     constexpr static Color powderblue = Color::rgb(0xb0e0e6);
     constexpr static Color purple = Color::rgb(0x800080);
-    constexpr static Color red	= Color::rgb(0xff0000);
+    constexpr static Color red  = Color::rgb(0xff0000);
     constexpr static Color rosybrown = Color::rgb(0xbc8f8f);
     constexpr static Color royalblue = Color::rgb(0x4169e1);
     constexpr static Color saddlebrown = Color::rgb(0x8b4513);
@@ -175,11 +174,11 @@ public:
     constexpr static Color slateblue = Color::rgb(0x6a5acd);
     constexpr static Color slategray = Color::rgb(0x708090);
     constexpr static Color slategrey = Color::rgb(0x708090);
-    constexpr static Color snow	= Color::rgb(0xfffafa);
+    constexpr static Color snow = Color::rgb(0xfffafa);
     constexpr static Color springgreen = Color::rgb(0x00ff7f);
     constexpr static Color steelblue = Color::rgb(0x4682b4);
     constexpr static Color tan = Color::rgb(0xd2b48c);
-    constexpr static Color teal	= Color::rgb(0x008080);
+    constexpr static Color teal = Color::rgb(0x008080);
     constexpr static Color thistle = Color::rgb(0xd8bfd8);
     constexpr static Color tomato = Color::rgb(0xff6347);
     constexpr static Color turquoise = Color::rgb(0x40e0d0);

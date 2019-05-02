@@ -14,6 +14,7 @@
 #include <egt/button.h>
 #include <egt/grid.h>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace egt
@@ -60,7 +61,9 @@ public:
                     b = l;
                 }
                 else
+                {
                     b = std::make_shared<Button>(label);
+                }
 
                 b->on_event([this, b](eventid event)
                 {

@@ -12,6 +12,8 @@
  */
 
 #include <egt/input.h>
+#include <memory>
+#include <string>
 
 namespace egt
 {

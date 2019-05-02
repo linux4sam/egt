@@ -51,7 +51,7 @@ public:
         oblique = 2,
     };
 
-    static const std::string DEFAULT_FACE;
+    static const char* DEFAULT_FACE;
     static const weightid DEFAULT_WEIGHT;
     static const int DEFAULT_SIZE;
     static const slantid DEFAULT_SLANT;

@@ -15,8 +15,10 @@
 #include <egt/font.h>
 #include <egt/textwidget.h>
 #include <egt/timer.h>
+#include <memory>
 #include <string>
 #include <unordered_set>
+#include <vector>
 
 namespace egt
 {

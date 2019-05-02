@@ -7,21 +7,22 @@
 #include "config.h"
 #endif
 
+#include "cairo_bmp.h"
+#include "egt/canvas.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/resource.h"
 #include "egt/utils.h"
-#include "egt/canvas.h"
 #include <cassert>
+#include <sstream>
+#include <string>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <vector>
+
 #ifdef HAVE_LIBMAGIC
 #include <magic.h>
 #endif
-#include <sstream>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <vector>
-#include <unistd.h>
-
-#include "cairo_bmp.h"
 
 #ifdef HAVE_LIBJPEG
 #ifdef __cplusplus
@@ -42,7 +43,7 @@ inline namespace v1
 namespace detail
 {
 
-static vector<string> image_paths;
+static std::vector<std::string> image_paths;
 
 void add_search_path(const std::string& path)
 {
@@ -117,7 +118,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             {
                 image = shared_cairo_surface_t(
                             cairo_image_surface_create_from_png_stream(
-                                read_resource_stream, (void*)name.c_str()),
+                                read_resource_stream, const_cast<char*>(name.c_str())),
                             cairo_surface_destroy);
             }
 #ifdef HAVE_LIBJPEG
@@ -125,7 +126,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             {
                 image = shared_cairo_surface_t(
                             cairo_image_surface_create_from_jpeg_stream(
-                                read_resource_stream, (void*)name.c_str()),
+                                read_resource_stream, const_cast<char*>(name.c_str())),
                             cairo_surface_destroy);
             }
 #endif
@@ -133,7 +134,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             {
                 image = shared_cairo_surface_t(
                             cairo_image_surface_create_from_bmp_stream(
-                                read_resource_stream, (void*)name.c_str()),
+                                read_resource_stream, const_cast<char*>(name.c_str())),
                             cairo_surface_destroy);
             }
             else

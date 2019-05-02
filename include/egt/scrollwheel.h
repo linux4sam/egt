@@ -15,6 +15,7 @@
 #include <egt/button.h>
 #include <egt/grid.h>
 #include <egt/label.h>
+#include <memory>
 #include <string>
 #include <vector>
 

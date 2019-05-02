@@ -13,6 +13,8 @@
 
 #include <egt/detail/alignment.h>
 #include <egt/frame.h>
+#include <memory>
+#include <utility>
 
 namespace egt
 {

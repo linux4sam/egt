@@ -12,6 +12,7 @@
  */
 
 #include <egt/screen.h>
+#include <string>
 
 namespace egt
 {

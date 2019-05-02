@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/tools.h"
-#include <sstream>
-#include <fstream>
-#include <cstring>
-#include <sstream>
 #include <cassert>
+#include <cstring>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -34,25 +33,25 @@ void CPUMonitorUsage::update()
             string field0;
             ss >> field0;
 
-            char cpu_id[5];
-            sprintf(cpu_id, "cpu%d", i);
+            ostringstream cpu_id;
+            cpu_id << "cpu" << i;
 
-            if (field0.find(cpu_id) != std::string::npos)
+            if (field0.find(cpu_id.str()) != std::string::npos)
             {
                 uint64_t times[7];
                 for (auto& x : times)
                     ss >> x;
 
-                uint64_t work_time = times[0] + times[1] + times[2];
-                uint64_t total_time = work_time + times[3] + times[4] + times[5] + times[6];
+                double work_time = times[0] + times[1] + times[2];
+                double total_time = work_time + times[3] + times[4] + times[5] + times[6];
 
                 // Update CPU Usage
-                m_cpu_usage[i] = ((double)work_time - m_work_cpu_last_time[i]) /
-                                 ((double)total_time - m_total_cpu_last_time[i]) * 100.;
+                m_cpu_usage[i] = (work_time - m_work_cpu_last_time[i]) /
+                                 (total_time - m_total_cpu_last_time[i]) * 100.;
 
                 // Update last values
-                m_work_cpu_last_time[i] = (double)work_time;
-                m_total_cpu_last_time[i] = (double)total_time;
+                m_work_cpu_last_time[i] = work_time;
+                m_total_cpu_last_time[i] = total_time;
 
                 i++;
             }

@@ -24,7 +24,8 @@ public:
         : T(size),
           m_moving(false)
     {
-        m_fscale = (double)main_screen()->size().w / (double)T::w();
+        m_fscale = static_cast<double>(main_screen()->size().w) /
+                   static_cast<double>(T::w());
         if (m_fscale <= 0)
             m_fscale = 1.0;
 
@@ -196,7 +197,8 @@ int main(int argc, const char** argv)
     {
         if (window->duration())
         {
-            double v = (double)window->position() / (double)window->duration() * 100.;
+            double v = static_cast<double>(window->position()) /
+                       static_cast<double>(window->duration()) * 100.;
             position.set_value(v);
         }
         else

@@ -11,7 +11,7 @@ namespace egt
 inline namespace v1
 {
 
-const std::string Font::DEFAULT_FACE = "Free Sans";
+const char* Font::DEFAULT_FACE = "Free Sans";
 const Font::weightid Font::DEFAULT_WEIGHT = Font::weightid::normal;
 const int Font::DEFAULT_SIZE = 18;
 const Font::slantid Font::DEFAULT_SLANT = Font::slantid::normal;

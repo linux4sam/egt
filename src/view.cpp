@@ -83,7 +83,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
 
         theme().draw_box(cpainter,
                          boxtype(),
-                         crect /*m_canvas->size()*//*to_child(box())*/,
+                         crect,
                          palette().color(Palette::ColorId::border, group),
                          palette().color(Palette::ColorId::bg, group),
                          border(),

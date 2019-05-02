@@ -107,7 +107,6 @@ public:
             widget->set_parent(this);
             m_children.push_back(widget);
             layout();
-            //parent_layout();
         }
     }
 
@@ -358,7 +357,9 @@ public:
                     return frame->child_hit_test(point);
                 }
                 else
+                {
                     return child.get();
+                }
             }
         }
 

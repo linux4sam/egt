@@ -18,6 +18,7 @@
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
 #include <rapidxml_print.hpp>
+#include <string>
 
 namespace egt
 {
@@ -43,7 +44,7 @@ struct OstreamWidgetSerializer
             " " << widget->box() << " " << widget->flags();
         out << " box(" << widget->margin() << "," <<
             widget->padding() << "," << widget->border() << ")";
-        out << " align(" << (int)widget->align() << ")";
+        out << " align(" << static_cast<int>(widget->align()) << ")";
         out << std::endl;
 
         return true;
@@ -113,11 +114,6 @@ struct XmlWidgetSerializer
         child->append_node(create_node<int>("yratio", std::bind(&Widget::yratio, widget)));
         child->append_node(create_node<int>("horizontal_ratio", std::bind(&Widget::horizontal_ratio, widget)));
         child->append_node(create_node<int>("vertical_ratio", std::bind(&Widget::vertical_ratio, widget)));
-
-        if (widget->flags().is_set(Widget::flag::frame))
-        {
-
-        }
 
         stack.back()->append_node(child);
         stack.push_back(child);

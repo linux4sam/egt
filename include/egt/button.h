@@ -17,6 +17,8 @@
 #include <egt/image.h>
 #include <egt/textwidget.h>
 #include <egt/theme.h>
+#include <memory>
+#include <string>
 
 namespace egt
 {

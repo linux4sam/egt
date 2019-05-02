@@ -304,10 +304,7 @@ bool AudioPlayer::createPipeline()
     /* Make sure we don't leave orphan references */
     destroyPipeline();
 
-    char buffer[2048];
-    sprintf(buffer, PIPE);
-
-    string pipe(buffer);
+    string pipe(PIPE);
     DBG(pipe);
 
     m_impl->m_audio_pipeline = gst_parse_launch(pipe.c_str(), &error);

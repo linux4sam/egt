@@ -16,6 +16,8 @@
 #include <egt/label.h>
 #include <egt/sizer.h>
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace egt
 {

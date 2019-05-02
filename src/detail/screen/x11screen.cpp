@@ -176,7 +176,7 @@ void X11Screen::handle_read(const asio::error_code& error)
             break;
         }
         case ClientMessage:
-            if ((int)e.xclient.data.l[0] == (int)m_priv->wmDeleteMessage)
+            if (static_cast<int>(e.xclient.data.l[0]) == static_cast<int>(m_priv->wmDeleteMessage))
                 main_app().event().quit();
             break;
         default:

@@ -12,6 +12,7 @@
  */
 
 #include <egt/widget.h>
+#include <memory>
 #include <string>
 
 namespace egt

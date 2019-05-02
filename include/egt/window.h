@@ -17,6 +17,7 @@
 #include <egt/screen.h>
 #include <iosfwd>
 #include <memory>
+#include <vector>
 
 namespace egt
 {

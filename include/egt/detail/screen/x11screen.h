@@ -26,7 +26,7 @@ class X11Screen : public Screen
 {
 public:
 
-    X11Screen(const Size& size = Size(800, 480), bool borderless = false);
+    explicit X11Screen(const Size& size = Size(800, 480), bool borderless = false);
 
     virtual void schedule_flip() {}
 

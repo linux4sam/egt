@@ -68,8 +68,8 @@ public:
     {
         if (this->size() != size)
         {
-            double hs = (double)size.w / (double)m_orig_size.w;
-            double vs = (double)size.h / (double)m_orig_size.h;
+            double hs = static_cast<double>(size.w) / static_cast<double>(m_orig_size.w);
+            double vs = static_cast<double>(size.h) / static_cast<double>(m_orig_size.h);
             scale(hs, vs);
         }
     }

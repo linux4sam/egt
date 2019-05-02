@@ -11,6 +11,7 @@
  * @brief Working with checkboxes.
  */
 #include <egt/button.h>
+#include <string>
 
 namespace egt
 {

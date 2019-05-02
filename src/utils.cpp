@@ -17,8 +17,6 @@
 #include "lua/script.h"
 #endif
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

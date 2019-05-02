@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 /*! This file contains all prototypes for the Cairo-BMP functions implemented
  * in cairo_bmp.c.
  */

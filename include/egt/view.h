@@ -14,6 +14,7 @@
 #include <egt/canvas.h>
 #include <egt/frame.h>
 #include <egt/slider.h>
+#include <memory>
 
 namespace egt
 {

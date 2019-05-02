@@ -60,7 +60,7 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& rect
     painter.set(widget.font());
     auto text_size = painter.text_size(widget.text());
 
-    vector<detail::LayoutRect> rects;
+    std::vector<detail::LayoutRect> rects;
 
     rects.emplace_back(0,
                        Rect(0, 0, std::min(b.w - text_size.w - widget.padding(), b.h), std::min(b.w - text_size.w - widget.padding(), b.h)),

@@ -13,6 +13,7 @@
 
 #include <egt/widget.h>
 #include <egt/frame.h>
+#include <memory>
 
 namespace egt
 {

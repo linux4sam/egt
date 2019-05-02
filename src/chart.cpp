@@ -24,9 +24,9 @@ inline namespace v1
 {
 
 #ifdef HAVE_KPLOT
-static void xticlabelfmt(double v, char* b, size_t)
+static void xticlabelfmt(double v, char* b, size_t len)
 {
-    sprintf(b, "%.02f", v);
+    snprintf(b, len, "%.02f", v);
 }
 
 LineChart::LineChart(const Rect& rect)

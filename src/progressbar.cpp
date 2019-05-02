@@ -5,6 +5,7 @@
  */
 #include "egt/detail/alignment.h"
 #include "egt/detail/math.h"
+#include "egt/detail/string.h"
 #include "egt/painter.h"
 #include "egt/progressbar.h"
 #include "egt/textwidget.h"
@@ -203,9 +204,8 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
                            -(hw + 10.0) * yangle));
         painter.stroke();
 
+        auto text = detail::format(tick, 2);
         painter.set(widget.color(Palette::ColorId::text).color());
-        char text[10];
-        sprintf(text, "%2.0f", tick);
         auto size = painter.text_size(text);
         painter.draw(Point(-(hw + 30.0) * xangle - size.w / 2.0,
                            -(hw + 30.0) * yangle - size.h / 2.0));

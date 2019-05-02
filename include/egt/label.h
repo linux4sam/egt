@@ -13,6 +13,8 @@
 
 #include <egt/image.h>
 #include <egt/textwidget.h>
+#include <memory>
+#include <string>
 
 namespace egt
 {

@@ -77,7 +77,7 @@ public:
      * The duration of the timer can be specified when calling
      * start_with_duration() when using this constructor.
      */
-    explicit Timer() noexcept;
+    Timer() noexcept;
 
     /**
      * Construct a one-shot timer with the specified duration.
@@ -205,7 +205,7 @@ public:
      * The duration of the timer can be specified when calling
      * start_with_duration() instead.
      */
-    explicit PeriodicTimer() noexcept;
+    PeriodicTimer() noexcept;
 
     /**
      * Construct a periodic timer with the specified duration.

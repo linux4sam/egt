@@ -6,11 +6,14 @@
 #ifndef EGT_RADIAL_H
 #define EGT_RADIAL_H
 
+#include <algorithm>
 #include <egt/detail/math.h>
 #include <egt/flags.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
 #include <egt/valuewidget.h>
+#include <memory>
+#include <string>
 
 namespace egt
 {
@@ -47,7 +50,7 @@ public:
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
      */
-    RadialType(const Rect& rect = Rect(), T min = 0, T max = 100, T value = 0)
+    explicit RadialType(const Rect& rect = Rect(), T min = 0, T max = 100, T value = 0)
         : ValueRangeWidget<T>(rect, min, max, value)
     {
         this->set_boxtype(Theme::boxtype::blank);

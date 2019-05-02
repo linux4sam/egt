@@ -92,7 +92,8 @@ static void top_menu(Window& win)
         {
             auto now = std::chrono::system_clock::now();
             time_t tt = std::chrono::system_clock::to_time_t(now);
-            tm local_tm = *localtime(&tt);
+            tm local_tm;
+            localtime_r(&tt, &local_tm);
 
             ostringstream ss;
             ss << local_tm.tm_hour << ":" << std::setfill('0') << std::setw(2) << local_tm.tm_min;

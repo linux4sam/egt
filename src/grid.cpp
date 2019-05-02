@@ -184,10 +184,10 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget, int column, int row)
 {
     Frame::add(widget);
 
-    if (column >= (int)m_cells.size())
+    if (column >= static_cast<int>(m_cells.size()))
         m_cells.resize(column + 1);
 
-    if (row >= (int)m_cells[column].size())
+    if (row >= static_cast<int>(m_cells[column].size()))
     {
         for (auto& c : m_cells)
             c.resize(row + 1, nullptr);

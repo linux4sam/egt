@@ -72,7 +72,7 @@ public:
     virtual bool unpause();
 
     /**
-     * @brief Adjusts the volume of the audio being played/
+     * @brief Adjusts the volume of the audio being played.
      *
      * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
      * @return true if success

@@ -13,6 +13,8 @@
 
 #include <egt/widget.h>
 #include <map>
+#include <memory>
+#include <string>
 #include <vector>
 
 namespace egt

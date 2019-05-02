@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-//#define DEBUG
 #include <iostream>
 #include "egt/detail/layout.h"
 #include "egt/frame.h"

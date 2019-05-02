@@ -31,7 +31,8 @@ int main(int argc, const char** argv)
     SoftwareVideo player(Size(320, 192));
     player.set_volume(50);
 
-    auto fullscale = (double)main_screen()->size().w / (double)player.w();
+    auto fullscale = static_cast<double>(main_screen()->size().w) /
+                     static_cast<double>(player.w());
     if (fullscale <= 0)
         fullscale = 1.0;
 

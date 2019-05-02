@@ -18,6 +18,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <utility>
 
 #ifdef DEBUG
 #define DBG(x) do { std::cout << x << std::endl; } while (0)
@@ -37,8 +38,8 @@
 
 #define ERR(x) do { std::cerr << x << std::endl; } while (0)
 
-#define likely(x)       __builtin_expect((x),1)
-#define unlikely(x)     __builtin_expect((x),0)
+#define likely(x)       __builtin_expect((x), 1)
+#define unlikely(x)     __builtin_expect((x), 0)
 
 namespace egt
 {

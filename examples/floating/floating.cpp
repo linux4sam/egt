@@ -184,7 +184,7 @@ int main(int argc, const char** argv)
         tools.update();
 
         ostringstream ss;
-        ss << "CPU: " << (int)tools.usage(0) << "%";
+        ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
         label1.set_text(ss.str());
     });
     cputimer.start();

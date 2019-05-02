@@ -6,9 +6,6 @@
 #include "egt/palette.h"
 #include <cassert>
 
-#include <iostream>
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

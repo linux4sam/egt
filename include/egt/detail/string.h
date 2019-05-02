@@ -6,6 +6,8 @@
 #ifndef EGT_DETAIL_STRING_H
 #define EGT_DETAIL_STRING_H
 
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 namespace egt
@@ -46,6 +48,17 @@ std::string ltrim(const std::string& source, const std::string& t = " \t\n\r\0\x
  * @brief Trim delimiters off both sides of a std::string
  */
 std::string trim(const std::string& source, const std::string& t = " \t\n\r\0\x0B");
+
+/**
+ * Format a float/double to a fixed precision and return as a string.
+ */
+template<class T>
+std::string format(T value, int precision = 2)
+{
+    std::ostringstream stream;
+    stream << std::fixed << std::setprecision(2) << value;
+    return stream.str();
+}
 
 }
 }

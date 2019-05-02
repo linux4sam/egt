@@ -12,6 +12,8 @@
  */
 
 #include <egt/frame.h>
+#include <memory>
+#include <string>
 #include <vector>
 
 namespace egt

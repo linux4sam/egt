@@ -16,7 +16,8 @@ static std::string last_line(const string& str)
 {
     std::stringstream ss(str);
     std::string line;
-    while (std::getline(ss, line, '\n'));
+    while (std::getline(ss, line, '\n'))
+    {}
     return line;
 }
 

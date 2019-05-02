@@ -150,10 +150,6 @@ void PlaneWindow::paint(Painter& painter)
     // There is something odd going on. The surface doesn't work unless it's
     // copied to a new surface first.
 
-    //auto image = Image(cairo_get_target(screen()->context().get()));
-    //cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-    //painter.draw_image(m_interface->to_screen(m_interface->point()), image);
-
     auto copy = copy_surface(cairo_get_target(screen()->context().get()));
     auto image = Image(copy);
     auto p = m_interface->to_display(m_interface->point());

@@ -366,7 +366,7 @@ uint32_t KMSScreen::count_planes(plane_type type)
     uint32_t total = 0;
     for (uint32_t x = 0; x < m_device->num_planes; x++)
     {
-        if ((int)m_device->planes[x]->type == drmtype)
+        if (static_cast<int>(m_device->planes[x]->type) == drmtype)
             total++;
     }
     return total;

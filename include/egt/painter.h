@@ -7,15 +7,12 @@
 #define EGT_PAINTER_H
 
 #include <cairo.h>
-#include <cassert>
 #include <egt/color.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
 #include <egt/utils.h>
-
-#include <iostream>
-using namespace std;
+#include <string>
 
 namespace egt
 {
@@ -36,8 +33,8 @@ public:
     /**
      * Scoped save() and restore() for a Painter.
      *
-     * You are encouraged to use this instead of manually calling save() and
-     * restore().
+     * You are encouraged to use this instead of manually calling
+     * Painter::save() and Painter::restore().
      */
     struct AutoSaveRestore
     {
@@ -133,7 +130,6 @@ public:
     template<class T>
     Painter& draw(const RectType<T>& rect)
     {
-        //assert(!rect.empty());
         if (rect.empty())
             return *this;
 
@@ -154,7 +150,6 @@ public:
     template<class T>
     Painter& draw(const ArcType<T>& arc)
     {
-        //assert(!arc.empty());
         if (arc.empty())
             return *this;
 
@@ -214,14 +209,9 @@ public:
 
 protected:
 
-    void paint_surface_with_drop_shadow(cairo_surface_t* source_surface,
-                                        int shadow_offset,
-                                        double shadow_alpha,
-                                        double tint_alpha,
-                                        int dstx,
-                                        int dsty);
-
-
+    /**
+     * Cairo context.
+     */
     shared_cairo_t m_cr;
 
 private:

@@ -454,7 +454,7 @@ void Widget::dump(std::ostream& out, int level)
     out << std::string(level, ' ') << name() <<
         " " << box() << " " << m_widget_flags;
     out << " box(" << margin() << "," << padding() << "," << border() << ")";
-    out << " align(" << (int)align() << ")";
+    out << " align(" << static_cast<int>(align()) << ")";
     out << std::endl;
 }
 

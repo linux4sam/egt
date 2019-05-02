@@ -14,6 +14,7 @@
 #include <egt/asio.hpp>
 #include <functional>
 #include <queue>
+#include <utility>
 
 namespace egt
 {

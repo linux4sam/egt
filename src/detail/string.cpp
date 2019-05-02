@@ -3,13 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/detail/string.h"
-
-using namespace std;
 
 namespace egt
 {
@@ -31,14 +25,14 @@ std::string replace_all(std::string str, const std::string& from, const std::str
 
 std::string rtrim(const std::string& source, const std::string& t)
 {
-    string str = source;
-    return str.erase(str.find_last_not_of(t) + 1) ;
+    std::string str = source;
+    return str.erase(str.find_last_not_of(t) + 1);
 }
 
 std::string ltrim(const std::string& source, const std::string& t)
 {
-    string str = source;
-    return str.erase(0, source.find_first_not_of(t)) ;
+    std::string str = source;
+    return str.erase(0, source.find_first_not_of(t));
 }
 
 std::string trim(const std::string& source, const std::string& t)
@@ -46,7 +40,7 @@ std::string trim(const std::string& source, const std::string& t)
     if (source.empty())
         return source;
 
-    string str = source;
+    std::string str = source;
     return ltrim(rtrim(str, t), t);
 }
 

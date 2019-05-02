@@ -7,6 +7,7 @@
 #define EGT_PROGRESSBAR_H
 
 #include <egt/valuewidget.h>
+#include <memory>
 
 namespace egt
 {
