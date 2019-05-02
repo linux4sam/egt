@@ -5,6 +5,7 @@
  */
 #include "egt/app.h"
 #include "egt/eventloop.h"
+#include "egt/screen.h"
 #include "egt/detail/input/inputlibinput.h"
 #include <cassert>
 #include <fstream>
@@ -141,8 +142,9 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
         break;
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
-        double x = libinput_event_touch_get_x_transformed(t, 800);
-        double y = libinput_event_touch_get_y_transformed(t, 480);
+        auto screen_size = main_screen()->size();
+        double x = libinput_event_touch_get_x_transformed(t, screen_size.w);
+        double y = libinput_event_touch_get_y_transformed(t, screen_size.h);
 
         m_pointer.point = DisplayPoint(x, y);
 
@@ -151,8 +153,9 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     }
     case LIBINPUT_EVENT_TOUCH_MOTION:
     {
-        double x = libinput_event_touch_get_x_transformed(t, 800);
-        double y = libinput_event_touch_get_y_transformed(t, 480);
+        auto screen_size = main_screen()->size();
+        double x = libinput_event_touch_get_x_transformed(t, screen_size.w);
+        double y = libinput_event_touch_get_y_transformed(t, screen_size.h);
 
         m_pointer.point = DisplayPoint(x, y);
 
