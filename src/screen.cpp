@@ -15,7 +15,6 @@
 #ifdef HAVE_LIBDRM
 #include <drm_fourcc.h>
 #endif
-#include <linux/fb.h>
 #include <map>
 
 using namespace std;
@@ -171,7 +170,6 @@ void Screen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
     for (const auto& d : buffer.damage)
         if (find(olddamage.begin(), olddamage.end(), d) != olddamage.end())
             cairo_rectangle(buffer.cr.get(), d.x, d.y, d.w, d.h);
-    //cairo_rectangle(buffer.cr.get(), d.x + 2, d.y + 2, d.w - 4, d.h - 4);
 
     cairo_stroke(buffer.cr.get());
 

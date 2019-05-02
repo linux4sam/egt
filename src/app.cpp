@@ -11,7 +11,6 @@
 #include "egt/detail/filesystem.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/input/inputevdev.h"
-#include "egt/detail/screen/framebuffer.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
@@ -29,6 +28,10 @@
 
 #ifdef HAVE_X11
 #include "egt/detail/screen/x11screen.h"
+#endif
+
+#ifdef HAVE_FBDEV
+#include "egt/detail/screen/framebuffer.h"
 #endif
 
 #ifdef HAVE_LIBINPUT
@@ -98,7 +101,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         backend = "kms";
 #elif defined(HAVE_X11)
         backend = "x11";
-#else
+#elif defined(HAVE_FBDEV)
         backend = "fbdev";
 #endif
     }
@@ -113,9 +116,11 @@ Application::Application(int argc, const char** argv, const std::string& name, b
             new detail::KMSScreen(primary);
         else
 #endif
+#ifdef HAVE_FBDEV
             if (backend == "fbdev")
                 new detail::FrameBuffer("/dev/fb0");
             else
+#endif
                 throw std::runtime_error("backend not available");
 
     const char* tmp = getenv("EGT_INPUT_DEVICES");

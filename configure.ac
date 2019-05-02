@@ -4,6 +4,7 @@ AC_INIT([libegt],[0.3-alpha])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_MACRO_DIR([m4])
+AC_USE_SYSTEM_EXTENSIONS
 AC_CANONICAL_SYSTEM
 PKG_PROG_PKG_CONFIG
 
@@ -11,6 +12,22 @@ AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
 
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+
+# Initialize libtool
+LT_PREREQ([2.2])
+LT_INIT([win32-dll])
+
+AC_MSG_CHECKING([for native Win32])
+case "$host" in
+  *-*-mingw*)
+      egt_os_win32=yes
+      ;;
+  *)
+      egt_os_win32=no
+      ;;
+esac
+AC_MSG_RESULT([$egt_os_win32])
+AM_CONDITIONAL(OS_WIN32, test "$egt_os_win32" = "yes")
 
 CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -g"
 CFLAGS="$CFLAGS -g"
@@ -28,8 +45,6 @@ AC_PROG_MKDIR_P
 
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
-
-AC_USE_SYSTEM_EXTENSIONS
 
 AC_DEFUN([EGT_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
@@ -139,7 +154,7 @@ AM_CONDITIONAL([HAVE_X11], [test "x${have_x11}" = xyes])
 if test "x${have_x11}" = xyes; then
    AC_DEFINE(HAVE_X11, 1, [Have x11 support])
    LIBEGT_EXTRA_CXXFLAGS="${X11_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${X11_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${X11_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(TSLIB, [tslib >= 1.15], [], [have_tslib=yes], [have_tslib=no])
@@ -147,7 +162,7 @@ AM_CONDITIONAL([HAVE_TSLIB], [test "x${have_tslib}" = xyes])
 if test "x${have_tslib}" = xyes; then
    AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
    LIBEGT_EXTRA_CXXFLAGS="${TSLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${TSLIB_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${TSLIB_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(LIBINPUT, [libinput >= 1.6.3], [], [have_libinput=yes], [have_libinput=no])
@@ -155,14 +170,14 @@ AM_CONDITIONAL([HAVE_LIBINPUT], [test "x${have_libinput}" = xyes])
 if test "x${have_libinput}" = xyes; then
    AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
    LIBEGT_EXTRA_CXXFLAGS="${LIBINPUT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(GSTREAMER, [gstreamer-1.0 >= 1.12 gstreamer-plugins-base-1.0], [], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
    LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 
@@ -174,7 +189,7 @@ AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
 if test "x${have_lua}" = xyes; then
    AC_DEFINE(HAVE_LUA, 1, [Have lua support])
    LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LUA_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LUA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 # remove when libplanes is fixed
@@ -188,20 +203,20 @@ if test "x${have_libplanes}" = xyes; then
    AC_DEFINE(HAVE_LIBDRM, 1, [Have libdrm support])
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
    LIBEGT_EXTRA_CXXFLAGS="${LIBPLANES_CFLAGS} ${LIBDRM_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBPLANES_LDFLAGS} ${LIBDRM_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBPLANES_LIBS} ${LIBDRM_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(CAIRO, [cairo >= 1.14.6], [], [], [AC_MSG_ERROR([
      cairo is a hard dependency, but a sufficient version was not found.])])
 LIBEGT_EXTRA_CXXFLAGS="${CAIRO_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-LIBEGT_EXTRA_LDFLAGS="${CAIRO_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+LIBEGT_EXTRA_LDFLAGS="${CAIRO_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
 AX_PKG_CHECK_MODULES2(LIBJPEG, [libjpeg], [], [have_libjpeg=yes], [have_libjpeg=no])
 AM_CONDITIONAL([HAVE_LIBJPEG], [test "x${have_libjpeg}" = xyes])
 if test "x${have_libjpeg}" = xyes; then
    AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
    LIBEGT_EXTRA_CXXFLAGS="${LIBJPEG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBJPEG_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBJPEG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(LIBCURL, [libcurl >= 4.5], [], [have_libcurl=yes], [have_libcurl=no])
@@ -210,7 +225,7 @@ if test "x${have_libcurl}" = xyes; then
    AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
    AC_SUBST(include_http, ["#include <egt/network/http.h>"])
    LIBEGT_EXTRA_CXXFLAGS="${LIBCURL_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(LIBRSVG, [librsvg-2.0], [], [have_librsvg=yes], [have_librsvg=no])
@@ -218,7 +233,7 @@ AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
 if test "x${have_librsvg}" = xyes; then
    AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
    LIBEGT_EXTRA_CXXFLAGS="${LIBRSVG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
@@ -250,6 +265,12 @@ if test "x${have_gstreamer}" = xyes; then
 fi
 AM_CONDITIONAL([HAVE_VIDEO_SUPPORT], [test "x${have_libplanes}" = xyes && test "x${have_gstreamer}" = xyes])
 
+AC_CHECK_HEADER([linux/fb.h], [have_fbdev=yes], [have_fbdev=no])
+AM_CONDITIONAL([HAVE_FBDEV], [test "x${have_fbdev}" = xyes])
+if test "x${have_fbdev}" = xyes; then
+   AC_DEFINE(HAVE_FBDEV, 1, [Have fbdev support])
+fi
+
 # only used by examples
 PKG_CHECK_MODULES(JSONCPP, [jsoncpp], [have_jsoncpp=yes], [have_jsoncpp=no])
 if test "x${have_jsoncpp}" = xyes; then
@@ -268,10 +289,6 @@ AC_SUBST(LIBEGT_EXTRA_LDFLAGS)
 AC_USE_SYSTEM_EXTENSIONS
 AC_SYS_LARGEFILE
 AC_FUNC_ALLOCA
-
-# Initialize libtool
-LT_PREREQ([2.2])
-LT_INIT()
 
 AC_PATH_PROG([ASTYLE_BIN], [astyle])
 AM_CONDITIONAL([HAVE_ASTYLE_BIN], [test -n "$ASTYLE_BIN"])
@@ -312,7 +329,7 @@ echo
 echo "Display:"
 echo "  DRM/KMS                ${have_libplanes:-no}"
 echo "  X11                    ${have_x11:-no}"
-echo "  fbdev                  yes"
+echo "  fbdev                  ${have_fbdev:-no}"
 echo
 
 echo "Input:"

@@ -46,7 +46,6 @@ detail/input/inputevdev.cpp \
 detail/layout.cpp \
 detail/mousegesture.cpp \
 detail/resource.cpp \
-detail/screen/framebuffer.cpp \
 detail/string.cpp \
 detail/windowimpl.cpp \
 dialog.cpp \
@@ -133,7 +132,6 @@ $(top_srcdir)/include/egt/detail/mousegesture.h \
 $(top_srcdir)/include/egt/detail/object.h \
 $(top_srcdir)/include/egt/detail/priorityqueue.h \
 $(top_srcdir)/include/egt/detail/resource.h \
-$(top_srcdir)/include/egt/detail/screen/framebuffer.h \
 $(top_srcdir)/include/egt/detail/serialize.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
 $(top_srcdir)/include/egt/detail/string.h \
@@ -270,7 +268,19 @@ nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/svg.h
 endif
 
-libegt_la_LDFLAGS = @LIBEGT_EXTRA_LDFLAGS@ -version-number 1:0:0 -no-undefined
+if HAVE_FBDEV
+libegt_la_SOURCES += \
+detail/screen/framebuffer.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/detail/screen/framebuffer.h
+endif
+
+if OS_WIN32
+libegt_la_LIBADD += -lws2_32 -lintl
+endif
+
+libegt_la_LDFLAGS = $(AM_LDFLAGS) @LIBEGT_EXTRA_LDFLAGS@ -version-number 1:0:0 -no-undefined
 
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = $(top_builddir)/libegt.pc
