@@ -15,6 +15,7 @@
 #include <cassert>
 #include <cmath>
 #include <egt/detail/floatingpoint.h>
+#include <egt/detail/math.h>
 #include <iostream>
 #include <string>
 
@@ -801,7 +802,7 @@ public:
      * Construct a Circle object.
      */
     CircleType(const Point& c = Point(), float r = 0.0f)
-        : Arc(c, r, 0.0f, 2 * M_PI)
+        : Arc(c, r, 0.0f, 2 * detail::pi())
     {
     }
 

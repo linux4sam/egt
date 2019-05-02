@@ -90,7 +90,7 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
 
     painter.set_line_width(linew);
     painter.set(widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
-    painter.draw(Arc(widget.center(), radius, 0.0f, 2 * M_PI));
+    painter.draw(Arc(widget.center(), radius, 0.0f, 2 * detail::pi()));
     painter.stroke();
 
     painter.set(widget.color(Palette::ColorId::button_fg).color());
@@ -194,8 +194,8 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
     // ticks and labels
     for (float tick = 0.0; tick <= 100.0; tick += 10.0)
     {
-        auto xangle = std::cos(M_PI * tick * 0.01);
-        auto yangle = std::sin(M_PI * tick * 0.01);
+        auto xangle = std::cos(detail::pi() * tick * 0.01);
+        auto yangle = std::sin(detail::pi() * tick * 0.01);
         painter.set(widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
         painter.draw(Point(hw * xangle,
                            -hw * yangle),
@@ -217,8 +217,8 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
     painter.set(widget.color(Palette::ColorId::button_fg).color());
     painter.set_line_width(tick_width * 2.0);
     painter.draw(Point(),
-                 Point((-hw - 15.0) * std::cos(M_PI * widget.value() * 0.01),
-                       (-hw - 15.0) * std::sin(M_PI * widget.value() * 0.01)));
+                 Point((-hw - 15.0) * std::cos(detail::pi() * widget.value() * 0.01),
+                       (-hw - 15.0) * std::sin(detail::pi() * widget.value() * 0.01)));
     painter.stroke();
     painter.draw(Circle(Point(), 5));
     painter.fill();

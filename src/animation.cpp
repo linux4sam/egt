@@ -6,6 +6,7 @@
 #include "egt/animation.h"
 #include "egt/app.h"
 #include "egt/detail/floatingpoint.h"
+#include "egt/detail/math.h"
 #include "egt/widget.h"
 #include <cassert>
 #include <cmath>
@@ -277,17 +278,17 @@ float_t easing_quintic_easeinout(float_t p)
 
 float_t easing_sine_easein(float_t p)
 {
-    return std::sin((p - 1) * M_PI_2) + 1;
+    return std::sin((p - 1) * detail::pi_2()) + 1;
 }
 
 float_t easing_sine_easeout(float_t p)
 {
-    return std::sin(p * M_PI_2);
+    return std::sin(p * detail::pi_2());
 }
 
 float_t easing_sine_easeinout(float_t p)
 {
-    return 0.5 * (1 - std::cos(p * M_PI));
+    return 0.5 * (1 - std::cos(p * detail::pi()));
 }
 
 float_t easing_circular_easein(float_t p)

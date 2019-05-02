@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/theme.h"
-#include "egt/painter.h"
-#include "egt/widget.h"
 #include "egt/checkbox.h"
+#include "egt/detail/math.h"
+#include "egt/painter.h"
+#include "egt/theme.h"
+#include "egt/widget.h"
 
 namespace egt
 {
@@ -167,7 +168,7 @@ void Theme::draw_box(Painter& painter,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
 
     double radius = corner_radius / aspect;
-    double degrees = M_PI / 180.0;
+    double degrees = detail::pi() / 180.0;
 
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();

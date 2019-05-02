@@ -16,6 +16,9 @@ inline namespace v1
 namespace detail
 {
 
+constexpr double pi() { return std::atan(1) * 4; }
+constexpr double pi_2() { return std::atan(1) * 2; }
+
 /**
  * Normalize a value, given its min and max, to a different target min and
  * max.
@@ -68,7 +71,7 @@ T normalize_to_angle(T value, T min, T max, T angle_start, T angle_stop, bool cl
 template <class T>
 inline T to_degrees(T radians)
 {
-    return radians * (180.0 / M_PI);
+    return radians * (180.0 / pi());
 }
 
 /**
@@ -78,7 +81,7 @@ template <class T>
 inline T to_radians(T zero, T degrees)
 {
     degrees += zero;
-    return degrees * (M_PI / 180.0);
+    return degrees * (pi() / 180.0);
 }
 
 }
