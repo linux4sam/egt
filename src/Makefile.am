@@ -180,7 +180,6 @@ $(top_srcdir)/include/egt/themes/sky.h \
 $(top_srcdir)/include/egt/timer.h \
 $(top_srcdir)/include/egt/tools.h \
 $(top_srcdir)/include/egt/types.h \
-$(top_srcdir)/include/egt/ui \
 $(top_srcdir)/include/egt/uiloader.h \
 $(top_srcdir)/include/egt/utils.h \
 $(top_srcdir)/include/egt/valuewidget.h \
