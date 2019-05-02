@@ -49,8 +49,8 @@ void GuageLayer::set_visible(bool visible)
 
 void NeedleLayer::set_value(float value)
 {
-    if (!detail::FloatingPoint<float_t>(value).
-        AlmostEquals(detail::FloatingPoint<float_t>(m_value)))
+    if (!detail::FloatingPoint<float>(value).
+        AlmostEquals(detail::FloatingPoint<float>(m_value)))
     {
         m_value = value;
         m_guage->damage();
