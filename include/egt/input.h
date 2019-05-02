@@ -15,7 +15,6 @@
 #include <egt/detail/object.h>
 #include <egt/event.h>
 #include <egt/geometry.h>
-#include <linux/input.h>
 #include <memory>
 #include <string>
 

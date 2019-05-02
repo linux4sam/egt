@@ -10,7 +10,6 @@
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/imagecache.h"
-#include "egt/detail/input/inputevdev.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
@@ -21,7 +20,6 @@
 #include "egt/window.h"
 #include <iostream>
 #include <libintl.h>
-#include <linux/limits.h>
 #include <locale.h>
 #include <string>
 #include <thread>
@@ -40,6 +38,10 @@
 
 #ifdef HAVE_TSLIB
 #include "egt/detail/input/inputtslib.h"
+#endif
+
+#ifdef HAVE_LINUX_INPUT_H
+#include "egt/detail/input/inputevdev.h"
 #endif
 
 using namespace std;
@@ -150,7 +152,9 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         }
         else if (device.first == "evdev")
         {
+#ifdef HAVE_LINUX_INPUT_H
             new detail::InputEvDev(device.second);
+#endif
         }
     }
 

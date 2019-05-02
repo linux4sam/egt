@@ -271,6 +271,9 @@ if test "x${have_fbdev}" = xyes; then
    AC_DEFINE(HAVE_FBDEV, 1, [Have fbdev support])
 fi
 
+AC_CHECK_HEADER([linux/input.h], [have_linux_input_h=yes], [have_linux_input_h=no])
+AM_CONDITIONAL([HAVE_LINUX_INPUT_H], [test "x${have_linux_input_h}" = xyes])
+
 # only used by examples
 PKG_CHECK_MODULES(JSONCPP, [jsoncpp], [have_jsoncpp=yes], [have_jsoncpp=no])
 if test "x${have_jsoncpp}" = xyes; then
@@ -335,7 +338,7 @@ echo
 echo "Input:"
 echo "  libinput               ${have_libinput:-no}"
 echo "  tslib                  ${have_tslib:-no}"
-echo "  evdev                  yes"
+echo "  evdev                  ${have_linux_input_h:-no}"
 echo "  X11                    ${have_x11:-no}"
 echo
 

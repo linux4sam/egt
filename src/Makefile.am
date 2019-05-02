@@ -42,7 +42,6 @@ detail/basicwindow.cpp \
 detail/collision.cpp \
 detail/filesystem.cpp \
 detail/imagecache.cpp \
-detail/input/inputevdev.cpp \
 detail/layout.cpp \
 detail/mousegesture.cpp \
 detail/resource.cpp \
@@ -125,7 +124,6 @@ $(top_srcdir)/include/egt/detail/basicwindow.h \
 $(top_srcdir)/include/egt/detail/collision.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
 $(top_srcdir)/include/egt/detail/imagecache.h \
-$(top_srcdir)/include/egt/detail/input/inputevdev.h \
 $(top_srcdir)/include/egt/detail/filesystem.h \
 $(top_srcdir)/include/egt/detail/math.h \
 $(top_srcdir)/include/egt/detail/mousegesture.h \
@@ -274,6 +272,14 @@ detail/screen/framebuffer.cpp
 
 nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/screen/framebuffer.h
+endif
+
+if HAVE_LINUX_INPUT_H
+libegt_la_SOURCES += \
+detail/input/inputevdev.cpp
+
+nobase_libegtinclude_HEADERS += \
+$(top_srcdir)/include/egt/detail/input/inputevdev.h
 endif
 
 if OS_WIN32

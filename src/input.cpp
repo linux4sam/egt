@@ -3,14 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/input.h"
 #include "egt/window.h"
 #include <chrono>
-#include <linux/input.h>
 
 using namespace std;
 
