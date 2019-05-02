@@ -8,6 +8,7 @@
 #include "egt/screen.h"
 #include <cmath>
 #include <vector>
+#include "compat.h"
 #include "kplot.h"
 
 using namespace std;
