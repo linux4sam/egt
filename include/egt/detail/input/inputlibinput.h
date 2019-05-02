@@ -40,15 +40,9 @@ public:
 private:
 
     void handle_event_device_notify(struct libinput_event* ev);
-    void handle_event_motion(struct libinput_event* ev);
-    void handle_event_absmotion(struct libinput_event* ev);
-    bool handle_event_touch(struct libinput_event* ev);
-    void handle_event_axis(struct libinput_event* ev);
+    void handle_event_touch(struct libinput_event* ev);
     void handle_event_keyboard(struct libinput_event* ev);
     void handle_event_button(struct libinput_event* ev);
-    void handle_event_swipe(struct libinput_event* ev);
-    void handle_event_pinch(struct libinput_event* ev);
-    void handle_event_tablet(struct libinput_event* ev);
 
     void handle_read(const asio::error_code& error);
 

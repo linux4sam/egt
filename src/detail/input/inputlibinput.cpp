@@ -126,15 +126,13 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
 #endif
 }
 
-bool InputLibInput::handle_event_touch(struct libinput_event* ev)
+void InputLibInput::handle_event_touch(struct libinput_event* ev)
 {
-    bool res = false;
-
     struct libinput_event_touch* t = libinput_event_get_touch_event(ev);
     int slot = libinput_event_touch_get_seat_slot(t);
 
     if (slot == -1)
-        return res;
+        return;
 
     switch (libinput_event_get_type(ev))
     {
@@ -157,14 +155,13 @@ bool InputLibInput::handle_event_touch(struct libinput_event* ev)
         double y = libinput_event_touch_get_y_transformed(t, 480);
 
         m_pointer.point = DisplayPoint(x, y);
-        res = true;
+
+        dispatch(eventid::raw_pointer_move);
         break;
     }
     default:
         break;
     }
-
-    return res;
 }
 
 void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
@@ -217,7 +214,6 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
 
 void InputLibInput::handle_read(const asio::error_code& error)
 {
-    bool res = false;
     if (error)
     {
         ERR(error);
@@ -248,7 +244,7 @@ void InputLibInput::handle_read(const asio::error_code& error)
         case LIBINPUT_EVENT_TOUCH_DOWN:
         case LIBINPUT_EVENT_TOUCH_MOTION:
         case LIBINPUT_EVENT_TOUCH_UP:
-            res = handle_event_touch(ev);
+            handle_event_touch(ev);
             break;
         /* These events are not handled. */
         case LIBINPUT_EVENT_TOUCH_CANCEL:
@@ -275,9 +271,6 @@ void InputLibInput::handle_read(const asio::error_code& error)
         libinput_event_destroy(ev);
         libinput_dispatch(li);
     }
-
-    if (res)
-        dispatch(eventid::raw_pointer_move);
 
 #ifdef USE_PRIORITY_QUEUE
     asio::async_read(m_input, asio::null_buffers(),
