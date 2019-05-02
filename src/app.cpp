@@ -23,6 +23,7 @@
 #include "egt/version.h"
 #include "egt/window.h"
 #include <clocale>
+#include <csignal>
 #include <iostream>
 #include <libintl.h>
 #include <regex>
