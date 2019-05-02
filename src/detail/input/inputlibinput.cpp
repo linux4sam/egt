@@ -21,42 +21,6 @@ inline namespace v1
 namespace detail
 {
 
-#if 0
-// try to convert pointercal (generated with ts_calibrate) to libinput matrix
-// this is broken - doesn't work
-static void tslib_pointercal_to_libinput(struct libinput_device* dev)
-{
-    //ENV{WL_CALIBRATION}="a/g b/g c/g d/g e/g f/g"
-
-    float matrix[6];
-    //libinput_device_config_calibration_get_matrix(dev, matrix);
-    float a, b, c, d, e, f, g, h, i;
-
-    std::fstream file("/etc/pointercal", std::ios_base::in);
-    file >> a >> b >> c >> d >> e >> f >> g >> h >> i;
-
-    cout << "values: " << a << " " <<  b << " " << c << " " << d << " " <<
-         e << " " << f << " " << g << " " << h << " " << i << endl;
-
-    matrix[0] = a / g;
-    matrix[1] = b / g;
-    matrix[2] = c / g;
-    matrix[3] = d / g;
-    matrix[4] = e / g;
-    matrix[5] = f / g;
-
-    cout << matrix[0] << " " <<  matrix[1] << " " << matrix[2] << endl;
-    cout << matrix[3] << " " <<  matrix[4] << " " << matrix[5] << endl;
-
-    //matrix[2] /= 800.;
-    //matrix[5] /= 480.;
-
-    auto status = libinput_device_config_calibration_set_matrix(dev, matrix);
-    if (status != LIBINPUT_CONFIG_STATUS_SUCCESS)
-        cout << "Failed to apply calibration.\n";
-}
-#endif
-
 static int
 open_restricted(const char* path, int flags, void* user_data)
 {
@@ -146,9 +110,6 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
 
     li = libinput_event_get_context(ev);
 
-    //tools_device_apply_config(libinput_event_get_device(ev),
-    //			  &w->options);
-
 #if 0
     if (libinput_event_get_type(ev) == LIBINPUT_EVENT_DEVICE_ADDED)
     {
@@ -165,59 +126,12 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
 #endif
 }
 
-void InputLibInput::handle_event_motion(struct libinput_event* ev)
-{
-    struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
-    //double dx = libinput_event_pointer_get_dx(p),
-    //    dy = libinput_event_pointer_get_dy(p);
-    //struct point point;
-    //const int mask = ARRAY_LENGTH(w->deltas);
-    //size_t idx;
-
-    //w->x += dx;
-    //w->y += dy;
-    //w->x = clip(w->x, 0.0, w->width);
-    //w->y = clip(w->y, 0.0, w->height);
-
-    //idx = w->ndeltas % mask;
-    //point = w->deltas[idx];
-    //idx = (w->ndeltas + 1) % mask;
-    //point.x += libinput_event_pointer_get_dx_unaccelerated(p);
-    //point.y += libinput_event_pointer_get_dy_unaccelerated(p);
-    //w->deltas[idx] = point;
-    //w->ndeltas++;
-    //#endif
-
-    //cout << x << "," << y << endl;
-    //m_pointer.point = Point(x, y);
-
-    m_pointer.point.x += libinput_event_pointer_get_dx_unaccelerated(p);
-    m_pointer.point.y += libinput_event_pointer_get_dy_unaccelerated(p);
-
-    dispatch(eventid::raw_pointer_move);
-}
-
-void InputLibInput::handle_event_absmotion(struct libinput_event* ev)
-{
-    ignoreparam(ev);
-
-#if 0
-    struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
-    double x = libinput_event_pointer_get_absolute_x_transformed(p, w->width),
-           y = libinput_event_pointer_get_absolute_y_transformed(p, w->height);
-
-    w->absx = x;
-    w->absy = y;
-#endif
-}
-
 bool InputLibInput::handle_event_touch(struct libinput_event* ev)
 {
     bool res = false;
 
     struct libinput_event_touch* t = libinput_event_get_touch_event(ev);
     int slot = libinput_event_touch_get_seat_slot(t);
-    //struct libinput_device* dev = libinput_event_get_device(ev);
 
     if (slot == -1)
         return res;
@@ -242,9 +156,6 @@ bool InputLibInput::handle_event_touch(struct libinput_event* ev)
         double x = libinput_event_touch_get_x_transformed(t, 800);
         double y = libinput_event_touch_get_y_transformed(t, 480);
 
-        //double x2 = libinput_event_touch_get_x(t);
-        //double y2 = libinput_event_touch_get_y(t);
-
         m_pointer.point = DisplayPoint(x, y);
         res = true;
         break;
@@ -254,34 +165,6 @@ bool InputLibInput::handle_event_touch(struct libinput_event* ev)
     }
 
     return res;
-}
-
-void InputLibInput::handle_event_axis(struct libinput_event* ev)
-{
-    ignoreparam(ev);
-
-#if 0
-    struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
-    double value;
-
-    if (libinput_event_pointer_has_axis(p,
-                                        LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL))
-    {
-        value = libinput_event_pointer_get_axis_value(p,
-                LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL);
-        w->vy += value;
-        w->vy = clip(w->vy, 0, w->height);
-    }
-
-    if (libinput_event_pointer_has_axis(p,
-                                        LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL))
-    {
-        value = libinput_event_pointer_get_axis_value(p,
-                LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL);
-        w->hx += value;
-        w->hx = clip(w->hx, 0, w->width);
-    }
-#endif
 }
 
 void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
@@ -332,161 +215,6 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
     dispatch(is_press ? eventid::raw_pointer_down : eventid::raw_pointer_up);
 }
 
-void InputLibInput::handle_event_swipe(struct libinput_event* ev)
-{
-    ignoreparam(ev);
-
-#if 0
-    struct libinput_event_gesture* g = libinput_event_get_gesture_event(ev);
-    int nfingers;
-    double dx, dy;
-
-    nfingers = libinput_event_gesture_get_finger_count(g);
-
-    switch (libinput_event_get_type(ev))
-    {
-    case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
-        w->swipe.nfingers = nfingers;
-        w->swipe.x = w->width / 2;
-        w->swipe.y = w->height / 2;
-        break;
-    case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
-        dx = libinput_event_gesture_get_dx(g);
-        dy = libinput_event_gesture_get_dy(g);
-        w->swipe.x += dx;
-        w->swipe.y += dy;
-        break;
-    case LIBINPUT_EVENT_GESTURE_SWIPE_END:
-        w->swipe.nfingers = 0;
-        w->swipe.x = w->width / 2;
-        w->swipe.y = w->height / 2;
-        break;
-    default:
-        abort();
-    }
-#endif
-}
-
-void InputLibInput::handle_event_pinch(struct libinput_event* ev)
-{
-    ignoreparam(ev);
-
-#if 0
-    struct libinput_event_gesture* g = libinput_event_get_gesture_event(ev);
-    int nfingers;
-    double dx, dy;
-
-    nfingers = libinput_event_gesture_get_finger_count(g);
-
-    switch (libinput_event_get_type(ev))
-    {
-    case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN:
-        w->pinch.nfingers = nfingers;
-        w->pinch.x = w->width / 2;
-        w->pinch.y = w->height / 2;
-        break;
-    case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
-        dx = libinput_event_gesture_get_dx(g);
-        dy = libinput_event_gesture_get_dy(g);
-        w->pinch.x += dx;
-        w->pinch.y += dy;
-        w->pinch.scale = libinput_event_gesture_get_scale(g);
-        w->pinch.angle += libinput_event_gesture_get_angle_delta(g);
-        break;
-    case LIBINPUT_EVENT_GESTURE_PINCH_END:
-        w->pinch.nfingers = 0;
-        w->pinch.x = w->width / 2;
-        w->pinch.y = w->height / 2;
-        w->pinch.angle = 0.0;
-        w->pinch.scale = 1.0;
-        break;
-    default:
-        abort();
-    }
-#endif
-}
-
-void InputLibInput::handle_event_tablet(struct libinput_event* ev)
-{
-    ignoreparam(ev);
-
-#if 0
-    struct libinput_event_tablet_tool* t = libinput_event_get_tablet_tool_event(ev);
-    double x, y;
-    struct point point;
-    int idx;
-    const int mask = ARRAY_LENGTH(w->tool.deltas);
-
-    x = libinput_event_tablet_tool_get_x_transformed(t, w->width);
-    y = libinput_event_tablet_tool_get_y_transformed(t, w->height);
-
-    switch (libinput_event_get_type(ev))
-    {
-    case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
-        if (libinput_event_tablet_tool_get_proximity_state(t) ==
-            LIBINPUT_TABLET_TOOL_PROXIMITY_STATE_OUT)
-        {
-            w->tool.x_in = 0;
-            w->tool.y_in = 0;
-            w->tool.x_down = 0;
-            w->tool.y_down = 0;
-            w->tool.x_up = 0;
-            w->tool.y_up = 0;
-        }
-        else
-        {
-            w->tool.x_in = x;
-            w->tool.y_in = y;
-            w->tool.ndeltas = 0;
-            w->tool.deltas[0].x = w->width / 2;
-            w->tool.deltas[0].y = w->height / 2;
-        }
-        break;
-    case LIBINPUT_EVENT_TABLET_TOOL_TIP:
-        w->tool.pressure = libinput_event_tablet_tool_get_pressure(t);
-        w->tool.distance = libinput_event_tablet_tool_get_distance(t);
-        w->tool.tilt_x = libinput_event_tablet_tool_get_tilt_x(t);
-        w->tool.tilt_y = libinput_event_tablet_tool_get_tilt_y(t);
-        if (libinput_event_tablet_tool_get_tip_state(t) ==
-            LIBINPUT_TABLET_TOOL_TIP_DOWN)
-        {
-            w->tool.x_down = x;
-            w->tool.y_down = y;
-        }
-        else
-        {
-            w->tool.x_up = x;
-            w->tool.y_up = y;
-        }
-    /* fallthrough */
-    case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
-        w->tool.x = x;
-        w->tool.y = y;
-        w->tool.pressure = libinput_event_tablet_tool_get_pressure(t);
-        w->tool.distance = libinput_event_tablet_tool_get_distance(t);
-        w->tool.tilt_x = libinput_event_tablet_tool_get_tilt_x(t);
-        w->tool.tilt_y = libinput_event_tablet_tool_get_tilt_y(t);
-
-        /* Add the delta to the last position and store them as abs
-         * coordinates */
-        idx = w->tool.ndeltas % mask;
-        point = w->tool.deltas[idx];
-
-        idx = (w->tool.ndeltas + 1) % mask;
-        point.x += libinput_event_tablet_tool_get_dx(t);
-        point.y += libinput_event_tablet_tool_get_dy(t);
-        w->tool.deltas[idx] = point;
-        w->tool.ndeltas++;
-        break;
-    case LIBINPUT_EVENT_TABLET_TOOL_BUTTON:
-        break;
-    default:
-        abort();
-    }
-
-#endif
-}
-
 void InputLibInput::handle_read(const asio::error_code& error)
 {
     bool res = false;
@@ -510,49 +238,36 @@ void InputLibInput::handle_read(const asio::error_code& error)
         case LIBINPUT_EVENT_DEVICE_REMOVED:
             handle_event_device_notify(ev);
             break;
-        case LIBINPUT_EVENT_POINTER_MOTION:
-            handle_event_motion(ev);
+        case LIBINPUT_EVENT_KEYBOARD_KEY:
+            handle_event_keyboard(ev);
             break;
-        case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
-            handle_event_absmotion(ev);
+        case LIBINPUT_EVENT_POINTER_BUTTON:
+            handle_event_button(ev);
             break;
+        case LIBINPUT_EVENT_POINTER_AXIS:
         case LIBINPUT_EVENT_TOUCH_DOWN:
         case LIBINPUT_EVENT_TOUCH_MOTION:
         case LIBINPUT_EVENT_TOUCH_UP:
             res = handle_event_touch(ev);
             break;
-        case LIBINPUT_EVENT_POINTER_AXIS:
-            handle_event_axis(ev);
-            break;
+        /* These events are not handled. */
         case LIBINPUT_EVENT_TOUCH_CANCEL:
         case LIBINPUT_EVENT_TOUCH_FRAME:
-            break;
-        case LIBINPUT_EVENT_POINTER_BUTTON:
-            handle_event_button(ev);
-            break;
-        case LIBINPUT_EVENT_KEYBOARD_KEY:
-            handle_event_keyboard(ev);
-            break;
+        case LIBINPUT_EVENT_POINTER_MOTION:
+        case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
         case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
         case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
         case LIBINPUT_EVENT_GESTURE_SWIPE_END:
-            handle_event_swipe(ev);
-            break;
         case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN:
         case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
         case LIBINPUT_EVENT_GESTURE_PINCH_END:
-            handle_event_pinch(ev);
-            break;
         case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
         case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
         case LIBINPUT_EVENT_TABLET_TOOL_TIP:
         case LIBINPUT_EVENT_TABLET_TOOL_BUTTON:
-            handle_event_tablet(ev);
-            break;
         case LIBINPUT_EVENT_TABLET_PAD_BUTTON:
         case LIBINPUT_EVENT_TABLET_PAD_RING:
         case LIBINPUT_EVENT_TABLET_PAD_STRIP:
-            break;
         default:
             break;
         }
