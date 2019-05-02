@@ -43,7 +43,7 @@ FrameBuffer::FrameBuffer(const string& path)
     DBG("fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres);
 
     m_fb = ::mmap(NULL, fixinfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
-    if (m_fb == (void*) -1)
+    if (m_fb == MAP_FAILED)
         throw std::runtime_error(("could not map framebuffer device: " + path).c_str());
 
     init(&m_fb, 1, varinfo.xres, varinfo.yres);
