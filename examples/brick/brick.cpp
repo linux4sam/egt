@@ -84,11 +84,11 @@ public:
         case eventid::keyboard_repeat:
         case eventid::keyboard_down:
         {
-            if (event::keys().key == KEY_LEFT || event::keys().key == KEY_RIGHT)
+            if (event::keys().key == EKEY_LEFT || event::keys().key == EKEY_RIGHT)
             {
                 int x;
                 m_running = true;
-                if (event::keys().key == KEY_LEFT)
+                if (event::keys().key == EKEY_LEFT)
                     x = m_paddle.x() - (event == eventid::keyboard_repeat ? 15 : 10);
                 else
                     x = m_paddle.x() + (event == eventid::keyboard_repeat ? 15 : 10);
@@ -98,14 +98,13 @@ public:
 
                 return 1;
             }
-            else if (event::keys().key == KEY_UP)
+            else if (event::keys().key == EKEY_UP)
             {
                 m_xspeed *= 1.5;
                 m_yspeed *= 1.5;
                 return 1;
             }
-
-            else if (event::keys().key == KEY_DOWN)
+            else if (event::keys().key == EKEY_DOWN)
             {
                 m_xspeed *= .5;
                 m_yspeed *= .5;
