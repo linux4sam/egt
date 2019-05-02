@@ -1,1 +1,2 @@
-EXTRA_DIST = mresg
+EXTRA_DIST = mresg \
+style.sh

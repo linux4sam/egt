@@ -290,7 +290,8 @@ AC_CONFIG_FILES([Makefile
 	include/egt/version.h
 	examples/i18n/Makefile
 	examples/resource/Makefile
-	examples/video/Makefile])
+	examples/video/Makefile
+	docs/Makefile])
 AC_OUTPUT
 
 dnl report how we have been configured

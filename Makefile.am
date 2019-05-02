@@ -1,20 +1,20 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = scripts external src
+SUBDIRS = scripts external src docs
 if ENABLE_EXAMPLES
 SUBDIRS += examples
 endif
 
-EXTRA_DIST = README.md COPYING docs/Doxyfile.in $(private_icons)
+EXTRA_DIST = README.md \
+CONTRIBUTING.md \
+CODE_OF_CONDUCT.md \
+COPYING \
+$(private_icons)
 
 if HAVE_DOXYGEN_BIN
 .PHONY: docs
 docs: docs/Doxyfile
 	@cd docs && $(DOXYGEN_BIN)
 endif
-
-clean-local:
-	rm -rf $(top_srcdir)/docs/html
-	rm -rf $(top_srcdir)/docs/latex
 
 ASTYLE_WILDCARDS = \
 "$(top_srcdir)/examples/\*.cpp" \
