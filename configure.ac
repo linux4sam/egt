@@ -111,6 +111,15 @@ AC_ARG_ENABLE([examples],
   [enable_examples=no], [enable_examples=yes])
 AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x${enable_examples}" != xno])
 
+AC_ARG_ENABLE([lto],
+  [AS_HELP_STRING([--enable-lto], [enable gcc's LTO [default=no]])],
+  [enable_lto=yes], [enable_lto=no])
+if test "$enable_lto" = "yes" ; then
+  AC_MSG_NOTICE([enabling LTO])
+  CFLAGS="$CFLAGS -flto"
+  CXXFLAGS="$CXXFLAGS -flto"
+fi
+
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
 AC_C_INLINE
