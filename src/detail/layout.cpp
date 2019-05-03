@@ -151,8 +151,6 @@ struct LayoutSerializer
 
         if (!stack.empty())
         {
-            lay_item_t* p = lay_get_item(&ctx, stack.back());
-            DBG(static_cast<Widget*>(p->data)->name() << "->" << widget->name());
             lay_insert(&ctx, stack.back(), child);
         }
 
