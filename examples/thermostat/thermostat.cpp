@@ -195,13 +195,13 @@ int main(int argc, const char** argv)
         // value arc
         painter.set(color2);
         painter.set_line_width(linew);
-        painter.draw(Arc(c, radius, angle1, angle2));
+        painter.draw(egt::Arc(c, radius, angle1, angle2));
         painter.stroke();
 
         // handle
         painter.set(color3);
         auto hp = c.point_on_circumference(radius, angle2);
-        painter.draw(Arc(hp, handle_radius, 0., static_cast<float>(2 * detail::pi())));
+        painter.draw(egt::Arc(hp, handle_radius, 0., static_cast<float>(2 * detail::pi())));
         painter.fill();
 
         // secondary value
@@ -210,7 +210,7 @@ int main(int argc, const char** argv)
                        widget.value_to_degrees(widget.value2()));
         painter.set(color4);
         painter.set_line_width(linew * 2);
-        painter.draw(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
+        painter.draw(egt::Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
         painter.stroke();
 
         //text
