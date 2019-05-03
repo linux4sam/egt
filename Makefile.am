@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = scripts external src docs
+SUBDIRS = external src scripts docs
 if ENABLE_EXAMPLES
 SUBDIRS += examples
 endif
