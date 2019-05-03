@@ -59,7 +59,7 @@ static bool debounce_mouse(int delta)
         chrono::steady_clock::now();
 
 
-    if (chrono::duration<float_t, milli>(chrono::steady_clock::now() - last_time).count() > delta)
+    if (chrono::duration<float, milli>(chrono::steady_clock::now() - last_time).count() > delta)
     {
         last_time =
             chrono::steady_clock::now();
