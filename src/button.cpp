@@ -270,5 +270,22 @@ void ImageButton::first_resize()
     }
 }
 
+namespace experimental
+{
+HotSpot::HotSpot(const Rect& rect) noexcept
+    : Widget(rect)
+{
+    set_boxtype(Theme::boxtype::none);
+    hide();
+}
+
+HotSpot::
+HotSpot(Frame& parent, const Rect& rect) noexcept
+    : HotSpot(rect)
+{
+    parent.add(*this);
+}
+}
+
 }
 }

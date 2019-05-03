@@ -226,6 +226,16 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
     }
 }
 
+Size ImageLabel::min_size_hint() const
+{
+    // if we are expanding the image, don't use it for min size hint
+    if ((m_image_align & alignmask::expand_horizontal) == alignmask::expand_horizontal ||
+        (m_image_align & alignmask::expand_vertical) == alignmask::expand_vertical)
+        return Widget::min_size_hint();
+
+    return m_image.size() + Widget::min_size_hint();
+}
+
 void ImageLabel::set_image(const Image& image)
 {
     if (!image.empty())

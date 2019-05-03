@@ -206,21 +206,13 @@ public:
             damage();
     }
 
-    void set_position_image_first(bool value)
+    virtual void set_position_image_first(bool value)
     {
         if (detail::change_if_diff<>(m_position_image_first, value))
             damage();
     }
 
-    virtual Size min_size_hint() const override
-    {
-        // if we are expanding the image, don't use it for min size hint
-        if ((m_image_align & alignmask::expand_horizontal) == alignmask::expand_horizontal ||
-            (m_image_align & alignmask::expand_vertical) == alignmask::expand_vertical)
-            return Widget::min_size_hint();
-
-        return m_image.size() + Widget::min_size_hint();
-    }
+    virtual Size min_size_hint() const override;
 
     virtual ~ImageLabel() = default;
 

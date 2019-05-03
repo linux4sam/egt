@@ -13,12 +13,10 @@
 
 #include <cairo.h>
 #include <cassert>
-#include <cstdint>
 #include <egt/detail/object.h>
 #include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
-#include <egt/input.h>
 #include <egt/palette.h>
 #include <egt/theme.h>
 #include <egt/utils.h>
@@ -118,10 +116,10 @@ public:
          */
         no_clip,
 
-        no_base_translate,
-
+        /**
+         * Tell any parent not to perform layout on this widget.
+         */
         no_layout,
-        layout_break,
     };
 
     using flags_type = Flags<flag>;
@@ -560,12 +558,7 @@ public:
      * This is used by sizers to pick minimum and default dimensions when no
      * other force is used.
      */
-    virtual Size min_size_hint() const
-    {
-        return Size(margin() * 2, margin() * 2) +
-               Size(border() * 2, border() * 2) +
-               Size(padding() * 2, padding() * 2);
-    }
+    virtual Size min_size_hint() const;
 
     /**
      * Paint the Widget using Painter.
@@ -695,33 +688,17 @@ public:
      * themselves, and only allow their children to be positioned in the
      * rest.
      */
-    virtual Rect content_area() const
-    {
-        auto moat = margin() + padding() + border();
-        auto b = box();
-        b += Point(moat, moat);
-        b -= Size(2. * moat, 2. * moat);
-        return b;
-    }
+    virtual Rect content_area() const;
 
-    Palette::pattern_type color(Palette::ColorId id)
-    {
-        Palette::GroupId group = Palette::GroupId::normal;
-        if (disabled())
-            group = Palette::GroupId::disabled;
-        else if (active())
-            group = Palette::GroupId::active;
-
-        return palette().color(id, group);
-    }
+    /**
+     * Get a Widget color.
+     */
+    Palette::pattern_type color(Palette::ColorId id);
 
     /**
      * Perform layout of the widget.
      */
-    virtual void layout()
-    {}
-
-    virtual ~Widget() noexcept;
+    virtual void layout();
 
     /**
      * Helper function to draw this widget's box using the appropriate
@@ -729,6 +706,8 @@ public:
      */
     void draw_box(Painter& painter, Palette::ColorId bg,
                   Palette::ColorId border) const;
+
+    virtual ~Widget() noexcept;
 
 protected:
 
@@ -740,17 +719,7 @@ protected:
     /**
      * Set this widget's parent.
      */
-    virtual void set_parent(Frame* parent)
-    {
-        // cannot already have a parent
-        assert(!m_parent);
-
-        if (!m_parent)
-        {
-            m_parent = parent;
-            damage();
-        }
-    }
+    virtual void set_parent(Frame* parent);
 
     /**
      * Bounding box.
@@ -769,6 +738,9 @@ protected:
      */
     int m_widgetid{0};
 
+    /**
+     * Call our parent to do a layout.
+     */
     void parent_layout();
 
 private:
@@ -809,8 +781,14 @@ private:
      */
     default_dim_type m_margin{0};
 
+    /**
+     * Alignment X ratio.
+     */
     default_dim_type m_xratio{0};
 
+    /**
+     * Alignment Y ratio.
+     */
     default_dim_type m_yratio{0};
 
     /**

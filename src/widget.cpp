@@ -415,6 +415,13 @@ Point Widget::from_display(const DisplayPoint& p)
     return Point(p.x, p.y);
 }
 
+Size Widget::min_size_hint() const
+{
+    return Size(margin() * 2, margin() * 2) +
+           Size(border() * 2, border() * 2) +
+           Size(padding() * 2, padding() * 2);
+}
+
 void Widget::paint(Painter& painter)
 {
     Painter::AutoSaveRestore sr(painter);
@@ -511,9 +518,44 @@ void Widget::detatch()
     }
 }
 
+Rect Widget::content_area() const
+{
+    auto moat = margin() + padding() + border();
+    auto b = box();
+    b += Point(moat, moat);
+    b -= Size(2. * moat, 2. * moat);
+    return b;
+}
+
+Palette::pattern_type Widget::color(Palette::ColorId id)
+{
+    Palette::GroupId group = Palette::GroupId::normal;
+    if (disabled())
+        group = Palette::GroupId::disabled;
+    else if (active())
+        group = Palette::GroupId::active;
+
+    return palette().color(id, group);
+}
+
+void Widget::layout()
+{}
+
 Widget::~Widget() noexcept
 {
     detatch();
+}
+
+void Widget::set_parent(Frame* parent)
+{
+    // cannot already have a parent
+    assert(!m_parent);
+
+    if (!m_parent)
+    {
+        m_parent = parent;
+        damage();
+    }
 }
 
 void Widget::parent_layout()

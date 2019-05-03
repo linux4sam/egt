@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/themes/sky.h"
-#include "egt/painter.h"
-#include "egt/widget.h"
 #include "egt/checkbox.h"
+#include "egt/detail/alignment.h"
+#include "egt/painter.h"
+#include "egt/themes/sky.h"
+#include "egt/widget.h"
 
 using namespace std;
 

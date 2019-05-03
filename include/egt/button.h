@@ -12,7 +12,6 @@
  */
 
 #include <egt/buttongroup.h>
-#include <egt/frame.h>
 #include <egt/geometry.h>
 #include <egt/image.h>
 #include <egt/textwidget.h>
@@ -25,6 +24,7 @@ namespace egt
 inline namespace v1
 {
 
+class Frame;
 class Painter;
 
 /**
@@ -225,18 +225,9 @@ class HotSpot : public Widget
 {
 public:
 
-    explicit HotSpot(const Rect& rect = Rect()) noexcept
-        : Widget(rect)
-    {
-        set_boxtype(Theme::boxtype::none);
-        hide();
-    }
+    explicit HotSpot(const Rect& rect = Rect()) noexcept;
 
-    explicit HotSpot(Frame& parent, const Rect& rect = Rect()) noexcept
-        : HotSpot(rect)
-    {
-        parent.add(*this);
-    }
+    explicit HotSpot(Frame& parent, const Rect& rect = Rect()) noexcept;
 
     virtual std::unique_ptr<Widget> clone() override
     {

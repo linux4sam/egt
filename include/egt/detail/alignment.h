@@ -12,7 +12,7 @@
  */
 
 #include <egt/geometry.h>
-#include <egt/widget.h>
+#include <egt/widgetflags.h>
 
 namespace egt
 {
