@@ -308,3 +308,38 @@ dist-hook:
 
 BUILT_SOURCES = $(top_builddir)/include/egt/version.h $(top_builddir)/include/egt/ui
 EXTRA_DIST = $(top_srcdir)/include/egt/version.h.in $(top_srcdir)/include/egt/ui.in
+
+TIDY_OPTIONS = \
+-checks="-*\
+,clang-analyzer-*\
+,cppcoreguidelines-* \
+,-cppcoreguidelines-pro-bounds-constant-array-index\
+,-cppcoreguidelines-pro-type-vararg\
+,-cppcoreguidelines-pro-type-reinterpret-cast\
+,-cppcoreguidelines-pro-type-union-access\
+,-cppcoreguidelines-pro-bounds-array-to-pointer-decay\
+,-cppcoreguidelines-pro-bounds-pointer-arithmetic\
+,modernize-*\
+,-modernize-pass-by-value\
+,-modernize-use-default\
+,-modernize-use-override\
+,readability-*\
+,-readability-braces-around-statements\
+,-readability-else-after-return\
+,-readability-implicit-bool-cast\
+,-readability-named-parameter\
+,misc-redundant-expression\
+,-clang-analyzer-alpha.deadcode.UnreachableCode\
+,-clang-analyzer-alpha.core.CastToStruct\
+,-clang-analyzer-alpha.unix.PthreadLock\
+,-clang-analyzer-alpha.cplusplus.VirtualCall" \
+-header-filter=egt/*.h \
+-- $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
+
+tidy: all-am
+	@for source in $(libegt_la_SOURCES) $(nobase_libegtinclude_HEADERS); do \
+		[[ $$source == *.c ]] && continue; \
+		[[ $$source == *.h ]] && continue; \
+		echo $$source; \
+		clang-tidy $$source $(TIDY_OPTIONS); \
+	done

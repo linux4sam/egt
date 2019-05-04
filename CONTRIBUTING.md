@@ -22,7 +22,7 @@ There are some extra tools that you can install with your distribution package
 manager.
 
 ```sh
-sudo apt-get install cloc doxygen graphviz
+sudo apt-get install cloc doxygen graphviz clang clang-tidy
 ```
 
 ## Extra Development Tools

@@ -95,3 +95,6 @@ compile \
 config.h.in~ \
 config.sub \
 ltmain.sh
+
+tidy:
+	@cd src && $(MAKE) $(AM_MAKEFLAGS) $@
