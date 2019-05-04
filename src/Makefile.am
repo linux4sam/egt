@@ -1,8 +1,7 @@
 CUSTOM_FLAGS = $(WARN_CFLAGS) \
+	-I$(top_srcdir)/src \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
-	-I$(top_srcdir)/src/images/bmp \
-	-I$(top_srcdir)/src/images/jpeg \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/utfcpp/source \
 	-isystem $(top_srcdir)/external/layout \
