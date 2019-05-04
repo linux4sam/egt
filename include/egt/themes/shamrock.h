@@ -13,6 +13,9 @@ namespace egt
 inline namespace v1
 {
 
+/**
+ * Shamrock Theme
+ */
 class ShamrockTheme : public Theme
 {
 public:

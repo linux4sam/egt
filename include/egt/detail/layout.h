@@ -19,8 +19,17 @@ class Frame;
 namespace detail
 {
 
+/**
+ * Perform an automatic flex layout of a Frame's children.
+ *
+ * @param frame The parent frame.
+ * @param max_level The maximum depth to go when looking at children.
+ */
 void flex_layout(Frame* frame, int max_level);
 
+/**
+ * Wrapper around properties for managing a rect by flex_layout().
+ */
 struct LayoutRect
 {
     LayoutRect()
@@ -47,6 +56,9 @@ struct LayoutRect
     uint32_t bmargin{0};
 };
 
+/**
+ * Perform a manual flex layout given a parent rect and children rects.
+ */
 void flex_layout(const Rect& parent,
                  std::vector<LayoutRect>& children,
                  justification justify,
