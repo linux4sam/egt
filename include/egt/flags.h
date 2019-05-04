@@ -33,8 +33,8 @@ public:
 
     using flags = std::unordered_set<T, flags_hash>;
 
-    explicit Flags(const flags& flags = flags()) noexcept
-        : m_flags(flags)
+    explicit Flags(const flags& f = flags()) noexcept
+        : m_flags(f)
     {}
 
     /**

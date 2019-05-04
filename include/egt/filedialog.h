@@ -34,7 +34,7 @@ class FileDialog : public Popup
 public:
     explicit FileDialog(const Rect& rect);
 
-    FileDialog(const std::string& title, const Rect& rect);
+    FileDialog(const std::string& filepath, const Rect& rect);
 
     virtual void set_selected(const std::string& fselect) = 0;
 

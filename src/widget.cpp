@@ -173,12 +173,12 @@ void Widget::move_to_center(const Point& point)
     }
 }
 
-void Widget::resize(const Size& size)
+void Widget::resize(const Size& s)
 {
-    if (size != box().size())
+    if (s != box().size())
     {
         damage();
-        m_box.size(size);
+        m_box.size(s);
         damage();
         parent_layout();
     }
@@ -506,7 +506,7 @@ void Widget::draw_box(Painter& painter, Palette::ColorId bg,
 const Theme& Widget::theme() const
 {
     if (m_theme.get())
-        return *m_theme.get();
+        return *m_theme;
 
     if (parent())
         return parent()->theme();

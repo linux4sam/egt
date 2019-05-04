@@ -142,34 +142,34 @@ public:
     Theme(const Theme& rhs)
     {
         if (rhs.m_palette)
-            m_palette.reset(new Palette(*rhs.m_palette.get()));
+            m_palette.reset(new Palette(*rhs.m_palette));
 
         if (rhs.m_font)
-            m_font.reset(new Font(*rhs.m_font.get()));
+            m_font.reset(new Font(*rhs.m_font));
     }
 
     Palette& palette()
     {
         assert(m_palette);
-        return *m_palette.get();
+        return *m_palette;
     }
 
     const Palette& palette() const
     {
         assert(m_palette);
-        return *m_palette.get();
+        return *m_palette;
     }
 
     Font& font()
     {
         assert(m_font);
-        return *m_font.get();
+        return *m_font;
     }
 
     const Font& font() const
     {
         assert(m_font);
-        return *m_font.get();
+        return *m_font;
     }
 
     /**

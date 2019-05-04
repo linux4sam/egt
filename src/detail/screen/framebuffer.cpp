@@ -5,7 +5,6 @@
  */
 #include "egt/detail/screen/framebuffer.h"
 #include "egt/utils.h"
-#include <cassert>
 #include <fcntl.h>
 #include <linux/fb.h>
 #include <sys/ioctl.h>
@@ -31,19 +30,15 @@ FrameBuffer::FrameBuffer(const string& path)
         throw std::runtime_error(("could not open device: " + path).c_str());
 
     if (::ioctl(m_fd, FBIOGET_FSCREENINFO, &fixinfo) < 0)
-    {
-        assert(0);
-    }
+        throw std::runtime_error("could not get fbdev screen info");
 
     if (::ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0)
-    {
-        assert(0);
-    }
+        throw std::runtime_error("could not get fbdev screen info");
 
     DBG("fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres);
 
-    m_fb = ::mmap(NULL, fixinfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
-    if (m_fb == MAP_FAILED)
+    m_fb = ::mmap(nullptr, fixinfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
+    if (m_fb == MAP_FAILED) // NOLINT
         throw std::runtime_error(("could not map framebuffer device: " + path).c_str());
 
     init(&m_fb, 1, varinfo.xres, varinfo.yres);

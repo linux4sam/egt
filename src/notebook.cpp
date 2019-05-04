@@ -63,7 +63,7 @@ void Notebook::remove(Widget* widget)
 
     if (m_current_index >= static_cast<int>(m_cells.size()))
     {
-        if (m_cells.size())
+        if (!m_cells.empty())
             set_select(m_cells.size() - 1);
         else
             m_current_index = -1;

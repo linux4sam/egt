@@ -233,7 +233,7 @@ void Screen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
     {
         DisplayBuffer buffer;
         buffer.surface = shared_cairo_surface_t(
-                             cairo_image_surface_create_for_data((unsigned char*)ptr[x],
+                             cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
                                      f,
                                      w, h,
                                      cairo_format_stride_for_width(f, w)),

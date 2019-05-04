@@ -114,6 +114,9 @@ protected:
     virtual Point get_frame_origin(int index) const
     {
         Point origin;
+        if (m_image.empty())
+            return origin;
+
         auto imagew = m_image.size().w;
         origin.x = m_strips[m_strip].point.x + (index * m_frame.w);
         origin.y = m_strips[m_strip].point.y;
@@ -123,7 +126,7 @@ protected:
         {
             auto x = m_strips[m_strip].point.x + (index * m_frame.w);
 
-            origin.x = (static_cast<uint32_t>(x) % static_cast<uint32_t>(imagew));
+            origin.x = (static_cast<uint32_t>(x) % static_cast<uint32_t>(imagew)); //NOLINT
             origin.y = ((x / imagew) * m_strips[m_strip].point.y) + (x / imagew) * m_frame.h;
         }
 

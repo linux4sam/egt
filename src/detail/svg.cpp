@@ -25,10 +25,10 @@ shared_cairo_surface_t load_svg(const string& filename,
                                 const SizeF& size,
                                 const std::string& id)
 {
-    GError* error = NULL;
+    GError* error = nullptr;
     std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), &error),
     [](RsvgHandle * r) { g_object_unref(r); });
-    assert(error == NULL);
+    assert(error == nullptr);
 
     RsvgDimensionData dim;
     rsvg_handle_get_dimensions(rsvg.get(), &dim);

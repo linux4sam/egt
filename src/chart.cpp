@@ -46,7 +46,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
                     b.x,
                     b.y);
 
-    struct kplot* p = kplot_alloc(NULL);
+    struct kplot* p = kplot_alloc(nullptr);
     struct kplotcfg* cfg = kplot_get_plotcfg(p);
     cfg->grid = m_grid;
     cfg->xticlabelfmt = xticlabelfmt;

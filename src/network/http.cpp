@@ -37,7 +37,7 @@ public:
 
     static HttpClientRequestManager* Instance()
     {
-        static HttpClientRequestManager* p = new HttpClientRequestManager;
+        static auto p = new HttpClientRequestManager;
         return p;
     }
 

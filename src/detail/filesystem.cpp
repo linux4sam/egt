@@ -94,7 +94,7 @@ std::vector<std::string> glob(const std::string& pattern)
     glob_t glob_result;
     memset(&glob_result, 0, sizeof(glob_result));
 
-    int return_value = glob(pattern.c_str(), GLOB_TILDE, NULL, &glob_result);
+    int return_value = glob(pattern.c_str(), GLOB_TILDE, nullptr, &glob_result);
     if (return_value != 0)
     {
         globfree(&glob_result);

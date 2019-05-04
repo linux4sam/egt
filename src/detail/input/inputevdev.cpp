@@ -67,7 +67,6 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
         assert(0);
     }
 
-    e = ev;
     end = ev + (length / sizeof(e[0]));
     for (e = ev; e < end; e++)
     {

@@ -142,7 +142,7 @@ public:
     /**
      * Add a new item to the end of the list.
      */
-    virtual void add_item(const std::shared_ptr<Widget>& item);
+    virtual void add_item(const std::shared_ptr<Widget>& widget);
 
     /**
      * Get the currently selected index item from list.
@@ -188,7 +188,7 @@ protected:
 
 private:
 
-    void add_item_private(const std::shared_ptr<Widget>& item);
+    void add_item_private(const std::shared_ptr<Widget>& widget);
 };
 
 }

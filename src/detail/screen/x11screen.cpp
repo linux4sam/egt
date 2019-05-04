@@ -35,14 +35,14 @@ X11Screen::X11Screen(const Size& size, bool borderless)
     : m_priv(new detail::X11Data),
       m_input(main_app().event().io())
 {
-    m_priv->display = XOpenDisplay(NULL);
+    m_priv->display = XOpenDisplay(nullptr);
     if (!m_priv->display)
         throw std::runtime_error("unable to connect to X11 display");
 
     m_input.assign(ConnectionNumber(m_priv->display));
 
-    int screen = DefaultScreen(m_priv->display);
-    Window win = RootWindow(m_priv->display, screen);
+    auto screen = DefaultScreen(m_priv->display);
+    auto win = RootWindow(m_priv->display, screen);
 
     m_priv->window = XCreateSimpleWindow(m_priv->display,
                                          win,
@@ -168,7 +168,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         case KeyRelease:
         {
             KeySym keysym = NoSymbol;
-            XLookupString(&e.xkey, NULL, 0, &keysym, NULL);
+            XLookupString(&e.xkey, nullptr, 0, &keysym, nullptr);
             m_in.m_keys.key = detail::GetUnicodeCharacterFromXKeySym(keysym);
             m_in.m_keys.code = detail::KeyboardCodeFromXKeyEvent(&e);
 

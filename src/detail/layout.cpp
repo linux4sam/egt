@@ -9,7 +9,7 @@
 #include "egt/sizer.h"
 
 #define LAY_IMPLEMENTATION
-#include "external/layout/layout.h"
+#include "layout.h"
 
 using namespace std;
 

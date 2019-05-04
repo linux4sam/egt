@@ -28,7 +28,7 @@ struct Resource
  * Because of static initialization order, make this a pointer and allocate
  * on demand instead of initializing statically.
  */
-static std::map<std::string, detail::Resource>* resources = 0;
+static std::map<std::string, detail::Resource>* resources = nullptr;
 
 cairo_status_t read_resource_stream(void* closure, unsigned char* data, unsigned int length)
 {
@@ -74,7 +74,7 @@ const unsigned char* read_resource_data(const char* name)
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 bool read_resource(const char* name, unsigned char* data, unsigned int length, unsigned int offset)

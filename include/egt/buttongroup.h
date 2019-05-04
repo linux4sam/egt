@@ -42,7 +42,7 @@ public:
     virtual bool imperative() const;
     virtual void add(Button& button);
     virtual void remove(Button& button);
-    virtual void checked_state_change(Button& button, bool value) const;
+    virtual void checked_state_change(Button& button, bool checked) const;
     virtual ~ButtonGroup();
 protected:
     using button_array = std::vector<Button*>;
