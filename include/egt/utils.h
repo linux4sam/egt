@@ -113,7 +113,7 @@ inline bool change_if_diff(T& old, const T& to)
 template<>
 inline bool change_if_diff(float& old, const float& to)
 {
-    if (std::fabs(old - to) < .00001)
+    if (std::fabs(old - to) > .00001)
     {
         old = to;
         return true;
