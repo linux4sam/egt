@@ -34,14 +34,51 @@ static vector<pair<easing_func_t, string>> easing_functions =
     {easing_exponential_easeinout, "exponential"}
 };
 
+static inline float_t interpolate(easing_func_t easing, float_t percent, float_t start,
+                                  float_t end, bool reverse = false)
+{
+    if (percent < 0.0f)
+        return start;
+    else if (percent > 1.0f)
+        return end;
+
+    if (reverse)
+        percent = 1.0f - easing(1.0f - percent);
+    else
+        percent = easing(percent);
+
+    return start * (1.0f - percent) + end * percent;
+}
+
+static LineChart::data_array create_data(easing_func_t easing)
+{
+    LineChart::data_array data;
+    for (float i = 0.; i <= 1.; i += .001)
+    {
+        LineChart::DataPair p;
+        p.x = i;
+        p.y = interpolate(easing, i, 0, 100);
+        data.push_back(p);
+    }
+    return data;
+}
+
 class MainWindow : public TopWindow
 {
 public:
     MainWindow()
         : m_seq(true),
           m_animation(-110, h() - 100, std::chrono::seconds(2)),
-          m_delay(std::chrono::seconds(1))
+          m_delay(std::chrono::seconds(1)),
+          m_board()
     {
+        auto imgicon = make_shared<ImageLabel>(Image("@chart_curve.png"));
+        imgicon->set_margin(5);
+        imgicon->resize(Size(SideBoard::HANDLE_WIDTH, SideBoard::HANDLE_WIDTH));
+        imgicon->set_align(alignmask::top | alignmask::right);
+        imgicon->set_image_align(alignmask::expand);
+        m_board.add(imgicon);
+
         auto i = Image("background.png");
         auto img = make_shared<ImageLabel>(i);
         img->set_align(alignmask::expand);
@@ -55,15 +92,24 @@ public:
         auto list1 = make_shared<ListBox>(items, Rect(Point(0, 0), Size(150, 0)));
         list1->set_align(alignmask::expand_vertical | alignmask::right);
         add(list1);
-        list1->set_select(7);
 
-        list1->on_event([this, list1](eventid)
+        auto line = std::make_shared<LineChart>();
+        line->set_width(m_board.w() - SideBoard::HANDLE_WIDTH);
+        line->set_color(Palette::ColorId::bg, Palette::black);
+        m_board.add(left(expand_vertical(line)));
+
+        list1->on_event([this, list1, line](eventid)
         {
             m_seq.reset();
             m_animation.set_easing_func(easing_functions[list1->selected()].first);
             m_seq.start();
+
+            line->clear();
+            line->add_data(create_data(easing_functions[list1->selected()].first), LineChart::chart_type::lines);
             return 0;
         }, {eventid::property_changed});
+
+        list1->set_select(7);
 
         auto image = std::make_shared<ImageLabel>(Image("ball.png"));
         image->set_boxtype(Theme::boxtype::none);
@@ -79,6 +125,9 @@ public:
         m_seq.add(m_animation);
         m_seq.add(m_delay);
         m_seq.start();
+
+        add(m_board);
+        m_board.show();
     }
 
 private:
@@ -86,6 +135,7 @@ private:
     AnimationSequence m_seq;
     PropertyAnimator m_animation;
     AnimationDelay m_delay;
+    SideBoard m_board;
 };
 
 int main(int argc, const char** argv)
@@ -97,6 +147,7 @@ int main(int argc, const char** argv)
     Label label1("CPU: ----");
     label1.set_color(Palette::ColorId::label_text, Palette::white);
     label1.set_color(Palette::ColorId::label_bg, Palette::transparent);
+    label1.set_margin(SideBoard::HANDLE_WIDTH);
     window.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;
