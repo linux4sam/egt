@@ -179,7 +179,7 @@ public:
         // bottom full circle
         painter.set(color1);
         painter.set_line_width(linew);
-        painter.draw(Arc(c, radius, 0, 2 * detail::pi()));
+        painter.draw(Arc(c, radius, 0, 2 * detail::pi<float>()));
         painter.stroke();
 
         if (widget.radial_flags().is_set(flag::primary_value))

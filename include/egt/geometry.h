@@ -802,7 +802,7 @@ public:
      * Construct a Circle object.
      */
     explicit CircleType(const Point& c = Point(), float r = 0.0f)
-        : Arc(c, r, 0.0f, 2 * detail::pi())
+        : Arc(c, r, 0.0f, 2 * detail::pi<float>())
     {
     }
 

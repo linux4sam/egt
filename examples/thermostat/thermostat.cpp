@@ -201,7 +201,7 @@ int main(int argc, const char** argv)
         // handle
         painter.set(color3);
         auto hp = c.point_on_circumference(radius, angle2);
-        painter.draw(egt::Arc(hp, handle_radius, 0., static_cast<float>(2 * detail::pi())));
+        painter.draw(egt::Arc(hp, handle_radius, 0., static_cast<float>(2 * detail::pi<float>())));
         painter.fill();
 
         // secondary value

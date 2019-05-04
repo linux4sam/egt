@@ -99,8 +99,8 @@ public:
 
     static inline Color hue(const Color& in, float h)
     {
-        auto u = std::cos(h * detail::pi() / 180.);
-        auto w = std::sin(h * detail::pi() / 180.);
+        auto u = std::cos(h * detail::pi<float>() / 180.);
+        auto w = std::sin(h * detail::pi<float>() / 180.);
 
         Color ret;
         ret.red((.299 + .701 * u + .168 * w)*in.red()

@@ -168,7 +168,7 @@ void Theme::draw_box(Painter& painter,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
 
     double radius = corner_radius / aspect;
-    double degrees = detail::pi() / 180.0;
+    double degrees = detail::pi<double>() / 180.0;
 
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
