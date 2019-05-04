@@ -50,6 +50,7 @@ detail/screen/framebuffer.cpp \
 detail/string.cpp \
 detail/windowimpl.cpp \
 dialog.cpp \
+easing.cpp \
 event.cpp \
 eventloop.cpp \
 font.cpp \
@@ -137,6 +138,7 @@ $(top_srcdir)/include/egt/detail/spriteimpl.h \
 $(top_srcdir)/include/egt/detail/string.h \
 $(top_srcdir)/include/egt/detail/windowimpl.h \
 $(top_srcdir)/include/egt/detail/layout.h \
+$(top_srcdir)/include/egt/easing.h \
 $(top_srcdir)/include/egt/event.h \
 $(top_srcdir)/include/egt/eventloop.h \
 $(top_srcdir)/include/egt/flags.h \

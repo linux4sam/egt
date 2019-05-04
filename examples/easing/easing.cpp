@@ -11,7 +11,7 @@
 using namespace std;
 using namespace egt;
 
-static vector<pair<easing_func, string>> easing_functions =
+static vector<pair<easing_func_t, string>> easing_functions =
 {
     {easing_linear, "linear"},
     {easing_easy, "easy"},
@@ -51,7 +51,7 @@ public:
         ListBox::item_array items;
         items.resize(easing_functions.size());
         transform(easing_functions.begin(), easing_functions.end(), items.begin(),
-        [](const std::pair<easing_func, string>& v) { return make_shared<StringItem>(v.second);});
+        [](const std::pair<easing_func_t, string>& v) { return make_shared<StringItem>(v.second);});
         auto list1 = make_shared<ListBox>(items, Rect(Point(0, 0), Size(150, 0)));
         list1->set_align(alignmask::expand_vertical | alignmask::right);
         add(list1);

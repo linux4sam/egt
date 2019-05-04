@@ -21,6 +21,7 @@
 #include <egt/color.h>
 #include <egt/combo.h>
 #include <egt/dialog.h>
+#include <egt/easing.h>
 #include <egt/event.h>
 #include <egt/filedialog.h>
 #include <egt/font.h>

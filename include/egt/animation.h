@@ -12,6 +12,7 @@
  */
 
 #include <chrono>
+#include <egt/easing.h>
 #include <egt/timer.h>
 #include <egt/utils.h>
 #include <functional>
@@ -25,59 +26,12 @@ inline namespace v1
 using float_t = float;
 
 /**
-* @defgroup animation Animation
-* Animation related classes.
-*/
-
-/**
- * @defgroup easing_functions Animation Easing Functions
- * @brief Predefined animation easing functions.
- * @{
+ * @defgroup animation Animation
+ * Animation related classes.
  */
-float_t easing_linear(float_t p);
-float_t easing_easy(float_t p);
-float_t easing_easy_slow(float_t p);
-float_t easing_extend(float_t p);
-float_t easing_drop(float_t p);
-float_t easing_drop_slow(float_t p);
-float_t easing_snap(float_t p);
-float_t easing_bounce(float_t p);
-float_t easing_bouncy(float_t p);
-float_t easing_rubber(float_t p);
-float_t easing_spring(float_t p);
-float_t easing_boing(float_t p);
-
-float_t easing_quadratic_easein(float_t p);
-float_t easing_quadratic_easeout(float_t p);
-float_t easing_quadratic_easeinout(float_t p);
-
-float_t easing_cubic_easein(float_t p);
-float_t easing_cubic_easeout(float_t p);
-float_t easing_cubic_easeinout(float_t p);
-
-float_t easing_quartic_easein(float_t p);
-float_t easing_quartic_easeout(float_t p);
-float_t easing_quartic_easeinout(float_t p);
-
-float_t easing_quintic_easein(float_t p);
-float_t easing_quintic_easeout(float_t p);
-float_t easing_quintic_easeinout(float_t p);
-
-float_t easing_sine_easein(float_t p);
-float_t easing_sine_easeout(float_t p);
-float_t easing_sine_easeinout(float_t p);
-
-float_t easing_circular_easein(float_t p);
-float_t easing_circular_easeout(float_t p);
-float_t easing_circular_easeinout(float_t p);
-
-float_t easing_exponential_easein(float_t p);
-float_t easing_exponential_easeout(float_t p);
-float_t easing_exponential_easeinout(float_t p);
-/** @} */
 
 using animation_callback = std::function<void (float_t value)>;
-using easing_func = std::function<float_t (float_t percent)>;
+using easing_func_t = std::function<float_t (float_t percent)>;
 
 namespace detail
 {
@@ -159,7 +113,7 @@ public:
               float_t end,
               animation_callback callback,
               std::chrono::milliseconds duration,
-              easing_func func = easing_linear);
+              easing_func_t func = easing_linear);
 
     /**
      * Get the starting value.
@@ -207,7 +161,7 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void set_easing_func(easing_func func);
+    void set_easing_func(easing_func_t func);
 
     /**
      * @note Calling this while running is undefined behavior.
@@ -225,7 +179,7 @@ protected:
 
     float_t m_start{0};
     float_t m_end{0};
-    easing_func m_easing{easing_linear};
+    easing_func_t m_easing{easing_linear};
     float_t m_current{0};
     std::chrono::milliseconds m_duration;
     std::chrono::time_point<std::chrono::steady_clock> m_start_time;
@@ -411,7 +365,7 @@ class AutoAnimation : public Animation
 public:
     AutoAnimation(float_t start, float_t end,
                   std::chrono::milliseconds duration,
-                  easing_func func = easing_linear,
+                  easing_func_t func = easing_linear,
                   animation_callback callback = nullptr);
 
     virtual void start() override;
@@ -440,7 +394,7 @@ public:
 
     PropertyAnimatorType(T start = T(), T end = T(),
                          std::chrono::milliseconds duration = std::chrono::milliseconds(),
-                         easing_func func = easing_linear)
+                         easing_func_t func = easing_linear)
         : AutoAnimation(start, end, duration, func,
                         std::bind(&PropertyAnimatorType<T>::invoke_handlers,
                                   this, std::placeholders::_1))

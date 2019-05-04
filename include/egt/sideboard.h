@@ -11,9 +11,10 @@
  * @brief Sideboard widget.
  */
 
-#include <egt/window.h>
-#include <egt/screen.h>
 #include <egt/animation.h>
+#include <egt/easing.h>
+#include <egt/screen.h>
+#include <egt/window.h>
 
 namespace egt
 {
@@ -31,6 +32,8 @@ class SideBoard : public Window
 {
 public:
 
+    constexpr static const auto HANDLE_WIDTH = 50;
+
     enum class flags
     {
         left = 1 << 0,
@@ -41,10 +44,12 @@ public:
 
     explicit SideBoard(flags f = flags::left,
                        std::chrono::milliseconds open_duration = std::chrono::milliseconds(1000),
-                       easing_func open_func = easing_cubic_easeinout,
+                       easing_func_t open_func = easing_cubic_easeinout,
                        std::chrono::milliseconds close_duration = std::chrono::milliseconds(1000),
-                       easing_func close_func = easing_circular_easeinout)
-        : Window(main_screen()->size(),  Widget::flags_type(), pixel_format::rgb565),
+                       easing_func_t close_func = easing_circular_easeinout)
+        : Window(main_screen()->size() + Size(f == flags::left || f == flags::right ? HANDLE_WIDTH : 0,
+                                              f == flags::top || f == flags::bottom ? HANDLE_WIDTH : 0),
+                 Widget::flags_type(), pixel_format::rgb565),
           m_side_flags(f)
     {
         m_oanim.duration(open_duration);
@@ -54,7 +59,7 @@ public:
 
         if (is_set(flags::left))
         {
-            m_oanim.starting(-main_screen()->size().w + HANDLE_WIDTH);
+            m_oanim.starting(-main_screen()->size().w);
             m_oanim.ending(0);
             m_canim.starting(m_oanim.ending());
             m_canim.ending(m_oanim.starting());
@@ -66,7 +71,7 @@ public:
         }
         else if (is_set(flags::right))
         {
-            m_oanim.starting(main_screen()->size().w - HANDLE_WIDTH);
+            m_oanim.starting(main_screen()->size().w);
             m_oanim.ending(0);
             m_canim.starting(m_oanim.ending());
             m_canim.ending(m_oanim.starting());
@@ -78,7 +83,7 @@ public:
         }
         else if (is_set(flags::top))
         {
-            m_oanim.starting(-main_screen()->size().h + HANDLE_WIDTH);
+            m_oanim.starting(-main_screen()->size().h);
             m_oanim.ending(0);
             m_canim.starting(m_oanim.ending());
             m_canim.ending(m_oanim.starting());
@@ -90,7 +95,7 @@ public:
         }
         else if (is_set(flags::bottom))
         {
-            m_oanim.starting(main_screen()->size().h - HANDLE_WIDTH);
+            m_oanim.starting(main_screen()->size().h);
             m_oanim.ending(0);
             m_canim.starting(m_oanim.ending());
             m_canim.ending(m_oanim.starting());
@@ -151,8 +156,6 @@ public:
     virtual ~SideBoard() = default;
 
 protected:
-
-    constexpr static const auto HANDLE_WIDTH = 50;
 
     inline bool is_set(flags f) const;
 
