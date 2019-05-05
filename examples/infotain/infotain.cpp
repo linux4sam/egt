@@ -77,9 +77,8 @@ static void top_menu(Window& win)
     auto i1 = std::make_shared<HomeImage>(win, "home.png", 5, 5);
 
     auto l1 = std::make_shared<Label>(win, "", Rect(Point(320, 0), Size(100, 60)), alignmask::center, Font(32));
-    l1->instance_palette()
-    .set(Palette::ColorId::text, Palette::white)
-    .set(Palette::ColorId::bg, Palette::transparent);
+    l1->set_color(Palette::ColorId::text, Palette::white);
+    l1->set_color(Palette::ColorId::bg, Palette::transparent);
 
     struct TimeTimer : public PeriodicTimer
     {
@@ -108,8 +107,8 @@ static void top_menu(Window& win)
     timer->start();
 
     auto l2 = std::make_shared<Label>("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::center, Font(24));
-    l2->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+    l2->set_color(Palette::ColorId::text, Palette::white);
+    l2->set_color(Palette::ColorId::bg, Palette::transparent);
     win.add(l2);
 
     auto i2 = std::make_shared<ImageLabel>(Image("wifi.png"), "", Rect(Point(800 - 50, 10), Size()));
@@ -119,7 +118,7 @@ static void top_menu(Window& win)
 static void bottom_menu(Window& win)
 {
     auto grid2 = std::make_shared<StaticGrid>(win, Rect(Point(0, 390), Size(800, 90)), Tuple(5, 1), 4);
-    grid2->instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+    grid2->set_color(Palette::ColorId::border, Palette::transparent);
 
     auto bb1 = std::make_shared<MyButton>("audio_s.png", _("Audio"), 0, 0);
     grid2->add(expand(bb1), 0, 0);
@@ -144,9 +143,9 @@ public:
         : TopWindow(size),
           grid(Rect(Point(0, 60), Size(800, 330)), Tuple(4, 2), 10)
     {
-        instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::lightblue);
+        set_color(Palette::ColorId::bg, Palette::lightblue);
 
-        grid.instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        grid.set_color(Palette::ColorId::border, Palette::transparent);
 
         add(grid);
 

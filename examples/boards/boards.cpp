@@ -26,25 +26,25 @@ int main(int argc, const char** argv)
     win.add(create_label("EGT SideBoards"));
 
     SideBoard board0;
-    board0.instance_palette().set(Palette::ColorId::bg, Palette::red);
+    board0.set_color(Palette::ColorId::bg, Palette::red);
     board0.add(create_label("LEFT"));
     win.add(board0);
     board0.show();
 
     SideBoard board1(SideBoard::flags::bottom);
-    board1.instance_palette().set(Palette::ColorId::bg, Palette::blue);
+    board1.set_color(Palette::ColorId::bg, Palette::blue);
     board1.add(create_label("BOTTOM"));
     win.add(board1);
     board1.show();
 
     SideBoard board2(SideBoard::flags::right);
-    board2.instance_palette().set(Palette::ColorId::bg, Palette::green);
+    board2.set_color(Palette::ColorId::bg, Palette::green);
     board2.add(create_label("RIGHT"));
     win.add(board2);
     board2.show();
 
     SideBoard board3(SideBoard::flags::top);
-    board3.instance_palette().set(Palette::ColorId::bg, Palette::gray);
+    board3.set_color(Palette::ColorId::bg, Palette::gray);
     board3.add(create_label("TOP"));
     win.add(board3);
     board3.show();

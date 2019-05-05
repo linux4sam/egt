@@ -40,8 +40,7 @@ public:
                                           Size(250, 64),
                                           alignmask::center,
                                           egt::Font(32, Font::weightid::bold));
-        m_title->instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal,
-                                        Palette::transparent);
+        m_title->set_color(Palette::ColorId::bg, Palette::transparent);
         m_title->set_align(alignmask::center | alignmask::top);
         m_title->set_margin(10);
         add(m_title);
@@ -57,7 +56,7 @@ public:
             m_radial1->text(text);
 
             if (m_radial1->value() > m_radial1->value2())
-                m_radial1->instance_palette().set(Palette::ColorId::button_bg, Palette::orange);
+                m_radial1->set_color(Palette::ColorId::button_bg, Palette::orange);
             else
                 m_radial1->reset_palette();
 
@@ -74,8 +73,8 @@ public:
                                                         Size(180, 64)),
                                                 alignmask::center,
                                                 egt::Font(30));
-        m_label1->instance_palette().set(Palette::ColorId::bg, Palette::transparent);
-        m_label1->instance_palette().set(Palette::ColorId::text, Palette::gray);
+        m_label1->set_color(Palette::ColorId::bg, Palette::transparent);
+        m_label1->set_color(Palette::ColorId::text, Palette::gray);
 
         auto m_label2 = make_shared<ImageLabel>(*this,
                                                 Image("night.png"),
@@ -84,8 +83,8 @@ public:
                                                         Size(180, 64)),
                                                 alignmask::center,
                                                 egt::Font(30));
-        m_label2->instance_palette().set(Palette::ColorId::bg, Palette::transparent);
-        m_label2->instance_palette().set(Palette::ColorId::text, Palette::gray);
+        m_label2->set_color(Palette::ColorId::bg, Palette::transparent);
+        m_label2->set_color(Palette::ColorId::text, Palette::gray);
 
         auto m_label3 = make_shared<ImageLabel>(*this,
                                                 Image("vacation.png"),
@@ -94,17 +93,15 @@ public:
                                                         Size(180, 64)),
                                                 alignmask::center,
                                                 egt::Font(30));
-        m_label3->instance_palette().set(Palette::ColorId::bg,
-                                         Palette::GroupId::normal, Palette::transparent);
-        m_label3->instance_palette().set(Palette::ColorId::text,
-                                         Palette::GroupId::normal, Palette::gray);
+        m_label3->set_color(Palette::ColorId::bg, Palette::transparent);
+        m_label3->set_color(Palette::ColorId::text, Palette::gray);
 
         auto m_label4 = make_shared<Label>(*this, "Fan",
                                            Rect(Point(800, 390),
                                                 Size(50, 64)),
                                            alignmask::center,
                                            egt::Font(16));
-        m_label4->instance_palette().set(Palette::ColorId::bg, Palette::transparent);
+        m_label4->set_color(Palette::ColorId::bg, Palette::transparent);
 
         auto m_slider1 = make_shared<Slider>(*this, Rect(Point(800, 100),
                                              Size(50, 300)),
@@ -114,9 +111,9 @@ public:
 
         m_label1->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            m_label1->instance_palette().set(Palette::ColorId::label_text, Palette::orange);
-            m_label2->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
-            m_label3->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
+            m_label1->set_color(Palette::ColorId::label_text, Palette::orange);
+            m_label2->set_color(Palette::ColorId::label_text, Palette::gray);
+            m_label3->set_color(Palette::ColorId::label_text, Palette::gray);
             m_label1->damage();
             m_label2->damage();
             m_label3->damage();
@@ -125,9 +122,9 @@ public:
 
         m_label2->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            m_label2->instance_palette().set(Palette::ColorId::label_text, Palette::orange);
-            m_label1->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
-            m_label3->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
+            m_label2->set_color(Palette::ColorId::label_text, Palette::orange);
+            m_label1->set_color(Palette::ColorId::label_text, Palette::gray);
+            m_label3->set_color(Palette::ColorId::label_text, Palette::gray);
             m_label1->damage();
             m_label2->damage();
             m_label3->damage();
@@ -136,9 +133,9 @@ public:
 
         m_label3->on_event([m_label1, m_label2, m_label3](eventid)
         {
-            m_label3->instance_palette().set(Palette::ColorId::label_text, Palette::orange);
-            m_label1->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
-            m_label2->instance_palette().set(Palette::ColorId::label_text, Palette::gray);
+            m_label3->set_color(Palette::ColorId::label_text, Palette::orange);
+            m_label1->set_color(Palette::ColorId::label_text, Palette::gray);
+            m_label2->set_color(Palette::ColorId::label_text, Palette::gray);
             m_label1->damage();
             m_label2->damage();
             m_label3->damage();
@@ -181,8 +178,8 @@ int main(int argc, const char** argv)
         float linew = 10;
         float handle_radius = 20;
 
-        auto color2 = widget.palette().color(Palette::ColorId::button_bg).color();
-        auto color3 = widget.palette().color(Palette::ColorId::button_fg).color();
+        auto color2 = widget.color(Palette::ColorId::button_bg).color();
+        auto color3 = widget.color(Palette::ColorId::button_fg).color();
 
         float radius = widget.w() / 2 - handle_radius - linew;
         float angle1 = detail::to_radians<float>(-90, 0);
@@ -216,7 +213,7 @@ int main(int argc, const char** argv)
         //text
         if (!widget.text().empty())
         {
-            painter.set(widget.palette().color(Palette::ColorId::text).color());
+            painter.set(widget.color(Palette::ColorId::text).color());
             painter.set(Font(72));
 
             auto text_size = painter.text_size(widget.text());
@@ -230,7 +227,7 @@ int main(int argc, const char** argv)
 
         string current = "Current " + std::to_string(widget.value2()) + "°";
 
-        painter.set(widget.palette().color(Palette::ColorId::text).color());
+        painter.set(widget.color(Palette::ColorId::text).color());
         painter.set(Font(24));
 
         auto txt_size = painter.text_size(current);

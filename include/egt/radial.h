@@ -163,10 +163,10 @@ public:
 
         const auto v = widget.value_to_degrees(widget.value());
 
-        auto color1 = widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
-        auto color2 = widget.palette().color(Palette::ColorId::button_fg).color();
-        auto color3 = widget.palette().color(Palette::ColorId::button_bg).color();
-        auto color4 = widget.palette().color(Palette::ColorId::button_fg).color();
+        auto color1 = widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
+        auto color2 = widget.color(Palette::ColorId::button_fg).color();
+        auto color3 = widget.color(Palette::ColorId::button_bg).color();
+        auto color4 = widget.color(Palette::ColorId::button_fg).color();
 
         float smalldim = std::min(b.w, b.h);
         float linew = smalldim / 10;
@@ -215,7 +215,7 @@ public:
         {
             if (!widget.m_text.empty())
             {
-                painter.set(widget.palette().color(Palette::ColorId::text).color());
+                painter.set(widget.color(Palette::ColorId::text).color());
                 painter.set(Font(72));
 
                 auto size = painter.text_size(widget.m_text);
@@ -229,7 +229,7 @@ public:
         {
             auto txt = std::to_string(widget.value());
 
-            painter.set(widget.palette().color(Palette::ColorId::text).color());
+            painter.set(widget.color(Palette::ColorId::text).color());
             painter.set(Font(72));
 
             auto size = painter.text_size(txt);

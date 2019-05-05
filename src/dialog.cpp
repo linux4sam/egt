@@ -21,7 +21,7 @@ Dialog::Dialog(const Rect& rect)
     set_name("Dialog" + std::to_string(m_widgetid));
 
     m_vsizer->set_align(alignmask::expand);
-    m_grid->instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+    m_grid->set_color(Palette::ColorId::border, Palette::transparent);
     add(m_vsizer);
 
     m_grid->set_align(alignmask::bottom | alignmask::right);

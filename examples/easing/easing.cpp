@@ -95,8 +95,8 @@ int main(int argc, const char** argv)
     MainWindow window;
 
     Label label1("CPU: ----");
-    label1.instance_palette().set(Palette::ColorId::label_text, Palette::white)
-    .set(Palette::ColorId::label_bg, Palette::transparent);
+    label1.set_color(Palette::ColorId::label_text, Palette::white);
+    label1.set_color(Palette::ColorId::label_bg, Palette::transparent);
     window.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;

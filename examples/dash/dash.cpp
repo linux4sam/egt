@@ -31,7 +31,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "dash");
 
     TopWindow win;
-    win.instance_palette().set(Palette::ColorId::bg, Color::CSS("1b1d43"));
+    win.set_color(Palette::ColorId::bg, Color::CSS("1b1d43"));
 
     auto f = 1.50375;
 

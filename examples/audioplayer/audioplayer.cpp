@@ -136,8 +136,8 @@ int main(int argc, const char** argv)
 
         auto v = widget.value_to_degrees(widget.value());
 
-        auto color1 = widget.palette().color(Palette::ColorId::button_fg).color();
-        auto color2 = widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
+        auto color1 = widget.color(Palette::ColorId::button_fg).color();
+        auto color2 = widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
 
         float smalldim = std::min(widget.w(), widget.h());
         float linew = smalldim / 10;

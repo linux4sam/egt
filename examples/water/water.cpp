@@ -74,8 +74,8 @@ public:
                                      Rect(Point(10, 10),
                                           Size(150, 40)),
                                      alignmask::left | alignmask::center);
-        m_label->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-        .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+        m_label->set_color(Palette::ColorId::text, Palette::white);
+        m_label->set_color(Palette::ColorId::bg, Palette::transparent);
         add(top(left(m_label)));
 
         m_sprite = make_shared<Sprite>(Image("diver.png"), Size(390, 312), 16, Point(0, 0));
@@ -259,9 +259,8 @@ int main(int argc, const char** argv)
 #endif
 
     Label label1("CPU: ----");
-    label1.instance_palette()
-    .set(Palette::ColorId::text, Palette::white)
-    .set(Palette::ColorId::bg, Palette::transparent);
+    label1.set_color(Palette::ColorId::text, Palette::white);
+    label1.set_color(Palette::ColorId::bg, Palette::transparent);
     win.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;

@@ -38,7 +38,7 @@ int main(int argc, const char** argv)
     seq.add(shrink_out);
 
     Label label("label");
-    label.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::red);
+    label.set_color(Palette::ColorId::bg, Palette::red);
     grid.add(center(label), 0, 1);
 
     auto orig = label.w();
@@ -50,7 +50,7 @@ int main(int argc, const char** argv)
     seq.add(shrinkh_out);
 
     Label label2("hello world");
-    label2.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::green);
+    label2.set_color(Palette::ColorId::bg, Palette::green);
     grid.add(expand(label2), 1, 1);
 
     seq.start();

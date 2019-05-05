@@ -35,8 +35,8 @@ public:
 
         add(m_grid1);
         add(m_grid2);
-        m_grid1.instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
-        m_grid2.instance_palette().set(Palette::ColorId::border, Palette::GroupId::normal, Palette::transparent);
+        m_grid1.set_color(Palette::ColorId::border, Palette::transparent);
+        m_grid2.set_color(Palette::ColorId::border, Palette::transparent);
 
         for (int c = 0; c < w() / 100; c++)
         {
@@ -69,8 +69,8 @@ public:
         add(m_ball);
 
         m_label = Label("-", alignmask::left | alignmask::center);
-        m_label.instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-        .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+        m_label.set_color(Palette::ColorId::text, Palette::white);
+        m_label.set_color(Palette::ColorId::bg, Palette::transparent);
         add(top(left(m_label)));
 
         reset_game();

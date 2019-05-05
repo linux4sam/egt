@@ -161,8 +161,8 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         widget.theme().draw_box(painter,
                                 Theme::boxtype::blank_rounded,
                                 rect,
-                                widget.palette().color(Palette::ColorId::border, Palette::GroupId::disabled),
-                                widget.palette().color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
+                                widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
+                                widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
     }
 
     if (!widget.on_text().empty())
@@ -174,7 +174,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         if (widget.checked())
             painter.set(widget.color(Palette::ColorId::button_text).color());
         else
-            painter.set(widget.palette().color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
+            painter.set(widget.color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
         painter.set(widget.font());
         auto size = painter.text_size(widget.on_text());
         Rect target = detail::align_algorithm(size,
@@ -190,9 +190,9 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         rect.w /= 2;
 
         if (widget.checked())
-            painter.set(widget.palette().color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+            painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
         else
-            painter.set(widget.palette().color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
+            painter.set(widget.color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
         painter.set(widget.font());
         auto size = painter.text_size(widget.off_text());
         Rect target = detail::align_algorithm(size,

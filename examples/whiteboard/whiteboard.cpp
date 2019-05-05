@@ -22,7 +22,7 @@ public:
           m_color(color)
     {
         expand(m_grid);
-        instance_palette().set(Palette::ColorId::bg, Palette::black);
+        set_color(Palette::ColorId::bg, Palette::black);
         add(m_grid);
 
         const vector<Color> colors =
@@ -53,7 +53,7 @@ public:
         {
             auto color_label = make_shared<RectangleWidget>();
 
-            color_label->instance_palette().set(Palette::ColorId::button_bg, Palette::GroupId::normal, c);
+            color_label->set_color(Palette::ColorId::button_bg, c);
 
             m_grid.add(expand(color_label));
             int column = m_grid.last_add_column();
@@ -64,7 +64,7 @@ public:
 
             color_label->on_event([this, column, row](eventid event)
             {
-                m_color = m_grid.get(m_grid.selected())->palette().color(Palette::ColorId::button_bg).color();
+                m_color = m_grid.get(m_grid.selected())->color(Palette::ColorId::button_bg).color();
                 this->hide();
                 return 0;
             }, {eventid::pointer_click});
@@ -88,7 +88,7 @@ public:
           m_width(width)
     {
         expand(m_grid);
-        instance_palette().set(Palette::ColorId::bg, Palette::black);
+        set_color(Palette::ColorId::bg, Palette::black);
         add(m_grid);
 
         const vector<int> widths =
@@ -102,7 +102,7 @@ public:
         for (auto& w : widths)
         {
             auto width_label = make_shared<Label>(std::to_string(w), alignmask::center);
-            width_label->instance_palette().set(Palette::ColorId::label_text, Palette::white);
+            width_label->set_color(Palette::ColorId::label_text, Palette::white);
 
             m_grid.add(expand(width_label));
             int column = m_grid.last_add_column();
@@ -143,7 +143,7 @@ public:
     {
         // don't draw background, we'll do it in draw()
         set_boxtype(Theme::boxtype::none);
-        instance_palette().set(Palette::ColorId::bg, Palette::white);
+        set_color(Palette::ColorId::bg, Palette::white);
 
         m_grid = make_shared<VerticalBoxSizer>(*this);
         //m_grid->set_margin(10);
@@ -214,7 +214,7 @@ public:
 
         m_fillpicker.on_event([this](eventid)
         {
-            instance_palette().set(Palette::ColorId::bg, m_fillpicker.color());
+            set_color(Palette::ColorId::bg, m_fillpicker.color());
             damage();
             return 1;
         }, {eventid::hide});
@@ -283,7 +283,7 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override
     {
-        painter.set(palette().color(Palette::ColorId::bg).color());
+        painter.set(color(Palette::ColorId::bg).color());
         painter.draw(rect);
         painter.fill();
 

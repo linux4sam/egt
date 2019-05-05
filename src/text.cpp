@@ -216,7 +216,7 @@ void TextBox::draw(Painter& painter, const Rect&)
     {
         if (focus() && m_cursor_state)
         {
-            painter.set(palette().color(Palette::ColorId::cursor).color());
+            painter.set(color(Palette::ColorId::cursor).color());
             painter.set_line_width(2);
 
             auto YOFF = 2.;

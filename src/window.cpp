@@ -231,7 +231,7 @@ struct CursorWindow : public Window
         : Window(image.size(), Widget::flags_type(), pixel_format::argb8888, windowhint::cursor_overlay),
           m_label(new ImageLabel(image))
     {
-        instance_palette().set(Palette::ColorId::bg, Palette::transparent);
+        set_color(Palette::ColorId::bg, Palette::transparent);
         set_boxtype(Theme::boxtype::fill);
         m_label->set_boxtype(Theme::boxtype::none);
         add(m_label);

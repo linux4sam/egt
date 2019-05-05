@@ -85,7 +85,7 @@ public:
           m_description(description),
           m_exec(exec)
     {
-        instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        set_color(Palette::ColorId::text, Palette::white);
         set_image_align(alignmask::center | alignmask::top);
         set_text_align(alignmask::center | alignmask::bottom);
     }

@@ -92,7 +92,7 @@ class MainWindow : public TopWindow
 public:
     MainWindow()
     {
-        instance_palette().set(Palette::ColorId::bg, Palette::black);
+        set_color(Palette::ColorId::bg, Palette::black);
     }
 
     int handle(eventid event) override
@@ -175,8 +175,8 @@ int main(int argc, const char** argv)
     spawntimer.start();
 
     Label label1("CPU: ----");
-    label1.instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+    label1.set_color(Palette::ColorId::text, Palette::white);
+    label1.set_color(Palette::ColorId::bg, Palette::transparent);
     win.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;

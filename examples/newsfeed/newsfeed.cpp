@@ -65,7 +65,7 @@ public:
         m_title.set_font(Font(20, Font::weightid::bold));
         m_date.set_font(Font(Font::slantid::oblique));
         m_link.set_font(Font(10));
-        m_link.instance_palette().set(Palette::ColorId::label_text, Palette::blue);
+        m_link.set_color(Palette::ColorId::label_text, Palette::blue);
 
         set_align(alignmask::expand_horizontal);
 

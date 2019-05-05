@@ -26,7 +26,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
     win.set_name("win");
-    win.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    win.set_color(Palette::ColorId::bg, Palette::black);
 
     SoftwareVideo player(Size(320, 192));
     player.set_volume(50);
@@ -44,7 +44,7 @@ int main(int argc, const char** argv)
     auto grid_height = (win.size().h - logo.h()) / 2;
 
     ScrolledView view0(Rect(0, logo.h(), win.size().w, grid_height));
-    view0.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    view0.set_color(Palette::ColorId::bg, Palette::black);
     view0.set_name("view0");
     win.add(view0);
 
@@ -80,7 +80,7 @@ int main(int argc, const char** argv)
     }
 
     ScrolledView view1(Rect(0, logo.h() + grid_height + 1, win.size().w, grid_height));
-    view1.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    view1.set_color(Palette::ColorId::bg, Palette::black);
     view1.set_name("view1");
     win.add(view1);
 

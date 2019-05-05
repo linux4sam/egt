@@ -90,7 +90,7 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
     float angle2 = detail::to_radians<float>(180, widget.value() / 100. * 360.);
 
     painter.set_line_width(linew);
-    painter.set(widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
+    painter.set(widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
     painter.draw(Arc(widget.center(), radius, 0.0f, 2 * detail::pi<float>()));
     painter.stroke();
 
@@ -141,7 +141,7 @@ void LevelMeter::default_draw(LevelMeter& widget, Painter& painter, const Rect&)
 
     for (size_t i = 0; i < widget.num_bars(); i++)
     {
-        auto color = widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled);
+        auto color = widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled);
         if (i >= limit)
             color = widget.color(Palette::ColorId::button_fg);
 
@@ -197,7 +197,7 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
     {
         auto xangle = std::cos(detail::pi<float>() * tick * 0.01);
         auto yangle = std::sin(detail::pi<float>() * tick * 0.01);
-        painter.set(widget.palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
+        painter.set(widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
         painter.draw(Point(hw * xangle,
                            -hw * yangle),
                      Point((hw + 10.0) * xangle,

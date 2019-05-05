@@ -24,17 +24,17 @@ int main(int argc, const char** argv)
     auto NAV_WIDTH = 80;
 
     ImageButton left(win, Image("arrow_left.png"), "", Rect(0, 0, NAV_WIDTH, win.h()));
-    left.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    left.set_color(Palette::ColorId::bg, Palette::black);
     left.set_text_align(alignmask::center);
     left.set_align(alignmask::left);
 
     ImageButton right(win, Image("arrow_right.png"), "", Rect(0, 0, NAV_WIDTH, win.h()));
-    right.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    right.set_color(Palette::ColorId::bg, Palette::black);
     right.set_text_align(alignmask::center);
     right.set_align(alignmask::right);
 
     ScrolledView view0(Rect(NAV_WIDTH, 0, win.w() - (NAV_WIDTH * 2), win.h()));
-    view0.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
+    view0.set_color(Palette::ColorId::bg, Palette::black);
     view0.set_name("view0");
     win.add(view0);
 
@@ -74,7 +74,7 @@ int main(int argc, const char** argv)
         std::string basename = file.substr(file.find_last_of("/\\") + 1);
         auto icon = make_shared<ImageButton>(Image(file), basename);
         icon->set_boxtype(Theme::boxtype::none);
-        icon->instance_palette().set(Palette::ColorId::button_text, Palette::black);
+        icon->set_color(Palette::ColorId::button_text, Palette::black);
         grid0.add(icon);
     }
 
@@ -84,15 +84,14 @@ int main(int argc, const char** argv)
 
     Popup popup(Size(100, 40));
     popup.move(Point(win.w() - 100 - 10 - NAV_WIDTH, 10));
-    popup.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
+    popup.set_color(Palette::ColorId::bg, FUCHSIA);
     popup.set_name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
                  alignmask::center);
-    label1.instance_palette()
-    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+    label1.set_color(Palette::ColorId::text, Palette::black);
+    label1.set_color(Palette::ColorId::bg, Palette::transparent);
     win.add(popup);
     popup.add(label1);
 

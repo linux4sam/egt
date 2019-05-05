@@ -343,7 +343,7 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
 
     if (slider_flags().is_set(flag::consistent_line))
     {
-        painter.set(palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
+        painter.set(color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
         painter.draw(a1, b2);
         painter.stroke();
     }
@@ -352,7 +352,7 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
         painter.set(color(Palette::ColorId::button_fg).color());
         painter.draw(a1, a2);
         painter.stroke();
-        painter.set(palette().color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
+        painter.set(color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
         painter.draw(b1, b2);
         painter.stroke();
     }

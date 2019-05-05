@@ -26,7 +26,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "calc");
 
     TopWindow win;
-    win.instance_palette().set(Palette::ColorId::bg, Palette::black);
+    win.set_color(Palette::ColorId::bg, Palette::black);
 
     VerticalBoxSizer vsizer;
     win.add(expand(vsizer));
@@ -39,8 +39,8 @@ int main(int argc, const char** argv)
     text.text_flags().set(TextBox::flag::multiline);
     text.set_text_align(alignmask::center | alignmask::right);
     text.set_font(Font(25));
-    text.instance_palette().set(Palette::ColorId::bg, Color(0x272727ff));
-    text.instance_palette().set(Palette::ColorId::text, Palette::white);
+    text.set_color(Palette::ColorId::bg, Color(0x272727ff));
+    text.set_color(Palette::ColorId::text, Palette::white);
     vsizer.add(expand(text));
 
     vector<vector<string>> buttons =
@@ -106,8 +106,8 @@ int main(int argc, const char** argv)
             auto b = make_shared<Button>(*line_sizer, label, Rect(Size(60, 60)));
             b->set_border(1);
             b->set_font(Font(25, Font::weightid::bold));
-            b->instance_palette().set(colors[r][c].first, colors[r][c].second);
-            b->instance_palette().set(Palette::ColorId::border, Palette::gray);
+            b->set_color(colors[r][c].first, colors[r][c].second);
+            b->set_color(Palette::ColorId::border, Palette::gray);
 
             b->on_event([&text, b](eventid event)
             {

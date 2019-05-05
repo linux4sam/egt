@@ -5,33 +5,55 @@ namespace egt { inline namespace v1 {
 
 This chapter discusses how to to use colors and palettes.
 
-@section colors_classes Color and Palette Classes
+@section colors_palette Palette
 
-Color and Palette are used for managing colors and palettes of colors.
+The Palette manages a set of colors.  However, colors are not stored as a one
+dimensional list internally.  Colors are identified by a Palette::ColorId and
+also a Palette::GroupId.  The GroupId is associated with different states of a
+Color in the Palette, which corresponds with different states of a Widget.  For
+example, when a button is pressed it changes from a normal to active state and
+uses the same Palette::ColorId to identify its background color, but uses a
+different Palette::GroupId.
 
-@section colors_global The Global Palette
+The default Palette for every Widget comes from the Theme. However, you can
+override any individual Color for a specific Widget instance by calling
+Widget::set_color().
 
-There is a single global palette accessible directly with the function
-global_palette().  All widgets use this palette by default and
-before creating widgets, this palette can be changed.
+@code{.cpp}
+Button button(window, "Press Me");
+button.set_color(Palette::ColorId::button_text, Palette::green);
+@endcode
 
-However, you can also change the palette for any individual widget and it will
-only have an affect for that widget. The local palette for a widget is
-accessible with the Widget::palette() function.
+If you change the global theme, it will retroactively have an effect on any
+widget, as long as that widget does not have an override for a Palette::ColorId
+and Palette::GroupId set.
 
-If you change the global palette, it will retroactively have an effect on any
-widget, as long as that widget does not have a custom palette assigned.  In
-other words, as long as the widget's palette has not been changed.  Changing any
-property of an individual widget's palette, results in that widget
-maintaining its own complete and independent palette from the global palette.
+The Palette class also defines a set of default colors to reference and use.
+With a few minor exceptions, these are the same colors defined by the [CSS
+standard](https://www.w3.org/TR/css-color-3/).
 
-@section colors_themes Widget Themes
+@todo Talk about Color and Pattern class.
+
+@section colors_themes Widget Theme
+
+The Theme contains the default Palette and Fonts and also can be used as a place
+to override Widget::draw() methods.
+
+By default, themes are inherited with the widget hierarchy.  If the Window does
+not have a custom theme or a widget does not have a parent, it will use the
+egt::global_theme() by default. So, when you add a Button Widget to a Window,
+that button will use the theme from the Window and on up the widget hierarchy as
+needed.  This means if you change the Font of the Window theme, the button and
+all of its children will inherit that change.  Each Widget can hold its own
+instance of a Theme, set with Widget::set_theme().
+
+@see custom for more information on how to create custom widgets.
 
 EGT does not use native style widgets by default.  It defines the look and feel
-of its own widgets.  The look and feel of these widgets can be extended
-or changed in several ways.
+of its own widgets, which is customizable.  The look and feel of widgets can be
+extended or modified in several ways.
 
-1. The first method is to register a new draw function for a specific widget
+1. The first method is to register a new draw() function for a specific widget
    type.  This will make the new draw function apply to any widget of the same
    type.
 2. The second method is to derive from an existing widget and create a new

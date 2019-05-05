@@ -46,7 +46,7 @@ public:
     {
         flags().set(Widget::flag::grab_mouse);
         set_boxtype(Theme::boxtype::blank);
-        instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x526d7480));
+        set_color(Palette::ColorId::bg, Color(0x526d7480));
 
         add(m_grip);
         m_grip.resize(Size(50, 50));
@@ -107,9 +107,8 @@ int main(int argc, const char** argv)
 
     Label label1("CPU: ----", Rect(), alignmask::left | alignmask::center);
     label1.set_align(alignmask::left | alignmask::bottom);
-    label1.instance_palette()
-    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white)
-    .set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+    label1.set_color(Palette::ColorId::text, Palette::white);
+    label1.set_color(Palette::ColorId::bg, Palette::transparent);
 
     win.add(label1);
 

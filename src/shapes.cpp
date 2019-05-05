@@ -52,8 +52,8 @@ void CircleWidget::draw(Painter& painter, const Rect&)
     theme().draw_circle(painter,
                         boxtype(),
                         b,
-                        palette().color(Palette::ColorId::border),
-                        palette().color(Palette::ColorId::button_bg),
+                        color(Palette::ColorId::border),
+                        color(Palette::ColorId::button_bg),
                         border(),
                         margin());
 }
@@ -86,8 +86,8 @@ void RectangleWidget::draw(Painter& painter, const Rect&)
     theme().draw_box(painter,
                      boxtype(),
                      b,
-                     palette().color(Palette::ColorId::border),
-                     palette().color(Palette::ColorId::button_bg),
+                     color(Palette::ColorId::border),
+                     color(Palette::ColorId::button_bg),
                      border(),
                      margin());
 

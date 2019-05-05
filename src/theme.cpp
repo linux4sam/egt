@@ -123,8 +123,8 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
     draw_box(painter,
              type,
              widget.box(),
-             widget.palette().color(border, group),
-             widget.palette().color(bg, group),
+             widget.color(border, group),
+             widget.color(bg, group),
              widget.border(),
              widget.margin());
 }

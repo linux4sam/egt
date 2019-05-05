@@ -155,7 +155,7 @@ int main(int argc, const char** argv)
         os << "image" << image_index++ << ".png";
         auto image = make_shared<ImageLabel>(Image(os.str()));
         auto plane = make_shared<Window>(Size(image->w(), image->h()));
-        plane->instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::transparent);
+        plane->set_color(Palette::ColorId::bg, Palette::transparent);
         plane->set_boxtype(Theme::boxtype::none);
         plane->add(image);
         plane->show();
@@ -173,8 +173,7 @@ int main(int argc, const char** argv)
     movetimer.start();
 
     Label label1("CPU: ----");
-    label1.instance_palette()
-    .set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+    label1.set_color(Palette::ColorId::text, Palette::white);
     win.add(bottom(left(label1)));
 
     CPUMonitorUsage tools;

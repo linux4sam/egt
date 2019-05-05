@@ -217,6 +217,8 @@ public:
 
     Palette& set(ColorId id, const pattern_type& color, GroupId group = GroupId::normal);
 
+    bool exists(ColorId id, GroupId group = GroupId::normal) const;
+
 protected:
 
     std::map<GroupId, std::map<ColorId, pattern_type>> m_colors;

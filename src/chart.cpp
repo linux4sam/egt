@@ -50,7 +50,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
     cfg->grid = m_grid;
     cfg->xticlabelfmt = xticlabelfmt;
     cfg->yticlabelfmt = xticlabelfmt;
-    auto tc = palette().color(Palette::ColorId::border).color();
+    auto tc = color(Palette::ColorId::border).color();
     cfg->borderline.clr.type = KPLOTCTYPE_RGBA;
     cfg->borderline.clr.rgba[0] = tc.redf();
     cfg->borderline.clr.rgba[1] = tc.bluef();

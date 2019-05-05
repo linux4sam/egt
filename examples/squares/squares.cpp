@@ -19,12 +19,11 @@ int main(int argc, const char** argv)
     const Color FUCHSIA(Color::CSS("#F012BE"));
 
     Label label("FPS: ---");
-    label.instance_palette()
-    .set(Palette::ColorId::text, Palette::black)
-    .set(Palette::ColorId::bg, Palette::transparent);
+    label.set_color(Palette::ColorId::text, Palette::black);
+    label.set_color(Palette::ColorId::bg, Palette::transparent);
 
     Popup popup(Size(100, 80));
-    popup.instance_palette().set(Palette::ColorId::bg, FUCHSIA);
+    popup.set_color(Palette::ColorId::bg, FUCHSIA);
     popup.add(label);
     top(right(popup));
     win.add(popup);

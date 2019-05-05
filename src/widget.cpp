@@ -29,7 +29,8 @@ static auto global_widget_id = 0;
 Widget::Widget(const Rect& rect, const Widget::flags_type& flags) noexcept
     : m_box(rect),
       m_widgetid(global_widget_id++),
-      m_widget_flags(flags)
+      m_widget_flags(flags),
+      m_palette(make_unique<Palette>())
 {
     set_name("Widget" + std::to_string(m_widgetid));
 }
@@ -323,22 +324,6 @@ Point Widget::point() const
     return box().point();
 }
 
-Palette& Widget::instance_palette()
-{
-    if (!m_palette)
-        m_palette.reset(new Palette(palette()));
-
-    return *m_palette.get();
-}
-
-const Palette& Widget::palette() const
-{
-    if (m_palette)
-        return *m_palette.get();
-
-    return theme().palette();
-}
-
 void Widget::set_palette(const Palette& palette)
 {
     m_palette.reset(new Palette(palette));
@@ -348,6 +333,38 @@ void Widget::set_palette(const Palette& palette)
 void Widget::reset_palette()
 {
     m_palette.reset();
+}
+
+Palette::pattern_type Widget::color(Palette::ColorId id) const
+{
+    Palette::GroupId group = Palette::GroupId::normal;
+    if (disabled())
+        group = Palette::GroupId::disabled;
+    else if (active())
+        group = Palette::GroupId::active;
+
+    return color(id, group);
+}
+
+Palette::pattern_type Widget::color(Palette::ColorId id, Palette::GroupId group) const
+{
+    if (m_palette->exists(id, group))
+        return m_palette->color(id, group);
+
+    return default_palette().color(id, group);
+}
+
+void Widget::set_color(Palette::ColorId id,
+                       const Palette::pattern_type& color,
+                       Palette::GroupId group)
+{
+    m_palette->set(id, group, color);
+    damage();
+}
+
+const Palette& Widget::default_palette() const
+{
+    return theme().palette();
 }
 
 Frame* Widget::parent()
@@ -525,17 +542,6 @@ Rect Widget::content_area() const
     b += Point(moat, moat);
     b -= Size(2. * moat, 2. * moat);
     return b;
-}
-
-Palette::pattern_type Widget::color(Palette::ColorId id)
-{
-    Palette::GroupId group = Palette::GroupId::normal;
-    if (disabled())
-        group = Palette::GroupId::disabled;
-    else if (active())
-        group = Palette::GroupId::active;
-
-    return palette().color(id, group);
 }
 
 void Widget::layout()

@@ -84,8 +84,8 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
         theme().draw_box(cpainter,
                          boxtype(),
                          crect,
-                         palette().color(Palette::ColorId::border, group),
-                         palette().color(Palette::ColorId::bg, group),
+                         color(Palette::ColorId::border, group),
+                         color(Palette::ColorId::bg, group),
                          border(),
                          margin());
     }

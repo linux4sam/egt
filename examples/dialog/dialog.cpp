@@ -23,7 +23,7 @@ int main(int argc, const char** argv)
     win0.add(expand(vsizer));
 
     auto grid = make_shared<StaticGrid>(Rect(Point(), Size(0, win0.h() * 0.10)), Tuple(3, 1), 10);
-    grid->instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0xed2924ff));
+    grid->set_color(Palette::ColorId::bg, Color(0xed2924ff));
     grid->set_boxtype(Theme::boxtype::blank);
 
     auto logo = make_shared<ImageLabel>(Image("@microchip_logo_white.png"));

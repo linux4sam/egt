@@ -397,27 +397,47 @@ public:
     inline Point center() const { return box().center(); }
 
     /**
-     * Get the widget Palette.
-     */
-    Palette& instance_palette();
-
-    /**
-     * Get the widget Palette.
-     */
-    const Palette& palette() const;
-
-    /**
      * Set the widget Palette.
+     *
+     * @todo Does this have to be a complete palette?  Should it be merged or
+     * just replace completely?
      *
      * @param palette The new palette to assign to the widget.
      * @note This will overwrite the entire widget Palette.
      */
-    void set_palette(const Palette& palette);
+    virtual void set_palette(const Palette& palette);
 
     /**
      * Reset the widget's palette to a default state.
      */
-    void reset_palette();
+    virtual void reset_palette();
+
+    /**
+     * Get a Widget color.
+     *
+     * This will return a color for the Palette::GroupId reflecting the current
+     * state of the Widget when the call is made.  To get a specific
+     * Palette::GroupId color, use the overloaded function.
+     *
+     * @param id Palette::ColorId to get.
+     */
+    Palette::pattern_type color(Palette::ColorId id) const;
+
+    /**
+     * Get a Widget color.
+     */
+    Palette::pattern_type color(Palette::ColorId id, Palette::GroupId group) const;
+
+    /**
+     * Set a Widget color.
+     *
+     * @param id Palette::ColorId to set.
+     * @param color Color to set.
+     * @param group Palette::GroupId to set.
+     */
+    void set_color(Palette::ColorId id,
+                   const Palette::pattern_type& color,
+                   Palette::GroupId group = Palette::GroupId::normal);
 
     /**
      * Get a pointer to the parent Frame, or nullptr if none exists.
@@ -691,11 +711,6 @@ public:
     virtual Rect content_area() const;
 
     /**
-     * Get a Widget color.
-     */
-    Palette::pattern_type color(Palette::ColorId id);
-
-    /**
      * Perform layout of the widget.
      */
     virtual void layout();
@@ -720,6 +735,8 @@ protected:
      * Set this widget's parent.
      */
     virtual void set_parent(Frame* parent);
+
+    virtual const Palette& default_palette() const;
 
     /**
      * Bounding box.
@@ -754,10 +771,13 @@ private:
     flags_type m_widget_flags{};
 
     /**
-     * Instance palette for the widget.
+     * Palette for the widget.
+     *
+     * This may or may not be a complete palette.  If a color does not exist in
+     * this instance, it will refer to the default_palette().
      *
      * @note This should not be accessed directly.  Always use the accessor
-     * functions because this is not set until it is modified.
+     * functions because this may not be a complete Palette.
      */
     std::unique_ptr<Palette> m_palette;
 

@@ -97,9 +97,8 @@ int main(int argc, const char** argv)
     Label label2("FPS: -",
                  Rect(Point(0, 40), Size(100, 40)),
                  alignmask::center);
-    label2.instance_palette()
-    .set(Palette::ColorId::text, Palette::black)
-    .set(Palette::ColorId::bg, Palette::transparent);
+    label2.set_color(Palette::ColorId::text, Palette::black);
+    label2.set_color(Palette::ColorId::bg, Palette::transparent);
 
 #define DEFAULT_MS_INTERVAL 100
 
@@ -145,15 +144,14 @@ int main(int argc, const char** argv)
 
     Popup popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
-    popup.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, FUCHSIA);
+    popup.set_color(Palette::ColorId::bg, FUCHSIA);
     popup.set_name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
                  alignmask::center);
-    label1.instance_palette()
-    .set(Palette::ColorId::text, Palette::black)
-    .set(Palette::ColorId::bg, Palette::transparent);
+    label1.set_color(Palette::ColorId::text, Palette::black);
+    label1.set_color(Palette::ColorId::bg, Palette::transparent);
 
     popup.add(label1);
     popup.add(label2);

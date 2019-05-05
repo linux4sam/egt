@@ -99,7 +99,7 @@ public:
           m_label(make_shared<Label>("FPS: 0",
                                      Rect(Size(100, 50))))
     {
-        m_label->instance_palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+        m_label->set_color(Palette::ColorId::text, Palette::white);
         add(m_label);
     }
 
@@ -153,7 +153,7 @@ int main(int argc, const char** argv)
 
     Window ctrlwindow(Size(600, 80));
     window->add(ctrlwindow);
-    ctrlwindow.instance_palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Color(0x80808055));
+    ctrlwindow.set_color(Palette::ColorId::bg, Color(0x80808055));
 
     ctrlwindow.move(Point((main_screen()->size().w / 2) - (ctrlwindow.w() / 2),
                           main_screen()->size().h - ctrlwindow.h()));
@@ -185,7 +185,7 @@ int main(int argc, const char** argv)
 
     Slider position(Rect(Size(150, 40)), 0, 100, 0, orientation::horizontal);
     grid.add(position);
-    position.instance_palette().set(Palette::ColorId::button_fg, Palette::blue);
+    position.set_color(Palette::ColorId::button_fg, Palette::blue);
     position.readonly();
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
