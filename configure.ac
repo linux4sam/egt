@@ -36,7 +36,7 @@ esac
 AC_MSG_RESULT([$egt_os_win32])
 AM_CONDITIONAL(OS_WIN32, test "$egt_os_win32" = "yes")
 
-CXXFLAGS="$CXXFLAGS -pedantic -g"
+CXXFLAGS="$CXXFLAGS -g"
 CFLAGS="$CFLAGS -g"
 
 if test "x$egt_os_win32" = "xyes"; then
@@ -77,6 +77,7 @@ AC_DEFUN([EGT_CC_TRY_FLAG], [
 ])
 
 MAYBE_WARN="-Wall -Wextra \
+-pedantic \
 -Wsign-compare \
 -Werror-implicit-function-declaration \
 -Wpointer-arith \
