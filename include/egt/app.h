@@ -82,7 +82,7 @@ public:
      * app.dump(cout);
      * @endcode
      */
-    void dump(std::ostream& out);
+    void dump(std::ostream& out = std::cout);
 
     /**
      * Get a list of input devices configured with the EGT_INPUT_DEVICES
