@@ -62,6 +62,7 @@ image.cpp \
 images/bmp/cairo_bmp.c \
 images/bmp/cairo_bmp.h \
 input.cpp \
+keyboard.cpp \
 label.cpp \
 list.cpp \
 notebook.cpp \
