@@ -60,7 +60,7 @@ public:
     using filter_type = std::unordered_set<eventid, eventid_hash>;
 
     /**
-     * Add a callback to be called when the widget receives an event.
+     * Add an event handler to be called when the widget receives an event.
      */
     virtual void on_event(event_callback_t handler, filter_type mask = filter_type())
     {
@@ -72,7 +72,9 @@ public:
      */
     virtual int invoke_handlers(eventid event)
     {
-        for (auto callback : m_callbacks)
+        // make it safe to modify m_callbacks in a callback
+        auto callbacks = m_callbacks;
+        for (auto callback : callbacks)
         {
             if (callback.mask.empty() ||
                 callback.mask.find(event) != callback.mask.end())
@@ -84,6 +86,14 @@ public:
         }
 
         return 0;
+    }
+
+    /**
+     * Clear all registered event handlers.
+     */
+    virtual void clear_event_handlers()
+    {
+        m_callbacks.clear();
     }
 
     virtual ~Object() = default;
