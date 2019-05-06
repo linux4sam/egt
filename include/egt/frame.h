@@ -176,7 +176,7 @@ public:
      * from where it's called.
      */
     template <class T>
-    T find_child(const std::string& name)
+    std::shared_ptr<T> find_child(const std::string& name)
     {
         if (name.empty())
             return nullptr;
@@ -189,7 +189,7 @@ public:
 
         // just return first one
         if (i != m_children.end())
-            return reinterpret_cast<T>(*i);
+            return *i;
 
         i = std::find_if(m_children.begin(), m_children.end(),
                          [&name](const std::shared_ptr<Widget>& obj)
@@ -199,7 +199,7 @@ public:
 
         for (; i != m_children.end(); ++i)
         {
-            auto frame = dynamic_cast<Frame*>(*i);
+            auto frame = dynamic_cast<Frame*>((*i).get());
             if (frame)
             {
                 auto w = frame->find_child<T>(name);
