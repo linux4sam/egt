@@ -12,6 +12,7 @@
  */
 
 #include <egt/button.h>
+#include <egt/input.h>
 #include <egt/notebook.h>
 #include <egt/sizer.h>
 #include <memory>
