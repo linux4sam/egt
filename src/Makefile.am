@@ -208,7 +208,8 @@ libegt_la_SOURCES += \
 audio.cpp \
 video.cpp \
 detail/video/gstdecoderimpl.cpp \
-detail/video/gstappsinkimpl.cpp
+detail/video/gstappsinkimpl.cpp \
+camera.cpp
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \
@@ -222,7 +223,9 @@ nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/audio.h \
 $(top_srcdir)/include/egt/video.h \
 $(top_srcdir)/include/egt/detail/video/gstdecoderimpl.h \
-$(top_srcdir)/include/egt/detail/video/gstappsinkimpl.h
+$(top_srcdir)/include/egt/detail/video/gstappsinkimpl.h \
+$(top_srcdir)/include/egt/camera.h
+
 endif
 
 if HAVE_LIBPLANES
