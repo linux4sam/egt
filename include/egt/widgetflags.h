@@ -56,6 +56,8 @@ enum class alignmask : uint32_t
 
 ENABLE_BITMASK_OPERATORS(alignmask)
 
+std::ostream& operator<<(std::ostream& os, const alignmask& align);
+
 template<class T>
 inline T& center(T& widget)
 {

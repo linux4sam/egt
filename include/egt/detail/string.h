@@ -7,6 +7,7 @@
 #define EGT_DETAIL_STRING_H
 
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -65,6 +66,23 @@ std::string format(T value, int precision = 2)
  * @brief Tokenize a std::string
  */
 void tokenize(std::string str, char delimiter, std::vector<std::string>& tokens);
+
+/**
+ * Join each item of a container with the specified delimiter between each item.
+ */
+template<class T>
+void join(std::ostream& os, const T& container, const std::string& delimiter = ",")
+{
+    bool first = true;
+    for (auto& item : container)
+    {
+        if (first)
+            first = false;
+        else
+            os << delimiter;
+        os << item;
+    }
+}
 
 }
 }

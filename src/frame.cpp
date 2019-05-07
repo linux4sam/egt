@@ -211,8 +211,7 @@ void Frame::damage(const Rect& rect)
 
 void Frame::dump(std::ostream& out, int level)
 {
-    out << std::string(level, ' ') << name() <<
-        " " << box() << " " << flags() << endl;
+    Widget::dump(out, level);
 
     for (auto& child : m_children)
         child->dump(out, level + 1);

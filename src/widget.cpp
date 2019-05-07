@@ -476,9 +476,9 @@ void Widget::paint_to_file(const std::string& filename)
 void Widget::dump(std::ostream& out, int level)
 {
     out << std::string(level, ' ') << name() <<
-        " " << box() << " " << m_widget_flags;
+        " " << box() << " " << flags();
     out << " box(" << margin() << "," << padding() << "," << border() << ")";
-    out << " align(" << static_cast<int>(align()) << ")";
+    out << " align(" << align() << ")";
     out << std::endl;
 }
 

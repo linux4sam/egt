@@ -101,6 +101,14 @@ public:
     }
 
     /**
+     * Returns true if there are no flags set.
+     */
+    inline bool empty() const
+    {
+        return m_flags.empty();
+    }
+
+    /**
      * Get the flags set.
      */
     inline const flags& get() const

@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/string.h"
 #include "egt/widget.h"
 #include "egt/widgetflags.h"
-#include <map>
 #include <iostream>
+#include <map>
 #include <string>
 
 namespace egt
@@ -37,26 +38,63 @@ static const std::map<Widget::flag, std::string>& flag_strings()
 
 std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
 {
-    auto strings = flag_strings();
-
-    bool first = true;
-    auto f = flags.get();
-    for (auto& flag : f)
+    if (!flags.empty())
     {
-        if (first)
-            first = false;
-        else
-            os << " | ";
-        os << strings[flag];
+        // would be nice to use std::copy here, but no such luck
+        detail::join(os, flags.get(), "|");
     }
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os, const Widget::flag& flag)
 {
-    auto strings = flag_strings();
+    const auto& strings = flag_strings();
 
-    os << strings[flag];
+    os << strings.at(flag);
+    return os;
+}
+
+static const std::map<alignmask, std::string>& alignmask_strings()
+{
+    static std::map<alignmask, std::string> strings;
+    if (strings.empty())
+    {
+#define MAPITEM(p) strings[p] = #p
+        // MAPITEM(alignmask::none); not included intentionally
+        MAPITEM(alignmask::left);
+        MAPITEM(alignmask::right);
+        MAPITEM(alignmask::center_horizontal);
+        MAPITEM(alignmask::top);
+        MAPITEM(alignmask::bottom);
+        MAPITEM(alignmask::center_vertical);
+        MAPITEM(alignmask::expand_horizontal);
+        MAPITEM(alignmask::expand_vertical);
+#undef MAPITEM
+    }
+    return strings;
+}
+
+std::ostream& operator<<(std::ostream& os, const alignmask& align)
+{
+    if (align == alignmask::none)
+        return os;
+
+    const auto& strings = alignmask_strings();
+
+    bool first = true;
+    for (auto& item : strings)
+    {
+        if ((item.first & align) == item.first)
+        {
+            if (first)
+                first = false;
+            else
+                os << "|";
+
+            os << item.second;
+        }
+    }
+
     return os;
 }
 
