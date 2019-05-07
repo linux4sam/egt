@@ -21,6 +21,7 @@
 #include <iostream>
 #include <libintl.h>
 #include <locale.h>
+#include <regex>
 #include <string>
 #include <thread>
 
@@ -125,6 +126,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 #endif
                 throw std::runtime_error("backend not available");
 
+    // EGT_INPUT_DEVICES=library:event_device1,event_device2;library:event_device3
     const char* tmp = getenv("EGT_INPUT_DEVICES");
 
     if (tmp)
@@ -138,7 +140,28 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         {
             vector<string> tokens;
             detail::tokenize(input, ':', tokens);
-            m_input_devices.push_back(pair<string, string>(tokens.front(), tokens.back()));
+
+            string library = tokens.front();
+            string devices = tokens.back();
+            vector<string> device_tokens;
+            detail::tokenize(devices, ',', device_tokens);
+
+            for (auto& device : device_tokens)
+            {
+                // deal with symlink
+                string target = detail::readlink(device);
+                if (!target.empty())
+                {
+                    // absolute or relative path
+                    if (target[0] == '/')
+                        device = target;
+                    else
+                        device = detail::extract_dirname(device) + "/" + target;
+                }
+
+                if (detail::exists(device))
+                    m_input_devices.push_back(pair<string, string>(library, device));
+            }
         }
     }
 
