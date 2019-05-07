@@ -202,20 +202,27 @@ nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/input/inputlibinput.h
 endif
 
+
 if HAVE_GSTREAMER
 libegt_la_SOURCES += \
-audio.cpp
+audio.cpp \
+video.cpp \
+detail/video/gstdecoderimpl.cpp \
+detail/video/gstappsinkimpl.cpp
+
+if HAVE_LIBPLANES
+libegt_la_SOURCES += \
+detail/video/gstkmssinkimpl.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/audio.h
+$(top_srcdir)/include/egt/detail/video/gstkmssinkimpl.h
 endif
 
-if HAVE_VIDEO_SUPPORT
-libegt_la_SOURCES += \
-video.cpp
-
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/video.h
+$(top_srcdir)/include/egt/audio.h \
+$(top_srcdir)/include/egt/video.h \
+$(top_srcdir)/include/egt/detail/video/gstdecoderimpl.h \
+$(top_srcdir)/include/egt/detail/video/gstappsinkimpl.h
 endif
 
 if HAVE_LIBPLANES

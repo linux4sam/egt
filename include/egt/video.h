@@ -3,17 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_VIDEO_H
-#define EGT_VIDEO_H
+#ifndef EGT_VIDEOVIEW_H
+#define EGT_VIDEOVIEW_H
 
-/**
- * @file
- * @brief Working with video output.
- */
-
+#include <egt/detail/video/gstdecoderimpl.h>
 #include <egt/window.h>
-#include <gst/gst.h>
-#include <string>
 
 namespace egt
 {
@@ -22,225 +16,165 @@ inline namespace v1
 namespace detail
 {
 void init_gst_thread();
+bool is_target_sama5d4();
+class GstKmsSinkImpl;
+class GstAppSinkImpl;
 }
 
-/**
- * Hardware based video window.
- */
 class VideoWindow : public Window
 {
 public:
+    VideoWindow(const Size& size,
+                pixel_format format = pixel_format::xrgb8888,
+                windowhint hint = windowhint::overlay);
 
-    explicit VideoWindow(const Size& size,
-                         pixel_format format = pixel_format::xrgb8888,
-                         windowhint hint = windowhint::overlay);
+    VideoWindow(const Rect& rect,
+                pixel_format format = pixel_format::xrgb8888,
+                windowhint hint = windowhint::overlay);
 
     virtual void top_draw() override;
 
+    virtual void draw(Painter& painter, const Rect& rect) override;
+
     /**
-     * @brief Sets the media file URI to the current pipeline
-     * @param uri file URI
+     * @brief Sets the media file to the current pipeline
+     * @param filename of a media file
      * @return true if success
      */
-    virtual bool set_media(const std::string& uri);
+    bool set_media(const std::string& filename);
 
     /**
      * @brief Send pipeline to play state
      * @return true if success
      */
-    virtual bool play(bool mute = false, int volume = 100);
+    bool play();
 
     /**
      * @brief pause Send Pipeline to pause state
      * @return true if success
      */
-    virtual bool pause();
+    bool pause();
 
     /**
-     * @brief unpause Send Pipeline to unpaused state
+     * @brief playing check if Pipeline is in play state
      * @return true if success
      */
-    virtual bool unpause();
+    virtual bool playing() const;
 
     /**
-     * @brief null Send pipeline to null state
-     * @return true if success
+     * @brief position gets the current position of video getting played
+     * @return 64bit time
      */
-    bool null();
+    uint64_t position();
+
+    /**
+     * @brief duration gets the duration of video getting played
+     * @return 64bit time
+     */
+    uint64_t duration();
+
+    void move(const Point& point);
 
     /**
      * @brief Adjusts the volume of the audio in the video being played
-     * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
+     * @param volume desired volume in the range of 0 (no sound) to 10 (normal sound)
      * @return true if success
      */
-    virtual bool set_volume(int volume);
-    virtual int get_volume() const;
+    bool set_volume(double volume);
 
     /**
-     * @brief Mutes the audio of the video being played
-     * @param mute true if the audio is to be muted
+     * @brief gets the volume of the audio in the video being played
+     * @return volume value set for video being played
+     */
+    double get_volume();
+
+    /**
+     * @brief gets the scale value
+     */
+    float scale();
+
+    /**
+     * @brief sets the scale value
+     */
+    void set_scale(float value);
+
+    /**
+     * @brief seek to time of the video being played
+     * @param time in nanoseconds
      * @return true if success
      */
-    virtual bool set_mute(bool mute);
+    bool seek(int64_t time_nanoseconds);
 
-    virtual void set_scale(float value);
-    virtual float scale();
+    /**
+     * @brief play video in loopback
+     * @param bool to enable/disbale loopback
+     */
+    void set_loopback(bool enable = false)
+    {
+        m_loopback = enable;
+    }
+
+    /**
+     * @brief get loopback state
+     * @return true/false based on set_loopback.
+     */
+    bool get_loopback()
+    {
+        return m_loopback;
+    }
+
+    void draw_frame(GstSample* sample)
+    {
+        m_decoderImpl->push_buffer(sample);
+        Window::damage();
+    }
+
+    /**
+     * @brief get Error Message received from pipeline
+     */
+    std::string get_error_message()
+    {
+        return m_decoderImpl->get_error_message();
+    }
+
+    void handle_gst_events(detail::gsteventid event);
 
     virtual ~VideoWindow();
 
-    inline uint64_t position() const
-    {
-        return m_position;
-    }
-    inline uint64_t duration() const
-    {
-        return m_duration;
-    }
-
-    virtual bool playing() const;
-
-    virtual uint32_t fps() const
-    {
-        return m_fps;
-    }
-
 protected:
-
-    bool set_state(GstState state);
-    virtual bool createPipeline() = 0;
-    void destroyPipeline();
-
-    static gboolean bus_callback(GstBus* bus,
-                                 GstMessage* message,
-                                 gpointer data);
-
-    GstElement* m_video_pipeline {nullptr};
-    GstElement* m_src {nullptr};
-    GstElement* m_volume {nullptr};
-    gint64 m_position {0};
-    gint64 m_duration {0};
     std::string m_filename;
-    int m_volume_value {100};
-    uint32_t m_fps {0};
+    void createImpl(const Size& size);
+    bool is_target_sama5d4();
+    bool get_media_info(const std::string& filename);
+    void set_media_info(const std::string& info, const int type);
+
+    static void print_stream_info(GstDiscovererStreamInfo* info, VideoWindow* data);
+    static void print_topology(GstDiscovererStreamInfo* info, VideoWindow* data);
+    static void on_discovered_cb(GstDiscoverer* discoverer, GstDiscovererInfo* info, gpointer data);
+    static void on_finished_cb(GstDiscoverer* discoverer, gpointer data);
 
 private:
+    std::shared_ptr<detail::GstDecoderImpl> m_decoderImpl;
+    bool m_seekable;
+    std::string m_vcodec;
+    std::string m_acodec;
+    std::string m_ctype;
+    bool m_atrack;
+    bool m_vtrack;
+    bool m_loopback;
+    GMainLoop* m_discoverer_loop;
+    std::string m_audio_info;
+    std::string m_video_info;
+
+    friend class detail::GstDecoderImpl;
+    friend class detail::GstKmsSinkImpl;
+    friend class detail::GstAppSinkImpl;
 
     VideoWindow() = delete;
 };
 
+} //namespace v1
 
-/**
- * Video player window with hardware acceleration supported.
- *
- * @ingroup media
- */
-class HardwareVideo : public VideoWindow
-{
-public:
-
-    explicit HardwareVideo(const Size& size, pixel_format format = pixel_format::yuyv);
-
-    /**
-     * @brief Sets the media file URI to the current pipeline
-     * @param uri file URI
-     * @return true if success
-     */
-    bool set_media(const std::string& uri) override;
-
-    virtual ~HardwareVideo();
-
-protected:
-
-    virtual bool createPipeline() override;
-};
-
-/**
- * Video player window using only software.
- *
- * @ingroup media
- */
-class SoftwareVideo : public VideoWindow
-{
-public:
-
-    explicit SoftwareVideo(const Size& size, pixel_format format = pixel_format::yuv420);
-
-    virtual bool set_media(const std::string& uri) override;
-
-    virtual ~SoftwareVideo();
-
-protected:
-
-    virtual bool createPipeline() override;
-    void destroyPipeline();
-
-    static GstFlowReturn on_new_buffer_from_source(GstElement* elt,
-            gpointer data);
-
-    GstElement* m_appsink;
-};
-
-/**
- * Specialized SoftwareVideo window with support for a V4L2 source.
- *
- * @ingroup media
- */
-class V4L2SoftwareVideo : public SoftwareVideo
-{
-public:
-
-    explicit V4L2SoftwareVideo(const Size& size);
-
-    virtual bool set_media(const std::string& uri) override;
-
-    virtual ~V4L2SoftwareVideo();
-
-protected:
-
-    virtual bool createPipeline() override;
-};
-
-/**
- * Specialized HardwareVideo window with support for a V4L2 source.
- *
- * @ingroup media
- */
-class V4L2HardwareVideo : public HardwareVideo
-{
-public:
-
-    explicit V4L2HardwareVideo(const Size& size);
-
-    virtual bool set_media(const std::string& uri) override;
-
-    virtual ~V4L2HardwareVideo();
-
-protected:
-
-    virtual bool createPipeline() override;
-};
-
-/**
- * Specialized SoftwareVideo window that only handles RAW video stream sources.
- *
- * @ingroup media
- */
-class RawSoftwareVideo : public SoftwareVideo
-{
-public:
-
-    explicit RawSoftwareVideo(const Size& size);
-
-    virtual bool set_media(const std::string& uri) override;
-
-    virtual ~RawSoftwareVideo();
-
-protected:
-
-    virtual bool createPipeline() override;
-};
-
-}
-}
+} //namespace egt
 
 #endif
