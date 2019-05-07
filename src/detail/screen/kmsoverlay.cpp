@@ -117,6 +117,11 @@ float KMSOverlay::scale() const
     return m_plane->scale;
 }
 
+uint32_t KMSOverlay::get_plane_format()
+{
+    return plane_format(m_plane);
+}
+
 int KMSOverlay::gem()
 {
     // TODO: array

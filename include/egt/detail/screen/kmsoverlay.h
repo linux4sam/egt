@@ -41,6 +41,8 @@ public:
     virtual void set_pan_pos(const Point& point);
     virtual float scale() const;
 
+    virtual uint32_t get_plane_format();
+
     virtual void hide();
 
     virtual void show();
