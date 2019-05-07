@@ -28,7 +28,7 @@ int main(int argc, const char** argv)
     win.set_name("win");
     win.set_color(Palette::ColorId::bg, Palette::black);
 
-    SoftwareVideo player(Size(320, 192));
+    VideoWindow player(Size(320, 192));
     player.set_volume(50);
 
     auto fullscale = static_cast<double>(main_screen()->size().w) /
@@ -69,7 +69,7 @@ int main(int argc, const char** argv)
             videoshown = true;
 
             animator.clear_change_callbacks();
-            animator.on_change(std::bind(&SoftwareVideo::set_scale, std::ref(player), std::placeholders::_1));
+            animator.on_change(std::bind(&VideoWindow::set_scale, std::ref(player), std::placeholders::_1));
             animator.start();
 
             return 0;
@@ -102,7 +102,7 @@ int main(int argc, const char** argv)
             videoshown = true;
 
             animator.clear_change_callbacks();
-            animator.on_change(std::bind(&SoftwareVideo::set_scale, std::ref(player), std::placeholders::_1));
+            animator.on_change(std::bind(&VideoWindow::set_scale, std::ref(player), std::placeholders::_1));
             animator.start();
 
             return 0;
