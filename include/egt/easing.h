@@ -62,6 +62,31 @@ float_t easing_circular_easeinout(float_t p);
 float_t easing_exponential_easein(float_t p);
 float_t easing_exponential_easeout(float_t p);
 float_t easing_exponential_easeinout(float_t p);
+
+
+/**
+ * Cubic Bezier equation.
+ */
+struct cubic_bezier
+{
+    cubic_bezier(float_t p0 = 0.42,
+                 float_t p1 = 0,
+                 float_t p2 = 0.58,
+                 float_t p3 = 1)
+        : m_p0(p0),
+          m_p1(p1),
+          m_p2(p2),
+          m_p3(p3)
+    {}
+
+    float_t operator()(float_t p);
+
+    float_t m_p0;
+    float_t m_p1;
+    float_t m_p2;
+    float_t m_p3;
+};
+
 /** @} */
 
 }
