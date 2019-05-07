@@ -21,71 +21,84 @@ class MyVideoWindow : public T
 {
 public:
     MyVideoWindow(const Size& size, const string& filename)
-        : T(size),
-          m_moving(false)
+        : T(size, pixel_format::yuv420, windowhint::overlay),
+          m_moving(true),
+          m_scaled(false)
     {
-        m_fscale = static_cast<double>(main_screen()->size().w) /
-                   static_cast<double>(T::w());
+        m_fscale = (double)main_screen()->size().w / (double)T::w();
         if (m_fscale <= 0)
             m_fscale = 1.0;
 
-        T::move(Point(0, 0));
-        T::set_scale(m_fscale);
         T::set_media(filename);
         T::play();
-        T::set_volume(50);
+        T::set_volume(5);
     }
 
-    int handle(int event)
+    MyVideoWindow(const Rect& rect, const string& filename)
+        : T(rect, pixel_format::yuv420, windowhint::overlay),
+          m_moving(true),
+          m_scaled(false)
     {
-        int ret = T::handle(event);
-        if (ret)
-            return ret;
+        m_fscale = (double)main_screen()->size().w / (double)T::w();
+        if (m_fscale <= 0)
+            m_fscale = 1.0;
 
+        T::set_media(filename);
+        T::play();
+        T::set_volume(5);
+    }
+
+
+    virtual int handle(eventid event) override
+    {
         switch (event)
         {
         case eventid::pointer_dblclick:
-            if (T::scale() <= 1.0)
+        {
+            DBG("VideoWindow: pointer_dblclick ");
+            if (!m_scaled)
             {
                 T::move(Point(0, 0));
                 T::set_scale(m_fscale);
+                m_scaled = true;
             }
             else
             {
-                T::scale(1.0);
-            }
-
-            return 1;
-        case eventid::raw_pointer_down:
-            if (T::scale() <= 1.0)
-            {
-                if (!m_moving)
-                {
-                    m_moving = true;
-                    m_starting_point = event::pointer().point;
-                    m_position = Point(T::x(), T::y());
-                }
-            }
-
-            return 1;
-        case eventid::raw_pointer_up:
-            m_moving = false;
-            return 1;
-        case eventid::raw_pointer_move:
-            if (m_moving)
-            {
-                auto diff = event::pointer().point - m_starting_point;
-                T::move(Point(m_position.x + diff.x, m_position.y + diff.y));
-                return 1;
+                T::set_scale(0.80);
+                m_scaled = false;
             }
             break;
         }
-        return 0;
+        case eventid::pointer_drag_start:
+            m_start_point = T::box().point();
+            break;
+        case eventid::pointer_drag:
+        {
+            DBG("VideoWindow: pointer_drag ");
+            auto diff = event::pointer().drag_start - event::pointer().point;
+            T::move(m_start_point - Point(diff.x, diff.y));
+            break;
+        }
+        case eventid::property_changed:
+        {
+            DBG("VideoWindow: property_changed");
+            break;
+        }
+        case eventid::event2:
+        {
+            DBG("VideoWindow: event2 : Error");
+            break;
+        }
+        default:
+            break;
+        }
+        return Window::handle(event);
     }
 
 private:
     bool m_moving;
-    DisplayPoint m_starting_point;
+    bool m_scaled;
+    Point m_start_point;
     Point m_position;
     double m_fscale;
 };
@@ -113,144 +126,178 @@ public:
 
 int main(int argc, const char** argv)
 {
-    if (argc != 3)
+    if (argc < 2)
     {
-        cerr << argv[0] << " TYPE FILENAME" << endl;
+        cerr << argv[0] << " FILENAME" << endl;
         return 1;
+    }
+
+    int w, h;
+    if (argc == 4)
+    {
+        w = atoi(argv[2]);
+        h = atoi(argv[3]);
+    }
+    else
+    {
+        w = 320;
+        h = 192;
     }
 
     Application app(argc, argv, "video");
     TopWindow win;
+    win.set_color(Palette::ColorId::bg, Palette::black);
 
     shared_ptr<VideoWindow> window;
-    if (argv[1] == string("v4l2"))
-        window = make_shared<MyVideoWindow<V4L2SoftwareVideo>>(Size(960, 720), argv[2]);
-    else if (argv[1] == string("v4l2h"))
-        window = make_shared<MyVideoWindow<V4L2HardwareVideo>>(Size(960, 720), argv[2]);
-    else if (argv[1] == string("raw"))
-        window = make_shared<MyVideoWindow<RawSoftwareVideo>>(Size(320, 192), argv[2]);
-    else if (argv[1] == string("hardware"))
-        window = make_shared<MyVideoWindow<HardwareVideo>>(Size(960, 540), argv[2]);
-    else if (argv[1] == string("software"))
-        window = make_shared<MyVideoWindow<SoftwareVideo>>(Size(320, 192), argv[2]);
-    //window = make_shared<MyVideoWindow<SoftwareVideo>>(Size(960, 540), argv[2]);
-    else
-    {
-        cerr << "unknown type: " << argv[1] << endl;
-        return 1;
-    }
-
+    window = make_shared<MyVideoWindow<VideoWindow>>(Rect(0, 0, w, h), argv[1]);
     window->set_name("video");
+    window->set_align(alignmask::center);
     win.add(window);
 
-#if 1
-    //#define FPS
-#ifdef FPS
-    FpsWindow fpslabel;
-    win.add(&fpslabel);
-    fpslabel.show();
-#endif
+    Label label("Error: ", Rect(Point(0, 0), Size(win.w() * 0.80, win.h() * 0.10)));
+    label.set_color(Palette::ColorId::label_text, Palette::white);
+    label.set_color(Palette::ColorId::bg, Palette::transparent);
+    label.set_align(alignmask::top | alignmask::center);
 
-    Window ctrlwindow(Size(600, 80));
-    window->add(ctrlwindow);
-    ctrlwindow.set_color(Palette::ColorId::bg, Color(0x80808055));
+    window->on_event([window, &win, &label](eventid)
+    {
+        label.set_text("Error: " + window->get_error_message());
+        win.add(label);
+        return 0;
+    }, {eventid::event2});
 
-    ctrlwindow.move(Point((main_screen()->size().w / 2) - (ctrlwindow.w() / 2),
-                          main_screen()->size().h - ctrlwindow.h()));
+    shared_ptr<Window> ctrlwindow;
+    ctrlwindow = make_shared< Window>(Size(win.w(), win.h() * 0.12));
+    ctrlwindow->set_align(alignmask::bottom | alignmask::center);
+    win.add(ctrlwindow);
+    ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent); // Color(0x80808055));
 
-    HorizontalPositioner grid(Rect(Size(600, 80)), 5, alignmask::center);
-    grid.set_name("grid");
-    ctrlwindow.add(grid);
+    HorizontalPositioner hpos(Rect(0, 0, ctrlwindow->w(), ctrlwindow->h()), 3, alignmask::center);
+    hpos.set_name("grid");
+    ctrlwindow->add(hpos);
 
-    ImageButton playbtn(Image(":play_png"));
+    ImageButton playbtn(Image(":pause_png"));
     playbtn.set_boxtype(Theme::boxtype::none);
-    grid.add(playbtn);
+    hpos.add(playbtn);
 
     playbtn.on_event([&playbtn, window](eventid)
     {
-        if (playbtn.active())
-            window->unpause();
+        if (window->playing())
+        {
+            if (window->pause())
+                playbtn.set_image(Image(":play_png"));
+        }
+        else
+        {
+            if (window->play())
+                playbtn.set_image(Image(":pause_png"));
+        }
         return 0;
-    });
+    }, {eventid::pointer_click});
 
-    ImageButton pausebtn(Image(":pause_png"));
-    pausebtn.set_boxtype(Theme::boxtype::none);
-    grid.add(pausebtn);
-    pausebtn.on_event([&pausebtn, window](eventid)
-    {
-        if (pausebtn.active())
-            window->pause();
-        return 0;
-    });
-
-    Slider position(Rect(Size(150, 40)), 0, 100, 0, orientation::horizontal);
-    grid.add(position);
-    position.set_color(Palette::ColorId::button_fg, Palette::blue);
-    position.readonly();
+    Slider position(Rect(Size(ctrlwindow->w() * 0.40, ctrlwindow->h())), 0, 100, 0, orientation::horizontal);
+    hpos.add(position);
+    position.set_color(Palette::ColorId::text_highlight, Palette::blue);
+    position.slider_flags().set({Slider::flag::round_handle});
+    position.set_readonly(0);
+    position.disable();
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
-    postimer.on_timeout([&position, window
-#ifdef FPS
-                                    , &fpslabel
-#endif
-                                   ]()
+    postimer.on_timeout([&position, window]()
     {
         if (window->duration())
         {
-            double v = static_cast<double>(window->position()) /
-                       static_cast<double>(window->duration()) * 100.;
+            double v = (double)window->position() / (double)window->duration() * 100.;
             position.set_value(v);
         }
         else
         {
             position.set_value(0);
         }
-
-#ifdef FPS
-        ostringstream ss;
-        ss << "fps: " << window->fps();
-        fpslabel.set_text(ss.str());
-#endif
     });
     postimer.start();
 
     ImageButton volumei(Image(":volumeup_png"));
     volumei.set_boxtype(Theme::boxtype::none);
-    grid.add(volumei);
+    hpos.add(volumei);
 
-    Slider volume(Rect(Size(100, 20)), 0, 100, 0, orientation::horizontal);
-    grid.add(volume);
+    Slider volume(Rect(Size(ctrlwindow->w() * 0.10, ctrlwindow->h())), 0, 10, 0, orientation::horizontal);
+    hpos.add(volume);
+    volume.slider_flags().set({Slider::flag::round_handle});
+    volume.set_value(5);
+    window->set_volume(5.0);
     volume.on_event([&volume, window](eventid)
     {
         window->set_volume(volume.value());
         return 0;
     });
-    volume.set_value(50);
+    volume.set_value(5);
 
-    playbtn.disable();
-    pausebtn.enable();
+    ImageButton fullscreen(Image(":fullscreen_png"));
+    fullscreen.set_boxtype(Theme::boxtype::none);
+    hpos.add(fullscreen);
 
-    window->on_event([window, &playbtn, &pausebtn](eventid)
+    double m_fscale = (double)main_screen()->size().w / w;
+
+    fullscreen.on_event([&fullscreen, window, m_fscale](eventid)
     {
-        if (window->playing())
+        static bool scaled = true;
+        if (scaled)
         {
-            playbtn.disable();
-            pausebtn.enable();
+            window->move(Point(0, 0));
+            window->set_scale(m_fscale);
+            fullscreen.set_image(Image(":fullscreen_exit_png"));
+            scaled = false;
         }
         else
         {
-            playbtn.enable();
-            pausebtn.disable();
+            window->move(Point(240, 120)); //set center
+            window->set_scale(1.0);
+            fullscreen.set_image(Image(":fullscreen_png"));
+            scaled = true;
         }
         return 0;
+    }, {eventid::pointer_click});
+
+    ImageButton loopback(Image(":repeat_one_png"));
+    loopback.set_boxtype(Theme::boxtype::none);
+    hpos.add(loopback);
+
+    loopback.on_event([&loopback, window](eventid)
+    {
+        if (window->get_loopback())
+        {
+            loopback.set_image(Image(":repeat_one_png"));
+            window->set_loopback(false);
+        }
+        else
+        {
+            loopback.set_image(Image(":repeat_png"));
+            window->set_loopback(true);
+        }
+        return 0;
+    }, {eventid::pointer_click});
+
+    Label label1("CPU: 0%", Rect(Point(0, 0), Size(100, 40)));
+    label1.set_color(Palette::ColorId::label_text, Palette::white);
+    label1.set_color(Palette::ColorId::bg, Palette::transparent);
+    hpos.add(label1);
+
+    CPUMonitorUsage tools;
+    PeriodicTimer cputimer(std::chrono::seconds(1));
+    cputimer.on_timeout([&label1, &tools]()
+    {
+        tools.update();
+        ostringstream ss;
+        ss << "CPU: " << (int)tools.usage(0) << "%";
+        label1.set_text(ss.str());
     });
+    cputimer.start();
 
-    grid.reposition();
-
-    ctrlwindow.show();
-#endif
-
+    hpos.reposition();
+    ctrlwindow->show();
     window->show();
+    win.show();
 
     return app.run();
 }
