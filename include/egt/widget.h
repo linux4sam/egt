@@ -132,7 +132,7 @@ public:
            const flags_type& flags = flags_type()) noexcept;
 
     /**
-     * @param[in] parent Parent Frame of the widget.
+     * @param[in] parent Parent Frame of the Widget.
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
@@ -197,10 +197,10 @@ public:
     /**
      * Resize the widget.
      *
-     * Changes the width and height of the widget.
+     * Changes the width and height of the Widget.
      *
      * @param[in] s The new size of the Widget.
-     * @note This will cause a redraw of the widget.
+     * @note This will cause a redraw of the Widget.
      */
     virtual void resize(const Size& s);
 
@@ -208,7 +208,7 @@ public:
      * Scale the current size of the Widget given the ratio.
      *
      * There is no automatic undo for this operation.  Each call to this function
-     * uses the current size of the widget.
+     * uses the current size of the Widget.
      *
      * @param[in] hratio Horizontal ratio of w().
      * @param[in] vratio Vertical ratio of h().
@@ -218,6 +218,8 @@ public:
     virtual void scale(int hratio, int vratio);
 
     /**
+     * Scale the current size of the Widget given the ratio.
+     *
      * @param[in] ratio Horizontal and vertical ratio of size().
      *
      * @see Widget::scale()
@@ -228,25 +230,26 @@ public:
     }
 
     /**
-     * Change the width of the widget.
+     * Change the width.
      *
-     * @param[in] w The new width of the widget.
+     * @param[in] w The new width of the Widget.
      */
     inline void set_width(default_dim_type w) { resize(Size(w, h())); }
 
     /**
-     * Change the height of the widget.
-     * @param[in] h The new height of the widget.
+     * Change the height.
+     *
+     * @param[in] h The new height of the Widget.
      */
     inline void set_height(default_dim_type h) { resize(Size(w(), h)); }
 
     /**
-     * Move the widget.
+     * Move the Widget to a new position.
      *
-     * Changes the x and y position of the widget.
+     * Changes the x and y position of the Widget.
      *
      * @param[in] point The new origin point for the widget relative to its parent.
-     * @note This will cause a redraw of the widget.
+     * @note This will cause a redraw of the Widget.
      */
     virtual void move(const Point& point);
 
@@ -274,24 +277,26 @@ public:
     virtual void move_to_center(const Point& point);
 
     /**
-     * Change the box of the widget.
-     * This is the same as calling move() and resize() at the same time.
+     * Change the box.
+     *
+     * This is the same as calling Widget::move() and Widget::resize() at the
+     * same time.
      */
     virtual void set_box(const Rect& rect);
 
     /**
-     * Hide the widget.
+     * Hide the Widget.
      *
      * A widget that is not visible will receive no draw() calls.
      *
-     * @note This changes the visible() property of the widget.
+     * @note This changes the visible() property of the Widget.
      */
     virtual void hide();
 
     /**
-     * Show the widget.
+     * Show the Widget.
      *
-     * @note This changes the visible() property of the widget.
+     * @note This changes the visible() property of the Widget.
      */
     virtual void show();
 
@@ -300,6 +305,12 @@ public:
      */
     virtual bool visible() const;
 
+    /**
+     * Toggle the visibility state.
+     *
+     * @see Widget::show()
+     * @see Widget::hide()
+     */
     inline void toggle_visible()
     {
         if (visible())
@@ -316,7 +327,9 @@ public:
     virtual bool active() const;
 
     /**
-     * Set the active property of the widget.
+     * Set the active property.
+     *
+     * The meaning of active is largely up to the derived implementation.
      */
     virtual void set_active(bool value);
 
@@ -327,6 +340,8 @@ public:
 
     /**
      * Set the readonly property of the widget.
+     *
+     * @param value Readonly when true.
      */
     virtual void set_readonly(bool value);
 
@@ -339,17 +354,17 @@ public:
     virtual bool disabled() const;
 
     /**
-     * Set the disabled status of the widget to true.
+     * Set the disabled status to true.
      */
     virtual void disable();
 
     /**
-     * Set the enable status of the widget to true.
+     * Set the enable status to true.
      */
     virtual void enable();
 
     /**
-     * Damage the box() of the widget.
+     * Damage the box() of the widget and cause a redraw.
      *
      * This is the same as calling damage(box()) in most cases.
      */
@@ -358,25 +373,27 @@ public:
     /**
      * Mark the specified rect as a damaged area of the widget.
      *
-     * This call will propagate to a top level parent frame that owns a Screen.
+     * @note This call will propagate to a top level parent frame that owns a Screen.
      *
      * @param rect The rectangle to save for damage.
      */
     virtual void damage(const Rect& rect);
 
     /**
-     * Bounding box for the widget.
+     * Bounding box for the Widget.
      */
     virtual const Rect& box() const;
 
     /**
-     * Get the size of the Widget.
+     * Get the size.
+     *
      * @see Widget::box()
      */
     virtual Size size() const;
 
     /**
-     * Get the origin point of the Widget.
+     * Get the origin point.
+     *
      * @see Widget::box()
      */
     virtual Point point() const;
@@ -392,7 +409,7 @@ public:
     /** @} */
 
     /**
-     * Get the center point of the widget.
+     * Get the center point.
      */
     inline Point center() const { return box().center(); }
 
@@ -468,6 +485,8 @@ public:
     inline flags_type& flags() { return m_widget_flags; }
 
     /**
+     * Get a modifiable ref of the flags.
+     *
      * @todo Need a better solution to force non-const call of flags() when
      * necessary.
      */
@@ -483,7 +502,7 @@ public:
     virtual void set_align(alignmask a);
 
     /**
-     * Get the alignment of the widget.
+     * Get the alignment.
      */
     inline alignmask align() const { return m_align; }
 
@@ -504,6 +523,9 @@ public:
      */
     inline default_dim_type padding() const { return m_padding; }
 
+    /**
+     * Set the margin.
+     */
     inline void set_margin(default_dim_type margin)
     {
         if (detail::change_if_diff<>(m_margin, margin))
@@ -513,8 +535,14 @@ public:
         }
     }
 
+    /**
+     * Get the margin.
+     */
     inline default_dim_type margin() const { return m_margin; }
 
+    /**
+     * Set the border.
+     */
     inline void set_border(default_dim_type border)
     {
         if (detail::change_if_diff<>(m_border, border))
@@ -526,11 +554,19 @@ public:
 
     inline default_dim_type border() const { return m_border; }
 
+    /**
+     * Set the horizontal and vertical ratio.
+     *
+     * @note This is the same as calling Widget::set_ratio(ratio, ratio).
+     */
     inline void set_ratio(default_dim_type ratio)
     {
         set_ratio(ratio, ratio);
     }
 
+    /**
+     * Set the ratio.
+     */
     inline void set_ratio(default_dim_type horizontal,
                           default_dim_type vertical)
     {
@@ -540,6 +576,9 @@ public:
             parent_layout();
     }
 
+    /**
+     * Set the vertical ratio.
+     */
     inline void set_vertical_ratio(default_dim_type vertical)
     {
         if (detail::change_if_diff<>(m_vertical_ratio, vertical))
@@ -548,6 +587,9 @@ public:
 
     inline default_dim_type vertical_ratio() const { return m_vertical_ratio; }
 
+    /**
+     * Set the horizontal ratio.
+     */
     inline void set_horizontal_ratio(default_dim_type horizontal)
     {
         if (detail::change_if_diff<>(m_horizontal_ratio, horizontal))
@@ -556,6 +598,9 @@ public:
 
     inline default_dim_type horizontal_ratio() const { return m_horizontal_ratio; }
 
+    /**
+     * Set the Y ratio.
+     */
     inline void set_yratio(default_dim_type yratio)
     {
         if (detail::change_if_diff<>(m_yratio, yratio))
@@ -564,6 +609,9 @@ public:
 
     inline default_dim_type yratio() const { return m_yratio; }
 
+    /**
+     * Set the X ratio.
+     */
     inline void set_xratio(default_dim_type xratio)
     {
         if (detail::change_if_diff<>(m_xratio, xratio))
@@ -597,7 +645,7 @@ public:
     virtual void paint_to_file(const std::string& filename = std::string());
 
     /**
-     * Dump the state of the Widget.
+     * Dump the Widget state.
      *
      * Dump the state of the Widget to the specified ostream.
      * @param[in,out] out The output stream.
@@ -616,22 +664,24 @@ public:
     virtual void walk(walk_callback_t callback, int level = 0);
 
     /**
-     * Get the current focus state of the widget.
+     * Get the current focus state.
+     *
+     * @return True if in focus.
      */
     virtual bool focus() const { return m_focus; }
 
     /**
-     * Set the widget's theme to a new theme.
+     * Set the Widget's theme to a new theme.
      */
     void set_theme(const Theme& theme);
 
     /**
-     * Reset the widget's Theme to the default Theme.
+     * Reset the Widget's Theme to the default Theme.
      */
     void reset_theme();
 
     /**
-     * Set the boxtype of the widget.
+     * Set the boxtype.
      */
     inline void set_boxtype(const Theme::boxtype& type)
     {
@@ -639,6 +689,9 @@ public:
             damage();
     }
 
+    /**
+     * Get the boxtype.
+     */
     inline Theme::boxtype boxtype() const
     {
         return m_boxtype;
@@ -711,7 +764,7 @@ public:
     virtual Rect content_area() const;
 
     /**
-     * Perform layout of the widget.
+     * Perform layout of the Widget.
      */
     virtual void layout();
 
@@ -827,7 +880,7 @@ private:
     bool m_focus{false};
 
     /**
-     * The boxtype of the widget.
+     * The boxtype.
      */
     Theme::boxtype m_boxtype{Theme::boxtype::none};
 
