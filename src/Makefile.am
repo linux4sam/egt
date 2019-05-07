@@ -43,6 +43,7 @@ detail/filesystem.cpp \
 detail/imagecache.cpp \
 detail/layout.cpp \
 detail/mousegesture.cpp \
+detail/object.cpp \
 detail/resource.cpp \
 detail/string.cpp \
 detail/windowimpl.cpp \

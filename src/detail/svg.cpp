@@ -3,13 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <egt/canvas.h>
-#include <egt/detail/imagecache.h>
-#include <egt/detail/svg.h>
+#include "egt/canvas.h"
+#include "egt/detail/imagecache.h"
+#include "egt/detail/svg.h"
 #include <librsvg/rsvg.h>
 
 using namespace std;

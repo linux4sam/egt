@@ -47,11 +47,10 @@ std::string trim(const std::string& source, const std::string& t)
 void tokenize(std::string str, char delimiter, std::vector<std::string>& tokens)
 {
     size_t start = str.find_first_not_of(delimiter);
-    size_t end = start;
 
     while (start != std::string::npos)
     {
-        end = str.find(delimiter, start);
+        auto end = str.find(delimiter, start);
         tokens.push_back(str.substr(start, end - start));
         start = str.find_first_not_of(delimiter, end);
     }

@@ -97,7 +97,7 @@ public:
     /**
      * Move to a point.
      *
-     * @param[in] p The point.
+     * @param[in] point The point.
      */
     template<class T>
     Painter& draw(const PointType<T, compatible::normal>& point)

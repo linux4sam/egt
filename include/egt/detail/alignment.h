@@ -29,6 +29,10 @@ namespace detail
  * @param[in] bounding The bounding box to position inside of.
  * @param[in] align The alignment setting to use for positioning.
  * @param[in] padding Padding to use when positioning.
+ * @param[in] horizontal_ratio Horizontal ratio value relative to bounding.
+ * @param[in] vertical_ratio Vertical ratio value relative to bounding.
+ * @param[in] xratio X ratio value relative to bounding.
+ * @param[in] yratio Y ratio value relative to bounding.
  *
  * @todo Add padding and border in addition to margin.
  */
@@ -51,6 +55,8 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
  * a widget that has both text and an image.  The first rectangle is aligned
  * to the main rectangle.  The second rectangle is aligned relative to the
  * first rectangle.
+ *
+ * @deprecated Use layout mechanics instead.
  */
 void double_align(const Rect& main,
                   const Size& fsize, alignmask first_align, Rect& first,

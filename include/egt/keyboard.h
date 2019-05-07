@@ -38,7 +38,7 @@ protected:
 class Panel : public NotebookTab
 {
 public:
-    Panel(std::vector<std::vector<std::shared_ptr<Key>>>  p,
+    Panel(std::vector<std::vector<std::shared_ptr<Key>>> k,
           Size size = Size(0, 0));
 
     void set_keyboard(Keyboard* keyboard);
