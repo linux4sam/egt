@@ -260,6 +260,7 @@ fi
 if test "x${have_gstreamer}" = xyes; then
    AC_SUBST(include_audio, ["#include <egt/audio.h>"])
    AC_SUBST(include_video, ["#include <egt/video.h>"])
+   AC_SUBST(include_camera, ["#include <egt/camera.h>"])
 fi
 
 AC_CHECK_HEADER([linux/fb.h], [have_fbdev=yes], [have_fbdev=no])

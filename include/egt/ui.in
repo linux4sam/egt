@@ -59,6 +59,7 @@
 
 @include_audio@
 @include_video@
+@include_camera@
 @include_http@
 
 #endif
