@@ -124,7 +124,7 @@ fi
 
 # Checks for header files.
 AC_PATH_X
-AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h])
+AC_CHECK_HEADERS([fcntl.h float.h inttypes.h locale.h stdint.h])
 AC_CHECK_HEADERS([stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h])
 AC_CHECK_HEADERS([unistd.h glob.h])
 
@@ -653,7 +653,15 @@ AC_CHECK_HEADER([libintl.h],
 AC_SUBST([NO_GETTEXT])
 
 if test -z "$NO_GETTEXT"; then
-    test -n "$LIBC_CONTAINS_LIBINTL" || LIBS="$LIBS -lintl"
+    if test -z "$LIBC_CONTAINS_LIBINTL"; then
+       AC_SEARCH_LIBS([gettext], [intl], [LIBS="$LIBS -lintl" have_libintl=yes], [have_libintl=no])
+    else
+       have_libintl=yes
+    fi
+fi
+AM_CONDITIONAL([HAVE_LIBINTL], [test "x${have_libintl}" = xyes])
+if test "x${have_libintl}" = xyes; then
+    AC_DEFINE(HAVE_LIBINTL, 1, [Have libintl support])
 fi
 
 AC_CHECK_PROG(MSGFMT, msgfmt, yes)
@@ -831,4 +839,6 @@ echo "  ALSA Sound             ${have_alsa:-no}"
 echo "  sndfile                ${have_sndfile:-no}"
 echo "  plplot                 ${have_plplot:-no}"
 echo "  Fontconfig             ${have_fontconfig:-no}"
+echo "  libintl                ${have_libintl:-no}"
+
 echo

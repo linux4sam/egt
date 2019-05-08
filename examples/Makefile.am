@@ -8,7 +8,9 @@ OPTIONAL =
 if HAVE_GSTREAMER
 OPTIONAL += video
 endif
+
 if HAVE_MSGFMT
+if HAVE_LIBINTL
 OPTIONAL += i18n
 endif
 if ENABLE_SNIPPETS
@@ -18,6 +20,7 @@ if HAVE_LIBRSVG
 OPTIONAL += resource
 endif
 SUBDIRS = $(OPTIONAL)
+endif
 
 CUSTOM_CXXFLAGS = \
 	-I$(top_srcdir)/include \

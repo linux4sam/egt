@@ -25,7 +25,9 @@
 #include <clocale>
 #include <csignal>
 #include <iostream>
+#ifdef HAVE_LIBINTL_H
 #include <libintl.h>
+#endif
 #include <regex>
 #include <string>
 #include <thread>
@@ -161,8 +163,10 @@ void Application::setup_locale(const std::string& name)
     if (!name.empty())
     {
         setlocale(LC_ALL, "");
+#ifdef HAVE_LIBINTL_H
         bindtextdomain(name.c_str(), (std::string(DATAPATH) + "/locale/").c_str());
         textdomain(name.c_str());
+#endif
     }
 }
 
@@ -200,7 +204,6 @@ void Application::setup_search_paths()
 void Application::setup_backend(bool primary)
 {
     detail::ignoreparam(primary);
-
     std::string backend;
 
     auto value = getenv("EGT_BACKEND");
