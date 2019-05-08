@@ -58,7 +58,7 @@ template<class T>
 std::string format(T value, int precision = 2)
 {
     std::ostringstream stream;
-    stream << std::fixed << std::setprecision(2) << value;
+    stream << std::fixed << std::setprecision(precision) << value;
     return stream.str();
 }
 

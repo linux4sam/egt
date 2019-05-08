@@ -204,7 +204,7 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
                            -(hw + 10.0) * yangle));
         painter.stroke();
 
-        auto text = detail::format(tick, 2);
+        auto text = detail::format(tick, 0);
         painter.set(widget.color(Palette::ColorId::text).color());
         auto size = painter.text_size(text);
         painter.draw(Point(-(hw + 30.0) * xangle - size.w / 2.0,
