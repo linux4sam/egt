@@ -106,7 +106,7 @@ AC_SUBST(WARN_CFLAGS)
 
 # Checks for header files.
 AC_PATH_X
-AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h glob.h])
 
 AC_ARG_ENABLE([debug],
   [AS_HELP_STRING([--disable-debug], [build without debugging support [default=yes]])],
