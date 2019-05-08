@@ -71,8 +71,8 @@ public:
         }
         else if (is_set(flags::right))
         {
-            m_oanim.starting(main_screen()->size().w);
-            m_oanim.ending(0);
+            m_oanim.starting(main_screen()->size().w - HANDLE_WIDTH);
+            m_oanim.ending(-HANDLE_WIDTH);
             m_canim.starting(m_oanim.ending());
             m_canim.ending(m_oanim.starting());
 
@@ -95,8 +95,8 @@ public:
         }
         else if (is_set(flags::bottom))
         {
-            m_oanim.starting(main_screen()->size().h);
-            m_oanim.ending(0);
+            m_oanim.starting(main_screen()->size().h - HANDLE_WIDTH);
+            m_oanim.ending(-HANDLE_WIDTH);
             m_canim.starting(m_oanim.ending());
             m_canim.ending(m_oanim.starting());
 
