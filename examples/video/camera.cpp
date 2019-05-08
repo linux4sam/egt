@@ -125,7 +125,8 @@ int main(int argc, const char** argv)
     win.add(ctrlwindow);
     ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent); // Color(0x80808055));
 
-    HorizontalPositioner hpos(Rect(0, 0, ctrlwindow->w(), ctrlwindow->h()), 3, alignmask::center);
+    HorizontalBoxSizer hpos;
+    hpos.set_align(alignmask::center);
     hpos.set_name("grid");
     ctrlwindow->add(hpos);
 
@@ -170,7 +171,6 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
-    hpos.reposition();
     ctrlwindow->show();
 
     return app.run();

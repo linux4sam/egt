@@ -199,7 +199,7 @@ const std::string FileOpenDialog::get_selected()
 FileSaveDialog::FileSaveDialog(const std::string& title, const Rect& rect)
     : FileDialog(title, rect),
       m_grid(std::make_shared<StaticGrid>(Rect(Size(rect.w, (rect.h * 0.10))), Tuple(3, 1), 1)),
-      m_hpositioner(std::make_shared<HorizontalPositioner>(Rect(0, 0, rect.w, (rect.h * 0.10)), 1)),
+      m_hpositioner(std::make_shared<HorizontalBoxSizer>()),
       m_fileselect_box(std::make_shared<TextBox>(Rect(0, 0, rect.w * 0.70, (rect.h * 0.10)))),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))

@@ -25,6 +25,8 @@ public:
           m_moving(true),
           m_scaled(false)
     {
+        this->ncflags().set(Widget::flag::grab_mouse);
+
         m_fscale = (double)main_screen()->size().w / (double)T::w();
         if (m_fscale <= 0)
             m_fscale = 1.0;
@@ -148,8 +150,7 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::black);
 
-    shared_ptr<VideoWindow> window;
-    window = make_shared<MyVideoWindow<VideoWindow>>(Rect(0, 0, w, h), argv[1]);
+    auto window = make_shared<MyVideoWindow<VideoWindow>>(Rect(0, 0, w, h), argv[1]);
     window->set_name("video");
     window->set_align(alignmask::center);
     win.add(window);
@@ -166,13 +167,13 @@ int main(int argc, const char** argv)
         return 0;
     }, {eventid::event2});
 
-    shared_ptr<Window> ctrlwindow;
-    ctrlwindow = make_shared< Window>(Size(win.w(), win.h() * 0.12));
+    auto ctrlwindow = make_shared< Window>(Size(win.w(), 72));
     ctrlwindow->set_align(alignmask::bottom | alignmask::center);
     win.add(ctrlwindow);
     ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent); // Color(0x80808055));
 
-    HorizontalPositioner hpos(Rect(0, 0, ctrlwindow->w(), ctrlwindow->h()), 3, alignmask::center);
+    HorizontalBoxSizer hpos;
+    hpos.resize(ctrlwindow->size());
     hpos.set_name("grid");
     ctrlwindow->add(hpos);
 
@@ -195,12 +196,13 @@ int main(int argc, const char** argv)
         return 0;
     }, {eventid::pointer_click});
 
-    Slider position(Rect(Size(ctrlwindow->w() * 0.40, ctrlwindow->h())), 0, 100, 0, orientation::horizontal);
+    Slider position(0, 100, 0, orientation::horizontal);
+    position.set_width(ctrlwindow->w() * 0.20);
+    position.set_align(alignmask::expand_vertical);
     hpos.add(position);
     position.set_color(Palette::ColorId::text_highlight, Palette::blue);
     position.slider_flags().set({Slider::flag::round_handle});
-    position.set_readonly(0);
-    position.disable();
+    position.set_readonly(true);
 
     PeriodicTimer postimer(std::chrono::milliseconds(200));
     postimer.on_timeout([&position, window]()
@@ -294,7 +296,6 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
-    hpos.reposition();
     ctrlwindow->show();
     window->show();
     win.show();
