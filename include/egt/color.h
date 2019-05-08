@@ -27,10 +27,10 @@ inline namespace v1
 {
 
 /**
- * @brief 32 bit RGBA color.
+ * 32 bit RGBA color.
  *
- * This manages the definition of a color, internally stored as seperate
- * red, gleen, blue, and alpha components.
+ * This manages the definition of a color, internally stored as separate
+ * red, green, blue, and alpha components.
  */
 class Color
 {
@@ -116,7 +116,7 @@ public:
     }
 
     //@{
-    /** @brief RGBA component value as a float from 0.0 to 1.0. */
+    /** RGBA component value as a float from 0.0 to 1.0. */
     inline float redf() const { return m_r / 255.; }
     inline float greenf() const { return m_g / 255.; }
     inline float bluef() const { return m_b / 255.; }
@@ -124,7 +124,7 @@ public:
     //@}
 
     //@{
-    /** @brief Set RGBA component value as a float from 0.0 to 1.0. */
+    /** Set RGBA component value as a float from 0.0 to 1.0. */
     inline void redf(float v) { m_r = v * 255.; }
     inline void greenf(float v) { m_g = v * 255.; }
     inline void bluef(float v) { m_b = v * 255.; }
@@ -132,7 +132,7 @@ public:
     //@}
 
     //@{
-    /** @brief RGBA component value as value from 0 to 255. */
+    /** RGBA component value as value from 0 to 255. */
     inline uint32_t red() const { return m_r; }
     inline uint32_t green() const { return m_g; }
     inline uint32_t blue() const { return m_b; }
@@ -140,7 +140,7 @@ public:
     //@}
 
     //@{
-    /** @brief Set RGBA component value individually from 0 to 255. */
+    /** Set RGBA component value individually from 0 to 255. */
     inline void red(uint32_t r) { m_r = r & 0xff; }
     inline void green(uint32_t g) { m_g = g & 0xff; }
     inline void blue(uint32_t b) { m_b = b & 0xff; }
@@ -189,7 +189,7 @@ public:
     }
 
     /**
-     * Return a 32 bit ARGB pre-multipled alpha pixel value for this color.
+     * Return a 32 bit ARGB pre-multiplied alpha pixel value for this color.
      */
     inline uint32_t prepixel_argb() const
     {

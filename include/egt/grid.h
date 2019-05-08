@@ -23,7 +23,7 @@ inline namespace v1
 {
 
 /**
- * @brief Static grid organization for widgets.
+ * Static grid organization for widgets.
  *
  * A static grid that does not perform any drawing, but controls the
  * size and position of any widget added into a grid.
@@ -176,7 +176,7 @@ public:
     virtual void remove(Widget* widget) override;
 
     /**
-     * Reposition all child widgets.
+     * Re-position all child widgets.
      *
      * @note You should *not* have to manually call this under normal
      * circumstances.
@@ -230,9 +230,9 @@ protected:
 };
 
 /**
- * @brief StaticGrid with selectable cells.
+ * StaticGrid with select-able cells.
  *
- * A StaticGrid where each item is visually selectable with a highlighted
+ * A StaticGrid where each item is visually select-able with a highlighted
  * border.
  *
  * @ingroup sizers

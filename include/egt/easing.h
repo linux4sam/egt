@@ -19,7 +19,7 @@ using float_t = float;
 
 /**
  * @defgroup easing_functions Animation Easing Functions
- * @brief Predefined animation easing functions.
+ * Predefined animation easing functions.
  * @{
  */
 float_t easing_linear(float_t p);

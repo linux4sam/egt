@@ -20,11 +20,11 @@ inline namespace v1
 {
 
 /**
- * @brief Manages a font and properties of a font.
+ * Manages a font and properties of a font.
  *
  * A Font consists of a type face, a size, and a weight. The font face must
  * be installed on the system in order to use it.  Usually, if the specified
- * fonr face cannot be found on the system, a similar font face will be
+ * font face cannot be found on the system, a similar font face will be
  * selected.
  */
 class Font

@@ -119,7 +119,7 @@ ComboBox::ComboBox(const Rect& rect) noexcept
 
 /**
  * @todo ComboBox needs the ability to update list, and this needs to
- * be propigated to ComboBoxPopup, which right now won't because it only
+ * be propagated to ComboBoxPopup, which right now won't because it only
  * happens in constructor.
  */
 

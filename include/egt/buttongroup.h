@@ -21,7 +21,7 @@ inline namespace v1
 class Button;
 
 /**
- * @brief Button group.
+ * Button group.
  *
  * Several buttons can be added to a group. A button must belong to
  * only one group.

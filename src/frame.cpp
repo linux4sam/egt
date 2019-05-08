@@ -247,7 +247,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
     Rect crect = rect;
 
     // if this frame does not have a screen, it means the damage rect is in
-    // cordinates of some parent frame, so we have to adjust the physical origin
+    // coordinates of some parent frame, so we have to adjust the physical origin
     // and take it into account when looking at children, who's coordinates are
     // respective of this frame
     if (!has_screen())

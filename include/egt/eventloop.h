@@ -38,7 +38,7 @@ struct EventLoopImpl;
 using event_callback = std::function<void ()>;
 
 /**
- * @brief Event loop interface.
+ * Event loop interface.
  */
 class EventLoop : public detail::noncopyable
 {
@@ -52,7 +52,7 @@ public:
     asio::io_context& io();
 
     /**
-     * Wait for an event to occure.
+     * Wait for an event to occur.
      */
     virtual int wait();
 
@@ -75,7 +75,7 @@ public:
     /**
      * Add a callback to be called any time the event loop is idle.
      *
-     * This is useful for executing long running tasks that shold otherwise
+     * This is useful for executing long running tasks that should otherwise
      * not impact any other event handling performance.
      */
     void add_idle_callback(event_callback func);

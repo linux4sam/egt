@@ -21,7 +21,7 @@ inline namespace v1
 {
 
 /**
- * @brief Radial dial widget that a user uses to select a value.
+ * Radial dial widget that a user uses to select a value.
  *
  * @image html widget_radial.png
  * @image latex widget_radial.png "widget_radial" width=5cm

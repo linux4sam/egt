@@ -24,7 +24,7 @@ inline namespace v1
 void dump_timers(std::ostream& out);
 
 /**
- * @brief Basic one shot timer.
+ * Basic one shot timer.
  *
  * This is a timer that will fire once after the specified duration.
  * To handle the timeout, call on_timeout with a callback.
@@ -111,7 +111,7 @@ public:
      * Change the duration of the timer.
      *
      * This will stop the timer, change the duration, and restart the timer
-     * with the new duration if the timer was alrady running.
+     * with the new duration if the timer was already running.
      */
     virtual void change_duration(std::chrono::milliseconds duration);
 
@@ -125,7 +125,7 @@ public:
      *
      * This will invoke any callback registered with add_handler(). If you
      * override this you must make sure to call Timer::timeout() or
-     * equivelant if you want callbacks to still be called.
+     * equivalent if you want callbacks to still be called.
      */
     virtual void timeout();
 
@@ -187,7 +187,7 @@ private:
 };
 
 /**
- * @brief Periodic timer.
+ * Periodic timer.
  *
  * This is a timer that will keep firing at the duration interval until it
  * is stopped by calling cancel().

@@ -21,7 +21,7 @@ inline namespace v1
 {
 
 /**
- * @brief Color palette.
+ * Color palette.
  *
  * The color Palette defines a bank of colors used by the Theme, and ultimately
  * widgets.
@@ -37,7 +37,7 @@ public:
 
     /**
      * @{
-     * @brief Pre-defined color.
+     * Pre-defined color.
      * See https://www.w3.org/TR/css-color-3/
      */
     constexpr static Color transparent = Color(0x00000000);

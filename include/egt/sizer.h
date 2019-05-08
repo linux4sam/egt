@@ -27,7 +27,7 @@ inline namespace v1
  */
 
 /**
- * @brief Positions and sizes widgets by orientation.
+ * Positions and sizes widgets by orientation.
  *
  * BoxSizer will position widgets added to it in a horizontal or vertical
  * orientation. The BoxSizer can be homogeneous, which means all widgets will be
@@ -154,7 +154,7 @@ public:
 
 #if 1
 /**
- * @brief Positions widgets based on an orientation.
+ * Positions widgets based on an orientation.
  * @deprecated This will be removed.
  */
 class OrientationPositioner : public Frame
@@ -279,7 +279,7 @@ protected:
 };
 
 /**
- * @brief Positions Widgets horizontally.
+ * Positions Widgets horizontally.
  * @deprecated This will be removed.
  */
 class HorizontalPositioner : public Frame

@@ -119,7 +119,7 @@ void double_align(const Rect& main,
     }
 
     /*
-     * The basic algoithm is to position the first target, then position the
+     * The basic algorithm is to position the first target, then position the
      * second target relative to it.  If that results in the second target
      * going out of bounds of the main rectangle, move both inside the
      * rectangle.

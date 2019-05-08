@@ -22,7 +22,7 @@ inline namespace v1
 {
 
 /**
- * @brief SideBoard widget for a sliding board that slides on and off the screen.
+ * SideBoard widget for a sliding board that slides on and off the screen.
  *
  * This is a widget that manages a Window that slides on and off the screen,
  * with only a small portion of it shown so that sliding it out can be

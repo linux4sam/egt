@@ -63,7 +63,7 @@ Timer& Timer::operator=(const Timer& rhs) noexcept
 
 void Timer::start()
 {
-    // error::operation_aborted occures when expires_from_now() is called on the
+    // error::operation_aborted occurs when expires_from_now() is called on the
     // timer while it is pending, we handle this ourselves with m_running
     m_running = false;
     m_timer.expires_from_now(m_duration);
@@ -154,7 +154,7 @@ PeriodicTimer::PeriodicTimer(std::chrono::milliseconds interval) noexcept
 
 void PeriodicTimer::start()
 {
-    // error::operation_aborted occures when expires_from_now() is called on the
+    // error::operation_aborted occurs when expires_from_now() is called on the
     // timer while it is pending, we handle this ourselves with m_running
     m_running = false;
     m_timer.expires_from_now(m_duration);

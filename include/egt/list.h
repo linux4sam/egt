@@ -25,7 +25,7 @@ inline namespace v1
 {
 
 /**
- * @brief ListBox string helper.
+ * ListBox string helper.
  *
  * Light wrapper around a Label to make each item in the ListBox a little bit
  * bigger.
@@ -72,7 +72,7 @@ struct StringItem : public Label
 };
 
 /**
- * @brief ListBox that manages a selectable list of widgets.
+ * ListBox that manages a select-able list of widgets.
  *
  * Only one item may be selected at a time. The items are based on Widget, so
  * any Widget can be used.

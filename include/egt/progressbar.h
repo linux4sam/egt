@@ -15,7 +15,7 @@ inline namespace v1
 {
 
 /**
- * @brief Displays a progress bar based on a value.
+ * Displays a progress bar based on a value.
  *
  * @ingroup controls
  */
@@ -52,7 +52,7 @@ public:
 };
 
 /**
- * @brief Displays a spinning progress meter.
+ * Displays a spinning progress meter.
  *
  * @ingroup controls
  */
@@ -89,7 +89,7 @@ public:
 };
 
 /**
- * @brief Displays a level meter based on a value.
+ * Displays a level meter based on a value.
  *
  * @image html widget_levelmeter.png
  * @image latex widget_levelmeter.png "widget_levelmeter" width=5cm
@@ -146,7 +146,7 @@ protected:
 };
 
 /**
- * @brief Displays an analog meter based on a percentage value.
+ * Displays an analog meter based on a percentage value.
  *
  * @image html widget_analogmeter.png
  * @image latex widget_analogmeter.png "widget_analogmeter" width=5cm

@@ -52,7 +52,7 @@ Window*& modal_window();
 std::vector<Window*>& windows();
 
 /**
- * @brief Hint used for configuring Window backends.
+ * Hint used for configuring Window backends.
  */
 enum class windowhint
 {
@@ -85,7 +85,7 @@ enum class windowhint
 std::ostream& operator<<(std::ostream& os, const windowhint& event);
 
 /**
- * @brief A Window is a Widget that handles drawing to a Screen.
+ * A Window is a Widget that handles drawing to a Screen.
  *
  * A Window is a Frame that optionally manages and draws to a Screen. If the
  * Window does not have a Screen itself, it will refer to its parent for the
@@ -181,10 +181,10 @@ public:
     }
 
     /*
-     * Damage rectangles propogate up the widget tree and stop at a top level
-     * widget, which can only be a window. As it propogates up, the damage
+     * Damage rectangles propagate up the widget tree and stop at a top level
+     * widget, which can only be a window. As it propagates up, the damage
      * rectangle origin changes value to respect the current frame.  When
-     * drawing those rectangles, as they propogate down the widget hierarchy
+     * drawing those rectangles, as they propagate down the widget hierarchy
      * the opposite change happens to the rectangle origin.
      */
     virtual void top_draw() override
@@ -270,9 +270,9 @@ protected:
 };
 
 /**
- * @brief Top level Window.
+ * Top level Window.
  *
- * This could also be calld the main Window.
+ * This could also be called the main Window.
  */
 class TopWindow : public Window
 {

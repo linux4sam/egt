@@ -19,7 +19,7 @@ inline namespace v1
 class Frame;
 
 /**
- * @brief This is a slider that can be used to select value from a range.
+ * This is a slider that can be used to select value from a range.
  *
  * @image html widget_slider1.png
  * @image latex widget_slider1.png "widget_slider1" width=5cm

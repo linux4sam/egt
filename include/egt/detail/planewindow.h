@@ -23,7 +23,7 @@ namespace detail
 /**
  * A PlaneWindow backend uses a hardware overlay as a Screen.
  *
- * PlaneWindow seperates "changing attributes" and "applying attributes".
+ * PlaneWindow separates "changing attributes" and "applying attributes".
  * This maps to the libplanes plane_apply() function. Which, is the same way
  * event handle() vs. draw() works in this toolkit. This is done as an
  * optimization to queue applying changes to a plane.

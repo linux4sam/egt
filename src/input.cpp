@@ -23,7 +23,7 @@ Input::Input()
 
 /**
  * @todo No mouse positions should be allowed off the screen box().  This is
- * possible with some input devices currentl and we need to limit.  Be careful
+ * possible with some input devices currently and we need to limit.  Be careful
  * not to drop events (like pointer up) when correcting.
  */
 void Input::dispatch(eventid event)

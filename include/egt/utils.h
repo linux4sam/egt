@@ -85,7 +85,7 @@ reverse_range<T> reverse_iterate(T& x)
 }
 
 /**
- * Utility base class to make a derived class non-copyable.
+ * Utility base class to make a derived class non-copy-able.
  */
 class noncopyable
 {

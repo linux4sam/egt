@@ -24,7 +24,7 @@ namespace egt
 inline namespace v1
 {
 /**
- * @brief Scrollwheel widget.
+ * Scrollwheel widget.
  *
  * Manages a list of selectable items. Only the one selected is shown.
  * Navigation through the list is done with the top and bottom arrows.

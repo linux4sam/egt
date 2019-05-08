@@ -37,38 +37,38 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
-     * @brief Sets the media file to the current pipeline
+     * Sets the media file to the current pipeline
      * @param filename of a media file
      * @return true if success
      */
     bool set_media(const std::string& filename);
 
     /**
-     * @brief Send pipeline to play state
+     * Send pipeline to play state
      * @return true if success
      */
     bool play();
 
     /**
-     * @brief pause Send Pipeline to pause state
+     * pause Send Pipeline to pause state
      * @return true if success
      */
     bool pause();
 
     /**
-     * @brief playing check if Pipeline is in play state
+     * playing check if Pipeline is in play state
      * @return true if success
      */
     virtual bool playing() const;
 
     /**
-     * @brief position gets the current position of video getting played
+     * position gets the current position of video getting played
      * @return 64bit time
      */
     uint64_t position();
 
     /**
-     * @brief duration gets the duration of video getting played
+     * duration gets the duration of video getting played
      * @return 64bit time
      */
     uint64_t duration();
@@ -76,38 +76,38 @@ public:
     void move(const Point& point);
 
     /**
-     * @brief Adjusts the volume of the audio in the video being played
+     * Adjusts the volume of the audio in the video being played
      * @param volume desired volume in the range of 0 (no sound) to 10 (normal sound)
      * @return true if success
      */
     bool set_volume(double volume);
 
     /**
-     * @brief gets the volume of the audio in the video being played
+     * gets the volume of the audio in the video being played
      * @return volume value set for video being played
      */
     double get_volume();
 
     /**
-     * @brief gets the scale value
+     * gets the scale value
      */
     float scale();
 
     /**
-     * @brief sets the scale value
+     * sets the scale value
      */
     void set_scale(float value);
 
     /**
-     * @brief seek to time of the video being played
+     * seek to time of the video being played
      * @param time in nanoseconds
      * @return true if success
      */
     bool seek(int64_t time_nanoseconds);
 
     /**
-     * @brief play video in loopback
-     * @param bool to enable/disbale loopback
+     * play video in loop-back
+     * @param bool to enable/disable loop-back
      */
     void set_loopback(bool enable = false)
     {
@@ -115,7 +115,7 @@ public:
     }
 
     /**
-     * @brief get loopback state
+     * get loop-back state
      * @return true/false based on set_loopback.
      */
     bool get_loopback()
@@ -130,7 +130,7 @@ public:
     }
 
     /**
-     * @brief get Error Message received from pipeline
+     * get Error Message received from pipeline
      */
     std::string get_error_message()
     {

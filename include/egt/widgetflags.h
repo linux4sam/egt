@@ -23,7 +23,7 @@ inline namespace v1
 {
 
 /**
- * @brief Alignment flags.
+ * Alignment flags.
  */
 enum class alignmask : uint32_t
 {
@@ -32,7 +32,7 @@ enum class alignmask : uint32_t
     /**
      * Center alignment is a weak alignment both horizontal and
      * vertical. To break one of those dimensions to another
-     * alignment, specify it in addiiton to center.  If both
+     * alignment, specify it in addition to center.  If both
      * are broken, center has no effect.
      */
     center_horizontal = (1 << 0),
@@ -248,7 +248,7 @@ inline std::shared_ptr<T>& align(std::shared_ptr<T>& widget, alignmask a)
 }
 
 /**
- * @brief Generic orientation flags.
+ * Generic orientation flags.
  */
 enum class orientation
 {

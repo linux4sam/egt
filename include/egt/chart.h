@@ -23,7 +23,7 @@ inline namespace v1
 {
 
 /**
- * @brief Line chart widget.
+ * Line chart widget.
  *
  */
 class LineChart : public Widget
@@ -118,7 +118,7 @@ protected:
 };
 
 /**
- * @brief Pie chart widget.
+ * Pie chart widget.
  */
 class PieChart : public Widget
 {

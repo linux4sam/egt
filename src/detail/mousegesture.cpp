@@ -76,7 +76,7 @@ eventid MouseGesture::handle(eventid event)
                     m_dragging = true;
                     dragging_started = true;
 
-                    /// @bug This may be a problem.  It is possble the long click
+                    /// @bug This may be a problem.  It is possible the long click
                     /// event will still be generated.
                     m_long_click_timer.cancel();
                 }

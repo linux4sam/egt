@@ -27,7 +27,7 @@ class Widget;
 class Painter;
 
 /**
- * @brief Drawable function object.
+ * Drawable function object.
  *
  * This class defines what is necessary to implement the draw() function of a
  * widget type.
@@ -49,7 +49,7 @@ public:
 };
 
 /**
- * @brief Manager of the Drawable for each widget type.
+ * Manager of the Drawable for each widget type.
  *
  * The Button draw() method calls the drawable like:
  * @code
@@ -96,12 +96,12 @@ typename Drawable<T>::draw_t Drawer<T>::m_drawable = T::default_draw;
 class Color;
 
 /**
- * @brief Customizable characteristics for drawing widgets.
+ * Customizable characteristics for drawing widgets.
  *
- * Theme implements common charactistics of drawing widgets, used mostly
+ * Theme implements common characteristics of drawing widgets, used mostly
  * by the theme.
  *
- * This can be overloaded and supplied with a different renderer in addiiton to
+ * This can be overloaded and supplied with a different renderer in addition to
  * setting up a custom palette.
  */
 class Theme
@@ -234,7 +234,7 @@ ENABLE_BITMASK_OPERATORS(Theme::boxtype)
 /**
  * Get the global theme.
  *
- * This is the point to get/set the global theme.  Keep in mind that
+ * This is the point to get and modify the global theme.  Keep in mind that
  * themes can be set on individual widgets, in which case, they are
  * disconnected from the global theme.
  */

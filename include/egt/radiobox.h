@@ -20,7 +20,7 @@ inline namespace v1
 class Painter;
 
 /**
- * @brief Boolean RadioBox.
+ * Boolean RadioBox.
  *
  * @ingroup controls
  */

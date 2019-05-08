@@ -15,7 +15,7 @@ inline namespace v1
 {
 
 /**
- * @brief Manages an unbounded value.
+ * Manages an unbounded value.
  *
  * While the value is technically unbounded, a type of bool will only allow
  * a boolean value.
@@ -65,7 +65,7 @@ protected:
 };
 
 /**
- * @brief Manages a value in a range.
+ * Manages a value in a range.
  *
  * A Widget that manages a value that must reside between a min and max
  * value range.

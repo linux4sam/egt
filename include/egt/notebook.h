@@ -22,7 +22,7 @@ inline namespace v1
 {
 
 /**
- * @brief A single layer of a Notebook.
+ * A single layer of a Notebook.
  */
 class NotebookTab : public Frame
 {
@@ -60,7 +60,7 @@ public:
 };
 
 /**
- * @brief Allows a collection of NotebookTab widgets to be shown one at a time.
+ * Allows a collection of NotebookTab widgets to be shown one at a time.
  *
  * @ingroup controls
  */

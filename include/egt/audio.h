@@ -47,32 +47,32 @@ public:
     AudioPlayer();
 
     /**
-     * @brief Sets the media file URI to the current pipeline
+     * Sets the media file URI to the current pipeline
      * @param uri file URI
      * @return true if success
      */
     virtual bool set_media(const std::string& uri);
 
     /**
-     * @brief Send pipeline to play state
+     * Send pipeline to play state
      * @return true if success
      */
     virtual bool play(bool mute = false, int volume = 100);
 
     /**
-     * @brief pause Send Pipeline to pause state
+     * pause Send Pipeline to pause state
      * @return true if success
      */
     virtual bool pause();
 
     /**
-     * @brief unpause Send Pipeline to unpaused state
+     * unpause Send Pipeline to unpaused state
      * @return true if success
      */
     virtual bool unpause();
 
     /**
-     * @brief Adjusts the volume of the audio being played.
+     * Adjusts the volume of the audio being played.
      *
      * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
      * @return true if success
@@ -81,7 +81,7 @@ public:
     virtual int get_volume() const;
 
     /**
-     * @brief Mutes the audio being played.
+     * Mutes the audio being played.
      *
      * @param mute true if the audio is to be muted
      * @return true if success
@@ -116,7 +116,7 @@ public:
 protected:
 
     /**
-     * @brief null Send pipeline to null state
+     * null Send pipeline to null state
      * @return true if success
      */
     bool null();

@@ -22,13 +22,13 @@ inline namespace v1
 {
 
 /**
- * @brief Image resource used for drawing or displaying.
+ * Image resource used for drawing or displaying.
  *
  * This class by default shares the internal surface pointer with anything
  * else using the surface.  To force this class to keep its own copy, call
  * the copy() function.
  *
- * If a filename is used to contruct an Image, the detail::ImageCache class
+ * If a filename is used to construct an Image, the detail::ImageCache class
  * will be used.
  *
  * @ingroup media

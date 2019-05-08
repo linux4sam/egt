@@ -39,10 +39,10 @@ std::string resolve_file_path(const std::string& filename);
  * Internal image cache.
  *
  * Provides an in-memory cache for images based on filename and scale. This
- * prevents multiple attempts at loading the same file as well as rescaling
+ * prevents multiple attempts at loading the same file as well as re-scaling
  * the image to the same scale multiple times.
  *
- * This is a tradeoff in consuming more memory instead of possibly
+ * This is a trade off in consuming more memory instead of possibly
  * constantly reloading or scaling the same image.
  */
 class ImageCache : public detail::noncopyable
@@ -66,12 +66,12 @@ public:
             float new_width, float new_height);
 
     /**
-     * Return the mimetype string for a filename.
+     * Return the mime type string for a filename.
      */
     static std::string get_mime_type(const std::string& filename);
 
     /**
-     * Return the mimetype string for a buffer.
+     * Return the mime type string for a buffer.
      */
     static std::string get_mime_type(const void* buffer, size_t length);
 

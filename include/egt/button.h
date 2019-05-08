@@ -33,7 +33,10 @@ class Painter;
  */
 
 /**
- * @brief Basic button widget.
+ * Basic button control.
+ *
+ * This presents a clickable control that can be used to respond to user input
+ * events.
  *
  * @ingroup controls
  *
@@ -121,7 +124,7 @@ private:
 };
 
 /**
- * @brief A button widget that can have an image and/or a label on it.
+ * A button widget that can have an image and/or a label on it.
  *
  * @ingroup controls
  */
@@ -208,7 +211,7 @@ protected:
 };
 
 /**
- * @brief Experimental namespace.
+ * Experimental namespace.
  *
  * This namespace contains unstable, broken, or otherwise incomplete things.
  */
@@ -216,7 +219,7 @@ namespace experimental
 {
 
 /**
- * @brief A special widget that has no content but receives events.
+ * A special widget that has no content but receives events.
  *
  * This is an invisible widget that can be used to handle events, like
  * input events.

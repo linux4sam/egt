@@ -264,7 +264,7 @@ void StaticGrid::reposition()
                                                       bounding,
                                                       widget->align());
 
-                // reposition/resize widget
+                // re-position/resize widget
                 widget->move(target.point());
                 widget->resize(target.size());
 

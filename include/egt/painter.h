@@ -22,7 +22,7 @@ inline namespace v1
 class Image;
 
 /**
- * @brief Drawing interface for 2D graphics.
+ * Drawing interface for 2D graphics.
  *
  * This is the interface for all 2D drawing primitives.
  */

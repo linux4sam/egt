@@ -17,7 +17,7 @@ inline namespace v1
 {
 
 /**
- * @brief Monitor CPU usage of the system.
+ * Monitor CPU usage of the system.
  */
 class CPUMonitorUsage
 {

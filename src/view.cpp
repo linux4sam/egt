@@ -161,7 +161,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
         m_vslider.draw(painter, rect);
 }
 
-/// @todo Hardcoded value
+/// @todo Hard-coded value
 const auto SLIDER_DIM = 10;
 
 Rect ScrolledView::content_area() const

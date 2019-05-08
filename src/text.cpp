@@ -557,8 +557,8 @@ void TextBox::hide_cursor()
 
 static const auto DEFAULT_TEXTBOX_SIZE = Size(100, 50);
 
-/// @todo this is not an acceptabe computation,
-/// especially for multiline text
+/// @todo this is not an acceptable computation,
+/// especially for multi-line text
 Size TextBox::min_size_hint() const
 {
     if (!m_text.empty())

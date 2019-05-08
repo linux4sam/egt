@@ -20,18 +20,18 @@
  */
 
 /**
- * @brief EGT framework namespace.
+ * EGT framework namespace.
  */
 namespace egt
 {
 /**
- * @brief EGT API version 1 namespace.
+ * EGT API version 1 namespace.
  */
 inline namespace v1
 {
 
 /**
- * @brief Application definition.
+ * Application definition.
  *
  * This is basically just a helper class that does standard setup for
  * inputs, outputs, the event loop, and more. It also acts as sort of a
@@ -41,7 +41,7 @@ class Application : public detail::noncopyable
 {
 public:
     /**
-     * @param[in] argc Aplication argument count.
+     * @param[in] argc Application argument count.
      * @param[in] argv Application argument array.
      * @param[in] primary Is this the primary display application.
      * @param[in] name Application name.  This is used for several things,
@@ -60,7 +60,7 @@ public:
     virtual int run();
 
     /**
-     * Get a reference to the internal eventloop of the application.
+     * Get a reference to the internal EventLoop of the application.
      */
     inline EventLoop& event() { return m_event; }
 

@@ -26,13 +26,13 @@ inline namespace v1
 {
 
 /**
- * @brief Input text box.
+ * Input text box.
  *
  * Supported Features:
  * - UTF-8 encoding
  * - Cursor movement
  * - Selection Copy/Delete
- * - Multiline
+ * - Multi-line
  *
  * @image html widget_textbox.png
  * @image latex widget_textbox.png "Widget Textbox" height=5cm
@@ -46,12 +46,12 @@ public:
     enum class flag
     {
         /**
-         * Support multiline
+         * Support multi-line
          */
         multiline,
 
         /**
-         * Wrap lines longer than the width of the textbox.  Must be multiline.
+         * Wrap lines longer than the width of the textbox.  Must be multi-line.
          */
         word_wrap,
     };
@@ -163,7 +163,7 @@ public:
     /**
      * Set the cursor to the specific position.
      *
-     * @param pos The nw cursor position.
+     * @param pos The new cursor position.
      */
     void cursor_set(size_t pos);
 

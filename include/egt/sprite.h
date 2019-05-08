@@ -29,7 +29,7 @@ class HardwareSprite;
 }
 
 /**
- * @brief Sprite widget that animates using a spite sheet Image.
+ * Sprite widget that animates using a spite sheet Image.
  */
 class Sprite : public Window
 {

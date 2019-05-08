@@ -24,7 +24,7 @@ namespace egt
 inline namespace v1
 {
 /**
- * @brief A Frame is a Widget that has children widgets.
+ * A Frame is a Widget that has children widgets.
  *
  * This base class basically contains the functionality for dealing with
  * children widgets.  A widget alone is a leaf node in the widget tree.
@@ -270,7 +270,7 @@ public:
 
     /**
      * @note Remember that when overriding this function as a Frame, you must call
-     * layout on each child Frame to propogate the layout.
+     * layout on each child Frame to propagate the layout.
      */
     virtual void layout() override;
 

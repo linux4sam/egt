@@ -34,7 +34,7 @@ struct eventid_hash
 };
 
 /**
- * @brief Base object class with fundamental properties.
+ * Base object class with fundamental properties.
  */
 class Object
 {

@@ -91,7 +91,7 @@ void Window::do_draw()
     if (m_damage.empty())
         return;
 
-    // bookeeping to make sure we don't damage() in draw()
+    // bookkeeping to make sure we don't damage() in draw()
     m_in_draw = true;
     detail::scope_exit reset([this]() { m_in_draw = false; });
 

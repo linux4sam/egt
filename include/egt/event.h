@@ -27,7 +27,7 @@ inline namespace v1
  */
 
 /**
- * @brief Event identifiers.
+ * Event identifiers.
  * @ingroup events
  */
 enum class eventid
@@ -36,7 +36,7 @@ enum class eventid
 
     //@{
     /**
-     * @brief Raw pointer events.
+     * Raw pointer events.
      * It's usually preferred to use the normal pointer events instead.
      */
     raw_pointer_down,
@@ -45,7 +45,7 @@ enum class eventid
     //@}
 
     //@{
-    /** @brief Pointer events. */
+    /** Pointer events. */
     pointer_click,
     pointer_dblclick,
     pointer_hold,
@@ -65,7 +65,7 @@ enum class eventid
     leave,
 
     //@{
-    /** @brief Keyboard event. */
+    /** Keyboard event. */
     keyboard_down,
     keyboard_up,
     keyboard_repeat,
@@ -97,7 +97,7 @@ enum class eventid
 std::ostream& operator<<(std::ostream& os, const eventid& event);
 
 /**
- * @brief Definitions for pointer buttons.
+ * Definitions for pointer buttons.
  */
 enum class pointer_button
 {
@@ -109,7 +109,7 @@ enum class pointer_button
 };
 
 /**
- * @brief Current event state for pointer.
+ * Current event state for pointer.
  * @ingroup events
  */
 struct Pointer
@@ -125,13 +125,13 @@ struct Pointer
     pointer_button button{pointer_button::none};
 
     /**
-     * The mouse point where eventid POINTER_DRAG_START occured.
+     * The mouse point where eventid POINTER_DRAG_START occurred.
      */
     DisplayPoint drag_start;
 };
 
 /**
- * @brief Current event state for keyboard.
+ * Current event state for keyboard.
  * @ingroup events
  */
 struct Keys
@@ -153,7 +153,7 @@ struct Keys
 };
 
 /**
- * @brief Information about the current outstanding event.
+ * Information about the current outstanding event.
  */
 namespace event
 {

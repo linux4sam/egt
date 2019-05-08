@@ -25,7 +25,7 @@ class Frame;
 class Painter;
 
 /**
- * @brief A Label of text.
+ * A Label of text.
  *
  * It handles no events, has a font and alignment, but otherwise is pretty
  * basic.
@@ -114,7 +114,7 @@ protected:
 };
 
 /**
- * @brief Label that also contains an Image.
+ * Label that also contains an Image.
  *
  * The interesting thing about this widget is the position of the text
  * relative to the image.  Alignment of txt usually works relative to the

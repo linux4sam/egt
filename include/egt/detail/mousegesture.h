@@ -84,7 +84,7 @@ protected:
     virtual void invoke_handlers(eventid event);
 
     /**
-     * Currently processessing subsequent events.
+     * Currently processing subsequent events.
      */
     bool m_active{false};
 

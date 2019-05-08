@@ -8,7 +8,7 @@
 
 /**
  * @file
- * @brief Working with file dialog popups.
+ * @brief Working with file dialog pop-ups.
  */
 
 #include <egt/button.h>

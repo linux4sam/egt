@@ -15,7 +15,7 @@ inline namespace v1
 {
 
 /**
- * @brief Utility class for managing a set of flags.
+ * Utility class for managing a set of flags.
  */
 template <class T>
 class Flags : public detail::Object
@@ -72,7 +72,7 @@ public:
     }
 
     /**
-     * Set the specified textbox flags.
+     * Set the specified flags.
      * @param flags Flags to set.
      * @return True if a new item was added.
      */

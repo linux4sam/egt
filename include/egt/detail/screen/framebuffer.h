@@ -24,7 +24,7 @@ namespace detail
 /**
  * Screen on a fbdev framebuffer.
  *
- * The framebuffer is internaly mmap()'ed and directly accessible.  The
+ * The framebuffer is internally mmap()'ed and directly accessible.  The
  * framebuffer does not manage multiple buffers.
  */
 class FrameBuffer : public Screen

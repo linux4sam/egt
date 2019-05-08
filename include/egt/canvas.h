@@ -21,7 +21,7 @@ inline namespace v1
 {
 
 /**
- * @brief Manages a unique drawing surface and context.
+ * Manages a unique drawing surface and context.
  *
  * This can be created and directly drawn to with Painter.
  *
@@ -90,7 +90,7 @@ protected:
     void copy(shared_cairo_surface_t surface);
 
     /**
-     * The surface of the canvase.
+     * The surface of the canvas.
      */
     shared_cairo_surface_t m_surface;
 

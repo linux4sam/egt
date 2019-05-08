@@ -25,7 +25,7 @@ inline namespace v1
 {
 /**
  * @defgroup geometry Geometry
- * @brief Objects for working with geometry.
+ * Objects for working with geometry.
  */
 
 using default_dim_type = int;
@@ -38,7 +38,7 @@ enum class compatible
 };
 
 /**
- * @brief Simple x,y coordinate.
+ * Simple x,y coordinate.
  * @ingroup geometry
  */
 template <class dim_t, compatible dim_c = compatible::normal>
@@ -170,7 +170,7 @@ using PointF = PointType<float, compatible::normal>;
 using DisplayPoint = PointType<default_dim_type, compatible::display>;
 
 /**
- * @brief Simple width and height.
+ * Simple width and height.
  * @ingroup geometry
  */
 template<class dim_t, compatible dim_c = compatible::normal>
@@ -314,7 +314,7 @@ using SizeF = SizeType<float, compatible::normal>;
 using Tuple = SizeType<int, compatible::tuple>;
 
 /**
- * @brief A rectangle.
+ * A rectangle.
  * @ingroup geometry
  *
  * A point and a size.
@@ -707,7 +707,7 @@ using Rect = RectType<default_dim_type, compatible::normal>;
 using RectF = RectType<float, compatible::normal>;
 
 /**
- * @brief A line, with a starting and ending point.
+ * A line, with a starting and ending point.
  * @ingroup geometry
  */
 template<class dim_t>
@@ -746,7 +746,7 @@ protected:
 using Line = LineType<default_dim_type>;
 
 /**
- * @brief An Arc consists of a radius and two angles.
+ * An Arc consists of a radius and two angles.
  * @ingroup geometry
  */
 template<class dim_t>
@@ -782,13 +782,13 @@ public:
 };
 
 /**
- * @brief Arc
+ * Arc
  * This is an Arc.
  */
 using Arc = ArcType<default_dim_type>;
 
 /**
- * @brief A basic circle with a center point and radius.
+ * A basic circle with a center point and radius.
  * @ingroup geometry
  */
 template<class dim_t>
