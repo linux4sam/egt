@@ -65,7 +65,7 @@ std::string format(T value, int precision = 2)
 /**
  * @brief Tokenize a std::string
  */
-void tokenize(std::string str, char delimiter, std::vector<std::string>& tokens);
+void tokenize(const std::string& str, char delimiter, std::vector<std::string>& tokens);
 
 /**
  * Join each item of a container with the specified delimiter between each item.
