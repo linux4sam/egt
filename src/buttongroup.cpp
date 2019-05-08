@@ -5,6 +5,7 @@
  */
 #include "egt/button.h"
 #include "egt/buttongroup.h"
+#include <cassert>
 
 using namespace std;
 
