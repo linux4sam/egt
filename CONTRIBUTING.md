@@ -105,3 +105,27 @@ make docs
 ```
 
 The resulting documentation will be in the *docs* folder.
+
+## Build/Generation Testing
+
+When making code or documentation changes and preparing commits, there are many
+different ways to build and test.  Here is an example of sort of a routine to
+run through and correct any errors/warnings seen.
+
+```sh
+make maintainer-clean
+./autogen.sh
+./configure
+make spellcheck
+make style
+make
+make docs
+./scripts/checkheaders.sh
+make cppcheck
+make tidy
+make dist
+tar xf libegt-*.tar.gz
+cd libegt-*
+./configure
+make
+```

@@ -98,3 +98,10 @@ ltmain.sh
 
 tidy:
 	@cd src && $(MAKE) $(AM_MAKEFLAGS) $@
+
+spellcheck:
+	@for f in `find $(top_srcdir)/docs/src/ $(top_srcdir)/include/ \
+		$(top_srcdir)/src/ $(top_srcdir)/examples/ -name '*.h' \
+		-o -name '*.c' -o -name '*.cpp' -o -name '*.dox'`; do \
+		aspell --mode=ccpp --dont-backup --personal=$(top_srcdir)/.aspell.en.pws check $$f; \
+	done
