@@ -101,11 +101,6 @@ public:
      * @param widget The widget to add, or nullptr.
      * @param column The column index.
      * @param row The row index.
-     *
-     * @todo remove align off both of the add() functions here. This is an
-     * API inconsistency and align needs to be controlled on the widget itself
-     * and not always overwritten or set again here. Which begs the question:
-     * what should the align default be or do we default to size of widget?
      */
     virtual void add(const std::shared_ptr<Widget>& widget, int column, int row);
 
@@ -207,7 +202,7 @@ public:
 
     virtual void select(int column, int row)
     {
-        /// TODO: make sure column and row are valid
+        /// @todo Make sure column and row are valid.
 
         bool c = detail::change_if_diff<>(m_selected_column, column);
         bool r = detail::change_if_diff<>(m_selected_row, row);

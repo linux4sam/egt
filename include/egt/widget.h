@@ -404,10 +404,12 @@ public:
     inline Point center() const { return box().center(); }
 
     /**
-     * Set the widget Palette.
+     * Set the widget Color Palette.
      *
-     * @todo Does this have to be a complete palette?  Should it be merged or
-     * just replace completely?
+     * This will replace any Palette instance currently owned by the Widget.
+     * This does not have to be a complete Palette, in which case the widget
+     * will default to the Theme palette if a Color is not found in this
+     * palette.
      *
      * @param palette The new palette to assign to the widget.
      * @note This will overwrite the entire widget Palette.

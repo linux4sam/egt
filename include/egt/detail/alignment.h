@@ -33,8 +33,6 @@ namespace detail
  * @param[in] vertical_ratio Vertical ratio value relative to bounding.
  * @param[in] xratio X ratio value relative to bounding.
  * @param[in] yratio Y ratio value relative to bounding.
- *
- * @todo Add padding and border in addition to margin.
  */
 Rect align_algorithm(const Rect& orig, const Rect& bounding,
                      alignmask align, default_dim_type padding = 0,
