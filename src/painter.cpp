@@ -107,7 +107,7 @@ Painter& Painter::draw(const Rect& rect, const Image& image)
     return *this;
 }
 
-Painter& Painter::draw(const std::string& str)
+Painter& Painter::draw(const std::string& str, const text_draw_flags& flags)
 {
     if (str.empty())
         return *this;
@@ -117,12 +117,23 @@ Painter& Painter::draw(const std::string& str)
 
     double x, y;
     cairo_text_extents_t textext;
-
     cairo_text_extents(m_cr.get(), str.c_str(), &textext);
+
+    cairo_get_current_point(m_cr.get(), &x, &y);
+
+    if (flags.is_set(text_flags::shadow))
+    {
+        AutoSaveRestore sr(*this);
+
+        cairo_move_to(m_cr.get(), x - textext.x_bearing + 5.,
+                      y - textext.y_bearing + 5.);
+        cairo_set_source_rgba(m_cr.get(), 0, 0, 0, 0.2);
+        cairo_show_text(m_cr.get(), str.c_str());
+        cairo_stroke(m_cr.get());
+    }
 
     AutoSaveRestore sr(*this);
 
-    cairo_get_current_point(m_cr.get(), &x, &y);
     cairo_move_to(m_cr.get(), x - textext.x_bearing,
                   y - textext.y_bearing);
     cairo_show_text(m_cr.get(), str.c_str());

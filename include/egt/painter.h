@@ -8,6 +8,7 @@
 
 #include <cairo.h>
 #include <egt/color.h>
+#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
@@ -220,10 +221,17 @@ public:
     virtual Painter& draw(const Rect& rect,
                           const Image& image);
 
+    enum class text_flags
+    {
+        shadow,
+    };
+
+    using text_draw_flags = Flags<text_flags>;
+
     /**
      * Draw text inside the specified rectangle.
      */
-    virtual Painter& draw(const std::string& str);
+    virtual Painter& draw(const std::string& str, const text_draw_flags& flags = text_draw_flags());
 
     virtual Painter& clip();
 
