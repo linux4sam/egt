@@ -32,7 +32,10 @@ public:
                 pixel_format format = pixel_format::xrgb8888,
                 windowhint hint = windowhint::overlay);
 
-    virtual void top_draw() override;
+    virtual void do_draw() override
+    {
+        // video windows don't draw
+    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -73,8 +76,6 @@ public:
      */
     uint64_t duration();
 
-    void move(const Point& point);
-
     /**
      * Adjusts the volume of the audio in the video being played
      * @param volume desired volume in the range of 0 (no sound) to 10 (normal sound)
@@ -87,16 +88,6 @@ public:
      * @return volume value set for video being played
      */
     double get_volume();
-
-    /**
-     * gets the scale value
-     */
-    float scale();
-
-    /**
-     * sets the scale value
-     */
-    void set_scale(float value);
 
     /**
      * seek to time of the video being played
@@ -154,7 +145,7 @@ protected:
     static void on_finished_cb(GstDiscoverer* discoverer, gpointer data);
 
 private:
-    std::shared_ptr<detail::GstDecoderImpl> m_decoderImpl;
+    std::unique_ptr<detail::GstDecoderImpl> m_decoderImpl;
     bool m_seekable;
     std::string m_vcodec;
     std::string m_acodec;

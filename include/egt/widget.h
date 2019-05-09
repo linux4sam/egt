@@ -208,19 +208,22 @@ public:
      *
      * @see Widget::resize()
      */
-    virtual void scale(int hratio, int vratio);
+    virtual void resize_by_ratio(int hratio, int vratio);
 
     /**
      * Scale the current size of the Widget given the ratio.
      *
      * @param[in] ratio Horizontal and vertical ratio of size().
      *
-     * @see Widget::scale()
+     * @see Widget::resize()
      */
-    inline void scale(int ratio)
+    inline void resize_by_ratio(int ratio)
     {
-        scale(ratio, ratio);
+        resize_by_ratio(ratio, ratio);
     }
+
+    virtual void set_scale(float scale)
+    {}
 
     /**
      * Change the width.
@@ -333,6 +336,9 @@ public:
 
     /**
      * Set the readonly property of the widget.
+     *
+     * When a widget is readonly, it typically works as normal, except it does
+     * not accept any user input.
      *
      * @param value Readonly when true.
      */

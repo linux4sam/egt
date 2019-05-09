@@ -168,6 +168,8 @@ public:
 
     virtual void resize(const Size& size) override;
 
+    virtual void set_scale(float scale) override;
+
     virtual void paint(Painter& painter) override
     {
         if (m_impl)
@@ -218,6 +220,11 @@ protected:
     virtual void default_resize(const Size& size)
     {
         Frame::resize(size);
+    }
+
+    virtual void default_set_scale(float scale)
+    {
+        Frame::set_scale(scale);
     }
 
     virtual void default_move(const Point& point)

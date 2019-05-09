@@ -16,10 +16,7 @@ namespace detail
 {
 
 GstDecoderImpl::GstDecoderImpl(const Size& size)
-    : m_pipeline(NULL),
-      m_width(size.w),
-      m_height(size.h),
-      m_volume(NULL)
+    : m_size(size)
 {}
 
 bool GstDecoderImpl::playing() const

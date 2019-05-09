@@ -95,11 +95,6 @@ void VideoWindow::createImpl(const Size& size)
     }
 }
 
-void VideoWindow::top_draw()
-{
-    m_decoderImpl->top_draw();
-}
-
 void VideoWindow::draw(Painter& painter, const Rect& rect)
 {
     m_decoderImpl->draw(painter, rect);
@@ -152,28 +147,9 @@ bool VideoWindow::playing() const
     return m_decoderImpl->playing();
 }
 
-
 bool VideoWindow::play()
 {
     return m_decoderImpl->play();
-}
-
-void VideoWindow::move(const Point& point)
-{
-    Window::move(point);
-#ifdef HAVE_LIBPLANES
-    m_decoderImpl->move(point);
-#endif
-}
-
-void VideoWindow::set_scale(float value)
-{
-    m_decoderImpl->set_scale(value);
-}
-
-float VideoWindow::scale()
-{
-    return m_decoderImpl->scale();
 }
 
 bool VideoWindow::set_volume(double volume)

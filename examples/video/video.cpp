@@ -50,7 +50,6 @@ public:
         T::set_volume(5);
     }
 
-
     virtual int handle(eventid event) override
     {
         switch (event)
@@ -66,7 +65,8 @@ public:
             }
             else
             {
-                T::set_scale(0.80);
+                this->move_to_center(this->parent()->center());
+                T::set_scale(1);
                 m_scaled = false;
             }
             break;
@@ -152,7 +152,7 @@ int main(int argc, const char** argv)
 
     auto window = make_shared<MyVideoWindow<VideoWindow>>(Rect(0, 0, w, h), argv[1]);
     window->set_name("video");
-    window->set_align(alignmask::center);
+    window->move_to_center(win.center());
     win.add(window);
 
     Label label("Error: ", Rect(Point(0, 0), Size(win.w() * 0.80, win.h() * 0.10)));
@@ -170,7 +170,7 @@ int main(int argc, const char** argv)
     auto ctrlwindow = make_shared< Window>(Size(win.w(), 72));
     ctrlwindow->set_align(alignmask::bottom | alignmask::center);
     win.add(ctrlwindow);
-    ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent); // Color(0x80808055));
+    ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent);
 
     HorizontalBoxSizer hpos;
     hpos.resize(ctrlwindow->size());
@@ -241,7 +241,7 @@ int main(int argc, const char** argv)
 
     double m_fscale = (double)main_screen()->size().w / w;
 
-    fullscreen.on_event([&fullscreen, window, m_fscale](eventid)
+    fullscreen.on_event([&fullscreen, window, m_fscale, &win](eventid)
     {
         static bool scaled = true;
         if (scaled)
@@ -253,7 +253,7 @@ int main(int argc, const char** argv)
         }
         else
         {
-            window->move(Point(240, 120)); //set center
+            window->move_to_center(win.center());
             window->set_scale(1.0);
             fullscreen.set_image(Image(":fullscreen_png"));
             scaled = true;

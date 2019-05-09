@@ -38,6 +38,8 @@ public:
 
     virtual void resize(const Size& size) override;
 
+    virtual void set_scale(float scale) override;
+
     virtual void damage(const Rect& rect) override;
 
     virtual void move(const Point& point) override;

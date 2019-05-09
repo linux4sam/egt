@@ -101,7 +101,7 @@ void Widget::resize(const Size& s)
     }
 }
 
-void Widget::scale(int hratio, int vratio)
+void Widget::resize_by_ratio(int hratio, int vratio)
 {
     Size size(static_cast<float>(w()) * (static_cast<float>(hratio) / 100.),
               static_cast<float>(h()) * (static_cast<float>(vratio) / 100.));

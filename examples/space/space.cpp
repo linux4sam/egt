@@ -122,7 +122,7 @@ public:
 
         m_images.emplace_back(make_shared<Ball>(xspeed, yspeed));
         auto image = m_images.back();
-        image->scale(scale);
+        image->resize_by_ratio(scale);
         image->set_image_align(alignmask::expand);
         image->move_to_center(p);
         add(image);

@@ -22,15 +22,7 @@ public:
 
     bool set_media(const std::string& filename);
 
-    void top_draw();
-
-    void move(const Point& p);
-
-    float scale() override;
-
-    void set_scale(float value) override;
-
-    void draw(Painter& painter, const Rect& rect)
+    virtual void draw(Painter& painter, const Rect& rect) override
     {
         ignoreparam(painter);
         ignoreparam(rect);

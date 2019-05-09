@@ -26,17 +26,9 @@ class GstAppSinkImpl: public GstDecoderImpl
 public:
     GstAppSinkImpl(VideoWindow& interface, const Size& size);
 
-    bool set_media(const std::string& filename);
+    virtual bool set_media(const std::string& filename) override;
 
-    void draw(Painter& painter, const Rect& rect);
-
-    void top_draw();
-
-    float scale() override;
-
-    void set_scale(float value) override;
-
-    void move(const Point& point);
+    virtual void draw(Painter& painter, const Rect& rect) override;
 
     void push_buffer(GstSample* sample) override
     {

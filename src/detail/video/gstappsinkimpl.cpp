@@ -45,15 +45,6 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
 					 " alsasink async=false enable-last-sample=false sync=true"
 #endif
 
-void GstAppSinkImpl::top_draw()
-{
-#ifdef HAVE_LIBPLANES
-    auto screen = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    screen->apply();
-#endif
-}
-
 void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 {
     DBG("In : " << __func__);
@@ -146,16 +137,16 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         pixel_format format = detail::egt_format(s->get_plane_format());
         DBG("VideoWindow: egt_format = " << format);
         if (format == pixel_format::yuv420)
-            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_width, m_height, "");
+            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, "");
         else if (format == pixel_format::yuyv)
-            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_width, m_height, (std::string(vc + "YUY2")).c_str());
+            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "YUY2")).c_str());
         else
-            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_width, m_height, (std::string(vc + "BGRx")).c_str());
+            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "BGRx")).c_str());
     }
     else
 #endif
     {
-        sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_width, m_height, (std::string(vc + "RGB16")).c_str());
+        sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "RGB16")).c_str());
     }
 
     std::string pipe(buffer);
@@ -191,35 +182,6 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     gst_object_unref(bus);
 
     return true;
-}
-
-void GstAppSinkImpl::set_scale(float value)
-{
-#ifdef HAVE_LIBPLANES
-    auto screen = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    screen->set_scale(value);
-#endif
-}
-
-float GstAppSinkImpl::scale()
-{
-#ifdef HAVE_LIBPLANES
-    auto screen = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    return screen->scale();
-#else
-    return 1.0;
-#endif
-}
-
-void GstAppSinkImpl::move(const Point& p)
-{
-#ifdef HAVE_LIBPLANES
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    screen->set_position(DisplayPoint(p.x, p.y));
-#endif
 }
 
 gboolean GstAppSinkImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)

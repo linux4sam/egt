@@ -76,22 +76,22 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
 
         if (uri.find("https://") != std::string::npos)
         {
-            sprintf(buffer, HARDWARE_PIPE, uri.c_str(), m_width, m_height, m_gem);
+            sprintf(buffer, HARDWARE_PIPE, uri.c_str(), m_size.w, m_size.h, m_gem);
         }
         else
         {
-            sprintf(buffer, HARDWARE_PIPE, (std::string("file://") + uri).c_str(), m_width, m_height, m_gem);
+            sprintf(buffer, HARDWARE_PIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, m_gem);
         }
     }
     else
     {
         std::string vc = "! videoconvert ! video/x-raw,format=";
         if (format == pixel_format::yuv420)
-            sprintf(buffer, SOFTWARE_PIPE, (std::string("file://") + uri).c_str(), m_width, m_height, "", m_gem);
+            sprintf(buffer, SOFTWARE_PIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, "", m_gem);
         else if (format == pixel_format::yuyv)
-            sprintf(buffer, SOFTWARE_PIPE, (std::string("file://") + uri).c_str(), m_width, m_height, (std::string(vc + "YUY2")).c_str(), m_gem);
+            sprintf(buffer, SOFTWARE_PIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "YUY2")).c_str(), m_gem);
         else
-            sprintf(buffer, SOFTWARE_PIPE, (std::string("file://") + uri).c_str(), m_width, m_height, (std::string(vc + "BGRx")).c_str(), m_gem);
+            sprintf(buffer, SOFTWARE_PIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "BGRx")).c_str(), m_gem);
     }
 
     DBG("VideoWindow: " << std::string(buffer));
@@ -110,34 +110,6 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
         return true;
     }
     return false;
-}
-
-void GstKmsSinkImpl::top_draw()
-{
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    screen->apply();
-}
-
-void GstKmsSinkImpl::set_scale(float value)
-{
-    auto screen = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    screen->set_scale(value);
-}
-
-float GstKmsSinkImpl::scale()
-{
-    auto screen = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    return screen->scale();
-}
-
-void GstKmsSinkImpl::move(const Point& p)
-{
-    KMSOverlay* screen = reinterpret_cast<KMSOverlay*>(m_interface.screen());
-    assert(screen);
-    screen->set_position(DisplayPoint(p.x, p.y));
 }
 
 gboolean GstKmsSinkImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)

@@ -116,6 +116,16 @@ void Window::resize(const Size& size)
         m_impl->resize(size);
 }
 
+void Window::set_scale(float scale)
+{
+    // cannot resize if we are screen
+    if (unlikely(the_main_window == this))
+        return;
+
+    if (m_impl)
+        m_impl->set_scale(scale);
+}
+
 void Window::create_impl(const Rect& rect,
                          pixel_format format,
                          windowhint hint)

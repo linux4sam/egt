@@ -31,19 +31,14 @@ enum class gsteventid
 class GstDecoderImpl
 {
 public:
+
+    GstDecoderImpl() = delete;
+
     GstDecoderImpl(const Size& size);
 
     virtual bool set_media(const std::string& filename) = 0;
 
     virtual void draw(Painter& painter, const Rect& rect) = 0;
-
-    virtual void top_draw() = 0;
-
-    virtual void move(const Point& p) = 0;
-
-    virtual float scale() = 0;
-
-    virtual void set_scale(float value) = 0;
 
     virtual bool play();
 
@@ -71,12 +66,11 @@ public:
     }
 
 protected:
-    GstElement* m_pipeline;
-    int m_width;
-    int m_height;
-    uint64_t m_duration;
-    uint64_t m_position;
-    GstElement* m_volume;
+    GstElement* m_pipeline{nullptr};
+    Size m_size;
+    uint64_t m_duration{0};
+    uint64_t m_position{0};
+    GstElement* m_volume{nullptr};
     std::string m_err_message;
 };
 

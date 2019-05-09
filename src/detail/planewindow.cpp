@@ -55,6 +55,21 @@ void PlaneWindow::resize(const Size& size)
     }
 }
 
+void PlaneWindow::set_scale(float scale)
+{
+    auto screen = dynamic_cast<KMSOverlay*>(m_screen);
+    assert(screen);
+    if (screen)
+    {
+        screen->set_scale(scale);
+        m_dirty = true;
+    }
+
+    /// @todo No way to save off scale.
+    //m_interface->m_scale = scale;
+    //m_interface->damage();
+}
+
 void PlaneWindow::move(const Point& point)
 {
     DBG(m_interface->name() << " " << __PRETTY_FUNCTION__);

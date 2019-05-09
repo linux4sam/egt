@@ -113,7 +113,7 @@ public:
         auto& image = m_images.back();
         add(image);
         image->set_image_align(alignmask::expand);
-        image->scale(size);
+        image->resize_by_ratio(size);
         image->move(Point(p.x - image->box().w / 2 + offset,
                           p.y - image->box().h / 2 + offset));
         objects_changed();

@@ -99,6 +99,7 @@ void KMSOverlay::set_position(const DisplayPoint& point)
 
 void KMSOverlay::set_scale(float scale)
 {
+    /// @todo This is only supported on HEO planes right?  Not primary or other overlays.
     plane_set_scale(m_plane, scale);
 }
 
