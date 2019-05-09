@@ -28,6 +28,8 @@ void init_gst_thread()
     static bool init = false;
     if (!init)
     {
+        gst_init(NULL, NULL);
+
         // cppcheck-suppress unreadVariable
         static std::thread t([]()
         {
@@ -76,8 +78,6 @@ VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)
 
 void VideoWindow::createImpl(const Size& size)
 {
-    gst_init(NULL, NULL);
-
     detail::init_gst_thread();
 
 #ifdef HAVE_LIBPLANES
