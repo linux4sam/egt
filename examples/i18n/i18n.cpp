@@ -15,6 +15,33 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "i18n");
 
+    Drawer<Label>::set_draw([](Label & widget, Painter & painter, const Rect & rect)
+    {
+        ignoreparam(rect);
+
+        widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
+
+        const auto b = widget.content_area();
+
+
+        painter.set(widget.font());
+        const auto size = painter.text_size(widget.text());
+        const auto target = detail::align_algorithm(size,
+                            b,
+                            widget.text_align());
+
+        // draw a shadow to an offset, but tint the real color and drop the alpha
+        auto color = widget.color(Palette::ColorId::label_text).color();
+        auto shadow = color.tint(0.5);
+        shadow.alphaf(0.3);
+        painter.set(shadow);
+        painter.draw(target.point() + Point(4, 4));
+        painter.draw(widget.text());
+        painter.set(color);
+        painter.draw(target.point());
+        painter.draw(widget.text());
+    });
+
     TopWindow window;
 
     auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
