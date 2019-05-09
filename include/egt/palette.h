@@ -192,23 +192,73 @@ public:
 
     enum class GroupId
     {
+        /**
+         * Default color group associated with a normal Widget state.
+         */
         normal = 1,
+
+        /**
+         * Color group usually associated with the Widget::flag::active flag.
+         */
         active = 2,
+
+        /**
+         * Color group usually associated with the Widget::flag::disabled flag.
+         */
         disabled = 3
     };
 
     enum class ColorId
     {
+        /**
+         * General (Window, Frame) background color.
+         */
         bg = 1,
+
+        /**
+         * Control (TextBox, ComboBox, RadioBox) text color.
+         */
         text,
+
+        /**
+         * TextBox highlight color.
+         */
         text_highlight,
-        border,
-        button_bg,
-        button_fg,
-        button_text,
-        label_bg,
-        label_text,
+
+        /**
+         * TextBox cursor color.
+         */
         cursor,
+
+        /**
+         * Border color.
+         */
+        border,
+
+        /**
+         * Button background color.
+         */
+        button_bg,
+
+        /**
+         * Button foreground color.
+         */
+        button_fg,
+
+        /**
+         * Button text color.
+         */
+        button_text,
+
+        /**
+         * Label background color.
+         */
+        label_bg,
+
+        /**
+         * Label text color.
+         */
+        label_text,
     };
 
     /**
