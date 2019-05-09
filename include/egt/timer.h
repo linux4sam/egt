@@ -134,9 +134,18 @@ public:
      *
      * This function can be called any number of times to add handlers.
      */
-    void on_timeout(timer_callback_t callback)
+    inline void on_timeout(timer_callback_t callback)
     {
-        m_callbacks.push_back(callback);
+        if (callback)
+            m_callbacks.push_back(callback);
+    }
+
+    /**
+     * Clear all handlers.
+     */
+    inline void clear_handlers()
+    {
+        m_callbacks.clear();
     }
 
     virtual ~Timer() noexcept;
@@ -189,6 +198,7 @@ private:
 class PeriodicTimer : public Timer
 {
 public:
+
     /**
      * Construct a periodic timer.
      *

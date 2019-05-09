@@ -34,7 +34,7 @@ static inline float_t interpolate(easing_func_t easing, float_t percent, float_t
 }
 
 Animation::Animation(float_t start, float_t end,
-                     animation_callback callback,
+                     animation_callback_t callback,
                      std::chrono::milliseconds duration,
                      easing_func_t func)
     : m_start(start),
@@ -98,7 +98,7 @@ void Animation::stop()
 AutoAnimation::AutoAnimation(float_t start, float_t end,
                              std::chrono::milliseconds duration,
                              easing_func_t func,
-                             animation_callback callback)
+                             animation_callback_t callback)
     : Animation(start, end, callback, duration, func),
       m_timer(std::chrono::milliseconds(30))
 {

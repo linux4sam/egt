@@ -15,9 +15,14 @@ namespace detail
 uint32_t Object::on_event(event_callback_t handler,
                           filter_type mask)
 {
-    auto handle = ++m_handle_counter;
-    m_callbacks.emplace_back(handler, mask, handle);
-    return handle;
+    if (handler)
+    {
+        auto handle = ++m_handle_counter;
+        m_callbacks.emplace_back(handler, mask, handle);
+        return handle;
+    }
+
+    return 0;
 }
 
 int Object::invoke_handlers(eventid event)

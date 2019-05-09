@@ -30,7 +30,14 @@ using float_t = float;
  * Animation related classes.
  */
 
-using animation_callback = std::function<void (float_t value)>;
+/**
+ * Animation callback type.
+ */
+using animation_callback_t = std::function<void (float_t value)>;
+
+/**
+ * Easing function type.
+ */
 using easing_func_t = std::function<float_t (float_t percent)>;
 
 namespace detail
@@ -43,6 +50,9 @@ class IAnimation : public detail::noncopyable
 {
 public:
 
+    /**
+     * Start the animation.
+     */
     virtual void start() = 0;
 
     /**
@@ -63,27 +73,50 @@ public:
      */
     virtual bool running() const { return m_running; }
 
-    void add_callback(animation_callback callback = nullptr)
+    /**
+     * Register a callback for the animation.
+     *
+     * More than one callback can be registered.
+     *
+     * The callback will be called for each step of the animation, usually only
+     * when the animation value has actually changed.
+     *
+     * @todo Need to implement removing callbacks, similar to Object class.
+     */
+    inline void add_callback(animation_callback_t callback = nullptr)
     {
-        m_callbacks.push_back(callback);
+        if (callback)
+            m_callbacks.push_back(callback);
+    }
+
+    /**
+     * Clear all callbacks.
+     */
+    inline void clear_callbacks()
+    {
+        m_callbacks.clear();
     }
 
     virtual ~IAnimation() = default;
 
 protected:
+
     /**
      * The running state of the animation.
      */
     bool m_running{false};
 
-    std::vector<animation_callback> m_callbacks;
+    /**
+     * Registered callbacks for the animation.
+     */
+    std::vector<animation_callback_t> m_callbacks;
 };
 }
 
 /**
  * Animation class with configurable easing function.
  *
- * An animation is a container that basically runs from a start value to an
+ * An Animation is a container that basically runs from a start value to an
  * end value over a duration of time. For example, the first value of the
  * animation will be the start value at duration 0 and the last value of the
  * animation will be the end value at the duration total.
@@ -94,7 +127,8 @@ protected:
  * animation value relative to time.
  *
  * Usually, this class will not be used directly and instead one of the
- * helper classes derived from this are easier to use.
+ * helper classes derived from this are easier to use, like @see
+ * PropertyAnimator.
  *
  * @ingroup animation
  */
@@ -111,7 +145,7 @@ public:
      */
     Animation(float_t start,
               float_t end,
-              animation_callback callback,
+              animation_callback_t callback,
               std::chrono::milliseconds duration,
               easing_func_t func = easing_linear);
 
@@ -366,7 +400,7 @@ public:
     AutoAnimation(float_t start, float_t end,
                   std::chrono::milliseconds duration,
                   easing_func_t func = easing_linear,
-                  animation_callback callback = nullptr);
+                  animation_callback_t callback = nullptr);
 
     virtual void start() override;
     virtual void stop() override;
@@ -432,11 +466,16 @@ using PropertyAnimator = PropertyAnimatorType<int>;
 /**
  * Simple delay, useful to insert a delay in an AnimationSequence.
  *
+ * This basically established as one-shot timer to create a delay.  It performs
+ * no easing curve function evaluation.
+ *
  * @ingroup animation
  */
 class AnimationDelay : public detail::IAnimation
 {
 public:
+
+    AnimationDelay() = delete;
 
     explicit AnimationDelay(std::chrono::milliseconds duration) noexcept
         : m_timer(duration)
@@ -472,11 +511,10 @@ public:
 
 protected:
 
+    /**
+     * One-shot timer.
+     */
     Timer m_timer;
-
-private:
-
-    AnimationDelay() = delete;
 };
 
 }
