@@ -120,10 +120,6 @@ Screen::Screen()
 
 void Screen::flip(const damage_array& damage)
 {
-    static int envset = -1;
-    if (envset < 0)
-        envset = !!getenv("EGT_GREENSCREEN");
-
     if (!damage.empty() && index() < m_buffers.size())
     {
         damage_array olddamage = m_buffers[index()].damage;
@@ -135,45 +131,12 @@ void Screen::flip(const damage_array& damage)
 
         DisplayBuffer& buffer = m_buffers[index()];
 
-        if (envset)
-            copy_to_buffer_greenscreen(buffer, olddamage);
-        else
-            copy_to_buffer(buffer);
+        copy_to_buffer(buffer);
 
         // delete all damage from current buffer
         buffer.damage.clear();
         schedule_flip();
     }
-}
-
-/**
- * @todo greenscreen is broken - does not cover all cases and getting it to
- * work with flipping is difficult.  Should consider going to a single
- * buffer for greenscreen.
- */
-void Screen::copy_to_buffer_greenscreen(DisplayBuffer& buffer,
-                                        const damage_array& olddamage)
-{
-    cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
-    cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
-
-    for (const auto& d : buffer.damage)
-        cairo_rectangle(buffer.cr.get(), d.x, d.y, d.w, d.h);
-
-    cairo_fill(buffer.cr.get());
-
-    Color color = Palette::green;
-    cairo_set_source_rgb(buffer.cr.get(), color.redf(),
-                         color.greenf(), color.bluef());
-    cairo_set_line_width(buffer.cr.get(), 4.0);
-
-    for (const auto& d : buffer.damage)
-        if (find(olddamage.begin(), olddamage.end(), d) != olddamage.end())
-            cairo_rectangle(buffer.cr.get(), d.x, d.y, d.w, d.h);
-
-    cairo_stroke(buffer.cr.get());
-
-    cairo_surface_flush(buffer.surface.get());
 }
 
 void Screen::copy_to_buffer(DisplayBuffer& buffer)

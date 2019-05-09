@@ -145,8 +145,6 @@ protected:
     };
 
     void copy_to_buffer(DisplayBuffer& buffer);
-    void copy_to_buffer_greenscreen(DisplayBuffer& buffer,
-                                    const damage_array& olddamage);
 
     shared_cairo_surface_t m_surface;
     shared_cairo_t m_cr;
