@@ -34,11 +34,6 @@ public:
 
     /// @todo Constructors
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<ProgressBar>(*this).release());
-    }
-
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -70,11 +65,6 @@ public:
                           int min = 0, int max = 100, int value = 0) noexcept;
 
     /// @todo Constructors
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<SpinProgress>(*this).release());
-    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -110,11 +100,6 @@ public:
                         int min = 0, int max = 100, int value = 0) noexcept;
 
     /// @todo Constructors
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<LevelMeter>(*this).release());
-    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -163,11 +148,6 @@ public:
     explicit AnalogMeter(const Rect& rect = Rect());
 
     /// @todo Constructors
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<AnalogMeter>(*this).release());
-    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

@@ -109,13 +109,13 @@ public:
         if (yspeed == 0)
             yspeed = 1;
 
-        m_images.emplace_back(xspeed, yspeed, p);
+        m_images.emplace_back(make_shared<Bubble>(xspeed, yspeed, p));
         auto& image = m_images.back();
         add(image);
-        image.set_image_align(alignmask::expand);
-        image.scale(size);
-        image.move(Point(p.x - image.box().w / 2 + offset,
-                         p.y - image.box().h / 2 + offset));
+        image->set_image_align(alignmask::expand);
+        image->scale(size);
+        image->move(Point(p.x - image->box().w / 2 + offset,
+                          p.y - image->box().h / 2 + offset));
         objects_changed();
     }
 
@@ -124,8 +124,9 @@ public:
         for (auto x = m_images.begin(); x != m_images.end();)
         {
             auto& image = *x;
-            if (!image.animate())
+            if (!image->animate())
             {
+                image->detatch();
                 x = m_images.erase(x);
                 objects_changed();
             }
@@ -143,7 +144,7 @@ public:
         m_label->set_text(ss.str());
     }
 
-    vector<Bubble> m_images;
+    vector<shared_ptr<Bubble>> m_images;
     shared_ptr<ImageLabel> m_background;
     shared_ptr<Label> m_label;
     shared_ptr<Sprite> m_sprite;

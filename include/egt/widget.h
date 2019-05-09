@@ -45,7 +45,7 @@ class Screen;
  * of what it means to handle an event or draw the Widget is implemented in
  * classes that are derived from this one, like a Button or a Label.
  */
-class Widget : public detail::Object
+class Widget : public detail::Object, public detail::noncopyable
 {
 public:
 
@@ -139,18 +139,8 @@ public:
     explicit Widget(Frame& parent, const Rect& rect = Rect(),
                     const flags_type& flags = flags_type()) noexcept;
 
-    Widget(const Widget& rhs) noexcept;
-
     Widget(Widget&& rhs) noexcept;
-
-    Widget& operator=(const Widget& rhs) noexcept;
-
     Widget& operator=(Widget&& rhs) noexcept;
-
-    /**
-     * Perform a deep copy of the widget.
-     */
-    virtual std::unique_ptr<Widget> clone() = 0;
 
     /**
      * Draw the widget.

@@ -101,11 +101,6 @@ public:
 
     using Widget::Widget;
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Guage>(*this).release());
-    }
-
     void add_layer(const std::shared_ptr<GuageLayer>& layer)
     {
         m_layers.push_back(layer);

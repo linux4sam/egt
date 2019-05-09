@@ -71,53 +71,6 @@ public:
     explicit StaticGrid(Frame& parent, const Tuple& size = Tuple(1, 1),
                         default_dim_type border = 0) noexcept;
 
-    StaticGrid(const StaticGrid& rhs) noexcept
-        : Frame(rhs),
-          m_cells(rhs.m_cells),
-          m_last_add_column(rhs.m_last_add_column),
-          m_last_add_row(rhs.m_last_add_row)
-    {
-        // fix our own pointers after deep copy of children
-        for (size_t x = 0; x < m_children.size(); ++x)
-        {
-            for (auto& column : m_cells)
-            {
-                std::replace(column.begin(), column.end(),
-                             rhs.m_children[x].get(), m_children[x].get());
-            }
-        }
-    }
-
-    StaticGrid(StaticGrid&& rhs) = delete;
-
-    StaticGrid& operator=(const StaticGrid& rhs) noexcept
-    {
-        Frame::operator=(rhs);
-
-        m_cells = rhs.m_cells;
-        m_last_add_column = rhs.m_last_add_column;
-        m_last_add_row = rhs.m_last_add_row;
-
-        // fix our own pointers after deep copy of children
-        for (size_t x = 0; x < m_children.size(); ++x)
-        {
-            for (auto& column : m_cells)
-            {
-                std::replace(column.begin(), column.end(),
-                             rhs.m_children[x].get(), m_children[x].get());
-            }
-        }
-
-        return *this;
-    }
-
-    StaticGrid& operator=(StaticGrid&& rhs) noexcept = delete;
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<StaticGrid>(*this).release());
-    }
-
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -242,11 +195,6 @@ class SelectableGrid : public StaticGrid
 public:
 
     using StaticGrid::StaticGrid;
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<SelectableGrid>(*this).release());
-    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

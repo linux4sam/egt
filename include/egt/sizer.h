@@ -67,11 +67,6 @@ public:
         parent.add(*this);
     }
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<BoxSizer>(*this).release());
-    }
-
     virtual void layout() override;
 
     inline justification justify() const { return m_justify; }

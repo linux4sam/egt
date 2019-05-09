@@ -120,11 +120,11 @@ public:
         if (xspeed == 0 && yspeed == 0)
             xspeed = yspeed = 1;
 
-        m_images.emplace_back(xspeed, yspeed);
-        auto& image = m_images.back();
-        image.scale(scale);
-        image.set_image_align(alignmask::expand);
-        image.move_to_center(p);
+        m_images.emplace_back(make_shared<Ball>(xspeed, yspeed));
+        auto image = m_images.back();
+        image->scale(scale);
+        image->set_image_align(alignmask::expand);
+        image->move_to_center(p);
         add(image);
     }
 
@@ -133,8 +133,9 @@ public:
         for (auto i = m_images.begin(); i != m_images.end();)
         {
             auto& image = *i;
-            if (!image.animate())
+            if (!image->animate())
             {
+                image->detatch();
                 i = m_images.erase(i);
             }
             else
@@ -145,7 +146,7 @@ public:
     }
 
 private:
-    vector<Ball> m_images;
+    vector<shared_ptr<Ball>> m_images;
 
     std::random_device r;
     std::default_random_engine e1 {r()};

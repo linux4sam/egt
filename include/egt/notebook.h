@@ -36,11 +36,6 @@ public:
         set_boxtype(Theme::boxtype::blank | Theme::boxtype::solid);
     }
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<NotebookTab>(*this).release());
-    }
-
     /**
      * @return true if allowed to leave, false otherwise.
      */
@@ -68,11 +63,6 @@ class Notebook : public Frame
 {
 public:
     explicit Notebook(const Rect& rect = Rect());
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Notebook>(*this).release());
-    }
 
     /**
      * @todo This should explicitly only allow NotebookTab widgets.

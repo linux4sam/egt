@@ -61,11 +61,6 @@ public:
         painter.fill();
     }
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Box>(*this).release());
-    }
-
 protected:
     Color m_color;
 };

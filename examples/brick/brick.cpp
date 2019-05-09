@@ -25,7 +25,7 @@ public:
                   Tuple(w() / 100, ROWS), 5),
           m_ball(Image("small_ball.png")),
           m_paddle(Image("paddle.png")),
-          m_running(false),
+          m_label("-", alignmask::left | alignmask::center),
           e1(random())
     {
         auto background = make_shared<ImageLabel>(Image("brick_background.png"));
@@ -68,7 +68,6 @@ public:
         m_ball.set_image_align(alignmask::expand);
         add(m_ball);
 
-        m_label = Label("-", alignmask::left | alignmask::center);
         m_label.set_color(Palette::ColorId::text, Palette::white);
         m_label.set_color(Palette::ColorId::bg, Palette::transparent);
         add(top(left(m_label)));
@@ -216,7 +215,7 @@ private:
     vector<shared_ptr<ImageLabel>> m_blocks;
     Label m_label;
     unsigned int m_points;
-    bool m_running;
+    bool m_running{false};
     std::random_device random;
     std::default_random_engine e1;
 };

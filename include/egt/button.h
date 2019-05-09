@@ -71,11 +71,6 @@ public:
      */
     Button(Frame& parent, const std::string& text, const Rect& rect) noexcept;
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Button>(*this).release());
-    }
-
     virtual int handle(eventid event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
@@ -141,11 +136,6 @@ public:
                 const Rect& rect = Rect()) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<ImageButton>(*this).release());
-    }
 
     static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
 
@@ -231,11 +221,6 @@ public:
     explicit HotSpot(const Rect& rect = Rect()) noexcept;
 
     explicit HotSpot(Frame& parent, const Rect& rect = Rect()) noexcept;
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<HotSpot>(*this).release());
-    }
 
     virtual void damage() override
     {}

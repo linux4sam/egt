@@ -50,27 +50,6 @@ public:
     explicit Frame(const Rect& rect = Rect(),
                    const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
-    /**
-     * @param[in] parent Parent Frame of the Frame.
-     * @param[in] rect Initial rectangle of the Frame.
-     * @param[in] flags Widget flags.
-     */
-    explicit Frame(Frame& parent, const Rect& rect,
-                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
-
-    Frame(const Frame& rhs) noexcept;
-
-    Frame(Frame&& rhs) noexcept;
-
-    Frame& operator=(const Frame& rhs) noexcept;
-
-    Frame& operator=(Frame&& rhs) noexcept;
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Frame>(*this).release());
-    }
-
     virtual int handle(eventid event) override;
 
     /**

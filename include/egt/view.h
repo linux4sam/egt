@@ -77,11 +77,6 @@ public:
                           policy horizontal_policy = policy::as_needed,
                           policy vertical_policy = policy::as_needed);
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<ScrolledView>(*this).release());
-    }
-
     virtual int handle(eventid event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;

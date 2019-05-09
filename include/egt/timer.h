@@ -62,7 +62,7 @@ void dump_timers(std::ostream& out);
  *
  * @ingroup timers
  */
-class Timer
+class Timer : public detail::noncopyable
 {
 public:
 
@@ -83,16 +83,6 @@ public:
      * Construct a one-shot timer with the specified duration.
      */
     explicit Timer(std::chrono::milliseconds duration) noexcept;
-
-    /**
-     * @warning Any handlers registered with on_timeout will not be copied.
-     */
-    Timer(const Timer& rhs) noexcept;
-
-    /**
-     * @warning Any handlers registered with on_timeout will not be copied.
-     */
-    Timer& operator=(const Timer& rhs) noexcept;
 
     /**
      * Start the timer.
@@ -211,9 +201,6 @@ public:
      * Construct a periodic timer with the specified duration.
      */
     explicit PeriodicTimer(std::chrono::milliseconds interval) noexcept;
-
-    PeriodicTimer(const PeriodicTimer&) = default;
-    PeriodicTimer& operator=(const PeriodicTimer&) = default;
 
     virtual void start() override;
 

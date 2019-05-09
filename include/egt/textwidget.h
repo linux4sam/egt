@@ -35,10 +35,6 @@ public:
                         alignmask align = alignmask::center,
                         const Font& font = Font()) noexcept;
 
-    TextWidget(const TextWidget& rhs) noexcept;
-
-    TextWidget& operator=(const TextWidget& rhs) noexcept;
-
     /**
      * Set the text of the label.
      * @param str The text string to set.
@@ -92,13 +88,13 @@ public:
         parent_layout();
     }
 
-    virtual ~TextWidget() noexcept = default;
-
     /**
      * Given a Font, text, and a target Size, scale the font size so that
      * the text will will fit and return the new Font.
      */
     static Font scale_font(const Size& target, const std::string& text, const Font& font);
+
+    virtual ~TextWidget() noexcept = default;
 
 protected:
 

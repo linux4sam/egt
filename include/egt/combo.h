@@ -97,11 +97,6 @@ public:
 
     virtual int handle(eventid event) override;
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<ComboBox>(*this).release());
-    }
-
     virtual void set_select(size_t index);
 
     virtual size_t selected() const { return m_selected; }

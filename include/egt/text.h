@@ -77,15 +77,6 @@ public:
                      alignmask align = alignmask::center | alignmask::left,
                      const flags_type::flags& flags = flags_type::flags()) noexcept;
 
-    TextBox(const TextBox&) noexcept;
-
-    TextBox& operator=(const TextBox&) noexcept;
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<TextBox>(*this).release());
-    }
-
     virtual int handle(eventid event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;

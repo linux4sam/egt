@@ -113,11 +113,6 @@ public:
     explicit Slider(Frame& parent, int min = 0, int max = 100, int value = 0,
                     orientation orient = orientation::horizontal) noexcept;
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Slider>(*this).release());
-    }
-
     virtual int handle(eventid event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;

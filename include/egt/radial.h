@@ -68,11 +68,6 @@ public:
         parent.add(*this);
     }
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<RadialType<T>>(*this).release());
-    }
-
     /**
      * Get a const ref of the flags.
      */

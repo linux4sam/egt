@@ -23,24 +23,6 @@ TextWidget::TextWidget(const std::string& text, const Rect& rect,
     set_font(font);
 }
 
-TextWidget::TextWidget(const TextWidget& rhs) noexcept
-    : Widget(rhs),
-      m_text_align(rhs.m_text_align),
-      m_text(rhs.m_text)
-{
-    if (rhs.m_font)
-        m_font = make_unique<Font>(*rhs.m_font.get());
-}
-
-TextWidget& TextWidget::operator=(const TextWidget& rhs) noexcept
-{
-    Widget::operator=(rhs);
-    if (rhs.m_font)
-        m_font = make_unique<Font>(*rhs.m_font.get());
-
-    return *this;
-}
-
 void TextWidget::clear()
 {
     if (!m_text.empty())

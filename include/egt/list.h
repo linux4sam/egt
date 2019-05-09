@@ -117,11 +117,6 @@ public:
      */
     ListBox(Frame& parent, const item_array& items, const Rect& rect) noexcept;
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<ListBox>(*this).release());
-    }
-
     virtual int handle(eventid event) override;
 
     /**

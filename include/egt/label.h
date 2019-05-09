@@ -88,11 +88,6 @@ public:
           alignmask align = default_align,
           const Font& font = Font()) noexcept;
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<Label>(*this).release());
-    }
-
     /**
      * Set the text of the label.
      */
@@ -178,11 +173,6 @@ public:
                const Rect& rect,
                alignmask align = alignmask::right | alignmask::center,
                const Font& font = Font()) noexcept;
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<ImageLabel>(*this).release());
-    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

@@ -39,11 +39,6 @@ public:
     explicit CircleWidget(const Circle& circle);
     CircleWidget(Frame& parent, const Circle& circle);
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<CircleWidget>(*this).release());
-    }
-
     inline float radius() const
     {
         return m_radius;
@@ -75,11 +70,6 @@ public:
         parent.add(*this);
     }
 
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<LineWidget>(*this).release());
-    }
-
     virtual void draw(Painter& painter, const Rect&) override;
 
     inline bool horizintal() const { return m_horizontal; }
@@ -107,11 +97,6 @@ public:
     {
         set_name("RectangleWidget" + std::to_string(m_widgetid));
         set_boxtype(Theme::boxtype::blank);
-    }
-
-    virtual std::unique_ptr<Widget> clone() override
-    {
-        return std::unique_ptr<Widget>(make_unique<RectangleWidget>(*this).release());
     }
 
     virtual void draw(Painter& painter, const Rect&) override;

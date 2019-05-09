@@ -27,58 +27,6 @@ Frame::Frame(const Rect& rect, const Widget::flags_type& flags) noexcept
     set_boxtype(Theme::boxtype::none);
 }
 
-Frame::Frame(const Frame& rhs) noexcept
-    : Widget(rhs),
-      m_damage(rhs.m_damage)
-{
-    // perform deep copy of all children
-    for (auto& child : rhs.m_children)
-    {
-        m_children.push_back(child->clone());
-        m_children.back()->m_parent = this;
-    }
-}
-
-Frame::Frame(Frame&& rhs) noexcept
-    : Widget(std::move(rhs)),
-      m_children(std::move(rhs.m_children)),
-      m_damage(std::move(rhs.m_damage))
-{
-    for (auto& child : m_children)
-        child->m_parent = this;
-}
-
-Frame& Frame::operator=(const Frame& rhs) noexcept
-{
-    if (&rhs != this)
-    {
-        Widget::operator=(rhs);
-
-        m_damage = rhs.m_damage;
-
-        // perform deep copy of all children
-        for (auto& child : rhs.m_children)
-        {
-            m_children.push_back(child->clone());
-            m_children.back()->m_parent = this;
-        }
-    }
-    return *this;
-}
-
-Frame& Frame::operator=(Frame&& rhs) noexcept
-{
-    Widget::operator=(std::move(rhs));
-
-    m_children = std::move(rhs.m_children);
-    m_damage = std::move(rhs.m_damage);
-
-    for (auto& child : m_children)
-        child->m_parent = this;
-
-    return *this;
-}
-
 void Frame::remove(Widget* widget)
 {
     if (!widget)

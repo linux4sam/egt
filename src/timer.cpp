@@ -40,27 +40,6 @@ Timer::Timer(std::chrono::milliseconds duration) noexcept
     timers.push_back(this);
 }
 
-Timer::Timer(const Timer& rhs) noexcept
-    : m_timer(main_app().event().io()),
-      m_duration(rhs.m_duration),
-      m_running(false)
-{
-    timers.push_back(this);
-    // m_callbacks not copied
-}
-
-Timer& Timer::operator=(const Timer& rhs) noexcept
-{
-    if (&rhs != this)
-    {
-        m_duration = rhs.m_duration;
-        // m_callbacks not copied
-        m_running = false;
-    }
-
-    return *this;
-}
-
 void Timer::start()
 {
     // error::operation_aborted occurs when expires_from_now() is called on the

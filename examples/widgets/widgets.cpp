@@ -394,16 +394,16 @@ struct ScrollwheelPage : public NotebookTab
                                           1900, 2019, 1, true);
 
         auto label_day =
-            std::make_shared<Label>(Label(scrollwheel_day->get_value(),
-                                          Rect(0, 0, 50, 30)));
+            std::make_shared<Label>(scrollwheel_day->get_value(),
+                                    Rect(0, 0, 50, 30));
 
         auto label_month =
-            std::make_shared<Label>(Label(scrollwheel_month->get_value(),
-                                          Rect(0, 0, 100, 30)));
+            std::make_shared<Label>(scrollwheel_month->get_value(),
+                                    Rect(0, 0, 100, 30));
 
         auto label_year =
-            std::make_shared<Label>(Label(scrollwheel_year->get_value(),
-                                          Rect(0, 0, 75, 30)));
+            std::make_shared<Label>(scrollwheel_year->get_value(),
+                                    Rect(0, 0, 75, 30));
 
         scrollwheel_day->on_event([label_day, scrollwheel_day](eventid event)
         {

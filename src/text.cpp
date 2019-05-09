@@ -65,38 +65,6 @@ TextBox::TextBox(const Rect& rect, alignmask align, const flags_type::flags& fla
     : TextBox(std::string(), rect, align, flags)
 {}
 
-TextBox::TextBox(const TextBox& rhs) noexcept
-    : TextWidget(rhs),
-      m_timer(std::chrono::seconds(1)),
-      m_cursor_pos(rhs.m_cursor_pos),
-      m_select_start(rhs.m_select_start),
-      m_select_len(rhs.m_select_len),
-      m_cursor_state(rhs.m_cursor_state),
-      m_text_flags(rhs.m_text_flags),
-      m_max_len(rhs.m_max_len)
-{
-    m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
-}
-
-TextBox& TextBox::operator=(const TextBox& rhs) noexcept
-{
-    if (&rhs != this)
-    {
-        TextWidget::operator=(rhs);
-
-        m_cursor_pos = rhs.m_cursor_pos;
-        m_select_start = rhs.m_select_start;
-        m_select_len = rhs.m_select_len;
-        m_cursor_state = rhs.m_cursor_state;
-        m_text_flags = rhs.m_text_flags;
-        m_max_len = rhs.m_max_len;
-
-        m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
-    }
-
-    return *this;
-}
-
 int TextBox::handle(eventid event)
 {
     switch (event)
