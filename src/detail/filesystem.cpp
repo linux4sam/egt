@@ -84,6 +84,15 @@ std::string readlink(const std::string& path)
     return std::string();
 }
 
+std::string abspath(const std::string& path)
+{
+    char buff[PATH_MAX];
+    if (::realpath(path.c_str(), buff))
+        return std::string(buff);
+
+    return std::string();
+}
+
 std::string exe_pwd()
 {
     return extract_dirname(std::string(readlink("/proc/self/exe")));

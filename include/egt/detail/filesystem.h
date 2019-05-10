@@ -58,6 +58,13 @@ std::vector<char> read_file(const std::string& path);
 std::string readlink(const std::string& path);
 
 /**
+ * Convert a relative path to an absolute path.
+ *
+ * This is similar to POSIX.1-2001 realpath().
+ */
+std::string abspath(const std::string& path);
+
+/**
  * Get the path to the current executable.
  */
 std::string exe_pwd();
