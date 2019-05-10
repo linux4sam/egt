@@ -56,6 +56,7 @@ int Button::handle(eventid event)
     case eventid::raw_pointer_down:
     {
         set_active(true);
+        return 1;
         break;
     }
     case eventid::raw_pointer_up:
