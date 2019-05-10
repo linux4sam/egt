@@ -65,6 +65,8 @@ std::ostream& operator<<(std::ostream& os, const windowhint& event)
     return os;
 }
 
+const pixel_format Window::DEFAULT_FORMAT = pixel_format::argb8888;
+
 Window::Window(const Rect& rect,
                pixel_format format,
                windowhint hint)
