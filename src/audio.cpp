@@ -289,11 +289,10 @@ void AudioPlayer::seek(uint64_t pos)
     }
 }
 
-/// @todo hard coded to second sound device
 #define PIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " caps=audio/x-raw " \
     "! progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " " \
     "! audioconvert ! volume name=" VOLUME_NAME " " \
-    "! alsasink device=hw:1"
+    "! autoaudiosink"
 
 bool AudioPlayer::createPipeline()
 {
