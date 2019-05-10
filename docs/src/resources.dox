@@ -3,15 +3,20 @@ namespace egt { inline namespace v1 {
 
  @page resources Resources
 
-This chapter discusses assets and how to distribute and use them.
+This chapter discusses resources and how to distribute and use them with EGT.
 
-Resources are a way of cataloging, distributing, and using asset data.  For
-example image assets, icons, audio files, and video files can be included as
-resources.  Resources may be stored in the filesystem and loaded on demand, or
-they may be compiled into the application binary itself by using the *mresg*
-command.
+Resources are a way of cataloging, distributing, identifying, and using some
+asset data.  For example assets might include images, icons, audio files, and
+video files. Resources may be stored in the filesystem and loaded on demand, or
+they may be compiled into the application binary itself by using the `mresg`
+command, or they may be installed by default by EGT.
 
-@section resources_paths File Paths
+@section resources_paths Respath
+
+Identifying a resource uses something referenced in the EGT API as a *respath*.
+This can take several different forms, including standard absolute or relative
+file paths.  Consider this an over-simplified version of a Universal Resource
+Identifier (URI) and the purpose of a URI.
 
 If an absolute file path is used, noting extra will happen.  That file path will
 attempt to be accessed. However, if a relative path is given then a search will
@@ -23,30 +28,40 @@ are searched in the following order:
 - EXE directory.
 - EGT icon path.
 
-@section resources_using Resources
+@section resources_using Respath: File Path
 
 To access a resource with a file path, specify an absolute or relative file path.
 
 @code{.cpp}
 auto play = Image("/some/path/play.png");
+auto forward = Image("forward.png");
 @endcode
 
 
-@section resources_icons EGT Icons
+@section resources_icons Respath: Built in EGT Icons and Images
 
-EGT comes with a set of icons built in.  To access these icons, use the
-following syntax:
+EGT comes with a set of icons and images installed with EGT by default.  To
+access these icons and images, use the following syntax:
 
 @code{.cpp}
 auto bug = Image("@bug.png");
 @endcode
 
 
-@section resources_mresg Resource Generator
+@section resources_mresg Respath: Executable Compiled in Resources
 
-This is a tool used to generate a resource file that contains the data of binary
-blobs of data that can then in turn directly be used in an application when, for
-example, referring an image.
+EGT provides a tool used to generate a resource file that contains the data of
+binary blobs of data that can then in turn directly be used in an application
+when, for example, referring to an image.  This tool is in the `scripts`
+directory of the EGT distribution and it's called `mresg`.
+
+This tool is generally run by your application Makefile to create the resulting
+`OUTPUT` C++ file that can then be compiled into the application binary.
+
+@code{.cpp}
+$ ./mresg --help
+./mresg INPUT... -o OUTPUT
+@endcode
 
 Instead of using a filesystem path to a file, prefix the path with a colon (":")
 to interpret the path as a resource.  Periods are replaced with underscores.

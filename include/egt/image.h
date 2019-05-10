@@ -36,13 +36,33 @@ inline namespace v1
 class Image
 {
 public:
+
+    /**
+     * @param respath Resource path.
+     * @param hscale Horizontal scale of the image [0.0 - 1.0].
+     * @param vscale Vertical scale of the image [0.0 - 1.0].
+     */
     // cppcheck-suppress noExplicitConstructor
-    Image(const std::string& filename = std::string(),
+    Image(const std::string& respath = std::string(),
           double hscale = 1.0, double vscale = 1.0);
 
+    /**
+     * @param surface A pre-existing surface.
+     *
+     * This take a reference to the passed in image.
+     *
+     * @todo This is a broken API.  It's different from the constructor below.
+     * Need consistency.
+     */
     // cppcheck-suppress noExplicitConstructor
     Image(shared_cairo_surface_t surface);
 
+    /**
+     * @param surface A pre-existing surface.
+     *
+     * This will not own the passed in pointer or surface, and instead will make
+     * a copy of the surface.
+     */
     // cppcheck-suppress noExplicitConstructor
     Image(cairo_surface_t* surface);
 
@@ -54,16 +74,27 @@ public:
     /**
      * Scale the image.
      *
-     * Change the size of the widget, similar to calling resize().
+     * Change the scale of the image, similar to calling Image::resize().
      *
-     * @param[in] hscale Horizontal scale, with 1.0 being 100%.
-     * @param[in] vscale Vertical scale, with 1.0 being 100%.
-     * @param[in] approximate Approximate the scale to increase image cache
+     * This scales relative to the original size of the image.  Not the result
+     * of any subsequent Image::resize() or Image::scale() call.
+     *
+     * @param hscale Horizontal scale of the image [0.0 - 1.0].
+     * @param vscale Vertical scale of the image [0.0 - 1.0].
+     * @param approximate Approximate the scale to increase image cache
      *            hit efficiency.
      */
     virtual void scale(double hscale, double vscale,
                        bool approximate = false);
 
+    /**
+     * Resize the image to the specified absolute size.
+     *
+     * This scales relative to the original size of the image.  Not the result
+     * of any subsequent Image::resize() or Image::scale() call.
+     *
+     * @param size The new size of the image.
+     */
     virtual void resize(const Size& size)
     {
         if (this->size() != size)
@@ -79,6 +110,14 @@ public:
      */
     double hscale() const { return m_hscale; }
 
+    /**
+     * Get the vertical scale value.
+     */
+    double vscale() const { return m_vscale; }
+
+    /**
+     * Get the absolute size of the image.
+     */
     Size size() const
     {
         if (empty())
@@ -89,11 +128,6 @@ public:
     }
 
     /**
-     * Get the vertical scale value.
-     */
-    double vscale() const { return m_vscale; }
-
-    /**
      * Returns true if no internal surface is set.
      */
     bool empty() const
@@ -101,6 +135,9 @@ public:
         return !surface();
     }
 
+    /**
+     * Get a reference to the internal image surface.
+     */
     shared_cairo_surface_t surface() const
     {
         if (m_surface_local.get())
@@ -108,6 +145,10 @@ public:
         return m_surface;
     }
 
+    /**
+     * Get the original size of the image before any Image::resize() or
+     * Image::scale() calls.
+     */
     Size size_orig() const { return m_orig_size; }
 
     /**
@@ -115,6 +156,8 @@ public:
      * modified.  It's safe to call this function when not necessary, and in
      * any event it will ensure this Image contains a unique copy of the
      * surface.
+     *
+     * @todo Tricky API.
      */
     virtual void copy();
 
@@ -123,11 +166,18 @@ public:
 protected:
 
     /**
-     * If a filename was used, the filename.
+     * If a respath was used, the respath.
      */
-    std::string m_filename;
+    std::string m_respath;
 
+    /**
+     * Horizontal scale value, compared to original.
+     */
     double m_hscale{1.0};
+
+    /**
+     * Vertical scale value, compared to original.
+     */
     double m_vscale{1.0};
 
     /**
@@ -141,7 +191,7 @@ protected:
     shared_cairo_surface_t m_surface_local;
 
     /**
-     * Original image size, used for scaling through a resize() call.
+     * Original image size.
      */
     Size m_orig_size;
 };

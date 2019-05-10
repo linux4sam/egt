@@ -12,13 +12,13 @@ namespace egt
 inline namespace v1
 {
 
-Image::Image(const std::string& filename,
+Image::Image(const std::string& respath,
              double hscale, double vscale)
-    : m_filename(filename)
+    : m_respath(respath)
 {
-    if (!filename.empty())
+    if (!respath.empty())
     {
-        m_surface = detail::image_cache().get(filename, hscale, vscale);
+        m_surface = detail::image_cache().get(respath, hscale, vscale);
         assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
         m_orig_size = Size(cairo_image_surface_get_width(m_surface.get()),
@@ -49,12 +49,12 @@ Image::Image(cairo_surface_t* surface)
 
 void Image::scale(double hscale, double vscale, bool approximate)
 {
-    if (m_filename.empty())
+    if (m_respath.empty())
         return;
 
     if (m_hscale != hscale || m_vscale != vscale)
     {
-        m_surface = detail::image_cache().get(m_filename, hscale, vscale, approximate);
+        m_surface = detail::image_cache().get(m_respath, hscale, vscale, approximate);
         m_hscale = hscale;
         m_vscale = vscale;
     }

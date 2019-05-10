@@ -69,23 +69,39 @@ public:
 
     virtual void layout() override;
 
+    /**
+     * Get the justify.
+     */
     inline justification justify() const { return m_justify; }
 
+    /**
+     * Set the justify.
+     */
     inline void set_justify(justification justify)
     {
         if (detail::change_if_diff<>(m_justify, justify))
-        {
             layout();
-        }
     }
 
+    /**
+     * Get the orientation.
+     */
     orientation orient() const { return m_orient; }
+
+    /**
+     * Set the orientation.
+     */
+    inline void set_orient(orientation orient)
+    {
+        if (detail::change_if_diff<>(m_orient, orient))
+            layout();
+    }
 
     virtual ~BoxSizer() noexcept = default;
 
 protected:
 
-    Size super_rect() const
+    inline Size super_rect() const
     {
         Rect result = size();
         for (auto& child : m_children)
@@ -98,11 +114,14 @@ protected:
 };
 
 /**
+ * HorizontalBoxSizer helper variation of BoxSizer.
+ *
  * @ingroup sizers
  */
 class HorizontalBoxSizer : public BoxSizer
 {
 public:
+
     explicit HorizontalBoxSizer(justification justify = justification::middle)
         : BoxSizer(orientation::horizontal, justify)
     {}
@@ -111,14 +130,20 @@ public:
     {}
 
     virtual ~HorizontalBoxSizer() = default;
+
+    // doesn't make sense to change
+    inline void set_orient(orientation orient) = delete;
 };
 
 /**
+ * VerticalBoxSizer helper variation of BoxSizer.
+ *
  * @ingroup sizers
  */
 class VerticalBoxSizer : public BoxSizer
 {
 public:
+
     explicit VerticalBoxSizer(justification justify = justification::middle)
         : BoxSizer(orientation::vertical, justify)
     {}
@@ -128,22 +153,32 @@ public:
     {}
 
     virtual ~VerticalBoxSizer() = default;
+
+    // doesn't make sense to change
+    inline void set_orient(orientation orient) = delete;
 };
 
 /**
+ * FlexBoxSizer helper variation of BoxSizer.
+ *
  * @ingroup sizers
  */
 class FlexBoxSizer : public BoxSizer
 {
 public:
+
     explicit FlexBoxSizer(justification justify = justification::middle)
         : BoxSizer(orientation::flex, justify)
     {}
+
     explicit FlexBoxSizer(Frame& parent, justification justify = justification::middle)
         : BoxSizer(parent, orientation::flex, justify)
     {}
 
     virtual ~FlexBoxSizer() = default;
+
+    // doesn't make sense to change
+    inline void set_orient(orientation orient) = delete;
 };
 
 }

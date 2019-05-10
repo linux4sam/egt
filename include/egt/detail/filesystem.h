@@ -49,7 +49,6 @@ bool exists(const std::string& path);
  */
 std::vector<char> read_file(const std::string& path);
 
-
 /**
  * Read the path of a symlink.
  *
