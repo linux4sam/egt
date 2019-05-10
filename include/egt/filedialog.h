@@ -107,13 +107,13 @@ public:
     virtual ~FileSaveDialog() {}
 
 protected:
-    std::shared_ptr<StaticGrid> m_grid;
-
     std::shared_ptr<HorizontalBoxSizer> m_hpositioner;
 
-    std::shared_ptr<Label> m_filename;
-
     std::shared_ptr<TextBox> m_fileselect_box;
+
+    std::shared_ptr<StaticGrid> m_grid;
+
+    std::shared_ptr<Label> m_filename;
 
     std::shared_ptr<Button> m_okay;
 
