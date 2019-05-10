@@ -57,17 +57,17 @@ FileDialog::FileDialog(const Rect& rect)
 
 bool FileDialog::list_files(const std::string& filepath)
 {
-    if (!fs::is_directory(filepath))
+    if (fs::is_directory(filepath))
+    {
+        m_filepath = filepath;
+    }
+    else
     {
         /* if filepath is a regular file then list
          * files of parent directory.
          */
         fs::path p = filepath;
         m_filepath = p.parent_path();
-    }
-    else
-    {
-        m_filepath = filepath;
     }
 
     m_title->set_text(m_filepath);
@@ -116,22 +116,17 @@ void FileDialog::list_item_selected(int index)
         fs::path p = m_filepath;
         m_filepath = p.parent_path();
         DBG(" FileDialog " <<  ": parent dir " << m_filepath);
-    }
-    else
-    {
-        if (m_filepath.back() == '/')
-            m_filepath =  m_filepath + fselect;
-        else
-            m_filepath =  m_filepath + "/" + fselect;
-    }
-
-    if (fs::is_directory(m_filepath))
-    {
-        m_filepath = fs::absolute(m_filepath);
-        DBG(" FileDialog " << ": " << fselect  << " is a directory");
+        set_selected("");
         list_files(m_filepath);
     }
-    else if (fs::is_regular_file(m_filepath))
+    else if (fs::is_directory(m_filepath + "/" + fselect))
+    {
+        DBG(" FileDialog " << ": " << fselect  << " is a directory");
+        set_selected("");
+        m_filepath =  m_filepath + "/" + fselect;
+        list_files(m_filepath);
+    }
+    else if (fs::is_regular_file(m_filepath + "/" + fselect))
     {
         DBG(" FileDialog " << ": " << fselect  << " is a regular file");
         set_selected(fselect);
@@ -190,12 +185,13 @@ void FileOpenDialog::show(bool center)
 void FileOpenDialog::set_selected(const std::string& fselect)
 {
     m_fselected = fselect;
-    invoke_handlers(eventid::property_changed);
+    if (!m_fselected.empty())
+        invoke_handlers(eventid::property_changed);
 }
 
 const std::string FileOpenDialog::get_selected()
 {
-    return m_filepath;
+    return (m_filepath + "/" + m_fselected);
 }
 
 FileSaveDialog::FileSaveDialog(const std::string& title, const Rect& rect)
@@ -226,7 +222,14 @@ FileSaveDialog::FileSaveDialog(const std::string& title, const Rect& rect)
     {
         ignoreparam(event);
         if (!m_fselected.empty())
+        {
             invoke_handlers(eventid::property_changed);
+        }
+        else if (!m_fileselect_box->text().empty())
+        {
+            m_fselected = m_fileselect_box->text();
+            invoke_handlers(eventid::property_changed);
+        }
         return 1;
     }, {eventid::pointer_click});
 
@@ -250,7 +253,7 @@ FileSaveDialog::FileSaveDialog(const Rect& rect)
 
 void FileSaveDialog::show(bool center)
 {
-    m_fileselect_box->set_text("filename:");
+    m_fileselect_box->set_text("");
     list_files(m_filepath);
     Popup::show(center);
 }
@@ -263,7 +266,7 @@ void FileSaveDialog::set_selected(const std::string& fselect)
 
 const std::string FileSaveDialog::get_selected()
 {
-    return m_filepath;
+    return (m_filepath + "/" + m_fselected);
 }
 
 
