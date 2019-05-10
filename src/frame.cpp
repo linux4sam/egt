@@ -80,6 +80,8 @@ int Frame::handle(eventid event)
     case eventid::pointer_drag:
     case eventid::pointer_drag_stop:
     {
+        Point pos = from_display(event::pointer().point);
+
         for (auto& child : detail::reverse_iterate(m_children))
         {
             if (child->readonly())
@@ -90,8 +92,6 @@ int Frame::handle(eventid event)
 
             if (!child->visible())
                 continue;
-
-            Point pos = to_child(from_display(event::pointer().point));
 
             if (Rect::point_inside(pos, child->box()))
             {
