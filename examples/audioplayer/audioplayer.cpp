@@ -5,6 +5,7 @@
  */
 #include <egt/asio.hpp>
 #include <egt/detail/imagecache.h>
+#include <egt/detail/filesystem.h>
 #include <egt/ui>
 #include <iomanip>
 #include <iostream>
@@ -44,12 +45,13 @@ public:
         : TopWindow(size),
           m_background(*this, Image("background.png")),
           m_logo(*this, Image("@microchip_logo_black.png")),
-          m_dial(*this, Rect(), 0, 100, 0)
+          m_dial(0, 100, 0)
     {
         m_background.set_align(alignmask::expand);
         m_background.set_image_align(alignmask::expand);
 
         m_dial.set_align(alignmask::expand);
+        add(m_dial);
         add(m_controls);
 
         m_controls.m_play.on_event([this](eventid)
@@ -65,7 +67,7 @@ public:
                 m_player.play();
             }
 
-            return 0;
+            return 1;
         }, {eventid::pointer_click});
 
         m_logo.set_align(alignmask::left | alignmask::top);
@@ -74,10 +76,8 @@ public:
         m_dial.on_event([this](eventid)
         {
             m_player.seek(m_dial.value());
-            return 0;
+            return 1;
         }, {eventid::input_property_changed});
-
-        add(m_dial);
 
         m_dial.radial_flags().set({Radial::flag::primary_value});
 
@@ -97,7 +97,7 @@ public:
             return 0;
         }, {eventid::property_changed});
 
-        m_player.set_media(detail::resolve_file_path("concerto.mp3"));
+        m_player.set_media(detail::abspath(detail::resolve_file_path("concerto.mp3")));
     }
 
 protected:
