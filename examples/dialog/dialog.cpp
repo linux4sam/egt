@@ -35,6 +35,7 @@ int main(int argc, const char** argv)
     vsizer.add(expand(hsizer));
 
     auto list = make_shared<ListBox>(Rect(Point(), Size(win0.w() * 0.25, 0)));
+    list->add_item(make_shared<StringItem>("", Rect(), alignmask::left | alignmask::center));
     list->add_item(make_shared<StringItem>("File Open", Rect(), alignmask::left | alignmask::center));
     list->add_item(make_shared<StringItem>("File Save", Rect(), alignmask::left | alignmask::center));
     list->add_item(make_shared<StringItem>("Message Dialog", Rect(), alignmask::left | alignmask::center));
@@ -43,27 +44,30 @@ int main(int argc, const char** argv)
     list->set_align(alignmask::expand_vertical | alignmask::left);
     hsizer->add(list);
 
-    auto label1 = std::make_shared<Label>("", Rect(0, 0, win0.w() * 0.75, win0.h() * 0.25), alignmask::left | alignmask::center, Font());
+    auto label1 = std::make_shared<TextBox>("", Rect(0, 0, win0.w() * 0.75, win0.h() * 0.25), alignmask::left | alignmask::center);
+    label1->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
     hsizer->add(label1);
 
     std::string RootDir = fs::current_path();
 
     auto win1 = std::make_shared<FileOpenDialog>(RootDir, Rect(0, 0, 640, 432));
-    win1->on_event([win1, label1](eventid)
+    win1->on_event([win1, label1, list](eventid)
     {
         DBG("FileDialog : file selected is : " << win1->get_selected());
         label1->set_text("File OpenDialog: " + win1->get_selected() + " Selected");
         win1->hide();
+        list->set_select(0);
         return 0;
     }, {eventid::property_changed});
     win0.add(win1);
 
     auto win2 = std::make_shared<FileSaveDialog>(RootDir, Rect(0, 0, 640, 432));
-    win2->on_event([win2, label1](eventid)
+    win2->on_event([win2, label1, list](eventid)
     {
         DBG("FileDialog : save file is : " << win2->get_selected());
         label1->set_text("File SaveDialog: " + win2->get_selected() + " Selected");
         win2->hide();
+        list->set_select(0);
         return 0;
     }, {eventid::property_changed});
 
@@ -76,7 +80,7 @@ int main(int argc, const char** argv)
     dialog->set_button(Dialog::buttonid::button2, "Cancel");
     win0.add(dialog);
 
-    dialog->on_event([dialog, label1](eventid event)
+    dialog->on_event([dialog, label1, list](eventid event)
     {
         if (event == eventid::event1)
         {
@@ -88,6 +92,7 @@ int main(int argc, const char** argv)
             DBG("FileDialog Cancel button clicked");
             label1->set_text("Message Dialog: Cancel button clicked");
         }
+        list->set_select(0);
         return 1;
     });
 
@@ -97,13 +102,13 @@ int main(int argc, const char** argv)
     dialog1->set_button(Dialog::buttonid::button2, "Cancel");
     win0.add(dialog1);
 
-    auto dlist0 = std::make_shared<ListBox>(Rect(0, 0, 400, 280));
+    auto dlist0 = std::make_shared<ListBox>(Rect(0, 0, dialog1->w(), dialog1->h() * 0.75));
     for (auto x = 0; x < 25; x++)
         dlist0->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Rect(), alignmask::left | alignmask::center));
-    dlist0->set_align(alignmask::center);
+    dlist0->set_align(alignmask::left | alignmask::expand_vertical);
     dialog1->set_widget(dlist0);
 
-    dialog1->on_event([dialog1, label1, dlist0](eventid event)
+    dialog1->on_event([dialog1, label1, dlist0, list](eventid event)
     {
         if (event == eventid::event1)
         {
@@ -116,6 +121,7 @@ int main(int argc, const char** argv)
             DBG("FileDialog Cancel button clicked");
             label1->set_text("List Dialog: Cancel button clicked");
         }
+        list->set_select(0);
         return 1;
     });
 
@@ -131,7 +137,7 @@ int main(int argc, const char** argv)
     slider1->set_align(alignmask::center);
     dialog2->set_widget(slider1);
 
-    dialog2->on_event([dialog2, label1, slider1](eventid event)
+    dialog2->on_event([dialog2, label1, slider1, list](eventid event)
     {
         if (event == eventid::event1)
         {
@@ -144,38 +150,47 @@ int main(int argc, const char** argv)
             DBG("FileDialog Cancel button clicked");
             label1->set_text("Slider Dialog: Cancel button clicked");
         }
+        list->set_select(0);
         return 1;
     });
 
     list->on_event([list, win1, win2, dialog, dialog1, dialog2, label1](eventid)
     {
         auto index = list->selected();
-        label1->set_text("");
         DBG("FileDialog : Index value " << index);
         switch (index)
         {
         case 0:
         {
-            win1->show_modal(true);
             break;
         }
         case 1:
         {
-            win2->show_modal(true);
+            label1->set_text("");
+            win1->show_modal(true);
             break;
         }
         case 2:
         {
-            dialog->show_modal(true);
+            label1->set_text("");
+            win2->show_modal(true);
             break;
         }
         case 3:
         {
-            dialog1->show_modal(true);
+            label1->set_text("");
+            dialog->show_modal(true);
             break;
         }
         case 4:
         {
+            label1->set_text("");
+            dialog1->show_modal(true);
+            break;
+        }
+        case 5:
+        {
+            label1->set_text("");
             dialog2->show_modal(true);
             break;
         }
