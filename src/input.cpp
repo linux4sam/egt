@@ -64,8 +64,31 @@ void Input::dispatch(eventid event)
         if (m_global_handler.invoke_handlers(eevent))
             return;
 
-
-    if (modal_window())
+    if (mouse_grab() && (event == eventid::raw_pointer_down ||
+                         event == eventid::raw_pointer_up ||
+                         event == eventid::raw_pointer_move ||
+                         event == eventid::pointer_click ||
+                         event == eventid::pointer_dblclick ||
+                         event == eventid::pointer_hold ||
+                         event == eventid::pointer_drag_start ||
+                         event == eventid::pointer_drag ||
+                         event == eventid::pointer_drag_stop))
+    {
+        auto target = mouse_grab();
+        target->handle(event);
+        if (eevent != eventid::none)
+            target->handle(eevent);
+    }
+    else if (keyboard_focus() && (event == eventid::keyboard_down ||
+                                  event == eventid::keyboard_up ||
+                                  event == eventid::keyboard_repeat))
+    {
+        auto target = keyboard_focus();
+        target->handle(event);
+        if (event != eventid::none)
+            target->handle(eevent);
+    }
+    else if (modal_window())
     {
         auto target = modal_window();
         // give event to the modal window
@@ -75,51 +98,24 @@ void Input::dispatch(eventid event)
     }
     else
     {
-        if (mouse_grab() && (event == eventid::raw_pointer_down ||
-                             event == eventid::raw_pointer_up ||
-                             event == eventid::raw_pointer_move ||
-                             event == eventid::pointer_click ||
-                             event == eventid::pointer_dblclick ||
-                             event == eventid::pointer_hold ||
-                             event == eventid::pointer_drag_start ||
-                             event == eventid::pointer_drag ||
-                             event == eventid::pointer_drag_stop))
+        // give event to any top level and visible windows
+        for (auto& w : detail::reverse_iterate(windows()))
         {
-            auto target = mouse_grab();
-            target->handle(event);
+            if (!w->top_level())
+                continue;
+
+            if (w->readonly())
+                continue;
+
+            if (w->disabled())
+                continue;
+
+            if (!w->visible())
+                continue;
+
+            w->handle(event);
             if (eevent != eventid::none)
-                target->handle(eevent);
-        }
-        else if (keyboard_focus() && (event == eventid::keyboard_down ||
-                                      event == eventid::keyboard_up ||
-                                      event == eventid::keyboard_repeat))
-        {
-            auto target = keyboard_focus();
-            target->handle(event);
-            if (event != eventid::none)
-                target->handle(eevent);
-        }
-        else
-        {
-            // give event to any top level and visible windows
-            for (auto& w : detail::reverse_iterate(windows()))
-            {
-                if (!w->top_level())
-                    continue;
-
-                if (w->readonly())
-                    continue;
-
-                if (w->disabled())
-                    continue;
-
-                if (!w->visible())
-                    continue;
-
-                w->handle(event);
-                if (eevent != eventid::none)
-                    w->handle(eevent);
-            }
+                w->handle(eevent);
         }
     }
 
