@@ -100,7 +100,7 @@ int ListBox::handle(eventid event)
     {
     case eventid::pointer_click:
     {
-        Point mouse = to_child(from_display(event::pointer().point));
+        Point mouse = from_display(event::pointer().point);
         for (size_t i = 0; i < m_sizer->count_children(); i++)
         {
             if (Rect::point_inside(mouse, m_sizer->child_at(i)->box()))
