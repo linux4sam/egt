@@ -745,6 +745,8 @@ public:
      */
     virtual Point from_display(const DisplayPoint& p);
 
+    virtual DisplayPoint display_origin();
+
     /**
      * Return the area that content is allowed to be positioned into.
      *
@@ -808,7 +810,6 @@ protected:
 private:
 
     DisplayPoint to_display_back(const Point& p);
-    Point from_display_back(const DisplayPoint& p);
 
     /**
      * Flags for the widget.

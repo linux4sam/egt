@@ -333,20 +333,32 @@ DisplayPoint Widget::to_display(const Point& p)
     return DisplayPoint(p.x, p.y);
 }
 
-Point Widget::from_display_back(const DisplayPoint& p)
-{
-    if (parent())
-        return parent()->from_display_back(p - DisplayPoint(box().point().x, box().point().y));
-
-    return Point(p.x, p.y) - box().point();
-}
-
 Point Widget::from_display(const DisplayPoint& p)
 {
-    if (parent())
-        return parent()->from_display_back(p);
+    Point p2(p.x, p.y);
 
-    return Point(p.x, p.y);
+    auto par = parent();
+    while (par)
+    {
+        p2 -= par->point();
+        par = par->parent();
+    }
+
+    return p2 - point();
+}
+
+DisplayPoint Widget::display_origin()
+{
+    DisplayPoint p(x(), y());
+
+    auto par = parent();
+    while (par)
+    {
+        p += DisplayPoint(par->x(), par->y());
+        par = par->parent();
+    }
+
+    return p;
 }
 
 Size Widget::min_size_hint() const
