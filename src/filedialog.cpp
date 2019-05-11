@@ -23,8 +23,10 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
 {
     set_name("FileDialog" + std::to_string(m_widgetid));
 
+    set_border(theme().default_border());
+    set_padding(5);
+
     m_vsizer->set_align(alignmask::expand_vertical);
-    m_vsizer->set_color(Palette::ColorId::border, Palette::darkgrey);
     add(m_vsizer);
 
     m_title->set_align(alignmask::left | alignmask::center);
