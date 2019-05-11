@@ -46,6 +46,7 @@ int main(int argc, const char** argv)
 
     auto label1 = std::make_shared<TextBox>("", Rect(0, 0, win0.w() * 0.75, win0.h() * 0.25), alignmask::left | alignmask::center);
     label1->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
+    label1->set_color(Palette::ColorId::border, Palette::transparent);
     hsizer->add(label1);
 
     std::string RootDir = fs::current_path();
@@ -106,6 +107,7 @@ int main(int argc, const char** argv)
     for (auto x = 0; x < 25; x++)
         dlist0->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Rect(), alignmask::left | alignmask::center));
     dlist0->set_align(alignmask::left | alignmask::expand_vertical);
+    dlist0->set_color(Palette::ColorId::border, Palette::transparent);
     dialog1->set_widget(dlist0);
 
     dialog1->on_event([dialog1, label1, dlist0, list](eventid event)
@@ -131,10 +133,9 @@ int main(int argc, const char** argv)
     dialog2->set_button(Dialog::buttonid::button2, "Cancel");
     win0.add(dialog2);
 
-    auto slider1 = std::make_shared<Slider>(Rect(0, 0, 300, 100));
-    slider1->set_value(50);
+    auto slider1 = std::make_shared<Slider>(Rect(0, 0, dialog2->w(), dialog2->h() * 0.70));
     slider1->slider_flags().set({Slider::flag::round_handle, Slider::flag::show_label});
-    slider1->set_align(alignmask::center);
+    slider1->set_value(50);
     dialog2->set_widget(slider1);
 
     dialog2->on_event([dialog2, label1, slider1, list](eventid event)
