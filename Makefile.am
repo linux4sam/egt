@@ -11,9 +11,9 @@ COPYING \
 $(private_icons)
 
 if HAVE_DOXYGEN_BIN
-.PHONY: docs
-docs: docs/Doxyfile
-	@cd docs && $(DOXYGEN_BIN)
+.PHONY: docs docset
+docs docset:
+	@cd docs && $(MAKE) $(AM_MAKEFLAGS) $@
 endif
 
 ASTYLE_WILDCARDS = \
