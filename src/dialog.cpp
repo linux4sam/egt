@@ -14,18 +14,19 @@ inline namespace v1
 Dialog::Dialog(const Rect& rect)
     : Popup(rect.size(), rect.point()),
       m_vsizer(std::make_shared<BoxSizer>(orientation::vertical)),
-      m_grid(std::make_shared<StaticGrid>(Rect(0, 0, rect.w, (rect.h * 0.15)), Tuple(2, 1), 2)),
+      m_grid(std::make_shared<StaticGrid>(Rect(0, 0, rect.w, (rect.h * 0.15)), Tuple(2, 1), 5)),
       m_button1(std::make_shared<Button>("OK")),
       m_button2(std::make_shared<Button>("Cancel"))
 {
     set_name("Dialog" + std::to_string(m_widgetid));
 
+    set_border(theme().default_border());
+    set_padding(5);
+
     m_vsizer->set_align(alignmask::expand);
-    m_grid->set_color(Palette::ColorId::border, Palette::transparent);
     add(m_vsizer);
 
     m_grid->set_align(alignmask::bottom | alignmask::right);
-    m_grid->set_boxtype(Theme::boxtype::blank_rounded);
 
     m_button1->set_align(alignmask::center);
     m_grid->add(expand(m_button1));
@@ -54,6 +55,7 @@ void Dialog::set_title(const std::string& title)
     if (!m_title)
     {
         m_title.reset(new ImageLabel(Image("@folder.png"), title, Rect(0, 0, w(), (h() * 0.10))));
+        m_title->set_align(alignmask::top | alignmask::left);
         m_title->set_text_align(alignmask::left | alignmask::center);
         m_vsizer->add(expand_horizontal(m_title));
     }
@@ -68,7 +70,8 @@ void Dialog::set_title(const Image& icon, const std::string& title)
     if (!m_title)
     {
         m_title.reset(new ImageLabel(icon, title, Rect(0, 0, w(), (h() * 0.10))));
-        m_title->set_text_align(alignmask::top | alignmask::left | alignmask::center);
+        m_title->set_align(alignmask::top | alignmask::left);
+        m_title->set_text_align(alignmask::left | alignmask::center);
         m_vsizer->add(expand_horizontal(m_title));
     }
     else
@@ -83,6 +86,7 @@ void Dialog::set_message(const std::string& message)
     {
         m_message.reset(new TextBox(message, Rect(), alignmask::left | alignmask::center));
         m_message->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
+        m_message->set_color(Palette::ColorId::border, Palette::transparent);
         m_vsizer->add(expand(m_message));
     }
     else
