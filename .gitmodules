@@ -1,6 +1,8 @@
 [submodule "external/kplot"]
 	path = external/kplot
 	url = https://github.com/kristapsdz/kplot.git
+	ignore = untracked
 [submodule "external/layout"]
 	path = external/layout
 	url = https://bitbucket.microchip.com/scm/~c16205/layout.git
+	ignore = untracked
