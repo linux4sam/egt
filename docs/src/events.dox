@@ -34,9 +34,14 @@ Asio provides way more features than what is directly used by EGT.
 @image html asio.png "Asio"
 @image latex asio.png "Asio" width=8cm
 
-EGT abstracts out any direct involvement with Asio, however, should you choose
-to use it directly it is available for use in, for example, networking and
-multi-threaded applications.
+EGT abstracts out any required direct involvement with Asio, however, should you
+choose to use it directly it is available for use in, for example, @subpage
+topics_networking "networking" and @subpage topics_threads "multi-threaded"
+applications.
+
+<a href="http://think-async.com/Asio/asio-1.12.2/doc/index.html">Asio
+Documentation</a> is a good reference point if you want to start using the Asio
+API directly.
 
 @section events_prop Event Propagation
 
