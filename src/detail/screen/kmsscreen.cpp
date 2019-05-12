@@ -96,7 +96,7 @@ struct FlipThread
     std::deque<function<void()>> m_queue;
     std::mutex m_mutex;
     std::condition_variable m_condition;
-    bool m_stop;
+    std::atomic<bool> m_stop;
 };
 
 struct FlipJob
