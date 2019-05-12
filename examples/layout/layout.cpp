@@ -311,7 +311,7 @@ public:
             case EKEY_DELETE:
                 if (m_selected)
                 {
-                    m_selected->detatch();
+                    m_selected->detach();
                     m_selected = nullptr;
                     m_form->remove_options();
                 }

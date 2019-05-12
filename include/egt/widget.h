@@ -723,7 +723,7 @@ public:
     /**
      * Detach this widget from its parent.
      */
-    void detatch();
+    void detach();
 
     /**
     * Convert a point with a local origin to a parent origin.

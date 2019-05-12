@@ -455,7 +455,7 @@ void Widget::zorder_up()
         m_parent->zorder_up(this);
 }
 
-void Widget::detatch()
+void Widget::detach()
 {
     if (m_parent)
     {
@@ -478,7 +478,7 @@ void Widget::layout()
 
 Widget::~Widget() noexcept
 {
-    detatch();
+    detach();
 }
 
 void Widget::set_parent(Frame* parent)

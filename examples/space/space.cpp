@@ -135,7 +135,7 @@ public:
             auto& image = *i;
             if (!image->animate())
             {
-                image->detatch();
+                image->detach();
                 i = m_images.erase(i);
             }
             else
