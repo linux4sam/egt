@@ -21,6 +21,26 @@ Want to help out or make some changes?  See [Contributing](CONTRIBUTING.md).
 - Multimedia support for video playback, raster images, and vector graphics.
 - Customizable look and feel with themeable widget drawing, colors, and fonts.
 
+## Build
+
+Install dependencies.
+
+```sh
+sudo apt-get install liblua5.3-dev libdrm-dev libinput-dev \
+    libcairo-dev libjpeg-dev libmagic-dev libcurl4-openssl-dev
+```
+
+Then clone and build.
+
+```sh
+git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
+cd egt
+./autogen.sh
+./configure
+make
+make install
+```
+
 ## Example
 
 The obligatory complete EGT application that can be compiled and run.  It shows
@@ -40,6 +60,18 @@ int main(int argc, const char** argv)
 
     return app.run();
 }
+```
+
+To link this example application, saved as example.cpp, use pkgconfig.
+
+```sh
+g++ -std=c++11 example.cpp -o example `pkg-config libegt --cflags --libs` -pthread
+```
+
+Then, run.
+
+```sh
+./example
 ```
 
 ## Screenshots
