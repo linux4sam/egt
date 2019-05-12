@@ -11,11 +11,13 @@
 #include "egt/palette.h"
 #include "egt/screen.h"
 #include "egt/utils.h"
+#include <cairo.h>
 #include <cassert>
+#include <map>
+
 #ifdef HAVE_LIBDRM
 #include <drm_fourcc.h>
 #endif
-#include <map>
 
 using namespace std;
 
@@ -194,21 +196,13 @@ void Screen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
 
     for (uint32_t x = 0; x < count; x++)
     {
-        DisplayBuffer buffer;
-        buffer.surface = shared_cairo_surface_t(
-                             cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
-                                     f,
-                                     w, h,
-                                     cairo_format_stride_for_width(f, w)),
-                             cairo_surface_destroy);
-        assert(buffer.surface);
+        m_buffers.emplace_back(
+            cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
+                                                f,
+                                                w, h,
+                                                cairo_format_stride_for_width(f, w)));
 
-        buffer.cr = shared_cairo_t(cairo_create(buffer.surface.get()), cairo_destroy);
-        assert(buffer.cr);
-
-        buffer.damage.emplace_back(0, 0, w, h);
-
-        m_buffers.emplace_back(buffer);
+        m_buffers.back().damage.emplace_back(0, 0, w, h);
     }
 
     m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, w, h),

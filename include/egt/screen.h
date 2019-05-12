@@ -124,11 +124,21 @@ protected:
     void init(void** ptr, uint32_t count, int w, int h,
               pixel_format format = pixel_format::argb8888);
 
+    inline void init(int w, int h, pixel_format format = pixel_format::argb8888)
+    {
+        init(nullptr, 0, w, h, format);
+    }
+
     /// @private
     struct DisplayBuffer
     {
-        shared_cairo_surface_t surface;
-        shared_cairo_t cr;
+        DisplayBuffer(cairo_surface_t* s)
+            : surface(s),
+              cr(cairo_create(s))
+        {}
+
+        unique_cairo_surface_t surface;
+        unique_cairo_t cr;
 
         /**
          * Each rect that needs to be copied from the back buffer.
@@ -142,8 +152,6 @@ protected:
 
             Screen::damage_algorithm(damage, rect);
         }
-
-        inline ~DisplayBuffer() noexcept {}
     };
 
     void copy_to_buffer(DisplayBuffer& buffer);

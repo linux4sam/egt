@@ -75,20 +75,16 @@ X11Screen::X11Screen(const Size& size, bool borderless)
                  PointerMotionMask | Button1MotionMask | VisibilityChangeMask |
                  ColormapChangeMask);
 
-    init(nullptr, 0, size.w, size.h);
+    init(size.w, size.h);
 
     // instead of using init() to create the buffer, create our own using cairo_xlib_surface_create
-    DisplayBuffer buffer;
-    buffer.surface =
-        shared_cairo_surface_t(cairo_xlib_surface_create(m_priv->display, m_priv->window,
-                               DefaultVisual(m_priv->display, screen),
-                               size.w, size.h),
-                               cairo_surface_destroy);
-    cairo_xlib_surface_set_size(buffer.surface.get(), size.w, size.h);
+    m_buffers.emplace_back(
+        cairo_xlib_surface_create(m_priv->display, m_priv->window,
+                                  DefaultVisual(m_priv->display, screen),
+                                  size.w, size.h));
+    cairo_xlib_surface_set_size(m_buffers.back().surface.get(), size.w, size.h);
 
-    buffer.cr = shared_cairo_t(cairo_create(buffer.surface.get()), cairo_destroy);
-    buffer.damage.emplace_back(0, 0, size.w, size.h);
-    m_buffers.push_back(buffer);
+    m_buffers.back().damage.emplace_back(0, 0, size.w, size.h);
 
     XMapWindow(m_priv->display, m_priv->window);
     XFlush(m_priv->display);
@@ -191,7 +187,8 @@ void X11Screen::handle_read(const asio::error_code& error)
 
 X11Screen::~X11Screen()
 {
-    XCloseDisplay(m_priv->display);
+    if (m_priv->display)
+        XCloseDisplay(m_priv->display);
 }
 
 }

@@ -38,7 +38,7 @@ protected:
 
     void handle_read(const asio::error_code& error);
 
-    std::shared_ptr<detail::X11Data> m_priv;
+    std::unique_ptr<detail::X11Data> m_priv;
     asio::posix::stream_descriptor m_input;
 
     struct X11Input : public Input
