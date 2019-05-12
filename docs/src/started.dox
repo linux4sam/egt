@@ -29,7 +29,7 @@ platforms.
 To build for a PC, first, install dependencies:
 
 @code{.sh}
-sudo apt-get install librapidxml-dev liblua5.3-dev libdrm-dev libinput-dev \
+sudo apt-get install liblua5.3-dev libdrm-dev libinput-dev \
     libcairo-dev libjpeg-dev libmagic-dev libcurl4-openssl-dev
 @endcode
 
