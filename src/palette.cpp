@@ -35,13 +35,18 @@ Palette& Palette::set(ColorId id, const pattern_type& color, GroupId group)
     return set(id, group, color);
 }
 
+void Palette::clear(ColorId id, GroupId group)
+{
+    auto g = m_colors.find(group);
+    if (g != m_colors.end())
+        g->second.erase(id);
+}
+
 bool Palette::exists(ColorId id, GroupId group) const
 {
     auto g = m_colors.find(group);
     if (g != m_colors.end())
-    {
         return g->second.find(id) != g->second.end();
-    }
 
     return false;
 }

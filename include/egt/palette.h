@@ -23,7 +23,7 @@ inline namespace v1
 /**
  * Color palette.
  *
- * The color Palette defines a bank of colors used by the Theme, and ultimately
+ * The Color Palette defines a bank of colors used by the Theme, and ultimately
  * widgets.
  *
  * The palette can be extended by simply inserting more groups and color
@@ -211,12 +211,50 @@ public:
         cursor,
     };
 
+    /**
+     * Get a color.
+     *
+     * @param id Color id.
+     * @param group Color group.
+     * @return The color or pattern.
+     */
     const pattern_type& color(ColorId id, GroupId group = GroupId::normal) const;
 
+    /**
+     * Set a color in the Palette.
+     *
+     * @param id Color id.
+     * @param group Color group.
+     * @param color The color or pattern.
+     * @return Reference to the Palette instance.
+     */
     Palette& set(ColorId id, GroupId group, const pattern_type& color);
 
+    /**
+     * Set a color in a Palette.
+     *
+     * @param id Color id.
+     * @param color The color or pattern.
+     * @param group Color group.
+     * @return Reference to the Palette instance.
+     */
     Palette& set(ColorId id, const pattern_type& color, GroupId group = GroupId::normal);
 
+    /**
+     * Remove a color from the Palette.
+     *
+     * @param id Color id.
+     * @param group Color group.
+     */
+    void clear(ColorId id, GroupId group = GroupId::normal);
+
+    /**
+     * Check if a color exists in the palette.
+     *
+     * @param id Color id.
+     * @param group Color group.
+     * @return True if exists.
+     */
     bool exists(ColorId id, GroupId group = GroupId::normal) const;
 
 protected:

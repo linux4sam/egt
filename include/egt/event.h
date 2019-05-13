@@ -24,6 +24,7 @@ inline namespace v1
 /**
  * @defgroup events Events
  * Event related functionality.
+ * @see @subpage events
  */
 
 /**
@@ -36,8 +37,8 @@ enum class eventid
 
     //@{
     /**
-     * Raw pointer events.
-     * It's usually preferred to use the normal pointer events instead.
+     * Raw pointer events. It's usually preferred to use the normal pointer
+     * events instead.
      */
     raw_pointer_down,
     raw_pointer_up,

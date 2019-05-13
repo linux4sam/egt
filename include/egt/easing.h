@@ -19,8 +19,14 @@ using float_t = float;
 
 /**
  * @defgroup easing_functions Animation Easing Functions
- * Predefined animation easing functions.
+ * These functions and functors define easing curves for use with animations.
+ * @see @subpage animations
+ */
+
+/**
  * @{
+ * @ingroup easing_functions
+ * Predefined animation easing functions.
  */
 float_t easing_linear(float_t p);
 float_t easing_easy(float_t p);
@@ -62,17 +68,19 @@ float_t easing_circular_easeinout(float_t p);
 float_t easing_exponential_easein(float_t p);
 float_t easing_exponential_easeout(float_t p);
 float_t easing_exponential_easeinout(float_t p);
-
+/** @} */
 
 /**
- * Cubic Bezier equation.
+ * Cubic Bezier equation easing function.
+ *
+ * @ingroup easing_functions
  */
-struct cubic_bezier
+struct easing_cubic_bezier
 {
-    cubic_bezier(float_t p0 = 0.42,
-                 float_t p1 = 0,
-                 float_t p2 = 0.58,
-                 float_t p3 = 1)
+    explicit constexpr easing_cubic_bezier(float_t p0 = 0.42,
+                                           float_t p1 = 0,
+                                           float_t p2 = 0.58,
+                                           float_t p3 = 1) noexcept
         : m_p0(p0),
           m_p1(p1),
           m_p2(p2),
@@ -87,7 +95,7 @@ struct cubic_bezier
     float_t m_p3;
 };
 
-/** @} */
+
 
 }
 }

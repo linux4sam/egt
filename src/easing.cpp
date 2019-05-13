@@ -316,7 +316,7 @@ float_t easing_exponential_easeinout(float_t p)
     }
 }
 
-float_t cubic_bezier::operator()(float_t p)
+float_t easing_cubic_bezier::operator()(float_t p)
 {
     return std::pow(1. - p, 3.) * m_p0 +
            3. * p * std::pow(1. - p, 2.) * m_p1 +

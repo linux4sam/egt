@@ -23,6 +23,9 @@ namespace egt
 {
 inline namespace v1
 {
+/**
+ * Easing function type.
+ */
 using float_t = float;
 
 /**

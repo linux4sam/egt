@@ -45,7 +45,7 @@ std::ostream& operator<<(std::ostream& os, const pixel_format& format);
 /**
  * Hidden detail namespace.
  *
- * The detail namespace is considered unstable and private to EGT. use at your
+ * The detail namespace is considered unstable and private to EGT. Use at your
  * own risk.
  */
 namespace detail
