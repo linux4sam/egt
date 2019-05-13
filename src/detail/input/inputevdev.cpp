@@ -30,7 +30,7 @@ namespace detail
 {
 
 InputEvDev::InputEvDev(const string& path)
-    : m_input(main_app().event().io()),
+    : m_input(Application::instance().event().io()),
       m_input_buf(sizeof(struct input_event) * 10)
 {
     int fd = open(path.c_str(), O_RDONLY);

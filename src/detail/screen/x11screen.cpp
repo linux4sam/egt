@@ -35,7 +35,7 @@ struct X11Data
 
 X11Screen::X11Screen(const Size& size, bool borderless)
     : m_priv(new detail::X11Data),
-      m_input(main_app().event().io())
+      m_input(Application::instance().event().io())
 {
     spdlog::info("X11 Screen");
 
@@ -182,7 +182,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ClientMessage:
             if (static_cast<int>(e.xclient.data.l[0]) == static_cast<int>(m_priv->wmDeleteMessage))
-                main_app().event().quit();
+                Application::instance().event().quit();
             break;
         default:
             SPDLOG_DEBUG("x11 unhandled event: {}", e.type);

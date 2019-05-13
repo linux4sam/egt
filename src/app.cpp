@@ -54,7 +54,7 @@ inline namespace v1
 {
 
 static Application* the_app = nullptr;
-Application& main_app()
+Application& Application::instance()
 {
     assert(the_app);
     return *the_app;

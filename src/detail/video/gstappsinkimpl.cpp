@@ -104,7 +104,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
         else
 #endif
         {
-            asio::post(main_app().event().io(), [Impl, sample]()
+            asio::post(Application::instance().event().io(), [Impl, sample]()
             {
                 Impl->m_videosample = sample;
                 Impl->m_interface.damage();

@@ -191,7 +191,7 @@ private:
 
     HttpClientRequestManager()
         : m_running(0),
-          m_timer(main_app().event().io())
+          m_timer(Application::instance().event().io())
     {
         m_multi = curl_multi_init();
         curl_multi_setopt(m_multi, CURLMOPT_SOCKETFUNCTION, HttpClientRequestManager::socket_callback);
@@ -223,7 +223,7 @@ static curl_socket_t opensocket_callback(void* clientp,
 
     if (purpose == CURLSOCKTYPE_IPCXN && address->family == AF_INET)
     {
-        s->impl()->socket = new asio::ip::tcp::socket(main_app().event().io());
+        s->impl()->socket = new asio::ip::tcp::socket(Application::instance().event().io());
 
         asio::error_code ec;
         s->impl()->socket->open(asio::ip::tcp::v4(), ec);

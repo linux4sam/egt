@@ -28,13 +28,13 @@ void dump_timers(ostream& out)
 }
 
 Timer::Timer() noexcept
-    : m_timer(main_app().event().io())
+    : m_timer(Application::instance().event().io())
 {
     timers.push_back(this);
 }
 
 Timer::Timer(std::chrono::milliseconds duration) noexcept
-    : m_timer(main_app().event().io()),
+    : m_timer(Application::instance().event().io()),
       m_duration(duration)
 {
     timers.push_back(this);
@@ -49,9 +49,9 @@ void Timer::start()
     m_running = true;
 #ifdef USE_PRIORITY_QUEUE
     m_timer.async_wait(
-        main_app().event().queue().wrap(detail::priorities::high,
-                                        std::bind(&Timer::timer_callback, this,
-                                                std::placeholders::_1)));
+        Application::instance().event().queue().wrap(detail::priorities::high,
+                std::bind(&Timer::timer_callback, this,
+                          std::placeholders::_1)));
 #else
     m_timer.async_wait(std::bind(&Timer::timer_callback, this,
                                  std::placeholders::_1));
@@ -137,7 +137,7 @@ void PeriodicTimer::start()
     m_running = true;
 
 #ifdef USE_PRIORITY_QUEUE
-    m_timer.async_wait(main_app().event().queue().wrap(detail::priorities::high, std::bind(&PeriodicTimer::timer_callback, this,
+    m_timer.async_wait(Application::instance().event().queue().wrap(detail::priorities::high, std::bind(&PeriodicTimer::timer_callback, this,
                        std::placeholders::_1)));
 #else
     m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this,

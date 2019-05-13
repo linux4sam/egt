@@ -51,6 +51,11 @@ public:
                          const std::string& name = "egt", bool primary = true);
 
     /**
+     * Reference to the main Application instance.
+     */
+    static Application& instance();
+
+    /**
      * Run the application.
      *
      * This will initialize the application and start running the event loop.
@@ -98,11 +103,6 @@ private:
      */
     void signal_handler(const asio::error_code& error, int signum);
 };
-
-/**
- * Reference to the main Application instance.
- */
-Application& main_app();
 
 /**
  * This is a wrapper around gettext.

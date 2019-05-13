@@ -98,7 +98,7 @@ public:
         {
         case eventid::pointer_click:
         {
-            main_app().event().quit();
+            Application::instance().event().quit();
 
 #ifdef HAVE_LIBPLANES
             // TODO: explicitly close KMS

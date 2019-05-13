@@ -99,7 +99,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         g_error_free(error);
         g_free(debug);
 
-        asio::post(main_app().event().io(), [cameraImpl]()
+        asio::post(Application::instance().event().io(), [cameraImpl]()
         {
             Event event(eventid::event2);
             cameraImpl->m_interface.invoke_handlers(event);
@@ -243,7 +243,7 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
         else
 #endif
         {
-            asio::post(main_app().event().io(), [cameraImpl, sample]()
+            asio::post(Application::instance().event().io(), [cameraImpl, sample]()
             {
                 cameraImpl->m_camerasample = sample;
                 cameraImpl->m_interface.damage();
