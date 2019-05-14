@@ -6,6 +6,11 @@
 #ifndef EGT_VALUEWIDGET_H
 #define EGT_VALUEWIDGET_H
 
+/**
+ * @file
+ * @brief Widgets for managing values.
+ */
+
 #include <cassert>
 #include <egt/widget.h>
 
@@ -55,8 +60,7 @@ public:
      */
     inline T value() const { return m_value; }
 
-    virtual ~ValueWidget()
-    {}
+    virtual ~ValueWidget() = default;
 
 protected:
     T m_value;
@@ -169,8 +173,7 @@ public:
         return m_value;
     }
 
-    virtual ~ValueRangeWidget()
-    {}
+    virtual ~ValueRangeWidget() = default;
 
 protected:
     /**

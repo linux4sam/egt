@@ -45,7 +45,7 @@ enum class pixel_format
 std::ostream& operator<<(std::ostream& os, const pixel_format& format);
 
 /**
- * Hidden detail namespace.
+ * Internal detail namespace.
  *
  * The detail namespace is considered unstable and private to EGT. Use at your
  * own risk.
