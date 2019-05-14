@@ -24,6 +24,10 @@ inline namespace v1
 /**
  * @defgroup sizers Sizing and Positioning
  * Sizing and positioning widgets.
+ *
+ * These widgets, different from other types of widgets like @ref controls, are
+ * used specifically for managing position and size of child widgets as well as
+ * themselves.
  */
 
 /**

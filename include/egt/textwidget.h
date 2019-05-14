@@ -52,17 +52,17 @@ public:
     virtual const std::string& text() const { return m_text; }
 
     /**
-     * Set the alignment of the Label.
+     * Set the text alignment within the Label.
      */
     void set_text_align(alignmask align)
     {
-        if (m_text_align != align)
-        {
-            m_text_align = align;
+        if (detail::change_if_diff<>(m_text_align, align))
             damage();
-        }
     }
 
+    /**
+     * Get the text alignment within the Label.
+     */
     alignmask text_align() const { return m_text_align; }
 
     /**

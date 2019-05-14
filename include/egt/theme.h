@@ -98,11 +98,9 @@ class Color;
 /**
  * Customizable characteristics for drawing widgets.
  *
- * Theme implements common characteristics of drawing widgets, used mostly
- * by the theme.
- *
- * This can be overloaded and supplied with a different renderer in addition to
- * setting up a custom palette.
+ * Theme implements common characteristics of drawing widgets. This can be
+ * overloaded and supplied with different properties like Palette and Font
+ * to change how Widget are rendered globally.
  */
 class Theme
 {
@@ -234,9 +232,10 @@ ENABLE_BITMASK_OPERATORS(Theme::boxtype)
 /**
  * Get the global theme.
  *
- * This is the point to get and modify the global theme.  Keep in mind that
- * themes can be set on individual widgets, in which case, they are
- * disconnected from the global theme.
+ * This is the point to get and modify the global theme.
+ *
+ * @warning Keep in mind that themes can be set on individual widgets, in which
+ * case, they are disconnected from the global theme.
  */
 Theme& global_theme();
 

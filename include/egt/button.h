@@ -30,12 +30,15 @@ class Painter;
 /**
  * @defgroup controls Controls
  * User interface control widgets.
+ *
+ * Control are widgets that usually provide some interaction with the user- even
+ * if that interaction is only visual like display a value.
  */
 
 /**
  * Basic button control.
  *
- * This presents a clickable control that can be used to respond to user input
+ * This presents a clickable control that can be used to respond to user pointer
  * events.
  *
  * @ingroup controls
@@ -163,31 +166,25 @@ public:
         scale_image(s, s, approximate);
     }
 
-    const Image& image() const { return m_image; }
+    inline const Image& image() const { return m_image; }
 
-    Image& image() { return m_image; }
+    inline Image& image() { return m_image; }
 
     void set_image_align(alignmask align)
     {
-        if (m_image_align != align)
-        {
-            m_image_align = align;
+        if (detail::change_if_diff<>(m_image_align, align))
             damage();
-        }
     }
 
-    alignmask image_align() const { return m_image_align; }
+    inline alignmask image_align() const { return m_image_align; }
 
     void set_position_image_first(bool value)
     {
-        if (m_position_image_first != value)
-        {
-            m_position_image_first = value;
+        if (detail::change_if_diff<>(m_position_image_first, value))
             damage();
-        }
     }
 
-    virtual ~ImageButton();
+    virtual ~ImageButton() = default;
 
 protected:
 
@@ -207,30 +204,6 @@ protected:
  */
 namespace experimental
 {
-
-/**
- * A special widget that has no content but receives events.
- *
- * This is an invisible widget that can be used to handle events, like
- * input events.
- */
-class HotSpot : public Widget
-{
-public:
-
-    explicit HotSpot(const Rect& rect = Rect()) noexcept;
-
-    explicit HotSpot(Frame& parent, const Rect& rect = Rect()) noexcept;
-
-    virtual void damage() override
-    {}
-
-    virtual void draw(Painter&, const Rect&) override
-    {}
-
-private:
-    virtual void show() override {}
-};
 
 }
 

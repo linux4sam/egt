@@ -235,11 +235,6 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     }
 }
 
-ImageButton::~ImageButton()
-{
-
-}
-
 void ImageButton::first_resize()
 {
     if (box().size().empty())
@@ -268,23 +263,6 @@ void ImageButton::first_resize()
             resize(m_image.size());
         }
     }
-}
-
-namespace experimental
-{
-HotSpot::HotSpot(const Rect& rect) noexcept
-    : Widget(rect)
-{
-    set_boxtype(Theme::boxtype::none);
-    hide();
-}
-
-HotSpot::
-HotSpot(Frame& parent, const Rect& rect) noexcept
-    : HotSpot(rect)
-{
-    parent.add(*this);
-}
 }
 
 }

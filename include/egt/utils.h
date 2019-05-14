@@ -98,6 +98,12 @@ private:
     noncopyable& operator=(const noncopyable&) = delete;
 };
 
+/**
+ * Utility to test and change a value if it is different.
+ *
+ * This is a very common pattern used by Widget functions to determine whether
+ * damage() should be called when a property is changed.
+ */
 template<class T>
 inline bool change_if_diff(T& old, const T& to)
 {

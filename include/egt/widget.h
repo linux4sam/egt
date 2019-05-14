@@ -180,6 +180,9 @@ public:
      * then this must be called from derived classes.  Or, manually call
      * Widget::invoke_handlers().
      *
+     * @see @subpage events
+     *
+     * @param event The eventid that occurred.
      * @return A return value of non-zero stops the propagation of the event.
      */
     virtual int handle(eventid event);

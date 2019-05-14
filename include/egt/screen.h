@@ -27,17 +27,19 @@ inline namespace v1
 /**
  * Supported pixel formats.
  *
- * @note Some backends may not support all formats.
+ * @note Not all formats are supported by all windows or backends.
  */
 enum class pixel_format
 {
-    invalid,
-    rgb565,
-    argb8888,
-    xrgb8888,
-    yuyv,
-    nv21,
-    yuv420,
+    invalid,  ///< Invalid color format
+    rgb565,   ///< 16 bpp, 16-bit color
+    argb8888, ///< 32 bpp, 24-bit color + 8-bit alpha
+    xrgb8888, ///< 32 bpp, 24-bit color
+    yuyv,     ///< Packed format with ½ horizontal chroma resolution, also known
+    ///< as YUV 4:2:2
+    nv21,     ///< YUV 4:2:0 planar image, with 8 bit Y samples, followed by
+    ///< interleaved V/U plane with 8bit 2x2 subsampled chroma samples
+    yuv420,   ///< Planar format
 };
 
 std::ostream& operator<<(std::ostream& os, const pixel_format& format);
