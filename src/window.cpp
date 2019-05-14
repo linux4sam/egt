@@ -7,8 +7,8 @@
 #include "config.h"
 #endif
 
-#include "egt/detail/basicwindow.h"
-#include "egt/detail/planewindow.h"
+#include "detail/window/basicwindow.h"
+#include "detail/window/planewindow.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/input.h"
 #include "egt/label.h"
@@ -84,6 +84,68 @@ Window::Window(const Rect& rect,
 
     // save off the new window to the window list
     windows().push_back(this);
+}
+
+void Window::damage(const Rect& rect)
+{
+    if (m_impl)
+        m_impl->damage(rect);
+}
+
+Screen* Window::screen()
+{
+    if (m_impl)
+        return m_impl->screen();
+    return nullptr;
+}
+
+bool Window::has_screen() const
+{
+    if (m_impl)
+        return m_impl->has_screen();
+    return false;
+}
+
+void Window::move(const Point& point)
+{
+    if (point != box().point())
+    {
+        if (m_impl)
+            m_impl->move(point);
+
+        parent_layout();
+    }
+}
+
+void Window::show()
+{
+    if (m_impl)
+        m_impl->show();
+}
+
+void Window::hide()
+{
+    if (m_impl)
+        m_impl->hide();
+}
+
+
+void Window::paint(Painter& painter)
+{
+    if (m_impl)
+        m_impl->paint(painter);
+}
+
+void Window::top_draw()
+{
+    if (m_impl)
+        m_impl->top_draw();
+}
+
+void Window::allocate_screen()
+{
+    if (m_impl)
+        m_impl->allocate_screen();
 }
 
 void Window::do_draw()

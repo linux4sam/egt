@@ -3,13 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include "egt/window.h"
+#include "detail/window/windowimpl.h"
 #include "egt/painter.h"
-#include "egt/detail/windowimpl.h"
+#include "egt/window.h"
 
 namespace egt
 {

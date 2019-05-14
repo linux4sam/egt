@@ -37,7 +37,6 @@ checkbox.cpp \
 color.cpp \
 combo.cpp \
 detail/alignment.cpp \
-detail/basicwindow.cpp \
 detail/collision.cpp \
 detail/filesystem.cpp \
 detail/imagecache.cpp \
@@ -46,7 +45,10 @@ detail/mousegesture.cpp \
 detail/object.cpp \
 detail/resource.cpp \
 detail/string.cpp \
-detail/windowimpl.cpp \
+detail/window/basicwindow.cpp \
+detail/window/basicwindow.h \
+detail/window/windowimpl.cpp \
+detail/window/windowimpl.h \
 dialog.cpp \
 easing.cpp \
 event.cpp \
@@ -120,7 +122,6 @@ $(top_srcdir)/include/egt/color.h \
 $(top_srcdir)/include/egt/combo.h \
 $(top_srcdir)/include/egt/dialog.h \
 $(top_srcdir)/include/egt/detail/alignment.h \
-$(top_srcdir)/include/egt/detail/basicwindow.h \
 $(top_srcdir)/include/egt/detail/collision.h \
 $(top_srcdir)/include/egt/detail/floatingpoint.h \
 $(top_srcdir)/include/egt/detail/imagecache.h \
@@ -133,7 +134,6 @@ $(top_srcdir)/include/egt/detail/resource.h \
 $(top_srcdir)/include/egt/detail/serialize.h \
 $(top_srcdir)/include/egt/detail/spriteimpl.h \
 $(top_srcdir)/include/egt/detail/string.h \
-$(top_srcdir)/include/egt/detail/windowimpl.h \
 $(top_srcdir)/include/egt/detail/layout.h \
 $(top_srcdir)/include/egt/easing.h \
 $(top_srcdir)/include/egt/event.h \
@@ -230,14 +230,14 @@ endif
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \
-detail/planewindow.cpp \
+detail/window/planewindow.cpp \
+detail/window/planewindow.h \
 detail/screen/kmsoverlay.cpp \
 detail/screen/kmsscreen.cpp
 
 nobase_libegtinclude_HEADERS += \
 $(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
-$(top_srcdir)/include/egt/detail/screen/kmsscreen.h \
-$(top_srcdir)/include/egt/detail/planewindow.h
+$(top_srcdir)/include/egt/detail/screen/kmsscreen.h
 endif
 
 if HAVE_X11

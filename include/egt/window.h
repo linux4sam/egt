@@ -11,7 +11,6 @@
  * @brief Working with windows.
  */
 
-#include <egt/detail/windowimpl.h>
 #include <egt/frame.h>
 #include <egt/image.h>
 #include <egt/screen.h>
@@ -23,33 +22,6 @@ namespace egt
 {
 inline namespace v1
 {
-
-namespace detail
-{
-class BasicWindow;
-class BasicTopWindow;
-class PlaneWindow;
-}
-
-class Window;
-
-/**
- * Get a pointer reference to the main window.
- */
-Window*& main_window();
-
-/**
- * Get a pointer reference to the modal window.
- *
- * The modal window is a single window that will receive all events. Only
- * one window can be modal at any given time.
- */
-Window*& modal_window();
-
-/**
- * Get the list of all currently allocated BasicWindows.
- */
-std::vector<Window*>& windows();
 
 /**
  * Hint used for configuring Window backends.
@@ -83,6 +55,12 @@ enum class windowhint
 };
 
 std::ostream& operator<<(std::ostream& os, const windowhint& event);
+
+namespace detail
+{
+class WindowImpl;
+class PlaneWindow;
+}
 
 /**
  * A Window is a Widget that handles drawing to a Screen.
@@ -119,62 +97,27 @@ public:
         Frame::damage();
     }
 
-    virtual void damage(const Rect& rect) override
-    {
-        if (m_impl)
-            m_impl->damage(rect);
-    }
+    virtual void damage(const Rect& rect) override;
 
     /**
      * The buck stops on this call to Widget::screen() with a Window
      * because the Window contains the screen.
      */
-    virtual Screen* screen() override
-    {
-        if (m_impl)
-            return m_impl->screen();
-        return nullptr;
-    }
+    virtual Screen* screen() override;
 
-    virtual bool has_screen() const override
-    {
-        if (m_impl)
-            return m_impl->has_screen();
-        return false;
-    }
+    virtual bool has_screen() const override;
 
-    virtual void move(const Point& point) override
-    {
-        if (point != box().point())
-        {
-            if (m_impl)
-                m_impl->move(point);
+    virtual void move(const Point& point) override;
 
-            parent_layout();
-        }
-    }
+    virtual void show() override;
 
-    virtual void show() override
-    {
-        if (m_impl)
-            m_impl->show();
-    }
-
-    virtual void hide() override
-    {
-        if (m_impl)
-            m_impl->hide();
-    }
+    virtual void hide() override;
 
     virtual void resize(const Size& size) override;
 
     virtual void set_scale(float scale) override;
 
-    virtual void paint(Painter& painter) override
-    {
-        if (m_impl)
-            m_impl->paint(painter);
-    }
+    virtual void paint(Painter& painter) override;
 
     /*
      * Damage rectangles propagate up the widget tree and stop at a top level
@@ -183,11 +126,7 @@ public:
      * drawing those rectangles, as they propagate down the widget hierarchy
      * the opposite change happens to the rectangle origin.
      */
-    virtual void top_draw() override
-    {
-        if (m_impl)
-            m_impl->top_draw();
-    }
+    virtual void top_draw() override;
 
     /**
      * Perform the actual drawing.  Allocate the Painter and call draw() on each
@@ -199,11 +138,7 @@ public:
 
 protected:
 
-    virtual void allocate_screen()
-    {
-        if (m_impl)
-            m_impl->allocate_screen();
-    }
+    virtual void allocate_screen();
 
     /**
      * Select and allocate the backend implementation for the window.
@@ -267,7 +202,6 @@ protected:
 
     friend class detail::WindowImpl;
     friend class detail::PlaneWindow;
-    friend class detail::BasicTopWindow;
 };
 
 /**
@@ -289,6 +223,24 @@ protected:
 
     std::shared_ptr<Window> m_cursor;
 };
+
+/**
+ * Get a pointer reference to the main window.
+ */
+Window*& main_window();
+
+/**
+ * Get a pointer reference to the modal window.
+ *
+ * The modal window is a single window that will receive all events. Only
+ * one window can be modal at any given time.
+ */
+Window*& modal_window();
+
+/**
+ * Get the list of all currently allocated BasicWindows.
+ */
+std::vector<Window*>& windows();
 
 }
 }

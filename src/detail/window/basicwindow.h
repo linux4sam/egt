@@ -6,12 +6,8 @@
 #ifndef EGT_DETAIL_BASICWINDOW_H
 #define EGT_DETAIL_BASICWINDOW_H
 
-/**
- * @file
- * @brief Working with windows.
- */
-
-#include <egt/window.h>
+#include "detail/window/windowimpl.h"
+#include "egt/window.h"
 
 namespace egt
 {

@@ -6,12 +6,7 @@
 #ifndef EGT_DETAIL_PLANEWINDOW_H
 #define EGT_DETAIL_PLANEWINDOW_H
 
-/**
- * @file
- * @brief Working with plane windows.
- */
-
-#include <egt/detail/basicwindow.h>
+#include "detail/window/basicwindow.h"
 
 namespace egt
 {
