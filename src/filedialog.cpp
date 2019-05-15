@@ -135,8 +135,8 @@ void FileDialog::list_item_selected(int index)
 
 FileDialog::~FileDialog() { }
 
-FileOpenDialog::FileOpenDialog(const std::string& title, const Rect& rect)
-    : FileDialog(title, rect),
+FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
+    : FileDialog(filepath, rect),
       m_grid(std::make_shared<StaticGrid>(Rect(Size(rect.w / 2, (rect.h * 0.10))), Tuple(2, 1), 5)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
@@ -190,8 +190,8 @@ const std::string FileOpenDialog::get_selected()
     return (m_filepath + "/" + m_fselected);
 }
 
-FileSaveDialog::FileSaveDialog(const std::string& title, const Rect& rect)
-    : FileDialog(title, rect),
+FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
+    : FileDialog(filepath, rect),
       m_hpositioner(std::make_shared<HorizontalBoxSizer>()),
       m_fileselect_box(std::make_shared<TextBox>("", Rect(0, 0, (rect.w * 0.60), (rect.h * 0.10)))),
       m_grid(std::make_shared<StaticGrid>(Rect(Size((rect.w * 0.40), (rect.h * 0.10))), Tuple(2, 1), 3)),
