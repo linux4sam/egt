@@ -29,12 +29,13 @@ Input::Input()
 void Input::dispatch(eventid event)
 {
     // can't support recursive calls into the same dispatch function
-    // using the m_diapcthing variable like this is not exception safe
+    // using the m_dispatching variable like this is not exception safe
     // one potential solution would be to asio::post() the call to dispatch if
     // we are currently dispatching already
     assert(!m_dispatching);
 
     m_dispatching = true;
+    detail::scope_exit reset([this]() { m_dispatching = false; });
 
     m_current_input = this;
 
@@ -118,8 +119,6 @@ void Input::dispatch(eventid event)
                 w->handle(eevent);
         }
     }
-
-    m_dispatching = false;
 }
 
 Input* Input::m_current_input = nullptr;
