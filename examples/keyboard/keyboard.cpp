@@ -41,7 +41,7 @@ struct QwertyLettersLowerCase : public Panel
             make_shared<Key>("k"),
             make_shared<Key>("l")
         }, {
-            make_shared<Key>("Shift", 1.5),
+            make_shared<Key>("Shift", 1, 1.5),
             make_shared<Key>("z"),
             make_shared<Key>("x"),
             make_shared<Key>("c"),
@@ -51,7 +51,102 @@ struct QwertyLettersLowerCase : public Panel
             make_shared<Key>("m"),
             make_shared<Key>("<-", 1.5)
         }, {
-            make_shared<Key>("?123", 1.5),
+            make_shared<Key>("?123", 2, 1.5),
+            make_shared<Key>(","),
+            make_shared<Key>(" ", 5.0),
+            make_shared<Key>("."),
+            make_shared<Key>("Enter", 1.5)
+        }
+    }, Size(30, 50))
+    {}
+};
+
+struct QwertyLettersUpperCase : public Panel
+{
+    QwertyLettersUpperCase()
+        : Panel(
+    {
+        {
+            make_shared<Key>("Q"),
+            make_shared<Key>("W"),
+            make_shared<Key>("E"),
+            make_shared<Key>("R"),
+            make_shared<Key>("T"),
+            make_shared<Key>("Y"),
+            make_shared<Key>("U"),
+            make_shared<Key>("I"),
+            make_shared<Key>("O"),
+            make_shared<Key>("P")
+        }, {
+            make_shared<Key>("A"),
+            make_shared<Key>("S"),
+            make_shared<Key>("D"),
+            make_shared<Key>("F"),
+            make_shared<Key>("G"),
+            make_shared<Key>("H"),
+            make_shared<Key>("J"),
+            make_shared<Key>("K"),
+            make_shared<Key>("L")
+        }, {
+            make_shared<Key>("SHIFT", 0, 1.5),
+            make_shared<Key>("Z"),
+            make_shared<Key>("X"),
+            make_shared<Key>("C"),
+            make_shared<Key>("V"),
+            make_shared<Key>("B"),
+            make_shared<Key>("N"),
+            make_shared<Key>("M"),
+            make_shared<Key>("<-", 1.5)
+        }, {
+            make_shared<Key>("?123", 2, 1.5),
+            make_shared<Key>(","),
+            make_shared<Key>(" ", 5.0),
+            make_shared<Key>("."),
+            make_shared<Key>("Enter", 1.5)
+        }
+    }, Size(30, 50))
+    {}
+};
+
+struct NumbersSymbols : public Panel
+{
+    NumbersSymbols()
+        : Panel(
+    {
+        {
+            make_shared<Key>("1"),
+            make_shared<Key>("2"),
+            make_shared<Key>("3"),
+            make_shared<Key>("4"),
+            make_shared<Key>("5"),
+            make_shared<Key>("6"),
+            make_shared<Key>("7"),
+            make_shared<Key>("8"),
+            make_shared<Key>("9"),
+            make_shared<Key>("0")
+        }, {
+            make_shared<Key>("+"),
+            make_shared<Key>("-"),
+            make_shared<Key>("*"),
+            make_shared<Key>("/"),
+            make_shared<Key>("("),
+            make_shared<Key>(")"),
+            make_shared<Key>(""),
+            make_shared<Key>(""),
+            make_shared<Key>("")
+        }, {
+            make_shared<Key>("1/2"),
+            make_shared<Key>("!"),
+            make_shared<Key>("@"),
+            make_shared<Key>("#"),
+            make_shared<Key>("$"),
+            make_shared<Key>("%"),
+            make_shared<Key>("^"),
+            make_shared<Key>("&"),
+            make_shared<Key>("*"),
+            make_shared<Key>("<-", 1.5)
+        }, {
+            make_shared<Key>("ABC", 0, 1.5),
             make_shared<Key>(","),
             make_shared<Key>(" ", 5.0),
             make_shared<Key>("."),
@@ -71,7 +166,12 @@ int main(int argc, const char** argv)
     textbox.set_align(alignmask::expand_horizontal | alignmask::top);
     textbox.text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
 
-    Keyboard keyboard({make_shared<QwertyLettersLowerCase>()});
+    Keyboard keyboard(
+    {
+        make_shared<QwertyLettersLowerCase>(),
+        make_shared<QwertyLettersUpperCase>(),
+        make_shared<NumbersSymbols>()
+    });
     keyboard.set_align(alignmask::expand);
 
     VerticalBoxSizer vbox;

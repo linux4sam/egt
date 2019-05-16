@@ -29,10 +29,12 @@ class Keyboard;
 class Key : public Button
 {
 public:
-    Key(std::string label, double length = 1.0);
+    Key(std::string label, int link = -1, double length = 1.0);
     double length() const;
+    int link() const;
 
 protected:
+    int m_link;
     double m_length;
 };
 

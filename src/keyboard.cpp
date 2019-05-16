@@ -10,14 +10,20 @@ namespace egt
 inline namespace v1
 {
 
-Key::Key(std::string label, double length)
+Key::Key(std::string label, int link, double length)
     : Button(label),
+      m_link(link),
       m_length(length)
 {}
 
 double Key::length() const
 {
     return m_length;
+}
+
+int Key::link() const
+{
+    return m_link;
 }
 
 Panel::Panel(std::vector<std::vector<std::shared_ptr<Key>>> k, Size size)
@@ -38,26 +44,38 @@ Panel::Panel(std::vector<std::vector<std::shared_ptr<Key>>> k, Size size)
             key->resize(Size(size.w * key->length(), size.h));
             key->set_border(1);
 
-            key->on_event([this, key](eventid event)
+            if (key->link() >= 0)
             {
-                if (!key->text().empty())
+                key->on_event([this, key](eventid event)
                 {
-                    if (event == eventid::raw_pointer_down)
-                    {
-                        m_keyboard->m_in.m_keys.key = key->text()[0];
-                        m_keyboard->m_in.m_keys.code = 0;
-                        m_keyboard->m_in.dispatch(eventid::keyboard_down);
-                    }
-                    else if (event == eventid::raw_pointer_up)
-                    {
-                        m_keyboard->m_in.m_keys.key = key->text()[0];
-                        m_keyboard->m_in.m_keys.code = 0;
-                        m_keyboard->m_in.dispatch(eventid::keyboard_up);
-                    }
-                }
+                    m_keyboard->set_select(key->link());
 
-                return 0;
-            });
+                    return 0;
+                }, {eventid::pointer_click});
+            }
+            else
+            {
+                key->on_event([this, key](eventid event)
+                {
+                    if (!key->text().empty())
+                    {
+                        if (event == eventid::raw_pointer_down)
+                        {
+                            m_keyboard->m_in.m_keys.key = key->text()[0];
+                            m_keyboard->m_in.m_keys.code = 0;
+                            m_keyboard->m_in.dispatch(eventid::keyboard_down);
+                        }
+                        else if (event == eventid::raw_pointer_up)
+                        {
+                            m_keyboard->m_in.m_keys.key = key->text()[0];
+                            m_keyboard->m_in.m_keys.code = 0;
+                            m_keyboard->m_in.dispatch(eventid::keyboard_up);
+                         }
+                    }
+
+                    return 0;
+                });
+            }
 
             hsizer->add(key);
         }
