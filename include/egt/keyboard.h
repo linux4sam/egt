@@ -155,6 +155,11 @@ private:
         using Input::Input;
         friend class Keyboard;
     };
+
+    void set_key_link(const std::shared_ptr<Key>& k);
+    void set_key_input_value(const std::shared_ptr<Key>& k);
+    void set_key_multichoice(const std::shared_ptr<Key>& k, unsigned id);
+
     KeyboardInput m_in;
     Notebook m_main_panel;
     MultichoicePopup m_multichoice_popup;

@@ -81,6 +81,78 @@ MultichoicePanel::MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>
     add(m_panel);
 }
 
+void Keyboard::set_key_link(const shared_ptr<Key>& k)
+{
+    k->on_event([this, k](eventid event)
+    {
+            m_main_panel.set_select(k->link());
+
+            return 0;
+    }, {eventid::pointer_click});
+}
+
+void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
+{
+    k->on_event([this, k](eventid event)
+    {
+        if (!k->text().empty())
+        {
+            if (event == eventid::raw_pointer_down)
+            {
+                m_in.m_keys.key = k->text()[0];
+                m_in.m_keys.code = 0;
+                m_in.dispatch(eventid::keyboard_down);
+            }
+            else if (event == eventid::raw_pointer_up)
+            {
+                    m_in.m_keys.key = k->text()[0];
+                    m_in.m_keys.code = 0;
+                    m_in.dispatch(eventid::keyboard_up);
+            }
+        }
+
+        return 0;
+    });
+}
+
+void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
+{
+    for (auto& multichoice_raw : k->m_multichoice->m_panel->m_keys)
+    {
+        for (auto& multichoice_key : multichoice_raw)
+        {
+            multichoice_key->on_event([this, k, multichoice_key](eventid event)
+            {
+                // hide popup first as it is modal
+                m_multichoice_popup.hide();
+
+                if (!multichoice_key->text().empty())
+                {
+                    m_in.m_keys.key = multichoice_key->text()[0];
+                    m_in.m_keys.code = 0;
+                    m_in.dispatch(eventid::keyboard_down);
+                    m_in.dispatch(eventid::keyboard_up);
+                    // the modal popup caught the raw_pointer_up event
+                    k->set_active(false);
+                }
+
+                return 0;
+            }, {eventid::raw_pointer_up}); //user may just move his finger
+        }
+    }
+
+    m_multichoice_popup.m_notebook.add(k->m_multichoice);
+
+    k->on_event([this, k, id](eventid event)
+    {
+        m_multichoice_popup.m_notebook.set_select(id);
+        m_multichoice_popup.resize(k->m_multichoice->m_panel->size());
+        m_multichoice_popup.show_modal(true);
+
+        return 0;
+    }, {eventid::pointer_hold});
+}
+
 Keyboard::Keyboard(std::vector<shared_ptr<MainPanel>> panels, Size size)
     : Frame(Rect(Point(), size))
 {
@@ -99,75 +171,14 @@ Keyboard::Keyboard(std::vector<shared_ptr<MainPanel>> panels, Size size)
             {
                 if (key->link() >= 0)
                 {
-                    key->on_event([this, key](eventid event)
-                    {
-                        m_main_panel.set_select(key->link());
-
-                        return 0;
-                    }, {eventid::pointer_click});
+                    set_key_link(key);
                 }
                 else
                 {
-                    key->on_event([this, key](eventid event)
-                    {
-                        if (!key->text().empty())
-                        {
-                            if (event == eventid::raw_pointer_down)
-                            {
-                                m_in.m_keys.key = key->text()[0];
-                                m_in.m_keys.code = 0;
-                                m_in.dispatch(eventid::keyboard_down);
-                            }
-                            else if (event == eventid::raw_pointer_up)
-                            {
-                                m_in.m_keys.key = key->text()[0];
-                                m_in.m_keys.code = 0;
-                                m_in.dispatch(eventid::keyboard_up);
-                            }
-                        }
-
-                        return 0;
-                    });
+                    set_key_input_value(key);
 
                     if (key->m_multichoice)
-                    {
-                        for (auto& multichoice_raw : key->m_multichoice->m_panel->m_keys)
-                        {
-                            for (auto& multichoice_key : multichoice_raw)
-                            {
-                                multichoice_key->on_event([this, key, multichoice_key](eventid event)
-                                {
-                                    // hide popup first as it is modal
-                                    m_multichoice_popup.hide();
-
-                                    if (!multichoice_key->text().empty())
-                                    {
-                                        m_in.m_keys.key = multichoice_key->text()[0];
-                                        m_in.m_keys.code = 0;
-                                        m_in.dispatch(eventid::keyboard_down);
-                                        m_in.dispatch(eventid::keyboard_up);
-                                        // the modal popup caught the raw_pointer_up event
-                                        key->set_active(false);
-                                    }
-
-                                    return 0;
-                                }, {eventid::raw_pointer_up}); //user may just move his finger
-                            }
-                        }
-
-                        m_multichoice_popup.m_notebook.add(key->m_multichoice);
-
-                        key->on_event([this, key, multichoice_id](eventid event)
-                        {
-                            m_multichoice_popup.m_notebook.set_select(multichoice_id);
-                            m_multichoice_popup.resize(key->m_multichoice->m_panel->size());
-                            m_multichoice_popup.show_modal(true);
-
-                            return 0;
-                        }, {eventid::pointer_hold});
-
-                        ++multichoice_id;
-                    }
+                        set_key_multichoice(key, multichoice_id++);
                 }
             }
         }
