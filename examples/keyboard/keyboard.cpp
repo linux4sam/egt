@@ -35,6 +35,55 @@ struct Multichoice_q : public MultichoicePanel
     {}
 };
 
+struct Multichoice_w : public MultichoicePanel
+{
+    Multichoice_w()
+        : MultichoicePanel(
+    {
+        {
+            make_shared<Key>("w1"),
+            make_shared<Key>("w2"),
+            make_shared<Key>("w3"),
+        }, {
+            make_shared<Key>("w4"),
+            make_shared<Key>("w5"),
+        }
+    }, Size(30, 50))
+    {}
+};
+
+struct Multichoice_e : public MultichoicePanel
+{
+    Multichoice_e()
+        : MultichoicePanel(
+    {
+        {
+            make_shared<Key>("e1"),
+            make_shared<Key>("e2"),
+            make_shared<Key>("e3"),
+        }
+    }, Size(30, 50))
+    {}
+};
+
+struct Multichoice_s : public MultichoicePanel
+{
+    Multichoice_s()
+        : MultichoicePanel(
+    {
+        {
+            make_shared<Key>("s1"),
+            make_shared<Key>("s2"),
+            make_shared<Key>("s3"),
+        }, {
+            make_shared<Key>("s4"),
+            make_shared<Key>("s5"),
+            make_shared<Key>("s6"),
+        }
+    }, Size(30, 50))
+    {}
+};
+
 struct Multichoice_Q : public MultichoicePanel
 {
     Multichoice_Q()
@@ -44,7 +93,7 @@ struct Multichoice_Q : public MultichoicePanel
             make_shared<Key>("Q1"),
             make_shared<Key>("Q2"),
         }
-    })
+    }, Size(30, 50))
     {}
 };
 
@@ -55,8 +104,8 @@ struct QwertyLettersLowerCase : public MainPanel
     {
         {
             make_shared<Key>("q", make_shared<Multichoice_q>()),
-            make_shared<Key>("w"),
-            make_shared<Key>("e"),
+            make_shared<Key>("w", make_shared<Multichoice_w>()),
+            make_shared<Key>("e", make_shared<Multichoice_e>()),
             make_shared<Key>("r"),
             make_shared<Key>("t"),
             make_shared<Key>("y"),
@@ -66,7 +115,7 @@ struct QwertyLettersLowerCase : public MainPanel
             make_shared<Key>("p")
         }, {
             make_shared<Key>("a"),
-            make_shared<Key>("s"),
+            make_shared<Key>("s", make_shared<Multichoice_s>()),
             make_shared<Key>("d"),
             make_shared<Key>("f"),
             make_shared<Key>("g"),

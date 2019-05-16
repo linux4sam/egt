@@ -147,7 +147,17 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
     {
         m_multichoice_popup.m_notebook.set_select(id);
         m_multichoice_popup.resize(k->m_multichoice->m_panel->size());
-        m_multichoice_popup.show_modal(true);
+
+        auto display_origin = k->to_display(k->point());
+        auto keyboard_origin = from_display(display_origin);
+        // Popup on top of the widget.
+        keyboard_origin.y -= m_multichoice_popup.size().h;
+        // Popup centered on button center.
+        keyboard_origin.x -= m_multichoice_popup.size().w / 2;
+        keyboard_origin.x += k->size().w / 2;
+
+        m_multichoice_popup.move(keyboard_origin);
+        m_multichoice_popup.show_modal();
 
         return 0;
     }, {eventid::pointer_hold});
