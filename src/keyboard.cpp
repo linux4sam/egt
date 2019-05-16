@@ -10,6 +10,13 @@ namespace egt
 {
 inline namespace v1
 {
+using Key = Keyboard::Key;
+using Panel = Keyboard::Panel;
+
+Key::Key(std::string label, double length)
+    : Button(label),
+      m_length(length)
+{}
 
 Key::Key(std::string label, int link, double length)
     : Button(label),

@@ -13,6 +13,8 @@
 
 using namespace std;
 using namespace egt;
+using Key = Keyboard::Key;
+using Panel = Keyboard::Panel;
 
 struct Multichoice_q : public Panel
 {
