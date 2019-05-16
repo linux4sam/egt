@@ -26,7 +26,7 @@ Input::Input()
  * possible with some input devices currently and we need to limit.  Be careful
  * not to drop events (like pointer up) when correcting.
  */
-void Input::dispatch(eventid event)
+void Input::dispatch(Event& event)
 {
     // can't support recursive calls into the same dispatch function
     // using the m_dispatching variable like this is not exception safe
@@ -37,69 +37,102 @@ void Input::dispatch(eventid event)
     m_dispatching = true;
     detail::scope_exit reset([this]() { m_dispatching = false; });
 
-    m_current_input = this;
-
-    if (event == eventid::keyboard_down)
+    switch (event.id())
     {
-        m_keys.states[m_keys.code] = true;
-    }
-    else if (event == eventid::keyboard_up)
-    {
-        m_keys.states[m_keys.code] = false;
+    case eventid::keyboard_down:
+        m_key_states[event.key().code] = true;
+        break;
+    case eventid::keyboard_up:
+        m_key_states[event.key().code] = false;
+        break;
+    case eventid::raw_pointer_down:
+        // always reset on new down event
+        detail::mouse_grab(nullptr);
+        break;
+    case eventid::raw_pointer_up:
+    case eventid::raw_pointer_move:
+    case eventid::pointer_click:
+    case eventid::pointer_dblclick:
+    case eventid::pointer_hold:
+    case eventid::pointer_drag_start:
+    case eventid::pointer_drag:
+    case eventid::pointer_drag_stop:
+    default:
+        break;
     }
 
     auto eevent = m_mouse->handle(event);
 
     DBG("input event: " << event);
-    if (eevent != eventid::none)
+    if (eevent.id() != eventid::none)
     {
         DBG("input event: " << eevent);
-        if (eevent == eventid::pointer_drag_start)
-            m_pointer.drag_start = m_mouse->mouse_start();
     }
 
     // then give it to any global input handlers
-    if (m_global_handler.invoke_handlers(event))
+    m_global_handler.invoke_handlers(event);
+    if (event.quit())
         return;
-    if (eevent != eventid::none)
-        if (m_global_handler.invoke_handlers(eevent))
+    if (eevent.id() != eventid::none)
+    {
+        m_global_handler.invoke_handlers(eevent);
+        if (event.quit())
             return;
-
-    if (mouse_grab() && (event == eventid::raw_pointer_down ||
-                         event == eventid::raw_pointer_up ||
-                         event == eventid::raw_pointer_move ||
-                         event == eventid::pointer_click ||
-                         event == eventid::pointer_dblclick ||
-                         event == eventid::pointer_hold ||
-                         event == eventid::pointer_drag_start ||
-                         event == eventid::pointer_drag ||
-                         event == eventid::pointer_drag_stop))
-    {
-        auto target = mouse_grab();
-        target->handle(event);
-        if (eevent != eventid::none)
-            target->handle(eevent);
     }
-    else if (keyboard_focus() && (event == eventid::keyboard_down ||
-                                  event == eventid::keyboard_up ||
-                                  event == eventid::keyboard_repeat))
+
+    if (detail::mouse_grab() && (event.id() == eventid::raw_pointer_down ||
+                                 event.id() == eventid::raw_pointer_up ||
+                                 event.id() == eventid::raw_pointer_move ||
+                                 event.id() == eventid::pointer_click ||
+                                 event.id() == eventid::pointer_dblclick ||
+                                 event.id() == eventid::pointer_hold ||
+                                 event.id() == eventid::pointer_drag_start ||
+                                 event.id() == eventid::pointer_drag ||
+                                 event.id() == eventid::pointer_drag_stop))
     {
-        auto target = keyboard_focus();
+        auto target = detail::mouse_grab();
         target->handle(event);
-        if (event != eventid::none)
+        if (event.quit())
+            return;
+        if (eevent.id() != eventid::none)
+        {
             target->handle(eevent);
+            if (eevent.quit())
+                return;
+        }
+    }
+    else if (detail::keyboard_focus() && (event.id() == eventid::keyboard_down ||
+                                          event.id() == eventid::keyboard_up ||
+                                          event.id() == eventid::keyboard_repeat))
+    {
+        auto target = detail::keyboard_focus();
+        target->handle(event);
+        if (event.quit())
+            return;
+        if (event.id() != eventid::none)
+        {
+            target->handle(eevent);
+            if (eevent.quit())
+                return;
+        }
     }
     else if (modal_window())
     {
         auto target = modal_window();
         // give event to the modal window
         target->handle(event);
-        if (eevent != eventid::none)
+        if (event.quit())
+            return;
+        if (eevent.id() != eventid::none)
+        {
             target->handle(eevent);
+            if (eevent.quit())
+                return;
+        }
     }
     else
     {
-        // give event to any top level and visible windows
+        // give event to any visible window
         for (auto& w : detail::reverse_iterate(windows()))
         {
             if (!w->top_level())
@@ -114,25 +147,50 @@ void Input::dispatch(eventid event)
             if (!w->visible())
                 continue;
 
+            switch (event.id())
+            {
+            case eventid::raw_pointer_down:
+            case eventid::raw_pointer_up:
+            case eventid::raw_pointer_move:
+            case eventid::pointer_click:
+            case eventid::pointer_dblclick:
+            case eventid::pointer_hold:
+            case eventid::pointer_drag_start:
+            case eventid::pointer_drag:
+            case eventid::pointer_drag_stop:
+            {
+                Point pos = w->from_display(event.pointer().point);
+                if (!Rect::point_inside(pos, w->size()))
+                    continue;
+                break;
+            }
+            default:
+                break;
+            }
+
             w->handle(event);
-            if (eevent != eventid::none)
+            if (event.quit())
+                return;
+            if (eevent.id() != eventid::none)
+            {
                 w->handle(eevent);
+                if (eevent.quit())
+                    return;
+            }
         }
     }
 }
 
-Input* Input::m_current_input = nullptr;
 detail::Object Input::m_global_handler;
 
 namespace detail
 {
-static Widget* grab = nullptr;
-static Widget* kfocus = nullptr;
-}
+static Widget* mouse_grab_widget = nullptr;
+static Widget* keyboard_focus_widget = nullptr;
 
 Widget* mouse_grab()
 {
-    return detail::grab;
+    return mouse_grab_widget;
 }
 
 void mouse_grab(Widget* widget)
@@ -141,30 +199,38 @@ void mouse_grab(Widget* widget)
     {
         DBG("mouse grab by " << widget->name());
     }
-    else if (detail::grab)
+    else if (mouse_grab_widget)
     {
-        DBG("mouse release by " << detail::grab->name());
+        DBG("mouse release by " << mouse_grab_widget->name());
     }
-    detail::grab = widget;
+    mouse_grab_widget = widget;
 }
 
 void keyboard_focus(Widget* widget)
 {
-    if (detail::kfocus == widget)
+    if (keyboard_focus_widget == widget)
         return;
 
-    if (detail::kfocus)
-        detail::kfocus->handle(eventid::on_lost_focus);
+    if (keyboard_focus_widget)
+    {
+        Event event(eventid::on_lost_focus);
+        keyboard_focus_widget->handle(event);
+    }
 
-    detail::kfocus = widget;
+    keyboard_focus_widget = widget;
 
     if (widget)
-        widget->handle(eventid::on_gain_focus);
+    {
+        Event event(eventid::on_gain_focus);
+        widget->handle(event);
+    }
 }
 
 Widget* keyboard_focus()
 {
-    return detail::kfocus;
+    return keyboard_focus_widget;
+}
+
 }
 
 }

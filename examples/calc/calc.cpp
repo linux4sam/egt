@@ -109,12 +109,9 @@ int main(int argc, const char** argv)
             b->set_color(colors[r][c].first, colors[r][c].second);
             b->set_color(Palette::ColorId::border, Palette::gray);
 
-            b->on_event([&text, b](eventid event)
+            b->on_event([&text, b](Event&)
             {
                 static bool do_clear = false;
-
-                if (event != eventid::pointer_click)
-                    return 0;
 
                 if (b->text() == "=")
                 {
@@ -142,9 +139,7 @@ int main(int argc, const char** argv)
                     }
                     text.append(b->text());
                 }
-
-                return 0;
-            });
+            }, {eventid::pointer_click});
         }
     }
 

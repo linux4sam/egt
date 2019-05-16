@@ -51,8 +51,9 @@ handlers. Events can also come from other things like the window manager,
 timers, or networking sockets.
 
 Events are usually propagated from the top level widget down.  There are
-exceptions to this, for example, when a widget grabs the mouse of keyboard, then
-this natural flow is short circuited.
+exceptions to this, for example, when a widget grabs the pointer or keyboard,
+then this natural flow is short circuited.  For example, when a TextBox has
+keyboard focus.
 
 @image html widget_hierarchy_event.png "Event"
 @image latex widget_hierarchy_event.png "Event" width=8cm
@@ -81,16 +82,15 @@ function may also be used.
 
 @code{.cpp}
 ImageButton settings("@cog.png");
-settings.on_event([this](eventid event)
+settings.on_event([this](Event& event)
 {
-    if (event == eventid::MOUSE_DOWN)
+    if (event.id() == eventid::pointer_click)
     {
         if (m_popup.visible())
             m_popup.hide();
         else
             m_popup.show(true);
     }
-    return 0;
 });
 @endcode
 
@@ -99,14 +99,13 @@ what events to filter as a second parameter.
 
 @code{.cpp}
 ImageButton settings("@cog.png");
-settings.on_event([this](eventid)
+settings.on_event([this](Event&)
 {
     if (m_popup.visible())
         m_popup.hide();
     else
         m_popup.show(true);
-    return 0;
-}, {eventid::MOUSE_DOWN});
+}, {eventid::pointer_click});
 @endcode
 
 Widget::on_event() can be called any number of times to register any number

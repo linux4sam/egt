@@ -107,13 +107,11 @@ public:
         }
     }
 
-    virtual int handle(eventid event) override
+    virtual void handle(Event& event) override
     {
-        auto ret = Window::handle(event);
-        if (ret)
-            return ret;
+        Window::handle(event);
 
-        switch (event)
+        switch (event.id())
         {
         case eventid::pointer_click:
         {
@@ -127,8 +125,6 @@ public:
         default:
             break;
         }
-
-        return ret;
     }
 
     virtual void close()

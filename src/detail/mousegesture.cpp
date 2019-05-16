@@ -25,7 +25,8 @@ MouseGesture::MouseGesture()
     m_long_click_timer.on_timeout([this]()
     {
         stop();
-        invoke_handlers(eventid::pointer_hold);
+        Event event(eventid::pointer_hold);
+        invoke_handlers(event);
     });
 }
 
@@ -34,13 +35,13 @@ void MouseGesture::on_async_event(mouse_callback_t callback)
     m_callbacks.push_back(callback);
 }
 
-eventid MouseGesture::handle(eventid event)
+Event MouseGesture::handle(Event& event)
 {
-    switch (event)
+    switch (event.id())
     {
     case eventid::raw_pointer_down:
     {
-        start();
+        start(event.pointer().point);
         break;
     }
     case eventid::raw_pointer_up:
@@ -52,13 +53,9 @@ eventid MouseGesture::handle(eventid event)
             stop();
 
             if (dragging)
-            {
-                return eventid::pointer_drag_stop;
-            }
+                return Event(eventid::pointer_drag_stop, event.pointer(), mouse_start());
             else
-            {
-                return eventid::pointer_click;
-            }
+                return Event(eventid::pointer_click, event.pointer());
         }
         break;
     }
@@ -70,7 +67,7 @@ eventid MouseGesture::handle(eventid event)
             if (!m_dragging)
             {
                 static const auto DRAG_ENABLE_DISTANCE = 10;
-                auto distance = std::abs(m_mouse_start_pos.distance_to<int>(event::pointer().point));
+                auto distance = std::abs(m_mouse_start_pos.distance_to<int>(event.pointer().point));
                 if (distance >= DRAG_ENABLE_DISTANCE)
                 {
                     m_dragging = true;
@@ -83,9 +80,10 @@ eventid MouseGesture::handle(eventid event)
             }
 
             if (dragging_started)
-                return eventid::pointer_drag_start;
+                return Event(eventid::pointer_drag_start, event.pointer(), mouse_start());
+
             if (m_dragging)
-                return eventid::pointer_drag;
+                return Event(eventid::pointer_drag, event.pointer(), mouse_start());
         }
 
         break;
@@ -94,13 +92,13 @@ eventid MouseGesture::handle(eventid event)
         break;
     }
 
-    return eventid::none;
+    return Event();
 }
 
-void MouseGesture::start()
+void MouseGesture::start(const DisplayPoint& point)
 {
     m_long_click_timer.start_with_duration(std::chrono::milliseconds(500));
-    m_mouse_start_pos = event::pointer().point;
+    m_mouse_start_pos = point;
     m_active = true;
     m_dragging = false;
 }
@@ -112,7 +110,7 @@ void MouseGesture::stop()
     m_long_click_timer.cancel();
 }
 
-void MouseGesture::invoke_handlers(eventid event)
+void MouseGesture::invoke_handlers(Event& event)
 {
     for (auto& callback : m_callbacks)
         callback(event);

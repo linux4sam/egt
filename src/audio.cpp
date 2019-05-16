@@ -44,8 +44,11 @@ struct AudioPlayerImpl
                 return false;
             }
 
-            main_app().event().io().post(std::bind(&AudioPlayer::invoke_handlers,
-                                                   player, eventid::property_changed));
+            main_app().event().io().post([player]()
+            {
+                Event event(eventid::property_changed);
+                player->invoke_handlers(event);
+            });
         }
         else
         {
@@ -124,8 +127,11 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
             vcurrent = gst_structure_get_value(info, "current");
             impl->m_position = g_value_get_int64(vcurrent);
 
-            main_app().event().io().post(std::bind(&AudioPlayer::invoke_handlers,
-                                                   &impl->player, eventid::property_changed));
+            main_app().event().io().post([impl]()
+            {
+                Event event(eventid::property_changed);
+                impl->player.invoke_handlers(event);
+            });
         }
         break;
     }

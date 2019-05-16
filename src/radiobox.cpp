@@ -29,20 +29,18 @@ RadioBox::RadioBox(const std::string& text,
     flags().set(Widget::flag::grab_mouse);
 }
 
-int RadioBox::handle(eventid event)
+void RadioBox::handle(Event& event)
 {
-    auto ret = Widget::handle(event);
+    Widget::handle(event);
 
-    switch (event)
+    switch (event.id())
     {
     case eventid::pointer_click:
         check(!checked());
-        return 1;
+        break;
     default:
         break;
     }
-
-    return ret;
 }
 
 void RadioBox::draw(Painter& painter, const Rect& rect)

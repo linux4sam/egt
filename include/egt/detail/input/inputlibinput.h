@@ -49,6 +49,8 @@ private:
     asio::posix::stream_descriptor m_input;
 
     struct libinput* li;
+
+    DisplayPoint m_last_point;
 };
 
 }

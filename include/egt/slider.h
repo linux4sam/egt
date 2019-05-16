@@ -113,7 +113,7 @@ public:
     explicit Slider(Frame& parent, int min = 0, int max = 100, int value = 0,
                     orientation orient = orientation::horizontal) noexcept;
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -180,7 +180,10 @@ public:
 
             // live update to handlers?
             if (false)
-                this->invoke_handlers(eventid::property_changed);
+            {
+                Event event(eventid::property_changed);
+                this->invoke_handlers(event);
+            }
             else
                 m_invoke_pending = true;
         }

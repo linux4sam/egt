@@ -39,13 +39,11 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 
     add(m_list);
 
-    m_list->on_event([this, &parent](eventid event)
+    m_list->on_event([this, &parent](Event & event)
     {
-        ignoreparam(event);
+        event.stop();
         parent.set_select(m_list->selected());
         hide();
-
-        return 1;
     }, {eventid::property_changed});
 }
 
@@ -80,15 +78,16 @@ void ComboBoxPopup::show(bool center)
     Popup::show(center);
 }
 
-int ComboBoxPopup::handle(eventid event)
+void ComboBoxPopup::handle(Event& event)
 {
-    auto ret = Popup::handle(event);
+    Popup::handle(event);
 
-    switch (event)
+    /// @todo How is this widget going to get this event?
+    switch (event.id())
     {
     case eventid::pointer_click:
     {
-        Point mouse = from_display(event::pointer().point);
+        Point mouse = from_display(event.pointer().point);
 
         if (!Rect::point_inside(mouse, box()))
         {
@@ -101,8 +100,6 @@ int ComboBoxPopup::handle(eventid event)
     default:
         break;
     }
-
-    return ret;
 }
 
 }
@@ -160,15 +157,15 @@ void ComboBox::set_parent(Frame* parent)
     m_popup->set_special_child_draw_callback(parent->special_child_draw_callback());
 }
 
-int ComboBox::handle(eventid event)
+void ComboBox::handle(Event& event)
 {
-    auto ret = Widget::handle(event);
+    Widget::handle(event);
 
-    switch (event)
+    switch (event.id())
     {
     case eventid::pointer_click:
     {
-        Point mouse = from_display(event::pointer().point);
+        Point mouse = from_display(event.pointer().point);
 
         if (Rect::point_inside(mouse, box()))
         {
@@ -180,8 +177,6 @@ int ComboBox::handle(eventid event)
     default:
         break;
     }
-
-    return ret;
 }
 
 void ComboBox::set_select(size_t index)

@@ -65,9 +65,11 @@ TextBox::TextBox(const Rect& rect, alignmask align, const flags_type::flags& fla
     : TextBox(std::string(), rect, align, flags)
 {}
 
-int TextBox::handle(eventid event)
+void TextBox::handle(Event& event)
 {
-    switch (event)
+    Widget::handle(event);
+
+    switch (event.id())
     {
     case eventid::on_gain_focus:
         show_cursor();
@@ -77,21 +79,18 @@ int TextBox::handle(eventid event)
         break;
     case eventid::pointer_click:
         keyboard_focus(this);
-        return 1;
+        break;
     case eventid::keyboard_down:
-        return handle_key(event);
+        handle_key(event.key());
+        event.stop();
     default:
         break;
     }
-
-    return Widget::handle(event);
 }
 
-int TextBox::handle_key(eventid event)
+void TextBox::handle_key(const Key& key)
 {
-    ignoreparam(event);
-
-    switch (event::keys().code)
+    switch (key.code)
     {
     case EKEY_BACK:
     {
@@ -152,16 +151,14 @@ int TextBox::handle_key(eventid event)
     }
     default:
     {
-        if (event::keys().key)
+        if (key.key)
         {
-            std::string str(1, event::keys().key);
+            std::string str(1, key.key);
             insert(str);
         }
         break;
     }
     }
-
-    return 0;
 }
 
 using utf8_const_iterator = utf8::unchecked::iterator<std::string::const_iterator>;

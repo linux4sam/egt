@@ -25,22 +25,29 @@ uint32_t Object::on_event(event_callback_t handler,
     return 0;
 }
 
-int Object::invoke_handlers(eventid event)
+void Object::invoke_handlers(Event& event)
 {
+    if (m_callbacks.empty())
+        return;
+
     // make it safe to modify m_callbacks in a callback
     auto callbacks = m_callbacks;
     for (auto callback : callbacks)
     {
         if (callback.mask.empty() ||
-            callback.mask.find(event) != callback.mask.end())
+            callback.mask.find(event.id()) != callback.mask.end())
         {
-            auto ret = callback.callback(event);
-            if (ret)
-                return ret;
+            callback.callback(event);
+            if (event.quit())
+                return;
         }
     }
+}
 
-    return 0;
+void Object::invoke_handlers(eventid event)
+{
+    Event e(event);
+    invoke_handlers(e);
 }
 
 void Object::clear_event_handlers()

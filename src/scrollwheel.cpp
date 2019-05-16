@@ -63,7 +63,7 @@ void Scrollwheel::init(bool reversed)
     m_label->set_text(m_items[m_selected]);
     add(expand(m_label), 0, 1);
 
-    m_button_up->on_event([this](eventid id)
+    m_button_up->on_event([this](Event&)
     {
         if (m_selected == m_items.size() - 1)
             m_selected = 0;
@@ -73,12 +73,10 @@ void Scrollwheel::init(bool reversed)
         m_label->set_text(m_items[m_selected]);
 
         invoke_handlers(eventid::property_changed);
-
-        return 0;
     }, {eventid::raw_pointer_up});
     add(expand(m_button_up), 0, 0);
 
-    m_button_down->on_event([this](eventid id)
+    m_button_down->on_event([this](Event&)
     {
         if (m_selected == 0)
             m_selected = m_items.size() - 1;
@@ -88,8 +86,6 @@ void Scrollwheel::init(bool reversed)
         m_label->set_text(m_items[m_selected]);
 
         invoke_handlers(eventid::property_changed);
-
-        return 0;
     }, {eventid::raw_pointer_up});
     add(expand(m_button_down), 0, 2);
 }

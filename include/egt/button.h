@@ -74,7 +74,7 @@ public:
      */
     Button(Frame& parent, const std::string& text, const Rect& rect) noexcept;
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

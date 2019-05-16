@@ -39,6 +39,7 @@ private:
 
     asio::posix::stream_descriptor m_input;
     std::vector<char> m_input_buf;
+    DisplayPoint m_last_point;
 };
 
 }

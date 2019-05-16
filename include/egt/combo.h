@@ -35,7 +35,7 @@ class ComboBoxPopup : public Popup
 public:
     explicit ComboBoxPopup(ComboBox& parent);
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void show(bool center = false) override;
 
@@ -95,7 +95,7 @@ public:
      */
     ComboBox(Frame& parent, const item_array& items, const Rect& rect) noexcept;
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void set_select(size_t index);
 

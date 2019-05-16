@@ -117,7 +117,7 @@ public:
      */
     ListBox(Frame& parent, const item_array& items, const Rect& rect) noexcept;
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     /**
      * Select an item by index.

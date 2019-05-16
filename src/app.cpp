@@ -210,9 +210,9 @@ int Application::run()
     m_signals.async_wait(std::bind(&Application::signal_handler, this,
                                    std::placeholders::_1, std::placeholders::_2));
 
-    Input::global_input().on_event([this](eventid)
+    Input::global_input().on_event([this](Event & event)
     {
-        if (event::keys().code == EKEY_SNAPSHOT)
+        if (event.key().code == EKEY_SNAPSHOT)
         {
             if (m_argc)
                 paint_to_file(string(m_argv[0]) + ".png");

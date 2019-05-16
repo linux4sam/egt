@@ -90,17 +90,15 @@ void ListBox::remove_item(Widget* widget)
     }
 }
 
-int ListBox::handle(eventid event)
+void ListBox::handle(Event& event)
 {
-    auto ret = Frame::handle(event);
-    if (ret)
-        return ret;
+    Frame::handle(event);
 
-    switch (event)
+    switch (event.id())
     {
     case eventid::pointer_click:
     {
-        Point mouse = from_display(event::pointer().point);
+        Point mouse = from_display(event.pointer().point);
         for (size_t i = 0; i < m_sizer->count_children(); i++)
         {
             if (Rect::point_inside(mouse, m_sizer->child_at(i)->box()))
@@ -110,13 +108,11 @@ int ListBox::handle(eventid event)
             }
         }
 
-        return 1;
+        event.stop();
     }
     default:
         break;
     }
-
-    return ret;
 }
 
 void ListBox::set_select(uint32_t index)

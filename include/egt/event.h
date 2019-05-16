@@ -11,7 +11,6 @@
  * @brief Event types.
  */
 
-#include <array>
 #include <egt/geometry.h>
 #include <egt/keycode.h>
 #include <iosfwd>
@@ -35,25 +34,26 @@ enum class eventid
 {
     none,
 
-    //@{
+    ///@{
     /**
-     * Raw pointer events. It's usually preferred to use the normal pointer
-     * events instead.
+     * Raw pointer event
+     *
+     * It's usually preferred to use the normal pointer events instead.
      */
     raw_pointer_down,
     raw_pointer_up,
     raw_pointer_move,
-    //@}
+    ///@}
 
-    //@{
-    /** Pointer events. */
+    ///@{
+    /** Pointer event. */
     pointer_click,
     pointer_dblclick,
     pointer_hold,
     pointer_drag_start,
     pointer_drag,
     pointer_drag_stop,
-    //@}
+    ///@}
 
     /**
      * Sent when a widget gets focus.
@@ -65,113 +65,274 @@ enum class eventid
      */
     leave,
 
-    //@{
+    ///@{
     /** Keyboard event. */
     keyboard_down,
     keyboard_up,
     keyboard_repeat,
-    //@}
+    ///@}
 
     /**
-     * Called when a property changes.
+     * Generated when a property changes internally.
      */
     property_changed,
+
+    /**
+     * Generated when a property changes due to user input.
+     */
     input_property_changed,
 
+    /**
+     * Generated when a Widget is hidden.
+     */
     hide,
+
+    /**
+     * Generated when a Widget is shown.
+     */
     show,
 
     /**
-     * Called when the widget gains focus.
+     * Generated when the widget gains focus.
      */
     on_gain_focus,
 
     /**
-     * Called when the widget loses focus.
+     * Generated when the widget loses focus.
      */
     on_lost_focus,
 
+    ///@{
+    /**
+     * Custom widget event.
+     */
     event1,
     event2,
+    ///@}
 };
 
 std::ostream& operator<<(std::ostream& os, const eventid& event);
 
 /**
- * Definitions for pointer buttons.
- */
-enum class pointer_button
-{
-    none,
-    left,
-    middle,
-    right,
-    touch
-};
-
-/**
- * Current event state for pointer.
+ * Pointer event data.
+ *
  * @ingroup events
  */
 struct Pointer
 {
+    constexpr Pointer()  noexcept
+    {}
+
+    constexpr explicit Pointer(const DisplayPoint& p) noexcept
+        : point(p)
+    {}
+
+    constexpr explicit Pointer(const DisplayPoint& p,
+                               const DisplayPoint& d) noexcept
+        : point(p),
+          drag_start(d)
+    {}
+
     /**
      * Mouse position in display coordinates.
      */
     DisplayPoint point;
 
     /**
-     * Pointer button value.
+     * Definitions for pointer buttons.
      */
-    pointer_button button{pointer_button::none};
+    enum class button
+    {
+        none,
+        left,
+        middle,
+        right,
+        touch
+    };
 
     /**
-     * The mouse point where eventid POINTER_DRAG_START occurred.
+     * Pointer button value.
+     */
+    button btn{button::none};
+
+    /**
+     * The mouse point where eventid::pointer_drag_start occurred.
+     *
+     * Only valid with the following events:
+     *  - eventid::pointer_drag_start
+     *  - eventid::pointer_drag
+     *  - eventid::pointer_drag_stop
      */
     DisplayPoint drag_start;
 };
 
+std::ostream& operator<<(std::ostream& os, const Pointer::button pointer);
+std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
+
 /**
- * Current event state for keyboard.
+ * Keyboard event data.
+ *
  * @ingroup events
  */
-struct Keys
+struct Key
 {
     /**
      * Key value.
      */
-    int key;
+    int key{0};
 
     /**
      * Key code.
      */
-    int code;
-
-    /**
-     * Boolean state of every key code.
-     */
-    std::array<bool, 256> states{};
+    int code{0};
 };
 
-/**
- * Information about the current outstanding event.
- */
-namespace event
+std::ostream& operator<<(std::ostream& os, const Key& key);
+
+class EventArg
 {
+public:
+
+    /**
+     * Stop the event from propagating.
+     */
+    inline void stop()
+    {
+        m_stop = true;
+    }
+
+    /**
+     * Was the event stopped from propagating?
+     */
+    inline bool quit() const
+    {
+        return m_stop;
+    }
+
+protected:
+
+    bool m_stop{false};
+};
+
+class Widget;
 
 /**
- * Get the event Pointer object.
  * @ingroup events
  */
-const Pointer& pointer();
+struct Event : public EventArg
+{
+    constexpr explicit Event(eventid id = eventid::none) noexcept
+        : m_id(id)
+    {}
 
-/**
- * Get the event Keys object.
- * @ingroup events
- */
-const Keys& keys();
+    constexpr Event(eventid id, const DisplayPoint& point) noexcept
+        : m_id(id),
+          m_pointer(point)
+    {}
 
-}
+    constexpr Event(eventid id,
+                    const DisplayPoint& point,
+                    const DisplayPoint& drag_start) noexcept
+        : m_id(id),
+          m_pointer(point, drag_start)
+    {}
+
+    Event(eventid id,
+          const Pointer& pointer,
+          const DisplayPoint& drag_start = DisplayPoint()) noexcept
+        : m_id(id),
+          m_pointer(pointer)
+    {
+        m_pointer.drag_start = drag_start;
+    }
+
+    inline const eventid& id() const noexcept
+    {
+        return m_id;
+    }
+
+    inline void set_id(eventid id)
+    {
+        m_id = id;
+    }
+
+    /**
+     * Get the Pointer event data.
+     *
+     * Only valid with the following events:
+     *   - eventid::raw_pointer_down,
+     *   - eventid::raw_pointer_up,
+     *   - eventid::raw_pointer_move,
+     *   - eventid::pointer_click,
+     *   - eventid::pointer_dblclick,
+     *   - eventid::pointer_hold,
+     *   - eventid::pointer_drag_start,
+     *   - eventid::pointer_drag,
+     *   - eventid::pointer_drag_stop,
+     *   - eventid::pointer_drag_start
+     *   - eventid::pointer_drag
+     *   - eventid::pointer_drag_stop
+     */
+    inline Pointer& pointer()
+    {
+        return m_pointer;
+    }
+
+    /**
+     * @overload
+     */
+    inline const Pointer& pointer() const
+    {
+        return m_pointer;
+    }
+
+    /**
+     * Get the Key event data.
+     *
+     * Only valid with the following events:
+     *   - eventid::keyboard_down,
+     *   - eventid::keyboard_up,
+     *   - eventid::keyboard_repeat,
+     */
+    inline Key& key()
+    {
+        return m_key;
+    }
+
+    /**
+     * @overload
+     */
+    inline const Key& key() const
+    {
+        return m_key;
+    };
+
+    /**
+     * Grab any related following events to this one.
+     *
+     * @note grab() implies stop().
+     */
+    void grab(Widget* widget);
+
+protected:
+
+    /**
+     * The eventid.
+     */
+    eventid m_id{eventid::none};
+
+    /**
+     * Key event data.
+     */
+    Key m_key;
+
+    /**
+     * Pointer event data.
+     */
+    Pointer m_pointer;
+};
+
+std::ostream& operator<<(std::ostream& os, const Event& event);
 
 }
 }

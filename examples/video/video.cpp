@@ -50,9 +50,11 @@ public:
         T::set_volume(5);
     }
 
-    virtual int handle(eventid event) override
+    virtual void handle(Event& event) override
     {
-        switch (event)
+        Window::handle(event);
+
+        switch (event.id())
         {
         case eventid::pointer_dblclick:
         {
@@ -77,7 +79,7 @@ public:
         case eventid::pointer_drag:
         {
             DBG("VideoWindow: pointer_drag ");
-            auto diff = event::pointer().drag_start - event::pointer().point;
+            auto diff = event.pointer().drag_start - event.pointer().point;
             T::move(m_start_point - Point(diff.x, diff.y));
             break;
         }
@@ -94,7 +96,6 @@ public:
         default:
             break;
         }
-        return Window::handle(event);
     }
 
 private:
@@ -160,11 +161,10 @@ int main(int argc, const char** argv)
     label.set_color(Palette::ColorId::bg, Palette::transparent);
     label.set_align(alignmask::top | alignmask::center);
 
-    window->on_event([window, &win, &label](eventid)
+    window->on_event([window, &win, &label](Event&)
     {
         label.set_text("Error: " + window->get_error_message());
         win.add(label);
-        return 0;
     }, {eventid::event2});
 
     auto ctrlwindow = make_shared< Window>(Size(win.w(), 72));
@@ -181,7 +181,7 @@ int main(int argc, const char** argv)
     playbtn.set_boxtype(Theme::boxtype::none);
     hpos.add(playbtn);
 
-    playbtn.on_event([&playbtn, window](eventid)
+    playbtn.on_event([&playbtn, window](Event&)
     {
         if (window->playing())
         {
@@ -193,7 +193,6 @@ int main(int argc, const char** argv)
             if (window->play())
                 playbtn.set_image(Image(":pause_png"));
         }
-        return 0;
     }, {eventid::pointer_click});
 
     Slider position(0, 100, 0, orientation::horizontal);
@@ -228,10 +227,9 @@ int main(int argc, const char** argv)
     volume.slider_flags().set({Slider::flag::round_handle});
     volume.set_value(5);
     window->set_volume(5.0);
-    volume.on_event([&volume, window](eventid)
+    volume.on_event([&volume, window](Event&)
     {
         window->set_volume(volume.value());
-        return 0;
     });
     volume.set_value(5);
 
@@ -241,7 +239,7 @@ int main(int argc, const char** argv)
 
     double m_fscale = (double)main_screen()->size().w / w;
 
-    fullscreen.on_event([&fullscreen, window, m_fscale, &win](eventid)
+    fullscreen.on_event([&fullscreen, window, m_fscale, &win](Event&)
     {
         static bool scaled = true;
         if (scaled)
@@ -258,14 +256,13 @@ int main(int argc, const char** argv)
             fullscreen.set_image(Image(":fullscreen_png"));
             scaled = true;
         }
-        return 0;
     }, {eventid::pointer_click});
 
     ImageButton loopback(Image(":repeat_one_png"));
     loopback.set_boxtype(Theme::boxtype::none);
     hpos.add(loopback);
 
-    loopback.on_event([&loopback, window](eventid)
+    loopback.on_event([&loopback, window](Event&)
     {
         if (window->get_loopback())
         {

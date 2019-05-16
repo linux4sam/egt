@@ -198,7 +198,7 @@ public:
         return Point(m_selected_column, m_selected_row);
     }
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void select(int column, int row)
     {

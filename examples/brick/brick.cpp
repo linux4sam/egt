@@ -76,38 +76,40 @@ public:
     }
 
     // TODO: convert this to use POINTER_DRAG events
-    int handle(eventid event) override
+    void handle(Event& event) override
     {
-        switch (event)
+        Window::handle(event);
+
+        switch (event.id())
         {
         case eventid::keyboard_repeat:
         case eventid::keyboard_down:
         {
-            if (event::keys().key == EKEY_LEFT || event::keys().key == EKEY_RIGHT)
+            if (event.key().key == EKEY_LEFT || event.key().key == EKEY_RIGHT)
             {
                 int x;
                 m_running = true;
-                if (event::keys().key == EKEY_LEFT)
-                    x = m_paddle.x() - (event == eventid::keyboard_repeat ? 15 : 10);
+                if (event.key().key == EKEY_LEFT)
+                    x = m_paddle.x() - (event.id() == eventid::keyboard_repeat ? 15 : 10);
                 else
-                    x = m_paddle.x() + (event == eventid::keyboard_repeat ? 15 : 10);
+                    x = m_paddle.x() + (event.id() == eventid::keyboard_repeat ? 15 : 10);
 
                 if (x > -m_paddle.w() && x < w())
                     m_paddle.move(Point(x, m_paddle.y()));
 
-                return 1;
+                event.stop();
             }
-            else if (event::keys().key == EKEY_UP)
+            else if (event.key().key == EKEY_UP)
             {
                 m_xspeed *= 1.5;
                 m_yspeed *= 1.5;
-                return 1;
+                event.stop();
             }
-            else if (event::keys().key == EKEY_DOWN)
+            else if (event.key().key == EKEY_DOWN)
             {
                 m_xspeed *= .5;
                 m_yspeed *= .5;
-                return 1;
+                event.stop();
             }
 
             break;
@@ -116,13 +118,12 @@ public:
             m_running = true;
             break;
         case eventid::raw_pointer_move:
-            m_paddle.move(Point(event::pointer().point.x - m_paddle.w() / 2, m_paddle.y()));
-            return 1;
+            m_paddle.move(Point(event.pointer().point.x - m_paddle.w() / 2, m_paddle.y()));
+            event.stop();
+            break;
         default:
             break;
         }
-
-        return Window::handle(event);
     }
 
     void reset_game()

@@ -47,16 +47,15 @@ Button::Button(Frame& parent, const std::string& text, const Rect& rect) noexcep
     parent.add(*this);
 }
 
-int Button::handle(eventid event)
+void Button::handle(Event& event)
 {
-    auto ret = TextWidget::handle(event);
+    TextWidget::handle(event);
 
-    switch (event)
+    switch (event.id())
     {
     case eventid::raw_pointer_down:
     {
         set_active(true);
-        return 1;
         break;
     }
     case eventid::raw_pointer_up:
@@ -67,8 +66,6 @@ int Button::handle(eventid event)
     default:
         break;
     }
-
-    return ret;
 }
 
 void Button::draw(Painter& painter, const Rect& rect)
@@ -110,7 +107,8 @@ void Button::check(bool value)
         if (m_checked == value)
         {
             damage();
-            invoke_handlers(eventid::property_changed);
+            Event event(eventid::property_changed);
+            invoke_handlers(event);
         }
     }
 }

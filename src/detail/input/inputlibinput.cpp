@@ -141,28 +141,31 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     switch (libinput_event_get_type(ev))
     {
     case LIBINPUT_EVENT_TOUCH_UP:
-        dispatch(eventid::raw_pointer_up);
+    {
+        Event event(eventid::raw_pointer_up, m_last_point);
+        dispatch(event);
         break;
+    }
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
-        auto screen_size = main_screen()->size();
+        const auto& screen_size = main_screen()->size();
         double x = libinput_event_touch_get_x_transformed(t, screen_size.w);
         double y = libinput_event_touch_get_y_transformed(t, screen_size.h);
 
-        m_pointer.point = DisplayPoint(x, y);
-
-        dispatch(eventid::raw_pointer_down);
+        Event event(eventid::raw_pointer_down);
+        event.pointer().point = m_last_point = DisplayPoint(x, y);
+        dispatch(event);
         break;
     }
     case LIBINPUT_EVENT_TOUCH_MOTION:
     {
-        auto screen_size = main_screen()->size();
+        const auto& screen_size = main_screen()->size();
         double x = libinput_event_touch_get_x_transformed(t, screen_size.w);
         double y = libinput_event_touch_get_y_transformed(t, screen_size.h);
 
-        m_pointer.point = DisplayPoint(x, y);
-
-        dispatch(eventid::raw_pointer_move);
+        Event event(eventid::raw_pointer_move);
+        event.pointer().point = m_last_point = DisplayPoint(x, y);
+        dispatch(event);
         break;
     }
     default:
@@ -185,8 +188,9 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
 
     if (v != eventid::none)
     {
-        m_keys.key = key;
-        dispatch(v);
+        Event event(v);
+        event.key().key = key;
+        dispatch(event);
     }
 }
 
@@ -194,28 +198,33 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
 {
     struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
     unsigned int button = libinput_event_pointer_get_button(p);
-    int is_press;
 
+    Pointer::button b = Pointer::button::none;
     switch (button)
     {
     case BTN_LEFT:
-        m_pointer.button = pointer_button::left;
+        b = Pointer::button::left;
         break;
     case BTN_MIDDLE:
-        m_pointer.button = pointer_button::middle;
+        b = Pointer::button::middle;
         break;
     case BTN_RIGHT:
-        m_pointer.button = pointer_button::right;
+        b = Pointer::button::right;
         break;
     default:
         /* Other buttons not handled. */
         /* For compatibility reasons, all additional buttons go after the old 4-7 scroll ones */
-        m_pointer.button = pointer_button::none;
-        break;
+        return;
     }
 
-    is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
-    dispatch(is_press ? eventid::raw_pointer_down : eventid::raw_pointer_up);
+    if (b != Pointer::button::none)
+    {
+        bool is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
+        Event event(is_press ? eventid::raw_pointer_down : eventid::raw_pointer_up,
+                    m_last_point);
+        event.pointer().btn = b;
+        dispatch(event);
+    }
 }
 
 void InputLibInput::handle_read(const asio::error_code& error)

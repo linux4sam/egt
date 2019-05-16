@@ -117,38 +117,24 @@ public:
         m_text = text;
     }
 
-    virtual int handle(eventid event) override
+    virtual void handle(Event& event) override
     {
-        auto ret = Widget::handle(event);
+        Widget::handle(event);
 
-        switch (event)
+        switch (event.id())
         {
-        case eventid::raw_pointer_down:
-        {
-            this->set_active(true);
-            return 1;
-        }
-        case eventid::raw_pointer_up:
-        {
-            this->set_active(false);
-            return 1;
-        }
         case eventid::pointer_click:
         case eventid::pointer_drag:
         {
-            auto angle = this->touch_to_degrees(this->from_display(event::pointer().point));
+            auto angle = this->touch_to_degrees(this->from_display(event.pointer().point));
             auto v = this->degrees_to_value(angle);
             auto orig = this->set_value(v);
             if (orig != v)
                 this->invoke_handlers(eventid::input_property_changed);
-
-            return 1;
         }
         default:
             break;
         }
-
-        return ret;
     }
 
     virtual void draw(Painter& painter, const Rect& rect) override

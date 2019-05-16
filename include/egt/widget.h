@@ -171,9 +171,6 @@ public:
      * Handle an event.
      * Override this function in a derived class to handle events.
      *
-     * Only the event ID is passed to this function. To get data associated
-     * with the event, you have to call other functions.
-     *
      * The default implementation in the Widget class, will dispatch the
      * event to any third party handlers that have been registered. What
      * this means is if you expect other handlers to receive the events
@@ -182,10 +179,9 @@ public:
      *
      * @see @subpage events
      *
-     * @param event The eventid that occurred.
-     * @return A return value of non-zero stops the propagation of the event.
+     * @param event The Event that occurred.
      */
-    virtual int handle(eventid event);
+    virtual void handle(Event& event);
 
     /**
      * Resize the widget.

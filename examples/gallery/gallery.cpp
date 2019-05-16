@@ -60,7 +60,7 @@ int main(int argc, const char** argv)
         auto l = make_shared<ImageButton>(Image(file));
         l->set_boxtype(Theme::boxtype::none);
         l->flags().clear(Widget::flag::grab_mouse);
-        l->on_event([&player, file, &animator, &videoshown](eventid)
+        l->on_event([&player, file, &animator, &videoshown](Event&)
         {
             cout << "playing " << file << ".avi" << endl;
             player.set_media(file + ".avi");
@@ -71,8 +71,6 @@ int main(int argc, const char** argv)
             animator.clear_change_callbacks();
             animator.on_change(std::bind(&VideoWindow::set_scale, std::ref(player), std::placeholders::_1));
             animator.start();
-
-            return 0;
         }, {eventid::pointer_click});
 
         l->set_align(alignmask::center);
@@ -93,7 +91,7 @@ int main(int argc, const char** argv)
         auto l = make_shared<ImageButton>(Image(file));
         l->set_boxtype(Theme::boxtype::none);
         l->flags().clear(Widget::flag::grab_mouse);
-        l->on_event([&player, file, &animator, &videoshown](eventid)
+        l->on_event([&player, file, &animator, &videoshown](Event&)
         {
             cout << "playing " << file << ".avi" << endl;
             player.set_media(file + ".avi");
@@ -105,7 +103,7 @@ int main(int argc, const char** argv)
             animator.on_change(std::bind(&VideoWindow::set_scale, std::ref(player), std::placeholders::_1));
             animator.start();
 
-            return 0;
+
         }, {eventid::pointer_click});
 
         l->set_align(alignmask::center);
@@ -124,7 +122,7 @@ int main(int argc, const char** argv)
     settings.set_boxtype(Theme::boxtype::none);
     settings.set_align(alignmask::right | alignmask::top);
     settings.set_margin(10);
-    settings.on_event([&popup](eventid)
+    settings.on_event([&popup](Event&)
     {
         if (popup.visible())
             popup.hide();
@@ -138,16 +136,15 @@ int main(int argc, const char** argv)
 
     win.show();
 
-    Input::global_input().on_event([&player, &videoshown](eventid)
+    Input::global_input().on_event([&player, &videoshown](Event & event)
     {
         if (videoshown)
         {
             player.pause();
             player.hide();
             videoshown = false;
-            return 1;
+            event.stop();
         }
-        return 0;
     }, {eventid::pointer_click});
 
     return app.run();

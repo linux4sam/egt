@@ -219,7 +219,7 @@ public:
 
 protected:
 
-    virtual int handle_mouse(eventid event);
+    virtual void handle_mouse(Event& event);
 
     std::shared_ptr<Window> m_cursor;
 };

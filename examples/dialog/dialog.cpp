@@ -52,24 +52,22 @@ int main(int argc, const char** argv)
     std::string RootDir = fs::current_path();
 
     auto win1 = std::make_shared<FileOpenDialog>(RootDir, Rect(0, 0, 640, 432));
-    win1->on_event([win1, label1, list](eventid)
+    win1->on_event([win1, label1, list](Event&)
     {
         DBG("FileDialog : file selected is : " << win1->get_selected());
         label1->set_text("File OpenDialog: " + win1->get_selected() + " Selected");
         win1->hide();
         list->set_select(0);
-        return 0;
     }, {eventid::property_changed});
     win0.add(win1);
 
     auto win2 = std::make_shared<FileSaveDialog>(RootDir, Rect(0, 0, 640, 432));
-    win2->on_event([win2, label1, list](eventid)
+    win2->on_event([win2, label1, list](Event&)
     {
         DBG("FileDialog : save file is : " << win2->get_selected());
         label1->set_text("File SaveDialog: " + win2->get_selected() + " Selected");
         win2->hide();
         list->set_select(0);
-        return 0;
     }, {eventid::property_changed});
 
     win0.add(win2);
@@ -81,20 +79,19 @@ int main(int argc, const char** argv)
     dialog->set_button(Dialog::buttonid::button2, "Cancel");
     win0.add(dialog);
 
-    dialog->on_event([dialog, label1, list](eventid event)
+    dialog->on_event([dialog, label1, list](Event & event)
     {
-        if (event == eventid::event1)
+        if (event.id() == eventid::event1)
         {
             DBG("FileDialog Okay button clicked");
             label1->set_text("Message Dialog: Okay button clicked");
         }
-        else if (event == eventid::event2)
+        else if (event.id() == eventid::event2)
         {
             DBG("FileDialog Cancel button clicked");
             label1->set_text("Message Dialog: Cancel button clicked");
         }
         list->set_select(0);
-        return 1;
     });
 
     auto dialog1 = std::make_shared<Dialog>(Rect(0, 0, 440, 320));
@@ -110,21 +107,20 @@ int main(int argc, const char** argv)
     dlist0->set_color(Palette::ColorId::border, Palette::transparent);
     dialog1->set_widget(dlist0);
 
-    dialog1->on_event([dialog1, label1, dlist0, list](eventid event)
+    dialog1->on_event([dialog1, label1, dlist0, list](Event & event)
     {
-        if (event == eventid::event1)
+        if (event.id() == eventid::event1)
         {
             DBG("FileDialog Okay button clicked");
             auto select = dynamic_cast<StringItem*>(dlist0->get_item(dlist0->selected()))->text();
             label1->set_text("List Dialog: " + select + " Selected");
         }
-        else if (event == eventid::event2)
+        else if (event.id() == eventid::event2)
         {
             DBG("FileDialog Cancel button clicked");
             label1->set_text("List Dialog: Cancel button clicked");
         }
         list->set_select(0);
-        return 1;
     });
 
     auto dialog2 = std::make_shared<Dialog>(Rect(0, 0, 440, 320));
@@ -138,24 +134,23 @@ int main(int argc, const char** argv)
     slider1->set_value(50);
     dialog2->set_widget(slider1);
 
-    dialog2->on_event([dialog2, label1, slider1, list](eventid event)
+    dialog2->on_event([dialog2, label1, slider1, list](Event & event)
     {
-        if (event == eventid::event1)
+        if (event.id() == eventid::event1)
         {
             DBG("FileDialog Okay button clicked");
             auto select = slider1->value();
             label1->set_text("Slider Dialog: value = " + std::to_string(select));
         }
-        else if (event == eventid::event2)
+        else if (event.id() == eventid::event2)
         {
             DBG("FileDialog Cancel button clicked");
             label1->set_text("Slider Dialog: Cancel button clicked");
         }
         list->set_select(0);
-        return 1;
     });
 
-    list->on_event([list, win1, win2, dialog, dialog1, dialog2, label1](eventid)
+    list->on_event([list, win1, win2, dialog, dialog1, dialog2, label1](Event&)
     {
         auto index = list->selected();
         DBG("FileDialog : Index value " << index);
@@ -198,9 +193,7 @@ int main(int argc, const char** argv)
         default:
             break;
         }
-        return 1;
     }, {eventid::property_changed});
-
 
     win0.show();
 

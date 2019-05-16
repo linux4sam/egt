@@ -30,20 +30,17 @@ CheckBox::CheckBox(const std::string& text,
     flags().set(Widget::flag::grab_mouse);
 }
 
-int CheckBox::handle(eventid event)
+void CheckBox::handle(Event& event)
 {
-    auto ret = Widget::handle(event);
+    Widget::handle(event);
 
-    switch (event)
+    switch (event.id())
     {
     case eventid::pointer_click:
         check(!checked());
-        return 1;
     default:
         break;
     }
-
-    return ret;
 }
 
 void CheckBox::draw(Painter& painter, const Rect& rect)

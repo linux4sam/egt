@@ -47,9 +47,9 @@ public:
         widget->on_event(std::bind(&FloatingBox::handle, this, std::placeholders::_1));
     }
 
-    virtual int handle(eventid event)
+    virtual void handle(Event& event)
     {
-        switch (event)
+        switch (event.id())
         {
         case eventid::pointer_dblclick:
             m_mx *= -1;
@@ -64,7 +64,7 @@ public:
             break;
         case eventid::pointer_drag:
         {
-            auto diff = (event::pointer().drag_start - event::pointer().point);
+            auto diff = event.pointer().drag_start - event.pointer().point;
             auto fromstart = m_start_point - Point(diff.x, diff.y);
             Rect dest(fromstart, m_widget->box().size());
             if (main_window()->box().contains(dest))
@@ -74,8 +74,6 @@ public:
         default:
             break;
         }
-
-        return 0;
     }
 
     virtual void next_frame()

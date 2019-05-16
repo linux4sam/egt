@@ -405,25 +405,19 @@ struct ScrollwheelPage : public NotebookTab
             std::make_shared<Label>(scrollwheel_year->get_value(),
                                     Rect(0, 0, 75, 30));
 
-        scrollwheel_day->on_event([label_day, scrollwheel_day](eventid event)
+        scrollwheel_day->on_event([label_day, scrollwheel_day](Event&)
         {
             label_day->set_text(scrollwheel_day->get_value());
-
-            return 0;
         }, {eventid::property_changed});
 
-        scrollwheel_month->on_event([label_month, scrollwheel_month](eventid event)
+        scrollwheel_month->on_event([label_month, scrollwheel_month](Event&)
         {
             label_month->set_text(scrollwheel_month->get_value());
-
-            return 0;
         }, {eventid::property_changed});
 
-        scrollwheel_year->on_event([label_year, scrollwheel_year](eventid event)
+        scrollwheel_year->on_event([label_year, scrollwheel_year](Event&)
         {
             label_year->set_text(scrollwheel_year->get_value());
-
-            return 0;
         }, {eventid::property_changed});
 
         hsizer1->add(scrollwheel_day);
@@ -483,10 +477,9 @@ int main(int argc, const char** argv)
     hsizer.add(expand_vertical(list));
     hsizer.add(expand(notebook));
 
-    list->on_event([&notebook, &list](eventid)
+    list->on_event([&notebook, &list](Event&)
     {
         notebook->set_select(list->selected());
-        return 1;
     }, {eventid::property_changed});
 
     win.show();

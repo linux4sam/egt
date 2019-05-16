@@ -60,7 +60,7 @@ public:
     /**
      * Event handler callback function.
      */
-    using event_callback_t = std::function<int (eventid event)>;
+    using event_callback_t = std::function<void (Event& event)>;
 
     /**
      * Event handler eventid filter.
@@ -88,7 +88,9 @@ public:
     /**
      * Invoke all handlers with the specified event.
      */
-    virtual int invoke_handlers(eventid event);
+    virtual void invoke_handlers(Event& event);
+
+    virtual void invoke_handlers(eventid event);
 
     /**
      * Clear all registered event handlers.

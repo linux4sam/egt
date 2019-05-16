@@ -11,6 +11,7 @@
  * @brief Working with input devices.
  */
 
+#include <array>
 #include <egt/detail/mousegesture.h>
 #include <egt/detail/object.h>
 #include <egt/event.h>
@@ -42,25 +43,6 @@ public:
         return m_global_handler;
     }
 
-    static inline Input& current()
-    {
-        if (m_current_input)
-            return *m_current_input;
-
-        static Input nullinput;
-        return nullinput;
-    }
-
-    /**
-     * Get the Pointer object for this input.
-     */
-    inline const Pointer& pointer() const { return m_pointer; }
-
-    /**
-     * Get the Keys object for this input.
-     */
-    inline const Keys& keys() const { return m_keys; }
-
     virtual ~Input() = default;
 
 protected:
@@ -68,7 +50,7 @@ protected:
     /**
      * Dispatch an event from this input.
      */
-    virtual void dispatch(eventid event);
+    virtual void dispatch(Event& event);
 
     /**
      * This is the single global input handler.  Anything can attach to this
@@ -79,27 +61,23 @@ protected:
     static detail::Object m_global_handler;
 
     /**
-     * Global current event input.
-     */
-    static Input* m_current_input;
-
-    /**
      * The mouse gesture handler for this input.
      */
     std::unique_ptr<detail::MouseGesture> m_mouse;
 
     /**
-     * Pointer object for this input.
+     * Currently dispatching an event when true.
      */
-    Pointer m_pointer;
+    bool m_dispatching{false};
 
     /**
-     * Keys object for this input.
+     * Boolean state of every key code.
      */
-    Keys m_keys;
-
-    bool m_dispatching{false};
+    std::array<bool, 256> m_key_states{};
 };
+
+namespace detail
+{
 
 /**
  * Get the current widget which has the mouse grabbed, or nullptr.
@@ -125,6 +103,8 @@ void keyboard_focus(Widget* widget);
  * Get the current widget which has the keyboard focus, or nullptr.
  */
 Widget* keyboard_focus();
+
+}
 
 }
 }

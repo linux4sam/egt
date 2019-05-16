@@ -54,7 +54,7 @@ public:
         add(m_dial);
         add(m_controls);
 
-        m_controls.m_play.on_event([this](eventid)
+        m_controls.m_play.on_event([this](Event&)
         {
             if (m_player.playing())
             {
@@ -66,22 +66,19 @@ public:
                 m_controls.m_play.set_image(Image("pause.png"));
                 m_player.play();
             }
-
-            return 1;
         }, {eventid::pointer_click});
 
         m_logo.set_align(alignmask::left | alignmask::top);
         m_logo.set_margin(10);
 
-        m_dial.on_event([this](eventid)
+        m_dial.on_event([this](Event&)
         {
             m_player.seek(m_dial.value());
-            return 1;
         }, {eventid::input_property_changed});
 
         m_dial.radial_flags().set({Radial::flag::primary_value});
 
-        m_player.on_event([this](eventid)
+        m_player.on_event([this](Event&)
         {
             if (m_player.playing())
             {
@@ -93,8 +90,6 @@ public:
             {
                 m_controls.m_play.set_image(Image("play.png"));
             }
-
-            return 0;
         }, {eventid::property_changed});
 
         m_player.set_media(detail::abspath(detail::resolve_file_path("concerto.mp3")));

@@ -50,7 +50,7 @@ public:
     explicit Frame(const Rect& rect = Rect(),
                    const Widget::flags_type& flags = Widget::flags_type()) noexcept;
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     /**
      * Add a child widget.

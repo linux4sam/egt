@@ -113,7 +113,8 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
             {
                 b->m_checked = false;
                 b->damage();
-                b->invoke_handlers(eventid::property_changed);
+                Event event(eventid::property_changed);
+                b->invoke_handlers(event);
             }
         }
     }

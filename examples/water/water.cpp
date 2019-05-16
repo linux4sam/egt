@@ -84,18 +84,18 @@ public:
         m_sprite->show();
     }
 
-    int handle(eventid event) override
+    void handle(Event& event) override
     {
-        switch (event)
+        TopWindow::handle(event);
+
+        switch (event.id())
         {
         case eventid::raw_pointer_move:
-            spawn(from_display(event::pointer().point));
+            spawn(from_display(event.pointer().point));
             break;
         default:
             break;
         }
-
-        return TopWindow::handle(event);
     }
 
     void spawn(const Point& p)

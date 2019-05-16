@@ -48,7 +48,7 @@ public:
 
     using dim_type = dim_t;
 
-    PointType() noexcept
+    constexpr PointType() noexcept
     {}
 
     constexpr PointType(dim_t x_, dim_t y_) noexcept
@@ -180,7 +180,7 @@ public:
 
     using dim_type = dim_t;
 
-    SizeType() noexcept
+    constexpr SizeType() noexcept
     {}
 
     constexpr explicit SizeType(dim_t w_, dim_t h_) noexcept
@@ -328,7 +328,7 @@ public:
 
     using dim_type = dim_t;
 
-    RectType() noexcept
+    constexpr RectType() noexcept
     {}
 
     /**
@@ -717,7 +717,7 @@ public:
 
     using dim_type = dim_t;
 
-    explicit LineType(const Point& start, const Point& end) noexcept
+    constexpr explicit LineType(const Point& start, const Point& end) noexcept
         : m_start(start),
           m_end(end)
     {}
@@ -759,8 +759,8 @@ public:
     /**
      * Construct Arc object.
      */
-    ArcType(const Point& c = Point(), float r = 0.0f,
-            float a1 = 0.0f, float a2 = 0.0f)
+    constexpr ArcType(const Point& c = Point(), float r = 0.0f,
+                      float a1 = 0.0f, float a2 = 0.0f) noexcept
         : center(c),
           radius(r),
           angle1(a1),
@@ -801,7 +801,7 @@ public:
     /**
      * Construct a Circle object.
      */
-    explicit CircleType(const Point& c = Point(), float r = 0.0f)
+    constexpr explicit CircleType(const Point& c = Point(), float r = 0.0f) noexcept
         : Arc(c, r, 0.0f, 2 * detail::pi<float>())
     {
     }

@@ -95,19 +95,19 @@ public:
         set_color(Palette::ColorId::bg, Palette::black);
     }
 
-    int handle(eventid event) override
+    void handle(Event& event) override
     {
-        switch (event)
+        TopWindow::handle(event);
+
+        switch (event.id())
         {
         case eventid::raw_pointer_move:
             if (debounce_mouse(50))
-                spawn(from_display(event::pointer().point));
+                spawn(from_display(event.pointer().point));
             break;
         default:
             break;
         }
-
-        return TopWindow::handle(event);
     }
 
     void spawn(const Point& p)

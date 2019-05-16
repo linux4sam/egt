@@ -39,7 +39,7 @@ public:
 
     MouseGesture();
 
-    using mouse_callback_t = std::function<void(eventid event)>;
+    using mouse_callback_t = std::function<void(Event& event)>;
 
     /**
      * Register a callback function to handle the async mouse events.
@@ -49,12 +49,12 @@ public:
     /**
      * Pass the raw eventid to this function to get the emulated mouse event.
      */
-    virtual eventid handle(eventid event);
+    virtual Event handle(Event& event);
 
     /**
      * Start.
      */
-    virtual void start();
+    virtual void start(const DisplayPoint& point);
 
     inline DisplayPoint mouse_start() const
     {
@@ -81,7 +81,7 @@ protected:
     /**
      * Invoke an event on each of the handlers.
      */
-    virtual void invoke_handlers(eventid event);
+    virtual void invoke_handlers(Event& event);
 
     /**
      * Currently processing subsequent events.

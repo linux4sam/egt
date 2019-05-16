@@ -77,7 +77,7 @@ public:
                           policy horizontal_policy = policy::as_needed,
                           policy vertical_policy = policy::as_needed);
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

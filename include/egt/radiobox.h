@@ -30,7 +30,7 @@ public:
     RadioBox(const std::string& text = std::string(),
              const Rect& rect = Rect());
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

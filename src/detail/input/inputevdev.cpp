@@ -116,15 +116,28 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             case BTN_TOOL_LENS:
                 break;
             case BTN_LEFT:
-                dispatch(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
+            {
+                Event event(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
+                event.pointer().btn = Pointer::button::left;
+                dispatch(event);
                 break;
+            }
             case BTN_RIGHT:
-                dispatch(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
+            {
+                Event event(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
+                event.pointer().btn = Pointer::button::right;
+                dispatch(event);
                 break;
+            }
             case BTN_MIDDLE:
-                dispatch(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
+            {
+                Event event(value ? eventid::raw_pointer_down : eventid::raw_pointer_up);
+                event.pointer().btn = Pointer::button::middle;
+                dispatch(event);
                 break;
+            }
             default:
+            {
                 eventid v = eventid::none;
                 if (value == 1)
                     v = eventid::keyboard_down;
@@ -134,24 +147,29 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                     v = eventid::keyboard_repeat;
                 if (v != eventid::none)
                 {
-                    m_keys.key = e->code;
-                    dispatch(v);
+                    Event event(v);
+                    event.key().key = e->code;
+                    dispatch(event);
                 }
+                break;
+            }
             }
         }
     }
 
     if (absolute_event)
     {
-        m_pointer.point = DisplayPoint(x, y);
-        dispatch(eventid::raw_pointer_move);
+        m_last_point = DisplayPoint(x, y);
+        Event event(eventid::raw_pointer_move, m_last_point);
+        dispatch(event);
     }
     else
     {
         if (dx != 0 || dy != 0)
         {
-            m_pointer.point = DisplayPoint(m_pointer.point.x + dx, m_pointer.point.y + dy);
-            dispatch(eventid::raw_pointer_move);
+            m_last_point = DisplayPoint(m_last_point.x + dx, m_last_point.y + dy);
+            Event event(eventid::raw_pointer_move, m_last_point);
+            dispatch(event);
         }
     }
 

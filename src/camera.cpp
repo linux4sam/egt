@@ -291,7 +291,13 @@ gboolean CameraWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer d
         DBG("CameraWindow: GST_MESSAGE_ERROR Debugging info: " << (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
-        asio::post(main_app().event().io(), std::bind(&CameraWindow::invoke_handlers, _this, eventid::event2));
+
+        main_app().event().io().post([_this]()
+        {
+            Event event(eventid::event2);
+            _this->invoke_handlers(event);
+        });
+
         break;
     }
     case GST_MESSAGE_WARNING:

@@ -64,11 +64,14 @@ void Frame::remove_all()
     layout();
 }
 
-int Frame::handle(eventid event)
+void Frame::handle(Event& event)
 {
-    auto ret = Widget::handle(event);
+    if (event.quit())
+        return;
 
-    switch (event)
+    Widget::handle(event);
+
+    switch (event.id())
     {
     case eventid::raw_pointer_down:
     case eventid::raw_pointer_up:
@@ -80,7 +83,7 @@ int Frame::handle(eventid event)
     case eventid::pointer_drag:
     case eventid::pointer_drag_stop:
     {
-        Point pos = from_display(event::pointer().point);
+        Point pos = from_display(event.pointer().point);
 
         for (auto& child : detail::reverse_iterate(m_children))
         {
@@ -95,9 +98,9 @@ int Frame::handle(eventid event)
 
             if (Rect::point_inside(pos, child->box()))
             {
-                auto cret = child->handle(event);
-                if (cret)
-                    return cret;
+                child->handle(event);
+                if (event.quit())
+                    return;
             }
         }
 
@@ -106,8 +109,6 @@ int Frame::handle(eventid event)
     default:
         break;
     }
-
-    return ret;
 }
 
 void Frame::add_damage(const Rect& rect)

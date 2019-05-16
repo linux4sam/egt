@@ -264,18 +264,20 @@ void ScrolledView::update_sliders()
         damage();
 }
 
-int ScrolledView::handle(eventid event)
+void ScrolledView::handle(Event& event)
 {
+    Widget::handle(event);
+
 #if 1
-    switch (event)
+    switch (event.id())
     {
     case eventid::pointer_drag_start:
         m_start_offset = m_offset;
         break;
     case eventid::pointer_drag:
     {
-        auto diff = event::pointer().point -
-                    event::pointer().drag_start;
+        auto diff = event.pointer().point -
+                    event.pointer().drag_start;
         set_offset(m_start_offset + Point(diff.x, diff.y));
         break;
     }
@@ -283,9 +285,8 @@ int ScrolledView::handle(eventid event)
         break;
     }
 #endif
-    auto ret = Widget::handle(event);
 
-    switch (event)
+    switch (event.id())
     {
     case eventid::raw_pointer_down:
     case eventid::raw_pointer_up:
@@ -308,13 +309,13 @@ int ScrolledView::handle(eventid event)
             if (!child->visible())
                 continue;
 
-            Point pos = to_child(from_display(event::pointer().point));
+            Point pos = to_child(from_display(event.pointer().point));
 
             if (Rect::point_inside(pos, child->box() + m_offset))
             {
-                auto cret = child->handle(event);
-                if (cret)
-                    return cret;
+                child->handle(event);
+                if (event.quit())
+                    return;
             }
         }
 
@@ -323,8 +324,6 @@ int ScrolledView::handle(eventid event)
     default:
         break;
     }
-
-    return ret;
 }
 
 }

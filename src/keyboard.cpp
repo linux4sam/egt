@@ -10,40 +10,39 @@ namespace egt
 {
 inline namespace v1
 {
-using Key = Keyboard::Key;
 using Panel = Keyboard::Panel;
 using MainPanel = Keyboard::MainPanel;
 using MultichoicePanel = Keyboard::MultichoicePanel;
 
-Key::Key(std::string label, double length)
+Keyboard::Key::Key(std::string label, double length)
     : Button(label),
       m_length(length)
 {}
 
-Key::Key(std::string label, int link, double length)
+Keyboard::Key::Key(std::string label, int link, double length)
     : Button(label),
       m_link(link),
       m_length(length)
 {}
 
-Key::Key(std::string label, shared_ptr<MultichoicePanel> multichoice, double length)
+Keyboard::Key::Key(std::string label, shared_ptr<MultichoicePanel> multichoice, double length)
     : Button(label),
       m_link(-1),
       m_length(length),
       m_multichoice(multichoice)
 {}
 
-double Key::length() const
+double Keyboard::Key::length() const
 {
     return m_length;
 }
 
-int Key::link() const
+int Keyboard::Key::link() const
 {
     return m_link;
 }
 
-Panel::Panel(std::vector<std::vector<std::shared_ptr<Key>>> keys, Size key_size)
+Panel::Panel(std::vector<std::vector<std::shared_ptr<Keyboard::Key>>> keys, Size key_size)
     : VerticalBoxSizer(),
       m_keys(keys)
 {
@@ -83,31 +82,31 @@ MultichoicePanel::MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>
 
 void Keyboard::set_key_link(const shared_ptr<Key>& k)
 {
-    k->on_event([this, k](eventid event)
+    k->on_event([this, k](Event&)
     {
-            m_main_panel.set_select(k->link());
-
-            return 0;
+        m_main_panel.set_select(k->link());
     }, {eventid::pointer_click});
 }
 
 void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
 {
-    k->on_event([this, k](eventid event)
+    k->on_event([this, k](Event & event)
     {
         if (!k->text().empty())
         {
-            if (event == eventid::raw_pointer_down)
+            if (event.id() == eventid::raw_pointer_down)
             {
-                m_in.m_keys.key = k->text()[0];
-                m_in.m_keys.code = 0;
-                m_in.dispatch(eventid::keyboard_down);
+                Event event2(eventid::keyboard_down);
+                event2.key().key = k->text()[0];
+                event2.key().code = 0;
+                m_in.dispatch(event2);
             }
-            else if (event == eventid::raw_pointer_up)
+            else if (event.id() == eventid::raw_pointer_up)
             {
-                    m_in.m_keys.key = k->text()[0];
-                    m_in.m_keys.code = 0;
-                    m_in.dispatch(eventid::keyboard_up);
+                Event event2(eventid::keyboard_up);
+                event2.key().key = k->text()[0];
+                event2.key().code = 0;
+                m_in.dispatch(event2);
             }
         }
 
@@ -121,29 +120,31 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
     {
         for (auto& multichoice_key : multichoice_raw)
         {
-            multichoice_key->on_event([this, k, multichoice_key](eventid event)
+            multichoice_key->on_event([this, k, multichoice_key](Event & event)
             {
                 // hide popup first as it is modal
                 m_multichoice_popup.hide();
 
                 if (!multichoice_key->text().empty())
                 {
-                    m_in.m_keys.key = multichoice_key->text()[0];
-                    m_in.m_keys.code = 0;
-                    m_in.dispatch(eventid::keyboard_down);
-                    m_in.dispatch(eventid::keyboard_up);
+                    Event down(eventid::keyboard_down);
+                    down.key().key = multichoice_key->text()[0];
+                    down.key().code = 0;
+                    m_in.dispatch(down);
+                    Event up(eventid::keyboard_down);
+                    up.key().key = multichoice_key->text()[0];
+                    up.key().code = 0;
+                    m_in.dispatch(up);
                     // the modal popup caught the raw_pointer_up event
                     k->set_active(false);
                 }
-
-                return 0;
             }, {eventid::raw_pointer_up}); //user may just move his finger
         }
     }
 
     m_multichoice_popup.m_notebook.add(k->m_multichoice);
 
-    k->on_event([this, k, id](eventid event)
+    k->on_event([this, k, id](Event&)
     {
         m_multichoice_popup.m_notebook.set_select(id);
         m_multichoice_popup.resize(k->m_multichoice->m_panel->size());
@@ -158,8 +159,6 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
 
         m_multichoice_popup.move(keyboard_origin);
         m_multichoice_popup.show_modal();
-
-        return 0;
     }, {eventid::pointer_hold});
 }
 

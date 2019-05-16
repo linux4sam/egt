@@ -50,7 +50,7 @@ public:
                                              Size(350, 350)),
                                              0, 100);
 
-        m_radial1->on_event([m_radial1](eventid)
+        m_radial1->on_event([m_radial1](Event&)
         {
             auto text = std::to_string(static_cast<int>(m_radial1->value())) + "°";
             m_radial1->text(text);
@@ -59,8 +59,6 @@ public:
                 m_radial1->set_color(Palette::ColorId::button_bg, Palette::orange);
             else
                 m_radial1->reset_palette();
-
-            return 1;
         }, {eventid::property_changed});
 
         m_radial1->set_value(73);
@@ -109,7 +107,7 @@ public:
                                              orientation::vertical);
         m_slider1->set_value(50);
 
-        m_label1->on_event([m_label1, m_label2, m_label3](eventid)
+        m_label1->on_event([m_label1, m_label2, m_label3](Event&)
         {
             m_label1->set_color(Palette::ColorId::label_text, Palette::orange);
             m_label2->set_color(Palette::ColorId::label_text, Palette::gray);
@@ -120,7 +118,7 @@ public:
             return 0;
         }, {eventid::pointer_click});
 
-        m_label2->on_event([m_label1, m_label2, m_label3](eventid)
+        m_label2->on_event([m_label1, m_label2, m_label3](Event&)
         {
             m_label2->set_color(Palette::ColorId::label_text, Palette::orange);
             m_label1->set_color(Palette::ColorId::label_text, Palette::gray);
@@ -131,7 +129,7 @@ public:
             return 0;
         }, {eventid::pointer_click});
 
-        m_label3->on_event([m_label1, m_label2, m_label3](eventid)
+        m_label3->on_event([m_label1, m_label2, m_label3](Event&)
         {
             m_label3->set_color(Palette::ColorId::label_text, Palette::orange);
             m_label1->set_color(Palette::ColorId::label_text, Palette::gray);

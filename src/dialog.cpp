@@ -34,18 +34,20 @@ Dialog::Dialog(const Rect& rect)
     m_button2->set_align(alignmask::center);
     m_grid->add(expand(m_button2));
 
-    m_button1->on_event([this](eventid)
+    m_button1->on_event([this](Event & event)
     {
-        invoke_handlers(eventid::event1);
+        event.stop();
+        Event event2(eventid::event1);
+        invoke_handlers(event2);
         hide();
-        return 1;
     }, {eventid::pointer_click});
 
-    m_button2->on_event([this](eventid)
+    m_button2->on_event([this](Event & event)
     {
-        invoke_handlers(eventid::event2);
+        event.stop();
+        Event event2(eventid::event2);
+        invoke_handlers(event2);
         hide();
-        return 1;
     }, {eventid::pointer_click});
 
 }

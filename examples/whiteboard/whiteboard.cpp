@@ -62,11 +62,10 @@ public:
             if (c == m_color)
                 m_grid.select(column, row);
 
-            color_label->on_event([this, column, row](eventid event)
+            color_label->on_event([this, column, row](Event&)
             {
                 m_color = m_grid.get(m_grid.selected())->color(Palette::ColorId::button_bg).color();
                 this->hide();
-                return 0;
             }, {eventid::pointer_click});
         }
     }
@@ -111,11 +110,10 @@ public:
             if (w == m_width)
                 m_grid.select(column, row);
 
-            width_label->on_event([this, column, row](eventid event)
+            width_label->on_event([this, column, row](Event&)
             {
                 m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
                 this->hide();
-                return 0;
             }, {eventid::pointer_click});
         }
     }
@@ -168,55 +166,46 @@ public:
         m_grid->add(m_widthbtn);
         m_grid->add(m_clearbtn);
 
-        m_colorbtn.on_event([this](eventid)
+        m_colorbtn.on_event([this](Event&)
         {
             m_penpicker.show_modal(true);
-            return 1;
         }, {eventid::pointer_click});
 
-        m_colorbtn.on_event([this](eventid)
+        m_colorbtn.on_event([this](Event&)
         {
             m_penpicker.show_modal(true);
-            return 1;
         }, {eventid::pointer_click});
 
-        m_colorbtn.on_event([this](eventid)
+        m_colorbtn.on_event([this](Event&)
         {
             m_penpicker.show_modal(true);
-            return 1;
         }, {eventid::pointer_click});
 
-        m_colorbtn.on_event([this](eventid)
+        m_colorbtn.on_event([this](Event&)
         {
             m_penpicker.show_modal(true);
-            return 1;
         }, {eventid::pointer_click});
 
-        m_fillbtn.on_event([this](eventid)
+        m_fillbtn.on_event([this](Event&)
         {
             m_fillpicker.show_modal(true);
-            return 1;
         }, {eventid::pointer_click});
 
-
-        m_widthbtn.on_event([this](eventid)
+        m_widthbtn.on_event([this](Event&)
         {
             m_widthpicker.show_modal(true);
-            return 1;
         }, {eventid::pointer_click});
 
-        m_clearbtn.on_event([this](eventid)
+        m_clearbtn.on_event([this](Event&)
         {
             clear();
             damage();
-            return 1;
         }, {eventid::pointer_click});
 
-        m_fillpicker.on_event([this](eventid)
+        m_fillpicker.on_event([this](Event&)
         {
             set_color(Palette::ColorId::bg, m_fillpicker.color());
             damage();
-            return 1;
         }, {eventid::hide});
 
         auto logo = make_shared<ImageLabel>(Image("@microchip_logo_black.png"));
@@ -235,20 +224,20 @@ public:
         painter.paint();
     }
 
-    int handle(eventid event) override
+    void handle(Event& event) override
     {
-        auto ret = TopWindow::handle(event);
-        if (ret)
-            return ret;
+        TopWindow::handle(event);
 
-        switch (event)
+        switch (event.id())
         {
         case eventid::pointer_drag_start:
-            m_last = from_display(event::pointer().point);
+            m_last = from_display(event.pointer().point);
+            event.grab(this);
             break;
         case eventid::pointer_drag:
         {
-            auto mouse = from_display(event::pointer().point);
+
+            auto mouse = from_display(event.pointer().point);
 
             if (m_last != mouse)
             {
@@ -277,8 +266,6 @@ public:
         default:
             break;
         }
-
-        return 0;
     }
 
     void draw(Painter& painter, const Rect& rect) override

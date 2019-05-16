@@ -32,8 +32,10 @@ public:
         T::move(Point(240, 120));
     }
 
-    virtual int handle(eventid event) override
+    virtual void handle(Event& event) override
     {
+        Window::handle(event);
+
         switch (event)
         {
         case eventid::pointer_dblclick:
@@ -48,22 +50,20 @@ public:
                 T::move(Point(240, 120));
                 T::set_scale(0.60);
             }
-            return 0;
+            break;
         case eventid::pointer_drag_start:
             m_start_point = T::box().point();
             break;
         case eventid::pointer_drag:
         {
             DBG("CameraWindow: pointer_drag ");
-            auto diff = event::pointer().drag_start - event::pointer().point;
+            auto diff = event.pointer().drag_start - event.pointer().point;
             T::move(m_start_point - Point(diff.x, diff.y));
             break;
         }
         default:
             break;
         }
-
-        return Window::handle(event);
     }
 
 private:
@@ -91,9 +91,9 @@ int main(int argc, const char** argv)
     label.set_align(alignmask::top | alignmask::center);
 
     Point m_start_point;
-    window->on_event([window, &win, &label, &m_start_point](eventid event)
+    window->on_event([window, &win, &label, &m_start_point](Event & event)
     {
-        switch (event)
+        switch (event.id())
         {
         case eventid::event2:
         {
@@ -109,14 +109,13 @@ int main(int argc, const char** argv)
         case eventid::pointer_drag:
         {
             DBG("CameraWindow: pointer_drag ");
-            auto diff = event::pointer().drag_start - event::pointer().point;
+            auto diff = event.pointer().drag_start - event.pointer().point;
             window->move(m_start_point - Point(diff.x, diff.y));
             break;
         }
         default:
             break;
         }
-        return 0;
     });
 
     shared_ptr<Window> ctrlwindow;
@@ -134,7 +133,7 @@ int main(int argc, const char** argv)
     fullscreen.set_boxtype(Theme::boxtype::none);
     hpos.add(fullscreen);
 
-    fullscreen.on_event([&fullscreen, window](eventid)
+    fullscreen.on_event([&fullscreen, window](Event&)
     {
         static bool scaled = true;
         if (scaled)
@@ -151,7 +150,6 @@ int main(int argc, const char** argv)
             fullscreen.set_image(Image(":fullscreen_png"));
             scaled = true;
         }
-        return 0;
     }, {eventid::pointer_click});
 
 

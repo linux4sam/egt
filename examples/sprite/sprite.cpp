@@ -64,30 +64,21 @@ int main(int argc, const char** argv)
     grid.add(center(software_checkbox), 1, 0);
     software_checkbox.check(true);
 
-    hardware_checkbox.on_event([&](eventid event)
+    hardware_checkbox.on_event([&](Event & event)
     {
-        if (event == eventid::property_changed)
-        {
-            if (hardware_checkbox.checked())
-                sprite1.show();
-            else
-                sprite1.hide();
-        }
-        return 0;
-    });
+        if (hardware_checkbox.checked())
+            sprite1.show();
+        else
+            sprite1.hide();
+    }, {eventid::property_changed});
 
-    software_checkbox.on_event([&](eventid event)
+    software_checkbox.on_event([&](Event & event)
     {
-        if (event == eventid::property_changed)
-        {
-            if (software_checkbox.checked())
-                sprite2.show();
-            else
-                sprite2.hide();
-        }
-        return 0;
-    });
-
+        if (software_checkbox.checked())
+            sprite2.show();
+        else
+            sprite2.hide();
+    }, {eventid::property_changed});
 
     win.add(grid);
 
@@ -133,12 +124,10 @@ int main(int argc, const char** argv)
     Slider slider1(Rect(Point(win.h() - 40, 300), Size(win.w(), 40)), 10, 500, 10);
     win.add(bottom(center(slider1)));
     slider1.set_value(DEFAULT_MS_INTERVAL);
-    slider1.on_event([&](eventid event)
+    slider1.on_event([&](Event&)
     {
-        if (event == eventid::property_changed)
-            animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
-        return 0;
-    });
+        animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
+    }, {eventid::property_changed});
 
     win.show();
 

@@ -45,8 +45,8 @@ public:
           m_arrows(Image("arrows.png"))
     {
         flags().set(Widget::flag::grab_mouse);
-        set_boxtype(Theme::boxtype::blank);
         set_color(Palette::ColorId::bg, Color(0x526d7480));
+        set_color(Palette::ColorId::bg, Color(0xff6d7480), Palette::GroupId::active);
 
         add(m_grip);
         m_grip.resize(Size(50, 50));
@@ -58,24 +58,24 @@ public:
         m_arrows.set_align(alignmask::center);
     }
 
-    virtual int handle(eventid event) override
+    virtual void handle(Event& event) override
     {
-        switch (event)
+        Window::handle(event);
+
+        switch (event.id())
         {
         case eventid::pointer_drag_start:
             m_start_point = box().point();
             break;
         case eventid::pointer_drag:
         {
-            auto diff = event::pointer().drag_start - event::pointer().point;
+            auto diff = event.pointer().drag_start - event.pointer().point;
             move(m_start_point - Point(diff.x, diff.y));
             break;
         }
         default:
             break;
         }
-
-        return Window::handle(event);
     }
 
 protected:

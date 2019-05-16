@@ -90,9 +90,11 @@ public:
         set_text_align(alignmask::center | alignmask::bottom);
     }
 
-    int handle(eventid event) override
+    void handle(Event& event) override
     {
-        switch (event)
+        ImageLabel::handle(event);
+
+        switch (event.id())
         {
         case eventid::pointer_click:
         {
@@ -107,13 +109,12 @@ public:
             string cmd = "../share/egt/examples/launcher/launch.sh " + m_exec + " &";
             exec(cmd.c_str());
 
-            return 1;
+            event.stop();
+            break;
         }
         default:
             break;
         }
-
-        return ImageLabel::handle(event);
     }
 
     void scale_box(int pos)
@@ -169,17 +170,13 @@ public:
         settings->set_boxtype(Theme::boxtype::none);
         settings->set_align(alignmask::right | alignmask::top);
         settings->set_margin(10);
-        settings->on_event([this](eventid event)
+        settings->on_event([this](Event&)
         {
-            if (event == eventid::pointer_click)
-            {
-                if (m_popup.visible())
-                    m_popup.hide();
-                else
-                    m_popup.show(true);
-            }
-            return 0;
-        });
+            if (m_popup.visible())
+                m_popup.hide();
+            else
+                m_popup.show(true);
+        }, {eventid::pointer_click});
     }
 
     virtual int load(const std::string& expr)
@@ -225,15 +222,17 @@ public:
         return 0;
     }
 
-    int handle(eventid event) override
+    void handle(Event& event) override
     {
-        switch (event)
+        TopWindow::handle(event);
+
+        switch (event.id())
         {
         case eventid::raw_pointer_down:
             if (!m_moving)
             {
                 m_moving = true;
-                m_moving_x = event::pointer().point.x;
+                m_moving_x = event.pointer().point.x;
                 m_offset = m_boxes[0]->center().x;
             }
             break;
@@ -244,15 +243,13 @@ public:
         case eventid::raw_pointer_move:
             if (m_moving)
             {
-                move_boxes(event::pointer().point.x);
-                return 1;
+                move_boxes(event.pointer().point.x);
+                event.stop();
             }
             break;
         default:
             break;
         }
-
-        return TopWindow::handle(event);
     }
 
     void move_boxes(int x)

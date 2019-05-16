@@ -41,27 +41,19 @@ int main(int argc, const char** argv)
     PropertyAnimator swipe(0, 0, std::chrono::milliseconds(1000), easing_quintic_easein);
     swipe.on_change(std::bind(&ScrolledView::set_hoffset, std::ref(view0), std::placeholders::_1));
 
-    right.on_event([&](eventid event)
+    right.on_event([&](Event&)
     {
-        if (event == eventid::pointer_click)
-        {
-            swipe.starting(view0.offset().x);
-            swipe.ending(view0.offset().x - view0.w());
-            swipe.start();
-        }
-        return 0;
-    });
+        swipe.starting(view0.offset().x);
+        swipe.ending(view0.offset().x - view0.w());
+        swipe.start();
+    }, {eventid::pointer_click});
 
-    left.on_event([&](eventid event)
+    left.on_event([&](Event&)
     {
-        if (event == eventid::pointer_click)
-        {
-            swipe.starting(view0.offset().x);
-            swipe.ending(view0.offset().x + view0.w());
-            swipe.start();
-        }
-        return 0;
-    });
+        swipe.starting(view0.offset().x);
+        swipe.ending(view0.offset().x + view0.w());
+        swipe.start();
+    }, {eventid::pointer_click});
 
     std::vector<std::string> files = detail::glob("../share/egt/icons/*.png");
 

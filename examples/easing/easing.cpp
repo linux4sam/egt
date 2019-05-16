@@ -98,7 +98,7 @@ public:
         line->set_color(Palette::ColorId::bg, Palette::black);
         m_board.add(left(expand_vertical(line)));
 
-        list1->on_event([this, list1, line](eventid)
+        list1->on_event([this, list1, line](Event&)
         {
             m_seq.reset();
             m_animation.set_easing_func(easing_functions[list1->selected()].first);
@@ -106,7 +106,6 @@ public:
 
             line->clear();
             line->add_data(create_data(easing_functions[list1->selected()].first), LineChart::chart_type::lines);
-            return 0;
         }, {eventid::property_changed});
 
         list1->set_select(7);

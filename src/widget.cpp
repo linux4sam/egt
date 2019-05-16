@@ -41,11 +41,14 @@ Widget::Widget(Frame& parent, const Rect& rect, const Widget::flags_type& flags)
     parent.add(*this);
 }
 
-int Widget::handle(eventid event)
+void Widget::handle(Event& event)
 {
+    if (event.quit())
+        return;
+
     DBG(name() << " handle: " << event);
 
-    switch (event)
+    switch (event.id())
     {
     case eventid::on_gain_focus:
         m_focus = true;
@@ -53,30 +56,21 @@ int Widget::handle(eventid event)
     case eventid::on_lost_focus:
         m_focus = false;
         break;
+    case eventid::raw_pointer_down:
+        if (flags().is_set(Widget::flag::grab_mouse))
+        {
+            set_active(true);
+            event.grab(this);
+        }
+        break;
+    case eventid::raw_pointer_up:
+        set_active(false);
+        break;
     default:
         break;
     }
 
-    if (flags().is_set(Widget::flag::grab_mouse))
-    {
-        switch (event)
-        {
-        case eventid::raw_pointer_down:
-        {
-            mouse_grab(this);
-            break;
-        }
-        case eventid::raw_pointer_up:
-        {
-            mouse_grab(nullptr);
-            break;
-        }
-        default:
-            break;
-        }
-    }
-
-    return invoke_handlers(event);
+    invoke_handlers(event);
 }
 
 void Widget::move_to_center(const Point& point)

@@ -67,7 +67,10 @@ public:
     {
         auto p = m_flags.insert(flag);
         if (p.second)
-            invoke_handlers(eventid::property_changed);
+        {
+            Event event(eventid::property_changed);
+            invoke_handlers(event);
+        }
         return p.second;
     }
 
@@ -83,7 +86,10 @@ public:
             if (set(flag))
                 inserted = true;
         if (inserted)
-            invoke_handlers(eventid::property_changed);
+        {
+            Event event(eventid::property_changed);
+            invoke_handlers(event);
+        }
         return inserted;
     }
 
@@ -96,7 +102,10 @@ public:
     {
         auto inserted = m_flags.erase(flag);
         if (inserted)
-            invoke_handlers(eventid::property_changed);
+        {
+            Event event(eventid::property_changed);
+            invoke_handlers(event);
+        }
         return inserted;
     }
 

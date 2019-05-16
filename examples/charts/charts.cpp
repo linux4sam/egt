@@ -77,9 +77,9 @@ struct LinePage : public NotebookTab
         atan_checkbox->set_name("atan");
         add(atan_checkbox);
 
-        auto handle_checkbox = [line, sin_checkbox, cos_checkbox, atan_checkbox](eventid event)
+        auto handle_checkbox = [line, sin_checkbox, cos_checkbox, atan_checkbox](Event & event)
         {
-            if (event == eventid::property_changed)
+            if (event.id() == eventid::property_changed)
             {
                 line->clear();
                 if (sin_checkbox->checked())
@@ -89,8 +89,6 @@ struct LinePage : public NotebookTab
                 if (atan_checkbox->checked())
                     line->add_data(create_atan_data(), LineChart::chart_type::linespoints);
             }
-
-            return 0;
         };
 
         sin_checkbox->on_event(handle_checkbox);
@@ -104,14 +102,10 @@ struct LinePage : public NotebookTab
         line_width->set_name("line_width");
         add(line_width);
 
-        line_width->on_event([line, line_width](eventid event)
+        line_width->on_event([line, line_width](Event & event)
         {
-            if (event == eventid::property_changed)
-            {
-                line->set_line_width(line_width->value());
-            }
-            return 0;
-        });
+            line->set_line_width(line_width->value());
+        }, {eventid::property_changed});
 
         line_width->set_value(2);
 
@@ -123,9 +117,9 @@ struct LinePage : public NotebookTab
         gridy_checkbox->set_color(Palette::ColorId::text, Palette::white);
         add(gridy_checkbox);
 
-        auto handle_grid_checkbox = [gridx_checkbox, gridy_checkbox, line](eventid event)
+        auto handle_grid_checkbox = [gridx_checkbox, gridy_checkbox, line](Event & event)
         {
-            if (event == eventid::property_changed)
+            if (event.id() == eventid::property_changed)
             {
                 uint32_t flags = 0;
                 if (gridx_checkbox->checked())
@@ -134,7 +128,6 @@ struct LinePage : public NotebookTab
                     flags |= LineChart::GRIDY;
                 line->set_grid(flags);
             }
-            return 0;
         };
 
         gridx_checkbox->on_event(handle_grid_checkbox);
@@ -185,11 +178,9 @@ int main(int argc, const char** argv)
     notebook.add(make_shared<LinePage>());
     notebook.add(make_shared<PiePage>());
 
-    list.on_event([&](eventid event)
+    list.on_event([&](Event&)
     {
-        ignoreparam(event);
         notebook.set_select(list.selected());
-        return 1;
     }, {eventid::property_changed});
 
     win.show();

@@ -77,7 +77,7 @@ public:
                      alignmask align = alignmask::center | alignmask::left,
                      const flags_type::flags& flags = flags_type::flags()) noexcept;
 
-    virtual int handle(eventid event) override;
+    virtual void handle(Event& event) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -228,7 +228,7 @@ protected:
     /**
      * Process key events.
      */
-    int handle_key(eventid event);
+    virtual void handle_key(const Key& key);
 
     /**
      * Validate the input against the validator pattern.

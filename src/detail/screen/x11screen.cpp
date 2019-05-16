@@ -134,41 +134,46 @@ void X11Screen::handle_read(const asio::error_code& error)
             break;
         }
         case ButtonPress:
-            m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
+        {
+            Event event(eventid::raw_pointer_down, DisplayPoint(e.xbutton.x, e.xbutton.y));
             if (e.xbutton.button == Button1)
-                m_in.m_pointer.button = pointer_button::left;
+                event.pointer().btn = Pointer::button::left;
             else if (e.xbutton.button == Button2)
-                m_in.m_pointer.button = pointer_button::middle;
+                event.pointer().btn = Pointer::button::middle;
             else if (e.xbutton.button == Button3)
-                m_in.m_pointer.button = pointer_button::right;
-
-            m_in.dispatch(eventid::raw_pointer_down);
+                event.pointer().btn = Pointer::button::right;
+            m_in.dispatch(event);
             break;
+        }
         case ButtonRelease:
-            m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
+        {
+            Event event(eventid::raw_pointer_up, DisplayPoint(e.xbutton.x, e.xbutton.y));
             if (e.xbutton.button == Button1)
-                m_in.m_pointer.button = pointer_button::left;
+                event.pointer().btn = Pointer::button::left;
             else if (e.xbutton.button == Button2)
-                m_in.m_pointer.button = pointer_button::middle;
+                event.pointer().btn = Pointer::button::middle;
             else if (e.xbutton.button == Button3)
-                m_in.m_pointer.button = pointer_button::right;
-            m_in.dispatch(eventid::raw_pointer_up);
+                event.pointer().btn = Pointer::button::right;
+            m_in.dispatch(event);
             break;
+        }
         case EnterNotify:
         case LeaveNotify:
         case MotionNotify:
-            m_in.m_pointer.point = DisplayPoint(e.xbutton.x, e.xbutton.y);
-            m_in.dispatch(eventid::raw_pointer_move);
+        {
+            Event event(eventid::raw_pointer_move, DisplayPoint(e.xbutton.x, e.xbutton.y));
+            m_in.dispatch(event);
             break;
+        }
         case KeyPress:
         case KeyRelease:
         {
+            Event event(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up);
             KeySym keysym = NoSymbol;
             XLookupString(&e.xkey, nullptr, 0, &keysym, nullptr);
-            m_in.m_keys.key = detail::GetUnicodeCharacterFromXKeySym(keysym);
-            m_in.m_keys.code = detail::KeyboardCodeFromXKeyEvent(&e);
-
-            m_in.dispatch(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up);
+            event.key().key = detail::GetUnicodeCharacterFromXKeySym(keysym);
+            event.key().code = detail::KeyboardCodeFromXKeyEvent(&e);
+            m_in.dispatch(event);
             break;
         }
         case ClientMessage:

@@ -280,9 +280,11 @@ void StaticGrid::reposition()
     damage();
 }
 
-int SelectableGrid::handle(eventid event)
+void SelectableGrid::handle(Event& event)
 {
-    if (event == eventid::raw_pointer_down)
+    StaticGrid::handle(event);
+
+    if (event.id() == eventid::raw_pointer_down)
     {
         auto b = content_area();
 
@@ -305,7 +307,7 @@ int SelectableGrid::handle(eventid event)
                 if (bounding.size().empty())
                     continue;
 
-                Point pos = from_display(event::pointer().point);
+                Point pos = from_display(event.pointer().point);
 
                 if (Rect::point_inside(pos, bounding))
                 {
@@ -315,8 +317,6 @@ int SelectableGrid::handle(eventid event)
             }
         }
     }
-
-    return StaticGrid::handle(event);
 }
 
 void SelectableGrid::draw(Painter& painter, const Rect& rect)

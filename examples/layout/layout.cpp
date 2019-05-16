@@ -190,11 +190,10 @@ shared_ptr<Widget> create_option(std::function<void(T)> set,
                                  std::function<T()> get)
 {
     auto x = make_shared<TextBox>(std::to_string(get()));
-    x->on_event([x, set](eventid)
+    x->on_event([x, set](Event&)
     {
         if (!x->text().empty())
             set(std::stoi(x->text()));
-        return 0;
     }, {eventid::property_changed});
     return static_pointer_cast<Widget>(x);
 }
@@ -204,11 +203,10 @@ shared_ptr<Widget> create_option(std::function<void(string)> set,
                                  std::function<string()> get)
 {
     auto x = make_shared<TextBox>(get());
-    x->on_event([x, set](eventid)
+    x->on_event([x, set](Event&)
     {
         if (!x->text().empty())
             set(x->text());
-        return 0;
     }, {eventid::property_changed});
     return static_pointer_cast<Widget>(x);
 }
@@ -242,7 +240,7 @@ public:
         combo->set_margin(5);
         frame->add(combo);
 
-        combo->on_event([combo, this](eventid)
+        combo->on_event([combo, this](Event&)
         {
             auto s = combo->item(combo->selected());
 
@@ -256,8 +254,6 @@ public:
                 set_global_theme(new ShamrockTheme());
 
             this->damage();
-
-            return 0;
         }, {eventid::property_changed});
 
         auto hsizer = make_shared<BoxSizer>(orientation::horizontal);
@@ -304,9 +300,9 @@ public:
         m_form->set_horizontal_ratio(100);
         hsizer->add(m_form);
 
-        Input::global_input().on_event([this](eventid)
+        Input::global_input().on_event([this](Event & event)
         {
-            switch (event::keys().code)
+            switch (event.key().code)
             {
             case EKEY_DELETE:
                 if (m_selected)
@@ -317,30 +313,31 @@ public:
                 }
                 break;
             }
-            return 0;
         }, {eventid::keyboard_down});
     }
 
-    int handle(eventid event) override
+    void handle(Event& event) override
     {
-        switch (event)
+        TopWindow::handle(event);
+
+        switch (event.id())
         {
         case eventid::pointer_click:
         {
-            if (event::pointer().button == pointer_button::right)
+            if (event.pointer().btn == Pointer::button::right)
             {
-                Point pos = from_display(event::pointer().point);
+                Point pos = from_display(event.pointer().point);
 
                 if (Rect::point_inside(pos, m_canvas->box()))
                 {
-                    auto parent = static_cast<Frame*>(m_canvas->child_hit_test(event::pointer().point));
+                    auto parent = static_cast<Frame*>(m_canvas->child_hit_test(event.pointer().point));
                     if (!parent->flags().is_set(Widget::flag::frame))
                         parent = nullptr;
                     auto p = m_grid->selected();
                     auto index = p.x + 3 * p.y;
                     auto widget = widgets[index].create();
-                    add_widget(widget, event::pointer().point, parent);
-                    return 1;
+                    add_widget(widget, event.pointer().point, parent);
+                    event.stop();
                 }
             }
             break;
@@ -348,8 +345,6 @@ public:
         default:
             break;
         }
-
-        return TopWindow::handle(event);
     }
 
     template<class T>
@@ -398,91 +393,84 @@ public:
         auto left = make_shared<CheckBox>("left");
         if ((widget->align() & alignmask::left) == alignmask::left)
             left->check(true);
-        left->on_event([widget, left](eventid)
+        left->on_event([widget, left](Event&)
         {
             if (left->checked())
                 widget->set_align(widget->align() | alignmask::left);
             else
                 widget->set_align(widget->align() & ~alignmask::left);
-            return 0;
         }, {eventid::property_changed});
         m_form->add_option(left);
 
         auto right = make_shared<CheckBox>("right");
         if ((widget->align() & alignmask::right) == alignmask::right)
             right->check(true);
-        right->on_event([widget, right](eventid)
+        right->on_event([widget, right](Event&)
         {
             if (right->checked())
                 widget->set_align(widget->align() | alignmask::right);
             else
                 widget->set_align(widget->align() & ~alignmask::right);
-            return 0;
         }, {eventid::property_changed});
         m_form->add_option(right);
 
         auto center = make_shared<CheckBox>("center");
         if ((widget->align() & alignmask::center) == alignmask::center)
             center->check(true);
-        center->on_event([widget, center](eventid)
+        center->on_event([widget, center](Event&)
         {
             if (center->checked())
                 widget->set_align(widget->align() | alignmask::center);
             else
                 widget->set_align(widget->align() & ~alignmask::center);
-            return 0;
         }, {eventid::property_changed});
         m_form->add_option(center);
 
         auto top = make_shared<CheckBox>("top");
         if ((widget->align() & alignmask::top) == alignmask::top)
             top->check(true);
-        top->on_event([widget, top](eventid)
+        top->on_event([widget, top](Event&)
         {
             if (top->checked())
                 widget->set_align(widget->align() | alignmask::top);
             else
                 widget->set_align(widget->align() & ~alignmask::top);
-            return 0;
         }, {eventid::property_changed});
         m_form->add_option(top);
 
         auto bottom = make_shared<CheckBox>("bottom");
         if ((widget->align() & alignmask::bottom) == alignmask::bottom)
             bottom->check(true);
-        bottom->on_event([widget, bottom](eventid)
+        bottom->on_event([widget, bottom](Event&)
         {
             if (bottom->checked())
                 widget->set_align(widget->align() | alignmask::bottom);
             else
                 widget->set_align(widget->align() & ~alignmask::bottom);
-            return 0;
         }, {eventid::property_changed});
         m_form->add_option(bottom);
 
         auto expand_horizontal = make_shared<CheckBox>("expand horizontal");
         if ((widget->align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
             expand_horizontal->check(true);
-        expand_horizontal->on_event([widget, expand_horizontal](eventid)
+        expand_horizontal->on_event([widget, expand_horizontal](Event&)
         {
             if (expand_horizontal->checked())
                 widget->set_align(widget->align() | alignmask::expand_horizontal);
             else
                 widget->set_align(widget->align() & ~alignmask::expand_horizontal);
-            return 0;
         }, {eventid::property_changed});
         m_form->add_option(expand_horizontal);
 
         auto expand_vertical = make_shared<CheckBox>("expand vertical");
         if ((widget->align() & alignmask::expand_vertical) == alignmask::expand_vertical)
             expand_vertical->check(true);
-        expand_vertical->on_event([widget, expand_vertical](eventid)
+        expand_vertical->on_event([widget, expand_vertical](Event&)
         {
             if (expand_vertical->checked())
                 widget->set_align(widget->align() | alignmask::expand_vertical);
             else
                 widget->set_align(widget->align() & ~alignmask::expand_vertical);
-            return 0;
         }, {eventid::property_changed});
         m_form->add_option(expand_vertical);
     }
@@ -503,15 +491,15 @@ public:
         if (widget->size().empty())
             widget->resize(Size(100, 100));
 
-        widget->on_event([this, widget](eventid event)
+        widget->on_event([this, widget](Event & event)
         {
             /// @todo drag is broken if you drag an item over one it is under
 
             static Point m_start_point;
-            switch (event)
+            switch (event.id())
             {
             case eventid::raw_pointer_down:
-                if (event::pointer().button == pointer_button::left)
+                if (event.pointer().btn == Pointer::button::left)
                 {
                     show_properties(widget.get());
                     m_selected = widget.get();
@@ -519,25 +507,22 @@ public:
                 break;
             case eventid::pointer_drag_start:
                 m_start_point = widget->box().point();
-                //return 1;
+                event.stop();
                 break;
             case eventid::pointer_drag:
             {
-                auto diff = event::pointer().drag_start - event::pointer().point;
+                auto diff = event.pointer().drag_start - event.pointer().point;
                 widget->move(m_start_point - Point(diff.x, diff.y));
-                //return 1;
                 break;
             }
             case eventid::pointer_drag_stop:
                 widget->set_align(alignmask::none);
                 show_properties(widget.get());
                 m_selected = widget.get();
-                //return 1;
                 break;
             default:
                 break;
             }
-            return 0;
         });
 
         m_selected = widget.get();

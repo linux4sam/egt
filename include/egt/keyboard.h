@@ -125,7 +125,7 @@ public:
     {
     public:
         MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-                  Size key_size = Size(0, 0));
+                         Size key_size = Size(0, 0));
     protected:
         std::shared_ptr<Panel> m_panel;
         friend class Keyboard;

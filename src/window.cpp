@@ -310,9 +310,9 @@ struct CursorWindow : public Window
         flags().set(Widget::flag::no_layout);
     }
 
-    virtual int handle(eventid) override
+    virtual void handle(Event&) override
     {
-        return 0;
+
     }
 
     virtual ~CursorWindow() = default;
@@ -339,17 +339,17 @@ void TopWindow::show_cursor(const Image& image)
     {eventid::raw_pointer_down, eventid::raw_pointer_up, eventid::raw_pointer_move});
 }
 
-int TopWindow::handle_mouse(eventid event)
+void TopWindow::handle_mouse(Event& event)
 {
     if (m_cursor)
     {
-        switch (event)
+        switch (event.id())
         {
         case eventid::raw_pointer_down:
         case eventid::raw_pointer_up:
         case eventid::raw_pointer_move:
         {
-            auto p = event::pointer().point;
+            auto p = event.pointer().point;
 
             // don't let the cursor go off the screen
             if (main_screen()->box().contains(Rect(Point(p.x, p.y), m_cursor->size())))
@@ -361,8 +361,6 @@ int TopWindow::handle_mouse(eventid event)
             break;
         }
     }
-
-    return 0;
 }
 
 }

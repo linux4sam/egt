@@ -37,12 +37,10 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     m_flist->set_color(Palette::ColorId::border, Palette::transparent);
     m_vsizer->add(m_flist);
 
-    m_flist->on_event([this](eventid event)
+    m_flist->on_event([this](Event&)
     {
-        ignoreparam(event);
         DBG("FileDialog index is  " << this->m_flist->selected());
         list_item_selected(this->m_flist->selected());
-        return 1;
     }, {eventid::property_changed});
 
     if (m_filepath.empty())
@@ -154,20 +152,16 @@ FileOpenDialog::FileOpenDialog(const std::string& title, const Rect& rect)
     m_cancel->set_align(alignmask::center);
     m_grid->add(expand(m_cancel));
 
-    m_okay->on_event([this](eventid event)
+    m_okay->on_event([this](Event&)
     {
-        ignoreparam(event);
         list_item_selected(this->m_flist->selected());
-        return 1;
     }, {eventid::pointer_click});
 
-    m_cancel->on_event([this](eventid event)
+    m_cancel->on_event([this](Event&)
     {
-        ignoreparam(event);
         this->m_fselected = std::string();
         this->m_flist->clear();
         this->hide();
-        return 1;
     }, {eventid::pointer_click});
 
 }
@@ -220,9 +214,8 @@ FileSaveDialog::FileSaveDialog(const std::string& title, const Rect& rect)
     m_cancel->set_align(alignmask::expand);
     m_grid->add(m_cancel);
 
-    m_okay->on_event([this](eventid event)
+    m_okay->on_event([this](Event & event)
     {
-        ignoreparam(event);
         if (!m_fselected.empty())
         {
             invoke_handlers(eventid::property_changed);
@@ -232,17 +225,14 @@ FileSaveDialog::FileSaveDialog(const std::string& title, const Rect& rect)
             m_fselected = m_fileselect_box->text();
             invoke_handlers(eventid::property_changed);
         }
-        return 1;
     }, {eventid::pointer_click});
 
-    m_cancel->on_event([this](eventid event)
+    m_cancel->on_event([this](Event & event)
     {
-        ignoreparam(event);
         this->m_fselected = std::string();
         this->m_flist->clear();
         this->m_fileselect_box->set_text(std::string());
         this->hide();
-        return 1;
     }, {eventid::pointer_click});
 
 }

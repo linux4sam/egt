@@ -174,15 +174,13 @@ Rect Slider::handle_box(int value) const
     }
 }
 
-int Slider::handle(eventid event)
+void Slider::handle(Event& event)
 {
-    switch (event)
+    Widget::handle(event);
+
+    switch (event.id())
     {
-    case eventid::raw_pointer_down:
-        set_active(true);
-        break;
     case eventid::raw_pointer_up:
-        set_active(false);
         if (m_invoke_pending)
         {
             m_invoke_pending = false;
@@ -195,20 +193,18 @@ int Slider::handle(eventid event)
     case eventid::pointer_drag:
         if (m_orient == orientation::horizontal)
         {
-            auto diff = event::pointer().point - event::pointer().drag_start;
+            auto diff = event.pointer().point - event.pointer().drag_start;
             set_value(to_value(m_start_offset + diff.x));
         }
         else
         {
-            auto diff = event::pointer().point - event::pointer().drag_start;
+            auto diff = event.pointer().point - event.pointer().drag_start;
             set_value(to_value(m_start_offset - diff.y));
         }
         break;
     default:
         break;
     }
-
-    return Widget::handle(event);
 }
 
 void Slider::draw_label(Painter& painter, int value)
