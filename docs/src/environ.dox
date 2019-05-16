@@ -57,5 +57,12 @@ levels using environment variables.
   </dd>
 </dl>
 
+@li <tt>EGT_ICONS_DIRECTORY</tt>
+    <br>
+    Change EGT installed default icons directory with a absolute path or directory name.
+    If a directory name is set, then this directory name will be appended with a EGT
+    installed default icons directory path.
+    examples: /home/egt/icons, 64px, /usr/share/libegt/icons/128px.
+
 */
 }}

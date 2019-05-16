@@ -47,6 +47,24 @@ access these icons and images, use the following syntax:
 auto bug = Image("@bug.png");
 @endcode
 
+In the above example, bug.png is picked from a EGT installed default icons
+directory (i.e. /usr/share/libegt/icons). If a user wants to pick a different
+icon from a different directory, use the following syntax:
+
+@code{.cpp}
+auto bug = Image("@128px/bug.png");
+@endcode
+
+The EGT installed default icons directory can be changed by setting a environment
+variable EGT_ICONS_DIRECTORY. This value can be a absolute path or directory name.
+If a directory name is set, then this directory name will be appended with a EGT
+installed default icons directory path.
+
+@code{.cpp}
+export EGT_ICONS_DIRECTORY=/usr/share/icons
+or
+export EGT_ICONS_DIRECTORY=64px
+@endcode
 
 @section resources_mresg Respath: Executable Compiled in Resources
 
