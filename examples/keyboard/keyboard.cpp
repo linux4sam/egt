@@ -14,13 +14,44 @@
 using namespace std;
 using namespace egt;
 
+struct Multichoice_q : public Panel
+{
+    Multichoice_q()
+        : Panel(
+    {
+        {
+            make_shared<Key>("q1"),
+            make_shared<Key>("q2"),
+            make_shared<Key>("q3"),
+        }, {
+            make_shared<Key>("q4"),
+            make_shared<Key>("q5"),
+            make_shared<Key>("q6"),
+        }
+    })
+    {}
+};
+
+struct Multichoice_Q : public Panel
+{
+    Multichoice_Q()
+        : Panel(
+    {
+        {
+            make_shared<Key>("Q1"),
+            make_shared<Key>("Q2"),
+        }
+    })
+    {}
+};
+
 struct QwertyLettersLowerCase : public Panel
 {
     QwertyLettersLowerCase()
         : Panel(
     {
         {
-            make_shared<Key>("q"),
+            make_shared<Key>("q", make_shared<Multichoice_q>()),
             make_shared<Key>("w"),
             make_shared<Key>("e"),
             make_shared<Key>("r"),
@@ -67,7 +98,7 @@ struct QwertyLettersUpperCase : public Panel
         : Panel(
     {
         {
-            make_shared<Key>("Q"),
+            make_shared<Key>("Q", make_shared<Multichoice_Q>()),
             make_shared<Key>("W"),
             make_shared<Key>("E"),
             make_shared<Key>("R"),

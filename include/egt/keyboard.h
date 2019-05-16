@@ -14,6 +14,7 @@
 #include <egt/button.h>
 #include <egt/input.h>
 #include <egt/notebook.h>
+#include <egt/popup.h>
 #include <egt/sizer.h>
 #include <memory>
 #include <string>
@@ -25,45 +26,60 @@ inline namespace v1
 {
 
 class Keyboard;
+class Panel;
 
 class Key : public Button
 {
 public:
     Key(std::string label, int link = -1, double length = 1.0);
+    Key(std::string label, std::shared_ptr<Panel> multichoice, double length = 1.0);
     double length() const;
     int link() const;
 
 protected:
     int m_link;
     double m_length;
+    std::shared_ptr<Panel> m_multichoice{nullptr};
+    friend class Keyboard;
 };
 
-class Panel : public NotebookTab
+class Panel : public VerticalBoxSizer
 {
 public:
     Panel(std::vector<std::vector<std::shared_ptr<Key>>> k,
           Size size = Size(0, 0));
 
-    void set_keyboard(Keyboard* keyboard);
-
 protected:
-    VerticalBoxSizer m_sizer;
-    Keyboard* m_keyboard;
+    std::vector<std::vector<std::shared_ptr<Key>>> m_keys;
+    friend class Keyboard;
 };
 
-class Keyboard : public Notebook
+class Keyboard : public Frame
 {
 public:
     Keyboard(std::vector<std::shared_ptr<Panel>> panels, Size size = Size());
 
 private:
+    struct MultichoicePopup : public Popup
+    {
+        MultichoicePopup()
+        {
+            m_notebook.set_align(alignmask::expand);
+            add(m_notebook);
+        }
+
+        Notebook m_notebook;
+        friend class Keyboard;
+    };
+
     struct KeyboardInput : public Input
     {
         using Input::Input;
-        friend class Panel;
+        friend class Keyboard;
     };
     KeyboardInput m_in;
-    friend class Panel;
+    Notebook m_main_panel;
+    MultichoicePopup m_multichoice_popup;
 };
 
 }
