@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdio>
 #include <egt/detail/filesystem.h>
+#include <egt/detail/imagecache.h>
 #include <egt/ui>
 #include <iostream>
 #include <map>
@@ -16,13 +17,11 @@
 using namespace std;
 using namespace egt;
 
-#define SHARED_PATH detail::exe_pwd() + "/../share/egt/examples/gallery/"
-
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "gallery");
 
-    std::vector<std::string> files = detail::glob(SHARED_PATH + "*trailer*.png");
+    std::vector<std::string> files = detail::glob(detail::resolve_file_path("movies/") + "*trailer*.jpg");
 
     TopWindow win;
     win.set_name("win");
