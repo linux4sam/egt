@@ -28,7 +28,7 @@ inline namespace v1
 class Keyboard : public Frame
 {
 public:
-    class Panel;
+    class MultichoicePanel;
 
     /**
      * @brief Key widget for the Keyboard widget.
@@ -47,14 +47,14 @@ public:
          */
         Key(std::string label, double length = 1.0);
         Key(std::string label, int link, double length = 1.0);
-        Key(std::string label, std::shared_ptr<Panel> multichoice, double length = 1.0);
+        Key(std::string label, std::shared_ptr<MultichoicePanel> multichoice, double length = 1.0);
         double length() const;
         int link() const;
 
     protected:
         int m_link{-1};
         double m_length;
-        std::shared_ptr<Panel> m_multichoice{nullptr};
+        std::shared_ptr<MultichoicePanel> m_multichoice{nullptr};
         friend class Keyboard;
     };
 
@@ -69,7 +69,27 @@ public:
         friend class Keyboard;
     };
 
-    Keyboard(std::vector<std::shared_ptr<Panel>> panels, Size size = Size());
+    class MainPanel : public NotebookTab
+    {
+    public:
+        MainPanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
+                  Size key_size = Size(0, 0));
+    protected:
+        std::shared_ptr<Panel> m_panel;
+        friend class Keyboard;
+    };
+
+    class MultichoicePanel : public NotebookTab
+    {
+    public:
+        MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
+                  Size key_size = Size(0, 0));
+    protected:
+        std::shared_ptr<Panel> m_panel;
+        friend class Keyboard;
+    };
+
+    Keyboard(std::vector<std::shared_ptr<MainPanel>> panels, Size size = Size());
 
 private:
     struct MultichoicePopup : public Popup

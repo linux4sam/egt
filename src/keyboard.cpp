@@ -12,6 +12,8 @@ inline namespace v1
 {
 using Key = Keyboard::Key;
 using Panel = Keyboard::Panel;
+using MainPanel = Keyboard::MainPanel;
+using MultichoicePanel = Keyboard::MultichoicePanel;
 
 Key::Key(std::string label, double length)
     : Button(label),
@@ -24,13 +26,12 @@ Key::Key(std::string label, int link, double length)
       m_length(length)
 {}
 
-Key::Key(std::string label, shared_ptr<Panel> multichoice, double length)
+Key::Key(std::string label, shared_ptr<MultichoicePanel> multichoice, double length)
     : Button(label),
       m_link(-1),
       m_length(length),
       m_multichoice(multichoice)
-{
-}
+{}
 
 double Key::length() const
 {
@@ -64,7 +65,23 @@ Panel::Panel(std::vector<std::vector<std::shared_ptr<Key>>> keys, Size key_size)
     }
 }
 
-Keyboard::Keyboard(std::vector<shared_ptr<Panel>> panels, Size size)
+MainPanel::MainPanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
+                     Size key_size)
+    : NotebookTab(),
+      m_panel(make_shared<Panel>(keys, key_size))
+{
+    add(m_panel);
+}
+
+MultichoicePanel::MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
+                                   Size key_size)
+    : NotebookTab(),
+      m_panel(make_shared<Panel>(keys, key_size))
+{
+    add(m_panel);
+}
+
+Keyboard::Keyboard(std::vector<shared_ptr<MainPanel>> panels, Size size)
     : Frame(Rect(Point(), size))
 {
     m_main_panel.set_align(alignmask::expand);
@@ -76,7 +93,7 @@ Keyboard::Keyboard(std::vector<shared_ptr<Panel>> panels, Size size)
 
     for (auto& panel : panels)
     {
-        for (auto& row : panel->m_keys)
+        for (auto& row : panel->m_panel->m_keys)
         {
             for (auto& key : row)
             {
@@ -114,7 +131,7 @@ Keyboard::Keyboard(std::vector<shared_ptr<Panel>> panels, Size size)
 
                     if (key->m_multichoice)
                     {
-                        for (auto& multichoice_raw : key->m_multichoice->m_keys)
+                        for (auto& multichoice_raw : key->m_multichoice->m_panel->m_keys)
                         {
                             for (auto& multichoice_key : multichoice_raw)
                             {
@@ -138,14 +155,12 @@ Keyboard::Keyboard(std::vector<shared_ptr<Panel>> panels, Size size)
                             }
                         }
 
-                        auto m = make_shared<NotebookTab>();
-                        m->add(key->m_multichoice);
-                        m_multichoice_popup.m_notebook.add(m);
+                        m_multichoice_popup.m_notebook.add(key->m_multichoice);
 
                         key->on_event([this, key, multichoice_id](eventid event)
                         {
                             m_multichoice_popup.m_notebook.set_select(multichoice_id);
-                            m_multichoice_popup.resize(key->m_multichoice->size());
+                            m_multichoice_popup.resize(key->m_multichoice->m_panel->size());
                             m_multichoice_popup.show_modal(true);
 
                             return 0;
@@ -157,9 +172,7 @@ Keyboard::Keyboard(std::vector<shared_ptr<Panel>> panels, Size size)
             }
         }
 
-        auto p = make_shared<NotebookTab>();
-        p->add(panel);
-        m_main_panel.add(p);
+        m_main_panel.add(panel);
     }
 }
 

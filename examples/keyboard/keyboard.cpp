@@ -14,12 +14,13 @@
 using namespace std;
 using namespace egt;
 using Key = Keyboard::Key;
-using Panel = Keyboard::Panel;
+using MainPanel = Keyboard::MainPanel;
+using MultichoicePanel = Keyboard::MultichoicePanel;
 
-struct Multichoice_q : public Panel
+struct Multichoice_q : public MultichoicePanel
 {
     Multichoice_q()
-        : Panel(
+        : MultichoicePanel(
     {
         {
             make_shared<Key>("q1"),
@@ -34,10 +35,10 @@ struct Multichoice_q : public Panel
     {}
 };
 
-struct Multichoice_Q : public Panel
+struct Multichoice_Q : public MultichoicePanel
 {
     Multichoice_Q()
-        : Panel(
+        : MultichoicePanel(
     {
         {
             make_shared<Key>("Q1"),
@@ -47,10 +48,10 @@ struct Multichoice_Q : public Panel
     {}
 };
 
-struct QwertyLettersLowerCase : public Panel
+struct QwertyLettersLowerCase : public MainPanel
 {
     QwertyLettersLowerCase()
-        : Panel(
+        : MainPanel(
     {
         {
             make_shared<Key>("q", make_shared<Multichoice_q>()),
@@ -94,10 +95,10 @@ struct QwertyLettersLowerCase : public Panel
     {}
 };
 
-struct QwertyLettersUpperCase : public Panel
+struct QwertyLettersUpperCase : public MainPanel
 {
     QwertyLettersUpperCase()
-        : Panel(
+        : MainPanel(
     {
         {
             make_shared<Key>("Q", make_shared<Multichoice_Q>()),
@@ -141,10 +142,10 @@ struct QwertyLettersUpperCase : public Panel
     {}
 };
 
-struct NumbersSymbols : public Panel
+struct NumbersSymbols : public MainPanel
 {
     NumbersSymbols()
-        : Panel(
+        : MainPanel(
     {
         {
             make_shared<Key>("1"),
