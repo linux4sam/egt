@@ -25,7 +25,7 @@ MouseGesture::MouseGesture()
     m_long_click_timer.on_timeout([this]()
     {
         stop();
-        Event event(eventid::pointer_hold);
+        Event event(eventid::pointer_hold, mouse_start());
         invoke_handlers(event);
     });
 }
