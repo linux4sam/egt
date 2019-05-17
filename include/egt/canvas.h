@@ -41,14 +41,12 @@ public:
 
     /**
      * Construct a canvas with the specified format and size.
-     *
-     * @todo This needs to be modified to use pixel_format instead of cairo_format_t.
      */
     explicit Canvas(const Size& size,
-                    cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
+                    pixel_format format = pixel_format::argb8888) noexcept;
 
     explicit Canvas(const SizeF& size,
-                    cairo_format_t format = CAIRO_FORMAT_ARGB32) noexcept;
+                    pixel_format format = pixel_format::argb8888) noexcept;
 
     /**
      * Construct a canvas with an already existing surface.
@@ -63,7 +61,7 @@ public:
      *
      * The canvas will create a copy of the supplied surface.
      */
-    Canvas(shared_cairo_surface_t surface, cairo_format_t format) noexcept;
+    Canvas(shared_cairo_surface_t surface, pixel_format format) noexcept;
 
     /**
      * Get the context for the Canvas.

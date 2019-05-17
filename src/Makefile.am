@@ -84,6 +84,7 @@ themes/shamrock.cpp \
 themes/sky.cpp \
 timer.cpp \
 tools.cpp \
+types.cpp \
 uiloader.cpp \
 utils.cpp \
 view.cpp \

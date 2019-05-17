@@ -137,7 +137,7 @@ public:
           m_penpicker(Palette::blue),
           m_fillpicker(Palette::white),
           m_widthpicker(2),
-          m_canvas(screen()->size(), CAIRO_FORMAT_ARGB32)
+          m_canvas(screen()->size(), pixel_format::argb8888)
     {
         // don't draw background, we'll do it in draw()
         set_boxtype(Theme::boxtype::none);
