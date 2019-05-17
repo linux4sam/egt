@@ -323,17 +323,23 @@ public:
         }
     }
 
-    virtual Widget* child_hit_test(const DisplayPoint& point)
+    /**
+     * Get the widget under the given DisplayPoint.
+     *
+     * @return The widget pointer or nullptr if not found.
+     */
+    virtual Widget* hit_test(const DisplayPoint& point)
     {
+        Point pos = display_to_local(point);
+
         for (auto& child : detail::reverse_iterate(m_children))
         {
-            Point pos = to_child(from_display(point));
             if (Rect::point_inside(pos, child->box()))
             {
                 if (child->flags().is_set(Widget::flag::frame))
                 {
                     auto frame = static_cast<Frame*>(child.get());
-                    return frame->child_hit_test(point);
+                    return frame->hit_test(point);
                 }
                 else
                 {
@@ -342,8 +348,7 @@ public:
             }
         }
 
-        Point pos = from_display(point);
-        if (Rect::point_inside(pos, box()))
+        if (Rect::point_inside(pos, local_box()))
             return this;
 
         return nullptr;

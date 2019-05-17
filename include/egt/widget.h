@@ -734,22 +734,6 @@ public:
         return Rect(to_parent(r.point()), r.size());
     }
 
-    /**
-     * Convert a local point to the coordinate system of the display.
-     *
-     * In other words, work towards the entire display so we can get
-     * this point relative to the origin of the display.
-     */
-    virtual DisplayPoint to_display(const Point& p);
-
-    /**
-     * Convert a display point to a local point.
-     *
-     * In other words, walk towards the current widget to we can
-     * get a point relative to the widget's own box.
-     */
-    virtual Point from_display(const DisplayPoint& p);
-
     virtual DisplayPoint display_origin();
 
     /**
@@ -774,6 +758,22 @@ public:
     void draw_box(Painter& painter, Palette::ColorId bg,
                   Palette::ColorId border) const;
 
+    /**
+     * Convert a local point to a display point.
+     *
+     * A display point has origin in the top left of the display. A local point
+     * has it's origin at the top left of the position of this widget.
+     */
+    virtual DisplayPoint local_to_display(const Point& p);
+
+    /**
+     * Convert a display point to a local point.
+     *
+     * A display point has origin in the top left of the display. A local point
+     * has it's origin at the top left of the position of this widget.
+     */
+    virtual Point display_to_local(const DisplayPoint& p);
+
     virtual ~Widget() noexcept;
 
 protected:
@@ -789,6 +789,11 @@ protected:
     virtual void set_parent(Frame* parent);
 
     virtual const Palette& default_palette() const;
+
+    inline Rect local_box() const
+    {
+        return size();
+    }
 
     /**
      * Bounding box.
@@ -813,8 +818,6 @@ protected:
     void parent_layout();
 
 private:
-
-    DisplayPoint to_display_back(const Point& p);
 
     /**
      * Flags for the widget.

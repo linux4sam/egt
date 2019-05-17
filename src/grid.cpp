@@ -286,7 +286,8 @@ void SelectableGrid::handle(Event& event)
 
     if (event.id() == eventid::raw_pointer_down)
     {
-        auto b = content_area();
+        auto b = content_area().size();
+        Point pos = display_to_local(event.pointer().point);
 
         auto columns = m_cells.size();
         for (size_t column = 0; column < columns; column++)
@@ -295,7 +296,6 @@ void SelectableGrid::handle(Event& event)
             for (size_t row = 0; row < rows; row++)
             {
                 Rect bounding = cell_rect(columns, rows, b.w, b.h, column, row, border(), padding());
-                bounding += b.point();
 
                 if (border())
                 {
@@ -306,8 +306,6 @@ void SelectableGrid::handle(Event& event)
                 assert(!bounding.size().empty());
                 if (bounding.size().empty())
                     continue;
-
-                Point pos = from_display(event.pointer().point);
 
                 if (Rect::point_inside(pos, bounding))
                 {

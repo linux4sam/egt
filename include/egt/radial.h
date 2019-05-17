@@ -126,7 +126,7 @@ public:
         case eventid::pointer_click:
         case eventid::pointer_drag:
         {
-            auto angle = this->touch_to_degrees(this->from_display(event.pointer().point));
+            auto angle = this->touch_to_degrees(this->display_to_local(event.pointer().point));
             auto v = this->degrees_to_value(angle);
             auto orig = this->set_value(v);
             if (orig != v)

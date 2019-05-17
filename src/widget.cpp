@@ -308,39 +308,6 @@ Point Widget::to_parent(const Point& r) const
     return r;
 }
 
-DisplayPoint Widget::to_display_back(const Point& p)
-{
-    auto calc = box().point() + p;
-
-    if (parent())
-        return parent()->to_display_back(calc);
-
-
-    return DisplayPoint(calc.x, calc.y);
-}
-
-DisplayPoint Widget::to_display(const Point& p)
-{
-    if (parent())
-        return parent()->to_display_back(p);
-
-    return DisplayPoint(p.x, p.y);
-}
-
-Point Widget::from_display(const DisplayPoint& p)
-{
-    Point p2(p.x, p.y);
-
-    auto par = parent();
-    while (par)
-    {
-        p2 -= par->point();
-        par = par->parent();
-    }
-
-    return p2 - point();
-}
-
 DisplayPoint Widget::display_origin()
 {
     DisplayPoint p(x(), y());
@@ -497,6 +464,34 @@ void Widget::parent_layout()
 
     if (parent())
         parent()->layout();
+}
+
+DisplayPoint Widget::local_to_display(const Point& p)
+{
+    DisplayPoint p2(p.x, p.y);
+
+    auto par = parent();
+    while (par)
+    {
+        p2 += DisplayPoint(par->point().x, par->point().y);
+        par = par->parent();
+    }
+
+    return p2 + DisplayPoint(x(), y());
+}
+
+Point Widget::display_to_local(const DisplayPoint& p)
+{
+    Point p2(p.x, p.y);
+
+    auto par = parent();
+    while (par)
+    {
+        p2 -= par->point();
+        par = par->parent();
+    }
+
+    return p2 - point();
 }
 
 }

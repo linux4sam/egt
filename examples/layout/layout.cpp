@@ -326,12 +326,11 @@ public:
         {
             if (event.pointer().btn == Pointer::button::right)
             {
-                Point pos = from_display(event.pointer().point);
-
+                Point pos = display_to_local(event.pointer().point);
                 if (Rect::point_inside(pos, m_canvas->box()))
                 {
-                    auto parent = static_cast<Frame*>(m_canvas->child_hit_test(event.pointer().point));
-                    if (!parent->flags().is_set(Widget::flag::frame))
+                    auto parent = static_cast<Frame*>(m_canvas->hit_test(event.pointer().point));
+                    if (parent && !parent->flags().is_set(Widget::flag::frame))
                         parent = nullptr;
                     auto p = m_grid->selected();
                     auto index = p.x + 3 * p.y;
@@ -483,7 +482,7 @@ public:
         cout << "Adding widget at " << point << " to " << parent->name() << endl;
 
         parent->add(widget);
-        widget->move(parent->to_child(parent->from_display(point)));
+        widget->move(parent->display_to_local(point));
 
         if (widget->size().empty())
             widget->resize(widget->min_size_hint());

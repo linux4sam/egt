@@ -33,7 +33,7 @@ int main(int argc, const char** argv)
         auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
         win1.on_event([&win1, label](Event & event)
         {
-            auto p = win1.from_display(event.pointer().point);
+            auto p = win1.display_to_local(event.pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
         }, {eventid::raw_pointer_move});
         label->set_align(a);
@@ -52,7 +52,7 @@ int main(int argc, const char** argv)
         auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
         win2.on_event([&win2, label](Event & event)
         {
-            auto p = win2.from_display(event.pointer().point);
+            auto p = win2.display_to_local(event.pointer().point);
             label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
         }, {eventid::raw_pointer_move});
         label->set_align(a);

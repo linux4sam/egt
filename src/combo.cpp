@@ -49,7 +49,7 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 
 void ComboBoxPopup::smart_pos()
 {
-    auto origin = m_parent.to_display(m_parent.box().point());
+    auto origin = m_parent.local_to_display(Point());
 
     auto real = origin + DisplayPoint(0, m_parent.size().h + POPUP_OFFSET);
     move(Point(real.x, real.y));
@@ -87,9 +87,9 @@ void ComboBoxPopup::handle(Event& event)
     {
     case eventid::pointer_click:
     {
-        Point mouse = from_display(event.pointer().point);
+        Point mouse = display_to_local(event.pointer().point);
 
-        if (!Rect::point_inside(mouse, box()))
+        if (!Rect::point_inside(mouse, local_box()))
         {
             // if any mouse click happens outside of us, hide
             hide();
@@ -165,9 +165,8 @@ void ComboBox::handle(Event& event)
     {
     case eventid::pointer_click:
     {
-        Point mouse = from_display(event.pointer().point);
-
-        if (Rect::point_inside(mouse, box()))
+        Point mouse = display_to_local(event.pointer().point);
+        if (Rect::point_inside(mouse, local_box()))
         {
             m_popup->show_modal();
         }

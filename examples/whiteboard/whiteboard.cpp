@@ -231,13 +231,13 @@ public:
         switch (event.id())
         {
         case eventid::pointer_drag_start:
-            m_last = from_display(event.pointer().point);
+            m_last = display_to_local(event.pointer().point);
             event.grab(this);
             break;
         case eventid::pointer_drag:
         {
 
-            auto mouse = from_display(event.pointer().point);
+            auto mouse = display_to_local(event.pointer().point);
 
             if (m_last != mouse)
             {

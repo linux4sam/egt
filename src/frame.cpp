@@ -83,7 +83,7 @@ void Frame::handle(Event& event)
     case eventid::pointer_drag:
     case eventid::pointer_drag_stop:
     {
-        Point pos = from_display(event.pointer().point);
+        Point pos = display_to_local(event.pointer().point);
 
         for (auto& child : detail::reverse_iterate(m_children))
         {

@@ -91,7 +91,7 @@ public:
         switch (event.id())
         {
         case eventid::raw_pointer_move:
-            spawn(from_display(event.pointer().point));
+            spawn(display_to_local(event.pointer().point));
             break;
         default:
             break;

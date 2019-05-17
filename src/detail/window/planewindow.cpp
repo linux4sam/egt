@@ -128,7 +128,7 @@ void PlaneWindow::top_draw()
                 assert(s);
                 if (s)
                 {
-                    s->set_position(m_interface->to_display(m_interface->box().point()));
+                    s->set_position(m_interface->local_to_display(Point()));
                     s->apply();
                     m_dirty = false;
                 }
@@ -167,7 +167,7 @@ void PlaneWindow::paint(Painter& painter)
 
     auto copy = copy_surface(cairo_get_target(screen()->context().get()));
     auto image = Image(copy);
-    auto p = m_interface->to_display(m_interface->point());
+    auto p = m_interface->local_to_display(Point());
     painter.draw(Point(p.x, p.y));
     painter.draw(image);
 }

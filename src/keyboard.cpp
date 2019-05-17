@@ -149,8 +149,8 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
         m_multichoice_popup.m_notebook.set_select(id);
         m_multichoice_popup.resize(k->m_multichoice->m_panel->size());
 
-        auto display_origin = k->to_display(k->point());
-        auto keyboard_origin = from_display(display_origin);
+        auto display_origin = k->local_to_display(k->point());
+        auto keyboard_origin = display_to_local(display_origin);
         // Popup on top of the widget.
         keyboard_origin.y -= m_multichoice_popup.size().h;
         // Popup centered on button center.
