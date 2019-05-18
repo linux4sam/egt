@@ -91,16 +91,25 @@ bool GstDecoderImpl::set_volume(double volume)
     return true;
 }
 
-bool GstDecoderImpl::seek(gint64 time)
+bool GstDecoderImpl::seek(const int64_t time)
 {
-    if (!gst_element_seek_simple(m_pipeline, GST_FORMAT_TIME,
-                                 (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT),
-                                 time))
+    if (playing())
     {
-        DBG("VideoWindow: Seek failed");
-        return false;
-    }
-    return true;
+        /* If seeking is enabled, we have not done it yet */
+        if (m_seek_enabled && !m_seekdone)
+        {
+            m_seekdone = true;
+            if (gst_element_seek(m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
+                                 GST_SEEK_TYPE_SET, (gint64) time,
+                                 GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
+            {
+                m_seekdone = false;
+                return true;
+            }
+            m_seekdone = false;
+        }
+    };
+    return false;
 }
 
 std::string GstDecoderImpl::get_error_message() const
