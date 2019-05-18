@@ -53,7 +53,9 @@ clean-local:
 	done
 
 uninstall-local:
-	rm -rf $(DESTDIR)$(localedir)/*/LC_MESSAGES/poedit.mo
+	for i in $(LINGUAS) ; do \
+	    rm -f $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES/i18n.mo ; \
+	done
 
 XGETTEXT=xgettext
 XGETTEXT_ARGS=-k_ \

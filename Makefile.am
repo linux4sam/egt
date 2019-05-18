@@ -7,8 +7,7 @@ endif
 EXTRA_DIST = README.md \
 CONTRIBUTING.md \
 CODE_OF_CONDUCT.md \
-COPYING \
-$(private_icons)
+COPYING
 
 if HAVE_DOXYGEN_BIN
 .PHONY: docs docset
@@ -29,19 +28,8 @@ style:
 		--exclude=images/jpeg -i
 endif
 
-private_icons = $(wildcard $(top_srcdir)/icons/*.png)
-
-install_verbose = $(install_verbose_@AM_V@)
-install_verbose_ = $(install_verbose_@AM_DEFAULT_V@)
-install_verbose_0 = @echo INSTALL $@;
-
-install-icons:
-	$(install_verbose)for icon in $(private_icons); do \
-		mkdir -p $(DESTDIR)$(pkgdatadir)/icons/; \
-		$(INSTALL_DATA) $(srcdir)/$$icon $(DESTDIR)$(pkgdatadir)/icons/; \
-	done
-
-install-data-local: install-icons
+iconsdir = $(pkgdatadir)/icons
+dist_icons_DATA = $(wildcard icons/*.png)
 
 CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--inline-suppr \

@@ -3,7 +3,7 @@ noinst_LTLIBRARIES = libkplot.la
 $(top_builddir)/external/kplot/compat.h: $(top_srcdir)/external/kplot/compat.pre.h $(top_srcdir)/external/kplot/compat.post.h
 	( mkdir -p $(top_builddir)/external/kplot/ ; \
 	  cat $(top_srcdir)/external/kplot/compat.pre.h ; \
-	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh $(top_builddir)/external/kplot/compat.sh reallocarray ; \
+	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh $(top_srcdir)/external/kplot/compat.sh reallocarray ; \
 	  cat $(top_srcdir)/external/kplot/compat.post.h ; ) >$@
 
 libkplot_la_SOURCES = \

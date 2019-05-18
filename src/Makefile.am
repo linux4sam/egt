@@ -5,7 +5,8 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/utfcpp/source \
 	-isystem $(top_srcdir)/external/layout \
-	-isystem $(top_srcdir)/external/kplot
+	-isystem $(top_srcdir)/external/kplot \
+	-isystem $(top_builddir)/external/kplot
 
 AM_CXXFLAGS = -DDATADIR=\"$(datadir)\"
 
@@ -111,77 +112,77 @@ libegtincludedir = ${includedir}
 nobase_libegtinclude_HEADERS = \
 $(top_builddir)/include/egt/ui \
 $(top_builddir)/include/egt/version.h \
-$(top_srcdir)/include/egt/animation.h \
-$(top_srcdir)/include/egt/app.h \
-$(top_srcdir)/include/egt/bitmask.h \
-$(top_srcdir)/include/egt/button.h \
-$(top_srcdir)/include/egt/buttongroup.h \
-$(top_srcdir)/include/egt/canvas.h \
-$(top_srcdir)/include/egt/chart.h \
-$(top_srcdir)/include/egt/checkbox.h \
-$(top_srcdir)/include/egt/color.h \
-$(top_srcdir)/include/egt/combo.h \
-$(top_srcdir)/include/egt/dialog.h \
-$(top_srcdir)/include/egt/detail/alignment.h \
-$(top_srcdir)/include/egt/detail/collision.h \
-$(top_srcdir)/include/egt/detail/floatingpoint.h \
-$(top_srcdir)/include/egt/detail/imagecache.h \
-$(top_srcdir)/include/egt/detail/filesystem.h \
-$(top_srcdir)/include/egt/detail/math.h \
-$(top_srcdir)/include/egt/detail/mousegesture.h \
-$(top_srcdir)/include/egt/detail/object.h \
-$(top_srcdir)/include/egt/detail/priorityqueue.h \
-$(top_srcdir)/include/egt/detail/resource.h \
-$(top_srcdir)/include/egt/detail/serialize.h \
-$(top_srcdir)/include/egt/detail/spriteimpl.h \
-$(top_srcdir)/include/egt/detail/string.h \
-$(top_srcdir)/include/egt/detail/layout.h \
-$(top_srcdir)/include/egt/easing.h \
-$(top_srcdir)/include/egt/event.h \
-$(top_srcdir)/include/egt/eventloop.h \
-$(top_srcdir)/include/egt/flags.h \
-$(top_srcdir)/include/egt/font.h \
-$(top_srcdir)/include/egt/form.h \
-$(top_srcdir)/include/egt/frame.h \
-$(top_srcdir)/include/egt/geometry.h \
-$(top_srcdir)/include/egt/grid.h \
-$(top_srcdir)/include/egt/guage.h \
-$(top_srcdir)/include/egt/image.h \
-$(top_srcdir)/include/egt/input.h \
-$(top_srcdir)/include/egt/keyboard.h \
-$(top_srcdir)/include/egt/keycode.h \
-$(top_srcdir)/include/egt/label.h \
-$(top_srcdir)/include/egt/list.h \
-$(top_srcdir)/include/egt/notebook.h \
-$(top_srcdir)/include/egt/painter.h \
-$(top_srcdir)/include/egt/palette.h \
-$(top_srcdir)/include/egt/popup.h \
-$(top_srcdir)/include/egt/progressbar.h \
-$(top_srcdir)/include/egt/radial.h \
-$(top_srcdir)/include/egt/radiobox.h \
-$(top_srcdir)/include/egt/screen.h \
-$(top_srcdir)/include/egt/scrollwheel.h \
-$(top_srcdir)/include/egt/sideboard.h \
-$(top_srcdir)/include/egt/sizer.h \
-$(top_srcdir)/include/egt/shapes.h \
-$(top_srcdir)/include/egt/slider.h \
-$(top_srcdir)/include/egt/sprite.h \
-$(top_srcdir)/include/egt/text.h \
-$(top_srcdir)/include/egt/textwidget.h \
-$(top_srcdir)/include/egt/theme.h \
-$(top_srcdir)/include/egt/themes/midnight.h \
-$(top_srcdir)/include/egt/themes/shamrock.h \
-$(top_srcdir)/include/egt/themes/sky.h \
-$(top_srcdir)/include/egt/timer.h \
-$(top_srcdir)/include/egt/tools.h \
-$(top_srcdir)/include/egt/types.h \
-$(top_srcdir)/include/egt/uiloader.h \
-$(top_srcdir)/include/egt/utils.h \
-$(top_srcdir)/include/egt/valuewidget.h \
-$(top_srcdir)/include/egt/view.h \
-$(top_srcdir)/include/egt/widget.h \
-$(top_srcdir)/include/egt/widgetflags.h \
-$(top_srcdir)/include/egt/window.h
+../include/egt/animation.h \
+../include/egt/app.h \
+../include/egt/bitmask.h \
+../include/egt/button.h \
+../include/egt/buttongroup.h \
+../include/egt/canvas.h \
+../include/egt/chart.h \
+../include/egt/checkbox.h \
+../include/egt/color.h \
+../include/egt/combo.h \
+../include/egt/dialog.h \
+../include/egt/detail/alignment.h \
+../include/egt/detail/collision.h \
+../include/egt/detail/floatingpoint.h \
+../include/egt/detail/imagecache.h \
+../include/egt/detail/filesystem.h \
+../include/egt/detail/math.h \
+../include/egt/detail/mousegesture.h \
+../include/egt/detail/object.h \
+../include/egt/detail/priorityqueue.h \
+../include/egt/detail/resource.h \
+../include/egt/detail/serialize.h \
+../include/egt/detail/spriteimpl.h \
+../include/egt/detail/string.h \
+../include/egt/detail/layout.h \
+../include/egt/easing.h \
+../include/egt/event.h \
+../include/egt/eventloop.h \
+../include/egt/flags.h \
+../include/egt/font.h \
+../include/egt/form.h \
+../include/egt/frame.h \
+../include/egt/geometry.h \
+../include/egt/grid.h \
+../include/egt/guage.h \
+../include/egt/image.h \
+../include/egt/input.h \
+../include/egt/keyboard.h \
+../include/egt/keycode.h \
+../include/egt/label.h \
+../include/egt/list.h \
+../include/egt/notebook.h \
+../include/egt/painter.h \
+../include/egt/palette.h \
+../include/egt/popup.h \
+../include/egt/progressbar.h \
+../include/egt/radial.h \
+../include/egt/radiobox.h \
+../include/egt/screen.h \
+../include/egt/scrollwheel.h \
+../include/egt/sideboard.h \
+../include/egt/sizer.h \
+../include/egt/shapes.h \
+../include/egt/slider.h \
+../include/egt/sprite.h \
+../include/egt/text.h \
+../include/egt/textwidget.h \
+../include/egt/theme.h \
+../include/egt/themes/midnight.h \
+../include/egt/themes/shamrock.h \
+../include/egt/themes/sky.h \
+../include/egt/timer.h \
+../include/egt/tools.h \
+../include/egt/types.h \
+../include/egt/uiloader.h \
+../include/egt/utils.h \
+../include/egt/valuewidget.h \
+../include/egt/view.h \
+../include/egt/widget.h \
+../include/egt/widgetflags.h \
+../include/egt/window.h
 
 include Makefile.asio
 
@@ -192,7 +193,7 @@ libegt_la_SOURCES += \
 detail/input/inputtslib.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/input/inputtslib.h
+../include/egt/detail/input/inputtslib.h
 endif
 
 if HAVE_LIBINPUT
@@ -200,7 +201,7 @@ libegt_la_SOURCES += \
 detail/input/inputlibinput.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/input/inputlibinput.h
+../include/egt/detail/input/inputlibinput.h
 endif
 
 
@@ -217,15 +218,15 @@ libegt_la_SOURCES += \
 detail/video/gstkmssinkimpl.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/video/gstkmssinkimpl.h
+../include/egt/detail/video/gstkmssinkimpl.h
 endif
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/audio.h \
-$(top_srcdir)/include/egt/video.h \
-$(top_srcdir)/include/egt/detail/video/gstdecoderimpl.h \
-$(top_srcdir)/include/egt/detail/video/gstappsinkimpl.h \
-$(top_srcdir)/include/egt/camera.h
+../include/egt/audio.h \
+../include/egt/video.h \
+../include/egt/detail/video/gstdecoderimpl.h \
+../include/egt/detail/video/gstappsinkimpl.h \
+../include/egt/camera.h
 
 endif
 
@@ -237,8 +238,8 @@ detail/screen/kmsoverlay.cpp \
 detail/screen/kmsscreen.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/screen/kmsoverlay.h \
-$(top_srcdir)/include/egt/detail/screen/kmsscreen.h
+../include/egt/detail/screen/kmsoverlay.h \
+../include/egt/detail/screen/kmsscreen.h
 endif
 
 if HAVE_X11
@@ -251,14 +252,14 @@ detail/screen/x11screen.cpp \
 detail/screen/x11wrap.h
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/screen/x11screen.h
+../include/egt/detail/screen/x11screen.h
 endif
 
 if HAVE_LIBCURL
 libegt_la_SOURCES += network/http.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/network/http.h
+../include/egt/network/http.h
 endif
 
 if HAVE_EXPERIMENTAL_FILESYSTEM
@@ -266,7 +267,7 @@ libegt_la_SOURCES += \
 filedialog.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/filedialog.h
+../include/egt/filedialog.h
 endif
 
 if HAVE_LIBRSVG
@@ -274,7 +275,7 @@ libegt_la_SOURCES += \
 detail/svg.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/svg.h
+../include/egt/detail/svg.h
 endif
 
 if HAVE_FBDEV
@@ -282,7 +283,7 @@ libegt_la_SOURCES += \
 detail/screen/framebuffer.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/screen/framebuffer.h
+../include/egt/detail/screen/framebuffer.h
 endif
 
 if HAVE_LINUX_INPUT_H
@@ -290,7 +291,7 @@ libegt_la_SOURCES += \
 detail/input/inputevdev.cpp
 
 nobase_libegtinclude_HEADERS += \
-$(top_srcdir)/include/egt/detail/input/inputevdev.h
+../include/egt/detail/input/inputevdev.h
 endif
 
 if OS_WIN32
