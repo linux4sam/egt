@@ -94,3 +94,6 @@ spellcheck:
 		-o -name '*.c' -o -name '*.cpp' -o -name '*.dox'`; do \
 		aspell --mode=ccpp --dont-backup --personal=$(top_srcdir)/.aspell.en.pws check $$f; \
 	done
+
+checkheaders:
+	@cd src && $(MAKE) $(AM_MAKEFLAGS) $@

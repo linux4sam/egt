@@ -4,42 +4,34 @@
 # Test public API headers for missing includes and form
 #
 
-top_srcdir=`pwd`/..
+includedir=$1
+shift
 
-CUSTOM_CXXFLAGS="\
--I$top_srcdir \
--I$top_srcdir/include \
--I$top_builddir/include \
--I$top_srcdir/src/images/bmp \
--I$top_srcdir/src/images/jpeg \
--isystem $top_srcdir/external/rapidxml \
--isystem $top_srcdir/external/layout \
--isystem $top_srcdir/external/asio/asio/include \
--DASIO_STANDALONE -DASIO_DISABLE_STD_FUTURE \
--isystem $top_srcdir/external/layout \
--isystem /usr/include/cairo"
+finish()
+{
+    rm -f test.cpp test.o
+}
+trap finish EXIT
 
-rm -f bad.txt
-
-for f in $(cd $top_srcdir/include/ && find . -name '*.h')
+for f in $(find $includedir -name '*.h' -printf '%P\n' | sed "s|^$includedir||")
 do
     b=$(echo $f | sed 's,\./,,g')
-    echo $b...
+    echo "CHECK $b"
 
-    if grep -q 'config\.h' $top_srcdir/include/$f; then
-	echo "$top_srcdir/include/$f:0:0: warning: includes config.h"
+    if grep -q 'config\.h' $includedir/$f; then
+	echo "$includedir/$f:0:0: warning: includes config.h"
     fi
 
     if echo "$f" | grep -q 'egt/detail'; then
-       if ! grep -q '#define EGT_DETAIL' $top_srcdir/include/$f; then
-	   echo "$top_srcdir/include/$f:0:0: warning: bad detail macro"
+       if ! grep -q '#define EGT_DETAIL' $includedir/$f; then
+	   echo "$includedir/$f:0:0: warning: bad detail macro"
        fi
     else
-	if ! grep -q "$b" $top_srcdir/include/egt/ui; then
-	   echo "$top_srcdir/include/$f:0:0: warning: not included in <egt/ui>"
+	if ! grep -q "$b" $includedir/egt/ui; then
+	   echo "$includedir/$f:0:0: warning: not included in <egt/ui>"
        fi
     fi
 
     echo "#include \"$b\"" > test.cpp
-    g++ -std=c++11 $CUSTOM_CXXFLAGS -c -o test.o test.cpp || echo $b >> bad.txt
+    g++ $@ -c -o test.o test.cpp #|| exit 1
 done
