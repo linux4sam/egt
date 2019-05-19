@@ -328,31 +328,7 @@ public:
      *
      * @return The widget pointer or nullptr if not found.
      */
-    virtual Widget* hit_test(const DisplayPoint& point)
-    {
-        Point pos = display_to_local(point);
-
-        for (auto& child : detail::reverse_iterate(m_children))
-        {
-            if (Rect::point_inside(pos, child->box()))
-            {
-                if (child->flags().is_set(Widget::flag::frame))
-                {
-                    auto frame = static_cast<Frame*>(child.get());
-                    return frame->hit_test(point);
-                }
-                else
-                {
-                    return child.get();
-                }
-            }
-        }
-
-        if (Rect::point_inside(pos, local_box()))
-            return this;
-
-        return nullptr;
-    }
+    virtual Widget* hit_test(const DisplayPoint& point);
 
     /**
      * Add damage to the damage array.

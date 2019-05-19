@@ -74,6 +74,7 @@ radiobox.cpp \
 screen.cpp \
 scrollwheel.cpp \
 shapes.cpp \
+sideboard.cpp \
 sizer.cpp \
 slider.cpp \
 sprite.cpp \

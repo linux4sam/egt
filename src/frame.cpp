@@ -109,6 +109,33 @@ void Frame::handle(Event& event)
     }
 }
 
+Widget* Frame::hit_test(const DisplayPoint& point)
+{
+    Point pos = display_to_local(point);
+
+    for (auto& child : detail::reverse_iterate(m_children))
+    {
+        if (Rect::point_inside(pos, child->box()))
+        {
+            if (child->flags().is_set(Widget::flag::frame))
+            {
+                auto frame = dynamic_cast<Frame*>(child.get());
+                if (frame)
+                    return frame->hit_test(point);
+            }
+            else
+            {
+                return child.get();
+            }
+        }
+    }
+
+    if (Rect::point_inside(pos, local_box()))
+        return this;
+
+    return nullptr;
+}
+
 void Frame::add_damage(const Rect& rect)
 {
     // if we get here, we must have a screen
