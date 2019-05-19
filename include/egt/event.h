@@ -166,7 +166,7 @@ struct Pointer
     DisplayPoint drag_start;
 };
 
-std::ostream& operator<<(std::ostream& os, const Pointer::button pointer);
+std::ostream& operator<<(std::ostream& os, const Pointer::button btn);
 std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
 
 /**

@@ -3,11 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
-#ifndef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <egt/ui>
 #include <iostream>
 #include <map>

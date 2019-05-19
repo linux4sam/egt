@@ -91,7 +91,7 @@ public:
     class Panel : public VerticalBoxSizer
     {
     public:
-        Panel(std::vector<std::vector<std::shared_ptr<Key>>>  p,
+        Panel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
               Size key_size = Size(0, 0));
 
     protected:

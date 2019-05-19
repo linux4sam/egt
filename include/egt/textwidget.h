@@ -71,7 +71,7 @@ public:
     const Font& font() const
     {
         if (m_font)
-            return *m_font.get();
+            return *m_font;
 
         return theme().font();
     }

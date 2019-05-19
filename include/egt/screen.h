@@ -98,7 +98,7 @@ protected:
     /// @private
     struct DisplayBuffer
     {
-        DisplayBuffer(cairo_surface_t* s)
+        explicit DisplayBuffer(cairo_surface_t* s) noexcept
             : surface(s),
               cr(cairo_create(s))
         {}

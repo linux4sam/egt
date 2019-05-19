@@ -32,7 +32,7 @@ static void download(const std::string& url, download_callback callback)
     }
 
     // TODO: memory leak
-    HttpClientRequest* session = new HttpClientRequest(url);
+    auto session = new HttpClientRequest(url);
     session->start([filename, callback](const std::string & url, HttpClientRequest::buffer_type && html)
     {
 

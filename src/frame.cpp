@@ -12,8 +12,6 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -333,7 +331,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 void Frame::paint_to_file(const std::string& filename)
 {
     /// @todo should this be redirected to parent()?
-    string name = filename;
+    std::string name = filename;
     if (name.empty())
     {
         std::ostringstream ss;

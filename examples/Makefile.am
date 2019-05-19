@@ -283,3 +283,40 @@ layout_layout_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 layout_layoutdir = $(prefix)/share/egt/examples/layout/icons
 dist_layout_layout_DATA = $(wildcard $(top_srcdir)/examples/layout/icons/*.png)
 layout_layout_LDFLAGS = $(AM_LDFLAGS)
+
+TIDY_OPTIONS = \
+-checks="-*\
+,clang-analyzer-*\
+,cppcoreguidelines-* \
+,-cppcoreguidelines-pro-bounds-constant-array-index\
+,-cppcoreguidelines-pro-type-vararg\
+,-cppcoreguidelines-pro-type-reinterpret-cast\
+,-cppcoreguidelines-pro-type-union-access\
+,-cppcoreguidelines-pro-bounds-array-to-pointer-decay\
+,-cppcoreguidelines-pro-bounds-pointer-arithmetic\
+,modernize-*\
+,-modernize-pass-by-value\
+,-modernize-use-default\
+,-modernize-use-override\
+,readability-*\
+,-readability-braces-around-statements\
+,-readability-else-after-return\
+,-readability-implicit-bool-cast\
+,-readability-named-parameter\
+,misc-redundant-expression\
+,-clang-analyzer-alpha.deadcode.UnreachableCode\
+,-clang-analyzer-alpha.core.CastToStruct\
+,-clang-analyzer-alpha.unix.PthreadLock\
+,-clang-analyzer-alpha.cplusplus.VirtualCall" \
+-header-filter='^.*include/egt/.*h$$' \
+-- $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+
+tidy-local: all-am
+	@for source in $(SOURCES); do \
+		[[ $$source == *.c ]] && continue; \
+		[[ $$source == *.hpp ]] && continue; \
+		[[ $$source == *.ipp ]] && continue; \
+		clang-tidy $$source $(TIDY_OPTIONS); \
+	done
+
+tidy: tidy-local

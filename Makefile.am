@@ -86,6 +86,7 @@ ltmain.sh
 
 tidy:
 	@cd src && $(MAKE) $(AM_MAKEFLAGS) $@
+	@cd examples && $(MAKE) $(AM_MAKEFLAGS) $@
 
 spellcheck:
 	@for f in `find $(top_srcdir)/docs/src/ $(top_srcdir)/include/ \

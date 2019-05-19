@@ -335,13 +335,14 @@ TIDY_OPTIONS = \
 ,-clang-analyzer-alpha.core.CastToStruct\
 ,-clang-analyzer-alpha.unix.PthreadLock\
 ,-clang-analyzer-alpha.cplusplus.VirtualCall" \
--header-filter=egt/*.h \
+-header-filter='^.*include/egt/.*h$$' \
 -- $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
 
-tidy: all-am
-	@for source in $(libegt_la_SOURCES) $(nobase_libegtinclude_HEADERS); do \
+tidy-local: all-am
+	@for source in $(SOURCES); do \
 		[[ $$source == *.c ]] && continue; \
 		[[ $$source == *.h ]] && continue; \
-		echo $$source; \
 		clang-tidy $$source $(TIDY_OPTIONS); \
 	done
+
+tidy: tidy-local

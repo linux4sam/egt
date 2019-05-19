@@ -329,7 +329,7 @@ public:
                 Point pos = display_to_local(event.pointer().point);
                 if (Rect::point_inside(pos, m_canvas->box()))
                 {
-                    auto parent = static_cast<Frame*>(m_canvas->hit_test(event.pointer().point));
+                    auto parent = dynamic_cast<Frame*>(m_canvas->hit_test(event.pointer().point));
                     if (parent && !parent->flags().is_set(Widget::flag::frame))
                         parent = nullptr;
                     auto p = m_grid->selected();

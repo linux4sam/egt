@@ -249,7 +249,7 @@ struct Pattern
 
     Color color() const
     {
-        if (m_steps.size())
+        if (!m_steps.empty())
             return m_steps.begin()->second;
 
         return Color();

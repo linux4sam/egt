@@ -34,8 +34,6 @@ void Screen::flip(const damage_array& damage)
 {
     if (!damage.empty() && index() < m_buffers.size())
     {
-        damage_array olddamage = m_buffers[index()].damage;
-
         // save the damage to all buffers
         for (auto& b : m_buffers)
             for (const auto& d : damage)
