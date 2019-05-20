@@ -64,8 +64,10 @@ AC_DEFUN([EGT_CC_TRY_FLAG], [
 ])
 
 MAYBE_WARN="-Wall -Wextra \
--Wsign-compare -Werror-implicit-function-declaration \
--Wpointer-arith -Wwrite-strings \
+-Wsign-compare \
+-Werror-implicit-function-declaration \
+-Wpointer-arith \
+-Wwrite-strings \
 -Wmissing-declarations \
 -Wpacked \
 -Wstrict-aliasing=2 -Winit-self \
@@ -119,6 +121,43 @@ if test "$enable_debug" = "no" ; then
 else
   CXXFLAGS="$CXXFLAGS -O0"
   CFLAGS="$CFLAGS -O0"
+fi
+
+AC_ARG_ENABLE(gcov, AC_HELP_STRING([--enable-gcov],[turn on code coverage analysis tools]))
+
+dnl Check for --enable-gcov and add appropriate flags for gcc
+dnl Note that these extra switches are NOT applied to the loader
+if test "x$enable_gcov" = "xyes";
+then
+  dnl Check for -fprofile-arcs and -ftest-coverage option
+  EGT_CC_TRY_FLAG([--coverage], ac_cv_c_gcc_ftest_coverage="yes")
+
+  if test "$ac_cv_c_gcc_ftest_coverage" = "yes"
+  then
+    CFLAGS="$CFLAGS --coverage"
+    CXXFLAGS="$CXXFLAGS --coverage"
+    dnl Turn off optimization so code coverage tool
+    dnl can get accurate line numbers
+    CFLAGS=`echo "$CFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
+    CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
+  else
+    ac_cv_c_gcc_ftest_coverage=no
+  fi
+fi
+
+AC_ARG_ENABLE(profile, AC_HELP_STRING([--enable-profile],[turn on profiling tools]))
+
+if test "x$enable_profile" = "xyes";
+then
+  EGT_CC_TRY_FLAG([-pg], ac_cv_c_gcc_pg="yes")
+
+  if test "$ac_cv_c_gcc_pg" = "yes"
+  then
+    CFLAGS="$CFLAGS -pg"
+    CXXFLAGS="$CXXFLAGS -pg"
+  else
+    ac_cv_c_gcc_pg=no
+  fi
 fi
 
 AC_ARG_ENABLE([examples],
@@ -324,7 +363,11 @@ echo "Configured EGT ${PACKAGE_VERSION} for \`${host}'"
 echo
 echo "Compile:"
 echo "  Debug                  ${enable_debug:-yes}"
+echo "  Coverage               ${ac_cv_c_gcc_ftest_coverage}"
+echo "  Profile                ${ac_cv_c_gcc_pg}"
+echo "  LTO                    ${enable_lto:-no}"
 echo "  Examples               ${enable_examples}"
+echo "  CXXFLAGS               ${CXXFLAGS}"
 echo
 
 echo "Display:"
