@@ -12,7 +12,6 @@
  */
 
 #include <cairo.h>
-#include <deque>
 #include <memory>
 #include <egt/geometry.h>
 #include <egt/types.h>
@@ -37,7 +36,7 @@ public:
     /**
      * Type used for damage arrays.
      */
-    using damage_array = std::deque<Rect>;
+    using damage_array = std::vector<Rect>;
 
     Screen();
 

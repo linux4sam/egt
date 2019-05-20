@@ -61,7 +61,7 @@ public:
      * Or maybe we leave this as it is and put the drawing abstraction under
      * cairo...
      */
-    explicit Painter(shared_cairo_t cr);
+    explicit Painter(shared_cairo_t cr) noexcept;
 
     /**
      * Save the state of the current context.

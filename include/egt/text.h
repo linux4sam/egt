@@ -17,7 +17,6 @@
 #include <egt/timer.h>
 #include <memory>
 #include <string>
-#include <unordered_set>
 #include <vector>
 
 namespace egt

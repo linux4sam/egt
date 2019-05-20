@@ -7,7 +7,7 @@
 #define EGT_FLAGS_H
 
 #include <egt/detail/object.h>
-#include <unordered_set>
+#include <set>
 
 namespace egt
 {
@@ -22,16 +22,7 @@ class Flags : public detail::Object
 {
 public:
 
-    /// @private
-    struct flags_hash
-    {
-        std::size_t operator()(T const& s) const noexcept
-        {
-            return std::hash<int> {}(static_cast<int>(s));
-        }
-    };
-
-    using flags = std::unordered_set<T, flags_hash>;
+    using flags = std::set<T>;
 
     explicit Flags(const flags& f = flags()) noexcept
         : m_flags(f)

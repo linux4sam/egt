@@ -14,7 +14,6 @@
 #include <cstdint>
 #include <egt/bitmask.h>
 #include <iosfwd>
-#include <unordered_set>
 #include <memory>
 
 namespace egt

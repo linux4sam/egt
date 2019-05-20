@@ -15,7 +15,7 @@
 #include <egt/event.h>
 #include <functional>
 #include <string>
-#include <unordered_set>
+#include <set>
 #include <vector>
 
 namespace egt
@@ -25,13 +25,6 @@ inline namespace v1
 
 namespace detail
 {
-struct eventid_hash
-{
-    std::size_t operator()(eventid const& s) const noexcept
-    {
-        return std::hash<int> {}(static_cast<int>(s));
-    }
-};
 
 /**
  * Base object class with fundamental properties.
@@ -65,7 +58,7 @@ public:
     /**
      * Event handler eventid filter.
      */
-    using filter_type = std::unordered_set<eventid, eventid_hash>;
+    using filter_type = std::set<eventid>;
 
     /**
      * Add an event handler to be called when the widget generates an event.
@@ -112,7 +105,7 @@ protected:
     {
         callback_meta(event_callback_t c,
                       filter_type m,
-                      uint32_t h)
+                      uint32_t h) noexcept
             : callback(std::move(c)),
               mask(std::move(m)),
               handle(std::move(h))
