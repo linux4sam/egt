@@ -50,7 +50,7 @@ public:
      *
      * Note: list the content of current directory.
      */
-    explicit FileDialog(const Rect& rect);
+    explicit FileDialog(const Rect& rect = Rect());
 
     /**
      * Create a file dialog window.
@@ -61,7 +61,7 @@ public:
      * Note: filepath should be a directory if the file path is regular
      * file, then the filedialog will list the content of parent directory.
      */
-    FileDialog(const std::string& filepath, const Rect& rect);
+    explicit FileDialog(const std::string& filepath = std::string(), const Rect& rect = Rect());
 
     virtual void set_selected(const std::string& fselect) = 0;
 
@@ -83,8 +83,6 @@ protected:
      */
     void list_item_selected(int index);
 
-private:
-    FileDialog() = delete;
 };
 
 class FileOpenDialog : public FileDialog
@@ -97,7 +95,7 @@ public:
      *
      * Note: list the content of current directory.
      */
-    explicit FileOpenDialog(const Rect& rect);
+    explicit FileOpenDialog(const Rect& rect = Rect());
 
     /**
      * Create a file open dialog window.
@@ -108,7 +106,7 @@ public:
      * Note: filepath should be a directory if the file path is regular
      * file, then the filedialog will list the content of parent directory.
      */
-    FileOpenDialog(const std::string& filepath, const Rect& rect);
+    explicit FileOpenDialog(const std::string& filepath = std::string(), const Rect& rect = Rect());
 
     /**
      * Show file open dialog window.
@@ -134,9 +132,6 @@ protected:
     std::shared_ptr<Button> m_okay;
     std::shared_ptr<Button> m_cancel;
     std::string m_fselected;
-
-private:
-    FileOpenDialog() = delete;
 };
 
 class FileSaveDialog : public FileDialog
@@ -149,7 +144,7 @@ public:
      *
      * Note: list the content of current directory.
      */
-    explicit FileSaveDialog(const Rect& rect);
+    explicit FileSaveDialog(const Rect& rect = Rect());
 
     /**
      * Create a file save dialog window.
@@ -160,7 +155,7 @@ public:
      * Note: filepath should be a directory. If file path is regular
      * file, then the filedialog will list the content of parent directory.
      */
-    FileSaveDialog(const std::string& filepath, const Rect& rect);
+    explicit FileSaveDialog(const std::string& filepath = std::string(), const Rect& rect = Rect());
 
     /**
      * Show file save dialog window.
@@ -188,9 +183,6 @@ protected:
     std::shared_ptr<Button> m_okay;
     std::shared_ptr<Button> m_cancel;
     std::string m_fselected;
-
-private:
-    FileSaveDialog() = delete;
 };
 
 }
