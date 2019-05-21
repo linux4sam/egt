@@ -16,117 +16,6 @@
 using namespace std;
 using namespace egt;
 
-template <class T>
-class MyVideoWindow : public T
-{
-public:
-    MyVideoWindow(const Size& size, const string& filename)
-        : T(size, pixel_format::yuv420, windowhint::overlay),
-          m_moving(true),
-          m_scaled(false)
-    {
-        this->ncflags().set(Widget::flag::grab_mouse);
-
-        m_fscale = (double)main_screen()->size().w / (double)T::w();
-        if (m_fscale <= 0)
-            m_fscale = 1.0;
-
-        T::set_media(filename);
-        T::play();
-        T::set_volume(5);
-    }
-
-    MyVideoWindow(const Rect& rect, const string& filename)
-        : T(rect, pixel_format::yuv420, windowhint::overlay),
-          m_moving(true),
-          m_scaled(false)
-    {
-        m_fscale = (double)main_screen()->size().w / (double)T::w();
-        if (m_fscale <= 0)
-            m_fscale = 1.0;
-
-        T::set_media(filename);
-        T::play();
-        T::set_volume(5);
-    }
-
-    virtual void handle(Event& event) override
-    {
-        Window::handle(event);
-
-        switch (event.id())
-        {
-        case eventid::pointer_dblclick:
-        {
-            DBG("VideoWindow: pointer_dblclick ");
-            if (!m_scaled)
-            {
-                T::move(Point(0, 0));
-                T::set_scale(m_fscale);
-                m_scaled = true;
-            }
-            else
-            {
-                this->move_to_center(this->parent()->center());
-                T::set_scale(1);
-                m_scaled = false;
-            }
-            break;
-        }
-        case eventid::pointer_drag_start:
-            m_start_point = T::box().point();
-            break;
-        case eventid::pointer_drag:
-        {
-            DBG("VideoWindow: pointer_drag ");
-            auto diff = event.pointer().drag_start - event.pointer().point;
-            T::move(m_start_point - Point(diff.x, diff.y));
-            break;
-        }
-        case eventid::property_changed:
-        {
-            DBG("VideoWindow: property_changed");
-            break;
-        }
-        case eventid::event2:
-        {
-            DBG("VideoWindow: event2 : Error");
-            break;
-        }
-        default:
-            break;
-        }
-    }
-
-private:
-    bool m_moving;
-    bool m_scaled;
-    Point m_start_point;
-    Point m_position;
-    double m_fscale;
-};
-
-class FpsWindow : public Window
-{
-public:
-    FpsWindow()
-        : Window(Size(100, 50),
-                 Widget::flags_type(), pixel_format::argb8888),
-          m_label(make_shared<Label>("FPS: 0",
-                                     Rect(Size(100, 50))))
-    {
-        m_label->set_color(Palette::ColorId::text, Palette::white);
-        add(m_label);
-    }
-
-    void set_text(const std::string& str)
-    {
-        m_label->set_text(str);
-    }
-
-    shared_ptr<Label> m_label;
-};
-
 int main(int argc, const char** argv)
 {
     if (argc < 2)
@@ -151,9 +40,12 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::black);
 
-    auto window = make_shared<MyVideoWindow<VideoWindow>>(Rect(0, 0, w, h), argv[1]);
+    auto window = make_shared<VideoWindow>(Rect(0, 0, w, h));
+    window->set_media(argv[1]);
     window->set_name("video");
     window->move_to_center(win.center());
+    window->play();
+    window->set_volume(5);
     win.add(window);
 
     Label label("Error: ", Rect(Point(0, 0), Size(win.w() * 0.80, win.h() * 0.10)));
@@ -201,22 +93,15 @@ int main(int argc, const char** argv)
     hpos.add(position);
     position.set_color(Palette::ColorId::text_highlight, Palette::blue);
     position.slider_flags().set({Slider::flag::round_handle});
-    position.set_readonly(true);
 
-    PeriodicTimer postimer(std::chrono::milliseconds(200));
-    postimer.on_timeout([&position, window]()
+    position.on_event([&position, window](Event&)
     {
-        if (window->duration())
+        if (window->playing())
         {
-            double v = (double)window->position() / (double)window->duration() * 100.;
-            position.set_value(v);
+            window->seek((window->duration() * position.value()) / position.max());
         }
-        else
-        {
-            position.set_value(0);
-        }
-    });
-    postimer.start();
+        return 0;
+    }, {eventid::property_changed});
 
     ImageButton volumei(Image(":volumeup_png"));
     volumei.set_boxtype(Theme::boxtype::none);
@@ -229,7 +114,8 @@ int main(int argc, const char** argv)
     window->set_volume(5.0);
     volume.on_event([&volume, window](Event&)
     {
-        window->set_volume(volume.value());
+        auto val = static_cast<double>(volume.value());
+        window->set_volume(val);
     });
     volume.set_value(5);
 
@@ -292,6 +178,46 @@ int main(int argc, const char** argv)
         label1.set_text(ss.str());
     });
     cputimer.start();
+
+    window->on_event([window, &win, &label, &position](Event & event)
+    {
+        static Point m_start_point;
+        switch (event.id())
+        {
+        case eventid::pointer_drag_start:
+        {
+            m_start_point = window->box().point();
+            break;
+        }
+        case eventid::pointer_drag:
+        {
+            auto diff = event.pointer().drag_start - event.pointer().point;
+            window->move(m_start_point - Point(diff.x, diff.y));
+            break;
+        }
+        case eventid::property_changed:
+        {
+            if (window->playing())
+            {
+                double v = (double)window->position() / (double)window->duration() * 100.;
+                position.set_value(v);
+            }
+            else
+            {
+                position.set_value(0);
+            }
+            break;
+        }
+        case eventid::event2:
+        {
+            label.set_text("Error: " + window->get_error_message());
+            win.add(label);
+            break;
+        }
+        default:
+            break;
+        }
+    });
 
     ctrlwindow->show();
     window->show();
