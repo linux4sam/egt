@@ -52,6 +52,11 @@ Dialog::Dialog(const Rect& rect)
 
 }
 
+Dialog::Dialog(const Size& size)
+    : Dialog(Rect(Point(), size))
+{
+}
+
 void Dialog::set_title(const std::string& title)
 {
     if (!m_title)

@@ -45,11 +45,18 @@ public:
     };
 
     /**
-     * Create a modal window with two buttons to handle decision.
+     * Create a dialog window with two buttons to handle decision.
      *
-     * @param[in] rect is a size of modal window.
+     * @param[in] rect is a size of dialog window.
      */
-    explicit Dialog(const Rect& rect);
+    explicit Dialog(const Rect& rect = Rect());
+
+    /**
+     * Create a dialog window with two buttons to handle decision.
+     *
+     * @param[in] size is a size of dialog window.
+     */
+    explicit Dialog(const Size& size = Size());
 
     /**
      * Set the title info for this dialog window.
@@ -57,24 +64,24 @@ public:
      * @param[in] icon set icon in a title area of a dialog window.
      * @param[in] title set title message in a title area of a dialog window.
      */
-    void set_title(const Image& icon, const std::string& title);
+    virtual void set_title(const Image& icon, const std::string& title);
 
     /**
      * Set the title text for this dialog window.
      */
-    void set_title(const std::string& title);
+    virtual void set_title(const std::string& title);
 
     /**
      * Set the icon in a title area of a dialog window.
      */
-    void set_icon(const Image& icon);
+    virtual void set_icon(const Image& icon);
 
     /**
      * Set the message text for this dialog window.
      *
      * @param[in] message to display in content area of a dialog window.
      */
-    void set_message(const std::string& message);
+    virtual void set_message(const std::string& message);
 
     /**
      * Set Button details for this dialog window.
@@ -82,14 +89,14 @@ public:
      * @param[in] button is buttonid
      * @param[in] text is a text to display on button.
      */
-    void set_button(buttonid button, const std::string& text);
+    virtual void set_button(buttonid button, const std::string& text);
 
     /**
      * Set a custom widget for this dialog window.
      *
      * @param[in] widget to add in content area of a dialog window
      */
-    void set_widget(const std::shared_ptr<Widget>& widget);
+    virtual void set_widget(const std::shared_ptr<Widget>& widget);
 
     /**
      * Show the dialog window.
@@ -108,8 +115,6 @@ protected:
     std::shared_ptr<Button> m_button1;
     std::shared_ptr<Button> m_button2;
 
-private:
-    Dialog() = delete;
 };
 
 }
