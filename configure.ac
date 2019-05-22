@@ -161,9 +161,9 @@ then
 fi
 
 AC_ARG_ENABLE([examples],
-  [AS_HELP_STRING([--disable-examples], [don't build examples [default=no]])],
-  [enable_examples=no], [enable_examples=yes])
-AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x${enable_examples}" != xno])
+  [AS_HELP_STRING([--enable-examples], [build examples [default=yes]])],
+  [enable_examples=${enableval}], [enable_examples=yes])
+AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x${enable_examples}" = xyes])
 
 AC_ARG_ENABLE([lto],
   [AS_HELP_STRING([--enable-lto], [enable gcc's LTO [default=no]])],
