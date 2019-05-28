@@ -11,8 +11,9 @@
  * @brief Working with fonts.
  */
 
-#include <string>
 #include <iosfwd>
+#include <string>
+#include <egt/types.h>
 
 namespace egt
 {
@@ -131,12 +132,16 @@ public:
 
     virtual ~Font() = default;
 
+    cairo_scaled_font_t* scaled_font() const;
+
 protected:
 
     std::string m_face;
     int m_size;
     weightid m_weight;
     slantid m_slant;
+
+    mutable shared_cairo_scaled_font_t m_scaled_font;
 };
 
 std::ostream& operator<<(std::ostream& os, const Font& font);

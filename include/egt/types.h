@@ -29,6 +29,9 @@ using shared_cairo_t =
 using shared_cairo_pattern_t =
     std::shared_ptr<cairo_pattern_t>;
 
+using shared_cairo_scaled_font_t =
+    std::shared_ptr<cairo_scaled_font_t>;
+
 namespace detail
 {
 /// @private
