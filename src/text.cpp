@@ -5,7 +5,9 @@
  */
 #include "egt/detail/alignment.h"
 #include "egt/detail/layout.h"
+#include "egt/detail/string.h"
 #include "egt/input.h"
+#include "egt/canvas.h"
 #include "egt/painter.h"
 #include "egt/text.h"
 #include <iostream>
@@ -164,6 +166,44 @@ void TextBox::handle_key(const Key& key)
 using utf8_const_iterator = utf8::unchecked::iterator<std::string::const_iterator>;
 using utf8_iterator = utf8::unchecked::iterator<std::string::iterator>;
 
+template<class T>
+inline std::string utf8_char_to_string(T ch)
+{
+    auto ch2 = ch;
+    utf8::unchecked::advance(ch2, 1);
+    return std::string(ch.base(), ch2.base());
+}
+
+template<class T>
+void tokenize_with_delimiters(T begin, T end,
+                              T dbegin, T dend,
+                              std::vector<std::string>& tokens)
+{
+    std::string token;
+
+    for (auto pos = begin; pos != end; ++pos)
+    {
+        auto f = std::find(dbegin, dend, *pos);
+        if (f != dend)
+        {
+            if (!token.empty())
+            {
+                tokens.push_back(token);
+                token.clear();
+            }
+
+            tokens.emplace_back(utf8_char_to_string(pos));
+        }
+        else
+        {
+            token.append(utf8_char_to_string(pos));
+        }
+    }
+
+    if (!token.empty())
+        tokens.push_back(token);
+}
+
 void TextBox::draw(Painter& painter, const Rect&)
 {
     auto b = content_area();
@@ -177,6 +217,7 @@ void TextBox::draw(Painter& painter, const Rect&)
     cairo_font_extents_t fe;
     cairo_font_extents(cr.get(), &fe);
 
+    // function to draw the cursor
     auto draw_cursor = [&](const Point & offset)
     {
         if (focus() && m_cursor_state)
@@ -191,12 +232,32 @@ void TextBox::draw(Painter& painter, const Rect&)
         }
     };
 
-    vector<detail::LayoutRect> rects;
-
-    uint32_t behave = 0;
-    for (utf8_const_iterator ch(m_text.begin()); ch != utf8_const_iterator(m_text.end()); ++ch)
+    // tokenize based on words or codepoints
+    const std::string delimiters = " \t\n\r";
+    std::vector<std::string> tokens;
+    if (text_flags().is_set(flag::multiline) && text_flags().is_set(flag::word_wrap))
     {
-        if (*ch == '\n')
+        tokenize_with_delimiters(utf8_const_iterator(m_text.begin()),
+                                 utf8_const_iterator(m_text.end()),
+                                 utf8_const_iterator(delimiters.begin()),
+                                 utf8_const_iterator(delimiters.end()),
+                                 tokens);
+    }
+    else
+    {
+        for (utf8_const_iterator ch(m_text.begin());
+             ch != utf8_const_iterator(m_text.end()); ++ch)
+        {
+            tokens.emplace_back(utf8_char_to_string(ch));
+        }
+    }
+
+    // setup rects for each word/codepoint
+    std::vector<detail::LayoutRect> rects;
+    int behave = 0;
+    for (auto t = tokens.begin(); t != tokens.end(); ++t)
+    {
+        if (*t == "\n")
         {
             detail::LayoutRect r;
             r.behave = behave;
@@ -205,25 +266,18 @@ void TextBox::draw(Painter& painter, const Rect&)
         }
         else
         {
-            auto ch2 = ch;
-            utf8::unchecked::advance(ch2, 1);
-            std::string text(ch.base(), ch2.base());
-
             cairo_text_extents_t te;
-            cairo_text_extents(cr.get(), text.c_str(), &te);
-            detail::LayoutRect r;
-            r.behave = behave;
-            r.rect = Rect(0, 0, te.x_advance, fe.height);
-            rects.emplace_back(r);
+            cairo_text_extents(cr.get(), (*t).c_str(), &te);
+            rects.emplace_back(detail::LayoutRect(behave, Rect(0, 0, te.x_advance, fe.height)));
         }
 
-        behave = 0;
-
-        // put next character on newline
-        if (*ch == '\n')
-            behave |= 0x200;
+        if (*t == "\n")
+            behave = 0x200;
+        else
+            behave = 0;
     }
 
+    // perform the layout
     justification justify = justification::start;
     if ((text_align() & alignmask::left) == alignmask::left)
     {}
@@ -234,57 +288,84 @@ void TextBox::draw(Painter& painter, const Rect&)
 
     detail::flex_layout(b, rects, justify, orientation::flex);
 
+    // draw the codepoints, cursor, and selected box
     size_t pos = 0;
     auto r = rects.begin();
-    for (utf8_const_iterator ch(m_text.begin()); ch != utf8_const_iterator(m_text.end()); ++ch)
+    std::string last_char;
+    bool workaround = false;
+    bool stop = false;
+    for (auto t = tokens.begin(); !stop && t != tokens.end(); ++t)
     {
-        if (*ch != '\n')
+        if (r->rect.y != 0 && !text_flags().is_set(flag::multiline))
+            break;
+
+        float roff = 0.;
+        for (utf8_const_iterator ch((*t).begin()); ch != utf8_const_iterator((*t).end()); ++ch)
         {
-            auto ch2 = ch;
-            utf8::unchecked::advance(ch2, 1);
-            std::string text(ch.base(), ch2.base());
-            cairo_text_extents_t te;
-            cairo_text_extents(cr.get(), text.c_str(), &te);
+            float char_width = 0;
+            last_char = utf8_char_to_string(ch);
 
-            auto p = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + te.x_bearing,
-                            static_cast<float>(b.y) + static_cast<float>(r->rect.y) + te.y_bearing - fe.descent + fe.height);
-
-
-            auto s = SizeF(r->rect.w, r->rect.h);
-
-            if (pos >= m_select_start && pos < m_select_start + m_select_len)
+            if (*ch != '\n')
             {
-                auto p2 = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x),
-                                 static_cast<float>(b.y) + static_cast<float>(r->rect.y));
+                cairo_text_extents_t te;
+                cairo_text_extents(cr.get(), last_char.c_str(), &te);
+                char_width = te.x_advance;
 
-                auto rect = RectF(p2, s);
-                if (!rect.empty())
+                auto p = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff + te.x_bearing,
+                                static_cast<float>(b.y) + static_cast<float>(r->rect.y) + te.y_bearing - fe.descent + fe.height);
+
+                if (workaround)
+                    p.y += fe.height;
+
+                auto s = SizeF(char_width, r->rect.h);
+
+                if (pos >= m_select_start && pos < m_select_start + m_select_len)
                 {
-                    painter.set(color(Palette::ColorId::text_highlight).color());
-                    painter.draw(rect);
-                    painter.fill();
+                    auto p2 = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff,
+                                     static_cast<float>(b.y) + static_cast<float>(r->rect.y));
+
+                    if (workaround)
+                        p2.y += fe.height;
+
+                    auto rect = RectF(p2, s);
+                    if (!rect.empty())
+                    {
+                        painter.set(color(Palette::ColorId::text_highlight).color());
+                        painter.draw(rect);
+                        painter.fill();
+                    }
+                }
+
+                painter.set(color(Palette::ColorId::text).color());
+                painter.draw(p);
+                painter.draw(last_char);
+
+                roff += char_width;
+            }
+            else
+            {
+                if (!text_flags().is_set(flag::multiline))
+                    break;
+
+                // if first char is a "\n" layout doesn't respond right
+                if (last_char.empty())
+                    workaround = true;
+            }
+
+            // draw cursor if before current character
+            if (pos == m_cursor_pos)
+            {
+                if (focus() && m_cursor_state)
+                {
+                    auto p = Point(b.x + r->rect.x + roff - char_width, b.y + r->rect.y);
+                    draw_cursor(p);
                 }
             }
 
-            painter.set(color(Palette::ColorId::text).color());
-            painter.draw(p);
-            painter.draw(text);
-        }
-        else
-        {
-            if (!text_flags().is_set(flag::multiline))
-                break;
-        }
-
-        // draw cursor if before current character
-        if (pos == m_cursor_pos)
-        {
-            if (focus() && m_cursor_state)
-                draw_cursor(Point(b.x + r->rect.x, b.y + r->rect.y));
+            pos++;
         }
 
         ++r;
-        pos++;
     }
 
     // handle cursor after last character
@@ -295,6 +376,17 @@ void TextBox::draw(Painter& painter, const Rect&)
             if (!rects.empty())
             {
                 auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.w, 0);
+                if (workaround)
+                {
+                    p.y += fe.height;
+                }
+
+                if (last_char == "\n")
+                {
+                    p.x = b.x;
+                    p.y += fe.height;
+                }
+
                 draw_cursor(p);
             }
             else
@@ -321,7 +413,17 @@ void TextBox::set_max_length(size_t len)
 {
     if (detail::change_if_diff<>(m_max_len, len))
     {
-        /// @todo need to truncate m_text is max len got shorter
+        if (m_max_len)
+        {
+            auto len = utf8len(m_text);
+            if (len > m_max_len)
+            {
+                auto i = m_text.begin();
+                utf8::unchecked::advance(i, m_max_len);
+                m_text.erase(i, m_text.end());
+            }
+        }
+
         damage();
     }
 }
@@ -332,34 +434,88 @@ size_t TextBox::append(const std::string& str)
     return insert(str);
 }
 
+size_t TextBox::width_to_len(const string& text) const
+{
+    auto b = content_area();
+
+    Canvas canvas(Size(100, 100));
+    auto cr = canvas.context();
+
+    Painter painter(cr);
+    painter.set(font());
+
+    size_t len = 0;
+    float total = 0;
+    for (utf8_const_iterator ch(text.begin());
+         ch != utf8_const_iterator(text.end()); ++ch)
+    {
+        auto txt = utf8_char_to_string(ch);
+        cairo_text_extents_t te;
+        cairo_text_extents(cr.get(), txt.c_str(), &te);
+        if (total + te.x_advance > b.w)
+        {
+            return len;
+        }
+        total += te.x_advance;
+        len++;
+    }
+
+    return len;
+}
+
 size_t TextBox::insert(const std::string& str)
 {
     if (str.empty())
         return 0;
 
+    auto current_len = utf8len(m_text);
     auto len = utf8len(str);
 
     if (m_max_len)
     {
-        auto current_len = utf8len(m_text);
         if (current_len + len > m_max_len)
             len = m_max_len - current_len;
+    }
+
+    if (!text_flags().is_set(flag::multiline) &&
+        text_flags().is_set(flag::fit_to_width))
+    {
+        /*
+         * Have to go through the motions and build the expected string at this
+         * point to see what will fit.
+         */
+
+        // insert at cursor position
+        auto text = m_text;
+        auto i = text.begin();
+        utf8::unchecked::advance(i, m_cursor_pos);
+        auto end = str.begin();
+        utf8::unchecked::advance(end, len);
+        text.insert(i, str.begin(), end);
+
+        auto maxlen = width_to_len(text);
+        if (current_len + len > maxlen)
+            len = maxlen - current_len;
     }
 
     if (m_validate_input)
         if (!validate_input(str))
             return 0;
 
-    // insert at cursor position
-    auto i = m_text.begin();
-    utf8::unchecked::advance(i, m_cursor_pos);
-    auto end = str.begin();
-    utf8::unchecked::advance(end, len);
-    m_text.insert(i, str.begin(), end);
-    cursor_forward(len);
-    clear_selection();
-    invoke_handlers(eventid::property_changed);
-    damage();
+    if (len)
+    {
+        // insert at cursor position
+        auto i = m_text.begin();
+        utf8::unchecked::advance(i, m_cursor_pos);
+        auto end = str.begin();
+        utf8::unchecked::advance(end, len);
+        m_text.insert(i, str.begin(), end);
+        cursor_forward(len);
+        clear_selection();
+
+        invoke_handlers(eventid::property_changed);
+        damage();
+    }
 
     return len;
 }

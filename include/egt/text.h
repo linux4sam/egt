@@ -45,12 +45,17 @@ public:
     enum class flag
     {
         /**
-         * Support multi-line
+         * When not multiline, only allow max length to be what can fit.
+         */
+        fit_to_width,
+
+        /**
+         * Enable multi-line text.
          */
         multiline,
 
         /**
-         * Wrap lines longer than the width of the textbox.  Must be multi-line.
+         * Wrap at word boundaries instead of character boundaries.  Must be flag::multiline.
          */
         word_wrap,
     };
@@ -66,15 +71,15 @@ public:
     TextBox(const std::string& str,
             const Rect& rect,
             alignmask align = alignmask::center | alignmask::left,
-            const flags_type::flags& flags = flags_type::flags()) noexcept;
+            const flags_type::flags& flags = {}) noexcept;
 
     explicit TextBox(const std::string& str,
                      alignmask align = alignmask::center | alignmask::left,
-                     const flags_type::flags& flags = flags_type::flags()) noexcept;
+                     const flags_type::flags& flags = {}) noexcept;
 
     explicit TextBox(const Rect& rect,
                      alignmask align = alignmask::center | alignmask::left,
-                     const flags_type::flags& flags = flags_type::flags()) noexcept;
+                     const flags_type::flags& flags = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -265,6 +270,8 @@ protected:
      * Callbacks invoked to validate the input.
      */
     validator_callback_array m_validator_callbacks;
+
+    size_t width_to_len(const std::string& text) const;
 
 private:
 

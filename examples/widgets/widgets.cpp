@@ -217,8 +217,13 @@ struct TextPage : public NotebookTab
         text6->enable_input_validation();
         grid0->add(expand(text6));
 
-        auto text7 = std::make_shared<TextBox>(u8"This is a utf-8 \u2190\u2191\u2192\u2193\nMulti-line\nTextBox", Rect(), alignmask::left | alignmask::top);
-        text7->set_selection(2, 5);
+        auto text7 = std::make_shared<TextBox>(
+                         u8"The Ensemble Graphics Toolkit (EGT) is a free and open-source C++ GUI widget "
+                         " toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop"
+                         " graphical applications for Linux.  EGT provides modern and complete GUI"
+                         " functionality, look-and-feel, and performance.\n\nThis multi-line TextBox fully"
+                         " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193", Rect(), alignmask::left | alignmask::top);
+        text7->set_selection(4, 25);
         text7->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
         grid1->add(expand(text7));
     }
