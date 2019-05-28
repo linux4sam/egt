@@ -41,6 +41,8 @@ protected:
 
     void handle_read(const asio::error_code& error);
 
+    virtual void copy_to_buffer(ScreenBuffer& buffer) override;
+
     Application& m_app;
     std::unique_ptr<detail::X11Data> m_priv;
     asio::posix::stream_descriptor m_input;

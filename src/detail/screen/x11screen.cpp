@@ -110,6 +110,11 @@ void X11Screen::flip(const damage_array& damage)
     XFlush(m_priv->display);
 }
 
+void X11Screen::copy_to_buffer(ScreenBuffer& buffer)
+{
+    copy_to_buffer_software(buffer);
+}
+
 void X11Screen::handle_read(const asio::error_code& error)
 {
     if (error)

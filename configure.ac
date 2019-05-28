@@ -440,6 +440,26 @@ AM_COND_IF([HAVE_DOXYGEN_BIN], [AC_CONFIG_FILES([docs/Doxyfile docs/Info.plist])
 AC_PATH_PROG([ASPELL_BIN], [aspell])
 AM_CONDITIONAL([HAVE_ASPELL_BIN], [test -n "$ASPELL_BIN"])
 
+AC_ARG_ENABLE([simd],
+  [AS_HELP_STRING([--enable-simd], [build with simd support [default=no]])])
+if test "x$enable_simd" = "xyes";
+then
+  AC_MSG_NOTICE([Enabling simd])
+  (
+    SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
+    SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-pedantic//g'`
+    SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-flto//g'`
+    SIMD_CXXFLAGS="$SIMD_CXXFLAGS -Wno-psabi"
+
+    cd external/Simd/prj/cmake/ &&
+    cmake . -DTOOLCHAIN="$CXX" -DTARGET="$host_cpu" \
+    	  -DCMAKE_BUILD_TYPE="Release" -DLIBRARY="STATIC" \
+	  -DSIMD_TEST=off -DCMAKE_CXX_FLAGS="${SIMD_CXXFLAGS}"
+  )
+  AC_DEFINE(HAVE_SIMD, 1, [Have simd support])
+fi
+AM_CONDITIONAL([HAVE_SIMD], [test "x${enable_simd}" = xyes])
+
 AC_CONFIG_FILES([Makefile
 	src/Makefile
 	external/Makefile
@@ -465,6 +485,7 @@ echo "  Debug                  ${enable_debug:-yes}"
 echo "  Coverage               ${ac_cv_c_gcc_ftest_coverage:-no}"
 echo "  Profile                ${ac_cv_c_gcc_pg:-no}"
 echo "  LTO                    ${enable_lto:-no}"
+echo "  SIMD                   ${enable_simd:-no}"
 echo "  Examples               ${enable_examples}"
 echo "  CXXFLAGS               ${CXXFLAGS}"
 echo

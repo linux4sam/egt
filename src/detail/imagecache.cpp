@@ -40,6 +40,10 @@ extern "C" {
 #include "egt/detail/svg.h"
 #endif
 
+#ifdef HAVE_SIMD
+#include "Simd/SimdLib.hpp"
+#endif
+
 using namespace std;
 
 namespace egt
@@ -264,10 +268,13 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         double width = cairo_image_surface_get_width(back.get());
         double height = cairo_image_surface_get_height(back.get());
 
-        image = scale_surface(back,
-                              width, height,
-                              width * hscale,
-                              height * vscale);
+        experimental::code_timer(false, "scale: ", [&]()
+        {
+            image = scale_surface(back,
+                                  width, height,
+                                  width * hscale,
+                                  height * vscale);
+        });
     }
 
     if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
@@ -301,6 +308,36 @@ string ImageCache::id(const string& filename, float hscale, float vscale)
     return ss.str();
 }
 
+#ifdef HAVE_SIMD
+shared_cairo_surface_t
+ImageCache::scale_surface(shared_cairo_surface_t old_surface,
+                          float old_width, float old_height,
+                          float new_width, float new_height)
+{
+    cairo_surface_flush(old_surface.get());
+
+    auto new_surface = shared_cairo_surface_t(
+                           cairo_surface_create_similar(old_surface.get(),
+                                   CAIRO_CONTENT_COLOR_ALPHA,
+                                   new_width,
+                                   new_height),
+                           cairo_surface_destroy);
+
+    auto src = cairo_image_surface_get_data(old_surface.get());
+    auto dst = cairo_image_surface_get_data(new_surface.get());
+
+    SimdResizeBilinear(src,
+                       old_width, old_height,
+                       cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, old_width),
+                       dst, new_width, new_height,
+                       cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, new_width),
+                       4);
+
+    cairo_surface_mark_dirty(new_surface.get());
+
+    return new_surface;
+}
+#else
 shared_cairo_surface_t
 ImageCache::scale_surface(shared_cairo_surface_t old_surface,
                           float old_width, float old_height,
@@ -334,6 +371,7 @@ ImageCache::scale_surface(shared_cairo_surface_t old_surface,
 
     return new_surface;
 }
+#endif
 
 std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 {

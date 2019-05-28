@@ -60,3 +60,11 @@ EXTRA_DIST = \
 	utfcpp \
 	spdlog \
 	googletest
+
+if HAVE_SIMD
+all-local:
+	cd Simd/prj/cmake/ && $(MAKE) $(AM_MAKEFLAGS) all
+
+clean-local:
+	cd Simd/prj/cmake/ && $(MAKE) $(AM_MAKEFLAGS) clean
+endif

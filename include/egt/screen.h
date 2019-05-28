@@ -110,12 +110,12 @@ protected:
     struct ScreenBuffer
     {
         explicit ScreenBuffer(cairo_surface_t* s) noexcept
-            : surface(s),
-              cr(cairo_create(s))
-        {}
+            : surface(s)
+        {
+            damage.reserve(10);
+        }
 
         unique_cairo_surface_t surface;
-        unique_cairo_t cr;
 
         /**
          * Each rect that needs to be copied from the back buffer.
@@ -131,7 +131,9 @@ protected:
         }
     };
 
-    void copy_to_buffer(ScreenBuffer& buffer);
+    virtual void copy_to_buffer(ScreenBuffer& buffer);
+
+    virtual void copy_to_buffer_software(ScreenBuffer& buffer);
 
     /**
      * Composition surface.

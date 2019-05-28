@@ -9,6 +9,10 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_builddir)/external/kplot \
 	-isystem $(top_srcdir)/external/spdlog/include
 
+if HAVE_SIMD
+CUSTOM_FLAGS += -isystem $(top_srcdir)/external/Simd/src/
+endif
+
 AM_CXXFLAGS = -DDATADIR=\"$(datadir)\"
 
 lib_LTLIBRARIES = libegt.la
@@ -117,6 +121,9 @@ endif
 
 libegt_la_LIBADD = $(CODE_COVERAGE_LDFLAGS)
 libegt_la_LIBADD += $(top_builddir)/external/libkplot.la $(top_builddir)/external/libspdlog.la
+if HAVE_SIMD
+libegt_la_LIBADD += $(top_builddir)/external/Simd/prj/cmake/libSimd.a
+endif
 
 libegtincludedir = ${includedir}
 nobase_libegtinclude_HEADERS = \
