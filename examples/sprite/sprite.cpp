@@ -14,23 +14,6 @@ using namespace egt;
 
 int main(int argc, const char** argv)
 {
-    const Color NAVY(Color::CSS("#001f3f"));
-    const Color BLUE(Color::CSS("#0074D9"));
-    const Color AQUA(Color::CSS("#7FDBFF"));
-    const Color TEAL(Color::CSS("#39CCCC"));
-    const Color OLIVE(Color::CSS("#3D9970"));
-    const Color GREEN(Color::CSS("#2ECC40"));
-    const Color LIME(Color::CSS("#01FF70"));
-    const Color YELLOW(Color::CSS("#FFDC00"));
-    const Color ORANGE(Color::CSS("#FF851B"));
-    const Color RED(Color::CSS("#FF4136"));
-    const Color MAROON(Color::CSS("#85144b"));
-    const Color FUCHSIA(Color::CSS("#F012BE"));
-    const Color PURPLE(Color::CSS("#B10DC9"));
-    const Color BLACK(Color::CSS("#111111"));
-    const Color GRAY(Color::CSS("#AAAAAA"));
-    const Color SILVER(Color::CSS("#DDDDDD"));
-
     Application app(argc, argv, "sprite");
 
     TopWindow win;
@@ -133,7 +116,7 @@ int main(int argc, const char** argv)
 
     Popup popup(Size(100, 80));
     popup.move(Point(win.w() - 100 - 10, 10));
-    popup.set_color(Palette::ColorId::bg, FUCHSIA);
+    popup.set_color(Palette::ColorId::bg, Palette::fuchsia);
     popup.set_name("popup");
 
     Label label1("CPU: -",
