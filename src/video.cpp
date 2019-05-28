@@ -40,6 +40,11 @@ void init_gst_thread()
     }
 }
 
+/**
+ * Check if target device is sama5d4 for using hardware
+ * decoder.
+ */
+
 bool is_target_sama5d4()
 {
     std::ifstream infile("/proc/device-tree/model");
@@ -63,14 +68,16 @@ bool is_target_sama5d4()
 } // End of detail.
 
 VideoWindow::VideoWindow(const Size& size, pixel_format format, windowhint hint)
-    : Window(size, flags_type(), (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint)
+    : Window(size, flags_type(), (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint),
+      m_loopback(false)
 {
     set_boxtype(Theme::boxtype::none);
     createImpl(size);
 }
 
 VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)
-    : Window(rect, flags_type(), (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint)
+    : Window(rect, flags_type(), (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint),
+      m_loopback(false)
 {
     set_boxtype(Theme::boxtype::none);
     createImpl(rect.size());
@@ -80,15 +87,14 @@ void VideoWindow::createImpl(const Size& size)
 {
     detail::init_gst_thread();
 
-#ifdef HAVE_LIBPLANES
-    DBG("VideoWindow: HAVE_LIBPLANES");
     if (flags().is_set(Widget::flag::plane_window) && detail::is_target_sama5d4())
     {
         DBG("VideoWindow: Using KMS sink");
+#ifdef HAVE_LIBPLANES
         m_decoderImpl.reset(new detail::GstKmsSinkImpl(*this, size, detail::is_target_sama5d4()));
+#endif
     }
     else
-#endif
     {
         DBG("VideoWindow: Using APP sink");
         m_decoderImpl.reset(new detail::GstAppSinkImpl(*this, size));
@@ -100,40 +106,18 @@ void VideoWindow::draw(Painter& painter, const Rect& rect)
     m_decoderImpl->draw(painter, rect);
 }
 
-uint64_t VideoWindow::position()
+int64_t VideoWindow::position() const
 {
     return m_decoderImpl->get_position();
 }
 
-uint64_t VideoWindow::duration()
+int64_t VideoWindow::duration() const
 {
     return m_decoderImpl->get_duration();
 }
 
-void VideoWindow::set_media_info(const std::string& info, const int type)
-{
-    DBG("VideoWindow: In " << __func__ << " Info = " << info);
-    if (type == 0)
-    {
-        m_ctype = info;
-    }
-    else if (type == 1)
-    {
-        m_vtrack = true;
-        m_vcodec = info;
-    }
-    else if (type == 2)
-    {
-        m_atrack = true;
-        m_acodec = info;
-    }
-}
-
 bool VideoWindow::set_media(const string& uri)
 {
-
-    m_filename = uri;
-
     return m_decoderImpl->set_media(uri);
 }
 
@@ -155,37 +139,22 @@ bool VideoWindow::play()
 bool VideoWindow::set_volume(double volume)
 {
     m_decoderImpl->set_volume(volume);
-    invoke_handlers(eventid::property_changed);
     return true;
 }
 
-double VideoWindow::get_volume()
+double VideoWindow::get_volume() const
 {
     return m_decoderImpl->get_volume();
 }
 
-bool VideoWindow::seek(int64_t time_nanoseconds)
+bool VideoWindow::seek(const int64_t time)
 {
-    return m_decoderImpl->seek_to_time(time_nanoseconds);
+    return m_decoderImpl->seek(time);
 }
 
-void VideoWindow::handle_gst_events(detail::gsteventid event)
+std::string VideoWindow::get_error_message() const
 {
-    switch (event)
-    {
-    case detail::gsteventid::gst_progress:
-        invoke_handlers(eventid::property_changed);
-        break;
-    case detail::gsteventid::gst_stop:
-        m_decoderImpl->destroyPipeline();
-        invoke_handlers(eventid::event1);
-        break;
-    case detail::gsteventid::gst_error:
-        invoke_handlers(eventid::event2);
-        break;
-    default:
-        break;
-    }
+    return m_decoderImpl->get_error_message();
 }
 
 VideoWindow::~VideoWindow()

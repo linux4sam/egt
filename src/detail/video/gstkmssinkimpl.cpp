@@ -7,7 +7,6 @@
 #include <egt/app.h>
 #include <egt/detail/screen/kmsscreen.h>
 #include <egt/detail/video/gstkmssinkimpl.h>
-#include <egt/video.h>
 #include <string>
 #include <vector>
 
@@ -18,8 +17,7 @@ inline namespace v1
 namespace detail
 {
 GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool decodertype)
-    : GstDecoderImpl(size),
-      m_interface(interface),
+    : GstDecoderImpl(interface, size),
       m_hwdecoder(decodertype)
 {
 }
@@ -110,105 +108,6 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
         return true;
     }
     return false;
-}
-
-gboolean GstKmsSinkImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
-{
-    ignoreparam(bus);
-
-    GError* error;
-    gchar* debug;
-
-    auto _this = reinterpret_cast<GstKmsSinkImpl*>(data);
-
-    switch (GST_MESSAGE_TYPE(message))
-    {
-    case GST_MESSAGE_ERROR:
-    {
-        gst_message_parse_error(message, &error, &debug);
-        _this->m_err_message = error->message;
-        DBG("VideoWindow: GST_MESSAGE_ERROR from element " <<  message->src << "  " << error->message);
-        DBG("VideoWindow: GST_MESSAGE_ERROR Debugging info: " << (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
-        asio::post(main_app().event().io(), std::bind(&VideoWindow::handle_gst_events,
-                   &_this->m_interface, gsteventid::gst_error));
-        break;
-    }
-    case GST_MESSAGE_WARNING:
-        gst_message_parse_warning(message, &error, &debug);
-        DBG("VideoWindow: GST_MESSAGE_WARNING from element " << message->src << "  " << error->message);
-        DBG("VideoWindow: GST_MESSAGE_WARNING Debugging info: " << (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
-        break;
-    case GST_MESSAGE_INFO:
-    {
-        gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
-        gst_message_parse_info(message, &error, &debug);
-        DBG("VideoWindow: GST_MESSAGE_INFO: " << error->message);
-        if (debug)
-        {
-            DBG("VideoWindow: GST_MESSAGE_INFO: \n" << debug << "\n");
-        }
-        g_clear_error(&error);
-        g_free(debug);
-        g_free(name);
-        break;
-    }
-    break;
-    case GST_MESSAGE_CLOCK_PROVIDE:
-        DBG("VideoWindow: GST_MESSAGE_CLOCK_PROVIDE");
-        break;
-    case GST_MESSAGE_CLOCK_LOST:
-        DBG("VideoWindow: GST_MESSAGE_CLOCK_LOST");
-        break;
-    case GST_MESSAGE_NEW_CLOCK:
-        DBG("VideoWindow: GST_MESSAGE_NEW_CLOCK");
-        break;
-    case GST_MESSAGE_EOS:
-    {
-        DBG("VideoWindow: GST_MESSAGE_EOS");
-        gst_element_seek(_this->m_pipeline, 1.0, GST_FORMAT_TIME,
-                         GST_SEEK_FLAG_FLUSH,
-                         GST_SEEK_TYPE_SET, 0,
-                         GST_SEEK_TYPE_NONE, -1);
-
-        gst_element_set_state(_this->m_pipeline, GST_STATE_PLAYING);
-
-        break;
-    }
-    case GST_MESSAGE_PROGRESS:
-        DBG("VideoWindow: GST_MESSAGE_PROGRESS");
-        break;
-    case GST_MESSAGE_DURATION_CHANGED:
-        DBG("VideoWindow: GST_MESSAGE_DURATION_CHANGED");
-        break;
-    case GST_MESSAGE_ELEMENT:
-    {
-        const GstStructure* info = gst_message_get_structure(message);
-        if (!std::string(gst_structure_get_name(info)).compare("progress"))
-        {
-            gint64 pos, len;
-            if (gst_element_query_position(_this->m_pipeline, GST_FORMAT_TIME, &pos)
-                && gst_element_query_duration(_this->m_pipeline, GST_FORMAT_TIME, &len))
-            {
-                _this->m_position = pos;
-                _this->m_duration = len;
-            }
-            asio::post(main_app().event().io(), std::bind(&VideoWindow::handle_gst_events,
-                       &_this->m_interface, gsteventid::gst_progress));
-        }
-        break;
-    }
-    default:
-        break;
-    }
-    /* we want to be notified again the next time there is a message
-     * on the bus, so returning TRUE (FALSE means we want to stop watching
-     * for messages on the bus and our callback should not be called again)
-     */
-    return TRUE;
 }
 
 } // End of namespace detail

@@ -7,12 +7,10 @@
 #define EGT_GST_APP_SINK_IMPL_H
 
 #include <egt/detail/video/gstdecoderimpl.h>
-#include <egt/video.h>
 
 #include <gst/app/gstappsink.h>
 
 #include <string>
-#include <vector>
 
 namespace egt
 {
@@ -26,25 +24,16 @@ class GstAppSinkImpl: public GstDecoderImpl
 public:
     GstAppSinkImpl(VideoWindow& interface, const Size& size);
 
-    virtual bool set_media(const std::string& filename) override;
+    virtual bool set_media(const std::string& uri) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    void push_buffer(GstSample* sample) override
-    {
-        m_videosample = sample;
-    }
-
 protected:
-    VideoWindow& m_interface;
-
     GstElement* m_appsink;
 
-    GstSample* m_videosample;
+    GstSample* m_videosample{nullptr};
 
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
-
-    static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 };
 
 } // end of namespace detail

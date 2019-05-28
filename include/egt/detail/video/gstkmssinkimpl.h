@@ -7,7 +7,6 @@
 #define EGT_GST_KMS_SINK_IMPL_H
 
 #include <egt/detail/video/gstdecoderimpl.h>
-#include <egt/video.h>
 
 namespace egt
 {
@@ -20,7 +19,7 @@ class GstKmsSinkImpl: public GstDecoderImpl
 public:
     GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool decodertype);
 
-    bool set_media(const std::string& filename);
+    bool set_media(const std::string& uri);
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
@@ -31,11 +30,7 @@ public:
 protected:
     int m_gem;
 
-    VideoWindow& m_interface;
-
     bool m_hwdecoder;
-
-    static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 };
 
 } // end of namespace detail

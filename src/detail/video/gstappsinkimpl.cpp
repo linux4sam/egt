@@ -11,7 +11,6 @@
 #include <egt/app.h>
 #include <egt/detail/video/gstappsinkimpl.h>
 #include <egt/detail/screen/kmsscreen.h>
-#include <egt/video.h>
 #include <string>
 
 namespace egt
@@ -22,20 +21,11 @@ namespace detail
 {
 
 GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
-    : GstDecoderImpl(size),
-      m_interface(interface),
-      m_appsink(NULL),
-      m_videosample(NULL)
+    : GstDecoderImpl(interface, size),
+      m_appsink(nullptr)
 {
 }
 
-#if 0
-#define APPSINKPIPE "uridecodebin uri=%s name=video caps=video/x-raw;audio/x-raw use-buffering=true buffer-size=1048576" \
-					" video. ! videoscale ! video/x-raw,width=%d,height=%d " \
-					" %s ! progressreport silent=true " \
-					" do-query=true update-freq=1 format=time name=progress ! appsink name=appsink video." \
-					" ! queue ! audioconvert ! volume name=volume ! autoaudiosink"
-#else
 #define APPSINKPIPE  "uridecodebin uri=%s expose-all-streams=false name=video " \
 					 " caps=video/x-raw;audio/x-raw use-buffering=true buffer-size=1048576 " \
 					 " video. ! queue ! videoscale  ! video/x-raw,width=%d,height=%d %s ! " \
@@ -43,7 +33,6 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
 					 " appsink drop=true enable-last-sample=false caps=video/x-raw name=appsink " \
 					 " video. ! queue ! audioconvert ! volume name=volume ! " \
 					 " alsasink async=false enable-last-sample=false sync=true"
-#endif
 
 void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 {
@@ -62,7 +51,7 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
             GstMapInfo map;
             if (gst_buffer_map(buffer, &map, GST_MAP_READ))
             {
-                Rect box = m_interface.m_box;
+                Rect box = m_interface.box();
                 cairo_surface_t* surface = cairo_image_surface_create_for_data(map.data,
                                            CAIRO_FORMAT_RGB16_565,
                                            box.w,
@@ -85,13 +74,13 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 
 GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 {
-    auto _this = reinterpret_cast<GstAppSinkImpl*>(data);
+    auto Impl = reinterpret_cast<GstAppSinkImpl*>(data);
     GstSample* sample;
     g_signal_emit_by_name(elt, "pull-sample", &sample);
     if (sample)
     {
 #ifdef HAVE_LIBPLANES
-        if (_this->m_interface.flags().is_set(Widget::flag::plane_window))
+        if (Impl->m_interface.flags().is_set(Widget::flag::plane_window))
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
@@ -100,7 +89,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
                 if (gst_buffer_map(buffer, &map, GST_MAP_READ))
                 {
                     auto screen =
-                        reinterpret_cast<detail::KMSOverlay*>(_this->m_interface.screen());
+                        reinterpret_cast<detail::KMSOverlay*>(Impl->m_interface.screen());
                     assert(screen);
                     memcpy(screen->raw(), map.data, map.size);
                     screen->schedule_flip();
@@ -112,18 +101,23 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
         else
 #endif
         {
-            asio::post(main_app().event().io(),
-                       std::bind(&VideoWindow::draw_frame, &_this->m_interface, sample));
+            asio::post(main_app().event().io(), [Impl, sample]()
+            {
+                Impl->m_videosample = sample;
+                Impl->m_interface.damage();
+            });
         }
         return GST_FLOW_OK;
     }
     return GST_FLOW_ERROR;
 }
 
+/* This function takes a textual representation of a pipeline
+ * and create an actual pipeline
+ */
+
 bool GstAppSinkImpl::set_media(const std::string& uri)
 {
-    GError* error = NULL;
-
     /* Make sure we don't leave orphan references */
     destroyPipeline();
 
@@ -149,14 +143,14 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "RGB16")).c_str());
     }
 
-    std::string pipe(buffer);
-    DBG("VideoWindow: " << pipe);
+    DBG("VideoWindow: " << std::string(buffer));
 
-    m_pipeline = gst_parse_launch(pipe.c_str(), &error);
+    GError* error = nullptr;
+    m_pipeline = gst_parse_launch(buffer, &error);
     if (!m_pipeline)
     {
-        m_pipeline = NULL;
         ERR("VideoWindow: failed to create video pipeline");
+        m_err_message = error->message;
         return false;
     }
 
@@ -164,6 +158,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     if (!m_appsink)
     {
         ERR("VideoWindow: failed to get app sink element");
+        m_err_message = "failed to get app sink element";
         return false;
     }
 
@@ -182,113 +177,6 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     gst_object_unref(bus);
 
     return true;
-}
-
-gboolean GstAppSinkImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
-{
-    ignoreparam(bus);
-
-    GError* error;
-    gchar* debug;
-
-    auto _this = reinterpret_cast<GstAppSinkImpl*>(data);
-
-    switch (GST_MESSAGE_TYPE(message))
-    {
-    case GST_MESSAGE_ERROR:
-    {
-        gst_message_parse_error(message, &error, &debug);
-        _this->m_err_message = error->message;
-        DBG("VideoWindow: GST_MESSAGE_ERROR from element " <<  message->src << "  " << error->message);
-        DBG("VideoWindow: GST_MESSAGE_ERROR Debugging info: " << (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
-        asio::post(main_app().event().io(), std::bind(&VideoWindow::handle_gst_events,
-                   &_this->m_interface, gsteventid::gst_error));
-        break;
-    }
-    case GST_MESSAGE_WARNING:
-        gst_message_parse_warning(message, &error, &debug);
-        DBG("VideoWindow: GST_MESSAGE_WARNING from element " << message->src << "  " << error->message);
-        DBG("VideoWindow: GST_MESSAGE_WARNING Debugging info: " << (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
-        break;
-    case GST_MESSAGE_INFO:
-    {
-        gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
-        gst_message_parse_info(message, &error, &debug);
-        DBG("VideoWindow: GST_MESSAGE_INFO: " << error->message);
-        if (debug)
-        {
-            DBG("VideoWindow: GST_MESSAGE_INFO: \n" << debug << "\n");
-        }
-        g_clear_error(&error);
-        g_free(debug);
-        g_free(name);
-        break;
-    }
-    break;
-    case GST_MESSAGE_CLOCK_PROVIDE:
-        DBG("VideoWindow: GST_MESSAGE_CLOCK_PROVIDE");
-        break;
-    case GST_MESSAGE_CLOCK_LOST:
-        DBG("VideoWindow: GST_MESSAGE_CLOCK_LOST");
-        break;
-    case GST_MESSAGE_NEW_CLOCK:
-        DBG("VideoWindow: GST_MESSAGE_NEW_CLOCK");
-        break;
-    case GST_MESSAGE_EOS:
-    {
-        DBG("VideoWindow: GST_MESSAGE_EOS: LoopMode: " << (_this->m_interface.m_loopback ? " TRUE" : "FALSE"));
-        if (_this->m_interface.m_loopback)
-        {
-            gst_element_seek(_this->m_pipeline, 1.0, GST_FORMAT_TIME,
-                             GST_SEEK_FLAG_FLUSH,
-                             GST_SEEK_TYPE_SET, 0,
-                             GST_SEEK_TYPE_NONE, -1);
-
-            gst_element_set_state(_this->m_pipeline, GST_STATE_PLAYING);
-        }
-        else
-        {
-            asio::post(main_app().event().io(), std::bind(&VideoWindow::handle_gst_events,
-                       &_this->m_interface, gsteventid::gst_stop));
-        }
-        break;
-    }
-    case GST_MESSAGE_PROGRESS:
-        DBG("VideoWindow: GST_MESSAGE_PROGRESS");
-        break;
-    case GST_MESSAGE_DURATION_CHANGED:
-        DBG("VideoWindow: GST_MESSAGE_DURATION_CHANGED");
-        break;
-    case GST_MESSAGE_ELEMENT:
-    {
-        const GstStructure* info = gst_message_get_structure(message);
-        if (!std::string(gst_structure_get_name(info)).compare("progress"))
-        {
-            gint64 pos, len;
-            if (gst_element_query_position(_this->m_pipeline, GST_FORMAT_TIME, &pos)
-                && gst_element_query_duration(_this->m_pipeline, GST_FORMAT_TIME, &len))
-            {
-                _this->m_position = pos;
-                _this->m_duration = len;
-            }
-            asio::post(main_app().event().io(), std::bind(&VideoWindow::handle_gst_events,
-                       &_this->m_interface, gsteventid::gst_progress));
-        }
-        break;
-    }
-    default:
-        break;
-    }
-    /* we want to be notified again the next time there is a message
-     * on the bus, so returning TRUE (FALSE means we want to stop watching
-     * for messages on the bus and our callback should not be called again)
-     */
-    //DBG("VideoWindow: Done " << __func__);
-    return TRUE;
 }
 
 } // End of detail

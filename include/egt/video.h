@@ -6,7 +6,6 @@
 #ifndef EGT_VIDEOVIEW_H
 #define EGT_VIDEOVIEW_H
 
-#include <egt/detail/video/gstdecoderimpl.h>
 #include <egt/window.h>
 
 namespace egt
@@ -17,18 +16,49 @@ namespace detail
 {
 void init_gst_thread();
 bool is_target_sama5d4();
+class GstDecoderImpl;
 class GstKmsSinkImpl;
 class GstAppSinkImpl;
 }
 
+/**
+ * A VideoWindow is a widget to decode video and render it to a screen.
+ *
+ * It has a bounding rectangle, format and windowhint. These properties can
+ * be manipulated to create a video window either as a basic window or an
+ * overlay plane.
+ *
+ * The video decoding is done through gstreamer media framework.
+ */
 class VideoWindow : public Window
 {
 public:
-    VideoWindow(const Size& size,
+
+    /**
+     * Create a video window to decode video and render it to a screen.
+     *
+     * @param size is a size of window with offset x & y = 0.
+     * @param format is a pixel format of window or a overlay plane.
+     * @param windowhint used for configuring window backend's.
+     *
+     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
+     * pixel formats.
+     */
+    VideoWindow(const Size& size = Size(),
                 pixel_format format = pixel_format::xrgb8888,
                 windowhint hint = windowhint::overlay);
 
-    VideoWindow(const Rect& rect,
+    /**
+     * Create a video window to decode video and render it to a screen.
+     *
+     * @param rect is a size of window with offset x & y.
+     * @param format is a pixel format of window or a overlay plane.
+     * @param windowhint used for configuring window backend's.
+     *
+     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
+     * pixel formats.
+     */
+    VideoWindow(const Rect& rect = Rect(),
                 pixel_format format = pixel_format::xrgb8888,
                 windowhint hint = windowhint::overlay);
 
@@ -40,128 +70,104 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
-     * Sets the media file to the current pipeline
-     * @param filename of a media file
+     * Initialize gstreamer pipeline for specified media file.
+     *
+     * @param uri of a media file
      * @return true if success
      */
-    bool set_media(const std::string& filename);
+    virtual bool set_media(const std::string& uri);
 
     /**
-     * Send pipeline to play state
+     * Play the video.
+     *
      * @return true if success
      */
-    bool play();
+    virtual bool play();
 
     /**
-     * pause Send Pipeline to pause state
+     * Pause the video.
+     *
      * @return true if success
      */
-    bool pause();
+    virtual bool pause();
 
     /**
-     * playing check if Pipeline is in play state
+     * Check is video in play state.
+     *
      * @return true if success
      */
     virtual bool playing() const;
 
     /**
-     * position gets the current position of video getting played
-     * @return 64bit time
+     * Get the current position of the video being played.
+     *
+     * @return 64bit time value nanosec's
      */
-    uint64_t position();
+    int64_t position() const;
 
     /**
-     * duration gets the duration of video getting played
-     * @return 64bit time
+     * Get the total duration of the video.
+     *
+     * @return 64bit time value in nanosec's
      */
-    uint64_t duration();
+    int64_t duration() const;
 
     /**
-     * Adjusts the volume of the audio in the video being played
-     * @param volume desired volume in the range of 0 (no sound) to 10 (normal sound)
+     * Adjust volume of the video being played.
+     *
+     * @param volume is in range of 0 (no sound) to 10 (normal sound)
      * @return true if success
      */
-    bool set_volume(double volume);
+    virtual bool set_volume(double volume);
 
     /**
-     * gets the volume of the audio in the video being played
-     * @return volume value set for video being played
+     * Get the volume value for the video being played.
      */
-    double get_volume();
+    virtual double get_volume() const;
 
     /**
-     * seek to time of the video being played
+     * Seek the video being played.
+     *
      * @param time in nanoseconds
-     * @return true if success
+     * @return true if seek success
      */
-    bool seek(int64_t time_nanoseconds);
+    virtual bool seek(const int64_t time);
 
     /**
-     * play video in loop-back
-     * @param bool to enable/disable loop-back
+     * Enable/disable continues loop-back mode of the video
+     * being played. by default this is disabled.
+     *
+     * @param enable to enable/disable loop-back mode.
      */
-    void set_loopback(bool enable = false)
+    inline void set_loopback(bool enable)
     {
         m_loopback = enable;
     }
 
     /**
-     * get loop-back state
-     * @return true/false based on set_loopback.
+     * Get loop-back state
+     *
+     * @return true/false based on loop-back state
      */
-    bool get_loopback()
+    inline bool get_loopback() const
     {
         return m_loopback;
     }
 
-    void draw_frame(GstSample* sample)
-    {
-        m_decoderImpl->push_buffer(sample);
-        Window::damage();
-    }
-
     /**
-     * get Error Message received from pipeline
+     * Get error message
      */
-    std::string get_error_message()
-    {
-        return m_decoderImpl->get_error_message();
-    }
-
-    void handle_gst_events(detail::gsteventid event);
+    std::string get_error_message() const;
 
     virtual ~VideoWindow();
 
 protected:
-    std::string m_filename;
-    void createImpl(const Size& size);
-    bool is_target_sama5d4();
-    bool get_media_info(const std::string& filename);
-    void set_media_info(const std::string& info, const int type);
-
-    static void print_stream_info(GstDiscovererStreamInfo* info, VideoWindow* data);
-    static void print_topology(GstDiscovererStreamInfo* info, VideoWindow* data);
-    static void on_discovered_cb(GstDiscoverer* discoverer, GstDiscovererInfo* info, gpointer data);
-    static void on_finished_cb(GstDiscoverer* discoverer, gpointer data);
-
-private:
-    std::unique_ptr<detail::GstDecoderImpl> m_decoderImpl;
-    bool m_seekable;
-    std::string m_vcodec;
-    std::string m_acodec;
-    std::string m_ctype;
-    bool m_atrack;
-    bool m_vtrack;
     bool m_loopback;
-    GMainLoop* m_discoverer_loop;
-    std::string m_audio_info;
-    std::string m_video_info;
 
-    friend class detail::GstDecoderImpl;
-    friend class detail::GstKmsSinkImpl;
-    friend class detail::GstAppSinkImpl;
+    void createImpl(const Size& size);
 
-    VideoWindow() = delete;
+    std::shared_ptr<detail::GstDecoderImpl> m_decoderImpl;
+
 };
 
 } //namespace v1
