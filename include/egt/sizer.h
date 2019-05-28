@@ -134,9 +134,6 @@ public:
     {}
 
     virtual ~HorizontalBoxSizer() = default;
-
-    // doesn't make sense to change
-    inline void set_orient(orientation orient) = delete;
 };
 
 /**
@@ -157,9 +154,6 @@ public:
     {}
 
     virtual ~VerticalBoxSizer() = default;
-
-    // doesn't make sense to change
-    inline void set_orient(orientation orient) = delete;
 };
 
 /**
@@ -180,9 +174,6 @@ public:
     {}
 
     virtual ~FlexBoxSizer() = default;
-
-    // doesn't make sense to change
-    inline void set_orient(orientation orient) = delete;
 };
 
 }
