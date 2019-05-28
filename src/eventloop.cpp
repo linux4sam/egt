@@ -26,11 +26,11 @@ namespace detail
 struct EventLoopImpl
 {
     EventLoopImpl()
-        : m_work(m_io)
+        : m_work(egt::asio::make_work_guard(m_io))
     {}
 
     asio::io_context m_io;
-    asio::io_context::work m_work;
+    asio::executor_work_guard<asio::io_context::executor_type> m_work;
 };
 }
 

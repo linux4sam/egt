@@ -292,7 +292,7 @@ gboolean CameraWindow::bus_callback(GstBus* bus, GstMessage* message, gpointer d
         g_error_free(error);
         g_free(debug);
 
-        main_app().event().io().post([_this]()
+        asio::post(main_app().event().io(), [_this]()
         {
             Event event(eventid::event2);
             _this->invoke_handlers(event);

@@ -44,7 +44,7 @@ struct AudioPlayerImpl
                 return false;
             }
 
-            main_app().event().io().post([player]()
+            asio::post(main_app().event().io(), [player]()
             {
                 Event event(eventid::property_changed);
                 player->invoke_handlers(event);
@@ -127,7 +127,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
             vcurrent = gst_structure_get_value(info, "current");
             impl->m_position = g_value_get_int64(vcurrent);
 
-            main_app().event().io().post([impl]()
+            asio::post(main_app().event().io(), [impl]()
             {
                 Event event(eventid::property_changed);
                 impl->player.invoke_handlers(event);

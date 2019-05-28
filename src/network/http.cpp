@@ -84,7 +84,7 @@ public:
         timer.cancel();
         if (timeout_ms > 0)
         {
-            timer.expires_from_now(std::chrono::milliseconds(timeout_ms));
+            timer.expires_after(std::chrono::milliseconds(timeout_ms));
             timer.async_wait(std::bind(&asio_timer_callback, std::placeholders::_1));
         }
         else if (timeout_ms == 0)
