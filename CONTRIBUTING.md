@@ -123,7 +123,7 @@ make docs
 ./scripts/checkheaders.sh
 make cppcheck
 make tidy
-make dist
+make distcheck
 tar xf libegt-*.tar.gz
 cd libegt-*
 ./configure
