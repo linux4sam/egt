@@ -1,0 +1,30 @@
+---
+Checks: "*,\
+-llvm-namespace-comment,\
+-cppcoreguidelines-pro-bounds-constant-array-index,\
+-cppcoreguidelines-pro-type-vararg,\
+-cppcoreguidelines-pro-type-reinterpret-cast,\
+-cppcoreguidelines-pro-type-union-access,\
+-cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
+-cppcoreguidelines-pro-bounds-pointer-arithmetic,\
+-modernize-pass-by-value,\
+-modernize-use-override,\
+-readability-braces-around-statements,\
+-readability-else-after-return,\
+-readability-implicit-bool-cast,\
+-readability-named-parameter,\
+-clang-analyzer-alpha.deadcode.UnreachableCode,\
+-clang-analyzer-alpha.core.CastToStruct,\
+-clang-analyzer-alpha.unix.PthreadLock,\
+-clang-analyzer-alpha.cplusplus.VirtualCall,\
+-llvm-include-order,\
+-google-readability-*,\
+-google-build-using-namespace,\
+-google-explicit-constructor,\
+-misc-noexcept-move-constructor,\
+-misc-macro-parentheses,\
+-misc-unused-parameters,\
+"
+HeaderFilterRegex: '^.*include/egt/.*h$$'
+AnalyzeTemporaryDtors: false
+...
