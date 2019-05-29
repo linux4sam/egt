@@ -191,6 +191,46 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
+    std::random_device r;
+    std::default_random_engine e1 {r()};
+    std::uniform_int_distribution<int> x_dist {0, 800};
+    std::uniform_int_distribution<int> y_dist {0, 480};
+    std::uniform_int_distribution<int> d_dist {100, 5000};
+    std::uniform_int_distribution<int> s_dist {2, 6};
+
+    for (int i = 0; i < 25; i++)
+    {
+        auto star = make_shared<CircleWidget>(Circle(Point(x_dist(e1), y_dist(e1)), s_dist(e1)));
+        win.add(star);
+        star->set_color(Palette::ColorId::button_bg, Palette::white);
+
+        auto in = new PropertyAnimator(0, 255, std::chrono::seconds(3), easing_spring);
+        in->on_change([star](float_t value)
+        {
+            auto color = star->color(Palette::ColorId::button_bg);
+            color.color().alpha(value);
+            star->set_color(Palette::ColorId::button_bg, color);
+        });
+
+        auto out = new PropertyAnimator(255, 0, std::chrono::seconds(3), easing_spring);
+        out->reverse(true);
+        out->on_change([star](float_t value)
+        {
+            auto color = star->color(Palette::ColorId::button_bg);
+            color.color().alpha(value);
+            star->set_color(Palette::ColorId::button_bg, color);
+        });
+
+        auto delay = new AnimationDelay(std::chrono::milliseconds(d_dist(e1)));
+
+        auto sequence = new AnimationSequence(true);
+        sequence->add(*delay);
+        sequence->add(*in);
+        sequence->add(*out);
+
+        sequence->start();
+    }
+
     try
     {
         return app.run();
