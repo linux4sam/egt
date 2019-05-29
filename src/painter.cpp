@@ -101,15 +101,13 @@ Painter& Painter::draw(const std::string& str, bool difference)
     if (str.empty())
         return *this;
 
-    double x, y;
-    cairo_font_extents_t fe;
-    cairo_text_extents_t textext;
-
-    cairo_font_extents(m_cr.get(), &fe);
-    cairo_text_extents(m_cr.get(), str.c_str(), &textext);
-
     if (!cairo_has_current_point(m_cr.get()))
         return *this;
+
+    double x, y;
+    cairo_text_extents_t textext;
+
+    cairo_text_extents(m_cr.get(), str.c_str(), &textext);
 
     AutoSaveRestore sr(*this);
 
