@@ -40,34 +40,7 @@ Painter& Painter::set(const Color& color)
 
 Painter& Painter::set(const Font& font)
 {
-    cairo_font_weight_t weight = CAIRO_FONT_WEIGHT_NORMAL;
-    switch (font.weight())
-    {
-    case Font::weightid::normal:
-        break;
-    case Font::weightid::bold:
-        weight = CAIRO_FONT_WEIGHT_BOLD;
-        break;
-    }
-
-    cairo_font_slant_t slant = CAIRO_FONT_SLANT_NORMAL;
-    switch (font.slant())
-    {
-    case Font::slantid::normal:
-        break;
-    case Font::slantid::italic:
-        slant = CAIRO_FONT_SLANT_ITALIC;
-        break;
-    case Font::slantid::oblique:
-        slant = CAIRO_FONT_SLANT_OBLIQUE;
-        break;
-    }
-
-    cairo_select_font_face(m_cr.get(),
-                           font.face().c_str(),
-                           slant,
-                           weight);
-    cairo_set_font_size(m_cr.get(), font.size());
+    cairo_set_scaled_font(m_cr.get(), font.scaled_font());
 
     return *this;
 }
