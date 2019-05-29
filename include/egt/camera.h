@@ -6,8 +6,6 @@
 
 #include <egt/window.h>
 
-#include <gst/gst.h>
-
 #include <string>
 
 namespace egt
@@ -15,55 +13,86 @@ namespace egt
 inline namespace v1
 {
 
+namespace detail
+{
+class CameraImpl;
+}
+
+/**
+ * A CameraWindow is a widget to capture image feed from the camera
+ * sensor and render it on screen using gstreamer media framework.
+ *
+ * It has a bounding rectangle, device, format and windowhint. These
+ * properties can be manipulated to create a camera window either as
+ * a basic window or an overlay plane.
+ *
+ */
 class CameraWindow : public Window
 {
 public:
-    CameraWindow(const Size& size,
+
+    /**
+     * Create a camera window.
+     *
+     * @param size is a size of window with offset x & y = 0.
+     * @param device is a cameras device node.
+     * @param format is a pixel format of a window or an overlay plane.
+     * @param windowhint used for configuring window backend's.
+     *
+     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
+     * pixel formats.
+     */
+    CameraWindow(const Size& size = Size(),
                  const std::string& device = "/dev/video0",
                  pixel_format format = pixel_format::xrgb8888,
                  windowhint hint = windowhint::overlay);
 
-    CameraWindow(const Rect& rect,
+    /**
+     * Create a camera window.
+     *
+     * @param rect is a size of window with offset x & y.
+     * @param device is a cameras device node.
+     * @param format is a pixel format of a window or an overlay plane.
+     * @param windowhint used for configuring window backend's.
+     *
+     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
+     * pixel formats.
+     */
+    CameraWindow(const Rect& rect = Rect(),
                  const std::string& device = "/dev/video0",
                  pixel_format format = pixel_format::xrgb8888,
                  windowhint hint = windowhint::overlay);
 
-    virtual void top_draw() override;
+    virtual void do_draw() override
+    {
+        // video windows don't draw
+    }
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual ~CameraWindow();
-
+    /**
+     * Initialize camera pipeline to capture image feed from the camera
+     * sensor and render to screen.
+     *
+     * @return true on success
+     */
     bool start();
 
+    /**
+     * Stop camera.
+     */
     void stop();
 
-    void move(const Point& p);
+    /**
+     * Get error message.
+     */
+    std::string get_error_message() const;
 
-    float scale();
-
-    void set_scale(float value);
-
-    std::string get_error_message();
+    virtual ~CameraWindow();
 
 protected:
-    std::string m_devnode;
-    int m_height;
-    GstElement* m_pipeline;
-    GstElement* m_appsink;
-    GstSample* m_camerasample;
-    std::string m_err_message;
+    std::shared_ptr<detail::CameraImpl> m_cameraImpl;
 
-    void createImpl(const Size& size);
-
-    void copy_frame(GstSample* sample);
-
-    static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
-
-    static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
-
-private:
-    CameraWindow() = delete;
 };
 
 } //namespace v1
