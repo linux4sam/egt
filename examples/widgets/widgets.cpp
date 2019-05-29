@@ -59,7 +59,7 @@ struct CheckBoxPage : public NotebookTab
         add(expand(grid0));
 
         auto toggle1 = std::make_shared<ToggleBox>();
-        toggle1->set_text("On", "Off");
+        toggle1->set_toggle_text("On", "Off");
         grid0->add(expand(toggle1));
 
         auto toggle2 = std::make_shared<ToggleBox>();

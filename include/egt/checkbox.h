@@ -72,8 +72,8 @@ public:
 
     virtual Size min_size_hint() const override;
 
-    void set_text(const std::string& on_text,
-                  const std::string& off_text)
+    virtual void set_toggle_text(const std::string& on_text,
+                                 const std::string& off_text)
     {
         bool on = detail::change_if_diff<>(m_on_text, on_text);
         bool off = detail::change_if_diff<>(m_off_text, off_text);
@@ -88,6 +88,8 @@ public:
     virtual ~ToggleBox() = default;
 
 protected:
+
+    virtual void set_text(const std::string& /*str*/) override {}
 
     std::string m_off_text;
     std::string m_on_text;
