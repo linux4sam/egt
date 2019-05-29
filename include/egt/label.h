@@ -20,14 +20,13 @@ namespace egt
 {
 inline namespace v1
 {
-class Font;
 class Frame;
 class Painter;
 
 /**
  * A Label of text.
  *
- * It handles no events, has a font and alignment, but otherwise is pretty
+ * It handles no events, has a text alignment, but otherwise is pretty
  * basic.
  *
  * @image html widget_label1.png
@@ -50,43 +49,34 @@ public:
     /**
      * @param[in] text The text to display.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
-    /// @todo All uses of Font() below are not using the theme font
     Label(const std::string& text = std::string(),
-          alignmask align = default_align,
-          const Font& font = Font()) noexcept;
+          alignmask align = default_align) noexcept;
 
     /**
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
     Label(const std::string& text, const Rect& rect,
-          alignmask align = default_align,
-          const Font& font = Font()) noexcept;
+          alignmask align = default_align) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
     explicit Label(Frame& parent, const std::string& text = std::string(),
-                   alignmask align = default_align,
-                   const Font& font = Font()) noexcept;
+                   alignmask align = default_align) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
     Label(Frame& parent, const std::string& text, const Rect& rect,
-          alignmask align = default_align,
-          const Font& font = Font()) noexcept;
+          alignmask align = default_align) noexcept;
 
     /**
      * Set the text of the label.
@@ -131,35 +121,29 @@ public:
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
     ImageLabel(const Image& image = Image(),
                const std::string& text = std::string(),
-               alignmask align = alignmask::right | alignmask::center,
-               const Font& font = Font()) noexcept;
+               alignmask align = alignmask::right | alignmask::center) noexcept;
 
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
     ImageLabel(const Image& image, const std::string& text, const Rect& rect,
-               alignmask align = alignmask::right | alignmask::center,
-               const Font& font = Font()) noexcept;
+               alignmask align = alignmask::right | alignmask::center) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
     explicit ImageLabel(Frame& parent, const Image& image = Image(),
                         const std::string& text = std::string(),
-                        alignmask align = alignmask::right | alignmask::center,
-                        const Font& font = Font()) noexcept;
+                        alignmask align = alignmask::right | alignmask::center) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -167,12 +151,10 @@ public:
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
      * @param[in] align Alignment for the text.
-     * @param[in] font The Font to use.
      */
     ImageLabel(Frame& parent, const Image& image, const std::string& text,
                const Rect& rect,
-               alignmask align = alignmask::right | alignmask::center,
-               const Font& font = Font()) noexcept;
+               alignmask align = alignmask::right | alignmask::center) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

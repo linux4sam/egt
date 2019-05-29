@@ -19,13 +19,13 @@ static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
 
 const alignmask Label::default_align = alignmask::center | alignmask::left;
 
-Label::Label(const std::string& text, alignmask align, const Font& font) noexcept
-    : Label(text, Rect(), align, font)
+Label::Label(const std::string& text, alignmask align) noexcept
+    : Label(text, Rect(), align)
 {
 }
 
-Label::Label(const std::string& text, const Rect& rect, alignmask align, const Font& font) noexcept
-    : TextWidget(text, rect, align, font)
+Label::Label(const std::string& text, const Rect& rect, alignmask align) noexcept
+    : TextWidget(text, rect, align)
 {
     set_name("Label" + std::to_string(m_widgetid));
 
@@ -33,15 +33,15 @@ Label::Label(const std::string& text, const Rect& rect, alignmask align, const F
     set_padding(5);
 }
 
-Label::Label(Frame& parent, const std::string& text, alignmask align, const Font& font) noexcept
-    : Label(text, align, font)
+Label::Label(Frame& parent, const std::string& text, alignmask align) noexcept
+    : Label(text, align)
 {
     parent.add(*this);
 }
 
 Label::Label(Frame& parent, const std::string& text, const Rect& rect,
-             alignmask align, const Font& font) noexcept
-    : Label(text, rect, align, font)
+             alignmask align) noexcept
+    : Label(text, rect, align)
 {
     parent.add(*this);
 }
@@ -111,18 +111,16 @@ void Label::first_resize()
 
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
-                       alignmask align,
-                       const Font& font) noexcept
-    : ImageLabel(image, text, Rect(), align, font)
+                       alignmask align) noexcept
+    : ImageLabel(image, text, Rect(), align)
 {
 }
 
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       alignmask align,
-                       const Font& font) noexcept
-    : Label(text, rect, align, font),
+                       alignmask align) noexcept
+    : Label(text, rect, align),
       m_image(image)
 {
     set_name("ImageLabel" + std::to_string(m_widgetid));
@@ -139,9 +137,8 @@ ImageLabel::ImageLabel(const Image& image,
 ImageLabel::ImageLabel(Frame& parent,
                        const Image& image,
                        const std::string& text,
-                       alignmask align,
-                       const Font& font) noexcept
-    : ImageLabel(image, text, align, font)
+                       alignmask align) noexcept
+    : ImageLabel(image, text, align)
 {
     parent.add(*this);
 }
@@ -150,9 +147,8 @@ ImageLabel::ImageLabel(Frame& parent,
                        const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       alignmask align,
-                       const Font& font) noexcept
-    : ImageLabel(image, text, rect, align, font)
+                       alignmask align) noexcept
+    : ImageLabel(image, text, rect, align)
 {
     parent.add(*this);
 }

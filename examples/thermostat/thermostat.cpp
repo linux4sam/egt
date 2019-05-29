@@ -38,8 +38,7 @@ public:
 
         auto m_title = make_shared<Label>("Living Room",
                                           Size(250, 64),
-                                          alignmask::center,
-                                          egt::Font(32, Font::weightid::bold));
+                                          alignmask::center);
         m_title->set_color(Palette::ColorId::bg, Palette::transparent);
         m_title->set_align(alignmask::center | alignmask::top);
         m_title->set_margin(10);
@@ -69,8 +68,7 @@ public:
                                                 "Day",
                                                 Rect(Point(-200, 150),
                                                         Size(180, 64)),
-                                                alignmask::center,
-                                                egt::Font(30));
+                                                alignmask::center);
         m_label1->set_color(Palette::ColorId::bg, Palette::transparent);
         m_label1->set_color(Palette::ColorId::text, Palette::gray);
 
@@ -79,8 +77,7 @@ public:
                                                 "Night",
                                                 Rect(Point(-200, 214),
                                                         Size(180, 64)),
-                                                alignmask::center,
-                                                egt::Font(30));
+                                                alignmask::center);
         m_label2->set_color(Palette::ColorId::bg, Palette::transparent);
         m_label2->set_color(Palette::ColorId::text, Palette::gray);
 
@@ -89,16 +86,14 @@ public:
                                                 "Vacation",
                                                 Rect(Point(-200, 278),
                                                         Size(180, 64)),
-                                                alignmask::center,
-                                                egt::Font(30));
+                                                alignmask::center);
         m_label3->set_color(Palette::ColorId::bg, Palette::transparent);
         m_label3->set_color(Palette::ColorId::text, Palette::gray);
 
         auto m_label4 = make_shared<Label>(*this, "Fan",
                                            Rect(Point(800, 390),
                                                 Size(50, 64)),
-                                           alignmask::center,
-                                           egt::Font(16));
+                                           alignmask::center);
         m_label4->set_color(Palette::ColorId::bg, Palette::transparent);
 
         auto m_slider1 = make_shared<Slider>(*this, Rect(Point(800, 100),

@@ -46,12 +46,10 @@ public:
 
         if (!title.empty())
         {
-            auto label = std::make_shared<Label>(title,
-                                                 alignmask::center,
-                                                 Font(Font::weightid::bold));
+            auto label = std::make_shared<Label>(title, alignmask::center);
             label->set_font(Font(label->font().face(),
                                  label->font().size() + 4,
-                                 label->font().weight(),
+                                 Font::weightid::bold,
                                  label->font().slant()));
             label->set_align(alignmask::expand_horizontal);
             m_vsizer.add(label);

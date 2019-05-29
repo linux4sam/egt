@@ -15,13 +15,11 @@ inline namespace v1
 {
 
 TextWidget::TextWidget(const std::string& text, const Rect& rect,
-                       alignmask align, const Font& font) noexcept
+                       alignmask align) noexcept
     : Widget(rect),
       m_text_align(align),
       m_text(text)
-{
-    set_font(font);
-}
+{}
 
 void TextWidget::clear()
 {

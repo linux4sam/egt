@@ -32,8 +32,7 @@ public:
 
     explicit TextWidget(const std::string& text = std::string(),
                         const Rect& rect = Rect(),
-                        alignmask align = alignmask::center,
-                        const Font& font = Font()) noexcept;
+                        alignmask align = alignmask::center) noexcept;
 
     /**
      * Set the text of the label.
@@ -66,29 +65,6 @@ public:
     alignmask text_align() const { return m_text_align; }
 
     /**
-     * Get the widget Font.
-     */
-    const Font& font() const
-    {
-        if (m_font)
-            return *m_font;
-
-        return theme().font();
-    }
-
-    /**
-     * Set the widget Font.
-     *
-     * @note This will overwrite the entire widget Font.
-     */
-    void set_font(const Font& font)
-    {
-        m_font.reset(new Font(font));
-        damage();
-        parent_layout();
-    }
-
-    /**
      * Given a Font, text, and a target Size, scale the font size so that
      * the text will will fit and return the new Font.
      */
@@ -109,9 +85,6 @@ protected:
      * The text.
      */
     std::string m_text;
-
-private:
-    mutable std::unique_ptr<Font> m_font;
 };
 
 }

@@ -33,33 +33,29 @@ inline namespace v1
 struct StringItem : public Label
 {
     StringItem(const std::string& text = std::string(),
-               alignmask align = alignmask::center,
-               const Font& font = Font()) noexcept
-        : Label(text, align, font)
+               alignmask align = alignmask::center) noexcept
+        : Label(text, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }
 
     StringItem(const std::string& text, const Rect& rect,
-               alignmask align = alignmask::center,
-               const Font& font = Font()) noexcept
-        : Label(text, rect, align, font)
+               alignmask align = alignmask::center) noexcept
+        : Label(text, rect, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }
 
     explicit StringItem(Frame& parent, const std::string& text = std::string(),
-                        alignmask align = alignmask::center,
-                        const Font& font = Font()) noexcept
-        : Label(parent, text, align, font)
+                        alignmask align = alignmask::center) noexcept
+        : Label(parent, text, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }
 
     StringItem(Frame& parent, const std::string& text, const Rect& rect,
-               alignmask align = alignmask::center,
-               const Font& font = Font()) noexcept
-        : Label(parent, text, rect, align, font)
+               alignmask align = alignmask::center) noexcept
+        : Label(parent, text, rect, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }

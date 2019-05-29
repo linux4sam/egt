@@ -774,6 +774,32 @@ public:
      */
     virtual Point display_to_local(const DisplayPoint& p);
 
+    /**
+     * Get the widget Font.
+     */
+    const Font& font() const
+    {
+        if (m_font)
+            return *m_font;
+
+        return theme().font();
+    }
+
+    /**
+     * Set the widget Font.
+     *
+     * @note This will overwrite the entire widget Font.
+     */
+    void set_font(const Font& font)
+    {
+        if (m_font && *m_font == font)
+            return;
+
+        m_font.reset(new Font(font));
+        damage();
+        parent_layout();
+    }
+
     virtual ~Widget() noexcept;
 
 protected:
@@ -892,6 +918,8 @@ private:
      * functions because this is not set until it is modified.
      */
     std::unique_ptr<Theme> m_theme;
+
+    mutable std::unique_ptr<Font> m_font;
 
     friend class Frame;
 };

@@ -218,10 +218,10 @@ void Slider::draw_label(Painter& painter, int value)
         handle -= Point(b.w / 2., 0);
 
     auto text = std::to_string(value);
-    auto font = TextWidget::scale_font(handle.size(), text, Font());
+    auto f = TextWidget::scale_font(handle.size(), text, font());
 
     painter.set(color(Palette::ColorId::text).color());
-    painter.set(font);
+    painter.set(f);
 
     auto text_size = painter.text_size(text);
     Rect target = detail::align_algorithm(text_size,

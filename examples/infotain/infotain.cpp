@@ -71,7 +71,7 @@ static void top_menu(Window& win)
 
     auto i1 = std::make_shared<HomeImage>(win, "home.png", 5, 5);
 
-    auto l1 = std::make_shared<Label>(win, "", Rect(Point(320, 0), Size(100, 60)), alignmask::center, Font(32));
+    auto l1 = std::make_shared<Label>(win, "", Rect(Point(320, 0), Size(100, 60)), alignmask::center);
     l1->set_color(Palette::ColorId::text, Palette::white);
     l1->set_color(Palette::ColorId::bg, Palette::transparent);
 
@@ -101,7 +101,7 @@ static void top_menu(Window& win)
 
     timer->start();
 
-    auto l2 = std::make_shared<Label>("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::center, Font(24));
+    auto l2 = std::make_shared<Label>("48°", Rect(Point(420, 0), Size(100, 60)), alignmask::center);
     l2->set_color(Palette::ColorId::text, Palette::white);
     l2->set_color(Palette::ColorId::bg, Palette::transparent);
     win.add(l2);

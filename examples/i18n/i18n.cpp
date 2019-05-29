@@ -36,9 +36,9 @@ int main(int argc, const char** argv)
     for (auto& str : variations)
     {
         static const auto face = "Noto Sans CJK SC Regular";
-        auto label = make_shared<Label>(str, egt::Label::default_align, egt::Font(face, 36));
+        auto label = make_shared<Label>(str, egt::Label::default_align);
+        label->set_font(egt::Font(face, 36));
         vsizer.add(label);
-
     }
 
     window.add(vsizer);

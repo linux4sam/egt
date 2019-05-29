@@ -48,11 +48,10 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
     }
 
     string text = std::to_string(widget.value()) + "%";
-    /// @todo font
-    auto dynamic_font = TextWidget::scale_font(b.size() * 0.75, text, Font());
+    auto f = TextWidget::scale_font(b.size() * 0.75, text, widget.font());
 
     painter.set(widget.color(Palette::ColorId::label_text).color());
-    painter.set(dynamic_font);
+    painter.set(f);
     auto size = painter.text_size(text);
     auto target = detail::align_algorithm(size, b, alignmask::center);
     painter.draw(target.point());
@@ -99,9 +98,8 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
     painter.stroke();
 
     string text = std::to_string(widget.value());
-    /// @todo font
-    auto dynamic_font = TextWidget::scale_font(Size(dim, dim) * 0.75, text, Font());
-    painter.set(dynamic_font);
+    auto f = TextWidget::scale_font(Size(dim, dim) * 0.75, text, widget.font());
+    painter.set(f);
     painter.set(widget.color(Palette::ColorId::text).color());
     auto size = painter.text_size(text);
     auto target = detail::align_algorithm(size, b, alignmask::center);
@@ -175,15 +173,13 @@ void AnalogMeter::draw(Painter& painter, const Rect& rect)
 
 void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect&)
 {
-    /// @todo This needs to support setting font.
-
     static const auto tick_width = 1.0;
 
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
     auto b = widget.content_area();
     painter.set_line_width(tick_width);
-    painter.set(Font());
+    painter.set(widget.font());
     auto text_size = painter.text_size("999");
 
     auto cr = painter.context().get();
