@@ -1,7 +1,11 @@
 noinst_LTLIBRARIES = libkplot.la
 
+MRESG_V_GEN = $(mresg_v_GEN_$(V))
+mresg_v_GEN_ = $(mresg_v_GEN_$(AM_DEFAULT_VERBOSITY))
+mresg_v_GEN_0 = @echo "  GEN     " $@;
+
 $(top_builddir)/external/kplot/compat.h: $(top_srcdir)/external/kplot/compat.pre.h $(top_srcdir)/external/kplot/compat.post.h
-	( mkdir -p $(top_builddir)/external/kplot/ ; \
+	$(MRESG_V_GEN)( mkdir -p $(top_builddir)/external/kplot/ ; \
 	  cat $(top_srcdir)/external/kplot/compat.pre.h ; \
 	  CC="$(CC)" CFLAGS="$(CFLAGS)" sh $(top_srcdir)/external/kplot/compat.sh reallocarray ; \
 	  cat $(top_srcdir)/external/kplot/compat.post.h ; ) >$@
