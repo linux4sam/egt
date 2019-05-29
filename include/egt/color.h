@@ -255,6 +255,15 @@ struct Pattern
         return Color();
     }
 
+    Color& color()
+    {
+        if (!m_steps.empty())
+            return m_steps.begin()->second;
+
+        static Color tmp;
+        return tmp;
+    }
+
     explicit Pattern(const std::vector<std::pair<float, Color>>& steps)
     {
         for (auto& s : steps)
