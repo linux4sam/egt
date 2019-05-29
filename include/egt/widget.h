@@ -128,8 +128,8 @@ public:
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
-    Widget(const Rect& rect = Rect(),
-           const flags_type& flags = flags_type()) noexcept;
+    explicit Widget(const Rect& rect = Rect(),
+                    const flags_type& flags = flags_type()) noexcept;
 
     /**
      * @param[in] parent Parent Frame of the Widget.
@@ -218,7 +218,7 @@ public:
         resize_by_ratio(ratio, ratio);
     }
 
-    virtual void set_scale(float scale)
+    virtual void set_scale(float /*scale*/)
     {}
 
     /**
@@ -439,6 +439,9 @@ public:
 
     /**
      * Get a Widget color.
+     *
+     * @param id Palette::ColorId to get.
+     * @param group Palette::GroupId to get.
      */
     Palette::pattern_type color(Palette::ColorId id, Palette::GroupId group) const;
 

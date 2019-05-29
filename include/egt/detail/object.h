@@ -108,7 +108,7 @@ protected:
                       uint32_t h) noexcept
             : callback(std::move(c)),
               mask(std::move(m)),
-              handle(std::move(h))
+              handle(h)
         {}
 
         event_callback_t callback;

@@ -15,8 +15,6 @@
 #include <deque>
 #include <numeric>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -131,7 +129,7 @@ int EventLoop::run(bool enable_fps)
 
             if (enable_fps && fps.ready())
             {
-                cout << "fps: " << std::round(fps.fps()) << endl;
+                std::cout << "fps: " << std::round(fps.fps()) << std::endl;
             }
         }
     }

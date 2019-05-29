@@ -3,15 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <iostream>
 #include "egt/detail/layout.h"
 #include "egt/frame.h"
 #include "egt/sizer.h"
+#include "egt/utils.h"
 
 #define LAY_IMPLEMENTATION
 #include "layout.h"
-
-using namespace std;
 
 namespace egt
 {
@@ -217,6 +215,11 @@ void flex_layout(Frame* frame, int max_level)
     lay_context ctx;
     lay_init_context(&ctx);
 
+    scope_exit cleanup([&ctx]()
+    {
+        lay_destroy_context(&ctx);
+    });
+
     // The context will automatically resize its heap buffer to grow as needed
     // during use. But we can avoid multiple reallocations by reserving as much
     // space as we'll need up-front. Don't worry, lay_init_context doesn't do any
@@ -224,21 +227,25 @@ void flex_layout(Frame* frame, int max_level)
     lay_reserve_items_capacity(&ctx, 1024);
 
     LayoutSerializer s(ctx, max_level);
-    frame->walk(std::bind(&LayoutSerializer::add, std::ref(s),
-                          std::placeholders::_1, std::placeholders::_2));
+    frame->walk([&s](Widget * widget, int level)
+    {
+        return s.add(widget, level);
+    });
     s.apply();
-
-    lay_destroy_context(&ctx);
 }
 
-
 void flex_layout(const Rect& parent,
-                 vector<LayoutRect>& children,
+                 std::vector<LayoutRect>& children,
                  justification justify,
                  orientation orient)
 {
     lay_context ctx;
     lay_init_context(&ctx);
+
+    scope_exit cleanup([&ctx]()
+    {
+        lay_destroy_context(&ctx);
+    });
 
     // The context will automatically resize its heap buffer to grow as needed
     // during use. But we can avoid multiple reallocations by reserving as much
@@ -308,7 +315,7 @@ void flex_layout(const Rect& parent,
         child = pchild->next_sibling;
     }
 
-    lay_destroy_context(&ctx);
+
 }
 
 }

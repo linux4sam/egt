@@ -48,12 +48,11 @@ public:
 
     using dim_type = dim_t;
 
-    constexpr PointType() noexcept
-    {}
+    constexpr PointType() noexcept = default;
 
-    constexpr PointType(dim_t x_, dim_t y_) noexcept
-        : x(x_),
-          y(y_)
+    constexpr PointType(dim_t xd, dim_t yd) noexcept
+        : x(xd),
+          y(yd)
     {}
 
     PointType<dim_t, dim_c>(const PointType<dim_t, dim_c>&) = default;
@@ -180,8 +179,7 @@ public:
 
     using dim_type = dim_t;
 
-    constexpr SizeType() noexcept
-    {}
+    constexpr SizeType() noexcept = default;
 
     constexpr explicit SizeType(dim_t w_, dim_t h_) noexcept
         : h(h_),
@@ -328,8 +326,7 @@ public:
 
     using dim_type = dim_t;
 
-    constexpr RectType() noexcept
-    {}
+    constexpr RectType() noexcept = default;
 
     /**
      * Construct a rectangle with an explicit point and size.
@@ -759,8 +756,8 @@ public:
     /**
      * Construct Arc object.
      */
-    constexpr ArcType(const Point& c = Point(), float r = 0.0f,
-                      float a1 = 0.0f, float a2 = 0.0f) noexcept
+    constexpr explicit ArcType(const Point& c = Point(), float r = 0.0f,
+                               float a1 = 0.0f, float a2 = 0.0f) noexcept
         : center(c),
           radius(r),
           angle1(a1),

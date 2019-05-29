@@ -238,8 +238,7 @@ std::ostream& operator<<(std::ostream& os, const Color& color);
  */
 struct Pattern
 {
-    Pattern()
-    {}
+    Pattern() noexcept = default;
 
     // cppcheck-suppress noExplicitConstructor
     Pattern(const Color& color)

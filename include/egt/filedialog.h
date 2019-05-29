@@ -124,7 +124,7 @@ public:
      */
     virtual const std::string get_selected();
 
-    virtual ~FileOpenDialog() {}
+    virtual ~FileOpenDialog() = default;
 
 protected:
     std::shared_ptr<StaticGrid> m_grid;
@@ -173,7 +173,7 @@ public:
      */
     virtual const std::string get_selected();
 
-    virtual ~FileSaveDialog() {}
+    virtual ~FileSaveDialog() = default;
 
 protected:
     std::shared_ptr<HorizontalBoxSizer> m_hpositioner;

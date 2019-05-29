@@ -71,8 +71,7 @@ public:
      */
     virtual uint32_t add_strip(int framecount, const Point& point);
 
-    virtual ~Sprite()
-    {}
+    virtual ~Sprite() = default;
 
 protected:
 

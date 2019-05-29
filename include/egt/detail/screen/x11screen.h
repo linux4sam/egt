@@ -28,7 +28,7 @@ public:
 
     explicit X11Screen(const Size& size = Size(800, 480), bool borderless = false);
 
-    virtual void schedule_flip() {}
+    virtual void schedule_flip() override {}
 
     virtual void flip(const damage_array& damage) override;
 

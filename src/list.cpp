@@ -60,9 +60,9 @@ void ListBox::add_item(const std::shared_ptr<Widget>& widget)
 
 void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
 {
-    m_sizer->add(widget);
-
     widget->set_align(alignmask::expand_horizontal);
+
+    m_sizer->add(widget);
 
     // automatically select the first item
     if (m_sizer->count_children() == 1)
@@ -110,6 +110,7 @@ void ListBox::handle(Event& event)
         }
 
         event.stop();
+        break;
     }
     default:
         break;

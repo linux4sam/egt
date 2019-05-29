@@ -48,7 +48,7 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
     Drawer<CheckBox>::draw(*this, painter, rect);
 }
 
-void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& rect)
+void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*rect*/)
 {
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 

@@ -210,7 +210,7 @@ public:
         return m_current;
     }
 
-    virtual ~Animation() {}
+    virtual ~Animation() = default;
 
 protected:
 
@@ -429,9 +429,9 @@ class PropertyAnimatorType : public AutoAnimation
 {
 public:
 
-    PropertyAnimatorType(T start = T(), T end = T(),
-                         std::chrono::milliseconds duration = std::chrono::milliseconds(),
-                         easing_func_t func = easing_linear)
+    explicit PropertyAnimatorType(T start = T(), T end = T(),
+                                  std::chrono::milliseconds duration = std::chrono::milliseconds(),
+                                  easing_func_t func = easing_linear)
         : AutoAnimation(start, end, duration, func,
                         std::bind(&PropertyAnimatorType<T>::invoke_handlers,
                                   this, std::placeholders::_1))

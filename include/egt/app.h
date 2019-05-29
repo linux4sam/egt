@@ -47,8 +47,8 @@ public:
      * @param[in] name Application name.  This is used for several things,
      *             including identifying the text domain used by gettext().
      */
-    Application(int argc = 0, const char** argv = nullptr,
-                const std::string& name = "egt", bool primary = true);
+    explicit Application(int argc = 0, const char** argv = nullptr,
+                         const std::string& name = "egt", bool primary = true);
 
     /**
      * Run the application.

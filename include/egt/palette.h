@@ -12,8 +12,8 @@
  */
 
 #include <egt/color.h>
-#include <memory>
 #include <map>
+#include <memory>
 
 namespace egt
 {

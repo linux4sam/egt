@@ -3,14 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/detail/mousegesture.h"
 #include "egt/input.h"
-
-using namespace std;
 
 namespace egt
 {

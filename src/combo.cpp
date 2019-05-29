@@ -225,7 +225,7 @@ void ComboBox::draw(Painter& painter, const Rect& rect)
     Drawer<ComboBox>::draw(*this, painter, rect);
 }
 
-void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& rect)
+void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*rect*/)
 {
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 

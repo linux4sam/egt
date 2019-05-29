@@ -116,7 +116,7 @@ public:
         damage(box());
     }
 
-    virtual void damage(const Rect& rect) override
+    virtual void damage(const Rect& /*rect*/) override
     {
         Frame::damage(box());
     }

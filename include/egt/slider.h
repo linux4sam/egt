@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_SLIDERWIDGET_H
-#define EGT_SLIDERWIDGET_H
+#ifndef EGT_SLIDER_H
+#define EGT_SLIDER_H
 
 #include <cassert>
 #include <egt/detail/math.h>
