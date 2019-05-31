@@ -17,7 +17,7 @@ namespace detail
 {
 
 /**
- * Returns the value of π, accurate to the type used.
+ * Returns the value of PI, accurate to the type used.
  */
 template<typename T>
 constexpr T pi()
@@ -26,7 +26,7 @@ constexpr T pi()
 }
 
 /**
- * Returns the value of π/2, accurate to the type used.
+ * Returns the value of PI/2, accurate to the type used.
  */
 template<typename T>
 constexpr T pi_2()
