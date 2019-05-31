@@ -40,7 +40,7 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::black);
 
-    auto window = make_shared<VideoWindow>(Rect(0, 0, w, h));
+    auto window = make_shared<VideoWindow>(Rect(0, 0, w, h), pixel_format::yuv420, windowhint::overlay);
     window->set_media(argv[1]);
     window->set_name("video");
     window->move_to_center(win.center());
