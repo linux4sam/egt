@@ -859,7 +859,7 @@ private:
      * This may or may not be a complete palette.  If a color does not exist in
      * this instance, it will refer to the default_palette().
      *
-     * @note This should not be accessed directly.  Always use the accessor
+     * @note This should not be accessed directly.  Always use the access
      * functions because this may not be a complete Palette.
      */
     std::unique_ptr<Palette> m_palette;
@@ -917,7 +917,7 @@ private:
     /**
      * Instance theme for the widget.
      *
-     * @note This should not be accessed directly.  Always use the accessor
+     * @note This should not be accessed directly.  Always use the access
      * functions because this is not set until it is modified.
      */
     std::unique_ptr<Theme> m_theme;

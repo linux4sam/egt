@@ -111,7 +111,7 @@ protected:
 @subpage events_loop
 
 The underlying EventLoop implementation uses Asio, which you can directly access
-and is part of the full EGT API.  Asio provides an excellent asychronous
+and is part of the full EGT API.  Asio provides an excellent asynchronous
 networking implementation that you get for free with EGT. It can provide
 efficient non-blocking I/O to service thousands of connections at once. The asio
 transport handles all aspects of networking (DNS lookups, creating TCP sockets,

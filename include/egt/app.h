@@ -35,7 +35,7 @@ inline namespace v1
  *
  * This is basically just a helper class that does standard setup for
  * inputs, outputs, the event loop, and more. It also acts as sort of a
- * global accessor to get to these things because of this.
+ * global access to get to these things because of this.
  */
 class Application : public detail::noncopyable
 {

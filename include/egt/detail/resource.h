@@ -45,7 +45,7 @@ bool read_resource(const char* name, unsigned char* data,
 
 /**
  * Helper function specifically for cairo's cairo_image_surface_create_from_png_stream().
- * @warning This operates as an unresetable stream making it single use.
+ * @warning This operates as an unrepeatable stream making it single use.
  */
 cairo_status_t read_resource_stream(void* closure, unsigned char* data, unsigned int length);
 

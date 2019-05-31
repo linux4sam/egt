@@ -44,7 +44,7 @@ enum class windowhint
     overlay,
 
     /**
-     * Request specifically an heo overlay plane.
+     * Request specifically an HEO overlay plane.
      */
     heo_overlay,
 
