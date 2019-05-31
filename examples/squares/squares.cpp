@@ -100,7 +100,7 @@ int main(int argc, const char** argv)
     });
     timer.start();
 
-    int index = 0;
+    size_t index = 0;
     vector<std::pair<int, int>> sets =
     {
         {100, 100},
