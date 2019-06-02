@@ -10,6 +10,14 @@
 using namespace std;
 using namespace egt;
 
+template<typename T, typename RandomGenerator>
+T random_item(T start, T end, RandomGenerator& e)
+{
+    std::uniform_int_distribution<> dist(0, std::distance(start, end) - 1);
+    std::advance(start, dist(e));
+    return start;
+}
+
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "squares");
@@ -47,7 +55,7 @@ int main(int argc, const char** argv)
         label_dims.set_text(ss.str());
     }
 
-    const vector<Color> colors =
+    const vector<Color> colors1 =
     {
         Palette::red,
         Palette::green,
@@ -68,11 +76,53 @@ int main(int argc, const char** argv)
         Palette::lightblue,
     };
 
+    const vector<Color> colors2 =
+    {
+        Color(Palette::red, 128),
+        Color(Palette::green, 128),
+        Color(Palette::blue, 128),
+        Color(Palette::yellow, 128),
+        Color(Palette::cyan, 128),
+        Color(Palette::magenta, 128),
+        Color(Palette::silver, 128),
+        Color(Palette::gray, 128),
+        Color(Palette::lightgray, 128),
+        Color(Palette::maroon, 128),
+        Color(Palette::olive, 128),
+        Color(Palette::purple, 128),
+        Color(Palette::teal, 128),
+        Color(Palette::navy, 128),
+        Color(Palette::orange, 128),
+        Color(Palette::aqua, 128),
+        Color(Palette::lightblue, 128),
+    };
+
+    size_t index = 0;
+    struct test_data
+    {
+        test_data(int w, int h, const vector<Color>& colors)
+            : w(w), h(h), colors(colors)
+        {}
+
+        int w;
+        int h;
+        vector<Color> colors;
+    };
+
+    vector<test_data> sets =
+    {
+        test_data(100, 100, colors1),
+        test_data(200, 200, colors1),
+        test_data(800, 480, colors1),
+        test_data(100, 100, colors2),
+        test_data(200, 200, colors2),
+        test_data(800, 480, colors2),
+    };
+
     std::random_device r;
     std::default_random_engine e1 {r()};
     std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.w() - width)};
     std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.h() - height)};
-    std::uniform_int_distribution<int> color_dist {0, static_cast<int>(colors.size()) - 1};
 
     experimental::Fps fps;
     fps.start();
@@ -83,7 +133,8 @@ int main(int argc, const char** argv)
         Rect rect(x_dist(e1), y_dist(e1), width, height);
 
         Painter painter(win.screen()->context());
-        painter.set(colors[color_dist(e1)]);
+        auto color = *random_item(sets[index].colors.begin(), sets[index].colors.end(), e1);
+        painter.set(color);
         painter.draw(rect);
         painter.fill();
 
@@ -96,17 +147,8 @@ int main(int argc, const char** argv)
         win.screen()->flip(damage);
 
         fps.end_frame();
-
     });
     timer.start();
-
-    size_t index = 0;
-    vector<std::pair<int, int>> sets =
-    {
-        {100, 100},
-        {200, 200},
-        {800, 480}
-    };
 
     PeriodicTimer vtimer(std::chrono::seconds(10));
     vtimer.on_timeout([&]()
@@ -114,8 +156,8 @@ int main(int argc, const char** argv)
         index++;
         if (index >= sets.size())
             index = 0;
-        width = sets[index].first;
-        height = sets[index].second;
+        width = sets[index].w;
+        height = sets[index].h;
 
         ostringstream ss;
         ss << width << "," << height;
