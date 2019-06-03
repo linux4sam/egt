@@ -330,19 +330,20 @@ struct ComboPage : public NotebookTab
 {
     ComboPage()
     {
-        auto grid = std::make_shared<StaticGrid>(Tuple(1, 3));
-        add(expand(grid));
+        auto vsizer =
+            std::make_shared<BoxSizer>(orientation::vertical);
+        add(expand(vsizer));
 
         {
             ComboBox::item_array combo_items;
             for (auto x = 0; x < 5; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo1 = std::make_shared<ComboBox>(combo_items);
-            grid->add(combo1);
+            vsizer->add(combo1);
 
             auto combo2 = std::make_shared<ComboBox>(combo_items);
             combo2->disable();
-            grid->add(combo2);
+            vsizer->add(combo2);
         }
 
         {
@@ -350,7 +351,7 @@ struct ComboPage : public NotebookTab
             for (auto x = 0; x < 25; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo3 = std::make_shared<ComboBox>(combo_items);
-            grid->add(combo3);
+            vsizer->add(combo3);
         }
     }
 };
