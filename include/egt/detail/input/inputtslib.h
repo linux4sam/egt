@@ -41,6 +41,7 @@ private:
     asio::posix::stream_descriptor m_input;
     std::unique_ptr<tslibimpl> m_impl;
     bool m_active{false};
+    DisplayPoint m_last_point;
 };
 
 }

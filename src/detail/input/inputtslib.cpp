@@ -119,19 +119,21 @@ void InputTslib::handle_read(const asio::error_code& error)
             {
                 if (samp_mt[j][i].pen_down == 0)
                 {
-                    m_pointer.point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
-                    m_pointer.button = pointer_button::touch;
                     m_active = false;
-                    DBG("mouse up " << m_pointer.point);
-                    dispatch(eventid::raw_pointer_up);
+
+                    DBG("mouse up " << m_last_point);
+
+                    m_last_point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
+                    Event event(eventid::raw_pointer_up, m_last_point);
+                    event.pointer().btn = Pointer::button::touch;
+                    dispatch(event);
                 }
                 else
                 {
                     DisplayPoint point(samp_mt[j][i].x, samp_mt[j][i].y);
-                    if (delta(m_pointer.point, point, 5))
+                    if (delta(m_last_point, point, 5))
                     {
-                        m_pointer.point = point;
-                        m_pointer.button = pointer_button::touch;
+                        m_last_point = point;
                         move = true;
                     }
                 }
@@ -140,8 +142,7 @@ void InputTslib::handle_read(const asio::error_code& error)
             {
                 if (samp_mt[j][i].pen_down == 1)
                 {
-                    m_pointer.point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
-                    m_pointer.button = pointer_button::touch;
+                    m_last_point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
 
                     std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> tv
                     {
@@ -153,13 +154,19 @@ void InputTslib::handle_read(const asio::error_code& error)
                     if (m_impl->last_down.time_since_epoch().count() &&
                         chrono::duration<double, milli>(tv - m_impl->last_down).count() < DOUBLE_CLICK_DELTA)
                     {
-                        dispatch(eventid::pointer_dblclick);
+                        Event event(eventid::pointer_dblclick, m_last_point);
+                        event.pointer().btn = Pointer::button::touch;
+                        dispatch(event);
                     }
                     else
                     {
-                        DBG("mouse down " << m_pointer.point);
-                        dispatch(eventid::raw_pointer_down);
                         m_active = true;
+
+                        DBG("mouse down " << m_last_point);
+
+                        Event event(eventid::raw_pointer_down, m_last_point);
+                        event.pointer().btn = Pointer::button::touch;
+                        dispatch(event);
                     }
 
                     m_impl->last_down = tv;
@@ -170,8 +177,11 @@ void InputTslib::handle_read(const asio::error_code& error)
 
     if (move)
     {
-        DBG("mouse move " << m_pointer.point);
-        dispatch(eventid::raw_pointer_move);
+        DBG("mouse move " << m_last_point);
+
+        Event event(eventid::raw_pointer_move, m_last_point);
+        event.pointer().btn = Pointer::button::touch;
+        dispatch(event);
     }
 
 #ifdef USE_PRIORITY_QUEUE
