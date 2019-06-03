@@ -54,7 +54,7 @@ static struct libinput* tools_open_udev(const char* seat, bool verbose, bool gra
     if (!udev)
     {
         fprintf(stderr, "Failed to initialize udev\n");
-        return NULL;
+        return nullptr;
     }
 
     li = libinput_udev_create_context(&interface, &grab, udev);
@@ -73,7 +73,7 @@ static struct libinput* tools_open_udev(const char* seat, bool verbose, bool gra
     {
         fprintf(stderr, "Failed to set seat\n");
         libinput_unref(li);
-        li = NULL;
+        li = nullptr;
         goto out;
     }
 

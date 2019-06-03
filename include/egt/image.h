@@ -108,20 +108,20 @@ public:
     /**
      * Get the horizontal scale value.
      */
-    double hscale() const { return m_hscale; }
+    inline double hscale() const { return m_hscale; }
 
     /**
      * Get the vertical scale value.
      */
-    double vscale() const { return m_vscale; }
+    inline double vscale() const { return m_vscale; }
 
     /**
      * Get the absolute size of the image.
      */
-    Size size() const
+    inline Size size() const
     {
         if (empty())
-            return Size();
+            return {};
 
         return Size(cairo_image_surface_get_width(surface().get()),
                     cairo_image_surface_get_height(surface().get()));
@@ -130,7 +130,7 @@ public:
     /**
      * Returns true if no internal surface is set.
      */
-    bool empty() const
+    inline bool empty() const
     {
         return !surface();
     }
@@ -138,7 +138,7 @@ public:
     /**
      * Get a reference to the internal image surface.
      */
-    shared_cairo_surface_t surface() const
+    inline shared_cairo_surface_t surface() const
     {
         if (m_surface_local.get())
             return m_surface_local;
@@ -149,7 +149,7 @@ public:
      * Get the original size of the image before any Image::resize() or
      * Image::scale() calls.
      */
-    Size size_orig() const { return m_orig_size; }
+    inline Size size_orig() const { return m_orig_size; }
 
     /**
      * This function must be called any time the surface is going to be

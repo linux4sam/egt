@@ -52,6 +52,8 @@ public:
         Painter& m_painter;
     };
 
+    Painter() = delete;
+
     /**
      * @todo Painter needs to come from the Screen. This constructor should
      * be hidden and you should have to get a custom version of it from the
@@ -213,10 +215,6 @@ protected:
      * Cairo context.
      */
     shared_cairo_t m_cr;
-
-private:
-
-    Painter() = delete;
 };
 
 }

@@ -133,8 +133,6 @@ void FileDialog::list_item_selected(int index)
     }
 }
 
-FileDialog::~FileDialog() { }
-
 FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
       m_grid(std::make_shared<StaticGrid>(Rect(Size(rect.w / 2, (rect.h * 0.10))), Tuple(2, 1), 5)),

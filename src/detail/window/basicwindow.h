@@ -25,7 +25,7 @@ public:
 
     explicit BasicWindow(Window* interface);
 
-    virtual ~BasicWindow();
+    virtual ~BasicWindow() = default;
 };
 
 /**
@@ -37,7 +37,7 @@ public:
 
     explicit BasicTopWindow(Window* interface);
 
-    virtual ~BasicTopWindow();
+    virtual ~BasicTopWindow() = default;
 };
 
 }

@@ -92,9 +92,5 @@ void Notebook::set_select(uint32_t index)
     }
 }
 
-Notebook::~Notebook()
-{
-}
-
 }
 }

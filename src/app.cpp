@@ -156,13 +156,19 @@ Application::Application(int argc, const char** argv, const std::string& name, b
                 {
                     // absolute or relative path
                     if (target[0] == '/')
+                    {
                         device = target;
+                    }
                     else
-                        device = detail::extract_dirname(device) + "/" + target;
+                    {
+                        device += detail::extract_dirname(device);
+                        device += "/";
+                        device += target;
+                    }
                 }
 
                 if (detail::exists(device))
-                    m_input_devices.push_back(pair<string, string>(library, device));
+                    m_input_devices.emplace_back(pair<string, string>(library, device));
             }
         }
     }

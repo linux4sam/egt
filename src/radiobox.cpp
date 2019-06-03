@@ -71,14 +71,14 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
     auto handle = rects[0].rect + b.point();
     auto text = rects[1].rect + b.point();
 
-    painter.draw(Circle(handle.center(), std::min(handle.w, handle.h) / 2));
+    painter.draw(Circle(handle.center(), std::min(handle.w, handle.h) / 2.));
     painter.set(widget.color(Palette::ColorId::button_fg).color());
     painter.set_line_width(widget.theme().default_border());
     painter.stroke();
 
     if (widget.checked())
     {
-        painter.draw(Circle(handle.center(), std::min(handle.w, handle.h) / 2 / 2));
+        painter.draw(Circle(handle.center(), std::min(handle.w, handle.h) / 2. / 2.));
         painter.fill();
     }
 

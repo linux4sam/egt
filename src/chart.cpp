@@ -64,7 +64,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
     cfg->ticline.clr.rgba[2] = tc.greenf();
     cfg->ticline.clr.rgba[3] = tc.alphaf();
 
-    struct kdatacfg dcfg;
+    struct kdatacfg dcfg {};
     kdatacfg_defaults(&dcfg);
     dcfg.line.sz = m_linewidth;
     dcfg.line.clr.type = KPLOTCTYPE_PATTERN;

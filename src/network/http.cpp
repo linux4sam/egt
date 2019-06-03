@@ -206,7 +206,7 @@ static size_t write_callback(char* ptr, size_t size, size_t nmemb, void* userdat
 {
     auto written = size * nmemb;
     string str(static_cast<const char*>(ptr), written);
-    detail::HttpClientRequestData* s = static_cast<detail::HttpClientRequestData*>(userdata);
+    auto s = static_cast<detail::HttpClientRequestData*>(userdata);
     s->buffer.insert(s->buffer.end(), str.begin(), str.end());
     return written;
 }
@@ -245,7 +245,7 @@ static curl_socket_t opensocket_callback(void* clientp,
 
 static int closesocket_callback(void* clientp, curl_socket_t item)
 {
-    HttpClientRequest* s = static_cast<HttpClientRequest*>(clientp);
+    auto s = static_cast<HttpClientRequest*>(clientp);
     assert(s);
     asio::error_code ec;
     if (s->impl()->socket)

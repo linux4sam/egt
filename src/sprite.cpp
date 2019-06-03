@@ -46,7 +46,7 @@ public:
 
     virtual shared_cairo_surface_t surface() const override;
 
-    virtual ~HardwareSprite();
+    virtual ~HardwareSprite() = default;
 protected:
     ImageLabel m_label;
     Sprite& m_interface;
@@ -71,7 +71,7 @@ public:
 
     virtual shared_cairo_surface_t surface() const override;
 
-    virtual ~SoftwareSprite();
+    virtual ~SoftwareSprite() = default;
 protected:
     Sprite& m_interface;
 };
@@ -155,9 +155,6 @@ void HardwareSprite::paint(Painter& painter)
     painter.draw(Image(surface()));
 }
 
-HardwareSprite::~HardwareSprite()
-{}
-
 #endif
 
 SoftwareSprite::SoftwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
@@ -198,10 +195,6 @@ void SoftwareSprite::paint(Painter& painter)
     auto cr = painter.context();
     cairo_move_to(cr.get(), m_interface.point().x, m_interface.point().y);
     painter.draw(Image(surface()));
-}
-
-SoftwareSprite::~SoftwareSprite()
-{
 }
 
 }
@@ -267,10 +260,10 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
 {
 #ifdef HAVE_LIBPLANES
     if (flags().is_set(Widget::flag::plane_window))
-        m_simpl.reset(new detail::HardwareSprite(*this, image, frame_size, framecount, frame_point));
+        m_simpl = make_unique<detail::HardwareSprite>(*this, image, frame_size, framecount, frame_point);
     else
 #endif
-        m_simpl.reset(new detail::SoftwareSprite(*this, image, frame_size, framecount, frame_point));
+        m_simpl = make_unique<detail::SoftwareSprite>(*this, image, frame_size, framecount, frame_point);
 }
 
 }

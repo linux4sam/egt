@@ -30,7 +30,7 @@ inline namespace v1
  * @warning A Screen is not necessarily the same resolution and orientation of
  * the Display.
  */
-class Screen
+class Screen : public detail::noncopyable
 {
 public:
 
@@ -39,7 +39,7 @@ public:
      */
     using damage_array = std::vector<Rect>;
 
-    Screen();
+    Screen() = default;
 
     /**
      * Perform a flip of the buffers.
@@ -83,7 +83,7 @@ public:
     static void damage_algorithm(Screen::damage_array& damage,
                                  const Rect& rect);
 
-    virtual ~Screen();
+    virtual ~Screen() = default;
 
 protected:
 

@@ -20,8 +20,7 @@ class ShamrockTheme : public Theme
 {
 public:
 
-    ShamrockTheme()
-    {}
+    ShamrockTheme() = default;
 
     virtual ~ShamrockTheme() = default;
 

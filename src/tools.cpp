@@ -16,9 +16,6 @@ namespace egt
 inline namespace v1
 {
 
-CPUMonitorUsage::CPUMonitorUsage()
-{}
-
 void CPUMonitorUsage::update()
 {
     std::ifstream fp("/proc/stat");
@@ -60,9 +57,6 @@ void CPUMonitorUsage::update()
         fp.close();
     }
 }
-
-CPUMonitorUsage::~CPUMonitorUsage()
-{}
 
 }
 }

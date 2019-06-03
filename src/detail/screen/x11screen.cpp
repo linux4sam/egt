@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "detail/screen/keysym_to_unicode.h"
 #include "detail/screen/keyboard_code_conversion_x.h"
+#include "detail/screen/keysym_to_unicode.h"
 #include "detail/screen/x11wrap.h"
 #include "egt/app.h"
 #include "egt/detail/screen/x11screen.h"

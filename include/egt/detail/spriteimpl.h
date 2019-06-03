@@ -76,7 +76,7 @@ public:
 
     struct strip
     {
-        int framecount;
+        int framecount{0};
         Point point;
     };
 

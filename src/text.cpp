@@ -646,7 +646,7 @@ void TextBox::add_validator_function(validator_callback_t callback)
 
 bool TextBox::validate_input(const std::string& str)
 {
-    for (auto callback : m_validator_callbacks)
+    for (auto& callback : m_validator_callbacks)
     {
         auto valid = callback(str);
         if (!valid)

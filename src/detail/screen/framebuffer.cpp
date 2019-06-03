@@ -22,8 +22,8 @@ namespace detail
 
 FrameBuffer::FrameBuffer(const string& path)
 {
-    struct fb_fix_screeninfo fixinfo;
-    struct fb_var_screeninfo varinfo;
+    struct fb_fix_screeninfo fixinfo {};
+    struct fb_var_screeninfo varinfo {};
 
     m_fd = ::open(path.c_str(), O_RDWR);
     if (m_fd < 0)

@@ -61,7 +61,7 @@ void Dialog::set_title(const std::string& title)
 {
     if (!m_title)
     {
-        m_title.reset(new ImageLabel(Image("@folder.png"), title, Rect(0, 0, w(), (h() * 0.10))));
+        m_title = std::make_shared<ImageLabel>(Image("@folder.png"), title, Rect(0, 0, w(), (h() * 0.10)));
         m_title->set_align(alignmask::top | alignmask::left);
         m_title->set_text_align(alignmask::left | alignmask::center);
         m_vsizer->add(expand_horizontal(m_title));
@@ -76,7 +76,7 @@ void Dialog::set_title(const Image& icon, const std::string& title)
 {
     if (!m_title)
     {
-        m_title.reset(new ImageLabel(icon, title, Rect(0, 0, w(), (h() * 0.10))));
+        m_title = std::make_shared<ImageLabel>(icon, title, Rect(0, 0, w(), (h() * 0.10)));
         m_title->set_align(alignmask::top | alignmask::left);
         m_title->set_text_align(alignmask::left | alignmask::center);
         m_vsizer->add(expand_horizontal(m_title));
@@ -91,7 +91,7 @@ void Dialog::set_message(const std::string& message)
 {
     if (!m_message)
     {
-        m_message.reset(new TextBox(message, Rect(), alignmask::left | alignmask::center));
+        m_message = std::make_shared<TextBox>(message, Rect(), alignmask::left | alignmask::center);
         m_message->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
         m_message->set_color(Palette::ColorId::border, Palette::transparent);
         m_vsizer->add(expand(m_message));

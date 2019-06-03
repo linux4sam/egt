@@ -17,8 +17,8 @@ bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
 {
     if (Rect::intersect(lhs, rhs))
     {
-        unsigned int* ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
-        unsigned int* rdata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(rimage.get()));
+        auto ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
+        auto rdata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(rimage.get()));
 
         Rect i = Rect::intersection(lhs, rhs);
 
@@ -45,7 +45,7 @@ bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
 {
     if (Rect::intersect(lhs, rhs))
     {
-        unsigned int* ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
+        auto ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
 
         for (int y = lhs.top(); y < lhs.bottom(); y++)
         {

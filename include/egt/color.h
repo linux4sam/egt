@@ -73,9 +73,9 @@ public:
           m_a(a & 0xff)
     {}
 
-    constexpr static inline Color rgb(uint32_t c)
+    constexpr static inline Color rgb(uint32_t c) noexcept
     {
-        return Color(c << 8 | 0xff);
+        return {c << 8 | 0xff};
     }
 
     /**
@@ -258,7 +258,7 @@ struct Pattern
         if (!m_steps.empty())
             return m_steps.begin()->second;
 
-        return Color();
+        return {};
     }
 
     Color& color()

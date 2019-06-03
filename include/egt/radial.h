@@ -158,10 +158,10 @@ public:
         auto color4 = widget.color(Palette::ColorId::button_fg).color();
 
         float smalldim = std::min(b.w, b.h);
-        float linew = smalldim / 10;
-        float radius = smalldim / 2 - (linew / 2);
-        float angle1 = detail::to_radians<float>(-90, 0);
-        float angle2 = detail::to_radians<float>(-90, v);
+        float linew = smalldim / 10.;
+        float radius = smalldim / 2. - (linew / 2.);
+        auto angle1 = detail::to_radians<float>(-90, 0);
+        auto angle2 = detail::to_radians<float>(-90, v);
 
         auto c = b.center();
 
@@ -238,7 +238,7 @@ public:
     {
         const auto b = this->content_area();
         const Point c = b.center();
-        float radians = c.angle_to<float>(point);
+        auto radians = c.angle_to<float>(point);
         float angle = detail::to_degrees(radians);
         if (angle < 0)
             angle = angle + 360.;

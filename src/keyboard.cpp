@@ -27,7 +27,6 @@ Keyboard::Key::Key(std::string label, int link, double length)
 
 Keyboard::Key::Key(std::string label, shared_ptr<MultichoicePanel> multichoice, double length)
     : Button(label),
-      m_link(-1),
       m_length(length),
       m_multichoice(multichoice)
 {}
@@ -43,8 +42,7 @@ int Keyboard::Key::link() const
 }
 
 Panel::Panel(std::vector<std::vector<std::shared_ptr<Keyboard::Key>>> keys, Size key_size)
-    : VerticalBoxSizer(),
-      m_keys(keys)
+    : m_keys(keys)
 {
     set_align(alignmask::center);
 
@@ -66,16 +64,14 @@ Panel::Panel(std::vector<std::vector<std::shared_ptr<Keyboard::Key>>> keys, Size
 
 MainPanel::MainPanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
                      Size key_size)
-    : NotebookTab(),
-      m_panel(make_shared<Panel>(keys, key_size))
+    : m_panel(make_shared<Panel>(keys, key_size))
 {
     add(m_panel);
 }
 
 MultichoicePanel::MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
                                    Size key_size)
-    : NotebookTab(),
-      m_panel(make_shared<Panel>(keys, key_size))
+    : m_panel(make_shared<Panel>(keys, key_size))
 {
     add(m_panel);
 }

@@ -65,7 +65,7 @@ public:
 
     virtual void set_selected(const std::string& fselect) = 0;
 
-    virtual ~FileDialog();
+    virtual ~FileDialog() = default;
 
 protected:
     std::shared_ptr<BoxSizer> m_vsizer;

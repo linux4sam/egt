@@ -92,8 +92,6 @@ class noncopyable
 public:
     noncopyable() = default;
     ~noncopyable() = default;
-
-private:
     noncopyable(const noncopyable&) = delete;
     noncopyable& operator=(const noncopyable&) = delete;
 };
@@ -134,7 +132,7 @@ inline bool change_if_diff(float& old, const float& to)
  * This can be used to run a function when an instance of a scope_exit goes out
  * of scope or is deleted.
  */
-struct scope_exit
+struct scope_exit : public noncopyable
 {
     explicit scope_exit(std::function<void()> f) noexcept
         : m_f(std::move(f))

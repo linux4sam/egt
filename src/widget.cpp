@@ -237,7 +237,7 @@ Point Widget::point() const
 
 void Widget::set_palette(const Palette& palette)
 {
-    m_palette.reset(new Palette(palette));
+    m_palette = make_unique<Palette>(palette);
     damage();
 }
 
@@ -379,7 +379,7 @@ void Widget::walk(walk_callback_t callback, int level)
 
 void Widget::set_theme(const Theme& theme)
 {
-    m_theme.reset(new Theme(theme));
+    m_theme = make_unique<Theme>(theme);
 }
 
 void Widget::reset_theme()
@@ -395,7 +395,7 @@ void Widget::draw_box(Painter& painter, Palette::ColorId bg,
 
 const Theme& Widget::theme() const
 {
-    if (m_theme.get())
+    if (m_theme)
         return *m_theme;
 
     if (parent())

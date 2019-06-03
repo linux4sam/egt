@@ -103,7 +103,7 @@ protected:
     /// @private
     struct data_set
     {
-        chart_type type;
+        chart_type type{chart_type::points};
         data_array data;
     };
 

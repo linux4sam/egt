@@ -17,8 +17,7 @@ class MidnightTheme : public Theme
 {
 public:
 
-    MidnightTheme()
-    {}
+    MidnightTheme() = default;
 
     virtual ~MidnightTheme() = default;
 

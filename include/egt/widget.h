@@ -798,7 +798,7 @@ public:
         if (m_font && *m_font == font)
             return;
 
-        m_font.reset(new Font(font));
+        m_font = make_unique<Font>(font);
         damage();
         parent_layout();
     }

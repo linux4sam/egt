@@ -55,10 +55,10 @@ public:
           y(yd)
     {}
 
-    PointType<dim_t, dim_c>(const PointType<dim_t, dim_c>&) = default;
-    PointType<dim_t, dim_c>(PointType<dim_t, dim_c>&&) = default;
-    PointType<dim_t, dim_c>& operator=(const PointType<dim_t, dim_c>&) = default;
-    PointType<dim_t, dim_c>& operator=(PointType<dim_t, dim_c>&&) = default;
+    PointType<dim_t, dim_c>(const PointType<dim_t, dim_c>&) noexcept = default;
+    PointType<dim_t, dim_c>(PointType<dim_t, dim_c>&&) noexcept = default;
+    PointType<dim_t, dim_c>& operator=(const PointType<dim_t, dim_c>&) noexcept = default;
+    PointType<dim_t, dim_c>& operator=(PointType<dim_t, dim_c>&&) noexcept = default;
     ~PointType<dim_t, dim_c>() = default;
 
     PointType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
@@ -186,10 +186,10 @@ public:
           w(w_)
     {}
 
-    SizeType<dim_t, dim_c>(const SizeType<dim_t, dim_c>&) = default;
-    SizeType<dim_t, dim_c>(SizeType<dim_t, dim_c>&&) = default;
-    SizeType<dim_t, dim_c>& operator=(const SizeType<dim_t, dim_c>&) = default;
-    SizeType<dim_t, dim_c>& operator=(SizeType<dim_t, dim_c>&&) = default;
+    SizeType<dim_t, dim_c>(const SizeType<dim_t, dim_c>&) noexcept = default;
+    SizeType<dim_t, dim_c>(SizeType<dim_t, dim_c>&&) noexcept = default;
+    SizeType<dim_t, dim_c>& operator=(const SizeType<dim_t, dim_c>&) noexcept = default;
+    SizeType<dim_t, dim_c>& operator=(SizeType<dim_t, dim_c>&&) noexcept = default;
     ~SizeType<dim_t, dim_c>() = default;
 
     /**
@@ -364,10 +364,10 @@ public:
         assert(h >= 0);
     }
 
-    RectType<dim_t, dim_c>(const RectType<dim_t, dim_c>&) = default;
-    RectType<dim_t, dim_c>(RectType<dim_t, dim_c>&&) = default;
-    RectType<dim_t, dim_c>& operator=(const RectType<dim_t, dim_c>&) = default;
-    RectType<dim_t, dim_c>& operator=(RectType<dim_t, dim_c>&&) = default;
+    RectType<dim_t, dim_c>(const RectType<dim_t, dim_c>&) noexcept = default;
+    RectType<dim_t, dim_c>(RectType<dim_t, dim_c>&&) noexcept = default;
+    RectType<dim_t, dim_c>& operator=(const RectType<dim_t, dim_c>&) noexcept = default;
+    RectType<dim_t, dim_c>& operator=(RectType<dim_t, dim_c>&&) noexcept = default;
     ~RectType<dim_t, dim_c>() = default;
 
     RectType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)

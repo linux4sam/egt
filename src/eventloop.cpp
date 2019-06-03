@@ -152,6 +152,5 @@ void EventLoop::invoke_idle_callbacks()
 
 EventLoop::~EventLoop()
 {}
-
 }
 }

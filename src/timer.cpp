@@ -124,9 +124,6 @@ Timer::~Timer() noexcept
         timers.erase(i);
 }
 
-PeriodicTimer::PeriodicTimer() noexcept
-{}
-
 PeriodicTimer::PeriodicTimer(std::chrono::milliseconds interval) noexcept
     : Timer(interval)
 {}

@@ -89,7 +89,7 @@ public:
     inline void add_callback(animation_callback_t callback = nullptr)
     {
         if (callback)
-            m_callbacks.push_back(callback);
+            m_callbacks.emplace_back(std::move(callback));
     }
 
     /**

@@ -23,7 +23,7 @@ class CPUMonitorUsage
 {
 public:
 
-    CPUMonitorUsage();
+    CPUMonitorUsage() = default;
 
     double usage(unsigned int index = 0) const { return m_cpu_usage[index]; }
 
@@ -33,7 +33,7 @@ public:
      */
     void update();
 
-    virtual ~CPUMonitorUsage();
+    virtual ~CPUMonitorUsage() = default;
 
 private:
 

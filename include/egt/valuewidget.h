@@ -30,6 +30,8 @@ class ValueWidget : public Widget
 {
 public:
 
+    ValueWidget() = delete;
+
     /**
      * @param[in] rect Rectangle for the widget.
      * @param[in] value Current value in the range.
@@ -64,8 +66,6 @@ public:
 
 protected:
     T m_value;
-
-    ValueWidget() = delete;
 };
 
 /**
@@ -78,6 +78,8 @@ template<class T>
 class ValueRangeWidget : public Widget
 {
 public:
+
+    ValueRangeWidget() = delete;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -190,8 +192,6 @@ protected:
      * The current value.
      */
     T m_value;
-
-    ValueRangeWidget() = delete;
 };
 
 }

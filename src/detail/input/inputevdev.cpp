@@ -53,7 +53,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
         return;
     }
 
-    struct input_event* ev = reinterpret_cast<struct input_event*>(m_input_buf.data());
+    auto ev = reinterpret_cast<struct input_event*>(m_input_buf.data());
     struct input_event* e, *end;
 
     int dx = 0;
@@ -177,10 +177,6 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                      std::bind(&InputEvDev::handle_read, this,
                                std::placeholders::_1,
                                std::placeholders::_2));
-}
-
-InputEvDev::~InputEvDev()
-{
 }
 
 }

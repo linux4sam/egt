@@ -20,20 +20,12 @@ BasicWindow::BasicWindow(Window* interface)
 
 }
 
-BasicWindow::~BasicWindow()
-{
-}
-
 BasicTopWindow::BasicTopWindow(Window* interface)
     : BasicWindow(interface)
 {
     // go ahead and pick up the default screen
     assert(main_screen());
     m_screen = main_screen();
-}
-
-BasicTopWindow::~BasicTopWindow()
-{
 }
 
 }

@@ -17,8 +17,7 @@ class SkyTheme : public Theme
 {
 public:
 
-    SkyTheme()
-    {}
+    SkyTheme() = default;
 
     virtual ~SkyTheme() = default;
 

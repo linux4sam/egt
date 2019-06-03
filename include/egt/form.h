@@ -36,8 +36,7 @@ class Form : public Frame
 public:
 
     explicit Form(const std::string& title = std::string()) noexcept
-        : Frame(),
-          m_vsizer(orientation::vertical)
+        : m_vsizer(orientation::vertical)
     {
         set_name("Form" + std::to_string(m_widgetid));
 

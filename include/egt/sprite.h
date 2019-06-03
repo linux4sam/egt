@@ -34,6 +34,9 @@ class HardwareSprite;
 class Sprite : public Window
 {
 public:
+
+    Sprite() = delete;
+
     Sprite(const Image& image, const Size& frame_size,
            int framecount, const Point& frame_point,
            const Point& point = Point());
@@ -88,10 +91,6 @@ protected:
     friend class detail::SpriteImpl;
     friend class detail::SoftwareSprite;
     friend class detail::HardwareSprite;
-
-private:
-
-    Sprite() = delete;
 };
 
 }

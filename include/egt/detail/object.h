@@ -108,6 +108,8 @@ public:
 
 protected:
 
+    uint32_t m_handle_counter{0};
+
     struct callback_meta
     {
         callback_meta(event_callback_t c,
@@ -131,8 +133,6 @@ protected:
      * A user defined name for the Object.
      */
     std::string m_name;
-
-    uint32_t m_handle_counter{0};
 };
 
 }

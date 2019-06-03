@@ -40,8 +40,7 @@ std::string trim(const std::string& source, const std::string& t)
     if (source.empty())
         return source;
 
-    std::string str = source;
-    return ltrim(rtrim(str, t), t);
+    return ltrim(rtrim(source, t), t);
 }
 
 void tokenize(const std::string& str, char delimiter, std::vector<std::string>& tokens)

@@ -33,9 +33,7 @@ void set_global_theme(Theme* theme)
 {
     assert(theme);
 
-    if (g_theme)
-        delete g_theme;
-
+    delete g_theme;
     g_theme = theme;
 
     if (g_theme)

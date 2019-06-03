@@ -74,7 +74,7 @@ std::string resolve_file_path(const std::string& filename)
     for (auto& path : image_paths)
     {
         auto test = path + filename;
-        struct stat buf;
+        struct stat buf {};
         if (!stat(test.c_str(), &buf))
         {
             DBG("found file " << test);
@@ -106,7 +106,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 
     if (hscale == 1.0 && vscale == 1.0)
     {
-        assert(CAIRO_HAS_PNG_FUNCTIONS == 1);
+        static_assert(CAIRO_HAS_PNG_FUNCTIONS == 1, "PNG support assumed.");
 
         if (filename.compare(0, 1, ":") == 0)
         {

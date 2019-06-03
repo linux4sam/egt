@@ -26,10 +26,6 @@ Screen*& main_screen()
     return the_screen;
 }
 
-Screen::Screen()
-{
-}
-
 void Screen::flip(const damage_array& damage)
 {
     if (!damage.empty() && index() < m_buffers.size())
@@ -59,10 +55,6 @@ void Screen::copy_to_buffer(DisplayBuffer& buffer)
 
     cairo_fill(buffer.cr.get());
     cairo_surface_flush(buffer.surface.get());
-}
-
-Screen::~Screen()
-{
 }
 
 void Screen::damage_algorithm(Screen::damage_array& damage, const Rect& rect)

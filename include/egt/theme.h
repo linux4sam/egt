@@ -15,6 +15,7 @@
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
+#include <egt/utils.h>
 #include <functional>
 #include <memory>
 
@@ -140,10 +141,10 @@ public:
     Theme(const Theme& rhs)
     {
         if (rhs.m_palette)
-            m_palette.reset(new Palette(*rhs.m_palette));
+            m_palette = egt::make_unique<Palette>(*rhs.m_palette);
 
         if (rhs.m_font)
-            m_font.reset(new Font(*rhs.m_font));
+            m_font = egt::make_unique<Font>(*rhs.m_font);
     }
 
     Palette& palette()

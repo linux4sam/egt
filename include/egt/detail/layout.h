@@ -32,8 +32,7 @@ void flex_layout(Frame* frame, int max_level);
  */
 struct LayoutRect
 {
-    LayoutRect()
-    {}
+    LayoutRect() = default;
 
     LayoutRect(uint32_t b, const Rect& r,
                uint32_t lm = 0,

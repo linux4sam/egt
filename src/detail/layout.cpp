@@ -175,7 +175,7 @@ protected:
     {
         lay_item_t* item = lay_get_item(&ctx, id);
 
-        Widget* widget = static_cast<Widget*>(item->data);
+        auto widget = static_cast<Widget*>(item->data);
 
         if (!top)
         {

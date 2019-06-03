@@ -39,6 +39,8 @@ class Canvas
 {
 public:
 
+    Canvas() = delete;
+
     /**
      * Construct a canvas with the specified format and size.
      */
@@ -96,10 +98,6 @@ protected:
      * The context of the canvas.
      */
     shared_cairo_t m_cr;
-
-private:
-
-    Canvas() = delete;
 };
 
 }

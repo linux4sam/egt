@@ -137,7 +137,7 @@ public:
     inline void on_timeout(timer_callback_t callback)
     {
         if (callback)
-            m_callbacks.push_back(callback);
+            m_callbacks.emplace_back(std::move(callback));
     }
 
     /**
@@ -205,7 +205,7 @@ public:
      * The duration of the timer can be specified when calling
      * start_with_duration() instead.
      */
-    PeriodicTimer() noexcept;
+    PeriodicTimer() noexcept = default;
 
     /**
      * Construct a periodic timer with the specified duration.

@@ -76,6 +76,8 @@ public:
      */
     virtual void stop();
 
+    virtual ~MouseGesture() = default;
+
 protected:
 
     /**

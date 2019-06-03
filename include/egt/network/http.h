@@ -42,6 +42,8 @@ class HttpClientRequest : public detail::noncopyable
 {
 public:
 
+    HttpClientRequest() = delete;
+
     using buffer_type = std::vector<char>;
 
     using finish_callback_t = std::function < void(const std::string& url, buffer_type && buffer) >;
@@ -85,8 +87,6 @@ protected:
      * Implementation pointer.
      */
     std::unique_ptr<detail::HttpClientRequestData> m_impl;
-
-    HttpClientRequest() = delete;
 
     friend class detail::HttpClientRequestManager;
 };

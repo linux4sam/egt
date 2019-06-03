@@ -32,7 +32,7 @@ public:
 
     explicit InputEvDev(const std::string& path);
 
-    virtual ~InputEvDev();
+    virtual ~InputEvDev() = default;
 
 private:
     void handle_read(const asio::error_code& error, std::size_t length);

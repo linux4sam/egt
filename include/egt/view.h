@@ -106,7 +106,7 @@ public:
 
         if (!m_canvas || m_canvas->size() != s)
         {
-            m_canvas.reset(new Canvas(s));
+            m_canvas = std::make_shared<Canvas>(s);
             damage();
         }
     }

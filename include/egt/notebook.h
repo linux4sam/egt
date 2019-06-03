@@ -73,7 +73,7 @@ public:
 
     virtual void set_select(uint32_t index);
 
-    virtual ~Notebook();
+    virtual ~Notebook() = default;
 
 protected:
 

@@ -56,7 +56,7 @@ void Event::grab(Widget* widget)
     detail::mouse_grab(widget);
 }
 
-std::ostream& operator<<(std::ostream& os, const Pointer::button btn)
+std::ostream& operator<<(std::ostream& os, const Pointer::button& btn)
 {
     static std::map<Pointer::button, std::string> strings;
     if (strings.empty())
