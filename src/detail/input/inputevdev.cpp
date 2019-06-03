@@ -29,8 +29,9 @@ inline namespace v1
 namespace detail
 {
 
-InputEvDev::InputEvDev(const string& path)
-    : m_input(Application::instance().event().io()),
+InputEvDev::InputEvDev(Application& app, const string& path)
+    : m_app(app),
+      m_input(app.event().io()),
       m_input_buf(sizeof(struct input_event) * 10)
 {
     int fd = open(path.c_str(), O_RDONLY);

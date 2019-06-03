@@ -85,8 +85,9 @@ out:
 }
 
 
-InputLibInput::InputLibInput()
-    : m_input(Application::instance().event().io())
+InputLibInput::InputLibInput(Application& app)
+    : m_app(app),
+      m_input(app.event().io())
 {
     const char* seat_or_device = "seat0";
     bool verbose = false;
@@ -96,7 +97,13 @@ InputLibInput::InputLibInput()
     m_input.assign(libinput_get_fd(li));
 
     // go ahead and enumerate devices and start the first async_read
-    handle_read(asio::error_code());
+#ifdef USE_PRIORITY_QUEUE
+    asio::async_read(m_input, asio::null_buffers(),
+                     m_app.event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));
+#else
+    asio::async_read(m_input, asio::null_buffers(),
+                     std::bind(&InputLibInput::handle_read, this, std::placeholders::_1));
+#endif
 }
 
 void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
@@ -115,7 +122,7 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
     li = libinput_event_get_context(ev);
 
     // if the device is handled by another backend, disable libinput events
-    for (auto& device : Application::instance().get_input_devices())
+    for (auto& device : m_app.get_input_devices())
     {
         vector<string> tokens;
         detail::tokenize(device.second, '/', tokens);
@@ -291,7 +298,7 @@ void InputLibInput::handle_read(const asio::error_code& error)
 
 #ifdef USE_PRIORITY_QUEUE
     asio::async_read(m_input, asio::null_buffers(),
-                     Application::instance().event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));
+                     m_app.event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));
 #else
     asio::async_read(m_input, asio::null_buffers(),
                      std::bind(&InputLibInput::handle_read, this, std::placeholders::_1));

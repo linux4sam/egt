@@ -33,7 +33,7 @@ class InputLibInput : public Input
 {
 public:
 
-    InputLibInput();
+    InputLibInput(Application& app);
 
     virtual ~InputLibInput();
 
@@ -46,10 +46,9 @@ private:
 
     void handle_read(const asio::error_code& error);
 
+    Application& m_app;
     asio::posix::stream_descriptor m_input;
-
     struct libinput* li;
-
     DisplayPoint m_last_point;
 };
 

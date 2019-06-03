@@ -15,6 +15,8 @@ namespace egt
 {
 inline namespace v1
 {
+class Application;
+
 namespace detail
 {
 struct X11Data;
@@ -26,7 +28,7 @@ class X11Screen : public Screen
 {
 public:
 
-    explicit X11Screen(const Size& size = Size(800, 480), bool borderless = false);
+    explicit X11Screen(Application& app, const Size& size = Size(800, 480), bool borderless = false);
 
     virtual void schedule_flip() override {}
 
@@ -38,6 +40,7 @@ protected:
 
     void handle_read(const asio::error_code& error);
 
+    Application& m_app;
     std::unique_ptr<detail::X11Data> m_priv;
     asio::posix::stream_descriptor m_input;
 

@@ -33,9 +33,10 @@ struct X11Data
     Atom wmDeleteMessage;
 };
 
-X11Screen::X11Screen(const Size& size, bool borderless)
-    : m_priv(new detail::X11Data),
-      m_input(Application::instance().event().io())
+X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
+    : m_app(app),
+      m_priv(new detail::X11Data),
+      m_input(m_app.event().io())
 {
     spdlog::info("X11 Screen");
 
@@ -182,7 +183,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ClientMessage:
             if (static_cast<int>(e.xclient.data.l[0]) == static_cast<int>(m_priv->wmDeleteMessage))
-                Application::instance().event().quit();
+                m_app.event().quit();
             break;
         default:
             SPDLOG_DEBUG("x11 unhandled event: {}", e.type);

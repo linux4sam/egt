@@ -30,7 +30,7 @@ class InputTslib : public Input
 {
 public:
 
-    explicit InputTslib(const std::string& path);
+    explicit InputTslib(Application& app, const std::string& path);
 
     virtual ~InputTslib();
 
@@ -38,6 +38,7 @@ private:
 
     void handle_read(const asio::error_code& error);
 
+    Application& m_app;
     asio::posix::stream_descriptor m_input;
     std::unique_ptr<tslibimpl> m_impl;
     bool m_active{false};

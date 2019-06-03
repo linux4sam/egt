@@ -30,13 +30,14 @@ class InputEvDev : public Input
 {
 public:
 
-    explicit InputEvDev(const std::string& path);
+    explicit InputEvDev(Application& app, const std::string& path);
 
     virtual ~InputEvDev() = default;
 
 private:
     void handle_read(const asio::error_code& error, std::size_t length);
 
+    Application& m_app;
     asio::posix::stream_descriptor m_input;
     std::vector<char> m_input_buf;
     DisplayPoint m_last_point;

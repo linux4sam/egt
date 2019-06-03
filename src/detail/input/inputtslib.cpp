@@ -29,8 +29,9 @@ struct tslibimpl
     std::chrono::time_point<std::chrono::steady_clock> last_down;
 };
 
-InputTslib::InputTslib(const string& path)
-    : m_input(main_app().event().io()),
+InputTslib::InputTslib(Application& app, const string& path)
+    : m_app(app),
+      m_input(app.event().io()),
       m_impl(new detail::tslibimpl)
 {
     const int NONBLOCKING = 1;
@@ -187,7 +188,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 
 #ifdef USE_PRIORITY_QUEUE
     asio::async_read(m_input, asio::null_buffers(),
-                     main_app().event().queue().wrap(detail::priorities::moderate, std::bind(&InputTslib::handle_read, this, std::placeholders::_1)));
+                     m_app.event().queue().wrap(detail::priorities::moderate, std::bind(&InputTslib::handle_read, this, std::placeholders::_1)));
 #else
     asio::async_read(m_input, asio::null_buffers(),
                      std::bind(&InputTslib::handle_read, this, std::placeholders::_1));

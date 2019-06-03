@@ -86,9 +86,13 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     spdlog::info("EGT Version {}", EGT_VERSION);
 
     if (the_app)
-        throw std::runtime_error("Already an Application instance created.");
-
-    the_app = this;
+    {
+        spdlog::warn("more than one application instance created");
+    }
+    else
+    {
+        the_app = this;
+    }
 
     // first search install path
     detail::add_search_path(std::string(DATADIR));
@@ -132,7 +136,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
 #ifdef HAVE_X11
     if (backend == "x11")
-        new detail::X11Screen(Size(800, 480));
+        new detail::X11Screen(*this, Size(800, 480));
     else
 #endif
 #ifdef HAVE_LIBPLANES
@@ -197,19 +201,19 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         if (device.first == "tslib")
         {
 #ifdef HAVE_TSLIB
-            new detail::InputTslib(device.second);
+            new detail::InputTslib(*this, device.second);
 #endif
         }
         else if (device.first == "evdev")
         {
 #ifdef HAVE_LINUX_INPUT_H
-            new detail::InputEvDev(device.second);
+            new detail::InputEvDev(*this, device.second);
 #endif
         }
     }
 
 #ifdef HAVE_LIBINPUT
-    new detail::InputLibInput;
+    new detail::InputLibInput(*this);
 #endif
 }
 
