@@ -326,7 +326,7 @@ public:
      *
      * @param animation The animation.
      */
-    virtual void add(std::shared_ptr<detail::IAnimation> animation)
+    virtual void add(const std::shared_ptr<detail::IAnimation>& animation)
     {
         if (!animation)
             return;

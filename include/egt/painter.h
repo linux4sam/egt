@@ -218,7 +218,7 @@ public:
     /**
      * Get a Size from a surface.
      */
-    static inline Size surface_to_size(shared_cairo_surface_t surface)
+    static inline Size surface_to_size(const shared_cairo_surface_t& surface)
     {
         return Size(cairo_image_surface_get_width(surface.get()),
                     cairo_image_surface_get_height(surface.get()));

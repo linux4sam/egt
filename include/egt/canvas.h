@@ -68,7 +68,7 @@ public:
      *
      * @param[in] surface The surface to copy from. A copy will be made.
      */
-    explicit Canvas(shared_cairo_surface_t surface) noexcept;
+    explicit Canvas(const shared_cairo_surface_t& surface) noexcept;
 
     /**
      * Construct a canvas with an already existing surface, and specify the
@@ -79,7 +79,7 @@ public:
      * @param[in] surface The surface to copy from. A copy will be made.
      * @param[in] format The pixel format for the canvas.
      */
-    Canvas(shared_cairo_surface_t surface, pixel_format format) noexcept;
+    Canvas(const shared_cairo_surface_t& surface, pixel_format format) noexcept;
 
     /**
      * Get the context for the Canvas.
@@ -108,7 +108,7 @@ protected:
     /**
      * Create a copy of a surface.
      */
-    void copy(shared_cairo_surface_t surface);
+    void copy(const shared_cairo_surface_t& surface);
 
     /**
      * The surface of the canvas.

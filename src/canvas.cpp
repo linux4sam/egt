@@ -24,13 +24,13 @@ Canvas::Canvas(const SizeF& size, pixel_format format) noexcept
 {
 }
 
-Canvas::Canvas(shared_cairo_surface_t surface) noexcept
+Canvas::Canvas(const shared_cairo_surface_t& surface) noexcept
     : Canvas(surface, detail::egt_format(cairo_image_surface_get_format(surface.get())))
 {
     copy(surface);
 }
 
-Canvas::Canvas(shared_cairo_surface_t surface, pixel_format format) noexcept
+Canvas::Canvas(const shared_cairo_surface_t& surface, pixel_format format) noexcept
     : m_surface(cairo_surface_create_similar_image(surface.get(),
                 detail::cairo_format(format),
                 cairo_image_surface_get_width(surface.get()),
@@ -58,7 +58,7 @@ pixel_format Canvas::format() const
     return detail::egt_format(cairo_image_surface_get_format(m_surface.get()));
 }
 
-void Canvas::copy(shared_cairo_surface_t surface)
+void Canvas::copy(const shared_cairo_surface_t& surface)
 {
     cairo_save(m_cr.get());
     cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
