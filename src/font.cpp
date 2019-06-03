@@ -3,11 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/canvas.h"
 #include "egt/font.h"
 #include "egt/utils.h"
 #include <cairo-ft.h>
 #include <cassert>
 #include <map>
+#include <memory>
 
 namespace egt
 {
@@ -19,28 +21,19 @@ const Font::weightid Font::DEFAULT_WEIGHT = Font::weightid::normal;
 const int Font::DEFAULT_SIZE = 18;
 const Font::slantid Font::DEFAULT_SLANT = Font::slantid::normal;
 
-// more ideas: https://searchfox.org/mozilla-central/source/gfx/2d/ScaledFontFontconfig.cpp
-
-static cairo_status_t create_scaled_font(cairo_t* cr,
-        cairo_scaled_font_t** out,
-        const Font& font)
+static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& font)
 {
-    FcPattern* pattern, *resolved;
-    FcResult result;
-    cairo_font_face_t* font_face;
-    cairo_scaled_font_t* scaled_font;
-    cairo_font_options_t* font_options;
-    cairo_matrix_t font_matrix, ctm;
-    cairo_status_t status;
-    double pixel_size;
-    font_options = cairo_font_options_create();
-    cairo_get_font_options(cr, font_options);
-    pattern = FcPatternCreate();
-    if (!pattern)
-        return CAIRO_STATUS_NO_MEMORY;
+    std::unique_ptr<cairo_font_options_t, decltype(cairo_font_options_destroy)*>
+    font_options(cairo_font_options_create(), cairo_font_options_destroy);
+    cairo_get_font_options(cr, font_options.get());
 
-    FcPatternAddString(pattern, FC_FAMILY, (FcChar8*) font.face().c_str());
-    FcPatternAddDouble(pattern, FC_SIZE, font.size());
+    std::unique_ptr<FcPattern, decltype(FcPatternDestroy)*>
+    pattern(FcPatternCreate(), FcPatternDestroy);
+    if (!pattern)
+        return nullptr;
+
+    FcPatternAddString(pattern.get(), FC_FAMILY, (FcChar8*)font.face().c_str());
+    FcPatternAddDouble(pattern.get(), FC_SIZE, font.size());
 
     int weight = FC_WEIGHT_NORMAL;
     switch (font.weight())
@@ -51,7 +44,7 @@ static cairo_status_t create_scaled_font(cairo_t* cr,
         weight = FC_WEIGHT_BOLD;
         break;
     }
-    FcPatternAddInteger(pattern, FC_WEIGHT, weight);
+    FcPatternAddInteger(pattern.get(), FC_WEIGHT, weight);
 
     int slant = FC_SLANT_ROMAN;
     switch (font.slant())
@@ -65,38 +58,43 @@ static cairo_status_t create_scaled_font(cairo_t* cr,
         slant = FC_SLANT_OBLIQUE;
         break;
     }
-    FcPatternAddInteger(pattern, FC_SLANT, slant);
+    FcPatternAddInteger(pattern.get(), FC_SLANT, slant);
 
-    FcConfigSubstitute(nullptr, pattern, FcMatchPattern);
-    cairo_ft_font_options_substitute(font_options, pattern);
-    FcDefaultSubstitute(pattern);
-    resolved = FcFontMatch(nullptr, pattern, &result);
+    FcConfigSubstitute(nullptr, pattern.get(), FcMatchPattern);
+    cairo_ft_font_options_substitute(font_options.get(), pattern.get());
+    FcDefaultSubstitute(pattern.get());
+    FcResult result;
+    std::unique_ptr<FcPattern, decltype(FcPatternDestroy)*>
+    resolved(FcFontMatch(nullptr, pattern.get(), &result), FcPatternDestroy);
     if (!resolved)
-    {
-        FcPatternDestroy(pattern);
-        return CAIRO_STATUS_NO_MEMORY;
-    }
-    FcPatternGetDouble(resolved, FC_PIXEL_SIZE, 0, &pixel_size);
-    font_face = cairo_ft_font_face_create_for_pattern(resolved);
+        return nullptr;
+
+    double pixel_size;
+    FcPatternGetDouble(resolved.get(), FC_PIXEL_SIZE, 0, &pixel_size);
+
+    std::unique_ptr<cairo_font_face_t, decltype(cairo_font_face_destroy)*>
+    font_face(cairo_ft_font_face_create_for_pattern(resolved.get()),
+              cairo_font_face_destroy);
+
+    cairo_matrix_t font_matrix;
     cairo_matrix_init_identity(&font_matrix);
+
     cairo_matrix_scale(&font_matrix, pixel_size, pixel_size);
+    cairo_matrix_t ctm;
     cairo_get_matrix(cr, &ctm);
-    scaled_font = cairo_scaled_font_create(font_face,
-                                           &font_matrix,
-                                           &ctm,
-                                           font_options);
-    cairo_font_options_destroy(font_options);
-    cairo_font_face_destroy(font_face);
-    FcPatternDestroy(pattern);
-    FcPatternDestroy(resolved);
-    status = cairo_scaled_font_status(scaled_font);
+
+    shared_cairo_scaled_font_t
+    scaled_font(cairo_scaled_font_create(font_face.get(),
+                                         &font_matrix,
+                                         &ctm,
+                                         font_options.get()),
+                cairo_scaled_font_destroy);
+
+    cairo_status_t status = cairo_scaled_font_status(scaled_font.get());
     if (status)
-    {
-        cairo_scaled_font_destroy(scaled_font);
-        return status;
-    }
-    *out = scaled_font;
-    return CAIRO_STATUS_SUCCESS;
+        return nullptr;
+
+    return scaled_font;
 }
 
 Font::Font()
@@ -171,16 +169,11 @@ struct FontCache
 
         DBG("creating scaled font " << font);
 
-        auto cr = shared_cairo_t(cairo_create(nullptr), cairo_destroy);
-        cairo_scaled_font_t* out = nullptr;
-        cairo_status_t status = create_scaled_font(cr.get(), &out, font);
-
-        assert(!status && out);
-        if (status || !out)
-            return nullptr;
-
-        auto scaled_font = shared_cairo_scaled_font_t(out, cairo_scaled_font_destroy);
-        cache.insert(std::make_pair(font, scaled_font));
+        Canvas canvas(Size(100, 100));
+        auto cr = canvas.context();
+        auto scaled_font = create_scaled_font(cr.get(), font);
+        if (scaled_font)
+            cache.insert(std::make_pair(font, scaled_font));
         return scaled_font;
     }
 };
