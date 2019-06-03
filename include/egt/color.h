@@ -51,6 +51,13 @@ public:
           m_a(c & 0xff)
     {}
 
+    constexpr Color(const Color& color, uint32_t alpha) noexcept
+        : m_r(color.m_r),
+          m_g(color.m_g),
+          m_b(color.m_b),
+          m_a(alpha)
+    {}
+
     /**
      * Create a color with the specified RGBA component values.
      *
