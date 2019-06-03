@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_GST_DECODER_IMPL_H
-#define EGT_GST_DECODER_IMPL_H
+#ifndef EGT_DETAIL_VIDEO_GSTDECODERIMPL_H
+#define EGT_DETAIL_VIDEO_GSTDECODERIMPL_H
 
 #include <egt/geometry.h>
 #include <egt/painter.h>

@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_VIDEOVIEW_H
-#define EGT_VIDEOVIEW_H
+#ifndef EGT_VIDEO_H
+#define EGT_VIDEO_H
 
 #include <egt/window.h>
 
