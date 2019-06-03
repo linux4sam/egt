@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include "detail/video/gstdecoderimpl.h"
 #include <egt/app.h>
-#include <egt/detail/video/gstdecoderimpl.h>
 #include <string>
 
 namespace egt

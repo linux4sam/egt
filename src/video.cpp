@@ -7,13 +7,13 @@
 #include "config.h"
 #endif
 
+#include "detail/video/gstappsinkimpl.h"
+#include "detail/video/gstkmssinkimpl.h"
 #include "egt/app.h"
-#include <egt/detail/video/gstappsinkimpl.h>
-#include <egt/detail/video/gstkmssinkimpl.h>
 #include <egt/video.h>
+#include <fstream>
 #include <string>
 #include <thread>
-#include <fstream>
 
 using namespace std;
 

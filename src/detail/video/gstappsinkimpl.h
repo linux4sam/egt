@@ -6,10 +6,8 @@
 #ifndef EGT_DETAIL_VIDEO_GSTAPPSINKIMPL_H
 #define EGT_DETAIL_VIDEO_GSTAPPSINKIMPL_H
 
-#include <egt/detail/video/gstdecoderimpl.h>
-
+#include "detail/video/gstdecoderimpl.h"
 #include <gst/app/gstappsink.h>
-
 #include <string>
 
 namespace egt

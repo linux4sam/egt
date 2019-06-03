@@ -6,7 +6,7 @@
 #ifndef EGT_DETAIL_VIDEO_GSTKMSSINKIMPL_H
 #define EGT_DETAIL_VIDEO_GSTKMSSINKIMPL_H
 
-#include <egt/detail/video/gstdecoderimpl.h>
+#include "detail/video/gstdecoderimpl.h"
 
 namespace egt
 {

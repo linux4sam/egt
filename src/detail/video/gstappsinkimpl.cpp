@@ -8,8 +8,8 @@
 #include "config.h"
 #endif
 
+#include "detail/video/gstappsinkimpl.h"
 #include <egt/app.h>
-#include <egt/detail/video/gstappsinkimpl.h>
 #include <egt/detail/screen/kmsscreen.h>
 #include <string>
 

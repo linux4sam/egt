@@ -210,23 +210,21 @@ if HAVE_GSTREAMER
 libegt_la_SOURCES += \
 audio.cpp \
 video.cpp \
-detail/video/gstdecoderimpl.cpp \
 detail/video/gstappsinkimpl.cpp \
+detail/video/gstappsinkimpl.h \
+detail/video/gstdecoderimpl.cpp \
+detail/video/gstdecoderimpl.h \
 camera.cpp
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \
-detail/video/gstkmssinkimpl.cpp
-
-nobase_libegtinclude_HEADERS += \
-../include/egt/detail/video/gstkmssinkimpl.h
+detail/video/gstkmssinkimpl.cpp \
+detail/video/gstkmssinkimpl.h
 endif
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/audio.h \
 ../include/egt/video.h \
-../include/egt/detail/video/gstdecoderimpl.h \
-../include/egt/detail/video/gstappsinkimpl.h \
 ../include/egt/camera.h
 
 endif
