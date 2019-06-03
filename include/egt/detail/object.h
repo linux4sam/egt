@@ -80,9 +80,16 @@ public:
 
     /**
      * Invoke all handlers with the specified event.
+     *
+     * @param event The event to invoke.
      */
     virtual void invoke_handlers(Event& event);
 
+    /**
+     * Invoke all handlers with the specified eventid.
+     *
+     * @param event The eventid to invoke.
+     */
     virtual void invoke_handlers(eventid event);
 
     /**
