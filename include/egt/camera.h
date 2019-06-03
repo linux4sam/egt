@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifndef EGT_CAMERA_H
+#define EGT_CAMERA_H
 
 #include <egt/window.h>
 
@@ -98,3 +100,5 @@ protected:
 } //namespace v1
 
 } //namespace egt
+
+#endif
