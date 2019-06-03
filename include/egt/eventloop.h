@@ -17,13 +17,14 @@
 #include <memory>
 #include <vector>
 
+namespace egt
+{
+
 namespace asio
 {
 class io_context;
 }
 
-namespace egt
-{
 inline namespace v1
 {
 
