@@ -24,6 +24,24 @@ Checks: "*,\
 -misc-noexcept-move-constructor,\
 -misc-macro-parentheses,\
 -misc-unused-parameters,\
+-fuchsia-default-arguments,\
+-hicpp-use-override,\
+-hicpp-braces-around-statements,\
+-google-default-arguments,\
+-fuchsia-overloaded-operator,\
+-readability-implicit-bool-conversion,\
+-hicpp-signed-bitwise,\
+-google-runtime-references,\
+-hicpp-no-array-decay,\
+-hicpp-special-member-functions,\
+-cppcoreguidelines-special-member-functions,\
+-hicpp-explicit-conversions,\
+-modernize-use-using,\
+-modernize-return-braced-init-list,\
+-performance-unnecessary-value-param,\
+-cert-err58-cpp,\
+-cppcoreguidelines-pro-type-const-cast,\
+-android-cloexec-open,\
 "
 HeaderFilterRegex: '^.*include/egt/.*h$$'
 AnalyzeTemporaryDtors: false
