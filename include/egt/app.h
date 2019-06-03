@@ -6,12 +6,12 @@
 #ifndef EGT_APP_H
 #define EGT_APP_H
 
+#include <clocale>
 #include <egt/asio.hpp>
 #include <egt/eventloop.h>
 #include <egt/utils.h>
 #include <iosfwd>
 #include <libintl.h>
-#include <locale.h>
 #include <string>
 
 /**

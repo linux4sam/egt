@@ -18,9 +18,9 @@
 #include "egt/utils.h"
 #include "egt/version.h"
 #include "egt/window.h"
+#include <clocale>
 #include <iostream>
 #include <libintl.h>
-#include <locale.h>
 #include <regex>
 #include <string>
 #include <thread>

@@ -12,11 +12,12 @@
  */
 
 #include <cairo.h>
-#include <memory>
 #include <egt/geometry.h>
 #include <egt/types.h>
-#include <vector>
+#include <egt/utils.h>
 #include <iosfwd>
+#include <memory>
+#include <vector>
 
 namespace egt
 {

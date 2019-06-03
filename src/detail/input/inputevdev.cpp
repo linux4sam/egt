@@ -11,7 +11,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
-#include <errno.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <linux/input.h>
 #include <string>

@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/filesystem.h"
+#include <climits>
 #include <cstring>
 #include <fstream>
 #include <glob.h>
 #include <iostream>
 #include <iterator>
 #include <libgen.h>
-#include <limits.h>
 #include <memory>
 #include <sstream>
 #include <sys/stat.h>
