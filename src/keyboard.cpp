@@ -14,35 +14,25 @@ using Panel = Keyboard::Panel;
 using MainPanel = Keyboard::MainPanel;
 using MultichoicePanel = Keyboard::MultichoicePanel;
 
-Keyboard::Key::Key(std::string label, double length)
+Keyboard::Key::Key(const string& label, double length)
     : Button(label),
       m_length(length)
 {}
 
-Keyboard::Key::Key(std::string label, int link, double length)
+Keyboard::Key::Key(const string& label, int link, double length)
     : Button(label),
       m_link(link),
       m_length(length)
 {}
 
-Keyboard::Key::Key(std::string label, shared_ptr<MultichoicePanel> multichoice, double length)
+Keyboard::Key::Key(const string& label, shared_ptr<MultichoicePanel> multichoice, double length)
     : Button(label),
       m_length(length),
       m_multichoice(multichoice)
 {}
 
-double Keyboard::Key::length() const
-{
-    return m_length;
-}
-
-int Keyboard::Key::link() const
-{
-    return m_link;
-}
-
-Panel::Panel(std::vector<std::vector<std::shared_ptr<Keyboard::Key>>> keys, Size key_size)
-    : m_keys(keys)
+Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys, Size key_size)
+    : m_keys(std::move(keys))
 {
     set_align(alignmask::center);
 
@@ -62,14 +52,14 @@ Panel::Panel(std::vector<std::vector<std::shared_ptr<Keyboard::Key>>> keys, Size
     }
 }
 
-MainPanel::MainPanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
+MainPanel::MainPanel(vector<vector<shared_ptr<Key>>> keys,
                      Size key_size)
     : m_panel(make_shared<Panel>(keys, key_size))
 {
     add(m_panel);
 }
 
-MultichoicePanel::MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
+MultichoicePanel::MultichoicePanel(vector<vector<shared_ptr<Key>>> keys,
                                    Size key_size)
     : m_panel(make_shared<Panel>(keys, key_size))
 {
@@ -158,7 +148,7 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
     }, {eventid::pointer_hold});
 }
 
-Keyboard::Keyboard(std::vector<shared_ptr<MainPanel>> panels, Size size)
+Keyboard::Keyboard(vector<shared_ptr<MainPanel>> panels, Size size)
     : Frame(Rect(Point(), size))
 {
     m_main_panel.set_align(alignmask::expand);

@@ -45,7 +45,7 @@ public:
          * @param[in] length Length of the key. It multiplies the width of the
          * default key size which is configured when creating a Panel.
          */
-        Key(std::string label, double length = 1.0);
+        Key(const std::string& label, double length = 1.0);
 
         /**
          * @param[in] label Label of the key.
@@ -56,7 +56,7 @@ public:
          * @param[in] length Length of the key. It multiplies the width of the
          * default key size which is configured when creating a Panel.
          */
-        Key(std::string label, int link, double length = 1.0);
+        Key(const std::string& label, int link, double length = 1.0);
 
         /**
          * @param[in] label Label of the key.
@@ -65,10 +65,11 @@ public:
          * @param[in] length Length of the key. It multiplies the width of the
          * default key size which is configured when creating a Panel.
          */
-        Key(std::string label, std::shared_ptr<MultichoicePanel> multichoice, double length = 1.0);
+        Key(const std::string& label, std::shared_ptr<MultichoicePanel> multichoice, double length = 1.0);
 
-        double length() const;
-        int link() const;
+        inline double length() const { return m_length; }
+
+        inline int link() const { return m_link; }
 
     protected:
         /**
