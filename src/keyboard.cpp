@@ -80,24 +80,17 @@ void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
     {
         if (!k->text().empty())
         {
-            if (event.id() == eventid::raw_pointer_down)
-            {
-                Event event2(eventid::keyboard_down);
-                event2.key().key = k->text()[0];
-                event2.key().code = 0;
-                m_in.dispatch(event2);
-            }
-            else if (event.id() == eventid::raw_pointer_up)
-            {
-                Event event2(eventid::keyboard_up);
-                event2.key().key = k->text()[0];
-                event2.key().code = 0;
-                m_in.dispatch(event2);
-            }
+            Event event2(eventid::keyboard_down);
+            event2.key().key = k->text()[0];
+            event2.key().code = 0;
+            m_in.dispatch(event2);
+
+            event2.set_id(eventid::keyboard_up);
+            m_in.dispatch(event2);
         }
 
         return 0;
-    });
+    }, {eventid::pointer_click});
 }
 
 void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
@@ -117,7 +110,7 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
                     down.key().key = multichoice_key->text()[0];
                     down.key().code = 0;
                     m_in.dispatch(down);
-                    Event up(eventid::keyboard_down);
+                    Event up(eventid::keyboard_up);
                     up.key().key = multichoice_key->text()[0];
                     up.key().code = 0;
                     m_in.dispatch(up);
