@@ -128,7 +128,7 @@ int main(int argc, const char** argv)
     popup.add(label1);
     popup.add(label2);
 
-    CPUMonitorUsage tools;
+    experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&tools, &label1]()
     {

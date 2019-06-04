@@ -169,7 +169,7 @@ int main(int argc, const char** argv)
     label1.set_color(Palette::ColorId::text, Palette::white);
     win.add(bottom(left(label1)));
 
-    CPUMonitorUsage tools;
+    experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&tools, &label1]()
     {

@@ -8,11 +8,12 @@
 #include "egt/eventloop.h"
 #include "egt/painter.h"
 #include "egt/timer.h"
+#include "egt/tools.h"
 #include "egt/widget.h"
 #include "egt/window.h"
-#include <egt/asio.hpp>
 #include <chrono>
 #include <deque>
+#include <egt/asio.hpp>
 #include <numeric>
 
 namespace egt

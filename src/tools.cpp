@@ -15,6 +15,8 @@ namespace egt
 {
 inline namespace v1
 {
+namespace experimental
+{
 
 void CPUMonitorUsage::update()
 {
@@ -58,5 +60,6 @@ void CPUMonitorUsage::update()
     }
 }
 
+}
 }
 }

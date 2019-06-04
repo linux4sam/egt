@@ -112,7 +112,7 @@ int main(int argc, const char** argv)
 
     win.add(label1);
 
-    CPUMonitorUsage tools;
+    experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&tools, &label1]()
     {

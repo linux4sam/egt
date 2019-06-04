@@ -149,7 +149,7 @@ int main(int argc, const char** argv)
     label1.set_margin(SideBoard::HANDLE_WIDTH);
     window.add(bottom(left(label1)));
 
-    CPUMonitorUsage tools;
+    experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&label1, &tools]()
     {
