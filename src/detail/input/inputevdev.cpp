@@ -4,16 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/app.h"
-#include "egt/geometry.h"
 #include "egt/detail/input/inputevdev.h"
+#include "egt/geometry.h"
 #include "egt/utils.h"
 #include <cassert>
+#include <cerrno>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
-#include <cerrno>
 #include <fcntl.h>
 #include <linux/input.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <sys/time.h>
 #include <unistd.h>
@@ -34,7 +36,7 @@ InputEvDev::InputEvDev(const string& path)
     int fd = open(path.c_str(), O_RDONLY);
     if (fd >= 0)
     {
-        INFO("input device: " << path);
+        spdlog::info("input device: {}", path);
 
         m_input.assign(fd);
 
@@ -49,7 +51,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
 {
     if (error)
     {
-        ERR(error);
+        spdlog::error("{}", error);
         return;
     }
 
@@ -72,7 +74,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     {
         int value = e->value;
 
-        DBG(value);
+        SPDLOG_DEBUG("{}", value);
         switch (e->type)
         {
         case EV_REL:

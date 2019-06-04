@@ -7,6 +7,8 @@
 #include <egt/app.h>
 #include <egt/detail/screen/kmsscreen.h>
 #include <egt/detail/video/gstkmssinkimpl.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <vector>
 
@@ -44,7 +46,7 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
     assert(s);
     m_gem = s->gem();
     pixel_format format = detail::egt_format(s->get_plane_format());
-    DBG("VideoWindow: egt_format = " << format);
+    SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
 
     char buffer[2048];
     if (m_hwdecoder)
@@ -92,12 +94,12 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
             sprintf(buffer, SOFTWARE_PIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "BGRx")).c_str(), m_gem);
     }
 
-    DBG("VideoWindow: " << std::string(buffer));
+    SPDLOG_DEBUG("VideoWindow: {}", std::string(buffer));
 
     m_pipeline = gst_parse_launch(buffer, &error);
     if (m_pipeline)
     {
-        DBG("VideoWindow: Create pipeline success");
+        SPDLOG_DEBUG("VideoWindow: Create pipeline success");
 
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
 

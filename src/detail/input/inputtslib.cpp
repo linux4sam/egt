@@ -6,6 +6,8 @@
 #include "egt/app.h"
 #include "egt/detail/input/inputtslib.h"
 #include <chrono>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <tslib.h>
 
 using namespace std;
@@ -36,7 +38,7 @@ InputTslib::InputTslib(const string& path)
 
     if (m_impl->ts)
     {
-        INFO("added tslib " << path);
+        spdlog::info("added tslib device {}", path);
 
         m_impl->samp_mt = (struct ts_sample_mt**)malloc(SAMPLES * sizeof(struct ts_sample_mt*));
         assert(m_impl->samp_mt);
@@ -59,7 +61,7 @@ InputTslib::InputTslib(const string& path)
     }
     else
     {
-        ERR("ts device not found: " << path);
+        spdlog::error("ts device not found: {}", path);
     }
 }
 
@@ -73,7 +75,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 {
     if (error)
     {
-        ERR(error);
+        spdlog::error("{}", error);
         return;
     }
 
@@ -82,7 +84,7 @@ void InputTslib::handle_read(const asio::error_code& error)
     int ret = ts_read_mt(m_impl->ts, samp_mt, SLOTS, SAMPLES);
     if (unlikely(ret < 0))
     {
-        ERR("ts_read_mt");
+        spdlog::warn("ts_read_mt error");
         return;
     }
 
@@ -100,18 +102,17 @@ void InputTslib::handle_read(const asio::error_code& error)
                 continue;
 #endif
 
-#if 0
-            printf("%ld.%06ld: (slot %d) %d %6d %6d %6d %d %d\n",
-                   samp_mt[j][i].tv.tv_sec,
-                   samp_mt[j][i].tv.tv_usec,
-                   samp_mt[j][i].slot,
-                   samp_mt[j][i].tool_type,
-                   samp_mt[j][i].x,
-                   samp_mt[j][i].y,
-                   samp_mt[j][i].pressure,
-                   samp_mt[j][i].distance,
-                   samp_mt[j][i].pen_down);
-#endif
+            SPDLOG_TRACE("{}.{}: (slot {}) {} {} {} {} {} {}\n",
+                         samp_mt[j][i].tv.tv_sec,
+                         samp_mt[j][i].tv.tv_usec,
+                         samp_mt[j][i].slot,
+                         samp_mt[j][i].tool_type,
+                         samp_mt[j][i].x,
+                         samp_mt[j][i].y,
+                         samp_mt[j][i].pressure,
+                         samp_mt[j][i].distance,
+                         samp_mt[j][i].pen_down);
+
             if (unlikely(samp_mt[j][i].x < 0 || samp_mt[j][i].y < 0))
                 continue;
 
@@ -121,7 +122,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                 {
                     m_active = false;
 
-                    DBG("mouse up " << m_last_point);
+                    SPDLOG_TRACE("mouse up {}", m_last_point);
 
                     m_last_point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
                     Event event(eventid::raw_pointer_up, m_last_point);
@@ -162,7 +163,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                     {
                         m_active = true;
 
-                        DBG("mouse down " << m_last_point);
+                        SPDLOG_TRACE("mouse down {}", m_last_point);
 
                         Event event(eventid::raw_pointer_down, m_last_point);
                         event.pointer().btn = Pointer::button::touch;
@@ -177,7 +178,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 
     if (move)
     {
-        DBG("mouse move " << m_last_point);
+        SPDLOG_TRACE("mouse move {}", m_last_point);
 
         Event event(eventid::raw_pointer_move, m_last_point);
         event.pointer().btn = Pointer::button::touch;

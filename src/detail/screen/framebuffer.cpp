@@ -7,6 +7,7 @@
 #include "egt/utils.h"
 #include <fcntl.h>
 #include <linux/fb.h>
+#include <spdlog/spdlog.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -22,6 +23,8 @@ namespace detail
 
 FrameBuffer::FrameBuffer(const string& path)
 {
+    spdlog::info("Framebuffer Screen");
+
     struct fb_fix_screeninfo fixinfo {};
     struct fb_var_screeninfo varinfo {};
 
@@ -35,7 +38,7 @@ FrameBuffer::FrameBuffer(const string& path)
     if (::ioctl(m_fd, FBIOGET_VSCREENINFO, &varinfo) < 0)
         throw std::runtime_error("could not get fbdev screen info");
 
-    DBG("fb size " << fixinfo.smem_len << " " << varinfo.xres << "," << varinfo.yres);
+    spdlog::info("fb size {} {},{}", fixinfo.smem_len, varinfo.xres, varinfo.yres);
 
     m_fb = ::mmap(nullptr, fixinfo.smem_len, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
     if (m_fb == MAP_FAILED) // NOLINT

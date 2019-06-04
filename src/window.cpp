@@ -17,6 +17,8 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <vector>
 
 using namespace std;
@@ -129,7 +131,6 @@ void Window::hide()
         m_impl->hide();
 }
 
-
 void Window::paint(Painter& painter)
 {
     if (m_impl)
@@ -157,7 +158,7 @@ void Window::do_draw()
     m_in_draw = true;
     detail::scope_exit reset([this]() { m_in_draw = false; });
 
-    DBG(name() << " " << __PRETTY_FUNCTION__);
+    SPDLOG_TRACE("{}", name());
 
     Painter painter(screen()->context());
 
@@ -228,7 +229,7 @@ void Window::create_impl(const Rect& rect,
         }
         catch (std::exception& e)
         {
-            DBG(e.what());
+            SPDLOG_DEBUG("non-fatal exception: {}", e.what());
         }
 
         if (!m_impl)
@@ -241,7 +242,7 @@ void Window::create_impl(const Rect& rect,
             }
             catch (std::exception& e)
             {
-                DBG(e.what());
+                SPDLOG_DEBUG("non-fatal exception: {}", e.what());
 #endif
 
                 m_impl = make_unique<detail::BasicWindow>(this);
@@ -255,11 +256,11 @@ void Window::create_impl(const Rect& rect,
 
     if (flags().is_set(Widget::flag::plane_window))
     {
-        DBG(name() << " backend is PlaneWindow");
+        SPDLOG_DEBUG("{} backend is PlaneWindow", name());
     }
     else
     {
-        DBG(name() << " backend is BasicWindow");
+        SPDLOG_DEBUG("{} backend is BasicWindow", name());
     }
 }
 

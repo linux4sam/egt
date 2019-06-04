@@ -5,6 +5,7 @@
  */
 #include "egt/dialog.h"
 #include <memory>
+#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -130,7 +131,7 @@ void Dialog::set_widget(const std::shared_ptr<Widget>& widget)
     }
     else
     {
-        DBG("Message Box is set");
+        SPDLOG_DEBUG("Message Box is set");
     }
 }
 

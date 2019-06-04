@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libkplot.la
+noinst_LTLIBRARIES = libkplot.la libspdlog.la
 
 MRESG_V_GEN = $(mresg_v_GEN_$(V))
 mresg_v_GEN_ = $(mresg_v_GEN_$(AM_DEFAULT_VERBOSITY))
@@ -38,6 +38,12 @@ kplot/vector.c
 libkplot_la_CFLAGS = $(CAIRO_CFLAGS) \
 	-I$(top_builddir)/external/kplot \
 	$(AM_CFLAGS)
+
+libspdlog_la_SOURCES = spdlog/src/spdlog.cpp
+
+libspdlog_la_CXXFLAGS = \
+	-I$(top_srcdir)/external/spdlog/include \
+	$(AM_CXXFLAGS)
 
 CLEANFILES = $(top_builddir)/external/kplot/compat.h
 BUILT_SOURCES = $(top_builddir)/external/kplot/compat.h

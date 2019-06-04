@@ -7,6 +7,7 @@
 #include <cassert>
 #include <stddef.h>
 #include <algorithm>
+#include <spdlog/spdlog.h>
 #define EKEY_UNSUPPORTED EKEY_UNKNOWN
 namespace egt
 {
@@ -1051,7 +1052,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
         return EKEY_KBD_BRIGHTNESS_UP;
         // TODO(sad): some keycodes are still missing.
     }
-    DBG("Unknown keysym: " << keysym);
+    SPDLOG_DEBUG("Unknown keysym: {}", keysym);
     return EKEY_UNKNOWN;
 }
 #if 0
@@ -1539,7 +1540,7 @@ int XKeysymForWindowsKeyCode(KeyboardCode keycode, bool shift)
     case EKEY_KBD_BRIGHTNESS_UP:
         return XF86XK_KbdBrightnessUp;
     default:
-        DBG("Unknown keycode:" << keycode);
+        SPDLOG_DEBUG("Unknown keycode: {}", keycode);
         return 0;
     }
 }

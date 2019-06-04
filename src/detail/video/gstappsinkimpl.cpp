@@ -11,6 +11,8 @@
 #include "detail/video/gstappsinkimpl.h"
 #include <egt/app.h>
 #include <egt/detail/screen/kmsscreen.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt
@@ -36,7 +38,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
 
 void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 {
-    DBG("In : " << __func__);
+    SPDLOG_DEBUG("In");
     ignoreparam(rect);
     /*
      * its a Basic window copying buffer to Cairo surface.
@@ -129,7 +131,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         pixel_format format = detail::egt_format(s->get_plane_format());
-        DBG("VideoWindow: egt_format = " << format);
+        SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
         if (format == pixel_format::yuv420)
             sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, "");
         else if (format == pixel_format::yuyv)
@@ -143,13 +145,13 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "RGB16")).c_str());
     }
 
-    DBG("VideoWindow: " << std::string(buffer));
+    SPDLOG_DEBUG("VideoWindow: {}", std::string(buffer));
 
     GError* error = nullptr;
     m_pipeline = gst_parse_launch(buffer, &error);
     if (!m_pipeline)
     {
-        ERR("VideoWindow: failed to create video pipeline");
+        spdlog::error("VideoWindow: failed to create video pipeline");
         m_err_message = error->message;
         return false;
     }
@@ -157,7 +159,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
     if (!m_appsink)
     {
-        ERR("VideoWindow: failed to get app sink element");
+        spdlog::error("VideoWindow: failed to get app sink element");
         m_err_message = "failed to get app sink element";
         return false;
     }
@@ -165,7 +167,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
     if (!m_volume)
     {
-        ERR("VideoWindow: failed to get volume element");
+        spdlog::error("VideoWindow: failed to get volume element");
         return false;
     }
 

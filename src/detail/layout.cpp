@@ -7,6 +7,8 @@
 #include "egt/frame.h"
 #include "egt/sizer.h"
 #include "egt/utils.h"
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 #define LAY_IMPLEMENTATION
 #include "layout.h"
@@ -42,7 +44,7 @@ struct LayoutSerializer
         if (min.h < widget->min_size_hint().h)
             min.h = widget->min_size_hint().h;
 
-        DBG("  current: " << min);
+        SPDLOG_TRACE("  current: {}", min);
         lay_set_size_xy(&ctx, w, min.w, min.h);
 
         if (level != 0)
@@ -69,7 +71,7 @@ struct LayoutSerializer
 
             if (behave)
             {
-                DBG("  behave:" << std::hex << behave);
+                SPDLOG_TRACE("  behave: {0:x}", behave);
                 lay_set_behave(&ctx, w, behave);
             }
         }
@@ -122,7 +124,7 @@ struct LayoutSerializer
 
             if (contains)
             {
-                DBG("  contains:" << std::hex << contains);
+                SPDLOG_TRACE("  contains: {0:x}", contains);
                 lay_set_contain(&ctx, w, contains);
             }
         }
@@ -143,7 +145,7 @@ struct LayoutSerializer
         while (static_cast<int>(stack.size()) > level)
             stack.pop_back();
 
-        DBG("level:" << level << " " << widget->name());
+        SPDLOG_TRACE("level: {} {}", level, widget->name());
 
         auto child = widget_to_layout(widget, level);
 
@@ -190,8 +192,8 @@ protected:
                 rect += Size(2. * moat, 2. * moat);
             }
 
-            DBG("apply " << widget->name() << " " << rect);
-            DBG("apply real: " << Rect(r[0], r[1], r[2], r[3]));
+            SPDLOG_TRACE("apply {} {}", widget->name(), rect);
+            SPDLOG_TRACE("apply real: {}", Rect(r[0], r[1], r[2], r[3]));
             widget->set_box(rect);
         }
 

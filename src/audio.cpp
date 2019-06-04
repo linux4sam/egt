@@ -8,6 +8,8 @@
 #include "egt/utils.h"
 #include "egt/video.h"
 #include <gst/gst.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -40,7 +42,7 @@ struct AudioPlayerImpl
             ret = gst_element_set_state(m_audio_pipeline, state);
             if (GST_STATE_CHANGE_FAILURE == ret)
             {
-                ERR("unable to set audio pipeline to " << state);
+                spdlog::error("unable to set audio pipeline to {}", state);
                 return false;
             }
 
@@ -95,17 +97,17 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     case GST_MESSAGE_INFO:
         break;
     case GST_MESSAGE_CLOCK_PROVIDE:
-        DBG("GStreamer: Message CLOCK_PROVIDE");
+        SPDLOG_DEBUG("GStreamer: Message CLOCK_PROVIDE");
         break;
     case GST_MESSAGE_CLOCK_LOST:
-        DBG("GStreamer: Message CLOCK_LOST");
+        SPDLOG_DEBUG("GStreamer: Message CLOCK_LOST");
         break;
     case GST_MESSAGE_NEW_CLOCK:
-        DBG("GStreamer: Message NEW_CLOCK");
+        SPDLOG_DEBUG("GStreamer: Message NEW_CLOCK");
         break;
     case GST_MESSAGE_EOS:
     {
-        DBG("GStreamer: Message EOS");
+        SPDLOG_DEBUG("GStreamer: Message EOS");
 
         gst_element_seek(impl->m_audio_pipeline, 1.0, GST_FORMAT_TIME,
                          GST_SEEK_FLAG_FLUSH,
@@ -310,26 +312,26 @@ bool AudioPlayer::createPipeline()
     destroyPipeline();
 
     string pipe(PIPE);
-    DBG(pipe);
+    SPDLOG_DEBUG(pipe);
 
     m_impl->m_audio_pipeline = gst_parse_launch(pipe.c_str(), &error);
     if (!m_impl->m_audio_pipeline)
     {
-        ERR("failed to create audio pipeline");
+        spdlog::error("failed to create audio pipeline");
         return false;
     }
 
     m_impl->m_src = gst_bin_get_by_name(GST_BIN(m_impl->m_audio_pipeline), SRC_NAME);
     if (!m_impl->m_src)
     {
-        ERR("failed to get audio src element");
+        spdlog::error("failed to get audio src element");
         return false;
     }
 
     m_impl->m_volume = gst_bin_get_by_name(GST_BIN(m_impl->m_audio_pipeline), VOLUME_NAME);
     if (!m_impl->m_volume)
     {
-        ERR("failed to get volume element");
+        spdlog::error("failed to get volume element");
         return false;
     }
 

@@ -14,6 +14,8 @@
 #include "egt/utils.h"
 #include <cairo-xlib.h>
 #include <cairo.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -35,6 +37,8 @@ X11Screen::X11Screen(const Size& size, bool borderless)
     : m_priv(new detail::X11Data),
       m_input(main_app().event().io())
 {
+    spdlog::info("X11 Screen");
+
     m_priv->display = XOpenDisplay(nullptr);
     if (!m_priv->display)
         throw std::runtime_error("unable to connect to X11 display");
@@ -108,7 +112,7 @@ void X11Screen::handle_read(const asio::error_code& error)
 {
     if (error)
     {
-        ERR(error);
+        spdlog::error("{}", error);
         return;
     }
 
@@ -117,7 +121,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         XEvent e;
         XNextEvent(m_priv->display, &e);
 
-        DBG("x11 event: " << e.type);
+        SPDLOG_DEBUG("x11 event: {}", e.type);
 
         switch (e.type)
         {
@@ -181,7 +185,7 @@ void X11Screen::handle_read(const asio::error_code& error)
                 main_app().event().quit();
             break;
         default:
-            DBG("x11 unhandled event: " << e.type);
+            SPDLOG_DEBUG("x11 unhandled event: {}", e.type);
             break;
         }
     }

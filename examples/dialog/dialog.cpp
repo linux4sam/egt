@@ -54,7 +54,7 @@ int main(int argc, const char** argv)
     auto win1 = std::make_shared<FileOpenDialog>(RootDir, Rect(0, 0, 640, 432));
     win1->on_event([win1, label1, list](Event&)
     {
-        DBG("FileDialog : file selected is : " << win1->get_selected());
+        cout << "FileDialog : file selected is : " << win1->get_selected() << endl;
         label1->set_text("File OpenDialog: " + win1->get_selected() + " Selected");
         win1->hide();
         list->set_select(0);
@@ -64,7 +64,7 @@ int main(int argc, const char** argv)
     auto win2 = std::make_shared<FileSaveDialog>(RootDir, Rect(0, 0, 640, 432));
     win2->on_event([win2, label1, list](Event&)
     {
-        DBG("FileDialog : save file is : " << win2->get_selected());
+        cout << "FileDialog : save file is : " << win2->get_selected() << endl;
         label1->set_text("File SaveDialog: " + win2->get_selected() + " Selected");
         win2->hide();
         list->set_select(0);
@@ -83,12 +83,12 @@ int main(int argc, const char** argv)
     {
         if (event.id() == eventid::event1)
         {
-            DBG("FileDialog Okay button clicked");
+            cout << "FileDialog Okay button clicked" << endl;
             label1->set_text("Message Dialog: Okay button clicked");
         }
         else if (event.id() == eventid::event2)
         {
-            DBG("FileDialog Cancel button clicked");
+            cout << "FileDialog Cancel button clicked" << endl;
             label1->set_text("Message Dialog: Cancel button clicked");
         }
         list->set_select(0);
@@ -111,13 +111,13 @@ int main(int argc, const char** argv)
     {
         if (event.id() == eventid::event1)
         {
-            DBG("FileDialog Okay button clicked");
+            cout << "FileDialog Okay button clicked" << endl;
             auto select = dynamic_cast<StringItem*>(dlist0->get_item(dlist0->selected()))->text();
             label1->set_text("List Dialog: " + select + " Selected");
         }
         else if (event.id() == eventid::event2)
         {
-            DBG("FileDialog Cancel button clicked");
+            cout << "FileDialog Cancel button clicked" << endl;
             label1->set_text("List Dialog: Cancel button clicked");
         }
         list->set_select(0);
@@ -138,13 +138,13 @@ int main(int argc, const char** argv)
     {
         if (event.id() == eventid::event1)
         {
-            DBG("FileDialog Okay button clicked");
+            cout << "FileDialog Okay button clicked" << endl;
             auto select = slider1->value();
             label1->set_text("Slider Dialog: value = " + std::to_string(select));
         }
         else if (event.id() == eventid::event2)
         {
-            DBG("FileDialog Cancel button clicked");
+            cout << "FileDialog Cancel button clicked" << endl;
             label1->set_text("Slider Dialog: Cancel button clicked");
         }
         list->set_select(0);
@@ -153,7 +153,7 @@ int main(int argc, const char** argv)
     list->on_event([list, win1, win2, dialog, dialog1, dialog2, label1](Event&)
     {
         auto index = list->selected();
-        DBG("FileDialog : Index value " << index);
+        cout << "FileDialog : Index value " << index << endl;
         switch (index)
         {
         case 0:

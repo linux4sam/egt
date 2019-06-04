@@ -9,6 +9,8 @@
 #include <cassert>
 #include <chrono>
 #include <curl/curl.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <unordered_map>
 
@@ -104,7 +106,7 @@ public:
                                                     &(HttpClientRequestManager::Instance()->m_running));
             if (mc != CURLM_OK)
             {
-                ERR("curl_multi_socket_action error: " << mc);
+                spdlog::error("curl_multi_socket_action error: ", mc);
             }
 
             check_multi_info();
@@ -126,7 +128,7 @@ public:
         CURLMcode rc = curl_multi_socket_action(multi->m_multi, s, what, &multi->m_running);
         if (rc != CURLM_OK)
         {
-            ERR("curl_multi_socket_action: " << int(rc));
+            spdlog::error("curl_multi_socket_action: ", int(rc));
         }
 
         check_multi_info();

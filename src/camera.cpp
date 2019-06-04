@@ -11,10 +11,10 @@
 #include "egt/camera.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
-
-#include <gst/gst.h>
-
 #include <fstream>
+#include <gst/gst.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
 
@@ -93,8 +93,8 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         gst_message_parse_error(message, &error, &debug);
         cameraImpl->m_err_message = error->message;
-        DBG("CameraWindow: GST_MESSAGE_ERROR from element " <<  message->src << "  " << error->message);
-        DBG("CameraWindow: GST_MESSAGE_ERROR Debugging info: " << (debug ? debug : "none"));
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_ERROR from element {} {}",  GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
 
@@ -108,8 +108,8 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     case GST_MESSAGE_WARNING:
     {
         gst_message_parse_warning(message, &error, &debug);
-        DBG("CameraWindow: GST_MESSAGE_WARNING from element " << message->src << "  " << error->message);
-        DBG("CameraWindow: GST_MESSAGE_WARNING Debugging info: " << (debug ? debug : "none"));
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_WARNING from element {} {}", GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_WARNING Debugging info: {}", (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
         break;
@@ -118,10 +118,10 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
         gst_message_parse_info(message, &error, &debug);
-        DBG("CameraWindow: GST_MESSAGE_INFO: " << error->message);
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_INFO: {} ", error->message);
         if (debug)
         {
-            DBG("CameraWindow: GST_MESSAGE_INFO: \n" << debug << "\n");
+            SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_INFO: {}", debug);
         }
         g_clear_error(&error);
         g_free(debug);
@@ -130,42 +130,42 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     }
     case GST_MESSAGE_CLOCK_PROVIDE:
     {
-        DBG("CameraWindow: GST_MESSAGE_CLOCK_PROVIDE");
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_CLOCK_PROVIDE");
         break;
     }
     case GST_MESSAGE_CLOCK_LOST:
     {
-        DBG("CameraWindow: GST_MESSAGE_CLOCK_LOST");
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_CLOCK_LOST");
         break;
     }
     case GST_MESSAGE_NEW_CLOCK:
     {
-        DBG("CameraWindow: GST_MESSAGE_NEW_CLOCK");
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_NEW_CLOCK");
         break;
     }
     case GST_MESSAGE_PROGRESS:
     {
-        DBG("CameraWindow: GST_MESSAGE_PROGRESS");
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_PROGRESS");
         break;
     }
     case GST_MESSAGE_DURATION_CHANGED:
     {
-        DBG("CameraWindow: GST_MESSAGE_DURATION_CHANGED");
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_DURATION_CHANGED");
         break;
     }
     case GST_MESSAGE_ELEMENT:
     {
-        DBG("CameraWindow: GST_MESSAGE_ELEMENT");
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_ELEMENT");
         break;
     }
     case GST_MESSAGE_TAG:
     {
-        DBG("CameraWindow: GST_MESSAGE_TAG");
+        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_TAG");
         break;
     }
     default:
     {
-        DBG("CameraWindow: default Message " << std::to_string(GST_MESSAGE_TYPE(message)));
+        SPDLOG_DEBUG("CameraWindow: default Message {}", std::to_string(GST_MESSAGE_TYPE(message)));
         break;
     }
     }
@@ -270,7 +270,7 @@ bool CameraImpl::start()
         assert(s);
 
         pixel_format format = detail::egt_format(s->get_plane_format());
-        DBG("CameraWindow: egt_format = " << format);
+        SPDLOG_DEBUG("CameraWindow: egt_format = {}", format);
 
         if (m_usekmssink)
         {
@@ -299,7 +299,7 @@ bool CameraImpl::start()
         sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), m_rect.w, m_rect.h, "RGB16");
     }
 
-    DBG("CameraWindow:  " << std::string(buffer));
+    SPDLOG_DEBUG("CameraWindow:  {}", std::string(buffer));
 
     /* Make sure we don't leave orphan references */
     stop();
@@ -308,7 +308,7 @@ bool CameraImpl::start()
     m_pipeline = gst_parse_launch(buffer, &error);
     if (!m_pipeline)
     {
-        ERR("CameraWindow: failed to create pipeline");
+        spdlog::error("CameraWindow: failed to create pipeline");
         m_err_message = error->message;
         return false;
     }
@@ -318,7 +318,7 @@ bool CameraImpl::start()
         m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
         if (!m_appsink)
         {
-            ERR("CameraWindow: failed to get app sink element");
+            spdlog::error("CameraWindow: failed to get app sink element");
             m_err_message = "failed to get app sink element";
             return false;
         }
@@ -335,7 +335,7 @@ bool CameraImpl::start()
     int ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE)
     {
-        DBG("CameraWindow: set pipeline to play state failed");
+        SPDLOG_DEBUG("CameraWindow: set pipeline to play state failed");
         m_err_message = "failed to set pipeline to play state";
         stop();
         return false;
@@ -350,7 +350,7 @@ void CameraImpl::stop()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            ERR("CameraWindow: set pipeline to NULL state failed");
+            spdlog::error("CameraWindow: set pipeline to NULL state failed");
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;

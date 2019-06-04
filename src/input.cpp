@@ -6,6 +6,8 @@
 #include "egt/input.h"
 #include "egt/window.h"
 #include <chrono>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -63,10 +65,10 @@ void Input::dispatch(Event& event)
 
     auto eevent = m_mouse->handle(event);
 
-    DBG("input event: " << event);
+    SPDLOG_DEBUG("input event: {}", event);
     if (eevent.id() != eventid::none)
     {
-        DBG("input event: " << eevent);
+        SPDLOG_DEBUG("input event: {}", eevent);
     }
 
     // then give it to any global input handlers
@@ -197,11 +199,11 @@ void mouse_grab(Widget* widget)
 {
     if (widget)
     {
-        DBG("mouse grab by " << widget->name());
+        SPDLOG_DEBUG("mouse grab by {}", widget->name());
     }
     else if (mouse_grab_widget)
     {
-        DBG("mouse release by " << mouse_grab_widget->name());
+        SPDLOG_DEBUG("mouse release by {}", mouse_grab_widget->name());
     }
     mouse_grab_widget = widget;
 }

@@ -14,6 +14,8 @@
 #include "egt/widget.h"
 #include <cassert>
 #include <iostream>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 
@@ -46,7 +48,7 @@ void Widget::handle(Event& event)
     if (event.quit())
         return;
 
-    DBG(name() << " handle: " << event);
+    SPDLOG_TRACE("{} handle: {}", name(), event);
 
     switch (event.id())
     {

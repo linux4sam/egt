@@ -6,3 +6,7 @@
 	path = external/layout
 	url = https://bitbucket.microchip.com/scm/~c16205/layout.git
 	ignore = untracked
+[submodule "external/spdlog"]
+	path = external/spdlog
+	url = https://github.com/gabime/spdlog.git
+	ignore = untracked

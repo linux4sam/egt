@@ -22,6 +22,7 @@
 #include <iostream>
 #include <libintl.h>
 #include <regex>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
 
@@ -59,12 +60,30 @@ Application& main_app()
     return *the_app;
 }
 
+static std::once_flag env_flag;
+
 Application::Application(int argc, const char** argv, const std::string& name, bool primary)
     : m_argc(argc),
       m_argv(argv),
       m_signals(event().io(), SIGUSR1, SIGUSR2)
 {
-    INFO("EGT Version " << EGT_VERSION);
+    std::call_once(env_flag, []()
+    {
+        if (getenv("EGT_DEBUG"))
+        {
+            auto loglevel = static_cast<spdlog::level::level_enum>(
+                                std::atoi(getenv("EGT_DEBUG")));
+            spdlog::set_level(loglevel);
+        }
+        else
+        {
+            spdlog::set_level(spdlog::level::level_enum::warn);
+        }
+
+        spdlog::set_pattern("%E.%e [%^%l%$] %@ %v");
+    });
+
+    spdlog::info("EGT Version {}", EGT_VERSION);
 
     if (the_app)
         throw std::runtime_error("Already an Application instance created.");

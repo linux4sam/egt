@@ -9,7 +9,15 @@ set log levels using environment variables.
 
 @li <tt>EGT_DEBUG</tt>
     <br>
-    Enable debug output for the framework.  The higher the number, the more output.
+    Set the log level for the framework. If the library is compiled with debug
+    turned off, the DEBUG and TRACE log levels are removed.
+    - TRACE=0
+    - DEBUG=1
+    - INFO=2
+    - WARN=3
+    - ERROR=4
+    - CRITICAL=5
+    - OFF=6
 
 @li <tt>EGT_BACKEND</tt>
     <br>

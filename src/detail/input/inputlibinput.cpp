@@ -4,15 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/app.h"
-#include "egt/eventloop.h"
-#include "egt/screen.h"
 #include "egt/detail/input/inputlibinput.h"
 #include "egt/detail/string.h"
+#include "egt/eventloop.h"
+#include "egt/screen.h"
 #include <cassert>
 #include <fstream>
-#include <unistd.h>
 #include <libinput.h>
 #include <libudev.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -107,8 +109,8 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
     else
         type = "removed";
 
-    INFO(type << " " << libinput_device_get_sysname(dev) << " " <<
-         libinput_device_get_name(dev));
+    spdlog::info("{} {} {}", type, libinput_device_get_sysname(dev),
+                 libinput_device_get_name(dev));
 
     li = libinput_event_get_context(ev);
 
@@ -231,7 +233,7 @@ void InputLibInput::handle_read(const asio::error_code& error)
 {
     if (error)
     {
-        ERR(error);
+        spdlog::error("{}", error);
         return;
     }
 

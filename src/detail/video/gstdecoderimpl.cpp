@@ -6,6 +6,8 @@
 
 #include "detail/video/gstdecoderimpl.h"
 #include <egt/app.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt
@@ -30,7 +32,7 @@ bool GstDecoderImpl::playing() const
                                     GST_CLOCK_TIME_NONE);
         return state == GST_STATE_PLAYING;
     }
-    DBG("VideoWindow: Done " << __func__);
+    SPDLOG_DEBUG("VideoWindow: Done");
     return false;
 }
 
@@ -41,12 +43,12 @@ bool GstDecoderImpl::play()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            DBG("VideoWindow: Unable to set the pipeline to the play state.\n");
+            SPDLOG_DEBUG("VideoWindow: Unable to set the pipeline to the play state.");
             destroyPipeline();
             return false;
         }
     }
-    DBG("VideoWindow: Done " << __func__);
+    SPDLOG_DEBUG("VideoWindow: Done");
     return true;
 }
 
@@ -57,12 +59,12 @@ bool GstDecoderImpl::pause()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            DBG("VideoWindow: Unable to set the pipeline to the Pause state.\n");
+            SPDLOG_DEBUG("VideoWindow: Unable to set the pipeline to the Pause state.");
             destroyPipeline();
             return false;
         }
     }
-    DBG("VideoWindow: Done " << __func__);
+    SPDLOG_DEBUG("VideoWindow: Done");
     return true;
 }
 
@@ -134,7 +136,7 @@ void GstDecoderImpl::destroyPipeline()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            ERR("VideoWindow: failed to set pipeline to GST_STATE_NULL");
+            spdlog::error("VideoWindow: failed to set pipeline to GST_STATE_NULL");
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
@@ -156,8 +158,8 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         gst_message_parse_error(message, &error, &debug);
         decodeImpl->m_err_message = error->message;
-        DBG("VideoWindow: GST_MESSAGE_ERROR from element " <<  message->src << "  " << error->message);
-        DBG("VideoWindow: GST_MESSAGE_ERROR Debugging info: " << (debug ? debug : "none"));
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_ERROR from element {} {}", GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
 
@@ -171,8 +173,8 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     case GST_MESSAGE_WARNING:
     {
         gst_message_parse_warning(message, &error, &debug);
-        DBG("VideoWindow: GST_MESSAGE_WARNING from element " << message->src << "  " << error->message);
-        DBG("VideoWindow: GST_MESSAGE_WARNING Debugging info: " << (debug ? debug : "none"));
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_WARNING from element {}", GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_WARNING Debugging info: {}", (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
         break;
@@ -181,10 +183,10 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
         gst_message_parse_info(message, &error, &debug);
-        DBG("VideoWindow: GST_MESSAGE_INFO: " << error->message);
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_INFO: {}", error->message);
         if (debug)
         {
-            DBG("VideoWindow: GST_MESSAGE_INFO: \n" << debug << "\n");
+            SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_INFO: {}", debug);
         }
         g_clear_error(&error);
         g_free(debug);
@@ -193,17 +195,17 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     }
     break;
     case GST_MESSAGE_CLOCK_PROVIDE:
-        DBG("VideoWindow: GST_MESSAGE_CLOCK_PROVIDE");
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_CLOCK_PROVIDE");
         break;
     case GST_MESSAGE_CLOCK_LOST:
-        DBG("VideoWindow: GST_MESSAGE_CLOCK_LOST");
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_CLOCK_LOST");
         break;
     case GST_MESSAGE_NEW_CLOCK:
-        DBG("VideoWindow: GST_MESSAGE_NEW_CLOCK");
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_NEW_CLOCK");
         break;
     case GST_MESSAGE_EOS:
     {
-        DBG("VideoWindow: GST_MESSAGE_EOS: LoopMode: " << (decodeImpl->m_interface.get_loopback() ? "TRUE" : "FALSE"));
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_EOS: LoopMode: {}", (decodeImpl->m_interface.get_loopback() ? "TRUE" : "FALSE"));
         if (decodeImpl->m_interface.get_loopback())
         {
             gst_element_seek(decodeImpl->m_pipeline, 1.0, GST_FORMAT_TIME,
@@ -224,10 +226,10 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         break;
     }
     case GST_MESSAGE_PROGRESS:
-        DBG("VideoWindow: GST_MESSAGE_PROGRESS");
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_PROGRESS");
         break;
     case GST_MESSAGE_DURATION_CHANGED:
-        DBG("VideoWindow: GST_MESSAGE_DURATION_CHANGED");
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_DURATION_CHANGED");
         break;
     case GST_MESSAGE_ELEMENT:
     {
@@ -256,9 +258,9 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         gst_message_parse_state_changed(message, &old_state, &new_state, &pending_state);
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(decodeImpl->m_pipeline))
         {
-            DBG("VideoWindow: GST_MESSAGE_STATE_CHANGED: from "
-                << gst_element_state_get_name(old_state) <<
-                " to "  <<  gst_element_state_get_name(new_state));
+            SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_STATE_CHANGED: from {} to {}",
+                         gst_element_state_get_name(old_state),
+                         gst_element_state_get_name(new_state));
 
             if (decodeImpl->playing())
             {
@@ -269,7 +271,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
                 }
                 else
                 {
-                    DBG("VideoWindow: Seeking query failed.");
+                    SPDLOG_DEBUG("VideoWindow: Seeking query failed.");
                 }
                 gst_query_unref(query);
             }

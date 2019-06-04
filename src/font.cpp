@@ -10,6 +10,8 @@
 #include <cassert>
 #include <map>
 #include <memory>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -167,7 +169,7 @@ struct FontCache
         if (i != cache.end())
             return i->second;
 
-        DBG("creating scaled font " << font);
+        SPDLOG_TRACE("creating scaled font {}", font);
 
         Canvas canvas(Size(100, 100));
         auto cr = canvas.context();

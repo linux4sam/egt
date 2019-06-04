@@ -8,6 +8,8 @@
 #include <rapidxml.hpp>
 #include <rapidxml_print.hpp>
 #include <rapidxml_utils.hpp>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -146,7 +148,8 @@ static shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node, shared_ptr<Fr
     }
     else
     {
-        ERR("widget type " << type << " unsupported");
+        spdlog::error("widget type {} unsupported", ttype);
+        return nullptr;
     }
 
     for (auto child = node->first_node("widget"); child; child = child->next_sibling())

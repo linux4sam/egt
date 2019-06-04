@@ -8,6 +8,7 @@
 #include "egt/image.h"
 #include "egt/painter.h"
 #include <algorithm>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -36,7 +37,7 @@ PlaneWindow::PlaneWindow(Window* interface,
 
 void PlaneWindow::resize(const Size& size)
 {
-    DBG(m_interface->name() << " " << __PRETTY_FUNCTION__);
+    SPDLOG_TRACE(m_interface->name());
 
     if (!size.empty() && m_interface->m_box.size() != size)
     {
@@ -72,7 +73,7 @@ void PlaneWindow::set_scale(float scale)
 
 void PlaneWindow::move(const Point& point)
 {
-    DBG(m_interface->name() << " " << __PRETTY_FUNCTION__);
+    SPDLOG_TRACE(m_interface->name());
 
     if (point != m_interface->box().point())
     {
@@ -116,7 +117,7 @@ void PlaneWindow::top_draw()
 {
     if (!m_interface->box().size().empty())
     {
-        DBG(m_interface->name() << " " << __PRETTY_FUNCTION__);
+        SPDLOG_TRACE(m_interface->name());
 
         if (m_interface->visible())
         {

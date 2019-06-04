@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/filedialog.h"
-#include <memory>
 #include <experimental/filesystem>
+#include <memory>
+#include <spdlog/spdlog.h>
 
 namespace fs = std::experimental::filesystem;
 
@@ -39,14 +40,14 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
 
     m_flist->on_event([this](Event&)
     {
-        DBG("FileDialog index is  " << this->m_flist->selected());
+        SPDLOG_DEBUG("FileDialog index is {}", this->m_flist->selected());
         list_item_selected(this->m_flist->selected());
     }, {eventid::property_changed});
 
     if (m_filepath.empty())
         m_filepath = fs::current_path();
 
-    DBG("FileDialog done ");
+    SPDLOG_DEBUG("FileDialog done");
 }
 
 FileDialog::FileDialog(const Rect& rect)
@@ -72,7 +73,7 @@ bool FileDialog::list_files(const std::string& filepath)
 
     m_title->set_text(m_filepath);
 
-    DBG("FileDialog :" << " file path is" << m_filepath);
+    SPDLOG_DEBUG("FileDialog : file path is {}", m_filepath);
 
     m_flist->clear();
 
@@ -92,7 +93,7 @@ bool FileDialog::list_files(const std::string& filepath)
     }
     catch (const fs::filesystem_error& ex)
     {
-        DBG("FileDialog :" << "Error: "  << ex.what());
+        SPDLOG_DEBUG("FileDialog : Error: {}", ex.what());
         return false;
     }
 
@@ -105,7 +106,7 @@ void FileDialog::list_item_selected(int index)
 {
     auto fselect = dynamic_cast<StringItem*>(m_flist->get_item(index))->text();
 
-    DBG(" FileDialog " << ": File Selected is :" << fselect);
+    SPDLOG_DEBUG("FileDialog : File Selected is : {}", fselect);
 
     if (fselect == "./")
     {
@@ -115,20 +116,20 @@ void FileDialog::list_item_selected(int index)
     {
         fs::path p = m_filepath;
         m_filepath = p.parent_path();
-        DBG(" FileDialog " <<  ": parent dir " << m_filepath);
+        SPDLOG_DEBUG("FileDialog : parent dir {}", m_filepath);
         set_selected("");
         list_files(m_filepath);
     }
     else if (fs::is_directory(m_filepath + "/" + fselect))
     {
-        DBG(" FileDialog " << ": " << fselect  << " is a directory");
+        SPDLOG_DEBUG("FileDialog : {} is a directory", fselect);
         set_selected("");
         m_filepath =  m_filepath + "/" + fselect;
         list_files(m_filepath);
     }
     else if (fs::is_regular_file(m_filepath + "/" + fselect))
     {
-        DBG(" FileDialog " << ": " << fselect  << " is a regular file");
+        SPDLOG_DEBUG("FileDialog : {} is a regular file", fselect);
         set_selected(fselect);
     }
 }

@@ -12,6 +12,7 @@
 #include "egt/app.h"
 #include <egt/video.h>
 #include <fstream>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
 
@@ -53,7 +54,7 @@ bool is_target_sama5d4()
         std::string line;
         while (getline(infile, line))
         {
-            DBG("CPU: " << line);
+            SPDLOG_DEBUG("CPU: {}", line);
             if (line.find("SAMA5D4") != std::string::npos)
             {
                 infile.close();
@@ -89,14 +90,14 @@ void VideoWindow::createImpl(const Size& size)
 
     if (flags().is_set(Widget::flag::plane_window) && detail::is_target_sama5d4())
     {
-        DBG("VideoWindow: Using KMS sink");
+        SPDLOG_DEBUG("VideoWindow: Using KMS sink");
 #ifdef HAVE_LIBPLANES
         m_decoderImpl.reset(new detail::GstKmsSinkImpl(*this, size, detail::is_target_sama5d4()));
 #endif
     }
     else
     {
-        DBG("VideoWindow: Using APP sink");
+        SPDLOG_DEBUG("VideoWindow: Using APP sink");
         m_decoderImpl.reset(new detail::GstAppSinkImpl(*this, size));
     }
 }

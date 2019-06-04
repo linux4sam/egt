@@ -9,6 +9,8 @@
 #include "egt/painter.h"
 #include "egt/screen.h"
 #include <iostream>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 
@@ -151,7 +153,7 @@ void Frame::add_damage(const Rect& rect)
     if (m_in_draw)
         return;
 
-    DBG(name() << " damage: " << rect);
+    SPDLOG_TRACE("{} damage:{}", name(), rect);
 
     // No damage outside of our box().  There are cases where this is expected,
     // for example, when a widget is halfway off the screen. So, we truncate the
@@ -213,7 +215,7 @@ Point Frame::to_panel(const Point& p)
 
 void Frame::draw(Painter& painter, const Rect& rect)
 {
-    DBG(name() << " " << __PRETTY_FUNCTION__ << " " << rect);
+    SPDLOG_TRACE("{} rect:{}", name(), rect);
 
     Painter::AutoSaveRestore sr(painter);
 

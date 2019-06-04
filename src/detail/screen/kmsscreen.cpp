@@ -18,6 +18,8 @@
 #include <planes/kms.h>
 #include <planes/plane.h>
 #include <pthread.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <thread>
 #include <xf86drm.h>
 
@@ -118,6 +120,8 @@ std::vector<planeid> KMSScreen::m_used;
 
 KMSScreen::KMSScreen(bool primary)
 {
+    spdlog::info("DRM/KMS Screen");
+
     m_fd = drmOpen("atmel-hlcdc", NULL);
     if (m_fd < 0)
         throw std::runtime_error("unable to open DRM driver");
@@ -144,8 +148,8 @@ KMSScreen::KMSScreen(bool primary)
         plane_fb_map(m_plane);
         plane_apply(m_plane);
 
-        DBG("primary plane dumb buffer " << plane_width(m_plane) << "," <<
-            plane_height(m_plane));
+        SPDLOG_DEBUG("primary plane dumb buffer {},{}", plane_width(m_plane),
+                     plane_height(m_plane));
 
         init(m_plane->bufs, NUM_PRIMARY_BUFFERS,
              plane_width(m_plane), plane_height(m_plane), detail::egt_format(format));
@@ -205,7 +209,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         pixel_format format,
         windowhint hint)
 {
-    DBG("allocate plane of size " << size << " " << format << " " << hint);
+    SPDLOG_TRACE("allocate plane of size {} {} {}", size, format, hint);
     struct plane_data* plane = nullptr;
 
     if (hint == windowhint::software)
@@ -340,9 +344,9 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
 
         plane_set_pos(plane, 0, 0);
 
-        DBG("allocated plane index " << plane->index << " [" <<
-            plane_width(plane) << "," << plane_height(plane) << "] " <<
-            format << " " << plane->type);
+        SPDLOG_DEBUG("allocated plane index {} {},{} {} {}", plane->index,
+                     plane_width(plane), plane_height(plane),
+                     format, plane->type);
     }
 
     return plane;

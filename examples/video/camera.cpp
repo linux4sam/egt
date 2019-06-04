@@ -39,7 +39,7 @@ public:
         switch (event)
         {
         case eventid::pointer_dblclick:
-            DBG("CameraWindow: T::scale() =  " << std::to_string(T::scale()));
+            cout << "CameraWindow: T::scale() =  " << std::to_string(T::scale()) << endl;
             if (T::scale() < 1.0)
             {
                 T::move(Point(0, 0));
@@ -56,7 +56,7 @@ public:
             break;
         case eventid::pointer_drag:
         {
-            DBG("CameraWindow: pointer_drag ");
+            cout << "CameraWindow: pointer_drag " << endl;
             auto diff = event.pointer().drag_start - event.pointer().point;
             T::move(m_start_point - Point(diff.x, diff.y));
             break;
@@ -108,7 +108,7 @@ int main(int argc, const char** argv)
         }
         case eventid::pointer_drag:
         {
-            DBG("CameraWindow: pointer_drag ");
+            cout << "CameraWindow: pointer_drag " << endl;
             auto diff = event.pointer().drag_start - event.pointer().point;
             window->move(m_start_point - Point(diff.x, diff.y));
             break;

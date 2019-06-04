@@ -10,6 +10,8 @@
 #include "egt/utils.h"
 #include <cstring>
 #include <memory>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <stdexcept>
 #include <unistd.h>
 
@@ -21,17 +23,6 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
-
-int& globalloglevel()
-{
-    static int loglevel = getenv("EGT_DEBUG") ? std::atoi(getenv("EGT_DEBUG")) : 0;
-    return loglevel;
-}
-
-}
-
 namespace experimental
 {
 
@@ -45,20 +36,20 @@ double lua_evaluate(const std::string& expr)
 
     if (!script_init(nullptr))
     {
-        ERR("can't init lua");
+        spdlog::error("can't init lua");
         return y;
     }
     cookie = script_load(expr.c_str(), &msg);
     if (msg)
     {
-        ERR("can't load expr: " << msg);
+        spdlog::error("can't load expr: {}", msg);
         goto error;
     }
 
     y = script_eval(cookie, &msg);
     if (msg)
     {
-        ERR("can't eval: " << msg);
+        spdlog::error("can't eval: {}", msg);
         goto error;
     }
 

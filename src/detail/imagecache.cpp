@@ -13,6 +13,8 @@
 #include "egt/utils.h"
 #include "images/bmp/cairo_bmp.h"
 #include <cassert>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -74,10 +76,13 @@ std::string resolve_file_path(const std::string& filename)
     for (auto& path : image_paths)
     {
         auto test = path + filename;
+
+        SPDLOG_TRACE("looking at file {}", test);
+
         struct stat buf {};
         if (!stat(test.c_str(), &buf))
         {
-            DBG("found file " << test);
+            SPDLOG_TRACE("found file {}", test);
             return test;
         }
     }
@@ -100,13 +105,13 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
     if (i != m_cache.end())
         return i->second;
 
-    DBG("image cache miss: " << filename << " hscale:" << hscale << " vscale:" << vscale);
+    SPDLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", filename, hscale, vscale);
 
     shared_cairo_surface_t image;
 
     if (hscale == 1.0 && vscale == 1.0)
     {
-        static_assert(CAIRO_HAS_PNG_FUNCTIONS == 1, "PNG support assumed.");
+        static_assert(CAIRO_HAS_PNG_FUNCTIONS == 1, "PNG support in cairo assumed.");
 
         if (filename.compare(0, 1, ":") == 0)
         {
@@ -115,7 +120,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 
             auto mimetype = get_mime_type(read_resource_data(name.c_str()),
                                           read_resource_length(name.c_str()));
-            DBG("mimetype of " << name << " is " << mimetype);
+            SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
             if (mimetype == "image/png")
             {
@@ -142,8 +147,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             }
             else
             {
-                ERR("could not load resource " << name);
-                throw std::runtime_error("unsupported file type");
+                throw std::runtime_error("unsupported mimetype");
             }
         }
         else if (filename.compare(0, 1, "@") == 0)
@@ -153,7 +157,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             name = resolve_file_path(name);
 
             auto mimetype = get_mime_type(name);
-            DBG("mimetype of " << name << " is " << mimetype);
+            SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
             if (mimetype == "image/png")
             {
@@ -183,17 +187,14 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 #endif
             else
             {
-                ERR("could not load file " << name);
-                throw std::runtime_error("unsupported file type");
+                throw std::runtime_error("unsupported mimetype");
             }
         }
         else
         {
             string name = resolve_file_path(filename);
-            DBG("loading: " << name);
-
             auto mimetype = get_mime_type(name);
-            DBG("mimetype of " << name << " is " << mimetype);
+            SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
             if (mimetype == "image/png")
             {
@@ -223,8 +224,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 #endif
             else
             {
-                ERR("could not load file " << name);
-                throw std::runtime_error("unsupported file type");
+                throw std::runtime_error("unsupported mimetype");
             }
         }
     }
