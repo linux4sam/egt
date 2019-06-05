@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include <detail/video/gstkmssinkimpl.h>
 #include <egt/app.h>
 #include <egt/detail/screen/kmsscreen.h>
-#include <egt/detail/video/gstkmssinkimpl.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <string>
