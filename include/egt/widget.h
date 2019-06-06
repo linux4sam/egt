@@ -120,6 +120,11 @@ public:
          * Tell any parent not to perform layout on this widget.
          */
         no_layout,
+
+        /**
+         * Do not automatically resize a widget to meet the minimal size hint.
+         */
+        no_autoresize,
     };
 
     using flags_type = Flags<flag>;

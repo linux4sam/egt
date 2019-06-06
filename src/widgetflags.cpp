@@ -31,6 +31,7 @@ static const std::map<Widget::flag, std::string>& flag_strings()
         MAPITEM(Widget::flag::grab_mouse);
         MAPITEM(Widget::flag::no_clip);
         MAPITEM(Widget::flag::no_layout);
+        MAPITEM(Widget::flag::no_autoresize);
 #undef MAPITEM
     }
     return strings;

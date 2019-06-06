@@ -39,10 +39,13 @@ struct LayoutSerializer
 
         auto min = widget->box();
 
-        if (min.w < widget->min_size_hint().w)
-            min.w = widget->min_size_hint().w;
-        if (min.h < widget->min_size_hint().h)
-            min.h = widget->min_size_hint().h;
+        if (!widget->flags().is_set(Widget::flag::no_autoresize))
+        {
+            if (min.w < widget->min_size_hint().w)
+                min.w = widget->min_size_hint().w;
+            if (min.h < widget->min_size_hint().h)
+                min.h = widget->min_size_hint().h;
+        }
 
         SPDLOG_TRACE("  current: {}", min);
         lay_set_size_xy(&ctx, w, min.w, min.h);
