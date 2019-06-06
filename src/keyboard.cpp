@@ -134,15 +134,15 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
         m_multichoice_popup.m_notebook.set_select(id);
         m_multichoice_popup.resize(k->m_multichoice->m_panel->size());
 
-        auto display_origin = k->local_to_display(k->point());
-        auto keyboard_origin = display_to_local(display_origin);
-        // Popup on top of the widget.
-        keyboard_origin.y -= m_multichoice_popup.size().h;
-        // Popup centered on button center.
-        keyboard_origin.x -= m_multichoice_popup.size().w / 2;
-        keyboard_origin.x += k->size().w / 2;
+        auto display_origin = k->display_origin();
+        auto main_window_origin = main_window()->display_to_local(display_origin);
+        // Popup on top of the key.
+        main_window_origin.y -= m_multichoice_popup.size().h;
+        // Popup aligned with key center.
+        main_window_origin.x -= m_multichoice_popup.size().w / 2;
+        main_window_origin.x += k->size().w / 2;
 
-        m_multichoice_popup.move(keyboard_origin);
+        m_multichoice_popup.move(main_window_origin);
         m_multichoice_popup.show_modal();
     }, {eventid::pointer_hold});
 }
@@ -153,7 +153,7 @@ Keyboard::Keyboard(vector<shared_ptr<MainPanel>> panels, Size size)
     m_main_panel.set_align(alignmask::expand);
     add(m_main_panel);
     m_multichoice_popup.resize(Size(100, 100));
-    add(m_multichoice_popup);
+    main_window()->add(m_multichoice_popup);
 
     unsigned multichoice_id = 0;
 
