@@ -47,6 +47,7 @@ detail/mousegesture.cpp \
 detail/object.cpp \
 detail/resource.cpp \
 detail/string.cpp \
+detail/screen/flipthread.h \
 detail/window/basicwindow.cpp \
 detail/window/basicwindow.h \
 detail/window/windowimpl.cpp \

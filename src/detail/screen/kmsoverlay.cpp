@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/screen/flipthread.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/utils.h"
-
 #include <planes/fb.h>
 #include <planes/kms.h>
 #include <planes/plane.h>
@@ -19,6 +19,21 @@ inline namespace v1
 {
 namespace detail
 {
+
+struct FlipJob
+{
+    explicit FlipJob(struct plane_data* plane, uint32_t index)
+        : m_plane(plane), m_index(index)
+    {}
+
+    void operator()()
+    {
+        plane_flip(m_plane, m_index);
+    }
+
+    struct plane_data* m_plane;
+    uint32_t m_index;
+};
 
 KMSOverlay::KMSOverlay(struct plane_data* plane)
     : m_plane(plane),
@@ -66,12 +81,8 @@ void KMSOverlay::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-#if 0
-        static FlipThread pool;
+        static FlipThread pool(m_plane->buffer_count - 1);
         pool.enqueue(FlipJob(m_plane, m_index));
-#else
-        plane_flip(m_plane, m_index);
-#endif
     }
 
     if (++m_index >= m_plane->buffer_count)

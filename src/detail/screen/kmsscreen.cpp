@@ -3,24 +3,20 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/screen/flipthread.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
 #include "egt/widget.h"
 #include "egt/window.h"
 #include <cairo.h>
-#include <condition_variable>
 #include <cstring>
-#include <deque>
 #include <drm_fourcc.h>
-#include <mutex>
 #include <planes/fb.h>
 #include <planes/kms.h>
 #include <planes/plane.h>
-#include <pthread.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <thread>
 #include <xf86drm.h>
 
 using namespace std;
@@ -31,75 +27,6 @@ inline namespace v1
 {
 namespace detail
 {
-
-static KMSScreen* the_kms = 0;
-
-struct FlipThread
-{
-    FlipThread()
-        : m_stop(false)
-    {
-        m_thread = std::thread(&FlipThread::run, this);
-#if 0
-        sched_param sch_params;
-        sch_params.sched_priority = sched_get_priority_max(SCHED_RR);
-        if (pthread_setschedparam(m_thread.native_handle(), SCHED_RR, &sch_params))
-        {
-            std::cerr << "Failed to set thread scheduling : " << std::strerror(errno) << std::endl;
-        }
-#endif
-    }
-
-    void run()
-    {
-        std::function<void()> task;
-        while (true)
-        {
-            {
-                std::unique_lock<std::mutex> lock(m_mutex);
-
-                while (!m_stop && m_queue.empty())
-                    m_condition.wait(lock);
-
-                if (m_stop)
-                    return;
-
-                task = m_queue.front();
-                m_queue.pop_front();
-            }
-
-            task();
-        }
-    }
-
-    void enqueue(function<void()> job)
-    {
-        {
-            unique_lock<mutex> lock(m_mutex);
-            m_queue.push_back(job);
-
-            while (m_queue.size() > 2)
-            {
-                cout << "too many flip jobs queued" << endl;
-                m_queue.pop_front();
-            }
-        }
-        m_condition.notify_one();
-    }
-
-    ~FlipThread()
-    {
-        m_stop = true;
-        m_condition.notify_all();
-        m_thread.join();
-    }
-
-    std::thread m_thread;
-    std::deque<function<void()>> m_queue;
-    std::mutex m_mutex;
-    std::condition_variable m_condition;
-    std::atomic<bool> m_stop;
-};
 
 struct FlipJob
 {
@@ -115,6 +42,8 @@ struct FlipJob
     struct plane_data* m_plane;
     uint32_t m_index;
 };
+
+static KMSScreen* the_kms = 0;
 
 std::vector<planeid> KMSScreen::m_used;
 
@@ -181,12 +110,8 @@ void KMSScreen::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-#if 0
-        static FlipThread pool;
+        static FlipThread pool(m_plane->buffer_count - 1);
         pool.enqueue(FlipJob(m_plane, m_index));
-#else
-        plane_flip(m_plane, m_index);
-#endif
     }
 
     if (++m_index >= m_plane->buffer_count)

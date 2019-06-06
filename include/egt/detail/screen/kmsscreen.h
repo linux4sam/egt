@@ -12,7 +12,6 @@
  */
 
 #include <egt/geometry.h>
-#include <egt/detail/screen/kmsoverlay.h>
 #include <egt/screen.h>
 #include <egt/window.h>
 #include <vector>
@@ -26,7 +25,7 @@ inline namespace v1
 {
 namespace detail
 {
-
+class KMSOverlay;
 struct planeid;
 
 /**

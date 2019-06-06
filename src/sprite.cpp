@@ -8,7 +8,7 @@
 #endif
 
 #include "egt/detail/imagecache.h"
-#include "egt/detail/screen/kmsscreen.h"
+#include "egt/detail/screen/kmsoverlay.h"
 #include "egt/image.h"
 #include "egt/label.h"
 #include "egt/painter.h"

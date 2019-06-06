@@ -9,6 +9,7 @@
 
 #include "egt/app.h"
 #include "egt/camera.h"
+#include <egt/detail/screen/kmsoverlay.h>
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
 #include <fstream>

@@ -6,6 +6,7 @@
 
 #include <detail/video/gstkmssinkimpl.h>
 #include <egt/app.h>
+#include <egt/detail/screen/kmsoverlay.h>
 #include <egt/detail/screen/kmsscreen.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/window/planewindow.h"
+#include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/image.h"
 #include "egt/painter.h"
