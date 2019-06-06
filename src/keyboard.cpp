@@ -17,19 +17,25 @@ using MultichoicePanel = Keyboard::MultichoicePanel;
 Keyboard::Key::Key(const string& label, double length)
     : Button(label),
       m_length(length)
-{}
+{
+    ncflags().set(Widget::flag::no_autoresize);
+}
 
 Keyboard::Key::Key(const string& label, int link, double length)
     : Button(label),
       m_link(link),
       m_length(length)
-{}
+{
+    ncflags().set(Widget::flag::no_autoresize);
+}
 
 Keyboard::Key::Key(const string& label, shared_ptr<MultichoicePanel> multichoice, double length)
     : Button(label),
       m_length(length),
       m_multichoice(multichoice)
-{}
+{
+    ncflags().set(Widget::flag::no_autoresize);
+}
 
 Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys, Size key_size)
     : m_keys(std::move(keys))
