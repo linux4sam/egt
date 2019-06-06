@@ -154,7 +154,24 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         {
             string name = filename;
             name.erase(0, 1);
-            name = resolve_file_path(name);
+
+            auto env_p = std::getenv("EGT_ICONS_DIRECTORY");
+            if (env_p)
+            {
+                auto iconsfolder = std::string(env_p);
+                if (!iconsfolder.empty())
+                {
+                    name = resolve_file_path(iconsfolder + "/" + name);
+                }
+                else
+                {
+                    name = resolve_file_path(name);
+                }
+            }
+            else
+            {
+                name = resolve_file_path(name);
+            }
 
             auto mimetype = get_mime_type(name);
             SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
