@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/screen/kmsoverlay.h"
+#include "egt/detail/screen/kmsscreen.h"
 #include "egt/utils.h"
 
 #include <planes/fb.h>
@@ -26,7 +27,7 @@ KMSOverlay::KMSOverlay(struct plane_data* plane)
     assert(plane);
     if (plane)
     {
-        init(plane->bufs, NUM_OVERLAY_BUFFERS,
+        init(plane->bufs, KMSScreen::max_buffers(),
              plane_width(plane), plane_height(plane), detail::egt_format(plane_format(plane)));
     }
 }
@@ -40,7 +41,7 @@ void KMSOverlay::resize(const Size& size)
     {
         plane_fb_map(m_plane);
 
-        init(m_plane->bufs, NUM_OVERLAY_BUFFERS,
+        init(m_plane->bufs, KMSScreen::max_buffers(),
              plane_width(m_plane), plane_height(m_plane),
              detail::egt_format(plane_format(m_plane)));
     }

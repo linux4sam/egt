@@ -120,7 +120,7 @@ std::vector<planeid> KMSScreen::m_used;
 
 KMSScreen::KMSScreen(bool primary)
 {
-    spdlog::info("DRM/KMS Screen");
+    spdlog::info("DRM/KMS Screen ({} buffers)", max_buffers());
 
     m_fd = drmOpen("atmel-hlcdc", NULL);
     if (m_fd < 0)
@@ -132,7 +132,6 @@ KMSScreen::KMSScreen(bool primary)
 
     if (primary)
     {
-        static const uint32_t NUM_PRIMARY_BUFFERS = 3;
         uint32_t format = DRM_FORMAT_RGB565;
 
         m_plane = plane_create_buffered(m_device,
@@ -141,7 +140,7 @@ KMSScreen::KMSScreen(bool primary)
                                         m_device->screens[0]->width,
                                         m_device->screens[0]->height,
                                         format,
-                                        NUM_PRIMARY_BUFFERS);
+                                        KMSScreen::max_buffers());
         if (!m_plane)
             throw std::runtime_error("unable to create primary plane");
 
@@ -151,7 +150,7 @@ KMSScreen::KMSScreen(bool primary)
         SPDLOG_DEBUG("primary plane dumb buffer {},{}", plane_width(m_plane),
                      plane_height(m_plane));
 
-        init(m_plane->bufs, NUM_PRIMARY_BUFFERS,
+        init(m_plane->bufs, KMSScreen::max_buffers(),
              plane_width(m_plane), plane_height(m_plane), detail::egt_format(format));
     }
     else
@@ -161,6 +160,21 @@ KMSScreen::KMSScreen(bool primary)
     }
 
     the_kms = this;
+}
+
+uint32_t KMSScreen::max_buffers()
+{
+    static uint32_t num_buffers = 3;
+    static std::once_flag env_flag;
+    std::call_once(env_flag, [&]()
+    {
+        if (getenv("EGT_KMS_BUFFERS"))
+        {
+            num_buffers = static_cast<spdlog::level::level_enum>(
+                              std::atoi(getenv("EGT_KMS_BUFFERS")));
+        }
+    });
+    return num_buffers;
 }
 
 void KMSScreen::schedule_flip()
@@ -230,7 +244,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                           size.w,
                                           size.h,
                                           detail::drm_format(format),
-                                          detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
+                                          KMSScreen::max_buffers());
             if (plane)
             {
                 m_used.push_back(id);
@@ -257,7 +271,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                           size.w,
                                           size.h,
                                           detail::drm_format(format),
-                                          detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
+                                          KMSScreen::max_buffers());
             if (plane)
             {
                 m_used.push_back(id);
@@ -303,7 +317,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                               size.w,
                                               size.h,
                                               detail::drm_format(format),
-                                              detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
+                                              KMSScreen::max_buffers());
                 if (plane)
                 {
                     m_used.push_back(id);
@@ -329,7 +343,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
                                           size.w,
                                           size.h,
                                           detail::drm_format(format),
-                                          detail::KMSOverlay::NUM_OVERLAY_BUFFERS);
+                                          KMSScreen::max_buffers());
             if (plane)
             {
                 m_used.push_back(id);

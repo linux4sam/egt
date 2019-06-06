@@ -37,6 +37,7 @@ struct planeid;
 class KMSScreen : public Screen
 {
 public:
+
     explicit KMSScreen(bool primary = true);
 
     enum class plane_type
@@ -64,6 +65,11 @@ public:
                                         windowhint hint = windowhint::automatic);
 
     virtual ~KMSScreen();
+
+    /**
+     * Get the number of buffers to use for KMS planes.
+     */
+    static uint32_t max_buffers();
 
 protected:
 

@@ -30,8 +30,6 @@ class KMSOverlay : public Screen
 {
 public:
 
-    constexpr static const uint32_t NUM_OVERLAY_BUFFERS = 3;
-
     explicit KMSOverlay(struct plane_data* plane);
 
     virtual void resize(const Size& size);
