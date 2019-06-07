@@ -165,12 +165,26 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                 }
                 else
                 {
-                    name = resolve_file_path(name);
+                    /* check if a folder name is prefixed with file name
+                     * if prefixed, then do nothing or else  point to default
+                     * 64px folder.
+                     */
+                    if (name.find("/") != string::npos)
+                        name = resolve_file_path(name);
+                    else
+                        name = resolve_file_path("64px/" + name);
                 }
             }
             else
             {
-                name = resolve_file_path(name);
+                /* check if a folder name is prefixed with file name
+                 * if prefixed, then do nothing or else  point to default
+                 * 64px folder.
+                 */
+                if (name.find("/") != string::npos)
+                    name = resolve_file_path(name);
+                else
+                    name = resolve_file_path("64px/" + name);
             }
 
             auto mimetype = get_mime_type(name);

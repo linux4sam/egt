@@ -16,7 +16,7 @@ int main(int argc, const char** argv)
 
     TopWindow window;
 
-    auto logo = make_shared<ImageLabel>(Image("@egt_logo_black.png"));
+    auto logo = make_shared<ImageLabel>(Image("@logos/egt_logo_black.png"));
     logo->set_margin(10);
     logo->set_align(alignmask::center | alignmask::bottom);
     window.add(logo);

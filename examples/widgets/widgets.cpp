@@ -28,25 +28,25 @@ struct ButtonPage : public NotebookTab
         btn2->disable();
         grid0->add(expand(btn2));
 
-        grid0->add(expand(make_shared<ImageButton>(Image("@flag_red.png"), "Flag")));
+        grid0->add(expand(make_shared<ImageButton>(Image("@16px/flag_red.png"), "Flag")));
 
-        auto imagebutton1 = make_shared<ImageButton>(Image("@flag_red.png"), "Flag");
+        auto imagebutton1 = make_shared<ImageButton>(Image("@16px/flag_red.png"), "Flag");
         grid0->add(expand(imagebutton1));
         imagebutton1->set_text_align(alignmask::center | alignmask::left);
 
-        auto imagebutton2 = make_shared<ImageButton>(Image("@flag_red.png"), "Flag");
+        auto imagebutton2 = make_shared<ImageButton>(Image("@16px/flag_red.png"), "Flag");
         grid0->add(expand(imagebutton2));
         imagebutton2->set_text_align(alignmask::center | alignmask::right);
 
-        auto imagebutton3 = make_shared<ImageButton>(Image("@flag_red.png"), "Flag");
+        auto imagebutton3 = make_shared<ImageButton>(Image("@16px/flag_red.png"), "Flag");
         grid0->add(expand(imagebutton3));
         imagebutton3->set_text_align(alignmask::center | alignmask::top);
 
-        auto imagebutton4 = make_shared<ImageButton>(Image("@flag_red.png"), "Flag");
+        auto imagebutton4 = make_shared<ImageButton>(Image("@16px/flag_red.png"), "Flag");
         grid0->add(expand(imagebutton4));
         imagebutton4->set_text_align(alignmask::center | alignmask::bottom);
 
-        auto imagebutton5 = make_shared<ImageButton>(Image("@flag_red.png"));
+        auto imagebutton5 = make_shared<ImageButton>(Image("@16px/flag_red.png"));
         grid0->add(expand(imagebutton5));
 
         auto button6 = make_shared<Button>("Multiline\nButton Text");
@@ -149,40 +149,40 @@ struct LabelPage : public NotebookTab
         label5->set_border(1);
         grid0->add(expand(label5));
 
-        auto imagelabel0 = std::make_shared<ImageLabel>(Image("@bug.png"), "Bug");
+        auto imagelabel0 = std::make_shared<ImageLabel>(Image("@16px/bug.png"), "Bug");
         imagelabel0->set_boxtype(Theme::boxtype::blank);
         imagelabel0->set_border(1);
         grid0->add(expand(imagelabel0));
         imagelabel0->set_image_align(alignmask::top);
         imagelabel0->set_text_align(alignmask::center);
 
-        auto imagelabel1 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
+        auto imagelabel1 = std::make_shared<ImageLabel>(Image("@16px/phone.png"), "Phone");
         imagelabel1->set_boxtype(Theme::boxtype::blank);
         imagelabel1->set_border(1);
         grid0->add(expand(imagelabel1));
         imagelabel1->set_text_align(alignmask::center);
 
-        auto imagelabel2 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
+        auto imagelabel2 = std::make_shared<ImageLabel>(Image("@16px/phone.png"), "Phone");
         imagelabel2->set_boxtype(Theme::boxtype::blank);
         imagelabel2->set_border(1);
         grid0->add(expand(imagelabel2));
         imagelabel2->set_text_align(alignmask::center | alignmask::right);
         imagelabel2->set_image_align(alignmask::right);
 
-        auto imagelabel3 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
+        auto imagelabel3 = std::make_shared<ImageLabel>(Image("@16px/phone.png"), "Phone");
         imagelabel3->set_boxtype(Theme::boxtype::blank);
         imagelabel3->set_border(1);
         grid0->add(expand(imagelabel3));
         imagelabel3->set_text_align(alignmask::center | alignmask::top);
         imagelabel3->set_image_align(alignmask::bottom);
 
-        auto imagelabel4 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
+        auto imagelabel4 = std::make_shared<ImageLabel>(Image("@16px/phone.png"), "Phone");
         imagelabel4->set_boxtype(Theme::boxtype::blank);
         imagelabel4->set_border(1);
         grid0->add(expand(imagelabel4));
         imagelabel4->set_text_align(alignmask::center | alignmask::bottom);
 
-        auto imagelabel5 = std::make_shared<ImageLabel>(Image("@phone.png"));
+        auto imagelabel5 = std::make_shared<ImageLabel>(Image("@16px/phone.png"));
         imagelabel5->set_boxtype(Theme::boxtype::blank);
         imagelabel5->set_border(1);
         grid0->add(expand(imagelabel5));
@@ -459,7 +459,7 @@ int main(int argc, const char** argv)
     VerticalBoxSizer vsizer(win);
     expand(vsizer);
 
-    auto logo = make_shared<ImageLabel>(Image("@egt_logo_black.png"));
+    auto logo = make_shared<ImageLabel>(Image("@logos/egt_logo_black.png"));
     logo->set_margin(5);
     logo->set_align(alignmask::center_horizontal);
     vsizer.add(logo);

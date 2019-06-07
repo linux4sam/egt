@@ -192,7 +192,7 @@ public:
             damage();
         }, {eventid::hide});
 
-        auto logo = make_shared<ImageLabel>(Image("@microchip_logo_black.png"));
+        auto logo = make_shared<ImageLabel>(Image("@logos/microchip_logo_black.png"));
         logo->set_align(alignmask::right | alignmask::top);
         logo->set_margin(10);
         add(logo);

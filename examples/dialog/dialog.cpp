@@ -26,7 +26,7 @@ int main(int argc, const char** argv)
     grid->set_color(Palette::ColorId::bg, Color(0xed2924ff));
     grid->set_boxtype(Theme::boxtype::blank);
 
-    auto logo = make_shared<ImageLabel>(Image("@microchip_logo_white.png"));
+    auto logo = make_shared<ImageLabel>(Image("@logos/microchip_logo_white.png"));
     grid->add(logo, 1, 0);
 
     vsizer.add(expand_horizontal(grid));

@@ -28,8 +28,9 @@ style:
 		--exclude=images/jpeg -i
 endif
 
-iconsdir = $(pkgdatadir)/icons
-dist_icons_DATA = $(wildcard icons/*.png)
+iconsdir = $(pkgdatadir)
+include $(top_srcdir)/icons/Makefile.icons
+nobase_dist_icons_DATA = $(PNG_ICONS_FILES)
 
 CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--inline-suppr \

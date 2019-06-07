@@ -27,7 +27,7 @@ public:
         m_img.set_align(alignmask::expand);
         m_img.set_image_align(alignmask::expand);
 
-        auto logo = make_shared<ImageLabel>(Image("@microchip_logo_white.png"));
+        auto logo = make_shared<ImageLabel>(Image("@logos/microchip_logo_white.png"));
         logo->set_align(alignmask::left | alignmask::top);
         logo->set_margin(10);
         add(logo);

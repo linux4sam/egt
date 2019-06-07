@@ -1,0 +1,15 @@
+PNG_ICONS_FILES =  \
+$(top_srcdir)/16px/cursor.png \
+$(top_srcdir)/16px/flag_red.png \
+$(top_srcdir)/16px/bug.png \
+$(top_srcdir)/16px/arrow_up.png \
+$(top_srcdir)/16px/phone.png \
+$(top_srcdir)/16px/arrow_down.png \
+$(top_srcdir)/logos/egt_logo_white.png \
+$(top_srcdir)/logos/microchip_logo_red_white.png \
+$(top_srcdir)/logos/microchip_logo_black.png \
+$(top_srcdir)/logos/egt_logo.png \
+$(top_srcdir)/logos/microchip_logo_white.png \
+$(top_srcdir)/logos/egt_logo_black.png \
+$(top_srcdir)/logos/egt_logo_small_black.png \
+$(top_srcdir)/logos/egt_logo_small_white.png
