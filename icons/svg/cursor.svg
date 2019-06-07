@@ -1,0 +1,38 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #b3332f;
+      }
+
+      .cls-3 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-4 {
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 4.22px;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="1.2" y="1" width="126.5" height="126.51"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_Cursor_Arrow_icon</title>
+  <g>
+    <polygon class="cls-2" points="106.4 79.3 29.3 8.5 29.3 113.1 52.7 90.8 66.4 122.1 87.8 112.7 74.1 81.4 106.4 79.3 106.4 79.3"/>
+    <g class="cls-3">
+      <polygon class="cls-4" points="106.4 79.3 29.3 8.5 29.3 113.1 52.7 90.8 66.4 122.1 87.8 112.7 74.1 81.4 106.4 79.3 106.4 79.3"/>
+    </g>
+    <line class="cls-2" x1="38.1" y1="26.7" x2="56.8" y2="45.3"/>
+    <line class="cls-4" x1="38.1" y1="26.7" x2="56.8" y2="45.3"/>
+    <line class="cls-2" x1="61.7" y1="50.4" x2="69.7" y2="58.5"/>
+    <line class="cls-4" x1="61.7" y1="50.4" x2="69.7" y2="58.5"/>
+  </g>
+</svg>

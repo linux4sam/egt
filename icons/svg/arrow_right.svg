@@ -1,0 +1,18 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #b0aeab;
+      }
+
+      .cls-2 {
+        fill: #b3332f;
+      }
+    </style>
+  </defs>
+  <title>190429_GR-19-050601_Arrow_Right_Icon</title>
+  <g id="reply">
+    <path class="cls-1" d="M78.3,41.7V16.4l44.3,44.3L78.3,105.1v-26c-31.7,0-53.9,10.2-69.8,32.4C14.8,79.8,33.9,48.1,78.3,41.7Z"/>
+  </g>
+  <path class="cls-2" d="M122.6,60.7S42.2,37.5,8.5,111.5c0,0,3.2-5.7,11.7-12.9,10.2-8.6,28-18.9,58.1-19.5v26Z"/>
+</svg>

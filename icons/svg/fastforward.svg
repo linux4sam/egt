@@ -1,0 +1,31 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #8db4b3;
+      }
+
+      .cls-4 {
+        fill: #fff;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="10.4" y="10.1" width="108.3" height="108.28"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_FF_icon</title>
+  <g>
+    <g class="cls-2">
+      <path class="cls-3" d="M118.6,64.2A54.1,54.1,0,1,1,64.5,10.1a54.2,54.2,0,0,1,54.1,54.1Z"/>
+    </g>
+    <path class="cls-4" d="M27.1,86.6V40.5L62.5,62V39.9L101,63.6,62.8,87V65.1L27.1,86.6Z"/>
+  </g>
+</svg>

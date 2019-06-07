@@ -1,0 +1,31 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #b3332f;
+      }
+
+      .cls-4 {
+        fill: #a6aa44;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="10.6" y="9.8" width="107.7" height="108.82"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_Alarm_On_Icon</title>
+  <g>
+    <g class="cls-2">
+      <path class="cls-3" d="M64.5,107.9a37.7,37.7,0,1,1,37.7-37.7,37.5,37.5,0,0,1-37.7,37.7Zm0-86.2A48.5,48.5,0,1,0,113,70.2,48.3,48.3,0,0,0,64.5,21.7ZM42.4,18.5l-7-8.1L10.6,30.8l7,8.1L42.4,18.5Zm76,12.3L93.6,9.8l-7,8.1,24.8,21,7-8.1Z"/>
+    </g>
+    <path class="cls-4" d="M38.9,72.2a1.9,1.9,0,0,1,0-2.8l2.8-2.9a2.1,2.1,0,0,1,2.9,0l.2.2,11,11.9a1,1,0,0,0,1.4,0l27-28h.2a2.1,2.1,0,0,1,2.9,0l2.8,2.8a2.1,2.1,0,0,1,0,2.9h0L57.9,89.7a2.2,2.2,0,0,1-1.5.6,1.8,1.8,0,0,1-1.4-.6L39.3,72.8l-.4-.6Z"/>
+  </g>
+</svg>

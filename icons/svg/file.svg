@@ -1,0 +1,35 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #565657;
+      }
+
+      .cls-3 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-4 {
+        fill: #b3332f;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="17.3" y="3.9" width="94.3" height="120.64"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_File_Icon</title>
+  <g>
+    <path class="cls-2" d="M91.9,47.8H37.1a2.2,2.2,0,1,0,0,4.4H91.9a2.2,2.2,0,0,0,0-4.4Z"/>
+    <path class="cls-2" d="M37.1,34.6H59a2.2,2.2,0,1,0,0-4.4H37.1a2.2,2.2,0,1,0,0,4.4Z"/>
+    <path class="cls-2" d="M91.9,65.3H37.1a2.2,2.2,0,1,0,0,4.4H91.9a2.2,2.2,0,0,0,0-4.4Z"/>
+    <path class="cls-2" d="M91.9,82.9H37.1a2.2,2.2,0,1,0,0,4.4H91.9a2.2,2.2,0,0,0,0-4.4Z"/>
+    <g class="cls-3">
+      <path class="cls-2" d="M91.9,100.4H37.1a2.2,2.2,0,0,0,0,4.4H91.9a2.2,2.2,0,1,0,0-4.4Z"/>
+      <path class="cls-4" d="M107.3,120.2H21.7V8.3H76.6V39h30.7v81.2ZM81,11.4l19.7,19.7,3.5,3.5H81V11.4Zm19.7,13.5-4.4-4.3L79.7,3.9H17.3V124.6h94.4V35.9l-11-11Z"/>
+    </g>
+  </g>
+</svg>

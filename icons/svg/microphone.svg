@@ -1,0 +1,27 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #565657;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 4.81px;
+      }
+
+      .cls-2 {
+        fill: #c7cac7;
+      }
+
+      .cls-3 {
+        fill: #afb6bb;
+      }
+    </style>
+  </defs>
+  <title>190429_GR-19-050601_Microphone_Icon</title>
+  <g>
+    <path class="cls-1" d="M94.1,63V74.9a29.6,29.6,0,1,1-59.2,0V63m29.6,41.5v13.8m11.8,0H52.7"/>
+    <path class="cls-2" d="M64.5,94.6h0A19.7,19.7,0,0,1,44.8,74.9V27.5A19.7,19.7,0,0,1,64.5,7.8h0A19.7,19.7,0,0,1,84.2,27.5V74.9A19.7,19.7,0,0,1,64.5,94.6Z"/>
+    <path class="cls-3" d="M84.2,74.9V27.5A19.7,19.7,0,0,0,64.5,7.8V94.6A19.7,19.7,0,0,0,84.2,74.9Z"/>
+  </g>
+</svg>

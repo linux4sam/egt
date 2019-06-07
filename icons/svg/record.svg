@@ -1,0 +1,38 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #b3332f;
+      }
+
+      .cls-3 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-4 {
+        stroke: #050406;
+        stroke-miterlimit: 10;
+        stroke-width: 2.93px;
+      }
+
+      .cls-5 {
+        fill: #fff;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="10.4" y="10.1" width="108.3" height="108.28"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_Record</title>
+  <g>
+    <path class="cls-2" d="M117.2,64.2A52.7,52.7,0,1,1,64.5,11.6a52.7,52.7,0,0,1,52.7,52.6Z"/>
+    <g class="cls-3">
+      <path class="cls-4" d="M117.2,64.2A52.7,52.7,0,1,1,64.5,11.6a52.7,52.7,0,0,1,52.7,52.6Z"/>
+    </g>
+    <path class="cls-5" d="M80.5,64.2a16,16,0,1,1-16-15.9,16,16,0,0,1,16,15.9Z"/>
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #efce49;
+      }
+
+      .cls-4 {
+        fill: #eaba1f;
+      }
+
+      .cls-5 {
+        fill: #f4efdd;
+      }
+
+      .cls-6 {
+        fill: #cec8ae;
+      }
+
+      .cls-7 {
+        fill: #d1bf86;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="10.4" y="10.1" width="108.3" height="108.28"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_Folder_Icon</title>
+  <g>
+    <g class="cls-2">
+      <path class="cls-3" d="M96.8,118.4H13.3a2.9,2.9,0,0,1-2.8-3.7l18.9-52a3,3,0,0,1,2.9-2.2h83.5c1.9,0,2.8,1.8,2.8,3.7l-18.9,52a3,3,0,0,1-2.9,2.2Z"/>
+    </g>
+    <path class="cls-4" d="M104.2,43.7H100V60.5h7.4V46.9a3.2,3.2,0,0,0-3.2-3.2Z"/>
+    <path class="cls-4" d="M17.8,30.6H13.6a3.2,3.2,0,0,0-3.2,3.3v79.7h.3l7.1-19.4V30.6Z"/>
+    <path class="cls-5" d="M29.4,62.7a3,3,0,0,1,2.9-2.2H100V10.1H29V63.8l.4-1.1Z"/>
+    <path class="cls-6" d="M42.1,40H86.9a1.9,1.9,0,0,0,0-3.8H42.1a1.9,1.9,0,0,0,0,3.8Z"/>
+    <path class="cls-6" d="M42.1,26.9H60.8A1.8,1.8,0,0,0,62.6,25a1.8,1.8,0,0,0-1.8-1.8H42.1a1.9,1.9,0,1,0,0,3.7Z"/>
+    <path class="cls-6" d="M86.9,49.3H42.1a1.9,1.9,0,1,0,0,3.7H86.9a1.9,1.9,0,1,0,0-3.7Z"/>
+    <polygon class="cls-6" points="29 63.8 29 13.8 23.4 13.8 23.4 79.1 29 63.8 29 63.8"/>
+    <polygon class="cls-7" points="23.4 79.1 23.4 17.6 17.8 17.6 17.8 94.5 23.4 79.1 23.4 79.1"/>
+  </g>
+</svg>

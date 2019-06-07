@@ -1,0 +1,32 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #d8ab3d;
+      }
+
+      .cls-4 {
+        fill: #fff;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="10.4" y="10.1" width="108.3" height="108.28"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_Play</title>
+  <g>
+    <g class="cls-2">
+      <path class="cls-3" d="M118.6,64.2A54.1,54.1,0,1,1,64.5,10.1a54.2,54.2,0,0,1,54.1,54.1Z"/>
+    </g>
+    <path class="cls-4" d="M59.7,34.6V91.8l-14.4.8v-58Z"/>
+    <path class="cls-4" d="M69.2,34.1H83.4V91.8l-14.2.8V34.1Z"/>
+  </g>
+</svg>

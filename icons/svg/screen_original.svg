@@ -1,0 +1,45 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #b3332f;
+      }
+
+      .cls-3 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-4 {
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+        stroke-width: 2.18px;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="10.4" y="10.1" width="108.3" height="108.28"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_Zoom_out_Icon</title>
+  <g>
+    <polygon class="cls-2" points="22.5 45.5 22.5 22.3 45.8 22.3 45.8 11.2 11.5 11.2 11.5 45.5 22.5 45.5 22.5 45.5"/>
+    <g class="cls-3">
+      <polygon class="cls-4" points="22.5 45.5 22.5 22.3 45.8 22.3 45.8 11.2 11.5 11.2 11.5 45.5 22.5 45.5 22.5 45.5"/>
+    </g>
+    <polygon class="cls-2" points="83.2 22.3 106.5 22.3 106.5 45.5 117.5 45.5 117.5 11.2 83.2 11.2 83.2 22.3 83.2 22.3"/>
+    <g class="cls-3">
+      <polygon class="cls-4" points="83.2 22.3 106.5 22.3 106.5 45.5 117.5 45.5 117.5 11.2 83.2 11.2 83.2 22.3 83.2 22.3"/>
+    </g>
+    <polygon class="cls-2" points="106.5 83 106.5 106.2 83.2 106.2 83.2 117.3 117.5 117.3 117.5 83 106.5 83 106.5 83"/>
+    <g class="cls-3">
+      <polygon class="cls-4" points="106.5 83 106.5 106.2 83.2 106.2 83.2 117.3 117.5 117.3 117.5 83 106.5 83 106.5 83"/>
+    </g>
+    <polygon class="cls-2" points="45.8 106.2 22.5 106.2 22.5 83 11.5 83 11.5 117.3 45.8 117.3 45.8 106.2 45.8 106.2"/>
+    <g class="cls-3">
+      <polygon class="cls-4" points="45.8 106.2 22.5 106.2 22.5 83 11.5 83 11.5 117.3 45.8 117.3 45.8 106.2 45.8 106.2"/>
+    </g>
+  </g>
+</svg>

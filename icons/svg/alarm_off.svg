@@ -1,0 +1,35 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-3 {
+        fill: #b3332f;
+      }
+
+      .cls-4 {
+        fill: #565657;
+      }
+    </style>
+    <clipPath id="clip-path">
+      <rect class="cls-1" x="11.8" y="8.7" width="105.3" height="111.17"/>
+    </clipPath>
+  </defs>
+  <title>190429_GR-19-050601_Alarm_Off_Icon</title>
+  <g>
+    <g class="cls-2">
+      <path class="cls-3" d="M50.1,33.6a38.1,38.1,0,0,1,14.4-2.8,36.7,36.7,0,0,1,36.9,36.8,37.5,37.5,0,0,1-5.6,19.7l7.1,8.3a48.2,48.2,0,0,0,9-28A47.2,47.2,0,0,0,64.5,20.2,48,48,0,0,0,43,25.3l7.1,8.3Z"/>
+      <polygon class="cls-3" points="117.2 29.2 92.9 8.7 86.1 16.6 110.3 37.1 117.2 29.2 117.2 29.2"/>
+      <polygon class="cls-3" points="38.9 20.4 42.9 17.1 36.1 9.2 32.1 12.5 38.9 20.4 38.9 20.4"/>
+      <polygon class="cls-3" points="28.6 28.9 21.8 21 11.8 29.2 18.7 37.1 28.6 28.9 28.6 28.9"/>
+    </g>
+    <path class="cls-3" d="M86.7,97.2A37,37,0,0,1,38.9,41L32,33a47.5,47.5,0,0,0,61.5,72.2l-6.8-8Z"/>
+    <polygon class="cls-4" points="109.6 111.2 99.5 119.8 13.4 18.8 23.5 10.1 109.6 111.2 109.6 111.2"/>
+  </g>
+</svg>
