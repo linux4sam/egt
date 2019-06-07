@@ -131,13 +131,13 @@ struct QwertyLettersLowerCase : public MainPanel
             make_shared<Keyboard::Key>("b"),
             make_shared<Keyboard::Key>("n"),
             make_shared<Keyboard::Key>("m"),
-            make_shared<Keyboard::Key>("<-", 1.5)
+            make_shared<Keyboard::Key>("<-", 1.5, EKEY_BACKSPACE)
         }, {
             make_shared<Keyboard::Key>("?123", 2, 1.5),
             make_shared<Keyboard::Key>(","),
             make_shared<Keyboard::Key>(" ", 5.0),
             make_shared<Keyboard::Key>("."),
-            make_shared<Keyboard::Key>("Enter", 1.5)
+            make_shared<Keyboard::Key>("Enter", 1.5, EKEY_ENTER)
         }
     }, Size(30, 50))
     {}
@@ -178,13 +178,13 @@ struct QwertyLettersUpperCase : public MainPanel
             make_shared<Keyboard::Key>("B"),
             make_shared<Keyboard::Key>("N"),
             make_shared<Keyboard::Key>("M"),
-            make_shared<Keyboard::Key>("<-", 1.5)
+            make_shared<Keyboard::Key>("<-", 1.5, EKEY_BACKSPACE)
         }, {
             make_shared<Keyboard::Key>("?123", 2, 1.5),
             make_shared<Keyboard::Key>(","),
             make_shared<Keyboard::Key>(" ", 5.0),
             make_shared<Keyboard::Key>("."),
-            make_shared<Keyboard::Key>("Enter", 1.5)
+            make_shared<Keyboard::Key>("Enter", 1.5, EKEY_ENTER)
         }
     }, Size(30, 50))
     {}
@@ -226,13 +226,13 @@ struct NumbersSymbols : public MainPanel
             make_shared<Keyboard::Key>("^"),
             make_shared<Keyboard::Key>("&"),
             make_shared<Keyboard::Key>("*"),
-            make_shared<Keyboard::Key>("<-", 1.5)
+            make_shared<Keyboard::Key>("<-", 1.5, EKEY_BACKSPACE)
         }, {
             make_shared<Keyboard::Key>("ABC", 0, 1.5),
             make_shared<Keyboard::Key>(","),
             make_shared<Keyboard::Key>(" ", 5.0),
             make_shared<Keyboard::Key>("."),
-            make_shared<Keyboard::Key>("Enter", 1.5)
+            make_shared<Keyboard::Key>("Enter", 1.5, EKEY_ENTER)
         }
     }, Size(30, 50))
     {}

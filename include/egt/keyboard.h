@@ -13,6 +13,7 @@
 
 #include <egt/button.h>
 #include <egt/input.h>
+#include <egt/keycode.h>
 #include <egt/notebook.h>
 #include <egt/popup.h>
 #include <egt/sizer.h>
@@ -44,9 +45,12 @@ public:
          * @param[in] label Label of the key.
          * @param[in] length Length of the key. It multiplies the width of the
          * default key size which is configured when creating a Panel.
+         * @param[in] keycode Code of the key.
          */
-        Key(const std::string& label, double length = 1.0);
+        Key(const std::string& label, double length = 1.0,
+            KeyboardCode keycode = EKEY_UNKNOWN);
 
+        Key(const std::string& label, KeyboardCode keycode, double length = 1.0);
         /**
          * @param[in] label Label of the key.
          * @param[in] link Id of the main panel to display when clicking on this
@@ -64,8 +68,10 @@ public:
          * after a long touch event.
          * @param[in] length Length of the key. It multiplies the width of the
          * default key size which is configured when creating a Panel.
+         * @param[in] keycode Code of the key.
          */
-        Key(const std::string& label, std::shared_ptr<MultichoicePanel> multichoice, double length = 1.0);
+        Key(const std::string& label, std::shared_ptr<MultichoicePanel> multichoice,
+            double length = 1.0, KeyboardCode keycode = EKEY_UNKNOWN);
 
         inline double length() const { return m_length; }
 
@@ -76,6 +82,8 @@ public:
          * Id of the main panel to display when clicking on this button.
          */
         int m_link{-1};
+
+        KeyboardCode m_keycode;
 
         /**
          * Length multiplicator of the panel default key size.
