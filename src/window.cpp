@@ -313,7 +313,7 @@ struct CursorWindow : public Window
 
     virtual void handle(Event&) override
     {
-
+        // no events handled
     }
 
     virtual ~CursorWindow() = default;

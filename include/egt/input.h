@@ -69,11 +69,6 @@ protected:
      * Currently dispatching an event when true.
      */
     bool m_dispatching{false};
-
-    /**
-     * Boolean state of every key code.
-     */
-    std::array<bool, 256> m_key_states{};
 };
 
 namespace detail

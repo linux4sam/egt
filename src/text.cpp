@@ -92,9 +92,12 @@ void TextBox::handle(Event& event)
 
 void TextBox::handle_key(const Key& key)
 {
-    switch (key.code)
+    switch (key.keycode)
     {
-    case EKEY_BACK:
+    case EKEY_ESCAPE:
+        // do nothing
+        break;
+    case EKEY_BACKSPACE:
     {
         if (cursor())
         {
@@ -109,7 +112,7 @@ void TextBox::handle_key(const Key& key)
         delete_selection();
         break;
     }
-    case EKEY_RETURN:
+    case EKEY_ENTER:
     {
         if (text_flags().is_set(flag::multiline))
             insert("\n");
@@ -153,10 +156,11 @@ void TextBox::handle_key(const Key& key)
     }
     default:
     {
-        if (key.key)
+        if (key.unicode)
         {
-            std::string str(1, key.key);
-            insert(str);
+            string tmp;
+            utf8::append(key.unicode, std::back_inserter(tmp));
+            insert(tmp);
         }
         break;
     }

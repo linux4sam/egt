@@ -782,7 +782,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     switch (keysym)
     {
     case XK_BackSpace:
-        return EKEY_BACK;
+        return EKEY_BACKSPACE;
     case XK_Delete:
     case XK_KP_Delete:
         return EKEY_DELETE;
@@ -795,7 +795,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     case XK_Return:
     case XK_KP_Enter:
     case XK_ISO_Enter:
-        return EKEY_RETURN;
+        return EKEY_ENTER;
     case XK_Clear:
     case XK_KP_Begin:  // NumPad 5 without Num Lock, for crosbug.com/29169.
         return EKEY_CLEAR;
@@ -810,10 +810,10 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
         return EKEY_END;
     case XK_Page_Up:
     case XK_KP_Page_Up:  // aka XK_KP_Prior
-        return EKEY_PRIOR;
+        return EKEY_PAGEUP;
     case XK_Page_Down:
     case XK_KP_Page_Down:  // aka XK_KP_Next
-        return EKEY_NEXT;
+        return EKEY_PAGEDOWN;
     case XK_Left:
     case XK_KP_Left:
         return EKEY_LEFT;
@@ -828,6 +828,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
         return EKEY_UP;
     case XK_Escape:
         return EKEY_ESCAPE;
+#if 0
     case XK_Kana_Lock:
     case XK_Kana_Shift:
         return EKEY_KANA;
@@ -843,6 +844,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
         return EKEY_NONCONVERT;
     case XK_Zenkaku_Hankaku:
         return EKEY_DBE_DBCSCHAR;
+#endif
     case XK_KP_0:
     case XK_KP_1:
     case XK_KP_2:
@@ -860,7 +862,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     case XK_KP_Add:
         return EKEY_ADD;
     case XK_KP_Separator:
-        return EKEY_SEPARATOR;
+        return EKEY_MULTIPLY;
     case XK_KP_Subtract:
         return EKEY_SUBTRACT;
     case XK_KP_Decimal:
@@ -870,59 +872,66 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     case XK_KP_Equal:
     case XK_equal:
     case XK_plus:
-        return EKEY_OEM_PLUS;
+        return EKEY_EQUAL;
     case XK_comma:
     case XK_less:
-        return EKEY_OEM_COMMA;
+        return EKEY_COMMA;
     case XK_minus:
     case XK_underscore:
-        return EKEY_OEM_MINUS;
+        return EKEY_MINUS;
     case XK_greater:
     case XK_period:
-        return EKEY_OEM_PERIOD;
+        return EKEY_DOT;
     case XK_colon:
     case XK_semicolon:
-        return EKEY_OEM_1;
+        return EKEY_SEMICOLON;
     case XK_question:
     case XK_slash:
-        return EKEY_OEM_2;
+        return EKEY_SLASH;
     case XK_asciitilde:
     case XK_quoteleft:
-        return EKEY_OEM_3;
+        return EKEY_GRAVE;
     case XK_bracketleft:
     case XK_braceleft:
-        return EKEY_OEM_4;
+        return EKEY_LEFTBRACE;
     case XK_backslash:
     case XK_bar:
-        return EKEY_OEM_5;
+        return EKEY_BACKSLASH;
     case XK_bracketright:
     case XK_braceright:
-        return EKEY_OEM_6;
+        return EKEY_RIGHTBRACE;
     case XK_quoteright:
     case XK_quotedbl:
-        return EKEY_OEM_7;
+        return EKEY_APOSTROPHE;
+#if 0
     case XK_ISO_Level5_Shift:
         return EKEY_OEM_8;
+#endif
     case XK_Shift_L:
+        return EKEY_LSHIFT;
     case XK_Shift_R:
-        return EKEY_SHIFT;
+        return EKEY_RSHIFT;
     case XK_Control_L:
+        return EKEY_LCONTROL;
     case XK_Control_R:
-        return EKEY_CONTROL;
+        return EKEY_RCONTROL;
     case XK_Meta_L:
-    case XK_Meta_R:
     case XK_Alt_L:
+        return EKEY_LEFTALT;
+    case XK_Meta_R:
     case XK_Alt_R:
-        return EKEY_MENU;
+        return EKEY_RIGHTALT;
+#if 0
     case XK_ISO_Level3_Shift:
     case XK_Mode_switch:
         return EKEY_ALTGR;
+#endif
     case XK_Multi_key:
         return EKEY_COMPOSE;
     case XK_Pause:
         return EKEY_PAUSE;
     case XK_Caps_Lock:
-        return EKEY_CAPITAL;
+        return EKEY_CAPSLOCK;
     case XK_Num_Lock:
         return EKEY_NUMLOCK;
     case XK_Scroll_Lock:
@@ -931,19 +940,23 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
         return EKEY_SELECT;
     case XK_Print:
         return EKEY_SNAPSHOT;
+#if 0
     case XK_Execute:
         return EKEY_EXECUTE;
+#endif
     case XK_Insert:
     case XK_KP_Insert:
         return EKEY_INSERT;
     case XK_Help:
         return EKEY_HELP;
+#if 0
     case XK_Super_L:
         return EKEY_LWIN;
     case XK_Super_R:
         return EKEY_RWIN;
     case XK_Menu:
         return EKEY_APPS;
+#endif
     case XK_F1:
     case XK_F2:
     case XK_F3:
@@ -974,6 +987,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     case XK_KP_F3:
     case XK_KP_F4:
         return static_cast<KeyboardCode>(EKEY_F1 + (keysym - XK_KP_F1));
+#if 0
     case XK_guillemotleft:
     case XK_guillemotright:
     case XK_degree:
@@ -983,6 +997,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     case XK_Ugrave:
     case XK_brokenbar:
         return EKEY_OEM_102;  // international backslash key in 102 keyboard.
+#endif
     // When evdev is in use, /usr/share/X11/xkb/symbols/inet maps F13-18 keys
     // to the special XF86XK symbols to support Microsoft Ergonomic keyboards:
     // https://bugs.freedesktop.org/show_bug.cgi?id=5783
@@ -1000,6 +1015,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
         return EKEY_F17;
     case XF86XK_Launch9:
         return EKEY_F18;
+#if 0
     // For supporting multimedia buttons on a USB keyboard.
     case XF86XK_Back:
         return EKEY_BROWSER_BACK;
@@ -1036,12 +1052,14 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     case XF86XK_LaunchB:  // F4 on an Apple keyboard.
     case XF86XK_Calculator:
         return EKEY_MEDIA_LAUNCH_APP2;
+#endif
     case XF86XK_WLAN:
         return EKEY_WLAN;
     case XF86XK_PowerOff:
         return EKEY_POWER;
     case XF86XK_Sleep:
         return EKEY_SLEEP;
+#if 0
     case XF86XK_MonBrightnessDown:
         return EKEY_BRIGHTNESS_DOWN;
     case XF86XK_MonBrightnessUp:
@@ -1051,69 +1069,11 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     case XF86XK_KbdBrightnessUp:
         return EKEY_KBD_BRIGHTNESS_UP;
         // TODO(sad): some keycodes are still missing.
+#endif
     }
     SPDLOG_DEBUG("Unknown keysym: {}", keysym);
     return EKEY_UNKNOWN;
 }
-#if 0
-DomCode CodeFromXEvent(const XEvent* xev)
-{
-    int keycode = (xev->type == GenericEvent)
-                  ? static_cast<XIDeviceEvent*>(xev->xcookie.data)->detail
-                  : xev->xkey.keycode;
-    return ui::KeycodeConverter::NativeKeycodeToDomCode(keycode);
-}
-
-uint16_t GetCharacterFromXEvent(const XEvent* xev)
-{
-    XEvent xkeyevent = {0};
-    const XKeyEvent* xkey = NULL;
-    if (xev->type == GenericEvent)
-    {
-        // Convert the XI2 key event into a core key event so that we can
-        // continue to use XLookupString() until crbug.com/367732 is complete.
-        InitXKeyEventFromXIDeviceEvent(*xev, &xkeyevent);
-        xkey = &xkeyevent.xkey;
-    }
-    else
-    {
-        xkey = &xev->xkey;
-    }
-    KeySym keysym = XK_VoidSymbol;
-    XLookupString(const_cast<XKeyEvent*>(xkey), NULL, 0, &keysym, NULL);
-    return GetUnicodeCharacterFromXKeySym(keysym);
-}
-DomKey GetDomKeyFromXEvent(const XEvent* xev)
-{
-    XEvent xkeyevent = {0};
-    XKeyEvent xkey;
-    if (xev->type == GenericEvent)
-    {
-        // Convert the XI2 key event into a core key event so that we can
-        // continue to use XLookupString() until crbug.com/367732 is complete.
-        InitXKeyEventFromXIDeviceEvent(*xev, &xkeyevent);
-        xkey = xkeyevent.xkey;
-    }
-    else
-    {
-        xkey = xev->xkey;
-    }
-    // There is no good way to check whether a key combination will print a
-    // character on screen.
-    // e.g. On Linux US keyboard with French layout, |XLookupString()|
-    //        * Returns '?' for ctrl-shift-/
-    //        * Returns '§' for shift-/
-    //      According to spec the DomKey for ctrl-shift-/ should also be '§'.
-    // The solution is to take out ctrl modifier directly, as according to XKB map
-    // no keyboard combinations with ctrl key are mapped to printable character.
-    // https://crbug.com/633838
-    xkey.state &= ~ControlMask;
-    KeySym keysym = XK_VoidSymbol;
-    XLookupString(&xkey, NULL, 0, &keysym, NULL);
-    base::char16 ch = GetUnicodeCharacterFromXKeySym(keysym);
-    return XKeySymToDomKey(keysym, ch);
-}
-#endif
 
 KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
     unsigned int hardware_code)
@@ -1145,9 +1105,9 @@ KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
         EKEY_8,             // 0x11: KEY_8                8
         EKEY_9,             // 0x12: KEY_9                9
         EKEY_0,             // 0x13: KEY_0                0
-        EKEY_OEM_MINUS,     // 0x14: KEY_MINUS            minus
-        EKEY_OEM_PLUS,      // 0x15: KEY_EQUAL            equal
-        EKEY_BACK,          // 0x16: KEY_BACKSPACE        BackSpace
+        EKEY_MINUS,         // 0x14: KEY_MINUS            minus
+        EKEY_PLUS,          // 0x15: KEY_EQUAL            equal
+        EKEY_BACKSPACE,     // 0x16: KEY_BACKSPACE        BackSpace
         EKEY_TAB,           // 0x17: KEY_TAB              Tab
         EKEY_Q,             // 0x18: KEY_Q                q
         EKEY_W,             // 0x19: KEY_W                w
@@ -1159,9 +1119,9 @@ KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
         EKEY_I,             // 0x1F: KEY_I                i
         EKEY_O,             // 0x20: KEY_O                o
         EKEY_P,             // 0x21: KEY_P                p
-        EKEY_OEM_4,         // 0x22: KEY_LEFTBRACE        bracketleft
-        EKEY_OEM_6,         // 0x23: KEY_RIGHTBRACE       bracketright
-        EKEY_RETURN,        // 0x24: KEY_ENTER            Return
+        EKEY_LEFTBRACE,         // 0x22: KEY_LEFTBRACE        bracketleft
+        EKEY_RIGHTBRACE,         // 0x23: KEY_RIGHTBRACE       bracketright
+        EKEY_ENTER,        // 0x24: KEY_ENTER            Return
         EKEY_LCONTROL,      // 0x25: KEY_LEFTCTRL         Control_L
         EKEY_A,             // 0x26: KEY_A                a
         EKEY_S,             // 0x27: KEY_S                s
@@ -1172,11 +1132,11 @@ KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
         EKEY_J,             // 0x2C: KEY_J                j
         EKEY_K,             // 0x2D: KEY_K                k
         EKEY_L,             // 0x2E: KEY_L                l
-        EKEY_OEM_1,         // 0x2F: KEY_SEMICOLON        semicolon
-        EKEY_OEM_7,         // 0x30: KEY_APOSTROPHE       apostrophe
-        EKEY_OEM_3,         // 0x31: KEY_GRAVE            grave
+        EKEY_SEMICOLON,     // 0x2F: KEY_SEMICOLON        semicolon
+        EKEY_APOSTROPHE,    // 0x30: KEY_APOSTROPHE       apostrophe
+        EKEY_GRAVE,         // 0x31: KEY_GRAVE            grave
         EKEY_LSHIFT,        // 0x32: KEY_LEFTSHIFT        Shift_L
-        EKEY_OEM_5,         // 0x33: KEY_BACKSLASH        backslash
+        EKEY_BACKSLASH,     // 0x33: KEY_BACKSLASH        backslash
         EKEY_Z,             // 0x34: KEY_Z                z
         EKEY_X,             // 0x35: KEY_X                x
         EKEY_C,             // 0x36: KEY_C                c
@@ -1184,14 +1144,14 @@ KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
         EKEY_B,             // 0x38: KEY_B                b
         EKEY_N,             // 0x39: KEY_N                n
         EKEY_M,             // 0x3A: KEY_M                m
-        EKEY_OEM_COMMA,     // 0x3B: KEY_COMMA            comma
-        EKEY_OEM_PERIOD,    // 0x3C: KEY_DOT              period
-        EKEY_OEM_2,         // 0x3D: KEY_SLASH            slash
+        EKEY_COMMA,         // 0x3B: KEY_COMMA            comma
+        EKEY_DOT,           // 0x3C: KEY_DOT              period
+        EKEY_SLASH,         // 0x3D: KEY_SLASH            slash
         EKEY_RSHIFT,        // 0x3E: KEY_RIGHTSHIFT       Shift_R
         EKEY_MULTIPLY,      // 0x3F: KEY_KPASTERISK       KP_Multiply
-        EKEY_LMENU,         // 0x40: KEY_LEFTALT          Alt_L
+        EKEY_LEFTALT,         // 0x40: KEY_LEFTALT          Alt_L
         EKEY_SPACE,         // 0x41: KEY_SPACE            space
-        EKEY_CAPITAL,       // 0x42: KEY_CAPSLOCK         Caps_Lock
+        EKEY_CAPSLOCK,      // 0x42: KEY_CAPSLOCK         Caps_Lock
         EKEY_F1,            // 0x43: KEY_F1               F1
         EKEY_F2,            // 0x44: KEY_F2               F2
         EKEY_F3,            // 0x45: KEY_F3               F3
@@ -1218,26 +1178,26 @@ KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
         EKEY_NUMPAD0,       // 0x5A: KEY_KP0              KP_0
         EKEY_DECIMAL,       // 0x5B: KEY_KPDOT            KP_Decimal
         EKEY_UNKNOWN,       // 0x5C:
-        EKEY_DBE_DBCSCHAR,  // 0x5D: KEY_ZENKAKUHANKAKU   Zenkaku_Hankaku
-        EKEY_OEM_5,         // 0x5E: KEY_102ND            backslash
+        EKEY_UNSUPPORTED,   // 0x5D: KEY_ZENKAKUHANKAKU   Zenkaku_Hankaku
+        EKEY_UNSUPPORTED,   // 0x5E: KEY_102ND            backslash
         EKEY_F11,           // 0x5F: KEY_F11              F11
         EKEY_F12,           // 0x60: KEY_F12              F12
-        EKEY_OEM_102,       // 0x61: KEY_RO               Romaji
+        EKEY_UNSUPPORTED,   // 0x61: KEY_RO               Romaji
         EKEY_UNSUPPORTED,   // 0x62: KEY_KATAKANA         Katakana
         EKEY_UNSUPPORTED,   // 0x63: KEY_HIRAGANA         Hiragana
-        EKEY_CONVERT,       // 0x64: KEY_HENKAN           Henkan
+        EKEY_UNSUPPORTED,   // 0x64: KEY_HENKAN           Henkan
         EKEY_UNSUPPORTED,   // 0x65: KEY_KATAKANAHIRAGANA Hiragana_Katakana
-        EKEY_NONCONVERT,    // 0x66: KEY_MUHENKAN         Muhenkan
-        EKEY_SEPARATOR,     // 0x67: KEY_KPJPCOMMA        KP_Separator
-        EKEY_RETURN,        // 0x68: KEY_KPENTER          KP_Enter
+        EKEY_UNSUPPORTED,   // 0x66: KEY_MUHENKAN         Muhenkan
+        EKEY_COMMA,         // 0x67: KEY_KPJPCOMMA        KP_Separator
+        EKEY_ENTER,         // 0x68: KEY_KPENTER          KP_Enter
         EKEY_RCONTROL,      // 0x69: KEY_RIGHTCTRL        Control_R
         EKEY_DIVIDE,        // 0x6A: KEY_KPSLASH          KP_Divide
         EKEY_SNAPSHOT,      // 0x6B: KEY_SYSRQ            Print
-        EKEY_RMENU,         // 0x6C: KEY_RIGHTALT         Alt_R
-        EKEY_RETURN,        // 0x6D: KEY_LINEFEED         Linefeed
+        EKEY_RIGHTALT,      // 0x6C: KEY_RIGHTALT         Alt_R
+        EKEY_ENTER,         // 0x6D: KEY_LINEFEED         Linefeed
         EKEY_HOME,          // 0x6E: KEY_HOME             Home
         EKEY_UP,            // 0x6F: KEY_UP               Up
-        EKEY_PRIOR,         // 0x70: KEY_PAGEUP           Page_Up
+        EKEY_PAGEUP,        // 0x70: KEY_PAGEUP           Page_Up
         EKEY_LEFT,          // 0x71: KEY_LEFT             Left
         EKEY_RIGHT,         // 0x72: KEY_RIGHT            Right
         EKEY_END,           // 0x73: KEY_END              End
@@ -1250,358 +1210,24 @@ KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
         EKEY_VOLUME_DOWN,   // 0x7A: KEY_VOLUMEDOWN       XF86AudioLowerVolume
         EKEY_VOLUME_UP,     // 0x7B: KEY_VOLUMEUP         XF86AudioRaiseVolume
         EKEY_POWER,         // 0x7C: KEY_POWER            XF86PowerOff
-        EKEY_OEM_PLUS,      // 0x7D: KEY_KPEQUAL          KP_Equal
+        EKEY_PLUS,          // 0x7D: KEY_KPEQUAL          KP_Equal
         EKEY_UNSUPPORTED,   // 0x7E: KEY_KPPLUSMINUS      plusminus
         EKEY_PAUSE,         // 0x7F: KEY_PAUSE            Pause
-        EKEY_MEDIA_LAUNCH_APP1,  // 0x80: KEY_SCALE            XF86LaunchA
-        EKEY_DECIMAL,            // 0x81: KEY_KPCOMMA          KP_Decimal
-        EKEY_HANGUL,             // 0x82: KEY_HANGUEL          Hangul
-        EKEY_HANJA,              // 0x83: KEY_HANJA            Hangul_Hanja
-        EKEY_OEM_5,              // 0x84: KEY_YEN              yen
-        EKEY_LWIN,               // 0x85: KEY_LEFTMETA         Super_L
-        EKEY_RWIN,               // 0x86: KEY_RIGHTMETA        Super_R
-        EKEY_COMPOSE,            // 0x87: KEY_COMPOSE          Menu
+        EKEY_UNSUPPORTED,   // 0x80: KEY_SCALE            XF86LaunchA
+        EKEY_DECIMAL,       // 0x81: KEY_KPCOMMA          KP_Decimal
+        EKEY_UNSUPPORTED,   // 0x82: KEY_HANGUEL          Hangul
+        EKEY_UNSUPPORTED,   // 0x83: KEY_HANJA            Hangul_Hanja
+        EKEY_UNSUPPORTED,   // 0x84: KEY_YEN              yen
+        EKEY_UNSUPPORTED,   // 0x85: KEY_LEFTMETA         Super_L
+        EKEY_UNSUPPORTED,   // 0x86: KEY_RIGHTMETA        Super_R
+        EKEY_COMPOSE,       // 0x87: KEY_COMPOSE          Menu
     };
     if (hardware_code >= base::size(kHardwareKeycodeMap))
     {
-        // Additional keycodes used by the Chrome OS top row special function keys.
-        switch (hardware_code)
-        {
-        case 0xA6:  // KEY_BACK
-            return EKEY_BACK;
-        case 0xA7:  // KEY_FORWARD
-            return EKEY_BROWSER_FORWARD;
-        case 0xB5:  // KEY_REFRESH
-            return EKEY_BROWSER_REFRESH;
-        case 0xD4:  // KEY_DASHBOARD
-            return EKEY_MEDIA_LAUNCH_APP2;
-        case 0xE8:  // KEY_BRIGHTNESSDOWN
-            return EKEY_BRIGHTNESS_DOWN;
-        case 0xE9:  // KEY_BRIGHTNESSUP
-            return EKEY_BRIGHTNESS_UP;
-        }
         return EKEY_UNKNOWN;
     }
     return kHardwareKeycodeMap[hardware_code];
 }
-// TODO(jcampan): this method might be incomplete.
-int XKeysymForWindowsKeyCode(KeyboardCode keycode, bool shift)
-{
-    switch (keycode)
-    {
-    case EKEY_NUMPAD0:
-        return XK_KP_0;
-    case EKEY_NUMPAD1:
-        return XK_KP_1;
-    case EKEY_NUMPAD2:
-        return XK_KP_2;
-    case EKEY_NUMPAD3:
-        return XK_KP_3;
-    case EKEY_NUMPAD4:
-        return XK_KP_4;
-    case EKEY_NUMPAD5:
-        return XK_KP_5;
-    case EKEY_NUMPAD6:
-        return XK_KP_6;
-    case EKEY_NUMPAD7:
-        return XK_KP_7;
-    case EKEY_NUMPAD8:
-        return XK_KP_8;
-    case EKEY_NUMPAD9:
-        return XK_KP_9;
-    case EKEY_MULTIPLY:
-        return XK_KP_Multiply;
-    case EKEY_ADD:
-        return XK_KP_Add;
-    case EKEY_SUBTRACT:
-        return XK_KP_Subtract;
-    case EKEY_DECIMAL:
-        return XK_KP_Decimal;
-    case EKEY_DIVIDE:
-        return XK_KP_Divide;
-    case EKEY_BACK:
-        return XK_BackSpace;
-    case EKEY_TAB:
-        return shift ? XK_ISO_Left_Tab : XK_Tab;
-    case EKEY_CLEAR:
-        return XK_Clear;
-    case EKEY_RETURN:
-        return XK_Return;
-    case EKEY_SHIFT:
-        return XK_Shift_L;
-    case EKEY_CONTROL:
-        return XK_Control_L;
-    case EKEY_MENU:
-        return XK_Alt_L;
-    case EKEY_APPS:
-        return XK_Menu;
-    case EKEY_ALTGR:
-        return XK_ISO_Level3_Shift;
-    case EKEY_COMPOSE:
-        return XK_Multi_key;
-    case EKEY_PAUSE:
-        return XK_Pause;
-    case EKEY_CAPITAL:
-        return XK_Caps_Lock;
-    case EKEY_KANA:
-        return XK_Kana_Lock;
-    case EKEY_HANJA:
-        return XK_Hangul_Hanja;
-    case EKEY_CONVERT:
-        return XK_Henkan;
-    case EKEY_NONCONVERT:
-        return XK_Muhenkan;
-    case EKEY_DBE_SBCSCHAR:
-        return XK_Zenkaku_Hankaku;
-    case EKEY_DBE_DBCSCHAR:
-        return XK_Zenkaku_Hankaku;
-    case EKEY_ESCAPE:
-        return XK_Escape;
-    case EKEY_SPACE:
-        return XK_space;
-    case EKEY_PRIOR:
-        return XK_Page_Up;
-    case EKEY_NEXT:
-        return XK_Page_Down;
-    case EKEY_END:
-        return XK_End;
-    case EKEY_HOME:
-        return XK_Home;
-    case EKEY_LEFT:
-        return XK_Left;
-    case EKEY_UP:
-        return XK_Up;
-    case EKEY_RIGHT:
-        return XK_Right;
-    case EKEY_DOWN:
-        return XK_Down;
-    case EKEY_SELECT:
-        return XK_Select;
-    case EKEY_PRINT:
-        return XK_Print;
-    case EKEY_EXECUTE:
-        return XK_Execute;
-    case EKEY_INSERT:
-        return XK_Insert;
-    case EKEY_DELETE:
-        return XK_Delete;
-    case EKEY_HELP:
-        return XK_Help;
-    case EKEY_0:
-        return shift ? XK_parenright : XK_0;
-    case EKEY_1:
-        return shift ? XK_exclam : XK_1;
-    case EKEY_2:
-        return shift ? XK_at : XK_2;
-    case EKEY_3:
-        return shift ? XK_numbersign : XK_3;
-    case EKEY_4:
-        return shift ? XK_dollar : XK_4;
-    case EKEY_5:
-        return shift ? XK_percent : XK_5;
-    case EKEY_6:
-        return shift ? XK_asciicircum : XK_6;
-    case EKEY_7:
-        return shift ? XK_ampersand : XK_7;
-    case EKEY_8:
-        return shift ? XK_asterisk : XK_8;
-    case EKEY_9:
-        return shift ? XK_parenleft : XK_9;
-    case EKEY_A:
-    case EKEY_B:
-    case EKEY_C:
-    case EKEY_D:
-    case EKEY_E:
-    case EKEY_F:
-    case EKEY_G:
-    case EKEY_H:
-    case EKEY_I:
-    case EKEY_J:
-    case EKEY_K:
-    case EKEY_L:
-    case EKEY_M:
-    case EKEY_N:
-    case EKEY_O:
-    case EKEY_P:
-    case EKEY_Q:
-    case EKEY_R:
-    case EKEY_S:
-    case EKEY_T:
-    case EKEY_U:
-    case EKEY_V:
-    case EKEY_W:
-    case EKEY_X:
-    case EKEY_Y:
-    case EKEY_Z:
-        return (shift ? XK_A : XK_a) + (keycode - EKEY_A);
-    case EKEY_LWIN:
-        return XK_Super_L;
-    case EKEY_RWIN:
-        return XK_Super_R;
-    case EKEY_NUMLOCK:
-        return XK_Num_Lock;
-    case EKEY_SCROLL:
-        return XK_Scroll_Lock;
-    case EKEY_OEM_1:
-        return shift ? XK_colon : XK_semicolon;
-    case EKEY_OEM_PLUS:
-        return shift ? XK_plus : XK_equal;
-    case EKEY_OEM_COMMA:
-        return shift ? XK_less : XK_comma;
-    case EKEY_OEM_MINUS:
-        return shift ? XK_underscore : XK_minus;
-    case EKEY_OEM_PERIOD:
-        return shift ? XK_greater : XK_period;
-    case EKEY_OEM_2:
-        return shift ? XK_question : XK_slash;
-    case EKEY_OEM_3:
-        return shift ? XK_asciitilde : XK_quoteleft;
-    case EKEY_OEM_4:
-        return shift ? XK_braceleft : XK_bracketleft;
-    case EKEY_OEM_5:
-        return shift ? XK_bar : XK_backslash;
-    case EKEY_OEM_6:
-        return shift ? XK_braceright : XK_bracketright;
-    case EKEY_OEM_7:
-        return shift ? XK_quotedbl : XK_quoteright;
-    case EKEY_OEM_8:
-        return XK_ISO_Level5_Shift;
-    case EKEY_OEM_102:
-        return shift ? XK_guillemotleft : XK_guillemotright;
-    case EKEY_F1:
-    case EKEY_F2:
-    case EKEY_F3:
-    case EKEY_F4:
-    case EKEY_F5:
-    case EKEY_F6:
-    case EKEY_F7:
-    case EKEY_F8:
-    case EKEY_F9:
-    case EKEY_F10:
-    case EKEY_F11:
-    case EKEY_F12:
-    case EKEY_F13:
-    case EKEY_F14:
-    case EKEY_F15:
-    case EKEY_F16:
-    case EKEY_F17:
-    case EKEY_F18:
-    case EKEY_F19:
-    case EKEY_F20:
-    case EKEY_F21:
-    case EKEY_F22:
-    case EKEY_F23:
-    case EKEY_F24:
-        return XK_F1 + (keycode - EKEY_F1);
-    case EKEY_BROWSER_BACK:
-        return XF86XK_Back;
-    case EKEY_BROWSER_FORWARD:
-        return XF86XK_Forward;
-    case EKEY_BROWSER_REFRESH:
-        return XF86XK_Reload;
-    case EKEY_BROWSER_STOP:
-        return XF86XK_Stop;
-    case EKEY_BROWSER_SEARCH:
-        return XF86XK_Search;
-    case EKEY_BROWSER_FAVORITES:
-        return XF86XK_Favorites;
-    case EKEY_BROWSER_HOME:
-        return XF86XK_HomePage;
-    case EKEY_VOLUME_MUTE:
-        return XF86XK_AudioMute;
-    case EKEY_VOLUME_DOWN:
-        return XF86XK_AudioLowerVolume;
-    case EKEY_VOLUME_UP:
-        return XF86XK_AudioRaiseVolume;
-    case EKEY_MEDIA_NEXT_TRACK:
-        return XF86XK_AudioNext;
-    case EKEY_MEDIA_PREV_TRACK:
-        return XF86XK_AudioPrev;
-    case EKEY_MEDIA_STOP:
-        return XF86XK_AudioStop;
-    case EKEY_MEDIA_PLAY_PAUSE:
-        return XF86XK_AudioPlay;
-    case EKEY_MEDIA_LAUNCH_MAIL:
-        return XF86XK_Mail;
-    case EKEY_MEDIA_LAUNCH_APP1:
-        return XF86XK_LaunchA;
-    case EKEY_MEDIA_LAUNCH_APP2:
-        return XF86XK_LaunchB;
-    case EKEY_WLAN:
-        return XF86XK_WLAN;
-    case EKEY_POWER:
-        return XF86XK_PowerOff;
-    case EKEY_BRIGHTNESS_DOWN:
-        return XF86XK_MonBrightnessDown;
-    case EKEY_BRIGHTNESS_UP:
-        return XF86XK_MonBrightnessUp;
-    case EKEY_KBD_BRIGHTNESS_DOWN:
-        return XF86XK_KbdBrightnessDown;
-    case EKEY_KBD_BRIGHTNESS_UP:
-        return XF86XK_KbdBrightnessUp;
-    default:
-        SPDLOG_DEBUG("Unknown keycode: {}", keycode);
-        return 0;
-    }
-}
-#if 0
-void InitXKeyEventFromXIDeviceEvent(const XEvent& src, XEvent* xkeyevent)
-{
-    assert(src.type == GenericEvent);
-    XIDeviceEvent* xievent = static_cast<XIDeviceEvent*>(src.xcookie.data);
-    switch (xievent->evtype)
-    {
-    case XI_KeyPress:
-        xkeyevent->type = KeyPress;
-        break;
-    case XI_KeyRelease:
-        xkeyevent->type = KeyRelease;
-        break;
-    default:
-        NOTREACHED();
-    }
-    xkeyevent->xkey.serial = xievent->serial;
-    xkeyevent->xkey.send_event = xievent->send_event;
-    xkeyevent->xkey.display = xievent->display;
-    xkeyevent->xkey.window = xievent->event;
-    xkeyevent->xkey.root = xievent->root;
-    xkeyevent->xkey.subwindow = xievent->child;
-    xkeyevent->xkey.time = xievent->time;
-    xkeyevent->xkey.x = xievent->event_x;
-    xkeyevent->xkey.y = xievent->event_y;
-    xkeyevent->xkey.x_root = xievent->root_x;
-    xkeyevent->xkey.y_root = xievent->root_y;
-    xkeyevent->xkey.state = xievent->mods.effective;
-    xkeyevent->xkey.keycode = xievent->detail;
-    xkeyevent->xkey.same_screen = 1;
-}
-unsigned int XKeyCodeForWindowsKeyCode(ui::KeyboardCode key_code,
-                                       int flags,
-                                       XDisplay* display)
-{
-    // SHIFT state is ignored in the call to XKeysymForWindowsKeyCode() here
-    // because we map the XKeysym back to a keycode, i.e. a physical key position.
-    // Using a SHIFT-modified XKeysym would sometimes yield X keycodes that,
-    // while technically valid, may be surprising in that they do not match
-    // the keycode of the original press, and conflict with assumptions in
-    // other code.
-    //
-    // For example, in a US layout, Shift-9 has the interpretation XK_parenleft,
-    // but the keycode KEY_9 alone does not map to XK_parenleft; instead,
-    // XKeysymToKeycode() returns KEY_KPLEFTPAREN (keypad left parenthesis)
-    // which does map to XK_parenleft -- notwithstanding that keyboards with
-    // dedicated number pad parenthesis keys are currently uncommon.
-    //
-    // Similarly, Shift-Comma has the interpretation XK_less, but KEY_COMMA
-    // alone does not map to XK_less; XKeysymToKeycode() returns KEY_102ND
-    // (the '<>' key between Shift and Z on 105-key keyboards) which does.
-    //
-    // crbug.com/386066 and crbug.com/390263 are examples of problems
-    // associated with this.
-    //
-    return XKeysymToKeycode(display, XKeysymForWindowsKeyCode(key_code, false));
-}
-#endif
 
 }
 }

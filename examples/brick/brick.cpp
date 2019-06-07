@@ -85,11 +85,11 @@ public:
         case eventid::keyboard_repeat:
         case eventid::keyboard_down:
         {
-            if (event.key().key == EKEY_LEFT || event.key().key == EKEY_RIGHT)
+            if (event.key().keycode == EKEY_LEFT || event.key().keycode == EKEY_RIGHT)
             {
                 int x;
                 m_running = true;
-                if (event.key().key == EKEY_LEFT)
+                if (event.key().keycode == EKEY_LEFT)
                     x = m_paddle.x() - (event.id() == eventid::keyboard_repeat ? 15 : 10);
                 else
                     x = m_paddle.x() + (event.id() == eventid::keyboard_repeat ? 15 : 10);
@@ -99,19 +99,18 @@ public:
 
                 event.stop();
             }
-            else if (event.key().key == EKEY_UP)
+            else if (event.key().keycode == EKEY_UP)
             {
                 m_xspeed *= 1.5;
                 m_yspeed *= 1.5;
                 event.stop();
             }
-            else if (event.key().key == EKEY_DOWN)
+            else if (event.key().keycode == EKEY_DOWN)
             {
                 m_xspeed *= .5;
                 m_yspeed *= .5;
                 event.stop();
             }
-
             break;
         }
         case eventid::raw_pointer_down:

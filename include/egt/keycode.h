@@ -6,6 +6,8 @@
 #ifndef EGT_KEYCODE_H
 #define EGT_KEYCODE_H
 
+#include <cstdint>
+
 /**
  * @file
  * @brief Key codes.
@@ -18,31 +20,20 @@ inline namespace v1
 
 enum KeyboardCode
 {
-    EKEY_CANCEL = 0x03,
-    EKEY_BACK = 0x08,
+    EKEY_UNKNOWN = 0,
+    EKEY_BACKSPACE = 0x08,
     EKEY_TAB = 0x09,
-    EKEY_BACKTAB = 0x0A,
     EKEY_CLEAR = 0x0C,
-    EKEY_RETURN = 0x0D,
-    EKEY_SHIFT = 0x10,
-    EKEY_CONTROL = 0x11,
+    EKEY_ENTER = 0x0D,
     EKEY_MENU = 0x12,
     EKEY_PAUSE = 0x13,
-    EKEY_CAPITAL = 0x14,
-    EKEY_KANA = 0x15,
-    EKEY_HANGUL = 0x15,
-    EKEY_JUNJA = 0x17,
-    EKEY_FINAL = 0x18,
-    EKEY_HANJA = 0x19,
-    EKEY_KANJI = 0x19,
+    EKEY_CAPSLOCK = 0x14,
+    EKEY_SNAPSHOT = 0x15,
     EKEY_ESCAPE = 0x1B,
-    EKEY_CONVERT = 0x1C,
-    EKEY_NONCONVERT = 0x1D,
-    EKEY_ACCEPT = 0x1E,
-    EKEY_MODECHANGE = 0x1F,
+    EKEY_NEXT = 0x1E,
     EKEY_SPACE = 0x20,
-    EKEY_PRIOR = 0x21,
-    EKEY_NEXT = 0x22,
+    EKEY_PAGEUP = 0x21,
+    EKEY_PAGEDOWN = 0x22,
     EKEY_END = 0x23,
     EKEY_HOME = 0x24,
     EKEY_LEFT = 0x25,
@@ -51,8 +42,6 @@ enum KeyboardCode
     EKEY_DOWN = 0x28,
     EKEY_SELECT = 0x29,
     EKEY_PRINT = 0x2A,
-    EKEY_EXECUTE = 0x2B,
-    EKEY_SNAPSHOT = 0x2C,  // Print Screen / SysRq
     EKEY_INSERT = 0x2D,
     EKEY_DELETE = 0x2E,
     EKEY_HELP = 0x2F,
@@ -92,10 +81,6 @@ enum KeyboardCode
     EKEY_X = 0x58,
     EKEY_Y = 0x59,
     EKEY_Z = 0x5A,
-    EKEY_LWIN = 0x5B,
-    EKEY_COMMAND = EKEY_LWIN,  // Provide the Mac name for convenience.
-    EKEY_RWIN = 0x5C,
-    EKEY_APPS = 0x5D,
     EKEY_SLEEP = 0x5F,
     EKEY_NUMPAD0 = 0x60,
     EKEY_NUMPAD1 = 0x61,
@@ -109,7 +94,7 @@ enum KeyboardCode
     EKEY_NUMPAD9 = 0x69,
     EKEY_MULTIPLY = 0x6A,
     EKEY_ADD = 0x6B,
-    EKEY_SEPARATOR = 0x6C,
+    EKEY_KPENTER = 0x6C,
     EKEY_SUBTRACT = 0x6D,
     EKEY_DECIMAL = 0x6E,
     EKEY_DIVIDE = 0x6F,
@@ -143,79 +128,40 @@ enum KeyboardCode
     EKEY_RSHIFT = 0xA1,
     EKEY_LCONTROL = 0xA2,
     EKEY_RCONTROL = 0xA3,
-    EKEY_LMENU = 0xA4,
-    EKEY_RMENU = 0xA5,
-    EKEY_BROWSER_BACK = 0xA6,
-    EKEY_BROWSER_FORWARD = 0xA7,
-    EKEY_BROWSER_REFRESH = 0xA8,
-    EKEY_BROWSER_STOP = 0xA9,
-    EKEY_BROWSER_SEARCH = 0xAA,
-    EKEY_BROWSER_FAVORITES = 0xAB,
-    EKEY_BROWSER_HOME = 0xAC,
+    EKEY_LEFTALT = 0xA4,
+    EKEY_RIGHTALT = 0xA5,
     EKEY_VOLUME_MUTE = 0xAD,
     EKEY_VOLUME_DOWN = 0xAE,
     EKEY_VOLUME_UP = 0xAF,
-    EKEY_MEDIA_NEXT_TRACK = 0xB0,
-    EKEY_MEDIA_PREV_TRACK = 0xB1,
-    EKEY_MEDIA_STOP = 0xB2,
-    EKEY_MEDIA_PLAY_PAUSE = 0xB3,
-    EKEY_MEDIA_LAUNCH_MAIL = 0xB4,
-    EKEY_MEDIA_LAUNCH_MEDIA_SELECT = 0xB5,
-    EKEY_MEDIA_LAUNCH_APP1 = 0xB6,
-    EKEY_MEDIA_LAUNCH_APP2 = 0xB7,
-    EKEY_OEM_1 = 0xBA,
-    EKEY_OEM_PLUS = 0xBB,
-    EKEY_OEM_COMMA = 0xBC,
-    EKEY_OEM_MINUS = 0xBD,
-    EKEY_OEM_PERIOD = 0xBE,
-    EKEY_OEM_2 = 0xBF,
-    EKEY_OEM_3 = 0xC0,
-    EKEY_OEM_4 = 0xDB,
-    EKEY_OEM_5 = 0xDC,
-    EKEY_OEM_6 = 0xDD,
-    EKEY_OEM_7 = 0xDE,
-    EKEY_OEM_8 = 0xDF,
-    EKEY_OEM_102 = 0xE2,
-    EKEY_OEM_103 = 0xE3,  // GTV KEYCODE_MEDIA_REWIND
-    EKEY_OEM_104 = 0xE4,  // GTV KEYCODE_MEDIA_FAST_FORWARD
-    EKEY_PROCESSKEY = 0xE5,
-    EKEY_PACKET = 0xE7,
-    EKEY_OEM_ATTN = 0xF0,      // JIS DomKey::ALPHANUMERIC
-    EKEY_OEM_FINISH = 0xF1,    // JIS DomKey::KATAKANA
-    EKEY_OEM_COPY = 0xF2,      // JIS DomKey::HIRAGANA
-    EKEY_DBE_SBCSCHAR = 0xF3,  // JIS DomKey::HANKAKU
-    EKEY_DBE_DBCSCHAR = 0xF4,  // JIS DomKey::ZENKAKU
-    EKEY_OEM_BACKTAB = 0xF5,   // JIS DomKey::ROMAJI
-    EKEY_ATTN = 0xF6,          // DomKey::ATTN or JIS DomKey::KANA_MODE
-    EKEY_CRSEL = 0xF7,
-    EKEY_EXSEL = 0xF8,
-    EKEY_EREOF = 0xF9,
+    EKEY_PLUS = 0xBB,
+    EKEY_COMMA = 0xBC,
+    EKEY_MINUS = 0xBD,
+    EKEY_DOT = 0xBE,
+    EKEY_NUMDOT = 0xBF,
+    EKEY_SLASH = 0xC0,
+    EKEY_SEMICOLON = 0xDB,
+    EKEY_APOSTROPHE = 0xDC,
+    EKEY_LEFTBRACE = 0xDD,
+    EKEY_RIGHTBRACE = 0xDE,
+    EKEY_EQUAL = 0xDF,
+    EKEY_GRAVE = 0xE2,
+    EKEY_BACKSLASH = 0xE3,
     EKEY_PLAY = 0xFA,
     EKEY_ZOOM = 0xFB,
-    EKEY_NONAME = 0xFC,
-    EKEY_PA1 = 0xFD,
-    EKEY_OEM_CLEAR = 0xFE,
-    EKEY_UNKNOWN = 0,
-    // POSIX specific EKEYs. Note that as of Windows SDK 7.1, 0x97-9F, 0xD8-DA,
-    // and 0xE8 are unassigned.
     EKEY_WLAN = 0x97,
     EKEY_POWER = 0x98,
-    EKEY_ASSISTANT = 0x99,
-    EKEY_SETTINGS = 0x9A,
-    EKEY_BRIGHTNESS_DOWN = 0xD8,
-    EKEY_BRIGHTNESS_UP = 0xD9,
-    EKEY_KBD_BRIGHTNESS_DOWN = 0xDA,
-    EKEY_KBD_BRIGHTNESS_UP = 0xE8,
-    // Windows does not have a specific key code for AltGr. We use the unused 0xE1
-    // (VK_OEM_AX) code to represent AltGr, matching the behaviour of Firefox on
-    // Linux.
-    EKEY_ALTGR = 0xE1,
-    // Windows does not have a specific key code for Compose. We use the unused
-    // 0xE6 (VK_ICO_CLEAR) code to represent Compose.
     EKEY_COMPOSE = 0xE6,
-
-
 };
+
+namespace detail
+{
+
+/**
+ * Map a linux key to an EKEY.
+ */
+KeyboardCode linux_to_ekey(int key);
+
+}
 
 }
 }

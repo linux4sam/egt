@@ -302,7 +302,7 @@ public:
 
         Input::global_input().on_event([this](Event & event)
         {
-            switch (event.key().code)
+            switch (event.key().keycode)
             {
             case EKEY_DELETE:
                 if (m_selected)
@@ -311,6 +311,8 @@ public:
                     m_selected = nullptr;
                     m_form->remove_options();
                 }
+                break;
+            default:
                 break;
             }
         }, {eventid::keyboard_down});

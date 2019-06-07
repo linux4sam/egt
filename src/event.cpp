@@ -84,8 +84,8 @@ std::ostream& operator<<(std::ostream& os, const Pointer& pointer)
 
 std::ostream& operator<<(std::ostream& os, const Key& key)
 {
-    os << "key(" << key.key << ")" <<
-       " code(" << key.code << ")";
+    os << "keycode(" << key.keycode << ")" <<
+       " unicode(" << key.unicode << ")";
     return os;
 }
 

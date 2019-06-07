@@ -176,14 +176,22 @@ std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
 struct Key
 {
     /**
-     * Key value.
+     * Key code value.
+     *
+     * This is basically the physical key that was pressed.
+     *
+     * Any idea of a scancode or keysym is handled by the input backends
+     * themselves, which truly represent physical keys and are used for
+     * mappings.
+     *
+     * @see KeyboardCode
      */
-    int key{0};
+    KeyboardCode keycode{EKEY_UNKNOWN};
 
     /**
-     * Key code.
+     * 32 bit code point.
      */
-    int code{0};
+    uint32_t unicode{0};
 };
 
 std::ostream& operator<<(std::ostream& os, const Key& key);

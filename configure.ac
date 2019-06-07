@@ -196,6 +196,14 @@ if test "x${have_x11}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="${X11_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
+AX_PKG_CHECK_MODULES2(XKBCOMMON, [xkbcommon], [], [have_xkbcommon=yes], [have_xkbcommon=no])
+AM_CONDITIONAL([HAVE_XKBCOMMON], [test "x${have_xkbcommon}" = xyes])
+if test "x${have_xkbcommon}" = xyes; then
+   AC_DEFINE(HAVE_XKBCOMMON, 1, [Have xkbcommon support])
+   LIBEGT_EXTRA_CXXFLAGS="${XKBCOMMON_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${XKBCOMMON_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+fi
+
 AX_PKG_CHECK_MODULES2(TSLIB, [tslib >= 1.15], [], [have_tslib=yes], [have_tslib=no])
 AM_CONDITIONAL([HAVE_TSLIB], [test "x${have_tslib}" = xyes])
 if test "x${have_tslib}" = xyes; then
@@ -381,6 +389,7 @@ echo "  libinput               ${have_libinput:-no}"
 echo "  tslib                  ${have_tslib:-no}"
 echo "  evdev                  ${have_linux_input_h:-no}"
 echo "  X11                    ${have_x11:-no}"
+echo "  xkbcommon              ${have_xkbcommon:-no}"
 echo
 
 echo "Media:"

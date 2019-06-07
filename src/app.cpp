@@ -215,6 +215,22 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 #ifdef HAVE_LIBINPUT
     new detail::InputLibInput(*this);
 #endif
+
+    m_signals.async_wait(std::bind(&Application::signal_handler, this,
+                                   std::placeholders::_1, std::placeholders::_2));
+
+    Input::global_input().on_event([this](Event & event)
+    {
+        if (event.key().keycode == EKEY_SNAPSHOT)
+        {
+            if (m_argc)
+                paint_to_file(string(m_argv[0]) + ".png");
+            else
+                paint_to_file();
+        }
+
+        return 0;
+    }, {eventid::keyboard_down});
 }
 
 void Application::signal_handler(const asio::error_code& error, int signum)
@@ -238,22 +254,6 @@ void Application::signal_handler(const asio::error_code& error, int signum)
 
 int Application::run()
 {
-    m_signals.async_wait(std::bind(&Application::signal_handler, this,
-                                   std::placeholders::_1, std::placeholders::_2));
-
-    Input::global_input().on_event([this](Event & event)
-    {
-        if (event.key().code == EKEY_SNAPSHOT)
-        {
-            if (m_argc)
-                paint_to_file(string(m_argv[0]) + ".png");
-            else
-                paint_to_file();
-        }
-
-        return 0;
-    }, {eventid::keyboard_down});
-
     return m_event.run();
 }
 

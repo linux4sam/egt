@@ -6,6 +6,7 @@
 #include "egt/app.h"
 #include "egt/detail/input/inputevdev.h"
 #include "egt/geometry.h"
+#include "egt/keycode.h"
 #include "egt/utils.h"
 #include <cassert>
 #include <cerrno>
@@ -151,7 +152,9 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                 if (v != eventid::none)
                 {
                     Event event(v);
-                    event.key().key = e->code;
+                    event.key().keycode = linux_to_ekey(e->code);
+                    /// @todo No mapping to actual key yet.
+                    event.key().unicode = 0;
                     dispatch(event);
                 }
                 break;

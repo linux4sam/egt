@@ -42,6 +42,8 @@ detail/alignment.cpp \
 detail/collision.cpp \
 detail/filesystem.cpp \
 detail/imagecache.cpp \
+detail/input/inputkeyboard.cpp \
+detail/input/inputkeyboard.h \
 detail/layout.cpp \
 detail/mousegesture.cpp \
 detail/object.cpp \
@@ -66,6 +68,7 @@ images/bmp/cairo_bmp.c \
 images/bmp/cairo_bmp.h \
 input.cpp \
 keyboard.cpp \
+keycode.cpp \
 label.cpp \
 list.cpp \
 notebook.cpp \
@@ -245,12 +248,10 @@ endif
 
 if HAVE_X11
 libegt_la_SOURCES += \
-detail/screen/keysym_to_unicode.cpp \
-detail/screen/keysym_to_unicode.h \
-detail/screen/keyboard_code_conversion_x.h \
-detail/screen/keyboard_code_conversion_x.cpp \
 detail/screen/x11screen.cpp \
-detail/screen/x11wrap.h
+detail/screen/x11wrap.h \
+detail/screen/keyboard_code_conversion_x.h \
+detail/screen/keyboard_code_conversion_x.cpp
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/detail/screen/x11screen.h

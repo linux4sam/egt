@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/input/inputkeyboard.h"
 #include "detail/screen/keyboard_code_conversion_x.h"
-#include "detail/screen/keysym_to_unicode.h"
 #include "detail/screen/x11wrap.h"
 #include "egt/app.h"
 #include "egt/detail/screen/x11screen.h"
@@ -36,7 +36,8 @@ struct X11Data
 X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     : m_app(app),
       m_priv(new detail::X11Data),
-      m_input(m_app.event().io())
+      m_input(m_app.event().io()),
+      m_keyboard(make_unique<InputKeyboard>())
 {
     spdlog::info("X11 Screen");
 
@@ -174,10 +175,8 @@ void X11Screen::handle_read(const asio::error_code& error)
         case KeyRelease:
         {
             Event event(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up);
-            KeySym keysym = NoSymbol;
-            XLookupString(&e.xkey, nullptr, 0, &keysym, nullptr);
-            event.key().key = detail::GetUnicodeCharacterFromXKeySym(keysym);
-            event.key().code = detail::KeyboardCodeFromXKeyEvent(&e);
+            event.key().unicode = m_keyboard->on_key(e.xkey.keycode, event.id());
+            event.key().keycode = detail::KeyboardCodeFromXKeyEvent(&e);
             m_in.dispatch(event);
             break;
         }

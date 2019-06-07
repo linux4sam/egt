@@ -87,11 +87,13 @@ void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
         if (!k->text().empty())
         {
             Event event2(eventid::keyboard_down);
-            event2.key().key = k->text()[0];
-            event2.key().code = 0;
+            event2.key().unicode = k->text()[0];
+            event2.key().keycode = EKEY_UNKNOWN;
             m_in.dispatch(event2);
 
             event2.set_id(eventid::keyboard_up);
+            event2.key().unicode = k->text()[0];
+            event2.key().keycode = EKEY_UNKNOWN;
             m_in.dispatch(event2);
         }
 
@@ -113,12 +115,12 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
                 if (!multichoice_key->text().empty())
                 {
                     Event down(eventid::keyboard_down);
-                    down.key().key = multichoice_key->text()[0];
-                    down.key().code = 0;
+                    down.key().unicode = multichoice_key->text()[0];
+                    down.key().keycode = EKEY_UNKNOWN;
                     m_in.dispatch(down);
                     Event up(eventid::keyboard_up);
-                    up.key().key = multichoice_key->text()[0];
-                    up.key().code = 0;
+                    up.key().unicode = multichoice_key->text()[0];
+                    up.key().keycode = EKEY_UNKNOWN;
                     m_in.dispatch(up);
                     // the modal popup caught the raw_pointer_up event
                     k->set_active(false);

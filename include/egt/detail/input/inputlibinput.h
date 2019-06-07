@@ -15,6 +15,7 @@
 #include <egt/asio.hpp>
 #include <linux/input.h>
 #include <egt/input.h>
+#include <memory>
 
 struct libinput;
 struct libinput_event;
@@ -25,6 +26,7 @@ inline namespace v1
 {
 namespace detail
 {
+class InputKeyboard;
 
 /**
  * Handles populating and reading input events from libinput.
@@ -50,6 +52,7 @@ private:
     asio::posix::stream_descriptor m_input;
     struct libinput* li;
     DisplayPoint m_last_point;
+    std::unique_ptr<InputKeyboard> m_keyboard;
 };
 
 }

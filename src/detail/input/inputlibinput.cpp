@@ -7,6 +7,7 @@
 #include "egt/detail/input/inputlibinput.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
+#include "egt/keycode.h"
 #include "egt/screen.h"
 #include <cassert>
 #include <fstream>
@@ -15,6 +16,7 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <unistd.h>
+#include "detail/input/inputkeyboard.h"
 
 using namespace std;
 
@@ -87,7 +89,8 @@ out:
 
 InputLibInput::InputLibInput(Application& app)
     : m_app(app),
-      m_input(app.event().io())
+      m_input(app.event().io()),
+      m_keyboard(make_unique<InputKeyboard>())
 {
     const char* seat_or_device = "seat0";
     bool verbose = false;
@@ -187,19 +190,30 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
     struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
     unsigned int key = libinput_event_keyboard_get_key(k);
 
-    eventid v = eventid::none;
-    if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_RELEASED)
-        v = eventid::keyboard_up;
-    else if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_PRESSED)
-        v = eventid::keyboard_down;
-    //else if (libinput_event_keyboard_get_key_state(k) == LIBINPUT_KEY_STATE_REPEAT)
-    //  v = eventid::keyboard_repeat;
+    SPDLOG_TRACE("key:{} state:{}", key, libinput_event_keyboard_get_key_state(k));
 
-    if (v != eventid::none)
+    static const auto EVDEV_OFFSET = 8;
+
+    switch (libinput_event_keyboard_get_key_state(k))
     {
-        Event event(v);
-        event.key().key = key;
+    case LIBINPUT_KEY_STATE_PRESSED:
+    {
+        auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_down);
+        Event event(eventid::keyboard_down);
+        event.key().unicode = unicode;
+        event.key().keycode = linux_to_ekey(key);
         dispatch(event);
+        break;
+    }
+    case LIBINPUT_KEY_STATE_RELEASED:
+    {
+        auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_up);
+        Event event(eventid::keyboard_up);
+        event.key().unicode = unicode;
+        event.key().keycode = linux_to_ekey(key);
+        dispatch(event);
+        break;
+    }
     }
 }
 
@@ -207,6 +221,8 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
 {
     struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
     unsigned int button = libinput_event_pointer_get_button(p);
+
+    SPDLOG_TRACE("button:{}", button);
 
     Pointer::button b = Pointer::button::none;
     switch (button)

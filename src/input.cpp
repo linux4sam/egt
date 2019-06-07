@@ -42,10 +42,7 @@ void Input::dispatch(Event& event)
     switch (event.id())
     {
     case eventid::keyboard_down:
-        m_key_states[event.key().code] = true;
-        break;
     case eventid::keyboard_up:
-        m_key_states[event.key().code] = false;
         break;
     case eventid::raw_pointer_down:
         // always reset on new down event
