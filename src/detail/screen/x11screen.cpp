@@ -123,7 +123,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         XEvent e;
         XNextEvent(m_priv->display, &e);
 
-        SPDLOG_DEBUG("x11 event: {}", e.type);
+        SPDLOG_TRACE("x11 event: {}", e.type);
 
         switch (e.type)
         {
@@ -185,7 +185,6 @@ void X11Screen::handle_read(const asio::error_code& error)
                 m_app.event().quit();
             break;
         default:
-            SPDLOG_DEBUG("x11 unhandled event: {}", e.type);
             break;
         }
     }
