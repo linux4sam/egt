@@ -39,10 +39,10 @@ public:
      * @param size is a size of window with offset x & y = 0.
      * @param device is a cameras device node.
      * @param format is a pixel format of a window or an overlay plane.
-     * @param windowhint used for configuring window backend's.
+     * @param hint used for configuring window backend's.
      *
-     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
-     * pixel formats.
+     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+     * formats.
      */
     CameraWindow(const Size& size = Size(),
                  const std::string& device = "/dev/video0",
@@ -55,10 +55,10 @@ public:
      * @param rect is a size of window with offset x & y.
      * @param device is a cameras device node.
      * @param format is a pixel format of a window or an overlay plane.
-     * @param windowhint used for configuring window backend's.
+     * @param hint used for configuring window backend's.
      *
-     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
-     * pixel formats.
+     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+     * formats.
      */
     CameraWindow(const Rect& rect = Rect(),
                  const std::string& device = "/dev/video0",

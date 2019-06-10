@@ -39,10 +39,10 @@ public:
      *
      * @param size is a size of window with offset x & y = 0.
      * @param format is a pixel format of window or a overlay plane.
-     * @param windowhint used for configuring window backend's.
+     * @param hint used for configuring window backend's.
      *
-     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
-     * pixel formats.
+     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+     * formats.
      */
     VideoWindow(const Size& size = Size(),
                 pixel_format format = pixel_format::xrgb8888,
@@ -53,10 +53,10 @@ public:
      *
      * @param rect is a size of window with offset x & y.
      * @param format is a pixel format of window or a overlay plane.
-     * @param windowhint used for configuring window backend's.
+     * @param hint used for configuring window backend's.
      *
-     * @note: only windowhint::heo_overlay can use yuyv, nv21 and yuv420 these
-     * pixel formats.
+     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+     * formats.
      */
     VideoWindow(const Rect& rect = Rect(),
                 pixel_format format = pixel_format::xrgb8888,
