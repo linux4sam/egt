@@ -3,25 +3,59 @@ namespace egt { inline namespace v1 {
 
  @page environ Environment Variables
 
-By default, EGT will look at several runtime environment variables to change the
-operation of the library.  For example, you can change some configuration and
-set log levels using environment variables.
+This chapter discusses several environment variables that can be used to
+configure the EGT library at runtime.
 
-@li <tt>EGT_DEBUG</tt>
-    <br>
-    Set the log level for the framework. If the library is compiled with debug
-    turned off, the DEBUG and TRACE log levels are removed.
-    - TRACE=0
-    - DEBUG=1
-    - INFO=2
-    - WARN=3
-    - ERROR=4
-    - CRITICAL=5
-    - OFF=6
+EGT will look at several runtime environment variables to change the operation
+of the library.  For example, you can change some configuration and set log
+levels using environment variables.
 
-@li <tt>EGT_BACKEND</tt>
-    <br>
-    Select what backend to use for rendering to the screen. Examples include x11, kms, fbdev.
+<dl>
+  <dt>EGT_DEBUG</dt>
+  <dd>
+    Set the numeric log level for the framework. If the library is compiled with
+    debug turned off, the internal DEBUG and TRACE log levels are removed at
+    compile time.
+    - TRACE = 0
+    - DEBUG = 1
+    - INFO = 2
+    - WARN = 3
+    - ERROR = 4
+    - CRITICAL = 5
+    - OFF = 6
+  </dd>
+
+  <dt>EGT_BACKEND</dt>
+  <dd>
+    Select what backend to use for rendering to the screen.  If this environment
+    variable is not specified, a suitable default will be chosen.
+    - kms
+    - x11
+    - sdl2
+    - fbdev
+  </dd>
+
+  <dt>EGT_KMS_BUFFERS</dt>
+  <dd>
+    Specify the number of buffers to use for KMS.  If you specifiy a single
+    buffer, no buffering will be used.  If you specify 2 buffers, double
+    buffering will be used.  If you specify 3 buffers, tripple buffering will be
+    used, and so on.
+  </dd>
+
+  <dt>EGT_INPUT_DEVICES</dt>
+  <dd>
+    Configure mapping of input devices to their EGT input backend.
+
+    Available backends include:
+    - tslib
+    - libinput
+
+    Example:
+
+        EGT_INPUT_DEVICES=libinput:/dev/input/touchscreen0,/dev/input/touchscreen1;tslib:/dev/input/touchscren2
+  </dd>
+</dl>
 
 */
 }}
