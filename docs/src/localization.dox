@@ -14,7 +14,7 @@ objects are assumed to be UTF-8 encoded within EGT.  For more information on why
 this is done, and in some ways how it is done, see the
 <a href="http://utf8everywhere.org/">UTF-8 Everywhere Manifesto</a>.
 
-To help understand details about Unicode and different character sets, see <a href="The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a>
+To help understand details about Unicode and different character sets, see <a href="https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a>
 
 @section local_gettext Text Translations
 
