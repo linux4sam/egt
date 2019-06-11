@@ -164,6 +164,7 @@ uint32_t BasicInputKeyboard::ekey_to_utf32(KeyboardCode code, bool shift, bool c
     return 0;
 }
 
+#ifdef HAVE_XKBCOMMON
 XkbInputKeyboard::XkbInputKeyboard()
 {
     m_ctx = unique_xkb_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS));
@@ -217,6 +218,7 @@ uint32_t XkbInputKeyboard::on_key(uint32_t key, eventid event)
 
     return utf32;
 }
+#endif
 
 }
 }
