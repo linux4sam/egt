@@ -15,9 +15,16 @@
 
 using namespace std;
 
+#define UTF8CPP_CHECKED
+#ifdef UTF8CPP_CHECKED
+namespace utf8ns = utf8;
+#else
+namespace utf8ns = utf8::unchecked;
+#endif
+
 static inline size_t utf8len(const std::string& str)
 {
-    return utf8::unchecked::distance(str.begin(), str.end());
+    return utf8ns::distance(str.begin(), str.end());
 }
 
 namespace egt
@@ -167,14 +174,23 @@ void TextBox::handle_key(const Key& key)
     }
 }
 
-using utf8_const_iterator = utf8::unchecked::iterator<std::string::const_iterator>;
-using utf8_iterator = utf8::unchecked::iterator<std::string::iterator>;
+using utf8_const_iterator = utf8ns::iterator<std::string::const_iterator>;
+using utf8_iterator = utf8ns::iterator<std::string::iterator>;
 
+#ifdef UTF8CPP_CHECKED
+template<class T1, class T2>
+inline std::string utf8_char_to_string(T1 ch, T2 e)
+#else
 template<class T>
 inline std::string utf8_char_to_string(T ch)
+#endif
 {
     auto ch2 = ch;
-    utf8::unchecked::advance(ch2, 1);
+#ifdef UTF8CPP_CHECKED
+    utf8ns::advance(ch2, 1, e);
+#else
+    utf8ns::advance(ch2, 1);
+#endif
     return std::string(ch.base(), ch2.base());
 }
 
@@ -185,10 +201,30 @@ void tokenize_with_delimiters(T begin, T end,
 {
     std::string token;
 
-    for (auto pos = begin; pos != end; ++pos)
+    for (auto pos = begin; pos != end;)
     {
-        auto f = std::find(dbegin, dend, *pos);
-        if (f != dend)
+#ifdef UTF8CPP_CHECKED
+        auto ch = utf8ns::next(pos, end);
+#else
+        auto ch = utf8ns::next(pos);
+#endif
+
+        bool found = false;
+        for (auto d = dbegin; d != dend;)
+        {
+#ifdef UTF8CPP_CHECKED
+            auto del = utf8ns::next(d, dend);
+#else
+            auto del = utf8ns::next(d);
+#endif
+            if (del == ch)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
         {
             if (!token.empty())
             {
@@ -196,11 +232,13 @@ void tokenize_with_delimiters(T begin, T end,
                 token.clear();
             }
 
-            tokens.emplace_back(utf8_char_to_string(pos));
+            string tmp;
+            utf8::append(ch, std::back_inserter(tmp));
+            tokens.emplace_back(tmp);
         }
         else
         {
-            token.append(utf8_char_to_string(pos));
+            utf8::append(ch, std::back_inserter(token));
         }
     }
 
@@ -241,18 +279,27 @@ void TextBox::draw(Painter& painter, const Rect&)
     std::vector<std::string> tokens;
     if (text_flags().is_set(flag::multiline) && text_flags().is_set(flag::word_wrap))
     {
-        tokenize_with_delimiters(utf8_const_iterator(m_text.begin()),
-                                 utf8_const_iterator(m_text.end()),
-                                 utf8_const_iterator(delimiters.begin()),
-                                 utf8_const_iterator(delimiters.end()),
+        tokenize_with_delimiters(m_text.cbegin(),
+                                 m_text.cend(),
+                                 delimiters.cbegin(),
+                                 delimiters.cend(),
                                  tokens);
     }
     else
     {
+#ifdef UTF8CPP_CHECKED
+        for (utf8_const_iterator ch(m_text.begin(), m_text.begin(), m_text.end());
+             ch != utf8_const_iterator(m_text.end(), m_text.begin(), m_text.end()); ++ch)
+#else
         for (utf8_const_iterator ch(m_text.begin());
              ch != utf8_const_iterator(m_text.end()); ++ch)
+#endif
         {
-            tokens.emplace_back(utf8_char_to_string(ch));
+#ifdef UTF8CPP_CHECKED
+            tokens.emplace_back(utf8_char_to_string(ch.base(), m_text.cend()));
+#else
+            tokens.emplace_back(utf8_char_to_string(ch.base()));
+#endif
         }
     }
 
@@ -304,10 +351,18 @@ void TextBox::draw(Painter& painter, const Rect&)
             break;
 
         float roff = 0.;
+#ifdef UTF8CPP_CHECKED
+        for (utf8_const_iterator ch((*t).begin(), (*t).begin(), (*t).end()); ch != utf8_const_iterator((*t).end(), (*t).begin(), (*t).end()); ++ch)
+#else
         for (utf8_const_iterator ch((*t).begin()); ch != utf8_const_iterator((*t).end()); ++ch)
+#endif
         {
             float char_width = 0;
-            last_char = utf8_char_to_string(ch);
+#ifdef UTF8CPP_CHECKED
+            last_char = utf8_char_to_string(ch.base(), (*t).cend());
+#else
+            last_char = utf8_char_to_string(ch.base());
+#endif
 
             if (*ch != '\n')
             {
@@ -423,7 +478,11 @@ void TextBox::set_max_length(size_t len)
             if (len > m_max_len)
             {
                 auto i = m_text.begin();
-                utf8::unchecked::advance(i, m_max_len);
+#ifdef UTF8CPP_CHECKED
+                utf8ns::advance(i, m_max_len, m_text.end());
+#else
+                utf8ns::advance(i, m_max_len);
+#endif
                 m_text.erase(i, m_text.end());
             }
         }
@@ -450,10 +509,19 @@ size_t TextBox::width_to_len(const string& text) const
 
     size_t len = 0;
     float total = 0;
+#ifdef UTF8CPP_CHECKED
+    for (utf8_const_iterator ch(text.begin(), m_text.begin(), m_text.end());
+         ch != utf8_const_iterator(text.end(), m_text.begin(), m_text.end()); ++ch)
+#else
     for (utf8_const_iterator ch(text.begin());
          ch != utf8_const_iterator(text.end()); ++ch)
+#endif
     {
-        auto txt = utf8_char_to_string(ch);
+#ifdef UTF8CPP_CHECKED
+        auto txt = utf8_char_to_string(ch.base(), m_text.cend());
+#else
+        auto txt = utf8_char_to_string(ch.base());
+#endif
         cairo_text_extents_t te;
         cairo_text_extents(cr.get(), txt.c_str(), &te);
         if (total + te.x_advance > b.w)
@@ -492,9 +560,17 @@ size_t TextBox::insert(const std::string& str)
         // insert at cursor position
         auto text = m_text;
         auto i = text.begin();
-        utf8::unchecked::advance(i, m_cursor_pos);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(i, m_cursor_pos, text.end());
+#else
+        utf8ns::advance(i, m_cursor_pos);
+#endif
         auto end = str.begin();
-        utf8::unchecked::advance(end, len);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(end, len, str.end());
+#else
+        utf8ns::advance(end, len);
+#endif
         text.insert(i, str.begin(), end);
 
         auto maxlen = width_to_len(text);
@@ -510,9 +586,17 @@ size_t TextBox::insert(const std::string& str)
     {
         // insert at cursor position
         auto i = m_text.begin();
-        utf8::unchecked::advance(i, m_cursor_pos);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(i, m_cursor_pos, m_text.end());
+#else
+        utf8ns::advance(i, m_cursor_pos);
+#endif
         auto end = str.begin();
-        utf8::unchecked::advance(end, len);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(end, len, str.end());
+#else
+        utf8ns::advance(end, len);
+#endif
         m_text.insert(i, str.begin(), end);
         cursor_forward(len);
         clear_selection();
@@ -578,8 +662,12 @@ void TextBox::set_selection(size_t pos, size_t length)
         pos = utf8len(m_text);
 
     auto i = m_text.begin();
-    utf8::unchecked::advance(i, pos);
-    size_t d = utf8::unchecked::distance(i, m_text.end());
+#ifdef UTF8CPP_CHECKED
+    utf8ns::advance(i, pos, m_text.end());
+#else
+    utf8ns::advance(i, pos);
+#endif
+    size_t d = utf8ns::distance(i, m_text.end());
     if (length > d)
         length = d;
 
@@ -605,9 +693,17 @@ std::string TextBox::get_selected_text() const
     if (m_select_len)
     {
         auto i = m_text.begin();
-        utf8::unchecked::advance(i, m_select_start);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(i, m_select_start, m_text.end());
+#else
+        utf8ns::advance(i, m_select_start);
+#endif
         auto l = i;
-        utf8::unchecked::advance(l, m_select_len);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(l, m_select_len, m_text.end());
+#else
+        utf8ns::advance(l, m_select_len);
+#endif
         return m_text.substr(std::distance(m_text.begin(), i),
                              std::distance(i, l));
     }
@@ -620,10 +716,18 @@ void TextBox::delete_selection()
     if (m_select_len)
     {
         auto i = m_text.begin();
-        utf8::unchecked::advance(i, m_select_start);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(i, m_select_start, m_text.end());
+#else
+        utf8ns::advance(i, m_select_start);
+#endif
         auto l = i;
-        utf8::unchecked::advance(l, m_select_len);
-        size_t p = utf8::unchecked::distance(m_text.begin(), i);
+#ifdef UTF8CPP_CHECKED
+        utf8ns::advance(l, m_select_len, m_text.end());
+#else
+        utf8ns::advance(l, m_select_len);
+#endif
+        size_t p = utf8ns::distance(m_text.begin(), i);
 
         m_text.erase(i, l);
         cursor_set(p);
