@@ -82,7 +82,7 @@ class WidthPickerWindow : public Popup
 public:
 
     explicit WidthPickerWindow(int width)
-        : Popup(main_screen()->size() / 2),
+        : Popup(main_screen()->size() / 4),
           m_grid(Tuple(4, 1), 10),
           m_width(width)
     {
@@ -144,7 +144,6 @@ public:
         set_color(Palette::ColorId::bg, Palette::white);
 
         m_grid = make_shared<VerticalBoxSizer>(*this);
-        //m_grid->set_margin(10);
         top(left(m_grid));
 
         m_colorbtn.set_boxtype(Theme::boxtype::none);
@@ -165,21 +164,6 @@ public:
         m_grid->add(m_fillbtn);
         m_grid->add(m_widthbtn);
         m_grid->add(m_clearbtn);
-
-        m_colorbtn.on_event([this](Event&)
-        {
-            m_penpicker.show_modal(true);
-        }, {eventid::pointer_click});
-
-        m_colorbtn.on_event([this](Event&)
-        {
-            m_penpicker.show_modal(true);
-        }, {eventid::pointer_click});
-
-        m_colorbtn.on_event([this](Event&)
-        {
-            m_penpicker.show_modal(true);
-        }, {eventid::pointer_click});
 
         m_colorbtn.on_event([this](Event&)
         {
