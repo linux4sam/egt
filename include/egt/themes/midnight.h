@@ -13,6 +13,9 @@ namespace egt
 inline namespace v1
 {
 
+/**
+ * Midnight Theme.
+ */
 class MidnightTheme : public Theme
 {
 public:

@@ -21,6 +21,9 @@ namespace experimental
 {
 class Guage;
 
+/**
+ * A layer of a guage display.
+ */
 class GuageLayer
 {
 public:
@@ -51,6 +54,9 @@ protected:
     bool m_visible{true};
 };
 
+/**
+ * Special GuageLayer that deals with rotating and displaying a needle.
+ */
 class NeedleLayer : public GuageLayer
 {
 public:
@@ -95,6 +101,9 @@ protected:
     PointF m_point;
 };
 
+/**
+ * A Guage Widget that is composed of GuageLayer layers.
+ */
 class Guage : public Widget
 {
 public:
@@ -107,7 +116,7 @@ public:
         resize(super_size());
     }
 
-    void draw(Painter& painter, const Rect&)
+    virtual void draw(Painter& painter, const Rect&) override
     {
         for (auto& layer : m_layers)
         {

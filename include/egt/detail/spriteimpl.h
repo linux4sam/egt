@@ -74,6 +74,9 @@ public:
         return m_strips[m_strip].framecount;
     }
 
+    /**
+     * Information about a single sprite strip.
+     */
     struct strip
     {
         int framecount{0};

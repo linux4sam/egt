@@ -23,7 +23,7 @@ inline namespace v1
 /**
  * @defgroup events Events
  * Event related functionality.
- * @see @subpage events
+ * @ref events
  */
 
 /**
@@ -196,6 +196,9 @@ struct Key
 
 std::ostream& operator<<(std::ostream& os, const Key& key);
 
+/**
+ * Base event argument class.
+ */
 class EventArg
 {
 public:
@@ -224,6 +227,8 @@ protected:
 class Widget;
 
 /**
+ * A single event that has information about the event and state for the event.
+ *
  * @ingroup events
  */
 struct Event : public EventArg
@@ -246,7 +251,7 @@ struct Event : public EventArg
 
     Event(eventid id,
           const Pointer& pointer,
-          const DisplayPoint& drag_start = DisplayPoint()) noexcept
+          const DisplayPoint& drag_start = {}) noexcept
         : m_id(id),
           m_pointer(pointer)
     {

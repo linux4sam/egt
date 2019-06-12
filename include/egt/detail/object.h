@@ -110,6 +110,9 @@ protected:
 
     uint32_t m_handle_counter{0};
 
+    /**
+     * Manages metadata about a registered callback.
+     */
     struct callback_meta
     {
         callback_meta(event_callback_t c,

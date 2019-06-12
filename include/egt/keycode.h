@@ -18,6 +18,9 @@ namespace egt
 inline namespace v1
 {
 
+/**
+ * Key codes that represent a physical key.
+ */
 enum KeyboardCode
 {
     EKEY_UNKNOWN = 0,
@@ -157,9 +160,9 @@ namespace detail
 {
 
 /**
- * Map a linux key to an EKEY.
+ * Map a linux key code to an EKEY.
  */
-KeyboardCode linux_to_ekey(int key);
+KeyboardCode linux_to_ekey(int code);
 
 }
 

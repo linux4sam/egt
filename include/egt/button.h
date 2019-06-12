@@ -142,6 +142,11 @@ public:
 
     static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
 
+    /**
+     * Set a new Image.
+     *
+     * @param image The new image to use.
+     */
     virtual void set_image(const Image& image);
 
     /**

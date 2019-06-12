@@ -13,6 +13,9 @@ namespace egt
 inline namespace v1
 {
 
+/**
+ * Sky Theme.
+ */
 class SkyTheme : public Theme
 {
 public:

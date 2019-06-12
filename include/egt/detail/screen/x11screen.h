@@ -45,6 +45,12 @@ protected:
     std::unique_ptr<detail::X11Data> m_priv;
     asio::posix::stream_descriptor m_input;
 
+    /**
+     * X11 input dispatcher.
+     *
+     * Because a X11Screen also handles input from an X11Server, this needs to
+     * have it's own Input device.
+     */
     struct X11Input : public Input
     {
         using Input::Input;

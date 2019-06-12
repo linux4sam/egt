@@ -20,7 +20,7 @@ using float_t = float;
 /**
  * @defgroup easing_functions Animation Easing Functions
  * These functions and functors define easing curves for use with animations.
- * @see @subpage animations
+ * @ref animations
  */
 
 /**

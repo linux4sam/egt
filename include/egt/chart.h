@@ -23,15 +23,18 @@ inline namespace v1
 {
 
 /**
- * Line chart widget.
- *
+ * Line/point chart widget.
  */
 class LineChart : public Widget
 {
 public:
     explicit LineChart(const Rect& rect = Rect());
 
-    // this must mirror struct kpair internally
+    /**
+     * A single data pair.
+     *
+     * @warning This must mirror struct kpair internally.
+     */
     struct DataPair
     {
         double x;

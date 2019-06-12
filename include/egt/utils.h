@@ -39,11 +39,15 @@ std::unique_ptr<T> make_unique(Args&& ... args)
 
 namespace detail
 {
+
+/**
+ * Range class to work with C++11 range based for loops in a reverse order.
+ * @see reverse_iterate
+ */
 template <typename T>
 class reverse_range
 {
     T& m_x;
-
 public:
     explicit reverse_range(T& x) : m_x(x) {}
 
@@ -58,6 +62,16 @@ public:
     }
 };
 
+/**
+ * Reverse iterator to work with C++11 range based for loops in a reverse order.
+ *
+ * @code{.cpp}
+ * for (auto& child : detail::reverse_iterate(children))
+ * {
+ *     ...
+ * }
+ * @endcode
+ */
 template <typename T>
 reverse_range<T> reverse_iterate(T& x)
 {

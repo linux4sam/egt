@@ -15,7 +15,7 @@ inline namespace v1
 namespace detail
 {
 
-KeyboardCode linux_to_ekey(int key)
+KeyboardCode linux_to_ekey(int code)
 {
     static std::map<int, KeyboardCode> keys =
     {
@@ -151,9 +151,9 @@ KeyboardCode linux_to_ekey(int key)
         {KEY_COMPOSE, EKEY_COMPOSE},
     };
 
-    SPDLOG_TRACE("key {} to keycode {}", key, keys[key]);
+    SPDLOG_TRACE("key {} to keycode {}", code, keys[code]);
 
-    return keys[key];
+    return keys[code];
 }
 
 }

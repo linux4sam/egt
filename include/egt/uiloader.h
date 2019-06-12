@@ -22,12 +22,21 @@ class Widget;
 
 namespace experimental
 {
+
+/**
+ * Parses and loads a UI XML file.
+ */
 class UiLoader
 {
 public:
 
     UiLoader();
 
+    /**
+     * Parses and loads a UI XML file and returns the parent Widget.
+     *
+     * @param file Path to the XML file to load.
+     */
     virtual std::shared_ptr<Widget> load(const std::string& file);
 
     virtual ~UiLoader();
