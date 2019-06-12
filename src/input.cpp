@@ -62,10 +62,10 @@ void Input::dispatch(Event& event)
 
     auto eevent = m_mouse->handle(event);
 
-    SPDLOG_DEBUG("input event: {}", event);
+    SPDLOG_TRACE("input event: {}", event);
     if (eevent.id() != eventid::none)
     {
-        SPDLOG_DEBUG("input event: {}", eevent);
+        SPDLOG_TRACE("input event: {}", eevent);
     }
 
     // then give it to any global input handlers
