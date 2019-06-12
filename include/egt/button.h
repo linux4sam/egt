@@ -12,9 +12,9 @@
  */
 
 #include <egt/buttongroup.h>
+#include <egt/detail/textwidget.h>
 #include <egt/geometry.h>
 #include <egt/image.h>
-#include <egt/textwidget.h>
 #include <egt/theme.h>
 #include <memory>
 #include <string>
@@ -46,7 +46,7 @@ class Painter;
  * @image html widget_button.png
  * @image latex widget_button.png "widget_button" width=5cm
  */
-class Button : public TextWidget
+class Button : public detail::TextWidget
 {
 public:
 
@@ -166,28 +166,43 @@ public:
         m_box = Rect(m_box.point(), m_image.size());
     }
 
+    /**
+     * Scale the image.
+     *
+     * @param[in] s Vertical and horizontal scale, with 1.0 being 100%.
+     * @param[in] approximate Approximate the scale to increase image cache
+     *            hit efficiency.
+     */
     virtual void scale_image(double s, bool approximate = false)
     {
         scale_image(s, s, approximate);
     }
 
+    /**
+     * Get a const reference of the image.
+     */
     inline const Image& image() const { return m_image; }
 
+    /**
+     * Get a non-const reference to the image.
+     */
     inline Image& image() { return m_image; }
 
-    void set_image_align(alignmask align)
+    /**
+     * Set the alignment of the image relative to the text.
+     *
+     * @param[in] align Only left, right, top, and bottom alignments are supported.
+     */
+    virtual void set_image_align(alignmask align)
     {
         if (detail::change_if_diff<>(m_image_align, align))
             damage();
     }
 
+    /**
+     * Get the image alignment.
+     */
     inline alignmask image_align() const { return m_image_align; }
-
-    void set_position_image_first(bool value)
-    {
-        if (detail::change_if_diff<>(m_position_image_first, value))
-            damage();
-    }
 
     virtual ~ImageButton() = default;
 
@@ -198,8 +213,7 @@ protected:
     void do_set_image(const Image& image);
 
     Image m_image;
-    alignmask m_image_align{alignmask::center | alignmask::left};
-    bool m_position_image_first{false};
+    alignmask m_image_align{alignmask::left};
 };
 
 /**

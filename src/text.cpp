@@ -3,58 +3,36 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/utf8text.h"
+#include "egt/canvas.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/layout.h"
 #include "egt/detail/string.h"
+#include "egt/frame.h"
 #include "egt/input.h"
-#include "egt/canvas.h"
 #include "egt/painter.h"
 #include "egt/text.h"
-#include <iostream>
-#include <utf8.h>
 
-using namespace std;
-
-#define UTF8CPP_CHECKED
-#ifdef UTF8CPP_CHECKED
-namespace utf8ns = utf8;
-#else
-namespace utf8ns = utf8::unchecked;
-#endif
-
-static inline size_t utf8len(const std::string& str)
-{
-    return utf8ns::distance(str.begin(), str.end());
-}
+using namespace egt::detail;
 
 namespace egt
 {
 inline namespace v1
 {
 
-TextBox::TextBox() noexcept
-    : m_timer(std::chrono::seconds(1))
-{
-    set_name("TextBox" + std::to_string(m_widgetid));
+const alignmask TextBox::default_align = alignmask::expand;
 
-    set_border(theme().default_border());
-    set_boxtype(Theme::boxtype::blank_rounded);
-    set_padding(5);
-    set_text_align(alignmask::center | alignmask::left);
-
-    m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
-
-    cursor_set_end();
-}
-
-TextBox::TextBox(const std::string& str, alignmask align,
+TextBox::TextBox(const std::string& text,
+                 alignmask text_align,
                  const flags_type::flags& flags) noexcept
-    : TextBox(str, Rect(), align, flags)
+    : TextBox(text, {}, text_align, flags)
 {}
 
-TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align,
+TextBox::TextBox(const std::string& text,
+                 const Rect& rect,
+                 alignmask text_align,
                  const flags_type::flags& flags) noexcept
-    : TextWidget(str, rect, align),
+    : TextWidget(text, rect, text_align),
       m_timer(std::chrono::seconds(1)),
       m_text_flags(flags)
 {
@@ -63,16 +41,28 @@ TextBox::TextBox(const std::string& str, const Rect& rect, alignmask align,
     set_border(theme().default_border());
     set_boxtype(Theme::boxtype::blank_rounded);
     set_padding(5);
-    set_text_align(alignmask::center | alignmask::left);
 
     m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
 
     cursor_set_end();
 }
 
-TextBox::TextBox(const Rect& rect, alignmask align, const flags_type::flags& flags) noexcept
-    : TextBox(std::string(), rect, align, flags)
+TextBox::TextBox(Frame& parent,
+                 const std::string& text,
+                 alignmask text_align,
+                 const flags_type::flags& flags) noexcept
+    : TextBox(text, Rect(), text_align, flags)
 {}
+
+TextBox::TextBox(Frame& parent,
+                 const std::string& text,
+                 const Rect& rect,
+                 alignmask text_align,
+                 const flags_type::flags& flags) noexcept
+    : TextBox(text, rect, text_align, flags)
+{
+    parent.add(*this);
+}
 
 void TextBox::handle(Event& event)
 {
@@ -165,7 +155,7 @@ void TextBox::handle_key(const Key& key)
     {
         if (key.unicode)
         {
-            string tmp;
+            std::string tmp;
             utf8::append(key.unicode, std::back_inserter(tmp));
             insert(tmp);
         }
@@ -174,93 +164,13 @@ void TextBox::handle_key(const Key& key)
     }
 }
 
-using utf8_const_iterator = utf8ns::iterator<std::string::const_iterator>;
-using utf8_iterator = utf8ns::iterator<std::string::iterator>;
-
-#ifdef UTF8CPP_CHECKED
-template<class T1, class T2>
-inline std::string utf8_char_to_string(T1 ch, T2 e)
-#else
-template<class T>
-inline std::string utf8_char_to_string(T ch)
-#endif
-{
-    auto ch2 = ch;
-#ifdef UTF8CPP_CHECKED
-    utf8ns::advance(ch2, 1, e);
-#else
-    utf8ns::advance(ch2, 1);
-#endif
-    return std::string(ch.base(), ch2.base());
-}
-
-template<class T>
-void tokenize_with_delimiters(T begin, T end,
-                              T dbegin, T dend,
-                              std::vector<std::string>& tokens)
-{
-    std::string token;
-
-    for (auto pos = begin; pos != end;)
-    {
-#ifdef UTF8CPP_CHECKED
-        auto ch = utf8ns::next(pos, end);
-#else
-        auto ch = utf8ns::next(pos);
-#endif
-
-        bool found = false;
-        for (auto d = dbegin; d != dend;)
-        {
-#ifdef UTF8CPP_CHECKED
-            auto del = utf8ns::next(d, dend);
-#else
-            auto del = utf8ns::next(d);
-#endif
-            if (del == ch)
-            {
-                found = true;
-                break;
-            }
-        }
-
-        if (found)
-        {
-            if (!token.empty())
-            {
-                tokens.push_back(token);
-                token.clear();
-            }
-
-            string tmp;
-            utf8::append(ch, std::back_inserter(tmp));
-            tokens.emplace_back(tmp);
-        }
-        else
-        {
-            utf8::append(ch, std::back_inserter(token));
-        }
-    }
-
-    if (!token.empty())
-        tokens.push_back(token);
-}
-
 void TextBox::draw(Painter& painter, const Rect&)
 {
-    auto b = content_area();
-
     // box
     draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    auto cr = painter.context();
-
-    painter.set(font());
-    cairo_font_extents_t fe;
-    cairo_font_extents(cr.get(), &fe);
-
     // function to draw the cursor
-    auto draw_cursor = [&](const Point & offset)
+    auto draw_cursor = [&](const Point & offset, size_t height)
     {
         if (focus() && m_cursor_state)
         {
@@ -269,189 +179,24 @@ void TextBox::draw(Painter& painter, const Rect&)
 
             auto YOFF = 2.;
             painter.draw(offset + Point(0, -YOFF),
-                         offset + Point(0, fe.height) + Point(0, YOFF));
+                         offset + Point(0, height) + Point(0, YOFF));
             painter.stroke();
         }
     };
 
-    // tokenize based on words or codepoints
-    const std::string delimiters = " \t\n\r";
-    std::vector<std::string> tokens;
-    if (text_flags().is_set(flag::multiline) && text_flags().is_set(flag::word_wrap))
-    {
-        tokenize_with_delimiters(m_text.cbegin(),
-                                 m_text.cend(),
-                                 delimiters.cbegin(),
-                                 delimiters.cend(),
-                                 tokens);
-    }
-    else
-    {
-#ifdef UTF8CPP_CHECKED
-        for (utf8_const_iterator ch(m_text.begin(), m_text.begin(), m_text.end());
-             ch != utf8_const_iterator(m_text.end(), m_text.begin(), m_text.end()); ++ch)
-#else
-        for (utf8_const_iterator ch(m_text.begin());
-             ch != utf8_const_iterator(m_text.end()); ++ch)
-#endif
-        {
-#ifdef UTF8CPP_CHECKED
-            tokens.emplace_back(utf8_char_to_string(ch.base(), m_text.cend()));
-#else
-            tokens.emplace_back(utf8_char_to_string(ch.base()));
-#endif
-        }
-    }
-
-    // setup rects for each word/codepoint
-    std::vector<detail::LayoutRect> rects;
-    int behave = 0;
-    for (auto t = tokens.begin(); t != tokens.end(); ++t)
-    {
-        if (*t == "\n")
-        {
-            detail::LayoutRect r;
-            r.behave = behave;
-            r.rect = Rect(0, 0, 1, fe.height);
-            rects.emplace_back(r);
-        }
-        else
-        {
-            cairo_text_extents_t te;
-            cairo_text_extents(cr.get(), (*t).c_str(), &te);
-            rects.emplace_back(detail::LayoutRect(behave, Rect(0, 0, te.x_advance, fe.height)));
-        }
-
-        if (*t == "\n")
-            behave = 0x200;
-        else
-            behave = 0;
-    }
-
-    // perform the layout
-    justification justify = justification::start;
-    if ((text_align() & alignmask::left) == alignmask::left)
-    {}
-    else if ((text_align() & alignmask::right) == alignmask::right)
-        justify = justification::end;
-    else if ((text_align() & alignmask::center) == alignmask::center)
-        justify = justification::middle;
-
-    detail::flex_layout(b, rects, justify, orientation::flex);
-
-    // draw the codepoints, cursor, and selected box
-    size_t pos = 0;
-    auto r = rects.begin();
-    std::string last_char;
-    bool workaround = false;
-    bool stop = false;
-    for (auto t = tokens.begin(); !stop && t != tokens.end(); ++t)
-    {
-        if (r->rect.y != 0 && !text_flags().is_set(flag::multiline))
-            break;
-
-        float roff = 0.;
-#ifdef UTF8CPP_CHECKED
-        for (utf8_const_iterator ch((*t).begin(), (*t).begin(), (*t).end()); ch != utf8_const_iterator((*t).end(), (*t).begin(), (*t).end()); ++ch)
-#else
-        for (utf8_const_iterator ch((*t).begin()); ch != utf8_const_iterator((*t).end()); ++ch)
-#endif
-        {
-            float char_width = 0;
-#ifdef UTF8CPP_CHECKED
-            last_char = utf8_char_to_string(ch.base(), (*t).cend());
-#else
-            last_char = utf8_char_to_string(ch.base());
-#endif
-
-            if (*ch != '\n')
-            {
-                cairo_text_extents_t te;
-                cairo_text_extents(cr.get(), last_char.c_str(), &te);
-                char_width = te.x_advance;
-
-                auto p = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff + te.x_bearing,
-                                static_cast<float>(b.y) + static_cast<float>(r->rect.y) + te.y_bearing - fe.descent + fe.height);
-
-                if (workaround)
-                    p.y += fe.height;
-
-                auto s = SizeF(char_width, r->rect.h);
-
-                if (pos >= m_select_start && pos < m_select_start + m_select_len)
-                {
-                    auto p2 = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff,
-                                     static_cast<float>(b.y) + static_cast<float>(r->rect.y));
-
-                    if (workaround)
-                        p2.y += fe.height;
-
-                    auto rect = RectF(p2, s);
-                    if (!rect.empty())
-                    {
-                        painter.set(color(Palette::ColorId::text_highlight).color());
-                        painter.draw(rect);
-                        painter.fill();
-                    }
-                }
-
-                painter.set(color(Palette::ColorId::text).color());
-                painter.draw(p);
-                painter.draw(last_char);
-
-                roff += char_width;
-            }
-            else
-            {
-                if (!text_flags().is_set(flag::multiline))
-                    break;
-
-                // if first char is a "\n" layout doesn't respond right
-                if (last_char.empty())
-                    workaround = true;
-            }
-
-            // draw cursor if before current character
-            if (pos == m_cursor_pos)
-            {
-                if (focus() && m_cursor_state)
-                {
-                    auto p = Point(b.x + r->rect.x + roff - char_width, b.y + r->rect.y);
-                    draw_cursor(p);
-                }
-            }
-
-            pos++;
-        }
-
-        ++r;
-    }
-
-    // handle cursor after last character
-    if (pos == m_cursor_pos)
-    {
-        if (focus() && m_cursor_state)
-        {
-            if (!rects.empty())
-            {
-                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.w, 0);
-                if (workaround)
-                {
-                    p.y += fe.height;
-                }
-
-                if (last_char == "\n")
-                {
-                    p.x = b.x;
-                    p.y += fe.height;
-                }
-
-                draw_cursor(p);
-            }
-            else
-                draw_cursor(b.point());
-        }
-    }
+    detail::draw_text(painter,
+                      content_area(),
+                      m_text,
+                      font(),
+                      text_flags(),
+                      text_align(),
+                      justification::start,
+                      color(Palette::ColorId::text).color(),
+                      draw_cursor,
+                      m_cursor_pos,
+                      color(Palette::ColorId::text_highlight).color(),
+                      m_select_start,
+                      m_select_len);
 }
 
 void TextBox::set_text(const std::string& str)
@@ -497,7 +242,7 @@ size_t TextBox::append(const std::string& str)
     return insert(str);
 }
 
-size_t TextBox::width_to_len(const string& text) const
+size_t TextBox::width_to_len(const std::string& text) const
 {
     auto b = content_area();
 

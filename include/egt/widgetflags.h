@@ -254,6 +254,7 @@ enum class orientation
     horizontal,
     vertical,
     flex,
+    none,
 };
 
 enum class justification
@@ -261,7 +262,8 @@ enum class justification
     start,
     middle,
     end,
-    justify
+    justify,
+    none,
 };
 
 }

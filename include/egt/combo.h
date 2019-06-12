@@ -61,7 +61,7 @@ protected:
  *
  * @ingroup controls
  */
-class ComboBox : public TextWidget
+class ComboBox : public detail::TextWidget
 {
 public:
     using item_array = std::vector<std::string>;

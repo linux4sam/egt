@@ -3,13 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/utf8text.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
 #include "egt/frame.h"
 #include "egt/label.h"
 #include "egt/painter.h"
-
-using namespace std;
 
 namespace egt
 {
@@ -19,13 +18,13 @@ static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
 
 const alignmask Label::default_align = alignmask::center | alignmask::left;
 
-Label::Label(const std::string& text, alignmask align) noexcept
-    : Label(text, Rect(), align)
+Label::Label(const std::string& text, alignmask text_align) noexcept
+    : Label(text, {}, text_align)
 {
 }
 
-Label::Label(const std::string& text, const Rect& rect, alignmask align) noexcept
-    : TextWidget(text, rect, align)
+Label::Label(const std::string& text, const Rect& rect, alignmask text_align) noexcept
+    : detail::TextWidget(text, rect, text_align)
 {
     set_name("Label" + std::to_string(m_widgetid));
 
@@ -33,15 +32,15 @@ Label::Label(const std::string& text, const Rect& rect, alignmask align) noexcep
     set_padding(5);
 }
 
-Label::Label(Frame& parent, const std::string& text, alignmask align) noexcept
-    : Label(text, align)
+Label::Label(Frame& parent, const std::string& text, alignmask text_align) noexcept
+    : Label(text, text_align)
 {
     parent.add(*this);
 }
 
 Label::Label(Frame& parent, const std::string& text, const Rect& rect,
-             alignmask align) noexcept
-    : Label(text, rect, align)
+             alignmask text_align) noexcept
+    : Label(text, rect, text_align)
 {
     parent.add(*this);
 }
@@ -65,22 +64,18 @@ void Label::draw(Painter& painter, const Rect& rect)
     Drawer<Label>::draw(*this, painter, rect);
 }
 
-void Label::default_draw(Label& widget, Painter& painter, const Rect& rect)
+void Label::default_draw(Label& widget, Painter& painter, const Rect&)
 {
-    ignoreparam(rect);
-
     widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 
-    const auto b = widget.content_area();
-
-    painter.set(widget.color(Palette::ColorId::label_text).color());
-    painter.set(widget.font());
-    const auto size = painter.text_size(widget.text());
-    const auto target = detail::align_algorithm(size,
-                        b,
-                        widget.text_align());
-    painter.draw(target.point());
-    painter.draw(widget.text());
+    detail::draw_text(painter,
+                      widget.content_area(),
+                      widget.text(),
+                      widget.font(),
+                      TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                      widget.text_align(),
+                      justification::middle,
+                      widget.color(Palette::ColorId::label_text).color());
 }
 
 void Label::set_parent(Frame* parent)
@@ -111,16 +106,16 @@ void Label::first_resize()
 
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
-                       alignmask align) noexcept
-    : ImageLabel(image, text, Rect(), align)
+                       alignmask text_align) noexcept
+    : ImageLabel(image, text, {}, text_align)
 {
 }
 
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       alignmask align) noexcept
-    : Label(text, rect, align),
+                       alignmask text_align) noexcept
+    : Label(text, rect, text_align),
       m_image(image)
 {
     set_name("ImageLabel" + std::to_string(m_widgetid));
@@ -137,8 +132,8 @@ ImageLabel::ImageLabel(const Image& image,
 ImageLabel::ImageLabel(Frame& parent,
                        const Image& image,
                        const std::string& text,
-                       alignmask align) noexcept
-    : ImageLabel(image, text, align)
+                       alignmask text_align) noexcept
+    : ImageLabel(image, text, text_align)
 {
     parent.add(*this);
 }
@@ -147,22 +142,10 @@ ImageLabel::ImageLabel(Frame& parent,
                        const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       alignmask align) noexcept
-    : ImageLabel(image, text, rect, align)
+                       alignmask text_align) noexcept
+    : ImageLabel(image, text, rect, text_align)
 {
     parent.add(*this);
-}
-
-void ImageLabel::scale_image(double hscale, double vscale,
-                             bool approximate)
-{
-    m_image.scale(hscale, vscale, approximate);
-    //m_box = Rect(m_box.point(), m_image.size());
-}
-
-void ImageLabel::scale_image(double s, bool approximate)
-{
-    scale_image(s, s, approximate);
 }
 
 void ImageLabel::draw(Painter& painter, const Rect& rect)
@@ -176,37 +159,26 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
     widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 
-    const auto b = widget.content_area();
-
     if (!widget.text().empty())
     {
-        const auto text_size = widget.text_size(widget.text());
-
-        Rect tbox;
-        Rect ibox;
-
-        if (widget.m_position_image_first)
-            detail::double_align(b,
-                                 widget.m_image.size(), widget.m_image_align, ibox,
-                                 text_size, widget.m_text_align, tbox, 0);
-        else
-            detail::double_align(b,
-                                 text_size, widget.text_align(), tbox,
-                                 widget.m_image.size(), widget.m_image_align, ibox, 0);
-
-        painter.draw(ibox.point());
-        painter.draw(widget.m_image);
-
+        std::string text;
         if (widget.m_show_label)
-        {
-            painter.set(widget.color(Palette::ColorId::label_text).color());
-            painter.set(widget.font());
-            painter.draw(tbox.point());
-            painter.draw(widget.m_text);
-        }
+            text = widget.text();
+
+        detail::draw_text(painter,
+                          widget.content_area(),
+                          text,
+                          widget.font(),
+                          TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                          widget.text_align(),
+                          justification::middle,
+                          widget.color(Palette::ColorId::label_text).color(),
+                          widget.image_align(),
+                          widget.image());
     }
     else
     {
+        const auto b = widget.content_area();
         const auto target = detail::align_algorithm(widget.m_image.size(),
                             b,
                             widget.m_image_align);
@@ -237,12 +209,6 @@ void ImageLabel::set_image(const Image& image)
     if (!image.empty())
     {
         m_image = image;
-#if 0
-        auto width = cairo_image_surface_get_width(m_image.get());
-        auto height = cairo_image_surface_get_height(m_image.get());
-        m_box.w = width;
-        m_box.h = height;
-#endif
         damage();
     }
 }
@@ -260,29 +226,7 @@ void ImageLabel::first_resize()
 {
     if (box().size().empty())
     {
-        if (!m_text.empty())
-        {
-            const auto text_size = this->text_size(m_text);
-
-            Rect tbox;
-            Rect ibox;
-
-            if (m_position_image_first)
-                detail::double_align(box(),
-                                     m_image.size(), m_image_align, ibox,
-                                     text_size, m_text_align, tbox, 5);
-            else
-                detail::double_align(box(),
-                                     text_size, m_text_align, tbox,
-                                     m_image.size(), m_image_align, ibox, 5);
-
-            const auto s = Rect::merge(tbox, ibox);
-            resize(s.size() + Size(10, 10));
-        }
-        else
-        {
-            resize(m_image.size());
-        }
+        resize(m_image.size());
     }
 }
 

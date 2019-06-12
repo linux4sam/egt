@@ -54,18 +54,14 @@ struct LayoutSerializer
         {
             uint32_t behave = 0;
 
-            if ((widget->align() & alignmask::center_horizontal) == alignmask::center_horizontal)
-                behave |= LAY_HCENTER;
-            else if ((widget->align() & alignmask::left) == alignmask::left)
+            if ((widget->align() & alignmask::left) == alignmask::left)
                 behave |= LAY_LEFT;
             else if ((widget->align() & alignmask::right) == alignmask::right)
                 behave |= LAY_RIGHT;
             else if ((widget->align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
                 behave |= LAY_HFILL;
 
-            if ((widget->align() & alignmask::center_vertical) == alignmask::center_vertical)
-                behave |= LAY_VCENTER;
-            else if ((widget->align() & alignmask::top) == alignmask::top)
+            if ((widget->align() & alignmask::top) == alignmask::top)
                 behave |= LAY_TOP;
             else if ((widget->align() & alignmask::bottom) == alignmask::bottom)
                 behave |= LAY_BOTTOM;
@@ -112,13 +108,15 @@ struct LayoutSerializer
                     case justification::justify:
                         contains |= LAY_JUSTIFY;
                         break;
+                    case justification::none:
+                        break;
                     }
 
                     if (sizer->orient() == orientation::horizontal)
                         contains |= LAY_ROW;
                     else if (sizer->orient() == orientation::vertical)
                         contains |= LAY_COLUMN;
-                    else
+                    else if (sizer->orient() == orientation::flex)
                         contains |= (LAY_FLEX | LAY_WRAP);
                 }
             }
@@ -185,7 +183,6 @@ protected:
         if (!top)
         {
             lay_vec4 r = lay_get_rect(&ctx, id);
-            //auto rect = Rect(widget->from_display(DisplayPoint(r[0], r[1])), Size(r[2], r[3]));
             auto rect = Rect(r[0], r[1], r[2], r[3]);
 
             if (widget->flags().is_set(Widget::flag::frame))
@@ -277,12 +274,16 @@ void flex_layout(const Rect& parent,
     case justification::justify:
         contains |= LAY_JUSTIFY;
         break;
+    case justification::none:
+        break;
     }
 
     if (orient == orientation::horizontal)
         contains |= LAY_ROW;
     else if (orient == orientation::vertical)
         contains |= LAY_COLUMN;
+    else if (orient == orientation::none)
+        contains |= (LAY_LAYOUT);
     else
         contains |= (LAY_FLEX | LAY_WRAP);
 
@@ -296,8 +297,11 @@ void flex_layout(const Rect& parent,
 
         lay_set_size_xy(&ctx, c, child.rect.w, child.rect.h);
 
-        uint32_t behave = child.behave;
-        lay_set_behave(&ctx, c, behave);
+        auto behave = child.behave;
+        SPDLOG_INFO("  behave: {0:x}", behave);
+
+        if (behave)
+            lay_set_behave(&ctx, c, behave);
         lay_set_margins_ltrb(&ctx, c, child.lmargin, child.tmargin, child.rmargin, child.bmargin);
 
         lay_insert(&ctx, p, c);
@@ -319,8 +323,112 @@ void flex_layout(const Rect& parent,
 
         child = pchild->next_sibling;
     }
+}
 
+void flex_layout(const Rect& parent,
+                 std::vector<LayoutRect>& children,
+                 justification justify,
+                 orientation orient,
+                 alignmask align)
+{
+    lay_context ctx;
+    lay_init_context(&ctx);
 
+    scope_exit cleanup([&ctx]()
+    {
+        lay_destroy_context(&ctx);
+    });
+
+    // The context will automatically resize its heap buffer to grow as needed
+    // during use. But we can avoid multiple reallocations by reserving as much
+    // space as we'll need up-front. Don't worry, lay_init_context doesn't do any
+    // allocations, so this is our first and only alloc.
+    lay_reserve_items_capacity(&ctx, 1024);
+
+    lay_id lp = lay_item(&ctx);
+    lay_id fp = lay_item(&ctx);
+
+    lay_set_size_xy(&ctx, lp, parent.w, parent.h);
+    uint32_t contains = 0;
+
+    switch (justify)
+    {
+    case justification::start:
+        contains |= LAY_START;
+        break;
+    case justification::middle:
+        contains |= LAY_MIDDLE;
+        break;
+    case justification::end:
+        contains |= LAY_END;
+        break;
+    case justification::justify:
+        contains |= LAY_JUSTIFY;
+        break;
+    case justification::none:
+        break;
+    }
+
+    if (orient == orientation::horizontal)
+        contains |= LAY_ROW;
+    else if (orient == orientation::vertical)
+        contains |= LAY_COLUMN;
+    else if (orient == orientation::flex)
+        contains |= (LAY_FLEX | LAY_WRAP);
+
+    lay_set_contain(&ctx, fp, contains);
+
+    uint32_t dbehave = 0;
+
+    if ((align & alignmask::expand_horizontal) == alignmask::expand_horizontal)
+        dbehave |= LAY_HFILL;
+    else if ((align & alignmask::left) == alignmask::left)
+        dbehave |= LAY_LEFT;
+    else if ((align & alignmask::right) == alignmask::right)
+        dbehave |= LAY_RIGHT;
+
+    if ((align & alignmask::expand_vertical) == alignmask::expand_vertical)
+        dbehave |= LAY_VFILL;
+    else if ((align & alignmask::top) == alignmask::top)
+        dbehave |= LAY_TOP;
+    else if ((align & alignmask::bottom) == alignmask::bottom)
+        dbehave |= LAY_BOTTOM;
+
+    lay_set_behave(&ctx, fp, dbehave);
+    lay_insert(&ctx, lp, fp);
+
+    for (auto& child : children)
+    {
+        lay_id c = lay_item(&ctx);
+        auto item = lay_get_item(&ctx, c);
+        item->data = &child;
+
+        lay_set_size_xy(&ctx, c, child.rect.w, child.rect.h);
+
+        if (child.behave)
+            lay_set_behave(&ctx, c, child.behave);
+
+        lay_set_margins_ltrb(&ctx, c, child.lmargin, child.tmargin, child.rmargin, child.bmargin);
+
+        lay_insert(&ctx, fp, c);
+    }
+
+    lay_run_context(&ctx);
+
+    auto child = lay_first_child(&ctx, fp);
+    while (child != LAY_INVALID_ID)
+    {
+        lay_item_t* pchild = lay_get_item(&ctx, child);
+
+        auto re = static_cast<LayoutRect*>(pchild->data);
+        lay_vec4 r = lay_get_rect(&ctx, child);
+        re->rect.x = r[0];
+        re->rect.y = r[1];
+        re->rect.w = r[2];
+        re->rect.h = r[3];
+
+        child = pchild->next_sibling;
+    }
 }
 
 }

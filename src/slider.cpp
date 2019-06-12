@@ -5,10 +5,10 @@
  */
 #include "egt/detail/alignment.h"
 #include "egt/detail/math.h"
+#include "egt/detail/textwidget.h"
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/slider.h"
-#include "egt/textwidget.h"
 #include "egt/frame.h"
 
 using namespace std;
@@ -218,7 +218,7 @@ void Slider::draw_label(Painter& painter, int value)
         handle -= Point(b.w / 2., 0);
 
     auto text = std::to_string(value);
-    auto f = TextWidget::scale_font(handle.size(), text, font());
+    auto f = detail::TextWidget::scale_font(handle.size(), text, font());
 
     painter.set(color(Palette::ColorId::text).color());
     painter.set(f);

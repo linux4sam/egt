@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/utf8text.h"
 #include "egt/button.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
@@ -20,10 +21,8 @@ inline namespace v1
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 30);
 
 Button::Button(const std::string& text) noexcept
-    : Button(text, Rect())
-{
-
-}
+    : Button(text, {})
+{}
 
 Button::Button(const std::string& text, const Rect& rect) noexcept
     : TextWidget(text, rect, alignmask::center)
@@ -31,6 +30,7 @@ Button::Button(const std::string& text, const Rect& rect) noexcept
     set_name("Button" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::blank_rounded);
+    set_padding(2);
 
     ncflags().set(Widget::flag::grab_mouse);
 }
@@ -77,17 +77,14 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect&)
 {
     widget.draw_box(painter, Palette::ColorId::button_bg, Palette::ColorId::border);
 
-    const auto b = widget.content_area();
-
-    // text
-    painter.set(widget.color(Palette::ColorId::button_text).color());
-    painter.set(widget.font());
-    auto size = painter.text_size(widget.text());
-    Rect target = detail::align_algorithm(size,
-                                          b,
-                                          widget.text_align());
-    painter.draw(target.point());
-    painter.draw(widget.text());
+    detail::draw_text(painter,
+                      widget.content_area(),
+                      widget.text(),
+                      widget.font(),
+                      TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                      widget.text_align(),
+                      justification::middle,
+                      widget.color(Palette::ColorId::button_text).color());
 }
 
 bool Button::checked() const
@@ -172,12 +169,6 @@ void ImageButton::do_set_image(const Image& image)
     if (!image.empty())
     {
         m_image = image;
-#if 0
-        auto width = cairo_image_surface_get_width(m_image.get());
-        auto height = cairo_image_surface_get_height(m_image.get());
-        m_box.w = width;
-        m_box.h = height;
-#endif
         damage();
     }
 }
@@ -200,29 +191,16 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
     if (!widget.text().empty())
     {
-        auto text_size = widget.text_size(widget.text());
-
-        Rect tbox;
-        Rect ibox;
-
-        if (widget.m_position_image_first)
-            detail::double_align(widget.box(),
-                                 widget.image().size(), widget.image_align(), ibox,
-                                 text_size, widget.text_align(), tbox, 5);
-        else
-            detail::double_align(widget.box(),
-                                 text_size, widget.text_align(), tbox,
-                                 widget.image().size(), widget.image_align(), ibox, 5);
-
-        //image
-        painter.draw(ibox.point());
-        painter.draw(widget.image());
-
-        //text
-        painter.set(widget.color(Palette::ColorId::button_text).color());
-        painter.set(widget.font());
-        painter.draw(tbox.point());
-        painter.draw(widget.text());
+        detail::draw_text(painter,
+                          widget.content_area(),
+                          widget.text(),
+                          widget.font(),
+                          TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                          widget.text_align(),
+                          justification::middle,
+                          widget.color(Palette::ColorId::button_text).color(),
+                          widget.image_align(),
+                          widget.image());
     }
     else
     {
@@ -237,29 +215,7 @@ void ImageButton::first_resize()
 {
     if (box().size().empty())
     {
-        if (!m_text.empty())
-        {
-            auto text_size = this->text_size(m_text);
-
-            Rect tbox;
-            Rect ibox;
-
-            if (m_position_image_first)
-                detail::double_align(box(),
-                                     m_image.size(), m_image_align, ibox,
-                                     text_size, m_text_align, tbox, 5);
-            else
-                detail::double_align(box(),
-                                     text_size, m_text_align, tbox,
-                                     m_image.size(), m_image_align, ibox, 5);
-
-            auto s = Rect::merge(tbox, ibox);
-            resize(s.size() + Size(10, 10));
-        }
-        else
-        {
-            resize(m_image.size());
-        }
+        resize(m_image.size());
     }
 }
 

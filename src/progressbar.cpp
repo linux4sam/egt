@@ -6,9 +6,9 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/math.h"
 #include "egt/detail/string.h"
+#include "egt/detail/textwidget.h"
 #include "egt/painter.h"
 #include "egt/progressbar.h"
-#include "egt/textwidget.h"
 #include <string>
 
 using namespace std;
@@ -48,7 +48,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
     }
 
     string text = std::to_string(widget.value()) + "%";
-    auto f = TextWidget::scale_font(b.size() * 0.75, text, widget.font());
+    auto f = detail::TextWidget::scale_font(b.size() * 0.75, text, widget.font());
 
     painter.set(widget.color(Palette::ColorId::label_text).color());
     painter.set(f);
@@ -98,7 +98,7 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
     painter.stroke();
 
     string text = std::to_string(widget.value());
-    auto f = TextWidget::scale_font(Size(dim, dim) * 0.75, text, widget.font());
+    auto f = detail::TextWidget::scale_font(Size(dim, dim) * 0.75, text, widget.font());
     painter.set(f);
     painter.set(widget.color(Palette::ColorId::text).color());
     auto size = painter.text_size(text);

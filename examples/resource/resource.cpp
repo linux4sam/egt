@@ -26,8 +26,7 @@ public:
              int y = 0)
         : ImageButton(Image(filename), label, Rect(Point(x, y), Size()))
     {
-        set_position_image_first(true);
-        set_image_align(alignmask::center);
+        set_image_align(alignmask::top);
         set_text_align(alignmask::center | alignmask::bottom);
     }
 };

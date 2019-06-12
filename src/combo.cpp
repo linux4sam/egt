@@ -105,7 +105,7 @@ void ComboBoxPopup::handle(Event& event)
 }
 
 ComboBox::ComboBox(const item_array& items) noexcept
-    : ComboBox(items, Rect())
+    : ComboBox(items, {})
 {
 }
 
@@ -122,7 +122,7 @@ ComboBox::ComboBox(const Rect& rect) noexcept
 
 ComboBox::ComboBox(const item_array& items,
                    const Rect& rect) noexcept
-    : TextWidget("", rect, alignmask::left | alignmask::center),
+    : detail::TextWidget("", rect, alignmask::left | alignmask::center),
       m_items(items),
       m_popup(new detail::ComboBoxPopup(*this))
 {
@@ -149,7 +149,7 @@ ComboBox::ComboBox(Frame& parent, const item_array& items, const Rect& rect) noe
 
 void ComboBox::set_parent(Frame* parent)
 {
-    TextWidget::set_parent(parent);
+    detail::TextWidget::set_parent(parent);
 
     /// @todo unsafe to be using main_window() here
     main_window()->add(m_popup);
@@ -193,7 +193,7 @@ void ComboBox::set_select(size_t index)
 
 void ComboBox::resize(const Size& s)
 {
-    TextWidget::resize(s);
+    detail::TextWidget::resize(s);
 
     if (m_popup->visible())
         m_popup->smart_pos();
@@ -201,7 +201,7 @@ void ComboBox::resize(const Size& s)
 
 void ComboBox::move(const Point& point)
 {
-    TextWidget::move(point);
+    detail::TextWidget::move(point);
 
     if (m_popup->visible())
         m_popup->smart_pos();

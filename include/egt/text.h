@@ -11,9 +11,9 @@
  * @brief Working with text input.
  */
 
+#include <egt/detail/textwidget.h>
 #include <egt/flags.h>
 #include <egt/font.h>
-#include <egt/textwidget.h>
 #include <egt/timer.h>
 #include <memory>
 #include <string>
@@ -38,7 +38,7 @@ inline namespace v1
  *
  * @ingroup controls
  */
-class TextBox : public TextWidget
+class TextBox : public detail::TextWidget
 {
 public:
 
@@ -64,22 +64,51 @@ public:
 
     using validator_callback_t = std::function<bool(std::string)>;
 
-    TextBox() noexcept;
+    static const alignmask default_align;
 
-    /// @todo These constructors are not consistent
-
-    TextBox(const std::string& str,
-            const Rect& rect,
-            alignmask align = alignmask::center | alignmask::left,
+    /**
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     * @param[in] flags TextBox flags.
+     */
+    TextBox(const std::string& text = {},
+            alignmask text_align = default_align,
             const flags_type::flags& flags = {}) noexcept;
 
-    explicit TextBox(const std::string& str,
-                     alignmask align = alignmask::center | alignmask::left,
-                     const flags_type::flags& flags = {}) noexcept;
+    /**
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] text_align Alignment for the text.
+     * @param[in] flags TextBox flags.
+     */
+    TextBox(const std::string& text,
+            const Rect& rect,
+            alignmask text_align = default_align,
+            const flags_type::flags& flags = {}) noexcept;
 
-    explicit TextBox(const Rect& rect,
-                     alignmask align = alignmask::center | alignmask::left,
-                     const flags_type::flags& flags = {}) noexcept;
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     * @param[in] flags TextBox flags.
+     */
+    TextBox(Frame& parent,
+            const std::string& text = {},
+            alignmask text_align = default_align,
+            const flags_type::flags& flags = {}) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] text_align Alignment for the text.
+     * @param[in] flags TextBox flags.
+     */
+    TextBox(Frame& parent,
+            const std::string& text,
+            const Rect& rect,
+            alignmask text_align = default_align,
+            const flags_type::flags& flags = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -89,8 +118,18 @@ public:
 
     virtual void clear() override;
 
+    virtual Size min_size_hint() const override;
+
+    /**
+     * Set the maximum allowed length of the text.
+     *
+     * @param len The maximum length of the text.
+     */
     virtual void set_max_length(size_t len);
 
+    /**
+     * Get the max length of allowed text.
+     */
     inline size_t max_length() const { return m_max_len;}
 
     /**
@@ -210,8 +249,6 @@ public:
      * Add a callback to be invoked to validate the input.
      */
     void add_validator_function(validator_callback_t callback);
-
-    virtual Size min_size_hint() const override;
 
     virtual ~TextBox() noexcept = default;
 

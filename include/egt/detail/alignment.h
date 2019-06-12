@@ -48,19 +48,6 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
                            default_dim_type xratio = 0,
                            default_dim_type yratio = 0);
 
-/**
- * This is used for aligning two rectangles in a single widget.  For example,
- * a widget that has both text and an image.  The first rectangle is aligned
- * to the main rectangle.  The second rectangle is aligned relative to the
- * first rectangle.
- *
- * @deprecated Use layout mechanics instead.
- */
-void double_align(const Rect& main,
-                  const Size& fsize, alignmask first_align, Rect& first,
-                  const Size& ssize, alignmask second_align, Rect& second,
-                  default_dim_type padding = 0);
-
 }
 }
 }

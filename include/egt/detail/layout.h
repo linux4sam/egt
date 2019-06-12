@@ -34,7 +34,8 @@ struct LayoutRect
 {
     LayoutRect() = default;
 
-    LayoutRect(uint32_t b, const Rect& r,
+    LayoutRect(uint32_t b,
+               const Rect& r,
                uint32_t lm = 0,
                uint32_t tm = 0,
                uint32_t rm = 0,
@@ -53,6 +54,7 @@ struct LayoutRect
     uint32_t tmargin{0};
     uint32_t rmargin{0};
     uint32_t bmargin{0};
+    std::string str;
 };
 
 /**
@@ -63,6 +65,11 @@ void flex_layout(const Rect& parent,
                  justification justify,
                  orientation orient);
 
+void flex_layout(const Rect& parent,
+                 std::vector<LayoutRect>& children,
+                 justification justify,
+                 orientation orient,
+                 alignmask align);
 }
 }
 }

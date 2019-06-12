@@ -11,8 +11,8 @@
  * @brief Working with labels.
  */
 
+#include <egt/detail/textwidget.h>
 #include <egt/image.h>
-#include <egt/textwidget.h>
 #include <memory>
 #include <string>
 
@@ -40,7 +40,7 @@ class Painter;
  *
  * @ingroup controls
  */
-class Label : public TextWidget
+class Label : public detail::TextWidget
 {
 public:
 
@@ -48,35 +48,35 @@ public:
 
     /**
      * @param[in] text The text to display.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
-    Label(const std::string& text = std::string(),
-          alignmask align = default_align) noexcept;
+    Label(const std::string& text = {},
+          alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
     Label(const std::string& text, const Rect& rect,
-          alignmask align = default_align) noexcept;
+          alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
-    explicit Label(Frame& parent, const std::string& text = std::string(),
-                   alignmask align = default_align) noexcept;
+    explicit Label(Frame& parent, const std::string& text = {},
+                   alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
     Label(Frame& parent, const std::string& text, const Rect& rect,
-          alignmask align = default_align) noexcept;
+          alignmask text_align = default_align) noexcept;
 
     /**
      * Set the text of the label.
@@ -120,78 +120,59 @@ public:
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
     ImageLabel(const Image& image = Image(),
                const std::string& text = std::string(),
-               alignmask align = alignmask::right | alignmask::center) noexcept;
+               alignmask text_align = alignmask::right | alignmask::center) noexcept;
 
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
     ImageLabel(const Image& image, const std::string& text, const Rect& rect,
-               alignmask align = alignmask::right | alignmask::center) noexcept;
+               alignmask text_align = alignmask::right | alignmask::center) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] image The image to display.
      * @param[in] text The text to display.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
     explicit ImageLabel(Frame& parent, const Image& image = Image(),
                         const std::string& text = std::string(),
-                        alignmask align = alignmask::right | alignmask::center) noexcept;
+                        alignmask text_align = alignmask::right | alignmask::center) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
-     * @param[in] align Alignment for the text.
+     * @param[in] text_align Alignment for the text.
      */
     ImageLabel(Frame& parent, const Image& image, const std::string& text,
                const Rect& rect,
-               alignmask align = alignmask::right | alignmask::center) noexcept;
+               alignmask text_align = alignmask::right | alignmask::center) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    virtual Size min_size_hint() const override;
 
     static void default_draw(ImageLabel& widget, Painter& painter, const Rect& rect);
 
     /**
      * Set a new Image.
+     *
+     * @param image The new image to use.
      */
     virtual void set_image(const Image& image);
 
-    const Image& image() const { return m_image; }
-
-    /** @deprecated */
-    Image& image() { return m_image; }
-
-    virtual void label_enabled(bool value);
-
-    virtual void set_image_align(alignmask align)
-    {
-        if (detail::change_if_diff<>(m_image_align, align))
-            damage();
-    }
-
-    virtual void set_position_image_first(bool value)
-    {
-        if (detail::change_if_diff<>(m_position_image_first, value))
-            damage();
-    }
-
-    virtual Size min_size_hint() const override;
-
-    virtual ~ImageLabel() = default;
-
-protected:
-
     /**
      * Scale the image.
+     *
+     * Change the size of the widget, similar to calling resize().
      *
      * @param[in] hscale Horizontal scale, with 1.0 being 100%.
      * @param[in] vscale Vertical scale, with 1.0 being 100%.
@@ -199,16 +180,66 @@ protected:
      *            hit efficiency.
      */
     virtual void scale_image(double hscale, double vscale,
-                             bool approximate = false);
+                             bool approximate = false)
+    {
+        m_image.scale(hscale, vscale, approximate);
+        m_box = Rect(m_box.point(), m_image.size());
+    }
 
-    virtual void scale_image(double s, bool approximate = false);
+    /**
+     * Scale the image.
+     *
+     * @param[in] s Vertical and horizontal scale, with 1.0 being 100%.
+     * @param[in] approximate Approximate the scale to increase image cache
+     *            hit efficiency.
+     */
+    virtual void scale_image(double s, bool approximate = false)
+    {
+        scale_image(s, s, approximate);
+    }
+
+    /**
+     * Get a const reference of the image.
+     */
+    inline const Image& image() const { return m_image; }
+
+    /**
+     * Get a non-const reference to the image.
+     */
+    inline Image& image() { return m_image; }
+
+    /**
+     * Set the alignment of the image relative to the text.
+     *
+     * @param[in] align Only left, right, top, and bottom alignments are supported.
+     */
+    virtual void set_image_align(alignmask align)
+    {
+        if (detail::change_if_diff<>(m_image_align, align))
+            damage();
+    }
+
+    /**
+     * Get the image alignment.
+     */
+    inline alignmask image_align() const { return m_image_align; }
+
+    /**
+     * Enable/disable showing the label text.
+     *
+     * @param[in] value When true, the label text is shown.
+     */
+    virtual void label_enabled(bool value);
+
+    virtual ~ImageLabel() = default;
+
+protected:
 
     virtual void first_resize() override;
 
     Image m_image;
     bool m_show_label{true};
-    alignmask m_image_align{alignmask::center | alignmask::left};
-    bool m_position_image_first{false};
+    alignmask m_image_align{alignmask::left};
 };
 
 }

@@ -19,7 +19,7 @@ struct ButtonPage : public NotebookTab
 {
     ButtonPage()
     {
-        auto grid0 = make_shared<StaticGrid>(Tuple(3, 10), 5);
+        auto grid0 = make_shared<StaticGrid>(Tuple(3, 6), 5);
         add(expand(grid0));
 
         grid0->add(expand(make_shared<Button>("button 1", Size(100, 40))));
@@ -48,6 +48,9 @@ struct ButtonPage : public NotebookTab
 
         auto imagebutton5 = make_shared<ImageButton>(Image("@flag_red.png"));
         grid0->add(expand(imagebutton5));
+
+        auto button6 = make_shared<Button>("Multiline\nButton Text");
+        grid0->add(expand(button6));
     }
 };
 
@@ -114,7 +117,7 @@ struct LabelPage : public NotebookTab
 {
     LabelPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 5), 5);
         add(expand(grid0));
 
         auto label1 = std::make_shared<Label>("left align",
@@ -141,10 +144,17 @@ struct LabelPage : public NotebookTab
         label4->set_border(1);
         grid0->add(expand(label4));
 
+        auto label5 = std::make_shared<Label>("Multiline\nLabel Text", alignmask::center);
+        label5->set_boxtype(Theme::boxtype::blank);
+        label5->set_border(1);
+        grid0->add(expand(label5));
+
         auto imagelabel0 = std::make_shared<ImageLabel>(Image("@bug.png"), "Bug");
         imagelabel0->set_boxtype(Theme::boxtype::blank);
         imagelabel0->set_border(1);
         grid0->add(expand(imagelabel0));
+        imagelabel0->set_image_align(alignmask::top);
+        imagelabel0->set_text_align(alignmask::center);
 
         auto imagelabel1 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
         imagelabel1->set_boxtype(Theme::boxtype::blank);
@@ -157,12 +167,14 @@ struct LabelPage : public NotebookTab
         imagelabel2->set_border(1);
         grid0->add(expand(imagelabel2));
         imagelabel2->set_text_align(alignmask::center | alignmask::right);
+        imagelabel2->set_image_align(alignmask::right);
 
         auto imagelabel3 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
         imagelabel3->set_boxtype(Theme::boxtype::blank);
         imagelabel3->set_border(1);
         grid0->add(expand(imagelabel3));
         imagelabel3->set_text_align(alignmask::center | alignmask::top);
+        imagelabel3->set_image_align(alignmask::bottom);
 
         auto imagelabel4 = std::make_shared<ImageLabel>(Image("@phone.png"), "Phone");
         imagelabel4->set_boxtype(Theme::boxtype::blank);
@@ -222,7 +234,7 @@ struct TextPage : public NotebookTab
                          " toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop"
                          " graphical applications for Linux.  EGT provides modern and complete GUI"
                          " functionality, look-and-feel, and performance.\n\nThis multi-line TextBox fully"
-                         " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193", Rect(), alignmask::left | alignmask::top);
+                         " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193", Rect());
         text7->set_selection(4, 25);
         text7->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
         grid1->add(expand(text7));
