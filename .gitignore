@@ -22,3 +22,11 @@ Makefile.in
 TAGS
 *.gcno
 *.gcda
+.aspell.en.pws
+.autotools
+.cproject
+.odt
+.project
+.settings
+.vscode
+*.gch
