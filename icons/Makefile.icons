@@ -189,12 +189,10 @@ $(top_srcdir)/icons/16px/cursor.png \
 $(top_srcdir)/icons/16px/brightness_high.png \
 $(top_srcdir)/icons/16px/calculator.png \
 $(top_srcdir)/icons/16px/unlock.png \
-$(top_srcdir)/icons/16px/flag_red.png \
 $(top_srcdir)/icons/16px/camera.png \
 $(top_srcdir)/icons/16px/alarm_off.png \
 $(top_srcdir)/icons/16px/volume_muted.png \
 $(top_srcdir)/icons/16px/cursor_hand.png \
-$(top_srcdir)/icons/16px/bug.png \
 $(top_srcdir)/icons/16px/arrow_up.png \
 $(top_srcdir)/icons/16px/cancel.png \
 $(top_srcdir)/icons/16px/calendar.png \
@@ -226,7 +224,6 @@ $(top_srcdir)/icons/16px/battery_full.png \
 $(top_srcdir)/icons/16px/zoom_in.png \
 $(top_srcdir)/icons/16px/file.png \
 $(top_srcdir)/icons/16px/webcam.png \
-$(top_srcdir)/icons/16px/phone.png \
 $(top_srcdir)/icons/16px/add.png \
 $(top_srcdir)/icons/16px/alarm_on.png \
 $(top_srcdir)/icons/16px/text_justify.png \
