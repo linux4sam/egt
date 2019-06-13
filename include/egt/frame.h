@@ -148,7 +148,7 @@ public:
      */
     Widget* child_at(size_t index)
     {
-        return m_children[index].get();
+        return m_children.at(index).get();
     }
 
     /**
