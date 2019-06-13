@@ -84,6 +84,17 @@ void join(std::ostream& os, const T& container, const std::string& delimiter = "
     }
 }
 
+/**
+ * Convert a type to a std::string using std::ostringstream.
+ */
+template<class T>
+inline std::string to_string(const T& x)
+{
+    std::ostringstream ss;
+    ss << x;
+    return ss.str();
+}
+
 }
 }
 }

@@ -34,14 +34,14 @@ int main(int argc, const char** argv)
         win1.on_event([&win1, label](Event & event)
         {
             auto p = win1.display_to_local(event.pointer().point);
-            label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
+            label->set_text(detail::to_string(p));
         }, {eventid::raw_pointer_move});
         label->set_align(a);
         win1.add(label);
     }
     win0.add(win1);
     win1.move(Point(50, 50));
-    auto l1 = make_shared<Label>(win1.box().tostring(), Rect(0, 0, 100, 50));
+    auto l1 = make_shared<Label>(detail::to_string(win1.box()), Rect(0, 0, 100, 50));
     l1->set_align(alignmask::center | alignmask::bottom);
     win1.add(l1);
 
@@ -53,14 +53,14 @@ int main(int argc, const char** argv)
         win2.on_event([&win2, label](Event & event)
         {
             auto p = win2.display_to_local(event.pointer().point);
-            label->set_text(std::to_string(p.x) + "," + std::to_string(p.y));
+            label->set_text(detail::to_string(p));
         }, {eventid::raw_pointer_move});
         label->set_align(a);
         win2.add(label);
     }
     win1.add(win2);
     win2.move(Point(50, 50));
-    auto l2 = make_shared<Label>(win2.box().tostring(), Rect(0, 0, 100, 50));
+    auto l2 = make_shared<Label>(detail::to_string(win2.box()), Rect(0, 0, 100, 50));
     l2->set_align(alignmask::center | alignmask::bottom);
     win2.add(l2);
 

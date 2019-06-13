@@ -636,12 +636,9 @@ public:
                rhs.top() > top();
     }
 
-    inline std::string tostring() const
-    {
-        return "[" + std::to_string(x) + "," + std::to_string(y) +
-               " - " + std::to_string(w) + "," + std::to_string(h) + "]";
-    }
-
+    /**
+     * X origin coordinate.
+     */
     dim_t x{0};
     dim_t y{0};
     dim_t w{0};
@@ -651,7 +648,8 @@ public:
 template<class dim_t, compatible dim_c>
 std::ostream& operator<<(std::ostream& os, const RectType<dim_t, dim_c>& rect)
 {
-    os << rect.tostring();
+    os << "["  << rect.x << "," << rect.y << "," <<
+       rect.w << "," << rect.h << "]";
     return os;
 }
 
