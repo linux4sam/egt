@@ -42,6 +42,7 @@ Checks: "*,\
 -cert-err58-cpp,\
 -cppcoreguidelines-pro-type-const-cast,\
 -android-cloexec-open,\
+-clang-diagnostic-unknown-warning-option,\
 "
 HeaderFilterRegex: '^.*include/egt/.*h$$'
 AnalyzeTemporaryDtors: false
