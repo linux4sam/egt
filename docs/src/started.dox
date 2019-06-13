@@ -5,6 +5,9 @@ namespace egt { inline namespace v1 {
 
 There are various ways to get started with EGT depending on your requirements.
 
+If building for an Microchip MPU Xplained or EK type board, visit
+<a href="http://www.at91.com/linux4sam/bin/view/Linux4SAM">Linux4SAM</a>.
+
 If you are building EGT on a PC you can start by just fetching the source of the
 EGT project.  If you are developing for and deploying to a target board, the
 easiest way to work with EGT is part of a buildroot SDK which already includes

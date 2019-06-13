@@ -128,13 +128,9 @@ generation tools, and many other products as well.
 
 @section fonts_inter Internationalization
 
-Both Fontconfig and FreeType support international fonts in many various languages and EGT takes advantage of this and in turn provides complete internationalization support for rendered text.
-
-@section fonts_rendering Font Rendering
-
-To understand what is sometimes called a "toy" implementation, meaning very
-simple, of text handling directly in cairo, see the following description:
-<https://www.cairographics.org/tutorial/#L1understandingtext>
+Both Fontconfig and FreeType support international fonts in many various
+languages and EGT takes advantage of this and in turn provides complete
+internationalization support for rendered text.
 
 */
 }}

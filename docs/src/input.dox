@@ -1,0 +1,17 @@
+namespace egt { inline namespace v1 {
+/**
+
+ @page input Input
+
+This chapter discusses various input device support.
+
+@section input_keyboard Keyboard
+
+@todo
+
+@section input_touchscreen Touchscreen
+
+@todo
+
+*/
+}}
