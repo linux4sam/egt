@@ -114,6 +114,7 @@ public:
      */
     enum class boxtype : uint32_t
     {
+        /// do not draw a box
         none = 0,
 
         /**
@@ -122,15 +123,17 @@ public:
          */
         solid = 1 << 0,
 
-        // type of fill, if none is set, no fill will be done
+        /// type of fill, if none is set, no fill will be done
         fill = 1 << 1,
 
-        // type of border, border will always be drawn if border_width > 0
+        /// type of border, border will always be drawn if border_width > 0
         border_rounded = 1 << 2,
+        /// type of border, border will always be drawn if border_width > 0
         border_bottom = 1 << 3,
 
-        // useful pre-defines
+        /// useful pre-define
         blank = fill,
+        /// useful pre-define
         blank_rounded = fill | border_rounded,
     };
 

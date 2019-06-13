@@ -20,8 +20,11 @@ namespace egt
 {
 inline namespace v1
 {
+class Application;
+
 namespace detail
 {
+class InputKeyboard;
 
 /**
  * Handles reading input events from evdev devices.
@@ -37,10 +40,30 @@ public:
 private:
     void handle_read(const asio::error_code& error, std::size_t length);
 
+    /**
+     * Application instance.
+     */
     Application& m_app;
+
+    /**
+     * Input handler to read from the evdev fd.
+     */
     asio::posix::stream_descriptor m_input;
+
+    /**
+     * Input buffer of events.
+     */
     std::vector<char> m_input_buf;
+
+    /**
+     * The last point seen, used for reference internally.
+     */
     DisplayPoint m_last_point;
+
+    /**
+     * Keyboard mapping instance.
+     */
+    std::unique_ptr<InputKeyboard> m_keyboard;
 };
 
 }

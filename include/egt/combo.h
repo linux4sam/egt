@@ -37,7 +37,7 @@ public:
 
     virtual void handle(Event& event) override;
 
-    virtual void show(bool center = false) override;
+    virtual void show() override;
 
     virtual ~ComboBoxPopup() = default;
 

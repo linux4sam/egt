@@ -35,7 +35,7 @@ class Form : public Frame
 {
 public:
 
-    explicit Form(const std::string& title = std::string()) noexcept
+    explicit Form(const std::string& title = {}) noexcept
         : m_vsizer(orientation::vertical)
     {
         set_name("Form" + std::to_string(m_widgetid));
@@ -55,7 +55,7 @@ public:
         }
     }
 
-    explicit Form(Frame& parent, const std::string& title = std::string()) noexcept
+    explicit Form(Frame& parent, const std::string& title = {}) noexcept
         : Form(title)
     {
         parent.add(*this);

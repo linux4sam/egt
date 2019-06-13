@@ -19,7 +19,7 @@ namespace egt
 inline namespace v1
 {
 
-Frame::Frame(const Rect& rect, const Widget::flags_type& flags) noexcept
+Frame::Frame(const Rect& rect, const flags_type& flags) noexcept
     : Widget(rect, flags + Widget::flag::frame)
 {
     set_name("Frame" + std::to_string(m_widgetid));

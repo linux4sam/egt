@@ -126,7 +126,7 @@ int main(int argc, const char** argv)
         if (popup.visible())
             popup.hide();
         else
-            popup.show(true);
+            popup.show_centered();
         return 1;
     }, {eventid::pointer_click});
     win.add(popup);

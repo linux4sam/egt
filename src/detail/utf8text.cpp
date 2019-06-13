@@ -116,26 +116,26 @@ void draw_text(Painter& painter,
     // setup rects for each word/codepoint
     std::vector<detail::LayoutRect> rects;
     uint32_t behave = default_behave;
-    for (auto t = tokens.begin(); t != tokens.end(); ++t)
+    for (const auto& t : tokens)
     {
-        if (*t == "\n")
+        if (t == "\n")
         {
             detail::LayoutRect r;
             r.behave = behave;
             r.rect = Rect(0, 0, 1, fe.height);
-            r.str = *t;
+            r.str = t;
             rects.push_back(r);
         }
         else
         {
             cairo_text_extents_t te;
-            cairo_text_extents(cr, (*t).c_str(), &te);
+            cairo_text_extents(cr, t.c_str(), &te);
             detail::LayoutRect r(behave, Rect(0, 0, te.x_advance, fe.height));
-            r.str = *t;
+            r.str = t;
             rects.push_back(r);
         }
 
-        if (*t == "\n")
+        if (t == "\n")
             behave |= LAY_BREAK;
         else
             behave = default_behave;
@@ -327,26 +327,26 @@ void draw_text(Painter& painter,
 
     uint32_t behave = default_behave;
 
-    for (auto t = tokens.begin(); t != tokens.end(); ++t)
+    for (const auto& t : tokens)
     {
-        if (*t == "\n")
+        if (t == "\n")
         {
             detail::LayoutRect r;
             r.behave = behave;
             r.rect = Rect(0, 0, 1, fe.height);
-            r.str = *t;
+            r.str = t;
             rects.push_back(r);
         }
         else
         {
             cairo_text_extents_t te;
-            cairo_text_extents(cr, (*t).c_str(), &te);
+            cairo_text_extents(cr, t.c_str(), &te);
             detail::LayoutRect r(behave, Rect(0, 0, te.x_advance, fe.height));
-            r.str = *t;
+            r.str = t;
             rects.push_back(r);
         }
 
-        if (*t == "\n")
+        if (t == "\n")
             behave |= LAY_BREAK;
         else
             behave = default_behave;

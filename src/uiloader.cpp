@@ -11,16 +11,15 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
 {
 namespace experimental
 {
+
 template <class T>
-void set_widget_property(T instance, const string& name, const string& value)
+void set_widget_property(T instance, const std::string& name, const std::string& value)
 {
     if (name == "width")
         instance->set_width(std::stoi(value));
@@ -37,7 +36,7 @@ void set_widget_property(T instance, const string& name, const string& value)
 }
 
 template <class T>
-void set_widget_text_property(T instance, const string& name, const string& value)
+void set_widget_text_property(T instance, const std::string& name, const std::string& value)
 {
     if (name == "text")
     {
@@ -64,36 +63,36 @@ void set_widget_text_property(T instance, const string& name, const string& valu
 }
 
 template <class T>
-void set_property(T instance, const string& name, const string& value)
+void set_property(T instance, const std::string& name, const std::string& value)
 {
     set_widget_property<T>(instance, name, value);
 }
 
 template <>
-void set_property<Button*>(Button* instance, const string& name, const string& value)
+void set_property<Button*>(Button* instance, const std::string& name, const std::string& value)
 {
     set_widget_property<Button*>(instance, name, value);
     set_widget_text_property<Button*>(instance, name, value);
 }
 
 template <>
-void set_property<Label*>(Label* instance, const string& name, const string& value)
+void set_property<Label*>(Label* instance, const std::string& name, const std::string& value)
 {
     set_widget_property<Label*>(instance, name, value);
     set_widget_text_property<Label*>(instance, name, value);
 }
 
 template <>
-void set_property<TextBox*>(TextBox* instance, const string& name, const string& value)
+void set_property<TextBox*>(TextBox* instance, const std::string& name, const std::string& value)
 {
     set_widget_property<TextBox*>(instance, name, value);
     set_widget_text_property<TextBox*>(instance, name, value);
 }
 
 template <class T>
-static shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, shared_ptr<Frame> parent)
+static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, std::shared_ptr<Frame> parent)
 {
-    auto instance = make_shared<T>();
+    auto instance = std::make_shared<T>();
     if (parent)
     {
         parent->add(instance);
@@ -107,18 +106,19 @@ static shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, shared_ptr<F
 
     for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling())
     {
-        string pname = prop->first_attribute("name")->value();
-        string pvalue = prop->value();
+        std::string pname = prop->first_attribute("name")->value();
+        std::string pvalue = prop->value();
 
         set_property<T*>(instance.get(), pname, pvalue);
     }
 
-    return static_pointer_cast<Widget>(instance);
+    return std::static_pointer_cast<Widget>(instance);
 }
 
-using create_function = std::function<shared_ptr<Widget>(rapidxml::xml_node<>* widget, shared_ptr<Frame> parent)>;
+using create_function =
+    std::function<std::shared_ptr<Widget>(rapidxml::xml_node<>* widget, std::shared_ptr<Frame> parent)>;
 
-static const map<string, create_function> allocators =
+static const std::map<std::string, create_function> allocators =
 {
     {"Button", create_widget<Button>},
     {"Window", create_widget<Window>},
@@ -127,13 +127,10 @@ static const map<string, create_function> allocators =
     {"StaticGrid", create_widget<StaticGrid>},
 };
 
-UiLoader::UiLoader()
-{}
-
-static shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node, shared_ptr<Frame> parent = nullptr)
+static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node, std::shared_ptr<Frame> parent = nullptr)
 {
-    shared_ptr<Widget> result;
-    string ttype;
+    std::shared_ptr<Widget> result;
+    std::string ttype;
 
     auto type = node->first_attribute("type");
     if (type)
@@ -154,13 +151,13 @@ static shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node, shared_ptr<Fr
 
     for (auto child = node->first_node("widget"); child; child = child->next_sibling())
     {
-        parse_widget(child, dynamic_pointer_cast<Frame>(result));
+        parse_widget(child, std::dynamic_pointer_cast<Frame>(result));
     }
 
     return result;
 }
 
-shared_ptr<Widget> UiLoader::load(const std::string& file)
+std::shared_ptr<Widget> UiLoader::load(const std::string& file)
 {
     rapidxml::file<> xml_file(file.c_str());
     rapidxml::xml_document<> doc;
@@ -174,13 +171,9 @@ shared_ptr<Widget> UiLoader::load(const std::string& file)
         return parse_widget(widget);
     }
 
-    return shared_ptr<Widget>();
+    return std::shared_ptr<Widget>();
 }
 
-UiLoader::~UiLoader()
-{}
-
 }
-
 }
 }

@@ -78,6 +78,9 @@ class PlaneWindow;
 class Window : public Frame
 {
 public:
+    /**
+     * Default pixel format for windows.
+     */
     constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
     explicit Window(const Rect& rect,

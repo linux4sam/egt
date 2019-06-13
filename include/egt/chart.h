@@ -28,7 +28,7 @@ inline namespace v1
 class LineChart : public Widget
 {
 public:
-    explicit LineChart(const Rect& rect = Rect());
+    explicit LineChart(const Rect& rect = {});
 
     /**
      * A single data pair.
@@ -121,7 +121,7 @@ protected:
 class PieChart : public Widget
 {
 public:
-    explicit PieChart(const Rect& rect = Rect());
+    explicit PieChart(const Rect& rect = {});
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

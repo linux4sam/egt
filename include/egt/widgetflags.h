@@ -257,6 +257,9 @@ enum class orientation
     none,
 };
 
+/**
+ * Generic justification of children flags.
+ */
 enum class justification
 {
     start,

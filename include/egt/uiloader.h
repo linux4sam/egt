@@ -25,12 +25,19 @@ namespace experimental
 
 /**
  * Parses and loads a UI XML file.
+ *
+
+ * @code{.cpp}
+ * egt::experimental::UiLoader loader;
+ * auto window = loader.load("ui.xml");
+ * window->show();
+ * @endcode
  */
 class UiLoader
 {
 public:
 
-    UiLoader();
+    UiLoader() = default;
 
     /**
      * Parses and loads a UI XML file and returns the parent Widget.
@@ -39,10 +46,10 @@ public:
      */
     virtual std::shared_ptr<Widget> load(const std::string& file);
 
-    virtual ~UiLoader();
+    virtual ~UiLoader() = default;
 };
-}
 
+}
 }
 }
 

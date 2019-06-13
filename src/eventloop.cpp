@@ -151,7 +151,7 @@ void EventLoop::invoke_idle_callbacks()
     }
 }
 
-EventLoop::~EventLoop()
-{}
+EventLoop::~EventLoop() = default;
+
 }
 }

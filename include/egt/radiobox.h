@@ -27,8 +27,8 @@ class Painter;
 class RadioBox : public Button
 {
 public:
-    RadioBox(const std::string& text = std::string(),
-             const Rect& rect = Rect());
+    RadioBox(const std::string& text = {},
+             const Rect& rect = {});
 
     virtual void handle(Event& event) override;
 

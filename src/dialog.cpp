@@ -53,11 +53,6 @@ Dialog::Dialog(const Rect& rect)
 
 }
 
-Dialog::Dialog(const Size& size)
-    : Dialog(Rect(Point(), size))
-{
-}
-
 void Dialog::set_title(const std::string& title)
 {
     if (!m_title)
@@ -135,10 +130,16 @@ void Dialog::set_widget(const std::shared_ptr<Widget>& widget)
     }
 }
 
-void Dialog::show(bool center)
+void Dialog::show()
 {
     m_vsizer->add(m_grid);
-    Popup::show(center);
+    Popup::show();
+}
+
+void Dialog::show_centered()
+{
+    m_vsizer->add(m_grid);
+    Popup::show_centered();
 }
 
 }

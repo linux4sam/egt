@@ -133,7 +133,7 @@ public:
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
-    explicit Widget(const Rect& rect = Rect(),
+    explicit Widget(const Rect& rect = {},
                     const flags_type& flags = flags_type()) noexcept;
 
     /**
@@ -141,7 +141,7 @@ public:
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
-    explicit Widget(Frame& parent, const Rect& rect = Rect(),
+    explicit Widget(Frame& parent, const Rect& rect = {},
                     const flags_type& flags = flags_type()) noexcept;
 
     Widget(Widget&& rhs) noexcept;
@@ -223,6 +223,11 @@ public:
         resize_by_ratio(ratio, ratio);
     }
 
+    /**
+     * Set the scale of the widget.
+     *
+     * @warning This is experimental.
+     */
     virtual void set_scale(float /*scale*/)
     {}
 
@@ -557,6 +562,9 @@ public:
         }
     }
 
+    /**
+     * Get the border.
+     */
     inline default_dim_type border() const { return m_border; }
 
     /**
@@ -590,6 +598,9 @@ public:
             parent_layout();
     }
 
+    /**
+     * Get the vertical ratio.
+     */
     inline default_dim_type vertical_ratio() const { return m_vertical_ratio; }
 
     /**
@@ -601,6 +612,9 @@ public:
             parent_layout();
     }
 
+    /**
+     * Get the horizontal ratio.
+     */
     inline default_dim_type horizontal_ratio() const { return m_horizontal_ratio; }
 
     /**
@@ -612,6 +626,9 @@ public:
             parent_layout();
     }
 
+    /**
+     * Get the Y ratio.
+     */
     inline default_dim_type yratio() const { return m_yratio; }
 
     /**
@@ -623,6 +640,9 @@ public:
             parent_layout();
     }
 
+    /**
+     * Get the X ratio.
+     */
     inline default_dim_type xratio() const { return m_xratio; }
 
     /**
@@ -647,7 +667,7 @@ public:
      *
      * @param[in] filename Optional filename to save to.
      */
-    virtual void paint_to_file(const std::string& filename = std::string());
+    virtual void paint_to_file(const std::string& filename = {});
 
     /**
      * Dump the Widget state.
@@ -658,6 +678,9 @@ public:
      */
     virtual void dump(std::ostream& out, int level = 0);
 
+    /**
+     * Callback definition used by Widget::walk().
+     */
     using walk_callback_t = std::function<bool(Widget* widget, int level)>;
 
     /**
@@ -742,6 +765,9 @@ public:
         return Rect(to_parent(r.point()), r.size());
     }
 
+    /**
+     * Get the display origin of the Widget.
+     */
     virtual DisplayPoint display_origin();
 
     /**
@@ -822,8 +848,15 @@ protected:
      */
     virtual void set_parent(Frame* parent);
 
+    /**
+     * Get a reference to the default palette.
+     */
     virtual const Palette& default_palette() const;
 
+    /**
+     * Get the local box which is the same size as box(), but with the
+     * origin zeroed.
+     */
     inline Rect local_box() const
     {
         return size();

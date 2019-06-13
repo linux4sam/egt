@@ -39,7 +39,9 @@ public:
     /**
      * Create a color with the specified RGBA value.
      *
-     * 0xrrggbbaa
+     * @code{.cpp}
+     * auto a = Color(0xRRGGBBAA);
+     * @endcode
      *
      * @param[in] c RGBA value.
      */
@@ -51,6 +53,9 @@ public:
           m_a(c & 0xff)
     {}
 
+    /**
+     * Create a color from an existing color, but with the specified alpha value.
+     */
     constexpr Color(const Color& color, uint32_t alpha) noexcept
         : m_r(color.m_r),
           m_g(color.m_g),
@@ -73,6 +78,13 @@ public:
           m_a(a & 0xff)
     {}
 
+    /**
+     * Create a color from only R,G, and B values.
+     *
+     * @code{.cpp}
+     * auto a = Color::rgb(0xRRGGBB);
+     * @endcode
+     */
     constexpr static inline Color rgb(uint32_t c) noexcept
     {
         return {c << 8 | 0xff};
@@ -80,6 +92,11 @@ public:
 
     /**
      * Create a color from float values.
+     *
+     * @param r Component value as a float from 0.0 to 1.0.
+     * @param g Component value as a float from 0.0 to 1.0.
+     * @param b Component value as a float from 0.0 to 1.0.
+     * @param a Component value as a float from 0.0 to 1.0.
      */
     static inline Color from_float(float r, float g, float b, float a = 1.0)
     {
@@ -96,6 +113,10 @@ public:
      *
      * For example, the string #0074D9 can be used to specify a blue-like
      * color.
+     *
+     * @code{.cpp}
+     * auto a = Color::CSS("#0074D9");
+     * @endcode
      */
     static inline Color CSS(const std::string& hex)
     {
@@ -104,6 +125,9 @@ public:
         return Color((std::stoi(str, nullptr, 16) << 8) | 0xff);
     }
 
+    /**
+     * Apply a hue value to an existing Color, and return a new Color.
+     */
     static inline Color hue(const Color& in, float h)
     {
         auto u = std::cos(h * detail::pi<float>() / 180.);
@@ -217,9 +241,13 @@ public:
     }
 
 protected:
+    /** Red component value. */
     uint32_t m_r{0};
+    /** Green component value. */
     uint32_t m_g{0};
+    /** Blue component value. */
     uint32_t m_b{0};
+    /** Alpha component value. */
     uint32_t m_a{0};
 
     friend bool operator==(const Color& lhs, const Color& rhs);

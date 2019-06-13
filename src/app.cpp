@@ -13,6 +13,7 @@
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
+#include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/timer.h"
 #include "egt/utils.h"

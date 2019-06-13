@@ -62,7 +62,7 @@ public:
 class Notebook : public Frame
 {
 public:
-    explicit Notebook(const Rect& rect = Rect());
+    explicit Notebook(const Rect& rect = {});
 
     /**
      * @todo This should explicitly only allow NotebookTab widgets.

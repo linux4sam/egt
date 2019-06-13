@@ -3,17 +3,17 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <egt/detail/string.h>
 #include <egt/ui>
-#include <math.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
 #include <iostream>
+#include <map>
+#include <math.h>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 using namespace egt;
-
 
 using WindowType = Window;
 

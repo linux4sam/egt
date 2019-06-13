@@ -35,8 +35,8 @@ class Painter;
 class CheckBox : public Button
 {
 public:
-    CheckBox(const std::string& text = std::string(),
-             const Rect& rect = Rect());
+    CheckBox(const std::string& text = {},
+             const Rect& rect = {});
 
     virtual void handle(Event& event) override;
 
@@ -61,7 +61,7 @@ public:
 class ToggleBox : public CheckBox
 {
 public:
-    explicit ToggleBox(const Rect& rect = Rect());
+    explicit ToggleBox(const Rect& rect = {});
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

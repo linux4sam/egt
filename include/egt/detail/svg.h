@@ -25,8 +25,8 @@ namespace detail
  * @param[in] id Optional object id to load from within the SVG file.
  */
 shared_cairo_surface_t load_svg(const std::string& filename,
-                                const SizeF& size = SizeF(),
-                                const std::string& id = std::string());
+                                const SizeF& size = {},
+                                const std::string& id = {});
 
 }
 }

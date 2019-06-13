@@ -28,6 +28,9 @@ inline namespace v1
  * Objects for working with geometry.
  */
 
+/**
+ * Helper type to define default dimension type used for geometry.
+ */
 using default_dim_type = int;
 
 enum class compatible
@@ -46,6 +49,9 @@ class PointType
 {
 public:
 
+    /**
+     * Helper to reference the dimension type.
+     */
     using dim_type = dim_t;
 
     constexpr PointType() noexcept = default;
@@ -160,12 +166,23 @@ inline PointType<dim_t, dim_c> operator/(PointType<dim_t, dim_c> lhs, const Poin
 template<class dim_t, compatible dim_c>
 std::ostream& operator<<(std::ostream& os, const PointType<dim_t, dim_c>& point)
 {
-    os << point.x << "," << point.y;
+    os << "[" << point.x << "," << point.y << "]";
     return os;
 }
 
+/**
+ * Helper type for a default point.
+ */
 using Point = PointType<default_dim_type, compatible::normal>;
+
+/**
+ * Helper type for a floating point.
+ */
 using PointF = PointType<float, compatible::normal>;
+
+/**
+ * Helper type for a default display point.
+ */
 using DisplayPoint = PointType<default_dim_type, compatible::display>;
 
 /**
@@ -177,13 +194,20 @@ class SizeType
 {
 public:
 
+    /**
+     * Helper to reference the dimension type.
+     */
     using dim_type = dim_t;
 
     constexpr SizeType() noexcept = default;
 
-    constexpr explicit SizeType(dim_t w_, dim_t h_) noexcept
-        : h(h_),
-          w(w_)
+    /**
+     * @param w Width
+     * @param h Height
+     */
+    constexpr explicit SizeType(dim_t w, dim_t h) noexcept
+        : h(h),
+          w(w)
     {}
 
     SizeType<dim_t, dim_c>(const SizeType<dim_t, dim_c>&) noexcept = default;
@@ -203,6 +227,11 @@ public:
         return w <= 0 || h <= 0;
     }
 
+    /**
+     * Clear the size.
+     *
+     * This means to set the width and height to zero.
+     */
     inline void clear()
     {
         h = w = 0;
@@ -236,7 +265,14 @@ public:
         return *this;
     }
 
+    /**
+     * Height
+     */
     dim_t h{0};
+
+    /**
+     * Width
+     */
     dim_t w{0};
 };
 
@@ -307,8 +343,17 @@ std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
     return os;
 }
 
+/**
+ * Helper type for a default size.
+ */
 using Size = SizeType<default_dim_type, compatible::normal>;
+/**
+ * Helper type for a float size.
+ */
 using SizeF = SizeType<float, compatible::normal>;
+/**
+ * Helper type for a tuple.
+ */
 using Tuple = SizeType<int, compatible::tuple>;
 
 /**
@@ -324,6 +369,9 @@ class RectType
 {
 public:
 
+    /**
+     * Helper to reference the dimension type.
+     */
     using dim_type = dim_t;
 
     constexpr RectType() noexcept = default;
@@ -354,11 +402,17 @@ public:
         assert(h >= 0);
     }
 
-    RectType(dim_t x_, dim_t y_, dim_t w_, dim_t h_) noexcept
-        : x(x_),
-          y(y_),
-          w(w_),
-          h(h_)
+    /**
+     * @param x X origin coordinate.
+     * @param y Y origin coordinate.
+     * @param w Width
+     * @param h Height
+     */
+    RectType(dim_t x, dim_t y, dim_t w, dim_t h) noexcept
+        : x(x),
+          y(y),
+          w(w),
+          h(h)
     {
         assert(w >= 0);
         assert(h >= 0);
@@ -398,6 +452,9 @@ public:
         return *this;
     }
 
+    /**
+     * Calculate the area of the rectangle.
+     */
     inline dim_t area() const
     {
         return w * h;
@@ -423,20 +480,30 @@ public:
         y = pos.y;
     }
 
-    inline void grow_around_center(dim_t value)
+    /**
+     * Grow the rectangle around its center by the specified radius.
+     *
+     * @param radius Relative radius to change by.
+     */
+    inline void grow_around_center(dim_t radius)
     {
-        x -= value / 2.;
-        y -= value / 2.;
-        w += value;
-        h += value;
+        x -= radius / 2.;
+        y -= radius / 2.;
+        w += radius;
+        h += radius;
     }
 
-    inline void shrink_around_center(dim_t value)
+    /**
+     * Shrink the rectangle around its center by the specified radius.
+     *
+     * @param radius Relative radius to change by.
+     */
+    inline void shrink_around_center(dim_t radius)
     {
-        x += value / 2.;
-        y += value / 2.;
-        w -= value;
-        h -= value;
+        x += radius / 2.;
+        y += radius / 2.;
+        w -= radius;
+        h -= radius;
     }
 
     /**
@@ -447,6 +514,9 @@ public:
         return Point(x, y);
     }
 
+    /**
+     * Set the rectangle's origin to the specified point.
+     */
     inline void point(const Point& p)
     {
         x = p.x;
@@ -640,8 +710,17 @@ public:
      * X origin coordinate.
      */
     dim_t x{0};
+    /**
+     * Y origin coordinate.
+     */
     dim_t y{0};
+    /**
+     * Width
+     */
     dim_t w{0};
+    /**
+     * Height
+     */
     dim_t h{0};
 };
 
@@ -698,7 +777,13 @@ inline bool operator!=(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, 
     return !(lhs == rhs);
 }
 
+/**
+ * Helper type for a default rect.
+ */
 using Rect = RectType<default_dim_type, compatible::normal>;
+/**
+ * Helper type for a default float rect.
+ */
 using RectF = RectType<float, compatible::normal>;
 
 /**
@@ -710,6 +795,9 @@ class LineType
 {
 public:
 
+    /**
+     * Helper to reference the dimension type.
+     */
     using dim_type = dim_t;
 
     constexpr explicit LineType(const Point& start, const Point& end) noexcept
@@ -738,6 +826,9 @@ protected:
     Point m_end;
 };
 
+/**
+ * Helper type for a default line.
+ */
 using Line = LineType<default_dim_type>;
 
 /**
@@ -749,10 +840,18 @@ class ArcType
 {
 public:
 
+    /**
+     * Helper to reference the dimension type.
+     */
     using dim_type = dim_t;
 
     /**
-     * Construct Arc object.
+     * Construct an Arc object.
+     *
+     * @param c Center point of the arc.
+     * @param r Radius of the arc.
+     * @param a1 Angle 1 of the arc in radians.
+     * @param a2 Angle 2 of the arc in radians.
      */
     constexpr explicit ArcType(const Point& c = Point(), float r = 0.0f,
                                float a1 = 0.0f, float a2 = 0.0f) noexcept
@@ -763,6 +862,9 @@ public:
     {
     }
 
+    /**
+     * Returns true if the arc has no radius.
+     */
     inline bool empty() const
     {
         return this->radius <= 0.0f ||
@@ -770,15 +872,29 @@ public:
                AlmostEquals(detail::FloatingPoint<float>(0.0f));
     }
 
+    /**
+     * Center point of the arc.
+     */
     Point center;
+
+    /**
+     * Radius of the arc.
+     */
     float radius{0.0f};
+
+    /**
+     * Angle of the arc in radians.
+     */
     float angle1;
+
+    /**
+     * Angle of the arc in radians.
+     */
     float angle2;
 };
 
 /**
- * Arc
- * This is an Arc.
+ * Helper type for a default arc.
  */
 using Arc = ArcType<default_dim_type>;
 
@@ -791,16 +907,25 @@ class CircleType : public ArcType<dim_t>
 {
 public:
 
+    /**
+     * Helper to reference the dimension type.
+     */
     using dim_type = dim_t;
 
     /**
      * Construct a Circle object.
+     *
+     * @param c Center point of the arc.
+     * @param r Radius of the arc.
      */
     constexpr explicit CircleType(const Point& c = Point(), float r = 0.0f) noexcept
         : Arc(c, r, 0.0f, 2 * detail::pi<float>())
     {
     }
 
+    /**
+     * Get a Rect that covers the circle.
+     */
     inline Rect rect() const
     {
         Rect r(this->center, Size());
@@ -809,6 +934,9 @@ public:
     }
 };
 
+/**
+ * Helper type for a default circle.
+ */
 using Circle = CircleType<default_dim_type>;
 
 }

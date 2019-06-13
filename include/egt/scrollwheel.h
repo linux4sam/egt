@@ -39,8 +39,8 @@ public:
      * @param[in] items Array of items to build the list.
      * @param[in] reversed Display the latest item instead of the first one.
      */
-    explicit Scrollwheel(const Rect& rect = Rect(),
-                         const item_array& items = item_array(),
+    explicit Scrollwheel(const Rect& rect = {},
+                         const item_array& items = {},
                          bool reversed = false) noexcept;
 
     /**
@@ -49,8 +49,9 @@ public:
      * @param[in] items Array of items to build the list.
      * @param[in] reversed Display the latest item instead of the first one.
      */
-    explicit Scrollwheel(Frame& parent, const Rect& rect = Rect(),
-                         const item_array& items = item_array(),
+    explicit Scrollwheel(Frame& parent,
+                         const Rect& rect = {},
+                         const item_array& items = {},
                          bool reversed = false) noexcept;
 
     /**

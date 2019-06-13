@@ -24,7 +24,7 @@ namespace egt
 inline namespace v1
 {
 /**
- * Easing function type.
+ * Easing function value type.
  */
 using float_t = float;
 
@@ -205,6 +205,9 @@ public:
      */
     void reverse(bool rev) { m_reverse = rev; }
 
+    /**
+     * Get the current value.
+     */
     inline float_t current() const
     {
         return m_current;
@@ -214,13 +217,44 @@ public:
 
 protected:
 
+    /**
+     * Starting value.
+     */
     float_t m_start{0};
+
+    /**
+     * Ending value.
+     */
     float_t m_end{0};
+
+    /**
+     * Easing function.
+     */
     easing_func_t m_easing{easing_linear};
+
+    /**
+     * Current value.
+     */
     float_t m_current{0};
+
+    /**
+     * Duration of the animation.
+     */
     std::chrono::milliseconds m_duration;
+
+    /**
+     * Absolute time when the animation was started.
+     */
     std::chrono::time_point<std::chrono::steady_clock> m_start_time;
+
+    /**
+     * Absolute time when the animation will end.
+     */
     std::chrono::time_point<std::chrono::steady_clock> m_stop_time;
+
+    /**
+     * Is the animation running in reverse.
+     */
     bool m_reverse{false};
 };
 
@@ -241,10 +275,18 @@ class AnimationSequence : public detail::IAnimation
 {
 public:
 
+    /**
+     * @param loop Should the animation sequence loop.
+     */
     explicit AnimationSequence(bool loop = false) noexcept
         : m_loop(loop)
     {}
 
+    /**
+     * Add an animation to the animation sequence.
+     *
+     * @param animation The animation.
+     */
     virtual void add(detail::IAnimation& animation)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
@@ -253,6 +295,14 @@ public:
         add(std::shared_ptr<detail::IAnimation>(&animation, [](detail::IAnimation*) {}));
     }
 
+    /**
+     * Add an animation to the animation sequence.
+     *
+     * This will take a reference to the shared_ptr and manage the lifetime of
+     * the animation.
+     *
+     * @param animation The animation.
+     */
     template<class T>
     void add(std::shared_ptr<T> animation)
     {
@@ -261,6 +311,8 @@ public:
 
     /**
      * Add a sub animation to the sequence.
+     *
+     * @param animation The animation.
      */
     virtual void add(std::shared_ptr<detail::IAnimation> animation)
     {
@@ -288,6 +340,8 @@ public:
 
     /**
      * Remove a sub animation from the sequence.
+     *
+     * @param animation The animation.
      */
     void remove(detail::IAnimation* animation)
     {
@@ -323,6 +377,9 @@ public:
         return true;
     }
 
+    /**
+     * Reset the animation sequence back to the beginning.
+     */
     virtual void reset()
     {
         stop();
@@ -381,10 +438,25 @@ public:
     virtual ~AnimationSequence() = default;
 
 protected:
+
+    /**
+     * Helper type for an array of animations.
+     */
     using animation_array = std::vector<std::shared_ptr<detail::IAnimation>>;
 
+    /**
+     * The animations of the sequence.
+     */
     animation_array m_animations;
+
+    /**
+     * Index of the current animation.
+     */
     size_t m_current{0};
+
+    /**
+     * Should the animation loop.
+     */
     bool m_loop{false};
 };
 
@@ -400,7 +472,16 @@ protected:
 class AutoAnimation : public Animation
 {
 public:
-    AutoAnimation(float_t start, float_t end,
+
+    /**
+     * @param[in] start The starting value of the animation.
+     * @param[in] end The ending value of the animation.
+     * @param[in] duration The duration of the animation.
+     * @param[in] func The easing function to use.
+     * @param[in] callback Called whenever the animation value changes. May be nullptr.
+     */
+    AutoAnimation(float_t start,
+                  float_t end,
                   std::chrono::milliseconds duration,
                   easing_func_t func = easing_linear,
                   animation_callback_t callback = nullptr);
@@ -412,6 +493,9 @@ public:
 
 protected:
 
+    /**
+     * Periodic timer used to run the animation.
+     */
     PeriodicTimer m_timer;
 };
 
@@ -429,7 +513,15 @@ class PropertyAnimatorType : public AutoAnimation
 {
 public:
 
-    explicit PropertyAnimatorType(T start = T(), T end = T(),
+
+    /**
+     * @param[in] start The starting value of the animation.
+     * @param[in] end The ending value of the animation.
+     * @param[in] duration The duration of the animation.
+     * @param[in] func The easing function to use.
+     */
+    explicit PropertyAnimatorType(T start = T(),
+                                  T end = T(),
                                   std::chrono::milliseconds duration = std::chrono::milliseconds(),
                                   easing_func_t func = easing_linear)
         : AutoAnimation(start, end, duration, func,
@@ -439,11 +531,19 @@ public:
 
     using property_callback_t = std::function<void (T v)>;
 
+    /**
+     * Register a callback handler for when the value changes.
+     *
+     * @param callback The callback function to invoke.
+     */
     void on_change(property_callback_t callback)
     {
         m_callbacks.push_back(callback);
     }
 
+    /**
+     * Clear all callbacks.
+     */
     void clear_change_callbacks()
     {
         m_callbacks.clear();
@@ -453,6 +553,9 @@ public:
 
 protected:
 
+    /**
+     * Invoke handlers with the specified value.
+     */
     void invoke_handlers(T value)
     {
         for (auto& callback : m_callbacks)
@@ -461,9 +564,15 @@ protected:
 
     using callback_array = std::vector<property_callback_t>;
 
+    /**
+     * Registered callbacks for the animation.
+     */
     callback_array m_callbacks;
 };
 
+/**
+ * Helper type.
+ */
 using PropertyAnimator = PropertyAnimatorType<int>;
 
 /**
@@ -480,6 +589,9 @@ public:
 
     AnimationDelay() = delete;
 
+    /**
+     * @param duration The delay time for the animation.
+     */
     explicit AnimationDelay(std::chrono::milliseconds duration) noexcept
         : m_timer(duration)
     {

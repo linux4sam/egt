@@ -29,7 +29,7 @@ public:
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit ProgressBar(const Rect& rect = Rect(),
+    explicit ProgressBar(const Rect& rect = {},
                          int min = 0, int max = 100, int value = 0) noexcept;
 
     /// @todo Constructors
@@ -61,7 +61,7 @@ public:
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit SpinProgress(const Rect& rect = Rect(),
+    explicit SpinProgress(const Rect& rect = {},
                           int min = 0, int max = 100, int value = 0) noexcept;
 
     /// @todo Constructors
@@ -96,7 +96,7 @@ public:
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit LevelMeter(const Rect& rect = Rect(),
+    explicit LevelMeter(const Rect& rect = {},
                         int min = 0, int max = 100, int value = 0) noexcept;
 
     /// @todo Constructors
@@ -145,7 +145,7 @@ public:
     /**
      * @param[in] rect Rectangle for the widget.
      */
-    explicit AnalogMeter(const Rect& rect = Rect());
+    explicit AnalogMeter(const Rect& rect = {});
 
     /// @todo Constructors
 

@@ -32,7 +32,7 @@ inline namespace v1
  */
 struct StringItem : public Label
 {
-    StringItem(const std::string& text = std::string(),
+    StringItem(const std::string& text = {},
                alignmask align = alignmask::center) noexcept
         : Label(text, align)
     {
@@ -46,7 +46,7 @@ struct StringItem : public Label
         set_boxtype(Theme::boxtype::blank);
     }
 
-    explicit StringItem(Frame& parent, const std::string& text = std::string(),
+    explicit StringItem(Frame& parent, const std::string& text = {},
                         alignmask align = alignmask::center) noexcept
         : Label(parent, text, align)
     {

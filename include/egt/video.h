@@ -44,7 +44,7 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    VideoWindow(const Size& size = Size(),
+    VideoWindow(const Size& size = {},
                 pixel_format format = pixel_format::xrgb8888,
                 windowhint hint = windowhint::overlay);
 
@@ -58,7 +58,7 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    VideoWindow(const Rect& rect = Rect(),
+    VideoWindow(const Rect& rect = {},
                 pixel_format format = pixel_format::xrgb8888,
                 windowhint hint = windowhint::overlay);
 

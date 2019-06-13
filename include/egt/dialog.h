@@ -49,14 +49,7 @@ public:
      *
      * @param[in] rect is a size of dialog window.
      */
-    explicit Dialog(const Rect& rect = Rect());
-
-    /**
-     * Create a dialog window with two buttons to handle decision.
-     *
-     * @param[in] size is a size of dialog window.
-     */
-    explicit Dialog(const Size& size = Size());
+    explicit Dialog(const Rect& rect = {});
 
     /**
      * Set the title info for this dialog window.
@@ -98,12 +91,9 @@ public:
      */
     virtual void set_widget(const std::shared_ptr<Widget>& widget);
 
-    /**
-     * Show the dialog window.
-     *
-     * @param[in] center Move the window to the center of the screen.
-     */
-    virtual void show(bool center = false) override;
+    virtual void show() override;
+
+    virtual void show_centered() override;
 
     virtual ~Dialog() = default;
 

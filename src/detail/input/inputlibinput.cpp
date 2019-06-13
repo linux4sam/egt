@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/input/inputkeyboard.h"
 #include "egt/app.h"
 #include "egt/detail/input/inputlibinput.h"
 #include "egt/detail/string.h"
@@ -16,7 +17,6 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <unistd.h>
-#include "detail/input/inputkeyboard.h"
 
 using namespace std;
 

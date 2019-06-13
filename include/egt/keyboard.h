@@ -101,7 +101,7 @@ public:
     {
     public:
         Panel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-              Size key_size = Size(0, 0));
+              Size key_size = {});
 
     protected:
         std::vector<std::vector<std::shared_ptr<Key>>> m_keys;
@@ -118,7 +118,7 @@ public:
     {
     public:
         MainPanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-                  Size key_size = Size(0, 0));
+                  Size key_size = {});
     protected:
         std::shared_ptr<Panel> m_panel;
         friend class Keyboard;
@@ -134,7 +134,7 @@ public:
     {
     public:
         MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-                         Size key_size = Size(0, 0));
+                         Size key_size = {});
     protected:
         std::shared_ptr<Panel> m_panel;
         friend class Keyboard;
@@ -144,7 +144,7 @@ public:
      * @param[in] panels Main panels of the keyboard.
      * @param[in] size Size of the Keyboard.
      */
-    Keyboard(std::vector<std::shared_ptr<MainPanel>> panels, Size size = Size());
+    Keyboard(std::vector<std::shared_ptr<MainPanel>> panels, Size size = {});
 
 private:
     struct MultichoicePopup : public Popup

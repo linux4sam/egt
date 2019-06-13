@@ -19,43 +19,54 @@ inline namespace v1
 {
 
 /**
- * Popup Window.
+ * Popup window.
+ *
+ * This is a utility class that manages a popup window with extra features like
+ * automatic centering and modal mode.
  */
 template <class T>
 class PopupType : public T
 {
 public:
-    explicit PopupType(const Size& size = Size(),
-                       const Point& point = Point())
+    explicit PopupType(const Size& size = {},
+                       const Point& point = {})
         : T(size)
     {
         this->move(point);
     }
 
     /**
-     * Show the window.
+     * Show the window centered.
      *
-     * @param[in] center Move the window to the center of the screen first.
+     * Position the window the center of its parent, or if it has no parent,
+     * the screen.
      */
-    virtual void show(bool center = false)
+    virtual void show_centered()
     {
-        if (center)
-        {
-            if (T::parent())
-                this->move_to_center(T::parent()->box().center());
-            else
-                this->move_to_center(main_screen()->box().center());
-        }
+        if (T::parent())
+            this->move_to_center(T::parent()->box().center());
+        else
+            this->move_to_center(main_screen()->box().center());
 
         T::show();
     }
 
+    /**
+     * Show the window in modal mode.
+     *
+     * This means it will explicitly steal all input events as long as it is
+     * visible.
+     */
     virtual void show_modal(bool center = false)
     {
         if (!modal_window())
         {
             modal_window() = this;
-            this->show(center);
+
+            if (center)
+                this->show_centered();
+            else
+                this->show();
         }
     }
 
@@ -73,6 +84,9 @@ public:
 
 };
 
+/**
+ * Helper type for a default Popup.
+ */
 using Popup = PopupType<Window>;
 
 }

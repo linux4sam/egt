@@ -9,8 +9,6 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -231,6 +229,5 @@ Widget* keyboard_focus()
 }
 
 }
-
 }
 }

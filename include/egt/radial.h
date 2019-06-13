@@ -66,7 +66,7 @@ public:
         : RadialType<T>(Rect(), min, max, value)
     {}
 
-    explicit RadialType(Frame& parent, const Rect& rect = Rect(), T min = 0, T max = 100, T value = 0)
+    explicit RadialType(Frame& parent, const Rect& rect = {}, T min = 0, T max = 100, T value = 0)
         : RadialType<T>(rect, min, max, value)
     {
         parent.add(*this);
@@ -279,6 +279,9 @@ protected:
     flags_type m_radial_flags;
 };
 
+/**
+ * Helper type for a default radial.
+ */
 using Radial = RadialType<int>;
 
 }

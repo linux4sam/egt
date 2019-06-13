@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/input/inputkeyboard.h"
 #include "egt/app.h"
 #include "egt/detail/input/inputevdev.h"
 #include "egt/geometry.h"
@@ -33,7 +34,8 @@ namespace detail
 InputEvDev::InputEvDev(Application& app, const string& path)
     : m_app(app),
       m_input(app.event().io()),
-      m_input_buf(sizeof(struct input_event) * 10)
+      m_input_buf(sizeof(struct input_event) * 10),
+      m_keyboard(make_unique<InputKeyboard>())
 {
     int fd = open(path.c_str(), O_RDONLY);
     if (fd >= 0)
@@ -142,21 +144,37 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             }
             default:
             {
-                eventid v = eventid::none;
-                if (value == 1)
-                    v = eventid::keyboard_down;
-                else if (value == 0)
-                    v = eventid::keyboard_up;
-                else if (value == 2)
-                    v = eventid::keyboard_repeat;
-                if (v != eventid::none)
+                switch (value)
                 {
-                    Event event(v);
+                case 0:
+                {
+                    auto unicode = m_keyboard->on_key(e->code, eventid::keyboard_up);
+                    Event event(eventid::keyboard_up);
                     event.key().keycode = linux_to_ekey(e->code);
-                    /// @todo No mapping to actual key yet.
-                    event.key().unicode = 0;
+                    event.key().unicode = unicode;
                     dispatch(event);
+                    break;
                 }
+                case 1:
+                {
+                    auto unicode = m_keyboard->on_key(e->code, eventid::keyboard_down);
+                    Event event(eventid::keyboard_down);
+                    event.key().keycode = linux_to_ekey(e->code);
+                    event.key().unicode = unicode;
+                    dispatch(event);
+                    break;
+                }
+                case 2:
+                {
+                    auto unicode = m_keyboard->on_key(e->code, eventid::keyboard_repeat);
+                    Event event(eventid::keyboard_repeat);
+                    event.key().keycode = linux_to_ekey(e->code);
+                    event.key().unicode = unicode;
+                    dispatch(event);
+                    break;
+                }
+                }
+
                 break;
             }
             }

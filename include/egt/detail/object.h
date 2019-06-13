@@ -108,6 +108,9 @@ public:
 
 protected:
 
+    /**
+     * Counter used to generate unique handles for each callback registration.
+     */
     uint32_t m_handle_counter{0};
 
     /**
@@ -128,8 +131,14 @@ protected:
         uint32_t handle{0};
     };
 
+    /**
+     * Helper type for an array of callbacks.
+     */
     using callback_array = std::vector<callback_meta>;
 
+    /**
+     * Array of callbacks.
+     */
     callback_array m_callbacks;
 
     /**

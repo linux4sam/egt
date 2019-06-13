@@ -76,7 +76,7 @@ public:
             m_player.seek(m_dial.value());
         }, {eventid::input_property_changed});
 
-        m_dial.radial_flags().set({Radial::flag::primary_value});
+        m_dial.radial_flags().set(Radial::flag::primary_value);
 
         m_player.on_event([this](Event&)
         {

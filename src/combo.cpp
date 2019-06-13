@@ -72,10 +72,10 @@ void ComboBoxPopup::smart_pos()
     }
 }
 
-void ComboBoxPopup::show(bool center)
+void ComboBoxPopup::show()
 {
     smart_pos();
-    Popup::show(center);
+    Popup::show();
 }
 
 void ComboBoxPopup::handle(Event& event)

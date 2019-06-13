@@ -171,10 +171,16 @@ FileOpenDialog::FileOpenDialog(const Rect& rect)
 
 }
 
-void FileOpenDialog::show(bool center)
+void FileOpenDialog::show()
 {
     list_files(m_filepath);
-    Popup::show(center);
+    Popup::show();
+}
+
+void FileOpenDialog::show_centered()
+{
+    list_files(m_filepath);
+    Popup::show_centered();
 }
 
 void FileOpenDialog::set_selected(const std::string& fselect)
@@ -242,11 +248,18 @@ FileSaveDialog::FileSaveDialog(const Rect& rect)
 
 }
 
-void FileSaveDialog::show(bool center)
+void FileSaveDialog::show()
 {
     m_fileselect_box->set_text("");
     list_files(m_filepath);
-    Popup::show(center);
+    Popup::show();
+}
+
+void FileSaveDialog::show_centered()
+{
+    m_fileselect_box->set_text("");
+    list_files(m_filepath);
+    Popup::show_centered();
 }
 
 void FileSaveDialog::set_selected(const std::string& fselect)

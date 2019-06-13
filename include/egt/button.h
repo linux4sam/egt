@@ -53,7 +53,7 @@ public:
     /**
      * @param[in] text The text to display.
      */
-    explicit Button(const std::string& text = std::string()) noexcept;
+    explicit Button(const std::string& text = {}) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -65,7 +65,7 @@ public:
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
      */
-    explicit Button(Frame& parent, const std::string& text = std::string()) noexcept;
+    explicit Button(Frame& parent, const std::string& text = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -130,13 +130,13 @@ class ImageButton : public Button
 {
 public:
     explicit ImageButton(const Image& image,
-                         const std::string& text = "",
-                         const Rect& rect = Rect()) noexcept;
+                         const std::string& text = {},
+                         const Rect& rect = {}) noexcept;
 
     ImageButton(Frame& parent,
                 const Image& image,
-                const std::string& text = "",
-                const Rect& rect = Rect()) noexcept;
+                const std::string& text = {},
+                const Rect& rect = {}) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

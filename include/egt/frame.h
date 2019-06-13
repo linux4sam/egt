@@ -47,8 +47,8 @@ public:
      * @param[in] rect Initial rectangle of the Frame.
      * @param[in] flags Widget flags.
      */
-    explicit Frame(const Rect& rect = Rect(),
-                   const Widget::flags_type& flags = Widget::flags_type()) noexcept;
+    explicit Frame(const Rect& rect = {},
+                   const flags_type& flags = flags_type()) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -62,6 +62,8 @@ public:
      *
      * The z-order of a widget is based on the order it is added.  First in
      * is bottom, or zorder 0.
+     *
+     * @param widget The widget.
      *
      * @todo Create the idea of layers by moving m_children to a 2d array.
      * Then add a layer index (x-order) here to add widgets to different
@@ -91,6 +93,8 @@ public:
 
     /**
      * Utility wrapper around add()
+     *
+     * @param widget The widget.
      */
     template<class T>
     void add(const std::shared_ptr<T>& widget)
@@ -105,6 +109,8 @@ public:
      * Adds a reference to a widget instance that the caller will manage.
      *
      * The inverse of this call is Frame::remove().
+     *
+     * @param widget The widget.
      *
      * @warning This does not manage the lifetime of Widget. It is up to the
      * caller to make sure this Widget is available for as long as the instance
@@ -122,6 +128,8 @@ public:
      * Remove a child widget.
      *
      * The inverse of this call is Frame::add().
+     *
+     * @param widget The widget.
      */
     virtual void remove(Widget* widget);
 
@@ -130,8 +138,14 @@ public:
      */
     void remove_all();
 
+    /**
+     * Get the number of children widgets.
+     */
     inline size_t count_children() const { return m_children.size(); }
 
+    /**
+     * Get a child widget at a specific index.
+     */
     Widget* child_at(size_t index)
     {
         return m_children[index].get();
@@ -206,6 +220,10 @@ public:
      */
     virtual void damage(const Rect& rect) override;
 
+    /**
+     * Special variation of damage() that is to be called explicitly by child
+     * widgets.
+     */
     virtual void damage_from_child(const Rect& rect)
     {
         damage(rect);
@@ -231,7 +249,7 @@ public:
     /**
      * Save the entire frame surface to a file.
      */
-    virtual void paint_to_file(const std::string& filename = std::string()) override;
+    virtual void paint_to_file(const std::string& filename = {}) override;
 
     /**
      * Paint individual children to file.
@@ -248,8 +266,8 @@ public:
     }
 
     /**
-     * @note Remember that when overriding this function as a Frame, you must call
-     * layout on each child Frame to propagate the layout.
+     * @note Remember that when overriding this function as a Frame, you must
+     * call layout on each child Frame to propagate the layout.
      */
     virtual void layout() override;
 
@@ -288,6 +306,12 @@ public:
         Widget::zorder_up();
     }
 
+    /**
+     * Move the specified widget zorder down relative to other widgets with the
+     * same parent.
+     *
+     * @param widget The widget.
+     */
     virtual void zorder_down(Widget* widget)
     {
         auto i = std::find_if(m_children.begin(), m_children.end(),
@@ -304,6 +328,12 @@ public:
         }
     }
 
+    /**
+     * Move the specified widget zorder up relative to other widgets with the
+     * same parent.
+     *
+     * @param widget The widget.
+     */
     virtual void zorder_up(Widget* widget)
     {
         auto i = std::find_if(m_children.begin(), m_children.end(),
@@ -339,18 +369,36 @@ public:
      */
     virtual void add_damage(const Rect& rect);
 
+    /**
+     * Helper type that defines the special draw child callback.
+     */
     using special_child_draw_callback_t = std::function<void(Painter& painter, Widget* widget)>;
 
+    /**
+     * Get the special child draw callback.
+     */
     inline special_child_draw_callback_t special_child_draw_callback() const
     {
         return m_special_child_draw_callback;
     }
 
+    /**
+     * Set the special child draw callback.
+     */
     inline void set_special_child_draw_callback(special_child_draw_callback_t func)
     {
         m_special_child_draw_callback = func;
     }
 
+    /**
+     * Special draw function that can be invoked when drawing each child.
+     *
+     * This is useful, for example, to draw a custom bounding box around
+     * children or to modify how a child draws by overwriting it.
+     *
+     * @param painter An instance of the Painter to use.
+     * @param widget The widget.
+     */
     inline void special_child_draw(Painter& painter, Widget* widget)
     {
         if (m_special_child_draw_callback)
@@ -359,8 +407,14 @@ public:
             parent()->special_child_draw(painter, widget);
     }
 
+    /**
+     * Does this frame have a screen?
+     */
     virtual bool has_screen() const { return false; }
 
+    /**
+     * Starting at this frame, work up and find frame that has a screen.
+     */
     virtual Frame* find_screen()
     {
         if (has_screen())
@@ -377,8 +431,14 @@ public:
 
 protected:
 
+    /**
+     * Used internally for calling the special child draw function.
+     */
     special_child_draw_callback_t m_special_child_draw_callback;
 
+    /**
+     * Helper type for an array of children.
+     */
     using children_array = std::deque<std::shared_ptr<Widget>>;
 
     /**
@@ -391,7 +451,14 @@ protected:
      */
     Screen::damage_array m_damage;
 
+    /**
+     * Status for whether this frame is currently drawing.
+     */
     bool m_in_draw{false};
+
+    /**
+     * Status for whether this frame is currently performing layout.
+     */
     bool m_in_layout{false};
 };
 

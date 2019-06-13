@@ -20,15 +20,27 @@ namespace egt
 inline namespace v1
 {
 
+/**
+ * Shared pointer for a cairo surface.
+ */
 using shared_cairo_surface_t =
     std::shared_ptr<cairo_surface_t>;
 
+/**
+ * Shared pointer for a cairo context.
+ */
 using shared_cairo_t =
     std::shared_ptr<cairo_t>;
 
+/**
+ * Shared pointer for a cairo pattern.
+ */
 using shared_cairo_pattern_t =
     std::shared_ptr<cairo_pattern_t>;
 
+/**
+ * Shared pointer for a cairo font.
+ */
 using shared_cairo_scaled_font_t =
     std::shared_ptr<cairo_scaled_font_t>;
 
@@ -47,9 +59,15 @@ struct cairo_surface_t_deleter
 };
 }
 
+/**
+ * Unique pointer for a cairo context.
+ */
 using unique_cairo_t =
     std::unique_ptr<cairo_t, detail::cairo_t_deleter>;
 
+/**
+ * Unique pointer for a cairo surface.
+ */
 using unique_cairo_surface_t =
     std::unique_ptr<cairo_surface_t, detail::cairo_surface_t_deleter>;
 
@@ -82,9 +100,21 @@ std::ostream& operator<<(std::ostream& os, const pixel_format& format);
  */
 namespace detail
 {
+/**
+ * Convert a pixel_format to a cairo format.
+ */
 cairo_format_t cairo_format(pixel_format format);
+/**
+ * Convert a pixel format to a DRM format.
+ */
 uint32_t drm_format(pixel_format format);
+/**
+ * Convert a DRM format to a pixel format.
+ */
 pixel_format egt_format(uint32_t format);
+/**
+ * Convert a cairo format to a pixel format.
+ */
 pixel_format egt_format(cairo_format_t format);
 }
 

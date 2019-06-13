@@ -189,7 +189,7 @@ struct Key
     KeyboardCode keycode{EKEY_UNKNOWN};
 
     /**
-     * 32 bit code point.
+     * 32 bit unicode code point.
      */
     uint32_t unicode{0};
 };

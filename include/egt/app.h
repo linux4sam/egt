@@ -65,35 +65,58 @@ public:
     virtual int run();
 
     /**
-     * Get a reference to the internal EventLoop of the application.
+     * Get a reference to the application event loop instance.
      */
     inline EventLoop& event() { return m_event; }
 
     /**
      * Paint the entire screen to a file.
      */
-    void paint_to_file(const std::string& filename = std::string());
+    void paint_to_file(const std::string& filename = {});
 
     /**
      * Dump the widget hierarchy and properties to the specified ostream.
      *
      * Example:
-     * @code
+     * @code{.cpp}
      * app.dump(cout);
      * @endcode
      */
     void dump(std::ostream& out);
 
+    /**
+     * Get a list of input devices configured with the EGT_INPUT_DEVICES
+     * environment variable.
+     */
     std::vector<std::pair<std::string, std::string>> get_input_devices();
 
     virtual ~Application() = default;
 
 protected:
 
+    /**
+     * The event loop instance.
+     */
     EventLoop m_event;
+
+    /**
+     * Argument count.
+     */
     int m_argc{0};
+
+    /**
+     * Argument list.
+     */
     const char** m_argv{nullptr};
+
+    /**
+     * Signal instance for registered signal handles by the Application.
+     */
     asio::signal_set m_signals;
+
+    /**
+     * List of configured input devices.
+     */
     std::vector<std::pair<std::string, std::string>> m_input_devices;
 
 private:
@@ -105,7 +128,7 @@ private:
 };
 
 /**
- * This is a wrapper around gettext.
+ * This is a wrapper around gettext().
  */
 #define _(String) gettext(String)
 

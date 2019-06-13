@@ -50,7 +50,7 @@ public:
      *
      * Note: list the content of current directory.
      */
-    explicit FileDialog(const Rect& rect = Rect());
+    explicit FileDialog(const Rect& rect = {});
 
     /**
      * Create a file dialog window.
@@ -61,7 +61,7 @@ public:
      * Note: filepath should be a directory if the file path is regular
      * file, then the filedialog will list the content of parent directory.
      */
-    explicit FileDialog(const std::string& filepath = std::string(), const Rect& rect = Rect());
+    explicit FileDialog(const std::string& filepath = {}, const Rect& rect = {});
 
     virtual void set_selected(const std::string& fselect) = 0;
 
@@ -95,7 +95,7 @@ public:
      *
      * Note: list the content of current directory.
      */
-    explicit FileOpenDialog(const Rect& rect = Rect());
+    explicit FileOpenDialog(const Rect& rect = {});
 
     /**
      * Create a file open dialog window.
@@ -106,14 +106,11 @@ public:
      * Note: filepath should be a directory if the file path is regular
      * file, then the filedialog will list the content of parent directory.
      */
-    explicit FileOpenDialog(const std::string& filepath = std::string(), const Rect& rect = Rect());
+    explicit FileOpenDialog(const std::string& filepath = {}, const Rect& rect = {});
 
-    /**
-     * Show file open dialog window.
-     *
-     * @param[in] center Move the window to the center of the screen.
-     */
-    virtual void show(bool center = false) override;
+    virtual void show() override;
+
+    virtual void show_centered() override;
 
     virtual void set_selected(const std::string& fselect) override;
 
@@ -144,7 +141,7 @@ public:
      *
      * Note: list the content of current directory.
      */
-    explicit FileSaveDialog(const Rect& rect = Rect());
+    explicit FileSaveDialog(const Rect& rect = {});
 
     /**
      * Create a file save dialog window.
@@ -155,14 +152,11 @@ public:
      * Note: filepath should be a directory. If file path is regular
      * file, then the filedialog will list the content of parent directory.
      */
-    explicit FileSaveDialog(const std::string& filepath = std::string(), const Rect& rect = Rect());
+    explicit FileSaveDialog(const std::string& filepath = {}, const Rect& rect = {});
 
-    /**
-     * Show file save dialog window.
-     *
-     * @param[in] center Move the window to the center of the screen.
-     */
-    virtual void show(bool center = false) override;
+    virtual void show() override;
+
+    virtual void show_centered() override;
 
     virtual void set_selected(const std::string& fselect) override;
 

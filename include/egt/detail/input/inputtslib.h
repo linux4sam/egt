@@ -19,6 +19,8 @@ namespace egt
 {
 inline namespace v1
 {
+class Application;
+
 namespace detail
 {
 struct tslibimpl;
@@ -38,10 +40,29 @@ private:
 
     void handle_read(const asio::error_code& error);
 
+    /**
+     * Application instance.
+     */
     Application& m_app;
+
+    /**
+     * Input handler to read from the evdev fd.
+     */
     asio::posix::stream_descriptor m_input;
+
+    /**
+     * tslib implementation container.
+     */
     std::unique_ptr<tslibimpl> m_impl;
+
+    /**
+     * Whether a current touch event is active internally.
+     */
     bool m_active{false};
+
+    /**
+     * The last point seen, used for reference internally.
+     */
     DisplayPoint m_last_point;
 };
 

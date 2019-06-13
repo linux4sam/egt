@@ -175,7 +175,7 @@ public:
             if (m_popup.visible())
                 m_popup.hide();
             else
-                m_popup.show(true);
+                m_popup.show_centered();
         }, {eventid::pointer_click});
     }
 

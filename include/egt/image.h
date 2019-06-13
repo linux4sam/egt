@@ -43,7 +43,7 @@ public:
      * @param vscale Vertical scale of the image [0.0 - 1.0].
      */
     // cppcheck-suppress noExplicitConstructor
-    Image(const std::string& respath = std::string(),
+    Image(const std::string& respath = {},
           double hscale = 1.0, double vscale = 1.0);
 
     /**

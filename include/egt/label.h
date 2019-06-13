@@ -122,8 +122,8 @@ public:
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    ImageLabel(const Image& image = Image(),
-               const std::string& text = std::string(),
+    ImageLabel(const Image& image = {},
+               const std::string& text = {},
                alignmask text_align = alignmask::right | alignmask::center) noexcept;
 
     /**
@@ -141,8 +141,8 @@ public:
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    explicit ImageLabel(Frame& parent, const Image& image = Image(),
-                        const std::string& text = std::string(),
+    explicit ImageLabel(Frame& parent, const Image& image = {},
+                        const std::string& text = {},
                         alignmask text_align = alignmask::right | alignmask::center) noexcept;
 
     /**

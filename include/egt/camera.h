@@ -44,7 +44,7 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    CameraWindow(const Size& size = Size(),
+    CameraWindow(const Size& size = {},
                  const std::string& device = "/dev/video0",
                  pixel_format format = pixel_format::xrgb8888,
                  windowhint hint = windowhint::overlay);
@@ -60,7 +60,7 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    CameraWindow(const Rect& rect = Rect(),
+    CameraWindow(const Rect& rect = {},
                  const std::string& device = "/dev/video0",
                  pixel_format format = pixel_format::xrgb8888,
                  windowhint hint = windowhint::overlay);

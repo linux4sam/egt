@@ -24,6 +24,8 @@ namespace egt
 {
 inline namespace v1
 {
+class Application;
+
 namespace detail
 {
 class InputKeyboard;
@@ -48,10 +50,26 @@ private:
 
     void handle_read(const asio::error_code& error);
 
+    /**
+     * Application instance.
+     */
     Application& m_app;
+
+    /**
+     * Input handler to read from the evdev fd.
+     */
     asio::posix::stream_descriptor m_input;
+
     struct libinput* li;
+
+    /**
+     * The last point seen, used for reference internally.
+     */
     DisplayPoint m_last_point;
+
+    /**
+     * Keyboard mapping instance.
+     */
     std::unique_ptr<InputKeyboard> m_keyboard;
 };
 
