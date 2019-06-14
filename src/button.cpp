@@ -191,18 +191,32 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
     if (!widget.text().empty())
     {
-        detail::draw_text(painter,
-                          widget.content_area(),
-                          widget.text(),
-                          widget.font(),
-                          TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
-                          widget.text_align(),
-                          justification::middle,
-                          widget.color(Palette::ColorId::button_text).color(),
-                          widget.image_align(),
-                          widget.image());
+        if (!widget.image().empty())
+        {
+            detail::draw_text(painter,
+                              widget.content_area(),
+                              widget.text(),
+                              widget.font(),
+                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              widget.text_align(),
+                              justification::middle,
+                              widget.color(Palette::ColorId::button_text).color(),
+                              widget.image_align(),
+                              widget.image());
+        }
+        else
+        {
+            detail::draw_text(painter,
+                              widget.content_area(),
+                              widget.text(),
+                              widget.font(),
+                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              widget.text_align(),
+                              justification::middle,
+                              widget.color(Palette::ColorId::button_text).color());
+        }
     }
-    else
+    else if (!widget.image().empty())
     {
         Rect target = detail::align_algorithm(widget.image().size(), widget.box(),
                                               widget.image_align());
