@@ -97,21 +97,6 @@ void draw_text(Painter& painter,
     }
 
     uint32_t default_behave = 0;
-#if 0
-    if ((text_align & alignmask::expand_horizontal) == alignmask::expand_horizontal)
-        default_behave |= LAY_HFILL;
-    else if ((text_align & alignmask::left) == alignmask::left)
-        default_behave |= LAY_LEFT;
-    else if ((text_align & alignmask::right) == alignmask::right)
-        default_behave |= LAY_RIGHT;
-    if ((text_align & alignmask::expand_vertical) == alignmask::expand_vertical)
-        default_behave |= LAY_VFILL;
-    else if ((text_align & alignmask::top) == alignmask::top)
-        default_behave |= LAY_TOP;
-    else if ((text_align & alignmask::bottom) == alignmask::bottom)
-        default_behave |= LAY_BOTTOM;
-#endif
-    SPDLOG_INFO("  default_behave: {}", default_behave);
 
     // setup rects for each word/codepoint
     std::vector<detail::LayoutRect> rects;
@@ -305,22 +290,6 @@ void draw_text(Painter& painter,
     }
 
     uint32_t default_behave = 0;
-#if 0
-    if ((text_align & alignmask::expand_horizontal) == alignmask::expand_horizontal)
-        default_behave |= LAY_HFILL;
-    else if ((text_align & alignmask::left) == alignmask::left)
-        default_behave |= LAY_LEFT;
-    else if ((text_align & alignmask::right) == alignmask::right)
-        default_behave |= LAY_RIGHT;
-    if ((text_align & alignmask::expand_vertical) == alignmask::expand_vertical)
-        default_behave |= LAY_VFILL;
-    else if ((text_align & alignmask::top) == alignmask::top)
-        default_behave |= LAY_TOP;
-    else if ((text_align & alignmask::bottom) == alignmask::bottom)
-        default_behave |= LAY_BOTTOM;
-#endif
-
-    SPDLOG_INFO("  default_behave: {}", default_behave);
 
     // setup rects for each word/codepoint
     std::vector<detail::LayoutRect> rects;
