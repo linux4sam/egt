@@ -43,7 +43,24 @@ public:
 
     virtual Size min_size_hint() const override;
 
+    /**
+     * Enable/disable showing the label text.
+     *
+     * @param[in] value When true, the label text is shown.
+     */
+    virtual void set_show_label(bool value);
+
+    /**
+     * Get the show label state.
+     */
+    inline bool show_label() const { return m_show_label; }
+
     virtual ~ProgressBar() = default;
+protected:
+    /**
+     * When true, the label text is shown.
+     */
+    bool m_show_label{true};
 };
 
 /**
@@ -75,7 +92,24 @@ public:
 
     virtual Size min_size_hint() const override;
 
+    /**
+    * Enable/disable showing the label text.
+    *
+    * @param[in] value When true, the label text is shown.
+    */
+    virtual void set_show_label(bool value);
+
+    /**
+     * Get the show label state.
+     */
+    inline bool show_label() const { return m_show_label; }
+
     virtual ~SpinProgress() = default;
+protected:
+    /**
+     * When true, the label text is shown.
+     */
+    bool m_show_label{true};
 };
 
 /**
@@ -160,7 +194,6 @@ public:
 
     virtual ~AnalogMeter() = default;
 };
-
 
 }
 }

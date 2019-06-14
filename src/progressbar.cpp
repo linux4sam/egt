@@ -47,15 +47,18 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
                                 widget.color(Palette::ColorId::button_bg));
     }
 
-    string text = std::to_string(widget.value()) + "%";
-    auto f = detail::TextWidget::scale_font(b.size() * 0.75, text, widget.font());
+    if (widget.show_label())
+    {
+        string text = std::to_string(widget.value()) + "%";
+        auto f = detail::TextWidget::scale_font(b.size() * 0.75, text, widget.font());
 
-    painter.set(widget.color(Palette::ColorId::label_text).color());
-    painter.set(f);
-    auto size = painter.text_size(text);
-    auto target = detail::align_algorithm(size, b, alignmask::center);
-    painter.draw(target.point());
-    painter.draw(text, true);
+        painter.set(widget.color(Palette::ColorId::label_text).color());
+        painter.set(f);
+        auto size = painter.text_size(text);
+        auto target = detail::align_algorithm(size, b, alignmask::center);
+        painter.draw(target.point());
+        painter.draw(text, true);
+    }
 }
 
 static const auto DEFAULT_PROGRESSBAR_SIZE = Size(200, 30);
@@ -63,6 +66,15 @@ static const auto DEFAULT_PROGRESSBAR_SIZE = Size(200, 30);
 Size ProgressBar::min_size_hint() const
 {
     return DEFAULT_PROGRESSBAR_SIZE + Widget::min_size_hint();
+}
+
+void ProgressBar::set_show_label(bool value)
+{
+    if (m_show_label != value)
+    {
+        m_show_label = value;
+        damage();
+    }
 }
 
 SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
@@ -97,14 +109,17 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
     painter.draw(Arc(widget.center(), radius, angle1, angle2));
     painter.stroke();
 
-    string text = std::to_string(widget.value());
-    auto f = detail::TextWidget::scale_font(Size(dim, dim) * 0.75, text, widget.font());
-    painter.set(f);
-    painter.set(widget.color(Palette::ColorId::text).color());
-    auto size = painter.text_size(text);
-    auto target = detail::align_algorithm(size, b, alignmask::center);
-    painter.draw(target.point());
-    painter.draw(text);
+    if (widget.show_label())
+    {
+        string text = std::to_string(widget.value());
+        auto f = detail::TextWidget::scale_font(Size(dim, dim) * 0.75, text, widget.font());
+        painter.set(f);
+        painter.set(widget.color(Palette::ColorId::text).color());
+        auto size = painter.text_size(text);
+        auto target = detail::align_algorithm(size, b, alignmask::center);
+        painter.draw(target.point());
+        painter.draw(text);
+    }
 }
 
 static const auto DEFAULT_SPINPROGRESS_SIZE = Size(100, 100);
@@ -112,6 +127,15 @@ static const auto DEFAULT_SPINPROGRESS_SIZE = Size(100, 100);
 Size SpinProgress::min_size_hint() const
 {
     return DEFAULT_SPINPROGRESS_SIZE + Widget::min_size_hint();
+}
+
+void SpinProgress::set_show_label(bool value)
+{
+    if (m_show_label != value)
+    {
+        m_show_label = value;
+        damage();
+    }
 }
 
 LevelMeter::LevelMeter(const Rect& rect,
