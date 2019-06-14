@@ -60,6 +60,7 @@ void Scrollwheel::init(bool reversed)
     if (reversed)
         m_selected = m_items.size() - 1;
 
+    m_label->set_text_align(alignmask::center);
     m_label->set_text(m_items[m_selected]);
     add(expand(m_label), 0, 1);
 
