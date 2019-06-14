@@ -86,12 +86,11 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
     cairo_matrix_t ctm;
     cairo_get_matrix(cr, &ctm);
 
-    shared_cairo_scaled_font_t
-    scaled_font(cairo_scaled_font_create(font_face.get(),
-                                         &font_matrix,
-                                         &ctm,
-                                         font_options.get()),
-                cairo_scaled_font_destroy);
+    shared_cairo_scaled_font_t scaled_font(cairo_scaled_font_create(font_face.get(),
+                                           &font_matrix,
+                                           &ctm,
+                                           font_options.get()),
+                                           cairo_scaled_font_destroy);
 
     cairo_status_t status = cairo_scaled_font_status(scaled_font.get());
     if (status)
@@ -155,10 +154,13 @@ struct FontCache
     {
         bool operator()(const Font& lhs, const Font& rhs) const
         {
-            return lhs.face() < rhs.face() &&
-                   lhs.size() < rhs.size() &&
-                   lhs.weight() < rhs.weight() &&
-                   lhs.slant() < rhs.slant();
+            if (lhs.face() != rhs.face())
+                return lhs.face() < rhs.face();
+            if (lhs.size() != rhs.size())
+                return lhs.size() < rhs.size();
+            if (lhs.weight() != rhs.weight())
+                return lhs.weight() < rhs.weight();
+            return lhs.slant() < rhs.slant();
         }
     };
 
