@@ -77,15 +77,29 @@ void Input::dispatch(Event& event)
             return;
     }
 
-    if (detail::mouse_grab() && (event.id() == eventid::raw_pointer_down ||
-                                 event.id() == eventid::raw_pointer_up ||
-                                 event.id() == eventid::raw_pointer_move ||
-                                 event.id() == eventid::pointer_click ||
-                                 event.id() == eventid::pointer_dblclick ||
-                                 event.id() == eventid::pointer_hold ||
-                                 event.id() == eventid::pointer_drag_start ||
-                                 event.id() == eventid::pointer_drag ||
-                                 event.id() == eventid::pointer_drag_stop))
+    if (modal_window())
+    {
+        auto target = modal_window();
+        // give event to the modal window
+        target->handle(event);
+        if (event.quit())
+            return;
+        if (eevent.id() != eventid::none)
+        {
+            target->handle(eevent);
+            if (eevent.quit())
+                return;
+        }
+    }
+    else if (detail::mouse_grab() && (event.id() == eventid::raw_pointer_down ||
+                                      event.id() == eventid::raw_pointer_up ||
+                                      event.id() == eventid::raw_pointer_move ||
+                                      event.id() == eventid::pointer_click ||
+                                      event.id() == eventid::pointer_dblclick ||
+                                      event.id() == eventid::pointer_hold ||
+                                      event.id() == eventid::pointer_drag_start ||
+                                      event.id() == eventid::pointer_drag ||
+                                      event.id() == eventid::pointer_drag_stop))
     {
         auto target = detail::mouse_grab();
         target->handle(event);
@@ -107,20 +121,6 @@ void Input::dispatch(Event& event)
         if (event.quit())
             return;
         if (event.id() != eventid::none)
-        {
-            target->handle(eevent);
-            if (eevent.quit())
-                return;
-        }
-    }
-    else if (modal_window())
-    {
-        auto target = modal_window();
-        // give event to the modal window
-        target->handle(event);
-        if (event.quit())
-            return;
-        if (eevent.id() != eventid::none)
         {
             target->handle(eevent);
             if (eevent.quit())

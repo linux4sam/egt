@@ -106,6 +106,30 @@ void Frame::handle(Event& event)
 
         break;
     }
+
+    case eventid::keyboard_down:
+    case eventid::keyboard_up:
+    case eventid::keyboard_repeat:
+    {
+        for (auto& child : detail::reverse_iterate(m_children))
+        {
+            if (child->readonly())
+                continue;
+
+            if (child->disabled())
+                continue;
+
+            if (!child->visible())
+                continue;
+
+            child->handle(event);
+            if (event.quit())
+                return;
+        }
+
+        break;
+    }
+
     default:
         break;
     }
