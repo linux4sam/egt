@@ -241,7 +241,7 @@ Window*& main_window();
 Window*& modal_window();
 
 /**
- * Get the list of all currently allocated BasicWindows.
+ * Get the list of all currently allocated Windows.
  */
 std::vector<Window*>& windows();
 
