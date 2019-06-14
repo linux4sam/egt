@@ -137,7 +137,7 @@ public:
     /**
      * Return the number of items in the list.
      */
-    virtual size_t count() const { return m_sizer->count_children(); }
+    virtual size_t item_count() const { return m_sizer->count_children(); }
 
     /**
      * Get the currently selected index.
