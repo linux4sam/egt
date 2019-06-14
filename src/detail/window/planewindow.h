@@ -68,6 +68,11 @@ protected:
      * in top_draw().
      */
     bool m_dirty{true};
+
+    /**
+     * Deallocate the underlying screen.
+     */
+    void deallocate_screen();
 };
 
 }

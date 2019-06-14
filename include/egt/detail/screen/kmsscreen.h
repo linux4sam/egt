@@ -63,6 +63,8 @@ public:
                                         pixel_format format = pixel_format::argb8888,
                                         windowhint hint = windowhint::automatic);
 
+    void deallocate_overlay(struct plane_data* plane);
+
     virtual ~KMSScreen();
 
     /**

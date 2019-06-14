@@ -9,6 +9,7 @@
 #include "egt/input.h"
 #include "egt/widget.h"
 #include "egt/window.h"
+#include <algorithm>
 #include <cairo.h>
 #include <cstring>
 #include <drm_fourcc.h>
@@ -313,6 +314,16 @@ uint32_t KMSScreen::count_planes(plane_type type)
             total++;
     }
     return total;
+}
+
+void KMSScreen::deallocate_overlay(struct plane_data* plane)
+{
+    if (plane)
+    {
+        auto id  = planeid(plane->index, DRM_PLANE_TYPE_OVERLAY);
+        m_used.erase(std::remove(m_used.begin(), m_used.end(), id), m_used.end());
+        plane_free(plane);
+    }
 }
 
 void KMSScreen::close()

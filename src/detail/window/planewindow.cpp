@@ -192,9 +192,24 @@ void PlaneWindow::hide()
     BasicWindow::hide();
 }
 
+void PlaneWindow::deallocate_screen()
+{
+    if (m_screen)
+    {
+        KMSOverlay* screen = dynamic_cast<KMSOverlay*>(m_screen);
+        assert(screen);
+        if (screen)
+        {
+            KMSScreen::instance()->deallocate_overlay(screen->s());
+        }
+        m_interface->m_box.size(Size());
+        m_interface->m_box.point(Point());
+    }
+}
+
 PlaneWindow::~PlaneWindow()
 {
-    /** @todo Need to release plane. */
+    deallocate_screen();
 }
 
 }
