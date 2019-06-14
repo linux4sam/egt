@@ -3,6 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <egt/themes/coconut.h>
+#include <egt/themes/lapis.h>
+#include <egt/themes/midnight.h>
+#include <egt/themes/shamrock.h>
+#include <egt/themes/sky.h>
+#include <egt/themes/ultraviolet.h>
 #include <egt/ui>
 #include <iostream>
 #include <map>
@@ -22,31 +28,32 @@ struct ButtonPage : public NotebookTab
         auto grid0 = make_shared<StaticGrid>(Tuple(3, 6), 5);
         add(expand(grid0));
 
-        grid0->add(expand(make_shared<Button>("button 1", Size(100, 40))));
+        grid0->add(expand(make_shared<Button>("Button", Size(100, 40))));
 
-        auto btn2 = make_shared<Button>("button 2");
+        auto btn2 = make_shared<Button>("Disabled");
         btn2->disable();
         grid0->add(expand(btn2));
 
-        grid0->add(expand(make_shared<ImageButton>(Image("@16px/flag.png"), "Flag")));
+        grid0->add(expand(make_shared<ImageButton>(Image("@calculator.png"), "Calculator")));
 
-        auto imagebutton1 = make_shared<ImageButton>(Image("@16px/flag.png"), "Flag");
+        auto imagebutton1 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton1));
         imagebutton1->set_text_align(alignmask::center | alignmask::left);
 
-        auto imagebutton2 = make_shared<ImageButton>(Image("@16px/flag.png"), "Flag");
+        auto imagebutton2 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton2));
         imagebutton2->set_text_align(alignmask::center | alignmask::right);
 
-        auto imagebutton3 = make_shared<ImageButton>(Image("@16px/flag.png"), "Flag");
+        auto imagebutton3 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton3));
         imagebutton3->set_text_align(alignmask::center | alignmask::top);
 
-        auto imagebutton4 = make_shared<ImageButton>(Image("@16px/flag.png"), "Flag");
+        auto imagebutton4 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton4));
         imagebutton4->set_text_align(alignmask::center | alignmask::bottom);
+        imagebutton4->set_image_align(alignmask::right);
 
-        auto imagebutton5 = make_shared<ImageButton>(Image("@16px/flag.png"));
+        auto imagebutton5 = make_shared<ImageButton>(Image("@calculator.png"));
         grid0->add(expand(imagebutton5));
 
         auto button6 = make_shared<Button>("Multiline\nButton Text");
@@ -82,7 +89,7 @@ struct CheckBoxPage : public NotebookTab
         auto checkbox3 = std::make_shared<CheckBox>("checkbox 3");
         grid0->add(expand(checkbox3));
 
-        auto checkbox4 = std::make_shared<CheckBox>("checkbox 4");
+        auto checkbox4 = std::make_shared<CheckBox>("Disabled");
         checkbox4->disable();
         grid0->add(expand(checkbox4));
 
@@ -101,7 +108,7 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(expand(radiobox2));
         radiobox2->check(true);
 
-        auto radiobox3 = std::make_shared<RadioBox>("radiobox 3");
+        auto radiobox3 = std::make_shared<RadioBox>("Disabled");
         grid0->add(expand(radiobox3));
         radiobox3->disable();
 
@@ -149,40 +156,40 @@ struct LabelPage : public NotebookTab
         label5->set_border(1);
         grid0->add(expand(label5));
 
-        auto imagelabel0 = std::make_shared<ImageLabel>(Image("@16px/cursor.png"), "Cursor");
+        auto imagelabel0 = std::make_shared<ImageLabel>(Image("@lock.png"), "Lock");
         imagelabel0->set_boxtype(Theme::boxtype::blank);
         imagelabel0->set_border(1);
         grid0->add(expand(imagelabel0));
         imagelabel0->set_image_align(alignmask::top);
         imagelabel0->set_text_align(alignmask::center);
 
-        auto imagelabel1 = std::make_shared<ImageLabel>(Image("@16px/camera.png"), "Camera");
+        auto imagelabel1 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
         imagelabel1->set_boxtype(Theme::boxtype::blank);
         imagelabel1->set_border(1);
         grid0->add(expand(imagelabel1));
         imagelabel1->set_text_align(alignmask::center);
 
-        auto imagelabel2 = std::make_shared<ImageLabel>(Image("@16px/camera.png"), "Camera");
+        auto imagelabel2 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
         imagelabel2->set_boxtype(Theme::boxtype::blank);
         imagelabel2->set_border(1);
         grid0->add(expand(imagelabel2));
         imagelabel2->set_text_align(alignmask::center | alignmask::right);
         imagelabel2->set_image_align(alignmask::right);
 
-        auto imagelabel3 = std::make_shared<ImageLabel>(Image("@16px/camera.png"), "Camera");
+        auto imagelabel3 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
         imagelabel3->set_boxtype(Theme::boxtype::blank);
         imagelabel3->set_border(1);
         grid0->add(expand(imagelabel3));
         imagelabel3->set_text_align(alignmask::center | alignmask::top);
         imagelabel3->set_image_align(alignmask::bottom);
 
-        auto imagelabel4 = std::make_shared<ImageLabel>(Image("@16px/camera.png"), "Camera");
+        auto imagelabel4 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
         imagelabel4->set_boxtype(Theme::boxtype::blank);
         imagelabel4->set_border(1);
         grid0->add(expand(imagelabel4));
         imagelabel4->set_text_align(alignmask::center | alignmask::bottom);
 
-        auto imagelabel5 = std::make_shared<ImageLabel>(Image("@16px/camera.png"));
+        auto imagelabel5 = std::make_shared<ImageLabel>(Image("@camera.png"));
         imagelabel5->set_boxtype(Theme::boxtype::blank);
         imagelabel5->set_border(1);
         grid0->add(expand(imagelabel5));
@@ -270,8 +277,13 @@ struct ProgressPage : public NotebookTab
         auto progressbar = std::make_shared<ProgressBar>();
         grid0->add(expand(progressbar));
 
+        auto progressbar1 = std::make_shared<ProgressBar>();
+        progressbar1->set_show_label(false);
+        grid0->add(expand(progressbar1));
+
         demo_up_down_animator(spinprogress);
         demo_up_down_animator(progressbar);
+        demo_up_down_animator(progressbar1);
     }
 };
 
@@ -316,7 +328,7 @@ struct MeterPage : public NotebookTab
 {
     MeterPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 3), 10);
+        auto grid0 = std::make_shared<StaticGrid>(Tuple(2, 2), 10);
         add(expand(grid0));
 
         auto lp1 = std::make_shared<LevelMeter>();
@@ -351,9 +363,11 @@ struct ComboPage : public NotebookTab
             for (auto x = 0; x < 5; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo1 = std::make_shared<ComboBox>(combo_items);
+            combo1->set_margin(10);
             vsizer->add(combo1);
 
             auto combo2 = std::make_shared<ComboBox>(combo_items);
+            combo2->set_margin(10);
             combo2->disable();
             vsizer->add(combo2);
         }
@@ -363,6 +377,7 @@ struct ComboPage : public NotebookTab
             for (auto x = 0; x < 25; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo3 = std::make_shared<ComboBox>(combo_items);
+            combo3->set_margin(10);
             vsizer->add(combo3);
         }
     }
@@ -372,19 +387,27 @@ struct ListPage : public NotebookTab
 {
     ListPage()
     {
-        auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, justification::middle);
+        auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, justification::justify);
+        hsizer1->set_padding(20);
         add(expand(hsizer1));
 
         auto list0 = std::make_shared<ListBox>(Rect(0, 0, 200, 0));
         for (auto x = 0; x < 25; x++)
             list0->add_item(std::make_shared<StringItem>("item " + std::to_string(x)));
-        list0->set_align(alignmask::expand_vertical | alignmask::left);
+        list0->set_align(alignmask::expand_vertical);
         hsizer1->add(list0);
 
         auto list1 = std::make_shared<ListBox>(Rect(0, 0, 200, 300));
         for (auto x = 0; x < 5; x++)
-            list1->add_item(std::make_shared<StringItem>("item " + std::to_string(x)));
-        hsizer1->add(left(list1));
+            list1->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Image("@ok.png")));
+        hsizer1->add(list1);
+
+        auto list2 = std::make_shared<ListBox>(Rect(0, 0, 200, 0));
+        list2->add_item(std::make_shared<StringItem>("Help", Image("@help.png")));
+        list2->add_item(std::make_shared<StringItem>("Info", Image("@info.png")));
+        list2->add_item(std::make_shared<StringItem>("Warning", Image("@warning.png")));
+        list2->set_height((list2->border() * 2) + (40 * list2->item_count()));
+        hsizer1->add(list2);
     }
 };
 
@@ -480,10 +503,50 @@ int main(int argc, const char** argv)
     VerticalBoxSizer vsizer(win);
     expand(vsizer);
 
-    auto logo = make_shared<ImageLabel>(Image("@logos/egt_logo_black.png"));
-    logo->set_margin(5);
-    logo->set_align(alignmask::center_horizontal);
-    vsizer.add(logo);
+    auto frame = make_shared<Frame>(Size(0, 60));
+    vsizer.add(expand_horizontal(frame));
+
+    auto logo = make_shared<ImageLabel>(Image("@logos/egt_logo.png"));
+    logo->set_align(alignmask::center);
+    frame->add(logo);
+
+    ComboBox::item_array combo_items =
+    {
+        "Default Theme",
+        "Lapis",
+        "Midnight",
+        "Sky",
+        "Shamrock",
+        "Coconut",
+        "Ultra Violet",
+    };
+    auto combo = make_shared<ComboBox>(combo_items);
+    combo->set_align(alignmask::center_vertical | alignmask::right);
+    combo->set_margin(5);
+    frame->add(combo);
+
+    combo->on_event([combo, &win](Event&)
+    {
+        auto s = combo->item(combo->selected());
+
+        if (s == "Default Theme")
+            set_global_theme(new Theme());
+        else if (s == "Midnight")
+            set_global_theme(new MidnightTheme());
+        else if (s == "Sky")
+            set_global_theme(new SkyTheme());
+        else if (s == "Shamrock")
+            set_global_theme(new ShamrockTheme());
+        else if (s == "Coconut")
+            set_global_theme(new CoconutTheme());
+        else if (s == "Lapis")
+            set_global_theme(new LapisTheme());
+        else if (s == "Ultra Violet")
+            set_global_theme(new UltraVioletTheme());
+
+        win.damage();
+    }, {eventid::property_changed});
+
 
     BoxSizer hsizer(orientation::horizontal);
     vsizer.add(expand(hsizer));

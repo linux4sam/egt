@@ -178,9 +178,12 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/sprite.h \
 ../include/egt/text.h \
 ../include/egt/theme.h \
+../include/egt/themes/coconut.h \
+../include/egt/themes/lapis.h \
 ../include/egt/themes/midnight.h \
 ../include/egt/themes/shamrock.h \
 ../include/egt/themes/sky.h \
+../include/egt/themes/ultraviolet.h \
 ../include/egt/timer.h \
 ../include/egt/tools.h \
 ../include/egt/types.h \
