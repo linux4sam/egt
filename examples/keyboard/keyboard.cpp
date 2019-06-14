@@ -708,7 +708,7 @@ struct QwertySymbols1 : public MainPanel
             make_shared<Keyboard::Key>(0x003f),
             make_shared<Keyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
-            make_shared<Keyboard::Key>("ABC", 2, 1.5),
+            make_shared<Keyboard::Key>("ABC", 0, 1.5),
             make_shared<Keyboard::Key>(0x0),
             make_shared<Keyboard::Key>(0x0020, 5.0),
             make_shared<Keyboard::Key>(0x002e),
@@ -767,7 +767,7 @@ struct QwertySymbols2 : public MainPanel
             make_shared<Keyboard::Key>(0x00bf),
             make_shared<Keyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
-            make_shared<Keyboard::Key>("ABC", 2, 1.5),
+            make_shared<Keyboard::Key>("ABC", 0, 1.5),
             make_shared<Keyboard::Key>(0x0),
             make_shared<Keyboard::Key>(0x0020, 5.0),
             make_shared<Keyboard::Key>(0x002e),
