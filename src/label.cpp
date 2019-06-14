@@ -24,7 +24,7 @@ Label::Label(const std::string& text, alignmask text_align) noexcept
 }
 
 Label::Label(const std::string& text, const Rect& rect, alignmask text_align) noexcept
-    : detail::TextWidget(text, rect, text_align)
+    : TextWidget(text, rect, text_align)
 {
     set_name("Label" + std::to_string(m_widgetid));
 
@@ -45,17 +45,16 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
     parent.add(*this);
 }
 
-void Label::set_text(const std::string& str)
+void Label::set_text(const std::string& text)
 {
-    if (m_text != str)
+    if (m_text != text)
     {
         bool doresize = m_text.empty();
-        m_text = str;
+        TextWidget::set_text(text);
         if (doresize)
         {
             first_resize();
         }
-        damage();
     }
 }
 
@@ -128,11 +127,9 @@ ImageLabel::ImageLabel(const Image& image,
 
     set_padding(0);
 
-    if (rect.empty())
-        m_box.size(image.size());
-
     if (text.empty())
-        m_image_align = alignmask::center;
+        set_image_align(alignmask::center);
+    do_set_image(image);
 }
 
 ImageLabel::ImageLabel(Frame& parent,
@@ -224,24 +221,26 @@ Size ImageLabel::min_size_hint() const
     return m_image.size() + Widget::min_size_hint();
 }
 
-void ImageLabel::set_image(const Image& image)
+void ImageLabel::do_set_image(const Image& image)
 {
     m_image = image;
     damage();
 }
 
+void ImageLabel::set_image(const Image& image)
+{
+    do_set_image(image);
+}
+
 void ImageLabel::set_show_label(bool value)
 {
-    if (m_show_label != value)
-    {
-        m_show_label = value;
+    if (detail::change_if_diff<>(m_show_label, value))
         damage();
-    }
 }
 
 void ImageLabel::first_resize()
 {
-    if (box().size().empty())
+    if (size().empty())
     {
         resize(m_image.size());
     }

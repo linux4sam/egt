@@ -83,7 +83,6 @@ public:
      */
     virtual void add(const std::shared_ptr<Widget>& widget) override;
 
-    /** @todo Why is this not inherited from Frame::add()? */
     virtual void add(Widget& widget) override
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
@@ -134,6 +133,10 @@ public:
     virtual void layout() override
     {
         if (!visible())
+            return;
+
+        // we cannot layout with no space
+        if (size().empty())
             return;
 
         if (m_in_layout)

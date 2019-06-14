@@ -78,10 +78,7 @@ public:
     Label(Frame& parent, const std::string& text, const Rect& rect,
           alignmask text_align = default_align) noexcept;
 
-    /**
-     * Set the text of the label.
-     */
-    virtual void set_text(const std::string& str) override;
+    virtual void set_text(const std::string& text) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -248,6 +245,8 @@ public:
 protected:
 
     virtual void first_resize() override;
+
+    void do_set_image(const Image& image);
 
     Image m_image;
     bool m_show_label{true};

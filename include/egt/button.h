@@ -76,6 +76,8 @@ public:
 
     virtual void handle(Event& event) override;
 
+    virtual void set_text(const std::string& text) override;
+
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -204,6 +206,18 @@ public:
      */
     inline alignmask image_align() const { return m_image_align; }
 
+    /**
+    * Enable/disable showing the label text.
+    *
+    * @param[in] value When true, the label text is shown.
+    */
+    virtual void set_show_label(bool value);
+
+    /**
+    * Get the show label state.
+    */
+    inline bool show_label() const { return m_show_label; }
+
     virtual ~ImageButton() = default;
 
 protected:
@@ -213,6 +227,7 @@ protected:
     void do_set_image(const Image& image);
 
     Image m_image;
+    bool m_show_label{true};
     alignmask m_image_align{alignmask::left};
 };
 

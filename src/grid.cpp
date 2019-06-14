@@ -19,11 +19,8 @@ StaticGrid::StaticGrid(const Rect& rect, const Tuple& size,
                        default_dim_type border) noexcept
     : Frame(rect)
 {
-    //instance_palette().set(Palette::ColorId::border, Palette::transparent);
-
     set_name("StaticGrid" + std::to_string(m_widgetid));
     set_border(border);
-    //flags().set(Widget::flag::no_layout);
 
     /*
      * The grid size is set here.  Every column should be the same size.  Don't
@@ -56,7 +53,6 @@ namespace detail
 {
 static inline default_dim_type round(default_dim_type x, default_dim_type y)
 {
-    //return (x + y - 1) / y;
     return x  / y;
 }
 }

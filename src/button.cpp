@@ -68,6 +68,19 @@ void Button::handle(Event& event)
     }
 }
 
+void Button::set_text(const std::string& text)
+{
+    if (m_text != text)
+    {
+        bool doresize = m_text.empty();
+        TextWidget::set_text(text);
+        if (doresize)
+        {
+            first_resize();
+        }
+    }
+}
+
 void Button::draw(Painter& painter, const Rect& rect)
 {
     Drawer<Button>::draw(*this, painter, rect);
@@ -166,11 +179,8 @@ ImageButton::ImageButton(Frame& parent,
 
 void ImageButton::do_set_image(const Image& image)
 {
-    if (!image.empty())
-    {
-        m_image = image;
-        damage();
-    }
+    m_image = image;
+    damage();
 }
 
 void ImageButton::set_image(const Image& image)
@@ -191,11 +201,15 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
     if (!widget.text().empty())
     {
+        std::string text;
+        if (widget.show_label())
+            text = widget.text();
+
         if (!widget.image().empty())
         {
             detail::draw_text(painter,
                               widget.content_area(),
-                              widget.text(),
+                              text,
                               widget.font(),
                               TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
                               widget.text_align(),
@@ -208,7 +222,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
         {
             detail::draw_text(painter,
                               widget.content_area(),
-                              widget.text(),
+                              text,
                               widget.font(),
                               TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
                               widget.text_align(),
@@ -225,9 +239,15 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     }
 }
 
+void ImageButton::set_show_label(bool value)
+{
+    if (detail::change_if_diff<>(m_show_label, value))
+        damage();
+}
+
 void ImageButton::first_resize()
 {
-    if (box().size().empty())
+    if (size().empty())
     {
         resize(m_image.size());
     }
