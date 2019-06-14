@@ -57,4 +57,5 @@ EXTRA_DIST = \
 	rapidxml \
 	layout \
 	kplot/compat.sh \
-	utfcpp
+	utfcpp \
+	spdlog
