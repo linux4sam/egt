@@ -6,8 +6,11 @@
 
 #include "detail/video/gstdecoderimpl.h"
 #include <egt/app.h>
+#include <exception>
+#include <fstream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <sstream>
 #include <string>
 
 namespace egt
@@ -20,7 +23,28 @@ namespace detail
 GstDecoderImpl::GstDecoderImpl(VideoWindow& interface, const Size& size)
     : m_interface(interface),
       m_size(size)
-{}
+{
+    GError* err = nullptr;
+    if (!gst_init_check(nullptr, nullptr, &err))
+    {
+        std::ostringstream ss;
+        ss << "failed to initialize gstreamer: ";
+        if (err && err->message)
+        {
+            ss << err->message;
+            g_error_free(err);
+        }
+        else
+        {
+            ss << "unknown error";
+        }
+
+        throw std::runtime_error(ss.str());
+    }
+
+    m_gmainLoop = g_main_loop_new(nullptr, FALSE);
+    m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
+}
 
 bool GstDecoderImpl::playing() const
 {
@@ -140,6 +164,29 @@ void GstDecoderImpl::destroyPipeline()
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
+    }
+
+    if (m_bus)
+    {
+        g_source_remove(m_bus_watchid);
+        gst_object_unref(m_bus);
+    }
+}
+
+GstDecoderImpl::~GstDecoderImpl()
+{
+    if (m_gmainLoop)
+    {
+        /*
+         * check loop is running to avoid race condition when stop is called too early
+         */
+        if (g_main_loop_is_running(m_gmainLoop))
+        {
+            //stop loop and wait
+            g_main_loop_quit(m_gmainLoop);
+        }
+        m_gmainThread.join();
+        g_main_loop_unref(m_gmainLoop);
     }
 }
 

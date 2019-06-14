@@ -10,6 +10,7 @@
 #include <egt/painter.h>
 #include <egt/video.h>
 #include <gst/gst.h>
+#include <thread>
 
 namespace egt
 {
@@ -24,7 +25,7 @@ public:
 
     GstDecoderImpl() = delete;
 
-    GstDecoderImpl(VideoWindow& interface, const Size& size);
+    explicit GstDecoderImpl(VideoWindow& interface, const Size& size);
 
     virtual bool set_media(const std::string& uri) = 0;
 
@@ -50,6 +51,8 @@ public:
 
     virtual void destroyPipeline();
 
+    virtual ~GstDecoderImpl();
+
 protected:
     VideoWindow& m_interface;
     GstElement* m_pipeline{nullptr};
@@ -61,6 +64,10 @@ protected:
     std::string m_err_message;
     gboolean m_seek_enabled{false};
     gboolean m_seekdone{false};
+    GstBus* m_bus{nullptr};
+    guint m_bus_watchid{0};
+    GMainLoop* m_gmainLoop{nullptr};
+    std::thread m_gmainThread;
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 };

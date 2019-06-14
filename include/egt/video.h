@@ -44,9 +44,9 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    VideoWindow(const Size& size = {},
-                pixel_format format = pixel_format::xrgb8888,
-                windowhint hint = windowhint::overlay);
+    explicit VideoWindow(const Size& size = {},
+                         pixel_format format = pixel_format::xrgb8888,
+                         windowhint hint = windowhint::overlay);
 
     /**
      * Create a video window to decode video and render it to a screen.
@@ -58,9 +58,9 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    VideoWindow(const Rect& rect = {},
-                pixel_format format = pixel_format::xrgb8888,
-                windowhint hint = windowhint::overlay);
+    explicit VideoWindow(const Rect& rect = {},
+                         pixel_format format = pixel_format::xrgb8888,
+                         windowhint hint = windowhint::overlay);
 
     virtual void do_draw() override
     {
@@ -167,6 +167,10 @@ protected:
     void createImpl(const Size& size);
 
     std::shared_ptr<detail::GstDecoderImpl> m_decoderImpl;
+
+    friend class detail::GstDecoderImpl;
+    friend class detail::GstKmsSinkImpl;
+    friend class detail::GstAppSinkImpl;
 
 };
 

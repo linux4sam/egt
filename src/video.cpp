@@ -86,8 +86,6 @@ VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)
 
 void VideoWindow::createImpl(const Size& size)
 {
-    detail::init_gst_thread();
-
     if (flags().is_set(Widget::flag::plane_window) && detail::is_target_sama5d4())
     {
         SPDLOG_DEBUG("VideoWindow: Using KMS sink");

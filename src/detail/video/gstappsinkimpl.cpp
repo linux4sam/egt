@@ -39,7 +39,6 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
 
 void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 {
-    SPDLOG_DEBUG("In");
     ignoreparam(rect);
     /*
      * its a Basic window copying buffer to Cairo surface.
@@ -175,9 +174,8 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
     g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
 
-    GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
-    gst_bus_add_watch(bus, &bus_callback, this);
-    gst_object_unref(bus);
+    m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
+    m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
     return true;
 }

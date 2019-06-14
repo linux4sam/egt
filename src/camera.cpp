@@ -9,7 +9,7 @@
 
 #include "egt/app.h"
 #include "egt/camera.h"
-#include <egt/detail/screen/kmsoverlay.h>
+#include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
 #include <fstream>
@@ -45,6 +45,8 @@ public:
 
     std::string get_error_message() const;
 
+    virtual ~CameraImpl();
+
 protected:
     CameraWindow& m_interface;
     std::string m_devnode;
@@ -54,6 +56,8 @@ protected:
     std::string m_err_message;
     Rect m_rect;
     bool m_usekmssink;
+    GMainLoop* m_gmainLoop{nullptr};
+    std::thread m_gmainThread;
 
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
 
@@ -67,7 +71,9 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Size& size,
       m_rect(Rect(size)),
       m_usekmssink(useKmssink)
 {
-
+    gst_init(NULL, NULL);
+    m_gmainLoop = g_main_loop_new(NULL, FALSE);
+    m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
 }
 
 CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
@@ -77,6 +83,9 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
       m_rect(rect),
       m_usekmssink(useKmssink)
 {
+    gst_init(NULL, NULL);
+    m_gmainLoop = g_main_loop_new(NULL, FALSE);
+    m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
 }
 
 gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
@@ -363,6 +372,23 @@ std::string CameraImpl::get_error_message() const
     return m_err_message;
 }
 
+CameraImpl::~CameraImpl()
+{
+    if (m_gmainLoop)
+    {
+        /*
+         * check loop is running to avoid race condition when stop is called too early
+         */
+        if (g_main_loop_is_running(m_gmainLoop))
+        {
+            //stop loop and wait
+            g_main_loop_quit(m_gmainLoop);
+        }
+        m_gmainThread.join();
+        g_main_loop_unref(m_gmainLoop);
+    }
+}
+
 } // End of details
 
 CameraWindow::CameraWindow(const Rect& rect, const std::string& device,
@@ -370,7 +396,6 @@ CameraWindow::CameraWindow(const Rect& rect, const std::string& device,
     : Window(rect, flags_type(), format, hint)
 {
     m_cameraImpl.reset(new detail::CameraImpl((*this), rect, device, detail::is_target_sama5d4()));
-    detail::init_gst_thread();
 }
 
 CameraWindow::CameraWindow(const Size& size, const std::string& device,
@@ -397,11 +422,6 @@ std::string CameraWindow::get_error_message() const
 void CameraWindow::stop()
 {
     m_cameraImpl->stop();
-}
-
-CameraWindow::~CameraWindow()
-{
-
 }
 
 } //namespace v1

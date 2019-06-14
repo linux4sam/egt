@@ -17,7 +17,7 @@ namespace detail
 class GstKmsSinkImpl: public GstDecoderImpl
 {
 public:
-    GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool decodertype);
+    explicit GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool decodertype);
 
     bool set_media(const std::string& uri);
 
@@ -26,6 +26,8 @@ public:
         ignoreparam(painter);
         ignoreparam(rect);
     }
+
+    virtual ~GstKmsSinkImpl() = default;
 
 protected:
     int m_gem;

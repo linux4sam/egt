@@ -44,10 +44,10 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    CameraWindow(const Size& size = {},
-                 const std::string& device = "/dev/video0",
-                 pixel_format format = pixel_format::xrgb8888,
-                 windowhint hint = windowhint::overlay);
+    explicit CameraWindow(const Size& size = {},
+                          const std::string& device = "/dev/video0",
+                          pixel_format format = pixel_format::xrgb8888,
+                          windowhint hint = windowhint::overlay);
 
     /**
      * Create a camera window.
@@ -60,10 +60,10 @@ public:
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
-    CameraWindow(const Rect& rect = {},
-                 const std::string& device = "/dev/video0",
-                 pixel_format format = pixel_format::xrgb8888,
-                 windowhint hint = windowhint::overlay);
+    explicit CameraWindow(const Rect& rect = {},
+                          const std::string& device = "/dev/video0",
+                          pixel_format format = pixel_format::xrgb8888,
+                          windowhint hint = windowhint::overlay);
 
     virtual void do_draw() override
     {
@@ -90,7 +90,7 @@ public:
      */
     std::string get_error_message() const;
 
-    virtual ~CameraWindow();
+    virtual ~CameraWindow() = default;
 
 protected:
     std::shared_ptr<detail::CameraImpl> m_cameraImpl;
