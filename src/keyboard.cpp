@@ -1,3 +1,4 @@
+#include "detail/utf8text.h"
 #include "egt/button.h"
 #include "egt/input.h"
 #include "egt/keyboard.h"
@@ -15,7 +16,18 @@ using Panel = Keyboard::Panel;
 using MainPanel = Keyboard::MainPanel;
 using MultichoicePanel = Keyboard::MultichoicePanel;
 
-Keyboard::Key::Key(const string& label, double length, KeyboardCode keycode)
+Keyboard::Key::Key(uint32_t unicode, double length)
+    : Button(),
+      m_unicode(unicode),
+      m_length(length)
+{
+    string tmp;
+    utf8::append(unicode, std::back_inserter(tmp));
+    set_text(tmp);
+    ncflags().set(Widget::flag::no_autoresize);
+}
+
+Keyboard::Key::Key(const std::string& label, KeyboardCode keycode, double length)
     : Button(label),
       m_keycode(keycode),
       m_length(length)
@@ -32,14 +44,17 @@ Keyboard::Key::Key(const string& label, int link, double length)
 }
 
 
-Keyboard::Key::Key(const string& label,
+Keyboard::Key::Key(uint32_t unicode,
                    shared_ptr<MultichoicePanel> multichoice,
                    double length, KeyboardCode keycode)
-    : Button(label),
-      m_keycode(keycode),
+    : Button(),
+      m_unicode(unicode),
       m_length(length),
       m_multichoice(multichoice)
 {
+    string tmp;
+    utf8::append(unicode, std::back_inserter(tmp));
+    set_text(tmp);
     ncflags().set(Widget::flag::no_autoresize);
 }
 
@@ -93,12 +108,12 @@ void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
         if (!k->text().empty())
         {
             Event event2(eventid::keyboard_down);
-            event2.key().unicode = k->text()[0];
+            event2.key().unicode = k->m_unicode;
             event2.key().keycode = k->m_keycode;
             m_in.dispatch(event2);
 
             event2.set_id(eventid::keyboard_up);
-            event2.key().unicode = k->text()[0];
+            event2.key().unicode = k->m_unicode;
             event2.key().keycode = k->m_keycode;
             m_in.dispatch(event2);
         }
@@ -121,11 +136,11 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
                 if (!multichoice_key->text().empty())
                 {
                     Event down(eventid::keyboard_down);
-                    down.key().unicode = multichoice_key->text()[0];
+                    down.key().unicode = multichoice_key->m_unicode;
                     down.key().keycode = multichoice_key->m_keycode;
                     m_in.dispatch(down);
                     Event up(eventid::keyboard_up);
-                    up.key().unicode = multichoice_key->text()[0];
+                    up.key().unicode = multichoice_key->m_unicode;
                     up.key().keycode = multichoice_key->m_keycode;
                     m_in.dispatch(up);
                     // the modal popup caught the raw_pointer_up event

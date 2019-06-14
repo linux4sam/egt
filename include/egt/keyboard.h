@@ -42,13 +42,11 @@ public:
     public:
 
         /**
-         * @param[in] label Label of the key.
          * @param[in] length Length of the key. It multiplies the width of the
          * default key size which is configured when creating a Panel.
-         * @param[in] keycode Code of the key.
+         * @param[in] unicode UTF32 code point for the key.
          */
-        Key(const std::string& label, double length = 1.0,
-            KeyboardCode keycode = EKEY_UNKNOWN);
+        Key(uint32_t unicode, double length = 1.0);
 
         Key(const std::string& label, KeyboardCode keycode, double length = 1.0);
         /**
@@ -63,14 +61,14 @@ public:
         Key(const std::string& label, int link, double length = 1.0);
 
         /**
-         * @param[in] label Label of the key.
+         * @param[in] unicode utf32 code point for the key.
          * @param[in] multichoice Multichoice panel that has to be displayed
          * after a long touch event.
          * @param[in] length Length of the key. It multiplies the width of the
          * default key size which is configured when creating a Panel.
          * @param[in] keycode Code of the key.
          */
-        Key(const std::string& label, std::shared_ptr<MultichoicePanel> multichoice,
+        Key(uint32_t unicode, std::shared_ptr<MultichoicePanel> multichoice,
             double length = 1.0, KeyboardCode keycode = EKEY_UNKNOWN);
 
         inline double length() const { return m_length; }
@@ -83,7 +81,8 @@ public:
          */
         int m_link{-1};
 
-        KeyboardCode m_keycode;
+        KeyboardCode m_keycode{EKEY_UNKNOWN};
+        uint32_t m_unicode{0};
 
         /**
          * Length multiplicator of the panel default key size.
