@@ -100,7 +100,7 @@ public:
     {
     public:
         Panel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-              Size key_size = {});
+              Size key_size = {}, int spacing = 0);
 
     protected:
         std::vector<std::vector<std::shared_ptr<Key>>> m_keys;
@@ -117,7 +117,7 @@ public:
     {
     public:
         MainPanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-                  Size key_size = {});
+                  Size key_size = {}, int spacing = 0);
     protected:
         std::shared_ptr<Panel> m_panel;
         friend class Keyboard;

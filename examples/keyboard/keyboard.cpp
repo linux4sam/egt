@@ -615,7 +615,7 @@ struct QwertyLettersLowerCase : public MainPanel
             make_shared<Keyboard::Key>(0x002e),
             make_shared<Keyboard::Key>("\u21b5", EKEY_ENTER, 1.5)
         }
-    }, Size(30, 50))
+    }, Size(30, 50), 4)
     {}
 };
 
@@ -673,7 +673,7 @@ struct QwertyLettersUpperCase : public MainPanel
             make_shared<Keyboard::Key>(0x002e),
             make_shared<Keyboard::Key>("\u21b5", EKEY_ENTER, 1.5)
         }
-    }, Size(30, 50))
+    }, Size(30, 50), 4)
     {}
 };
 
@@ -732,7 +732,7 @@ struct QwertySymbols1 : public MainPanel
             make_shared<Keyboard::Key>(0x002e),
             make_shared<Keyboard::Key>("\u21b5", EKEY_ENTER, 1.5)
         }
-    }, Size(30, 50))
+    }, Size(30, 50), 4)
     {}
 };
 
@@ -791,7 +791,7 @@ struct QwertySymbols2 : public MainPanel
             make_shared<Keyboard::Key>(0x002e),
             make_shared<Keyboard::Key>("\u21b5", EKEY_ENTER, 1.5)
         }
-    }, Size(30, 50))
+    }, Size(30, 50), 4)
     {}
 };
 

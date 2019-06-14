@@ -58,7 +58,9 @@ Keyboard::Key::Key(uint32_t unicode,
     ncflags().set(Widget::flag::no_autoresize);
 }
 
-Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys, Size key_size)
+Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys,
+             Size key_size,
+             int spacing)
     : m_keys(std::move(keys))
 {
     set_align(alignmask::center);
@@ -71,8 +73,9 @@ Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys, Size key_size)
 
         for (auto& key : row)
         {
-            key->resize(Size(key_size.w * key->length(), key_size.h));
-            key->set_border(1);
+            key->resize(Size(key_size.w * key->length() + 2 * spacing,
+                             key_size.h + 2 * spacing));
+            key->set_margin(spacing / 2);
 
             hsizer->add(key);
         }
@@ -80,8 +83,8 @@ Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys, Size key_size)
 }
 
 MainPanel::MainPanel(vector<vector<shared_ptr<Key>>> keys,
-                     Size key_size)
-    : m_panel(make_shared<Panel>(keys, key_size))
+                     Size key_size, int spacing)
+    : m_panel(make_shared<Panel>(keys, key_size, spacing))
 {
     add(m_panel);
 }
@@ -146,7 +149,8 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
                     // the modal popup caught the raw_pointer_up event
                     k->set_active(false);
                 }
-            }, {eventid::raw_pointer_up}); //user may just move his finger
+            // User may just move his finger so prefer the raw_pointer_up event to the pointer_click one.
+            }, {eventid::raw_pointer_up});
         }
     }
 
