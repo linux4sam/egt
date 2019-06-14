@@ -104,6 +104,12 @@ void Label::first_resize()
     }
 }
 
+ImageLabel::ImageLabel(const std::string& text,
+                       alignmask text_align) noexcept
+    : ImageLabel(Image(), text, {}, text_align)
+{
+}
+
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
                        alignmask text_align) noexcept
@@ -162,21 +168,35 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
     if (!widget.text().empty())
     {
         std::string text;
-        if (widget.m_show_label)
+        if (widget.show_label())
             text = widget.text();
 
-        detail::draw_text(painter,
-                          widget.content_area(),
-                          text,
-                          widget.font(),
-                          TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
-                          widget.text_align(),
-                          justification::middle,
-                          widget.color(Palette::ColorId::label_text).color(),
-                          widget.image_align(),
-                          widget.image());
+        if (!widget.image().empty())
+        {
+            detail::draw_text(painter,
+                              widget.content_area(),
+                              text,
+                              widget.font(),
+                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              widget.text_align(),
+                              justification::middle,
+                              widget.color(Palette::ColorId::label_text).color(),
+                              widget.image_align(),
+                              widget.image());
+        }
+        else
+        {
+            detail::draw_text(painter,
+                              widget.content_area(),
+                              text,
+                              widget.font(),
+                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              widget.text_align(),
+                              justification::middle,
+                              widget.color(Palette::ColorId::label_text).color());
+        }
     }
-    else
+    else if (!widget.image().empty())
     {
         const auto b = widget.content_area();
         const auto target = detail::align_algorithm(widget.m_image.size(),
@@ -190,7 +210,7 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
         widget.scale_image(hs, vs);
 
         painter.draw(target.point());
-        painter.draw(widget.m_image);
+        painter.draw(widget.image());
     }
 }
 
@@ -206,14 +226,11 @@ Size ImageLabel::min_size_hint() const
 
 void ImageLabel::set_image(const Image& image)
 {
-    if (!image.empty())
-    {
-        m_image = image;
-        damage();
-    }
+    m_image = image;
+    damage();
 }
 
-void ImageLabel::label_enabled(bool value)
+void ImageLabel::set_show_label(bool value)
 {
     if (m_show_label != value)
     {

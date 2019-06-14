@@ -118,13 +118,20 @@ class ImageLabel : public Label
 public:
 
     /**
+    * @param[in] text The text to display.
+    * @param[in] text_align Alignment for the text.
+    */
+    ImageLabel(const std::string& text = {},
+               alignmask text_align = default_align) noexcept;
+
+    /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    ImageLabel(const Image& image = {},
+    ImageLabel(const Image& image,
                const std::string& text = {},
-               alignmask text_align = alignmask::right | alignmask::center) noexcept;
+               alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] image The image to display.
@@ -133,7 +140,7 @@ public:
      * @param[in] text_align Alignment for the text.
      */
     ImageLabel(const Image& image, const std::string& text, const Rect& rect,
-               alignmask text_align = alignmask::right | alignmask::center) noexcept;
+               alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -143,7 +150,7 @@ public:
      */
     explicit ImageLabel(Frame& parent, const Image& image = {},
                         const std::string& text = {},
-                        alignmask text_align = alignmask::right | alignmask::center) noexcept;
+                        alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -154,7 +161,7 @@ public:
      */
     ImageLabel(Frame& parent, const Image& image, const std::string& text,
                const Rect& rect,
-               alignmask text_align = alignmask::right | alignmask::center) noexcept;
+               alignmask text_align = default_align) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -229,7 +236,12 @@ public:
      *
      * @param[in] value When true, the label text is shown.
      */
-    virtual void label_enabled(bool value);
+    virtual void set_show_label(bool value);
+
+    /**
+    * Get the show label state.
+    */
+    inline bool show_label() const { return m_show_label; }
 
     virtual ~ImageLabel() = default;
 

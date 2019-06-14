@@ -30,32 +30,46 @@ inline namespace v1
  * Light wrapper around a Label to make each item in the ListBox a little bit
  * bigger.
  */
-struct StringItem : public Label
+struct StringItem : public ImageLabel
 {
     StringItem(const std::string& text = {},
+               const Image& image = {},
                alignmask align = alignmask::center) noexcept
-        : Label(text, align)
+        : ImageLabel(image, text, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }
 
-    StringItem(const std::string& text, const Rect& rect,
+    StringItem(const std::string& text,
+               const Image& image,
+               const Rect& rect,
                alignmask align = alignmask::center) noexcept
-        : Label(text, rect, align)
+        : ImageLabel(image, text, rect, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }
 
-    explicit StringItem(Frame& parent, const std::string& text = {},
+    StringItem(const std::string& text,
+               const Rect& rect,
+               alignmask align = alignmask::center) noexcept
+        : ImageLabel(Image(), text, rect, align)
+    {
+        set_boxtype(Theme::boxtype::blank);
+    }
+
+    explicit StringItem(Frame& parent,
+                        const std::string& text = {},
                         alignmask align = alignmask::center) noexcept
-        : Label(parent, text, align)
+        : ImageLabel(parent, Image(), text, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }
 
-    StringItem(Frame& parent, const std::string& text, const Rect& rect,
+    StringItem(Frame& parent,
+               const std::string& text,
+               const Rect& rect,
                alignmask align = alignmask::center) noexcept
-        : Label(parent, text, rect, align)
+        : ImageLabel(parent, Image(), text, rect, align)
     {
         set_boxtype(Theme::boxtype::blank);
     }
