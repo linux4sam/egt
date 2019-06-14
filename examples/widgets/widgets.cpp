@@ -450,6 +450,27 @@ struct ScrollwheelPage : public NotebookTab
     }
 };
 
+struct FormPage : public NotebookTab
+{
+    FormPage()
+    {
+        auto form = make_shared<experimental::Form>("Information");
+        form->set_align(alignmask::expand_vertical);
+        form->set_horizontal_ratio(50);
+        add(form);
+
+        form->add_group("Name");
+        form->add_option("First Name", make_shared<TextBox>());
+        form->add_option("Last Name", make_shared<TextBox>());
+        form->add_group("Settings");
+        form->add_option("Admin", make_shared<CheckBox>());
+        auto toggle1 = std::make_shared<ToggleBox>();
+        toggle1->set_toggle_text("On", "Off");
+        form->add_option("Active", toggle1);
+        form->add_option(make_shared<Button>("Save"));
+    }
+};
+
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "widgets");
@@ -484,6 +505,7 @@ int main(int argc, const char** argv)
         {"ComboBox", make_shared<ComboPage>()},
         {"ListBox", make_shared<ListPage>()},
         {"Scrollwheel", make_shared<ScrollwheelPage>()},
+        {"Form", make_shared<FormPage>()},
     };
 
     for (auto& i : pages)
