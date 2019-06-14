@@ -16,24 +16,6 @@ using namespace egt;
 using MainPanel = Keyboard::MainPanel;
 using MultichoicePanel = Keyboard::MultichoicePanel;
 
-struct Multichoice_q : public MultichoicePanel
-{
-    Multichoice_q()
-        : MultichoicePanel(
-    {
-        {
-            make_shared<Keyboard::Key>(0x0),
-            make_shared<Keyboard::Key>(0x0),
-            make_shared<Keyboard::Key>(0x0),
-        }, {
-            make_shared<Keyboard::Key>(0x0),
-            make_shared<Keyboard::Key>(0x0),
-            make_shared<Keyboard::Key>(0x0),
-        }
-    })
-    {}
-};
-
 struct Multichoice_w : public MultichoicePanel
 {
     Multichoice_w()
@@ -47,7 +29,7 @@ struct Multichoice_w : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0),
             make_shared<Keyboard::Key>(0x0),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -69,7 +51,7 @@ struct Multichoice_e : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00eb),
             make_shared<Keyboard::Key>(0x0113),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -91,7 +73,7 @@ struct Multichoice_E : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00cb),
             make_shared<Keyboard::Key>(0x0112),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -104,7 +86,7 @@ struct Multichoice_r : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0155),
             make_shared<Keyboard::Key>(0x0159),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -117,7 +99,7 @@ struct Multichoice_R : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0154),
             make_shared<Keyboard::Key>(0x0158),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -132,7 +114,7 @@ struct Multichoice_t : public MultichoicePanel
             make_shared<Keyboard::Key>(0x021b),
             make_shared<Keyboard::Key>(0x0163),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -147,7 +129,7 @@ struct Multichoice_T : public MultichoicePanel
             make_shared<Keyboard::Key>(0x021a),
             make_shared<Keyboard::Key>(0x0162),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -159,7 +141,7 @@ struct Multichoice_y : public MultichoicePanel
         {
             make_shared<Keyboard::Key>(0x0fd),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -171,7 +153,7 @@ struct Multichoice_Y : public MultichoicePanel
         {
             make_shared<Keyboard::Key>(0x0dd),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -191,7 +173,7 @@ struct Multichoice_u : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00fa),
             make_shared<Keyboard::Key>(0x00f9),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -211,7 +193,7 @@ struct Multichoice_U : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00da),
             make_shared<Keyboard::Key>(0x00d9),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -230,7 +212,7 @@ struct Multichoice_i : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00ed),
             make_shared<Keyboard::Key>(0x00ec),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -249,7 +231,7 @@ struct Multichoice_I : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00cd),
             make_shared<Keyboard::Key>(0x00cc),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -269,7 +251,7 @@ struct Multichoice_o : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00f3),
             make_shared<Keyboard::Key>(0x00f2),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -289,7 +271,7 @@ struct Multichoice_O : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00d3),
             make_shared<Keyboard::Key>(0x00d2),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -311,7 +293,7 @@ struct Multichoice_a : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00e3),
             make_shared<Keyboard::Key>(0x00e4),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -333,7 +315,7 @@ struct Multichoice_A : public MultichoicePanel
             make_shared<Keyboard::Key>(0x00c3),
             make_shared<Keyboard::Key>(0x00c4),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -349,7 +331,7 @@ struct Multichoice_s : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0161),
             make_shared<Keyboard::Key>(0x015f),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -365,7 +347,7 @@ struct Multichoice_S : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0160),
             make_shared<Keyboard::Key>(0x015e),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -378,7 +360,7 @@ struct Multichoice_d : public MultichoicePanel
             make_shared<Keyboard::Key>(0x010f),
             make_shared<Keyboard::Key>(0x0111),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -391,7 +373,7 @@ struct Multichoice_D : public MultichoicePanel
             make_shared<Keyboard::Key>(0x010e),
             make_shared<Keyboard::Key>(0x0110),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -404,7 +386,7 @@ struct Multichoice_g : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0123),
             make_shared<Keyboard::Key>(0x011f),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -417,7 +399,7 @@ struct Multichoice_G : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0122),
             make_shared<Keyboard::Key>(0x011e),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -429,7 +411,7 @@ struct Multichoice_k : public MultichoicePanel
         {
             make_shared<Keyboard::Key>(0x0137),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -441,7 +423,7 @@ struct Multichoice_K : public MultichoicePanel
         {
             make_shared<Keyboard::Key>(0x0136),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -456,7 +438,7 @@ struct Multichoice_l : public MultichoicePanel
             make_shared<Keyboard::Key>(0x013c),
             make_shared<Keyboard::Key>(0x013a),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -471,7 +453,7 @@ struct Multichoice_L : public MultichoicePanel
             make_shared<Keyboard::Key>(0x013b),
             make_shared<Keyboard::Key>(0x0139),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -485,7 +467,7 @@ struct Multichoice_z : public MultichoicePanel
             make_shared<Keyboard::Key>(0x017c),
             make_shared<Keyboard::Key>(0x017e),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -499,7 +481,7 @@ struct Multichoice_Z : public MultichoicePanel
             make_shared<Keyboard::Key>(0x017b),
             make_shared<Keyboard::Key>(0x017d),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -513,7 +495,7 @@ struct Multichoice_c : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0107),
             make_shared<Keyboard::Key>(0x010d),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -527,7 +509,7 @@ struct Multichoice_C : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0106),
             make_shared<Keyboard::Key>(0x010c),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -542,7 +524,7 @@ struct Multichoice_n : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0144),
             make_shared<Keyboard::Key>(0x00f1),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
@@ -557,7 +539,7 @@ struct Multichoice_N : public MultichoicePanel
             make_shared<Keyboard::Key>(0x0143),
             make_shared<Keyboard::Key>(0x00d1),
         }
-    }, Size(30, 50))
+    }, Size(45, 75))
     {}
 };
 
