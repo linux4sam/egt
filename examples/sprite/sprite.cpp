@@ -22,7 +22,7 @@ int main(int argc, const char** argv)
     img.set_align(alignmask::expand);
     img.set_image_align(alignmask::expand);
 
-    ImageLabel logo(Image("@logos/microchip_logo_white.png"));
+    ImageLabel logo(Image("@128px/microchip_logo_white.png"));
     logo.set_align(alignmask::left | alignmask::top);
     logo.set_margin(10);
     win.add(logo);

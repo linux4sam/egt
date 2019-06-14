@@ -159,7 +159,7 @@ public:
 
         add(make_shared<ImageLabel>(Image("background.png")));
 
-        auto logo = std::make_shared<ImageLabel>(Image("@logos/microchip_logo_white.png"));
+        auto logo = std::make_shared<ImageLabel>(Image("@128px/microchip_logo_white.png"));
         logo->set_align(alignmask::left | alignmask::top);
         logo->set_margin(10);
         add(logo);

@@ -1,6 +1,56 @@
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
-  <defs>
-    <style>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   sodipodi:docname="cursor.svg"
+   inkscape:version="0.92.4 (unknown)">
+  <metadata
+     id="metadata30">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>190429_GR-19-050601_Cursor_Arrow_icon</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1124"
+     id="namedview28"
+     showgrid="false"
+     inkscape:zoom="1.84375"
+     inkscape:cx="36.81"
+     inkscape:cy="60.209933"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs7">
+    <style
+       id="style2">
       .cls-1, .cls-4 {
         fill: none;
       }
@@ -20,19 +70,68 @@
         stroke-width: 4.22px;
       }
     </style>
-    <clipPath id="clip-path">
-      <rect class="cls-1" x="1.2" y="1" width="126.5" height="126.51"/>
+    <clipPath
+       id="clip-path">
+      <rect
+         class="cls-1"
+         x="1.2"
+         y="1"
+         width="126.5"
+         height="126.51"
+         id="rect4" />
     </clipPath>
   </defs>
-  <title>190429_GR-19-050601_Cursor_Arrow_icon</title>
-  <g>
-    <polygon class="cls-2" points="106.4 79.3 29.3 8.5 29.3 113.1 52.7 90.8 66.4 122.1 87.8 112.7 74.1 81.4 106.4 79.3 106.4 79.3"/>
-    <g class="cls-3">
-      <polygon class="cls-4" points="106.4 79.3 29.3 8.5 29.3 113.1 52.7 90.8 66.4 122.1 87.8 112.7 74.1 81.4 106.4 79.3 106.4 79.3"/>
+  <title
+     id="title9">190429_GR-19-050601_Cursor_Arrow_icon</title>
+  <g
+     id="g25"
+     transform="translate(-27.19,-6.3902692)">
+    <polygon
+       class="cls-2"
+       points="29.3,113.1 52.7,90.8 66.4,122.1 87.8,112.7 74.1,81.4 106.4,79.3 29.3,8.5 "
+       id="polygon11"
+       style="fill:#b3332f" />
+    <g
+       class="cls-3"
+       clip-path="url(#clip-path)"
+       id="g15">
+      <polygon
+         class="cls-4"
+         points="29.3,113.1 52.7,90.8 66.4,122.1 87.8,112.7 74.1,81.4 106.4,79.3 29.3,8.5 "
+         id="polygon13"
+         style="fill:none;stroke:#000000;stroke-width:4.21999979px;stroke-linecap:round;stroke-linejoin:round" />
     </g>
-    <line class="cls-2" x1="38.1" y1="26.7" x2="56.8" y2="45.3"/>
-    <line class="cls-4" x1="38.1" y1="26.7" x2="56.8" y2="45.3"/>
-    <line class="cls-2" x1="61.7" y1="50.4" x2="69.7" y2="58.5"/>
-    <line class="cls-4" x1="61.7" y1="50.4" x2="69.7" y2="58.5"/>
+    <line
+       class="cls-2"
+       x1="38.099998"
+       y1="26.700001"
+       x2="56.799999"
+       y2="45.299999"
+       id="line17"
+       style="fill:#b3332f" />
+    <line
+       class="cls-4"
+       x1="38.099998"
+       y1="26.700001"
+       x2="56.799999"
+       y2="45.299999"
+       id="line19"
+       style="fill:none;stroke:#000000;stroke-width:4.21999979px;stroke-linecap:round;stroke-linejoin:round" />
+    <line
+       class="cls-2"
+       x1="61.700001"
+       y1="50.400002"
+       x2="69.699997"
+       y2="58.5"
+       id="line21"
+       style="fill:#b3332f" />
+    <line
+       class="cls-4"
+       x1="61.700001"
+       y1="50.400002"
+       x2="69.699997"
+       y2="58.5"
+       id="line23"
+       style="fill:none;stroke:#000000;stroke-width:4.21999979px;stroke-linecap:round;stroke-linejoin:round" />
   </g>
 </svg>

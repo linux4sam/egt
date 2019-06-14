@@ -32,7 +32,7 @@ public:
         background->set_image_align(alignmask::expand);
         add(background);
 
-        auto m_logo = make_shared<ImageLabel>(*this, Image("@logos/microchip_logo_black.png"));
+        auto m_logo = make_shared<ImageLabel>(*this, Image("@128px/microchip_logo_black.png"));
         m_logo->set_align(alignmask::left | alignmask::top);
         m_logo->set_margin(10);
 

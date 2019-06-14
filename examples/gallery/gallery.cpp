@@ -35,7 +35,7 @@ int main(int argc, const char** argv)
     if (fullscale <= 0)
         fullscale = 1.0;
 
-    ImageLabel logo(Image("@logos/microchip_logo_white.png"));
+    ImageLabel logo(Image("@128px/microchip_logo_white.png"));
     win.add(logo);
     logo.set_align(alignmask::left | alignmask::top);
     logo.set_margin(10);

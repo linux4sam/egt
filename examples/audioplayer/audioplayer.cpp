@@ -44,7 +44,7 @@ public:
     explicit AudioPlayerWindow(const Size& size = Size())
         : TopWindow(size),
           m_background(*this, Image("background.png")),
-          m_logo(*this, Image("@logos/microchip_logo_black.png")),
+          m_logo(*this, Image("@128px/microchip_logo_black.png")),
           m_dial(0, 100, 0)
     {
         m_background.set_align(alignmask::expand);

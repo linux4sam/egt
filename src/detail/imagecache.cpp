@@ -8,6 +8,7 @@
 #endif
 
 #include "egt/canvas.h"
+#include "egt/detail/filesystem.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/resource.h"
 #include "egt/utils.h"
@@ -118,7 +119,11 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             string name = filename;
             name.erase(0, 1);
 
-            auto mimetype = get_mime_type(read_resource_data(name.c_str()),
+            auto data = read_resource_data(name.c_str());
+            if (!data)
+                throw std::runtime_error("resource not found: " + name);
+
+            auto mimetype = get_mime_type(data,
                                           read_resource_length(name.c_str()));
             SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
@@ -147,7 +152,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             }
             else
             {
-                throw std::runtime_error("unsupported mimetype");
+                throw std::runtime_error("unsupported mimetype for: " + name);
             }
         }
         else if (filename.compare(0, 1, "@") == 0)
@@ -155,37 +160,26 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
             string name = filename;
             name.erase(0, 1);
 
-            auto env_p = std::getenv("EGT_ICONS_DIRECTORY");
-            if (env_p)
+            static std::string egt_icons_dir = "32px";
+            static std::once_flag env_flag;
+            std::call_once(env_flag, [&name]()
             {
-                auto iconsfolder = std::string(env_p);
-                if (!iconsfolder.empty())
+                auto icons_dir = std::getenv("EGT_ICONS_DIRECTORY");
+                if (icons_dir)
                 {
-                    name = resolve_file_path(iconsfolder + "/" + name);
+                    auto dir = std::string(icons_dir);
+                    if (!dir.empty())
+                        egt_icons_dir = dir;
                 }
-                else
-                {
-                    /* check if a folder name is prefixed with file name
-                     * if prefixed, then do nothing or else  point to default
-                     * 64px folder.
-                     */
-                    if (name.find("/") != string::npos)
-                        name = resolve_file_path(name);
-                    else
-                        name = resolve_file_path("64px/" + name);
-                }
-            }
+            });
+
+            if (name.find("/") != string::npos)
+                name = resolve_file_path(name);
             else
-            {
-                /* check if a folder name is prefixed with file name
-                 * if prefixed, then do nothing or else  point to default
-                 * 64px folder.
-                 */
-                if (name.find("/") != string::npos)
-                    name = resolve_file_path(name);
-                else
-                    name = resolve_file_path("64px/" + name);
-            }
+                name = resolve_file_path(egt_icons_dir + "/" + name);
+
+            if (!detail::exists(name))
+                throw std::runtime_error("file not found: " + name);
 
             auto mimetype = get_mime_type(name);
             SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
@@ -218,12 +212,16 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 #endif
             else
             {
-                throw std::runtime_error("unsupported mimetype");
+                throw std::runtime_error("unsupported mimetype for: " + name);
             }
         }
         else
         {
             string name = resolve_file_path(filename);
+
+            if (!detail::exists(name))
+                throw std::runtime_error("file not found: " + name);
+
             auto mimetype = get_mime_type(name);
             SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
@@ -255,7 +253,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 #endif
             else
             {
-                throw std::runtime_error("unsupported mimetype");
+                throw std::runtime_error("unsupported mimetype for: " + name);
             }
         }
     }

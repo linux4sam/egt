@@ -192,7 +192,7 @@ public:
             damage();
         }, {eventid::hide});
 
-        auto logo = make_shared<ImageLabel>(Image("@logos/microchip_logo_black.png"));
+        auto logo = make_shared<ImageLabel>(Image("@128px/microchip_logo_black.png"));
         logo->set_align(alignmask::right | alignmask::top);
         logo->set_margin(10);
         add(logo);
@@ -281,7 +281,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "whiteboard");
 
     MainWindow win;
-    win.show_cursor(Image("@pencil.png"));
+    win.show_cursor(Image("@cursor_pencil.png"));
     win.show();
 
     return app.run();

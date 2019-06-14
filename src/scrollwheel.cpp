@@ -24,8 +24,8 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
                          bool reversed) noexcept
     : StaticGrid(rect, Tuple(1, 3), 1),
       m_items(items),
-      m_button_up(make_shared<ImageButton>(Image("@16px/arrow_up.png"))),
-      m_button_down(make_shared<ImageButton>(Image("@16px/arrow_down.png"))),
+      m_button_up(make_shared<ImageButton>(Image("@arrow_up.png"))),
+      m_button_down(make_shared<ImageButton>(Image("@arrow_down.png"))),
       m_label(make_shared<Label>())
 {
     init(reversed);
@@ -41,8 +41,8 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const item_array& item
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
                          bool reversed) noexcept
     : StaticGrid(rect, Tuple(1, 3), 1),
-      m_button_up(make_shared<ImageButton>(Image("@16px/arrow_up.png"))),
-      m_button_down(make_shared<ImageButton>(Image("@16px/arrow_down.png"))),
+      m_button_up(make_shared<ImageButton>(Image("@arrow_up.png"))),
+      m_button_down(make_shared<ImageButton>(Image("@arrow_down.png"))),
       m_label(make_shared<Label>())
 {
     for (int i = min; i <= max; i += step)

@@ -223,7 +223,7 @@ public:
         auto frame = make_shared<Frame>(Size(0, 60));
         vsizer->add(expand_horizontal(frame));
 
-        auto logo = make_shared<ImageLabel>(Image("@logos/egt_logo.png"));
+        auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
         logo->set_margin(1);
         logo->set_align(alignmask::center);
         frame->add(logo);

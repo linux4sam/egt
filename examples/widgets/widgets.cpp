@@ -420,18 +420,18 @@ struct ScrollwheelPage : public NotebookTab
         add(expand(hsizer1));
 
         auto scrollwheel_day =
-            std::make_shared<Scrollwheel>(Rect(0, 0, 50, 75), 1, 31, 1);
+            std::make_shared<Scrollwheel>(Rect(0, 0, 50, 100), 1, 31, 1);
 
         std::vector<std::string> months = { "January", "February", "March",
                                             "April", "May", "June", "July", "August", "September", "October",
                                             "November", "December"
                                           };
         auto scrollwheel_month =
-            std::make_shared<Scrollwheel>(Rect(0, 0, 200, 75), months);
+            std::make_shared<Scrollwheel>(Rect(0, 0, 200, 100), months);
         scrollwheel_month->add_item("");
 
         auto scrollwheel_year =
-            std::make_shared<Scrollwheel>(Rect(0, 0, 100, 75),
+            std::make_shared<Scrollwheel>(Rect(0, 0, 100, 100),
                                           1900, 2019, 1, true);
 
         auto label_day =
@@ -506,7 +506,7 @@ int main(int argc, const char** argv)
     auto frame = make_shared<Frame>(Size(0, 60));
     vsizer.add(expand_horizontal(frame));
 
-    auto logo = make_shared<ImageLabel>(Image("@logos/egt_logo.png"));
+    auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
     logo->set_align(alignmask::center);
     frame->add(logo);
 
