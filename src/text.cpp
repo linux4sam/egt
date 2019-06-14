@@ -164,6 +164,8 @@ void TextBox::handle_key(const Key& key)
     }
 }
 
+auto CURSOR_Y_OFFSET = 2.;
+
 void TextBox::draw(Painter& painter, const Rect&)
 {
     // box
@@ -177,9 +179,8 @@ void TextBox::draw(Painter& painter, const Rect&)
             painter.set(color(Palette::ColorId::cursor).color());
             painter.set_line_width(2);
 
-            auto YOFF = 2.;
-            painter.draw(offset + Point(0, -YOFF),
-                         offset + Point(0, height) + Point(0, YOFF));
+            painter.draw(offset + Point(0, -CURSOR_Y_OFFSET),
+                         offset + Point(0, height) + Point(0, CURSOR_Y_OFFSET));
             painter.stroke();
         }
     };
@@ -529,20 +530,15 @@ void TextBox::hide_cursor()
     damage();
 }
 
-static const auto DEFAULT_TEXTBOX_SIZE = Size(100, 50);
-
-/// @todo this is not an acceptable computation,
-/// especially for multi-line text
 Size TextBox::min_size_hint() const
 {
-    if (!m_text.empty())
-    {
-        auto s = text_size(m_text);
-        s += Widget::min_size_hint();
-        return s;
-    }
+    auto text = m_text;
+    if (text.empty())
+        text = "Hello World";
 
-    return DEFAULT_TEXTBOX_SIZE + Widget::min_size_hint();
+    auto s = text_size(text);
+    s += Widget::min_size_hint() + Size(0, CURSOR_Y_OFFSET * 2.);
+    return s;
 }
 
 }
