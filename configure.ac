@@ -188,6 +188,9 @@ AC_TYPE_UINT8_T
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 
+AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
+            CFLAGS="$CFLAGS $PTHREAD_CFLAGS"], AC_MSG_ERROR(Can not find pthreads.  This is required.))
+
 AX_PKG_CHECK_MODULES2(X11, [x11 >= 1.6.3], [], [have_x11=yes], [have_x11=no])
 AM_CONDITIONAL([HAVE_X11], [test "x${have_x11}" = xyes])
 if test "x${have_x11}" = xyes; then
