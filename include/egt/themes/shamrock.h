@@ -39,38 +39,59 @@ protected:
             return pattern1;
         };
 
-        m_palette->set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::palegreen);
-        m_palette->set(Palette::ColorId::text, Palette::GroupId::normal, Color(0x576060ff));
+        // colors light to dark
+        std::vector<Color> colors =
+        {
+            Color::CSS("#eafffd"),
+            Color::CSS("#bafff7"),
+            Color::CSS("#74ffef"),
+            Color::CSS("#2fffe7"),
+            Color::CSS("#00e9cd"),
+            Color::CSS("#00a591"),
+            Color::CSS("#009382"),
+            Color::CSS("#008373"),
+            Color::CSS("#007265"),
+            Color::CSS("#006256"),
+            Color::CSS("#005248"),
+        };
+
+        m_palette->set(Palette::ColorId::bg, Palette::GroupId::normal, colors[0]);
+        m_palette->set(Palette::ColorId::text, Palette::GroupId::normal, colors[5]);
         m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::normal, Palette::hotpink);
-        m_palette->set(Palette::ColorId::border, Palette::GroupId::normal, Palette::yellowgreen);
-        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::normal, Palette::seagreen);
-        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::normal, Palette::yellowgreen);
-        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::normal, Palette::white);
-        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::normal, Palette::palegreen);
-        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::normal, Color(0x576060ff));
+        m_palette->set(Palette::ColorId::border, Palette::GroupId::normal, colors[7]);
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::normal, pattern(colors[7]));
+        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::normal, colors[7]);
+        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::normal, colors[2]);
+        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::normal, colors[0]);
+        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::normal, colors[5]);
 
-        m_palette->set(Palette::ColorId::bg, Palette::GroupId::disabled, Palette::palegreen);
-        m_palette->set(Palette::ColorId::text, Palette::GroupId::disabled, Palette::gray);
+        m_palette->set(Palette::ColorId::bg, Palette::GroupId::disabled, colors[0]);
+        m_palette->set(Palette::ColorId::text, Palette::GroupId::disabled, colors[2]);
         m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::disabled, Palette::hotpink);
-        m_palette->set(Palette::ColorId::border, Palette::GroupId::disabled, Color(0xc9c9caff));
-        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::disabled, pattern(0xdcdcdcff));
-        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::disabled, Color(0xc9c9caff));
-        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::disabled, Palette::gray);
-        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::disabled, Palette::palegreen);
-        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::disabled, Color(Palette::gray));
+        m_palette->set(Palette::ColorId::border, Palette::GroupId::disabled, colors[2]);
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::disabled, pattern(colors[4]));
+        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::disabled, colors[2]);
+        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::disabled, colors[2]);
+        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::disabled, colors[0]);
+        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::disabled, colors[2]);
 
-        m_palette->set(Palette::ColorId::bg, Palette::GroupId::active, Palette::yellowgreen);
-        m_palette->set(Palette::ColorId::text, Palette::GroupId::active, Color(0x576060ff));
+        m_palette->set(Palette::ColorId::bg, Palette::GroupId::active, colors[0]);
+        m_palette->set(Palette::ColorId::text, Palette::GroupId::active, colors[5]);
         m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::active, Palette::hotpink);
-        m_palette->set(Palette::ColorId::border, Palette::GroupId::active, Palette::yellowgreen);
-        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::active, Palette::teal);
-        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::active, Palette::yellowgreen);
-        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::active, Palette::white);
-        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::active, Palette::yellowgreen);
-        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::active, Palette::white);
+        m_palette->set(Palette::ColorId::border, Palette::GroupId::active, colors[5]);
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::active, pattern(colors[10]));
+        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::active, colors[7]);
+        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::active, colors[0]);
+        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::active, colors[10]);
+        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::active, colors[0]);
     }
 
     virtual void init_draw() override;
+
+    virtual void init_font() override
+    {
+        m_font->set_face("Verdana");
+    }
 };
 
 }
