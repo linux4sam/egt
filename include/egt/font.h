@@ -62,6 +62,12 @@ public:
      */
     Font();
 
+    /**
+     * Create a font based on the supplied parameters.
+     *
+     * @param[in] face The face name of the font.
+     * @param[in] size The size of the font.
+     */
     explicit Font(const std::string& face, int size);
 
     /**
@@ -103,7 +109,7 @@ public:
     /**
      * Set the face of the font.
      */
-    void face(const std::string& face) { m_face = face; }
+    void set_face(const std::string& face) { m_face = face; }
 
     /**
      * Get the size of the font.
@@ -113,7 +119,7 @@ public:
     /**
      * Set the size of the font.
      */
-    virtual void size(int s) { m_size = s; }
+    virtual void set_size(int s) { m_size = s; }
 
     /**
      * Get the weight of the font.
@@ -121,9 +127,9 @@ public:
     virtual weightid weight() const { return m_weight; }
 
     /**
-     *
+     * Set the weight of the font.
      */
-    virtual void weight(weightid w) { m_weight = w; }
+    virtual void set_weight(weightid w) { m_weight = w; }
 
     /**
      * Get the slant of the font.
@@ -132,16 +138,35 @@ public:
 
     virtual ~Font() = default;
 
+    /**
+     * Generates a FontConfig scaled font instance.
+     *
+     * Internally, this may use a font cache to limit regeneration of the same
+     * font more than once.
+     */
     cairo_scaled_font_t* scaled_font() const;
 
 protected:
 
+    /**
+     * Font face name.
+     */
     std::string m_face;
-    int m_size;
-    weightid m_weight;
-    slantid m_slant;
 
-    mutable shared_cairo_scaled_font_t m_scaled_font;
+    /**
+     * Font size.
+     */
+    int m_size;
+
+    /**
+     * Font weight.
+     */
+    weightid m_weight;
+
+    /**
+     * Font slant.
+     */
+    slantid m_slant;
 };
 
 std::ostream& operator<<(std::ostream& os, const Font& font);
@@ -152,7 +177,6 @@ inline bool operator==(const Font& lhs, const Font& rhs)
            lhs.size() == rhs.size() &&
            lhs.weight() == rhs.weight() &&
            lhs.slant() == rhs.slant();
-
 }
 
 inline bool operator!=(const Font& lhs, const Font& rhs)

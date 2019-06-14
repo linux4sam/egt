@@ -45,19 +45,19 @@ void set_widget_text_property(T instance, const std::string& name, const std::st
     else if (name == "fontface")
     {
         Font font(instance->font());
-        font.face(value);
+        font.set_face(value);
         instance->set_font(font);
     }
     else if (name == "fontsize")
     {
         Font font(instance->font());
-        font.size(std::stoi(value));
+        font.set_size(std::stoi(value));
         instance->set_font(font);
     }
     else if (name == "fontweight")
     {
         Font font(instance->font());
-        font.weight((Font::weightid)std::stoi(value));
+        font.set_weight((Font::weightid)std::stoi(value));
         instance->set_font(font);
     }
 }

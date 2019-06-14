@@ -65,7 +65,7 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
             textext.height - textext.y_bearing < target.h)
             return nfont;
 
-        nfont.size(nfont.size() - 1);
+        nfont.set_size(nfont.size() - 1);
         if (nfont.size() < 1)
             return font;
     }
