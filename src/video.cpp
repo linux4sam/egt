@@ -24,22 +24,6 @@ inline namespace v1
 {
 namespace detail
 {
-void init_gst_thread()
-{
-    static bool init = false;
-    if (!init)
-    {
-        gst_init(NULL, NULL);
-
-        // cppcheck-suppress unreadVariable
-        static std::thread t([]()
-        {
-            GMainLoop* mainloop = g_main_loop_new(NULL, FALSE);
-            g_main_loop_run(mainloop);
-        });
-        init = true;
-    }
-}
 
 /**
  * Check if target device is sama5d4 for using hardware

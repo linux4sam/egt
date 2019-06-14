@@ -14,7 +14,6 @@ inline namespace v1
 {
 namespace detail
 {
-void init_gst_thread();
 bool is_target_sama5d4();
 class GstDecoderImpl;
 class GstKmsSinkImpl;

@@ -10,6 +10,7 @@
 #include <gst/gst.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <thread>
 
 using namespace std;
 
@@ -69,6 +70,8 @@ struct AudioPlayerImpl
     gint64 m_duration {0};
     std::string m_filename;
     int m_volume_value {100};
+    GMainLoop* m_gmainLoop{nullptr};
+    std::thread m_gmainThread;
 };
 
 }
@@ -152,7 +155,9 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 AudioPlayer::AudioPlayer()
     : m_impl(new detail::AudioPlayerImpl(*this))
 {
-    detail::init_gst_thread();
+    gst_init(NULL, NULL);
+    m_impl->m_gmainLoop = g_main_loop_new(NULL, FALSE);
+    m_impl->m_gmainThread = std::thread(g_main_loop_run, m_impl->m_gmainLoop);
 }
 
 void AudioPlayer::destroyPipeline()
@@ -182,6 +187,20 @@ void AudioPlayer::destroyPipeline()
 AudioPlayer::~AudioPlayer()
 {
     destroyPipeline();
+
+    if (m_impl->m_gmainLoop)
+    {
+        /*
+         * check loop is running to avoid race condition when stop is called too early
+         */
+        if (g_main_loop_is_running(m_impl->m_gmainLoop))
+        {
+            //stop loop and wait
+            g_main_loop_quit(m_impl->m_gmainLoop);
+        }
+        m_impl->m_gmainThread.join();
+        g_main_loop_unref(m_impl->m_gmainLoop);
+    }
 }
 
 bool AudioPlayer::play(bool mute, int volume)
