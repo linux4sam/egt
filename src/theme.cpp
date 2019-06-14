@@ -103,6 +103,10 @@ void Theme::init_draw()
     Drawer<CheckBox>::set_draw(CheckBox::default_draw);
 }
 
+void Theme::init_font()
+{
+}
+
 void Theme::draw_box(Painter& painter, const Widget& widget,
                      Palette::ColorId bg,
                      Palette::ColorId border) const

@@ -209,6 +209,7 @@ public:
     virtual void apply()
     {
         init_palette();
+        init_font();
         init_draw();
     }
 
@@ -227,6 +228,8 @@ protected:
     std::unique_ptr<Font> m_font;
 
     virtual void init_palette();
+
+    virtual void init_font();
 
     virtual void init_draw();
 };
