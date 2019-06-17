@@ -319,6 +319,7 @@ int main(int argc, const char** argv)
     win.load(detail::exe_pwd() + "/../share/egt/examples/launcher/*.xml");
     win.show();
 
+#ifdef SHOW_STARFIELD
     std::random_device r;
     std::default_random_engine e1 {r()};
     std::uniform_int_distribution<int> x_dist {0, 800};
@@ -358,6 +359,7 @@ int main(int argc, const char** argv)
 
         sequence->start();
     }
+#endif
 
     return app.run();
 }
