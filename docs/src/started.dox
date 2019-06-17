@@ -26,14 +26,22 @@ git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
 EGT uses the GNU autotools, like autoconf and automake, for building on Linux
 platforms.
 
-To build for a PC, first, install dependencies:
+To build for a PC, first install recommended dependencies:
 
 @code{.sh}
-sudo apt-get install liblua5.3-dev libdrm-dev libinput-dev \
-    libcairo-dev libjpeg-dev libmagic-dev libcurl4-openssl-dev
+sudo apt-get install libdrm-dev libinput-dev \
+    libcairo-dev libjpeg-dev libmagic-dev
 @endcode
 
-Then build.
+Optional dependencies include:
+
+@code{.sh}
+sudo apt-get install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
+     libxkbcommon-dev xkb-data libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+@endcode
+
+Then clone the source and build.
 
 @code{.sh}
 git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git

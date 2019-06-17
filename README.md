@@ -25,12 +25,22 @@ Want to help out or make some changes?  See [Contributing](CONTRIBUTING.md).
 
 Install dependencies.
 
+To build for a PC, first install recommended dependencies:
+
 ```sh
-sudo apt-get install liblua5.3-dev libdrm-dev libinput-dev \
-    libcairo-dev libjpeg-dev libmagic-dev libcurl4-openssl-dev
+sudo apt-get install libdrm-dev libinput-dev \
+    libcairo-dev libjpeg-dev libmagic-dev
 ```
 
-Then clone and build.
+Optional dependencies include:
+
+```sh
+sudo apt-get install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
+     libxkbcommon-dev xkb-data libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+```
+
+Then clone the source and build.
 
 ```sh
 git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
