@@ -3,6 +3,7 @@ SUBDIRS = external src scripts docs
 if ENABLE_EXAMPLES
 SUBDIRS += examples
 endif
+SUBDIRS += test
 
 EXTRA_DIST = README.md \
 CONTRIBUTING.md \
@@ -83,7 +84,8 @@ config.rpath \
 compile \
 config.h.in~ \
 config.sub \
-ltmain.sh
+ltmain.sh \
+test-driver
 
 tidy:
 	@cd src && $(MAKE) $(AM_MAKEFLAGS) $@

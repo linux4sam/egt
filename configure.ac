@@ -379,7 +379,8 @@ AC_CONFIG_FILES([Makefile
 	examples/i18n/Makefile
 	examples/resource/Makefile
 	examples/video/Makefile
-	docs/Makefile])
+	docs/Makefile
+	test/Makefile])
 AC_OUTPUT
 
 dnl report how we have been configured
