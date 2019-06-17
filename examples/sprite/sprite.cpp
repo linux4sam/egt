@@ -41,11 +41,11 @@ int main(int argc, const char** argv)
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
     grid.add(center(hardware_checkbox), 0, 0);
-    hardware_checkbox.check(true);
+    hardware_checkbox.set_check(true);
 
     CheckBox software_checkbox("Software", Rect(Point(0, 0), Size(120, 40)));
     grid.add(center(software_checkbox), 1, 0);
-    software_checkbox.check(true);
+    software_checkbox.set_check(true);
 
     hardware_checkbox.on_event([&](Event & event)
     {

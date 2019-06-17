@@ -95,8 +95,8 @@ struct LinePage : public NotebookTab
         cos_checkbox->on_event(handle_checkbox);
         atan_checkbox->on_event(handle_checkbox);
 
-        sin_checkbox->check(true);
-        cos_checkbox->check(true);
+        sin_checkbox->set_check(true);
+        cos_checkbox->set_check(true);
 
         auto line_width = std::make_shared<Slider>(Rect(Point(300, 410), Size(200, 40)), 1, 10, 1);
         line_width->set_name("line_width");

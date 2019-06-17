@@ -73,7 +73,7 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(expand(toggle1));
 
         auto toggle2 = std::make_shared<ToggleBox>();
-        toggle2->check(true);
+        toggle2->set_check(true);
         grid0->add(expand(toggle2));
 
         auto toggle3 = std::make_shared<ToggleBox>();
@@ -106,7 +106,7 @@ struct CheckBoxPage : public NotebookTab
 
         auto radiobox2 = std::make_shared<RadioBox>("radiobox 2");
         grid0->add(expand(radiobox2));
-        radiobox2->check(true);
+        radiobox2->set_check(true);
 
         auto radiobox3 = std::make_shared<RadioBox>("Disabled");
         grid0->add(expand(radiobox3));

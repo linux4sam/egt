@@ -105,11 +105,10 @@ bool Button::checked() const
     return m_checked;
 }
 
-void Button::check(bool value)
+void Button::set_check(bool value)
 {
-    if (m_checked != value)
+    if (detail::change_if_diff<>(m_checked, value))
     {
-        m_checked = value;
         if (m_group)
             m_group->checked_state_change(*this, value);
 

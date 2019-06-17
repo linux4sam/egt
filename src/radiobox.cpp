@@ -36,7 +36,7 @@ void RadioBox::handle(Event& event)
     switch (event.id())
     {
     case eventid::pointer_click:
-        check(!checked());
+        set_check(!checked());
         break;
     default:
         break;

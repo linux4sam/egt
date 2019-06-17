@@ -93,7 +93,7 @@ public:
     /**
      * Set checked state of the button.
      */
-    virtual void check(bool value);
+    virtual void set_check(bool value);
 
     virtual Size min_size_hint() const override;
 
