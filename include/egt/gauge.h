@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_GUAGE_H
-#define EGT_GUAGE_H
+#ifndef EGT_GAUGE_H
+#define EGT_GAUGE_H
 
 #include <egt/detail/math.h>
 #include <egt/flags.h>
@@ -19,15 +19,15 @@ inline namespace v1
 {
 namespace experimental
 {
-class Guage;
+class Gauge;
 
 /**
- * A layer of a guage display.
+ * A layer of a gauge display.
  */
-class GuageLayer
+class GaugeLayer
 {
 public:
-    explicit GuageLayer(const Image& image)
+    explicit GaugeLayer(const Image& image)
         : m_image(image)
     {}
 
@@ -41,29 +41,29 @@ public:
 
     void set_visible(bool visible);
 
-    void set_guage(Guage* guage)
+    void set_gauge(Gauge* gauge)
     {
-        m_guage = guage;
+        m_gauge = gauge;
     }
 
-    virtual ~GuageLayer() = default;
+    virtual ~GaugeLayer() = default;
 
 protected:
     Image m_image;
-    Guage* m_guage{nullptr};
+    Gauge* m_gauge{nullptr};
     bool m_visible{true};
 };
 
 /**
- * Special GuageLayer that deals with rotating and displaying a needle.
+ * Special GaugeLayer that deals with rotating and displaying a needle.
  */
-class NeedleLayer : public GuageLayer
+class NeedleLayer : public GaugeLayer
 {
 public:
 
     NeedleLayer(const Image& image, float min, float max, float angle_start,
                 float angle_stop, bool clockwise = true)
-        :  GuageLayer(image),
+        :  GaugeLayer(image),
            m_min(min),
            m_max(max),
            m_angle_start(angle_start),
@@ -102,15 +102,15 @@ protected:
 };
 
 /**
- * A Guage Widget that is composed of GuageLayer layers.
+ * A Gauge Widget that is composed of GaugeLayer layers.
  */
-class Guage : public Widget
+class Gauge : public Widget
 {
 public:
 
     using Widget::Widget;
 
-    void add_layer(const std::shared_ptr<GuageLayer>& layer)
+    void add_layer(const std::shared_ptr<GaugeLayer>& layer)
     {
         m_layers.push_back(layer);
         resize(super_size());
@@ -140,7 +140,7 @@ protected:
         return result;
     }
 
-    std::vector<std::shared_ptr<GuageLayer>> m_layers;
+    std::vector<std::shared_ptr<GaugeLayer>> m_layers;
 };
 
 }

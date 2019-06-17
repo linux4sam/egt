@@ -65,7 +65,7 @@ font.cpp \
 frame.cpp \
 geometry.cpp \
 grid.cpp \
-guage.cpp \
+gauge.cpp \
 image.cpp \
 images/bmp/cairo_bmp.c \
 images/bmp/cairo_bmp.h \
@@ -155,7 +155,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/frame.h \
 ../include/egt/geometry.h \
 ../include/egt/grid.h \
-../include/egt/guage.h \
+../include/egt/gauge.h \
 ../include/egt/image.h \
 ../include/egt/input.h \
 ../include/egt/keyboard.h \

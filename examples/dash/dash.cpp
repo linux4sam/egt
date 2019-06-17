@@ -36,24 +36,24 @@ int main(int argc, const char** argv)
 
     auto f = 1.50375;
 
-    // the guage
-    Guage guage;
-    center(guage);
+    // the gauge
+    Gauge gauge;
+    center(gauge);
 
     // create a background layer
-    auto guage_background = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
+    auto gauge_background = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
                             SizeF(1203, 593) / SizeF(f, f),
                             "#background")));
-    guage_background->set_guage(&guage);
-    guage.add_layer(guage_background);
+    gauge_background->set_gauge(&gauge);
+    gauge.add_layer(gauge_background);
 
     // create the right blink layer
-    auto right_blink = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
+    auto right_blink = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
                        SizeF(1203, 593) / SizeF(f, f),
                        "#right_blink")));
-    right_blink->set_guage(&guage);
+    right_blink->set_gauge(&gauge);
     right_blink->set_visible(false);
-    guage.add_layer(right_blink);
+    gauge.add_layer(right_blink);
 
     PeriodicTimer right_timer(std::chrono::milliseconds(1500));
     right_timer.on_timeout([right_blink]()
@@ -63,12 +63,12 @@ int main(int argc, const char** argv)
     right_timer.start();
 
     // create the left blink layer
-    auto left_blink = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
+    auto left_blink = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
                       SizeF(1203, 593) / SizeF(f, f),
                       "#left_blink")));
-    left_blink->set_guage(&guage);
+    left_blink->set_gauge(&gauge);
     left_blink->set_visible(false);
-    guage.add_layer(left_blink);
+    gauge.add_layer(left_blink);
 
     PeriodicTimer left_timer(std::chrono::milliseconds(1000));
     left_timer.on_timeout([left_blink]()
@@ -78,12 +78,12 @@ int main(int argc, const char** argv)
     left_timer.start();
 
     // create the brights layer
-    auto brights = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
+    auto brights = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
                                            SizeF(1203, 593) / SizeF(f, f),
                                            "#brights")));
-    brights->set_guage(&guage);
+    brights->set_gauge(&gauge);
     brights->set_visible(false);
-    guage.add_layer(brights);
+    gauge.add_layer(brights);
 
     PeriodicTimer brights_timer(std::chrono::seconds(5));
     brights_timer.on_timeout([brights]()
@@ -93,12 +93,12 @@ int main(int argc, const char** argv)
     brights_timer.start();
 
     // create the hazards layer
-    auto hazards = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
+    auto hazards = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
                                            SizeF(1203, 593) / SizeF(f, f),
                                            "#hazards")));
-    hazards->set_guage(&guage);
+    hazards->set_gauge(&gauge);
     hazards->set_visible(false);
-    guage.add_layer(hazards);
+    gauge.add_layer(hazards);
 
     PeriodicTimer hazards_timer(std::chrono::seconds(2));
     hazards_timer.on_timeout([hazards]()
@@ -109,29 +109,29 @@ int main(int argc, const char** argv)
 
     auto rpm_needle = make_shared<NeedleLayer>(Image(detail::load_svg("dash_needle.svg", SizeF(102, 8) / SizeF(f, f))),
                       1000, 6000, 171.34, 8.6);
-    rpm_needle->set_guage(&guage);
+    rpm_needle->set_gauge(&gauge);
     rpm_needle->set_needle_point(PointF(284.49, 339.51) / PointF(f, f));
     rpm_needle->set_needle_center(PointF(4.8, 3.9) / PointF(f, f));
-    guage.add_layer(rpm_needle);
+    gauge.add_layer(rpm_needle);
     demo_up_down_animator(rpm_needle, 1000, 6000, std::chrono::seconds(8));
 
     auto mph_needle = make_shared<NeedleLayer>(Image(detail::load_svg("dash_needle.svg", SizeF(102, 8) / SizeF(f, f))),
                       20, 220, 171.34, 8.6);
-    mph_needle->set_guage(&guage);
+    mph_needle->set_gauge(&gauge);
     mph_needle->set_needle_point(PointF(918.40, 339.51) / PointF(f, f));
     mph_needle->set_needle_center(PointF(4.8, 3.9) / PointF(f, f));
-    guage.add_layer(mph_needle);
+    gauge.add_layer(mph_needle);
     demo_up_down_animator(mph_needle, 20, 220, std::chrono::seconds(8));
 
     auto fuel_needle = make_shared<NeedleLayer>(Image(detail::load_svg("dash_needle.svg", SizeF(102, 8) / SizeF(f, f))),
                        0, 100, 180, 270);
-    fuel_needle->set_guage(&guage);
+    fuel_needle->set_gauge(&gauge);
     fuel_needle->set_needle_point(PointF(641.29, 359.43) / PointF(f, f));
     fuel_needle->set_needle_center(PointF(4.8, 3.9) / PointF(f, f));
-    guage.add_layer(fuel_needle);
+    gauge.add_layer(fuel_needle);
     demo_up_down_animator(fuel_needle, 0, 100, std::chrono::seconds(30));
 
-    win.add(guage);
+    win.add(gauge);
 
     win.show();
 

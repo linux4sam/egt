@@ -28,7 +28,7 @@ static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max, s
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "guage");
+    Application app(argc, argv, "gauge");
 
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::gray);
@@ -37,68 +37,68 @@ int main(int argc, const char** argv)
     grid.set_color(Palette::ColorId::border, Palette::transparent);
     win.add(expand(grid));
 
-    Guage guage;
-    center(guage);
-    auto guage_background = make_shared<GuageLayer>(Image(detail::load_svg("guage_background.svg", SizeF(192, 192))));
-    guage_background->set_guage(&guage);
-    guage.add_layer(guage_background);
+    Gauge gauge;
+    center(gauge);
+    auto gauge_background = make_shared<GaugeLayer>(Image(detail::load_svg("gauge_background.svg", SizeF(192, 192))));
+    gauge_background->set_gauge(&gauge);
+    gauge.add_layer(gauge_background);
 
-    auto guage_needle1 = make_shared<NeedleLayer>(Image(detail::load_svg("guage_needle2.svg", SizeF(91, 14))),
+    auto gauge_needle1 = make_shared<NeedleLayer>(Image(detail::load_svg("gauge_needle2.svg", SizeF(91, 14))),
                          0, 100, 135, 45);
-    guage_needle1->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
-    guage_needle1->set_needle_center(PointF(6.8725, 6.87253));
-    guage_needle1->set_guage(&guage);
-    guage.add_layer(guage_needle1);
-    demo_up_down_animator(guage_needle1, 0, 100, std::chrono::seconds(5));
+    gauge_needle1->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
+    gauge_needle1->set_needle_center(PointF(6.8725, 6.87253));
+    gauge_needle1->set_gauge(&gauge);
+    gauge.add_layer(gauge_needle1);
+    demo_up_down_animator(gauge_needle1, 0, 100, std::chrono::seconds(5));
 
-    auto guage_needle2 = make_shared<NeedleLayer>(Image(detail::load_svg("guage_needle1.svg", SizeF(91, 14))),
+    auto gauge_needle2 = make_shared<NeedleLayer>(Image(detail::load_svg("gauge_needle1.svg", SizeF(91, 14))),
                          0, 100, 135, 45);
-    guage_needle2->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
-    guage_needle2->set_needle_center(PointF(6.8725, 6.87253));
-    guage_needle2->set_guage(&guage);
-    guage.add_layer(guage_needle2);
-    demo_up_down_animator(guage_needle2, 0, 100, std::chrono::seconds(8));
+    gauge_needle2->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
+    gauge_needle2->set_needle_center(PointF(6.8725, 6.87253));
+    gauge_needle2->set_gauge(&gauge);
+    gauge.add_layer(gauge_needle2);
+    demo_up_down_animator(gauge_needle2, 0, 100, std::chrono::seconds(8));
 
-    grid.add(guage);
+    grid.add(gauge);
 
-    Guage fuel;
+    Gauge fuel;
     center(fuel);
-    auto fuel_background = make_shared<GuageLayer>(Image(detail::load_svg("fuel_background.svg", SizeF(198, 153))));
-    fuel_background->set_guage(&fuel);
+    auto fuel_background = make_shared<GaugeLayer>(Image(detail::load_svg("fuel_background.svg", SizeF(198, 153))));
+    fuel_background->set_gauge(&fuel);
     fuel.add_layer(fuel_background);
     auto fuel_needle = make_shared<NeedleLayer>(Image(detail::load_svg("fuel_needle.svg", SizeF(72, 6))),
                        0, 100, 60, 300, false);
     fuel_needle->set_needle_point(PointF(415.73, 382.09) / PointF(5.0, 5.0));
     fuel_needle->set_needle_center(PointF(3, 3));
-    fuel_needle->set_guage(&fuel);
+    fuel_needle->set_gauge(&fuel);
     fuel.add_layer(fuel_needle);
     demo_up_down_animator(fuel_needle, 0, 100, std::chrono::seconds(10));
     grid.add(fuel);
 
-    Guage airspeed;
+    Gauge airspeed;
     center(airspeed);
-    auto airspeed_background = make_shared<GuageLayer>(Image(detail::load_svg("airspeed_background.svg", SizeF(400, 400) / SizeF(2, 2))));
-    airspeed_background->set_guage(&airspeed);
+    auto airspeed_background = make_shared<GaugeLayer>(Image(detail::load_svg("airspeed_background.svg", SizeF(400, 400) / SizeF(2, 2))));
+    airspeed_background->set_gauge(&airspeed);
     airspeed.add_layer(airspeed_background);
     auto airspeed_needle = make_shared<NeedleLayer>(Image(detail::load_svg("airspeed_needle.svg", SizeF(168, 17) / SizeF(2, 2))),
                            0, 180, 270, 222);
     airspeed_needle->set_needle_point(PointF(200, 200) / PointF(2, 2));
     airspeed_needle->set_needle_center(PointF(8, 8.3) / PointF(2, 2));
-    airspeed_needle->set_guage(&airspeed);
+    airspeed_needle->set_gauge(&airspeed);
     airspeed.add_layer(airspeed_needle);
     demo_up_down_animator(airspeed_needle, 0, 180, std::chrono::seconds(7));
     grid.add(airspeed);
 
-    Guage speedometer;
+    Gauge speedometer;
     center(speedometer);
-    auto speedometer_background = make_shared<GuageLayer>(Image(detail::load_svg("speedometer_background.svg", SizeF(913, 908) / SizeF(4.6, 4.6))));
-    speedometer_background->set_guage(&speedometer);
+    auto speedometer_background = make_shared<GaugeLayer>(Image(detail::load_svg("speedometer_background.svg", SizeF(913, 908) / SizeF(4.6, 4.6))));
+    speedometer_background->set_gauge(&speedometer);
     speedometer.add_layer(speedometer_background);
     auto speedometer_needle = make_shared<NeedleLayer>(Image(detail::load_svg("speedometer_needle.svg", SizeF(467, 376) / SizeF(4.6, 4.6))),
                               0, 110, 136.52, 41.80);
     speedometer_needle->set_needle_point(PointF(913, 908) / PointF(4.6, 4.6) / PointF(2, 2));
     speedometer_needle->set_needle_center(PointF(85.88, 185.44) / PointF(4.6, 4.6));
-    speedometer_needle->set_guage(&speedometer);
+    speedometer_needle->set_gauge(&speedometer);
     speedometer.add_layer(speedometer_needle);
     demo_up_down_animator(speedometer_needle, 0, 110, std::chrono::seconds(12));
     grid.add(speedometer);

@@ -75,7 +75,7 @@ endif
 
 if HAVE_LIBRSVG
 bin_PROGRAMS += \
-guage/guage \
+gauge/gauge \
 dash/dash
 endif
 
@@ -258,12 +258,12 @@ dialog_dialog_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 dialog_dialogdir = $(prefix)/share/egt/examples/dialog
 dialog_dialog_LDFLAGS = $(AM_LDFLAGS)
 
-guage_guage_SOURCES = guage/guage.cpp
-guage_guage_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-guage_guage_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-guage_guagedir = $(prefix)/share/egt/examples/guage
-dist_guage_guage_DATA = $(wildcard $(top_srcdir)/examples/guage/*.svg)
-guage_guage_LDFLAGS = $(AM_LDFLAGS)
+gauge_gauge_SOURCES = gauge/gauge.cpp
+gauge_gauge_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+gauge_gauge_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+gauge_gaugedir = $(prefix)/share/egt/examples/gauge
+dist_gauge_gauge_DATA = $(wildcard $(top_srcdir)/examples/gauge/*.svg)
+gauge_gauge_LDFLAGS = $(AM_LDFLAGS)
 
 dash_dash_SOURCES = dash/dash.cpp
 dash_dash_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)

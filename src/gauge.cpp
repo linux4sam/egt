@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/guage.h"
+#include "egt/gauge.h"
 #include <egt/detail/math.h>
 #include <egt/detail/floatingpoint.h>
 
@@ -41,10 +41,10 @@ static void draw_image(Painter& painter,
     cairo_paint(cr);
 }
 
-void GuageLayer::set_visible(bool visible)
+void GaugeLayer::set_visible(bool visible)
 {
     if (detail::change_if_diff<>(m_visible, visible))
-        m_guage->damage();
+        m_gauge->damage();
 }
 
 void NeedleLayer::set_value(float value)
@@ -53,7 +53,7 @@ void NeedleLayer::set_value(float value)
         AlmostEquals(detail::FloatingPoint<float>(m_value)))
     {
         m_value = value;
-        m_guage->damage();
+        m_gauge->damage();
     }
 }
 
@@ -61,13 +61,13 @@ void NeedleLayer::draw(Painter& painter)
 {
     auto angle = detail::normalize_to_angle(m_value, m_min, m_max, m_angle_start, m_angle_stop, m_clockwise);
 
-    draw_image(painter, PointF(m_guage->point().x, m_guage->point().y) + m_point,
+    draw_image(painter, PointF(m_gauge->point().x, m_gauge->point().y) + m_point,
                m_center, m_image, detail::to_radians<double>(0, angle));
 }
 
-void GuageLayer::draw(Painter& painter)
+void GaugeLayer::draw(Painter& painter)
 {
-    painter.draw(m_guage->point());
+    painter.draw(m_gauge->point());
     painter.draw(m_image);
 }
 
