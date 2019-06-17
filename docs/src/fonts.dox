@@ -11,6 +11,14 @@ The interface for working with fonts in EGT is the Font class. This class
 handles properties related to working with fonts, but there are still some other
 libraries in play.
 
+Creating and assigning a Font to a specific Widget involves using the
+Widget::set_font() member function.
+
+@code{.cpp}
+Button btn("Press Me");
+btn.set_font(Font("Serif", 25, Font::weightid::bold, Font::slantid::italic));
+@endcode
+
 @section fonts_fontconfig Fontconfig
 
 <a href="https://www.freedesktop.org/wiki/Software/fontconfig/">Fontconfig</a> is a library for configuring and customizing font access.  This is the library EGT uses to discover fonts installed on the system automatically.

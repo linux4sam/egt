@@ -24,10 +24,14 @@ class Frame;
 class Painter;
 
 /**
- * A Label of text.
+ * A Label that displays text.
  *
  * It handles no events, has a text alignment, but otherwise is pretty
  * basic.
+ *
+ * Supported Features:
+ * - UTF-8 encoding
+ * - Multi-line
  *
  * @image html widget_label1.png
  * @image latex widget_label1.png "widget_label1" width=5cm
@@ -169,7 +173,7 @@ public:
     /**
      * Set a new Image.
      *
-     * @param image The new image to use.
+     * @param[in] image The new image to use.
      */
     virtual void set_image(const Image& image);
 
@@ -248,8 +252,20 @@ protected:
 
     void do_set_image(const Image& image);
 
+    /**
+     * The image.
+     * Allowed to be empty.
+     */
     Image m_image;
+
+    /**
+     * When true, the label text is shown.
+     */
     bool m_show_label{true};
+
+    /**
+     * Alignment of the image relative to the text.
+     */
     alignmask m_image_align{alignmask::left};
 };
 

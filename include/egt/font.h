@@ -41,7 +41,6 @@ public:
         bold = 1,
     };
 
-
     /**
      * Font slants.
      */

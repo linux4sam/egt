@@ -11,7 +11,8 @@ using namespace egt;
 using namespace egt::experimental;
 
 template<class T>
-static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max, std::chrono::seconds length = std::chrono::seconds(10))
+static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
+                                  std::chrono::seconds length = std::chrono::seconds(10))
 {
     auto animationup = std::make_shared<PropertyAnimator>(min, max, length, easing_circular_easein);
     animationup->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
@@ -31,18 +32,22 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "dash");
 
     TopWindow win;
-    win.set_color(Palette::ColorId::bg, Color::CSS("1b1d43"));
+    win.set_color(Palette::ColorId::bg, Color::CSS("#1b1d43"));
 
     auto f = 1.50375;
 
+    // the guage
     Guage guage;
     center(guage);
+
+    // create a background layer
     auto guage_background = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
                             SizeF(1203, 593) / SizeF(f, f),
                             "#background")));
     guage_background->set_guage(&guage);
     guage.add_layer(guage_background);
 
+    // create the right blink layer
     auto right_blink = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
                        SizeF(1203, 593) / SizeF(f, f),
                        "#right_blink")));
@@ -57,6 +62,7 @@ int main(int argc, const char** argv)
     });
     right_timer.start();
 
+    // create the left blink layer
     auto left_blink = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
                       SizeF(1203, 593) / SizeF(f, f),
                       "#left_blink")));
@@ -71,6 +77,7 @@ int main(int argc, const char** argv)
     });
     left_timer.start();
 
+    // create the brights layer
     auto brights = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
                                            SizeF(1203, 593) / SizeF(f, f),
                                            "#brights")));
@@ -85,6 +92,7 @@ int main(int argc, const char** argv)
     });
     brights_timer.start();
 
+    // create the hazards layer
     auto hazards = make_shared<GuageLayer>(Image(detail::load_svg("dash_background.svg",
                                            SizeF(1203, 593) / SizeF(f, f),
                                            "#hazards")));

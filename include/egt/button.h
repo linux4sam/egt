@@ -41,6 +41,18 @@ class Painter;
  * This presents a clickable control that can be used to respond to user pointer
  * events.
  *
+ * Supported Features:
+ * - UTF-8 encoding
+ * - Multi-line
+ *
+ * @code{.cpp}
+ * Button btn("Button");
+ * // handle the clicked event of the button
+ * btn.on_event([](Event&){
+ *     cout << "clicked!" << endl;
+ * }, {eventid::pointer_click});
+ * @endcode
+ *
  * @ingroup controls
  *
  * @image html widget_button.png
@@ -81,7 +93,7 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
-     * Default draw method for the Button.
+     * Default draw method for Button.
      */
     static void default_draw(Button& widget, Painter& painter, const Rect& rect);
 
@@ -131,10 +143,22 @@ private:
 class ImageButton : public Button
 {
 public:
+
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
     explicit ImageButton(const Image& image,
                          const std::string& text = {},
                          const Rect& rect = {}) noexcept;
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
     ImageButton(Frame& parent,
                 const Image& image,
                 const std::string& text = {},
@@ -147,7 +171,7 @@ public:
     /**
      * Set a new Image.
      *
-     * @param image The new image to use.
+     * @param[in] image The new image to use.
      */
     virtual void set_image(const Image& image);
 
@@ -226,8 +250,20 @@ protected:
 
     void do_set_image(const Image& image);
 
+    /**
+     * The image.
+     * Allowed to be empty.
+     */
     Image m_image;
+
+    /**
+     * When true, the label text is shown.
+     */
     bool m_show_label{true};
+
+    /**
+     * Alignment of the image relative to the text.
+     */
     alignmask m_image_align{alignmask::left};
 };
 
