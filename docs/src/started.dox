@@ -105,39 +105,11 @@ on it.
 
 The include file <egt/ui> contains most basic functionality needed.
 
-@code{.cpp}
-#include <egt/ui>
-
-int main(int argc, const char** argv)
-{
-    egt::Application app(argc, argv);
-
-    egt::TopWindow window;
-    egt::Button button(window, "Press Me");
-    button.set_align(egt::alignmask::center);
-    window.show();
-
-    return app.run();
-}
-@endcode
+\snippet "../examples/basic/basic.cpp" Example
 
 If you want to use a UI file instead.
 
-@code{.cpp}
-#include <egt/ui>
-#include <egt/uiloader.h>
-
-int main(int argc, const char** argv)
-{
-    egt::Application app(argc, argv);
-
-    egt::experimental::UiLoader loader;
-    auto window = loader.load("ui.xml");
-    window->show();
-
-    return app.run();
-}
-@endcode
+\snippet "../examples/basicui/basicui.cpp" Example
 
 */
 }}

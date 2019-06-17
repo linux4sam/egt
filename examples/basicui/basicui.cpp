@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+/// @[Example]
 #include <egt/detail/imagecache.h>
 #include <egt/ui>
 #include <egt/uiloader.h>
@@ -17,3 +18,4 @@ int main(int argc, const char** argv)
 
     return app.run();
 }
+/// @[Example]
