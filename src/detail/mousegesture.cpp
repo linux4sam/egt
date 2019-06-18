@@ -60,7 +60,7 @@ Event MouseGesture::handle(Event& event)
             if (!m_dragging)
             {
                 static const auto DRAG_ENABLE_DISTANCE = 10;
-                auto distance = std::abs(m_mouse_start_pos.distance_to<int>(event.pointer().point));
+                auto distance = std::abs(mouse_start().distance_to<int>(event.pointer().point));
                 if (distance >= DRAG_ENABLE_DISTANCE)
                 {
                     m_dragging = true;
