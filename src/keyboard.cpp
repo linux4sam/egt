@@ -149,7 +149,7 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
                     // the modal popup caught the raw_pointer_up event
                     k->set_active(false);
                 }
-            // User may just move his finger so prefer the raw_pointer_up event to the pointer_click one.
+                // User may just move his finger so prefer the raw_pointer_up event to the pointer_click one.
             }, {eventid::raw_pointer_up});
         }
     }
