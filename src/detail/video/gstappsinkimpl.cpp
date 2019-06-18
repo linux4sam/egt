@@ -29,14 +29,6 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
 {
 }
 
-#define APPSINKPIPE  "uridecodebin uri=%s expose-all-streams=false name=video " \
-					 " caps=video/x-raw;audio/x-raw use-buffering=true buffer-size=1048576 " \
-					 " video. ! queue ! videoscale  ! video/x-raw,width=%d,height=%d %s ! " \
-					 " progressreport silent=true do-query=true update-freq=1 format=time name=progress ! " \
-					 " appsink drop=true enable-last-sample=false caps=video/x-raw name=appsink " \
-					 " video. ! queue ! audioconvert ! volume name=volume ! " \
-					 " alsasink async=false enable-last-sample=false sync=true"
-
 void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 {
     ignoreparam(rect);
@@ -114,41 +106,58 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
     return GST_FLOW_ERROR;
 }
 
-/* This function takes a textual representation of a pipeline
- * and create an actual pipeline
- */
-
-bool GstAppSinkImpl::set_media(const std::string& uri)
+std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
 {
-    /* Make sure we don't leave orphan references */
-    destroyPipeline();
-
-    char buffer[2048];
-    std::string vc = "! videoconvert ! video/x-raw,format=";
-#ifdef HAVE_LIBPLANES
+    std::string vc = " ! videoconvert ! video/x-raw,format=";
     if (m_interface.flags().is_set(Widget::flag::plane_window))
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         pixel_format format = detail::egt_format(s->get_plane_format());
         SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
+
         if (format == pixel_format::yuv420)
-            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, "");
+            vc = "";
         else if (format == pixel_format::yuyv)
-            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "YUY2")).c_str());
+            vc = vc + "YUY2";
         else
-            sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "BGRx")).c_str());
+            vc =  vc + "BGRx";
     }
     else
-#endif
     {
-        sprintf(buffer, APPSINKPIPE, (std::string("file://") + uri).c_str(), m_size.w, m_size.h, (std::string(vc + "RGB16")).c_str());
+        vc = vc + "RGB16";
     }
 
-    SPDLOG_DEBUG("VideoWindow: {}", std::string(buffer));
+    std::string a_pipe;
+    if (m_audiodevice)
+        a_pipe = "! queue ! audioconvert ! volume name=volume ! alsasink async=false enable-last-sample=false sync=false";
+    else
+        a_pipe = "! fakesink";
+
+    std::ostringstream pipeline;
+    pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
+             " caps=video/x-raw;audio/x-raw video. ! queue ! videoscale ! video/x-raw,width=" <<
+             std::to_string(m_size.w) << ",height=" << std::to_string(m_size.h) << vc <<
+             " ! progressreport silent=true do-query=true update-freq=1 format=time name=progress ! "
+             " appsink name=appsink video. " << a_pipe ;
+
+    return pipeline.str();
+}
+
+/* This function takes a textual representation of a pipeline
+ * and create an actual pipeline
+ */
+bool GstAppSinkImpl::set_media(const std::string& uri)
+{
+    m_uri = uri;
+    /* Make sure we don't leave orphan references */
+    destroyPipeline();
+
+    std::string buffer = create_pipeline(uri, m_audiodevice);
+    SPDLOG_DEBUG("VideoWindow: {}", buffer);
 
     GError* error = nullptr;
-    m_pipeline = gst_parse_launch(buffer, &error);
+    m_pipeline = gst_parse_launch(buffer.c_str(), &error);
     if (!m_pipeline)
     {
         spdlog::error("VideoWindow: failed to create video pipeline");
@@ -164,11 +173,15 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         return false;
     }
 
-    m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
-    if (!m_volume)
+    if (m_audiodevice)
     {
-        spdlog::error("VideoWindow: failed to get volume element");
-        return false;
+        m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
+        if (!m_volume)
+        {
+            spdlog::error("VideoWindow: failed to get volume element");
+            m_err_message = "failed to get volume element";
+            return false;
+        }
     }
 
     g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
@@ -177,7 +190,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
-    return true;
+    return play();
 }
 
 } // End of detail

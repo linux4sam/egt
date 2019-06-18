@@ -56,13 +56,12 @@ bool GstDecoderImpl::playing() const
                                     GST_CLOCK_TIME_NONE);
         return state == GST_STATE_PLAYING;
     }
-    SPDLOG_DEBUG("VideoWindow: Done");
     return false;
 }
 
 bool GstDecoderImpl::play()
 {
-    if (m_pipeline)
+    if (m_pipeline && !playing())
     {
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE)
@@ -72,7 +71,6 @@ bool GstDecoderImpl::play()
             return false;
         }
     }
-    SPDLOG_DEBUG("VideoWindow: Done");
     return true;
 }
 
@@ -88,7 +86,6 @@ bool GstDecoderImpl::pause()
             return false;
         }
     }
-    SPDLOG_DEBUG("VideoWindow: Done");
     return true;
 }
 
@@ -170,6 +167,7 @@ void GstDecoderImpl::destroyPipeline()
     {
         g_source_remove(m_bus_watchid);
         gst_object_unref(m_bus);
+        m_bus = nullptr;
     }
 }
 
@@ -210,11 +208,23 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         g_error_free(error);
         g_free(debug);
 
-        asio::post(Application::instance().event().io(), [decodeImpl]()
+        if (decodeImpl->m_err_message.find("not open audio device") != std::string::npos)
         {
-            Event event(eventid::event2);
-            decodeImpl->m_interface.invoke_handlers(event);
-        });
+            asio::post(Application::instance().event().io(), [decodeImpl]()
+            {
+                /* restart pipeline with audio disable */
+                decodeImpl->m_audiodevice = false;
+                decodeImpl->m_interface.set_media(decodeImpl->m_uri);
+            });
+        }
+        else
+        {
+            asio::post(Application::instance().event().io(), [decodeImpl]()
+            {
+                Event event(eventid::event2);
+                decodeImpl->m_interface.invoke_handlers(event);
+            });
+        }
         break;
     }
     case GST_MESSAGE_WARNING:

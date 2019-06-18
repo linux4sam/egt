@@ -31,6 +31,8 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) = 0;
 
+    virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) = 0;
+
     virtual bool play();
 
     virtual bool pause();
@@ -64,6 +66,8 @@ protected:
     std::string m_err_message;
     gboolean m_seek_enabled{false};
     gboolean m_seekdone{false};
+    gboolean m_audiodevice{true};
+    std::string m_uri;
     GstBus* m_bus{nullptr};
     guint m_bus_watchid{0};
     GMainLoop* m_gmainLoop{nullptr};
