@@ -43,10 +43,10 @@ public:
             Palette::navy,
             Palette::orange,
             Palette::black,
-            Color::CSS("#F012BE"),
-            Color::CSS("#7FDBFF"),
-            Color::CSS("#01FF70"),
-            Color::CSS("#AA0070"),
+            Color::css("#F012BE"),
+            Color::css("#7FDBFF"),
+            Color::css("#01FF70"),
+            Color::css("#AA0070"),
         };
 
         for (auto& c : colors)

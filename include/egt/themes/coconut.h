@@ -42,17 +42,17 @@ protected:
         // colors light to dark
         std::vector<Color> colors =
         {
-            Color::CSS("#fefefd"),
-            Color::CSS("#fcfbfa"),
-            Color::CSS("#f9f8f5"),
-            Color::CSS("#f6f4ef"),
-            Color::CSS("#f3f1ea"),
-            Color::CSS("#f0ede5"),
-            Color::CSS("#dfd9c7"),
-            Color::CSS("#cec4aa"),
-            Color::CSS("#bdb08c"),
-            Color::CSS("#ac9b6e"),
-            Color::CSS("#958456"),
+            Color::css("#fefefd"),
+            Color::css("#fcfbfa"),
+            Color::css("#f9f8f5"),
+            Color::css("#f6f4ef"),
+            Color::css("#f3f1ea"),
+            Color::css("#f0ede5"),
+            Color::css("#dfd9c7"),
+            Color::css("#cec4aa"),
+            Color::css("#bdb08c"),
+            Color::css("#ac9b6e"),
+            Color::css("#958456"),
         };
 
         m_palette->set(Palette::ColorId::bg, Palette::GroupId::normal, colors[0]);

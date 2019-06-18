@@ -24,7 +24,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    const Color FUCHSIA(Color::CSS("#F012BE"));
+    const Color FUCHSIA(Color::css("#F012BE"));
 
     VerticalBoxSizer sizer;
 

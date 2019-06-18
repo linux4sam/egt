@@ -44,7 +44,7 @@ protected:
         m_palette->set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
         m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::normal, Palette::hotpink);
         m_palette->set(Palette::ColorId::border, Palette::GroupId::normal, Color(0xc0c5c1ff));
-        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::normal, pattern(0xff9b29ff));
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::normal, pattern(Color(0xff9b29ff)));
         m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::normal, Color(0xff9b29ff));
         m_palette->set(Palette::ColorId::button_text, Palette::GroupId::normal, Palette::black);
         m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::normal, Palette::black);
@@ -54,7 +54,7 @@ protected:
         m_palette->set(Palette::ColorId::text, Palette::GroupId::disabled, Palette::gray);
         m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::disabled, Palette::hotpink);
         m_palette->set(Palette::ColorId::border, Palette::GroupId::disabled, Palette::gray);
-        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::disabled, pattern(0xdcdcdcff));
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::disabled, pattern(Color(0xdcdcdcff)));
         m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::disabled, Palette::gray);
         m_palette->set(Palette::ColorId::button_text, Palette::GroupId::disabled, Palette::gray);
         m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::disabled, Palette::black);
@@ -64,7 +64,7 @@ protected:
         m_palette->set(Palette::ColorId::text, Palette::GroupId::active, Palette::white);
         m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::active, Palette::hotpink);
         m_palette->set(Palette::ColorId::border, Palette::GroupId::active, Color(0xc088c1ff));
-        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::active, pattern(0xff8829ff));
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::active, pattern(Color(0xff8829ff)));
         m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::active, Color(0xff9b29ff));
         m_palette->set(Palette::ColorId::button_text, Palette::GroupId::active, Palette::black);
         m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::active, Color(0xff9b29ff));
