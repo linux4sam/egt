@@ -195,9 +195,9 @@ uint32_t XkbInputKeyboard::on_key(uint32_t key, eventid event)
 {
     uint32_t utf32 = 0;;
     xkb_keycode_t keycode = key;
-    xkb_keysym_t keysym = xkb_state_key_get_one_sym(m_state.get(), keycode);
 
 #ifndef NDEBUG
+    xkb_keysym_t keysym = xkb_state_key_get_one_sym(m_state.get(), keycode);
     char keysym_name[64];
     xkb_keysym_get_name(keysym, keysym_name, sizeof(keysym_name));
     SPDLOG_TRACE("keysym name {}", keysym_name);
