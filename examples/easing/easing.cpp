@@ -72,7 +72,7 @@ public:
           m_delay(std::chrono::seconds(1)),
           m_board()
     {
-        auto imgicon = make_shared<ImageLabel>(Image("@chart_curve.png"));
+        auto imgicon = make_shared<ImageLabel>(Image("@cursor_hand.png"));
         imgicon->set_margin(5);
         imgicon->resize(Size(SideBoard::HANDLE_WIDTH, SideBoard::HANDLE_WIDTH));
         imgicon->set_align(alignmask::top | alignmask::right);
