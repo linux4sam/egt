@@ -85,8 +85,7 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
     std::string buffer = create_pipeline(uri, m_audiodevice);
     SPDLOG_DEBUG("VideoWindow: {}", buffer);
 
-    GError* error = NULL;
-    m_pipeline = gst_parse_launch(buffer.c_str(), &error);
+    m_pipeline = gst_parse_launch(buffer.c_str(), nullptr);
     if (!m_pipeline)
     {
         SPDLOG_DEBUG("VideoWindow: gst_parse_launch failed ");

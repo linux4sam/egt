@@ -52,7 +52,7 @@ bool GstDecoderImpl::playing() const
 
     if (m_pipeline)
     {
-        (void)gst_element_get_state(m_pipeline, &state, NULL,
+        (void)gst_element_get_state(m_pipeline, &state, nullptr,
                                     GST_CLOCK_TIME_NONE);
         return state == GST_STATE_PLAYING;
     }
@@ -95,7 +95,7 @@ double GstDecoderImpl::get_volume() const
         return 0;
 
     gdouble volume = 0;
-    g_object_get(m_volume, "volume", &volume, NULL);
+    g_object_get(m_volume, "volume", &volume, nullptr);
     return volume;
 }
 
@@ -110,7 +110,7 @@ bool GstDecoderImpl::set_volume(double volume)
     else if (volume > 10)
         volume = 10;
 
-    g_object_set(m_volume, "volume", volume, NULL);
+    g_object_set(m_volume, "volume", volume, nullptr);
     return true;
 }
 
@@ -324,7 +324,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
                 GstQuery* query = gst_query_new_seeking(GST_FORMAT_TIME);
                 if (gst_element_query(decodeImpl->m_pipeline, query))
                 {
-                    gst_query_parse_seeking(query, NULL, &decodeImpl->m_seek_enabled, &decodeImpl->m_start, &decodeImpl->m_duration);
+                    gst_query_parse_seeking(query, nullptr, &decodeImpl->m_seek_enabled, &decodeImpl->m_start, &decodeImpl->m_duration);
                 }
                 else
                 {
