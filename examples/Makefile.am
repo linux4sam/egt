@@ -40,16 +40,12 @@ drag/drag \
 easing/easing \
 floating/floating \
 frames/frames \
-icon/icon \
-infotain/infotain \
 keyboard/keyboard \
-launcher/launcher \
 layout/layout \
 sizers/sizers \
 space/space \
 sprite/sprite \
 squares/squares \
-thermostat/thermostat \
 water/water \
 whiteboard/whiteboard \
 widgets/widgets
@@ -129,16 +125,6 @@ dist_gallery_gallery_DATA = $(wildcard $(top_srcdir)/examples/gallery/*.png) \
 	$(wildcard $(top_srcdir)/examples/gallery/movies/*.jpg)
 gallery_gallery_LDFLAGS = $(AM_LDFLAGS)
 
-launcher_launcher_SOURCES = launcher/launcher.cpp
-launcher_launcher_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-launcher_launcher_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-launcher_launcherdir = $(prefix)/share/egt/examples/launcher
-dist_launcher_launcher_DATA = $(wildcard $(top_srcdir)/examples/launcher/*.png) \
-	$(top_srcdir)/examples/launcher/menu.xml \
-	$(top_srcdir)/examples/launcher/background.jpg
-launcher_launcher_LDFLAGS = $(AM_LDFLAGS)
-launcher_launcher_SCRIPTS = $(wildcard $(top_srcdir)/examples/launcher/*.sh)
-
 space_space_SOURCES = space/space.cpp
 space_space_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 space_space_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
@@ -159,13 +145,6 @@ water_water_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 water_waterdir = $(prefix)/share/egt/examples/water
 dist_water_water_DATA = $(wildcard $(top_srcdir)/examples/water/*.png)
 water_water_LDFLAGS = $(AM_LDFLAGS)
-
-infotain_infotain_SOURCES = infotain/infotain.cpp
-infotain_infotain_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-infotain_infotain_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-infotain_infotaindir = $(prefix)/share/egt/examples/infotain
-dist_infotain_infotain_DATA = $(wildcard $(top_srcdir)/examples/infotain/res/*.png)
-infotain_infotain_LDFLAGS = $(AM_LDFLAGS)
 
 widgets_widgets_SOURCES = widgets/widgets.cpp
 widgets_widgets_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
@@ -193,20 +172,6 @@ newsfeed_newsfeed_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 newsfeed_newsfeeddir = $(prefix)/share/egt/examples/newsfeed
 dist_newsfeed_newsfeed_DATA = $(wildcard $(top_srcdir)/examples/newsfeed/*.xml)
 newsfeed_newsfeed_LDFLAGS = $(AM_LDFLAGS)
-
-thermostat_thermostat_SOURCES = thermostat/thermostat.cpp
-thermostat_thermostat_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-thermostat_thermostat_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-thermostat_thermostatdir = $(prefix)/share/egt/examples/thermostat
-dist_thermostat_thermostat_DATA = $(wildcard $(top_srcdir)/examples/thermostat/*.png)
-thermostat_thermostat_LDFLAGS = $(AM_LDFLAGS)
-
-icon_icon_SOURCES = icon/icon.cpp
-icon_icon_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-icon_icon_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-icon_icondir = $(prefix)/share/egt/examples/icon
-dist_icon_icon_DATA = $(wildcard $(top_srcdir)/examples/icon/*.png)
-icon_icon_LDFLAGS = $(AM_LDFLAGS)
 
 drag_drag_SOURCES = drag/drag.cpp
 drag_drag_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
