@@ -7,9 +7,11 @@
 #include "egt/audio.h"
 #include "egt/utils.h"
 #include "egt/video.h"
+#include <exception>
 #include <gst/gst.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <sstream>
 #include <thread>
 
 using namespace std;
@@ -155,7 +157,24 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 AudioPlayer::AudioPlayer()
     : m_impl(new detail::AudioPlayerImpl(*this))
 {
-    gst_init(NULL, NULL);
+    GError* err = nullptr;
+    if (!gst_init_check(nullptr, nullptr, &err))
+    {
+        std::ostringstream ss;
+        ss << "failed to initialize gstreamer: ";
+        if (err && err->message)
+        {
+            ss << err->message;
+            g_error_free(err);
+        }
+        else
+        {
+            ss << "unknown error";
+        }
+
+        throw std::runtime_error(ss.str());
+    }
+
     m_impl->m_gmainLoop = g_main_loop_new(NULL, FALSE);
     m_impl->m_gmainThread = std::thread(g_main_loop_run, m_impl->m_gmainLoop);
 }

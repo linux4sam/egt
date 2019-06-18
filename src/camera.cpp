@@ -12,10 +12,12 @@
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
+#include <exception>
 #include <fstream>
 #include <gst/gst.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <sstream>
 #include <string>
 #include <thread>
 
@@ -31,9 +33,6 @@ namespace detail
 class CameraImpl
 {
 public:
-    explicit CameraImpl(CameraWindow& interface, const Size& size,
-                        const std::string& device, bool useKmssink);
-
     explicit CameraImpl(CameraWindow& interface, const Rect& rect,
                         const std::string& device, bool useKmssink);
 
@@ -64,18 +63,6 @@ protected:
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 };
 
-CameraImpl::CameraImpl(CameraWindow& interface, const Size& size,
-                       const std::string& device, bool useKmssink)
-    : m_interface(interface),
-      m_devnode(device),
-      m_rect(Rect(size)),
-      m_usekmssink(useKmssink)
-{
-    gst_init(NULL, NULL);
-    m_gmainLoop = g_main_loop_new(NULL, FALSE);
-    m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
-}
-
 CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
                        const std::string& device, bool useKmssink)
     : m_interface(interface),
@@ -83,7 +70,24 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
       m_rect(rect),
       m_usekmssink(useKmssink)
 {
-    gst_init(NULL, NULL);
+    GError* err = nullptr;
+    if (!gst_init_check(nullptr, nullptr, &err))
+    {
+        std::ostringstream ss;
+        ss << "failed to initialize gstreamer: ";
+        if (err && err->message)
+        {
+            ss << err->message;
+            g_error_free(err);
+        }
+        else
+        {
+            ss << "unknown error";
+        }
+
+        throw std::runtime_error(ss.str());
+    }
+
     m_gmainLoop = g_main_loop_new(NULL, FALSE);
     m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
 }
