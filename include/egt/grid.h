@@ -38,6 +38,16 @@ class StaticGrid : public Frame
 {
 public:
 
+    enum class flag
+    {
+        /**
+         * When set, draw a border using Palette::ColorId::border.
+         */
+        show_border,
+    };
+
+    using flags_type = Flags<flag>;
+
     /**
      * @param[in] rect Rectangle for the widget.
      * @param[in] size Rows and columns.
@@ -168,6 +178,16 @@ public:
         return b;
     }
 
+    /**
+     * Get a const ref of the flags.
+     */
+    inline const flags_type& grid_flags() const { return m_grid_flags; }
+
+    /**
+     * Get a modifiable ref of the flags.
+     */
+    inline flags_type& grid_flags() { return m_grid_flags; }
+
     virtual ~StaticGrid() noexcept = default;
 
 protected:
@@ -178,6 +198,11 @@ protected:
     int m_last_add_column{0};
     int m_last_add_row{0};
     bool m_column_priority{false};
+
+    /**
+     * Grid flags.
+     */
+    flags_type m_grid_flags;
 };
 
 /**

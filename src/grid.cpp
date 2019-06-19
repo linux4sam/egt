@@ -88,29 +88,26 @@ static Rect cell_rect(int columns, int rows, default_dim_type width, default_dim
 
 void StaticGrid::draw(Painter& painter, const Rect& rect)
 {
-    if (false && border() > 0)
+    if (grid_flags().is_set(flag::show_border) && border() > 0)
     {
-        if (color(Palette::ColorId::border).color() != Palette::transparent)
+        auto b = content_area();
+
+        painter.set(color(Palette::ColorId::border).color());
+        painter.set_line_width(border());
+
+        auto columns = m_cells.size();
+        for (size_t column = 0; column < columns; column++)
         {
-            auto b = content_area();
-
-            painter.set(color(Palette::ColorId::border).color());
-            painter.set_line_width(border());
-
-            auto columns = m_cells.size();
-            for (size_t column = 0; column < columns; column++)
+            auto rows = m_cells[column].size();
+            for (size_t row = 0; row < rows; row++)
             {
-                auto rows = m_cells[column].size();
-                for (size_t row = 0; row < rows; row++)
-                {
-                    Rect r = cell_rect(columns, rows, b.w, b.h, column, row, border());
-                    r += b.point();
-                    painter.draw(r);
+                Rect r = cell_rect(columns, rows, b.w, b.h, column, row, border());
+                r += b.point();
+                painter.draw(r);
                 }
-            }
-
-            painter.stroke();
         }
+
+        painter.stroke();
     }
 
     Frame::draw(painter, rect);
