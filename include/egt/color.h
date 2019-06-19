@@ -12,6 +12,7 @@
  */
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdint>
 #include <egt/detail/math.h>
@@ -36,6 +37,8 @@ class Color
 {
 public:
 
+    constexpr Color() = default;
+
     /**
      * Create a color with the specified RGBA value.
      *
@@ -46,21 +49,31 @@ public:
      * @param[in] c RGBA value.
      */
     // cppcheck-suppress noExplicitConstructor
-    constexpr Color(uint32_t c = 0) noexcept
-        : m_r((c >> 24) & 0xff),
-          m_g((c >> 16) & 0xff),
-          m_b((c >> 8) & 0xff),
-          m_a(c & 0xff)
+    constexpr Color(uint32_t c) noexcept
+        : m_rgba
+    {
+        {
+            (c >> 24) & 0xff,
+            (c >> 16) & 0xff,
+            (c >> 8) & 0xff,
+            c & 0xff
+        }
+    }
     {}
 
     /**
      * Create a color from an existing color, but with the specified alpha value.
      */
     constexpr Color(const Color& color, uint32_t alpha) noexcept
-        : m_r(color.m_r),
-          m_g(color.m_g),
-          m_b(color.m_b),
-          m_a(alpha)
+        : m_rgba
+    {
+        {
+            color.m_rgba[0],
+                         color.m_rgba[1],
+                         color.m_rgba[2],
+                         alpha
+        }
+    }
     {}
 
     /**
@@ -72,22 +85,27 @@ public:
      * @param[in] a Alpha component in range 0 - 255.
      */
     constexpr explicit Color(uint32_t r, uint32_t g, uint32_t b, uint32_t a = 255) noexcept
-        : m_r(r & 0xff),
-          m_g(g & 0xff),
-          m_b(b & 0xff),
-          m_a(a & 0xff)
+        : m_rgba
+    {
+        {
+            r & 0xff,
+            g & 0xff,
+            b & 0xff,
+            a & 0xff
+        }
+    }
     {}
 
     /**
-     * Create a color from only R,G, and B values.
+     * Create a color from only a RGB value with optional alpha.
      *
      * @code{.cpp}
      * auto a = Color::rgb(0xRRGGBB);
      * @endcode
      */
-    constexpr static inline Color rgb(uint32_t c) noexcept
+    constexpr static inline Color rgb(uint32_t c, uint32_t alpha = 0xff) noexcept
     {
-        return {c << 8 | 0xff};
+        return {c << 8 | alpha};
     }
 
     /**
@@ -148,34 +166,34 @@ public:
 
     //@{
     /** RGBA component value as a float from 0.0 to 1.0. */
-    inline float redf() const { return m_r / 255.; }
-    inline float greenf() const { return m_g / 255.; }
-    inline float bluef() const { return m_b / 255.; }
-    inline float alphaf() const { return m_a / 255.; }
+    inline float redf() const { return m_rgba[0] / 255.; }
+    inline float greenf() const { return m_rgba[1] / 255.; }
+    inline float bluef() const { return m_rgba[2] / 255.; }
+    inline float alphaf() const { return m_rgba[3] / 255.; }
     //@}
 
     //@{
     /** Set RGBA component value as a float from 0.0 to 1.0. */
-    inline void redf(float v) { m_r = v * 255.; }
-    inline void greenf(float v) { m_g = v * 255.; }
-    inline void bluef(float v) { m_b = v * 255.; }
-    inline void alphaf(float v) { m_a  = v * 255.; }
+    inline void redf(float v) { m_rgba[0] = v * 255.; }
+    inline void greenf(float v) { m_rgba[1] = v * 255.; }
+    inline void bluef(float v) { m_rgba[2] = v * 255.; }
+    inline void alphaf(float v) { m_rgba[3]  = v * 255.; }
     //@}
 
     //@{
     /** RGBA component value as value from 0 to 255. */
-    inline uint32_t red() const { return m_r; }
-    inline uint32_t green() const { return m_g; }
-    inline uint32_t blue() const { return m_b; }
-    inline uint32_t alpha() const { return m_a; }
+    inline uint32_t red() const { return m_rgba[0]; }
+    inline uint32_t green() const { return m_rgba[1]; }
+    inline uint32_t blue() const { return m_rgba[2]; }
+    inline uint32_t alpha() const { return m_rgba[3]; }
     //@}
 
     //@{
     /** Set RGBA component value individually from 0 to 255. */
-    inline void red(uint32_t r) { m_r = r & 0xff; }
-    inline void green(uint32_t g) { m_g = g & 0xff; }
-    inline void blue(uint32_t b) { m_b = b & 0xff; }
-    inline void alpha(uint32_t a) { m_a = a & 0xff; }
+    inline void red(uint32_t r) { m_rgba[0] = r & 0xff; }
+    inline void green(uint32_t g) { m_rgba[1] = g & 0xff; }
+    inline void blue(uint32_t b) { m_rgba[2] = b & 0xff; }
+    inline void alpha(uint32_t a) { m_rgba[3] = a & 0xff; }
     //@}
 
     /**
@@ -202,9 +220,9 @@ public:
      */
     inline Color tint(float factor) const
     {
-        return Color(red() + ((255. - red()) * factor),
-                     green() + ((255. - green()) * factor),
-                     blue() + ((255. - blue()) * factor),
+        return Color(red() + ((255 - red()) * factor),
+                     green() + ((255 - green()) * factor),
+                     blue() + ((255 - blue()) * factor),
                      alpha());
     }
 
@@ -213,10 +231,10 @@ public:
      */
     inline uint32_t pixel_argb() const
     {
-        return (m_a & 0xff) << 24 |
-               (m_r & 0xff) << 16 |
-               (m_g & 0xff) << 8 |
-               (m_b & 0xff);
+        return (m_rgba[3] & 0xff) << 24 |
+               (m_rgba[0] & 0xff) << 16 |
+               (m_rgba[1] & 0xff) << 8 |
+               (m_rgba[2] & 0xff);
     }
 
     /**
@@ -224,41 +242,40 @@ public:
      */
     inline uint32_t prepixel_argb() const
     {
-        return ((m_a & 0xff) << 24) |
-               (((m_r * m_a / 255) & 0xff) << 16) |
-               (((m_g * m_a / 255) & 0xff) << 8) |
-               ((m_b * m_a / 255) & 0xff);
+        return ((m_rgba[3] & 0xff) << 24) |
+               (((m_rgba[0] * m_rgba[3] / 255) & 0xff) << 16) |
+               (((m_rgba[1] * m_rgba[3] / 255) & 0xff) << 8) |
+               ((m_rgba[2] * m_rgba[3] / 255) & 0xff);
     }
 
     Color& operator=(uint32_t c)
     {
-        m_r = (c >> 24) & 0xff;
-        m_g = (c >> 16) & 0xff;
-        m_b = (c >> 8) & 0xff;
-        m_a = c & 0xff;
+        m_rgba[0] = (c >> 24) & 0xff;
+        m_rgba[1] = (c >> 16) & 0xff;
+        m_rgba[2] = (c >> 8) & 0xff;
+        m_rgba[3] = c & 0xff;
 
         return *this;
     }
 
 protected:
-    /** Red component value. */
-    uint32_t m_r{0};
-    /** Green component value. */
-    uint32_t m_g{0};
-    /** Blue component value. */
-    uint32_t m_b{0};
-    /** Alpha component value. */
-    uint32_t m_a{0};
+
+    /**
+     * RGBA value.
+     *
+     * red[0], green[1], blue[2], alpha[3]
+     */
+    std::array<uint32_t, 4> m_rgba{};
 
     friend bool operator==(const Color& lhs, const Color& rhs);
 };
 
 inline bool operator==(const Color& lhs, const Color& rhs)
 {
-    return lhs.m_r == rhs.m_r &&
-           lhs.m_g == rhs.m_g &&
-           lhs.m_b == rhs.m_b &&
-           lhs.m_a == rhs.m_a;
+    return lhs.m_rgba[0] == rhs.m_rgba[0] &&
+           lhs.m_rgba[1] == rhs.m_rgba[1] &&
+           lhs.m_rgba[2] == rhs.m_rgba[2] &&
+           lhs.m_rgba[3] == rhs.m_rgba[3];
 }
 
 inline bool operator!=(const Color& lhs, const Color& rhs)
