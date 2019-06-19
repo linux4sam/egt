@@ -204,8 +204,8 @@ public:
      * There is no automatic undo for this operation.  Each call to this function
      * uses the current size of the Widget.
      *
-     * @param[in] hratio Horizontal ratio of w().
-     * @param[in] vratio Vertical ratio of h().
+     * @param[in] hratio Horizontal ratio of width().
+     * @param[in] vratio Vertical ratio of height().
      *
      * @see Widget::resize()
      */
@@ -236,14 +236,14 @@ public:
      *
      * @param[in] w The new width of the Widget.
      */
-    inline void set_width(default_dim_type w) { resize(Size(w, h())); }
+    inline void set_width(default_dim_type w) { resize(Size(w, height())); }
 
     /**
      * Change the height.
      *
      * @param[in] h The new height of the Widget.
      */
-    inline void set_height(default_dim_type h) { resize(Size(w(), h)); }
+    inline void set_height(default_dim_type h) { resize(Size(width(), h)); }
 
     /**
      * Move the Widget to a new position.
@@ -407,8 +407,8 @@ public:
      * @{
      * Bounding box dimensions.
      */
-    inline default_dim_type w() const { return m_box.w; }
-    inline default_dim_type h() const { return m_box.h; }
+    inline default_dim_type width() const { return m_box.width; }
+    inline default_dim_type height() const { return m_box.height; }
     inline default_dim_type x() const { return m_box.x; }
     inline default_dim_type y() const { return m_box.y; }
     /** @} */

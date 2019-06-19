@@ -11,14 +11,14 @@ inline namespace v1
 {
 
 Canvas::Canvas(const Size& size, pixel_format format) noexcept
-    : m_surface(cairo_image_surface_create(detail::cairo_format(format), size.w, size.h),
+    : m_surface(cairo_image_surface_create(detail::cairo_format(format), size.width, size.height),
                 cairo_surface_destroy),
       m_cr(cairo_create(m_surface.get()), cairo_destroy)
 {
 }
 
 Canvas::Canvas(const SizeF& size, pixel_format format) noexcept
-    : m_surface(cairo_image_surface_create(detail::cairo_format(format), size.w, size.h),
+    : m_surface(cairo_image_surface_create(detail::cairo_format(format), size.width, size.height),
                 cairo_surface_destroy),
       m_cr(cairo_create(m_surface.get()), cairo_destroy)
 {

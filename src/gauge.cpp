@@ -34,7 +34,7 @@ static void draw_image(Painter& painter,
      * probably an expensive operation, considering the rotate.
      */
     cairo_rectangle(cr, -needle_center.x, -needle_center.y + 1,
-                    image.size().w, image.size().h - 2);
+                    image.size().width, image.size().height - 2);
     cairo_clip(cr);
 
     cairo_set_source_surface(cr, image.surface().get(), -needle_center.x, -needle_center.y);

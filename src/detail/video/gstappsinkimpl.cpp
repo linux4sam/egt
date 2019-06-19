@@ -48,14 +48,14 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
                 Rect box = m_interface.box();
                 cairo_surface_t* surface = cairo_image_surface_create_for_data(map.data,
                                            CAIRO_FORMAT_RGB16_565,
-                                           box.w,
-                                           box.h,
-                                           cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, box.w));
+                                           box.width,
+                                           box.height,
+                                           cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, box.width));
 
                 if (cairo_surface_status(surface) == CAIRO_STATUS_SUCCESS)
                 {
                     cairo_set_source_surface(cr.get(), surface, box.x, box.y);
-                    cairo_rectangle(cr.get(), box.x, box.y, box.w, box.h);
+                    cairo_rectangle(cr.get(), box.x, box.y, box.width, box.height);
                     cairo_fill_preserve(cr.get());
                     cairo_surface_destroy(surface);
                 }
@@ -137,7 +137,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     std::ostringstream pipeline;
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
              " caps=video/x-raw;audio/x-raw video. ! queue ! videoscale ! video/x-raw,width=" <<
-             std::to_string(m_size.w) << ",height=" << std::to_string(m_size.h) << vc <<
+             std::to_string(m_size.width) << ",height=" << std::to_string(m_size.height) << vc <<
              " ! progressreport silent=true do-query=true update-freq=1 format=time name=progress ! "
              " appsink name=appsink video. " << a_pipe ;
 

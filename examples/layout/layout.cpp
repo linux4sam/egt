@@ -365,10 +365,10 @@ public:
                                               std::bind(&Widget::y, widget)));
         m_form->add_option("Width",
                            create_option<int>(std::bind(&Widget::set_width, widget, std::placeholders::_1),
-                                              std::bind(&Widget::w, widget)));
+                                              std::bind(&Widget::width, widget)));
         m_form->add_option("Height",
                            create_option<int>(std::bind(&Widget::set_height, widget, std::placeholders::_1),
-                                              std::bind(&Widget::h, widget)));
+                                              std::bind(&Widget::height, widget)));
         m_form->add_option("Border",
                            create_option<int>(std::bind(&Widget::set_border, widget, std::placeholders::_1),
                                               std::bind(&Widget::border, widget)));

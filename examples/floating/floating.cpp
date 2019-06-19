@@ -79,13 +79,13 @@ public:
         auto p = Point(m_widget->x() + m_mx,
                        m_widget->y() + m_my);
 
-        if (m_widget->box().right() >= main_window()->size().w)
+        if (m_widget->box().right() >= main_window()->size().width)
             m_mx = std::fabs(m_mx) * -1;
 
         if (p.x < 0)
             m_mx = std::fabs(m_mx);
 
-        if (m_widget->box().bottom() >= main_window()->size().h)
+        if (m_widget->box().bottom() >= main_window()->size().height)
             m_my = std::fabs(m_my) * -1;
 
         if (p.y < 0)
@@ -147,7 +147,7 @@ int main(int argc, const char** argv)
         stringstream os;
         os << "image" << image_index++ << ".png";
         auto image = make_shared<ImageLabel>(Image(os.str()));
-        auto plane = make_shared<Window>(Size(image->w(), image->h()));
+        auto plane = make_shared<Window>(Size(image->width(), image->height()));
         plane->set_color(Palette::ColorId::bg, Palette::transparent);
         plane->set_boxtype(Theme::boxtype::none);
         plane->add(image);

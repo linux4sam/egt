@@ -43,9 +43,9 @@ int main(int argc, const char** argv)
 
     window.add(vsizer);
 
-    int minx = 0 - vsizer.w();
-    int maxx = window.w();
-    int half = (window.w() - vsizer.w()) / 2;
+    int minx = 0 - vsizer.width();
+    int maxx = window.width();
+    int half = (window.width() - vsizer.width()) / 2;
 
     auto in = new PropertyAnimator(maxx, half, std::chrono::seconds(3), easing_exponential_easeout);
     in->on_change(std::bind(&Label::set_x, std::ref(vsizer), std::placeholders::_1));

@@ -15,7 +15,7 @@ inline namespace v1
 Dialog::Dialog(const Rect& rect)
     : Popup(rect.size(), rect.point()),
       m_vsizer(std::make_shared<BoxSizer>(orientation::vertical)),
-      m_grid(std::make_shared<StaticGrid>(Rect(0, 0, rect.w, (rect.h * 0.15)), Tuple(2, 1), 5)),
+      m_grid(std::make_shared<StaticGrid>(Rect(0, 0, rect.width, (rect.height * 0.15)), Tuple(2, 1), 5)),
       m_button1(std::make_shared<Button>("OK")),
       m_button2(std::make_shared<Button>("Cancel"))
 {
@@ -57,7 +57,7 @@ void Dialog::set_title(const std::string& title)
 {
     if (!m_title)
     {
-        m_title = std::make_shared<ImageLabel>(Image("@folder.png"), title, Rect(0, 0, w(), (h() * 0.10)));
+        m_title = std::make_shared<ImageLabel>(Image("@folder.png"), title, Rect(0, 0, width(), (height() * 0.10)));
         m_title->set_align(alignmask::top | alignmask::left);
         m_title->set_text_align(alignmask::left | alignmask::center);
         m_vsizer->add(expand_horizontal(m_title));
@@ -72,7 +72,7 @@ void Dialog::set_title(const Image& icon, const std::string& title)
 {
     if (!m_title)
     {
-        m_title = std::make_shared<ImageLabel>(icon, title, Rect(0, 0, w(), (h() * 0.10)));
+        m_title = std::make_shared<ImageLabel>(icon, title, Rect(0, 0, width(), (height() * 0.10)));
         m_title->set_align(alignmask::top | alignmask::left);
         m_title->set_text_align(alignmask::left | alignmask::center);
         m_vsizer->add(expand_horizontal(m_title));

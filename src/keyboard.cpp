@@ -72,8 +72,8 @@ Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys,
 
         for (auto& key : row)
         {
-            key->m_button->resize(Size(key_size.w * key->length() + 2 * spacing,
-                                     key_size.h + 2 * spacing));
+            key->m_button->resize(Size(key_size.width * key->length() + 2 * spacing,
+                                       key_size.height + 2 * spacing));
             key->m_button->set_margin(spacing / 2);
 
             hsizer->add(key->m_button);
@@ -163,10 +163,10 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
         auto display_origin = k->m_button->display_origin();
         auto main_window_origin = main_window()->display_to_local(display_origin);
         // Popup on top of the key.
-        main_window_origin.y -= m_multichoice_popup.size().h;
+        main_window_origin.y -= m_multichoice_popup.size().height;
         // Popup aligned with key center.
-        main_window_origin.x -= m_multichoice_popup.size().w / 2;
-        main_window_origin.x += k->m_button->size().w / 2;
+        main_window_origin.x -= m_multichoice_popup.size().width / 2;
+        main_window_origin.x += k->m_button->size().width / 2;
 
         m_multichoice_popup.move(main_window_origin);
         m_multichoice_popup.show_modal();

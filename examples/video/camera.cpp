@@ -23,7 +23,7 @@ public:
     MyCameraWindow(const Size& size)
         : T(size)
     {
-        m_fscale = (double)main_screen()->size().w / (double)T::w();
+        m_fscale = (double)main_screen()->size().width / (double)T::width();
         if (m_fscale <= (float)0.0)
             m_fscale = 1.0;
 
@@ -85,7 +85,7 @@ int main(int argc, const char** argv)
     window->show();
     win.show();
 
-    Label label("Error: ", Rect(Point(0, 0), Size(win.w() * 0.80, win.h() * 0.10)));
+    Label label("Error: ", Rect(Point(0, 0), Size(win.width() * 0.80, win.height() * 0.10)));
     label.set_color(Palette::ColorId::label_text, Palette::white);
     label.set_color(Palette::ColorId::bg, Palette::transparent);
     label.set_align(alignmask::top | alignmask::center);
@@ -119,7 +119,7 @@ int main(int argc, const char** argv)
     });
 
     shared_ptr<Window> ctrlwindow;
-    ctrlwindow = make_shared< Window>(Size(win.w() * 0.20, win.h() * 0.10));
+    ctrlwindow = make_shared< Window>(Size(win.width() * 0.20, win.height() * 0.10));
     ctrlwindow->set_align(alignmask::top | alignmask::right);
     win.add(ctrlwindow);
     ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent); // Color(0x80808055));

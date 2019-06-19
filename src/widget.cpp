@@ -79,8 +79,8 @@ void Widget::move_to_center(const Point& point)
 {
     if (center() != point)
     {
-        Point pos(point.x - w() / 2,
-                  point.y - h() / 2);
+        Point pos(point.x - width() / 2,
+                  point.y - height() / 2);
 
         move(pos);
     }
@@ -99,8 +99,8 @@ void Widget::resize(const Size& s)
 
 void Widget::resize_by_ratio(int hratio, int vratio)
 {
-    Size size(static_cast<float>(w()) * (static_cast<float>(hratio) / 100.),
-              static_cast<float>(h()) * (static_cast<float>(vratio) / 100.));
+    Size size(static_cast<float>(width()) * (static_cast<float>(hratio) / 100.),
+              static_cast<float>(height()) * (static_cast<float>(vratio) / 100.));
     resize(size);
 }
 
@@ -355,7 +355,7 @@ void Widget::paint_to_file(const std::string& filename)
 
     auto surface = shared_cairo_surface_t(
                        cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               w(), h()),
+                               width(), height()),
                        cairo_surface_destroy);
 
     auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);

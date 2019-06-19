@@ -152,7 +152,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     cairo_set_source_surface(painter.context().get(), m_canvas->surface().get(),
                              m_offset.x, m_offset.y);
     cairo_rectangle(painter.context().get(),
-                    mrect.point().x, mrect.point().y, mrect.w, mrect.h);
+                    mrect.point().x, mrect.point().y, mrect.width, mrect.height);
     painter.fill();
 
     if (hscrollable())
@@ -188,11 +188,11 @@ void ScrolledView::resize_slider()
     if (hscrollable())
     {
         auto b = box();
-        b.y = b.y + b.h - SLIDER_DIM;
-        b.h = SLIDER_DIM;
+        b.y = b.y + b.height - SLIDER_DIM;
+        b.height = SLIDER_DIM;
 
         if (vscrollable())
-            b.w -= SLIDER_DIM;
+            b.width -= SLIDER_DIM;
 
         m_hslider.move(b.point() - point());
         m_hslider.resize(b.size());
@@ -201,11 +201,11 @@ void ScrolledView::resize_slider()
     if (vscrollable())
     {
         auto b = box();
-        b.x = b.x + b.w - SLIDER_DIM;
-        b.w = SLIDER_DIM;
+        b.x = b.x + b.width - SLIDER_DIM;
+        b.width = SLIDER_DIM;
 
         if (hscrollable())
-            b.h -= SLIDER_DIM;
+            b.height -= SLIDER_DIM;
 
         m_vslider.move(b.point() - point());
         m_vslider.resize(b.size());
@@ -227,8 +227,8 @@ void ScrolledView::set_offset(Point offset)
     if (hscrollable() || vscrollable())
     {
         auto super = super_rect();
-        auto offset_max = Point(super.w - content_area().w,
-                                super.h - content_area().h);
+        auto offset_max = Point(super.width - content_area().width,
+                                super.height - content_area().height);
         if (offset.x > 0)
             offset.x = 0;
         else if (-offset.x > offset_max.x)
@@ -250,8 +250,8 @@ void ScrolledView::set_offset(Point offset)
 void ScrolledView::update_sliders()
 {
     auto super = super_rect();
-    auto offset_max = Point(super.w - content_area().w,
-                            super.h - content_area().h);
+    auto offset_max = Point(super.width - content_area().width,
+                            super.height - content_area().height);
 
     auto hslider_value =
         egt::detail::normalize<float>(std::abs(m_offset.x), 0, offset_max.x, 0, 100);

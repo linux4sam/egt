@@ -66,7 +66,7 @@ Painter& Painter::draw(const Image& image)
     double x, y;
     cairo_get_current_point(m_cr.get(), &x, &y);
     cairo_set_source_surface(m_cr.get(), image.surface().get(), x, y);
-    cairo_rectangle(m_cr.get(), x, y, image.size().w, image.size().h);
+    cairo_rectangle(m_cr.get(), x, y, image.size().width, image.size().height);
 
     /// @todo no fill here
     fill();
@@ -88,7 +88,7 @@ Painter& Painter::draw(const Rect& rect, const Image& image)
     cairo_get_current_point(m_cr.get(), &x, &y);
     cairo_set_source_surface(m_cr.get(), image.surface().get(),
                              x - rect.x, y - rect.y);
-    cairo_rectangle(m_cr.get(), x, y, rect.w, rect.h);
+    cairo_rectangle(m_cr.get(), x, y, rect.width, rect.height);
 
     /// @todo no fill here
     fill();
@@ -133,7 +133,7 @@ Size Painter::font_size(const std::string& text)
 {
     cairo_font_extents_t fe;
     cairo_font_extents(m_cr.get(), &fe);
-    return Size(text_size(text).w, fe.height);
+    return Size(text_size(text).width, fe.height);
 }
 
 Painter& Painter::clip()

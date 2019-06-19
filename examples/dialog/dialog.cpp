@@ -22,7 +22,7 @@ int main(int argc, const char** argv)
     BoxSizer vsizer(orientation::vertical);
     win0.add(expand(vsizer));
 
-    auto grid = make_shared<StaticGrid>(Rect(Point(), Size(0, win0.h() * 0.10)), Tuple(3, 1), 10);
+    auto grid = make_shared<StaticGrid>(Rect(Point(), Size(0, win0.height() * 0.10)), Tuple(3, 1), 10);
     grid->set_color(Palette::ColorId::bg, Color(0xed2924ff));
     grid->set_boxtype(Theme::boxtype::blank);
 
@@ -34,7 +34,7 @@ int main(int argc, const char** argv)
     auto hsizer = make_shared<BoxSizer>(orientation::horizontal);
     vsizer.add(expand(hsizer));
 
-    auto list = make_shared<ListBox>(Rect(Point(), Size(win0.w() * 0.25, 0)));
+    auto list = make_shared<ListBox>(Rect(Point(), Size(win0.width() * 0.25, 0)));
     list->add_item(make_shared<StringItem>("", Rect(), alignmask::left | alignmask::center));
     list->add_item(make_shared<StringItem>("File Open", Rect(), alignmask::left | alignmask::center));
     list->add_item(make_shared<StringItem>("File Save", Rect(), alignmask::left | alignmask::center));
@@ -44,7 +44,7 @@ int main(int argc, const char** argv)
     list->set_align(alignmask::expand_vertical | alignmask::left);
     hsizer->add(list);
 
-    auto label1 = std::make_shared<TextBox>("", Rect(0, 0, win0.w() * 0.75, win0.h() * 0.25), alignmask::left | alignmask::center);
+    auto label1 = std::make_shared<TextBox>("", Rect(0, 0, win0.width() * 0.75, win0.height() * 0.25), alignmask::left | alignmask::center);
     label1->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
     label1->set_color(Palette::ColorId::border, Palette::transparent);
     hsizer->add(label1);
@@ -100,7 +100,7 @@ int main(int argc, const char** argv)
     dialog1->set_button(Dialog::buttonid::button2, "Cancel");
     win0.add(dialog1);
 
-    auto dlist0 = std::make_shared<ListBox>(Rect(0, 0, dialog1->w(), dialog1->h() * 0.75));
+    auto dlist0 = std::make_shared<ListBox>(Rect(0, 0, dialog1->width(), dialog1->height() * 0.75));
     for (auto x = 0; x < 25; x++)
         dlist0->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Rect(), alignmask::left | alignmask::center));
     dlist0->set_align(alignmask::left | alignmask::expand_vertical);
@@ -129,7 +129,7 @@ int main(int argc, const char** argv)
     dialog2->set_button(Dialog::buttonid::button2, "Cancel");
     win0.add(dialog2);
 
-    auto slider1 = std::make_shared<Slider>(Rect(0, 0, dialog2->w(), dialog2->h() * 0.70));
+    auto slider1 = std::make_shared<Slider>(Rect(0, 0, dialog2->width(), dialog2->height() * 0.70));
     slider1->slider_flags().set({Slider::flag::round_handle, Slider::flag::show_label});
     slider1->set_value(50);
     dialog2->set_widget(slider1);

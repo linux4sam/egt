@@ -105,8 +105,8 @@ struct XmlWidgetSerializer
 
         child->append_node(create_node<int>("x", std::bind(&Widget::x, widget)));
         child->append_node(create_node<int>("y", std::bind(&Widget::y, widget)));
-        child->append_node(create_node<int>("w", std::bind(&Widget::w, widget)));
-        child->append_node(create_node<int>("h", std::bind(&Widget::h, widget)));
+        child->append_node(create_node<int>("w", std::bind(&Widget::width, widget)));
+        child->append_node(create_node<int>("h", std::bind(&Widget::height, widget)));
         child->append_node(create_node<int>("border", std::bind(&Widget::border, widget)));
         child->append_node(create_node<int>("margin", std::bind(&Widget::margin, widget)));
         child->append_node(create_node<int>("padding", std::bind(&Widget::padding, widget)));

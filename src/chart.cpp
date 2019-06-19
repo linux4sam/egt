@@ -69,7 +69,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
     dcfg.line.sz = m_linewidth;
     dcfg.line.clr.type = KPLOTCTYPE_PATTERN;
     dcfg.line.clr.pattern =
-        cairo_pattern_create_linear(0.0, 0.0, b.w, b.h);
+        cairo_pattern_create_linear(0.0, 0.0, b.width, b.height);
 
     cairo_pattern_add_color_stop_rgb
     (dcfg.line.clr.pattern, 0.25, 1.0, 0.0, 0.0);
@@ -104,7 +104,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
 
     experimental::code_timer(false, "kplot_draw: ", [&]()
     {
-        kplot_draw(p, b.w, b.h, cr.get());
+        kplot_draw(p, b.width, b.height, cr.get());
     });
 
     kplot_free(p);
@@ -156,8 +156,8 @@ void PieChart::draw(Painter& painter, const Rect& rect)
     float from_angle = to_angle;
 
     // keep everything square
-    auto width = std::min(b.w, b.h);
-    auto height = std::min(b.w, b.h);
+    auto width = std::min(b.width, b.height);
+    auto height = std::min(b.width, b.height);
 
     auto c = b.center();
 

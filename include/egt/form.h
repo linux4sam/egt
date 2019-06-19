@@ -89,7 +89,7 @@ public:
         label->set_text_align(alignmask::center | alignmask::left);
         auto grid = std::make_shared<StaticGrid>(Tuple(2, 1));
         grid->set_margin(2); /// @todo Not working
-        grid->resize(Size(0, widget->min_size_hint().h));
+        grid->resize(Size(0, widget->min_size_hint().height));
         grid->set_align(alignmask::expand_horizontal);
         grid->add(label);
         grid->add(widget);
@@ -102,7 +102,7 @@ public:
         widget->set_align(alignmask::expand);
         auto grid = std::make_shared<StaticGrid>(Tuple(1, 1));
         grid->set_margin(2); /// @todo Not working
-        grid->resize(Size(0, widget->min_size_hint().h));
+        grid->resize(Size(0, widget->min_size_hint().height));
         grid->set_align(alignmask::expand_horizontal);
         grid->add(widget);
         m_vsizer.add(grid);

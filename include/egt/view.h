@@ -167,14 +167,14 @@ protected:
         auto super = super_rect();
 
         m_hscrollable = (m_horizontal_policy == policy::always) ||
-                        (m_horizontal_policy == policy::as_needed && super.w > content_area().w);
+                        (m_horizontal_policy == policy::as_needed && super.width > content_area().width);
         m_vscrollable = (m_vertical_policy == policy::always) ||
-                        (m_vertical_policy == policy::as_needed && super.h > content_area().h);
+                        (m_vertical_policy == policy::as_needed && super.height > content_area().height);
 
-        if (super.w <= content_area().w)
+        if (super.width <= content_area().width)
             m_offset.x = 0;
 
-        if (super.h <= content_area().h)
+        if (super.height <= content_area().height)
             m_offset.y = 0;
     }
 

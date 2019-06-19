@@ -48,7 +48,7 @@ int main(int argc, const char** argv)
     window->set_volume(5);
     win.add(window);
 
-    Label label("Error: ", Rect(Point(0, 0), Size(win.w() * 0.80, win.h() * 0.10)));
+    Label label("Error: ", Rect(Point(0, 0), Size(win.width() * 0.80, win.height() * 0.10)));
     label.set_color(Palette::ColorId::label_text, Palette::white);
     label.set_color(Palette::ColorId::bg, Palette::transparent);
     label.set_align(alignmask::top | alignmask::center);
@@ -59,7 +59,7 @@ int main(int argc, const char** argv)
         win.add(label);
     }, {eventid::event2});
 
-    auto ctrlwindow = make_shared< Window>(Size(win.w(), 72));
+    auto ctrlwindow = make_shared< Window>(Size(win.width(), 72));
     ctrlwindow->set_align(alignmask::bottom | alignmask::center);
     win.add(ctrlwindow);
     ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent);
@@ -88,7 +88,7 @@ int main(int argc, const char** argv)
     }, {eventid::pointer_click});
 
     Slider position(0, 100, 0, orientation::horizontal);
-    position.set_width(ctrlwindow->w() * 0.20);
+    position.set_width(ctrlwindow->width() * 0.20);
     position.set_align(alignmask::expand_vertical);
     hpos.add(position);
     position.set_color(Palette::ColorId::text_highlight, Palette::blue);
@@ -107,7 +107,7 @@ int main(int argc, const char** argv)
     volumei.set_boxtype(Theme::boxtype::none);
     hpos.add(volumei);
 
-    Slider volume(Rect(Size(ctrlwindow->w() * 0.10, ctrlwindow->h())), 0, 10, 0, orientation::horizontal);
+    Slider volume(Rect(Size(ctrlwindow->width() * 0.10, ctrlwindow->height())), 0, 10, 0, orientation::horizontal);
     hpos.add(volume);
     volume.slider_flags().set({Slider::flag::round_handle});
     volume.set_value(5);
@@ -123,7 +123,7 @@ int main(int argc, const char** argv)
     fullscreen.set_boxtype(Theme::boxtype::none);
     hpos.add(fullscreen);
 
-    double m_fscale = (double)main_screen()->size().w / w;
+    double m_fscale = (double)main_screen()->size().width / w;
 
     fullscreen.on_event([&fullscreen, window, m_fscale, &win](Event&)
     {

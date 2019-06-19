@@ -19,10 +19,10 @@ public:
     static constexpr int ROWS = 2;
 
     GameWindow()
-        : m_grid1(Rect(Point(0, 50), Size(w(), 80)),
-                  Tuple(w() / 100, ROWS), 5),
-          m_grid2(Rect(Point(0, 50 + 80 + 30), Size(w(), 80)),
-                  Tuple(w() / 100, ROWS), 5),
+        : m_grid1(Rect(Point(0, 50), Size(width(), 80)),
+                  Tuple(width() / 100, ROWS), 5),
+          m_grid2(Rect(Point(0, 50 + 80 + 30), Size(width(), 80)),
+                  Tuple(width() / 100, ROWS), 5),
           m_ball(Image("small_ball.png")),
           m_paddle(Image("paddle.png")),
           m_label("-", alignmask::left | alignmask::center),
@@ -38,7 +38,7 @@ public:
         m_grid1.set_color(Palette::ColorId::border, Palette::transparent);
         m_grid2.set_color(Palette::ColorId::border, Palette::transparent);
 
-        for (int c = 0; c < w() / 100; c++)
+        for (int c = 0; c < width() / 100; c++)
         {
             for (int r = 0; r < ROWS; r++)
             {
@@ -50,7 +50,7 @@ public:
             }
         }
 
-        for (int c = 0; c < w() / 100; c++)
+        for (int c = 0; c < width() / 100; c++)
         {
             for (int r = 0; r < ROWS; r++)
             {
@@ -64,7 +64,7 @@ public:
 
         add(m_paddle);
 
-        m_ball.resize(Size(Ratio<int>(w(), 5), Ratio<int>(w(), 5)));
+        m_ball.resize(Size(Ratio<int>(width(), 5), Ratio<int>(width(), 5)));
         m_ball.set_image_align(alignmask::expand);
         add(m_ball);
 
@@ -94,7 +94,7 @@ public:
                 else
                     x = m_paddle.x() + (event.id() == eventid::keyboard_repeat ? 15 : 10);
 
-                if (x > -m_paddle.w() && x < w())
+                if (x > -m_paddle.width() && x < width())
                     m_paddle.move(Point(x, m_paddle.y()));
 
                 event.stop();
@@ -117,7 +117,7 @@ public:
             m_running = true;
             break;
         case eventid::raw_pointer_move:
-            m_paddle.move(Point(event.pointer().point.x - m_paddle.w() / 2, m_paddle.y()));
+            m_paddle.move(Point(event.pointer().point.x - m_paddle.width() / 2, m_paddle.y()));
             event.stop();
             break;
         default:
@@ -130,8 +130,8 @@ public:
         for (auto block : m_blocks)
             block->show();
 
-        m_ball.move(Point(w() / 2 - m_ball.w() / 2, h() - m_paddle.h() - 25 - m_ball.h() - 100));
-        m_paddle.move(Point(w() / 2 - m_paddle.w() / 2, h() - m_paddle.h() - 25));
+        m_ball.move(Point(width() / 2 - m_ball.width() / 2, height() - m_paddle.height() - 25 - m_ball.height() - 100));
+        m_paddle.move(Point(width() / 2 - m_paddle.width() / 2, height() - m_paddle.height() - 25));
 
         std::uniform_real_distribution<float> speed_dist(2.0, 5.0);
         m_xspeed = speed_dist(e1);
@@ -186,13 +186,13 @@ public:
         }
 
         // bounce off walls
-        if (m_ball.x() + m_ball.w() > w() || m_ball.x() < 0)
+        if (m_ball.x() + m_ball.width() > width() || m_ball.x() < 0)
         {
             m_xspeed *= -1.0;
         }
 
         // below paddle
-        if (m_ball.y() + m_ball.h() > h())
+        if (m_ball.y() + m_ball.height() > height())
         {
             reset_game();
         }

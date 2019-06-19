@@ -26,9 +26,9 @@ StaticGrid::StaticGrid(const Rect& rect, const Tuple& size,
      * The grid size is set here.  Every column should be the same size.  Don't
      * delete from the column vectors.  Only set empty cells to nullptr.
      */
-    m_cells.resize(size.w);
+    m_cells.resize(size.width);
     for (auto& x : m_cells)
-        x.resize(size.h, nullptr);
+        x.resize(size.height, nullptr);
 }
 
 StaticGrid::StaticGrid(const Tuple& size, default_dim_type border) noexcept
@@ -101,10 +101,10 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
             auto rows = m_cells[column].size();
             for (size_t row = 0; row < rows; row++)
             {
-                Rect r = cell_rect(columns, rows, b.w, b.h, column, row, border());
+                Rect r = cell_rect(columns, rows, b.width, b.height, column, row, border());
                 r += b.point();
                 painter.draw(r);
-                }
+            }
         }
 
         painter.stroke();
@@ -240,7 +240,7 @@ void StaticGrid::reposition()
             Widget* widget = m_cells[column][row];
             if (widget)
             {
-                Rect bounding = cell_rect(columns, rows, b.w, b.h, column, row, border(), padding());
+                Rect bounding = cell_rect(columns, rows, b.width, b.height, column, row, border(), padding());
                 bounding += b.point() - point();
 
                 if (border())
@@ -288,7 +288,7 @@ void SelectableGrid::handle(Event& event)
             auto rows = m_cells[column].size();
             for (size_t row = 0; row < rows; row++)
             {
-                Rect bounding = cell_rect(columns, rows, b.w, b.h, column, row, border(), padding());
+                Rect bounding = cell_rect(columns, rows, b.width, b.height, column, row, border(), padding());
 
                 if (border())
                 {
@@ -327,7 +327,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
 
         auto b = content_area();
 
-        Rect r = cell_rect(columns, rows, b.w, b.h, column, row, border(), padding());
+        Rect r = cell_rect(columns, rows, b.width, b.height, column, row, border(), padding());
         r += b.point();
 
         painter.draw(r);

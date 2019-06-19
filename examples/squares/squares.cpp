@@ -121,8 +121,8 @@ int main(int argc, const char** argv)
 
     std::random_device r;
     std::default_random_engine e1 {r()};
-    std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.w() - width)};
-    std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.h() - height)};
+    std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.width() - width)};
+    std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.height() - height)};
 
     experimental::Fps fps;
     fps.start();
@@ -163,8 +163,8 @@ int main(int argc, const char** argv)
         ss << width << "," << height;
         label_dims.set_text(ss.str());
 
-        x_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.w() - width));
-        y_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.h() - height));
+        x_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.width() - width));
+        y_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.height() - height));
     });
     vtimer.start();
 

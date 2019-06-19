@@ -55,8 +55,8 @@ int Slider::handle_width() const
 {
     auto b = content_area();
 
-    auto width = b.w;
-    auto height = b.h;
+    auto width = b.width;
+    auto height = b.height;
 
     if (slider_flags().is_set(flag::show_labels) ||
         slider_flags().is_set(flag::show_label))
@@ -88,8 +88,8 @@ int Slider::handle_height() const
 {
     auto b = content_area();
 
-    auto width = b.w;
-    auto height = b.h;
+    auto width = b.width;
+    auto height = b.height;
 
     if (slider_flags().is_set(flag::show_labels) ||
         slider_flags().is_set(flag::show_label))
@@ -132,41 +132,41 @@ Rect Slider::handle_box(int value) const
     {
         auto xv = b.x + to_offset(value);
         if (slider_flags().is_set(flag::origin_opposite))
-            xv = b.x + b.w - to_offset(value) - dimw;
+            xv = b.x + b.width - to_offset(value) - dimw;
 
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
             return Rect(xv,
-                        b.y + b.h / 4 - dimh / 2 + b.h / 2,
+                        b.y + b.height / 4 - dimh / 2 + b.height / 2,
                         dimw,
                         dimh);
         }
         else
         {
             return Rect(xv,
-                        b.y + b.h / 2 - dimh / 2,
+                        b.y + b.height / 2 - dimh / 2,
                         dimw,
                         dimh);
         }
     }
     else
     {
-        auto yv = b.y + b.h - to_offset(value) - dimh;
+        auto yv = b.y + b.height - to_offset(value) - dimh;
         if (slider_flags().is_set(flag::origin_opposite))
             yv = b.y + to_offset(value);
 
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
-            return Rect(b.x + b.w / 4 - dimw / 2 + b.w / 2,
+            return Rect(b.x + b.width / 4 - dimw / 2 + b.width / 2,
                         yv,
                         dimw,
                         dimh);
         }
         else
         {
-            return Rect(b.x + b.w / 2 - dimw / 2,
+            return Rect(b.x + b.width / 2 - dimw / 2,
                         yv,
                         dimw,
                         dimh);
@@ -213,9 +213,9 @@ void Slider::draw_label(Painter& painter, int value)
     auto handle = handle_box(value);
 
     if (m_orient == orientation::horizontal)
-        handle -= Point(0, b.h / 2.);
+        handle -= Point(0, b.height / 2.);
     else
-        handle -= Point(b.w / 2., 0);
+        handle -= Point(b.width / 2., 0);
 
     auto text = std::to_string(value);
     auto f = detail::TextWidget::scale_font(handle.size(), text, font());
@@ -235,7 +235,6 @@ void Slider::draw_label(Painter& painter, int value)
 void Slider::draw_handle(Painter& painter)
 {
     auto handle = handle_box();
-    //auto dim = std::min(handle.w, handle.h);
 
     if (slider_flags().is_set(flag::round_handle))
     {
@@ -258,15 +257,15 @@ void Slider::draw_handle(Painter& painter)
 void Slider::draw(Painter& painter, const Rect&)
 {
     auto b = content_area();
-    auto yp = b.y + b.h / 2.;
-    auto xp = b.x + b.w / 2.;
+    auto yp = b.y + b.height / 2.;
+    auto xp = b.x + b.width / 2.;
 
     if (m_orient == orientation::horizontal)
     {
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
-            yp += b.h / 4.;
+            yp += b.height / 4.;
 
             if (slider_flags().is_set(flag::show_label))
             {
@@ -285,7 +284,7 @@ void Slider::draw(Painter& painter, const Rect&)
         if (slider_flags().is_set(flag::show_labels) ||
             slider_flags().is_set(flag::show_label))
         {
-            xp += b.w / 4.;
+            xp += b.width / 4.;
 
             if (slider_flags().is_set(flag::show_label))
             {
@@ -322,19 +321,19 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
     {
         a1 = Point(b.x, yp);
         a2 = Point(handle.x, yp);
-        b1 = Point(handle.x /*+ handle.w*/, yp);
-        b2 = Point(b.x + b.w, yp);
+        b1 = Point(handle.x, yp);
+        b2 = Point(b.x + b.width, yp);
 
-        painter.set_line_width(handle.h / 5.0);
+        painter.set_line_width(handle.height / 5.0);
     }
     else
     {
-        a1 = Point(xp, b.y + b.h);
-        a2 = Point(xp, handle.y /*+ handle.h*/);
+        a1 = Point(xp, b.y + b.height);
+        a2 = Point(xp, handle.y);
         b1 = Point(xp, handle.y);
         b2 = Point(xp, b.y);
 
-        painter.set_line_width(handle.w / 5.0);
+        painter.set_line_width(handle.width / 5.0);
     }
 
     if (slider_flags().is_set(flag::consistent_line))

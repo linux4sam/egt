@@ -268,7 +268,7 @@ void Application::paint_to_file(const string& filename)
 
     auto surface = shared_cairo_surface_t(
                        cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               main_screen()->size().w, main_screen()->size().h),
+                               main_screen()->size().width, main_screen()->size().height),
                        cairo_surface_destroy);
 
     auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);

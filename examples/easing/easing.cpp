@@ -68,7 +68,7 @@ class MainWindow : public TopWindow
 public:
     MainWindow()
         : m_seq(true),
-          m_animation(-110, h() - 100, std::chrono::seconds(2)),
+          m_animation(-110, height() - 100, std::chrono::seconds(2)),
           m_delay(std::chrono::seconds(1)),
           m_board()
     {
@@ -94,7 +94,7 @@ public:
         add(list1);
 
         auto line = std::make_shared<LineChart>();
-        line->set_width(m_board.w() - SideBoard::HANDLE_WIDTH);
+        line->set_width(m_board.width() - SideBoard::HANDLE_WIDTH);
         line->set_color(Palette::ColorId::bg, Palette::black);
         m_board.add(left(expand_vertical(line)));
 
@@ -116,7 +116,7 @@ public:
         m_box = make_shared<Window>(Size(100, 200));
         m_box->set_boxtype(Theme::boxtype::none);
         m_box->add(image);
-        m_box->move(Point(w() / 2 - m_box->w() / 2, -110));
+        m_box->move(Point(width() / 2 - m_box->width() / 2, -110));
         m_box->show();
         add(m_box);
 

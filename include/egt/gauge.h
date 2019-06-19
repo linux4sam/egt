@@ -132,8 +132,8 @@ protected:
         Size result = size();
         for (auto& layer : m_layers)
         {
-            if (layer->size().w > result.w ||
-                layer->size().h > result.h)
+            if (layer->size().width > result.width ||
+                layer->size().height > result.height)
                 result = layer->size();
         }
 

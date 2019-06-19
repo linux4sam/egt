@@ -164,8 +164,8 @@ void Theme::draw_box(Painter& painter,
 
     double rx = box.x,
            ry = box.y,
-           width = box.w,
-           height = box.h,
+           width = box.width,
+           height = box.height,
            aspect = 1.0,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
 
@@ -271,7 +271,7 @@ void Theme::draw_circle(Painter& painter,
     if (box.empty())
         return;
 
-    Circle circle(box.center(), std::min(box.w, box.h) / 2.);
+    Circle circle(box.center(), std::min(box.width, box.height) / 2.);
 
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();

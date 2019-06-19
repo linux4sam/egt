@@ -23,7 +23,7 @@ namespace detail
 {
 
 ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
-    : Popup(Size(parent.size().w, 40)),
+    : Popup(Size(parent.size().width, 40)),
       m_list(std::make_shared<ListBox>()),
       m_parent(parent)
 {
@@ -51,24 +51,24 @@ void ComboBoxPopup::smart_pos()
 {
     auto origin = m_parent.local_to_display(Point());
 
-    auto real = origin + DisplayPoint(0, m_parent.size().h + POPUP_OFFSET);
+    auto real = origin + DisplayPoint(0, m_parent.size().height + POPUP_OFFSET);
     move(Point(real.x, real.y));
 
     if (main_screen())
     {
         auto ss = main_screen()->size();
         auto height =
-            std::min(static_cast<default_dim_type>((ss.h - origin.y) / 40),
+            std::min(static_cast<default_dim_type>((ss.height - origin.y) / 40),
                      static_cast<default_dim_type>(m_list->item_count())) * 40;
 
         // hack because list child area is smaller by this much
         height += 2.0 * 3.0;
 
-        resize(Size(m_parent.size().w, height));
+        resize(Size(m_parent.size().width, height));
     }
     else
     {
-        resize(Size(m_parent.size().w, 100));
+        resize(Size(m_parent.size().width, 100));
     }
 }
 
@@ -213,7 +213,7 @@ Size ComboBox::min_size_hint() const
     {
         auto s = text_size(m_text);
         s *= Size(1, 3);
-        s += Size(s.w / 2 + 5, 0);
+        s += Size(s.width / 2 + 5, 0);
         return s + Widget::min_size_hint();
     }
 
@@ -230,18 +230,18 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
     auto b = widget.content_area();
-    auto handle_dim = std::min(b.w, b.h);
+    auto handle_dim = std::min(b.width, b.height);
     auto handle = Rect(b.top_right() - Point(handle_dim, 0), Size(handle_dim, handle_dim));
-    auto text = Rect(b.point(), b.size() - Size(handle.size().w, 0));
+    auto text = Rect(b.point(), b.size() - Size(handle.size().width, 0));
 
     // draw a down arrow
     painter.set(widget.color(Palette::ColorId::button_fg).color());
     auto cr = painter.context().get();
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-    painter.draw(Point(handle.x, handle.y + handle.h / 3.),
-                 Point(handle.x + handle.w / 2., handle.y + (handle.h / 3. * 2.)));
-    painter.draw(Point(handle.x + handle.w / 2., handle.y + (handle.h / 3. * 2.)),
-                 Point(handle.x + handle.w, handle.y + handle.h / 3.));
+    painter.draw(Point(handle.x, handle.y + handle.height / 3.),
+                 Point(handle.x + handle.width / 2., handle.y + (handle.height / 3. * 2.)));
+    painter.draw(Point(handle.x + handle.width / 2., handle.y + (handle.height / 3. * 2.)),
+                 Point(handle.x + handle.width, handle.y + handle.height / 3.));
     painter.set_line_width(widget.theme().default_border());
     painter.stroke();
 

@@ -138,8 +138,8 @@ public:
         cairo_rectangle(m_cr.get(),
                         rect.x,
                         rect.y,
-                        rect.w,
-                        rect.h);
+                        rect.width,
+                        rect.height);
 
         return *this;
     }

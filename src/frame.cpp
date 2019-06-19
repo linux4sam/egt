@@ -443,12 +443,11 @@ void Frame::layout()
                 return;
 
             auto min = child->box();
-#if 1
-            if (min.w < child->min_size_hint().w)
-                min.w = child->min_size_hint().w;
-            if (min.h < child->min_size_hint().h)
-                min.h = child->min_size_hint().h;
-#endif
+
+            if (min.width < child->min_size_hint().width)
+                min.width = child->min_size_hint().width;
+            if (min.height < child->min_size_hint().height)
+                min.height = child->min_size_hint().height;
 
             auto r = detail::align_algorithm(min,
                                              bounding,

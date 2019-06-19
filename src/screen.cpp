@@ -51,7 +51,7 @@ void Screen::copy_to_buffer(DisplayBuffer& buffer)
     cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
 
     for (const auto& rect : buffer.damage)
-        cairo_rectangle(buffer.cr.get(), rect.x, rect.y, rect.w, rect.h);
+        cairo_rectangle(buffer.cr.get(), rect.x, rect.y, rect.width, rect.height);
 
     cairo_fill(buffer.cr.get());
     cairo_surface_flush(buffer.surface.get());

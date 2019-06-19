@@ -18,8 +18,8 @@ inline namespace v1
 FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     : Popup(rect.size(), rect.point()),
       m_vsizer(std::make_shared<BoxSizer>(orientation::vertical)),
-      m_title(std::make_shared<ImageLabel>(Image("@folder.png"), filepath, Rect(Size(rect.w, (rect.h * 0.10))))),
-      m_flist(std::make_shared<ListBox>(Rect(rect.x, rect.y, rect.w, (rect.h * 0.75)))),
+      m_title(std::make_shared<ImageLabel>(Image("@folder.png"), filepath, Rect(Size(rect.width, (rect.height * 0.10))))),
+      m_flist(std::make_shared<ListBox>(Rect(rect.x, rect.y, rect.width, (rect.height * 0.75)))),
       m_filepath(filepath)
 {
     set_name("FileDialog" + std::to_string(m_widgetid));
@@ -136,7 +136,7 @@ void FileDialog::list_item_selected(int index)
 
 FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
-      m_grid(std::make_shared<StaticGrid>(Rect(Size(rect.w / 2, (rect.h * 0.10))), Tuple(2, 1), 5)),
+      m_grid(std::make_shared<StaticGrid>(Rect(Size(rect.width / 2, (rect.height * 0.10))), Tuple(2, 1), 5)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
 {
@@ -198,8 +198,8 @@ const std::string FileOpenDialog::get_selected()
 FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
       m_hpositioner(std::make_shared<HorizontalBoxSizer>()),
-      m_fileselect_box(std::make_shared<TextBox>("", Rect(0, 0, (rect.w * 0.60), (rect.h * 0.10)))),
-      m_grid(std::make_shared<StaticGrid>(Rect(Size((rect.w * 0.40), (rect.h * 0.10))), Tuple(2, 1), 3)),
+      m_fileselect_box(std::make_shared<TextBox>("", Rect(0, 0, (rect.width * 0.60), (rect.height * 0.10)))),
+      m_grid(std::make_shared<StaticGrid>(Rect(Size((rect.width * 0.40), (rect.height * 0.10))), Tuple(2, 1), 3)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
 {

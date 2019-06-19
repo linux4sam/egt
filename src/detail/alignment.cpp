@@ -31,52 +31,52 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
     if (xratio)
     {
         p.x = bounding.x + padding +
-              static_cast<float>(bounding.w - padding * 2) *
+              static_cast<float>(bounding.width - padding * 2) *
               (static_cast<float>(xratio) / 100.);
     }
     else if ((align & alignmask::left) == alignmask::left)
         p.x = bounding.x + padding;
     else if ((align & alignmask::right) == alignmask::right)
-        p.x = bounding.x + bounding.w - orig.size().w - padding;
+        p.x = bounding.x + bounding.width - orig.size().width - padding;
     else if ((align & alignmask::center_horizontal) == alignmask::center_horizontal)
     {
-        p.x = bounding.x + (bounding.w / 2) - (orig.size().w / 2);
+        p.x = bounding.x + (bounding.width / 2) - (orig.size().width / 2);
     }
 
     if (yratio)
     {
         p.y = bounding.y + padding +
-              static_cast<float>(bounding.h - padding * 2) *
+              static_cast<float>(bounding.height - padding * 2) *
               (static_cast<float>(yratio) / 100.);
     }
     else if ((align & alignmask::top) == alignmask::top)
         p.y = bounding.y + padding;
     else if ((align & alignmask::bottom) == alignmask::bottom)
-        p.y = bounding.y + bounding.h - orig.size().h - padding;
+        p.y = bounding.y + bounding.height - orig.size().height - padding;
     else if ((align & alignmask::center_vertical) == alignmask::center_vertical)
     {
-        p.y = bounding.y + (bounding.h / 2) - (orig.size().h / 2);
+        p.y = bounding.y + (bounding.height / 2) - (orig.size().height / 2);
     }
 
     if (horizontal_ratio)
     {
-        s.w = static_cast<float>(bounding.w - padding * 2) *
-              (static_cast<float>(horizontal_ratio) / 100.);
+        s.width = static_cast<float>(bounding.width - padding * 2) *
+                  (static_cast<float>(horizontal_ratio) / 100.);
     }
     else if ((align & alignmask::expand_horizontal) == alignmask::expand_horizontal)
     {
-        s.w = bounding.w - padding * 2;
+        s.width = bounding.width - padding * 2;
         p.x = bounding.x + padding;
     }
 
     if (vertical_ratio)
     {
-        s.h = static_cast<float>(bounding.h - padding * 2) *
-              (static_cast<float>(vertical_ratio) / 100.);
+        s.height = static_cast<float>(bounding.height - padding * 2) *
+                   (static_cast<float>(vertical_ratio) / 100.);
     }
     else if ((align & alignmask::expand_vertical) == alignmask::expand_vertical)
     {
-        s.h = bounding.h - padding * 2;
+        s.height = bounding.height - padding * 2;
         p.y = bounding.y + padding;
     }
 

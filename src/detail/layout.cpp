@@ -41,14 +41,14 @@ struct LayoutSerializer
 
         if (!widget->flags().is_set(Widget::flag::no_autoresize))
         {
-            if (min.w < widget->min_size_hint().w)
-                min.w = widget->min_size_hint().w;
-            if (min.h < widget->min_size_hint().h)
-                min.h = widget->min_size_hint().h;
+            if (min.width < widget->min_size_hint().width)
+                min.width = widget->min_size_hint().width;
+            if (min.height < widget->min_size_hint().height)
+                min.height = widget->min_size_hint().height;
         }
 
         SPDLOG_TRACE("  current: {}", min);
-        lay_set_size_xy(&ctx, w, min.w, min.h);
+        lay_set_size_xy(&ctx, w, min.width, min.height);
 
         if (level != 0)
         {
@@ -85,7 +85,7 @@ struct LayoutSerializer
             auto moat = widget->margin() + widget->padding() + widget->border();
             lay_set_margins_ltrb(&ctx, w, moat, moat, moat, moat);
 
-            lay_set_size_xy(&ctx, w, min.w - moat * 2, min.h - moat * 2);
+            lay_set_size_xy(&ctx, w, min.width - moat * 2, min.height - moat * 2);
 
             uint32_t contains = 0;
 
@@ -257,7 +257,7 @@ void flex_layout(const Rect& parent,
 
     lay_id p = lay_item(&ctx);
 
-    lay_set_size_xy(&ctx, p, parent.w, parent.h);
+    lay_set_size_xy(&ctx, p, parent.width, parent.height);
     uint32_t contains = 0;
 
     switch (justify)
@@ -295,7 +295,7 @@ void flex_layout(const Rect& parent,
         auto item = lay_get_item(&ctx, c);
         item->data = &child;
 
-        lay_set_size_xy(&ctx, c, child.rect.w, child.rect.h);
+        lay_set_size_xy(&ctx, c, child.rect.width, child.rect.height);
 
         auto behave = child.behave;
         SPDLOG_INFO("  behave: {0:x}", behave);
@@ -318,8 +318,8 @@ void flex_layout(const Rect& parent,
         lay_vec4 r = lay_get_rect(&ctx, child);
         re->rect.x = r[0];
         re->rect.y = r[1];
-        re->rect.w = r[2];
-        re->rect.h = r[3];
+        re->rect.width = r[2];
+        re->rect.height = r[3];
 
         child = pchild->next_sibling;
     }
@@ -348,7 +348,7 @@ void flex_layout(const Rect& parent,
     lay_id lp = lay_item(&ctx);
     lay_id fp = lay_item(&ctx);
 
-    lay_set_size_xy(&ctx, lp, parent.w, parent.h);
+    lay_set_size_xy(&ctx, lp, parent.width, parent.height);
     uint32_t contains = 0;
 
     switch (justify)
@@ -403,7 +403,7 @@ void flex_layout(const Rect& parent,
         auto item = lay_get_item(&ctx, c);
         item->data = &child;
 
-        lay_set_size_xy(&ctx, c, child.rect.w, child.rect.h);
+        lay_set_size_xy(&ctx, c, child.rect.width, child.rect.height);
 
         if (child.behave)
             lay_set_behave(&ctx, c, child.behave);
@@ -424,8 +424,8 @@ void flex_layout(const Rect& parent,
         lay_vec4 r = lay_get_rect(&ctx, child);
         re->rect.x = r[0];
         re->rect.y = r[1];
-        re->rect.w = r[2];
-        re->rect.h = r[3];
+        re->rect.width = r[2];
+        re->rect.height = r[3];
 
         child = pchild->next_sibling;
     }

@@ -42,8 +42,8 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 
     std::ostringstream pipeline;
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
-             " caps=video/x-raw video. ! video/x-raw,width=" <<  std::to_string(m_size.w) <<
-             ",height=" << std::to_string(m_size.h) << ",format=BGRx " << " ! progressreport "
+             " caps=video/x-raw video. ! video/x-raw,width=" <<  std::to_string(m_size.width) <<
+             ",height=" << std::to_string(m_size.height) << ",format=BGRx " << " ! progressreport "
              " silent=true do-query=true update-freq=1 format=time name=progress ! g1kmssink "
              " gem-name=" << std::to_string(m_gem) << " video. " << a_pipe ;
 

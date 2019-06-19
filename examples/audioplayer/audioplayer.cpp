@@ -134,7 +134,7 @@ int main(int argc, const char** argv)
         auto color1 = widget.color(Palette::ColorId::button_fg).color();
         auto color2 = widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
 
-        float smalldim = std::min(widget.w(), widget.h());
+        float smalldim = std::min(widget.width(), widget.height());
         float linew = smalldim / 10;
         float radius = (smalldim / 2) - (linew * 2);
         float angle1 = detail::to_radians<float>(-90, 0);
@@ -159,7 +159,7 @@ int main(int argc, const char** argv)
         auto s = painter.text_size(text);
 
         if (angle2 > 1.5)
-            p -= Point(s.w, 0);
+            p -= Point(s.width, 0);
 
         painter.set(Font());
         painter.set(Palette::white);

@@ -270,7 +270,7 @@ size_t TextBox::width_to_len(const std::string& text) const
 #endif
         cairo_text_extents_t te;
         cairo_text_extents(cr.get(), txt.c_str(), &te);
-        if (total + te.x_advance > b.w)
+        if (total + te.x_advance > b.width)
         {
             return len;
         }

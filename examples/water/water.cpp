@@ -114,8 +114,8 @@ public:
         add(image);
         image->set_image_align(alignmask::expand);
         image->resize_by_ratio(size);
-        image->move(Point(p.x - image->box().w / 2 + offset,
-                          p.y - image->box().h / 2 + offset));
+        image->move(Point(p.x - image->box().width / 2 + offset,
+                          p.y - image->box().height / 2 + offset));
         objects_changed();
     }
 
@@ -205,14 +205,14 @@ int main(int argc, const char** argv)
         if (win.m_images.size() > 30)
             return;
 
-        static std::uniform_int_distribution<int> xoffset_dist(-win.w() / 2, win.w() / 2);
+        static std::uniform_int_distribution<int> xoffset_dist(-win.width() / 2, win.width() / 2);
         int offset = xoffset_dist(win.e1);
 
         static std::uniform_int_distribution<int> count_dist(1, 10);
         int count = count_dist(win.e1);
 
         Point p(win.box().center());
-        p.y = win.box().h;
+        p.y = win.box().height;
         p.x += offset;
 
         while (count--)
@@ -221,7 +221,7 @@ int main(int argc, const char** argv)
     spawntimer.start();
 
 #ifdef SPRITE1
-    PropertyAnimator a1(-sprite1.size().w, main_screen()->size().w,
+    PropertyAnimator a1(-sprite1.size().width, main_screen()->size().width,
                         std::chrono::milliseconds(10000),
                         easing_linear);
     a1.on_change(std::bind(&Sprite::set_x, std::ref(sprite1), std::placeholders::_1));
@@ -231,17 +231,17 @@ int main(int argc, const char** argv)
     floattimer.on_timeout([&a1, &sprite1, &win]()
     {
 
-        static std::uniform_int_distribution<int> yoffset_dist(0, win.h() - sprite1.size().h);
+        static std::uniform_int_distribution<int> yoffset_dist(0, win.height() - sprite1.size().height);
         int y = yoffset_dist(win.e1);
 
-        sprite1.move(Point(-sprite1.size().w, y));
+        sprite1.move(Point(-sprite1.size().width, y));
         a1.start();
     });
     floattimer.start();
 #endif
 
 #ifdef SPRITE2
-    PropertyAnimator a2(-sprite2.size().w, main_screen()->size().w,
+    PropertyAnimator a2(-sprite2.size().width, main_screen()->size().width,
                         std::chrono::milliseconds(12000),
                         easing_linear);
     a2.on_change(std::bind(&Sprite::set_x, std::ref(sprite2), std::placeholders::_1));
@@ -250,10 +250,10 @@ int main(int argc, const char** argv)
     PeriodicTimer floattimer2(std::chrono::milliseconds(1000 * 15));
     floattimer2.on_timeout([&a2, &sprite2, &win]()
     {
-        static std::uniform_int_distribution<int> yoffset_dist(0, win.h() - sprite2.size().h);
+        static std::uniform_int_distribution<int> yoffset_dist(0, win.height() - sprite2.size().height);
         int y = yoffset_dist(win.e1);
 
-        sprite2.move(Point(-sprite2.size().w, y));
+        sprite2.move(Point(-sprite2.size().width, y));
         a2.start();
     });
     floattimer2.start();

@@ -30,8 +30,8 @@ int main(int argc, const char** argv)
     VideoWindow player(Size(320, 192));
     player.set_volume(50);
 
-    auto fullscale = static_cast<double>(main_screen()->size().w) /
-                     static_cast<double>(player.w());
+    auto fullscale = static_cast<double>(main_screen()->size().width) /
+                     static_cast<double>(player.width());
     if (fullscale <= 0)
         fullscale = 1.0;
 
@@ -40,9 +40,9 @@ int main(int argc, const char** argv)
     logo.set_align(alignmask::left | alignmask::top);
     logo.set_margin(10);
 
-    auto grid_height = (win.size().h - logo.h()) / 2;
+    auto grid_height = (win.size().height - logo.height()) / 2;
 
-    ScrolledView view0(Rect(0, logo.h(), win.size().w, grid_height));
+    ScrolledView view0(Rect(0, logo.height(), win.size().width, grid_height));
     view0.set_color(Palette::ColorId::bg, Palette::black);
     view0.set_name("view0");
     win.add(view0);
@@ -76,7 +76,7 @@ int main(int argc, const char** argv)
         grid0.add(l);
     }
 
-    ScrolledView view1(Rect(0, logo.h() + grid_height + 1, win.size().w, grid_height));
+    ScrolledView view1(Rect(0, logo.height() + grid_height + 1, win.size().width, grid_height));
     view1.set_color(Palette::ColorId::bg, Palette::black);
     view1.set_name("view1");
     win.add(view1);
@@ -109,7 +109,7 @@ int main(int argc, const char** argv)
         grid1.add(l);
     }
 
-    Popup popup(Size(main_screen()->size().w / 2, main_screen()->size().h / 2));
+    Popup popup(Size(main_screen()->size().width / 2, main_screen()->size().height / 2));
     popup.set_name("popup");
     Button button("Hello World");
     popup.add(button);

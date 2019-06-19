@@ -27,16 +27,16 @@ int main(int argc, const char** argv)
     logo.set_margin(10);
     win.add(logo);
 
-    StaticGrid grid(Rect(Size(win.w(), win.h() - 40)), Tuple(2, 2));
+    StaticGrid grid(Rect(Size(win.width(), win.height() - 40)), Tuple(2, 2));
 
     Sprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
-                   Point(main_screen()->size().w / 2 - 75,
-                         main_screen()->size().h / 2 - 132 / 2));
+                   Point(main_screen()->size().width / 2 - 75,
+                         main_screen()->size().height / 2 - 132 / 2));
     grid.add(center(sprite1), 0, 1);
 
     Sprite sprite2(Image("walk.png"), Size(75, 132), 8, Point(0, 0),
-                   Point(main_screen()->size().w / 2,
-                         main_screen()->size().h / 2 - 132 / 2));
+                   Point(main_screen()->size().width / 2,
+                         main_screen()->size().height / 2 - 132 / 2));
     grid.add(center(sprite2), 1, 1);
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
@@ -104,7 +104,7 @@ int main(int argc, const char** argv)
     });
     animatetimer.start();
 
-    Slider slider1(Rect(Point(win.h() - 40, 300), Size(win.w(), 40)), 10, 500, 10);
+    Slider slider1(Rect(Point(win.height() - 40, 300), Size(win.width(), 40)), 10, 500, 10);
     win.add(bottom(center(slider1)));
     slider1.set_value(DEFAULT_MS_INTERVAL);
     slider1.on_event([&](Event&)
@@ -115,7 +115,7 @@ int main(int argc, const char** argv)
     win.show();
 
     Popup popup(Size(100, 80));
-    popup.move(Point(win.w() - 100 - 10, 10));
+    popup.move(Point(win.width() - 100 - 10, 10));
     popup.set_color(Palette::ColorId::bg, Palette::fuchsia);
     popup.set_name("popup");
 

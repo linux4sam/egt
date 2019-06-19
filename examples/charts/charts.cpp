@@ -166,7 +166,7 @@ int main(int argc, const char** argv)
     hsizer.set_align(alignmask::expand);
     win.add(hsizer);
 
-    ListBox list(Size(win.w() * 0.15, 0));
+    ListBox list(Size(win.width() * 0.15, 0));
     list.set_align(alignmask::expand_vertical | alignmask::left);
     list.add_item(make_shared<StringItem>("Line"));
     list.add_item(make_shared<StringItem>("Pie"));

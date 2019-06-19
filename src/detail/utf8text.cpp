@@ -161,7 +161,7 @@ void draw_text(Painter& painter,
                 if (workaround)
                     p.y += fe.height;
 
-                auto s = SizeF(char_width, r->rect.h);
+                auto s = SizeF(char_width, r->rect.height);
 
                 if (pos >= select_start && pos < select_start + select_len)
                 {
@@ -217,7 +217,7 @@ void draw_text(Painter& painter,
         {
             if (!rects.empty())
             {
-                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.w, 0);
+                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width, 0);
                 if (workaround)
                 {
                     p.y += fe.height;
@@ -408,7 +408,7 @@ void draw_text(Painter& painter,
                 if (workaround)
                     p.y += fe.height;
 
-                auto s = SizeF(char_width, r->rect.h);
+                auto s = SizeF(char_width, r->rect.height);
 
                 if (pos >= select_start && pos < select_start + select_len)
                 {
@@ -464,7 +464,7 @@ void draw_text(Painter& painter,
         {
             if (!rects.empty())
             {
-                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.w, 0);
+                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width, 0);
                 if (workaround)
                 {
                     p.y += fe.height;

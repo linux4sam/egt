@@ -90,16 +90,16 @@ int main(int argc, const char** argv)
 
     MainWindow win;
 
-    FloatingBox box1(Rect(Ratio<int>(win.w(), 20),
-                          Ratio<int>(win.h(), 20),
-                          Ratio<int>(win.w(), 20),
-                          Ratio<int>(win.w(), 20)));
+    FloatingBox box1(Rect(Ratio<int>(win.width(), 20),
+                          Ratio<int>(win.height(), 20),
+                          Ratio<int>(win.width(), 20),
+                          Ratio<int>(win.width(), 20)));
     win.add(box1);
 
-    FloatingBox box2(Rect(Ratio<int>(win.w(), 20) * 3,
-                          Ratio<int>(win.h(), 20),
-                          Ratio<int>(win.w(), 20),
-                          Ratio<int>(win.w(), 20)));
+    FloatingBox box2(Rect(Ratio<int>(win.width(), 20) * 3,
+                          Ratio<int>(win.height(), 20),
+                          Ratio<int>(win.width(), 20),
+                          Ratio<int>(win.width(), 20)));
     win.add(box2);
 
     box1.show();

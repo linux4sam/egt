@@ -202,12 +202,12 @@ public:
     constexpr SizeType() noexcept = default;
 
     /**
-     * @param w Width
-     * @param h Height
+     * @param width Width
+     * @param height Height
      */
-    constexpr explicit SizeType(dim_t w, dim_t h) noexcept
-        : h(h),
-          w(w)
+    constexpr explicit SizeType(dim_t width, dim_t height) noexcept
+        : height(height),
+          width(width)
     {}
 
     SizeType<dim_t, dim_c>(const SizeType<dim_t, dim_c>&) noexcept = default;
@@ -224,7 +224,7 @@ public:
      */
     inline bool empty() const
     {
-        return w <= 0 || h <= 0;
+        return width <= 0 || height <= 0;
     }
 
     /**
@@ -234,53 +234,53 @@ public:
      */
     inline void clear()
     {
-        h = w = 0;
+        height = width = 0;
     }
 
     SizeType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)
     {
-        w += rhs.w;
-        h += rhs.h;
+        width += rhs.width;
+        height += rhs.height;
         return *this;
     }
 
     SizeType<dim_t, dim_c>& operator-=(const SizeType<dim_t, dim_c>& rhs)
     {
-        w -= rhs.w;
-        h -= rhs.h;
+        width -= rhs.width;
+        height -= rhs.height;
         return *this;
     }
 
     SizeType<dim_t, dim_c>& operator*=(const SizeType<dim_t, dim_c>& rhs)
     {
-        w *= rhs.w;
-        h *= rhs.h;
+        width *= rhs.width;
+        height *= rhs.height;
         return *this;
     }
 
     SizeType<dim_t, dim_c>& operator/=(const SizeType<dim_t, dim_c>& rhs)
     {
-        w /= rhs.w;
-        h /= rhs.h;
+        width /= rhs.width;
+        height /= rhs.height;
         return *this;
     }
 
     /**
      * Height
      */
-    dim_t h{0};
+    dim_t height{0};
 
     /**
      * Width
      */
-    dim_t w{0};
+    dim_t width{0};
 };
 
 /// Compares two @c SizeType objects for equality.
 template<class dim_t, compatible dim_c>
 inline bool operator==(const SizeType<dim_t, dim_c>& lhs, const SizeType<dim_t, dim_c>& rhs)
 {
-    return lhs.w == rhs.w && lhs.h == rhs.h;
+    return lhs.width == rhs.width && lhs.height == rhs.height;
 }
 
 /// Compares two @c SizeType objects for inequality.
@@ -307,39 +307,39 @@ inline SizeType<dim_t, dim_c> operator+(SizeType<dim_t, dim_c> lhs, const SizeTy
 template<class dim_t, compatible dim_c>
 inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
-    lhs.w *= rhs.w;
-    lhs.h *= rhs.h;
+    lhs.width *= rhs.width;
+    lhs.height *= rhs.height;
     return lhs;
 }
 
 template<class dim_t, compatible dim_c>
 inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, float rhs)
 {
-    lhs.w *= rhs;
-    lhs.h *= rhs;
+    lhs.width *= rhs;
+    lhs.height *= rhs;
     return lhs;
 }
 
 template<class dim_t, compatible dim_c>
 inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
-    lhs.w /= rhs.w;
-    lhs.h /= rhs.h;
+    lhs.width /= rhs.width;
+    lhs.height /= rhs.height;
     return lhs;
 }
 
 template<class dim_t, compatible dim_c>
 inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, float rhs)
 {
-    lhs.w /= rhs;
-    lhs.h /= rhs;
+    lhs.width /= rhs;
+    lhs.height /= rhs;
     return lhs;
 }
 
 template<class dim_t, compatible dim_c>
 std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
 {
-    os << size.w << "," << size.h;
+    os << size.width << "," << size.height;
     return os;
 }
 
@@ -382,11 +382,11 @@ public:
     explicit RectType(const PointType<dim_t>& point, const SizeType<dim_t, dim_c>& size) noexcept
         : x(point.x),
           y(point.y),
-          w(size.w),
-          h(size.h)
+          width(size.width),
+          height(size.height)
     {
-        assert(w >= 0);
-        assert(h >= 0);
+        assert(width >= 0);
+        assert(height >= 0);
     }
 
     /**
@@ -395,27 +395,27 @@ public:
      */
     // cppcheck-suppress noExplicitConstructor
     RectType(const SizeType<dim_t, dim_c>& size) noexcept
-        : w(size.w),
-          h(size.h)
+        : width(size.width),
+          height(size.height)
     {
-        assert(w >= 0);
-        assert(h >= 0);
+        assert(width >= 0);
+        assert(height >= 0);
     }
 
     /**
      * @param x X origin coordinate.
      * @param y Y origin coordinate.
-     * @param w Width
-     * @param h Height
+     * @param width Width
+     * @param height Height
      */
-    RectType(dim_t x, dim_t y, dim_t w, dim_t h) noexcept
+    RectType(dim_t x, dim_t y, dim_t width, dim_t height) noexcept
         : x(x),
           y(y),
-          w(w),
-          h(h)
+          width(width),
+          height(height)
     {
-        assert(w >= 0);
-        assert(h >= 0);
+        assert(width >= 0);
+        assert(height >= 0);
     }
 
     RectType<dim_t, dim_c>(const RectType<dim_t, dim_c>&) noexcept = default;
@@ -426,15 +426,15 @@ public:
 
     RectType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)
     {
-        w += rhs.w;
-        h += rhs.h;
+        width += rhs.width;
+        height += rhs.height;
         return *this;
     }
 
     RectType<dim_t, dim_c>& operator-=(const SizeType<dim_t, dim_c>& rhs)
     {
-        w -= rhs.w;
-        h -= rhs.h;
+        width -= rhs.width;
+        height -= rhs.height;
         return *this;
     }
 
@@ -457,7 +457,7 @@ public:
      */
     inline dim_t area() const
     {
-        return w * h;
+        return width * height;
     }
 
     /**
@@ -465,7 +465,7 @@ public:
      */
     inline Point center() const
     {
-        return Point(x + (w / 2.), y + (h / 2.));
+        return Point(x + (width / 2.), y + (height / 2.));
     }
 
     /**
@@ -473,8 +473,8 @@ public:
      */
     inline void move_to_center(const Point& center)
     {
-        Point pos(center.x - w / 2.,
-                  center.y - h / 2.);
+        Point pos(center.x - width / 2.,
+                  center.y - height / 2.);
 
         x = pos.x;
         y = pos.y;
@@ -489,8 +489,8 @@ public:
     {
         x -= radius / 2.;
         y -= radius / 2.;
-        w += radius;
-        h += radius;
+        width += radius;
+        height += radius;
     }
 
     /**
@@ -502,8 +502,8 @@ public:
     {
         x += radius / 2.;
         y += radius / 2.;
-        w -= radius;
-        h -= radius;
+        width -= radius;
+        height -= radius;
     }
 
     /**
@@ -528,7 +528,7 @@ public:
      */
     inline SizeType<dim_t, dim_c> size() const
     {
-        return SizeType<dim_t, dim_c>(w, h);
+        return SizeType<dim_t, dim_c>(width, height);
     }
 
     /**
@@ -536,8 +536,8 @@ public:
      */
     inline void size(const SizeType<dim_t, dim_c>& s)
     {
-        w = s.w;
-        h = s.h;
+        width = s.width;
+        height = s.height;
     }
 
     /**
@@ -561,7 +561,7 @@ public:
      */
     inline dim_t bottom() const
     {
-        return y + h;
+        return y + height;
     }
 
     /**
@@ -569,7 +569,7 @@ public:
      */
     inline dim_t right() const
     {
-        return x + w;
+        return x + width;
     }
 
     /**
@@ -611,7 +611,7 @@ public:
      */
     inline void clear()
     {
-        x = y = w = h = 0;
+        x = y = width = height = 0;
     }
 
     /**
@@ -619,7 +619,7 @@ public:
      */
     inline bool empty() const
     {
-        return w <= 0 || h <= 0;
+        return width <= 0 || height <= 0;
     }
 
     /**
@@ -645,8 +645,8 @@ public:
      */
     static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
     {
-        return (lhs.x < rhs.x + rhs.w && lhs.x + lhs.w > rhs.x &&
-                lhs.y < rhs.y + rhs.h && lhs.y + lhs.h > rhs.y);
+        return (lhs.x < rhs.x + rhs.width && lhs.x + lhs.width > rhs.x &&
+                lhs.y < rhs.y + rhs.height && lhs.y + lhs.height > rhs.y);
     }
 
     /**
@@ -654,8 +654,8 @@ public:
      */
     static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const Point& rhs)
     {
-        return (lhs.x < rhs.x && lhs.x + lhs.w > rhs.x &&
-                lhs.y < rhs.y && lhs.y + lhs.h > rhs.y);
+        return (lhs.x < rhs.x && lhs.x + lhs.width > rhs.x &&
+                lhs.y < rhs.y && lhs.y + lhs.height > rhs.y);
     }
 
     /**
@@ -665,11 +665,11 @@ public:
     static inline RectType<dim_t, dim_c> merge(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs) noexcept
     {
         auto xmin = std::min(lhs.x, rhs.x);
-        auto xmax = std::max(lhs.x + lhs.w,
-                             rhs.x + rhs.w);
+        auto xmax = std::max(lhs.x + lhs.width,
+                             rhs.x + rhs.width);
         auto ymin = std::min(lhs.y, rhs.y);
-        auto ymax = std::max(lhs.y + lhs.h,
-                             rhs.y + rhs.h);
+        auto ymax = std::max(lhs.y + lhs.height,
+                             rhs.y + rhs.height);
 
         return RectType<dim_t, dim_c>(xmin, ymin, xmax - xmin, ymax - ymin);
     }
@@ -686,8 +686,8 @@ public:
     {
         auto x0 = std::max(lhs.x, rhs.x);
         auto y0 = std::max(lhs.y, rhs.y);
-        auto w0 = std::min(lhs.x + lhs.w, rhs.x + rhs.w) - x0;
-        auto h0 = std::min(lhs.y + lhs.h, rhs.y + rhs.h) - y0;
+        auto w0 = std::min(lhs.x + lhs.width, rhs.x + rhs.width) - x0;
+        auto h0 = std::min(lhs.y + lhs.height, rhs.y + rhs.height) - y0;
 
         if (w0 < 0 || h0 < 0)
             return RectType<dim_t, dim_c>();
@@ -717,18 +717,18 @@ public:
     /**
      * Width
      */
-    dim_t w{0};
+    dim_t width{0};
     /**
      * Height
      */
-    dim_t h{0};
+    dim_t height{0};
 };
 
 template<class dim_t, compatible dim_c>
 std::ostream& operator<<(std::ostream& os, const RectType<dim_t, dim_c>& rect)
 {
     os << "["  << rect.x << "," << rect.y << "," <<
-       rect.w << "," << rect.h << "]";
+       rect.width << "," << rect.height << "]";
     return os;
 }
 
@@ -766,8 +766,8 @@ inline bool operator==(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, 
 {
     return lhs.x == rhs.x &&
            lhs.y == rhs.y &&
-           lhs.w == rhs.w &&
-           lhs.h == rhs.h;
+           lhs.width == rhs.width &&
+           lhs.height == rhs.height;
 }
 
 /// Compares two @c Rect objects for inequality.

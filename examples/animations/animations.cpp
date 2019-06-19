@@ -23,7 +23,7 @@ int main(int argc, const char** argv)
 
     AnimationSequence seq;
 
-    PropertyAnimator in(0, win.w(), std::chrono::seconds(1));
+    PropertyAnimator in(0, win.width(), std::chrono::seconds(1));
     in.on_change(std::bind(&StaticGrid::set_width, std::ref(grid), std::placeholders::_1));
     seq.add(in);
 
@@ -41,7 +41,7 @@ int main(int argc, const char** argv)
     label.set_color(Palette::ColorId::bg, Palette::red);
     grid.add(center(label), 0, 1);
 
-    auto orig = label.w();
+    auto orig = label.width();
     PropertyAnimator shrinkh_in(100, 10, std::chrono::seconds(1));
     shrinkh_in.on_change(std::bind(&Label::set_width, std::ref(label), std::placeholders::_1));
     PropertyAnimator shrinkh_out(10, orig, std::chrono::seconds(1));

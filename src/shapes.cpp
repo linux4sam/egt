@@ -70,11 +70,11 @@ void LineWidget::draw(Painter& painter, const Rect&)
     painter.set_line_width(width);
 
     if (m_horizontal)
-        painter.draw(b.center() - Point(b.w / 2., 0),
-                     b.center() + Point(b.w / 2., 0));
+        painter.draw(b.center() - Point(b.width / 2., 0),
+                     b.center() + Point(b.width / 2., 0));
     else
-        painter.draw(b.center() - Point(0, b.h / 2.),
-                     b.center() + Point(0, b.h / 2.));
+        painter.draw(b.center() - Point(0, b.height / 2.),
+                     b.center() + Point(0, b.height / 2.));
 
     painter.stroke();
 }
