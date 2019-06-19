@@ -87,12 +87,12 @@ public:
 
 protected:
 
-    void init(void** ptr, uint32_t count, int w, int h,
+    void init(void** ptr, uint32_t count, const Size& size,
               pixel_format format = pixel_format::argb8888);
 
-    inline void init(int w, int h, pixel_format format = pixel_format::argb8888)
+    inline void init(const Size& size, pixel_format format = pixel_format::argb8888)
     {
-        init(nullptr, 0, w, h, format);
+        init(nullptr, 0, size, format);
     }
 
     /// @private

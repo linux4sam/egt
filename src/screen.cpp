@@ -84,9 +84,9 @@ void Screen::damage_algorithm(Screen::damage_array& damage, const Rect& rect)
     damage.emplace_back(rect);
 }
 
-void Screen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
+void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format format)
 {
-    m_size = Size(w, h);
+    m_size = size;
 
     cairo_format_t f = detail::cairo_format(format);
     if (f == CAIRO_FORMAT_INVALID)
@@ -99,13 +99,13 @@ void Screen::init(void** ptr, uint32_t count, int w, int h, pixel_format format)
         m_buffers.emplace_back(
             cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
                                                 f,
-                                                w, h,
-                                                cairo_format_stride_for_width(f, w)));
+                                                size.width, size.height,
+                                                cairo_format_stride_for_width(f, size.width)));
 
-        m_buffers.back().damage.emplace_back(0, 0, w, h);
+        m_buffers.back().damage.emplace_back(Point(), size);
     }
 
-    m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, w, h),
+    m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, size.width, size.height),
                                        cairo_surface_destroy);
 
     assert(m_surface.get());

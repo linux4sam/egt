@@ -44,7 +44,7 @@ FrameBuffer::FrameBuffer(const string& path)
     if (m_fb == MAP_FAILED) // NOLINT
         throw std::runtime_error(("could not map framebuffer device: " + path).c_str());
 
-    init(&m_fb, 1, varinfo.xres, varinfo.yres);
+    init(&m_fb, 1, Size(varinfo.xres, varinfo.yres));
 }
 
 FrameBuffer::~FrameBuffer()

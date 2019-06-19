@@ -81,7 +81,8 @@ KMSScreen::KMSScreen(bool primary)
                      plane_height(m_plane));
 
         init(m_plane->bufs, KMSScreen::max_buffers(),
-             plane_width(m_plane), plane_height(m_plane), detail::egt_format(format));
+             Size(plane_width(m_plane), plane_height(m_plane)),
+             detail::egt_format(format));
     }
     else
     {
