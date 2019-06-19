@@ -38,6 +38,16 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
     if (m_videosample)
     {
+        GstCaps* caps = gst_sample_get_caps(m_videosample);
+        char* strCaps = gst_caps_to_string(caps);
+        SPDLOG_DEBUG("VideoWindow: Caps = {}", std::string(strCaps));
+        GstStructure* capsStruct = gst_caps_get_structure(caps, 0);
+        int width, height;
+        gst_structure_get_int(capsStruct, "width", &width);
+        gst_structure_get_int(capsStruct, "height", &height);
+
+        SPDLOG_DEBUG("VideoWindow: videowidth = {}  videoheight = {}", width, height);
+
         gst_sample_ref(m_videosample);
         GstBuffer* buffer = gst_sample_get_buffer(m_videosample);
         if (buffer)
@@ -46,18 +56,26 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
             if (gst_buffer_map(buffer, &map, GST_MAP_READ))
             {
                 Rect box = m_interface.box();
-                cairo_surface_t* surface = cairo_image_surface_create_for_data(map.data,
+                auto surface = shared_cairo_surface_t(
+                                   cairo_image_surface_create_for_data(map.data,
                                            CAIRO_FORMAT_RGB16_565,
-                                           box.width,
-                                           box.height,
-                                           cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, box.width));
+                                           width,
+                                           height,
+                                           cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, width)),
+                                   cairo_surface_destroy);
 
-                if (cairo_surface_status(surface) == CAIRO_STATUS_SUCCESS)
+                if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
                 {
-                    cairo_set_source_surface(cr.get(), surface, box.x, box.y);
-                    cairo_rectangle(cr.get(), box.x, box.y, box.width, box.height);
-                    cairo_fill_preserve(cr.get());
-                    cairo_surface_destroy(surface);
+                    SPDLOG_DEBUG("VideoWindow: boxwidth = {}  boxheight = {}", box.width, box.height);
+                    if (width != box.width)
+                    {
+                        double scale = (double) box.width / width;
+                        SPDLOG_DEBUG("VideoWindow: scale = {}", scale);
+                        cairo_scale(cr.get(), scale, scale);
+                    }
+                    cairo_set_source_surface(cr.get(), surface.get(), box.x, box.y);
+                    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
+                    cairo_paint(cr.get());
                 }
                 gst_buffer_unmap(buffer, &map);
             }
@@ -191,6 +209,11 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
     return play();
+}
+
+void GstAppSinkImpl::scale(float scale)
+{
+    m_interface.resize(Size(m_size.width * scale, m_size.height * scale));
 }
 
 } // End of detail

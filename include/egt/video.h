@@ -154,6 +154,13 @@ public:
     }
 
     /**
+     * Scale the video by scale value.
+     *
+     * @param[in] scale
+     */
+    virtual void set_scale(float scale) override;
+
+    /**
      * Get error message
      */
     std::string get_error_message() const;

@@ -28,6 +28,8 @@ public:
 
     virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) override;
 
+    virtual void scale(float scale) override;
+
     virtual ~GstAppSinkImpl() = default;
 
 protected:

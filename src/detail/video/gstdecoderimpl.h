@@ -33,6 +33,8 @@ public:
 
     virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) = 0;
 
+    virtual void scale(float scale) = 0;
+
     virtual bool play();
 
     virtual bool pause();

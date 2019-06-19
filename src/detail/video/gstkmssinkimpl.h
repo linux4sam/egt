@@ -27,6 +27,11 @@ public:
         ignoreparam(rect);
     }
 
+    virtual void scale(float scale) override
+    {
+        ignoreparam(scale);
+    }
+
     virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) override;
 
     virtual ~GstKmsSinkImpl() = default;

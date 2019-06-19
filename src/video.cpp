@@ -135,6 +135,18 @@ bool VideoWindow::seek(const int64_t time)
     return m_decoderImpl->seek(time);
 }
 
+void VideoWindow::set_scale(float scale)
+{
+    if (!flags().is_set(Widget::flag::plane_window))
+    {
+        m_decoderImpl->scale(scale);
+    }
+    else
+    {
+        Window::set_scale(scale);
+    }
+}
+
 std::string VideoWindow::get_error_message() const
 {
     return m_decoderImpl->get_error_message();
