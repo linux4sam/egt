@@ -37,7 +37,7 @@ public:
      * This widget allows to describe a key that will be used by the Keyboard
      * widget.
      */
-    class Key : public Button
+    class Key
     {
     public:
 
@@ -76,6 +76,8 @@ public:
         inline int link() const { return m_link; }
 
     protected:
+        std::shared_ptr<Button> m_button{nullptr};
+
         /**
          * Id of the main panel to display when clicking on this button.
          */

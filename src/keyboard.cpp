@@ -17,45 +17,44 @@ using MainPanel = Keyboard::MainPanel;
 using MultichoicePanel = Keyboard::MultichoicePanel;
 
 Keyboard::Key::Key(uint32_t unicode, double length)
-    : Button(),
+    : m_button(make_shared<Button>()),
       m_unicode(unicode),
       m_length(length)
 {
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
-    set_text(tmp);
-    ncflags().set(Widget::flag::no_autoresize);
+    m_button->set_text(tmp);
+    m_button->ncflags().set(Widget::flag::no_autoresize);
 }
 
 Keyboard::Key::Key(const std::string& label, KeyboardCode keycode, double length)
-    : Button(label),
+    : m_button(make_shared<Button>(label)),
       m_keycode(keycode),
       m_length(length)
 {
-    ncflags().set(Widget::flag::no_autoresize);
+    m_button->ncflags().set(Widget::flag::no_autoresize);
 }
 
 Keyboard::Key::Key(const string& label, int link, double length)
-    : Button(label),
+    : m_button(make_shared<Button>(label)),
       m_link(link),
       m_length(length)
 {
-    ncflags().set(Widget::flag::no_autoresize);
+    m_button->ncflags().set(Widget::flag::no_autoresize);
 }
-
 
 Keyboard::Key::Key(uint32_t unicode,
                    shared_ptr<MultichoicePanel> multichoice,
                    double length, KeyboardCode keycode)
-    : Button(),
+    : m_button(make_shared<Button>()),
       m_unicode(unicode),
       m_length(length),
       m_multichoice(multichoice)
 {
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
-    set_text(tmp);
-    ncflags().set(Widget::flag::no_autoresize);
+    m_button->set_text(tmp);
+    m_button->ncflags().set(Widget::flag::no_autoresize);
 }
 
 Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys,
@@ -73,11 +72,11 @@ Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys,
 
         for (auto& key : row)
         {
-            key->resize(Size(key_size.w * key->length() + 2 * spacing,
-                             key_size.h + 2 * spacing));
-            key->set_margin(spacing / 2);
+            key->m_button->resize(Size(key_size.w * key->length() + 2 * spacing,
+                                     key_size.h + 2 * spacing));
+            key->m_button->set_margin(spacing / 2);
 
-            hsizer->add(key);
+            hsizer->add(key->m_button);
         }
     }
 }
@@ -98,7 +97,7 @@ MultichoicePanel::MultichoicePanel(vector<vector<shared_ptr<Key>>> keys,
 
 void Keyboard::set_key_link(const shared_ptr<Key>& k)
 {
-    k->on_event([this, k](Event&)
+    k->m_button->on_event([this, k](Event&)
     {
         m_main_panel.set_select(k->link());
     }, {eventid::pointer_click});
@@ -106,9 +105,9 @@ void Keyboard::set_key_link(const shared_ptr<Key>& k)
 
 void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
 {
-    k->on_event([this, k](Event & event)
+    k->m_button->on_event([this, k](Event & event)
     {
-        if (!k->text().empty())
+        if (!k->m_button->text().empty())
         {
             Event event2(eventid::keyboard_down);
             event2.key().unicode = k->m_unicode;
@@ -131,12 +130,12 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
     {
         for (auto& multichoice_key : multichoice_raw)
         {
-            multichoice_key->on_event([this, k, multichoice_key](Event & event)
+            multichoice_key->m_button->on_event([this, k, multichoice_key](Event & event)
             {
                 // hide popup first as it is modal
                 m_multichoice_popup.hide();
 
-                if (!multichoice_key->text().empty())
+                if (!multichoice_key->m_button->text().empty())
                 {
                     Event down(eventid::keyboard_down);
                     down.key().unicode = multichoice_key->m_unicode;
@@ -147,7 +146,7 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
                     up.key().keycode = multichoice_key->m_keycode;
                     m_in.dispatch(up);
                     // the modal popup caught the raw_pointer_up event
-                    k->set_active(false);
+                    k->m_button->set_active(false);
                 }
                 // User may just move his finger so prefer the raw_pointer_up event to the pointer_click one.
             }, {eventid::raw_pointer_up});
@@ -156,18 +155,18 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
 
     m_multichoice_popup.m_notebook.add(k->m_multichoice);
 
-    k->on_event([this, k, id](Event&)
+    k->m_button->on_event([this, k, id](Event&)
     {
         m_multichoice_popup.m_notebook.set_select(id);
         m_multichoice_popup.resize(k->m_multichoice->m_panel->size());
 
-        auto display_origin = k->display_origin();
+        auto display_origin = k->m_button->display_origin();
         auto main_window_origin = main_window()->display_to_local(display_origin);
         // Popup on top of the key.
         main_window_origin.y -= m_multichoice_popup.size().h;
         // Popup aligned with key center.
         main_window_origin.x -= m_multichoice_popup.size().w / 2;
-        main_window_origin.x += k->size().w / 2;
+        main_window_origin.x += k->m_button->size().w / 2;
 
         m_multichoice_popup.move(main_window_origin);
         m_multichoice_popup.show_modal();
