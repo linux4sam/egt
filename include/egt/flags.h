@@ -24,9 +24,14 @@ public:
 
     using flags = std::set<T>;
 
-    explicit Flags(const flags& f = flags()) noexcept
+    constexpr explicit Flags(const flags& f = {}) noexcept
         : m_flags(f)
     {}
+
+    explicit Flags(const T& flag) noexcept
+    {
+        set(flag);
+    }
 
     /**
      * Test if the specified flag is set.
@@ -116,6 +121,20 @@ public:
         return m_flags;
     }
 
+    inline Flags<T> operator|(const T& rhs) const
+    {
+        flags f(m_flags);
+        f.insert(rhs);
+        return Flags<T>(f);
+    }
+
+    inline Flags<T> operator|(Flags<T> rhs) const
+    {
+        flags f(m_flags);
+        f.insert(rhs.m_flags.begin(), rhs.m_flags.end());
+        return Flags<T>(f);
+    }
+
 protected:
 
     /**
@@ -123,20 +142,6 @@ protected:
      */
     flags m_flags;
 };
-
-template<class T>
-inline Flags<T> operator+(Flags<T> lhs, const T& rhs)
-{
-    lhs.set(rhs);
-    return lhs;
-}
-
-template<class T>
-inline Flags<T> operator-(Flags<T> lhs, const T& rhs)
-{
-    lhs.clear(rhs);
-    return lhs;
-}
 
 }
 }
