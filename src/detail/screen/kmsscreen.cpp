@@ -52,7 +52,7 @@ KMSScreen::KMSScreen(bool primary)
 {
     spdlog::info("DRM/KMS Screen ({} buffers)", max_buffers());
 
-    m_fd = drmOpen("atmel-hlcdc", NULL);
+    m_fd = drmOpen("atmel-hlcdc", nullptr);
     if (m_fd < 0)
         throw std::runtime_error("unable to open DRM driver");
 

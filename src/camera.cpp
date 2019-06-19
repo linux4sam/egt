@@ -88,7 +88,7 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
         throw std::runtime_error(ss.str());
     }
 
-    m_gmainLoop = g_main_loop_new(NULL, FALSE);
+    m_gmainLoop = g_main_loop_new(nullptr, FALSE);
     m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
 }
 
@@ -337,7 +337,7 @@ bool CameraImpl::start()
             return false;
         }
 
-        g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
+        g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
         g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
     }
 

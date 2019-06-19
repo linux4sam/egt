@@ -184,7 +184,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         }
     }
 
-    g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, NULL);
+    g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
     g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
 
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));

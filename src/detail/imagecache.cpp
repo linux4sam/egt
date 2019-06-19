@@ -343,7 +343,7 @@ std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 
     if (magic)
     {
-        if (!magic_load(magic, NULL))
+        if (!magic_load(magic, nullptr))
         {
             auto mime = magic_buffer(magic, buffer, length);
             if (mime)
@@ -364,7 +364,7 @@ std::string ImageCache::get_mime_type(const std::string& filename)
 
     if (magic)
     {
-        if (!magic_load(magic, NULL))
+        if (!magic_load(magic, nullptr))
         {
             auto mime = magic_file(magic, filename.c_str());
             if (mime)

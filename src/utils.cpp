@@ -31,8 +31,7 @@ double lua_evaluate(const std::string& expr)
     double y = 0.;
 #ifdef HAVE_LUA
     int cookie;
-    char* msg = NULL;
-
+    char* msg = nullptr;
 
     if (!script_init(nullptr))
     {

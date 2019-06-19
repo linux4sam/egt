@@ -175,7 +175,7 @@ AudioPlayer::AudioPlayer()
         throw std::runtime_error(ss.str());
     }
 
-    m_impl->m_gmainLoop = g_main_loop_new(NULL, FALSE);
+    m_impl->m_gmainLoop = g_main_loop_new(nullptr, FALSE);
     m_impl->m_gmainThread = std::thread(g_main_loop_run, m_impl->m_gmainLoop);
 }
 
@@ -187,19 +187,19 @@ void AudioPlayer::destroyPipeline()
     if (m_impl->m_volume)
     {
         g_object_unref(m_impl->m_volume);
-        m_impl->m_volume = NULL;
+        m_impl->m_volume = nullptr;
     }
 
     if (m_impl->m_src)
     {
         g_object_unref(m_impl->m_src);
-        m_impl->m_src = NULL;
+        m_impl->m_src = nullptr;
     }
 
     if (m_impl->m_audio_pipeline)
     {
         g_object_unref(m_impl->m_audio_pipeline);
-        m_impl->m_audio_pipeline = NULL;
+        m_impl->m_audio_pipeline = nullptr;
     }
 }
 
@@ -254,7 +254,7 @@ bool AudioPlayer::set_media(const string& uri)
 
     destroyPipeline();
     createPipeline();
-    g_object_set(m_impl->m_src, "uri", (string("file://") + uri).c_str(), NULL);
+    g_object_set(m_impl->m_src, "uri", (string("file://") + uri).c_str(), nullptr);
 
     return true;
 }
@@ -269,7 +269,7 @@ bool AudioPlayer::set_volume(int volume)
     if (volume > 100)
         volume = 100;
 
-    g_object_set(m_impl->m_volume, "volume", volume / 100.0, NULL);
+    g_object_set(m_impl->m_volume, "volume", volume / 100.0, nullptr);
     invoke_handlers(eventid::property_changed);
 
     return true;
@@ -281,7 +281,7 @@ int AudioPlayer::get_volume() const
         return 0;
 
     gdouble volume = 0;
-    g_object_get(m_impl->m_volume, "volume", &volume, NULL);
+    g_object_get(m_impl->m_volume, "volume", &volume, nullptr);
     return volume * 100.0;
 }
 
@@ -290,7 +290,7 @@ bool AudioPlayer::set_mute(bool mute)
     if (!m_impl->m_volume)
         return false;
 
-    g_object_set(m_impl->m_volume, "mute", mute, NULL);
+    g_object_set(m_impl->m_volume, "mute", mute, nullptr);
     invoke_handlers(eventid::property_changed);
     return true;
 }
@@ -312,7 +312,7 @@ bool AudioPlayer::playing() const
     if (m_impl->m_audio_pipeline)
     {
         (void)gst_element_get_state(m_impl->m_audio_pipeline, &state,
-                                    NULL, GST_CLOCK_TIME_NONE);
+                                    nullptr, GST_CLOCK_TIME_NONE);
         return state == GST_STATE_PLAYING;
     }
 
@@ -342,7 +342,7 @@ void AudioPlayer::seek(uint64_t pos)
 
 bool AudioPlayer::createPipeline()
 {
-    GError* error = NULL;
+    GError* error = nullptr;
     GstBus* bus;
     //guint bus_watch_id;
 
