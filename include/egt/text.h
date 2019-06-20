@@ -58,6 +58,11 @@ public:
          * Wrap at word boundaries instead of character boundaries.  Must be flag::multiline.
          */
         word_wrap,
+
+        /**
+         * Do not display a virtual keyboard when focus is gained.
+         */
+        no_virt_keyboard,
     };
 
     using flags_type = Flags<flag>;

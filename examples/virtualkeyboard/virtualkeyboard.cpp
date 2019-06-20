@@ -27,7 +27,6 @@ int main(int argc, const char** argv)
     auto keyboard = make_shared<VirtualKeyboard>();
     keyboard->set_align(alignmask::expand);
     PopupVirtualKeyboard popup_keyboard {keyboard};
-    popup_keyboard.show();
 
     VerticalBoxSizer vbox;
     vbox.set_align(alignmask::expand);
