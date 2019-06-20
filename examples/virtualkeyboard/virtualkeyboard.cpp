@@ -13,13 +13,12 @@
 
 using namespace std;
 using namespace egt;
-using MainPanel = VirtualKeyboard::MainPanel;
-using MultichoicePanel = VirtualKeyboard::MultichoicePanel;
+using Panel = VirtualKeyboard::Panel;
 
-struct Multichoice_w : public MultichoicePanel
+struct Multichoice_w : public Panel
 {
     Multichoice_w()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0),
@@ -33,10 +32,10 @@ struct Multichoice_w : public MultichoicePanel
     {}
 };
 
-struct Multichoice_e : public MultichoicePanel
+struct Multichoice_e : public Panel
 {
     Multichoice_e()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0117),
@@ -55,10 +54,10 @@ struct Multichoice_e : public MultichoicePanel
     {}
 };
 
-struct Multichoice_E : public MultichoicePanel
+struct Multichoice_E : public Panel
 {
     Multichoice_E()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0116),
@@ -77,10 +76,10 @@ struct Multichoice_E : public MultichoicePanel
     {}
 };
 
-struct Multichoice_r : public MultichoicePanel
+struct Multichoice_r : public Panel
 {
     Multichoice_r()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0155),
@@ -90,10 +89,10 @@ struct Multichoice_r : public MultichoicePanel
     {}
 };
 
-struct Multichoice_R : public MultichoicePanel
+struct Multichoice_R : public Panel
 {
     Multichoice_R()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0154),
@@ -103,10 +102,10 @@ struct Multichoice_R : public MultichoicePanel
     {}
 };
 
-struct Multichoice_t : public MultichoicePanel
+struct Multichoice_t : public Panel
 {
     Multichoice_t()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0fe),
@@ -118,10 +117,10 @@ struct Multichoice_t : public MultichoicePanel
     {}
 };
 
-struct Multichoice_T : public MultichoicePanel
+struct Multichoice_T : public Panel
 {
     Multichoice_T()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0fe),
@@ -133,10 +132,10 @@ struct Multichoice_T : public MultichoicePanel
     {}
 };
 
-struct Multichoice_y : public MultichoicePanel
+struct Multichoice_y : public Panel
 {
     Multichoice_y()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0fd),
@@ -145,10 +144,10 @@ struct Multichoice_y : public MultichoicePanel
     {}
 };
 
-struct Multichoice_Y : public MultichoicePanel
+struct Multichoice_Y : public Panel
 {
     Multichoice_Y()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0dd),
@@ -157,10 +156,10 @@ struct Multichoice_Y : public MultichoicePanel
     {}
 };
 
-struct Multichoice_u : public MultichoicePanel
+struct Multichoice_u : public Panel
 {
     Multichoice_u()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0173),
@@ -177,10 +176,10 @@ struct Multichoice_u : public MultichoicePanel
     {}
 };
 
-struct Multichoice_U : public MultichoicePanel
+struct Multichoice_U : public Panel
 {
     Multichoice_U()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0172),
@@ -197,10 +196,10 @@ struct Multichoice_U : public MultichoicePanel
     {}
 };
 
-struct Multichoice_i : public MultichoicePanel
+struct Multichoice_i : public Panel
 {
     Multichoice_i()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0131),
@@ -216,10 +215,10 @@ struct Multichoice_i : public MultichoicePanel
     {}
 };
 
-struct Multichoice_I : public MultichoicePanel
+struct Multichoice_I : public Panel
 {
     Multichoice_I()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0130),
@@ -235,10 +234,10 @@ struct Multichoice_I : public MultichoicePanel
     {}
 };
 
-struct Multichoice_o : public MultichoicePanel
+struct Multichoice_o : public Panel
 {
     Multichoice_o()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0153),
@@ -255,10 +254,10 @@ struct Multichoice_o : public MultichoicePanel
     {}
 };
 
-struct Multichoice_O : public MultichoicePanel
+struct Multichoice_O : public Panel
 {
     Multichoice_O()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0152),
@@ -275,10 +274,10 @@ struct Multichoice_O : public MultichoicePanel
     {}
 };
 
-struct Multichoice_a : public MultichoicePanel
+struct Multichoice_a : public Panel
 {
     Multichoice_a()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x00e5),
@@ -297,10 +296,10 @@ struct Multichoice_a : public MultichoicePanel
     {}
 };
 
-struct Multichoice_A : public MultichoicePanel
+struct Multichoice_A : public Panel
 {
     Multichoice_A()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x00c5),
@@ -319,10 +318,10 @@ struct Multichoice_A : public MultichoicePanel
     {}
 };
 
-struct Multichoice_s : public MultichoicePanel
+struct Multichoice_s : public Panel
 {
     Multichoice_s()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x00df),
@@ -335,10 +334,10 @@ struct Multichoice_s : public MultichoicePanel
     {}
 };
 
-struct Multichoice_S : public MultichoicePanel
+struct Multichoice_S : public Panel
 {
     Multichoice_S()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x00df),
@@ -351,10 +350,10 @@ struct Multichoice_S : public MultichoicePanel
     {}
 };
 
-struct Multichoice_d : public MultichoicePanel
+struct Multichoice_d : public Panel
 {
     Multichoice_d()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x010f),
@@ -364,10 +363,10 @@ struct Multichoice_d : public MultichoicePanel
     {}
 };
 
-struct Multichoice_D : public MultichoicePanel
+struct Multichoice_D : public Panel
 {
     Multichoice_D()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x010e),
@@ -377,10 +376,10 @@ struct Multichoice_D : public MultichoicePanel
     {}
 };
 
-struct Multichoice_g : public MultichoicePanel
+struct Multichoice_g : public Panel
 {
     Multichoice_g()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0123),
@@ -390,10 +389,10 @@ struct Multichoice_g : public MultichoicePanel
     {}
 };
 
-struct Multichoice_G : public MultichoicePanel
+struct Multichoice_G : public Panel
 {
     Multichoice_G()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0122),
@@ -403,10 +402,10 @@ struct Multichoice_G : public MultichoicePanel
     {}
 };
 
-struct Multichoice_k : public MultichoicePanel
+struct Multichoice_k : public Panel
 {
     Multichoice_k()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0137),
@@ -415,10 +414,10 @@ struct Multichoice_k : public MultichoicePanel
     {}
 };
 
-struct Multichoice_K : public MultichoicePanel
+struct Multichoice_K : public Panel
 {
     Multichoice_K()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0136),
@@ -427,10 +426,10 @@ struct Multichoice_K : public MultichoicePanel
     {}
 };
 
-struct Multichoice_l : public MultichoicePanel
+struct Multichoice_l : public Panel
 {
     Multichoice_l()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0142),
@@ -442,10 +441,10 @@ struct Multichoice_l : public MultichoicePanel
     {}
 };
 
-struct Multichoice_L : public MultichoicePanel
+struct Multichoice_L : public Panel
 {
     Multichoice_L()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0141),
@@ -457,10 +456,10 @@ struct Multichoice_L : public MultichoicePanel
     {}
 };
 
-struct Multichoice_z : public MultichoicePanel
+struct Multichoice_z : public Panel
 {
     Multichoice_z()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x017a),
@@ -471,10 +470,10 @@ struct Multichoice_z : public MultichoicePanel
     {}
 };
 
-struct Multichoice_Z : public MultichoicePanel
+struct Multichoice_Z : public Panel
 {
     Multichoice_Z()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0179),
@@ -485,10 +484,10 @@ struct Multichoice_Z : public MultichoicePanel
     {}
 };
 
-struct Multichoice_c : public MultichoicePanel
+struct Multichoice_c : public Panel
 {
     Multichoice_c()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x00e7),
@@ -499,10 +498,10 @@ struct Multichoice_c : public MultichoicePanel
     {}
 };
 
-struct Multichoice_C : public MultichoicePanel
+struct Multichoice_C : public Panel
 {
     Multichoice_C()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x00c7),
@@ -513,10 +512,10 @@ struct Multichoice_C : public MultichoicePanel
     {}
 };
 
-struct Multichoice_n : public MultichoicePanel
+struct Multichoice_n : public Panel
 {
     Multichoice_n()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0148),
@@ -528,10 +527,10 @@ struct Multichoice_n : public MultichoicePanel
     {}
 };
 
-struct Multichoice_N : public MultichoicePanel
+struct Multichoice_N : public Panel
 {
     Multichoice_N()
-        : MultichoicePanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0147),
@@ -543,10 +542,10 @@ struct Multichoice_N : public MultichoicePanel
     {}
 };
 
-struct QwertyLettersLowerCase : public MainPanel
+struct QwertyLettersLowerCase : public Panel
 {
     QwertyLettersLowerCase()
-        : MainPanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0031),
@@ -601,10 +600,10 @@ struct QwertyLettersLowerCase : public MainPanel
     {}
 };
 
-struct QwertyLettersUpperCase : public MainPanel
+struct QwertyLettersUpperCase : public Panel
 {
     QwertyLettersUpperCase()
-        : MainPanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0031),
@@ -659,10 +658,10 @@ struct QwertyLettersUpperCase : public MainPanel
     {}
 };
 
-struct QwertySymbols1 : public MainPanel
+struct QwertySymbols1 : public Panel
 {
     QwertySymbols1()
-        : MainPanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0031),
@@ -718,10 +717,10 @@ struct QwertySymbols1 : public MainPanel
     {}
 };
 
-struct QwertySymbols2 : public MainPanel
+struct QwertySymbols2 : public Panel
 {
     QwertySymbols2()
-        : MainPanel(
+        : Panel(
     {
         {
             make_shared<VirtualKeyboard::Key>(0x0031),

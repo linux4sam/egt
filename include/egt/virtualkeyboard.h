@@ -29,7 +29,7 @@ inline namespace v1
 class VirtualKeyboard : public Frame
 {
 public:
-    class MultichoicePanel;
+    class Panel;
 
     /**
      * @brief Key widget for the Keyboard widget.
@@ -76,7 +76,7 @@ public:
          * default key size which is configured when creating a Panel.
          * @param[in] keycode Code of the key.
          */
-        Key(uint32_t unicode, std::shared_ptr<MultichoicePanel> multichoice,
+        Key(uint32_t unicode, std::shared_ptr<Panel> multichoice,
             double length = 1.0, KeyboardCode keycode = EKEY_UNKNOWN);
 
         /**
@@ -118,50 +118,19 @@ public:
         /**
          * Link to a multichoice panel to display when long touch happens.
          */
-        std::shared_ptr<MultichoicePanel> m_multichoice{nullptr};
+        std::shared_ptr<Panel> m_multichoice{nullptr};
         friend class VirtualKeyboard;
     };
 
-    class Panel : public VerticalBoxSizer
+    class Panel : public NotebookTab
     {
     public:
         Panel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
               Size key_size = {}, int spacing = 0);
 
     protected:
+        std::shared_ptr<VerticalBoxSizer> m_vsizer;
         std::vector<std::vector<std::shared_ptr<Key>>> m_keys;
-        friend class VirtualKeyboard;
-    };
-
-    /**
-     * @brief MainPanel widget for the Keyboard widget.
-     *
-     * This widget is used to define the main panels that will be displayed by
-     * the keyboard.
-     */
-    class MainPanel : public NotebookTab
-    {
-    public:
-        MainPanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-                  Size key_size = {}, int spacing = 0);
-    protected:
-        std::shared_ptr<Panel> m_panel;
-        friend class VirtualKeyboard;
-    };
-
-    /**
-     * @brief MultichoicePanel widget for the Keyboard widget.
-     *
-     * This widget is used to define the multichoice panels that are displayed
-     * when a long touch happens on a key.
-     */
-    class MultichoicePanel : public NotebookTab
-    {
-    public:
-        MultichoicePanel(std::vector<std::vector<std::shared_ptr<Key>>> keys,
-                         Size key_size = {});
-    protected:
-        std::shared_ptr<Panel> m_panel;
         friend class VirtualKeyboard;
     };
 
@@ -169,7 +138,7 @@ public:
      * @param[in] panels Main panels of the keyboard.
      * @param[in] size Size of the Keyboard.
      */
-    VirtualKeyboard(std::vector<std::shared_ptr<MainPanel>> panels, Size size = {});
+    VirtualKeyboard(std::vector<std::shared_ptr<Panel>> panels, Size size = {});
 
 private:
     struct MultichoicePopup : public Popup

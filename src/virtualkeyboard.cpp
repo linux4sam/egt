@@ -13,8 +13,6 @@ namespace egt
 inline namespace v1
 {
 using Panel = VirtualKeyboard::Panel;
-using MainPanel = VirtualKeyboard::MainPanel;
-using MultichoicePanel = VirtualKeyboard::MultichoicePanel;
 
 VirtualKeyboard::Key::Key(uint32_t unicode, double length)
     : m_button(make_shared<Button>()),
@@ -44,7 +42,7 @@ VirtualKeyboard::Key::Key(const string& label, int link, double length)
 }
 
 VirtualKeyboard::Key::Key(uint32_t unicode,
-                          shared_ptr<MultichoicePanel> multichoice,
+                          shared_ptr<Panel> multichoice,
                           double length, KeyboardCode keycode)
     : m_button(make_shared<Button>()),
       m_unicode(unicode),
@@ -60,15 +58,19 @@ VirtualKeyboard::Key::Key(uint32_t unicode,
 Panel::Panel(vector<vector<shared_ptr<VirtualKeyboard::Key>>> keys,
              Size key_size,
              int spacing)
-    : m_keys(std::move(keys))
+    : m_vsizer(make_shared<VerticalBoxSizer>()),
+      m_keys(std::move(keys))
 {
     set_align(alignmask::center);
+
+    m_vsizer->set_align(alignmask::center);
+    add(m_vsizer);
 
     for (auto& row : m_keys)
     {
         auto hsizer = make_shared<HorizontalBoxSizer>();
         hsizer->set_align(alignmask::center | alignmask::top);
-        add(hsizer);
+        m_vsizer->add(hsizer);
 
         for (auto& key : row)
         {
@@ -79,20 +81,6 @@ Panel::Panel(vector<vector<shared_ptr<VirtualKeyboard::Key>>> keys,
             hsizer->add(key->m_button);
         }
     }
-}
-
-MainPanel::MainPanel(vector<vector<shared_ptr<Key>>> keys,
-                     Size key_size, int spacing)
-    : m_panel(make_shared<Panel>(keys, key_size, spacing))
-{
-    add(m_panel);
-}
-
-MultichoicePanel::MultichoicePanel(vector<vector<shared_ptr<Key>>> keys,
-                                   Size key_size)
-    : m_panel(make_shared<Panel>(keys, key_size))
-{
-    add(m_panel);
 }
 
 void VirtualKeyboard::set_key_link(const shared_ptr<Key>& k)
@@ -126,7 +114,7 @@ void VirtualKeyboard::set_key_input_value(const shared_ptr<Key>& k)
 
 void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
 {
-    for (auto& multichoice_raw : k->m_multichoice->m_panel->m_keys)
+    for (auto& multichoice_raw : k->m_multichoice->m_keys)
     {
         for (auto& multichoice_key : multichoice_raw)
         {
@@ -158,7 +146,7 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
     k->m_button->on_event([this, k, id](Event&)
     {
         m_multichoice_popup.m_notebook.set_select(id);
-        m_multichoice_popup.resize(k->m_multichoice->m_panel->size());
+        m_multichoice_popup.resize(k->m_multichoice->m_vsizer->size());
 
         auto display_origin = k->m_button->display_origin();
         auto main_window_origin = main_window()->display_to_local(display_origin);
@@ -173,7 +161,7 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
     }, {eventid::pointer_hold});
 }
 
-VirtualKeyboard::VirtualKeyboard(vector<shared_ptr<MainPanel>> panels, Size size)
+VirtualKeyboard::VirtualKeyboard(vector<shared_ptr<Panel>> panels, Size size)
     : Frame(Rect(Point(), size))
 {
     m_main_panel.set_align(alignmask::expand);
@@ -185,7 +173,7 @@ VirtualKeyboard::VirtualKeyboard(vector<shared_ptr<MainPanel>> panels, Size size
 
     for (auto& panel : panels)
     {
-        for (auto& row : panel->m_panel->m_keys)
+        for (auto& row : panel->m_keys)
         {
             for (auto& key : row)
             {
