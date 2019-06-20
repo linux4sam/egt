@@ -135,10 +135,20 @@ public:
     };
 
     /**
+     * A default keyboard with a qwerty layout.
+     *
      * @param[in] panels Main panels of the keyboard.
-     * @param[in] size Size of the Keyboard.
+     * @param[in] rect Rect of the Keyboard.
      */
-    VirtualKeyboard(std::vector<std::shared_ptr<Panel>> panels, Size size = {});
+    VirtualKeyboard(const Rect& rect = {});
+
+    /**
+     * A custom keyboard with your own panels.
+     *
+     * @param[in] panels Main panels of the keyboard.
+     * @param[in] rect Rect of the Keyboard.
+     */
+    VirtualKeyboard(std::vector<std::shared_ptr<Panel>> panels, const Rect& rect = {});
 
 private:
     struct MultichoicePopup : public Popup
