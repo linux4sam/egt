@@ -48,7 +48,9 @@ static KMSScreen* the_kms = 0;
 
 std::vector<planeid> KMSScreen::m_used;
 
-KMSScreen::KMSScreen(bool primary)
+KMSScreen::KMSScreen(bool allocate_primary_plane,
+                     pixel_format format)
+
 {
     spdlog::info("DRM/KMS Screen ({} buffers)", max_buffers());
 
@@ -60,16 +62,16 @@ KMSScreen::KMSScreen(bool primary)
     if (!m_device)
         throw std::runtime_error("unable to open KMS device");
 
-    if (primary)
+    if (allocate_primary_plane)
     {
-        uint32_t format = DRM_FORMAT_RGB565;
+        uint32_t drmformat = detail::drm_format(format);
 
         m_plane = plane_create_buffered(m_device,
                                         DRM_PLANE_TYPE_PRIMARY,
                                         0,
                                         m_device->screens[0]->width,
                                         m_device->screens[0]->height,
-                                        format,
+                                        drmformat,
                                         KMSScreen::max_buffers());
         if (!m_plane)
             throw std::runtime_error("unable to create primary plane");
@@ -77,12 +79,12 @@ KMSScreen::KMSScreen(bool primary)
         plane_fb_map(m_plane);
         plane_apply(m_plane);
 
-        SPDLOG_DEBUG("primary plane dumb buffer {},{}", plane_width(m_plane),
-                     plane_height(m_plane));
+        SPDLOG_DEBUG("primary plane dumb buffer {},{} {}", plane_width(m_plane),
+                     plane_height(m_plane), format);
 
         init(m_plane->bufs, KMSScreen::max_buffers(),
              Size(plane_width(m_plane), plane_height(m_plane)),
-             detail::egt_format(format));
+             format);
     }
     else
     {
@@ -150,7 +152,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         pixel_format format,
         windowhint hint)
 {
-    SPDLOG_TRACE("allocate plane of size {} {} {}", size, format, hint);
+    SPDLOG_TRACE("request to allocate overlay {} {} {}", size, format, hint);
     struct plane_data* plane = nullptr;
 
     if (hint == windowhint::software)
@@ -285,7 +287,7 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
 
         plane_set_pos(plane, 0, 0);
 
-        SPDLOG_DEBUG("allocated plane index {} {},{} {} {}", plane->index,
+        SPDLOG_DEBUG("allocated overlay index {} {},{} {} {}", plane->index,
                      plane_width(plane), plane_height(plane),
                      format, plane->type);
     }

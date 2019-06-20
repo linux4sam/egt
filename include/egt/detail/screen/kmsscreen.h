@@ -37,7 +37,8 @@ class KMSScreen : public Screen
 {
 public:
 
-    explicit KMSScreen(bool primary = true);
+    explicit KMSScreen(bool allocate_primary_plane = true,
+                       pixel_format format = pixel_format::rgb565);
 
     enum class plane_type
     {
