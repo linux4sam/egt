@@ -36,6 +36,7 @@ boards/boards \
 brick/brick \
 calc/calc \
 charts/charts \
+colors/colors \
 drag/drag \
 easing/easing \
 floating/floating \
@@ -248,6 +249,12 @@ layout_layout_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 layout_layoutdir = $(prefix)/share/egt/examples/layout/icons
 dist_layout_layout_DATA = $(wildcard $(top_srcdir)/examples/layout/icons/*.png)
 layout_layout_LDFLAGS = $(AM_LDFLAGS)
+
+colors_colors_SOURCES = colors/colors.cpp
+colors_colors_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+colors_colors_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+colors_colorsdir = $(prefix)/share/egt/examples/colors
+colors_colors_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
