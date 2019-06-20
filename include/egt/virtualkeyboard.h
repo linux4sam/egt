@@ -178,6 +178,22 @@ private:
     MultichoicePopup m_multichoice_popup;
 };
 
+class PopupVirtualKeyboard : public Popup
+{
+public:
+    PopupVirtualKeyboard(std::shared_ptr<VirtualKeyboard> keyboard);
+private:
+    VerticalBoxSizer m_vsizer;
+    HorizontalBoxSizer m_hsizer;
+    ImageButton m_close {Image("@cancel.png")};
+    ImageButton m_up {Image("@arrow_up.png")};
+};
+
+/**
+ * Get a pointer to the popup virtual keyboard.
+ */
+PopupVirtualKeyboard*& popup_virtual_keyboard();
+
 }
 }
 

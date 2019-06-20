@@ -14,6 +14,8 @@ inline namespace v1
 {
 using Panel = VirtualKeyboard::Panel;
 
+static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
+
 struct Multichoice_w : public Panel
 {
     Multichoice_w()
@@ -963,6 +965,40 @@ VirtualKeyboard::VirtualKeyboard(const Rect& rect)
     make_shared<QwertySymbols2>()
 }, rect)
 {
+}
+
+PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
+{
+    auto popup_width = main_screen()->size().width;
+    auto popup_height = main_screen()->size().height * 0.4;
+
+    resize(Size(popup_width, popup_height));
+    move(Point(0, main_screen()->size().height - popup_height));
+
+    m_vsizer.set_align(alignmask::expand);
+    add(m_vsizer);
+
+    m_hsizer.set_align(alignmask::top | alignmask::right);
+    m_vsizer.add(m_hsizer);
+
+    m_up.set_align(alignmask::top | alignmask::right);
+    m_hsizer.add(m_up);
+
+    m_close.set_align(alignmask::top | alignmask::right);
+    m_close.on_event([this](Event&)
+    {
+        hide();
+    }, {eventid::pointer_click});
+    m_hsizer.add(m_close);
+
+    m_vsizer.add(keyboard);
+
+    the_popup_virtual_keyboard = this;
+}
+
+PopupVirtualKeyboard*& popup_virtual_keyboard()
+{
+    return the_popup_virtual_keyboard;
 }
 
 }

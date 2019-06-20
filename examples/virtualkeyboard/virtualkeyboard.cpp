@@ -24,16 +24,18 @@ int main(int argc, const char** argv)
     textbox.set_align(alignmask::expand_horizontal | alignmask::top);
     textbox.text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
 
-    VirtualKeyboard keyboard;
-    keyboard.set_align(alignmask::expand);
+    auto keyboard = make_shared<VirtualKeyboard>();
+    keyboard->set_align(alignmask::expand);
+    PopupVirtualKeyboard popup_keyboard {keyboard};
+    popup_keyboard.show();
 
     VerticalBoxSizer vbox;
     vbox.set_align(alignmask::expand);
     vbox.add(textbox);
-    vbox.add(keyboard);
 
     keyboard_focus(&textbox);
 
+    win.add(popup_keyboard);
     win.add(vbox);
     win.show();
 
