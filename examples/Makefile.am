@@ -41,12 +41,12 @@ drag/drag \
 easing/easing \
 floating/floating \
 frames/frames \
-keyboard/keyboard \
 layout/layout \
 sizers/sizers \
 space/space \
 sprite/sprite \
 squares/squares \
+virtualkeyboard/virtualkeyboard \
 water/water \
 whiteboard/whiteboard \
 widgets/widgets
@@ -191,10 +191,10 @@ frames_frames_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 frames_frames_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 frames_frames_LDFLAGS = $(AM_LDFLAGS)
 
-keyboard_keyboard_SOURCES = keyboard/keyboard.cpp
-keyboard_keyboard_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-keyboard_keyboard_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-keyboard_keyboard_LDFLAGS = $(AM_LDFLAGS)
+virtualkeyboard_virtualkeyboard_SOURCES = virtualkeyboard/virtualkeyboard.cpp
+virtualkeyboard_virtualkeyboard_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+virtualkeyboard_virtualkeyboard_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+virtualkeyboard_virtualkeyboard_LDFLAGS = $(AM_LDFLAGS)
 
 basicui_basicui_SOURCES = basicui/basicui.cpp
 basicui_basicui_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)

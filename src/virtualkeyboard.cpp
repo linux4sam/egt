@@ -1,10 +1,10 @@
 #include "detail/utf8text.h"
 #include "egt/button.h"
 #include "egt/input.h"
-#include "egt/keyboard.h"
 #include "egt/keycode.h"
 #include "egt/popup.h"
 #include "egt/sizer.h"
+#include "egt/virtualkeyboard.h"
 
 using namespace std;
 
@@ -12,11 +12,11 @@ namespace egt
 {
 inline namespace v1
 {
-using Panel = Keyboard::Panel;
-using MainPanel = Keyboard::MainPanel;
-using MultichoicePanel = Keyboard::MultichoicePanel;
+using Panel = VirtualKeyboard::Panel;
+using MainPanel = VirtualKeyboard::MainPanel;
+using MultichoicePanel = VirtualKeyboard::MultichoicePanel;
 
-Keyboard::Key::Key(uint32_t unicode, double length)
+VirtualKeyboard::Key::Key(uint32_t unicode, double length)
     : m_button(make_shared<Button>()),
       m_unicode(unicode),
       m_length(length)
@@ -27,7 +27,7 @@ Keyboard::Key::Key(uint32_t unicode, double length)
     m_button->ncflags().set(Widget::flag::no_autoresize);
 }
 
-Keyboard::Key::Key(const std::string& label, KeyboardCode keycode, double length)
+VirtualKeyboard::Key::Key(const std::string& label, KeyboardCode keycode, double length)
     : m_button(make_shared<Button>(label)),
       m_keycode(keycode),
       m_length(length)
@@ -35,7 +35,7 @@ Keyboard::Key::Key(const std::string& label, KeyboardCode keycode, double length
     m_button->ncflags().set(Widget::flag::no_autoresize);
 }
 
-Keyboard::Key::Key(const string& label, int link, double length)
+VirtualKeyboard::Key::Key(const string& label, int link, double length)
     : m_button(make_shared<Button>(label)),
       m_link(link),
       m_length(length)
@@ -43,9 +43,9 @@ Keyboard::Key::Key(const string& label, int link, double length)
     m_button->ncflags().set(Widget::flag::no_autoresize);
 }
 
-Keyboard::Key::Key(uint32_t unicode,
-                   shared_ptr<MultichoicePanel> multichoice,
-                   double length, KeyboardCode keycode)
+VirtualKeyboard::Key::Key(uint32_t unicode,
+                          shared_ptr<MultichoicePanel> multichoice,
+                          double length, KeyboardCode keycode)
     : m_button(make_shared<Button>()),
       m_unicode(unicode),
       m_length(length),
@@ -57,7 +57,7 @@ Keyboard::Key::Key(uint32_t unicode,
     m_button->ncflags().set(Widget::flag::no_autoresize);
 }
 
-Panel::Panel(vector<vector<shared_ptr<Keyboard::Key>>> keys,
+Panel::Panel(vector<vector<shared_ptr<VirtualKeyboard::Key>>> keys,
              Size key_size,
              int spacing)
     : m_keys(std::move(keys))
@@ -95,7 +95,7 @@ MultichoicePanel::MultichoicePanel(vector<vector<shared_ptr<Key>>> keys,
     add(m_panel);
 }
 
-void Keyboard::set_key_link(const shared_ptr<Key>& k)
+void VirtualKeyboard::set_key_link(const shared_ptr<Key>& k)
 {
     k->m_button->on_event([this, k](Event&)
     {
@@ -103,7 +103,7 @@ void Keyboard::set_key_link(const shared_ptr<Key>& k)
     }, {eventid::pointer_click});
 }
 
-void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
+void VirtualKeyboard::set_key_input_value(const shared_ptr<Key>& k)
 {
     k->m_button->on_event([this, k](Event & event)
     {
@@ -124,7 +124,7 @@ void Keyboard::set_key_input_value(const shared_ptr<Key>& k)
     }, {eventid::pointer_click});
 }
 
-void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
+void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
 {
     for (auto& multichoice_raw : k->m_multichoice->m_panel->m_keys)
     {
@@ -173,7 +173,7 @@ void Keyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
     }, {eventid::pointer_hold});
 }
 
-Keyboard::Keyboard(vector<shared_ptr<MainPanel>> panels, Size size)
+VirtualKeyboard::VirtualKeyboard(vector<shared_ptr<MainPanel>> panels, Size size)
     : Frame(Rect(Point(), size))
 {
     m_main_panel.set_align(alignmask::expand);

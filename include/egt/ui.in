@@ -32,7 +32,6 @@
 #include <egt/grid.h>
 #include <egt/image.h>
 #include <egt/input.h>
-#include <egt/keyboard.h>
 #include <egt/keycode.h>
 #include <egt/label.h>
 #include <egt/list.h>
@@ -55,6 +54,7 @@
 #include <egt/valuewidget.h>
 #include <egt/version.h>
 #include <egt/view.h>
+#include <egt/virtualkeyboard.h>
 #include <egt/window.h>
 
 @include_audio@

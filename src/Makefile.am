@@ -71,7 +71,6 @@ image.cpp \
 images/bmp/cairo_bmp.c \
 images/bmp/cairo_bmp.h \
 input.cpp \
-keyboard.cpp \
 keycode.cpp \
 label.cpp \
 list.cpp \
@@ -98,6 +97,7 @@ types.cpp \
 uiloader.cpp \
 utils.cpp \
 view.cpp \
+virtualkeyboard.cpp \
 widget.cpp \
 widgetflags.cpp \
 window.cpp
@@ -158,7 +158,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/gauge.h \
 ../include/egt/image.h \
 ../include/egt/input.h \
-../include/egt/keyboard.h \
 ../include/egt/keycode.h \
 ../include/egt/label.h \
 ../include/egt/list.h \
@@ -191,6 +190,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/utils.h \
 ../include/egt/valuewidget.h \
 ../include/egt/view.h \
+../include/egt/virtualkeyboard.h \
 ../include/egt/widget.h \
 ../include/egt/widgetflags.h \
 ../include/egt/window.h

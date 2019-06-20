@@ -26,7 +26,7 @@ namespace egt
 inline namespace v1
 {
 
-class Keyboard : public Frame
+class VirtualKeyboard : public Frame
 {
 public:
     class MultichoicePanel;
@@ -119,7 +119,7 @@ public:
          * Link to a multichoice panel to display when long touch happens.
          */
         std::shared_ptr<MultichoicePanel> m_multichoice{nullptr};
-        friend class Keyboard;
+        friend class VirtualKeyboard;
     };
 
     class Panel : public VerticalBoxSizer
@@ -130,7 +130,7 @@ public:
 
     protected:
         std::vector<std::vector<std::shared_ptr<Key>>> m_keys;
-        friend class Keyboard;
+        friend class VirtualKeyboard;
     };
 
     /**
@@ -146,7 +146,7 @@ public:
                   Size key_size = {}, int spacing = 0);
     protected:
         std::shared_ptr<Panel> m_panel;
-        friend class Keyboard;
+        friend class VirtualKeyboard;
     };
 
     /**
@@ -162,14 +162,14 @@ public:
                          Size key_size = {});
     protected:
         std::shared_ptr<Panel> m_panel;
-        friend class Keyboard;
+        friend class VirtualKeyboard;
     };
 
     /**
      * @param[in] panels Main panels of the keyboard.
      * @param[in] size Size of the Keyboard.
      */
-    Keyboard(std::vector<std::shared_ptr<MainPanel>> panels, Size size = {});
+    VirtualKeyboard(std::vector<std::shared_ptr<MainPanel>> panels, Size size = {});
 
 private:
     struct MultichoicePopup : public Popup
@@ -181,13 +181,13 @@ private:
         }
 
         Notebook m_notebook;
-        friend class Keyboard;
+        friend class VirtualKeyboard;
     };
 
     struct KeyboardInput : public Input
     {
         using Input::Input;
-        friend class Keyboard;
+        friend class VirtualKeyboard;
     };
 
     void set_key_link(const std::shared_ptr<Key>& k);
