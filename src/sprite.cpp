@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/spriteimpl.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/image.h"
@@ -35,8 +36,7 @@ class HardwareSprite : public SpriteImpl
 {
 public:
     HardwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
-                   int framecount, const Point& frame_point,
-                   const Point& point = Point());
+                   int frame_count, const Point& frame_point);
 
     virtual void show_frame(int index) override;
 
@@ -60,8 +60,7 @@ class SoftwareSprite : public SpriteImpl
 {
 public:
     SoftwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
-                   int framecount, const Point& frame_point,
-                   const Point& point = Point());
+                   int frame_count, const Point& frame_point);
 
     virtual void show_frame(int index) override;
 
@@ -101,9 +100,8 @@ static shared_cairo_surface_t frame_surface(const Rect& rect, const Image& image
 
 #ifdef HAVE_LIBPLANES
 HardwareSprite::HardwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
-                               int framecount, const Point& frame_point,
-                               const Point& point)
-    : SpriteImpl(image, frame_size, framecount, frame_point),
+                               int frame_count, const Point& frame_point)
+    : SpriteImpl(image, frame_size, frame_count, frame_point),
       m_label(image),
       m_interface(interface)
 {
@@ -117,7 +115,6 @@ HardwareSprite::HardwareSprite(Sprite& interface, const Image& image, const Size
     plane_set_pan_size(s->s(), m_frame.width, m_frame.height);
 
     // hack to change the size because the screen size and the box size are different
-    interface.move(point);
     interface.m_box.size(frame_size);
 }
 
@@ -159,12 +156,11 @@ void HardwareSprite::paint(Painter& painter)
 #endif
 
 SoftwareSprite::SoftwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
-                               int framecount, const Point& frame_point,
-                               const Point& point)
-    : SpriteImpl(image, frame_size, framecount, frame_point),
+                               int frame_count, const Point& frame_point)
+    : SpriteImpl(image, frame_size, frame_count, frame_point),
       m_interface(interface)
 {
-    interface.m_box = Rect(point, frame_size);
+    interface.m_box = Rect({}, frame_size);
 }
 
 void SoftwareSprite::draw(Painter& painter, const Rect& rect)
@@ -200,72 +196,103 @@ void SoftwareSprite::paint(Painter& painter)
 
 }
 
+Sprite::Sprite()
+    : Window(pixel_format::argb8888)
+{}
+
 Sprite::Sprite(const Image& image, const Size& frame_size,
-               int framecount, const Point& frame_point,
-               const Point& point)
-    : Window(Rect(point, image.size()), Widget::flags_type(), pixel_format::argb8888)
+               int frame_count, const Point& frame_point)
+    : Window(Rect({}, image.size()), pixel_format::argb8888)
 {
     set_name("Sprite" + std::to_string(m_widgetid));
     set_boxtype(Theme::boxtype::none);
-    create_impl(image, frame_size, framecount, frame_point);
+    create_impl(image, frame_size, frame_count, frame_point);
+}
+
+void Sprite::init(const Image& image, const Size& frame_size,
+                  int frame_count, const Point& frame_point)
+{
+    resize(image.size());
+    create_impl(image, frame_size, frame_count, frame_point);
 }
 
 void Sprite::draw(Painter& painter, const Rect& rect)
 {
+    if (!m_simpl)
+        return;
+
     Window::draw(painter, rect);
     m_simpl->draw(painter, rect);
 }
 
 void Sprite::show_frame(int index)
 {
+    if (!m_simpl)
+        throw std::runtime_error("no sprite implementation initialized");
     m_simpl->show_frame(index);
 }
 
 void Sprite::paint(Painter& painter)
 {
+    if (!m_simpl)
+        return;
     m_simpl->paint(painter);
 }
 
 shared_cairo_surface_t Sprite::surface() const
 {
+    if (!m_simpl)
+        throw std::runtime_error("no sprite implementation initialized");
     return m_simpl->surface();
 }
 
 void Sprite::advance()
 {
+    if (!m_simpl)
+        throw std::runtime_error("no sprite implementation initialized");
     m_simpl->advance();
 }
 
 bool Sprite::is_last_frame() const
 {
+    if (!m_simpl)
+        throw std::runtime_error("no sprite implementation initialized");
     return m_simpl->is_last_frame();
 }
 
 uint32_t Sprite::frame_count() const
 {
+    if (!m_simpl)
+        throw std::runtime_error("no sprite implementation initialized");
     return m_simpl->frame_count();
 }
 
 void Sprite::set_strip(uint32_t id)
 {
+    if (!m_simpl)
+        throw std::runtime_error("no sprite implementation initialized");
     m_simpl->set_strip(id);
 }
 
-uint32_t Sprite::add_strip(int framecount, const Point& point)
+uint32_t Sprite::add_strip(int frame_count, const Point& frame_point)
 {
-    return m_simpl->add_strip(framecount, point);
+    if (!m_simpl)
+        throw std::runtime_error("no sprite implementation initialized");
+    return m_simpl->add_strip(frame_count, frame_point);
 }
 
 void Sprite::create_impl(const Image& image, const Size& frame_size,
-                         int framecount, const Point& frame_point)
+                         int frame_count, const Point& frame_point)
 {
 #ifdef HAVE_LIBPLANES
     if (flags().is_set(Widget::flag::plane_window))
-        m_simpl = make_unique<detail::HardwareSprite>(*this, image, frame_size, framecount, frame_point);
+        m_simpl = make_unique<detail::HardwareSprite>(*this, image, frame_size, frame_count, frame_point);
     else
 #endif
-        m_simpl = make_unique<detail::SoftwareSprite>(*this, image, frame_size, framecount, frame_point);
+        m_simpl = make_unique<detail::SoftwareSprite>(*this, image, frame_size, frame_count, frame_point);
 }
+
+Sprite::~Sprite() = default;
 
 }
 }

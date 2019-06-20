@@ -397,15 +397,9 @@ CameraImpl::~CameraImpl()
 
 CameraWindow::CameraWindow(const Rect& rect, const std::string& device,
                            pixel_format format, windowhint hint)
-    : Window(rect, flags_type(), format, hint)
+    : Window(rect, format, hint)
 {
     m_cameraImpl.reset(new detail::CameraImpl((*this), rect, device, detail::is_target_sama5d4()));
-}
-
-CameraWindow::CameraWindow(const Size& size, const std::string& device,
-                           pixel_format format, windowhint hint)
-    : CameraWindow(Rect(size), device, format, hint)
-{
 }
 
 void CameraWindow::draw(Painter& painter, const Rect& rect)

@@ -83,17 +83,14 @@ public:
      */
     constexpr static const auto DEFAULT_FORMAT = pixel_format::argb8888;
 
+    explicit Window(pixel_format format = DEFAULT_FORMAT,
+                    windowhint hint = windowhint::automatic)
+        : Window({}, format, hint)
+    {}
+
     explicit Window(const Rect& rect,
-                    const Widget::flags_type& flags = Widget::flags_type(),
                     pixel_format format = DEFAULT_FORMAT,
                     windowhint hint = windowhint::automatic);
-
-    Window(const Size& size = Size(),
-           const Widget::flags_type& flags = Widget::flags_type(),
-           pixel_format format = DEFAULT_FORMAT,
-           windowhint hint = windowhint::automatic)
-        : Window(Rect(Point(), size), flags, format, hint)
-    {}
 
     virtual void damage() override
     {

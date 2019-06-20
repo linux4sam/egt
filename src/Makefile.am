@@ -49,6 +49,7 @@ detail/mousegesture.cpp \
 detail/object.cpp \
 detail/resource.cpp \
 detail/screen/flipthread.h \
+detail/spriteimpl.h \
 detail/string.cpp \
 detail/textwidget.cpp \
 detail/utf8text.cpp \
@@ -142,7 +143,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/priorityqueue.h \
 ../include/egt/detail/resource.h \
 ../include/egt/detail/serialize.h \
-../include/egt/detail/spriteimpl.h \
 ../include/egt/detail/string.h \
 ../include/egt/detail/textwidget.h \
 ../include/egt/detail/layout.h \

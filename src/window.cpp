@@ -66,10 +66,9 @@ std::ostream& operator<<(std::ostream& os, const windowhint& event)
 }
 
 Window::Window(const Rect& rect,
-               const Widget::flags_type& flags,
                pixel_format format,
                windowhint hint)
-    : Frame(rect, flags)
+    : Frame(rect)
 {
     set_name("Window" + std::to_string(m_widgetid));
 
@@ -301,7 +300,7 @@ Window::~Window()
 struct CursorWindow : public Window
 {
     explicit CursorWindow(const Image& image)
-        : Window(image.size(), Widget::flags_type(), pixel_format::argb8888, windowhint::cursor_overlay),
+        : Window(image.size(), pixel_format::argb8888, windowhint::cursor_overlay),
           m_label(new ImageLabel(image))
     {
         set_color(Palette::ColorId::bg, Palette::transparent);

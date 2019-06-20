@@ -17,7 +17,7 @@ SideBoard::SideBoard(flags f,
                      easing_func_t close_func)
     : Window(main_screen()->size() + Size(f == flags::left || f == flags::right ? HANDLE_WIDTH : 0,
                                           f == flags::top || f == flags::bottom ? HANDLE_WIDTH : 0),
-             Widget::flags_type(), pixel_format::rgb565),
+             pixel_format::rgb565),
       m_side_flags(f)
 {
     m_oanim.duration(open_duration);
