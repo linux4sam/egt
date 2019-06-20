@@ -40,10 +40,12 @@ int main(int argc, const char** argv)
     grid.add(center(sprite2), 1, 1);
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
+    hardware_checkbox.set_color(Palette::ColorId::bg, Palette::transparent);
     grid.add(center(hardware_checkbox), 0, 0);
     hardware_checkbox.set_check(true);
 
     CheckBox software_checkbox("Software", Rect(Point(0, 0), Size(120, 40)));
+    software_checkbox.set_color(Palette::ColorId::bg, Palette::transparent);
     grid.add(center(software_checkbox), 1, 0);
     software_checkbox.set_check(true);
 
