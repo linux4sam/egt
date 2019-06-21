@@ -5,7 +5,14 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_MACRO_DIR([m4])
 AC_USE_SYSTEM_EXTENSIONS
+
+if test "$program_prefix" = NONE; then
+  program_prefix="egt_"
+fi
+
 AC_CANONICAL_SYSTEM
+AC_ARG_PROGRAM
+
 PKG_PROG_PKG_CONFIG
 
 AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
