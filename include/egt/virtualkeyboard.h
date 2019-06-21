@@ -187,6 +187,7 @@ private:
     HorizontalBoxSizer m_hsizer;
     ImageButton m_close_button {Image("@cancel.png")};
     ImageButton m_top_bottom_button {Image("@arrow_up.png")};
+    bool m_bottom_positionned {true};
 };
 
 /**

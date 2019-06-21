@@ -973,7 +973,8 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
     auto popup_height = main_screen()->size().height * 0.4;
 
     resize(Size(popup_width, popup_height));
-    move(Point(0, main_screen()->size().height - popup_height));
+    auto y_keyboard_position = main_screen()->size().height - popup_height;
+    move(Point(0, y_keyboard_position));
 
     m_vsizer.set_align(alignmask::expand);
     add(m_vsizer);
@@ -982,15 +983,36 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
     m_vsizer.add(m_hsizer);
 
     m_top_bottom_button.set_align(alignmask::top | alignmask::right);
+    m_top_bottom_button.on_event([this, y_keyboard_position](Event&)
+    {
+        if (m_bottom_positionned)
+        {
+            move(Point(0, 0));
+            m_top_bottom_button.set_image(Image("@arrow_down.png"));
+        }
+        else
+        {
+            move(Point(0, y_keyboard_position));
+            m_top_bottom_button.set_image(Image("@arrow_up.png"));
+        }
+
+        m_bottom_positionned = !m_bottom_positionned;
+    }, {eventid::pointer_click});
     m_hsizer.add(m_top_bottom_button);
 
     m_close_button.set_align(alignmask::top | alignmask::right);
-    m_close_button.on_event([this](Event&)
+    m_close_button.on_event([this, y_keyboard_position](Event&)
     {
         hide();
+        // By default, the virtual keyboard is displayed first at the bottom of
+        // the screen.
+        move(Point(0, y_keyboard_position));
+        m_top_bottom_button.set_image(Image("@arrow_up.png"));
+        m_bottom_positionned = true;
     }, {eventid::pointer_click});
     m_hsizer.add(m_close_button);
 
+    keyboard->set_align(alignmask::expand);
     m_vsizer.add(keyboard);
 
     the_popup_virtual_keyboard = this;
