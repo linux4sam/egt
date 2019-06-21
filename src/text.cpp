@@ -77,12 +77,14 @@ void TextBox::handle(Event& event)
     case eventid::on_lost_focus:
         hide_cursor();
         if (!text_flags().is_set(flag::no_virt_keyboard))
-            popup_virtual_keyboard()->hide();
+            if (popup_virtual_keyboard())
+                popup_virtual_keyboard()->hide();
         break;
     case eventid::pointer_click:
         keyboard_focus(this);
         if (!text_flags().is_set(flag::no_virt_keyboard))
-            popup_virtual_keyboard()->show();
+            if (popup_virtual_keyboard())
+                popup_virtual_keyboard()->show();
         break;
     case eventid::keyboard_down:
         handle_key(event.key());
