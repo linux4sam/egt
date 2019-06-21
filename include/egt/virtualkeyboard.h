@@ -185,8 +185,8 @@ public:
 private:
     VerticalBoxSizer m_vsizer;
     HorizontalBoxSizer m_hsizer;
-    ImageButton m_close {Image("@cancel.png")};
-    ImageButton m_up {Image("@arrow_up.png")};
+    ImageButton m_closeButton {Image("@cancel.png")};
+    ImageButton m_topBottomButton {Image("@arrow_up.png")};
 };
 
 /**

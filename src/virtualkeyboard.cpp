@@ -981,15 +981,15 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
     m_hsizer.set_align(alignmask::top | alignmask::right);
     m_vsizer.add(m_hsizer);
 
-    m_up.set_align(alignmask::top | alignmask::right);
-    m_hsizer.add(m_up);
+    m_topBottomButton.set_align(alignmask::top | alignmask::right);
+    m_hsizer.add(m_topBottomButton);
 
-    m_close.set_align(alignmask::top | alignmask::right);
-    m_close.on_event([this](Event&)
+    m_closeButton.set_align(alignmask::top | alignmask::right);
+    m_closeButton.on_event([this](Event&)
     {
         hide();
     }, {eventid::pointer_click});
-    m_hsizer.add(m_close);
+    m_hsizer.add(m_closeButton);
 
     m_vsizer.add(keyboard);
 
