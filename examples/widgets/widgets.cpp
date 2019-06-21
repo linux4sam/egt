@@ -585,6 +585,11 @@ int main(int argc, const char** argv)
         notebook->set_select(list->selected());
     }, {eventid::property_changed});
 
+    auto default_keyboard = make_shared<VirtualKeyboard>();
+    PopupVirtualKeyboard popup_keyboard {default_keyboard};
+
+    win.add(popup_keyboard);
+
     win.show();
 
     return app.run();
