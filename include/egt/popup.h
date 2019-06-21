@@ -28,6 +28,11 @@ template <class T>
 class PopupType : public T
 {
 public:
+
+    /**
+     * @param size The size of the window.
+     * @param point The origin point of the window.
+     */
     explicit PopupType(const Size& size = {},
                        const Point& point = {})
         : T(size)

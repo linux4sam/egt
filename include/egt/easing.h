@@ -95,8 +95,6 @@ struct easing_cubic_bezier
     float_t m_p3;
 };
 
-
-
 }
 }
 

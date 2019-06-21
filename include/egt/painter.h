@@ -24,7 +24,8 @@ class Image;
 /**
  * Drawing interface for 2D graphics.
  *
- * This is the interface for all 2D drawing primitives.
+ * This is the interface for 2D drawing primitives that makes working with and
+ * drawing EGT primitives easier.
  */
 class Painter : public detail::noncopyable
 {
@@ -35,6 +36,15 @@ public:
      *
      * You are encouraged to use this instead of manually calling
      * Painter::save() and Painter::restore().
+     *
+     * @code{.cpp}
+     * void SomeWidget::paint(Painter& painter)
+     * {
+     *     Painter::AutoSaveRestore sr(painter);
+     *
+     *     // painter state will be restored when sr is destructed
+     * }
+     * @endcode
      */
     struct AutoSaveRestore
     {
@@ -55,13 +65,12 @@ public:
     Painter() = delete;
 
     /**
+     * Construct a Painter with an existing context.
+     *
      * @todo Painter needs to come from the Screen. This constructor should
      * be hidden and you should have to get a custom version of it from the
      * Screen for drawing. A default software/GPU painter can be created,
      * otherwise for something like X11 we should be using X11 to paint.
-     *
-     * Or maybe we leave this as it is and put the drawing abstraction under
-     * cairo...
      */
     explicit Painter(shared_cairo_t cr) noexcept;
 

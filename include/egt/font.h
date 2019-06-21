@@ -96,46 +96,56 @@ public:
      */
     explicit Font(int size, weightid weight);
 
+    /**
+     * Create a font based on the global default font, but with the
+     * specified weight.
+     *
+     * @param[in] weight The weight of the font.
+     */
     explicit Font(weightid weight);
 
+    /**
+     * Create a font based on the global default font, but with the
+     * specified slant.
+     *
+     * @param[in] slant The slant of the font.
+     */
     explicit Font(slantid slant);
 
     /**
      * Get the face name the font.
      */
-    const std::string& face() const { return m_face; }
+    inline const std::string& face() const { return m_face; }
 
     /**
      * Set the face of the font.
      */
-    void set_face(const std::string& face) { m_face = face; }
+    inline void set_face(const std::string& face) { m_face = face; }
 
     /**
      * Get the size of the font.
      */
-    virtual int size() const { return m_size; }
+    inline int size() const { return m_size; }
 
     /**
      * Set the size of the font.
      */
-    virtual void set_size(int s) { m_size = s; }
+    inline void set_size(int s) { m_size = s; }
 
     /**
      * Get the weight of the font.
      */
-    virtual weightid weight() const { return m_weight; }
+    inline weightid weight() const { return m_weight; }
 
     /**
      * Set the weight of the font.
      */
-    virtual void set_weight(weightid w) { m_weight = w; }
+    inline void set_weight(weightid w) { m_weight = w; }
 
     /**
      * Get the slant of the font.
      */
-    virtual slantid slant() const { return m_slant; }
-
-    virtual ~Font() = default;
+    inline slantid slant() const { return m_slant; }
 
     /**
      * Generates a FontConfig scaled font instance.

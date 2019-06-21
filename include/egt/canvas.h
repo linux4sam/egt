@@ -43,10 +43,19 @@ public:
 
     /**
      * Construct a canvas with the specified format and size.
+     *
+     * @param[in] size The size of the canvas.
+     * @param[in] format The pixel format for the canvas.
      */
     explicit Canvas(const Size& size,
                     pixel_format format = pixel_format::argb8888) noexcept;
 
+    /**
+     * Construct a canvas with the specified format and size.
+     *
+     * @param[in] size The size of the canvas.
+     * @param[in] format The pixel format for the canvas.
+     */
     explicit Canvas(const SizeF& size,
                     pixel_format format = pixel_format::argb8888) noexcept;
 
@@ -54,6 +63,8 @@ public:
      * Construct a canvas with an already existing surface.
      *
      * The canvas will create a copy of the supplied surface.
+     *
+     * @param[in] surface The surface to copy from. A copy will be made.
      */
     explicit Canvas(shared_cairo_surface_t surface) noexcept;
 
@@ -62,6 +73,9 @@ public:
      * format of the surface the canvas create a copy to.
      *
      * The canvas will create a copy of the supplied surface.
+     *
+     * @param[in] surface The surface to copy from. A copy will be made.
+     * @param[in] format The pixel format for the canvas.
      */
     Canvas(shared_cairo_surface_t surface, pixel_format format) noexcept;
 

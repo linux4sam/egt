@@ -28,8 +28,7 @@ namespace experimental
 {
 
 /**
- * Help with the creation is standard for layouts.
- *
+ * Utility class to help with standard form layout of widgets.
  */
 class Form : public Frame
 {
@@ -117,7 +116,16 @@ public:
 
 protected:
 
+    /**
+     * Internal BoxSizer used for layout.
+     */
     BoxSizer m_vsizer;
+
+    /**
+     * Array of options.
+     *
+     * @todo This will keep pointers around to deleted child widgets.
+     */
     std::vector<Widget*> m_options;
 };
 

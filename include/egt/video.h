@@ -28,6 +28,8 @@ class GstAppSinkImpl;
  * overlay plane.
  *
  * The video decoding is done through gstreamer media framework.
+ *
+ * @ingroup media
  */
 class VideoWindow : public Window
 {
