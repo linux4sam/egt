@@ -22,6 +22,9 @@ namespace egt
 inline namespace v1
 {
 
+namespace experimental
+{
+
 /**
  * Line/point chart widget.
  */
@@ -145,6 +148,8 @@ protected:
     data_array m_data;
     std::vector<Color> m_colors;
 };
+
+}
 
 }
 }

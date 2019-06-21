@@ -10,6 +10,7 @@
 
 using namespace std;
 using namespace egt;
+using namespace egt::experimental;
 
 static vector<pair<easing_func_t, string>> easing_functions =
 {

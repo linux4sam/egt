@@ -13,6 +13,7 @@
 
 using namespace std;
 using namespace egt;
+using namespace egt::experimental;
 
 static LineChart::data_array create_sin_data()
 {

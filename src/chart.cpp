@@ -17,6 +17,8 @@ namespace egt
 {
 inline namespace v1
 {
+namespace experimental
+{
 
 static void xticlabelfmt(double v, char* b, size_t len)
 {
@@ -197,6 +199,8 @@ void PieChart::draw(Painter& painter, const Rect& rect)
         cairo_fill(cr.get());
         from_angle = to_angle;
     }
+}
+
 }
 
 }
