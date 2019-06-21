@@ -97,31 +97,43 @@ public:
 
     virtual void handle(Event& event) override;
 
-    virtual void set_select(size_t index);
-
-    virtual size_t selected() const { return m_selected; }
-
-    virtual std::string item(size_t index) const { return m_items[index]; }
-
     virtual void resize(const Size& s) override;
 
     virtual void move(const Point& point) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    virtual void set_parent(Frame* parent) override;
+
+    virtual Size min_size_hint() const override;
+
     /**
      * Default draw method for the ComboBox.
      */
     static void default_draw(ComboBox& widget, Painter& painter, const Rect& rect);
 
+    /**
+     * Set the index of the selected item.
+     */
+    virtual void set_select(size_t index);
+
+    /**
+     * Get the index of the selected item.
+     */
+    virtual size_t selected() const { return m_selected; }
+
+    /**
+     * Get an item at the specified index.
+     */
+    virtual std::string item_at(size_t index) const { return m_items[index]; }
+
+    /**
+     * Return the number of items in the list.
+     */
     inline size_t item_count() const
     {
         return m_items.size();
     }
-
-    virtual void set_parent(Frame* parent) override;
-
-    virtual Size min_size_hint() const override;
 
     virtual ~ComboBox() = default;
 

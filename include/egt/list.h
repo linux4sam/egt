@@ -129,6 +129,26 @@ public:
 
     virtual void handle(Event& event) override;
 
+    virtual void layout() override
+    {
+        if (m_sizer)
+            m_sizer->layout();
+    }
+
+    virtual void resize(const Size& s) override
+    {
+        if (s != size())
+        {
+            Frame::resize(s);
+            if (m_sizer)
+            {
+                auto carea = content_area();
+                if (!carea.empty())
+                    m_sizer->set_box(to_child(carea));
+            }
+        }
+    }
+
     /**
      * Select an item by index.
      */
@@ -152,7 +172,7 @@ public:
     /**
      * Get the currently selected index item from list.
      */
-    virtual Widget* get_item(uint32_t index);
+    virtual Widget* item_at(uint32_t index);
 
     /**
      * Remove an item from the list.
@@ -163,26 +183,6 @@ public:
      * Remove all items from the list.
      */
     virtual void clear();
-
-    virtual void layout() override
-    {
-        if (m_sizer)
-            m_sizer->layout();
-    }
-
-    virtual void resize(const Size& s) override
-    {
-        if (s != size())
-        {
-            Frame::resize(s);
-            if (m_sizer)
-            {
-                auto carea = content_area();
-                if (!carea.empty())
-                    m_sizer->set_box(to_child(carea));
-            }
-        }
-    }
 
     virtual ~ListBox() = default;
 

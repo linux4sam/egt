@@ -112,7 +112,7 @@ int main(int argc, const char** argv)
         if (event.id() == eventid::event1)
         {
             cout << "FileDialog Okay button clicked" << endl;
-            auto select = dynamic_cast<StringItem*>(dlist0->get_item(dlist0->selected()))->text();
+            auto select = dynamic_cast<StringItem*>(dlist0->item_at(dlist0->selected()))->text();
             label1->set_text("List Dialog: " + select + " Selected");
         }
         else if (event.id() == eventid::event2)

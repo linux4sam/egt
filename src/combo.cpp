@@ -250,12 +250,12 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
         // text
         painter.set(widget.color(Palette::ColorId::text).color());
         painter.set(widget.font());
-        auto size = painter.text_size(widget.item(widget.selected()));
+        auto size = painter.text_size(widget.item_at(widget.selected()));
         auto target = detail::align_algorithm(size,
                                               text,
                                               widget.text_align());
         painter.draw(target.point());
-        painter.draw(widget.item(widget.selected()));
+        painter.draw(widget.item_at(widget.selected()));
     }
 }
 

@@ -527,7 +527,7 @@ int main(int argc, const char** argv)
 
     combo->on_event([combo, &win](Event&)
     {
-        auto s = combo->item(combo->selected());
+        auto s = combo->item_at(combo->selected());
 
         if (s == "Default Theme")
             set_global_theme(new Theme());

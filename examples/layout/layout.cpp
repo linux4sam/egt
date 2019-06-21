@@ -242,7 +242,7 @@ public:
 
         combo->on_event([combo, this](Event&)
         {
-            auto s = combo->item(combo->selected());
+            auto s = combo->item_at(combo->selected());
 
             if (s == "Default")
                 set_global_theme(new Theme());
