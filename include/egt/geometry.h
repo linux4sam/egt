@@ -61,12 +61,6 @@ public:
           y(yd)
     {}
 
-    PointType<dim_t, dim_c>(const PointType<dim_t, dim_c>&) noexcept = default;
-    PointType<dim_t, dim_c>(PointType<dim_t, dim_c>&&) noexcept = default;
-    PointType<dim_t, dim_c>& operator=(const PointType<dim_t, dim_c>&) noexcept = default;
-    PointType<dim_t, dim_c>& operator=(PointType<dim_t, dim_c>&&) noexcept = default;
-    ~PointType<dim_t, dim_c>() = default;
-
     PointType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
     {
         x += rhs.x;
@@ -209,12 +203,6 @@ public:
         : height(height),
           width(width)
     {}
-
-    SizeType<dim_t, dim_c>(const SizeType<dim_t, dim_c>&) noexcept = default;
-    SizeType<dim_t, dim_c>(SizeType<dim_t, dim_c>&&) noexcept = default;
-    SizeType<dim_t, dim_c>& operator=(const SizeType<dim_t, dim_c>&) noexcept = default;
-    SizeType<dim_t, dim_c>& operator=(SizeType<dim_t, dim_c>&&) noexcept = default;
-    ~SizeType<dim_t, dim_c>() = default;
 
     /**
      * Returns true if the size has no width or height.
@@ -417,12 +405,6 @@ public:
         assert(width >= 0);
         assert(height >= 0);
     }
-
-    RectType<dim_t, dim_c>(const RectType<dim_t, dim_c>&) noexcept = default;
-    RectType<dim_t, dim_c>(RectType<dim_t, dim_c>&&) noexcept = default;
-    RectType<dim_t, dim_c>& operator=(const RectType<dim_t, dim_c>&) noexcept = default;
-    RectType<dim_t, dim_c>& operator=(RectType<dim_t, dim_c>&&) noexcept = default;
-    ~RectType<dim_t, dim_c>() = default;
 
     RectType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)
     {
