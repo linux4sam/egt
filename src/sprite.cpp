@@ -107,6 +107,7 @@ HardwareSprite::HardwareSprite(Sprite& interface, const Image& image, const Size
       m_label(image),
       m_interface(interface)
 {
+    m_label.set_image_align(alignmask::none);
     interface.resize(m_image.size());
 
     interface.allocate_screen();
