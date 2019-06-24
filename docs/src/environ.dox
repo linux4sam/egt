@@ -55,14 +55,15 @@ levels using environment variables.
 
         EGT_INPUT_DEVICES=libinput:/dev/input/touchscreen0,/dev/input/touchscreen1;tslib:/dev/input/touchscren2
   </dd>
-</dl>
 
-@li <tt>EGT_ICONS_DIRECTORY</tt>
-    <br>
+  <dt>EGT_ICONS_DIRECTORY</dt>
+  <dd>
     Change EGT installed default icons directory with a absolute path or directory name.
     If a directory name is set, then this directory name will be appended with a EGT
     installed default icons directory path.
     examples: /home/egt/icons, 64px, /usr/share/libegt/icons/128px.
+  </dd>
+</dl>
 
 */
 }}
