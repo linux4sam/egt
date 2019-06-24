@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
-#include <egt/detail/floatingpoint.h>
 #include <egt/detail/math.h>
 #include <iostream>
 #include <string>
@@ -847,12 +846,7 @@ public:
     /**
      * Returns true if the arc has no radius.
      */
-    inline bool empty() const
-    {
-        return this->radius <= 0.0f ||
-               detail::FloatingPoint<float>(this->radius).
-               AlmostEquals(detail::FloatingPoint<float>(0.0f));
-    }
+    bool empty() const;
 
     /**
      * Center point of the arc.

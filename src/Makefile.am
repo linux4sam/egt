@@ -41,6 +41,7 @@ combo.cpp \
 detail/alignment.cpp \
 detail/collision.cpp \
 detail/filesystem.cpp \
+detail/floatingpoint.h \
 detail/imagecache.cpp \
 detail/input/inputkeyboard.cpp \
 detail/input/inputkeyboard.h \
@@ -134,7 +135,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/dialog.h \
 ../include/egt/detail/alignment.h \
 ../include/egt/detail/collision.h \
-../include/egt/detail/floatingpoint.h \
 ../include/egt/detail/imagecache.h \
 ../include/egt/detail/filesystem.h \
 ../include/egt/detail/math.h \

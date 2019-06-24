@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/gauge.h"
+#include <detail/floatingpoint.h>
 #include <egt/detail/math.h>
-#include <egt/detail/floatingpoint.h>
 
 using namespace std;
 

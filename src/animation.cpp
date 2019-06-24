@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/floatingpoint.h"
 #include "egt/animation.h"
 #include "egt/app.h"
-#include "egt/detail/floatingpoint.h"
 #include "egt/detail/math.h"
 #include "egt/widget.h"
 #include <cassert>
