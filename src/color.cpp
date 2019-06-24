@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/floatingpoint.h"
 #include "egt/color.h"
 #include <cassert>
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 namespace egt
 {
@@ -134,6 +135,73 @@ static Color hsv2rgb(hsv in)
     return out;
 }
 
+typedef struct
+{
+    double h; // angle in degrees
+    double s; // a fraction between 0 and 1
+    double l; // a fraction between 0 and 1
+} hsl;
+
+static hsl rgb2hsl(const Color& rgb)
+{
+    const auto cmax = std::max(std::max(rgb.redf(), rgb.greenf()), rgb.bluef());
+    const auto cmin = std::min(std::min(rgb.redf(), rgb.greenf()), rgb.bluef());
+    const auto delta = cmax - cmin;
+
+    hsl hsl =
+    {
+        0.f,
+        0.f,
+        (cmax + cmin) / 2.f
+    };
+
+    if (detail::FloatingPoint<float_t>(delta).AlmostEquals(detail::FloatingPoint<float_t>(0.f)))
+        return hsl;
+
+    if (detail::FloatingPoint<float_t>(cmax).AlmostEquals(detail::FloatingPoint<float_t>(rgb.redf())))
+    {
+        hsl.h = fmodf((rgb.greenf() - rgb.bluef()) / delta, 6.f);
+    }
+    else if (detail::FloatingPoint<float_t>(cmax).AlmostEquals(detail::FloatingPoint<float_t>(rgb.greenf())))
+    {
+        hsl.h = (rgb.bluef() - rgb.redf()) / delta + 2.f;
+    }
+    else
+    {
+        hsl.h = (rgb.redf() - rgb.greenf()) / delta + 4.f;
+    }
+
+    hsl.s = delta / (1.f - std::abs(2.f * hsl.l - 1.f));
+    hsl.h /= 6.f;
+    hsl.h = fmodf(hsl.h + 1.f, 1.f);
+
+    return hsl;
+}
+
+static Color hsl2rgb(hsl hsl)
+{
+    const float k = hsl.h * 6.f;
+    const float C = (1.f - std::abs(2.f * hsl.l - 1.f)) * hsl.s;
+    const float X = C * (1.f - std::abs(fmodf(k, 2.f) - 1.f));
+    const float m = hsl.l - C / 2.f;
+    const int d = int(floorf(k));
+
+    Color out;
+
+    switch (d)
+    {
+    case 0: out = Color::rgbaf(C, X, 0.f); break;
+    case 1: out = Color::rgbaf(X, C, 0.f); break;
+    case 2: out = Color::rgbaf(0.f, C, X); break;
+    case 3: out = Color::rgbaf(0.f, X, C); break;
+    case 4: out = Color::rgbaf(X, 0.f, C); break;
+    default: out = Color::rgbaf(C, 0.f, X); break;
+    }
+
+    out = out + m;
+    return out;
+}
+
 void Color::get_hsvf(float* h, float* s, float* v, float* alpha)
 {
     hsv c = rgb2hsv(*this);
@@ -143,6 +211,19 @@ void Color::get_hsvf(float* h, float* s, float* v, float* alpha)
         *s = c.s;
     if (v)
         *v = c.v;
+    if (alpha)
+        *alpha = alphaf();
+}
+
+void Color::get_hslf(float* h, float* s, float* l, float* alpha)
+{
+    hsl c = rgb2hsl(*this);
+    if (h)
+        *h = c.h;
+    if (s)
+        *s = c.s;
+    if (l)
+        *l = c.l;
     if (alpha)
         *alpha = alphaf();
 }
@@ -162,6 +243,13 @@ void Color::get_rgbaf(float* r, float* g, float* b, float* alpha)
 Color Color::hsvf(float h, float s, float v, float alpha)
 {
     auto c = hsv2rgb({h, s, v});
+    c.alphaf(alpha);
+    return c;
+}
+
+Color Color::hslf(float h, float s, float l, float alpha)
+{
+    auto c = hsl2rgb({h, s, l});
     c.alphaf(alpha);
     return c;
 }
@@ -186,10 +274,37 @@ Color Color::interp_hsv(const Color& a, const Color& b, float t)
                  a.alpha() + (b.alpha() - a.alpha()) * t);
 }
 
+Color Color::interp_hsl(const Color& a, const Color& b, float t)
+{
+    hsl hsla = rgb2hsl(a);
+    hsl hslb = rgb2hsl(b);
+
+    hsl hslaa = hsla;
+
+    if (std::abs(hslaa.h - hslb.h) > 0.5f)
+    {
+        if (hslaa.h > hslb.h)
+        {
+            hslaa.h -= 1.f;
+        }
+        else
+        {
+            hslaa.h += 1.f;
+        }
+    }
+
+    hsl hsl;
+    hsl.h = hslaa.h + t * (hslb.h - hslaa.h);
+    hsl.s = hslaa.s + t * (hslb.s - hslaa.s);
+    hsl.l = hslaa.l + t * (hslb.l - hslaa.l);
+    hsl.h = fmodf(hsl.h + 1.f, 1.f);
+
+    return Color(hsl2rgb(hsl),
+                 a.alpha() + (b.alpha() - a.alpha()) * t);
+}
+
 Color Color::interp_rgba(const Color& a, const Color& b, float t)
 {
-    //return a + (b - a) * t;
-
     return Color::rgbaf(a.redf() + (b.redf() - a.redf()) * t,
                         a.greenf() + (b.greenf() - a.greenf()) * t,
                         a.bluef() + (b.bluef() - a.bluef()) * t,
@@ -229,6 +344,8 @@ Color ColorMap::interp(float t) const
         return Color::interp_rgba(m_steps[k], m_steps[k + 1], u);
     case interpolation::hsv:
         return Color::interp_hsv(m_steps[k], m_steps[k + 1], u);
+    case interpolation::hsl:
+        return Color::interp_hsl(m_steps[k], m_steps[k + 1], u);
     }
 
     return {};

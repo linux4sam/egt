@@ -64,18 +64,23 @@ int main(int argc, const char** argv)
     {
         { "RGB", {Palette::white, Palette::black}, ColorMap::interpolation::rgba },
         { "HSV", {Palette::white, Palette::black}, ColorMap::interpolation::hsv },
+        { "HSL", {Palette::white, Palette::black}, ColorMap::interpolation::hsl },
 
         { "RGB", {Palette::red, Palette::green}, ColorMap::interpolation::rgba },
         { "HSV", {Palette::red, Palette::green}, ColorMap::interpolation::hsv },
+        { "HSL", {Palette::red, Palette::green}, ColorMap::interpolation::hsl },
 
         { "RGB", {Palette::red, Palette::blue}, ColorMap::interpolation::rgba },
         { "HSV", {Palette::red, Palette::blue}, ColorMap::interpolation::hsv },
+        { "HSL", {Palette::red, Palette::blue}, ColorMap::interpolation::hsl },
 
         { "RGB", {Palette::white, Palette::orange}, ColorMap::interpolation::rgba },
         { "HSV", {Palette::white, Palette::orange}, ColorMap::interpolation::hsv },
+        { "HSL", {Palette::white, Palette::orange}, ColorMap::interpolation::hsl },
 
         { "RGB", {Palette::purple, Palette::yellow, Palette::maroon}, ColorMap::interpolation::rgba },
         { "HSV", {Palette::purple, Palette::yellow, Palette::maroon}, ColorMap::interpolation::hsv },
+        { "HSL", {Palette::purple, Palette::yellow, Palette::maroon}, ColorMap::interpolation::hsl },
     };
 
     for (auto& m : maps)

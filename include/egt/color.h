@@ -155,6 +155,16 @@ public:
     void get_hsvf(float* h, float* s, float* v, float* alpha = nullptr);
 
     /**
+     * Get the hue, saturation, lightness, and alpha channel components of the color.
+     *
+     * @param[out] h Hue component in range 0 - 1.
+     * @param[out] s Saturation component in range 0 - 1.
+     * @param[out] l Lightness component in range 0 - 1.
+     * @param[out] alpha Alpha component in range 0 - 1.
+     */
+    void get_hslf(float* h, float* s, float* l, float* alpha = nullptr);
+
+    /**
      * Get the red, green, blue, and alpha channel components of the color.
      *
      * @param[out] r Red component in range 0 - 1.
@@ -223,6 +233,16 @@ public:
      * @param[out] alpha Alpha component in range 0 - 1.
      */
     static Color hsvf(float h, float s, float v, float alpha = 1.0);
+
+    /**
+     * Create a color from HSL values.
+     *
+     * @param[out] h Hue component in range 0 - 1.
+     * @param[out] s Saturation component in range 0 - 1.
+     * @param[out] l Lightness component in range 0 - 1.
+     * @param[out] alpha Alpha component in range 0 - 1.
+     */
+    static Color hslf(float h, float s, float l, float alpha = 1.0);
 
     /**
      * Create a shade (darker) color based off this color given a factor.
@@ -372,6 +392,15 @@ public:
     static Color interp_hsv(const Color& a, const Color& b, float t);
 
     /**
+     * Perform linear interpolation between two colors in the HSL colorspace.
+     *
+     * @param a The first color.
+     * @param b The second color.
+     * @param t Value from 0 to 1.
+     */
+    static Color interp_hsl(const Color& a, const Color& b, float t);
+
+    /**
      * Perform linear interpolation between two colors in the RGB colorspace.
      *
      * @param a The first color.
@@ -514,7 +543,8 @@ public:
     enum class interpolation
     {
         rgba,
-        hsv
+        hsv,
+        hsl
     };
 
     using steps_array = std::vector<Color>;
