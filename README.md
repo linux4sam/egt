@@ -28,8 +28,8 @@ Install dependencies.
 To build for a PC, first install recommended dependencies:
 
 ```sh
-sudo apt-get install libdrm-dev libinput-dev \
-    libcairo-dev libjpeg-dev libmagic-dev
+sudo apt-get install build-essential automake autoconf libtool pkg-config \
+    libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev gettext
 ```
 
 Optional dependencies include:

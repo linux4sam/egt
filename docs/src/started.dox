@@ -32,8 +32,8 @@ platforms.
 To build for a PC, first install recommended dependencies:
 
 @code{.sh}
-sudo apt-get install libdrm-dev libinput-dev \
-    libcairo-dev libjpeg-dev libmagic-dev
+sudo apt-get install build-essential automake autoconf libtool pkg-config \
+    libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev gettext
 @endcode
 
 Optional dependencies include:
