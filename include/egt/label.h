@@ -33,15 +33,6 @@ class Painter;
  * - UTF-8 encoding
  * - Multi-line
  *
- * @image html widget_label1.png
- * @image latex widget_label1.png "widget_label1" width=5cm
- * @image html widget_label2.png
- * @image latex widget_label2.png "widget_label2" width=5cm
- * @image html widget_label3.png
- * @image latex widget_label3.png "widget_label3" width=5cm
- * @image html widget_label4.png
- * @image latex widget_label4.png "widget_label4" width=5cm
- *
  * @ingroup controls
  */
 class Label : public detail::TextWidget
@@ -102,10 +93,10 @@ protected:
 /**
  * Label that also contains an Image.
  *
- * The interesting thing about this widget is the position of the text
- * relative to the image.  Alignment of txt usually works relative to the
- * bounding box of the widget.  However, in this case the text is bumped up
- * against the image and aligned relative to the image instead.
+ * The interesting thing about this Widget is the position of the text
+ * relative to the image.  Alignment of text works as usual, however, the image
+ * is aligned relative to the position of the text.  If there is no text, the
+ * image is aligned relative to the Widget::box() as the text would be.
  *
  * @image html widget_imagelabel1.png
  * @image latex widget_imagelabel1.png "widget_imagelabel1" width=5cm

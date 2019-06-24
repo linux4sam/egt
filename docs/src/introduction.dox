@@ -13,8 +13,16 @@ and solution for working across all Microchip AT91/SAMA5 processors in order to
 build robust GUI based applications that make the best use of the hardware
 available.
 
-For more information about Microchip MPU Xplained or EK type boards, visit
+@see For more information about Microchip MPU Xplained or EK type boards, visit
 <a href="http://www.at91.com/linux4sam/bin/view/Linux4SAM">Linux4SAM</a>.
+
+EGT uses and provides a standard API to many different third party and system
+libraries and resources.  Here are some of them.
+
+@imageSize{egt_libs.png,max-width:90%;height:auto;}
+@image html egt_libs.png "Integration"
+@image latex egt_libs.png "Integration"
+
 
 @section intro_what What is a Graphics Toolkit?
 
@@ -36,20 +44,41 @@ with the application code expected to be sitting on top.
 @section intro_history Architecture
 
 A software architecture involving EGT usually involves using EGT as the middle
-layer between the application code and everything else.
+layer between the application code and everything else.  EGT provides an
+abstraction layer to everything below it to an application programmer.
 
 @imageSize{architecture.png,width:500px;}
 @image html architecture.png "Architecture"
 @image latex architecture.png "Architecture" width=8cm
 
-In order to accomplish this task, EGT uses and provides a standard API to many
-different libraries and resources.
+In order to provide this abstraction, EGT provides a list of objects, or C++
+classes, some of which are specialized into a type called Widget. The @ref
+controls are your standard interface components.  @ref sizers widgets help with
+layout and position of other widgets.  There are some basic @ref shapes widgets
+for drawing plain shapes.  And of course, the @ref media widgets handle playing
+audio and video related media.
 
-@imageSize{egt_libs.png,max-width:90%;height:auto;}
-@image html egt_libs.png "Integration"
-@image latex egt_libs.png "Integration"
+And then, there are some framework and application level classes like
+Application, EventLoop, Input, Screen, @ref timers, and Event help everything
+work together.
 
-@section intro_language Programming Language
+@section intro_features EGT Features
+
+This is a list of high level features generally support and provided by EGT.
+
+- Anti-aliased 2D vector graphics.
+- Modern C++11 design and simplicity.
+- Optimized for Microchip microprocessors running Linux.
+- DRM/KMS, X11, and fbdev backends.
+- libinput, tslib, and evdev input support for mouse, keyboard, and touchscreen.
+- UTF-8 encoding with internationalization and localization support.
+- Support for libplanes and hardware LCD overlay planes.
+- Built in and simple animation support for creating custom effects.
+- A rich and extensible default widget set designed for embedded touchscreens.
+- Multimedia support for video playback, raster images, and vector graphics.
+- Customizable look and feel with theme-able widget drawing, colors, and fonts.
+
+@section intro_language C++ Language and Namespaces
 
 EGT takes advantage of and focuses on using features available in the C++11
 language standard.  The EGT API is all inside of an ::egt namespace.  This
@@ -65,6 +94,8 @@ Namespace                 | Meaning
 ::egt::v1                 | Inline namespace denoting the API version.
 ::egt::v1::detail         | A namespace usually used to hide internal EGT functionality.  This is not considered stable or public.
 ::egt::v1::experimental   | A namespace for what is considered unstable and experimental.
+
+@remark Did you know the C++ Standard Draft Sources are [available on GitHub](https://github.com/cplusplus/draft)?
 
 */
 }}

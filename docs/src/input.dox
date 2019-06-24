@@ -5,13 +5,20 @@ namespace egt { inline namespace v1 {
 
 This chapter discusses various input device support.
 
-@section input_keyboard Keyboard
+@section input_backends Input Support
 
-@todo
+EGT supports various different backends for gathering input device events.
 
-@section input_touchscreen Touchscreen
+Library          | Type
+---------------- | ----------------------------
+libinput         | Keyboard, Mouse, Touchscreen
+tslib            | Touchscreen
+raw evdev        | Keyboard, Mouse, Touchscreen
+X11              | Keyboard, Mouse, Touchscreen
 
-@todo
+
+See @subpage environ for some environment variables that are useful for configuring
+input devices.
 
 */
 }}

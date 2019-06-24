@@ -29,21 +29,23 @@ For example, to change the position of a button from another thread, the
 following can be done.
 
 @code{.cpp}
-asio::post(main_app().event().io(), std::bind(&Button::set_x, button, 5));
+asio::post(Application::instance().event().io(), std::bind(&Button::set_x, button, 5));
 @endcode
 
 To run any code you want from another thread on the EventLoop thread, post() a
 lamba or function.
 
 @code{.cpp}
-asio::post(main_app().event().io(),
-    []()
-    {
+asio::post(Application::instance().event().io(), []() {
         ...
     });
 @endcode
 
 @section topics_lifetime Widget Lifetime
+
+There are various different forms of managing Widget lifetime.  They can be
+managed explicitly on the stack, and they can also be managed on the heap,
+usually through C++ smart pointers.
 
 Everything is on the stack.
 
@@ -88,27 +90,19 @@ class MyWindow : public TopWindow
 public:
     explicit MyWindow(const Size& size)
         : TopWindow(size),
-          m_grid(Rect(Point(0, 60), Size(800, 330)), 4, 2, 10)
+          m_grid(Tuple(2, 2))
     {
         add(m_grid);
     }
-
-    virtual ~MyWindow() = default;
 
 protected:
     StaticGrid m_grid;
 };
 @endcode
 
-@section topics_otherloops Integrating the EGT EventLoop with Third Party Event Loops
-
-@subpage events_loop
-
-@todo
-
 @section topics_networking Networking and Serial
 
-@subpage events_loop
+@see @ref events_loop
 
 The underlying EventLoop implementation uses Asio, which you can directly access
 and is part of the full EGT API.  Asio provides an excellent asynchronous
@@ -121,9 +115,9 @@ plain and TLS secured sockets when the appropriate libraries are available.
 The same is true for reading and writing to several other interfaces, including
 serial ports using the asio::serial_port object.
 
-Outside of that, EGT provides some utility classes like HttpClientRequest that
-uses libcurl underneath for full HTTP/HTTPS support, and handles the integration
-of libcurl with Asio.
+Outside of that, EGT provides some utility classes like
+experimental::HttpClientRequest that uses libcurl underneath for full HTTP/HTTPS
+support, and handles the integration of libcurl with Asio.
 
 */
 }}

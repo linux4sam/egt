@@ -8,7 +8,7 @@ This chapter discusses resources and how to distribute and use them with EGT.
 Resources are a way of cataloging, distributing, identifying, and using some
 asset data.  For example assets might include images, icons, audio files, and
 video files. Resources may be stored in the filesystem and loaded on demand, or
-they may be compiled into the application binary itself by using the `mresg`
+they may be compiled into the application binary itself by using the EGT `mresg`
 command, or they may be installed by default by EGT.
 
 @section resources_paths Respath
@@ -38,10 +38,10 @@ auto forward = Image("forward.png");
 @endcode
 
 
-@section resources_icons Respath: Built in EGT Icons and Images
+@section resources_icons Respath: Built-in EGT Icons and Images
 
 EGT comes with a set of icons and images installed with EGT by default.  To
-access these icons and images, use the following syntax:
+access these icons and images, prefix the filename with a `@` symbol like so:
 
 @code{.cpp}
 auto bug = Image("@bug.png");
@@ -58,13 +58,7 @@ auto bug = Image("@128px/bug.png");
 The EGT installed default icons directory can be changed by setting a environment
 variable EGT_ICONS_DIRECTORY. This value can be a absolute path or directory name.
 If a directory name is set, then this directory name will be appended with a EGT
-installed default icons directory path.
-
-@code{.cpp}
-export EGT_ICONS_DIRECTORY=/usr/share/icons
-or
-export EGT_ICONS_DIRECTORY=64px
-@endcode
+installed default icons directory path.  See @subpage environ for more information.
 
 @section resources_mresg Respath: Executable Compiled in Resources
 

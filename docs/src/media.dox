@@ -1,15 +1,15 @@
 namespace egt { inline namespace v1 {
 /**
 
- @page media Media
+ @page media_page Media
 
-This chapter discusses media formats directly supported by EGT.
+This chapter discusses media formats supported by EGT.
 
 @section media_intro Supported Media Formats
 
-While EGT has direct and indirect support for many image, video, and audio
-formats, in some cases using third party libraries, this does not mean any other
-format cannot be converted into a format usable by EGT by a user.
+EGT has direct and indirect support for many standard image, video, and
+audio formats.  In most cases, this is done through using third party libraries
+like libpng, libjpeg, gstramer, and so on.
 
 @section media_image Image Formats
 
@@ -19,20 +19,6 @@ The following image formats are directly supported by EGT:
 - BMP
 - SVG
 
-@section media_video Video Formats
-
-The following video stream formats are directly supported by EGT:
-
-Format           | Support
----------------- | -------------
-Uncompressed YUV | All
-MPEG1            | All
-MPEG2            | All
-MPEG4            | All
-H.264            | SAMA5D4
-VP8              | SAMA5D4
-VP9              | SAMA5D4
-
 @section media_svg Working with SVG (Scalable Vector Graphics) Files
 
 Scalable Vector Graphics (SVG) is an XML-based vector image format for
@@ -41,13 +27,44 @@ specification is an open standard developed by the World Wide Web Consortium
 (W3C) since 1999. SVG images and their behaviors are defined in XML text files.
 
 EGT can load SVG files using the third party library
-<a href="https://github.com/GNOME/librsvg">librsvg</a>.  On top of that,
+[librsvg](https://github.com/GNOME/librsvg).  On top of that,
 this library provides the ability to load objects by id from SVG files.  What
 this means is a graphic designer can create an SVG file and give each component
 of the UI a unique ID.  Then, an EGT programmer can individually load these
 components and assign them to widgets and create logic around these components
 from a single SVG file.  It's an easy and natural way to add logic to what is
 otherwise just a single UI file by using EGT.
+
+experimental::Gauge, experimental::GaugeLayer, and experimental::NeedleLayer are
+several classes useful in EGT for taking advantage of SVG files directly by
+using complete SVG files or individual objects in those SVG files to construct
+layered widgets.
+
+
+@section media_video Video Formats
+
+The following video stream formats are directly supported by EGT:
+
+Format           | Processor Support
+---------------- | -----------------
+Uncompressed YUV | All
+MPEG1            | All
+MPEG2            | All
+MPEG4            | All
+H.264            | SAMA5D4
+VP8              | SAMA5D4
+VP9              | SAMA5D4
+
+
+@section media_file_formats Metadata File Formats
+
+EGT supports several different types of metadata file formats through
+third-party libraries.
+
+Format           | Support Library
+---------------- | ---------------
+XML              | RapidXML
+JSON             | JsonCpp
 
 */
 }}

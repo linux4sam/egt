@@ -136,7 +136,12 @@ private:
 };
 
 /**
- * A button widget that can have an image and/or a label on it.
+ * Button that also contains an Image.
+ *
+ * The interesting thing about this Widget is the position of the text
+ * relative to the image.  Alignment of text works as usual, however, the image
+ * is aligned relative to the position of the text.  If there is no text, the
+ * image is aligned relative to the Widget::box() as the text would be.
  *
  * @ingroup controls
  */

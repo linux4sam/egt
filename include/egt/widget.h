@@ -166,6 +166,8 @@ public:
      * EventLoop will call this function with an already established
      * Painter when the Widget needs to be drawn.
      *
+     * @see @subpage colors and @subpage draw
+     *
      * @param[in] painter Instance of the Painter for the Screen.
      * @param[in] rect The rectangle to draw.
      *

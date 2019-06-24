@@ -137,7 +137,6 @@ public:
     /**
      * A default keyboard with a qwerty layout.
      *
-     * @param[in] panels Main panels of the keyboard.
      * @param[in] rect Rect of the Keyboard.
      */
     VirtualKeyboard(const Rect& rect = {});

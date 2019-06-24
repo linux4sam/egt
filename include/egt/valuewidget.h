@@ -65,6 +65,10 @@ public:
     virtual ~ValueWidget() = default;
 
 protected:
+
+    /**
+     * The current value.
+     */
     T m_value;
 };
 
@@ -145,6 +149,8 @@ public:
 
     /**
      * Set the min value.
+     *
+     * @param[in] v The min value.
      */
     virtual void set_min(T v)
     {
@@ -157,6 +163,8 @@ public:
 
     /**
      * Set the max value.
+     *
+     * @param[in] v The max value.
      */
     virtual void set_max(T v)
     {

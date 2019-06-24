@@ -43,6 +43,8 @@ translations for those strings to be loaded by the application depending on
 language and locale settings at runtime.  In addition, gettext defines a
 workflow and tools for creating those translation "databases."
 
+@section local_gettext_example Example GNU gettext Steps
+
 Here are the steps necessary to implement the usage of gettext in an
 EGT application.
 
@@ -82,6 +84,5 @@ domain for:
 
     Symbol: BR2_GENERATE_LOCALE [=en_US es_MX]
 
-@see https://fedoraproject.org/wiki/How_to_do_I18N_through_gettext
 */
 }}

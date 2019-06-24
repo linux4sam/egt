@@ -7,25 +7,27 @@ This chapter discusses the coordinate system and how to deal with geometry in EG
 
 @section geometry_coord Coordinate System
 
-EGT defines a Point, Size, Rect, Line, Arc, and Circle along with several other
-classes for working with geometry.
+EGT defines a PointType, SizeType, RectType, LineType, ArcType, and CircleType
+along with several other classes for working with geometry.
 
-All coordinate systems in EGT default with an origin of 0,0 in the top left.
-Positive X moves to the right, and positive Y moves down.  EGT does not
-currently support the idea of transforming this coordinate system, or separating
-user from device coordinates, but it can be done at the painter level by
-individual widgets for drawing purposes.
+EGT uses a standard Cartesian coordinate system that specifies each point
+uniquely in a plane by a set of numerical coordinates, which are the signed
+distances to the point from two fixed perpendicular oriented lines, measured in
+the same unit of length. Each reference line is called a coordinate axis or just
+axis (plural axes) of the system, and the point where they meet is its origin,
+at ordered pair (0, 0).  The default for all origins in EGT is the top left or a
+rectangle. Positive X moves to the right, and positive Y moves down.
 
-@image html coordsys.png "Coordinate system"
-@image latex coordsys.png "Coordinate system" width=8cm
+@image html cartesian-coordinate-system.png "Cartesian Coordinate System"
+@image latex cartesian-coordinate-system.png "Cartesian Coordinate System" width=8cm
 
-There are two coordinate system origins in EGT:
+Depending on context, there are several coordinate system origins in EGT:
 
 - Widget
 
 @par
 The widget origin is how each widget sees itself.  The origin is always relative
-to its parent.
+to its parent's origin if it has a parent.
 
 - Display
 
@@ -43,10 +45,11 @@ identical, they are not compatible C++ types.
 
 While most of the geometry related to EGT deals with rectangles, it is sometimes
 necessary to deal with arcs when drawing.  The following unit circle is used
-when dealing with degrees or radians.
+when dealing with degrees or radians, depending on the API being used.  For
+example, creating a CircleType or ArcType.
 
-@image html radians.png "Radians and Degrees"
-@image latex radians.png "Radians and Degrees" width=8cm
+@image html unit_circle.png "Unit Circle Jim.belk [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]"
+@image latex unit_circle.png "Unit Circle Jim.belk [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]" width=8cm
 
 */
 }}

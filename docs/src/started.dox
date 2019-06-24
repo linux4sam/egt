@@ -4,25 +4,26 @@ namespace egt { inline namespace v1 {
  @page started Getting Started
 
 There are various ways to get started with EGT depending on your requirements.
-
 If building for an Microchip MPU Xplained or EK type board, visit
-<a href="http://www.at91.com/linux4sam/bin/view/Linux4SAM">Linux4SAM</a>.
-
-If you are building EGT on a PC you can start by just fetching the source of the
-EGT project.  If you are developing for and deploying to a target board, the
-easiest way to work with EGT is part of a buildroot SDK which already includes
-a cross compiler and all of the necessary dependencies and tools.
+<a href="http://www.at91.com/linux4sam/bin/view/Linux4SAM">Linux4SAM</a>. If you
+are building EGT on a PC you can start by just fetching the source of the EGT
+project.  If you are developing for and deploying to a target board, the easiest
+way to work with EGT is part of a buildroot SDK which already includes a cross
+compiler and all of the necessary dependencies and tools.
 
 Also, see @subpage eclipse for how to setup the Eclipse IDE for host or cross
 compiling.
 
 @section started_fetching Fetching Source
 
-To simply fetch the source:
+Fetch the source:
 
 @code{.sh}
 git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
 @endcode
+
+@note Note the `--recursive` option.  This option is necessary to initialize any
+git submodules in the project.
 
 @section started_building Building
 
@@ -71,21 +72,35 @@ PATH and follow the standard instructions.
 make
 @endcode
 
+@section started_configure Configure Options
+
 You can run "./configure --help" to see more options.  Some non-standard
 options are listed here.
 
-@par `--disable-debug`
-build without debugging support [default=yes]
+@par `--enable-code-coverage`
+Whether to enable code coverage support
 
-@par `--disable-examples`
-don't build examples [default=no]
+@par `--disable-debug`
+build without debugging support [default=no]
+
+@par `--enable-gcov`
+turn on code coverage analysis tools
+
+@par `--enable-profile`
+turn on profiling tools
+
+@par `--enable-examples`
+build examples [default=yes]
+
+@par `--enable-lto`
+enable gcc's LTO [default=no]
 
 @section started_buildroot Cross Compiling With Buildroot
 
 We provide EGT as part of the <a href="https://bitbucket.microchip.com/projects/LINUX4SAM/repos/buildroot-external-microchip/browse">buildroot-external-microchip</a> project. To build a
-complete SDK and target filesystem for a board follow the instructions found at:
+complete SDK and target filesystem for a board follow the instructions found in the buildroot-external-microchip project README.
 
-https://bitbucket.microchip.com/scm/linux4sam/buildroot-external-microchip.git
+@see https://bitbucket.microchip.com/scm/linux4sam/buildroot-external-microchip.git
 
 Follow the README.md instructions for that project with the following versions.
 

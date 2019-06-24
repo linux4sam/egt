@@ -1,18 +1,37 @@
 namespace egt { inline namespace v1 {
 /**
 
- @page colors Theme, Palette, and Colors
+ @page colors Color, Palette, and Theme
 
-This chapter discusses how to to use colors and palettes.
+This chapter discusses how to to use colors, palettes, and themes.
+
+@section colors_colors Colors
+
+The Color class internally keeps track of an 32-bit RGBA (red, green, blue, and
+alpha) color by managing the individual color components.  However, this class
+also supports at least the HSV and HSL colorspaces, and conversion between the
+different colorspaces.  The Pattern class helps with managing a pattern
+consisting of color steps at specific offsets.  Also, the experimental::ColorMap
+class deals with color steps and allows interpolation between the different color
+steps in any of the supported colorspaces.
+
+Supporting different colorspaces provides a variety of different ways to perform
+interpolation between colors.
+
+@imageSize{high_level.png,width:500px;}
+@image html color_solid_comparison_hsl_hsv_rgb.png "SharkD [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]"
+@image latex color_solid_comparison_hsl_hsv_rgb.png "SharkD [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]"
 
 @section colors_palette Palette
 
-The Palette manages a set of colors.  However, colors are not stored as a one
-dimensional list internally.  Colors are identified by a Palette::ColorId and
-also a Palette::GroupId.  The GroupId is associated with different states of a
-Color in the Palette, which corresponds with different states of a Widget.  For
-example, when a button is pressed it changes from a normal to active state and
-uses the same Palette::ColorId to identify its background color, but uses a
+The Palette contains a list of @ref predefined_colors.
+
+The Palette class manages a set of colors.  However, colors are not stored as a
+one dimensional list internally.  Colors are identified by a Palette::ColorId
+and also a Palette::GroupId.  The GroupId is associated with different states of
+a Color in the Palette, which corresponds with different states of a Widget.
+For example, when a button is pressed it changes from a normal to active state
+and uses the same Palette::ColorId to identify its background color, but uses a
 different Palette::GroupId.
 
 The default Palette for every Widget comes from the Theme. However, you can
@@ -24,6 +43,8 @@ Button button(window, "Press Me");
 button.set_color(Palette::ColorId::button_text, Palette::green);
 @endcode
 
+For a list of configurable Palette colors, see Palette::ColorId.
+
 If you change the global theme, it will retroactively have an effect on any
 widget, as long as that widget does not have an override for a Palette::ColorId
 and Palette::GroupId set.
@@ -32,22 +53,20 @@ The Palette class also defines a set of default colors to reference and use.
 With a few minor exceptions, these are the same colors defined by the [CSS
 standard](https://www.w3.org/TR/css-color-3/).
 
-@todo Talk about Color and Pattern class.
+@section colors_themes Theme
 
-@section colors_themes Widget Theme
-
-The Theme contains the default Palette and Fonts and also can be used as a place
+The Theme contains the default Palette and Font and also can be used as a place
 to override Widget::draw() methods.
 
-By default, themes are inherited with the widget hierarchy.  If the Window does
-not have a custom theme or a widget does not have a parent, it will use the
-egt::global_theme() by default. So, when you add a Button Widget to a Window,
+By default, themes are inherited in the widget hierarchy.  If the top level
+Window does not have a custom theme or a widget does not have a parent, it will
+use global_theme() by default. So, when you add a Button Widget to a Window,
 that button will use the theme from the Window and on up the widget hierarchy as
 needed.  This means if you change the Font of the Window theme, the button and
 all of its children will inherit that change.  Each Widget can hold its own
 instance of a Theme, set with Widget::set_theme().
 
-@see custom for more information on how to create custom widgets.
+@see @subpage custom for more information on how to create custom widgets.
 
 EGT does not use native style widgets by default.  It defines the look and feel
 of its own widgets, which is customizable.  The look and feel of widgets can be
@@ -61,9 +80,9 @@ extended or modified in several ways.
 
 @section theme_overview Theme Inheritance
 
-Theme is a class that holds a palette, font, and drawing functions used by
-widgets.  By default, there is a global_theme() that is used by all widgets.
-This can be changed by calling set_global_theme().
+Theme is a class that holds a Palette, Font, and other functions and properties
+used by widgets.  By default, there is a global_theme() that is used by all
+widgets. This can be changed by calling set_global_theme() function.
 
 Each Widget references a Theme through its Widget::theme() call.  However,
 theme's are inherited by default from a Widget's parent.  If no parent widget
@@ -86,14 +105,21 @@ you would implement your own draw function to customize the look of a widget.
 
 @section theme_type_draw Widget Type Draw Functions
 
-It is possible to change the draw() function for a Widget type globally based
-only on the widget's c++ type.  For example, you can change the draw() function
-for all Button widgets by setting one draw method.
+It is possible to change the Widget::draw() function for a Widget type globally
+based only on the widget's C++ type.  For example, you can change the draw()
+function for all Button widgets by setting one draw method.
+
+@code{.cpp}
+Drawer<Button>::set_draw([](Button & widget, Painter & painter, const Rect & rect)
+{
+    ...
+});
+@endcode
 
 @section theme_instance_draw Widget Instance Draw Functions
 
 It is currently not possible to change the draw() function for a specific
-instance of a Widget.  To accomplish this task, you must inherit from the widget
+instance of a Widget.  To accomplish this task, you must inherit from the Widget
 type you wish to change and overload the draw() function.  Then, use the new
 widget type.
 

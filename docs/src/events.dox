@@ -27,8 +27,8 @@ The event loop in EGT is implemented with the
 <a href="https://think-async.com/">Asio</a> library.  Asio is a cross-platform
 C++ library for network and low-level I/O programming that provides developers
 with a consistent asynchronous model using a modern C++ approach.  Asio can be
-used as part of boost or standalone, and EGT comes with the standalone version.
-Asio provides way more features than what is directly used by EGT.
+used as part of boost or standalone, and EGT comes with the standalone version
+built in. Asio provides way more features than what is directly used by EGT.
 
 @imageSize{asio.png,width:400px;}
 @image html asio.png "Asio"
@@ -37,9 +37,7 @@ Asio provides way more features than what is directly used by EGT.
 EGT abstracts out any required direct involvement with Asio, however, should you
 choose to use it directly it is available for use in, for example, @ref
 topics_networking "networking" and @ref topics_threads "multi-threaded"
-applications.
-
-<a href="http://think-async.com/Asio/asio-1.12.2/doc/index.html">Asio
+applications. <a href="http://think-async.com/Asio/asio-1.12.2/doc/index.html">Asio
 Documentation</a> is a good reference point if you want to start using the Asio
 API directly.
 
@@ -47,7 +45,7 @@ API directly.
 
 Every time a user touches the screen, clicks a button, or presses a key, an
 event is generated and sent to the event loop and then dispatched to appropriate
-handlers. Events can also come from other things like the window manager,
+handlers. Events can also come from other things like a window manager,
 timers, or networking sockets.
 
 Events are usually propagated from the top level widget down.  There are
@@ -60,25 +58,19 @@ keyboard focus.
 
 @section events_data Event Data
 
-The following global functions contain more information about the event.
-
-- event::pointer()
-- event::keys()
+Each event handler, like Widget::handle(), is called with an Event object.  This
+object maintains the unique egt::v1::eventid of the event, and any data associated
+with the Event such as Pointer or Key event data.
 
 @section events_handling Handling Events
 
-Events are identified by the eventid argument passed to a @p handle() method
-that overrides the Widget::handle() virtual method. Other information about
-the most recent event is stored in static locations and acquired by calling the
-functions related to the events as necessary. This static information remains
-valid until the next event is read method.
-
-When implementing a widget that needs to handle events, overriding the the
+When implementing a Widget that needs to handle events, overriding the the
 Widget::handle() virtual method is the expected method to handle events.
-However, when using a widget, it can be a burden to subclass every widget just
-to handle events.  So, to handle events when using a widget, the
-Widget::on_event() method can be used to register a callback. A lambda
-function may also be used.
+However, when using an existing Widget, it can be a burden to subclass just
+to handle events.  So, to handle events when using a Widget, the
+Widget::on_event() method can be used to register any number of callbacks. A
+[lambda](https://en.cppreference.com/w/cpp/language/lambda) function may also be
+used.
 
 @code{.cpp}
 ImageButton settings("@cog.png");
@@ -113,7 +105,7 @@ of callbacks.
 
 @section events_timers Timers
 
-Timers are an intrinsic part of the event loop.  There are two main classes for
+Timers are an intrinsic part of the EventLoop.  There are two main classes for
 working with timers: Timer and PeriodicTimer.
 
 Creating a timer is straightforward, and you can register any number of

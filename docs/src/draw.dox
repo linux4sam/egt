@@ -6,17 +6,16 @@ namespace egt { inline namespace v1 {
 This chapter discusses how drawing works and how rectangles are marked for
 redraw.
 
-@section draw_loop Damaging and Drawing
+@section draw_loop Damaging, Drawing, and the Widget Tree
 
 Each Widget has a Widget::box(), which holds the bounding
 rectangle for the widget. This is the rectangle a widget is responsible for at
 some z-order level for what content should be placed inside that bounding box.
 
 Widgets are organized into a tree.  At the top of the tree there is a top level
-widget that is a special type of widget called a Window.  A
-Window is a Frame widget, which is a composing widget.  This
-is just another way of saying an Frame can deal with zero or more
-children widgets inside of its Widget::box().
+widget that is a special type of widget called a Window.  A Window is a Frame
+widget, which is a composing widget.  This is just another way of saying a
+Frame can deal with zero or more children widgets inside of its Widget::box().
 
 Widgets are essentially rectangles that are drawn.  The widget defines the
 content of what is drawn, but all that matters to the widget is its rectangle
@@ -35,7 +34,7 @@ propagation of the damage rectangles, and the other is propagation of redrawing
 the damaged rectangles with the correct content.
 
 Damage propagates *up* in the tree.  If leaf node widget is damaged, it will
-ultimately report the damage rectangle to a Frame which has a surface.
+ultimately report the damage rectangle to a parent Frame which has a surface.
 This is usually the top level frame or the special plane frame.
 
 @image html widget_hierarchy_damage.png "Damage"
@@ -52,10 +51,29 @@ redraw their damage regions.
 
 Typically, drawing should only be done inside the Widget::draw() method.
 
-When a Widget is asked to draw, it does it by using Painter.  Painter
-is a simple 2D primitive graphics drawing API.  Painter can be used to draw
-lines, and rectangles, fills, and fonts.  It even supports more complicated
+Typically, EGT default widgets have another level of indirection to implement
+the Widget::draw() function by using the Drawer class.  This allows draw
+functions to be overwritten by the Theme.  However, this is not a technical
+requirement if there is no need to Theme the Widget::draw() method of a Widget.
+See @ref colors_themes "Widget Theme" for more information.
+
+When a Widget is asked to draw, it usually uses the Painter class to perform
+all drawing.  However, underneath the Painter class is a cairo context and
+surface.  This means the draw function for a widget can be implemented
+completely with Painter, by using a combination of Painter and cairo directly,
+or just use the cairo API directly.
+
+The Painter API provides basic 2D primitive drawing functions that work well
+with EGT primitives like colors and geometry classes. Painter can be used to
+draw lines, and rectangles, fills, and fonts.  It even supports more complicated
 features drawing like gradients and arcs.
+
+When using Painter to draw, there are also several other very common
+properties and resources used.  For example, the Palette of the Widget is
+usually referenced, along with its Font when applicable, and also the use of
+Color comes into play.
+
+@section draw_cairo Painting Directly with Cairo
 
 The back-end used by Painter is the excellent
 <a href="https://www.cairographics.org/">cairo graphics</a> library.  Which in
@@ -63,23 +81,78 @@ turn uses <a href="http://www.pixman.org/">pixman</a> for optimized pixel
 manipulation.  Both cairo and pixman take advantage of hardware acceleration
 when possible.
 
+To use cairo directly in a Widget::draw() method, get the cairo context by
+calling Painter::context() and then call cairo API functions like normal.
+
+@code{.cpp}
+auto cr = painter.context().get();
+cairo_set_line_width(cr, 1.0);
+cairo_stroke(cr);
+@endcode
+
+Understanding the cairo drawing model, considering it is a vector drawing API,
+is important to understand how to use cairo, and in some cases how to use the
+Painter class in EGT.
+
+@imageSize{architecture.png,width:500px;}
+@image html cairo_drawing.png "Cairo Drawing Model [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]"
+@image latex cairo_drawing.png "Cairo Drawing Model [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]" width=8cm
+
 If you are not familiar with cairo, the
 <a href="https://www.cairographics.org/tutorial/">Cairo Tutorial</a> information
 is very helpful to understand the basics.
 
-To use cairo directly in a Widget::draw() method, get the cairo context by
-calling Painter::context() and then call cairo function like normal.
+@section draw_function Implementing a Draw Function
+
+The best way to see how typical widgets are drawn is to look at the draw()
+functions of default EGT widgets.  However, there are several things to take
+into account when implementing a draw() function.
+
+By default, a parent Frame will first clip the drawing area to the box() of the
+Widget that is asked to draw().  This means that even if the widget tries to
+draw outside of its box(), it will not be seen.  This is important because EGT
+needs to know where things are drawn so it can account for repainting as
+necessary. If any widget were allowed to draw anywhere on the screen at any time,
+EGT would have no idea what needs to be redrawn.  To circumvent this operation
+at your own risk, set the Widget::flag::no_clip flag on a widget.  This will
+disable the automatic clipping.
+
+When the parent frame calls the draw() function of a widget, it will first setup
+a Painter::AutoSaveRestore instance.  So, there is not need to handle saving or
+restoring the state in any Widget::draw() function as this is done automatically.
+
+@section draw_transforms Affine Matrix Transformations
+
+Cairo supports matrix transformations of the coordinate system.  This is an
+advanced topic.  For more information on how this works, see
+<a href="https://cairographics.org/cookbook/matrix_transform/">Cairo Matrix Transformation</a>.
+
+An example of doing a transformation in a class derived from an ImageLabel might
+look like this.
 
 @code{.cpp}
-auto cr = painter.context();
-cairo_set_line_width(cr.get(), 1.0);
-cairo_stroke(cr.get());
-@endcode
+    virtual void draw(Painter& painter, const Rect& rect) override
+    {
+        auto cr = painter.context().get();
 
-When using Painter to draw, there are also several other very common
-properties and resources used.  For example, the Widget::palette() of
-the widget is usually referenced, along with its Font when applicable,
-and also the use of Color comes into play.
+        float yrotate;
+        if (m_scale > 0.5)
+            yrotate = .35 * (m_scale - .5);
+        else
+            yrotate = -1 * .35 * (.5 - m_scale);
+
+        cairo_matrix_t matrix_perspective;
+        cairo_matrix_init(&matrix_perspective,
+                          1.0, yrotate,
+                          0.0, 1.0,
+                          parent()->w() / 2, 0.0);
+
+        cairo_transform(cr, &matrix_perspective);
+        cairo_translate(cr, -parent()->w() / 2, 0);
+
+        Drawer<ImageLabel>::draw(*this, painter, rect);
+    }
+@endcode
 
 */
 }}

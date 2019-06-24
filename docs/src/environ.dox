@@ -23,6 +23,9 @@ levels using environment variables.
     - ERROR = 4
     - CRITICAL = 5
     - OFF = 6
+
+    See @subpage started_configure for more information on compile time options.
+
   </dd>
 
   <dt>EGT_BACKEND</dt>
@@ -37,9 +40,9 @@ levels using environment variables.
 
   <dt>EGT_KMS_BUFFERS</dt>
   <dd>
-    Specify the number of buffers to use for KMS.  If you specifiy a single
+    Specify the number of buffers to use for KMS.  If you specify a single
     buffer, no buffering will be used.  If you specify 2 buffers, double
-    buffering will be used.  If you specify 3 buffers, tripple buffering will be
+    buffering will be used.  If you specify 3 buffers, triple buffering will be
     used, and so on.
   </dd>
 
@@ -51,9 +54,11 @@ levels using environment variables.
     - tslib
     - libinput
 
-    Example:
+    @b Example
+    @code{.sh}
+    EGT_INPUT_DEVICES=libinput:/dev/input/touchscreen0,/dev/input/touchscreen1;tslib:/dev/input/touchscreen2
+    @endcode
 
-        EGT_INPUT_DEVICES=libinput:/dev/input/touchscreen0,/dev/input/touchscreen1;tslib:/dev/input/touchscren2
   </dd>
 
   <dt>EGT_ICONS_DIRECTORY</dt>
@@ -62,6 +67,15 @@ levels using environment variables.
     If a directory name is set, then this directory name will be appended with a EGT
     installed default icons directory path.
     examples: /home/egt/icons, 64px, /usr/share/libegt/icons/128px.
+
+    @b Example
+    @code{.sh}
+    EGT_ICONS_DIRECTORY=/usr/share/icons
+    @endcode
+    or
+    @code{.sh}
+    EGT_ICONS_DIRECTORY=64px
+    @endcode
   </dd>
 </dl>
 

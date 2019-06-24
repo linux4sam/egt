@@ -42,6 +42,8 @@ constexpr const T& clampf(const T& v, const T& lo = 0, const T& hi = 1)
  *
  * This manages the definition of a color, internally stored as separate
  * red, green, blue, and alpha components.
+ *
+ * @ref colors_colors
  */
 class Color
 {
@@ -77,8 +79,8 @@ public:
     /**
      * Create a color from an existing color, but with the specified alpha value.
      *
-     * @param color Pre-existing color.
-     * @param alpha Specific alpha value.
+     * @param[in] color Pre-existing color.
+     * @param[in] alpha Specific alpha value.
      */
     constexpr Color(const Color& color, component_t alpha) noexcept
         : m_rgba
@@ -182,7 +184,7 @@ public:
      * @endcode
      *
      * @param[in] c RGB value.
-     * @param[in] a Alpha component in range 0 - 255.
+     * @param[in] alpha Alpha component in range 0 - 255.
      */
     constexpr static inline Color rgb(rgb_t c, component_t alpha = 255) noexcept
     {
@@ -192,10 +194,10 @@ public:
     /**
      * Create a color from float values.
      *
-     * @param r Component value as a float from 0.0 to 1.0.
-     * @param g Component value as a float from 0.0 to 1.0.
-     * @param b Component value as a float from 0.0 to 1.0.
-     * @param a Component value as a float from 0.0 to 1.0.
+     * @param[in] r Component value as a float from 0.0 to 1.0.
+     * @param[in] g Component value as a float from 0.0 to 1.0.
+     * @param[in] b Component value as a float from 0.0 to 1.0.
+     * @param[in] a Component value as a float from 0.0 to 1.0.
      */
     static inline Color rgbaf(float r, float g, float b, float a = 1.0)
     {
@@ -227,20 +229,20 @@ public:
     /**
      * Create a color from HSV values.
      *
-     * @param[out] h Hue component in range 0 - 1.
-     * @param[out] s Saturation component in range 0 - 1.
-     * @param[out] v Value component in range 0 - 1.
-     * @param[out] alpha Alpha component in range 0 - 1.
+     * @param[in] h Hue component in range 0 - 1.
+     * @param[in] s Saturation component in range 0 - 1.
+     * @param[in] v Value component in range 0 - 1.
+     * @param[in] alpha Alpha component in range 0 - 1.
      */
     static Color hsvf(float h, float s, float v, float alpha = 1.0);
 
     /**
      * Create a color from HSL values.
      *
-     * @param[out] h Hue component in range 0 - 1.
-     * @param[out] s Saturation component in range 0 - 1.
-     * @param[out] l Lightness component in range 0 - 1.
-     * @param[out] alpha Alpha component in range 0 - 1.
+     * @param[in] h Hue component in range 0 - 1.
+     * @param[in] s Saturation component in range 0 - 1.
+     * @param[in] l Lightness component in range 0 - 1.
+     * @param[in] alpha Alpha component in range 0 - 1.
      */
     static Color hslf(float h, float s, float l, float alpha = 1.0);
 
@@ -560,6 +562,9 @@ public:
           m_steps(steps)
     {}
 
+    /**
+     * Append a color step.
+     */
     ColorMap& step(const Color& color)
     {
         m_steps.emplace_back(color);
@@ -573,13 +578,22 @@ public:
      */
     Color interp(float t) const;
 
+    /**
+     * Get a reference to the color steps array.
+     */
     const steps_array& steps() const
     {
         return m_steps;
     }
 
+    /**
+     * Are there any color steps?
+     */
     inline bool empty() const { return m_steps.empty(); }
 
+    /**
+     * Count the number of color steps.
+     */
     inline size_t count() const { return m_steps.size(); }
 
 protected:

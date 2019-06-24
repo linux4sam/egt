@@ -118,7 +118,7 @@ AC_PATH_X
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h glob.h])
 
 AC_ARG_ENABLE([debug],
-  [AS_HELP_STRING([--disable-debug], [build without debugging support [default=yes]])],
+  [AS_HELP_STRING([--disable-debug], [build without debugging support [default=no]])],
   [enable_debug=no], [ ])
 
 if test "$enable_debug" = "no" ; then
@@ -248,9 +248,6 @@ if test "x${have_lua}" = xyes; then
    LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
    LIBEGT_EXTRA_LDFLAGS="${LUA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
-
-# remove when libplanes is fixed
-PKG_CHECK_MODULES(CJSON, [libcjson >= 1.6.0], [have_cjson=yes], [have_cjson=no])
 
 AX_PKG_CHECK_MODULES2(LIBPLANES, [libplanes >= 1.0.0], [], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])

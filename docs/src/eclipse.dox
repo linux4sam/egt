@@ -23,11 +23,10 @@ for developing EGT application and Buildroot integration.
 
 @section eclipse_installation Eclipse Installation
 
-Download Eclipse IDE for C/C++ Developers (Luna 4.4) from
+Download Eclipse IDE for C/C++ Developers (Luna 4.4) and follow below steps for
+installation.
 
-<http://www.eclipse.org/downloads/packages/release/luna/r/eclipse-ide-cc-developers>
-
-and follow below steps for installation.
+@see http://www.eclipse.org/downloads/packages/release/luna/r/eclipse-ide-cc-developers
 
 Extract the eclipse-cpp-luna-R-linux-gtk-x86_64.tar.gz to folder /opt
 
