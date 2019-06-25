@@ -28,6 +28,8 @@ inline namespace v1
  *
  * Manages a list of selectable items. Only the one selected is shown.
  * Navigation through the list is done with the top and bottom arrows.
+ *
+ * @ingroup controls
  */
 class Scrollwheel : public StaticGrid
 {

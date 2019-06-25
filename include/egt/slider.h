@@ -117,51 +117,6 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    //#define OPTIMIZE_SLIDER_DRAW
-#ifdef OPTIMIZE_SLIDER_DRAW
-    /**
-     * By default, damage() will damage the entire box().  However, this
-     * widget can damage a rectangle significantly less than its box().
-     */
-    virtual void damage() override
-    {
-        auto b = content_area();
-
-        if (b.empty())
-            return;
-
-        // can't optimize without more work below to include label - SHOW_LABEL
-        // moves as well
-        if (slider_flags().is_set(flag::show_label))
-        {
-            Widget::damage();
-            return;
-        }
-
-        auto handlerect = handle_box();
-
-        if (m_orient == orientation::horizontal)
-        {
-            damage(Rect(b.x - 1,
-                        handlerect.y - 1,
-                        b.w + 2,
-                        handlerect.h + 2));
-        }
-        else
-        {
-            damage(Rect(handlerect.x  - 1,
-                        b.y - 1,
-                        handlerect.w + 2,
-                        b.h + 2));
-        }
-    }
-
-    virtual void damage(const Rect& rect) override
-    {
-        Widget::damage(rect);
-    }
-#endif
-
     virtual int set_value(int value) override
     {
         int orig = m_value;

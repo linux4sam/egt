@@ -20,10 +20,6 @@ inline namespace v1
 {
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 30);
 
-Button::Button(const std::string& text) noexcept
-    : Button(text, {})
-{}
-
 Button::Button(const std::string& text, const Rect& rect) noexcept
     : TextWidget(text, rect, alignmask::center)
 {
@@ -33,12 +29,6 @@ Button::Button(const std::string& text, const Rect& rect) noexcept
     set_padding(2);
 
     ncflags().set(Widget::flag::grab_mouse);
-}
-
-Button::Button(Frame& parent, const std::string& text) noexcept
-    : Button(text)
-{
-    parent.add(*this);
 }
 
 Button::Button(Frame& parent, const std::string& text, const Rect& rect) noexcept
@@ -105,7 +95,7 @@ bool Button::checked() const
     return m_checked;
 }
 
-void Button::set_check(bool value)
+void Button::set_checked(bool value)
 {
     if (detail::change_if_diff<>(m_checked, value))
     {

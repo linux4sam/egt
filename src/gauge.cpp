@@ -29,7 +29,7 @@ static void draw_image(Painter& painter,
     cairo_rotate(cr, angle);
 
     /*
-     * Some really odd artifacting happens on the needle image edges *only* on
+     * Some really odd artifact happens on the needle image edges *only* on
      * the ARM target. So, slightly clip those horizontal edges.  This is
      * probably an expensive operation, considering the rotate.
      */

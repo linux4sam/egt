@@ -7,6 +7,7 @@
 #include "egt/detail/math.h"
 #include "egt/detail/string.h"
 #include "egt/detail/textwidget.h"
+#include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/progressbar.h"
 #include <string>
@@ -24,6 +25,13 @@ ProgressBar::ProgressBar(const Rect& rect,
 {
     set_boxtype(Theme::boxtype::blank);
     set_border(theme().default_border());
+}
+
+ProgressBar::ProgressBar(Frame& parent, const Rect& rect,
+                         int min, int max, int value) noexcept
+    : ProgressBar(rect, min, max, value)
+{
+    parent.add(*this);
 }
 
 void ProgressBar::draw(Painter& painter, const Rect& rect)
@@ -81,6 +89,12 @@ SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexce
     : ValueRangeWidget<int>(rect, min, max, value)
 {
     set_boxtype(Theme::boxtype::blank);
+}
+
+SpinProgress::SpinProgress(Frame& parent, const Rect& rect, int min, int max, int value) noexcept
+    : SpinProgress(rect, min, max, value)
+{
+    parent.add(*this);
 }
 
 void SpinProgress::draw(Painter& painter, const Rect& rect)
@@ -146,6 +160,13 @@ LevelMeter::LevelMeter(const Rect& rect,
     set_padding(2);
 }
 
+LevelMeter::LevelMeter(Frame& parent, const Rect& rect,
+                       int min, int max, int value) noexcept
+    : LevelMeter(rect, min, max, value)
+{
+    parent.add(*this);
+}
+
 void LevelMeter::draw(Painter& painter, const Rect& rect)
 {
     Drawer<LevelMeter>::draw(*this, painter, rect);
@@ -184,10 +205,16 @@ Size LevelMeter::min_size_hint() const
     return DEFAULT_LEVELMETER_SIZE + Widget::min_size_hint();
 }
 
-AnalogMeter::AnalogMeter(const Rect& rect)
+AnalogMeter::AnalogMeter(const Rect& rect) noexcept
     : ValueRangeWidget<float>(rect, 0, 100, 0)
 {
     set_boxtype(Theme::boxtype::blank);
+}
+
+AnalogMeter::AnalogMeter(Frame& parent, const Rect& rect) noexcept
+    : AnalogMeter(rect)
+{
+    parent.add(*this);
 }
 
 void AnalogMeter::draw(Painter& painter, const Rect& rect)

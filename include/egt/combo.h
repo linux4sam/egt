@@ -45,7 +45,14 @@ protected:
 
     void smart_pos();
 
+    /**
+     * ListBox of ComboBox items.
+     */
     std::shared_ptr<ListBox> m_list;
+
+    /**
+     * Parent ComboBox.
+     */
     ComboBox& m_parent;
 
     friend class egt::ComboBox;
@@ -85,15 +92,11 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] items Array of items to insert into the list.
-     */
-    explicit ComboBox(Frame& parent, const item_array& items = item_array()) noexcept;
-
-    /**
-     * @param[in] parent The parent Frame.
-     * @param[in] items Array of items to insert into the list.
      * @param[in] rect Rectangle for the widget.
      */
-    ComboBox(Frame& parent, const item_array& items, const Rect& rect) noexcept;
+    explicit ComboBox(Frame& parent,
+                      const item_array& items = {},
+                      const Rect& rect = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -115,12 +118,12 @@ public:
     /**
      * Set the index of the selected item.
      */
-    virtual void set_select(size_t index);
+    virtual void set_selected(size_t index);
 
     /**
      * Get the index of the selected item.
      */
-    virtual size_t selected() const { return m_selected; }
+    virtual ssize_t selected() const { return m_selected; }
 
     /**
      * Get an item at the specified index.
@@ -138,8 +141,20 @@ public:
     virtual ~ComboBox() = default;
 
 protected:
+
+    /**
+     * Item array.
+     */
     item_array m_items;
-    size_t m_selected{0};
+
+    /**
+     * Currently selected index.
+     */
+    ssize_t m_selected{-1};
+
+    /**
+     * Popup associated with the ComboBox.
+     */
     std::shared_ptr<detail::ComboBoxPopup> m_popup;
 
     friend class detail::ComboBoxPopup;

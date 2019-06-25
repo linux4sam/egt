@@ -160,7 +160,7 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void starting(float_t start) { m_start = start; }
+    void set_starting(float_t start) { m_start = start; }
 
     /**
      * Get the ending value.
@@ -170,12 +170,22 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void ending(float_t end) { m_end = end; }
+    void set_ending(float_t end) { m_end = end; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void duration(std::chrono::milliseconds dur) { m_duration = dur; }
+    void set_duration(std::chrono::milliseconds dur) { m_duration = dur; }
+
+    /**
+     * @note Calling this while running is undefined behavior.
+     */
+    void set_easing_func(easing_func_t func);
+
+    /**
+     * @note Calling this while running is undefined behavior.
+     */
+    void set_reverse(bool rev) { m_reverse = rev; }
 
     /**
      * Start the animation.
@@ -194,16 +204,6 @@ public:
      * Stop the animation.
      */
     virtual void stop() override;
-
-    /**
-     * @note Calling this while running is undefined behavior.
-     */
-    void set_easing_func(easing_func_t func);
-
-    /**
-     * @note Calling this while running is undefined behavior.
-     */
-    void reverse(bool rev) { m_reverse = rev; }
 
     /**
      * Get the current value.

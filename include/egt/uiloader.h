@@ -26,7 +26,7 @@ namespace experimental
 /**
  * Parses and loads a UI XML file.
  *
-
+ * @b Example
  * @code{.cpp}
  * egt::experimental::UiLoader loader;
  * auto window = loader.load("ui.xml");

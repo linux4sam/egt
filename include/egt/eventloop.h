@@ -64,6 +64,9 @@ public:
      */
     virtual int run(bool enable_fps = false);
 
+    /**
+     * Single step on the event loop.
+     */
     virtual int step();
 
     /**
@@ -90,10 +93,20 @@ public:
 protected:
 
     virtual void draw();
+
+    /**
+     * Called to invoke idle callbacks.
+     */
     void invoke_idle_callbacks();
 
+    /**
+     * Internal event loop implementation.
+     */
     std::unique_ptr<detail::EventLoopImpl> m_impl;
 
+    /**
+     * Registered idle callbacks.
+     */
     std::vector<event_callback> m_idle;
 
 #ifdef USE_PRIORITY_QUEUE

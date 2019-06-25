@@ -52,14 +52,6 @@ bool is_target_sama5d4()
 
 } // End of detail.
 
-VideoWindow::VideoWindow(const Size& size, pixel_format format, windowhint hint)
-    : Window(size, (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint),
-      m_loopback(false)
-{
-    set_boxtype(Theme::boxtype::none);
-    createImpl(size);
-}
-
 VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)
     : Window(rect, (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint),
       m_loopback(false)

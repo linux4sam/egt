@@ -19,7 +19,7 @@ ButtonGroup::ButtonGroup(bool imperative, bool exclusive) noexcept
 {
 }
 
-void ButtonGroup::exclusive(bool exclusive)
+void ButtonGroup::set_exclusive(bool exclusive)
 {
     m_exclusive = exclusive;
 }
@@ -29,7 +29,7 @@ bool ButtonGroup::exclusive() const
     return m_exclusive;
 }
 
-void ButtonGroup::imperative(bool imperative)
+void ButtonGroup::set_imperative(bool imperative)
 {
     m_imperative = imperative;
 }

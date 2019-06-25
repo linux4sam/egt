@@ -28,12 +28,14 @@ inline namespace v1
  * This is useful, for example, if you need a temporary or intermediate
  * buffer for drawing to.
  *
+ * @b Example
  * @code{.cpp}
  * Canvas canvas(Size(100,100));
  * Painter painter(canvas.context());
  * ...
  * @endcode
  *
+ * @ingroup drawing
  */
 class Canvas
 {

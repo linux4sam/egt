@@ -190,7 +190,7 @@ void FileOpenDialog::set_selected(const std::string& fselect)
         invoke_handlers(eventid::property_changed);
 }
 
-const std::string FileOpenDialog::get_selected()
+std::string FileOpenDialog::selected() const
 {
     return (m_filepath + "/" + m_fselected);
 }
@@ -268,7 +268,7 @@ void FileSaveDialog::set_selected(const std::string& fselect)
     m_fileselect_box->set_text(m_fselected);
 }
 
-const std::string FileSaveDialog::get_selected()
+std::string FileSaveDialog::selected() const
 {
     return (m_filepath + "/" + m_fselected);
 }

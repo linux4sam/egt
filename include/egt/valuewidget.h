@@ -36,7 +36,7 @@ public:
      * @param[in] rect Rectangle for the widget.
      * @param[in] value Current value in the range.
      */
-    explicit ValueWidget(const Rect& rect, T value = T())
+    explicit ValueWidget(const Rect& rect, T value = T()) noexcept
         : Widget(rect),
           m_value(value)
     {}

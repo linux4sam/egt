@@ -117,15 +117,9 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] items Array of items to insert into the list.
-     */
-    explicit ListBox(Frame& parent, const item_array& items = item_array()) noexcept;
-
-    /**
-     * @param[in] parent The parent Frame.
-     * @param[in] items Array of items to insert into the list.
      * @param[in] rect Rectangle for the widget.
      */
-    ListBox(Frame& parent, const item_array& items, const Rect& rect) noexcept;
+    explicit ListBox(Frame& parent, const item_array& items = {}, const Rect& rect = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -152,17 +146,17 @@ public:
     /**
      * Select an item by index.
      */
-    virtual void set_select(uint32_t index);
+    virtual void set_selected(size_t index);
+
+    /**
+     * Get the currently selected index.
+     */
+    virtual ssize_t selected() const { return m_selected; }
 
     /**
      * Return the number of items in the list.
      */
     virtual size_t item_count() const { return m_sizer->count_children(); }
-
-    /**
-     * Get the currently selected index.
-     */
-    virtual uint32_t selected() const { return m_selected; }
 
     /**
      * Add a new item to the end of the list.
@@ -172,7 +166,7 @@ public:
     /**
      * Get the currently selected index item from list.
      */
-    virtual Widget* item_at(uint32_t index);
+    virtual Widget* item_at(size_t index) const;
 
     /**
      * Remove an item from the list.
@@ -188,7 +182,14 @@ public:
 
 protected:
 
-    uint32_t m_selected{0};
+    /**
+     * Currently selected index.
+     */
+    ssize_t m_selected{-1};
+
+    /**
+     * Internal sizer used to layout items.
+     */
     std::shared_ptr<BoxSizer> m_sizer;
 
 private:

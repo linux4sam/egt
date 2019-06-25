@@ -51,7 +51,7 @@ int main(int argc, const char** argv)
     in->on_change(std::bind(&Label::set_x, std::ref(vsizer), std::placeholders::_1));
 
     auto out = new PropertyAnimator(half + 1, minx, std::chrono::seconds(3), easing_exponential_easeout);
-    out->reverse(true);
+    out->set_reverse(true);
     out->on_change(std::bind(&Label::set_x, std::ref(vsizer), std::placeholders::_1));
 
     auto delay = new AnimationDelay(std::chrono::seconds(1));

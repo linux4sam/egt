@@ -45,8 +45,8 @@ public:
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    Label(const std::string& text = {},
-          alignmask text_align = default_align) noexcept;
+    explicit Label(const std::string& text = {},
+                   alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -113,17 +113,17 @@ public:
     * @param[in] text The text to display.
     * @param[in] text_align Alignment for the text.
     */
-    ImageLabel(const std::string& text = {},
-               alignmask text_align = default_align) noexcept;
+    explicit ImageLabel(const std::string& text = {},
+                        alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    ImageLabel(const Image& image,
-               const std::string& text = {},
-               alignmask text_align = default_align) noexcept;
+    explicit ImageLabel(const Image& image,
+                        const std::string& text = {},
+                        alignmask text_align = default_align) noexcept;
 
     /**
      * @param[in] image The image to display.

@@ -441,7 +441,7 @@ void TextBox::clear_selection()
     }
 }
 
-std::string TextBox::get_selected_text() const
+std::string TextBox::selected_text() const
 {
     if (m_select_len)
     {
@@ -490,14 +490,9 @@ void TextBox::delete_selection()
     }
 }
 
-void TextBox::enable_input_validation()
+void TextBox::set_input_validation_enabled(bool enabled)
 {
-    m_validate_input = true;
-}
-
-void TextBox::disable_input_validation()
-{
-    m_validate_input = true;
+    m_validate_input = enabled;
 }
 
 void TextBox::add_validator_function(validator_callback_t callback)

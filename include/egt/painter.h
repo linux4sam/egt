@@ -22,10 +22,17 @@ inline namespace v1
 class Image;
 
 /**
+ * @defgroup drawing Drawing Classes
+ * Drawing related functionality.
+ */
+
+/**
  * Drawing interface for 2D graphics.
  *
  * This is the interface for 2D drawing primitives that makes working with and
  * drawing EGT primitives easier.
+ *
+ * @ingroup drawing
  */
 class Painter : public detail::noncopyable
 {
@@ -37,6 +44,7 @@ public:
      * You are encouraged to use this instead of manually calling
      * Painter::save() and Painter::restore().
      *
+     * @b Example
      * @code{.cpp}
      * void SomeWidget::paint(Painter& painter)
      * {

@@ -19,6 +19,7 @@ inline namespace v1
 {
 
 class Painter;
+class Frame;
 
 /**
  * Boolean checkbox.
@@ -35,8 +36,22 @@ class Painter;
 class CheckBox : public Button
 {
 public:
-    CheckBox(const std::string& text = {},
-             const Rect& rect = {});
+
+    /**
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit CheckBox(const std::string& text = {},
+                      const Rect& rect = {}) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit CheckBox(Frame& parent,
+                      const std::string& text = {},
+                      const Rect& rect = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -57,11 +72,23 @@ public:
  *
  * @image html widget_slidingcheckbox.png
  * @image latex widget_slidingcheckbox.png "widget_slidingcheckbox" width=5cm
+ *
+ * @ingroup controls
  */
 class ToggleBox : public CheckBox
 {
 public:
-    explicit ToggleBox(const Rect& rect = {});
+
+    /**
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit ToggleBox(const Rect& rect = {}) noexcept;
+
+    /**
+    * @param[in] parent The parent Frame.
+    * @param[in] rect Rectangle for the widget.
+    */
+    explicit ToggleBox(Frame& parent, const Rect& rect = {}) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -72,6 +99,12 @@ public:
 
     virtual Size min_size_hint() const override;
 
+    /**
+     * Set the optional "on" and "off" text.
+     *
+     * @param[in] on_text The "on" text to display.
+     * @param[in] off_text The "off" text to display.
+     */
     virtual void set_toggle_text(const std::string& on_text,
                                  const std::string& off_text)
     {
@@ -82,7 +115,14 @@ public:
             damage();
     }
 
+    /**
+     * Get the "on" text.
+     */
     inline const std::string& on_text() const { return m_on_text; }
+
+    /**
+     * Get the "off" text.
+     */
     inline const std::string& off_text() const { return m_off_text; }
 
     virtual ~ToggleBox() = default;
@@ -91,7 +131,14 @@ protected:
 
     virtual void set_text(const std::string& /*str*/) override {}
 
+    /**
+     * Optional "off" text.
+     */
     std::string m_off_text;
+
+    /**
+     * Optional "on" text.
+     */
     std::string m_on_text;
 };
 

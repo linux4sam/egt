@@ -89,6 +89,9 @@ protected:
 
     cell_array m_cells;
 
+    /**
+     * Currently selected index.
+     */
     int m_current_index{-1};
 };
 

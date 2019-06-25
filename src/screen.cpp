@@ -35,7 +35,7 @@ void Screen::flip(const damage_array& damage)
             for (const auto& d : damage)
                 b.add_damage(d);
 
-        DisplayBuffer& buffer = m_buffers[index()];
+        ScreenBuffer& buffer = m_buffers[index()];
 
         copy_to_buffer(buffer);
 
@@ -45,7 +45,7 @@ void Screen::flip(const damage_array& damage)
     }
 }
 
-void Screen::copy_to_buffer(DisplayBuffer& buffer)
+void Screen::copy_to_buffer(ScreenBuffer& buffer)
 {
     cairo_set_source_surface(buffer.cr.get(), m_surface.get(), 0, 0);
     cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);

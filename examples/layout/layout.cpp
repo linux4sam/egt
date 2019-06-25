@@ -393,7 +393,7 @@ public:
 
         auto left = make_shared<CheckBox>("left");
         if ((widget->align() & alignmask::left) == alignmask::left)
-            left->set_check(true);
+            left->set_checked(true);
         left->on_event([widget, left](Event&)
         {
             if (left->checked())
@@ -405,7 +405,7 @@ public:
 
         auto right = make_shared<CheckBox>("right");
         if ((widget->align() & alignmask::right) == alignmask::right)
-            right->set_check(true);
+            right->set_checked(true);
         right->on_event([widget, right](Event&)
         {
             if (right->checked())
@@ -417,7 +417,7 @@ public:
 
         auto center = make_shared<CheckBox>("center");
         if ((widget->align() & alignmask::center) == alignmask::center)
-            center->set_check(true);
+            center->set_checked(true);
         center->on_event([widget, center](Event&)
         {
             if (center->checked())
@@ -429,7 +429,7 @@ public:
 
         auto top = make_shared<CheckBox>("top");
         if ((widget->align() & alignmask::top) == alignmask::top)
-            top->set_check(true);
+            top->set_checked(true);
         top->on_event([widget, top](Event&)
         {
             if (top->checked())
@@ -441,7 +441,7 @@ public:
 
         auto bottom = make_shared<CheckBox>("bottom");
         if ((widget->align() & alignmask::bottom) == alignmask::bottom)
-            bottom->set_check(true);
+            bottom->set_checked(true);
         bottom->on_event([widget, bottom](Event&)
         {
             if (bottom->checked())
@@ -453,7 +453,7 @@ public:
 
         auto expand_horizontal = make_shared<CheckBox>("expand horizontal");
         if ((widget->align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
-            expand_horizontal->set_check(true);
+            expand_horizontal->set_checked(true);
         expand_horizontal->on_event([widget, expand_horizontal](Event&)
         {
             if (expand_horizontal->checked())
@@ -465,7 +465,7 @@ public:
 
         auto expand_vertical = make_shared<CheckBox>("expand vertical");
         if ((widget->align() & alignmask::expand_vertical) == alignmask::expand_vertical)
-            expand_vertical->set_check(true);
+            expand_vertical->set_checked(true);
         expand_vertical->on_event([widget, expand_vertical](Event&)
         {
             if (expand_vertical->checked())

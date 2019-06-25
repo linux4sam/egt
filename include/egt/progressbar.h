@@ -14,6 +14,8 @@ namespace egt
 inline namespace v1
 {
 
+class Frame;
+
 /**
  * Displays a progress bar based on a value.
  *
@@ -32,7 +34,15 @@ public:
     explicit ProgressBar(const Rect& rect = {},
                          int min = 0, int max = 100, int value = 0) noexcept;
 
-    /// @todo Constructors
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] min Minimum value for the range.
+     * @param[in] max Maximum value in the range.
+     * @param[in] value Current value in the range.
+     */
+    explicit ProgressBar(Frame& parent, const Rect& rect = {},
+                         int min = 0, int max = 100, int value = 0) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -56,6 +66,7 @@ public:
     inline bool show_label() const { return m_show_label; }
 
     virtual ~ProgressBar() = default;
+
 protected:
     /**
      * When true, the label text is shown.
@@ -81,7 +92,16 @@ public:
     explicit SpinProgress(const Rect& rect = {},
                           int min = 0, int max = 100, int value = 0) noexcept;
 
-    /// @todo Constructors
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] min Minimum value for the range.
+     * @param[in] max Maximum value in the range.
+     * @param[in] value Current value in the range.
+     */
+    explicit SpinProgress(Frame& parent, const Rect& rect = {},
+                          int min = 0, int max = 100, int value = 0) noexcept;
+
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -133,7 +153,15 @@ public:
     explicit LevelMeter(const Rect& rect = {},
                         int min = 0, int max = 100, int value = 0) noexcept;
 
-    /// @todo Constructors
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     * @param[in] min Minimum value for the range.
+     * @param[in] max Maximum value in the range.
+     * @param[in] value Current value in the range.
+     */
+    explicit LevelMeter(Frame& parent, const Rect& rect = {},
+                        int min = 0, int max = 100, int value = 0) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -142,15 +170,18 @@ public:
      */
     static void default_draw(LevelMeter& widget, Painter& painter, const Rect& rect);
 
+    /**
+     * Set the number of bars to show.
+     */
     virtual void set_num_bars(size_t bars)
     {
         m_num_bars = bars;
     }
 
-    virtual size_t num_bars() const
-    {
-        return m_num_bars;
-    }
+    /**
+     * Get the number of bars to show.
+     */
+    inline size_t num_bars() const { return m_num_bars; }
 
     virtual Size min_size_hint() const override;
 
@@ -179,9 +210,13 @@ public:
     /**
      * @param[in] rect Rectangle for the widget.
      */
-    explicit AnalogMeter(const Rect& rect = {});
+    explicit AnalogMeter(const Rect& rect = {}) noexcept;
 
-    /// @todo Constructors
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit AnalogMeter(Frame& parent, const Rect& rect = {}) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

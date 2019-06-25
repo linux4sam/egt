@@ -36,9 +36,17 @@ public:
     using pattern_type = Pattern;
 
     /**
+     * @defgroup predefined_colors Predefined Colors
+     * Predefined colors.
+     *
+     * @see These are the same colors defined in [CSS Color Module Level 3](https://www.w3.org/TR/css-color-3/)
+     */
+
+    /**
+     * Predefined color.
+     *
      * @{
-     * Pre-defined color.
-     * See https://www.w3.org/TR/css-color-3/
+     * @ingroup predefined_colors
      */
     constexpr static Color transparent = Color(0x00000000);
     constexpr static Color aliceblue = Color::rgb(0xf0f8ff);
@@ -309,6 +317,9 @@ public:
 
 protected:
 
+    /**
+     * Colors in the palette.
+     */
     std::map<GroupId, std::map<ColorId, pattern_type>> m_colors;
 };
 

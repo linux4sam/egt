@@ -42,7 +42,7 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
     m_list->on_event([this, &parent](Event & event)
     {
         event.stop();
-        parent.set_select(m_list->selected());
+        parent.set_selected(m_list->selected());
         hide();
     }, {eventid::property_changed});
 }
@@ -133,12 +133,10 @@ ComboBox::ComboBox(const item_array& items,
     set_border(theme().default_border());
 
     ncflags().set(Widget::flag::grab_mouse);
-}
 
-ComboBox::ComboBox(Frame& parent, const item_array& items) noexcept
-    : ComboBox(items)
-{
-    parent.add(*this);
+    // automatically select the first item
+    if (m_items.size() >= 1)
+        m_selected = 0;
 }
 
 ComboBox::ComboBox(Frame& parent, const item_array& items, const Rect& rect) noexcept
@@ -178,9 +176,9 @@ void ComboBox::handle(Event& event)
     }
 }
 
-void ComboBox::set_select(size_t index)
+void ComboBox::set_selected(size_t index)
 {
-    if (m_selected != index)
+    if (m_selected != static_cast<ssize_t>(index))
     {
         if (index < m_items.size())
         {
@@ -245,7 +243,7 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
     painter.set_line_width(widget.theme().default_border());
     painter.stroke();
 
-    if (widget.selected() < widget.item_count())
+    if (widget.selected() >= 0 && widget.selected() < static_cast<ssize_t>(widget.item_count()))
     {
         // text
         painter.set(widget.color(Palette::ColorId::text).color());

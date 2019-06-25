@@ -30,7 +30,7 @@ class PopupType : public T
 public:
 
     /**
-     * @param size The size of the window.
+     * @param size The size of the Window.
      * @param point The origin point of the window.
      */
     explicit PopupType(const Size& size = {},

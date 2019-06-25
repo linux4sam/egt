@@ -17,7 +17,9 @@ namespace egt
 {
 inline namespace v1
 {
+
 class Painter;
+class Frame;
 
 /**
  * Boolean RadioBox.
@@ -27,8 +29,22 @@ class Painter;
 class RadioBox : public Button
 {
 public:
-    RadioBox(const std::string& text = {},
-             const Rect& rect = {});
+
+    /**
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit RadioBox(const std::string& text = {},
+                      const Rect& rect = {}) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit RadioBox(Frame& parent,
+                      const std::string& text = {},
+                      const Rect& rect = {}) noexcept;
 
     virtual void handle(Event& event) override;
 

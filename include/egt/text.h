@@ -33,6 +33,12 @@ inline namespace v1
  * - Selection Copy/Delete
  * - Multi-line
  *
+ * @b Example
+ * @code{.cpp}
+ * TextBox textbox;
+ * textbox.text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
+ * @endcode
+ *
  * @image html widget_textbox.png
  * @image latex widget_textbox.png "Widget Textbox" height=5cm
  *
@@ -76,9 +82,9 @@ public:
      * @param[in] text_align Alignment for the text.
      * @param[in] flags TextBox flags.
      */
-    TextBox(const std::string& text = {},
-            alignmask text_align = default_align,
-            const flags_type::flags& flags = {}) noexcept;
+    explicit TextBox(const std::string& text = {},
+                     alignmask text_align = default_align,
+                     const flags_type::flags& flags = {}) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -158,7 +164,7 @@ public:
      *
      * @param str The string to append.
      */
-    size_t append(const std::string& str);
+    virtual size_t append(const std::string& str);
 
     /**
      * Insert text at the cursor.
@@ -166,22 +172,22 @@ public:
      * @param str The string to insert.
      * @return The number of characters inserted.
      */
-    size_t insert(const std::string& str);
+    virtual size_t insert(const std::string& str);
 
     /**
      * Get the cursor position.
      */
-    size_t cursor() const;
+    virtual size_t cursor() const;
 
     /**
      * Move the cursor to the beginning.
      */
-    void cursor_set_begin();
+    virtual void cursor_set_begin();
 
     /**
      * Move the cursor to the end.
      */
-    void cursor_set_end();
+    virtual void cursor_set_end();
 
     /**
      * Move the cursor forward by the specified count from the current
@@ -189,7 +195,7 @@ public:
      *
      * @param count The number of characters to move.
      */
-    void cursor_forward(size_t count = 1);
+    virtual void cursor_forward(size_t count = 1);
 
     /**
      * Move the cursor backward by the specified count from the current
@@ -197,19 +203,19 @@ public:
      *
      * @param count The number of characters to move.
      */
-    void cursor_backward(size_t count = 1);
+    virtual void cursor_backward(size_t count = 1);
 
     /**
      * Set the cursor to the specific position.
      *
      * @param pos The new cursor position.
      */
-    void cursor_set(size_t pos);
+    virtual void cursor_set(size_t pos);
 
     /**
      * Select all of the text.
      */
-    void set_selection_all();
+    virtual void set_selection_all();
 
     /**
      * Set the selection of text.
@@ -217,7 +223,7 @@ public:
      * @param pos The starting position.
      * @param length The length of the selection.
      */
-    void set_selection(size_t pos, size_t length);
+    virtual void set_selection(size_t pos, size_t length);
 
     /**
      * Clear any selection.
@@ -225,35 +231,32 @@ public:
      * @note This does not delete text, it just clears the selection. To delete
      * the selected text call delete_selection().
      */
-    void clear_selection();
+    virtual void clear_selection();
 
     /**
      * Get, or copy, the selected text.
      *
      * @return The selected text, or an empty string if there is no selection.
      */
-    std::string get_selected_text() const;
+    std::string selected_text() const;
 
     /**
      * Delete the selected text.
      */
-    void delete_selection();
+    virtual void delete_selection();
 
     /**
-     * Enable validation of the input. Invoke the validator callbacks. If one of
-     * them returns false, the input is rejected.
+     * Enable or disable input validation.
+     *
+     * Invoke the validator callbacks. If one of them returns false, the input
+     * is rejected.
      */
-    void enable_input_validation();
-
-    /**
-     * Disable validation of the input.
-     */
-    void disable_input_validation();
+    virtual void set_input_validation_enabled(bool enabled);
 
     /**
      * Add a callback to be invoked to validate the input.
      */
-    void add_validator_function(validator_callback_t callback);
+    virtual void add_validator_function(validator_callback_t callback);
 
     virtual ~TextBox() noexcept = default;
 

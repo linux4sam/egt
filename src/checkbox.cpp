@@ -3,14 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/detail/alignment.h"
-#include "egt/detail/layout.h"
 #include "egt/button.h"
 #include "egt/checkbox.h"
+#include "egt/detail/alignment.h"
+#include "egt/detail/layout.h"
+#include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/theme.h"
-
-using namespace std;
 
 namespace egt
 {
@@ -18,7 +17,7 @@ inline namespace v1
 {
 
 CheckBox::CheckBox(const std::string& text,
-                   const Rect& rect)
+                   const Rect& rect) noexcept
     : Button(text, rect)
 {
     set_name("CheckBox" + std::to_string(m_widgetid));
@@ -30,6 +29,14 @@ CheckBox::CheckBox(const std::string& text,
     flags().set(Widget::flag::grab_mouse);
 }
 
+CheckBox::CheckBox(Frame& parent,
+                   const std::string& text,
+                   const Rect& rect) noexcept
+    : CheckBox(text, rect)
+{
+    parent.add(*this);
+}
+
 void CheckBox::handle(Event& event)
 {
     Widget::handle(event);
@@ -37,7 +44,7 @@ void CheckBox::handle(Event& event)
     switch (event.id())
     {
     case eventid::pointer_click:
-        set_check(!checked());
+        set_checked(!checked());
     default:
         break;
     }
@@ -120,13 +127,19 @@ Size CheckBox::min_size_hint() const
     return Size(100, 30) + Widget::min_size_hint();
 }
 
-ToggleBox::ToggleBox(const Rect& rect)
-    : CheckBox("", rect)
+ToggleBox::ToggleBox(const Rect& rect) noexcept
+    : CheckBox( {}, rect)
 {
     set_name("ToggleBox" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::blank_rounded);
     set_border(theme().default_border());
+}
+
+ToggleBox::ToggleBox(Frame& parent, const Rect& rect) noexcept
+    : ToggleBox(rect)
+{
+    parent.add(*this);
 }
 
 void ToggleBox::draw(Painter& painter, const Rect& rect)

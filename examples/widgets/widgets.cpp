@@ -73,7 +73,7 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(expand(toggle1));
 
         auto toggle2 = std::make_shared<ToggleBox>();
-        toggle2->set_check(true);
+        toggle2->set_checked(true);
         grid0->add(expand(toggle2));
 
         auto toggle3 = std::make_shared<ToggleBox>();
@@ -106,7 +106,7 @@ struct CheckBoxPage : public NotebookTab
 
         auto radiobox2 = std::make_shared<RadioBox>("radiobox 2");
         grid0->add(expand(radiobox2));
-        radiobox2->set_check(true);
+        radiobox2->set_checked(true);
 
         auto radiobox3 = std::make_shared<RadioBox>("Disabled");
         grid0->add(expand(radiobox3));
@@ -225,7 +225,7 @@ struct TextPage : public NotebookTab
 
         auto text5 = std::make_shared<TextBox>("all characters allowed");
         text5->add_validator_function([this](std::string s) { return true; });
-        text5->enable_input_validation();
+        text5->set_input_validation_enabled(true);
         grid0->add(expand(text5));
 
         auto text6 = std::make_shared<TextBox>("abc123 only");
@@ -233,7 +233,7 @@ struct TextPage : public NotebookTab
         {
             return std::regex_match(s, regex("[abc123]*"));
         });
-        text6->enable_input_validation();
+        text6->set_input_validation_enabled(true);
         grid0->add(expand(text6));
 
         auto text7 = std::make_shared<TextBox>(

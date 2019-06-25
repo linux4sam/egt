@@ -24,20 +24,20 @@ inline namespace v1
 
 /**
  * A dialog is a widget that allows user to make a decision.
+ *
  * A dialog does not fill the screen and is normally used for modal
  * events that require users to take an action before they can proceed
  * further.
  *
  * A Basic dialog window contains three regions:
- *
- * Title: used for showing title info of dialog.
- * Content area: The display message or other widget in dialog.
- * buttons: two buttons to make a decision.
- *
+ * - Title: used for showing title info of dialog.
+ * - Content area: The display message or other widget in dialog.
+ * - buttons: two buttons to make a decision.
  */
 class Dialog : public Popup
 {
 public:
+
     enum class buttonid
     {
         button1,
@@ -49,7 +49,7 @@ public:
      *
      * @param[in] rect is a size of dialog window.
      */
-    explicit Dialog(const Rect& rect = {});
+    explicit Dialog(const Rect& rect = {}) noexcept;
 
     /**
      * Set the title info for this dialog window.

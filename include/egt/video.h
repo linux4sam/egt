@@ -38,20 +38,6 @@ public:
     /**
      * Create a video window to decode video and render it to a screen.
      *
-     * @param size is a size of window with offset x & y = 0.
-     * @param format is a pixel format of window or a overlay plane.
-     * @param hint used for configuring window backend's.
-     *
-     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
-     * formats.
-     */
-    explicit VideoWindow(const Size& size = {},
-                         pixel_format format = pixel_format::xrgb8888,
-                         windowhint hint = windowhint::overlay);
-
-    /**
-     * Create a video window to decode video and render it to a screen.
-     *
      * @param rect is a size of window with offset x & y.
      * @param format is a pixel format of window or a overlay plane.
      * @param hint used for configuring window backend's.

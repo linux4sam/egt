@@ -36,7 +36,9 @@ public:
     using Widget::Widget;
 
     CircleWidget();
+
     explicit CircleWidget(const Circle& circle);
+
     CircleWidget(Frame& parent, const Circle& circle);
 
     inline float radius() const

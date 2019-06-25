@@ -6,6 +6,7 @@
 #include "egt/input.h"
 #include "egt/window.h"
 #include <chrono>
+#include <egt/detail/mousegesture.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
@@ -177,6 +178,8 @@ void Input::dispatch(Event& event)
         }
     }
 }
+
+Input::~Input() = default;
 
 detail::Object Input::m_global_handler;
 

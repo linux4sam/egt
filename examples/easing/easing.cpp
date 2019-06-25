@@ -68,7 +68,8 @@ class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : m_seq(true),
+        : m_box(make_shared<Window>(Size(100, 200))),
+          m_seq(true),
           m_animation(-110, height() - 100, std::chrono::seconds(2)),
           m_delay(std::chrono::seconds(1)),
           m_board()
@@ -77,8 +78,10 @@ public:
         imgicon->set_margin(5);
         imgicon->resize(Size(SideBoard::HANDLE_WIDTH, SideBoard::HANDLE_WIDTH));
         imgicon->set_align(alignmask::top | alignmask::right);
-        imgicon->set_image_align(alignmask::expand);
         m_board.add(imgicon);
+
+        add(m_board);
+        m_board.show();
 
         auto i = Image("background.png");
         auto img = make_shared<ImageLabel>(i);
@@ -97,6 +100,7 @@ public:
         auto line = std::make_shared<LineChart>();
         line->set_width(m_board.width() - SideBoard::HANDLE_WIDTH);
         line->set_color(Palette::ColorId::bg, Palette::black);
+        line->set_color(Palette::ColorId::border, Palette::white);
         m_board.add(left(expand_vertical(line)));
 
         list1->on_event([this, list1, line](Event&)
@@ -109,12 +113,11 @@ public:
             line->add_data(create_data(easing_functions[list1->selected()].first), LineChart::chart_type::lines);
         }, {eventid::property_changed});
 
-        list1->set_select(7);
+        list1->set_selected(7);
 
         auto image = std::make_shared<ImageLabel>(Image("ball.png"));
         image->set_boxtype(Theme::boxtype::none);
 
-        m_box = make_shared<Window>(Size(100, 200));
         m_box->set_boxtype(Theme::boxtype::none);
         m_box->add(image);
         m_box->move(Point(width() / 2 - m_box->width() / 2, -110));
@@ -125,9 +128,6 @@ public:
         m_seq.add(m_animation);
         m_seq.add(m_delay);
         m_seq.start();
-
-        add(m_board);
-        m_board.show();
     }
 
 private:

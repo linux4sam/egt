@@ -20,21 +20,36 @@ using float_t = float;
 /**
  * @defgroup easing_functions Animation Easing Functions
  * These functions and functors define easing curves for use with animations.
- * @ref animations
+ * @see @ref animations
  */
 
 /**
+ * @addtogroup easing_functions
  * @{
- * @ingroup easing_functions
- * Predefined animation easing functions.
+ */
+
+/**
+ * @imageSize{easing_linear.png,width:400px;}
+ * @image html easing/easing_linear.png
+ * @image latex easing/easing_linear.png
  */
 float_t easing_linear(float_t p);
 float_t easing_easy(float_t p);
 float_t easing_easy_slow(float_t p);
 float_t easing_extend(float_t p);
+/**
+ * @imageSize{easing_drop.png,width:400px;}
+ * @image html easing/easing_drop.png
+ * @image latex easing/easing_drop.png
+ */
 float_t easing_drop(float_t p);
 float_t easing_drop_slow(float_t p);
 float_t easing_snap(float_t p);
+/**
+ * @imageSize{easing_bounce.png,width:400px;}
+ * @image html easing/easing_bounce.png
+ * @image latex easing/easing_bounce.png
+ */
 float_t easing_bounce(float_t p);
 float_t easing_bouncy(float_t p);
 float_t easing_rubber(float_t p);
@@ -61,6 +76,11 @@ float_t easing_sine_easein(float_t p);
 float_t easing_sine_easeout(float_t p);
 float_t easing_sine_easeinout(float_t p);
 
+/**
+ * @imageSize{easing_circular_easein.png,width:400px;}
+ * @image html easing/easing_circular_easein.png
+ * @image latex easing/easing_circular_easein.png
+ */
 float_t easing_circular_easein(float_t p);
 float_t easing_circular_easeout(float_t p);
 float_t easing_circular_easeinout(float_t p);
@@ -68,7 +88,6 @@ float_t easing_circular_easeinout(float_t p);
 float_t easing_exponential_easein(float_t p);
 float_t easing_exponential_easeout(float_t p);
 float_t easing_exponential_easeinout(float_t p);
-/** @} */
 
 /**
  * Cubic Bezier equation easing function.
@@ -94,6 +113,8 @@ struct easing_cubic_bezier
     float_t m_p2;
     float_t m_p3;
 };
+
+/** @} */
 
 }
 }

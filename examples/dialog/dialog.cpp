@@ -54,20 +54,20 @@ int main(int argc, const char** argv)
     auto win1 = std::make_shared<FileOpenDialog>(RootDir, Rect(0, 0, 640, 432));
     win1->on_event([win1, label1, list](Event&)
     {
-        cout << "FileDialog : file selected is : " << win1->get_selected() << endl;
-        label1->set_text("File OpenDialog: " + win1->get_selected() + " Selected");
+        cout << "FileDialog : file selected is : " << win1->selected() << endl;
+        label1->set_text("File OpenDialog: " + win1->selected() + " Selected");
         win1->hide();
-        list->set_select(0);
+        list->set_selected(0);
     }, {eventid::property_changed});
     win0.add(win1);
 
     auto win2 = std::make_shared<FileSaveDialog>(RootDir, Rect(0, 0, 640, 432));
     win2->on_event([win2, label1, list](Event&)
     {
-        cout << "FileDialog : save file is : " << win2->get_selected() << endl;
-        label1->set_text("File SaveDialog: " + win2->get_selected() + " Selected");
+        cout << "FileDialog : save file is : " << win2->selected() << endl;
+        label1->set_text("File SaveDialog: " + win2->selected() + " Selected");
         win2->hide();
-        list->set_select(0);
+        list->set_selected(0);
     }, {eventid::property_changed});
 
     win0.add(win2);
@@ -91,7 +91,7 @@ int main(int argc, const char** argv)
             cout << "FileDialog Cancel button clicked" << endl;
             label1->set_text("Message Dialog: Cancel button clicked");
         }
-        list->set_select(0);
+        list->set_selected(0);
     });
 
     auto dialog1 = std::make_shared<Dialog>(Rect(0, 0, 440, 320));
@@ -120,7 +120,7 @@ int main(int argc, const char** argv)
             cout << "FileDialog Cancel button clicked" << endl;
             label1->set_text("List Dialog: Cancel button clicked");
         }
-        list->set_select(0);
+        list->set_selected(0);
     });
 
     auto dialog2 = std::make_shared<Dialog>(Rect(0, 0, 440, 320));
@@ -147,7 +147,7 @@ int main(int argc, const char** argv)
             cout << "FileDialog Cancel button clicked" << endl;
             label1->set_text("Slider Dialog: Cancel button clicked");
         }
-        list->set_select(0);
+        list->set_selected(0);
     });
 
     list->on_event([list, win1, win2, dialog, dialog1, dialog2, label1](Event&)

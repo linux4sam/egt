@@ -207,20 +207,36 @@ protected:
 /**
  * Top level Window.
  *
- * This could also be called the main Window.
+ * Special Window type that is the top level Window, or main Window.  It
+ * provides features like a pointer cursor, that usually only make sense as a
+ * top level Window.
  */
 class TopWindow : public Window
 {
 public:
+
     using Window::Window;
 
+    /**
+     * Show the cursor.
+     */
     virtual void show_cursor(const Image& image = Image("@cursor.png"));
+
+    /**
+     * Hide the cursor.
+     */
     virtual void hide_cursor();
 
 protected:
 
+    /**
+     * Handle mouse events.
+     */
     virtual void handle_mouse(Event& event);
 
+    /**
+     * Cursor window, if created.
+     */
     std::shared_ptr<Window> m_cursor;
 };
 

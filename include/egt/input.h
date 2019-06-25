@@ -11,26 +11,27 @@
  * @brief Working with input devices.
  */
 
-#include <array>
-#include <egt/detail/mousegesture.h>
 #include <egt/detail/object.h>
 #include <egt/event.h>
-#include <egt/geometry.h>
 #include <memory>
-#include <string>
 
 namespace egt
 {
 inline namespace v1
 {
 
+namespace detail
+{
+class MouseGesture;
+}
+
 class Widget;
 
 /**
  * Base Input device class.
  *
- * This is an abstract class that must be derived from in order to
- * generate input events.
+ * An input device must inherit from this class and call dispatch() in order to
+ * dispatch events to the rest of the framework.
  */
 class Input
 {
@@ -38,12 +39,29 @@ public:
 
     Input();
 
+    /**
+     * Get a reference to the global input Object.
+     *
+     * This allows you to connect to any Event dispatched from any Input device.
+     *
+     * @b Example
+     * @code{.cpp}
+     * // receive any eventid::keyboard_down event from any Input device
+     * Input::global_input().on_event([this](Event & event)
+     * {
+     *     switch (event.key().keycode)
+     *     {
+     *         ...
+     *     }
+     * }, {eventid::keyboard_down});
+     * @endcode
+     */
     static inline detail::Object& global_input()
     {
         return m_global_handler;
     }
 
-    virtual ~Input() = default;
+    virtual ~Input();
 
 protected:
 

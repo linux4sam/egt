@@ -272,15 +272,15 @@ struct Event : public EventArg
      * Get the Pointer event data.
      *
      * Only valid with the following events:
-     *   - eventid::raw_pointer_down,
-     *   - eventid::raw_pointer_up,
-     *   - eventid::raw_pointer_move,
-     *   - eventid::pointer_click,
-     *   - eventid::pointer_dblclick,
-     *   - eventid::pointer_hold,
-     *   - eventid::pointer_drag_start,
-     *   - eventid::pointer_drag,
-     *   - eventid::pointer_drag_stop,
+     *   - eventid::raw_pointer_down
+     *   - eventid::raw_pointer_up
+     *   - eventid::raw_pointer_move
+     *   - eventid::pointer_click
+     *   - eventid::pointer_dblclick
+     *   - eventid::pointer_hold
+     *   - eventid::pointer_drag_start
+     *   - eventid::pointer_drag
+     *   - eventid::pointer_drag_stop
      *   - eventid::pointer_drag_start
      *   - eventid::pointer_drag
      *   - eventid::pointer_drag_stop

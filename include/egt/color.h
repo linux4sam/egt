@@ -58,6 +58,7 @@ public:
     /**
      * Create a color with the specified RGBA value.
      *
+     * @b Example
      * @code{.cpp}
      * auto a = Color(0xRRGGBBAA);
      * @endcode
@@ -179,6 +180,7 @@ public:
     /**
      * Create a color from only a RGB value with separate alpha channel component.
      *
+     * @b Example
      * @code{.cpp}
      * auto a = Color::rgb(0xRRGGBB);
      * @endcode
@@ -215,6 +217,7 @@ public:
      * For example, the string #0074D9 can be used to specify a blue-like
      * color.
      *
+     * @b Example
      * @code{.cpp}
      * auto a = Color::css("#0074D9");
      * @endcode
@@ -300,6 +303,7 @@ public:
     /**
      * Assign an RGBA value.
      *
+     * @b Example
      * @code{.cpp}
      * Color a = 0xRRGGBBAA;
      * @endcode

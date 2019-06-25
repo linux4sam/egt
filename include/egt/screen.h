@@ -25,9 +25,9 @@ inline namespace v1
 {
 
 /**
- * Manages one of more buffers that make up a surface.
+ * Manages one of more buffers that make up a Screen.
  *
- * @warning A Screen is not necessarily the same resolution and orientation of
+ * @note A Screen is not necessarily the same resolution and orientation of
  * the Display.
  */
 class Screen : public detail::noncopyable
@@ -44,12 +44,18 @@ public:
     /**
      * Perform a flip of the buffers.
      *
+     * This iterates the buffers and puts the composition buffer into the screen
+     * buffers.
+     *
      * @note This will call schedule_flip() automatically.
      */
     virtual void flip(const damage_array& damage);
 
     /**
      * Schedule a flip to occur later.
+     *
+     * This is needed if a flip should to occur sometime in the future to the
+     * hardware.
      */
     virtual void schedule_flip()  = 0;
 
@@ -79,6 +85,11 @@ public:
     /**
      * This function implements the algorithm for adding damage rectangles
      * to a list.
+     *
+     * @param[in,out] damage The starting and ending damage array.
+     * @param[in] rect The new rectangle to add.
+     *
+     * @note This function may be implemented to be recursive.
      */
     static void damage_algorithm(Screen::damage_array& damage,
                                  const Rect& rect);
@@ -96,9 +107,9 @@ protected:
     }
 
     /// @private
-    struct DisplayBuffer
+    struct ScreenBuffer
     {
-        explicit DisplayBuffer(cairo_surface_t* s) noexcept
+        explicit ScreenBuffer(cairo_surface_t* s) noexcept
             : surface(s),
               cr(cairo_create(s))
         {}
@@ -120,14 +131,31 @@ protected:
         }
     };
 
-    void copy_to_buffer(DisplayBuffer& buffer);
+    void copy_to_buffer(ScreenBuffer& buffer);
 
+    /**
+     * Composition surface.
+     */
     shared_cairo_surface_t m_surface;
+
+    /**
+     * Composition surface context.
+     */
     shared_cairo_t m_cr;
 
-    using buffer_array = std::vector<DisplayBuffer>;
+    /**
+     * Type used for an array of ScreenBuffer objects.
+     */
+    using buffer_array = std::vector<ScreenBuffer>;
 
+    /**
+     * Screen buffer array.
+     */
     buffer_array m_buffers;
+
+    /**
+     * Size of the screen.
+     */
     Size m_size;
 };
 

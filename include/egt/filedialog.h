@@ -119,7 +119,7 @@ public:
      *
      * @return full path of the selected file.
      */
-    virtual const std::string get_selected();
+    virtual std::string selected() const;
 
     virtual ~FileOpenDialog() = default;
 
@@ -165,7 +165,7 @@ public:
      *
      * @return full path of the file location.
      */
-    virtual const std::string get_selected();
+    virtual std::string selected() const;
 
     virtual ~FileSaveDialog() = default;
 

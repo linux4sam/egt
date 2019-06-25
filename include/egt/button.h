@@ -32,7 +32,7 @@ class Painter;
  * User interface control widgets.
  *
  * Control are widgets that usually provide some interaction with the user- even
- * if that interaction is only visual like display a value.
+ * if that interaction is only visual.  For example, displaying a value.
  */
 
 /**
@@ -45,6 +45,7 @@ class Painter;
  * - UTF-8 encoding
  * - Multi-line
  *
+ * @b Example
  * @code{.cpp}
  * Button btn("Button");
  * // handle the clicked event of the button
@@ -64,27 +65,16 @@ public:
 
     /**
      * @param[in] text The text to display.
-     */
-    explicit Button(const std::string& text = {}) noexcept;
-
-    /**
-     * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
      */
-    Button(const std::string& text, const Rect& rect) noexcept;
-
-    /**
-     * @param[in] parent The parent Frame.
-     * @param[in] text The text to display.
-     */
-    explicit Button(Frame& parent, const std::string& text = {}) noexcept;
+    explicit Button(const std::string& text = {}, const Rect& rect = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
      */
-    Button(Frame& parent, const std::string& text, const Rect& rect) noexcept;
+    explicit Button(Frame& parent, const std::string& text = {}, const Rect& rect = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -105,7 +95,7 @@ public:
     /**
      * Set checked state of the button.
      */
-    virtual void set_check(bool value);
+    virtual void set_checked(bool value);
 
     virtual Size min_size_hint() const override;
 

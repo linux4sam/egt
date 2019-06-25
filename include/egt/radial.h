@@ -86,11 +86,17 @@ public:
      */
     inline flags_type& radial_flags() { return m_radial_flags; }
 
+    /**
+     * Get the second value of the radial.
+     */
     inline T value2() const
     {
         return m_value2;
     }
 
+    /**
+     * Set the second value of the widget.
+     */
     virtual void set_value2(T v)
     {
         assert(this->m_max > this->m_min);
@@ -234,7 +240,7 @@ public:
      */
     virtual const std::string& text() const { return m_text; }
 
-    float touch_to_degrees(const Point& point)
+    inline float touch_to_degrees(const Point& point) const
     {
         const auto b = this->content_area();
         const Point c = b.center();
@@ -248,7 +254,7 @@ public:
     /**
      * Normalize a value to degrees.
      */
-    float value_to_degrees(T value)
+    inline float value_to_degrees(T value) const
     {
         float n = (static_cast<float>(value) -
                    static_cast<float>(this->m_min)) /
@@ -259,7 +265,7 @@ public:
     /**
      * Normalize degrees to a value.
      */
-    T degrees_to_value(float degrees)
+    inline T degrees_to_value(float degrees) const
     {
         float n = degrees / 360.;
         return (n * (this->m_max - this->m_min)) + this->m_min;
@@ -269,8 +275,14 @@ public:
 
 protected:
 
+    /**
+     * Center text of the widget.
+     */
     std::string m_text;
 
+    /**
+     * The second value of the widget.
+     */
     T m_value2{};
 
     /**

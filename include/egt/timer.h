@@ -61,6 +61,7 @@ void dump_timers(std::ostream& out);
  * @endcode
  *
  * @ingroup timers
+ * @see PeriodicTimer
  */
 class Timer : public detail::noncopyable
 {
@@ -190,6 +191,16 @@ private:
  *
  * This is a timer that will keep firing at the duration interval until it
  * is stopped by calling cancel().
+ *
+ * @b Example
+ * @code{.cpp}
+ * PeriodicTimer timer(std::chrono::seconds(1));
+ * timer.on_timeout([]()
+ * {
+ *     // called every 1 second
+ * });
+ * timer.start();
+ * @endcode
  *
  * @see Timer
  *

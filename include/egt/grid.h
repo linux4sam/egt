@@ -49,19 +49,19 @@ public:
     using flags_type = Flags<flag>;
 
     /**
+     * @param[in] size Rows and columns.
+     * @param[in] border Border width. @see Widget::set_border().
+     */
+    explicit StaticGrid(const Tuple& size = Tuple(1, 1),
+                        default_dim_type border = 0) noexcept;
+
+    /**
      * @param[in] rect Rectangle for the widget.
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::set_border().
      */
     explicit StaticGrid(const Rect& rect, const Tuple& size = Tuple(1, 1),
                         default_dim_type border = 0) noexcept;
-
-    /**
-     * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::set_border().
-     */
-    StaticGrid(const Tuple& size = Tuple(1, 1),
-               default_dim_type border = 0) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -158,11 +158,17 @@ public:
         reposition();
     }
 
+    /**
+     * Returns the last column used for an add() call.
+     */
     int last_add_column() const
     {
         return m_last_add_column;
     }
 
+    /**
+     * Returns the last row used for an add() call.
+     */
     int last_add_row() const
     {
         return m_last_add_row;

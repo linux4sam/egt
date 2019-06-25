@@ -41,12 +41,6 @@ ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
         m_sizer->set_box(to_child(carea));
 }
 
-ListBox:: ListBox(Frame& parent, const item_array& items) noexcept
-    : ListBox(items)
-{
-    parent.add(*this);
-}
-
 ListBox::ListBox(Frame& parent, const item_array& items, const Rect& rect) noexcept
     : ListBox(items, rect)
 {
@@ -72,7 +66,7 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
     }
 }
 
-Widget* ListBox::item_at(uint32_t index)
+Widget* ListBox::item_at(size_t index) const
 {
     return m_sizer->child_at(index);
 }
@@ -81,12 +75,12 @@ void ListBox::remove_item(Widget* widget)
 {
     m_sizer->remove(widget);
 
-    if (m_selected >= m_sizer->count_children())
+    if (m_selected >= static_cast<ssize_t>(m_sizer->count_children()))
     {
         if (m_sizer->count_children())
-            set_select(m_sizer->count_children() - 1);
+            set_selected(m_sizer->count_children() - 1);
         else
-            m_selected = 0;
+            m_selected = -1;
     }
 }
 
@@ -104,7 +98,7 @@ void ListBox::handle(Event& event)
         {
             if (Rect::point_inside(pos, m_sizer->child_at(i)->box()))
             {
-                set_select(i);
+                set_selected(i);
                 break;
             }
         }
@@ -117,16 +111,16 @@ void ListBox::handle(Event& event)
     }
 }
 
-void ListBox::set_select(uint32_t index)
+void ListBox::set_selected(size_t index)
 {
-    if (m_selected != index)
+    if (m_selected != static_cast<ssize_t>(index))
     {
         if (index < m_sizer->count_children())
         {
-            if (m_sizer->count_children() > m_selected)
+            if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
                 m_sizer->child_at(m_selected)->set_active(false);
             m_selected = index;
-            if (m_sizer->count_children() > m_selected)
+            if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
                 m_sizer->child_at(m_selected)->set_active(true);
 
             damage();

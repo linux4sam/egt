@@ -21,7 +21,7 @@ namespace detail
 /**
  * Flip thread queue.
  *
- * This creates a flip queue used for queueing up flip calls when using more
+ * This creates a flip queue used for queuing up flip calls when using more
  * than one buffer.
  */
 struct FlipThread : public detail::noncopyable

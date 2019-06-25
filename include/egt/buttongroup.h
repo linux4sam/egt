@@ -35,19 +35,33 @@ class Button;
 class ButtonGroup
 {
 public:
+
     explicit ButtonGroup(bool imperative = false, bool exclusive = true) noexcept;
-    virtual void exclusive(bool exclusive);
+    virtual void set_exclusive(bool exclusive);
     virtual bool exclusive() const;
-    virtual void imperative(bool imperative);
+    virtual void set_imperative(bool imperative);
     virtual bool imperative() const;
     virtual void add(Button& button);
     virtual void remove(Button& button);
     virtual void checked_state_change(Button& button, bool checked) const;
     virtual ~ButtonGroup();
+
 protected:
     using button_array = std::vector<Button*>;
+
+    /**
+     * Buttons in the group.
+     */
     button_array m_buttons;
+
+    /**
+     * Only one button can be checked().
+     */
     bool m_exclusive;
+
+    /**
+     * At least one button must be checked().
+     */
     bool m_imperative;
 };
 

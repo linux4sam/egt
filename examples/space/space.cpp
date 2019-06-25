@@ -213,7 +213,7 @@ int main(int argc, const char** argv)
         });
 
         auto out = new PropertyAnimator(255, 0, std::chrono::seconds(3), easing_spring);
-        out->reverse(true);
+        out->set_reverse(true);
         out->on_change([star](float_t value)
         {
             auto color = star->color(Palette::ColorId::button_bg);

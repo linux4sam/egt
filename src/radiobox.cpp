@@ -3,11 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/button.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/layout.h"
-#include "egt/button.h"
-#include "egt/radiobox.h"
+#include "egt/frame.h"
 #include "egt/painter.h"
+#include "egt/radiobox.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ inline namespace v1
 {
 
 RadioBox::RadioBox(const std::string& text,
-                   const Rect& rect)
+                   const Rect& rect) noexcept
     : Button(text, rect)
 {
     set_name("RadioBox" + std::to_string(m_widgetid));
@@ -29,6 +30,14 @@ RadioBox::RadioBox(const std::string& text,
     flags().set(Widget::flag::grab_mouse);
 }
 
+RadioBox::RadioBox(Frame& parent,
+                   const std::string& text,
+                   const Rect& rect) noexcept
+    : RadioBox(text, rect)
+{
+    parent.add(*this);
+}
+
 void RadioBox::handle(Event& event)
 {
     Widget::handle(event);
@@ -36,7 +45,7 @@ void RadioBox::handle(Event& event)
     switch (event.id())
     {
     case eventid::pointer_click:
-        set_check(!checked());
+        set_checked(!checked());
         break;
     default:
         break;
