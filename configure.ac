@@ -6,7 +6,7 @@ AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_MACRO_DIR([m4])
 AC_USE_SYSTEM_EXTENSIONS
 
-if test "$program_prefix" = NONE; then
+if test "x$program_prefix" = xNONE; then
   program_prefix="egt_"
 fi
 
