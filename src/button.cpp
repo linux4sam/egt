@@ -168,6 +168,9 @@ ImageButton::ImageButton(Frame& parent,
 
 void ImageButton::do_set_image(const Image& image)
 {
+    if (size().empty() && !image.empty())
+        resize(image.size());
+
     m_image = image;
     damage();
 }

@@ -223,6 +223,9 @@ Size ImageLabel::min_size_hint() const
 
 void ImageLabel::do_set_image(const Image& image)
 {
+    if (size().empty() && !image.empty())
+        resize(image.size());
+
     m_image = image;
     damage();
 }
