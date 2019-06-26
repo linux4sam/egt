@@ -58,10 +58,6 @@ endif
 if HAVE_GSTREAMER
 bin_PROGRAMS += \
 audioplayer/audioplayer
-if HAVE_LIBPLANES
-bin_PROGRAMS += \
-gallery/gallery
-endif
 endif
 
 if HAVE_EXPERIMENTAL_FILESYSTEM
@@ -115,15 +111,6 @@ floating_floating_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 floating_floatingdir = $(prefix)/share/egt/examples/floating
 dist_floating_floating_DATA = $(wildcard $(top_srcdir)/examples/floating/*.png)
 floating_floating_LDFLAGS = $(AM_LDFLAGS)
-
-gallery_gallery_SOURCES = gallery/gallery.cpp
-gallery_gallery_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-gallery_gallery_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-gallery_gallerydir = $(prefix)/share/egt/examples/gallery
-dist_gallery_gallery_DATA = $(wildcard $(top_srcdir)/examples/gallery/*.png) \
-	$(wildcard $(top_srcdir)/examples/gallery/movies/*.png) \
-	$(wildcard $(top_srcdir)/examples/gallery/movies/*.jpg)
-gallery_gallery_LDFLAGS = $(AM_LDFLAGS)
 
 space_space_SOURCES = space/space.cpp
 space_space_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
