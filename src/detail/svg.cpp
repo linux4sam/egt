@@ -8,8 +8,6 @@
 #include "egt/detail/svg.h"
 #include <librsvg/rsvg.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -17,14 +15,16 @@ inline namespace v1
 namespace detail
 {
 
-shared_cairo_surface_t load_svg(const string& filename,
+shared_cairo_surface_t load_svg(const std::string& filename,
                                 const SizeF& size,
                                 const std::string& id)
 {
     GError* error = nullptr;
     std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), &error),
     [](RsvgHandle * r) { g_object_unref(r); });
-    assert(error == nullptr);
+
+    if (!error)
+        throw std::runtime_error("unable to load file: " + filename);
 
     RsvgDimensionData dim;
     rsvg_handle_get_dimensions(rsvg.get(), &dim);
