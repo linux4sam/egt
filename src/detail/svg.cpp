@@ -23,8 +23,8 @@ shared_cairo_surface_t load_svg(const std::string& filename,
     std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), &error),
     [](RsvgHandle * r) { g_object_unref(r); });
 
-    if (!error)
-        throw std::runtime_error("unable to load file: " + filename);
+    if (error)
+        throw std::runtime_error("unable to load svg file: " + filename);
 
     RsvgDimensionData dim;
     rsvg_handle_get_dimensions(rsvg.get(), &dim);
