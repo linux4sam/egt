@@ -29,15 +29,18 @@ inline namespace v1
  * events that require users to take an action before they can proceed
  * further.
  *
- * A Basic dialog window contains three regions:
- * - Title: used for showing title info of dialog.
- * - Content area: The display message or other widget in dialog.
- * - buttons: two buttons to make a decision.
+ * A basic dialog contains three regions:
+ *
+ * Title: Title of a dialog.
+ * Content: a message text or an widget.
+ * Buttons: two buttons to make a decision.
  */
 class Dialog : public Popup
 {
 public:
-
+    /**
+     * buttonid used for dialog button properties.
+     */
     enum class buttonid
     {
         button1,
@@ -45,39 +48,39 @@ public:
     };
 
     /**
-     * Create a dialog window with two buttons to handle decision.
+     * Create a dialog with two buttons to handle decision.
      *
-     * @param[in] rect is a size of dialog window.
+     * @param[in] rect is a size of dialog.
      */
     explicit Dialog(const Rect& rect = {}) noexcept;
 
     /**
-     * Set the title info for this dialog window.
+     * Set the title info for this dialog.
      *
-     * @param[in] icon set icon in a title area of a dialog window.
-     * @param[in] title set title message in a title area of a dialog window.
+     * @param[in] icon set the icon in a title.
+     * @param[in] title set the title text.
      */
     virtual void set_title(const Image& icon, const std::string& title);
 
     /**
-     * Set the title text for this dialog window.
+     * Set a title text for this dialog.
      */
     virtual void set_title(const std::string& title);
 
     /**
-     * Set the icon in a title area of a dialog window.
+     * Set a icon in a title area of a dialog.
      */
     virtual void set_icon(const Image& icon);
 
     /**
-     * Set the message text for this dialog window.
+     * Set a text message for this dialog.
      *
-     * @param[in] message to display in content area of a dialog window.
+     * @param[in] message is a dialog text message.
      */
     virtual void set_message(const std::string& message);
 
     /**
-     * Set Button details for this dialog window.
+     * Set Button details for this dialog.
      *
      * @param[in] button is buttonid
      * @param[in] text is a text to display on button.
@@ -85,9 +88,9 @@ public:
     virtual void set_button(buttonid button, const std::string& text);
 
     /**
-     * Set a custom widget for this dialog window.
+     * Set a widget for this dialog.
      *
-     * @param[in] widget to add in content area of a dialog window
+     * @param[in] widget
      */
     virtual void set_widget(const std::shared_ptr<Widget>& widget);
 
@@ -98,13 +101,35 @@ public:
     virtual ~Dialog() = default;
 
 protected:
+    /**
+     * Vertical BoxSizer
+     */
     std::shared_ptr<BoxSizer> m_vsizer;
-    std::shared_ptr<StaticGrid> m_grid;
-    std::shared_ptr<ImageLabel> m_title;
-    std::shared_ptr<TextBox> m_message;
-    std::shared_ptr<Button> m_button1;
-    std::shared_ptr<Button> m_button2;
 
+    /**
+     * grid for organizing okay & cancel Buttons.
+     */
+    std::shared_ptr<StaticGrid> m_grid;
+
+    /**
+     * m_title is for dialog title.
+     */
+    std::shared_ptr<ImageLabel> m_title;
+
+    /**
+     * m_message is for dialog message.
+     */
+    std::shared_ptr<TextBox> m_message;
+
+    /**
+     * m_button1 Button for okay or cancel.
+     */
+    std::shared_ptr<Button> m_button1;
+
+    /**
+     * m_button2 Button for okay or cancel.
+     */
+    std::shared_ptr<Button> m_button2;
 };
 
 }
