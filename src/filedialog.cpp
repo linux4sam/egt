@@ -198,7 +198,7 @@ std::string FileOpenDialog::selected() const
 FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
       m_hpositioner(std::make_shared<HorizontalBoxSizer>()),
-      m_fileselect_box(std::make_shared<TextBox>("", Rect(0, 0, (rect.width * 0.60), (rect.height * 0.10)))),
+      m_fsave_box(std::make_shared<TextBox>("", Rect(0, 0, (rect.width * 0.60), (rect.height * 0.10)))),
       m_grid(std::make_shared<StaticGrid>(Rect(Size((rect.width * 0.40), (rect.height * 0.10))), Tuple(2, 1), 3)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
@@ -207,8 +207,8 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     m_hpositioner->set_align(alignmask::bottom | alignmask::left);
     m_vsizer->add(m_hpositioner);
 
-    m_fileselect_box->set_align(alignmask::left);
-    m_hpositioner->add(m_fileselect_box);
+    m_fsave_box->set_align(alignmask::left);
+    m_hpositioner->add(m_fsave_box);
 
     m_grid->set_align(alignmask::center);
     m_hpositioner->add(m_grid);
@@ -221,22 +221,22 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
 
     m_okay->on_event([this](Event & event)
     {
-        if (!m_fselected.empty())
+        if (!m_fsave.empty())
         {
             invoke_handlers(eventid::property_changed);
         }
-        else if (!m_fileselect_box->text().empty())
+        else if (!m_fsave_box->text().empty())
         {
-            m_fselected = m_fileselect_box->text();
+            m_fsave = m_fsave_box->text();
             invoke_handlers(eventid::property_changed);
         }
     }, {eventid::pointer_click});
 
     m_cancel->on_event([this](Event & event)
     {
-        this->m_fselected = std::string();
+        this->m_fsave = std::string();
         this->m_flist->clear();
-        this->m_fileselect_box->set_text(std::string());
+        this->m_fsave_box->set_text(std::string());
         this->hide();
     }, {eventid::pointer_click});
 
@@ -250,27 +250,27 @@ FileSaveDialog::FileSaveDialog(const Rect& rect)
 
 void FileSaveDialog::show()
 {
-    m_fileselect_box->set_text("");
+    m_fsave_box->set_text("");
     list_files(m_filepath);
     Popup::show();
 }
 
 void FileSaveDialog::show_centered()
 {
-    m_fileselect_box->set_text("");
+    m_fsave_box->set_text("");
     list_files(m_filepath);
     Popup::show_centered();
 }
 
 void FileSaveDialog::set_selected(const std::string& fselect)
 {
-    m_fselected = fselect;
-    m_fileselect_box->set_text(m_fselected);
+    m_fsave = fselect;
+    m_fsave_box->set_text(m_fsave);
 }
 
 std::string FileSaveDialog::selected() const
 {
-    return (m_filepath + "/" + m_fselected);
+    return (m_filepath + "/" + m_fsave);
 }
 
 
