@@ -26,7 +26,7 @@ int main(int argc, const char** argv)
 
     auto a = alignmask::top | alignmask::center;
 
-    WindowType win1(Size(400, 400));
+    WindowType win1(Size(400, 400), pixel_format::argb8888, windowhint::software);
     win1.set_color(Palette::ColorId::bg, Palette::red);
     win1.set_name("red");
     {
@@ -45,7 +45,7 @@ int main(int argc, const char** argv)
     l1->set_align(alignmask::center | alignmask::bottom);
     win1.add(l1);
 
-    WindowType win2(Size(300, 300));
+    WindowType win2(Size(300, 300), pixel_format::argb8888, windowhint::software);
     win2.set_color(Palette::ColorId::bg, Palette::blue);
     win2.set_name("blue");
     {
