@@ -111,10 +111,9 @@ public:
      *
      * @param point The other point.
      */
-    template <class T>
-    T distance_to(const PointType<dim_t, dim_c>& point) const
+    dim_t distance_to(const PointType<dim_t, dim_c>& point) const
     {
-        return std::hypot(T(point.x - x), T(point.y - y));
+        return std::hypot(point.x - x, point.y - y);
     }
 
     dim_t x{0};
