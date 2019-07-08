@@ -81,7 +81,7 @@ involve doing the following:
 
 @code{.cpp}
 Button button("hello world");
-win.add(&button);
+win.add(button);
 
 PropertyAnimator shrink(100, 10, std::chrono::seconds(1), easing_boing);
 shrink_in.on_change(std::bind(&Button::set_width, std::ref(button),
