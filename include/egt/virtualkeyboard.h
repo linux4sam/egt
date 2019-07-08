@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_KEYBOARD_H
-#define EGT_KEYBOARD_H
+#ifndef EGT_VIRTUALKEYBOARD_H
+#define EGT_VIRTUALKEYBOARD_H
 
 /**
  * @file
