@@ -50,6 +50,14 @@ Size Canvas::size() const
                 cairo_image_surface_get_height(m_surface.get()));
 }
 
+pixel_format Canvas::format() const
+{
+    if (!m_surface)
+        return pixel_format::invalid;
+
+    return detail::egt_format(cairo_image_surface_get_format(m_surface.get()));
+}
+
 void Canvas::copy(shared_cairo_surface_t surface)
 {
     cairo_save(m_cr.get());

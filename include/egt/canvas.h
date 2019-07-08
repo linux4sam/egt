@@ -96,6 +96,11 @@ public:
      */
     Size size() const;
 
+    /**
+     * Get the format of the surface.
+     */
+    pixel_format format() const;
+
     virtual ~Canvas() = default;
 
 protected:
