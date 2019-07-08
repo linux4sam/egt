@@ -275,7 +275,7 @@ bool AudioPlayer::set_volume(int volume)
     return true;
 }
 
-int AudioPlayer::get_volume() const
+int AudioPlayer::volume() const
 {
     if (!m_impl->m_volume)
         return 0;

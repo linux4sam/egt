@@ -73,7 +73,11 @@ public:
      * @return true if success
      */
     virtual bool set_volume(int volume);
-    virtual int get_volume() const;
+
+    /**
+     * Get the volume.
+     */
+    virtual int volume() const;
 
     /**
      * Mutes the audio being played.
