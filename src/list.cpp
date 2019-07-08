@@ -29,6 +29,7 @@ ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
       m_sizer(make_shared<BoxSizer>(*this, orientation::vertical, justification::start))
 {
     set_name("ListBox" + std::to_string(m_widgetid));
+    m_sizer->set_align(alignmask::expand_horizontal);
 
     set_boxtype(Theme::boxtype::blank);
     set_border(theme().default_border());
