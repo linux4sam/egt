@@ -11,6 +11,7 @@
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/screen/kmsscreen.h"
+#include "egt/detail/screen/memoryscreen.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
@@ -236,6 +237,7 @@ void Application::setup_backend(bool primary)
 #ifdef HAVE_FBDEV
         {"fbdev", []() { return std::make_unique<detail::FrameBuffer>("/dev/fb0"); }},
 #endif
+        {"memory", [&size]() { return std::make_unique<detail::MemoryScreen>(size); }},
     };
 
     if (backend != "none")
