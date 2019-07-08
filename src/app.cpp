@@ -136,9 +136,22 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 #endif
     }
 
+    Size size(800, 480);
+    const char* sizestr = getenv("EGT_SCREEN_SIZE");
+    if (sizestr)
+    {
+        vector<string> dims;
+        detail::tokenize(sizestr, 'x', dims);
+        if (dims.size() == 2)
+        {
+            size.width = std::stoi(dims[0]);
+            size.height = std::stoi(dims[1]);
+        }
+    }
+
 #ifdef HAVE_X11
     if (backend == "x11")
-        new detail::X11Screen(*this, Size(800, 480));
+        new detail::X11Screen(*this, size);
     else
 #endif
 #ifdef HAVE_LIBPLANES

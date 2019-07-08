@@ -58,7 +58,6 @@ levels using environment variables.
     @code{.sh}
     EGT_INPUT_DEVICES=libinput:/dev/input/touchscreen0,/dev/input/touchscreen1;tslib:/dev/input/touchscreen2
     @endcode
-
   </dd>
 
   <dt>EGT_ICONS_DIRECTORY</dt>
@@ -75,6 +74,16 @@ levels using environment variables.
     or
     @code{.sh}
     EGT_ICONS_DIRECTORY=64px
+    @endcode
+  </dd>
+
+  <dt>EGT_SCREEN_SIZE</dt>
+  <dd>
+    Set a custom screen size.  This is only possible with some backends, like X11.
+
+    @b Example
+    @code{.sh}
+    EGT_SCREEN_SIZE=640x480 ./widgets
     @endcode
   </dd>
 </dl>
