@@ -330,7 +330,7 @@ inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, float rhs)
 template<class dim_t, compatible dim_c>
 std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
 {
-    os << size.width << "," << size.height;
+    os << size.width << "x" << size.height;
     return os;
 }
 
@@ -713,7 +713,7 @@ template<class dim_t, compatible dim_c>
 std::ostream& operator<<(std::ostream& os, const RectType<dim_t, dim_c>& rect)
 {
     os << "["  << rect.x << "," << rect.y << "," <<
-       rect.width << "," << rect.height << "]";
+       rect.width << "x" << rect.height << "]";
     return os;
 }
 
