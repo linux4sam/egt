@@ -265,6 +265,11 @@ AX_PKG_CHECK_MODULES2(CAIRO, [cairo >= 1.14.6], [], [], [AC_MSG_ERROR([
 LIBEGT_EXTRA_CXXFLAGS="${CAIRO_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
 LIBEGT_EXTRA_LDFLAGS="${CAIRO_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
+AX_PKG_CHECK_MODULES2(FONTCONFIG, [fontconfig], [], [], [AC_MSG_ERROR([
+     fontconfig is a hard dependency, but a sufficient version was not found.])])
+LIBEGT_EXTRA_CXXFLAGS="${FONTCONFIG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+LIBEGT_EXTRA_LDFLAGS="${FONTCONFIG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+
 AX_PKG_CHECK_MODULES2(LIBJPEG, [libjpeg], [], [have_libjpeg=yes], [have_libjpeg=no])
 AM_CONDITIONAL([HAVE_LIBJPEG], [test "x${have_libjpeg}" = xyes])
 if test "x${have_libjpeg}" = xyes; then
