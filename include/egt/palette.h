@@ -276,7 +276,7 @@ public:
      * @param group Color group.
      * @return The color or pattern.
      */
-    const pattern_type& color(ColorId id, GroupId group = GroupId::normal) const;
+    virtual const pattern_type& color(ColorId id, GroupId group = GroupId::normal) const;
 
     /**
      * Set a color in the Palette.
@@ -286,7 +286,7 @@ public:
      * @param color The color or pattern.
      * @return Reference to the Palette instance.
      */
-    Palette& set(ColorId id, GroupId group, const pattern_type& color);
+    virtual Palette& set(ColorId id, GroupId group, const pattern_type& color);
 
     /**
      * Set a color in a Palette.
@@ -296,7 +296,7 @@ public:
      * @param group Color group.
      * @return Reference to the Palette instance.
      */
-    Palette& set(ColorId id, const pattern_type& color, GroupId group = GroupId::normal);
+    virtual Palette& set(ColorId id, const pattern_type& color, GroupId group = GroupId::normal);
 
     /**
      * Remove a color from the Palette.
@@ -304,7 +304,7 @@ public:
      * @param id Color id.
      * @param group Color group.
      */
-    void clear(ColorId id, GroupId group = GroupId::normal);
+    virtual void clear(ColorId id, GroupId group = GroupId::normal);
 
     /**
      * Check if a color exists in the palette.
@@ -313,7 +313,7 @@ public:
      * @param group Color group.
      * @return True if exists.
      */
-    bool exists(ColorId id, GroupId group = GroupId::normal) const;
+    virtual bool exists(ColorId id, GroupId group = GroupId::normal) const;
 
 protected:
 
