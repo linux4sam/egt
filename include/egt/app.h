@@ -90,7 +90,7 @@ public:
      */
     std::vector<std::pair<std::string, std::string>> get_input_devices();
 
-    virtual ~Application() = default;
+    virtual ~Application();
 
 protected:
 

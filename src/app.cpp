@@ -57,7 +57,8 @@ inline namespace v1
 static Application* the_app = nullptr;
 Application& Application::instance()
 {
-    assert(the_app);
+    if (!the_app)
+        throw std::runtime_error("no application instance");
     return *the_app;
 }
 
@@ -303,6 +304,12 @@ void Application::dump(std::ostream& out)
 vector<pair<string, string>> Application::get_input_devices()
 {
     return m_input_devices;
+}
+
+Application::~Application()
+{
+    if (the_app == this)
+        the_app = nullptr;
 }
 
 }
