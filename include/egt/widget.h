@@ -315,7 +315,7 @@ public:
      * @see Widget::show()
      * @see Widget::hide()
      */
-    inline void toggle_visible()
+    inline void visible_toggle()
     {
         if (visible())
             hide();
@@ -353,12 +353,12 @@ public:
     virtual void set_readonly(bool value);
 
     /**
-     * Return the disabled status of the widget.
-     *
-     * When a widget is disabled, it does not receive events. Also, the
-     * color scheme may change when a widget is disabled.
+     * Toggle the readonly state.
      */
-    virtual bool disabled() const;
+    inline void readonly_toggle()
+    {
+        set_readonly(!readonly());
+    }
 
     /**
      * Set the disabled status to true.
@@ -369,6 +369,25 @@ public:
      * Set the enable status to true.
      */
     virtual void enable();
+
+    /**
+    * Return the disabled status of the widget.
+    *
+    * When a widget is disabled, it does not receive events. Also, the
+    * color scheme may change when a widget is disabled.
+    */
+    virtual bool disabled() const;
+
+    /**
+     * Toggle the disabled state.
+     */
+    inline void disable_toggle()
+    {
+        if (disabled())
+            enable();
+        else
+            disable();
+    }
 
     /**
      * Damage the box() of the widget and cause a redraw.
