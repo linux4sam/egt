@@ -37,11 +37,11 @@ public:
 
     inline bool visible() const { return m_visible; }
 
-    inline void toggle_visible() { set_visible(!m_visible); }
+    inline void visible_toggle() { set_visible(!m_visible); }
 
     void set_visible(bool visible);
 
-    void set_gauge(Gauge* gauge)
+    inline void set_gauge(Gauge* gauge)
     {
         m_gauge = gauge;
     }
@@ -95,7 +95,7 @@ protected:
     float m_max{0.0};
     float m_angle_start{0.0};
     float m_angle_stop{360.0};
-    bool m_clockwise;
+    bool m_clockwise{true};
 
     PointF m_center;
     PointF m_point;
@@ -127,7 +127,7 @@ public:
 
 protected:
 
-    Size super_size() const
+    inline Size super_size() const
     {
         Size result = size();
         for (auto& layer : m_layers)

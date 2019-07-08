@@ -58,7 +58,7 @@ int main(int argc, const char** argv)
     PeriodicTimer right_timer(std::chrono::milliseconds(1500));
     right_timer.on_timeout([right_blink]()
     {
-        right_blink->toggle_visible();
+        right_blink->visible_toggle();
     });
     right_timer.start();
 
@@ -73,7 +73,7 @@ int main(int argc, const char** argv)
     PeriodicTimer left_timer(std::chrono::milliseconds(1000));
     left_timer.on_timeout([left_blink]()
     {
-        left_blink->toggle_visible();
+        left_blink->visible_toggle();
     });
     left_timer.start();
 
@@ -88,7 +88,7 @@ int main(int argc, const char** argv)
     PeriodicTimer brights_timer(std::chrono::seconds(5));
     brights_timer.on_timeout([brights]()
     {
-        brights->toggle_visible();
+        brights->visible_toggle();
     });
     brights_timer.start();
 
