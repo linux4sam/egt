@@ -57,6 +57,7 @@ ENABLE_BITMASK_OPERATORS(alignmask)
 
 std::ostream& operator<<(std::ostream& os, const alignmask& align);
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& center(T& widget)
 {
@@ -64,6 +65,7 @@ inline T& center(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& center(const std::shared_ptr<T>& widget)
 {
@@ -71,6 +73,7 @@ inline const std::shared_ptr<T>& center(const std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& center(std::shared_ptr<T>& widget)
 {
@@ -78,6 +81,7 @@ inline std::shared_ptr<T>& center(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& left(T& widget)
 {
@@ -85,6 +89,7 @@ inline T& left(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& left(const std::shared_ptr<T>& widget)
 {
@@ -92,6 +97,7 @@ inline const std::shared_ptr<T>& left(const std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& left(std::shared_ptr<T>& widget)
 {
@@ -99,6 +105,7 @@ inline std::shared_ptr<T>& left(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& right(T& widget)
 {
@@ -106,6 +113,7 @@ inline T& right(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& right(const std::shared_ptr<T>& widget)
 {
@@ -113,6 +121,7 @@ inline const std::shared_ptr<T>& right(const std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& right(std::shared_ptr<T>& widget)
 {
@@ -120,6 +129,7 @@ inline std::shared_ptr<T>& right(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& top(T& widget)
 {
@@ -127,6 +137,7 @@ inline T& top(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& top(const std::shared_ptr<T>& widget)
 {
@@ -134,6 +145,7 @@ inline const std::shared_ptr<T>& top(const std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& top(std::shared_ptr<T>& widget)
 {
@@ -141,6 +153,7 @@ inline std::shared_ptr<T>& top(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& bottom(T& widget)
 {
@@ -148,6 +161,7 @@ inline T& bottom(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& bottom(const std::shared_ptr<T>& widget)
 {
@@ -155,6 +169,7 @@ inline const std::shared_ptr<T>& bottom(const std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& bottom(std::shared_ptr<T>& widget)
 {
@@ -162,6 +177,7 @@ inline std::shared_ptr<T>& bottom(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& expand_horizontal(T& widget)
 {
@@ -169,6 +185,7 @@ inline T& expand_horizontal(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& expand_horizontal(const std::shared_ptr<T>& widget)
 {
@@ -176,6 +193,7 @@ inline const std::shared_ptr<T>& expand_horizontal(const std::shared_ptr<T>& wid
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& expand_horizontal(std::shared_ptr<T>& widget)
 {
@@ -183,6 +201,7 @@ inline std::shared_ptr<T>& expand_horizontal(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& expand_vertical(T& widget)
 {
@@ -190,6 +209,7 @@ inline T& expand_vertical(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& expand_vertical(const std::shared_ptr<T>& widget)
 {
@@ -197,6 +217,7 @@ inline const std::shared_ptr<T>& expand_vertical(const std::shared_ptr<T>& widge
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& expand_vertical(std::shared_ptr<T>& widget)
 {
@@ -204,6 +225,7 @@ inline std::shared_ptr<T>& expand_vertical(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& expand(T& widget)
 {
@@ -211,6 +233,7 @@ inline T& expand(T& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& expand(const std::shared_ptr<T>& widget)
 {
@@ -218,6 +241,7 @@ inline const std::shared_ptr<T>& expand(const std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& expand(std::shared_ptr<T>& widget)
 {
@@ -225,6 +249,7 @@ inline std::shared_ptr<T>& expand(std::shared_ptr<T>& widget)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline T& align(T& widget, alignmask a)
 {
@@ -232,6 +257,7 @@ inline T& align(T& widget, alignmask a)
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, alignmask a)
 {
@@ -239,6 +265,7 @@ inline const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, alignma
     return widget;
 }
 
+/** Helper to set alignment of a widget. */
 template<class T>
 inline std::shared_ptr<T>& align(std::shared_ptr<T>& widget, alignmask a)
 {

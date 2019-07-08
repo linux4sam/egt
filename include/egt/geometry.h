@@ -32,6 +32,11 @@ inline namespace v1
  */
 using default_dim_type = int;
 
+/**
+ * Geometry types compatibility type.
+ *
+ * This is used to create strong incompatible types as a template argument.
+ */
 enum class compatible
 {
     normal,
