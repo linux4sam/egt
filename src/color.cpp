@@ -75,9 +75,9 @@ static hsv rgb2hsv(const Color& in)
 
 static Color hsv2rgb(hsv in)
 {
-    double      hh, p, q, t, ff;
-    long        i;
-    Color         out;
+    double hh, p, q, t, ff;
+    int64_t i;
+    Color out;
 
     if (in.s <= 0.0)
     {
@@ -91,7 +91,7 @@ static Color hsv2rgb(hsv in)
     if (hh >= 360.0)
         hh = 0.0;
     hh /= 60.0;
-    i = (long)hh;
+    i = (int64_t)hh;
     ff = hh - i;
     p = in.v * (1.0 - in.s);
     q = in.v * (1.0 - (in.s * ff));
