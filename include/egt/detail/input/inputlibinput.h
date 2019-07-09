@@ -37,7 +37,7 @@ class InputLibInput : public Input
 {
 public:
 
-    InputLibInput(Application& app);
+    explicit InputLibInput(Application& app);
 
     virtual ~InputLibInput();
 

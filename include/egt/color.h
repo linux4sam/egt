@@ -491,6 +491,7 @@ class Pattern
 public:
     Pattern() noexcept = default;
 
+    // cppcheck-suppress noExplicitConstructor
     Pattern(const Color& color)
     {
         m_steps.insert(std::make_pair(0.f, color));
@@ -557,7 +558,7 @@ public:
 
     ColorMap() noexcept = default;
 
-    ColorMap(interpolation interp) noexcept
+    explicit ColorMap(interpolation interp) noexcept
         : m_interp(interp)
     {}
 

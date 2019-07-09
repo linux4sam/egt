@@ -50,7 +50,7 @@ public:
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
      */
-    RadialType(const Rect& rect, T min = 0, T max = 100, T value = 0)
+    explicit RadialType(const Rect& rect, T min = 0, T max = 100, T value = 0)
         : ValueRangeWidget<T>(rect, min, max, value)
     {
         this->set_boxtype(Theme::boxtype::blank);

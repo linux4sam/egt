@@ -20,7 +20,7 @@ template <class T>
 class MyCameraWindow : public T
 {
 public:
-    MyCameraWindow(const Size& size)
+    explicit MyCameraWindow(const Size& size)
         : T(size)
     {
         m_fscale = (double)main_screen()->size().width / (double)T::width();

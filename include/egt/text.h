@@ -103,10 +103,10 @@ public:
      * @param[in] text_align Alignment for the text.
      * @param[in] flags TextBox flags.
      */
-    TextBox(Frame& parent,
-            const std::string& text = {},
-            alignmask text_align = default_align,
-            const flags_type::flags& flags = {}) noexcept;
+    explicit TextBox(Frame& parent,
+                     const std::string& text = {},
+                     alignmask text_align = default_align,
+                     const flags_type::flags& flags = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
