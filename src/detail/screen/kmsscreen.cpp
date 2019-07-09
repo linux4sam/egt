@@ -44,7 +44,7 @@ struct FlipJob
     uint32_t m_index;
 };
 
-static KMSScreen* the_kms = 0;
+static KMSScreen* the_kms = nullptr;
 
 std::vector<planeid> KMSScreen::m_used;
 
