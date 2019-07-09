@@ -132,8 +132,7 @@ void draw_text(Painter& painter,
     size_t pos = 0;
     std::string last_char;
     bool workaround = false;
-    bool stop = false;
-    for (auto r = rects.begin(); !stop && r != rects.end(); ++r)
+    for (auto r = rects.begin(); r != rects.end(); ++r)
     {
         float roff = 0.;
 #ifdef UTF8CPP_CHECKED
@@ -369,8 +368,7 @@ void draw_text(Painter& painter,
     size_t pos = 0;
     std::string last_char;
     bool workaround = false;
-    bool stop = false;
-    for (auto r = rects.begin(); !stop && r != rects.end(); ++r)
+    for (auto r = rects.begin(); r != rects.end(); ++r)
     {
         if (r->str.empty())
         {
