@@ -139,7 +139,7 @@ public:
 
     static float DEFAULT_ROUNDED_RADIUS;
 
-    Theme();
+    Theme() = default;
 
     Theme(const Theme& rhs)
     {
@@ -220,12 +220,12 @@ protected:
     /**
      * Palette instance used by the theme.
      */
-    std::unique_ptr<Palette> m_palette;
+    std::unique_ptr<Palette> m_palette{egt::make_unique<Palette>()};
 
     /**
      * Default font instance used by the theme.
      */
-    std::unique_ptr<Font> m_font;
+    std::unique_ptr<Font> m_font{egt::make_unique<Font>()};
 
     virtual void init_palette();
 

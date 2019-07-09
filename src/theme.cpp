@@ -42,11 +42,6 @@ void set_global_theme(Theme* theme)
 
 float Theme::DEFAULT_ROUNDED_RADIUS = 4.0;
 
-Theme::Theme()
-    : m_palette(new Palette),
-      m_font(new Font)
-{}
-
 void Theme::init_palette()
 {
     m_palette->set(Palette::ColorId::cursor, Palette::GroupId::normal, Palette::red);
