@@ -30,3 +30,4 @@ TAGS
 .settings
 .vscode
 *.gch
+*.exe
