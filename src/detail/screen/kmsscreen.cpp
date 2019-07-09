@@ -158,28 +158,63 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
     if (hint == windowhint::software)
         return plane;
 
-    if (hint == windowhint::overlay)
+    auto overlay_plane_create = [this, &size, format](plane_type type)
     {
-        int count = count_planes(plane_type::overlay);
-        for (auto i = count - 1; i >= 0; i--)
+        int drm_type = DRM_PLANE_TYPE_OVERLAY;
+        switch (type)
         {
-            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
+        case plane_type::overlay:
+            break;
+        case plane_type::cursor:
+            drm_type = DRM_PLANE_TYPE_CURSOR;
+            break;
+        case plane_type::primary:
+            break;
+        }
+
+        /*
+         * overlay_index_zorder[num overlay planes][overlay index]
+         */
+        static std::map<int, std::array<int, 5>> overlay_index_zorder =
+        {
+            {0, { 0, 0, 0, 0, 0 }},
+            {1, { 0, 0, 0, 0, 0 }},
+            {2, { 1, 0, 0, 0, 0 }},
+            {3, { 2, 0, 1, 0, 0 }},
+            {4, { 2, 0, 1, 3, 0 }},
+            {5, { 2, 0, 1, 4, 3 }},
+        };
+
+        struct plane_data* plane = nullptr;
+        auto count = count_planes(type);
+        assert(count <= 5);
+        for (auto i = 0U; i < count; i++)
+        {
+            auto id = planeid(overlay_index_zorder[count][i], drm_type);
             if (find(m_used.begin(), m_used.end(), id) != m_used.end())
                 continue;
 
             plane = plane_create_buffered(m_device,
-                                          DRM_PLANE_TYPE_OVERLAY,
-                                          i,
+                                          drm_type,
+                                          overlay_index_zorder[count][i],
                                           size.width,
                                           size.height,
                                           detail::drm_format(format),
                                           KMSScreen::max_buffers());
+
             if (plane)
             {
                 m_used.push_back(id);
                 break;
             }
         }
+
+        return plane;
+    };
+
+    if (hint == windowhint::overlay)
+    {
+        plane = overlay_plane_create(plane_type::overlay);
     }
     else if (hint == windowhint::heo_overlay)
     {
@@ -187,104 +222,22 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
         /// requiring the HEO plane for now even though that is not the only
         /// thing different about an HEO plane.  For example, HEO planes are
         /// scaleable and normal planes are not.
-        int count = count_planes(plane_type::overlay);
-        for (auto i = count - 1; i >= 0; i--)
-        {
-            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-            if (find(m_used.begin(), m_used.end(), id) != m_used.end())
-                continue;
-
-            plane = plane_create_buffered(m_device,
-                                          DRM_PLANE_TYPE_OVERLAY,
-                                          i,
-                                          size.width,
-                                          size.height,
-                                          detail::drm_format(format),
-                                          KMSScreen::max_buffers());
-            if (plane)
-            {
-                m_used.push_back(id);
-                break;
-            }
-        }
+        plane = overlay_plane_create(plane_type::overlay);
     }
     else if (hint == windowhint::cursor_overlay)
     {
-        int count = count_planes(plane_type::cursor);
-        for (auto i = 0; i < count; i++)
-        {
-            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-            if (find(m_used.begin(), m_used.end(), id) != m_used.end())
-                continue;
-
-            plane = plane_create_buffered(m_device,
-                                          DRM_PLANE_TYPE_CURSOR,
-                                          i,
-                                          size.width,
-                                          size.height,
-                                          detail::drm_format(format),
-                                          1);
-            if (plane)
-            {
-                m_used.push_back(id);
-                break;
-            }
-        }
-
-        if (!plane)
-        {
-            int cnt = count_planes(plane_type::overlay);
-            for (auto i = 0; i < cnt; i++)
-            {
-                auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-                if (find(m_used.begin(), m_used.end(), id) != m_used.end())
-                    continue;
-
-                plane = plane_create_buffered(m_device,
-                                              DRM_PLANE_TYPE_OVERLAY,
-                                              i,
-                                              size.width,
-                                              size.height,
-                                              detail::drm_format(format),
-                                              KMSScreen::max_buffers());
-                if (plane)
-                {
-                    m_used.push_back(id);
-                    break;
-                }
-            }
-        }
+        plane = overlay_plane_create(plane_type::cursor);
     }
 
     if (!plane)
     {
-        int count = count_planes(plane_type::overlay);
-        for (auto i = count - 1; i >= 0; i--)
-        {
-
-            auto id  = planeid(i, DRM_PLANE_TYPE_OVERLAY);
-            if (find(m_used.begin(), m_used.end(), id) != m_used.end())
-                continue;
-
-            plane = plane_create_buffered(m_device,
-                                          DRM_PLANE_TYPE_OVERLAY,
-                                          i,
-                                          size.width,
-                                          size.height,
-                                          detail::drm_format(format),
-                                          KMSScreen::max_buffers());
-            if (plane)
-            {
-                m_used.push_back(id);
-                break;
-            }
-        }
+        // fallback to overlay plane
+        plane = overlay_plane_create(plane_type::overlay);
     }
 
     if (plane)
     {
         plane_fb_map(plane);
-
         plane_set_pos(plane, 0, 0);
 
         SPDLOG_DEBUG("allocated overlay index {} {},{} {} {}", plane->index,
@@ -323,7 +276,7 @@ void KMSScreen::deallocate_overlay(struct plane_data* plane)
 {
     if (plane)
     {
-        auto id  = planeid(plane->index, DRM_PLANE_TYPE_OVERLAY);
+        auto id = planeid(plane->index, DRM_PLANE_TYPE_OVERLAY);
         m_used.erase(std::remove(m_used.begin(), m_used.end(), id), m_used.end());
         plane_free(plane);
     }
