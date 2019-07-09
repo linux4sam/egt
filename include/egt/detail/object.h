@@ -119,7 +119,7 @@ protected:
     struct callback_meta
     {
         callback_meta(event_callback_t c,
-                      filter_type m,
+                      const filter_type& m,
                       uint32_t h) noexcept
             : callback(std::move(c)),
               mask(std::move(m)),

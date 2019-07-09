@@ -46,7 +46,7 @@ public:
      * Test if the specified flags are set.
      * @param flags The flags to test.
      */
-    inline bool is_set(flags flags) const
+    inline bool is_set(const flags& flags) const
     {
         for (auto& flag : flags)
             if (!is_text_flag_set(flag))
@@ -75,7 +75,7 @@ public:
      * @param flags Flags to set.
      * @return True if a new item was added.
      */
-    inline bool set(flags flags)
+    inline bool set(const flags& flags)
     {
         bool inserted = false;
         for (auto& flag : flags)

@@ -28,7 +28,7 @@ typedef struct
     double v; // a fraction between 0 and 1
 } hsv;
 
-static hsv rgb2hsv(Color in)
+static hsv rgb2hsv(const Color& in)
 {
     hsv out;
 
