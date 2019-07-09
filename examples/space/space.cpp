@@ -49,8 +49,8 @@ private:
 
     Ball() = delete;
 
-    int m_xspeed;
-    int m_yspeed;
+    int m_xspeed{0};
+    int m_yspeed{0};
 };
 
 static bool debounce_mouse(int delta)
@@ -58,33 +58,13 @@ static bool debounce_mouse(int delta)
     static std::chrono::time_point<std::chrono::steady_clock> last_time =
         chrono::steady_clock::now();
 
-
     if (chrono::duration<float, milli>(chrono::steady_clock::now() - last_time).count() > delta)
     {
-        last_time =
-            chrono::steady_clock::now();
+        last_time = chrono::steady_clock::now();
         return true;
     }
 
     return false;
-
-#if 0
-    static Point pos;
-    bool res = false;
-
-    if (delta)
-    {
-        if (std::abs(pos.x - event_mouse().x) > delta ||
-            std::abs(pos.y - event_mouse().y) > delta)
-        {
-            res = true;
-        }
-    }
-
-    pos = event_mouse();
-
-    return res;
-#endif
 }
 
 class MainWindow : public TopWindow
