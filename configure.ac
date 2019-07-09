@@ -287,6 +287,14 @@ if test "x$with_xkbcommon" = xyes && test "x${have_xkbcommon}" != xyes; then
 fi
 AM_CONDITIONAL([HAVE_XKBCOMMON], [test "x${have_xkbcommon}" = xyes])
 
+AX_PKG_CHECK_MODULES2(SDL2, [sdl2], [], [have_sdl2=yes], [have_sdl2=no])
+AM_CONDITIONAL([HAVE_SDL2], [test "x${have_sdl2}" = xyes])
+if test "x${have_sdl2}" = xyes; then
+   AC_DEFINE(HAVE_SDL2, 1, [Have sdl2 support])
+   LIBEGT_EXTRA_CXXFLAGS="${SDL2_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${SDL2_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+fi
+
 AC_ARG_WITH([tslib],
     AS_HELP_STRING([--without-tslib], [Ignore presence of tslib and disable it]),
     [with_tslib=$withval],
@@ -780,6 +788,7 @@ echo
 echo "Display:"
 echo "  DRM/KMS                ${have_libplanes:-no}"
 echo "  X11                    ${have_x11:-no}"
+echo "  SDL2                   ${have_sdl2:-no}"
 echo "  fbdev                  ${have_fbdev:-no}"
 echo
 

@@ -36,6 +36,10 @@
 #include "egt/detail/screen/framebuffer.h"
 #endif
 
+#ifdef HAVE_SDL2
+#include "egt/detail/screen/sdlscreen.h"
+#endif
+
 #ifdef HAVE_LIBINPUT
 #include "egt/detail/input/inputlibinput.h"
 #endif
@@ -207,31 +211,34 @@ void Application::setup_backend(bool primary)
         backend = "kms";
 #elif defined(HAVE_X11)
         backend = "x11";
+#elif defined(HAVE_SDL2)
+        backend = "sdl2";
 #elif defined(HAVE_FBDEV)
         backend = "fbdev";
 #endif
     }
 
+    Size size(800, 480);
+    auto sizestr = getenv("EGT_SCREEN_SIZE");
+    if (sizestr && strlen(sizestr))
+    {
+        std::vector<std::string> dims;
+        detail::tokenize(sizestr, 'x', dims);
+        if (dims.size() == 2)
+        {
+            size.width(std::stoi(dims[0]));
+            size.height(std::stoi(dims[1]));
+        }
+        else
+        {
+            detail::warn("invalid EGT_SCREEN_SIZE: {}", sizestr);
+        }
+    }
+
+
 #ifdef HAVE_X11
     if (backend == "x11")
     {
-        Size size(800, 480);
-        auto sizestr = getenv("EGT_SCREEN_SIZE");
-        if (sizestr && strlen(sizestr))
-        {
-            std::vector<std::string> dims;
-            detail::tokenize(sizestr, 'x', dims);
-            if (dims.size() == 2)
-            {
-                size.width(std::stoi(dims[0]));
-                size.height(std::stoi(dims[1]));
-            }
-            else
-            {
-                detail::warn("invalid EGT_SCREEN_SIZE: {}", sizestr);
-            }
-        }
-
         m_screen = std::make_unique<detail::X11Screen>(*this, size);
     }
     else
@@ -241,12 +248,17 @@ void Application::setup_backend(bool primary)
             m_screen = std::make_unique<detail::KMSScreen>(primary);
         else
 #endif
-#ifdef HAVE_FBDEV
-            if (backend == "fbdev")
-                m_screen = std::make_unique<detail::FrameBuffer>("/dev/fb0");
+#ifdef HAVE_SDL2
+            if (backend == "sdl2")
+                m_screen = std::make_unique<detail::SDLScreen>(*this, size);
             else
 #endif
-                detail::info("no screen backend");
+#ifdef HAVE_FBDEV
+                if (backend == "fbdev")
+                    m_screen = std::make_unique<detail::FrameBuffer>("/dev/fb0");
+                else
+#endif
+                    detail::info("no screen backend");
 
 }
 

@@ -308,6 +308,14 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/detail/screen/x11screen.h
 endif
 
+if HAVE_SDL2
+libegt_la_SOURCES += \
+detail/screen/sdlscreen.cpp
+
+nobase_libegtinclude_HEADERS += \
+../include/egt/detail/screen/sdlscreen.h
+endif
+
 if HAVE_LIBCURL
 libegt_la_SOURCES += network/http.cpp
 
