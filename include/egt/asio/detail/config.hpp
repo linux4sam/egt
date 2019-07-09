@@ -15,6 +15,10 @@
 #define EGT_ASIO_DISABLE_STD_FUTURE
 #define EGT_ASIO_NO_DEPRECATED
 
+#ifdef __WIN32__
+#include <sdkddkver.h>
+#endif
+
 #if defined(EGT_ASIO_STANDALONE)
 # define EGT_ASIO_DISABLE_BOOST_ARRAY 1
 # define EGT_ASIO_DISABLE_BOOST_ASSERT 1
