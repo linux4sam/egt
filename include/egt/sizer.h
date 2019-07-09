@@ -107,10 +107,50 @@ protected:
 
     inline Size super_rect() const
     {
-        Rect result = size();
-        for (auto& child : m_children)
-            result = Rect::merge(result, child->box());
-        return result.size();
+        if (orient() == orientation::flex)
+        {
+            Rect result = size();
+            for (auto& child : m_children)
+                result = Rect::merge(result, child->box());
+
+            return result.size();
+        }
+
+        int width = 0;
+        int height = 0;
+
+        if (orient() == orientation::horizontal)
+        {
+            for (auto& child : m_children)
+            {
+                if ((child->align() & alignmask::expand_horizontal) != alignmask::expand_horizontal)
+                {
+                    width += child->box().width;
+                    height = std::max(child->box().height, height);
+                }
+            }
+        }
+        else
+        {
+            for (auto& child : m_children)
+            {
+                if ((child->align() & alignmask::expand_vertical) != alignmask::expand_vertical)
+                {
+                    width = std::max(child->box().width, width);
+                    height += child->box().height;
+                }
+            }
+        }
+
+        if ((align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
+            if (width < box().width)
+                width = box().width;
+
+        if ((align() & alignmask::expand_vertical) == alignmask::expand_vertical)
+            if (height < box().height)
+                height = box().height;
+
+        return Size(width, height);
     }
 
     orientation m_orient{orientation::horizontal};
