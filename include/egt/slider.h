@@ -159,9 +159,9 @@ protected:
     {
         auto b = content_area();
         if (m_orient == orientation::horizontal)
-            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.width - handle_width());
+            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.width() - handle_width());
         else
-            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.height - handle_height());
+            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.height() - handle_height());
     }
 
     /// Convert an offset to value.
@@ -169,9 +169,9 @@ protected:
     {
         auto b = content_area();
         if (m_orient == orientation::horizontal)
-            return egt::detail::normalize<float>(offset, 0, b.width - handle_width(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, b.width() - handle_width(), m_min, m_max);
         else
-            return egt::detail::normalize<float>(offset, 0, b.height - handle_height(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, b.height() - handle_height(), m_min, m_max);
     }
 
     int handle_width() const;

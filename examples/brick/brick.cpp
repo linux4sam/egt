@@ -117,7 +117,7 @@ public:
             m_running = true;
             break;
         case eventid::raw_pointer_move:
-            m_paddle.move(Point(event.pointer().point.x - m_paddle.width() / 2, m_paddle.y()));
+            m_paddle.move(Point(event.pointer().point.x() - m_paddle.width() / 2, m_paddle.y()));
             event.stop();
             break;
         default:

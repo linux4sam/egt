@@ -110,7 +110,7 @@ int main(int argc, const char** argv)
         {
             cout << "CameraWindow: pointer_drag " << endl;
             auto diff = event.pointer().drag_start - event.pointer().point;
-            window->move(m_start_point - Point(diff.x, diff.y));
+            window->move(m_start_point - Point(diff.x(), diff.y()));
             break;
         }
         default:

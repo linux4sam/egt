@@ -23,8 +23,8 @@ void SkyTheme::init_draw()
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
         auto b = widget.content_area();
-        auto handle = Rect(b.point(), Size(std::min(b.width, b.height), std::min(b.width, b.height)));
-        auto text = Rect(handle.top_right() + Point(widget.padding(), 0), b.size() - Size(handle.size().width, 0));
+        auto handle = Rect(b.point(), Size(std::min(b.width(), b.height()), std::min(b.width(), b.height())));
+        auto text = Rect(handle.top_right() + Point(widget.padding(), 0), b.size() - Size(handle.size().width(), 0));
 
         if (widget.checked())
         {
@@ -36,7 +36,7 @@ void SkyTheme::init_draw()
                                     fgborder);
 
             auto shrink = handle;
-            shrink.shrink_around_center(handle.width / 2);
+            shrink.shrink_around_center(handle.width() / 2);
             widget.theme().draw_box(painter, Theme::boxtype::blank, shrink,
                                     widget.color(Palette::ColorId::button_fg),
                                     widget.color(Palette::ColorId::button_fg));

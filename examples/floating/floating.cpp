@@ -60,7 +60,7 @@ public:
         case eventid::pointer_drag:
         {
             auto diff = event.pointer().drag_start - event.pointer().point;
-            auto fromstart = m_start_point - Point(diff.x, diff.y);
+            auto fromstart = m_start_point - Point(diff.x(), diff.y());
             Rect dest(fromstart, m_widget->box().size());
             if (main_window()->box().contains(dest))
                 m_widget->move(fromstart);
@@ -79,16 +79,16 @@ public:
         auto p = Point(m_widget->x() + m_mx,
                        m_widget->y() + m_my);
 
-        if (m_widget->box().right() >= main_window()->size().width)
+        if (m_widget->box().right() >= main_window()->size().width())
             m_mx = std::fabs(m_mx) * -1;
 
-        if (p.x < 0)
+        if (p.x() < 0)
             m_mx = std::fabs(m_mx);
 
-        if (m_widget->box().bottom() >= main_window()->size().height)
+        if (m_widget->box().bottom() >= main_window()->size().height())
             m_my = std::fabs(m_my) * -1;
 
-        if (p.y < 0)
+        if (p.y() < 0)
             m_my = std::fabs(m_my);
 
         m_widget->move(p);

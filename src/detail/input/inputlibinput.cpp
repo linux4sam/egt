@@ -161,8 +161,8 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
         const auto& screen_size = main_screen()->size();
-        double x = libinput_event_touch_get_x_transformed(t, screen_size.width);
-        double y = libinput_event_touch_get_y_transformed(t, screen_size.height);
+        double x = libinput_event_touch_get_x_transformed(t, screen_size.width());
+        double y = libinput_event_touch_get_y_transformed(t, screen_size.height());
 
         Event event(eventid::raw_pointer_down);
         event.pointer().point = m_last_point = DisplayPoint(x, y);
@@ -172,8 +172,8 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     case LIBINPUT_EVENT_TOUCH_MOTION:
     {
         const auto& screen_size = main_screen()->size();
-        double x = libinput_event_touch_get_x_transformed(t, screen_size.width);
-        double y = libinput_event_touch_get_y_transformed(t, screen_size.height);
+        double x = libinput_event_touch_get_x_transformed(t, screen_size.width());
+        double y = libinput_event_touch_get_y_transformed(t, screen_size.height());
 
         Event event(eventid::raw_pointer_move);
         event.pointer().point = m_last_point = DisplayPoint(x, y);

@@ -284,7 +284,7 @@ public:
      */
     inline Rect to_child(Rect rect) const
     {
-        rect.point(to_child(rect.point()));
+        rect.set_point(to_child(rect.point()));
         return rect;
     }
 

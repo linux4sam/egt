@@ -69,10 +69,11 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
     vector<detail::LayoutRect> rects;
 
     rects.emplace_back(0,
-                       Rect(0, 0, std::min(b.width - text_size.width - widget.padding(), b.height), std::min(b.width - text_size.width - widget.padding(), b.height)),
+                       Rect(0, 0, std::min(b.width() - text_size.width() - widget.padding(), b.height()),
+                            std::min(b.width() - text_size.width() - widget.padding(), b.height())),
                        0, 0, widget.padding() / 2);
     rects.emplace_back(0,
-                       Rect(0, 0, text_size.width, text_size.height),
+                       Rect(0, 0, text_size.width(), text_size.height()),
                        widget.padding() / 2);
 
     detail::flex_layout(b, rects, justification::start, orientation::horizontal);
@@ -80,14 +81,14 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
     auto handle = rects[0].rect + b.point();
     auto text = rects[1].rect + b.point();
 
-    painter.draw(Circle(handle.center(), std::min(handle.width, handle.height) / 2.));
+    painter.draw(Circle(handle.center(), std::min(handle.width(), handle.height()) / 2.));
     painter.set(widget.color(Palette::ColorId::button_fg).color());
     painter.set_line_width(widget.theme().default_border());
     painter.stroke();
 
     if (widget.checked())
     {
-        painter.draw(Circle(handle.center(), std::min(handle.width, handle.height) / 2. / 2.));
+        painter.draw(Circle(handle.center(), std::min(handle.width(), handle.height()) / 2. / 2.));
         painter.fill();
     }
 
@@ -106,7 +107,7 @@ Size RadioBox::min_size_hint() const
     {
         auto s = text_size(m_text);
         //s *= Size(1, 3);
-        s += Size(s.width / 2 + 5, 0);
+        s += Size(s.width() / 2 + 5, 0);
         return s + Widget::min_size_hint();
     }
 

@@ -15,7 +15,7 @@ inline namespace v1
 Dialog::Dialog(const Rect& rect) noexcept
     : Popup(rect.size(), rect.point()),
       m_vsizer(std::make_shared<BoxSizer>(orientation::vertical)),
-      m_grid(std::make_shared<StaticGrid>(Rect(0, 0, rect.width, (rect.height * 0.15)), Tuple(2, 1), 5)),
+      m_grid(std::make_shared<StaticGrid>(Rect(0, 0, rect.width(), (rect.height() * 0.15)), Tuple(2, 1), 5)),
       m_button1(std::make_shared<Button>("OK")),
       m_button2(std::make_shared<Button>("Cancel"))
 {

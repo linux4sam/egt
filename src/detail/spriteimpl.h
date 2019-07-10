@@ -120,17 +120,17 @@ protected:
         if (m_image.empty())
             return origin;
 
-        auto imagew = m_image.size().width;
-        origin.x = m_strips[m_strip].point.x + (index * m_frame.width);
-        origin.y = m_strips[m_strip].point.y;
+        auto imagew = m_image.size().width();
+        origin.set_x(m_strips[m_strip].point.x() + (index * m_frame.width()));
+        origin.set_y(m_strips[m_strip].point.y());
 
         // support sheets that have frames on multiple rows
-        if (origin.x + m_frame.width > imagew)
+        if (origin.x() + m_frame.width() > imagew)
         {
-            auto x = m_strips[m_strip].point.x + (index * m_frame.width);
+            auto x = m_strips[m_strip].point.x() + (index * m_frame.width());
 
-            origin.x = (static_cast<uint32_t>(x) % static_cast<uint32_t>(imagew)); //NOLINT
-            origin.y = ((x / imagew) * m_strips[m_strip].point.y) + (x / imagew) * m_frame.height;
+            origin.set_x((static_cast<uint32_t>(x) % static_cast<uint32_t>(imagew))); //NOLINT
+            origin.set_y(((x / imagew) * m_strips[m_strip].point.y()) + (x / imagew) * m_frame.height());
         }
 
         return origin;

@@ -191,7 +191,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     {
         if (dx != 0 || dy != 0)
         {
-            m_last_point = DisplayPoint(m_last_point.x + dx, m_last_point.y + dy);
+            m_last_point = DisplayPoint(m_last_point.x() + dx, m_last_point.y() + dy);
             Event event(eventid::raw_pointer_move, m_last_point);
             dispatch(event);
         }

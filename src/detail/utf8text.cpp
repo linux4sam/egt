@@ -154,21 +154,21 @@ void draw_text(Painter& painter,
                 cairo_text_extents(cr, last_char.c_str(), &te);
                 char_width = te.x_advance;
 
-                auto p = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff + te.x_bearing,
-                                static_cast<float>(b.y) + static_cast<float>(r->rect.y) + te.y_bearing - fe.descent + fe.height);
+                auto p = PointF(static_cast<float>(b.x()) + static_cast<float>(r->rect.x()) + roff + te.x_bearing,
+                                static_cast<float>(b.y()) + static_cast<float>(r->rect.y()) + te.y_bearing - fe.descent + fe.height);
 
                 if (workaround)
-                    p.y += fe.height;
+                    p.set_y(p.y() + fe.height);
 
-                auto s = SizeF(char_width, r->rect.height);
+                auto s = SizeF(char_width, r->rect.height());
 
                 if (pos >= select_start && pos < select_start + select_len)
                 {
-                    auto p2 = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff,
-                                     static_cast<float>(b.y) + static_cast<float>(r->rect.y));
+                    auto p2 = PointF(static_cast<float>(b.x()) + static_cast<float>(r->rect.x()) + roff,
+                                     static_cast<float>(b.y()) + static_cast<float>(r->rect.y()));
 
                     if (workaround)
-                        p2.y += fe.height;
+                        p2.set_y(p2.y() + fe.height);
 
                     auto rect = RectF(p2, s);
                     if (!rect.empty())
@@ -200,7 +200,7 @@ void draw_text(Painter& painter,
             {
                 if (draw_cursor)
                 {
-                    auto p = Point(b.x + r->rect.x + roff - char_width, b.y + r->rect.y);
+                    auto p = Point(b.x() + r->rect.x() + roff - char_width, b.y() + r->rect.y());
                     draw_cursor(p, fe.height);
                 }
             }
@@ -216,16 +216,16 @@ void draw_text(Painter& painter,
         {
             if (!rects.empty())
             {
-                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width, 0);
+                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width(), 0);
                 if (workaround)
                 {
-                    p.y += fe.height;
+                    p.set_y(p.y() + fe.height);
                 }
 
                 if (last_char == "\n")
                 {
-                    p.x = b.x;
-                    p.y += fe.height;
+                    p.set_x(b.x());
+                    p.set_y(p.y() + fe.height);
                 }
 
                 draw_cursor(p, fe.height);
@@ -372,8 +372,8 @@ void draw_text(Painter& painter,
     {
         if (r->str.empty())
         {
-            auto p = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x),
-                            static_cast<float>(b.y) + static_cast<float>(r->rect.y));
+            auto p = PointF(static_cast<float>(b.x()) + static_cast<float>(r->rect.x()),
+                            static_cast<float>(b.y()) + static_cast<float>(r->rect.y()));
 
             painter.draw(p);
             painter.draw(image);
@@ -400,21 +400,21 @@ void draw_text(Painter& painter,
                 cairo_text_extents(cr, last_char.c_str(), &te);
                 char_width = te.x_advance;
 
-                auto p = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff + te.x_bearing,
-                                static_cast<float>(b.y) + static_cast<float>(r->rect.y) + te.y_bearing - fe.descent + fe.height);
+                auto p = PointF(static_cast<float>(b.x()) + static_cast<float>(r->rect.x()) + roff + te.x_bearing,
+                                static_cast<float>(b.y()) + static_cast<float>(r->rect.y()) + te.y_bearing - fe.descent + fe.height);
 
                 if (workaround)
-                    p.y += fe.height;
+                    p.set_y(p.y() + fe.height);
 
-                auto s = SizeF(char_width, r->rect.height);
+                auto s = SizeF(char_width, r->rect.height());
 
                 if (pos >= select_start && pos < select_start + select_len)
                 {
-                    auto p2 = PointF(static_cast<float>(b.x) + static_cast<float>(r->rect.x) + roff,
-                                     static_cast<float>(b.y) + static_cast<float>(r->rect.y));
+                    auto p2 = PointF(static_cast<float>(b.x()) + static_cast<float>(r->rect.x()) + roff,
+                                     static_cast<float>(b.y()) + static_cast<float>(r->rect.y()));
 
                     if (workaround)
-                        p2.y += fe.height;
+                        p2.set_y(p2.y() + fe.height);
 
                     auto rect = RectF(p2, s);
                     if (!rect.empty())
@@ -446,7 +446,7 @@ void draw_text(Painter& painter,
             {
                 if (draw_cursor)
                 {
-                    auto p = Point(b.x + r->rect.x + roff - char_width, b.y + r->rect.y);
+                    auto p = Point(b.x() + r->rect.x() + roff - char_width, b.y() + r->rect.y());
                     draw_cursor(p, fe.height);
                 }
             }
@@ -462,16 +462,16 @@ void draw_text(Painter& painter,
         {
             if (!rects.empty())
             {
-                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width, 0);
+                auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width(), 0);
                 if (workaround)
                 {
-                    p.y += fe.height;
+                    p.set_y(p.y() + fe.height);
                 }
 
                 if (last_char == "\n")
                 {
-                    p.x = b.x;
-                    p.y += fe.height;
+                    p.set_x(b.x());
+                    p.set_y(p.y() + fe.height);
                 }
 
                 draw_cursor(p, fe.height);

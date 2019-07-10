@@ -25,7 +25,7 @@ static void draw_image(Painter& painter,
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
 
-    cairo_translate(cr, center.x, center.y);
+    cairo_translate(cr, center.x(), center.y());
     cairo_rotate(cr, angle);
 
     /*
@@ -33,11 +33,11 @@ static void draw_image(Painter& painter,
      * the ARM target. So, slightly clip those horizontal edges.  This is
      * probably an expensive operation, considering the rotate.
      */
-    cairo_rectangle(cr, -needle_center.x, -needle_center.y + 1,
-                    image.size().width, image.size().height - 2);
+    cairo_rectangle(cr, -needle_center.x(), -needle_center.y() + 1,
+                    image.size().width(), image.size().height() - 2);
     cairo_clip(cr);
 
-    cairo_set_source_surface(cr, image.surface().get(), -needle_center.x, -needle_center.y);
+    cairo_set_source_surface(cr, image.surface().get(), -needle_center.x(), -needle_center.y());
     cairo_paint(cr);
 }
 
@@ -61,7 +61,7 @@ void NeedleLayer::draw(Painter& painter)
 {
     auto angle = detail::normalize_to_angle(m_value, m_min, m_max, m_angle_start, m_angle_stop, m_clockwise);
 
-    draw_image(painter, PointF(m_gauge->point().x, m_gauge->point().y) + m_point,
+    draw_image(painter, PointF(m_gauge->point().x(), m_gauge->point().y()) + m_point,
                m_center, m_image, detail::to_radians<double>(0, angle));
 }
 

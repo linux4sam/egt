@@ -163,7 +163,7 @@ public:
         auto color3 = widget.color(Palette::ColorId::button_bg).color();
         auto color4 = widget.color(Palette::ColorId::button_fg).color();
 
-        float smalldim = std::min(b.width, b.height);
+        float smalldim = std::min(b.width(), b.height());
         float linew = smalldim / 10.;
         float radius = smalldim / 2. - (linew / 2.);
         auto angle1 = detail::to_radians<float>(-90, 0);

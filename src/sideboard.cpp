@@ -27,7 +27,7 @@ SideBoard::SideBoard(flags f,
 
     if (is_set(flags::left))
     {
-        m_oanim.set_starting(-main_screen()->size().width);
+        m_oanim.set_starting(-main_screen()->size().width());
         m_oanim.set_ending(0);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());
@@ -39,7 +39,7 @@ SideBoard::SideBoard(flags f,
     }
     else if (is_set(flags::right))
     {
-        m_oanim.set_starting(main_screen()->size().width - HANDLE_WIDTH);
+        m_oanim.set_starting(main_screen()->size().width() - HANDLE_WIDTH);
         m_oanim.set_ending(-HANDLE_WIDTH);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());
@@ -51,7 +51,7 @@ SideBoard::SideBoard(flags f,
     }
     else if (is_set(flags::top))
     {
-        m_oanim.set_starting(-main_screen()->size().height);
+        m_oanim.set_starting(-main_screen()->size().height());
         m_oanim.set_ending(0);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());
@@ -63,7 +63,7 @@ SideBoard::SideBoard(flags f,
     }
     else if (is_set(flags::bottom))
     {
-        m_oanim.set_starting(main_screen()->size().height - HANDLE_WIDTH);
+        m_oanim.set_starting(main_screen()->size().height() - HANDLE_WIDTH);
         m_oanim.set_ending(-HANDLE_WIDTH);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());

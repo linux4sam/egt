@@ -53,7 +53,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     m_priv->window = XCreateSimpleWindow(m_priv->display,
                                          win,
                                          0, 0,
-                                         size.width, size.height,
+                                         size.width(), size.height(),
                                          0, 0, 0);
     if (!m_priv->window)
         throw std::runtime_error("unable to connect to X11 window");
@@ -70,8 +70,8 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
 
     auto sh = unique_ptr<XSizeHints, decltype(&::XFree)>(XAllocSizeHints(), ::XFree);
     sh->flags = PMinSize | PMaxSize;
-    sh->min_width = sh->max_width = size.width;
-    sh->min_height = sh->max_height = size.height;
+    sh->min_width = sh->max_width = size.width();
+    sh->min_height = sh->max_height = size.height();
     XSetWMNormalHints(m_priv->display, m_priv->window, sh.get());
 
     XSelectInput(m_priv->display, m_priv->window,
@@ -87,10 +87,10 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     m_buffers.emplace_back(
         cairo_xlib_surface_create(m_priv->display, m_priv->window,
                                   DefaultVisual(m_priv->display, screen),
-                                  size.width, size.height));
-    cairo_xlib_surface_set_size(m_buffers.back().surface.get(), size.width, size.height);
+                                  size.width(), size.height()));
+    cairo_xlib_surface_set_size(m_buffers.back().surface.get(), size.width(), size.height());
 
-    m_buffers.back().damage.emplace_back(0, 0, size.width, size.height);
+    m_buffers.back().damage.emplace_back(0, 0, size.width(), size.height());
 
     XMapWindow(m_priv->display, m_priv->window);
     XFlush(m_priv->display);

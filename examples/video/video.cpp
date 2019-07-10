@@ -123,7 +123,7 @@ int main(int argc, const char** argv)
     fullscreen.set_boxtype(Theme::boxtype::none);
     hpos.add(fullscreen);
 
-    double m_fscale = (double)main_screen()->size().width / w;
+    double m_fscale = (double)main_screen()->size().width() / w;
 
     fullscreen.on_event([&fullscreen, window, m_fscale, &win](Event&)
     {
@@ -192,7 +192,7 @@ int main(int argc, const char** argv)
         case eventid::pointer_drag:
         {
             auto diff = event.pointer().drag_start - event.pointer().point;
-            window->move(m_start_point - Point(diff.x, diff.y));
+            window->move(m_start_point - Point(diff.x(), diff.y()));
             break;
         }
         case eventid::property_changed:

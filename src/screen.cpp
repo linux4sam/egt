@@ -51,7 +51,7 @@ void Screen::copy_to_buffer(ScreenBuffer& buffer)
     cairo_set_operator(buffer.cr.get(), CAIRO_OPERATOR_SOURCE);
 
     for (const auto& rect : buffer.damage)
-        cairo_rectangle(buffer.cr.get(), rect.x, rect.y, rect.width, rect.height);
+        cairo_rectangle(buffer.cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
 
     cairo_fill(buffer.cr.get());
     cairo_surface_flush(buffer.surface.get());
@@ -99,13 +99,13 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format for
         m_buffers.emplace_back(
             cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
                                                 f,
-                                                size.width, size.height,
-                                                cairo_format_stride_for_width(f, size.width)));
+                                                size.width(), size.height(),
+                                                cairo_format_stride_for_width(f, size.width())));
 
         m_buffers.back().damage.emplace_back(Point(), size);
     }
 
-    m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, size.width, size.height),
+    m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, size.width(), size.height()),
                                        cairo_surface_destroy);
 
     assert(m_surface.get());

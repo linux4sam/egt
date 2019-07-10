@@ -24,12 +24,12 @@ struct ColorMapWidget : public Widget
     {
         auto b = content_area();
 
-        auto inc = 1.0 / b.width;
+        auto inc = 1.0 / b.width();
 
         for (auto x = 0.0; x <= 1.0; x += inc)
         {
-            RectF seg(b.x, b.y, b.width, b.height);
-            seg.x = x * seg.width;
+            RectF seg(b.x(), b.y(), b.width(), b.height());
+            seg.set_x(x * seg.width());
             painter.set(m_map.interp(x));
             painter.draw(seg);
             painter.fill();

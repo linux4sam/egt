@@ -335,7 +335,7 @@ public:
                     if (parent && !parent->flags().is_set(Widget::flag::frame))
                         parent = nullptr;
                     auto p = m_grid->selected();
-                    auto index = p.x + 3 * p.y;
+                    auto index = p.x() + 3 * p.y();
                     auto widget = widgets[index].create();
                     add_widget(widget, event.pointer().point, parent);
                     event.stop();
@@ -513,7 +513,7 @@ public:
             case eventid::pointer_drag:
             {
                 auto diff = event.pointer().drag_start - event.pointer().point;
-                widget->move(m_start_point - Point(diff.x, diff.y));
+                widget->move(m_start_point - Point(diff.x(), diff.y()));
                 break;
             }
             case eventid::pointer_drag_stop:

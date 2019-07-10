@@ -197,8 +197,8 @@ struct plane_data* KMSScreen::allocate_overlay(const Size& size,
             plane = plane_create_buffered(m_device,
                                           drm_type,
                                           overlay_index_zorder[count][i],
-                                          size.width,
-                                          size.height,
+                                          size.width(),
+                                          size.height(),
                                           detail::drm_format(format),
                                           KMSScreen::max_buffers());
 

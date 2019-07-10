@@ -159,7 +159,7 @@ int main(int argc, const char** argv)
         auto s = painter.text_size(text);
 
         if (angle2 > 1.5)
-            p -= Point(s.width, 0);
+            p -= Point(s.width(), 0);
 
         painter.set(Font());
         painter.set(Palette::white);

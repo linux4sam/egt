@@ -31,7 +31,7 @@ PlaneWindow::PlaneWindow(Window* interface,
 
     // hack to force some size
     if (m_interface->m_box.size().empty())
-        m_interface->m_box.size(Size(32, 32));
+        m_interface->m_box.set_size(Size(32, 32));
 
     allocate_screen();
 }
@@ -52,7 +52,7 @@ void PlaneWindow::resize(const Size& size)
             }
         }
 
-        m_interface->m_box.size(size);
+        m_interface->m_box.set_size(size);
         m_interface->damage();
     }
 }
@@ -78,7 +78,7 @@ void PlaneWindow::move(const Point& point)
 
     if (point != m_interface->box().point())
     {
-        m_interface->m_box.point(point);
+        m_interface->m_box.set_point(point);
         m_dirty = true;
     }
 }
@@ -170,7 +170,7 @@ void PlaneWindow::paint(Painter& painter)
     auto copy = copy_surface(cairo_get_target(screen()->context().get()));
     auto image = Image(copy);
     auto p = m_interface->local_to_display(Point());
-    painter.draw(Point(p.x, p.y));
+    painter.draw(Point(p.x(), p.y()));
     painter.draw(image);
 }
 
@@ -202,8 +202,8 @@ void PlaneWindow::deallocate_screen()
         {
             KMSScreen::instance()->deallocate_overlay(screen->s());
         }
-        m_interface->m_box.size(Size());
-        m_interface->m_box.point(Point());
+        m_interface->m_box.set_size(Size());
+        m_interface->m_box.set_point(Point());
     }
 }
 

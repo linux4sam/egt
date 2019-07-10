@@ -121,7 +121,7 @@ public:
     template<class T>
     Painter& draw(const PointType<T, compatible::normal>& point)
     {
-        cairo_move_to(m_cr.get(), point.x, point.y);
+        cairo_move_to(m_cr.get(), point.x(), point.y());
 
         return *this;
     }
@@ -135,8 +135,8 @@ public:
     template<class T>
     Painter& draw(const T& start, const T& end)
     {
-        cairo_move_to(m_cr.get(), start.x, start.y);
-        cairo_line_to(m_cr.get(), end.x, end.y);
+        cairo_move_to(m_cr.get(), start.x(), start.y());
+        cairo_line_to(m_cr.get(), end.x(), end.y());
 
         return *this;
     }
@@ -153,10 +153,10 @@ public:
             return *this;
 
         cairo_rectangle(m_cr.get(),
-                        rect.x,
-                        rect.y,
-                        rect.width,
-                        rect.height);
+                        rect.x(),
+                        rect.y(),
+                        rect.width(),
+                        rect.height());
 
         return *this;
     }
@@ -172,7 +172,7 @@ public:
         if (arc.empty())
             return *this;
 
-        cairo_arc(m_cr.get(), arc.center.x, arc.center.y,
+        cairo_arc(m_cr.get(), arc.center.x(), arc.center.y(),
                   arc.radius, arc.angle1, arc.angle2);
 
         return *this;

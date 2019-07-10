@@ -140,12 +140,12 @@ public:
 
     inline void set_hoffset(int offset)
     {
-        set_offset(Point(offset, m_offset.y));
+        set_offset(Point(offset, m_offset.y()));
     }
 
     inline void set_voffset(int offset)
     {
-        set_offset(Point(m_offset.x, offset));
+        set_offset(Point(m_offset.x(), offset));
     }
 
     virtual ~ScrolledView() noexcept = default;
@@ -167,15 +167,15 @@ protected:
         auto super = super_rect();
 
         m_hscrollable = (m_horizontal_policy == policy::always) ||
-                        (m_horizontal_policy == policy::as_needed && super.width > content_area().width);
+                        (m_horizontal_policy == policy::as_needed && super.width() > content_area().width());
         m_vscrollable = (m_vertical_policy == policy::always) ||
-                        (m_vertical_policy == policy::as_needed && super.height > content_area().height);
+                        (m_vertical_policy == policy::as_needed && super.height() > content_area().height());
 
-        if (super.width <= content_area().width)
-            m_offset.x = 0;
+        if (super.width() <= content_area().width())
+            m_offset.set_x(0);
 
-        if (super.height <= content_area().height)
-            m_offset.y = 0;
+        if (super.height() <= content_area().height())
+            m_offset.set_y(0);
     }
 
     void update_sliders();

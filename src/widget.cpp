@@ -79,8 +79,8 @@ void Widget::move_to_center(const Point& point)
 {
     if (center() != point)
     {
-        Point pos(point.x - width() / 2,
-                  point.y - height() / 2);
+        Point pos(point.x() - width() / 2,
+                  point.y() - height() / 2);
 
         move(pos);
     }
@@ -91,7 +91,7 @@ void Widget::resize(const Size& s)
     if (s != box().size())
     {
         damage();
-        m_box.size(s);
+        m_box.set_size(s);
         damage();
         parent_layout();
     }
@@ -109,7 +109,7 @@ void Widget::move(const Point& point)
     if (point != box().point())
     {
         damage();
-        m_box.point(point);
+        m_box.set_point(point);
         damage();
 
         /// @todo this is too expensive for animations
@@ -470,12 +470,12 @@ void Widget::parent_layout()
 
 DisplayPoint Widget::local_to_display(const Point& p)
 {
-    DisplayPoint p2(p.x, p.y);
+    DisplayPoint p2(p.x(), p.y());
 
     auto par = parent();
     while (par)
     {
-        p2 += DisplayPoint(par->point().x, par->point().y);
+        p2 += DisplayPoint(par->point().x(), par->point().y());
         par = par->parent();
     }
 
@@ -484,7 +484,7 @@ DisplayPoint Widget::local_to_display(const Point& p)
 
 Point Widget::display_to_local(const DisplayPoint& p)
 {
-    Point p2(p.x, p.y);
+    Point p2(p.x(), p.y());
 
     auto par = parent();
     while (par)

@@ -352,8 +352,8 @@ void TopWindow::handle_mouse(Event& event)
             auto p = event.pointer().point;
 
             // don't let the cursor go off the screen
-            if (main_screen()->box().contains(Rect(Point(p.x, p.y), m_cursor->size())))
-                m_cursor->move(Point(p.x, p.y));
+            if (main_screen()->box().contains(Rect(Point(p.x(), p.y()), m_cursor->size())))
+                m_cursor->move(Point(p.x(), p.y()));
 
             break;
         }

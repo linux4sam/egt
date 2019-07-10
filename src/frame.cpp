@@ -253,15 +253,15 @@ void Frame::draw(Painter& painter, const Rect& rect)
     if (!has_screen())
     {
         Point origin = point();
-        if (origin.x || origin.y)
+        if (origin.x() || origin.y())
         {
             //
             // Origin about to change
             //
             auto cr = painter.context();
             cairo_translate(cr.get(),
-                            origin.x,
-                            origin.y);
+                            origin.x(),
+                            origin.y());
         }
 
         // adjust our child rect for comparison's below
@@ -444,10 +444,10 @@ void Frame::layout()
 
             auto min = child->box();
 
-            if (min.width < child->min_size_hint().width)
-                min.width = child->min_size_hint().width;
-            if (min.height < child->min_size_hint().height)
-                min.height = child->min_size_hint().height;
+            if (min.width() < child->min_size_hint().width())
+                min.set_width(child->min_size_hint().width());
+            if (min.height() < child->min_size_hint().height())
+                min.set_height(child->min_size_hint().height());
 
             auto r = detail::align_algorithm(min,
                                              bounding,

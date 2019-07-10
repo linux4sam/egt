@@ -67,10 +67,10 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
     std::vector<detail::LayoutRect> rects;
 
     rects.emplace_back(0,
-                       Rect(0, 0, std::min(b.width - text_size.width - widget.padding(), b.height), std::min(b.width - text_size.width - widget.padding(), b.height)),
+                       Rect(0, 0, std::min(b.width() - text_size.width() - widget.padding(), b.height()), std::min(b.width() - text_size.width() - widget.padding(), b.height())),
                        0, 0, widget.padding() / 2);
     rects.emplace_back(0,
-                       Rect(0, 0, text_size.width, text_size.height),
+                       Rect(0, 0, text_size.width(), text_size.height()),
                        widget.padding() / 2);
 
     detail::flex_layout(b, rects, justification::start, orientation::horizontal);
@@ -120,7 +120,7 @@ Size CheckBox::min_size_hint() const
     {
         auto s = text_size(m_text);
         //s *= Size(1, 3);
-        s += Size(s.width / 2 + 5, 0);
+        s += Size(s.width() / 2 + 5, 0);
         return s + Widget::min_size_hint();
     }
 
@@ -156,8 +156,8 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     if (widget.checked())
     {
         Rect rect = b;
-        rect.width /= 2;
-        rect.x += rect.width;
+        rect.set_width(rect.width() / 2);
+        rect.set_x(rect.x() + rect.width());
         widget.theme().draw_box(painter,
                                 Theme::boxtype::blank_rounded,
                                 rect,
@@ -167,7 +167,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     else
     {
         Rect rect = b;
-        rect.width /= 2;
+        rect.set_width(rect.width() / 2);
         widget.theme().draw_box(painter,
                                 Theme::boxtype::blank_rounded,
                                 rect,
@@ -178,8 +178,8 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     if (!widget.on_text().empty())
     {
         Rect rect = b;
-        rect.width /= 2;
-        rect.x += rect.width;
+        rect.set_width(rect.width() / 2);
+        rect.set_x(rect.x() + rect.width());
 
         if (widget.checked())
             painter.set(widget.color(Palette::ColorId::button_text).color());
@@ -197,7 +197,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     if (!widget.off_text().empty())
     {
         Rect rect = b;
-        rect.width /= 2;
+        rect.set_width(rect.width() / 2);
 
         if (widget.checked())
             painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());

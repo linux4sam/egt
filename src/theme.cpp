@@ -157,10 +157,10 @@ void Theme::draw_box(Painter& painter,
     if (box.empty())
         return;
 
-    double rx = box.x,
-           ry = box.y,
-           width = box.width,
-           height = box.height,
+    double rx = box.x(),
+           ry = box.y(),
+           width = box.width(),
+           height = box.height(),
            aspect = 1.0,
            corner_radius = DEFAULT_ROUNDED_RADIUS;
 
@@ -266,7 +266,7 @@ void Theme::draw_circle(Painter& painter,
     if (box.empty())
         return;
 
-    Circle circle(box.center(), std::min(box.width, box.height) / 2.);
+    Circle circle(box.center(), std::min(box.width(), box.height()) / 2.);
 
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
@@ -289,11 +289,11 @@ void Theme::draw_circle(Painter& painter,
         else if (steps.size() > 1)
         {
             auto pat = shared_cairo_pattern_t(cairo_pattern_create_radial(
-                                                  circle.center.x,
-                                                  circle.center.y,
+                                                  circle.center.x(),
+                                                  circle.center.y(),
                                                   circle.radius,
-                                                  circle.center.x,
-                                                  circle.center.y,
+                                                  circle.center.x(),
+                                                  circle.center.y(),
                                                   0),
                                               cairo_pattern_destroy);
 

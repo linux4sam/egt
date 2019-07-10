@@ -99,8 +99,8 @@ public:
     {
         if (this->size() != size)
         {
-            double hs = static_cast<double>(size.width) / static_cast<double>(m_orig_size.width);
-            double vs = static_cast<double>(size.height) / static_cast<double>(m_orig_size.height);
+            double hs = static_cast<double>(size.width()) / static_cast<double>(m_orig_size.width());
+            double vs = static_cast<double>(size.height()) / static_cast<double>(m_orig_size.height());
             scale(hs, vs);
         }
     }
@@ -125,6 +125,22 @@ public:
 
         return Size(cairo_image_surface_get_width(surface().get()),
                     cairo_image_surface_get_height(surface().get()));
+    }
+
+    inline default_dim_type width() const
+    {
+        if (empty())
+            return 0;
+
+        return cairo_image_surface_get_width(surface().get());
+    }
+
+    inline default_dim_type height() const
+    {
+        if (empty())
+            return 0;
+
+        return cairo_image_surface_get_height(surface().get());
     }
 
     /**

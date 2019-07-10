@@ -70,7 +70,7 @@ public:
         case eventid::pointer_drag:
         {
             auto diff = event.pointer().drag_start - event.pointer().point;
-            move(m_start_point - Point(diff.x, diff.y));
+            move(m_start_point - Point(diff.x(), diff.y()));
             break;
         }
         default:

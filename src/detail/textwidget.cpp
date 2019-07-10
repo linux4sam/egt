@@ -61,8 +61,8 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
         cairo_text_extents_t textext;
         cairo_text_extents(painter.context().get(), text.c_str(), &textext);
 
-        if (textext.width - textext.x_bearing < target.width &&
-            textext.height - textext.y_bearing < target.height)
+        if (textext.width - textext.x_bearing < target.width() &&
+            textext.height - textext.y_bearing < target.height())
             return nfont;
 
         nfont.set_size(nfont.size() - 1);

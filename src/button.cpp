@@ -130,7 +130,7 @@ Size Button::min_size_hint() const
     {
         auto s = text_size(m_text);
         s *= Size(1, 3);
-        s += Size(s.width / 2 + 5, 0);
+        s += Size(s.width() / 2 + 5, 0);
         return s + Widget::min_size_hint();
     }
 

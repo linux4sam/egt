@@ -50,7 +50,7 @@ KMSOverlay::KMSOverlay(struct plane_data* plane)
 void KMSOverlay::resize(const Size& size)
 {
     auto ret = plane_fb_reallocate(m_plane,
-                                   size.width, size.height, plane_format(m_plane));
+                                   size.width(), size.height(), plane_format(m_plane));
     assert(!ret);
     if (!ret)
     {
@@ -106,7 +106,7 @@ void KMSOverlay::set_position(const DisplayPoint& point)
 
     /// @todo implement fix to above problem
 
-    plane_set_pos(m_plane, point.x, point.y);
+    plane_set_pos(m_plane, point.x(), point.y());
 }
 
 void KMSOverlay::set_scale(float scale)
@@ -117,12 +117,12 @@ void KMSOverlay::set_scale(float scale)
 
 void KMSOverlay::set_pan_size(const Size& size)
 {
-    plane_set_pan_size(m_plane, size.width, size.height);
+    plane_set_pan_size(m_plane, size.width(), size.height());
 }
 
 void KMSOverlay::set_pan_pos(const Point& point)
 {
-    plane_set_pan_pos(m_plane, point.x, point.y);
+    plane_set_pan_pos(m_plane, point.x(), point.y());
 }
 
 float KMSOverlay::scale() const

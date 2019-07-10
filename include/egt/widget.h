@@ -428,10 +428,10 @@ public:
      * @{
      * Bounding box dimensions.
      */
-    inline default_dim_type width() const { return m_box.width; }
-    inline default_dim_type height() const { return m_box.height; }
-    inline default_dim_type x() const { return m_box.x; }
-    inline default_dim_type y() const { return m_box.y; }
+    inline default_dim_type width() const { return m_box.width(); }
+    inline default_dim_type height() const { return m_box.height(); }
+    inline default_dim_type x() const { return m_box.x(); }
+    inline default_dim_type y() const { return m_box.y(); }
     /** @} */
 
     /**

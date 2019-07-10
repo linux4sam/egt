@@ -44,13 +44,13 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
     auto b = widget.content_area();
-    auto width = detail::normalize<float>(widget.value(), widget.min(), widget.max(), 0, b.width);
+    auto width = detail::normalize<float>(widget.value(), widget.min(), widget.max(), 0, b.width());
 
     if (width)
     {
         widget.theme().draw_box(painter,
                                 Theme::boxtype::blank,
-                                Rect(b.x, b.y, width, b.height),
+                                Rect(b.x(), b.y(), width, b.height()),
                                 Color(),
                                 widget.color(Palette::ColorId::button_bg));
     }
@@ -108,7 +108,7 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
 
     auto b = widget.content_area();
 
-    auto dim = std::min(b.width, b.height);
+    auto dim = std::min(b.width(), b.height());
     float linew = dim / 10.;
     float radius = dim / 2. - (linew / 2.);
     auto angle1 = detail::to_radians<float>(180, 0);
@@ -180,7 +180,7 @@ void LevelMeter::default_draw(LevelMeter& widget, Painter& painter, const Rect&)
 
     auto limit = egt::detail::normalize<float>(widget.value(), widget.min(),
                  widget.max(), widget.num_bars(), 0);
-    auto barheight = b.height / widget.num_bars();
+    auto barheight = b.height() / widget.num_bars();
 
     for (size_t i = 0; i < widget.num_bars(); i++)
     {
@@ -188,7 +188,7 @@ void LevelMeter::default_draw(LevelMeter& widget, Painter& painter, const Rect&)
         if (i >= limit)
             color = widget.color(Palette::ColorId::button_fg);
 
-        Rect rect(b.x,  b.y + i * barheight, b.width, barheight - widget.padding());
+        Rect rect(b.x(),  b.y() + i * barheight, b.width(), barheight - widget.padding());
 
         widget.theme().draw_box(painter,
                                 Theme::boxtype::blank,
@@ -234,10 +234,10 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
     auto text_size = painter.text_size("999");
 
     auto cr = painter.context().get();
-    cairo_translate(cr, b.center().x, b.y + b.height - text_size.height);
+    cairo_translate(cr, b.center().x(), b.y() + b.height() - text_size.height());
 
-    auto dim = std::min(b.width / 2, b.height);
-    float hw = dim - (text_size.width * 2.0);
+    auto dim = std::min(b.width() / 2, b.height());
+    float hw = dim - (text_size.width() * 2.0);
 
     // ticks and labels
     for (float tick = 0.0; tick <= 100.0; tick += 10.0)
@@ -254,8 +254,8 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
         auto text = detail::format(tick, 0);
         painter.set(widget.color(Palette::ColorId::text).color());
         auto size = painter.text_size(text);
-        painter.draw(Point(-(hw + 30.0) * xangle - size.width / 2.0,
-                           -(hw + 30.0) * yangle - size.height / 2.0));
+        painter.draw(Point(-(hw + 30.0) * xangle - size.width() / 2.0,
+                           -(hw + 30.0) * yangle - size.height() / 2.0));
         painter.draw(text);
         painter.stroke();
     }

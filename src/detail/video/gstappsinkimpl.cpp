@@ -66,14 +66,14 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 
                 if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
                 {
-                    SPDLOG_DEBUG("VideoWindow: boxwidth = {}  boxheight = {}", box.width, box.height);
-                    if (width != box.width)
+                    SPDLOG_DEBUG("VideoWindow: {}", box);
+                    if (width != box.width())
                     {
-                        double scale = (double) box.width / width;
+                        double scale = (double) box.width() / width;
                         SPDLOG_DEBUG("VideoWindow: scale = {}", scale);
                         cairo_scale(cr.get(), scale, scale);
                     }
-                    cairo_set_source_surface(cr.get(), surface.get(), box.x, box.y);
+                    cairo_set_source_surface(cr.get(), surface.get(), box.x(), box.y());
                     cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
                     cairo_paint(cr.get());
                 }
@@ -155,7 +155,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     std::ostringstream pipeline;
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
              " caps=video/x-raw;audio/x-raw video. ! queue ! videoscale ! video/x-raw,width=" <<
-             std::to_string(m_size.width) << ",height=" << std::to_string(m_size.height) << vc <<
+             std::to_string(m_size.width()) << ",height=" << std::to_string(m_size.height()) << vc <<
              " ! progressreport silent=true do-query=true update-freq=1 format=time name=progress ! "
              " appsink name=appsink video. " << a_pipe ;
 
@@ -213,7 +213,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
 
 void GstAppSinkImpl::scale(float scale)
 {
-    m_interface.resize(Size(m_size.width * scale, m_size.height * scale));
+    m_interface.resize(Size(m_size.width() * scale, m_size.height() * scale));
 }
 
 } // End of detail

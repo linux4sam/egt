@@ -837,8 +837,8 @@ Panel::Panel(vector<vector<shared_ptr<VirtualKeyboard::Key>>> keys,
 
         for (auto& key : row)
         {
-            key->m_button->resize(Size(key_size.width * key->length() + 2 * spacing,
-                                       key_size.height + 2 * spacing));
+            key->m_button->resize(Size(key_size.width() * key->length() + 2 * spacing,
+                                       key_size.height() + 2 * spacing));
             key->m_button->set_margin(spacing / 2);
 
             hsizer->add(key->m_button);
@@ -914,10 +914,10 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k, unsigned id)
         auto display_origin = k->m_button->display_origin();
         auto main_window_origin = main_window()->display_to_local(display_origin);
         // Popup on top of the key.
-        main_window_origin.y -= m_multichoice_popup.size().height;
+        main_window_origin.set_y(main_window_origin.y() - m_multichoice_popup.size().height());
         // Popup aligned with key center.
-        main_window_origin.x -= m_multichoice_popup.size().width / 2;
-        main_window_origin.x += k->m_button->size().width / 2;
+        main_window_origin.set_x(main_window_origin.x() - m_multichoice_popup.size().width() / 2);
+        main_window_origin.set_x(main_window_origin.x() + k->m_button->size().width() / 2);
 
         m_multichoice_popup.move(main_window_origin);
         m_multichoice_popup.show_modal();
@@ -969,11 +969,11 @@ VirtualKeyboard::VirtualKeyboard(const Rect& rect)
 
 PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
 {
-    auto popup_width = main_screen()->size().width;
-    auto popup_height = main_screen()->size().height * 0.4;
+    auto popup_width = main_screen()->size().width();
+    auto popup_height = main_screen()->size().height() * 0.4;
 
     resize(Size(popup_width, popup_height));
-    auto y_keyboard_position = main_screen()->size().height - popup_height;
+    auto y_keyboard_position = main_screen()->size().height() - popup_height;
     move(Point(0, y_keyboard_position));
 
     m_vsizer.set_align(alignmask::expand);

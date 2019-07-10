@@ -40,8 +40,8 @@ shared_cairo_surface_t load_svg(const std::string& filename,
 
     /* Scale *before* setting the source surface (1) */
     cairo_scale(cr.get(),
-                scaled.width,
-                scaled.height);
+                scaled.width(),
+                scaled.height());
 
     /* To avoid getting the edge pixels blended with 0 alpha, which would
      * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)
