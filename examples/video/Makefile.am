@@ -38,7 +38,8 @@ nodist_video_SOURCES = $(BUILT_SOURCES)
 video_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 video_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 videodir = $(prefix)/share/egt/examples/video
-video_DATA = $(wildcard $(top_srcdir)/examples/video/*.png)
+video_DATA = $(wildcard $(top_srcdir)/examples/video/*.png) \
+	video.xml
 video_LDFLAGS = $(AM_LDFLAGS)
 
 camera_SOURCES = camera.cpp

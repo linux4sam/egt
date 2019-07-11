@@ -89,20 +89,24 @@ calc_calc_SOURCES = calc/calc.cpp
 calc_calc_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 calc_calc_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 calc_calcdir = $(prefix)/share/egt/examples/calc
+dist_calc_calc_DATA = $(wildcard $(top_srcdir)/examples/calc/*.png) \
+	$(top_srcdir)/examples/calc/calc.xml
 calc_calc_LDFLAGS = $(AM_LDFLAGS)
 
 charts_charts_SOURCES = charts/charts.cpp
 charts_charts_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 charts_charts_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 charts_chartsdir = $(prefix)/share/egt/examples/charts
-dist_charts_charts_DATA = $(wildcard $(top_srcdir)/examples/charts/*.png)
+dist_charts_charts_DATA = $(wildcard $(top_srcdir)/examples/charts/*.png) \
+	$(top_srcdir)/examples/charts/charts.xml
 charts_charts_LDFLAGS = $(AM_LDFLAGS)
 
 easing_easing_SOURCES = easing/easing.cpp
 easing_easing_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 easing_easing_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 easing_easingdir = $(prefix)/share/egt/examples/easing
-dist_easing_easing_DATA = $(wildcard $(top_srcdir)/examples/easing/*.png)
+dist_easing_easing_DATA = $(wildcard $(top_srcdir)/examples/easing/*.png) \
+	$(top_srcdir)/examples/easing/easing.xml
 easing_easing_LDFLAGS = $(AM_LDFLAGS)
 
 floating_floating_SOURCES = floating/floating.cpp
@@ -116,7 +120,8 @@ space_space_SOURCES = space/space.cpp
 space_space_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 space_space_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 space_spacedir = $(prefix)/share/egt/examples/space
-dist_space_space_DATA = $(wildcard $(top_srcdir)/examples/space/*.png)
+dist_space_space_DATA = $(wildcard $(top_srcdir)/examples/space/*.png) \
+	$(top_srcdir)/examples/space/space.xml
 space_space_LDFLAGS = $(AM_LDFLAGS)
 
 sprite_sprite_SOURCES = sprite/sprite.cpp
@@ -137,7 +142,8 @@ widgets_widgets_SOURCES = widgets/widgets.cpp
 widgets_widgets_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 widgets_widgets_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 widgets_widgetsdir = $(prefix)/share/egt/examples/widgets
-dist_widgets_widgets_DATA = $(wildcard $(top_srcdir)/examples/widgets/*.png)
+dist_widgets_widgets_DATA = $(wildcard $(top_srcdir)/examples/widgets/*.png) \
+	$(top_srcdir)/examples/widgets/widgets.xml
 widgets_widgets_LDFLAGS = $(AM_LDFLAGS)
 
 basic_basic_SOURCES = basic/basic.cpp
@@ -150,7 +156,8 @@ whiteboard_whiteboard_SOURCES = whiteboard/whiteboard.cpp
 whiteboard_whiteboard_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 whiteboard_whiteboard_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 whiteboard_whiteboarddir = $(prefix)/share/egt/examples/whiteboard
-dist_whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*.png)
+dist_whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*.png) \
+	$(top_srcdir)/examples/whiteboard/whiteboard.xml
 whiteboard_whiteboard_LDFLAGS = $(AM_LDFLAGS)
 
 newsfeed_newsfeed_SOURCES = newsfeed/newsfeed.cpp
@@ -201,7 +208,8 @@ boards_boards_SOURCES = boards/boards.cpp
 boards_boards_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 boards_boards_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 boards_boardsdir = $(prefix)/share/egt/examples/boards
-dist_boards_boards_DATA = $(wildcard $(top_srcdir)/examples/boards/*.png)
+dist_boards_boards_DATA = $(wildcard $(top_srcdir)/examples/boards/*.png) \
+	$(top_srcdir)/examples/boards/boards.xml
 boards_boards_LDFLAGS = $(AM_LDFLAGS)
 
 dialog_dialog_SOURCES = dialog/dialog.cpp
@@ -214,14 +222,18 @@ gauge_gauge_SOURCES = gauge/gauge.cpp
 gauge_gauge_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 gauge_gauge_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 gauge_gaugedir = $(prefix)/share/egt/examples/gauge
-dist_gauge_gauge_DATA = $(wildcard $(top_srcdir)/examples/gauge/*.svg)
+dist_gauge_gauge_DATA = $(wildcard $(top_srcdir)/examples/gauge/*.svg) \
+	$(wildcard $(top_srcdir)/examples/gauge/*.png) \
+	$(top_srcdir)/examples/gauge/gauge.xml
 gauge_gauge_LDFLAGS = $(AM_LDFLAGS)
 
 dash_dash_SOURCES = dash/dash.cpp
 dash_dash_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 dash_dash_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 dash_dashdir = $(prefix)/share/egt/examples/dash
-dist_dash_dash_DATA = $(wildcard $(top_srcdir)/examples/dash/*.svg)
+dist_dash_dash_DATA = $(wildcard $(top_srcdir)/examples/dash/*.svg) \
+	$(wildcard $(top_srcdir)/examples/dash/*.png) \
+	$(top_srcdir)/examples/dash/dash.xml
 dash_dash_LDFLAGS = $(AM_LDFLAGS)
 
 sizers_sizers_SOURCES = sizers/sizers.cpp

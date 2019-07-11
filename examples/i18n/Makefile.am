@@ -30,6 +30,8 @@ i18n_DEPENDENCIES = build-mo.stamp
 i18n_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 i18n_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 i18ndir = $(prefix)/share/egt/examples/i18n
+i18n_DATA = $(wildcard $(top_srcdir)/examples/i18n/*.png) \
+	$(top_srcdir)/examples/i18n/i18n.xml
 i18n_LDFLAGS = $(AM_LDFLAGS)
 
 LINGUAS = de es fr zh
