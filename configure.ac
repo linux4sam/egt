@@ -230,7 +230,7 @@ if test "x${have_libinput}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(GSTREAMER, [gstreamer-1.0 >= 1.8 gstreamer-plugins-base-1.0 >= 1.8], [], [have_gstreamer=yes], [have_gstreamer=no])
+AX_PKG_CHECK_MODULES2(GSTREAMER, [gstreamer-1.0 >= 1.8], [], [have_gstreamer=yes], [have_gstreamer=no])
 if test "x${have_gstreamer}" = xyes; then
    AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
    LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
