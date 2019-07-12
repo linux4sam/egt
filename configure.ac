@@ -341,6 +341,11 @@ AM_CONDITIONAL([HAVE_JSONCPP], [test "x${have_jsoncpp}" = xyes])
 AM_CONDITIONAL([HAVE_BOX2D], [test true])
 AC_DEFINE(HAVE_BOX2D, 1, [Have Box2D support])
 
+AC_CHECK_PROG(XXD, xxd, yes)
+if test "x${XXD}" != x"yes"; then
+   AC_MSG_ERROR("Cannot find xxd. This is required.")
+fi
+
 # Subst LIBEGT_EXTRA_CFLAGS & CXXFLAGS & LDFLAGS
 AC_SUBST(LIBEGT_EXTRA_CFLAGS)
 AC_SUBST(LIBEGT_EXTRA_CXXFLAGS)
