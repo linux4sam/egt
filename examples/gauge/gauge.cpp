@@ -31,7 +31,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "gauge");
 
     TopWindow win;
-    win.set_color(Palette::ColorId::bg, Palette::gray);
+    win.set_color(Palette::ColorId::bg, Palette::black);
 
     StaticGrid grid(Tuple(2, 2));
     grid.set_color(Palette::ColorId::border, Palette::transparent);
