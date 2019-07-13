@@ -171,6 +171,7 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
+#ifdef ENABLE_STARFIELD
     std::random_device r;
     std::default_random_engine e1 {r()};
     std::uniform_int_distribution<int> x_dist {0, 800};
@@ -210,6 +211,7 @@ int main(int argc, const char** argv)
 
         sequence->start();
     }
+#endif
 
     try
     {
