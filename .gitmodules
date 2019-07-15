@@ -4,7 +4,7 @@
 	ignore = untracked
 [submodule "external/layout"]
 	path = external/layout
-	url = https://bitbucket.microchip.com/scm/~c16205/layout.git
+	url = https://github.com/linux4sam/layout.git
 	ignore = untracked
 [submodule "external/spdlog"]
 	path = external/spdlog
