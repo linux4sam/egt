@@ -39,8 +39,6 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
     if (m_videosample)
     {
         GstCaps* caps = gst_sample_get_caps(m_videosample);
-        char* strCaps = gst_caps_to_string(caps);
-        SPDLOG_DEBUG("VideoWindow: Caps = {}", std::string(strCaps));
         GstStructure* capsStruct = gst_caps_get_structure(caps, 0);
         int width, height;
         gst_structure_get_int(capsStruct, "width", &width);
