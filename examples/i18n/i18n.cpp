@@ -6,6 +6,7 @@
 #include <egt/ui>
 #include <iostream>
 #include <string>
+#include <utf8.h>
 
 using namespace std;
 using namespace egt;
@@ -30,15 +31,27 @@ int main(int argc, const char** argv)
         "EGT prend en charge toutes les langues",
         "EGT unterstützt alle Sprachen",
         "EGT soporta todos los idiomas",
-        _("Hello World")
+        ""
     };
 
+    utf8::append(0x0001f602, std::back_inserter(variations.back()));
+    utf8::append(0x0001f412, std::back_inserter(variations.back()));
+    utf8::append(0x0001f3d7, std::back_inserter(variations.back()));
+    utf8::append(0x0001f6b2, std::back_inserter(variations.back()));
+    utf8::append(0x0001f3a3, std::back_inserter(variations.back()));
+
+    int index = 0;
     for (auto& str : variations)
     {
-        static const auto face = "Noto Sans CJK SC Regular";
         auto label = make_shared<Label>(str, egt::Label::default_align);
-        label->set_font(egt::Font(face, 36));
+        string face;
+        if (index == static_cast<int>(variations.size()) - 1)
+            label->set_font(egt::Font("Noto Color Emoji", 16));
+        else
+            label->set_font(egt::Font("Noto Sans CJK SC Regular", 30));
+
         vsizer.add(label);
+        index++;
     }
 
     window.add(vsizer);
