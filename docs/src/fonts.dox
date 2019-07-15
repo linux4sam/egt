@@ -68,6 +68,13 @@ DejaVuSerif-Italic.ttf: "DejaVu Serif" "Italic"
 DejaVuSerif-BoldItalic.ttf: "DejaVu Serif" "Bold Italic"
 @endcode
 
+To see what installed fonts contain a certain code point, you can use the
+`fc-list` utility and specify one or more code points in hex.
+
+@code{.sh}
+fc-list ':charset=B6'
+@endcode
+
 When running an EGT application, or any application that uses Fontconfig, you
 can define the environment variable `FC_DEBUG` that will cause Fontconfig to
 issue some useful information.
