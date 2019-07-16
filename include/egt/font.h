@@ -65,6 +65,13 @@ public:
      * Create a font based on the supplied parameters.
      *
      * @param[in] face The face name of the font.
+     */
+    explicit Font(const std::string& face);
+
+    /**
+     * Create a font based on the supplied parameters.
+     *
+     * @param[in] face The face name of the font.
      * @param[in] size The size of the font.
      */
     explicit Font(const std::string& face, int size);
