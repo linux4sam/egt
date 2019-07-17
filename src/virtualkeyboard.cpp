@@ -108,6 +108,8 @@ VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
         auto main_panel = make_shared<NotebookTab>();
         main_panel->add(panel);
         main_panel->set_align(alignmask::expand);
+        // By default NotebookTab are not transparent.
+        main_panel->set_boxtype(Theme::boxtype::none);
         m_main_panel.add(main_panel);
 
         for (auto& keys_row : keys_panel)
@@ -284,6 +286,10 @@ static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
 
 PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard) noexcept
 {
+    // Make the keyboard partially transparent.
+    set_boxtype(Theme::boxtype::fill);
+    set_color(Palette::ColorId::bg, Color(Palette::transparent, 80));
+
     auto popup_width = main_screen()->size().width();
     auto popup_height = main_screen()->size().height() * 0.4;
 
