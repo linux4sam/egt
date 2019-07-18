@@ -19,40 +19,46 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "keyboard");
 
-    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row1 = {
+    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row1 =
+    {
         make_shared<VirtualKeyboard::Key>(0x0037),
         make_shared<VirtualKeyboard::Key>(0x0038),
         make_shared<VirtualKeyboard::Key>(0x0039),
     };
     random_shuffle(code_keyboard_row1.begin(), code_keyboard_row1.end());
 
-    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row2 = {
+    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row2 =
+    {
         make_shared<VirtualKeyboard::Key>(0x0034),
         make_shared<VirtualKeyboard::Key>(0x0035),
         make_shared<VirtualKeyboard::Key>(0x0036),
     };
     random_shuffle(code_keyboard_row2.begin(), code_keyboard_row2.end());
 
-    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row3 = {
+    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row3 =
+    {
         make_shared<VirtualKeyboard::Key>(0x0031),
         make_shared<VirtualKeyboard::Key>(0x0032),
         make_shared<VirtualKeyboard::Key>(0x0033),
     };
     random_shuffle(code_keyboard_row3.begin(), code_keyboard_row3.end());
 
-    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row4 = {
+    vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row4 =
+    {
         make_shared<VirtualKeyboard::Key>(Image("@cancel.png"), EKEY_BACKSPACE),
         make_shared<VirtualKeyboard::Key>(0x0030),
         make_shared<VirtualKeyboard::Key>(Image("@ok.png"), EKEY_ENTER),
     };
 
-    VirtualKeyboard::panel_keys code_keyboard_panel_keys = {
-        code_keyboard_row1, code_keyboard_row2, code_keyboard_row3, code_keyboard_row4 };
+    VirtualKeyboard::panel_keys code_keyboard_panel_keys =
+    {
+        code_keyboard_row1, code_keyboard_row2, code_keyboard_row3, code_keyboard_row4
+    };
     random_shuffle(code_keyboard_panel_keys.begin(), code_keyboard_panel_keys.end() - 1);
 
     VirtualKeyboard code_keyboard(
-        { code_keyboard_panel_keys },
-        Rect(Point(), Size(200, 200))
+    { code_keyboard_panel_keys },
+    Rect(Point(), Size(200, 200))
     );
 
     auto key_a = make_shared<VirtualKeyboard::Key>(0x0061);
@@ -82,33 +88,36 @@ int main(int argc, const char** argv)
     auto key_y = make_shared<VirtualKeyboard::Key>(0x0079);
     auto key_z = make_shared<VirtualKeyboard::Key>(0x007a);
 
-    vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row1 = {
+    vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row1 =
+    {
         key_a, key_b, key_c, key_d, key_e, key_f, key_g, key_h, key_i
     };
-    for (auto &key : abc_keyboard_row1)
+    for (auto& key : abc_keyboard_row1)
         key->set_color(Palette::ColorId::button_bg, Palette::red);
 
-    vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row2 = {
+    vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row2 =
+    {
         key_j, key_k, key_l, key_m, key_n, key_o, key_p, key_q, key_r
     };
-    for (auto &key : abc_keyboard_row2)
+    for (auto& key : abc_keyboard_row2)
         key->set_color(Palette::ColorId::button_bg, Palette::green);
 
-    vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row3 = {
+    vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row3 =
+    {
         key_s, key_t, key_u, key_v, key_w, key_x, key_y, key_z
     };
-    for (auto &key : abc_keyboard_row3)
+    for (auto& key : abc_keyboard_row3)
         key->set_color(Palette::ColorId::button_bg, Palette::blue);
 
     VirtualKeyboard abc_keyboard(
+    {
         {
-            {
-                abc_keyboard_row1,
-                abc_keyboard_row2,
-                abc_keyboard_row3,
-            },
+            abc_keyboard_row1,
+            abc_keyboard_row2,
+            abc_keyboard_row3,
         },
-        Rect(Point(), Size(400, 100))
+    },
+    Rect(Point(), Size(400, 100))
     );
     abc_keyboard.set_align(alignmask::center);
 

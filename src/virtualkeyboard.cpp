@@ -127,10 +127,13 @@ VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
 }
 
 VirtualKeyboard::VirtualKeyboard(const Rect& rect) noexcept
-    : VirtualKeyboard({ QwertyLettersLowerCase(),
-    QwertyLettersUpperCase(),
-    QwertySymbols1(),
-    QwertySymbols2() })
+    : VirtualKeyboard(
+{
+    QwertyLettersLowerCase(),
+                           QwertyLettersUpperCase(),
+                           QwertySymbols1(),
+                           QwertySymbols2()
+})
 {
 }
 
@@ -242,7 +245,7 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& key)
             main_window_origin.set_x(0);
 
         if (main_window_origin.x() + m_multichoice_popup->width() > main_window()->width())
-            main_window_origin.set_x( main_window()->width() - m_multichoice_popup->width());
+            main_window_origin.set_x(main_window()->width() - m_multichoice_popup->width());
 
         m_multichoice_popup->move(main_window_origin);
         m_multichoice_popup->show_modal();
