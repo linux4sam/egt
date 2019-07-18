@@ -231,11 +231,7 @@ void TextBox::set_max_length(size_t len)
             if (len > m_max_len)
             {
                 auto i = m_text.begin();
-#ifdef UTF8CPP_CHECKED
-                utf8ns::advance(i, m_max_len, m_text.end());
-#else
-                utf8ns::advance(i, m_max_len);
-#endif
+                utf8::advance(i, m_max_len, m_text.end());
                 m_text.erase(i, m_text.end());
             }
         }
@@ -262,19 +258,10 @@ size_t TextBox::width_to_len(const std::string& text) const
 
     size_t len = 0;
     float total = 0;
-#ifdef UTF8CPP_CHECKED
     for (utf8_const_iterator ch(text.begin(), m_text.begin(), m_text.end());
          ch != utf8_const_iterator(text.end(), m_text.begin(), m_text.end()); ++ch)
-#else
-    for (utf8_const_iterator ch(text.begin());
-         ch != utf8_const_iterator(text.end()); ++ch)
-#endif
     {
-#ifdef UTF8CPP_CHECKED
         auto txt = utf8_char_to_string(ch.base(), m_text.cend());
-#else
-        auto txt = utf8_char_to_string(ch.base());
-#endif
         cairo_text_extents_t te;
         cairo_text_extents(cr.get(), txt.c_str(), &te);
         if (total + te.x_advance > b.width())
@@ -313,17 +300,9 @@ size_t TextBox::insert(const std::string& str)
         // insert at cursor position
         auto text = m_text;
         auto i = text.begin();
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(i, m_cursor_pos, text.end());
-#else
-        utf8ns::advance(i, m_cursor_pos);
-#endif
+        utf8::advance(i, m_cursor_pos, text.end());
         auto end = str.begin();
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(end, len, str.end());
-#else
-        utf8ns::advance(end, len);
-#endif
+        utf8::advance(end, len, str.end());
         text.insert(i, str.begin(), end);
 
         auto maxlen = width_to_len(text);
@@ -339,17 +318,9 @@ size_t TextBox::insert(const std::string& str)
     {
         // insert at cursor position
         auto i = m_text.begin();
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(i, m_cursor_pos, m_text.end());
-#else
-        utf8ns::advance(i, m_cursor_pos);
-#endif
+        utf8::advance(i, m_cursor_pos, m_text.end());
         auto end = str.begin();
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(end, len, str.end());
-#else
-        utf8ns::advance(end, len);
-#endif
+        utf8::advance(end, len, str.end());
         m_text.insert(i, str.begin(), end);
         cursor_forward(len);
         clear_selection();
@@ -415,12 +386,8 @@ void TextBox::set_selection(size_t pos, size_t length)
         pos = utf8len(m_text);
 
     auto i = m_text.begin();
-#ifdef UTF8CPP_CHECKED
-    utf8ns::advance(i, pos, m_text.end());
-#else
-    utf8ns::advance(i, pos);
-#endif
-    size_t d = utf8ns::distance(i, m_text.end());
+    utf8::advance(i, pos, m_text.end());
+    size_t d = utf8::distance(i, m_text.end());
     if (length > d)
         length = d;
 
@@ -446,17 +413,9 @@ std::string TextBox::selected_text() const
     if (m_select_len)
     {
         auto i = m_text.begin();
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(i, m_select_start, m_text.end());
-#else
-        utf8ns::advance(i, m_select_start);
-#endif
+        utf8::advance(i, m_select_start, m_text.end());
         auto l = i;
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(l, m_select_len, m_text.end());
-#else
-        utf8ns::advance(l, m_select_len);
-#endif
+        utf8::advance(l, m_select_len, m_text.end());
         return m_text.substr(std::distance(m_text.begin(), i),
                              std::distance(i, l));
     }
@@ -469,18 +428,10 @@ void TextBox::delete_selection()
     if (m_select_len)
     {
         auto i = m_text.begin();
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(i, m_select_start, m_text.end());
-#else
-        utf8ns::advance(i, m_select_start);
-#endif
+        utf8::advance(i, m_select_start, m_text.end());
         auto l = i;
-#ifdef UTF8CPP_CHECKED
-        utf8ns::advance(l, m_select_len, m_text.end());
-#else
-        utf8ns::advance(l, m_select_len);
-#endif
-        size_t p = utf8ns::distance(m_text.begin(), i);
+        utf8::advance(l, m_select_len, m_text.end());
+        size_t p = utf8::distance(m_text.begin(), i);
 
         m_text.erase(i, l);
         cursor_set(p);

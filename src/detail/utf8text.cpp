@@ -80,19 +80,10 @@ void draw_text(Painter& painter,
     }
     else
     {
-#ifdef UTF8CPP_CHECKED
         for (utf8_const_iterator ch(text.begin(), text.begin(), text.end());
              ch != utf8_const_iterator(text.end(), text.begin(), text.end()); ++ch)
-#else
-        for (utf8_const_iterator ch(text.begin());
-             ch != utf8_const_iterator(text.end()); ++ch)
-#endif
         {
-#ifdef UTF8CPP_CHECKED
             tokens.emplace_back(utf8_char_to_string(ch.base(), text.cend()));
-#else
-            tokens.emplace_back(utf8_char_to_string(ch.base()));
-#endif
         }
     }
 
@@ -135,18 +126,10 @@ void draw_text(Painter& painter,
     for (auto r = rects.begin(); r != rects.end(); ++r)
     {
         float roff = 0.;
-#ifdef UTF8CPP_CHECKED
         for (utf8_const_iterator ch(r->str.begin(), r->str.begin(), r->str.end()); ch != utf8_const_iterator(r->str.end(), r->str.begin(), r->str.end()); ++ch)
-#else
-        for (utf8_const_iterator ch(r->str.begin()); ch != utf8_const_iterator(r->str.end()); ++ch)
-#endif
         {
             float char_width = 0;
-#ifdef UTF8CPP_CHECKED
             last_char = utf8_char_to_string(ch.base(), r->str.cend());
-#else
-            last_char = utf8_char_to_string(ch.base());
-#endif
 
             if (*ch != '\n')
             {
@@ -272,19 +255,10 @@ void draw_text(Painter& painter,
     }
     else
     {
-#ifdef UTF8CPP_CHECKED
         for (utf8_const_iterator ch(text.begin(), text.begin(), text.end());
              ch != utf8_const_iterator(text.end(), text.begin(), text.end()); ++ch)
-#else
-        for (utf8_const_iterator ch(text.begin());
-             ch != utf8_const_iterator(text.end()); ++ch)
-#endif
         {
-#ifdef UTF8CPP_CHECKED
             tokens.emplace_back(utf8_char_to_string(ch.base(), text.cend()));
-#else
-            tokens.emplace_back(utf8_char_to_string(ch.base()));
-#endif
         }
     }
 
@@ -381,18 +355,10 @@ void draw_text(Painter& painter,
         }
 
         float roff = 0.;
-#ifdef UTF8CPP_CHECKED
         for (utf8_const_iterator ch(r->str.begin(), r->str.begin(), r->str.end()); ch != utf8_const_iterator(r->str.end(), r->str.begin(), r->str.end()); ++ch)
-#else
-        for (utf8_const_iterator ch(r->str.begin()); ch != utf8_const_iterator(r->str.end()); ++ch)
-#endif
         {
             float char_width = 0;
-#ifdef UTF8CPP_CHECKED
             last_char = utf8_char_to_string(ch.base(), r->str.cend());
-#else
-            last_char = utf8_char_to_string(ch.base());
-#endif
 
             if (*ch != '\n')
             {

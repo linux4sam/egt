@@ -20,41 +20,25 @@ inline namespace v1
 namespace detail
 {
 
-#define UTF8CPP_CHECKED
-#ifdef UTF8CPP_CHECKED
-namespace utf8ns = utf8;
-#else
-namespace utf8ns = utf8::unchecked;
-#endif
-
-using utf8_const_iterator = utf8ns::iterator<std::string::const_iterator>;
-using utf8_iterator = utf8ns::iterator<std::string::iterator>;
+using utf8_const_iterator = utf8::iterator<std::string::const_iterator>;
+using utf8_iterator = utf8::iterator<std::string::iterator>;
 
 /**
  * Returns the length of a utf-8 encoded string.
  */
 inline size_t utf8len(const std::string& str)
 {
-    return utf8ns::distance(str.begin(), str.end());
+    return utf8::distance(str.begin(), str.end());
 }
 
 /**
  * Convert a utf-8 iterator to a standalone std::string.
  */
-#ifdef UTF8CPP_CHECKED
 template<class T1, class T2>
 inline std::string utf8_char_to_string(T1 ch, T2 e)
-#else
-template<class T>
-inline std::string utf8_char_to_string(T ch)
-#endif
 {
     auto ch2 = ch;
-#ifdef UTF8CPP_CHECKED
-    utf8ns::advance(ch2, 1, e);
-#else
-    utf8ns::advance(ch2, 1);
-#endif
+    utf8::advance(ch2, 1, e);
     return std::string(ch.base(), ch2.base());
 }
 
@@ -76,20 +60,11 @@ void tokenize_with_delimiters(T begin, T end,
 
     for (auto pos = begin; pos != end;)
     {
-#ifdef UTF8CPP_CHECKED
-        auto ch = utf8ns::next(pos, end);
-#else
-        auto ch = utf8ns::next(pos);
-#endif
-
+        auto ch = utf8::next(pos, end);
         bool found = false;
         for (auto d = dbegin; d != dend;)
         {
-#ifdef UTF8CPP_CHECKED
-            auto del = utf8ns::next(d, dend);
-#else
-            auto del = utf8ns::next(d);
-#endif
+            auto del = utf8::next(d, dend);
             if (del == ch)
             {
                 found = true;
