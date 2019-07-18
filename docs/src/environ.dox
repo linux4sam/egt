@@ -86,6 +86,16 @@ levels using environment variables.
     EGT_SCREEN_SIZE=640x480 ./widgets
     @endcode
   </dd>
+
+  <dt>EGT_SEARCH_PATH</dt>
+  <dd>
+    Add additional search directories to find resources.
+
+    @b Example
+    @code{.sh}
+    EGT_SEARCH_PATH=/opt/icons:/usr/share/planes
+    @endcode
+  </dd>
 </dl>
 
 */

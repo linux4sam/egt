@@ -96,23 +96,31 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         the_app = this;
     }
 
-    // first search install path
-    detail::add_search_path(std::string(DATADIR));
+    // any added search paths take priority
+    if (getenv("EGT_SEARCH_PATH"))
+    {
+        vector<string> tokens;
+        detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
+
+        for (auto& token : tokens)
+            detail::add_search_path(token);
+    }
+
+    // search exe pwd
+    detail::add_search_path(detail::exe_pwd());
+
+    // libegt icons
+    detail::add_search_path(std::string(DATADIR) + "/libegt/icons");
+
     if (!name.empty())
     {
-        // examples install path
-        detail::add_search_path(std::string(DATADIR) + "/examples/" + name);
-        detail::add_search_path(detail::exe_pwd() + "/../share/egt/examples/" + name);
+        // special handling for installed examples
+        detail::add_search_path(std::string(DATADIR) + "/egt/examples/" + name);
     }
-    // then go to exe pwd
-    detail::add_search_path(detail::exe_pwd());
-    // then go to icons
-    detail::add_search_path(std::string(DATADIR) + "/icons");
-    detail::add_search_path(detail::exe_pwd() + "/../share/libegt/icons");
+
+    // special handling for running example in the source directory
     detail::add_search_path(detail::exe_pwd() + "/../../../icons");
     detail::add_search_path(detail::exe_pwd() + "/../../icons");
-    detail::add_search_path(detail::exe_pwd() + "/../share/egt");
-    detail::add_search_path(std::string(DATADIR) + "/egt");
 
     setlocale(LC_ALL, "");
     bindtextdomain(name.c_str(), (detail::exe_pwd() + "/../share/locale/").c_str());
