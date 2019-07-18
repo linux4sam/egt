@@ -99,6 +99,13 @@ inline T to_radians(T zero, T degrees)
     return degrees * (pi<T>() / 180.0);
 }
 
+template <class T>
+constexpr const T& clamp(const T& v, const T& lo, const T& hi)
+{
+    return assert(!(hi < lo)),
+           (v < lo) ? lo : (hi < v) ? hi : v;
+}
+
 }
 
 /**
