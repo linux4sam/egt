@@ -148,7 +148,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     if (m_audiodevice)
         a_pipe = "! queue ! audioconvert ! volume name=volume ! alsasink async=false enable-last-sample=false sync=false";
     else
-        a_pipe = "! fakesink";
+        a_pipe = "! fakesink async=false enable-last-sample=false sync=false";
 
     std::ostringstream pipeline;
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
