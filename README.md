@@ -43,7 +43,7 @@ sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 Then clone the source and build.
 
 ```sh
-git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
+git clone --recursive https://github.com/linux4sam/egt.git
 cd egt
 ./autogen.sh
 ./configure

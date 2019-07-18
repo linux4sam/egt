@@ -6,15 +6,14 @@ namespace egt { inline namespace v1 {
 @section intro_what_is_egt What is EGT?
 
 The Ensemble Graphics Toolkit (EGT) is a C++ GUI Linux toolkit for
-<a href="https://www.microchip.com/">Microchip</a> AT91/SAMA5 processors.  EGT
-provides modern GUI functionality, look-and-feel, and maximizes performance
-while staying as close to the metal as possible. EGT provides a consistent API
-and solution for working across all Microchip AT91/SAMA5 processors in order to
-build robust GUI based applications that make the best use of the hardware
-available.
+[Microchip](https://www.microchip.com/) AT91/SAMA5 processors.  EGT provides
+modern GUI functionality, look-and-feel, and maximizes performance while staying
+as close to the metal as possible. EGT provides a consistent API and solution
+for working across all Microchip AT91/SAMA5 processors in order to build robust
+GUI based applications that make the best use of the hardware available.
 
 @see For more information about Microchip MPU Xplained or EK type boards, visit
-<a href="http://www.at91.com/linux4sam/bin/view/Linux4SAM">Linux4SAM</a>.
+[Linux4SAM](http://www.at91.com/linux4sam/bin/view/Linux4SAM).
 
 EGT uses and provides a standard API to many different third party and system
 libraries and resources.  Here are some of them.

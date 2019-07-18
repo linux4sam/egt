@@ -5,7 +5,7 @@ namespace egt { inline namespace v1 {
 
 There are various ways to get started with EGT depending on your requirements.
 If building for an Microchip MPU Xplained or EK type board, visit
-<a href="http://www.at91.com/linux4sam/bin/view/Linux4SAM">Linux4SAM</a>. If you
+[Linux4SAM](http://www.at91.com/linux4sam/bin/view/Linux4SAM). If you
 are building EGT on a PC you can start by just fetching the source of the EGT
 project.  If you are developing for and deploying to a target board, the easiest
 way to work with EGT is part of a buildroot SDK which already includes a cross
@@ -19,7 +19,7 @@ compiling.
 Fetch the source:
 
 @code{.sh}
-git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
+git clone --recursive https://github.com/linux4sam/egt.git
 @endcode
 
 @note Note the `--recursive` option.  This option is necessary to initialize any
@@ -48,7 +48,7 @@ sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 Then clone the source and build.
 
 @code{.sh}
-git clone --recursive https://bitbucket.microchip.com/scm/linux4sam/egt.git
+git clone --recursive https://github.com/linux4sam/egt.git
 cd egt
 ./autogen.sh
 ./configure
@@ -97,17 +97,15 @@ enable gcc's LTO [default=no]
 
 @section started_buildroot Cross Compiling With Buildroot
 
-We provide EGT as part of the <a href="https://bitbucket.microchip.com/projects/LINUX4SAM/repos/buildroot-external-microchip/browse">buildroot-external-microchip</a> project. To build a
-complete SDK and target filesystem for a board follow the instructions found in the buildroot-external-microchip project README.
-
-@see https://bitbucket.microchip.com/scm/linux4sam/buildroot-external-microchip.git
-
-Follow the README.md instructions for that project with the following versions.
+EGT is included as a package as part of the
+[buildroot-external-microchip](https://github.com/linux4sam/buildroot-external-microchip)
+project. To build a complete SDK and target filesystem for a board follow the
+instructions found in that project's README with the following versions.
 
 @code{.sh}
-git clone https://bitbucket.microchip.com/scm/linux4sam/buildroot-external-microchip.git -b egt_devel
-git clone https://bitbucket.microchip.com/scm/linux4sam/buildroot-at91.git -b egt_devel
-cd buildroot-at91
+git clone https://github.com/linux4sam/buildroot-external-microchip.git -b egt_devel
+git clone https://git.buildroot.net/buildroot -b 2019.05.x
+cd buildroot
 BR2_EXTERNAL=../buildroot-external-microchip/ make sam9x60ek_egt_defconfig
 make
 @endcode

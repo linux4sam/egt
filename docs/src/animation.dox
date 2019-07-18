@@ -72,7 +72,8 @@ The @b examples/easing/ directory contains an example that allows you to
 visually select and see some of the different easing functions and how they
 work.
 
-@see <https://easings.net> has more information about other easing functions.
+@see [easings.net](https://easings.net) has more information about other easing
+functions.
 
 @section animations_animating Animating Widgets
 
@@ -88,8 +89,6 @@ shrink_in.on_change(std::bind(&Button::set_width, std::ref(button),
 						  std::placeholders::_1));
 shrink.start();
 @endcode
-
-
 
 */
 }}

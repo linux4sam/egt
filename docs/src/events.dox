@@ -23,12 +23,12 @@ It does this until the event loop is told to exit, and in turn, this usually
 means the application exits.  For example, a call to EventLoop::quit() would
 cause the event loop to exit.
 
-The event loop in EGT is implemented with the
-<a href="https://think-async.com/">Asio</a> library.  Asio is a cross-platform
-C++ library for network and low-level I/O programming that provides developers
-with a consistent asynchronous model using a modern C++ approach.  Asio can be
-used as part of boost or standalone, and EGT comes with the standalone version
-built in. Asio provides way more features than what is directly used by EGT.
+The event loop in EGT is implemented with the [Asio](https://think-async.com/)
+library.  Asio is a cross-platform C++ library for network and low-level I/O
+programming that provides developers with a consistent asynchronous model using
+a modern C++ approach.  Asio can be used as part of boost or standalone, and EGT
+comes with the standalone version built in. Asio provides way more features than
+what is directly used by EGT.
 
 @imageSize{asio.png,width:400px;}
 @image html asio.png "Asio"
@@ -37,9 +37,8 @@ built in. Asio provides way more features than what is directly used by EGT.
 EGT abstracts out any required direct involvement with Asio, however, should you
 choose to use it directly it is available for use in, for example, @ref
 topics_networking "networking" and @ref topics_threads "multi-threaded"
-applications. <a href="http://think-async.com/Asio/asio-1.12.2/doc/index.html">Asio
-Documentation</a> is a good reference point if you want to start using the Asio
-API directly.
+applications. [Asio Documentation](http://think-async.com/Asio/asio-1.12.2/doc/index.html)
+is a good reference point if you want to start using the Asio API directly.
 
 @section events_prop Event Propagation
 

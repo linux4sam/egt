@@ -23,10 +23,12 @@ btn.set_font(customfont);
 
 @section fonts_fontconfig Fontconfig
 
-<a href="https://www.freedesktop.org/wiki/Software/fontconfig/">Fontconfig</a> is a library for configuring and customizing font access.  This is the library EGT uses to discover fonts installed on the system automatically.
+[Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) is a library
+for configuring and customizing font access.  This is the library EGT uses to
+discover fonts installed on the system automatically.
 
 Selecting fonts from within EGT ultimately uses Fontconfig.  The
-<a href="https://www.freedesktop.org/software/fontconfig/fontconfig-user.html">Fontconfig
+[Fontconfig](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html)
 documentation</a> should be the ultimate source of how to make the best use of
 and configure Fontconfig. However, to help introduce how to debug using
 Fontconfig, several things are worth noting.
@@ -85,7 +87,7 @@ FC_DEBUG=1 ./basic
 
 The value of the `FC_DEBUG` variable, depending on what you want printed, is
 defined in the
-<a href="https://www.freedesktop.org/software/fontconfig/fontconfig-user.html#DEBUG">Fontconfig documentation</a>.
+[Fontconfig documentation](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html#DEBUG).
 
 @section fonts_installing Installing Fonts
 
@@ -93,14 +95,15 @@ Installing fonts is a system level operation outside of EGT itself.  In most
 cases the font can be copied to /usr/share/fonts, `fc-cache` can be run, and it
 will be automatically found by EGT.
 
-A useful tool to load a font and inspect it can be found at:
+A useful tool to load a font and inspect it can be found
+[here](http://mathew-kurian.github.io/CharacterMap/).
 
-http://mathew-kurian.github.io/CharacterMap/
+@note This may not work work with some fonts, such as as the Google Noto
+Color Emoji font.
 
 While there are hundreds if not thousands of fonts available from all different
 sources under various licenses, both free and non-free, Google provides some
-relatively <a href="https://www.google.com/get/noto/">complete and free fonts
-called Google Noto Fonts</a>.
+relatively [complete and free fonts called Google Noto Fonts](https://www.google.com/get/noto/).
 
 > When text is rendered by a computer, sometimes characters are displayed as
 > “tofu”. They are little boxes to indicate your device doesn’t have a font to
@@ -113,8 +116,8 @@ called Google Noto Fonts</a>.
 > to all. The comprehensive set of fonts and tools used in our development is
 > available in our GitHub repositories.
 
-These Google Noto Fonts also include specific support for many languages requiring
-Unicode support.
+These Google Noto Fonts also include specific support for many languages
+requiring Unicode support.
 
 > Noto Sans CJK and Noto Serif CJK comprehensively cover Simplified Chinese,
 > Traditional Chinese, Japanese, and Korean in a unified font family. This
@@ -129,7 +132,7 @@ Unicode support.
 FreeType is used by EGT to render any font that is available and installed in
 the system.
 
-<a href="https://www.freetype.org/">FreeType</a> is a software font engine that
+[FreeType](https://www.freetype.org/) is a software font engine that
 is designed to be small, efficient, highly customizable, and portable while
 capable of producing high-quality output (glyph images). It can be used in
 graphics libraries, display servers, font conversion tools, text image

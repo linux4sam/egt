@@ -76,10 +76,9 @@ Color comes into play.
 @section draw_cairo Painting Directly with Cairo
 
 The back-end used by Painter is the excellent
-<a href="https://www.cairographics.org/">cairo graphics</a> library.  Which in
-turn uses <a href="http://www.pixman.org/">pixman</a> for optimized pixel
-manipulation.  Both cairo and pixman take advantage of hardware acceleration
-when possible.
+[cairo graphics](https://www.cairographics.org/) library.  Which in turn uses
+[pixman](http://www.pixman.org/) for optimized pixel manipulation.  Both cairo
+and pixman take advantage of hardware acceleration when possible.
 
 To use cairo directly in a Widget::draw() method, get the cairo context by
 calling Painter::context() and then call cairo API functions like normal.
@@ -99,8 +98,8 @@ Painter class in EGT.
 @image latex cairo_drawing.png "Cairo Drawing Model [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]" width=8cm
 
 If you are not familiar with cairo, the
-<a href="https://www.cairographics.org/tutorial/">Cairo Tutorial</a> information
-is very helpful to understand the basics.
+[Cairo Tutorial](https://www.cairographics.org/tutorial/) information is very
+helpful to understand the basics.
 
 @section draw_function Implementing a Draw Function
 
@@ -125,7 +124,7 @@ restoring the state in any Widget::draw() function as this is done automatically
 
 Cairo supports matrix transformations of the coordinate system.  This is an
 advanced topic.  For more information on how this works, see
-<a href="https://cairographics.org/cookbook/matrix_transform/">Cairo Matrix Transformation</a>.
+[Cairo Matrix Transformation](https://cairographics.org/cookbook/matrix_transform/).
 
 An example of doing a transformation in a class derived from an ImageLabel might
 look like this.
