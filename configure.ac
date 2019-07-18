@@ -331,13 +331,6 @@ fi
 AC_CHECK_HEADER([linux/input.h], [have_linux_input_h=yes], [have_linux_input_h=no])
 AM_CONDITIONAL([HAVE_LINUX_INPUT_H], [test "x${have_linux_input_h}" = xyes])
 
-# only used by examples
-PKG_CHECK_MODULES(JSONCPP, [jsoncpp], [have_jsoncpp=yes], [have_jsoncpp=no])
-if test "x${have_jsoncpp}" = xyes; then
-   AC_DEFINE(HAVE_JSONCPP, 1, [Have jsoncpp support])
-fi
-AM_CONDITIONAL([HAVE_JSONCPP], [test "x${have_jsoncpp}" = xyes])
-
 AM_CONDITIONAL([HAVE_BOX2D], [test true])
 AC_DEFINE(HAVE_BOX2D, 1, [Have Box2D support])
 
