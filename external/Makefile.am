@@ -58,4 +58,5 @@ EXTRA_DIST = \
 	layout \
 	kplot/compat.sh \
 	utfcpp \
-	spdlog
+	spdlog \
+	googletest

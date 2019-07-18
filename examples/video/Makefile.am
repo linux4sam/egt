@@ -50,4 +50,5 @@ cameradir = $(prefix)/share/egt/examples/camera
 camera_DATA = $(wildcard $(top_srcdir)/examples/video/*.png)
 camera_LDFLAGS = $(AM_LDFLAGS)
 
-EXTRA_DIST = $(wildcard $(top_srcdir)/examples/video/*.png)
+EXTRA_DIST = $(wildcard $(top_srcdir)/examples/video/*.png) \
+	video.xml

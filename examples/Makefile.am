@@ -237,3 +237,14 @@ tidy-local: all-am
 	done
 
 tidy: tidy-local
+
+EXTRA_DIST = \
+	boards/boards.xml \
+	widgets/widgets.xml \
+	easing/easing.xml \
+	charts/charts.xml \
+	gauge/gauge.xml \
+	whiteboard/whiteboard.xml \
+	calc/calc.xml \
+	space/space.xml \
+	dash/dash.xml
