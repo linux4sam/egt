@@ -792,6 +792,12 @@ public:
     virtual DisplayPoint display_origin();
 
     /**
+     * Get the sum of the margin, padding, and border around the content of the
+     * widget.
+     */
+    virtual size_t moat() const;
+
+    /**
      * Return the area that content is allowed to be positioned into.
      *
      * In most cases, the normal box() area needs to be shrunk by the

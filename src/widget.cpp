@@ -427,12 +427,17 @@ void Widget::detach()
     }
 }
 
+size_t Widget::moat() const
+{
+    return margin() + padding() + border();
+}
+
 Rect Widget::content_area() const
 {
-    auto moat = margin() + padding() + border();
+    auto m = moat();
     auto b = box();
-    b += Point(moat, moat);
-    b -= Size(2. * moat, 2. * moat);
+    b += Point(m, m);
+    b -= Size(2. * m, 2. * m);
     return b;
 }
 
