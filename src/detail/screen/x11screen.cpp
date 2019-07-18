@@ -75,7 +75,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     XSetWMNormalHints(m_priv->display, m_priv->window, sh.get());
 
     XSelectInput(m_priv->display, m_priv->window,
-                 ExposureMask | KeyPressMask | ButtonPress |
+                 ExposureMask | KeyPressMask | ButtonPressMask |
                  StructureNotifyMask | ButtonReleaseMask |
                  KeyReleaseMask | EnterWindowMask | LeaveWindowMask |
                  PointerMotionMask | Button1MotionMask | VisibilityChangeMask |
