@@ -28,7 +28,6 @@ CUSTOM_LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 	$(CODE_COVERAGE_LDFLAGS)
 
 bin_PROGRAMS = \
-animations/animations \
 basic/basic \
 basicui/basicui \
 boards/boards \
@@ -46,14 +45,8 @@ space/space \
 sprite/sprite \
 squares/squares \
 virtualkeyboard/virtualkeyboard \
-water/water \
 whiteboard/whiteboard \
 widgets/widgets
-
-if HAVE_LIBCURL
-bin_PROGRAMS += \
-newsfeed/newsfeed
-endif
 
 if HAVE_GSTREAMER
 bin_PROGRAMS += \
@@ -70,13 +63,6 @@ bin_PROGRAMS += \
 gauge/gauge \
 dash/dash
 endif
-
-animations_animations_SOURCES = animations/animations.cpp
-animations_animations_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-animations_animations_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-animations_animationsdir = $(prefix)/share/egt/examples/animations
-dist_animations_animations_DATA = $(wildcard $(top_srcdir)/examples/animations/*.png)
-animations_animations_LDFLAGS = $(AM_LDFLAGS)
 
 brick_brick_SOURCES = brick/brick.cpp
 brick_brick_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
@@ -131,13 +117,6 @@ sprite_spritedir = $(prefix)/share/egt/examples/sprite
 dist_sprite_sprite_DATA = $(wildcard $(top_srcdir)/examples/sprite/*.png)
 sprite_sprite_LDFLAGS = $(AM_LDFLAGS)
 
-water_water_SOURCES = water/water.cpp
-water_water_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-water_water_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-water_waterdir = $(prefix)/share/egt/examples/water
-dist_water_water_DATA = $(wildcard $(top_srcdir)/examples/water/*.png)
-water_water_LDFLAGS = $(AM_LDFLAGS)
-
 widgets_widgets_SOURCES = widgets/widgets.cpp
 widgets_widgets_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 widgets_widgets_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
@@ -159,13 +138,6 @@ whiteboard_whiteboarddir = $(prefix)/share/egt/examples/whiteboard
 dist_whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*.png) \
 	$(top_srcdir)/examples/whiteboard/whiteboard.xml
 whiteboard_whiteboard_LDFLAGS = $(AM_LDFLAGS)
-
-newsfeed_newsfeed_SOURCES = newsfeed/newsfeed.cpp
-newsfeed_newsfeed_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-newsfeed_newsfeed_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-newsfeed_newsfeeddir = $(prefix)/share/egt/examples/newsfeed
-dist_newsfeed_newsfeed_DATA = $(wildcard $(top_srcdir)/examples/newsfeed/*.xml)
-newsfeed_newsfeed_LDFLAGS = $(AM_LDFLAGS)
 
 drag_drag_SOURCES = drag/drag.cpp
 drag_drag_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
