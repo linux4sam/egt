@@ -94,8 +94,6 @@ void ListBox::remove_item(Widget* widget)
 
 void ListBox::handle(Event& event)
 {
-    Frame::handle(event);
-
     switch (event.id())
     {
     case eventid::pointer_click:
@@ -117,9 +115,14 @@ void ListBox::handle(Event& event)
         event.stop();
         break;
     }
+    case eventid::raw_pointer_down:
+    case eventid::raw_pointer_up:
+        return;
     default:
         break;
     }
+
+    Frame::handle(event);
 }
 
 void ListBox::set_selected(size_t index)
