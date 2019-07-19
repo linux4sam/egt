@@ -141,8 +141,8 @@ protected:
                 }
             }
         }
-        width += 2 * (margin() + padding() + border());
-        height += 2 * (margin() + padding() + border());
+        width += 2 * moat();
+        height += 2 * moat();
 
         if ((align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
             if (width < box().width())
