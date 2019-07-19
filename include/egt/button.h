@@ -184,7 +184,9 @@ public:
                              bool approximate = false)
     {
         m_image.scale(hscale, vscale, approximate);
-        m_box = Rect(m_box.point(), m_image.size());
+        auto new_box_size = Size(m_image.width() + 2 * moat(),
+                                 m_image.height() + 2 * moat());
+        m_box = Rect(m_box.point(), new_box_size);
     }
 
     /**
