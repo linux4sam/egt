@@ -26,20 +26,27 @@ ListBox::ListBox(const Rect& rect) noexcept
 
 ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
     : Frame(rect),
-      m_sizer(make_shared<BoxSizer>(*this, orientation::vertical, justification::start))
+      m_view(make_shared<ScrolledView>(*this, ScrolledView::policy::never)),
+      m_sizer(make_shared<BoxSizer>(orientation::vertical, justification::start))
 {
     set_name("ListBox" + std::to_string(m_widgetid));
-    m_sizer->set_align(alignmask::expand_horizontal);
 
     set_boxtype(Theme::boxtype::blank);
     set_border(theme().default_border());
 
-    for (auto& i : items)
-        add_item_private(i);
+    m_sizer->set_align(alignmask::expand_horizontal);
+
+    m_view->add(m_sizer);
 
     auto carea = content_area();
     if (!carea.empty())
-        m_sizer->set_box(to_child(carea));
+    {
+        m_view->set_box(to_child(carea));
+        m_sizer->resize(carea.size());
+    }
+
+    for (auto& i : items)
+        add_item_private(i);
 }
 
 ListBox::ListBox(Frame& parent, const item_array& items, const Rect& rect) noexcept
@@ -97,7 +104,10 @@ void ListBox::handle(Event& event)
 
         for (size_t i = 0; i < m_sizer->count_children(); i++)
         {
-            if (Rect::point_inside(pos, m_sizer->child_at(i)->box()))
+            auto cbox = m_sizer->child_at(i)->box();
+            cbox.set_y(cbox.y() + m_view->offset().y());
+
+            if (Rect::point_inside(pos, cbox))
             {
                 set_selected(i);
                 break;

@@ -83,11 +83,22 @@ public:
 
     virtual void resize(const Size& size) override;
 
-    virtual Rect content_area() const override;
-
     virtual void layout() override
     {
         Frame::layout();
+
+        if (!visible())
+            return;
+
+        // we cannot layout with no space
+        if (size().empty())
+            return;
+
+        if (m_in_layout)
+            return;
+
+        m_in_layout = true;
+        detail::scope_exit reset([this]() { m_in_layout = false; });
 
         bool hold = hscrollable();
         bool vold = vscrollable();

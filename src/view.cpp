@@ -31,7 +31,6 @@ ScrolledView::ScrolledView(const Rect& rect,
       m_vertical_policy(vertical_policy)
 {
     set_name("ScrolledView" + std::to_string(m_widgetid));
-    set_boxtype(Theme::boxtype::blank);
 
     m_hslider.slider_flags().set({Slider::flag::rectangle_handle,
                                   Slider::flag::consistent_line});
@@ -143,12 +142,9 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
                         origin.y());
     }
 
-    //cairo_surface_write_to_png(m_canvas->surface().get(), "canvas.png");
-
     // limit to content area
     const auto mrect = Rect::intersection(to_child(box()), to_child(content_area()));
 
-    cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
     cairo_set_source_surface(painter.context().get(), m_canvas->surface().get(),
                              m_offset.x(), m_offset.y());
     cairo_rectangle(painter.context().get(),
@@ -162,20 +158,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
 }
 
 /// @todo Hard-coded value
-const auto SLIDER_DIM = 10;
-
-Rect ScrolledView::content_area() const
-{
-    auto b = Frame::content_area();
-
-    if (hscrollable())
-        b -= Size(0, SLIDER_DIM);
-
-    if (vscrollable())
-        b -= Size(SLIDER_DIM, 0);
-
-    return b;
-}
+const auto SLIDER_DIM = 8;
 
 void ScrolledView::resize(const Size& size)
 {
@@ -268,7 +251,6 @@ void ScrolledView::handle(Event& event)
 {
     Widget::handle(event);
 
-#if 1
     switch (event.id())
     {
     case eventid::pointer_drag_start:
@@ -284,7 +266,6 @@ void ScrolledView::handle(Event& event)
     default:
         break;
     }
-#endif
 
     switch (event.id())
     {

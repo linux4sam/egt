@@ -91,6 +91,8 @@ struct StringItem : public ImageLabel
  * @image latex widget_listbox.png "widget_listbox" width=5cm
  *
  * @ingroup controls
+ *
+ * @note This interface only supports a vertical orientation.
  */
 class ListBox : public Frame
 {
@@ -123,22 +125,19 @@ public:
 
     virtual void handle(Event& event) override;
 
-    virtual void layout() override
-    {
-        if (m_sizer)
-            m_sizer->layout();
-    }
-
     virtual void resize(const Size& s) override
     {
         if (s != size())
         {
             Frame::resize(s);
-            if (m_sizer)
+            if (m_view)
             {
                 auto carea = content_area();
                 if (!carea.empty())
-                    m_sizer->set_box(to_child(carea));
+                {
+                    m_view->set_box(to_child(carea));
+                    m_sizer->resize(carea.size());
+                }
             }
         }
     }
@@ -186,6 +185,11 @@ protected:
      * Currently selected index.
      */
     ssize_t m_selected{-1};
+
+    /**
+     * View used to contain the possible large sizer.
+     */
+    std::shared_ptr<ScrolledView> m_view;
 
     /**
      * Internal sizer used to layout items.
