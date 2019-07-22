@@ -70,7 +70,7 @@ public:
     MainWindow()
         : m_box(make_shared<Window>(Size(100, 200))),
           m_seq(true),
-          m_animation(-110, height() - 100, std::chrono::seconds(2)),
+          m_animation(height() - 100, 0, std::chrono::seconds(2)),
           m_delay(std::chrono::seconds(1)),
           m_board()
     {
@@ -148,8 +148,8 @@ int main(int argc, const char** argv)
     Label label1("CPU: ----");
     label1.set_color(Palette::ColorId::label_text, Palette::white);
     label1.set_color(Palette::ColorId::label_bg, Palette::transparent);
-    label1.set_margin(SideBoard::HANDLE_WIDTH);
-    window.add(bottom(left(label1)));
+    label1.set_x(SideBoard::HANDLE_WIDTH);
+    window.add(bottom(label1));
 
     experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
