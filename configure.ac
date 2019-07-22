@@ -368,6 +368,9 @@ AC_PATH_PROG([DOXYGEN_BIN], [doxygen])
 AM_CONDITIONAL([HAVE_DOXYGEN_BIN], [test -n "$DOXYGEN_BIN"])
 AM_COND_IF([HAVE_DOXYGEN_BIN], [AC_CONFIG_FILES([docs/Doxyfile docs/Info.plist])])
 
+AC_PATH_PROG([ASPELL_BIN], [aspell])
+AM_CONDITIONAL([HAVE_ASPELL_BIN], [test -n "$ASPELL_BIN"])
+
 AC_CONFIG_FILES([Makefile
 	src/Makefile
 	external/Makefile

@@ -91,14 +91,16 @@ tidy:
 	@cd src && $(MAKE) $(AM_MAKEFLAGS) $@
 	@cd examples && $(MAKE) $(AM_MAKEFLAGS) $@
 
+if HAVE_ASPELL_BIN
 SPELLCHECK_FILES = `find $(top_srcdir)/docs/src/ $(top_srcdir)/include/ \
 	$(top_srcdir)/src/ $(top_srcdir)/examples/ -name '*.h' \
 	-o -name '*.c' -o -name '*.cpp' -o -name '*.dox'`
 
 spellcheck:
 	for f in $(SPELLCHECK_FILES); do \
-		aspell --mode=ccpp --dont-backup --personal=$(top_srcdir)/.aspell.en.pws check $$f; \
+		$(ASPELL_BIN) --mode=ccpp --dont-backup --personal=$(top_srcdir)/.aspell.en.pws check $$f; \
 	done
+endif
 
 checkheaders:
 	@cd src && $(MAKE) $(AM_MAKEFLAGS) $@
