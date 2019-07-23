@@ -424,6 +424,18 @@ void Widget::zorder_up()
         m_parent->zorder_up(this);
 }
 
+void Widget::zorder_bottom()
+{
+    if (m_parent)
+        m_parent->zorder_bottom(this);
+}
+
+void Widget::zorder_top()
+{
+    if (m_parent)
+        m_parent->zorder_top(this);
+}
+
 void Widget::detach()
 {
     if (m_parent)

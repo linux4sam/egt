@@ -237,6 +237,87 @@ Point Frame::to_panel(const Point& p)
     return p;
 }
 
+void Frame::zorder_down()
+{
+    Widget::zorder_down();
+}
+
+void Frame::zorder_up()
+{
+    Widget::zorder_up();
+}
+
+void Frame::zorder_down(Widget* widget)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const std::shared_ptr<Widget>& ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end() && i != m_children.begin())
+    {
+        auto to = std::prev(i);
+        (*i)->damage();
+        (*to)->damage();
+        std::iter_swap(i, to);
+    }
+}
+
+void Frame::zorder_up(Widget* widget)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const std::shared_ptr<Widget>& ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        auto to = std::next(i);
+        if (to != m_children.end())
+        {
+            (*i)->damage();
+            (*to)->damage();
+            std::iter_swap(i, to);
+        }
+    }
+}
+
+void Frame::zorder_bottom()
+{
+    Widget::zorder_bottom();
+}
+
+void Frame::zorder_top()
+{
+    Widget::zorder_top();
+}
+
+void Frame::zorder_bottom(Widget* widget)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const std::shared_ptr<Widget>& ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        std::rotate(m_children.begin(), i, i + 1);
+    }
+}
+
+void Frame::zorder_top(Widget* widget)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const std::shared_ptr<Widget>& ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        std::rotate(i, i + 1, m_children.end());
+    }
+}
+
 void Frame::draw(Painter& painter, const Rect& rect)
 {
     SPDLOG_TRACE("{} rect:{}", name(), rect);

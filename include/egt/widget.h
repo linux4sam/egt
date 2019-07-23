@@ -769,6 +769,16 @@ public:
     virtual void zorder_up();
 
     /**
+     * Move the widget to the bottom.
+     */
+    virtual void zorder_bottom();
+
+    /**
+     * Move the widget to the top.
+     */
+    virtual void zorder_top();
+
+    /**
      * Detach this widget from its parent.
      */
     void detach();

@@ -296,15 +296,9 @@ public:
      */
     virtual Point to_panel(const Point& p);
 
-    virtual void zorder_down() override
-    {
-        Widget::zorder_down();
-    }
+    virtual void zorder_down() override;
 
-    virtual void zorder_up() override
-    {
-        Widget::zorder_up();
-    }
+    virtual void zorder_up() override;
 
     /**
      * Move the specified widget zorder down relative to other widgets with the
@@ -312,21 +306,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_down(Widget* widget)
-    {
-        auto i = std::find_if(m_children.begin(), m_children.end(),
-                              [widget](const std::shared_ptr<Widget>& ptr)
-        {
-            return ptr.get() == widget;
-        });
-        if (i != m_children.end() && i != m_children.begin())
-        {
-            auto to = std::prev(i);
-            (*i)->damage();
-            (*to)->damage();
-            std::iter_swap(i, to);
-        }
-    }
+    virtual void zorder_down(Widget* widget);
 
     /**
      * Move the specified widget zorder up relative to other widgets with the
@@ -334,24 +314,27 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_up(Widget* widget)
-    {
-        auto i = std::find_if(m_children.begin(), m_children.end(),
-                              [widget](const std::shared_ptr<Widget>& ptr)
-        {
-            return ptr.get() == widget;
-        });
-        if (i != m_children.end())
-        {
-            auto to = std::next(i);
-            if (to != m_children.end())
-            {
-                (*i)->damage();
-                (*to)->damage();
-                std::iter_swap(i, to);
-            }
-        }
-    }
+    virtual void zorder_up(Widget* widget);
+
+    virtual void zorder_bottom() override;
+
+    virtual void zorder_top() override;
+
+    /**
+     * Move the specified widget zorder to the bottom of the current list of widgets
+     * with the same parent.
+     *
+     * @param widget The widget.
+     */
+    virtual void zorder_bottom(Widget* widget);
+
+    /**
+     * Move the specified widget zorder to the top of the current list of widgets
+     * with the same parent.
+     *
+     * @param widget The widget.
+     */
+    virtual void zorder_top(Widget* widget);
 
     /**
      * Get the widget under the given DisplayPoint.
