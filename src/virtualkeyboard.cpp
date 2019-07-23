@@ -915,7 +915,7 @@ VirtualKeyboard::panel_keys& QwertyLettersUpperCase()
             make_shared<VirtualKeyboard::Key>(0x004b, multichoice_K()),
             make_shared<VirtualKeyboard::Key>(0x004c, multichoice_L())
         }, {
-            make_shared<VirtualKeyboard::Key>("\ua71b", 1, 1.5),
+            make_shared<VirtualKeyboard::Key>("\ua71b", 0, 1.5),
             make_shared<VirtualKeyboard::Key>(0x005a, multichoice_Z()),
             make_shared<VirtualKeyboard::Key>(0x0058),
             make_shared<VirtualKeyboard::Key>(0x0043, multichoice_C()),
