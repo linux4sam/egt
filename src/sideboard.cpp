@@ -25,13 +25,10 @@ SideBoard::SideBoard(flags f,
     m_oanim.set_easing_func(open_func);
     m_canim.set_easing_func(close_func);
 
+    reset_animations();
+
     if (is_set(flags::left))
     {
-        m_oanim.set_starting(-main_screen()->size().width());
-        m_oanim.set_ending(0);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
-
         m_oanim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
         m_canim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
 
@@ -39,11 +36,6 @@ SideBoard::SideBoard(flags f,
     }
     else if (is_set(flags::right))
     {
-        m_oanim.set_starting(main_screen()->size().width() - HANDLE_WIDTH);
-        m_oanim.set_ending(-HANDLE_WIDTH);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
-
         m_oanim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
         m_canim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
 
@@ -51,11 +43,6 @@ SideBoard::SideBoard(flags f,
     }
     else if (is_set(flags::top))
     {
-        m_oanim.set_starting(-main_screen()->size().height());
-        m_oanim.set_ending(0);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
-
         m_oanim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
         m_canim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
 
@@ -63,15 +50,42 @@ SideBoard::SideBoard(flags f,
     }
     else if (is_set(flags::bottom))
     {
-        m_oanim.set_starting(main_screen()->size().height() - HANDLE_WIDTH);
-        m_oanim.set_ending(-HANDLE_WIDTH);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
-
         m_oanim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
         m_canim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
 
         move(Point(0, m_oanim.starting()));
+    }
+}
+
+void SideBoard::reset_animations()
+{
+    if (is_set(flags::left))
+    {
+        m_oanim.set_starting(-main_screen()->size().width());
+        m_oanim.set_ending(0);
+        m_canim.set_starting(m_oanim.ending());
+        m_canim.set_ending(m_oanim.starting());
+    }
+    else if (is_set(flags::right))
+    {
+        m_oanim.set_starting(main_screen()->size().width() - HANDLE_WIDTH);
+        m_oanim.set_ending(-HANDLE_WIDTH);
+        m_canim.set_starting(m_oanim.ending());
+        m_canim.set_ending(m_oanim.starting());
+    }
+    else if (is_set(flags::top))
+    {
+        m_oanim.set_starting(-main_screen()->size().height());
+        m_oanim.set_ending(0);
+        m_canim.set_starting(m_oanim.ending());
+        m_canim.set_ending(m_oanim.starting());
+    }
+    else if (is_set(flags::bottom))
+    {
+        m_oanim.set_starting(main_screen()->size().height() - HANDLE_WIDTH);
+        m_oanim.set_ending(-HANDLE_WIDTH);
+        m_canim.set_starting(m_oanim.ending());
+        m_canim.set_ending(m_oanim.starting());
     }
 }
 
@@ -97,26 +111,29 @@ void SideBoard::handle(Event& event)
 
 void SideBoard::close()
 {
-    if (m_oanim.running())
-    {
-        m_oanim.stop();
-        m_canim.set_starting(m_oanim.current());
-    }
+    m_canim.stop();
+    auto running = m_oanim.running();
+    m_oanim.stop();
+    auto current = m_oanim.current();
+    reset_animations();
+    if (running)
+        m_canim.set_starting(current);
     m_canim.start();
     m_dir = false;
 }
 
 void SideBoard::open()
 {
-    if (m_oanim.running())
-    {
-        m_canim.stop();
-        m_oanim.set_starting(m_canim.current());
-    }
+    m_oanim.stop();
+    auto running = m_canim.running();
+    m_canim.stop();
+    auto current = m_canim.current();
+    reset_animations();
+    if (running)
+        m_oanim.set_starting(current);
     m_oanim.start();
     m_dir = true;
 }
-
 
 }
 }

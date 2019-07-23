@@ -61,6 +61,11 @@ protected:
     inline bool is_set(flags f) const;
 
     /**
+     * Reset animation start/end values.
+     */
+    void reset_animations();
+
+    /**
      * Sideboard flags.
      */
     flags m_side_flags{flags::left};
