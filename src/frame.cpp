@@ -99,8 +99,7 @@ void Frame::handle(Event& event)
             if (Rect::point_inside(pos, child->box()))
             {
                 child->handle(event);
-                if (event.quit())
-                    return;
+                break;
             }
         }
 
