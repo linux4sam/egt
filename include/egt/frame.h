@@ -337,6 +337,15 @@ public:
     virtual void zorder_top(Widget* widget);
 
     /**
+     * Get the zorder of the widget.
+     *
+     * @param widget The widget.
+     */
+    virtual size_t zorder(const Widget* widget) const;
+
+    virtual size_t zorder() const override;
+
+    /**
      * Get the widget under the given DisplayPoint.
      *
      * @return The widget pointer or nullptr if not found.

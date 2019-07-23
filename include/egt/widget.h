@@ -779,6 +779,11 @@ public:
     virtual void zorder_top();
 
     /**
+     * Get the zorder of the widget.
+     */
+    virtual size_t zorder() const;
+
+    /**
      * Detach this widget from its parent.
      */
     void detach();

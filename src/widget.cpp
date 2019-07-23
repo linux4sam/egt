@@ -377,6 +377,7 @@ void Widget::dump(std::ostream& out, int level)
         " " << box() << " " << flags();
     out << " box(" << margin() << "," << padding() << "," << border() << ")";
     out << " align(" << align() << ")";
+    out << " zorder(" << zorder() << ")";
     out << std::endl;
 }
 
@@ -434,6 +435,14 @@ void Widget::zorder_top()
 {
     if (m_parent)
         m_parent->zorder_top(this);
+}
+
+size_t Widget::zorder() const
+{
+    if (m_parent)
+        return m_parent->zorder(this);
+
+    return 0;
 }
 
 void Widget::detach()

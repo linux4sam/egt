@@ -317,6 +317,26 @@ void Frame::zorder_top(Widget* widget)
     }
 }
 
+size_t Frame::zorder(const Widget* widget) const
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const std::shared_ptr<Widget>& ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        return std::distance(m_children.begin(), i);
+    }
+
+    return 0;
+}
+
+size_t Frame::zorder() const
+{
+    return Widget::zorder();
+}
+
 void Frame::draw(Painter& painter, const Rect& rect)
 {
     SPDLOG_TRACE("{} rect:{}", name(), rect);
