@@ -45,7 +45,7 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     }, {eventid::property_changed});
 
     if (m_filepath.empty())
-        m_filepath = fs::current_path();
+        m_filepath = fs::current_path().string();
 
     SPDLOG_DEBUG("FileDialog done");
 }
@@ -68,7 +68,7 @@ bool FileDialog::list_files(const std::string& filepath)
          * files of parent directory.
          */
         fs::path p = filepath;
-        m_filepath = p.parent_path();
+        m_filepath = p.parent_path().string();
     }
 
     m_title->set_text(m_filepath);
@@ -88,7 +88,7 @@ bool FileDialog::list_files(const std::string& filepath)
     {
         for (auto& dir : fs::directory_iterator(m_filepath))
         {
-            m_flist->add_item(std::make_shared<StringItem>(dir.path().filename(), Rect(), alignmask::left | alignmask::center));
+            m_flist->add_item(std::make_shared<StringItem>(dir.path().filename().string(), Rect(), alignmask::left | alignmask::center));
         }
     }
     catch (const fs::filesystem_error& ex)
@@ -115,7 +115,7 @@ void FileDialog::list_item_selected(int index)
     else if (fselect == "../")
     {
         fs::path p = m_filepath;
-        m_filepath = p.parent_path();
+        m_filepath = p.parent_path().string();
         SPDLOG_DEBUG("FileDialog : parent dir {}", m_filepath);
         set_selected("");
         list_files(m_filepath);

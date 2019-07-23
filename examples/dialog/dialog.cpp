@@ -49,7 +49,7 @@ int main(int argc, const char** argv)
     label1->set_color(Palette::ColorId::border, Palette::transparent);
     hsizer->add(label1);
 
-    std::string RootDir = fs::current_path();
+    std::string RootDir = fs::current_path().string();
 
     auto win1 = std::make_shared<FileOpenDialog>(RootDir, Rect(0, 0, 640, 432));
     win1->on_event([win1, label1, list](Event&)
