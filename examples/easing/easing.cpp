@@ -71,8 +71,7 @@ public:
         : m_box(make_shared<Window>(Size(100, 200))),
           m_seq(true),
           m_animation(height() - 100, 0, std::chrono::seconds(2)),
-          m_delay(std::chrono::seconds(1)),
-          m_board()
+          m_delay(std::chrono::seconds(1))
     {
         auto imgicon = make_shared<ImageLabel>(Image("@cursor_hand.png"));
         imgicon->set_margin(5);
@@ -129,6 +128,8 @@ public:
         m_seq.add(m_animation);
         m_seq.add(m_delay);
         m_seq.start();
+
+        m_board.zorder_top();
     }
 
 private:
