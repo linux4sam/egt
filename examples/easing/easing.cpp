@@ -121,6 +121,7 @@ public:
         m_box->set_boxtype(Theme::boxtype::none);
         m_box->add(image);
         m_box->move(Point(width() / 2 - m_box->width() / 2, -110));
+        m_box->flags().set(Widget::flag::no_layout);
         m_box->show();
         add(m_box);
 

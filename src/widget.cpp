@@ -93,6 +93,10 @@ void Widget::resize(const Size& s)
         damage();
         m_box.set_size(s);
         damage();
+
+        if (flags().is_set(Widget::flag::no_layout))
+            return;
+
         parent_layout();
     }
 }
@@ -112,7 +116,9 @@ void Widget::move(const Point& point)
         m_box.set_point(point);
         damage();
 
-        /// @todo this is too expensive for animations
+        if (flags().is_set(Widget::flag::no_layout))
+            return;
+
         parent_layout();
     }
 }
