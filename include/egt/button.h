@@ -173,20 +173,19 @@ public:
     /**
      * Scale the image.
      *
-     * Change the size of the widget, similar to calling resize().
+     * Change the size of the image.
      *
      * @param[in] hscale Horizontal scale, with 1.0 being 100%.
      * @param[in] vscale Vertical scale, with 1.0 being 100%.
      * @param[in] approximate Approximate the scale to increase image cache
      *            hit efficiency.
+     *
+     * @warning This does not damage the widget.
      */
     virtual void scale_image(double hscale, double vscale,
                              bool approximate = false)
     {
         m_image.scale(hscale, vscale, approximate);
-        auto new_box_size = Size(m_image.width() + 2 * moat(),
-                                 m_image.height() + 2 * moat());
-        m_box = Rect(m_box.point(), new_box_size);
     }
 
     /**
@@ -195,6 +194,8 @@ public:
      * @param[in] s Vertical and horizontal scale, with 1.0 being 100%.
      * @param[in] approximate Approximate the scale to increase image cache
      *            hit efficiency.
+     *
+     * @warning This does not damage the widget.
      */
     virtual void scale_image(double s, bool approximate = false)
     {
