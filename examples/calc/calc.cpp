@@ -41,6 +41,7 @@ int main(int argc, const char** argv)
     text.set_font(Font(25));
     text.set_color(Palette::ColorId::bg, Color(0x272727ff));
     text.set_color(Palette::ColorId::text, Palette::white);
+    text.set_readonly(true);
     vsizer.add(expand(text));
 
     vector<vector<string>> buttons =
