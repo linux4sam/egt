@@ -40,6 +40,7 @@ void TextWidget::set_text(const std::string& str)
     {
         invoke_handlers(eventid::property_changed);
         damage();
+        parent_layout();
     }
 }
 
