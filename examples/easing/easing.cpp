@@ -152,6 +152,11 @@ int main(int argc, const char** argv)
     label1.set_x(SideBoard::HANDLE_WIDTH);
     window.add(bottom(label1));
 
+    ImageLabel logo(Image("@128px/egt_logo_white.png"));
+    logo.set_x(SideBoard::HANDLE_WIDTH);
+    logo.set_margin(10);
+    window.add(top(logo));
+
     experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&label1, &tools]()
