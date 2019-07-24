@@ -143,7 +143,8 @@ drag_drag_SOURCES = drag/drag.cpp
 drag_drag_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 drag_drag_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 drag_dragdir = $(prefix)/share/egt/examples/drag
-dist_drag_drag_DATA = $(wildcard $(top_srcdir)/examples/drag/*.png)
+dist_drag_drag_DATA = $(wildcard $(top_srcdir)/examples/drag/*.png) \
+	$(top_srcdir)/examples/drag/drag.xml
 drag_drag_LDFLAGS = $(AM_LDFLAGS)
 
 squares_squares_SOURCES = squares/squares.cpp
