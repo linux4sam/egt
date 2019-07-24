@@ -33,6 +33,10 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::black);
 
+    auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
+    logo->set_margin(10);
+    win.add(top(center(logo)));
+
     StaticGrid grid(Tuple(2, 2));
     grid.set_color(Palette::ColorId::border, Palette::transparent);
     win.add(expand(grid));
