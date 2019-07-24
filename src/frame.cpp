@@ -524,6 +524,9 @@ void Frame::layout()
     if (m_in_layout)
         return;
 
+    if (m_children.empty())
+        return;
+
     m_in_layout = true;
     detail::scope_exit reset([this]() { m_in_layout = false; });
 
