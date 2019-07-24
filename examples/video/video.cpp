@@ -59,14 +59,13 @@ int main(int argc, const char** argv)
         win.add(label);
     }, {eventid::event2});
 
-    auto ctrlwindow = make_shared< Window>(Size(win.width(), 72));
+    auto ctrlwindow = make_shared<Window>(Size(win.width(), 72));
     ctrlwindow->set_align(alignmask::bottom | alignmask::center);
     win.add(ctrlwindow);
     ctrlwindow->set_color(Palette::ColorId::bg, Palette::transparent);
 
     HorizontalBoxSizer hpos;
     hpos.resize(ctrlwindow->size());
-    hpos.set_name("grid");
     ctrlwindow->add(hpos);
 
     ImageButton playbtn(Image(":pause_png"));
@@ -163,7 +162,7 @@ int main(int argc, const char** argv)
         return 0;
     }, {eventid::pointer_click});
 
-    Label label1("CPU: 0%", Rect(Point(0, 0), Size(100, 40)));
+    Label label1("CPU: 0%");
     label1.set_color(Palette::ColorId::label_text, Palette::white);
     label1.set_color(Palette::ColorId::bg, Palette::transparent);
     hpos.add(label1);
@@ -174,7 +173,7 @@ int main(int argc, const char** argv)
     {
         tools.update();
         ostringstream ss;
-        ss << "CPU: " << (int)tools.usage(0) << "%";
+        ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
         label1.set_text(ss.str());
     });
     cputimer.start();
