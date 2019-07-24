@@ -143,8 +143,8 @@ public:
         set_boxtype(Theme::boxtype::none);
         set_color(Palette::ColorId::bg, Palette::white);
 
-        m_grid = make_shared<VerticalBoxSizer>(*this);
-        top(left(m_grid));
+        m_sizer = make_shared<VerticalBoxSizer>(*this);
+        top(left(m_sizer));
 
         m_colorbtn.set_boxtype(Theme::boxtype::none);
         m_fillbtn.set_boxtype(Theme::boxtype::none);
@@ -160,10 +160,10 @@ public:
         add(m_fillpicker);
         add(m_widthpicker);
 
-        m_grid->add(m_colorbtn);
-        m_grid->add(m_fillbtn);
-        m_grid->add(m_widthbtn);
-        m_grid->add(m_clearbtn);
+        m_sizer->add(m_colorbtn);
+        m_sizer->add(m_fillbtn);
+        m_sizer->add(m_widthbtn);
+        m_sizer->add(m_clearbtn);
 
         m_colorbtn.on_event([this](Event&)
         {
@@ -192,7 +192,7 @@ public:
             damage();
         }, {eventid::hide});
 
-        auto logo = make_shared<ImageLabel>(Image("@128px/microchip_logo_black.png"));
+        auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
         logo->set_align(alignmask::right | alignmask::top);
         logo->set_margin(10);
         add(logo);
@@ -220,7 +220,6 @@ public:
             break;
         case eventid::pointer_drag:
         {
-
             auto mouse = display_to_local(event.pointer().point);
 
             if (m_last != mouse)
@@ -265,7 +264,7 @@ public:
     }
 
     Point m_last;
-    shared_ptr<VerticalBoxSizer> m_grid;
+    shared_ptr<VerticalBoxSizer> m_sizer;
     ImageButton m_colorbtn;
     ImageButton m_fillbtn;
     ImageButton m_widthbtn;
