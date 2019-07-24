@@ -218,6 +218,9 @@ Size ImageLabel::min_size_hint() const
         (m_image_align & alignmask::expand_vertical) == alignmask::expand_vertical)
         return Widget::min_size_hint();
 
+    if (!m_text.empty())
+        return m_image.size() + Label::min_size_hint();
+
     return m_image.size() + Widget::min_size_hint();
 }
 
