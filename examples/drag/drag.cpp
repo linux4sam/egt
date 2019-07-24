@@ -26,11 +26,6 @@ public:
         set_boxtype(Theme::boxtype::none);
         m_img.set_align(alignmask::expand);
         m_img.set_image_align(alignmask::expand);
-
-        auto logo = make_shared<ImageLabel>(Image("@128px/microchip_logo_white.png"));
-        logo->set_align(alignmask::left | alignmask::top);
-        logo->set_margin(10);
-        add(logo);
     }
 
     ImageLabel m_img;
@@ -82,35 +77,40 @@ protected:
     ImageLabel m_grip;
     ImageLabel m_arrows;
     Point m_start_point;
+    PropertyAnimator m_animationx;
+    PropertyAnimator m_animationy;
 };
 
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "drag");
 
-    MainWindow win;
+    MainWindow window;
 
-    FloatingBox box1(Rect(Ratio<int>(win.width(), 20),
-                          Ratio<int>(win.height(), 20),
-                          Ratio<int>(win.width(), 20),
-                          Ratio<int>(win.width(), 20)));
-    win.add(box1);
+    FloatingBox box1(Rect(Ratio<int>(window.width(), 20),
+                          Ratio<int>(window.height(), 20),
+                          Ratio<int>(window.width(), 20),
+                          Ratio<int>(window.width(), 20)));
+    window.add(box1);
 
-    FloatingBox box2(Rect(Ratio<int>(win.width(), 20) * 3,
-                          Ratio<int>(win.height(), 20),
-                          Ratio<int>(win.width(), 20),
-                          Ratio<int>(win.width(), 20)));
-    win.add(box2);
+    FloatingBox box2(Rect(Ratio<int>(window.width(), 20) * 3,
+                          Ratio<int>(window.height(), 20),
+                          Ratio<int>(window.width(), 20),
+                          Ratio<int>(window.width(), 20)));
+    window.add(box2);
 
     box1.show();
     box2.show();
 
     Label label1("CPU: ----", Rect(), alignmask::left | alignmask::center);
     label1.set_align(alignmask::left | alignmask::bottom);
-    label1.set_color(Palette::ColorId::text, Palette::white);
+    label1.set_color(Palette::ColorId::label_text, Palette::white);
     label1.set_color(Palette::ColorId::bg, Palette::transparent);
+    window.add(label1);
 
-    win.add(label1);
+    ImageLabel logo(Image("@128px/egt_logo_white.png"));
+    logo.set_margin(10);
+    window.add(center(top(logo)));
 
     experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
@@ -124,7 +124,7 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
-    win.show();
+    window.show();
 
     return app.run();
 }
