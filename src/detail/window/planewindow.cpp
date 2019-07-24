@@ -74,8 +74,6 @@ void PlaneWindow::set_scale(float scale)
 
 void PlaneWindow::move(const Point& point)
 {
-    SPDLOG_TRACE(m_interface->name());
-
     if (point != m_interface->box().point())
     {
         m_interface->m_box.set_point(point);
@@ -118,8 +116,6 @@ void PlaneWindow::top_draw()
 {
     if (!m_interface->box().size().empty())
     {
-        SPDLOG_TRACE(m_interface->name());
-
         if (m_interface->visible())
         {
             if (m_dirty)

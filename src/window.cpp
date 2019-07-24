@@ -138,6 +138,8 @@ void Window::paint(Painter& painter)
 
 void Window::top_draw()
 {
+    SPDLOG_TRACE("{} top draw", name());
+
     if (m_impl)
         m_impl->top_draw();
 }
@@ -157,7 +159,7 @@ void Window::do_draw()
     m_in_draw = true;
     detail::scope_exit reset([this]() { m_in_draw = false; });
 
-    SPDLOG_TRACE("{}", name());
+    SPDLOG_TRACE("{} do draw", name());
 
     Painter painter(screen()->context());
 

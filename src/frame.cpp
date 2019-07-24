@@ -339,7 +339,7 @@ size_t Frame::zorder() const
 
 void Frame::draw(Painter& painter, const Rect& rect)
 {
-    SPDLOG_TRACE("{} rect:{}", name(), rect);
+    SPDLOG_TRACE("{} draw {}", name(), rect);
 
     Painter::AutoSaveRestore sr(painter);
 

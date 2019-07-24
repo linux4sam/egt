@@ -48,7 +48,7 @@ void Widget::handle(Event& event)
     if (event.quit())
         return;
 
-    SPDLOG_TRACE("{} handle: {}", name(), event);
+    SPDLOG_TRACE("{} handle {}", name(), event);
 
     switch (event.id())
     {
