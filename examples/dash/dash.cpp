@@ -34,6 +34,10 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Color::css("#1b1d43"));
 
+    auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
+    logo->set_margin(10);
+    win.add(top(left(logo)));
+
     auto f = 1.50375;
 
     // the gauge
