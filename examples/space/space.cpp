@@ -73,6 +73,10 @@ public:
     MainWindow()
     {
         set_color(Palette::ColorId::bg, Palette::black);
+
+        auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
+        logo->set_margin(10);
+        add(top(left(logo)));
     }
 
     void handle(Event& event) override
