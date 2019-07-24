@@ -310,6 +310,7 @@ struct CursorWindow : public Window
         m_label->set_boxtype(Theme::boxtype::none);
         add(m_label);
         flags().set(Widget::flag::no_layout);
+        set_readonly(true);
     }
 
     virtual void handle(Event&) override
