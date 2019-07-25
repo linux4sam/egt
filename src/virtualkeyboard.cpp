@@ -87,6 +87,8 @@ void VirtualKeyboard::Key::set_font(const Font& font)
 VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
     : Frame(rect)
 {
+    set_name("VirtualKeyboard" + std::to_string(m_widgetid));
+
     m_main_panel.set_align(alignmask::expand);
     add(m_main_panel);
 
