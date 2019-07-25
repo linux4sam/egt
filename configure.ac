@@ -333,6 +333,7 @@ AM_CONDITIONAL([HAVE_LINUX_INPUT_H], [test "x${have_linux_input_h}" = xyes])
 
 AC_CHECK_PROG(XXD, xxd, yes)
 if test "x${XXD}" != x"yes"; then
+if test "x${enable_examples}" = xyes; then
    AC_MSG_ERROR("Cannot find xxd. This is required.")
 fi
 fi
