@@ -3,7 +3,7 @@ namespace egt { inline namespace v1 {
 
  @page debug Debugging
 
-There are many resources, and as always, tricks to debug an EGT application.
+There are many resources and, as always, tricks to debug an EGT application.
 
 @section debug_environ Environment Variables
 
@@ -12,13 +12,13 @@ useful for debugging.  Specifically, configuring logging internal to EGT.
 
 @section debug_gdb GDB Tips
 
-EGT uses asserts internally.  Make sure and compile the library without -DNDEBUG
+EGT uses asserts internally.  Be sure to compile the library without -DNDEBUG
 and then you can break on any assert using GDB to examine the callstack and the
 state of the application.  EGT will compile with asserts enabled by default.
 See @subpage started_configure for more information on compile time options.
 
-Issue the following in a GDB session to break on an assert, before the program
-aborts.
+Issue the following in a GDB session to break on an assert before the program
+aborts:
 
 @code
 break __assert_fail
@@ -37,12 +37,15 @@ r
 bt
 @endcode
 
-Running GDB right in the build directory without having to install the examples.
+@section debug_libtool Using GDB Without Installing Examples
+
+Running GDB right in the build directory without having to install the examples
+takes some special consideration.
 
 When libtool is used, it creates wrapper scripts that appear to be the
 executable.  It does this so that any built libraries can be automatically found.
 However, when you want to run GDB, you can't exactly run them on the wrapper
-scripts.  Still, libtool provides a way to do it.
+scripts.  However, libtool provides a way to do it.
 
 @code
 libtool --mode=execute gdb basic
@@ -85,7 +88,7 @@ cairo-perf-trace thermostat.26611.trace
 @section debug_tree Dump Widget Tree
 
 In code, Application::dump() can be called to print the widget tree to an ostream.
-However, the default Application instance installs a signal handler to do the
+However, the default application instance installs a signal handler to do the
 same thing.  So, you can send the signal SIGUSR1 to an EGT process and it will
 automatically print the widget tree.
 
@@ -98,9 +101,9 @@ killall -SIGUSR1 binary-name
 @section debug_screenshot Save Screenshot
 
 In code, Application::paint_to_file() can be called to save a screenshot to a
-PNG file. However, the default Application instance installs a signal handler to
+PNG file. However, the default application instance installs a signal handler to
 do the same thing.  So, you can send the signal SIGUSR2 to an EGT process and it
-will automatically save a screenshot a file.
+will automatically save a screenshot file.
 
 @code{.sh}
 killall -SIGUSR2 binary-name

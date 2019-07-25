@@ -4,9 +4,9 @@ namespace egt { inline namespace v1 {
  @page started Getting Started
 
 There are various ways to get started with EGT depending on your requirements.
-If building for an Microchip MPU Xplained or EK type board, visit
+If building for a Microchip MPU Xplained or EK type board, visit
 [Linux4SAM](http://www.at91.com/linux4sam/bin/view/Linux4SAM). If you
-are building EGT on a PC you can start by just fetching the source of the EGT
+are building EGT on a PC, you can start by just fetching the source of the EGT
 project.  If you are developing for and deploying to a target board, the easiest
 way to work with EGT is part of a buildroot SDK which already includes a cross
 compiler and all of the necessary dependencies and tools.
@@ -30,7 +30,7 @@ git submodules in the project.
 EGT uses the GNU autotools, like autoconf and automake, for building on Linux
 platforms.
 
-To build for a PC, first install recommended dependencies:
+To build for a PC, first install the recommended dependencies:
 
 @code{.sh}
 sudo apt-get install build-essential automake autoconf libtool pkg-config \
@@ -99,7 +99,7 @@ enable gcc's LTO [default=no]
 
 EGT is included as a package as part of the
 [buildroot-external-microchip](https://github.com/linux4sam/buildroot-external-microchip)
-project. To build a complete SDK and target filesystem for a board follow the
+project. To build a complete SDK and target filesystem for a board, follow the
 instructions found in that project's README with the following versions.
 
 @code{.sh}

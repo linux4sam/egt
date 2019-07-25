@@ -12,7 +12,7 @@ Animation, AnimationSequence, AutoAnimation, and
 PropertyAnimatorType classes all provide ways to animate almost anything.
 
 On top of these base animation classes, there are also higher order classes such
-as Sprite that provides a built in way to animate sprite sheets and
+as Sprite that provide a built in way to animate sprite sheets and
 even different strips within the same sheet.  A benefit of having EGT do this is
 it can use hardware accelerated composition to animate the Sprite when
 available.
@@ -24,11 +24,11 @@ over some period of time.
 @image html easing_graph.png "Easing Curve Graph"
 @image latex easing_graph.png "Easing Curve Graph" width=8cm
 
-Of course, the interesting question is how is that value computed over a
-specified time-frame?  The most straightforward answer is just linearly.  The
+Of course the interesting question is how is that value computed over a
+specified timeframe?  The most straightforward answer is just linearly.  The
 min value is at the starting time and the max value is at ending time, and every
-value in-between is evenly spread out.  However, more complex versions of this
-are necessary to add some life and diversity to animations.  In comes the idea
+value inbetween is evenly spread out.  However, more complex versions of this
+are necessary to add some life and diversity to animations, which leads to the idea
 of easing functions.  Easing functions define what that value should be, linear
 or otherwise.
 
@@ -40,9 +40,9 @@ easing function or select one of the predefined ones.
 
 All easing functions take a percent time, and return a percent value.  They have
 a very simple API, but what happens inside the easing function can be anywhere
-from a simple liner value to a complex mathematical curve. For example, the
+from a simple linear value to a complex mathematical curve. For example, the
 simplest of easing functions is the easing_linear() function that is
-implemented like so:
+implemented like this:
 
 @code{.cpp}
 float_t easing_linear(float_t p)
@@ -55,7 +55,7 @@ float_t easing_linear(float_t p)
 @image html easing/easing_linear.png "Linear Easing Curve"
 @image latex easing/easing_linear.png "Linear Easing Curve" width=8cm
 
-A more complicated easing function, might include a circular calculation.
+A more complicated easing function might include a circular calculation:
 
 @code{.cpp}
 float_t easing_circular_easein(float_t p)

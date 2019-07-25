@@ -16,7 +16,7 @@ GUI based applications that make the best use of the hardware available.
 [Linux4SAM](http://www.at91.com/linux4sam/bin/view/Linux4SAM).
 
 EGT uses and provides a standard API to many different third party and system
-libraries and resources.  Here are some of them.
+libraries and resources.  Here are some of them:
 
 @imageSize{egt_libs.png,max-width:90%;height:auto;}
 @image html egt_libs.png "Integration"
@@ -31,7 +31,7 @@ well defined API and an organization of features, properties, and methods that
 makes creating user interfaces easier and more consistent. This can mean
 creating an API to the operating system or various system libraries.  In
 addition, a toolkit may provide various tools that make creating graphical
-applications easier for both programmers and graphics artists.
+applications easier for both programmers and graphic artists.
 
 In order to accomplish this, EGT contains several different layers of software,
 with the application code expected to be sitting on top.
@@ -58,12 +58,12 @@ for drawing plain shapes.  And of course, the @ref media widgets handle playing
 audio and video related media.
 
 And then, there are some framework and application level classes like
-Application, EventLoop, Input, Screen, @ref timers, and Event help everything
+Application, EventLoop, Input, Screen, @ref timers, and Event that help everything
 work together.
 
 @section intro_features EGT Features
 
-This is a list of high level features generally support and provided by EGT.
+This is a list of high level features generally supported and provided by EGT:
 
 - Anti-aliased 2D vector graphics.
 - Modern C++11 design and simplicity.

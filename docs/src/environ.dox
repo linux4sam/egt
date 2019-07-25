@@ -7,7 +7,7 @@ This chapter discusses several environment variables that can be used to
 configure the EGT library at runtime.
 
 EGT will look at several runtime environment variables to change the operation
-of the library.  For example, you can change some configuration and set log
+of the library.  For example, you can change some configurations and set log
 levels using environment variables.
 
 <dl>
@@ -63,7 +63,7 @@ levels using environment variables.
   <dt>EGT_ICONS_DIRECTORY</dt>
   <dd>
     Change EGT installed default icons directory with a absolute path or directory name.
-    If a directory name is set, then this directory name will be appended with a EGT
+    If a directory name is set, then this directory name will be appended with an EGT
     installed default icons directory path.
     examples: /home/egt/icons, 64px, /usr/share/libegt/icons/128px.
 

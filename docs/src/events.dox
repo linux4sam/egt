@@ -26,16 +26,16 @@ cause the event loop to exit.
 The event loop in EGT is implemented with the [Asio](https://think-async.com/)
 library.  Asio is a cross-platform C++ library for network and low-level I/O
 programming that provides developers with a consistent asynchronous model using
-a modern C++ approach.  Asio can be used as part of boost or standalone, and EGT
-comes with the standalone version built in. Asio provides way more features than
+a modern C++ approach.  Asio can be used as part of the boost or standalone, and EGT
+comes with the standalone version built in. Asio provides more features than
 what is directly used by EGT.
 
 @imageSize{asio.png,width:400px;}
 @image html asio.png "Asio"
 @image latex asio.png "Asio" width=8cm
 
-EGT abstracts out any required direct involvement with Asio, however, should you
-choose to use it directly it is available for use in, for example, @ref
+EGT abstracts out any required direct involvement with Asio; however, should you
+choose to use it directly, it is available for use in, for example, @ref
 topics_networking "networking" and @ref topics_threads "multi-threaded"
 applications. [Asio Documentation](http://think-async.com/Asio/asio-1.12.2/doc/index.html)
 is a good reference point if you want to start using the Asio API directly.
@@ -49,7 +49,7 @@ timers, or networking sockets.
 
 Events are usually propagated from the top level widget down.  There are
 exceptions to this, for example, when a widget grabs the pointer or keyboard,
-then this natural flow is short circuited.  For example, when a TextBox has
+since this natural flow is short circuited.  For example, when a TextBox has
 keyboard focus.
 
 @image html widget_hierarchy_event.png "Event"
@@ -57,16 +57,16 @@ keyboard focus.
 
 @section events_data Event Data
 
-Each event handler, like Widget::handle(), is called with an Event object.  This
+Each event handler, like Widget::handle(), is called with an event object.  This
 object maintains the unique egt::v1::eventid of the event, and any data associated
-with the Event such as Pointer or Key event data.
+with the event such as pointer or key event data.
 
 @section events_handling Handling Events
 
-When implementing a Widget that needs to handle events, overriding the the
+When implementing a widget that needs to handle events, overriding the the
 Widget::handle() virtual method is the expected method to handle events.
-However, when using an existing Widget, it can be a burden to subclass just
-to handle events.  So, to handle events when using a Widget, the
+However, when using an existing widget, it can be a burden to the subclass just
+to handle events.  So, to handle events when using a widget, the
 Widget::on_event() method can be used to register any number of callbacks. A
 [lambda](https://en.cppreference.com/w/cpp/language/lambda) function may also be
 used.

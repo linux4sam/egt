@@ -12,7 +12,7 @@ handles properties related to working with fonts, but there are still some other
 libraries in play.  Underneath, the Font class uses Fontconfig and Freetype for
 finding and rendering fonts.
 
-Creating and assigning a Font to a specific Widget involves using the
+Creating and assigning a Font to a specific widget involves using the
 Widget::set_font() member function.
 
 @code{.cpp}
@@ -30,7 +30,7 @@ discover fonts installed on the system automatically.
 Selecting fonts from within EGT ultimately uses Fontconfig.  The
 [Fontconfig](https://www.freedesktop.org/software/fontconfig/fontconfig-user.html)
 documentation</a> should be the ultimate source of how to make the best use of
-and configure Fontconfig. However, to help introduce how to debug using
+and how to configure Fontconfig. However, to help introduce how to debug using
 Fontconfig, several things are worth noting.
 
 To see what fonts will be returned given a specific name, you can use the
@@ -98,7 +98,7 @@ will be automatically found by EGT.
 A useful tool to load a font and inspect it can be found
 [here](http://mathew-kurian.github.io/CharacterMap/).
 
-@note This may not work work with some fonts, such as as the Google Noto
+@note This may not work with some fonts, such as as the Google Noto
 Color Emoji font.
 
 While there are hundreds if not thousands of fonts available from all different

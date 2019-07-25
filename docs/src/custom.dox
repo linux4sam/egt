@@ -7,14 +7,14 @@ This chapter discusses how to extend and customize widgets.
 
 EGT is designed to support extension by way of custom widgets and functionality.
 Essentially, to change the behavior or look and feel of an existing widget,
-create a derived class of a a similar and existing widget and re-implement the
+create a derived class of a similar and existing widget and reimplement the
 functions that should be changed.  If you are creating a completely new type of
 widget, you would inherit directly from Widget or one of the other base
 widget types.
 
 An example of this happening is fluent throughout the EGT library itself.  For
-example, CheckBox implements a standard traditional CheckBox that
-shows a *X* when then CheckBox is CheckBox::checked().  However, to change the look
+example, CheckBox implements a standard traditional checkBox that
+shows an *X* when the checkBox is CheckBox::checked().  However, to change the look
 and keep the same logical operation, ToggleBox derives from
 CheckBox and changes the ToggleBox::draw() method.
 
@@ -33,8 +33,8 @@ something like this:
     };
 @endcode
 
-This new widget is basically a CheckBox, but we want to change how it looks and
-operates. The new ToggleBox::draw() method looks like this.
+This new widget is basically a checkBox, but we want to change how it looks and
+operates. The new ToggleBox::draw() method looks like this:
 
 @code
     void ToggleBox::draw(Painter& painter, const Rect& rect)

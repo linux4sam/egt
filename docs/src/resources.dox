@@ -6,7 +6,7 @@ namespace egt { inline namespace v1 {
 This chapter discusses resources and how to distribute and use them with EGT.
 
 Resources are a way of cataloging, distributing, identifying, and using some
-asset data.  For example assets might include images, icons, audio files, and
+asset data.  For example, assets might include images, icons, audio files, and
 video files. Resources may be stored in the filesystem and loaded on demand, or
 they may be compiled into the application binary itself by using the EGT `mresg`
 command, or they may be installed by default by EGT.
@@ -21,8 +21,8 @@ Identifier (URI) and the purpose of a URI.
 If an absolute file path is used, noting extra will happen.  That file path will
 attempt to be accessed. However, if a relative path is given then a search will
 happened by calling detail::resolve_file_path().  This function will search any
-directory registered with detail::add_search_path().  The default paths setup
-are searched in the following order:
+directory registered with detail::add_search_path().  The default path's setup
+is searched in the following order:
 
 - Data install path.
 - EXE directory.
@@ -55,10 +55,10 @@ icon from a different directory, use the following syntax:
 auto bug = Image("@128px/bug.png");
 @endcode
 
-The EGT installed default icons directory can be changed by setting a environment
-variable EGT_ICONS_DIRECTORY. This value can be a absolute path or directory name.
-If a directory name is set, then this directory name will be appended with a EGT
-installed default icons directory path.  See @subpage environ for more information.
+The EGT installed default icons directory can be changed by setting an environment
+variable EGT_ICONS_DIRECTORY. This value can be an absolute path or directory name.
+If a directory name is set, then this directory name will be appended with an EGT
+installed default icon's directory path.  See @subpage environ for more information.
 
 @section resources_mresg Respath: Executable Compiled in Resources
 

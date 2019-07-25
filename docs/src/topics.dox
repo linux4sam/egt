@@ -11,7 +11,7 @@ Window::show() at least once somewhere in your application.
 @section topics_threads Multiple Threads and Thread Safety
 
 The EGT API is not thread safe, but there are well defined ways provided and
-supported to use the EGT API in a multi-threaded application following a couple
+supported to use the EGT API in a multi-threaded application by following a couple
 simple rules.  The thread the main EventLoop is started on, usually through
 Application::run(), must not be directly accessed by a separate thread.  This
 means any widgets or windows that are managed by that main thread should not be
@@ -22,7 +22,7 @@ the API in a thread safe manner through the event loop and Asio.  To call a
 function in the EGT API from another thread, you must egt::asio::post() or
 egt::asio::dispatch() a call to the EventLoop.  This should not be confused with
 messaging.  Calling egt::asio::post() or egt::asio::dispatch() is like calling a
-function, however, based on which variation you use it will either directly or
+function; however, based on which variation you use it will either directly or
 indirectly happen in a thread safe manner.
 
 For example, to change the position of a button from another thread, the
@@ -43,7 +43,7 @@ asio::post(Application::instance().event().io(), []() {
 
 @section topics_lifetime Widget Lifetime
 
-There are various different forms of managing Widget lifetime.  They can be
+There are various different forms of managing widget lifetime.  They can be
 managed explicitly on the stack, and they can also be managed on the heap,
 usually through C++ smart pointers.
 
@@ -106,7 +106,7 @@ protected:
 
 The underlying EventLoop implementation uses Asio, which you can directly access
 and is part of the full EGT API.  Asio provides an excellent asynchronous
-networking implementation that you get for free with EGT. It can provide
+networking implementation that you free with EGT. It can provide
 efficient non-blocking I/O to service thousands of connections at once. The asio
 transport handles all aspects of networking (DNS lookups, creating TCP sockets,
 connecting and listening, etc). It supports IPv4 and IPv6.  It supports both
