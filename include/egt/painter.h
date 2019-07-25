@@ -193,7 +193,7 @@ public:
     /**
      * Draw text inside the specified rectangle.
      */
-    virtual Painter& draw(const std::string& str, bool difference = false);
+    virtual Painter& draw(const std::string& str);
 
     virtual Painter& clip();
 

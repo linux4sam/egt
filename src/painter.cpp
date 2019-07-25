@@ -96,7 +96,7 @@ Painter& Painter::draw(const Rect& rect, const Image& image)
     return *this;
 }
 
-Painter& Painter::draw(const std::string& str, bool difference)
+Painter& Painter::draw(const std::string& str)
 {
     if (str.empty())
         return *this;
@@ -114,8 +114,6 @@ Painter& Painter::draw(const std::string& str, bool difference)
     cairo_get_current_point(m_cr.get(), &x, &y);
     cairo_move_to(m_cr.get(), x - textext.x_bearing,
                   y - textext.y_bearing);
-    if (difference)
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_DIFFERENCE);
     cairo_show_text(m_cr.get(), str.c_str());
     cairo_stroke(m_cr.get());
 

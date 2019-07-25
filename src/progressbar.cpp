@@ -65,7 +65,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
         auto size = painter.text_size(text);
         auto target = detail::align_algorithm(size, b, alignmask::center);
         painter.draw(target.point());
-        painter.draw(text, true);
+        painter.draw(text);
     }
 }
 
