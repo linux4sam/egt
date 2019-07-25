@@ -68,6 +68,10 @@ int main(int argc, const char** argv)
     hpos.resize(ctrlwindow->size());
     ctrlwindow->add(hpos);
 
+    auto logo = make_shared<ImageLabel>(Image("@32px/egt_logo_icon.png"));
+    logo->set_margin(10);
+    hpos.add(logo);
+
     ImageButton playbtn(Image(":pause_png"));
     playbtn.set_boxtype(Theme::boxtype::none);
     hpos.add(playbtn);
