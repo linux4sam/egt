@@ -342,6 +342,7 @@ struct MeterPage : public NotebookTab
         r1->radial_flags().set({Radial::flag::primary_value,
                                 Radial::flag::text_value,
                                 Radial::flag::primary_handle});
+        r1->set_readonly(true);
         grid0->add(expand(r1));
 
         demo_up_down_animator(lp1);
