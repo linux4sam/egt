@@ -23,7 +23,12 @@ int main(int argc, const char** argv)
         return label;
     };
 
-    win.add(create_label("EGT SideBoards"));
+    auto label = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"), "Sideboard Widget");
+    label->set_font(Font(28));
+    label->set_boxtype(Theme::boxtype::none);
+    label->set_align(alignmask::center);
+    label->set_image_align(alignmask::top);
+    win.add(label);
 
     SideBoard board0;
     board0.set_color(Palette::ColorId::bg, Palette::red);
