@@ -162,6 +162,12 @@ public:
         return *m_palette;
     }
 
+    void set_palette(Palette& palette)
+    {
+        assert(m_palette);
+        *m_palette = palette;
+    }
+
     Font& font()
     {
         assert(m_font);
@@ -172,6 +178,12 @@ public:
     {
         assert(m_font);
         return *m_font;
+    }
+
+    void set_font(Font& font)
+    {
+        assert(m_font);
+        *m_font = font;
     }
 
     /**
