@@ -827,7 +827,7 @@ public:
     /**
      * Returns a rectangle containing the line.
      */
-    inline Rect rect()
+    inline Rect rect() const
     {
         auto x = std::min(m_start.x(), m_end.x());
         auto y = std::min(m_start.y(), m_end.y());
