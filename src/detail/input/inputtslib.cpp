@@ -68,8 +68,8 @@ InputTslib::InputTslib(Application& app, const string& path)
 
 static bool delta(const DisplayPoint& lhs, const DisplayPoint& rhs, int d)
 {
-    return (std::abs(lhs.x - rhs.x) >= d ||
-            std::abs(lhs.y - rhs.y) >= d);
+    return (std::abs(lhs.x() - rhs.x()) >= d ||
+            std::abs(lhs.y() - rhs.y()) >= d);
 }
 
 void InputTslib::handle_read(const asio::error_code& error)
