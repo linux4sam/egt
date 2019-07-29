@@ -207,7 +207,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
                     }
                     else
                     {
-                        device += detail::extract_dirname(device);
+                        device = detail::extract_dirname(device);
                         device += "/";
                         device += target;
                     }
