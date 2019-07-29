@@ -89,9 +89,15 @@ Then, run.
 
 ## Screenshots
 
-![Widgets Example Default Theme](docs/src/screenshot0.png "Widgets Example Default Theme")
+![Widgets TextBox Example](docs/src/screenshot0.png "Widgets TextBox Example")
 
-![Widgets Example Dark Theme](docs/src/screenshot1.png "Widgets Example Dark Theme")
+![Widgets CheckBox Example](docs/src/screenshot1.png "Widgets CheckBox Example")
+
+![Widgets Easing Example](docs/src/screenshot2.png "Widgets Easing Example")
+
+![Widgets i18n Example](docs/src/screenshot3.png "Widgets i18n Example")
+
+![Widgets ListBox Example](docs/src/screenshot4.png "Widgets ListBox Example")
 
 
 ## Dependencies
