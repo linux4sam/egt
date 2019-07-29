@@ -402,10 +402,7 @@ on a Host Machine in Eclipse using Autotools.
 Fetching Source
 
 @code{.sh}
-git clone https://bitbucket.microchip.com/scm/linux4sam/egt.git
-cd egt
-git submodule init
-git submodule update
+git clone --recursive https://github.com/linux4sam/egt.git
 @endcode
 
 Create a new CPP Project:

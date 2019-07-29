@@ -2,10 +2,13 @@
 
 The Ensemble Graphics Toolkit (EGT) is a free and open-source C++ GUI widget
 toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop
-graphical applications for Linux.  EGT provides modern and complete GUI
+graphical embedded Linux applications.  EGT provides modern and complete GUI
 functionality, look-and-feel, and performance.
 
 Want to help out or make some changes?  See [Contributing](CONTRIBUTING.md).
+
+Complete [EGT Programmers Manual](https://linux4sam.github.io/egt-docs/)
+with API reference is available for the latest version.
 
 ## Features
 
@@ -93,27 +96,29 @@ Then, run.
 
 ## Dependencies
 
+EGT depends on a variety of different libraries.  Some of them are required or
+recommended, and others are optional for conditional features in EGT.
+
 *Recommended:*
 
 - libplanes >= 1.0.0
 - libdrm >= 2.4.0
-- cJSON >= 1.6.0
 - lua >= 5.3.1
 - cairo >= 1.14.6
-- tslib >= 1.15
-- gstreamer >= 1.12
+- fontconfig
+- libinput >= 1.6.3
 - libjpeg
-- rapidxml
-- libinput >= 1.8.2
 - libmagic
 
 *Optional:*
 
-- x11
-- lua
-- libjpeg
-- libcurl
-- librsvg
+- x11 >= 1.6.3
+- xkbcommon
+- tslib >= 1.15
+- gstreamer-1.0 >= 1.8
+- lua >= 5.3.0
+- libcurl >= 4.5
+- librsvg-2.0
 
 
 ## License
