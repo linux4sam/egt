@@ -39,7 +39,6 @@ drag/drag \
 easing/easing \
 floating/floating \
 frames/frames \
-layout/layout \
 sizers/sizers \
 space/space \
 sprite/sprite \
@@ -213,13 +212,6 @@ sizers_sizers_SOURCES = sizers/sizers.cpp
 sizers_sizers_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 sizers_sizers_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 sizers_sizers_LDFLAGS = $(AM_LDFLAGS)
-
-layout_layout_SOURCES = layout/layout.cpp
-layout_layout_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-layout_layout_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-layout_layoutdir = $(prefix)/share/egt/examples/layout/icons
-dist_layout_layout_DATA = $(wildcard $(top_srcdir)/examples/layout/icons/*.png)
-layout_layout_LDFLAGS = $(AM_LDFLAGS)
 
 colors_colors_SOURCES = colors/colors.cpp
 colors_colors_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
