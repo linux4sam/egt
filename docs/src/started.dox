@@ -104,7 +104,7 @@ instructions found in that project's README with the following versions.
 
 @code{.sh}
 git clone https://github.com/linux4sam/buildroot-external-microchip.git -b egt_devel
-git clone https://git.buildroot.net/buildroot -b 2019.05.x
+git clone https://git.buildroot.net/buildroot -b 2019.05.1
 cd buildroot
 BR2_EXTERNAL=../buildroot-external-microchip/ make sam9x60ek_egt_defconfig
 make
