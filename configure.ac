@@ -331,9 +331,6 @@ fi
 AC_CHECK_HEADER([linux/input.h], [have_linux_input_h=yes], [have_linux_input_h=no])
 AM_CONDITIONAL([HAVE_LINUX_INPUT_H], [test "x${have_linux_input_h}" = xyes])
 
-AM_CONDITIONAL([HAVE_BOX2D], [test true])
-AC_DEFINE(HAVE_BOX2D, 1, [Have Box2D support])
-
 AC_CHECK_PROG(XXD, xxd, yes)
 if test "x${XXD}" != x"yes"; then
    AC_MSG_ERROR("Cannot find xxd. This is required.")
