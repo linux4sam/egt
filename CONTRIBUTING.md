@@ -22,7 +22,7 @@ There are some extra tools that you can install with your distribution package
 manager.
 
 ```sh
-sudo apt-get install cloc doxygen graphviz clang clang-tidy
+sudo apt-get install cloc doxygen graphviz clang clang-tidy aspell
 ```
 
 ## Extra Development Tools
@@ -31,9 +31,9 @@ We like to stay on a recent version of development tools, so while these tools
 are probably packaged for your distribution, there is a chance they are old.
 You should download and install the latest version of these tools manually.
 
-- <a href="http://astyle.sourceforge.net/">Astyle</a>
-- <a href="http://cppcheck.sourceforge.net/">cppcheck</a>
-- Your favorite editor.
+- [Astyle](http://astyle.sourceforge.net/)
+- [cppcheck](http://cppcheck.sourceforge.net/)
+- Your favorite editor: [Emacs](https://www.gnu.org/software/emacs/).
 
 ## General Coding Rules
 
@@ -46,15 +46,15 @@ must not be in any public include file.
 - Anything not part of the public API goes in the egt::detail namespace, and
 additionally if it can be treated as a different compilation unit or header,
 then it goes in the include/egt/detail/ or src/detail/ dir.
-- Private headers not necessary to be in the public indlude folder should remain
-in the src dir.
-- As a general fule, no compiler warnings should be emitted in debug or release
+- Headers that do not need to be in the public include folder should
+remain in the src dir.
+- As a general rule, no compiler warnings should be emitted in debug or release
 builds.
 - As a general rule, no cppcheck warnings should be emitted.
 
 ## Static Analysis
 
-Static analysis is useful for detecting unexpectd behavior or bugs before they
+Static analysis is useful for detecting unexpected behavior or bugs before they
 happen.  The tool used by EGT is cppcheck to do this, but there are several other
 tools available.
 
@@ -76,10 +76,10 @@ static std::thread t([]()
 
 ## Coding Style
 
-The C++ coding style of the EGT project mostly adhere's to the Allman style with
+The C++ coding style of the EGT project mostly adheres to the Allman style with
 a couple exceptions.  This coding style is enforced throughout the codebase.
 
-<a href="http://astyle.sourceforge.net/">Astyle</a> is used to enforce this
+[Astyle](http://astyle.sourceforge.net/) is used to enforce this
 coding style with the *scripts/style.sh* script. This can be automatically
 executed for all of the source code with a make target by typing:
 
@@ -88,7 +88,7 @@ make style
 ```
 
 Be careful not to abuse this and change coding style just for the fun of it,
-especially on source that you are not currentoly working on.
+especially on source that you are not currently working on.
 
 ## Git Commit Messages
 
@@ -100,8 +100,21 @@ especially on source that you are not currentoly working on.
 This documentation is generated with Doxygen, which is managed by the EGT build
 system.  To generate the documentation at any time run:
 
+Generate HTML:
 ```sh
 make docs
+```
+
+Generate docset:
+```sh
+make docs
+make docset
+```
+
+Generate PDF:
+```sh
+make docs
+cd docs/latex && make
 ```
 
 The resulting documentation will be in the *docs* folder.
@@ -116,16 +129,12 @@ run through and correct any errors/warnings seen.
 make maintainer-clean
 ./autogen.sh
 ./configure
+make
 make spellcheck
 make style
-make
 make docs
-./scripts/checkheaders.sh
+make checkheaders
 make cppcheck
 make tidy
 make distcheck
-tar xf libegt-*.tar.gz
-cd libegt-*
-./configure
-make
 ```
