@@ -121,13 +121,13 @@ int main(int argc, const char** argv)
     );
     abc_keyboard.set_align(alignmask::center);
 
-    HorizontalBoxSizer hbox;
-    hbox.set_align(alignmask::expand);
-    hbox.add(code_keyboard);
-    hbox.add(expand_horizontal(abc_keyboard));
+    VerticalBoxSizer vbox;
+    vbox.set_align(alignmask::expand);
+    vbox.add(expand_horizontal(abc_keyboard));
+    vbox.add(code_keyboard);
 
     TopWindow win;
-    win.add(hbox);
+    win.add(vbox);
     win.show();
 
     return app.run();
