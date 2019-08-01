@@ -181,7 +181,12 @@ void Widget::set_readonly(bool value)
     if (flags().is_set(Widget::flag::readonly) != value)
     {
         if (value)
+        {
             flags().set(Widget::flag::readonly);
+
+            if (detail::keyboard_focus() == this)
+                detail::keyboard_focus(nullptr);
+        }
         else
             flags().clear(Widget::flag::readonly);
         damage();
@@ -199,6 +204,9 @@ void Widget::disable()
         return;
     damage();
     flags().set(Widget::flag::disabled);
+
+    if (detail::keyboard_focus() == this)
+        detail::keyboard_focus(nullptr);
 }
 
 void Widget::enable()
