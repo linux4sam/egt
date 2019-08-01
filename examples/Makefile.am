@@ -4,7 +4,10 @@ OPTIONAL =
 if HAVE_GSTREAMER
 OPTIONAL += video
 endif
-SUBDIRS = $(OPTIONAL) i18n resource
+if HAVE_MSGFMT
+OPTIONAL += i18n
+endif
+SUBDIRS = $(OPTIONAL) resource
 
 CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir)/include \

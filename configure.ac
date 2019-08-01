@@ -335,6 +335,15 @@ AC_CHECK_PROG(XXD, xxd, yes)
 if test "x${XXD}" != x"yes"; then
    AC_MSG_ERROR("Cannot find xxd. This is required.")
 fi
+fi
+
+AC_CHECK_PROG(MSGFMT, msgfmt, yes)
+if test "x${MSGFMT}" != x"yes"; then
+if test "x${enable_examples}" = xyes; then
+   AC_MSG_WARN("Missing msgfmt: install gettext")
+fi
+fi
+AM_CONDITIONAL([HAVE_MSGFMT], [test "x${MSGFMT}" = xyes])
 
 # Subst LIBEGT_EXTRA_CFLAGS & CXXFLAGS & LDFLAGS
 AC_SUBST(LIBEGT_EXTRA_CFLAGS)
