@@ -361,21 +361,21 @@ public:
     }
 
     /**
-     * Set the disabled status to true.
+     * Set the disabled state to true.
      */
     virtual void disable();
 
     /**
-     * Set the enable status to true.
+     * Set the disabled state to false.
      */
     virtual void enable();
 
     /**
-    * Return the disabled status of the widget.
-    *
-    * When a widget is disabled, it does not receive events. Also, the
-    * color scheme may change when a widget is disabled.
-    */
+     * Return the disabled state of the widget.
+     *
+     * When a widget is disabled, it does not receive events. Also, the
+     * color scheme may change when a widget is disabled.
+     */
     virtual bool disabled() const;
 
     /**
@@ -387,6 +387,22 @@ public:
             enable();
         else
             disable();
+    }
+
+    /**
+     * Set the disabled state.
+     *
+     * @param[in] value When true, the Widget is disabled.
+     *
+     * @see Widget::enable()
+     * @see Widget::disable()
+     */
+    inline void set_disabled(bool value)
+    {
+        if (value)
+            disable();
+        else
+            enable();
     }
 
     /**
