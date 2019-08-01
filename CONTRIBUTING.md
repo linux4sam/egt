@@ -138,3 +138,11 @@ make cppcheck
 make tidy
 make distcheck
 ```
+
+Running make distcheck in a cross compile environment takes a little more
+effort.  For example:
+
+```sh
+make distcheck \
+    DISTCHECK_CONFIGURE_FLAGS="--host=arm-buildroot-linux-gnueabihf"
+```
