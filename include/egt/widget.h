@@ -441,14 +441,24 @@ public:
     virtual Point point() const;
 
     /**
-     * @{
-     * Bounding box dimensions.
+     * Width of the widget.
      */
     inline default_dim_type width() const { return m_box.width(); }
+
+    /**
+     * Height of the widget.
+     */
     inline default_dim_type height() const { return m_box.height(); }
+
+    /**
+     * X coordinate of the widget origin.
+     */
     inline default_dim_type x() const { return m_box.x(); }
+
+    /**
+     * Y coordinate of the widget origin.
+     */
     inline default_dim_type y() const { return m_box.y(); }
-    /** @} */
 
     /**
      * Get the center point.
