@@ -6,7 +6,15 @@
 #ifndef EGT_DETAIL_VIDEO_GSTKMSSINKIMPL_H
 #define EGT_DETAIL_VIDEO_GSTKMSSINKIMPL_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "detail/video/gstdecoderimpl.h"
+
+#ifdef HAVE_GSTREAMER_PBUTILS
+#include <gst/pbutils/pbutils.h>
+#endif
 
 namespace egt
 {
@@ -37,9 +45,17 @@ public:
     virtual ~GstKmsSinkImpl() = default;
 
 protected:
-    int m_gem;
+    int m_gem{-1};
+    bool m_hwdecoder{false};
+    std::string m_vcodec;
+    std::string m_acodec;
+    bool m_audiotrack{false};
+    std::string m_container;
+#ifdef HAVE_GSTREAMER_PBUTILS
+    bool start_discoverer();
 
-    bool m_hwdecoder;
+    void get_stream_info(GstDiscovererStreamInfo* info);
+#endif
 };
 
 } // end of namespace detail

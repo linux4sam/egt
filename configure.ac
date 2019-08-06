@@ -238,6 +238,14 @@ if test "x${have_gstreamer}" = xyes; then
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 
+AX_PKG_CHECK_MODULES2(GSTREAMER_PBUTILS, [gstreamer-pbutils-1.0 >= 1.8], [], [have_gst_pbutils=yes], [have_gst_pbutils=no])
+if test "x${have_gst_pbutils}" = xyes; then
+   AC_DEFINE(HAVE_GSTREAMER_PBUTILS, 1, [Have gstreamer pbutils support])
+   LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_PBUTILS_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_PBUTILS_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+fi
+AM_CONDITIONAL([HAVE_GSTREAMER_PBUTILS], [test "x${have_gst_pbutils}" = xyes])
+
 AX_PKG_CHECK_MODULES2(LUA, [lua >= 5.3.0], [], [have_lua=yes], [have_lua=no])
 if test "x${have_lua}" = xno; then
 AX_PKG_CHECK_MODULES2(LUA, [lua5.3], [], [have_lua=yes], [have_lua=no])
