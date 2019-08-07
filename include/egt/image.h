@@ -174,6 +174,11 @@ public:
      */
     virtual void copy();
 
+    inline std::string respath() const
+    {
+        return m_respath;
+    }
+
     virtual ~Image() = default;
 
 protected:
