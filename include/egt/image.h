@@ -90,9 +90,6 @@ public:
     /**
      * Resize the image to the specified absolute size.
      *
-     * This scales relative to the original size of the image.  Not the result
-     * of any subsequent Image::resize() or Image::scale() call.
-     *
      * @param size The new size of the image.
      */
     virtual void resize(const Size& size)
