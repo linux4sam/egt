@@ -118,9 +118,10 @@ public:
     /**
      * Set the center label text of the dial.
      */
-    void text(const std::string& text)
+    virtual void set_text(const std::string& text)
     {
-        m_text = text;
+        if (detail::change_if_diff<>(m_text, text))
+            this->damage();
     }
 
     virtual void handle(Event& event) override
