@@ -182,7 +182,7 @@ public:
 
         // just return first one
         if (i != m_children.end())
-            return *i;
+            return std::dynamic_pointer_cast<T>(*i);
 
         i = std::find_if(m_children.begin(), m_children.end(),
                          [&name](const std::shared_ptr<Widget>& obj)
