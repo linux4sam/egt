@@ -307,6 +307,11 @@ public:
     virtual void clear(ColorId id, GroupId group = GroupId::normal);
 
     /**
+     * Remove all colors from the Palette.
+     */
+    virtual void clear_all();
+
+    /**
      * Check if a color exists in the palette.
      *
      * @param id Color id.

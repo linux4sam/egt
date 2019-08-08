@@ -42,6 +42,11 @@ void Palette::clear(ColorId id, GroupId group)
         g->second.erase(id);
 }
 
+void Palette::clear_all()
+{
+    m_colors.clear();
+}
+
 bool Palette::exists(ColorId id, GroupId group) const
 {
     auto g = m_colors.find(group);
