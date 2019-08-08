@@ -88,6 +88,9 @@ public:
     /**
      * Start the timer.
      *
+     * It is safe to call start() on an already running timer.  It will simply
+     * reset and start again.
+     *
      * @note Assumes a duration is set already.
      */
     virtual void start();
