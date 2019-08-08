@@ -259,7 +259,10 @@ void Widget::set_palette(const Palette& palette)
 
 void Widget::reset_palette()
 {
-    m_palette.reset();
+    assert(m_palette);
+    if (m_palette)
+        m_palette->clear_all();
+    damage();
 }
 
 Palette::pattern_type Widget::color(Palette::ColorId id) const
@@ -275,7 +278,9 @@ Palette::pattern_type Widget::color(Palette::ColorId id) const
 
 Palette::pattern_type Widget::color(Palette::ColorId id, Palette::GroupId group) const
 {
-    if (m_palette->exists(id, group))
+    assert(m_palette);
+
+    if (m_palette && m_palette->exists(id, group))
         return m_palette->color(id, group);
 
     return default_palette().color(id, group);
@@ -285,7 +290,9 @@ void Widget::set_color(Palette::ColorId id,
                        const Palette::pattern_type& color,
                        Palette::GroupId group)
 {
-    m_palette->set(id, group, color);
+    assert(m_palette);
+    if (m_palette)
+        m_palette->set(id, group, color);
     damage();
 }
 
