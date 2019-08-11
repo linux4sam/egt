@@ -26,13 +26,27 @@ static vector<pair<easing_func_t, string>> easing_functions =
     {easing_rubber, "rubber"},
     {easing_spring, "spring"},
     {easing_boing, "boing"},
-    {easing_quadratic_easeinout, "quadratic"},
-    {easing_cubic_easeinout, "cubic"},
-    {easing_quartic_easeinout, "quartic"},
-    {easing_quintic_easeinout, "quintic"},
-    {easing_sine_easeinout, "sine"},
-    {easing_circular_easeinout, "circular"},
-    {easing_exponential_easeinout, "exponential"}
+    {easing_quadratic_easein, "quadratic easein"},
+    {easing_quadratic_easeout, "quadratic easeout"},
+    {easing_quadratic_easeinout, "quadratic easeinout"},
+    {easing_cubic_easein, "cubic easein"},
+    {easing_cubic_easeout, "cubic easeout"},
+    {easing_cubic_easeinout, "cubic easeinout"},
+    {easing_quartic_easein, "quartic easein"},
+    {easing_quartic_easeout, "quartic easeout"},
+    {easing_quartic_easeinout, "quartic easeinout"},
+    {easing_quintic_easein, "quintic easein"},
+    {easing_quintic_easeout, "quintic easeout"},
+    {easing_quintic_easeinout, "quintic easeinout"},
+    {easing_sine_easein, "sine easein"},
+    {easing_sine_easeout, "sine easeout"},
+    {easing_sine_easeinout, "sine easeinout"},
+    {easing_circular_easein, "circular easein"},
+    {easing_circular_easeout, "circular easeout"},
+    {easing_circular_easeinout, "circular easeinout"},
+    {easing_exponential_easein, "exponential easein"},
+    {easing_exponential_easeout, "exponential easeout"},
+    {easing_exponential_easeinout, "exponential easeinout"}
 };
 
 static inline float_t interpolate(easing_func_t easing, float_t percent, float_t start,
@@ -92,7 +106,7 @@ public:
         items.resize(easing_functions.size());
         transform(easing_functions.begin(), easing_functions.end(), items.begin(),
         [](const std::pair<easing_func_t, string>& v) { return make_shared<StringItem>(v.second);});
-        auto list1 = make_shared<ListBox>(items, Rect(Point(0, 0), Size(150, 0)));
+        auto list1 = make_shared<ListBox>(items, Rect(Point(0, 0), Size(190, 0)));
         list1->set_align(alignmask::expand_vertical | alignmask::right);
         add(list1);
 
