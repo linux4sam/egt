@@ -18,6 +18,7 @@
 #include <linux/input.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <sstream>
 #include <string>
 #include <sys/time.h>
 #include <unistd.h>
@@ -37,17 +38,23 @@ InputEvDev::InputEvDev(Application& app, const string& path)
       m_input_buf(sizeof(struct input_event) * 10),
       m_keyboard(make_unique<InputKeyboard>())
 {
-    int fd = open(path.c_str(), O_RDONLY);
-    if (fd >= 0)
+    m_fd = open(path.c_str(), O_RDONLY);
+    if (m_fd >= 0)
     {
         spdlog::info("input device: {}", path);
 
-        m_input.assign(fd);
+        m_input.assign(m_fd);
 
         asio::async_read(m_input, asio::buffer(m_input_buf.data(), m_input_buf.size()),
                          std::bind(&InputEvDev::handle_read, this,
                                    std::placeholders::_1,
                                    std::placeholders::_2));
+    }
+    else
+    {
+        ostringstream ss;
+        ss << "could not open evdev device " << path;
+        throw std::runtime_error(ss.str());
     }
 }
 
@@ -71,6 +78,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     if (length == 0 || length % sizeof(e[0]) != 0)
     {
         assert(0);
+        return;
     }
 
     end = ev + (length / sizeof(e[0]));
@@ -92,6 +100,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                 break;
             default:
                 assert(0);
+                break;
             }
             break;
 
@@ -201,6 +210,12 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                      std::bind(&InputEvDev::handle_read, this,
                                std::placeholders::_1,
                                std::placeholders::_2));
+}
+
+InputEvDev::~InputEvDev()
+{
+    if (m_fd >= 0)
+        close(m_fd);
 }
 
 }

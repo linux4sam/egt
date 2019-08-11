@@ -35,7 +35,7 @@ public:
 
     explicit InputEvDev(Application& app, const std::string& path);
 
-    virtual ~InputEvDev() = default;
+    virtual ~InputEvDev();
 
 private:
     void handle_read(const asio::error_code& error, std::size_t length);
@@ -64,6 +64,11 @@ private:
      * Keyboard mapping instance.
      */
     std::unique_ptr<InputKeyboard> m_keyboard;
+
+    /**
+     * Internal descriptor;
+     */
+    int m_fd{-1};
 };
 
 }
