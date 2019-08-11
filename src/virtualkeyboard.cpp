@@ -215,35 +215,35 @@ void VirtualKeyboard::set_key_input_value(const shared_ptr<Key>& k)
     }, {eventid::pointer_click});
 }
 
-void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& key)
+void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k)
 {
-    key->m_multichoice_panel = make_shared<Panel>(key->m_keys_multichoice);
-    key->m_multichoice_panel->set_align(alignmask::center);
+    k->m_multichoice_panel = make_shared<Panel>(k->m_keys_multichoice);
+    k->m_multichoice_panel->set_align(alignmask::center);
 
     // Create a Popup to display the multichoice panel.
-    key->m_button->on_event([this, key](Event&)
+    k->m_button->on_event([this, k](Event&)
     {
-        key->m_multichoice_panel->update_key_space(m_key_space);
+        k->m_multichoice_panel->update_key_space(m_key_space);
         auto key_multichoice_size = Size(width() / m_max_cols, height() / m_max_rows);
-        key->m_multichoice_panel->update_key_size(key_multichoice_size * m_key_size_multichoice_factor);
+        k->m_multichoice_panel->update_key_size(key_multichoice_size * m_key_size_multichoice_factor);
 
         m_multichoice_popup.reset(new Popup());
-        m_multichoice_popup->resize(key->m_multichoice_panel->size());
-        m_multichoice_popup->add(key->m_multichoice_panel);
+        m_multichoice_popup->resize(k->m_multichoice_panel->size());
+        m_multichoice_popup->add(k->m_multichoice_panel);
         main_window()->add(m_multichoice_popup);
 
-        auto display_origin = key->m_button->display_origin();
+        auto display_origin = k->m_button->display_origin();
         auto main_window_origin = main_window()->display_to_local(display_origin);
 
         // Popup on top of the key.
         main_window_origin.set_y(main_window_origin.y() - m_multichoice_popup->height());
         // If it goes out of the main_window, move it at the bottom of the key.
         if (main_window_origin.y() < 0)
-            main_window_origin.set_y(main_window()->display_to_local(display_origin).y() + key->m_button->height());
+            main_window_origin.set_y(main_window()->display_to_local(display_origin).y() + k->m_button->height());
 
         // Popup aligned with key.
         main_window_origin.set_x(main_window_origin.x() - m_multichoice_popup->width() / 2);
-        main_window_origin.set_x(main_window_origin.x() + key->m_button->width() / 2);
+        main_window_origin.set_x(main_window_origin.x() + k->m_button->width() / 2);
         // Update the position if it goes out of the main_window.
         if (main_window_origin.x() < 0)
             main_window_origin.set_x(0);
@@ -256,11 +256,11 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& key)
     }, {eventid::pointer_hold});
 
     // Create the Buttons for the multichoice panel.
-    for (auto& key_multichoice_row : key->m_keys_multichoice)
+    for (auto& key_multichoice_row : k->m_keys_multichoice)
     {
         for (auto& key_multichoice : key_multichoice_row)
         {
-            key_multichoice->m_button->on_event([this, key, key_multichoice](Event & event)
+            key_multichoice->m_button->on_event([this, k, key_multichoice](Event & event)
             {
                 m_multichoice_popup->hide();
                 main_window()->remove(m_multichoice_popup.get());
@@ -276,7 +276,7 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& key)
                     up.key().keycode = key_multichoice->m_keycode;
                     m_in.dispatch(up);
                     // the modal popup caught the raw_pointer_up event
-                    key->m_button->set_active(false);
+                    k->m_button->set_active(false);
                 }
                 // User may just move his finger so prefer the raw_pointer_up event to the pointer_click one.
             }, {eventid::raw_pointer_up});
