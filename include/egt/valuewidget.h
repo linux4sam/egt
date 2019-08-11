@@ -34,7 +34,7 @@ public:
 
     /**
      * @param[in] rect Rectangle for the widget.
-     * @param[in] value Current value in the range.
+     * @param[in] value Current value.
      */
     explicit ValueWidget(const Rect& rect, T value = T()) noexcept
         : Widget(rect),
@@ -45,16 +45,18 @@ public:
      * Set the value.
      *
      * If this results in changing the value, it will damage() the widget.
+     *
+     * @return The old value.
      */
-    virtual void set_value(T v)
+    virtual T set_value(T v)
     {
-        /// @todo Need to handle float comparison.
-        if (v != m_value)
+        T orig = m_value;
+        if (detail::change_if_diff<T>(m_value, v))
         {
-            m_value = v;
             damage();
             invoke_handlers(eventid::property_changed);
         }
+        return orig;
     }
 
     /**
@@ -114,6 +116,9 @@ public:
      * value is below min, the value will be set to min.
      *
      * If this results in changing the value, it will damage() the widget.
+     *
+     * @param[in] value Value to set.
+     * @return The old value.
      */
     virtual T set_value(T value)
     {
@@ -127,9 +132,8 @@ public:
         if (value < m_min)
             value = m_min;
 
-        if (value != m_value)
+        if (detail::change_if_diff<T>(m_value, value))
         {
-            m_value = value;
             damage();
             invoke_handlers(eventid::property_changed);
         }
@@ -154,11 +158,10 @@ public:
      */
     virtual void set_min(T v)
     {
-        if (m_min != v)
-        {
-            m_min = v;
+        if (detail::change_if_diff<>(m_min, v))
             damage();
-        }
+
+        assert(m_max > m_min);
     }
 
     /**
@@ -168,17 +171,16 @@ public:
      */
     virtual void set_max(T v)
     {
-        if (m_max != v)
-        {
-            m_max = v;
+        if (detail::change_if_diff<>(m_max, v))
             damage();
-        }
+
+        assert(m_max > m_min);
     }
 
     /**
      * Get the current value.
      */
-    T value() const
+    inline T value() const
     {
         return m_value;
     }
@@ -186,6 +188,7 @@ public:
     virtual ~ValueRangeWidget() = default;
 
 protected:
+
     /**
      * The min value.
      */
