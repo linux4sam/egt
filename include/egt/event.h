@@ -132,6 +132,11 @@ struct Pointer
           drag_start(d)
     {}
 
+    inline DisplayPoint delta() const
+    {
+        return point - drag_start;
+    }
+
     /**
      * Mouse position in display coordinates.
      */
