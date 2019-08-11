@@ -33,8 +33,7 @@ namespace detail
 {
 
 InputEvDev::InputEvDev(Application& app, const string& path)
-    : m_app(app),
-      m_input(app.event().io()),
+    : m_input(app.event().io()),
       m_input_buf(sizeof(struct input_event) * 10),
       m_keyboard(make_unique<InputKeyboard>())
 {
