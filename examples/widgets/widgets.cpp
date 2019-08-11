@@ -309,7 +309,7 @@ struct SliderPage : public NotebookTab
 
         auto slider4 = std::make_shared<Slider>(Rect(0, 0, 80, 200), 0, 100, 0, orientation::vertical);
         slider4->set_value(75);
-        slider4->slider_flags().set({Slider::flag::round_handle});
+        slider4->slider_flags().set(Slider::flag::round_handle);
         slider4->disable();
         hsizer1->add(slider4);
 
