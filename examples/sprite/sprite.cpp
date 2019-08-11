@@ -30,13 +30,9 @@ int main(int argc, const char** argv)
     StaticGrid grid(Rect(Size(win.width(), win.height() - 40)), Tuple(2, 2));
 
     Sprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0));
-    sprite1.move(Point(main_screen()->size().width() / 2 - 75,
-                       main_screen()->size().height() / 2 - 132 / 2));
     grid.add(center(sprite1), 0, 1);
 
     Sprite sprite2(Image("walk.png"), Size(75, 132), 8, Point(0, 0));
-    sprite2.move(Point(main_screen()->size().width() / 2,
-                       main_screen()->size().height() / 2 - 132 / 2));
     grid.add(center(sprite2), 1, 1);
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
@@ -106,7 +102,7 @@ int main(int argc, const char** argv)
     });
     animatetimer.start();
 
-    Slider slider1(Rect(Point(win.height() - 40, 300), Size(win.width(), 40)), 10, 500, 10);
+    Slider slider1(Rect(Point(win.height() - 40, 300), Size(win.width(), 40)), 10, 500);
     win.add(bottom(center(slider1)));
     slider1.set_value(DEFAULT_MS_INTERVAL);
     slider1.on_event([&](Event&)
