@@ -127,7 +127,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 
                     m_last_point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
                     Event event(eventid::raw_pointer_up, m_last_point);
-                    event.pointer().btn = Pointer::button::touch;
+                    event.pointer().btn = Pointer::button::left;
                     dispatch(event);
                 }
                 else
@@ -157,7 +157,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                         chrono::duration<double, milli>(tv - m_impl->last_down).count() < DOUBLE_CLICK_DELTA)
                     {
                         Event event(eventid::pointer_dblclick, m_last_point);
-                        event.pointer().btn = Pointer::button::touch;
+                        event.pointer().btn = Pointer::button::left;
                         dispatch(event);
                     }
                     else
@@ -167,7 +167,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                         SPDLOG_TRACE("mouse down {}", m_last_point);
 
                         Event event(eventid::raw_pointer_down, m_last_point);
-                        event.pointer().btn = Pointer::button::touch;
+                        event.pointer().btn = Pointer::button::left;
                         dispatch(event);
                     }
 
@@ -182,7 +182,7 @@ void InputTslib::handle_read(const asio::error_code& error)
         SPDLOG_TRACE("mouse move {}", m_last_point);
 
         Event event(eventid::raw_pointer_move, m_last_point);
-        event.pointer().btn = Pointer::button::touch;
+        event.pointer().btn = Pointer::button::left;
         dispatch(event);
     }
 

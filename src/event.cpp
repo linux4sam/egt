@@ -66,7 +66,6 @@ std::ostream& operator<<(std::ostream& os, const Pointer::button& btn)
         MAPITEM(Pointer::button::left);
         MAPITEM(Pointer::button::middle);
         MAPITEM(Pointer::button::right);
-        MAPITEM(Pointer::button::touch);
 #undef MAPITEM
     }
 

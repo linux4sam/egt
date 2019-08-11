@@ -150,8 +150,7 @@ struct Pointer
         none,
         left,
         middle,
-        right,
-        touch
+        right
     };
 
     /**
@@ -283,9 +282,6 @@ struct Event : public EventArg
      *   - eventid::pointer_click
      *   - eventid::pointer_dblclick
      *   - eventid::pointer_hold
-     *   - eventid::pointer_drag_start
-     *   - eventid::pointer_drag
-     *   - eventid::pointer_drag_stop
      *   - eventid::pointer_drag_start
      *   - eventid::pointer_drag
      *   - eventid::pointer_drag_stop
