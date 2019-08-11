@@ -22,7 +22,8 @@ void dump_timers(ostream& out)
 {
     for (auto& timer : timers)
     {
-        out << "Timer duration(" << timer->duration().count() << " ms) " <<
+        out << "Timer (" << timer->name() << ") duration(" <<
+            timer->duration().count() << " ms) " <<
             (timer->running() ? "running" : "idle") << endl;
     }
 }
@@ -50,10 +51,10 @@ void Timer::start()
 #ifdef USE_PRIORITY_QUEUE
     m_timer.async_wait(
         Application::instance().event().queue().wrap(detail::priorities::high,
-                std::bind(&Timer::timer_callback, this,
+                std::bind(&Timer::internal_timer_callback, this,
                           std::placeholders::_1)));
 #else
-    m_timer.async_wait(std::bind(&Timer::timer_callback, this,
+    m_timer.async_wait(std::bind(&Timer::internal_timer_callback, this,
                                  std::placeholders::_1));
 #endif
 }
@@ -89,7 +90,7 @@ void Timer::do_cancel()
     m_timer.cancel();
 }
 
-void Timer::timer_callback(const asio::error_code& error)
+void Timer::internal_timer_callback(const asio::error_code& error)
 {
     if (error)
         return;
@@ -109,10 +110,40 @@ void Timer::timeout()
     invoke_handlers();
 }
 
+uint32_t Timer::on_timeout(timer_callback_t callback)
+{
+    if (callback)
+    {
+        // TODO: m_handle_counter can wrap, making the handle non-unique
+        auto handle = ++m_handle_counter;
+        m_callbacks.emplace_back(std::move(callback), handle);
+        return handle;
+    }
+
+    return 0;
+}
+
+void Timer::clear_handlers()
+{
+    m_callbacks.clear();
+}
+
+void Timer::remove_handler(uint32_t handle)
+{
+    auto i = std::find_if(m_callbacks.begin(), m_callbacks.end(),
+                          [handle](const CallbackMeta & meta)
+    {
+        return meta.handle == handle;
+    });
+
+    if (i != m_callbacks.end())
+        m_callbacks.erase(i);
+}
+
 void Timer::invoke_handlers()
 {
     for (auto& callback : m_callbacks)
-        callback();
+        callback.callback();
 }
 
 Timer::~Timer() noexcept
@@ -137,16 +168,16 @@ void PeriodicTimer::start()
     m_running = true;
 
 #ifdef USE_PRIORITY_QUEUE
-    m_timer.async_wait(Application::instance().event().queue().wrap(detail::priorities::high, std::bind(&PeriodicTimer::timer_callback, this,
+    m_timer.async_wait(Application::instance().event().queue().wrap(detail::priorities::high, std::bind(&PeriodicTimer::internal_timer_callback, this,
                        std::placeholders::_1)));
 #else
-    m_timer.async_wait(std::bind(&PeriodicTimer::timer_callback, this,
+    m_timer.async_wait(std::bind(&PeriodicTimer::internal_timer_callback, this,
                                  std::placeholders::_1));
 #endif
 
 }
 
-void PeriodicTimer::timer_callback(const asio::error_code& error)
+void PeriodicTimer::internal_timer_callback(const asio::error_code& error)
 {
     if (error)
         return;

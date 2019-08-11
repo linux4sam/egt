@@ -44,7 +44,7 @@ public:
      * Set the name of the Object.
      *
      * Assigns a human readable name to an Object that can then be used to
-     * find Objects by name or debug Objects.
+     * find timers by name or debug.
      *
      * @param[in] name Name to set for the Object.
      */
@@ -95,7 +95,7 @@ public:
     /**
      * Clear all registered event handlers.
      */
-    virtual void clear_event_handlers();
+    virtual void clear_handlers();
 
     /**
      * Remove an event handler.
@@ -116,13 +116,13 @@ protected:
     /**
      * Manages metadata about a registered callback.
      */
-    struct callback_meta
+    struct CallbackMeta
     {
-        callback_meta(event_callback_t c,
-                      const filter_type& m,
-                      uint32_t h) noexcept
+        CallbackMeta(event_callback_t c,
+                     const filter_type& m,
+                     uint32_t h) noexcept
             : callback(std::move(c)),
-              mask(std::move(m)),
+              mask(m),
               handle(h)
         {}
 
@@ -134,7 +134,7 @@ protected:
     /**
      * Helper type for an array of callbacks.
      */
-    using callback_array = std::vector<callback_meta>;
+    using callback_array = std::vector<CallbackMeta>;
 
     /**
      * Array of callbacks.

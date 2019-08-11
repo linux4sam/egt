@@ -6,6 +6,11 @@
 #ifndef EGT_TIMER_H
 #define EGT_TIMER_H
 
+/**
+ * @file
+ * @brief Timers.
+ */
+
 #include <chrono>
 #include <egt/asio.hpp>
 #include <egt/utils.h>
@@ -20,8 +25,6 @@ inline namespace v1
  * @defgroup timers Timers
  * Timer related widgets.
  */
-
-void dump_timers(std::ostream& out);
 
 /**
  * Basic one shot timer.
@@ -137,31 +140,70 @@ public:
      * Add a handler callback to be called with the timer times out.
      *
      * This function can be called any number of times to add handlers.
+     *
+     * @param handler The callback to invoke on event.
+     * @return A handle used to identify the registration.  This can then be
+     *         passed to remove_handler().
      */
-    inline void on_timeout(timer_callback_t callback)
-    {
-        if (callback)
-            m_callbacks.emplace_back(std::move(callback));
-    }
+    virtual uint32_t on_timeout(timer_callback_t callback);
 
     /**
      * Clear all handlers.
      */
-    inline void clear_handlers()
-    {
-        m_callbacks.clear();
-    }
+    virtual void clear_handlers();
+
+    /**
+     * Remove an event handler.
+     *
+     * @param handle The handle returned from on_timeout().
+     */
+    virtual void remove_handler(uint32_t handle);
+
+    /**
+    * Get the name of the Timer.
+    */
+    inline const std::string& name() const { return m_name; }
+
+    /**
+     * Set the name of the Timer.
+     *
+     * Assigns a human readable name to a Timer that can then be used to
+     * find timers by name or debug.
+     *
+     * @param[in] name Name to set for the Object.
+     */
+    inline void set_name(const std::string& name) { m_name = name; }
 
     virtual ~Timer() noexcept;
 
 protected:
 
     /**
+     * Counter used to generate unique handles for each callback registration.
+     */
+    uint32_t m_handle_counter{0};
+
+    /**
      * Invoke any registered handlers.
      */
     virtual void invoke_handlers();
 
-    using callback_array = std::vector<timer_callback_t>;
+    /**
+     * Manages metadata about a registered callback.
+     */
+    struct CallbackMeta
+    {
+        CallbackMeta(timer_callback_t c,
+                     uint32_t h) noexcept
+            : callback(std::move(c)),
+              handle(h)
+        {}
+
+        timer_callback_t callback;
+        uint32_t handle{0};
+    };
+
+    using callback_array = std::vector<CallbackMeta>;
 
     /**
      * ASIO timer object.
@@ -183,9 +225,14 @@ protected:
      */
     bool m_running{false};
 
+    /**
+     * A user defined name for the Timer.
+     */
+    std::string m_name;
+
 private:
 
-    void timer_callback(const asio::error_code& error);
+    void internal_timer_callback(const asio::error_code& error);
     void do_cancel();
 };
 
@@ -232,8 +279,13 @@ public:
 
 private:
 
-    void timer_callback(const asio::error_code& error);
+    void internal_timer_callback(const asio::error_code& error);
 };
+
+/**
+ * Dump debug information about all timers to the specified ostream.
+ */
+void dump_timers(std::ostream& out);
 
 }
 }
