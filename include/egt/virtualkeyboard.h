@@ -37,7 +37,7 @@ inline namespace v1
 class VirtualKeyboard : public Frame
 {
 protected:
-    class Panel;
+    struct Panel;
 
 public:
     class Key;
