@@ -815,8 +815,8 @@ public:
     void detach();
 
     /**
-    * Convert a point with a local origin to a parent origin.
-    */
+     * Convert a point with a local origin to a parent origin.
+     */
     Point to_parent(const Point& r) const;
 
     /**
