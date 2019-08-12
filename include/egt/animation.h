@@ -47,6 +47,18 @@ namespace detail
 {
 
 /**
+ * Interpolate function used internally.
+ *
+ * @param[in] easing The easing function to use.
+ * @param[in] percent The current percent of the range.
+ * @param[in] start Starting value.
+ * @param[in] end Ending value.
+ * @param[in] reverse Should we reverse start and end.
+ */
+float_t interpolate(easing_func_t easing, float_t percent, float_t start,
+                    float_t end, bool reverse = false);
+
+/**
  * Base class for an animation.
  */
 class IAnimation : public detail::noncopyable

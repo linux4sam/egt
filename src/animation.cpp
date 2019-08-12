@@ -17,8 +17,11 @@ namespace egt
 {
 inline namespace v1
 {
-static inline float_t interpolate(easing_func_t easing, float_t percent, float_t start,
-                                  float_t end, bool reverse = false)
+
+namespace detail
+{
+float_t interpolate(easing_func_t easing, float_t percent, float_t start,
+                    float_t end, bool reverse)
 {
     if (percent < 0.0f)
         return start;
@@ -31,6 +34,7 @@ static inline float_t interpolate(easing_func_t easing, float_t percent, float_t
         percent = easing(percent);
 
     return start * (1.0f - percent) + end * percent;
+}
 }
 
 Animation::Animation(float_t start, float_t end,
@@ -70,7 +74,7 @@ bool Animation::next()
     {
         float_t percent = chrono::duration<float_t, milli>(now - m_start_time).count() /
                           chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
-        float_t result = interpolate(m_easing, percent, m_start, m_end, m_reverse);
+        float_t result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
         if (!detail::FloatingPoint<float_t>(result).
             AlmostEquals(detail::FloatingPoint<float_t>(m_current)))
