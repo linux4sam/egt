@@ -40,14 +40,15 @@ public:
      */
     struct DataPair
     {
-        double x;
-        double y;
+        DataPair() = default;
 
-        /// @todo float comparison not supported here
-        bool operator==(const DataPair& rhs) const
-        {
-            return (x == rhs.x) && (y == rhs.y);
-        }
+        constexpr DataPair(double x, double y) noexcept
+            : x(x),
+              y(y)
+        {}
+
+        double x{0.};
+        double y{0.};
     };
 
     virtual void draw(Painter& painter, const Rect& rect) override;
