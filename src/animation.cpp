@@ -55,6 +55,7 @@ void Animation::start()
     m_start_time = chrono::steady_clock::now();
     m_stop_time = m_start_time + m_duration;
     m_running = true;
+    m_current = m_start;
 }
 
 bool Animation::next()
