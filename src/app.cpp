@@ -71,6 +71,14 @@ bool Application::check_instance()
     return !!the_app;
 }
 
+#ifndef SIGUSR1
+#define SIGUSR1 SIGINT
+#endif
+
+#ifndef SIGUSR2
+#define SIGUSR2 SIGTERM
+#endif
+
 Application::Application(int argc, char** argv,
                          const std::string& name, bool primary)
     : m_argc(argc),
