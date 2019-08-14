@@ -3,9 +3,16 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "egt/keycode.h"
-#include <linux/input.h>
 #include <spdlog/spdlog.h>
+
+#ifdef HAVE_LINUX_INPUT_H
+#include <linux/input.h>
+#endif
 
 namespace egt
 {
@@ -16,6 +23,7 @@ namespace detail
 
 static constexpr std::pair<int, KeyboardCode> keys[] =
 {
+#ifdef HAVE_LINUX_INPUT_H
     //{KEY_UNKNOWN, EKEY_UNKNOWN},
     {KEY_BACKSPACE, EKEY_BACKSPACE},
     {KEY_TAB, EKEY_TAB},
@@ -148,6 +156,7 @@ static constexpr std::pair<int, KeyboardCode> keys[] =
     {KEY_COMPOSE, EKEY_COMPOSE},
     // non-standard key code, used by some DTS gpio_keys
     {0x104, EKEY_USER1},
+#endif
 };
 
 KeyboardCode linux_to_ekey(int code)
