@@ -595,6 +595,12 @@ if test "x${have_linux_input_h}" = xyes; then
    AC_DEFINE(HAVE_LINUX_INPUT_H, 1, [Have linux/input.h support])
 fi
 
+AC_CHECK_HEADER([windows.h], [have_windows_h=yes], [have_windows_h=no])
+AM_CONDITIONAL([HAVE_WINDOWS_H], [test "x${have_windows_h}" = xyes])
+if test "x${have_windows_h}" = xyes; then
+   AC_DEFINE(HAVE_WINDOWS_H, 1, [Have windows_h support])
+fi
+
 AC_CHECK_PROG(XXD, xxd, yes)
 if test "x${XXD}" != x"yes"; then
    if test "x${enable_examples}" = xyes; then

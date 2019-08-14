@@ -11,7 +11,6 @@
 #include <climits>
 #include <cstring>
 #include <fstream>
-#include <glob.h>
 #include <iterator>
 #include <libgen.h>
 #include <memory>
@@ -20,9 +19,19 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#ifdef HAVE_GLOB_H
+#include <glob.h>
+#endif
+
 #ifdef HAVE_EXPERIMENTAL_FILESYSTEM
 #include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
+#endif
+
+#ifdef HAVE_WINDOWS_H
+#include <cstdio>
+#include <tchar.h>
+#include <windows.h>
 #endif
 
 namespace egt
@@ -43,9 +52,19 @@ std::string extract_filename(const std::string& path)
     return {};
 }
 
+// can't depend on strdup() in some environments
+static char* custom_strdup(const char* str)
+{
+    const size_t len = strlen(str) + 1;
+    char* buf = static_cast<char*>(malloc(len));
+    if (buf)
+        return static_cast<char*>(memcpy(buf, str, len));
+    return buf;
+}
+
 std::string extract_dirname(const std::string& path)
 {
-    std::unique_ptr<char, decltype(std::free)*> p(strdup(path.c_str()), std::free);
+    std::unique_ptr<char, decltype(std::free)*> p(custom_strdup(path.c_str()), std::free);
     const auto dir = ::dirname(p.get());
     return std::string(dir);
 }
@@ -79,23 +98,39 @@ std::vector<unsigned char> read_file(const std::string& path)
 
 std::string readlink(const std::string& path)
 {
-    char buff[PATH_MAX];
-    ssize_t len = ::readlink(path.c_str(), buff, sizeof(buff) - 1);
+    static const auto MAX_PATH_SIZE = 1024;
+    char buff[MAX_PATH_SIZE] {};
+    ssize_t len = -1;
+#ifdef HAVE_WINDOWS_H
+    if (path == "/proc/self/exe")
+    {
+        return std::to_string(GetModuleFileNameA(NULL, buff, MAX_PATH_SIZE));
+    }
+    len = sizeof(_fullpath(buff, path.c_str(), sizeof(buff) - 1));
+#elif defined(HAVE_GLOB_H)
+    len = ::readlink(path.c_str(), buff, sizeof(buff) - 1);
+#endif
     if (len != -1)
     {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
         buff[len] = '\0';
         return std::string(buff);
     }
+
     return {};
 }
 
 std::string abspath(const std::string& path)
 {
-    char buff[PATH_MAX];
-    if (::realpath(path.c_str(), buff))
+#ifdef HAVE_WINDOWS_H
+    char buff[_MAX_PATH] {};
+    if (_fullpath(buff, path.c_str(), _MAX_PATH))
         return std::string(buff);
-
+#else
+    char buff[PATH_MAX] {};
+    if (realpath(path.c_str(), buff))
+        return std::string(buff);
+#endif
     return {};
 }
 
@@ -108,6 +143,10 @@ std::string cwd()
 {
 #ifdef HAVE_EXPERIMENTAL_FILESYSTEM
     return fs::current_path();
+#elif defined(HAVE_WINDOWS_H)
+    char buff[PATH_MAX] {};
+    if (_getcwd(buff, PATH_MAX))
+        return std::string(buff);
 #else
     std::unique_ptr<char, decltype(std::free)*> d(get_current_dir_name(), std::free);
     if (d)
@@ -118,6 +157,8 @@ std::string cwd()
 
 std::vector<std::string> glob(const std::string& pattern)
 {
+    std::vector<std::string> filenames;
+#ifdef HAVE_GLOB_H
     glob_t glob_result;
     memset(&glob_result, 0, sizeof(glob_result));
 
@@ -128,12 +169,23 @@ std::vector<std::string> glob(const std::string& pattern)
         throw std::runtime_error(fmt::format("glob() failed: {}", return_value));
     }
 
-    std::vector<std::string> filenames;
     for (size_t i = 0; i < glob_result.gl_pathc; ++i)
         filenames.emplace_back(glob_result.gl_pathv[i]);
 
     globfree(&glob_result);
-
+#elif defined(HAVE_WINDOWS_H)
+    HANDLE hFind;
+    WIN32_FIND_DATAA file;
+    hFind = FindFirstFileA(pattern.c_str(), &file);
+    if (hFind != INVALID_HANDLE_VALUE)
+    {
+        do
+        {
+            filenames.emplace_back(file.cFileName);
+        } while (FindNextFileA(hFind, &file));
+        FindClose(hFind);
+    }
+#endif
     return filenames;
 }
 
