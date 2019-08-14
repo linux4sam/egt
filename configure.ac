@@ -36,8 +36,14 @@ esac
 AC_MSG_RESULT([$egt_os_win32])
 AM_CONDITIONAL(OS_WIN32, test "$egt_os_win32" = "yes")
 
-CXXFLAGS="$CXXFLAGS -std=c++11 -pedantic -g"
+CXXFLAGS="$CXXFLAGS -pedantic -g"
 CFLAGS="$CFLAGS -g"
+
+if test "x$egt_os_win32" = "xyes"; then
+  CXXFLAGS="$CXXFLAGS -std=gnu++11"
+else
+  CXXFLAGS="$CXXFLAGS -std=c++11"
+fi
 
 AC_DISABLE_STATIC
 AC_PROG_CXX
