@@ -1,5 +1,9 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = external src scripts docs
+SUBDIRS = external
+if ENABLE_LUA_BINDINGS
+SUBDIRS += lua
+endif
+SUBDIRS += src scripts docs
 if ENABLE_EXAMPLES
 SUBDIRS += examples
 endif

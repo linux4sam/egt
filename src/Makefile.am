@@ -301,6 +301,16 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/detail/input/inputevdev.h
 endif
 
+if ENABLE_LUA_BINDINGS
+libegt_la_CXXFLAGS += -DLUA_USE_POSIX
+libegt_la_SOURCES += \
+luaapp.cpp \
+../lua/ui.cpp
+
+nobase_libegtinclude_HEADERS += \
+../include/egt/luaapp.h
+endif
+
 if OS_WIN32
 libegt_la_LIBADD += -lws2_32 -lintl
 endif

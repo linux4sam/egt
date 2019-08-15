@@ -61,5 +61,6 @@
 @include_video@
 @include_camera@
 @include_http@
+@include_luaapp@
 
 #endif

@@ -47,6 +47,7 @@ std::unique_ptr<T> make_unique(Args&& ... args)
 
 namespace detail
 {
+#ifndef SWIG
 
 /**
  * Range class to work with C++11 range based for loops in a reverse order.
@@ -85,6 +86,8 @@ reverse_range<T> reverse_iterate(T& x)
 {
     return reverse_range<T>(x);
 }
+
+#endif
 
 /**
  * Utility base class to make a derived class non-copy-able.

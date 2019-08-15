@@ -86,7 +86,9 @@ protected:
     bool m_dir{false};
 };
 
+#ifndef SWIG
 ENABLE_BITMASK_OPERATORS(SideBoard::flags)
+#endif
 
 bool SideBoard::is_set(flags f) const
 {

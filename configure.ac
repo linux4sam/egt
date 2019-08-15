@@ -288,6 +288,23 @@ AS_IF([test "x$with_lua" != "xno"],[
 ])
 AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
 
+AC_ARG_ENABLE(lua-bindings, AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings (default: no)]))
+if test "x$enable_lua_bindings" = "xyes";
+then
+   AC_PATH_PROG([SWIG_BIN], [swig])
+   if test "x${have_lua}" = xyes && test -n "$SWIG_BIN"; then
+      have_lua_bindings=yes
+      AC_SUBST(include_luaapp, ["#include <egt/luaapp.h>"])
+   fi
+fi
+AM_CONDITIONAL([ENABLE_LUA_BINDINGS], [test "x${have_lua_bindings}" = xyes])
+
+AC_CHECK_HEADER([readline/readline.h], [have_readline=yes], [have_readline=no])
+if test "x${have_readline}" = xyes; then
+   LIBEGT_EXTRA_CXXFLAGS="-DLUA_USE_READLINE ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="-lreadline ${LIBEGT_EXTRA_LDFLAGS}"
+fi
+
 AX_PKG_CHECK_MODULES2(LIBPLANES, [libplanes >= 1.0.0], [], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
 if test "x${have_libplanes}" = xyes; then
@@ -434,7 +451,8 @@ AC_CONFIG_FILES([Makefile
 	examples/resource/Makefile
 	examples/video/Makefile
 	docs/Makefile
-	test/Makefile])
+	test/Makefile
+	lua/Makefile])
 AC_OUTPUT
 
 dnl report how we have been configured
@@ -475,6 +493,7 @@ echo
 echo "Features:"
 echo "  Networking             ${have_libcurl:-no}"
 echo "  libmagic               ${have_libmagic:-no (mime type detection disabled)}"
-echo "  LUA                    ${have_lua:-no}"
+echo "  LUA Interpreter        ${have_lua:-no}"
+echo "  LUA Bindings           ${have_lua_bindings:-no}"
 echo "  C++17 Filesystem       ${have_libstdcppfs:-no}"
 echo
