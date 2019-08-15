@@ -35,7 +35,6 @@ basic/basic \
 basicui/basicui \
 boards/boards \
 brick/brick \
-calc/calc \
 charts/charts \
 colors/colors \
 drag/drag \
@@ -49,6 +48,11 @@ squares/squares \
 virtualkeyboard/virtualkeyboard \
 whiteboard/whiteboard \
 widgets/widgets
+
+if HAVE_LUA
+bin_PROGRAMS += \
+calc/calc
+endif
 
 if HAVE_GSTREAMER
 bin_PROGRAMS += \
