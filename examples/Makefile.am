@@ -54,6 +54,11 @@ bin_PROGRAMS += \
 calc/calc
 endif
 
+if ENABLE_LUA_BINDINGS
+bin_PROGRAMS += \
+luarepl/luarepl
+endif
+
 if HAVE_GSTREAMER
 bin_PROGRAMS += \
 audioplayer/audioplayer
@@ -225,6 +230,12 @@ colors_colors_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 colors_colors_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 colors_colorsdir = $(prefix)/share/egt/examples/colors
 colors_colors_LDFLAGS = $(AM_LDFLAGS)
+
+luarepl_luarepl_SOURCES = luarepl/luarepl.cpp
+luarepl_luarepl_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+luarepl_luarepl_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+luarepl_luarepldir = $(prefix)/share/egt/examples/luarepl
+luarepl_luarepl_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
