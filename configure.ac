@@ -204,64 +204,88 @@ AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
             CFLAGS="$CFLAGS $PTHREAD_CFLAGS"], AC_MSG_ERROR(Can not find pthreads.  This is required.))
 
-AX_PKG_CHECK_MODULES2(X11, [x11 >= 1.6.3], [], [have_x11=yes], [have_x11=no])
+AC_ARG_WITH([x11],
+    AS_HELP_STRING([--without-x11], [Ignore presence of x11 and disable it]))
+AS_IF([test "x$with_x11" != "xno"],[
+   AX_PKG_CHECK_MODULES2(X11, [x11 >= 1.6.3], [], [have_x11=yes], [have_x11=no])
+   if test "x${have_x11}" = xyes; then
+      AC_DEFINE(HAVE_X11, 1, [Have x11 support])
+      LIBEGT_EXTRA_CXXFLAGS="${X11_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${X11_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_X11], [test "x${have_x11}" = xyes])
-if test "x${have_x11}" = xyes; then
-   AC_DEFINE(HAVE_X11, 1, [Have x11 support])
-   LIBEGT_EXTRA_CXXFLAGS="${X11_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${X11_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
-AX_PKG_CHECK_MODULES2(XKBCOMMON, [xkbcommon], [], [have_xkbcommon=yes], [have_xkbcommon=no])
+AC_ARG_WITH([xkbcommon],
+    AS_HELP_STRING([--without-xkbcommon], [Ignore presence of xkbcommon and disable it]))
+AS_IF([test "x$with_xkbcommon" != "xno"],[
+   AX_PKG_CHECK_MODULES2(XKBCOMMON, [xkbcommon], [], [have_xkbcommon=yes], [have_xkbcommon=no])
+   if test "x${have_xkbcommon}" = xyes; then
+      AC_DEFINE(HAVE_XKBCOMMON, 1, [Have xkbcommon support])
+      LIBEGT_EXTRA_CXXFLAGS="${XKBCOMMON_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${XKBCOMMON_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_XKBCOMMON], [test "x${have_xkbcommon}" = xyes])
-if test "x${have_xkbcommon}" = xyes; then
-   AC_DEFINE(HAVE_XKBCOMMON, 1, [Have xkbcommon support])
-   LIBEGT_EXTRA_CXXFLAGS="${XKBCOMMON_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${XKBCOMMON_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
-AX_PKG_CHECK_MODULES2(TSLIB, [tslib >= 1.15], [], [have_tslib=yes], [have_tslib=no])
+AC_ARG_WITH([tslib],
+    AS_HELP_STRING([--without-tslib], [Ignore presence of tslib and disable it]))
+AS_IF([test "x$with_tslib" != "xno"],[
+   AX_PKG_CHECK_MODULES2(TSLIB, [tslib >= 1.15], [], [have_tslib=yes], [have_tslib=no])
+   if test "x${have_tslib}" = xyes; then
+      AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
+      LIBEGT_EXTRA_CXXFLAGS="${TSLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${TSLIB_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_TSLIB], [test "x${have_tslib}" = xyes])
-if test "x${have_tslib}" = xyes; then
-   AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
-   LIBEGT_EXTRA_CXXFLAGS="${TSLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${TSLIB_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
-AX_PKG_CHECK_MODULES2(LIBINPUT, [libinput >= 1.6.3], [], [have_libinput=yes], [have_libinput=no])
+AC_ARG_WITH([libinput],
+    AS_HELP_STRING([--without-libinput], [Ignore presence of libinput and disable it]))
+AS_IF([test "x$with_libinput" != "xno"],[
+   AX_PKG_CHECK_MODULES2(LIBINPUT, [libinput >= 1.6.3], [], [have_libinput=yes], [have_libinput=no])
+   if test "x${have_libinput}" = xyes; then
+      AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
+      LIBEGT_EXTRA_CXXFLAGS="${LIBINPUT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_LIBINPUT], [test "x${have_libinput}" = xyes])
-if test "x${have_libinput}" = xyes; then
-   AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
-   LIBEGT_EXTRA_CXXFLAGS="${LIBINPUT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
-AX_PKG_CHECK_MODULES2(GSTREAMER, [gstreamer-1.0 >= 1.8], [], [have_gstreamer=yes], [have_gstreamer=no])
-if test "x${have_gstreamer}" = xyes; then
-   AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
-   LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
+AC_ARG_WITH([gstreamer],
+    AS_HELP_STRING([--without-gstreamer], [Ignore presence of gstreamer and disable it]))
+AS_IF([test "x$with_gstreamer" != "xno"],[
+   AX_PKG_CHECK_MODULES2(GSTREAMER, [gstreamer-1.0 >= 1.8], [], [have_gstreamer=yes], [have_gstreamer=no])
+   if test "x${have_gstreamer}" = xyes; then
+      AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
+      LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+
+      AX_PKG_CHECK_MODULES2(GSTREAMER_PBUTILS, [gstreamer-pbutils-1.0 >= 1.8], [], [have_gst_pbutils=yes], [have_gst_pbutils=no])
+      if test "x${have_gst_pbutils}" = xyes; then
+         AC_DEFINE(HAVE_GSTREAMER_PBUTILS, 1, [Have gstreamer pbutils support])
+         LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_PBUTILS_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+         LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_PBUTILS_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      fi
+   fi
+])
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
-
-AX_PKG_CHECK_MODULES2(GSTREAMER_PBUTILS, [gstreamer-pbutils-1.0 >= 1.8], [], [have_gst_pbutils=yes], [have_gst_pbutils=no])
-if test "x${have_gst_pbutils}" = xyes; then
-   AC_DEFINE(HAVE_GSTREAMER_PBUTILS, 1, [Have gstreamer pbutils support])
-   LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_PBUTILS_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_PBUTILS_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 AM_CONDITIONAL([HAVE_GSTREAMER_PBUTILS], [test "x${have_gst_pbutils}" = xyes])
 
-AX_PKG_CHECK_MODULES2(LUA, [lua >= 5.3.0], [], [have_lua=yes], [have_lua=no])
-if test "x${have_lua}" = xno; then
-AX_PKG_CHECK_MODULES2(LUA, [lua5.3], [], [have_lua=yes], [have_lua=no])
-fi
+AC_ARG_WITH([lua],
+    AS_HELP_STRING([--without-lua], [Ignore presence of lua and disable it]))
+AS_IF([test "x$with_lua" != "xno"],[
+   AX_PKG_CHECK_MODULES2(LUA, [lua >= 5.3.0], [], [have_lua=yes], [have_lua=no])
+   if test "x${have_lua}" = xno; then
+      AX_PKG_CHECK_MODULES2(LUA, [lua5.3], [], [have_lua=yes], [have_lua=no])
+   fi
+   if test "x${have_lua}" = xyes; then
+      AC_DEFINE(HAVE_LUA, 1, [Have lua support])
+      LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${LUA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
-if test "x${have_lua}" = xyes; then
-   AC_DEFINE(HAVE_LUA, 1, [Have lua support])
-   LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LUA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
 AX_PKG_CHECK_MODULES2(LIBPLANES, [libplanes >= 1.0.0], [], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
@@ -284,30 +308,42 @@ AX_PKG_CHECK_MODULES2(FONTCONFIG, [fontconfig], [], [], [AC_MSG_ERROR([
 LIBEGT_EXTRA_CXXFLAGS="${FONTCONFIG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
 LIBEGT_EXTRA_LDFLAGS="${FONTCONFIG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
-AX_PKG_CHECK_MODULES2(LIBJPEG, [libjpeg], [], [have_libjpeg=yes], [have_libjpeg=no])
+AC_ARG_WITH([libjpeg],
+    AS_HELP_STRING([--without-libjpeg], [Ignore presence of libjpeg and disable it]))
+AS_IF([test "x$with_libjpeg" != "xno"],[
+   AX_PKG_CHECK_MODULES2(LIBJPEG, [libjpeg], [], [have_libjpeg=yes], [have_libjpeg=no])
+   if test "x${have_libjpeg}" = xyes; then
+      AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
+      LIBEGT_EXTRA_CXXFLAGS="${LIBJPEG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${LIBJPEG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_LIBJPEG], [test "x${have_libjpeg}" = xyes])
-if test "x${have_libjpeg}" = xyes; then
-   AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
-   LIBEGT_EXTRA_CXXFLAGS="${LIBJPEG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBJPEG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
-AX_PKG_CHECK_MODULES2(LIBCURL, [libcurl >= 4.5], [], [have_libcurl=yes], [have_libcurl=no])
+AC_ARG_WITH([libcurl],
+    AS_HELP_STRING([--without-libcurl], [Ignore presence of libcurl and disable it]))
+AS_IF([test "x$with_libcurl" != "xno"],[
+   AX_PKG_CHECK_MODULES2(LIBCURL, [libcurl >= 4.5], [], [have_libcurl=yes], [have_libcurl=no])
+   if test "x${have_libcurl}" = xyes; then
+      AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
+      AC_SUBST(include_http, ["#include <egt/network/http.h>"])
+      LIBEGT_EXTRA_CXXFLAGS="${LIBCURL_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_LIBCURL], [test "x${have_libcurl}" = xyes])
-if test "x${have_libcurl}" = xyes; then
-   AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
-   AC_SUBST(include_http, ["#include <egt/network/http.h>"])
-   LIBEGT_EXTRA_CXXFLAGS="${LIBCURL_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
-AX_PKG_CHECK_MODULES2(LIBRSVG, [librsvg-2.0], [], [have_librsvg=yes], [have_librsvg=no])
+AC_ARG_WITH([librsvg],
+    AS_HELP_STRING([--without-librsvg], [Ignore presence of librsvg and disable it]))
+AS_IF([test "x$with_librsvg" != "xno"],[
+   AX_PKG_CHECK_MODULES2(LIBRSVG, [librsvg-2.0], [], [have_librsvg=yes], [have_librsvg=no])
+   if test "x${have_librsvg}" = xyes; then
+      AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
+      LIBEGT_EXTRA_CXXFLAGS="${LIBRSVG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
 AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
-if test "x${have_librsvg}" = xyes; then
-   AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
-   LIBEGT_EXTRA_CXXFLAGS="${LIBRSVG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
 AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
 AC_CHECK_HEADER([magic.h],
@@ -347,16 +383,16 @@ AM_CONDITIONAL([HAVE_LINUX_INPUT_H], [test "x${have_linux_input_h}" = xyes])
 
 AC_CHECK_PROG(XXD, xxd, yes)
 if test "x${XXD}" != x"yes"; then
-if test "x${enable_examples}" = xyes; then
-   AC_MSG_ERROR("Cannot find xxd. This is required.")
-fi
+   if test "x${enable_examples}" = xyes; then
+      AC_MSG_ERROR("Cannot find xxd. This is required.")
+   fi
 fi
 
 AC_CHECK_PROG(MSGFMT, msgfmt, yes)
 if test "x${MSGFMT}" != x"yes"; then
-if test "x${enable_examples}" = xyes; then
-   AC_MSG_WARN("Missing msgfmt: install gettext")
-fi
+   if test "x${enable_examples}" = xyes; then
+      AC_MSG_WARN("Missing msgfmt: install gettext")
+   fi
 fi
 AM_CONDITIONAL([HAVE_MSGFMT], [test "x${MSGFMT}" = xyes])
 
