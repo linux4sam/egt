@@ -97,7 +97,10 @@ Painter class in EGT.
 @image html cairo_drawing.png "Cairo Drawing Model [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]"
 @image latex cairo_drawing.png "Cairo Drawing Model [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]" width=8cm
 
-If you are not familiar with cairo, the
+The
+[Cairo Manual](https://www.cairographics.org/manual/index.html) provides
+excellent documentation of the cairo API and is a useful reference.  If you are
+not familiar with cairo, the
 [Cairo Tutorial](https://www.cairographics.org/tutorial/) information is very
 helpful to understand the basics.
 
