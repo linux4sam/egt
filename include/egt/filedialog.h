@@ -61,7 +61,7 @@ public:
      * @note filepath should be a directory. If the file path is regular file,
      * then content of its parent directory will be listed.
      */
-    explicit FileDialog(const std::string& filepath = {}, const Rect& rect = {});
+    explicit FileDialog(const std::string& filepath, const Rect& rect = {});
 
     /**
      * File is selected in a file dialog window.
@@ -134,7 +134,7 @@ public:
      * @note filepath should be a directory. If the file path is regular file,
      * then content of its parent directory will be listed.
      */
-    explicit FileOpenDialog(const std::string& filepath = {}, const Rect& rect = {});
+    explicit FileOpenDialog(const std::string& filepath, const Rect& rect = {});
 
     virtual void show() override;
 
@@ -201,7 +201,7 @@ public:
      * @note filepath should be a directory. If the file path is regular file,
      * then content of its parent directory will be listed.
      */
-    explicit FileSaveDialog(const std::string& filepath = {}, const Rect& rect = {});
+    explicit FileSaveDialog(const std::string& filepath, const Rect& rect = {});
 
     virtual void show() override;
 
