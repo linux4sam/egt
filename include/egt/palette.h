@@ -320,6 +320,8 @@ public:
      */
     virtual bool exists(ColorId id, GroupId group = GroupId::normal) const;
 
+    virtual ~Palette() = default;
+
 protected:
 
     /**
