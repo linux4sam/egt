@@ -43,8 +43,7 @@ libspdlog_la_SOURCES = spdlog/src/spdlog.cpp
 
 libspdlog_la_CXXFLAGS = \
 	-I$(top_srcdir)/external/spdlog/include \
-	$(AM_CXXFLAGS) \
-	-DFMT_HEADER_ONLY
+	$(AM_CXXFLAGS)
 
 CLEANFILES = $(top_builddir)/external/kplot/compat.h
 BUILT_SOURCES = $(top_builddir)/external/kplot/compat.h
