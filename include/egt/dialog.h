@@ -8,12 +8,10 @@
 
 #include <egt/button.h>
 #include <egt/grid.h>
-#include <egt/input.h>
 #include <egt/label.h>
 #include <egt/popup.h>
 #include <egt/sizer.h>
 #include <egt/text.h>
-#include <functional>
 #include <memory>
 #include <string>
 
