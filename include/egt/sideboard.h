@@ -32,7 +32,7 @@ class SideBoard : public Window
 {
 public:
 
-    constexpr static const auto HANDLE_WIDTH = 50;
+    constexpr static const int HANDLE_WIDTH = 50;
 
     enum class flags
     {
