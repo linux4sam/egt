@@ -15,6 +15,7 @@
 #include <deque>
 #include <egt/asio.hpp>
 #include <numeric>
+#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -115,6 +116,7 @@ int EventLoop::run(bool enable_fps)
     draw();
 
     do_quit = false;
+    m_impl->m_io.restart();
     while (!do_quit)
     {
         if (wait())
@@ -130,6 +132,8 @@ int EventLoop::run(bool enable_fps)
             }
         }
     }
+
+    SPDLOG_TRACE("EventLoop::run() exiting");
 
     return 0;
 }
