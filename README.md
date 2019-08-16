@@ -40,7 +40,6 @@ Optional dependencies include:
 ```sh
 sudo apt-get install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
      libxkbcommon-dev xkb-data libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 ```
 
 Then clone the source and build.
