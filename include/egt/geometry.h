@@ -437,14 +437,14 @@ public:
         return *this;
     }
 
-    RectType<dim_t, dim_c>& operator+=(const Point& rhs)
+    RectType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
     {
         m_x += rhs.x();
         m_y += rhs.y();
         return *this;
     }
 
-    RectType<dim_t, dim_c>& operator-=(const Point& rhs)
+    RectType<dim_t, dim_c>& operator-=(const PointType<dim_t, dim_c>& rhs)
     {
         m_x -= rhs.x();
         m_y -= rhs.y();
@@ -462,18 +462,18 @@ public:
     /**
      * Return the center point of the rectangle.
      */
-    inline Point center() const
+    inline PointType<dim_t, dim_c> center() const
     {
-        return Point(m_x + (m_width / 2.), m_y + (m_height / 2.));
+        return PointType<dim_t, dim_c>(m_x + (m_width / 2.), m_y + (m_height / 2.));
     }
 
     /**
      * Move the rectangle's center to the specified point.
      */
-    inline void move_to_center(const Point& center)
+    inline void move_to_center(const PointType<dim_t, dim_c>& center)
     {
-        Point pos(center.x() - m_width / 2.,
-                  center.y() - m_height / 2.);
+        PointType<dim_t, dim_c> pos(center.x() - m_width / 2.,
+                                    center.y() - m_height / 2.);
 
         m_x = pos.x();
         m_y = pos.y();
@@ -516,7 +516,7 @@ public:
     /**
      * Set the rectangle's origin to the specified point.
      */
-    inline void set_point(const Point& p)
+    inline void set_point(const PointType<dim_t, dim_c>& p)
     {
         m_x = p.x();
         m_y = p.y();
@@ -625,7 +625,7 @@ public:
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
      */
-    inline bool point_inside(const Point& point) const
+    inline bool point_inside(const PointType<dim_t, dim_c>& point) const
     {
         return point_inside(point, *this);
     }
@@ -633,7 +633,7 @@ public:
     /**
      * Determine if the specified point is inside of the rectangle.
      */
-    static inline bool point_inside(const Point& point, const RectType<dim_t, dim_c>& rhs)
+    static inline bool point_inside(const PointType<dim_t, dim_c>& point, const RectType<dim_t, dim_c>& rhs)
     {
         return (point.x() <= rhs.right() && point.x() >= rhs.left() &&
                 point.y() <= rhs.bottom() && point.y() >= rhs.top());
@@ -760,14 +760,14 @@ inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const SizeTy
 }
 
 template<class dim_t, compatible dim_c>
-inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const Point& rhs)
+inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
     lhs.set_point(lhs.point() + rhs);
     return lhs;
 }
 
 template<class dim_t, compatible dim_c>
-inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const Point& rhs)
+inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
     lhs.set_point(lhs.point() - rhs);
     return lhs;
