@@ -198,6 +198,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/types.h \
 ../include/egt/uiloader.h \
 ../include/egt/utils.h \
+../include/egt/value.h \
 ../include/egt/valuewidget.h \
 ../include/egt/view.h \
 ../include/egt/virtualkeyboard.h \

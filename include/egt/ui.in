@@ -51,6 +51,7 @@
 #include <egt/timer.h>
 #include <egt/tools.h>
 #include <egt/types.h>
+#include <egt/value.h>
 #include <egt/valuewidget.h>
 #include <egt/version.h>
 #include <egt/view.h>
