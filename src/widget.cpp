@@ -154,6 +154,17 @@ bool Widget::visible() const
     return !flags().is_set(Widget::flag::invisible);
 }
 
+void Widget::set_visible(bool value)
+{
+    if (visible() != value)
+    {
+        if (value)
+            show();
+        else
+            hide();
+    }
+}
+
 bool Widget::active() const
 {
     return flags().is_set(Widget::flag::active);

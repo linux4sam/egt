@@ -310,6 +310,11 @@ public:
     virtual bool visible() const;
 
     /**
+     * Set the visible property.
+     */
+    virtual void set_visible(bool value);
+
+    /**
      * Toggle the visibility state.
      *
      * @see Widget::show()
