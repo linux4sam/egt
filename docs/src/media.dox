@@ -28,18 +28,21 @@ specification is an open standard developed by the World Wide Web Consortium
 
 EGT can load SVG files using the third party library
 [librsvg](https://github.com/GNOME/librsvg).  On top of that,
-this library provides the ability to load objects by id from SVG files.  What
+this library provides the ability to load elements by id from SVG files.  What
 this means is a graphic designer can create an SVG file and give each component
-of the UI a unique ID.  Then, an EGT programmer can individually load these
-components and assign them to widgets and create logic around these components
-from a single SVG file.  It's an easy and natural way to add logic to what is
-otherwise just a single UI file by using EGT.
+of the UI a unique element ID.  Then, an EGT programmer can individually load
+these components and assign them to widgets and create logic around these
+components from a single SVG file.  Also, a graphic designer can put elements in
+the SVG that are a hint where EGT should be used to draw something, like text.
+
+Working with an SVG file in EGT is mostly accomplished with the single SvgImage
+class.  THis class allows fine grained access into SVG specific properties,
+while still allowing easy conversion to a normal raster Image instance.
 
 experimental::Gauge, experimental::GaugeLayer, and experimental::NeedleLayer are
 several classes useful in EGT for taking advantage of SVG files directly by
 using complete SVG files or individual objects in those SVG files to construct
 layered widgets.
-
 
 @section media_video Video Formats
 

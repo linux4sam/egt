@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
-#include <egt/detail/svg.h>
 
 using namespace std;
 using namespace egt;
@@ -37,75 +36,82 @@ int main(int argc, const char** argv)
     logo->set_margin(10);
     win.add(top(center(logo)));
 
-    StaticGrid grid(Tuple(2, 2));
-    grid.set_color(Palette::ColorId::border, Palette::transparent);
+    StaticGrid grid(Tuple(3, 2));
     win.add(expand(grid));
 
     Gauge gauge;
-    center(gauge);
-    auto gauge_background = make_shared<GaugeLayer>(Image(detail::load_svg("gauge_background.svg", SizeF(192, 192))));
-    gauge_background->set_gauge(&gauge);
+    auto gauge_background = make_shared<GaugeLayer>(SvgImage("gauge_background.svg", SizeF(192, 192)));
     gauge.add_layer(gauge_background);
 
-    auto gauge_needle1 = make_shared<NeedleLayer>(Image(detail::load_svg("gauge_needle2.svg", SizeF(91, 14))),
+    auto gauge_needle1 = make_shared<NeedleLayer>(SvgImage("gauge_needle2.svg", SizeF(91, 14)),
                          0, 100, 135, 45);
     gauge_needle1->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
     gauge_needle1->set_needle_center(PointF(6.8725, 6.87253));
-    gauge_needle1->set_gauge(&gauge);
     gauge.add_layer(gauge_needle1);
     demo_up_down_animator(gauge_needle1, 0, 100, std::chrono::seconds(5));
 
-    auto gauge_needle2 = make_shared<NeedleLayer>(Image(detail::load_svg("gauge_needle1.svg", SizeF(91, 14))),
+    auto gauge_needle2 = make_shared<NeedleLayer>(SvgImage("gauge_needle1.svg", SizeF(91, 14)),
                          0, 100, 135, 45);
     gauge_needle2->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
     gauge_needle2->set_needle_center(PointF(6.8725, 6.87253));
-    gauge_needle2->set_gauge(&gauge);
     gauge.add_layer(gauge_needle2);
     demo_up_down_animator(gauge_needle2, 0, 100, std::chrono::seconds(8));
-
-    grid.add(gauge);
+    grid.add(center(gauge));
 
     Gauge fuel;
-    center(fuel);
-    auto fuel_background = make_shared<GaugeLayer>(Image(detail::load_svg("fuel_background.svg", SizeF(198, 153))));
-    fuel_background->set_gauge(&fuel);
+    SvgImage fuelsvg("fuel_background.svg", SizeF(0, 150));
+
+    auto fuel_background = make_shared<GaugeLayer>(fuelsvg.id("#background"));
     fuel.add_layer(fuel_background);
-    auto fuel_needle = make_shared<NeedleLayer>(Image(detail::load_svg("fuel_needle.svg", SizeF(72, 6))),
-                       0, 100, 60, 300, false);
-    fuel_needle->set_needle_point(PointF(415.73, 382.09) / PointF(5.0, 5.0));
-    fuel_needle->set_needle_center(PointF(3, 3));
-    fuel_needle->set_gauge(&fuel);
+
+    auto fuel_needle_box = fuelsvg.id_box("#needle");
+    auto fuel_needle = make_shared<NeedleLayer>(fuelsvg.id("#needle", fuel_needle_box),
+                       0, 100, -63, 63, true);
+
+    auto needle_point = fuelsvg.id_box("#needlepoint").center();
+    fuel_needle->set_needle_point(needle_point);
+    fuel_needle->set_needle_center(needle_point - fuel_needle_box.point());
     fuel.add_layer(fuel_needle);
     demo_up_down_animator(fuel_needle, 0, 100, std::chrono::seconds(10));
-    grid.add(fuel);
+    grid.add(center(fuel));
+
+    Gauge custom1;
+    SvgImage custom1svg("custom1_gauge.svg", SizeF(200, 0));
+
+    auto custom1_background = make_shared<GaugeLayer>(custom1svg.id("#g82"));
+    custom1.add_layer(custom1_background);
+
+    auto custom1_needle_box = custom1svg.id_box("#needle");
+    auto custom1_needle = make_shared<NeedleLayer>(custom1svg.id("#needle", custom1_needle_box),
+                          0, 100, 8, 150, true);
+    auto custom1_needle_point = custom1svg.id_box("#needlepoint").center();
+    custom1_needle->set_needle_point(custom1_needle_point);
+    custom1_needle->set_needle_center(custom1_needle_point - custom1_needle_box.point());
+    custom1.add_layer(custom1_needle);
+    demo_up_down_animator(custom1_needle, 0, 100, std::chrono::seconds(10));
+    grid.add(center(custom1));
 
     Gauge airspeed;
-    center(airspeed);
-    auto airspeed_background = make_shared<GaugeLayer>(Image(detail::load_svg("airspeed_background.svg", SizeF(400, 400) / SizeF(2, 2))));
-    airspeed_background->set_gauge(&airspeed);
+    auto airspeed_background = make_shared<GaugeLayer>(SvgImage("airspeed_background.svg", SizeF(400, 400) / SizeF(2, 2)));
     airspeed.add_layer(airspeed_background);
-    auto airspeed_needle = make_shared<NeedleLayer>(Image(detail::load_svg("airspeed_needle.svg", SizeF(168, 17) / SizeF(2, 2))),
+    auto airspeed_needle = make_shared<NeedleLayer>(SvgImage("airspeed_needle.svg", SizeF(168, 17) / SizeF(2, 2)),
                            0, 180, 270, 222);
     airspeed_needle->set_needle_point(PointF(200, 200) / PointF(2, 2));
     airspeed_needle->set_needle_center(PointF(8, 8.3) / PointF(2, 2));
-    airspeed_needle->set_gauge(&airspeed);
     airspeed.add_layer(airspeed_needle);
     demo_up_down_animator(airspeed_needle, 0, 180, std::chrono::seconds(7));
-    grid.add(airspeed);
+    grid.add(center(airspeed));
 
     Gauge speedometer;
-    center(speedometer);
-    auto speedometer_background = make_shared<GaugeLayer>(Image(detail::load_svg("speedometer_background.svg", SizeF(913, 908) / SizeF(4.6, 4.6))));
-    speedometer_background->set_gauge(&speedometer);
+    auto speedometer_background = make_shared<GaugeLayer>(SvgImage("speedometer_background.svg", SizeF(913, 908) / SizeF(4.6, 4.6)));
     speedometer.add_layer(speedometer_background);
-    auto speedometer_needle = make_shared<NeedleLayer>(Image(detail::load_svg("speedometer_needle.svg", SizeF(467, 376) / SizeF(4.6, 4.6))),
+    auto speedometer_needle = make_shared<NeedleLayer>(SvgImage("speedometer_needle.svg", SizeF(467, 376) / SizeF(4.6, 4.6)),
                               0, 110, 136.52, 41.80);
     speedometer_needle->set_needle_point(PointF(913, 908) / PointF(4.6, 4.6) / PointF(2, 2));
     speedometer_needle->set_needle_center(PointF(85.88, 185.44) / PointF(4.6, 4.6));
-    speedometer_needle->set_gauge(&speedometer);
     speedometer.add_layer(speedometer_needle);
     demo_up_down_animator(speedometer_needle, 0, 110, std::chrono::seconds(12));
-    grid.add(speedometer);
+    grid.add(center(speedometer));
 
     win.show();
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
-#include <egt/detail/svg.h>
+#include <chrono>
 
 using namespace std;
 using namespace egt;
@@ -12,12 +12,14 @@ using namespace egt::experimental;
 
 template<class T>
 static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
-                                  std::chrono::seconds length = std::chrono::seconds(10))
+                                  std::chrono::milliseconds duration = std::chrono::seconds(10),
+                                  easing_func_t easingin = easing_circular_easein,
+                                  easing_func_t easingout = easing_circular_easeout)
 {
-    auto animationup = std::make_shared<PropertyAnimator>(min, max, length, easing_circular_easein);
+    auto animationup = std::make_shared<PropertyAnimator>(min, max, duration, easingin);
     animationup->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
 
-    auto animationdown = std::make_shared<PropertyAnimator>(max, min, length, easing_circular_easeout);
+    auto animationdown = std::make_shared<PropertyAnimator>(max, min, duration, easingout);
     animationdown->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
 
     /// @todo leak
@@ -27,115 +29,133 @@ static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
     sequence->start();
 }
 
+static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
+        const std::string& id, const std::string& point_id,
+        int min, int max, int min_angle, int max_angle,
+        std::chrono::milliseconds duration,
+        easing_func_t easing = easing_circular_easein)
+{
+    if (!svg.id_exists(id) || !svg.id_exists(point_id))
+        return nullptr;
+
+    auto needle_box = svg.id_box(id);
+    auto needle = make_shared<NeedleLayer>(svg.id(id, needle_box),
+                                           min, max, min_angle, max_angle);
+    auto needle_point = svg.id_box(point_id).center();
+    needle->set_needle_point(needle_point);
+    needle->set_needle_center(needle_point - needle_box.point());
+    gauge.add_layer(needle);
+
+    demo_up_down_animator(needle, min, max, duration, easing);
+
+    return needle;
+}
+
+static shared_ptr<GaugeLayer> create_layer(Gauge& gauge, SvgImage& svg,
+        const std::string& id,
+        std::chrono::milliseconds duration)
+{
+    if (!svg.id_exists(id))
+        return nullptr;
+
+    auto box = svg.id_box(id);
+    auto layer = make_shared<GaugeLayer>(svg.id(id, box));
+    layer->set_box(Rect(std::floor(box.x()),
+                        std::floor(box.y()),
+                        std::ceil(box.width()),
+                        std::ceil(box.height())));
+    layer->hide();
+    gauge.add_layer(layer);
+
+    /// @todo leak
+    auto timer = new PeriodicTimer(duration);
+    timer->on_timeout([layer]() { layer->visible_toggle(); });
+    timer->start();
+
+    return layer;
+}
+
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "dash");
 
     TopWindow win;
+    win.set_padding(10);
     win.set_color(Palette::ColorId::bg, Color::css("#1b1d43"));
 
     auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
-    logo->set_margin(10);
     win.add(top(left(logo)));
-
-    auto f = 1.50375;
 
     // the gauge
     Gauge gauge;
     center(gauge);
 
+    SvgImage dash_background("dash_background.svg", SizeF(win.content_area().width(), 0));
+
     // create a background layer
-    auto gauge_background = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
-                            SizeF(1203, 593) / SizeF(f, f),
-                            "#background")));
-    gauge_background->set_gauge(&gauge);
+    auto gauge_background = make_shared<GaugeLayer>(dash_background.id("#background"));
     gauge.add_layer(gauge_background);
 
-    // create the right blink layer
-    auto right_blink = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
-                       SizeF(1203, 593) / SizeF(f, f),
-                       "#right_blink")));
-    right_blink->set_gauge(&gauge);
-    right_blink->set_visible(false);
-    gauge.add_layer(right_blink);
+    // pick out some other layers
+    auto right_blink = create_layer(gauge, dash_background, "#right_blink", std::chrono::milliseconds(1500));
+    auto left_blink = create_layer(gauge, dash_background, "#left_blink", std::chrono::seconds(1));
+    auto brights = create_layer(gauge, dash_background, "#brights", std::chrono::seconds(5));
+    auto high_brights = create_layer(gauge, dash_background, "#highbrights", std::chrono::seconds(4));
+    auto hazards = create_layer(gauge, dash_background, "#hazards", std::chrono::seconds(2));
+    auto heat = create_layer(gauge, dash_background, "#heat", std::chrono::seconds(3));
 
-    PeriodicTimer right_timer(std::chrono::milliseconds(1500));
-    right_timer.on_timeout([right_blink]()
-    {
-        right_blink->visible_toggle();
-    });
-    right_timer.start();
-
-    // create the left blink layer
-    auto left_blink = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
-                      SizeF(1203, 593) / SizeF(f, f),
-                      "#left_blink")));
-    left_blink->set_gauge(&gauge);
-    left_blink->set_visible(false);
-    gauge.add_layer(left_blink);
-
-    PeriodicTimer left_timer(std::chrono::milliseconds(1000));
-    left_timer.on_timeout([left_blink]()
-    {
-        left_blink->visible_toggle();
-    });
-    left_timer.start();
-
-    // create the brights layer
-    auto brights = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
-                                           SizeF(1203, 593) / SizeF(f, f),
-                                           "#brights")));
-    brights->set_gauge(&gauge);
-    brights->set_visible(false);
-    gauge.add_layer(brights);
-
-    PeriodicTimer brights_timer(std::chrono::seconds(5));
-    brights_timer.on_timeout([brights]()
-    {
-        brights->visible_toggle();
-    });
-    brights_timer.start();
-
-    // create the hazards layer
-    auto hazards = make_shared<GaugeLayer>(Image(detail::load_svg("dash_background.svg",
-                                           SizeF(1203, 593) / SizeF(f, f),
-                                           "#hazards")));
-    hazards->set_gauge(&gauge);
-    hazards->set_visible(false);
-    gauge.add_layer(hazards);
-
-    PeriodicTimer hazards_timer(std::chrono::seconds(2));
-    hazards_timer.on_timeout([hazards]()
-    {
-        hazards->set_visible(!hazards->visible());
-    });
-    hazards_timer.start();
-
-    auto rpm_needle = make_shared<NeedleLayer>(Image(detail::load_svg("dash_needle.svg", SizeF(102, 8) / SizeF(f, f))),
-                      1000, 6000, 171.34, 8.6);
-    rpm_needle->set_gauge(&gauge);
-    rpm_needle->set_needle_point(PointF(284.49, 339.51) / PointF(f, f));
-    rpm_needle->set_needle_center(PointF(4.8, 3.9) / PointF(f, f));
-    gauge.add_layer(rpm_needle);
-    demo_up_down_animator(rpm_needle, 1000, 6000, std::chrono::seconds(8));
-
-    auto mph_needle = make_shared<NeedleLayer>(Image(detail::load_svg("dash_needle.svg", SizeF(102, 8) / SizeF(f, f))),
-                      20, 220, 171.34, 8.6);
-    mph_needle->set_gauge(&gauge);
-    mph_needle->set_needle_point(PointF(918.40, 339.51) / PointF(f, f));
-    mph_needle->set_needle_center(PointF(4.8, 3.9) / PointF(f, f));
-    gauge.add_layer(mph_needle);
-    demo_up_down_animator(mph_needle, 20, 220, std::chrono::seconds(8));
-
-    auto fuel_needle = make_shared<NeedleLayer>(Image(detail::load_svg("dash_needle.svg", SizeF(102, 8) / SizeF(f, f))),
-                       0, 100, 180, 270);
-    fuel_needle->set_gauge(&gauge);
-    fuel_needle->set_needle_point(PointF(641.29, 359.43) / PointF(f, f));
-    fuel_needle->set_needle_center(PointF(4.8, 3.9) / PointF(f, f));
-    gauge.add_layer(fuel_needle);
-    demo_up_down_animator(fuel_needle, 0, 100, std::chrono::seconds(30));
+    // pick out the needles
+    auto rpm_needle = create_needle(gauge, dash_background, "#rpmneedle", "#rpmpoint",
+                                    0, 6000, -20, 190, std::chrono::seconds(8), easing_bounce);
+    auto mph_needle = create_needle(gauge, dash_background, "#mphneedle", "#mphpoint",
+                                    0, 220, -20, 190, std::chrono::seconds(8));
+    auto fuel_needle = create_needle(gauge, dash_background, "#fuelneedle", "#fuelpoint",
+                                     0, 100, 0, 90, std::chrono::seconds(3));
 
     win.add(gauge);
+
+    // add some labels to show updating text at specific places
+
+    auto rpm_box = dash_background.id_box("#rpm");
+    auto rpm_text = make_shared<Label>();
+    rpm_text->set_text_align(alignmask::center);
+    rpm_text->set_box(Rect(rpm_box.x(), rpm_box.y(), rpm_box.width(), rpm_box.height()));
+    rpm_text->set_color(Palette::ColorId::label_text, Palette::cyan);
+    rpm_text->set_text("Trip 1: 100.5 miles");
+    gauge.add(rpm_text);
+
+    auto speed_box = dash_background.id_box("#speed");
+    auto speed_text = make_shared<Label>();
+    speed_text->set_text_align(alignmask::center);
+    speed_text->set_box(Rect(speed_box.x(), speed_box.y(), speed_box.width(), speed_box.height()));
+    speed_text->set_color(Palette::ColorId::label_text, Palette::white);
+    speed_text->set_font(Font(28, Font::weightid::bold));
+    speed_text->set_text("0 mph");
+    gauge.add(speed_text);
+
+    mph_needle->on_event([speed_text, mph_needle](Event&)
+    {
+        ostringstream ss;
+        ss << mph_needle->value() << " mph";
+        speed_text->set_text(ss.str());
+    }, {eventid::property_changed});
+
+    auto middle_box = dash_background.id_box("#middle");
+    auto middle_text = make_shared<Label>();
+    middle_text->set_text_align(alignmask::center);
+    middle_text->set_box(Rect(middle_box.x(), middle_box.y(), middle_box.width(), middle_box.height()));
+    middle_text->set_color(Palette::ColorId::label_text, Palette::aquamarine);
+    middle_text->set_text("98.7 FM");
+    gauge.add(middle_text);
+
+    auto console_box = dash_background.id_box("#console");
+    auto console_text = make_shared<Label>();
+    console_text->set_text_align(alignmask::center);
+    console_text->set_box(Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
+    console_text->set_color(Palette::ColorId::label_text, Palette::orange);
+    console_text->set_font(Font(55, Font::weightid::bold));
+    console_text->set_text("D");
+    gauge.add(console_text);
 
     win.show();
 

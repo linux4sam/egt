@@ -3,11 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/math.h"
 #include "egt/gauge.h"
-#include <detail/floatingpoint.h>
-#include <egt/detail/math.h>
-
-using namespace std;
 
 namespace egt
 {
@@ -16,8 +13,44 @@ inline namespace v1
 namespace experimental
 {
 
+GaugeLayer::GaugeLayer(const Image& image) noexcept
+    : m_image(image)
+{
+    if (!m_image.empty())
+        m_box.set_size(m_image.size());
+}
+
+GaugeLayer::GaugeLayer(Gauge& gauge, const Image& image) noexcept
+    : GaugeLayer(image)
+{
+    gauge.add_layer(*this);
+}
+
+void GaugeLayer::draw(Painter& painter, const Rect&)
+{
+    painter.draw(point());
+    painter.draw(m_image);
+}
+
+NeedleLayer::NeedleLayer(const Image& image,
+                         float min,
+                         float max,
+                         float angle_start,
+                         float angle_stop,
+                         bool clockwise) noexcept
+    : GaugeLayer(image),
+      m_min(min),
+      m_max(max),
+      m_value(m_min),
+      m_angle_start(angle_start),
+      m_angle_stop(angle_stop),
+      m_clockwise(clockwise)
+{
+    assert(m_max > m_min);
+}
+
 static void draw_image(Painter& painter,
-                       const PointF& center,
+                       const PointF& point,
                        const PointF& needle_center,
                        const Image& image,
                        float angle)
@@ -25,7 +58,7 @@ static void draw_image(Painter& painter,
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
 
-    cairo_translate(cr, center.x(), center.y());
+    cairo_translate(cr, point.x(), point.y());
     cairo_rotate(cr, angle);
 
     /*
@@ -37,38 +70,67 @@ static void draw_image(Painter& painter,
                     image.size().width(), image.size().height() - 2);
     cairo_clip(cr);
 
-    cairo_set_source_surface(cr, image.surface().get(), -needle_center.x(), -needle_center.y());
+    cairo_set_source_surface(cr, image.surface().get(),
+                             -needle_center.x(), -needle_center.y());
+
     cairo_paint(cr);
 }
 
-void GaugeLayer::set_visible(bool visible)
+void NeedleLayer::draw(Painter& painter, const Rect&)
 {
-    if (detail::change_if_diff<>(m_visible, visible))
-        m_gauge->damage();
-}
+    auto angle = detail::normalize_to_angle(m_value, m_min, m_max,
+                                            m_angle_start, m_angle_stop,
+                                            m_clockwise);
 
-void NeedleLayer::set_value(float value)
-{
-    if (!detail::FloatingPoint<float>(value).
-        AlmostEquals(detail::FloatingPoint<float>(m_value)))
-    {
-        m_value = value;
-        m_gauge->damage();
-    }
-}
-
-void NeedleLayer::draw(Painter& painter)
-{
-    auto angle = detail::normalize_to_angle(m_value, m_min, m_max, m_angle_start, m_angle_stop, m_clockwise);
-
-    draw_image(painter, PointF(m_gauge->point().x(), m_gauge->point().y()) + m_point,
+    draw_image(painter, m_point,
                m_center, m_image, detail::to_radians<double>(0, angle));
 }
 
-void GaugeLayer::draw(Painter& painter)
+void NeedleLayer::set_gauge(Gauge* gauge)
 {
-    painter.draw(m_gauge->point());
-    painter.draw(m_image);
+    if (!m_gauge || !gauge)
+    {
+        if (detail::change_if_diff<>(m_gauge, gauge))
+            damage();
+    }
+}
+
+void Gauge::add_layer(const std::shared_ptr<GaugeLayer>& layer)
+{
+    if (!layer)
+        return;
+
+    flags().set(Widget::flag::no_layout);
+
+    auto i = std::find(m_layers.begin(), m_layers.end(), layer);
+    if (i == m_layers.end())
+    {
+        m_layers.push_back(layer);
+        layer->set_gauge(this);
+        resize(super_size());
+        damage();
+    }
+
+    Frame::add(layer);
+}
+
+void Gauge::remove_layer(const std::shared_ptr<GaugeLayer>& layer)
+{
+    if (!layer)
+        return;
+
+    auto i = std::find(m_layers.begin(), m_layers.end(), layer);
+    if (i != m_layers.end())
+    {
+        layer->set_gauge(nullptr);
+        m_layers.erase(i);
+    }
+}
+
+Gauge::~Gauge()
+{
+    for (auto& layer : m_layers)
+        layer->set_gauge(nullptr);
 }
 
 }
