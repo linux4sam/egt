@@ -41,7 +41,7 @@ class Canvas
 {
 public:
 
-    Canvas() = delete;
+    Canvas() = default;
 
     /**
      * Construct a canvas with the specified format and size.
@@ -95,6 +95,28 @@ public:
      * Get the size of the surface.
      */
     Size size() const;
+
+    /**
+     * Reallocate the canvas to a different size.
+     *
+     * @param[in] size The size of the canvas.
+     * @param[in] format The pixel format for the canvas.
+     */
+    void reallocate(const Size& size, pixel_format format = pixel_format::argb8888);
+
+    /**
+     * Reallocate the canvas to a different size.
+     *
+     * @param[in] size The size of the canvas.
+     * @param[in] format The pixel format for the canvas.
+     */
+    void reallocate(const SizeF& size, pixel_format format = pixel_format::argb8888);
+
+    /**
+     * Fill the surface with zero (including for transparency channel if
+     * applicable).
+     */
+    void zero();
 
     /**
      * Get the format of the surface.

@@ -58,6 +58,33 @@ pixel_format Canvas::format() const
     return detail::egt_format(cairo_image_surface_get_format(m_surface.get()));
 }
 
+void Canvas::reallocate(const Size& size, pixel_format format)
+{
+    m_surface = shared_cairo_surface_t(cairo_image_surface_create(detail::cairo_format(format), size.width(), size.height()),
+                                       cairo_surface_destroy);
+    m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
+
+}
+
+void Canvas::reallocate(const SizeF& size, pixel_format format)
+{
+    m_surface = shared_cairo_surface_t(cairo_image_surface_create(detail::cairo_format(format), size.width(), size.height()),
+                                       cairo_surface_destroy);
+    m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
+
+}
+
+void Canvas::zero()
+{
+    if (m_surface && m_cr)
+    {
+        cairo_save(m_cr.get());
+        cairo_set_source_rgba(m_cr.get(), 0, 0, 0, 0);
+        cairo_paint(m_cr.get());
+        cairo_restore(m_cr.get());
+    }
+}
+
 void Canvas::copy(const shared_cairo_surface_t& surface)
 {
     cairo_save(m_cr.get());
