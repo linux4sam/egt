@@ -62,5 +62,6 @@
 @include_camera@
 @include_http@
 @include_luaapp@
+@include_svg@
 
 #endif

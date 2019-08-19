@@ -357,6 +357,7 @@ AS_IF([test "x$with_librsvg" != "xno"],[
    AX_PKG_CHECK_MODULES2(LIBRSVG, [librsvg-2.0], [], [have_librsvg=yes], [have_librsvg=no])
    if test "x${have_librsvg}" = xyes; then
       AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
+      AC_SUBST(include_svg, ["#include <egt/svgimage.h>"])
       LIBEGT_EXTRA_CXXFLAGS="${LIBRSVG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
       LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi

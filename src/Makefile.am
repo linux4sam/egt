@@ -279,10 +279,12 @@ endif
 
 if HAVE_LIBRSVG
 libegt_la_SOURCES += \
-detail/svg.cpp
+detail/svg.cpp \
+svgimage.cpp
 
 nobase_libegtinclude_HEADERS += \
-../include/egt/detail/svg.h
+../include/egt/detail/svg.h \
+../include/egt/svgimage.h
 endif
 
 if HAVE_FBDEV
