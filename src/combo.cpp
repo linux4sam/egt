@@ -29,12 +29,6 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 {
     set_name("ComboBoxPopup" + std::to_string(m_widgetid));
 
-    for (auto& item : parent.m_items)
-    {
-        auto p = std::make_shared<StringItem>(item);
-        m_list->add_item(p);
-    }
-
     m_list->set_align(alignmask::expand);
 
     add(m_list);
@@ -74,6 +68,16 @@ void ComboBoxPopup::smart_pos()
 
 void ComboBoxPopup::show()
 {
+    m_list->clear();
+    for (auto& item : m_parent.m_items)
+    {
+        auto p = std::make_shared<StringItem>(item);
+        m_list->add_item(p);
+    }
+
+    if (!m_parent.m_items.empty())
+        m_list->set_selected(m_parent.selected());
+
     smart_pos();
     Popup::show();
 }
@@ -143,6 +147,14 @@ ComboBox::ComboBox(Frame& parent, const item_array& items, const Rect& rect) noe
     : ComboBox(items, rect)
 {
     parent.add(*this);
+}
+
+void ComboBox::add_item(const std::string& item)
+{
+    m_items.push_back(item);
+
+    if (m_items.size() == 1)
+        m_selected = 0;
 }
 
 void ComboBox::set_parent(Frame* parent)

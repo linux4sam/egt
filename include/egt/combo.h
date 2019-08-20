@@ -126,6 +126,11 @@ public:
     virtual ssize_t selected() const { return m_selected; }
 
     /**
+     * Append a new item to the ComboBox.
+     */
+    virtual void add_item(const std::string& item);
+
+    /**
      * Get an item at the specified index.
      */
     virtual std::string item_at(size_t index) const { return m_items[index]; }
