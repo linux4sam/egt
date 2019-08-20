@@ -869,7 +869,7 @@ public:
      * @param a1 Angle 1 of the arc in radians.
      * @param a2 Angle 2 of the arc in radians.
      */
-    constexpr explicit ArcType(const Point& c = Point(), float r = 0.0f,
+    constexpr explicit ArcType(const Point& c = {}, float r = 0.0f,
                                float a1 = 0.0f, float a2 = 0.0f) noexcept
         : center(c),
           radius(r),
@@ -929,7 +929,7 @@ public:
      * @param c Center point of the arc.
      * @param r Radius of the arc.
      */
-    constexpr explicit CircleType(const Point& c = Point(), float r = 0.0f) noexcept
+    constexpr CircleType(const Point& c = {}, float r = 0.0f) noexcept
         : Arc(c, r, 0.0f, 2 * detail::pi<float>())
     {
     }
