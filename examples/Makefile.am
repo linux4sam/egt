@@ -7,6 +7,9 @@ endif
 if HAVE_MSGFMT
 OPTIONAL += i18n
 endif
+if ENABLE_SNIPPETS
+OPTIONAL += snippets
+endif
 SUBDIRS = $(OPTIONAL) resource
 
 CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \

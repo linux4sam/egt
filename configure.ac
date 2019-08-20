@@ -491,6 +491,10 @@ then
 fi
 AM_CONDITIONAL([HAVE_SIMD], [test "x${enable_simd}" = xyes])
 
+AC_ARG_ENABLE([snippets],
+  [AS_HELP_STRING([--enable-snippets], [build snippets examples [default=no]])])
+AM_CONDITIONAL([ENABLE_SNIPPETS], [test "x${enable_snippets}" = xyes])
+
 AC_CONFIG_FILES([Makefile
 	src/Makefile
 	external/Makefile
@@ -501,6 +505,7 @@ AC_CONFIG_FILES([Makefile
 	include/egt/version.h
 	examples/i18n/Makefile
 	examples/resource/Makefile
+	examples/snippets/Makefile
 	examples/video/Makefile
 	docs/Makefile
 	test/Makefile
