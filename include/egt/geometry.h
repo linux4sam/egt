@@ -508,9 +508,9 @@ public:
     /**
      * Get the PointType of the rectangle.
      */
-    inline Point point() const
+    inline PointType<dim_t, dim_c> point() const
     {
-        return Point(m_x, m_y);
+        return PointType<dim_t, dim_c>(m_x, m_y);
     }
 
     /**
@@ -576,33 +576,33 @@ public:
      *
      * @note This is usually the origin/point of the rectangle.
      */
-    inline Point top_left() const
+    inline PointType<dim_t, dim_c> top_left() const
     {
-        return Point(left(), top());
+        return PointType<dim_t, dim_c>(left(), top());
     }
 
     /**
      * Get the top right point of the rectangle.
      */
-    inline Point top_right() const
+    inline PointType<dim_t, dim_c> top_right() const
     {
-        return Point(right(), top());
+        return PointType<dim_t, dim_c>(right(), top());
     }
 
     /**
      * Get the bottom left point of the rectangle.
      */
-    inline Point bottom_left() const
+    inline PointType<dim_t, dim_c> bottom_left() const
     {
-        return Point(left(), bottom());
+        return PointType<dim_t, dim_c>(left(), bottom());
     }
 
     /**
      * Get the bottom right point of the rectangle.
      */
-    inline Point bottom_right() const
+    inline PointType<dim_t, dim_c> bottom_right() const
     {
-        return Point(right(), bottom());
+        return PointType<dim_t, dim_c>(right(), bottom());
     }
 
     /**
@@ -651,7 +651,7 @@ public:
     /**
      * Determine if a point intersects with a rectangle.
      */
-    static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const Point& rhs)
+    static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const PointType<dim_t, dim_c>& rhs)
     {
         return (lhs.x() < rhs.x() && lhs.x() + lhs.width() > rhs.x() &&
                 lhs.y() < rhs.y() && lhs.y() + lhs.height() > rhs.y());
