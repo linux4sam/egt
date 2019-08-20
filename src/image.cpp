@@ -70,5 +70,12 @@ void Image::copy()
     }
 }
 
+Image Image::crop(const RectF& rect)
+{
+    Canvas canvas(rect.size());
+    canvas.copy(m_surface, rect);
+    return canvas.surface();
+}
+
 }
 }

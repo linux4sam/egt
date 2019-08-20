@@ -173,6 +173,13 @@ public:
         return m_respath;
     }
 
+    virtual Image crop(const RectF& rect);
+
+    inline Image crop(const Rect& rect)
+    {
+        return crop(RectF(rect.x(), rect.y(), rect.width(), rect.height()));
+    }
+
     virtual ~Image() = default;
 
 protected:
