@@ -15,33 +15,17 @@ namespace egt
 inline namespace v1
 {
 
-CircleWidget::CircleWidget()
-{
-    set_name("CircleWidget" + std::to_string(m_widgetid));
-
-    set_boxtype(Theme::boxtype::blank);
-}
-
 CircleWidget::CircleWidget(const Circle& circle)
-    : m_radius(circle.radius)
+    : Widget(circle.rect()),
+      m_radius(circle.radius)
 {
     set_name("CircleWidget" + std::to_string(m_widgetid));
-
     set_boxtype(Theme::boxtype::blank);
-
-    resize(circle.rect().size());
-    move_to_center(circle.center);
 }
 
 CircleWidget::CircleWidget(Frame& parent, const Circle& circle)
-    : m_radius(circle.radius)
+    : CircleWidget(circle)
 {
-    set_name("CircleWidget" + std::to_string(m_widgetid));
-
-    set_boxtype(Theme::boxtype::blank);
-
-    resize(circle.rect().size());
-    move_to_center(circle.center);
     parent.add(*this);
 }
 

@@ -11,7 +11,6 @@
 #include <egt/themes/ultraviolet.h>
 #include <egt/ui>
 #include <iostream>
-#include <map>
 #include <math.h>
 #include <regex>
 #include <sstream>
@@ -424,7 +423,8 @@ struct ScrollwheelPage : public NotebookTab
             std::make_shared<Scrollwheel>(Rect(0, 0, 50, 100), 1, 31, 1);
 
         std::vector<std::string> months = { "January", "February", "March",
-                                            "April", "May", "June", "July", "August", "September", "October",
+                                            "April", "May", "June", "July",
+                                            "August", "September", "October",
                                             "November", "December"
                                           };
         auto scrollwheel_month =
@@ -495,6 +495,32 @@ struct FormPage : public NotebookTab
     }
 };
 
+struct ShapesPage : public NotebookTab
+{
+    ShapesPage()
+    {
+        auto hsizer1 = std::make_shared<BoxSizer>(orientation::flex);
+        add(expand(hsizer1));
+
+        auto circle = std::make_shared<CircleWidget>(Circle(Point(), 100));
+        circle->set_margin(10);
+        hsizer1->add(circle);
+
+        auto hline = std::make_shared<LineWidget>(Size(100, 100));
+        hline->set_margin(10);
+        hsizer1->add(hline);
+
+        auto vline = std::make_shared<LineWidget>(Size(100, 100));
+        vline->set_margin(10);
+        vline->set_horizontal(false);
+        hsizer1->add(vline);
+
+        auto rect = std::make_shared<RectangleWidget>(Size(100, 100));
+        rect->set_margin(10);
+        hsizer1->add(rect);
+    }
+};
+
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "widgets");
@@ -511,43 +537,39 @@ int main(int argc, const char** argv)
     logo->set_align(alignmask::center);
     frame->add(logo);
 
-    ComboBox::item_array combo_items =
+    vector<std::pair<std::string, std::function<Theme*()>>> combo_items =
     {
-        "Default Theme",
-        "Lapis",
-        "Midnight",
-        "Sky",
-        "Shamrock",
-        "Coconut",
-        "Ultra Violet",
+        {"Default Theme", []{ return new Theme(); }},
+        {"Lapis", []{ return new LapisTheme(); }},
+        {"Midnight", []{ return new MidnightTheme(); }},
+        {"Sky", []{ return new SkyTheme(); }},
+        {"Shamrock", []{ return new ShamrockTheme(); }},
+        {"Coconut", []{ return new CoconutTheme(); }},
+        {"Ultra Violet", []{ return new UltraVioletTheme(); }}
     };
-    auto combo = make_shared<ComboBox>(combo_items);
+
+    auto combo = make_shared<ComboBox>();
+    for (auto& i : combo_items)
+        combo->add_item(i.first);
     combo->set_align(alignmask::center_vertical | alignmask::right);
     combo->set_margin(5);
     frame->add(combo);
 
-    combo->on_event([combo, &win](Event&)
+    combo->on_event([&combo_items, combo, &win](Event&)
     {
         auto s = combo->item_at(combo->selected());
-
-        if (s == "Default Theme")
-            set_global_theme(new Theme());
-        else if (s == "Midnight")
-            set_global_theme(new MidnightTheme());
-        else if (s == "Sky")
-            set_global_theme(new SkyTheme());
-        else if (s == "Shamrock")
-            set_global_theme(new ShamrockTheme());
-        else if (s == "Coconut")
-            set_global_theme(new CoconutTheme());
-        else if (s == "Lapis")
-            set_global_theme(new LapisTheme());
-        else if (s == "Ultra Violet")
-            set_global_theme(new UltraVioletTheme());
+        for (auto& i : combo_items)
+        {
+            if (s == i.first)
+            {
+                set_global_theme(i.second());
+                break;
+            }
+        }
 
         win.damage();
-    }, {eventid::property_changed});
 
+    }, {eventid::property_changed});
 
     BoxSizer hsizer(orientation::horizontal);
     vsizer.add(expand(hsizer));
@@ -557,7 +579,7 @@ int main(int argc, const char** argv)
 
     auto notebook = make_shared<Notebook>();
 
-    map<string, shared_ptr<NotebookTab>> pages =
+    vector<std::pair<string, shared_ptr<NotebookTab>>> pages =
     {
         {"Buttons", make_shared<ButtonPage>()},
         {"Text", make_shared<TextPage>()},
@@ -570,6 +592,7 @@ int main(int argc, const char** argv)
         {"ListBox", make_shared<ListPage>()},
         {"Scrollwheel", make_shared<ScrollwheelPage>()},
         {"Form", make_shared<FormPage>()},
+        {"Shapes", make_shared<ShapesPage>()},
     };
 
     for (auto& i : pages)

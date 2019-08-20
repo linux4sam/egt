@@ -35,11 +35,9 @@ class CircleWidget : public Widget
 public:
     using Widget::Widget;
 
-    CircleWidget();
+    explicit CircleWidget(const Circle& circle = {});
 
-    explicit CircleWidget(const Circle& circle);
-
-    CircleWidget(Frame& parent, const Circle& circle);
+    explicit CircleWidget(Frame& parent, const Circle& circle = {});
 
     inline float radius() const
     {
@@ -61,22 +59,24 @@ class LineWidget : public Widget
 {
 public:
 
-    LineWidget()
+    explicit LineWidget(const Rect& rect = {})
+        : Widget(rect)
     {
         set_name("LineWidget" + std::to_string(m_widgetid));
         set_boxtype(Theme::boxtype::none);
     }
 
-    explicit LineWidget(Frame& parent)
+    explicit LineWidget(Frame& parent, const Rect& rect = {})
+        : LineWidget(rect)
     {
         parent.add(*this);
     }
 
     virtual void draw(Painter& painter, const Rect&) override;
 
-    inline bool horizintal() const { return m_horizontal; }
+    inline bool horizontal() const { return m_horizontal; }
 
-    void set_horizontal(bool horizontal)
+    inline void set_horizontal(bool horizontal)
     {
         if (detail::change_if_diff<>(m_horizontal, horizontal))
             damage();
@@ -95,10 +95,17 @@ class RectangleWidget : public Widget
 {
 public:
 
-    RectangleWidget()
+    explicit RectangleWidget(const Rect& rect = {})
+        : Widget(rect)
     {
         set_name("RectangleWidget" + std::to_string(m_widgetid));
         set_boxtype(Theme::boxtype::blank);
+    }
+
+    explicit RectangleWidget(Frame& parent, const Rect& rect = {})
+        : RectangleWidget(rect)
+    {
+        parent.add(*this);
     }
 
     virtual void draw(Painter& painter, const Rect&) override;
