@@ -125,12 +125,15 @@ public:
 
     virtual ~Canvas() = default;
 
-protected:
 
     /**
      * Create a copy of a surface.
      */
     void copy(const shared_cairo_surface_t& surface);
+
+    void copy(const shared_cairo_surface_t& surface, const RectF& rect);
+
+protected:
 
     /**
      * The surface of the canvas.

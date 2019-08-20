@@ -96,5 +96,15 @@ void Canvas::copy(const shared_cairo_surface_t& surface)
     cairo_restore(m_cr.get());
 }
 
+void Canvas::copy(const shared_cairo_surface_t& surface, const RectF& rect)
+{
+    cairo_save(m_cr.get());
+    cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+    cairo_set_source_surface(m_cr.get(), surface.get(), -rect.x(), -rect.y());
+    cairo_rectangle(m_cr.get(), 0, 0, rect.width(), rect.height());
+    cairo_fill(m_cr.get());
+    cairo_restore(m_cr.get());
+}
+
 }
 }
