@@ -489,6 +489,12 @@ void Widget::layout()
 Widget::~Widget() noexcept
 {
     detach();
+
+    if (detail::mouse_grab() == this)
+        detail::mouse_grab(nullptr);
+
+    if (detail::keyboard_focus() == this)
+        detail::keyboard_focus(nullptr);
 }
 
 void Widget::set_parent(Frame* parent)
