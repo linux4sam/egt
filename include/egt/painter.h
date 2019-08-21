@@ -70,6 +70,22 @@ public:
         Painter& m_painter;
     };
 
+    struct AutoGroup
+    {
+        explicit AutoGroup(Painter& painter)
+            : m_painter(painter)
+        {
+            m_painter.push_group();
+        }
+
+        ~AutoGroup()
+        {
+            m_painter.pop_group();
+        }
+
+        Painter& m_painter;
+    };
+
     Painter() = delete;
 
     /**
@@ -95,6 +111,20 @@ public:
      * @see AutoSaveRestore
      */
     virtual void restore();
+
+    /**
+     * Push a group onto the stack.
+     *
+     * @see AutoGroup
+     */
+    virtual void push_group();
+
+    /**
+     * Pop a group off the stack and automatically make it the source.
+     *
+     * @see AutoGroup
+     */
+    virtual void pop_group();
 
     /**
      * Set the current color.

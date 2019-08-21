@@ -27,6 +27,16 @@ void Painter::restore()
     cairo_restore(m_cr.get());
 }
 
+void Painter::push_group()
+{
+    cairo_push_group(m_cr.get());
+}
+
+void Painter::pop_group()
+{
+    cairo_pop_group_to_source(m_cr.get());
+}
+
 Painter& Painter::set(const Color& color)
 {
     cairo_set_source_rgba(m_cr.get(),
