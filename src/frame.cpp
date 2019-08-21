@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/floatingpoint.h"
 #include "egt/detail/layout.h"
 #include "egt/frame.h"
 #include "egt/input.h"
@@ -402,6 +403,61 @@ void Frame::draw(Painter& painter, const Rect& rect)
     // keep the crect inside our content area
     crect = Rect::intersection(crect, to_child(content_area()));
 
+    auto draw_child = [this, &crect, &painter](Widget * child)
+    {
+        if (Rect::intersect(crect, child->box()))
+        {
+            // don't give a child a rectangle that is outside of its own box
+            auto r = Rect::intersection(crect, child->box());
+            if (r.empty())
+                return;
+
+            if (detail::FloatingPoint<float>(child->alpha()).
+                AlmostEquals(detail::FloatingPoint<float>(1.f)))
+            {
+                Painter::AutoSaveRestore sr2(painter);
+
+                // no matter what the child draws, clip the output to only the
+                // rectangle we care about updating
+                if (!child->flags().is_set(Widget::flag::no_clip))
+                {
+                    painter.draw(r);
+                    painter.clip();
+                }
+
+                experimental::code_timer(false, child->name() + " draw: ", [&]()
+                {
+                    child->draw(painter, r);
+                });
+            }
+            else
+            {
+                {
+                    Painter::AutoGroup group(painter);
+
+                    // no matter what the child draws, clip the output to only the
+                    // rectangle we care about updating
+                    if (!child->flags().is_set(Widget::flag::no_clip))
+                    {
+                        painter.draw(r);
+                        painter.clip();
+                    }
+
+                    experimental::code_timer(false, child->name() + " draw: ", [&]()
+                    {
+                        child->draw(painter, r);
+                    });
+                }
+
+                // we pushed a group for the child to draw into it, now paint that
+                // child with its alpha component
+                painter.paint(child->alpha());
+            }
+
+            special_child_draw(painter, child);
+        }
+    };
+
     // OK, nasty - doing two loops: one for non windows, then for windows
 
     for (auto& child : m_children)
@@ -417,31 +473,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
         if (child->flags().is_set(Widget::flag::plane_window))
             continue;
 
-        if (Rect::intersect(crect, child->box()))
-        {
-            // don't give a child a rectangle that is outside of its own box
-            auto r = Rect::intersection(crect, child->box());
-            if (r.empty())
-                continue;
-
-            {
-                // no matter what the child draws, clip the output to only the
-                // rectangle we care about updating
-                Painter::AutoSaveRestore sr2(painter);
-                if (!child->flags().is_set(Widget::flag::no_clip))
-                {
-                    painter.draw(r);
-                    painter.clip();
-                }
-
-                experimental::code_timer(false, child->name() + " draw: ", [&]()
-                {
-                    child->draw(painter, r);
-                });
-            }
-
-            special_child_draw(painter, child.get());
-        }
+        draw_child(child.get());
     }
 
     for (auto& child : m_children)
@@ -457,27 +489,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
         if (child->flags().is_set(Widget::flag::plane_window))
             continue;
 
-        if (Rect::intersect(crect, child->box()))
-        {
-            // don't give a child a rectangle that is outside of its own box
-            auto r = Rect::intersection(crect, child->box());
-            if (r.empty())
-                continue;
-
-            // no matter what the child draws, clip the output to only the
-            // rectangle we care about updating
-            Painter::AutoSaveRestore sr2(painter);
-            if (!child->flags().is_set(Widget::flag::no_clip))
-            {
-                painter.draw(r);
-                painter.clip();
-            }
-
-            experimental::code_timer(false, child->name() + " draw: ", [&]()
-            {
-                child->draw(painter, r);
-            });
-        }
+        draw_child(child.get());
     }
 }
 
