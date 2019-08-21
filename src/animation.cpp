@@ -56,6 +56,8 @@ void Animation::start()
     m_stop_time = m_start_time + m_duration;
     m_running = true;
     m_current = m_start;
+    for (auto& callback : m_callbacks)
+        callback(m_current);
 }
 
 bool Animation::next()
