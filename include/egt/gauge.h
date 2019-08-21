@@ -53,6 +53,8 @@ public:
     /**
      * Set the image of the gauge layer.
      *
+     * This will resize the layer to be the same size as the image.
+     *
      * @param[in] image The image to display.
      */
     inline void set_image(const Image& image)
