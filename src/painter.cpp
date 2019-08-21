@@ -165,6 +165,13 @@ Painter& Painter::paint()
     return *this;
 }
 
+Painter& Painter::paint(float alpha)
+{
+    cairo_paint_with_alpha(m_cr.get(), alpha);
+
+    return *this;
+}
+
 Painter& Painter::stroke()
 {
     cairo_stroke(m_cr.get());

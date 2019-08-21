@@ -231,6 +231,8 @@ public:
 
     virtual Painter& paint();
 
+    virtual Painter& paint(float alpha);
+
     virtual Painter& stroke();
 
     virtual Size text_size(const std::string& text);
