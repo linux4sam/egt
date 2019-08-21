@@ -90,33 +90,33 @@ int main(int argc, const char** argv)
     Gauge gauge;
     center(gauge);
 
-    SvgImage dash_background("dash_background.svg", SizeF(win.content_area().width(), 0));
+    auto dash_background = make_unique<SvgImage>("dash_background.svg", SizeF(win.content_area().width(), 0));
 
     // create a background layer
-    auto gauge_background = make_shared<GaugeLayer>(dash_background.id("#background"));
+    auto gauge_background = make_shared<GaugeLayer>(dash_background->id("#background"));
     gauge.add_layer(gauge_background);
 
     // pick out some other layers
-    auto right_blink = create_layer(gauge, dash_background, "#right_blink", std::chrono::milliseconds(1500));
-    auto left_blink = create_layer(gauge, dash_background, "#left_blink", std::chrono::seconds(1));
-    auto brights = create_layer(gauge, dash_background, "#brights", std::chrono::seconds(5));
-    auto high_brights = create_layer(gauge, dash_background, "#highbrights", std::chrono::seconds(4));
-    auto hazards = create_layer(gauge, dash_background, "#hazards", std::chrono::seconds(2));
-    auto heat = create_layer(gauge, dash_background, "#heat", std::chrono::seconds(3));
+    auto right_blink = create_layer(gauge, *dash_background, "#right_blink", std::chrono::milliseconds(1500));
+    auto left_blink = create_layer(gauge, *dash_background, "#left_blink", std::chrono::seconds(1));
+    auto brights = create_layer(gauge, *dash_background, "#brights", std::chrono::seconds(5));
+    auto high_brights = create_layer(gauge, *dash_background, "#highbrights", std::chrono::seconds(4));
+    auto hazards = create_layer(gauge, *dash_background, "#hazards", std::chrono::seconds(2));
+    auto heat = create_layer(gauge, *dash_background, "#heat", std::chrono::seconds(3));
 
     // pick out the needles
-    auto rpm_needle = create_needle(gauge, dash_background, "#rpmneedle", "#rpmpoint",
+    auto rpm_needle = create_needle(gauge, *dash_background, "#rpmneedle", "#rpmpoint",
                                     0, 6000, -20, 190, std::chrono::seconds(8), easing_bounce);
-    auto mph_needle = create_needle(gauge, dash_background, "#mphneedle", "#mphpoint",
+    auto mph_needle = create_needle(gauge, *dash_background, "#mphneedle", "#mphpoint",
                                     0, 220, -20, 190, std::chrono::seconds(8));
-    auto fuel_needle = create_needle(gauge, dash_background, "#fuelneedle", "#fuelpoint",
+    auto fuel_needle = create_needle(gauge, *dash_background, "#fuelneedle", "#fuelpoint",
                                      0, 100, 0, 90, std::chrono::seconds(3));
 
     win.add(gauge);
 
     // add some labels to show updating text at specific places
 
-    auto rpm_box = dash_background.id_box("#rpm");
+    auto rpm_box = dash_background->id_box("#rpm");
     auto rpm_text = make_shared<Label>();
     rpm_text->set_text_align(alignmask::center);
     rpm_text->set_box(Rect(rpm_box.x(), rpm_box.y(), rpm_box.width(), rpm_box.height()));
@@ -124,7 +124,7 @@ int main(int argc, const char** argv)
     rpm_text->set_text("Trip 1: 100.5 miles");
     gauge.add(rpm_text);
 
-    auto speed_box = dash_background.id_box("#speed");
+    auto speed_box = dash_background->id_box("#speed");
     auto speed_text = make_shared<Label>();
     speed_text->set_text_align(alignmask::center);
     speed_text->set_box(Rect(speed_box.x(), speed_box.y(), speed_box.width(), speed_box.height()));
@@ -140,7 +140,7 @@ int main(int argc, const char** argv)
         speed_text->set_text(ss.str());
     }, {eventid::property_changed});
 
-    auto middle_box = dash_background.id_box("#middle");
+    auto middle_box = dash_background->id_box("#middle");
     auto middle_text = make_shared<Label>();
     middle_text->set_text_align(alignmask::center);
     middle_text->set_box(Rect(middle_box.x(), middle_box.y(), middle_box.width(), middle_box.height()));
@@ -148,7 +148,7 @@ int main(int argc, const char** argv)
     middle_text->set_text("98.7 FM");
     gauge.add(middle_text);
 
-    auto console_box = dash_background.id_box("#console");
+    auto console_box = dash_background->id_box("#console");
     auto console_text = make_shared<Label>();
     console_text->set_text_align(alignmask::center);
     console_text->set_box(Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
@@ -156,6 +156,8 @@ int main(int argc, const char** argv)
     console_text->set_font(Font(55, Font::weightid::bold));
     console_text->set_text("D");
     gauge.add(console_text);
+
+    dash_background.release();
 
     win.show();
 
