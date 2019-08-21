@@ -5,6 +5,7 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/alignment.h"
+#include "egt/detail/math.h"
 #include "egt/frame.h"
 #include "egt/geometry.h"
 #include "egt/input.h"
@@ -226,6 +227,14 @@ void Widget::enable()
         return;
     damage();
     flags().clear(Widget::flag::disabled);
+}
+
+void Widget::set_alpha(float alpha)
+{
+    alpha = detail::clamp<>(alpha, 0.f, 1.f);
+
+    if (detail::change_if_diff<float>(m_alpha, alpha))
+        damage();
 }
 
 void Widget::damage()

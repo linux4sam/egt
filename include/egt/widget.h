@@ -411,6 +411,21 @@ public:
     }
 
     /**
+     * Return true if the widget is visible.
+     */
+    inline float alpha() const
+    {
+        return m_alpha;
+    }
+
+    /**
+     * Set the alpha property.
+     *
+     * @param[in] alpha Widget alpha component in range 0.0 - 1.0.
+     */
+    virtual void set_alpha(float alpha);
+
+    /**
      * Damage the box() of the widget and cause a redraw.
      *
      * This is the same as calling damage(box()) in most cases.
@@ -1026,6 +1041,11 @@ private:
      * Focus state.
      */
     bool m_focus{false};
+
+    /**
+     * Widget alpha.
+     */
+    float m_alpha{1.0f};
 
     /**
      * The boxtype.
