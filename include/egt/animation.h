@@ -586,6 +586,7 @@ protected:
  * Helper type.
  */
 using PropertyAnimator = PropertyAnimatorType<int>;
+using PropertyAnimatorF = PropertyAnimatorType<float>;
 
 /**
  * Simple delay, useful to insert a delay in an AnimationSequence.
