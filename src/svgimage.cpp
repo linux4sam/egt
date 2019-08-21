@@ -142,9 +142,8 @@ shared_cairo_surface_t SvgImage::render(const std::string& id, const RectF& rect
     Canvas canvas(s);
     auto cr = canvas.context().get();
 
-    experimental::code_timer(true, "render " + id + ": ", [&]()
+    experimental::code_timer(false, "render " + id + ": ", [&]()
     {
-
         if (!rect.empty())
         {
             cairo_translate(cr,
