@@ -400,12 +400,12 @@ public:
     }
 
     /**
-     * Does this frame have a screen?
+     * Does this Frame have a screen?
      */
     virtual bool has_screen() const { return false; }
 
     /**
-     * Starting at this frame, work up and find frame that has a screen.
+     * Starting at this Frame, work up and find Frame that has a Screen.
      */
     virtual Frame* find_screen()
     {
