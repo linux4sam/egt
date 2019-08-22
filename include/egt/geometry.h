@@ -813,33 +813,33 @@ public:
      */
     using dim_type = dim_t;
 
-    constexpr explicit LineType(const Point& start, const Point& end) noexcept
+    constexpr explicit LineType(const PointType<dim_t>& start, const PointType<dim_t>& end) noexcept
         : m_start(start),
           m_end(end)
     {}
 
-    inline Point start() const { return m_start; }
-    inline Point end() const { return m_end; }
+    inline PointType<dim_t> start() const { return m_start; }
+    inline PointType<dim_t> end() const { return m_end; }
 
-    inline void set_start(const Point& start) { m_start = start; }
-    inline void set_end(const Point& end) { m_end = end; }
+    inline void set_start(const PointType<dim_t>& start) { m_start = start; }
+    inline void set_end(const PointType<dim_t>& end) { m_end = end; }
 
     /**
      * Returns a rectangle containing the line.
      */
-    inline Rect rect() const
+    inline RectType<dim_t> rect() const
     {
         auto x = std::min(m_start.x(), m_end.x());
         auto y = std::min(m_start.y(), m_end.y());
         auto x2 = std::max(m_start.x(), m_end.x());
         auto y2 = std::max(m_start.y(), m_end.y());
 
-        return Rect(x, y, x2 - x, y2 - y);
+        return RectType<dim_t>(x, y, x2 - x, y2 - y);
     }
 
 protected:
-    Point m_start;
-    Point m_end;
+    PointType<dim_t> m_start;
+    PointType<dim_t> m_end;
 };
 
 /**
@@ -869,7 +869,7 @@ public:
      * @param a1 Angle 1 of the arc in radians.
      * @param a2 Angle 2 of the arc in radians.
      */
-    constexpr explicit ArcType(const Point& c = {}, float r = 0.0f,
+    constexpr explicit ArcType(const PointType<dim_t>& c = {}, float r = 0.0f,
                                float a1 = 0.0f, float a2 = 0.0f) noexcept
         : center(c),
           radius(r),
@@ -886,7 +886,7 @@ public:
     /**
      * Center point of the arc.
      */
-    Point center;
+    PointType<dim_t> center;
 
     /**
      * Radius of the arc.
@@ -929,7 +929,7 @@ public:
      * @param c Center point of the arc.
      * @param r Radius of the arc.
      */
-    constexpr CircleType(const Point& c = {}, float r = 0.0f) noexcept
+    constexpr CircleType(const PointType<dim_t>& c = {}, float r = 0.0f) noexcept
         : Arc(c, r, 0.0f, 2 * detail::pi<float>())
     {
     }
@@ -937,9 +937,9 @@ public:
     /**
      * Get a Rect that covers the circle.
      */
-    inline Rect rect() const
+    inline RectType<dim_t> rect() const
     {
-        Rect r(this->center, Size());
+        RectType<dim_t> r(this->center, SizeType<dim_t>());
         r.grow_around_center(this->radius);
         return r;
     }
