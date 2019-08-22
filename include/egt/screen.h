@@ -68,12 +68,12 @@ public:
     /**
      * Size of the screen.
      */
-    Size size() const { return m_size; }
+    inline Size size() const { return m_size; }
 
     /**
      * Bounding box for the screen.
      */
-    Rect box() const { return Rect(Point(), m_size); }
+    inline Rect box() const { return Rect(Point(), m_size); }
 
     /**
      * Get the context for the screen.
