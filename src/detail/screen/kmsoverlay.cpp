@@ -22,7 +22,7 @@ namespace detail
 
 struct FlipJob
 {
-    explicit FlipJob(struct plane_data* plane, uint32_t index)
+    constexpr explicit FlipJob(struct plane_data* plane, uint32_t index) noexcept
         : m_plane(plane), m_index(index)
     {}
 
@@ -31,8 +31,8 @@ struct FlipJob
         plane_flip(m_plane, m_index);
     }
 
-    struct plane_data* m_plane;
-    uint32_t m_index;
+    struct plane_data* m_plane {nullptr};
+    uint32_t m_index{};
 };
 
 KMSOverlay::KMSOverlay(struct plane_data* plane)
@@ -44,6 +44,8 @@ KMSOverlay::KMSOverlay(struct plane_data* plane)
     {
         init(plane->bufs, KMSScreen::max_buffers(),
              Size(plane_width(plane), plane_height(plane)), detail::egt_format(plane_format(plane)));
+
+        m_pool.reset(new FlipThread(m_plane->buffer_count - 1));
     }
 }
 
@@ -81,8 +83,7 @@ void KMSOverlay::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-        static FlipThread pool(m_plane->buffer_count - 1);
-        pool.enqueue(FlipJob(m_plane, m_index));
+        m_pool->enqueue(FlipJob(m_plane, m_index));
     }
 
     if (++m_index >= m_plane->buffer_count)

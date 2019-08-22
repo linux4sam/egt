@@ -14,6 +14,7 @@
 #include <egt/geometry.h>
 #include <egt/screen.h>
 #include <egt/window.h>
+#include <memory>
 #include <vector>
 
 struct plane_data;
@@ -27,6 +28,7 @@ namespace detail
 {
 class KMSOverlay;
 struct planeid;
+class FlipThread;
 
 /**
  * Screen in an KMS dumb buffer.
@@ -80,6 +82,7 @@ protected:
     struct plane_data* m_plane {nullptr};
     uint32_t m_index{0};
     static std::vector<planeid> m_used;
+    std::unique_ptr<FlipThread> m_pool;
 
     friend class detail::KMSOverlay;
 };

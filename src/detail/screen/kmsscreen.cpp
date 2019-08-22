@@ -31,7 +31,7 @@ namespace detail
 
 struct FlipJob
 {
-    explicit FlipJob(struct plane_data* plane, uint32_t index)
+    constexpr explicit FlipJob(struct plane_data* plane, uint32_t index) noexcept
         : m_plane(plane), m_index(index)
     {}
 
@@ -40,8 +40,8 @@ struct FlipJob
         plane_flip(m_plane, m_index);
     }
 
-    struct plane_data* m_plane;
-    uint32_t m_index;
+    struct plane_data* m_plane {nullptr};
+    uint32_t m_index{};
 };
 
 static KMSScreen* the_kms = nullptr;
@@ -50,7 +50,6 @@ std::vector<planeid> KMSScreen::m_used;
 
 KMSScreen::KMSScreen(bool allocate_primary_plane,
                      pixel_format format)
-
 {
     spdlog::info("DRM/KMS Screen ({} buffers)", max_buffers());
 
@@ -92,6 +91,8 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
                       m_device->screens[0]->height);
     }
 
+    m_pool.reset(new FlipThread(m_plane->buffer_count - 1));
+
     the_kms = this;
 }
 
@@ -114,8 +115,7 @@ void KMSScreen::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-        static FlipThread pool(m_plane->buffer_count - 1);
-        pool.enqueue(FlipJob(m_plane, m_index));
+        m_pool->enqueue(FlipJob(m_plane, m_index));
     }
 
     if (++m_index >= m_plane->buffer_count)

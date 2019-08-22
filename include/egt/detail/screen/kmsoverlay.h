@@ -13,6 +13,7 @@
 
 #include <egt/screen.h>
 #include <egt/input.h>
+#include <memory>
 
 struct plane_data;
 
@@ -22,6 +23,7 @@ inline namespace v1
 {
 namespace detail
 {
+class FlipThread;
 
 /**
  * A screen backed by an overlay plane.
@@ -63,8 +65,9 @@ public:
     virtual ~KMSOverlay();
 
 protected:
-    struct plane_data* m_plane;
-    uint32_t m_index;
+    struct plane_data* m_plane {nullptr};
+    uint32_t m_index{};
+    std::unique_ptr<FlipThread> m_pool;
 };
 
 }

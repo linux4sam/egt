@@ -9,6 +9,7 @@
 #include <deque>
 #include <memory>
 #include <mutex>
+#include <spdlog/spdlog.h>
 #include <thread>
 
 namespace egt
@@ -60,7 +61,10 @@ struct FlipThread : public detail::noncopyable
         std::unique_lock<std::mutex> lock(m_mutex);
 
         while (m_max_queue && m_queue.size() >= m_max_queue)
+        {
+            SPDLOG_DEBUG("flip thread blocked");
             m_condition.wait(lock);
+        }
 
         m_queue.emplace_back(std::move(job));
         m_condition.notify_one();
