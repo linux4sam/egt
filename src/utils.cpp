@@ -56,6 +56,7 @@ error:
     if (msg)
         free(msg);
     script_unref(cookie);
+    script_close();
 #else
     ignoreparam(expr);
 #endif

@@ -106,3 +106,8 @@ double script_getvar(const char* name)
     lua_pop(state, 1);
     return ret;
 }
+
+void script_close()
+{
+    lua_close(state);
+}

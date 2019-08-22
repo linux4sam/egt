@@ -24,6 +24,8 @@ double script_getvar(const char* name);
 typedef int (*SCRIPT_CALLBACK)(lua_State*);
 void script_setfunc(const char* name, SCRIPT_CALLBACK callback);
 
+void script_close();
+
 #ifdef __cplusplus
 }
 #endif
