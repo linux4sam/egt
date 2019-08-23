@@ -244,7 +244,7 @@ protected:
 /**
  * Get a pointer reference to the main window.
  */
-Window*& main_window();
+Window* main_window();
 
 /**
  * Get a pointer reference to the modal window.
@@ -252,7 +252,17 @@ Window*& main_window();
  * The modal window is a single window that will receive all events. Only
  * one window can be modal at any given time.
  */
-Window*& modal_window();
+Window* modal_window();
+
+namespace detail
+{
+
+/**
+ * Set the modal window.
+ */
+void set_modal_window(Window* window);
+
+}
 
 /**
  * Get the list of all currently allocated Windows.

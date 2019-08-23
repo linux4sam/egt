@@ -32,14 +32,22 @@ static std::vector<Window*> the_windows;
 static Window* the_main_window = nullptr;
 static Window* the_modal_window = nullptr;
 
-Window*& main_window()
+Window* main_window()
 {
     return the_main_window;
 }
 
-Window*& modal_window()
+Window* modal_window()
 {
     return the_modal_window;
+}
+
+namespace detail
+{
+void set_modal_window(Window* window)
+{
+    the_modal_window = window;
+}
 }
 
 std::vector<Window*>& windows()
