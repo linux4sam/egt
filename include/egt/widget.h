@@ -414,13 +414,20 @@ public:
      * Damage the box() of the widget and cause a redraw.
      *
      * This is the same as calling damage(box()) in most cases.
+     *
+     * @warning damage() cannot be called while in or below a Widget::draw()
+     * method.
      */
     virtual void damage();
 
     /**
      * Mark the specified rect as a damaged area of the widget.
      *
-     * @note This call will propagate to a top level parent frame that owns a Screen.
+     * @note This call will propagate to a top level parent frame that owns a
+     * Screen.
+     *
+     * @warning damage() cannot be called while in or below a Widget::draw()
+     * method.
      *
      * @param rect The rectangle to save for damage.
      */
