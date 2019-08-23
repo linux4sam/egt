@@ -141,7 +141,7 @@ protected:
 
     virtual void copy_to_buffer(ScreenBuffer& buffer);
 
-    virtual void copy_to_buffer_software(ScreenBuffer& buffer);
+    void copy_to_buffer_software(ScreenBuffer& buffer);
 
     /**
      * Composition surface.
