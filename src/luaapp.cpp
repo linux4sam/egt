@@ -9,23 +9,21 @@
 
 #include "egt/luaapp.h"
 #include <iostream>
-#include <thread>
-
-#define lua_c
+extern "C" {
+#include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+}
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
+#include <thread>
 
 /*
  * Mainly based on the standard lua REPL.  Has special handling to jump in and
  * out of the EGT event loop.
  */
-
-using namespace std;
 
 #if !defined(LUA_PROMPT)
 #define LUA_PROMPT		"> "
