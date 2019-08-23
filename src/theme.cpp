@@ -227,7 +227,7 @@ void Theme::draw_box(Painter& painter,
             painter.draw(box.bottom_left(), box.bottom_right());
         }
 
-        painter.set(border.color());
+        painter.set(border);
         painter.set_line_width(border_width);
         cairo_stroke(cr);
     }
@@ -315,7 +315,7 @@ void Theme::draw_circle(Painter& painter,
 
     if (border_width)
     {
-        painter.set(border.color());
+        painter.set(border);
         painter.set_line_width(border_width);
         cairo_stroke(cr);
     }

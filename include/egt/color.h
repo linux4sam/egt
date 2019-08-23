@@ -497,7 +497,7 @@ public:
         m_steps.insert(std::make_pair(0.f, color));
     }
 
-    Color color() const
+    operator Color() const
     {
         if (!m_steps.empty())
             return m_steps.begin()->second;
