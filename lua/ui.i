@@ -43,6 +43,10 @@ private:
 
 %}
 
+#pragma SWIG nowarn=325,503
+%warnfilter(451) Font;
+%warnfilter(509) Image;
+
 // %import for type info, but don't generate bindings
 %import "egt/types.h"
 %import "egt/utils.h"
@@ -59,6 +63,16 @@ private:
 %include "egt/event.h"
 %include "egt/app.h"
 %include "egt/canvas.h"
+
+namespace egt
+{
+inline namespace v1
+{
+%ignore Font::Font(weightid);
+%ignore Font::Font(slantid);
+}
+}
+
 %include "egt/font.h"
 %include "egt/keycode.h"
 %include "egt/timer.h"
@@ -70,6 +84,15 @@ private:
 %include "egt/widget.h"
 %include "egt/detail/textwidget.h"
 %include "egt/valuewidget.h"
+
+namespace egt
+{
+inline namespace v1
+{
+%template(ValueRangeWidgetI) ValueRangeWidget<int>;
+%template(ValueRangeWidgetF) ValueRangeWidget<float>;
+}
+}
 
 %include "egt/button.h"
 %include "egt/buttongroup.h"
@@ -88,6 +111,15 @@ private:
 %include "egt/frame.h"
 %include "egt/window.h"
 %include "egt/popup.h"
+
+namespace egt
+{
+inline namespace v1
+{
+%template(Popup) PopupType<Window>;
+}
+}
+
 %include "egt/view.h"
 %include "egt/sizer.h"
 %include "egt/virtualkeyboard.h"
