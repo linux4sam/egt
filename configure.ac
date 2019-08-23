@@ -284,19 +284,19 @@ AS_IF([test "x$with_lua" != "xno"],[
       AC_DEFINE(HAVE_LUA, 1, [Have lua support])
       LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
       LIBEGT_EXTRA_LDFLAGS="${LUA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+
+      AC_ARG_ENABLE(lua-bindings, AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings (default: no)]))
+      if test "x$enable_lua_bindings" = "xyes";
+      then
+         AC_PATH_PROG([SWIG_BIN], [swig])
+         if test "x${have_lua}" = xyes && test -n "$SWIG_BIN"; then
+             have_lua_bindings=yes
+             AC_SUBST(include_luaapp, ["#include <egt/luaapp.h>"])
+         fi
+      fi
    fi
 ])
 AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
-
-AC_ARG_ENABLE(lua-bindings, AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings (default: no)]))
-if test "x$enable_lua_bindings" = "xyes";
-then
-   AC_PATH_PROG([SWIG_BIN], [swig])
-   if test "x${have_lua}" = xyes && test -n "$SWIG_BIN"; then
-      have_lua_bindings=yes
-      AC_SUBST(include_luaapp, ["#include <egt/luaapp.h>"])
-   fi
-fi
 AM_CONDITIONAL([ENABLE_LUA_BINDINGS], [test "x${have_lua_bindings}" = xyes])
 
 AC_CHECK_HEADER([readline/readline.h], [have_readline=yes], [have_readline=no])
