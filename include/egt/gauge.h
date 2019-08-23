@@ -122,8 +122,8 @@ public:
      * @param[in] clockwise Rotation is clockwise.
      */
     explicit NeedleLayer(const Image& image,
-                         float min = 0.,
-                         float max = 100,
+                         float min,
+                         float max,
                          float angle_start = 0,
                          float angle_stop = 360,
                          bool clockwise = true) noexcept;
