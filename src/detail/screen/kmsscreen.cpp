@@ -31,17 +31,21 @@ namespace detail
 
 struct FlipJob
 {
-    constexpr explicit FlipJob(struct plane_data* plane, uint32_t index) noexcept
-        : m_plane(plane), m_index(index)
+    constexpr explicit FlipJob(struct plane_data* plane, uint32_t index, bool async = false) noexcept
+        : m_plane(plane), m_index(index), m_async(async)
     {}
 
     void operator()()
     {
-        plane_flip(m_plane, m_index);
+        if (m_async)
+            plane_flip_async(m_plane, m_index);
+        else
+            plane_flip(m_plane, m_index);
     }
 
-    struct plane_data* m_plane {nullptr};
+    struct plane_data* m_plane{nullptr};
     uint32_t m_index{};
+    bool m_async{false};
 };
 
 static KMSScreen* the_kms = nullptr;
@@ -115,7 +119,10 @@ void KMSScreen::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-        m_pool->enqueue(FlipJob(m_plane, m_index));
+        if (m_async)
+            plane_flip_async(m_plane, m_index);
+        else
+            m_pool->enqueue(FlipJob(m_plane, m_index));
     }
 
     if (++m_index >= m_plane->buffer_count)

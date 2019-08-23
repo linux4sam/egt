@@ -39,7 +39,7 @@ public:
      */
     using damage_array = std::vector<Rect>;
 
-    Screen() = default;
+    Screen();
 
     /**
      * Perform a flip of the buffers.
@@ -93,6 +93,14 @@ public:
      */
     static void damage_algorithm(Screen::damage_array& damage,
                                  const Rect& rect);
+
+    /**
+     * Set if asynchronous buffer flips are used.
+     */
+    inline void set_async_flip(bool async)
+    {
+        m_async = async;
+    }
 
     virtual ~Screen() = default;
 
@@ -159,6 +167,8 @@ protected:
      * Size of the screen.
      */
     Size m_size;
+
+    bool m_async{false};
 };
 
 /**

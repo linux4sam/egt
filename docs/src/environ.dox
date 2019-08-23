@@ -96,6 +96,19 @@ levels using environment variables.
     EGT_SEARCH_PATH=/opt/icons:/usr/share/planes
     @endcode
   </dd>
+
+  <dt>EGT_SCREEN_ASYNC_FLIP</dt>
+  <dd>
+    A non-empty value tells the screen backend to perform asynchronous flip
+    operations.  Note that when this is enabled, screen tearing may be possible.
+
+    @b Example
+    @code{.sh}
+    EGT_SCREEN_ASYNC_FLIP=1 ./widgets
+    @endcode
+  </dd>
+
+
 </dl>
 
 */

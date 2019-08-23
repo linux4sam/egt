@@ -14,6 +14,7 @@
 #include "egt/utils.h"
 #include <cairo.h>
 #include <cassert>
+#include <cstring>
 #include <map>
 
 #ifdef HAVE_SIMD
@@ -30,6 +31,15 @@ static Screen* the_screen = nullptr;
 Screen*& main_screen()
 {
     return the_screen;
+}
+
+Screen::Screen()
+{
+    if (getenv("EGT_SCREEN_ASYNC_FLIP"))
+    {
+        if (strlen(getenv("EGT_SCREEN_ASYNC_FLIP")))
+            m_async = true;
+    }
 }
 
 void Screen::flip(const damage_array& damage)

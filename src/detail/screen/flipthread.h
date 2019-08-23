@@ -28,8 +28,7 @@ namespace detail
 struct FlipThread : public detail::noncopyable
 {
     explicit FlipThread(uint32_t max_queue = 0)
-        : m_stop(false),
-          m_max_queue(max_queue)
+        : m_max_queue(max_queue)
     {
         m_thread = std::thread(&FlipThread::run, this);
     }
@@ -83,7 +82,7 @@ struct FlipThread : public detail::noncopyable
     std::deque<std::function<void()>> m_queue;
     std::mutex m_mutex;
     std::condition_variable m_condition;
-    std::atomic<bool> m_stop;
+    std::atomic<bool> m_stop{false};
     uint32_t m_max_queue{0};
 };
 
