@@ -15,7 +15,7 @@ uniquely in a plane by a set of numerical coordinates, which are the signed
 distances to the point from two fixed perpendicular oriented lines, measured in
 the same unit of length. Each reference line is called a coordinate axis or just
 axis (plural axes) of the system, and the point where they meet is its origin,
-at ordered pair (0, 0).  The default for all origins in EGT is the top left or a
+at ordered pair (0, 0).  The default for all origins in EGT is the top left of a
 rectangle. Positive X moves to the right, and positive Y moves down.
 
 @image html cartesian-coordinate-system.png "Cartesian Coordinate System"
