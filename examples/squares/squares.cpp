@@ -33,10 +33,19 @@ int main(int argc, const char** argv)
     label.set_color(Palette::ColorId::bg, Palette::transparent);
     sizer.add(expand_horizontal(label));
 
+    label.on_event([&label](Event&){
+            cout << label.text() << endl;
+        }, {eventid::property_changed});
+
     Label label_dims("");
     label_dims.set_color(Palette::ColorId::text, Palette::black);
     label_dims.set_color(Palette::ColorId::bg, Palette::transparent);
     sizer.add(expand_horizontal(label_dims));
+
+    label_dims.on_event([&label_dims](Event&){
+            cout << label_dims.text() << endl;
+        }, {eventid::property_changed});
+
 
     Popup popup(Size(100, 80));
     popup.set_color(Palette::ColorId::bg, FUCHSIA);
