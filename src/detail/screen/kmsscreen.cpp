@@ -108,8 +108,7 @@ uint32_t KMSScreen::max_buffers()
     {
         if (getenv("EGT_KMS_BUFFERS"))
         {
-            num_buffers = static_cast<spdlog::level::level_enum>(
-                              std::atoi(getenv("EGT_KMS_BUFFERS")));
+            num_buffers = std::atoi(getenv("EGT_KMS_BUFFERS"));
         }
     });
     return num_buffers;
