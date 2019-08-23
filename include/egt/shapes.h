@@ -33,7 +33,6 @@ inline namespace v1
 class CircleWidget : public Widget
 {
 public:
-    using Widget::Widget;
 
     explicit CircleWidget(const Circle& circle = {});
 
