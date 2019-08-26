@@ -415,10 +415,9 @@ protected:
      */
     inline Size super_size() const
     {
-        Rect result = size();
+        Rect result = content_area().size();
         for (const auto& layer : m_layers)
-            result = Rect::merge(result, layer->box());
-
+            result = Rect::merge(result, layer->box() + Size(moat() * 2, moat() * 2));
         return result.size();
     }
 

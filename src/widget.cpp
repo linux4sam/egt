@@ -500,6 +500,9 @@ Rect Widget::content_area() const
     auto b = box();
     b += Point(m, m);
     b -= Size(2. * m, 2. * m);
+    // don't return a negative size
+    if (b.empty())
+        return Rect(point(), Size());
     return b;
 }
 
