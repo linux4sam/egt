@@ -33,7 +33,7 @@ public:
     {
         assert(parent());
 
-        bool visible = Rect::intersect(parent()->box(), box());
+        bool visible = box().intersect(parent()->box());
 
         if (visible)
         {

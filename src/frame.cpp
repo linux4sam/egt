@@ -97,7 +97,7 @@ void Frame::handle(Event& event)
             if (!child->visible())
                 continue;
 
-            if (Rect::point_inside(pos, child->box()))
+            if (child->box().intersect(pos))
             {
                 child->handle(event);
                 break;
@@ -141,7 +141,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
 
     for (auto& child : detail::reverse_iterate(m_children))
     {
-        if (Rect::point_inside(pos, child->box()))
+        if (child->box().intersect(pos))
         {
             if (child->flags().is_set(Widget::flag::frame))
             {
@@ -156,7 +156,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
         }
     }
 
-    if (Rect::point_inside(pos, local_box()))
+    if (local_box().intersect(pos))
         return this;
 
     return nullptr;
@@ -405,7 +405,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
     auto draw_child = [this, &crect, &painter](Widget * child)
     {
-        if (Rect::intersect(crect, child->box()))
+        if (child->box().intersect(crect))
         {
             // don't give a child a rectangle that is outside of its own box
             auto r = Rect::intersection(crect, child->box());

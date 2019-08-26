@@ -99,7 +99,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
         if (child->flags().is_set(Widget::flag::plane_window))
             continue;
 
-        if (Rect::intersect(crect, child->box()))
+        if (child->box().intersect(crect))
         {
             // don't give a child a rectangle that is outside of its own box
             const auto r = Rect::intersection(crect, child->box());
@@ -292,7 +292,8 @@ void ScrolledView::handle(Event& event)
             if (!child->visible())
                 continue;
 
-            if (Rect::point_inside(pos, child->box() + m_offset))
+            auto b = child->box() + m_offset;
+            if (b.intersect(pos))
             {
                 child->handle(event);
                 if (event.quit())

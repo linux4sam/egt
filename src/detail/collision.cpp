@@ -16,7 +16,7 @@ namespace detail
 bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
                      const Rect& rhs, shared_cairo_surface_t rimage)
 {
-    if (Rect::intersect(lhs, rhs))
+    if (lhs.intersect(rhs))
     {
         assert(cairo_image_surface_get_format(limage.get()) == CAIRO_FORMAT_ARGB32);
         assert(cairo_image_surface_get_format(rimage.get()) == CAIRO_FORMAT_ARGB32);
@@ -47,7 +47,7 @@ bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
 bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
                      const Point& rhs)
 {
-    if (Rect::intersect(lhs, rhs))
+    if (lhs.intersect(rhs))
     {
         assert(cairo_image_surface_get_format(limage.get()) == CAIRO_FORMAT_ARGB32);
 

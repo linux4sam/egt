@@ -93,7 +93,7 @@ void ComboBoxPopup::handle(Event& event)
     {
         Point mouse = display_to_local(event.pointer().point);
 
-        if (!Rect::point_inside(mouse, local_box()))
+        if (!local_box().intersect(mouse))
         {
             // if any mouse click happens outside of us, hide
             hide();
@@ -176,7 +176,7 @@ void ComboBox::handle(Event& event)
     case eventid::pointer_click:
     {
         Point mouse = display_to_local(event.pointer().point);
-        if (Rect::point_inside(mouse, local_box()))
+        if (local_box().intersect(mouse))
         {
             m_popup->show_modal();
         }

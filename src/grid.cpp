@@ -300,7 +300,7 @@ void SelectableGrid::handle(Event& event)
                 if (bounding.size().empty())
                     continue;
 
-                if (Rect::point_inside(pos, bounding))
+                if (bounding.intersect(pos))
                 {
                     select(column, row);
                     break;

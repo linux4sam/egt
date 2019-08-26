@@ -174,7 +174,7 @@ void Screen::damage_algorithm(Screen::damage_array& damage, const Rect& rect)
 
         // if this rectangle intersects an existing rectangle, then merge
         // the rectangles and re-add the super rectangle
-        if (Rect::intersect(*i, rect))
+        if (rect.intersect(*i))
         {
             Rect super(Rect::merge(*i, rect));
             damage.erase(std::next(i).base());

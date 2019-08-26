@@ -105,7 +105,7 @@ void ListBox::handle(Event& event)
             auto cbox = m_sizer->child_at(i)->box();
             cbox.set_y(cbox.y() + m_view->offset().y());
 
-            if (Rect::point_inside(pos, cbox))
+            if (cbox.intersect(pos))
             {
                 set_selected(i);
                 break;

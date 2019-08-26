@@ -170,7 +170,7 @@ public:
             if (!block->visible())
                 continue;
 
-            if (Rect::intersect(m_ball.box(), block->to_parent(block->box())))
+            if (block->to_parent(block->box()).intersect(m_ball.box()))
             {
                 block->hide();
                 m_yspeed *= -1.0;
@@ -180,7 +180,7 @@ public:
         }
 
         // hit paddle
-        if (Rect::intersect(m_ball.box(), m_paddle.box()))
+        if (m_paddle.box().intersect(m_ball.box()))
         {
             m_yspeed *= -1.0;
         }

@@ -158,7 +158,7 @@ void Input::dispatch(Event& event)
             case eventid::pointer_drag_stop:
             {
                 Point pos = w->display_to_local(event.pointer().point);
-                if (!Rect::point_inside(pos, w->size()))
+                if (!Rect(w->size()).intersect(pos))
                     continue;
                 break;
             }

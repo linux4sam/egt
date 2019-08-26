@@ -625,36 +625,20 @@ public:
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
      */
-    inline bool point_inside(const PointType<dim_t, dim_c>& point) const
+    inline bool intersect(const PointType<dim_t, dim_c>& point) const
     {
-        return point_inside(point, *this);
-    }
-
-    /**
-     * Determine if the specified point is inside of the rectangle.
-     */
-    static inline bool point_inside(const PointType<dim_t, dim_c>& point, const RectType<dim_t, dim_c>& rhs)
-    {
-        return (point.x() <= rhs.right() && point.x() >= rhs.left() &&
-                point.y() <= rhs.bottom() && point.y() >= rhs.top());
+        return (point.x() <= right() && point.x() >= left() &&
+                point.y() <= bottom() && point.y() >= top());
     }
 
     /**
      * Determine if two rectangles intersect, or, overlap.
+     * @param rect The rect to test.
      */
-    static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
+    inline bool intersect(const RectType<dim_t, dim_c>& rect) const
     {
-        return (lhs.x() < rhs.x() + rhs.width() && lhs.x() + lhs.width() > rhs.x() &&
-                lhs.y() < rhs.y() + rhs.height() && lhs.y() + lhs.height() > rhs.y());
-    }
-
-    /**
-     * Determine if a point intersects with a rectangle.
-     */
-    static inline bool intersect(const RectType<dim_t, dim_c>& lhs, const PointType<dim_t, dim_c>& rhs)
-    {
-        return (lhs.x() < rhs.x() && lhs.x() + lhs.width() > rhs.x() &&
-                lhs.y() < rhs.y() && lhs.y() + lhs.height() > rhs.y());
+        return (x() < rect.x() + rect.width() && x() + width() > rect.x() &&
+                y() < rect.y() + rect.height() && y() + height() > rect.y());
     }
 
     /**
