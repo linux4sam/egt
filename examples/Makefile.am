@@ -70,7 +70,8 @@ endif
 if HAVE_LIBRSVG
 bin_PROGRAMS += \
 gauge/gauge \
-dash/dash
+dash/dash \
+sevensegment/sevensegment
 endif
 
 if HAVE_ALSA
@@ -312,6 +313,14 @@ keys_keys_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 keys_keys_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 keys_keysdir = $(prefix)/share/egt/examples/keys
 keys_keys_LDFLAGS = $(AM_LDFLAGS)
+
+sevensegment_sevensegment_SOURCES = sevensegment/sevensegment.cpp
+sevensegment_sevensegment_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/sevensegment\"
+sevensegment_sevensegment_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+sevensegment_sevensegmentdir = $(prefix)/share/egt/examples/sevensegment
+sevensegment_sevensegment_DATA = $(wildcard $(top_srcdir)/examples/sevensegment/*.svg)
+sevensegment_sevensegment_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_FLAGS = $(CUSTOM_CXXFLAGS)
 include ../src/Makefile.tidy
