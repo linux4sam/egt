@@ -43,7 +43,7 @@ struct FlipJob
             plane_flip(m_plane, m_index);
     }
 
-    struct plane_data* m_plane{nullptr};
+    struct plane_data* m_plane {nullptr};
     uint32_t m_index{};
     bool m_async{false};
 };
