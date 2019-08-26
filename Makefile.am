@@ -14,10 +14,12 @@ CONTRIBUTING.md \
 CODE_OF_CONDUCT.md \
 COPYING
 
-if HAVE_DOXYGEN_BIN
 .PHONY: docs docset
 docs docset:
+if HAVE_DOXYGEN_BIN
 	@cd docs && $(MAKE) $(AM_MAKEFLAGS) $@
+else
+	@echo "configured without doxygen"
 endif
 
 ASTYLE_WILDCARDS = \
@@ -27,10 +29,13 @@ ASTYLE_WILDCARDS = \
 "$(top_srcdir)/src/\*.cpp" \
 "$(top_srcdir)/src/\*.h"
 
-if HAVE_ASTYLE_BIN
+.PHONY: style
 style:
+if HAVE_ASTYLE_BIN
 	./scripts/style.sh --recursive $(ASTYLE_WILDCARDS) \
 		--exclude=images/jpeg -i
+else
+	@echo "configured without astyle"
 endif
 
 iconsdir = $(pkgdatadir)
@@ -58,9 +63,11 @@ $(top_srcdir)/include/egt/ \
 $(top_srcdir)/src/ \
 $(top_srcdir)/examples/
 
-if HAVE_CPPCHECK_BIN
 cppcheck:
+if HAVE_CPPCHECK_BIN
 	$(CPPCHECK_CMD) --enable=all $(CPPCHECK_DIRS)
+else
+	@echo "configured without cppcheck"
 endif
 
 lc:
