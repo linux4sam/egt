@@ -239,6 +239,16 @@ public:
 
     virtual Size font_size(const std::string& text);
 
+    virtual void color_at(const Point& point, const Color& color);
+    static void color_at(cairo_surface_t* image, const Point& point, const Color& color);
+    virtual Color color_at(const Point& point);
+    static Color color_at(cairo_surface_t* image, const Point& point);
+
+    virtual Painter& flood(const Point& point, const Color& color);
+
+    static void flood(cairo_surface_t* image,
+                      const Point& point, const Color& color);
+
     /**
      * Get the current underlying context the painter is using.
      */
@@ -254,6 +264,15 @@ public:
     {
         return Size(cairo_image_surface_get_width(surface.get()),
                     cairo_image_surface_get_height(surface.get()));
+    }
+
+    /**
+     * Get a Size from a surface.
+     */
+    static inline Size surface_to_size(cairo_surface_t* surface)
+    {
+        return Size(cairo_image_surface_get_width(surface),
+                    cairo_image_surface_get_height(surface));
     }
 
     virtual ~Painter() = default;

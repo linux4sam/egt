@@ -77,6 +77,56 @@ public:
     }
     {}
 
+    inline uint16_t pixel16() const
+    {
+        uint16_t b = (blue() >> 3) & 0x1f;
+        uint16_t g = ((green() >> 2) & 0x3f) << 5;
+        uint16_t r = ((red() >> 3) & 0x1f) << 11;
+
+        return (uint16_t)(r | g | b);
+    }
+
+    static inline Color pixel16(uint16_t c)
+    {
+        uint16_t b = (c) & 0x1f;
+        uint16_t g = (c >> 5) & 0x3f;
+        uint16_t r = (c >> 11) & 0x1f;
+
+        return Color(r, g, b, 0xff);
+    }
+
+    inline constexpr rgba_t pixel24() const
+    {
+        return (red() << 16) |
+               (green() << 8) |
+               blue() |
+               (0xff);
+    }
+
+    static inline constexpr Color pixel24(rgba_t c)
+    {
+        return Color((c >> 16) & 0xff,
+                     (c >> 8) & 0xff,
+                     c & 0xff,
+                     0xff);
+    }
+
+    inline constexpr rgba_t pixel32() const
+    {
+        return (red() << 16) |
+               (green() << 8) |
+               blue() |
+               (alpha() << 24);
+    }
+
+    static inline constexpr Color pixel32(rgba_t c)
+    {
+        return Color((c >> 16) & 0xff,
+                     (c >> 8) & 0xff,
+                     c & 0xff,
+                     (c >> 24) & 0xff);
+    }
+
     /**
      * Create a color from an existing color, but with the specified alpha value.
      *
