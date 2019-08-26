@@ -125,17 +125,19 @@ protected:
     int m_width{2};
 };
 
+
 class MainWindow : public TopWindow
 {
 public:
 
     MainWindow()
         : m_colorbtn(Image("palette.png")),
-          m_fillbtn(Image("fill.png")),
+          m_fillbutton(Image("fill.png")),
           m_widthbtn(Image("width.png")),
           m_clearbtn(Image("clear.png")),
+          m_snapshotbtn(Image("camera.png")),
           m_penpicker(Palette::blue),
-          m_fillpicker(Palette::white),
+          m_fillpicker(Palette::red),
           m_widthpicker(2),
           m_canvas(screen()->size(), pixel_format::argb8888)
     {
@@ -147,30 +149,33 @@ public:
         top(left(m_sizer));
 
         m_colorbtn.set_boxtype(Theme::boxtype::none);
-        m_fillbtn.set_boxtype(Theme::boxtype::none);
+        m_fillbutton.set_boxtype(Theme::boxtype::none);
         m_widthbtn.set_boxtype(Theme::boxtype::none);
         m_clearbtn.set_boxtype(Theme::boxtype::none);
+        m_snapshotbtn.set_boxtype(Theme::boxtype::none);
 
         m_colorbtn.set_image_align(alignmask::expand);
-        m_fillbtn.set_image_align(alignmask::expand);
+        m_fillbutton.set_image_align(alignmask::expand);
         m_widthbtn.set_image_align(alignmask::expand);
         m_clearbtn.set_image_align(alignmask::expand);
+        m_snapshotbtn.set_image_align(alignmask::expand);
 
         add(m_penpicker);
         add(m_fillpicker);
         add(m_widthpicker);
 
         m_sizer->add(m_colorbtn);
-        m_sizer->add(m_fillbtn);
+        m_sizer->add(m_fillbutton);
         m_sizer->add(m_widthbtn);
         m_sizer->add(m_clearbtn);
+        m_sizer->add(m_snapshotbtn);
 
         m_colorbtn.on_event([this](Event&)
         {
             m_penpicker.show_modal(true);
         }, {eventid::pointer_click});
 
-        m_fillbtn.on_event([this](Event&)
+        m_fillbutton.on_event([this](Event&)
         {
             m_fillpicker.show_modal(true);
         }, {eventid::pointer_click});
@@ -186,11 +191,10 @@ public:
             damage();
         }, {eventid::pointer_click});
 
-        m_fillpicker.on_event([this](Event&)
+        m_snapshotbtn.on_event([this](Event&)
         {
-            set_color(Palette::ColorId::bg, m_fillpicker.color());
-            damage();
-        }, {eventid::hide});
+            paint_to_file();
+        }, {eventid::pointer_click});
 
         auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
         logo->set_align(alignmask::right | alignmask::top);
@@ -214,6 +218,15 @@ public:
 
         switch (event.id())
         {
+        case eventid::pointer_click:
+        {
+            auto mouse = display_to_local(event.pointer().point);
+            Painter painter(m_canvas.context());
+            cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
+            painter.flood(mouse, m_fillpicker.color());
+            damage();
+            break;
+        }
         case eventid::pointer_drag_start:
             m_last = display_to_local(event.pointer().point);
             event.grab(this);
@@ -228,6 +241,7 @@ public:
 
                 Line line(m_last, mouse);
                 Painter painter(m_canvas.context());
+                cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
                 painter.set_line_width(width);
                 auto cr = painter.context();
                 cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
@@ -266,9 +280,10 @@ public:
     Point m_last;
     shared_ptr<VerticalBoxSizer> m_sizer;
     ImageButton m_colorbtn;
-    ImageButton m_fillbtn;
+    ImageButton m_fillbutton;
     ImageButton m_widthbtn;
     ImageButton m_clearbtn;
+    ImageButton m_snapshotbtn;
     ColorPickerWindow m_penpicker;
     ColorPickerWindow m_fillpicker;
     WidthPickerWindow m_widthpicker;
