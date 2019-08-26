@@ -35,7 +35,7 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
         return nullptr;
 
     // NOLINTNEXTLINE
-    FcPatternAddString(pattern.get(), FC_FAMILY, (FcChar8*)font.face().c_str());
+    FcPatternAddString(pattern.get(), FC_FAMILY, reinterpret_cast<const FcChar8*>(font.face().c_str()));
     FcPatternAddDouble(pattern.get(), FC_SIZE, font.size());
 
     int weight = FC_WEIGHT_NORMAL;
