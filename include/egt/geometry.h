@@ -913,8 +913,8 @@ public:
      * @param c Center point of the arc.
      * @param r Radius of the arc.
      */
-    constexpr CircleType(const PointType<dim_t>& c = {}, float r = 0.0f) noexcept
-        : Arc(c, r, 0.0f, 2 * detail::pi<float>())
+    constexpr explicit CircleType(const PointType<dim_t>& c = {}, float r = 0.0f) noexcept
+        : ArcType<dim_t>(c, r, 0.0f, 2 * detail::pi<float>())
     {
     }
 
@@ -933,6 +933,8 @@ public:
  * Helper type for a default circle.
  */
 using Circle = CircleType<default_dim_type>;
+
+using CircleF = CircleType<float>;
 
 }
 }

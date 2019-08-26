@@ -34,9 +34,9 @@ class CircleWidget : public Widget
 {
 public:
 
-    explicit CircleWidget(const Circle& circle = {});
+    explicit CircleWidget(const Circle& circle = Circle());
 
-    explicit CircleWidget(Frame& parent, const Circle& circle = {});
+    explicit CircleWidget(Frame& parent, const Circle& circle = Circle());
 
     inline float radius() const
     {
