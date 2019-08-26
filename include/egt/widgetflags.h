@@ -293,7 +293,7 @@ enum class justification
 {
     start,
     middle,
-    end,
+    ending,
     justify,
     none,
 };

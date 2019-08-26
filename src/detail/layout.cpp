@@ -59,7 +59,7 @@ static uint32_t justify_to_contains(justification justify, orientation orient)
     case justification::middle:
         contains |= LAY_MIDDLE;
         break;
-    case justification::end:
+    case justification::ending:
         contains |= LAY_END;
         break;
     case justification::justify:
