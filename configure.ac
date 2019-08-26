@@ -290,8 +290,10 @@ AS_IF([test "x$with_lua" != "xno"],[
       then
          AC_PATH_PROG([SWIG_BIN], [swig])
          if test "x${have_lua}" = xyes && test -n "$SWIG_BIN"; then
-             have_lua_bindings=yes
-             AC_SUBST(include_luaapp, ["#include <egt/luaapp.h>"])
+            have_lua_bindings=yes
+            AC_SUBST(include_luaapp, ["#include <egt/luaapp.h>"])
+	 else
+	    AC_MSG_ERROR([bindings requested but swig not found.])
          fi
       fi
    fi
