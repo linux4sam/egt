@@ -116,8 +116,8 @@ protected:
             return result.size();
         }
 
-        int width = 0;
-        int height = 0;
+        default_dim_type width = 0;
+        default_dim_type height = 0;
 
         if (orient() == orientation::horizontal)
         {
@@ -141,8 +141,8 @@ protected:
                 }
             }
         }
-        width += 2 * moat();
-        height += 2 * moat();
+        width += 2. * moat();
+        height += 2. * moat();
 
         if ((align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
             if (width < box().width())
