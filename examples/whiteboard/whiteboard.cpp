@@ -135,7 +135,7 @@ public:
           m_fillbutton(Image("fill.png")),
           m_widthbtn(Image("width.png")),
           m_clearbtn(Image("clear.png")),
-          m_snapshotbtn(Image("camera.png")),
+          m_snapshotbtn(Image("screenshot.png")),
           m_penpicker(Palette::blue),
           m_fillpicker(Palette::red),
           m_widthpicker(2),
