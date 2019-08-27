@@ -34,7 +34,6 @@ bin_PROGRAMS = \
 basic/basic \
 basicui/basicui \
 boards/boards \
-brick/brick \
 charts/charts \
 colors/colors \
 drag/drag \
@@ -74,13 +73,6 @@ bin_PROGRAMS += \
 gauge/gauge \
 dash/dash
 endif
-
-brick_brick_SOURCES = brick/brick.cpp
-brick_brick_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-brick_brick_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-brick_brickdir = $(prefix)/share/egt/examples/brick
-dist_brick_brick_DATA = $(wildcard $(top_srcdir)/examples/brick/*.png)
-brick_brick_LDFLAGS = $(AM_LDFLAGS)
 
 calc_calc_SOURCES = calc/calc.cpp
 calc_calc_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
