@@ -246,7 +246,8 @@ protected:
     virtual void init_draw();
 };
 
-ENABLE_BITMASK_OPERATORS(Theme::boxtype)
+ENABLE_BITMASK_OPERATORS(Theme::boxtype);
+
 
 /**
  * Get the global theme.

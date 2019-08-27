@@ -53,9 +53,7 @@ enum class alignmask : uint32_t
     expand = expand_horizontal | expand_vertical,
 };
 
-#ifndef SWIG
-ENABLE_BITMASK_OPERATORS(alignmask)
-#endif
+ENABLE_BITMASK_OPERATORS(alignmask);
 
 std::ostream& operator<<(std::ostream& os, const alignmask& align);
 

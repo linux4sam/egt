@@ -134,6 +134,7 @@ inline namespace v1
 %include "egt/sideboard.h"
 %include "egt/sprite.h"
 %include "egt/scrollwheel.h"
+%include "egt/theme.h"
 
 namespace egt
 {

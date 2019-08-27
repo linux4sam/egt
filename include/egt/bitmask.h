@@ -28,7 +28,7 @@ struct EnableBitMaskOperators : std::false_type
 #define ENABLE_BITMASK_OPERATORS(x)                     \
     template<>                                          \
     struct EnableBitMaskOperators<x> : std::true_type   \
-    {};
+    {}
 
 template<typename T>
 constexpr typename std::enable_if<EnableBitMaskOperators<T>::value, T>::type
