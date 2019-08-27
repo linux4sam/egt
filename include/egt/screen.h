@@ -102,7 +102,7 @@ public:
         m_async = async;
     }
 
-    virtual ~Screen() = default;
+    virtual ~Screen();
 
 protected:
 
@@ -174,7 +174,7 @@ protected:
 /**
  * Get a pointer to the main screen.
  */
-Screen*& main_screen();
+Screen* main_screen();
 
 }
 }

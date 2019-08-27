@@ -28,7 +28,7 @@ inline namespace v1
 
 static Screen* the_screen = nullptr;
 
-Screen*& main_screen()
+Screen* main_screen()
 {
     return the_screen;
 }
@@ -225,6 +225,12 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format for
 
     if (!the_screen)
         the_screen = this;
+}
+
+Screen::~Screen()
+{
+    if (the_screen == this)
+        the_screen = nullptr;
 }
 
 }
