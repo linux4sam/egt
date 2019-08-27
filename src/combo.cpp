@@ -91,14 +91,8 @@ void ComboBoxPopup::handle(Event& event)
     {
     case eventid::pointer_click:
     {
-        Point mouse = display_to_local(event.pointer().point);
-
-        if (!local_box().intersect(mouse))
-        {
-            // if any mouse click happens outside of us, hide
-            hide();
-        }
-
+        // if any mouse click happens, hide
+        hide();
         break;
     }
     default:
