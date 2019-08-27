@@ -63,10 +63,13 @@ void BoxSizer::layout()
     {
         auto min = child->box();
 
-        if (min.width() < child->min_size_hint().width())
-            min.set_width(child->min_size_hint().width());
-        if (min.height() < child->min_size_hint().height())
-            min.set_height(child->min_size_hint().height());
+        if (!child->flags().is_set(Widget::flag::no_autoresize))
+        {
+            if (min.width() < child->min_size_hint().width())
+                min.set_width(child->min_size_hint().width());
+            if (min.height() < child->min_size_hint().height())
+                min.set_height(child->min_size_hint().height());
+        }
 
         uint32_t behave = 0;
 
