@@ -598,7 +598,7 @@ public:
         if (detail::change_if_diff<>(m_padding, padding))
         {
             damage();
-            layout();
+            parent_layout();
         }
     }
 
@@ -615,7 +615,7 @@ public:
         if (detail::change_if_diff<>(m_margin, margin))
         {
             damage();
-            layout();
+            parent_layout();
         }
     }
 
@@ -632,7 +632,7 @@ public:
         if (detail::change_if_diff<>(m_border, border))
         {
             damage();
-            layout();
+            parent_layout();
         }
     }
 
