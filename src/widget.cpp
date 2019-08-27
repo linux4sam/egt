@@ -367,9 +367,7 @@ DisplayPoint Widget::display_origin()
 
 Size Widget::min_size_hint() const
 {
-    return Size(margin() * 2, margin() * 2) +
-           Size(border() * 2, border() * 2) +
-           Size(padding() * 2, padding() * 2);
+    return Size(moat() * 2., moat() * 2.);
 }
 
 void Widget::paint(Painter& painter)
