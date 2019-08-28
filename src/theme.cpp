@@ -289,11 +289,11 @@ void Theme::draw_circle(Painter& painter,
         else if (steps.size() > 1)
         {
             auto pat = shared_cairo_pattern_t(cairo_pattern_create_radial(
-                                                  circle.center.x(),
-                                                  circle.center.y(),
-                                                  circle.radius,
-                                                  circle.center.x(),
-                                                  circle.center.y(),
+                                                  circle.center().x(),
+                                                  circle.center().y(),
+                                                  circle.radius(),
+                                                  circle.center().x(),
+                                                  circle.center().y(),
                                                   0),
                                               cairo_pattern_destroy);
 

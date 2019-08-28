@@ -225,7 +225,8 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k)
     {
         k->m_multichoice_panel->update_key_space(m_key_space);
         auto key_multichoice_size = Size(width() / m_max_cols, height() / m_max_rows);
-        k->m_multichoice_panel->update_key_size(key_multichoice_size * m_key_size_multichoice_factor);
+        k->m_multichoice_panel->update_key_size(Size(key_multichoice_size.width() * m_key_size_multichoice_factor,
+                                                key_multichoice_size.height() * m_key_size_multichoice_factor));
 
         m_multichoice_popup.reset(new Popup());
         m_multichoice_popup->resize(k->m_multichoice_panel->size());

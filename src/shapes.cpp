@@ -17,7 +17,7 @@ inline namespace v1
 
 CircleWidget::CircleWidget(const Circle& circle)
     : Widget(circle.rect()),
-      m_radius(circle.radius)
+      m_radius(circle.radius())
 {
     set_name("CircleWidget" + std::to_string(m_widgetid));
     set_boxtype(Theme::boxtype::blank);

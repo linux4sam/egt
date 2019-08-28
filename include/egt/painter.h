@@ -149,7 +149,7 @@ public:
      * @param[in] point The point.
      */
     template<class T>
-    Painter& draw(const PointType<T, compatible::normal>& point)
+    Painter& draw(const PointType<T, detail::compatible::normal>& point)
     {
         cairo_move_to(m_cr.get(), point.x(), point.y());
 
@@ -202,8 +202,8 @@ public:
         if (arc.empty())
             return *this;
 
-        cairo_arc(m_cr.get(), arc.center.x(), arc.center.y(),
-                  arc.radius, arc.angle1, arc.angle2);
+        cairo_arc(m_cr.get(), arc.center().x(), arc.center().y(),
+                  arc.radius(), arc.angle1(), arc.angle2());
 
         return *this;
     }

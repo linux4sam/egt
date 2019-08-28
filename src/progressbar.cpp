@@ -58,7 +58,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
     if (widget.show_label())
     {
         string text = std::to_string(widget.value()) + "%";
-        auto f = detail::TextWidget::scale_font(b.size() * 0.75, text, widget.font());
+        auto f = detail::TextWidget::scale_font(Size(b.width() * 0.75, b.height() * 0.75), text, widget.font());
 
         painter.set(widget.color(Palette::ColorId::label_text).color());
         painter.set(f);
@@ -126,7 +126,7 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
     if (widget.show_label())
     {
         string text = std::to_string(widget.value());
-        auto f = detail::TextWidget::scale_font(Size(dim, dim) * 0.75, text, widget.font());
+        auto f = detail::TextWidget::scale_font(Size(dim * 0.75, dim * 0.75), text, widget.font());
         painter.set(f);
         painter.set(widget.color(Palette::ColorId::text).color());
         auto size = painter.text_size(text);
