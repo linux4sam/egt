@@ -60,7 +60,7 @@ void tokenize_with_delimiters(T begin, T end,
 
     for (auto pos = begin; pos != end;)
     {
-        auto ch = utf8::next(pos, end);
+        const auto ch = utf8::next(pos, end);
         bool found = false;
         for (auto d = dbegin; d != dend;)
         {

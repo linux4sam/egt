@@ -46,6 +46,54 @@ enum
     LAY_BREAK = 0x200
 };
 
+static void draw_text_common(std::vector<detail::LayoutRect>& rects,
+                             cairo_t* cr,
+                             cairo_font_extents_t& fe,
+                             const Rect& b,
+                             const std::string& text,
+                             const Font& font,
+                             TextBox::flags_type flags,
+                             alignmask text_align)
+{
+    // tokenize based on words or codepoints
+    static const std::string delimiters = " \t\n\r";
+    std::vector<std::string> tokens;
+    if (flags.is_set(TextBox::flag::multiline) && flags.is_set(TextBox::flag::word_wrap))
+    {
+        detail::tokenize_with_delimiters(text.cbegin(),
+                                         text.cend(),
+                                         delimiters.cbegin(),
+                                         delimiters.cend(),
+                                         tokens);
+    }
+    else
+    {
+        for (utf8_const_iterator ch(text.begin(), text.begin(), text.end());
+             ch != utf8_const_iterator(text.end(), text.begin(), text.end()); ++ch)
+        {
+            tokens.emplace_back(utf8_char_to_string(ch.base(), text.cend()));
+        }
+    }
+
+    uint32_t default_behave = 0;
+    uint32_t behave = default_behave;
+
+    for (const auto& t : tokens)
+    {
+        if (t == "\n")
+        {
+            rects.emplace_back(behave, Rect(0, 0, 1, fe.height), t);
+            behave |= LAY_BREAK;
+        }
+        else
+        {
+            cairo_text_extents_t te;
+            cairo_text_extents(cr, t.c_str(), &te);
+            rects.emplace_back(behave, Rect(0, 0, te.x_advance, fe.height), t);
+            behave = default_behave;
+        }
+    }
+}
 
 void draw_text(Painter& painter,
                const Rect& b,
@@ -67,55 +115,16 @@ void draw_text(Painter& painter,
     cairo_font_extents_t fe;
     cairo_font_extents(cr, &fe);
 
-    // tokenize based on words or codepoints
-    const std::string delimiters = " \t\n\r";
-    std::vector<std::string> tokens;
-    if (flags.is_set(TextBox::flag::multiline) && flags.is_set(TextBox::flag::word_wrap))
-    {
-        detail::tokenize_with_delimiters(text.cbegin(),
-                                         text.cend(),
-                                         delimiters.cbegin(),
-                                         delimiters.cend(),
-                                         tokens);
-    }
-    else
-    {
-        for (utf8_const_iterator ch(text.begin(), text.begin(), text.end());
-             ch != utf8_const_iterator(text.end(), text.begin(), text.end()); ++ch)
-        {
-            tokens.emplace_back(utf8_char_to_string(ch.base(), text.cend()));
-        }
-    }
-
-    uint32_t default_behave = 0;
-
-    // setup rects for each word/codepoint
     std::vector<detail::LayoutRect> rects;
-    uint32_t behave = default_behave;
-    for (const auto& t : tokens)
-    {
-        if (t == "\n")
-        {
-            detail::LayoutRect r;
-            r.behave = behave;
-            r.rect = Rect(0, 0, 1, fe.height);
-            r.str = t;
-            rects.push_back(r);
-        }
-        else
-        {
-            cairo_text_extents_t te;
-            cairo_text_extents(cr, t.c_str(), &te);
-            detail::LayoutRect r(behave, Rect(0, 0, te.x_advance, fe.height));
-            r.str = t;
-            rects.push_back(r);
-        }
 
-        if (t == "\n")
-            behave |= LAY_BREAK;
-        else
-            behave = default_behave;
-    }
+    draw_text_common(rects,
+                     cr,
+                     fe,
+                     b,
+                     text,
+                     font,
+                     flags,
+                     text_align);
 
     detail::flex_layout(b, rects, justify, orientation::flex, text_align);
 
@@ -242,97 +251,37 @@ void draw_text(Painter& painter,
     cairo_font_extents_t fe;
     cairo_font_extents(cr, &fe);
 
-    // tokenize based on words or codepoints
-    const std::string delimiters = " \t\n\r";
-    std::vector<std::string> tokens;
-    if (flags.is_set(TextBox::flag::multiline) && flags.is_set(TextBox::flag::word_wrap))
-    {
-        detail::tokenize_with_delimiters(text.cbegin(),
-                                         text.cend(),
-                                         delimiters.cbegin(),
-                                         delimiters.cend(),
-                                         tokens);
-    }
-    else
-    {
-        for (utf8_const_iterator ch(text.begin(), text.begin(), text.end());
-             ch != utf8_const_iterator(text.end(), text.begin(), text.end()); ++ch)
-        {
-            tokens.emplace_back(utf8_char_to_string(ch.base(), text.cend()));
-        }
-    }
-
-    uint32_t default_behave = 0;
-
-    // setup rects for each word/codepoint
     std::vector<detail::LayoutRect> rects;
 
-    uint32_t behave = default_behave;
-
-    for (const auto& t : tokens)
-    {
-        if (t == "\n")
-        {
-            detail::LayoutRect r;
-            r.behave = behave;
-            r.rect = Rect(0, 0, 1, fe.height);
-            r.str = t;
-            rects.push_back(r);
-        }
-        else
-        {
-            cairo_text_extents_t te;
-            cairo_text_extents(cr, t.c_str(), &te);
-            detail::LayoutRect r(behave, Rect(0, 0, te.x_advance, fe.height));
-            r.str = t;
-            rects.push_back(r);
-        }
-
-        if (t == "\n")
-            behave |= LAY_BREAK;
-        else
-            behave = default_behave;
-    }
+    draw_text_common(rects,
+                     cr,
+                     fe,
+                     b,
+                     text,
+                     font,
+                     flags,
+                     text_align);
 
     if ((image_align & alignmask::top) == alignmask::top)
     {
-        detail::LayoutRect r;
-        r.behave = LAY_BREAK;
-        r.rect = Rect(0, 0, 1, fe.height);
-        r.str = "\n";
+        detail::LayoutRect r(LAY_BREAK, Rect(0, 0, 1, fe.height), "\n");
         rects.insert(rects.begin(), r);
 
-        r.behave = default_behave;
-        r.rect = Rect(Point(), image.size());
-        r.str.clear();
-        rects.insert(rects.begin(), r);
+        detail::LayoutRect r2(0, Rect(Point(), image.size()));
+        rects.insert(rects.begin(), r2);
     }
     else if ((image_align & alignmask::right) == alignmask::right)
     {
-        detail::LayoutRect r;
-        r.behave = default_behave;
-        r.rect = Rect(Point(), image.size());
-        r.str.clear();
-        rects.push_back(r);
+        rects.emplace_back(0, Rect(Point(), image.size()));
     }
     else if ((image_align & alignmask::bottom) == alignmask::bottom)
     {
-        detail::LayoutRect r;
-        r.behave = LAY_BREAK;
-        r.rect = Rect(0, 0, 1, fe.height);
-        r.str = "\n";
-        rects.push_back(r);
-
-        r.behave = default_behave;
-        r.rect = Rect(Point(), image.size());
-        r.str.clear();
-        rects.push_back(r);
+        rects.emplace_back(LAY_BREAK, Rect(0, 0, 1, fe.height), "\n");
+        rects.emplace_back(0, Rect(Point(), image.size()));
     }
     else
     {
-        detail::LayoutRect r;
-        r.behave = default_behave;
-        r.rect = Rect(Point(), image.size());
+        detail::LayoutRect r(0, Rect(Point(), image.size()));
         rects.insert(rects.begin(), r);
     }
 

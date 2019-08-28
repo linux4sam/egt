@@ -31,13 +31,29 @@ struct LayoutRect
                uint32_t lm = 0,
                uint32_t tm = 0,
                uint32_t rm = 0,
-               uint32_t bm = 0)
+               uint32_t bm = 0) noexcept
         : behave(b),
           rect(r),
           lmargin(lm),
           tmargin(tm),
           rmargin(rm),
           bmargin(bm)
+    {}
+
+    LayoutRect(uint32_t b,
+               const Rect& r,
+               const std::string& s,
+               uint32_t lm = 0,
+               uint32_t tm = 0,
+               uint32_t rm = 0,
+               uint32_t bm = 0) noexcept
+        : behave(b),
+          rect(r),
+          lmargin(lm),
+          tmargin(tm),
+          rmargin(rm),
+          bmargin(bm),
+          str(s)
     {}
 
     uint32_t behave{0};
