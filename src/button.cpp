@@ -145,6 +145,12 @@ void Button::first_resize()
     }
 }
 
+ImageButton::ImageButton(const std::string& text,
+                         const Rect& rect) noexcept
+    : ImageButton(Image(), text, rect)
+{
+}
+
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
                          const Rect& rect) noexcept

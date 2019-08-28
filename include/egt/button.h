@@ -140,6 +140,13 @@ class ImageButton : public Button
 public:
 
     /**
+     * @param[in] text The text to display.
+     * @param[in] rect Rectangle for the widget.
+     */
+    explicit ImageButton(const std::string& text = {},
+                         const Rect& rect = {}) noexcept;
+
+    /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
