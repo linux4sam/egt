@@ -124,6 +124,9 @@ libegt_la_LIBADD += $(top_builddir)/external/libkplot.la $(top_builddir)/externa
 if HAVE_SIMD
 libegt_la_LIBADD += $(top_builddir)/external/Simd/prj/cmake/libSimd.a
 endif
+if ENABLE_LUA_BINDINGS
+libegt_la_LIBADD += $(top_builddir)/lua/libegtlua.la
+endif
 
 libegtincludedir = ${includedir}
 nobase_libegtinclude_HEADERS = \
@@ -311,10 +314,8 @@ nobase_libegtinclude_HEADERS += \
 endif
 
 if ENABLE_LUA_BINDINGS
-libegt_la_CXXFLAGS += -DLUA_USE_POSIX
 libegt_la_SOURCES += \
-luaapp.cpp \
-../lua/ui.cpp
+luaapp.cpp
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/luaapp.h

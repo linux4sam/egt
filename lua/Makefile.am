@@ -18,6 +18,16 @@ endif
 
 CLEANFILES = ui.cpp
 BUILT_SOURCES = ui.cpp
-EXTRA_DIST = ui.i examples
+EXTRA_DIST = ui.i
+
+noinst_LTLIBRARIES = libegtlua.la
+libegtlua_la_SOURCES = ui.cpp
+EXTRA_libegtlua_la_SOURCES = ui.cpp
+libegtlua_la_CXXFLAGS = -fPIC -I$(top_srcdir)/include \
+	-I$(top_builddir)/include \
+	@LIBEGT_EXTRA_CXXFLAGS@ \
+	$(CODE_COVERAGE_CXXFLAGS) \
+	$(AM_CXXFLAGS) \
+	-DLUA_USE_POSIX
 
 endif
