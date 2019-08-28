@@ -208,12 +208,28 @@ protected:
 
 using WidgetTypes = ::testing::Types<AnalogMeter,
 				     Button,
+				     ImageButton,
 				     CheckBox,
 				     CircleWidget,
 				     Label,
+				     ImageLabel,
 				     ListBox,
 				     RadioBox,
-				     TextBox>;
+				     TextBox,
+				     ComboBox,
+				     Slider,
+				     BoxSizer,
+				     VerticalBoxSizer,
+				     HorizontalBoxSizer,
+				     Notebook,
+				     StaticGrid,
+				     ProgressBar,
+				     SpinProgress,
+				     LevelMeter,
+				     AnalogMeter,
+				     CircleWidget,
+				     LineWidget,
+				     RectangleWidget>;
 TYPED_TEST_SUITE(Widgets, WidgetTypes);
 TYPED_TEST(Widgets, Properties)
 {
