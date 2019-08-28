@@ -27,16 +27,6 @@ namespace egt
 inline namespace v1
 {
 
-namespace detail
-{
-template<class T>
-constexpr const T& clampf(const T& v, const T& lo = 0, const T& hi = 1)
-{
-    return assert(!(hi < lo)),
-           (v < lo) ? lo : (hi < v) ? hi : v;
-}
-}
-
 /**
  * 32 bit RGBA color.
  *
@@ -175,10 +165,10 @@ public:
 
     //@{
     /** Set RGBA component value as a float from 0.0 to 1.0. */
-    inline void redf(float v) { m_rgba[0] = detail::clampf(v) * 255; }
-    inline void greenf(float v) { m_rgba[1] = detail::clampf(v) * 255; }
-    inline void bluef(float v) { m_rgba[2] = detail::clampf(v) * 255; }
-    inline void alphaf(float v) { m_rgba[3] = detail::clampf(v) * 255; }
+    inline void redf(float v) { m_rgba[0] = detail::clamp(v, 0.f, 1.f) * 255.f; }
+    inline void greenf(float v) { m_rgba[1] = detail::clamp(v, 0.f, 1.f) * 255.f; }
+    inline void bluef(float v) { m_rgba[2] = detail::clamp(v, 0.f, 1.f) * 255.f; }
+    inline void alphaf(float v) { m_rgba[3] = detail::clamp(v, 0.f, 1.f) * 255.f; }
     //@}
 
     //@{
