@@ -57,15 +57,19 @@ void Scrollwheel::init(bool reversed)
 
     set_boxtype(Theme::boxtype::none);
 
-    if (reversed)
+    if (!m_items.empty() && reversed)
         m_selected = m_items.size() - 1;
 
     m_label->set_text_align(alignmask::center);
-    m_label->set_text(m_items[m_selected]);
+    if (!m_items.empty())
+        m_label->set_text(m_items[m_selected]);
     add(expand(m_label), 0, 1);
 
     m_button_up->on_event([this](Event&)
     {
+        if (m_items.empty())
+            return;
+
         if (m_selected == m_items.size() - 1)
             m_selected = 0;
         else
@@ -79,6 +83,9 @@ void Scrollwheel::init(bool reversed)
 
     m_button_down->on_event([this](Event&)
     {
+        if (m_items.empty())
+            return;
+
         if (m_selected == 0)
             m_selected = m_items.size() - 1;
         else
@@ -108,6 +115,9 @@ unsigned int Scrollwheel::get_index() const
 
 void Scrollwheel::set_index(unsigned int index)
 {
+    if (m_items.empty())
+        return;
+
     m_selected = index;
     if (m_selected >  m_items.size() - 1)
         m_selected = m_items.size() - 1;
