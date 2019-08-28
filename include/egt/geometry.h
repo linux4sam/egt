@@ -941,6 +941,13 @@ protected:
     PointType<dim_t> m_end;
 };
 
+template<class dim_t>
+std::ostream& operator<<(std::ostream& os, const LineType<dim_t>& line)
+{
+    os << "[" << line.start() << "-" << line.end() << "]";
+    return os;
+}
+
 /**
  * Helper type for a default line.
  */
