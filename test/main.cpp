@@ -142,6 +142,29 @@ TEST(Canvas, Basic)
     EXPECT_EQ(canvas4.format(), pixel_format::rgb565);
 }
 
+TEST(Geometry, Basic)
+{
+    Point p1(3,4);
+    EXPECT_EQ(p1.x(), 3);
+    EXPECT_EQ(p1.y(), 4);
+    p1 += 1;
+    EXPECT_EQ(p1.x(), 4);
+    EXPECT_EQ(p1.y(), 5);
+
+    Size s1(3,4);
+    EXPECT_EQ(s1.width(), 3);
+    EXPECT_EQ(s1.height(), 4);
+    s1 += 1;
+    EXPECT_EQ(s1.width(), 4);
+    EXPECT_EQ(s1.height(), 5);
+
+    Rect r1(3, 4, 5, 6);
+    EXPECT_EQ(r1.x(), 3);
+    EXPECT_EQ(r1.y(), 4);
+    EXPECT_EQ(r1.width(), 5);
+    EXPECT_EQ(r1.height(), 6);
+}
+
 TEST(Geometry, Points)
 {
     Point p1;
