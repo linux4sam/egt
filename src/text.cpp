@@ -53,7 +53,9 @@ TextBox::TextBox(Frame& parent,
                  alignmask text_align,
                  const flags_type::flags& flags) noexcept
     : TextBox(text, Rect(), text_align, flags)
-{}
+{
+    parent.add(*this);
+}
 
 TextBox::TextBox(Frame& parent,
                  const std::string& text,
