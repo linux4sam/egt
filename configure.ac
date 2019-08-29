@@ -15,7 +15,7 @@ AC_ARG_PROGRAM
 
 PKG_PROG_PKG_CONFIG
 
-AM_INIT_AUTOMAKE([1.10 foreign subdir-objects])
+AM_INIT_AUTOMAKE([1.10 foreign subdir-objects tar-ustar])
 
 # Enable quiet compiles on automake 1.11.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
