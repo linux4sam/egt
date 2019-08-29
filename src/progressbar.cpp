@@ -46,7 +46,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
     auto b = widget.content_area();
     auto width = detail::normalize<float>(widget.value(), widget.min(), widget.max(), 0, b.width());
 
-    if (width)
+    if (width > 0.f)
     {
         widget.theme().draw_box(painter,
                                 Theme::boxtype::blank,

@@ -45,7 +45,6 @@ combo.cpp \
 detail/alignment.cpp \
 detail/collision.cpp \
 detail/filesystem.cpp \
-detail/floatingpoint.h \
 detail/imagecache.cpp \
 detail/input/inputkeyboard.cpp \
 detail/input/inputkeyboard.h \

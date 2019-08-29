@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "detail/floatingpoint.h"
+#include "egt/detail/math.h"
 #include "egt/color.h"
 #include <cassert>
 #include <cmath>
@@ -155,14 +155,14 @@ static hsl rgb2hsl(const Color& rgb)
         (cmax + cmin) / 2.f
     };
 
-    if (detail::FloatingPoint<float_t>(delta).AlmostEquals(detail::FloatingPoint<float_t>(0.f)))
+    if (detail::float_compare(delta, 0.f))
         return hsl;
 
-    if (detail::FloatingPoint<float_t>(cmax).AlmostEquals(detail::FloatingPoint<float_t>(rgb.redf())))
+    if (detail::float_compare(cmax, rgb.redf()))
     {
         hsl.h = fmodf((rgb.greenf() - rgb.bluef()) / delta, 6.f);
     }
-    else if (detail::FloatingPoint<float_t>(cmax).AlmostEquals(detail::FloatingPoint<float_t>(rgb.greenf())))
+    else if (detail::float_compare(cmax, rgb.greenf()))
     {
         hsl.h = (rgb.bluef() - rgb.redf()) / delta + 2.f;
     }

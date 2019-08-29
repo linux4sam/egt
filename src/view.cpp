@@ -238,12 +238,12 @@ void ScrolledView::update_sliders()
 
     auto hslider_value =
         egt::detail::normalize<float>(std::abs(m_offset.x()), 0, offset_max.x(), 0, 100);
-    if (m_hslider.set_value(hslider_value) != hslider_value)
+    if (!detail::float_compare(m_hslider.set_value(hslider_value), hslider_value))
         damage();
 
     auto vslider_value =
         egt::detail::normalize<float>(std::abs(m_offset.y()), 0, offset_max.y(), 0, 100);
-    if (m_vslider.set_value(vslider_value) != vslider_value)
+    if (!detail::float_compare(m_vslider.set_value(vslider_value), vslider_value))
         damage();
 }
 

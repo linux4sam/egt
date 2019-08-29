@@ -180,6 +180,13 @@ inline bool operator==(const PointType<dim_t, dim_c>& lhs, const PointType<dim_t
     return lhs.x() == rhs.x() && lhs.y() == rhs.y();
 }
 
+template<detail::compatible dim_c>
+inline bool operator==(const PointType<float, dim_c>& lhs, const PointType<float, dim_c>& rhs)
+{
+    return detail::float_compare(lhs.x(), rhs.x()) &&
+           detail::float_compare(lhs.y(), rhs.y());
+}
+
 /// Compares two @c PointType objects for inequality.
 template<class dim_t, detail::compatible dim_c>
 inline bool operator!=(const PointType<dim_t, dim_c>& lhs, const PointType<dim_t, dim_c>& rhs)
@@ -390,6 +397,13 @@ template<class dim_t, detail::compatible dim_c>
 inline bool operator==(const SizeType<dim_t, dim_c>& lhs, const SizeType<dim_t, dim_c>& rhs)
 {
     return lhs.width() == rhs.width() && lhs.height() == rhs.height();
+}
+
+template<detail::compatible dim_c>
+inline bool operator==(const SizeType<float, dim_c>& lhs, const SizeType<float, dim_c>& rhs)
+{
+    return detail::float_compare(lhs.width(), rhs.width()) &&
+           detail::float_compare(lhs.height(), rhs.height());
 }
 
 /// Compares two @c SizeType objects for inequality.
@@ -876,10 +890,8 @@ inline RectType<dim_t, dim_c> operator/(RectType<dim_t, dim_c> lhs, const PointT
 template<class dim_t, detail::compatible dim_c>
 inline bool operator==(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
 {
-    return lhs.x() == rhs.x() &&
-           lhs.y() == rhs.y() &&
-           lhs.width() == rhs.width() &&
-           lhs.height() == rhs.height();
+    return lhs.point() == rhs.point() &&
+           lhs.size() == rhs.size();
 }
 
 /// Compares two @c Rect objects for inequality.

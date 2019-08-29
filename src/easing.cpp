@@ -38,9 +38,9 @@ float_t easing_extend(float_t p)
 
 static inline float_t power(float_t base, float_t exponent)
 {
-    if (exponent == 0.0f)
+    if (detail::float_compare(exponent, 0.0f))
         return 1.0f;
-    else if (base == 0.0f && exponent > 0.0f)
+    else if (detail::float_compare(base, 0.0f) && exponent > 0.0f)
         return 0.0f;
 
     return std::exp(exponent * std::log(base));
@@ -293,17 +293,17 @@ float_t easing_circular_easeinout(float_t p)
 
 float_t easing_exponential_easein(float_t p)
 {
-    return (p == 0.0) ? p : std::pow(2, 10 * (p - 1));
+    return detail::float_compare(p, 0.0f) ? p : std::pow(2, 10 * (p - 1));
 }
 
 float_t easing_exponential_easeout(float_t p)
 {
-    return (p == 1.0) ? p : 1 - std::pow(2, -10 * p);
+    return detail::float_compare(p, 1.0f) ? p : 1 - std::pow(2, -10 * p);
 }
 
 float_t easing_exponential_easeinout(float_t p)
 {
-    if (p == 0.0 || p == 1.0)
+    if (detail::float_compare(p, 0.0f) || detail::float_compare(p, 1.0f))
         return p;
 
     if (p < 0.5)

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "detail/floatingpoint.h"
+#include "egt/detail/math.h"
 #include "egt/animation.h"
 #include "egt/app.h"
 #include "egt/detail/math.h"
@@ -79,8 +79,7 @@ bool Animation::next()
                           chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
         float_t result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
-        if (!detail::FloatingPoint<float_t>(result).
-            AlmostEquals(detail::FloatingPoint<float_t>(m_current)))
+        if (!detail::float_compare(result, m_current))
         {
             m_current = result;
             for (auto& callback : m_callbacks)

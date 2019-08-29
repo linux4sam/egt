@@ -6,6 +6,7 @@
 #ifndef EGT_DETAIL_MATH_H
 #define EGT_DETAIL_MATH_H
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 
@@ -104,6 +105,22 @@ constexpr const T& clamp(const T& v, const T& lo, const T& hi)
 {
     return assert(!(hi < lo)),
            (v < lo) ? lo : (hi < v) ? hi : v;
+}
+
+inline bool float_compare(const float f1, const float f2)
+{
+    static constexpr auto epsilon = 1.0e-05f;
+    if (std::fabs(f1 - f2) <= epsilon)
+        return true;
+    return std::fabs(f1 - f2) <= epsilon * std::max(std::fabs(f1), std::fabs(f2));
+}
+
+inline bool float_compare(const double f1, const double f2)
+{
+    static constexpr auto epsilon = 1.0e-9;
+    if (std::fabs(f1 - f2) <= epsilon)
+        return true;
+    return std::fabs(f1 - f2) <= epsilon * std::max(std::fabs(f1), std::fabs(f2));
 }
 
 }

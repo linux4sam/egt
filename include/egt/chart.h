@@ -11,6 +11,7 @@
  * @brief Working with charts.
  */
 
+#include <egt/detail/math.h>
 #include <egt/widget.h>
 #include <map>
 #include <memory>
@@ -90,7 +91,7 @@ public:
 
     void set_line_width(float width)
     {
-        if (m_linewidth != width)
+        if (!detail::float_compare(m_linewidth, width))
         {
             m_linewidth = width;
             damage();

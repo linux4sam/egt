@@ -52,7 +52,8 @@ void Image::scale(double hscale, double vscale, bool approximate)
     if (m_respath.empty())
         return;
 
-    if (m_hscale != hscale || m_vscale != vscale)
+    if (!detail::float_compare(m_hscale, hscale) ||
+        !detail::float_compare(m_vscale, vscale))
     {
         m_surface = detail::image_cache().get(m_respath, hscale, vscale, approximate);
         m_hscale = hscale;

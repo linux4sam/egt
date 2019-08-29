@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "detail/floatingpoint.h"
 #include "egt/detail/layout.h"
+#include "egt/detail/math.h"
 #include "egt/frame.h"
 #include "egt/input.h"
 #include "egt/painter.h"
@@ -412,8 +412,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
             if (r.empty())
                 return;
 
-            if (detail::FloatingPoint<float>(child->alpha()).
-                AlmostEquals(detail::FloatingPoint<float>(1.f)))
+            if (detail::float_compare(child->alpha(), 1.f))
             {
                 Painter::AutoSaveRestore sr2(painter);
 

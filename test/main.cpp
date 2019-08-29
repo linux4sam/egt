@@ -8,6 +8,48 @@
 
 using namespace egt;
 
+static float calculate(float start, float decrement, int count)
+{
+    for (int i = 0; i < count; ++i)
+        start -= decrement;
+    return start;
+}
+
+static double calculate(double start, double decrement, int count)
+{
+    for (int i = 0; i < count; ++i)
+        start -= decrement;
+    return start;
+}
+
+TEST(Math, CompareFloat)
+{
+    const auto total = 10000;
+    auto count = 0;
+    for (auto i = 0; i < total; ++i)
+    {
+        auto expected = (i / 10.0f);
+        auto actual = calculate(9.0f + expected, 0.2f, 45);
+        if (detail::float_compare(actual, expected))
+            ++count;
+    }
+    EXPECT_EQ(count, total);
+}
+
+TEST(Math, CompareDouble)
+{
+    const auto total = 10000;
+    auto count = 0;
+    for (auto i = 0; i < total; ++i)
+    {
+        auto expected = (i / 10.0);
+        auto actual = calculate(9.0 + expected, 0.2, 45);
+        if (detail::float_compare(actual, expected))
+            ++count;
+    }
+    EXPECT_EQ(count, total);
+}
+
 TEST(Color, Basic)
 {
     Color c1(0x11223344);

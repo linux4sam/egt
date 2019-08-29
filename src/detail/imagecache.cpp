@@ -10,6 +10,7 @@
 #include "egt/canvas.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/imagecache.h"
+#include "egt/detail/math.h"
 #include "egt/detail/resource.h"
 #include "egt/utils.h"
 #include "images/bmp/cairo_bmp.h"
@@ -114,7 +115,8 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 
     shared_cairo_surface_t image;
 
-    if (hscale == 1.0 && vscale == 1.0)
+    if (detail::float_compare(hscale, 1.0f) &&
+        detail::float_compare(vscale, 1.0f))
     {
         static_assert(CAIRO_HAS_PNG_FUNCTIONS == 1, "PNG support in cairo assumed.");
 
