@@ -11,8 +11,6 @@
 #include <cassert>
 #include <cmath>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -52,7 +50,7 @@ Animation::Animation(float_t start, float_t end,
 
 void Animation::start()
 {
-    m_start_time = chrono::steady_clock::now();
+    m_start_time = std::chrono::steady_clock::now();
     m_stop_time = m_start_time + m_duration;
     m_running = true;
     m_current = m_start;
@@ -65,7 +63,7 @@ bool Animation::next()
     if (!running())
         return false;
 
-    auto now = chrono::steady_clock::now();
+    auto now = std::chrono::steady_clock::now();
     if (now >= m_stop_time)
     {
         m_running = false;
@@ -75,8 +73,8 @@ bool Animation::next()
     }
     else
     {
-        float_t percent = chrono::duration<float_t, milli>(now - m_start_time).count() /
-                          chrono::duration<float_t, milli>(m_stop_time - m_start_time).count();
+        float_t percent = std::chrono::duration<float_t, std::milli>(now - m_start_time).count() /
+                          std::chrono::duration<float_t, std::milli>(m_stop_time - m_start_time).count();
         float_t result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
         if (!detail::float_compare(result, m_current))
