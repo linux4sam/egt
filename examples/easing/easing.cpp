@@ -91,6 +91,7 @@ public:
         list1->set_selected(7);
 
         auto image = std::make_shared<ImageLabel>(Image("ball.png"));
+        m_box.resize(image->size());
         m_box.add(image);
 
         m_box.set_boxtype(Theme::boxtype::none);
@@ -126,7 +127,7 @@ private:
         m_board.add(left(expand_vertical(m_line)));
     }
 
-    Window m_box{Size(100, 200)};
+    Window m_box;
     AnimationSequence m_seq{true};
     PropertyAnimator m_animation;
     AnimationDelay m_delay{std::chrono::seconds(1)};
