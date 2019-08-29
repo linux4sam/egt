@@ -17,12 +17,10 @@ endif
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui.i.dep@am__quote@
 
 CLEANFILES = ui.cpp
-BUILT_SOURCES = ui.cpp
-EXTRA_DIST = ui.i
 
 noinst_LTLIBRARIES = libegtlua.la
-libegtlua_la_SOURCES = ui.cpp
-EXTRA_libegtlua_la_SOURCES = ui.cpp
+libegtlua_la_SOURCES =
+nodist_libegtlua_la_SOURCES = ui.cpp
 libegtlua_la_CXXFLAGS = -fPIC -I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
 	@LIBEGT_EXTRA_CXXFLAGS@ \
@@ -31,3 +29,6 @@ libegtlua_la_CXXFLAGS = -fPIC -I$(top_srcdir)/include \
 	-DLUA_USE_POSIX
 
 endif
+
+BUILT_SOURCES = ui.cpp
+EXTRA_DIST = ui.i
