@@ -225,6 +225,16 @@ public:
         return m_current;
     }
 
+    /**
+     * Should the value be rounded?
+     *
+     * When set to true, the resulting @b value will be rounded to the nearest
+     * integer.
+     *
+     * @param[in] enable When true, rounding is enabled. It is false by default.
+     */
+    inline void set_rounding(bool enable) { m_round = enable; }
+
     virtual ~Animation() = default;
 
 protected:
@@ -268,6 +278,11 @@ protected:
      * Is the animation running in reverse.
      */
     bool m_reverse{false};
+
+    /**
+     * Should the dispatched value be rounded?
+     */
+    bool m_round{false};
 };
 
 /**
@@ -525,7 +540,6 @@ class PropertyAnimatorType : public AutoAnimation
 {
 public:
 
-
     /**
      * @param[in] start The starting value of the animation.
      * @param[in] end The ending value of the animation.
@@ -546,9 +560,9 @@ public:
     /**
      * Register a callback handler for when the value changes.
      *
-     * @param callback The callback function to invoke.
+     * @param[in] callback The callback function to invoke.
      */
-    void on_change(property_callback_t callback)
+    inline void on_change(property_callback_t callback)
     {
         m_callbacks.push_back(callback);
     }
@@ -556,7 +570,7 @@ public:
     /**
      * Clear all callbacks.
      */
-    void clear_change_callbacks()
+    inline void clear_change_callbacks()
     {
         m_callbacks.clear();
     }

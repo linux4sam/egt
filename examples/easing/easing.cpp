@@ -101,6 +101,7 @@ public:
         add(m_box);
 
         m_animation.on_change(std::bind(&Window::set_y, &m_box, std::placeholders::_1));
+        m_animation.set_rounding(true);
         m_seq.add(m_animation);
         m_seq.add(m_delay);
         m_seq.start();

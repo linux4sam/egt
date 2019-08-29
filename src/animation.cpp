@@ -54,6 +54,8 @@ void Animation::start()
     m_stop_time = m_start_time + m_duration;
     m_running = true;
     m_current = m_start;
+    if (m_round)
+        m_current = std::round(m_current);
     for (auto& callback : m_callbacks)
         callback(m_current);
 }
@@ -68,6 +70,8 @@ bool Animation::next()
     {
         m_running = false;
         m_current = m_end;
+        if (m_round)
+            m_current = std::round(m_current);
         for (auto& callback : m_callbacks)
             callback(m_current);
     }
@@ -76,6 +80,9 @@ bool Animation::next()
         float_t percent = std::chrono::duration<float_t, std::milli>(now - m_start_time).count() /
                           std::chrono::duration<float_t, std::milli>(m_stop_time - m_start_time).count();
         float_t result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
+
+        if (m_round)
+            result = std::round(result);
 
         if (!detail::float_compare(result, m_current))
         {
