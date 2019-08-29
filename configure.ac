@@ -78,6 +78,7 @@ AC_DEFUN([EGT_CC_TRY_FLAG], [
 
 MAYBE_WARN="-Wall -Wextra \
 -pedantic \
+-Wfloat-equal \
 -Wsign-compare \
 -Werror-implicit-function-declaration \
 -Wpointer-arith \
