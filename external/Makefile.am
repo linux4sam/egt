@@ -52,6 +52,7 @@ dist-hook:
 	for file in $(BUILT_SOURCES) ; do \
 		rm -f $(distdir)/$$file ; \
 	done
+	rm -f $(distdir)/Simd/prj/cmake/CMakeCache.txt
 
 EXTRA_DIST = \
 	rapidxml \
@@ -59,12 +60,13 @@ EXTRA_DIST = \
 	kplot/compat.sh \
 	utfcpp \
 	spdlog \
-	googletest
+	googletest \
+	Simd
 
 if HAVE_SIMD
 all-local:
-	cd Simd/prj/cmake/ && $(MAKE) $(AM_MAKEFLAGS) all
+	$(MAKE) -C Simd/prj/cmake/ $(AM_MAKEFLAGS) all
 
 clean-local:
-	cd Simd/prj/cmake/ && $(MAKE) $(AM_MAKEFLAGS) clean
+	$(MAKE) -C Simd/prj/cmake/ $(AM_MAKEFLAGS) clean
 endif

@@ -443,22 +443,24 @@ AM_COND_IF([HAVE_DOXYGEN_BIN], [AC_CONFIG_FILES([docs/Doxyfile docs/Info.plist])
 AC_PATH_PROG([ASPELL_BIN], [aspell])
 AM_CONDITIONAL([HAVE_ASPELL_BIN], [test -n "$ASPELL_BIN"])
 
+AC_MSG_NOTICE([configuring simd])
+(
+  SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
+  SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-pedantic//g'`
+  SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-flto//g'`
+  SIMD_CXXFLAGS="$SIMD_CXXFLAGS -Wno-psabi"
+
+  mkdir -p external/Simd/prj/cmake/ &&
+  cd external/Simd/prj/cmake/ &&
+  cmake ../../../../${srcdir}/external/Simd/prj/cmake/ -DTOOLCHAIN="$CXX" -DTARGET="$host_cpu" \
+  	-DCMAKE_BUILD_TYPE="Release" -DLIBRARY="STATIC" \
+	-DSIMD_TEST=off -DCMAKE_CXX_FLAGS="${SIMD_CXXFLAGS} -DCHECK_VERSION=0"
+)
+
 AC_ARG_ENABLE([simd],
   [AS_HELP_STRING([--enable-simd], [build with simd support [default=no]])])
 if test "x$enable_simd" = "xyes";
 then
-  AC_MSG_NOTICE([Enabling simd])
-  (
-    SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
-    SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-pedantic//g'`
-    SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-flto//g'`
-    SIMD_CXXFLAGS="$SIMD_CXXFLAGS -Wno-psabi"
-
-    cd external/Simd/prj/cmake/ &&
-    cmake . -DTOOLCHAIN="$CXX" -DTARGET="$host_cpu" \
-    	  -DCMAKE_BUILD_TYPE="Release" -DLIBRARY="STATIC" \
-	  -DSIMD_TEST=off -DCMAKE_CXX_FLAGS="${SIMD_CXXFLAGS}"
-  )
   AC_DEFINE(HAVE_SIMD, 1, [Have simd support])
 fi
 AM_CONDITIONAL([HAVE_SIMD], [test "x${enable_simd}" = xyes])
