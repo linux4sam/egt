@@ -46,6 +46,8 @@ public:
     Image(const std::string& respath = {},
           double hscale = 1.0, double vscale = 1.0);
 
+    void load(const std::string& respath, double hscale = 1.0, double vscale = 1.0);
+
     /**
      * @param surface A pre-existing surface.
      *

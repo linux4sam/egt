@@ -47,6 +47,21 @@ Image::Image(cairo_surface_t* surface)
                        cairo_image_surface_get_height(m_surface.get()));
 }
 
+void Image::load(const std::string& respath, double hscale, double vscale)
+{
+    if (detail::change_if_diff<>(m_respath, respath))
+    {
+        if (!respath.empty())
+        {
+            m_surface = detail::image_cache().get(respath, hscale, vscale);
+            assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
+
+            m_orig_size = Size(cairo_image_surface_get_width(m_surface.get()),
+                               cairo_image_surface_get_height(m_surface.get()));
+        }
+    }
+}
+
 void Image::scale(double hscale, double vscale, bool approximate)
 {
     if (m_respath.empty())
