@@ -159,6 +159,20 @@ public:
         set_offset(Point(m_offset.x(), offset));
     }
 
+    /**
+     * Get the slider dimension.
+     */
+    inline default_dim_type slider_dim() const { return m_slider_dim; }
+
+    /**
+     * Set the slider dimension.
+     */
+    inline void set_slider_dim(default_dim_type dim)
+    {
+        if (detail::change_if_diff<>(m_slider_dim, dim))
+            damage();
+    }
+
     virtual ~ScrolledView() noexcept = default;
 
 protected:
@@ -224,6 +238,11 @@ protected:
     policy m_vertical_policy{policy::as_needed};
 
     std::shared_ptr<Canvas> m_canvas;
+
+    /**
+     * Width/height of the slider when shown.
+     */
+    default_dim_type m_slider_dim{8};
 };
 
 }

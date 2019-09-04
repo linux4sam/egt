@@ -157,9 +157,6 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
         m_vslider.draw(painter, rect);
 }
 
-/// @todo Hard-coded value
-const auto SLIDER_DIM = 8;
-
 void ScrolledView::resize(const Size& size)
 {
     Frame::resize(size);
@@ -171,11 +168,11 @@ void ScrolledView::resize_slider()
     if (hscrollable())
     {
         auto b = box();
-        b.set_y(b.y() + b.height() - SLIDER_DIM);
-        b.set_height(SLIDER_DIM);
+        b.set_y(b.y() + b.height() - m_slider_dim);
+        b.set_height(m_slider_dim);
 
         if (vscrollable())
-            b.set_width(b.width() - SLIDER_DIM);
+            b.set_width(b.width() - m_slider_dim);
 
         m_hslider.move(b.point() - point());
         m_hslider.resize(b.size());
@@ -184,11 +181,11 @@ void ScrolledView::resize_slider()
     if (vscrollable())
     {
         auto b = box();
-        b.set_x(b.x() + b.width() - SLIDER_DIM);
-        b.set_width(SLIDER_DIM);
+        b.set_x(b.x() + b.width() - m_slider_dim);
+        b.set_width(m_slider_dim);
 
         if (hscrollable())
-            b.set_height(b.height() - SLIDER_DIM);
+            b.set_height(b.height() - m_slider_dim);
 
         m_vslider.move(b.point() - point());
         m_vslider.resize(b.size());
