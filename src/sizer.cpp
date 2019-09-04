@@ -99,14 +99,6 @@ void BoxSizer::layout()
     for (const auto& r : rects)
     {
         (*child)->set_box(r.rect - point() + content_area().point());
-
-        if ((*child)->flags().is_set(Widget::flag::frame))
-        {
-            auto frame = dynamic_cast<Frame*>(child->get());
-            if (frame)
-                frame->layout();
-        }
-
         child++;
     }
 

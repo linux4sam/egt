@@ -271,6 +271,15 @@ public:
      */
     virtual void layout() override;
 
+    virtual void resize(const Size& size) override
+    {
+        if (size != this->size())
+        {
+            Widget::resize(size);
+            layout();
+        }
+    }
+
     /**
      * Convert a point with an origin of the current frame to child origin.
      */

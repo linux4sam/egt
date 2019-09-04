@@ -87,12 +87,12 @@ void Widget::move_to_center(const Point& point)
     }
 }
 
-void Widget::resize(const Size& s)
+void Widget::resize(const Size& size)
 {
-    if (s != box().size())
+    if (size != this->size())
     {
         damage();
-        m_box.set_size(s);
+        m_box.set_size(size);
         damage();
 
         if (flags().is_set(Widget::flag::no_layout))

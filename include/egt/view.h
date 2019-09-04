@@ -83,44 +83,7 @@ public:
 
     virtual void resize(const Size& size) override;
 
-    virtual void layout() override
-    {
-        Frame::layout();
-
-        if (!visible())
-            return;
-
-        // we cannot layout with no space
-        if (size().empty())
-            return;
-
-        if (m_in_layout)
-            return;
-
-        m_in_layout = true;
-        detail::scope_exit reset([this]() { m_in_layout = false; });
-
-        bool hold = hscrollable();
-        bool vold = vscrollable();
-
-        update_scrollable();
-
-        if (hold != hscrollable() || vold != vscrollable())
-        {
-            resize_slider();
-            damage();
-        }
-
-        update_sliders();
-
-        auto s = super_rect().size();
-
-        if (!m_canvas || m_canvas->size() != s)
-        {
-            m_canvas = std::make_shared<Canvas>(s);
-            damage();
-        }
-    }
+    virtual void layout() override;
 
     virtual void damage() override
     {

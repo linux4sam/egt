@@ -195,10 +195,10 @@ public:
      *
      * Changes the width and height of the Widget.
      *
-     * @param[in] s The new size of the Widget.
+     * @param[in] size The new size of the Widget.
      * @note This will cause a redraw of the Widget.
      */
-    virtual void resize(const Size& s);
+    virtual void resize(const Size& size);
 
     /**
      * Scale the current size of the Widget given the ratio.

@@ -163,6 +163,45 @@ void ScrolledView::resize(const Size& size)
     resize_slider();
 }
 
+void ScrolledView::layout()
+{
+    Frame::layout();
+
+    if (!visible())
+        return;
+
+    // we cannot layout with no space
+    if (size().empty())
+        return;
+
+    if (m_in_layout)
+        return;
+
+    m_in_layout = true;
+    detail::scope_exit reset([this]() { m_in_layout = false; });
+
+    bool hold = hscrollable();
+    bool vold = vscrollable();
+
+    update_scrollable();
+
+    if (hold != hscrollable() || vold != vscrollable())
+    {
+        resize_slider();
+        damage();
+    }
+
+    update_sliders();
+
+    auto s = super_rect().size();
+
+    if (!m_canvas || m_canvas->size() != s)
+    {
+        m_canvas = std::make_shared<Canvas>(s);
+        damage();
+    }
+}
+
 void ScrolledView::resize_slider()
 {
     if (hscrollable())
@@ -194,8 +233,8 @@ void ScrolledView::resize_slider()
 
 Rect ScrolledView::super_rect() const
 {
-    Rect result = box();
-    for (auto& child : m_children)
+    auto result = box();
+    for (const auto& child : m_children)
     {
         result = Rect::merge(result, child->to_parent(child->box()));
     }

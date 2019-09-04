@@ -576,12 +576,6 @@ void Frame::layout()
                                              child->yratio());
             child->set_box(r);
         }
-
-        if (child->flags().is_set(Widget::flag::frame))
-        {
-            auto frame = dynamic_cast<Frame*>(child.get());
-            frame->layout();
-        }
     }
 }
 
