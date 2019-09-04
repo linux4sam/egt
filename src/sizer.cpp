@@ -87,10 +87,7 @@ void BoxSizer::layout()
         else if ((child->align() & alignmask::bottom) == alignmask::bottom)
             behave |= LAY_BOTTOM;
 
-        detail::LayoutRect r;
-        r.behave = behave;
-        r.rect = min;
-        rects.push_back(r);
+        rects.emplace_back(behave, min);
     }
 
     detail::flex_layout(content_area(), rects, justify(), orient());
