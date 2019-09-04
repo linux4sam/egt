@@ -176,8 +176,27 @@ void X11Screen::handle_read(const asio::error_code& error)
             m_in.dispatch(event);
             break;
         }
-        case KeyPress:
         case KeyRelease:
+            if (XEventsQueued(m_priv->display, QueuedAfterReading))
+            {
+                XEvent nev;
+                XPeekEvent(m_priv->display, &nev);
+
+                if (nev.type == KeyPress && nev.xkey.time == e.xkey.time &&
+                    nev.xkey.keycode == e.xkey.keycode)
+                {
+                    /* Key wasn’t actually released */
+                    XEvent trash;
+                    XNextEvent(m_priv->display, &trash);
+
+                    Event event(eventid::keyboard_repeat);
+                    event.key().unicode = m_keyboard->on_key(e.xkey.keycode, event.id());
+                    event.key().keycode = detail::KeyboardCodeFromXKeyEvent(&e);
+                    m_in.dispatch(event);
+                    break;
+                }
+            }
+        case KeyPress:
         {
             Event event(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up);
             event.key().unicode = m_keyboard->on_key(e.xkey.keycode, event.id());
