@@ -11,8 +11,7 @@ localization support in EGT.
 UTF-8 encoding is supported everywhere in EGT.  All text is stored in
 std::string.  No other special storage classes are used.  All std::string
 objects are assumed to be UTF-8 encoded within EGT.  For more information on why
-this is done, and some ways in how it is done, see the
-[UTF-8 Everywhere Manifesto](http://utf8everywhere.org/).
+this is done, see the [UTF-8 Everywhere Manifesto](http://utf8everywhere.org/).
 
 To help understand details about Unicode and different character sets, see
 [The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses).
@@ -22,21 +21,22 @@ To help understand details about Unicode and different character sets, see
 Any framework that supports language translations, otherwise known as
 internationalization or i18n for short, should work without any issue with EGT.
 This is largely an application level exercise as long as the method supports
-UTF-8 encoding, or the conversion to and from UTF-8 encoding, like EGT does.
-However, the recommended method to perform text translations in an EGT
+UTF-8 encoding, or the conversion to and from UTF-8 encoding, as required by
+EGT. However, the recommended method to perform text translations in an EGT
 application, for example to display different languages, is using the mature and
-well proven GNU `gettext` support.
+well established
+[GNU gettext](https://www.gnu.org/software/gettext/manual/index.html)
+support.
 
-GNU `gettext`
-> offers to programmers, translators, and even users, a well integrated set of
-> tools and documentation. Specifically, the GNU `gettext' utilities are a set
-> of tools that provide a framework to help other GNU packages produce
-> multi-lingual messages. These tools include a set of conventions about how
-> programs should be written to support message catalogs, a directory and file
-> naming organization for the message catalogs themselves, a runtime library
-> supporting the retrieval of translated messages, and a few stand-alone
-> programs to massage in various ways the sets of translatable strings, or
-> already translated strings.
+> GNU `gettext` offers to programmers, translators, and even users, a well
+> integrated set of tools and documentation. Specifically, the GNU `gettext'
+> utilities are a set of tools that provide a framework to help other GNU
+> packages produce multi-lingual messages. These tools include a set of
+> conventions about how programs should be written to support message catalogs,
+> a directory and file naming organization for the message catalogs themselves,
+> a runtime library supporting the retrieval of translated messages, and a few
+> stand-alone programs to massage in various ways the sets of translatable
+> strings, or already translated strings.
 
 Basically, gettext provides the ability to write all of your strings in one
 language (usually English) in code, and then allow a "database" of different

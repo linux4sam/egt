@@ -10,15 +10,19 @@ This chapter discusses various input device support.
 EGT supports various different backends for gathering input device events.
 
 Library          | Type
----------------- | ----------------------------
+---------------- | -----------------------------------
 libinput         | Keyboard, Mouse, Touchscreen
 tslib            | Touchscreen
-raw evdev        | Keyboard, Mouse, Touchscreen
+raw evdev        | Keyboard, Mouse, Touchscreen, Other
 X11              | Keyboard, Mouse, Touchscreen
 
 
 See @subpage environ for some environment variables that are useful for configuring
 input devices.
+
+@section input_mapping Keyboard Mapping
+
+@todo
 
 */
 }}

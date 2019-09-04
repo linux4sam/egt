@@ -9,7 +9,7 @@ This chapter discusses media formats supported by EGT.
 
 EGT has direct and indirect support for many standard image, video, and
 audio formats.  In most cases, this is done through using third party libraries
-like libpng, libjpeg, gstramer, and so on.
+like libpng, libjpeg, gstreamer, and so on.
 
 @section media_image Image Formats
 
