@@ -198,6 +198,7 @@ protected:
      */
     struct Panel : public VerticalBoxSizer
     {
+        // cppcheck-suppress noExplicitConstructor
         Panel(panel_keys keys);
         void update_key_space(unsigned key_space);
         void update_key_size(const Size& s);

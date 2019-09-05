@@ -42,6 +42,7 @@ public:
      *
      * @see SvgImage::set_size() for more information about specifying size.
      */
+    // cppcheck-suppress noExplicitConstructor
     SvgImage(const std::string& respath, const SizeF& size = {});
 
     operator Image() const;

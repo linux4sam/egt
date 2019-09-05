@@ -88,16 +88,12 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
          * The button can be unchecked only if, at least, another
          * button is checked.
          */
-        auto other_button_checked = false;
-
-        for (auto& b : m_buttons)
+        auto other_button_checked = std::any_of(m_buttons.begin(),
+                                                m_buttons.end(),
+                                                [](const Button * button)
         {
-            if (b->checked())
-            {
-                other_button_checked = true;
-                break;
-            }
-        }
+            return button->checked();
+        });
 
         if (!other_button_checked)
             button.m_checked = true;
