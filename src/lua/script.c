@@ -110,4 +110,5 @@ double script_getvar(const char* name)
 void script_close()
 {
     lua_close(state);
+    state = NULL;
 }
