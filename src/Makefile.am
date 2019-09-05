@@ -67,6 +67,7 @@ easing.cpp \
 event.cpp \
 eventloop.cpp \
 font.cpp \
+form.cpp \
 frame.cpp \
 geometry.cpp \
 grid.cpp \
