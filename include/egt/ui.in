@@ -63,5 +63,6 @@
 @include_http@
 @include_luaapp@
 @include_svg@
+@include_sound@
 
 #endif

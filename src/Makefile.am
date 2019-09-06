@@ -321,6 +321,14 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/luaapp.h
 endif
 
+if HAVE_ALSA
+libegt_la_SOURCES += \
+sound.cpp
+
+nobase_libegtinclude_HEADERS += \
+../include/egt/sound.h
+endif
+
 if OS_WIN32
 libegt_la_LIBADD += -lws2_32 -lintl
 endif

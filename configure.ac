@@ -418,6 +418,31 @@ if test "x${MSGFMT}" != x"yes"; then
 fi
 AM_CONDITIONAL([HAVE_MSGFMT], [test "x${MSGFMT}" = xyes])
 
+AC_ARG_WITH([alsa],
+    AS_HELP_STRING([--without-alsa], [Ignore presence of alsa and disable it]))
+AS_IF([test "x$with_alsa" != "xno"],[
+   AX_PKG_CHECK_MODULES2(ALSA, [alsa], [], [have_alsa=yes], [have_alsa=no])
+   if test "x${have_alsa}" = xyes; then
+      AC_DEFINE(HAVE_ALSA, 1, [Have alsa support])
+      LIBEGT_EXTRA_CXXFLAGS="${ALSA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${ALSA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      AC_SUBST(include_sound, ["#include <egt/sound.h>"])
+   fi
+])
+AM_CONDITIONAL([HAVE_ALSA], [test "x${have_alsa}" = xyes])
+
+AC_ARG_WITH([sndfile],
+    AS_HELP_STRING([--without-sndfile], [Ignore presence of sndfile and disable it]))
+AS_IF([test "x$with_sndfile" != "xno"],[
+   AX_PKG_CHECK_MODULES2(SNDFILE, [sndfile], [], [have_sndfile=yes], [have_sndfile=no])
+   if test "x${have_sndfile}" = xyes; then
+      AC_DEFINE(HAVE_SNDFILE, 1, [Have sndfile support])
+      LIBEGT_EXTRA_CXXFLAGS="${SNDFILE_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${SNDFILE_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
+AM_CONDITIONAL([HAVE_SNDFILE], [test "x${have_sndfile}" = xyes])
+
 # Subst LIBEGT_EXTRA_CFLAGS & CXXFLAGS & LDFLAGS
 AC_SUBST(LIBEGT_EXTRA_CFLAGS)
 AC_SUBST(LIBEGT_EXTRA_CXXFLAGS)
@@ -523,4 +548,6 @@ echo "  libmagic               ${have_libmagic:-no (mime type detection disabled
 echo "  LUA Interpreter        ${have_lua:-no}"
 echo "  LUA Bindings           ${have_lua_bindings:-no}"
 echo "  C++17 Filesystem       ${have_libstdcppfs:-no}"
+echo "  ALSA Sound             ${have_alsa:-no}"
+echo "  sndfile                ${have_sndfile:-no}"
 echo
