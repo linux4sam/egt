@@ -78,6 +78,11 @@ gauge/gauge \
 dash/dash
 endif
 
+if HAVE_ALSA
+bin_PROGRAMS += \
+drummachine/drummachine
+endif
+
 calc_calc_SOURCES = calc/calc.cpp
 calc_calc_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 calc_calc_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
@@ -239,6 +244,13 @@ imagestack_imagestack_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 imagestack_imagestackdir = $(prefix)/share/egt/examples/imagestack
 imagestack_imagestack_DATA = $(wildcard $(top_srcdir)/examples/imagestack/images/*.png)
 imagestack_imagestack_LDFLAGS = $(AM_LDFLAGS)
+
+drummachine_drummachine_SOURCES = drummachine/drummachine.cpp
+drummachine_drummachine_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+drummachine_drummachine_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+drummachine_drummachinedir = $(prefix)/share/egt/examples/drummachine
+drummachine_drummachine_DATA = $(wildcard $(top_srcdir)/examples/drummachine/*.wav)
+drummachine_drummachine_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
