@@ -309,7 +309,6 @@ void InputLibInput::handle_read(const asio::error_code& error)
         }
 
         libinput_event_destroy(ev);
-        libinput_dispatch(li);
     }
 
 #ifdef USE_PRIORITY_QUEUE
