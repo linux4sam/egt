@@ -49,8 +49,6 @@ void WindowImpl::move(const Point& point)
 
 void WindowImpl::top_draw()
 {
-    SPDLOG_TRACE("{} top draw", m_interface->name());
-
     m_interface->default_top_draw();
 }
 
