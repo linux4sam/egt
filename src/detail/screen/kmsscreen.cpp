@@ -3,6 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "detail/screen/flipthread.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
@@ -13,12 +17,20 @@
 #include <cairo.h>
 #include <cstring>
 #include <drm_fourcc.h>
+#include <fstream>
 #include <planes/fb.h>
 #include <planes/kms.h>
 #include <planes/plane.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <string>
 #include <xf86drm.h>
+
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem;
+#endif
 
 using namespace std;
 
@@ -294,6 +306,55 @@ void KMSScreen::close()
         kms_device_close(m_device);
     if (m_fd >= 0)
         drmClose(m_fd);
+}
+
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
+static fs::path const get_backlight_dir(std::string const& path)
+{
+    auto const iterator = fs::directory_iterator{fs::path{path}};
+    return iterator->path();
+}
+#endif
+
+size_t KMSScreen::max_brightness() const
+{
+    size_t max_brightness{};
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
+    auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
+    auto const max_backlight_path = backlight_dir / "max_brightness";
+    std::ifstream max_brightness_file{max_backlight_path};
+    max_brightness_file >> max_brightness;
+#else
+    spdlog::warn("getting screen brightness requires std::experimental::filesystem");
+#endif
+    return max_brightness;
+}
+
+size_t KMSScreen::brightness() const
+{
+    size_t brightness{};
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
+    auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
+    auto const brightness_backlight_path = backlight_dir / "brightness";
+    std::ifstream brightness_file{brightness_backlight_path};
+    brightness_file >> brightness;
+#else
+    spdlog::warn("getting screen brightness requires std::experimental::filesystem");
+#endif
+    return brightness;
+}
+
+void KMSScreen::set_brightness(size_t brightness)
+{
+    auto max = max_brightness();
+    if (brightness > max)
+        brightness = max;
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
+    auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
+    std::ofstream{backlight_dir / "brightness"} << std::to_string(brightness);
+#else
+    spdlog::warn("setting screen brightness requires std::experimental::filesystem");
+#endif
 }
 
 KMSScreen::~KMSScreen()

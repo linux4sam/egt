@@ -387,6 +387,7 @@ then
    LDFLAGS="${SAVED_LDFLAGS} -lstdc++fs"
    AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
 fi
+AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
 
 if test "x${have_gstreamer}" = xyes; then
    AC_SUBST(include_audio, ["#include <egt/audio.h>"])

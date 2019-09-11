@@ -102,6 +102,29 @@ public:
         m_async = async;
     }
 
+    /**
+     * Get the max brightness of the screen.
+     *
+     * @note Not all screens support this capability.
+     */
+    virtual size_t max_brightness() const;
+
+    /**
+     * Get the current brightness of the screen.
+     *
+     * @note Not all screens support this capability.
+     */
+    virtual size_t brightness() const;
+
+    /**
+     * Set the brightness of the screen.
+     *
+     * @param brightness Value from 0 to max_brightness().
+     *
+     * @note Not all screens support this capability.
+     */
+    virtual void set_brightness(size_t brightness);
+
     virtual ~Screen();
 
 protected:

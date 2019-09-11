@@ -227,6 +227,20 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format for
         the_screen = this;
 }
 
+size_t Screen::max_brightness() const
+{
+    return 100;
+}
+
+size_t Screen::brightness() const
+{
+    return 100;
+}
+
+void Screen::set_brightness(size_t brightness)
+{
+}
+
 Screen::~Screen()
 {
     if (the_screen == this)

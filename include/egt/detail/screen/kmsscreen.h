@@ -68,6 +68,12 @@ public:
 
     void deallocate_overlay(struct plane_data* plane);
 
+    virtual size_t max_brightness() const override;
+
+    virtual size_t brightness() const override;
+
+    virtual void set_brightness(size_t brightness) override;
+
     virtual ~KMSScreen();
 
     /**
