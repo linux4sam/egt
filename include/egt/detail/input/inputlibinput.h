@@ -16,6 +16,7 @@
 #include <linux/input.h>
 #include <egt/input.h>
 #include <memory>
+#include <array>
 
 struct libinput;
 struct libinput_event;
@@ -63,9 +64,9 @@ private:
     struct libinput* li;
 
     /**
-     * The last point seen, used for reference internally.
+     * The last point seen, indexed by slot, used for reference internally.
      */
-    DisplayPoint m_last_point;
+    std::array<DisplayPoint, 2> m_last_point;
 
     /**
      * Keyboard mapping instance.

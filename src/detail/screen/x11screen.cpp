@@ -171,7 +171,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ButtonPress:
         {
-            Event event(eventid::raw_pointer_down, DisplayPoint(e.xbutton.x, e.xbutton.y));
+            Event event(eventid::raw_pointer_down, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
             if (e.xbutton.button == Button1)
                 event.pointer().btn = Pointer::button::left;
             else if (e.xbutton.button == Button2)
@@ -183,7 +183,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ButtonRelease:
         {
-            Event event(eventid::raw_pointer_up, DisplayPoint(e.xbutton.x, e.xbutton.y));
+            Event event(eventid::raw_pointer_up, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
             if (e.xbutton.button == Button1)
                 event.pointer().btn = Pointer::button::left;
             else if (e.xbutton.button == Button2)
@@ -197,7 +197,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         case LeaveNotify:
         case MotionNotify:
         {
-            Event event(eventid::raw_pointer_move, DisplayPoint(e.xbutton.x, e.xbutton.y));
+            Event event(eventid::raw_pointer_move, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
             m_in.dispatch(event);
             break;
         }
@@ -214,18 +214,17 @@ void X11Screen::handle_read(const asio::error_code& error)
                     XEvent trash;
                     XNextEvent(m_priv->display, &trash);
 
-                    Event event(eventid::keyboard_repeat);
-                    event.key().unicode = m_keyboard->on_key(e.xkey.keycode, event.id());
-                    event.key().keycode = detail::KeyboardCodeFromXKeyEvent(&e);
+                    Event event(eventid::keyboard_repeat, Key(detail::KeyboardCodeFromXKeyEvent(&e),
+                                m_keyboard->on_key(e.xkey.keycode, event.id())));
                     m_in.dispatch(event);
                     break;
                 }
             }
         case KeyPress:
         {
-            Event event(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up);
-            event.key().unicode = m_keyboard->on_key(e.xkey.keycode, event.id());
-            event.key().keycode = detail::KeyboardCodeFromXKeyEvent(&e);
+            Event event(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up,
+                        Key(detail::KeyboardCodeFromXKeyEvent(&e),
+                            m_keyboard->on_key(e.xkey.keycode, event.id())));
             m_in.dispatch(event);
             break;
         }

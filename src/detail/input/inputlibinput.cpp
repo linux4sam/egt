@@ -6,6 +6,7 @@
 #include "detail/input/inputkeyboard.h"
 #include "egt/app.h"
 #include "egt/detail/input/inputlibinput.h"
+#include "egt/detail/meta.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
 #include "egt/keycode.h"
@@ -16,9 +17,13 @@
 #include <libudev.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <stdarg.h>
+#include <string>
 #include <unistd.h>
+#include <vector>
 
-using namespace std;
+// enable libinput verbose logging
+//#ifdef LIBINPUT_VERBOSE_LOG
 
 namespace egt
 {
@@ -49,6 +54,16 @@ static const struct libinput_interface interface =
     close_restricted,
 };
 
+#ifdef LIBINPUT_VERBOSE_LOG
+static void log_handler(struct libinput* libinput_context,
+                        enum libinput_log_priority priority, const char* fmt, va_list args)
+{
+    char buffer[1024];
+    vsprintf(buffer, fmt, args);
+    printf(buffer);
+}
+#endif
+
 static struct libinput* tools_open_udev(const char* seat, bool verbose, bool grab)
 {
     ignoreparam(verbose);
@@ -57,25 +72,25 @@ static struct libinput* tools_open_udev(const char* seat, bool verbose, bool gra
 
     if (!udev)
     {
-        fprintf(stderr, "Failed to initialize udev\n");
+        spdlog::warn("Failed to initialize udev");
         return nullptr;
     }
 
     li = libinput_udev_create_context(&interface, &grab, udev);
     if (!li)
     {
-        fprintf(stderr, "Failed to initialize context from udev\n");
+        spdlog::warn("Failed to initialize context from udev");
         goto out;
     }
 
-    //if (verbose) {
-    //  libinput_log_set_handler(li, log_handler);
-    //  libinput_log_set_priority(li, LIBINPUT_LOG_PRIORITY_DEBUG);
-    //}
+#ifdef LIBINPUT_VERBOSE_LOG
+    libinput_log_set_handler(li, log_handler);
+    libinput_log_set_priority(li, LIBINPUT_LOG_PRIORITY_DEBUG);
+#endif
 
     if (libinput_udev_assign_seat(li, seat))
     {
-        fprintf(stderr, "Failed to set seat\n");
+        spdlog::warn("failed to set seat");
         libinput_unref(li);
         li = nullptr;
         goto out;
@@ -85,7 +100,6 @@ out:
     udev_unref(udev);
     return li;
 }
-
 
 InputLibInput::InputLibInput(Application& app)
     : m_app(app),
@@ -134,7 +148,7 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
     // if the device is handled by another backend, disable libinput events
     for (auto& device : m_app.get_input_devices())
     {
-        vector<string> tokens;
+        std::vector<std::string> tokens;
         detail::tokenize(device.second, '/', tokens);
 
         if (tokens.back() == libinput_device_get_sysname(dev))
@@ -152,38 +166,39 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
 void InputLibInput::handle_event_touch(struct libinput_event* ev)
 {
     struct libinput_event_touch* t = libinput_event_get_touch_event(ev);
-    int slot = libinput_event_touch_get_seat_slot(t);
+    auto slot = libinput_event_touch_get_seat_slot(t);
 
-    if (slot == -1)
+    if (slot < 0 || slot >= static_cast<decltype(slot)>(m_last_point.size()))
         return;
 
     switch (libinput_event_get_type(ev))
     {
     case LIBINPUT_EVENT_TOUCH_UP:
     {
-        Event event(eventid::raw_pointer_up, m_last_point);
+        Event event(eventid::raw_pointer_up, Pointer(m_last_point[slot], slot));
         dispatch(event);
         break;
     }
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
         const auto& screen_size = main_screen()->size();
-        double x = libinput_event_touch_get_x_transformed(t, screen_size.width());
-        double y = libinput_event_touch_get_y_transformed(t, screen_size.height());
+        const auto x = libinput_event_touch_get_x_transformed(t, screen_size.width());
+        const auto y = libinput_event_touch_get_y_transformed(t, screen_size.height());
 
-        Event event(eventid::raw_pointer_down);
-        event.pointer().point = m_last_point = DisplayPoint(x, y);
+        m_last_point[slot] = DisplayPoint(x, y);
+
+        Event event(eventid::raw_pointer_down, Pointer(m_last_point[slot], slot));
         dispatch(event);
         break;
     }
     case LIBINPUT_EVENT_TOUCH_MOTION:
     {
         const auto& screen_size = main_screen()->size();
-        double x = libinput_event_touch_get_x_transformed(t, screen_size.width());
-        double y = libinput_event_touch_get_y_transformed(t, screen_size.height());
+        const auto x = libinput_event_touch_get_x_transformed(t, screen_size.width());
+        const auto y = libinput_event_touch_get_y_transformed(t, screen_size.height());
 
-        Event event(eventid::raw_pointer_move);
-        event.pointer().point = m_last_point = DisplayPoint(x, y);
+        m_last_point[slot] = DisplayPoint(x, y);
+        Event event(eventid::raw_pointer_move, Pointer(m_last_point[slot], slot));
         dispatch(event);
         break;
     }
@@ -195,7 +210,7 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
 void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
 {
     struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
-    unsigned int key = libinput_event_keyboard_get_key(k);
+    const auto key = libinput_event_keyboard_get_key(k);
 
     SPDLOG_TRACE("key:{} state:{}", key, libinput_event_keyboard_get_key_state(k));
 
@@ -205,19 +220,15 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
     {
     case LIBINPUT_KEY_STATE_PRESSED:
     {
-        auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_down);
-        Event event(eventid::keyboard_down);
-        event.key().unicode = unicode;
-        event.key().keycode = linux_to_ekey(key);
+        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_down);
+        Event event(eventid::keyboard_down, Key(linux_to_ekey(key), unicode));
         dispatch(event);
         break;
     }
     case LIBINPUT_KEY_STATE_RELEASED:
     {
-        auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_up);
-        Event event(eventid::keyboard_up);
-        event.key().unicode = unicode;
-        event.key().keycode = linux_to_ekey(key);
+        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_up);
+        Event event(eventid::keyboard_up, Key(linux_to_ekey(key), unicode));
         dispatch(event);
         break;
     }
@@ -227,7 +238,7 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
 void InputLibInput::handle_event_button(struct libinput_event* ev)
 {
     struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
-    unsigned int button = libinput_event_pointer_get_button(p);
+    const auto button = libinput_event_pointer_get_button(p);
 
     SPDLOG_TRACE("button:{}", button);
 
@@ -251,12 +262,24 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
 
     if (b != Pointer::button::none)
     {
-        bool is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
+        const bool is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
         Event event(is_press ? eventid::raw_pointer_down : eventid::raw_pointer_up,
-                    m_last_point);
-        event.pointer().btn = b;
+                    Pointer(m_last_point[0], b));
         dispatch(event);
     }
+}
+
+static inline bool time_input_enabled()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_TIME_INPUT"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
 }
 
 void InputLibInput::handle_read(const asio::error_code& error)
@@ -267,71 +290,74 @@ void InputLibInput::handle_read(const asio::error_code& error)
         return;
     }
 
-    struct libinput_event* ev;
-
-    libinput_dispatch(li);
-
-    while ((ev = libinput_get_event(li)))
+    detail::code_timer(time_input_enabled(), "libinput: ", [this]()
     {
-        switch (libinput_event_get_type(ev))
+        struct libinput_event* ev;
+
+        libinput_dispatch(li);
+
+        while ((ev = libinput_get_event(li)))
         {
-        case LIBINPUT_EVENT_NONE:
-            break;
-        case LIBINPUT_EVENT_DEVICE_ADDED:
-        case LIBINPUT_EVENT_DEVICE_REMOVED:
-            handle_event_device_notify(ev);
-            break;
-        case LIBINPUT_EVENT_KEYBOARD_KEY:
-            handle_event_keyboard(ev);
-            break;
-        case LIBINPUT_EVENT_POINTER_BUTTON:
-            handle_event_button(ev);
-            break;
-        case LIBINPUT_EVENT_POINTER_AXIS:
-        case LIBINPUT_EVENT_TOUCH_DOWN:
-        case LIBINPUT_EVENT_TOUCH_MOTION:
-        case LIBINPUT_EVENT_TOUCH_UP:
-            handle_event_touch(ev);
-            break;
-        /* These events are not handled. */
-        case LIBINPUT_EVENT_TOUCH_CANCEL:
-        case LIBINPUT_EVENT_TOUCH_FRAME:
-        case LIBINPUT_EVENT_POINTER_MOTION:
-        case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
-        case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
-        case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
-        case LIBINPUT_EVENT_GESTURE_SWIPE_END:
-        case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN:
-        case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
-        case LIBINPUT_EVENT_GESTURE_PINCH_END:
-        case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
-        case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
-        case LIBINPUT_EVENT_TABLET_TOOL_TIP:
-        case LIBINPUT_EVENT_TABLET_TOOL_BUTTON:
-        case LIBINPUT_EVENT_TABLET_PAD_BUTTON:
-        case LIBINPUT_EVENT_TABLET_PAD_RING:
-        case LIBINPUT_EVENT_TABLET_PAD_STRIP:
-        default:
-            break;
+            switch (libinput_event_get_type(ev))
+            {
+            case LIBINPUT_EVENT_NONE:
+                break;
+            case LIBINPUT_EVENT_DEVICE_ADDED:
+            case LIBINPUT_EVENT_DEVICE_REMOVED:
+                handle_event_device_notify(ev);
+                break;
+            case LIBINPUT_EVENT_KEYBOARD_KEY:
+                handle_event_keyboard(ev);
+                break;
+            case LIBINPUT_EVENT_POINTER_BUTTON:
+                handle_event_button(ev);
+                break;
+            case LIBINPUT_EVENT_POINTER_AXIS:
+            case LIBINPUT_EVENT_TOUCH_DOWN:
+            case LIBINPUT_EVENT_TOUCH_MOTION:
+            case LIBINPUT_EVENT_TOUCH_UP:
+                handle_event_touch(ev);
+                break;
+            /* These events are not handled. */
+            case LIBINPUT_EVENT_TOUCH_CANCEL:
+            case LIBINPUT_EVENT_TOUCH_FRAME:
+            case LIBINPUT_EVENT_POINTER_MOTION:
+            case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
+            case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
+            case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
+            case LIBINPUT_EVENT_GESTURE_SWIPE_END:
+            case LIBINPUT_EVENT_GESTURE_PINCH_BEGIN:
+            case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
+            case LIBINPUT_EVENT_GESTURE_PINCH_END:
+            case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
+            case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
+            case LIBINPUT_EVENT_TABLET_TOOL_TIP:
+            case LIBINPUT_EVENT_TABLET_TOOL_BUTTON:
+            case LIBINPUT_EVENT_TABLET_PAD_BUTTON:
+            case LIBINPUT_EVENT_TABLET_PAD_RING:
+            case LIBINPUT_EVENT_TABLET_PAD_STRIP:
+            default:
+                break;
+            }
+
+            libinput_event_destroy(ev);
         }
 
-        libinput_event_destroy(ev);
-    }
-
 #ifdef USE_PRIORITY_QUEUE
-    asio::async_read(m_input, asio::null_buffers(),
-                     m_app.event().queue().wrap(detail::priorities::moderate,
-                             [this](const asio::error_code & error, std::size_t)
-    {
-        handle_read(error);
-    }));
+        asio::async_read(m_input, asio::null_buffers(),
+                         m_app.event().queue().wrap(detail::priorities::moderate,
+                                 [this](const asio::error_code & error, std::size_t)
+        {
+            handle_read(error);
+        }));
 #else
-    asio::async_read(m_input, asio::null_buffers(),
-                     [this](const asio::error_code & error, std::size_t)
-    {
-        handle_read(error);
-    });
+        asio::async_read(m_input, asio::null_buffers(),
+                         [this](const asio::error_code & error, std::size_t)
+        {
+            handle_read(error);
+        });
 #endif
+    });
 }
 
 InputLibInput::~InputLibInput()

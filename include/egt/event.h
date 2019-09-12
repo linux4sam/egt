@@ -121,16 +121,36 @@ std::ostream& operator<<(std::ostream& os, const eventid& event);
  */
 struct Pointer
 {
+    /**
+     * Definitions for pointer buttons.
+     */
+    enum class button
+    {
+        none,
+        left,
+        middle,
+        right
+    };
+
     constexpr Pointer() noexcept = default;
 
-    constexpr explicit Pointer(const DisplayPoint& p) noexcept
-        : point(p)
+    constexpr explicit Pointer(const DisplayPoint& p, size_t s = 0) noexcept
+        : point(p),
+          slot(s)
     {}
 
-    constexpr explicit Pointer(const DisplayPoint& p,
-                               const DisplayPoint& d) noexcept
+    constexpr Pointer(const DisplayPoint& p, button b, size_t s = 0) noexcept
         : point(p),
-          drag_start(d)
+          btn(b),
+          slot(s)
+    {}
+
+    constexpr Pointer(const DisplayPoint& p,
+                      const DisplayPoint& d,
+                      size_t s = 0) noexcept
+        : point(p),
+          drag_start(d),
+          slot(s)
     {}
 
     inline DisplayPoint delta() const
@@ -142,17 +162,6 @@ struct Pointer
      * Mouse position in display coordinates.
      */
     DisplayPoint point;
-
-    /**
-     * Definitions for pointer buttons.
-     */
-    enum class button
-    {
-        none,
-        left,
-        middle,
-        right
-    };
 
     /**
      * Pointer button value.
@@ -168,6 +177,11 @@ struct Pointer
      *  - eventid::pointer_drag_stop
      */
     DisplayPoint drag_start;
+
+    /**
+     * The event slot.  Used for multitouch.
+     */
+    size_t slot{};
 };
 
 static_assert(detail::rule_of_5<Pointer>(),
@@ -183,6 +197,13 @@ std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
  */
 struct Key
 {
+    constexpr Key() noexcept = default;
+
+    constexpr explicit Key(KeyboardCode k, uint32_t u = 0) noexcept
+        : keycode(k),
+          unicode(u)
+    {}
+
     /**
      * Key code value.
      *
@@ -248,26 +269,15 @@ struct Event : public EventArg
         : m_id(id)
     {}
 
-    constexpr Event(eventid id, const DisplayPoint& point) noexcept
-        : m_id(id),
-          m_pointer(point)
-    {}
-
-    constexpr Event(eventid id,
-                    const DisplayPoint& point,
-                    const DisplayPoint& drag_start) noexcept
-        : m_id(id),
-          m_pointer(point, drag_start)
-    {}
-
-    Event(eventid id,
-          const Pointer& pointer,
-          const DisplayPoint& drag_start = {}) noexcept
+    constexpr Event(eventid id, const Pointer& pointer) noexcept
         : m_id(id),
           m_pointer(pointer)
-    {
-        m_pointer.drag_start = drag_start;
-    }
+    {}
+
+    constexpr Event(eventid id, const Key& key) noexcept
+        : m_id(id),
+          m_key(key)
+    {}
 
     inline const eventid& id() const noexcept
     {

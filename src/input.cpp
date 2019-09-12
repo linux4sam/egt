@@ -24,6 +24,23 @@ Input::Input()
     });
 }
 
+template<class Callable>
+static inline bool handler_dispatch(Event& event, Event& eevent,
+                                    const Callable& handler)
+{
+    handler(event);
+    if (event.quit())
+        return true;
+    if (eevent.id() != eventid::none)
+    {
+        handler(eevent);
+        if (event.quit())
+            return true;
+    }
+
+    return false;
+}
+
 /**
  * @todo No mouse positions should be allowed off the screen box().  This is
  * possible with some input devices currently and we need to limit.  Be careful
@@ -39,25 +56,10 @@ void Input::dispatch(Event& event)
     m_dispatching = true;
     detail::scope_exit reset([this]() { m_dispatching = false; });
 
-    switch (event.id())
+    if (event.id() == eventid::raw_pointer_down)
     {
-    case eventid::keyboard_down:
-    case eventid::keyboard_up:
-        break;
-    case eventid::raw_pointer_down:
         // always reset on new down event
         detail::mouse_grab(nullptr);
-        break;
-    case eventid::raw_pointer_up:
-    case eventid::raw_pointer_move:
-    case eventid::pointer_click:
-    case eventid::pointer_dblclick:
-    case eventid::pointer_hold:
-    case eventid::pointer_drag_start:
-    case eventid::pointer_drag:
-    case eventid::pointer_drag_stop:
-    default:
-        break;
     }
 
     auto eevent = m_mouse->handle(event);
@@ -68,115 +70,103 @@ void Input::dispatch(Event& event)
         SPDLOG_TRACE("input event: {}", eevent);
     }
 
-    // then give it to any global input handlers
+    if (handler_dispatch(event, eevent,
+                         [this](Event & event)
+{
     m_global_handler.invoke_handlers(event);
-    if (event.quit())
-        return;
-    if (eevent.id() != eventid::none)
-    {
-        m_global_handler.invoke_handlers(eevent);
-        if (event.quit())
-            return;
-    }
+    }))
+    return;
 
     if (modal_window())
     {
-        auto target = modal_window();
         // give event to the modal window
-        target->handle(event);
-        if (event.quit())
-            return;
-        if (eevent.id() != eventid::none)
+        auto target = modal_window();
+        handler_dispatch(event, eevent, [target](Event & event)
         {
-            target->handle(eevent);
-            if (eevent.quit())
-                return;
-        }
+            target->handle(event);
+        });
+
+        return;
     }
-    else if (detail::mouse_grab() && (event.id() == eventid::raw_pointer_down ||
-                                      event.id() == eventid::raw_pointer_up ||
-                                      event.id() == eventid::raw_pointer_move ||
-                                      event.id() == eventid::pointer_click ||
-                                      event.id() == eventid::pointer_dblclick ||
-                                      event.id() == eventid::pointer_hold ||
-                                      event.id() == eventid::pointer_drag_start ||
-                                      event.id() == eventid::pointer_drag ||
-                                      event.id() == eventid::pointer_drag_stop))
+
+    switch (event.id())
     {
-        auto target = detail::mouse_grab();
-        target->handle(event);
-        if (event.quit())
+    case eventid::raw_pointer_down:
+    case eventid::raw_pointer_up:
+    case eventid::raw_pointer_move:
+    case eventid::pointer_click:
+    case eventid::pointer_dblclick:
+    case eventid::pointer_hold:
+    case eventid::pointer_drag_start:
+    case eventid::pointer_drag:
+    case eventid::pointer_drag_stop:
+    {
+        if (detail::mouse_grab())
+        {
+            auto target = detail::mouse_grab();
+            handler_dispatch(event, eevent, [target](Event & event)
+            {
+                target->handle(event);
+            });
             return;
-        if (eevent.id() != eventid::none)
-        {
-            target->handle(eevent);
-            if (eevent.quit())
-                return;
         }
+
+        break;
     }
-    else if (detail::keyboard_focus() && (event.id() == eventid::keyboard_down ||
-                                          event.id() == eventid::keyboard_up ||
-                                          event.id() == eventid::keyboard_repeat))
+    case eventid::keyboard_down:
+    case eventid::keyboard_up:
+    case eventid::keyboard_repeat:
     {
-        auto target = detail::keyboard_focus();
-        target->handle(event);
-        if (event.quit())
+        if (detail::keyboard_focus())
+        {
+            auto target = detail::keyboard_focus();
+            handler_dispatch(event, eevent, [target](Event & event)
+            {
+                target->handle(event);
+            });
             return;
-        if (event.id() != eventid::none)
-        {
-            target->handle(eevent);
-            if (eevent.quit())
-                return;
         }
+        break;
     }
-    else
+    default:
+        break;
+    }
+
+    // give event to any visible window
+    for (auto& w : detail::reverse_iterate(windows()))
     {
-        // give event to any visible window
-        for (auto& w : detail::reverse_iterate(windows()))
+        if (!w->top_level() ||
+            w->readonly() ||
+            w->disabled() ||
+            !w->visible())
+            continue;
+
+        switch (event.id())
         {
-            if (!w->top_level())
+        case eventid::raw_pointer_down:
+        case eventid::raw_pointer_up:
+        case eventid::raw_pointer_move:
+        case eventid::pointer_click:
+        case eventid::pointer_dblclick:
+        case eventid::pointer_hold:
+        case eventid::pointer_drag_start:
+        case eventid::pointer_drag:
+        case eventid::pointer_drag_stop:
+        {
+            const auto pos = w->display_to_local(event.pointer().point);
+            if (!Rect(w->size()).intersect(pos))
                 continue;
-
-            if (w->readonly())
-                continue;
-
-            if (w->disabled())
-                continue;
-
-            if (!w->visible())
-                continue;
-
-            switch (event.id())
-            {
-            case eventid::raw_pointer_down:
-            case eventid::raw_pointer_up:
-            case eventid::raw_pointer_move:
-            case eventid::pointer_click:
-            case eventid::pointer_dblclick:
-            case eventid::pointer_hold:
-            case eventid::pointer_drag_start:
-            case eventid::pointer_drag:
-            case eventid::pointer_drag_stop:
-            {
-                Point pos = w->display_to_local(event.pointer().point);
-                if (!Rect(w->size()).intersect(pos))
-                    continue;
-                break;
-            }
-            default:
-                break;
-            }
-
-            w->handle(event);
-            if (event.quit())
-                return;
-            if (eevent.id() != eventid::none)
-            {
-                w->handle(eevent);
-                if (eevent.quit())
-                    return;
-            }
+            break;
         }
+        default:
+            break;
+        }
+
+        if (handler_dispatch(event, eevent, [w](Event & event)
+    {
+        w->handle(event);
+        }))
+        return;
     }
 }
 

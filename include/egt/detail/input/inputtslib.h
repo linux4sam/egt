@@ -59,12 +59,12 @@ private:
     /**
      * Whether a current touch event is active internally.
      */
-    bool m_active{false};
+    std::array<m_active, 2> {};
 
     /**
      * The last point seen, used for reference internally.
      */
-    DisplayPoint m_last_point;
+    std::array<DisplayPoint, 2> m_last_point;
 };
 
 }

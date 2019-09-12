@@ -19,7 +19,7 @@ MouseGesture::MouseGesture()
     m_long_click_timer.on_timeout([this]()
     {
         stop();
-        Event event(eventid::pointer_hold, mouse_start());
+        Event event(eventid::pointer_hold, Pointer(mouse_start()));
         invoke_handlers(event);
     });
 }
@@ -29,7 +29,7 @@ void MouseGesture::on_async_event(mouse_callback_t callback)
     m_callbacks.emplace_back(std::move(callback));
 }
 
-Event MouseGesture::handle(Event& event)
+Event MouseGesture::handle(const Event& event)
 {
     switch (event.id())
     {
@@ -47,9 +47,13 @@ Event MouseGesture::handle(Event& event)
             stop();
 
             if (dragging)
-                return {eventid::pointer_drag_stop, event.pointer(), mouse_start()};
+            {
+                Event eevent(eventid::pointer_drag_stop, event.pointer());
+                eevent.pointer().drag_start = mouse_start();
+                return eevent;
+            }
             else
-                return {eventid::pointer_click, event.pointer()};
+                return Event(eventid::pointer_click, event.pointer());
         }
         break;
     }
@@ -74,10 +78,18 @@ Event MouseGesture::handle(Event& event)
             }
 
             if (dragging_started)
-                return {eventid::pointer_drag_start, event.pointer(), mouse_start()};
+            {
+                Event eevent(eventid::pointer_drag_start, event.pointer());
+                eevent.pointer().drag_start = mouse_start();
+                return eevent;
+            }
 
             if (m_dragging)
-                return {eventid::pointer_drag, event.pointer(), mouse_start()};
+            {
+                Event eevent(eventid::pointer_drag, event.pointer());
+                eevent.pointer().drag_start = mouse_start();
+                return eevent;
+            }
         }
 
         break;

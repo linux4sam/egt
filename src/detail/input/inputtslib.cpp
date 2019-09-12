@@ -19,14 +19,14 @@ inline namespace v1
 namespace detail
 {
 
-static const int SLOTS = 1;
-static const int SAMPLES = 20;
+static const int CHANNELS = 2;
+static const int SAMPLE_COUNT = 20;
 
 struct tslibimpl
 {
     struct tsdev* ts;
     struct ts_sample_mt** samp_mt;
-    std::chrono::time_point<std::chrono::steady_clock> last_down;
+    std::array<std::chrono::time_point<std::chrono::steady_clock>, 2> last_down;
 };
 
 InputTslib::InputTslib(Application& app, const string& path)
@@ -41,12 +41,12 @@ InputTslib::InputTslib(Application& app, const string& path)
     {
         spdlog::info("added tslib device {}", path);
 
-        m_impl->samp_mt = (struct ts_sample_mt**)malloc(SAMPLES * sizeof(struct ts_sample_mt*));
+        m_impl->samp_mt = (struct ts_sample_mt**)malloc(SAMPLE_COUNT * sizeof(struct ts_sample_mt*));
         assert(m_impl->samp_mt);
 
-        for (int i = 0; i < SAMPLES; i++)
+        for (int i = 0; i < SAMPLE_COUNT; i++)
         {
-            m_impl->samp_mt[i] = (struct ts_sample_mt*)calloc(SLOTS, sizeof(struct ts_sample_mt));
+            m_impl->samp_mt[i] = (struct ts_sample_mt*)calloc(CHANNELS, sizeof(struct ts_sample_mt));
             if (unlikely(!m_impl->samp_mt[i]))
             {
                 free(m_impl->samp_mt);
@@ -82,7 +82,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 
     struct ts_sample_mt** samp_mt = m_impl->samp_mt;
 
-    int ret = ts_read_mt(m_impl->ts, samp_mt, SLOTS, SAMPLES);
+    int ret = ts_read_mt(m_impl->ts, samp_mt, CHANNELS, SAMPLE_COUNT);
     if (unlikely(ret < 0))
     {
         spdlog::warn("ts_read_mt error");
@@ -93,7 +93,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 
     for (int j = 0; j < ret; j++)
     {
-        for (int i = 0; i < SLOTS; i++)
+        for (int i = 0; i < CHANNELS; i++)
         {
 #ifdef TSLIB_MT_VALID
             if (unlikely(!(samp_mt[j][i].valid & TSLIB_MT_VALID)))
@@ -114,37 +114,42 @@ void InputTslib::handle_read(const asio::error_code& error)
                          samp_mt[j][i].distance,
                          samp_mt[j][i].pen_down);
 
-            if (unlikely(samp_mt[j][i].x < 0 || samp_mt[j][i].y < 0))
+            const auto x = samp_mt[j][i].x;
+            const auto y = samp_mt[j][i].y;
+            const auto slot = samp_mt[j][i].slot;
+            const auto pen_down = samp_mt[j][i].pen_down;
+
+            if (unlikely(x < 0 || y < 0))
                 continue;
 
             if (m_active)
             {
-                if (samp_mt[j][i].pen_down == 0)
+                if (pen_down == 0)
                 {
                     m_active = false;
 
                     SPDLOG_TRACE("mouse up {}", m_last_point);
 
-                    m_last_point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
-                    Event event(eventid::raw_pointer_up, m_last_point);
-                    event.pointer().btn = Pointer::button::left;
+                    m_last_point[slot] = DisplayPoint(x, y);
+                    Event event(eventid::raw_pointer_up, Pointer(m_last_point[slot],
+                                Pointer::button::left));
                     dispatch(event);
                 }
                 else
                 {
-                    DisplayPoint point(samp_mt[j][i].x, samp_mt[j][i].y);
-                    if (delta(m_last_point, point, 5))
+                    DisplayPoint point(x, y);
+                    if (delta(m_last_point[slot], point, 5))
                     {
-                        m_last_point = point;
+                        m_last_point[slot] = point;
                         move = true;
                     }
                 }
             }
             else
             {
-                if (samp_mt[j][i].pen_down == 1)
+                if (pen_down == 1)
                 {
-                    m_last_point = DisplayPoint(samp_mt[j][i].x, samp_mt[j][i].y);
+                    m_last_point[slot] = DisplayPoint(x, y);
 
                     std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> tv
                     {
@@ -153,25 +158,24 @@ void InputTslib::handle_read(const asio::error_code& error)
 
                     auto DOUBLE_CLICK_DELTA = 300;
 
-                    if (m_impl->last_down.time_since_epoch().count() &&
+                    if (m_impl->last_down[slot].time_since_epoch().count() &&
                         chrono::duration<double, milli>(tv - m_impl->last_down).count() < DOUBLE_CLICK_DELTA)
                     {
-                        Event event(eventid::pointer_dblclick, m_last_point);
-                        event.pointer().btn = Pointer::button::left;
+                        Event event(eventid::pointer_dblclick, Pointer(m_last_point, Pointer::button::left));
                         dispatch(event);
                     }
                     else
                     {
                         m_active = true;
 
-                        SPDLOG_TRACE("mouse down {}", m_last_point);
+                        SPDLOG_TRACE("mouse down {}", m_last_point[slot]);
 
-                        Event event(eventid::raw_pointer_down, m_last_point);
-                        event.pointer().btn = Pointer::button::left;
+                        Event event(eventid::raw_pointer_down, Pointer(m_last_point[slot],
+                                    Pointer::button::left));
                         dispatch(event);
                     }
 
-                    m_impl->last_down = tv;
+                    m_impl->last_down[slot] = tv;
                 }
             }
         }
@@ -179,10 +183,10 @@ void InputTslib::handle_read(const asio::error_code& error)
 
     if (move)
     {
-        SPDLOG_TRACE("mouse move {}", m_last_point);
+        SPDLOG_TRACE("mouse move {}", m_last_point[slot]);
 
-        Event event(eventid::raw_pointer_move, m_last_point);
-        event.pointer().btn = Pointer::button::left;
+        Event event(eventid::raw_pointer_move, Pointer(m_last_point,
+                    Pointer::button::left));
         dispatch(event);
     }
 
@@ -199,7 +203,7 @@ InputTslib::~InputTslib()
 {
     ts_close(m_impl->ts);
 
-    for (int i = 0; i < SAMPLES; i++)
+    for (int i = 0; i < SAMPLE_COUNT; i++)
     {
         free(m_impl->samp_mt[i]);
     }

@@ -49,14 +49,14 @@ public:
     /**
      * Pass the raw eventid to this function to get the emulated mouse event.
      */
-    virtual Event handle(Event& event);
+    virtual Event handle(const Event& event);
 
     /**
      * Start.
      */
     virtual void start(const DisplayPoint& point);
 
-    inline DisplayPoint mouse_start() const
+    inline const DisplayPoint& mouse_start() const
     {
         return m_mouse_start_pos;
     }
