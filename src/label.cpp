@@ -27,7 +27,6 @@ Label::Label(const std::string& text, const Rect& rect, alignmask text_align) no
     set_name("Label" + std::to_string(m_widgetid));
 
     set_boxtype(Theme::boxtype::none);
-    set_padding(5);
 }
 
 Label::Label(Frame& parent, const std::string& text, alignmask text_align) noexcept
@@ -109,8 +108,6 @@ ImageLabel::ImageLabel(const Image& image,
       m_image(image)
 {
     set_name("ImageLabel" + std::to_string(m_widgetid));
-
-    set_padding(0);
 
     if (text.empty())
         set_image_align(alignmask::center);
