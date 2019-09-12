@@ -14,7 +14,7 @@ namespace egt
 {
 inline namespace v1
 {
-const alignmask Label::default_align = alignmask::center | alignmask::left;
+const alignmask Label::DEFAULT_TEXT_ALIGN = alignmask::center;
 
 Label::Label(const std::string& text, alignmask text_align) noexcept
     : Label(text, {}, text_align)

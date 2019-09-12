@@ -43,7 +43,7 @@ int main(int argc, const char** argv)
     int index = 0;
     for (auto& str : variations)
     {
-        auto label = make_shared<Label>(str, egt::Label::default_align);
+        auto label = make_shared<Label>(str);
         string face;
         if (index == static_cast<int>(variations.size()) - 1)
             label->set_font(egt::Font("Noto Color Emoji", 16));

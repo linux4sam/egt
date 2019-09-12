@@ -39,14 +39,14 @@ class Label : public detail::TextWidget
 {
 public:
 
-    static const alignmask default_align;
+    static const alignmask DEFAULT_TEXT_ALIGN;
 
     /**
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
     explicit Label(const std::string& text = {},
-                   alignmask text_align = default_align) noexcept;
+                   alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -54,7 +54,7 @@ public:
      * @param[in] text_align Alignment for the text.
      */
     Label(const std::string& text, const Rect& rect,
-          alignmask text_align = default_align) noexcept;
+          alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -62,7 +62,7 @@ public:
      * @param[in] text_align Alignment for the text.
      */
     explicit Label(Frame& parent, const std::string& text = {},
-                   alignmask text_align = default_align) noexcept;
+                   alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -71,7 +71,7 @@ public:
      * @param[in] text_align Alignment for the text.
      */
     Label(Frame& parent, const std::string& text, const Rect& rect,
-          alignmask text_align = default_align) noexcept;
+          alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     virtual void set_text(const std::string& text) override;
 
@@ -112,7 +112,7 @@ public:
     * @param[in] text_align Alignment for the text.
     */
     explicit ImageLabel(const std::string& text = {},
-                        alignmask text_align = default_align) noexcept;
+                        alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] image The image to display.
@@ -121,7 +121,7 @@ public:
      */
     explicit ImageLabel(const Image& image,
                         const std::string& text = {},
-                        alignmask text_align = default_align) noexcept;
+                        alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] image The image to display.
@@ -130,7 +130,7 @@ public:
      * @param[in] text_align Alignment for the text.
      */
     ImageLabel(const Image& image, const std::string& text, const Rect& rect,
-               alignmask text_align = default_align) noexcept;
+               alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -140,7 +140,7 @@ public:
      */
     explicit ImageLabel(Frame& parent, const Image& image = {},
                         const std::string& text = {},
-                        alignmask text_align = default_align) noexcept;
+                        alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -151,7 +151,7 @@ public:
      */
     ImageLabel(Frame& parent, const Image& image, const std::string& text,
                const Rect& rect,
-               alignmask text_align = default_align) noexcept;
+               alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
