@@ -39,13 +39,25 @@ public:
 
     /**
      * @param respath Resource path.
+     * @param scale Scale of the image [0.0 - 1.0].
+     */
+    // cppcheck-suppress noExplicitConstructor
+    Image(const std::string& respath = {}, double scale = 1.0);
+
+    /**
+     * @param respath Resource path.
      * @param hscale Horizontal scale of the image [0.0 - 1.0].
      * @param vscale Vertical scale of the image [0.0 - 1.0].
      */
-    // cppcheck-suppress noExplicitConstructor
-    Image(const std::string& respath = {},
-          double hscale = 1.0, double vscale = 1.0);
+    Image(const std::string& respath, double hscale, double vscale);
 
+    /**
+     * Load a new source image.
+     *
+     * @param respath Resource path.
+     * @param hscale Horizontal scale of the image [0.0 - 1.0].
+     * @param vscale Vertical scale of the image [0.0 - 1.0].
+     */
     void load(const std::string& respath, double hscale = 1.0, double vscale = 1.0);
 
     /**
