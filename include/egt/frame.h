@@ -77,6 +77,8 @@ public:
         if (widget.get() == this)
             throw std::runtime_error("cannot add a widget to itself");
 
+        assert(!widget->parent() && "widget already has parent!");
+
         auto i = std::find_if(m_children.begin(), m_children.end(),
                               [&widget](const std::shared_ptr<Widget>& ptr)
         {

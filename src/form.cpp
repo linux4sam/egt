@@ -57,6 +57,11 @@ void Form::add_group(const std::string& caption)
 
 void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& widget)
 {
+    if (!widget)
+        return;
+
+    assert(!widget->parent() && "widget already has parent!");
+
     widget->set_align(alignmask::expand);
     auto label = std::make_shared<Label>(name);
     label->set_align(alignmask::expand);
