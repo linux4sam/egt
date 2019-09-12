@@ -190,7 +190,7 @@ void VirtualKeyboard::set_key_link(const shared_ptr<Key>& k)
 {
     k->m_button->on_event([this, k](Event&)
     {
-        m_main_panel.set_select(k->m_link);
+        m_main_panel.set_selected(k->m_link);
     }, {eventid::pointer_click});
 }
 

@@ -71,7 +71,9 @@ public:
 
     virtual void remove(Widget* widget) override;
 
-    virtual void set_select(uint32_t index);
+    virtual void set_selected(size_t index);
+
+    virtual ssize_t selected() const { return m_current_index; }
 
     virtual ~Notebook() = default;
 
@@ -92,7 +94,7 @@ protected:
     /**
      * Currently selected index.
      */
-    int m_current_index{-1};
+    ssize_t m_current_index{-1};
 };
 
 }

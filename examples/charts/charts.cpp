@@ -181,7 +181,7 @@ int main(int argc, const char** argv)
 
     list.on_event([&](Event&)
     {
-        notebook.set_select(list.selected());
+        notebook.set_selected(list.selected());
     }, {eventid::property_changed});
 
     win.show();

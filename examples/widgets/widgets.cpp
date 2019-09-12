@@ -606,7 +606,7 @@ int main(int argc, const char** argv)
 
     list->on_event([&notebook, &list](Event&)
     {
-        notebook->set_select(list->selected());
+        notebook->set_selected(list->selected());
     }, {eventid::property_changed});
 
     auto default_keyboard = make_shared<VirtualKeyboard>();
