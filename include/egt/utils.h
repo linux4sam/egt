@@ -14,6 +14,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
+#include <egt/detail/math.h>
 #include <functional>
 #include <iomanip>
 #include <iostream>
@@ -122,7 +123,7 @@ inline bool change_if_diff(T& old, const T& to)
 template<>
 inline bool change_if_diff(float& old, const float& to)
 {
-    if (std::fabs(old - to) > .00001)
+    if (!detail::float_compare(old, to))
     {
         old = to;
         return true;
