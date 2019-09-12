@@ -105,11 +105,6 @@ protected:
 
     virtual void set_parent(Frame* parent) override;
 
-    /**
-     * Perform a special first resize of the button.
-     */
-    virtual void first_resize();
-
 private:
 
     /**
@@ -169,6 +164,8 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
+
+    virtual Size min_size_hint() const override;
 
     /**
      * Set a new Image.
@@ -250,8 +247,6 @@ public:
     virtual ~ImageButton() = default;
 
 protected:
-
-    virtual void first_resize() override;
 
     void do_set_image(const Image& image);
 

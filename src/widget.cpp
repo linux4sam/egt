@@ -505,7 +505,17 @@ Rect Widget::content_area() const
 }
 
 void Widget::layout()
-{}
+{
+    if (!flags().is_set(Widget::flag::no_autoresize))
+    {
+        auto s = size();
+        if (s.width() < min_size_hint().width())
+            s.set_width(min_size_hint().width());
+        if (s.height() < min_size_hint().height())
+            s.set_height(min_size_hint().height());
+        resize(s);
+    }
+}
 
 Widget::~Widget() noexcept
 {

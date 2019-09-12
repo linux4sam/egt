@@ -60,14 +60,10 @@ void Button::handle(Event& event)
 
 void Button::set_text(const std::string& text)
 {
-    if (m_text != text)
+    if (detail::change_if_diff<>(m_text, text))
     {
-        bool doresize = m_text.empty();
-        TextWidget::set_text(text);
-        if (doresize)
-        {
-            first_resize();
-        }
+        damage();
+        layout();
     }
 }
 
@@ -112,16 +108,10 @@ void Button::set_checked(bool value)
     }
 }
 
-Button::~Button()
-{
-    if (m_group)
-        m_group->remove(*this);
-}
-
 void Button::set_parent(Frame* parent)
 {
     TextWidget::set_parent(parent);
-    first_resize();
+    layout();
 }
 
 Size Button::min_size_hint() const
@@ -129,6 +119,7 @@ Size Button::min_size_hint() const
     if (!m_text.empty())
     {
         auto s = text_size(m_text);
+        // add a little bit of fluff for touch
         s *= Size(1, 3);
         s += Size(s.width() / 2 + 5, 0);
         return s + Widget::min_size_hint();
@@ -137,12 +128,10 @@ Size Button::min_size_hint() const
     return DEFAULT_BUTTON_SIZE + Widget::min_size_hint();
 }
 
-void Button::first_resize()
+Button::~Button()
 {
-    if (box().size().empty())
-    {
-        resize(min_size_hint());
-    }
+    if (m_group)
+        m_group->remove(*this);
 }
 
 ImageButton::ImageButton(const std::string& text,
@@ -170,6 +159,30 @@ ImageButton::ImageButton(Frame& parent,
     : ImageButton(image, text, rect)
 {
     parent.add(*this);
+}
+
+Size ImageButton::min_size_hint() const
+{
+    Rect size = Button::min_size_hint() - Size(moat() * 2, moat() * 2);
+
+    if (!m_image.size().empty())
+    {
+        if ((image_align() & alignmask::left) == alignmask::left ||
+            (image_align() & alignmask::right) == alignmask::right)
+        {
+            size += Size(m_image.width(), 0);
+        }
+        else if ((image_align() & alignmask::top) == alignmask::top ||
+                 (image_align() & alignmask::bottom) == alignmask::bottom)
+        {
+            size += Size(0, m_image.height());
+        }
+
+        size = Rect::merge(size, m_image.size());
+    }
+
+    auto res = size.size() + Size(moat() * 2, moat() * 2);
+    return res;
 }
 
 void ImageButton::do_set_image(const Image& image)
@@ -230,7 +243,8 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     }
     else if (!widget.image().empty())
     {
-        Rect target = detail::align_algorithm(widget.image().size(), widget.box(),
+        Rect target = detail::align_algorithm(widget.image().size(),
+                                              widget.content_area(),
                                               widget.image_align());
         painter.draw(target.point());
         painter.draw(widget.image());
@@ -241,14 +255,6 @@ void ImageButton::set_show_label(bool value)
 {
     if (detail::change_if_diff<>(m_show_label, value))
         damage();
-}
-
-void ImageButton::first_resize()
-{
-    if (size().empty())
-    {
-        resize(m_image.size());
-    }
 }
 
 }

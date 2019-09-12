@@ -14,8 +14,6 @@ namespace egt
 {
 inline namespace v1
 {
-static const auto DEFAULT_LABEL_SIZE = Size(100, 50);
-
 const alignmask Label::default_align = alignmask::center | alignmask::left;
 
 Label::Label(const std::string& text, alignmask text_align) noexcept
@@ -47,14 +45,10 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
 
 void Label::set_text(const std::string& text)
 {
-    if (m_text != text)
+    if (detail::change_if_diff<>(m_text, text))
     {
-        bool doresize = m_text.empty();
-        TextWidget::set_text(text);
-        if (doresize)
-        {
-            first_resize();
-        }
+        damage();
+        layout();
     }
 }
 
@@ -80,7 +74,7 @@ void Label::default_draw(Label& widget, Painter& painter, const Rect&)
 void Label::set_parent(Frame* parent)
 {
     TextWidget::set_parent(parent);
-    first_resize();
+    layout();
 }
 
 Size Label::min_size_hint() const
@@ -88,19 +82,10 @@ Size Label::min_size_hint() const
     if (!m_text.empty())
     {
         auto s = text_size(m_text);
-        s += Widget::min_size_hint();
-        return s;
+        return s + Widget::min_size_hint();
     }
 
-    return DEFAULT_LABEL_SIZE;
-}
-
-void Label::first_resize()
-{
-    if (box().size().empty())
-    {
-        resize(min_size_hint());
-    }
+    return Widget::min_size_hint();
 }
 
 ImageLabel::ImageLabel(const std::string& text,
@@ -198,7 +183,7 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
         const auto b = widget.content_area();
         const auto target = detail::align_algorithm(widget.m_image.size(),
                             b,
-                            widget.m_image_align);
+                            widget.image_align());
 
         const auto hs = static_cast<double>(target.width()) /
                         static_cast<double>(widget.image().size_orig().width());
@@ -213,21 +198,32 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
 Size ImageLabel::min_size_hint() const
 {
-    // if we are expanding the image, don't use it for min size hint
-    if ((m_image_align & alignmask::expand_horizontal) == alignmask::expand_horizontal ||
-        (m_image_align & alignmask::expand_vertical) == alignmask::expand_vertical)
-        return Widget::min_size_hint();
+    Rect size = Label::min_size_hint() - Size(moat() * 2, moat() * 2);
 
-    if (!m_text.empty())
-        return m_image.size() + Label::min_size_hint();
+    if (!m_image.size().empty())
+    {
+        if ((image_align() & alignmask::left) == alignmask::left ||
+            (image_align() & alignmask::right) == alignmask::right)
+        {
+            size += Size(m_image.width(), 0);
+        }
+        else if ((image_align() & alignmask::top) == alignmask::top ||
+                 (image_align() & alignmask::bottom) == alignmask::bottom)
+        {
+            size += Size(0, m_image.height());
+        }
 
-    return m_image.size() + Widget::min_size_hint();
+        size = Rect::merge(size, m_image.size());
+    }
+
+    auto res = size.size() + Size(moat() * 2, moat() * 2);
+    return res;
 }
 
 void ImageLabel::do_set_image(const Image& image)
 {
     if (size().empty() && !image.empty())
-        resize(image.size());
+        resize(image.size() + Size(moat() * 2, moat() * 2));
 
     m_image = image;
     damage();
@@ -242,14 +238,6 @@ void ImageLabel::set_show_label(bool value)
 {
     if (detail::change_if_diff<>(m_show_label, value))
         damage();
-}
-
-void ImageLabel::first_resize()
-{
-    if (size().empty())
-    {
-        resize(m_image.size());
-    }
 }
 
 }
