@@ -237,17 +237,13 @@ public:
 
     virtual void handle(Event& event) override;
 
-    virtual void select(int column, int row)
-    {
-        /// @todo Make sure column and row are valid.
-
-        bool c = detail::change_if_diff<>(m_selected_column, column);
-        bool r = detail::change_if_diff<>(m_selected_row, row);
-        if (c || r)
-        {
-            damage();
-        }
-    }
+    /**
+     * Set the selected cell.
+     *
+     * @param[in] column The column to select.
+     * @param[in] row The row to select.
+     */
+    virtual void set_selected(int column, int row);
 
     virtual ~SelectableGrid() noexcept = default;
 

@@ -302,7 +302,7 @@ void SelectableGrid::handle(Event& event)
 
                 if (bounding.intersect(pos))
                 {
-                    select(column, row);
+                    set_selected(column, row);
                     break;
                 }
             }
@@ -335,6 +335,21 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
     }
 
     Frame::draw(painter, rect);
+}
+
+void SelectableGrid::set_selected(int column, int row)
+{
+    const auto columns = m_cells.size();
+    if (column >= static_cast<ssize_t>(columns))
+        return;
+
+    if (!columns || row >= static_cast<ssize_t>(m_cells[column].size()))
+        return;
+
+    auto c = detail::change_if_diff<>(m_selected_column, column);
+    auto r = detail::change_if_diff<>(m_selected_row, row);
+    if (c || r)
+        damage();
 }
 
 }

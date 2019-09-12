@@ -60,7 +60,7 @@ public:
             int row = m_grid.last_add_row();
 
             if (c == m_color)
-                m_grid.select(column, row);
+                m_grid.set_selected(column, row);
 
             color_label->on_event([this, column, row](Event&)
             {
@@ -108,7 +108,7 @@ public:
             int row = m_grid.last_add_row();
 
             if (w == m_width)
-                m_grid.select(column, row);
+                m_grid.set_selected(column, row);
 
             width_label->on_event([this, column, row](Event&)
             {
