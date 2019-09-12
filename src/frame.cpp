@@ -561,22 +561,13 @@ void Frame::layout()
         //
         if (child->align() != alignmask::none)
         {
-
             auto bounding = to_child(area);
             if (bounding.empty())
                 return;
 
-            auto min = child->box();
+            child->layout();
 
-            if (!child->flags().is_set(Widget::flag::no_autoresize))
-            {
-                if (min.width() < child->min_size_hint().width())
-                    min.set_width(child->min_size_hint().width());
-                if (min.height() < child->min_size_hint().height())
-                    min.set_height(child->min_size_hint().height());
-            }
-
-            auto r = detail::align_algorithm(min,
+            auto r = detail::align_algorithm(child->box(),
                                              bounding,
                                              child->align(),
                                              0,
