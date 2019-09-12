@@ -102,14 +102,14 @@ public:
     /**
      * Set the optional "on" and "off" text.
      *
-     * @param[in] on_text The "on" text to display.
      * @param[in] off_text The "off" text to display.
+     * @param[in] on_text The "on" text to display.
      */
-    virtual void set_toggle_text(const std::string& on_text,
-                                 const std::string& off_text)
+    virtual void set_toggle_text(const std::string& off_text,
+                                 const std::string& on_text)
     {
-        bool on = detail::change_if_diff<>(m_on_text, on_text);
         bool off = detail::change_if_diff<>(m_off_text, off_text);
+        bool on = detail::change_if_diff<>(m_on_text, on_text);
 
         if (on || off)
             damage();
