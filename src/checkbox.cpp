@@ -67,7 +67,9 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
     std::vector<detail::LayoutRect> rects;
 
     rects.emplace_back(0,
-                       Rect(0, 0, std::min(b.width() - text_size.width() - widget.padding(), b.height()), std::min(b.width() - text_size.width() - widget.padding(), b.height())),
+                       Rect(0, 0,
+                            std::min(b.width() - text_size.width() - widget.padding(), b.height()),
+                            std::min(b.width() - text_size.width() - widget.padding(), b.height())),
                        0, 0, widget.padding() / 2);
     rects.emplace_back(0,
                        Rect(0, 0, text_size.width(), text_size.height()),
@@ -184,7 +186,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         if (widget.checked())
             painter.set(widget.color(Palette::ColorId::button_text).color());
         else
-            painter.set(widget.color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
+            painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
         painter.set(widget.font());
         auto size = painter.text_size(widget.on_text());
         Rect target = detail::align_algorithm(size,
@@ -202,7 +204,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         if (widget.checked())
             painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
         else
-            painter.set(widget.color(Palette::ColorId::label_text, Palette::GroupId::disabled).color());
+            painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
         painter.set(widget.font());
         auto size = painter.text_size(widget.off_text());
         Rect target = detail::align_algorithm(size,
