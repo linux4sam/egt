@@ -220,7 +220,7 @@ void Slider::draw_label(Painter& painter, int value)
     auto text = std::to_string(value);
     auto f = detail::TextWidget::scale_font(handle.size(), text, font());
 
-    painter.set(color(Palette::ColorId::text).color());
+    painter.set(color(Palette::ColorId::label_text).color());
     painter.set(f);
 
     auto text_size = painter.text_size(text);
