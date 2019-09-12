@@ -86,11 +86,6 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect&)
                       widget.color(Palette::ColorId::button_text).color());
 }
 
-bool Button::checked() const
-{
-    return m_checked;
-}
-
 void Button::set_checked(bool value)
 {
     if (detail::change_if_diff<>(m_checked, value))

@@ -68,7 +68,17 @@ protected:
         m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::active, Color(0xff9b29ff));
         m_palette->set(Palette::ColorId::button_text, Palette::GroupId::active, Palette::black);
         m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::active, Color(0xff9b29ff));
-        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::active, Palette::black);
+        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::active, Palette::white);
+
+        m_palette->set(Palette::ColorId::bg, Palette::GroupId::checked, Palette::black);
+        m_palette->set(Palette::ColorId::text, Palette::GroupId::checked, Palette::white);
+        m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::checked, Palette::hotpink);
+        m_palette->set(Palette::ColorId::border, Palette::GroupId::checked, Color(0xc0c5c1ff));
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::checked, pattern(Color(0xff9b29ff)));
+        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::checked, Color(0xff9b29ff));
+        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::checked, Palette::black);
+        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::checked, Color(0xff9b29ff));
+        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::checked, Palette::white);
     }
 
     virtual void init_draw() override;

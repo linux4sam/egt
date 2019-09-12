@@ -213,7 +213,12 @@ public:
         /**
          * Color group usually associated with the Widget::flag::disabled flag.
          */
-        disabled = 3
+        disabled = 3,
+
+        /**
+         * Checked state associated with buttons.
+        */
+        checked = 4
     };
 
     enum class ColorId

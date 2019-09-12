@@ -102,15 +102,7 @@ public:
      */
     static void default_draw(Button& widget, Painter& painter, const Rect& rect);
 
-    /**
-     * Return the boolean checked state of the a button.
-     */
-    virtual bool checked() const;
-
-    /**
-     * Set checked state of the button.
-     */
-    virtual void set_checked(bool value);
+    virtual void set_checked(bool value) override;
 
     virtual Size min_size_hint() const override;
 
@@ -121,11 +113,6 @@ protected:
     virtual void set_parent(Frame* parent) override;
 
 private:
-
-    /**
-     * Is the button currently checked?
-     */
-    bool m_checked{false};
 
     /**
      * Pointer to the group this button is a part of.
@@ -248,15 +235,15 @@ public:
     inline alignmask image_align() const { return m_image_align; }
 
     /**
-    * Enable/disable showing the label text.
-    *
-    * @param[in] value When true, the label text is shown.
-    */
+     * Enable/disable showing the label text.
+     *
+     * @param[in] value When true, the label text is shown.
+     */
     virtual void set_show_label(bool value);
 
     /**
-    * Get the show label state.
-    */
+     * Get the show label state.
+     */
     inline bool show_label() const { return m_show_label; }
 
     virtual ~ImageButton() = default;

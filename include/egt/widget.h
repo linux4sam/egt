@@ -926,7 +926,22 @@ public:
 
         m_font = make_unique<Font>(font);
         damage();
+        layout();
         parent_layout();
+    }
+
+    /**
+     * Return the boolean checked state of the a widget.
+     */
+    inline bool checked() const { return m_checked; }
+
+    /**
+     * Set checked state of the widget.
+     */
+    virtual void set_checked(bool value)
+    {
+        if (detail::change_if_diff<>(m_checked, value))
+            damage();
     }
 
     virtual ~Widget() noexcept;
@@ -978,6 +993,11 @@ protected:
      * Call our parent to do a layout.
      */
     void parent_layout();
+
+    /**
+     * Is the widget currently checked?
+     */
+    bool m_checked{false};
 
 private:
 

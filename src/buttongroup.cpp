@@ -122,6 +122,15 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
      */
 }
 
+void ButtonGroup::foreach_checked(foreach_checked_callback_t callback)
+{
+    for (auto& b : m_buttons)
+    {
+        if (b->checked())
+            callback(*b);
+    }
+}
+
 ButtonGroup::~ButtonGroup()
 {
     for (auto button : m_buttons)

@@ -11,6 +11,7 @@
  * @brief Working with button groups.
  */
 
+#include <functional>
 #include <vector>
 
 namespace egt
@@ -36,17 +37,69 @@ class ButtonGroup
 {
 public:
 
+    /**
+     * @param imperative When true, one must must always be checked.
+     * @param exclusive When true, only one button can be checked at a time.
+     */
     explicit ButtonGroup(bool imperative = false, bool exclusive = true) noexcept;
+
+    /**
+     * Set the exclusive property of the group.
+     *
+     * @param exclusive When true, only one button can be checked at a time.
+     *
+     * @note Changing this after adding buttons is undefined.
+     */
     virtual void set_exclusive(bool exclusive);
+
+    /**
+     * Get the exclusive property.
+     */
     virtual bool exclusive() const;
+
+    /**
+     * Set the imperative property of the group.
+     *
+     * @param imperative When true, one must must always be checked.
+     *
+     * @note Changing this after adding buttons is undefined.
+     */
     virtual void set_imperative(bool imperative);
+
+    /**
+     * Get the imperative property.
+     */
     virtual bool imperative() const;
+
+    /**
+     * Add a button to the group.
+     */
     virtual void add(Button& button);
+
+    /**
+     * Remove a button from the group.
+     */
     virtual void remove(Button& button);
+
+
     virtual void checked_state_change(Button& button, bool checked) const;
+
+    using foreach_checked_callback_t = std::function<void (Button& button)>;
+
+    /**
+     * Run a function on each checked button.
+     *
+     * If the exclusive property is true, only one button will even be
+     * invoked.
+     *
+     * @param callback The callback to invoke.
+     */
+    virtual void foreach_checked(foreach_checked_callback_t callback);
+
     virtual ~ButtonGroup();
 
 protected:
+
     using button_array = std::vector<Button*>;
 
     /**
@@ -57,12 +110,12 @@ protected:
     /**
      * Only one button can be checked().
      */
-    bool m_exclusive;
+    bool m_exclusive{false};
 
     /**
      * At least one button must be checked().
      */
-    bool m_imperative;
+    bool m_imperative{true};
 };
 
 }

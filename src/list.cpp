@@ -70,7 +70,7 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
     if (m_sizer->count_children() == 1)
     {
         m_selected = 0;
-        m_sizer->child_at(m_selected)->set_active(true);
+        m_sizer->child_at(m_selected)->set_checked(true);
     }
 }
 
@@ -132,10 +132,10 @@ void ListBox::set_selected(size_t index)
         if (index < m_sizer->count_children())
         {
             if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
-                m_sizer->child_at(m_selected)->set_active(false);
+                m_sizer->child_at(m_selected)->set_checked(false);
             m_selected = index;
             if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
-                m_sizer->child_at(m_selected)->set_active(true);
+                m_sizer->child_at(m_selected)->set_checked(true);
 
             damage();
             invoke_handlers(eventid::property_changed);

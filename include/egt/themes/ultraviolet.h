@@ -82,8 +82,18 @@ protected:
         m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::active, pattern(colors[10]));
         m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::active, colors[7]);
         m_palette->set(Palette::ColorId::button_text, Palette::GroupId::active, colors[0]);
-        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::active, colors[10]);
-        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::active, colors[0]);
+        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::active, colors[0]);
+        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::active, colors[10]);
+
+        m_palette->set(Palette::ColorId::bg, Palette::GroupId::checked, colors[0]);
+        m_palette->set(Palette::ColorId::text, Palette::GroupId::checked, colors[5]);
+        m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::checked, Palette::hotpink);
+        m_palette->set(Palette::ColorId::border, Palette::GroupId::checked, colors[7]);
+        m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::checked, pattern(colors[7]));
+        m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::checked, colors[7]);
+        m_palette->set(Palette::ColorId::button_text, Palette::GroupId::checked, Palette::white);
+        m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::checked, colors[10]);
+        m_palette->set(Palette::ColorId::label_text, Palette::GroupId::checked, colors[8]);
     }
 };
 

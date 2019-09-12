@@ -292,6 +292,8 @@ Palette::pattern_type Widget::color(Palette::ColorId id) const
         group = Palette::GroupId::disabled;
     else if (active())
         group = Palette::GroupId::active;
+    else if (checked())
+        group = Palette::GroupId::checked;
 
     return color(id, group);
 }
