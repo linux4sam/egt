@@ -83,6 +83,21 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     /**
+     * Add an event handler to be called when the widget receives an
+     * eventid::pointer_click event.
+     *
+     * @param handler The callback to invoke on event.
+     * @return A handle used to identify the registration.  This can then be
+     *         passed to remove_handler().
+     *
+     * @see detail::Object::on_event()
+     */
+    virtual uint32_t on_click(event_callback_t handler)
+    {
+        return on_event(handler, {eventid::pointer_click});
+    }
+
+    /**
      * Default draw method for Button.
      */
     static void default_draw(Button& widget, Painter& painter, const Rect& rect);
