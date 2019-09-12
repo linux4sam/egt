@@ -24,5 +24,20 @@ input devices.
 
 @todo
 
+@section input_mapping libinput
+
+[libinput](https://www.freedesktop.org/wiki/Software/libinput/) is the prime
+interface to receive keyboard and touchscreen or pointer
+events.  libinput does [not support gestures on these interfaces](https://wayland.freedesktop.org/libinput/doc/1.14.1/gestures.html#gestures-touchscreens).
+
+While EGT does include ways to configure how it uses libinput, this should be
+used as an end-all means of configuring input devices with libinput.  libinput
+has a well documented and solid way of configuring input devices and even has
+[tools for debugging](https://wayland.freedesktop.org/libinput/doc/1.14.1/tools.html#libinput-list-devices)
+configuration of input devices.
+
+Also, take special note of [udev configuration of devices](https://wayland.freedesktop.org/libinput/doc/latest/device-configuration-via-udev.html#)
+that controls how they are introduced to libinput.
+
 */
 }}
