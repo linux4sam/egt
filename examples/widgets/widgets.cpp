@@ -92,13 +92,12 @@ struct CheckBoxPage : public NotebookTab
         checkbox4->disable();
         grid0->add(expand(checkbox4));
 
-        /// @todo leak
-        auto checkbox_group = new ButtonGroup(true, false);
-        checkbox_group->add(*checkbox1);
-        checkbox_group->add(*checkbox2);
-        checkbox_group->add(*checkbox3);
-        checkbox_group->add(*checkbox4);
-        checkbox_group->remove(*checkbox3);
+        m_checkbox_group = make_unique<ButtonGroup>(true, false);
+        m_checkbox_group->add(*checkbox1);
+        m_checkbox_group->add(*checkbox2);
+        m_checkbox_group->add(*checkbox3);
+        m_checkbox_group->add(*checkbox4);
+        m_checkbox_group->remove(*checkbox3);
 
         auto radiobox1 = std::make_shared<RadioBox>("radiobox 1");
         grid0->add(expand(radiobox1));
@@ -111,12 +110,14 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(expand(radiobox3));
         radiobox3->disable();
 
-        /// @todo leak
-        auto radiobox_group = new ButtonGroup(true);
-        radiobox_group->add(*radiobox1);
-        radiobox_group->add(*radiobox2);
-        radiobox_group->add(*radiobox3);
+        m_radiobox_group = make_unique<ButtonGroup>(true);
+        m_radiobox_group->add(*radiobox1);
+        m_radiobox_group->add(*radiobox2);
+        m_radiobox_group->add(*radiobox3);
     }
+
+    unique_ptr<ButtonGroup> m_checkbox_group;
+    unique_ptr<ButtonGroup> m_radiobox_group;
 };
 
 struct LabelPage : public NotebookTab
@@ -248,7 +249,7 @@ struct TextPage : public NotebookTab
 };
 
 template<class T>
-static void demo_up_down_animator(std::shared_ptr<T> widget)
+static unique_ptr<AnimationSequence> demo_up_down_animator(std::shared_ptr<T> widget)
 {
     auto animationup = std::make_shared<PropertyAnimator>(0, 100, std::chrono::seconds(5), easing_circular_easein);
     animationup->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
@@ -256,11 +257,11 @@ static void demo_up_down_animator(std::shared_ptr<T> widget)
     auto animationdown = std::make_shared<PropertyAnimator>(100, 0, std::chrono::seconds(5), easing_circular_easeout);
     animationdown->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
 
-    /// @todo leak
-    auto sequence = new AnimationSequence(true);
+    auto sequence = make_unique<AnimationSequence>(true);
     sequence->add(animationup);
     sequence->add(animationdown);
     sequence->start();
+    return sequence;
 }
 
 struct ProgressPage : public NotebookTab
@@ -280,10 +281,12 @@ struct ProgressPage : public NotebookTab
         progressbar1->set_show_label(false);
         grid0->add(expand(progressbar1));
 
-        demo_up_down_animator(spinprogress);
-        demo_up_down_animator(progressbar);
-        demo_up_down_animator(progressbar1);
+        m_animators.push_back(demo_up_down_animator(spinprogress));
+        m_animators.push_back(demo_up_down_animator(progressbar));
+        m_animators.push_back(demo_up_down_animator(progressbar1));
     }
+
+    vector<unique_ptr<AnimationSequence>> m_animators;
 };
 
 struct SliderPage : public NotebookTab
@@ -344,10 +347,12 @@ struct MeterPage : public NotebookTab
         r1->set_readonly(true);
         grid0->add(expand(r1));
 
-        demo_up_down_animator(lp1);
-        demo_up_down_animator(am1);
-        demo_up_down_animator(r1);
+        m_animators.push_back(demo_up_down_animator(lp1));
+        m_animators.push_back(demo_up_down_animator(am1));
+        m_animators.push_back(demo_up_down_animator(r1));
     }
+
+    vector<unique_ptr<AnimationSequence>> m_animators;
 };
 
 struct ComboPage : public NotebookTab
