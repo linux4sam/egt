@@ -116,14 +116,33 @@ public:
     }
 
     /**
+     * Get the "off" text.
+     */
+    inline const std::string& off_text() const { return m_off_text; }
+
+    /**
      * Get the "on" text.
      */
     inline const std::string& on_text() const { return m_on_text; }
 
     /**
-     * Get the "off" text.
+     * Get the enable/disable mode.
      */
-    inline const std::string& off_text() const { return m_off_text; }
+    inline bool enable_disable() const { return m_enable_disable; }
+
+    /**
+     * Set the enable/disable mode.
+     *
+     * When true, the left side is in a disabled state and the right/second side
+     * is an enabled state.  When false, both sides are always enabled.
+     *
+     * In either case, checked() true still means right/second.
+     */
+    void set_enable_disable(bool value)
+    {
+        if (detail::change_if_diff<>(m_enable_disable, value))
+            damage();
+    }
 
     virtual ~ToggleBox() = default;
 
@@ -140,6 +159,11 @@ protected:
      * Optional "on" text.
      */
     std::string m_on_text;
+
+    /**
+     * Enable/disable mode.
+     */
+    bool m_enable_disable{true};
 };
 
 }

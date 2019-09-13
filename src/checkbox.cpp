@@ -170,11 +170,23 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     {
         Rect rect = b;
         rect.set_width(rect.width() / 2);
-        widget.theme().draw_box(painter,
-                                Theme::boxtype::blank_rounded,
-                                rect,
-                                widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
-                                widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
+
+        if (widget.enable_disable())
+        {
+            widget.theme().draw_box(painter,
+                                    Theme::boxtype::blank_rounded,
+                                    rect,
+                                    widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
+                                    widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
+        }
+        else
+        {
+            widget.theme().draw_box(painter,
+                                    Theme::boxtype::blank_rounded,
+                                    rect,
+                                    widget.color(Palette::ColorId::border),
+                                    widget.color(Palette::ColorId::button_bg));
+        }
     }
 
     if (!widget.on_text().empty())
