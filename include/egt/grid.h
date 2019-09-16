@@ -197,11 +197,13 @@ public:
      */
     inline flags_type& grid_flags() { return m_grid_flags; }
 
+    virtual void reallocate(const Tuple& size);
+
     virtual ~StaticGrid() noexcept = default;
 
 protected:
 
-    using cell_array = std::vector<std::vector<Widget*>>;
+    using cell_array = std::vector<std::vector<std::weak_ptr<Widget>>>;
 
     cell_array m_cells;
     int m_last_add_column{0};
