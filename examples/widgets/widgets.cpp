@@ -443,30 +443,30 @@ struct ScrollwheelPage : public NotebookTab
                                           1900, 2019, 1, true);
 
         auto label_day =
-            std::make_shared<Label>(scrollwheel_day->get_value(),
+            std::make_shared<Label>(scrollwheel_day->value(),
                                     Rect(0, 0, 50, 30));
 
         auto label_month =
-            std::make_shared<Label>(scrollwheel_month->get_value(),
+            std::make_shared<Label>(scrollwheel_month->value(),
                                     Rect(0, 0, 100, 30));
 
         auto label_year =
-            std::make_shared<Label>(scrollwheel_year->get_value(),
+            std::make_shared<Label>(scrollwheel_year->value(),
                                     Rect(0, 0, 75, 30));
 
         scrollwheel_day->on_event([label_day, scrollwheel_day](Event&)
         {
-            label_day->set_text(scrollwheel_day->get_value());
+            label_day->set_text(scrollwheel_day->value());
         }, {eventid::property_changed});
 
         scrollwheel_month->on_event([label_month, scrollwheel_month](Event&)
         {
-            label_month->set_text(scrollwheel_month->get_value());
+            label_month->set_text(scrollwheel_month->value());
         }, {eventid::property_changed});
 
         scrollwheel_year->on_event([label_year, scrollwheel_year](Event&)
         {
-            label_year->set_text(scrollwheel_year->get_value());
+            label_year->set_text(scrollwheel_year->value());
         }, {eventid::property_changed});
 
         hsizer1->add(scrollwheel_day);
@@ -477,7 +477,7 @@ struct ScrollwheelPage : public NotebookTab
         hsizer1->add(label_month);
         hsizer1->add(label_year);
 
-        scrollwheel_month->set_index(4);
+        scrollwheel_month->set_selected(4);
     }
 };
 

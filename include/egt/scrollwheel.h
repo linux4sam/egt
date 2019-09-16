@@ -37,11 +37,27 @@ public:
     using item_array = std::vector<std::string>;
 
     /**
+     * @param[in] items Array of items to build the list.
+     * @param[in] reversed Display the latest item instead of the first one.
+     */
+    explicit Scrollwheel(const item_array& items = {},
+                         bool reversed = false) noexcept;
+
+    /**
      * @param[in] rect Rectangle for the Widget.
      * @param[in] items Array of items to build the list.
      * @param[in] reversed Display the latest item instead of the first one.
      */
-    explicit Scrollwheel(const Rect& rect = {},
+    explicit Scrollwheel(const Rect& rect,
+                         const item_array& items = {},
+                         bool reversed = false) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] items Array of items to build the list.
+     * @param[in] reversed Display the latest item instead of the first one.
+     */
+    explicit Scrollwheel(Frame& parent,
                          const item_array& items = {},
                          bool reversed = false) noexcept;
 
@@ -52,7 +68,7 @@ public:
      * @param[in] reversed Display the latest item instead of the first one.
      */
     explicit Scrollwheel(Frame& parent,
-                         const Rect& rect = {},
+                         const Rect& rect,
                          const item_array& items = {},
                          bool reversed = false) noexcept;
 
@@ -66,32 +82,48 @@ public:
     explicit Scrollwheel(const Rect& rect, int min, int max, int step, bool reversed = false) noexcept;
 
     /**
+     * Get the orientation.
+     */
+    inline orientation orient() const { return m_orient; }
+
+    /**
+     * Set the orientation.
+     */
+    void set_orient(orientation orient);
+
+    /**
      * Returns a string of the item selected.
      */
-    std::string get_value() const;
+    std::string value() const;
 
     /**
      * Add an item at the end of the array.
      */
-    void add_item(std::string item);
+    virtual void add_item(const std::string& item);
 
     /**
      * Get the index of the item selected.
      */
-    unsigned int get_index() const;
+    virtual size_t selected() const;
 
     /**
      * Set the index to select a specific item.
      */
-    void set_index(unsigned int index);
+    virtual void set_selected(size_t index);
+
+    /**
+     * Return the number of items.
+     */
+    virtual size_t item_count() const { return m_items.size(); }
 
 protected:
     void init(bool reversed);
     item_array m_items;
-    unsigned int m_selected{0};
+    size_t m_selected{0};
     std::shared_ptr<Button> m_button_up;
     std::shared_ptr<Button> m_button_down;
     std::shared_ptr<Label> m_label;
+    orientation m_orient{orientation::vertical};
 };
 
 }
