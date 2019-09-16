@@ -68,7 +68,12 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
     label->set_text_align(alignmask::center | alignmask::left);
     auto grid = std::make_shared<StaticGrid>(Tuple(2, 1));
     grid->set_margin(2); /// @todo Not working
-    grid->resize(Size(0, widget->min_size_hint().height()));
+    auto b = widget->size();
+    if (b.height() < widget->min_size_hint().height())
+        b.set_height(widget->min_size_hint().height());
+    if (b.height() < min_option_height())
+        b.set_height(min_option_height());
+    grid->resize(Size(0, b.height()));
     grid->set_align(alignmask::expand_horizontal);
     grid->add(label);
     grid->add(widget);
@@ -81,7 +86,12 @@ void Form::add_option(const std::shared_ptr<Widget>& widget)
     widget->set_align(alignmask::expand);
     auto grid = std::make_shared<StaticGrid>(Tuple(1, 1));
     grid->set_margin(2); /// @todo Not working
-    grid->resize(Size(0, widget->min_size_hint().height()));
+    auto b = widget->size();
+    if (b.height() < widget->min_size_hint().height())
+        b.set_height(widget->min_size_hint().height());
+    if (b.height() < min_option_height())
+        b.set_height(min_option_height());
+    grid->resize(Size(0, b.height()));
     grid->set_align(alignmask::expand_horizontal);
     grid->add(widget);
     m_vsizer.add(grid);

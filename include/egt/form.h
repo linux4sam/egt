@@ -26,7 +26,7 @@ namespace experimental
 {
 
 /**
- * Utility class to help with standard form layout of widgets.
+ * Utility class to help with standard Form layout of widgets.
  */
 class Form : public Frame
 {
@@ -36,6 +36,9 @@ public:
 
     explicit Form(Frame& parent, const std::string& title = {}) noexcept;
 
+    /**
+     * Add a group to the Form.
+     */
     virtual void add_group(const std::string& caption);
 
     template<class T>
@@ -45,15 +48,36 @@ public:
         add_option(name, p);
     }
 
+    /**
+     * Add an option to the form with a name.
+     */
     virtual void add_option(const std::string& name, const std::shared_ptr<Widget>& widget);
 
+    template<class T>
+    void add_option(const std::shared_ptr<T>& widget)
+    {
+        auto p = std::dynamic_pointer_cast<Widget>(widget);
+        add_option(p);
+    }
+
+    /**
+     * Add an option to the Form without a name.
+     */
     virtual void add_option(const std::shared_ptr<Widget>& widget);
 
+    /**
+     * Remove all options from the Form.
+     */
     virtual void remove_options();
 
     virtual ~Form() = default;
 
 protected:
+
+    inline default_dim_type min_option_height() const
+    {
+        return 50;
+    }
 
     /**
      * Internal BoxSizer used for layout.
