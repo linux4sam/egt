@@ -229,7 +229,7 @@ public:
         bg = 1,
 
         /**
-         * Control (TextBox, ComboBox, RadioBox) text color.
+         * Control (TextBox) text color.
          */
         text,
 

@@ -57,7 +57,7 @@ void CheckBox::draw(Painter& painter, const Rect& rect)
 
 void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*rect*/)
 {
-    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
+    widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 
     auto b = widget.content_area();
 
@@ -79,35 +79,29 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
 
     auto handle = rects[0].rect + b.point();
     auto text = rects[1].rect + b.point();
+    auto border = widget.theme().default_border();
+
+    widget.theme().draw_box(painter, Theme::boxtype::fill, handle,
+                            widget.color(Palette::ColorId::button_fg),
+                            Palette::transparent,
+                            border);
 
     if (widget.checked())
     {
-        auto fgborder = widget.theme().default_border();
-
-        widget.theme().draw_box(painter, Theme::boxtype::blank, handle,
-                                widget.color(Palette::ColorId::button_fg),
-                                widget.color(Palette::ColorId::bg),
-                                fgborder);
-
         // draw an "X"
         auto cr = painter.context().get();
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
         painter.set(widget.color(Palette::ColorId::button_fg).color());
-        painter.draw(handle.top_left() + Point(fgborder, fgborder), handle.bottom_right() - Point(fgborder, fgborder));
-        painter.draw(handle.top_right() + Point(-fgborder, fgborder), handle.bottom_left() + Point(fgborder, -fgborder));
-        painter.set_line_width(widget.theme().default_border());
+        painter.draw(handle.top_left() + Point(border, border),
+                     handle.bottom_right() - Point(border, border));
+        painter.draw(handle.top_right() + Point(-border, border),
+                     handle.bottom_left() + Point(border, -border));
+        painter.set_line_width(border);
         painter.stroke();
-    }
-    else
-    {
-        widget.theme().draw_box(painter, Theme::boxtype::blank, handle,
-                                widget.color(Palette::ColorId::button_fg),
-                                widget.color(Palette::ColorId::bg),
-                                widget.theme().default_border());
     }
 
     // text
-    painter.set(widget.color(Palette::ColorId::text).color());
+    painter.set(widget.color(Palette::ColorId::label_text).color());
     auto size = painter.text_size(widget.text());
     Rect target = detail::align_algorithm(size,
                                           text,

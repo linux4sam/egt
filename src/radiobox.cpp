@@ -59,7 +59,7 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
 
 void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect)
 {
-    widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
+    widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 
     auto b = widget.content_area();
 
@@ -88,12 +88,13 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
 
     if (widget.checked())
     {
-        painter.draw(Circle(handle.center(), std::min(handle.width(), handle.height()) / 2. / 2.));
+        painter.draw(Circle(handle.center(),
+                            std::min(handle.width(), handle.height()) / 2. / 2.));
         painter.fill();
     }
 
     // text
-    painter.set(widget.color(Palette::ColorId::text).color());
+    painter.set(widget.color(Palette::ColorId::label_text).color());
     Rect target = detail::align_algorithm(text_size,
                                           text,
                                           widget.text_align());
@@ -106,7 +107,6 @@ Size RadioBox::min_size_hint() const
     if (!m_text.empty())
     {
         auto s = text_size(m_text);
-        //s *= Size(1, 3);
         s += Size(s.width() / 2 + 5, 0);
         return s + Widget::min_size_hint();
     }
