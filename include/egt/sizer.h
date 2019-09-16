@@ -90,7 +90,7 @@ public:
     /**
      * Get the orientation.
      */
-    orientation orient() const { return m_orient; }
+    inline orientation orient() const { return m_orient; }
 
     /**
      * Set the orientation.
