@@ -38,7 +38,7 @@ class ButtonGroup
 public:
 
     /**
-     * @param imperative When true, one must must always be checked.
+     * @param imperative When true, one button must always be checked.
      * @param exclusive When true, only one button can be checked at a time.
      */
     explicit ButtonGroup(bool imperative = false, bool exclusive = true) noexcept;
