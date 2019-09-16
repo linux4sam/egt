@@ -19,6 +19,8 @@ namespace egt
 {
 inline namespace v1
 {
+namespace experimental
+{
 
 /**
  * Radial dial widget that a user uses to select a value.
@@ -297,6 +299,7 @@ protected:
  */
 using Radial = RadialType<int>;
 
+}
 }
 }
 

@@ -340,6 +340,8 @@ struct MeterPage : public NotebookTab
         auto am1 = std::make_shared<AnalogMeter>();
         grid0->add(expand(am1));
 
+        using namespace egt::experimental;
+
         auto r1 = std::make_shared<Radial>(Rect(), 0, 100, 0);
         r1->radial_flags().set({Radial::flag::primary_value,
                                 Radial::flag::text_value,
