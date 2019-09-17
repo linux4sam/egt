@@ -27,8 +27,8 @@ inline namespace v1
 /**
  * ListBox string helper.
  *
- * Light wrapper around a Label to make each item in the ListBox a little bit
- * bigger.
+ * Light wrapper around a list item to make each item in the ListBox a little
+ * bit bigger.
  */
 struct StringItem : public ImageLabel
 {

@@ -53,7 +53,8 @@ public:
      * @param[in] rect Rectangle for the widget.
      * @param[in] text_align Alignment for the text.
      */
-    Label(const std::string& text, const Rect& rect,
+    Label(const std::string& text,
+          const Rect& rect,
           alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
@@ -61,7 +62,8 @@ public:
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    explicit Label(Frame& parent, const std::string& text = {},
+    explicit Label(Frame& parent,
+                   const std::string& text = {},
                    alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
@@ -70,7 +72,9 @@ public:
      * @param[in] rect Rectangle for the widget.
      * @param[in] text_align Alignment for the text.
      */
-    Label(Frame& parent, const std::string& text, const Rect& rect,
+    Label(Frame& parent,
+          const std::string& text,
+          const Rect& rect,
           alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     virtual void set_text(const std::string& text) override;
@@ -129,7 +133,9 @@ public:
      * @param[in] rect Rectangle for the widget.
      * @param[in] text_align Alignment for the text.
      */
-    ImageLabel(const Image& image, const std::string& text, const Rect& rect,
+    ImageLabel(const Image& image,
+               const std::string& text,
+               const Rect& rect,
                alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
@@ -138,7 +144,8 @@ public:
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    explicit ImageLabel(Frame& parent, const Image& image = {},
+    explicit ImageLabel(Frame& parent,
+                        const Image& image = {},
                         const std::string& text = {},
                         alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
@@ -149,7 +156,9 @@ public:
      * @param[in] rect Rectangle for the widget.
      * @param[in] text_align Alignment for the text.
      */
-    ImageLabel(Frame& parent, const Image& image, const std::string& text,
+    ImageLabel(Frame& parent,
+               const Image& image,
+               const std::string& text,
                const Rect& rect,
                alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 

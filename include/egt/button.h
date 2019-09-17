@@ -63,18 +63,41 @@ class Button : public detail::TextWidget
 {
 public:
 
+    static const alignmask DEFAULT_TEXT_ALIGN;
+
+    /**
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
+    explicit Button(const std::string& text = {},
+                    alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+
     /**
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
+     * @param[in] text_align Alignment for the text.
      */
-    explicit Button(const std::string& text = {}, const Rect& rect = {}) noexcept;
+    Button(const std::string& text, const Rect& rect,
+           alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
+    explicit Button(Frame& parent, const std::string& text = {},
+                    alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
+     * @param[in] text_align Alignment for the text.
      */
-    explicit Button(Frame& parent, const std::string& text = {}, const Rect& rect = {}) noexcept;
+    Button(Frame& parent,
+           const std::string& text,
+           const Rect& rect,
+           alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -139,30 +162,54 @@ public:
 
     /**
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] text_align Alignment for the text.
      */
     explicit ImageButton(const std::string& text = {},
-                         const Rect& rect = {}) noexcept;
+                         alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
+    explicit ImageButton(const Image& image,
+                         const std::string& text = {},
+                         alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
+     * @param[in] text_align Alignment for the text.
      */
     explicit ImageButton(const Image& image,
-                         const std::string& text = {},
-                         const Rect& rect = {}) noexcept;
+                         const std::string& text,
+                         const Rect& rect,
+                         alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
+    ImageButton(Frame& parent,
+                const Image& image = {},
+                const std::string& text = {},
+                alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] image The image to display.
      * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
+     * @param[in] text_align Alignment for the text.
      */
     ImageButton(Frame& parent,
                 const Image& image,
-                const std::string& text = {},
-                const Rect& rect = {}) noexcept;
+                const std::string& text,
+                const Rect& rect,
+                alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

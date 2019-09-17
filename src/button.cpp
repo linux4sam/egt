@@ -18,10 +18,18 @@ namespace egt
 {
 inline namespace v1
 {
+const alignmask Button::DEFAULT_TEXT_ALIGN = alignmask::center;
+
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 30);
 
-Button::Button(const std::string& text, const Rect& rect) noexcept
-    : TextWidget(text, rect, alignmask::center)
+Button::Button(const std::string& text, alignmask text_align) noexcept
+    : Button(text, {}, text_align)
+{}
+
+Button::Button(const std::string& text,
+               const Rect& rect,
+               alignmask text_align) noexcept
+    : TextWidget(text, rect, text_align)
 {
     set_name("Button" + std::to_string(m_widgetid));
 
@@ -30,8 +38,19 @@ Button::Button(const std::string& text, const Rect& rect) noexcept
     ncflags().set(Widget::flag::grab_mouse);
 }
 
-Button::Button(Frame& parent, const std::string& text, const Rect& rect) noexcept
-    : Button(text, rect)
+Button::Button(Frame& parent,
+               const std::string& text,
+               alignmask text_align) noexcept
+    : Button(text, text_align)
+{
+    parent.add(*this);
+}
+
+Button::Button(Frame& parent,
+               const std::string& text,
+               const Rect& rect,
+               alignmask text_align) noexcept
+    : Button(text, rect, text_align)
 {
     parent.add(*this);
 }
@@ -129,15 +148,21 @@ Button::~Button()
 }
 
 ImageButton::ImageButton(const std::string& text,
-                         const Rect& rect) noexcept
-    : ImageButton(Image(), text, rect)
-{
-}
+                         alignmask text_align) noexcept
+    : ImageButton(Image(), text, text_align)
+{}
 
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
-                         const Rect& rect) noexcept
-    : Button(text, rect)
+                         alignmask text_align) noexcept
+    : ImageButton(image, text, {}, text_align)
+{}
+
+ImageButton::ImageButton(const Image& image,
+                         const std::string& text,
+                         const Rect& rect,
+                         alignmask text_align) noexcept
+    : Button(text, rect, text_align)
 {
     set_name("ImageButton" + std::to_string(m_widgetid));
 
@@ -149,8 +174,18 @@ ImageButton::ImageButton(const Image& image,
 ImageButton::ImageButton(Frame& parent,
                          const Image& image,
                          const std::string& text,
-                         const Rect& rect) noexcept
-    : ImageButton(image, text, rect)
+                         alignmask text_align) noexcept
+    : ImageButton(image, text, text_align)
+{
+    parent.add(*this);
+}
+
+ImageButton::ImageButton(Frame& parent,
+                         const Image& image,
+                         const std::string& text,
+                         const Rect& rect,
+                         alignmask text_align) noexcept
+    : ImageButton(image, text, rect, text_align)
 {
     parent.add(*this);
 }
