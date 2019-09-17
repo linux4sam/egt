@@ -125,7 +125,7 @@ Size Button::min_size_hint() const
 Button::~Button()
 {
     if (m_group)
-        m_group->remove(*this);
+        m_group->remove(this);
 }
 
 ImageButton::ImageButton(const std::string& text,

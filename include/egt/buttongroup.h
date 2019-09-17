@@ -12,6 +12,7 @@
  */
 
 #include <functional>
+#include <memory>
 #include <vector>
 
 namespace egt
@@ -74,12 +75,12 @@ public:
     /**
      * Add a button to the group.
      */
-    virtual void add(Button& button);
+    virtual void add(std::shared_ptr<Button> button);
 
     /**
      * Remove a button from the group.
      */
-    virtual void remove(Button& button);
+    virtual void remove(Button* button);
 
 
     virtual void checked_state_change(Button& button, bool checked) const;
@@ -100,8 +101,7 @@ public:
 
 protected:
 
-    // @todo This should be std::weak_ptr
-    using button_array = std::vector<Button*>;
+    using button_array = std::vector<std::weak_ptr<Button>>;
 
     /**
      * Buttons in the group.

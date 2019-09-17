@@ -93,11 +93,11 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(expand(checkbox4));
 
         m_checkbox_group = make_unique<ButtonGroup>(true, false);
-        m_checkbox_group->add(*checkbox1);
-        m_checkbox_group->add(*checkbox2);
-        m_checkbox_group->add(*checkbox3);
-        m_checkbox_group->add(*checkbox4);
-        m_checkbox_group->remove(*checkbox3);
+        m_checkbox_group->add(checkbox1);
+        m_checkbox_group->add(checkbox2);
+        m_checkbox_group->add(checkbox3);
+        m_checkbox_group->add(checkbox4);
+        m_checkbox_group->remove(checkbox3.get());
 
         auto radiobox1 = std::make_shared<RadioBox>("radiobox 1");
         grid0->add(expand(radiobox1));
@@ -111,9 +111,9 @@ struct CheckBoxPage : public NotebookTab
         radiobox3->disable();
 
         m_radiobox_group = make_unique<ButtonGroup>(true);
-        m_radiobox_group->add(*radiobox1);
-        m_radiobox_group->add(*radiobox2);
-        m_radiobox_group->add(*radiobox3);
+        m_radiobox_group->add(radiobox1);
+        m_radiobox_group->add(radiobox2);
+        m_radiobox_group->add(radiobox3);
     }
 
     unique_ptr<ButtonGroup> m_checkbox_group;

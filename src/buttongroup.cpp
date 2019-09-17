@@ -39,31 +39,38 @@ bool ButtonGroup::imperative() const
     return m_imperative;
 }
 
-void ButtonGroup::add(Button& button)
+void ButtonGroup::add(shared_ptr<Button> button)
 {
     /*
      * Cannot belong to several groups or several times to the same
      * group.
      */
-    assert(!button.m_group);
-    button.m_group = this;
+    assert(!button->m_group);
+    button->m_group = this;
 
     /* If imperative is set, the first button has to be checked */
-    if (imperative() && m_buttons.empty() && !button.checked())
-        button.m_checked = true;
+    if (imperative() && m_buttons.empty() && !button->checked())
+        button->m_checked = true;
 
-    m_buttons.push_back(&button);
+    m_buttons.push_back(button);
 
-    if (button.checked())
-        checked_state_change(button, true);
+    if (button->checked())
+        checked_state_change(*button, true);
 }
 
-void ButtonGroup::remove(Button& button)
+void ButtonGroup::remove(Button* button)
 {
-    auto pos = std::find(m_buttons.begin(), m_buttons.end(), &button);
+    if (!button)
+        return;
+
+    auto pos = std::find_if(m_buttons.begin(), m_buttons.end(), [button](const std::weak_ptr<Button>& weak)
+    {
+        auto real = weak.lock();
+        return button == real.get();
+    });
     if (pos != m_buttons.end())
     {
-        button.m_group = nullptr;
+        button->m_group = nullptr;
         m_buttons.erase(pos);
     }
 }
@@ -90,9 +97,12 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
          */
         auto other_button_checked = std::any_of(m_buttons.begin(),
                                                 m_buttons.end(),
-                                                [](const Button * button)
+                                                [](const std::weak_ptr<Button>& weak)
         {
-            return button->checked();
+            auto button = weak.lock();
+            if (button)
+                return button->checked();
+            return false;
         });
 
         if (!other_button_checked)
@@ -105,12 +115,13 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
     {
         for (auto& b : m_buttons)
         {
-            if (b != &button)
+            auto real = b.lock();
+            if (real && real.get() != &button)
             {
-                b->m_checked = false;
-                b->damage();
+                real->m_checked = false;
+                real->damage();
                 Event event(eventid::property_changed);
-                b->invoke_handlers(event);
+                real->invoke_handlers(event);
             }
         }
     }
@@ -126,15 +137,20 @@ void ButtonGroup::foreach_checked(foreach_checked_callback_t callback)
 {
     for (auto& b : m_buttons)
     {
-        if (b->checked())
-            callback(*b);
+        auto real = b.lock();
+        if (real && real->checked())
+            callback(*real);
     }
 }
 
 ButtonGroup::~ButtonGroup()
 {
     for (auto button : m_buttons)
-        button->m_group = nullptr;
+    {
+        auto real = button.lock();
+        if (real)
+            real->m_group = nullptr;
+    }
 
     m_buttons.clear();
 }
