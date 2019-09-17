@@ -92,7 +92,7 @@ void Button::set_checked(bool value)
         if (m_group)
             m_group->checked_state_change(*this, value);
 
-        /* Check if the button group has not canceled the change. */
+        /* Check if the button group has not cancelled the change. */
         if (m_checked == value)
         {
             damage();
