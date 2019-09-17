@@ -208,5 +208,11 @@ void Scrollwheel::set_selected(size_t index)
     }
 }
 
+void Scrollwheel::set_image(const Image& down_image, const Image& up_image)
+{
+    m_button_down->set_image(down_image);
+    m_button_up->set_image(up_image);
+}
+
 }
 }

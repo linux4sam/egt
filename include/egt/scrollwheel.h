@@ -82,6 +82,11 @@ public:
     explicit Scrollwheel(const Rect& rect, int min, int max, int step, bool reversed = false) noexcept;
 
     /**
+     * Change the images used for up and down buttons.
+     */
+    virtual void set_image(const Image& down_image, const Image& up_image);
+
+    /**
      * Get the orientation.
      */
     inline orientation orient() const { return m_orient; }
@@ -120,8 +125,8 @@ protected:
     void init(bool reversed);
     item_array m_items;
     size_t m_selected{0};
-    std::shared_ptr<Button> m_button_up;
-    std::shared_ptr<Button> m_button_down;
+    std::shared_ptr<ImageButton> m_button_up;
+    std::shared_ptr<ImageButton> m_button_down;
     std::shared_ptr<Label> m_label;
     orientation m_orient{orientation::vertical};
 };
