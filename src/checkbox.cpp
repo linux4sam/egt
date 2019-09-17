@@ -22,7 +22,7 @@ CheckBox::CheckBox(const std::string& text,
 {
     set_name("CheckBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::none);
     set_padding(5);
     set_text_align(alignmask::left | alignmask::center);
 
