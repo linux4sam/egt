@@ -100,6 +100,7 @@ public:
 
 protected:
 
+    // @todo This should be std::weak_ptr
     using button_array = std::vector<Button*>;
 
     /**

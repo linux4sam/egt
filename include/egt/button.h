@@ -116,6 +116,7 @@ private:
 
     /**
      * Pointer to the group this button is a part of.
+     * @todo This should be std::shared_ptr<ButtonGroup>
      */
     ButtonGroup* m_group{nullptr};
 
