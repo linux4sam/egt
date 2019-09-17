@@ -50,7 +50,7 @@ void Form::add_group(const std::string& caption)
                          Font::weightid::bold,
                          label->font().slant()));
     label->set_align(alignmask::expand_horizontal);
-    label->set_text_align(alignmask::bottom | alignmask::left);
+    label->set_text_align(m_group_align);
     m_vsizer.add(label);
     m_options.push_back(label.get());
 }
@@ -65,7 +65,7 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
     widget->set_align(alignmask::expand);
     auto label = std::make_shared<Label>(name);
     label->set_align(alignmask::expand);
-    label->set_text_align(alignmask::center | alignmask::left);
+    label->set_text_align(m_name_align);
     auto grid = std::make_shared<StaticGrid>(Tuple(2, 1));
     grid->set_margin(2); /// @todo Not working
     auto b = widget->size();

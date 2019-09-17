@@ -70,6 +70,22 @@ public:
      */
     virtual void remove_options();
 
+    /**
+     * Set option name text alignment.
+     */
+    inline void set_name_align(alignmask align)
+    {
+        m_name_align = align;
+    }
+
+    /**
+     * Set group name text alignment.
+     */
+    inline void set_group_align(alignmask align)
+    {
+        m_group_align = align;
+    }
+
     virtual ~Form() = default;
 
 protected:
@@ -90,6 +106,16 @@ protected:
      * @todo This will keep pointers around to deleted child widgets.
      */
     std::vector<Widget*> m_options;
+
+    /**
+     * Option name text alignment.
+     */
+    alignmask m_name_align{alignmask::center | alignmask::left};
+
+    /**
+     * Group name text alignment.
+     */
+    alignmask m_group_align{alignmask::bottom | alignmask::left};
 };
 
 }
