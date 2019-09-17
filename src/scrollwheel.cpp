@@ -146,6 +146,10 @@ void Scrollwheel::init(bool reversed)
 {
     set_name("Scrollwheel" + std::to_string(m_widgetid));
 
+    m_button_up->set_boxtype(Theme::boxtype::none);
+    m_button_down->set_boxtype(Theme::boxtype::none);
+    m_label->set_boxtype(Theme::boxtype::none);
+
     set_boxtype(Theme::boxtype::none);
 
     if (!m_items.empty() && reversed)
