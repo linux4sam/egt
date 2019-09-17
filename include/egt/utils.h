@@ -37,6 +37,9 @@ template <typename T>
 void ignoreparam(T&&)
 {}
 
+namespace detail
+{
+
 /**
  * C++11 does not provide std::make_unique(), so we provide a basic implementation.
  */
@@ -46,8 +49,6 @@ std::unique_ptr<T> make_unique(Args&& ... args)
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...)); // NOLINT
 }
 
-namespace detail
-{
 #ifndef SWIG
 
 /**

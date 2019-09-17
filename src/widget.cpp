@@ -33,7 +33,7 @@ Widget::Widget(const Rect& rect, const Widget::flags_type& flags) noexcept
     : m_box(rect),
       m_widgetid(global_widget_id++),
       m_widget_flags(flags),
-      m_palette(make_unique<Palette>())
+      m_palette(detail::make_unique<Palette>())
 {
     set_name("Widget" + std::to_string(m_widgetid));
 }
@@ -273,7 +273,7 @@ Point Widget::point() const
 
 void Widget::set_palette(const Palette& palette)
 {
-    m_palette = make_unique<Palette>(palette);
+    m_palette = detail::make_unique<Palette>(palette);
     damage();
 }
 
@@ -423,7 +423,7 @@ void Widget::walk(walk_callback_t callback, int level)
 
 void Widget::set_theme(const Theme& theme)
 {
-    m_theme = make_unique<Theme>(theme);
+    m_theme = detail::make_unique<Theme>(theme);
 }
 
 void Widget::reset_theme()

@@ -90,7 +90,7 @@ int main(int argc, const char** argv)
     Gauge gauge;
     center(gauge);
 
-    auto dash_background = make_unique<SvgImage>("dash_background.svg", SizeF(win.content_area().width(), 0));
+    auto dash_background = detail::make_unique<SvgImage>("dash_background.svg", SizeF(win.content_area().width(), 0));
 
     // create a background layer
     auto gauge_background = make_shared<GaugeLayer>(dash_background->id("#background"));

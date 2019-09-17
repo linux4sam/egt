@@ -92,7 +92,7 @@ struct CheckBoxPage : public NotebookTab
         checkbox4->disable();
         grid0->add(expand(checkbox4));
 
-        m_checkbox_group = make_unique<ButtonGroup>(true, false);
+        m_checkbox_group = detail::make_unique<ButtonGroup>(true, false);
         m_checkbox_group->add(checkbox1);
         m_checkbox_group->add(checkbox2);
         m_checkbox_group->add(checkbox3);
@@ -110,7 +110,7 @@ struct CheckBoxPage : public NotebookTab
         grid0->add(expand(radiobox3));
         radiobox3->disable();
 
-        m_radiobox_group = make_unique<ButtonGroup>(true);
+        m_radiobox_group = detail::make_unique<ButtonGroup>(true);
         m_radiobox_group->add(radiobox1);
         m_radiobox_group->add(radiobox2);
         m_radiobox_group->add(radiobox3);
@@ -257,7 +257,7 @@ static unique_ptr<AnimationSequence> demo_up_down_animator(std::shared_ptr<T> wi
     auto animationdown = std::make_shared<PropertyAnimator>(100, 0, std::chrono::seconds(5), easing_circular_easeout);
     animationdown->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
 
-    auto sequence = make_unique<AnimationSequence>(true);
+    auto sequence = detail::make_unique<AnimationSequence>(true);
     sequence->add(animationup);
     sequence->add(animationdown);
     sequence->start();

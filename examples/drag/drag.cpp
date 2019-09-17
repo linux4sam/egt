@@ -14,7 +14,6 @@
 
 using namespace std;
 using namespace egt;
-using namespace egt::detail;
 
 class MainWindow : public TopWindow
 {

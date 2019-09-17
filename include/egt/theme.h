@@ -144,10 +144,10 @@ public:
     Theme(const Theme& rhs)
     {
         if (rhs.m_palette)
-            m_palette = egt::make_unique<Palette>(*rhs.m_palette);
+            m_palette = detail::make_unique<Palette>(*rhs.m_palette);
 
         if (rhs.m_font)
-            m_font = egt::make_unique<Font>(*rhs.m_font);
+            m_font = detail::make_unique<Font>(*rhs.m_font);
     }
 
     Palette& palette()
@@ -232,12 +232,12 @@ protected:
     /**
      * Palette instance used by the theme.
      */
-    std::unique_ptr<Palette> m_palette{egt::make_unique<Palette>()};
+    std::unique_ptr<Palette> m_palette{detail::make_unique<Palette>()};
 
     /**
      * Default font instance used by the theme.
      */
-    std::unique_ptr<Font> m_font{egt::make_unique<Font>()};
+    std::unique_ptr<Font> m_font{detail::make_unique<Font>()};
 
     virtual void init_palette();
 
