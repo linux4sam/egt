@@ -271,6 +271,28 @@ protected:
 };
 
 /**
+ * Same as a normal Button, except it manipulates its checked state like a
+ * RadioBox or CheckBox.
+ */
+class CheckButton : public Button
+{
+    using Button::Button;
+
+    virtual void handle(Event& event) override
+    {
+        Button::handle(event);
+
+        switch (event.id())
+        {
+        case eventid::pointer_click:
+            set_checked(!checked());
+        default:
+            break;
+        }
+    }
+};
+
+/**
  * Experimental namespace.
  *
  * This namespace contains unstable, broken, or otherwise incomplete things.
