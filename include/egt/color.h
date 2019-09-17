@@ -292,7 +292,7 @@ public:
     /**
      * Create a shade (darker) color based off this color given a factor.
      *
-     * The smaller the factor, the darker the shade.
+     * The larger the factor, the darker the shade.
      *
      * @param[in] factor Value from 0.0 to 1.0.
      */
@@ -307,7 +307,7 @@ public:
     /**
      * Create a tint (lighter) color based off this color given a factor.
      *
-     * The greater the factor the lighter the tint.
+     * The larger the factor the lighter the tint.
      *
      * @param[in] factor Value from 0.0 to 1.0.
      */
