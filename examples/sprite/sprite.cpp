@@ -17,10 +17,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "sprite");
 
     TopWindow win;
-    ImageLabel img(Image("background.png"));
-    win.add(img);
-    img.set_align(alignmask::expand);
-    img.set_image_align(alignmask::expand);
+    win.set_background(Image("background.png"));
 
     ImageLabel logo(Image("@128px/microchip_logo_white.png"));
     logo.set_align(alignmask::left | alignmask::top);

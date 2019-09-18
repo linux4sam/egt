@@ -21,6 +21,7 @@ public:
           m_yspeed(yspeed)
     {
         flags().set(Widget::flag::no_layout);
+        flags().set(Widget::flag::no_autoresize);
     }
 
     Ball(const Ball&) = default;

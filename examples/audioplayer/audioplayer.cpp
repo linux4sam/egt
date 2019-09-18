@@ -44,12 +44,10 @@ class AudioPlayerWindow : public TopWindow
 public:
     explicit AudioPlayerWindow(const Size& size = Size())
         : TopWindow(size),
-          m_background(*this, Image("background.png")),
           m_logo(*this, Image("@128px/microchip_logo_black.png")),
           m_dial(0, 100, 0)
     {
-        m_background.set_align(alignmask::expand);
-        m_background.set_image_align(alignmask::expand);
+        set_background(Image("background.png"));
 
         m_dial.set_align(alignmask::expand);
         add(m_dial);
@@ -98,7 +96,6 @@ public:
 
 protected:
 
-    ImageLabel m_background;
     ImageLabel m_logo;
     Radial m_dial;
     Controls m_controls;

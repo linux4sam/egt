@@ -65,10 +65,7 @@ public:
     {
         create_board();
 
-        auto img = make_shared<ImageLabel>(Image("background.png"));
-        img->set_align(alignmask::expand);
-        img->set_image_align(alignmask::expand);
-        add(img);
+        set_background(Image("background.png"));
 
         ListBox::item_array items;
         items.resize(easing_functions.size());

@@ -13,22 +13,6 @@
 using namespace std;
 using namespace egt;
 
-class MyWindow : public TopWindow
-{
-public:
-    MyWindow()
-        : TopWindow(Size()),
-          m_img(*this, Image("background.png"))
-    {
-        set_boxtype(Theme::boxtype::none);
-
-        m_img.set_align(alignmask::expand);
-        m_img.set_image_align(alignmask::expand);
-    }
-
-    ImageLabel m_img;
-};
-
 class FloatingBox
 {
 public:
@@ -108,7 +92,8 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "floating");
 
-    MyWindow win;
+    TopWindow win;
+    win.set_background(Image("background.png"));
     win.show();
 
     default_dim_type f = 2;

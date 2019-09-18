@@ -13,6 +13,7 @@
 
 #include <egt/frame.h>
 #include <egt/image.h>
+#include <egt/label.h>
 #include <egt/screen.h>
 #include <iosfwd>
 #include <memory>
@@ -135,6 +136,18 @@ public:
      */
     virtual void do_draw();
 
+    /**
+     * Set a background image of the window.
+     *
+     * The background image will automatically be scaled to fit the size of the
+     * window.
+     *
+     * @note This is not a special child widget, in the sense that you can
+     * technically put another child widget before the background using
+     * zorder.
+     */
+    virtual void set_background(const Image& image);
+
     virtual ~Window();
 
 protected:
@@ -200,6 +213,11 @@ protected:
      * Change this window as the main window.
      */
     void set_main_window();
+
+    /**
+     * Optional background image.
+     */
+    std::shared_ptr<ImageLabel> m_background;
 
     friend class detail::WindowImpl;
     friend class detail::PlaneWindow;

@@ -15,21 +15,6 @@
 using namespace std;
 using namespace egt;
 
-class MainWindow : public TopWindow
-{
-public:
-    MainWindow()
-        : TopWindow(Size()),
-          m_img(*this, Image("background.png"))
-    {
-        set_boxtype(Theme::boxtype::none);
-        m_img.set_align(alignmask::expand);
-        m_img.set_image_align(alignmask::expand);
-    }
-
-    ImageLabel m_img;
-};
-
 class FloatingBox : public Window
 {
 public:
@@ -84,7 +69,8 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "drag");
 
-    MainWindow window;
+    TopWindow window;
+    window.set_background(Image("background.png"));
 
     FloatingBox box1(Rect(Ratio<int>(window.width(), 20),
                           Ratio<int>(window.height(), 20),

@@ -93,10 +93,8 @@ int main(int argc, const char** argv)
 
     for (size_t r = 0; r < buttons.size(); r++)
     {
-        auto line_sizer = make_shared<BoxSizer>(orientation::horizontal, justification::middle);
-        vsizer.add(line_sizer);
-        line_sizer->set_height(60);
-        expand_horizontal(line_sizer);
+        auto line_sizer = make_shared<HorizontalBoxSizer>(justification::middle);
+        vsizer.add(expand_horizontal(line_sizer));
 
         for (size_t c = 0; c < buttons[r].size(); c++)
         {
@@ -104,11 +102,13 @@ int main(int argc, const char** argv)
             if (label.empty())
                 continue;
 
-            auto b = make_shared<Button>(*line_sizer, label, Rect(Size(60, 60)));
+            auto b = make_shared<Button>(label, Rect(Size(60, 60)));
+            b->flags().set(Widget::flag::no_autoresize);
             b->set_border(1);
             b->set_font(Font(25, Font::weightid::bold));
             b->set_color(colors[r][c].first, colors[r][c].second);
             b->set_color(Palette::ColorId::border, Palette::gray);
+            line_sizer->add(b);
 
             b->on_event([&text, b](Event&)
             {
