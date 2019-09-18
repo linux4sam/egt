@@ -99,28 +99,32 @@ public:
         return *this;
     }
 
-    PointType<dim_t, dim_c>& operator+=(const dim_t& rhs)
+    template <class T>
+    PointType<dim_t, dim_c>& operator+=(const T& rhs)
     {
         m_x += rhs;
         m_y += rhs;
         return *this;
     }
 
-    PointType<dim_t, dim_c>& operator-=(const dim_t& rhs)
+    template <class T>
+    PointType<dim_t, dim_c>& operator-=(const T& rhs)
     {
         m_x -= rhs;
         m_y -= rhs;
         return *this;
     }
 
-    PointType<dim_t, dim_c>& operator*=(const dim_t& rhs)
+    template <class T>
+    PointType<dim_t, dim_c>& operator*=(const T& rhs)
     {
         m_x *= rhs;
         m_y *= rhs;
         return *this;
     }
 
-    PointType<dim_t, dim_c>& operator/=(const dim_t& rhs)
+    template <class T>
+    PointType<dim_t, dim_c>& operator/=(const T& rhs)
     {
         m_x /= rhs;
         m_y /= rhs;
@@ -222,29 +226,29 @@ inline PointType<dim_t, dim_c> operator*(PointType<dim_t, dim_c> lhs, const Poin
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator-(PointType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline PointType<dim_t, dim_c> operator-(PointType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator+(PointType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline PointType<dim_t, dim_c> operator+(PointType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator/(PointType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline PointType<dim_t, dim_c> operator/(PointType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs /= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator*(PointType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline PointType<dim_t, dim_c> operator*(PointType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs *= rhs;
     return lhs;
@@ -346,28 +350,32 @@ public:
         return *this;
     }
 
-    SizeType<dim_t, dim_c>& operator+=(const dim_t& rhs)
+    template<class T>
+    SizeType<dim_t, dim_c>& operator+=(const T& rhs)
     {
         m_width += rhs;
         m_height += rhs;
         return *this;
     }
 
-    SizeType<dim_t, dim_c>& operator-=(const dim_t& rhs)
+    template<class T>
+    SizeType<dim_t, dim_c>& operator-=(const T& rhs)
     {
         m_width -= rhs;
         m_height -= rhs;
         return *this;
     }
 
-    SizeType<dim_t, dim_c>& operator*=(const dim_t& rhs)
+    template<class T>
+    SizeType<dim_t, dim_c>& operator*=(const T& rhs)
     {
         m_width *= rhs;
         m_height *= rhs;
         return *this;
     }
 
-    SizeType<dim_t, dim_c>& operator/=(const dim_t& rhs)
+    template<class T>
+    SizeType<dim_t, dim_c>& operator/=(const T& rhs)
     {
         m_width /= rhs;
         m_height /= rhs;
@@ -441,29 +449,29 @@ inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, const SizeTy
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator-(SizeType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline SizeType<dim_t, dim_c> operator-(SizeType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator+(SizeType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline SizeType<dim_t, dim_c> operator+(SizeType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs *= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, const dim_t& rhs)
+template<class dim_t, detail::compatible dim_c, class T>
+inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, const T& rhs)
 {
     lhs /= rhs;
     return lhs;
