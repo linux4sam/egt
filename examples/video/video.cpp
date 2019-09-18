@@ -126,15 +126,15 @@ int main(int argc, const char** argv)
     fullscreen.set_boxtype(Theme::boxtype::none);
     hpos.add(fullscreen);
 
-    double m_fscale = (double)main_screen()->size().width() / w;
+    const float vscale = (float)main_screen()->size().width() / w;
 
-    fullscreen.on_event([&fullscreen, window, m_fscale, &win](Event&)
+    fullscreen.on_event([&fullscreen, window, vscale, &win](Event&)
     {
         static bool scaled = true;
         if (scaled)
         {
             window->move(Point(0, 0));
-            window->set_scale(m_fscale);
+            window->set_scale(vscale);
             fullscreen.set_image(Image(":fullscreen_exit_png"));
             scaled = false;
         }
@@ -182,7 +182,7 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
-    window->on_event([window, &win, &label, &position](Event & event)
+    window->on_event([window, &win, &label, &position, vscale, w, h](Event & event)
     {
         static Point m_start_point;
         switch (event.id())
@@ -194,8 +194,22 @@ int main(int argc, const char** argv)
         }
         case eventid::pointer_drag:
         {
-            auto diff = event.pointer().drag_start - event.pointer().point;
-            window->move(m_start_point - Point(diff.x(), diff.y()));
+            if (!(detail::float_compare(window->scale(), vscale)))
+            {
+                auto diff = event.pointer().drag_start - event.pointer().point;
+                auto p = m_start_point - Point(diff.x(), diff.y());
+                int maxXpos = win.width() - w;
+                int maxYpos = win.height() - h;
+                if (p.x() >= maxXpos)
+                    p.set_x(maxXpos);
+                if (p.x() < 0)
+                    p.set_x(0);
+                if (p.y() >= maxYpos)
+                    p.set_y(maxYpos);
+                if (p.y() < 0)
+                    p.set_y(0);
+                window->move(p);
+            }
             break;
         }
         case eventid::property_changed:
