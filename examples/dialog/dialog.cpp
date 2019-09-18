@@ -11,191 +11,169 @@ using namespace std;
 using namespace egt;
 namespace fs = std::experimental::filesystem;
 
-using WindowType = Window;
-
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "dialog");
 
-    TopWindow win0;
+    TopWindow win;
 
-    BoxSizer vsizer(orientation::vertical);
-    win0.add(expand(vsizer));
+    auto dialog_size = main_screen()->size() * 0.75;
 
-    auto grid = make_shared<StaticGrid>(Rect(Point(), Size(0, win0.height() * 0.10)), Tuple(3, 1), 10);
-    grid->set_color(Palette::ColorId::bg, Color(0xed2924ff));
-    grid->set_boxtype(Theme::boxtype::blank);
+    auto layout = make_shared<VerticalBoxSizer>();
+    win.add(expand(layout));
 
-    auto logo = make_shared<ImageLabel>(Image("@128px/microchip_logo_white.png"));
-    grid->add(logo, 1, 0);
+    auto grid = make_shared<StaticGrid>(Tuple(3, 1));
+    grid->set_height(50);
+    grid->set_color(Palette::ColorId::bg, Palette::gray);
+    layout->add(expand_horizontal(grid));
 
-    vsizer.add(expand_horizontal(grid));
+    auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+    grid->add(center(logo), 1, 0);
 
-    auto hsizer = make_shared<BoxSizer>(orientation::horizontal);
-    vsizer.add(expand(hsizer));
+    auto vsizer = make_shared<VerticalBoxSizer>();
+    layout->add(expand(vsizer));
 
-    auto list = make_shared<ListBox>(Rect(Point(), Size(win0.width() * 0.25, 0)));
-    list->add_item(make_shared<StringItem>("", Rect(), alignmask::left | alignmask::center));
-    list->add_item(make_shared<StringItem>("File Open", Rect(), alignmask::left | alignmask::center));
-    list->add_item(make_shared<StringItem>("File Save", Rect(), alignmask::left | alignmask::center));
-    list->add_item(make_shared<StringItem>("Message Dialog", Rect(), alignmask::left | alignmask::center));
-    list->add_item(make_shared<StringItem>("List Dialog", Rect(), alignmask::left | alignmask::center));
-    list->add_item(make_shared<StringItem>("Slider Dialog", Rect(), alignmask::left | alignmask::center));
-    list->set_align(alignmask::expand_vertical | alignmask::left);
-    hsizer->add(list);
+    auto dialog_result = std::make_shared<Label>();
 
-    auto label1 = std::make_shared<TextBox>("", Rect(0, 0, win0.width() * 0.75, win0.height() * 0.25), alignmask::left | alignmask::center);
-    label1->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
-    label1->set_color(Palette::ColorId::border, Palette::transparent);
-    hsizer->add(label1);
+    auto hsizer = make_shared<FlexBoxSizer>(justification::none);
+    vsizer->add(expand(hsizer));
 
-    std::string RootDir = fs::current_path().string();
+    std::string root_dir = fs::current_path().string();
 
-    auto win1 = std::make_shared<FileOpenDialog>(RootDir, Rect(0, 0, 640, 432));
-    win1->on_event([win1, label1, list](Event&)
+    auto fileopen_dialog = std::make_shared<FileOpenDialog>(root_dir, dialog_size);
+    fileopen_dialog->on_event([fileopen_dialog, dialog_result](Event&)
     {
-        cout << "FileDialog : file selected is : " << win1->selected() << endl;
-        label1->set_text("File OpenDialog: " + win1->selected() + " Selected");
-        win1->hide();
-        list->set_selected(0);
+        dialog_result->set_text("File OpenDialog: " + fileopen_dialog->selected() + " Selected");
+        fileopen_dialog->hide();
     }, {eventid::property_changed});
-    win0.add(win1);
+    win.add(fileopen_dialog);
 
-    auto win2 = std::make_shared<FileSaveDialog>(RootDir, Rect(0, 0, 640, 432));
-    win2->on_event([win2, label1, list](Event&)
+    auto fileopen_dialog_btn = std::make_shared<Button>("File Open");
+    fileopen_dialog_btn->set_margin(5);
+    hsizer->add(fileopen_dialog_btn);
+    fileopen_dialog_btn->on_click([fileopen_dialog, dialog_result](Event&)
     {
-        cout << "FileDialog : save file is : " << win2->selected() << endl;
-        label1->set_text("File SaveDialog: " + win2->selected() + " Selected");
-        win2->hide();
-        list->set_selected(0);
+        dialog_result->set_text("");
+        fileopen_dialog->show_modal(true);
+    });
+
+    auto filesave_dialog = std::make_shared<FileSaveDialog>(root_dir, dialog_size);
+    win.add(filesave_dialog);
+    filesave_dialog->on_event([filesave_dialog, dialog_result](Event&)
+    {
+        dialog_result->set_text("File SaveDialog: " + filesave_dialog->selected() + " Selected");
+        filesave_dialog->hide();
     }, {eventid::property_changed});
 
-    win0.add(win2);
+    auto filesave_dialog_btn = std::make_shared<Button>("File Save");
+    filesave_dialog_btn->set_margin(5);
+    hsizer->add(filesave_dialog_btn);
+    filesave_dialog_btn->on_click([filesave_dialog, dialog_result](Event&)
+    {
+        dialog_result->set_text("");
+        filesave_dialog->show_modal(true);
+    });
 
-    auto dialog = std::make_shared<Dialog>(Rect(0, 0, 440, 320));
-    dialog->set_title("Message Dialog Example");
-    dialog->set_message("This is a Example of Ensemble Graphics Toolkit Message Dialog with two button");
-    dialog->set_button(Dialog::buttonid::button1, "OK");
-    dialog->set_button(Dialog::buttonid::button2, "Cancel");
-    win0.add(dialog);
+    auto message_dialog = std::make_shared<Dialog>(dialog_size);
+    message_dialog->set_title("Message Dialog Example");
+    auto text = std::make_shared<TextBox>("This is a Example of Ensemble Graphics "
+                                          "Toolkit Message Dialog with two buttons");
+    text->set_readonly(true);
+    message_dialog->set_widget(expand(text));
+    message_dialog->set_button(Dialog::buttonid::button1, "OK");
+    message_dialog->set_button(Dialog::buttonid::button2, "Cancel");
+    win.add(message_dialog);
 
-    dialog->on_event([dialog, label1, list](Event & event)
+    message_dialog->on_event([message_dialog, dialog_result](Event & event)
     {
         if (event.id() == eventid::event1)
         {
-            cout << "FileDialog Okay button clicked" << endl;
-            label1->set_text("Message Dialog: Okay button clicked");
+            dialog_result->set_text("Message Dialog: OK button clicked");
         }
         else if (event.id() == eventid::event2)
         {
-            cout << "FileDialog Cancel button clicked" << endl;
-            label1->set_text("Message Dialog: Cancel button clicked");
+            dialog_result->set_text("Message Dialog: Cancel button clicked");
         }
-        list->set_selected(0);
     });
 
-    auto dialog1 = std::make_shared<Dialog>(Rect(0, 0, 440, 320));
-    dialog1->set_title("List Dialog Box Example");
-    dialog1->set_button(Dialog::buttonid::button1, "OK");
-    dialog1->set_button(Dialog::buttonid::button2, "Cancel");
-    win0.add(dialog1);
+    auto message_dialog_btn = std::make_shared<Button>("Message Dialog");
+    message_dialog_btn->set_margin(5);
+    hsizer->add(message_dialog_btn);
+    message_dialog_btn->on_click([message_dialog, dialog_result](Event&)
+    {
+        dialog_result->set_text("");
+        message_dialog->show_modal(true);
+    });
 
-    auto dlist0 = std::make_shared<ListBox>(Rect(0, 0, dialog1->width(), dialog1->height() * 0.75));
+    auto list_dialog = std::make_shared<Dialog>(dialog_size);
+    list_dialog->set_title("List Dialog Box Example");
+    list_dialog->set_button(Dialog::buttonid::button1, "OK");
+    list_dialog->set_button(Dialog::buttonid::button2, "Cancel");
+    win.add(list_dialog);
+
+    auto dlist0 = std::make_shared<ListBox>();
     for (auto x = 0; x < 25; x++)
         dlist0->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Rect(), alignmask::left | alignmask::center));
-    dlist0->set_align(alignmask::left | alignmask::expand_vertical);
-    dlist0->set_color(Palette::ColorId::border, Palette::transparent);
-    dialog1->set_widget(dlist0);
+    list_dialog->set_widget(expand(dlist0));
 
-    dialog1->on_event([dialog1, label1, dlist0, list](Event & event)
+    list_dialog->on_event([list_dialog, dialog_result, dlist0](Event & event)
     {
         if (event.id() == eventid::event1)
         {
-            cout << "FileDialog Okay button clicked" << endl;
             auto select = dynamic_cast<StringItem*>(dlist0->item_at(dlist0->selected()))->text();
-            label1->set_text("List Dialog: " + select + " Selected");
+            dialog_result->set_text("List Dialog: " + select + " Selected");
         }
         else if (event.id() == eventid::event2)
         {
-            cout << "FileDialog Cancel button clicked" << endl;
-            label1->set_text("List Dialog: Cancel button clicked");
+            dialog_result->set_text("List Dialog: Cancel button clicked");
         }
-        list->set_selected(0);
     });
 
-    auto dialog2 = std::make_shared<Dialog>(Rect(0, 0, 440, 320));
-    dialog2->set_title("Slider Dialog Example");
-    dialog2->set_button(Dialog::buttonid::button1, "OK");
-    dialog2->set_button(Dialog::buttonid::button2, "Cancel");
-    win0.add(dialog2);
+    auto list_dialog_btn = std::make_shared<Button>("List Dialog");
+    list_dialog_btn->set_margin(5);
+    hsizer->add(list_dialog_btn);
+    list_dialog_btn->on_click([list_dialog, dialog_result](Event&)
+    {
+        dialog_result->set_text("");
+        list_dialog->show_modal(true);
+    });
 
-    auto slider1 = std::make_shared<Slider>(Rect(0, 0, dialog2->width(), dialog2->height() * 0.70));
+    auto slider_dialog = std::make_shared<Dialog>(dialog_size);
+    slider_dialog->set_title("Slider Dialog Example");
+    slider_dialog->set_button(Dialog::buttonid::button1, "OK");
+    slider_dialog->set_button(Dialog::buttonid::button2, "Cancel");
+    win.add(slider_dialog);
+
+    auto slider1 = std::make_shared<Slider>();
     slider1->slider_flags().set({Slider::flag::round_handle, Slider::flag::show_label});
     slider1->set_value(50);
-    dialog2->set_widget(slider1);
+    slider_dialog->set_widget(expand(slider1));
 
-    dialog2->on_event([dialog2, label1, slider1, list](Event & event)
+    slider_dialog->on_event([slider_dialog, dialog_result, slider1](Event & event)
     {
         if (event.id() == eventid::event1)
         {
-            cout << "FileDialog Okay button clicked" << endl;
             auto select = slider1->value();
-            label1->set_text("Slider Dialog: value = " + std::to_string(select));
+            dialog_result->set_text("Slider Dialog: value = " + std::to_string(select));
         }
         else if (event.id() == eventid::event2)
         {
-            cout << "FileDialog Cancel button clicked" << endl;
-            label1->set_text("Slider Dialog: Cancel button clicked");
+            dialog_result->set_text("Slider Dialog: Cancel button clicked");
         }
-        list->set_selected(0);
     });
 
-    list->on_event([list, win1, win2, dialog, dialog1, dialog2, label1](Event&)
+    auto slider_dialog_btn = std::make_shared<Button>("Slider Dialog");
+    slider_dialog_btn->set_margin(5);
+    hsizer->add(slider_dialog_btn);
+    slider_dialog_btn->on_click([slider_dialog, dialog_result](Event&)
     {
-        auto index = list->selected();
-        cout << "FileDialog : Index value " << index << endl;
-        switch (index)
-        {
-        case 0:
-        {
-            break;
-        }
-        case 1:
-        {
-            label1->set_text("");
-            win1->show_modal(true);
-            break;
-        }
-        case 2:
-        {
-            label1->set_text("");
-            win2->show_modal(true);
-            break;
-        }
-        case 3:
-        {
-            label1->set_text("");
-            dialog->show_modal(true);
-            break;
-        }
-        case 4:
-        {
-            label1->set_text("");
-            dialog1->show_modal(true);
-            break;
-        }
-        case 5:
-        {
-            label1->set_text("");
-            dialog2->show_modal(true);
-            break;
-        }
-        default:
-            break;
-        }
-    }, {eventid::property_changed});
+        dialog_result->set_text("");
+        slider_dialog->show_modal(true);
+    });
 
-    win0.show();
+    vsizer->add(center(dialog_result));
+
+    win.show();
 
     return app.run();
 }

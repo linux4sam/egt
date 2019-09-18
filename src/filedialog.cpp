@@ -18,8 +18,8 @@ inline namespace v1
 FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     : Popup(rect.size(), rect.point()),
       m_vsizer(std::make_shared<BoxSizer>(orientation::vertical)),
-      m_title(std::make_shared<ImageLabel>(Image("@folder.png"), filepath, Rect(Size(rect.width(), (rect.height() * 0.10))))),
-      m_flist(std::make_shared<ListBox>(Rect(rect.x(), rect.y(), rect.width(), (rect.height() * 0.75)))),
+      m_title(std::make_shared<ImageLabel>(Image("@folder.png"), filepath)),
+      m_flist(std::make_shared<ListBox>()),
       m_filepath(filepath)
 {
     set_name("FileDialog" + std::to_string(m_widgetid));
@@ -27,16 +27,12 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     set_border(theme().default_border());
     set_padding(5);
 
-    m_vsizer->set_align(alignmask::expand_vertical);
-    add(m_vsizer);
+    add(expand(m_vsizer));
 
-    m_title->set_align(alignmask::left | alignmask::center);
     m_title->set_text_align(alignmask::left | alignmask::center);
-    m_vsizer->add(m_title);
+    m_vsizer->add(expand_horizontal(m_title));
 
-    m_flist->set_align(alignmask::left | alignmask::expand_vertical);
-    m_flist->set_color(Palette::ColorId::border, Palette::transparent);
-    m_vsizer->add(m_flist);
+    m_vsizer->add(expand(m_flist));
 
     m_flist->on_event([this](Event&)
     {
@@ -51,7 +47,7 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
 }
 
 FileDialog::FileDialog(const Rect& rect)
-    : FileDialog(std::string(), rect)
+    : FileDialog({}, rect)
 {
 
 }
@@ -136,19 +132,14 @@ void FileDialog::list_item_selected(int index)
 
 FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
-      m_grid(std::make_shared<StaticGrid>(Rect(Size(rect.width() / 2, (rect.height() * 0.10))), Tuple(2, 1), 5)),
+      m_grid(std::make_shared<StaticGrid>(Size(0, (rect.height() * 0.15)), Tuple(2, 1), 5)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
 {
     set_name("FileOpenDialog" + std::to_string(m_widgetid));
 
-    m_grid->set_align(alignmask::bottom | alignmask::right);
-    m_vsizer->add(m_grid);
-
-    m_okay->set_align(alignmask::center);
+    m_vsizer->add(expand_horizontal(m_grid));
     m_grid->add(expand(m_okay));
-
-    m_cancel->set_align(alignmask::center);
     m_grid->add(expand(m_cancel));
 
     m_okay->on_event([this](Event&)
@@ -162,14 +153,11 @@ FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
         this->m_flist->clear();
         this->hide();
     }, {eventid::pointer_click});
-
 }
 
 FileOpenDialog::FileOpenDialog(const Rect& rect)
-    : FileOpenDialog(std::string(), rect)
-{
-
-}
+    : FileOpenDialog({}, rect)
+{}
 
 void FileOpenDialog::show()
 {
@@ -197,27 +185,20 @@ std::string FileOpenDialog::selected() const
 
 FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
-      m_hpositioner(std::make_shared<HorizontalBoxSizer>()),
-      m_fsave_box(std::make_shared<TextBox>("", Rect(0, 0, (rect.width() * 0.60), (rect.height() * 0.10)))),
-      m_grid(std::make_shared<StaticGrid>(Rect(Size((rect.width() * 0.40), (rect.height() * 0.10))), Tuple(2, 1), 3)),
+      m_fsave_box(std::make_shared<TextBox>("", Size(0, rect.height() * 0.15))),
+      m_grid(std::make_shared<StaticGrid>(Size(rect.width() * 0.30, rect.height() * 0.15), Tuple(2, 1), 5)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
 {
+    auto hpositioner = std::make_shared<HorizontalBoxSizer>();
+    m_vsizer->add(expand_horizontal(hpositioner));
 
-    m_hpositioner->set_align(alignmask::bottom | alignmask::left);
-    m_vsizer->add(m_hpositioner);
+    m_fsave_box->set_margin(5);
+    hpositioner->add(expand_horizontal(m_fsave_box));
+    hpositioner->add(m_grid);
 
-    m_fsave_box->set_align(alignmask::left);
-    m_hpositioner->add(m_fsave_box);
-
-    m_grid->set_align(alignmask::center);
-    m_hpositioner->add(m_grid);
-
-    m_okay->set_align(alignmask::expand);
-    m_grid->add(m_okay);
-
-    m_cancel->set_align(alignmask::expand);
-    m_grid->add(m_cancel);
+    m_grid->add(expand(m_okay));
+    m_grid->add(expand(m_cancel));
 
     m_okay->on_event([this](Event & event)
     {
@@ -239,7 +220,6 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
         this->m_fsave_box->set_text(std::string());
         this->hide();
     }, {eventid::pointer_click});
-
 }
 
 FileSaveDialog::FileSaveDialog(const Rect& rect)

@@ -219,10 +219,6 @@ public:
     virtual ~FileSaveDialog() = default;
 
 protected:
-    /**
-     * horizontal BoxSizer
-     */
-    std::shared_ptr<HorizontalBoxSizer> m_hpositioner;
 
     /**
      * m_fsave_box to input a filename or file path.

@@ -71,13 +71,6 @@ public:
     virtual void set_icon(const Image& icon);
 
     /**
-     * Set a text message for this dialog.
-     *
-     * @param[in] message is a dialog text message.
-     */
-    virtual void set_message(const std::string& message);
-
-    /**
      * Set Button details for this dialog.
      *
      * @param[in] button is buttonid
@@ -92,32 +85,24 @@ public:
      */
     virtual void set_widget(const std::shared_ptr<Widget>& widget);
 
-    virtual void show() override;
-
-    virtual void show_centered() override;
-
     virtual ~Dialog() = default;
 
 protected:
-    /**
-     * Vertical BoxSizer
-     */
-    std::shared_ptr<BoxSizer> m_vsizer;
 
     /**
-     * grid for organizing okay & cancel Buttons.
+     * Layout sizer.
      */
-    std::shared_ptr<StaticGrid> m_grid;
+    std::shared_ptr<VerticalBoxSizer> m_layout;
+
+    /**
+     * Content sizer.
+     */
+    std::shared_ptr<VerticalBoxSizer> m_content;
 
     /**
      * m_title is for dialog title.
      */
     std::shared_ptr<ImageLabel> m_title;
-
-    /**
-     * m_message is for dialog message.
-     */
-    std::shared_ptr<TextBox> m_message;
 
     /**
      * m_button1 Button for okay or cancel.
