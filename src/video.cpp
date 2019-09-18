@@ -137,6 +137,7 @@ void VideoWindow::set_scale(float scale)
     {
         Window::set_scale(scale);
     }
+    m_scale = scale;
 }
 
 std::string VideoWindow::get_error_message() const

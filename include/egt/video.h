@@ -149,6 +149,16 @@ public:
     virtual void set_scale(float scale) override;
 
     /**
+     * get video scale value.
+     *
+     * @param[in] scale
+     */
+    virtual float scale() const
+    {
+        return m_scale;
+    }
+
+    /**
      * Get error message
      */
     std::string get_error_message() const;
@@ -157,6 +167,7 @@ public:
 
 protected:
     bool m_loopback;
+    float m_scale = {1.0};
 
     void createImpl(const Size& size);
 
