@@ -64,17 +64,14 @@ struct LinePage : public NotebookTab
         add(line);
 
         auto sin_checkbox = std::make_shared<CheckBox>("sin", Rect(Point(0, 410), Size(80, 40)));
-        sin_checkbox->set_color(Palette::ColorId::text, Palette::white);
         sin_checkbox->set_name("sin");
         add(sin_checkbox);
 
         auto cos_checkbox = std::make_shared<CheckBox>("cos", Rect(Point(100, 410), Size(80, 40)));
-        cos_checkbox->set_color(Palette::ColorId::text, Palette::white);
         cos_checkbox->set_name("cos");
         add(cos_checkbox);
 
         auto atan_checkbox = std::make_shared<CheckBox>("atan", Rect(Point(200, 410), Size(80, 40)));
-        atan_checkbox->set_color(Palette::ColorId::text, Palette::white);
         atan_checkbox->set_name("atan");
         add(atan_checkbox);
 
@@ -111,11 +108,9 @@ struct LinePage : public NotebookTab
         line_width->set_value(2);
 
         auto gridx_checkbox = std::make_shared<CheckBox>("grid X", Rect(Point(500, 410), Size(80, 40)));
-        gridx_checkbox->set_color(Palette::ColorId::text, Palette::white);
         add(gridx_checkbox);
 
         auto gridy_checkbox = std::make_shared<CheckBox>("grid Y", Rect(Point(600, 410), Size(80, 40)));
-        gridy_checkbox->set_color(Palette::ColorId::text, Palette::white);
         add(gridy_checkbox);
 
         auto handle_grid_checkbox = [gridx_checkbox, gridy_checkbox, line](Event & event)
@@ -158,8 +153,10 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "charts");
 
     global_theme().palette().set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);
-    global_theme().palette().set(Palette::ColorId::text, Palette::GroupId::normal, Palette::white);
+    global_theme().palette().set(Palette::ColorId::label_text, Palette::GroupId::normal, Palette::white);
+    global_theme().palette().set(Palette::ColorId::label_text, Palette::GroupId::checked, Palette::white);
     global_theme().palette().set(Palette::ColorId::text, Palette::GroupId::active, Palette::black);
+    global_theme().palette().set(Palette::ColorId::label_bg, Palette::GroupId::normal, Palette::black);
 
     TopWindow win;
 
