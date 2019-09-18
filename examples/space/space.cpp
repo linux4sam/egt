@@ -16,7 +16,7 @@ class Ball : public ImageLabel
 {
 public:
     Ball(int xspeed, int yspeed) noexcept
-        : ImageLabel(Image("metalball.png")),
+        : ImageLabel(Image("star.png")),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {
@@ -73,7 +73,7 @@ class MainWindow : public TopWindow
 public:
     MainWindow()
     {
-        set_color(Palette::ColorId::bg, Palette::black);
+        set_background(Image("background.png"));
 
         auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
         logo->set_margin(10);
