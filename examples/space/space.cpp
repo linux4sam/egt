@@ -3,18 +3,21 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <cassert>
 #include <chrono>
 #include <cmath>
 #include <egt/ui>
 #include <random>
 #include <vector>
+#include <sstream>
 
-using namespace std;
 using namespace egt;
 
 class Ball : public ImageLabel
 {
 public:
+    Ball() = delete;
+
     Ball(int xspeed, int yspeed) noexcept
         : ImageLabel(Image("star.png")),
           m_xspeed(xspeed),
@@ -30,6 +33,7 @@ public:
     Ball& operator=(Ball&&) = default;
     virtual ~Ball() = default;
 
+    // returns false when it's no longer visible
     bool animate()
     {
         assert(parent());
@@ -48,8 +52,6 @@ public:
 
 private:
 
-    Ball() = delete;
-
     int m_xspeed{0};
     int m_yspeed{0};
 };
@@ -57,11 +59,12 @@ private:
 static bool debounce_mouse(int delta)
 {
     static std::chrono::time_point<std::chrono::steady_clock> last_time =
-        chrono::steady_clock::now();
+        std::chrono::steady_clock::now();
 
-    if (chrono::duration<float, milli>(chrono::steady_clock::now() - last_time).count() > delta)
+    if (std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() -
+            last_time).count() > delta)
     {
-        last_time = chrono::steady_clock::now();
+        last_time = std::chrono::steady_clock::now();
         return true;
     }
 
@@ -87,7 +90,7 @@ public:
         switch (event.id())
         {
         case eventid::raw_pointer_move:
-            if (debounce_mouse(50))
+            if (debounce_mouse(100))
                 spawn(display_to_local(event.pointer().point));
             break;
         default:
@@ -101,11 +104,12 @@ public:
         auto yspeed = speed_dist(e1);
         auto scale = size_dist(e1);
 
-        // has to move at some speed
+        // has to move at some speed!
         if (xspeed == 0 && yspeed == 0)
             xspeed = yspeed = 1;
 
-        m_images.emplace_back(make_shared<Ball>(xspeed, yspeed));
+        m_images.emplace_back(std::make_shared<Ball>(xspeed, yspeed));
+
         auto image = m_images.back();
         image->resize_by_ratio(scale);
         image->set_image_align(alignmask::expand);
@@ -131,7 +135,7 @@ public:
     }
 
 private:
-    vector<shared_ptr<Ball>> m_images;
+    std::vector<std::shared_ptr<Ball>> m_images;
 
     std::random_device r;
     std::default_random_engine e1 {r()};
@@ -170,53 +174,55 @@ int main(int argc, const char** argv)
     cputimer.on_timeout([&label1, &tools]()
     {
         tools.update();
-        ostringstream ss;
+        std::ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
         label1.set_text(ss.str());
     });
     cputimer.start();
 
-#ifdef ENABLE_STARFIELD
-    std::random_device r;
-    std::default_random_engine e1 {r()};
-    std::uniform_int_distribution<int> x_dist {0, 800};
-    std::uniform_int_distribution<int> y_dist {0, 480};
-    std::uniform_int_distribution<int> d_dist {100, 5000};
-    std::uniform_int_distribution<int> s_dist {2, 6};
+    std::vector<std::unique_ptr<AnimationSequence>> animations;
 
-    for (int i = 0; i < 25; i++)
+    if (argc > 1)
     {
-        auto star = make_shared<CircleWidget>(Circle(Point(x_dist(e1), y_dist(e1)), s_dist(e1)));
-        win.add(star);
-        star->set_color(Palette::ColorId::button_bg, Palette::white);
+        // create starfield effect
 
-        auto in = new PropertyAnimator(0, 255, std::chrono::seconds(3), easing_spring);
-        in->on_change([star](float_t value)
+        std::random_device r;
+        std::default_random_engine e1 {r()};
+        std::uniform_int_distribution<int> x_dist {0, 800};
+        std::uniform_int_distribution<int> y_dist {0, 480};
+        std::uniform_int_distribution<int> d_dist {500, 4000};
+        std::uniform_int_distribution<int> s_dist {10, 30};
+
+        for (int i = 0; i < 25; i++)
         {
-            auto color = star->color(Palette::ColorId::button_bg);
-            color.color().alpha(value);
-            star->set_color(Palette::ColorId::button_bg, color);
-        });
+            auto star = std::make_shared<Ball>(0, 0);
+            star->resize_by_ratio(s_dist(e1));
+            star->set_image_align(alignmask::expand);
+            star->move_to_center(Point(x_dist(e1), y_dist(e1)));
+            win.add(star);
 
-        auto out = new PropertyAnimator(255, 0, std::chrono::seconds(3), easing_spring);
-        out->set_reverse(true);
-        out->on_change([star](float_t value)
-        {
-            auto color = star->color(Palette::ColorId::button_bg);
-            color.color().alpha(value);
-            star->set_color(Palette::ColorId::button_bg, color);
-        });
+            auto in = std::make_shared<PropertyAnimatorF>(0, 1,
+                      std::chrono::milliseconds(d_dist(e1)),
+                      easing_spring);
+            in->on_change(std::bind(&Ball::set_alpha, star, std::placeholders::_1));
 
-        auto delay = new AnimationDelay(std::chrono::milliseconds(d_dist(e1)));
+            auto out = std::make_shared<PropertyAnimatorF>(1, 0,
+                       std::chrono::milliseconds(d_dist(e1)),
+                       easing_spring);
+            out->set_reverse(true);
+            out->on_change(std::bind(&Ball::set_alpha, star, std::placeholders::_1));
 
-        auto sequence = new AnimationSequence(true);
-        sequence->add(*delay);
-        sequence->add(*in);
-        sequence->add(*out);
+            auto delay = std::make_shared<AnimationDelay>(std::chrono::milliseconds(d_dist(e1)));
 
-        sequence->start();
+            animations.emplace_back(detail::make_unique<AnimationSequence>(true));
+            auto& sequence = animations.back();
+            sequence->add(delay);
+            sequence->add(in);
+            sequence->add(out);
+
+            sequence->start();
+        }
     }
-#endif
 
     try
     {
@@ -224,8 +230,9 @@ int main(int argc, const char** argv)
     }
     catch (std::exception& e)
     {
-        cerr << e.what() << endl;
+        std::cerr << e.what() << std::endl;
+        return 1;
     }
 
-    return 1;
+    return 0;
 }
