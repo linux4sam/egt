@@ -65,6 +65,11 @@ public:
     virtual int run();
 
     /**
+     * Calls EventLoop::quit() by default.
+     */
+    virtual void quit();
+
+    /**
      * Get a reference to the application event loop instance.
      */
     inline EventLoop& event() { return m_event; }

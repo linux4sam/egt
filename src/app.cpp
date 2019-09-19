@@ -302,6 +302,11 @@ int Application::run()
     return m_event.run();
 }
 
+void Application::quit()
+{
+    m_event.quit();
+}
+
 void Application::paint_to_file(const string& filename)
 {
     string name = filename;
