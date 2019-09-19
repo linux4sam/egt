@@ -365,7 +365,7 @@ void Sound::play(bool repeat)
 #else
                 m_impl->in.read(reinterpret_cast<char*>(buf.data()), frames_to_deliver * sizeof(buf[0]));
                 const auto count = m_impl->in.gcount() / 2;
-                if (!in)
+                if (!m_impl->in)
                 {
                     break;
                 }
