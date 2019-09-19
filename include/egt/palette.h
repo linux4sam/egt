@@ -12,6 +12,7 @@
  */
 
 #include <egt/color.h>
+#include <iosfwd>
 #include <map>
 #include <memory>
 
@@ -334,6 +335,9 @@ protected:
      */
     std::map<GroupId, std::map<ColorId, pattern_type>> m_colors;
 };
+
+std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color);
+std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group);
 
 }
 }

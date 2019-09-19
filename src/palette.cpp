@@ -5,6 +5,8 @@
  */
 #include "egt/palette.h"
 #include <cassert>
+#include <iostream>
+#include <sstream>
 
 namespace egt
 {
@@ -21,7 +23,9 @@ const Palette::pattern_type& Palette::color(ColorId id, GroupId group) const
             return c->second;
     }
 
-    throw std::runtime_error("color not found in palette");
+    std::ostringstream ss;
+    ss << "color not found in palette:" << group << "/" << id;
+    throw std::runtime_error(ss.str());
 }
 
 Palette& Palette::set(ColorId id, GroupId group, const pattern_type& color)
@@ -204,6 +208,58 @@ constexpr Color Palette::white;
 constexpr Color Palette::whitesmoke;
 constexpr Color Palette::yellow;
 constexpr Color Palette::yellowgreen;
+
+static const std::map<Palette::ColorId, std::string>& color_strings()
+{
+    static std::map<Palette::ColorId, std::string> strings;
+    if (strings.empty())
+    {
+#define MAPITEM(p) strings[p] = #p
+        MAPITEM(Palette::ColorId::bg);
+        MAPITEM(Palette::ColorId::text);
+        MAPITEM(Palette::ColorId::text_highlight);
+        MAPITEM(Palette::ColorId::cursor);
+        MAPITEM(Palette::ColorId::border);
+        MAPITEM(Palette::ColorId::button_bg);
+        MAPITEM(Palette::ColorId::button_fg);
+        MAPITEM(Palette::ColorId::button_text);
+        MAPITEM(Palette::ColorId::label_bg);
+        MAPITEM(Palette::ColorId::label_text);
+#undef MAPITEM
+    }
+    return strings;
+}
+
+std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color)
+{
+    const auto& strings = color_strings();
+
+    os << strings.at(color);
+    return os;
+}
+
+static const std::map<Palette::GroupId, std::string>& group_strings()
+{
+    static std::map<Palette::GroupId, std::string> strings;
+    if (strings.empty())
+    {
+#define MAPITEM(p) strings[p] = #p
+        MAPITEM(Palette::GroupId::normal);
+        MAPITEM(Palette::GroupId::active);
+        MAPITEM(Palette::GroupId::disabled);
+        MAPITEM(Palette::GroupId::checked);
+#undef MAPITEM
+    }
+    return strings;
+}
+
+std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group)
+{
+    const auto& strings = group_strings();
+
+    os << strings.at(group);
+    return os;
+}
 
 }
 }
