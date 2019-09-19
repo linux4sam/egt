@@ -44,7 +44,6 @@ class AudioPlayerWindow : public TopWindow
 public:
     explicit AudioPlayerWindow(const Size& size = Size())
         : TopWindow(size),
-          m_logo(*this, Image("@128px/microchip_logo_black.png")),
           m_dial(0, 100, 0)
     {
         set_background(Image("background.png"));
@@ -67,8 +66,10 @@ public:
             }
         }, {eventid::pointer_click});
 
-        m_logo.set_align(alignmask::left | alignmask::top);
-        m_logo.set_margin(10);
+        auto logo = std::make_shared<ImageLabel>(Image("@128px/microchip_logo_black.png"));
+        logo->set_align(alignmask::left | alignmask::top);
+        logo->set_margin(10);
+        add(logo);
 
         m_dial.on_event([this](Event&)
         {
@@ -91,12 +92,11 @@ public:
             }
         }, {eventid::property_changed});
 
-        m_player.set_media(detail::abspath(detail::resolve_file_path("concerto.mp3")));
+        m_player.set_media(detail::resolve_file_path("concerto.mp3"));
     }
 
 protected:
 
-    ImageLabel m_logo;
     Radial m_dial;
     Controls m_controls;
     AudioPlayer m_player;

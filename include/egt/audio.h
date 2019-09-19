@@ -42,6 +42,12 @@ public:
     AudioPlayer();
 
     /**
+     * Construct and set the media file URI to the current pipeline.
+     * @param uri file URI
+     */
+    AudioPlayer(const std::string& uri);
+
+    /**
      * Sets the media file URI to the current pipeline
      * @param uri file URI
      * @return true if success

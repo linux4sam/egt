@@ -5,6 +5,7 @@
  */
 #include "egt/app.h"
 #include "egt/audio.h"
+#include "egt/detail/filesystem.h"
 #include "egt/utils.h"
 #include "egt/video.h"
 #include <exception>
@@ -13,8 +14,6 @@
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <thread>
-
-using namespace std;
 
 #define SRC_NAME "srcAudio"
 #define PROGRESS_NAME "progress"
@@ -92,7 +91,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
         gchar* debug;
 
         gst_message_parse_error(message, &error, &debug);
-        cout << "error: " << error->message << endl;
+        spdlog::info("audio error: {}", error->message);
         g_error_free(error);
         g_free(debug);
         break;
@@ -179,6 +178,12 @@ AudioPlayer::AudioPlayer()
     m_impl->m_gmainThread = std::thread(g_main_loop_run, m_impl->m_gmainLoop);
 }
 
+AudioPlayer::AudioPlayer(const std::string& uri)
+    : AudioPlayer()
+{
+    set_media(uri);
+}
+
 void AudioPlayer::destroyPipeline()
 {
     if (m_impl->m_audio_pipeline)
@@ -248,13 +253,16 @@ bool AudioPlayer::null()
     return m_impl->set_state(this, GST_STATE_NULL);
 }
 
-bool AudioPlayer::set_media(const string& uri)
+bool AudioPlayer::set_media(const std::string& uri)
 {
-    m_impl->m_filename = uri;
+    m_impl->m_filename = detail::abspath(uri);
 
     destroyPipeline();
     createPipeline();
-    g_object_set(m_impl->m_src, "uri", (string("file://") + uri).c_str(), nullptr);
+    g_object_set(m_impl->m_src,
+                 "uri",
+                 (std::string("file://") + m_impl->m_filename).c_str(),
+                 nullptr);
 
     return true;
 }
@@ -349,7 +357,7 @@ bool AudioPlayer::createPipeline()
     /* Make sure we don't leave orphan references */
     destroyPipeline();
 
-    string pipe(PIPE);
+    std::string pipe(PIPE);
     SPDLOG_DEBUG(pipe);
 
     m_impl->m_audio_pipeline = gst_parse_launch(pipe.c_str(), &error);
