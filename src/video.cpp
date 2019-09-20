@@ -10,7 +10,8 @@
 #include "detail/video/gstappsinkimpl.h"
 #include "detail/video/gstkmssinkimpl.h"
 #include "egt/app.h"
-#include <egt/video.h>
+#include "egt/detail/filesystem.h"
+#include "egt/video.h"
 #include <fstream>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -57,7 +58,15 @@ VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)
       m_loopback(false)
 {
     set_boxtype(Theme::boxtype::none);
+
     createImpl(rect.size());
+}
+
+VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
+                         pixel_format format, windowhint hint)
+    : VideoWindow(rect, format, hint)
+{
+    set_media(uri);
 }
 
 void VideoWindow::createImpl(const Size& size)
@@ -93,7 +102,7 @@ int64_t VideoWindow::duration() const
 
 bool VideoWindow::set_media(const string& uri)
 {
-    return m_decoderImpl->set_media(uri);
+    return m_decoderImpl->set_media(detail::abspath(uri));
 }
 
 bool VideoWindow::pause()
@@ -129,15 +138,17 @@ bool VideoWindow::seek(const int64_t time)
 
 void VideoWindow::set_scale(float scale)
 {
-    if (!flags().is_set(Widget::flag::plane_window))
+    if (detail::change_if_diff<float>(m_scale, scale))
     {
-        m_decoderImpl->scale(scale);
+        if (!flags().is_set(Widget::flag::plane_window))
+        {
+            m_decoderImpl->scale(scale);
+        }
+        else
+        {
+            Window::set_scale(scale);
+        }
     }
-    else
-    {
-        Window::set_scale(scale);
-    }
-    m_scale = scale;
 }
 
 std::string VideoWindow::get_error_message() const

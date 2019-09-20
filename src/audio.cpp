@@ -255,14 +255,16 @@ bool AudioPlayer::null()
 
 bool AudioPlayer::set_media(const std::string& uri)
 {
-    m_impl->m_filename = detail::abspath(uri);
-
-    destroyPipeline();
-    createPipeline();
-    g_object_set(m_impl->m_src,
-                 "uri",
-                 (std::string("file://") + m_impl->m_filename).c_str(),
-                 nullptr);
+    std::string u = detail::abspath(uri);
+    if (detail::change_if_diff(m_impl->m_filename, u))
+    {
+        destroyPipeline();
+        createPipeline();
+        g_object_set(m_impl->m_src,
+                     "uri",
+                     (std::string("file://") + m_impl->m_filename).c_str(),
+                     nullptr);
+    }
 
     return true;
 }
