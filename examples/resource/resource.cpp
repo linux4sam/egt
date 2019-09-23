@@ -17,47 +17,69 @@ using namespace egt;
 
 class MainWindow;
 
-class MyButton : public ImageButton
+class ResourceFrame : public Frame
 {
 public:
-    MyButton(const string& filename,
-             const string& label,
-             int x = 0,
-             int y = 0)
-        : ImageButton(Image(filename), label, Rect(Point(x, y), Size()))
+    ResourceFrame(const Image& image,
+                  const string& label)
     {
-        set_image_align(alignmask::top);
-        set_text_align(alignmask::center | alignmask::bottom);
+        auto sizer = std::make_shared<VerticalBoxSizer>();
+        add(expand(sizer));
+
+        auto l = std::make_shared<Label>(label);
+        sizer->add(expand_horizontal(l));
+
+        auto i = std::make_shared<ImageLabel>(image);
+        i->set_image_align(alignmask::expand);
+        sizer->add(expand(i));
     }
 };
 
 class MainWindow : public TopWindow
 {
 public:
-    explicit MainWindow(const Size& size)
-        : TopWindow(size),
-          grid(Tuple(2, 2), 10)
+    explicit MainWindow()
+        : m_grid(Tuple(2, 3))
     {
-        grid.set_color(Palette::ColorId::border, Palette::transparent);
+        auto sizer = std::make_shared<VerticalBoxSizer>();
+        add(expand(sizer));
 
-        add(expand(grid));
+        auto egt_logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+        egt_logo->set_align(alignmask::center | alignmask::top);
+        egt_logo->set_margin(5);
+        sizer->add(egt_logo);
 
-        grid.add(expand(make_shared<MyButton>("image1.png", _("PNG-filename"))));
-        grid.add(expand(make_shared<MyButton>(":image2_png", _("PNG-stream"))));
-        grid.add(expand(make_shared<MyButton>("image3.bmp", _("BMP-filename"))));
-        grid.add(expand(make_shared<MyButton>(":image4_bmp", _("BMP-stream"))));
+        sizer->add(expand(m_grid));
+
+        m_grid.add(expand(make_shared<ResourceFrame>(Image("image1.png"), _("PNG-filename"))));
+        m_grid.add(expand(make_shared<ResourceFrame>(Image(":image2_png"), _("PNG-stream"))));
+        m_grid.add(expand(make_shared<ResourceFrame>(Image("image3.bmp"), _("BMP-filename"))));
+        m_grid.add(expand(make_shared<ResourceFrame>(Image(":image4_bmp"), _("BMP-stream"))));
+
+        try
+        {
+            m_grid.add(expand(make_shared<ResourceFrame>(Image("image5.jpg"), _("JPEG-file"))));
+        }
+        catch (...)
+        {}
+
+        try
+        {
+            m_grid.add(expand(make_shared<ResourceFrame>(SvgImage("image6.svg", SizeF(0, 205)), _("SVG-file"))));
+        }
+        catch (...)
+        {}
     }
 
-    StaticGrid grid;
+    StaticGrid m_grid;
 };
 
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "resource");
 
-    MainWindow win1(Size(800, 480));
-
-    win1.show();
+    MainWindow window;
+    window.show();
 
     return app.run();
 }

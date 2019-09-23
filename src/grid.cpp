@@ -270,8 +270,7 @@ void StaticGrid::reposition()
                                                       widget->align());
 
                 // re-position/resize widget
-                widget->move(target.point());
-                widget->resize(target.size());
+                widget->set_box(target);
 
                 if (widget->flags().is_set(Widget::flag::frame))
                 {

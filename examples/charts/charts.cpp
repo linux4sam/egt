@@ -58,22 +58,28 @@ struct LinePage : public NotebookTab
 {
     LinePage()
     {
-        auto line = std::make_shared<LineChart>(Rect(50, 10, 600, 400));
+        auto sizer = std::make_shared<VerticalBoxSizer>();
+        add(expand(sizer));
+
+        auto line = std::make_shared<LineChart>();
         line->set_name("linechart");
         line->set_color(Palette::ColorId::bg, Palette::black);
-        add(line);
+        sizer->add(expand(line));
+
+        auto csizer = std::make_shared<HorizontalBoxSizer>();
+        sizer->add(csizer);
 
         auto sin_checkbox = std::make_shared<CheckBox>("sin", Rect(Point(0, 410), Size(80, 40)));
         sin_checkbox->set_name("sin");
-        add(sin_checkbox);
+        csizer->add(sin_checkbox);
 
         auto cos_checkbox = std::make_shared<CheckBox>("cos", Rect(Point(100, 410), Size(80, 40)));
         cos_checkbox->set_name("cos");
-        add(cos_checkbox);
+        csizer->add(cos_checkbox);
 
         auto atan_checkbox = std::make_shared<CheckBox>("atan", Rect(Point(200, 410), Size(80, 40)));
         atan_checkbox->set_name("atan");
-        add(atan_checkbox);
+        csizer->add(atan_checkbox);
 
         auto handle_checkbox = [line, sin_checkbox, cos_checkbox, atan_checkbox](Event & event)
         {
@@ -98,7 +104,7 @@ struct LinePage : public NotebookTab
 
         auto line_width = std::make_shared<Slider>(Rect(Point(300, 410), Size(200, 40)), 1, 10, 1);
         line_width->set_name("line_width");
-        add(line_width);
+        csizer->add(line_width);
 
         line_width->on_event([line, line_width](Event & event)
         {
@@ -108,10 +114,10 @@ struct LinePage : public NotebookTab
         line_width->set_value(2);
 
         auto gridx_checkbox = std::make_shared<CheckBox>("grid X", Rect(Point(500, 410), Size(80, 40)));
-        add(gridx_checkbox);
+        csizer->add(gridx_checkbox);
 
         auto gridy_checkbox = std::make_shared<CheckBox>("grid Y", Rect(Point(600, 410), Size(80, 40)));
-        add(gridy_checkbox);
+        csizer->add(gridy_checkbox);
 
         auto handle_grid_checkbox = [gridx_checkbox, gridy_checkbox, line](Event & event)
         {
@@ -135,7 +141,7 @@ struct PiePage : public NotebookTab
 {
     PiePage()
     {
-        auto pie = std::make_shared<PieChart>(Rect(10, 10, 600, 400));
+        auto pie = std::make_shared<PieChart>();
         std::map<std::string, float> data;
         data.insert(make_pair("truck", .25));
         data.insert(make_pair("car", .55));
@@ -144,7 +150,7 @@ struct PiePage : public NotebookTab
         data.insert(make_pair("plane", .05));
         pie->data(data);
 
-        add(pie);
+        add(expand(pie));
     }
 };
 
