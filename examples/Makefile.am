@@ -40,6 +40,7 @@ drag/drag \
 easing/easing \
 floating/floating \
 frames/frames \
+imagestack/imagestack \
 sizers/sizers \
 space/space \
 sprite/sprite \
@@ -228,6 +229,13 @@ luarepl_luarepl_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 luarepl_luarepl_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 luarepl_luarepldir = $(prefix)/share/egt/examples/luarepl
 luarepl_luarepl_LDFLAGS = $(AM_LDFLAGS)
+
+imagestack_imagestack_SOURCES = imagestack/imagestack.cpp
+imagestack_imagestack_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+imagestack_imagestack_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+imagestack_imagestackdir = $(prefix)/share/egt/examples/imagestack
+imagestack_imagestack_DATA = $(wildcard $(top_srcdir)/examples/imagestack/images/*.png)
+imagestack_imagestack_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
