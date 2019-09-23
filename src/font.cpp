@@ -20,7 +20,7 @@ inline namespace v1
 
 const char* Font::DEFAULT_FACE = "Free Sans";
 const Font::weightid Font::DEFAULT_WEIGHT = Font::weightid::normal;
-const int Font::DEFAULT_SIZE = 18;
+const Font::fontsize Font::DEFAULT_SIZE = 18.f;
 const Font::slantid Font::DEFAULT_SLANT = Font::slantid::normal;
 
 static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& font)
@@ -113,28 +113,28 @@ Font::Font(const std::string& face)
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(const std::string& face, int size)
+Font::Font(const std::string& face, fontsize size)
     : m_face(face),
       m_size(size),
       m_weight(DEFAULT_WEIGHT),
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(const std::string& face, int size, weightid weight, slantid slant)
+Font::Font(const std::string& face, fontsize size, weightid weight, slantid slant)
     : m_face(face),
       m_size(size),
       m_weight(weight),
       m_slant(slant)
 {}
 
-Font::Font(int size)
+Font::Font(fontsize size)
     : m_face(DEFAULT_FACE),
       m_size(size),
       m_weight(DEFAULT_WEIGHT),
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(int size, weightid weight)
+Font::Font(fontsize size, weightid weight)
     : m_face(DEFAULT_FACE),
       m_size(size),
       m_weight(weight),
@@ -163,7 +163,7 @@ struct FontCache
         {
             if (lhs.face() != rhs.face())
                 return lhs.face() < rhs.face();
-            if (lhs.size() != rhs.size())
+            if (!detail::float_compare(lhs.size(), rhs.size()))
                 return lhs.size() < rhs.size();
             if (lhs.weight() != rhs.weight())
                 return lhs.weight() < rhs.weight();

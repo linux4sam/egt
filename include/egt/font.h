@@ -11,9 +11,10 @@
  * @brief Working with fonts.
  */
 
+#include <egt/detail/math.h>
+#include <egt/types.h>
 #include <iosfwd>
 #include <string>
-#include <egt/types.h>
 
 namespace egt
 {
@@ -31,6 +32,8 @@ inline namespace v1
 class Font
 {
 public:
+
+    using fontsize = float;
 
     /**
      * Font weights.
@@ -53,7 +56,7 @@ public:
 
     static const char* DEFAULT_FACE;
     static const weightid DEFAULT_WEIGHT;
-    static const int DEFAULT_SIZE;
+    static const fontsize DEFAULT_SIZE;
     static const slantid DEFAULT_SLANT;
 
     /**
@@ -74,7 +77,7 @@ public:
      * @param[in] face The face name of the font.
      * @param[in] size The size of the font.
      */
-    explicit Font(const std::string& face, int size);
+    explicit Font(const std::string& face, fontsize size);
 
     /**
      * Create a font based on the supplied parameters.
@@ -84,7 +87,7 @@ public:
      * @param[in] weight The weight of the font.
      * @param[in] slant The slant of the font.
      */
-    explicit Font(const std::string& face, int size, weightid weight, slantid slant);
+    explicit Font(const std::string& face, fontsize size, weightid weight, slantid slant);
 
     /**
      * Create a font based on the global default font, but with the
@@ -92,7 +95,7 @@ public:
      *
      * @param[in] size The size of the font.
      */
-    explicit Font(int size);
+    explicit Font(fontsize size);
 
     /**
      * Create a font based on the global default font, but with the
@@ -101,7 +104,7 @@ public:
      * @param[in] size The size of the font.
      * @param[in] weight The weight of the font.
      */
-    explicit Font(int size, weightid weight);
+    explicit Font(fontsize size, weightid weight);
 
     /**
      * Create a font based on the global default font, but with the
@@ -132,12 +135,12 @@ public:
     /**
      * Get the size of the font.
      */
-    inline int size() const { return m_size; }
+    inline fontsize size() const { return m_size; }
 
     /**
      * Set the size of the font.
      */
-    inline void set_size(int s) { m_size = s; }
+    inline void set_size(fontsize s) { m_size = s; }
 
     /**
      * Get the weight of the font.
@@ -172,7 +175,7 @@ protected:
     /**
      * Font size.
      */
-    int m_size;
+    fontsize m_size{};
 
     /**
      * Font weight.
@@ -190,7 +193,7 @@ std::ostream& operator<<(std::ostream& os, const Font& font);
 inline bool operator==(const Font& lhs, const Font& rhs)
 {
     return lhs.face() == rhs.face() &&
-           lhs.size() == rhs.size() &&
+           detail::float_compare(lhs.size(), rhs.size()) &&
            lhs.weight() == rhs.weight() &&
            lhs.slant() == rhs.slant();
 }
