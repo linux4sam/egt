@@ -14,30 +14,27 @@ namespace egt
 inline namespace v1
 {
 
-static Theme* g_theme = nullptr;
+static std::shared_ptr<Theme> the_global_theme;
 
 Theme& global_theme()
 {
-    if (!g_theme)
+    if (!the_global_theme)
     {
-        g_theme = new Theme();
-        g_theme->apply();
+        the_global_theme = std::make_shared<Theme>();
+        the_global_theme->apply();
     }
 
-    assert(g_theme);
-
-    return *g_theme;
+    return *the_global_theme;
 }
 
-void set_global_theme(Theme* theme)
+void set_global_theme(std::shared_ptr<Theme> theme)
 {
     assert(theme);
 
-    delete g_theme;
-    g_theme = theme;
+    the_global_theme = std::move(theme);
 
-    if (g_theme)
-        g_theme->apply();
+    if (the_global_theme)
+        the_global_theme->apply();
 }
 
 float Theme::DEFAULT_ROUNDED_RADIUS = 4.0;

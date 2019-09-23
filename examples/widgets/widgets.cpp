@@ -544,15 +544,15 @@ int main(int argc, const char** argv)
     logo->set_align(alignmask::center);
     frame->add(logo);
 
-    vector<std::pair<std::string, std::function<Theme*()>>> combo_items =
+    vector<std::pair<std::string, std::function<std::unique_ptr<Theme>()>>> combo_items =
     {
-        {"Default Theme", []{ return new Theme(); }},
-        {"Lapis", []{ return new LapisTheme(); }},
-        {"Midnight", []{ return new MidnightTheme(); }},
-        {"Sky", []{ return new SkyTheme(); }},
-        {"Shamrock", []{ return new ShamrockTheme(); }},
-        {"Coconut", []{ return new CoconutTheme(); }},
-        {"Ultra Violet", []{ return new UltraVioletTheme(); }}
+        {"Default Theme", []{ return detail::make_unique<Theme>(); }},
+        {"Lapis", []{ return detail::make_unique<LapisTheme>(); }},
+        {"Midnight", []{ return detail::make_unique<MidnightTheme>(); }},
+        {"Sky", []{ return detail::make_unique<SkyTheme>(); }},
+        {"Shamrock", []{ return detail::make_unique<ShamrockTheme>(); }},
+        {"Coconut", []{ return detail::make_unique<CoconutTheme>(); }},
+        {"Ultra Violet", []{ return detail::make_unique<UltraVioletTheme>(); }}
     };
 
     auto combo = make_shared<ComboBox>();

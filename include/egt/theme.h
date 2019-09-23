@@ -264,7 +264,7 @@ Theme& global_theme();
  *
  * @note This will destroy any pre-existing theme instance.
  */
-void set_global_theme(Theme* theme);
+void set_global_theme(std::shared_ptr<Theme> theme);
 
 }
 }
