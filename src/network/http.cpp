@@ -28,7 +28,7 @@ using namespace experimental;
 struct HttpClientRequestData
 {
     CURL* easy{nullptr};
-    asio::ip::tcp::socket* socket{nullptr};
+    std::unique_ptr<asio::ip::tcp::socket> socket;
     int last_event{CURL_POLL_NONE};
     HttpClientRequest::buffer_type buffer;
 };
@@ -223,7 +223,7 @@ static curl_socket_t opensocket_callback(void* clientp,
 
     if (purpose == CURLSOCKTYPE_IPCXN && address->family == AF_INET)
     {
-        s->impl()->socket = new asio::ip::tcp::socket(Application::instance().event().io());
+        s->impl()->socket = detail::make_unique<asio::ip::tcp::socket>(Application::instance().event().io());
 
         asio::error_code ec;
         s->impl()->socket->open(asio::ip::tcp::v4(), ec);
@@ -302,7 +302,7 @@ void HttpClientRequest::cleanup()
     if (m_impl->socket)
     {
         detail::HttpClientRequestManager::Instance()->m_sockets.erase(m_impl->socket->native_handle());
-        delete m_impl->socket;
+        m_impl->socket.reset();
     }
 }
 
