@@ -98,7 +98,9 @@ Then, run.
 
 ![Widgets i18n Example](docs/src/screenshot3.png "Widgets i18n Example")
 
-![Widgets ListBox Example](docs/src/screenshot4.png "Widgets ListBox Example")
+![Car Dashboard Example](docs/src/screenshot4.png "Car Dashboard Example")
+
+![Animating Images Example](docs/src/screenshot5.png "Animating Images Example")
 
 
 ## Dependencies
