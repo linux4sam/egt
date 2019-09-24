@@ -24,7 +24,7 @@ input devices.
 
 @todo
 
-@section input_mapping libinput
+@section input_libinput libinput
 
 [libinput](https://www.freedesktop.org/wiki/Software/libinput/) is the prime
 interface to receive keyboard and touchscreen or pointer

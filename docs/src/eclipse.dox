@@ -105,7 +105,7 @@ With Eclipse installed in /opt folder and it can now be accessed by any users.
 
 Start Eclipse from the Ubuntu Applications tray and you will be asked where to
 place your workspace directory. By default, the location will be under users
-home directory. i.e. /home/<user>/eclipse-workspace.
+home directory. i.e. /home/\<user\>/eclipse-workspace.
 
 @imageSize{eclipse_workspace.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_workspace.png "Eclipse workspace"
@@ -417,7 +417,7 @@ on the host system. This is a x86_64 debugger and it does not understand the sym
 messages from the gdb-server on the target. You must change this to point to the ARM specific
 gdb that is created by Buildroot, change it to:
 
-<buildroot>/output/host/bin/arm-buildroot-linux-gnueabi-gdb
+\<buildroot\>/output/host/bin/arm-buildroot-linux-gnueabi-gdb
 
 To prevent some spurious SIGNALS and to help the GDB debugger we have provided an
 initialization script. Create a gdbinit file in your project folder and copy below
