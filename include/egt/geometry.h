@@ -1064,8 +1064,8 @@ public:
     /**
      * Construct a Circle object.
      *
-     * @param c Center point of the arc.
-     * @param r Radius of the arc.
+     * @param center Center point of the arc.
+     * @param radius Radius of the arc.
      */
     constexpr explicit CircleType(const PointType<dim_t>& center = {}, dim_t radius = {}) noexcept
         : ArcType<dim_t>(center, radius, 0, 2.f * detail::pi<float>())

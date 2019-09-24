@@ -52,21 +52,29 @@ class Sound
 public:
 
     /**
-     * @file The WAV file to play.
+     * @param file The WAV file to play.
      * @param device ALSA sound device.
      */
     explicit Sound(const std::string& file,
                    const std::string& device = "default");
 
     /**
-     * @file The WAV file to play.
-     * @rate Rate of the sound file, i.e. 44100.
-     * @channels The number of channels in the sound file.
+     * @param file The WAV file to play.
+     * @param rate Rate of the sound file, i.e. 44100.
+     * @param channels The number of channels in the sound file.
      * @param device ALSA sound device.
      */
     explicit Sound(const std::string& file, unsigned int rate, int channels,
                    const std::string& device = "default");
 
+    /**
+     * Play the sound.
+     *
+     * This will immediately cancel any existing playback happening of this
+     * Sound.
+     *
+     * @param repeat Should the sound keep repeating?
+     */
     virtual void play(bool repeat = false);
 
     virtual ~Sound();

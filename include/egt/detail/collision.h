@@ -33,7 +33,7 @@ bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
 /**
  * Detect alpha collision with a specific point.
  *
- * This basically tests if the pixel at @rhs is opaque.
+ * This basically tests if the pixel at @b rhs is opaque.
  *
  * @b lhs specified the origin with its point(). @b rhs is relative to this
  * origin. @b lhs.size() should be the same size as the limage.

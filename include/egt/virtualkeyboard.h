@@ -110,10 +110,9 @@ public:
 
         /**
          * @param[in] unicode UTF32 code point for the key.
-         * @param[in] multichoice Multichoice panel that has to be displayed
+         * @param[in] keys_multichoice Multichoice panel that has to be displayed
          * after a long touch event.
          * @param[in] length Length of the key.
-         * @param[in] keycode Code of the key.
          */
         explicit Key(uint32_t unicode,
                      panel_keys keys_multichoice,
@@ -179,7 +178,7 @@ public:
     /**
      * A keyboard with a custom layout.
      *
-     * @param[in] panels Main panels of the keyboard.
+     * @param[in] keys Main panels of the keyboard.
      * @param[in] rect Rect of the Keyboard.
      */
     explicit VirtualKeyboard(std::vector<panel_keys> keys,

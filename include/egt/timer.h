@@ -141,7 +141,7 @@ public:
      *
      * This function can be called any number of times to add handlers.
      *
-     * @param handler The callback to invoke on event.
+     * @param callback The callback to invoke on event.
      * @return A handle used to identify the registration.  This can then be
      *         passed to remove_handler().
      */

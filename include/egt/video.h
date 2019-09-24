@@ -165,9 +165,7 @@ public:
     virtual void set_scale(float scale) override;
 
     /**
-     * get video scale value.
-     *
-     * @param[in] scale
+     * Get video scale value.
      */
     virtual float scale() const
     {
