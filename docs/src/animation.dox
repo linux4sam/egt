@@ -51,9 +51,9 @@ float_t easing_linear(float_t p)
 }
 @endcode
 
-@imageSize{easing_linear.png,width:400px;}
-@image html easing/easing_linear.png "Linear Easing Curve"
-@image latex easing/easing_linear.png "Linear Easing Curve" width=8cm
+@imageSize{linear.png,width:320px;}
+@image html easing/linear.png "Linear Easing Curve"
+@image latex easing/linear.png "Linear Easing Curve" width=8cm
 
 A more complicated easing function might include a circular calculation:
 
@@ -64,9 +64,9 @@ float_t easing_circular_easein(float_t p)
 }
 @endcode
 
-@imageSize{easing_circular_easein.png,width:400px;}
-@image html easing/easing_circular_easein.png "Circular Easein Easing Curve"
-@image latex easing/easing_circular_easein.png "Circular Easein Easing Curve" width=8cm
+@imageSize{circular_easein.png,width:320px;}
+@image html easing/circular_easein.png "Circular Easein Easing Curve"
+@image latex easing/circular_easein.png "Circular Easein Easing Curve" width=8cm
 
 The @b examples/easing/ directory contains an example that allows you to
 visually select and see some of the different easing functions and how they

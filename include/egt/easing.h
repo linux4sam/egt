@@ -29,69 +29,210 @@ using float_t = float;
  */
 
 /**
- * @imageSize{easing_linear.png,width:400px;}
- * @image html easing/easing_linear.png
- * @image latex easing/easing_linear.png
+ * @imageSize{linear.png,width:320px;}
+ * @image html easing/linear.png
+ * @image latex easing/linear.png
  */
 float_t easing_linear(float_t p);
+/**
+ * @imageSize{easy.png,width:320px;}
+ * @image html easing/easy.png
+ * @image latex easing/easy.png
+ */
 float_t easing_easy(float_t p);
+/**
+ * @imageSize{easy_slow.png,width:320px;}
+ * @image html easing/easy_slow.png
+ * @image latex easing/easy_slow.png
+ */
 float_t easing_easy_slow(float_t p);
+/**
+ * @imageSize{extend.png,width:320px;}
+ * @image html easing/extend.png
+ * @image latex easing/extend.png
+ */
 float_t easing_extend(float_t p);
 /**
- * @imageSize{easing_drop.png,width:400px;}
- * @image html easing/easing_drop.png
- * @image latex easing/easing_drop.png
+ * @imageSize{drop.png,width:320px;}
+ * @image html easing/drop.png
+ * @image latex easing/drop.png
  */
 float_t easing_drop(float_t p);
+/**
+ * @imageSize{drop_slow.png,width:320px;}
+ * @image html easing/drop_slow.png
+ * @image latex easing/drop_slow.png
+ */
 float_t easing_drop_slow(float_t p);
+/**
+ * @imageSize{snap.png,width:320px;}
+ * @image html easing/snap.png
+ * @image latex easing/snap.png
+ */
 float_t easing_snap(float_t p);
 /**
- * @imageSize{easing_bounce.png,width:400px;}
- * @image html easing/easing_bounce.png
- * @image latex easing/easing_bounce.png
+ * @imageSize{bounce.png,width:320px;}
+ * @image html easing/bounce.png
+ * @image latex easing/bounce.png
  */
 float_t easing_bounce(float_t p);
-float_t easing_bouncy(float_t p);
-float_t easing_rubber(float_t p);
-float_t easing_spring(float_t p);
-float_t easing_boing(float_t p);
-
-float_t easing_quadratic_easein(float_t p);
-float_t easing_quadratic_easeout(float_t p);
-float_t easing_quadratic_easeinout(float_t p);
-
-float_t easing_cubic_easein(float_t p);
-float_t easing_cubic_easeout(float_t p);
-float_t easing_cubic_easeinout(float_t p);
-
-float_t easing_quartic_easein(float_t p);
-float_t easing_quartic_easeout(float_t p);
-float_t easing_quartic_easeinout(float_t p);
-
-float_t easing_quintic_easein(float_t p);
-float_t easing_quintic_easeout(float_t p);
-float_t easing_quintic_easeinout(float_t p);
-
-float_t easing_sine_easein(float_t p);
-float_t easing_sine_easeout(float_t p);
-float_t easing_sine_easeinout(float_t p);
-
 /**
- * @imageSize{easing_circular_easein.png,width:400px;}
- * @image html easing/easing_circular_easein.png
- * @image latex easing/easing_circular_easein.png
+ * @imageSize{bouncy.png,width:320px;}
+ * @image html easing/bouncy.png
+ * @image latex easing/bouncy.png
+ */
+float_t easing_bouncy(float_t p);
+/**
+ * @imageSize{rubber.png,width:320px;}
+ * @image html easing/rubber.png
+ * @image latex easing/rubber.png
+ */
+float_t easing_rubber(float_t p);
+/**
+ * @imageSize{spring.png,width:320px;}
+ * @image html easing/spring.png
+ * @image latex easing/spring.png
+ */
+float_t easing_spring(float_t p);
+/**
+ * @imageSize{boing.png,width:320px;}
+ * @image html easing/boing.png
+ * @image latex easing/boing.png
+ */
+float_t easing_boing(float_t p);
+/**
+ * @imageSize{quadratic_easein.png,width:320px;}
+ * @image html easing/quadratic_easein.png
+ * @image latex easing/quadratic_easein.png
+ */
+float_t easing_quadratic_easein(float_t p);
+/**
+ * @imageSize{quadratic_easeout.png,width:320px;}
+ * @image html easing/quadratic_easeout.png
+ * @image latex easing/quadratic_easeout.png
+ */
+float_t easing_quadratic_easeout(float_t p);
+/**
+ * @imageSize{quadratic_easeinout.png,width:320px;}
+ * @image html easing/quadratic_easeinout.png
+ * @image latex easing/quadratic_easeinout.png
+ */
+float_t easing_quadratic_easeinout(float_t p);
+/**
+ * @imageSize{cubic_easein.png,width:320px;}
+ * @image html easing/cubic_easein.png
+ * @image latex easing/cubic_easein.png
+ */
+float_t easing_cubic_easein(float_t p);
+/**
+ * @imageSize{cubic_easeout.png,width:320px;}
+ * @image html easing/cubic_easeout.png
+ * @image latex easing/cubic_easeout.png
+ */
+float_t easing_cubic_easeout(float_t p);
+/**
+ * @imageSize{cubic_easeinout.png,width:320px;}
+ * @image html easing/cubic_easeinout.png
+ * @image latex easing/cubic_easeinout.png
+ */
+float_t easing_cubic_easeinout(float_t p);
+/**
+ * @imageSize{quartic_easein.png,width:320px;}
+ * @image html easing/quartic_easein.png
+ * @image latex easing/quartic_easein.png
+ */
+float_t easing_quartic_easein(float_t p);
+/**
+ * @imageSize{quartic_easeout.png,width:320px;}
+ * @image html easing/quartic_easeout.png
+ * @image latex easing/quartic_easeout.png
+ */
+float_t easing_quartic_easeout(float_t p);
+/**
+ * @imageSize{quartic_easeinout.png,width:320px;}
+ * @image html easing/quartic_easeinout.png
+ * @image latex easing/quartic_easeinout.png
+ */
+float_t easing_quartic_easeinout(float_t p);
+/**
+ * @imageSize{quintic_easein.png,width:320px;}
+ * @image html easing/quintic_easein.png
+ * @image latex easing/quintic_easein.png
+ */
+float_t easing_quintic_easein(float_t p);
+/**
+ * @imageSize{quintic_easeout.png,width:320px;}
+ * @image html easing/quintic_easeout.png
+ * @image latex easing/quintic_easeout.png
+ */
+float_t easing_quintic_easeout(float_t p);
+/**
+ * @imageSize{quintic_easeinout.png,width:320px;}
+ * @image html easing/quintic_easeinout.png
+ * @image latex easing/quintic_easeinout.png
+ */
+float_t easing_quintic_easeinout(float_t p);
+/**
+ * @imageSize{sine_easein.png,width:320px;}
+ * @image html easing/sine_easein.png
+ * @image latex easing/sine_easein.png
+ */
+float_t easing_sine_easein(float_t p);
+/**
+ * @imageSize{sine_easeout.png,width:320px;}
+ * @image html easing/sine_easeout.png
+ * @image latex easing/sine_easeout.png
+ */
+float_t easing_sine_easeout(float_t p);
+/**
+ * @imageSize{sine_easeinout.png,width:320px;}
+ * @image html easing/sine_easeinout.png
+ * @image latex easing/sine_easeinout.png
+ */
+float_t easing_sine_easeinout(float_t p);
+/**
+ * @imageSize{circular_easein.png,width:320px;}
+ * @image html easing/circular_easein.png
+ * @image latex easing/circular_easein.png
  */
 float_t easing_circular_easein(float_t p);
+/**
+ * @imageSize{circular_easeout.png,width:320px;}
+ * @image html easing/circular_easeout.png
+ * @image latex easing/circular_easeout.png
+ */
 float_t easing_circular_easeout(float_t p);
+/**
+ * @imageSize{circular_easeinout.png,width:320px;}
+ * @image html easing/circular_easeinout.png
+ * @image latex easing/circular_easeinout.png
+ */
 float_t easing_circular_easeinout(float_t p);
-
+/**
+ * @imageSize{exponential_easein.png,width:320px;}
+ * @image html easing/exponential_easein.png
+ * @image latex easing/exponential_easein.png
+ */
 float_t easing_exponential_easein(float_t p);
+/**
+ * @imageSize{exponential_easeout.png,width:320px;}
+ * @image html easing/exponential_easeout.png
+ * @image latex easing/exponential_easeout.png
+ */
 float_t easing_exponential_easeout(float_t p);
+/**
+ * @imageSize{exponential_easeinout.png,width:320px;}
+ * @image html easing/exponential_easeinout.png
+ * @image latex easing/exponential_easeinout.png
+ */
 float_t easing_exponential_easeinout(float_t p);
 
 /**
  * Cubic Bezier equation easing function.
  *
+ * @imageSize{cubic_bezier.png,width:320px;}
+ * @image html easing/cubic_bezier.png
+ * @image latex easing/cubic_bezier.png
  * @ingroup easing_functions
  */
 struct easing_cubic_bezier
