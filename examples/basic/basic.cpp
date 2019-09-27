@@ -12,7 +12,7 @@ int main(int argc, const char** argv)
 
     egt::TopWindow window;
     egt::Button button(window, "Press Me");
-    center(button);
+    egt::center(button);
     window.show();
 
     return app.run();
