@@ -24,11 +24,11 @@ public:
 
     using flags = std::set<T>;
 
-    constexpr explicit Flags(const flags& f = {}) noexcept
+    constexpr Flags(const flags& f = {}) noexcept
         : m_flags(f)
     {}
 
-    explicit Flags(const T& flag) noexcept
+    Flags(const T& flag) noexcept
     {
         set(flag);
     }
