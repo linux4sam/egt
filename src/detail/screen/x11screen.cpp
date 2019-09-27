@@ -14,6 +14,7 @@
 #include "egt/utils.h"
 #include <cairo-xlib.h>
 #include <cairo.h>
+#include <cstdlib>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
@@ -91,6 +92,27 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     cairo_xlib_surface_set_size(m_buffers.back().surface.get(), size.width(), size.height());
 
     m_buffers.back().damage.emplace_back(0, 0, size.width(), size.height());
+
+    // remove window decorations
+    if (getenv("EGT_X11_NODECORATION") &&
+        strlen(getenv("EGT_X11_NODECORATION")))
+    {
+        struct
+        {
+            unsigned long flags;
+            unsigned long functions;
+            unsigned long decorations;
+            signed long input_mode;
+            unsigned long status;
+        } hints;
+
+        hints.flags = 2;
+        hints.decorations = 0;
+        Atom property = XInternAtom(m_priv->display, "_MOTIF_WM_HINTS", true);
+        XChangeProperty(m_priv->display, m_priv->window,
+                        property, property, 32, PropModeReplace,
+                        (unsigned char*)&hints, 5);
+    }
 
     XMapWindow(m_priv->display, m_priv->window);
     XFlush(m_priv->display);

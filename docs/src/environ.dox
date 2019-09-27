@@ -116,6 +116,10 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     @endcode
   </dd>
 
+  <dt>EGT_X11_NODECORATION</dt>
+  <dd>
+    A non-empty valye turns off window decorations on an X11 window.
+  </dd>
 
 </dl>
 
