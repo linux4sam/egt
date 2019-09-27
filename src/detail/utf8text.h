@@ -94,36 +94,6 @@ void tokenize_with_delimiters(T begin, T end,
         tokens.push_back(token);
 }
 
-void draw_text(Painter& painter,
-               const Rect& b,
-               const std::string& text,
-               const Font& font,
-               TextBox::flags_type flags,
-               alignmask text_align,
-               justification justify,
-               const Color& text_color,
-               std::function<void(const Point& offset, size_t height)> draw_cursor = nullptr,
-               size_t cursor_pos = 0,
-               const Color& highlight_color = Color(),
-               size_t select_start = 0,
-               size_t select_len = 0);
-
-void draw_text(Painter& painter,
-               const Rect& b,
-               const std::string& text,
-               const Font& font,
-               TextBox::flags_type flags,
-               alignmask text_align,
-               justification justify,
-               const Color& text_color,
-               alignmask image_align,
-               const Image& image,
-               std::function<void(const Point& offset, size_t height)> draw_cursor = nullptr,
-               size_t cursor_pos = 0,
-               const Color& highlight_color = Color(),
-               size_t select_start = 0,
-               size_t select_len = 0);
-
 }
 }
 }
