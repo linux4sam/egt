@@ -215,7 +215,7 @@ void Sound::init_alsa_params(unsigned int rate, int channels)
         spdlog::error("can't set channels number. {}", snd_strerror(err));
     }
 
-    err = snd_pcm_hw_params_set_rate_near(m_impl->handle, params, &rate, 0);
+    err = snd_pcm_hw_params_set_rate_near(m_impl->handle, params, &rate, nullptr);
     if (err < 0)
     {
         spdlog::error("can't set rate. {}", snd_strerror(err));
