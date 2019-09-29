@@ -168,7 +168,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 
             static std::string egt_icons_dir = "32px";
             static std::once_flag env_flag;
-            std::call_once(env_flag, [&name]()
+            std::call_once(env_flag, []()
             {
                 auto icons_dir = std::getenv("EGT_ICONS_DIRECTORY");
                 if (icons_dir)
