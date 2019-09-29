@@ -206,6 +206,11 @@ public:
                           default_dim_type margin_width = 0) const;
 
     virtual void draw_circle(Painter& painter,
+                             const Widget& widget,
+                             Palette::ColorId bg,
+                             Palette::ColorId border) const;
+
+    virtual void draw_circle(Painter& painter,
                              boxtype type,
                              const Rect& rect,
                              const pattern_type& border,

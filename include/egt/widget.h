@@ -887,6 +887,9 @@ public:
     void draw_box(Painter& painter, Palette::ColorId bg,
                   Palette::ColorId border) const;
 
+    void draw_circle(Painter& painter, Palette::ColorId bg,
+                     Palette::ColorId border) const;
+
     /**
      * Convert a local point to a display point.
      *

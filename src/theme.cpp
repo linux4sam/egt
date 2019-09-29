@@ -244,6 +244,32 @@ void Theme::draw_box(Painter& painter,
     cairo_new_path(cr);
 }
 
+void Theme::draw_circle(Painter& painter, const Widget& widget,
+                        Palette::ColorId bg,
+                        Palette::ColorId border) const
+{
+    auto type = widget.boxtype();
+
+    if (type == boxtype::none)
+        return;
+
+    Palette::GroupId group = Palette::GroupId::normal;
+    if (widget.disabled())
+        group = Palette::GroupId::disabled;
+    else if (widget.active())
+        group = Palette::GroupId::active;
+    else if (widget.checked())
+        group = Palette::GroupId::checked;
+
+    draw_circle(painter,
+                type,
+                widget.box(),
+                widget.color(border, group),
+                widget.color(bg, group),
+                widget.border(),
+                widget.margin());
+}
+
 void Theme::draw_circle(Painter& painter,
                         boxtype type,
                         const Rect& rect,

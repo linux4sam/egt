@@ -437,6 +437,12 @@ void Widget::draw_box(Painter& painter, Palette::ColorId bg,
     theme().draw_box(painter, *this, bg, border);
 }
 
+void Widget::draw_circle(Painter& painter, Palette::ColorId bg,
+                         Palette::ColorId border) const
+{
+    theme().draw_circle(painter, *this, bg, border);
+}
+
 const Theme& Widget::theme() const
 {
     if (m_theme)
