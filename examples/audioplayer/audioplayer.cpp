@@ -43,9 +43,11 @@ class AudioPlayerWindow : public TopWindow
 {
 public:
     explicit AudioPlayerWindow(const Size& size = Size())
-        : TopWindow(size),
-          m_dial(0, 100, 0)
+        : TopWindow(size)
     {
+        auto range = std::make_shared<RangeValue<int>>(0, 100, 0);
+        m_dial.add(range);
+
         set_background(Image("background.png"));
 
         m_dial.set_align(alignmask::expand);
@@ -71,20 +73,18 @@ public:
         logo->set_margin(10);
         add(logo);
 
-        m_dial.on_event([this](Event&)
+        m_dial.on_event([this, range](Event&)
         {
-            m_player.seek(m_dial.value());
+            m_player.seek(range->value());
         }, {eventid::input_property_changed});
 
-        m_dial.radial_flags().set(Radial::flag::primary_value);
-
-        m_player.on_event([this](Event&)
+        m_player.on_event([this, range](Event&)
         {
             if (m_player.playing())
             {
                 if (m_player.duration() > 0)
-                    m_dial.set_max(m_player.duration());
-                m_dial.set_value(m_player.position());
+                    range->set_max(m_player.duration());
+                range->set_value(m_player.position());
             }
             else
             {
@@ -123,6 +123,7 @@ inline string s_to_human(int seconds)
 
 int main(int argc, const char** argv)
 {
+#if 0
     Drawer<Radial>::set_draw([](Radial & widget, Painter & painter, const Rect & rect)
     {
         ignoreparam(rect);
@@ -164,6 +165,7 @@ int main(int argc, const char** argv)
         painter.draw(p);
         painter.draw(text);
     });
+#endif
 
     Application app(argc, argv, "audioplayer");
 

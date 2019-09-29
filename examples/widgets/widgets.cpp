@@ -342,16 +342,17 @@ struct MeterPage : public NotebookTab
 
         using namespace egt::experimental;
 
-        auto r1 = std::make_shared<Radial>(Rect(), 0, 100, 0);
-        r1->radial_flags().set({Radial::flag::primary_value,
-                                Radial::flag::text_value,
-                                Radial::flag::primary_handle});
+        auto r1 = std::make_shared<Radial>();
+        auto range0 = std::make_shared<RangeValue<int>>(0, 100, 100);
+        r1->add(range0, Palette::grey, 10);
+        auto range1 = std::make_shared<RangeValue<int>>(0, 100, 0);
+        r1->add(range1, Palette::blue, 5, Radial::flag::text_value);
         r1->set_readonly(true);
         grid0->add(expand(r1));
 
         m_animators.push_back(demo_up_down_animator(lp1));
         m_animators.push_back(demo_up_down_animator(am1));
-        m_animators.push_back(demo_up_down_animator(r1));
+        m_animators.push_back(demo_up_down_animator(range1));
     }
 
     vector<unique_ptr<AnimationSequence>> m_animators;

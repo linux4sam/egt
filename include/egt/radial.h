@@ -8,12 +8,14 @@
 
 #include <algorithm>
 #include <egt/detail/math.h>
+#include <egt/detail/textwidget.h>
 #include <egt/flags.h>
-#include <egt/frame.h>
 #include <egt/painter.h>
-#include <egt/valuewidget.h>
+#include <egt/value.h>
+#include <egt/widget.h>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace egt
 {
@@ -23,7 +25,7 @@ namespace experimental
 {
 
 /**
- * Radial dial widget that a user uses to select a value.
+ * Radial widget that draws a series of RangleValues on a circle.
  *
  * @image html widget_radial.png
  * @image latex widget_radial.png "widget_radial" width=5cm
@@ -31,91 +33,84 @@ namespace experimental
  * @ingroup controls
  */
 template<class T>
-class RadialType : public ValueRangeWidget<T>
+class RadialType : public Widget
 {
 public:
 
     enum class flag
     {
-        primary_value,
-        primary_handle,
-        secondary_value,
-        text,
-        text_value
+        /**
+         * Use the value for the center text of the widget.
+         */
+        text_value,
+
+        /**
+         * When drawing the value, use rounded ends.  The default is square.
+         */
+        rounded_cap,
+
+        /**
+         * This value is modified by use input.
+         */
+        input_value
     };
 
     using flags_type = Flags<flag>;
 
     /**
      * @param[in] rect Rectangle for the widget.
-     * @param[in] min Minimum value for the range.
-     * @param[in] max Maximum value in the range.
-     * @param[in] value Current value in the range.
      */
-    explicit RadialType(const Rect& rect, T min = 0, T max = 100, T value = 0)
-        : ValueRangeWidget<T>(rect, min, max, value)
+    explicit RadialType(const Rect& rect = {})
+        : Widget(rect)
     {
-        this->set_boxtype(Theme::boxtype::blank);
+        this->set_name("Radial" + std::to_string(m_widgetid));
+        this->set_boxtype(Theme::boxtype::none);
         this->flags().set(Widget::flag::grab_mouse);
-
-        this->radial_flags().set({flag::primary_value,
-                                  flag::primary_handle,
-                                  flag::secondary_value,
-                                  flag::text});
     }
 
-    explicit RadialType(T min = 0, T max = 100, T value = 0)
-        : RadialType<T>(Rect(), min, max, value)
-    {}
-
-    explicit RadialType(Frame& parent, const Rect& rect = {}, T min = 0, T max = 100, T value = 0)
-        : RadialType<T>(rect, min, max, value)
+    explicit RadialType(Frame& parent, const Rect& rect = {})
+        : RadialType<T>(rect)
     {
         parent.add(*this);
     }
 
-    explicit RadialType(Frame& parent, T min = 0, T max = 100, T value = 0)
-        : RadialType<T>(parent, Rect(), min, max, value)
-    {}
-
-    /**
-     * Get a const ref of the flags.
-     */
-    inline const flags_type& radial_flags() const { return m_radial_flags; }
-
-    /**
-     * Get a modifiable ref of the flags.
-     */
-    inline flags_type& radial_flags() { return m_radial_flags; }
-
-    /**
-     * Get the second value of the radial.
-     */
-    inline T value2() const
+    virtual uint32_t add(const std::shared_ptr<RangeValue<T>>& range,
+                         const Color& color = {},
+                         default_dim_type width = 10,
+                         flags_type flags = flags_type())
     {
-        return m_value2;
+        // TODO: m_handle_counter can wrap, making the handle non-unique
+        auto handle = ++this->m_handle_counter;
+        this->m_values.emplace_back(range, color, width, flags, handle);
+
+        // when a value changes, damage
+        range->on_event([this, flags](Event&)
+        {
+            this->damage();
+        }, {eventid::property_changed});
+
+        damage();
+
+        return handle;
     }
 
-    /**
-     * Set the second value of the widget.
-     */
-    virtual void set_value2(T v)
+    virtual void set_color(uint32_t handle, const Color& color)
     {
-        assert(this->m_max > this->m_min);
-
-        if (v > this->m_max)
-            v = this->m_max;
-
-        if (v < this->m_min)
-            v = this->m_min;
-
-        if (v != this->m_value2)
+        for (auto& value : this->m_values)
         {
-            this->m_value2 = v;
-            this->damage();
-            this->invoke_handlers(eventid::property_changed);
+            if (value.handle == handle)
+            {
+                value.color = color;
+                this->damage();
+                break;
+            }
         }
     }
+
+    /**
+     * Get the current text of the radial.
+     */
+    virtual const std::string& text() const { return m_text; }
 
     /**
      * Set the center label text of the dial.
@@ -135,10 +130,23 @@ public:
         case eventid::pointer_click:
         case eventid::pointer_drag:
         {
+            bool changed = false;
             auto angle = this->touch_to_degrees(this->display_to_local(event.pointer().point));
-            auto v = this->degrees_to_value(angle);
-            auto orig = this->set_value(v);
-            if (orig != v)
+
+            for (auto& value : this->m_values)
+            {
+                if (value.flags.is_set(flag::input_value))
+                {
+                    auto v = this->degrees_to_value(value.range->min(),
+                                                    value.range->max(),
+                                                    angle);
+                    auto orig = value.range->set_value(v);
+                    if (!changed)
+                        changed = (orig != v);
+                }
+            }
+
+            if (changed)
                 this->invoke_handlers(eventid::input_property_changed);
         }
         default:
@@ -158,90 +166,60 @@ public:
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
         const auto b = widget.content_area();
+        const auto c = b.center();
+        auto text = widget.text();
+        const auto smalldim = std::min(b.width(), b.height());
 
-        const auto v = widget.value_to_degrees(widget.value());
-
-        auto color1 = widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color();
-        auto color2 = widget.color(Palette::ColorId::button_fg).color();
-        auto color3 = widget.color(Palette::ColorId::button_bg).color();
-        auto color4 = widget.color(Palette::ColorId::button_fg).color();
-
-        float smalldim = std::min(b.width(), b.height());
-        float linew = smalldim / 10.;
-        float radius = smalldim / 2. - (linew / 2.);
-        auto angle1 = detail::to_radians<float>(-90, 0);
-        auto angle2 = detail::to_radians<float>(-90, v);
-
-        auto c = b.center();
-
-        // bottom full circle
-        painter.set(color1);
-        painter.set_line_width(linew);
-        painter.draw(Arc(c, radius, 0, 2 * detail::pi<float>()));
-        painter.stroke();
-
-        if (widget.radial_flags().is_set(flag::primary_value))
+        default_dim_type maxwidth = 0;
+        for (auto& value : widget.m_values)
         {
-            // value arc
-            painter.set(color2);
-            painter.set_line_width(linew - (linew / 3));
+            if (value.width > maxwidth)
+                maxwidth = value.width;
+        }
+
+        for (auto& value : widget.m_values)
+        {
+            const auto radius = smalldim * 0.5f - (maxwidth * 0.5f);
+            const auto angle1 = detail::to_radians<float>(-90, widget.start_angle());
+            const auto angle2 = detail::to_radians<float>(-90,
+                                widget.value_to_degrees(value.range->min(),
+                                        value.range->max(),
+                                        value.range->value()));
+
+            painter.set(value.color);
+            painter.set_line_width(value.width);
+            auto cr = painter.context().get();
+            if (value.flags.is_set(flag::rounded_cap))
+                cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+            else
+                cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+
             painter.draw(Arc(c, radius, angle1, angle2));
             painter.stroke();
-        }
 
-        if (widget.radial_flags().is_set(flag::primary_handle))
-        {
-            // handle
-            painter.set(color3);
-            painter.set_line_width(linew);
-            painter.draw(Arc(c, radius, angle2 - 0.3, angle2));
-            painter.stroke();
-        }
-
-        if (widget.radial_flags().is_set(flag::secondary_value))
-        {
-            // secondary value
-            float angle3 = detail::to_radians<float>(-90,
-                           widget.value_to_degrees(widget.value2()));
-            painter.set(color4);
-            painter.set_line_width(linew);
-            painter.draw(Arc(c, radius, angle3 - 0.01, angle3 + 0.01));
-            painter.stroke();
-        }
-
-        if (widget.radial_flags().is_set(flag::text))
-        {
-            if (!widget.m_text.empty())
+            if (value.flags.is_set(flag::text_value))
             {
-                painter.set(widget.color(Palette::ColorId::text).color());
-                painter.set(Font(72));
-
-                auto size = painter.text_size(widget.m_text);
-                Rect target = detail::align_algorithm(size, b, alignmask::center, 0);
-
-                painter.draw(target.point());
-                painter.draw(widget.m_text);
+                text = std::to_string(value.range->value());
             }
         }
-        else if (widget.radial_flags().is_set(flag::text_value))
+
+        if (!text.empty())
         {
-            auto txt = std::to_string(widget.value());
+            auto target = Rect(Size(smalldim, smalldim));
+            target.move_to_center(b.center());
+            auto font = detail::TextWidget::scale_font(target.size(), text,
+                        widget.font());
 
-            painter.set(widget.color(Palette::ColorId::text).color());
-            painter.set(Font(72));
-
-            auto size = painter.text_size(txt);
-            Rect target = detail::align_algorithm(size, b, alignmask::center, 0);
-
-            painter.draw(target.point());
-            painter.draw(txt);
+            detail::draw_text(painter,
+                              widget.content_area(),
+                              text,
+                              font,
+                              TextBox::flags_type(),
+                              alignmask::center,
+                              justification::middle,
+                              widget.color(Palette::ColorId::label_text).color());
         }
     }
-
-    /**
-     * Get the current text of the radial.
-     */
-    virtual const std::string& text() const { return m_text; }
 
     inline float touch_to_degrees(const Point& point) const
     {
@@ -257,26 +235,64 @@ public:
     /**
      * Normalize a value to degrees.
      */
-    inline float value_to_degrees(T value) const
+    inline T value_to_degrees(T min, T max, T value) const
     {
-        float n = (static_cast<float>(value) -
-                   static_cast<float>(this->m_min)) /
-                  (static_cast<float>(this->m_max) - static_cast<float>(this->m_min));
+        const auto n = (static_cast<float>(value) -
+                        static_cast<float>(min)) /
+                       (static_cast<float>(max) - static_cast<float>(min));
         return n * 360.;
     }
 
     /**
      * Normalize degrees to a value.
      */
-    inline T degrees_to_value(float degrees) const
+    inline T degrees_to_value(T min, T max, T degrees) const
     {
-        float n = degrees / 360.;
-        return (n * (this->m_max - this->m_min)) + this->m_min;
+        const auto n = degrees / 360.;
+        return (n * (max - min)) + min;
+    }
+
+    /**
+     * The starting angle in degrees for the min values.
+     */
+    inline float start_angle() const
+    {
+        return m_start_angle;
+    }
+
+    /**
+     * Set the starting angle in degrees for the min values.
+     */
+    inline void set_start_angle(float value)
+    {
+        m_start_angle = value;
     }
 
     virtual ~RadialType() = default;
 
 protected:
+
+    template< class T2>
+    struct ValueData
+    {
+        ValueData(std::shared_ptr<RangeValue<T2>> r,
+                  const Color c,
+                  size_t w = 10,
+                  flags_type f = {},
+                  uint32_t h = 0) noexcept
+            : range(r),
+              color(c),
+              width(w),
+              flags(f),
+              handle(h)
+        {}
+
+        std::shared_ptr<RangeValue<T2>> range;
+        Color color;
+        default_dim_type width{};
+        flags_type flags{};
+        uint32_t handle{0};
+    };
 
     /**
      * Center text of the widget.
@@ -286,18 +302,24 @@ protected:
     /**
      * The second value of the widget.
      */
-    T m_value2{};
+    std::vector<ValueData<T>> m_values;
 
     /**
-     * Radial flags.
+     * Counter used to generate unique handles for each handle registration.
      */
-    flags_type m_radial_flags;
+    uint32_t m_handle_counter{0};
+
+    /**
+     * The starting angle in degrees for the min values.
+     */
+    float m_start_angle{0.f};
 };
 
 /**
  * Helper type for a default radial.
  */
 using Radial = RadialType<int>;
+using RadialF = RadialType<float>;
 
 }
 }
