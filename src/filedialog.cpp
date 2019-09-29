@@ -132,7 +132,7 @@ void FileDialog::list_item_selected(int index)
 
 FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
-      m_grid(std::make_shared<StaticGrid>(Size(0, (rect.height() * 0.15)), Tuple(2, 1), 5)),
+      m_grid(std::make_shared<StaticGrid>(Size(0, (rect.height() * 0.15)), std::make_tuple(2, 1), 5)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
 {
@@ -186,7 +186,7 @@ std::string FileOpenDialog::selected() const
 FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     : FileDialog(filepath, rect),
       m_fsave_box(std::make_shared<TextBox>("", Size(0, rect.height() * 0.15))),
-      m_grid(std::make_shared<StaticGrid>(Size(rect.width() * 0.30, rect.height() * 0.15), Tuple(2, 1), 5)),
+      m_grid(std::make_shared<StaticGrid>(Size(rect.width() * 0.30, rect.height() * 0.15), std::make_tuple(2, 1), 5)),
       m_okay(std::make_shared<Button>("OK")),
       m_cancel(std::make_shared<Button>("Cancel"))
 {

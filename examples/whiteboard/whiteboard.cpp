@@ -18,7 +18,7 @@ public:
 
     explicit ColorPickerWindow(const Color& color)
         : Popup(main_screen()->size() / 2),
-          m_grid(Tuple(4, 5), 10),
+          m_grid(std::make_tuple(4, 5), 10),
           m_color(color)
     {
         expand(m_grid);
@@ -83,7 +83,7 @@ public:
 
     explicit WidthPickerWindow(int width)
         : Popup(main_screen()->size() / 4),
-          m_grid(Tuple(4, 1), 10),
+          m_grid(std::make_tuple(4, 1), 10),
           m_width(width)
     {
         expand(m_grid);

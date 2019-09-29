@@ -16,6 +16,7 @@
 #include <egt/widget.h>
 #include <memory>
 #include <vector>
+#include <tuple>
 
 namespace egt
 {
@@ -52,7 +53,7 @@ public:
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::set_border().
      */
-    explicit StaticGrid(const Tuple& size = Tuple(1, 1),
+    explicit StaticGrid(const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         default_dim_type border = 0) noexcept;
 
     /**
@@ -60,7 +61,7 @@ public:
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::set_border().
      */
-    explicit StaticGrid(const Rect& rect, const Tuple& size = Tuple(1, 1),
+    explicit StaticGrid(const Rect& rect, const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         default_dim_type border = 0) noexcept;
 
     /**
@@ -70,7 +71,7 @@ public:
      * @param[in] border Border width. @see Widget::set_border().
      */
     StaticGrid(Frame& parent, const Rect& rect,
-               const Tuple& size = Tuple(1, 1),
+               const std::tuple<int, int>& size = std::make_tuple(1, 1),
                default_dim_type border = 0) noexcept;
 
     /**
@@ -78,10 +79,12 @@ public:
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::set_border().
      */
-    explicit StaticGrid(Frame& parent, const Tuple& size = Tuple(1, 1),
+    explicit StaticGrid(Frame& parent, const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         default_dim_type border = 0) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    using Frame::add;
 
     /**
      * Add a widget to the next empty cell.
@@ -92,14 +95,6 @@ public:
      * @param widget The widget to add, or nullptr.
      */
     virtual void add(const std::shared_ptr<Widget>& widget) override;
-
-    virtual void add(Widget& widget) override
-    {
-        // Nasty, but it gets the job done.  If a widget is passed in as a
-        // reference, we don't own it, so create a "pointless" shared_ptr that
-        // will not delete it.
-        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}));
-    }
 
     /**
      * Add a widget to the grid into a specific cell.
@@ -132,47 +127,24 @@ public:
 
     virtual void remove(Widget* widget) override;
 
-    /**
-     * Re-position all child widgets.
-     *
-     * @note You should *not* have to manually call this under normal
-     * circumstances.
-     */
-    virtual void reposition();
-
-    virtual void layout() override
-    {
-        if (!visible())
-            return;
-
-        // we cannot layout with no space
-        if (size().empty())
-            return;
-
-        if (m_in_layout)
-            return;
-
-        if (m_children.empty())
-            return;
-
-        m_in_layout = true;
-        detail::scope_exit reset([this]() { m_in_layout = false; });
-
-        reposition();
-    }
+    virtual void layout() override;
 
     /**
      * Returns the last column used for an add() call.
+     *
+     * @note This will return -1 if nothing has been added.
      */
-    int last_add_column() const
+    inline int last_add_column() const
     {
         return m_last_add_column;
     }
 
     /**
      * Returns the last row used for an add() call.
+     *
+     * @note This will return -1 if nothing has been added.
      */
-    int last_add_row() const
+    inline int last_add_row() const
     {
         return m_last_add_row;
     }
@@ -197,17 +169,25 @@ public:
      */
     inline flags_type& grid_flags() { return m_grid_flags; }
 
-    virtual void reallocate(const Tuple& size);
+    virtual void reallocate(const std::tuple<int, int>& size);
 
     virtual ~StaticGrid() noexcept = default;
 
 protected:
 
+    /**
+     * Re-position all child widgets.
+     *
+     * @note You should *not* have to manually call this under normal
+     * circumstances.
+     */
+    virtual void reposition();
+
     using cell_array = std::vector<std::vector<std::weak_ptr<Widget>>>;
 
     cell_array m_cells;
-    int m_last_add_column{0};
-    int m_last_add_row{0};
+    int m_last_add_column{-1};
+    int m_last_add_row{-1};
     bool m_column_priority{false};
 
     /**
@@ -234,7 +214,7 @@ public:
 
     virtual Point selected() const
     {
-        return Point(m_selected_column, m_selected_row);
+        return {m_selected_column, m_selected_row};
     }
 
     virtual void handle(Event& event) override;

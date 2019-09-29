@@ -24,7 +24,7 @@ struct ButtonPage : public NotebookTab
 {
     ButtonPage()
     {
-        auto grid0 = make_shared<StaticGrid>(Tuple(3, 6), 5);
+        auto grid0 = make_shared<StaticGrid>(std::make_tuple(3, 6), 5);
         add(expand(grid0));
 
         grid0->add(expand(make_shared<Button>("Button", Size(100, 40))));
@@ -64,7 +64,7 @@ struct CheckBoxPage : public NotebookTab
 {
     CheckBoxPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 10), 5);
+        auto grid0 = std::make_shared<StaticGrid>(std::make_tuple(3, 10), 5);
         add(expand(grid0));
 
         auto toggle1 = std::make_shared<ToggleBox>();
@@ -124,7 +124,7 @@ struct LabelPage : public NotebookTab
 {
     LabelPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(3, 5), 5);
+        auto grid0 = std::make_shared<StaticGrid>(std::make_tuple(3, 5), 5);
         add(expand(grid0));
 
         auto label1 = std::make_shared<Label>("left align",
@@ -200,10 +200,10 @@ struct TextPage : public NotebookTab
 {
     TextPage()
     {
-        auto grid1 = std::make_shared<StaticGrid>(Tuple(2, 1), 5);
+        auto grid1 = std::make_shared<StaticGrid>(std::make_tuple(2, 1), 5);
         add(expand(grid1));
 
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(1, 10), 5);
+        auto grid0 = std::make_shared<StaticGrid>(std::make_tuple(1, 10), 5);
         grid1->add(expand(grid0));
 
         auto text1 = std::make_shared<TextBox>("text 1");
@@ -268,7 +268,7 @@ struct ProgressPage : public NotebookTab
 {
     ProgressPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(2, 8), 5);
+        auto grid0 = std::make_shared<StaticGrid>(std::make_tuple(2, 8), 5);
         add(expand(grid0));
 
         auto spinprogress = std::make_shared<SpinProgress>();
@@ -330,7 +330,7 @@ struct MeterPage : public NotebookTab
 {
     MeterPage()
     {
-        auto grid0 = std::make_shared<StaticGrid>(Tuple(2, 2), 10);
+        auto grid0 = std::make_shared<StaticGrid>(std::make_tuple(2, 2), 10);
         add(expand(grid0));
 
         auto lp1 = std::make_shared<LevelMeter>();

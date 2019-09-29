@@ -24,7 +24,7 @@ int main(int argc, const char** argv)
     logo.set_margin(10);
     win.add(logo);
 
-    StaticGrid grid(Rect(Size(win.width(), win.height() - 40)), Tuple(2, 2));
+    StaticGrid grid(Rect(Size(win.width(), win.height() - 40)), std::make_tuple(2, 2));
 
     Sprite sprite1(Image("walk.png"), Size(75, 132), 8, Point(0, 0));
     grid.add(center(sprite1), 0, 1);

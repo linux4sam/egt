@@ -66,7 +66,7 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
     auto label = std::make_shared<Label>(name);
     label->set_align(alignmask::expand);
     label->set_text_align(m_name_align);
-    auto grid = std::make_shared<StaticGrid>(Tuple(2, 1));
+    auto grid = std::make_shared<StaticGrid>(std::make_tuple(2, 1));
     grid->set_margin(2); /// @todo Not working
     auto b = widget->size();
     if (b.height() < widget->min_size_hint().height())
@@ -84,7 +84,7 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
 void Form::add_option(const std::shared_ptr<Widget>& widget)
 {
     widget->set_align(alignmask::expand);
-    auto grid = std::make_shared<StaticGrid>(Tuple(1, 1));
+    auto grid = std::make_shared<StaticGrid>(std::make_tuple(1, 1));
     grid->set_margin(2); /// @todo Not working
     auto b = widget->size();
     if (b.height() < widget->min_size_hint().height())

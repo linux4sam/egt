@@ -19,7 +19,7 @@ class Controls : public StaticGrid
 public:
 
     Controls()
-        : StaticGrid(Size(250, 64), Tuple(3, 1)),
+        : StaticGrid(Size(250, 64), std::make_tuple(3, 1)),
           m_previous(Image("previous.png")),
           m_play(Image("play.png")),
           m_next(Image("next.png"))

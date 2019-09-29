@@ -36,7 +36,7 @@ int main(int argc, const char** argv)
     logo->set_margin(10);
     win.add(top(center(logo)));
 
-    StaticGrid grid(Tuple(3, 2));
+    StaticGrid grid(std::make_tuple(3, 2));
     win.add(expand(grid));
 
     Gauge gauge;

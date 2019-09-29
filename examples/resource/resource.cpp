@@ -39,7 +39,7 @@ class MainWindow : public TopWindow
 {
 public:
     explicit MainWindow()
-        : m_grid(Tuple(2, 3))
+        : m_grid(std::make_tuple(2, 3))
     {
         auto sizer = std::make_shared<VerticalBoxSizer>();
         add(expand(sizer));

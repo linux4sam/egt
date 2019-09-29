@@ -27,7 +27,7 @@ Scrollwheel::Scrollwheel(const item_array& items,
 
 Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
                          bool reversed) noexcept
-    : StaticGrid(rect, Tuple(1, 3), 1),
+    : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_items(items),
       m_button_up(make_shared<ImageButton>(Image("@arrow_up.png"))),
       m_button_down(make_shared<ImageButton>(Image("@arrow_down.png"))),
@@ -83,7 +83,7 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const item_array& item
 
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
                          bool reversed) noexcept
-    : StaticGrid(rect, Tuple(1, 3), 1),
+    : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_button_up(make_shared<ImageButton>(Image("@arrow_up.png"))),
       m_button_down(make_shared<ImageButton>(Image("@arrow_down.png"))),
       m_label(make_shared<Label>())
@@ -165,14 +165,14 @@ void Scrollwheel::init(bool reversed)
 
     if (m_orient == orientation::vertical)
     {
-        reallocate(Tuple(1, 3));
+        reallocate(std::make_tuple(1, 3));
         add(expand(m_label), 0, 1);
         add(expand(m_button_up), 0, 0);
         add(expand(m_button_down), 0, 2);
     }
     else
     {
-        reallocate(Tuple(3, 1));
+        reallocate(std::make_tuple(3, 1));
         add(expand(m_button_up), 0, 0);
         add(expand(m_label), 1, 0);
         add(expand(m_button_down), 2, 0);

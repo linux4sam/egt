@@ -22,7 +22,7 @@ int main(int argc, const char** argv)
     auto layout = make_shared<VerticalBoxSizer>();
     win.add(expand(layout));
 
-    auto grid = make_shared<StaticGrid>(Tuple(3, 1));
+    auto grid = make_shared<StaticGrid>(std::make_tuple(3, 1));
     grid->set_height(50);
     grid->set_color(Palette::ColorId::bg, Palette::gray);
     layout->add(expand_horizontal(grid));

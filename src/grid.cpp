@@ -15,42 +15,40 @@ namespace egt
 inline namespace v1
 {
 
-StaticGrid::StaticGrid(const Rect& rect, const Tuple& size,
+StaticGrid::StaticGrid(const Rect& rect, const std::tuple<int, int>& size,
                        default_dim_type border) noexcept
     : Frame(rect)
 {
     set_name("StaticGrid" + std::to_string(m_widgetid));
     set_border(border);
 
+    reallocate(size);
+}
+
+void StaticGrid::reallocate(const std::tuple<int, int>& size)
+{
     /*
      * The grid size is set here.  Every column should be the same size.  Don't
      * delete from the column vectors.  Only set empty cells to nullptr.
      */
-    m_cells.resize(size.width());
+    m_cells.resize(std::get<0>(size));
     for (auto& x : m_cells)
-        x.resize(size.height(), {});
+        x.resize(std::get<1>(size), {});
 }
 
-void StaticGrid::reallocate(const Tuple& size)
-{
-    m_cells.resize(size.width());
-    for (auto& x : m_cells)
-        x.resize(size.height(), {});
-}
-
-StaticGrid::StaticGrid(const Tuple& size, default_dim_type border) noexcept
+StaticGrid::StaticGrid(const std::tuple<int, int>& size, default_dim_type border) noexcept
     : StaticGrid(Rect(), size, border)
 {
 }
 
 StaticGrid::StaticGrid(Frame& parent, const Rect& rect,
-                       const Tuple& size, default_dim_type border) noexcept
+                       const std::tuple<int, int>& size, default_dim_type border) noexcept
     : StaticGrid(rect, size, border)
 {
     parent.add(*this);
 }
 
-StaticGrid::StaticGrid(Frame& parent, const Tuple& size, default_dim_type border) noexcept
+StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, default_dim_type border) noexcept
     : StaticGrid(size, border)
 {
     parent.add(*this);
@@ -219,7 +217,9 @@ void StaticGrid::remove(Widget* widget)
     auto predicate = [widget](const std::weak_ptr<Widget>& ptr)
     {
         auto w = ptr.lock();
-        return w.get() == widget;
+        if (w)
+            return w.get() == widget;
+        return false;
     };
 
     for (auto& x : m_cells)
@@ -282,6 +282,27 @@ void StaticGrid::reposition()
     }
 
     damage();
+}
+
+void StaticGrid::layout()
+{
+    if (!visible())
+        return;
+
+    // we cannot layout with no space
+    if (size().empty())
+        return;
+
+    if (m_in_layout)
+        return;
+
+    if (m_children.empty())
+        return;
+
+    m_in_layout = true;
+    detail::scope_exit reset([this]() { m_in_layout = false; });
+
+    reposition();
 }
 
 void SelectableGrid::handle(Event& event)

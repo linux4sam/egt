@@ -44,7 +44,6 @@ enum class compatible
 {
     normal,
     display,
-    tuple,
 };
 
 }
@@ -492,10 +491,6 @@ using Size = SizeType<default_dim_type, detail::compatible::normal>;
  * Helper type for a float size.
  */
 using SizeF = SizeType<float, detail::compatible::normal>;
-/**
- * Helper type for a tuple.
- */
-using Tuple = SizeType<int, detail::compatible::tuple>;
 
 /**
  * A rectangle.
