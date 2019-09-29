@@ -131,7 +131,7 @@ double VideoWindow::get_volume() const
     return m_decoderImpl->get_volume();
 }
 
-bool VideoWindow::seek(const int64_t time)
+bool VideoWindow::seek(int64_t time)
 {
     return m_decoderImpl->seek(time);
 }

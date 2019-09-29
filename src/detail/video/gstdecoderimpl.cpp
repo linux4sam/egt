@@ -114,7 +114,7 @@ bool GstDecoderImpl::set_volume(double volume)
     return true;
 }
 
-bool GstDecoderImpl::seek(const int64_t time)
+bool GstDecoderImpl::seek(int64_t time)
 {
     if (playing())
     {

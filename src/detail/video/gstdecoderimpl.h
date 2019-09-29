@@ -51,7 +51,7 @@ public:
 
     int64_t get_position() const;
 
-    virtual bool seek(const int64_t time);
+    virtual bool seek(int64_t time);
 
     virtual void destroyPipeline();
 

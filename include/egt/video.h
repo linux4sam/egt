@@ -134,7 +134,7 @@ public:
      * @param time in nanoseconds
      * @return true if seek success
      */
-    virtual bool seek(const int64_t time);
+    virtual bool seek(int64_t time);
 
     /**
      * Enable/disable continues loop-back mode of the video
