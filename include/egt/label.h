@@ -184,13 +184,12 @@ public:
      * @param[in] vscale Vertical scale, with 1.0 being 100%.
      * @param[in] approximate Approximate the scale to increase image cache
      *            hit efficiency.
-     *
-     * @warning This does not damage the widget.
      */
     virtual void scale_image(double hscale, double vscale,
                              bool approximate = false)
     {
         m_image.scale(hscale, vscale, approximate);
+        parent_layout();
     }
 
     /**

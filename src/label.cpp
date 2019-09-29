@@ -186,7 +186,7 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
                         static_cast<double>(widget.image().size_orig().width());
         const auto vs = static_cast<double>(target.height()) /
                         static_cast<double>(widget.image().size_orig().height());
-        widget.scale_image(hs, vs);
+        widget.image().scale(hs, vs);
 
         painter.draw(target.point());
         painter.draw(widget.image());
