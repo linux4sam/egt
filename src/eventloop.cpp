@@ -140,7 +140,7 @@ int EventLoop::run(bool enable_fps)
 
 void EventLoop::add_idle_callback(event_callback func)
 {
-    m_idle.push_back(func);
+    m_idle.emplace_back(std::move(func));
 }
 
 void EventLoop::invoke_idle_callbacks()

@@ -61,7 +61,7 @@ public:
      */
     void clear();
 
-    static shared_cairo_surface_t scale_surface(shared_cairo_surface_t old_surface,
+    static shared_cairo_surface_t scale_surface(const shared_cairo_surface_t& old_surface,
             float old_width, float old_height,
             float new_width, float new_height);
 

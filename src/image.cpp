@@ -40,7 +40,7 @@ Image::Image(const std::string& respath,
 }
 
 Image::Image(shared_cairo_surface_t surface)
-    : m_surface(surface)
+    : m_surface(std::move(surface))
 {
     assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 

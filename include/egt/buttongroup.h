@@ -75,7 +75,7 @@ public:
     /**
      * Add a button to the group.
      */
-    virtual void add(std::shared_ptr<Button> button);
+    virtual void add(const std::shared_ptr<Button>& button);
 
     /**
      * Remove a button from the group.
@@ -95,7 +95,7 @@ public:
      *
      * @param callback The callback to invoke.
      */
-    virtual void foreach_checked(foreach_checked_callback_t callback);
+    virtual void foreach_checked(const foreach_checked_callback_t& callback);
 
     virtual ~ButtonGroup();
 

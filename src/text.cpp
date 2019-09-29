@@ -450,7 +450,7 @@ void TextBox::set_input_validation_enabled(bool enabled)
 
 void TextBox::add_validator_function(validator_callback_t callback)
 {
-    m_validator_callbacks.push_back(callback);
+    m_validator_callbacks.emplace_back(std::move(callback));
 }
 
 bool TextBox::validate_input(const std::string& str)

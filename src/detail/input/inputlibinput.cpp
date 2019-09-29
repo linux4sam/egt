@@ -102,10 +102,17 @@ InputLibInput::InputLibInput(Application& app)
     // go ahead and enumerate devices and start the first async_read
 #ifdef USE_PRIORITY_QUEUE
     asio::async_read(m_input, asio::null_buffers(),
-                     m_app.event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));
+                     m_app.event().queue().wrap(detail::priorities::moderate,
+                             [this](const asio::error_code & error, std::size_t)
+    {
+        handle_read(error);
+    }));
 #else
     asio::async_read(m_input, asio::null_buffers(),
-                     std::bind(&InputLibInput::handle_read, this, std::placeholders::_1));
+                     [this](const asio::error_code & error, std::size_t)
+    {
+        handle_read(error);
+    });
 #endif
 }
 
@@ -313,10 +320,17 @@ void InputLibInput::handle_read(const asio::error_code& error)
 
 #ifdef USE_PRIORITY_QUEUE
     asio::async_read(m_input, asio::null_buffers(),
-                     m_app.event().queue().wrap(detail::priorities::moderate, std::bind(&InputLibInput::handle_read, this, std::placeholders::_1)));
+                     m_app.event().queue().wrap(detail::priorities::moderate,
+                             [this](const asio::error_code & error, std::size_t)
+    {
+        handle_read(error);
+    }));
 #else
     asio::async_read(m_input, asio::null_buffers(),
-                     std::bind(&InputLibInput::handle_read, this, std::placeholders::_1));
+                     [this](const asio::error_code & error, std::size_t)
+    {
+        handle_read(error);
+    });
 #endif
 }
 

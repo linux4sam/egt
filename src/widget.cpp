@@ -540,12 +540,14 @@ void Widget::set_parent(Frame* parent)
 {
     // cannot already have a parent
     assert(!m_parent);
+    if (m_parent)
+        throw std::runtime_error("widget already has a parent");
 
-    if (!m_parent)
-    {
-        m_parent = parent;
-        damage();
-    }
+    if (parent == this)
+        throw std::runtime_error("cannot add a widget to itself");
+
+    m_parent = parent;
+    damage();
 }
 
 void Widget::parent_layout()

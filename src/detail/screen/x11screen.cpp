@@ -123,7 +123,10 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
 
     // start the async read from the server
     asio::async_read(m_input, asio::null_buffers(),
-                     std::bind(&X11Screen::handle_read, this, std::placeholders::_1));
+                     [this](const asio::error_code & error, std::size_t)
+    {
+        handle_read(error);
+    });
 }
 
 void X11Screen::flip(const damage_array& damage)
@@ -236,7 +239,10 @@ void X11Screen::handle_read(const asio::error_code& error)
     }
 
     asio::async_read(m_input, asio::null_buffers(),
-                     std::bind(&X11Screen::handle_read, this, std::placeholders::_1));
+                     [this](const asio::error_code & error, std::size_t)
+    {
+        handle_read(error);
+    });
 }
 
 X11Screen::~X11Screen()

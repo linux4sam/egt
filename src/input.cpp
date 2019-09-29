@@ -18,8 +18,10 @@ inline namespace v1
 Input::Input()
     : m_mouse(new detail::MouseGesture)
 {
-    m_mouse->on_async_event(std::bind(&Input::dispatch,
-                                      this, std::placeholders::_1));
+    m_mouse->on_async_event([this](Event & event)
+    {
+        dispatch(event);
+    });
 }
 
 /**

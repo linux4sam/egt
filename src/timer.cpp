@@ -51,11 +51,15 @@ void Timer::start()
 #ifdef USE_PRIORITY_QUEUE
     m_timer.async_wait(
         Application::instance().event().queue().wrap(detail::priorities::high,
-                std::bind(&Timer::internal_timer_callback, this,
-                          std::placeholders::_1)));
+                [this](const asio::error_code & error)
+    {
+        internal_timer_callback(error);
+    }));
 #else
-    m_timer.async_wait(std::bind(&Timer::internal_timer_callback, this,
-                                 std::placeholders::_1));
+    m_timer.async_wait([this](const asio::error_code & error)
+    {
+        internal_timer_callback(error);
+    });
 #endif
 }
 
@@ -168,13 +172,17 @@ void PeriodicTimer::start()
     m_running = true;
 
 #ifdef USE_PRIORITY_QUEUE
-    m_timer.async_wait(Application::instance().event().queue().wrap(detail::priorities::high, std::bind(&PeriodicTimer::internal_timer_callback, this,
-                       std::placeholders::_1)));
+    m_timer.async_wait(Application::instance().event().queue().wrap(detail::priorities::high,
+                       [this](const asio::error_code & error)
+    {
+        internal_timer_callback(error);
+    }))
 #else
-    m_timer.async_wait(std::bind(&PeriodicTimer::internal_timer_callback, this,
-                                 std::placeholders::_1));
+    m_timer.async_wait([this](const asio::error_code & error)
+    {
+        internal_timer_callback(error);
+    });
 #endif
-
 }
 
 void PeriodicTimer::internal_timer_callback(const asio::error_code& error)

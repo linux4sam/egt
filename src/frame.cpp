@@ -28,6 +28,16 @@ Frame::Frame(const Rect& rect, const flags_type& flags) noexcept
     set_boxtype(Theme::boxtype::none);
 }
 
+void Frame::add(std::shared_ptr<Widget> widget)
+{
+    if (!widget)
+        return;
+
+    widget->set_parent(this);
+    m_children.emplace_back(std::move(widget));
+    layout();
+}
+
 void Frame::remove(Widget* widget)
 {
     if (!widget)

@@ -94,7 +94,7 @@ public:
      *
      * @param widget The widget to add, or nullptr.
      */
-    virtual void add(const std::shared_ptr<Widget>& widget) override;
+    virtual void add(std::shared_ptr<Widget> widget) override;
 
     /**
      * Add a widget to the grid into a specific cell.

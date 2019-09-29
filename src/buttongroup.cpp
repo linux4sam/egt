@@ -39,7 +39,7 @@ bool ButtonGroup::imperative() const
     return m_imperative;
 }
 
-void ButtonGroup::add(shared_ptr<Button> button)
+void ButtonGroup::add(const shared_ptr<Button>& button)
 {
     /*
      * Cannot belong to several groups or several times to the same
@@ -133,7 +133,7 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
      */
 }
 
-void ButtonGroup::foreach_checked(foreach_checked_callback_t callback)
+void ButtonGroup::foreach_checked(const foreach_checked_callback_t& callback)
 {
     for (auto& b : m_buttons)
     {
@@ -145,14 +145,12 @@ void ButtonGroup::foreach_checked(foreach_checked_callback_t callback)
 
 ButtonGroup::~ButtonGroup()
 {
-    for (auto button : m_buttons)
+    for (auto& button : m_buttons)
     {
         auto real = button.lock();
         if (real)
             real->m_group = nullptr;
     }
-
-    m_buttons.clear();
 }
 
 }

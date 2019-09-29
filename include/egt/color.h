@@ -602,9 +602,9 @@ public:
         : m_interp(interp)
     {}
 
-    explicit ColorMap(const steps_array& steps, interpolation interp = interpolation::rgba)
+    explicit ColorMap(steps_array steps, interpolation interp = interpolation::rgba)
         : m_interp(interp),
-          m_steps(steps)
+          m_steps(std::move(steps))
     {}
 
     /**

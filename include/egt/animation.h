@@ -111,7 +111,7 @@ public:
      *
      * @todo Need to implement removing callbacks, similar to Object class.
      */
-    inline void add_callback(animation_callback_t callback = nullptr)
+    inline void add_callback(animation_callback_t callback)
     {
         if (callback)
             m_callbacks.emplace_back(std::move(callback));
@@ -173,7 +173,7 @@ public:
      */
     Animation(float_t start,
               float_t end,
-              animation_callback_t callback,
+              const animation_callback_t& callback,
               std::chrono::milliseconds duration,
               easing_func_t func = easing_linear);
 
@@ -520,8 +520,8 @@ public:
     AutoAnimation(float_t start,
                   float_t end,
                   std::chrono::milliseconds duration,
-                  easing_func_t func = easing_linear,
-                  animation_callback_t callback = nullptr);
+                  const easing_func_t& func = easing_linear,
+                  const animation_callback_t& callback = nullptr);
 
     virtual void start() override;
     virtual void stop() override;
@@ -561,8 +561,10 @@ public:
                                   std::chrono::milliseconds duration = std::chrono::milliseconds(),
                                   easing_func_t func = easing_linear)
         : AutoAnimation(start, end, duration, func,
-                        std::bind(&PropertyAnimatorType<T>::invoke_handlers,
-                                  this, std::placeholders::_1))
+                        [this](T value)
+    {
+        invoke_handlers(value);
+    })
     {}
 
     using property_callback_t = std::function<void (T v)>;

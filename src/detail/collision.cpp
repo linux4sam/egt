@@ -13,8 +13,8 @@ inline namespace v1
 namespace detail
 {
 
-bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
-                     const Rect& rhs, shared_cairo_surface_t rimage)
+bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
+                     const Rect& rhs, const shared_cairo_surface_t& rimage)
 {
     if (lhs.intersect(rhs))
     {
@@ -45,7 +45,7 @@ bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
     return false;
 }
 
-bool alpha_collision(const Rect& lhs, shared_cairo_surface_t limage,
+bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
                      const Point& rhs)
 {
     if (lhs.intersect(rhs))

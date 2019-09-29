@@ -117,7 +117,7 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
     Frame::draw(painter, rect);
 }
 
-void StaticGrid::add(const std::shared_ptr<Widget>& widget)
+void StaticGrid::add(std::shared_ptr<Widget> widget)
 {
     if (!widget)
         return;

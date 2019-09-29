@@ -26,7 +26,7 @@ MouseGesture::MouseGesture()
 
 void MouseGesture::on_async_event(mouse_callback_t callback)
 {
-    m_callbacks.push_back(callback);
+    m_callbacks.emplace_back(std::move(callback));
 }
 
 Event MouseGesture::handle(Event& event)

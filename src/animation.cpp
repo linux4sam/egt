@@ -17,16 +17,15 @@ inline namespace v1
 {
 
 Animation::Animation(float_t start, float_t end,
-                     animation_callback_t callback,
+                     const animation_callback_t& callback,
                      std::chrono::milliseconds duration,
                      easing_func_t func)
     : m_start(start),
       m_end(end),
-      m_easing(func),
+      m_easing(std::move(func)),
       m_duration(duration)
 {
-    if (callback)
-        add_callback(callback);
+    add_callback(callback);
 }
 
 void Animation::start()
@@ -79,7 +78,7 @@ bool Animation::next()
 void Animation::set_easing_func(easing_func_t func)
 {
     if (!running())
-        m_easing = func;
+        m_easing = std::move(func);
 }
 
 void Animation::stop()
@@ -89,8 +88,8 @@ void Animation::stop()
 
 AutoAnimation::AutoAnimation(float_t start, float_t end,
                              std::chrono::milliseconds duration,
-                             easing_func_t func,
-                             animation_callback_t callback)
+                             const easing_func_t& func,
+                             const animation_callback_t& callback)
     : Animation(start, end, callback, duration, func),
       m_timer(std::chrono::milliseconds(30))
 {

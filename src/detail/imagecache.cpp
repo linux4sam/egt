@@ -312,7 +312,7 @@ string ImageCache::id(const string& filename, float hscale, float vscale)
 
 #ifdef HAVE_SIMD
 shared_cairo_surface_t
-ImageCache::scale_surface(shared_cairo_surface_t old_surface,
+ImageCache::scale_surface(const shared_cairo_surface_t& old_surface,
                           float old_width, float old_height,
                           float new_width, float new_height)
 {
@@ -341,7 +341,7 @@ ImageCache::scale_surface(shared_cairo_surface_t old_surface,
 }
 #else
 shared_cairo_surface_t
-ImageCache::scale_surface(shared_cairo_surface_t old_surface,
+ImageCache::scale_surface(const shared_cairo_surface_t& old_surface,
                           float old_width, float old_height,
                           float new_width, float new_height)
 {

@@ -69,29 +69,7 @@ public:
      * Then add a layer index (x-order) here to add widgets to different
      * layers for drawing.
      */
-    virtual void add(const std::shared_ptr<Widget>& widget)
-    {
-        if (!widget)
-            return;
-
-        if (widget.get() == this)
-            throw std::runtime_error("cannot add a widget to itself");
-
-        assert(!widget->parent() && "widget already has parent!");
-
-        auto i = std::find_if(m_children.begin(), m_children.end(),
-                              [&widget](const std::shared_ptr<Widget>& ptr)
-        {
-            return ptr.get() == widget.get();
-        });
-
-        if (i == m_children.end())
-        {
-            widget->set_parent(this);
-            m_children.push_back(widget);
-            layout();
-        }
-    }
+    virtual void add(std::shared_ptr<Widget> widget);
 
     /**
      * Utility wrapper around add()
@@ -99,7 +77,7 @@ public:
      * @param widget The widget.
      */
     template<class T>
-    void add(const std::shared_ptr<T>& widget)
+    inline void add(std::shared_ptr<T>& widget)
     {
         auto p = std::dynamic_pointer_cast<Widget>(widget);
         add(p);
@@ -118,7 +96,7 @@ public:
      * caller to make sure this Widget is available for as long as the instance
      * of this class is around.
      */
-    virtual void add(Widget& widget)
+    inline void add(Widget& widget)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
@@ -390,7 +368,7 @@ public:
      */
     inline void set_special_child_draw_callback(special_child_draw_callback_t func)
     {
-        m_special_child_draw_callback = func;
+        m_special_child_draw_callback = std::move(func);
     }
 
     /**

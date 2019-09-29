@@ -224,12 +224,12 @@ namespace experimental
 double lua_evaluate(const std::string& expr);
 
 #ifdef NDEBUG
-inline void code_timer(bool, const std::string&, std::function<void ()> callback)
+inline void code_timer(bool, const std::string&, const std::function<void ()>& callback)
 {
     callback();
 }
 #else
-inline void code_timer(bool enable, const std::string& prefix, std::function<void ()> callback)
+inline void code_timer(bool enable, const std::string& prefix, const std::function<void ()>& callback)
 {
     if (enable)
     {

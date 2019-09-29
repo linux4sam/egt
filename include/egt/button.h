@@ -115,7 +115,7 @@ public:
      *
      * @see detail::Object::on_event()
      */
-    virtual uint32_t on_click(event_callback_t handler)
+    virtual uint32_t on_click(const event_callback_t& handler)
     {
         return on_event(handler, {eventid::pointer_click});
     }
