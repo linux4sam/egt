@@ -179,7 +179,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                 }
             });
 
-            if (name.find("/") != string::npos)
+            if (name.find('/') != string::npos)
                 name = resolve_file_path(name);
             else
                 name = resolve_file_path(egt_icons_dir + "/" + name);
