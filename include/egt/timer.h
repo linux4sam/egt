@@ -118,6 +118,11 @@ public:
     virtual void cancel();
 
     /**
+     * Alias for cancel().
+     */
+    inline void stop() { cancel(); }
+
+    /**
      * Called when the timer times out.
      *
      * This will invoke any callback registered with add_handler(). If you
