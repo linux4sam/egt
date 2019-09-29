@@ -51,7 +51,10 @@ public:
     {
     }
 
-    virtual ~NotebookTab() = default;
+    /**
+     * Select this tab.
+     */
+    void select();
 };
 
 /**
@@ -62,39 +65,58 @@ public:
 class Notebook : public Frame
 {
 public:
-    explicit Notebook(const Rect& rect = {});
 
-    /**
-     * @todo This should explicitly only allow NotebookTab widgets.
+    /*
+     * @param[in] rect Initial rectangle of the Frame.
      */
+    explicit Notebook(const Rect& rect = {}) noexcept;
+
+    /*
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Initial rectangle of the Frame.
+     */
+    explicit Notebook(Frame& parent, const Rect& rect = {}) noexcept;
+
+    using Frame::add;
+
     virtual void add(const std::shared_ptr<Widget>& widget) override;
 
     virtual void remove(Widget* widget) override;
 
+    /**
+     * Set the selected widget by index.
+     */
     virtual void set_selected(size_t index);
 
-    virtual ssize_t selected() const { return m_current_index; }
+    /**
+     * Set the selected widget by widget.
+     */
+    virtual void set_selected(Widget* widget);
+
+    /**
+     * Get the currently selected index.
+     */
+    inline ssize_t selected() const { return m_selected; }
+
+    /**
+     * Get a widget at he specified index.
+     *
+     * @param index The index of the widget.
+     */
+    virtual NotebookTab* get(size_t index) const;
 
     virtual ~Notebook() = default;
 
 protected:
 
-    /// @private
-    struct Cell
-    {
-        // cppcheck-suppress unusedStructMember
-        std::shared_ptr<NotebookTab> widget;
-        std::string name;
-    };
-
-    using cell_array = std::vector<Cell>;
+    using cell_array = std::vector<std::weak_ptr<NotebookTab>>;
 
     cell_array m_cells;
 
     /**
      * Currently selected index.
      */
-    ssize_t m_current_index{-1};
+    ssize_t m_selected{-1};
 };
 
 }

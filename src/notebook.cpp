@@ -3,19 +3,26 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 #include "egt/notebook.h"
 #include <algorithm>
 #include <string>
-
-using namespace std;
 
 namespace egt
 {
 inline namespace v1
 {
 
-Notebook::Notebook(const Rect& rect)
+void NotebookTab::select()
+{
+    if (parent())
+    {
+        auto notebook = dynamic_cast<Notebook*>(parent());
+        if (notebook)
+            notebook->set_selected(this);
+    }
+}
+
+Notebook::Notebook(const Rect& rect) noexcept
     : Frame(rect)
 {
     set_name("Notebook" + std::to_string(m_widgetid));
@@ -23,19 +30,35 @@ Notebook::Notebook(const Rect& rect)
     set_boxtype(Theme::boxtype::none);
 }
 
+Notebook::Notebook(Frame& parent, const Rect& rect) noexcept
+    : Notebook(rect)
+{
+    parent.add(*this);
+}
+
 void Notebook::add(const std::shared_ptr<Widget>& widget)
 {
-    Cell cell;
-    cell.widget = std::dynamic_pointer_cast<NotebookTab>(widget);
+    if (!widget)
+        return;
+
+    if (widget.get() == this)
+        throw std::runtime_error("cannot add a widget to itself");
+
+    assert(!widget->parent() && "widget already has parent!");
+
+    auto cell = std::dynamic_pointer_cast<NotebookTab>(widget);
+    if (!cell)
+        throw std::invalid_argument("only NotebookTab can be added to a Notebook");
+
     m_cells.push_back(cell);
 
     widget->set_align(alignmask::expand);
 
     Frame::add(widget);
 
-    if (m_current_index < 0)
+    if (m_selected < 0)
     {
-        m_current_index = 0;
+        m_selected = 0;
         widget->show();
     }
     else
@@ -53,20 +76,23 @@ void Notebook::remove(Widget* widget)
         return;
 
     auto i = std::remove_if(m_cells.begin(), m_cells.end(),
-                            [widget](const Notebook::Cell & cell)
+                            [widget](const std::weak_ptr<NotebookTab>& cell)
     {
-        return cell.widget.get() == widget;
+        auto w = cell.lock();
+        if (w)
+            return w.get() == widget;
+        return false;
     });
     m_cells.erase(i, m_cells.end());
 
     Frame::remove(widget);
 
-    if (m_current_index >= static_cast<int>(m_cells.size()))
+    if (m_selected >= static_cast<int>(m_cells.size()))
     {
         if (!m_cells.empty())
             set_selected(m_cells.size() - 1);
         else
-            m_current_index = -1;
+            m_selected = -1;
     }
 }
 
@@ -75,21 +101,60 @@ void Notebook::set_selected(size_t index)
     if (m_cells.empty())
         return;
 
-    if (static_cast<int>(index) != m_current_index)
-    {
-        if (index < m_cells.size())
-        {
-            if (m_cells[m_current_index].widget->leave())
-            {
-                m_cells[m_current_index].widget->hide();
-                m_current_index = index;
-                m_cells[m_current_index].widget->enter();
-                m_cells[m_current_index].widget->show();
+    if (index >= m_cells.size())
+        return;
 
-                invoke_handlers(eventid::property_changed);
+    if (static_cast<int>(index) != m_selected)
+    {
+        if (m_selected >= 0 &&
+            m_selected < static_cast<int>(m_cells.size()))
+        {
+            auto from = m_cells[m_selected].lock();
+            if (from)
+            {
+                if (!from->leave())
+                    return;
+                from->hide();
             }
         }
+
+        m_selected = index;
+        auto to = m_cells[m_selected].lock();
+        if (to)
+        {
+            to->enter();
+            to->show();
+        }
+
+        invoke_handlers(eventid::property_changed);
     }
+}
+
+void Notebook::set_selected(Widget* widget)
+{
+    auto predicate = [widget](const std::weak_ptr<NotebookTab>& ptr)
+    {
+        auto w = ptr.lock();
+        if (w)
+            return w.get() == widget;
+        return false;
+    };
+
+    auto i = std::find_if(m_cells.begin(), m_cells.end(), predicate);
+    if (i != m_cells.end())
+        set_selected(std::distance(m_cells.begin(), i));
+}
+
+NotebookTab* Notebook::get(size_t index) const
+{
+    if (index < m_cells.size())
+    {
+        auto w = m_cells[index].lock();
+        if (w)
+            return w.get();
+    }
+
+    return nullptr;
 }
 
 }
