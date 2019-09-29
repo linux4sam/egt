@@ -30,7 +30,6 @@ Input::Input()
 void Input::dispatch(Event& event)
 {
     // can't support recursive calls into the same dispatch function
-    // using the m_dispatching variable like this is not exception safe
     // one potential solution would be to asio::post() the call to dispatch if
     // we are currently dispatching already
     assert(!m_dispatching);
