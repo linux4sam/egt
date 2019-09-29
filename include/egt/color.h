@@ -617,6 +617,14 @@ public:
     }
 
     /**
+     * Set the steps.
+     */
+    inline void set_steps(const steps_array& steps)
+    {
+        m_steps = steps;
+    }
+
+    /**
      * Get a color at the specified offset.
      *
      * @param[in] t Offset from 0 to 1.
@@ -626,10 +634,7 @@ public:
     /**
      * Get a reference to the color steps array.
      */
-    const steps_array& steps() const
-    {
-        return m_steps;
-    }
+    const steps_array& steps() const { return m_steps; }
 
     /**
      * Are there any color steps?
@@ -643,7 +648,14 @@ public:
 
 protected:
 
+    /**
+     * Interpolation method.
+     */
     interpolation m_interp{interpolation::rgba};
+
+    /**
+     * Steps in the color map.
+     */
     steps_array m_steps;
 };
 
