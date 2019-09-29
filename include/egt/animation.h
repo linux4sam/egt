@@ -55,8 +55,21 @@ namespace detail
  * @param[in] end Ending value.
  * @param[in] reverse Should we reverse start and end.
  */
-float_t interpolate(easing_func_t easing, float_t percent, float_t start,
-                    float_t end, bool reverse = false);
+template<class Functor, class T>
+T interpolate(Functor&& easing, T percent, T start, T end, bool reverse = false)
+{
+    if (percent < 0.0f)
+        return start;
+    else if (percent > 1.0f)
+        return end;
+
+    if (reverse)
+        percent = 1.0f - easing(1.0f - percent);
+    else
+        percent = easing(percent);
+
+    return start * (1.0f - percent) + end * percent;
+}
 
 /**
  * Base class for an animation.

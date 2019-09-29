@@ -53,7 +53,7 @@ static LineChart::data_array create_data(easing_func_t easing)
 {
     LineChart::data_array data;
     for (float i = 0.; i <= 1.; i += .001)
-        data.emplace_back(i, detail::interpolate(easing, i, 0, 100));
+        data.emplace_back(i, detail::interpolate(easing, i, 0.f, 100.f));
     return data;
 }
 

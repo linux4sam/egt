@@ -16,25 +16,6 @@ namespace egt
 inline namespace v1
 {
 
-namespace detail
-{
-float_t interpolate(easing_func_t easing, float_t percent, float_t start,
-                    float_t end, bool reverse)
-{
-    if (percent < 0.0f)
-        return start;
-    else if (percent > 1.0f)
-        return end;
-
-    if (reverse)
-        percent = 1.0f - easing(1.0f - percent);
-    else
-        percent = easing(percent);
-
-    return start * (1.0f - percent) + end * percent;
-}
-}
-
 Animation::Animation(float_t start, float_t end,
                      animation_callback_t callback,
                      std::chrono::milliseconds duration,
