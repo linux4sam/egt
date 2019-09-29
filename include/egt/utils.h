@@ -133,6 +133,18 @@ inline bool change_if_diff(float& old, const float& to)
     return false;
 }
 
+template<>
+inline bool change_if_diff(double& old, const double& to)
+{
+    if (!detail::float_compare(old, to))
+    {
+        old = to;
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * Utility to run a callback std::function when this object goes out of scope.
  *
