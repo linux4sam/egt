@@ -542,7 +542,7 @@ public:
         if (!m_steps.empty())
             return m_steps.begin()->second;
 
-        return Color();
+        return {};
     }
 
     Color& color()

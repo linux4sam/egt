@@ -152,7 +152,7 @@ protected:
             if (height < box().height())
                 height = box().height();
 
-        return Size(width, height);
+        return {width, height};
     }
 
     orientation m_orient{orientation::horizontal};

@@ -47,9 +47,9 @@ Event MouseGesture::handle(Event& event)
             stop();
 
             if (dragging)
-                return Event(eventid::pointer_drag_stop, event.pointer(), mouse_start());
+                return {eventid::pointer_drag_stop, event.pointer(), mouse_start()};
             else
-                return Event(eventid::pointer_click, event.pointer());
+                return {eventid::pointer_click, event.pointer()};
         }
         break;
     }
@@ -74,10 +74,10 @@ Event MouseGesture::handle(Event& event)
             }
 
             if (dragging_started)
-                return Event(eventid::pointer_drag_start, event.pointer(), mouse_start());
+                return {eventid::pointer_drag_start, event.pointer(), mouse_start()};
 
             if (m_dragging)
-                return Event(eventid::pointer_drag, event.pointer(), mouse_start());
+                return {eventid::pointer_drag, event.pointer(), mouse_start()};
         }
 
         break;

@@ -134,8 +134,8 @@ public:
         if (empty())
             return {};
 
-        return Size(cairo_image_surface_get_width(surface().get()),
-                    cairo_image_surface_get_height(surface().get()));
+        return {cairo_image_surface_get_width(surface().get()),
+                cairo_image_surface_get_height(surface().get())};
     }
 
     inline default_dim_type width() const

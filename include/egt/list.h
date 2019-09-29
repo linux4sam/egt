@@ -76,7 +76,7 @@ struct StringItem : public ImageLabel
 
     virtual Size min_size_hint() const override
     {
-        return Size(100, 40);
+        return {100, 40};
     }
 
 };

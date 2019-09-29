@@ -44,10 +44,10 @@ Canvas::Canvas(const shared_cairo_surface_t& surface, pixel_format format) noexc
 Size Canvas::size() const
 {
     if (!m_surface)
-        return Size(0, 0);
+        return {};
 
-    return Size(cairo_image_surface_get_width(m_surface.get()),
-                cairo_image_surface_get_height(m_surface.get()));
+    return {cairo_image_surface_get_width(m_surface.get()),
+            cairo_image_surface_get_height(m_surface.get())};
 }
 
 pixel_format Canvas::format() const

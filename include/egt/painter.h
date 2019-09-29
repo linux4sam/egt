@@ -262,8 +262,8 @@ public:
      */
     static inline Size surface_to_size(const shared_cairo_surface_t& surface)
     {
-        return Size(cairo_image_surface_get_width(surface.get()),
-                    cairo_image_surface_get_height(surface.get()));
+        return {cairo_image_surface_get_width(surface.get()),
+                cairo_image_surface_get_height(surface.get())};
     }
 
     /**
@@ -271,8 +271,8 @@ public:
      */
     static inline Size surface_to_size(cairo_surface_t* surface)
     {
-        return Size(cairo_image_surface_get_width(surface),
-                    cairo_image_surface_get_height(surface));
+        return {cairo_image_surface_get_width(surface),
+                cairo_image_surface_get_height(surface)};
     }
 
     virtual ~Painter() = default;
