@@ -7,8 +7,7 @@
 #include "egt/grid.h"
 #include "egt/painter.h"
 #include <algorithm>
-
-using namespace std;
+#include <cassert>
 
 namespace egt
 {
@@ -122,6 +121,11 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget)
 {
     if (!widget)
         return;
+
+    if (widget.get() == this)
+        throw std::runtime_error("cannot add a widget to itself");
+
+    assert(!widget->parent() && "widget already has parent!");
 
     if (m_column_priority)
     {
