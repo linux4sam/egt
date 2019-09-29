@@ -13,6 +13,7 @@
 #include <alsa/asoundlib.h>
 #include <atomic>
 #include <condition_variable>
+#include <cstdio>
 #include <deque>
 #include <fstream>
 #include <iostream>
@@ -20,7 +21,6 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
-#include <stdio.h>
 #include <thread>
 #include <vector>
 
