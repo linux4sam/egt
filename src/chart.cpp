@@ -181,8 +181,8 @@ void PieChart::draw(Painter& painter, const Rect& rect)
         from_angle = to_angle;
     }
 
-    cairo_set_font_size(cr.get(), width / 30);
-    to_angle = M_PI * 3 / 2;
+    cairo_set_font_size(cr.get(), width / 30.);
+    to_angle = M_PI * 3. / 2.;
     from_angle = to_angle;
     for (auto& i : m_data)
     {
@@ -190,11 +190,11 @@ void PieChart::draw(Painter& painter, const Rect& rect)
             continue;
 
         to_angle += 2 * M_PI * i.second;
-        float label_angle = (from_angle + to_angle) / 2;
-        int label_x = width / 2 * (1.0 + 0.7 * std::cos(label_angle));
-        int label_y = height / 2 * (1.0 + 0.7 * std::sin(label_angle));
+        auto label_angle = (from_angle + to_angle) / 2.;
+        auto label_x = width / 2. * (1.0 + 0.7 * std::cos(label_angle));
+        auto label_y = height / 2. * (1.0 + 0.7 * std::sin(label_angle));
         painter.set(Palette::black);
-        cairo_move_to(cr.get(), c.x() - width / 2 + label_x, c.y() - height / 2 + label_y);
+        cairo_move_to(cr.get(), c.x() - width / 2. + label_x, c.y() - height / 2. + label_y);
         cairo_show_text(cr.get(), i.first.c_str());
         cairo_fill(cr.get());
         from_angle = to_angle;

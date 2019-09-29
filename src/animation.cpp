@@ -58,9 +58,9 @@ bool Animation::next()
     }
     else
     {
-        float_t percent = std::chrono::duration<float_t, std::milli>(now - m_start_time).count() /
-                          std::chrono::duration<float_t, std::milli>(m_stop_time - m_start_time).count();
-        float_t result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
+        auto percent = std::chrono::duration<float_t, std::milli>(now - m_start_time).count() /
+                       std::chrono::duration<float_t, std::milli>(m_stop_time - m_start_time).count();
+        auto result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
         if (m_round)
             result = std::round(result);

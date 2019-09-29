@@ -5,7 +5,6 @@
  */
 #include "egt/detail/math.h"
 #include "egt/color.h"
-#include <cassert>
 #include <cmath>
 #include <iostream>
 
@@ -21,16 +20,16 @@ std::ostream& operator<<(std::ostream& os, const Color& color)
     return os;
 }
 
-typedef struct
+struct hsv
 {
     double h; // angle in degrees
     double s; // a fraction between 0 and 1
     double v; // a fraction between 0 and 1
-} hsv;
+};
 
 static hsv rgb2hsv(const Color& in)
 {
-    hsv out;
+    hsv out{};
 
     auto min = in.redf() < in.greenf() ? in.redf() : in.greenf();
     min = min  < in.bluef() ? min  : in.bluef();
@@ -75,8 +74,6 @@ static hsv rgb2hsv(const Color& in)
 
 static Color hsv2rgb(hsv in)
 {
-    double hh, p, q, t, ff;
-    int64_t i;
     Color out;
 
     if (in.s <= 0.0)
@@ -87,15 +84,15 @@ static Color hsv2rgb(hsv in)
         return out;
     }
 
-    hh = in.h;
+    double hh = in.h;
     if (hh >= 360.0)
         hh = 0.0;
     hh /= 60.0;
-    i = (int64_t)hh;
-    ff = hh - i;
-    p = in.v * (1.0 - in.s);
-    q = in.v * (1.0 - (in.s * ff));
-    t = in.v * (1.0 - (in.s * (1.0 - ff)));
+    auto i = (int64_t)hh;
+    double ff = hh - i;
+    double p = in.v * (1.0 - in.s);
+    double q = in.v * (1.0 - (in.s * ff));
+    double t = in.v * (1.0 - (in.s * (1.0 - ff)));
 
     switch (i)
     {
@@ -135,12 +132,12 @@ static Color hsv2rgb(hsv in)
     return out;
 }
 
-typedef struct
+struct hsl
 {
     double h; // angle in degrees
     double s; // a fraction between 0 and 1
     double l; // a fraction between 0 and 1
-} hsl;
+};
 
 static hsl rgb2hsl(const Color& rgb)
 {
@@ -184,7 +181,7 @@ static Color hsl2rgb(hsl hsl)
     const float C = (1.f - std::abs(2.f * hsl.l - 1.f)) * hsl.s;
     const float X = C * (1.f - std::abs(fmodf(k, 2.f) - 1.f));
     const float m = hsl.l - C / 2.f;
-    const int d = int(floorf(k));
+    const auto d = int(floorf(k));
 
     Color out;
 
@@ -264,14 +261,14 @@ Color Color::interp_hsv(const Color& a, const Color& b, float t)
 {
     hsv ca = rgb2hsv(a);
     hsv cb = rgb2hsv(b);
-    hsv final;
+    hsv final{};
 
     final.h = linear_interpolator(ca.h, cb.h, static_cast<double>(t));
     final.s = linear_interpolator(ca.s, cb.s, static_cast<double>(t));
     final.v = linear_interpolator(ca.v, cb.v, static_cast<double>(t));
 
-    return Color(hsv2rgb(final),
-                 a.alpha() + (b.alpha() - a.alpha()) * t);
+    return {hsv2rgb(final),
+            static_cast<component_t>(a.alpha() + (b.alpha() - a.alpha()) * t)};
 }
 
 Color Color::interp_hsl(const Color& a, const Color& b, float t)
@@ -293,14 +290,14 @@ Color Color::interp_hsl(const Color& a, const Color& b, float t)
         }
     }
 
-    hsl hsl;
+    hsl hsl{};
     hsl.h = hslaa.h + t * (hslb.h - hslaa.h);
     hsl.s = hslaa.s + t * (hslb.s - hslaa.s);
     hsl.l = hslaa.l + t * (hslb.l - hslaa.l);
     hsl.h = fmodf(hsl.h + 1.f, 1.f);
 
-    return Color(hsl2rgb(hsl),
-                 a.alpha() + (b.alpha() - a.alpha()) * t);
+    return {hsl2rgb(hsl),
+            static_cast<component_t>(a.alpha() + (b.alpha() - a.alpha()) * t)};
 }
 
 Color Color::interp_rgba(const Color& a, const Color& b, float t)
@@ -315,21 +312,13 @@ Color Color::interp_rgba(const Color& a, const Color& b, float t)
 namespace experimental
 {
 
-template<class T>
-constexpr const T& clamp(const T& v, const T& lo, const T& hi)
-{
-    return assert(!(hi < lo)),
-           (v < lo) ? lo : (hi < v) ? hi : v;
-}
-
-
 Color ColorMap::interp(float t) const
 {
     if (empty())
         return {};
 
     const size_t steps = m_steps.size() - 1;
-    const float s = clamp(t, 0.f, 1.f);
+    const float s = detail::clamp(t, 0.f, 1.f);
     const float sf = s * steps;
     const size_t k = floorf(sf);
 
