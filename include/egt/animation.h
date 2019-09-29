@@ -180,27 +180,27 @@ public:
     /**
      * Get the starting value.
      */
-    float_t starting() const { return m_start; }
+    inline float_t starting() const { return m_start; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void set_starting(float_t start) { m_start = start; }
+    inline void set_starting(float_t start) { m_start = start; }
 
     /**
      * Get the ending value.
      */
-    float_t ending() const { return m_end; }
+    inline float_t ending() const { return m_end; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void set_ending(float_t end) { m_end = end; }
+    inline void set_ending(float_t end) { m_end = end; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void set_duration(std::chrono::milliseconds dur) { m_duration = dur; }
+    inline void set_duration(std::chrono::milliseconds dur) { m_duration = dur; }
 
     /**
      * @note Calling this while running is undefined behavior.
@@ -210,7 +210,7 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void set_reverse(bool rev) { m_reverse = rev; }
+    inline void set_reverse(bool rev) { m_reverse = rev; }
 
     /**
      * Start the animation.
@@ -233,10 +233,7 @@ public:
     /**
      * Get the current value.
      */
-    inline float_t current() const
-    {
-        return m_current;
-    }
+    inline float_t current() const { return m_current; }
 
     /**
      * Should the value be rounded?
