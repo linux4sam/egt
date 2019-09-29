@@ -150,7 +150,7 @@ public:
     /**
      * Get the currently selected index.
      */
-    virtual ssize_t selected() const { return m_selected; }
+    inline ssize_t selected() const { return m_selected; }
 
     /**
      * Return the number of items in the list.
