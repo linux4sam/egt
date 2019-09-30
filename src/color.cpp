@@ -318,26 +318,56 @@ Color ColorMap::interp(float t) const
         return {};
 
     const size_t steps = m_steps.size() - 1;
-    const float s = detail::clamp(t, 0.f, 1.f);
-    const float sf = s * steps;
+    const float sf = detail::clamp<float>(t, 0.f, 1.f) * steps;
     const size_t k = floorf(sf);
 
-    if (k + 1 == m_steps.size())
+    if (k + 1 >= m_steps.size())
         return m_steps.back();
 
     const auto u = fmodf(sf, 1.f);
 
+    Color result;
     switch (m_interp)
     {
     case interpolation::rgba:
-        return Color::interp_rgba(m_steps[k], m_steps[k + 1], u);
+        result = Color::interp_rgba(m_steps[k], m_steps[k + 1], u);
+        break;
     case interpolation::hsv:
-        return Color::interp_hsv(m_steps[k], m_steps[k + 1], u);
+        result = Color::interp_hsv(m_steps[k], m_steps[k + 1], u);
+        break;
     case interpolation::hsl:
-        return Color::interp_hsl(m_steps[k], m_steps[k + 1], u);
+        result = Color::interp_hsl(m_steps[k], m_steps[k + 1], u);
+        break;
+    default:
+        assert(!"unhandled interpolation type");
+        break;
     }
 
-    return {};
+    return result;
+}
+
+Color ColorMap::interp_cached(float t) const
+{
+    if (empty())
+        return {};
+
+    const size_t steps = m_steps.size() - 1;
+    const float sf = detail::clamp<float>(t, 0.f, 1.f) * steps;
+    const size_t k = floorf(sf);
+
+    if (k + 1 >= m_steps.size())
+        return m_steps.back();
+
+    const auto u = fmodf(sf, 1.f);
+
+    const size_t index = (k + u) * 10000;
+    auto i = m_cache[static_cast<size_t>(m_interp)].find(index);
+    if (i != m_cache[static_cast<size_t>(m_interp)].end())
+        return i->second;
+
+    auto result = ColorMap::interp(t);
+    m_cache[static_cast<size_t>(m_interp)].insert(std::make_pair(index, result));
+    return result;
 }
 
 }

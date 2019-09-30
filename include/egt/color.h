@@ -16,6 +16,7 @@
 #include <cmath>
 #include <cstdint>
 #include <egt/detail/math.h>
+#include <egt/utils.h>
 #include <iosfwd>
 #include <map>
 #include <string>
@@ -583,7 +584,7 @@ namespace experimental
  * A ColorMap contains a series of sequential color steps that can be used for
  * generating colors by interpolation.
  */
-class ColorMap
+class ColorMap : public detail::noncopyable
 {
 public:
 
@@ -613,6 +614,8 @@ public:
     ColorMap& step(const Color& color)
     {
         m_steps.emplace_back(color);
+        for (auto& x : m_cache)
+            x.clear();
         return *this;
     }
 
@@ -622,6 +625,8 @@ public:
     inline void set_steps(const steps_array& steps)
     {
         m_steps = steps;
+        for (auto& x : m_cache)
+            x.clear();
     }
 
     /**
@@ -630,6 +635,15 @@ public:
      * @param[in] t Offset from 0 to 1.
      */
     Color interp(float t) const;
+
+    /**
+     * Get a color at the specified offset.
+     *
+     * This will use a cache to speed up repetative calls to interpolate.
+     *
+     * @param[in] t Offset from 0 to 1.
+     */
+    Color interp_cached(float t) const;
 
     /**
      * Get a reference to the color steps array.
@@ -657,6 +671,11 @@ protected:
      * Steps in the color map.
      */
     steps_array m_steps;
+
+    /**
+     * Interpolation cache.
+     */
+    mutable std::array<std::map<size_t, Color>, 3> m_cache{};
 };
 
 }
