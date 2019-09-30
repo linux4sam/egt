@@ -3,7 +3,6 @@ Doxyfile.in \
 custom_footer.html \
 custom_header.html \
 Doxyfile.in \
-DoxygenLayout.xml \
 extra_stylesheet.css \
 footer.tex \
 header.tex  \
