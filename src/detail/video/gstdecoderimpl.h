@@ -43,13 +43,13 @@ public:
 
     virtual bool set_volume(double volume);
 
-    virtual double get_volume() const;
+    virtual double volume() const;
 
-    std::string get_error_message() const;
+    std::string error_message() const;
 
-    int64_t get_duration() const;
+    int64_t duration() const;
 
-    int64_t get_position() const;
+    int64_t position() const;
 
     virtual bool seek(int64_t time);
 

@@ -42,7 +42,7 @@ public:
 
     void stop();
 
-    std::string get_error_message() const;
+    std::string error_message() const;
 
     virtual ~CameraImpl();
 
@@ -371,7 +371,7 @@ void CameraImpl::stop()
     }
 }
 
-std::string CameraImpl::get_error_message() const
+std::string CameraImpl::error_message() const
 {
     return m_err_message;
 }
@@ -420,9 +420,9 @@ bool CameraWindow::start()
     return m_cameraImpl->start();
 }
 
-std::string CameraWindow::get_error_message() const
+std::string CameraWindow::error_message() const
 {
-    return m_cameraImpl->get_error_message();
+    return m_cameraImpl->error_message();
 }
 
 void CameraWindow::stop()

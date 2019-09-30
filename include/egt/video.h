@@ -126,7 +126,7 @@ public:
     /**
      * Get the volume value for the video being played.
      */
-    virtual double get_volume() const;
+    virtual double volume() const;
 
     /**
      * Seek the video being played.
@@ -152,7 +152,7 @@ public:
      *
      * @return true/false based on loop-back state
      */
-    inline bool get_loopback() const
+    inline bool loopback() const
     {
         return m_loopback;
     }
@@ -175,7 +175,7 @@ public:
     /**
      * Get error message
      */
-    std::string get_error_message() const;
+    std::string error_message() const;
 
     virtual ~VideoWindow();
 

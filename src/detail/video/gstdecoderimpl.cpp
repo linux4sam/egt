@@ -89,7 +89,7 @@ bool GstDecoderImpl::pause()
     return true;
 }
 
-double GstDecoderImpl::get_volume() const
+double GstDecoderImpl::volume() const
 {
     if (!m_volume)
         return 0;
@@ -135,17 +135,17 @@ bool GstDecoderImpl::seek(int64_t time)
     return false;
 }
 
-std::string GstDecoderImpl::get_error_message() const
+std::string GstDecoderImpl::error_message() const
 {
     return m_err_message;
 }
 
-int64_t GstDecoderImpl::get_duration() const
+int64_t GstDecoderImpl::duration() const
 {
     return m_duration;
 }
 
-int64_t GstDecoderImpl::get_position() const
+int64_t GstDecoderImpl::position() const
 {
     return m_position;
 }
@@ -262,8 +262,8 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         break;
     case GST_MESSAGE_EOS:
     {
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_EOS: LoopMode: {}", (decodeImpl->m_interface.get_loopback() ? "TRUE" : "FALSE"));
-        if (decodeImpl->m_interface.get_loopback())
+        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_EOS: LoopMode: {}", (decodeImpl->m_interface.loopback() ? "TRUE" : "FALSE"));
+        if (decodeImpl->m_interface.loopback())
         {
             gst_element_seek(decodeImpl->m_pipeline, 1.0, GST_FORMAT_TIME,
                              GST_SEEK_FLAG_FLUSH,

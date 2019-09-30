@@ -92,12 +92,12 @@ void VideoWindow::draw(Painter& painter, const Rect& rect)
 
 int64_t VideoWindow::position() const
 {
-    return m_decoderImpl->get_position();
+    return m_decoderImpl->position();
 }
 
 int64_t VideoWindow::duration() const
 {
-    return m_decoderImpl->get_duration();
+    return m_decoderImpl->duration();
 }
 
 bool VideoWindow::set_media(const string& uri)
@@ -126,9 +126,9 @@ bool VideoWindow::set_volume(double volume)
     return true;
 }
 
-double VideoWindow::get_volume() const
+double VideoWindow::volume() const
 {
-    return m_decoderImpl->get_volume();
+    return m_decoderImpl->volume();
 }
 
 bool VideoWindow::seek(int64_t time)
@@ -151,9 +151,9 @@ void VideoWindow::set_scale(float scale)
     }
 }
 
-std::string VideoWindow::get_error_message() const
+std::string VideoWindow::error_message() const
 {
-    return m_decoderImpl->get_error_message();
+    return m_decoderImpl->error_message();
 }
 
 VideoWindow::~VideoWindow()

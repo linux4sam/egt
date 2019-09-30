@@ -86,7 +86,7 @@ public:
     /**
      * Get error message.
      */
-    std::string get_error_message() const;
+    std::string error_message() const;
 
     virtual ~CameraWindow() = default;
 
