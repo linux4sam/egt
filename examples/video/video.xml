@@ -5,3 +5,9 @@
   <description></description>
   <link rel="enclosure" type="image/png" href="video.png" />
 </entry>
+<entry>
+  <title>Camera</title>
+  <arg>egt_camera</arg>
+  <description></description>
+  <link rel="enclosure" type="image/png" href="camera.png" />
+</entry>
