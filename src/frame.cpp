@@ -434,7 +434,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
                     painter.clip();
                 }
 
-                experimental::code_timer(false, child->name() + " draw: ", [&]()
+                detail::code_timer(false, child->name() + " draw: ", [&]()
                 {
                     child->draw(painter, r);
                 });
@@ -452,7 +452,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
                         painter.clip();
                     }
 
-                    experimental::code_timer(false, child->name() + " draw: ", [&]()
+                    detail::code_timer(false, child->name() + " draw: ", [&]()
                     {
                         child->draw(painter, r);
                     });

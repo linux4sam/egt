@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <egt/detail/math.h>
+#include <egt/detail/meta.h>
 #include <egt/detail/textwidget.h>
 #include <egt/flags.h>
 #include <egt/painter.h>
@@ -161,7 +162,7 @@ public:
 
     static void default_draw(RadialType<T>& widget, Painter& painter, const Rect& rect)
     {
-        ignoreparam(rect);
+        detail::ignoreparam(rect);
 
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 

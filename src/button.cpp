@@ -7,6 +7,7 @@
 #include "egt/button.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
+#include "egt/detail/meta.h"
 #include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/theme.h"
@@ -235,7 +236,7 @@ void ImageButton::draw(Painter& painter, const Rect& rect)
 
 void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    detail::ignoreparam(rect);
 
     widget.draw_box(painter, Palette::ColorId::button_bg, Palette::ColorId::border);
 

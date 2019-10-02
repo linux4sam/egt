@@ -13,7 +13,7 @@
 
 #include <chrono>
 #include <egt/asio.hpp>
-#include <egt/utils.h>
+#include <egt/detail/meta.h>
 #include <iosfwd>
 #include <vector>
 

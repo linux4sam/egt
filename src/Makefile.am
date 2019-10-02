@@ -148,6 +148,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/imagecache.h \
 ../include/egt/detail/filesystem.h \
 ../include/egt/detail/math.h \
+../include/egt/detail/meta.h \
 ../include/egt/detail/mousegesture.h \
 ../include/egt/detail/object.h \
 ../include/egt/detail/priorityqueue.h \

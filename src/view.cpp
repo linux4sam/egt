@@ -117,7 +117,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
                         cpainter.clip();
                     }
 
-                    experimental::code_timer(false, child->name() + " draw: ", [&]()
+                    detail::code_timer(false, child->name() + " draw: ", [&]()
                     {
                         child->draw(cpainter, r);
                     });

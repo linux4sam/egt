@@ -9,6 +9,7 @@
 
 #include "detail/window/basicwindow.h"
 #include "detail/window/planewindow.h"
+#include "egt/detail/meta.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/input.h"
 #include "egt/label.h"
@@ -204,8 +205,8 @@ void Window::create_impl(const Rect& rect,
                          pixel_format format,
                          windowhint hint)
 {
-    ignoreparam(format);
-    ignoreparam(hint);
+    detail::ignoreparam(format);
+    detail::ignoreparam(hint);
 
     assert(main_screen());
 

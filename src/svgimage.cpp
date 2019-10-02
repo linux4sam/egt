@@ -5,6 +5,7 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/imagecache.h"
+#include "egt/detail/meta.h"
 #include "egt/svgimage.h"
 #include <librsvg/rsvg.h>
 
@@ -142,7 +143,7 @@ shared_cairo_surface_t SvgImage::render(const std::string& id, const RectF& rect
     Canvas canvas(s);
     auto cr = canvas.context().get();
 
-    experimental::code_timer(false, "render " + id + ": ", [&]()
+    detail::code_timer(false, "render " + id + ": ", [&]()
     {
         if (!rect.empty())
         {

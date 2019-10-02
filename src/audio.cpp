@@ -6,6 +6,7 @@
 #include "egt/app.h"
 #include "egt/audio.h"
 #include "egt/detail/filesystem.h"
+#include "egt/detail/meta.h"
 #include "egt/utils.h"
 #include "egt/video.h"
 #include <exception>
@@ -79,7 +80,7 @@ struct AudioPlayerImpl
 
 static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
-    ignoreparam(bus);
+    detail::ignoreparam(bus);
 
     auto impl = reinterpret_cast<detail::AudioPlayerImpl*>(data);
 
@@ -229,8 +230,8 @@ AudioPlayer::~AudioPlayer()
 
 bool AudioPlayer::play(bool mute, int volume)
 {
-    ignoreparam(mute);
-    ignoreparam(volume);
+    detail::ignoreparam(mute);
+    detail::ignoreparam(volume);
 
     m_impl->set_state(this, GST_STATE_PLAYING);
     return false;

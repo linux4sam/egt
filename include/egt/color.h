@@ -16,7 +16,7 @@
 #include <cmath>
 #include <cstdint>
 #include <egt/detail/math.h>
-#include <egt/utils.h>
+#include <egt/detail/meta.h>
 #include <iosfwd>
 #include <map>
 #include <string>
@@ -471,6 +471,9 @@ protected:
      */
     std::array<component_t, 4> m_rgba{};
 };
+
+static_assert(detail::rule_of_5<Color>(),
+              "Color : must fulfill rule of 5");
 
 inline bool operator==(const Color& lhs, const Color& rhs)
 {

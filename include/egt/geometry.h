@@ -15,6 +15,7 @@
 #include <cassert>
 #include <cmath>
 #include <egt/detail/math.h>
+#include <egt/detail/meta.h>
 #include <ostream>
 #include <string>
 
@@ -265,6 +266,9 @@ std::ostream& operator<<(std::ostream& os, const PointType<dim_t, dim_c>& point)
  */
 using Point = PointType<default_dim_type, detail::compatible::normal>;
 
+static_assert(detail::rule_of_5<Point>(),
+              "Point : must fulfill rule of 5");
+
 /**
  * Helper type for a floating point.
  */
@@ -487,6 +491,10 @@ std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
  * Helper type for a default size.
  */
 using Size = SizeType<default_dim_type, detail::compatible::normal>;
+
+static_assert(detail::rule_of_5<Size>(),
+              "Size : must fulfill rule of 5");
+
 /**
  * Helper type for a float size.
  */
@@ -908,6 +916,10 @@ inline bool operator!=(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, 
  * Helper type for a default rect.
  */
 using Rect = RectType<default_dim_type, detail::compatible::normal>;
+
+static_assert(detail::rule_of_5<Rect>(),
+              "Rect : must fulfill rule of 5");
+
 /**
  * Helper type for a default float rect.
  */
@@ -967,6 +979,9 @@ std::ostream& operator<<(std::ostream& os, const LineType<dim_t>& line)
  * Helper type for a default line.
  */
 using Line = LineType<default_dim_type>;
+
+static_assert(detail::rule_of_5<Line>(),
+              "Line : must fulfill rule of 5");
 
 /**
  * An Arc consists of a radius and two angles.
@@ -1042,6 +1057,9 @@ protected:
  */
 using Arc = ArcType<default_dim_type>;
 
+static_assert(detail::rule_of_5<Arc>(),
+              "Arc : must fulfill rule of 5");
+
 /**
  * A basic circle with a center point and radius.
  * @ingroup geometry
@@ -1082,6 +1100,9 @@ public:
  * Helper type for a default circle.
  */
 using Circle = CircleType<default_dim_type>;
+
+static_assert(detail::rule_of_5<Circle>(),
+              "Circle : must fulfill rule of 5");
 
 using CircleF = CircleType<float>;
 

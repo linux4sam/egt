@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <egt/detail/meta.h>
 #include <egt/ui>
 #include <iostream>
 #include <string>
@@ -17,7 +18,7 @@ int main(int argc, const char** argv)
 
     Drawer<Label>::set_draw([](Label & widget, Painter & painter, const Rect & rect)
     {
-        ignoreparam(rect);
+        detail::ignoreparam(rect);
 
         widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 

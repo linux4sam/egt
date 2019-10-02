@@ -51,7 +51,7 @@ void Screen::flip(const damage_array& damage)
             for (const auto& d : damage)
                 b.add_damage(d);
 
-        experimental::code_timer(false, "copy_to_buffer: ", [&]()
+        detail::code_timer(false, "copy_to_buffer: ", [&]()
         {
             ScreenBuffer& buffer = m_buffers[index()];
             copy_to_buffer(buffer);

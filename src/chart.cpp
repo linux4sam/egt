@@ -3,13 +3,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "compat.h"
 #include "egt/chart.h"
+#include "egt/detail/meta.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
+#include "kplot.h"
 #include <cmath>
 #include <vector>
-#include "compat.h"
-#include "kplot.h"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ LineChart::LineChart(const Rect& rect)
 
 void LineChart::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    detail::ignoreparam(rect);
 
     draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
@@ -104,7 +105,7 @@ void LineChart::draw(Painter& painter, const Rect& rect)
         kdata_destroy(d1);
     }
 
-    experimental::code_timer(false, "kplot_draw: ", [&]()
+    detail::code_timer(false, "kplot_draw: ", [&]()
     {
         kplot_draw(p, b.width(), b.height(), cr.get());
     });
@@ -145,7 +146,7 @@ PieChart::PieChart(const Rect& rect)
 
 void PieChart::draw(Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    detail::ignoreparam(rect);
 
     draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 

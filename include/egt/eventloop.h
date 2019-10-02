@@ -11,8 +11,8 @@
  * @brief Working with event loops.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/detail/priorityqueue.h>
-#include <egt/utils.h>
 #include <functional>
 #include <memory>
 #include <vector>

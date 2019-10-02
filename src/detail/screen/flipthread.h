@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/utils.h"
+#include "egt/detail/meta.h"
 #include <atomic>
 #include <condition_variable>
 #include <deque>
@@ -25,7 +25,7 @@ namespace detail
  * This creates a flip queue used for queuing up flip calls when using more
  * than one buffer.
  */
-struct FlipThread : public detail::noncopyable
+struct FlipThread : public noncopyable
 {
     explicit FlipThread(uint32_t max_queue = 0)
         : m_max_queue(max_queue)

@@ -43,7 +43,7 @@ int EventLoop::wait()
 {
     int ret = 0;
 
-    experimental::code_timer(false, "wait: ", [&]()
+    detail::code_timer(false, "wait: ", [&]()
     {
         ret = m_impl->m_io.run_one();
         if (ret)
@@ -77,7 +77,7 @@ void EventLoop::quit()
 
 void EventLoop::draw()
 {
-    experimental::code_timer(false, "draw: ", [&]()
+    detail::code_timer(false, "draw: ", [&]()
     {
         for (auto& w : windows())
         {

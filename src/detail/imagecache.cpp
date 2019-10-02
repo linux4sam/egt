@@ -270,7 +270,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         double width = cairo_image_surface_get_width(back.get());
         double height = cairo_image_surface_get_height(back.get());
 
-        experimental::code_timer(false, "scale: ", [&]()
+        detail::code_timer(false, "scale: ", [&]()
         {
             image = scale_surface(back,
                                   width, height,

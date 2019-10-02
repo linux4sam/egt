@@ -6,6 +6,7 @@
 #include "detail/utf8text.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
+#include "egt/detail/meta.h"
 #include "egt/frame.h"
 #include "egt/label.h"
 #include "egt/painter.h"
@@ -140,7 +141,7 @@ void ImageLabel::draw(Painter& painter, const Rect& rect)
 
 void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& rect)
 {
-    ignoreparam(rect);
+    detail::ignoreparam(rect);
 
     widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 

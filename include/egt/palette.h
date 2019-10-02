@@ -336,6 +336,9 @@ protected:
     std::map<GroupId, std::map<ColorId, pattern_type>> m_colors;
 };
 
+static_assert(std::is_move_constructible<Palette>::value, "Palette should be move constructable");
+static_assert(std::is_move_assignable<Palette>::value, "Palette should be move assignable");
+
 std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color);
 std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group);
 
