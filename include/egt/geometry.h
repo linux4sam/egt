@@ -70,28 +70,28 @@ public:
           m_y(y)
     {}
 
-    PointType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
+    inline PointType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
     {
         m_x += rhs.m_x;
         m_y += rhs.m_y;
         return *this;
     }
 
-    PointType<dim_t, dim_c>& operator-=(const PointType<dim_t, dim_c>& rhs)
+    inline PointType<dim_t, dim_c>& operator-=(const PointType<dim_t, dim_c>& rhs)
     {
         m_x -= rhs.m_x;
         m_y -= rhs.m_y;
         return *this;
     }
 
-    PointType<dim_t, dim_c>& operator*=(const PointType<dim_t, dim_c>& rhs)
+    inline PointType<dim_t, dim_c>& operator*=(const PointType<dim_t, dim_c>& rhs)
     {
         m_x *= rhs.m_x;
         m_y *= rhs.m_y;
         return *this;
     }
 
-    PointType<dim_t, dim_c>& operator/=(const PointType<dim_t, dim_c>& rhs)
+    inline PointType<dim_t, dim_c>& operator/=(const PointType<dim_t, dim_c>& rhs)
     {
         m_x /= rhs.m_x;
         m_y /= rhs.m_y;
@@ -99,7 +99,7 @@ public:
     }
 
     template <class T>
-    PointType<dim_t, dim_c>& operator+=(const T& rhs)
+    inline PointType<dim_t, dim_c>& operator+=(const T& rhs)
     {
         m_x += rhs;
         m_y += rhs;
@@ -107,7 +107,7 @@ public:
     }
 
     template <class T>
-    PointType<dim_t, dim_c>& operator-=(const T& rhs)
+    inline PointType<dim_t, dim_c>& operator-=(const T& rhs)
     {
         m_x -= rhs;
         m_y -= rhs;
@@ -115,7 +115,7 @@ public:
     }
 
     template <class T>
-    PointType<dim_t, dim_c>& operator*=(const T& rhs)
+    inline PointType<dim_t, dim_c>& operator*=(const T& rhs)
     {
         m_x *= rhs;
         m_y *= rhs;
@@ -123,7 +123,7 @@ public:
     }
 
     template <class T>
-    PointType<dim_t, dim_c>& operator/=(const T& rhs)
+    inline PointType<dim_t, dim_c>& operator/=(const T& rhs)
     {
         m_x /= rhs;
         m_y /= rhs;
