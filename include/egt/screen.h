@@ -91,8 +91,7 @@ public:
      *
      * @note This function may be implemented to be recursive.
      */
-    static void damage_algorithm(Screen::damage_array& damage,
-                                 const Rect& rect);
+    static void damage_algorithm(Screen::damage_array& damage, Rect rect);
 
     /**
      * Set if asynchronous buffer flips are used.

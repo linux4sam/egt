@@ -160,31 +160,33 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
     cairo_surface_flush(buffer.surface.get());
 }
 
-void Screen::damage_algorithm(Screen::damage_array& damage, const Rect& rect)
+void Screen::damage_algorithm(Screen::damage_array& damage, Rect rect)
 {
     if (rect.empty())
         return;
 
     // work backwards for a stronger hit chance for existing rectangles
-    for (auto i = damage.rbegin(); i != damage.rend(); ++i)
+    for (auto i = damage.rbegin(); i != damage.rend();)
     {
         // exact rectangle already exists; done
         if (*i == rect)
             return;
 
         // if this rectangle intersects an existing rectangle, then merge
-        // the rectangles and re-add the super rectangle
+        // the rectangles and start over
         if (rect.intersect(*i))
         {
-            Rect super(Rect::merge(*i, rect));
+            rect = Rect::merge(*i, rect);
             damage.erase(std::next(i).base());
-            Screen::damage_algorithm(damage, super);
-            return;
+            i = damage.rbegin();
+            continue;
         }
+
+        ++i;
     }
 
     // if we get here, no intersect found so add it
-    damage.emplace_back(rect);
+    damage.emplace_back(std::move(rect));
 }
 
 void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format format)
