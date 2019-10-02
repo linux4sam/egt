@@ -87,20 +87,26 @@ int main(int argc, const char** argv)
     int maxx = window.width();
     int half = (window.width() - vsizer.width()) / 2;
 
-    auto in = new PropertyAnimator(maxx, half, std::chrono::seconds(3), easing_exponential_easeout);
-    in->on_change(std::bind(&Label::set_x, std::ref(vsizer), std::placeholders::_1));
+    auto in = std::make_shared<PropertyAnimator>(maxx, half, std::chrono::seconds(3), easing_exponential_easeout);
+    in->on_change([&vsizer](int value)
+    {
+        vsizer.set_x(value);
+    });
 
-    auto out = new PropertyAnimator(half + 1, minx, std::chrono::seconds(3), easing_exponential_easeout);
+    auto out = std::make_shared<PropertyAnimator>(half + 1, minx, std::chrono::seconds(3), easing_exponential_easeout);
     out->set_reverse(true);
-    out->on_change(std::bind(&Label::set_x, std::ref(vsizer), std::placeholders::_1));
+    out->on_change([&vsizer](int value)
+    {
+        vsizer.set_x(value);
+    });
 
-    auto delay = new AnimationDelay(std::chrono::seconds(1));
+    auto delay = std::make_shared<AnimationDelay>(std::chrono::seconds(1));
 
-    auto sequence = new AnimationSequence(true);
-    sequence->add(*in);
-    sequence->add(*out);
-    sequence->add(*delay);
-    sequence->start();
+    AnimationSequence sequence(true);
+    sequence.add(in);
+    sequence.add(out);
+    sequence.add(delay);
+    sequence.start();
 
     window.show();
 
