@@ -81,11 +81,23 @@ void Dialog::set_button(buttonid button, const std::string& text)
 {
     if (button == buttonid::button1)
     {
-        m_button1->set_text(text);
+        if (text.empty())
+            m_button1->hide();
+        else
+        {
+            m_button1->set_text(text);
+            m_button1->show();
+        }
     }
     else if (button == buttonid::button2)
     {
-        m_button2->set_text(text);
+        if (text.empty())
+            m_button2->hide();
+        else
+        {
+            m_button2->set_text(text);
+            m_button2->show();
+        }
     }
 }
 
