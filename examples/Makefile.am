@@ -10,7 +10,10 @@ endif
 if ENABLE_SNIPPETS
 OPTIONAL += snippets
 endif
-SUBDIRS = $(OPTIONAL) resource
+if HAVE_LIBRSVG
+OPTIONAL += resource
+endif
+SUBDIRS = $(OPTIONAL)
 
 CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir)/include \
