@@ -189,7 +189,8 @@ audioplayer_audioplayer_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 audioplayer_audioplayer_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 audioplayer_audioplayerdir = $(prefix)/share/egt/examples/audioplayer
 dist_audioplayer_audioplayer_DATA = $(wildcard $(top_srcdir)/examples/audioplayer/*.png) \
-	$(wildcard $(top_srcdir)/examples/audioplayer/*.mp3)
+	$(wildcard $(top_srcdir)/examples/audioplayer/*.mp3) \
+	$(wildcard $(top_srcdir)/examples/audioplayer/*.xml)
 audioplayer_audioplayer_LDFLAGS = $(AM_LDFLAGS)
 
 boards_boards_SOURCES = boards/boards.cpp
