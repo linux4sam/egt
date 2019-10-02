@@ -27,8 +27,8 @@ namespace detail
  * @param[in] rhs The origin and size of the rimage surface.
  * @param[in] rimage The second image surface.
  */
-bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
-                     const Rect& rhs, const shared_cairo_surface_t& rimage);
+bool alpha_collision(const Rect& lhs, cairo_surface_t* limage,
+                     const Rect& rhs, cairo_surface_t* rimage);
 
 /**
  * Detect alpha collision with a specific point.
@@ -42,7 +42,7 @@ bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
  * @param[in] limage The image surface.
  * @param[in] rhs The point to test.
  */
-bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
+bool alpha_collision(const Rect& lhs, cairo_surface_t* limage,
                      const Point& rhs);
 
 }

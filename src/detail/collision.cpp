@@ -13,18 +13,18 @@ inline namespace v1
 namespace detail
 {
 
-bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
-                     const Rect& rhs, const shared_cairo_surface_t& rimage)
+bool alpha_collision(const Rect& lhs, cairo_surface_t* limage,
+                     const Rect& rhs, cairo_surface_t* rimage)
 {
     if (lhs.intersect(rhs))
     {
-        assert(cairo_image_surface_get_format(limage.get()) == CAIRO_FORMAT_ARGB32);
-        assert(cairo_image_surface_get_format(rimage.get()) == CAIRO_FORMAT_ARGB32);
+        assert(cairo_image_surface_get_format(limage) == CAIRO_FORMAT_ARGB32);
+        assert(cairo_image_surface_get_format(rimage) == CAIRO_FORMAT_ARGB32);
 
-        const auto ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
-        const auto rdata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(rimage.get()));
-        const auto lpitch = cairo_image_surface_get_stride(limage.get()) / sizeof(uint32_t);
-        const auto rpitch = cairo_image_surface_get_stride(rimage.get()) / sizeof(uint32_t);
+        const auto ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage));
+        const auto rdata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(rimage));
+        const auto lpitch = cairo_image_surface_get_stride(limage) / sizeof(uint32_t);
+        const auto rpitch = cairo_image_surface_get_stride(rimage) / sizeof(uint32_t);
         const auto i = Rect::intersection(lhs, rhs);
 
         for (auto y = i.top(); y < i.bottom(); y++)
@@ -45,15 +45,15 @@ bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
     return false;
 }
 
-bool alpha_collision(const Rect& lhs, const shared_cairo_surface_t& limage,
+bool alpha_collision(const Rect& lhs, cairo_surface_t* limage,
                      const Point& rhs)
 {
     if (lhs.intersect(rhs))
     {
-        assert(cairo_image_surface_get_format(limage.get()) == CAIRO_FORMAT_ARGB32);
+        assert(cairo_image_surface_get_format(limage) == CAIRO_FORMAT_ARGB32);
 
-        const auto ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage.get()));
-        const auto pitch = cairo_image_surface_get_stride(limage.get()) / sizeof(uint32_t);
+        const auto ldata = reinterpret_cast<unsigned int*>(cairo_image_surface_get_data(limage));
+        const auto pitch = cairo_image_surface_get_stride(limage) / sizeof(uint32_t);
 
         const auto l = ldata[static_cast<uint32_t>((rhs.x() - lhs.left()) + (rhs.y() - lhs.top()) * pitch)];
 
