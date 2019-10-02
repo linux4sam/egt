@@ -155,7 +155,7 @@ Font::Font(slantid slant)
       m_slant(slant)
 {}
 
-struct FontCache
+struct FontCache : detail::noncopyable
 {
     struct FontCompare
     {
