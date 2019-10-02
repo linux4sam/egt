@@ -75,7 +75,7 @@ public:
      * @return A handle used to identify the registration.  This can then be
      *         passed to remove_handler().
      */
-    virtual uint32_t on_event(event_callback_t handler,
+    virtual uint32_t on_event(const event_callback_t& handler,
                               filter_type mask = filter_type());
 
     /**

@@ -12,7 +12,7 @@ inline namespace v1
 namespace detail
 {
 
-uint32_t Object::on_event(event_callback_t handler,
+uint32_t Object::on_event(const event_callback_t& handler,
                           filter_type mask)
 {
     if (handler)
