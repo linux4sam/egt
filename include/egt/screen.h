@@ -125,6 +125,22 @@ public:
      */
     virtual void set_brightness(size_t brightness);
 
+    /**
+     * Configure low fidelity options.
+     *
+     * This configures settings related to font hinting, font aliasing, and
+     * shape aliasing.
+     */
+    virtual void low_fidelity();
+
+    /**
+     * Configure high fidelity options.
+     *
+     * This configures settings related to font hinting, font aliasing, and
+     * shape aliasing.
+     */
+    virtual void high_fidelity();
+
     virtual ~Screen();
 
 protected:

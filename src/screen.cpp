@@ -216,16 +216,36 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format for
     m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
     assert(m_cr);
 
-    cairo_font_options_t* cfo = cairo_font_options_create();
-    cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
-    cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_SLIGHT);
-    cairo_set_font_options(m_cr.get(), cfo);
-    cairo_font_options_destroy(cfo);
-    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_FAST);
-
     if (!the_screen)
         the_screen = this;
 }
+
+void Screen::low_fidelity()
+{
+    // font
+    cairo_font_options_t* cfo = cairo_font_options_create();
+    cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
+    cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_NONE);
+    cairo_set_font_options(m_cr.get(), cfo);
+    cairo_font_options_destroy(cfo);
+
+    // shapes
+    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_FAST);
+}
+
+void Screen::high_fidelity()
+{
+    // font
+    cairo_font_options_t* cfo = cairo_font_options_create();
+    cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_GOOD);
+    cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_MEDIUM);
+    cairo_set_font_options(m_cr.get(), cfo);
+    cairo_font_options_destroy(cfo);
+
+    // shapes
+    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_GOOD);
+}
+
 
 size_t Screen::max_brightness() const
 {
