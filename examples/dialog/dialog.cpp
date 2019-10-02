@@ -76,8 +76,8 @@ int main(int argc, const char** argv)
 
     auto message_dialog = std::make_shared<Dialog>(dialog_size);
     message_dialog->set_title("Message Dialog Example");
-    auto text = std::make_shared<TextBox>("This is a Example of Ensemble Graphics "
-                                          "Toolkit Message Dialog with two buttons");
+    auto text = std::make_shared<TextBox>("This is an Example of the Ensemble Graphics "
+                                          "Toolkit Dialog with two buttons");
     text->set_readonly(true);
     message_dialog->set_widget(expand(text));
     message_dialog->set_button(Dialog::buttonid::button1, "OK");
