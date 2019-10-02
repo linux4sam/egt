@@ -121,6 +121,16 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     A non-empty valye turns off window decorations on an X11 window.
   </dd>
 
+  <dt>EGT_TIME_DRAW</dt>
+  <dd>
+    Print timing information for drawing every widget.
+  </dd>
+
+  <dt>EGT_TIME_EVENTLOOP</dt>
+  <dd>
+    Print timing information for the event loop.
+  </dd>
+
 </dl>
 
 */

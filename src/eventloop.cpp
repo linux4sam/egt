@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/painter.h"
@@ -11,7 +10,7 @@
 #include "egt/tools.h"
 #include "egt/widget.h"
 #include "egt/window.h"
-#include <chrono>
+#include <cstdlib>
 #include <deque>
 #include <egt/asio.hpp>
 #include <numeric>
@@ -39,11 +38,24 @@ asio::io_context& EventLoop::io()
     return m_impl->m_io;
 }
 
+static bool time_event_loop_enabled()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_TIME_EVENTLOOP"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
 int EventLoop::wait()
 {
     int ret = 0;
 
-    detail::code_timer(false, "wait: ", [&]()
+    detail::code_timer(time_event_loop_enabled(), "wait: ", [&]()
     {
         ret = m_impl->m_io.run_one();
         if (ret)
@@ -77,7 +89,7 @@ void EventLoop::quit()
 
 void EventLoop::draw()
 {
-    detail::code_timer(false, "draw: ", [&]()
+    detail::code_timer(time_event_loop_enabled(), "draw: ", [&]()
     {
         for (auto& w : windows())
         {

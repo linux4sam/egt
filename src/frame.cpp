@@ -9,6 +9,7 @@
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
+#include <cstdlib>
 #include <iostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
@@ -348,6 +349,19 @@ size_t Frame::zorder() const
     return Widget::zorder();
 }
 
+static bool time_child_draw_enabled()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_TIME_DRAW"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
 void Frame::draw(Painter& painter, const Rect& rect)
 {
     SPDLOG_TRACE("{} draw {}", name(), rect);
@@ -434,7 +448,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
                     painter.clip();
                 }
 
-                detail::code_timer(false, child->name() + " draw: ", [&]()
+                detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [&]()
                 {
                     child->draw(painter, r);
                 });
@@ -452,7 +466,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
                         painter.clip();
                     }
 
-                    detail::code_timer(false, child->name() + " draw: ", [&]()
+                    detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [&]()
                     {
                         child->draw(painter, r);
                     });
