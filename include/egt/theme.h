@@ -180,7 +180,7 @@ public:
         return *m_font;
     }
 
-    void set_font(Font& font)
+    void set_font(const Font& font)
     {
         assert(m_font);
         *m_font = font;
