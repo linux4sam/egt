@@ -295,7 +295,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_down(Widget* widget);
+    virtual void zorder_down(const Widget* widget);
 
     /**
      * Move the specified widget zorder up relative to other widgets with the
@@ -303,7 +303,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_up(Widget* widget);
+    virtual void zorder_up(const Widget* widget);
 
     virtual void zorder_bottom() override;
 
@@ -315,7 +315,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_bottom(Widget* widget);
+    virtual void zorder_bottom(const Widget* widget);
 
     /**
      * Move the specified widget zorder to the top of the current list of widgets
@@ -323,7 +323,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_top(Widget* widget);
+    virtual void zorder_top(const Widget* widget);
 
     /**
      * Get the zorder of the widget.

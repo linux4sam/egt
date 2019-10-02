@@ -257,7 +257,7 @@ void Frame::zorder_up()
     Widget::zorder_up();
 }
 
-void Frame::zorder_down(Widget* widget)
+void Frame::zorder_down(const Widget* widget)
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
                           [widget](const std::shared_ptr<Widget>& ptr)
@@ -273,7 +273,7 @@ void Frame::zorder_down(Widget* widget)
     }
 }
 
-void Frame::zorder_up(Widget* widget)
+void Frame::zorder_up(const Widget* widget)
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
                           [widget](const std::shared_ptr<Widget>& ptr)
@@ -302,7 +302,7 @@ void Frame::zorder_top()
     Widget::zorder_top();
 }
 
-void Frame::zorder_bottom(Widget* widget)
+void Frame::zorder_bottom(const Widget* widget)
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
                           [widget](const std::shared_ptr<Widget>& ptr)
@@ -315,7 +315,7 @@ void Frame::zorder_bottom(Widget* widget)
     }
 }
 
-void Frame::zorder_top(Widget* widget)
+void Frame::zorder_top(const Widget* widget)
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
                           [widget](const std::shared_ptr<Widget>& ptr)
