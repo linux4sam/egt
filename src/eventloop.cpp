@@ -38,7 +38,7 @@ asio::io_context& EventLoop::io()
     return m_impl->m_io;
 }
 
-static bool time_event_loop_enabled()
+static inline bool time_event_loop_enabled()
 {
     static int value = 0;
     if (value == 0)
@@ -51,19 +51,22 @@ static bool time_event_loop_enabled()
     return value == 1;
 }
 
+// maximum number of handlers when in a tight poll loop
+static const auto MAX_POLL_COUNT = 10;
+
 int EventLoop::wait()
 {
     int ret = 0;
 
-    detail::code_timer(time_event_loop_enabled(), "wait: ", [&]()
+    detail::code_timer(time_event_loop_enabled(), "wait: ", [this, &ret]()
     {
-        ret = m_impl->m_io.run_one();
+        ret = m_impl->m_io.run_one_for(std::chrono::milliseconds(100));
         if (ret)
         {
             // hmm, libinput async_read will always return something on poll_one()
             // until we have satisfied the handler, so we have to give up at
             // some point
-            int count = 10;
+            int count = MAX_POLL_COUNT;
             while (m_impl->m_io.poll_one() && count--)
             {}
 
@@ -74,22 +77,27 @@ int EventLoop::wait()
     });
 
     if (!ret)
-        invoke_idle_callbacks();
+    {
+        if (!m_idle.empty())
+        {
+            invoke_idle_callbacks();
+            // fake out that we did something in the idle callback
+            ret = 1;
+        }
+    }
 
     return ret;
 }
 
-static bool do_quit = false;
-
 void EventLoop::quit()
 {
-    do_quit = true;
+    m_do_quit = true;
     m_impl->m_io.stop();
 }
 
 void EventLoop::draw()
 {
-    detail::code_timer(time_event_loop_enabled(), "draw: ", [&]()
+    detail::code_timer(time_event_loop_enabled(), "draw: ", []()
     {
         for (auto& w : windows())
         {
@@ -106,7 +114,7 @@ void EventLoop::draw()
 int EventLoop::step()
 {
     int ret = 0;
-    int count = 10;
+    int count = MAX_POLL_COUNT;
     while (count--)
     {
         auto r = m_impl->m_io.poll_one();
@@ -121,26 +129,42 @@ int EventLoop::step()
     return ret;
 }
 
-int EventLoop::run(bool enable_fps)
+static inline bool show_fps_enabled()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_SHOW_FPS"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
+int EventLoop::run()
 {
     experimental::Fps fps;
 
+    // initial draw
     draw();
 
-    do_quit = false;
+    m_do_quit = false;
     m_impl->m_io.restart();
-    while (!do_quit)
+    while (!m_do_quit)
     {
+        // process events
         if (wait())
         {
+            // draw anything that's changed
             draw();
 
-            if (enable_fps)
+            if (show_fps_enabled())
+            {
                 fps.end_frame();
 
-            if (enable_fps && fps.ready())
-            {
-                std::cout << "fps: " << std::round(fps.fps()) << std::endl;
+                if (fps.ready())
+                    std::cout << "fps: " << std::round(fps.fps()) << std::endl;
             }
         }
     }
@@ -158,9 +182,7 @@ void EventLoop::add_idle_callback(event_callback func)
 void EventLoop::invoke_idle_callbacks()
 {
     for (auto& i : m_idle)
-    {
         i();
-    }
 }
 
 EventLoop::~EventLoop() = default;

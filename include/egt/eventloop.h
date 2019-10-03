@@ -34,11 +34,6 @@ struct EventLoopImpl;
 }
 
 /**
- * Event callback function defitiion.
- */
-using event_callback = std::function<void ()>;
-
-/**
  * Event loop interface.
  */
 class EventLoop : public detail::noncopyable
@@ -60,12 +55,14 @@ public:
     /**
      * Run the event loop.
      *
-     * This will not return until quit is called.
+     * This will not return until quit() is called.
      */
-    virtual int run(bool enable_fps = false);
+    virtual int run();
 
     /**
      * Single step on the event loop.
+     *
+     * @note If calling this manually, this will not invoke any idle callbacks.
      */
     virtual int step();
 
@@ -75,6 +72,11 @@ public:
      * This will cause the run() function to return.
      */
     virtual void quit();
+
+    /**
+     * Event callback function definition.
+     */
+    using event_callback = std::function<void ()>;
 
     /**
      * Add a callback to be called any time the event loop is idle.
@@ -112,6 +114,11 @@ protected:
 #ifdef USE_PRIORITY_QUEUE
     detail::PriorityQueue m_queue;
 #endif
+
+    /**
+     * Used internally to determine whether the event loop should exit.
+     */
+    bool m_do_quit{false};
 };
 
 

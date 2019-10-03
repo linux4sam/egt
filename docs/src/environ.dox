@@ -131,6 +131,11 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     Print timing information for the event loop.
   </dd>
 
+  <dt>EGT_SHOW_FPS</dt>
+  <dd>
+    Print the frames per second of the eventloop.
+  </dd>
+
 </dl>
 
 */
