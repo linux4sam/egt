@@ -20,6 +20,12 @@ namespace egt
 {
 inline namespace v1
 {
+
+std::string egt_version()
+{
+    return PACKAGE_VERSION;
+}
+
 namespace experimental
 {
 

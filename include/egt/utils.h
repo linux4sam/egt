@@ -18,6 +18,11 @@ namespace egt
 inline namespace v1
 {
 
+/**
+ * Get the version of the egt library.
+ */
+std::string egt_version();
+
 namespace experimental
 {
 
