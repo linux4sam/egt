@@ -7,13 +7,10 @@
 #include "config.h"
 #endif
 
+#include "egt/detail/meta.h"
 #include "egt/utils.h"
-#include <cstring>
-#include <memory>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <stdexcept>
-#include <unistd.h>
 
 #ifdef HAVE_LUA
 #include "lua/script.h"
@@ -58,7 +55,7 @@ error:
     script_unref(cookie);
     script_close();
 #else
-    ignoreparam(expr);
+    detail::ignoreparam(expr);
 #endif
     return y;
 }
