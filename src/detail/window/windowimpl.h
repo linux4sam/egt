@@ -40,7 +40,7 @@ public:
     virtual void resize(const Size& size);
     virtual void set_scale(float scalex, float scaley);
     virtual void move(const Point& point);
-    virtual void top_draw();
+    virtual void begin_draw();
     virtual void show();
     virtual void hide();
     virtual void paint(Painter& painter);

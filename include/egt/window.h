@@ -95,13 +95,7 @@ public:
      * drawing those rectangles, as they propagate down the widget hierarchy
      * the opposite change happens to the rectangle origin.
      */
-    virtual void top_draw() override;
-
-    /**
-     * Perform the actual drawing.  Allocate the Painter and call draw() on each
-     * child.
-     */
-    virtual void do_draw();
+    virtual void begin_draw() override;
 
     /**
      * Set a background image of the window.
@@ -118,6 +112,12 @@ public:
     virtual ~Window();
 
 protected:
+
+    /**
+     * Perform the actual drawing.  Allocate the Painter and call draw() on each
+     * child.
+     */
+    virtual void do_draw();
 
     virtual void allocate_screen();
 
@@ -148,11 +148,11 @@ protected:
         Frame::move(point);
     }
 
-    virtual void default_top_draw()
+    virtual void default_begin_draw()
     {
         if (m_parent)
         {
-            m_parent->top_draw();
+            m_parent->begin_draw();
             return;
         }
 

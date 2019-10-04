@@ -217,7 +217,7 @@ public:
      * @warning Normally this should not be called directly and instead the
      * event loop will call this function.
      */
-    virtual void top_draw()
+    virtual void begin_draw()
     {
         assert(0);
     }

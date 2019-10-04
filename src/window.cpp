@@ -129,12 +129,12 @@ void Window::paint(Painter& painter)
         m_impl->paint(painter);
 }
 
-void Window::top_draw()
+void Window::begin_draw()
 {
     SPDLOG_TRACE("{} top draw", name());
 
     if (m_impl)
-        m_impl->top_draw();
+        m_impl->begin_draw();
 }
 
 void Window::allocate_screen()

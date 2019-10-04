@@ -41,7 +41,7 @@ public:
 
     virtual void move(const Point& point) override;
 
-    virtual void top_draw() override;
+    virtual void begin_draw() override;
 
     virtual void show() override;
 
@@ -67,7 +67,7 @@ protected:
 
     /**
      * When true, we have settings that need to be flushed to the plane
-     * in top_draw().
+     * in begin_draw().
      */
     bool m_dirty{true};
 

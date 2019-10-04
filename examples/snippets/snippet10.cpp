@@ -72,7 +72,7 @@ int main(int argc, const char** argv)
         line.clear();
         line.add_data(create_data(e.first), LineChart::chart_type::lines);
 
-        window.top_draw();
+        window.begin_draw();
         app.paint_to_file(detail::replace_all(e.second, " ", "_") + ".png");
     }
 

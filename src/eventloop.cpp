@@ -106,7 +106,7 @@ void EventLoop::draw()
 
             // draw top level frames and plane frames
             if (w->top_level() || w->flags().is_set(Widget::flag::plane_window))
-                w->top_draw();
+                w->begin_draw();
         }
     });
 }

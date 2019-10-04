@@ -48,9 +48,9 @@ void WindowImpl::move(const Point& point)
     m_interface->default_move(point);
 }
 
-void WindowImpl::top_draw()
+void WindowImpl::begin_draw()
 {
-    m_interface->default_top_draw();
+    m_interface->default_begin_draw();
 }
 
 void WindowImpl::show()

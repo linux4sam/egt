@@ -99,7 +99,7 @@ void PlaneWindow::allocate_screen()
     }
 }
 
-void PlaneWindow::top_draw()
+void PlaneWindow::begin_draw()
 {
     if (!m_interface->box().size().empty())
     {
