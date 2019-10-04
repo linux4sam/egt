@@ -126,7 +126,7 @@ ComboBox::ComboBox(const item_array& items,
 {
     set_name("ComboBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::blank_rounded);
+    set_boxtype(Theme::boxtype::fill_rounded);
     set_padding(5);
     set_border(theme().default_border());
 

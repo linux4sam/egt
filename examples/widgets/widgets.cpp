@@ -129,68 +129,50 @@ struct LabelPage : public NotebookTab
 
         auto label1 = std::make_shared<Label>("left align",
                                               alignmask::left | alignmask::center);
-        label1->set_boxtype(Theme::boxtype::blank);
-        label1->set_border(1);
         grid0->add(expand(label1));
 
         auto label2 = std::make_shared<Label>("right align",
                                               alignmask::right | alignmask::center);
-        label2->set_boxtype(Theme::boxtype::blank);
-        label2->set_border(1);
         grid0->add(expand(label2));
 
         auto label3 = std::make_shared<Label>("top align",
                                               alignmask::top | alignmask::center);
-        label3->set_boxtype(Theme::boxtype::blank);
-        label3->set_border(1);
         grid0->add(expand(label3));
 
         auto label4 = std::make_shared<Label>("bottom align",
                                               alignmask::bottom | alignmask::center);
-        label4->set_boxtype(Theme::boxtype::blank);
-        label4->set_border(1);
         grid0->add(expand(label4));
 
         auto label5 = std::make_shared<Label>("Multiline\nLabel Text", alignmask::center);
-        label5->set_boxtype(Theme::boxtype::blank);
-        label5->set_border(1);
         grid0->add(expand(label5));
 
         auto imagelabel0 = std::make_shared<ImageLabel>(Image("@lock.png"), "Lock");
-        imagelabel0->set_boxtype(Theme::boxtype::blank);
-        imagelabel0->set_border(1);
         grid0->add(expand(imagelabel0));
         imagelabel0->set_image_align(alignmask::top);
         imagelabel0->set_text_align(alignmask::center);
 
         auto imagelabel1 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
-        imagelabel1->set_boxtype(Theme::boxtype::blank);
-        imagelabel1->set_border(1);
         grid0->add(expand(imagelabel1));
         imagelabel1->set_text_align(alignmask::center);
 
         auto imagelabel2 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
-        imagelabel2->set_boxtype(Theme::boxtype::blank);
-        imagelabel2->set_border(1);
         grid0->add(expand(imagelabel2));
         imagelabel2->set_text_align(alignmask::center | alignmask::right);
         imagelabel2->set_image_align(alignmask::right);
 
         auto imagelabel3 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
-        imagelabel3->set_boxtype(Theme::boxtype::blank);
-        imagelabel3->set_border(1);
         grid0->add(expand(imagelabel3));
         imagelabel3->set_text_align(alignmask::center | alignmask::top);
         imagelabel3->set_image_align(alignmask::bottom);
 
         auto imagelabel4 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
-        imagelabel4->set_boxtype(Theme::boxtype::blank);
+        imagelabel4->set_boxtype(Theme::boxtype::fill);
         imagelabel4->set_border(1);
         grid0->add(expand(imagelabel4));
         imagelabel4->set_text_align(alignmask::center | alignmask::bottom);
 
         auto imagelabel5 = std::make_shared<ImageLabel>(Image("@camera.png"));
-        imagelabel5->set_boxtype(Theme::boxtype::blank);
+        imagelabel5->set_boxtype(Theme::boxtype::fill);
         imagelabel5->set_border(1);
         grid0->add(expand(imagelabel5));
     }

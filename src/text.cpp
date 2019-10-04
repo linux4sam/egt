@@ -40,10 +40,10 @@ TextBox::TextBox(const std::string& text,
     set_name("TextBox" + std::to_string(m_widgetid));
 
     set_border(theme().default_border());
-    set_boxtype(Theme::boxtype::blank_rounded);
+    set_boxtype(Theme::boxtype::fill_rounded);
     set_padding(5);
 
-    m_timer.on_timeout(std::bind(&TextBox::cursor_timeout, this));
+    m_timer.on_timeout([this]() { cursor_timeout(); });
 
     cursor_set_end();
 }

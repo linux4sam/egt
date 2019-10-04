@@ -98,7 +98,7 @@ public:
         : Widget(rect)
     {
         set_name("RectangleWidget" + std::to_string(m_widgetid));
-        set_boxtype(Theme::boxtype::blank);
+        set_boxtype(Theme::boxtype::fill);
     }
 
     explicit RectangleWidget(Frame& parent, const Rect& rect = {})

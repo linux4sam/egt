@@ -128,7 +128,7 @@ ToggleBox::ToggleBox(const Rect& rect) noexcept
 {
     set_name("ToggleBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::blank_rounded);
+    set_boxtype(Theme::boxtype::fill_rounded);
     set_border(theme().default_border());
 }
 
@@ -155,7 +155,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         rect.set_width(rect.width() / 2);
         rect.set_x(rect.x() + rect.width());
         widget.theme().draw_box(painter,
-                                Theme::boxtype::blank_rounded,
+                                Theme::boxtype::fill_rounded,
                                 rect,
                                 widget.color(Palette::ColorId::border),
                                 widget.color(Palette::ColorId::button_bg));
@@ -168,7 +168,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         if (widget.enable_disable())
         {
             widget.theme().draw_box(painter,
-                                    Theme::boxtype::blank_rounded,
+                                    Theme::boxtype::fill_rounded,
                                     rect,
                                     widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
                                     widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
@@ -176,7 +176,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         else
         {
             widget.theme().draw_box(painter,
-                                    Theme::boxtype::blank_rounded,
+                                    Theme::boxtype::fill_rounded,
                                     rect,
                                     widget.color(Palette::ColorId::border),
                                     widget.color(Palette::ColorId::button_bg));

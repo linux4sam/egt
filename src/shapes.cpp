@@ -20,7 +20,7 @@ CircleWidget::CircleWidget(const Circle& circle)
       m_radius(circle.radius())
 {
     set_name("CircleWidget" + std::to_string(m_widgetid));
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
 }
 
 CircleWidget::CircleWidget(Frame& parent, const Circle& circle)

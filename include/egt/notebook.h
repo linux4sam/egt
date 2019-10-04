@@ -33,7 +33,7 @@ public:
         set_name("NotebookTab" + std::to_string(m_widgetid));
 
         // tabs are not transparent by default
-        set_boxtype(Theme::boxtype::blank | Theme::boxtype::solid);
+        set_boxtype(Theme::boxtype::fill | Theme::boxtype::solid);
     }
 
     /**

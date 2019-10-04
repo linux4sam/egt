@@ -31,7 +31,7 @@ LineChart::LineChart(const Rect& rect)
 {
     set_name("LineChart" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
 }
 
 void LineChart::draw(Painter& painter, const Rect& rect)
@@ -118,7 +118,7 @@ PieChart::PieChart(const Rect& rect)
 {
     set_name("PieChart" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
 
     static const vector<Color> default_colors =
     {

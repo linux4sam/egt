@@ -131,10 +131,7 @@ public:
         /// type of border, border will always be drawn if border_width > 0
         border_bottom = 1 << 3,
 
-        /// useful pre-define
-        blank = fill,
-        /// useful pre-define
-        blank_rounded = fill | border_rounded,
+        fill_rounded = fill | border_rounded,
     };
 
     static float DEFAULT_ROUNDED_RADIUS;

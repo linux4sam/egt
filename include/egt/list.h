@@ -37,7 +37,7 @@ struct StringItem : public ImageLabel
                alignmask align = alignmask::center) noexcept
         : ImageLabel(image, text, align)
     {
-        set_boxtype(Theme::boxtype::blank);
+        set_boxtype(Theme::boxtype::fill);
     }
 
     StringItem(const std::string& text,
@@ -46,7 +46,7 @@ struct StringItem : public ImageLabel
                alignmask align = alignmask::center) noexcept
         : ImageLabel(image, text, rect, align)
     {
-        set_boxtype(Theme::boxtype::blank);
+        set_boxtype(Theme::boxtype::fill);
     }
 
     StringItem(const std::string& text,
@@ -54,7 +54,7 @@ struct StringItem : public ImageLabel
                alignmask align = alignmask::center) noexcept
         : ImageLabel(Image(), text, rect, align)
     {
-        set_boxtype(Theme::boxtype::blank);
+        set_boxtype(Theme::boxtype::fill);
     }
 
     explicit StringItem(Frame& parent,
@@ -62,7 +62,7 @@ struct StringItem : public ImageLabel
                         alignmask align = alignmask::center) noexcept
         : ImageLabel(parent, Image(), text, align)
     {
-        set_boxtype(Theme::boxtype::blank);
+        set_boxtype(Theme::boxtype::fill);
     }
 
     StringItem(Frame& parent,
@@ -71,7 +71,7 @@ struct StringItem : public ImageLabel
                alignmask align = alignmask::center) noexcept
         : ImageLabel(parent, Image(), text, rect, align)
     {
-        set_boxtype(Theme::boxtype::blank);
+        set_boxtype(Theme::boxtype::fill);
     }
 
     virtual Size min_size_hint() const override

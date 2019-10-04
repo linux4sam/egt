@@ -25,7 +25,7 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
 {
     set_name("Slider" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
 
     flags().set(Widget::flag::grab_mouse);
 
@@ -239,7 +239,7 @@ void Slider::draw_handle(Painter& painter)
     if (slider_flags().is_set(flag::round_handle))
     {
         theme().draw_circle(painter,
-                            Theme::boxtype::blank_rounded,
+                            Theme::boxtype::fill_rounded,
                             handle,
                             color(Palette::ColorId::border),
                             color(Palette::ColorId::button_bg));
@@ -247,7 +247,7 @@ void Slider::draw_handle(Painter& painter)
     else
     {
         theme().draw_box(painter,
-                         Theme::boxtype::blank_rounded,
+                         Theme::boxtype::fill_rounded,
                          handle,
                          color(Palette::ColorId::border),
                          color(Palette::ColorId::button_bg));

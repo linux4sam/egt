@@ -34,7 +34,7 @@ Button::Button(const std::string& text,
 {
     set_name("Button" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::blank_rounded);
+    set_boxtype(Theme::boxtype::fill_rounded);
 
     ncflags().set(Widget::flag::grab_mouse);
 }

@@ -23,7 +23,7 @@ ProgressBar::ProgressBar(const Rect& rect,
                          int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
     set_border(theme().default_border());
 }
 
@@ -49,7 +49,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
     if (width > 0.f)
     {
         widget.theme().draw_box(painter,
-                                Theme::boxtype::blank,
+                                Theme::boxtype::fill,
                                 Rect(b.x(), b.y(), width, b.height()),
                                 Color(),
                                 widget.color(Palette::ColorId::button_bg));
@@ -88,7 +88,7 @@ void ProgressBar::set_show_label(bool value)
 SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
 }
 
 SpinProgress::SpinProgress(Frame& parent, const Rect& rect, int min, int max, int value) noexcept
@@ -156,7 +156,7 @@ LevelMeter::LevelMeter(const Rect& rect,
                        int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
     set_padding(2);
 }
 
@@ -191,7 +191,7 @@ void LevelMeter::default_draw(LevelMeter& widget, Painter& painter, const Rect&)
         Rect rect(b.x(),  b.y() + i * barheight, b.width(), barheight - widget.padding());
 
         widget.theme().draw_box(painter,
-                                Theme::boxtype::blank,
+                                Theme::boxtype::fill,
                                 rect,
                                 widget.color(Palette::ColorId::border),
                                 color);
@@ -208,7 +208,7 @@ Size LevelMeter::min_size_hint() const
 AnalogMeter::AnalogMeter(const Rect& rect) noexcept
     : ValueRangeWidget<float>(rect, 0, 100, 0)
 {
-    set_boxtype(Theme::boxtype::blank);
+    set_boxtype(Theme::boxtype::fill);
 }
 
 AnalogMeter::AnalogMeter(Frame& parent, const Rect& rect) noexcept
