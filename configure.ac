@@ -125,16 +125,18 @@ AC_SUBST(WARN_CFLAGS)
 AC_PATH_X
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h glob.h])
 
+CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB"
+
 AC_ARG_ENABLE([debug],
   [AS_HELP_STRING([--disable-debug], [build without debugging support [default=no]])],
   [enable_debug=no], [ ])
 
 if test "$enable_debug" = "no" ; then
   AC_MSG_NOTICE([Disabling debugging])
-  CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast -DSPDLOG_COMPILED_LIB"
+  CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast"
   CFLAGS="$CFLAGS -DNDEBUG -Ofast"
 else
-  CXXFLAGS="$CXXFLAGS -O0 -DSPDLOG_ACTIVE_LEVEL=0 -DSPDLOG_COMPILED_LIB"
+  CXXFLAGS="$CXXFLAGS -O0 -DSPDLOG_ACTIVE_LEVEL=0"
   CFLAGS="$CFLAGS -O0"
 fi
 
