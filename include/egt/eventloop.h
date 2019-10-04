@@ -53,6 +53,14 @@ public:
     virtual int wait();
 
     /**
+     * Perform a draw.
+     *
+     * @note You do not normally need to call this directly.  It is called by
+     * step() and run() automatically.
+     */
+    virtual void draw();
+
+    /**
      * Run the event loop.
      *
      * This will not return until quit() is called.
@@ -93,8 +101,6 @@ public:
     virtual ~EventLoop();
 
 protected:
-
-    virtual void draw();
 
     /**
      * Called to invoke idle callbacks.
