@@ -182,6 +182,19 @@ void Screen::damage_algorithm(Screen::damage_array& damage, Rect rect)
     damage.emplace_back(rect);
 }
 
+static inline bool no_composition_buffer()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_NO_COMPOSITION_BUFFER"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
 void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format format)
 {
     m_size = size;
@@ -192,19 +205,31 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format for
 
     m_buffers.clear();
 
-    for (uint32_t x = 0; x < count; x++)
+    if (count == 1 && no_composition_buffer())
     {
-        m_buffers.emplace_back(
-            cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
-                                                f,
-                                                size.width(), size.height(),
-                                                cairo_format_stride_for_width(f, size.width())));
-
-        m_buffers.back().damage.emplace_back(Point(), size);
+        m_surface = shared_cairo_surface_t(
+                        cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[0]),
+                                f,
+                                size.width(), size.height(),
+                                cairo_format_stride_for_width(f, size.width())),
+                        cairo_surface_destroy);
     }
+    else
+    {
+        for (uint32_t x = 0; x < count; x++)
+        {
+            m_buffers.emplace_back(
+                cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
+                                                    f,
+                                                    size.width(), size.height(),
+                                                    cairo_format_stride_for_width(f, size.width())));
 
-    m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, size.width(), size.height()),
-                                       cairo_surface_destroy);
+            m_buffers.back().damage.emplace_back(Point(), size);
+        }
+
+        m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, size.width(), size.height()),
+                                           cairo_surface_destroy);
+    }
 
     assert(m_surface.get());
 
