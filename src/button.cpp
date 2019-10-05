@@ -36,7 +36,7 @@ Button::Button(const std::string& text,
 
     set_boxtype(Theme::boxtype::fill_rounded);
 
-    ncflags().set(Widget::flag::grab_mouse);
+    flags().set(Widget::flag::grab_mouse);
 }
 
 Button::Button(Frame& parent,

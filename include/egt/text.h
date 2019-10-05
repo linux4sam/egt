@@ -85,7 +85,7 @@ public:
      */
     explicit TextBox(const std::string& text = {},
                      alignmask text_align = default_align,
-                     const flags_type::flags& flags = {}) noexcept;
+                     const flags_type& flags = {}) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -96,7 +96,7 @@ public:
     TextBox(const std::string& text,
             const Rect& rect,
             alignmask text_align = default_align,
-            const flags_type::flags& flags = {}) noexcept;
+            const flags_type& flags = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -107,7 +107,7 @@ public:
     explicit TextBox(Frame& parent,
                      const std::string& text = {},
                      alignmask text_align = default_align,
-                     const flags_type::flags& flags = {}) noexcept;
+                     const flags_type& flags = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -120,7 +120,7 @@ public:
             const std::string& text,
             const Rect& rect,
             alignmask text_align = default_align,
-            const flags_type::flags& flags = {}) noexcept;
+            const flags_type& flags = {}) noexcept;
 
     virtual void handle(Event& event) override;
 

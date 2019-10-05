@@ -52,7 +52,7 @@ public:
     /**
      * Common flags used for various widget properties.
      */
-    enum class flag
+    enum class flag : uint32_t
     {
         /**
          * This is an overlay plane window.
@@ -312,7 +312,10 @@ public:
     /**
      * Return true if the widget is visible.
      */
-    virtual bool visible() const;
+    inline bool visible() const
+    {
+        return !flags().is_set(Widget::flag::invisible);
+    }
 
     /**
      * Set the visible property.
@@ -350,7 +353,10 @@ public:
     /**
      * Return true if the widget is readonly.
      */
-    virtual bool readonly() const;
+    inline bool readonly() const
+    {
+        return flags().is_set(Widget::flag::readonly);
+    }
 
     /**
      * Set the readonly property of the widget.
@@ -386,7 +392,10 @@ public:
      * When a widget is disabled, it does not receive events. Also, the
      * color scheme may change when a widget is disabled.
      */
-    virtual bool disabled() const;
+    inline bool disabled() const
+    {
+        return flags().is_set(Widget::flag::disabled);
+    }
 
     /**
      * Toggle the disabled state.
@@ -581,14 +590,6 @@ public:
      * Get a modifiable ref of the flags.
      */
     inline flags_type& flags() { return m_widget_flags; }
-
-    /**
-     * Get a modifiable ref of the flags.
-     *
-     * @todo Need a better solution to force non-const call of flags() when
-     * necessary.
-     */
-    inline flags_type& ncflags() { return m_widget_flags; }
 
     /**
      * Align the widget.

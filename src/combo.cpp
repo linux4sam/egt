@@ -130,7 +130,7 @@ ComboBox::ComboBox(const item_array& items,
     set_padding(5);
     set_border(theme().default_border());
 
-    ncflags().set(Widget::flag::grab_mouse);
+    flags().set(Widget::flag::grab_mouse);
 
     // automatically select the first item
     if (!m_items.empty())

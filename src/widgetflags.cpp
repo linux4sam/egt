@@ -41,7 +41,6 @@ std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
 {
     if (!flags.empty())
     {
-        // would be nice to use std::copy here, but no such luck
         detail::join(os, flags.get(), "|");
     }
     return os;

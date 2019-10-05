@@ -144,11 +144,6 @@ void Widget::show()
     invoke_handlers(eventid::show);
 }
 
-bool Widget::visible() const
-{
-    return !flags().is_set(Widget::flag::invisible);
-}
-
 void Widget::set_visible(bool value)
 {
     if (visible() != value)
@@ -177,11 +172,6 @@ void Widget::set_active(bool value)
     }
 }
 
-bool Widget::readonly() const
-{
-    return flags().is_set(Widget::flag::readonly);
-}
-
 void Widget::set_readonly(bool value)
 {
     if (flags().is_set(Widget::flag::readonly) != value)
@@ -197,11 +187,6 @@ void Widget::set_readonly(bool value)
             flags().clear(Widget::flag::readonly);
         damage();
     }
-}
-
-bool Widget::disabled() const
-{
-    return flags().is_set(Widget::flag::disabled);
 }
 
 void Widget::disable()

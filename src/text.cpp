@@ -25,14 +25,14 @@ const alignmask TextBox::default_align = alignmask::expand;
 
 TextBox::TextBox(const std::string& text,
                  alignmask text_align,
-                 const flags_type::flags& flags) noexcept
+                 const flags_type& flags) noexcept
     : TextBox(text, {}, text_align, flags)
 {}
 
 TextBox::TextBox(const std::string& text,
                  const Rect& rect,
                  alignmask text_align,
-                 const flags_type::flags& flags) noexcept
+                 const flags_type& flags) noexcept
     : TextWidget(text, rect, text_align),
       m_timer(std::chrono::seconds(1)),
       m_text_flags(flags)
@@ -51,7 +51,7 @@ TextBox::TextBox(const std::string& text,
 TextBox::TextBox(Frame& parent,
                  const std::string& text,
                  alignmask text_align,
-                 const flags_type::flags& flags) noexcept
+                 const flags_type& flags) noexcept
     : TextBox(text, Rect(), text_align, flags)
 {
     parent.add(*this);
@@ -61,7 +61,7 @@ TextBox::TextBox(Frame& parent,
                  const std::string& text,
                  const Rect& rect,
                  alignmask text_align,
-                 const flags_type::flags& flags) noexcept
+                 const flags_type& flags) noexcept
     : TextBox(text, rect, text_align, flags)
 {
     parent.add(*this);

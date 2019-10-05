@@ -61,17 +61,13 @@ const pixel_format Window::DEFAULT_FORMAT = pixel_format::argb8888;
 Window::Window(const Rect& rect,
                pixel_format format,
                windowhint hint)
-    : Frame(rect)
+// by default, windows are hidden
+    : Frame(rect, {Widget::flag::window, Widget::flag::invisible})
 {
     set_name("Window" + std::to_string(m_widgetid));
 
-    ncflags().set(Widget::flag::window);
-
     // windows are not transparent by default
     set_boxtype(Theme::boxtype::solid | Theme::boxtype::fill);
-
-    // by default, windows are hidden
-    ncflags().set(Widget::flag::invisible);
 
     // create the window implementation
     create_impl(box(), format, hint);

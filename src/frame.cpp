@@ -95,17 +95,13 @@ void Frame::handle(Event& event)
     case eventid::pointer_drag:
     case eventid::pointer_drag_stop:
     {
-        Point pos = display_to_local(event.pointer().point);
+        auto pos = display_to_local(event.pointer().point);
 
         for (auto& child : detail::reverse_iterate(m_children))
         {
-            if (child->readonly())
-                continue;
-
-            if (child->disabled())
-                continue;
-
-            if (!child->visible())
+            if (child->readonly() ||
+                child->disabled() ||
+                !child->visible())
                 continue;
 
             if (child->box().intersect(pos))
@@ -124,13 +120,9 @@ void Frame::handle(Event& event)
     {
         for (auto& child : detail::reverse_iterate(m_children))
         {
-            if (child->readonly())
-                continue;
-
-            if (child->disabled())
-                continue;
-
-            if (!child->visible())
+            if (child->readonly() ||
+                child->disabled() ||
+                !child->visible())
                 continue;
 
             child->handle(event);

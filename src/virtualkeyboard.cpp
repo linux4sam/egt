@@ -21,7 +21,7 @@ VirtualKeyboard::Key::Key(uint32_t unicode, double length) noexcept
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
     m_button->set_text(tmp);
-    m_button->ncflags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const std::string& label, KeyboardCode keycode,
@@ -30,7 +30,7 @@ VirtualKeyboard::Key::Key(const std::string& label, KeyboardCode keycode,
       m_keycode(keycode),
       m_length(length)
 {
-    m_button->ncflags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const Image& img, KeyboardCode keycode,
@@ -39,7 +39,7 @@ VirtualKeyboard::Key::Key(const Image& img, KeyboardCode keycode,
       m_keycode(keycode),
       m_length(length)
 {
-    m_button->ncflags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const string& label, int link,
@@ -48,7 +48,7 @@ VirtualKeyboard::Key::Key(const string& label, int link,
       m_length(length),
       m_link(link)
 {
-    m_button->ncflags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const Image& img, int link,
@@ -57,7 +57,7 @@ VirtualKeyboard::Key::Key(const Image& img, int link,
       m_length(length),
       m_link(link)
 {
-    m_button->ncflags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(uint32_t unicode,
@@ -71,7 +71,7 @@ VirtualKeyboard::Key::Key(uint32_t unicode,
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
     m_button->set_text(tmp);
-    m_button->ncflags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::flag::no_autoresize);
 }
 
 void VirtualKeyboard::Key::set_color(Palette::ColorId id, const Palette::pattern_type& color, Palette::GroupId group)
