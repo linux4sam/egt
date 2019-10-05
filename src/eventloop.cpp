@@ -111,7 +111,7 @@ void EventLoop::draw()
     });
 }
 
-int EventLoop::step()
+int EventLoop::poll()
 {
     int ret = 0;
     int count = MAX_POLL_COUNT;
@@ -122,7 +122,12 @@ int EventLoop::step()
             break;
         ret += r;
     }
+    return ret;
+}
 
+int EventLoop::step()
+{
+    auto ret = poll();
     if (ret)
         draw();
 

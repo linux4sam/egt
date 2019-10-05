@@ -74,6 +74,8 @@ public:
      */
     virtual int step();
 
+    virtual int poll();
+
     /**
      * Quit the event loop.
      *
