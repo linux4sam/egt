@@ -139,6 +139,19 @@ void Window::allocate_screen()
         m_impl->allocate_screen();
 }
 
+static inline bool time_child_draw_enabled()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_TIME_DRAW"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
 void Window::do_draw()
 {
     if (m_damage.empty())
@@ -150,13 +163,16 @@ void Window::do_draw()
 
     SPDLOG_TRACE("{} do draw", name());
 
-    Painter painter(screen()->context());
+    detail::code_timer(time_child_draw_enabled(), name() + " draw: ", [this]()
+    {
+        Painter painter(screen()->context());
 
-    for (auto& damage : m_damage)
-        draw(painter, damage);
+        for (auto& damage : m_damage)
+            draw(painter, damage);
 
-    screen()->flip(m_damage);
-    m_damage.clear();
+        screen()->flip(m_damage);
+        m_damage.clear();
+    });
 }
 
 void Window::resize(const Size& size)
