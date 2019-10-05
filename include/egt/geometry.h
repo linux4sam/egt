@@ -633,7 +633,7 @@ public:
     /**
      * Get the PointType of the rectangle.
      */
-    inline PointType<dim_t, dim_c> point() const
+    inline const PointType<dim_t, dim_c>& point() const
     {
         return m_origin;
     }
@@ -649,7 +649,7 @@ public:
     /**
      * Get the SizeType of the rectangle.
      */
-    inline SizeType<dim_t, dim_c> size() const
+    inline const SizeType<dim_t, dim_c>& size() const
     {
         return m_size;
     }

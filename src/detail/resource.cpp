@@ -34,7 +34,7 @@ cairo_status_t read_resource_stream(void* closure, unsigned char* data, unsigned
 {
     if (resources)
     {
-        string id = reinterpret_cast<const char*>(closure);
+        const auto id = reinterpret_cast<const char*>(closure);
         auto i = resources->find(id);
         if (i != resources->end())
         {
@@ -51,8 +51,7 @@ unsigned int read_resource_length(const char* name)
 {
     if (resources)
     {
-        string id = name;
-        auto i = resources->find(id);
+        const auto i = resources->find(name);
         if (i != resources->end())
         {
             return i->second.len;

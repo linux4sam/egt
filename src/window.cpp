@@ -86,7 +86,7 @@ void Window::damage(const Rect& rect)
         m_impl->damage(rect);
 }
 
-Screen* Window::screen()
+Screen* Window::screen() const
 {
     if (m_impl)
         return m_impl->screen();

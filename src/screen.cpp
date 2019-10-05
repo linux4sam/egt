@@ -186,7 +186,7 @@ void Screen::damage_algorithm(Screen::damage_array& damage, Rect rect)
     }
 
     // if we get here, no intersect found so add it
-    damage.emplace_back(std::move(rect));
+    damage.emplace_back(rect);
 }
 
 void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format format)

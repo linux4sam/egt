@@ -456,21 +456,30 @@ public:
     /**
      * Bounding box for the Widget.
      */
-    virtual const Rect& box() const;
+    inline const Rect& box() const
+    {
+        return m_box;
+    }
 
     /**
      * Get the size.
      *
      * @see Widget::box()
      */
-    virtual Size size() const;
+    inline const Size& size() const
+    {
+        return box().size();
+    }
 
     /**
      * Get the origin point.
      *
      * @see Widget::box()
      */
-    virtual Point point() const;
+    inline const Point& point() const
+    {
+        return box().point();
+    }
 
     /**
      * Width of the widget.
@@ -561,7 +570,7 @@ public:
      *
      * @return An Screen if available, or nullptr.
      */
-    virtual Screen* screen();
+    virtual Screen* screen() const;
 
     /**
      * Get a const ref of the flags.

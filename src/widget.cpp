@@ -250,21 +250,6 @@ void Widget::damage(const Rect& rect)
         m_parent->damage_from_child(to_parent(rect));
 }
 
-const Rect& Widget::box() const
-{
-    return m_box;
-}
-
-Size Widget::size() const
-{
-    return box().size();
-}
-
-Point Widget::point() const
-{
-    return box().point();
-}
-
 void Widget::set_palette(const Palette& palette)
 {
     m_palette = detail::make_unique<Palette>(palette);
@@ -327,7 +312,7 @@ const Frame* Widget::parent() const
     return m_parent;
 }
 
-Screen* Widget::screen()
+Screen* Widget::screen() const
 {
     assert(m_parent);
     return parent()->screen();

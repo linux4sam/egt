@@ -14,7 +14,7 @@ inline namespace v1
 {
 
 Painter::Painter(shared_cairo_t cr) noexcept
-    : m_cr(cr)
+    : m_cr(std::move(cr))
 {
 }
 

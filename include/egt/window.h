@@ -72,7 +72,7 @@ public:
      * The buck stops on this call to Widget::screen() with a Window
      * because the Window contains the screen.
      */
-    virtual Screen* screen() override;
+    virtual Screen* screen() const override;
 
     virtual bool has_screen() const override;
 
