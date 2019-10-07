@@ -1113,6 +1113,80 @@ static_assert(detail::rule_of_5<Circle>(),
 
 using CircleF = CircleType<float>;
 
+template<class dim_t>
+class EllipseType
+{
+public:
+    /**
+    * Helper to reference the dimension type.
+    */
+    using dim_type = dim_t;
+
+    constexpr EllipseType(const PointType<dim_t>& center = {},
+                          dim_t radiusa = {},
+                          dim_t radiusb = {}) noexcept
+        : m_center(center),
+          m_radiusa(radiusa),
+          m_radiusb(radiusb)
+    {
+    }
+
+    /**
+     * Get the total perimeter of the ellipse.
+     *
+     * This is technically just an approximation.
+     */
+    inline dim_t perimeter() const
+    {
+        return 2.f * detail::pi<float>() * std::sqrt((m_radiusa * m_radiusa +
+                m_radiusb * m_radiusb) / 2.f);
+    }
+
+    /**
+     * @param angle The angle in degrees on the ellipse, with the center in the
+     * middle of the ellipse.
+     */
+    inline PointType<dim_t> point_on_perimeter(float angle)
+    {
+        const auto x = m_radiusa * std::cos(detail::to_radians(0.f, angle));
+        const auto y = m_radiusb * std::sin(detail::to_radians(0.f, angle));
+        return center() + PointType<dim_t>(x, y);
+    }
+
+    inline void set_radiusa(const dim_t radiusa) { m_radiusa = radiusa; }
+    inline void set_radiusb(const dim_t radiusb) { m_radiusb = radiusb; }
+    inline void set_center(const PointType<dim_t>& center) { m_center = center; }
+
+    constexpr inline dim_t radiusa() const { return m_radiusa; }
+    constexpr inline dim_t radiusb() const { return m_radiusb; }
+    constexpr inline PointType<dim_t> center() const { return m_center; }
+
+protected:
+
+    /**
+     * Center point of the arc.
+     */
+    PointType<dim_t> m_center;
+
+    /**
+     * A radius.
+     */
+    dim_t m_radiusa{0};
+
+    /**
+     * B radius.
+     */
+    dim_t m_radiusb{0};
+};
+
+template<class dim_t>
+std::ostream& operator<<(std::ostream& os, const EllipseType<dim_t>& ellipse)
+{
+    os << "[" << ellipse.center() << "-" << ellipse.radiusa() <<
+       "-" << ellipse.radiusb() << "]";
+    return os;
+}
+
 }
 }
 
