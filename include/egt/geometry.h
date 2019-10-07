@@ -1096,6 +1096,13 @@ public:
     }
 };
 
+template<class dim_t>
+std::ostream& operator<<(std::ostream& os, const CircleType<dim_t>& circle)
+{
+    os << "[" << circle.center() << "-" << circle.radius() << "]";
+    return os;
+}
+
 /**
  * Helper type for a default circle.
  */
