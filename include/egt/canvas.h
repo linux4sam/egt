@@ -48,6 +48,8 @@ public:
      *
      * @param[in] size The size of the canvas.
      * @param[in] format The pixel format for the canvas.
+     *
+     * @note The canvas contents are undefined. zero() can be used to initialize it.
      */
     explicit Canvas(const Size& size,
                     pixel_format format = pixel_format::argb8888) noexcept;
@@ -57,6 +59,8 @@ public:
      *
      * @param[in] size The size of the canvas.
      * @param[in] format The pixel format for the canvas.
+     *
+     * @note The canvas contents are undefined. zero() can be used to initialize it.
      */
     explicit Canvas(const SizeF& size,
                     pixel_format format = pixel_format::argb8888) noexcept;
@@ -115,6 +119,8 @@ public:
     /**
      * Fill the surface with zero (including for transparency channel if
      * applicable).
+     *
+     * @note This is not done by default when creating a canvas.
      */
     void zero();
 
@@ -123,15 +129,14 @@ public:
      */
     pixel_format format() const;
 
-    virtual ~Canvas() = default;
-
-
     /**
      * Create a copy of a surface.
      */
     void copy(const shared_cairo_surface_t& surface);
 
     void copy(const shared_cairo_surface_t& surface, const RectF& rect);
+
+    virtual ~Canvas() = default;
 
 protected:
 
