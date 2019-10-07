@@ -12,6 +12,7 @@
  */
 
 #include <cairo.h>
+#include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/painter.h>
 #include <string>
@@ -228,6 +229,9 @@ protected:
      */
     Size m_orig_size;
 };
+
+static_assert(detail::rule_of_5<Image>(),
+              "Image : must fulfill rule of 5");
 
 }
 }

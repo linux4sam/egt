@@ -11,6 +11,7 @@
  * @brief Event types.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/keycode.h>
 #include <iosfwd>
@@ -169,6 +170,9 @@ struct Pointer
     DisplayPoint drag_start;
 };
 
+static_assert(detail::rule_of_5<Pointer>(),
+              "Pointer : must fulfill rule of 5");
+
 std::ostream& operator<<(std::ostream& os, const Pointer::button& btn);
 std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
 
@@ -197,6 +201,9 @@ struct Key
      */
     uint32_t unicode{0};
 };
+
+static_assert(detail::rule_of_5<Key>(),
+              "Key : must fulfill rule of 5");
 
 std::ostream& operator<<(std::ostream& os, const Key& key);
 
@@ -344,6 +351,9 @@ protected:
      */
     Pointer m_pointer;
 };
+
+static_assert(detail::rule_of_5<Event>(),
+              "Event : must fulfill rule of 5");
 
 std::ostream& operator<<(std::ostream& os, const Event& event);
 
