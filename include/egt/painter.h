@@ -173,6 +173,20 @@ public:
     }
 
     /**
+     * Create a line.
+     *
+     * @param[in] line The line.
+     */
+    template<class T>
+    Painter& draw(const LineType<T>& line)
+    {
+        cairo_move_to(m_cr.get(), line.start().x(), line.start().y());
+        cairo_line_to(m_cr.get(), line.end().x(), line.end().y());
+
+        return *this;
+    }
+
+    /**
      * Create a rectangle.
      *
      * @param[in] rect The rectangle.
@@ -199,6 +213,23 @@ public:
      */
     template<class T>
     Painter& draw(const ArcType<T>& arc)
+    {
+        if (arc.empty())
+            return *this;
+
+        cairo_arc(m_cr.get(), arc.center().x(), arc.center().y(),
+                  arc.radius(), arc.angle1(), arc.angle2());
+
+        return *this;
+    }
+
+    /**
+     * Create a circle.
+     *
+     * @param[in] arc The circle.
+     */
+    template<class T>
+    Painter& draw(const CircleType<T>& arc)
     {
         if (arc.empty())
             return *this;
