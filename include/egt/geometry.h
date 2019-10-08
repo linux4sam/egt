@@ -1090,8 +1090,8 @@ public:
      */
     inline RectType<dim_t> rect() const
     {
-        RectType<dim_t> r(this->center(), SizeType<dim_t>());
-        r.grow_around_center(this->radius());
+        RectType<dim_t> r(this->center() - Point(this->radius(), this->radius()),
+                          SizeType<dim_t>(this->radius() * 2, this->radius() * 2));
         return r;
     }
 };
