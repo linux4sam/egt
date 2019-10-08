@@ -11,6 +11,7 @@
  * @brief Working with popup windows.
  */
 
+#include <egt/app.h>
 #include <egt/window.h>
 
 namespace egt
@@ -51,7 +52,7 @@ public:
         if (T::parent())
             this->move_to_center(T::parent()->box().center());
         else
-            this->move_to_center(main_screen()->box().center());
+            this->move_to_center(Application::instance().screen()->box().center());
 
         T::show();
     }

@@ -12,7 +12,9 @@
 #include <egt/utils.h>
 #include <iosfwd>
 #include <libintl.h>
+#include <memory>
 #include <string>
+#include <vector>
 
 /**
  * @file
@@ -29,6 +31,9 @@ namespace egt
  */
 inline namespace v1
 {
+
+class Screen;
+class Input;
 
 /**
  * Application definition.
@@ -73,6 +78,8 @@ public:
      * Get a reference to the application event loop instance.
      */
     inline EventLoop& event() { return m_event; }
+
+    inline Screen* screen() const { return m_screen.get(); }
 
     /**
      * Paint the entire screen to a file.
@@ -130,6 +137,16 @@ private:
      * Signal handler to handle some default signals to the application.
      */
     void signal_handler(const asio::error_code& error, int signum);
+
+    /**
+     * The screen instance.
+     */
+    std::unique_ptr<Screen> m_screen;
+
+    /**
+     * Array of inputs.
+     */
+    std::vector<std::unique_ptr<Input>> m_inputs;
 };
 
 /**

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/app.h"
 #include "egt/sideboard.h"
 
 namespace egt
@@ -15,8 +16,8 @@ SideBoard::SideBoard(flags f,
                      easing_func_t open_func,
                      std::chrono::milliseconds close_duration,
                      easing_func_t close_func)
-    : Window(main_screen()->size() + Size(f == flags::left || f == flags::right ? HANDLE_WIDTH : 0,
-                                          f == flags::top || f == flags::bottom ? HANDLE_WIDTH : 0),
+    : Window(Application::instance().screen()->size() + Size(f == flags::left || f == flags::right ? HANDLE_WIDTH : 0,
+             f == flags::top || f == flags::bottom ? HANDLE_WIDTH : 0),
              pixel_format::rgb565),
       m_side_flags(f)
 {
@@ -61,28 +62,28 @@ void SideBoard::reset_animations()
 {
     if (is_set(flags::left))
     {
-        m_oanim.set_starting(-main_screen()->size().width());
+        m_oanim.set_starting(-Application::instance().screen()->size().width());
         m_oanim.set_ending(0);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());
     }
     else if (is_set(flags::right))
     {
-        m_oanim.set_starting(main_screen()->size().width() - HANDLE_WIDTH);
+        m_oanim.set_starting(Application::instance().screen()->size().width() - HANDLE_WIDTH);
         m_oanim.set_ending(-HANDLE_WIDTH);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());
     }
     else if (is_set(flags::top))
     {
-        m_oanim.set_starting(-main_screen()->size().height());
+        m_oanim.set_starting(-Application::instance().screen()->size().height());
         m_oanim.set_ending(0);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());
     }
     else if (is_set(flags::bottom))
     {
-        m_oanim.set_starting(main_screen()->size().height() - HANDLE_WIDTH);
+        m_oanim.set_starting(Application::instance().screen()->size().height() - HANDLE_WIDTH);
         m_oanim.set_ending(-HANDLE_WIDTH);
         m_canim.set_starting(m_oanim.ending());
         m_canim.set_ending(m_oanim.starting());

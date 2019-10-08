@@ -48,9 +48,9 @@ void ComboBoxPopup::smart_pos()
     auto real = origin + DisplayPoint(0, m_parent.size().height() + POPUP_OFFSET);
     move(Point(real.x(), real.y()));
 
-    if (main_screen())
+    if (Application::instance().screen())
     {
-        auto ss = main_screen()->size();
+        auto ss = Application::instance().screen()->size();
         auto height =
             std::min(static_cast<default_dim_type>((ss.height() - origin.y()) / 40),
                      static_cast<default_dim_type>(m_list->item_count())) * 40;

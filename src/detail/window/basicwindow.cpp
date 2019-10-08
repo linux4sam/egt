@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/window/basicwindow.h"
+#include "egt/app.h"
 #include "egt/screen.h"
 #include <cassert>
 
@@ -21,10 +22,10 @@ BasicWindow::BasicWindow(Window* interface, Screen* screen)
 }
 
 BasicTopWindow::BasicTopWindow(Window* interface)
-    : BasicWindow(interface, main_screen())
+    : BasicWindow(interface, Application::instance().screen())
 {
     // go ahead and pick up the default screen
-    assert(main_screen());
+    assert(Application::instance().screen());
 }
 
 }

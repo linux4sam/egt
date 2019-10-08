@@ -26,13 +26,6 @@ namespace egt
 inline namespace v1
 {
 
-static Screen* the_screen = nullptr;
-
-Screen* main_screen()
-{
-    return the_screen;
-}
-
 Screen::Screen()
 {
     if (getenv("EGT_SCREEN_ASYNC_FLIP"))
@@ -217,9 +210,6 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format for
 
     m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
     assert(m_cr);
-
-    if (!the_screen)
-        the_screen = this;
 }
 
 void Screen::low_fidelity()
@@ -265,8 +255,7 @@ void Screen::set_brightness(size_t brightness)
 
 Screen::~Screen()
 {
-    if (the_screen == this)
-        the_screen = nullptr;
+
 }
 
 }

@@ -149,7 +149,7 @@ int main(int argc, const char** argv)
     fullscreenbtn.set_boxtype(Theme::boxtype::none);
     hpos.add(fullscreenbtn);
 
-    const float vscale = (float)main_screen()->size().width() / size.width();
+    const auto vscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
 
     fullscreenbtn.on_event([&fullscreenbtn, &player, vscale, &win](Event&)
     {

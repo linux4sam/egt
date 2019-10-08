@@ -249,12 +249,13 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
 
             PropertyAnimatorF animation;
             animation.set_starting(0.0);
-            animation.set_ending(main_screen()->max_brightness());
+            animation.set_ending(app.screen()->max_brightness());
             animation.set_duration(std::chrono::seconds(5));
             animation.set_easing_func(easing_linear);
-            animation.on_change(std::bind(&Screen::set_brightness,
-                                          main_screen(),
-                                          std::placeholders::_1));
+            animation.on_change([&app](float v)
+            {
+                app.screen()->set_brightness(v);
+            });
             animation.start();
 
             window.show();

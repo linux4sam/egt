@@ -293,11 +293,11 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
     set_boxtype(Theme::boxtype::fill);
     set_color(Palette::ColorId::bg, Color(Palette::transparent, 80));
 
-    auto popup_width = main_screen()->size().width();
-    auto popup_height = main_screen()->size().height() * 0.4;
+    auto popup_width = Application::instance().screen()->size().width();
+    auto popup_height = Application::instance().screen()->size().height() * 0.4;
 
     resize(Size(popup_width, popup_height));
-    auto y_keyboard_position = main_screen()->size().height() - popup_height;
+    auto y_keyboard_position = Application::instance().screen()->size().height() - popup_height;
     move(Point(0, y_keyboard_position));
 
     m_vsizer.set_align(alignmask::expand);

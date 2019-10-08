@@ -9,6 +9,8 @@
 
 #include "detail/window/basicwindow.h"
 #include "detail/window/planewindow.h"
+#include "egt/app.h"
+#include "egt/detail/math.h"
 #include "egt/detail/meta.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/input.h"
@@ -202,12 +204,12 @@ void Window::create_impl(const Rect& rect,
     detail::ignoreparam(format);
     detail::ignoreparam(hint);
 
-    assert(main_screen());
+    assert(Application::instance().screen());
 
     if (!the_main_window)
     {
         the_main_window = this;
-        m_box = main_screen()->box();
+        m_box = Application::instance().screen()->box();
         m_impl = detail::make_unique<detail::BasicTopWindow>(this);
     }
     else
@@ -274,9 +276,9 @@ void Window::set_main_window()
 {
     the_main_window = this;
 
-    assert(main_screen());
+    assert(Application::instance().screen());
 
-    m_box = main_screen()->box();
+    m_box = Application::instance().screen()->box();
 
     damage();
 }
@@ -351,7 +353,7 @@ void TopWindow::hide_cursor()
 void TopWindow::show_cursor(const Image& image)
 {
     m_cursor = std::make_shared<CursorWindow>(image);
-    m_cursor->move(main_screen()->box().center());
+    m_cursor->move(Application::instance().screen()->box().center());
     add(m_cursor);
     m_cursor->show();
 

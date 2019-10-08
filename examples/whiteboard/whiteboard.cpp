@@ -17,7 +17,7 @@ class ColorPickerWindow : public Popup
 public:
 
     explicit ColorPickerWindow(const Color& color)
-        : Popup(main_screen()->size() / 2),
+        : Popup(Application::instance().screen()->size() / 2),
           m_grid(std::make_tuple(4, 5), 10),
           m_color(color)
     {
@@ -82,7 +82,7 @@ class WidthPickerWindow : public Popup
 public:
 
     explicit WidthPickerWindow(int width)
-        : Popup(main_screen()->size() / 4),
+        : Popup(Application::instance().screen()->size() / 4),
           m_grid(std::make_tuple(4, 1), 10),
           m_width(width)
     {

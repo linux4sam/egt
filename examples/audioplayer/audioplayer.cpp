@@ -223,7 +223,7 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "audioplayer");
 
-    main_screen()->high_fidelity();
+    Application::instance().screen()->high_fidelity();
 
     AudioPlayerWindow win;
     win.show();

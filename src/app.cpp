@@ -181,20 +181,20 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
 #ifdef HAVE_X11
     if (backend == "x11")
-        new detail::X11Screen(*this, size);
+        m_screen = detail::make_unique<detail::X11Screen>(*this, size);
     else
 #endif
 #ifdef HAVE_LIBPLANES
         if (backend == "kms")
-            new detail::KMSScreen(primary);
+            m_screen = detail::make_unique<detail::KMSScreen>(primary);
         else
 #endif
 #ifdef HAVE_FBDEV
             if (backend == "fbdev")
-                new detail::FrameBuffer("/dev/fb0");
+                m_screen = detail::make_unique<detail::FrameBuffer>("/dev/fb0");
             else
 #endif
-                throw std::runtime_error("backend not available");
+                spdlog::info("no screen backend");
 
     // EGT_INPUT_DEVICES=library:event_device1,event_device2;library:event_device3
     const char* tmp = getenv("EGT_INPUT_DEVICES");
@@ -246,19 +246,19 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         if (device.first == "tslib")
         {
 #ifdef HAVE_TSLIB
-            new detail::InputTslib(*this, device.second);
+            m_inputs.push_back(detail::make_unique<detail::InputTslib>(*this, device.second));
 #endif
         }
         else if (device.first == "evdev")
         {
 #ifdef HAVE_LINUX_INPUT_H
-            new detail::InputEvDev(*this, device.second);
+            m_inputs.push_back(detail::make_unique<detail::InputEvDev>(*this, device.second));
 #endif
         }
     }
 
 #ifdef HAVE_LIBINPUT
-    new detail::InputLibInput(*this);
+    m_inputs.push_back(detail::make_unique<detail::InputLibInput>(*this));
 #endif
 
     m_signals.async_wait(std::bind(&Application::signal_handler, this,
@@ -317,7 +317,7 @@ void Application::paint_to_file(const string& filename)
 
     auto surface = shared_cairo_surface_t(
                        cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               main_screen()->size().width(), main_screen()->size().height()),
+                               screen()->size().width(), screen()->size().height()),
                        cairo_surface_destroy);
 
     auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);

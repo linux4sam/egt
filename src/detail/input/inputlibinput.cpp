@@ -181,7 +181,7 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     }
     case LIBINPUT_EVENT_TOUCH_DOWN:
     {
-        const auto& screen_size = main_screen()->size();
+        const auto& screen_size = Application::instance().screen()->size();
         const auto x = libinput_event_touch_get_x_transformed(t, screen_size.width());
         const auto y = libinput_event_touch_get_y_transformed(t, screen_size.height());
 
@@ -193,7 +193,7 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     }
     case LIBINPUT_EVENT_TOUCH_MOTION:
     {
-        const auto& screen_size = main_screen()->size();
+        const auto& screen_size = Application::instance().screen()->size();
         const auto x = libinput_event_touch_get_x_transformed(t, screen_size.width());
         const auto y = libinput_event_touch_get_y_transformed(t, screen_size.height());
 

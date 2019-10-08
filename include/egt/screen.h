@@ -209,11 +209,6 @@ protected:
     bool m_async{false};
 };
 
-/**
- * Get a pointer to the main screen.
- */
-Screen* main_screen();
-
 }
 }
 

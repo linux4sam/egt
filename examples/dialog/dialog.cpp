@@ -17,7 +17,7 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    auto dialog_size = main_screen()->size() * 0.75;
+    auto dialog_size = Application::instance().screen()->size() * 0.75;
 
     auto layout = make_shared<VerticalBoxSizer>();
     win.add(expand(layout));
