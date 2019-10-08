@@ -97,16 +97,26 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
     destroyPipeline();
 
 #ifdef HAVE_GSTREAMER_PBUTILS
-    start_discoverer();
+    if (!start_discoverer())
+    {
+        Event event(eventid::event2);
+        m_interface.invoke_handlers(event);
+        return false;
+    }
 #endif
 
     std::string buffer = create_pipeline(uri, m_audiodevice);
     SPDLOG_DEBUG("VideoWindow: {}", buffer);
 
-    m_pipeline = gst_parse_launch(buffer.c_str(), nullptr);
+    GError* error = nullptr;
+    m_pipeline = gst_parse_launch(buffer.c_str(), &error);
     if (!m_pipeline)
     {
         SPDLOG_DEBUG("VideoWindow: gst_parse_launch failed ");
+        if (error && error->message)
+            m_err_message = error->message;
+        Event event(eventid::event2);
+        m_interface.invoke_handlers(event);
         return false;
     }
 
