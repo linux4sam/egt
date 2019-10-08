@@ -346,6 +346,130 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     return true;
 }
 
+#ifdef HAVE_GSTREAMER_PBUTILS
+bool GstDecoderImpl::start_discoverer()
+{
+    GError* err1 = nullptr;
+    std::shared_ptr<GstDiscoverer> discoverer =
+        std::shared_ptr<GstDiscoverer>(gst_discoverer_new(5 * GST_SECOND, &err1), g_object_unref);
+    if (!discoverer.get())
+    {
+        SPDLOG_DEBUG("VideoWindow: Error creating discoverer instance: {}", err1->message);
+        g_clear_error(&err1);
+        return false;
+    }
+
+    GError* err2 = nullptr;
+    std::shared_ptr<GstDiscovererInfo> info = std::shared_ptr<GstDiscovererInfo>(
+                gst_discoverer_discover_uri(discoverer.get(), ("file://" + m_uri).c_str(), &err2),
+                g_object_unref);
+
+    GstDiscovererResult result = gst_discoverer_info_get_result(info.get());
+    SPDLOG_DEBUG("VideoWindow: Discoverer result: {} ", result);
+    switch (result)
+    {
+    case GST_DISCOVERER_URI_INVALID:
+    {
+        SPDLOG_DEBUG("VideoWindow: Discoverer Invalid URI {} ", m_uri);
+        m_err_message = "Discoverer Invalid URI " + m_uri;
+        return false;
+    }
+    case GST_DISCOVERER_ERROR:
+    {
+        SPDLOG_DEBUG("VideoWindow: Discoverer error: {} ", err2->message);
+        m_err_message = "Discoverer Error: " + std::string(err2->message);
+        break;
+    }
+    case GST_DISCOVERER_TIMEOUT:
+    {
+        SPDLOG_DEBUG("VideoWindow: Discoverer Timeout");
+        m_err_message = "Discoverer Timeout ";
+        return false;
+    }
+    case GST_DISCOVERER_BUSY:
+    {
+        SPDLOG_DEBUG("VideoWindow: Discoverer Busy");
+        m_err_message = "Discoverer Busy try later ";
+        return false;
+    }
+    case GST_DISCOVERER_MISSING_PLUGINS:
+    {
+        const GstStructure* s = gst_discoverer_info_get_misc(info.get());
+        std::shared_ptr<gchar> str = std::shared_ptr<gchar>(gst_structure_to_string(s), g_free);
+        SPDLOG_DEBUG("VideoWindow: Discoverer Missing plugins: {}", str.get());
+        m_err_message = str.get();
+        return false;
+    }
+    case GST_DISCOVERER_OK:
+        SPDLOG_DEBUG("VideoWindow: Discoverer Success");
+        break;
+    }
+
+    std::shared_ptr<GstDiscovererStreamInfo> sinfo = std::shared_ptr<GstDiscovererStreamInfo>(
+                gst_discoverer_info_get_stream_info(info.get()), g_object_unref);
+    if (!sinfo.get())
+    {
+        SPDLOG_DEBUG("VideoWindow: Discoverer error: get_stream_info failed");
+        m_err_message = "Discoverer error: failed to container_info ";
+        return false;
+    }
+
+    std::shared_ptr<GList> streams = std::shared_ptr<GList>(
+                                         gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO(sinfo.get())),
+                                         gst_discoverer_stream_info_list_free);
+    if (!streams.get())
+    {
+        SPDLOG_DEBUG("VideoWindow: Discoverer error: failed to container_info");
+        m_err_message = "Discoverer error: failed to container_info ";
+        return false;
+    }
+
+    GList* cinfo = streams.get();
+    while (cinfo)
+    {
+        GstDiscovererStreamInfo* tmpinf = (GstDiscovererStreamInfo*)cinfo->data;
+        get_stream_info(tmpinf);
+        cinfo = cinfo->next;
+    }
+    return true;
+}
+
+/* Print information regarding a stream */
+void GstDecoderImpl::get_stream_info(GstDiscovererStreamInfo* info)
+{
+    std::shared_ptr<GstCaps> caps = std::shared_ptr<GstCaps>(
+                                        gst_discoverer_stream_info_get_caps(info),
+                                        gst_caps_unref);
+    if (caps.get())
+    {
+        std::shared_ptr<gchar> desc;
+        if (gst_caps_is_fixed(caps.get()))
+            desc.reset(gst_pb_utils_get_codec_description(caps.get()), g_free);
+        else
+            desc.reset(gst_caps_to_string(caps.get()), g_free);
+
+        if (desc.get())
+        {
+            std::string type = std::string(gst_discoverer_stream_info_get_stream_type_nick(info));
+            if (!type.compare("video"))
+            {
+                m_vcodec = desc.get();
+            }
+            else if (!type.compare("audio"))
+            {
+                m_acodec = desc.get();
+                m_audiotrack = true;
+            }
+            else if (!type.compare("container"))
+            {
+                m_container = desc.get();
+            }
+            SPDLOG_DEBUG("VideoWindow: {} : {}", type, std::string(desc.get()));
+        }
+    }
+}
+#endif
+
 } // end of namespace detail
 
 } // end of namespace v1

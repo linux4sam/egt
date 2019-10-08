@@ -6,10 +6,19 @@
 #ifndef EGT_DETAIL_VIDEO_GSTDECODERIMPL_H
 #define EGT_DETAIL_VIDEO_GSTDECODERIMPL_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <egt/geometry.h>
 #include <egt/painter.h>
 #include <egt/video.h>
 #include <gst/gst.h>
+
+#ifdef HAVE_GSTREAMER_PBUTILS
+#include <gst/pbutils/pbutils.h>
+#endif
+
 #include <thread>
 
 namespace egt
@@ -74,8 +83,17 @@ protected:
     guint m_bus_watchid{0};
     GMainLoop* m_gmainLoop{nullptr};
     std::thread m_gmainThread;
+    std::string m_vcodec;
+    std::string m_acodec;
+    bool m_audiotrack{false};
+    std::string m_container;
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
+
+#ifdef HAVE_GSTREAMER_PBUTILS
+    bool start_discoverer();
+    void get_stream_info(GstDiscovererStreamInfo* info);
+#endif
 };
 
 } // end of namespace detail
