@@ -21,31 +21,6 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
     : GstDecoderImpl(interface, size),
       m_hwdecoder(decodertype)
 {
-    if (m_hwdecoder)
-    {
-        GstRegistry* reg = gst_registry_get();
-
-        std::shared_ptr<GstPluginFeature> g1h264_decode =
-            std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1h264dec"), gst_object_unref);
-        if (g1h264_decode.get())
-        {
-            gst_plugin_feature_set_rank(g1h264_decode.get(), GST_RANK_PRIMARY + 1);
-        }
-
-        std::shared_ptr<GstPluginFeature> g1mp4_decode =
-            std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1mp4dec"), gst_object_unref);
-        if (g1mp4_decode.get())
-        {
-            gst_plugin_feature_set_rank(g1mp4_decode.get(), GST_RANK_PRIMARY + 1);
-        }
-
-        std::shared_ptr<GstPluginFeature> g1vp8_decode =
-            std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1vp8dec"), gst_object_unref);
-        if (g1vp8_decode.get())
-        {
-            gst_plugin_feature_set_rank(g1vp8_decode.get(), GST_RANK_PRIMARY + 1);
-        }
-    }
 }
 
 std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
@@ -72,6 +47,32 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 
     if (it != hwcodecs.end())
     {
+        if (m_hwdecoder)
+        {
+            GstRegistry* reg = gst_registry_get();
+
+            std::shared_ptr<GstPluginFeature> g1h264_decode =
+                std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1h264dec"), gst_object_unref);
+            if (g1h264_decode.get())
+            {
+                gst_plugin_feature_set_rank(g1h264_decode.get(), GST_RANK_PRIMARY + 1);
+            }
+
+            std::shared_ptr<GstPluginFeature> g1mp4_decode =
+                std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1mp4dec"), gst_object_unref);
+            if (g1mp4_decode.get())
+            {
+                gst_plugin_feature_set_rank(g1mp4_decode.get(), GST_RANK_PRIMARY + 1);
+            }
+
+            std::shared_ptr<GstPluginFeature> g1vp8_decode =
+                std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1vp8dec"), gst_object_unref);
+            if (g1vp8_decode.get())
+            {
+                gst_plugin_feature_set_rank(g1vp8_decode.get(), GST_RANK_PRIMARY + 1);
+            }
+        }
+
         v_pipe << " ! video/x-raw,width=" << m_size.width() << ",height=" << m_size.height() << ",format=BGRx";
     }
     else
