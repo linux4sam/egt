@@ -115,12 +115,9 @@ int EventLoop::poll()
 {
     int ret = 0;
     int count = MAX_POLL_COUNT;
-    while (count--)
+    while (m_impl->m_io.poll_one() && count--)
     {
-        auto r = m_impl->m_io.poll_one();
-        if (!r)
-            break;
-        ret += r;
+        ret++;
     }
     return ret;
 }
