@@ -22,6 +22,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <initializer_list>
 
 namespace egt
 {
@@ -610,6 +611,13 @@ public:
         : m_interp(interp),
           m_steps(std::move(steps))
     {}
+
+    template<class T>
+    explicit ColorMap(std::initializer_list<T> steps, interpolation interp = interpolation::rgba)
+        : m_interp(interp)
+    {
+        m_steps.insert(m_steps.end(), steps.begin(), steps.end());
+    }
 
     /**
      * Append a color step.
