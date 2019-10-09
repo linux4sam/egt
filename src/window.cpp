@@ -56,24 +56,6 @@ std::vector<Window*>& windows()
     return the_windows;
 }
 
-std::ostream& operator<<(std::ostream& os, const windowhint& event)
-{
-    static std::map<windowhint, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(windowhint::automatic);
-        MAPITEM(windowhint::software);
-        MAPITEM(windowhint::overlay);
-        MAPITEM(windowhint::heo_overlay);
-        MAPITEM(windowhint::cursor_overlay);
-#undef MAPITEM
-    }
-
-    os << strings[event];
-    return os;
-}
-
 const pixel_format Window::DEFAULT_FORMAT = pixel_format::argb8888;
 
 Window::Window(const Rect& rect,

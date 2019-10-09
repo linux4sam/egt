@@ -11,8 +11,10 @@
  * @brief Working with KMS screens.
  */
 
-#include <egt/screen.h>
+#include <egt/detail/screen/kmstype.h>
 #include <egt/input.h>
+#include <egt/screen.h>
+#include <egt/widgetflags.h>
 #include <memory>
 
 struct plane_data;
@@ -32,7 +34,9 @@ class KMSOverlay : public Screen
 {
 public:
 
-    explicit KMSOverlay(struct plane_data* plane);
+    KMSOverlay() = delete;
+
+    KMSOverlay(const Size& size, pixel_format format, windowhint hint);
 
     virtual void resize(const Size& size);
     virtual void set_position(const DisplayPoint& point);
@@ -54,20 +58,18 @@ public:
 
     void* raw();
 
-    struct plane_data* s() const
+    plane_data* s() const
     {
-        return m_plane;
+        return m_plane.get();
     }
 
     void schedule_flip() override;
 
     uint32_t index() override;
 
-    virtual ~KMSOverlay();
-
 protected:
-    struct plane_data* m_plane {nullptr};
-    uint32_t m_index{};
+    unique_plane_t m_plane;
+    uint32_t m_index{0};
     std::unique_ptr<FlipThread> m_pool;
 };
 

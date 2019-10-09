@@ -260,7 +260,8 @@ detail/screen/kmsscreen.cpp
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/detail/screen/kmsoverlay.h \
-../include/egt/detail/screen/kmsscreen.h
+../include/egt/detail/screen/kmsscreen.h \
+../include/egt/detail/screen/kmstype.h
 endif
 
 if HAVE_X11

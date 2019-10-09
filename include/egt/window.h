@@ -15,7 +15,7 @@
 #include <egt/image.h>
 #include <egt/label.h>
 #include <egt/screen.h>
-#include <iosfwd>
+#include <egt/widgetflags.h>
 #include <memory>
 #include <vector>
 
@@ -23,39 +23,6 @@ namespace egt
 {
 inline namespace v1
 {
-
-/**
- * Hint used for configuring Window backends.
- */
-enum class windowhint
-{
-    /**
-     * Allow automatic detection of the window type to create.
-     */
-    automatic,
-
-    /**
-     * Request a software only implementation.
-     */
-    software,
-
-    /**
-     * Request an overlay plane.
-     */
-    overlay,
-
-    /**
-     * Request specifically an HEO overlay plane.
-     */
-    heo_overlay,
-
-    /**
-     * Request a cursor overlay plane.
-     */
-    cursor_overlay,
-};
-
-std::ostream& operator<<(std::ostream& os, const windowhint& event);
 
 namespace detail
 {

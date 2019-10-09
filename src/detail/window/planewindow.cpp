@@ -104,11 +104,7 @@ void PlaneWindow::allocate_screen()
     {
         assert(!m_interface->box().size().empty());
 
-        auto plane = KMSScreen::instance()->allocate_overlay(m_interface->box().size(),
-                     m_format, m_hint);
-        if (!plane)
-            throw std::runtime_error("failed to allocate plane");
-        m_screen = new KMSOverlay(plane);
+        m_screen = new KMSOverlay(m_interface->box().size(), m_format, m_hint);
     }
 }
 

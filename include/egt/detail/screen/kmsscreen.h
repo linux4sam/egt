@@ -11,6 +11,7 @@
  * @brief Working with KMS screens.
  */
 
+#include <egt/detail/screen/kmstype.h>
 #include <egt/geometry.h>
 #include <egt/screen.h>
 #include <egt/window.h>
@@ -62,11 +63,11 @@ public:
 
     void close();
 
-    struct plane_data* allocate_overlay(const Size& size,
-                                        pixel_format format = pixel_format::argb8888,
-                                        windowhint hint = windowhint::automatic);
+    unique_plane_t allocate_overlay(const Size& size,
+                                    pixel_format format = pixel_format::argb8888,
+                                    windowhint hint = windowhint::automatic);
 
-    void deallocate_overlay(struct plane_data* plane);
+    void deallocate_overlay(plane_data* plane);
 
     virtual size_t max_brightness() const override;
 
@@ -83,9 +84,13 @@ public:
 
 protected:
 
+    plane_data* overlay_plane_create(const Size& size,
+                                     pixel_format format,
+                                     plane_type type);
+
     int m_fd{-1};
     struct kms_device* m_device {nullptr};
-    struct plane_data* m_plane {nullptr};
+    unique_plane_t m_plane;
     uint32_t m_index{0};
     static std::vector<planeid> m_used;
     std::unique_ptr<FlipThread> m_pool;

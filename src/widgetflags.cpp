@@ -99,5 +99,23 @@ std::ostream& operator<<(std::ostream& os, const alignmask& align)
     return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const windowhint& event)
+{
+    static std::map<windowhint, std::string> strings;
+    if (strings.empty())
+    {
+#define MAPITEM(p) strings[p] = #p
+        MAPITEM(windowhint::automatic);
+        MAPITEM(windowhint::software);
+        MAPITEM(windowhint::overlay);
+        MAPITEM(windowhint::heo_overlay);
+        MAPITEM(windowhint::cursor_overlay);
+#undef MAPITEM
+    }
+
+    os << strings[event];
+    return os;
+}
+
 }
 }
