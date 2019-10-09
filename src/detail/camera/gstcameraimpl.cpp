@@ -187,12 +187,12 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
 
             if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
             {
-                SPDLOG_DEBUG("CameraWindow: {}", box);
-                if (width != box.width())
+                SPDLOG_TRACE("CameraWindow: {}", box);
+                if (width != box.width() || height != box.height())
                 {
-                    double scale = (double) box.width() / width;
-                    SPDLOG_DEBUG("CameraWindow: scale = {}", scale);
-                    cairo_scale(cr.get(), scale, scale);
+                    double scalex = static_cast<double>(box.width()) / width;
+                    double scaley = static_cast<double>(box.height()) / height;
+                    cairo_scale(cr.get(), scalex, scaley);
                 }
                 cairo_set_source_surface(cr.get(), surface.get(), box.x(), box.y());
                 cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
@@ -333,6 +333,11 @@ bool CameraImpl::start()
         return false;
     }
     return true;
+}
+
+void CameraImpl::scale(float scalex, float scaley)
+{
+    m_interface.resize(Size(m_rect.width() * scalex, m_rect.height() * scaley));
 }
 
 void CameraImpl::stop()

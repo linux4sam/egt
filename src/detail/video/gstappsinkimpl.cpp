@@ -63,11 +63,11 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
                 if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
                 {
                     auto cr = painter.context().get();
-                    if (width != box.width())
+                    if (width != box.width() || height != box.height())
                     {
-                        double scale = (double) box.width() / width;
-                        SPDLOG_TRACE("VideoWindow: scale = {}", scale);
-                        cairo_scale(cr, scale, scale);
+                        double scalex = static_cast<double>(box.width()) / width;
+                        double scaley = static_cast<double>(box.height()) / height;
+                        cairo_scale(cr, scalex, scaley);
                     }
                     cairo_set_source_surface(cr, surface.get(), box.x(), box.y());
                     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);

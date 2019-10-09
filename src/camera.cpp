@@ -54,6 +54,24 @@ bool CameraWindow::start()
     return m_cameraImpl->start();
 }
 
+void CameraWindow::set_scale(float scalex, float scaley)
+{
+    auto xs = detail::change_if_diff<float>(m_scalex, scalex);
+    auto ys = detail::change_if_diff<float>(m_scaley, scaley);
+
+    if (xs || ys)
+    {
+        if (!flags().is_set(Widget::flag::plane_window))
+        {
+            m_cameraImpl->scale(m_scalex, m_scaley);
+        }
+        else
+        {
+            Window::set_scale(m_scalex, m_scaley);
+        }
+    }
+}
+
 std::string CameraWindow::error_message() const
 {
     return m_cameraImpl->error_message();

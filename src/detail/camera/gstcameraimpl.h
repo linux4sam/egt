@@ -30,6 +30,8 @@ public:
 
     virtual void stop();
 
+    virtual void scale(float scalex, float scaley);
+
     std::string error_message() const;
 
     virtual ~CameraImpl();

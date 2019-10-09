@@ -84,6 +84,13 @@ public:
     virtual void stop();
 
     /**
+     * Scale the video by scale value.
+     *
+     * @param[in] scale
+     */
+    virtual void set_scale(float scalex, float scaley) override;
+
+    /**
      * Get error message.
      */
     std::string error_message() const;
@@ -91,6 +98,9 @@ public:
     virtual ~CameraWindow() = default;
 
 protected:
+    float m_scalex{1.0};
+    float m_scaley{1.0};
+
     std::shared_ptr<detail::CameraImpl> m_cameraImpl;
 
 };
