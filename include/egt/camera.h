@@ -76,12 +76,12 @@ public:
      *
      * @return true on success
      */
-    bool start();
+    virtual bool start();
 
     /**
      * Stop camera.
      */
-    void stop();
+    virtual void stop();
 
     /**
      * Get error message.

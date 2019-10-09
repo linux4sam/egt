@@ -239,7 +239,9 @@ detail/video/gstappsinkimpl.cpp \
 detail/video/gstappsinkimpl.h \
 detail/video/gstdecoderimpl.cpp \
 detail/video/gstdecoderimpl.h \
-camera.cpp
+camera.cpp \
+detail/camera/gstcameraimpl.cpp \
+detail/camera/gstcameraimpl.h
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \
