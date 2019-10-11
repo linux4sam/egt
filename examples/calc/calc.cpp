@@ -44,7 +44,7 @@ int main(int argc, const char** argv)
     text.set_readonly(true);
     vsizer.add(expand(text));
 
-    vector<vector<string>> buttons =
+    const vector<vector<string>> buttons =
     {
         {"(", ")", "%", "C"},
         {"7", "8", "9", "/"},
