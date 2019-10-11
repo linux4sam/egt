@@ -224,12 +224,12 @@ struct TextPage : public NotebookTab
         grid0->add(expand(text4));
 
         auto text5 = std::make_shared<TextBox>("all characters allowed");
-        text5->add_validator_function([this](std::string s) { return true; });
+        text5->add_validator_function([](std::string s) { return true; });
         text5->set_input_validation_enabled(true);
         grid0->add(expand(text5));
 
         auto text6 = std::make_shared<TextBox>("abc123 only");
-        text6->add_validator_function([this](std::string s)
+        text6->add_validator_function([](std::string s)
         {
             return std::regex_match(s, regex("[abc123]*"));
         });

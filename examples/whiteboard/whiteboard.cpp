@@ -62,7 +62,7 @@ public:
             if (c == m_color)
                 m_grid.set_selected(column, row);
 
-            color_label->on_event([this, column, row](Event&)
+            color_label->on_event([this](Event&)
             {
                 m_color = m_grid.get(m_grid.selected())->color(Palette::ColorId::button_bg).color();
                 this->hide();
@@ -110,7 +110,7 @@ public:
             if (w == m_width)
                 m_grid.set_selected(column, row);
 
-            width_label->on_event([this, column, row](Event&)
+            width_label->on_event([this](Event&)
             {
                 m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
                 this->hide();
