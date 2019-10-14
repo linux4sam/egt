@@ -405,12 +405,13 @@ public:
             return parent()->find_screen();
 
         return nullptr;
-
     }
 
     virtual ~Frame() noexcept;
 
 protected:
+
+    void draw_child(Painter& painter, const Rect& rect, Widget* child);
 
     /**
      * Used internally for calling the special child draw function.

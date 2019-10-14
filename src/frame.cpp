@@ -25,7 +25,6 @@ Frame::Frame(const Rect& rect, const flags_type& flags) noexcept
     : Widget(rect, flags | Widget::flag::frame)
 {
     set_name("Frame" + std::to_string(m_widgetid));
-
     set_boxtype(Theme::boxtype::none);
 }
 
@@ -341,7 +340,7 @@ size_t Frame::zorder() const
     return Widget::zorder();
 }
 
-static bool time_child_draw_enabled()
+static inline bool time_child_draw_enabled()
 {
     static int value = 0;
     if (value == 0)
@@ -361,7 +360,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
     Painter::AutoSaveRestore sr(painter);
 
     // child rect
-    Rect crect = rect;
+    auto crect = rect;
 
     // if this frame does not have a screen, it means the damage rect is in
     // coordinates of some parent frame, so we have to adjust the physical origin
@@ -369,7 +368,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
     // respective of this frame
     if (!has_screen())
     {
-        Point origin = point();
+        const auto& origin = point();
         if (origin.x() || origin.y())
         {
             //
@@ -384,8 +383,6 @@ void Frame::draw(Painter& painter, const Rect& rect)
         // adjust our child rect for comparison's below
         crect -= origin;
     }
-
-
 
     if (!flags().is_set(Widget::flag::no_clip))
     {
@@ -422,18 +419,50 @@ void Frame::draw(Painter& painter, const Rect& rect)
     // keep the crect inside our content area
     crect = Rect::intersection(crect, to_child(content_area()));
 
-    auto draw_child = [this, &crect, &painter](Widget * child)
+    for (auto& child : m_children)
     {
-        if (child->box().intersect(crect))
-        {
-            // don't give a child a rectangle that is outside of its own box
-            auto r = Rect::intersection(crect, child->box());
-            if (r.empty())
-                return;
+        if (!child->visible())
+            continue;
 
-            if (detail::float_compare(child->alpha(), 1.f))
+        // don't draw plane frame as child - this is
+        // specifically handled by event loop
+        if (child->flags().is_set(Widget::flag::plane_window))
+            continue;
+
+        draw_child(painter, crect, child.get());
+    }
+}
+
+void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
+{
+    if (child->box().intersect(crect))
+    {
+        // don't give a child a rectangle that is outside of its own box
+        auto r = Rect::intersection(crect, child->box());
+        if (r.empty())
+            return;
+
+        if (detail::float_compare(child->alpha(), 1.f))
+        {
+            Painter::AutoSaveRestore sr2(painter);
+
+            // no matter what the child draws, clip the output to only the
+            // rectangle we care about updating
+            if (!child->flags().is_set(Widget::flag::no_clip))
             {
-                Painter::AutoSaveRestore sr2(painter);
+                painter.draw(r);
+                painter.clip();
+            }
+
+            detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [&]()
+            {
+                child->draw(painter, r);
+            });
+        }
+        else
+        {
+            {
+                Painter::AutoGroup group(painter);
 
                 // no matter what the child draws, clip the output to only the
                 // rectangle we care about updating
@@ -448,66 +477,13 @@ void Frame::draw(Painter& painter, const Rect& rect)
                     child->draw(painter, r);
                 });
             }
-            else
-            {
-                {
-                    Painter::AutoGroup group(painter);
 
-                    // no matter what the child draws, clip the output to only the
-                    // rectangle we care about updating
-                    if (!child->flags().is_set(Widget::flag::no_clip))
-                    {
-                        painter.draw(r);
-                        painter.clip();
-                    }
-
-                    detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [&]()
-                    {
-                        child->draw(painter, r);
-                    });
-                }
-
-                // we pushed a group for the child to draw into it, now paint that
-                // child with its alpha component
-                painter.paint(child->alpha());
-            }
-
-            special_child_draw(painter, child);
+            // we pushed a group for the child to draw into it, now paint that
+            // child with its alpha component
+            painter.paint(child->alpha());
         }
-    };
 
-    // OK, nasty - doing two loops: one for non windows, then for windows
-
-    for (auto& child : m_children)
-    {
-        if (child->flags().is_set(Widget::flag::window))
-            continue;
-
-        if (!child->visible())
-            continue;
-
-        // don't draw plane frame as child - this is
-        // specifically handled by event loop
-        if (child->flags().is_set(Widget::flag::plane_window))
-            continue;
-
-        draw_child(child.get());
-    }
-
-    for (auto& child : m_children)
-    {
-        if (!child->flags().is_set(Widget::flag::window))
-            continue;
-
-        if (!child->visible())
-            continue;
-
-        // don't draw plane frame as child - this is
-        // specifically handled by event loop
-        if (child->flags().is_set(Widget::flag::plane_window))
-            continue;
-
-        draw_child(child.get());
+        special_child_draw(painter, child);
     }
 }
 
