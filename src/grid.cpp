@@ -65,11 +65,11 @@ static inline default_dim_type round(default_dim_type x, default_dim_type y)
  * Calculates the rectangle for a cell. This calculates the rectangle right
  * down the center of any border_width if one exists.
  */
-static Rect cell_rect(int columns, int rows, default_dim_type width, default_dim_type height,
-                      int column, int row, int border_width = 0, int padding = 0)
+static inline Rect cell_rect(int columns, int rows, default_dim_type width, default_dim_type height,
+                             int column, int row, int border_width = 0, int padding = 0)
 {
-    auto inner_width = detail::round((width - ((columns + 1) * border_width)), columns);
-    auto inner_height = detail::round((height - ((rows + 1) * border_width)), rows);
+    const auto inner_width = detail::round((width - ((columns + 1) * border_width)), columns);
+    const auto inner_height = detail::round((height - ((rows + 1) * border_width)), rows);
 
     auto ix = (column * border_width) + (column * inner_width) + detail::round(border_width, 2);
     auto iy = (row * border_width) + (row * inner_height) + detail::round(border_width, 2);
@@ -87,25 +87,25 @@ static Rect cell_rect(int columns, int rows, default_dim_type width, default_dim
     if (ih < 0)
         ih = 0;
 
-    return Rect(ix, iy, iw, ih);
+    return {ix, iy, iw, ih};
 }
 
 void StaticGrid::draw(Painter& painter, const Rect& rect)
 {
     if (grid_flags().is_set(flag::show_border) && border() > 0)
     {
-        auto b = content_area();
+        const auto b = content_area();
 
         painter.set(color(Palette::ColorId::border).color());
         painter.set_line_width(border());
 
-        auto columns = m_cells.size();
+        const auto columns = m_cells.size();
         for (size_t column = 0; column < columns; column++)
         {
-            auto rows = m_cells[column].size();
+            const auto rows = m_cells[column].size();
             for (size_t row = 0; row < rows; row++)
             {
-                Rect r = cell_rect(columns, rows, b.width(), b.height(), column, row, border());
+                auto r = cell_rect(columns, rows, b.width(), b.height(), column, row, border());
                 r += b.point();
                 painter.draw(r);
             }
