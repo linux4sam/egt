@@ -105,8 +105,8 @@ namespace detail
 
 struct soundimpl
 {
-    snd_pcm_t* handle;
-    snd_pcm_uframes_t frames;
+    snd_pcm_t* handle{nullptr};
+    snd_pcm_uframes_t frames{};
     int channels{0};
     unsigned int rate{0};
     PlaybackThread play_thread;
