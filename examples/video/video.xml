@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <entry>
   <title>Video Player</title>
-  <arg>egt_video /usr/share/egt/examples/video/Microchip-masters_mpeg2.avi</arg>
+  <arg>egt_video /usr/share/egt/examples/video/microchip_corporate_mpeg2.avi</arg>
   <description></description>
   <link rel="enclosure" type="image/png" href="video.png" />
 </entry>
