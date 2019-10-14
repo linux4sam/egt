@@ -110,7 +110,7 @@ public:
     using pattern_type = Pattern;
 
     /**
-     * Box types used to characterize how a widget's box should be draw.
+     * Box types used to characterize how a widget's box should be drawn.
      */
     enum class boxtype : uint32_t
     {
