@@ -424,6 +424,9 @@ void Frame::draw(Painter& painter, const Rect& rect)
                          margin());
     }
 
+    if (m_children.empty())
+        return;
+
     // keep the crect inside our content area
     crect = Rect::intersection(crect, to_child(content_area()));
 
