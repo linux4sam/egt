@@ -101,9 +101,8 @@ struct AudioRadial : public Radial
 class AudioPlayerWindow : public TopWindow
 {
 public:
-    explicit AudioPlayerWindow(const Size& size = Size())
-        : TopWindow(size),
-          m_colormap({Color(76, 181, 253), Color(34, 186, 133)})
+    explicit AudioPlayerWindow()
+        : m_colormap({Color(76, 181, 253), Color(34, 186, 133)})
     {
         set_background(Image("background.png"));
 
