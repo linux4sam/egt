@@ -510,7 +510,7 @@ struct ShapesPage : public NotebookTab
         auto hsizer1 = std::make_shared<BoxSizer>(orientation::flex);
         add(expand(hsizer1));
 
-        auto circle = std::make_shared<CircleWidget>(Circle(Point(), 100));
+        auto circle = std::make_shared<CircleWidget>(Circle(Point(), 50));
         circle->set_margin(10);
         hsizer1->add(circle);
 
