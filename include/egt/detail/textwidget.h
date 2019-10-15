@@ -11,6 +11,7 @@
  * @brief Base class TextWidget definition.
  */
 
+#include <egt/image.h>
 #include <egt/widget.h>
 #include <memory>
 #include <string>

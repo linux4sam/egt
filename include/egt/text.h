@@ -14,6 +14,7 @@
 #include <egt/detail/textwidget.h>
 #include <egt/flags.h>
 #include <egt/font.h>
+#include <egt/image.h>
 #include <egt/timer.h>
 #include <memory>
 #include <string>

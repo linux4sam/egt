@@ -9,14 +9,20 @@
 #include <algorithm>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/textwidget.h>
 #include <egt/flags.h>
+#include <egt/frame.h>
 #include <egt/painter.h>
+#include <egt/text.h>
 #include <egt/value.h>
 #include <egt/widget.h>
 #include <memory>
 #include <string>
 #include <vector>
+
+/**
+ * @file
+ * @brief Radial widget.
+ */
 
 namespace egt
 {

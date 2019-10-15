@@ -11,6 +11,7 @@
  * @brief Working with input devices.
  */
 
+#include <egt/asio.hpp>
 #include <egt/input.h>
 #include <memory>
 #include <string>

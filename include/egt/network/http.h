@@ -6,10 +6,10 @@
 #ifndef EGT_NETWORK_HTTP_H
 #define EGT_NETWORK_HTTP_H
 
+#include <egt/detail/meta.h>
 #include <memory>
 #include <string>
 #include <vector>
-#include <egt/utils.h>
 
 namespace egt
 {
