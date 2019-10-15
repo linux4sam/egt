@@ -40,6 +40,12 @@ static std::string line_break(const std::string& in, size_t width = 50)
     return out + tmp;
 }
 
+template<class T>
+static inline T ns2ms(T n)
+{
+    return n / 1000000UL;
+}
+
 int main(int argc, const char** argv)
 {
     if (argc < 2)
@@ -225,7 +231,10 @@ int main(int argc, const char** argv)
         case eventid::property_changed:
         {
             if (player.playing())
-                position.set_value(player.position() / player.duration() * 100.);
+            {
+                position.set_value((ns2ms<double>(player.position()) /
+                                    ns2ms<double>(player.duration())) * 100.);
+            }
             else
                 position.set_value(0);
             break;
