@@ -13,9 +13,9 @@
 
 #include <cstdint>
 #include <egt/detail/cow.h>
+#include <egt/detail/flagsbase.h>
 #include <egt/event.h>
 #include <functional>
-#include <set>
 #include <string>
 #include <vector>
 
@@ -59,7 +59,7 @@ public:
     /**
      * Event handler eventid filter.
      */
-    using filter_type = std::set<eventid>;
+    using filter_type = detail::FlagsBase<eventid>;
 
     /**
      * Handle type.
@@ -128,7 +128,7 @@ protected:
                      filter_type m,
                      handle_t h) noexcept
             : callback(c),
-              mask(std::move(m)),
+              mask(m),
               handle(h)
         {}
 

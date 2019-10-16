@@ -34,7 +34,7 @@ void Object::invoke_handlers(Event& event)
     for (auto& callback : *m_callbacks)
     {
         if (callback.mask.empty() ||
-            callback.mask.find(event.id()) != callback.mask.end())
+            callback.mask.is_set(event.id()))
         {
             callback.callback(event);
             if (event.quit())

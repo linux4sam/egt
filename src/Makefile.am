@@ -149,6 +149,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/dump.h \
 ../include/egt/detail/imagecache.h \
 ../include/egt/detail/filesystem.h \
+../include/egt/detail/flagsbase.h \
 ../include/egt/detail/math.h \
 ../include/egt/detail/meta.h \
 ../include/egt/detail/mousegesture.h \
