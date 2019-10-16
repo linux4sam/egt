@@ -12,10 +12,11 @@
  */
 
 #include <cstdint>
+#include <egt/detail/cow.h>
 #include <egt/event.h>
 #include <functional>
-#include <string>
 #include <set>
+#include <string>
 #include <vector>
 
 namespace egt
@@ -139,7 +140,7 @@ protected:
     /**
      * Array of callbacks.
      */
-    callback_array m_callbacks;
+    detail::CopyOnWriteAllocate<callback_array> m_callbacks;
 
     /**
      * A user defined name for the Object.

@@ -19,7 +19,7 @@ uint32_t Object::on_event(const event_callback_t& handler,
     {
         // TODO: m_handle_counter can wrap, making the handle non-unique
         auto handle = ++m_handle_counter;
-        m_callbacks.emplace_back(handler, mask, handle);
+        m_callbacks->emplace_back(handler, mask, handle);
         return handle;
     }
 
@@ -28,12 +28,10 @@ uint32_t Object::on_event(const event_callback_t& handler,
 
 void Object::invoke_handlers(Event& event)
 {
-    if (m_callbacks.empty())
+    if (!m_callbacks)
         return;
 
-    // make it safe to modify m_callbacks in a callback
-    auto callbacks = m_callbacks;
-    for (auto& callback : callbacks)
+    for (auto& callback : *m_callbacks)
     {
         if (callback.mask.empty() ||
             callback.mask.find(event.id()) != callback.mask.end())
@@ -53,19 +51,25 @@ void Object::invoke_handlers(eventid event)
 
 void Object::clear_handlers()
 {
-    m_callbacks.clear();
+    if (!m_callbacks)
+        return;
+
+    m_callbacks->clear();
 }
 
 void Object::remove_handler(uint32_t handle)
 {
-    auto i = std::find_if(m_callbacks.begin(), m_callbacks.end(),
+    if (!m_callbacks)
+        return;
+
+    auto i = std::find_if(m_callbacks->begin(), m_callbacks->end(),
                           [handle](const CallbackMeta & meta)
     {
         return meta.handle == handle;
     });
 
-    if (i != m_callbacks.end())
-        m_callbacks.erase(i);
+    if (i != m_callbacks->end())
+        m_callbacks->erase(i);
 }
 
 }
