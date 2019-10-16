@@ -12,8 +12,8 @@ inline namespace v1
 namespace detail
 {
 
-uint32_t Object::on_event(const event_callback_t& handler,
-                          filter_type mask)
+Object::handle_t Object::on_event(const event_callback_t& handler,
+                                  filter_type mask)
 {
     if (handler)
     {
@@ -57,7 +57,7 @@ void Object::clear_handlers()
     m_callbacks->clear();
 }
 
-void Object::remove_handler(uint32_t handle)
+void Object::remove_handler(handle_t handle)
 {
     if (!m_callbacks)
         return;

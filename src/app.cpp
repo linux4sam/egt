@@ -264,7 +264,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     m_signals.async_wait(std::bind(&Application::signal_handler, this,
                                    std::placeholders::_1, std::placeholders::_2));
 
-    Input::global_input().on_event([this](Event & event)
+    m_handle = Input::global_input().on_event([this](Event & event)
     {
         if (event.key().keycode == EKEY_SNAPSHOT)
         {
@@ -356,6 +356,8 @@ vector<pair<string, string>> Application::get_input_devices()
 
 Application::~Application()
 {
+    Input::global_input().remove_handler(m_handle);
+
     if (the_app == this)
         the_app = nullptr;
 }

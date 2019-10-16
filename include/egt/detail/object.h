@@ -62,6 +62,11 @@ public:
     using filter_type = std::set<eventid>;
 
     /**
+     * Handle type.
+     */
+    using handle_t = uint32_t;
+
+    /**
      * Add an event handler to be called when the widget generates an event.
      *
      * Any number of handlers (callbacks) can be registered. Also, the same
@@ -76,7 +81,7 @@ public:
      * @return A handle used to identify the registration.  This can then be
      *         passed to remove_handler().
      */
-    virtual uint32_t on_event(const event_callback_t& handler,
+    virtual handle_t on_event(const event_callback_t& handler,
                               filter_type mask = filter_type());
 
     /**
@@ -103,7 +108,7 @@ public:
      *
      * @param handle The handle returned from on_event().
      */
-    virtual void remove_handler(uint32_t handle);
+    virtual void remove_handler(handle_t handle);
 
     virtual ~Object() = default;
 
@@ -112,7 +117,7 @@ protected:
     /**
      * Counter used to generate unique handles for each callback registration.
      */
-    uint32_t m_handle_counter{0};
+    handle_t m_handle_counter{0};
 
     /**
      * Manages metadata about a registered callback.
@@ -121,7 +126,7 @@ protected:
     {
         CallbackMeta(const event_callback_t& c,
                      filter_type m,
-                     uint32_t h) noexcept
+                     handle_t h) noexcept
             : callback(c),
               mask(std::move(m)),
               handle(h)
@@ -129,7 +134,7 @@ protected:
 
         event_callback_t callback;
         filter_type mask;
-        uint32_t handle{0};
+        handle_t handle{0};
     };
 
     /**

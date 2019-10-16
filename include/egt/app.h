@@ -8,6 +8,7 @@
 
 #include <clocale>
 #include <egt/asio.hpp>
+#include <egt/detail/object.h>
 #include <egt/eventloop.h>
 #include <egt/utils.h>
 #include <iosfwd>
@@ -147,6 +148,8 @@ private:
      * Array of inputs.
      */
     std::vector<std::unique_ptr<Input>> m_inputs;
+
+    detail::Object::handle_t m_handle{0};
 };
 
 /**
