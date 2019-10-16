@@ -24,8 +24,6 @@
 #include <spdlog/spdlog.h>
 #include <vector>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
