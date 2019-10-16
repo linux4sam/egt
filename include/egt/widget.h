@@ -477,6 +477,16 @@ public:
     }
 
     /**
+     * Returns true if the widget is capable of handling an event.
+     */
+    bool can_handle_event() const
+    {
+        return !m_widget_flags.is_set(Flag::readonly) &&
+               !m_widget_flags.is_set(Flag::invisible) &&
+               !m_widget_flags.is_set(Flag::disabled);
+    }
+
+    /**
      * Set the grab_mouse state.
      *
      * @param[in] value When true, grab mouse events.

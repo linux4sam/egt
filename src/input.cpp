@@ -133,10 +133,7 @@ void Input::dispatch(Event& event)
     // give event to any visible window
     for (auto& w : detail::reverse_iterate(Application::instance().windows()))
     {
-        if (!w->top_level() ||
-            w->readonly() ||
-            w->disabled() ||
-            !w->visible())
+        if (!w->top_level() || !w->can_handle_event())
             continue;
 
         switch (event.id())

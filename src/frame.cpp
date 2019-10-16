@@ -121,9 +121,7 @@ void Frame::handle(Event& event)
 
         for (auto& child : detail::reverse_iterate(m_children))
         {
-            if (child->readonly() ||
-                child->disabled() ||
-                !child->visible())
+            if (!child->can_handle_event())
                 continue;
 
             if (child->box().intersect(pos))
@@ -142,9 +140,7 @@ void Frame::handle(Event& event)
     {
         for (auto& child : detail::reverse_iterate(m_children))
         {
-            if (child->readonly() ||
-                child->disabled() ||
-                !child->visible())
+            if (!child->can_handle_event())
                 continue;
 
             child->handle(event);
