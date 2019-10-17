@@ -35,7 +35,6 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
     /*
      * its a Basic window copying buffer to Cairo surface.
      */
-    auto cr = painter.context();
     if (m_videosample)
     {
         GstCaps* caps = gst_sample_get_caps(m_videosample);
@@ -53,27 +52,26 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
             GstMapInfo map;
             if (gst_buffer_map(buffer, &map, GST_MAP_READ))
             {
-                Rect box = m_interface.box();
-                auto surface = shared_cairo_surface_t(
+                auto box = m_interface.box();
+                auto surface = unique_cairo_surface_t(
                                    cairo_image_surface_create_for_data(map.data,
                                            CAIRO_FORMAT_RGB16_565,
                                            width,
                                            height,
-                                           cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, width)),
-                                   cairo_surface_destroy);
+                                           cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, width)));
 
                 if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
                 {
-                    SPDLOG_DEBUG("VideoWindow: {}", box);
+                    auto cr = painter.context().get();
                     if (width != box.width())
                     {
                         double scale = (double) box.width() / width;
-                        SPDLOG_DEBUG("VideoWindow: scale = {}", scale);
-                        cairo_scale(cr.get(), scale, scale);
+                        SPDLOG_TRACE("VideoWindow: scale = {}", scale);
+                        cairo_scale(cr, scale, scale);
                     }
-                    cairo_set_source_surface(cr.get(), surface.get(), box.x(), box.y());
-                    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-                    cairo_paint(cr.get());
+                    cairo_set_source_surface(cr, surface.get(), box.x(), box.y());
+                    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+                    cairo_paint(cr);
                 }
                 gst_buffer_unmap(buffer, &map);
             }
