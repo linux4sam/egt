@@ -82,13 +82,13 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 
 GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 {
-    auto Impl = reinterpret_cast<GstAppSinkImpl*>(data);
+    auto impl = reinterpret_cast<GstAppSinkImpl*>(data);
     GstSample* sample;
     g_signal_emit_by_name(elt, "pull-sample", &sample);
     if (sample)
     {
 #ifdef HAVE_LIBPLANES
-        if (Impl->m_interface.flags().is_set(Widget::flag::plane_window))
+        if (impl->m_interface.flags().is_set(Widget::flag::plane_window))
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
@@ -97,7 +97,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
                 if (gst_buffer_map(buffer, &map, GST_MAP_READ))
                 {
                     auto screen =
-                        reinterpret_cast<detail::KMSOverlay*>(Impl->m_interface.screen());
+                        reinterpret_cast<detail::KMSOverlay*>(impl->m_interface.screen());
                     assert(screen);
                     memcpy(screen->raw(), map.data, map.size);
                     screen->schedule_flip();
@@ -109,13 +109,13 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
         else
 #endif
         {
-            asio::post(Application::instance().event().io(), [Impl, sample]()
+            asio::post(Application::instance().event().io(), [impl, sample]()
             {
-                if (Impl->m_videosample)
-                    gst_sample_unref(Impl->m_videosample);
+                if (impl->m_videosample)
+                    gst_sample_unref(impl->m_videosample);
 
-                Impl->m_videosample = sample;
-                Impl->m_interface.damage();
+                impl->m_videosample = sample;
+                impl->m_interface.damage();
             });
         }
         return GST_FLOW_OK;
