@@ -25,7 +25,8 @@ MRESG_V_GEN = $(mresg_v_GEN_$(V))
 mresg_v_GEN_ = $(mresg_v_GEN_$(AM_DEFAULT_VERBOSITY))
 mresg_v_GEN_0 = @echo "  RES     " $@;
 
-resources = $(wildcard $(top_srcdir)/examples/resource/*.png *.bmp)
+resources = $(wildcard $(top_srcdir)/examples/resource/*.png) \
+	$(wildcard $(top_srcdir)/examples/resource/*.bmp)
 rc.cpp: $(resources) Makefile
 	$(MRESG_V_GEN)$(top_srcdir)/scripts/mresg $(resources) -o $@
 BUILT_SOURCES = rc.cpp
@@ -36,8 +37,8 @@ nodist_resource_SOURCES = $(BUILT_SOURCES)
 resource_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 resource_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 resourcedir = $(prefix)/share/egt/examples/resource
-resource_DATA = $(wildcard $(top_srcdir)/examples/resource/*.png *.bmp)
+resource_DATA = $(wildcard $(top_srcdir)/examples/resource/*.png) \
+	$(wildcard $(top_srcdir)/examples/resource/*.bmp) \
+	$(wildcard $(top_srcdir)/examples/resource/*.jpg) \
+	$(wildcard $(top_srcdir)/examples/resource/*.svg)
 resource_LDFLAGS = $(AM_LDFLAGS)
-
-EXTRA_DIST = $(wildcard $(top_srcdir)/examples/resource/*.png) \
-	$(wildcard $(top_srcdir)/examples/resource/*.bmp)
