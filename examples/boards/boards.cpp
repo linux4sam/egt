@@ -23,7 +23,7 @@ int main(int argc, const char** argv)
         return label;
     };
 
-    auto label = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"), "Sideboard Widget");
+    auto label = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"), "SideBoard Widget");
     label->set_font(Font(28));
     label->set_boxtype(Theme::boxtype::none);
     label->set_align(alignmask::center);
