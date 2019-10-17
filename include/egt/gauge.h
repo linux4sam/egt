@@ -252,7 +252,7 @@ public:
         if (detail::change_if_diff<PointF>(m_point, point))
         {
             auto dim = std::max(m_image.width(), m_image.height());
-            auto circle = Circle(Point(m_point.x(), m_point.y()), dim * 2.);
+            auto circle = Circle(Point(m_point.x(), m_point.y()), dim / 2);
             auto superrect = circle.rect();
 
             // real widget size is the big rect, center is a common point
