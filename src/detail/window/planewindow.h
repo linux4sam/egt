@@ -7,6 +7,7 @@
 #define EGT_DETAIL_PLANEWINDOW_H
 
 #include "detail/window/basicwindow.h"
+#include <memory>
 
 namespace egt
 {
@@ -14,6 +15,7 @@ inline namespace v1
 {
 namespace detail
 {
+class KMSOverlay;
 
 /**
  * A PlaneWindow backend uses a hardware overlay as a Screen.
@@ -73,6 +75,11 @@ protected:
      * Deallocate the underlying screen.
      */
     void deallocate_screen();
+
+    /**
+     * Instance of the KMS overlay.
+     */
+    std::unique_ptr<KMSOverlay> m_overlay;
 };
 
 }

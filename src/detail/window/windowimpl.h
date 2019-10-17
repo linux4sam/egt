@@ -27,11 +27,13 @@ class WindowImpl
 {
 public:
 
+    WindowImpl() = delete;
+
     /**
      * Construct the implementation and provide a pointer to the parent
      * interface.
      */
-    explicit WindowImpl(Window* interface);
+    explicit WindowImpl(Window* interface, Screen* screen = nullptr);
 
     virtual void damage(const Rect& rect);
     virtual Screen* screen();
@@ -48,15 +50,12 @@ public:
         return m_screen != nullptr;
     }
 
-    virtual ~WindowImpl()
-    {}
+    virtual ~WindowImpl() = default;
 
 protected:
 
     Screen* m_screen{nullptr};
     Window* m_interface;
-
-    WindowImpl() = delete;
 };
 }
 

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/screen/flipthread.h"
 #include "detail/window/planewindow.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
@@ -26,9 +27,6 @@ PlaneWindow::PlaneWindow(Window* interface,
       m_format(format),
       m_hint(hint)
 {
-    assert(KMSScreen::instance());
-    m_screen = nullptr;
-
     // hack to force some size
     if (m_interface->m_box.size().empty())
         m_interface->m_box.set_size(Size(32, 32));
@@ -42,14 +40,9 @@ void PlaneWindow::resize(const Size& size)
 
     if (!size.empty() && m_interface->m_box.size() != size)
     {
-        if (m_screen)
+        if (m_overlay)
         {
-            auto screen = dynamic_cast<KMSOverlay*>(m_screen);
-            assert(screen);
-            if (screen)
-            {
-                screen->resize(size);
-            }
+            m_overlay->resize(size);
         }
 
         m_interface->m_box.set_size(size);
@@ -59,17 +52,11 @@ void PlaneWindow::resize(const Size& size)
 
 void PlaneWindow::set_scale(float scalex, float scaley)
 {
-    auto screen = dynamic_cast<KMSOverlay*>(m_screen);
-    assert(screen);
-    if (screen)
+    if (m_overlay)
     {
-        screen->set_scale(scalex, scaley);
+        m_overlay->set_scale(scalex, scaley);
         m_dirty = true;
     }
-
-    /// @todo No way to save off scale.
-    //m_interface->m_scale = scale;
-    //m_interface->damage();
 }
 
 void PlaneWindow::move(const Point& point)
@@ -100,11 +87,15 @@ void PlaneWindow::damage(const Rect& rect)
 
 void PlaneWindow::allocate_screen()
 {
-    if (!m_screen)
+    if (!m_overlay)
     {
-        assert(!m_interface->box().size().empty());
+        if (!m_interface->box().size().empty())
+        {
+            m_overlay = detail::make_unique<KMSOverlay>(m_interface->box().size(),
+                        m_format, m_hint);
 
-        m_screen = new KMSOverlay(m_interface->box().size(), m_format, m_hint);
+            m_screen = m_overlay.get();
+        }
     }
 }
 
@@ -118,12 +109,10 @@ void PlaneWindow::top_draw()
             {
                 allocate_screen();
 
-                KMSOverlay* s = dynamic_cast<KMSOverlay*>(m_screen);
-                assert(s);
-                if (s)
+                if (m_overlay)
                 {
-                    s->set_position(m_interface->local_to_display(Point()));
-                    s->apply();
+                    m_overlay->set_position(m_interface->local_to_display(Point()));
+                    m_overlay->apply();
                     m_dirty = false;
                 }
             }
@@ -156,14 +145,17 @@ static shared_cairo_surface_t copy_surface(cairo_surface_t* surface)
 
 void PlaneWindow::paint(Painter& painter)
 {
-    // There is something odd going on. The surface doesn't work unless it's
-    // copied to a new surface first.
+    if (m_screen)
+    {
+        // There is something odd going on. The surface doesn't work unless it's
+        // copied to a new surface first.
 
-    auto copy = copy_surface(cairo_get_target(screen()->context().get()));
-    auto image = Image(copy);
-    auto p = m_interface->local_to_display(Point());
-    painter.draw(Point(p.x(), p.y()));
-    painter.draw(image);
+        auto copy = copy_surface(cairo_get_target(screen()->context().get()));
+        auto image = Image(copy);
+        auto p = m_interface->local_to_display(Point());
+        painter.draw(Point(p.x(), p.y()));
+        painter.draw(image);
+    }
 }
 
 void PlaneWindow::show()
@@ -174,10 +166,9 @@ void PlaneWindow::show()
 
 void PlaneWindow::hide()
 {
-    KMSOverlay* s = dynamic_cast<KMSOverlay*>(m_screen);
-    if (s)
+    if (m_overlay)
     {
-        s->hide();
+        m_overlay->hide();
         m_dirty = false;
     }
 
@@ -186,16 +177,13 @@ void PlaneWindow::hide()
 
 void PlaneWindow::deallocate_screen()
 {
-    if (m_screen)
+    if (m_overlay)
     {
-        KMSOverlay* screen = dynamic_cast<KMSOverlay*>(m_screen);
-        assert(screen);
-        if (screen)
-        {
-            KMSScreen::instance()->deallocate_overlay(screen->s());
-        }
+        KMSScreen::instance()->deallocate_overlay(m_overlay->s());
         m_interface->m_box.set_size(Size());
         m_interface->m_box.set_point(Point());
+        m_overlay.reset();
+        m_screen = nullptr;
     }
 }
 

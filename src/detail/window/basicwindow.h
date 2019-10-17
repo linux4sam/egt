@@ -13,6 +13,8 @@ namespace egt
 {
 inline namespace v1
 {
+class Screen;
+
 namespace detail
 {
 
@@ -23,13 +25,13 @@ class BasicWindow : public detail::WindowImpl
 {
 public:
 
-    explicit BasicWindow(Window* interface);
+    explicit BasicWindow(Window* interface, Screen* screen = nullptr);
 
     virtual ~BasicWindow() = default;
 };
 
 /**
- * A BasicTopWindow will grab the main_screen() by default.
+ * A BasicTopWindow will grab the main screen by default.
  */
 class BasicTopWindow : public BasicWindow
 {

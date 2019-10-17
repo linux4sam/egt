@@ -14,18 +14,17 @@ inline namespace v1
 namespace detail
 {
 
-BasicWindow::BasicWindow(Window* interface)
-    : WindowImpl(interface)
+BasicWindow::BasicWindow(Window* interface, Screen* screen)
+    : WindowImpl(interface, screen)
 {
 
 }
 
 BasicTopWindow::BasicTopWindow(Window* interface)
-    : BasicWindow(interface)
+    : BasicWindow(interface, main_screen())
 {
     // go ahead and pick up the default screen
     assert(main_screen());
-    m_screen = main_screen();
 }
 
 }

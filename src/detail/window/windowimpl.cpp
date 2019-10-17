@@ -16,8 +16,9 @@ inline namespace v1
 namespace detail
 {
 
-WindowImpl::WindowImpl(Window* interface)
-    : m_interface(interface)
+WindowImpl::WindowImpl(Window* interface, Screen* screen)
+    : m_screen(screen),
+      m_interface(interface)
 {
 }
 
