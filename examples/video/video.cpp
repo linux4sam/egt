@@ -73,12 +73,16 @@ int main(int argc, const char** argv)
 
     // player after label to handle drag
     VideoWindow player(size, pixel_format::yuv420, windowhint::overlay);
-    player.set_media(argv[1]);
-    player.set_name("video");
     player.move_to_center(win.center());
-    player.play();
     player.set_volume(5);
     win.add(player);
+
+    // wait to start playing the video until the window is shown
+    win.on_event([&player, argv](Event&)
+    {
+        player.set_media(argv[1]);
+        player.play();
+    }, {eventid::show});
 
     Window ctrlwindow(Size(win.width(), 72));
     ctrlwindow.set_align(alignmask::bottom | alignmask::center);
