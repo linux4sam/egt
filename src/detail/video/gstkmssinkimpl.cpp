@@ -84,8 +84,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 
     std::ostringstream pipeline;
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
-             " caps=video/x-raw video." << v_pipe.str()  << " ! progressreport "
-             " silent=true do-query=true update-freq=1 format=time name=progress ! g1kmssink "
+             " caps=video/x-raw video." << v_pipe.str()  << " ! g1kmssink "
              " gem-name=" << m_gem << " video. " << a_pipe ;
 
     return pipeline.str();
@@ -130,7 +129,26 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     gst_bus_add_watch(m_bus, &bus_callback, this);
 
+    g_timeout_add(1000, (GSourceFunc) &query_position, this);
+
     return play();
+}
+
+gboolean GstKmsSinkImpl::query_position(gpointer data)
+{
+    auto impl = reinterpret_cast<GstKmsSinkImpl*>(data);
+
+    if (!impl->m_duration)
+        gst_element_query_duration(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_duration);
+
+    if (gst_element_query_position(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_position))
+    {
+        asio::post(Application::instance().event().io(), [impl]()
+        {
+            impl->m_interface.invoke_handlers(eventid::property_changed);
+        });
+    }
+    return true;
 }
 
 } // End of namespace detail

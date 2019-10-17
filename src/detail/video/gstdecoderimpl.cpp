@@ -126,6 +126,7 @@ bool GstDecoderImpl::seek(int64_t time)
                                  GST_SEEK_TYPE_SET, (gint64) time,
                                  GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
             {
+                m_position = time;
                 m_seekdone = false;
                 return true;
             }
@@ -288,27 +289,6 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     case GST_MESSAGE_DURATION_CHANGED:
         SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_DURATION_CHANGED");
         break;
-    case GST_MESSAGE_ELEMENT:
-    {
-        const GstStructure* info = gst_message_get_structure(message);
-        if (!std::string(gst_structure_get_name(info)).compare("progress"))
-        {
-            gint64 pos, len;
-            if (gst_element_query_position(decodeImpl->m_pipeline, GST_FORMAT_TIME, &pos)
-                && gst_element_query_duration(decodeImpl->m_pipeline, GST_FORMAT_TIME, &len))
-            {
-                decodeImpl->m_position = pos;
-                decodeImpl->m_duration = len;
-            }
-
-            asio::post(Application::instance().event().io(), [decodeImpl]()
-            {
-                Event event(eventid::property_changed);
-                decodeImpl->m_interface.invoke_handlers(event);
-            });
-        }
-        break;
-    }
     case GST_MESSAGE_STATE_CHANGED:
     {
         GstState old_state, new_state, pending_state;
@@ -325,10 +305,6 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
                 if (gst_element_query(decodeImpl->m_pipeline, query))
                 {
                     gst_query_parse_seeking(query, nullptr, &decodeImpl->m_seek_enabled, &decodeImpl->m_start, &decodeImpl->m_duration);
-                }
-                else
-                {
-                    SPDLOG_DEBUG("VideoWindow: Seeking query failed.");
                 }
                 gst_query_unref(query);
             }

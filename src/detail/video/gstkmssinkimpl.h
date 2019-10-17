@@ -40,6 +40,8 @@ public:
 protected:
     int m_gem{-1};
     bool m_hwdecoder{false};
+
+    static gboolean query_position(gpointer data);
 };
 
 } // end of namespace detail

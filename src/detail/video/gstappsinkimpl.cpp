@@ -73,10 +73,13 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
                     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
                     cairo_paint(cr);
                 }
+
+                m_position = GST_BUFFER_TIMESTAMP(buffer);
                 gst_buffer_unmap(buffer, &map);
             }
         }
         gst_sample_unref(m_videosample);
+
     }
 }
 
@@ -101,6 +104,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
                     assert(screen);
                     memcpy(screen->raw(), map.data, map.size);
                     screen->schedule_flip();
+                    impl->m_position = GST_BUFFER_TIMESTAMP(buffer);
                     gst_buffer_unmap(buffer, &map);
                 }
             }
@@ -155,8 +159,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
              " caps=video/x-raw;audio/x-raw video. ! queue ! videoscale ! video/x-raw,width=" <<
              std::to_string(m_size.width()) << ",height=" << std::to_string(m_size.height()) << vc <<
-             " ! progressreport silent=true do-query=true update-freq=1 format=time name=progress ! "
-             " appsink name=appsink video. " << a_pipe ;
+             " ! appsink name=appsink video. " << a_pipe ;
 
     return pipeline.str();
 }
@@ -223,12 +226,26 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
+    g_timeout_add(500, (GSourceFunc) &post_position, this);
+
     return play();
 }
 
 void GstAppSinkImpl::scale(float scalex, float scaley)
 {
     m_interface.resize(Size(m_size.width() * scalex, m_size.height() * scaley));
+}
+
+gboolean GstAppSinkImpl::post_position(gpointer data)
+{
+    auto impl = reinterpret_cast<GstAppSinkImpl*>(data);
+
+    asio::post(Application::instance().event().io(), [impl]()
+    {
+        impl->m_interface.invoke_handlers(eventid::property_changed);
+    });
+
+    return true;
 }
 
 } // End of detail

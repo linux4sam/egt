@@ -38,6 +38,8 @@ protected:
     GstSample* m_videosample{nullptr};
 
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
+
+    static gboolean post_position(gpointer data);
 };
 
 } // end of namespace detail
