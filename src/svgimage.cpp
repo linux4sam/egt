@@ -127,11 +127,12 @@ void SvgImage::load()
 
     GError* error = nullptr;
     auto handle = rsvg_handle_new_from_file(detail::resolve_file_path(m_respath).c_str(), &error);
+
+    if (!handle || error)
+        throw std::runtime_error("unable to load svg file: " + m_respath);
+
     m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
     [](RsvgHandle * r) { g_object_unref(r); });
-
-    if (error)
-        throw std::runtime_error("unable to load svg file: " + m_respath);
 }
 
 shared_cairo_surface_t SvgImage::render(const std::string& id, const RectF& rect) const
