@@ -236,6 +236,9 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
         {
             asio::post(Application::instance().event().io(), [cameraImpl, sample]()
             {
+                if (cameraImpl->m_camerasample)
+                    gst_sample_unref(cameraImpl->m_camerasample);
+
                 cameraImpl->m_camerasample = sample;
                 cameraImpl->m_interface.damage();
             });
