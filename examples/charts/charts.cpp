@@ -113,27 +113,21 @@ struct LinePage : public NotebookTab
 
         line_width->set_value(2);
 
-        auto gridx_checkbox = std::make_shared<CheckBox>("grid X", Rect(Point(500, 410), Size(80, 40)));
-        csizer->add(gridx_checkbox);
+        auto grid_checkbox = std::make_shared<CheckBox>("grid", Rect(Point(500, 410), Size(80, 40)));
+        csizer->add(grid_checkbox);
 
-        auto gridy_checkbox = std::make_shared<CheckBox>("grid Y", Rect(Point(600, 410), Size(80, 40)));
-        csizer->add(gridy_checkbox);
-
-        auto handle_grid_checkbox = [gridx_checkbox, gridy_checkbox, line](Event & event)
+        auto handle_grid_checkbox = [grid_checkbox, line](Event & event)
         {
             if (event.id() == eventid::property_changed)
             {
                 uint32_t flags = 0;
-                if (gridx_checkbox->checked())
-                    flags |= LineChart::GRIDX;
-                if (gridy_checkbox->checked())
-                    flags |= LineChart::GRIDY;
+                if (grid_checkbox->checked())
+                    flags |= LineChart::GRIDX | LineChart::GRIDY;
                 line->set_grid(flags);
             }
         };
 
-        gridx_checkbox->on_event(handle_grid_checkbox);
-        gridy_checkbox->on_event(handle_grid_checkbox);
+        grid_checkbox->on_event(handle_grid_checkbox);
     }
 };
 
