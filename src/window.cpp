@@ -286,13 +286,19 @@ void Window::set_background(const Image& image)
     set_boxtype(Theme::boxtype::none);
 
     if (m_background)
+    {
         m_background->detach();
+        m_background.reset();
+    }
 
-    m_background = std::make_shared<ImageLabel>(image);
-    m_background->set_align(alignmask::expand);
-    m_background->set_image_align(alignmask::expand);
-    add(m_background);
-    m_background->zorder_bottom();
+    if (!image.empty())
+    {
+        m_background = std::make_shared<ImageLabel>(image);
+        m_background->set_align(alignmask::expand);
+        m_background->set_image_align(alignmask::expand);
+        add(m_background);
+        m_background->zorder_bottom();
+    }
 }
 
 Window::~Window()
