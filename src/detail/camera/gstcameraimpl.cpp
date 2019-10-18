@@ -176,7 +176,7 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
         GstMapInfo map;
         if (gst_buffer_map(buffer, &map, GST_MAP_READ))
         {
-            Rect box = m_interface.box();
+            Rect box = m_interface.content_area();
             auto surface = shared_cairo_surface_t(
                                cairo_image_surface_create_for_data(map.data,
                                        CAIRO_FORMAT_RGB16_565,
@@ -255,6 +255,8 @@ bool CameraImpl::start()
 {
     char buffer[2048];
 
+    Rect box = m_interface.content_area();
+
 #ifdef HAVE_LIBPLANES
     if (m_interface.flags().is_set(Widget::flag::plane_window))
     {
@@ -269,26 +271,26 @@ bool CameraImpl::start()
             int gem_name = s->gem();
 
             if (format == pixel_format::argb8888 || format == pixel_format::xrgb8888 || format == pixel_format::rgb565)
-                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), m_rect.width(), m_rect.height(), "BGRx", gem_name);
+                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "BGRx", gem_name);
             else if (format == pixel_format::yuv420)
-                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), m_rect.width(), m_rect.height(), "I420", gem_name);
+                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "I420", gem_name);
             else if (format == pixel_format::yuyv)
-                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), m_rect.width(), m_rect.height(), "YUY2", gem_name);
+                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "YUY2", gem_name);
         }
         else
         {
             if (format == pixel_format::argb8888 || format == pixel_format::xrgb8888 || format == pixel_format::rgb565)
-                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), m_rect.width(), m_rect.height(), "BGRx");
+                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "BGRx");
             else if (format == pixel_format::yuv420)
-                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), m_rect.width(), m_rect.height(), "I420");
+                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "I420");
             else if (format == pixel_format::yuyv)
-                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), m_rect.width(), m_rect.height(), "YUY2");
+                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "YUY2");
         }
     }
     else
 #endif
     {
-        sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), m_rect.width(), m_rect.height(), "RGB16");
+        sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "RGB16");
     }
 
     SPDLOG_DEBUG("CameraWindow:  {}", std::string(buffer));
