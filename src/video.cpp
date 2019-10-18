@@ -51,6 +51,27 @@ bool is_target_sama5d4()
     return false;
 }
 
+bool audio_device()
+{
+    std::ifstream infile("/proc/asound/cards");
+    if (infile.is_open())
+    {
+        std::string line;
+        while (getline(infile, line))
+        {
+            spdlog::info("Sound : {}", line);
+            if (line.find("no soundcards") != std::string::npos)
+            {
+                infile.close();
+                return false;
+            }
+        }
+        infile.close();
+        return true;
+    }
+    return false;
+}
+
 } // End of detail.
 
 VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)

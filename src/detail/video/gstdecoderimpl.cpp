@@ -22,7 +22,8 @@ namespace detail
 
 GstDecoderImpl::GstDecoderImpl(VideoWindow& interface, const Size& size)
     : m_interface(interface),
-      m_size(size)
+      m_size(size),
+      m_audiodevice(detail::audio_device())
 {
     GError* err = nullptr;
     if (!gst_init_check(nullptr, nullptr, &err))
@@ -209,23 +210,10 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         g_error_free(error);
         g_free(debug);
 
-        if (decodeImpl->m_err_message.find("not open audio device") != std::string::npos)
+        asio::post(Application::instance().event().io(), [decodeImpl]()
         {
-            asio::post(Application::instance().event().io(), [decodeImpl]()
-            {
-                /* restart pipeline with audio disable */
-                decodeImpl->m_audiodevice = false;
-                decodeImpl->m_interface.set_media(decodeImpl->m_uri);
-            });
-        }
-        else
-        {
-            asio::post(Application::instance().event().io(), [decodeImpl]()
-            {
-                Event event(eventid::event2);
-                decodeImpl->m_interface.invoke_handlers(event);
-            });
-        }
+            decodeImpl->m_interface.invoke_handlers(eventid::event2);
+        });
         break;
     }
     case GST_MESSAGE_WARNING:

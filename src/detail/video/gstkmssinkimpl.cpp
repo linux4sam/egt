@@ -33,10 +33,12 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     }
 
     std::string a_pipe;
+    std::string caps = " caps=video/x-raw";
     if (m_audiodevice && m_audiotrack)
-        a_pipe = "! queue ! audioconvert ! volume name=volume ! alsasink async=false enable-last-sample=false sync=false";
-    else
-        a_pipe = "";
+    {
+        caps += ";audio/x-raw";
+        a_pipe = " ! queue ! audioconvert ! volume name=volume ! alsasink async=false enable-last-sample=false sync=false";
+    }
 
     std::ostringstream v_pipe;
     std::array<std::string, 5> hwcodecs{"MPEG-4", "VP8", "H.264", "H.263", "H.26n"};
@@ -84,8 +86,8 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 
     std::ostringstream pipeline;
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
-             " caps=video/x-raw video." << v_pipe.str()  << " ! g1kmssink "
-             " gem-name=" << m_gem << " video. " << a_pipe ;
+             << caps << " video." << v_pipe.str()  << " ! g1kmssink gem-name=" << m_gem
+             << " video. " << a_pipe ;
 
     return pipeline.str();
 }
@@ -121,7 +123,7 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
     }
 
     SPDLOG_DEBUG("VideoWindow: gst_parse_launch success");
-    if (m_audiodevice)
+    if (m_audiodevice & m_audiotrack)
     {
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
     }

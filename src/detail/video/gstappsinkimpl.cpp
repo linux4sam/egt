@@ -150,14 +150,16 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     }
 
     std::string a_pipe;
-    if (m_audiodevice)
+    std::string caps = " caps=video/x-raw";
+    if (m_audiodevice && m_audiotrack)
+    {
+        caps += ";audio/x-raw";
         a_pipe = "! queue ! audioconvert ! volume name=volume ! alsasink async=false enable-last-sample=false sync=false";
-    else
-        a_pipe = "! fakesink async=false enable-last-sample=false sync=false";
+    }
 
     std::ostringstream pipeline;
     pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
-             " caps=video/x-raw;audio/x-raw video. ! queue ! videoscale ! video/x-raw,width=" <<
+             << caps  << " video. ! queue ! videoscale ! video/x-raw,width=" <<
              std::to_string(m_size.width()) << ",height=" << std::to_string(m_size.height()) << vc <<
              " ! appsink name=appsink video. " << a_pipe ;
 
@@ -207,7 +209,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         return false;
     }
 
-    if (m_audiodevice)
+    if (m_audiodevice && m_audiotrack)
     {
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
         if (!m_volume)

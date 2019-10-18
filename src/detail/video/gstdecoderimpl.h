@@ -70,6 +70,7 @@ protected:
     VideoWindow& m_interface;
     GstElement* m_pipeline{nullptr};
     Size m_size;
+    gboolean m_audiodevice;
     int64_t m_start{0};
     int64_t m_duration{0};
     int64_t m_position{0};
@@ -77,7 +78,6 @@ protected:
     std::string m_err_message;
     gboolean m_seek_enabled{false};
     gboolean m_seekdone{false};
-    gboolean m_audiodevice{true};
     std::string m_uri;
     GstBus* m_bus{nullptr};
     guint m_bus_watchid{0};

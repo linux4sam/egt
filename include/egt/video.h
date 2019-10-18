@@ -15,6 +15,7 @@ inline namespace v1
 namespace detail
 {
 bool is_target_sama5d4();
+bool audio_device();
 class GstDecoderImpl;
 class GstKmsSinkImpl;
 class GstAppSinkImpl;
