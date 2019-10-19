@@ -27,7 +27,7 @@ class GstKmsSinkImpl: public GstDecoderImpl
 public:
     explicit GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool decodertype);
 
-    bool set_media(const std::string& uri);
+    bool set_media(const std::string& uri) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
