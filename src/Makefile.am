@@ -145,6 +145,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/dialog.h \
 ../include/egt/detail/alignment.h \
 ../include/egt/detail/collision.h \
+../include/egt/detail/dump.h \
 ../include/egt/detail/imagecache.h \
 ../include/egt/detail/filesystem.h \
 ../include/egt/detail/math.h \
