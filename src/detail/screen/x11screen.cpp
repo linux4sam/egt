@@ -219,6 +219,7 @@ void X11Screen::handle_read(const asio::error_code& error)
                     break;
                 }
             }
+            [[fallthrough]];
         case KeyPress:
         {
             const auto id = e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up;
