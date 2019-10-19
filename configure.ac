@@ -63,7 +63,7 @@ AC_DEFUN([EGT_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
 
   egt_save_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $1"
+  CFLAGS="$CFLAGS $1 -Werror"
 
   AC_COMPILE_IFELSE([AC_LANG_SOURCE([ ])], [egt_cc_flag=yes], [egt_cc_flag=no])
   CFLAGS="$egt_save_CFLAGS"
