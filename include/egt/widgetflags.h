@@ -13,6 +13,7 @@
 
 #include <cstdint>
 #include <egt/bitmask.h>
+#include <egt/detail/meta.h>
 #include <iosfwd>
 #include <memory>
 
@@ -55,7 +56,7 @@ enum class alignmask : uint32_t
 
 ENABLE_BITMASK_OPERATORS(alignmask);
 
-std::ostream& operator<<(std::ostream& os, const alignmask& align);
+EGT_API std::ostream& operator<<(std::ostream& os, const alignmask& align);
 
 /** Helper to set alignment of a widget. */
 template<class T>
@@ -327,7 +328,7 @@ enum class windowhint
     cursor_overlay,
 };
 
-std::ostream& operator<<(std::ostream& os, const windowhint& event);
+EGT_API std::ostream& operator<<(std::ostream& os, const windowhint& event);
 
 }
 }

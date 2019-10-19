@@ -125,7 +125,7 @@ AC_SUBST(WARN_CFLAGS)
 AC_PATH_X
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h glob.h])
 
-CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB"
+CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -DEGT_DLL_EXPORTS"
 
 AC_ARG_ENABLE([debug],
   [AS_HELP_STRING([--disable-debug], [build without debugging support [default=no]])],

@@ -26,7 +26,7 @@ namespace detail
  * Any actual file path used, for example when loading images, will be searched
  * for relative to any added path here.
  */
-void EGT_API add_search_path(const std::string& path);
+EGT_API void add_search_path(const std::string& path);
 
 /**
  * Given a file path, try to find it related to any added search paths.
@@ -34,7 +34,7 @@ void EGT_API add_search_path(const std::string& path);
  * @return The full path to the file if found, or a path to a file that doesn't
  *         exist.
  */
-std::string EGT_API resolve_file_path(const std::string& filename);
+EGT_API std::string resolve_file_path(const std::string& filename);
 
 /**
  * Internal image cache.
@@ -88,7 +88,7 @@ protected:
 /**
  * Global image cache instance.
  */
-ImageCache& EGT_API image_cache();
+EGT_API ImageCache& image_cache();
 
 }
 }

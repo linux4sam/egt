@@ -123,7 +123,7 @@ protected:
     /**
      * Manages metadata about a registered callback.
      */
-    struct CallbackMeta
+    struct EGT_API CallbackMeta
     {
         CallbackMeta(const event_callback_t& c,
                      filter_type m,
