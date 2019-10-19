@@ -11,7 +11,6 @@
 #include <egt/label.h>
 #include <egt/popup.h>
 #include <egt/sizer.h>
-#include <egt/text.h>
 #include <memory>
 #include <string>
 

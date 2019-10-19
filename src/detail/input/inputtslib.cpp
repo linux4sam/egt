@@ -30,8 +30,7 @@ struct tslibimpl
 };
 
 InputTslib::InputTslib(Application& app, const string& path)
-    : m_app(app),
-      m_input(app.event().io()),
+    : m_input(app.event().io()),
       m_impl(new detail::tslibimpl)
 {
     const int NONBLOCKING = 1;

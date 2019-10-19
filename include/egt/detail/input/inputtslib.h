@@ -42,11 +42,6 @@ private:
     void handle_read(const asio::error_code& error);
 
     /**
-     * Application instance.
-     */
-    Application& m_app;
-
-    /**
      * Input handler to read from the evdev fd.
      */
     asio::posix::stream_descriptor m_input;

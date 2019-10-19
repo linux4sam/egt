@@ -249,10 +249,10 @@ struct easing_cubic_bezier
 
     float_t operator()(float_t p);
 
-    float_t m_p0;
-    float_t m_p1;
-    float_t m_p2;
-    float_t m_p3;
+    float_t m_p0{};
+    float_t m_p1{};
+    float_t m_p2{};
+    float_t m_p3{};
 };
 
 /** @} */

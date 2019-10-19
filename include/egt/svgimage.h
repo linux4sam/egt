@@ -11,7 +11,6 @@
  * @brief Working with images.
  */
 
-#include <cairo.h>
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/image.h>

@@ -34,7 +34,7 @@ public:
      *
      * @param index CPU index if more than one CPU.
      */
-    double usage(unsigned int index = 0) const { return m_cpu_usage[index]; }
+    inline double usage(unsigned int index = 0) const { return m_cpu_usage[index]; }
 
     /**
      * Update the CPU usage.

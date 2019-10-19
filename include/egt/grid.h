@@ -15,8 +15,8 @@
 #include <egt/utils.h>
 #include <egt/widget.h>
 #include <memory>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 namespace egt
 {

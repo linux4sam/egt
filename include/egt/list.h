@@ -17,7 +17,6 @@
 #include <egt/view.h>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace egt
 {

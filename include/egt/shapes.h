@@ -109,6 +109,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect&) override;
 };
+
 }
 }
 
