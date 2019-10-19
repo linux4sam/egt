@@ -133,7 +133,14 @@ AC_ARG_ENABLE([debug],
 
 if test "$enable_debug" = "no" ; then
   AC_MSG_NOTICE([Disabling debugging])
-  CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast"
+  CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast \
+  		      -fvisibility=hidden \
+		      -fvisibility-inlines-hidden \
+		      -fno-math-errno \
+		      -fmerge-all-constants \
+		      -ftree-vectorize \
+		      -ffunction-sections \
+		      -fdata-sections"
   CFLAGS="$CFLAGS -DNDEBUG -Ofast"
 else
   CXXFLAGS="$CXXFLAGS -O0 -DSPDLOG_ACTIVE_LEVEL=0"
