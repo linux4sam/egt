@@ -474,9 +474,10 @@ AM_CONDITIONAL([HAVE_ASPELL_BIN], [test -n "$ASPELL_BIN"])
 AC_MSG_NOTICE([configuring simd])
 (
   SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
+  # if -Wno-psabi was there, add it back
+  SIMD_CXXFLAGS+=`echo "$CXXFLAGS" | grep -o '\-Wno-psabi'`
   SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-pedantic//g'`
   SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-flto//g'`
-  SIMD_CXXFLAGS="$SIMD_CXXFLAGS -Wno-psabi"
 
   mkdir -p external/Simd/prj/cmake/ &&
   cd external/Simd/prj/cmake/ &&
