@@ -168,7 +168,7 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
         gst_structure_get_int(capsStruct, "width", &width);
         gst_structure_get_int(capsStruct, "height", &height);
 
-        SPDLOG_DEBUG("CameraWindow: videowidth = {}  videoheight = {}", width, height);
+        SPDLOG_TRACE("CameraWindow: videowidth = {}  videoheight = {}", width, height);
 
         gst_sample_ref(m_camerasample);
         GstBuffer* buffer = gst_sample_get_buffer(m_camerasample);
