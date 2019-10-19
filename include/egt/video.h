@@ -6,6 +6,7 @@
 #ifndef EGT_VIDEO_H
 #define EGT_VIDEO_H
 
+#include <egt/detail/meta.h>
 #include <egt/window.h>
 
 namespace egt
@@ -32,7 +33,7 @@ class GstAppSinkImpl;
  *
  * @ingroup media
  */
-class VideoWindow : public Window
+class EGT_API VideoWindow : public Window
 {
 public:
 

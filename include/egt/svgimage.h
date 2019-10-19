@@ -30,7 +30,7 @@ inline namespace v1
  * SVG file or data once, and then rendering any number of images at different
  * sizes or made up of different objects from the SVG file.
  */
-class SvgImage
+class EGT_API SvgImage
 {
 public:
 

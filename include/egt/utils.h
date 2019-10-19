@@ -11,6 +11,7 @@
  * @brief Working with basic utilities.
  */
 
+#include <egt/detail/meta.h>
 #include <string>
 
 namespace egt
@@ -21,7 +22,7 @@ inline namespace v1
 /**
  * Get the version of the egt library.
  */
-std::string egt_version();
+EGT_API std::string egt_version();
 
 namespace experimental
 {
@@ -29,7 +30,7 @@ namespace experimental
 /**
  * Toy lua evaluation.
  */
-double lua_evaluate(const std::string& expr);
+EGT_API double lua_evaluate(const std::string& expr);
 
 }
 

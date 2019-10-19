@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/math.h>
+#include <egt/detail/meta.h>
 #include <egt/types.h>
 #include <iosfwd>
 #include <string>
@@ -29,7 +30,7 @@ inline namespace v1
  * font face cannot be found on the system, a similar font face will be
  * selected.
  */
-class Font
+class EGT_API Font
 {
 public:
 
@@ -188,9 +189,9 @@ protected:
     slantid m_slant;
 };
 
-std::ostream& operator<<(std::ostream& os, const Font& font);
+EGT_API std::ostream& operator<<(std::ostream& os, const Font& font);
 
-inline bool operator==(const Font& lhs, const Font& rhs)
+inline bool EGT_API operator==(const Font& lhs, const Font& rhs)
 {
     return lhs.face() == rhs.face() &&
            detail::float_compare(lhs.size(), rhs.size()) &&
@@ -198,7 +199,7 @@ inline bool operator==(const Font& lhs, const Font& rhs)
            lhs.slant() == rhs.slant();
 }
 
-inline bool operator!=(const Font& lhs, const Font& rhs)
+inline bool EGT_API operator!=(const Font& lhs, const Font& rhs)
 {
     return !(lhs == rhs);
 }

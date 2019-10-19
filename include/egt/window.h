@@ -11,6 +11,7 @@
  * @brief Working with windows.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <egt/image.h>
 #include <egt/label.h>
@@ -43,7 +44,7 @@ class PlaneWindow;
  * This class acts as normal Frame/Widget but punts many operations to a
  * dynamically selected backend to work with the screen.
  */
-class Window : public Frame
+class EGT_API Window : public Frame
 {
 public:
 
@@ -229,7 +230,7 @@ protected:
  * provides features like a pointer cursor, that usually only make sense as a
  * top level Window.
  */
-class TopWindow : public Window
+class EGT_API TopWindow : public Window
 {
 public:
 
@@ -261,7 +262,7 @@ protected:
 /**
  * Get a pointer reference to the main window.
  */
-Window* main_window();
+EGT_API Window* main_window();
 
 /**
  * Get a pointer reference to the modal window.
@@ -269,7 +270,7 @@ Window* main_window();
  * The modal window is a single window that will receive all events. Only
  * one window can be modal at any given time.
  */
-Window* modal_window();
+EGT_API Window* modal_window();
 
 namespace detail
 {
@@ -277,14 +278,14 @@ namespace detail
 /**
  * Set the modal window.
  */
-void set_modal_window(Window* window);
+EGT_API void set_modal_window(Window* window);
 
 }
 
 /**
  * Get the list of all currently allocated Windows.
  */
-std::vector<Window*>& windows();
+EGT_API std::vector<Window*>& windows();
 
 }
 }

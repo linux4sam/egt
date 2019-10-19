@@ -10,7 +10,9 @@
  * @file
  * @brief Working with checkboxes.
  */
+
 #include <egt/button.h>
+#include <egt/detail/meta.h>
 #include <string>
 
 namespace egt
@@ -33,7 +35,7 @@ class Frame;
  *
  * @ingroup controls
  */
-class CheckBox : public Button
+class EGT_API CheckBox : public Button
 {
 public:
 
@@ -75,7 +77,7 @@ public:
  *
  * @ingroup controls
  */
-class ToggleBox : public CheckBox
+class EGT_API ToggleBox : public CheckBox
 {
 public:
 

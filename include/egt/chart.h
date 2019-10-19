@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/math.h>
+#include <egt/detail/meta.h>
 #include <egt/widget.h>
 #include <map>
 #include <memory>
@@ -29,7 +30,7 @@ namespace experimental
 /**
  * Line/point chart widget.
  */
-class LineChart : public Widget
+class EGT_API LineChart : public Widget
 {
 public:
     explicit LineChart(const Rect& rect = {});
@@ -123,7 +124,7 @@ protected:
 /**
  * Pie chart widget.
  */
-class PieChart : public Widget
+class EGT_API PieChart : public Widget
 {
 public:
     explicit PieChart(const Rect& rect = {});

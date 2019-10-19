@@ -12,6 +12,7 @@
  */
 
 #include <egt/button.h>
+#include <egt/detail/meta.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <egt/list.h>
@@ -39,7 +40,7 @@ inline namespace v1
  * library
  *
  */
-class FileDialog : public Popup
+class EGT_API FileDialog : public Popup
 {
 public:
     /**
@@ -112,7 +113,7 @@ protected:
  * 2. View the contents of file system directories.
  *
  */
-class FileOpenDialog : public FileDialog
+class EGT_API FileOpenDialog : public FileDialog
 {
 public:
     /**
@@ -180,7 +181,7 @@ protected:
  * 2. Select a location to save a file or select a
  *    file to override a existing file.
  */
-class FileSaveDialog : public FileDialog
+class EGT_API FileSaveDialog : public FileDialog
 {
 public:
     /**

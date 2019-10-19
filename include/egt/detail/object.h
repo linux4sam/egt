@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <egt/detail/cow.h>
 #include <egt/detail/flagsbase.h>
+#include <egt/detail/meta.h>
 #include <egt/event.h>
 #include <functional>
 #include <string>
@@ -30,7 +31,7 @@ namespace detail
 /**
  * Base object class with fundamental properties.
  */
-class Object
+class EGT_API Object
 {
 public:
 

@@ -117,14 +117,14 @@ enum class eventid
     error,
 };
 
-std::ostream& operator<<(std::ostream& os, const eventid& event);
+EGT_API std::ostream& operator<<(std::ostream& os, const eventid& event);
 
 /**
  * Pointer event data.
  *
  * @ingroup events
  */
-struct Pointer
+struct EGT_API Pointer
 {
     /**
      * Definitions for pointer buttons.
@@ -192,15 +192,15 @@ struct Pointer
 static_assert(detail::rule_of_5<Pointer>(),
               "Pointer : must fulfill rule of 5");
 
-std::ostream& operator<<(std::ostream& os, const Pointer::button& btn);
-std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
+EGT_API std::ostream& operator<<(std::ostream& os, const Pointer::button& btn);
+EGT_API std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
 
 /**
  * Keyboard event data.
  *
  * @ingroup events
  */
-struct Key
+struct EGT_API Key
 {
     constexpr Key() noexcept = default;
 
@@ -231,7 +231,7 @@ struct Key
 static_assert(detail::rule_of_5<Key>(),
               "Key : must fulfill rule of 5");
 
-std::ostream& operator<<(std::ostream& os, const Key& key);
+EGT_API std::ostream& operator<<(std::ostream& os, const Key& key);
 
 /**
  * Base event argument class.
@@ -268,7 +268,7 @@ class Widget;
  *
  * @ingroup events
  */
-struct Event : public EventArg
+struct EGT_API Event : public EventArg
 {
     constexpr explicit Event(eventid id = eventid::none) noexcept
         : m_id(id)
@@ -370,7 +370,7 @@ protected:
 static_assert(detail::rule_of_5<Event>(),
               "Event : must fulfill rule of 5");
 
-std::ostream& operator<<(std::ostream& os, const Event& event);
+EGT_API std::ostream& operator<<(std::ostream& os, const Event& event);
 
 }
 }

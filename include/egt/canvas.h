@@ -11,7 +11,7 @@
  * @brief Canvas definition.
  */
 
-#include <cairo.h>
+#include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
 
@@ -37,7 +37,7 @@ inline namespace v1
  *
  * @ingroup drawing
  */
-class Canvas
+class EGT_API Canvas
 {
 public:
 

@@ -11,6 +11,7 @@
  * @brief Working with text input.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/detail/textwidget.h>
 #include <egt/flags.h>
 #include <egt/font.h>
@@ -45,7 +46,7 @@ inline namespace v1
  *
  * @ingroup controls
  */
-class TextBox : public detail::TextWidget
+class EGT_API TextBox : public detail::TextWidget
 {
 public:
 
@@ -344,35 +345,35 @@ private:
 
 namespace detail
 {
-void draw_text(Painter& painter,
-               const Rect& b,
-               const std::string& text,
-               const Font& font,
-               const TextBox::flags_type& flags,
-               alignmask text_align,
-               justification justify,
-               const Color& text_color,
-               const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
-               size_t cursor_pos = 0,
-               const Color& highlight_color = Color(),
-               size_t select_start = 0,
-               size_t select_len = 0);
+EGT_API void draw_text(Painter& painter,
+                       const Rect& b,
+                       const std::string& text,
+                       const Font& font,
+                       const TextBox::flags_type& flags,
+                       alignmask text_align,
+                       justification justify,
+                       const Color& text_color,
+                       const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
+                       size_t cursor_pos = 0,
+                       const Color& highlight_color = Color(),
+                       size_t select_start = 0,
+                       size_t select_len = 0);
 
-void draw_text(Painter& painter,
-               const Rect& b,
-               const std::string& text,
-               const Font& font,
-               const TextBox::flags_type& flags,
-               alignmask text_align,
-               justification justify,
-               const Color& text_color,
-               alignmask image_align,
-               const Image& image,
-               const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
-               size_t cursor_pos = 0,
-               const Color& highlight_color = Color(),
-               size_t select_start = 0,
-               size_t select_len = 0);
+EGT_API void draw_text(Painter& painter,
+                       const Rect& b,
+                       const std::string& text,
+                       const Font& font,
+                       const TextBox::flags_type& flags,
+                       alignmask text_align,
+                       justification justify,
+                       const Color& text_color,
+                       alignmask image_align,
+                       const Image& image,
+                       const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
+                       size_t cursor_pos = 0,
+                       const Color& highlight_color = Color(),
+                       size_t select_start = 0,
+                       size_t select_len = 0);
 }
 
 }

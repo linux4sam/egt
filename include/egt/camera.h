@@ -6,6 +6,7 @@
 #ifndef EGT_CAMERA_H
 #define EGT_CAMERA_H
 
+#include <egt/detail/meta.h>
 #include <egt/window.h>
 #include <memory>
 #include <string>
@@ -29,7 +30,7 @@ class CameraImpl;
  * a basic window or an overlay plane.
  *
  */
-class CameraWindow : public Window
+class EGT_API CameraWindow : public Window
 {
 public:
 

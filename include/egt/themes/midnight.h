@@ -16,7 +16,7 @@ inline namespace v1
 /**
  * Midnight Theme.
  */
-class MidnightTheme : public Theme
+class EGT_API MidnightTheme : public Theme
 {
 public:
 

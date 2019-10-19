@@ -7,6 +7,7 @@
 #define EGT_DIALOG_H
 
 #include <egt/button.h>
+#include <egt/detail/meta.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <egt/popup.h>
@@ -32,7 +33,7 @@ inline namespace v1
  * Content: a message text or an widget.
  * Buttons: two buttons to make a decision.
  */
-class Dialog : public Popup
+class EGT_API Dialog : public Popup
 {
 public:
     /**

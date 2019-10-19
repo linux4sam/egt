@@ -11,8 +11,9 @@
  * @brief Working with shape widgets.
  */
 
-#include <egt/widget.h>
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
+#include <egt/widget.h>
 #include <memory>
 
 namespace egt
@@ -30,7 +31,7 @@ inline namespace v1
  *
  * @ingroup shapes
  */
-class CircleWidget : public Widget
+class EGT_API CircleWidget : public Widget
 {
 public:
 
@@ -54,7 +55,7 @@ protected:
  *
  * @ingroup shapes
  */
-class LineWidget : public Widget
+class EGT_API LineWidget : public Widget
 {
 public:
 
@@ -90,7 +91,7 @@ protected:
  *
  * @ingroup shapes
  */
-class RectangleWidget : public Widget
+class EGT_API RectangleWidget : public Widget
 {
 public:
 

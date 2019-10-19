@@ -36,7 +36,7 @@ struct EventLoopImpl;
 /**
  * Event loop interface.
  */
-class EventLoop : public detail::noncopyable
+class EGT_API EventLoop : public detail::noncopyable
 {
 public:
 

@@ -6,6 +6,7 @@
 #ifndef EGT_DETAIL_IMAGECACHE_H
 #define EGT_DETAIL_IMAGECACHE_H
 
+#include <egt/detail/meta.h>
 #include <egt/painter.h>
 #include <egt/utils.h>
 #include <map>
@@ -25,7 +26,7 @@ namespace detail
  * Any actual file path used, for example when loading images, will be searched
  * for relative to any added path here.
  */
-void add_search_path(const std::string& path);
+void EGT_API add_search_path(const std::string& path);
 
 /**
  * Given a file path, try to find it related to any added search paths.
@@ -33,7 +34,7 @@ void add_search_path(const std::string& path);
  * @return The full path to the file if found, or a path to a file that doesn't
  *         exist.
  */
-std::string resolve_file_path(const std::string& filename);
+std::string EGT_API resolve_file_path(const std::string& filename);
 
 /**
  * Internal image cache.
@@ -45,7 +46,7 @@ std::string resolve_file_path(const std::string& filename);
  * This is a trade off in consuming more memory instead of possibly
  * constantly reloading or scaling the same image.
  */
-class ImageCache : public detail::noncopyable
+class EGT_API ImageCache : public detail::noncopyable
 {
 public:
 
@@ -87,7 +88,7 @@ protected:
 /**
  * Global image cache instance.
  */
-ImageCache& image_cache();
+ImageCache& EGT_API image_cache();
 
 }
 }

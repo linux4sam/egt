@@ -11,6 +11,7 @@
  * @brief Working with grids.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <egt/utils.h>
 #include <egt/widget.h>
@@ -35,7 +36,7 @@ inline namespace v1
  *
  * @ingroup sizers
  */
-class StaticGrid : public Frame
+class EGT_API StaticGrid : public Frame
 {
 public:
 
@@ -204,7 +205,7 @@ protected:
  *
  * @ingroup sizers
  */
-class SelectableGrid : public StaticGrid
+class EGT_API SelectableGrid : public StaticGrid
 {
 public:
 

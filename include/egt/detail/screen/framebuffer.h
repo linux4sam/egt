@@ -11,6 +11,7 @@
  * @brief Working with framebuffers.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/screen.h>
 #include <string>
 
@@ -27,7 +28,7 @@ namespace detail
  * The framebuffer is internally mmap()'ed and directly accessible.  The
  * framebuffer does not manage multiple buffers.
  */
-class FrameBuffer : public Screen
+class EGT_API FrameBuffer : public Screen
 {
 public:
 

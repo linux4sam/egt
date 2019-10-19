@@ -11,6 +11,7 @@
  * @brief Working with KMS screens.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/detail/screen/kmstype.h>
 #include <egt/input.h>
 #include <egt/screen.h>
@@ -30,7 +31,7 @@ class FlipThread;
 /**
  * A screen backed by an overlay plane.
  */
-class KMSOverlay : public Screen
+class EGT_API KMSOverlay : public Screen
 {
 public:
 

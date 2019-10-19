@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <egt/detail/meta.h>
 
 /**
  * @file
@@ -23,7 +24,7 @@ namespace experimental
 /**
  * Monitor CPU usage of the system.
  */
-class CPUMonitorUsage
+class EGT_API CPUMonitorUsage
 {
 public:
 
@@ -55,7 +56,7 @@ private:
 /**
  * Calculate "frame-per-second" of something.
  */
-class Fps
+class EGT_API Fps
 {
 public:
 

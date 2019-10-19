@@ -34,7 +34,7 @@ inline namespace v1
  *
  * @ingroup media
  */
-class Image
+class EGT_API Image
 {
 public:
 

@@ -11,14 +11,15 @@
  * @brief Serialize widgets.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/widget.h>
 #include <fstream>
 #include <ostream>
-#include <vector>
 #include <rapidxml.hpp>
-#include <rapidxml_utils.hpp>
 #include <rapidxml_print.hpp>
+#include <rapidxml_utils.hpp>
 #include <string>
+#include <vector>
 
 namespace egt
 {
@@ -32,7 +33,7 @@ namespace detail
  *
  * @see Widget::walk()
  */
-struct OstreamWidgetSerializer
+struct EGT_API OstreamWidgetSerializer
 {
     explicit OstreamWidgetSerializer(std::ostream& o)
         : out(o)
@@ -58,7 +59,7 @@ struct OstreamWidgetSerializer
  *
  * @see Widget::walk()
  */
-struct XmlWidgetSerializer
+struct EGT_API XmlWidgetSerializer
 {
     XmlWidgetSerializer()
     {

@@ -28,7 +28,7 @@ namespace experimental
  * Utility to capture a video feed directly to a file.
  *
  */
-class CameraCapture : public egt::detail::Object
+class EGT_API CameraCapture : public egt::detail::Object
 {
 public:
 

@@ -11,6 +11,7 @@
  * @brief Working with input devices.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/detail/object.h>
 #include <egt/event.h>
 #include <memory>
@@ -33,7 +34,7 @@ class Widget;
  * An input device must inherit from this class and call dispatch() in order to
  * dispatch events to the rest of the framework.
  */
-class Input
+class EGT_API Input
 {
 public:
 
@@ -95,14 +96,14 @@ namespace detail
 /**
  * Get the current widget which has the mouse grabbed, or nullptr.
  */
-Widget* mouse_grab();
+EGT_API Widget* mouse_grab();
 
 /**
  * Set the current widget to grab the mouse.
  *
  * @param[in] widget The widget to grab all mouse events, or nullptr.
  */
-void mouse_grab(Widget* widget);
+EGT_API void mouse_grab(Widget* widget);
 
 /**
  * Set the keyboard focus of a widget.
@@ -110,12 +111,12 @@ void mouse_grab(Widget* widget);
  * This will result in calling eventid::on_gain_focus for the new widget and
  * eventid::on_lost_focus for any previous widget.
  */
-void keyboard_focus(Widget* widget);
+EGT_API void keyboard_focus(Widget* widget);
 
 /**
  * Get the current widget which has the keyboard focus, or nullptr.
  */
-Widget* keyboard_focus();
+EGT_API Widget* keyboard_focus();
 
 }
 

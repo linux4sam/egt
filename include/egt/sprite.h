@@ -11,6 +11,7 @@
  * @brief Working with sprites.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/window.h>
 #include <memory>
 
@@ -32,7 +33,7 @@ class HardwareSprite;
  * Sprite widget that animates frames from an image using one or more configured
  * strips.
  */
-class Sprite : public Window
+class EGT_API Sprite : public Window
 {
 public:
 

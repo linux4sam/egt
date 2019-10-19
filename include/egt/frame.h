@@ -15,6 +15,7 @@
 #include <egt/screen.h>
 #include <egt/widget.h>
 #include <egt/detail/alignment.h>
+#include <egt/detail/meta.h>
 #include <exception>
 #include <memory>
 #include <string>
@@ -39,7 +40,7 @@ inline namespace v1
  * frame.  In other words, child widgets are drawn respective to and inside
  * of their parent frame.
  */
-class Frame : public Widget
+class EGT_API Frame : public Widget
 {
 public:
 

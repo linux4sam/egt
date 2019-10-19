@@ -11,6 +11,7 @@
  * @brief UI XML loader.
  */
 
+#include <egt/detail/meta.h>
 #include <memory>
 #include <string>
 
@@ -33,7 +34,7 @@ namespace experimental
  * window->show();
  * @endcode
  */
-class UiLoader
+class EGT_API UiLoader
 {
 public:
 

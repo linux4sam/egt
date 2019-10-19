@@ -11,6 +11,7 @@
  * @brief ListBox definition.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <egt/label.h>
 #include <egt/sizer.h>
@@ -29,7 +30,7 @@ inline namespace v1
  * Light wrapper around a list item to make each item in the ListBox a little
  * bit bigger.
  */
-struct StringItem : public ImageLabel
+struct EGT_API StringItem : public ImageLabel
 {
     StringItem(const std::string& text = {},
                const Image& image = {},
@@ -93,7 +94,7 @@ struct StringItem : public ImageLabel
  *
  * @note This interface only supports a vertical orientation.
  */
-class ListBox : public Frame
+class EGT_API ListBox : public Frame
 {
 public:
 

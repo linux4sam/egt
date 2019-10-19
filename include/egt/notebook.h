@@ -11,6 +11,7 @@
  * @brief Working with notebooks.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <memory>
 #include <string>
@@ -24,7 +25,7 @@ inline namespace v1
 /**
  * A single layer of a Notebook.
  */
-class NotebookTab : public Frame
+class EGT_API NotebookTab : public Frame
 {
 public:
 
@@ -62,7 +63,7 @@ public:
  *
  * @ingroup controls
  */
-class Notebook : public Frame
+class EGT_API Notebook : public Frame
 {
 public:
 

@@ -11,6 +11,7 @@
  * @brief Working with forms.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <egt/sizer.h>
 #include <memory>
@@ -28,7 +29,7 @@ namespace experimental
 /**
  * Utility class to help with standard Form layout of widgets.
  */
-class Form : public Frame
+class EGT_API Form : public Frame
 {
 public:
 

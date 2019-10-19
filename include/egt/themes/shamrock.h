@@ -16,7 +16,7 @@ inline namespace v1
 /**
  * Shamrock Theme
  */
-class ShamrockTheme : public Theme
+class EGT_API ShamrockTheme : public Theme
 {
 public:
 

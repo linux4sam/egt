@@ -37,7 +37,7 @@ inline namespace v1
  *
  * @ref colors_colors
  */
-class Color
+class EGT_API Color
 {
 public:
 
@@ -525,13 +525,13 @@ inline Color operator/(T scalar, const Color& rhs)
                         rhs.alphaf() / scalar);
 }
 
-std::ostream& operator<<(std::ostream& os, const Color& color);
+EGT_API std::ostream& operator<<(std::ostream& os, const Color& color);
 
 /**
  * A Pattern which can store one or more colors at different offsets (steps)
  * which can be used to create gradients.
  */
-class Pattern
+class EGT_API Pattern
 {
 public:
     Pattern() noexcept = default;
@@ -588,7 +588,7 @@ namespace experimental
  * A ColorMap contains a series of sequential color steps that can be used for
  * generating colors by interpolation.
  */
-class ColorMap : public detail::noncopyable
+class EGT_API ColorMap : public detail::noncopyable
 {
 public:
 

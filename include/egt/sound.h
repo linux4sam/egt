@@ -11,6 +11,7 @@
  * @brief Working with sound.
  */
 
+#include <egt/detail/meta.h>
 #include <memory>
 #include <string>
 
@@ -48,7 +49,7 @@ namespace experimental
  * defaults.ctl.card 1
  * @endcode
  */
-class Sound
+class EGT_API Sound
 {
 public:
 

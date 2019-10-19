@@ -1017,7 +1017,7 @@ public:
     /**
      * Returns true if the arc has no radius.
      */
-    bool empty() const;
+    EGT_API bool empty() const;
 
     inline void set_radius(dim_t radius) { m_radius = radius; }
     inline void set_angle1(float angle) { m_angle1 = angle; }

@@ -11,6 +11,7 @@
  * @brief Base class TextWidget definition.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/image.h>
 #include <egt/widget.h>
 #include <memory>
@@ -29,7 +30,7 @@ namespace detail
  * This is not meant to be used directly as it does not implement at least a
  * draw() method.
  */
-class TextWidget : public Widget
+class EGT_API TextWidget : public Widget
 {
 public:
 

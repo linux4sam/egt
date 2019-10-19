@@ -11,6 +11,7 @@
  * @brief Working with alignment.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/widgetflags.h>
 
@@ -34,19 +35,19 @@ namespace detail
  * @param[in] xratio X ratio value relative to bounding.
  * @param[in] yratio Y ratio value relative to bounding.
  */
-Rect align_algorithm(const Rect& orig, const Rect& bounding,
-                     alignmask align, default_dim_type padding = 0,
-                     default_dim_type horizontal_ratio = 0,
-                     default_dim_type vertical_ratio = 0,
-                     default_dim_type xratio = 0,
-                     default_dim_type yratio = 0);
+EGT_API Rect align_algorithm(const Rect& orig, const Rect& bounding,
+                             alignmask align, default_dim_type padding = 0,
+                             default_dim_type horizontal_ratio = 0,
+                             default_dim_type vertical_ratio = 0,
+                             default_dim_type xratio = 0,
+                             default_dim_type yratio = 0);
 
-Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
-                           alignmask align, default_dim_type padding = 0,
-                           default_dim_type horizontal_ratio = 0,
-                           default_dim_type vertical_ratio = 0,
-                           default_dim_type xratio = 0,
-                           default_dim_type yratio = 0);
+EGT_API Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
+                                   alignmask align, default_dim_type padding = 0,
+                                   default_dim_type horizontal_ratio = 0,
+                                   default_dim_type vertical_ratio = 0,
+                                   default_dim_type xratio = 0,
+                                   default_dim_type yratio = 0);
 
 }
 }

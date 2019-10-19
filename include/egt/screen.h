@@ -12,6 +12,7 @@
  */
 
 #include <cairo.h>
+#include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
 #include <egt/utils.h>
@@ -30,7 +31,7 @@ inline namespace v1
  * @note A Screen is not necessarily the same resolution and orientation of
  * the Display.
  */
-class Screen : public detail::noncopyable
+class EGT_API Screen : public detail::noncopyable
 {
 public:
 

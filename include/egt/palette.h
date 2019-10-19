@@ -12,6 +12,7 @@
  */
 
 #include <egt/color.h>
+#include <egt/detail/meta.h>
 #include <iosfwd>
 #include <map>
 #include <memory>
@@ -30,7 +31,7 @@ inline namespace v1
  * The palette can be extended by simply inserting more groups and color
  * ids in the event the palette needs to be expanded to support more colors.
  */
-class Palette
+class EGT_API Palette
 {
 public:
 
@@ -339,8 +340,8 @@ protected:
 static_assert(std::is_move_constructible<Palette>::value, "Palette should be move constructable");
 static_assert(std::is_move_assignable<Palette>::value, "Palette should be move assignable");
 
-std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color);
-std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group);
+EGT_API std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color);
+EGT_API std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group);
 
 }
 }

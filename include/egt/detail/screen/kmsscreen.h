@@ -11,6 +11,7 @@
  * @brief Working with KMS screens.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/detail/screen/kmstype.h>
 #include <egt/geometry.h>
 #include <egt/screen.h>
@@ -36,7 +37,7 @@ class FlipThread;
  *
  * This uses libplanes to modeset and configure planes.
  */
-class KMSScreen : public Screen
+class EGT_API KMSScreen : public Screen
 {
 public:
 

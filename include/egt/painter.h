@@ -13,6 +13,7 @@
 
 #include <cairo.h>
 #include <egt/color.h>
+#include <egt/detail/meta.h>
 #include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
@@ -40,7 +41,7 @@ class Image;
  *
  * @ingroup drawing
  */
-class Painter : public detail::noncopyable
+class EGT_API Painter : public detail::noncopyable
 {
 public:
 

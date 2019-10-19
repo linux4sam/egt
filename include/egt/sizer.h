@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/alignment.h>
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <memory>
 #include <utility>
@@ -42,7 +43,7 @@ inline namespace v1
  *
  * @ingroup sizers
  */
-class BoxSizer : public Frame
+class EGT_API BoxSizer : public Frame
 {
 public:
 
@@ -164,7 +165,7 @@ protected:
  *
  * @ingroup sizers
  */
-class HorizontalBoxSizer : public BoxSizer
+class EGT_API HorizontalBoxSizer : public BoxSizer
 {
 public:
 
@@ -183,7 +184,7 @@ public:
  *
  * @ingroup sizers
  */
-class VerticalBoxSizer : public BoxSizer
+class EGT_API VerticalBoxSizer : public BoxSizer
 {
 public:
 
@@ -203,7 +204,7 @@ public:
  *
  * @ingroup sizers
  */
-class FlexBoxSizer : public BoxSizer
+class EGT_API FlexBoxSizer : public BoxSizer
 {
 public:
 

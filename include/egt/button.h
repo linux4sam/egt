@@ -12,6 +12,7 @@
  */
 
 #include <egt/buttongroup.h>
+#include <egt/detail/meta.h>
 #include <egt/detail/textwidget.h>
 #include <egt/geometry.h>
 #include <egt/image.h>
@@ -59,7 +60,7 @@ class Painter;
  * @image html widget_button.png
  * @image latex widget_button.png "widget_button" width=5cm
  */
-class Button : public detail::TextWidget
+class EGT_API Button : public detail::TextWidget
 {
 public:
 
@@ -156,7 +157,7 @@ private:
  *
  * @ingroup controls
  */
-class ImageButton : public Button
+class EGT_API ImageButton : public Button
 {
 public:
 

@@ -12,6 +12,7 @@
  */
 
 #include <chrono>
+#include <egt/detail/meta.h>
 #include <egt/easing.h>
 #include <egt/timer.h>
 #include <egt/utils.h>
@@ -74,7 +75,7 @@ T interpolate(Functor&& easing, T percent, T start, T end, bool reverse = false)
 /**
  * Base class for an animation.
  */
-class IAnimation : public detail::noncopyable
+class EGT_API IAnimation : public detail::noncopyable
 {
 public:
 
@@ -160,7 +161,7 @@ protected:
  *
  * @ingroup animation
  */
-class Animation : public detail::IAnimation
+class EGT_API Animation : public detail::IAnimation
 {
 public:
 
@@ -308,7 +309,7 @@ protected:
  *
  * @ingroup animation
  */
-class AnimationSequence : public detail::IAnimation
+class EGT_API AnimationSequence : public detail::IAnimation
 {
 public:
 
@@ -506,7 +507,7 @@ protected:
  *
  * @ingroup animation
  */
-class AutoAnimation : public Animation
+class EGT_API AutoAnimation : public Animation
 {
 public:
 
@@ -622,7 +623,7 @@ using PropertyAnimatorF = PropertyAnimatorType<float>;
  *
  * @ingroup animation
  */
-class AnimationDelay : public detail::IAnimation
+class EGT_API AnimationDelay : public detail::IAnimation
 {
 public:
 

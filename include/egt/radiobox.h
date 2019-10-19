@@ -10,6 +10,8 @@
  * @file
  * @brief Working with radioboxes.
  */
+
+#include <egt/detail/meta.h>
 #include <egt/button.h>
 #include <string>
 
@@ -26,7 +28,7 @@ class Frame;
  *
  * @ingroup controls
  */
-class RadioBox : public Button
+class EGT_API RadioBox : public Button
 {
 public:
 

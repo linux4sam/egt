@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <egt/detail/math.h>
+#include <egt/detail/meta.h>
 #include <egt/flags.h>
 #include <egt/valuewidget.h>
 #include <memory>
@@ -28,7 +29,7 @@ class Frame;
  *
  * @ingroup controls
  */
-class Slider : public ValueRangeWidget<int>
+class EGT_API Slider : public ValueRangeWidget<int>
 {
 public:
 

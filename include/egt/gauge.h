@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/math.h>
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <egt/image.h>
 #include <egt/widget.h>
@@ -29,7 +30,7 @@ class Gauge;
 /**
  * A layer of a GaugeWidget.
  */
-class GaugeLayer : public Widget
+class EGT_API GaugeLayer : public Widget
 {
 public:
 
@@ -107,7 +108,7 @@ protected:
  * range you chose, and the value of the needle must fall in this range.  The
  * range corresponds to the configured display start and stop angle.
  */
-class NeedleLayer : public GaugeLayer
+class EGT_API NeedleLayer : public GaugeLayer
 {
 public:
 
@@ -380,7 +381,7 @@ protected:
  * [Inkscape](https://inkscape.org/).  Of course, any tool that can create
  * standard SVG files works just as well.
  */
-class Gauge : public Frame
+class EGT_API Gauge : public Frame
 {
 public:
 

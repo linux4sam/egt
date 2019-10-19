@@ -66,7 +66,7 @@ inline namespace v1
  * @ingroup timers
  * @see PeriodicTimer
  */
-class Timer : public detail::noncopyable
+class EGT_API Timer : public detail::noncopyable
 {
 public:
 
@@ -261,7 +261,7 @@ private:
  *
  * @ingroup timers
  */
-class PeriodicTimer : public Timer
+class EGT_API PeriodicTimer : public Timer
 {
 public:
 

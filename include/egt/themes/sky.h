@@ -16,7 +16,7 @@ inline namespace v1
 /**
  * Sky Theme.
  */
-class SkyTheme : public Theme
+class EGT_API SkyTheme : public Theme
 {
 public:
 

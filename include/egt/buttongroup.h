@@ -11,6 +11,7 @@
  * @brief Working with button groups.
  */
 
+#include <egt/detail/meta.h>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -34,7 +35,7 @@ class Button;
  * If the group is imperative, it ensures that at least one button is
  * checked.
  */
-class ButtonGroup
+class EGT_API ButtonGroup
 {
 public:
 

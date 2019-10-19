@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <egt/animation.h>
+#include <egt/detail/meta.h>
 #include <egt/easing.h>
 #include <egt/window.h>
 
@@ -28,7 +29,7 @@ inline namespace v1
  * with only a small portion of it shown so that sliding it out can be
  * initiated by default.
  */
-class SideBoard : public Window
+class EGT_API SideBoard : public Window
 {
 public:
 

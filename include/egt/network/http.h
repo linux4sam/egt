@@ -38,7 +38,7 @@ namespace experimental
  * });
  * @endcode
  */
-class HttpClientRequest : public detail::noncopyable
+class EGT_API HttpClientRequest : public detail::noncopyable
 {
 public:
 

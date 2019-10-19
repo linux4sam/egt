@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/textwidget.h>
+#include <egt/detail/meta.h>
 #include <egt/image.h>
 #include <memory>
 #include <string>
@@ -35,7 +36,7 @@ class Painter;
  *
  * @ingroup controls
  */
-class Label : public detail::TextWidget
+class EGT_API Label : public detail::TextWidget
 {
 public:
 
@@ -107,7 +108,7 @@ protected:
  *
  * @ingroup controls
  */
-class ImageLabel : public Label
+class EGT_API ImageLabel : public Label
 {
 public:
 

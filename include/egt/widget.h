@@ -14,6 +14,7 @@
 #include <cairo.h>
 #include <cassert>
 #include <egt/detail/object.h>
+#include <egt/detail/meta.h>
 #include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
@@ -45,7 +46,7 @@ class Screen;
  * of what it means to handle an event or draw the Widget is implemented in
  * classes that are derived from this one, like a Button or a Label.
  */
-class Widget : public detail::Object, public detail::noncopyable
+class EGT_API Widget : public detail::Object, public detail::noncopyable
 {
 public:
 
@@ -1103,8 +1104,8 @@ private:
     friend class Frame;
 };
 
-std::ostream& operator<<(std::ostream& os, const Widget::flag& flag);
-std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags);
+EGT_API std::ostream& operator<<(std::ostream& os, const Widget::flag& flag);
+EGT_API std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags);
 
 }
 }

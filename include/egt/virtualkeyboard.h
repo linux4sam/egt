@@ -12,6 +12,7 @@
  */
 
 #include <egt/button.h>
+#include <egt/detail/meta.h>
 #include <egt/input.h>
 #include <egt/keycode.h>
 #include <egt/notebook.h>
@@ -34,7 +35,7 @@ inline namespace v1
  * keyboard by giving a list of keys divided in panels and rows. A base size of
  * the keys is automatically computed.
  */
-class VirtualKeyboard : public Frame
+class EGT_API VirtualKeyboard : public Frame
 {
 protected:
     struct Panel;
@@ -277,7 +278,7 @@ protected:
  * Two buttons are added to the virtual keyboard in order to close it or to
  * move it from the bottom to the top of the screen or the other way around.
  */
-class PopupVirtualKeyboard : public Popup
+class EGT_API PopupVirtualKeyboard : public Popup
 {
 public:
     /**

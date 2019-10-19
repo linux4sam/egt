@@ -11,6 +11,7 @@
  * @brief ComboBox definition.
  */
 
+#include <egt/detail/meta.h>
 #include <egt/list.h>
 #include <egt/popup.h>
 #include <egt/widget.h>
@@ -30,7 +31,7 @@ namespace detail
 /**
  * Popup class used by ComboBox.
  */
-class ComboBoxPopup : public Popup
+class EGT_API ComboBoxPopup : public Popup
 {
 public:
     explicit ComboBoxPopup(ComboBox& parent);
@@ -68,7 +69,7 @@ protected:
  *
  * @ingroup controls
  */
-class ComboBox : public detail::TextWidget
+class EGT_API ComboBox : public detail::TextWidget
 {
 public:
     using item_array = std::vector<std::string>;

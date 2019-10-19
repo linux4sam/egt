@@ -26,6 +26,38 @@
 #define likely(x)       __builtin_expect((x), 1)
 #define unlikely(x)     __builtin_expect((x), 0)
 
+#if defined _WIN32 || defined __CYGWIN__
+#define EGT_HELPER_DLL_IMPORT __declspec(dllimport)
+#define EGT_HELPER_DLL_EXPORT __declspec(dllexport)
+#define EGT_HELPER_DLL_LOCAL
+#else
+#if __GNUC__ >= 4
+#define EGT_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
+#define EGT_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
+#define EGT_HELPER_DLL_LOCAL  __attribute__ ((visibility ("hidden")))
+#else
+#define EGT_HELPER_DLL_IMPORT
+#define EGT_HELPER_DLL_EXPORT
+#define EGT_HELPER_DLL_LOCAL
+#endif
+#endif
+
+// Now we use the generic helper definitions above to define EGT_API and EGT_LOCAL.
+// EGT_API is used for the public API symbols. It either DLL imports or DLL exports (or does nothing for static build)
+// EGT_LOCAL is used for non-api symbols.
+
+#ifdef EGT_DLL // defined if EGT is compiled as a DLL
+#ifdef EGT_DLL_EXPORTS // defined if we are building the EGT DLL (instead of using it)
+#define EGT_API EGT_HELPER_DLL_EXPORT
+#else
+#define EGT_API EGT_HELPER_DLL_IMPORT
+#endif // EGT_DLL_EXPORTS
+#define EGT_LOCAL EGT_HELPER_DLL_LOCAL
+#else // EGT_DLL is not defined: this means EGT is a static lib.
+#define EGT_API
+#define EGT_LOCAL
+#endif // EGT_DLL
+
 namespace egt
 {
 inline namespace v1
@@ -92,7 +124,7 @@ reverse_range<T> reverse_iterate(T& x)
 /**
  * Utility base class to make a derived class non-copy-able.
  */
-class noncopyable
+class EGT_API noncopyable
 {
 public:
     noncopyable() = default;
@@ -193,7 +225,7 @@ inline bool change_if_diff(double& old, const double& to)
  * This can be used to run a function when an instance of a scope_exit goes out
  * of scope or is deleted.
  */
-struct scope_exit : public noncopyable
+struct EGT_API scope_exit : public noncopyable
 {
     explicit scope_exit(std::function<void()> f) noexcept
         : m_f(std::move(f))

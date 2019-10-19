@@ -12,6 +12,7 @@
  */
 
 #include <egt/canvas.h>
+#include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <egt/slider.h>
 #include <memory>
@@ -31,7 +32,7 @@ inline namespace v1
  *
  * This is used internally by Widgets, but can also be used directly.
  */
-class ScrolledView : public Frame
+class EGT_API ScrolledView : public Frame
 {
 public:
 

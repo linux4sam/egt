@@ -12,6 +12,7 @@
  */
 
 #include <cairo.h>
+#include <egt/detail/meta.h>
 #include <iosfwd>
 #include <memory>
 
@@ -90,7 +91,7 @@ enum class pixel_format
     yuv420,   ///< Planar format
 };
 
-std::ostream& operator<<(std::ostream& os, const pixel_format& format);
+EGT_API std::ostream& operator<<(std::ostream& os, const pixel_format& format);
 
 /**
  * Internal detail namespace.

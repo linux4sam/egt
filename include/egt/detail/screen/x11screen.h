@@ -6,6 +6,7 @@
 #ifndef EGT_DETAIL_SCREEN_X11SCREEN_H
 #define EGT_DETAIL_SCREEN_X11SCREEN_H
 
+#include <egt/detail/meta.h>
 #include <egt/asio.hpp>
 #include <egt/screen.h>
 #include <egt/input.h>
@@ -25,7 +26,7 @@ class InputKeyboard;
 /**
  * Screen in an X11 window.
  */
-class X11Screen : public Screen
+class EGT_API X11Screen : public Screen
 {
 public:
 

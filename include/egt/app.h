@@ -8,6 +8,7 @@
 
 #include <clocale>
 #include <egt/asio.hpp>
+#include <egt/detail/meta.h>
 #include <egt/detail/object.h>
 #include <egt/eventloop.h>
 #include <egt/utils.h>
@@ -43,7 +44,7 @@ class Input;
  * inputs, outputs, the event loop, and more. It also acts as sort of a
  * global access to get to these things because of this.
  */
-class Application : public detail::noncopyable
+class EGT_API Application : public detail::noncopyable
 {
 public:
     /**

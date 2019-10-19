@@ -13,6 +13,7 @@
  */
 
 #include <egt/button.h>
+#include <egt/detail/meta.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <memory>
@@ -31,7 +32,7 @@ inline namespace v1
  *
  * @ingroup controls
  */
-class Scrollwheel : public StaticGrid
+class EGT_API Scrollwheel : public StaticGrid
 {
 public:
     using item_array = std::vector<std::string>;

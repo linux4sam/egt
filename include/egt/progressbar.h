@@ -6,6 +6,7 @@
 #ifndef EGT_PROGRESSBAR_H
 #define EGT_PROGRESSBAR_H
 
+#include <egt/detail/meta.h>
 #include <egt/valuewidget.h>
 #include <memory>
 
@@ -21,7 +22,7 @@ class Frame;
  *
  * @ingroup controls
  */
-class ProgressBar : public ValueRangeWidget<int>
+class EGT_API ProgressBar : public ValueRangeWidget<int>
 {
 public:
 
@@ -79,7 +80,7 @@ protected:
  *
  * @ingroup controls
  */
-class SpinProgress : public ValueRangeWidget<int>
+class EGT_API SpinProgress : public ValueRangeWidget<int>
 {
 public:
 
@@ -140,7 +141,7 @@ protected:
  *
  * @ingroup controls
  */
-class LevelMeter : public ValueRangeWidget<int>
+class EGT_API LevelMeter : public ValueRangeWidget<int>
 {
 public:
 
@@ -203,7 +204,7 @@ protected:
  *
  * @ingroup controls
  */
-class AnalogMeter : public ValueRangeWidget<float>
+class EGT_API AnalogMeter : public ValueRangeWidget<float>
 {
 public:
 
