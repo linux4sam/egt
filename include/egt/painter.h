@@ -6,6 +6,11 @@
 #ifndef EGT_PAINTER_H
 #define EGT_PAINTER_H
 
+/**
+ * @file
+ * @brief Painter interface.
+ */
+
 #include <cairo.h>
 #include <egt/color.h>
 #include <egt/flags.h>

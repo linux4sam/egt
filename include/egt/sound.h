@@ -8,6 +8,7 @@
 
 /**
  * @file
+ * @brief Working with sound.
  */
 
 #include <memory>

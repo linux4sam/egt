@@ -8,7 +8,7 @@
 
 /**
  * @file
- * @brief Working with checkboxes.
+ * @brief Working with radioboxes.
  */
 #include <egt/button.h>
 #include <string>
