@@ -119,5 +119,26 @@ Outside of that, EGT provides some utility classes like
 experimental::HttpClientRequest that uses libcurl underneath for full HTTP/HTTPS
 support, and handles the integration of libcurl with Asio.
 
+@section topics_compiler Compiler Setup and Options
+
+The primary compiler uses is gcc.  Other compilers like clang and mingw are a
+work in progress and considered experimetal.
+
+- `-std=c++11` - EGT requires C++11.
+- `-fvisibility=hidden` - EGT uses explicit public visibility so everything else should be hidden by default.  gcc is particularly chatty about exporting symbols ina  shared library.
+- `-fvisibility-inlines-hidden` - Same as `-fvisibility=hidden`
+- `-fno-rtti` - EGT does not use runtime type information, like dynamic casting.
+- `-fno-math-errno` - EGT does not check errno after calling math functions.  That can result int standard math functions being inlined.
+- `-fmerge-all-constants` - EGT doesn't compare pointers of constants so it's perfectly fine to merge constants with the same values.
+- `-ftree-vectorize` - In some cases you may want to explicitly list this, but it's usually automatic.
+- `-Ofast` - In most cases, this gives the best performance compiler optimization wise.  `-O2` and `-O3` are not far off in most cases.  Just be aware that `-Ofast` uses some non-standard optimizations related to math.
+
+@section topics_optimizing Finding Optimal Performance
+
+--disable-debug
+--enagle-lto
+--disable-shared
+
+
 */
 }}
