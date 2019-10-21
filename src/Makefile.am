@@ -355,7 +355,7 @@ tidy-local: all-am
 	@for source in $(SOURCES); do \
 		[[ $$source == *.c ]] && continue; \
 		[[ $$source == *.h ]] && continue; \
-		clang-tidy $(srcdir)/$$source -- $(TIDY_OPTIONS); \
+		$(CLANG_TIDY_BIN) $(srcdir)/$$source -- $(TIDY_OPTIONS); \
 	done
 
 tidy: tidy-local

@@ -471,6 +471,9 @@ AM_COND_IF([HAVE_DOXYGEN_BIN], [AC_CONFIG_FILES([docs/Doxyfile docs/Info.plist])
 AC_PATH_PROG([ASPELL_BIN], [aspell])
 AM_CONDITIONAL([HAVE_ASPELL_BIN], [test -n "$ASPELL_BIN"])
 
+AC_PATH_PROGS([CLANG_TIDY_BIN], [clang-tidy-6.0 clang-tidy])
+AM_CONDITIONAL([HAVE_CLANG_TIDY_BIN], [test -n "$CLANG_TIDY_BIN"])
+
 AC_MSG_NOTICE([configuring simd])
 (
   SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
