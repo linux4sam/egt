@@ -263,7 +263,7 @@ tidy-local: all-am
 		[[ $$source == *.c ]] && continue; \
 		[[ $$source == *.hpp ]] && continue; \
 		[[ $$source == *.ipp ]] && continue; \
-		clang-tidy $$source -- $(TIDY_OPTIONS); \
+		clang-tidy $(srcdir)/$$source -- $(TIDY_OPTIONS); \
 	done
 
 tidy: tidy-local
