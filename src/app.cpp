@@ -78,7 +78,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         if (getenv("EGT_DEBUG"))
         {
             auto loglevel = static_cast<spdlog::level::level_enum>(
-                                std::atoi(getenv("EGT_DEBUG")));
+                                std::stoi(getenv("EGT_DEBUG")));
             spdlog::set_level(loglevel);
         }
         else
