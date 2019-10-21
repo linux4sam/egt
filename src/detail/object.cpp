@@ -13,7 +13,7 @@ namespace detail
 {
 
 Object::handle_t Object::on_event(const event_callback_t& handler,
-                                  filter_type mask)
+                                  filter_t mask)
 {
     if (handler)
     {

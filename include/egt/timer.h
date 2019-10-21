@@ -208,7 +208,7 @@ protected:
         uint32_t handle{0};
     };
 
-    using callback_array = std::vector<CallbackMeta>;
+    using callback_array_t = std::vector<CallbackMeta>;
 
     /**
      * ASIO timer object.
@@ -223,7 +223,7 @@ protected:
     /**
      * Array of registered callbacks.
      */
-    callback_array m_callbacks;
+    callback_array_t m_callbacks;
 
     /**
      * When true, currently running.

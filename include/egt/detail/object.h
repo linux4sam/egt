@@ -60,7 +60,7 @@ public:
     /**
      * Event handler eventid filter.
      */
-    using filter_type = detail::FlagsBase<eventid>;
+    using filter_t = detail::FlagsBase<eventid>;
 
     /**
      * Handle type.
@@ -83,7 +83,7 @@ public:
      *         passed to remove_handler().
      */
     virtual handle_t on_event(const event_callback_t& handler,
-                              filter_type mask = filter_type());
+                              filter_t mask = filter_t());
 
     /**
      * Invoke all handlers with the specified event.
@@ -126,7 +126,7 @@ protected:
     struct EGT_API CallbackMeta
     {
         CallbackMeta(const event_callback_t& c,
-                     filter_type m,
+                     filter_t m,
                      handle_t h) noexcept
             : callback(c),
               mask(m),
@@ -134,19 +134,19 @@ protected:
         {}
 
         event_callback_t callback;
-        filter_type mask;
+        filter_t mask;
         handle_t handle{0};
     };
 
     /**
      * Helper type for an array of callbacks.
      */
-    using callback_array = std::vector<CallbackMeta>;
+    using callback_array_t = std::vector<CallbackMeta>;
 
     /**
      * Array of callbacks.
      */
-    detail::CopyOnWriteAllocate<callback_array> m_callbacks;
+    detail::CopyOnWriteAllocate<callback_array_t> m_callbacks;
 
     /**
      * A user defined name for the Object.
