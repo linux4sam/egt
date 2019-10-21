@@ -9,6 +9,8 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_builddir)/external/kplot \
 	-isystem $(top_srcdir)/external/spdlog/include
 
+CUSTOM_CXXFLAGS = -Woverloaded-virtual
+
 if HAVE_SIMD
 CUSTOM_FLAGS += -isystem $(top_srcdir)/external/Simd/src/
 endif
@@ -18,6 +20,7 @@ AM_CXXFLAGS = -DDATADIR=\"$(datadir)\"
 lib_LTLIBRARIES = libegt.la
 libegt_la_CXXFLAGS = \
 	$(CUSTOM_FLAGS) \
+	$(CUSTOM_CXXFLAGS) \
 	@LIBEGT_EXTRA_CXXFLAGS@ \
 	$(CODE_COVERAGE_CXXFLAGS) \
 	$(AM_CXXFLAGS)
