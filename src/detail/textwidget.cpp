@@ -34,7 +34,7 @@ void TextWidget::clear()
     }
 }
 
-void TextWidget::set_text(const std::string& str)
+void TextWidget::text(const std::string& str)
 {
     if (detail::change_if_diff<>(m_text, str))
     {
@@ -66,7 +66,7 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
             textext.height - textext.y_bearing < target.height())
             return nfont;
 
-        nfont.set_size(nfont.size() - 1);
+        nfont.size(nfont.size() - 1);
         if (nfont.size() < 1)
             return font;
     }

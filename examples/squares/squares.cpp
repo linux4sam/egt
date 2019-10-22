@@ -29,8 +29,8 @@ int main(int argc, const char** argv)
     VerticalBoxSizer sizer;
 
     Label label("FPS: ---");
-    label.set_color(Palette::ColorId::text, Palette::black);
-    label.set_color(Palette::ColorId::bg, Palette::transparent);
+    label.color(Palette::ColorId::text, Palette::black);
+    label.color(Palette::ColorId::bg, Palette::transparent);
     sizer.add(expand_horizontal(label));
 
     label.on_event([&label](Event&)
@@ -39,8 +39,8 @@ int main(int argc, const char** argv)
     }, {eventid::property_changed});
 
     Label label_dims("");
-    label_dims.set_color(Palette::ColorId::text, Palette::black);
-    label_dims.set_color(Palette::ColorId::bg, Palette::transparent);
+    label_dims.color(Palette::ColorId::text, Palette::black);
+    label_dims.color(Palette::ColorId::bg, Palette::transparent);
     sizer.add(expand_horizontal(label_dims));
 
     label_dims.on_event([&label_dims](Event&)
@@ -50,7 +50,7 @@ int main(int argc, const char** argv)
 
 
     Popup popup(Size(100, 80));
-    popup.set_color(Palette::ColorId::bg, FUCHSIA);
+    popup.color(Palette::ColorId::bg, FUCHSIA);
     popup.add(sizer);
     expand(sizer);
     top(right(popup));
@@ -63,7 +63,7 @@ int main(int argc, const char** argv)
     {
         ostringstream ss;
         ss << width << "," << height;
-        label_dims.set_text(ss.str());
+        label_dims.text(ss.str());
     }
 
     const vector<Color> colors1 =
@@ -151,7 +151,7 @@ int main(int argc, const char** argv)
 
         ostringstream ss;
         ss << "FPS: " << std::round(fps.fps());
-        label.set_text(ss.str());
+        label.text(ss.str());
 
         Screen::damage_array damage;
         damage.push_back(rect);
@@ -172,7 +172,7 @@ int main(int argc, const char** argv)
 
         ostringstream ss;
         ss << width << "," << height;
-        label_dims.set_text(ss.str());
+        label_dims.text(ss.str());
 
         x_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.width() - width));
         y_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.height() - height));

@@ -202,7 +202,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 /* This function takes a textual representation of a pipeline
  * and create an actual pipeline
  */
-bool GstAppSinkImpl::set_media(const std::string& uri)
+bool GstAppSinkImpl::media(const std::string& uri)
 {
     m_uri = uri;
     /* Make sure we don't leave orphan references */

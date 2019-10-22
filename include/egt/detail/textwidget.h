@@ -48,7 +48,7 @@ public:
      *
      * @param str The text string to set.
      */
-    virtual void set_text(const std::string& str);
+    virtual void text(const std::string& str);
 
     /**
      * Clear the text value.
@@ -65,7 +65,7 @@ public:
      *
      * @param[in] align Alignment for the text.
      */
-    void set_text_align(alignmask align)
+    void text_align(alignmask align)
     {
         if (detail::change_if_diff<>(m_text_align, align))
             damage();

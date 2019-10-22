@@ -39,7 +39,7 @@ public:
 
     Value<T>& operator=(T value)
     {
-        set_value(value);
+        value(value);
         return *this;
     }
 
@@ -54,7 +54,7 @@ public:
      * @param[in] value Value to set.
      * @return The old value.
      */
-    T set_value(T value)
+    T value(T value)
     {
         T orig = m_value;
 
@@ -102,7 +102,7 @@ public:
 
     RangeValue<T>& operator=(T value)
     {
-        set_value(value);
+        value(value);
         return *this;
     }
 
@@ -120,7 +120,7 @@ public:
      * @param[in] value Value to set.
      * @return The old value.
      */
-    virtual T set_value(T value)
+    virtual T value(T value)
     {
         assert(m_max > m_min);
 
@@ -144,10 +144,10 @@ public:
      *
      * @param[in] min The min value.
      */
-    inline void set_min(T min)
+    inline void min(T min)
     {
         if (detail::change_if_diff<>(m_min, min))
-            set_value(m_value);
+            value(m_value);
     }
 
     /**
@@ -160,10 +160,10 @@ public:
      *
      * @param[in] max The max value.
      */
-    inline void set_max(T max)
+    inline void max(T max)
     {
         if (detail::change_if_diff<>(m_max, max))
-            set_value(m_value);
+            value(m_value);
     }
 
     virtual ~RangeValue() = default;
@@ -195,8 +195,8 @@ public:
     {
         m_pending = value;
 
-        m_animation.set_duration(dur);
-        m_animation.set_easing_func(easing_linear);
+        m_animation.duration(dur);
+        m_animation.easing_func(easing_linear);
         m_animation.on_change([this](T value)
         {
             if (detail::change_if_diff<T>(this->m_value, value))
@@ -204,7 +204,7 @@ public:
         });
     }
 
-    virtual T set_value(T value) override
+    virtual T value(T value) override
     {
         assert(this->m_max > this->m_min);
 
@@ -227,8 +227,8 @@ protected:
     void animate(const T starting, const T ending)
     {
         m_animation.stop();
-        m_animation.set_starting(starting);
-        m_animation.set_ending(ending);
+        m_animation.starting(starting);
+        m_animation.ending(ending);
         m_animation.start();
     }
 

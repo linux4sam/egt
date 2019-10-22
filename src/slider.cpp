@@ -23,9 +23,9 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
     : ValueRangeWidget<int>(rect, min, max, value),
       m_orient(orient)
 {
-    set_name("Slider" + std::to_string(m_widgetid));
+    name("Slider" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill);
+    boxtype(Theme::boxtype::fill);
 
     flags().set(Widget::flag::grab_mouse);
 
@@ -194,12 +194,12 @@ void Slider::handle(Event& event)
         if (m_orient == orientation::horizontal)
         {
             auto diff = event.pointer().point - event.pointer().drag_start;
-            set_value(to_value(m_start_offset + diff.x()));
+            value(to_value(m_start_offset + diff.x()));
         }
         else
         {
             auto diff = event.pointer().point - event.pointer().drag_start;
-            set_value(to_value(m_start_offset - diff.y()));
+            value(to_value(m_start_offset - diff.y()));
         }
         break;
     default:
@@ -324,7 +324,7 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
         b1 = Point(handle.x(), yp);
         b2 = Point(b.x() + b.width(), yp);
 
-        painter.set_line_width(handle.height() / 5.0);
+        painter.line_width(handle.height() / 5.0);
     }
     else
     {
@@ -333,7 +333,7 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
         b1 = Point(xp, handle.y());
         b2 = Point(xp, b.y());
 
-        painter.set_line_width(handle.width() / 5.0);
+        painter.line_width(handle.width() / 5.0);
     }
 
     if (slider_flags().is_set(flag::consistent_line))

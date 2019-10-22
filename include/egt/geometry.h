@@ -169,8 +169,8 @@ public:
     constexpr inline dim_t x() const { return m_x; }
     constexpr inline dim_t y() const { return m_y; }
 
-    inline void set_x(dim_t x) { m_x = x; }
-    inline void set_y(dim_t y) { m_y = y; }
+    inline void x(dim_t x) { m_x = x; }
+    inline void y(dim_t y) { m_y = y; }
 
 protected:
     dim_t m_x{0};
@@ -388,8 +388,8 @@ public:
     constexpr inline dim_t width() const { return m_width; }
     constexpr inline dim_t height() const { return m_height; }
 
-    inline void set_width(dim_t width) { m_width = width; }
-    inline void set_height(dim_t height) { m_height = height; }
+    inline void width(dim_t width) { m_width = width; }
+    inline void height(dim_t height) { m_height = height; }
 
 protected:
     /**
@@ -641,7 +641,7 @@ public:
     /**
      * Set the rectangle's origin to the specified point.
      */
-    inline void set_point(const PointType<dim_t, dim_c>& p)
+    inline void point(const PointType<dim_t, dim_c>& p)
     {
         m_origin = p;
     }
@@ -657,7 +657,7 @@ public:
     /**
      * Set the SizeType of the rectangle.
      */
-    inline void set_size(const SizeType<dim_t, dim_c>& size)
+    inline void size(const SizeType<dim_t, dim_c>& size)
     {
         m_size = size;
     }
@@ -816,14 +816,14 @@ public:
     constexpr inline dim_t x() const { return m_origin.x(); }
     constexpr inline dim_t y() const { return m_origin.y(); }
 
-    inline void set_x(dim_t x) { m_origin.set_x(x); }
-    inline void set_y(dim_t y) { m_origin.set_y(y); }
+    inline void x(dim_t x) { m_origin.x(x); }
+    inline void y(dim_t y) { m_origin.y(y); }
 
     constexpr inline dim_t width() const { return m_size.width(); }
     constexpr inline dim_t height() const { return m_size.height(); }
 
-    inline void set_width(dim_t width) { m_size.set_width(width); }
-    inline void set_height(dim_t height) { m_size.set_height(height); }
+    inline void width(dim_t width) { m_size.width(width); }
+    inline void height(dim_t height) { m_size.height(height); }
 
 protected:
 
@@ -844,56 +844,56 @@ std::ostream& operator<<(std::ostream& os, const RectType<dim_t, dim_c>& rect)
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
-    lhs.set_size(lhs.size() - rhs);
+    lhs.size(lhs.size() - rhs);
     return lhs;
 }
 
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
-    lhs.set_size(lhs.size() + rhs);
+    lhs.size(lhs.size() + rhs);
     return lhs;
 }
 
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator*(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
-    lhs.set_size(lhs.size() * rhs);
+    lhs.size(lhs.size() * rhs);
     return lhs;
 }
 
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator/(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
 {
-    lhs.set_size(lhs.size() / rhs);
+    lhs.size(lhs.size() / rhs);
     return lhs;
 }
 
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
-    lhs.set_point(lhs.point() + rhs);
+    lhs.point(lhs.point() + rhs);
     return lhs;
 }
 
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
-    lhs.set_point(lhs.point() - rhs);
+    lhs.point(lhs.point() - rhs);
     return lhs;
 }
 
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator*(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
-    lhs.set_point(lhs.point() * rhs);
+    lhs.point(lhs.point() * rhs);
     return lhs;
 }
 
 template<class dim_t, detail::compatible dim_c>
 inline RectType<dim_t, dim_c> operator/(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
 {
-    lhs.set_point(lhs.point() / rhs);
+    lhs.point(lhs.point() / rhs);
     return lhs;
 }
 
@@ -947,8 +947,8 @@ public:
     inline PointType<dim_t> start() const { return m_start; }
     inline PointType<dim_t> end() const { return m_end; }
 
-    inline void set_start(const PointType<dim_t>& start) { m_start = start; }
-    inline void set_end(const PointType<dim_t>& end) { m_end = end; }
+    inline void start(const PointType<dim_t>& start) { m_start = start; }
+    inline void end(const PointType<dim_t>& end) { m_end = end; }
 
     /**
      * Returns a rectangle containing the line.
@@ -1019,10 +1019,10 @@ public:
      */
     EGT_API bool empty() const;
 
-    inline void set_radius(dim_t radius) { m_radius = radius; }
-    inline void set_angle1(float angle) { m_angle1 = angle; }
-    inline void set_angle2(float angle) { m_angle2 = angle; }
-    inline void set_center(const PointType<dim_t>& center) { m_center = center; }
+    inline void radius(dim_t radius) { m_radius = radius; }
+    inline void angle1(float angle) { m_angle1 = angle; }
+    inline void angle2(float angle) { m_angle2 = angle; }
+    inline void center(const PointType<dim_t>& center) { m_center = center; }
 
     constexpr inline dim_t radius() const { return m_radius; }
     constexpr inline float angle1() const { return m_angle1; }
@@ -1153,9 +1153,9 @@ public:
         return center() + PointType<dim_t>(x, y);
     }
 
-    inline void set_radiusa(const dim_t radiusa) { m_radiusa = radiusa; }
-    inline void set_radiusb(const dim_t radiusb) { m_radiusb = radiusb; }
-    inline void set_center(const PointType<dim_t>& center) { m_center = center; }
+    inline void radiusa(const dim_t radiusa) { m_radiusa = radiusa; }
+    inline void radiusb(const dim_t radiusb) { m_radiusb = radiusb; }
+    inline void center(const PointType<dim_t>& center) { m_center = center; }
 
     constexpr inline dim_t radiusa() const { return m_radiusa; }
     constexpr inline dim_t radiusb() const { return m_radiusb; }

@@ -15,7 +15,7 @@ inline namespace v1
 
 void MidnightTheme::init_draw()
 {
-    Drawer<CheckBox>::set_draw(CheckBox::default_draw);
+    Drawer<CheckBox>::draw(CheckBox::default_draw);
 }
 
 }

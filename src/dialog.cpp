@@ -20,27 +20,27 @@ Dialog::Dialog(const Rect& rect) noexcept
       m_button1(std::make_shared<Button>("OK")),
       m_button2(std::make_shared<Button>("Cancel"))
 {
-    set_name("Dialog" + std::to_string(m_widgetid));
+    name("Dialog" + std::to_string(m_widgetid));
 
-    set_border(theme().default_border());
-    set_padding(5);
+    border(theme().default_border());
+    padding(5);
 
-    m_layout->set_align(alignmask::expand);
+    m_layout->align(alignmask::expand);
     add(m_layout);
 
-    m_title->set_text_align(alignmask::left | alignmask::center);
+    m_title->text_align(alignmask::left | alignmask::center);
     m_layout->add(expand_horizontal(m_title));
 
     m_layout->add(expand(m_content));
 
     auto grid = std::make_shared<StaticGrid>(Rect(0, 0, 0, (rect.height() * 0.15)), std::make_tuple(2, 1), 5);
-    grid->set_align(alignmask::bottom | alignmask::expand_horizontal);
+    grid->align(alignmask::bottom | alignmask::expand_horizontal);
     m_layout->add(grid);
 
-    m_button1->set_align(alignmask::center);
+    m_button1->align(alignmask::center);
     grid->add(expand(m_button1));
 
-    m_button2->set_align(alignmask::center);
+    m_button2->align(alignmask::center);
     grid->add(expand(m_button2));
 
     m_button1->on_event([this](Event & event)
@@ -61,23 +61,23 @@ Dialog::Dialog(const Rect& rect) noexcept
 
 }
 
-void Dialog::set_title(const std::string& title)
+void Dialog::title(const std::string& title)
 {
-    m_title->set_text(title);
+    m_title->text(title);
 }
 
-void Dialog::set_title(const Image& icon, const std::string& title)
+void Dialog::title(const Image& icon, const std::string& title)
 {
-    m_title->set_image(icon);
-    m_title->set_text(title);
+    m_title->image(icon);
+    m_title->text(title);
 }
 
-void Dialog::set_icon(const Image& icon)
+void Dialog::icon(const Image& icon)
 {
-    m_title->set_image(icon);
+    m_title->image(icon);
 }
 
-void Dialog::set_button(buttonid button, const std::string& text)
+void Dialog::button(buttonid button, const std::string& text)
 {
     if (button == buttonid::button1)
     {
@@ -85,7 +85,7 @@ void Dialog::set_button(buttonid button, const std::string& text)
             m_button1->hide();
         else
         {
-            m_button1->set_text(text);
+            m_button1->text(text);
             m_button1->show();
         }
     }
@@ -95,13 +95,13 @@ void Dialog::set_button(buttonid button, const std::string& text)
             m_button2->hide();
         else
         {
-            m_button2->set_text(text);
+            m_button2->text(text);
             m_button2->show();
         }
     }
 }
 
-void Dialog::set_widget(const std::shared_ptr<Widget>& widget)
+void Dialog::widget(const std::shared_ptr<Widget>& widget)
 {
     m_content->add(widget);
 }

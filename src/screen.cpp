@@ -275,7 +275,7 @@ size_t Screen::brightness() const
     return 100;
 }
 
-void Screen::set_brightness(size_t brightness)
+void Screen::brightness(size_t brightness)
 {
 }
 

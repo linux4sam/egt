@@ -80,7 +80,7 @@ public:
      * @param uri Media file
      * @return true if success
      */
-    virtual bool set_media(const std::string& uri);
+    virtual bool media(const std::string& uri);
 
     /**
      * Play the video.
@@ -123,7 +123,7 @@ public:
      * @param volume is in range of 0 (no sound) to 10 (normal sound)
      * @return true if success
      */
-    virtual bool set_volume(double volume);
+    virtual bool volume(double volume);
 
     /**
      * Get the volume value for the video being played.
@@ -144,7 +144,7 @@ public:
      *
      * @param enable to enable/disable loop-back mode.
      */
-    inline void set_loopback(bool enable)
+    inline void loopback(bool enable)
     {
         m_loopback = enable;
     }
@@ -165,7 +165,7 @@ public:
      * @param[in] scalex Horizontal scale value, 0-1.
      * @param[in] scaley Vertical scale value, 0-1.
      */
-    virtual void set_scale(float scalex, float scaley) override;
+    virtual void scale(float scalex, float scaley) override;
 
     /**
      * Get video scale value.

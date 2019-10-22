@@ -98,7 +98,7 @@ protected:
 
     virtual void init_font() override
     {
-        m_font->set_face("Courier New");
+        m_font->face("Courier New");
     }
 };
 

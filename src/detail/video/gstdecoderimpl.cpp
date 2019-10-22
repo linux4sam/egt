@@ -100,7 +100,7 @@ double GstDecoderImpl::volume() const
     return volume;
 }
 
-bool GstDecoderImpl::set_volume(double volume)
+bool GstDecoderImpl::volume(double volume)
 {
     if (!m_volume)
         return false;

@@ -17,7 +17,7 @@ GaugeLayer::GaugeLayer(const Image& image) noexcept
     : m_image(image)
 {
     if (!m_image.empty())
-        m_box.set_size(m_image.size());
+        m_box.size(m_image.size());
 }
 
 GaugeLayer::GaugeLayer(Gauge& gauge, const Image& image) noexcept
@@ -86,7 +86,7 @@ void NeedleLayer::draw(Painter& painter, const Rect&)
                m_center, m_image, detail::to_radians<double>(0, angle));
 }
 
-void NeedleLayer::set_gauge(Gauge* gauge)
+void NeedleLayer::gauge(Gauge* gauge)
 {
     if (!m_gauge || !gauge)
     {
@@ -106,7 +106,7 @@ void Gauge::add_layer(const std::shared_ptr<GaugeLayer>& layer)
     if (i == m_layers.end())
     {
         m_layers.push_back(layer);
-        layer->set_gauge(this);
+        layer->gauge(this);
         resize(super_size());
         damage();
     }
@@ -122,7 +122,7 @@ void Gauge::remove_layer(const std::shared_ptr<GaugeLayer>& layer)
     auto i = std::find(m_layers.begin(), m_layers.end(), layer);
     if (i != m_layers.end())
     {
-        layer->set_gauge(nullptr);
+        layer->gauge(nullptr);
         m_layers.erase(i);
     }
 }
@@ -130,7 +130,7 @@ void Gauge::remove_layer(const std::shared_ptr<GaugeLayer>& layer)
 Gauge::~Gauge()
 {
     for (auto& layer : m_layers)
-        layer->set_gauge(nullptr);
+        layer->gauge(nullptr);
 }
 
 }

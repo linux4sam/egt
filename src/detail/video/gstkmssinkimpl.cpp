@@ -147,7 +147,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     return pipeline.str();
 }
 
-bool GstKmsSinkImpl::set_media(const std::string& uri)
+bool GstKmsSinkImpl::media(const std::string& uri)
 {
     m_uri = uri;
 

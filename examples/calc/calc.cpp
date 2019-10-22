@@ -27,22 +27,22 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "calc");
 
     TopWindow win;
-    win.set_color(Palette::ColorId::bg, Palette::black);
+    win.color(Palette::ColorId::bg, Palette::black);
 
     VerticalBoxSizer vsizer;
     win.add(expand(vsizer));
 
     ImageLabel elogo(Image("@128px/egt_logo_white.png"));
-    elogo.set_margin(10);
+    elogo.margin(10);
     vsizer.add(elogo);
 
     TextBox text("");
     text.text_flags().set(TextBox::flag::multiline);
-    text.set_text_align(alignmask::center | alignmask::right);
-    text.set_font(Font(25));
-    text.set_color(Palette::ColorId::bg, Color(0x272727ff));
-    text.set_color(Palette::ColorId::text, Palette::white);
-    text.set_readonly(true);
+    text.text_align(alignmask::center | alignmask::right);
+    text.font(Font(25));
+    text.color(Palette::ColorId::bg, Color(0x272727ff));
+    text.color(Palette::ColorId::text, Palette::white);
+    text.readonly(true);
     vsizer.add(expand(text));
 
     const vector<vector<string>> buttons =
@@ -105,10 +105,10 @@ int main(int argc, const char** argv)
 
             auto b = make_shared<Button>(label, Rect(Size(60, 60)));
             b->flags().set(Widget::flag::no_autoresize);
-            b->set_border(1);
-            b->set_font(Font(25, Font::weightid::bold));
-            b->set_color(colors[r][c].first, colors[r][c].second);
-            b->set_color(Palette::ColorId::border, Palette::gray);
+            b->border(1);
+            b->font(Font(25, Font::weightid::bold));
+            b->color(colors[r][c].first, colors[r][c].second);
+            b->color(Palette::ColorId::border, Palette::gray);
             line_sizer->add(b);
 
             b->on_click([&text, b](Event & event)

@@ -127,7 +127,9 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void set_text(const std::string& str) override;
+    using TextWidget::text;
+
+    virtual void text(const std::string& str) override;
 
     virtual void clear() override;
 
@@ -138,7 +140,7 @@ public:
      *
      * @param len The maximum length of the text.
      */
-    virtual void set_max_length(size_t len);
+    virtual void max_length(size_t len);
 
     /**
      * Get the max length of allowed text.
@@ -160,7 +162,7 @@ public:
      *
      * The is the same as doing:
      * @code{.cpp}
-     * cursor_set_end();
+     * cursor_end();
      * insert(str);
      * @endcode
      *
@@ -184,12 +186,12 @@ public:
     /**
      * Move the cursor to the beginning.
      */
-    virtual void cursor_set_begin();
+    virtual void cursor_begin();
 
     /**
      * Move the cursor to the end.
      */
-    virtual void cursor_set_end();
+    virtual void cursor_end();
 
     /**
      * Move the cursor forward by the specified count from the current
@@ -217,7 +219,7 @@ public:
     /**
      * Select all of the text.
      */
-    virtual void set_selection_all();
+    virtual void selection_all();
 
     /**
      * Set the selection of text.
@@ -225,7 +227,7 @@ public:
      * @param pos The starting position.
      * @param length The length of the selection.
      */
-    virtual void set_selection(size_t pos, size_t length);
+    virtual void selection(size_t pos, size_t length);
 
     /**
      * Clear any selection.
@@ -253,7 +255,7 @@ public:
      * Invoke the validator callbacks. If one of them returns false, the input
      * is rejected.
      */
-    virtual void set_input_validation_enabled(bool enabled);
+    virtual void input_validation_enabled(bool enabled);
 
     /**
      * Add a callback to be invoked to validate the input.

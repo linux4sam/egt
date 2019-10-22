@@ -150,7 +150,7 @@ void draw_text(Painter& painter,
                                 static_cast<float>(b.y()) + static_cast<float>(r.rect.y()) + te.y_bearing - fe.descent + fe.height);
 
                 if (workaround)
-                    p.set_y(p.y() + fe.height);
+                    p.y(p.y() + fe.height);
 
                 auto s = SizeF(char_width, r.rect.height());
 
@@ -160,7 +160,7 @@ void draw_text(Painter& painter,
                                      static_cast<float>(b.y()) + static_cast<float>(r.rect.y()));
 
                     if (workaround)
-                        p2.set_y(p2.y() + fe.height);
+                        p2.y(p2.y() + fe.height);
 
                     auto rect = RectF(p2, s);
                     if (!rect.empty())
@@ -211,13 +211,13 @@ void draw_text(Painter& painter,
                 auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width(), 0);
                 if (workaround)
                 {
-                    p.set_y(p.y() + fe.height);
+                    p.y(p.y() + fe.height);
                 }
 
                 if (last_char == "\n")
                 {
-                    p.set_x(b.x());
-                    p.set_y(p.y() + fe.height);
+                    p.x(b.x());
+                    p.y(p.y() + fe.height);
                 }
 
                 draw_cursor(p, fe.height);
@@ -319,7 +319,7 @@ void draw_text(Painter& painter,
                                 static_cast<float>(b.y()) + static_cast<float>(r.rect.y()) + te.y_bearing - fe.descent + fe.height);
 
                 if (workaround)
-                    p.set_y(p.y() + fe.height);
+                    p.y(p.y() + fe.height);
 
                 auto s = SizeF(char_width, r.rect.height());
 
@@ -329,7 +329,7 @@ void draw_text(Painter& painter,
                                      static_cast<float>(b.y()) + static_cast<float>(r.rect.y()));
 
                     if (workaround)
-                        p2.set_y(p2.y() + fe.height);
+                        p2.y(p2.y() + fe.height);
 
                     auto rect = RectF(p2, s);
                     if (!rect.empty())
@@ -380,13 +380,13 @@ void draw_text(Painter& painter,
                 auto p = b.point() + rects.back().rect.point() + Point(rects.back().rect.width(), 0);
                 if (workaround)
                 {
-                    p.set_y(p.y() + fe.height);
+                    p.y(p.y() + fe.height);
                 }
 
                 if (last_char == "\n")
                 {
-                    p.set_x(b.x());
-                    p.set_y(p.y() + fe.height);
+                    p.x(b.x());
+                    p.y(p.y() + fe.height);
                 }
 
                 draw_cursor(p, fe.height);

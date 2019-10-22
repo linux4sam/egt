@@ -131,7 +131,7 @@ public:
     /**
      * Set the face of the font.
      */
-    inline void set_face(const std::string& face) { m_face = face; }
+    inline void face(const std::string& face) { m_face = face; }
 
     /**
      * Get the size of the font.
@@ -141,7 +141,7 @@ public:
     /**
      * Set the size of the font.
      */
-    inline void set_size(fontsize s) { m_size = s; }
+    inline void size(fontsize s) { m_size = s; }
 
     /**
      * Get the weight of the font.
@@ -151,7 +151,7 @@ public:
     /**
      * Set the weight of the font.
      */
-    inline void set_weight(weightid w) { m_weight = w; }
+    inline void weight(weightid w) { m_weight = w; }
 
     /**
      * Get the slant of the font.

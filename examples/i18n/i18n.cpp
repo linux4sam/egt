@@ -16,7 +16,7 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "i18n");
 
-    Drawer<Label>::set_draw([](Label & widget, Painter & painter, const Rect & rect)
+    Drawer<Label>::draw([](Label & widget, Painter & painter, const Rect & rect)
     {
         detail::ignoreparam(rect);
 
@@ -46,8 +46,8 @@ int main(int argc, const char** argv)
     TopWindow window;
 
     auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
-    logo->set_margin(10);
-    logo->set_align(alignmask::center | alignmask::bottom);
+    logo->margin(10);
+    logo->align(alignmask::center | alignmask::bottom);
     window.add(logo);
 
     VerticalBoxSizer vsizer;
@@ -74,9 +74,9 @@ int main(int argc, const char** argv)
         auto label = make_shared<Label>(str);
         string face;
         if (index == static_cast<int>(variations.size()) - 1)
-            label->set_font(egt::Font("Noto Color Emoji", 16));
+            label->font(egt::Font("Noto Color Emoji", 16));
         else
-            label->set_font(egt::Font("Noto Sans CJK SC Regular", 30));
+            label->font(egt::Font("Noto Sans CJK SC Regular", 30));
 
         vsizer.add(label);
         index++;
@@ -91,14 +91,14 @@ int main(int argc, const char** argv)
     auto in = std::make_shared<PropertyAnimator>(maxx, half, std::chrono::seconds(3), easing_exponential_easeout);
     in->on_change([&vsizer](int value)
     {
-        vsizer.set_x(value);
+        vsizer.x(value);
     });
 
     auto out = std::make_shared<PropertyAnimator>(half + 1, minx, std::chrono::seconds(3), easing_exponential_easeout);
-    out->set_reverse(true);
+    out->reverse(true);
     out->on_change([&vsizer](int value)
     {
-        vsizer.set_x(value);
+        vsizer.x(value);
     });
 
     auto delay = std::make_shared<AnimationDelay>(std::chrono::seconds(1));

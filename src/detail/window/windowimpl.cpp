@@ -38,9 +38,9 @@ void WindowImpl::resize(const Size& size)
     m_interface->default_resize(size);
 }
 
-void WindowImpl::set_scale(float scalex, float scaley)
+void WindowImpl::scale(float scalex, float scaley)
 {
-    m_interface->default_set_scale(scalex, scaley);
+    m_interface->default_scale(scalex, scaley);
 }
 
 void WindowImpl::move(const Point& point)

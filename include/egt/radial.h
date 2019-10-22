@@ -70,8 +70,8 @@ public:
     explicit RadialType(const Rect& rect = {})
         : Widget(rect)
     {
-        this->set_name("Radial" + std::to_string(m_widgetid));
-        this->set_boxtype(Theme::boxtype::none);
+        this->name("Radial" + std::to_string(m_widgetid));
+        this->boxtype(Theme::boxtype::none);
         this->flags().set(Widget::flag::grab_mouse);
     }
 
@@ -101,9 +101,9 @@ public:
         return handle;
     }
 
-    using Widget::set_color;
+    using Widget::color;
 
-    virtual void set_color(uint32_t handle, const Color& color)
+    virtual void color(uint32_t handle, const Color& color)
     {
         for (auto& value : this->m_values)
         {
@@ -124,7 +124,7 @@ public:
     /**
      * Set the center label text of the dial.
      */
-    virtual void set_text(const std::string& text)
+    virtual void text(const std::string& text)
     {
         if (detail::change_if_diff<>(m_text, text))
             this->damage();
@@ -149,7 +149,7 @@ public:
                     auto v = this->degrees_to_value(value.range->min(),
                                                     value.range->max(),
                                                     angle);
-                    auto orig = value.range->set_value(v);
+                    auto orig = value.range->value(v);
                     if (!changed)
                         changed = (orig != v);
                 }
@@ -196,7 +196,7 @@ public:
                                         value.range->value()));
 
             painter.set(value.color);
-            painter.set_line_width(value.width);
+            painter.line_width(value.width);
             auto cr = painter.context().get();
             if (value.flags.is_set(flag::rounded_cap))
                 cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
@@ -272,7 +272,7 @@ public:
     /**
      * Set the starting angle in degrees for the min values.
      */
-    inline void set_start_angle(float value)
+    inline void start_angle(float value)
     {
         m_start_angle = value;
     }

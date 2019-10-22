@@ -99,7 +99,7 @@ public:
      *
      * @param[in] scale
      */
-    virtual void set_scale(float scalex, float scaley) override;
+    virtual void scale(float scalex, float scaley) override;
 
     /**
      * Get error message.

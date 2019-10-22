@@ -22,11 +22,11 @@ CheckBox::CheckBox(const std::string& text,
                    const Rect& rect) noexcept
     : Button(text, rect)
 {
-    set_name("CheckBox" + std::to_string(m_widgetid));
+    name("CheckBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::none);
-    set_padding(5);
-    set_text_align(alignmask::left | alignmask::center);
+    boxtype(Theme::boxtype::none);
+    padding(5);
+    text_align(alignmask::left | alignmask::center);
 
     flags().set(Widget::flag::grab_mouse);
 }
@@ -46,7 +46,7 @@ void CheckBox::handle(Event& event)
     switch (event.id())
     {
     case eventid::pointer_click:
-        set_checked(!checked());
+        checked(!checked());
     default:
         break;
     }
@@ -98,7 +98,7 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
                      handle.bottom_right() - Point(border, border));
         painter.draw(handle.top_right() + Point(-border, border),
                      handle.bottom_left() + Point(border, -border));
-        painter.set_line_width(border);
+        painter.line_width(border);
         painter.stroke();
     }
 
@@ -122,9 +122,9 @@ Size CheckBox::min_size_hint() const
         s += Size(s.width() / 2 + 5, 0);
         s += Widget::min_size_hint();
         if (s.width() < default_size.width())
-            s.set_width(default_size.width());
+            s.width(default_size.width());
         if (s.height() < default_size.height())
-            s.set_height(default_size.height());
+            s.height(default_size.height());
         return s;
     }
 
@@ -134,10 +134,10 @@ Size CheckBox::min_size_hint() const
 ToggleBox::ToggleBox(const Rect& rect) noexcept
     : CheckBox( {}, rect)
 {
-    set_name("ToggleBox" + std::to_string(m_widgetid));
+    name("ToggleBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill_rounded);
-    set_border(theme().default_border());
+    boxtype(Theme::boxtype::fill_rounded);
+    border(theme().default_border());
 }
 
 ToggleBox::ToggleBox(Frame& parent, const Rect& rect) noexcept
@@ -160,8 +160,8 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     if (widget.checked())
     {
         Rect rect = b;
-        rect.set_width(rect.width() / 2);
-        rect.set_x(rect.x() + rect.width());
+        rect.width(rect.width() / 2);
+        rect.x(rect.x() + rect.width());
         widget.theme().draw_box(painter,
                                 Theme::boxtype::fill_rounded,
                                 rect,
@@ -171,7 +171,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     else
     {
         Rect rect = b;
-        rect.set_width(rect.width() / 2);
+        rect.width(rect.width() / 2);
 
         if (widget.enable_disable())
         {
@@ -194,8 +194,8 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     if (!widget.on_text().empty())
     {
         Rect rect = b;
-        rect.set_width(rect.width() / 2);
-        rect.set_x(rect.x() + rect.width());
+        rect.width(rect.width() / 2);
+        rect.x(rect.x() + rect.width());
 
         if (widget.checked())
             painter.set(widget.color(Palette::ColorId::button_text).color());
@@ -213,7 +213,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
     if (!widget.off_text().empty())
     {
         Rect rect = b;
-        rect.set_width(rect.width() / 2);
+        rect.width(rect.width() / 2);
 
         if (widget.checked())
             painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());

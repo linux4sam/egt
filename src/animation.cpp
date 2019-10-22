@@ -75,7 +75,7 @@ bool Animation::next()
     return m_running;
 }
 
-void Animation::set_easing_func(easing_func_t func)
+void Animation::easing_func(easing_func_t func)
 {
     if (!running())
         m_easing = std::move(func);

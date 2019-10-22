@@ -45,7 +45,7 @@ Window* modal_window()
 
 namespace detail
 {
-void set_modal_window(Window* window)
+void modal_window(Window* window)
 {
     the_modal_window = window;
 }
@@ -64,10 +64,10 @@ Window::Window(const Rect& rect,
 // by default, windows are hidden
     : Frame(rect, {Widget::flag::window, Widget::flag::invisible})
 {
-    set_name("Window" + std::to_string(m_widgetid));
+    name("Window" + std::to_string(m_widgetid));
 
     // windows are not transparent by default
-    set_boxtype(Theme::boxtype::solid | Theme::boxtype::fill);
+    boxtype(Theme::boxtype::solid | Theme::boxtype::fill);
 
     // create the window implementation
     create_impl(box(), format_hint, hint);
@@ -185,14 +185,14 @@ void Window::resize(const Size& size)
         m_impl->resize(size);
 }
 
-void Window::set_scale(float scalex, float scaley)
+void Window::scale(float scalex, float scaley)
 {
     // cannot resize if we are screen
     if (unlikely(the_main_window == this))
         return;
 
     if (m_impl)
-        m_impl->set_scale(scalex, scaley);
+        m_impl->scale(scalex, scaley);
 }
 
 void Window::create_impl(const Rect& rect,
@@ -270,7 +270,7 @@ void Window::create_impl(const Rect& rect,
     }
 }
 
-void Window::set_main_window()
+void Window::main_window()
 {
     the_main_window = this;
 
@@ -280,9 +280,9 @@ void Window::set_main_window()
     damage();
 }
 
-void Window::set_background(const Image& image)
+void Window::background(const Image& image)
 {
-    set_boxtype(Theme::boxtype::none);
+    boxtype(Theme::boxtype::none);
 
     if (m_background)
     {
@@ -293,8 +293,8 @@ void Window::set_background(const Image& image)
     if (!image.empty())
     {
         m_background = std::make_shared<ImageLabel>(image);
-        m_background->set_align(alignmask::expand);
-        m_background->set_image_align(alignmask::expand);
+        m_background->align(alignmask::expand);
+        m_background->image_align(alignmask::expand);
         add(m_background);
         m_background->zorder_bottom();
     }
@@ -314,7 +314,7 @@ Window::~Window()
 
         for (auto& window : the_windows)
         {
-            window->set_main_window();
+            window->main_window();
             break;
         }
     }
@@ -329,12 +329,12 @@ struct CursorWindow : public Window
         : Window(image.size(), pixel_format::argb8888, windowhint::cursor_overlay),
           m_label(new ImageLabel(image))
     {
-        set_color(Palette::ColorId::bg, Palette::transparent);
-        set_boxtype(Theme::boxtype::fill);
-        m_label->set_boxtype(Theme::boxtype::none);
+        color(Palette::ColorId::bg, Palette::transparent);
+        boxtype(Theme::boxtype::fill);
+        m_label->boxtype(Theme::boxtype::none);
         add(m_label);
         flags().set(Widget::flag::no_layout);
-        set_readonly(true);
+        readonly(true);
     }
 
     virtual void handle(Event&) override

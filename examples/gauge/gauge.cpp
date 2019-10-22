@@ -13,10 +13,10 @@ template<class T>
 static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max, std::chrono::seconds length = std::chrono::seconds(10))
 {
     auto animationup = std::make_shared<PropertyAnimator>(min, max, length, easing_circular_easein);
-    animationup->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+    animationup->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
 
     auto animationdown = std::make_shared<PropertyAnimator>(max, min, length, easing_circular_easeout);
-    animationdown->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+    animationdown->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
 
     /// @todo leak
     auto sequence = new AnimationSequence(true);
@@ -30,10 +30,10 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "gauge");
 
     TopWindow win;
-    win.set_color(Palette::ColorId::bg, Palette::black);
+    win.color(Palette::ColorId::bg, Palette::black);
 
     auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
-    logo->set_margin(10);
+    logo->margin(10);
     win.add(top(center(logo)));
 
     StaticGrid grid(std::make_tuple(3, 2));
@@ -45,15 +45,15 @@ int main(int argc, const char** argv)
 
     auto gauge_needle1 = make_shared<NeedleLayer>(SvgImage("gauge_needle2.svg", SizeF(91, 14)),
                          0, 100, 135, 45);
-    gauge_needle1->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
-    gauge_needle1->set_needle_center(PointF(6.8725, 6.87253));
+    gauge_needle1->needle_point(PointF(192, 192) / PointF(2.0, 2.0));
+    gauge_needle1->needle_center(PointF(6.8725, 6.87253));
     gauge.add_layer(gauge_needle1);
     demo_up_down_animator(gauge_needle1, 0, 100, std::chrono::seconds(5));
 
     auto gauge_needle2 = make_shared<NeedleLayer>(SvgImage("gauge_needle1.svg", SizeF(91, 14)),
                          0, 100, 135, 45);
-    gauge_needle2->set_needle_point(PointF(192, 192) / PointF(2.0, 2.0));
-    gauge_needle2->set_needle_center(PointF(6.8725, 6.87253));
+    gauge_needle2->needle_point(PointF(192, 192) / PointF(2.0, 2.0));
+    gauge_needle2->needle_center(PointF(6.8725, 6.87253));
     gauge.add_layer(gauge_needle2);
     demo_up_down_animator(gauge_needle2, 0, 100, std::chrono::seconds(8));
     grid.add(center(gauge));
@@ -69,8 +69,8 @@ int main(int argc, const char** argv)
                        0, 100, -63, 63, true);
 
     auto needle_point = fuelsvg.id_box("#needlepoint").center();
-    fuel_needle->set_needle_point(needle_point);
-    fuel_needle->set_needle_center(needle_point - fuel_needle_box.point());
+    fuel_needle->needle_point(needle_point);
+    fuel_needle->needle_center(needle_point - fuel_needle_box.point());
     fuel.add_layer(fuel_needle);
     demo_up_down_animator(fuel_needle, 0, 100, std::chrono::seconds(10));
     grid.add(center(fuel));
@@ -85,8 +85,8 @@ int main(int argc, const char** argv)
     auto custom1_needle = make_shared<NeedleLayer>(custom1svg.id("#needle", custom1_needle_box),
                           0, 100, 8, 150, true);
     auto custom1_needle_point = custom1svg.id_box("#needlepoint").center();
-    custom1_needle->set_needle_point(custom1_needle_point);
-    custom1_needle->set_needle_center(custom1_needle_point - custom1_needle_box.point());
+    custom1_needle->needle_point(custom1_needle_point);
+    custom1_needle->needle_center(custom1_needle_point - custom1_needle_box.point());
     custom1.add_layer(custom1_needle);
     demo_up_down_animator(custom1_needle, 0, 100, std::chrono::seconds(10));
     grid.add(center(custom1));
@@ -96,8 +96,8 @@ int main(int argc, const char** argv)
     airspeed.add_layer(airspeed_background);
     auto airspeed_needle = make_shared<NeedleLayer>(SvgImage("airspeed_needle.svg", SizeF(168, 17) / SizeF(2, 2)),
                            0, 180, 270, 222);
-    airspeed_needle->set_needle_point(PointF(200, 200) / PointF(2, 2));
-    airspeed_needle->set_needle_center(PointF(8, 8.3) / PointF(2, 2));
+    airspeed_needle->needle_point(PointF(200, 200) / PointF(2, 2));
+    airspeed_needle->needle_center(PointF(8, 8.3) / PointF(2, 2));
     airspeed.add_layer(airspeed_needle);
     demo_up_down_animator(airspeed_needle, 0, 180, std::chrono::seconds(7));
     grid.add(center(airspeed));
@@ -107,8 +107,8 @@ int main(int argc, const char** argv)
     speedometer.add_layer(speedometer_background);
     auto speedometer_needle = make_shared<NeedleLayer>(SvgImage("speedometer_needle.svg", SizeF(467, 376) / SizeF(4.6, 4.6)),
                               0, 110, 136.52, 41.80);
-    speedometer_needle->set_needle_point(PointF(913, 908) / PointF(4.6, 4.6) / PointF(2, 2));
-    speedometer_needle->set_needle_center(PointF(85.88, 185.44) / PointF(4.6, 4.6));
+    speedometer_needle->needle_point(PointF(913, 908) / PointF(4.6, 4.6) / PointF(2, 2));
+    speedometer_needle->needle_center(PointF(85.88, 185.44) / PointF(4.6, 4.6));
     speedometer.add_layer(speedometer_needle);
     demo_up_down_animator(speedometer_needle, 0, 110, std::chrono::seconds(12));
     grid.add(center(speedometer));

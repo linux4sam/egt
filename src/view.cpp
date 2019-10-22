@@ -30,7 +30,7 @@ ScrolledView::ScrolledView(const Rect& rect,
       m_horizontal_policy(horizontal_policy),
       m_vertical_policy(vertical_policy)
 {
-    set_name("ScrolledView" + std::to_string(m_widgetid));
+    name("ScrolledView" + std::to_string(m_widgetid));
 
     m_hslider.slider_flags().set({Slider::flag::rectangle_handle,
                                   Slider::flag::consistent_line});
@@ -212,11 +212,11 @@ void ScrolledView::resize_slider()
     if (hscrollable())
     {
         auto b = box();
-        b.set_y(b.y() + b.height() - m_slider_dim);
-        b.set_height(m_slider_dim);
+        b.y(b.y() + b.height() - m_slider_dim);
+        b.height(m_slider_dim);
 
         if (vscrollable())
-            b.set_width(b.width() - m_slider_dim);
+            b.width(b.width() - m_slider_dim);
 
         m_hslider.move(b.point() - point());
         m_hslider.resize(b.size());
@@ -225,11 +225,11 @@ void ScrolledView::resize_slider()
     if (vscrollable())
     {
         auto b = box();
-        b.set_x(b.x() + b.width() - m_slider_dim);
-        b.set_width(m_slider_dim);
+        b.x(b.x() + b.width() - m_slider_dim);
+        b.width(m_slider_dim);
 
         if (hscrollable())
-            b.set_height(b.height() - m_slider_dim);
+            b.height(b.height() - m_slider_dim);
 
         m_vslider.move(b.point() - point());
         m_vslider.resize(b.size());
@@ -246,22 +246,22 @@ Rect ScrolledView::super_rect() const
     return result;
 }
 
-void ScrolledView::set_offset(Point offset)
+void ScrolledView::offset(Point offset)
 {
     if (hscrollable() || vscrollable())
     {
         auto super = super_rect();
-        auto offset_max = Point(super.width() - content_area().width(),
-                                super.height() - content_area().height());
+        auto offmax = Point(super.width() - content_area().width(),
+                            super.height() - content_area().height());
         if (offset.x() > 0)
-            offset.set_x(0);
-        else if (-offset.x() > offset_max.x())
-            offset.set_x(-offset_max.x());
+            offset.x(0);
+        else if (-offset.x() > offmax.x())
+            offset.x(-offmax.x());
 
         if (offset.y() > 0)
-            offset.set_y(0);
-        else if (-offset.y() > offset_max.y())
-            offset.set_y(-offset_max.y());
+            offset.y(0);
+        else if (-offset.y() > offmax.y())
+            offset.y(-offmax.y());
 
         if (detail::change_if_diff<>(m_offset, offset))
         {
@@ -275,17 +275,17 @@ void ScrolledView::set_offset(Point offset)
 void ScrolledView::update_sliders()
 {
     auto super = super_rect();
-    auto offset_max = Point(super.width() - content_area().width(),
-                            super.height() - content_area().height());
+    auto offmax = Point(super.width() - content_area().width(),
+                        super.height() - content_area().height());
 
     auto hslider_value =
-        egt::detail::normalize<float>(std::abs(m_offset.x()), 0, offset_max.x(), 0, 100);
-    if (!detail::float_compare(m_hslider.set_value(hslider_value), hslider_value))
+        egt::detail::normalize<float>(std::abs(m_offset.x()), 0, offmax.x(), 0, 100);
+    if (!detail::float_compare(m_hslider.value(hslider_value), hslider_value))
         damage();
 
     auto vslider_value =
-        egt::detail::normalize<float>(std::abs(m_offset.y()), 0, offset_max.y(), 0, 100);
-    if (!detail::float_compare(m_vslider.set_value(vslider_value), vslider_value))
+        egt::detail::normalize<float>(std::abs(m_offset.y()), 0, offmax.y(), 0, 100);
+    if (!detail::float_compare(m_vslider.value(vslider_value), vslider_value))
         damage();
 }
 
@@ -302,7 +302,7 @@ void ScrolledView::handle(Event& event)
     {
         auto diff = event.pointer().point -
                     event.pointer().drag_start;
-        set_offset(m_start_offset + Point(diff.x(), diff.y()));
+        offset(m_start_offset + Point(diff.x(), diff.y()));
         break;
     }
     default:

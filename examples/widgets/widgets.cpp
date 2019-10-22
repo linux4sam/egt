@@ -37,20 +37,20 @@ struct ButtonPage : public NotebookTab
 
         auto imagebutton1 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton1));
-        imagebutton1->set_text_align(alignmask::center | alignmask::left);
+        imagebutton1->text_align(alignmask::center | alignmask::left);
 
         auto imagebutton2 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton2));
-        imagebutton2->set_text_align(alignmask::center | alignmask::right);
+        imagebutton2->text_align(alignmask::center | alignmask::right);
 
         auto imagebutton3 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton3));
-        imagebutton3->set_text_align(alignmask::center | alignmask::top);
+        imagebutton3->text_align(alignmask::center | alignmask::top);
 
         auto imagebutton4 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
         grid0->add(expand(imagebutton4));
-        imagebutton4->set_text_align(alignmask::center | alignmask::bottom);
-        imagebutton4->set_image_align(alignmask::right);
+        imagebutton4->text_align(alignmask::center | alignmask::bottom);
+        imagebutton4->image_align(alignmask::right);
 
         auto imagebutton5 = make_shared<ImageButton>(Image("@calculator.png"));
         grid0->add(expand(imagebutton5));
@@ -68,11 +68,11 @@ struct CheckBoxPage : public NotebookTab
         add(expand(grid0));
 
         auto toggle1 = std::make_shared<ToggleBox>();
-        toggle1->set_toggle_text("Off", "On");
+        toggle1->toggle_text("Off", "On");
         grid0->add(expand(toggle1));
 
         auto toggle2 = std::make_shared<ToggleBox>();
-        toggle2->set_checked(true);
+        toggle2->checked(true);
         grid0->add(expand(toggle2));
 
         auto toggle3 = std::make_shared<ToggleBox>();
@@ -104,7 +104,7 @@ struct CheckBoxPage : public NotebookTab
 
         auto radiobox2 = std::make_shared<RadioBox>("radiobox 2");
         grid0->add(expand(radiobox2));
-        radiobox2->set_checked(true);
+        radiobox2->checked(true);
 
         auto radiobox3 = std::make_shared<RadioBox>("Disabled");
         grid0->add(expand(radiobox3));
@@ -148,32 +148,32 @@ struct LabelPage : public NotebookTab
 
         auto imagelabel0 = std::make_shared<ImageLabel>(Image("@lock.png"), "Lock");
         grid0->add(expand(imagelabel0));
-        imagelabel0->set_image_align(alignmask::top);
-        imagelabel0->set_text_align(alignmask::center);
+        imagelabel0->image_align(alignmask::top);
+        imagelabel0->text_align(alignmask::center);
 
         auto imagelabel1 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
         grid0->add(expand(imagelabel1));
-        imagelabel1->set_text_align(alignmask::center);
+        imagelabel1->text_align(alignmask::center);
 
         auto imagelabel2 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
         grid0->add(expand(imagelabel2));
-        imagelabel2->set_text_align(alignmask::center | alignmask::right);
-        imagelabel2->set_image_align(alignmask::right);
+        imagelabel2->text_align(alignmask::center | alignmask::right);
+        imagelabel2->image_align(alignmask::right);
 
         auto imagelabel3 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
         grid0->add(expand(imagelabel3));
-        imagelabel3->set_text_align(alignmask::center | alignmask::top);
-        imagelabel3->set_image_align(alignmask::bottom);
+        imagelabel3->text_align(alignmask::center | alignmask::top);
+        imagelabel3->image_align(alignmask::bottom);
 
         auto imagelabel4 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
-        imagelabel4->set_boxtype(Theme::boxtype::fill);
-        imagelabel4->set_border(1);
+        imagelabel4->boxtype(Theme::boxtype::fill);
+        imagelabel4->border(1);
         grid0->add(expand(imagelabel4));
-        imagelabel4->set_text_align(alignmask::center | alignmask::bottom);
+        imagelabel4->text_align(alignmask::center | alignmask::bottom);
 
         auto imagelabel5 = std::make_shared<ImageLabel>(Image("@camera.png"));
-        imagelabel5->set_boxtype(Theme::boxtype::fill);
-        imagelabel5->set_border(1);
+        imagelabel5->boxtype(Theme::boxtype::fill);
+        imagelabel5->border(1);
         grid0->add(expand(imagelabel5));
     }
 };
@@ -196,18 +196,18 @@ struct TextPage : public NotebookTab
         grid0->add(expand(text2));
 
         auto text3 = std::make_shared<TextBox>("right aligned text");
-        text3->set_boxtype(Theme::boxtype::fill | Theme::boxtype::border_bottom);
-        text3->set_text_align(alignmask::right);
+        text3->boxtype(Theme::boxtype::fill | Theme::boxtype::border_bottom);
+        text3->text_align(alignmask::right);
         grid0->add(expand(text3));
 
         auto text4 = std::make_shared<TextBox>("text 4");
-        text4->set_boxtype(Theme::boxtype::fill | Theme::boxtype::border_bottom);
+        text4->boxtype(Theme::boxtype::fill | Theme::boxtype::border_bottom);
         text4->disable();
         grid0->add(expand(text4));
 
         auto text5 = std::make_shared<TextBox>("all characters allowed");
         text5->add_validator_function([](std::string s) { return true; });
-        text5->set_input_validation_enabled(true);
+        text5->input_validation_enabled(true);
         grid0->add(expand(text5));
 
         auto text6 = std::make_shared<TextBox>("abc123 only");
@@ -215,7 +215,7 @@ struct TextPage : public NotebookTab
         {
             return std::regex_match(s, regex("[abc123]*"));
         });
-        text6->set_input_validation_enabled(true);
+        text6->input_validation_enabled(true);
         grid0->add(expand(text6));
 
         auto text7 = std::make_shared<TextBox>(
@@ -224,7 +224,7 @@ struct TextPage : public NotebookTab
                          " graphical applications for Linux.  EGT provides modern and complete GUI"
                          " functionality, look-and-feel, and performance.\n\nThis multi-line TextBox fully"
                          " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193", Rect());
-        text7->set_selection(4, 25);
+        text7->selection(4, 25);
         text7->text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
         grid1->add(expand(text7));
     }
@@ -234,10 +234,10 @@ template<class T>
 static unique_ptr<AnimationSequence> demo_up_down_animator(std::shared_ptr<T> widget)
 {
     auto animationup = std::make_shared<PropertyAnimator>(0, 100, std::chrono::seconds(5), easing_circular_easein);
-    animationup->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+    animationup->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
 
     auto animationdown = std::make_shared<PropertyAnimator>(100, 0, std::chrono::seconds(5), easing_circular_easeout);
-    animationdown->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+    animationdown->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
 
     auto sequence = detail::make_unique<AnimationSequence>(true);
     sequence->add(animationup);
@@ -260,7 +260,7 @@ struct ProgressPage : public NotebookTab
         grid0->add(expand(progressbar));
 
         auto progressbar1 = std::make_shared<ProgressBar>();
-        progressbar1->set_show_label(false);
+        progressbar1->show_label(false);
         grid0->add(expand(progressbar1));
 
         m_animators.push_back(demo_up_down_animator(spinprogress));
@@ -279,26 +279,26 @@ struct SliderPage : public NotebookTab
         add(expand(hsizer1));
 
         auto slider1 = std::make_shared<Slider>(Rect(0, 0, 200, 80));
-        slider1->set_value(50);
+        slider1->value(50);
         hsizer1->add(slider1);
 
         auto slider2 = std::make_shared<Slider>(Rect(0, 0, 80, 200), 0, 100, 0, orientation::vertical);
-        slider2->set_value(75);
+        slider2->value(75);
         hsizer1->add(slider2);
 
         auto slider3 = std::make_shared<Slider>(Rect(0, 0, 200, 80));
-        slider3->set_value(50);
+        slider3->value(50);
         slider3->slider_flags().set({Slider::flag::round_handle, Slider::flag::show_label});
         hsizer1->add(slider3);
 
         auto slider4 = std::make_shared<Slider>(Rect(0, 0, 80, 200), 0, 100, 0, orientation::vertical);
-        slider4->set_value(75);
+        slider4->value(75);
         slider4->slider_flags().set(Slider::flag::round_handle);
         slider4->disable();
         hsizer1->add(slider4);
 
         auto slider5 = std::make_shared<Slider>(Rect(0, 0, 80, 200), 100, 200, 150, orientation::vertical);
-        slider5->set_value(180);
+        slider5->value(180);
         slider5->slider_flags().set({Slider::flag::square_handle, Slider::flag::show_labels});
         hsizer1->add(slider5);
 
@@ -316,7 +316,7 @@ struct MeterPage : public NotebookTab
         add(expand(grid0));
 
         auto lp1 = std::make_shared<LevelMeter>();
-        lp1->set_num_bars(10);
+        lp1->num_bars(10);
         grid0->add(expand(lp1));
 
         auto am1 = std::make_shared<AnalogMeter>();
@@ -329,7 +329,7 @@ struct MeterPage : public NotebookTab
         r1->add(range0, Palette::grey, 10);
         auto range1 = std::make_shared<RangeValue<int>>(0, 100, 0);
         r1->add(range1, Palette::blue, 5, Radial::flag::text_value);
-        r1->set_readonly(true);
+        r1->readonly(true);
         grid0->add(expand(r1));
 
         m_animators.push_back(demo_up_down_animator(lp1));
@@ -353,11 +353,11 @@ struct ComboPage : public NotebookTab
             for (auto x = 0; x < 5; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo1 = std::make_shared<ComboBox>(combo_items);
-            combo1->set_margin(10);
+            combo1->margin(10);
             vsizer->add(combo1);
 
             auto combo2 = std::make_shared<ComboBox>(combo_items);
-            combo2->set_margin(10);
+            combo2->margin(10);
             combo2->disable();
             vsizer->add(combo2);
         }
@@ -367,7 +367,7 @@ struct ComboPage : public NotebookTab
             for (auto x = 0; x < 25; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo3 = std::make_shared<ComboBox>(combo_items);
-            combo3->set_margin(10);
+            combo3->margin(10);
             vsizer->add(combo3);
         }
     }
@@ -378,13 +378,13 @@ struct ListPage : public NotebookTab
     ListPage()
     {
         auto hsizer1 = std::make_shared<BoxSizer>(orientation::horizontal, justification::justify);
-        hsizer1->set_padding(20);
+        hsizer1->padding(20);
         add(expand(hsizer1));
 
         auto list0 = std::make_shared<ListBox>(Rect(0, 0, 200, 0));
         for (auto x = 0; x < 25; x++)
             list0->add_item(std::make_shared<StringItem>("item " + std::to_string(x)));
-        list0->set_align(alignmask::expand_vertical);
+        list0->align(alignmask::expand_vertical);
         hsizer1->add(list0);
 
         auto list1 = std::make_shared<ListBox>(Rect(0, 0, 200, 300));
@@ -396,7 +396,7 @@ struct ListPage : public NotebookTab
         list2->add_item(std::make_shared<StringItem>("Help", Image("@help.png")));
         list2->add_item(std::make_shared<StringItem>("Info", Image("@info.png")));
         list2->add_item(std::make_shared<StringItem>("Warning", Image("@warning.png")));
-        list2->set_height((list2->border() * 2) + (40 * list2->item_count()));
+        list2->height((list2->border() * 2) + (40 * list2->item_count()));
         hsizer1->add(list2);
     }
 };
@@ -439,17 +439,17 @@ struct ScrollwheelPage : public NotebookTab
 
         scrollwheel_day->on_event([label_day, scrollwheel_day](Event&)
         {
-            label_day->set_text(scrollwheel_day->value());
+            label_day->text(scrollwheel_day->value());
         }, {eventid::property_changed});
 
         scrollwheel_month->on_event([label_month, scrollwheel_month](Event&)
         {
-            label_month->set_text(scrollwheel_month->value());
+            label_month->text(scrollwheel_month->value());
         }, {eventid::property_changed});
 
         scrollwheel_year->on_event([label_year, scrollwheel_year](Event&)
         {
-            label_year->set_text(scrollwheel_year->value());
+            label_year->text(scrollwheel_year->value());
         }, {eventid::property_changed});
 
         hsizer1->add(scrollwheel_day);
@@ -460,7 +460,7 @@ struct ScrollwheelPage : public NotebookTab
         hsizer1->add(label_month);
         hsizer1->add(label_year);
 
-        scrollwheel_month->set_selected(4);
+        scrollwheel_month->selected(4);
     }
 };
 
@@ -469,8 +469,8 @@ struct FormPage : public NotebookTab
     FormPage()
     {
         auto form = make_shared<egt::experimental::Form>("Information");
-        form->set_align(alignmask::expand_vertical);
-        form->set_horizontal_ratio(50);
+        form->align(alignmask::expand_vertical);
+        form->horizontal_ratio(50);
         add(form);
 
         form->add_group("Name");
@@ -479,7 +479,7 @@ struct FormPage : public NotebookTab
         form->add_group("Settings");
         form->add_option("Admin", make_shared<CheckBox>());
         auto toggle1 = std::make_shared<ToggleBox>();
-        toggle1->set_toggle_text("On", "Off");
+        toggle1->toggle_text("On", "Off");
         form->add_option("Active", toggle1);
         form->add_option(make_shared<Button>("Save"));
     }
@@ -493,20 +493,20 @@ struct ShapesPage : public NotebookTab
         add(expand(hsizer1));
 
         auto circle = std::make_shared<CircleWidget>(Circle(Point(), 50));
-        circle->set_margin(10);
+        circle->margin(10);
         hsizer1->add(circle);
 
         auto hline = std::make_shared<LineWidget>(Size(100, 100));
-        hline->set_margin(10);
+        hline->margin(10);
         hsizer1->add(hline);
 
         auto vline = std::make_shared<LineWidget>(Size(100, 100));
-        vline->set_margin(10);
-        vline->set_horizontal(false);
+        vline->margin(10);
+        vline->horizontal(false);
         hsizer1->add(vline);
 
         auto rect = std::make_shared<RectangleWidget>(Size(100, 100));
-        rect->set_margin(10);
+        rect->margin(10);
         hsizer1->add(rect);
     }
 };
@@ -524,7 +524,7 @@ int main(int argc, const char** argv)
     vsizer.add(expand_horizontal(frame));
 
     auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
-    logo->set_align(alignmask::center);
+    logo->align(alignmask::center);
     frame->add(logo);
 
     vector<std::pair<std::string, std::function<std::unique_ptr<Theme>()>>> combo_items =
@@ -541,8 +541,8 @@ int main(int argc, const char** argv)
     auto combo = make_shared<ComboBox>();
     for (auto& i : combo_items)
         combo->add_item(i.first);
-    combo->set_align(alignmask::center_vertical | alignmask::right);
-    combo->set_margin(5);
+    combo->align(alignmask::center_vertical | alignmask::right);
+    combo->margin(5);
     frame->add(combo);
 
     combo->on_event([&combo_items, combo, &win](Event&)
@@ -552,7 +552,7 @@ int main(int argc, const char** argv)
         {
             if (s == i.first)
             {
-                set_global_theme(i.second());
+                global_theme(i.second());
                 break;
             }
         }
@@ -596,7 +596,7 @@ int main(int argc, const char** argv)
 
     list->on_event([&notebook, &list](Event&)
     {
-        notebook->set_selected(list->selected());
+        notebook->selected(list->selected());
     }, {eventid::property_changed});
 
     auto default_keyboard = make_shared<VirtualKeyboard>();

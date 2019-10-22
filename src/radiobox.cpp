@@ -21,11 +21,11 @@ RadioBox::RadioBox(const std::string& text,
                    const Rect& rect) noexcept
     : Button(text, rect)
 {
-    set_name("RadioBox" + std::to_string(m_widgetid));
+    name("RadioBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::none);
-    set_padding(5);
-    set_text_align(alignmask::left | alignmask::center);
+    boxtype(Theme::boxtype::none);
+    padding(5);
+    text_align(alignmask::left | alignmask::center);
 
     flags().set(Widget::flag::grab_mouse);
 }
@@ -45,7 +45,7 @@ void RadioBox::handle(Event& event)
     switch (event.id())
     {
     case eventid::pointer_click:
-        set_checked(!checked());
+        checked(!checked());
         break;
     default:
         break;
@@ -85,7 +85,7 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
     painter.draw(Circle(handle.center(),
                         (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2.));
     painter.set(widget.color(Palette::ColorId::button_fg).color());
-    painter.set_line_width(widget.theme().default_border());
+    painter.line_width(widget.theme().default_border());
     painter.stroke();
 
     if (widget.checked())

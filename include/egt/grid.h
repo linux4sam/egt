@@ -51,7 +51,7 @@ public:
 
     /**
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::set_border().
+     * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         default_dim_type border = 0) noexcept;
@@ -59,7 +59,7 @@ public:
     /**
      * @param[in] rect Rectangle for the widget.
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::set_border().
+     * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(const Rect& rect, const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         default_dim_type border = 0) noexcept;
@@ -68,7 +68,7 @@ public:
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the widget.
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::set_border().
+     * @param[in] border Border width. @see Widget::border().
      */
     StaticGrid(Frame& parent, const Rect& rect,
                const std::tuple<int, int>& size = std::make_tuple(1, 1),
@@ -77,7 +77,7 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::set_border().
+     * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(Frame& parent, const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         default_dim_type border = 0) noexcept;
@@ -225,7 +225,7 @@ public:
      * @param[in] column The column to select.
      * @param[in] row The row to select.
      */
-    virtual void set_selected(int column, int row);
+    virtual void selected(int column, int row);
 
     virtual ~SelectableGrid() noexcept = default;
 

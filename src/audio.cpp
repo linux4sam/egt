@@ -35,7 +35,7 @@ struct AudioPlayerImpl
     /**
      * Set the current state of the stream.
      */
-    bool set_state(AudioPlayer* player, GstState state)
+    bool state(AudioPlayer* player, GstState state)
     {
         GstStateChangeReturn ret;
 
@@ -181,7 +181,7 @@ AudioPlayer::AudioPlayer()
 AudioPlayer::AudioPlayer(const std::string& uri)
     : AudioPlayer()
 {
-    set_media(uri);
+    media(uri);
 }
 
 void AudioPlayer::destroyPipeline()
@@ -232,28 +232,28 @@ bool AudioPlayer::play(bool mute, int volume)
     detail::ignoreparam(mute);
     detail::ignoreparam(volume);
 
-    m_impl->set_state(this, GST_STATE_PLAYING);
+    m_impl->state(this, GST_STATE_PLAYING);
     return false;
 }
 
 bool AudioPlayer::unpause()
 {
-    m_impl->set_state(this, GST_STATE_PLAYING);
+    m_impl->state(this, GST_STATE_PLAYING);
     return false;
 }
 
 bool AudioPlayer::pause()
 {
-    m_impl->set_state(this, GST_STATE_PAUSED);
+    m_impl->state(this, GST_STATE_PAUSED);
     return false;
 }
 
 bool AudioPlayer::null()
 {
-    return m_impl->set_state(this, GST_STATE_NULL);
+    return m_impl->state(this, GST_STATE_NULL);
 }
 
-bool AudioPlayer::set_media(const std::string& uri)
+bool AudioPlayer::media(const std::string& uri)
 {
     std::string u = detail::abspath(uri);
     if (detail::change_if_diff(m_impl->m_filename, u))
@@ -269,7 +269,7 @@ bool AudioPlayer::set_media(const std::string& uri)
     return true;
 }
 
-bool AudioPlayer::set_volume(int volume)
+bool AudioPlayer::volume(int volume)
 {
     if (!m_impl->m_volume)
         return false;
@@ -295,7 +295,7 @@ int AudioPlayer::volume() const
     return volume * 100.0;
 }
 
-bool AudioPlayer::set_mute(bool mute)
+bool AudioPlayer::mute(bool mute)
 {
     if (!m_impl->m_volume)
         return false;

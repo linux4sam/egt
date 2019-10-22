@@ -96,7 +96,7 @@ public:
     /**
      * Set if asynchronous buffer flips are used.
      */
-    inline void set_async_flip(bool async)
+    inline void async_flip(bool async)
     {
         m_async = async;
     }
@@ -122,7 +122,7 @@ public:
      *
      * @note Not all screens support this capability.
      */
-    virtual void set_brightness(size_t brightness);
+    virtual void brightness(size_t brightness);
 
     /**
      * Configure low fidelity options.

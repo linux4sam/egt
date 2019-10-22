@@ -122,13 +122,13 @@ public:
         /**
          * Set the key color.
          */
-        void set_color(Palette::ColorId id, const Palette::pattern_type& color,
-                       Palette::GroupId group = Palette::GroupId::normal);
+        void color(Palette::ColorId id, const Palette::pattern_type& color,
+                   Palette::GroupId group = Palette::GroupId::normal);
 
         /*
          * Set the key font.
          */
-        void set_font(const Font& font);
+        void font(const Font& font);
 
     protected:
         /**
@@ -190,7 +190,7 @@ public:
     /**
      * Set the space between keys.
      */
-    void set_key_space(unsigned key_space);
+    void key_space(unsigned key_space);
 
 protected:
     /**
@@ -218,17 +218,17 @@ protected:
     /**
      * Configure the key to select the appropriate panel on a click event.
      */
-    void set_key_link(const std::shared_ptr<Key>& k);
+    void key_link(const std::shared_ptr<Key>& k);
 
     /**
      * Configure the Event data to be dispatched on a click event.
      */
-    void set_key_input_value(const std::shared_ptr<Key>& k);
+    void key_input_value(const std::shared_ptr<Key>& k);
 
     /**
      * Create the multichoice panel and configure the keys.
      */
-    void set_key_multichoice(const std::shared_ptr<Key>& k);
+    void key_multichoice(const std::shared_ptr<Key>& k);
 
     /**
      * The popup that displays the multichoice panel.

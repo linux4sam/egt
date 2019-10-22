@@ -18,8 +18,8 @@ StaticGrid::StaticGrid(const Rect& rect, const std::tuple<int, int>& size,
                        default_dim_type border) noexcept
     : Frame(rect)
 {
-    set_name("StaticGrid" + std::to_string(m_widgetid));
-    set_border(border);
+    name("StaticGrid" + std::to_string(m_widgetid));
+    this->border(border);
 
     reallocate(size);
 }
@@ -97,7 +97,7 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
         const auto b = content_area();
 
         painter.set(color(Palette::ColorId::border).color());
-        painter.set_line_width(border());
+        painter.line_width(border());
 
         const auto columns = m_cells.size();
         for (size_t column = 0; column < columns; column++)
@@ -274,7 +274,7 @@ void StaticGrid::reposition()
                                                       widget->align());
 
                 // re-position/resize widget
-                widget->set_box(target);
+                widget->box(target);
 
                 if (widget->flags().is_set(Widget::flag::frame))
                 {
@@ -338,7 +338,7 @@ void SelectableGrid::handle(Event& event)
 
                 if (bounding.intersect(pos))
                 {
-                    set_selected(column, row);
+                    selected(column, row);
                     break;
                 }
             }
@@ -354,7 +354,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
         auto line_width = border() / 2;
         if (line_width <= 0)
             line_width = border();
-        painter.set_line_width(line_width);
+        painter.line_width(line_width);
 
         size_t column = m_selected_column;
         size_t row = m_selected_row;
@@ -373,7 +373,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
     Frame::draw(painter, rect);
 }
 
-void SelectableGrid::set_selected(int column, int row)
+void SelectableGrid::selected(int column, int row)
 {
     const auto columns = m_cells.size();
     if (column >= static_cast<ssize_t>(columns))

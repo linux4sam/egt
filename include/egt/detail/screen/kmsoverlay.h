@@ -40,10 +40,10 @@ public:
     KMSOverlay(const Size& size, pixel_format format, windowhint hint);
 
     virtual void resize(const Size& size);
-    virtual void set_position(const DisplayPoint& point);
-    virtual void set_scale(float scalex, float scaley);
-    virtual void set_pan_size(const Size& size);
-    virtual void set_pan_pos(const Point& point);
+    virtual void position(const DisplayPoint& point);
+    virtual void scale(float scalex, float scaley);
+    virtual void pan_size(const Size& size);
+    virtual void pan_pos(const Point& point);
     virtual float scale_x() const;
     virtual float scale_y() const;
 

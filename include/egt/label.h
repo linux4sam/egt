@@ -78,7 +78,9 @@ public:
           const Rect& rect,
           alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
-    virtual void set_text(const std::string& text) override;
+    using TextWidget::text;
+
+    virtual void text(const std::string& text) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -90,7 +92,8 @@ public:
 
 protected:
 
-    virtual void set_parent(Frame* parent) override;
+    using TextWidget::parent;
+    virtual void parent(Frame* parent) override;
 };
 
 /**
@@ -174,7 +177,7 @@ public:
      *
      * @param[in] image The new image to use.
      */
-    virtual void set_image(const Image& image);
+    virtual void image(const Image& image);
 
     /**
      * Scale the image.
@@ -222,7 +225,7 @@ public:
      *
      * @param[in] align Only left, right, top, and bottom alignments are supported.
      */
-    virtual void set_image_align(alignmask align)
+    virtual void image_align(alignmask align)
     {
         if (detail::change_if_diff<>(m_image_align, align))
             damage();
@@ -238,7 +241,7 @@ public:
      *
      * @param[in] value When true, the label text is shown.
      */
-    virtual void set_show_label(bool value);
+    virtual void show_label(bool value);
 
     /**
     * Get the show label state.
@@ -249,7 +252,7 @@ public:
 
 protected:
 
-    void do_set_image(const Image& image);
+    void do_image(const Image& image);
 
     /**
      * The image.

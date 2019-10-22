@@ -15,16 +15,16 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    win.set_border(2);
-    win.set_padding(10);
-    win.set_margin(10);
+    win.border(2);
+    win.padding(10);
+    win.margin(10);
 
     BoxSizer vsizer(win, orientation::vertical);
     expand(vsizer);
 
     BoxSizer sizer0(vsizer, orientation::horizontal);
     expand_horizontal(sizer0);
-    sizer0.set_margin(10);
+    sizer0.margin(10);
 
     for (auto i = 0; i < 4; ++i)
     {

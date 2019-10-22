@@ -29,7 +29,7 @@ struct ColorMapWidget : public Widget
         for (auto x = 0.0; x <= 1.0; x += inc)
         {
             RectF seg(b.x(), b.y(), b.width(), b.height());
-            seg.set_x(x * seg.width());
+            seg.x(x * seg.width());
             painter.set(m_map.interp(x));
             painter.draw(seg);
             painter.fill();

@@ -74,7 +74,7 @@ public:
 
     virtual size_t brightness() const override;
 
-    virtual void set_brightness(size_t brightness) override;
+    virtual void brightness(size_t brightness) override;
 
     virtual ~KMSScreen();
 

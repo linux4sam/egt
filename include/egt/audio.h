@@ -53,7 +53,7 @@ public:
      * @param uri file URI
      * @return true if success
      */
-    virtual bool set_media(const std::string& uri);
+    virtual bool media(const std::string& uri);
 
     /**
      * Send pipeline to play state
@@ -79,7 +79,7 @@ public:
      * @param volume desired volume in the range of 0 (no sound) to 100 (normal sound)
      * @return true if success
      */
-    virtual bool set_volume(int volume);
+    virtual bool volume(int volume);
 
     /**
      * Get the volume.
@@ -92,7 +92,7 @@ public:
      * @param mute true if the audio is to be muted
      * @return true if success
      */
-    virtual bool set_mute(bool mute);
+    virtual bool mute(bool mute);
 
     /**
      * Get the current position of the audio stream.

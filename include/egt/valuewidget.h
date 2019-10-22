@@ -48,7 +48,7 @@ public:
      *
      * @return The old value.
      */
-    virtual T set_value(T v)
+    virtual T value(T v)
     {
         T orig = m_value;
         if (detail::change_if_diff<T>(m_value, v))
@@ -120,7 +120,7 @@ public:
      * @param[in] value Value to set.
      * @return The old value.
      */
-    virtual T set_value(T value)
+    virtual T value(T value)
     {
         T orig = m_value;
 
@@ -156,7 +156,7 @@ public:
      *
      * @param[in] v The min value.
      */
-    virtual void set_min(T v)
+    virtual void min(T v)
     {
         if (detail::change_if_diff<>(m_min, v))
             damage();
@@ -169,7 +169,7 @@ public:
      *
      * @param[in] v The max value.
      */
-    virtual void set_max(T v)
+    virtual void max(T v)
     {
         if (detail::change_if_diff<>(m_max, v))
             damage();

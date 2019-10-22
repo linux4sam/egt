@@ -62,8 +62,8 @@ public:
     explicit LineWidget(const Rect& rect = {})
         : Widget(rect)
     {
-        set_name("LineWidget" + std::to_string(m_widgetid));
-        set_boxtype(Theme::boxtype::none);
+        name("LineWidget" + std::to_string(m_widgetid));
+        boxtype(Theme::boxtype::none);
     }
 
     explicit LineWidget(Frame& parent, const Rect& rect = {})
@@ -76,7 +76,7 @@ public:
 
     inline bool horizontal() const { return m_horizontal; }
 
-    inline void set_horizontal(bool horizontal)
+    inline void horizontal(bool horizontal)
     {
         if (detail::change_if_diff<>(m_horizontal, horizontal))
             damage();
@@ -98,8 +98,8 @@ public:
     explicit RectangleWidget(const Rect& rect = {})
         : Widget(rect)
     {
-        set_name("RectangleWidget" + std::to_string(m_widgetid));
-        set_boxtype(Theme::boxtype::fill);
+        name("RectangleWidget" + std::to_string(m_widgetid));
+        boxtype(Theme::boxtype::fill);
     }
 
     explicit RectangleWidget(Frame& parent, const Rect& rect = {})

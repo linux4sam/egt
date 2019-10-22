@@ -102,7 +102,9 @@ public:
 
     virtual void handle(Event& event) override;
 
-    virtual void set_text(const std::string& text) override;
+    using TextWidget::text;
+
+    virtual void text(const std::string& text) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -126,7 +128,9 @@ public:
      */
     static void default_draw(Button& widget, Painter& painter, const Rect& rect);
 
-    virtual void set_checked(bool value) override;
+    using Widget::checked;
+
+    virtual void checked(bool value) override;
 
     virtual Size min_size_hint() const override;
 
@@ -134,7 +138,7 @@ public:
 
 protected:
 
-    virtual void set_parent(Frame* parent) override;
+    virtual void parent(Frame* parent) override;
 
 private:
 
@@ -223,7 +227,7 @@ public:
      *
      * @param[in] image The new image to use.
      */
-    virtual void set_image(const Image& image);
+    virtual void image(const Image& image);
 
     /**
      * Scale the image.
@@ -272,7 +276,7 @@ public:
      *
      * @param[in] align Only left, right, top, and bottom alignments are supported.
      */
-    virtual void set_image_align(alignmask align)
+    virtual void image_align(alignmask align)
     {
         if (detail::change_if_diff<>(m_image_align, align))
             damage();
@@ -288,7 +292,7 @@ public:
      *
      * @param[in] value When true, the label text is shown.
      */
-    virtual void set_show_label(bool value);
+    virtual void show_label(bool value);
 
     /**
      * Get the show label state.
@@ -299,7 +303,7 @@ public:
 
 protected:
 
-    void do_set_image(const Image& image);
+    void do_image(const Image& image);
 
     /**
      * The image.
@@ -333,7 +337,7 @@ class CheckButton : public Button
         switch (event.id())
         {
         case eventid::pointer_click:
-            set_checked(!checked());
+            checked(!checked());
         default:
             break;
         }

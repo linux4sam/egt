@@ -289,7 +289,7 @@ struct EGT_API Event : public EventArg
         return m_id;
     }
 
-    inline void set_id(eventid id)
+    inline void id(eventid id)
     {
         m_id = id;
     }

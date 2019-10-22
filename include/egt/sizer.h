@@ -56,7 +56,7 @@ public:
         : m_orient(orient),
           m_justify(justify)
     {
-        set_name("BoxSizer" + std::to_string(m_widgetid));
+        name("BoxSizer" + std::to_string(m_widgetid));
     }
 
     /**
@@ -82,7 +82,7 @@ public:
     /**
      * Set the justify.
      */
-    inline void set_justify(justification justify)
+    inline void justify(justification justify)
     {
         if (detail::change_if_diff<>(m_justify, justify))
             layout();
@@ -96,7 +96,7 @@ public:
     /**
      * Set the orientation.
      */
-    inline void set_orient(orientation orient)
+    inline void orient(orientation orient)
     {
         if (detail::change_if_diff<>(m_orient, orient))
             layout();

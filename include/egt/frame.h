@@ -274,7 +274,7 @@ public:
      */
     inline Rect to_child(Rect rect) const
     {
-        rect.set_point(to_child(rect.point()));
+        rect.point(to_child(rect.point()));
         return rect;
     }
 
@@ -367,7 +367,7 @@ public:
     /**
      * Set the special child draw callback.
      */
-    inline void set_special_child_draw_callback(special_child_draw_callback_t func)
+    inline void special_child_draw_callback(special_child_draw_callback_t func)
     {
         m_special_child_draw_callback = std::move(func);
     }

@@ -22,7 +22,7 @@ class GstAppSinkImpl: public GstDecoderImpl
 public:
     explicit GstAppSinkImpl(VideoWindow& interface, const Size& size);
 
-    virtual bool set_media(const std::string& uri) override;
+    virtual bool media(const std::string& uri) override;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

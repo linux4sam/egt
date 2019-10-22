@@ -94,7 +94,7 @@ public:
     /**
      * Change the strip to the specified id.
      */
-    virtual void set_strip(uint32_t id);
+    virtual void change_strip(uint32_t id);
 
     /**
      * Add a new strip.

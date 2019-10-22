@@ -27,16 +27,16 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
       m_list(std::make_shared<ListBox>()),
       m_parent(parent)
 {
-    set_name("ComboBoxPopup" + std::to_string(m_widgetid));
+    name("ComboBoxPopup" + std::to_string(m_widgetid));
 
-    m_list->set_align(alignmask::expand);
+    m_list->align(alignmask::expand);
 
     add(m_list);
 
     m_list->on_event([this, &parent](Event & event)
     {
         event.stop();
-        parent.set_selected(m_list->selected());
+        parent.selected(m_list->selected());
         hide();
     }, {eventid::property_changed});
 }
@@ -76,7 +76,7 @@ void ComboBoxPopup::show()
     }
 
     if (!m_parent.m_items.empty())
-        m_list->set_selected(m_parent.selected());
+        m_list->selected(m_parent.selected());
 
     smart_pos();
     Popup::show();
@@ -124,11 +124,11 @@ ComboBox::ComboBox(const item_array& items,
       m_items(items),
       m_popup(new detail::ComboBoxPopup(*this))
 {
-    set_name("ComboBox" + std::to_string(m_widgetid));
+    name("ComboBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill_rounded);
-    set_padding(5);
-    set_border(theme().default_border());
+    boxtype(Theme::boxtype::fill_rounded);
+    padding(5);
+    border(theme().default_border());
 
     flags().set(Widget::flag::grab_mouse);
 
@@ -151,14 +151,14 @@ void ComboBox::add_item(const std::string& item)
         m_selected = 0;
 }
 
-void ComboBox::set_parent(Frame* parent)
+void ComboBox::parent(Frame* parent)
 {
-    detail::TextWidget::set_parent(parent);
+    detail::TextWidget::parent(parent);
 
     /// @todo unsafe to be using main_window() here
     main_window()->add(m_popup);
 
-    m_popup->set_special_child_draw_callback(parent->special_child_draw_callback());
+    m_popup->special_child_draw_callback(parent->special_child_draw_callback());
 }
 
 void ComboBox::handle(Event& event)
@@ -182,7 +182,7 @@ void ComboBox::handle(Event& event)
     }
 }
 
-void ComboBox::set_selected(size_t index)
+void ComboBox::selected(size_t index)
 {
     if (m_selected != static_cast<ssize_t>(index))
     {
@@ -246,7 +246,7 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
                  Point(handle.x() + handle.width() / 2., handle.y() + (handle.height() / 3. * 2.)));
     painter.draw(Point(handle.x() + handle.width() / 2., handle.y() + (handle.height() / 3. * 2.)),
                  Point(handle.x() + handle.width(), handle.y() + handle.height() / 3.));
-    painter.set_line_width(widget.theme().default_border());
+    painter.line_width(widget.theme().default_border());
     painter.stroke();
 
     if (widget.selected() >= 0 && widget.selected() < static_cast<ssize_t>(widget.item_count()))

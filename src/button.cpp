@@ -30,9 +30,9 @@ Button::Button(const std::string& text,
                alignmask text_align) noexcept
     : TextWidget(text, rect, text_align)
 {
-    set_name("Button" + std::to_string(m_widgetid));
+    name("Button" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill_rounded);
+    boxtype(Theme::boxtype::fill_rounded);
 
     flags().set(Widget::flag::grab_mouse);
 }
@@ -62,12 +62,12 @@ void Button::handle(Event& event)
     {
     case eventid::raw_pointer_down:
     {
-        set_active(true);
+        active(true);
         break;
     }
     case eventid::raw_pointer_up:
     {
-        set_active(false);
+        active(false);
         break;
     }
     default:
@@ -75,7 +75,7 @@ void Button::handle(Event& event)
     }
 }
 
-void Button::set_text(const std::string& text)
+void Button::text(const std::string& text)
 {
     if (detail::change_if_diff<>(m_text, text))
     {
@@ -103,7 +103,7 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect&)
                       widget.color(Palette::ColorId::button_text).color());
 }
 
-void Button::set_checked(bool value)
+void Button::checked(bool value)
 {
     if (detail::change_if_diff<>(m_checked, value))
     {
@@ -120,9 +120,9 @@ void Button::set_checked(bool value)
     }
 }
 
-void Button::set_parent(Frame* parent)
+void Button::parent(Frame* parent)
 {
-    TextWidget::set_parent(parent);
+    TextWidget::parent(parent);
     layout();
 }
 
@@ -163,11 +163,11 @@ ImageButton::ImageButton(const Image& image,
                          alignmask text_align) noexcept
     : Button(text, rect, text_align)
 {
-    set_name("ImageButton" + std::to_string(m_widgetid));
+    name("ImageButton" + std::to_string(m_widgetid));
 
     if (text.empty())
-        set_image_align(alignmask::center);
-    do_set_image(image);
+        image_align(alignmask::center);
+    do_image(image);
 }
 
 ImageButton::ImageButton(Frame& parent,
@@ -213,7 +213,7 @@ Size ImageButton::min_size_hint() const
     return res;
 }
 
-void ImageButton::do_set_image(const Image& image)
+void ImageButton::do_image(const Image& image)
 {
     if (size().empty() && !image.empty())
         resize(image.size());
@@ -222,9 +222,9 @@ void ImageButton::do_set_image(const Image& image)
     damage();
 }
 
-void ImageButton::set_image(const Image& image)
+void ImageButton::image(const Image& image)
 {
-    do_set_image(image);
+    do_image(image);
 }
 
 void ImageButton::draw(Painter& painter, const Rect& rect)
@@ -279,7 +279,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     }
 }
 
-void ImageButton::set_show_label(bool value)
+void ImageButton::show_label(bool value)
 {
     if (detail::change_if_diff<>(m_show_label, value))
         damage();

@@ -34,7 +34,7 @@ Widget::Widget(const Rect& rect, const Widget::flags_type& flags) noexcept
       m_widget_flags(flags),
       m_palette(detail::make_unique<Palette>())
 {
-    set_name("Widget" + std::to_string(m_widgetid));
+    name("Widget" + std::to_string(m_widgetid));
 }
 
 Widget::Widget(Frame& parent, const Rect& rect, const Widget::flags_type& flags) noexcept
@@ -61,12 +61,12 @@ void Widget::handle(Event& event)
     case eventid::raw_pointer_down:
         if (flags().is_set(Widget::flag::grab_mouse))
         {
-            set_active(true);
+            active(true);
             event.grab(this);
         }
         break;
     case eventid::raw_pointer_up:
-        set_active(false);
+        active(false);
         break;
     default:
         break;
@@ -99,7 +99,7 @@ void Widget::resize(const Size& size)
     if (size != this->size())
     {
         damage();
-        m_box.set_size(size);
+        m_box.size(size);
         damage();
 
         parent_layout();
@@ -118,14 +118,14 @@ void Widget::move(const Point& point)
     if (point != box().point())
     {
         damage();
-        m_box.set_point(point);
+        m_box.point(point);
         damage();
 
         parent_layout();
     }
 }
 
-void Widget::set_box(const Rect& rect)
+void Widget::box(const Rect& rect)
 {
     move(rect.point());
     resize(rect.size());
@@ -151,7 +151,7 @@ void Widget::show()
     invoke_handlers(eventid::show);
 }
 
-void Widget::set_visible(bool value)
+void Widget::visible(bool value)
 {
     if (visible() != value)
     {
@@ -167,7 +167,7 @@ bool Widget::active() const
     return flags().is_set(Widget::flag::active);
 }
 
-void Widget::set_active(bool value)
+void Widget::active(bool value)
 {
     if (flags().is_set(Widget::flag::active) != value)
     {
@@ -179,7 +179,7 @@ void Widget::set_active(bool value)
     }
 }
 
-void Widget::set_readonly(bool value)
+void Widget::readonly(bool value)
 {
     if (flags().is_set(Widget::flag::readonly) != value)
     {
@@ -215,7 +215,7 @@ void Widget::enable()
     flags().clear(Widget::flag::disabled);
 }
 
-void Widget::set_alpha(float alpha)
+void Widget::alpha(float alpha)
 {
     alpha = detail::clamp<>(alpha, 0.f, 1.f);
 
@@ -242,13 +242,13 @@ void Widget::damage(const Rect& rect)
         m_parent->damage_from_child(to_parent(rect));
 }
 
-void Widget::set_palette(const Palette& palette)
+void Widget::palette(const Palette& palette)
 {
     m_palette = detail::make_unique<Palette>(palette);
     damage();
 }
 
-void Widget::reset_palette()
+void Widget::repalette()
 {
     assert(m_palette);
     if (m_palette)
@@ -279,9 +279,9 @@ Palette::pattern_type Widget::color(Palette::ColorId id, Palette::GroupId group)
     return default_palette().color(id, group);
 }
 
-void Widget::set_color(Palette::ColorId id,
-                       const Palette::pattern_type& color,
-                       Palette::GroupId group)
+void Widget::color(Palette::ColorId id,
+                   const Palette::pattern_type& color,
+                   Palette::GroupId group)
 {
     assert(m_palette);
     if (m_palette)
@@ -310,7 +310,7 @@ Screen* Widget::screen() const
     return parent()->screen();
 }
 
-void Widget::set_align(alignmask a)
+void Widget::align(alignmask a)
 {
     if (detail::change_if_diff<>(m_align, a))
         parent_layout();
@@ -392,12 +392,12 @@ void Widget::walk(walk_callback_t callback, int level)
     callback(this, level);
 }
 
-void Widget::set_theme(const Theme& theme)
+void Widget::theme(const Theme& theme)
 {
     m_theme = detail::make_unique<Theme>(theme);
 }
 
-void Widget::reset_theme()
+void Widget::retheme()
 {
     m_theme.reset();
 }
@@ -489,9 +489,9 @@ void Widget::layout()
     {
         auto s = size();
         if (s.width() < min_size_hint().width())
-            s.set_width(min_size_hint().width());
+            s.width(min_size_hint().width());
         if (s.height() < min_size_hint().height())
-            s.set_height(min_size_hint().height());
+            s.height(min_size_hint().height());
         resize(s);
     }
 }
@@ -507,7 +507,7 @@ Widget::~Widget() noexcept
         detail::keyboard_focus(nullptr);
 }
 
-void Widget::set_parent(Frame* parent)
+void Widget::parent(Frame* parent)
 {
     // cannot already have a parent
     assert(!m_parent);

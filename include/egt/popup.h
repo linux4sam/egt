@@ -67,7 +67,7 @@ public:
     {
         if (!modal_window())
         {
-            detail::set_modal_window(this);
+            detail::modal_window(this);
 
             if (center)
                 this->show_centered();
@@ -82,7 +82,7 @@ public:
 
         if (modal_window() == this)
         {
-            detail::set_modal_window(nullptr);
+            detail::modal_window(nullptr);
         }
     }
 

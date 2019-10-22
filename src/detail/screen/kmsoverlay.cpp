@@ -100,7 +100,7 @@ uint32_t KMSOverlay::index()
     return m_index;
 }
 
-void KMSOverlay::set_position(const DisplayPoint& point)
+void KMSOverlay::position(const DisplayPoint& point)
 {
     /*
      * The hardware planes (maybe driver issue) are sensitive to being moved out
@@ -115,18 +115,18 @@ void KMSOverlay::set_position(const DisplayPoint& point)
     plane_set_pos(m_plane.get(), point.x(), point.y());
 }
 
-void KMSOverlay::set_scale(float scalex, float scaley)
+void KMSOverlay::scale(float scalex, float scaley)
 {
     /// This is only supported on HEO planes.
     plane_set_scale_independent(m_plane.get(), scalex, scaley);
 }
 
-void KMSOverlay::set_pan_size(const Size& size)
+void KMSOverlay::pan_size(const Size& size)
 {
     plane_set_pan_size(m_plane.get(), size.width(), size.height());
 }
 
-void KMSOverlay::set_pan_pos(const Point& point)
+void KMSOverlay::pan_pos(const Point& point)
 {
     plane_set_pan_pos(m_plane.get(), point.x(), point.y());
 }

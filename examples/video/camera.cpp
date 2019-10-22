@@ -51,19 +51,19 @@ int main(int argc, const char** argv)
     if (argc == 5)
     {
         dev = std::string(argv[1]);
-        size.set_width(atoi(argv[2]));
-        size.set_height(atoi(argv[3]));
+        size.width(atoi(argv[2]));
+        size.height(atoi(argv[3]));
         if (atoi(argv[4]) <= 10)
             format = static_cast<pixel_format>(atoi(argv[4]));
     }
 
     TopWindow win;
-    win.set_color(Palette::ColorId::bg, Palette::black);
+    win.color(Palette::ColorId::bg, Palette::black);
 
     Label errlabel;
-    errlabel.set_color(Palette::ColorId::label_text, Palette::white);
-    errlabel.set_align(alignmask::expand);
-    errlabel.set_text_align(alignmask::center | alignmask::top);
+    errlabel.color(Palette::ColorId::label_text, Palette::white);
+    errlabel.align(alignmask::expand);
+    errlabel.text_align(alignmask::center | alignmask::top);
     win.add(errlabel);
 
     CameraWindow player(size, dev, format, windowhint::overlay);
@@ -85,9 +85,9 @@ int main(int argc, const char** argv)
         {
             auto msg = player.error_message();
             if (msg.empty())
-                errlabel.set_text("");
+                errlabel.text("");
             else
-                errlabel.set_text("Error:\n" + line_break(msg));
+                errlabel.text("Error:\n" + line_break(msg));
             break;
         }
         case eventid::pointer_drag_start:
@@ -107,16 +107,16 @@ int main(int argc, const char** argv)
     });
 
     Window ctrlwindow(Size(win.width(), 72));
-    ctrlwindow.set_align(alignmask::bottom | alignmask::center);
-    ctrlwindow.set_color(Palette::ColorId::bg, Palette::transparent);
+    ctrlwindow.align(alignmask::bottom | alignmask::center);
+    ctrlwindow.color(Palette::ColorId::bg, Palette::transparent);
     win.add(ctrlwindow);
 
     HorizontalBoxSizer hpos;
-    hpos.set_align(alignmask::center);
+    hpos.align(alignmask::center);
     ctrlwindow.add(hpos);
 
     ImageButton fullscreen(Image(":fullscreen_png"));
-    fullscreen.set_boxtype(Theme::boxtype::none);
+    fullscreen.boxtype(Theme::boxtype::none);
     hpos.add(fullscreen);
 
     const auto wscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
@@ -128,21 +128,21 @@ int main(int argc, const char** argv)
         if (scaled)
         {
             player.move(Point(0, 0));
-            player.set_scale(wscale, hscale);
-            fullscreen.set_image(Image(":fullscreen_exit_png"));
+            player.scale(wscale, hscale);
+            fullscreen.image(Image(":fullscreen_exit_png"));
             scaled = false;
         }
         else
         {
             player.move(Point(240, 120));
-            player.set_scale(1.0, 1.0);
-            fullscreen.set_image(Image(":fullscreen_png"));
+            player.scale(1.0, 1.0);
+            fullscreen.image(Image(":fullscreen_png"));
             scaled = true;
         }
     }, {eventid::pointer_click});
 
     Label cpulabel("CPU: 0%", Size(100, 40));
-    cpulabel.set_color(Palette::ColorId::label_text, Palette::white);
+    cpulabel.color(Palette::ColorId::label_text, Palette::white);
     hpos.add(cpulabel);
 
     egt::experimental::CPUMonitorUsage tools;
@@ -152,7 +152,7 @@ int main(int argc, const char** argv)
         tools.update();
         ostringstream ss;
         ss << "CPU: " << (int)tools.usage(0) << "%";
-        cpulabel.set_text(ss.str());
+        cpulabel.text(ss.str());
     });
     cputimer.start();
 

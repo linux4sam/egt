@@ -111,16 +111,16 @@ public:
     /**
      * Set the position.
      */
-    virtual void set_offset(Point offset);
+    virtual void offset(Point offset);
 
-    inline void set_hoffset(int offset)
+    inline void hoffset(int offset)
     {
-        set_offset(Point(offset, m_offset.y()));
+        this->offset(Point(offset, m_offset.y()));
     }
 
-    inline void set_voffset(int offset)
+    inline void voffset(int offset)
     {
-        set_offset(Point(m_offset.x(), offset));
+        this->offset(Point(m_offset.x(), offset));
     }
 
     /**
@@ -131,7 +131,7 @@ public:
     /**
      * Set the slider dimension.
      */
-    inline void set_slider_dim(default_dim_type dim)
+    inline void slider_dim(default_dim_type dim)
     {
         if (detail::change_if_diff<>(m_slider_dim, dim))
             damage();
@@ -161,10 +161,10 @@ protected:
                         (m_vertical_policy == policy::as_needed && super.height() > content_area().height());
 
         if (super.width() <= content_area().width())
-            m_offset.set_x(0);
+            m_offset.x(0);
 
         if (super.height() <= content_area().height())
-            m_offset.set_y(0);
+            m_offset.y(0);
     }
 
     void update_sliders();

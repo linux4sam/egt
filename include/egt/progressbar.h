@@ -59,7 +59,7 @@ public:
      *
      * @param[in] value When true, the label text is shown.
      */
-    virtual void set_show_label(bool value);
+    virtual void show_label(bool value);
 
     /**
      * Get the show label state.
@@ -118,7 +118,7 @@ public:
     *
     * @param[in] value When true, the label text is shown.
     */
-    virtual void set_show_label(bool value);
+    virtual void show_label(bool value);
 
     /**
      * Get the show label state.
@@ -174,7 +174,7 @@ public:
     /**
      * Set the number of bars to show.
      */
-    virtual void set_num_bars(size_t bars)
+    virtual void num_bars(size_t bars)
     {
         m_num_bars = bars;
     }

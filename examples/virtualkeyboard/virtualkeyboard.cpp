@@ -91,21 +91,21 @@ int main(int argc, const char** argv)
         key_a, key_b, key_c, key_d, key_e, key_f, key_g, key_h, key_i
     };
     for (auto& key : abc_keyboard_row1)
-        key->set_color(Palette::ColorId::button_bg, Palette::red);
+        key->color(Palette::ColorId::button_bg, Palette::red);
 
     vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row2 =
     {
         key_j, key_k, key_l, key_m, key_n, key_o, key_p, key_q, key_r
     };
     for (auto& key : abc_keyboard_row2)
-        key->set_color(Palette::ColorId::button_bg, Palette::green);
+        key->color(Palette::ColorId::button_bg, Palette::green);
 
     vector<shared_ptr<VirtualKeyboard::Key>> abc_keyboard_row3 =
     {
         key_s, key_t, key_u, key_v, key_w, key_x, key_y, key_z
     };
     for (auto& key : abc_keyboard_row3)
-        key->set_color(Palette::ColorId::button_bg, Palette::blue);
+        key->color(Palette::ColorId::button_bg, Palette::blue);
 
     VirtualKeyboard abc_keyboard(
     {
@@ -117,10 +117,10 @@ int main(int argc, const char** argv)
     },
     Rect(Point(), Size(400, 100))
     );
-    abc_keyboard.set_align(alignmask::center);
+    abc_keyboard.align(alignmask::center);
 
     VerticalBoxSizer vbox;
-    vbox.set_align(alignmask::expand);
+    vbox.align(alignmask::expand);
     vbox.add(expand_horizontal(abc_keyboard));
     vbox.add(code_keyboard);
 

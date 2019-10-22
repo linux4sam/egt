@@ -36,7 +36,7 @@ public:
 
     explicit GstDecoderImpl(VideoWindow& interface, const Size& size);
 
-    virtual bool set_media(const std::string& uri) = 0;
+    virtual bool media(const std::string& uri) = 0;
 
     virtual void draw(Painter& painter, const Rect& rect) = 0;
 
@@ -50,7 +50,7 @@ public:
 
     virtual bool playing() const;
 
-    virtual bool set_volume(double volume);
+    virtual bool volume(double volume);
 
     virtual double volume() const;
 

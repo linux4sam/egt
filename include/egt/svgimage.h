@@ -40,7 +40,7 @@ public:
      * @param[in] respath Resource path.
      * @param[in] size Size of the image.
      *
-     * @see SvgImage::set_size() for more information about specifying size.
+     * @see SvgImage::size() for more information about specifying size.
      */
     // cppcheck-suppress noExplicitConstructor
     SvgImage(const std::string& respath, const SizeF& size = {});
@@ -84,7 +84,7 @@ public:
      * If both dimensions are zero, the default size will be loaded from the SVG
      * file.
      */
-    inline void set_size(const SizeF& size)
+    inline void size(const SizeF& size)
     {
         m_size = size;
     }
@@ -95,7 +95,7 @@ public:
      * If this results in changing the respath, this will cause a re-load of the
      * SVG file
      */
-    void set_respath(const std::string& respath);
+    void respath(const std::string& respath);
 
     virtual ~SvgImage();
 

@@ -78,7 +78,7 @@ VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)
     : Window(rect, (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint),
       m_loopback(false)
 {
-    set_boxtype(Theme::boxtype::none);
+    boxtype(Theme::boxtype::none);
 
     createImpl(rect.size());
 }
@@ -87,8 +87,7 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
                          pixel_format format, windowhint hint)
     : VideoWindow(rect, format, hint)
 {
-
-    if (!set_media(uri))
+    if (!media(uri))
     {
         std::ostringstream ss;
         ss << "Error: failed to initalize gstreamer pipeline";
@@ -127,9 +126,9 @@ int64_t VideoWindow::duration() const
     return m_decoderImpl->duration();
 }
 
-bool VideoWindow::set_media(const string& uri)
+bool VideoWindow::media(const string& uri)
 {
-    return m_decoderImpl->set_media(detail::abspath(uri));
+    return m_decoderImpl->media(detail::abspath(uri));
 }
 
 bool VideoWindow::pause()
@@ -147,9 +146,9 @@ bool VideoWindow::play()
     return m_decoderImpl->play();
 }
 
-bool VideoWindow::set_volume(double volume)
+bool VideoWindow::volume(double volume)
 {
-    m_decoderImpl->set_volume(volume);
+    m_decoderImpl->volume(volume);
     return true;
 }
 
@@ -163,7 +162,7 @@ bool VideoWindow::seek(int64_t time)
     return m_decoderImpl->seek(time);
 }
 
-void VideoWindow::set_scale(float scalex, float scaley)
+void VideoWindow::scale(float scalex, float scaley)
 {
     auto xs = detail::change_if_diff<float>(m_scalex, scalex);
     auto ys = detail::change_if_diff<float>(m_scaley, scaley);
@@ -176,7 +175,7 @@ void VideoWindow::set_scale(float scalex, float scaley)
         }
         else
         {
-            Window::set_scale(m_scalex, m_scaley);
+            Window::scale(m_scalex, m_scaley);
         }
     }
 }

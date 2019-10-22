@@ -100,7 +100,7 @@ protected:
 
     virtual void init_font() override
     {
-        m_font->set_face("Verdana");
+        m_font->face("Verdana");
     }
 };
 

@@ -52,7 +52,7 @@ public:
      *
      * @note Changing this after adding buttons is undefined.
      */
-    virtual void set_exclusive(bool exclusive);
+    virtual void exclusive(bool exclusive);
 
     /**
      * Get the exclusive property.
@@ -66,7 +66,7 @@ public:
      *
      * @note Changing this after adding buttons is undefined.
      */
-    virtual void set_imperative(bool imperative);
+    virtual void imperative(bool imperative);
 
     /**
      * Get the imperative property.

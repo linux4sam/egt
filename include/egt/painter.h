@@ -147,7 +147,7 @@ public:
      *
      * @param[in] width Line width.
      */
-    virtual Painter& set_line_width(float width);
+    virtual Painter& line_width(float width);
 
     /**
      * Move to a point.

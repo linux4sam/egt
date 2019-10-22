@@ -29,7 +29,7 @@ PlaneWindow::PlaneWindow(Window* interface,
 {
     // hack to force some size
     if (m_interface->m_box.size().empty())
-        m_interface->m_box.set_size(Size(32, 32));
+        m_interface->m_box.size(Size(32, 32));
 
     allocate_screen();
 }
@@ -45,16 +45,16 @@ void PlaneWindow::resize(const Size& size)
             m_overlay->resize(size);
         }
 
-        m_interface->m_box.set_size(size);
+        m_interface->m_box.size(size);
         m_interface->damage();
     }
 }
 
-void PlaneWindow::set_scale(float scalex, float scaley)
+void PlaneWindow::scale(float scalex, float scaley)
 {
     if (m_overlay)
     {
-        m_overlay->set_scale(scalex, scaley);
+        m_overlay->scale(scalex, scaley);
         m_dirty = true;
     }
 }
@@ -63,7 +63,7 @@ void PlaneWindow::move(const Point& point)
 {
     if (point != m_interface->box().point())
     {
-        m_interface->m_box.set_point(point);
+        m_interface->m_box.point(point);
         m_dirty = true;
     }
 }
@@ -111,7 +111,7 @@ void PlaneWindow::begin_draw()
 
                 if (m_overlay)
                 {
-                    m_overlay->set_position(m_interface->local_to_display(Point()));
+                    m_overlay->position(m_interface->local_to_display(Point()));
                     m_overlay->apply();
                     m_dirty = false;
                 }
@@ -180,8 +180,8 @@ void PlaneWindow::deallocate_screen()
     if (m_overlay)
     {
         KMSScreen::instance()->deallocate_overlay(m_overlay->s());
-        m_interface->m_box.set_size(Size());
-        m_interface->m_box.set_point(Point());
+        m_interface->m_box.size(Size());
+        m_interface->m_box.point(Point());
         m_overlay.reset();
         m_screen = nullptr;
     }

@@ -85,7 +85,7 @@ public:
     /**
      * Change the images used for up and down buttons.
      */
-    virtual void set_image(const Image& down_image, const Image& up_image);
+    virtual void image(const Image& down_image, const Image& up_image);
 
     /**
      * Get the orientation.
@@ -95,7 +95,7 @@ public:
     /**
      * Set the orientation.
      */
-    void set_orient(orientation orient);
+    void orient(orientation orient);
 
     /**
      * Returns a string of the item selected.
@@ -115,7 +115,7 @@ public:
     /**
      * Set the index to select a specific item.
      */
-    virtual void set_selected(size_t index);
+    virtual void selected(size_t index);
 
     /**
      * Return the number of items.

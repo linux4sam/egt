@@ -95,7 +95,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "floating");
 
     TopWindow win;
-    win.set_background(Image("background.png"));
+    win.background(Image("background.png"));
     win.show();
 
     default_dim_type f = 2;
@@ -135,8 +135,8 @@ int main(int argc, const char** argv)
         os << "image" << image_index++ << ".png";
         auto image = make_shared<ImageLabel>(Image(os.str()));
         auto plane = make_shared<Window>(Size(image->width(), image->height()));
-        plane->set_color(Palette::ColorId::bg, Palette::transparent);
-        plane->set_boxtype(Theme::boxtype::none);
+        plane->color(Palette::ColorId::bg, Palette::transparent);
+        plane->boxtype(Theme::boxtype::none);
         plane->add(image);
         plane->show();
         plane->move(Point(100, 100));
@@ -153,7 +153,7 @@ int main(int argc, const char** argv)
     movetimer.start();
 
     Label label1("CPU: ----");
-    label1.set_color(Palette::ColorId::text, Palette::white);
+    label1.color(Palette::ColorId::text, Palette::white);
     win.add(bottom(left(label1)));
 
     egt::experimental::CPUMonitorUsage tools;
@@ -164,7 +164,7 @@ int main(int argc, const char** argv)
 
         ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
-        label1.set_text(ss.str());
+        label1.text(ss.str());
     });
     cputimer.start();
 

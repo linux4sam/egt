@@ -37,7 +37,7 @@ bool CameraWindow::start()
     return m_impl->start();
 }
 
-void CameraWindow::set_scale(float scalex, float scaley)
+void CameraWindow::scale(float scalex, float scaley)
 {
     auto xs = detail::change_if_diff<float>(m_scalex, scalex);
     auto ys = detail::change_if_diff<float>(m_scaley, scaley);
@@ -50,7 +50,7 @@ void CameraWindow::set_scale(float scalex, float scaley)
         }
         else
         {
-            Window::set_scale(m_scalex, m_scaley);
+            Window::scale(m_scalex, m_scaley);
         }
     }
 }

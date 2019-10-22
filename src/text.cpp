@@ -35,15 +35,15 @@ TextBox::TextBox(const std::string& text,
       m_timer(std::chrono::seconds(1)),
       m_text_flags(flags)
 {
-    set_name("TextBox" + std::to_string(m_widgetid));
+    name("TextBox" + std::to_string(m_widgetid));
 
-    set_border(theme().default_border());
-    set_boxtype(Theme::boxtype::fill_rounded);
-    set_padding(5);
+    border(theme().default_border());
+    boxtype(Theme::boxtype::fill_rounded);
+    padding(5);
 
     m_timer.on_timeout([this]() { cursor_timeout(); });
 
-    cursor_set_end();
+    cursor_end();
 }
 
 TextBox::TextBox(Frame& parent,
@@ -105,14 +105,14 @@ void TextBox::handle_key(const Key& key)
     {
         if (cursor())
         {
-            set_selection(cursor() - 1, 1);
+            selection(cursor() - 1, 1);
             delete_selection();
         }
         break;
     }
     case EKEY_DELETE:
     {
-        set_selection(cursor(), 1);
+        selection(cursor(), 1);
         delete_selection();
         break;
     }
@@ -184,7 +184,7 @@ void TextBox::draw(Painter& painter, const Rect&)
         if (focus() && m_cursor_state)
         {
             painter.set(color(Palette::ColorId::cursor).color());
-            painter.set_line_width(2);
+            painter.line_width(2);
 
             painter.draw(offset + Point(0, -CURSOR_Y_OFFSET),
                          offset + Point(0, height) + Point(0, CURSOR_Y_OFFSET));
@@ -207,7 +207,7 @@ void TextBox::draw(Painter& painter, const Rect&)
                       m_select_len);
 }
 
-void TextBox::set_text(const std::string& str)
+void TextBox::text(const std::string& str)
 {
     clear_selection();
     clear();
@@ -217,11 +217,11 @@ void TextBox::set_text(const std::string& str)
 void TextBox::clear()
 {
     clear_selection();
-    cursor_set_begin();
+    cursor_begin();
     TextWidget::clear();
 }
 
-void TextBox::set_max_length(size_t len)
+void TextBox::max_length(size_t len)
 {
     if (detail::change_if_diff<>(m_max_len, len))
     {
@@ -242,7 +242,7 @@ void TextBox::set_max_length(size_t len)
 
 size_t TextBox::append(const std::string& str)
 {
-    cursor_set_end();
+    cursor_end();
     return insert(str);
 }
 
@@ -337,12 +337,12 @@ size_t TextBox::cursor() const
     return m_cursor_pos;
 }
 
-void TextBox::cursor_set_begin()
+void TextBox::cursor_begin()
 {
     cursor_set(0);
 }
 
-void TextBox::cursor_set_end()
+void TextBox::cursor_end()
 {
     // one past end
     cursor_set(detail::utf8len(m_text));
@@ -376,12 +376,12 @@ void TextBox::cursor_set(size_t pos)
     show_cursor();
 }
 
-void TextBox::set_selection_all()
+void TextBox::selection_all()
 {
-    set_selection(0, detail::utf8len(m_text));
+    selection(0, detail::utf8len(m_text));
 }
 
-void TextBox::set_selection(size_t pos, size_t length)
+void TextBox::selection(size_t pos, size_t length)
 {
     const auto len = detail::utf8len(m_text);
     if (pos > len)
@@ -443,7 +443,7 @@ void TextBox::delete_selection()
     }
 }
 
-void TextBox::set_input_validation_enabled(bool enabled)
+void TextBox::input_validation_enabled(bool enabled)
 {
     m_validate_input = enabled;
 }

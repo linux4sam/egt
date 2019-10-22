@@ -17,11 +17,11 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "sprite");
 
     TopWindow win;
-    win.set_background(Image("background.png"));
+    win.background(Image("background.png"));
 
     ImageLabel logo(Image("@128px/microchip_logo_white.png"));
-    logo.set_align(alignmask::left | alignmask::top);
-    logo.set_margin(10);
+    logo.align(alignmask::left | alignmask::top);
+    logo.margin(10);
     win.add(logo);
 
     StaticGrid grid(Rect(Size(win.width(), win.height() - 40)), std::make_tuple(2, 2));
@@ -33,14 +33,14 @@ int main(int argc, const char** argv)
     grid.add(center(sprite2), 1, 1);
 
     CheckBox hardware_checkbox("Hardware", Rect(Point(0, 0), Size(120, 40)));
-    hardware_checkbox.set_color(Palette::ColorId::bg, Palette::transparent);
+    hardware_checkbox.color(Palette::ColorId::bg, Palette::transparent);
     grid.add(center(hardware_checkbox), 0, 0);
-    hardware_checkbox.set_checked(true);
+    hardware_checkbox.checked(true);
 
     CheckBox software_checkbox("Software", Rect(Point(0, 0), Size(120, 40)));
-    software_checkbox.set_color(Palette::ColorId::bg, Palette::transparent);
+    software_checkbox.color(Palette::ColorId::bg, Palette::transparent);
     grid.add(center(software_checkbox), 1, 0);
-    software_checkbox.set_checked(true);
+    software_checkbox.checked(true);
 
     hardware_checkbox.on_event([&](Event & event)
     {
@@ -66,8 +66,8 @@ int main(int argc, const char** argv)
     Label label2("FPS: -",
                  Rect(Point(0, 40), Size(100, 40)),
                  alignmask::center);
-    label2.set_color(Palette::ColorId::text, Palette::black);
-    label2.set_color(Palette::ColorId::bg, Palette::transparent);
+    label2.color(Palette::ColorId::text, Palette::black);
+    label2.color(Palette::ColorId::bg, Palette::transparent);
 
 #define DEFAULT_MS_INTERVAL 100
 
@@ -90,18 +90,18 @@ int main(int argc, const char** argv)
 
             ostringstream ss;
             ss << "FPS: " << std::round(fps.fps());
-            label2.set_text(ss.str());
+            label2.text(ss.str());
         }
         else
         {
-            label2.set_text("FPS: -");
+            label2.text("FPS: -");
         }
     });
     animatetimer.start();
 
     Slider slider1(Rect(Point(win.height() - 40, 300), Size(win.width(), 40)), 10, 500);
     win.add(bottom(center(slider1)));
-    slider1.set_value(DEFAULT_MS_INTERVAL);
+    slider1.value(DEFAULT_MS_INTERVAL);
     slider1.on_event([&](Event&)
     {
         animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
@@ -111,14 +111,14 @@ int main(int argc, const char** argv)
 
     Popup popup(Size(100, 80));
     popup.move(Point(win.width() - 100 - 10, 10));
-    popup.set_color(Palette::ColorId::bg, Palette::fuchsia);
-    popup.set_name("popup");
+    popup.color(Palette::ColorId::bg, Palette::fuchsia);
+    popup.name("popup");
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
                  alignmask::center);
-    label1.set_color(Palette::ColorId::text, Palette::black);
-    label1.set_color(Palette::ColorId::bg, Palette::transparent);
+    label1.color(Palette::ColorId::text, Palette::black);
+    label1.color(Palette::ColorId::bg, Palette::transparent);
 
     popup.add(label1);
     popup.add(label2);
@@ -131,7 +131,7 @@ int main(int argc, const char** argv)
 
         ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
-        label1.set_text(ss.str());
+        label1.text(ss.str());
     });
     cputimer.start();
 

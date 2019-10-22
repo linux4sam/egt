@@ -107,8 +107,8 @@ public:
      * @param[in] off_text The "off" text to display.
      * @param[in] on_text The "on" text to display.
      */
-    virtual void set_toggle_text(const std::string& off_text,
-                                 const std::string& on_text)
+    virtual void toggle_text(const std::string& off_text,
+                             const std::string& on_text)
     {
         bool off = detail::change_if_diff<>(m_off_text, off_text);
         bool on = detail::change_if_diff<>(m_on_text, on_text);
@@ -140,7 +140,7 @@ public:
      *
      * In either case, checked() true still means right/second.
      */
-    void set_enable_disable(bool value)
+    void enable_disable(bool value)
     {
         if (detail::change_if_diff<>(m_enable_disable, value))
             damage();
@@ -150,7 +150,8 @@ public:
 
 protected:
 
-    virtual void set_text(const std::string& /*str*/) override {}
+    // this is particularly bad design that we don't even use text() here
+    using TextWidget::text;
 
     /**
      * Optional "off" text.

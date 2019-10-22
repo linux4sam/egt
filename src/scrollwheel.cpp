@@ -45,7 +45,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
         else
             m_selected++;
 
-        m_label->set_text(m_items[m_selected]);
+        m_label->text(m_items[m_selected]);
 
         invoke_handlers(eventid::property_changed);
     });
@@ -61,7 +61,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
         else
             m_selected--;
 
-        m_label->set_text(m_items[m_selected]);
+        m_label->text(m_items[m_selected]);
 
         invoke_handlers(eventid::property_changed);
     });
@@ -103,7 +103,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
         else
             m_selected++;
 
-        m_label->set_text(m_items[m_selected]);
+        m_label->text(m_items[m_selected]);
 
         invoke_handlers(eventid::property_changed);
     });
@@ -119,14 +119,14 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
         else
             m_selected--;
 
-        m_label->set_text(m_items[m_selected]);
+        m_label->text(m_items[m_selected]);
 
         invoke_handlers(eventid::property_changed);
     });
 
 }
 
-void Scrollwheel::set_orient(orientation orient)
+void Scrollwheel::orient(orientation orient)
 {
     if (orient != orientation::horizontal &&
         orient != orientation::vertical)
@@ -138,26 +138,26 @@ void Scrollwheel::set_orient(orientation orient)
     {
         auto s = selected();
         init(false); // todo
-        set_selected(s);
+        selected(s);
     }
 }
 
 void Scrollwheel::init(bool reversed)
 {
-    set_name("Scrollwheel" + std::to_string(m_widgetid));
+    name("Scrollwheel" + std::to_string(m_widgetid));
 
-    m_button_up->set_boxtype(Theme::boxtype::none);
-    m_button_down->set_boxtype(Theme::boxtype::none);
-    m_label->set_boxtype(Theme::boxtype::none);
+    m_button_up->boxtype(Theme::boxtype::none);
+    m_button_down->boxtype(Theme::boxtype::none);
+    m_label->boxtype(Theme::boxtype::none);
 
-    set_boxtype(Theme::boxtype::none);
+    boxtype(Theme::boxtype::none);
 
     if (!m_items.empty() && reversed)
         m_selected = m_items.size() - 1;
 
-    m_label->set_text_align(alignmask::center);
+    m_label->text_align(alignmask::center);
     if (!m_items.empty())
-        m_label->set_text(m_items[m_selected]);
+        m_label->text(m_items[m_selected]);
 
     m_label->detach();
     m_button_up->detach();
@@ -197,7 +197,7 @@ size_t Scrollwheel::selected() const
     return m_selected;
 }
 
-void Scrollwheel::set_selected(size_t index)
+void Scrollwheel::selected(size_t index)
 {
     if (m_items.empty())
         return;
@@ -207,15 +207,15 @@ void Scrollwheel::set_selected(size_t index)
 
     if (detail::change_if_diff<>(m_selected, index))
     {
-        m_label->set_text(m_items[m_selected]);
+        m_label->text(m_items[m_selected]);
         invoke_handlers(eventid::property_changed);
     }
 }
 
-void Scrollwheel::set_image(const Image& down_image, const Image& up_image)
+void Scrollwheel::image(const Image& down_image, const Image& up_image)
 {
-    m_button_down->set_image(down_image);
-    m_button_up->set_image(up_image);
+    m_button_down->image(down_image);
+    m_button_up->image(up_image);
 }
 
 }

@@ -25,9 +25,9 @@ Label::Label(const std::string& text, alignmask text_align) noexcept
 Label::Label(const std::string& text, const Rect& rect, alignmask text_align) noexcept
     : TextWidget(text, rect, text_align)
 {
-    set_name("Label" + std::to_string(m_widgetid));
+    name("Label" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::none);
+    boxtype(Theme::boxtype::none);
 }
 
 Label::Label(Frame& parent, const std::string& text, alignmask text_align) noexcept
@@ -43,7 +43,7 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
     parent.add(*this);
 }
 
-void Label::set_text(const std::string& text)
+void Label::text(const std::string& text)
 {
     if (detail::change_if_diff<>(m_text, text))
     {
@@ -71,9 +71,9 @@ void Label::default_draw(Label& widget, Painter& painter, const Rect&)
                       widget.color(Palette::ColorId::label_text).color());
 }
 
-void Label::set_parent(Frame* parent)
+void Label::parent(Frame* parent)
 {
-    TextWidget::set_parent(parent);
+    TextWidget::parent(parent);
     layout();
 }
 
@@ -108,11 +108,11 @@ ImageLabel::ImageLabel(const Image& image,
     : Label(text, rect, text_align),
       m_image(image)
 {
-    set_name("ImageLabel" + std::to_string(m_widgetid));
+    name("ImageLabel" + std::to_string(m_widgetid));
 
     if (text.empty())
-        set_image_align(alignmask::center);
-    do_set_image(image);
+        image_align(alignmask::center);
+    do_image(image);
 }
 
 ImageLabel::ImageLabel(Frame& parent,
@@ -218,7 +218,7 @@ Size ImageLabel::min_size_hint() const
     return res;
 }
 
-void ImageLabel::do_set_image(const Image& image)
+void ImageLabel::do_image(const Image& image)
 {
     if (size().empty() && !image.empty())
         resize(image.size() + Size(moat() * 2, moat() * 2));
@@ -227,12 +227,12 @@ void ImageLabel::do_set_image(const Image& image)
     damage();
 }
 
-void ImageLabel::set_image(const Image& image)
+void ImageLabel::image(const Image& image)
 {
-    do_set_image(image);
+    do_image(image);
 }
 
-void ImageLabel::set_show_label(bool value)
+void ImageLabel::show_label(bool value)
 {
     if (detail::change_if_diff<>(m_show_label, value))
         damage();

@@ -16,13 +16,13 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "drummachine");
 
     TopWindow win;
-    win.set_color(Palette::ColorId::bg, Palette::black);
+    win.color(Palette::ColorId::bg, Palette::black);
 
     VerticalBoxSizer sizer;
     win.add(expand(sizer));
 
     ImageLabel logo(Image("@128px/egt_logo_white.png"));
-    logo.set_margin(10);
+    logo.margin(10);
     sizer.add(top(center(logo)));
 
     StaticGrid grid(std::make_tuple(3, 3));
@@ -41,11 +41,11 @@ int main(int argc, const char** argv)
     for (auto& drum : drums)
     {
         auto button = make_shared<Button>(drum.second);
-        button->set_color(Palette::ColorId::button_bg, Palette::purple);
-        button->set_color(Palette::ColorId::button_bg, Palette::purple, Palette::GroupId::active);
-        button->set_border(2);
-        button->set_color(Palette::ColorId::border, Palette::black);
-        button->set_color(Palette::ColorId::border, Palette::red, Palette::GroupId::active);
+        button->color(Palette::ColorId::button_bg, Palette::purple);
+        button->color(Palette::ColorId::button_bg, Palette::purple, Palette::GroupId::active);
+        button->border(2);
+        button->color(Palette::ColorId::border, Palette::black);
+        button->color(Palette::ColorId::border, Palette::red, Palette::GroupId::active);
         button->resize(Size(100, 100));
 
         auto sound = make_shared<Sound>(drum.first);

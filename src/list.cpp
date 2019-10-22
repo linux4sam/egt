@@ -29,19 +29,19 @@ ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
       m_view(make_shared<ScrolledView>(*this, ScrolledView::policy::never)),
       m_sizer(make_shared<BoxSizer>(orientation::vertical, justification::start))
 {
-    set_name("ListBox" + std::to_string(m_widgetid));
+    name("ListBox" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill);
-    set_border(theme().default_border());
+    boxtype(Theme::boxtype::fill);
+    border(theme().default_border());
 
-    m_sizer->set_align(alignmask::expand_horizontal);
+    m_sizer->align(alignmask::expand_horizontal);
 
     m_view->add(m_sizer);
 
     auto carea = content_area();
     if (!carea.empty())
     {
-        m_view->set_box(to_child(carea));
+        m_view->box(to_child(carea));
         m_sizer->resize(carea.size());
     }
 
@@ -62,7 +62,7 @@ void ListBox::add_item(const std::shared_ptr<Widget>& widget)
 
 void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
 {
-    widget->set_align(alignmask::expand_horizontal);
+    widget->align(alignmask::expand_horizontal);
 
     m_sizer->add(widget);
 
@@ -70,7 +70,7 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
     if (m_sizer->count_children() == 1)
     {
         m_selected = 0;
-        m_sizer->child_at(m_selected)->set_checked(true);
+        m_sizer->child_at(m_selected)->checked(true);
     }
 }
 
@@ -86,7 +86,7 @@ void ListBox::remove_item(Widget* widget)
     if (m_selected >= static_cast<ssize_t>(m_sizer->count_children()))
     {
         if (m_sizer->count_children())
-            set_selected(m_sizer->count_children() - 1);
+            selected(m_sizer->count_children() - 1);
         else
             m_selected = -1;
     }
@@ -103,11 +103,11 @@ void ListBox::handle(Event& event)
         for (size_t i = 0; i < m_sizer->count_children(); i++)
         {
             auto cbox = m_sizer->child_at(i)->box();
-            cbox.set_y(cbox.y() + m_view->offset().y());
+            cbox.y(cbox.y() + m_view->offset().y());
 
             if (cbox.intersect(pos))
             {
-                set_selected(i);
+                selected(i);
                 break;
             }
         }
@@ -125,17 +125,17 @@ void ListBox::handle(Event& event)
     Frame::handle(event);
 }
 
-void ListBox::set_selected(size_t index)
+void ListBox::selected(size_t index)
 {
     if (m_selected != static_cast<ssize_t>(index))
     {
         if (index < m_sizer->count_children())
         {
             if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
-                m_sizer->child_at(m_selected)->set_checked(false);
+                m_sizer->child_at(m_selected)->checked(false);
             m_selected = index;
             if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
-                m_sizer->child_at(m_selected)->set_checked(true);
+                m_sizer->child_at(m_selected)->checked(true);
 
             damage();
             invoke_handlers(eventid::property_changed);

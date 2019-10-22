@@ -118,7 +118,9 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual int set_value(int value) override
+    using ValueRangeWidget<int>::value;
+
+    virtual int value(int value) override
     {
         int orig = m_value;
 

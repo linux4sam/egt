@@ -19,8 +19,8 @@ CircleWidget::CircleWidget(const Circle& circle)
     : Widget(circle.rect()),
       m_radius(circle.radius())
 {
-    set_name("CircleWidget" + std::to_string(m_widgetid));
-    set_boxtype(Theme::boxtype::fill);
+    name("CircleWidget" + std::to_string(m_widgetid));
+    boxtype(Theme::boxtype::fill);
 }
 
 CircleWidget::CircleWidget(Frame& parent, const Circle& circle)
@@ -51,7 +51,7 @@ void LineWidget::draw(Painter& painter, const Rect&)
         width = 1;
 
     painter.set(color(Palette::ColorId::border).color());
-    painter.set_line_width(width);
+    painter.line_width(width);
 
     if (m_horizontal)
         painter.draw(b.center() - Point(b.width() / 2., 0),

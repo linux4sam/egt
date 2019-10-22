@@ -107,7 +107,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void set_parent(Frame* parent) override;
+    virtual void parent(Frame* parent) override;
 
     virtual Size min_size_hint() const override;
 
@@ -119,7 +119,7 @@ public:
     /**
      * Set the index of the selected item.
      */
-    virtual void set_selected(size_t index);
+    virtual void selected(size_t index);
 
     /**
      * Get the index of the selected item.

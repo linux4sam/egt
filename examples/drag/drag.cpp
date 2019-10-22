@@ -24,17 +24,17 @@ public:
           m_arrows(Image("arrows.png"))
     {
         flags().set(Widget::flag::grab_mouse);
-        set_color(Palette::ColorId::bg, Color(0x526d7480));
-        set_color(Palette::ColorId::bg, Color(0xff6d7480), Palette::GroupId::active);
+        color(Palette::ColorId::bg, Color(0x526d7480));
+        color(Palette::ColorId::bg, Color(0xff6d7480), Palette::GroupId::active);
 
         add(m_grip);
         m_grip.resize(Size(50, 50));
-        m_grip.set_align(alignmask::right | alignmask::bottom);
+        m_grip.align(alignmask::right | alignmask::bottom);
 
         add(m_arrows);
         m_arrows.resize(box().size() / 2);
         m_arrows.image().resize(box().size() / 2);
-        m_arrows.set_align(alignmask::center);
+        m_arrows.align(alignmask::center);
     }
 
     virtual void handle(Event& event) override
@@ -70,7 +70,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "drag");
 
     TopWindow window;
-    window.set_background(Image("background.png"));
+    window.background(Image("background.png"));
 
     FloatingBox box1(Rect(Ratio<int>(window.width(), 20),
                           Ratio<int>(window.height(), 20),
@@ -88,13 +88,13 @@ int main(int argc, const char** argv)
     box2.show();
 
     Label label1("CPU: ----", Rect(), alignmask::left | alignmask::center);
-    label1.set_align(alignmask::left | alignmask::bottom);
-    label1.set_color(Palette::ColorId::label_text, Palette::white);
-    label1.set_color(Palette::ColorId::bg, Palette::transparent);
+    label1.align(alignmask::left | alignmask::bottom);
+    label1.color(Palette::ColorId::label_text, Palette::white);
+    label1.color(Palette::ColorId::bg, Palette::transparent);
     window.add(label1);
 
     ImageLabel logo(Image("@128px/egt_logo_white.png"));
-    logo.set_margin(10);
+    logo.margin(10);
     window.add(center(top(logo)));
 
     egt::experimental::CPUMonitorUsage tools;
@@ -105,7 +105,7 @@ int main(int argc, const char** argv)
 
         ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
-        label1.set_text(ss.str());
+        label1.text(ss.str());
     });
     cputimer.start();
 

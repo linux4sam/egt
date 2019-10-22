@@ -185,7 +185,7 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void set_starting(float_t start) { m_start = start; }
+    inline void starting(float_t start) { m_start = start; }
 
     /**
      * Get the ending value.
@@ -195,22 +195,22 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void set_ending(float_t end) { m_end = end; }
+    inline void ending(float_t end) { m_end = end; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void set_duration(std::chrono::milliseconds dur) { m_duration = dur; }
+    inline void duration(std::chrono::milliseconds dur) { m_duration = dur; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void set_easing_func(easing_func_t func);
+    void easing_func(easing_func_t func);
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void set_reverse(bool rev) { m_reverse = rev; }
+    inline void reverse(bool rev) { m_reverse = rev; }
 
     /**
      * Start the animation.
@@ -243,7 +243,7 @@ public:
      *
      * @param[in] enable When true, rounding is enabled. It is false by default.
      */
-    inline void set_rounding(bool enable) { m_round = enable; }
+    inline void rounding(bool enable) { m_round = enable; }
 
     virtual ~Animation() = default;
 
@@ -558,6 +558,11 @@ template <class T>
 class PropertyAnimatorType : public AutoAnimation
 {
 public:
+
+    /**
+     * Alias for the value type of the animator.
+     */
+    using Value = T;
 
     /**
      * @param[in] start The starting value of the animation.

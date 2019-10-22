@@ -31,10 +31,10 @@ public:
 
     NotebookTab()
     {
-        set_name("NotebookTab" + std::to_string(m_widgetid));
+        name("NotebookTab" + std::to_string(m_widgetid));
 
         // tabs are not transparent by default
-        set_boxtype(Theme::boxtype::fill | Theme::boxtype::solid);
+        boxtype(Theme::boxtype::fill | Theme::boxtype::solid);
     }
 
     /**
@@ -87,12 +87,12 @@ public:
     /**
      * Set the selected widget by index.
      */
-    virtual void set_selected(size_t index);
+    virtual void selected(size_t index);
 
     /**
      * Set the selected widget by widget.
      */
-    virtual void set_selected(Widget* widget);
+    virtual void selected(Widget* widget);
 
     /**
      * Get the currently selected index.

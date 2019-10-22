@@ -20,11 +20,11 @@ public:
         explicit LauncherItem(const Image& image)
             : m_background(image)
         {
-            set_boxtype(Theme::boxtype::none);
+            boxtype(Theme::boxtype::none);
             flags().set(Widget::flag::no_layout);
 
-            m_background.set_align(alignmask::expand);
-            m_background.set_image_align(alignmask::expand);
+            m_background.align(alignmask::expand);
+            m_background.image_align(alignmask::expand);
             add(m_background);
         }
 
@@ -34,16 +34,16 @@ public:
 
     MainWindow()
     {
-        set_background(Image("background.png"));
+        background(Image("background.png"));
 
         auto egt_logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
-        egt_logo->set_align(alignmask::center | alignmask::top);
-        egt_logo->set_margin(5);
+        egt_logo->align(alignmask::center | alignmask::top);
+        egt_logo->margin(5);
         add(egt_logo);
 
-        m_animation.set_starting(0);
-        m_animation.set_duration(std::chrono::seconds(2));
-        m_animation.set_easing_func(easing_cubic_easeout);
+        m_animation.starting(0);
+        m_animation.duration(std::chrono::seconds(2));
+        m_animation.easing_func(easing_cubic_easeout);
         m_animation.on_change(std::bind(&MainWindow::move_boxes,
                                         this, std::placeholders::_1));
         m_seq.add(m_delay);
@@ -72,7 +72,7 @@ public:
             if (!m_boxes.empty())
             {
                 m_start = m_boxes.front()->x();
-                m_animation.set_ending(width() - m_boxes.front()->width() - m_boxes.front()->x());
+                m_animation.ending(width() - m_boxes.front()->width() - m_boxes.front()->x());
                 m_seq.start();
             }
             break;
@@ -95,7 +95,7 @@ public:
         {
             if (x + box->width() > width())
                 x = width() - box->width();
-            box->set_x(x);
+            box->x(x);
             x += box->width() + 10;
         }
     }
@@ -114,8 +114,8 @@ private:
 
         for (auto& box : detail::reverse_iterate(m_boxes))
         {
-            box->set_y(center().y() - box->height() / 2);
-            box->set_x(width() - box->width());
+            box->y(center().y() - box->height() / 2);
+            box->x(width() - box->width());
             add(box);
         }
 

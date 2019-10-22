@@ -58,7 +58,7 @@ public:
      *
      * @param[in] image The image to display.
      */
-    inline void set_image(const Image& image)
+    inline void image(const Image& image)
     {
         m_image = image;
         resize(m_image.size());
@@ -79,7 +79,7 @@ protected:
      *
      * When a GaugeLayer is added to a Gauge, this will automatically be called.
      */
-    virtual void set_gauge(Gauge* gauge)
+    virtual void gauge(Gauge* gauge)
     {
         if (!m_gauge || !gauge)
         {
@@ -141,7 +141,7 @@ public:
      *
      * @param[in] angle_start The starting angle of the needle.
      */
-    inline float set_angle_start(float angle_start)
+    inline float angle_start(float angle_start)
     {
         float orig = m_angle_start;
         if (detail::change_if_diff<float>(m_angle_start, angle_start))
@@ -159,7 +159,7 @@ public:
      *
      * @param[in] angle_stop The stop angle of the needle.
      */
-    inline float set_angle_stop(float angle_stop)
+    inline float angle_stop(float angle_stop)
     {
         float orig = m_angle_stop;
         if (detail::change_if_diff<float>(m_angle_stop, angle_stop))
@@ -177,12 +177,12 @@ public:
      *
      * @param[in] min The min value.
      */
-    inline float set_min(float min)
+    inline float min(float min)
     {
         float orig = m_min;
         if (detail::change_if_diff<float>(m_min, min))
         {
-            set_value(m_value);
+            value(m_value);
             damage();
         }
 
@@ -199,12 +199,12 @@ public:
      *
      * @param[in] max The max value.
      */
-    inline float set_max(float max)
+    inline float max(float max)
     {
         float orig = m_max;
         if (detail::change_if_diff<float>(m_max, max))
         {
-            set_value(m_value);
+            value(m_value);
             damage();
         }
 
@@ -223,7 +223,7 @@ public:
      *
      * @return The old value.
      */
-    virtual float set_value(float value)
+    virtual float value(float value)
     {
         auto orig = m_value;
 
@@ -248,7 +248,7 @@ public:
      *
      * This is the rotate point of the needle on the gauge surface.
      */
-    inline void set_needle_point(const PointF& point)
+    inline void needle_point(const PointF& point)
     {
         if (detail::change_if_diff<PointF>(m_point, point))
         {
@@ -274,7 +274,7 @@ public:
      * if a symmetrical needle rotates on its center, this would be a point on
      * the center of the needle layer itself.
      */
-    inline void set_needle_center(const PointF& center)
+    inline void needle_center(const PointF& center)
     {
         if (detail::change_if_diff<PointF>(m_center, center))
             damage();
@@ -290,7 +290,7 @@ public:
      *
      * @param[in] value The clockwise value.
      */
-    inline void set_clockwise(bool value)
+    inline void clockwise(bool value)
     {
         if (detail::change_if_diff<>(m_clockwise, value))
             damage();
@@ -300,7 +300,7 @@ public:
 
 protected:
 
-    virtual void set_gauge(Gauge* gauge) override;
+    virtual void gauge(Gauge* gauge) override;
 
     /**
      * Minimum value of the needle.
@@ -367,8 +367,8 @@ protected:
  * auto custom1_needle = make_shared<NeedleLayer>(custom1svg.id("#needle"),
  *                                                0, 100, 0, 180);
  * auto custom1_needle_point = custom1svg.id_box("#needlepoint").center();
- * custom1_needle->set_needle_point(custom1_needle_point);
- * custom1_needle->set_needle_center(custom1_needle_point);
+ * custom1_needle->needle_point(custom1_needle_point);
+ * custom1_needle->needle_center(custom1_needle_point);
  * custom1.add_layer(custom1_needle);
  * @endcode
  *

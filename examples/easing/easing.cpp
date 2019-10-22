@@ -65,40 +65,40 @@ public:
     {
         create_board();
 
-        set_background(Image("background.png"));
+        background(Image("background.png"));
 
         ListBox::item_array items;
         items.resize(easing_functions.size());
         transform(easing_functions.begin(), easing_functions.end(), items.begin(),
         [](const std::pair<easing_func_t, string>& v) { return make_shared<StringItem>(v.second);});
         auto list1 = make_shared<ListBox>(items, Rect(Point(0, 0), Size(190, 0)));
-        list1->set_align(alignmask::expand_vertical | alignmask::right);
+        list1->align(alignmask::expand_vertical | alignmask::right);
         add(list1);
 
         list1->on_event([this, list1](Event&)
         {
             m_seq.reset();
-            m_animation.set_easing_func(easing_functions[list1->selected()].first);
+            m_animation.easing_func(easing_functions[list1->selected()].first);
             m_seq.start();
 
             m_line.clear();
             m_line.add_data(create_data(easing_functions[list1->selected()].first), LineChart::chart_type::lines);
         }, {eventid::property_changed});
 
-        list1->set_selected(7);
+        list1->selected(7);
 
         auto image = std::make_shared<ImageLabel>(Image("ball.png"));
         m_box.resize(image->size());
         m_box.add(image);
 
-        m_box.set_boxtype(Theme::boxtype::none);
+        m_box.boxtype(Theme::boxtype::none);
         m_box.move(Point(width() / 2 - m_box.width() / 2, -110));
         m_box.flags().set(Widget::flag::no_layout);
         m_box.show();
         add(m_box);
 
-        m_animation.on_change(std::bind(&Window::set_y, &m_box, std::placeholders::_1));
-        m_animation.set_rounding(true);
+        m_animation.on_change([this](PropertyAnimator::Value v) {m_box.y(v);});
+        m_animation.rounding(true);
         m_seq.add(m_animation);
         m_seq.add(m_delay);
         m_seq.start();
@@ -111,17 +111,17 @@ private:
     void create_board()
     {
         auto imgicon = make_shared<ImageLabel>(Image("@cursor_hand.png"));
-        imgicon->set_margin(5);
+        imgicon->margin(5);
         imgicon->resize(Size(SideBoard::HANDLE_WIDTH, SideBoard::HANDLE_WIDTH));
-        imgicon->set_align(alignmask::top | alignmask::right);
+        imgicon->align(alignmask::top | alignmask::right);
         m_board.add(imgicon);
 
         add(m_board);
         m_board.show();
 
-        m_line.set_width(m_board.width() - SideBoard::HANDLE_WIDTH);
-        m_line.set_color(Palette::ColorId::bg, Palette::black);
-        m_line.set_color(Palette::ColorId::border, Palette::white);
+        m_line.width(m_board.width() - SideBoard::HANDLE_WIDTH);
+        m_line.color(Palette::ColorId::bg, Palette::black);
+        m_line.color(Palette::ColorId::border, Palette::white);
         m_board.add(left(expand_vertical(m_line)));
     }
 
@@ -140,14 +140,14 @@ int main(int argc, const char** argv)
     MainWindow window;
 
     Label label1("CPU: ----");
-    label1.set_color(Palette::ColorId::label_text, Palette::white);
-    label1.set_color(Palette::ColorId::label_bg, Palette::transparent);
-    label1.set_x(SideBoard::HANDLE_WIDTH);
+    label1.color(Palette::ColorId::label_text, Palette::white);
+    label1.color(Palette::ColorId::label_bg, Palette::transparent);
+    label1.x(SideBoard::HANDLE_WIDTH);
     window.add(bottom(label1));
 
     ImageLabel logo(Image("@128px/egt_logo_white.png"));
-    logo.set_x(SideBoard::HANDLE_WIDTH);
-    logo.set_margin(10);
+    logo.x(SideBoard::HANDLE_WIDTH);
+    logo.margin(10);
     window.add(top(logo));
 
     egt::experimental::CPUMonitorUsage tools;
@@ -157,7 +157,7 @@ int main(int argc, const char** argv)
         tools.update();
         ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
-        label1.set_text(ss.str());
+        label1.text(ss.str());
     });
     cputimer.start();
 

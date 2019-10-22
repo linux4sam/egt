@@ -108,7 +108,7 @@ public:
 
     virtual void resize(const Size& size) override;
 
-    virtual void set_scale(float scalex, float scaley) override;
+    virtual void scale(float scalex, float scaley) override;
 
     virtual void paint(Painter& painter) override;
 
@@ -131,7 +131,7 @@ public:
      * technically put another child widget before the background using
      * zorder.
      */
-    virtual void set_background(const Image& image);
+    virtual void background(const Image& image);
 
     virtual pixel_format format() const
     {
@@ -171,9 +171,9 @@ protected:
         Frame::resize(size);
     }
 
-    virtual void default_set_scale(float scalex, float scaley)
+    virtual void default_scale(float scalex, float scaley)
     {
-        Frame::set_scale(scalex, scaley);
+        Frame::scale(scalex, scaley);
     }
 
     virtual void default_move(const Point& point)
@@ -212,7 +212,7 @@ protected:
     /**
      * Change this window as the main window.
      */
-    void set_main_window();
+    void main_window();
 
     /**
      * Optional background image.
@@ -278,7 +278,7 @@ namespace detail
 /**
  * Set the modal window.
  */
-EGT_API void set_modal_window(Window* window);
+EGT_API void modal_window(Window* window);
 
 }
 

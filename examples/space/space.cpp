@@ -76,10 +76,10 @@ class MainWindow : public TopWindow
 public:
     MainWindow()
     {
-        set_background(Image("background.png"));
+        background(Image("background.png"));
 
         auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
-        logo->set_margin(10);
+        logo->margin(10);
         add(top(left(logo)));
     }
 
@@ -112,7 +112,7 @@ public:
 
         auto image = m_images.back();
         image->resize_by_ratio(scale);
-        image->set_image_align(alignmask::expand);
+        image->image_align(alignmask::expand);
         image->move_to_center(p);
         add(image);
     }
@@ -165,8 +165,8 @@ int main(int argc, const char** argv)
     spawntimer.start();
 
     Label label1("CPU: ----");
-    label1.set_color(Palette::ColorId::text, Palette::white);
-    label1.set_color(Palette::ColorId::bg, Palette::transparent);
+    label1.color(Palette::ColorId::text, Palette::white);
+    label1.color(Palette::ColorId::bg, Palette::transparent);
     win.add(bottom(left(label1)));
 
     experimental::CPUMonitorUsage tools;
@@ -176,7 +176,7 @@ int main(int argc, const char** argv)
         tools.update();
         std::ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
-        label1.set_text(ss.str());
+        label1.text(ss.str());
     });
     cputimer.start();
 
@@ -197,20 +197,20 @@ int main(int argc, const char** argv)
         {
             auto star = std::make_shared<Ball>(0, 0);
             star->resize_by_ratio(s_dist(e1));
-            star->set_image_align(alignmask::expand);
+            star->image_align(alignmask::expand);
             star->move_to_center(Point(x_dist(e1), y_dist(e1)));
             win.add(star);
 
             auto in = std::make_shared<PropertyAnimatorF>(0, 1,
                       std::chrono::milliseconds(d_dist(e1)),
                       easing_spring);
-            in->on_change(std::bind(&Ball::set_alpha, star, std::placeholders::_1));
+            in->on_change([star](PropertyAnimatorF::Value v) {star->alpha(v);});
 
             auto out = std::make_shared<PropertyAnimatorF>(1, 0,
                        std::chrono::milliseconds(d_dist(e1)),
                        easing_spring);
-            out->set_reverse(true);
-            out->on_change(std::bind(&Ball::set_alpha, star, std::placeholders::_1));
+            out->reverse(true);
+            out->on_change([star](PropertyAnimatorF::Value v) {star->alpha(v);});
 
             auto delay = std::make_shared<AnimationDelay>(std::chrono::milliseconds(d_dist(e1)));
 

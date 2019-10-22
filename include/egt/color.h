@@ -633,7 +633,7 @@ public:
     /**
      * Set the steps.
      */
-    inline void set_steps(const steps_array& steps)
+    inline void steps(const steps_array& steps)
     {
         m_steps = steps;
         for (auto& x : m_cache)

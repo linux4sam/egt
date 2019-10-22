@@ -56,7 +56,7 @@ Painter& Painter::set(const Font& font)
     return *this;
 }
 
-Painter& Painter::set_line_width(float width)
+Painter& Painter::line_width(float width)
 {
     cairo_set_line_width(m_cr.get(), width);
 

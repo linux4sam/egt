@@ -59,7 +59,7 @@ RectF SvgImage::id_box(const std::string& id) const
         RsvgPositionData pos;
         if (rsvg_handle_get_position_sub(m_impl->rsvg.get(), &pos, id.c_str()))
         {
-            result.set_point(PointF(pos.x * hfactor, pos.y * vfactor));
+            result.point(PointF(pos.x * hfactor, pos.y * vfactor));
         }
 
         if (rsvg_handle_get_dimensions_sub(m_impl->rsvg.get(), &dim, id.c_str()))
@@ -73,7 +73,7 @@ RectF SvgImage::id_box(const std::string& id) const
              *
              * See https://gitlab.gnome.org/GNOME/librsvg/blob/master/librsvg/rsvg.h#L208
              */
-            result.set_size(SizeF(dim.em * hfactor + 1, dim.ex * vfactor + 1));
+            result.size(SizeF(dim.em * hfactor + 1, dim.ex * vfactor + 1));
         }
     }
 
@@ -88,7 +88,7 @@ bool SvgImage::id_exists(const std::string& id) const
     return false;
 }
 
-void SvgImage::set_respath(const std::string& respath)
+void SvgImage::respath(const std::string& respath)
 {
     if (detail::change_if_diff<>(m_respath, respath))
         load();
@@ -106,12 +106,12 @@ SizeF SvgImage::size() const
         if (m_size.width() <= 0 && m_size.height() > 0)
         {
             auto factor = m_size.height() / dim.height;
-            result.set_width(dim.width * factor);
+            result.width(dim.width * factor);
         }
         else if (m_size.height() <= 0 && m_size.width() > 0)
         {
             auto factor = m_size.width() / dim.width;
-            result.set_height(dim.height * factor);
+            result.height(dim.height * factor);
         }
 
         if (result.empty())

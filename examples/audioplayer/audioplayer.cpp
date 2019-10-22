@@ -23,14 +23,14 @@ public:
           m_play(Image("play.png")),
           m_next(Image("next.png"))
     {
-        set_align(alignmask::center);
+        align(alignmask::center);
 
         add(expand(m_previous));
         add(expand(m_play));
         add(expand(m_next));
 
         for (auto& child : m_children)
-            child->set_boxtype(Theme::boxtype::none);
+            child->boxtype(Theme::boxtype::none);
 
         // no forward/rewind support in this example for now
         m_next.hide();
@@ -103,7 +103,7 @@ public:
     explicit AudioPlayerWindow()
         : m_colormap({Color(76, 181, 253), Color(34, 186, 133)})
     {
-        set_background(Image("background.png"));
+        background(Image("background.png"));
 
         auto range0 = std::make_shared<RangeValue<int>>(0, 100, 100);
         auto range1 = std::make_shared<RangeValue<int>>(0, 100, 100);
@@ -114,8 +114,8 @@ public:
         m_dial->add(range1, Color(17, 17, 17, 180), 13);
         Radial::flags_type flags = Radial::flags_type({Radial::flag::input_value, Radial::flag::rounded_cap});
         auto range2handle = m_dial->add(range2, {}, 15, flags);
-        m_dial->set_margin(50);
-        m_dial->set_align(alignmask::expand);
+        m_dial->margin(50);
+        m_dial->align(alignmask::expand);
         add(m_dial);
         add(m_controls);
 
@@ -123,40 +123,40 @@ public:
         {
             if (m_player.playing())
             {
-                m_controls.m_play.set_image(Image("play.png"));
+                m_controls.m_play.image(Image("play.png"));
                 m_player.pause();
                 m_animation.stop();
             }
             else
             {
-                m_controls.m_play.set_image(Image("pause.png"));
+                m_controls.m_play.image(Image("pause.png"));
                 m_player.play();
                 m_animation.start();
             }
         }, {eventid::pointer_click});
 
         auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
-        logo->set_align(alignmask::left | alignmask::top);
-        logo->set_margin(10);
+        logo->align(alignmask::left | alignmask::top);
+        logo->margin(10);
         add(logo);
 
         auto message_dialog = std::make_shared<Dialog>(this->size() * 0.75);
-        message_dialog->set_title("Audio Player Example");
+        message_dialog->title("Audio Player Example");
         auto text = std::make_shared<TextBox>("This is an Ensemble Graphics "
                                               "Toolkit audio player example that "
                                               "uses egt::AudioPlayer to play mp3, "
                                               "wav, ogg, and more audio formats "
                                               "seamlessly.");
-        text->set_readonly(true);
-        message_dialog->set_widget(expand(text));
-        message_dialog->set_button(Dialog::buttonid::button1, "");
-        message_dialog->set_button(Dialog::buttonid::button2, "OK");
+        text->readonly(true);
+        message_dialog->widget(expand(text));
+        message_dialog->button(Dialog::buttonid::button1, "");
+        message_dialog->button(Dialog::buttonid::button2, "OK");
         add(message_dialog);
 
         auto note = std::make_shared<ImageButton>(Image("note.png"));
-        note->set_boxtype(Theme::boxtype::none);
-        note->set_align(alignmask::right | alignmask::bottom);
-        note->set_margin(10);
+        note->boxtype(Theme::boxtype::none);
+        note->align(alignmask::right | alignmask::bottom);
+        note->margin(10);
         add(note);
         note->on_click([message_dialog](Event&)
         {
@@ -174,35 +174,35 @@ public:
             if (m_player.playing())
             {
                 if (m_player.duration() > 0)
-                    range2->set_max(m_player.duration());
-                range2->set_value(m_player.position());
+                    range2->max(m_player.duration());
+                range2->value(m_player.position());
             }
             else
             {
-                m_controls.m_play.set_image(Image("play.png"));
+                m_controls.m_play.image(Image("play.png"));
                 m_animation.stop();
             }
         }, {eventid::property_changed});
 
-        m_player.set_media(resolve_file_path("concerto.mp3"));
+        m_player.media(resolve_file_path("concerto.mp3"));
 
         auto glow = [this, range2handle](float value)
         {
-            m_dial->set_color(range2handle, m_colormap.interp_cached(value));
+            m_dial->color(range2handle, m_colormap.interp_cached(value));
         };
 
         auto glow_out = std::make_shared<PropertyAnimatorF>();
-        glow_out->set_starting(0);
-        glow_out->set_ending(1);
-        glow_out->set_duration(std::chrono::milliseconds(1500));
-        glow_out->set_easing_func(easing_linear);
+        glow_out->starting(0);
+        glow_out->ending(1);
+        glow_out->duration(std::chrono::milliseconds(1500));
+        glow_out->easing_func(easing_linear);
         glow_out->on_change(glow);
 
         auto glow_in = std::make_shared<PropertyAnimatorF>();
-        glow_in->set_starting(1);
-        glow_in->set_ending(0);
-        glow_in->set_duration(std::chrono::milliseconds(2000));
-        glow_in->set_easing_func(easing_linear);
+        glow_in->starting(1);
+        glow_in->ending(0);
+        glow_in->duration(std::chrono::milliseconds(2000));
+        glow_in->easing_func(easing_linear);
         glow_in->on_change(glow);
 
         m_animation.add(glow_out);

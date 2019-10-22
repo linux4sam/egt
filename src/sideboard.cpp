@@ -21,38 +21,38 @@ SideBoard::SideBoard(flags f,
              pixel_format::rgb565),
       m_side_flags(f)
 {
-    m_oanim.set_duration(open_duration);
-    m_canim.set_duration(close_duration);
-    m_oanim.set_easing_func(std::move(open_func));
-    m_canim.set_easing_func(std::move(close_func));
+    m_oanim.duration(open_duration);
+    m_canim.duration(close_duration);
+    m_oanim.easing_func(std::move(open_func));
+    m_canim.easing_func(std::move(close_func));
 
     reset_animations();
 
     if (is_set(flags::left))
     {
-        m_oanim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
-        m_canim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
+        m_oanim.on_change([this](PropertyAnimator::Value v) {x(v);});
+        m_canim.on_change([this](PropertyAnimator::Value v) {x(v);});
 
         move(Point(m_oanim.starting(), 0));
     }
     else if (is_set(flags::right))
     {
-        m_oanim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
-        m_canim.on_change(std::bind(&SideBoard::set_x, this, std::placeholders::_1));
+        m_oanim.on_change([this](PropertyAnimator::Value v) {x(v);});
+        m_canim.on_change([this](PropertyAnimator::Value v) {x(v);});
 
         move(Point(m_oanim.starting(), 0));
     }
     else if (is_set(flags::top))
     {
-        m_oanim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
-        m_canim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
+        m_oanim.on_change([this](PropertyAnimator::Value v) {y(v);});
+        m_canim.on_change([this](PropertyAnimator::Value v) {y(v);});
 
         move(Point(0, m_oanim.starting()));
     }
     else if (is_set(flags::bottom))
     {
-        m_oanim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
-        m_canim.on_change(std::bind(&SideBoard::set_y, this, std::placeholders::_1));
+        m_oanim.on_change([this](PropertyAnimator::Value v) {y(v);});
+        m_canim.on_change([this](PropertyAnimator::Value v) {y(v);});
 
         move(Point(0, m_oanim.starting()));
     }
@@ -62,31 +62,31 @@ void SideBoard::reset_animations()
 {
     if (is_set(flags::left))
     {
-        m_oanim.set_starting(-Application::instance().screen()->size().width());
-        m_oanim.set_ending(0);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
+        m_oanim.starting(-Application::instance().screen()->size().width());
+        m_oanim.ending(0);
+        m_canim.starting(m_oanim.ending());
+        m_canim.ending(m_oanim.starting());
     }
     else if (is_set(flags::right))
     {
-        m_oanim.set_starting(Application::instance().screen()->size().width() - HANDLE_WIDTH);
-        m_oanim.set_ending(-HANDLE_WIDTH);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
+        m_oanim.starting(Application::instance().screen()->size().width() - HANDLE_WIDTH);
+        m_oanim.ending(-HANDLE_WIDTH);
+        m_canim.starting(m_oanim.ending());
+        m_canim.ending(m_oanim.starting());
     }
     else if (is_set(flags::top))
     {
-        m_oanim.set_starting(-Application::instance().screen()->size().height());
-        m_oanim.set_ending(0);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
+        m_oanim.starting(-Application::instance().screen()->size().height());
+        m_oanim.ending(0);
+        m_canim.starting(m_oanim.ending());
+        m_canim.ending(m_oanim.starting());
     }
     else if (is_set(flags::bottom))
     {
-        m_oanim.set_starting(Application::instance().screen()->size().height() - HANDLE_WIDTH);
-        m_oanim.set_ending(-HANDLE_WIDTH);
-        m_canim.set_starting(m_oanim.ending());
-        m_canim.set_ending(m_oanim.starting());
+        m_oanim.starting(Application::instance().screen()->size().height() - HANDLE_WIDTH);
+        m_oanim.ending(-HANDLE_WIDTH);
+        m_canim.starting(m_oanim.ending());
+        m_canim.ending(m_oanim.starting());
     }
 }
 
@@ -118,7 +118,7 @@ void SideBoard::close()
     auto current = m_oanim.current();
     reset_animations();
     if (running)
-        m_canim.set_starting(current);
+        m_canim.starting(current);
     m_canim.start();
     m_dir = false;
 }
@@ -131,7 +131,7 @@ void SideBoard::open()
     auto current = m_canim.current();
     reset_animations();
     if (running)
-        m_oanim.set_starting(current);
+        m_oanim.starting(current);
     m_oanim.start();
     m_dir = true;
 }

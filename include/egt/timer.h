@@ -177,7 +177,7 @@ public:
      *
      * @param[in] name Name to set for the Object.
      */
-    inline void set_name(const std::string& name) { m_name = name; }
+    inline void name(const std::string& name) { m_name = name; }
 
     virtual ~Timer() noexcept;
 

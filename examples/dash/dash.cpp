@@ -17,10 +17,10 @@ static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
                                   easing_func_t easingout = easing_circular_easeout)
 {
     auto animationup = std::make_shared<PropertyAnimator>(min, max, duration, easingin);
-    animationup->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+    animationup->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
 
     auto animationdown = std::make_shared<PropertyAnimator>(max, min, duration, easingout);
-    animationdown->on_change(std::bind(&T::set_value, std::ref(*widget), std::placeholders::_1));
+    animationdown->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
 
     /// @todo leak
     auto sequence = new AnimationSequence(true);
@@ -42,8 +42,8 @@ static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
     auto needle = make_shared<NeedleLayer>(svg.id(id, needle_box),
                                            min, max, min_angle, max_angle);
     auto needle_point = svg.id_box(point_id).center();
-    needle->set_needle_point(needle_point);
-    needle->set_needle_center(needle_point - needle_box.point());
+    needle->needle_point(needle_point);
+    needle->needle_center(needle_point - needle_box.point());
     gauge.add_layer(needle);
 
     demo_up_down_animator(needle, min, max, duration, easing);
@@ -60,10 +60,10 @@ static shared_ptr<GaugeLayer> create_layer(Gauge& gauge, SvgImage& svg,
 
     auto box = svg.id_box(id);
     auto layer = make_shared<GaugeLayer>(svg.id(id, box));
-    layer->set_box(Rect(std::floor(box.x()),
-                        std::floor(box.y()),
-                        std::ceil(box.width()),
-                        std::ceil(box.height())));
+    layer->box(Rect(std::floor(box.x()),
+                    std::floor(box.y()),
+                    std::ceil(box.width()),
+                    std::ceil(box.height())));
     layer->hide();
     gauge.add_layer(layer);
 
@@ -80,8 +80,8 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "dash");
 
     TopWindow win;
-    win.set_padding(10);
-    win.set_color(Palette::ColorId::bg, Color::css("#1b1d43"));
+    win.padding(10);
+    win.color(Palette::ColorId::bg, Color::css("#1b1d43"));
 
     auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
     win.add(top(left(logo)));
@@ -118,43 +118,43 @@ int main(int argc, const char** argv)
 
     auto rpm_box = dash_background->id_box("#rpm");
     auto rpm_text = make_shared<Label>();
-    rpm_text->set_text_align(alignmask::center);
-    rpm_text->set_box(Rect(rpm_box.x(), rpm_box.y(), rpm_box.width(), rpm_box.height()));
-    rpm_text->set_color(Palette::ColorId::label_text, Palette::cyan);
-    rpm_text->set_text("Trip 1: 100.5 miles");
+    rpm_text->text_align(alignmask::center);
+    rpm_text->box(Rect(rpm_box.x(), rpm_box.y(), rpm_box.width(), rpm_box.height()));
+    rpm_text->color(Palette::ColorId::label_text, Palette::cyan);
+    rpm_text->text("Trip 1: 100.5 miles");
     gauge.add(rpm_text);
 
     auto speed_box = dash_background->id_box("#speed");
     auto speed_text = make_shared<Label>();
-    speed_text->set_text_align(alignmask::center);
-    speed_text->set_box(Rect(speed_box.x(), speed_box.y(), speed_box.width(), speed_box.height()));
-    speed_text->set_color(Palette::ColorId::label_text, Palette::white);
-    speed_text->set_font(Font(28, Font::weightid::bold));
-    speed_text->set_text("0 mph");
+    speed_text->text_align(alignmask::center);
+    speed_text->box(Rect(speed_box.x(), speed_box.y(), speed_box.width(), speed_box.height()));
+    speed_text->color(Palette::ColorId::label_text, Palette::white);
+    speed_text->font(Font(28, Font::weightid::bold));
+    speed_text->text("0 mph");
     gauge.add(speed_text);
 
     mph_needle->on_event([speed_text, mph_needle](Event&)
     {
         ostringstream ss;
         ss << mph_needle->value() << " mph";
-        speed_text->set_text(ss.str());
+        speed_text->text(ss.str());
     }, {eventid::property_changed});
 
     auto middle_box = dash_background->id_box("#middle");
     auto middle_text = make_shared<Label>();
-    middle_text->set_text_align(alignmask::center);
-    middle_text->set_box(Rect(middle_box.x(), middle_box.y(), middle_box.width(), middle_box.height()));
-    middle_text->set_color(Palette::ColorId::label_text, Palette::aquamarine);
-    middle_text->set_text("98.7 FM");
+    middle_text->text_align(alignmask::center);
+    middle_text->box(Rect(middle_box.x(), middle_box.y(), middle_box.width(), middle_box.height()));
+    middle_text->color(Palette::ColorId::label_text, Palette::aquamarine);
+    middle_text->text("98.7 FM");
     gauge.add(middle_text);
 
     auto console_box = dash_background->id_box("#console");
     auto console_text = make_shared<Label>();
-    console_text->set_text_align(alignmask::center);
-    console_text->set_box(Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
-    console_text->set_color(Palette::ColorId::label_text, Palette::orange);
-    console_text->set_font(Font(55, Font::weightid::bold));
-    console_text->set_text("D");
+    console_text->text_align(alignmask::center);
+    console_text->box(Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
+    console_text->color(Palette::ColorId::label_text, Palette::orange);
+    console_text->font(Font(55, Font::weightid::bold));
+    console_text->text("D");
     gauge.add(console_text);
 
     dash_background.release();

@@ -27,7 +27,7 @@ Theme& global_theme()
     return *the_global_theme;
 }
 
-void set_global_theme(std::shared_ptr<Theme> theme)
+void global_theme(std::shared_ptr<Theme> theme)
 {
     assert(theme);
 
@@ -102,7 +102,7 @@ void Theme::init_draw()
      * there was a global method to reset back to default.  Maybe this function
      * could be it if it listed all widget types.
      */
-    Drawer<CheckBox>::set_draw(CheckBox::default_draw);
+    Drawer<CheckBox>::draw(CheckBox::default_draw);
 }
 
 void Theme::init_font()
@@ -237,7 +237,7 @@ void Theme::draw_box(Painter& painter,
         }
 
         painter.set(border);
-        painter.set_line_width(border_width);
+        painter.line_width(border_width);
         cairo_stroke(cr);
     }
 
@@ -351,7 +351,7 @@ void Theme::draw_circle(Painter& painter,
     if (border_width)
     {
         painter.set(border);
-        painter.set_line_width(border_width);
+        painter.line_width(border_width);
         cairo_stroke(cr);
     }
 

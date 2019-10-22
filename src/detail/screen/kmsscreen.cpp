@@ -364,7 +364,7 @@ size_t KMSScreen::brightness() const
     return brightness;
 }
 
-void KMSScreen::set_brightness(size_t brightness)
+void KMSScreen::brightness(size_t brightness)
 {
     auto max = max_brightness();
     if (brightness > max)

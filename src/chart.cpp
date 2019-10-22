@@ -29,9 +29,9 @@ static void xticlabelfmt(double v, char* b, size_t len)
 LineChart::LineChart(const Rect& rect)
     : Widget(rect)
 {
-    set_name("LineChart" + std::to_string(m_widgetid));
+    name("LineChart" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill);
+    boxtype(Theme::boxtype::fill);
 }
 
 void LineChart::draw(Painter& painter, const Rect& rect)
@@ -116,9 +116,9 @@ void LineChart::draw(Painter& painter, const Rect& rect)
 PieChart::PieChart(const Rect& rect)
     : Widget(rect)
 {
-    set_name("PieChart" + std::to_string(m_widgetid));
+    name("PieChart" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::fill);
+    boxtype(Theme::boxtype::fill);
 
     static const vector<Color> default_colors =
     {

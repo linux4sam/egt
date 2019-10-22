@@ -173,8 +173,8 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         detail::tokenize(sizestr, 'x', dims);
         if (dims.size() == 2)
         {
-            size.set_width(std::stoi(dims[0]));
-            size.set_height(std::stoi(dims[1]));
+            size.width(std::stoi(dims[0]));
+            size.height(std::stoi(dims[1]));
         }
     }
 

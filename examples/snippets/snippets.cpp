@@ -34,7 +34,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             /// @[label2]
             TopWindow window;
             Label label(window, "I'm a Bigger Label");
-            label.set_font(Font("Sans", 30));
+            label.font(Font("Sans", 30));
             center(label);
             window.show();
             /// @[label2]
@@ -47,7 +47,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             /// @[label3]
             TopWindow window;
             Label label(window, "I'm a Red Label");
-            label.set_color(Palette::ColorId::label_text, Palette::red);
+            label.color(Palette::ColorId::label_text, Palette::red);
             center(label);
             window.show();
             /// @[label3]
@@ -107,11 +107,11 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             button.on_click([&button, &colors](Event & event)
             {
                 static float step = 0;
-                button.set_color(Palette::ColorId::button_bg,
-                                 colors.interp(step += 0.1));
-                button.set_color(Palette::ColorId::button_bg,
-                                 colors.interp(1.0 - step),
-                                 Palette::GroupId::active);
+                button.color(Palette::ColorId::button_bg,
+                             colors.interp(step += 0.1));
+                button.color(Palette::ColorId::button_bg,
+                             colors.interp(1.0 - step),
+                             Palette::GroupId::active);
                 if (step >= 1.0)
                     step = 0.;
             });
@@ -148,12 +148,11 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             center(button);
 
             PropertyAnimatorF animation;
-            animation.set_starting(0.0);
-            animation.set_ending(1.0);
-            animation.set_duration(std::chrono::seconds(5));
-            animation.set_easing_func(easing_linear);
-            animation.on_change(std::bind(&Button::set_alpha,
-                                          &button, std::placeholders::_1));
+            animation.starting(0.0);
+            animation.ending(1.0);
+            animation.duration(std::chrono::seconds(5));
+            animation.easing_func(easing_linear);
+            animation.on_change([&button](PropertyAnimatorF::Value v) { button.alpha(v); });
             animation.start();
 
             window.show();
@@ -170,12 +169,11 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             button.move_to_center(window.center());
 
             PropertyAnimator animation;
-            animation.set_starting(button.y());
-            animation.set_ending(button.y() + 100);
-            animation.set_duration(std::chrono::seconds(5));
-            animation.set_easing_func(easing_linear);
-            animation.on_change(std::bind(&Button::set_y,
-                                          &button, std::placeholders::_1));
+            animation.starting(button.y());
+            animation.ending(button.y() + 100);
+            animation.duration(std::chrono::seconds(5));
+            animation.easing_func(easing_linear);
+            animation.on_change([&button](PropertyAnimator::Value v) { button.y(v); });
 
             animation.start();
 
@@ -194,10 +192,10 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             const Point starting_point = button.point();
 
             PropertyAnimator animation;
-            animation.set_starting(0);
-            animation.set_ending(100);
-            animation.set_duration(std::chrono::seconds(5));
-            animation.set_easing_func(easing_linear);
+            animation.starting(0);
+            animation.ending(100);
+            animation.duration(std::chrono::seconds(5));
+            animation.easing_func(easing_linear);
             animation.on_change([&button, starting_point](int value)
             {
                 auto point = starting_point;
@@ -221,15 +219,15 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             center(label);
 
             PropertyAnimatorF animation;
-            animation.set_starting(8.f);
-            animation.set_ending(120.f);
-            animation.set_duration(std::chrono::seconds(5));
-            animation.set_easing_func(easing_linear);
+            animation.starting(8.f);
+            animation.ending(120.f);
+            animation.duration(std::chrono::seconds(5));
+            animation.easing_func(easing_linear);
             animation.on_change([&label](float value)
             {
                 auto font = label.font();
-                font.set_size(value);
-                label.set_font(font);
+                font.size(value);
+                label.font(font);
             });
 
             animation.start();
@@ -248,13 +246,13 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             center(button);
 
             PropertyAnimatorF animation;
-            animation.set_starting(0.0);
-            animation.set_ending(app.screen()->max_brightness());
-            animation.set_duration(std::chrono::seconds(5));
-            animation.set_easing_func(easing_linear);
+            animation.starting(0.0);
+            animation.ending(app.screen()->max_brightness());
+            animation.duration(std::chrono::seconds(5));
+            animation.easing_func(easing_linear);
             animation.on_change([&app](float v)
             {
-                app.screen()->set_brightness(v);
+                app.screen()->brightness(v);
             });
             animation.start();
 
@@ -275,7 +273,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             CheckBox checkbox(sizer, "Button Disabled");
             checkbox.on_event([&button, &checkbox](Event & event)
             {
-                button.set_disabled(checkbox.checked());
+                button.disabled(checkbox.checked());
             }, {eventid::property_changed});
 
             window.show();
@@ -289,7 +287,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             /// @[timer1]
             TopWindow window;
             Label label(window);
-            label.set_text_align(alignmask::center);
+            label.text_align(alignmask::center);
             center(label);
 
             PeriodicTimer timer(std::chrono::seconds(1));
@@ -298,7 +296,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
                 static auto count = 0;
                 std::ostringstream ss;
                 ss << ++count;
-                label.set_text(ss.str());
+                label.text(ss.str());
             });
             timer.start();
 
@@ -330,7 +328,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             } theme;
 
             theme.apply();
-            window.set_theme(theme);
+            window.theme(theme);
 
             Button button0(window, "Button");
             center(left(button0));
@@ -356,7 +354,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
                                 Palette::GroupId::normal,
                                 Palette::blue);
 
-            window.set_theme(theme);
+            window.theme(theme);
 
             Button button0(window, "Button");
             center(left(button0));
@@ -428,7 +426,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
 
             VideoWindow player(window.content_area(), "assets/video.mp4");
             window.add(player);
-            player.set_volume(5);
+            player.volume(5);
             player.show();
             player.play();
 

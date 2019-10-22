@@ -60,7 +60,7 @@ public:
  *
  * Observing code can change the Button Drawable by calling:
  * @code
- * Drawer<Button>::set_draw([](Button & widget, Painter & painter, const Rect & rect)
+ * Drawer<Button>::draw([](Button & widget, Painter & painter, const Rect & rect)
  * {
  *     ...
  * });
@@ -74,7 +74,7 @@ public:
     /**
      * Set the default Drawable for all buttons.
      */
-    static void set_draw(typename Drawable<T>::draw_t d)
+    static void draw(typename Drawable<T>::draw_t d)
     {
         m_drawable = d;
     }
@@ -159,7 +159,7 @@ public:
         return *m_palette;
     }
 
-    void set_palette(Palette& palette)
+    void palette(Palette& palette)
     {
         assert(m_palette);
         *m_palette = palette;
@@ -177,7 +177,7 @@ public:
         return *m_font;
     }
 
-    void set_font(const Font& font)
+    void font(const Font& font)
     {
         assert(m_font);
         *m_font = font;
@@ -266,7 +266,7 @@ EGT_API Theme& global_theme();
  *
  * @note This will destroy any pre-existing theme instance.
  */
-EGT_API void set_global_theme(std::shared_ptr<Theme> theme);
+EGT_API void global_theme(std::shared_ptr<Theme> theme);
 
 }
 }

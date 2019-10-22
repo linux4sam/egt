@@ -230,12 +230,12 @@ public:
      *
      * @warning This is experimental.
      */
-    virtual void set_scale(float /*scalex*/, float /*scaley*/)
+    virtual void scale(float /*scalex*/, float /*scaley*/)
     {}
 
-    inline void set_scale(float scale)
+    inline void scale(float scale)
     {
-        this->set_scale(scale, scale);
+        this->scale(scale, scale);
     }
 
     /**
@@ -243,14 +243,14 @@ public:
      *
      * @param[in] w The new width of the Widget.
      */
-    inline void set_width(default_dim_type w) { resize(Size(w, height())); }
+    inline void width(default_dim_type w) { resize(Size(w, height())); }
 
     /**
      * Change the height.
      *
      * @param[in] h The new height of the Widget.
      */
-    inline void set_height(default_dim_type h) { resize(Size(width(), h)); }
+    inline void height(default_dim_type h) { resize(Size(width(), h)); }
 
     /**
      * Move the Widget to a new position.
@@ -267,14 +267,14 @@ public:
      *
      * @param[in] x The new origin X value for the widget relative to its parent.
      */
-    inline void set_x(default_dim_type x) { move(Point(x, y())); }
+    inline void x(default_dim_type x) { move(Point(x, y())); }
 
     /**
      * Set the y coordinate of the box.
      *
      * @param[in] y The new origin Y value for the widget relative to its parent.
      */
-    inline void set_y(default_dim_type y) { move(Point(x(), y)); }
+    inline void y(default_dim_type y) { move(Point(x(), y)); }
 
     /**
      * Move the widget to the specified center point.
@@ -301,7 +301,7 @@ public:
      * This is the same as calling Widget::move() and Widget::resize() at the
      * same time.
      */
-    virtual void set_box(const Rect& rect);
+    virtual void box(const Rect& rect);
 
     /**
      * Hide the Widget.
@@ -330,7 +330,7 @@ public:
     /**
      * Set the visible property.
      */
-    virtual void set_visible(bool value);
+    virtual void visible(bool value);
 
     /**
      * Toggle the visibility state.
@@ -358,7 +358,7 @@ public:
      *
      * The meaning of active is largely up to the derived implementation.
      */
-    virtual void set_active(bool value);
+    virtual void active(bool value);
 
     /**
      * Return true if the widget is readonly.
@@ -376,14 +376,14 @@ public:
      *
      * @param value Readonly when true.
      */
-    virtual void set_readonly(bool value);
+    virtual void readonly(bool value);
 
     /**
      * Toggle the readonly state.
      */
     inline void readonly_toggle()
     {
-        set_readonly(!readonly());
+        readonly(!readonly());
     }
 
     /**
@@ -426,7 +426,7 @@ public:
      * @see Widget::enable()
      * @see Widget::disable()
      */
-    inline void set_disabled(bool value)
+    inline void disabled(bool value)
     {
         if (value)
             disable();
@@ -447,7 +447,7 @@ public:
      *
      * @param[in] alpha Widget alpha component in range 0.0 - 1.0.
      */
-    virtual void set_alpha(float alpha);
+    virtual void alpha(float alpha);
 
     /**
      * Damage the box() of the widget and cause a redraw.
@@ -536,12 +536,12 @@ public:
      * @param palette The new palette to assign to the widget.
      * @note This will overwrite the entire widget Palette.
      */
-    virtual void set_palette(const Palette& palette);
+    virtual void palette(const Palette& palette);
 
     /**
      * Reset the widget's palette to a default state.
      */
-    virtual void reset_palette();
+    virtual void repalette();
 
     /**
      * Get a Widget color.
@@ -569,9 +569,9 @@ public:
      * @param color Color to set.
      * @param group Palette::GroupId to set.
      */
-    void set_color(Palette::ColorId id,
-                   const Palette::pattern_type& color,
-                   Palette::GroupId group = Palette::GroupId::normal);
+    void color(Palette::ColorId id,
+               const Palette::pattern_type& color,
+               Palette::GroupId group = Palette::GroupId::normal);
 
     /**
      * Get a pointer to the parent Frame, or nullptr if none exists.
@@ -608,7 +608,7 @@ public:
      *
      * @param[in] a The alignmask.
      */
-    virtual void set_align(alignmask a);
+    virtual void align(alignmask a);
 
     /**
      * Get the alignment.
@@ -618,7 +618,7 @@ public:
     /**
      * Set the alignment padding.
      */
-    inline void set_padding(default_dim_type padding)
+    inline void padding(default_dim_type padding)
     {
         if (detail::change_if_diff<>(m_padding, padding))
         {
@@ -635,7 +635,7 @@ public:
     /**
      * Set the margin.
      */
-    inline void set_margin(default_dim_type margin)
+    inline void margin(default_dim_type margin)
     {
         if (detail::change_if_diff<>(m_margin, margin))
         {
@@ -652,7 +652,7 @@ public:
     /**
      * Set the border.
      */
-    inline void set_border(default_dim_type border)
+    inline void border(default_dim_type border)
     {
         if (detail::change_if_diff<>(m_border, border))
         {
@@ -669,18 +669,18 @@ public:
     /**
      * Set the horizontal and vertical ratio.
      *
-     * @note This is the same as calling Widget::set_ratio(ratio, ratio).
+     * @note This is the same as calling Widget::ratio(ratio, ratio).
      */
-    inline void set_ratio(default_dim_type ratio)
+    inline void ratio(default_dim_type ratio)
     {
-        set_ratio(ratio, ratio);
+        this->ratio(ratio, ratio);
     }
 
     /**
      * Set the ratio.
      */
-    inline void set_ratio(default_dim_type horizontal,
-                          default_dim_type vertical)
+    inline void ratio(default_dim_type horizontal,
+                      default_dim_type vertical)
     {
         auto a = detail::change_if_diff<>(m_horizontal_ratio, horizontal);
         auto b = detail::change_if_diff<>(m_vertical_ratio, vertical);
@@ -691,7 +691,7 @@ public:
     /**
      * Set the vertical ratio.
      */
-    inline void set_vertical_ratio(default_dim_type vertical)
+    inline void vertical_ratio(default_dim_type vertical)
     {
         if (detail::change_if_diff<>(m_vertical_ratio, vertical))
             parent_layout();
@@ -705,7 +705,7 @@ public:
     /**
      * Set the horizontal ratio.
      */
-    inline void set_horizontal_ratio(default_dim_type horizontal)
+    inline void horizontal_ratio(default_dim_type horizontal)
     {
         if (detail::change_if_diff<>(m_horizontal_ratio, horizontal))
             parent_layout();
@@ -719,7 +719,7 @@ public:
     /**
      * Set the Y ratio.
      */
-    inline void set_yratio(default_dim_type yratio)
+    inline void yratio(default_dim_type yratio)
     {
         if (detail::change_if_diff<>(m_yratio, yratio))
             parent_layout();
@@ -733,7 +733,7 @@ public:
     /**
      * Set the X ratio.
      */
-    inline void set_xratio(default_dim_type xratio)
+    inline void xratio(default_dim_type xratio)
     {
         if (detail::change_if_diff<>(m_xratio, xratio))
             parent_layout();
@@ -800,17 +800,17 @@ public:
     /**
      * Set the Widget's theme to a new theme.
      */
-    void set_theme(const Theme& theme);
+    void theme(const Theme& theme);
 
     /**
      * Reset the Widget's Theme to the default Theme.
      */
-    void reset_theme();
+    void retheme();
 
     /**
      * Set the boxtype.
      */
-    inline void set_boxtype(const Theme::boxtype& type)
+    inline void boxtype(const Theme::boxtype& type)
     {
         if (detail::change_if_diff<>(m_boxtype, type))
             damage();
@@ -947,7 +947,7 @@ public:
      *
      * @note This will overwrite the entire widget Font.
      */
-    void set_font(const Font& font)
+    void font(const Font& font)
     {
         if (m_font && *m_font == font)
             return;
@@ -966,7 +966,7 @@ public:
     /**
      * Set checked state of the widget.
      */
-    virtual void set_checked(bool value)
+    virtual void checked(bool value)
     {
         if (detail::change_if_diff<>(m_checked, value))
             damage();
@@ -984,7 +984,7 @@ protected:
     /**
      * Set this widget's parent.
      */
-    virtual void set_parent(Frame* parent);
+    virtual void parent(Frame* parent);
 
     /**
      * Get a reference to the default palette.

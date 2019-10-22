@@ -20,7 +20,7 @@ VirtualKeyboard::Key::Key(uint32_t unicode, double length) noexcept
 {
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
-    m_button->set_text(tmp);
+    m_button->text(tmp);
     m_button->flags().set(Widget::flag::no_autoresize);
 }
 
@@ -70,26 +70,26 @@ VirtualKeyboard::Key::Key(uint32_t unicode,
 {
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
-    m_button->set_text(tmp);
+    m_button->text(tmp);
     m_button->flags().set(Widget::flag::no_autoresize);
 }
 
-void VirtualKeyboard::Key::set_color(Palette::ColorId id, const Palette::pattern_type& color, Palette::GroupId group)
+void VirtualKeyboard::Key::color(Palette::ColorId id, const Palette::pattern_type& color, Palette::GroupId group)
 {
-    m_button->set_color(id, color, group);
+    m_button->color(id, color, group);
 }
 
-void VirtualKeyboard::Key::set_font(const Font& font)
+void VirtualKeyboard::Key::font(const Font& font)
 {
-    m_button->set_font(font);
+    m_button->font(font);
 }
 
 VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
     : Frame(rect)
 {
-    set_name("VirtualKeyboard" + std::to_string(m_widgetid));
+    name("VirtualKeyboard" + std::to_string(m_widgetid));
 
-    m_main_panel.set_align(alignmask::expand);
+    m_main_panel.align(alignmask::expand);
     add(m_main_panel);
 
     for (auto& keys_panel : keys)
@@ -103,26 +103,26 @@ VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
     for (auto& keys_panel : keys)
     {
         auto panel = make_shared<Panel>(keys_panel);
-        panel->set_align(alignmask::expand);
+        panel->align(alignmask::expand);
         panel->update_key_space(m_key_space);
         m_main_panels.push_back(panel);
 
         auto main_panel = make_shared<NotebookTab>();
         main_panel->add(panel);
-        main_panel->set_align(alignmask::expand);
+        main_panel->align(alignmask::expand);
         // By default NotebookTab are not transparent.
-        main_panel->set_boxtype(Theme::boxtype::none);
+        main_panel->boxtype(Theme::boxtype::none);
         m_main_panel.add(main_panel);
 
         for (auto& keys_row : keys_panel)
         {
             for (auto& key : keys_row)
             {
-                set_key_link(key);
-                set_key_input_value(key);
+                key_link(key);
+                key_input_value(key);
                 if (!key->m_keys_multichoice.empty())
                 {
-                    set_key_multichoice(key);
+                    key_multichoice(key);
 
                 }
             }
@@ -151,7 +151,7 @@ void VirtualKeyboard::resize(const Size& s)
         main_panel->update_key_size(key_base_size);
 }
 
-void VirtualKeyboard::set_key_space(unsigned key_space)
+void VirtualKeyboard::key_space(unsigned key_space)
 {
     m_key_space = key_space;
     for (auto& main_panel : m_main_panels)
@@ -164,7 +164,7 @@ VirtualKeyboard::Panel::Panel(panel_keys keys)
     for (auto& row : keys)
     {
         auto hsizer = make_shared<HorizontalBoxSizer>();
-        hsizer->set_align(alignmask::expand_horizontal | alignmask::top);
+        hsizer->align(alignmask::expand_horizontal | alignmask::top);
         add(hsizer);
 
         for (auto& key : row)
@@ -176,7 +176,7 @@ void VirtualKeyboard::Panel::update_key_space(unsigned key_space)
 {
     for (auto& row : m_keys)
         for (auto& key : row)
-            key->m_button->set_margin(key_space / 2);
+            key->m_button->margin(key_space / 2);
 }
 
 void VirtualKeyboard::Panel::update_key_size(const Size& s)
@@ -186,15 +186,15 @@ void VirtualKeyboard::Panel::update_key_size(const Size& s)
             key->m_button->resize(Size(s.width() * key->m_length, s.height()));
 }
 
-void VirtualKeyboard::set_key_link(const shared_ptr<Key>& k)
+void VirtualKeyboard::key_link(const shared_ptr<Key>& k)
 {
     k->m_button->on_event([this, k](Event&)
     {
-        m_main_panel.set_selected(k->m_link);
+        m_main_panel.selected(k->m_link);
     }, {eventid::pointer_click});
 }
 
-void VirtualKeyboard::set_key_input_value(const shared_ptr<Key>& k)
+void VirtualKeyboard::key_input_value(const shared_ptr<Key>& k)
 {
     k->m_button->on_event([this, k](Event & event)
     {
@@ -205,7 +205,7 @@ void VirtualKeyboard::set_key_input_value(const shared_ptr<Key>& k)
             event2.key().keycode = k->m_keycode;
             m_in.dispatch(event2);
 
-            event2.set_id(eventid::keyboard_up);
+            event2.id(eventid::keyboard_up);
             event2.key().unicode = k->m_unicode;
             event2.key().keycode = k->m_keycode;
             m_in.dispatch(event2);
@@ -215,10 +215,10 @@ void VirtualKeyboard::set_key_input_value(const shared_ptr<Key>& k)
     }, {eventid::pointer_click});
 }
 
-void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k)
+void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
 {
     k->m_multichoice_panel = make_shared<Panel>(k->m_keys_multichoice);
-    k->m_multichoice_panel->set_align(alignmask::center);
+    k->m_multichoice_panel->align(alignmask::center);
 
     // Create a Popup to display the multichoice panel.
     k->m_button->on_event([this, k](Event&)
@@ -237,20 +237,20 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k)
         auto main_window_origin = main_window()->display_to_local(display_origin);
 
         // Popup on top of the key.
-        main_window_origin.set_y(main_window_origin.y() - m_multichoice_popup->height());
+        main_window_origin.y(main_window_origin.y() - m_multichoice_popup->height());
         // If it goes out of the main_window, move it at the bottom of the key.
         if (main_window_origin.y() < 0)
-            main_window_origin.set_y(main_window()->display_to_local(display_origin).y() + k->m_button->height());
+            main_window_origin.y(main_window()->display_to_local(display_origin).y() + k->m_button->height());
 
         // Popup aligned with key.
-        main_window_origin.set_x(main_window_origin.x() - m_multichoice_popup->width() / 2);
-        main_window_origin.set_x(main_window_origin.x() + k->m_button->width() / 2);
+        main_window_origin.x(main_window_origin.x() - m_multichoice_popup->width() / 2);
+        main_window_origin.x(main_window_origin.x() + k->m_button->width() / 2);
         // Update the position if it goes out of the main_window.
         if (main_window_origin.x() < 0)
-            main_window_origin.set_x(0);
+            main_window_origin.x(0);
 
         if (main_window_origin.x() + m_multichoice_popup->width() > main_window()->width())
-            main_window_origin.set_x(main_window()->width() - m_multichoice_popup->width());
+            main_window_origin.x(main_window()->width() - m_multichoice_popup->width());
 
         m_multichoice_popup->move(main_window_origin);
         m_multichoice_popup->show_modal();
@@ -277,7 +277,7 @@ void VirtualKeyboard::set_key_multichoice(const shared_ptr<Key>& k)
                     up.key().keycode = key_multichoice->m_keycode;
                     m_in.dispatch(up);
                     // the modal popup caught the raw_pointer_up event
-                    k->m_button->set_active(false);
+                    k->m_button->active(false);
                 }
                 // User may just move his finger so prefer the raw_pointer_up event to the pointer_click one.
             }, {eventid::raw_pointer_up});
@@ -290,8 +290,8 @@ static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
 PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard) noexcept
 {
     // Make the keyboard partially transparent.
-    set_boxtype(Theme::boxtype::fill);
-    set_color(Palette::ColorId::bg, Color(Palette::transparent, 80));
+    boxtype(Theme::boxtype::fill);
+    color(Palette::ColorId::bg, Color(Palette::transparent, 80));
 
     auto popup_width = Application::instance().screen()->size().width();
     auto popup_height = Application::instance().screen()->size().height() * 0.4;
@@ -300,42 +300,42 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
     auto y_keyboard_position = Application::instance().screen()->size().height() - popup_height;
     move(Point(0, y_keyboard_position));
 
-    m_vsizer.set_align(alignmask::expand);
+    m_vsizer.align(alignmask::expand);
     add(m_vsizer);
 
-    m_hsizer.set_align(alignmask::top | alignmask::right);
+    m_hsizer.align(alignmask::top | alignmask::right);
     m_vsizer.add(m_hsizer);
 
-    m_top_bottom_button.set_align(alignmask::top | alignmask::right);
+    m_top_bottom_button.align(alignmask::top | alignmask::right);
     m_top_bottom_button.on_event([this, y_keyboard_position](Event&)
     {
         if (m_bottom_positionned)
         {
             move(Point(0, 0));
-            m_top_bottom_button.set_image(Image("@arrow_down.png"));
+            m_top_bottom_button.image(Image("@arrow_down.png"));
         }
         else
         {
             move(Point(0, y_keyboard_position));
-            m_top_bottom_button.set_image(Image("@arrow_up.png"));
+            m_top_bottom_button.image(Image("@arrow_up.png"));
         }
 
         m_bottom_positionned = !m_bottom_positionned;
     }, {eventid::pointer_click});
     m_hsizer.add(m_top_bottom_button);
 
-    m_close_button.set_align(alignmask::top | alignmask::right);
+    m_close_button.align(alignmask::top | alignmask::right);
     m_close_button.on_event([this, y_keyboard_position](Event&)
     {
         hide();
         // By default, the virtual keyboard is displayed at the bottom of the screen.
         move(Point(0, y_keyboard_position));
-        m_top_bottom_button.set_image(Image("@arrow_up.png"));
+        m_top_bottom_button.image(Image("@arrow_up.png"));
         m_bottom_positionned = true;
     }, {eventid::pointer_click});
     m_hsizer.add(m_close_button);
 
-    keyboard->set_align(alignmask::expand);
+    keyboard->align(alignmask::expand);
     m_vsizer.add(keyboard);
 
     the_popup_virtual_keyboard = this;

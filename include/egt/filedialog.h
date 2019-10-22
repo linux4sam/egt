@@ -67,7 +67,7 @@ public:
      *
      * @param[in] fselect is a selected filename.
      */
-    virtual void set_selected(const std::string& fselect) = 0;
+    virtual void selected(const std::string& fselect) = 0;
 
     virtual ~FileDialog() = default;
 
@@ -139,7 +139,7 @@ public:
 
     virtual void show_centered() override;
 
-    virtual void set_selected(const std::string& fselect) override;
+    virtual void selected(const std::string& fselect) override;
 
     /**
      * return file selected in file open dialog window.
@@ -206,7 +206,7 @@ public:
 
     virtual void show_centered() override;
 
-    virtual void set_selected(const std::string& fselect) override;
+    virtual void selected(const std::string& fselect) override;
 
     /**
      * Selected a location for saving a file.

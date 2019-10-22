@@ -105,7 +105,7 @@ HardwareSprite::HardwareSprite(Sprite& interface, const Image& image, const Size
       m_label(image),
       m_interface(interface)
 {
-    m_label.set_image_align(alignmask::none);
+    m_label.image_align(alignmask::none);
     interface.resize(m_image.size());
 
     interface.allocate_screen();
@@ -115,7 +115,7 @@ HardwareSprite::HardwareSprite(Sprite& interface, const Image& image, const Size
     plane_set_pan_size(s->s(), m_frame.width(), m_frame.height());
 
     // hack to change the size because the screen size and the box size are different
-    interface.m_box.set_size(frame_size);
+    interface.m_box.size(frame_size);
 }
 
 void HardwareSprite::draw(Painter& painter, const Rect& rect)
@@ -204,8 +204,8 @@ Sprite::Sprite(const Image& image, const Size& frame_size,
                int frame_count, const Point& frame_point)
     : Window(Rect({}, image.size()), pixel_format::argb8888)
 {
-    set_name("Sprite" + std::to_string(m_widgetid));
-    set_boxtype(Theme::boxtype::none);
+    name("Sprite" + std::to_string(m_widgetid));
+    boxtype(Theme::boxtype::none);
     create_impl(image, frame_size, frame_count, frame_point);
 }
 
@@ -267,11 +267,11 @@ uint32_t Sprite::frame_count() const
     return m_simpl->frame_count();
 }
 
-void Sprite::set_strip(uint32_t id)
+void Sprite::change_strip(uint32_t id)
 {
     if (!m_simpl)
         throw std::runtime_error("no sprite implementation initialized");
-    m_simpl->set_strip(id);
+    m_simpl->change_strip(id);
 }
 
 uint32_t Sprite::add_strip(int frame_count, const Point& frame_point)

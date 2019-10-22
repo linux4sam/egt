@@ -18,16 +18,16 @@ void NotebookTab::select()
     {
         auto notebook = dynamic_cast<Notebook*>(parent());
         if (notebook)
-            notebook->set_selected(this);
+            notebook->selected(this);
     }
 }
 
 Notebook::Notebook(const Rect& rect) noexcept
     : Frame(rect)
 {
-    set_name("Notebook" + std::to_string(m_widgetid));
+    name("Notebook" + std::to_string(m_widgetid));
 
-    set_boxtype(Theme::boxtype::none);
+    boxtype(Theme::boxtype::none);
 }
 
 Notebook::Notebook(Frame& parent, const Rect& rect) noexcept
@@ -52,7 +52,7 @@ void Notebook::add(std::shared_ptr<Widget> widget)
 
     m_cells.push_back(cell);
 
-    widget->set_align(alignmask::expand);
+    widget->align(alignmask::expand);
 
     Frame::add(widget);
 
@@ -90,13 +90,13 @@ void Notebook::remove(Widget* widget)
     if (m_selected >= static_cast<int>(m_cells.size()))
     {
         if (!m_cells.empty())
-            set_selected(m_cells.size() - 1);
+            selected(m_cells.size() - 1);
         else
             m_selected = -1;
     }
 }
 
-void Notebook::set_selected(size_t index)
+void Notebook::selected(size_t index)
 {
     if (m_cells.empty())
         return;
@@ -130,7 +130,7 @@ void Notebook::set_selected(size_t index)
     }
 }
 
-void Notebook::set_selected(Widget* widget)
+void Notebook::selected(Widget* widget)
 {
     auto predicate = [widget](const std::weak_ptr<NotebookTab>& ptr)
     {
@@ -142,7 +142,7 @@ void Notebook::set_selected(Widget* widget)
 
     auto i = std::find_if(m_cells.begin(), m_cells.end(), predicate);
     if (i != m_cells.end())
-        set_selected(std::distance(m_cells.begin(), i));
+        selected(std::distance(m_cells.begin(), i));
 }
 
 NotebookTab* Notebook::get(size_t index) const

@@ -22,7 +22,7 @@ public:
           m_color(color)
     {
         expand(m_grid);
-        set_color(Palette::ColorId::bg, Palette::black);
+        this->color(Palette::ColorId::bg, Palette::black);
         add(m_grid);
 
         const vector<Color> colors =
@@ -53,14 +53,14 @@ public:
         {
             auto color_label = make_shared<RectangleWidget>();
 
-            color_label->set_color(Palette::ColorId::button_bg, c);
+            color_label->color(Palette::ColorId::button_bg, c);
 
             m_grid.add(expand(color_label));
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
             if (c == m_color)
-                m_grid.set_selected(column, row);
+                m_grid.selected(column, row);
 
             color_label->on_event([this](Event&)
             {
@@ -70,6 +70,7 @@ public:
         }
     }
 
+    using Widget::color;
     const Color& color() const { return m_color; }
 
 protected:
@@ -87,7 +88,7 @@ public:
           m_width(width)
     {
         expand(m_grid);
-        set_color(Palette::ColorId::bg, Palette::black);
+        color(Palette::ColorId::bg, Palette::black);
         add(m_grid);
 
         const vector<int> widths =
@@ -101,14 +102,14 @@ public:
         for (auto& w : widths)
         {
             auto width_label = make_shared<Label>(std::to_string(w), alignmask::center);
-            width_label->set_color(Palette::ColorId::label_text, Palette::white);
+            width_label->color(Palette::ColorId::label_text, Palette::white);
 
             m_grid.add(expand(width_label));
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
             if (w == m_width)
-                m_grid.set_selected(column, row);
+                m_grid.selected(column, row);
 
             width_label->on_event([this](Event&)
             {
@@ -142,23 +143,23 @@ public:
           m_canvas(screen()->size(), pixel_format::argb8888)
     {
         // don't draw background, we'll do it in draw()
-        set_boxtype(Theme::boxtype::none);
-        set_color(Palette::ColorId::bg, Palette::white);
+        boxtype(Theme::boxtype::none);
+        color(Palette::ColorId::bg, Palette::white);
 
         m_sizer = make_shared<VerticalBoxSizer>(*this);
         top(left(m_sizer));
 
-        m_colorbtn.set_boxtype(Theme::boxtype::none);
-        m_fillbutton.set_boxtype(Theme::boxtype::none);
-        m_widthbtn.set_boxtype(Theme::boxtype::none);
-        m_clearbtn.set_boxtype(Theme::boxtype::none);
-        m_snapshotbtn.set_boxtype(Theme::boxtype::none);
+        m_colorbtn.boxtype(Theme::boxtype::none);
+        m_fillbutton.boxtype(Theme::boxtype::none);
+        m_widthbtn.boxtype(Theme::boxtype::none);
+        m_clearbtn.boxtype(Theme::boxtype::none);
+        m_snapshotbtn.boxtype(Theme::boxtype::none);
 
-        m_colorbtn.set_image_align(alignmask::expand);
-        m_fillbutton.set_image_align(alignmask::expand);
-        m_widthbtn.set_image_align(alignmask::expand);
-        m_clearbtn.set_image_align(alignmask::expand);
-        m_snapshotbtn.set_image_align(alignmask::expand);
+        m_colorbtn.image_align(alignmask::expand);
+        m_fillbutton.image_align(alignmask::expand);
+        m_widthbtn.image_align(alignmask::expand);
+        m_clearbtn.image_align(alignmask::expand);
+        m_snapshotbtn.image_align(alignmask::expand);
 
         add(m_penpicker);
         add(m_fillpicker);
@@ -197,8 +198,8 @@ public:
         }, {eventid::pointer_click});
 
         auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
-        logo->set_align(alignmask::right | alignmask::top);
-        logo->set_margin(10);
+        logo->align(alignmask::right | alignmask::top);
+        logo->margin(10);
         add(logo);
 
         clear();
@@ -242,7 +243,7 @@ public:
                 Line line(m_last, mouse);
                 Painter painter(m_canvas.context());
                 cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
-                painter.set_line_width(width);
+                painter.line_width(width);
                 auto cr = painter.context();
                 cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
                 painter.set(m_penpicker.color());

@@ -58,31 +58,38 @@ int main(int argc, const char** argv)
     auto format = pixel_format::yuv420;
     if (argc == 5)
     {
-        size.set_width(atoi(argv[2]));
-        size.set_height(atoi(argv[3]));
+        size.width(atoi(argv[2]));
+        size.height(atoi(argv[3]));
         if (atoi(argv[4]) <= 10)
             format = static_cast<pixel_format>(atoi(argv[4]));
     }
 
     Application app(argc, argv, "video");
     TopWindow win;
-    win.set_color(Palette::ColorId::bg, Palette::black);
+    win.color(Palette::ColorId::bg, Palette::black);
 
     Label errlabel;
-    errlabel.set_color(Palette::ColorId::label_text, Palette::white);
-    errlabel.set_align(alignmask::expand);
-    errlabel.set_text_align(alignmask::center | alignmask::top);
+    errlabel.color(Palette::ColorId::label_text, Palette::white);
+    errlabel.align(alignmask::expand);
+    errlabel.text_align(alignmask::center | alignmask::top);
     win.add(errlabel);
 
     // player after label to handle drag
     VideoWindow player(size, format, windowhint::overlay);
     player.move_to_center(win.center());
-    player.set_volume(5);
+    player.volume(5);
     win.add(player);
 
+    // wait to start playing the video until the window is shown
+    win.on_event([&player, argv](Event&)
+    {
+        player.media(argv[1]);
+        player.play();
+    }, {eventid::show});
+
     Window ctrlwindow(Size(win.width(), 72));
-    ctrlwindow.set_align(alignmask::bottom | alignmask::center);
-    ctrlwindow.set_color(Palette::ColorId::bg, Palette::transparent);
+    ctrlwindow.align(alignmask::bottom | alignmask::center);
+    ctrlwindow.color(Palette::ColorId::bg, Palette::transparent);
     win.add(ctrlwindow);
 
     HorizontalBoxSizer hpos;
@@ -90,11 +97,11 @@ int main(int argc, const char** argv)
     ctrlwindow.add(hpos);
 
     auto logo = make_shared<ImageLabel>(Image("@32px/egt_logo_icon.png"));
-    logo->set_margin(10);
+    logo->margin(10);
     hpos.add(logo);
 
     ImageButton playbtn(Image(":pause_png"));
-    playbtn.set_boxtype(Theme::boxtype::none);
+    playbtn.boxtype(Theme::boxtype::none);
     hpos.add(playbtn);
 
     playbtn.on_event([&playbtn, &player](Event&)
@@ -102,18 +109,18 @@ int main(int argc, const char** argv)
         if (player.playing())
         {
             if (player.pause())
-                playbtn.set_image(Image(":play_png"));
+                playbtn.image(Image(":play_png"));
         }
         else
         {
             if (player.play())
-                playbtn.set_image(Image(":pause_png"));
+                playbtn.image(Image(":pause_png"));
         }
     }, {eventid::pointer_click});
 
     Slider position(0, 100, 0, orientation::horizontal);
-    position.set_width(ctrlwindow.width() * 0.20);
-    position.set_align(alignmask::expand_vertical);
+    position.width(ctrlwindow.width() * 0.20);
+    position.align(alignmask::expand_vertical);
     position.slider_flags().set({Slider::flag::round_handle});
     hpos.add(position);
 
@@ -131,23 +138,23 @@ int main(int argc, const char** argv)
     }, {eventid::property_changed});
 
     ImageButton volumei(Image(":volumeup_png"));
-    volumei.set_boxtype(Theme::boxtype::none);
+    volumei.boxtype(Theme::boxtype::none);
     hpos.add(volumei);
 
     Slider volume(Size(ctrlwindow.width() * 0.10, ctrlwindow.height()), 0, 10, 0, orientation::horizontal);
     hpos.add(volume);
     volume.slider_flags().set({Slider::flag::round_handle});
-    volume.set_value(5);
-    player.set_volume(5.0);
+    volume.value(5);
+    player.volume(5.0);
     volume.on_event([&volume, &player](Event&)
     {
         auto val = static_cast<double>(volume.value());
-        player.set_volume(val);
+        player.volume(val);
     });
-    volume.set_value(5);
+    volume.value(5);
 
     ImageButton fullscreenbtn(Image(":fullscreen_png"));
-    fullscreenbtn.set_boxtype(Theme::boxtype::none);
+    fullscreenbtn.boxtype(Theme::boxtype::none);
     hpos.add(fullscreenbtn);
 
     const auto vscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
@@ -158,39 +165,39 @@ int main(int argc, const char** argv)
         if (scaled)
         {
             player.move(Point(0, 0));
-            player.set_scale(vscale, vscale);
-            fullscreenbtn.set_image(Image(":fullscreen_exit_png"));
+            player.scale(vscale, vscale);
+            fullscreenbtn.image(Image(":fullscreen_exit_png"));
             scaled = false;
         }
         else
         {
             player.move_to_center(win.center());
-            player.set_scale(1.0, 1.0);
-            fullscreenbtn.set_image(Image(":fullscreen_png"));
+            player.scale(1.0, 1.0);
+            fullscreenbtn.image(Image(":fullscreen_png"));
             scaled = true;
         }
     }, {eventid::pointer_click});
 
     ImageButton loopbackbtn(Image(":repeat_one_png"));
-    loopbackbtn.set_boxtype(Theme::boxtype::none);
+    loopbackbtn.boxtype(Theme::boxtype::none);
     hpos.add(loopbackbtn);
 
     loopbackbtn.on_event([&loopbackbtn, &player](Event&)
     {
         if (player.loopback())
         {
-            loopbackbtn.set_image(Image(":repeat_one_png"));
-            player.set_loopback(false);
+            loopbackbtn.image(Image(":repeat_one_png"));
+            player.loopback(false);
         }
         else
         {
-            loopbackbtn.set_image(Image(":repeat_png"));
-            player.set_loopback(true);
+            loopbackbtn.image(Image(":repeat_png"));
+            player.loopback(true);
         }
     }, {eventid::pointer_click});
 
     Label cpulabel("CPU: 0%");
-    cpulabel.set_color(Palette::ColorId::label_text, Palette::white);
+    cpulabel.color(Palette::ColorId::label_text, Palette::white);
     hpos.add(cpulabel);
 
     egt::experimental::CPUMonitorUsage tools;
@@ -200,18 +207,18 @@ int main(int argc, const char** argv)
         tools.update();
         ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
-        cpulabel.set_text(ss.str());
+        cpulabel.text(ss.str());
     });
     cputimer.start();
 
     // wait to start playing the video until the window is shown
     win.on_event([&player, argv, &position, &ctrlwindow, &volume, &volumei, &hpos](Event&)
     {
-        player.set_media(argv[1]);
+        player.media(argv[1]);
 
         if (!player.has_audio())
         {
-            position.set_width(ctrlwindow.width() * 0.45);
+            position.width(ctrlwindow.width() * 0.45);
             hpos.remove(&volume);
             hpos.remove(&volumei);
         }
@@ -238,13 +245,13 @@ int main(int argc, const char** argv)
                 auto max_x = win.width() - size.width();
                 auto max_y = win.height() - size.height();
                 if (p.x() >= max_x)
-                    p.set_x(max_x);
+                    p.x(max_x);
                 if (p.x() < 0)
-                    p.set_x(0);
+                    p.x(0);
                 if (p.y() >= max_y)
-                    p.set_y(max_y);
+                    p.y(max_y);
                 if (p.y() < 0)
-                    p.set_y(0);
+                    p.y(0);
                 player.move(p);
             }
             break;
@@ -253,14 +260,14 @@ int main(int argc, const char** argv)
         {
             if (player.playing())
             {
-                position.set_value((ns2ms<double>(player.position()) /
-                                    ns2ms<double>(player.duration())) * 100.);
+                position.value((ns2ms<double>(player.position()) /
+                                ns2ms<double>(player.duration())) * 100.);
             }
             break;
         }
         case eventid::error:
         {
-            errlabel.set_text("Error:\n" + line_break(player.error_message()));
+            errlabel.text("Error:\n" + line_break(player.error_message()));
             break;
         }
         default:

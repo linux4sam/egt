@@ -74,7 +74,7 @@ public:
     /**
      * Set option name text alignment.
      */
-    inline void set_name_align(alignmask align)
+    inline void name_align(alignmask align)
     {
         m_name_align = align;
     }
@@ -82,7 +82,7 @@ public:
     /**
      * Set group name text alignment.
      */
-    inline void set_group_align(alignmask align)
+    inline void group_align(alignmask align)
     {
         m_group_align = align;
     }

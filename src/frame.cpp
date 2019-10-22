@@ -24,8 +24,8 @@ inline namespace v1
 Frame::Frame(const Rect& rect, const flags_type& flags) noexcept
     : Widget(rect, flags | Widget::flag::frame)
 {
-    set_name("Frame" + std::to_string(m_widgetid));
-    set_boxtype(Theme::boxtype::none);
+    name("Frame" + std::to_string(m_widgetid));
+    boxtype(Theme::boxtype::none);
 }
 
 void Frame::add(std::shared_ptr<Widget> widget)
@@ -33,7 +33,7 @@ void Frame::add(std::shared_ptr<Widget> widget)
     if (!widget)
         return;
 
-    widget->set_parent(this);
+    widget->parent(this);
     m_children.emplace_back(std::move(widget));
     layout();
 }
@@ -560,7 +560,7 @@ void Frame::layout()
                                              child->vertical_ratio(),
                                              child->xratio(),
                                              child->yratio());
-            child->set_box(r);
+            child->box(r);
         }
     }
 }

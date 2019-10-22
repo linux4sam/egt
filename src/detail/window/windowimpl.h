@@ -38,7 +38,7 @@ public:
     virtual void damage(const Rect& rect);
     virtual Screen* screen();
     virtual void resize(const Size& size);
-    virtual void set_scale(float scalex, float scaley);
+    virtual void scale(float scalex, float scaley);
     virtual void move(const Point& point);
     virtual void begin_draw();
     virtual void show();

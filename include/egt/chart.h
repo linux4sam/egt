@@ -81,7 +81,7 @@ public:
         GRIDY = 0x2
     };
 
-    void set_grid(uint32_t flags)
+    void grid(uint32_t flags)
     {
         if (m_grid != flags)
         {
@@ -90,7 +90,7 @@ public:
         }
     }
 
-    void set_line_width(float width)
+    void line_width(float width)
     {
         if (!detail::float_compare(m_linewidth, width))
         {
