@@ -63,6 +63,8 @@ public:
         return m_plane.get();
     }
 
+    virtual void rotate(uint32_t degrees);
+
     void schedule_flip() override;
 
     uint32_t index() override;

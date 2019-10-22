@@ -158,6 +158,11 @@ void KMSOverlay::apply()
     plane_apply(m_plane.get());
 }
 
+void KMSOverlay::rotate(uint32_t degrees)
+{
+    plane_apply_rotate(m_plane.get(), degrees);
+}
+
 }
 }
 }
