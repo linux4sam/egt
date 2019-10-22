@@ -65,6 +65,13 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::black);
 
+    Label errlabel;
+    errlabel.set_color(Palette::ColorId::label_text, Palette::white);
+    errlabel.set_align(alignmask::expand);
+    errlabel.set_text_align(alignmask::center | alignmask::top);
+    win.add(errlabel);
+
+    // player after label to handle drag
     VideoWindow player(size, pixel_format::yuv420, windowhint::overlay);
     player.set_media(argv[1]);
     player.set_name("video");
@@ -72,12 +79,6 @@ int main(int argc, const char** argv)
     player.play();
     player.set_volume(5);
     win.add(player);
-
-    Label errlabel;
-    errlabel.set_color(Palette::ColorId::label_text, Palette::white);
-    errlabel.set_align(alignmask::expand);
-    errlabel.set_text_align(alignmask::center | alignmask::top);
-    win.add(errlabel);
 
     Window ctrlwindow(Size(win.width(), 72));
     ctrlwindow.set_align(alignmask::bottom | alignmask::center);
