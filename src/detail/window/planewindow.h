@@ -33,7 +33,7 @@ public:
 
     virtual void resize(const Size& size) override;
 
-    virtual void set_scale(float scale) override;
+    virtual void set_scale(float scalex, float scaley) override;
 
     virtual void damage(const Rect& rect) override;
 

@@ -117,7 +117,7 @@ public:
 
     virtual void resize(const Size& size) override;
 
-    virtual void set_scale(float scale) override;
+    virtual void set_scale(float scalex, float scaley) override;
 
     virtual void paint(Painter& painter) override;
 
@@ -171,9 +171,9 @@ protected:
         Frame::resize(size);
     }
 
-    virtual void default_set_scale(float scale)
+    virtual void default_set_scale(float scalex, float scaley)
     {
-        Frame::set_scale(scale);
+        Frame::set_scale(scalex, scaley);
     }
 
     virtual void default_move(const Point& point)

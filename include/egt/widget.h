@@ -230,8 +230,13 @@ public:
      *
      * @warning This is experimental.
      */
-    virtual void set_scale(float /*scale*/)
+    virtual void set_scale(float /*scalex*/, float /*scaley*/)
     {}
+
+    inline void set_scale(float scale)
+    {
+        this->set_scale(scale, scale);
+    }
 
     /**
      * Change the width.

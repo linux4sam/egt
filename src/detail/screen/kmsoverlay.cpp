@@ -117,10 +117,10 @@ void KMSOverlay::set_position(const DisplayPoint& point)
     plane_set_pos(m_plane, point.x(), point.y());
 }
 
-void KMSOverlay::set_scale(float scale)
+void KMSOverlay::set_scale(float scalex, float scaley)
 {
-    /// @todo This is only supported on HEO planes right?  Not primary or other overlays.
-    plane_set_scale(m_plane, scale);
+    /// This is only supported on HEO planes.
+    plane_set_scale_independent(m_plane, scalex, scaley);
 }
 
 void KMSOverlay::set_pan_size(const Size& size)
@@ -133,9 +133,14 @@ void KMSOverlay::set_pan_pos(const Point& point)
     plane_set_pan_pos(m_plane, point.x(), point.y());
 }
 
-float KMSOverlay::scale() const
+float KMSOverlay::scale_x() const
 {
-    return m_plane->scale;
+    return plane_scale_x(m_plane);
+}
+
+float KMSOverlay::scale_y() const
+{
+    return plane_scale_y(m_plane);
 }
 
 uint32_t KMSOverlay::get_plane_format()

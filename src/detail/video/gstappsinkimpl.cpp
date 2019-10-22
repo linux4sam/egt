@@ -209,9 +209,9 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     return play();
 }
 
-void GstAppSinkImpl::scale(float scale)
+void GstAppSinkImpl::scale(float scalex, float scaley)
 {
-    m_interface.resize(Size(m_size.width() * scale, m_size.height() * scale));
+    m_interface.resize(Size(m_size.width() * scalex, m_size.height() * scaley));
 }
 
 } // End of detail

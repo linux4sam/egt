@@ -153,14 +153,14 @@ int main(int argc, const char** argv)
         if (scaled)
         {
             player.move(Point(0, 0));
-            player.set_scale(vscale);
+            player.set_scale(vscale, vscale);
             fullscreenbtn.set_image(Image(":fullscreen_exit_png"));
             scaled = false;
         }
         else
         {
             player.move_to_center(win.center());
-            player.set_scale(1.0);
+            player.set_scale(1.0, 1.0);
             fullscreenbtn.set_image(Image(":fullscreen_png"));
             scaled = true;
         }
@@ -211,7 +211,7 @@ int main(int argc, const char** argv)
         }
         case eventid::pointer_drag:
         {
-            if (!(detail::float_compare(player.scale(), vscale)))
+            if (!(detail::float_compare(player.scalex(), vscale)))
             {
                 auto diff = event.pointer().drag_start - event.pointer().point;
                 auto p = m_start_point - Point(diff.x(), diff.y());

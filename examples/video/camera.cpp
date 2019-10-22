@@ -104,14 +104,14 @@ int main(int argc, const char** argv)
         if (scaled)
         {
             player.move(Point(0, 0));
-            player.set_scale(2.5);
+            player.set_scale(2.5, 2.5);
             fullscreen.set_image(Image(":fullscreen_exit_png"));
             scaled = false;
         }
         else
         {
             player.move(Point(240, 120));
-            player.set_scale(1.0);
+            player.set_scale(1.0, 1.0);
             fullscreen.set_image(Image(":fullscreen_png"));
             scaled = true;
         }

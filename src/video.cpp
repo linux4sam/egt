@@ -136,17 +136,20 @@ bool VideoWindow::seek(int64_t time)
     return m_decoderImpl->seek(time);
 }
 
-void VideoWindow::set_scale(float scale)
+void VideoWindow::set_scale(float scalex, float scaley)
 {
-    if (detail::change_if_diff<float>(m_scale, scale))
+    auto xs = detail::change_if_diff<float>(m_scalex, scalex);
+    auto ys = detail::change_if_diff<float>(m_scaley, scaley);
+
+    if (xs || ys)
     {
         if (!flags().is_set(Widget::flag::plane_window))
         {
-            m_decoderImpl->scale(scale);
+            m_decoderImpl->scale(m_scalex, m_scaley);
         }
         else
         {
-            Window::set_scale(scale);
+            Window::set_scale(m_scalex, m_scaley);
         }
     }
 }

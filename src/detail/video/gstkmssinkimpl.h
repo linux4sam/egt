@@ -35,9 +35,10 @@ public:
         ignoreparam(rect);
     }
 
-    virtual void scale(float scale) override
+    virtual void scale(float scalex, float scaley) override
     {
-        ignoreparam(scale);
+        ignoreparam(scalex);
+        ignoreparam(scaley);
     }
 
     virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) override;

@@ -57,13 +57,13 @@ void PlaneWindow::resize(const Size& size)
     }
 }
 
-void PlaneWindow::set_scale(float scale)
+void PlaneWindow::set_scale(float scalex, float scaley)
 {
     auto screen = dynamic_cast<KMSOverlay*>(m_screen);
     assert(screen);
     if (screen)
     {
-        screen->set_scale(scale);
+        screen->set_scale(scalex, scaley);
         m_dirty = true;
     }
 

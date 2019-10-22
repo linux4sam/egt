@@ -36,10 +36,11 @@ public:
 
     virtual void resize(const Size& size);
     virtual void set_position(const DisplayPoint& point);
-    virtual void set_scale(float scale);
+    virtual void set_scale(float scalex, float scaley);
     virtual void set_pan_size(const Size& size);
     virtual void set_pan_pos(const Point& point);
-    virtual float scale() const;
+    virtual float scale_x() const;
+    virtual float scale_y() const;
 
     virtual uint32_t get_plane_format();
 

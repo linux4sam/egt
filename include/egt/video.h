@@ -162,14 +162,19 @@ public:
      *
      * @param[in] scale
      */
-    virtual void set_scale(float scale) override;
+    virtual void set_scale(float scalex, float scaley) override;
 
     /**
      * Get video scale value.
      */
-    virtual float scale() const
+    inline float scalex() const
     {
-        return m_scale;
+        return m_scalex;
+    }
+
+    inline float scaley() const
+    {
+        return m_scaley;
     }
 
     /**
@@ -181,7 +186,8 @@ public:
 
 protected:
     bool m_loopback;
-    float m_scale = {1.0};
+    float m_scalex{1.0};
+    float m_scaley{1.0};
 
     void createImpl(const Size& size);
 
