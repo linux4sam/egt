@@ -67,7 +67,7 @@ bool GstDecoderImpl::play()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            SPDLOG_DEBUG("VideoWindow: Unable to set the pipeline to the play state.");
+            SPDLOG_ERROR("VideoWindow: Unable to set the pipeline to the play state.");
             destroyPipeline();
             return false;
         }
@@ -82,7 +82,7 @@ bool GstDecoderImpl::pause()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            SPDLOG_DEBUG("VideoWindow: Unable to set the pipeline to the Pause state.");
+            SPDLOG_ERROR("VideoWindow: Unable to set the pipeline to the Pause state.");
             destroyPipeline();
             return false;
         }
@@ -167,7 +167,7 @@ void GstDecoderImpl::destroyPipeline()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            spdlog::error("VideoWindow: failed to set pipeline to GST_STATE_NULL");
+            SPDLOG_ERROR("VideoWindow: failed to set pipeline to GST_STATE_NULL");
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
@@ -213,8 +213,8 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         gst_message_parse_error(message, &error, &debug);
         decodeImpl->m_err_message = error->message;
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_ERROR from element {} {}", GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
+        SPDLOG_ERROR("VideoWindow: GST_MESSAGE_ERROR from element {} {}", GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_ERROR("VideoWindow: GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
 
@@ -248,15 +248,6 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         break;
     }
     break;
-    case GST_MESSAGE_CLOCK_PROVIDE:
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_CLOCK_PROVIDE");
-        break;
-    case GST_MESSAGE_CLOCK_LOST:
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_CLOCK_LOST");
-        break;
-    case GST_MESSAGE_NEW_CLOCK:
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_NEW_CLOCK");
-        break;
     case GST_MESSAGE_EOS:
     {
         SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_EOS: LoopMode: {}", (decodeImpl->m_interface.loopback() ? "TRUE" : "FALSE"));
@@ -279,12 +270,6 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         }
         break;
     }
-    case GST_MESSAGE_PROGRESS:
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_PROGRESS");
-        break;
-    case GST_MESSAGE_DURATION_CHANGED:
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_DURATION_CHANGED");
-        break;
     case GST_MESSAGE_STATE_CHANGED:
     {
         GstState old_state, new_state, pending_state;
@@ -292,8 +277,8 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(decodeImpl->m_pipeline))
         {
             SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_STATE_CHANGED: from {} to {}",
-                         gst_element_state_get_name(old_state),
-                         gst_element_state_get_name(new_state));
+                          gst_element_state_get_name(old_state),
+                          gst_element_state_get_name(new_state));
 
             if (decodeImpl->playing())
             {
@@ -326,7 +311,7 @@ bool GstDecoderImpl::start_discoverer()
         std::shared_ptr<GstDiscoverer>(gst_discoverer_new(5 * GST_SECOND, &err1), g_object_unref);
     if (!discoverer.get())
     {
-        SPDLOG_DEBUG("VideoWindow: Error creating discoverer instance: {}", err1->message);
+        SPDLOG_ERROR("VideoWindow: Error creating discoverer instance: {}", err1->message);
         g_clear_error(&err1);
         return false;
     }
@@ -342,25 +327,25 @@ bool GstDecoderImpl::start_discoverer()
     {
     case GST_DISCOVERER_URI_INVALID:
     {
-        SPDLOG_DEBUG("VideoWindow: Discoverer Invalid URI {} ", m_uri);
+        SPDLOG_ERROR("VideoWindow: Discoverer Invalid URI {} ", m_uri);
         m_err_message = "Discoverer Invalid URI " + m_uri;
         return false;
     }
     case GST_DISCOVERER_ERROR:
     {
-        SPDLOG_DEBUG("VideoWindow: Discoverer error: {} ", err2->message);
+        SPDLOG_ERROR("VideoWindow: Discoverer error: {} ", err2->message);
         m_err_message = "Discoverer Error: " + std::string(err2->message);
         break;
     }
     case GST_DISCOVERER_TIMEOUT:
     {
-        SPDLOG_DEBUG("VideoWindow: Discoverer Timeout");
+        SPDLOG_ERROR("VideoWindow: Discoverer Timeout");
         m_err_message = "Discoverer Timeout ";
         return false;
     }
     case GST_DISCOVERER_BUSY:
     {
-        SPDLOG_DEBUG("VideoWindow: Discoverer Busy");
+        SPDLOG_ERROR("VideoWindow: Discoverer Busy");
         m_err_message = "Discoverer Busy try later ";
         return false;
     }
@@ -368,7 +353,7 @@ bool GstDecoderImpl::start_discoverer()
     {
         const GstStructure* s = gst_discoverer_info_get_misc(info.get());
         std::shared_ptr<gchar> str = std::shared_ptr<gchar>(gst_structure_to_string(s), g_free);
-        SPDLOG_DEBUG("VideoWindow: Discoverer Missing plugins: {}", str.get());
+        SPDLOG_ERROR("VideoWindow: Discoverer Missing plugins: {}", str.get());
         m_err_message = str.get();
         return false;
     }
@@ -381,7 +366,7 @@ bool GstDecoderImpl::start_discoverer()
                 gst_discoverer_info_get_stream_info(info.get()), g_object_unref);
     if (!sinfo.get())
     {
-        SPDLOG_DEBUG("VideoWindow: Discoverer error: get_stream_info failed");
+        SPDLOG_ERROR("VideoWindow: Discoverer error: get_stream_info failed");
         m_err_message = "Discoverer error: failed to container_info ";
         return false;
     }
@@ -391,7 +376,7 @@ bool GstDecoderImpl::start_discoverer()
                                          gst_discoverer_stream_info_list_free);
     if (!streams.get())
     {
-        SPDLOG_DEBUG("VideoWindow: Discoverer error: failed to container_info");
+        SPDLOG_ERROR("VideoWindow: Discoverer error: failed to container_info");
         m_err_message = "Discoverer error: failed to container_info ";
         return false;
     }

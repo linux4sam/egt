@@ -59,7 +59,7 @@ bool audio_device()
         std::string line;
         while (getline(infile, line))
         {
-            spdlog::info("Sound : {}", line);
+            SPDLOG_DEBUG("Sound : {}", line);
             if (line.find("no soundcards") != std::string::npos)
             {
                 infile.close();

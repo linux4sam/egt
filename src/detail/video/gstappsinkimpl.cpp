@@ -43,8 +43,6 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
         gst_structure_get_int(capsStruct, "width", &width);
         gst_structure_get_int(capsStruct, "height", &height);
 
-        SPDLOG_DEBUG("VideoWindow: videowidth = {}  videoheight = {}", width, height);
-
         gst_sample_ref(m_videosample);
         GstBuffer* buffer = gst_sample_get_buffer(m_videosample);
         if (buffer)
@@ -191,7 +189,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     m_pipeline = gst_parse_launch(buffer.c_str(), &error);
     if (!m_pipeline)
     {
-        spdlog::error("VideoWindow: failed to create video pipeline");
+        SPDLOG_ERROR("VideoWindow: failed to create video pipeline");
         if (error && error->message)
             m_err_message = error->message;
         Event event(eventid::event2);
@@ -202,7 +200,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
     if (!m_appsink)
     {
-        spdlog::error("VideoWindow: failed to get app sink element");
+        SPDLOG_ERROR("VideoWindow: failed to get app sink element");
         m_err_message = "failed to get app sink element";
         Event event(eventid::event2);
         m_interface.invoke_handlers(event);
@@ -214,7 +212,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
         if (!m_volume)
         {
-            spdlog::error("VideoWindow: failed to get volume element");
+            SPDLOG_ERROR("VideoWindow: failed to get volume element");
             m_err_message = "failed to get volume element";
             Event event(eventid::event2);
             m_interface.invoke_handlers(event);
