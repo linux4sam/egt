@@ -175,6 +175,11 @@ void VideoWindow::set_scale(float scalex, float scaley)
     }
 }
 
+bool VideoWindow::has_audio() const
+{
+    return m_decoderImpl->has_audio();
+}
+
 std::string VideoWindow::error_message() const
 {
     return m_decoderImpl->error_message();

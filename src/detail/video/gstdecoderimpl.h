@@ -62,6 +62,8 @@ public:
 
     virtual bool seek(int64_t time);
 
+    virtual bool has_audio() const;
+
     virtual void destroyPipeline();
 
     virtual ~GstDecoderImpl();

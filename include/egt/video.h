@@ -179,6 +179,14 @@ public:
     }
 
     /**
+     * check for audio is supported. check is done based on
+     * sound device and audio track present in media file.
+     *
+     * @return true if supported and false if not supported.
+     */
+    virtual bool has_audio() const;
+
+    /**
      * Get error message
      */
     std::string error_message() const;

@@ -152,6 +152,14 @@ int64_t GstDecoderImpl::position() const
     return m_position;
 }
 
+bool GstDecoderImpl::has_audio() const
+{
+    if (m_audiodevice && m_audiotrack)
+        return true;
+
+    return false;
+}
+
 void GstDecoderImpl::destroyPipeline()
 {
     if (m_pipeline)
