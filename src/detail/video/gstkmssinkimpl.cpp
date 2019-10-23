@@ -133,7 +133,7 @@ bool GstKmsSinkImpl::set_media(const std::string& uri)
 
     g_timeout_add(1000, (GSourceFunc) &query_position, this);
 
-    return play();
+    return true;
 }
 
 gboolean GstKmsSinkImpl::query_position(gpointer data)

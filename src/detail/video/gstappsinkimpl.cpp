@@ -230,7 +230,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
 
     g_timeout_add(500, (GSourceFunc) &post_position, this);
 
-    return play();
+    return true;
 }
 
 void GstAppSinkImpl::scale(float scalex, float scaley)
