@@ -3,9 +3,7 @@
 #define EGT_DETAIL_CAMERA_GSTIMPL_H
 
 #include "egt/camera.h"
-
 #include <gst/gst.h>
-
 #include <string>
 #include <thread>
 
@@ -21,8 +19,8 @@ namespace detail
 class CameraImpl
 {
 public:
-    explicit CameraImpl(CameraWindow& interface, const Rect& rect,
-                        const std::string& device, bool useKmssink);
+    CameraImpl(CameraWindow& interface, const Rect& rect,
+               const std::string& device, bool useKmssink);
 
     virtual void draw(Painter& painter, const Rect& rect);
 
