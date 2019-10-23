@@ -48,16 +48,16 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::black);
 
-    CameraWindow player(Size(320, 240));
-    player.move_to_center(win.center());
-    player.start();
-    win.add(player);
-
     Label errlabel;
     errlabel.set_color(Palette::ColorId::label_text, Palette::white);
     errlabel.set_align(alignmask::expand);
     errlabel.set_text_align(alignmask::center | alignmask::top);
     win.add(errlabel);
+
+    CameraWindow player(Size(320, 240));
+    player.move_to_center(win.center());
+    player.start();
+    win.add(player);
 
     Point m_start_point;
     player.on_event([&player, &win, &errlabel, &m_start_point](Event & event)
