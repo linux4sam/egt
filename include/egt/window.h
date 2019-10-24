@@ -52,13 +52,36 @@ public:
      */
     static const pixel_format DEFAULT_FORMAT;
 
-    explicit Window(pixel_format format = DEFAULT_FORMAT,
+    /**
+     * Construct a window.
+     *
+     * @param[in] format_hint Requested format of the Window. This only applies
+     *            if this Window will be responsible for creating a backing
+     *            screen. Otherwise, the Window will use whatever format the
+     *            existing screen has. This is only a hint.
+     * @param[in] hint Requested Window type. This only applies if this Window
+     *            will be responsible for creating a backing screen.  This is
+     *            only a hint.
+     */
+    explicit Window(pixel_format format_hint = DEFAULT_FORMAT,
                     windowhint hint = windowhint::automatic)
-        : Window({}, format, hint)
+        : Window({}, format_hint, hint)
     {}
 
+    /**
+     * Construct a window.
+     *
+     * @param[in] rect Initial rectangle of the Window.
+     * @param[in] format_hint Requested format of the Window. This only applies
+     *            if this Window will be responsible for creating a backing
+     *            screen. Otherwise, the Window will use whatever format the
+     *            existing screen has. This is only a hint.
+     * @param[in] hint Requested Window type. This only applies if this Window
+     *            will be responsible for creating a backing screen.  This is
+     *            only a hint.
+     */
     explicit Window(const Rect& rect,
-                    pixel_format format = DEFAULT_FORMAT,
+                    pixel_format format_hint = DEFAULT_FORMAT,
                     windowhint hint = windowhint::automatic);
 
     virtual void damage() override
@@ -134,7 +157,7 @@ protected:
      * Select and allocate the backend implementation for the window.
      */
     void create_impl(const Rect& rect,
-                     pixel_format format,
+                     pixel_format format_hint,
                      windowhint hint);
 
     virtual void default_damage(const Rect& rect)

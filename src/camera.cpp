@@ -3,26 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include "egt/app.h"
 #include "egt/camera.h"
 #include "detail/camera/gstcameraimpl.h"
-#include "egt/detail/screen/kmsoverlay.h"
-#include "egt/detail/screen/kmsscreen.h"
 #include "egt/video.h"
-#include <exception>
-#include <fstream>
-#include <gst/gst.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
-#include <sstream>
-#include <string>
-#include <thread>
-
-using namespace std;
 
 namespace egt
 {
@@ -30,28 +13,28 @@ inline namespace v1
 {
 
 CameraWindow::CameraWindow(const std::string& device,
-                           pixel_format format,
+                           pixel_format format_hint,
                            windowhint hint)
-    : CameraWindow({}, device, format, hint)
+    : CameraWindow({}, device, format_hint, hint)
 {}
 
 CameraWindow::CameraWindow(const Rect& rect,
                            const std::string& device,
-                           pixel_format format,
+                           pixel_format format_hint,
                            windowhint hint)
-    : Window(rect, format, hint)
-{
-    m_cameraImpl.reset(new detail::CameraImpl((*this), rect, device, detail::is_target_sama5d4()));
-}
+    : Window(rect, format_hint, hint),
+      m_impl(new detail::CameraImpl(*this, rect, device, detail::is_target_sama5d4()))
+{}
 
 void CameraWindow::draw(Painter& painter, const Rect& rect)
 {
-    m_cameraImpl->draw(painter, rect);
+    m_impl->draw(painter, rect);
 }
 
 bool CameraWindow::start()
 {
-    return m_cameraImpl->start();
+    allocate_screen();
+    return m_impl->start();
 }
 
 void CameraWindow::set_scale(float scalex, float scaley)
@@ -63,7 +46,7 @@ void CameraWindow::set_scale(float scalex, float scaley)
     {
         if (!flags().is_set(Widget::flag::plane_window))
         {
-            m_cameraImpl->scale(m_scalex, m_scaley);
+            m_impl->scale(m_scalex, m_scaley);
         }
         else
         {
@@ -74,13 +57,15 @@ void CameraWindow::set_scale(float scalex, float scaley)
 
 std::string CameraWindow::error_message() const
 {
-    return m_cameraImpl->error_message();
+    return m_impl->error_message();
 }
 
 void CameraWindow::stop()
 {
-    m_cameraImpl->stop();
+    m_impl->stop();
 }
+
+CameraWindow::~CameraWindow() = default;
 
 } //namespace v1
 

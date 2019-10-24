@@ -56,8 +56,13 @@ int main(int argc, const char** argv)
 
     CameraWindow player(Size(320, 240));
     player.move_to_center(win.center());
-    player.start();
     win.add(player);
+
+    // wait to start playing the video until the window is shown
+    win.on_event([&player](Event&)
+    {
+        player.start();
+    }, {eventid::show});
 
     Point m_start_point;
     player.on_event([&player, &errlabel, &m_start_point](Event & event)

@@ -59,7 +59,7 @@ std::vector<Window*>& windows()
 const pixel_format Window::DEFAULT_FORMAT = pixel_format::argb8888;
 
 Window::Window(const Rect& rect,
-               pixel_format format,
+               pixel_format format_hint,
                windowhint hint)
 // by default, windows are hidden
     : Frame(rect, {Widget::flag::window, Widget::flag::invisible})
@@ -70,7 +70,7 @@ Window::Window(const Rect& rect,
     set_boxtype(Theme::boxtype::solid | Theme::boxtype::fill);
 
     // create the window implementation
-    create_impl(box(), format, hint);
+    create_impl(box(), format_hint, hint);
 
     // save off the new window to the window list
     windows().push_back(this);
@@ -196,10 +196,10 @@ void Window::set_scale(float scalex, float scaley)
 }
 
 void Window::create_impl(const Rect& rect,
-                         pixel_format format,
+                         pixel_format format_hint,
                          windowhint hint)
 {
-    detail::ignoreparam(format);
+    detail::ignoreparam(format_hint);
     detail::ignoreparam(hint);
 
     assert(Application::instance().screen());
@@ -225,7 +225,7 @@ void Window::create_impl(const Rect& rect,
             case windowhint::heo_overlay:
             case windowhint::cursor_overlay:
 #ifdef HAVE_LIBPLANES
-                m_impl = detail::make_unique<detail::PlaneWindow>(this, format, hint);
+                m_impl = detail::make_unique<detail::PlaneWindow>(this, format_hint, hint);
                 flags().set(Widget::flag::plane_window);
 #endif
                 break;
@@ -243,7 +243,7 @@ void Window::create_impl(const Rect& rect,
 #ifdef HAVE_LIBPLANES
             try
             {
-                m_impl = detail::make_unique<detail::PlaneWindow>(this, format, hint);
+                m_impl = detail::make_unique<detail::PlaneWindow>(this, format_hint, hint);
                 flags().set(Widget::flag::plane_window);
             }
             catch (std::exception& e)

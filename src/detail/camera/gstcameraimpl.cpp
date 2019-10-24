@@ -1,22 +1,22 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "egt/app.h"
 #include "detail/camera/gstcameraimpl.h"
+#include "egt/app.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
+#include "egt/video.h"
+#include <exception>
+#include <gst/gst.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include "egt/video.h"
-
-#include <gst/gst.h>
-
-#include <exception>
-#include <fstream>
-#include <sstream>
-
-using namespace std;
+#include <map>
 
 namespace egt
 {
@@ -58,19 +58,18 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 {
     ignoreparam(bus);
 
-    GError* error;
-    gchar* debug;
-
     auto cameraImpl = reinterpret_cast<CameraImpl*>(data);
 
     switch (GST_MESSAGE_TYPE(message))
     {
     case GST_MESSAGE_ERROR:
     {
+        GError* error;
+        gchar* debug;
         gst_message_parse_error(message, &error, &debug);
         cameraImpl->m_err_message = error->message;
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_ERROR from element {} {}",  GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
+        SPDLOG_DEBUG("GST_MESSAGE_ERROR from element {} {}",  GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_DEBUG("GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
 
@@ -83,21 +82,25 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     }
     case GST_MESSAGE_WARNING:
     {
+        GError* error;
+        gchar* debug;
         gst_message_parse_warning(message, &error, &debug);
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_WARNING from element {} {}", GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_WARNING Debugging info: {}", (debug ? debug : "none"));
+        SPDLOG_DEBUG("GST_MESSAGE_WARNING from element {} {}", GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_DEBUG("GST_MESSAGE_WARNING Debugging info: {}", (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
         break;
     }
     case GST_MESSAGE_INFO:
     {
+        GError* error;
+        gchar* debug;
         gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
         gst_message_parse_info(message, &error, &debug);
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_INFO: {} ", error->message);
+        SPDLOG_DEBUG("GST_MESSAGE_INFO: {} ", error->message);
         if (debug)
         {
-            SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_INFO: {}", debug);
+            SPDLOG_DEBUG("GST_MESSAGE_INFO: {}", debug);
         }
         g_clear_error(&error);
         g_free(debug);
@@ -106,42 +109,42 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     }
     case GST_MESSAGE_CLOCK_PROVIDE:
     {
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_CLOCK_PROVIDE");
+        SPDLOG_DEBUG("GST_MESSAGE_CLOCK_PROVIDE");
         break;
     }
     case GST_MESSAGE_CLOCK_LOST:
     {
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_CLOCK_LOST");
+        SPDLOG_DEBUG("GST_MESSAGE_CLOCK_LOST");
         break;
     }
     case GST_MESSAGE_NEW_CLOCK:
     {
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_NEW_CLOCK");
+        SPDLOG_DEBUG("GST_MESSAGE_NEW_CLOCK");
         break;
     }
     case GST_MESSAGE_PROGRESS:
     {
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_PROGRESS");
+        SPDLOG_DEBUG("GST_MESSAGE_PROGRESS");
         break;
     }
     case GST_MESSAGE_DURATION_CHANGED:
     {
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_DURATION_CHANGED");
+        SPDLOG_DEBUG("GST_MESSAGE_DURATION_CHANGED");
         break;
     }
     case GST_MESSAGE_ELEMENT:
     {
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_ELEMENT");
+        SPDLOG_DEBUG("GST_MESSAGE_ELEMENT");
         break;
     }
     case GST_MESSAGE_TAG:
     {
-        SPDLOG_DEBUG("CameraWindow: GST_MESSAGE_TAG");
+        SPDLOG_DEBUG("GST_MESSAGE_TAG");
         break;
     }
     default:
     {
-        SPDLOG_DEBUG("CameraWindow: default Message {}", std::to_string(GST_MESSAGE_TYPE(message)));
+        SPDLOG_DEBUG("default Message {}", std::to_string(GST_MESSAGE_TYPE(message)));
         break;
     }
     }
@@ -159,7 +162,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 void CameraImpl::draw(Painter& painter, const Rect& rect)
 {
     ignoreparam(rect);
-    auto cr = painter.context();
+
     if (m_camerasample)
     {
         GstCaps* caps = gst_sample_get_caps(m_camerasample);
@@ -168,7 +171,7 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
         gst_structure_get_int(capsStruct, "width", &width);
         gst_structure_get_int(capsStruct, "height", &height);
 
-        SPDLOG_TRACE("CameraWindow: videowidth = {}  videoheight = {}", width, height);
+        SPDLOG_TRACE("videowidth = {}  videoheight = {}", width, height);
 
         gst_sample_ref(m_camerasample);
         GstBuffer* buffer = gst_sample_get_buffer(m_camerasample);
@@ -176,27 +179,26 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
         GstMapInfo map;
         if (gst_buffer_map(buffer, &map, GST_MAP_READ))
         {
-            Rect box = m_interface.content_area();
-            auto surface = shared_cairo_surface_t(
-                               cairo_image_surface_create_for_data(map.data,
-                                       CAIRO_FORMAT_RGB16_565,
-                                       width,
-                                       height,
-                                       cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, width)),
-                               cairo_surface_destroy);
+            const auto box = m_interface.content_area();
+            const auto surface = unique_cairo_surface_t(
+                                     cairo_image_surface_create_for_data(map.data,
+                                             CAIRO_FORMAT_RGB16_565,
+                                             width,
+                                             height,
+                                             cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, width)));
 
             if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
             {
-                SPDLOG_TRACE("CameraWindow: {}", box);
+                auto cr = painter.context().get();
                 if (width != box.width() || height != box.height())
                 {
                     double scalex = static_cast<double>(box.width()) / width;
                     double scaley = static_cast<double>(box.height()) / height;
-                    cairo_scale(cr.get(), scalex, scaley);
+                    cairo_scale(cr, scalex, scaley);
                 }
-                cairo_set_source_surface(cr.get(), surface.get(), box.x(), box.y());
-                cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-                cairo_paint(cr.get());
+                cairo_set_source_surface(cr, surface.get(), box.x(), box.y());
+                cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+                cairo_paint(cr);
             }
             gst_buffer_unmap(buffer, &map);
         }
@@ -224,9 +226,12 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
                     auto screen =
                         reinterpret_cast<detail::KMSOverlay*>(cameraImpl->m_interface.screen());
                     assert(screen);
-                    memcpy(screen->raw(), map.data, map.size);
-                    screen->schedule_flip();
-                    gst_buffer_unmap(buffer, &map);
+                    if (screen)
+                    {
+                        memcpy(screen->raw(), map.data, map.size);
+                        screen->schedule_flip();
+                        gst_buffer_unmap(buffer, &map);
+                    }
                 }
             }
             gst_sample_unref(sample);
@@ -248,65 +253,68 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
     return GST_FLOW_ERROR;
 }
 
-#define V4L2_KMSSINK_PIPE "v4l2src device=%s ! videoconvert ! video/x-raw,width=%d,height=%d,format=%s,framerate=15/1 ! "\
-						  " g1kmssink gem-name=%d "
+static inline std::string gstreamer_format(pixel_format format)
+{
+    static const std::map<pixel_format, std::string> formats =
+    {
+        {pixel_format::argb8888, "BGRx"},
+        {pixel_format::xrgb8888, "BGRx"},
+        {pixel_format::rgb565, "RGB16"},
+        {pixel_format::yuv420, "I420"},
+        {pixel_format::yuyv, "YUY2"},
+    };
 
-#define V4L2_APPSINK_PIPE "v4l2src device=%s ! videoconvert ! video/x-raw,width=%d,height=%d,format=%s,framerate=15/1 ! " \
-						  " appsink name=appsink async=false enable-last-sample=false sync=true"
+    const auto i = formats.find(format);
+    if (i != formats.end())
+        return i->second;
+
+    return {};
+}
 
 bool CameraImpl::start()
 {
-    char buffer[2048];
-
-    Rect box = m_interface.content_area();
+    std::string pipe;
 
 #ifdef HAVE_LIBPLANES
-    if (m_interface.flags().is_set(Widget::flag::plane_window))
+    if (m_interface.flags().is_set(Widget::flag::plane_window) && m_usekmssink)
     {
+        static const auto kmssink_pipe =
+            "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=15/1 ! " \
+            "g1kmssink gem-name={}";
+
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
-
-        pixel_format format = detail::egt_format(s->get_plane_format());
-        SPDLOG_DEBUG("CameraWindow: egt_format = {}", format);
-
-        if (m_usekmssink)
+        if (s)
         {
-            int gem_name = s->gem();
-
-            if (format == pixel_format::argb8888 || format == pixel_format::xrgb8888 || format == pixel_format::rgb565)
-                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "BGRx", gem_name);
-            else if (format == pixel_format::yuv420)
-                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "I420", gem_name);
-            else if (format == pixel_format::yuyv)
-                sprintf(buffer, V4L2_KMSSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "YUY2", gem_name);
-        }
-        else
-        {
-            if (format == pixel_format::argb8888 || format == pixel_format::xrgb8888 || format == pixel_format::rgb565)
-                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "BGRx");
-            else if (format == pixel_format::yuv420)
-                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "I420");
-            else if (format == pixel_format::yuyv)
-                sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "YUY2");
+            const auto gem_name = s->gem();
+            const auto format = gstreamer_format(m_interface.format());
+            const auto box = m_interface.content_area();
+            pipe = fmt::format(kmssink_pipe, m_devnode, box.width(), box.height(), format, gem_name);
         }
     }
     else
 #endif
     {
-        sprintf(buffer, V4L2_APPSINK_PIPE, m_devnode.c_str(), box.width(), box.height(), "RGB16");
+        static const auto appsink_pipe =
+            "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=15/1 ! " \
+            "appsink name=appsink async=false enable-last-sample=false sync=true";
+
+        const auto box = m_interface.content_area();
+        const auto format = gstreamer_format(m_interface.format());
+        pipe = fmt::format(appsink_pipe, m_devnode, box.width(), box.height(), format);
     }
 
-    SPDLOG_DEBUG("CameraWindow:  {}", std::string(buffer));
+    SPDLOG_DEBUG(pipe);
 
     /* Make sure we don't leave orphan references */
     stop();
 
     GError* error = nullptr;
-    m_pipeline = gst_parse_launch(buffer, &error);
+    m_pipeline = gst_parse_launch(pipe.c_str(), &error);
     if (!m_pipeline)
     {
-        spdlog::error("CameraWindow: failed to create pipeline");
         m_err_message = error->message;
+        spdlog::error("failed to create pipeline: {}", m_err_message);
         return false;
     }
 
@@ -315,15 +323,14 @@ bool CameraImpl::start()
         m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
         if (!m_appsink)
         {
-            spdlog::error("CameraWindow: failed to get app sink element");
             m_err_message = "failed to get app sink element";
+            spdlog::error(m_err_message);
             return false;
         }
 
         g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
         g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
     }
-
 
     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     gst_bus_add_watch(bus, &bus_callback, this);
@@ -332,8 +339,8 @@ bool CameraImpl::start()
     int ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE)
     {
-        SPDLOG_DEBUG("CameraWindow: set pipeline to play state failed");
         m_err_message = "failed to set pipeline to play state";
+        spdlog::error(m_err_message);
         stop();
         return false;
     }
@@ -352,7 +359,7 @@ void CameraImpl::stop()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            spdlog::error("CameraWindow: set pipeline to NULL state failed");
+            spdlog::error("set pipeline to NULL state failed");
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
@@ -381,8 +388,6 @@ CameraImpl::~CameraImpl()
     }
 }
 
-} // end of detail
-
-} // end of v1
-
-} // end of egt
+}
+}
+}

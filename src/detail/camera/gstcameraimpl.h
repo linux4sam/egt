@@ -1,13 +1,15 @@
-
-#ifndef EGT_DETAIL_CAMERA_GSTIMPL_H
-#define EGT_DETAIL_CAMERA_GSTIMPL_H
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+#ifndef EGT_DETAIL_CAMERA_GSTCAMERAIMPL_H
+#define EGT_DETAIL_CAMERA_GSTCAMERAIMPL_H
 
 #include "egt/camera.h"
 #include <gst/gst.h>
 #include <string>
 #include <thread>
-
-using namespace std;
 
 namespace egt
 {
@@ -42,7 +44,7 @@ protected:
     GstSample* m_camerasample{nullptr};
     std::string m_err_message;
     Rect m_rect;
-    bool m_usekmssink;
+    bool m_usekmssink{};
     GMainLoop* m_gmainLoop{nullptr};
     std::thread m_gmainThread;
 

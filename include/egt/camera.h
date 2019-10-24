@@ -36,31 +36,41 @@ public:
     /**
      * Create a camera window.
      *
-     * @param device is a cameras device node.
-     * @param format is a pixel format of a window or an overlay plane.
-     * @param hint used for configuring window backend's.
+     * @param[in] device Camera device node.
+     * @param[in] format_hint Requested format of the Window. This only applies
+     *            if this Window will be responsible for creating a backing
+     *            screen. Otherwise, the Window will use whatever format the
+     *            existing screen has. This is only a hint.
+     * @param[in] hint Requested Window type. This only applies if this Window
+     *            will be responsible for creating a backing screen.  This is
+     *            only a hint.
      *
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
     explicit CameraWindow(const std::string& device = "/dev/video0",
-                          pixel_format format = pixel_format::xrgb8888,
+                          pixel_format format_hint = pixel_format::yuv420,
                           windowhint hint = windowhint::overlay);
 
     /**
      * Create a camera window.
      *
-     * @param rect is a size of window with offset x & y.
-     * @param device is a cameras device node.
-     * @param format is a pixel format of a window or an overlay plane.
-     * @param hint used for configuring window backend's.
+     * @param[in] rect Initial rectangle of the Window.
+     * @param[in] device Camera device node.
+     * @param[in] format_hint Requested format of the Window. This only applies
+     *            if this Window will be responsible for creating a backing
+     *            screen. Otherwise, the Window will use whatever format the
+     *            existing screen has. This is only a hint.
+     * @param[in] hint Requested Window type. This only applies if this Window
+     *            will be responsible for creating a backing screen.  This is
+     *            only a hint.
      *
      * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
     explicit CameraWindow(const Rect& rect,
                           const std::string& device = "/dev/video0",
-                          pixel_format format = pixel_format::xrgb8888,
+                          pixel_format format_hint = pixel_format::yuv420,
                           windowhint hint = windowhint::overlay);
 
     virtual void do_draw() override
@@ -72,7 +82,7 @@ public:
 
     /**
      * Initialize camera pipeline to capture image feed from the camera
-     * sensor and render to screen.
+     * sensor and render to Window.
      *
      * @return true on success
      */
@@ -95,13 +105,13 @@ public:
      */
     std::string error_message() const;
 
-    virtual ~CameraWindow() = default;
+    virtual ~CameraWindow();
 
 protected:
     float m_scalex{1.0};
     float m_scaley{1.0};
 
-    std::shared_ptr<detail::CameraImpl> m_cameraImpl;
+    std::unique_ptr<detail::CameraImpl> m_impl;
 
 };
 
