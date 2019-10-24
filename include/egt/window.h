@@ -109,6 +109,15 @@ public:
      */
     virtual void set_background(const Image& image);
 
+    virtual pixel_format format() const
+    {
+        auto frame = find_screen();
+        if (frame)
+            return frame->screen()->format();
+
+        return pixel_format::invalid;
+    }
+
     virtual ~Window();
 
 protected:

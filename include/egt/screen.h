@@ -140,6 +140,8 @@ public:
      */
     virtual void high_fidelity();
 
+    inline pixel_format format() const { return m_format; };
+
     virtual ~Screen();
 
 protected:
@@ -207,6 +209,8 @@ protected:
     Size m_size;
 
     bool m_async{false};
+
+    pixel_format m_format{};
 };
 
 }

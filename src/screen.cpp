@@ -235,6 +235,8 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format for
 
     m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
     assert(m_cr);
+
+    m_format = format;
 }
 
 void Screen::low_fidelity()
@@ -278,10 +280,7 @@ void Screen::set_brightness(size_t brightness)
 {
 }
 
-Screen::~Screen()
-{
-
-}
+Screen::~Screen() = default;
 
 }
 }
