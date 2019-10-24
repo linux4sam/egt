@@ -54,7 +54,7 @@ private:
     /**
      * Whether a current touch event is active internally.
      */
-    std::array<m_active, 2> {};
+    std::array<bool, 2> m_active{};
 
     /**
      * The last point seen, used for reference internally.

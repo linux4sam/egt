@@ -88,7 +88,7 @@ void InputTslib::handle_read(const asio::error_code& error)
         return;
     }
 
-    bool move = false;
+    std::array<bool, 2> move{};
 
     for (int j = 0; j < ret; j++)
     {
@@ -121,11 +121,11 @@ void InputTslib::handle_read(const asio::error_code& error)
             if (unlikely(x < 0 || y < 0))
                 continue;
 
-            if (m_active)
+            if (m_active[slot])
             {
                 if (pen_down == 0)
                 {
-                    m_active = false;
+                    m_active[slot] = false;
 
                     SPDLOG_TRACE("mouse up {}", m_last_point);
 
@@ -140,7 +140,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                     if (delta(m_last_point[slot], point, 5))
                     {
                         m_last_point[slot] = point;
-                        move = true;
+                        move[slot] = true;
                     }
                 }
             }
@@ -158,14 +158,14 @@ void InputTslib::handle_read(const asio::error_code& error)
                     auto DOUBLE_CLICK_DELTA = 300;
 
                     if (m_impl->last_down[slot].time_since_epoch().count() &&
-                        chrono::duration<double, milli>(tv - m_impl->last_down).count() < DOUBLE_CLICK_DELTA)
+                        chrono::duration<double, milli>(tv - m_impl->last_down[slot]).count() < DOUBLE_CLICK_DELTA)
                     {
-                        Event event(eventid::pointer_dblclick, Pointer(m_last_point, Pointer::button::left));
+                        Event event(eventid::pointer_dblclick, Pointer(m_last_point[slot], Pointer::button::left));
                         dispatch(event);
                     }
                     else
                     {
-                        m_active = true;
+                        m_active[slot] = true;
 
                         SPDLOG_TRACE("mouse down {}", m_last_point[slot]);
 
@@ -180,13 +180,16 @@ void InputTslib::handle_read(const asio::error_code& error)
         }
     }
 
-    if (move)
+    for (size_t slot = 0; slot < move.size(); slot++)
     {
-        SPDLOG_TRACE("mouse move {}", m_last_point[slot]);
+        if (move[slot])
+        {
+            SPDLOG_TRACE("mouse move {}", m_last_point[slot]);
 
-        Event event(eventid::raw_pointer_move, Pointer(m_last_point,
-                    Pointer::button::left));
-        dispatch(event);
+            Event event(eventid::raw_pointer_move, Pointer(m_last_point[slot],
+                        Pointer::button::left));
+            dispatch(event);
+        }
     }
 
 #ifdef USE_PRIORITY_QUEUE
