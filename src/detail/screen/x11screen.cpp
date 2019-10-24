@@ -18,8 +18,6 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -57,7 +55,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
                                          size.width(), size.height(),
                                          0, 0, 0);
     if (!m_priv->window)
-        throw std::runtime_error("unable to connect to X11 window");
+        throw std::runtime_error("unable to create X11 window");
 
     if (borderless)
     {
@@ -69,7 +67,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
 
     XStoreName(m_priv->display, m_priv->window, "EGT");
 
-    auto sh = unique_ptr<XSizeHints, decltype(&::XFree)>(XAllocSizeHints(), ::XFree);
+    auto sh = std::unique_ptr<XSizeHints, decltype(&::XFree)>(XAllocSizeHints(), ::XFree);
     sh->flags = PMinSize | PMaxSize;
     sh->min_width = sh->max_width = size.width();
     sh->min_height = sh->max_height = size.height();
@@ -214,17 +212,18 @@ void X11Screen::handle_read(const asio::error_code& error)
                     XEvent trash;
                     XNextEvent(m_priv->display, &trash);
 
-                    Event event(eventid::keyboard_repeat, Key(detail::KeyboardCodeFromXKeyEvent(&e),
-                                m_keyboard->on_key(e.xkey.keycode, event.id())));
+                    const auto id = eventid::keyboard_repeat;
+                    Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
+                                        m_keyboard->on_key(e.xkey.keycode, id)));
                     m_in.dispatch(event);
                     break;
                 }
             }
         case KeyPress:
         {
-            Event event(e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up,
-                        Key(detail::KeyboardCodeFromXKeyEvent(&e),
-                            m_keyboard->on_key(e.xkey.keycode, event.id())));
+            const auto id = e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up;
+            Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
+                                m_keyboard->on_key(e.xkey.keycode, id)));
             m_in.dispatch(event);
             break;
         }
