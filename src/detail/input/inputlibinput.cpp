@@ -108,7 +108,7 @@ InputLibInput::InputLibInput(Application& app)
 {
     const char* seat_or_device = "seat0";
     bool verbose = false;
-    li = tools_open_udev(seat_or_device, verbose, NULL);
+    li = tools_open_udev(seat_or_device, verbose, false);
     assert(li);
 
     m_input.assign(libinput_get_fd(li));
