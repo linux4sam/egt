@@ -407,6 +407,17 @@ public:
         return nullptr;
     }
 
+    virtual const Frame* find_screen() const
+    {
+        if (has_screen())
+            return this;
+
+        if (parent())
+            return parent()->find_screen();
+
+        return nullptr;
+    }
+
     virtual ~Frame() noexcept;
 
 protected:
