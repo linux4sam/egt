@@ -45,7 +45,7 @@ public:
         const auto res = detail::FlagsBase<T>::clear(flag);
         if (res)
             invoke_handlers({eventid::property_changed});
-	return res;
+        return res;
     }
 
     inline bool clear() noexcept
@@ -53,7 +53,7 @@ public:
         const auto res = detail::FlagsBase<T>::clear();
         if (res)
             invoke_handlers({eventid::property_changed});
-	return res;
+        return res;
     }
 
     inline Flags<T> operator|(const T& flag) const noexcept
