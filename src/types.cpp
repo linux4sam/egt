@@ -31,6 +31,7 @@ std::ostream& operator<<(std::ostream& os, const pixel_format& format)
         MAPITEM(pixel_format::invalid);
         MAPITEM(pixel_format::rgb565);
         MAPITEM(pixel_format::argb8888);
+        MAPITEM(pixel_format::xrgb8888);
         MAPITEM(pixel_format::yuyv);
         MAPITEM(pixel_format::nv21);
         MAPITEM(pixel_format::yuv420);
