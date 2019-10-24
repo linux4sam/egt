@@ -80,7 +80,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
                  PointerMotionMask | Button1MotionMask | VisibilityChangeMask |
                  ColormapChangeMask);
 
-    init(size);
+    init(size, pixel_format::rgb565);
 
     // instead of using init() to create the buffer, create our own using cairo_xlib_surface_create
     m_buffers.emplace_back(
