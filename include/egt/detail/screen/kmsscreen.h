@@ -95,6 +95,7 @@ protected:
     uint32_t m_index{0};
     static std::vector<planeid> m_used;
     std::unique_ptr<FlipThread> m_pool;
+    bool m_gfx2d {false};
 
     friend class detail::KMSOverlay;
 };

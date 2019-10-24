@@ -26,6 +26,10 @@
 #include <string>
 #include <xf86drm.h>
 
+#if defined(HAVE_CAIRO_GFX2D)
+#include <cairo-gfx2d.h>
+#endif
+
 #ifdef HAVE_EXPERIMENTAL_FILESYSTEM
 #include <experimental/filesystem>
 
@@ -75,6 +79,11 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
 {
     spdlog::info("DRM/KMS Screen ({} buffers)", max_buffers());
 
+#if defined(HAVE_CAIRO_GFX2D)
+    if (getenv("EGT_USE_GFX2D") && strlen(getenv("EGT_USE_GFX2D")))
+        m_gfx2d = true;
+#endif
+
     m_fd = drmOpen("atmel-hlcdc", nullptr);
     if (m_fd < 0)
         throw std::runtime_error("unable to open DRM driver");
@@ -103,9 +112,44 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
         SPDLOG_DEBUG("primary plane dumb buffer {},{} {}", plane_width(m_plane.get()),
                      plane_height(m_plane.get()), format);
 
-        init(m_plane->bufs, KMSScreen::max_buffers(),
-             Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
-             format);
+        if (!m_gfx2d)
+        {
+            init(m_plane->bufs, KMSScreen::max_buffers(),
+                 Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
+                 format);
+        }
+#if defined(HAVE_CAIRO_GFX2D)
+        else
+        {
+            SPDLOG_DEBUG("use gfx2d surfaces");
+            m_size = Size(plane_width(m_plane.get()), plane_height(m_plane.get()));
+
+            cairo_format_t f = detail::cairo_format(format);
+            if (f == CAIRO_FORMAT_INVALID)
+                f = CAIRO_FORMAT_ARGB32;
+
+            m_buffers.clear();
+
+            for (uint32_t x = 0; x < KMSScreen::max_buffers(); x++)
+            {
+                m_buffers.emplace_back(
+                    cairo_gfx2d_surface_create_from_name(
+                        m_plane->gem_names[x],
+                        f,
+                        m_size.width(), m_size.height()));
+
+                m_buffers.back().damage.emplace_back(Point(), m_size);
+            }
+
+            m_surface = shared_cairo_surface_t(
+                            cairo_gfx2d_surface_create(f, m_size.width(), m_size.height()),
+                            cairo_surface_destroy);
+            assert(m_surface.get());
+
+            m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
+            assert(m_cr);
+        }
+#endif
     }
     else
     {

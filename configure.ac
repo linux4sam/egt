@@ -328,10 +328,21 @@ if test "x${have_libplanes}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="${LIBPLANES_LIBS} ${LIBDRM_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(CAIRO, [cairo >= 1.14.6], [], [], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES2(CAIRO, [cairo >= 1.14.6], [], [have_cairo=yes], [AC_MSG_ERROR([
      cairo is a hard dependency, but a sufficient version was not found.])])
-LIBEGT_EXTRA_CXXFLAGS="${CAIRO_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-LIBEGT_EXTRA_LDFLAGS="${CAIRO_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+AM_CONDITIONAL([HAVE_CAIRO], [test "x${have_cairo}" = xyes])
+if test "x${have_cairo}" = xyes; then
+  LIBEGT_EXTRA_CXXFLAGS="${CAIRO_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+  LIBEGT_EXTRA_LDFLAGS="${CAIRO_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+  AC_SEARCH_LIBS([cairo_gfx2d_surface_create], [cairo], [have_cairo_gfx2d=yes], [have_cairo_gfx2d=no])
+  AC_CHECK_HEADER([cairo/cairo-gfx2d.h],
+    [],
+    [have_cairo_gfx2d=no
+  ])
+  if test "x${have_cairo_gfx2d}" = xyes; then
+    AC_DEFINE(HAVE_CAIRO_GFX2D, 1, [Have cairo gfx2d support])
+  fi
+fi
 
 AX_PKG_CHECK_MODULES2(FONTCONFIG, [fontconfig], [], [], [AC_MSG_ERROR([
      fontconfig is a hard dependency, but a sufficient version was not found.])])
