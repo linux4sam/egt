@@ -127,7 +127,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                 {
                     m_active[slot] = false;
 
-                    SPDLOG_TRACE("mouse up {}", m_last_point);
+                    SPDLOG_TRACE("mouse up {}", m_last_point[slot]);
 
                     m_last_point[slot] = DisplayPoint(x, y);
                     Event event(eventid::raw_pointer_up, Pointer(m_last_point[slot],
