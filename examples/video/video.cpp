@@ -77,13 +77,6 @@ int main(int argc, const char** argv)
     player.set_volume(5);
     win.add(player);
 
-    // wait to start playing the video until the window is shown
-    win.on_event([&player, argv](Event&)
-    {
-        player.set_media(argv[1]);
-        player.play();
-    }, {eventid::show});
-
     Window ctrlwindow(Size(win.width(), 72));
     ctrlwindow.set_align(alignmask::bottom | alignmask::center);
     ctrlwindow.set_color(Palette::ColorId::bg, Palette::transparent);
@@ -207,6 +200,21 @@ int main(int argc, const char** argv)
         cpulabel.set_text(ss.str());
     });
     cputimer.start();
+
+    // wait to start playing the video until the window is shown
+    win.on_event([&player, argv, &position, &ctrlwindow, &volume, &volumei, &hpos](Event&)
+    {
+        player.set_media(argv[1]);
+
+        if (!player.has_audio())
+        {
+            position.set_width(ctrlwindow.width() * 0.45);
+            hpos.remove(&volume);
+            hpos.remove(&volumei);
+        }
+
+        player.play();
+    }, {eventid::show});
 
     player.on_event([&player, &win, &errlabel, &position, vscale, size](Event & event)
     {
