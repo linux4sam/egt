@@ -60,7 +60,7 @@ int main(int argc, const char** argv)
     win.add(player);
 
     Point m_start_point;
-    player.on_event([&player, &win, &errlabel, &m_start_point](Event & event)
+    player.on_event([&player, &errlabel, &m_start_point](Event & event)
     {
         switch (event.id())
         {
