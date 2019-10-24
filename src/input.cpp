@@ -70,8 +70,7 @@ void Input::dispatch(Event& event)
         SPDLOG_TRACE("input event: {}", eevent);
     }
 
-    if (handler_dispatch(event, eevent,
-                         [this](Event & event)
+    if (handler_dispatch(event, eevent, [](Event & event)
 {
     m_global_handler.invoke_handlers(event);
     }))
