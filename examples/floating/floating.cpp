@@ -78,6 +78,8 @@ public:
         m_widget->move(p);
     }
 
+    virtual ~FloatingBox() = default;
+
 protected:
     shared_ptr<Widget> m_widget;
     default_dim_type m_mx;
