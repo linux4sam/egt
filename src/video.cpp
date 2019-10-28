@@ -87,7 +87,13 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
                          pixel_format format, windowhint hint)
     : VideoWindow(rect, format, hint)
 {
-    set_media(uri);
+
+    if (!set_media(uri))
+    {
+        std::ostringstream ss;
+        ss << "Error: failed to initalize gstreamer pipeline";
+        throw std::runtime_error(ss.str());
+    }
 }
 
 void VideoWindow::createImpl(const Size& size)
