@@ -55,10 +55,13 @@ int main(int argc, const char** argv)
     }
 
     Size size(320, 192);
-    if (argc == 4)
+    auto format = pixel_format::yuv420;
+    if (argc == 5)
     {
         size.set_width(atoi(argv[2]));
         size.set_height(atoi(argv[3]));
+        if (atoi(argv[4]) <= 6)
+            format = static_cast<pixel_format>(atoi(argv[4]));
     }
 
     Application app(argc, argv, "video");
@@ -72,7 +75,7 @@ int main(int argc, const char** argv)
     win.add(errlabel);
 
     // player after label to handle drag
-    VideoWindow player(size, pixel_format::yuv420, windowhint::overlay);
+    VideoWindow player(size, format, windowhint::overlay);
     player.move_to_center(win.center());
     player.set_volume(5);
     win.add(player);
