@@ -181,8 +181,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
-        Event event(eventid::event2);
-        m_interface.invoke_handlers(event);
+        m_interface.invoke_handlers(eventid::error);
         return false;
     }
 #endif
@@ -197,8 +196,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         SPDLOG_ERROR("VideoWindow: failed to create video pipeline");
         if (error && error->message)
             m_err_message = error->message;
-        Event event(eventid::event2);
-        m_interface.invoke_handlers(event);
+        m_interface.invoke_handlers(eventid::error);
         return false;
     }
 
@@ -207,8 +205,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
     {
         SPDLOG_ERROR("VideoWindow: failed to get app sink element");
         m_err_message = "failed to get app sink element";
-        Event event(eventid::event2);
-        m_interface.invoke_handlers(event);
+        m_interface.invoke_handlers(eventid::error);
         return false;
     }
 
@@ -219,8 +216,7 @@ bool GstAppSinkImpl::set_media(const std::string& uri)
         {
             SPDLOG_ERROR("VideoWindow: failed to get volume element");
             m_err_message = "failed to get volume element";
-            Event event(eventid::event2);
-            m_interface.invoke_handlers(event);
+            m_interface.invoke_handlers(eventid::error);
             return false;
         }
     }

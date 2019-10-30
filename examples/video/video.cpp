@@ -258,9 +258,8 @@ int main(int argc, const char** argv)
             }
             break;
         }
-        case eventid::event2:
+        case eventid::error:
         {
-            cout << player.error_message() << endl;
             errlabel.set_text("Error:\n" + line_break(player.error_message()));
             break;
         }

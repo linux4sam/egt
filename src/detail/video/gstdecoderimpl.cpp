@@ -218,7 +218,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
 
         asio::post(Application::instance().event().io(), [decodeImpl]()
         {
-            decodeImpl->m_interface.invoke_handlers(eventid::event2);
+            decodeImpl->m_interface.invoke_handlers(eventid::error);
         });
         break;
     }
