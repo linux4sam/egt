@@ -52,6 +52,7 @@ static const map<pixel_format, uint32_t> drm_formats =
     {pixel_format::xrgb8888, DRM_FORMAT_XRGB8888},
     {pixel_format::yuyv, DRM_FORMAT_YUYV},
     {pixel_format::yuv420, DRM_FORMAT_YUV420},
+    {pixel_format::nv21, DRM_FORMAT_NV21},
 #else
     {pixel_format::rgb565, 0},
     {pixel_format::argb8888, 1},
