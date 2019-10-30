@@ -135,12 +135,17 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         pixel_format format = detail::egt_format(s->get_plane_format());
         SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
 
-        if (format == pixel_format::yuv420)
-            vc = "";
-        else if (format == pixel_format::yuyv)
+        if (format == pixel_format::yuyv)
             vc = vc + "YUY2";
+        else if (format == pixel_format::rgb565)
+            vc = vc + "RGB16";
+        else if ((format == pixel_format::argb8888) ||
+                 (format == pixel_format::xrgb8888))
+            vc = vc + "BGRx";
+        else if (format == pixel_format::nv21)
+            vc = vc + "NV21";
         else
-            vc =  vc + "BGRx";
+            vc = "";
     }
     else
     {

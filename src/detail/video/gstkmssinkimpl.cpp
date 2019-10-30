@@ -21,15 +21,32 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
     : GstDecoderImpl(interface, size),
       m_hwdecoder(decodertype)
 {
+    auto s = reinterpret_cast<detail::KMSOverlay*>(interface.screen());
+    assert(s);
+    auto format = detail::egt_format(s->get_plane_format());
+    if ((format != pixel_format::yuyv) && (format != pixel_format::xrgb8888))
+    {
+        std::ostringstream ss;
+        ss << "Error: Invalid format: supported formats are xrgb8888 & yuyv for sama5d4";
+        throw std::runtime_error(ss.str());
+    }
 }
 
 std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
 {
+    std::string vc = "BGRx";
     if (m_interface.flags().is_set(Widget::flag::plane_window))
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         m_gem = s->gem();
+        auto format = detail::egt_format(s->get_plane_format());
+        SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
+
+        if (format == pixel_format::yuyv)
+            vc = "YUY2";
+        else if (format == pixel_format::xrgb8888)
+            vc = "BGRx";
     }
 
     std::string a_pipe;
@@ -75,13 +92,13 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
             }
         }
 
-        v_pipe << " ! video/x-raw,width=" << m_size.width() << ",height=" << m_size.height() << ",format=BGRx";
+        v_pipe << " ! video/x-raw,width=" << m_size.width() << ",height=" << m_size.height() << ",format=" << vc;
     }
     else
     {
         SPDLOG_DEBUG("VideoWindow: Decoding through software decoders");
         v_pipe << " ! queue ! videoscale ! video/x-raw,width=" << m_size.width() << ",height=" << m_size.height() <<
-               " ! videoconvert ! video/x-raw,format=BGRx";
+               " ! videoconvert ! video/x-raw,format=" << vc;
     }
 
     std::ostringstream pipeline;
