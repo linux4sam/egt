@@ -110,6 +110,11 @@ enum class eventid
     event1,
     event2,
     ///@}
+
+    /**
+     * Error Event
+     */
+    error,
 };
 
 std::ostream& operator<<(std::ostream& os, const eventid& event);
