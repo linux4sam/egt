@@ -123,10 +123,15 @@ int main(int argc, const char** argv)
 
     position.on_event([&position, &player](Event&)
     {
-        if (player.playing())
-        {
-            player.seek((player.duration() * position.value()) / position.max());
-        }
+        auto state = player.playing();
+        if (state)
+            player.pause();
+
+        player.seek((player.duration() * position.value()) / position.max());
+
+        if (state)
+            player.play();
+
     }, {eventid::property_changed});
 
     ImageButton volumei(Image(":volumeup_png"));
@@ -240,8 +245,6 @@ int main(int argc, const char** argv)
                 position.set_value((ns2ms<double>(player.position()) /
                                     ns2ms<double>(player.duration())) * 100.);
             }
-            else
-                position.set_value(0);
             break;
         }
         case eventid::event2:
