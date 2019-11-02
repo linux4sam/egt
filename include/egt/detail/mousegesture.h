@@ -110,7 +110,7 @@ protected:
     /**
      * Async timer for detecting long clicks.
      */
-    Timer m_long_click_timer;
+    PeriodicTimer m_long_click_timer;
 };
 
 }
