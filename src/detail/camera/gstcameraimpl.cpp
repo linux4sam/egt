@@ -67,14 +67,17 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         GError* error;
         gchar* debug;
         gst_message_parse_error(message, &error, &debug);
-        cameraImpl->m_err_message = error->message;
-        SPDLOG_DEBUG("GST_MESSAGE_ERROR from element {} {}",  GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
+        std::string error_message = error->message;
+        SPDLOG_DEBUG("GST_MESSAGE_ERROR from element {} {}",
+                     GST_OBJECT_NAME(message->src), error->message);
+        SPDLOG_DEBUG("GST_MESSAGE_ERROR Debugging info: {}",
+                     (debug ? debug : "none"));
         g_error_free(error);
         g_free(debug);
 
-        asio::post(Application::instance().event().io(), [cameraImpl]()
+        asio::post(Application::instance().event().io(), [cameraImpl, error_message]()
         {
+            cameraImpl->m_err_message = error_message;
             Event event(eventid::event2);
             cameraImpl->m_interface.invoke_handlers(event);
         });
@@ -215,6 +218,7 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
     if (sample)
     {
 #ifdef HAVE_LIBPLANES
+        // TODO: this is not thread safe accessing cameraImpl here
         if (cameraImpl->m_interface.flags().is_set(Widget::flag::plane_window))
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
