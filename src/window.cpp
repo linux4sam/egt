@@ -274,9 +274,8 @@ void Window::set_main_window()
 {
     the_main_window = this;
 
-    assert(Application::instance().screen());
-
-    m_box = Application::instance().screen()->box();
+    if (Application::instance().screen())
+        m_box = Application::instance().screen()->box();
 
     damage();
 }
