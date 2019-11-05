@@ -61,6 +61,7 @@
 @include_audio@
 @include_video@
 @include_camera@
+@include_capture@
 @include_http@
 @include_luaapp@
 @include_svg@

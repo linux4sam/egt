@@ -241,7 +241,10 @@ detail/video/gstdecoderimpl.cpp \
 detail/video/gstdecoderimpl.h \
 camera.cpp \
 detail/camera/gstcameraimpl.cpp \
-detail/camera/gstcameraimpl.h
+detail/camera/gstcameraimpl.h \
+capture.cpp \
+detail/camera/gstcaptureimpl.cpp \
+detail/camera/gstcaptureimpl.h
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \
@@ -252,7 +255,8 @@ endif
 nobase_libegtinclude_HEADERS += \
 ../include/egt/audio.h \
 ../include/egt/video.h \
-../include/egt/camera.h
+../include/egt/camera.h \
+../include/egt/capture.h
 
 endif
 

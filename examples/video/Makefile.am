@@ -21,7 +21,7 @@ CUSTOM_LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 
 AM_LDFLAGS = -pthread
 
-bin_PROGRAMS = video camera
+bin_PROGRAMS = video camera capture
 
 MRESG_V_GEN = $(mresg_v_GEN_$(V))
 mresg_v_GEN_ = $(mresg_v_GEN_$(AM_DEFAULT_VERBOSITY))
@@ -49,6 +49,14 @@ camera_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 cameradir = $(prefix)/share/egt/examples/camera
 camera_DATA = $(wildcard $(top_srcdir)/examples/video/*.png)
 camera_LDFLAGS = $(AM_LDFLAGS)
+
+capture_SOURCES = capture.cpp
+nodist_capture_SOURCES = $(BUILT_SOURCES)
+capture_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+capture_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+capturedir = $(prefix)/share/egt/examples/capture
+capture_DATA = $(wildcard $(top_srcdir)/examples/video/*.png)
+capture_LDFLAGS = $(AM_LDFLAGS)
 
 EXTRA_DIST = $(wildcard $(top_srcdir)/examples/video/*.png) \
 	video.xml
