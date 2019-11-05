@@ -7,7 +7,7 @@
 #define EGT_CAMERA_H
 
 #include <egt/window.h>
-
+#include <memory>
 #include <string>
 
 namespace egt

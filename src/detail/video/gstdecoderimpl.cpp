@@ -275,8 +275,8 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(decodeImpl->m_pipeline))
         {
             SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_STATE_CHANGED: from {} to {}",
-                          gst_element_state_get_name(old_state),
-                          gst_element_state_get_name(new_state));
+                         gst_element_state_get_name(old_state),
+                         gst_element_state_get_name(new_state));
 
             if (decodeImpl->playing())
             {
