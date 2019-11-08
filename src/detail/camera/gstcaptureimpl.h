@@ -27,6 +27,10 @@ public:
                 experimental::CameraCapture::container_type container,
                 const std::string& device);
 
+    virtual void set_output(const std::string& output,
+                            experimental::CameraCapture::container_type container = experimental::CameraCapture::container_type::avi,
+                            pixel_format format = pixel_format::yuv420);
+
     virtual bool start();
 
     virtual void stop();

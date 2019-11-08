@@ -162,6 +162,16 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     return true;
 }
 
+void CaptureImpl::set_output(const std::string& output,
+                             experimental::CameraCapture::container_type container,
+                             pixel_format format)
+{
+    m_output = output;
+    m_format = format;
+    m_container = container;
+}
+
+
 static inline std::string gstreamer_format(pixel_format format)
 {
     static const std::map<pixel_format, std::string> formats =
@@ -179,14 +189,6 @@ static inline std::string gstreamer_format(pixel_format format)
 
     return {};
 }
-
-/*
-1 % CPU
-gst-launch-1.0  v4l2src ! videoconvert ! video/x-raw,width=320,height=240,format=I420,framerate=30/1 ! avimux ! filesink location = output.avi -e
-
-80 % CPU
-gst-launch-1.0  v4l2src ! videoconvert ! video/x-raw,width=320,height=240,format=I420,framerate=30/1 ! avenc_mpeg2video ! mpegtsmux ! filesink location = output.ts - e
-*/
 
 bool CaptureImpl::start()
 {

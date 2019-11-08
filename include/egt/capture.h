@@ -25,35 +25,64 @@ namespace experimental
 {
 
 /**
- * Utility to capture a video feed directly to a file.
+ * Capture a camera video feed directly to an output file.
  *
+ * @code{.cpp}
+ * experimental::CameraCapture capture("output.avi");
+ * capture.start();
+ * ...
+ * capture.stop();
+ * @endcode
  */
 class EGT_API CameraCapture : public egt::detail::Object
 {
 public:
 
+    /**
+     * Output container type.
+     */
     enum class container_type
     {
         avi,
         mpeg2ts
     };
 
-    CameraCapture() = delete;
-
-    CameraCapture(const std::string& output,
-                  container_type container = container_type::avi,
-                  pixel_format format = pixel_format::yuv420,
-                  const std::string& device = "/dev/video0");
+    CameraCapture();
 
     /**
-     * Initialize camera pipeline to capture image feed from the camera.
+     * @param[in] output The output file path.
+     * @param[in] container The output container format.
+     * @param[in] format The input pixel format.
+     * @param[in] device The camera device.
+     */
+    explicit CameraCapture(const std::string& output,
+                           container_type container = container_type::avi,
+                           pixel_format format = pixel_format::yuv420,
+                           const std::string& device = "/dev/video0");
+
+    /**
+     * Set the output.
+     *
+     * @warning If this is called while the camera is currently capturing, it
+     * will automatically stop the capture.
+     *
+     * @param[in] output The output file path.
+     * @param[in] container The output container format.
+     * @param[in] format The input pixel format.
+     */
+    virtual void set_output(const std::string& output,
+                            container_type container = container_type::avi,
+                            pixel_format format = pixel_format::yuv420);
+
+    /**
+     * Initialize camera pipeline to capture from the camera.
      *
      * @return true on success
      */
     virtual bool start();
 
     /**
-     * Stop camera.
+     * Stop camera capture and finish the output.
      */
     virtual void stop();
 
@@ -66,6 +95,9 @@ public:
 
 protected:
 
+    /**
+     * Internal capture implementation.
+     */
     std::unique_ptr<detail::CaptureImpl> m_impl;
 
 };

@@ -13,12 +13,25 @@ inline namespace v1
 namespace experimental
 {
 
+CameraCapture::CameraCapture()
+    : CameraCapture("output.avi")
+{}
+
+
 CameraCapture::CameraCapture(const std::string& output,
                              container_type container,
                              pixel_format format,
                              const std::string& device)
     : m_impl(new detail::CaptureImpl(*this, output, format, container, device))
 {}
+
+void CameraCapture::set_output(const std::string& output,
+                               container_type container,
+                               pixel_format format)
+{
+    stop();
+    m_impl->set_output(output, container, format);
+}
 
 bool CameraCapture::start()
 {
