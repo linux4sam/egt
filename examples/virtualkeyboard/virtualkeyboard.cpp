@@ -3,14 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <egt/ui>
-#include <math.h>
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-#include <iostream>
 #include <algorithm>
+#include <egt/ui>
+#include <random>
 
 using namespace std;
 using namespace egt;
@@ -19,13 +14,16 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "keyboard");
 
+    std::random_device rd;
+    std::mt19937 g(rd());
+
     vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row1 =
     {
         make_shared<VirtualKeyboard::Key>(0x0037),
         make_shared<VirtualKeyboard::Key>(0x0038),
         make_shared<VirtualKeyboard::Key>(0x0039),
     };
-    random_shuffle(code_keyboard_row1.begin(), code_keyboard_row1.end());
+    shuffle(code_keyboard_row1.begin(), code_keyboard_row1.end(), g);
 
     vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row2 =
     {
@@ -33,7 +31,7 @@ int main(int argc, const char** argv)
         make_shared<VirtualKeyboard::Key>(0x0035),
         make_shared<VirtualKeyboard::Key>(0x0036),
     };
-    random_shuffle(code_keyboard_row2.begin(), code_keyboard_row2.end());
+    shuffle(code_keyboard_row2.begin(), code_keyboard_row2.end(), g);
 
     vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row3 =
     {
@@ -41,7 +39,7 @@ int main(int argc, const char** argv)
         make_shared<VirtualKeyboard::Key>(0x0032),
         make_shared<VirtualKeyboard::Key>(0x0033),
     };
-    random_shuffle(code_keyboard_row3.begin(), code_keyboard_row3.end());
+    shuffle(code_keyboard_row3.begin(), code_keyboard_row3.end(), g);
 
     vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row4 =
     {
@@ -54,7 +52,7 @@ int main(int argc, const char** argv)
     {
         code_keyboard_row1, code_keyboard_row2, code_keyboard_row3, code_keyboard_row4
     };
-    random_shuffle(code_keyboard_panel_keys.begin(), code_keyboard_panel_keys.end() - 1);
+    shuffle(code_keyboard_panel_keys.begin(), code_keyboard_panel_keys.end() - 1, g);
 
     VirtualKeyboard code_keyboard(
     { code_keyboard_panel_keys },
