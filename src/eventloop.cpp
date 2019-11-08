@@ -5,13 +5,10 @@
  */
 #include "egt/app.h"
 #include "egt/eventloop.h"
-#include "egt/painter.h"
-#include "egt/timer.h"
 #include "egt/tools.h"
 #include "egt/widget.h"
 #include "egt/window.h"
 #include <cstdlib>
-#include <deque>
 #include <egt/asio.hpp>
 #include <numeric>
 #include <spdlog/spdlog.h>
@@ -20,17 +17,15 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
-struct EventLoopImpl
+
+struct EventLoop::EventLoopImpl
 {
     asio::io_context m_io;
     asio::executor_work_guard<asio::io_context::executor_type> m_work{egt::asio::make_work_guard(m_io)};
 };
-}
 
 EventLoop::EventLoop() noexcept
-    : m_impl(new detail::EventLoopImpl)
+    : m_impl(new EventLoopImpl)
 {}
 
 asio::io_context& EventLoop::io()

@@ -8,7 +8,7 @@
 
 /**
  * @file
- * @brief Working with event loops.
+ * @brief Working with the event loop.
  */
 
 #include <egt/detail/meta.h>
@@ -27,11 +27,6 @@ class io_context;
 
 inline namespace v1
 {
-
-namespace detail
-{
-struct EventLoopImpl;
-}
 
 /**
  * Event loop interface.
@@ -109,10 +104,12 @@ protected:
      */
     void invoke_idle_callbacks();
 
+    struct EventLoopImpl;
+
     /**
      * Internal event loop implementation.
      */
-    std::unique_ptr<detail::EventLoopImpl> m_impl;
+    std::unique_ptr<EventLoopImpl> m_impl;
 
     /**
      * Registered idle callbacks.
