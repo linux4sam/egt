@@ -3,11 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <cmath>
 #include <egt/detail/string.h>
 #include <egt/ui>
 #include <iostream>
 #include <map>
-#include <math.h>
 #include <sstream>
 #include <string>
 #include <vector>
