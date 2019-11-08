@@ -11,8 +11,9 @@
  * @brief Debug dump tools.
  */
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <vector>
 
 namespace egt
 {
