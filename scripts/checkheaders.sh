@@ -5,6 +5,8 @@
 #
 
 includedir=$1
+buildincludedir=$2
+shift
 shift
 
 finish()
@@ -27,7 +29,7 @@ do
 	   echo "$includedir/$f:0:0: warning: bad detail macro"
        fi
     else
-	if ! grep -q "$b" $includedir/egt/ui; then
+       if ! grep -q "<${b}>" $buildincludedir/egt/ui; then
 	   echo "$includedir/$f:0:0: warning: not included in <egt/ui>"
        fi
     fi

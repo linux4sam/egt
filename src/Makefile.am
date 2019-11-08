@@ -375,4 +375,5 @@ tidy: tidy-local
 checkheaders:
 	@$(top_srcdir)/scripts/checkheaders.sh \
 		$(top_srcdir)/include \
+		$(top_builddir)/include \
 		$(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
