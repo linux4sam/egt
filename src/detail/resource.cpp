@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/resource.h"
+#include <cassert>
 #include <cstring>
 #include <map>
+#include <memory>
 #include <string>
-#include <cassert>
-
-using namespace std;
 
 namespace egt
 {
@@ -28,7 +27,7 @@ struct Resource
  * Because of static initialization order, make this a pointer and allocate
  * on demand instead of initializing statically.
  */
-static std::map<std::string, detail::Resource>* resources = nullptr;
+static std::unique_ptr<std::map<std::string, detail::Resource>> resources;
 
 cairo_status_t read_resource_stream(void* closure, unsigned char* data, unsigned int length)
 {
@@ -65,7 +64,7 @@ const unsigned char* read_resource_data(const char* name)
 {
     if (resources)
     {
-        string id = name;
+        std::string id = name;
         auto i = resources->find(id);
         if (i != resources->end())
         {
@@ -80,7 +79,7 @@ bool read_resource(const char* name, unsigned char* data, unsigned int length, u
 {
     if (resources)
     {
-        string id = name;
+        std::string id = name;
         auto i = resources->find(id);
         if (i != resources->end())
         {
@@ -96,7 +95,7 @@ bool read_resource(const char* name, unsigned char* data, unsigned int length, u
 void register_resource(const char* name, const unsigned char* data, unsigned int len)
 {
     if (!resources)
-        resources = new std::map<std::string, detail::Resource>();
+        resources.reset(new std::map<std::string, detail::Resource>());
     assert(resources);
     detail::Resource r = {data, len, 0};
     resources->insert(std::make_pair(name, r));
@@ -106,7 +105,7 @@ void unregister_resource(const char* name)
 {
     if (resources)
     {
-        string id = name;
+        std::string id = name;
         auto i = resources->find(id);
         if (i != resources->end())
             resources->erase(i);
