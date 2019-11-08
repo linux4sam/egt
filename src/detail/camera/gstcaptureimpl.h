@@ -7,7 +7,9 @@
 #define EGT_DETAIL_CAMERA_GSTCAPTUREIMPL_H
 
 #include "egt/capture.h"
+#include <condition_variable>
 #include <gst/gst.h>
+#include <mutex>
 #include <string>
 #include <thread>
 
@@ -50,7 +52,8 @@ protected:
     std::string m_err_message;
     GMainLoop* m_gmainLoop{nullptr};
     std::thread m_gmainThread;
-
+    std::mutex m_mutex;
+    std::condition_variable m_condition;
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 };

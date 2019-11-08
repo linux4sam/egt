@@ -61,7 +61,11 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 {
     ignoreparam(bus);
 
-    auto cameraImpl = reinterpret_cast<CaptureImpl*>(data);
+    auto impl = reinterpret_cast<CaptureImpl*>(data);
+
+    std::unique_lock<std::mutex> lock(impl->m_mutex);
+
+    SPDLOG_DEBUG("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
@@ -78,11 +82,11 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         g_error_free(error);
         g_free(debug);
 
-        asio::post(Application::instance().event().io(), [cameraImpl, error_message]()
+        asio::post(Application::instance().event().io(), [impl, error_message]()
         {
-            cameraImpl->m_err_message = error_message;
+            impl->m_err_message = error_message;
             Event event(eventid::event2);
-            cameraImpl->m_interface.invoke_handlers(event);
+            impl->m_interface.invoke_handlers(event);
         });
         break;
     }
@@ -113,46 +117,13 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         g_free(name);
         break;
     }
-    case GST_MESSAGE_CLOCK_PROVIDE:
+    case GST_MESSAGE_EOS:
     {
-        SPDLOG_DEBUG("GST_MESSAGE_CLOCK_PROVIDE");
-        break;
-    }
-    case GST_MESSAGE_CLOCK_LOST:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_CLOCK_LOST");
-        break;
-    }
-    case GST_MESSAGE_NEW_CLOCK:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_NEW_CLOCK");
-        break;
-    }
-    case GST_MESSAGE_PROGRESS:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_PROGRESS");
-        break;
-    }
-    case GST_MESSAGE_DURATION_CHANGED:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_DURATION_CHANGED");
-        break;
-    }
-    case GST_MESSAGE_ELEMENT:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_ELEMENT");
-        break;
-    }
-    case GST_MESSAGE_TAG:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_TAG");
+        impl->m_condition.notify_one();
         break;
     }
     default:
-    {
-        SPDLOG_DEBUG("default Message {}", std::to_string(GST_MESSAGE_TYPE(message)));
         break;
-    }
     }
 
     /* we want to be notified again if there is a message on the bus, so
@@ -170,7 +141,6 @@ void CaptureImpl::set_output(const std::string& output,
     m_format = format;
     m_container = container;
 }
-
 
 static inline std::string gstreamer_format(pixel_format format)
 {
@@ -252,11 +222,22 @@ void CaptureImpl::stop()
 {
     if (m_pipeline)
     {
+        bool wait = GST_STATE(m_pipeline) == GST_STATE_PLAYING;
+
+        std::unique_lock<std::mutex> lock(m_mutex);
+        if (wait)
+        {
+            gst_element_send_event(m_pipeline, gst_event_new_eos());
+            m_condition.wait(lock);
+        }
+
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            spdlog::error("set pipeline to NULL state failed");
+            m_err_message = "set pipeline to NULL state failed";
+            spdlog::error(m_err_message);
         }
+
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
     }
@@ -269,6 +250,8 @@ std::string CaptureImpl::error_message() const
 
 CaptureImpl::~CaptureImpl()
 {
+    stop();
+
     if (m_gmainLoop)
     {
         /*
