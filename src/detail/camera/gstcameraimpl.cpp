@@ -11,12 +11,12 @@
 #include "egt/app.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
+#include "egt/types.h"
 #include "egt/video.h"
 #include <exception>
 #include <gst/gst.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <map>
 
 namespace egt
 {
@@ -257,25 +257,6 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
     return GST_FLOW_ERROR;
 }
 
-static inline std::string gstreamer_format(pixel_format format)
-{
-    static const std::map<pixel_format, std::string> formats =
-    {
-        {pixel_format::argb8888, "BGRx"},
-        {pixel_format::xrgb8888, "BGRx"},
-        {pixel_format::rgb565, "RGB16"},
-        {pixel_format::yuv420, "I420"},
-        {pixel_format::yuyv, "YUY2"},
-        {pixel_format::nv21, "NV21"},
-    };
-
-    const auto i = formats.find(format);
-    if (i != formats.end())
-        return i->second;
-
-    return {};
-}
-
 bool CameraImpl::start()
 {
     std::string pipe;
@@ -292,7 +273,7 @@ bool CameraImpl::start()
         if (s)
         {
             const auto gem_name = s->gem();
-            const auto format = gstreamer_format(m_interface.format());
+            const auto format = detail::gstreamer_format(m_interface.format());
             const auto box = m_interface.content_area();
             pipe = fmt::format(kmssink_pipe, m_devnode, box.width(), box.height(), format, gem_name);
         }
@@ -305,7 +286,7 @@ bool CameraImpl::start()
             "appsink name=appsink async=false enable-last-sample=false sync=true";
 
         const auto box = m_interface.content_area();
-        const auto format = gstreamer_format(m_interface.format());
+        const auto format = detail::gstreamer_format(m_interface.format());
         pipe = fmt::format(appsink_pipe, m_devnode, box.width(), box.height(), format);
     }
 

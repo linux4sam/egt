@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <detail/video/gstkmssinkimpl.h>
-#include <egt/app.h>
-#include <egt/detail/screen/kmsoverlay.h>
-#include <egt/detail/screen/kmsscreen.h>
+#include "detail/video/gstkmssinkimpl.h"
+#include "egt/app.h"
+#include "egt/detail/screen/kmsoverlay.h"
+#include "egt/detail/screen/kmsscreen.h"
+#include "egt/types.h"
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -43,10 +44,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         auto format = detail::egt_format(s->get_plane_format());
         SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
 
-        if (format == pixel_format::yuyv)
-            vc = "YUY2";
-        else if (format == pixel_format::xrgb8888)
-            vc = "BGRx";
+        vc = detail::gstreamer_format(format);
     }
 
     std::string a_pipe;

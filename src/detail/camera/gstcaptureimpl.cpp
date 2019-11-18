@@ -10,9 +10,9 @@
 #include "detail/camera/gstcaptureimpl.h"
 #include "egt/app.h"
 #include "egt/detail/meta.h"
+#include "egt/types.h"
 #include <exception>
 #include <gst/gst.h>
-#include <map>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
@@ -142,25 +142,6 @@ void CaptureImpl::set_output(const std::string& output,
     m_container = container;
 }
 
-static inline std::string gstreamer_format(pixel_format format)
-{
-    static const std::map<pixel_format, std::string> formats =
-    {
-        {pixel_format::argb8888, "BGRx"},
-        {pixel_format::xrgb8888, "BGRx"},
-        {pixel_format::rgb565, "RGB16"},
-        {pixel_format::yuv420, "I420"},
-        {pixel_format::yuyv, "YUY2"},
-        {pixel_format::nv21, "NV21"},
-    };
-
-    const auto i = formats.find(format);
-    if (i != formats.end())
-        return i->second;
-
-    return {};
-}
-
 bool CaptureImpl::start()
 {
     std::string pipe;
@@ -173,7 +154,7 @@ bool CaptureImpl::start()
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=30/1 ! " \
             "avimux ! filesink location={}";
 
-        const auto format = gstreamer_format(m_format);
+        const auto format = detail::gstreamer_format(m_format);
         pipe = fmt::format(avi_pipe, m_devnode, 320, 240, format, m_output);
         break;
     }
@@ -183,7 +164,7 @@ bool CaptureImpl::start()
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=30/1 ! " \
             "avenc_mpeg2video ! mpegtsmux ! filesink location={}";
 
-        const auto format = gstreamer_format(m_format);
+        const auto format = detail::gstreamer_format(m_format);
         pipe = fmt::format(mpeg2ts_pipe, m_devnode, 320, 240, format, m_output);
 
         break;

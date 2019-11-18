@@ -35,6 +35,10 @@ std::ostream& operator<<(std::ostream& os, const pixel_format& format)
         MAPITEM(pixel_format::yuyv);
         MAPITEM(pixel_format::nv21);
         MAPITEM(pixel_format::yuv420);
+        MAPITEM(pixel_format::yvyu);
+        MAPITEM(pixel_format::nv61);
+        MAPITEM(pixel_format::yuy2);
+        MAPITEM(pixel_format::uyvy);
 #undef MAPITEM
     }
 
@@ -53,12 +57,21 @@ static const map<pixel_format, uint32_t> drm_formats =
     {pixel_format::yuyv, DRM_FORMAT_YUYV},
     {pixel_format::yuv420, DRM_FORMAT_YUV420},
     {pixel_format::nv21, DRM_FORMAT_NV21},
+    {pixel_format::yvyu, DRM_FORMAT_YVYU},
+    {pixel_format::nv61, DRM_FORMAT_NV61},
+    {pixel_format::yuy2, DRM_FORMAT_YUYV},
+    {pixel_format::uyvy, DRM_FORMAT_UYVY},
 #else
     {pixel_format::rgb565, 0},
     {pixel_format::argb8888, 1},
     {pixel_format::xrgb8888, 2},
     {pixel_format::yuyv, 3},
-    {pixel_format::yuv420, 4},
+    {pixel_format::nv21, 4},
+    {pixel_format::yuv420, 5},
+    {pixel_format::yvyu, 6},
+    {pixel_format::nv61, 7},
+    {pixel_format::yuy2, 8},
+    {pixel_format::uyvy, 9},
 #endif
 };
 
@@ -105,6 +118,29 @@ pixel_format egt_format(cairo_format_t format)
             return i.first;
 
     return pixel_format::invalid;
+}
+
+std::string gstreamer_format(pixel_format format)
+{
+    static const std::map<pixel_format, std::string> formats =
+    {
+        {pixel_format::argb8888, "BGRx"},
+        {pixel_format::xrgb8888, "BGRx"},
+        {pixel_format::rgb565, "RGB16"},
+        {pixel_format::yuv420, "I420"},
+        {pixel_format::yuyv, "YUY2"},
+        {pixel_format::nv21, "NV21"},
+        {pixel_format::yvyu, "YVYU"},
+        {pixel_format::nv61, "NV61"},
+        {pixel_format::yuy2, "YUY2"},
+        {pixel_format::uyvy, "UYVY"},
+    };
+
+    const auto i = formats.find(format);
+    if (i != formats.end())
+        return i->second;
+
+    return {};
 }
 
 }

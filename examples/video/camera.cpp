@@ -53,7 +53,7 @@ int main(int argc, const char** argv)
         dev = std::string(argv[1]);
         size.set_width(atoi(argv[2]));
         size.set_height(atoi(argv[3]));
-        if (atoi(argv[4]) <= 6)
+        if (atoi(argv[4]) <= 10)
             format = static_cast<pixel_format>(atoi(argv[4]));
     }
 

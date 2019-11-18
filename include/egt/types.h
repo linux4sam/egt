@@ -89,6 +89,10 @@ enum class pixel_format
     nv21,     ///< YUV 4:2:0 planar image, with 8 bit Y samples, followed by
     ///< interleaved V/U plane with 8bit 2x2 subsampled chroma samples
     yuv420,   ///< Planar format
+    yvyu,
+    nv61,
+    yuy2,     ///< Packed YUY 4:2:2
+    uyvy,     ///< Reverse byte order of YUY2
 };
 
 EGT_API std::ostream& operator<<(std::ostream& os, const pixel_format& format);
@@ -117,6 +121,10 @@ pixel_format egt_format(uint32_t format);
  * Convert a cairo format to a pixel format.
  */
 pixel_format egt_format(cairo_format_t format);
+/**
+ * Convert a pixel format to a gstreamer format.
+ */
+std::string gstreamer_format(pixel_format format);
 }
 
 }
