@@ -50,7 +50,7 @@ public:
      * formats.
      */
     explicit CameraWindow(const std::string& device = "/dev/video0",
-                          pixel_format format_hint = pixel_format::yuv420,
+                          pixel_format format_hint = pixel_format::yuyv,
                           windowhint hint = windowhint::overlay);
 
     /**
@@ -71,7 +71,7 @@ public:
      */
     explicit CameraWindow(const Rect& rect,
                           const std::string& device = "/dev/video0",
-                          pixel_format format_hint = pixel_format::yuv420,
+                          pixel_format format_hint = pixel_format::yuyv,
                           windowhint hint = windowhint::overlay);
 
     virtual void do_draw() override
