@@ -45,6 +45,18 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "camera");
 
+    Size size(320, 240);
+    auto format = pixel_format::yuyv;
+    std::string dev = "/dev/video0";
+    if (argc == 5)
+    {
+        dev = std::string(argv[1]);
+        size.set_width(atoi(argv[2]));
+        size.set_height(atoi(argv[3]));
+        if (atoi(argv[4]) <= 6)
+            format = static_cast<pixel_format>(atoi(argv[4]));
+    }
+
     TopWindow win;
     win.set_color(Palette::ColorId::bg, Palette::black);
 
@@ -54,7 +66,7 @@ int main(int argc, const char** argv)
     errlabel.set_text_align(alignmask::center | alignmask::top);
     win.add(errlabel);
 
-    CameraWindow player(Size(320, 240));
+    CameraWindow player(size, dev, format, windowhint::overlay);
     player.move_to_center(win.center());
     win.add(player);
 
