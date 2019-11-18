@@ -115,13 +115,16 @@ int main(int argc, const char** argv)
     fullscreen.set_boxtype(Theme::boxtype::none);
     hpos.add(fullscreen);
 
-    fullscreen.on_event([&fullscreen, &player](Event&)
+    const auto wscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
+    const auto hscale = static_cast<float>(Application::instance().screen()->size().height()) / size.height();
+
+    fullscreen.on_event([&fullscreen, &player, wscale, hscale](Event&)
     {
         static bool scaled = true;
         if (scaled)
         {
             player.move(Point(0, 0));
-            player.set_scale(2.5, 2.5);
+            player.set_scale(wscale, hscale);
             fullscreen.set_image(Image(":fullscreen_exit_png"));
             scaled = false;
         }
