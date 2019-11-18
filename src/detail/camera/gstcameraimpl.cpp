@@ -266,6 +266,7 @@ static inline std::string gstreamer_format(pixel_format format)
         {pixel_format::rgb565, "RGB16"},
         {pixel_format::yuv420, "I420"},
         {pixel_format::yuyv, "YUY2"},
+        {pixel_format::nv21, "NV21"},
     };
 
     const auto i = formats.find(format);
