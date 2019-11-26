@@ -159,6 +159,11 @@ public:
     inline slantid slant() const { return m_slant; }
 
     /**
+     * Set the slant of the font.
+     */
+    inline void set_slant(slantid s) { m_slant = s; }
+
+    /**
      * Generates a FontConfig scaled font instance.
      *
      * Internally, this may use a font cache to limit regeneration of the same
