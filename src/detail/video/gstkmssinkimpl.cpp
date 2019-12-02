@@ -22,6 +22,46 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
     : GstDecoderImpl(interface, size),
       m_hwdecoder(decodertype)
 {
+    /**
+     * check for cache file by finding a playback plugin.
+     * if gst_registry_find_plugin returns NULL, then no
+     * cache file present and assume GSTREAMER1_PLUGIN_REGISTRY
+     * is disabled in gstreamer package.
+     */
+    if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
+    {
+        auto plugins =
+        {
+            "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
+            "/usr/lib/gstreamer-1.0/libgsttypefindfunctions.so",
+            "/usr/lib/gstreamer-1.0/libgstplayback.so",
+            "/usr/lib/gstreamer-1.0/libgstavi.so",
+            "/usr/lib/gstreamer-1.0/libgstisomp4.so",
+            "/usr/lib/gstreamer-1.0/libgstmpeg2dec.so",
+            "/usr/lib/gstreamer-1.0/libgstlibav.so",
+            "/usr/lib/gstreamer-1.0/libgstvideoparsersbad.so",
+            "/usr/lib/gstreamer-1.0/libgstg1.so",
+            "/usr/lib/gstreamer-1.0/libgstg1kmssink.so",
+            "/usr/lib/gstreamer-1.0/libgstaudioconvert.so",
+            "/usr/lib/gstreamer-1.0/libgstvolume.so",
+            "/usr/lib/gstreamer-1.0/libgstalsa.so",
+            "/usr/lib/gstreamer-1.0/libgstvideoscale.so",
+            "/usr/lib/gstreamer-1.0/libgstvideoconvert.so",
+        };
+
+        for (auto& plugin : plugins)
+        {
+            GError* error = NULL;
+            gst_plugin_load_file(plugin, &error);
+            if (error)
+            {
+                if (error->message)
+                    SPDLOG_ERROR("load plugin error: {}", error->message);
+                g_error_free(error);
+            }
+        }
+    }
+
     auto s = reinterpret_cast<detail::KMSOverlay*>(interface.screen());
     assert(s);
     auto format = detail::egt_format(s->get_plane_format());

@@ -49,9 +49,44 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
 
         throw std::runtime_error(ss.str());
     }
+    /**
+     * check for cache file by finding a playback plugin.
+     * if gst_registry_find_plugin returns NULL, then no
+     * cache file present and assume GSTREAMER1_PLUGIN_REGISTRY
+     * is disabled in gstreamer package.
+     */
+    if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
+    {
+        SPDLOG_DEBUG(" Manually loading gstreamer plugins");
+        auto plugins =
+        {
+            "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
+            "/usr/lib/gstreamer-1.0/libgsttypefindfunctions.so",
+            "/usr/lib/gstreamer-1.0/libgstplayback.so",
+            "/usr/lib/gstreamer-1.0/libgstapp.so",
+            "/usr/lib/gstreamer-1.0/libgstvideo4linux2.so",
+            "/usr/lib/gstreamer-1.0/libgstvideoscale.so",
+            "/usr/lib/gstreamer-1.0/libgstvideoconvert.so",
+            "/usr/lib/gstreamer-1.0/libgstlibav.so",
+            "/usr/lib/gstreamer-1.0/libgstvideoparsersbad.so",
+        };
+
+        for (auto& plugin : plugins)
+        {
+            GError* error = NULL;
+            gst_plugin_load_file(plugin, &error);
+            if (error)
+            {
+                if (error->message)
+                    SPDLOG_ERROR("load plugin error: {}", error->message);
+                g_error_free(error);
+            }
+        }
+    }
 
     m_gmainLoop = g_main_loop_new(nullptr, FALSE);
     m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
+
 }
 
 gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
