@@ -109,41 +109,6 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         g_free(name);
         break;
     }
-    case GST_MESSAGE_CLOCK_PROVIDE:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_CLOCK_PROVIDE");
-        break;
-    }
-    case GST_MESSAGE_CLOCK_LOST:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_CLOCK_LOST");
-        break;
-    }
-    case GST_MESSAGE_NEW_CLOCK:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_NEW_CLOCK");
-        break;
-    }
-    case GST_MESSAGE_PROGRESS:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_PROGRESS");
-        break;
-    }
-    case GST_MESSAGE_DURATION_CHANGED:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_DURATION_CHANGED");
-        break;
-    }
-    case GST_MESSAGE_ELEMENT:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_ELEMENT");
-        break;
-    }
-    case GST_MESSAGE_TAG:
-    {
-        SPDLOG_DEBUG("GST_MESSAGE_TAG");
-        break;
-    }
     case GST_MESSAGE_DEVICE_ADDED:
     {
         GstDevice* device;
