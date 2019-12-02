@@ -81,7 +81,7 @@ int main(int argc, const char** argv)
     {
         switch (event.id())
         {
-        case eventid::event2:
+        case eventid::error:
         {
             errlabel.set_text("Error:\n" + line_break(player.error_message()));
             break;

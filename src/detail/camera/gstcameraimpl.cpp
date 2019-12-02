@@ -78,8 +78,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         asio::post(Application::instance().event().io(), [cameraImpl, error_message]()
         {
             cameraImpl->m_err_message = error_message;
-            Event event(eventid::event2);
-            cameraImpl->m_interface.invoke_handlers(event);
+            cameraImpl->m_interface.invoke_handlers(eventid::error);
         });
         break;
     }
@@ -301,6 +300,7 @@ bool CameraImpl::start()
     {
         m_err_message = error->message;
         spdlog::error("failed to create pipeline: {}", m_err_message);
+        m_interface.invoke_handlers(eventid::error);
         return false;
     }
 
@@ -311,6 +311,7 @@ bool CameraImpl::start()
         {
             m_err_message = "failed to get app sink element";
             spdlog::error(m_err_message);
+            m_interface.invoke_handlers(eventid::error);
             return false;
         }
 
@@ -327,6 +328,7 @@ bool CameraImpl::start()
     {
         m_err_message = "failed to set pipeline to play state";
         spdlog::error(m_err_message);
+        m_interface.invoke_handlers(eventid::error);
         stop();
         return false;
     }
