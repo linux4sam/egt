@@ -144,6 +144,43 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         SPDLOG_DEBUG("GST_MESSAGE_TAG");
         break;
     }
+    case GST_MESSAGE_DEVICE_ADDED:
+    {
+        GstDevice* device;
+        gst_message_parse_device_added(message, &device);
+        gchar* name = gst_device_get_display_name(device);
+        SPDLOG_DEBUG("Device added: {} \n", name);
+        g_free(name);
+        gst_object_unref(device);
+
+        asio::post(Application::instance().event().io(), [cameraImpl]()
+        {
+            if (cameraImpl->start())
+            {
+                cameraImpl->m_err_message = "";
+                cameraImpl->m_interface.invoke_handlers(eventid::error);
+            }
+        });
+
+        break;
+    }
+    case GST_MESSAGE_DEVICE_REMOVED:
+    {
+        GstDevice* device;
+        gst_message_parse_device_removed(message, &device);
+        gchar* name = gst_device_get_display_name(device);
+        SPDLOG_DEBUG("Device removed: {} \n", name);
+        g_free(name);
+        gst_object_unref(device);
+
+        asio::post(Application::instance().event().io(), [cameraImpl, name]()
+        {
+            cameraImpl->m_err_message = std::string(name) + " Device removed";
+            cameraImpl->m_interface.invoke_handlers(eventid::error);
+        });
+        cameraImpl->stop();
+        break;
+    }
     default:
     {
         SPDLOG_DEBUG("default Message {}", std::to_string(GST_MESSAGE_TYPE(message)));
@@ -256,9 +293,59 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
     return GST_FLOW_ERROR;
 }
 
+void CameraImpl::get_camera_device_caps()
+{
+
+    GstDeviceMonitor* monitor = gst_device_monitor_new();
+
+    GstBus* bus = gst_device_monitor_get_bus(monitor);
+    gst_bus_add_watch(bus, &bus_callback, this);
+    gst_object_unref(bus);
+
+    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
+    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
+    gst_caps_unref(caps);
+
+    if (gst_device_monitor_start(monitor))
+    {
+        GList* devlist, *devIter;
+        devlist = gst_device_monitor_get_devices(monitor);
+
+        GstDevice* device;
+        for (devIter = g_list_first(devlist); devIter != NULL; devIter = g_list_next(devIter))
+        {
+            device = static_cast<GstDevice*>(devIter->data);
+            if (device == NULL)
+                continue;
+
+            // Probe all device properties and store them internally:
+            auto display_name = gst_device_get_display_name(device);
+            SPDLOG_DEBUG("In {} : display_name = {} \n", __func__, display_name);
+            g_free(display_name);
+
+            auto devString = gst_device_get_device_class(device);
+            SPDLOG_DEBUG("In {} : devString = {} \n", __func__, devString);
+            g_free(devString);
+
+            GstStructure* props = gst_device_get_properties(device);
+            if (props)
+            {
+                SPDLOG_DEBUG("In {} : Device Properties: \n {} \n", __func__, gst_structure_to_string(props));
+
+                m_devnode = gst_structure_get_string(props, "device.path");
+                SPDLOG_DEBUG("In {} : Using default Camera device = {} \n", __func__, m_devnode);
+                gst_structure_free(props);
+            }
+        }
+        g_list_free(devlist);
+    }
+}
+
 bool CameraImpl::start()
 {
     std::string pipe;
+
+    get_camera_device_caps();
 
 #ifdef HAVE_LIBPLANES
     if (m_interface.flags().is_set(Widget::flag::plane_window) && m_usekmssink)

@@ -48,6 +48,8 @@ protected:
     GMainLoop* m_gmainLoop{nullptr};
     std::thread m_gmainThread;
 
+    void get_camera_device_caps();
+
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);

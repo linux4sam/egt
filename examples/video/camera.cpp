@@ -83,7 +83,11 @@ int main(int argc, const char** argv)
         {
         case eventid::error:
         {
-            errlabel.set_text("Error:\n" + line_break(player.error_message()));
+            auto msg = player.error_message();
+            if (msg.empty())
+                errlabel.set_text("");
+            else
+                errlabel.set_text("Error:\n" + line_break(msg));
             break;
         }
         case eventid::pointer_drag_start:
