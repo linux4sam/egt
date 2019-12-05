@@ -258,7 +258,7 @@ AS_IF([test "x$with_libinput" != "xno"],[
    if test "x${have_libinput}" = xyes; then
       AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
       LIBEGT_EXTRA_CXXFLAGS="${LIBINPUT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} -ludev ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 AM_CONDITIONAL([HAVE_LIBINPUT], [test "x${have_libinput}" = xyes])
