@@ -311,10 +311,9 @@ void CameraImpl::get_camera_device_caps()
         GList* devlist, *devIter;
         devlist = gst_device_monitor_get_devices(monitor);
 
-        GstDevice* device;
         for (devIter = g_list_first(devlist); devIter != NULL; devIter = g_list_next(devIter))
         {
-            device = static_cast<GstDevice*>(devIter->data);
+            auto device = static_cast<GstDevice*>(devIter->data);
             if (device == NULL)
                 continue;
 
