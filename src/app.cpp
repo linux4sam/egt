@@ -211,6 +211,9 @@ Application::Application(int argc, const char** argv, const std::string& name, b
             vector<string> tokens;
             detail::tokenize(input, ':', tokens);
 
+            if (tokens.size() != 2)
+                continue;
+
             string library = tokens.front();
             string devices = tokens.back();
             vector<string> device_tokens;
