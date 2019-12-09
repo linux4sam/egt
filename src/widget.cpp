@@ -87,6 +87,14 @@ void Widget::move_to_center(const Point& point)
     }
 }
 
+void Widget::move_to_center()
+{
+    if (!m_parent)
+        return;
+
+    move_to_center(m_parent->center());
+}
+
 void Widget::resize(const Size& size)
 {
     if (size != this->size())

@@ -287,6 +287,16 @@ public:
     virtual void move_to_center(const Point& point);
 
     /**
+     * Move the widget to the center of its parent.
+     *
+     * Changes the x and y position of the widget relative to the center point
+     * of its parent.
+     *
+     * @note This will cause a redraw of the widget.
+     */
+    virtual void move_to_center();
+
+    /**
      * Change the box.
      *
      * This is the same as calling Widget::move() and Widget::resize() at the
