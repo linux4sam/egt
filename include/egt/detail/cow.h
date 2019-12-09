@@ -33,11 +33,11 @@ public:
 
     CopyOnWriteAllocate() = default;
 
-    CopyOnWriteAllocate(T* t)
+    explicit CopyOnWriteAllocate(T* t)
         : m_ptr(t)
     {}
 
-    CopyOnWriteAllocate(const std::shared_ptr<T>& refptr)
+    explicit CopyOnWriteAllocate(const std::shared_ptr<T>& refptr)
         : m_ptr(refptr)
     {}
 
