@@ -101,6 +101,8 @@ public:
         return handle;
     }
 
+    using Widget::set_color;
+
     virtual void set_color(uint32_t handle, const Color& color)
     {
         for (auto& value : this->m_values)
