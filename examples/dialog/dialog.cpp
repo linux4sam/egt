@@ -120,7 +120,7 @@ int main(int argc, const char** argv)
     {
         if (event.id() == eventid::event1)
         {
-            auto select = dynamic_cast<StringItem*>(dlist0->item_at(dlist0->selected()))->text();
+            auto select = dynamic_cast<StringItem*>(dlist0->item_at(dlist0->selected()).get())->text();
             dialog_result->set_text("List Dialog: " + select + " Selected");
         }
         else if (event.id() == eventid::event2)

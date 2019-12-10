@@ -165,7 +165,7 @@ public:
     /**
      * Get the currently selected index item from list.
      */
-    virtual Widget* item_at(size_t index) const;
+    virtual std::shared_ptr<Widget> item_at(size_t index) const;
 
     /**
      * Remove an item from the list.

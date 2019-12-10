@@ -74,7 +74,7 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
     }
 }
 
-Widget* ListBox::item_at(size_t index) const
+std::shared_ptr<Widget> ListBox::item_at(size_t index) const
 {
     return m_sizer->child_at(index);
 }

@@ -127,9 +127,9 @@ public:
     /**
      * Get a child widget at a specific index.
      */
-    Widget* child_at(size_t index)
+    std::shared_ptr<Widget> child_at(size_t index)
     {
-        return m_children.at(index).get();
+        return m_children.at(index);
     }
 
     /**
