@@ -79,6 +79,16 @@ static std::thread t([]()
 The C++ coding style of the EGT project mostly adheres to the Allman style with
 a couple exceptions.  This coding style is enforced throughout the codebase.
 
+- Indententation is 4 spaces.  No tabs.
+- All type names including classes, enums, and using/typedef declarations use
+CamelCaseNaming and begin with a capital letter.
+- All functions and variables including member functions, member variables, and
+local variables use lowercase names with words_seperated_by_an_underscore.
+- Prefer not to use postfix '_t' on type names as this _namespace_ is
+considered reserved.
+
+### Automatic Code Style
+
 [Astyle](http://astyle.sourceforge.net/) is used to enforce this
 coding style with the *scripts/style.sh* script. This can be automatically
 executed for all of the source code with a make target by typing:
