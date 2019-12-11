@@ -9,12 +9,12 @@
 
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
-#include "egt/detail/imagecache.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
 #include "egt/painter.h"
+#include "egt/respath.h"
 #include "egt/timer.h"
 #include "egt/utils.h"
 #include "egt/version.h"
@@ -125,24 +125,24 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
 
         for (auto& token : tokens)
-            detail::add_search_path(token);
+            add_search_path(token);
     }
 
     // search exe pwd
-    detail::add_search_path(detail::exe_pwd());
+    add_search_path(detail::exe_pwd());
 
     // libegt icons
-    detail::add_search_path(std::string(DATADIR) + "/libegt/icons");
+    add_search_path(std::string(DATADIR) + "/libegt/icons");
 
     if (!name.empty())
     {
         // special handling for installed examples
-        detail::add_search_path(std::string(DATADIR) + "/egt/examples/" + name);
+        add_search_path(std::string(DATADIR) + "/egt/examples/" + name);
     }
 
     // special handling for running example in the source directory
-    detail::add_search_path(detail::exe_pwd() + "/../../../icons");
-    detail::add_search_path(detail::exe_pwd() + "/../../icons");
+    add_search_path(detail::exe_pwd() + "/../../../icons");
+    add_search_path(detail::exe_pwd() + "/../../icons");
 
     setlocale(LC_ALL, "");
     bindtextdomain(name.c_str(), (detail::exe_pwd() + "/../share/locale/").c_str());

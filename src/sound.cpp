@@ -7,7 +7,7 @@
 #include "config.h"
 #endif
 
-#include "egt/detail/imagecache.h"
+#include "egt/respath.h"
 #include "egt/sound.h"
 #include "egt/utils.h"
 #include <alsa/asoundlib.h>
@@ -142,7 +142,7 @@ Sound::Sound(const std::string& file, const std::string& device)
 
 void Sound::open_file()
 {
-    auto file = detail::resolve_file_path(m_file);
+    auto file = resolve_file_path(m_file);
 
 #ifdef HAVE_SNDFILE
     m_impl->in = SndfileHandle(file.c_str());

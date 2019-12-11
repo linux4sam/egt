@@ -87,6 +87,7 @@ painter.cpp \
 palette.cpp \
 progressbar.cpp \
 radiobox.cpp \
+respath.cpp \
 screen.cpp \
 scrollwheel.cpp \
 shapes.cpp \
@@ -185,6 +186,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/progressbar.h \
 ../include/egt/radial.h \
 ../include/egt/radiobox.h \
+../include/egt/respath.h \
 ../include/egt/screen.h \
 ../include/egt/scrollwheel.h \
 ../include/egt/sideboard.h \

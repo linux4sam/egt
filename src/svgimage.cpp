@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/canvas.h"
-#include "egt/detail/imagecache.h"
 #include "egt/detail/meta.h"
+#include "egt/respath.h"
 #include "egt/svgimage.h"
 #include <librsvg/rsvg.h>
 
@@ -126,7 +126,7 @@ void SvgImage::load()
     // TODO: this only supports file paths, not all respaths
 
     GError* error = nullptr;
-    auto handle = rsvg_handle_new_from_file(detail::resolve_file_path(m_respath).c_str(), &error);
+    auto handle = rsvg_handle_new_from_file(resolve_file_path(m_respath).c_str(), &error);
 
     if (!handle || error)
         throw std::runtime_error("unable to load svg file: " + m_respath);

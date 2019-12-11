@@ -12,16 +12,13 @@
 #include "egt/detail/imagecache.h"
 #include "egt/detail/math.h"
 #include "egt/detail/resource.h"
+#include "egt/respath.h"
 #include "egt/utils.h"
 #include "images/bmp/cairo_bmp.h"
 #include <cassert>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <vector>
 
 #ifdef HAVE_LIBMAGIC
 #include <magic.h>
@@ -53,48 +50,6 @@ inline namespace v1
 {
 namespace detail
 {
-
-static std::vector<std::string> image_paths;
-
-void add_search_path(const std::string& path)
-{
-    if (path.empty())
-        return;
-
-    auto newpath = path;
-
-    if (*newpath.rbegin() != '/')
-        newpath += '/';
-
-    if (find(image_paths.begin(), image_paths.end(), newpath) == image_paths.end())
-        image_paths.push_back(newpath);
-}
-
-std::string resolve_file_path(const std::string& filename)
-{
-    if (filename.empty())
-        return filename;
-
-    // we don't resolve absolute paths
-    if (filename[0] == '/')
-        return filename;
-
-    for (auto& path : image_paths)
-    {
-        auto test = path + filename;
-
-        SPDLOG_TRACE("looking at file {}", test);
-
-        struct stat buf {};
-        if (!stat(test.c_str(), &buf))
-        {
-            SPDLOG_TRACE("found file {}", test);
-            return test;
-        }
-    }
-
-    return filename;
-}
 
 shared_cairo_surface_t ImageCache::get(const std::string& filename,
                                        float hscale, float vscale, bool approximate)

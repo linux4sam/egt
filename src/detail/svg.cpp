@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/canvas.h"
-#include "egt/detail/imagecache.h"
 #include "egt/detail/svg.h"
+#include "egt/respath.h"
 #include <librsvg/rsvg.h>
 
 namespace egt

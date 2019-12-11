@@ -20,8 +20,8 @@ Identifier (URI) and the purpose of a URI.
 
 If an absolute file path is used, noting extra will happen.  That file path will
 attempt to be accessed. However, if a relative path is given then a search will
-happened by calling detail::resolve_file_path().  This function will search any
-directory registered with detail::add_search_path().  The default path's setup
+happened by calling resolve_file_path().  This function will search any
+directory registered with add_search_path().  The default path's setup
 is searched in the following order:
 
 - Data install path.

@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/asio.hpp>
-#include <egt/detail/imagecache.h>
 #include <egt/detail/filesystem.h>
 #include <egt/ui>
 #include <iomanip>
@@ -185,7 +184,7 @@ public:
             }
         }, {eventid::property_changed});
 
-        m_player.set_media(detail::resolve_file_path("concerto.mp3"));
+        m_player.set_media(resolve_file_path("concerto.mp3"));
 
         auto glow = [this, range2handle](float value)
         {

@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <egt/detail/imagecache.h>
 #include <egt/ui>
 #include <memory>
 #include <string>
@@ -138,7 +137,7 @@ int main(int argc, const char** argv)
 {
     Application app(argc, argv, "imagestack");
 
-    detail::add_search_path("images/");
+    add_search_path("images/");
 
     MainWindow window;
     window.show();
