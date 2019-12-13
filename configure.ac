@@ -210,7 +210,7 @@ AC_TYPE_UINT8_T
 
 # Checks for library functions.
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
+AC_CHECK_FUNCS([floor memmove memset munmap reallocarray select setlocale sqrt strerror])
 
 AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
             CFLAGS="$CFLAGS $PTHREAD_CFLAGS"], AC_MSG_ERROR(Can not find pthreads.  This is required.))

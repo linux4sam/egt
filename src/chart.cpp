@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "config.h"
 #include "compat.h"
 #include "egt/chart.h"
 #include "egt/detail/meta.h"
