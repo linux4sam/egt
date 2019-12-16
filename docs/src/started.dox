@@ -68,6 +68,9 @@ EGT also supports cross compilation for target systems. If you already have a
 cross compiler available with dependent libraries available, add it to your
 PATH and follow the standard instructions.
 
+@note When adding cross compilation paths to the PATH environment variable, it
+should come before any existing system paths.
+
 @code{.sh}
 ./autogen.sh
 ./configure --prefix=/nfsroot/root/egt/ --host=arm-buildroot-linux-gnueabi
