@@ -52,7 +52,7 @@ protected:
      * X11 input dispatcher.
      *
      * Because a X11Screen also handles input from an X11Server, this needs to
-     * have it's own Input device.
+     * have its own Input device.
      */
     struct X11Input : public Input
     {

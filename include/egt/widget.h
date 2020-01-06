@@ -920,7 +920,7 @@ public:
      * Convert a local point to a display point.
      *
      * A display point has origin in the top left of the display. A local point
-     * has it's origin at the top left of the position of this widget.
+     * has its origin at the top left of the position of this widget.
      */
     virtual DisplayPoint local_to_display(const Point& p);
 
@@ -928,7 +928,7 @@ public:
      * Convert a display point to a local point.
      *
      * A display point has origin in the top left of the display. A local point
-     * has it's origin at the top left of the position of this widget.
+     * has its origin at the top left of the position of this widget.
      */
     virtual Point display_to_local(const DisplayPoint& p);
 

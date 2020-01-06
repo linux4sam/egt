@@ -59,7 +59,7 @@ public:
      *
      * Even if the VirtualKeyboard class computes automatically the base size
      * of the keys, it's still possible to customize the size of a key by
-     * setting it's length which is a factor for the base size width.
+     * setting its length which is a factor for the base size width.
      */
     class Key
     {

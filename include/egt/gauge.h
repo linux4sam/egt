@@ -271,7 +271,7 @@ public:
      * Set the needle center.
      *
      * This is the rotate point of the needle on the needle itself.  For example,
-     * if a symmetrical needle rotates on it's center, this would be a point on
+     * if a symmetrical needle rotates on its center, this would be a point on
      * the center of the needle layer itself.
      */
     inline void set_needle_center(const PointF& center)
