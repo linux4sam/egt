@@ -162,7 +162,8 @@ public:
     /**
      * Scale the video by scale value.
      *
-     * @param[in] scale
+     * @param[in] scalex Horizontal scale value, 0-1.
+     * @param[in] scaley Vertical scale value, 0-1.
      */
     virtual void set_scale(float scalex, float scaley) override;
 
