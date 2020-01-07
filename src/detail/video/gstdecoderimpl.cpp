@@ -126,7 +126,7 @@ bool GstDecoderImpl::seek(int64_t time)
                              GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
         {
             m_seekdone = false;
-            gst_element_get_state(m_pipeline, NULL, NULL, GST_CLOCK_TIME_NONE);
+            gst_element_get_state(m_pipeline, nullptr, nullptr, GST_CLOCK_TIME_NONE);
             gst_element_query_position(m_pipeline, GST_FORMAT_TIME, &m_position);
             return true;
         }

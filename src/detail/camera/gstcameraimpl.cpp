@@ -73,7 +73,7 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
 
         for (auto& plugin : plugins)
         {
-            GError* error = NULL;
+            GError* error = nullptr;
             gst_plugin_load_file(plugin, &error);
             if (error)
             {
@@ -311,10 +311,10 @@ void CameraImpl::get_camera_device_caps()
         GList* devlist, *devIter;
         devlist = gst_device_monitor_get_devices(monitor);
 
-        for (devIter = g_list_first(devlist); devIter != NULL; devIter = g_list_next(devIter))
+        for (devIter = g_list_first(devlist); devIter; devIter = g_list_next(devIter))
         {
             auto device = static_cast<GstDevice*>(devIter->data);
-            if (device == NULL)
+            if (device == nullptr)
                 continue;
 
             // Probe all device properties and store them internally:

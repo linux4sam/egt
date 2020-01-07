@@ -80,7 +80,7 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
 
         for (auto& plugin : plugins)
         {
-            GError* error = NULL;
+            GError* error = nullptr;
             gst_plugin_load_file(plugin, &error);
             if (error)
             {
