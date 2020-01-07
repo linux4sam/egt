@@ -32,3 +32,4 @@ TAGS
 *.gch
 *.exe
 test-driver
+build
