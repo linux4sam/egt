@@ -59,7 +59,7 @@ inline static string seconds_to_human(int seconds)
 
 struct AudioRadial : public Radial
 {
-    AudioRadial(std::shared_ptr<RangeValue<int>> value)
+    explicit AudioRadial(std::shared_ptr<RangeValue<int>> value)
         : m_value(std::move(value))
     {
     }

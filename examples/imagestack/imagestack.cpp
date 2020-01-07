@@ -17,7 +17,7 @@ public:
     class LauncherItem : public Frame
     {
     public:
-        LauncherItem(const Image& image)
+        explicit LauncherItem(const Image& image)
             : m_background(image)
         {
             set_boxtype(Theme::boxtype::none);
