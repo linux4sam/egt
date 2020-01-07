@@ -10,7 +10,6 @@
 #include <egt/event.h>
 #include <egt/geometry.h>
 #include <egt/timer.h>
-#include <egt/utils.h>
 #include <string>
 #include <vector>
 

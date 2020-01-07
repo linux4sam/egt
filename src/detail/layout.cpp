@@ -6,7 +6,6 @@
 #include "egt/detail/layout.h"
 #include "egt/frame.h"
 #include "egt/sizer.h"
-#include "egt/utils.h"
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 

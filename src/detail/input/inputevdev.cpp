@@ -8,7 +8,6 @@
 #include "egt/detail/input/inputevdev.h"
 #include "egt/geometry.h"
 #include "egt/keycode.h"
-#include "egt/utils.h"
 #include <cassert>
 #include <cerrno>
 #include <cstdint>

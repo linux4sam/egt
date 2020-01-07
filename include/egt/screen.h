@@ -15,7 +15,6 @@
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
-#include <egt/utils.h>
 #include <iosfwd>
 #include <memory>
 #include <vector>

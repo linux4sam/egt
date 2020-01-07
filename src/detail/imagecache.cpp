@@ -13,7 +13,6 @@
 #include "egt/detail/math.h"
 #include "egt/detail/resource.h"
 #include "egt/respath.h"
-#include "egt/utils.h"
 #include "images/bmp/cairo_bmp.h"
 #include <cassert>
 #include <spdlog/fmt/ostr.h>

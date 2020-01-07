@@ -16,7 +16,6 @@
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
-#include <egt/utils.h>
 #include <functional>
 #include <memory>
 

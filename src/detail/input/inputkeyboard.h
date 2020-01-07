@@ -12,7 +12,6 @@
 
 #include "egt/event.h"
 #include "egt/keycode.h"
-#include "egt/utils.h"
 #include <array>
 #include <cassert>
 #include <spdlog/spdlog.h>

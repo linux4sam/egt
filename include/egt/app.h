@@ -11,7 +11,6 @@
 #include <egt/detail/meta.h>
 #include <egt/detail/object.h>
 #include <egt/eventloop.h>
-#include <egt/utils.h>
 #include <iosfwd>
 #include <libintl.h>
 #include <memory>

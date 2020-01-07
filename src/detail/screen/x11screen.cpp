@@ -11,7 +11,6 @@
 #include "egt/eventloop.h"
 #include "egt/input.h"
 #include "egt/keycode.h"
-#include "egt/utils.h"
 #include <cairo-xlib.h>
 #include <cairo.h>
 #include <cstdlib>

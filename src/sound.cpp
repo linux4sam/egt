@@ -9,7 +9,6 @@
 
 #include "egt/respath.h"
 #include "egt/sound.h"
-#include "egt/utils.h"
 #include <alsa/asoundlib.h>
 #include <atomic>
 #include <condition_variable>

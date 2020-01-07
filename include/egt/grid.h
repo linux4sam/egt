@@ -13,7 +13,6 @@
 
 #include <egt/detail/meta.h>
 #include <egt/frame.h>
-#include <egt/utils.h>
 #include <egt/widget.h>
 #include <memory>
 #include <tuple>

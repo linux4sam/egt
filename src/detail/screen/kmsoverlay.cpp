@@ -6,7 +6,6 @@
 #include "detail/screen/flipthread.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
-#include "egt/utils.h"
 #include <planes/fb.h>
 #include <planes/kms.h>
 #include <planes/plane.h>

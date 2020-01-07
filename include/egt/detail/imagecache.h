@@ -8,7 +8,6 @@
 
 #include <egt/detail/meta.h>
 #include <egt/painter.h>
-#include <egt/utils.h>
 #include <map>
 #include <memory>
 #include <string>

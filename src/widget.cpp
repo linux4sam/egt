@@ -11,7 +11,6 @@
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
-#include "egt/utils.h"
 #include "egt/widget.h"
 #include <cassert>
 #include <iostream>

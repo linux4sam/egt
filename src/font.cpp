@@ -5,7 +5,6 @@
  */
 #include "egt/canvas.h"
 #include "egt/font.h"
-#include "egt/utils.h"
 #include <cairo-ft.h>
 #include <cassert>
 #include <map>

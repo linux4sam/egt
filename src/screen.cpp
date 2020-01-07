@@ -11,7 +11,6 @@
 #include "egt/palette.h"
 #include "egt/screen.h"
 #include "egt/types.h"
-#include "egt/utils.h"
 #include <cairo.h>
 #include <cassert>
 #include <cstring>

@@ -5,6 +5,7 @@
  */
 #include <egt/ui>
 #include <egt/detail/string.h>
+#include <egt/utils.h>
 #include <string>
 #include <vector>
 #include <sstream>

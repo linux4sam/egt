@@ -18,7 +18,6 @@
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
-#include <egt/utils.h>
 #include <string>
 
 namespace egt

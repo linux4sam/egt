@@ -15,7 +15,6 @@
 #include <egt/detail/meta.h>
 #include <egt/easing.h>
 #include <egt/timer.h>
-#include <egt/utils.h>
 #include <functional>
 #include <memory>
 #include <vector>

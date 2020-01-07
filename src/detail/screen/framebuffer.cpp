@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/screen/framebuffer.h"
-#include "egt/utils.h"
 #include <fcntl.h>
 #include <linux/fb.h>
 #include <spdlog/spdlog.h>

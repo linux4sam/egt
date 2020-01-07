@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 #include "detail/screen/keyboard_code_conversion_x.h"
 #include "detail/screen/x11wrap.h"
-#include "egt/utils.h"
 #include <cassert>
 #include <stddef.h>
 #include <algorithm>

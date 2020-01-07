@@ -7,7 +7,6 @@
 #include "egt/audio.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/meta.h"
-#include "egt/utils.h"
 #include "egt/video.h"
 #include <exception>
 #include <gst/gst.h>

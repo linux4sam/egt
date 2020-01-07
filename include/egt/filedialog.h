@@ -19,7 +19,6 @@
 #include <egt/popup.h>
 #include <egt/sizer.h>
 #include <egt/text.h>
-#include <egt/utils.h>
 #include <iostream>
 #include <memory>
 #include <string>
