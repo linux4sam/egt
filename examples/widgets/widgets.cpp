@@ -11,7 +11,7 @@
 #include <egt/themes/ultraviolet.h>
 #include <egt/ui>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <regex>
 #include <sstream>
 #include <string>
