@@ -111,7 +111,7 @@ int main(int argc, const char** argv)
             b->set_color(Palette::ColorId::border, Palette::gray);
             line_sizer->add(b);
 
-            b->on_event([&text, b](Event&)
+            b->on_click([&text, b](Event & event)
             {
                 static bool do_clear = false;
 
@@ -141,7 +141,7 @@ int main(int argc, const char** argv)
                     }
                     text.append(b->text());
                 }
-            }, {eventid::pointer_click});
+            });
         }
     }
 
