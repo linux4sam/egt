@@ -145,7 +145,7 @@ public:
     /**
      * Set the size of the font.
      */
-    inline void size(Font::Size s) { m_size = s; }
+    inline void size(const Font::Size& s) { m_size = s; }
 
     /**
      * Get the weight of the font.
@@ -185,6 +185,8 @@ public:
      */
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs);
+
+    virtual ~Font() = default;
 
 protected:
 
