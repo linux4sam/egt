@@ -14,8 +14,6 @@
 #include "egt/text.h"
 #include "egt/virtualkeyboard.h"
 
-using namespace egt::detail;
-
 namespace egt
 {
 inline namespace v1
@@ -229,7 +227,7 @@ void TextBox::set_max_length(size_t len)
     {
         if (m_max_len)
         {
-            auto len = utf8len(m_text);
+            auto len = detail::utf8len(m_text);
             if (len > m_max_len)
             {
                 auto i = m_text.begin();
@@ -260,10 +258,10 @@ size_t TextBox::width_to_len(const std::string& text) const
 
     size_t len = 0;
     float total = 0;
-    for (utf8_const_iterator ch(text.begin(), m_text.begin(), m_text.end());
-         ch != utf8_const_iterator(text.end(), m_text.begin(), m_text.end()); ++ch)
+    for (detail::utf8_const_iterator ch(text.begin(), m_text.begin(), m_text.end());
+         ch != detail::utf8_const_iterator(text.end(), m_text.begin(), m_text.end()); ++ch)
     {
-        auto txt = utf8_char_to_string(ch.base(), m_text.cend());
+        auto txt = detail::utf8_char_to_string(ch.base(), m_text.cend());
         cairo_text_extents_t te;
         cairo_text_extents(cr.get(), txt.c_str(), &te);
         if (total + te.x_advance > b.width())
@@ -282,8 +280,8 @@ size_t TextBox::insert(const std::string& str)
     if (str.empty())
         return 0;
 
-    auto current_len = utf8len(m_text);
-    auto len = utf8len(str);
+    auto current_len = detail::utf8len(m_text);
+    auto len = detail::utf8len(str);
 
     if (m_max_len)
     {
@@ -347,7 +345,7 @@ void TextBox::cursor_set_begin()
 void TextBox::cursor_set_end()
 {
     // one past end
-    cursor_set(utf8len(m_text));
+    cursor_set(detail::utf8len(m_text));
 }
 
 void TextBox::cursor_forward(size_t count)
@@ -365,8 +363,9 @@ void TextBox::cursor_backward(size_t count)
 
 void TextBox::cursor_set(size_t pos)
 {
-    if (pos > utf8len(m_text))
-        pos = utf8len(m_text);
+    const auto len = detail::utf8len(m_text);
+    if (pos > len)
+        pos = len;
 
     if (m_cursor_pos != pos)
     {
@@ -379,13 +378,14 @@ void TextBox::cursor_set(size_t pos)
 
 void TextBox::set_selection_all()
 {
-    set_selection(0, utf8len(m_text));
+    set_selection(0, detail::utf8len(m_text));
 }
 
 void TextBox::set_selection(size_t pos, size_t length)
 {
-    if (pos > utf8len(m_text))
-        pos = utf8len(m_text);
+    const auto len = detail::utf8len(m_text);
+    if (pos > len)
+        pos = len;
 
     auto i = m_text.begin();
     utf8::advance(i, pos, m_text.end());
