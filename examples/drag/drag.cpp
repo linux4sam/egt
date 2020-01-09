@@ -97,7 +97,7 @@ int main(int argc, const char** argv)
     logo.set_margin(10);
     window.add(center(top(logo)));
 
-    experimental::CPUMonitorUsage tools;
+    egt::experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&tools, &label1]()
     {

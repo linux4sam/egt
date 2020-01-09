@@ -103,7 +103,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             Button button(window, "Change Colors");
             center(button);
 
-            experimental::ColorMap colors({Palette::red, Palette::green});
+            egt::experimental::ColorMap colors({Palette::red, Palette::green});
             button.on_click([&button, &colors](Event & event)
             {
                 static float step = 0;
@@ -375,7 +375,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             TopWindow window;
 
             /// @[sound0]
-            experimental::Sound sound("assets/tom.wav");
+            egt::experimental::Sound sound("assets/tom.wav");
             sound.play();
             /// @[sound0]
 
@@ -389,7 +389,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             /// @[sound1]
             TopWindow window;
 
-            experimental::Sound sound("assets/tom.wav");
+            egt::experimental::Sound sound("assets/tom.wav");
 
             Button button(window, "Play Sound");
             center(button);

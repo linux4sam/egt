@@ -12,7 +12,7 @@ using namespace egt;
 int main(int argc, const char** argv)
 {
     Application app(argc, argv);
-    experimental::CameraCapture capture("output.avi");
+    egt::experimental::CameraCapture capture("output.avi");
 
     capture.on_event([&capture](Event & event)
     {

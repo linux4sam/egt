@@ -468,7 +468,7 @@ struct FormPage : public NotebookTab
 {
     FormPage()
     {
-        auto form = make_shared<experimental::Form>("Information");
+        auto form = make_shared<egt::experimental::Form>("Information");
         form->set_align(alignmask::expand_vertical);
         form->set_horizontal_ratio(50);
         add(form);

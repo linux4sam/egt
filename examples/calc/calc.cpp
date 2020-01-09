@@ -122,7 +122,7 @@ int main(int argc, const char** argv)
                     {
                         ostringstream ss;
                         ss << "\n= " <<
-                           experimental::lua_evaluate(line) <<
+                           egt::experimental::lua_evaluate(line) <<
                            "\n";
                         text.append(ss.str());
                     }

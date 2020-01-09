@@ -135,7 +135,7 @@ int main(int argc, const char** argv)
     std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.width() - width)};
     std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.height() - height)};
 
-    experimental::Fps fps;
+    egt::experimental::Fps fps;
     fps.start();
 
     PeriodicTimer timer(std::chrono::milliseconds(1));

@@ -145,7 +145,7 @@ int main(int argc, const char** argv)
     cpulabel.set_color(Palette::ColorId::label_text, Palette::white);
     hpos.add(cpulabel);
 
-    experimental::CPUMonitorUsage tools;
+    egt::experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&cpulabel, &tools]()
     {

@@ -71,7 +71,7 @@ int main(int argc, const char** argv)
 
 #define DEFAULT_MS_INTERVAL 100
 
-    experimental::Fps fps;
+    egt::experimental::Fps fps;
     fps.start();
 
     PeriodicTimer animatetimer(std::chrono::milliseconds(DEFAULT_MS_INTERVAL));
@@ -123,7 +123,7 @@ int main(int argc, const char** argv)
     popup.add(label1);
     popup.add(label2);
 
-    experimental::CPUMonitorUsage tools;
+    egt::experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&tools, &label1]()
     {
