@@ -39,7 +39,7 @@ void TextWidget::text(const std::string& str)
 {
     if (detail::change_if_diff<>(m_text, str))
     {
-        invoke_handlers(EventId::property_changed);
+        on_text_changed.invoke();
         damage();
         parent_layout();
     }

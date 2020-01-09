@@ -164,12 +164,12 @@ public:
         });
 
         // handle input event to seek player
-        m_dial->on_event([this, range2](Event&)
+        m_dial->on_user_input_changed([this, range2]()
         {
             m_player.seek(range2->value());
-        }, {EventId::input_property_changed});
+        });
 
-        m_player.on_event([this, range2](Event&)
+        m_player.on_state_changed([this, range2]()
         {
             if (m_player.playing())
             {
@@ -182,7 +182,7 @@ public:
                 m_controls.m_play.image(Image("play.png"));
                 m_animation.stop();
             }
-        }, {EventId::property_changed});
+        });
 
         m_player.media(resolve_file_path("concerto.mp3"));
 

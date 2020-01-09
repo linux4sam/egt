@@ -112,6 +112,8 @@ class EGT_API NeedleLayer : public GaugeLayer
 {
 public:
 
+    detail::Signal<> on_value_changed;
+
     using GaugeLayer::GaugeLayer;
 
     /**
@@ -231,7 +233,7 @@ public:
 
         if (detail::change_if_diff<float>(m_value, value))
         {
-            invoke_handlers(EventId::property_changed);
+            on_value_changed.invoke();
             damage();
         }
 

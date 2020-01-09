@@ -117,7 +117,7 @@ int main(int argc, const char** argv)
     position.slider_flags().set({Slider::SliderFlag::round_handle});
     hpos.add(position);
 
-    position.on_event([&position, &player](Event&)
+    position.on_value_changed([&position, &player]()
     {
         auto state = player.playing();
         if (state)
@@ -128,7 +128,7 @@ int main(int argc, const char** argv)
         if (state)
             player.play();
 
-    }, {EventId::property_changed});
+    });
 
     ImageButton volumei(Image(":volumeup_png"));
     volumei.boxtype().clear();
@@ -205,7 +205,7 @@ int main(int argc, const char** argv)
     cputimer.start();
 
     // wait to start playing the video until the window is shown
-    win.on_event([&player, argv, &position, &ctrlwindow, &volume, &volumei, &hpos](Event&)
+    win.on_show([&player, argv, &position, &ctrlwindow, &volume, &volumei, &hpos]()
     {
         player.media(argv[1]);
 
@@ -217,9 +217,23 @@ int main(int argc, const char** argv)
         }
 
         player.play();
-    }, {EventId::show});
+    });
 
-    player.on_event([&player, &win, &errlabel, &position, vscale, size](Event & event)
+    player.on_position_changed([&player, &position]()
+    {
+        if (player.playing())
+        {
+            position.value((ns2ms<double>(player.position()) /
+                            ns2ms<double>(player.duration())) * 100.);
+        }
+    });
+
+    player.on_error([&player, &errlabel]()
+    {
+        errlabel.text("Error:\n" + line_break(player.error_message()));
+    });
+
+    player.on_event([&player, &win, vscale, size](Event & event)
     {
         static Point m_start_point;
         switch (event.id())
@@ -247,20 +261,6 @@ int main(int argc, const char** argv)
                     p.y(0);
                 player.move(p);
             }
-            break;
-        }
-        case EventId::property_changed:
-        {
-            if (player.playing())
-            {
-                position.value((ns2ms<double>(player.position()) /
-                                ns2ms<double>(player.duration())) * 100.);
-            }
-            break;
-        }
-        case EventId::error:
-        {
-            errlabel.text("Error:\n" + line_break(player.error_message()));
             break;
         }
         default:

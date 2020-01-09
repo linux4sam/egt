@@ -37,7 +37,9 @@ enum class EventId
 
     ///@{
     /**
-     * Raw pointer event
+     * Raw pointer event.
+     *
+     * These events are usually tied to physical device events.
      *
      * It's usually preferred to use the normal pointer events instead.
      */
@@ -56,64 +58,11 @@ enum class EventId
     pointer_drag_stop = detail::bit(9),
     ///@}
 
-    /**
-     * Sent when a widget gets focus.
-     */
-    enter = detail::bit(10),
-
-    /**
-     * Sent when a widget loses focus.
-     */
-    leave = detail::bit(11),
-
     ///@{
     /** Keyboard event. */
-    keyboard_down = detail::bit(12),
-    keyboard_up = detail::bit(13),
-    keyboard_repeat = detail::bit(14),
-    ///@}
-
-    /**
-     * Generated when a property changes internally.
-     */
-    property_changed = detail::bit(15),
-
-    /**
-     * Generated when a property changes due to user input.
-     */
-    input_property_changed = detail::bit(16),
-
-    /**
-     * Generated when a Widget is hidden.
-     */
-    hide = detail::bit(17),
-
-    /**
-     * Generated when a Widget is shown.
-     */
-    show = detail::bit(18),
-
-    /**
-     * Generated when the widget gains focus.
-     */
-    on_gain_focus = detail::bit(19),
-
-    /**
-     * Generated when the widget loses focus.
-     */
-    on_lost_focus = detail::bit(20),
-
-    /**
-     * Error Event
-     */
-    error = detail::bit(21),
-
-    ///@{
-    /**
-     * Custom widget event.
-     */
-    event1 = detail::bit(22),
-    event2 = detail::bit(23),
+    keyboard_down = detail::bit(10),
+    keyboard_up = detail::bit(11),
+    keyboard_repeat = detail::bit(12),
     ///@}
 };
 

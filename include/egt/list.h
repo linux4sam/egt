@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/frame.h>
 #include <egt/label.h>
 #include <egt/sizer.h>
@@ -97,6 +98,16 @@ struct EGT_API StringItem : public ImageLabel
 class EGT_API ListBox : public Frame
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the selection changes.
+     */
+    detail::Signal<> on_selected_changed;
+    /** @} */
 
     using item_array = std::vector<std::shared_ptr<Widget>>;
 

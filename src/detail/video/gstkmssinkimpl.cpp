@@ -156,7 +156,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
-        m_interface.invoke_handlers(EventId::error);
+        m_interface.on_error.invoke();
         return false;
     }
 #endif
@@ -171,7 +171,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
         SPDLOG_DEBUG("VideoWindow: gst_parse_launch failed ");
         if (error && error->message)
             m_err_message = error->message;
-        m_interface.invoke_handlers(EventId::error);
+        m_interface.on_error.invoke();
         return false;
     }
 
@@ -200,7 +200,7 @@ gboolean GstKmsSinkImpl::query_position(gpointer data)
     {
         asio::post(Application::instance().event().io(), [impl]()
         {
-            impl->m_interface.invoke_handlers(EventId::property_changed);
+            impl->m_interface.on_position_changed.invoke();
         });
     }
     return true;

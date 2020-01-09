@@ -13,6 +13,7 @@
 
 #include <egt/button.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <egt/list.h>
@@ -42,6 +43,17 @@ inline namespace v1
 class EGT_API FileDialog : public Popup
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when a selection is made.
+     */
+    detail::Signal<> on_selected;
+    /** @} */
+
     /**
      * Create a file open dialog window and list the contents
      * of current directory.

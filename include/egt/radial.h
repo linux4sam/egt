@@ -10,6 +10,7 @@
 #include <egt/detail/flags.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
 #include <egt/text.h>
@@ -43,6 +44,16 @@ template<class T>
 class RadialType : public Widget
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when user input changes the value of the radial.
+     */
+    detail::Signal<> on_user_input_changed;
+    /** @} */
 
     enum class RadialFlag
     {
@@ -90,10 +101,10 @@ public:
         this->m_values.emplace_back(range, color, width, flags, handle);
 
         // when a value changes, damage
-        range->on_event([this, flags](Event&)
+        range->on_value_changed([this, flags]()
         {
             this->damage();
-        }, {EventId::property_changed});
+        });
 
         damage();
 
@@ -155,7 +166,7 @@ public:
             }
 
             if (changed)
-                this->invoke_handlers(EventId::input_property_changed);
+                this->on_user_input_changed.invoke();
         }
         default:
             break;

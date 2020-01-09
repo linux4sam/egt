@@ -47,7 +47,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(EventId::property_changed);
+        on_value_changed.invoke();
     });
 
 
@@ -63,7 +63,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(EventId::property_changed);
+        on_value_changed.invoke();
     });
 }
 
@@ -105,9 +105,8 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(EventId::property_changed);
+        on_value_changed.invoke();
     });
-
 
     m_button_down->on_click([this](Event&)
     {
@@ -121,9 +120,8 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(EventId::property_changed);
+        on_value_changed.invoke();
     });
-
 }
 
 void Scrollwheel::orient(Orientation orient)
@@ -208,7 +206,7 @@ void Scrollwheel::selected(size_t index)
     if (detail::change_if_diff<>(m_selected, index))
     {
         m_label->text(m_items[m_selected]);
-        invoke_handlers(EventId::property_changed);
+        on_value_changed.invoke();
     }
 }
 

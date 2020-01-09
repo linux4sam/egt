@@ -7,6 +7,7 @@
 #define EGT_CAPTURE_H
 
 #include <egt/detail/object.h>
+#include <egt/detail/signal.h>
 #include <egt/types.h>
 #include <memory>
 #include <string>
@@ -37,6 +38,8 @@ namespace experimental
 class EGT_API CameraCapture : public egt::detail::Object
 {
 public:
+
+    detail::Signal<> on_error;
 
     /**
      * Output container type.

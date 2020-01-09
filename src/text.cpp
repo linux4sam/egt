@@ -46,6 +46,22 @@ TextBox::TextBox(const std::string& text,
     m_timer.on_timeout([this]() { cursor_timeout(); });
 
     cursor_end();
+
+    m_gain_focus_reg = on_gain_focus([this]()
+    {
+        show_cursor();
+        if (!text_flags().is_set(TextFlag::no_virt_keyboard))
+            if (popup_virtual_keyboard())
+                popup_virtual_keyboard()->show();
+    });
+
+    m_lost_focus_reg = on_lost_focus([this]()
+    {
+        hide_cursor();
+        if (!text_flags().is_set(TextFlag::no_virt_keyboard))
+            if (popup_virtual_keyboard())
+                popup_virtual_keyboard()->hide();
+    });
 }
 
 TextBox::TextBox(Frame& parent,
@@ -73,20 +89,8 @@ void TextBox::handle(Event& event)
 
     switch (event.id())
     {
-    case EventId::on_gain_focus:
-        show_cursor();
-        break;
-    case EventId::on_lost_focus:
-        hide_cursor();
-        if (!text_flags().is_set(TextFlag::no_virt_keyboard))
-            if (popup_virtual_keyboard())
-                popup_virtual_keyboard()->hide();
-        break;
     case EventId::pointer_click:
         keyboard_focus(this);
-        if (!text_flags().is_set(TextFlag::no_virt_keyboard))
-            if (popup_virtual_keyboard())
-                popup_virtual_keyboard()->show();
         break;
     case EventId::keyboard_down:
         handle_key(event.key());
@@ -327,7 +331,7 @@ size_t TextBox::insert(const std::string& str)
         cursor_forward(len);
         clear_selection();
 
-        invoke_handlers(EventId::property_changed);
+        on_text_changed.invoke();
         damage();
     }
 
@@ -440,7 +444,7 @@ void TextBox::delete_selection()
         m_text.erase(i, l);
         cursor_set(p);
         clear_selection();
-        invoke_handlers(EventId::property_changed);
+        on_text_changed.invoke();
         damage();
     }
 }
@@ -496,6 +500,12 @@ Size TextBox::min_size_hint() const
     auto s = text_size(text);
     s += Widget::min_size_hint() + Size(0, CURSOR_Y_OFFSET * 2.);
     return s;
+}
+
+TextBox::~TextBox()
+{
+    on_gain_focus.remove(m_gain_focus_reg);
+    on_lost_focus.remove(m_lost_focus_reg);
 }
 
 template<>

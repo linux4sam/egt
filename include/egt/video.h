@@ -7,6 +7,7 @@
 #define EGT_VIDEO_H
 
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/window.h>
 
 namespace egt
@@ -36,6 +37,26 @@ class GstAppSinkImpl;
 class EGT_API VideoWindow : public Window
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the position of the player changes.
+     */
+    detail::Signal<> on_position_changed;
+
+    /**
+     * Invoked when an error occurs.
+     */
+    detail::Signal<> on_error;
+
+    /**
+     * Invoked on end of stream.
+     */
+    detail::Signal<> on_eos;
+    /** @} */
 
     /**
      * Create a video window to decode video and render it to a screen.

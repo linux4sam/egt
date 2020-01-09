@@ -14,6 +14,7 @@
 
 #include <egt/button.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <memory>
@@ -35,6 +36,9 @@ inline namespace v1
 class EGT_API Scrollwheel : public StaticGrid
 {
 public:
+
+    detail::Signal<> on_value_changed;
+
     using item_array = std::vector<std::string>;
 
     /**

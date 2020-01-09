@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/image.h>
 #include <egt/widget.h>
 #include <memory>
@@ -33,6 +34,16 @@ namespace detail
 class EGT_API TextWidget : public Widget
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the text of the widget changes.
+     */
+    detail::Signal<> on_text_changed;
+    /** @} */
 
     /**
      * @param[in] text The text to display.

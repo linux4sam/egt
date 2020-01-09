@@ -113,7 +113,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         asio::post(Application::instance().event().io(), [cameraImpl, error_message]()
         {
             cameraImpl->m_err_message = error_message;
-            cameraImpl->m_interface.invoke_handlers(EventId::error);
+            cameraImpl->m_interface.on_error.invoke();
         });
         break;
     }
@@ -158,7 +158,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
             if (cameraImpl->start())
             {
                 cameraImpl->m_err_message = "";
-                cameraImpl->m_interface.invoke_handlers(EventId::error);
+                cameraImpl->m_interface.on_error.invoke();
             }
         });
 
@@ -176,7 +176,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         asio::post(Application::instance().event().io(), [cameraImpl, name]()
         {
             cameraImpl->m_err_message = std::string(name) + " Device removed";
-            cameraImpl->m_interface.invoke_handlers(EventId::error);
+            cameraImpl->m_interface.on_error.invoke();
         });
         cameraImpl->stop();
         break;
@@ -386,7 +386,7 @@ bool CameraImpl::start()
     {
         m_err_message = error->message;
         spdlog::error("failed to create pipeline: {}", m_err_message);
-        m_interface.invoke_handlers(EventId::error);
+        m_interface.on_error.invoke();
         return false;
     }
 
@@ -397,7 +397,7 @@ bool CameraImpl::start()
         {
             m_err_message = "failed to get app sink element";
             spdlog::error(m_err_message);
-            m_interface.invoke_handlers(EventId::error);
+            m_interface.on_error.invoke();
             return false;
         }
 
@@ -414,7 +414,7 @@ bool CameraImpl::start()
     {
         m_err_message = "failed to set pipeline to play state";
         spdlog::error(m_err_message);
-        m_interface.invoke_handlers(EventId::error);
+        m_interface.on_error.invoke();
         stop();
         return false;
     }

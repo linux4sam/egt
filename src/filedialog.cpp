@@ -34,11 +34,11 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
 
     m_vsizer->add(expand(m_flist));
 
-    m_flist->on_event([this](Event&)
+    m_flist->on_selected_changed([this]()
     {
-        SPDLOG_DEBUG("FileDialog index is {}", this->m_flist->selected());
-        list_item_selected(this->m_flist->selected());
-    }, {EventId::property_changed});
+        SPDLOG_DEBUG("FileDialog index is {}", m_flist->selected());
+        list_item_selected(m_flist->selected());
+    });
 
     if (m_filepath.empty())
         m_filepath = fs::current_path().string();
@@ -175,7 +175,7 @@ void FileOpenDialog::selected(const std::string& fselect)
 {
     m_fselected = fselect;
     if (!m_fselected.empty())
-        invoke_handlers(EventId::property_changed);
+        on_selected.invoke();
 }
 
 std::string FileOpenDialog::selected() const
@@ -204,12 +204,12 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     {
         if (!m_fsave.empty())
         {
-            invoke_handlers(EventId::property_changed);
+            on_selected.invoke();
         }
         else if (!m_fsave_box->text().empty())
         {
             m_fsave = m_fsave_box->text();
-            invoke_handlers(EventId::property_changed);
+            on_selected.invoke();
         }
     }, {EventId::pointer_click});
 

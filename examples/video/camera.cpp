@@ -71,25 +71,25 @@ int main(int argc, const char** argv)
     win.add(player);
 
     // wait to start playing the video until the window is shown
-    win.on_event([&player](Event&)
+    win.on_show([&player]()
     {
         player.start();
-    }, {EventId::show});
+    });
+
+    player.on_error([&player, &errlabel]()
+    {
+        auto msg = player.error_message();
+        if (msg.empty())
+            errlabel.text("");
+        else
+            errlabel.text("Error:\n" + line_break(msg));
+    });
 
     Point m_start_point;
-    player.on_event([&player, &errlabel, &m_start_point](Event & event)
+    player.on_event([&player, &m_start_point](Event & event)
     {
         switch (event.id())
         {
-        case EventId::error:
-        {
-            auto msg = player.error_message();
-            if (msg.empty())
-                errlabel.text("");
-            else
-                errlabel.text("Error:\n" + line_break(msg));
-            break;
-        }
         case EventId::pointer_drag_start:
         {
             m_start_point = player.box().point();

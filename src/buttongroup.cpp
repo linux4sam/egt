@@ -120,8 +120,7 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
             {
                 real->flags().clear(Widget::Flag::checked);
                 real->damage();
-                Event event(EventId::property_changed);
-                real->invoke_handlers(event);
+                real->on_checked_changed.invoke();
             }
         }
     }

@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/list.h>
 #include <egt/popup.h>
 #include <egt/widget.h>
@@ -72,6 +73,17 @@ protected:
 class EGT_API ComboBox : public detail::TextWidget
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the selection changes.
+     */
+    detail::Signal<> on_selected_changed;
+    /** @} */
+
     using item_array = std::vector<std::string>;
 
     /**

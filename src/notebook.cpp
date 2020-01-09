@@ -124,7 +124,7 @@ void Notebook::selected(size_t index)
             to->show();
         }
 
-        invoke_handlers(EventId::property_changed);
+        on_selected_changed.invoke();
     }
 }
 

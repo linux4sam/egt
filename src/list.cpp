@@ -138,7 +138,7 @@ void ListBox::selected(size_t index)
                 m_sizer->child_at(m_selected)->checked(true);
 
             damage();
-            invoke_handlers(EventId::property_changed);
+            on_selected_changed.invoke();
         }
     }
 }

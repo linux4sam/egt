@@ -28,18 +28,9 @@ std::map<EventId, char const*> detail::EnumStrings<EventId>::data =
     {EventId::pointer_drag_start, "pointer_drag_start"},
     {EventId::pointer_drag, "pointer_drag"},
     {EventId::pointer_drag_stop, "pointer_drag_stop"},
-    {EventId::enter, "enter"},
-    {EventId::leave, "leave"},
     {EventId::keyboard_down, "keyboard_down"},
     {EventId::keyboard_up, "keyboard_up"},
     {EventId::keyboard_repeat, "keyboard_repeat"},
-    {EventId::property_changed, "property_changed"},
-    {EventId::input_property_changed, "input_property_changed"},
-    {EventId::hide, "hide"},
-    {EventId::show, "show"},
-    {EventId::on_gain_focus, "on_gain_focus"},
-    {EventId::on_lost_focus, "on_lost_focus"},
-    {EventId::error, "error"},
 };
 
 std::ostream& operator<<(std::ostream& os, const EventId& event)

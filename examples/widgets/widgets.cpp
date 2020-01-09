@@ -437,20 +437,20 @@ struct ScrollwheelPage : public NotebookTab
             std::make_shared<Label>(scrollwheel_year->value(),
                                     Rect(0, 0, 75, 30));
 
-        scrollwheel_day->on_event([label_day, scrollwheel_day](Event&)
+        scrollwheel_day->on_value_changed([label_day, scrollwheel_day]()
         {
             label_day->text(scrollwheel_day->value());
-        }, {EventId::property_changed});
+        });
 
-        scrollwheel_month->on_event([label_month, scrollwheel_month](Event&)
+        scrollwheel_month->on_value_changed([label_month, scrollwheel_month]()
         {
             label_month->text(scrollwheel_month->value());
-        }, {EventId::property_changed});
+        });
 
-        scrollwheel_year->on_event([label_year, scrollwheel_year](Event&)
+        scrollwheel_year->on_value_changed([label_year, scrollwheel_year]()
         {
             label_year->text(scrollwheel_year->value());
-        }, {EventId::property_changed});
+        });
 
         hsizer1->add(scrollwheel_day);
         hsizer1->add(scrollwheel_month);
@@ -545,7 +545,7 @@ int main(int argc, const char** argv)
     combo->margin(5);
     frame->add(combo);
 
-    combo->on_event([&combo_items, combo, &win](Event&)
+    combo->on_selected_changed([&combo_items, combo, &win]()
     {
         auto s = combo->item_at(combo->selected());
         for (auto& i : combo_items)
@@ -558,8 +558,7 @@ int main(int argc, const char** argv)
         }
 
         win.damage();
-
-    }, {EventId::property_changed});
+    });
 
     BoxSizer hsizer(Orientation::horizontal);
     vsizer.add(expand(hsizer));
@@ -594,10 +593,10 @@ int main(int argc, const char** argv)
     hsizer.add(expand_vertical(list));
     hsizer.add(expand(notebook));
 
-    list->on_event([&notebook, &list](Event&)
+    list->on_selected_changed([&notebook, &list]()
     {
         notebook->selected(list->selected());
-    }, {EventId::property_changed});
+    });
 
     auto default_keyboard = make_shared<VirtualKeyboard>();
     PopupVirtualKeyboard popup_keyboard {default_keyboard};

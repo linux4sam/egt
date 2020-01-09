@@ -81,23 +81,20 @@ struct LinePage : public NotebookTab
         atan_checkbox->name("atan");
         csizer->add(atan_checkbox);
 
-        auto handle_checkbox = [line, sin_checkbox, cos_checkbox, atan_checkbox](Event & event)
+        auto handle_checkbox = [line, sin_checkbox, cos_checkbox, atan_checkbox]()
         {
-            if (event.id() == EventId::property_changed)
-            {
-                line->clear();
-                if (sin_checkbox->checked())
-                    line->add_data(create_sin_data(), LineChart::chart_type::points);
-                if (cos_checkbox->checked())
-                    line->add_data(create_cos_data(), LineChart::chart_type::lines);
-                if (atan_checkbox->checked())
-                    line->add_data(create_atan_data(), LineChart::chart_type::linespoints);
-            }
+            line->clear();
+            if (sin_checkbox->checked())
+                line->add_data(create_sin_data(), LineChart::chart_type::points);
+            if (cos_checkbox->checked())
+                line->add_data(create_cos_data(), LineChart::chart_type::lines);
+            if (atan_checkbox->checked())
+                line->add_data(create_atan_data(), LineChart::chart_type::linespoints);
         };
 
-        sin_checkbox->on_event(handle_checkbox);
-        cos_checkbox->on_event(handle_checkbox);
-        atan_checkbox->on_event(handle_checkbox);
+        sin_checkbox->on_checked_changed(handle_checkbox);
+        cos_checkbox->on_checked_changed(handle_checkbox);
+        atan_checkbox->on_checked_changed(handle_checkbox);
 
         sin_checkbox->checked(true);
         cos_checkbox->checked(true);
@@ -106,28 +103,25 @@ struct LinePage : public NotebookTab
         line_width->name("line_width");
         csizer->add(line_width);
 
-        line_width->on_event([line, line_width](Event & event)
+        line_width->on_value_changed([line, line_width]()
         {
             line->line_width(line_width->value());
-        }, {EventId::property_changed});
+        });
 
         line_width->value(2);
 
         auto grid_checkbox = std::make_shared<CheckBox>("grid", Rect(Point(500, 410), Size(80, 40)));
         csizer->add(grid_checkbox);
 
-        auto handle_grid_checkbox = [grid_checkbox, line](Event & event)
+        auto handle_grid_checkbox = [grid_checkbox, line]()
         {
-            if (event.id() == EventId::property_changed)
-            {
-                uint32_t flags = 0;
-                if (grid_checkbox->checked())
-                    flags |= LineChart::GRIDX | LineChart::GRIDY;
-                line->grid(flags);
-            }
+            uint32_t flags = 0;
+            if (grid_checkbox->checked())
+                flags |= LineChart::GRIDX | LineChart::GRIDY;
+            line->grid(flags);
         };
 
-        grid_checkbox->on_event(handle_grid_checkbox);
+        grid_checkbox->on_checked_changed(handle_grid_checkbox);
     }
 };
 
@@ -176,10 +170,10 @@ int main(int argc, const char** argv)
     notebook.add(make_shared<LinePage>());
     notebook.add(make_shared<PiePage>());
 
-    list.on_event([&](Event&)
+    list.on_selected_changed([&]()
     {
         notebook.selected(list.selected());
-    }, {EventId::property_changed});
+    });
 
     win.show();
 

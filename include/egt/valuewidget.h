@@ -12,6 +12,7 @@
  */
 
 #include <cassert>
+#include <egt/detail/signal.h>
 #include <egt/widget.h>
 
 namespace egt
@@ -29,6 +30,16 @@ template<class T>
 class ValueWidget : public Widget
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the value of the widget changes.
+     */
+    detail::Signal<> on_value_changed;
+    /** @} */
 
     ValueWidget() = delete;
 
@@ -54,7 +65,7 @@ public:
         if (detail::change_if_diff<T>(m_value, v))
         {
             damage();
-            invoke_handlers(EventId::property_changed);
+            on_value_changed.invoke();
         }
         return orig;
     }
@@ -84,6 +95,16 @@ template<class T>
 class ValueRangeWidget : public Widget
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the value of the widget changes.
+     */
+    detail::Signal<> on_value_changed;
+    /** @} */
 
     ValueRangeWidget() = delete;
 
@@ -135,7 +156,7 @@ public:
         if (detail::change_if_diff<T>(m_value, value))
         {
             damage();
-            invoke_handlers(EventId::property_changed);
+            on_value_changed.invoke();
         }
 
         return orig;

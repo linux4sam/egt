@@ -13,6 +13,7 @@
 
 #include <egt/detail/meta.h>
 #include <egt/detail/object.h>
+#include <egt/detail/signal.h>
 #include <egt/event.h>
 #include <memory>
 

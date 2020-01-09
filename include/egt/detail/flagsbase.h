@@ -54,6 +54,12 @@ public:
             m_flags |= static_cast<Underlying>(flag);
     }
 
+    constexpr FlagsBase(const FlagsBase& rhs)
+        : m_flags(rhs.m_flags)
+    {
+    }
+
+
     /**
      * Test if the specified flag is set.
      * @param flag The flag to test.

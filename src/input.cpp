@@ -203,16 +203,14 @@ void keyboard_focus(Widget* widget)
 
     if (keyboard_focus_widget)
     {
-        Event event(EventId::on_lost_focus);
-        keyboard_focus_widget->handle(event);
+        keyboard_focus_widget->on_lost_focus.invoke();
     }
 
     keyboard_focus_widget = widget;
 
     if (widget)
     {
-        Event event(EventId::on_gain_focus);
-        widget->handle(event);
+        widget->on_gain_focus.invoke();
     }
 }
 

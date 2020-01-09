@@ -10,6 +10,7 @@
 #include <egt/detail/flagsbase.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/object.h>
+#include <egt/detail/signal.h>
 #include <egt/detail/string.h>
 #include <iosfwd>
 #include <sstream>
@@ -42,16 +43,34 @@ class Flags : public detail::Object, public detail::FlagsBase<T>
 public:
     using detail::FlagsBase<T>::FlagsBase;
 
+    detail::Signal<> on_change;
+
     explicit Flags(const std::string& str)
     {
         this->from_string(str);
+    }
+
+    constexpr Flags(const Flags& rhs)
+        : detail::Object(rhs),
+          detail::FlagsBase<T>(rhs)
+    {
+    }
+
+    Flags& operator=(const Flags& rhs)
+    {
+        if (&rhs != this)
+        {
+            detail::Object::operator=(rhs);
+            detail::FlagsBase<T>::operator=(rhs);
+        }
+        return *this;
     }
 
     inline bool set(const T flag) noexcept
     {
         const auto res = detail::FlagsBase<T>::set(flag);
         if (res)
-            invoke_handlers({EventId::property_changed});
+            on_change.invoke();
         return res;
     }
 
@@ -59,7 +78,7 @@ public:
     {
         const auto res = detail::FlagsBase<T>::set(flags);
         if (res)
-            invoke_handlers({EventId::property_changed});
+            on_change.invoke();
         return res;
     }
 
@@ -67,7 +86,7 @@ public:
     {
         const auto res = detail::FlagsBase<T>::clear(flag);
         if (res)
-            invoke_handlers({EventId::property_changed});
+            on_change.invoke();
         return res;
     }
 
@@ -75,7 +94,7 @@ public:
     {
         const auto res = detail::FlagsBase<T>::clear();
         if (res)
-            invoke_handlers({EventId::property_changed});
+            on_change.invoke();
         return res;
     }
 

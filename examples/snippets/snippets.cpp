@@ -271,10 +271,10 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
 
             Button button(sizer, "Disable Me");
             CheckBox checkbox(sizer, "Button Disabled");
-            checkbox.on_event([&button, &checkbox](Event & event)
+            checkbox.on_checked_changed([&button, &checkbox]()
             {
                 button.disabled(checkbox.checked());
-            }, {EventId::property_changed});
+            });
 
             window.show();
             /// @[events1]

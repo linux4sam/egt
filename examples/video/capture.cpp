@@ -14,10 +14,10 @@ int main(int argc, const char** argv)
     Application app(argc, argv);
     egt::experimental::CameraCapture capture("output.avi");
 
-    capture.on_event([&capture](Event & event)
+    capture.on_error([&capture]()
     {
         cout << "error: " << capture.error_message() << endl;
-    }, {EventId::error});
+    });
 
     Timer stop_timer(std::chrono::seconds(10));
     stop_timer.on_timeout([&capture, &app]()

@@ -8,6 +8,7 @@
 
 #include <egt/button.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <egt/popup.h>
@@ -44,6 +45,9 @@ public:
         button1,
         button2,
     };
+
+    detail::Signal<> on_button1_click;
+    detail::Signal<> on_button2_click;
 
     /**
      * Create a dialog with two buttons to handle decision.

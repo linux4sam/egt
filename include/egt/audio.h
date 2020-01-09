@@ -18,6 +18,7 @@
 
 #include <egt/detail/meta.h>
 #include <egt/detail/object.h>
+#include <egt/detail/signal.h>
 #include <memory>
 #include <string>
 
@@ -39,6 +40,16 @@ struct AudioPlayerImpl;
 class EGT_API AudioPlayer : public detail::Object
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the state of the player changes.
+     */
+    detail::Signal<> on_state_changed;
+    /** @} */
 
     AudioPlayer();
 

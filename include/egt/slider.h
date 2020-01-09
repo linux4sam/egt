@@ -139,8 +139,7 @@ public:
             // live update to handlers?
             if (false)
             {
-                Event event(EventId::property_changed);
-                this->invoke_handlers(event);
+                on_value_changed.invoke();
             }
             else
                 m_invoke_pending = true;

@@ -38,10 +38,20 @@ Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
 {
     name("Widget" + std::to_string(m_widgetid));
 
-    m_align.on_event([this](Event&)
+    m_align.on_change([this]()
     {
         parent_layout();
-    }, {EventId::property_changed});
+    });
+
+    on_gain_focus([this]()
+    {
+        m_focus = true;
+    });
+
+    on_lost_focus([this]()
+    {
+        m_focus = false;
+    });
 }
 
 Widget::Widget(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
@@ -59,12 +69,6 @@ void Widget::handle(Event& event)
 
     switch (event.id())
     {
-    case EventId::on_gain_focus:
-        m_focus = true;
-        break;
-    case EventId::on_lost_focus:
-        m_focus = false;
-        break;
     case EventId::raw_pointer_down:
         if (flags().is_set(Widget::Flag::grab_mouse))
         {
@@ -145,7 +149,7 @@ void Widget::hide()
     // careful attention to ordering
     damage();
     flags().set(Widget::Flag::invisible);
-    invoke_handlers(EventId::hide);
+    on_hide.invoke();
 }
 
 void Widget::show()
@@ -155,7 +159,7 @@ void Widget::show()
     // careful attention to ordering
     flags().clear(Widget::Flag::invisible);
     damage();
-    invoke_handlers(EventId::show);
+    on_show.invoke();
 }
 
 void Widget::visible(bool value)

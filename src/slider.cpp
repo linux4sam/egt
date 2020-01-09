@@ -184,7 +184,7 @@ void Slider::handle(Event& event)
         if (m_invoke_pending)
         {
             m_invoke_pending = false;
-            this->invoke_handlers(EventId::property_changed);
+            this->on_value_changed.invoke();
         }
         break;
     case EventId::pointer_drag_start:

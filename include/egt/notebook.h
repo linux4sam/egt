@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
+#include <egt/detail/signal.h>
 #include <egt/frame.h>
 #include <memory>
 #include <string>
@@ -66,6 +67,8 @@ public:
 class EGT_API Notebook : public Frame
 {
 public:
+
+    detail::Signal<> on_selected_changed;
 
     /*
      * @param[in] rect Initial rectangle of the Frame.

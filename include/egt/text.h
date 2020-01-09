@@ -267,7 +267,7 @@ public:
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;
 
-    virtual ~TextBox() noexcept = default;
+    virtual ~TextBox() noexcept;
 
 protected:
 
@@ -348,6 +348,16 @@ private:
      * Maximum text length, or zero.
      */
     size_t m_max_len{0};
+
+    /**
+     * Gain focus registration.
+     */
+    detail::Signal<>::RegisterHandle m_gain_focus_reg{};
+
+    /**
+     * Lost focus registration.
+     */
+    detail::Signal<>::RegisterHandle m_lost_focus_reg{};
 };
 
 namespace detail

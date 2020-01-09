@@ -35,6 +35,16 @@ class EGT_API CameraWindow : public Window
 public:
 
     /**
+     * Event signal
+     * @{
+     */
+    /**
+     * Generated when an error occurs.
+     */
+    detail::Signal<> on_error;
+    /** @} */
+
+    /**
      * Create a camera window.
      *
      * @param[in] device Camera device node.

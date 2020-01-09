@@ -42,21 +42,21 @@ int main(int argc, const char** argv)
     grid.add(center(software_checkbox), 1, 0);
     software_checkbox.checked(true);
 
-    hardware_checkbox.on_event([&](Event & event)
+    hardware_checkbox.on_checked_changed([&]()
     {
         if (hardware_checkbox.checked())
             sprite1.show();
         else
             sprite1.hide();
-    }, {EventId::property_changed});
+    });
 
-    software_checkbox.on_event([&](Event & event)
+    software_checkbox.on_checked_changed([&]()
     {
         if (software_checkbox.checked())
             sprite2.show();
         else
             sprite2.hide();
-    }, {EventId::property_changed});
+    });
 
     win.add(grid);
 
@@ -102,10 +102,10 @@ int main(int argc, const char** argv)
     Slider slider1(Rect(Point(win.height() - 40, 300), Size(win.width(), 40)), 10, 500);
     win.add(bottom(center(slider1)));
     slider1.value(DEFAULT_MS_INTERVAL);
-    slider1.on_event([&](Event&)
+    slider1.on_value_changed([&]()
     {
         animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
-    }, {EventId::property_changed});
+    });
 
     win.show();
 

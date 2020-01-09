@@ -10,6 +10,7 @@
 #include <egt/animation.h>
 #include <egt/detail/math.h>
 #include <egt/detail/object.h>
+#include <egt/detail/signal.h>
 
 namespace egt
 {
@@ -23,6 +24,16 @@ template<class T>
 class Value : public detail::Object
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the value of the widget changes.
+     */
+    detail::Signal<> on_value_changed;
+    /** @} */
 
     /**
      * @param[in] value Current value.
@@ -59,7 +70,7 @@ public:
         T orig = m_value;
 
         if (detail::change_if_diff<T>(m_value, value))
-            invoke_handlers(EventId::property_changed);
+            on_value_changed.invoke();
 
         return orig;
     }
@@ -81,6 +92,16 @@ template<class T>
 class RangeValue : public detail::Object
 {
 public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the value of the widget changes.
+     */
+    detail::Signal<> on_value_changed;
+    /** @} */
 
     /**
      * @param[in] min Minimum value for the range.
@@ -129,7 +150,7 @@ public:
         value = detail::clamp<T>(value, m_min, m_max);
 
         if (detail::change_if_diff<T>(m_value, value))
-            invoke_handlers(EventId::property_changed);
+            on_value_changed.invoke();
 
         return orig;
     }
@@ -200,7 +221,7 @@ public:
         m_animation.on_change([this](T value)
         {
             if (detail::change_if_diff<T>(this->m_value, value))
-                this->invoke_handlers(EventId::property_changed);
+                this->on_value_changed.invoke();
         });
     }
 

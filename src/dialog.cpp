@@ -46,16 +46,14 @@ Dialog::Dialog(const Rect& rect) noexcept
     m_button1->on_event([this](Event & event)
     {
         event.stop();
-        Event event2(EventId::event1);
-        invoke_handlers(event2);
+        on_button1_click.invoke();
         hide();
     }, {EventId::pointer_click});
 
     m_button2->on_event([this](Event & event)
     {
         event.stop();
-        Event event2(EventId::event2);
-        invoke_handlers(event2);
+        on_button2_click.invoke();
         hide();
     }, {EventId::pointer_click});
 

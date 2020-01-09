@@ -41,11 +41,11 @@ int main(int argc, const char** argv)
     std::string root_dir = fs::current_path().string();
 
     auto fileopen_dialog = std::make_shared<FileOpenDialog>(root_dir, dialog_size);
-    fileopen_dialog->on_event([fileopen_dialog, dialog_result](Event&)
+    fileopen_dialog->on_selected([fileopen_dialog, dialog_result]()
     {
         dialog_result->text("File OpenDialog: " + fileopen_dialog->selected() + " Selected");
         fileopen_dialog->hide();
-    }, {EventId::property_changed});
+    });
     win.add(fileopen_dialog);
 
     auto fileopen_dialog_btn = std::make_shared<Button>("File Open");
@@ -59,11 +59,11 @@ int main(int argc, const char** argv)
 
     auto filesave_dialog = std::make_shared<FileSaveDialog>(root_dir, dialog_size);
     win.add(filesave_dialog);
-    filesave_dialog->on_event([filesave_dialog, dialog_result](Event&)
+    filesave_dialog->on_selected([filesave_dialog, dialog_result]()
     {
         dialog_result->text("File SaveDialog: " + filesave_dialog->selected() + " Selected");
         filesave_dialog->hide();
-    }, {EventId::property_changed});
+    });
 
     auto filesave_dialog_btn = std::make_shared<Button>("File Save");
     filesave_dialog_btn->margin(5);
@@ -84,16 +84,14 @@ int main(int argc, const char** argv)
     message_dialog->button(Dialog::ButtonId::button2, "Cancel");
     win.add(message_dialog);
 
-    message_dialog->on_event([message_dialog, dialog_result](Event & event)
+    message_dialog->on_button1_click([message_dialog, dialog_result]()
     {
-        if (event.id() == EventId::event1)
-        {
-            dialog_result->text("Message Dialog: OK button clicked");
-        }
-        else if (event.id() == EventId::event2)
-        {
-            dialog_result->text("Message Dialog: Cancel button clicked");
-        }
+        dialog_result->text("Message Dialog: OK button clicked");
+    });
+
+    message_dialog->on_button2_click([message_dialog, dialog_result]()
+    {
+        dialog_result->text("Message Dialog: Cancel button clicked");
     });
 
     auto message_dialog_btn = std::make_shared<Button>("Message Dialog");
@@ -116,17 +114,15 @@ int main(int argc, const char** argv)
         dlist0->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Rect(), AlignFlag::left | AlignFlag::center));
     list_dialog->widget(expand(dlist0));
 
-    list_dialog->on_event([list_dialog, dialog_result, dlist0](Event & event)
+    list_dialog->on_button1_click([list_dialog, dialog_result, dlist0]()
     {
-        if (event.id() == EventId::event1)
-        {
-            auto select = dynamic_cast<StringItem*>(dlist0->item_at(dlist0->selected()).get())->text();
-            dialog_result->text("List Dialog: " + select + " Selected");
-        }
-        else if (event.id() == EventId::event2)
-        {
-            dialog_result->text("List Dialog: Cancel button clicked");
-        }
+        auto select = dynamic_cast<StringItem*>(dlist0->item_at(dlist0->selected()).get())->text();
+        dialog_result->text("List Dialog: " + select + " Selected");
+    });
+
+    list_dialog->on_button2_click([list_dialog, dialog_result, dlist0]()
+    {
+        dialog_result->text("List Dialog: Cancel button clicked");
     });
 
     auto list_dialog_btn = std::make_shared<Button>("List Dialog");
@@ -149,17 +145,15 @@ int main(int argc, const char** argv)
     slider1->value(50);
     slider_dialog->widget(expand(slider1));
 
-    slider_dialog->on_event([slider_dialog, dialog_result, slider1](Event & event)
+    slider_dialog->on_button1_click([slider_dialog, dialog_result, slider1]()
     {
-        if (event.id() == EventId::event1)
-        {
-            auto select = slider1->value();
-            dialog_result->text("Slider Dialog: value = " + std::to_string(select));
-        }
-        else if (event.id() == EventId::event2)
-        {
-            dialog_result->text("Slider Dialog: Cancel button clicked");
-        }
+        auto select = slider1->value();
+        dialog_result->text("Slider Dialog: value = " + std::to_string(select));
+    });
+
+    slider_dialog->on_button2_click([slider_dialog, dialog_result, slider1]()
+    {
+        dialog_result->text("Slider Dialog: Cancel button clicked");
     });
 
     auto slider_dialog_btn = std::make_shared<Button>("Slider Dialog");

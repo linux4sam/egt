@@ -119,8 +119,7 @@ void Button::checked(bool value)
         if (flags().is_set(Widget::Flag::checked) == value)
         {
             damage();
-            Event event(EventId::property_changed);
-            invoke_handlers(event);
+            on_checked_changed.invoke();
         }
     }
 }

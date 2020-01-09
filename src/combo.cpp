@@ -33,12 +33,13 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 
     add(m_list);
 
-    m_list->on_event([this, &parent](Event & event)
+    m_list->on_selected_changed([this, &parent]()
     {
-        event.stop();
+        // ?? how to stop event
+        //event.stop();
         parent.selected(m_list->selected());
         hide();
-    }, {EventId::property_changed});
+    });
 }
 
 void ComboBoxPopup::smart_pos()
@@ -190,7 +191,7 @@ void ComboBox::selected(size_t index)
         {
             m_selected = index;
             damage();
-            invoke_handlers(EventId::property_changed);
+            on_selected_changed.invoke();
         }
     }
 }

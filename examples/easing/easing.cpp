@@ -75,7 +75,7 @@ public:
         list1->align(AlignFlag::expand_vertical | AlignFlag::right);
         add(list1);
 
-        list1->on_event([this, list1](Event&)
+        list1->on_selected_changed([this, list1]()
         {
             m_seq.reset();
             m_animation.easing_func(easing_functions[list1->selected()].first);
@@ -83,7 +83,7 @@ public:
 
             m_line.clear();
             m_line.add_data(create_data(easing_functions[list1->selected()].first), LineChart::chart_type::lines);
-        }, {EventId::property_changed});
+        });
 
         list1->selected(7);
 

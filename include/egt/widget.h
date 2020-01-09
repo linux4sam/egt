@@ -16,6 +16,8 @@
 #include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/object.h>
+#include <egt/detail/signal.h>
+#include <egt/event.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
@@ -140,6 +142,36 @@ public:
     using Flags = detail::Flags<Widget::Flag>;
 
     /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the checked state of the widget changes.
+     */
+    detail::Signal<> on_checked_changed;
+
+    /**
+     * Invoked when the widget gains focus.
+     */
+    detail::Signal<> on_gain_focus;
+
+    /**
+     * Invoked when the widget loses focus.
+     */
+    detail::Signal<> on_lost_focus;
+
+    /**
+     * Invoked when a widget is shown.
+     */
+    detail::Signal<> on_show;
+
+    /**
+     * Invoked when a widget is hidden.
+     */
+    detail::Signal<> on_hide;
+    /** @} */
+
+    /**
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
@@ -186,13 +218,17 @@ public:
 
     /**
      * Handle an event.
-     * Override this function in a derived class to handle events.
+     *
+     * This handles global events that usually do not originate at the widget.
+     * For example, a pointer event.
      *
      * The default implementation in the Widget class, will dispatch the
      * event to any third party handlers that have been registered. What
      * this means is if you expect other handlers to receive the events
      * then this must be called from derived classes.  Or, manually call
      * Widget::invoke_handlers().
+     *
+     * Override this function in a derived class to handle events.
      *
      * @see @subpage events
      *

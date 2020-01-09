@@ -26,9 +26,9 @@ cause the event loop to exit.
 The event loop in EGT is implemented with the [Asio](https://think-async.com/)
 library.  Asio is a cross-platform C++ library for network and low-level I/O
 programming that provides developers with a consistent asynchronous model using
-a modern C++ approach.  Asio can be used as part of the boost or standalone, and EGT
-comes with the standalone version built in. Asio provides more features than
-what is directly used by EGT.
+a modern C++ approach.  Asio can be used as part of the boost or standalone, and
+EGT comes with the standalone version built in. Asio provides far more features
+than what is directly used by EGT itself.
 
 @imageSize{asio.png,width:400px;}
 @image html asio.png "Asio"
@@ -49,17 +49,18 @@ timers, or networking sockets.
 
 Events are usually propagated from the top level widget down.  There are
 exceptions to this, for example, when a widget grabs the pointer or keyboard,
-since this natural flow is short circuited.  For example, when a TextBox has
-keyboard focus.
+and the natural top-down flow is short circuited.  For example, when a TextBox
+has keyboard focus it will be directly send keyboard events without having to
+navigate the widget tree.
 
 @image html widget_hierarchy_event.png "Event"
 @image latex widget_hierarchy_event.png "Event" width=8cm
 
 @section events_data Event Data
 
-Each event handler, like Widget::handle(), is called with an event object.  This
-object maintains the unique egt::v1::EventId of the event, and any data associated
-with the event such as pointer or key event data.
+Each event handler, like Widget::handle(), is called with an Event object.  This
+object maintains the unique ::EventId of the event, and any data
+associated with the event such as pointer or key event data.
 
 @section events_handling Handling Events
 
@@ -120,6 +121,24 @@ timer.on_timeout([]()
 });
 
 timer.start();
+@endcode
+
+@section events_handling_extended Handling Extended or Custom Widget Events
+
+The ::EventId lists global events that usually don't necessary originate in a
+widget itself.  To handle custom or widget type specific events,
+detail::::Signal<> member attributes can be added to a widget to provide custom
+handles any user can connect to in order to receive the event.
+
+The typical use case for detail::Signal<> is the same as Widget::on_event()
+except it can take any number of type of arguments, including none.
+
+@code{.cpp}
+CheckBox box;
+box.on_checked_changed([&box]()
+{
+    std::cout << "CheckBox state is: " << box.checked() << std::endl;
+});
 @endcode
 
 */

@@ -133,12 +133,12 @@ int main(int argc, const char** argv)
     speed_text->text("0 mph");
     gauge.add(speed_text);
 
-    mph_needle->on_event([speed_text, mph_needle](Event&)
+    mph_needle->on_value_changed([speed_text, mph_needle]()
     {
         ostringstream ss;
         ss << mph_needle->value() << " mph";
         speed_text->text(ss.str());
-    }, {EventId::property_changed});
+    });
 
     auto middle_box = dash_background->id_box("#middle");
     auto middle_text = make_shared<Label>();
