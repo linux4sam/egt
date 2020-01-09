@@ -13,8 +13,6 @@
 #include "egt/theme.h"
 #include "egt/widget.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
