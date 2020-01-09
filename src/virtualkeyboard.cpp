@@ -66,7 +66,7 @@ VirtualKeyboard::Key::Key(uint32_t unicode,
     : m_button(make_shared<Button>()),
       m_unicode(unicode),
       m_length(length),
-      m_keys_multichoice(keys_multichoice)
+      m_keys_multichoice(std::move(keys_multichoice))
 {
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));

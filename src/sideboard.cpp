@@ -23,8 +23,8 @@ SideBoard::SideBoard(flags f,
 {
     m_oanim.set_duration(open_duration);
     m_canim.set_duration(close_duration);
-    m_oanim.set_easing_func(open_func);
-    m_canim.set_easing_func(close_func);
+    m_oanim.set_easing_func(std::move(open_func));
+    m_canim.set_easing_func(std::move(close_func));
 
     reset_animations();
 
