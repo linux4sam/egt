@@ -113,7 +113,7 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
                      Palette::ColorId bg,
                      Palette::ColorId border) const
 {
-    auto type = widget.boxtype();
+    const auto& type = widget.boxtype();
 
     if (type == boxtype::none)
         return;
@@ -248,7 +248,7 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
                         Palette::ColorId bg,
                         Palette::ColorId border) const
 {
-    auto type = widget.boxtype();
+    const auto& type = widget.boxtype();
 
     if (type == boxtype::none)
         return;
