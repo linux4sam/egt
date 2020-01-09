@@ -96,11 +96,11 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     {
         struct
         {
-            unsigned long flags;
-            unsigned long functions;
-            unsigned long decorations;
-            signed long input_mode;
-            unsigned long status;
+            unsigned long flags{};
+            unsigned long functions{};
+            unsigned long decorations{};
+            signed long input_mode{};
+            unsigned long status{};
         } hints;
 
         hints.flags = 2;
