@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/meta.h"
 #include "egt/detail/resource.h"
 #include <cassert>
 #include <cstring>
@@ -95,7 +96,7 @@ bool read_resource(const char* name, unsigned char* data, unsigned int length, u
 void register_resource(const char* name, const unsigned char* data, unsigned int len)
 {
     if (!resources)
-        resources.reset(new std::map<std::string, detail::Resource>());
+        resources = detail::make_unique<std::map<std::string, detail::Resource>>();
     assert(resources);
     detail::Resource r = {data, len, 0};
     resources->insert(std::make_pair(name, r));
