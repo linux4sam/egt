@@ -83,7 +83,7 @@ public:
      *         passed to remove_handler().
      */
     virtual RegisterHandle on_event(const EventCallback& handler,
-                                    FilterFlags mask = FilterFlags());
+                                    const FilterFlags& mask = {});
 
     /**
      * Invoke all handlers with the specified event.
@@ -126,7 +126,7 @@ protected:
     struct EGT_API CallbackMeta
     {
         CallbackMeta(const EventCallback& c,
-                     FilterFlags m,
+                     const FilterFlags& m,
                      RegisterHandle h) noexcept
             : callback(c),
               mask(m),

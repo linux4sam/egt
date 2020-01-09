@@ -137,7 +137,7 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
 }
 
 void Theme::draw_box(Painter& painter,
-                     BoxFlags type,
+                     const BoxFlags& type,
                      const Rect& rect,
                      const pattern_type& border,
                      const pattern_type& bg,
@@ -272,7 +272,7 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
 }
 
 void Theme::draw_circle(Painter& painter,
-                        BoxFlags type,
+                        const BoxFlags& type,
                         const Rect& rect,
                         const pattern_type& border,
                         const pattern_type& bg,

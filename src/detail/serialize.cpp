@@ -51,7 +51,7 @@ void Serializer::add_property(const std::string& name, double value,
     add_property(name, std::to_string(value), attrs);
 }
 
-void Serializer::add_property(const std::string& name, Theme::BoxFlags value)
+void Serializer::add_property(const std::string& name, const Theme::BoxFlags& value)
 {
     add_property(name, value.to_string());
 }

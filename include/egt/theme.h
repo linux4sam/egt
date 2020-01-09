@@ -191,7 +191,7 @@ public:
      * Draw a box specifying the properties directly.
      */
     virtual void draw_box(Painter& painter,
-                          BoxFlags type,
+                          const BoxFlags& type,
                           const Rect& rect,
                           const pattern_type& border,
                           const pattern_type& bg,
@@ -204,7 +204,7 @@ public:
                              Palette::ColorId border) const;
 
     virtual void draw_circle(Painter& painter,
-                             BoxFlags type,
+                             const BoxFlags& type,
                              const Rect& rect,
                              const pattern_type& border,
                              const pattern_type& bg,

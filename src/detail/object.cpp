@@ -13,7 +13,7 @@ namespace detail
 {
 
 Object::RegisterHandle Object::on_event(const EventCallback& handler,
-                                        FilterFlags mask)
+                                        const FilterFlags& mask)
 {
     if (handler)
     {
