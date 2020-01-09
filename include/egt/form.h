@@ -74,17 +74,19 @@ public:
     /**
      * Set option name text alignment.
      */
-    inline void set_name_align(AlignFlags align)
+    virtual void set_name_align(const AlignFlags& align)
     {
-        m_name_align = align;
+        if (detail::change_if_diff<>(m_name_align, align))
+            parent_layout();
     }
 
     /**
      * Set group name text alignment.
      */
-    inline void set_group_align(AlignFlags align)
+    virtual void set_group_align(const AlignFlags& align)
     {
-        m_group_align = align;
+        if (detail::change_if_diff<>(m_group_align, align))
+            parent_layout();
     }
 
     virtual ~Form() = default;
