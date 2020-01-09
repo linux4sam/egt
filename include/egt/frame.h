@@ -423,7 +423,7 @@ public:
 
 protected:
 
-    void draw_child(Painter& painter, const Rect& rect, Widget* child);
+    void draw_child(Painter& painter, const Rect& crect, Widget* child);
 
     /**
      * Used internally for calling the special child draw function.
