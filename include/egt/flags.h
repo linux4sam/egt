@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_FLAGS_H
-#define EGT_FLAGS_H
+#ifndef EGT_DETAIL_FLAGS_H
+#define EGT_DETAIL_FLAGS_H
 
 #include <egt/detail/enum.h>
 #include <egt/detail/flagsbase.h>
