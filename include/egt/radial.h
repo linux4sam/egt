@@ -84,7 +84,7 @@ public:
     virtual uint32_t add(const std::shared_ptr<RangeValue<T>>& range,
                          const Color& color = {},
                          default_dim_type width = 10,
-                         flags_type flags = flags_type())
+                         flags_type flags = {})
     {
         // TODO: m_handle_counter can wrap, making the handle non-unique
         auto handle = ++this->m_handle_counter;
@@ -223,7 +223,7 @@ public:
                               widget.content_area(),
                               text,
                               font,
-                              TextBox::flags_type(),
+                              {},
                               alignmask::center,
                               justification::middle,
                               widget.color(Palette::ColorId::label_text).color());

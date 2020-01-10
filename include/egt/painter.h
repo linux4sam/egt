@@ -267,7 +267,7 @@ public:
     /**
      * Draw text inside the specified rectangle.
      */
-    virtual Painter& draw(const std::string& str, const text_draw_flags& flags = text_draw_flags());
+    virtual Painter& draw(const std::string& str, const text_draw_flags& flags = {});
 
     virtual Painter& clip();
 

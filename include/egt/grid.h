@@ -193,7 +193,7 @@ protected:
     /**
      * Grid flags.
      */
-    flags_type m_grid_flags;
+    flags_type m_grid_flags{};
 };
 
 /**

@@ -49,7 +49,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Frame(const Rect& rect = {},
-                   const flags_type& flags = flags_type()) noexcept;
+                   const flags_type& flags = {}) noexcept;
 
     virtual void handle(Event& event) override;
 

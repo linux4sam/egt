@@ -337,7 +337,7 @@ private:
     /**
      * TextBox flags.
      */
-    flags_type m_text_flags;
+    flags_type m_text_flags{};
 
     /**
      * Maximum text length, or zero.

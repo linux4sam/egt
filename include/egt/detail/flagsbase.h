@@ -140,11 +140,6 @@ public:
         return orig != m_flags;
     }
 
-    inline FlagsBase<T> operator|(const T& flag) const noexcept
-    {
-        return {m_flags | (1 << static_cast<underlying>(flag))};
-    }
-
     /**
      * Get a std::set of all set flags.
      */
@@ -152,7 +147,6 @@ public:
     {
         std::set<T> result;
         const auto bits = std::numeric_limits<underlying>::digits;
-        static_assert(bits == 32 || bits == 64, "expecting 32 or 64 bits");
         for (auto b = 0; b < bits; b++)
         {
             if ((m_flags & (1 << b)))
@@ -160,6 +154,16 @@ public:
         }
 
         return result;
+    }
+
+    inline underlying raw() const
+    {
+        return m_flags;
+    }
+
+    inline underlying& raw()
+    {
+        return m_flags;
     }
 
 protected:

@@ -134,7 +134,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Widget(const Rect& rect = {},
-                    const flags_type& flags = flags_type()) noexcept;
+                    const flags_type& flags = {}) noexcept;
 
     /**
      * @param[in] parent Parent Frame of the Widget.
@@ -142,7 +142,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Widget(Frame& parent, const Rect& rect = {},
-                    const flags_type& flags = flags_type()) noexcept;
+                    const flags_type& flags = {}) noexcept;
 
     Widget(Widget&& rhs) noexcept;
     Widget& operator=(Widget&& rhs) noexcept;

@@ -192,7 +192,7 @@ protected:
     /**
      * Slider flags.
      */
-    flags_type m_slider_flags;
+    flags_type m_slider_flags{};
 
     int m_start_offset{0};
 };
