@@ -123,7 +123,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         asio::post(Application::instance().event().io(), [impl, error_message]()
         {
             impl->m_err_message = error_message;
-            Event event(eventid::event2);
+            Event event(eventid::error);
             impl->m_interface.invoke_handlers(event);
         });
         break;
