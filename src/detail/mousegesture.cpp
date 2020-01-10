@@ -52,7 +52,7 @@ Event MouseGesture::handle(const Event& event)
                 return eevent;
             }
             else
-                return Event(eventid::pointer_click, event.pointer());
+                return {eventid::pointer_click, event.pointer()};
         }
         break;
     }
