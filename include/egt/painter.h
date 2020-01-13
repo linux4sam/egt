@@ -283,10 +283,10 @@ public:
 
     virtual Size font_size(const std::string& text);
 
-    virtual void color_at(const Point& point, const Color& color);
-    static void color_at(cairo_surface_t* image, const Point& point, const Color& color);
-    virtual Color color_at(const Point& point);
-    static Color color_at(cairo_surface_t* image, const Point& point);
+    virtual void color_at(const Point& point, const Color& color) noexcept;
+    static void color_at(cairo_surface_t* image, const Point& point, const Color& color) noexcept;
+    virtual Color color_at(const Point& point) noexcept;
+    static Color color_at(cairo_surface_t* image, const Point& point) noexcept;
 
     virtual Painter& flood(const Point& point, const Color& color);
 

@@ -208,7 +208,7 @@ static inline Color get16(const unsigned char* data, size_t stride, const Point&
     return Color::pixel16(*reinterpret_cast<const uint16_t*>(data + point.y() * stride + 2 * point.x()));
 }
 
-static inline Color getc(cairo_surface_t* image, const Point& point)
+static inline Color getc(cairo_surface_t* image, const Point& point) noexcept
 {
     const auto data = cairo_image_surface_get_data(image);
     const auto format = cairo_image_surface_get_format(image);
@@ -232,22 +232,22 @@ static inline Color getc(cairo_surface_t* image, const Point& point)
     return {};
 }
 
-static inline void set32(unsigned char* data, size_t stride, const Point& point, const Color& color)
+static inline void set32(unsigned char* data, size_t stride, const Point& point, const Color& color) noexcept
 {
     *reinterpret_cast<uint32_t*>(data + point.y() * stride + 4 * point.x()) = color.pixel32();
 }
 
-static inline void set24(unsigned char* data, size_t stride, const Point& point, const Color& color)
+static inline void set24(unsigned char* data, size_t stride, const Point& point, const Color& color) noexcept
 {
     *reinterpret_cast<uint32_t*>(data + point.y() * stride + 4 * point.x()) = color.pixel24();
 }
 
-static inline void set16(unsigned char* data, size_t stride, const Point& point, const Color& color)
+static inline void set16(unsigned char* data, size_t stride, const Point& point, const Color& color) noexcept
 {
     *reinterpret_cast<uint16_t*>(data + point.y() * stride + 2 * point.x()) = color.pixel16();
 }
 
-static inline void setc(cairo_surface_t* image, const Point& point, const Color& color)
+static inline void setc(cairo_surface_t* image, const Point& point, const Color& color) noexcept
 {
     auto data = cairo_image_surface_get_data(image);
     const auto stride = cairo_image_surface_get_stride(image);
@@ -272,7 +272,7 @@ static inline void setc(cairo_surface_t* image, const Point& point, const Color&
     }
 }
 
-void Painter::color_at(cairo_surface_t* image, const Point& point, const Color& color)
+void Painter::color_at(cairo_surface_t* image, const Point& point, const Color& color) noexcept
 {
     const auto size = surface_to_size(image);
     if (!Rect(Point(), size - Size(1, 1)).intersect(point))
@@ -285,17 +285,17 @@ void Painter::color_at(cairo_surface_t* image, const Point& point, const Color& 
     cairo_surface_mark_dirty(image);
 }
 
-void Painter::color_at(const Point& point, const Color& color)
+void Painter::color_at(const Point& point, const Color& color) noexcept
 {
     color_at(cairo_get_target(m_cr.get()), point, color);
 }
 
-Color Painter::color_at(const Point& point)
+Color Painter::color_at(const Point& point) noexcept
 {
     return color_at(cairo_get_target(m_cr.get()), point);
 }
 
-Color Painter::color_at(cairo_surface_t* image, const Point& point)
+Color Painter::color_at(cairo_surface_t* image, const Point& point) noexcept
 {
     const auto size = surface_to_size(image);
     if (!Rect(Point(), size - Size(1, 1)).intersect(point))
@@ -309,7 +309,7 @@ Color Painter::color_at(cairo_surface_t* image, const Point& point)
 static inline bool check(const Size& size, cairo_format_t format,
                          const unsigned char* data,
                          size_t stride, const Point& point,
-                         const Color& target_color, const Color& color)
+                         const Color& target_color, const Color& color) noexcept
 {
     if (!Rect(Point(), size).intersect(point))
         return false;
