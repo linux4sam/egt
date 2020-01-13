@@ -523,6 +523,15 @@ public:
                   const easing_func_t& func = easing_linear,
                   const animation_callback_t& callback = nullptr);
 
+    /**
+     * @param[in] duration The duration of the animation.
+     * @param[in] func The easing function to use.
+     * @param[in] callback Called whenever the animation value changes. May be nullptr.
+     */
+    AutoAnimation(std::chrono::milliseconds duration,
+                  const easing_func_t& func = easing_linear,
+                  const animation_callback_t& callback = nullptr);
+
     virtual void start() override;
     virtual void stop() override;
 
@@ -561,6 +570,19 @@ public:
                                   std::chrono::milliseconds duration = std::chrono::milliseconds(),
                                   easing_func_t func = easing_linear)
         : AutoAnimation(start, end, duration, func,
+                        [this](T value)
+    {
+        invoke_handlers(value);
+    })
+    {}
+
+    /**
+     * @param[in] duration The duration of the animation.
+     * @param[in] func The easing function to use.
+     */
+    explicit PropertyAnimatorType(std::chrono::milliseconds duration,
+                                  easing_func_t func = easing_linear)
+        : AutoAnimation(duration, func,
                         [this](T value)
     {
         invoke_handlers(value);

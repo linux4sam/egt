@@ -102,6 +102,12 @@ AutoAnimation::AutoAnimation(float_t start, float_t end,
     });
 }
 
+AutoAnimation::AutoAnimation(std::chrono::milliseconds duration,
+                             const easing_func_t& func,
+                             const animation_callback_t& callback)
+    : AutoAnimation({}, {}, duration, func, callback)
+{}
+
 void AutoAnimation::start()
 {
     Animation::start();
