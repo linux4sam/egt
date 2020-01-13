@@ -3,6 +3,8 @@ namespace egt { inline namespace v1 {
 
  @page topics Developer Topics
 
+This chapter discusses some common problems and advanced developer topics.
+
 @section topics_black Black Screen
 
 If you see a black screen when you run your application, make sure you call
@@ -100,14 +102,14 @@ protected:
 };
 @endcode
 
-@section topics_networking Networking and Serial
+@section topics_networking Networking and Serial Communications
 
 @see @ref events_loop
 
-The underlying EventLoop implementation uses Asio, which you can directly access
-and is part of the full EGT API.  Asio provides an excellent asynchronous
-networking implementation that you free with EGT. It can provide
-efficient non-blocking I/O to service thousands of connections at once. The asio
+The underlying EventLoop implementation in EGT uses Asio, which you can directly
+access and is part of the full EGT API.  Asio provides an excellent asynchronous
+networking implementation that you get for free with EGT. It can provide
+efficient non-blocking I/O to service thousands of connections at once. The Asio
 transport handles all aspects of networking (DNS lookups, creating TCP sockets,
 connecting and listening, etc). It supports IPv4 and IPv6.  It supports both
 plain and TLS secured sockets when the appropriate libraries are available.
@@ -115,14 +117,18 @@ plain and TLS secured sockets when the appropriate libraries are available.
 The same is true for reading and writing to several other interfaces, including
 serial ports using the asio::serial_port object.
 
+A benefit of using Asio for networking is it it automatically built into the EGT
+event loop automatically.
+
 Outside of that, EGT provides some utility classes like
 experimental::HttpClientRequest that uses libcurl underneath for full HTTP/HTTPS
 support, and handles the integration of libcurl with Asio.
 
 @section topics_compiler Compiler Setup and Options
 
-The primary compiler uses is gcc.  Other compilers like clang and mingw are a
-work in progress and considered experimetal.
+The primary compiler used is gcc.  Other compilers like clang and mingw are a
+work in progress and considered experimetal.  It is worth going over some common
+compiler flags used when compiling EGT and EGT applications.
 
 - `-std=c++11` - EGT requires C++11.
 - `-fvisibility=hidden` - EGT uses explicit public visibility so everything else should be hidden by default.  gcc is particularly chatty about exporting symbols ina  shared library.
@@ -135,10 +141,15 @@ work in progress and considered experimetal.
 
 @section topics_optimizing Finding Optimal Performance
 
---disable-debug
---enagle-lto
---disable-shared
+EGT provides several `configure` options that can be used to help improve
+performance based on your needs.  These options will automatically setup the
+appropriate compiler and linker flags.
 
+- `--disable-debug`
+- `--enable-lto`
+- `--disable-shared`
+
+See @subpage started_configure for more information on available configure options.
 
 */
 }}

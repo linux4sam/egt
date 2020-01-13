@@ -80,7 +80,7 @@ make
 @section started_configure Configure Options
 
 You can run "./configure --help" to see more options.  Some non-standard
-options are listed here.
+options are listed here, but not all.
 
 @par `--enable-code-coverage`
 Whether to enable code coverage support
@@ -131,6 +131,29 @@ The include file <egt/ui> contains most basic functionality needed.
 If you want to use a UI file instead.
 
 @snippet "../examples/basicui/basicui.cpp" Example
+
+
+@section started_zeal Using this Documentation Offline or With Other Development Tools
+
+This documentation is also available in the form of a docset that can be
+read and searched using a tool like [Dash](https://kapeli.com/dash) (macOS) and
+[Zeal](https://zealdocs.org/) (macOS/Windows/Linux).  In turn, the documentation
+can be integrated into an IDE or tools like Atom/VSCode for an indexed and
+easily searchable API reference.  These tools also provide a method for
+automatically or manually updating the documentation.
+
+Once you have one of these tools installed, the docset feed URL is located at:
+
+https://linux4sam.github.io/egt-docs/docset/EGT.xml
+
+@note To install Zeal, see the [official documentation to download and
+    installing](https://zealdocs.org/download.html).  Specifically, on Ubuntu,
+    you should get the latest version with their PPA.
+    @code{.sh}
+    sudo add-apt-repository ppa:zeal-developers/ppa
+    sudo apt-get update
+    sudo apt-get install zeal
+    @endcode
 
 */
 }}

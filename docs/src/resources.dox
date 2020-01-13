@@ -9,24 +9,28 @@ Resources are a way of cataloging, distributing, identifying, and using some
 asset data.  For example, assets might include images, icons, audio files, and
 video files. Resources may be stored in the filesystem and loaded on demand, or
 they may be compiled into the application binary itself by using the EGT `mresg`
-command, or they may be installed by default by EGT.
+command, or they may be installed by default when installing the EGT library.
 
 @section resources_paths Respath
 
 Identifying a resource uses something referenced in the EGT API as a *respath*.
-This can take several different forms, including standard absolute or relative
-file paths.  Consider this an over-simplified version of a Universal Resource
-Identifier (URI) and the purpose of a URI.
+This is a string that can take several different forms, including standard
+absolute or relative file paths.  Consider this an over-simplified version of a
+Universal Resource Identifier (URI) and the purpose of a URI.
 
 If an absolute file path is used, noting extra will happen.  That file path will
 attempt to be accessed. However, if a relative path is given then a search will
-happened by calling resolve_file_path().  This function will search any
-directory registered with add_search_path().  The default path's setup
-is searched in the following order:
+happened by calling the internal EGT function resolve_file_path().  This
+function will search any directory registered with add_search_path().  The
+default path's setup is searched in the following order:
 
 - Data install path.
 - EXE directory.
 - EGT icon path.
+
+Outside of standard absolute and relative file paths, there are also several
+qualifiers that can be used to find files in special locations including the
+application binary itself.
 
 @section resources_using Respath: File Path
 

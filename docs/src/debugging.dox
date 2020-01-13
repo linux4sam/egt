@@ -3,7 +3,8 @@ namespace egt { inline namespace v1 {
 
  @page debug Debugging
 
-There are many resources and, as always, tricks to debug an EGT application.
+This chapter covers some of the many tools and techniques to debug an EGT
+application or EGT itself.
 
 @section debug_environ Environment Variables
 
@@ -12,10 +13,14 @@ useful for debugging.  Specifically, configuring logging internal to EGT.
 
 @section debug_gdb GDB Tips
 
-EGT uses asserts internally.  Be sure to compile the library without -DNDEBUG
-and then you can break on any assert using GDB to examine the callstack and the
-state of the application.  EGT will compile with asserts enabled by default.
-See @subpage started_configure for more information on compile time options.
+Outside of typical debugging with GDB, there are a couple cases where
+specifically instructing GDB to break before an event occures is useful.
+
+EGT uses runtime asserts internally.  Be sure to compile the library without
+-DNDEBUG and then you can break on any assert using GDB to examine the callstack
+and the state of the application to figure out what happened leading up to the
+assert.  EGT will compile with asserts enabled by default. See
+@subpage started_configure for more information on compile time options.
 
 Issue the following in a GDB session to break on an assert before the program
 aborts:
@@ -26,6 +31,13 @@ r
 ...assert...
 bt
 @endcode
+
+@note This may be libc [implementation specific](https://refspecs.linuxbase.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/baselib---assert-fail-1.html).
+
+Another technique EGT uses to expose non-fatal runtime errors is through the use
+of C++ exceptions.  Like runtime asserts, it is often useful to understand the
+callstack and what happened leading up to the exception being thrown.  By the
+time the exception is caught, it is usually too late to get this information.
 
 To catch when a C++ exception is thrown, before the stack starts unwinding, you
 can issue the following in a GDB session:
@@ -40,7 +52,8 @@ bt
 @section debug_libtool Using GDB Without Installing Examples
 
 Running GDB right in the build directory without having to install the examples
-takes some special consideration.
+takes some special consideration.  By default, compiling the EGT library makes
+use of a tool called [libtool](https://www.gnu.org/software/libtool/).
 
 When libtool is used, it creates wrapper scripts that appear to be the
 executable.  It does this so that any built libraries can be automatically found.
