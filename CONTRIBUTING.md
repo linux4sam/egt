@@ -100,6 +100,14 @@ make style
 Be careful not to abuse this and change coding style just for the fun of it,
 especially on source that you are not currently working on.
 
+## Assertions vs. Exceptions
+
+- Use asserts to check for errors that should never occur. Use exceptions to
+  check for errors that might occur, for example, errors in input validation on
+  parameters of public functions.
+- Use exceptions when the code that handles the error might be separated from
+  the code that detects the error by one or more intervening function calls.
+
 ## Git Commit Messages
 
 - Limit the first line to 72 characters or less
