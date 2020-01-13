@@ -79,6 +79,18 @@ protected:
 /**
  * Serialize a widget tree to an XML document.
  *
+ * @code{.cpp}
+ * // already have a Window variable named win
+ * XmlWidgetSerializer xml;
+ * win.walk(std::bind(&XmlWidgetSerializer::add, std::ref(xml),
+ *                    std::placeholders::_1, std::placeholders::_2));
+ * xml.write("output.xml");
+ *
+ * or
+ *
+ * xml.write(std::cout);
+ *@endcode
+ *
  * @see Widget::walk()
  */
 class EGT_API XmlWidgetSerializer : public Serializer
