@@ -5,6 +5,7 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/enum.h"
+#include "egt/detail/serialize.h"
 #include "egt/font.h"
 #include <cairo-ft.h>
 #include <cassert>
@@ -169,6 +170,34 @@ std::map<Font::Slant, char const*> detail::EnumStrings<Font::Slant>::data =
     {Font::Slant::italic, "italic"},
     {Font::Slant::oblique, "oblique"},
 };
+
+void Font::serialize(const std::string& name, detail::Serializer& serializer) const
+{
+    const std::map<std::string, std::string> attrs =
+    {
+        {"weight", detail::enum_to_string(weight())},
+        {"slant", detail::enum_to_string(slant())},
+        {"size", std::to_string(size())},
+    };
+
+    serializer.add_property(name, face(), attrs);
+}
+
+void Font::deserialize(const std::string& name, const std::string& value,
+                       const std::map<std::string, std::string>& attrs)
+{
+    face(value);
+
+    for (auto& a : attrs)
+    {
+        if (a.first == "size")
+            size(std::stoi(a.second));
+        else if (a.first == "weight")
+            weight(detail::enum_from_string<Font::Weight>(a.second));
+        else if (a.first == "slant")
+            slant(detail::enum_from_string<Font::Slant>(a.second));
+    }
+}
 
 struct FontCache : detail::NonCopyable
 {

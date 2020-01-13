@@ -7,6 +7,7 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/math.h"
+#include "egt/detail/serialize.h"
 #include "egt/frame.h"
 #include "egt/geometry.h"
 #include "egt/input.h"
@@ -511,6 +512,82 @@ void Widget::checked(bool value)
             flags().clear(Widget::Flag::checked);
         damage();
     }
+}
+
+void Widget::serialize(detail::Serializer& serializer) const
+{
+    serializer.add_property("x", x());
+    serializer.add_property("y", y());
+    serializer.add_property("width", width());
+    serializer.add_property("height", height());
+    if (!align().empty())
+        serializer.add_property("align", align());
+    serializer.add_property("flags", flags().to_string());
+    if (padding())
+        serializer.add_property("padding", padding());
+    if (margin())
+        serializer.add_property("margin", margin());
+    if (border())
+        serializer.add_property("border", border());
+    if (xratio())
+        serializer.add_property("ratio:x", xratio());
+    if (yratio())
+        serializer.add_property("ratio:y", yratio());
+    if (horizontal_ratio())
+        serializer.add_property("ratio:horizontal", horizontal_ratio());
+    if (vertical_ratio())
+        serializer.add_property("ratio:vertical", vertical_ratio());
+    if (!boxtype().empty())
+        serializer.add_property("boxtype", boxtype().to_string());
+
+    if (m_palette)
+        m_palette->serialize("color", serializer);
+
+    if (m_font)
+        m_font->serialize("font", serializer);
+}
+
+void Widget::deserialize(const std::string& name, const std::string& value,
+                         const std::map<std::string, std::string>& attrs)
+{
+    if (name == "width")
+        width(std::stoi(value));
+    else if (name == "height")
+        height(std::stoi(value));
+    else if (name == "x")
+        x(std::stoi(value));
+    else if (name == "y")
+        y(std::stoi(value));
+    else if (name == "align")
+        align(AlignFlags(value));
+    else if (name == "flags")
+        m_widget_flags.from_string(value);
+    else if (name == "alpha")
+        alpha(std::stoi(value));
+    else if (name == "padding")
+        padding(std::stoi(value));
+    else if (name == "margin")
+        margin(std::stoi(value));
+    else if (name == "border")
+        border(std::stoi(value));
+    else if (name == "boxtype")
+        m_boxtype.from_string(value);
+    else if (name == "ratio:x")
+    {}
+    else if (name == "ratio:y")
+    {}
+    else if (name == "ratio:horizontal")
+    {}
+    else if (name == "ratio:vertical")
+    {}
+    else if (name == "font")
+    {
+        Font font;
+        font.deserialize(name, value, attrs);
+        this->font(font);
+    }
+    else if (name == "color")
+        m_palette->deserialize(name, value, attrs);
 }
 
 Widget::~Widget() noexcept

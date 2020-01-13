@@ -5,6 +5,7 @@
  */
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
+#include "egt/detail/serialize.h"
 #include "egt/grid.h"
 #include "egt/painter.h"
 #include <algorithm>
@@ -316,6 +317,25 @@ std::map<StaticGrid::GridFlag, char const*> detail::EnumStrings<StaticGrid::Grid
     {StaticGrid::GridFlag::show_border, "show_border"},
 };
 
+void StaticGrid::serialize(detail::Serializer& serializer) const
+{
+    Frame::serialize(serializer);
+
+    serializer.add_property("grid_flags", m_grid_flags.to_string());
+    serializer.add_property("column_priority", static_cast<int>(m_column_priority));
+}
+
+void StaticGrid::deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs)
+{
+    if (name == "grid_flags")
+        m_grid_flags.from_string(value);
+    else if (name == "column_priority")
+        m_column_priority = std::stoi(value);
+    else
+        Frame::deserialize(name, value, attrs);
+}
+
 void SelectableGrid::handle(Event& event)
 {
     StaticGrid::handle(event);
@@ -393,6 +413,25 @@ void SelectableGrid::selected(int column, int row)
     auto r = detail::change_if_diff<>(m_selected_row, row);
     if (c || r)
         damage();
+}
+
+void SelectableGrid::serialize(detail::Serializer& serializer) const
+{
+    StaticGrid::serialize(serializer);
+
+    serializer.add_property("selected_column", m_selected_column);
+    serializer.add_property("selected_row", m_selected_row);
+}
+
+void SelectableGrid::deserialize(const std::string& name, const std::string& value,
+                                 const std::map<std::string, std::string>& attrs)
+{
+    if (name == "selected_column")
+        m_selected_column = std::stoul(value);
+    else if (name == "selected_row")
+        m_selected_row = std::stoul(value);
+    else
+        StaticGrid::deserialize(name, value, attrs);
 }
 
 }

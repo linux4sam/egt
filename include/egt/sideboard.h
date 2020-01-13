@@ -81,6 +81,11 @@ public:
      */
     virtual void open();
 
+    virtual void serialize(detail::Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
+
     virtual ~SideBoard() = default;
 
 protected:

@@ -2,7 +2,7 @@
   <widget type="Window" name="window1">
     <widget type="Button" name="button1">
       <property name="text">Press Me</property>
-      <property name="align">3</property>
+      <property name="align">center</property>
     </widget>
   </widget>
 </widgets>

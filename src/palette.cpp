@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/enum.h"
+#include "egt/detail/serialize.h"
 #include "egt/detail/string.h"
 #include "egt/palette.h"
 #include <cassert>
@@ -244,6 +245,41 @@ std::map<Palette::GroupId, char const*> detail::EnumStrings<Palette::GroupId>::d
 std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group)
 {
     return os << detail::enum_to_string(group);
+}
+
+void Palette::serialize(const std::string& name, detail::Serializer& serializer) const
+{
+    for (const auto& x : m_colors)
+    {
+        for (const auto& y : x.second)
+        {
+            const std::map<std::string, std::string> attrs =
+            {
+                {"id", detail::enum_to_string(y.first)},
+                {"group", detail::enum_to_string(x.first)},
+            };
+
+            serializer.add_property(name,
+                                    y.second.color().hex(),
+                                    attrs);
+        }
+    }
+}
+
+void Palette::deserialize(const std::string& name, const std::string& value,
+                          const std::map<std::string, std::string>& attrs)
+{
+    auto i = attrs.find("id");
+    auto g = attrs.find("group");
+    if (i != attrs.end() && g != attrs.end())
+    {
+        const auto id = detail::enum_from_string<Palette::ColorId>(i->second);
+        Palette::GroupId group = Palette::GroupId::normal;
+        if (g != attrs.end())
+            group = detail::enum_from_string<Palette::GroupId>(g->second);
+
+        set(id, Color(std::stoul(value, nullptr, 16)), group);
+    }
 }
 
 }

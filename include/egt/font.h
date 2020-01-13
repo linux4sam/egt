@@ -14,12 +14,17 @@
 #include <egt/detail/math.h>
 #include <egt/types.h>
 #include <iosfwd>
+#include <map>
 #include <string>
 
 namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+class Serializer;
+}
 
 /**
  * Manages a font and properties of a font.
@@ -169,6 +174,17 @@ public:
      * font more than once.
      */
     cairo_scaled_font_t* scaled_font() const;
+
+    /**
+     * Serialize to the specified serializer.
+     */
+    virtual void serialize(const std::string& name, detail::Serializer& serializer) const;
+
+    /**
+     * Deserialize.
+     */
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs);
 
 protected:
 

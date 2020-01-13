@@ -8,6 +8,7 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/layout.h"
+#include "egt/detail/serialize.h"
 #include "egt/detail/string.h"
 #include "egt/frame.h"
 #include "egt/input.h"
@@ -505,6 +506,26 @@ std::map<TextBox::TextFlag, char const*> detail::EnumStrings<TextBox::TextFlag>:
     {TextBox::TextFlag::word_wrap, "word_wrap"},
     {TextBox::TextFlag::no_virt_keyboard, "no_virt_keyboard"},
 };
+
+void TextBox::serialize(detail::Serializer& serializer) const
+{
+    TextWidget::serialize(serializer);
+
+    if (max_length())
+        serializer.add_property("maxlength", static_cast<unsigned int>(max_length()));
+    serializer.add_property("text_flags", m_text_flags.to_string());
+}
+
+void TextBox::deserialize(const std::string& name, const std::string& value,
+                          const std::map<std::string, std::string>& attrs)
+{
+    if (name == "maxlength")
+        max_length(std::stoul(value));
+    else if (name == "text_flags")
+        m_text_flags.from_string(value);
+    else
+        TextWidget::deserialize(name, value, attrs);
+}
 
 }
 }

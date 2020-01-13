@@ -23,6 +23,11 @@ namespace egt
 inline namespace v1
 {
 
+namespace detail
+{
+class Serializer;
+}
+
 /**
  * Static grid organization for widgets.
  *
@@ -171,6 +176,11 @@ public:
 
     virtual void reallocate(const std::tuple<int, int>& size);
 
+    virtual void serialize(detail::Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
+
     virtual ~StaticGrid() noexcept = default;
 
 protected:
@@ -226,6 +236,11 @@ public:
      * @param[in] row The row to select.
      */
     virtual void selected(int column, int row);
+
+    virtual void serialize(detail::Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
 
     virtual ~SelectableGrid() noexcept = default;
 

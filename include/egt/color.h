@@ -271,6 +271,8 @@ public:
         return Color((std::stoi(str, nullptr, 16) << 8) | 0xff);
     }
 
+    std::string hex() const;
+
     /**
      * Create a color from HSV values.
      *
@@ -548,6 +550,15 @@ public:
             return m_steps.begin()->second;
 
         return {};
+    }
+
+    const Color& color() const
+    {
+        if (!m_steps.empty())
+            return m_steps.begin()->second;
+
+        static Color tmp;
+        return tmp;
     }
 
     Color& color()

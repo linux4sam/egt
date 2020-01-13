@@ -125,6 +125,9 @@ PixelFormat egt_format(cairo_format_t format);
  * Convert a pixel format to a gstreamer format.
  */
 std::string gstreamer_format(PixelFormat format);
+
+std::string demangle(const char* name);
+
 }
 
 }

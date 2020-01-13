@@ -5,6 +5,7 @@
  */
 #include "detail/utf8text.h"
 #include "egt/canvas.h"
+#include "egt/detail/serialize.h"
 #include "egt/detail/textwidget.h"
 #include "egt/painter.h"
 
@@ -79,6 +80,21 @@ Size TextWidget::text_size(const std::string& text) const
     Painter painter(canvas.context());
     painter.set(this->font());
     return painter.font_size(text);
+}
+
+void TextWidget::serialize(detail::Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+    serializer.add_property("text", text());
+}
+
+void TextWidget::deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs)
+{
+    if (name == "text")
+        text(value);
+    else
+        Widget::deserialize(name, value, attrs);
 }
 
 }

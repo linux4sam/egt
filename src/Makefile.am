@@ -56,6 +56,7 @@ detail/mousegesture.cpp \
 detail/object.cpp \
 detail/resource.cpp \
 detail/screen/flipthread.h \
+detail/serialize.cpp \
 detail/spriteimpl.h \
 detail/string.cpp \
 detail/textwidget.cpp \

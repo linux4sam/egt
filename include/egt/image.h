@@ -15,12 +15,17 @@
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/painter.h>
+#include <map>
 #include <string>
 
 namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+class Serializer;
+}
 
 /**
  * Image resource used for drawing or displaying.
@@ -194,6 +199,18 @@ public:
     {
         return crop(RectF(rect.x(), rect.y(), rect.width(), rect.height()));
     }
+
+    /**
+    * Serialize to the specified serializer.
+    */
+    virtual void serialize(const std::string& name, detail::Serializer& serializer) const;
+
+    /**
+     * Deserialized property.
+     */
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs);
 
     virtual ~Image() = default;
 

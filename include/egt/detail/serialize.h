@@ -8,50 +8,72 @@
 
 /**
  * @file
- * @brief Serialize widgets.
+ * @brief Serialize support for widgets.
  */
 
 #include <egt/detail/meta.h>
-#include <egt/widget.h>
-#include <fstream>
+#include <egt/theme.h>
+#include <egt/widgetflags.h>
+#include <map>
+#include <memory>
 #include <ostream>
-#include <rapidxml.hpp>
-#include <rapidxml_print.hpp>
-#include <rapidxml_utils.hpp>
 #include <string>
-#include <vector>
 
 namespace egt
 {
 inline namespace v1
 {
+class Widget;
+class Image;
+class Pattern;
+
 namespace detail
 {
+
+/**
+ * Base serializer class.
+ */
+class EGT_API Serializer
+{
+public:
+    virtual bool add(Widget* widget, int level) = 0;
+
+    virtual void add_property(const std::string& name, const std::string& value,
+                              const std::map<std::string, std::string>& attrs = {}) = 0;
+    virtual void add_property(const std::string& name, int value,
+                              const std::map<std::string, std::string>& attrs = {});
+    virtual void add_property(const std::string& name, unsigned int value,
+                              const std::map<std::string, std::string>& attrs = {});
+    virtual void add_property(const std::string& name, const AlignFlags& value,
+                              const std::map<std::string, std::string>& attrs = {});
+    virtual void add_property(const std::string& name, float value,
+                              const std::map<std::string, std::string>& attrs = {});
+    virtual void add_property(const std::string& name, double value,
+                              const std::map<std::string, std::string>& attrs = {});
+    virtual void add_property(const std::string& name, Theme::BoxFlags value);
+    virtual void add_property(const std::string& name, const Pattern& value);
+};
 
 /**
  * Serialize a widget tree to an std::ostream
  *
  * @see Widget::walk()
  */
-struct EGT_API OstreamWidgetSerializer
+class EGT_API OstreamWidgetSerializer : public Serializer
 {
-    explicit OstreamWidgetSerializer(std::ostream& o)
-        : out(o)
-    {}
+public:
+    explicit OstreamWidgetSerializer(std::ostream& o);
 
-    bool add(Widget* widget, int level)
-    {
-        out << std::string(level, ' ') << widget->name() <<
-            " " << widget->box() << " " << widget->flags();
-        out << " box(" << widget->margin() << "," <<
-            widget->padding() << "," << widget->border() << ")";
-        out << " align(" << static_cast<int>(widget->align().raw()) << ")";
-        out << std::endl;
+    bool add(Widget* widget, int level) override;
 
-        return true;
-    }
+    using Serializer::add_property;
 
-    std::ostream& out;
+    void add_property(const std::string& name, const std::string& value,
+                      const std::map<std::string, std::string>& attrs = {}) override;
+
+protected:
+    std::ostream& m_out;
+    int m_level{0};
 };
 
 /**
@@ -59,83 +81,29 @@ struct EGT_API OstreamWidgetSerializer
  *
  * @see Widget::walk()
  */
-struct EGT_API XmlWidgetSerializer
+class EGT_API XmlWidgetSerializer : public Serializer
 {
-    XmlWidgetSerializer()
-    {
-        reset();
-    }
+public:
+    XmlWidgetSerializer();
 
-    void reset()
-    {
-        doc.clear();
-        stack.clear();
+    void reset();
 
-        auto decl = doc.allocate_node(rapidxml::node_declaration);
-        decl->append_attribute(doc.allocate_attribute("version", "1.0"));
-        decl->append_attribute(doc.allocate_attribute("encoding", "utf-8"));
-        doc.append_node(decl);
+    bool add(Widget* widget, int level) override;
 
-        auto root = doc.allocate_node(rapidxml::node_element, "widgets");
-        doc.append_node(root);
-        stack.push_back(root);
-    }
+    using Serializer::add_property;
 
-    template<class T>
-    rapidxml::xml_node<>* create_node(const std::string& name, std::function<T()> func)
-    {
-        auto n = doc.allocate_string(name.c_str());
-        auto node = doc.allocate_node(rapidxml::node_element, n);
-        auto v = doc.allocate_string(std::to_string(func()).c_str());
-        node->value(v);
-        return node;
-    }
+    void add_property(const std::string& name, const std::string& value,
+                      const std::map<std::string, std::string>& attrs = {}) override;
 
-    bool add(Widget* widget, int level)
-    {
-        if (level < static_cast<int>(stack.size()) - 1)
-            stack.pop_back();
+    void write(const std::string& filename);
+    void write(std::ostream& out);
 
-        auto child = doc.allocate_node(rapidxml::node_element, "widget");
-        auto str = doc.allocate_string(widget->name().c_str());
-        child->append_attribute(doc.allocate_attribute("name", str));
-        str = doc.allocate_string("Widget");
-        child->append_attribute(doc.allocate_attribute("type", str));
-        str = doc.allocate_string("1.0");
-        child->append_attribute(doc.allocate_attribute("version", str));
+    virtual ~XmlWidgetSerializer() noexcept;
 
-        child->append_node(create_node<int>("x", std::bind(&Widget::x, widget)));
-        child->append_node(create_node<int>("y", std::bind(&Widget::y, widget)));
-        child->append_node(create_node<int>("w", std::bind(&Widget::width, widget)));
-        child->append_node(create_node<int>("h", std::bind(&Widget::height, widget)));
-        child->append_node(create_node<int>("border", std::bind(&Widget::border, widget)));
-        child->append_node(create_node<int>("margin", std::bind(&Widget::margin, widget)));
-        child->append_node(create_node<int>("padding", std::bind(&Widget::padding, widget)));
-        child->append_node(create_node<int>("xratio", std::bind(&Widget::xratio, widget)));
-        child->append_node(create_node<int>("yratio", std::bind(&Widget::yratio, widget)));
-        child->append_node(create_node<int>("horizontal_ratio", std::bind(&Widget::horizontal_ratio, widget)));
-        child->append_node(create_node<int>("vertical_ratio", std::bind(&Widget::vertical_ratio, widget)));
+protected:
 
-        stack.back()->append_node(child);
-        stack.push_back(child);
-
-        return true;
-    }
-
-    void write(const std::string& filename)
-    {
-        std::ofstream file_stored(filename.c_str());
-        file_stored << doc;
-        file_stored.close();
-    }
-
-    void write(std::ostream& out)
-    {
-        out << doc;
-    }
-
-    rapidxml::xml_document<> doc;
-    std::vector<rapidxml::xml_node<>*> stack;
+    struct XmlSerializerImpl;
+    std::unique_ptr<XmlSerializerImpl> m_impl;
 };
 
 }

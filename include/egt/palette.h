@@ -16,11 +16,16 @@
 #include <iosfwd>
 #include <map>
 #include <memory>
+#include <string>
 
 namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+class Serializer;
+}
 
 /**
  * Color palette.
@@ -326,6 +331,17 @@ public:
      * @return True if exists.
      */
     virtual bool exists(ColorId id, GroupId group = GroupId::normal) const;
+
+    /**
+     * Serialize to the specified serializer.
+     */
+    virtual void serialize(const std::string& name, detail::Serializer& serializer) const;
+
+    /**
+     * Deserialize.
+     */
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs);
 
     virtual ~Palette() = default;
 

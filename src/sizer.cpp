@@ -5,6 +5,7 @@
  */
 #include "egt/detail/enum.h"
 #include "egt/detail/layout.h"
+#include "egt/detail/serialize.h"
 #include "egt/sizer.h"
 
 namespace egt
@@ -101,6 +102,25 @@ void BoxSizer::layout()
     }
 
     resize(super_rect());
+}
+
+void BoxSizer::serialize(detail::Serializer& serializer) const
+{
+    Frame::serialize(serializer);
+
+    serializer.add_property("orient", detail::enum_to_string(m_orient));
+    serializer.add_property("justify", detail::enum_to_string(m_justify));
+}
+
+void BoxSizer::deserialize(const std::string& name, const std::string& value,
+                           const std::map<std::string, std::string>& attrs)
+{
+    if (name == "orient")
+        set_orient(detail::enum_from_string<Orientation>(value));
+    else if (name == "justify")
+        set_justify(detail::enum_from_string<Justification>(value));
+    else
+        Frame::deserialize(name, value, attrs);
 }
 
 }

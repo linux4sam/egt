@@ -31,6 +31,11 @@ namespace egt
 inline namespace v1
 {
 
+namespace detail
+{
+class Serializer;
+}
+
 class Painter;
 class Frame;
 class Screen;
@@ -994,6 +999,22 @@ public:
      * Set checked state of the widget.
      */
     virtual void checked(bool value);
+
+    inline std::string type() const
+    {
+        return detail::demangle(typeid(*this).name());
+    }
+
+    /**
+     * Serialize the widget to the specified serializer.
+     */
+    virtual void serialize(detail::Serializer& serializer) const;
+
+    /**
+     * Deserialize widget properties.
+     */
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs);
 
     virtual ~Widget() noexcept;
 

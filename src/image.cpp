@@ -5,6 +5,7 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/imagecache.h"
+#include "egt/detail/serialize.h"
 #include "egt/image.h"
 
 namespace egt
@@ -103,6 +104,32 @@ Image Image::crop(const RectF& rect)
     Canvas canvas(rect.size());
     canvas.copy(m_surface, rect);
     return canvas.surface();
+}
+
+void Image::serialize(const std::string& name, detail::Serializer& serializer) const
+{
+    serializer.add_property(name, respath(),
+    {
+        {"hscale", std::to_string(hscale())},
+        {"vscale", std::to_string(vscale())}
+    });
+}
+
+void Image::deserialize(const std::string& name, const std::string& value,
+                        const std::map<std::string, std::string>& attrs)
+{
+    double hscale = 1.0;
+    double vscale = 1.0;
+
+    auto h = attrs.find("hscale");
+    if (h != attrs.end())
+        hscale = std::stod(h->second);
+
+    auto v = attrs.find("vscale");
+    if (v != attrs.end())
+        vscale = std::stod(v->second);
+
+    load(value, hscale, vscale);
 }
 
 }

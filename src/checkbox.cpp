@@ -7,6 +7,7 @@
 #include "egt/checkbox.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/layout.h"
+#include "egt/detail/serialize.h"
 #include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/theme.h"
@@ -233,6 +234,28 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
 Size ToggleBox::min_size_hint() const
 {
     return Size(100, 30) + Widget::min_size_hint();
+}
+
+void ToggleBox::serialize(detail::Serializer& serializer) const
+{
+    CheckBox::serialize(serializer);
+
+    serializer.add_property("off_text", off_text());
+    serializer.add_property("on_text", off_text());
+    serializer.add_property("enable_disable", static_cast<int>(enable_disable()));
+}
+
+void ToggleBox::deserialize(const std::string& name, const std::string& value,
+                            const std::map<std::string, std::string>& attrs)
+{
+    if (name == "off_text")
+        toggle_text(value, on_text());
+    else if (name == "on_text")
+        toggle_text(off_text(), value);
+    else if (name == "enable_disable")
+        enable_disable(std::stoi(value));
+    else
+        CheckBox::deserialize(name, value, attrs);
 }
 
 }

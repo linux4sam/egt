@@ -5,6 +5,7 @@
  */
 #include "egt/app.h"
 #include "egt/detail/enum.h"
+#include "egt/detail/serialize.h"
 #include "egt/sideboard.h"
 #include <iostream>
 
@@ -168,6 +169,22 @@ void SideBoard::open()
         m_oanim.starting(current);
     m_oanim.start();
     m_dir = true;
+}
+
+void SideBoard::serialize(detail::Serializer& serializer) const
+{
+    Window::serialize(serializer);
+
+    serializer.add_property("position", detail::enum_to_string(position()));
+}
+
+void SideBoard::deserialize(const std::string& name, const std::string& value,
+                            const std::map<std::string, std::string>& attrs)
+{
+    if (name == "position")
+        position(detail::enum_from_string<PositionFlag>(value));
+    else
+        Window::deserialize(name, value, attrs);
 }
 
 template<>
