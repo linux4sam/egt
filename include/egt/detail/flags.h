@@ -18,7 +18,8 @@
 #include <vector>
 
 /**
- * @file Flags handling.
+ * @file
+ * @brief Flags handling.
  */
 
 namespace egt

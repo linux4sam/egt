@@ -11,7 +11,8 @@
 #include <set>
 
 /**
- * @file Flags handling.
+ * @file
+ * @brief Flags handling.
  */
 
 namespace egt

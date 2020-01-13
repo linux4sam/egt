@@ -37,31 +37,83 @@ This new widget is basically a checkBox, but we want to change how it looks and
 operates. The new ToggleBox::draw() method looks like this:
 
 @code
-    void ToggleBox::draw(Painter& painter, const Rect& rect)
+void ToggleBox::draw(Painter& painter, const Rect& rect)
+{
+    draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
+
+    auto b = content_area();
+
+    if (checked())
     {
-        ignoreparam(rect);
+        Rect rect = b;
+        rect.set_width(rect.width() / 2);
+        rect.set_x(rect.x() + rect.width());
+        theme().draw_box(painter,
+        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+        rect,
+        color(Palette::ColorId::border),
+        color(Palette::ColorId::button_bg));
+    }
+    else
+    {
+        Rect rect = b;
+        rect.set_width(rect.width() / 2);
 
-        painter.draw_basic_box(box(), palette().color(Palette::BORDER),
-                               palette().color(Palette::BG));
-
-        if (checked())
+        if (enable_disable())
         {
-            Rect rect = box();
-            rect.w /= 2;
-            rect.x += rect.w;
-            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::HIGHLIGHT));
+            theme().draw_box(painter,
+            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+            rect,
+            color(Palette::ColorId::border, Palette::GroupId::disabled),
+            color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
         }
         else
         {
-            Rect rect = box();
-            rect.w /= 2;
-            painter.draw_gradient_box(rect, palette().color(Palette::BORDER),
-                                      false,
-                                      palette().color(Palette::MID));
+            theme().draw_box(painter,
+            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+            rect,
+            color(Palette::ColorId::border),
+            color(Palette::ColorId::button_bg));
         }
     }
+
+    if (!on_text().empty())
+    {
+        Rect rect = b;
+        rect.set_width(rect.width() / 2);
+        rect.set_x(rect.x() + rect.width());
+
+        if (checked())
+            painter.set(color(Palette::ColorId::button_text).color());
+        else
+            painter.set(color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+        painter.set(font());
+        auto size = painter.text_size(on_text());
+        Rect target = detail::align_algorithm(size,
+                                              rect,
+                                              AlignFlag::center);
+        painter.draw(target.point());
+        painter.draw(on_text());
+    }
+
+    if (!off_text().empty())
+    {
+        Rect rect = b;
+        rect.set_width(rect.width() / 2);
+
+        if (checked())
+            painter.set(color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+        else
+            painter.set(color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+        painter.set(font());
+        auto size = painter.text_size(off_text());
+        Rect target = detail::align_algorithm(size,
+                                              rect,
+                                              AlignFlag::center);
+        painter.draw(target.point());
+        painter.draw(off_text());
+    }
+}
 @endcode
 
 */

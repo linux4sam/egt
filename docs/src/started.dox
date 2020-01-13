@@ -126,11 +126,11 @@ on it.
 
 The include file <egt/ui> contains most basic functionality needed.
 
-\snippet "../examples/basic/basic.cpp" Example
+@snippet "../examples/basic/basic.cpp" Example
 
 If you want to use a UI file instead.
 
-\snippet "../examples/basicui/basicui.cpp" Example
+@snippet "../examples/basicui/basicui.cpp" Example
 
 */
 }}

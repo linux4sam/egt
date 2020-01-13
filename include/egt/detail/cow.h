@@ -9,7 +9,8 @@
 #include <memory>
 
 /**
- * @file Copy-On-Write wrappers.
+ * @file
+ * @brief Copy-On-Write wrappers.
  */
 
 namespace egt

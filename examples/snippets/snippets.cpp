@@ -165,6 +165,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         {
             /// @[animation1]
             TopWindow window;
+            /// @[animation1.1]
             Button button(window, "I Move");
             button.move_to_center(window.center());
 
@@ -176,6 +177,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             animation.on_change([&button](PropertyAnimator::Value value) { button.y(value); });
 
             animation.start();
+            /// @[animation1.1]
 
             window.show();
             /// @[animation1]

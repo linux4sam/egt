@@ -33,8 +33,8 @@ is searched in the following order:
 To access a resource with a file path, specify an absolute or relative file path.
 
 @code{.cpp}
-auto play = Image("/some/path/play.png");
-auto forward = Image("forward.png");
+auto play = egt::Image("/some/path/play.png");
+auto forward = egt::Image("forward.png");
 @endcode
 
 
@@ -44,7 +44,7 @@ EGT comes with a set of icons and images installed with EGT by default.  To
 access these icons and images, prefix the filename with a `@` symbol like so:
 
 @code{.cpp}
-auto bug = Image("@bug.png");
+auto bug = egt::Image("@bug.png");
 @endcode
 
 In the above example, bug.png is picked from a EGT installed default icons
@@ -52,7 +52,7 @@ directory (i.e. /usr/share/libegt/icons). If a user wants to pick a different
 icon from a different directory, use the following syntax:
 
 @code{.cpp}
-auto bug = Image("@128px/bug.png");
+auto bug = egt::Image("@128px/bug.png");
 @endcode
 
 The EGT installed default icons directory can be changed by setting an environment
@@ -79,7 +79,7 @@ Instead of using a filesystem path to a file, prefix the path with a colon (":")
 to interpret the path as a resource.  Periods are replaced with underscores.
 
 @code{.cpp}
-auto play = Image(":play_png");
+auto play = egt::Image(":play_png");
 @endcode
 
 */

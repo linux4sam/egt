@@ -195,21 +195,7 @@ In New Source File window, set File name basic.cpp & Click Finish
 
 copy below lines to basic.cpp file
 
-@code{.cpp}
-#include <egt/ui>
-
-int main(int argc, const char** argv)
-{
-    egt::Application app(argc, argv);
-
-    egt::TopWindow window;
-    egt::Button button(window, "Press Me");
-    button.set_align(egt::AlignFlag::center);
-    window.show();
-
-    return app.run();
-}
-@endcode
+@snippet "../examples/basic/basic.cpp" Example
 
 @imageSize{eclipse_new_cpp.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_new_cpp.png "Create cpp file"
