@@ -12,8 +12,8 @@ inline namespace v1
 namespace detail
 {
 
-Object::handle_t Object::on_event(const event_callback_t& handler,
-                                  filter_t mask)
+Object::RegisterHandle Object::on_event(const EventCallback& handler,
+                                        FilterFlags mask)
 {
     if (handler)
     {
@@ -43,7 +43,7 @@ void Object::invoke_handlers(Event& event)
     }
 }
 
-void Object::invoke_handlers(eventid event)
+void Object::invoke_handlers(EventId event)
 {
     Event e(event);
     invoke_handlers(e);
@@ -57,7 +57,7 @@ void Object::clear_handlers()
     m_callbacks->clear();
 }
 
-void Object::remove_handler(handle_t handle)
+void Object::remove_handler(RegisterHandle handle)
 {
     if (!m_callbacks)
         return;

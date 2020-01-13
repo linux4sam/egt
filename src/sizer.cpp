@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/enum.h"
 #include "egt/detail/layout.h"
 #include "egt/sizer.h"
 
@@ -53,7 +54,7 @@ void BoxSizer::layout()
         return;
 
     m_in_layout = true;
-    detail::scope_exit reset([this]() { m_in_layout = false; });
+    detail::ScopeExit reset([this]() { m_in_layout = false; });
 
     resize(super_rect());
 
@@ -63,7 +64,7 @@ void BoxSizer::layout()
     {
         auto min = child->box();
 
-        if (!child->flags().is_set(Widget::flag::no_autoresize))
+        if (!child->flags().is_set(Widget::Flag::no_autoresize))
         {
             if (min.width() < child->min_size_hint().width())
                 min.width(child->min_size_hint().width());
@@ -73,18 +74,18 @@ void BoxSizer::layout()
 
         uint32_t behave = 0;
 
-        if ((child->align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
+        if (child->align().is_set(AlignFlag::expand_horizontal))
             behave |= LAY_HFILL;
-        else if ((child->align() & alignmask::left) == alignmask::left)
+        else if (child->align().is_set(AlignFlag::left))
             behave |= LAY_LEFT;
-        else if ((child->align() & alignmask::right) == alignmask::right)
+        else if (child->align().is_set(AlignFlag::right))
             behave |= LAY_RIGHT;
 
-        if ((child->align() & alignmask::expand_vertical) == alignmask::expand_vertical)
+        if (child->align().is_set(AlignFlag::expand_vertical))
             behave |= LAY_VFILL;
-        else if ((child->align() & alignmask::top) == alignmask::top)
+        else if (child->align().is_set(AlignFlag::top))
             behave |= LAY_TOP;
-        else if ((child->align() & alignmask::bottom) == alignmask::bottom)
+        else if (child->align().is_set(AlignFlag::bottom))
             behave |= LAY_BOTTOM;
 
         rects.emplace_back(behave, min);

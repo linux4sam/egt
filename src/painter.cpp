@@ -107,7 +107,7 @@ Painter& Painter::draw(const Rect& rect, const Image& image)
     return *this;
 }
 
-Painter& Painter::draw(const std::string& str, const text_draw_flags& flags)
+Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)
 {
     if (str.empty())
         return *this;
@@ -121,7 +121,7 @@ Painter& Painter::draw(const std::string& str, const text_draw_flags& flags)
 
     cairo_get_current_point(m_cr.get(), &x, &y);
 
-    if (flags.is_set(text_flags::shadow))
+    if (flags.is_set(TextDrawFlag::shadow))
     {
         AutoSaveRestore sr(*this);
 

@@ -45,7 +45,7 @@ struct EGT_API OstreamWidgetSerializer
             " " << widget->box() << " " << widget->flags();
         out << " box(" << widget->margin() << "," <<
             widget->padding() << "," << widget->border() << ")";
-        out << " align(" << static_cast<int>(widget->align()) << ")";
+        out << " align(" << static_cast<int>(widget->align().raw()) << ")";
         out << std::endl;
 
         return true;

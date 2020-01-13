@@ -16,10 +16,10 @@ namespace egt
 inline namespace v1
 {
 
-Animation::Animation(float_t start, float_t end,
-                     const animation_callback_t& callback,
+Animation::Animation(EasingScalar start, EasingScalar end,
+                     const AnimationCallback& callback,
                      std::chrono::milliseconds duration,
-                     easing_func_t func)
+                     EasingFunc func)
     : m_start(start),
       m_end(end),
       m_easing(std::move(func)),
@@ -57,8 +57,8 @@ bool Animation::next()
     }
     else
     {
-        auto percent = std::chrono::duration<float_t, std::milli>(now - m_start_time).count() /
-                       std::chrono::duration<float_t, std::milli>(m_stop_time - m_start_time).count();
+        auto percent = std::chrono::duration<EasingScalar, std::milli>(now - m_start_time).count() /
+                       std::chrono::duration<EasingScalar, std::milli>(m_stop_time - m_start_time).count();
         auto result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
         if (m_round)
@@ -75,7 +75,7 @@ bool Animation::next()
     return m_running;
 }
 
-void Animation::easing_func(easing_func_t func)
+void Animation::easing_func(EasingFunc func)
 {
     if (!running())
         m_easing = std::move(func);
@@ -86,10 +86,10 @@ void Animation::stop()
     m_running = false;
 }
 
-AutoAnimation::AutoAnimation(float_t start, float_t end,
+AutoAnimation::AutoAnimation(EasingScalar start, EasingScalar end,
                              std::chrono::milliseconds duration,
-                             const easing_func_t& func,
-                             const animation_callback_t& callback)
+                             const EasingFunc& func,
+                             const AnimationCallback& callback)
     : Animation(start, end, callback, duration, func),
       m_timer(std::chrono::milliseconds(30))
 {
@@ -103,8 +103,8 @@ AutoAnimation::AutoAnimation(float_t start, float_t end,
 }
 
 AutoAnimation::AutoAnimation(std::chrono::milliseconds duration,
-                             const easing_func_t& func,
-                             const animation_callback_t& callback)
+                             const EasingFunc& func,
+                             const AnimationCallback& callback)
     : AutoAnimation({}, {}, duration, func, callback)
 {}
 

@@ -17,7 +17,7 @@ int main(int argc, const char** argv)
     capture.on_event([&capture](Event & event)
     {
         cout << "error: " << capture.error_message() << endl;
-    }, {eventid::error});
+    }, {EventId::error});
 
     Timer stop_timer(std::chrono::seconds(10));
     stop_timer.on_timeout([&capture, &app]()

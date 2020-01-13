@@ -31,7 +31,7 @@ static inline bool handler_dispatch(Event& event, Event& eevent,
     handler(event);
     if (event.quit())
         return true;
-    if (eevent.id() != eventid::none)
+    if (eevent.id() != EventId::none)
     {
         handler(eevent);
         if (event.quit())
@@ -54,9 +54,9 @@ void Input::dispatch(Event& event)
     assert(!m_dispatching);
 
     m_dispatching = true;
-    detail::scope_exit reset([this]() { m_dispatching = false; });
+    detail::ScopeExit reset([this]() { m_dispatching = false; });
 
-    if (event.id() == eventid::raw_pointer_down)
+    if (event.id() == EventId::raw_pointer_down)
     {
         // always reset on new down event
         detail::mouse_grab(nullptr);
@@ -65,7 +65,7 @@ void Input::dispatch(Event& event)
     auto eevent = m_mouse->handle(event);
 
     SPDLOG_TRACE("input event: {}", event);
-    if (eevent.id() != eventid::none)
+    if (eevent.id() != EventId::none)
     {
         SPDLOG_TRACE("input event: {}", eevent);
     }
@@ -90,15 +90,15 @@ void Input::dispatch(Event& event)
 
     switch (event.id())
     {
-    case eventid::raw_pointer_down:
-    case eventid::raw_pointer_up:
-    case eventid::raw_pointer_move:
-    case eventid::pointer_click:
-    case eventid::pointer_dblclick:
-    case eventid::pointer_hold:
-    case eventid::pointer_drag_start:
-    case eventid::pointer_drag:
-    case eventid::pointer_drag_stop:
+    case EventId::raw_pointer_down:
+    case EventId::raw_pointer_up:
+    case EventId::raw_pointer_move:
+    case EventId::pointer_click:
+    case EventId::pointer_dblclick:
+    case EventId::pointer_hold:
+    case EventId::pointer_drag_start:
+    case EventId::pointer_drag:
+    case EventId::pointer_drag_stop:
     {
         if (detail::mouse_grab())
         {
@@ -112,9 +112,9 @@ void Input::dispatch(Event& event)
 
         break;
     }
-    case eventid::keyboard_down:
-    case eventid::keyboard_up:
-    case eventid::keyboard_repeat:
+    case EventId::keyboard_down:
+    case EventId::keyboard_up:
+    case EventId::keyboard_repeat:
     {
         if (detail::keyboard_focus())
         {
@@ -142,15 +142,15 @@ void Input::dispatch(Event& event)
 
         switch (event.id())
         {
-        case eventid::raw_pointer_down:
-        case eventid::raw_pointer_up:
-        case eventid::raw_pointer_move:
-        case eventid::pointer_click:
-        case eventid::pointer_dblclick:
-        case eventid::pointer_hold:
-        case eventid::pointer_drag_start:
-        case eventid::pointer_drag:
-        case eventid::pointer_drag_stop:
+        case EventId::raw_pointer_down:
+        case EventId::raw_pointer_up:
+        case EventId::raw_pointer_move:
+        case EventId::pointer_click:
+        case EventId::pointer_dblclick:
+        case EventId::pointer_hold:
+        case EventId::pointer_drag_start:
+        case EventId::pointer_drag:
+        case EventId::pointer_drag_stop:
         {
             const auto pos = w->display_to_local(event.pointer().point);
             if (!Rect(w->size()).intersect(pos))
@@ -203,7 +203,7 @@ void keyboard_focus(Widget* widget)
 
     if (keyboard_focus_widget)
     {
-        Event event(eventid::on_lost_focus);
+        Event event(EventId::on_lost_focus);
         keyboard_focus_widget->handle(event);
     }
 
@@ -211,7 +211,7 @@ void keyboard_focus(Widget* widget)
 
     if (widget)
     {
-        Event event(eventid::on_gain_focus);
+        Event event(EventId::on_gain_focus);
         widget->handle(event);
     }
 }

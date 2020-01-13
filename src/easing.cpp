@@ -12,31 +12,31 @@ namespace egt
 inline namespace v1
 {
 
-constexpr static auto NEGCOSPI = float_t(1.61803398874989);
+constexpr static auto NEGCOSPI = EasingScalar(1.61803398874989);
 
-float_t easing_linear(float_t p)
+EasingScalar easing_linear(EasingScalar p)
 {
     return p;
 }
 
-float_t easing_easy(float_t p)
+EasingScalar easing_easy(EasingScalar p)
 {
     return p * p * (3.0f - 2.0f * p);
 }
 
-float_t easing_easy_slow(float_t p)
+EasingScalar easing_easy_slow(EasingScalar p)
 {
     p = easing_easy(p);
     return p * p * (3.0f - 2.0f * p);
 }
 
-float_t easing_extend(float_t p)
+EasingScalar easing_extend(EasingScalar p)
 {
     p = (p * 1.4f) - 0.2f;
-    return 0.5f - std::cos(detail::pi<float_t>() * p) / NEGCOSPI;
+    return 0.5f - std::cos(detail::pi<EasingScalar>() * p) / NEGCOSPI;
 }
 
-static inline float_t power(float_t base, float_t exponent)
+static inline EasingScalar power(EasingScalar base, EasingScalar exponent)
 {
     if (detail::float_compare(exponent, 0.0f))
         return 1.0f;
@@ -46,38 +46,38 @@ static inline float_t power(float_t base, float_t exponent)
     return std::exp(exponent * std::log(base));
 }
 
-float_t easing_drop(float_t p)
+EasingScalar easing_drop(EasingScalar p)
 {
     return p * p;
 }
 
-float_t easing_drop_slow(float_t p)
+EasingScalar easing_drop_slow(EasingScalar p)
 {
     return p * p * p * p * p;
 }
 
-float_t easing_snap(float_t p)
+EasingScalar easing_snap(EasingScalar p)
 {
     p = p * p;
     p = (p * 1.4f) - 0.2f;
-    return 0.5f - std::cos(detail::pi<float_t>() * p) / NEGCOSPI;
+    return 0.5f - std::cos(detail::pi<EasingScalar>() * p) / NEGCOSPI;
 }
 
-float_t easing_bounce(float_t p)
+EasingScalar easing_bounce(EasingScalar p)
 {
     if (p > 0.9f)
     {
-        float_t result = p - 0.95f;
+        EasingScalar result = p - 0.95f;
         return 1.0f + result * result * 20.0f - (0.05f * 0.05f * 20.0f);
     }
     else if (p > 0.75f)
     {
-        float_t result = p - 0.825f;
+        EasingScalar result = p - 0.825f;
         return 1.0f + result * result * 16.0f - (0.075f * 0.075f * 16.0f);
     }
     else if (p > 0.5f)
     {
-        float_t result = p - 0.625f;
+        EasingScalar result = p - 0.625f;
         return 1.0f + result * result * 12.0f - (0.125f * 0.125f * 12.0f);
     }
 
@@ -85,12 +85,12 @@ float_t easing_bounce(float_t p)
     return p * p;
 }
 
-float_t easing_bouncy(float_t p)
+EasingScalar easing_bouncy(EasingScalar p)
 {
-    float_t result = 1.0f;
-    float_t scale = 5.0f;
-    float_t start = 0.5f;
-    float_t step = 0.2f;
+    EasingScalar result = 1.0f;
+    EasingScalar scale = 5.0f;
+    EasingScalar start = 0.5f;
+    EasingScalar step = 0.2f;
 
     if (p < start)
     {
@@ -118,21 +118,21 @@ float_t easing_bouncy(float_t p)
     return result;
 }
 
-float_t easing_rubber(float_t p)
+EasingScalar easing_rubber(EasingScalar p)
 {
     if (p > 0.9f)
     {
-        float_t result = p - 0.95f;
+        EasingScalar result = p - 0.95f;
         return 1.0f - result * result * 20.0f + (0.05f * 0.05f * 20.0f);
     }
     else if (p > 0.75f)
     {
-        float_t result = p - 0.825f;
+        EasingScalar result = p - 0.825f;
         return 1.0f + result * result * 18.0f - (0.075f * 0.075f * 18.0f);
     }
     else if (p > 0.5f)
     {
-        float_t result = p - 0.625f;
+        EasingScalar result = p - 0.625f;
         return 1.0f - result * result * 14.0f + (0.125f * 0.125f * 14.0f);
     }
 
@@ -140,37 +140,37 @@ float_t easing_rubber(float_t p)
     return p * p;
 }
 
-float_t easing_spring(float_t p)
+EasingScalar easing_spring(EasingScalar p)
 {
     p = p * p;
-    float_t result = std::sin(detail::pi<float_t>() * p * p * 10.0f - detail::pi<float_t>() / 2.0f) / 4.0f;
+    EasingScalar result = std::sin(detail::pi<EasingScalar>() * p * p * 10.0f - detail::pi<EasingScalar>() / 2.0f) / 4.0f;
     result = result * (1.0f - p) + 1.0f;
     if (p < 0.3f)
         result = result * easing_easy(p / 0.3f);
     return result;
 }
 
-float_t easing_boing(float_t p)
+EasingScalar easing_boing(EasingScalar p)
 {
     p = power(p, 1.5f);
-    float_t result = std::sin(detail::pi<float_t>() * power(p, 2.0f) * 20.0f - detail::pi<float_t>() / 2.0f) / 4.0f;
+    EasingScalar result = std::sin(detail::pi<EasingScalar>() * power(p, 2.0f) * 20.0f - detail::pi<EasingScalar>() / 2.0f) / 4.0f;
     result = result * (1.0f - p) + 1.0f;
     if (p < 0.2f)
         result = result * easing_easy(p / 0.2f);
     return result;
 }
 
-float_t easing_quadratic_easein(float_t p)
+EasingScalar easing_quadratic_easein(EasingScalar p)
 {
     return p * p;
 }
 
-float_t easing_quadratic_easeout(float_t p)
+EasingScalar easing_quadratic_easeout(EasingScalar p)
 {
     return -(p * (p - 2));
 }
 
-float_t easing_quadratic_easeinout(float_t p)
+EasingScalar easing_quadratic_easeinout(EasingScalar p)
 {
     if (p < 0.5)
     {
@@ -182,18 +182,18 @@ float_t easing_quadratic_easeinout(float_t p)
     }
 }
 
-float_t easing_cubic_easein(float_t p)
+EasingScalar easing_cubic_easein(EasingScalar p)
 {
     return p * p * p;
 }
 
-float_t easing_cubic_easeout(float_t p)
+EasingScalar easing_cubic_easeout(EasingScalar p)
 {
-    float_t f = (p - 1);
+    EasingScalar f = (p - 1);
     return f * f * f + 1;
 }
 
-float_t easing_cubic_easeinout(float_t p)
+EasingScalar easing_cubic_easeinout(EasingScalar p)
 {
     if (p < 0.5)
     {
@@ -201,23 +201,23 @@ float_t easing_cubic_easeinout(float_t p)
     }
     else
     {
-        float_t f = ((2 * p) - 2);
+        EasingScalar f = ((2 * p) - 2);
         return 0.5 * f * f * f + 1;
     }
 }
 
-float_t easing_quartic_easein(float_t p)
+EasingScalar easing_quartic_easein(EasingScalar p)
 {
     return p * p * p * p;
 }
 
-float_t easing_quartic_easeout(float_t p)
+EasingScalar easing_quartic_easeout(EasingScalar p)
 {
-    float_t f = (p - 1);
+    EasingScalar f = (p - 1);
     return f * f * f * (1 - p) + 1;
 }
 
-float_t easing_quartic_easeinout(float_t p)
+EasingScalar easing_quartic_easeinout(EasingScalar p)
 {
     if (p < 0.5)
     {
@@ -225,23 +225,23 @@ float_t easing_quartic_easeinout(float_t p)
     }
     else
     {
-        float_t f = (p - 1);
+        EasingScalar f = (p - 1);
         return -8 * f * f * f * f + 1;
     }
 }
 
-float_t easing_quintic_easein(float_t p)
+EasingScalar easing_quintic_easein(EasingScalar p)
 {
     return p * p * p * p * p;
 }
 
-float_t easing_quintic_easeout(float_t p)
+EasingScalar easing_quintic_easeout(EasingScalar p)
 {
-    float_t f = (p - 1);
+    EasingScalar f = (p - 1);
     return f * f * f * f * f + 1;
 }
 
-float_t easing_quintic_easeinout(float_t p)
+EasingScalar easing_quintic_easeinout(EasingScalar p)
 {
     if (p < 0.5)
     {
@@ -249,37 +249,37 @@ float_t easing_quintic_easeinout(float_t p)
     }
     else
     {
-        float_t f = ((2 * p) - 2);
+        EasingScalar f = ((2 * p) - 2);
         return  0.5 * f * f * f * f * f + 1;
     }
 }
 
-float_t easing_sine_easein(float_t p)
+EasingScalar easing_sine_easein(EasingScalar p)
 {
-    return std::sin((p - 1) * detail::pi_2<float_t>()) + 1;
+    return std::sin((p - 1) * detail::pi_2<EasingScalar>()) + 1;
 }
 
-float_t easing_sine_easeout(float_t p)
+EasingScalar easing_sine_easeout(EasingScalar p)
 {
-    return std::sin(p * detail::pi_2<float_t>());
+    return std::sin(p * detail::pi_2<EasingScalar>());
 }
 
-float_t easing_sine_easeinout(float_t p)
+EasingScalar easing_sine_easeinout(EasingScalar p)
 {
-    return 0.5 * (1 - std::cos(p * detail::pi<float_t>()));
+    return 0.5 * (1 - std::cos(p * detail::pi<EasingScalar>()));
 }
 
-float_t easing_circular_easein(float_t p)
+EasingScalar easing_circular_easein(EasingScalar p)
 {
     return 1 - std::sqrt(1 - (p * p));
 }
 
-float_t easing_circular_easeout(float_t p)
+EasingScalar easing_circular_easeout(EasingScalar p)
 {
     return std::sqrt((2 - p) * p);
 }
 
-float_t easing_circular_easeinout(float_t p)
+EasingScalar easing_circular_easeinout(EasingScalar p)
 {
     if (p < 0.5)
     {
@@ -291,17 +291,17 @@ float_t easing_circular_easeinout(float_t p)
     }
 }
 
-float_t easing_exponential_easein(float_t p)
+EasingScalar easing_exponential_easein(EasingScalar p)
 {
     return detail::float_compare(p, 0.0f) ? p : std::pow(2, 10 * (p - 1));
 }
 
-float_t easing_exponential_easeout(float_t p)
+EasingScalar easing_exponential_easeout(EasingScalar p)
 {
     return detail::float_compare(p, 1.0f) ? p : 1 - std::pow(2, -10 * p);
 }
 
-float_t easing_exponential_easeinout(float_t p)
+EasingScalar easing_exponential_easeinout(EasingScalar p)
 {
     if (detail::float_compare(p, 0.0f) || detail::float_compare(p, 1.0f))
         return p;
@@ -316,7 +316,7 @@ float_t easing_exponential_easeinout(float_t p)
     }
 }
 
-float_t easing_cubic_bezier::operator()(float_t p)
+EasingScalar easing_cubic_bezier::operator()(EasingScalar p)
 {
     return std::pow(1. - p, 3.) * m_p0 +
            3. * p * std::pow(1. - p, 2.) * m_p1 +

@@ -30,20 +30,20 @@ void SkyTheme::init_draw()
         {
             auto fgborder = widget.theme().default_border();
 
-            widget.theme().draw_box(painter, Theme::boxtype::fill, handle,
+            widget.theme().draw_box(painter, Theme::BoxFlag::fill, handle,
                                     widget.color(Palette::ColorId::button_fg),
                                     widget.color(Palette::ColorId::bg),
                                     fgborder);
 
             auto shrink = handle;
             shrink.shrink_around_center(handle.width() / 2);
-            widget.theme().draw_box(painter, Theme::boxtype::fill, shrink,
+            widget.theme().draw_box(painter, Theme::BoxFlag::fill, shrink,
                                     widget.color(Palette::ColorId::button_fg),
                                     widget.color(Palette::ColorId::button_fg));
         }
         else
         {
-            widget.theme().draw_box(painter, Theme::boxtype::fill, handle,
+            widget.theme().draw_box(painter, Theme::BoxFlag::fill, handle,
                                     widget.color(Palette::ColorId::button_fg),
                                     widget.color(Palette::ColorId::bg),
                                     widget.theme().default_border());

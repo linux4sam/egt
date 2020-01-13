@@ -74,7 +74,7 @@ public:
     /**
      * Set option name text alignment.
      */
-    inline void name_align(alignmask align)
+    inline void set_name_align(AlignFlags align)
     {
         m_name_align = align;
     }
@@ -82,7 +82,7 @@ public:
     /**
      * Set group name text alignment.
      */
-    inline void group_align(alignmask align)
+    inline void set_group_align(AlignFlags align)
     {
         m_group_align = align;
     }
@@ -111,12 +111,12 @@ protected:
     /**
      * Option name text alignment.
      */
-    alignmask m_name_align{alignmask::center | alignmask::left};
+    AlignFlags m_name_align{AlignFlag::center | AlignFlag::left};
 
     /**
      * Group name text alignment.
      */
-    alignmask m_group_align{alignmask::bottom | alignmask::left};
+    AlignFlags m_group_align{AlignFlag::bottom | AlignFlag::left};
 };
 
 }

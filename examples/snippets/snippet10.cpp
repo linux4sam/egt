@@ -10,7 +10,7 @@ using namespace std;
 using namespace egt;
 using namespace egt::experimental;
 
-static vector<pair<easing_func_t, string>> easing_functions =
+static vector<pair<EasingFunc, string>> easing_functions =
 {
     {easing_linear, "linear"},
     {easing_easy, "easy"},
@@ -48,7 +48,7 @@ static vector<pair<easing_func_t, string>> easing_functions =
     {easing_cubic_bezier(), "cubic bezier"}
 };
 
-static LineChart::data_array create_data(easing_func_t easing)
+static LineChart::data_array create_data(EasingFunc easing)
 {
     LineChart::data_array data;
     for (float i = 0.; i <= 1.; i += .001)

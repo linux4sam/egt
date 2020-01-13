@@ -19,7 +19,7 @@ namespace detail
 
 TextWidget::TextWidget(const std::string& text,
                        const Rect& rect,
-                       alignmask text_align) noexcept
+                       const AlignFlags& text_align) noexcept
     : Widget(rect),
       m_text_align(text_align),
       m_text(text)
@@ -38,7 +38,7 @@ void TextWidget::text(const std::string& str)
 {
     if (detail::change_if_diff<>(m_text, str))
     {
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
         damage();
         parent_layout();
     }

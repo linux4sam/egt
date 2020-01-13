@@ -15,29 +15,27 @@ namespace egt
 {
 inline namespace v1
 {
-const alignmask Label::DEFAULT_TEXT_ALIGN = alignmask::center;
+const AlignFlags Label::DEFAULT_TEXT_ALIGN = AlignFlag::center;
 
-Label::Label(const std::string& text, alignmask text_align) noexcept
+Label::Label(const std::string& text, const AlignFlags& text_align) noexcept
     : Label(text, {}, text_align)
 {
 }
 
-Label::Label(const std::string& text, const Rect& rect, alignmask text_align) noexcept
+Label::Label(const std::string& text, const Rect& rect, const AlignFlags& text_align) noexcept
     : TextWidget(text, rect, text_align)
 {
     name("Label" + std::to_string(m_widgetid));
-
-    boxtype(Theme::boxtype::none);
 }
 
-Label::Label(Frame& parent, const std::string& text, alignmask text_align) noexcept
+Label::Label(Frame& parent, const std::string& text, const AlignFlags& text_align) noexcept
     : Label(text, text_align)
 {
     parent.add(*this);
 }
 
 Label::Label(Frame& parent, const std::string& text, const Rect& rect,
-             alignmask text_align) noexcept
+             const AlignFlags& text_align) noexcept
     : Label(text, rect, text_align)
 {
     parent.add(*this);
@@ -65,9 +63,9 @@ void Label::default_draw(Label& widget, Painter& painter, const Rect&)
                       widget.content_area(),
                       widget.text(),
                       widget.font(),
-                      TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                      TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                       widget.text_align(),
-                      justification::middle,
+                      Justification::middle,
                       widget.color(Palette::ColorId::label_text).color());
 }
 
@@ -89,14 +87,14 @@ Size Label::min_size_hint() const
 }
 
 ImageLabel::ImageLabel(const std::string& text,
-                       alignmask text_align) noexcept
+                       const AlignFlags& text_align) noexcept
     : ImageLabel(Image(), text, {}, text_align)
 {
 }
 
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
-                       alignmask text_align) noexcept
+                       const AlignFlags& text_align) noexcept
     : ImageLabel(image, text, {}, text_align)
 {
 }
@@ -104,21 +102,21 @@ ImageLabel::ImageLabel(const Image& image,
 ImageLabel::ImageLabel(const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       alignmask text_align) noexcept
+                       const AlignFlags& text_align) noexcept
     : Label(text, rect, text_align),
       m_image(image)
 {
     name("ImageLabel" + std::to_string(m_widgetid));
 
     if (text.empty())
-        image_align(alignmask::center);
-    do_image(image);
+        image_align(AlignFlag::center);
+    do_set_image(image);
 }
 
 ImageLabel::ImageLabel(Frame& parent,
                        const Image& image,
                        const std::string& text,
-                       alignmask text_align) noexcept
+                       const AlignFlags& text_align) noexcept
     : ImageLabel(image, text, text_align)
 {
     parent.add(*this);
@@ -128,7 +126,7 @@ ImageLabel::ImageLabel(Frame& parent,
                        const Image& image,
                        const std::string& text,
                        const Rect& rect,
-                       alignmask text_align) noexcept
+                       const AlignFlags& text_align) noexcept
     : ImageLabel(image, text, rect, text_align)
 {
     parent.add(*this);
@@ -157,9 +155,9 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
                               widget.content_area(),
                               text,
                               widget.font(),
-                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
-                              justification::middle,
+                              Justification::middle,
                               widget.color(Palette::ColorId::label_text).color(),
                               widget.image_align(),
                               widget.image());
@@ -170,9 +168,9 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
                               widget.content_area(),
                               text,
                               widget.font(),
-                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
-                              justification::middle,
+                              Justification::middle,
                               widget.color(Palette::ColorId::label_text).color());
         }
     }
@@ -200,13 +198,13 @@ Size ImageLabel::min_size_hint() const
 
     if (!m_image.size().empty())
     {
-        if ((image_align() & alignmask::left) == alignmask::left ||
-            (image_align() & alignmask::right) == alignmask::right)
+        if (image_align().is_set(AlignFlag::left) ||
+            image_align().is_set(AlignFlag::right))
         {
             size += Size(m_image.width(), 0);
         }
-        else if ((image_align() & alignmask::top) == alignmask::top ||
-                 (image_align() & alignmask::bottom) == alignmask::bottom)
+        else if (image_align().is_set(AlignFlag::top) ||
+                 image_align().is_set(AlignFlag::bottom))
         {
             size += Size(0, m_image.height());
         }
@@ -218,7 +216,7 @@ Size ImageLabel::min_size_hint() const
     return res;
 }
 
-void ImageLabel::do_image(const Image& image)
+void ImageLabel::do_set_image(const Image& image)
 {
     if (size().empty() && !image.empty())
         resize(image.size() + Size(moat() * 2, moat() * 2));
@@ -229,7 +227,7 @@ void ImageLabel::do_image(const Image& image)
 
 void ImageLabel::image(const Image& image)
 {
-    do_image(image);
+    do_set_image(image);
 }
 
 void ImageLabel::show_label(bool value)

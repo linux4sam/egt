@@ -41,7 +41,7 @@ public:
      */
     explicit TextWidget(const std::string& text = {},
                         const Rect& rect = {},
-                        alignmask text_align = alignmask::center) noexcept;
+                        const AlignFlags& text_align = AlignFlag::center) noexcept;
 
     /**
      * Set the text.
@@ -65,7 +65,7 @@ public:
      *
      * @param[in] align Alignment for the text.
      */
-    void text_align(alignmask align)
+    void text_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_text_align, align))
             damage();
@@ -74,7 +74,7 @@ public:
     /**
      * Get the text alignment within the Label.
      */
-    alignmask text_align() const { return m_text_align; }
+    AlignFlags text_align() const { return m_text_align; }
 
     /**
      * Get the length of the text.
@@ -99,7 +99,7 @@ protected:
     /**
      * Alignment of the text.
      */
-    alignmask m_text_align{alignmask::center};
+    AlignFlags m_text_align{AlignFlag::center};
 
     /**
      * The text.

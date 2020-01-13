@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/canvas.h"
+#include "egt/detail/enum.h"
 #include "egt/font.h"
 #include <cairo-ft.h>
 #include <cassert>
@@ -18,9 +19,9 @@ inline namespace v1
 {
 
 const char* Font::DEFAULT_FACE = "Free Sans";
-const Font::weightid Font::DEFAULT_WEIGHT = Font::weightid::normal;
-const Font::fontsize Font::DEFAULT_SIZE = 18.f;
-const Font::slantid Font::DEFAULT_SLANT = Font::slantid::normal;
+const Font::Weight Font::DEFAULT_WEIGHT = Font::Weight::normal;
+const Font::Size Font::DEFAULT_SIZE = 18.f;
+const Font::Slant Font::DEFAULT_SLANT = Font::Slant::normal;
 
 static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& font)
 {
@@ -40,9 +41,9 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
     int weight = FC_WEIGHT_NORMAL;
     switch (font.weight())
     {
-    case Font::weightid::normal:
+    case Font::Weight::normal:
         break;
-    case Font::weightid::bold:
+    case Font::Weight::bold:
         weight = FC_WEIGHT_BOLD;
         break;
     }
@@ -51,12 +52,12 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
     int slant = FC_SLANT_ROMAN;
     switch (font.slant())
     {
-    case Font::slantid::normal:
+    case Font::Slant::normal:
         break;
-    case Font::slantid::italic:
+    case Font::Slant::italic:
         slant = FC_SLANT_ITALIC;
         break;
-    case Font::slantid::oblique:
+    case Font::Slant::oblique:
         slant = FC_SLANT_OBLIQUE;
         break;
     }
@@ -112,49 +113,64 @@ Font::Font(const std::string& face)
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(const std::string& face, fontsize size)
+Font::Font(const std::string& face, Font::Size size)
     : m_face(face),
       m_size(size),
       m_weight(DEFAULT_WEIGHT),
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(const std::string& face, fontsize size, weightid weight, slantid slant)
+Font::Font(const std::string& face, Font::Size size, Font::Weight weight, Font::Slant slant)
     : m_face(face),
       m_size(size),
       m_weight(weight),
       m_slant(slant)
 {}
 
-Font::Font(fontsize size)
+Font::Font(Font::Size size)
     : m_face(DEFAULT_FACE),
       m_size(size),
       m_weight(DEFAULT_WEIGHT),
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(fontsize size, weightid weight)
+Font::Font(Font::Size size, Font::Weight weight)
     : m_face(DEFAULT_FACE),
       m_size(size),
       m_weight(weight),
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(weightid weight)
+Font::Font(Font::Weight weight)
     : m_face(DEFAULT_FACE),
       m_size(DEFAULT_SIZE),
       m_weight(weight),
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(slantid slant)
+Font::Font(Font::Slant slant)
     : m_face(DEFAULT_FACE),
       m_size(DEFAULT_SIZE),
       m_weight(DEFAULT_WEIGHT),
       m_slant(slant)
 {}
 
-struct FontCache : detail::noncopyable
+template<>
+std::map<Font::Weight, char const*> detail::EnumStrings<Font::Weight>::data =
+{
+    {Font::Weight::normal, "normal"},
+    {Font::Weight::bold, "bold"},
+};
+
+template<>
+std::map<Font::Slant, char const*> detail::EnumStrings<Font::Slant>::data =
+{
+    {Font::Slant::normal, "normal"},
+    {Font::Slant::italic, "italic"},
+    {Font::Slant::oblique, "oblique"},
+};
+
+struct FontCache : detail::NonCopyable
 {
     struct FontCompare
     {

@@ -19,10 +19,10 @@ int main(int argc, const char** argv)
     win.padding(10);
     win.margin(10);
 
-    BoxSizer vsizer(win, orientation::vertical);
+    BoxSizer vsizer(win, Orientation::vertical);
     expand(vsizer);
 
-    BoxSizer sizer0(vsizer, orientation::horizontal);
+    BoxSizer sizer0(vsizer, Orientation::horizontal);
     expand_horizontal(sizer0);
     sizer0.margin(10);
 
@@ -31,7 +31,7 @@ int main(int argc, const char** argv)
         new Button(sizer0, "Button " + std::to_string(i));
     }
 
-    BoxSizer sizer3(vsizer, orientation::horizontal);
+    BoxSizer sizer3(vsizer, Orientation::horizontal);
     expand_horizontal(sizer3);
 
     for (auto i = 0; i < 4; ++i)
@@ -39,7 +39,7 @@ int main(int argc, const char** argv)
         new Button(sizer3, "Button " + std::to_string(i));
     }
 
-    BoxSizer sizer1(vsizer, orientation::vertical);
+    BoxSizer sizer1(vsizer, Orientation::vertical);
     expand(sizer1);
 
     for (auto i = 0; i < 4; ++i)

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/enum.h"
 #include "egt/detail/string.h"
 #include "egt/widget.h"
 #include "egt/widgetflags.h"
@@ -15,106 +16,86 @@ namespace egt
 inline namespace v1
 {
 
-static const std::map<Widget::flag, std::string>& flag_strings()
+template<>
+std::map<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data =
 {
-    static std::map<Widget::flag, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(Widget::flag::plane_window);
-        MAPITEM(Widget::flag::window);
-        MAPITEM(Widget::flag::frame);
-        MAPITEM(Widget::flag::disabled);
-        MAPITEM(Widget::flag::readonly);
-        MAPITEM(Widget::flag::active);
-        MAPITEM(Widget::flag::invisible);
-        MAPITEM(Widget::flag::grab_mouse);
-        MAPITEM(Widget::flag::no_clip);
-        MAPITEM(Widget::flag::no_layout);
-        MAPITEM(Widget::flag::no_autoresize);
-#undef MAPITEM
-    }
-    return strings;
+    {Widget::Flag::plane_window, "plane_window"},
+    {Widget::Flag::window, "window"},
+    {Widget::Flag::frame, "frame"},
+    {Widget::Flag::disabled, "disabled"},
+    {Widget::Flag::readonly, "readonly"},
+    {Widget::Flag::active, "active"},
+    {Widget::Flag::invisible, "invisible"},
+    {Widget::Flag::grab_mouse, "grab_mouse"},
+    {Widget::Flag::no_clip, "no_clip"},
+    {Widget::Flag::no_layout, "no_layout"},
+    {Widget::Flag::no_autoresize, "no_autoresize"},
+    {Widget::Flag::checked, "checked"},
+};
+
+std::ostream& operator<<(std::ostream& os, const Widget::Flags& flags)
+{
+    return os << flags.to_string();
 }
 
-std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags)
+std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag)
 {
-    if (!flags.empty())
-    {
-        detail::join(os, flags.get(), "|");
-    }
-    return os;
+    return os << detail::enum_to_string(flag);
 }
 
-std::ostream& operator<<(std::ostream& os, const Widget::flag& flag)
+template<>
+std::map<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data =
 {
-    const auto& strings = flag_strings();
+    {AlignFlag::center_horizontal, "center_horizontal"},
+    {AlignFlag::center_vertical, "center_vertical"},
+    {AlignFlag::center, "center"},
+    {AlignFlag::left, "left"},
+    {AlignFlag::right, "right"},
+    {AlignFlag::top, "top"},
+    {AlignFlag::bottom, "bottom"},
+    {AlignFlag::expand_horizontal, "expand_horizontal"},
+    {AlignFlag::expand_vertical, "expand_vertical"},
+    {AlignFlag::expand, "expand"},
+};
 
-    os << strings.at(flag);
-    return os;
+std::ostream& operator<<(std::ostream& os, const AlignFlags& align)
+{
+    return os << align.to_string();
 }
 
-static const std::map<alignmask, std::string>& alignmask_strings()
+template<>
+std::map<WindowHint, char const*> detail::EnumStrings<WindowHint>::data =
 {
-    static std::map<alignmask, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        // MAPITEM(alignmask::none); not included intentionally
-        MAPITEM(alignmask::left);
-        MAPITEM(alignmask::right);
-        MAPITEM(alignmask::center_horizontal);
-        MAPITEM(alignmask::top);
-        MAPITEM(alignmask::bottom);
-        MAPITEM(alignmask::center_vertical);
-        MAPITEM(alignmask::expand_horizontal);
-        MAPITEM(alignmask::expand_vertical);
-#undef MAPITEM
-    }
-    return strings;
+    {WindowHint::automatic, "automatic"},
+    {WindowHint::software, "software"},
+    {WindowHint::overlay, "overlay"},
+    {WindowHint::heo_overlay, "heo_overlay"},
+    {WindowHint::cursor_overlay, "cursor_overlay"},
+};
+
+std::ostream& operator<<(std::ostream& os, const WindowHint& hint)
+{
+    return os << detail::enum_to_string(hint);
 }
 
-std::ostream& operator<<(std::ostream& os, const alignmask& align)
+template<>
+std::map<Orientation, char const*> detail::EnumStrings<Orientation>::data =
 {
-    if (align == alignmask::none)
-        return os;
+    {Orientation::horizontal, "horizontal"},
+    {Orientation::vertical, "vertical"},
+    {Orientation::flex, "flex"},
+    {Orientation::none, "none"},
+};
 
-    const auto& strings = alignmask_strings();
-
-    bool first = true;
-    for (auto& item : strings)
-    {
-        if ((item.first & align) == item.first)
-        {
-            if (first)
-                first = false;
-            else
-                os << "|";
-
-            os << item.second;
-        }
-    }
-
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const windowhint& event)
+template<>
+std::map<Justification, char const*> detail::EnumStrings<Justification>::data =
 {
-    static std::map<windowhint, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(windowhint::automatic);
-        MAPITEM(windowhint::software);
-        MAPITEM(windowhint::overlay);
-        MAPITEM(windowhint::heo_overlay);
-        MAPITEM(windowhint::cursor_overlay);
-#undef MAPITEM
-    }
-
-    os << strings[event];
-    return os;
-}
+    {Justification::start, "start"},
+    {Justification::middle, "middle"},
+    {Justification::ending, "ending"},
+    {Justification::justify, "justify"},
+    {Justification::none, "none"},
+};
 
 }
 }

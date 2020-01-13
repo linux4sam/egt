@@ -34,7 +34,7 @@ Screen::Screen()
     }
 }
 
-void Screen::flip(const damage_array& damage)
+void Screen::flip(const DamageArray& damage)
 {
     if (!damage.empty() && index() < m_buffers.size())
     {
@@ -77,7 +77,7 @@ static inline View::Format simd_format(cairo_format_t format)
 
 static void simd_copy(cairo_surface_t* src_surface,
                       cairo_surface_t* dst_surface,
-                      const Screen::damage_array& damage)
+                      const Screen::DamageArray& damage)
 {
     cairo_surface_flush(src_surface);
 
@@ -152,7 +152,7 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
     cairo_surface_flush(buffer.surface.get());
 }
 
-void Screen::damage_algorithm(Screen::damage_array& damage, Rect rect)
+void Screen::damage_algorithm(Screen::DamageArray& damage, Rect rect)
 {
     if (rect.empty())
         return;
@@ -194,7 +194,7 @@ static inline bool no_composition_buffer()
     return value == 1;
 }
 
-void Screen::init(void** ptr, uint32_t count, const Size& size, pixel_format format)
+void Screen::init(void** ptr, uint32_t count, const Size& size, PixelFormat format)
 {
     m_size = size;
 

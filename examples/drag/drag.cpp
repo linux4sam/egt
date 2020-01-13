@@ -23,18 +23,18 @@ public:
           m_grip(Image("grip.png")),
           m_arrows(Image("arrows.png"))
     {
-        flags().set(Widget::flag::grab_mouse);
+        flags().set(Widget::Flag::grab_mouse);
         color(Palette::ColorId::bg, Color(0x526d7480));
         color(Palette::ColorId::bg, Color(0xff6d7480), Palette::GroupId::active);
 
         add(m_grip);
         m_grip.resize(Size(50, 50));
-        m_grip.align(alignmask::right | alignmask::bottom);
+        m_grip.align(AlignFlag::right | AlignFlag::bottom);
 
         add(m_arrows);
         m_arrows.resize(box().size() / 2);
         m_arrows.image().resize(box().size() / 2);
-        m_arrows.align(alignmask::center);
+        m_arrows.align(AlignFlag::center);
     }
 
     virtual void handle(Event& event) override
@@ -43,10 +43,10 @@ public:
 
         switch (event.id())
         {
-        case eventid::pointer_drag_start:
+        case EventId::pointer_drag_start:
             m_start_point = box().point();
             break;
-        case eventid::pointer_drag:
+        case EventId::pointer_drag:
         {
             auto diff = event.pointer().drag_start - event.pointer().point;
             move(m_start_point - Point(diff.x(), diff.y()));
@@ -87,8 +87,8 @@ int main(int argc, const char** argv)
     box1.show();
     box2.show();
 
-    Label label1("CPU: ----", Rect(), alignmask::left | alignmask::center);
-    label1.align(alignmask::left | alignmask::bottom);
+    Label label1("CPU: ----", Rect(), AlignFlag::left | AlignFlag::center);
+    label1.align(AlignFlag::left | AlignFlag::bottom);
     label1.color(Palette::ColorId::label_text, Palette::white);
     label1.color(Palette::ColorId::bg, Palette::transparent);
     window.add(label1);

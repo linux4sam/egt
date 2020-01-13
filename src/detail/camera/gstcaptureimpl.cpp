@@ -26,7 +26,7 @@ namespace detail
 
 CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
                          const std::string& output,
-                         pixel_format format,
+                         PixelFormat format,
                          experimental::CameraCapture::container_type container,
                          const std::string& device)
     : m_interface(interface),
@@ -123,7 +123,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         asio::post(Application::instance().event().io(), [impl, error_message]()
         {
             impl->m_err_message = error_message;
-            Event event(eventid::error);
+            Event event(EventId::error);
             impl->m_interface.invoke_handlers(event);
         });
         break;
@@ -173,7 +173,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 
 void CaptureImpl::set_output(const std::string& output,
                              experimental::CameraCapture::container_type container,
-                             pixel_format format)
+                             PixelFormat format)
 {
     m_output = output;
     m_format = format;

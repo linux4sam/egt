@@ -34,44 +34,44 @@ struct EGT_API StringItem : public ImageLabel
 {
     StringItem(const std::string& text = {},
                const Image& image = {},
-               alignmask align = alignmask::center) noexcept
+               const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(image, text, align)
     {
-        boxtype(Theme::boxtype::fill);
+        boxtype(Theme::BoxFlag::fill);
     }
 
     StringItem(const std::string& text,
                const Image& image,
                const Rect& rect,
-               alignmask align = alignmask::center) noexcept
+               const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(image, text, rect, align)
     {
-        boxtype(Theme::boxtype::fill);
+        boxtype(Theme::BoxFlag::fill);
     }
 
     StringItem(const std::string& text,
                const Rect& rect,
-               alignmask align = alignmask::center) noexcept
+               const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(Image(), text, rect, align)
     {
-        boxtype(Theme::boxtype::fill);
+        boxtype(Theme::BoxFlag::fill);
     }
 
     explicit StringItem(Frame& parent,
                         const std::string& text = {},
-                        alignmask align = alignmask::center) noexcept
+                        const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(parent, Image(), text, align)
     {
-        boxtype(Theme::boxtype::fill);
+        boxtype(Theme::BoxFlag::fill);
     }
 
     StringItem(Frame& parent,
                const std::string& text,
                const Rect& rect,
-               alignmask align = alignmask::center) noexcept
+               const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(parent, Image(), text, rect, align)
     {
-        boxtype(Theme::boxtype::fill);
+        boxtype(Theme::BoxFlag::fill);
     }
 
     virtual Size min_size_hint() const override
@@ -92,7 +92,7 @@ struct EGT_API StringItem : public ImageLabel
  *
  * @ingroup controls
  *
- * @note This interface only supports a vertical orientation.
+ * @note This interface only supports a vertical Orientation.
  */
 class EGT_API ListBox : public Frame
 {

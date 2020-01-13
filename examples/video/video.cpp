@@ -55,13 +55,13 @@ int main(int argc, const char** argv)
     }
 
     Size size(320, 192);
-    auto format = pixel_format::yuv420;
+    auto format = PixelFormat::yuv420;
     if (argc == 5)
     {
         size.width(atoi(argv[2]));
         size.height(atoi(argv[3]));
         if (atoi(argv[4]) <= 10)
-            format = static_cast<pixel_format>(atoi(argv[4]));
+            format = static_cast<PixelFormat>(atoi(argv[4]));
     }
 
     Application app(argc, argv, "video");
@@ -70,25 +70,18 @@ int main(int argc, const char** argv)
 
     Label errlabel;
     errlabel.color(Palette::ColorId::label_text, Palette::white);
-    errlabel.align(alignmask::expand);
-    errlabel.text_align(alignmask::center | alignmask::top);
+    errlabel.align(AlignFlag::expand);
+    errlabel.text_align(AlignFlag::center | AlignFlag::top);
     win.add(errlabel);
 
     // player after label to handle drag
-    VideoWindow player(size, format, windowhint::overlay);
+    VideoWindow player(size, format, WindowHint::overlay);
     player.move_to_center(win.center());
     player.volume(5);
     win.add(player);
 
-    // wait to start playing the video until the window is shown
-    win.on_event([&player, argv](Event&)
-    {
-        player.media(argv[1]);
-        player.play();
-    }, {eventid::show});
-
     Window ctrlwindow(Size(win.width(), 72));
-    ctrlwindow.align(alignmask::bottom | alignmask::center);
+    ctrlwindow.align(AlignFlag::bottom | AlignFlag::center);
     ctrlwindow.color(Palette::ColorId::bg, Palette::transparent);
     win.add(ctrlwindow);
 
@@ -101,7 +94,7 @@ int main(int argc, const char** argv)
     hpos.add(logo);
 
     ImageButton playbtn(Image(":pause_png"));
-    playbtn.boxtype(Theme::boxtype::none);
+    playbtn.boxtype().clear();
     hpos.add(playbtn);
 
     playbtn.on_event([&playbtn, &player](Event&)
@@ -116,12 +109,12 @@ int main(int argc, const char** argv)
             if (player.play())
                 playbtn.image(Image(":pause_png"));
         }
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
-    Slider position(0, 100, 0, orientation::horizontal);
+    Slider position(0, 100, 0, Orientation::horizontal);
     position.width(ctrlwindow.width() * 0.20);
-    position.align(alignmask::expand_vertical);
-    position.slider_flags().set({Slider::flag::round_handle});
+    position.align(AlignFlag::expand_vertical);
+    position.slider_flags().set({Slider::SliderFlag::round_handle});
     hpos.add(position);
 
     position.on_event([&position, &player](Event&)
@@ -135,15 +128,15 @@ int main(int argc, const char** argv)
         if (state)
             player.play();
 
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     ImageButton volumei(Image(":volumeup_png"));
-    volumei.boxtype(Theme::boxtype::none);
+    volumei.boxtype().clear();
     hpos.add(volumei);
 
-    Slider volume(Size(ctrlwindow.width() * 0.10, ctrlwindow.height()), 0, 10, 0, orientation::horizontal);
+    Slider volume(Size(ctrlwindow.width() * 0.10, ctrlwindow.height()), 0, 10, 0, Orientation::horizontal);
     hpos.add(volume);
-    volume.slider_flags().set({Slider::flag::round_handle});
+    volume.slider_flags().set({Slider::SliderFlag::round_handle});
     volume.value(5);
     player.volume(5.0);
     volume.on_event([&volume, &player](Event&)
@@ -154,7 +147,7 @@ int main(int argc, const char** argv)
     volume.value(5);
 
     ImageButton fullscreenbtn(Image(":fullscreen_png"));
-    fullscreenbtn.boxtype(Theme::boxtype::none);
+    fullscreenbtn.boxtype().clear();
     hpos.add(fullscreenbtn);
 
     const auto vscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
@@ -176,10 +169,10 @@ int main(int argc, const char** argv)
             fullscreenbtn.image(Image(":fullscreen_png"));
             scaled = true;
         }
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
     ImageButton loopbackbtn(Image(":repeat_one_png"));
-    loopbackbtn.boxtype(Theme::boxtype::none);
+    loopbackbtn.boxtype().clear();
     hpos.add(loopbackbtn);
 
     loopbackbtn.on_event([&loopbackbtn, &player](Event&)
@@ -194,7 +187,7 @@ int main(int argc, const char** argv)
             loopbackbtn.image(Image(":repeat_png"));
             player.loopback(true);
         }
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
     Label cpulabel("CPU: 0%");
     cpulabel.color(Palette::ColorId::label_text, Palette::white);
@@ -224,19 +217,19 @@ int main(int argc, const char** argv)
         }
 
         player.play();
-    }, {eventid::show});
+    }, {EventId::show});
 
     player.on_event([&player, &win, &errlabel, &position, vscale, size](Event & event)
     {
         static Point m_start_point;
         switch (event.id())
         {
-        case eventid::pointer_drag_start:
+        case EventId::pointer_drag_start:
         {
             m_start_point = player.box().point();
             break;
         }
-        case eventid::pointer_drag:
+        case EventId::pointer_drag:
         {
             if (!(detail::float_compare(player.scalex(), vscale)))
             {
@@ -256,7 +249,7 @@ int main(int argc, const char** argv)
             }
             break;
         }
-        case eventid::property_changed:
+        case EventId::property_changed:
         {
             if (player.playing())
             {
@@ -265,7 +258,7 @@ int main(int argc, const char** argv)
             }
             break;
         }
-        case eventid::error:
+        case EventId::error:
         {
             errlabel.text("Error:\n" + line_break(player.error_message()));
             break;

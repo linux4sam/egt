@@ -56,7 +56,7 @@ int main(int argc, const char** argv)
 
     TopWindow window;
     Button button(window, "Press Me");
-    button.set_align(alignmask::center);
+    button.set_align(AlignFlag::center);
     window.show();
 
     return app.run();

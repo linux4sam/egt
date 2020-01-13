@@ -32,10 +32,10 @@ inline namespace v1
  */
 
 /**
- * Positions and sizes widgets by orientation.
+ * Positions and sizes widgets by Orientation.
  *
  * BoxSizer will position widgets added to it in a horizontal or vertical
- * orientation. The BoxSizer can be homogeneous, which means all widgets will be
+ * Orientation. The BoxSizer can be homogeneous, which means all widgets will be
  * given equal space, or not.  Also, space can be specified that should be
  * between each widget.
  *
@@ -48,11 +48,11 @@ class EGT_API BoxSizer : public Frame
 public:
 
     /**
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] orient Vertical or horizontal Orientation.
      * @param[in] justify Justification of child widgets.
      */
-    explicit BoxSizer(orientation orient = orientation::horizontal,
-                      justification justify = justification::middle)
+    explicit BoxSizer(Orientation orient = Orientation::horizontal,
+                      Justification justify = Justification::middle)
         : m_orient(orient),
           m_justify(justify)
     {
@@ -61,12 +61,12 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] orient Vertical or horizontal Orientation.
      * @param[in] justify Justification of child widgets.
      */
     explicit BoxSizer(Frame& parent,
-                      orientation orient = orientation::horizontal,
-                      justification justify = justification::middle)
+                      Orientation orient = Orientation::horizontal,
+                      Justification justify = Justification::middle)
         : BoxSizer(orient, justify)
     {
         parent.add(*this);
@@ -77,26 +77,26 @@ public:
     /**
      * Get the justify.
      */
-    inline justification justify() const { return m_justify; }
+    inline Justification justify() const { return m_justify; }
 
     /**
      * Set the justify.
      */
-    inline void justify(justification justify)
+    inline void set_justify(Justification justify)
     {
         if (detail::change_if_diff<>(m_justify, justify))
             layout();
     }
 
     /**
-     * Get the orientation.
+     * Get the Orientation.
      */
-    inline orientation orient() const { return m_orient; }
+    inline Orientation orient() const { return m_orient; }
 
     /**
-     * Set the orientation.
+     * Set the Orientation.
      */
-    inline void orient(orientation orient)
+    inline void set_orient(Orientation orient)
     {
         if (detail::change_if_diff<>(m_orient, orient))
             layout();
@@ -108,7 +108,7 @@ protected:
 
     inline Size super_rect() const
     {
-        if (orient() == orientation::flex)
+        if (orient() == Orientation::flex)
         {
             Rect result = size();
             for (auto& child : m_children)
@@ -120,11 +120,11 @@ protected:
         default_dim_type width = 0;
         default_dim_type height = 0;
 
-        if (orient() == orientation::horizontal)
+        if (orient() == Orientation::horizontal)
         {
             for (auto& child : m_children)
             {
-                if ((child->align() & alignmask::expand_horizontal) != alignmask::expand_horizontal)
+                if (!child->align().is_set(AlignFlag::expand_horizontal))
                 {
                     width += child->box().width();
                     height = std::max(child->box().height(), height);
@@ -135,7 +135,7 @@ protected:
         {
             for (auto& child : m_children)
             {
-                if ((child->align() & alignmask::expand_vertical) != alignmask::expand_vertical)
+                if (!child->align().is_set(AlignFlag::expand_vertical))
                 {
                     width = std::max(child->box().width(), width);
                     height += child->box().height();
@@ -145,19 +145,19 @@ protected:
         width += 2. * moat();
         height += 2. * moat();
 
-        if ((align() & alignmask::expand_horizontal) == alignmask::expand_horizontal)
+        if (align().is_set(AlignFlag::expand_horizontal))
             if (width < box().width())
                 width = box().width();
 
-        if ((align() & alignmask::expand_vertical) == alignmask::expand_vertical)
+        if (align().is_set(AlignFlag::expand_vertical))
             if (height < box().height())
                 height = box().height();
 
         return {width, height};
     }
 
-    orientation m_orient{orientation::horizontal};
-    justification m_justify{justification::start};
+    Orientation m_orient{Orientation::horizontal};
+    Justification m_justify{Justification::start};
 };
 
 /**
@@ -169,11 +169,11 @@ class EGT_API HorizontalBoxSizer : public BoxSizer
 {
 public:
 
-    explicit HorizontalBoxSizer(justification justify = justification::middle)
-        : BoxSizer(orientation::horizontal, justify)
+    explicit HorizontalBoxSizer(Justification justify = Justification::middle)
+        : BoxSizer(Orientation::horizontal, justify)
     {}
-    explicit HorizontalBoxSizer(Frame& parent, justification justify = justification::middle)
-        : BoxSizer(parent, orientation::horizontal, justify)
+    explicit HorizontalBoxSizer(Frame& parent, Justification justify = Justification::middle)
+        : BoxSizer(parent, Orientation::horizontal, justify)
     {}
 
     virtual ~HorizontalBoxSizer() = default;
@@ -188,12 +188,12 @@ class EGT_API VerticalBoxSizer : public BoxSizer
 {
 public:
 
-    explicit VerticalBoxSizer(justification justify = justification::middle)
-        : BoxSizer(orientation::vertical, justify)
+    explicit VerticalBoxSizer(Justification justify = Justification::middle)
+        : BoxSizer(Orientation::vertical, justify)
     {}
 
-    explicit VerticalBoxSizer(Frame& parent, justification justify = justification::middle)
-        : BoxSizer(parent, orientation::vertical, justify)
+    explicit VerticalBoxSizer(Frame& parent, Justification justify = Justification::middle)
+        : BoxSizer(parent, Orientation::vertical, justify)
     {}
 
     virtual ~VerticalBoxSizer() = default;
@@ -208,12 +208,12 @@ class EGT_API FlexBoxSizer : public BoxSizer
 {
 public:
 
-    explicit FlexBoxSizer(justification justify = justification::middle)
-        : BoxSizer(orientation::flex, justify)
+    explicit FlexBoxSizer(Justification justify = Justification::middle)
+        : BoxSizer(Orientation::flex, justify)
     {}
 
-    explicit FlexBoxSizer(Frame& parent, justification justify = justification::middle)
-        : BoxSizer(parent, orientation::flex, justify)
+    explicit FlexBoxSizer(Frame& parent, Justification justify = Justification::middle)
+        : BoxSizer(parent, Orientation::flex, justify)
     {}
 
     virtual ~FlexBoxSizer() = default;

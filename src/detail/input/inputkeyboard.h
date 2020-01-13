@@ -36,7 +36,7 @@ public:
      *
      * @return A UTF32 representation of the key, or zero.
      */
-    virtual uint32_t on_key(uint32_t key, eventid event) = 0;
+    virtual uint32_t on_key(uint32_t key, EventId event) = 0;
 
     virtual ~InputKeyboardImpl() = default;
 };
@@ -47,7 +47,7 @@ public:
 class BasicInputKeyboard : public InputKeyboardImpl
 {
 public:
-    virtual uint32_t on_key(uint32_t key, eventid event) override;
+    virtual uint32_t on_key(uint32_t key, EventId event) override;
 protected:
 
     uint32_t ekey_to_utf32(KeyboardCode code, bool shift, bool caps, bool numlock);
@@ -89,7 +89,7 @@ public:
 
     XkbInputKeyboard();
 
-    virtual uint32_t on_key(uint32_t key, eventid event) override;
+    virtual uint32_t on_key(uint32_t key, EventId event) override;
 
     virtual ~XkbInputKeyboard() = default;
 
@@ -126,7 +126,7 @@ public:
         SPDLOG_DEBUG("using basic input keyboard mapping");
     }
 
-    virtual uint32_t on_key(uint32_t key, eventid event)
+    virtual uint32_t on_key(uint32_t key, EventId event)
     {
         assert(m_impl);
         return m_impl->on_key(key, event);

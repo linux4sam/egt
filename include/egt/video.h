@@ -25,7 +25,7 @@ class GstAppSinkImpl;
 /**
  * A VideoWindow is a widget to decode video and render it to a screen.
  *
- * It has a bounding rectangle, format and windowhint. These properties can
+ * It has a bounding rectangle, format and WindowHint. These properties can
  * be manipulated to create a video window either as a basic window or an
  * overlay plane.
  *
@@ -44,12 +44,12 @@ public:
      * @param format Pixel format of window or a overlay plane.
      * @param hint Used for configuring window backend's.
      *
-     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+     * @note Only WindowHint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
     explicit VideoWindow(const Rect& rect = {},
-                         pixel_format format = pixel_format::xrgb8888,
-                         windowhint hint = windowhint::overlay);
+                         PixelFormat format = PixelFormat::xrgb8888,
+                         WindowHint hint = WindowHint::overlay);
 
     /**
     * Create a video window to decode video and render it to a screen.
@@ -59,13 +59,13 @@ public:
     * @param format Pixel format of window or a overlay plane.
     * @param hint Used for configuring window backend's.
     *
-    * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+    * @note Only WindowHint::heo_overlay can use yuyv, nv21 and yuv420 pixel
     * formats.
     */
     VideoWindow(const Rect& rect,
                 const std::string& uri,
-                pixel_format format = pixel_format::xrgb8888,
-                windowhint hint = windowhint::overlay);
+                PixelFormat format = PixelFormat::xrgb8888,
+                WindowHint hint = WindowHint::overlay);
 
     virtual void do_draw() override
     {

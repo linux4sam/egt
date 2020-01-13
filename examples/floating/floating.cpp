@@ -21,8 +21,8 @@ public:
           m_mx(mx),
           m_my(my)
     {
-        m_widget->flags().set(Widget::flag::no_layout);
-        m_widget->flags().set(Widget::flag::grab_mouse);
+        m_widget->flags().set(Widget::Flag::no_layout);
+        m_widget->flags().set(Widget::Flag::grab_mouse);
         widget->on_event(std::bind(&FloatingBox::handle, this, std::placeholders::_1));
     }
 
@@ -30,18 +30,18 @@ public:
     {
         switch (event.id())
         {
-        case eventid::pointer_dblclick:
+        case EventId::pointer_dblclick:
             m_mx *= -1;
             m_my *= -1;
             break;
-        case eventid::pointer_drag_start:
+        case EventId::pointer_drag_start:
             m_start_point = m_widget->box().point();
             m_dragging = true;
             break;
-        case eventid::pointer_drag_stop:
+        case EventId::pointer_drag_stop:
             m_dragging = false;
             break;
-        case eventid::pointer_drag:
+        case EventId::pointer_drag:
         {
             auto diff = event.pointer().drag_start - event.pointer().point;
             auto fromstart = m_start_point - Point(diff.x(), diff.y());
@@ -136,7 +136,7 @@ int main(int argc, const char** argv)
         auto image = make_shared<ImageLabel>(Image(os.str()));
         auto plane = make_shared<Window>(Size(image->width(), image->height()));
         plane->color(Palette::ColorId::bg, Palette::transparent);
-        plane->boxtype(Theme::boxtype::none);
+        plane->boxtype().clear();
         plane->add(image);
         plane->show();
         plane->move(Point(100, 100));

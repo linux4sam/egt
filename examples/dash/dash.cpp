@@ -13,14 +13,14 @@ using namespace egt::experimental;
 template<class T>
 static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
                                   std::chrono::milliseconds duration = std::chrono::seconds(10),
-                                  easing_func_t easingin = easing_circular_easein,
-                                  easing_func_t easingout = easing_circular_easeout)
+                                  EasingFunc easingin = easing_circular_easein,
+                                  EasingFunc easingout = easing_circular_easeout)
 {
     auto animationup = std::make_shared<PropertyAnimator>(min, max, duration, easingin);
-    animationup->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
+    animationup->on_change([widget](PropertyAnimator::Value value) { widget->value(value); });
 
     auto animationdown = std::make_shared<PropertyAnimator>(max, min, duration, easingout);
-    animationdown->on_change([widget](PropertyAnimator::Value v) { widget->value(v); });
+    animationdown->on_change([widget](PropertyAnimator::Value value) { widget->value(value); });
 
     /// @todo leak
     auto sequence = new AnimationSequence(true);
@@ -33,7 +33,7 @@ static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
         const std::string& id, const std::string& point_id,
         int min, int max, int min_angle, int max_angle,
         std::chrono::milliseconds duration,
-        easing_func_t easing = easing_circular_easein)
+        EasingFunc easing = easing_circular_easein)
 {
     if (!svg.id_exists(id) || !svg.id_exists(point_id))
         return nullptr;
@@ -118,7 +118,7 @@ int main(int argc, const char** argv)
 
     auto rpm_box = dash_background->id_box("#rpm");
     auto rpm_text = make_shared<Label>();
-    rpm_text->text_align(alignmask::center);
+    rpm_text->text_align(AlignFlag::center);
     rpm_text->box(Rect(rpm_box.x(), rpm_box.y(), rpm_box.width(), rpm_box.height()));
     rpm_text->color(Palette::ColorId::label_text, Palette::cyan);
     rpm_text->text("Trip 1: 100.5 miles");
@@ -126,10 +126,10 @@ int main(int argc, const char** argv)
 
     auto speed_box = dash_background->id_box("#speed");
     auto speed_text = make_shared<Label>();
-    speed_text->text_align(alignmask::center);
+    speed_text->text_align(AlignFlag::center);
     speed_text->box(Rect(speed_box.x(), speed_box.y(), speed_box.width(), speed_box.height()));
     speed_text->color(Palette::ColorId::label_text, Palette::white);
-    speed_text->font(Font(28, Font::weightid::bold));
+    speed_text->font(Font(28, Font::Weight::bold));
     speed_text->text("0 mph");
     gauge.add(speed_text);
 
@@ -138,11 +138,11 @@ int main(int argc, const char** argv)
         ostringstream ss;
         ss << mph_needle->value() << " mph";
         speed_text->text(ss.str());
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     auto middle_box = dash_background->id_box("#middle");
     auto middle_text = make_shared<Label>();
-    middle_text->text_align(alignmask::center);
+    middle_text->text_align(AlignFlag::center);
     middle_text->box(Rect(middle_box.x(), middle_box.y(), middle_box.width(), middle_box.height()));
     middle_text->color(Palette::ColorId::label_text, Palette::aquamarine);
     middle_text->text("98.7 FM");
@@ -150,10 +150,10 @@ int main(int argc, const char** argv)
 
     auto console_box = dash_background->id_box("#console");
     auto console_text = make_shared<Label>();
-    console_text->text_align(alignmask::center);
+    console_text->text_align(AlignFlag::center);
     console_text->box(Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
     console_text->color(Palette::ColorId::label_text, Palette::orange);
-    console_text->font(Font(55, Font::weightid::bold));
+    console_text->font(Font(55, Font::Weight::bold));
     console_text->text("D");
     gauge.add(console_text);
 

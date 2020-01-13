@@ -23,7 +23,7 @@ ProgressBar::ProgressBar(const Rect& rect,
                          int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
-    boxtype(Theme::boxtype::fill);
+    boxtype(Theme::BoxFlag::fill);
     border(theme().default_border());
 }
 
@@ -49,7 +49,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
     if (width > 0.f)
     {
         widget.theme().draw_box(painter,
-                                Theme::boxtype::fill,
+                                Theme::BoxFlag::fill,
                                 Rect(b.x(), b.y(), width, b.height()),
                                 Color(),
                                 widget.color(Palette::ColorId::button_bg));
@@ -63,7 +63,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
         painter.set(widget.color(Palette::ColorId::label_text).color());
         painter.set(f);
         auto size = painter.text_size(text);
-        auto target = detail::align_algorithm(size, b, alignmask::center);
+        auto target = detail::align_algorithm(size, b, AlignFlag::center);
         painter.draw(target.point());
         painter.draw(text);
     }
@@ -88,7 +88,7 @@ void ProgressBar::show_label(bool value)
 SpinProgress::SpinProgress(const Rect& rect, int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
-    boxtype(Theme::boxtype::fill);
+    boxtype(Theme::BoxFlag::fill);
 }
 
 SpinProgress::SpinProgress(Frame& parent, const Rect& rect, int min, int max, int value) noexcept
@@ -130,7 +130,7 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
         painter.set(f);
         painter.set(widget.color(Palette::ColorId::text).color());
         auto size = painter.text_size(text);
-        auto target = detail::align_algorithm(size, b, alignmask::center);
+        auto target = detail::align_algorithm(size, b, AlignFlag::center);
         painter.draw(target.point());
         painter.draw(text);
     }
@@ -156,7 +156,7 @@ LevelMeter::LevelMeter(const Rect& rect,
                        int min, int max, int value) noexcept
     : ValueRangeWidget<int>(rect, min, max, value)
 {
-    boxtype(Theme::boxtype::fill);
+    boxtype(Theme::BoxFlag::fill);
     padding(2);
 }
 
@@ -191,7 +191,7 @@ void LevelMeter::default_draw(LevelMeter& widget, Painter& painter, const Rect&)
         Rect rect(b.x(),  b.y() + i * barheight, b.width(), barheight - widget.padding());
 
         widget.theme().draw_box(painter,
-                                Theme::boxtype::fill,
+                                Theme::BoxFlag::fill,
                                 rect,
                                 widget.color(Palette::ColorId::border),
                                 color);
@@ -208,7 +208,7 @@ Size LevelMeter::min_size_hint() const
 AnalogMeter::AnalogMeter(const Rect& rect) noexcept
     : ValueRangeWidget<float>(rect, 0, 100, 0)
 {
-    boxtype(Theme::boxtype::fill);
+    boxtype(Theme::BoxFlag::fill);
 }
 
 AnalogMeter::AnalogMeter(Frame& parent, const Rect& rect) noexcept

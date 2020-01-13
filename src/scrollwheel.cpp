@@ -47,7 +47,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
     });
 
 
@@ -63,7 +63,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
     });
 }
 
@@ -105,7 +105,7 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
     });
 
 
@@ -121,17 +121,17 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
 
         m_label->text(m_items[m_selected]);
 
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
     });
 
 }
 
-void Scrollwheel::orient(orientation orient)
+void Scrollwheel::orient(Orientation orient)
 {
-    if (orient != orientation::horizontal &&
-        orient != orientation::vertical)
+    if (orient != Orientation::horizontal &&
+        orient != Orientation::vertical)
     {
-        orient = orientation::vertical;
+        orient = Orientation::vertical;
     }
 
     if (detail::change_if_diff<>(m_orient, orient))
@@ -146,16 +146,16 @@ void Scrollwheel::init(bool reversed)
 {
     name("Scrollwheel" + std::to_string(m_widgetid));
 
-    m_button_up->boxtype(Theme::boxtype::none);
-    m_button_down->boxtype(Theme::boxtype::none);
-    m_label->boxtype(Theme::boxtype::none);
+    m_button_up->boxtype().clear();
+    m_button_down->boxtype().clear();
+    m_label->boxtype().clear();
 
-    boxtype(Theme::boxtype::none);
+    boxtype().clear();
 
     if (!m_items.empty() && reversed)
         m_selected = m_items.size() - 1;
 
-    m_label->text_align(alignmask::center);
+    m_label->text_align(AlignFlag::center);
     if (!m_items.empty())
         m_label->text(m_items[m_selected]);
 
@@ -163,7 +163,7 @@ void Scrollwheel::init(bool reversed)
     m_button_up->detach();
     m_button_down->detach();
 
-    if (m_orient == orientation::vertical)
+    if (m_orient == Orientation::vertical)
     {
         reallocate(std::make_tuple(1, 3));
         add(expand(m_label), 0, 1);
@@ -208,7 +208,7 @@ void Scrollwheel::selected(size_t index)
     if (detail::change_if_diff<>(m_selected, index))
     {
         m_label->text(m_items[m_selected]);
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
     }
 }
 

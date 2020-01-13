@@ -52,7 +52,7 @@ int main(int argc, const char** argv)
         button->on_event([sound](Event&)
         {
             sound->play();
-        }, {eventid::raw_pointer_down});
+        }, {EventId::raw_pointer_down});
 
         grid.add(center(button));
     }

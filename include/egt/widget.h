@@ -13,9 +13,9 @@
 
 #include <cairo.h>
 #include <cassert>
-#include <egt/detail/object.h>
+#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
-#include <egt/flags.h>
+#include <egt/detail/object.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
@@ -45,29 +45,29 @@ class Screen;
  * of what it means to handle an event or draw the Widget is implemented in
  * classes that are derived from this one, like a Button or a Label.
  */
-class EGT_API Widget : public detail::Object, public detail::noncopyable
+class EGT_API Widget : public detail::Object, public detail::NonCopyable
 {
 public:
 
     /**
      * Common flags used for various widget properties.
      */
-    enum class flag : uint32_t
+    enum class Flag : uint32_t
     {
         /**
          * This is an overlay plane window.
          */
-        plane_window,
+        plane_window = detail::bit(0),
 
         /**
          * This is a window widget.
          */
-        window,
+        window = detail::bit(1),
 
         /**
          * This is a frame.
          */
-        frame,
+        frame = detail::bit(2),
 
         /**
          * When set, the widget is disabled.
@@ -76,12 +76,12 @@ public:
          *
          * This may change how the widget behaves or is drawn.
          */
-        disabled,
+        disabled = detail::bit(3),
 
         /**
          * When set, the widget will not receive input events.
          */
-        readonly,
+        readonly = detail::bit(4),
 
         /**
          * When true, the widget is active.
@@ -93,48 +93,53 @@ public:
          *
          * This may change how the widget behaves or is draw.
          */
-        active,
+        active = detail::bit(5),
 
         /**
          * When set, the widget is not visible.
          */
-        invisible,
+        invisible = detail::bit(6),
 
         /**
          * Grab related mouse events.
          *
-         * For example, if a button is pressed with the eventid::MOUSE_DOWN
+         * For example, if a button is pressed with the EventId::MOUSE_DOWN
          * event, make sure the button gets subsequent mouse events, including
-         * the eventid::MOUSE_UP event.
+         * the EventId::MOUSE_UP event.
          */
-        grab_mouse,
+        grab_mouse = detail::bit(7),
 
         /**
          * Don't clip the child to drawing only in its box.
          *
          * Use this with caution, it's probably not what you want.
          */
-        no_clip,
+        no_clip = detail::bit(8),
 
         /**
          * Tell any parent not to perform layout on this widget.
          */
-        no_layout,
+        no_layout = detail::bit(9),
 
         /**
          * Do not automatically resize a widget to meet the minimal size hint.
          */
-        no_autoresize,
+        no_autoresize = detail::bit(10),
+
+        /**
+         * Is the widget in a checked state.
+         */
+        checked = detail::bit(11),
     };
 
-    using flags_type = Flags<flag>;
+    using Flags = detail::Flags<Widget::Flag>;
 
     /**
      * @param[in] rect Initial rectangle of the Widget.
      * @param[in] flags Widget flags.
      */
     explicit Widget(const Rect& rect = {},
-                    const flags_type& flags = {}) noexcept;
+                    const Widget::Flags& flags = {}) noexcept;
 
     /**
      * @param[in] parent Parent Frame of the Widget.
@@ -142,7 +147,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Widget(Frame& parent, const Rect& rect = {},
-                    const flags_type& flags = {}) noexcept;
+                    const Widget::Flags& flags = {}) noexcept;
 
     Widget(Widget&& rhs) noexcept;
     Widget& operator=(Widget&& rhs) noexcept;
@@ -233,6 +238,11 @@ public:
     virtual void scale(float /*scalex*/, float /*scaley*/)
     {}
 
+    /**
+     * Set the scale of the widget.
+     *
+     * @warning This is experimental.
+     */
     inline void scale(float scale)
     {
         this->scale(scale, scale);
@@ -324,7 +334,7 @@ public:
      */
     inline bool visible() const
     {
-        return !flags().is_set(Widget::flag::invisible);
+        return !flags().is_set(Widget::Flag::invisible);
     }
 
     /**
@@ -365,7 +375,7 @@ public:
      */
     inline bool readonly() const
     {
-        return flags().is_set(Widget::flag::readonly);
+        return flags().is_set(Widget::Flag::readonly);
     }
 
     /**
@@ -404,7 +414,7 @@ public:
      */
     inline bool disabled() const
     {
-        return flags().is_set(Widget::flag::disabled);
+        return flags().is_set(Widget::Flag::disabled);
     }
 
     /**
@@ -541,7 +551,7 @@ public:
     /**
      * Reset the widget's palette to a default state.
      */
-    virtual void repalette();
+    virtual void reset_palette();
 
     /**
      * Get a Widget color.
@@ -594,26 +604,35 @@ public:
     /**
      * Get a const ref of the flags.
      */
-    inline const flags_type& flags() const { return m_widget_flags; }
+    inline const Widget::Flags& flags() const { return m_widget_flags; }
 
     /**
      * Get a modifiable ref of the flags.
+     *
+     * @warning Directly modifying flags may result in inconsistent state of the
+     * widget. Always use the appropriate member functions (i.e. readonly(),
+     * checked()).
      */
-    inline flags_type& flags() { return m_widget_flags; }
+    inline Widget::Flags& flags() { return m_widget_flags; }
 
     /**
      * Align the widget.
      *
      * This will align the widget relative to the box of its parent frame.
      *
-     * @param[in] a The alignmask.
+     * @param[in] a The AlignFlags.
      */
-    virtual void align(alignmask a);
+    virtual void align(const AlignFlags& a);
 
     /**
      * Get the alignment.
      */
-    inline alignmask align() const { return m_align; }
+    inline const AlignFlags& align() const { return m_align; }
+
+    /**
+     * Get the alignment.
+     */
+    inline AlignFlags& align() { return m_align; }
 
     /**
      * Set the alignment padding.
@@ -780,7 +799,7 @@ public:
     /**
      * Callback definition used by Widget::walk().
      */
-    using walk_callback_t = std::function<bool(Widget* widget, int level)>;
+    using WalkCallback = std::function<bool(Widget* widget, int level)>;
 
     /**
      * Walk the Widget tree and call @b callback with each Widget.
@@ -788,7 +807,7 @@ public:
      * @param callback Function to call for each widget.
      * @param level The current level of the widget hierarchy.
      */
-    virtual void walk(walk_callback_t callback, int level = 0);
+    virtual void walk(WalkCallback callback, int level = 0);
 
     /**
      * Get the current focus state.
@@ -805,12 +824,12 @@ public:
     /**
      * Reset the Widget's Theme to the default Theme.
      */
-    void retheme();
+    void reset_theme();
 
     /**
      * Set the boxtype.
      */
-    inline void boxtype(const Theme::boxtype& type)
+    inline void boxtype(const Theme::BoxFlags& type)
     {
         if (detail::change_if_diff<>(m_boxtype, type))
             damage();
@@ -819,7 +838,12 @@ public:
     /**
      * Get the boxtype.
      */
-    inline Theme::boxtype boxtype() const
+    inline const Theme::BoxFlags& boxtype() const
+    {
+        return m_boxtype;
+    }
+
+    inline Theme::BoxFlags& boxtype()
     {
         return m_boxtype;
     }
@@ -961,16 +985,15 @@ public:
     /**
      * Return the boolean checked state of the a widget.
      */
-    inline bool checked() const { return m_checked; }
+    inline bool checked() const
+    {
+        return flags().is_set(Widget::Flag::checked);
+    }
 
     /**
      * Set checked state of the widget.
      */
-    virtual void checked(bool value)
-    {
-        if (detail::change_if_diff<>(m_checked, value))
-            damage();
-    }
+    virtual void checked(bool value);
 
     virtual ~Widget() noexcept;
 
@@ -1022,17 +1045,12 @@ protected:
      */
     void parent_layout();
 
-    /**
-     * Is the widget currently checked?
-     */
-    bool m_checked{false};
-
 private:
 
     /**
      * Flags for the widget.
      */
-    flags_type m_widget_flags{};
+    Widget::Flags m_widget_flags{};
 
     /**
      * Palette for the widget.
@@ -1048,7 +1066,7 @@ private:
     /**
      * Alignment hint for this widget within its parent.
      */
-    alignmask m_align{alignmask::none};
+    AlignFlags m_align{};
 
     /**
      * Alignment padding.
@@ -1098,7 +1116,7 @@ private:
     /**
      * The boxtype.
      */
-    Theme::boxtype m_boxtype{Theme::boxtype::none};
+    Theme::BoxFlags m_boxtype{};
 
     /**
      * Instance theme for the widget.
@@ -1113,8 +1131,8 @@ private:
     friend class Frame;
 };
 
-EGT_API std::ostream& operator<<(std::ostream& os, const Widget::flag& flag);
-EGT_API std::ostream& operator<<(std::ostream& os, const Widget::flags_type& flags);
+EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag);
+EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flags& flags);
 
 }
 }

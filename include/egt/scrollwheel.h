@@ -88,14 +88,14 @@ public:
     virtual void image(const Image& down_image, const Image& up_image);
 
     /**
-     * Get the orientation.
+     * Get the Orientation.
      */
-    inline orientation orient() const { return m_orient; }
+    inline Orientation orient() const { return m_orient; }
 
     /**
-     * Set the orientation.
+     * Set the Orientation.
      */
-    void orient(orientation orient);
+    void orient(Orientation orient);
 
     /**
      * Returns a string of the item selected.
@@ -129,7 +129,7 @@ protected:
     std::shared_ptr<ImageButton> m_button_up;
     std::shared_ptr<ImageButton> m_button_down;
     std::shared_ptr<Label> m_label;
-    orientation m_orient{orientation::vertical};
+    Orientation m_orient{Orientation::vertical};
 };
 
 }

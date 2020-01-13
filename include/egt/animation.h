@@ -26,7 +26,7 @@ inline namespace v1
 /**
  * Easing function value type.
  */
-using float_t = float;
+using EasingScalar = float;
 
 /**
  * @defgroup animation Animation
@@ -36,12 +36,12 @@ using float_t = float;
 /**
  * Animation callback type.
  */
-using animation_callback_t = std::function<void (float_t value)>;
+using AnimationCallback = std::function<void (EasingScalar value)>;
 
 /**
  * Easing function type.
  */
-using easing_func_t = std::function<float_t (float_t percent)>;
+using EasingFunc = std::function<EasingScalar(EasingScalar percent)>;
 
 namespace detail
 {
@@ -74,7 +74,7 @@ T interpolate(Functor&& easing, T percent, T start, T end, bool reverse = false)
 /**
  * Base class for an animation.
  */
-class EGT_API IAnimation : public detail::noncopyable
+class EGT_API IAnimation : public detail::NonCopyable
 {
 public:
 
@@ -111,7 +111,7 @@ public:
      *
      * @todo Need to implement removing callbacks, similar to Object class.
      */
-    inline void add_callback(animation_callback_t callback)
+    inline void add_callback(AnimationCallback callback)
     {
         if (callback)
             m_callbacks.emplace_back(std::move(callback));
@@ -137,7 +137,7 @@ protected:
     /**
      * Registered callbacks for the animation.
      */
-    std::vector<animation_callback_t> m_callbacks;
+    std::vector<AnimationCallback> m_callbacks;
 };
 }
 
@@ -171,31 +171,31 @@ public:
      * @param[in] duration The duration of the animation.
      * @param[in] func The easing function to use.
      */
-    Animation(float_t start,
-              float_t end,
-              const animation_callback_t& callback,
+    Animation(EasingScalar start,
+              EasingScalar end,
+              const AnimationCallback& callback,
               std::chrono::milliseconds duration,
-              easing_func_t func = easing_linear);
+              EasingFunc func = easing_linear);
 
     /**
      * Get the starting value.
      */
-    inline float_t starting() const { return m_start; }
+    inline EasingScalar starting() const { return m_start; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void starting(float_t start) { m_start = start; }
+    inline void starting(EasingScalar start) { m_start = start; }
 
     /**
      * Get the ending value.
      */
-    inline float_t ending() const { return m_end; }
+    inline EasingScalar ending() const { return m_end; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void ending(float_t end) { m_end = end; }
+    inline void ending(EasingScalar end) { m_end = end; }
 
     /**
      * @note Calling this while running is undefined behavior.
@@ -205,7 +205,7 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    void easing_func(easing_func_t func);
+    void easing_func(EasingFunc func);
 
     /**
      * @note Calling this while running is undefined behavior.
@@ -233,7 +233,7 @@ public:
     /**
      * Get the current value.
      */
-    inline float_t current() const { return m_current; }
+    inline EasingScalar current() const { return m_current; }
 
     /**
      * Should the value be rounded?
@@ -252,22 +252,22 @@ protected:
     /**
      * Starting value.
      */
-    float_t m_start{0};
+    EasingScalar m_start{0};
 
     /**
      * Ending value.
      */
-    float_t m_end{0};
+    EasingScalar m_end{0};
 
     /**
      * Easing function.
      */
-    easing_func_t m_easing{easing_linear};
+    EasingFunc m_easing{easing_linear};
 
     /**
      * Current value.
      */
-    float_t m_current{0};
+    EasingScalar m_current{0};
 
     /**
      * Duration of the animation.
@@ -366,7 +366,7 @@ public:
         {
             m_animations.push_back(animation);
 
-            animation->add_callback([this, animation](float_t)
+            animation->add_callback([this, animation](EasingScalar)
             {
                 // when the animation ever completes, we go next
                 if (!animation->running())
@@ -479,12 +479,12 @@ protected:
     /**
      * Helper type for an array of animations.
      */
-    using animation_array = std::vector<std::shared_ptr<detail::IAnimation>>;
+    using AnimationArray = std::vector<std::shared_ptr<detail::IAnimation>>;
 
     /**
      * The animations of the sequence.
      */
-    animation_array m_animations;
+    AnimationArray m_animations;
 
     /**
      * Index of the current animation.
@@ -517,11 +517,11 @@ public:
      * @param[in] func The easing function to use.
      * @param[in] callback Called whenever the animation value changes. May be nullptr.
      */
-    AutoAnimation(float_t start,
-                  float_t end,
+    AutoAnimation(EasingScalar start,
+                  EasingScalar end,
                   std::chrono::milliseconds duration,
-                  const easing_func_t& func = easing_linear,
-                  const animation_callback_t& callback = nullptr);
+                  const EasingFunc& func = easing_linear,
+                  const AnimationCallback& callback = nullptr);
 
     /**
      * @param[in] duration The duration of the animation.
@@ -529,8 +529,8 @@ public:
      * @param[in] callback Called whenever the animation value changes. May be nullptr.
      */
     AutoAnimation(std::chrono::milliseconds duration,
-                  const easing_func_t& func = easing_linear,
-                  const animation_callback_t& callback = nullptr);
+                  const EasingFunc& func = easing_linear,
+                  const AnimationCallback& callback = nullptr);
 
     virtual void start() override;
     virtual void stop() override;
@@ -573,7 +573,7 @@ public:
     explicit PropertyAnimatorType(T start = T(),
                                   T end = T(),
                                   std::chrono::milliseconds duration = std::chrono::milliseconds(),
-                                  easing_func_t func = easing_linear)
+                                  EasingFunc func = easing_linear)
         : AutoAnimation(start, end, duration, func,
                         [this](T value)
     {
@@ -586,7 +586,7 @@ public:
      * @param[in] func The easing function to use.
      */
     explicit PropertyAnimatorType(std::chrono::milliseconds duration,
-                                  easing_func_t func = easing_linear)
+                                  EasingFunc func = easing_linear)
         : AutoAnimation(duration, func,
                         [this](T value)
     {
@@ -594,14 +594,14 @@ public:
     })
     {}
 
-    using property_callback_t = std::function<void (T v)>;
+    using PropertyCallback = std::function<void (T v)>;
 
     /**
      * Register a callback handler for when the value changes.
      *
      * @param[in] callback The callback function to invoke.
      */
-    inline void on_change(property_callback_t callback)
+    inline void on_change(PropertyCallback callback)
     {
         m_callbacks.push_back(callback);
     }
@@ -627,12 +627,12 @@ protected:
             callback(value);
     }
 
-    using callback_array = std::vector<property_callback_t>;
+    using CallbackArray = std::vector<PropertyCallback>;
 
     /**
      * Registered callbacks for the animation.
      */
-    callback_array m_callbacks;
+    CallbackArray m_callbacks;
 };
 
 /**

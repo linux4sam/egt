@@ -19,7 +19,7 @@ namespace experimental
 {
 
 template <class T>
-void widget_property(T instance, const std::string& name, const std::string& value)
+void set_widget_property(T instance, const std::string& name, const std::string& value)
 {
     if (name == "width")
         instance->width(std::stoi(value));
@@ -30,13 +30,13 @@ void widget_property(T instance, const std::string& name, const std::string& val
     else if (name == "y")
         instance->y(std::stoi(value));
     else if (name == "align")
-        instance->align((alignmask)std::stoi(value));
+        instance->align((AlignFlag)std::stoi(value));
     else if (name == "flags")
-        instance->flags().set((Widget::flag)std::stoi(value));
+        instance->flags().set((Widget::Flag)std::stoi(value));
 }
 
 template <class T>
-void widget_text_property(T instance, const std::string& name, const std::string& value)
+void set_widget_text_property(T instance, const std::string& name, const std::string& value)
 {
     if (name == "text")
     {
@@ -57,36 +57,36 @@ void widget_text_property(T instance, const std::string& name, const std::string
     else if (name == "fontweight")
     {
         Font font(instance->font());
-        font.weight((Font::weightid)std::stoi(value));
+        font.weight((Font::Weight)std::stoi(value));
         instance->font(font);
     }
 }
 
 template <class T>
-void property(T instance, const std::string& name, const std::string& value)
+void set_property(T instance, const std::string& name, const std::string& value)
 {
-    widget_property<T>(instance, name, value);
+    set_widget_property<T>(instance, name, value);
 }
 
 template <>
-void property<Button*>(Button* instance, const std::string& name, const std::string& value)
+void set_property<Button*>(Button* instance, const std::string& name, const std::string& value)
 {
-    widget_property<Button*>(instance, name, value);
-    widget_text_property<Button*>(instance, name, value);
+    set_widget_property<Button*>(instance, name, value);
+    set_widget_text_property<Button*>(instance, name, value);
 }
 
 template <>
-void property<Label*>(Label* instance, const std::string& name, const std::string& value)
+void set_property<Label*>(Label* instance, const std::string& name, const std::string& value)
 {
-    widget_property<Label*>(instance, name, value);
-    widget_text_property<Label*>(instance, name, value);
+    set_widget_property<Label*>(instance, name, value);
+    set_widget_text_property<Label*>(instance, name, value);
 }
 
 template <>
-void property<TextBox*>(TextBox* instance, const std::string& name, const std::string& value)
+void set_property<TextBox*>(TextBox* instance, const std::string& name, const std::string& value)
 {
-    widget_property<TextBox*>(instance, name, value);
-    widget_text_property<TextBox*>(instance, name, value);
+    set_widget_property<TextBox*>(instance, name, value);
+    set_widget_text_property<TextBox*>(instance, name, value);
 }
 
 template <class T>
@@ -109,7 +109,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, std::sh
         std::string pname = prop->first_attribute("name")->value();
         std::string pvalue = prop->value();
 
-        property<T*>(instance.get(), pname, pvalue);
+        set_property<T*>(instance.get(), pname, pvalue);
     }
 
     return std::static_pointer_cast<Widget>(instance);

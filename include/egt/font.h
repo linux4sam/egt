@@ -12,7 +12,6 @@
  */
 
 #include <egt/detail/math.h>
-#include <egt/detail/meta.h>
 #include <egt/types.h>
 #include <iosfwd>
 #include <string>
@@ -34,12 +33,12 @@ class EGT_API Font
 {
 public:
 
-    using fontsize = float;
+    using Size = float;
 
     /**
      * Font weights.
      */
-    enum class weightid
+    enum class Weight
     {
         normal = 0,
         bold = 1,
@@ -48,7 +47,7 @@ public:
     /**
      * Font slants.
      */
-    enum class slantid
+    enum class Slant
     {
         normal = 0,
         italic = 1,
@@ -56,9 +55,9 @@ public:
     };
 
     static const char* DEFAULT_FACE;
-    static const weightid DEFAULT_WEIGHT;
-    static const fontsize DEFAULT_SIZE;
-    static const slantid DEFAULT_SLANT;
+    static const Font::Weight DEFAULT_WEIGHT;
+    static const Font::Size DEFAULT_SIZE;
+    static const Font::Slant DEFAULT_SLANT;
 
     /**
      * Create a font based on the global default font.
@@ -78,7 +77,7 @@ public:
      * @param[in] face The face name of the font.
      * @param[in] size The size of the font.
      */
-    explicit Font(const std::string& face, fontsize size);
+    explicit Font(const std::string& face, Font::Size size);
 
     /**
      * Create a font based on the supplied parameters.
@@ -88,7 +87,7 @@ public:
      * @param[in] weight The weight of the font.
      * @param[in] slant The slant of the font.
      */
-    explicit Font(const std::string& face, fontsize size, weightid weight, slantid slant);
+    explicit Font(const std::string& face, Font::Size size, Font::Weight weight, Font::Slant slant);
 
     /**
      * Create a font based on the global default font, but with the
@@ -96,7 +95,7 @@ public:
      *
      * @param[in] size The size of the font.
      */
-    explicit Font(fontsize size);
+    explicit Font(Font::Size size);
 
     /**
      * Create a font based on the global default font, but with the
@@ -105,7 +104,7 @@ public:
      * @param[in] size The size of the font.
      * @param[in] weight The weight of the font.
      */
-    explicit Font(fontsize size, weightid weight);
+    explicit Font(Font::Size size, Font::Weight weight);
 
     /**
      * Create a font based on the global default font, but with the
@@ -113,7 +112,7 @@ public:
      *
      * @param[in] weight The weight of the font.
      */
-    explicit Font(weightid weight);
+    explicit Font(Font::Weight weight);
 
     /**
      * Create a font based on the global default font, but with the
@@ -121,7 +120,7 @@ public:
      *
      * @param[in] slant The slant of the font.
      */
-    explicit Font(slantid slant);
+    explicit Font(Font::Slant slant);
 
     /**
      * Get the face name the font.
@@ -136,32 +135,32 @@ public:
     /**
      * Get the size of the font.
      */
-    inline fontsize size() const { return m_size; }
+    inline Font::Size size() const { return m_size; }
 
     /**
      * Set the size of the font.
      */
-    inline void size(fontsize s) { m_size = s; }
+    inline void size(Font::Size s) { m_size = s; }
 
     /**
      * Get the weight of the font.
      */
-    inline weightid weight() const { return m_weight; }
+    inline Font::Weight weight() const { return m_weight; }
 
     /**
      * Set the weight of the font.
      */
-    inline void weight(weightid w) { m_weight = w; }
+    inline void weight(Font::Weight w) { m_weight = w; }
 
     /**
      * Get the slant of the font.
      */
-    inline slantid slant() const { return m_slant; }
+    inline Font::Slant slant() const { return m_slant; }
 
     /**
      * Set the slant of the font.
      */
-    inline void set_slant(slantid s) { m_slant = s; }
+    inline void slant(Font::Slant s) { m_slant = s; }
 
     /**
      * Generates a FontConfig scaled font instance.
@@ -181,17 +180,17 @@ protected:
     /**
      * Font size.
      */
-    fontsize m_size{};
+    Font::Size m_size{};
 
     /**
      * Font weight.
      */
-    weightid m_weight;
+    Font::Weight m_weight;
 
     /**
      * Font slant.
      */
-    slantid m_slant;
+    Font::Slant m_slant;
 };
 
 EGT_API std::ostream& operator<<(std::ostream& os, const Font& font);

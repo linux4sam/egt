@@ -11,9 +11,9 @@
  * @brief Working with text input.
  */
 
+#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/textwidget.h>
-#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/image.h>
 #include <egt/timer.h>
@@ -38,7 +38,7 @@ inline namespace v1
  * @b Example
  * @code{.cpp}
  * TextBox textbox;
- * textbox.text_flags().set({TextBox::flag::multiline, TextBox::flag::word_wrap});
+ * textbox.text_flags().set({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap});
  * @endcode
  *
  * @image html widget_textbox.png
@@ -50,34 +50,34 @@ class EGT_API TextBox : public detail::TextWidget
 {
 public:
 
-    enum class flag
+    enum class TextFlag : uint32_t
     {
         /**
          * When not multiline, only allow max length to be what can fit.
          */
-        fit_to_width,
+        fit_to_width = detail::bit(0),
 
         /**
          * Enable multi-line text.
          */
-        multiline,
+        multiline = detail::bit(1),
 
         /**
          * Wrap at word boundaries instead of character boundaries.  Must be flag::multiline.
          */
-        word_wrap,
+        word_wrap = detail::bit(2),
 
         /**
          * Do not display a virtual keyboard when focus is gained.
          */
-        no_virt_keyboard,
+        no_virt_keyboard = detail::bit(3),
     };
 
-    using flags_type = Flags<flag>;
+    using TextFlags = detail::Flags<TextFlag>;
 
-    using validator_callback_t = std::function<bool(std::string)>;
+    using ValidatorCallback = std::function<bool(std::string)>;
 
-    static const alignmask default_align;
+    static const AlignFlags default_align;
 
     /**
      * @param[in] text The text to display.
@@ -85,8 +85,8 @@ public:
      * @param[in] flags TextBox flags.
      */
     explicit TextBox(const std::string& text = {},
-                     alignmask text_align = default_align,
-                     const flags_type& flags = {}) noexcept;
+                     const AlignFlags& text_align = default_align,
+                     const TextFlags& flags = {}) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -96,8 +96,8 @@ public:
      */
     TextBox(const std::string& text,
             const Rect& rect,
-            alignmask text_align = default_align,
-            const flags_type& flags = {}) noexcept;
+            const AlignFlags& text_align = default_align,
+            const TextFlags& flags = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -107,8 +107,8 @@ public:
      */
     explicit TextBox(Frame& parent,
                      const std::string& text = {},
-                     alignmask text_align = default_align,
-                     const flags_type& flags = {}) noexcept;
+                     const AlignFlags& text_align = default_align,
+                     const TextFlags& flags = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -120,8 +120,8 @@ public:
     TextBox(Frame& parent,
             const std::string& text,
             const Rect& rect,
-            alignmask text_align = default_align,
-            const flags_type& flags = {}) noexcept;
+            const AlignFlags& text_align = default_align,
+            const TextFlags& flags = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -150,12 +150,12 @@ public:
     /**
      * Get a const ref of the flags.
      */
-    inline const flags_type& text_flags() const { return m_text_flags; }
+    inline const TextFlags& text_flags() const { return m_text_flags; }
 
     /**
      * Get a modifiable ref of the flags.
      */
-    inline flags_type& text_flags() { return m_text_flags; }
+    inline TextFlags& text_flags() { return m_text_flags; }
 
     /**
      * Move the cursor to the end and insert.
@@ -260,13 +260,13 @@ public:
     /**
      * Add a callback to be invoked to validate the input.
      */
-    virtual void add_validator_function(validator_callback_t callback);
+    virtual void add_validator_function(ValidatorCallback callback);
 
     virtual ~TextBox() noexcept = default;
 
 protected:
 
-    using validator_callback_array = std::vector<validator_callback_t>;
+    using validator_callback_array = std::vector<ValidatorCallback>;
 
     /**
      * Show/enable the visibility of the cursor.
@@ -337,7 +337,7 @@ private:
     /**
      * TextBox flags.
      */
-    flags_type m_text_flags{};
+    TextFlags m_text_flags{};
 
     /**
      * Maximum text length, or zero.
@@ -351,9 +351,9 @@ EGT_API void draw_text(Painter& painter,
                        const Rect& b,
                        const std::string& text,
                        const Font& font,
-                       const TextBox::flags_type& flags,
-                       alignmask text_align,
-                       justification justify,
+                       const TextBox::TextFlags& flags,
+                       const AlignFlags& text_align,
+                       Justification justify,
                        const Color& text_color,
                        const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
                        size_t cursor_pos = 0,
@@ -365,11 +365,11 @@ EGT_API void draw_text(Painter& painter,
                        const Rect& b,
                        const std::string& text,
                        const Font& font,
-                       const TextBox::flags_type& flags,
-                       alignmask text_align,
-                       justification justify,
+                       const TextBox::TextFlags& flags,
+                       const AlignFlags& text_align,
+                       Justification justify,
                        const Color& text_color,
-                       alignmask image_align,
+                       const AlignFlags& image_align,
                        const Image& image,
                        const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
                        size_t cursor_pos = 0,

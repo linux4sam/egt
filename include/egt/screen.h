@@ -27,17 +27,17 @@ inline namespace v1
 /**
  * Manages one of more buffers that make up a Screen.
  *
- * @note A Screen is not necessarily the same resolution and orientation of
+ * @note A Screen is not necessarily the same resolution and Orientation of
  * the Display.
  */
-class EGT_API Screen : public detail::noncopyable
+class EGT_API Screen : public detail::NonCopyable
 {
 public:
 
     /**
      * Type used for damage arrays.
      */
-    using damage_array = std::vector<Rect>;
+    using DamageArray = std::vector<Rect>;
 
     Screen();
 
@@ -49,7 +49,7 @@ public:
      *
      * @note This will call schedule_flip() automatically.
      */
-    virtual void flip(const damage_array& damage);
+    virtual void flip(const DamageArray& damage);
 
     /**
      * Schedule a flip to occur later.
@@ -91,7 +91,7 @@ public:
      *
      * @note This function may be implemented to be recursive.
      */
-    static void damage_algorithm(Screen::damage_array& damage, Rect rect);
+    static void damage_algorithm(Screen::DamageArray& damage, Rect rect);
 
     /**
      * Set if asynchronous buffer flips are used.
@@ -140,16 +140,16 @@ public:
      */
     virtual void high_fidelity();
 
-    inline pixel_format format() const { return m_format; };
+    inline PixelFormat format() const { return m_format; };
 
     virtual ~Screen();
 
 protected:
 
     void init(void** ptr, uint32_t count, const Size& size,
-              pixel_format format = pixel_format::argb8888);
+              PixelFormat format = PixelFormat::argb8888);
 
-    inline void init(const Size& size, pixel_format format = pixel_format::argb8888)
+    inline void init(const Size& size, PixelFormat format = PixelFormat::argb8888)
     {
         init(nullptr, 0, size, format);
     }
@@ -168,9 +168,9 @@ protected:
         /**
          * Each rect that needs to be copied from the back buffer.
          */
-        damage_array damage;
+        DamageArray damage;
 
-        void add_damage(const Rect& rect)
+        inline void add_damage(const Rect& rect)
         {
             if (rect.empty())
                 return;
@@ -196,12 +196,12 @@ protected:
     /**
      * Type used for an array of ScreenBuffer objects.
      */
-    using buffer_array = std::vector<ScreenBuffer>;
+    using BufferArray = std::vector<ScreenBuffer>;
 
     /**
      * Screen buffer array.
      */
-    buffer_array m_buffers;
+    BufferArray m_buffers;
 
     /**
      * Size of the screen.
@@ -210,7 +210,7 @@ protected:
 
     bool m_async{false};
 
-    pixel_format m_format{};
+    PixelFormat m_format{};
 };
 
 }

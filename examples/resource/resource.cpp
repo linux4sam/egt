@@ -30,7 +30,7 @@ public:
         sizer->add(expand_horizontal(l));
 
         auto i = std::make_shared<ImageLabel>(image);
-        i->image_align(alignmask::expand);
+        i->image_align(AlignFlag::expand);
         sizer->add(expand(i));
     }
 };
@@ -45,7 +45,7 @@ public:
         add(expand(sizer));
 
         auto egt_logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
-        egt_logo->align(alignmask::center | alignmask::top);
+        egt_logo->align(AlignFlag::center | AlignFlag::top);
         egt_logo->margin(5);
         sizer->add(egt_logo);
 

@@ -18,12 +18,12 @@ MouseGesture::MouseGesture()
     // setup long click timer handler
     m_long_click_timer.on_timeout([this]()
     {
-        Event event(eventid::pointer_hold, Pointer(mouse_start()));
+        Event event(EventId::pointer_hold, Pointer(mouse_start()));
         invoke_handlers(event);
     });
 }
 
-void MouseGesture::on_async_event(mouse_callback_t callback)
+void MouseGesture::on_async_event(MouseCallback callback)
 {
     m_callbacks.emplace_back(std::move(callback));
 }
@@ -32,12 +32,12 @@ Event MouseGesture::handle(const Event& event)
 {
     switch (event.id())
     {
-    case eventid::raw_pointer_down:
+    case EventId::raw_pointer_down:
     {
         start(event.pointer().point);
         break;
     }
-    case eventid::raw_pointer_up:
+    case EventId::raw_pointer_up:
     {
         if (m_active)
         {
@@ -47,16 +47,16 @@ Event MouseGesture::handle(const Event& event)
 
             if (dragging)
             {
-                Event eevent(eventid::pointer_drag_stop, event.pointer());
+                Event eevent(EventId::pointer_drag_stop, event.pointer());
                 eevent.pointer().drag_start = mouse_start();
                 return eevent;
             }
             else
-                return {eventid::pointer_click, event.pointer()};
+                return {EventId::pointer_click, event.pointer()};
         }
         break;
     }
-    case eventid::raw_pointer_move:
+    case EventId::raw_pointer_move:
     {
         if (m_active)
         {
@@ -78,14 +78,14 @@ Event MouseGesture::handle(const Event& event)
 
             if (dragging_started)
             {
-                Event eevent(eventid::pointer_drag_start, event.pointer());
+                Event eevent(EventId::pointer_drag_start, event.pointer());
                 eevent.pointer().drag_start = mouse_start();
                 return eevent;
             }
 
             if (m_dragging)
             {
-                Event eevent(eventid::pointer_drag, event.pointer());
+                Event eevent(EventId::pointer_drag, event.pointer());
                 eevent.pointer().drag_start = mouse_start();
                 return eevent;
             }

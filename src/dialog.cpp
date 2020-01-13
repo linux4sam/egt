@@ -25,39 +25,39 @@ Dialog::Dialog(const Rect& rect) noexcept
     border(theme().default_border());
     padding(5);
 
-    m_layout->align(alignmask::expand);
+    m_layout->align(AlignFlag::expand);
     add(m_layout);
 
-    m_title->text_align(alignmask::left | alignmask::center);
+    m_title->text_align(AlignFlag::left | AlignFlag::center);
     m_layout->add(expand_horizontal(m_title));
 
     m_layout->add(expand(m_content));
 
     auto grid = std::make_shared<StaticGrid>(Rect(0, 0, 0, (rect.height() * 0.15)), std::make_tuple(2, 1), 5);
-    grid->align(alignmask::bottom | alignmask::expand_horizontal);
+    grid->align(AlignFlag::bottom | AlignFlag::expand_horizontal);
     m_layout->add(grid);
 
-    m_button1->align(alignmask::center);
+    m_button1->align(AlignFlag::center);
     grid->add(expand(m_button1));
 
-    m_button2->align(alignmask::center);
+    m_button2->align(AlignFlag::center);
     grid->add(expand(m_button2));
 
     m_button1->on_event([this](Event & event)
     {
         event.stop();
-        Event event2(eventid::event1);
+        Event event2(EventId::event1);
         invoke_handlers(event2);
         hide();
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
     m_button2->on_event([this](Event & event)
     {
         event.stop();
-        Event event2(eventid::event2);
+        Event event2(EventId::event2);
         invoke_handlers(event2);
         hide();
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
 }
 
@@ -77,9 +77,9 @@ void Dialog::icon(const Image& icon)
     m_title->image(icon);
 }
 
-void Dialog::button(buttonid button, const std::string& text)
+void Dialog::button(ButtonId button, const std::string& text)
 {
-    if (button == buttonid::button1)
+    if (button == ButtonId::button1)
     {
         if (text.empty())
             m_button1->hide();
@@ -89,7 +89,7 @@ void Dialog::button(buttonid button, const std::string& text)
             m_button1->show();
         }
     }
-    else if (button == buttonid::button2)
+    else if (button == ButtonId::button2)
     {
         if (text.empty())
             m_button2->hide();

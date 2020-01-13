@@ -17,21 +17,21 @@ namespace experimental
 {
 
 Form::Form(const std::string& title) noexcept
-    : m_vsizer(orientation::vertical)
+    : m_vsizer(Orientation::vertical)
 {
     name("Form" + std::to_string(m_widgetid));
 
-    m_vsizer.align(alignmask::expand);
+    m_vsizer.align(AlignFlag::expand);
     add(m_vsizer);
 
     if (!title.empty())
     {
-        auto label = std::make_shared<Label>(title, alignmask::center);
+        auto label = std::make_shared<Label>(title, AlignFlag::center);
         label->font(Font(label->font().face(),
                          label->font().size() + 4,
-                         Font::weightid::bold,
+                         Font::Weight::bold,
                          label->font().slant()));
-        label->align(alignmask::expand_horizontal);
+        label->align(AlignFlag::expand_horizontal);
         m_vsizer.add(label);
     }
 }
@@ -47,9 +47,9 @@ void Form::add_group(const std::string& caption)
     auto label = std::make_shared<Label>(caption);
     label->font(Font(label->font().face(),
                      label->font().size(),
-                     Font::weightid::bold,
+                     Font::Weight::bold,
                      label->font().slant()));
-    label->align(alignmask::expand_horizontal);
+    label->align(AlignFlag::expand_horizontal);
     label->text_align(m_group_align);
     m_vsizer.add(label);
     m_options.push_back(label.get());
@@ -62,9 +62,9 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
 
     assert(!widget->parent() && "widget already has parent!");
 
-    widget->align(alignmask::expand);
+    widget->align(AlignFlag::expand);
     auto label = std::make_shared<Label>(name);
-    label->align(alignmask::expand);
+    label->align(AlignFlag::expand);
     label->text_align(m_name_align);
     auto grid = std::make_shared<StaticGrid>(std::make_tuple(2, 1));
     grid->margin(2); /// @todo Not working
@@ -74,7 +74,7 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
     if (b.height() < min_option_height())
         b.height(min_option_height());
     grid->resize(Size(0, b.height()));
-    grid->align(alignmask::expand_horizontal);
+    grid->align(AlignFlag::expand_horizontal);
     grid->add(label);
     grid->add(widget);
     m_vsizer.add(grid);
@@ -83,7 +83,7 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
 
 void Form::add_option(const std::shared_ptr<Widget>& widget)
 {
-    widget->align(alignmask::expand);
+    widget->align(AlignFlag::expand);
     auto grid = std::make_shared<StaticGrid>(std::make_tuple(1, 1));
     grid->margin(2); /// @todo Not working
     auto b = widget->size();
@@ -92,7 +92,7 @@ void Form::add_option(const std::shared_ptr<Widget>& widget)
     if (b.height() < min_option_height())
         b.height(min_option_height());
     grid->resize(Size(0, b.height()));
-    grid->align(alignmask::expand_horizontal);
+    grid->align(AlignFlag::expand_horizontal);
     grid->add(widget);
     m_vsizer.add(grid);
     m_options.push_back(grid.get());

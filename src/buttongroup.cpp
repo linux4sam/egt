@@ -50,7 +50,7 @@ void ButtonGroup::add(const shared_ptr<Button>& button)
 
     /* If imperative is set, the first button has to be checked */
     if (imperative() && m_buttons.empty() && !button->checked())
-        button->m_checked = true;
+        button->flags().set(Widget::Flag::checked);
 
     m_buttons.push_back(button);
 
@@ -87,7 +87,7 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
         /* Only one button is checked so it can't be unchecked */
         if (exclusive())
         {
-            button.m_checked = true;
+            button.flags().set(Widget::Flag::checked);
             return;
         }
 
@@ -106,7 +106,7 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
         });
 
         if (!other_button_checked)
-            button.m_checked = true;
+            button.flags().set(Widget::Flag::checked);
 
         return;
     }
@@ -118,9 +118,9 @@ void ButtonGroup::checked_state_change(Button& button, bool checked) const
             auto real = b.lock();
             if (real && real.get() != &button)
             {
-                real->m_checked = false;
+                real->flags().clear(Widget::Flag::checked);
                 real->damage();
-                Event event(eventid::property_changed);
+                Event event(EventId::property_changed);
                 real->invoke_handlers(event);
             }
         }

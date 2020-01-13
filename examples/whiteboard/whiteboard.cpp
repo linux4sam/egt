@@ -22,7 +22,7 @@ public:
           m_color(color)
     {
         expand(m_grid);
-        this->color(Palette::ColorId::bg, Palette::black);
+        Popup::color(Palette::ColorId::bg, Palette::black);
         add(m_grid);
 
         const vector<Color> colors =
@@ -66,11 +66,10 @@ public:
             {
                 m_color = m_grid.get(m_grid.selected())->color(Palette::ColorId::button_bg).color();
                 this->hide();
-            }, {eventid::pointer_click});
+            }, {EventId::pointer_click});
         }
     }
 
-    using Widget::color;
     const Color& color() const { return m_color; }
 
 protected:
@@ -101,7 +100,7 @@ public:
 
         for (auto& w : widths)
         {
-            auto width_label = make_shared<Label>(std::to_string(w), alignmask::center);
+            auto width_label = make_shared<Label>(std::to_string(w), AlignFlag::center);
             width_label->color(Palette::ColorId::label_text, Palette::white);
 
             m_grid.add(expand(width_label));
@@ -115,7 +114,7 @@ public:
             {
                 m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
                 this->hide();
-            }, {eventid::pointer_click});
+            }, {EventId::pointer_click});
         }
     }
 
@@ -140,26 +139,26 @@ public:
           m_penpicker(Palette::blue),
           m_fillpicker(Palette::red),
           m_widthpicker(2),
-          m_canvas(screen()->size(), pixel_format::argb8888)
+          m_canvas(screen()->size(), PixelFormat::argb8888)
     {
         // don't draw background, we'll do it in draw()
-        boxtype(Theme::boxtype::none);
+        boxtype().clear();
         color(Palette::ColorId::bg, Palette::white);
 
         m_sizer = make_shared<VerticalBoxSizer>(*this);
         top(left(m_sizer));
 
-        m_colorbtn.boxtype(Theme::boxtype::none);
-        m_fillbutton.boxtype(Theme::boxtype::none);
-        m_widthbtn.boxtype(Theme::boxtype::none);
-        m_clearbtn.boxtype(Theme::boxtype::none);
-        m_snapshotbtn.boxtype(Theme::boxtype::none);
+        m_colorbtn.boxtype().clear();
+        m_fillbutton.boxtype().clear();
+        m_widthbtn.boxtype().clear();
+        m_clearbtn.boxtype().clear();
+        m_snapshotbtn.boxtype().clear();
 
-        m_colorbtn.image_align(alignmask::expand);
-        m_fillbutton.image_align(alignmask::expand);
-        m_widthbtn.image_align(alignmask::expand);
-        m_clearbtn.image_align(alignmask::expand);
-        m_snapshotbtn.image_align(alignmask::expand);
+        m_colorbtn.image_align(AlignFlag::expand);
+        m_fillbutton.image_align(AlignFlag::expand);
+        m_widthbtn.image_align(AlignFlag::expand);
+        m_clearbtn.image_align(AlignFlag::expand);
+        m_snapshotbtn.image_align(AlignFlag::expand);
 
         add(m_penpicker);
         add(m_fillpicker);
@@ -174,31 +173,31 @@ public:
         m_colorbtn.on_event([this](Event&)
         {
             m_penpicker.show_modal(true);
-        }, {eventid::pointer_click});
+        }, {EventId::pointer_click});
 
         m_fillbutton.on_event([this](Event&)
         {
             m_fillpicker.show_modal(true);
-        }, {eventid::pointer_click});
+        }, {EventId::pointer_click});
 
         m_widthbtn.on_event([this](Event&)
         {
             m_widthpicker.show_modal(true);
-        }, {eventid::pointer_click});
+        }, {EventId::pointer_click});
 
         m_clearbtn.on_event([this](Event&)
         {
             clear();
             damage();
-        }, {eventid::pointer_click});
+        }, {EventId::pointer_click});
 
         m_snapshotbtn.on_event([this](Event&)
         {
             paint_to_file();
-        }, {eventid::pointer_click});
+        }, {EventId::pointer_click});
 
         auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
-        logo->align(alignmask::right | alignmask::top);
+        logo->align(AlignFlag::right | AlignFlag::top);
         logo->margin(10);
         add(logo);
 
@@ -219,7 +218,7 @@ public:
 
         switch (event.id())
         {
-        case eventid::pointer_click:
+        case EventId::pointer_click:
         {
             auto mouse = display_to_local(event.pointer().point);
             Painter painter(m_canvas.context());
@@ -228,11 +227,11 @@ public:
             damage();
             break;
         }
-        case eventid::pointer_drag_start:
+        case EventId::pointer_drag_start:
             m_last = display_to_local(event.pointer().point);
             event.grab(this);
             break;
-        case eventid::pointer_drag:
+        case EventId::pointer_drag:
         {
             auto mouse = display_to_local(event.pointer().point);
 

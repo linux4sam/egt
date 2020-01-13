@@ -46,7 +46,7 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "camera");
 
     Size size(320, 240);
-    auto format = pixel_format::yuyv;
+    auto format = PixelFormat::yuyv;
     std::string dev = "/dev/video0";
     if (argc == 5)
     {
@@ -54,7 +54,7 @@ int main(int argc, const char** argv)
         size.width(atoi(argv[2]));
         size.height(atoi(argv[3]));
         if (atoi(argv[4]) <= 10)
-            format = static_cast<pixel_format>(atoi(argv[4]));
+            format = static_cast<PixelFormat>(atoi(argv[4]));
     }
 
     TopWindow win;
@@ -62,11 +62,11 @@ int main(int argc, const char** argv)
 
     Label errlabel;
     errlabel.color(Palette::ColorId::label_text, Palette::white);
-    errlabel.align(alignmask::expand);
-    errlabel.text_align(alignmask::center | alignmask::top);
+    errlabel.align(AlignFlag::expand);
+    errlabel.text_align(AlignFlag::center | AlignFlag::top);
     win.add(errlabel);
 
-    CameraWindow player(size, dev, format, windowhint::overlay);
+    CameraWindow player(size, dev, format, WindowHint::overlay);
     player.move_to_center(win.center());
     win.add(player);
 
@@ -74,14 +74,14 @@ int main(int argc, const char** argv)
     win.on_event([&player](Event&)
     {
         player.start();
-    }, {eventid::show});
+    }, {EventId::show});
 
     Point m_start_point;
     player.on_event([&player, &errlabel, &m_start_point](Event & event)
     {
         switch (event.id())
         {
-        case eventid::error:
+        case EventId::error:
         {
             auto msg = player.error_message();
             if (msg.empty())
@@ -90,12 +90,12 @@ int main(int argc, const char** argv)
                 errlabel.text("Error:\n" + line_break(msg));
             break;
         }
-        case eventid::pointer_drag_start:
+        case EventId::pointer_drag_start:
         {
             m_start_point = player.box().point();
             break;
         }
-        case eventid::pointer_drag:
+        case EventId::pointer_drag:
         {
             auto diff = event.pointer().drag_start - event.pointer().point;
             player.move(m_start_point - Point(diff.x(), diff.y()));
@@ -104,19 +104,21 @@ int main(int argc, const char** argv)
         default:
             break;
         }
+
+        event.quit();
     });
 
     Window ctrlwindow(Size(win.width(), 72));
-    ctrlwindow.align(alignmask::bottom | alignmask::center);
+    ctrlwindow.align(AlignFlag::bottom | AlignFlag::center);
     ctrlwindow.color(Palette::ColorId::bg, Palette::transparent);
     win.add(ctrlwindow);
 
     HorizontalBoxSizer hpos;
-    hpos.align(alignmask::center);
+    hpos.align(AlignFlag::center);
     ctrlwindow.add(hpos);
 
     ImageButton fullscreen(Image(":fullscreen_png"));
-    fullscreen.boxtype(Theme::boxtype::none);
+    fullscreen.boxtype().clear();
     hpos.add(fullscreen);
 
     const auto wscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
@@ -139,7 +141,7 @@ int main(int argc, const char** argv)
             fullscreen.image(Image(":fullscreen_png"));
             scaled = true;
         }
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
     Label cpulabel("CPU: 0%", Size(100, 40));
     cpulabel.color(Palette::ColorId::label_text, Palette::white);

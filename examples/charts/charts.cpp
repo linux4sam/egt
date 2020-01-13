@@ -83,7 +83,7 @@ struct LinePage : public NotebookTab
 
         auto handle_checkbox = [line, sin_checkbox, cos_checkbox, atan_checkbox](Event & event)
         {
-            if (event.id() == eventid::property_changed)
+            if (event.id() == EventId::property_changed)
             {
                 line->clear();
                 if (sin_checkbox->checked())
@@ -109,7 +109,7 @@ struct LinePage : public NotebookTab
         line_width->on_event([line, line_width](Event & event)
         {
             line->line_width(line_width->value());
-        }, {eventid::property_changed});
+        }, {EventId::property_changed});
 
         line_width->value(2);
 
@@ -118,7 +118,7 @@ struct LinePage : public NotebookTab
 
         auto handle_grid_checkbox = [grid_checkbox, line](Event & event)
         {
-            if (event.id() == eventid::property_changed)
+            if (event.id() == EventId::property_changed)
             {
                 uint32_t flags = 0;
                 if (grid_checkbox->checked())
@@ -160,18 +160,18 @@ int main(int argc, const char** argv)
 
     TopWindow win;
 
-    BoxSizer hsizer(orientation::horizontal);
-    hsizer.align(alignmask::expand);
+    BoxSizer hsizer(Orientation::horizontal);
+    hsizer.align(AlignFlag::expand);
     win.add(hsizer);
 
     ListBox list(Size(win.width() * 0.15, 0));
-    list.align(alignmask::expand_vertical | alignmask::left);
+    list.align(AlignFlag::expand_vertical | AlignFlag::left);
     list.add_item(make_shared<StringItem>("Line"));
     list.add_item(make_shared<StringItem>("Pie"));
     hsizer.add(list);
 
     Notebook notebook;
-    notebook.align(alignmask::expand);
+    notebook.align(AlignFlag::expand);
     hsizer.add(notebook);
     notebook.add(make_shared<LinePage>());
     notebook.add(make_shared<PiePage>());
@@ -179,7 +179,7 @@ int main(int argc, const char** argv)
     list.on_event([&](Event&)
     {
         notebook.selected(list.selected());
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     win.show();
 

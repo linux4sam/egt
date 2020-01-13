@@ -5,6 +5,7 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/alignment.h"
+#include "egt/detail/enum.h"
 #include "egt/detail/math.h"
 #include "egt/frame.h"
 #include "egt/geometry.h"
@@ -28,16 +29,21 @@ inline namespace v1
 
 static auto global_widget_id = 0;
 
-Widget::Widget(const Rect& rect, const Widget::flags_type& flags) noexcept
+Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
     : m_box(rect),
       m_widgetid(global_widget_id++),
       m_widget_flags(flags),
       m_palette(detail::make_unique<Palette>())
 {
     name("Widget" + std::to_string(m_widgetid));
+
+    m_align.on_event([this](Event&)
+    {
+        parent_layout();
+    }, {EventId::property_changed});
 }
 
-Widget::Widget(Frame& parent, const Rect& rect, const Widget::flags_type& flags) noexcept
+Widget::Widget(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
     : Widget(rect, flags)
 {
     parent.add(*this);
@@ -52,20 +58,20 @@ void Widget::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::on_gain_focus:
+    case EventId::on_gain_focus:
         m_focus = true;
         break;
-    case eventid::on_lost_focus:
+    case EventId::on_lost_focus:
         m_focus = false;
         break;
-    case eventid::raw_pointer_down:
-        if (flags().is_set(Widget::flag::grab_mouse))
+    case EventId::raw_pointer_down:
+        if (flags().is_set(Widget::Flag::grab_mouse))
         {
             active(true);
             event.grab(this);
         }
         break;
-    case eventid::raw_pointer_up:
+    case EventId::raw_pointer_up:
         active(false);
         break;
     default:
@@ -133,22 +139,22 @@ void Widget::box(const Rect& rect)
 
 void Widget::hide()
 {
-    if (flags().is_set(Widget::flag::invisible))
+    if (flags().is_set(Widget::Flag::invisible))
         return;
     // careful attention to ordering
     damage();
-    flags().set(Widget::flag::invisible);
-    invoke_handlers(eventid::hide);
+    flags().set(Widget::Flag::invisible);
+    invoke_handlers(EventId::hide);
 }
 
 void Widget::show()
 {
-    if (!flags().is_set(Widget::flag::invisible))
+    if (!flags().is_set(Widget::Flag::invisible))
         return;
     // careful attention to ordering
-    flags().clear(Widget::flag::invisible);
+    flags().clear(Widget::Flag::invisible);
     damage();
-    invoke_handlers(eventid::show);
+    invoke_handlers(EventId::show);
 }
 
 void Widget::visible(bool value)
@@ -164,44 +170,44 @@ void Widget::visible(bool value)
 
 bool Widget::active() const
 {
-    return flags().is_set(Widget::flag::active);
+    return flags().is_set(Widget::Flag::active);
 }
 
 void Widget::active(bool value)
 {
-    if (flags().is_set(Widget::flag::active) != value)
+    if (flags().is_set(Widget::Flag::active) != value)
     {
         if (value)
-            flags().set(Widget::flag::active);
+            flags().set(Widget::Flag::active);
         else
-            flags().clear(Widget::flag::active);
+            flags().clear(Widget::Flag::active);
         damage();
     }
 }
 
 void Widget::readonly(bool value)
 {
-    if (flags().is_set(Widget::flag::readonly) != value)
+    if (flags().is_set(Widget::Flag::readonly) != value)
     {
         if (value)
         {
-            flags().set(Widget::flag::readonly);
+            flags().set(Widget::Flag::readonly);
 
             if (detail::keyboard_focus() == this)
                 detail::keyboard_focus(nullptr);
         }
         else
-            flags().clear(Widget::flag::readonly);
+            flags().clear(Widget::Flag::readonly);
         damage();
     }
 }
 
 void Widget::disable()
 {
-    if (flags().is_set(Widget::flag::disabled))
+    if (flags().is_set(Widget::Flag::disabled))
         return;
     damage();
-    flags().set(Widget::flag::disabled);
+    flags().set(Widget::Flag::disabled);
 
     if (detail::keyboard_focus() == this)
         detail::keyboard_focus(nullptr);
@@ -209,10 +215,10 @@ void Widget::disable()
 
 void Widget::enable()
 {
-    if (!flags().is_set(Widget::flag::disabled))
+    if (!flags().is_set(Widget::Flag::disabled))
         return;
     damage();
-    flags().clear(Widget::flag::disabled);
+    flags().clear(Widget::Flag::disabled);
 }
 
 void Widget::alpha(float alpha)
@@ -248,7 +254,7 @@ void Widget::palette(const Palette& palette)
     damage();
 }
 
-void Widget::repalette()
+void Widget::reset_palette()
 {
     assert(m_palette);
     if (m_palette)
@@ -310,10 +316,9 @@ Screen* Widget::screen() const
     return parent()->screen();
 }
 
-void Widget::align(alignmask a)
+void Widget::align(const AlignFlags& a)
 {
-    if (detail::change_if_diff<>(m_align, a))
-        parent_layout();
+    m_align = a;
 }
 
 Point Widget::to_parent(const Point& r) const
@@ -387,7 +392,7 @@ void Widget::dump(std::ostream& out, int level)
     out << std::endl;
 }
 
-void Widget::walk(walk_callback_t callback, int level)
+void Widget::walk(WalkCallback callback, int level)
 {
     callback(this, level);
 }
@@ -397,7 +402,7 @@ void Widget::theme(const Theme& theme)
     m_theme = detail::make_unique<Theme>(theme);
 }
 
-void Widget::retheme()
+void Widget::reset_theme()
 {
     m_theme.reset();
 }
@@ -485,7 +490,7 @@ Rect Widget::content_area() const
 
 void Widget::layout()
 {
-    if (!flags().is_set(Widget::flag::no_autoresize))
+    if (!flags().is_set(Widget::Flag::no_autoresize))
     {
         auto s = size();
         if (s.width() < min_size_hint().width())
@@ -493,6 +498,18 @@ void Widget::layout()
         if (s.height() < min_size_hint().height())
             s.height(min_size_hint().height());
         resize(s);
+    }
+}
+
+void Widget::checked(bool value)
+{
+    if (flags().is_set(Widget::Flag::checked) != value)
+    {
+        if (value)
+            flags().set(Widget::Flag::checked);
+        else
+            flags().clear(Widget::Flag::checked);
+        damage();
     }
 }
 
@@ -526,7 +543,7 @@ void Widget::parent_layout()
     if (!visible())
         return;
 
-    if (flags().is_set(Widget::flag::no_layout))
+    if (flags().is_set(Widget::Flag::no_layout))
         return;
 
     if (parent())

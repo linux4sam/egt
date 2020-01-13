@@ -39,7 +39,7 @@ public:
     /**
      * buttonid used for dialog button properties.
      */
-    enum class buttonid
+    enum class ButtonId
     {
         button1,
         button2,
@@ -76,7 +76,7 @@ public:
      * @param[in] button is buttonid
      * @param[in] text is a text to display on button.
      */
-    virtual void button(buttonid button, const std::string& text);
+    virtual void button(ButtonId button, const std::string& text);
 
     /**
      * Set a widget for this dialog.

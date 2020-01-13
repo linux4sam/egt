@@ -16,6 +16,7 @@
 #include <egt/detail/meta.h>
 #include <egt/easing.h>
 #include <egt/window.h>
+#include <iosfwd>
 
 namespace egt
 {
@@ -35,31 +36,54 @@ public:
 
     constexpr static const int HANDLE_WIDTH = 50;
 
-    enum class flags
+    enum class PositionFlag : uint32_t
     {
-        left = 1 << 0,
-        right = 1 << 1,
-        top = 1 << 2,
-        bottom = 1 << 3,
+        left,
+        right,
+        top,
+        bottom,
     };
 
-    explicit SideBoard(flags f = flags::left,
+    /**
+     * @param[in] position Position of the SideBoard.
+     * @param[in] open_duration The duration of the open animation.
+     * @param[in] open_func Open easing function.
+     * @param[in] close_duration Duration of the close animation.
+     * @param[in] close_func Close easing function.
+     */
+    explicit SideBoard(PositionFlag position = PositionFlag::left,
                        std::chrono::milliseconds open_duration = std::chrono::milliseconds(1000),
-                       easing_func_t open_func = easing_cubic_easeinout,
+                       EasingFunc open_func = easing_cubic_easeinout,
                        std::chrono::milliseconds close_duration = std::chrono::milliseconds(1000),
-                       easing_func_t close_func = easing_circular_easeinout);
+                       EasingFunc close_func = easing_circular_easeinout);
 
     virtual void handle(Event& event) override;
 
+    /**
+     * Set the position of the SideBoard.
+     *
+     * @param[in] position Position of the SideBoard.
+     */
+    virtual void position(PositionFlag position);
+
+    /**
+     * Get the position of the SideBoard.
+     */
+    inline PositionFlag position() const { return m_position; }
+
+    /**
+     * Move to a closed state.
+     */
     virtual void close();
 
+    /**
+     * Move to an open state.
+     */
     virtual void open();
 
     virtual ~SideBoard() = default;
 
 protected:
-
-    inline bool is_set(flags f) const;
 
     /**
      * Reset animation start/end values.
@@ -69,7 +93,7 @@ protected:
     /**
      * Sideboard flags.
      */
-    flags m_side_flags{flags::left};
+    PositionFlag m_position{PositionFlag::left};
 
     /**
      * Open animation.
@@ -87,12 +111,7 @@ protected:
     bool m_dir{false};
 };
 
-ENABLE_BITMASK_OPERATORS(SideBoard::flags);
-
-bool SideBoard::is_set(flags f) const
-{
-    return ((m_side_flags & f) == f);
-}
+EGT_API std::ostream& operator<<(std::ostream& os, const SideBoard::PositionFlag& flag);
 
 }
 }

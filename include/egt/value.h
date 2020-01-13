@@ -59,7 +59,7 @@ public:
         T orig = m_value;
 
         if (detail::change_if_diff<T>(m_value, value))
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
 
         return orig;
     }
@@ -129,7 +129,7 @@ public:
         value = detail::clamp<T>(value, m_min, m_max);
 
         if (detail::change_if_diff<T>(m_value, value))
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
 
         return orig;
     }
@@ -200,7 +200,7 @@ public:
         m_animation.on_change([this](T value)
         {
             if (detail::change_if_diff<T>(this->m_value, value))
-                this->invoke_handlers(eventid::property_changed);
+                this->invoke_handlers(EventId::property_changed);
         });
     }
 

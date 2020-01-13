@@ -12,7 +12,7 @@ using namespace std;
 using namespace egt;
 using namespace egt::experimental;
 
-static vector<pair<easing_func_t, string>> easing_functions =
+static vector<pair<EasingFunc, string>> easing_functions =
 {
     {easing_linear, "linear"},
     {easing_easy, "easy"},
@@ -49,7 +49,7 @@ static vector<pair<easing_func_t, string>> easing_functions =
     {easing_exponential_easeinout, "exponential easeinout"}
 };
 
-static LineChart::data_array create_data(easing_func_t easing)
+static LineChart::data_array create_data(EasingFunc easing)
 {
     LineChart::data_array data;
     for (float i = 0.; i <= 1.; i += .001)
@@ -70,9 +70,9 @@ public:
         ListBox::item_array items;
         items.resize(easing_functions.size());
         transform(easing_functions.begin(), easing_functions.end(), items.begin(),
-        [](const std::pair<easing_func_t, string>& v) { return make_shared<StringItem>(v.second);});
+        [](const std::pair<EasingFunc, string>& v) { return make_shared<StringItem>(v.second);});
         auto list1 = make_shared<ListBox>(items, Rect(Point(0, 0), Size(190, 0)));
-        list1->align(alignmask::expand_vertical | alignmask::right);
+        list1->align(AlignFlag::expand_vertical | AlignFlag::right);
         add(list1);
 
         list1->on_event([this, list1](Event&)
@@ -83,7 +83,7 @@ public:
 
             m_line.clear();
             m_line.add_data(create_data(easing_functions[list1->selected()].first), LineChart::chart_type::lines);
-        }, {eventid::property_changed});
+        }, {EventId::property_changed});
 
         list1->selected(7);
 
@@ -91,13 +91,13 @@ public:
         m_box.resize(image->size());
         m_box.add(image);
 
-        m_box.boxtype(Theme::boxtype::none);
+        m_box.boxtype().clear();
         m_box.move(Point(width() / 2 - m_box.width() / 2, -110));
-        m_box.flags().set(Widget::flag::no_layout);
+        m_box.flags().set(Widget::Flag::no_layout);
         m_box.show();
         add(m_box);
 
-        m_animation.on_change([this](PropertyAnimator::Value v) {m_box.y(v);});
+        m_animation.on_change([this](PropertyAnimator::Value value) { m_box.y(value); });
         m_animation.rounding(true);
         m_seq.add(m_animation);
         m_seq.add(m_delay);
@@ -113,7 +113,7 @@ private:
         auto imgicon = make_shared<ImageLabel>(Image("@cursor_hand.png"));
         imgicon->margin(5);
         imgicon->resize(Size(SideBoard::HANDLE_WIDTH, SideBoard::HANDLE_WIDTH));
-        imgicon->align(alignmask::top | alignmask::right);
+        imgicon->align(AlignFlag::top | AlignFlag::right);
         m_board.add(imgicon);
 
         add(m_board);

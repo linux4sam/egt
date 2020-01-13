@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/checkbox.h"
+#include "egt/detail/enum.h"
 #include "egt/detail/math.h"
 #include "egt/painter.h"
 #include "egt/theme.h"
@@ -115,7 +116,7 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
 {
     const auto& type = widget.boxtype();
 
-    if (type == boxtype::none)
+    if (type.empty())
         return;
 
     Palette::GroupId group = Palette::GroupId::normal;
@@ -136,14 +137,14 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
 }
 
 void Theme::draw_box(Painter& painter,
-                     boxtype type,
+                     BoxFlags type,
                      const Rect& rect,
                      const pattern_type& border,
                      const pattern_type& bg,
                      default_dim_type border_width,
                      default_dim_type margin_width) const
 {
-    if (type == boxtype::none)
+    if (type.empty())
         return;
 
     auto box = rect;
@@ -179,14 +180,14 @@ void Theme::draw_box(Painter& painter,
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
 
-    if ((type & boxtype::solid) == boxtype::solid)
+    if (type.is_set(BoxFlag::solid))
     {
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
     }
 
     cairo_new_path(cr);
 
-    if ((type & boxtype::border_rounded) == boxtype::border_rounded)
+    if (type.is_set(BoxFlag::border_rounded))
     {
         cairo_arc(cr, rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
         cairo_arc(cr, rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
@@ -199,7 +200,7 @@ void Theme::draw_box(Painter& painter,
         painter.draw(box);
     }
 
-    if ((type & boxtype::fill) == boxtype::fill)
+    if (type.is_set(BoxFlag::fill))
     {
         const auto& steps = bg.steps();
         if (steps.size() == 1)
@@ -230,7 +231,7 @@ void Theme::draw_box(Painter& painter,
 
     if (border_width)
     {
-        if ((type & boxtype::border_bottom) == boxtype::border_bottom)
+        if (type.is_set(BoxFlag::border_bottom))
         {
             cairo_new_path(cr);
             painter.draw(box.bottom_left(), box.bottom_right());
@@ -250,7 +251,7 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
 {
     const auto& type = widget.boxtype();
 
-    if (type == boxtype::none)
+    if (type.empty())
         return;
 
     Palette::GroupId group = Palette::GroupId::normal;
@@ -271,14 +272,14 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
 }
 
 void Theme::draw_circle(Painter& painter,
-                        boxtype type,
+                        BoxFlags type,
                         const Rect& rect,
                         const pattern_type& border,
                         const pattern_type& bg,
                         default_dim_type border_width,
                         default_dim_type margin_width) const
 {
-    if (type == boxtype::none)
+    if (type.empty())
         return;
 
     auto box = rect;
@@ -306,7 +307,7 @@ void Theme::draw_circle(Painter& painter,
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
 
-    if ((type & boxtype::solid) == boxtype::solid)
+    if (type.is_set(BoxFlag::solid))
     {
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
     }
@@ -314,7 +315,7 @@ void Theme::draw_circle(Painter& painter,
     cairo_new_path(cr);
     painter.draw(circle);
 
-    if ((type & boxtype::fill) == boxtype::fill)
+    if (type.is_set(BoxFlag::fill))
     {
         const auto& steps = bg.steps();
         if (steps.size() == 1)
@@ -357,6 +358,15 @@ void Theme::draw_circle(Painter& painter,
 
     cairo_new_path(cr);
 }
+
+template<>
+std::map<Theme::BoxFlag, char const*> detail::EnumStrings<Theme::BoxFlag>::data =
+{
+    {Theme::BoxFlag::solid, "solid"},
+    {Theme::BoxFlag::fill, "fill"},
+    {Theme::BoxFlag::border_rounded, "border_rounded"},
+    {Theme::BoxFlag::border_bottom, "border_bottom"},
+};
 
 }
 }

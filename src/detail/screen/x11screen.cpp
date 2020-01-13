@@ -79,7 +79,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
                  PointerMotionMask | Button1MotionMask | VisibilityChangeMask |
                  ColormapChangeMask);
 
-    init(size, pixel_format::rgb565);
+    init(size, PixelFormat::rgb565);
 
     // instead of using init() to create the buffer, create our own using cairo_xlib_surface_create
     m_buffers.emplace_back(
@@ -126,7 +126,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     });
 }
 
-void X11Screen::flip(const damage_array& damage)
+void X11Screen::flip(const DamageArray& damage)
 {
     Screen::flip(damage);
     XFlush(m_priv->display);
@@ -160,7 +160,7 @@ void X11Screen::handle_read(const asio::error_code& error)
             break;
         case Expose:
         {
-            damage_array damage;
+            DamageArray damage;
             damage.emplace_back(e.xexpose.x, e.xexpose.y,
                                 e.xexpose.width, e.xexpose.height);
             flip(damage);
@@ -168,25 +168,25 @@ void X11Screen::handle_read(const asio::error_code& error)
         }
         case ButtonPress:
         {
-            Event event(eventid::raw_pointer_down, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
+            Event event(EventId::raw_pointer_down, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
             if (e.xbutton.button == Button1)
-                event.pointer().btn = Pointer::button::left;
+                event.pointer().btn = Pointer::Button::left;
             else if (e.xbutton.button == Button2)
-                event.pointer().btn = Pointer::button::middle;
+                event.pointer().btn = Pointer::Button::middle;
             else if (e.xbutton.button == Button3)
-                event.pointer().btn = Pointer::button::right;
+                event.pointer().btn = Pointer::Button::right;
             m_in.dispatch(event);
             break;
         }
         case ButtonRelease:
         {
-            Event event(eventid::raw_pointer_up, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
+            Event event(EventId::raw_pointer_up, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
             if (e.xbutton.button == Button1)
-                event.pointer().btn = Pointer::button::left;
+                event.pointer().btn = Pointer::Button::left;
             else if (e.xbutton.button == Button2)
-                event.pointer().btn = Pointer::button::middle;
+                event.pointer().btn = Pointer::Button::middle;
             else if (e.xbutton.button == Button3)
-                event.pointer().btn = Pointer::button::right;
+                event.pointer().btn = Pointer::Button::right;
             m_in.dispatch(event);
             break;
         }
@@ -194,7 +194,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         case LeaveNotify:
         case MotionNotify:
         {
-            Event event(eventid::raw_pointer_move, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
+            Event event(EventId::raw_pointer_move, Pointer(DisplayPoint(e.xbutton.x, e.xbutton.y)));
             m_in.dispatch(event);
             break;
         }
@@ -211,7 +211,7 @@ void X11Screen::handle_read(const asio::error_code& error)
                     XEvent trash;
                     XNextEvent(m_priv->display, &trash);
 
-                    const auto id = eventid::keyboard_repeat;
+                    const auto id = EventId::keyboard_repeat;
                     Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
                                         m_keyboard->on_key(e.xkey.keycode, id)));
                     m_in.dispatch(event);
@@ -221,7 +221,7 @@ void X11Screen::handle_read(const asio::error_code& error)
             [[fallthrough]];
         case KeyPress:
         {
-            const auto id = e.type == KeyPress ? eventid::keyboard_down : eventid::keyboard_up;
+            const auto id = e.type == KeyPress ? EventId::keyboard_down : EventId::keyboard_up;
             Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
                                 m_keyboard->on_key(e.xkey.keycode, id)));
             m_in.dispatch(event);

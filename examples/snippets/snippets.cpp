@@ -152,7 +152,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             animation.ending(1.0);
             animation.duration(std::chrono::seconds(5));
             animation.easing_func(easing_linear);
-            animation.on_change([&button](PropertyAnimatorF::Value v) { button.alpha(v); });
+            animation.on_change([&button](PropertyAnimatorF::Value value) { button.alpha(value); });
             animation.start();
 
             window.show();
@@ -173,7 +173,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             animation.ending(button.y() + 100);
             animation.duration(std::chrono::seconds(5));
             animation.easing_func(easing_linear);
-            animation.on_change([&button](PropertyAnimator::Value v) { button.y(v); });
+            animation.on_change([&button](PropertyAnimator::Value value) { button.y(value); });
 
             animation.start();
 
@@ -274,7 +274,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             checkbox.on_event([&button, &checkbox](Event & event)
             {
                 button.disabled(checkbox.checked());
-            }, {eventid::property_changed});
+            }, {EventId::property_changed});
 
             window.show();
             /// @[events1]
@@ -287,7 +287,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             /// @[timer1]
             TopWindow window;
             Label label(window);
-            label.text_align(alignmask::center);
+            label.text_align(AlignFlag::center);
             center(label);
 
             PeriodicTimer timer(std::chrono::seconds(1));

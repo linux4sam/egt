@@ -18,16 +18,16 @@ int main(int argc, const char** argv)
     {
         auto label = make_shared<Label>(text);
         label->font(Font(30));
-        label->boxtype(Theme::boxtype::none);
-        label->align(alignmask::center);
+        label->boxtype().clear();
+        label->align(AlignFlag::center);
         return label;
     };
 
     auto label = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"), "SideBoard Widget");
     label->font(Font(28));
-    label->boxtype(Theme::boxtype::none);
-    label->align(alignmask::center);
-    label->image_align(alignmask::top);
+    label->boxtype().clear();
+    label->align(AlignFlag::center);
+    label->image_align(AlignFlag::top);
     win.add(label);
 
     SideBoard board0;
@@ -36,19 +36,19 @@ int main(int argc, const char** argv)
     win.add(board0);
     board0.show();
 
-    SideBoard board1(SideBoard::flags::bottom);
+    SideBoard board1(SideBoard::PositionFlag::bottom);
     board1.color(Palette::ColorId::bg, Palette::blue);
     board1.add(create_label("BOTTOM"));
     win.add(board1);
     board1.show();
 
-    SideBoard board2(SideBoard::flags::right);
+    SideBoard board2(SideBoard::PositionFlag::right);
     board2.color(Palette::ColorId::bg, Palette::green);
     board2.add(create_label("RIGHT"));
     win.add(board2);
     board2.show();
 
-    SideBoard board3(SideBoard::flags::top);
+    SideBoard board3(SideBoard::PositionFlag::top);
     board3.color(Palette::ColorId::bg, Palette::gray);
     board3.add(create_label("TOP"));
     win.add(board3);

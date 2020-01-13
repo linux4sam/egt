@@ -3,10 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/enum.h"
+#include "egt/detail/string.h"
 #include "egt/palette.h"
 #include <cassert>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 namespace egt
 {
@@ -209,56 +212,38 @@ constexpr Color Palette::whitesmoke;
 constexpr Color Palette::yellow;
 constexpr Color Palette::yellowgreen;
 
-static const std::map<Palette::ColorId, std::string>& color_strings()
+template<>
+std::map<Palette::ColorId, char const*> detail::EnumStrings<Palette::ColorId>::data =
 {
-    static std::map<Palette::ColorId, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(Palette::ColorId::bg);
-        MAPITEM(Palette::ColorId::text);
-        MAPITEM(Palette::ColorId::text_highlight);
-        MAPITEM(Palette::ColorId::cursor);
-        MAPITEM(Palette::ColorId::border);
-        MAPITEM(Palette::ColorId::button_bg);
-        MAPITEM(Palette::ColorId::button_fg);
-        MAPITEM(Palette::ColorId::button_text);
-        MAPITEM(Palette::ColorId::label_bg);
-        MAPITEM(Palette::ColorId::label_text);
-#undef MAPITEM
-    }
-    return strings;
-}
+    {Palette::ColorId::bg, "bg"},
+    {Palette::ColorId::text, "text"},
+    {Palette::ColorId::text_highlight, "text_highlight"},
+    {Palette::ColorId::cursor, "cursor"},
+    {Palette::ColorId::border, "border"},
+    {Palette::ColorId::button_bg, "button_bg"},
+    {Palette::ColorId::button_fg, "button_fg"},
+    {Palette::ColorId::button_text, "button_text"},
+    {Palette::ColorId::label_bg, "label_bg"},
+    {Palette::ColorId::label_text, "label_text"},
+};
 
 std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color)
 {
-    const auto& strings = color_strings();
-
-    os << strings.at(color);
-    return os;
+    return os << detail::enum_to_string(color);
 }
 
-static const std::map<Palette::GroupId, std::string>& group_strings()
+template<>
+std::map<Palette::GroupId, char const*> detail::EnumStrings<Palette::GroupId>::data =
 {
-    static std::map<Palette::GroupId, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(Palette::GroupId::normal);
-        MAPITEM(Palette::GroupId::active);
-        MAPITEM(Palette::GroupId::disabled);
-        MAPITEM(Palette::GroupId::checked);
-#undef MAPITEM
-    }
-    return strings;
-}
+    {Palette::GroupId::normal, "normal"},
+    {Palette::GroupId::active, "active"},
+    {Palette::GroupId::disabled, "disabled"},
+    {Palette::GroupId::checked, "checked"},
+};
 
 std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group)
 {
-    const auto& strings = group_strings();
-
-    os << strings.at(group);
-    return os;
+    return os << detail::enum_to_string(group);
 }
 
 }

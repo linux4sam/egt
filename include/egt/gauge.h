@@ -231,7 +231,7 @@ public:
 
         if (detail::change_if_diff<float>(m_value, value))
         {
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
             damage();
         }
 

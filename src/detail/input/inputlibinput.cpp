@@ -175,7 +175,7 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     {
     case LIBINPUT_EVENT_TOUCH_UP:
     {
-        Event event(eventid::raw_pointer_up, Pointer(m_last_point[slot], slot));
+        Event event(EventId::raw_pointer_up, Pointer(m_last_point[slot], slot));
         dispatch(event);
         break;
     }
@@ -187,7 +187,7 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
 
         m_last_point[slot] = DisplayPoint(x, y);
 
-        Event event(eventid::raw_pointer_down, Pointer(m_last_point[slot], slot));
+        Event event(EventId::raw_pointer_down, Pointer(m_last_point[slot], slot));
         dispatch(event);
         break;
     }
@@ -198,7 +198,7 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
         const auto y = libinput_event_touch_get_y_transformed(t, screen_size.height());
 
         m_last_point[slot] = DisplayPoint(x, y);
-        Event event(eventid::raw_pointer_move, Pointer(m_last_point[slot], slot));
+        Event event(EventId::raw_pointer_move, Pointer(m_last_point[slot], slot));
         dispatch(event);
         break;
     }
@@ -220,15 +220,15 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
     {
     case LIBINPUT_KEY_STATE_PRESSED:
     {
-        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_down);
-        Event event(eventid::keyboard_down, Key(linux_to_ekey(key), unicode));
+        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, EventId::keyboard_down);
+        Event event(EventId::keyboard_down, Key(linux_to_ekey(key), unicode));
         dispatch(event);
         break;
     }
     case LIBINPUT_KEY_STATE_RELEASED:
     {
-        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, eventid::keyboard_up);
-        Event event(eventid::keyboard_up, Key(linux_to_ekey(key), unicode));
+        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, EventId::keyboard_up);
+        Event event(EventId::keyboard_up, Key(linux_to_ekey(key), unicode));
         dispatch(event);
         break;
     }
@@ -242,17 +242,17 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
 
     SPDLOG_TRACE("button:{}", button);
 
-    Pointer::button b = Pointer::button::none;
+    Pointer::Button b = Pointer::Button::none;
     switch (button)
     {
     case BTN_LEFT:
-        b = Pointer::button::left;
+        b = Pointer::Button::left;
         break;
     case BTN_MIDDLE:
-        b = Pointer::button::middle;
+        b = Pointer::Button::middle;
         break;
     case BTN_RIGHT:
-        b = Pointer::button::right;
+        b = Pointer::Button::right;
         break;
     default:
         /* Other buttons not handled. */
@@ -260,10 +260,10 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
         return;
     }
 
-    if (b != Pointer::button::none)
+    if (b != Pointer::Button::none)
     {
         const bool is_press = libinput_event_pointer_get_button_state(p) == LIBINPUT_BUTTON_STATE_PRESSED;
-        Event event(is_press ? eventid::raw_pointer_down : eventid::raw_pointer_up,
+        Event event(is_press ? EventId::raw_pointer_down : EventId::raw_pointer_up,
                     Pointer(m_last_point[0], b));
         dispatch(event);
     }

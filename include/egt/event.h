@@ -31,9 +31,9 @@ inline namespace v1
  * Event identifiers.
  * @ingroup events
  */
-enum class eventid
+enum class EventId
 {
-    none,
+    none = detail::bit(0),
 
     ///@{
     /**
@@ -41,83 +41,83 @@ enum class eventid
      *
      * It's usually preferred to use the normal pointer events instead.
      */
-    raw_pointer_down,
-    raw_pointer_up,
-    raw_pointer_move,
+    raw_pointer_down = detail::bit(1),
+    raw_pointer_up = detail::bit(2),
+    raw_pointer_move = detail::bit(3),
     ///@}
 
     ///@{
     /** Pointer event. */
-    pointer_click,
-    pointer_dblclick,
-    pointer_hold,
-    pointer_drag_start,
-    pointer_drag,
-    pointer_drag_stop,
+    pointer_click = detail::bit(4),
+    pointer_dblclick = detail::bit(5),
+    pointer_hold = detail::bit(6),
+    pointer_drag_start = detail::bit(7),
+    pointer_drag = detail::bit(8),
+    pointer_drag_stop = detail::bit(9),
     ///@}
 
     /**
      * Sent when a widget gets focus.
      */
-    enter,
+    enter = detail::bit(10),
 
     /**
      * Sent when a widget loses focus.
      */
-    leave,
+    leave = detail::bit(11),
 
     ///@{
     /** Keyboard event. */
-    keyboard_down,
-    keyboard_up,
-    keyboard_repeat,
+    keyboard_down = detail::bit(12),
+    keyboard_up = detail::bit(13),
+    keyboard_repeat = detail::bit(14),
     ///@}
 
     /**
      * Generated when a property changes internally.
      */
-    property_changed,
+    property_changed = detail::bit(15),
 
     /**
      * Generated when a property changes due to user input.
      */
-    input_property_changed,
+    input_property_changed = detail::bit(16),
 
     /**
      * Generated when a Widget is hidden.
      */
-    hide,
+    hide = detail::bit(17),
 
     /**
      * Generated when a Widget is shown.
      */
-    show,
+    show = detail::bit(18),
 
     /**
      * Generated when the widget gains focus.
      */
-    on_gain_focus,
+    on_gain_focus = detail::bit(19),
 
     /**
      * Generated when the widget loses focus.
      */
-    on_lost_focus,
+    on_lost_focus = detail::bit(20),
+
+    /**
+     * Error Event
+     */
+    error = detail::bit(21),
 
     ///@{
     /**
      * Custom widget event.
      */
-    event1,
-    event2,
+    event1 = detail::bit(22),
+    event2 = detail::bit(23),
     ///@}
-
-    /**
-     * Error Event
-     */
-    error,
 };
 
-EGT_API std::ostream& operator<<(std::ostream& os, const eventid& event);
+EGT_API std::ostream& operator<<(std::ostream& os, const EventId& event);
 
 /**
  * Pointer event data.
@@ -129,7 +129,7 @@ struct EGT_API Pointer
     /**
      * Definitions for pointer buttons.
      */
-    enum class button
+    enum class Button
     {
         none,
         left,
@@ -144,7 +144,7 @@ struct EGT_API Pointer
           slot(s)
     {}
 
-    constexpr Pointer(const DisplayPoint& p, button b, size_t s = 0) noexcept
+    constexpr Pointer(const DisplayPoint& p, Button b, size_t s = 0) noexcept
         : point(p),
           btn(b),
           slot(s)
@@ -171,15 +171,15 @@ struct EGT_API Pointer
     /**
      * Pointer button value.
      */
-    button btn{button::none};
+    Button btn{Button::none};
 
     /**
-     * The mouse point where eventid::pointer_drag_start occurred.
+     * The mouse point where EventId::pointer_drag_start occurred.
      *
      * Only valid with the following events:
-     *  - eventid::pointer_drag_start
-     *  - eventid::pointer_drag
-     *  - eventid::pointer_drag_stop
+     *  - EventId::pointer_drag_start
+     *  - EventId::pointer_drag
+     *  - EventId::pointer_drag_stop
      */
     DisplayPoint drag_start;
 
@@ -192,7 +192,7 @@ struct EGT_API Pointer
 static_assert(detail::rule_of_5<Pointer>(),
               "Pointer : must fulfill rule of 5");
 
-EGT_API std::ostream& operator<<(std::ostream& os, const Pointer::button& btn);
+EGT_API std::ostream& operator<<(std::ostream& os, const Pointer::Button& btn);
 EGT_API std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
 
 /**
@@ -270,26 +270,26 @@ class Widget;
  */
 struct EGT_API Event : public EventArg
 {
-    constexpr explicit Event(eventid id = eventid::none) noexcept
+    constexpr explicit Event(EventId id = EventId::none) noexcept
         : m_id(id)
     {}
 
-    constexpr Event(eventid id, const Pointer& pointer) noexcept
+    constexpr Event(EventId id, const Pointer& pointer) noexcept
         : m_id(id),
           m_pointer(pointer)
     {}
 
-    constexpr Event(eventid id, const Key& key) noexcept
+    constexpr Event(EventId id, const Key& key) noexcept
         : m_id(id),
           m_key(key)
     {}
 
-    inline const eventid& id() const noexcept
+    inline const EventId& id() const noexcept
     {
         return m_id;
     }
 
-    inline void id(eventid id)
+    inline void id(EventId id)
     {
         m_id = id;
     }
@@ -298,15 +298,15 @@ struct EGT_API Event : public EventArg
      * Get the Pointer event data.
      *
      * Only valid with the following events:
-     *   - eventid::raw_pointer_down
-     *   - eventid::raw_pointer_up
-     *   - eventid::raw_pointer_move
-     *   - eventid::pointer_click
-     *   - eventid::pointer_dblclick
-     *   - eventid::pointer_hold
-     *   - eventid::pointer_drag_start
-     *   - eventid::pointer_drag
-     *   - eventid::pointer_drag_stop
+     *   - EventId::raw_pointer_down
+     *   - EventId::raw_pointer_up
+     *   - EventId::raw_pointer_move
+     *   - EventId::pointer_click
+     *   - EventId::pointer_dblclick
+     *   - EventId::pointer_hold
+     *   - EventId::pointer_drag_start
+     *   - EventId::pointer_drag
+     *   - EventId::pointer_drag_stop
      */
     inline Pointer& pointer()
     {
@@ -325,9 +325,9 @@ struct EGT_API Event : public EventArg
      * Get the Key event data.
      *
      * Only valid with the following events:
-     *   - eventid::keyboard_down,
-     *   - eventid::keyboard_up,
-     *   - eventid::keyboard_repeat,
+     *   - EventId::keyboard_down,
+     *   - EventId::keyboard_up,
+     *   - EventId::keyboard_repeat,
      */
     inline Key& key()
     {
@@ -352,9 +352,9 @@ struct EGT_API Event : public EventArg
 protected:
 
     /**
-     * The eventid.
+     * The EventId.
      */
-    eventid m_id{eventid::none};
+    EventId m_id{EventId::none};
 
     /**
      * Key event data.

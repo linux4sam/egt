@@ -49,7 +49,7 @@ public:
      * @param[in] flags Widget flags.
      */
     explicit Frame(const Rect& rect = {},
-                   const flags_type& flags = {}) noexcept;
+                   const Flags& flags = {}) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -168,7 +168,7 @@ public:
         i = std::find_if(m_children.begin(), m_children.end(),
                          [&name](const std::shared_ptr<Widget>& obj)
         {
-            return obj->flags().is_set(Widget::flag::frame);
+            return obj->flags().is_set(Widget::Flag::frame);
         });
 
         for (; i != m_children.end(); ++i)
@@ -225,7 +225,7 @@ public:
 
     virtual void dump(std::ostream& out, int level = 0) override;
 
-    virtual void walk(walk_callback_t callback, int level = 0) override;
+    virtual void walk(WalkCallback callback, int level = 0) override;
 
     /**
      * Save the entire frame surface to a file.
@@ -354,12 +354,12 @@ public:
     /**
      * Helper type that defines the special draw child callback.
      */
-    using special_child_draw_callback_t = std::function<void(Painter& painter, Widget* widget)>;
+    using ChildDrawCallback = std::function<void(Painter& painter, Widget* widget)>;
 
     /**
      * Get the special child draw callback.
      */
-    inline special_child_draw_callback_t special_child_draw_callback() const
+    inline ChildDrawCallback special_child_draw_callback() const
     {
         return m_special_child_draw_callback;
     }
@@ -367,7 +367,7 @@ public:
     /**
      * Set the special child draw callback.
      */
-    inline void special_child_draw_callback(special_child_draw_callback_t func)
+    inline void special_child_draw_callback(ChildDrawCallback func)
     {
         m_special_child_draw_callback = std::move(func);
     }
@@ -428,22 +428,22 @@ protected:
     /**
      * Used internally for calling the special child draw function.
      */
-    special_child_draw_callback_t m_special_child_draw_callback;
+    ChildDrawCallback m_special_child_draw_callback;
 
     /**
      * Helper type for an array of children.
      */
-    using children_array = std::deque<std::shared_ptr<Widget>>;
+    using ChildrenArray = std::deque<std::shared_ptr<Widget>>;
 
     /**
      * Array of child widgets in the order they were added.
      */
-    children_array m_children;
+    ChildrenArray m_children;
 
     /**
      * The damage array for this frame.
      */
-    Screen::damage_array m_damage;
+    Screen::DamageArray m_damage;
 
     /**
      * Status for whether this frame is currently drawing.

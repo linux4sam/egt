@@ -13,8 +13,8 @@
 
 #include <cairo.h>
 #include <egt/color.h>
+#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
-#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
@@ -40,7 +40,7 @@ class Image;
  *
  * @ingroup drawing
  */
-class EGT_API Painter : public detail::noncopyable
+class EGT_API Painter : public detail::NonCopyable
 {
 public:
 
@@ -257,17 +257,17 @@ public:
     virtual Painter& draw(const Rect& rect,
                           const Image& image);
 
-    enum class text_flags
+    enum class TextDrawFlag : uint32_t
     {
-        shadow,
+        shadow = detail::bit(0),
     };
 
-    using text_draw_flags = Flags<text_flags>;
+    using TextDrawFlags = detail::Flags<TextDrawFlag>;
 
     /**
      * Draw text inside the specified rectangle.
      */
-    virtual Painter& draw(const std::string& str, const text_draw_flags& flags = {});
+    virtual Painter& draw(const std::string& str, const TextDrawFlags& flags = {});
 
     virtual Painter& clip();
 

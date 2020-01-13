@@ -40,14 +40,14 @@ class EGT_API Label : public detail::TextWidget
 {
 public:
 
-    static const alignmask DEFAULT_TEXT_ALIGN;
+    static const AlignFlags DEFAULT_TEXT_ALIGN;
 
     /**
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
     explicit Label(const std::string& text = {},
-                   alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                   const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -56,7 +56,7 @@ public:
      */
     Label(const std::string& text,
           const Rect& rect,
-          alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+          const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -65,7 +65,7 @@ public:
      */
     explicit Label(Frame& parent,
                    const std::string& text = {},
-                   alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                   const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -76,7 +76,7 @@ public:
     Label(Frame& parent,
           const std::string& text,
           const Rect& rect,
-          alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+          const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     using TextWidget::text;
 
@@ -93,6 +93,7 @@ public:
 protected:
 
     using TextWidget::parent;
+
     virtual void parent(Frame* parent) override;
 };
 
@@ -120,7 +121,7 @@ public:
     * @param[in] text_align Alignment for the text.
     */
     explicit ImageLabel(const std::string& text = {},
-                        alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                        const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] image The image to display.
@@ -129,7 +130,7 @@ public:
      */
     explicit ImageLabel(const Image& image,
                         const std::string& text = {},
-                        alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                        const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] image The image to display.
@@ -140,7 +141,7 @@ public:
     ImageLabel(const Image& image,
                const std::string& text,
                const Rect& rect,
-               alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+               const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -151,7 +152,7 @@ public:
     explicit ImageLabel(Frame& parent,
                         const Image& image = {},
                         const std::string& text = {},
-                        alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                        const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -164,7 +165,7 @@ public:
                const Image& image,
                const std::string& text,
                const Rect& rect,
-               alignmask text_align = DEFAULT_TEXT_ALIGN) noexcept;
+               const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -225,7 +226,7 @@ public:
      *
      * @param[in] align Only left, right, top, and bottom alignments are supported.
      */
-    virtual void image_align(alignmask align)
+    virtual void image_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_image_align, align))
             damage();
@@ -234,7 +235,7 @@ public:
     /**
      * Get the image alignment.
      */
-    inline alignmask image_align() const { return m_image_align; }
+    inline AlignFlags image_align() const { return m_image_align; }
 
     /**
      * Enable/disable showing the label text.
@@ -252,7 +253,7 @@ public:
 
 protected:
 
-    void do_image(const Image& image);
+    void do_set_image(const Image& image);
 
     /**
      * The image.
@@ -268,7 +269,7 @@ protected:
     /**
      * Alignment of the image relative to the text.
      */
-    alignmask m_image_align{alignmask::left};
+    AlignFlags m_image_align{AlignFlag::left};
 };
 
 }

@@ -65,7 +65,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
     auto s = reinterpret_cast<detail::KMSOverlay*>(interface.screen());
     assert(s);
     auto format = detail::egt_format(s->get_plane_format());
-    if ((format != pixel_format::yuyv) && (format != pixel_format::xrgb8888))
+    if ((format != PixelFormat::yuyv) && (format != PixelFormat::xrgb8888))
     {
         std::ostringstream ss;
         ss << "Error: Invalid format: supported formats are xrgb8888 & yuyv for sama5d4";
@@ -76,7 +76,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
 std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
 {
     std::string vc = "BGRx";
-    if (m_interface.flags().is_set(Widget::flag::plane_window))
+    if (m_interface.flags().is_set(Widget::Flag::plane_window))
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
@@ -156,7 +156,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
-        m_interface.invoke_handlers(eventid::error);
+        m_interface.invoke_handlers(EventId::error);
         return false;
     }
 #endif
@@ -171,7 +171,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
         SPDLOG_DEBUG("VideoWindow: gst_parse_launch failed ");
         if (error && error->message)
             m_err_message = error->message;
-        m_interface.invoke_handlers(eventid::error);
+        m_interface.invoke_handlers(EventId::error);
         return false;
     }
 
@@ -200,7 +200,7 @@ gboolean GstKmsSinkImpl::query_position(gpointer data)
     {
         asio::post(Application::instance().event().io(), [impl]()
         {
-            impl->m_interface.invoke_handlers(eventid::property_changed);
+            impl->m_interface.invoke_handlers(EventId::property_changed);
         });
     }
     return true;

@@ -6,6 +6,7 @@
 #include "detail/utf8text.h"
 #include "egt/canvas.h"
 #include "egt/detail/alignment.h"
+#include "egt/detail/enum.h"
 #include "egt/detail/layout.h"
 #include "egt/detail/string.h"
 #include "egt/frame.h"
@@ -19,18 +20,18 @@ namespace egt
 inline namespace v1
 {
 
-const alignmask TextBox::default_align = alignmask::expand;
+const AlignFlags TextBox::default_align = AlignFlag::expand;
 
 TextBox::TextBox(const std::string& text,
-                 alignmask text_align,
-                 const flags_type& flags) noexcept
+                 const AlignFlags& text_align,
+                 const TextFlags& flags) noexcept
     : TextBox(text, {}, text_align, flags)
 {}
 
 TextBox::TextBox(const std::string& text,
                  const Rect& rect,
-                 alignmask text_align,
-                 const flags_type& flags) noexcept
+                 const AlignFlags& text_align,
+                 const TextFlags& flags) noexcept
     : TextWidget(text, rect, text_align),
       m_timer(std::chrono::seconds(1)),
       m_text_flags(flags)
@@ -38,7 +39,7 @@ TextBox::TextBox(const std::string& text,
     name("TextBox" + std::to_string(m_widgetid));
 
     border(theme().default_border());
-    boxtype(Theme::boxtype::fill_rounded);
+    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
     padding(5);
 
     m_timer.on_timeout([this]() { cursor_timeout(); });
@@ -48,8 +49,8 @@ TextBox::TextBox(const std::string& text,
 
 TextBox::TextBox(Frame& parent,
                  const std::string& text,
-                 alignmask text_align,
-                 const flags_type& flags) noexcept
+                 const AlignFlags& text_align,
+                 const TextFlags& flags) noexcept
     : TextBox(text, Rect(), text_align, flags)
 {
     parent.add(*this);
@@ -58,8 +59,8 @@ TextBox::TextBox(Frame& parent,
 TextBox::TextBox(Frame& parent,
                  const std::string& text,
                  const Rect& rect,
-                 alignmask text_align,
-                 const flags_type& flags) noexcept
+                 const AlignFlags& text_align,
+                 const TextFlags& flags) noexcept
     : TextBox(text, rect, text_align, flags)
 {
     parent.add(*this);
@@ -71,22 +72,22 @@ void TextBox::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::on_gain_focus:
+    case EventId::on_gain_focus:
         show_cursor();
         break;
-    case eventid::on_lost_focus:
+    case EventId::on_lost_focus:
         hide_cursor();
-        if (!text_flags().is_set(flag::no_virt_keyboard))
+        if (!text_flags().is_set(TextFlag::no_virt_keyboard))
             if (popup_virtual_keyboard())
                 popup_virtual_keyboard()->hide();
         break;
-    case eventid::pointer_click:
+    case EventId::pointer_click:
         keyboard_focus(this);
-        if (!text_flags().is_set(flag::no_virt_keyboard))
+        if (!text_flags().is_set(TextFlag::no_virt_keyboard))
             if (popup_virtual_keyboard())
                 popup_virtual_keyboard()->show();
         break;
-    case eventid::keyboard_down:
+    case EventId::keyboard_down:
         handle_key(event.key());
         event.stop();
     default:
@@ -118,7 +119,7 @@ void TextBox::handle_key(const Key& key)
     }
     case EKEY_ENTER:
     {
-        if (text_flags().is_set(flag::multiline))
+        if (text_flags().is_set(TextFlag::multiline))
             insert("\n");
         break;
     }
@@ -134,7 +135,7 @@ void TextBox::handle_key(const Key& key)
     }
     case EKEY_UP:
     {
-        if (text_flags().is_set(flag::multiline))
+        if (text_flags().is_set(TextFlag::multiline))
         {
             // TODO
         }
@@ -142,7 +143,7 @@ void TextBox::handle_key(const Key& key)
     }
     case EKEY_DOWN:
     {
-        if (text_flags().is_set(flag::multiline))
+        if (text_flags().is_set(TextFlag::multiline))
         {
             // TODO
         }
@@ -198,7 +199,7 @@ void TextBox::draw(Painter& painter, const Rect&)
                       font(),
                       text_flags(),
                       text_align(),
-                      justification::start,
+                      Justification::start,
                       color(Palette::ColorId::text).color(),
                       draw_cursor,
                       m_cursor_pos,
@@ -289,8 +290,8 @@ size_t TextBox::insert(const std::string& str)
             len = m_max_len - current_len;
     }
 
-    if (!text_flags().is_set(flag::multiline) &&
-        text_flags().is_set(flag::fit_to_width))
+    if (!text_flags().is_set(TextFlag::multiline) &&
+        text_flags().is_set(TextFlag::fit_to_width))
     {
         /*
          * Have to go through the motions and build the expected string at this
@@ -325,7 +326,7 @@ size_t TextBox::insert(const std::string& str)
         cursor_forward(len);
         clear_selection();
 
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
         damage();
     }
 
@@ -438,7 +439,7 @@ void TextBox::delete_selection()
         m_text.erase(i, l);
         cursor_set(p);
         clear_selection();
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
         damage();
     }
 }
@@ -448,7 +449,7 @@ void TextBox::input_validation_enabled(bool enabled)
     m_validate_input = enabled;
 }
 
-void TextBox::add_validator_function(validator_callback_t callback)
+void TextBox::add_validator_function(ValidatorCallback callback)
 {
     m_validator_callbacks.emplace_back(std::move(callback));
 }
@@ -495,6 +496,15 @@ Size TextBox::min_size_hint() const
     s += Widget::min_size_hint() + Size(0, CURSOR_Y_OFFSET * 2.);
     return s;
 }
+
+template<>
+std::map<TextBox::TextFlag, char const*> detail::EnumStrings<TextBox::TextFlag>::data =
+{
+    {TextBox::TextFlag::fit_to_width, "fit_to_width"},
+    {TextBox::TextFlag::multiline, "multiline"},
+    {TextBox::TextFlag::word_wrap, "word_wrap"},
+    {TextBox::TextFlag::no_virt_keyboard, "no_virt_keyboard"},
+};
 
 }
 }

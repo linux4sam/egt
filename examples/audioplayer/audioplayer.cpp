@@ -23,14 +23,14 @@ public:
           m_play(Image("play.png")),
           m_next(Image("next.png"))
     {
-        align(alignmask::center);
+        align(AlignFlag::center);
 
         add(expand(m_previous));
         add(expand(m_play));
         add(expand(m_next));
 
         for (auto& child : m_children)
-            child->boxtype(Theme::boxtype::none);
+            child->boxtype().clear();
 
         // no forward/rewind support in this example for now
         m_next.hide();
@@ -112,10 +112,10 @@ public:
         m_dial = std::make_shared<AudioRadial>(range2);
         m_dial->add(range0, Color(Palette::white, 55), 21);
         m_dial->add(range1, Color(17, 17, 17, 180), 13);
-        Radial::flags_type flags = Radial::flags_type({Radial::flag::input_value, Radial::flag::rounded_cap});
+        Radial::RadialFlags flags = Radial::RadialFlags({Radial::RadialFlag::input_value, Radial::RadialFlag::rounded_cap});
         auto range2handle = m_dial->add(range2, {}, 15, flags);
         m_dial->margin(50);
-        m_dial->align(alignmask::expand);
+        m_dial->align(AlignFlag::expand);
         add(m_dial);
         add(m_controls);
 
@@ -133,10 +133,10 @@ public:
                 m_player.play();
                 m_animation.start();
             }
-        }, {eventid::pointer_click});
+        }, {EventId::pointer_click});
 
         auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
-        logo->align(alignmask::left | alignmask::top);
+        logo->align(AlignFlag::left | AlignFlag::top);
         logo->margin(10);
         add(logo);
 
@@ -149,13 +149,13 @@ public:
                                               "seamlessly.");
         text->readonly(true);
         message_dialog->widget(expand(text));
-        message_dialog->button(Dialog::buttonid::button1, "");
-        message_dialog->button(Dialog::buttonid::button2, "OK");
+        message_dialog->button(Dialog::ButtonId::button1, "");
+        message_dialog->button(Dialog::ButtonId::button2, "OK");
         add(message_dialog);
 
         auto note = std::make_shared<ImageButton>(Image("note.png"));
-        note->boxtype(Theme::boxtype::none);
-        note->align(alignmask::right | alignmask::bottom);
+        note->boxtype().clear();
+        note->align(AlignFlag::right | AlignFlag::bottom);
         note->margin(10);
         add(note);
         note->on_click([message_dialog](Event&)
@@ -167,7 +167,7 @@ public:
         m_dial->on_event([this, range2](Event&)
         {
             m_player.seek(range2->value());
-        }, {eventid::input_property_changed});
+        }, {EventId::input_property_changed});
 
         m_player.on_event([this, range2](Event&)
         {
@@ -182,7 +182,7 @@ public:
                 m_controls.m_play.image(Image("play.png"));
                 m_animation.stop();
             }
-        }, {eventid::property_changed});
+        }, {EventId::property_changed});
 
         m_player.media(resolve_file_path("concerto.mp3"));
 

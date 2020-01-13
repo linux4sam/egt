@@ -23,11 +23,11 @@ RadioBox::RadioBox(const std::string& text,
 {
     name("RadioBox" + std::to_string(m_widgetid));
 
-    boxtype(Theme::boxtype::none);
+    boxtype().clear();
     padding(5);
-    text_align(alignmask::left | alignmask::center);
+    text_align(AlignFlag::left | AlignFlag::center);
 
-    flags().set(Widget::flag::grab_mouse);
+    flags().set(Widget::Flag::grab_mouse);
 }
 
 RadioBox::RadioBox(Frame& parent,
@@ -44,7 +44,7 @@ void RadioBox::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::pointer_click:
+    case EventId::pointer_click:
         checked(!checked());
         break;
     default:
@@ -77,7 +77,7 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
                        Rect(0, 0, text_size.width(), text_size.height()),
                        widget.padding() / 2);
 
-    detail::flex_layout(b, rects, justification::start, orientation::horizontal);
+    detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
 
     auto handle = rects[0].rect + b.point();
     auto text = rects[1].rect + b.point();

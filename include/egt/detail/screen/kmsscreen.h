@@ -42,7 +42,7 @@ class EGT_API KMSScreen : public Screen
 public:
 
     explicit KMSScreen(bool allocate_primary_plane = true,
-                       pixel_format format = pixel_format::rgb565);
+                       PixelFormat format = PixelFormat::rgb565);
 
     enum class plane_type
     {
@@ -65,8 +65,8 @@ public:
     void close();
 
     unique_plane_t allocate_overlay(const Size& size,
-                                    pixel_format format = pixel_format::argb8888,
-                                    windowhint hint = windowhint::automatic);
+                                    PixelFormat format = PixelFormat::argb8888,
+                                    WindowHint hint = WindowHint::automatic);
 
     void deallocate_overlay(plane_data* plane);
 
@@ -86,7 +86,7 @@ public:
 protected:
 
     plane_data* overlay_plane_create(const Size& size,
-                                     pixel_format format,
+                                     PixelFormat format,
                                      plane_type type);
 
     int m_fd{-1};

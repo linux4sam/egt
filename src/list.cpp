@@ -26,15 +26,15 @@ ListBox::ListBox(const Rect& rect) noexcept
 
 ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
     : Frame(rect),
-      m_view(make_shared<ScrolledView>(*this, ScrolledView::policy::never)),
-      m_sizer(make_shared<BoxSizer>(orientation::vertical, justification::start))
+      m_view(make_shared<ScrolledView>(*this, ScrolledView::Policy::never)),
+      m_sizer(make_shared<BoxSizer>(Orientation::vertical, Justification::start))
 {
     name("ListBox" + std::to_string(m_widgetid));
 
-    boxtype(Theme::boxtype::fill);
+    boxtype(Theme::BoxFlag::fill);
     border(theme().default_border());
 
-    m_sizer->align(alignmask::expand_horizontal);
+    m_sizer->align(AlignFlag::expand_horizontal);
 
     m_view->add(m_sizer);
 
@@ -62,7 +62,7 @@ void ListBox::add_item(const std::shared_ptr<Widget>& widget)
 
 void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
 {
-    widget->align(alignmask::expand_horizontal);
+    widget->align(AlignFlag::expand_horizontal);
 
     m_sizer->add(widget);
 
@@ -96,7 +96,7 @@ void ListBox::handle(Event& event)
 {
     switch (event.id())
     {
-    case eventid::pointer_click:
+    case EventId::pointer_click:
     {
         Point pos = display_to_local(event.pointer().point);
 
@@ -115,8 +115,8 @@ void ListBox::handle(Event& event)
         event.stop();
         break;
     }
-    case eventid::raw_pointer_down:
-    case eventid::raw_pointer_up:
+    case EventId::raw_pointer_down:
+    case EventId::raw_pointer_up:
         return;
     default:
         break;
@@ -138,7 +138,7 @@ void ListBox::selected(size_t index)
                 m_sizer->child_at(m_selected)->checked(true);
 
             damage();
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
         }
     }
 }

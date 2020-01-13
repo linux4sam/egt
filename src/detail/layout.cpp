@@ -46,33 +46,33 @@ static void run_and_apply(lay_context& ctx, lay_id parent,
     }
 }
 
-static uint32_t justify_to_contains(justification justify, orientation orient)
+static uint32_t justify_to_contains(Justification justify, Orientation orient)
 {
     uint32_t contains = 0;
 
     switch (justify)
     {
-    case justification::start:
+    case Justification::start:
         contains |= LAY_START;
         break;
-    case justification::middle:
+    case Justification::middle:
         contains |= LAY_MIDDLE;
         break;
-    case justification::ending:
+    case Justification::ending:
         contains |= LAY_END;
         break;
-    case justification::justify:
+    case Justification::justify:
         contains |= LAY_JUSTIFY;
         break;
-    case justification::none:
+    case Justification::none:
         break;
     }
 
-    if (orient == orientation::horizontal)
+    if (orient == Orientation::horizontal)
         contains |= LAY_ROW;
-    else if (orient == orientation::vertical)
+    else if (orient == Orientation::vertical)
         contains |= LAY_COLUMN;
-    else if (orient == orientation::none)
+    else if (orient == Orientation::none)
         contains |= (LAY_LAYOUT);
     else
         contains |= (LAY_FLEX | LAY_WRAP);
@@ -80,34 +80,34 @@ static uint32_t justify_to_contains(justification justify, orientation orient)
     return contains;
 }
 
-static uint32_t align_to_behave(alignmask align)
+static uint32_t align_to_behave(const AlignFlags& align)
 {
     uint32_t behave = 0;
-    if ((align & alignmask::expand_horizontal) == alignmask::expand_horizontal)
+    if (align.is_set(AlignFlag::expand_horizontal))
         behave |= LAY_HFILL;
-    else if ((align & alignmask::left) == alignmask::left)
+    else if (align.is_set(AlignFlag::left))
         behave |= LAY_LEFT;
-    else if ((align & alignmask::right) == alignmask::right)
+    else if (align.is_set(AlignFlag::right))
         behave |= LAY_RIGHT;
 
-    if ((align & alignmask::expand_vertical) == alignmask::expand_vertical)
+    if (align.is_set(AlignFlag::expand_vertical))
         behave |= LAY_VFILL;
-    else if ((align & alignmask::top) == alignmask::top)
+    else if (align.is_set(AlignFlag::top))
         behave |= LAY_TOP;
-    else if ((align & alignmask::bottom) == alignmask::bottom)
+    else if (align.is_set(AlignFlag::bottom))
         behave |= LAY_BOTTOM;
     return behave;
 }
 
 void flex_layout(const Rect& parent,
                  std::vector<LayoutRect>& children,
-                 justification justify,
-                 orientation orient)
+                 Justification justify,
+                 Orientation orient)
 {
     lay_context ctx;
     lay_init_context(&ctx);
 
-    scope_exit cleanup([&ctx]()
+    ScopeExit cleanup([&ctx]()
     {
         lay_destroy_context(&ctx);
     });
@@ -124,14 +124,14 @@ void flex_layout(const Rect& parent,
 
 void flex_layout(const Rect& parent,
                  std::vector<LayoutRect>& children,
-                 justification justify,
-                 orientation orient,
-                 alignmask align)
+                 Justification justify,
+                 Orientation orient,
+                 const AlignFlags& align)
 {
     lay_context ctx;
     lay_init_context(&ctx);
 
-    scope_exit cleanup([&ctx]()
+    ScopeExit cleanup([&ctx]()
     {
         lay_destroy_context(&ctx);
     });

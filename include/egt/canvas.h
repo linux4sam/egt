@@ -52,7 +52,7 @@ public:
      * @note The canvas contents are undefined. zero() can be used to initialize it.
      */
     explicit Canvas(const Size& size,
-                    pixel_format format = pixel_format::argb8888) noexcept;
+                    PixelFormat format = PixelFormat::argb8888) noexcept;
 
     /**
      * Construct a canvas with the specified format and size.
@@ -63,7 +63,7 @@ public:
      * @note The canvas contents are undefined. zero() can be used to initialize it.
      */
     explicit Canvas(const SizeF& size,
-                    pixel_format format = pixel_format::argb8888) noexcept;
+                    PixelFormat format = PixelFormat::argb8888) noexcept;
 
     /**
      * Construct a canvas with an already existing surface.
@@ -83,7 +83,7 @@ public:
      * @param[in] surface The surface to copy from. A copy will be made.
      * @param[in] format The pixel format for the canvas.
      */
-    Canvas(const shared_cairo_surface_t& surface, pixel_format format) noexcept;
+    Canvas(const shared_cairo_surface_t& surface, PixelFormat format) noexcept;
 
     /**
      * Get the context for the Canvas.
@@ -106,7 +106,7 @@ public:
      * @param[in] size The size of the canvas.
      * @param[in] format The pixel format for the canvas.
      */
-    void reallocate(const Size& size, pixel_format format = pixel_format::argb8888);
+    void reallocate(const Size& size, PixelFormat format = PixelFormat::argb8888);
 
     /**
      * Reallocate the canvas to a different size.
@@ -114,7 +114,7 @@ public:
      * @param[in] size The size of the canvas.
      * @param[in] format The pixel format for the canvas.
      */
-    void reallocate(const SizeF& size, pixel_format format = pixel_format::argb8888);
+    void reallocate(const SizeF& size, PixelFormat format = PixelFormat::argb8888);
 
     /**
      * Fill the surface with zero (including for transparency channel if
@@ -127,7 +127,7 @@ public:
     /**
      * Get the format of the surface.
      */
-    pixel_format format() const;
+    PixelFormat format() const;
 
     /**
      * Create a copy of a surface.

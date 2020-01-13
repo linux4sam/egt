@@ -45,7 +45,7 @@ simplest of easing functions is the easing_linear() function that is
 implemented like this:
 
 @code{.cpp}
-float_t easing_linear(float_t p)
+EasingScalar easing_linear(EasingScalar p)
 {
     return p;
 }
@@ -58,7 +58,7 @@ float_t easing_linear(float_t p)
 A more complicated easing function might include a circular calculation:
 
 @code{.cpp}
-float_t easing_circular_easein(float_t p)
+EasingScalar easing_circular_easein(EasingScalar p)
 {
     return 1 - std::sqrt(1 - (p * p));
 }

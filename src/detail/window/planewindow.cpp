@@ -22,7 +22,7 @@ namespace detail
 {
 
 PlaneWindow::PlaneWindow(Window* interface,
-                         pixel_format format, windowhint hint)
+                         PixelFormat format, WindowHint hint)
     : BasicWindow(interface),
       m_format(format),
       m_hint(hint)

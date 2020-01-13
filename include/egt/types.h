@@ -78,7 +78,7 @@ using unique_cairo_surface_t =
  *
  * @note Not all formats are supported by all windows or backends.
  */
-enum class pixel_format
+enum class PixelFormat
 {
     invalid,  ///< Invalid color format
     rgb565,   ///< 16 bpp, 16-bit color
@@ -95,7 +95,7 @@ enum class pixel_format
     uyvy,     ///< Reverse byte order of YUY2
 };
 
-EGT_API std::ostream& operator<<(std::ostream& os, const pixel_format& format);
+EGT_API std::ostream& operator<<(std::ostream& os, const PixelFormat& format);
 
 /**
  * Internal detail namespace.
@@ -106,25 +106,25 @@ EGT_API std::ostream& operator<<(std::ostream& os, const pixel_format& format);
 namespace detail
 {
 /**
- * Convert a pixel_format to a cairo format.
+ * Convert a PixelFormat to a cairo format.
  */
-cairo_format_t cairo_format(pixel_format format);
+cairo_format_t cairo_format(PixelFormat format);
 /**
  * Convert a pixel format to a DRM format.
  */
-uint32_t drm_format(pixel_format format);
+uint32_t drm_format(PixelFormat format);
 /**
  * Convert a DRM format to a pixel format.
  */
-pixel_format egt_format(uint32_t format);
+PixelFormat egt_format(uint32_t format);
 /**
  * Convert a cairo format to a pixel format.
  */
-pixel_format egt_format(cairo_format_t format);
+PixelFormat egt_format(cairo_format_t format);
 /**
  * Convert a pixel format to a gstreamer format.
  */
-std::string gstreamer_format(pixel_format format);
+std::string gstreamer_format(PixelFormat format);
 }
 
 }

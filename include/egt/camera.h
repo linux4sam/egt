@@ -25,7 +25,7 @@ class CameraImpl;
  * A CameraWindow is a widget to capture image feed from the camera
  * sensor and render it on screen using gstreamer media framework.
  *
- * It has a bounding rectangle, device, format and windowhint. These
+ * It has a bounding rectangle, device, format and WindowHint. These
  * properties can be manipulated to create a camera window either as
  * a basic window or an overlay plane.
  *
@@ -46,12 +46,12 @@ public:
      *            will be responsible for creating a backing screen.  This is
      *            only a hint.
      *
-     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+     * @note Only WindowHint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
     explicit CameraWindow(const std::string& device = "/dev/video0",
-                          pixel_format format_hint = pixel_format::yuyv,
-                          windowhint hint = windowhint::overlay);
+                          PixelFormat format_hint = PixelFormat::yuyv,
+                          WindowHint hint = WindowHint::overlay);
 
     /**
      * Create a camera window.
@@ -66,13 +66,13 @@ public:
      *            will be responsible for creating a backing screen.  This is
      *            only a hint.
      *
-     * @note Only windowhint::heo_overlay can use yuyv, nv21 and yuv420 pixel
+     * @note Only WindowHint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
      */
     explicit CameraWindow(const Rect& rect,
                           const std::string& device = "/dev/video0",
-                          pixel_format format_hint = pixel_format::yuyv,
-                          windowhint hint = windowhint::overlay);
+                          PixelFormat format_hint = PixelFormat::yuyv,
+                          WindowHint hint = WindowHint::overlay);
 
     virtual void do_draw() override
     {

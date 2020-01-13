@@ -51,7 +51,7 @@ public:
     /**
      * Default pixel format used for Window.
      */
-    static const pixel_format DEFAULT_FORMAT;
+    static const PixelFormat DEFAULT_FORMAT;
 
     /**
      * Construct a window.
@@ -64,8 +64,8 @@ public:
      *            will be responsible for creating a backing screen.  This is
      *            only a hint.
      */
-    explicit Window(pixel_format format_hint = DEFAULT_FORMAT,
-                    windowhint hint = windowhint::automatic)
+    explicit Window(PixelFormat format_hint = DEFAULT_FORMAT,
+                    WindowHint hint = WindowHint::automatic)
         : Window({}, format_hint, hint)
     {}
 
@@ -82,8 +82,8 @@ public:
      *            only a hint.
      */
     explicit Window(const Rect& rect,
-                    pixel_format format_hint = DEFAULT_FORMAT,
-                    windowhint hint = windowhint::automatic);
+                    PixelFormat format_hint = DEFAULT_FORMAT,
+                    WindowHint hint = WindowHint::automatic);
 
     virtual void damage() override
     {
@@ -133,13 +133,13 @@ public:
      */
     virtual void background(const Image& image);
 
-    virtual pixel_format format() const
+    virtual PixelFormat format() const
     {
         auto frame = find_screen();
         if (frame)
             return frame->screen()->format();
 
-        return pixel_format::invalid;
+        return PixelFormat::invalid;
     }
 
     virtual ~Window();
@@ -158,8 +158,8 @@ protected:
      * Select and allocate the backend implementation for the window.
      */
     void create_impl(const Rect& rect,
-                     pixel_format format_hint,
-                     windowhint hint);
+                     PixelFormat format_hint,
+                     WindowHint hint);
 
     virtual void default_damage(const Rect& rect)
     {

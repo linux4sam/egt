@@ -13,15 +13,15 @@ inline namespace v1
 {
 
 CameraWindow::CameraWindow(const std::string& device,
-                           pixel_format format_hint,
-                           windowhint hint)
+                           PixelFormat format_hint,
+                           WindowHint hint)
     : CameraWindow({}, device, format_hint, hint)
 {}
 
 CameraWindow::CameraWindow(const Rect& rect,
                            const std::string& device,
-                           pixel_format format_hint,
-                           windowhint hint)
+                           PixelFormat format_hint,
+                           WindowHint hint)
     : Window(rect, format_hint, hint),
       m_impl(new detail::CameraImpl(*this, rect, device, detail::is_target_sama5d4()))
 {}
@@ -44,7 +44,7 @@ void CameraWindow::scale(float scalex, float scaley)
 
     if (xs || ys)
     {
-        if (!flags().is_set(Widget::flag::plane_window))
+        if (!flags().is_set(Widget::Flag::plane_window))
         {
             m_impl->scale(m_scalex, m_scaley);
         }

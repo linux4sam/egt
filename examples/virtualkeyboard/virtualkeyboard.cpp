@@ -117,10 +117,10 @@ int main(int argc, const char** argv)
     },
     Rect(Point(), Size(400, 100))
     );
-    abc_keyboard.align(alignmask::center);
+    abc_keyboard.align(AlignFlag::center);
 
     VerticalBoxSizer vbox;
-    vbox.align(alignmask::expand);
+    vbox.align(AlignFlag::expand);
     vbox.add(expand_horizontal(abc_keyboard));
     vbox.add(code_keyboard);
 

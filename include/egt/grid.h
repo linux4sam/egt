@@ -39,15 +39,15 @@ class EGT_API StaticGrid : public Frame
 {
 public:
 
-    enum class flag
+    enum class GridFlag
     {
         /**
          * When set, draw a border using Palette::ColorId::border.
          */
-        show_border,
+        show_border = detail::bit(0),
     };
 
-    using flags_type = Flags<flag>;
+    using GridFlags = detail::Flags<GridFlag>;
 
     /**
      * @param[in] size Rows and columns.
@@ -162,12 +162,12 @@ public:
     /**
      * Get a const ref of the flags.
      */
-    inline const flags_type& grid_flags() const { return m_grid_flags; }
+    inline const GridFlags& grid_flags() const { return m_grid_flags; }
 
     /**
      * Get a modifiable ref of the flags.
      */
-    inline flags_type& grid_flags() { return m_grid_flags; }
+    inline GridFlags& grid_flags() { return m_grid_flags; }
 
     virtual void reallocate(const std::tuple<int, int>& size);
 
@@ -193,7 +193,7 @@ protected:
     /**
      * Grid flags.
      */
-    flags_type m_grid_flags{};
+    GridFlags m_grid_flags{};
 };
 
 /**

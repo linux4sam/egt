@@ -37,7 +37,7 @@ public:
 
     KMSOverlay() = delete;
 
-    KMSOverlay(const Size& size, pixel_format format, windowhint hint);
+    KMSOverlay(const Size& size, PixelFormat format, WindowHint hint);
 
     virtual void resize(const Size& size);
     virtual void position(const DisplayPoint& point);

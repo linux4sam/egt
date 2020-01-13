@@ -4,22 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/app.h"
+#include "egt/detail/enum.h"
 #include "egt/sideboard.h"
+#include <iostream>
 
 namespace egt
 {
 inline namespace v1
 {
 
-SideBoard::SideBoard(flags f,
+static inline Size calculate_size(SideBoard::PositionFlag position)
+{
+    return Application::instance().screen()->size() +
+           Size(position == SideBoard::PositionFlag::left || position == SideBoard::PositionFlag::right ? SideBoard::HANDLE_WIDTH : 0,
+                position == SideBoard::PositionFlag::top || position == SideBoard::PositionFlag::bottom ? SideBoard::HANDLE_WIDTH : 0);
+}
+
+SideBoard::SideBoard(PositionFlag position,
                      std::chrono::milliseconds open_duration,
-                     easing_func_t open_func,
+                     EasingFunc open_func,
                      std::chrono::milliseconds close_duration,
-                     easing_func_t close_func)
-    : Window(Application::instance().screen()->size() + Size(f == flags::left || f == flags::right ? HANDLE_WIDTH : 0,
-             f == flags::top || f == flags::bottom ? HANDLE_WIDTH : 0),
-             pixel_format::rgb565),
-      m_side_flags(f)
+                     EasingFunc close_func)
+    : Window(calculate_size(position), PixelFormat::rgb565),
+      m_position(position)
 {
     m_oanim.duration(open_duration);
     m_canim.duration(close_duration);
@@ -28,65 +35,92 @@ SideBoard::SideBoard(flags f,
 
     reset_animations();
 
-    if (is_set(flags::left))
+    switch (m_position)
     {
-        m_oanim.on_change([this](PropertyAnimator::Value v) {x(v);});
-        m_canim.on_change([this](PropertyAnimator::Value v) {x(v);});
+    case PositionFlag::left:
+    {
+        m_oanim.on_change([this](PropertyAnimator::Value value) { x(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { x(value); });
 
         move(Point(m_oanim.starting(), 0));
+        break;
     }
-    else if (is_set(flags::right))
+    case PositionFlag::right:
     {
-        m_oanim.on_change([this](PropertyAnimator::Value v) {x(v);});
-        m_canim.on_change([this](PropertyAnimator::Value v) {x(v);});
+        m_oanim.on_change([this](PropertyAnimator::Value value) { x(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { x(value); });
 
         move(Point(m_oanim.starting(), 0));
+        break;
     }
-    else if (is_set(flags::top))
+    case PositionFlag::top:
     {
-        m_oanim.on_change([this](PropertyAnimator::Value v) {y(v);});
-        m_canim.on_change([this](PropertyAnimator::Value v) {y(v);});
+        m_oanim.on_change([this](PropertyAnimator::Value value) { y(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { y(value); });
 
         move(Point(0, m_oanim.starting()));
+        break;
     }
-    else if (is_set(flags::bottom))
+    case PositionFlag::bottom:
     {
-        m_oanim.on_change([this](PropertyAnimator::Value v) {y(v);});
-        m_canim.on_change([this](PropertyAnimator::Value v) {y(v);});
+        m_oanim.on_change([this](PropertyAnimator::Value value) { y(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { y(value); });
 
         move(Point(0, m_oanim.starting()));
+        break;
+    }
+    }
+}
+
+void SideBoard::position(PositionFlag position)
+{
+    if (detail::change_if_diff<>(m_position, position))
+    {
+        m_oanim.stop();
+        m_canim.stop();
+        resize(calculate_size(position));
+        m_dir = false;
+        reset_animations();
+        move(Point(m_oanim.starting(), 0));
     }
 }
 
 void SideBoard::reset_animations()
 {
-    if (is_set(flags::left))
+    switch (m_position)
+    {
+    case PositionFlag::left:
     {
         m_oanim.starting(-Application::instance().screen()->size().width());
         m_oanim.ending(0);
         m_canim.starting(m_oanim.ending());
         m_canim.ending(m_oanim.starting());
+        break;
     }
-    else if (is_set(flags::right))
+    case PositionFlag::right:
     {
         m_oanim.starting(Application::instance().screen()->size().width() - HANDLE_WIDTH);
         m_oanim.ending(-HANDLE_WIDTH);
         m_canim.starting(m_oanim.ending());
         m_canim.ending(m_oanim.starting());
+        break;
     }
-    else if (is_set(flags::top))
+    case PositionFlag::top:
     {
         m_oanim.starting(-Application::instance().screen()->size().height());
         m_oanim.ending(0);
         m_canim.starting(m_oanim.ending());
         m_canim.ending(m_oanim.starting());
+        break;
     }
-    else if (is_set(flags::bottom))
+    case PositionFlag::bottom:
     {
         m_oanim.starting(Application::instance().screen()->size().height() - HANDLE_WIDTH);
         m_oanim.ending(-HANDLE_WIDTH);
         m_canim.starting(m_oanim.ending());
         m_canim.ending(m_oanim.starting());
+        break;
+    }
     }
 }
 
@@ -96,7 +130,7 @@ void SideBoard::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::pointer_click:
+    case EventId::pointer_click:
     {
         if (m_dir)
             close();
@@ -134,6 +168,20 @@ void SideBoard::open()
         m_oanim.starting(current);
     m_oanim.start();
     m_dir = true;
+}
+
+template<>
+std::map<SideBoard::PositionFlag, char const*> detail::EnumStrings<SideBoard::PositionFlag>::data =
+{
+    {SideBoard::PositionFlag::left, "left"},
+    {SideBoard::PositionFlag::right, "right"},
+    {SideBoard::PositionFlag::top, "top"},
+    {SideBoard::PositionFlag::bottom, "bottom"},
+};
+
+std::ostream& operator<<(std::ostream& os, const SideBoard::PositionFlag& flag)
+{
+    return os << detail::enum_to_string(flag);
 }
 
 }

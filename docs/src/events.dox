@@ -58,7 +58,7 @@ keyboard focus.
 @section events_data Event Data
 
 Each event handler, like Widget::handle(), is called with an event object.  This
-object maintains the unique egt::v1::eventid of the event, and any data associated
+object maintains the unique egt::v1::EventId of the event, and any data associated
 with the event such as pointer or key event data.
 
 @section events_handling Handling Events
@@ -75,7 +75,7 @@ used.
 ImageButton settings("@cog.png");
 settings.on_event([this](Event& event)
 {
-    if (event.id() == eventid::pointer_click)
+    if (event.id() == EventId::pointer_click)
     {
         if (m_popup.visible())
             m_popup.hide();
@@ -96,7 +96,7 @@ settings.on_event([this](Event&)
         m_popup.hide();
     else
         m_popup.show(true);
-}, {eventid::pointer_click});
+}, {EventId::pointer_click});
 @endcode
 
 Widget::on_event() can be called any number of times to register any number

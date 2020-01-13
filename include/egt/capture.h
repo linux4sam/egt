@@ -57,7 +57,7 @@ public:
      */
     explicit CameraCapture(const std::string& output,
                            container_type container = container_type::avi,
-                           pixel_format format = pixel_format::yuyv,
+                           PixelFormat format = PixelFormat::yuyv,
                            const std::string& device = "/dev/video0");
 
     /**
@@ -72,7 +72,7 @@ public:
      */
     virtual void set_output(const std::string& output,
                             container_type container = container_type::avi,
-                            pixel_format format = pixel_format::yuyv);
+                            PixelFormat format = PixelFormat::yuyv);
 
     /**
      * Initialize camera pipeline to capture from the camera.

@@ -31,7 +31,7 @@ inline namespace v1
 /**
  * Event loop interface.
  */
-class EGT_API EventLoop : public detail::noncopyable
+class EGT_API EventLoop : public detail::NonCopyable
 {
 public:
 

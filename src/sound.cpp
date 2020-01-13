@@ -32,7 +32,7 @@ namespace egt
 inline namespace v1
 {
 
-struct PlaybackThread : public detail::noncopyable
+struct PlaybackThread : public detail::NonCopyable
 {
     PlaybackThread()
     {

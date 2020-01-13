@@ -50,7 +50,7 @@ struct AudioPlayerImpl
 
             asio::post(Application::instance().event().io(), [player]()
             {
-                Event event(eventid::property_changed);
+                Event event(EventId::property_changed);
                 player->invoke_handlers(event);
             });
         }
@@ -135,7 +135,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 
             asio::post(Application::instance().event().io(), [impl]()
             {
-                Event event(eventid::property_changed);
+                Event event(EventId::property_changed);
                 impl->player.invoke_handlers(event);
             });
         }
@@ -280,7 +280,7 @@ bool AudioPlayer::volume(int volume)
         volume = 100;
 
     g_object_set(m_impl->m_volume, "volume", volume / 100.0, nullptr);
-    invoke_handlers(eventid::property_changed);
+    invoke_handlers(EventId::property_changed);
 
     return true;
 }
@@ -301,7 +301,7 @@ bool AudioPlayer::mute(bool mute)
         return false;
 
     g_object_set(m_impl->m_volume, "mute", mute, nullptr);
-    invoke_handlers(eventid::property_changed);
+    invoke_handlers(EventId::property_changed);
     return true;
 }
 

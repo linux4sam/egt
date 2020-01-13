@@ -153,6 +153,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/dump.h \
 ../include/egt/detail/enum.h \
 ../include/egt/detail/filesystem.h \
+../include/egt/detail/flags.h \
 ../include/egt/detail/flagsbase.h \
 ../include/egt/detail/imagecache.h \
 ../include/egt/detail/math.h \
@@ -169,7 +170,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/easing.h \
 ../include/egt/event.h \
 ../include/egt/eventloop.h \
-../include/egt/flags.h \
 ../include/egt/font.h \
 ../include/egt/form.h \
 ../include/egt/frame.h \

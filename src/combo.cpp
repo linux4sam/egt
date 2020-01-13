@@ -29,7 +29,7 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 {
     name("ComboBoxPopup" + std::to_string(m_widgetid));
 
-    m_list->align(alignmask::expand);
+    m_list->align(AlignFlag::expand);
 
     add(m_list);
 
@@ -38,7 +38,7 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
         event.stop();
         parent.selected(m_list->selected());
         hide();
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 }
 
 void ComboBoxPopup::smart_pos()
@@ -89,7 +89,7 @@ void ComboBoxPopup::handle(Event& event)
     /// @todo How is this widget going to get this event?
     switch (event.id())
     {
-    case eventid::pointer_click:
+    case EventId::pointer_click:
     {
         // if any mouse click happens, hide
         hide();
@@ -120,17 +120,17 @@ ComboBox::ComboBox(const Rect& rect) noexcept
 
 ComboBox::ComboBox(const item_array& items,
                    const Rect& rect) noexcept
-    : detail::TextWidget("", rect, alignmask::left | alignmask::center),
+    : detail::TextWidget("", rect, AlignFlag::left | AlignFlag::center),
       m_items(items),
       m_popup(new detail::ComboBoxPopup(*this))
 {
     name("ComboBox" + std::to_string(m_widgetid));
 
-    boxtype(Theme::boxtype::fill_rounded);
+    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
     padding(5);
     border(theme().default_border());
 
-    flags().set(Widget::flag::grab_mouse);
+    flags().set(Widget::Flag::grab_mouse);
 
     // automatically select the first item
     if (!m_items.empty())
@@ -167,7 +167,7 @@ void ComboBox::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::pointer_click:
+    case EventId::pointer_click:
     {
         Point mouse = display_to_local(event.pointer().point);
         if (local_box().intersect(mouse))
@@ -190,7 +190,7 @@ void ComboBox::selected(size_t index)
         {
             m_selected = index;
             damage();
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
         }
     }
 }

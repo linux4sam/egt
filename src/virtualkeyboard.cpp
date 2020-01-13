@@ -21,7 +21,7 @@ VirtualKeyboard::Key::Key(uint32_t unicode, double length) noexcept
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
     m_button->text(tmp);
-    m_button->flags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const std::string& label, KeyboardCode keycode,
@@ -30,7 +30,7 @@ VirtualKeyboard::Key::Key(const std::string& label, KeyboardCode keycode,
       m_keycode(keycode),
       m_length(length)
 {
-    m_button->flags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const Image& img, KeyboardCode keycode,
@@ -39,7 +39,7 @@ VirtualKeyboard::Key::Key(const Image& img, KeyboardCode keycode,
       m_keycode(keycode),
       m_length(length)
 {
-    m_button->flags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const string& label, int link,
@@ -48,7 +48,7 @@ VirtualKeyboard::Key::Key(const string& label, int link,
       m_length(length),
       m_link(link)
 {
-    m_button->flags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(const Image& img, int link,
@@ -57,7 +57,7 @@ VirtualKeyboard::Key::Key(const Image& img, int link,
       m_length(length),
       m_link(link)
 {
-    m_button->flags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
 VirtualKeyboard::Key::Key(uint32_t unicode,
@@ -71,7 +71,7 @@ VirtualKeyboard::Key::Key(uint32_t unicode,
     string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
     m_button->text(tmp);
-    m_button->flags().set(Widget::flag::no_autoresize);
+    m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
 void VirtualKeyboard::Key::color(Palette::ColorId id, const Palette::pattern_type& color, Palette::GroupId group)
@@ -89,7 +89,7 @@ VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
 {
     name("VirtualKeyboard" + std::to_string(m_widgetid));
 
-    m_main_panel.align(alignmask::expand);
+    m_main_panel.align(AlignFlag::expand);
     add(m_main_panel);
 
     for (auto& keys_panel : keys)
@@ -103,15 +103,15 @@ VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
     for (auto& keys_panel : keys)
     {
         auto panel = make_shared<Panel>(keys_panel);
-        panel->align(alignmask::expand);
+        panel->align(AlignFlag::expand);
         panel->update_key_space(m_key_space);
         m_main_panels.push_back(panel);
 
         auto main_panel = make_shared<NotebookTab>();
         main_panel->add(panel);
-        main_panel->align(alignmask::expand);
+        main_panel->align(AlignFlag::expand);
         // By default NotebookTab are not transparent.
-        main_panel->boxtype(Theme::boxtype::none);
+        main_panel->boxtype().clear();
         m_main_panel.add(main_panel);
 
         for (auto& keys_row : keys_panel)
@@ -164,7 +164,7 @@ VirtualKeyboard::Panel::Panel(panel_keys keys)
     for (auto& row : keys)
     {
         auto hsizer = make_shared<HorizontalBoxSizer>();
-        hsizer->align(alignmask::expand_horizontal | alignmask::top);
+        hsizer->align(AlignFlag::expand_horizontal | AlignFlag::top);
         add(hsizer);
 
         for (auto& key : row)
@@ -191,7 +191,7 @@ void VirtualKeyboard::key_link(const shared_ptr<Key>& k)
     k->m_button->on_event([this, k](Event&)
     {
         m_main_panel.selected(k->m_link);
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 }
 
 void VirtualKeyboard::key_input_value(const shared_ptr<Key>& k)
@@ -200,25 +200,25 @@ void VirtualKeyboard::key_input_value(const shared_ptr<Key>& k)
     {
         if (!k->m_button->text().empty())
         {
-            Event event2(eventid::keyboard_down);
+            Event event2(EventId::keyboard_down);
             event2.key().unicode = k->m_unicode;
             event2.key().keycode = k->m_keycode;
             m_in.dispatch(event2);
 
-            event2.id(eventid::keyboard_up);
+            event2.id(EventId::keyboard_up);
             event2.key().unicode = k->m_unicode;
             event2.key().keycode = k->m_keycode;
             m_in.dispatch(event2);
         }
 
         return 0;
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 }
 
 void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
 {
     k->m_multichoice_panel = make_shared<Panel>(k->m_keys_multichoice);
-    k->m_multichoice_panel->align(alignmask::center);
+    k->m_multichoice_panel->align(AlignFlag::center);
 
     // Create a Popup to display the multichoice panel.
     k->m_button->on_event([this, k](Event&)
@@ -254,7 +254,7 @@ void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
 
         m_multichoice_popup->move(main_window_origin);
         m_multichoice_popup->show_modal();
-    }, {eventid::pointer_hold});
+    }, {EventId::pointer_hold});
 
     // Create the Buttons for the multichoice panel.
     for (auto& key_multichoice_row : k->m_keys_multichoice)
@@ -268,11 +268,11 @@ void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
 
                 if (!key_multichoice->m_button->text().empty())
                 {
-                    Event down(eventid::keyboard_down);
+                    Event down(EventId::keyboard_down);
                     down.key().unicode = key_multichoice->m_unicode;
                     down.key().keycode = key_multichoice->m_keycode;
                     m_in.dispatch(down);
-                    Event up(eventid::keyboard_up);
+                    Event up(EventId::keyboard_up);
                     up.key().unicode = key_multichoice->m_unicode;
                     up.key().keycode = key_multichoice->m_keycode;
                     m_in.dispatch(up);
@@ -280,7 +280,7 @@ void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
                     k->m_button->active(false);
                 }
                 // User may just move his finger so prefer the raw_pointer_up event to the pointer_click one.
-            }, {eventid::raw_pointer_up});
+            }, {EventId::raw_pointer_up});
         }
     }
 }
@@ -290,7 +290,7 @@ static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
 PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard) noexcept
 {
     // Make the keyboard partially transparent.
-    boxtype(Theme::boxtype::fill);
+    boxtype(Theme::BoxFlag::fill);
     color(Palette::ColorId::bg, Color(Palette::transparent, 80));
 
     auto popup_width = Application::instance().screen()->size().width();
@@ -300,13 +300,13 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
     auto y_keyboard_position = Application::instance().screen()->size().height() - popup_height;
     move(Point(0, y_keyboard_position));
 
-    m_vsizer.align(alignmask::expand);
+    m_vsizer.align(AlignFlag::expand);
     add(m_vsizer);
 
-    m_hsizer.align(alignmask::top | alignmask::right);
+    m_hsizer.align(AlignFlag::top | AlignFlag::right);
     m_vsizer.add(m_hsizer);
 
-    m_top_bottom_button.align(alignmask::top | alignmask::right);
+    m_top_bottom_button.align(AlignFlag::top | AlignFlag::right);
     m_top_bottom_button.on_event([this, y_keyboard_position](Event&)
     {
         if (m_bottom_positionned)
@@ -321,10 +321,10 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
         }
 
         m_bottom_positionned = !m_bottom_positionned;
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
     m_hsizer.add(m_top_bottom_button);
 
-    m_close_button.align(alignmask::top | alignmask::right);
+    m_close_button.align(AlignFlag::top | AlignFlag::right);
     m_close_button.on_event([this, y_keyboard_position](Event&)
     {
         hide();
@@ -332,10 +332,10 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard)
         move(Point(0, y_keyboard_position));
         m_top_bottom_button.image(Image("@arrow_up.png"));
         m_bottom_positionned = true;
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
     m_hsizer.add(m_close_button);
 
-    keyboard->align(alignmask::expand);
+    keyboard->align(AlignFlag::expand);
     m_vsizer.add(keyboard);
 
     the_popup_virtual_keyboard = this;

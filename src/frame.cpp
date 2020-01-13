@@ -21,11 +21,10 @@ namespace egt
 inline namespace v1
 {
 
-Frame::Frame(const Rect& rect, const flags_type& flags) noexcept
-    : Widget(rect, flags | Widget::flag::frame)
+Frame::Frame(const Rect& rect, const Widget::Flags& flags) noexcept
+    : Widget(rect, flags | Widget::Flag::frame)
 {
     name("Frame" + std::to_string(m_widgetid));
-    boxtype(Theme::boxtype::none);
 }
 
 void Frame::add(std::shared_ptr<Widget> widget)
@@ -84,15 +83,15 @@ void Frame::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::raw_pointer_down:
-    case eventid::raw_pointer_up:
-    case eventid::raw_pointer_move:
-    case eventid::pointer_click:
-    case eventid::pointer_dblclick:
-    case eventid::pointer_hold:
-    case eventid::pointer_drag_start:
-    case eventid::pointer_drag:
-    case eventid::pointer_drag_stop:
+    case EventId::raw_pointer_down:
+    case EventId::raw_pointer_up:
+    case EventId::raw_pointer_move:
+    case EventId::pointer_click:
+    case EventId::pointer_dblclick:
+    case EventId::pointer_hold:
+    case EventId::pointer_drag_start:
+    case EventId::pointer_drag:
+    case EventId::pointer_drag_stop:
     {
         auto pos = display_to_local(event.pointer().point);
 
@@ -113,9 +112,9 @@ void Frame::handle(Event& event)
         break;
     }
 
-    case eventid::keyboard_down:
-    case eventid::keyboard_up:
-    case eventid::keyboard_repeat:
+    case EventId::keyboard_down:
+    case EventId::keyboard_up:
+    case EventId::keyboard_repeat:
     {
         for (auto& child : detail::reverse_iterate(m_children))
         {
@@ -145,7 +144,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
     {
         if (child->box().intersect(pos))
         {
-            if (child->flags().is_set(Widget::flag::frame))
+            if (child->flags().is_set(Widget::Flag::frame))
             {
                 auto frame = dynamic_cast<Frame*>(child.get());
                 if (frame)
@@ -219,7 +218,7 @@ void Frame::dump(std::ostream& out, int level)
         child->dump(out, level + 1);
 }
 
-void Frame::walk(walk_callback_t callback, int level)
+void Frame::walk(WalkCallback callback, int level)
 {
     if (!callback(this, level))
         return;
@@ -384,7 +383,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
         crect -= origin;
     }
 
-    if (!flags().is_set(Widget::flag::no_clip))
+    if (!flags().is_set(Widget::Flag::no_clip))
     {
         // clip the damage rectangle, otherwise we will draw this whole frame
         // and then only draw the children inside the actual damage rect, which
@@ -396,7 +395,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
     // draw our frame box, but now that the physical origin has possibly changed
     // and our box() is relative to our parent, we have to adjust to our local
     // origin
-    if (boxtype() != Theme::boxtype::none)
+    if (!boxtype().empty())
     {
         Palette::GroupId group = Palette::GroupId::normal;
         if (disabled())
@@ -426,7 +425,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
 
         // don't draw plane frame as child - this is
         // specifically handled by event loop
-        if (child->flags().is_set(Widget::flag::plane_window))
+        if (child->flags().is_set(Widget::Flag::plane_window))
             continue;
 
         draw_child(painter, crect, child.get());
@@ -448,7 +447,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
 
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
-            if (!child->flags().is_set(Widget::flag::no_clip))
+            if (!child->flags().is_set(Widget::Flag::no_clip))
             {
                 painter.draw(r);
                 painter.clip();
@@ -466,7 +465,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
 
                 // no matter what the child draws, clip the output to only the
                 // rectangle we care about updating
-                if (!child->flags().is_set(Widget::flag::no_clip))
+                if (!child->flags().is_set(Widget::Flag::no_clip))
                 {
                     painter.draw(r);
                     painter.clip();
@@ -506,7 +505,7 @@ void Frame::paint_children_to_file()
 {
     for (auto& child : m_children)
     {
-        if (child->flags().is_set(Widget::flag::frame))
+        if (child->flags().is_set(Widget::Flag::frame))
         {
             auto frame = std::dynamic_pointer_cast<Frame>(child);
             frame->paint_children_to_file();
@@ -534,7 +533,7 @@ void Frame::layout()
         return;
 
     m_in_layout = true;
-    detail::scope_exit reset([this]() { m_in_layout = false; });
+    detail::ScopeExit reset([this]() { m_in_layout = false; });
 
     auto area = content_area();
 
@@ -544,7 +543,7 @@ void Frame::layout()
         // first directly align the child, then if it is a frame, tell the
         // frame to layout().
         //
-        if (child->align() != alignmask::none)
+        if (!child->align().empty())
         {
             auto bounding = to_child(area);
             if (bounding.empty())

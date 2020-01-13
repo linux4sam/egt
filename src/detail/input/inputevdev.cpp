@@ -130,22 +130,22 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                 break;
             case BTN_LEFT:
             {
-                Event event(value ? eventid::raw_pointer_down : eventid::raw_pointer_up,
-                            Pointer(m_last_point, Pointer::button::left));
+                Event event(value ? EventId::raw_pointer_down : EventId::raw_pointer_up,
+                            Pointer(m_last_point, Pointer::Button::left));
                 dispatch(event);
                 break;
             }
             case BTN_RIGHT:
             {
-                Event event(value ? eventid::raw_pointer_down : eventid::raw_pointer_up,
-                            Pointer(m_last_point, Pointer::button::right));
+                Event event(value ? EventId::raw_pointer_down : EventId::raw_pointer_up,
+                            Pointer(m_last_point, Pointer::Button::right));
                 dispatch(event);
                 break;
             }
             case BTN_MIDDLE:
             {
-                Event event(value ? eventid::raw_pointer_down : eventid::raw_pointer_up,
-                            Pointer(m_last_point, Pointer::button::middle));
+                Event event(value ? EventId::raw_pointer_down : EventId::raw_pointer_up,
+                            Pointer(m_last_point, Pointer::Button::middle));
                 dispatch(event);
                 break;
             }
@@ -155,22 +155,22 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                 {
                 case 0:
                 {
-                    const auto unicode = m_keyboard->on_key(e->code, eventid::keyboard_up);
-                    Event event(eventid::keyboard_up, Key(linux_to_ekey(e->code), unicode));
+                    const auto unicode = m_keyboard->on_key(e->code, EventId::keyboard_up);
+                    Event event(EventId::keyboard_up, Key(linux_to_ekey(e->code), unicode));
                     dispatch(event);
                     break;
                 }
                 case 1:
                 {
-                    const auto unicode = m_keyboard->on_key(e->code, eventid::keyboard_down);
-                    Event event(eventid::keyboard_down, Key(linux_to_ekey(e->code), unicode));
+                    const auto unicode = m_keyboard->on_key(e->code, EventId::keyboard_down);
+                    Event event(EventId::keyboard_down, Key(linux_to_ekey(e->code), unicode));
                     dispatch(event);
                     break;
                 }
                 case 2:
                 {
-                    const auto unicode = m_keyboard->on_key(e->code, eventid::keyboard_repeat);
-                    Event event(eventid::keyboard_repeat, Key(linux_to_ekey(e->code), unicode));
+                    const auto unicode = m_keyboard->on_key(e->code, EventId::keyboard_repeat);
+                    Event event(EventId::keyboard_repeat, Key(linux_to_ekey(e->code), unicode));
                     dispatch(event);
                     break;
                 }
@@ -185,7 +185,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     if (absolute_event)
     {
         m_last_point = DisplayPoint(x, y);
-        Event event(eventid::raw_pointer_move, Pointer(m_last_point));
+        Event event(EventId::raw_pointer_move, Pointer(m_last_point));
         dispatch(event);
     }
     else
@@ -193,7 +193,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
         if (dx != 0 || dy != 0)
         {
             m_last_point = DisplayPoint(m_last_point.x() + dx, m_last_point.y() + dy);
-            Event event(eventid::raw_pointer_move, Pointer(m_last_point));
+            Event event(EventId::raw_pointer_move, Pointer(m_last_point));
             dispatch(event);
         }
     }

@@ -261,7 +261,7 @@ HttpClientRequest::HttpClientRequest(const std::string& url)
       m_impl(new detail::HttpClientRequestData)
 {}
 
-void HttpClientRequest::start(finish_callback_t finish)
+void HttpClientRequest::start(FinishCallback finish)
 {
     m_finish_callback = finish;
     m_impl->easy = curl_easy_init();

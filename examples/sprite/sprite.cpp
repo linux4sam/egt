@@ -20,7 +20,7 @@ int main(int argc, const char** argv)
     win.background(Image("background.png"));
 
     ImageLabel logo(Image("@128px/microchip_logo_white.png"));
-    logo.align(alignmask::left | alignmask::top);
+    logo.align(AlignFlag::left | AlignFlag::top);
     logo.margin(10);
     win.add(logo);
 
@@ -48,7 +48,7 @@ int main(int argc, const char** argv)
             sprite1.show();
         else
             sprite1.hide();
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     software_checkbox.on_event([&](Event & event)
     {
@@ -56,7 +56,7 @@ int main(int argc, const char** argv)
             sprite2.show();
         else
             sprite2.hide();
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     win.add(grid);
 
@@ -65,7 +65,7 @@ int main(int argc, const char** argv)
 
     Label label2("FPS: -",
                  Rect(Point(0, 40), Size(100, 40)),
-                 alignmask::center);
+                 AlignFlag::center);
     label2.color(Palette::ColorId::text, Palette::black);
     label2.color(Palette::ColorId::bg, Palette::transparent);
 
@@ -105,7 +105,7 @@ int main(int argc, const char** argv)
     slider1.on_event([&](Event&)
     {
         animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     win.show();
 
@@ -116,7 +116,7 @@ int main(int argc, const char** argv)
 
     Label label1("CPU: -",
                  Rect(Point(0, 0), Size(100, 40)),
-                 alignmask::center);
+                 AlignFlag::center);
     label1.color(Palette::ColorId::text, Palette::black);
     label1.color(Palette::ColorId::bg, Palette::transparent);
 

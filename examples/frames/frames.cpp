@@ -22,9 +22,9 @@ int main(int argc, const char** argv)
     Application app(argc, argv, "frames");
 
     TopWindow win0;
-    win0.flags().set(Widget::flag::no_layout);
+    win0.flags().set(Widget::Flag::no_layout);
 
-    auto a = alignmask::top | alignmask::center;
+    auto a = AlignFlag::top | AlignFlag::center;
 
     WindowType win1(Size(400, 400));
     win1.color(Palette::ColorId::bg, Palette::red);
@@ -35,14 +35,14 @@ int main(int argc, const char** argv)
         {
             auto p = win1.display_to_local(event.pointer().point);
             label->text(detail::to_string(p));
-        }, {eventid::raw_pointer_move});
+        }, {EventId::raw_pointer_move});
         label->align(a);
         win1.add(label);
     }
     win0.add(win1);
     win1.move(Point(50, 50));
     auto l1 = make_shared<Label>(detail::to_string(win1.box()), Rect(0, 0, 100, 50));
-    l1->align(alignmask::center | alignmask::bottom);
+    l1->align(AlignFlag::center | AlignFlag::bottom);
     win1.add(l1);
 
     WindowType win2(Size(300, 300));
@@ -54,14 +54,14 @@ int main(int argc, const char** argv)
         {
             auto p = win2.display_to_local(event.pointer().point);
             label->text(detail::to_string(p));
-        }, {eventid::raw_pointer_move});
+        }, {EventId::raw_pointer_move});
         label->align(a);
         win2.add(label);
     }
     win1.add(win2);
     win2.move(Point(50, 50));
     auto l2 = make_shared<Label>(detail::to_string(win2.box()), Rect(0, 0, 100, 50));
-    l2->align(alignmask::center | alignmask::bottom);
+    l2->align(AlignFlag::center | AlignFlag::bottom);
     win2.add(l2);
 
     WindowType win3(Size(200, 200));

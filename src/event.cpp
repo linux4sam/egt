@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/enum.h"
 #include "egt/event.h"
 #include "egt/input.h"
 #include <iostream>
@@ -14,40 +15,36 @@ namespace egt
 inline namespace v1
 {
 
-std::ostream& operator<<(std::ostream& os, const eventid& event)
+template<>
+std::map<EventId, char const*> detail::EnumStrings<EventId>::data =
 {
-    static std::map<eventid, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(eventid::none);
-        MAPITEM(eventid::raw_pointer_down);
-        MAPITEM(eventid::raw_pointer_up);
-        MAPITEM(eventid::raw_pointer_move);
-        MAPITEM(eventid::pointer_click);
-        MAPITEM(eventid::pointer_dblclick);
-        MAPITEM(eventid::pointer_hold);
-        MAPITEM(eventid::pointer_drag_start);
-        MAPITEM(eventid::pointer_drag);
-        MAPITEM(eventid::pointer_drag_stop);
-        MAPITEM(eventid::enter);
-        MAPITEM(eventid::leave);
-        MAPITEM(eventid::keyboard_down);
-        MAPITEM(eventid::keyboard_up);
-        MAPITEM(eventid::keyboard_repeat);
-        MAPITEM(eventid::property_changed);
-        MAPITEM(eventid::input_property_changed);
-        MAPITEM(eventid::hide);
-        MAPITEM(eventid::show);
-        MAPITEM(eventid::on_gain_focus);
-        MAPITEM(eventid::on_lost_focus);
-        MAPITEM(eventid::event1);
-        MAPITEM(eventid::event2);
-#undef MAPITEM
-    }
+    {EventId::none, "none"},
+    {EventId::raw_pointer_down, "raw_pointer_down"},
+    {EventId::raw_pointer_up, "raw_pointer_up"},
+    {EventId::raw_pointer_move, "raw_pointer_move"},
+    {EventId::pointer_click, "pointer_click"},
+    {EventId::pointer_dblclick, "pointer_dblclick"},
+    {EventId::pointer_hold, "pointer_hold"},
+    {EventId::pointer_drag_start, "pointer_drag_start"},
+    {EventId::pointer_drag, "pointer_drag"},
+    {EventId::pointer_drag_stop, "pointer_drag_stop"},
+    {EventId::enter, "enter"},
+    {EventId::leave, "leave"},
+    {EventId::keyboard_down, "keyboard_down"},
+    {EventId::keyboard_up, "keyboard_up"},
+    {EventId::keyboard_repeat, "keyboard_repeat"},
+    {EventId::property_changed, "property_changed"},
+    {EventId::input_property_changed, "input_property_changed"},
+    {EventId::hide, "hide"},
+    {EventId::show, "show"},
+    {EventId::on_gain_focus, "on_gain_focus"},
+    {EventId::on_lost_focus, "on_lost_focus"},
+    {EventId::error, "error"},
+};
 
-    os << strings[event];
-    return os;
+std::ostream& operator<<(std::ostream& os, const EventId& event)
+{
+    return os << detail::enum_to_string(event);
 }
 
 void Event::grab(Widget* widget)
@@ -56,21 +53,18 @@ void Event::grab(Widget* widget)
     detail::mouse_grab(widget);
 }
 
-std::ostream& operator<<(std::ostream& os, const Pointer::button& btn)
+template<>
+std::map<Pointer::Button, char const*> detail::EnumStrings<Pointer::Button>::data =
 {
-    static std::map<Pointer::button, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(Pointer::button::none);
-        MAPITEM(Pointer::button::left);
-        MAPITEM(Pointer::button::middle);
-        MAPITEM(Pointer::button::right);
-#undef MAPITEM
-    }
+    {Pointer::Button::none, "none"},
+    {Pointer::Button::left, "left"},
+    {Pointer::Button::middle, "middle"},
+    {Pointer::Button::right, "right"},
+};
 
-    os << strings[btn];
-    return os;
+std::ostream& operator<<(std::ostream& os, const Pointer::Button& btn)
+{
+    return os << detail::enum_to_string(btn);
 }
 
 std::ostream& operator<<(std::ostream& os, const Pointer& pointer)
@@ -93,20 +87,20 @@ std::ostream& operator<<(std::ostream& os, const Event& event)
     os << event.id();
     switch (event.id())
     {
-    case eventid::raw_pointer_down:
-    case eventid::raw_pointer_up:
-    case eventid::raw_pointer_move:
-    case eventid::pointer_click:
-    case eventid::pointer_dblclick:
-    case eventid::pointer_hold:
-    case eventid::pointer_drag_start:
-    case eventid::pointer_drag:
-    case eventid::pointer_drag_stop:
+    case EventId::raw_pointer_down:
+    case EventId::raw_pointer_up:
+    case EventId::raw_pointer_move:
+    case EventId::pointer_click:
+    case EventId::pointer_dblclick:
+    case EventId::pointer_hold:
+    case EventId::pointer_drag_start:
+    case EventId::pointer_drag:
+    case EventId::pointer_drag_stop:
         os << " " << event.pointer();
         break;
-    case eventid::keyboard_down:
-    case eventid::keyboard_up:
-    case eventid::keyboard_repeat:
+    case EventId::keyboard_down:
+    case EventId::keyboard_up:
+    case EventId::keyboard_repeat:
         os << " " << event.key();
         break;
     default:

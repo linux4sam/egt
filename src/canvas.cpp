@@ -10,14 +10,14 @@ namespace egt
 inline namespace v1
 {
 
-Canvas::Canvas(const Size& size, pixel_format format) noexcept
+Canvas::Canvas(const Size& size, PixelFormat format) noexcept
     : m_surface(cairo_image_surface_create(detail::cairo_format(format), size.width(), size.height()),
                 cairo_surface_destroy),
       m_cr(cairo_create(m_surface.get()), cairo_destroy)
 {
 }
 
-Canvas::Canvas(const SizeF& size, pixel_format format) noexcept
+Canvas::Canvas(const SizeF& size, PixelFormat format) noexcept
     : m_surface(cairo_image_surface_create(detail::cairo_format(format), size.width(), size.height()),
                 cairo_surface_destroy),
       m_cr(cairo_create(m_surface.get()), cairo_destroy)
@@ -30,7 +30,7 @@ Canvas::Canvas(const shared_cairo_surface_t& surface) noexcept
     copy(surface);
 }
 
-Canvas::Canvas(const shared_cairo_surface_t& surface, pixel_format format) noexcept
+Canvas::Canvas(const shared_cairo_surface_t& surface, PixelFormat format) noexcept
     : m_surface(cairo_surface_create_similar_image(surface.get(),
                 detail::cairo_format(format),
                 cairo_image_surface_get_width(surface.get()),
@@ -50,15 +50,15 @@ Size Canvas::size() const
             cairo_image_surface_get_height(m_surface.get())};
 }
 
-pixel_format Canvas::format() const
+PixelFormat Canvas::format() const
 {
     if (!m_surface)
-        return pixel_format::invalid;
+        return PixelFormat::invalid;
 
     return detail::egt_format(cairo_image_surface_get_format(m_surface.get()));
 }
 
-void Canvas::reallocate(const Size& size, pixel_format format)
+void Canvas::reallocate(const Size& size, PixelFormat format)
 {
     m_surface = shared_cairo_surface_t(cairo_image_surface_create(detail::cairo_format(format), size.width(), size.height()),
                                        cairo_surface_destroy);
@@ -66,7 +66,7 @@ void Canvas::reallocate(const Size& size, pixel_format format)
 
 }
 
-void Canvas::reallocate(const SizeF& size, pixel_format format)
+void Canvas::reallocate(const SizeF& size, PixelFormat format)
 {
     m_surface = shared_cairo_surface_t(cairo_image_surface_create(detail::cairo_format(format), size.width(), size.height()),
                                        cairo_surface_destroy);

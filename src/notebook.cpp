@@ -26,8 +26,6 @@ Notebook::Notebook(const Rect& rect) noexcept
     : Frame(rect)
 {
     name("Notebook" + std::to_string(m_widgetid));
-
-    boxtype(Theme::boxtype::none);
 }
 
 Notebook::Notebook(Frame& parent, const Rect& rect) noexcept
@@ -52,7 +50,7 @@ void Notebook::add(std::shared_ptr<Widget> widget)
 
     m_cells.push_back(cell);
 
-    widget->align(alignmask::expand);
+    widget->align(AlignFlag::expand);
 
     Frame::add(widget);
 
@@ -126,7 +124,7 @@ void Notebook::selected(size_t index)
             to->show();
         }
 
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
     }
 }
 

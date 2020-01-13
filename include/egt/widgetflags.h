@@ -12,7 +12,7 @@
  */
 
 #include <cstdint>
-#include <egt/bitmask.h>
+#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
 #include <iosfwd>
 #include <memory>
@@ -24,45 +24,56 @@ inline namespace v1
 
 /**
  * Alignment flags.
+ *
+ * @note Center alignment is a weak alignment both horizontal and
+ * vertical. To break one of those dimensions to another
+ * alignment, specify it in addition to center.  If both
+ * are broken, center has no effect.
  */
-enum class alignmask : uint32_t
+enum class AlignFlag : uint32_t
 {
-    /** No alignment. */
-    none = 0,
     /**
      * Center alignment is a weak alignment both horizontal and
      * vertical. To break one of those dimensions to another
      * alignment, specify it in addition to center.  If both
      * are broken, center has no effect.
      */
-    center_horizontal = (1 << 0),
-    center_vertical = (1 << 1),
+    /** Center horizontal alignment. */
+    center_horizontal = detail::bit(0),
+    /** Center vertical alignment. */
+    center_vertical = detail::bit(1),
+    /** Center horizontal and vertical alignment. */
     center = center_horizontal | center_vertical,
     /** Horizontal alignment. */
-    left = (1 << 2),
+    left = detail::bit(2),
     /** Horizontal alignment. */
-    right = (1 << 3),
+    right = detail::bit(3),
     /** Vertical alignment. */
-    top = (1 << 4),
+    top = detail::bit(4),
     /** Vertical alignment. */
-    bottom = (1 << 5),
+    bottom = detail::bit(5),
     /** Expand only horizontally. */
-    expand_horizontal = (1 << 6),
+    expand_horizontal = detail::bit(6),
     /** Expand only vertically. */
-    expand_vertical = (1 << 7),
-    /** Expand vertically and horizontally. */
+    expand_vertical = detail::bit(7),
+    /** Expand horizontally and vertically. */
     expand = expand_horizontal | expand_vertical,
 };
 
-ENABLE_BITMASK_OPERATORS(alignmask);
+using AlignFlags = detail::Flags<AlignFlag>;
 
-EGT_API std::ostream& operator<<(std::ostream& os, const alignmask& align);
+inline AlignFlags operator|(AlignFlag lhs, AlignFlag rhs)
+{
+    return {lhs, rhs};
+}
+
+EGT_API std::ostream& operator<<(std::ostream& os, const AlignFlags& align);
 
 /** Helper to set alignment of a widget. */
 template<class T>
 inline T& center(T& widget)
 {
-    widget.align(widget.align() | alignmask::center);
+    widget.align(widget.align() | AlignFlag::center);
     return widget;
 }
 
@@ -70,7 +81,7 @@ inline T& center(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& center(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::center);
+    widget->align(widget->align() | AlignFlag::center);
     return widget;
 }
 
@@ -78,7 +89,7 @@ inline const std::shared_ptr<T>& center(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& center(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::center);
+    widget->align(widget->align() | AlignFlag::center);
     return widget;
 }
 
@@ -86,7 +97,7 @@ inline std::shared_ptr<T>& center(std::shared_ptr<T>& widget)
 template<class T>
 inline T& left(T& widget)
 {
-    widget.align(widget.align() | alignmask::left);
+    widget.align(widget.align() | AlignFlag::left);
     return widget;
 }
 
@@ -94,7 +105,7 @@ inline T& left(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& left(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::left);
+    widget->align(widget->align() | AlignFlag::left);
     return widget;
 }
 
@@ -102,7 +113,7 @@ inline const std::shared_ptr<T>& left(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& left(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::left);
+    widget->align(widget->align() | AlignFlag::left);
     return widget;
 }
 
@@ -110,7 +121,7 @@ inline std::shared_ptr<T>& left(std::shared_ptr<T>& widget)
 template<class T>
 inline T& right(T& widget)
 {
-    widget.align(widget.align() | alignmask::right);
+    widget.align(widget.align() | AlignFlag::right);
     return widget;
 }
 
@@ -118,7 +129,7 @@ inline T& right(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& right(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::right);
+    widget->align(widget->align() | AlignFlag::right);
     return widget;
 }
 
@@ -126,7 +137,7 @@ inline const std::shared_ptr<T>& right(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& right(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::right);
+    widget->align(widget->align() | AlignFlag::right);
     return widget;
 }
 
@@ -134,7 +145,7 @@ inline std::shared_ptr<T>& right(std::shared_ptr<T>& widget)
 template<class T>
 inline T& top(T& widget)
 {
-    widget.align(widget.align() | alignmask::top);
+    widget.align(widget.align() | AlignFlag::top);
     return widget;
 }
 
@@ -142,7 +153,7 @@ inline T& top(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& top(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::top);
+    widget->align(widget->align() | AlignFlag::top);
     return widget;
 }
 
@@ -150,7 +161,7 @@ inline const std::shared_ptr<T>& top(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& top(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::top);
+    widget->align(widget->align() | AlignFlag::top);
     return widget;
 }
 
@@ -158,7 +169,7 @@ inline std::shared_ptr<T>& top(std::shared_ptr<T>& widget)
 template<class T>
 inline T& bottom(T& widget)
 {
-    widget.align(widget.align() | alignmask::bottom);
+    widget.align(widget.align() | AlignFlag::bottom);
     return widget;
 }
 
@@ -166,7 +177,7 @@ inline T& bottom(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& bottom(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::bottom);
+    widget->align(widget->align() | AlignFlag::bottom);
     return widget;
 }
 
@@ -174,7 +185,7 @@ inline const std::shared_ptr<T>& bottom(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& bottom(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::bottom);
+    widget->align(widget->align() | AlignFlag::bottom);
     return widget;
 }
 
@@ -182,7 +193,7 @@ inline std::shared_ptr<T>& bottom(std::shared_ptr<T>& widget)
 template<class T>
 inline T& expand_horizontal(T& widget)
 {
-    widget.align(widget.align() | alignmask::expand_horizontal);
+    widget.align(widget.align() | AlignFlag::expand_horizontal);
     return widget;
 }
 
@@ -190,7 +201,7 @@ inline T& expand_horizontal(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& expand_horizontal(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::expand_horizontal);
+    widget->align(widget->align() | AlignFlag::expand_horizontal);
     return widget;
 }
 
@@ -198,7 +209,7 @@ inline const std::shared_ptr<T>& expand_horizontal(const std::shared_ptr<T>& wid
 template<class T>
 inline std::shared_ptr<T>& expand_horizontal(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::expand_horizontal);
+    widget->align(widget->align() | AlignFlag::expand_horizontal);
     return widget;
 }
 
@@ -206,7 +217,7 @@ inline std::shared_ptr<T>& expand_horizontal(std::shared_ptr<T>& widget)
 template<class T>
 inline T& expand_vertical(T& widget)
 {
-    widget.align(widget.align() | alignmask::expand_vertical);
+    widget.align(widget.align() | AlignFlag::expand_vertical);
     return widget;
 }
 
@@ -214,7 +225,7 @@ inline T& expand_vertical(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& expand_vertical(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::expand_vertical);
+    widget->align(widget->align() | AlignFlag::expand_vertical);
     return widget;
 }
 
@@ -222,7 +233,7 @@ inline const std::shared_ptr<T>& expand_vertical(const std::shared_ptr<T>& widge
 template<class T>
 inline std::shared_ptr<T>& expand_vertical(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::expand_vertical);
+    widget->align(widget->align() | AlignFlag::expand_vertical);
     return widget;
 }
 
@@ -230,7 +241,7 @@ inline std::shared_ptr<T>& expand_vertical(std::shared_ptr<T>& widget)
 template<class T>
 inline T& expand(T& widget)
 {
-    widget.align(widget.align() | alignmask::expand);
+    widget.align(widget.align() | AlignFlag::expand);
     return widget;
 }
 
@@ -238,7 +249,7 @@ inline T& expand(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& expand(const std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::expand);
+    widget->align(widget->align() | AlignFlag::expand);
     return widget;
 }
 
@@ -246,13 +257,13 @@ inline const std::shared_ptr<T>& expand(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& expand(std::shared_ptr<T>& widget)
 {
-    widget->align(widget->align() | alignmask::expand);
+    widget->align(widget->align() | AlignFlag::expand);
     return widget;
 }
 
 /** Helper to set alignment of a widget. */
 template<class T>
-inline T& align(T& widget, alignmask a)
+inline T& align(T& widget, AlignFlags a)
 {
     widget.align(a);
     return widget;
@@ -260,7 +271,7 @@ inline T& align(T& widget, alignmask a)
 
 /** Helper to set alignment of a widget. */
 template<class T>
-inline const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, alignmask a)
+inline const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, AlignFlags a)
 {
     widget->align(a);
     return widget;
@@ -268,7 +279,7 @@ inline const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, alignma
 
 /** Helper to set alignment of a widget. */
 template<class T>
-inline std::shared_ptr<T>& align(std::shared_ptr<T>& widget, alignmask a)
+inline std::shared_ptr<T>& align(std::shared_ptr<T>& widget, AlignFlags a)
 {
     widget->align(a);
     return widget;
@@ -277,58 +288,58 @@ inline std::shared_ptr<T>& align(std::shared_ptr<T>& widget, alignmask a)
 /**
  * Generic orientation flags.
  */
-enum class orientation
+enum class Orientation : uint32_t
 {
-    horizontal,
-    vertical,
-    flex,
-    none,
+    horizontal = detail::bit(0),
+    vertical = detail::bit(1),
+    flex = detail::bit(2),
+    none = detail::bit(3),
 };
 
 /**
  * Generic justification of children flags.
  */
-enum class justification
+enum class Justification : uint32_t
 {
-    start,
-    middle,
-    ending,
-    justify,
-    none,
+    start = detail::bit(0),
+    middle = detail::bit(1),
+    ending = detail::bit(2),
+    justify = detail::bit(3),
+    none = detail::bit(4),
 };
 
 /**
  * Hint used for configuring Window backends.
  */
-enum class windowhint
+enum class WindowHint : uint32_t
 {
     /**
      * Allow automatic detection of the window type to create.
      */
-    automatic,
+    automatic = detail::bit(0),
 
     /**
      * Request a software only implementation.
      */
-    software,
+    software = detail::bit(1),
 
     /**
      * Request an overlay plane.
      */
-    overlay,
+    overlay = detail::bit(2),
 
     /**
      * Request specifically an HEO overlay plane.
      */
-    heo_overlay,
+    heo_overlay = detail::bit(3),
 
     /**
      * Request a cursor overlay plane.
      */
-    cursor_overlay,
+    cursor_overlay = detail::bit(4),
 };
 
-EGT_API std::ostream& operator<<(std::ostream& os, const windowhint& event);
+EGT_API std::ostream& operator<<(std::ostream& os, const WindowHint& hint);
 
 }
 }

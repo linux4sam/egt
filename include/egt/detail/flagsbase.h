@@ -11,7 +11,7 @@
 #include <set>
 
 /**
- * @file Flags base.
+ * @file Flags handling.
  */
 
 namespace egt
@@ -22,10 +22,12 @@ namespace detail
 {
 
 /**
- * Utility class for managing a set of 32 possible flags.
+ * Utility class for managing a set of flags.
  *
  * This supports at most flag values supported by the number of bits in the
- * underlying type.
+ * underlying enum type.
+ *
+ * @warning All flags must be a power of 2.
  */
 template <class T>
 class FlagsBase
@@ -36,18 +38,20 @@ public:
      * This is the underlying type of the flags, which is used internally for
      * efficient bitwise operation on flags.
      */
-    using underlying = typename std::underlying_type<T>::type;
+    using Underlying = typename std::underlying_type<T>::type;
 
     constexpr FlagsBase() noexcept = default;
 
+    // cppcheck-suppress noExplicitConstructor
     constexpr FlagsBase(const T flag) noexcept
-        : m_flags(1 << static_cast<underlying>(flag))
+        : m_flags(static_cast<Underlying>(flag))
     {}
 
+    // cppcheck-suppress noExplicitConstructor
     FlagsBase(std::initializer_list<T> flags) noexcept
     {
         for (auto& flag : flags)
-            m_flags |= (1 << static_cast<underlying>(flag));
+            m_flags |= static_cast<Underlying>(flag);
     }
 
     /**
@@ -56,7 +60,7 @@ public:
      */
     constexpr inline bool is_set(const T flag) const noexcept
     {
-        return m_flags & (1 << static_cast<underlying>(flag));
+        return m_flags & static_cast<Underlying>(flag);
     }
 
     /**
@@ -81,7 +85,7 @@ public:
     {
         auto state = is_set(flag);
         if (!state)
-            m_flags |= (1 << static_cast<underlying>(flag));
+            m_flags |= static_cast<Underlying>(flag);
         return !state;
     }
 
@@ -97,7 +101,7 @@ public:
         {
             if (!is_set(flag))
             {
-                m_flags |= (1 << static_cast<underlying>(flag));
+                m_flags |= static_cast<Underlying>(flag);
                 inserted = true;
             }
         }
@@ -115,7 +119,7 @@ public:
         bool changed = false;
         if (is_set(flag))
         {
-            m_flags &= ~(1 << static_cast<underlying>(flag));
+            m_flags &= ~(static_cast<Underlying>(flag));
             changed = true;
         }
 
@@ -146,36 +150,43 @@ public:
     inline std::set<T> get() const
     {
         std::set<T> result;
-        const auto bits = std::numeric_limits<underlying>::digits;
+        const auto bits = std::numeric_limits<Underlying>::digits;
         for (auto b = 0; b < bits; b++)
         {
             if ((m_flags & (1 << b)))
-                result.insert(static_cast<T>(b));
+                result.insert(static_cast<T>(1 << b));
         }
 
         return result;
     }
 
-    inline underlying raw() const
+    /**
+     * Get the raw underlying value.
+     */
+    inline const Underlying& raw() const
     {
         return m_flags;
     }
 
-    inline underlying& raw()
+    /**
+     * Get the raw underlying value.
+     */
+    inline Underlying& raw()
     {
         return m_flags;
     }
 
 protected:
 
-    constexpr FlagsBase(const underlying flags) noexcept
+    // cppcheck-suppress noExplicitConstructor
+    constexpr FlagsBase(const Underlying flags) noexcept
         : m_flags(flags)
     {}
 
     /**
      * The flags.
      */
-    underlying m_flags{};
+    Underlying m_flags{};
 };
 
 }

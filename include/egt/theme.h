@@ -11,8 +11,9 @@
  * @brief Working with themes.
  */
 
+
+#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
-#include <egt/bitmask.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
@@ -112,27 +113,22 @@ public:
     /**
      * Box types used to characterize how a widget's box should be drawn.
      */
-    enum class boxtype : uint32_t
+    enum class BoxFlag : uint32_t
     {
-        /// do not draw a box
-        none = 0,
-
         /**
          * Overwrite and don't blend.
          * @note This is the same as CAIRO_OPERATOR_SOURCE.
          */
-        solid = 1 << 0,
-
+        solid = detail::bit(0),
         /// type of fill, if none is set, no fill will be done
-        fill = 1 << 1,
-
+        fill = detail::bit(1),
         /// type of border, border will always be drawn if border_width > 0
-        border_rounded = 1 << 2,
+        border_rounded = detail::bit(2),
         /// type of border, border will always be drawn if border_width > 0
-        border_bottom = 1 << 3,
-
-        fill_rounded = fill | border_rounded,
+        border_bottom = detail::bit(3),
     };
+
+    using BoxFlags = detail::Flags<BoxFlag>;
 
     static float DEFAULT_ROUNDED_RADIUS;
 
@@ -195,7 +191,7 @@ public:
      * Draw a box specifying the properties directly.
      */
     virtual void draw_box(Painter& painter,
-                          boxtype type,
+                          BoxFlags type,
                           const Rect& rect,
                           const pattern_type& border,
                           const pattern_type& bg,
@@ -208,7 +204,7 @@ public:
                              Palette::ColorId border) const;
 
     virtual void draw_circle(Painter& painter,
-                             boxtype type,
+                             BoxFlags type,
                              const Rect& rect,
                              const pattern_type& border,
                              const pattern_type& bg,
@@ -247,9 +243,6 @@ protected:
 
     virtual void init_draw();
 };
-
-ENABLE_BITMASK_OPERATORS(Theme::boxtype);
-
 
 /**
  * Get the global theme.

@@ -70,8 +70,8 @@ struct LayoutRect
  */
 void flex_layout(const Rect& parent,
                  std::vector<LayoutRect>& children,
-                 justification justify,
-                 orientation orient);
+                 Justification justify,
+                 Orientation orient);
 
 /**
  * Perform a manual flex layout with a parent and child rect, but allow a global
@@ -79,9 +79,9 @@ void flex_layout(const Rect& parent,
  */
 void flex_layout(const Rect& parent,
                  std::vector<LayoutRect>& children,
-                 justification justify,
-                 orientation orient,
-                 alignmask align);
+                 Justification justify,
+                 Orientation orient,
+                 const AlignFlags& align);
 }
 }
 }

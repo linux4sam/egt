@@ -74,19 +74,20 @@ bool audio_device()
 
 } // End of detail.
 
-VideoWindow::VideoWindow(const Rect& rect, pixel_format format, windowhint hint)
-    : Window(rect, (detail::is_target_sama5d4() ? pixel_format::xrgb8888 : format), hint),
+VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
+    : Window(rect, (detail::is_target_sama5d4() ? PixelFormat::xrgb8888 : format), hint),
       m_loopback(false)
 {
-    boxtype(Theme::boxtype::none);
+    boxtype().clear();
 
     createImpl(rect.size());
 }
 
 VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
-                         pixel_format format, windowhint hint)
+                         PixelFormat format, WindowHint hint)
     : VideoWindow(rect, format, hint)
 {
+
     if (!media(uri))
     {
         std::ostringstream ss;
@@ -97,7 +98,7 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
 
 void VideoWindow::createImpl(const Size& size)
 {
-    if (flags().is_set(Widget::flag::plane_window) && detail::is_target_sama5d4())
+    if (flags().is_set(Widget::Flag::plane_window) && detail::is_target_sama5d4())
     {
         SPDLOG_DEBUG("VideoWindow: Using KMS sink");
 #ifdef HAVE_LIBPLANES
@@ -169,7 +170,7 @@ void VideoWindow::scale(float scalex, float scaley)
 
     if (xs || ys)
     {
-        if (!flags().is_set(Widget::flag::plane_window))
+        if (!flags().is_set(Widget::Flag::plane_window))
         {
             m_decoderImpl->scale(m_scalex, m_scaley);
         }

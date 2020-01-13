@@ -105,7 +105,7 @@ HardwareSprite::HardwareSprite(Sprite& interface, const Image& image, const Size
       m_label(image),
       m_interface(interface)
 {
-    m_label.image_align(alignmask::none);
+    m_label.image_align().clear();
     interface.resize(m_image.size());
 
     interface.allocate_screen();
@@ -197,15 +197,15 @@ void SoftwareSprite::paint(Painter& painter)
 }
 
 Sprite::Sprite()
-    : Window(pixel_format::argb8888)
+    : Window(PixelFormat::argb8888)
 {}
 
 Sprite::Sprite(const Image& image, const Size& frame_size,
                int frame_count, const Point& frame_point)
-    : Window(Rect({}, image.size()), pixel_format::argb8888)
+    : Window(Rect({}, image.size()), PixelFormat::argb8888)
 {
     name("Sprite" + std::to_string(m_widgetid));
-    boxtype(Theme::boxtype::none);
+    boxtype().clear();
     create_impl(image, frame_size, frame_count, frame_point);
 }
 
@@ -285,7 +285,7 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
                          int frame_count, const Point& frame_point)
 {
 #ifdef HAVE_LIBPLANES
-    if (flags().is_set(Widget::flag::plane_window))
+    if (flags().is_set(Widget::Flag::plane_window))
         m_simpl = detail::make_unique<detail::HardwareSprite>(*this, image, frame_size, frame_count, frame_point);
     else
 #endif

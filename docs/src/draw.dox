@@ -116,7 +116,7 @@ draw outside of its box(), it will not be seen.  This is important because EGT
 needs to know where things are drawn so it can account for repainting as
 necessary. If any widget were allowed to draw anywhere on the screen at any time,
 EGT would have no idea what needs to be redrawn.  To circumvent this operation
-at your own risk, set the Widget::flag::no_clip flag on a widget.  This will
+at your own risk, set the Widget::Flag::no_clip flag on a widget.  This will
 disable automatic clipping.
 
 When the parent frame calls the draw() function of a widget, it will first setup

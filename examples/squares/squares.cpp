@@ -36,7 +36,7 @@ int main(int argc, const char** argv)
     label.on_event([&label](Event&)
     {
         cout << label.text() << endl;
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     Label label_dims("");
     label_dims.color(Palette::ColorId::text, Palette::black);
@@ -46,7 +46,7 @@ int main(int argc, const char** argv)
     label_dims.on_event([&label_dims](Event&)
     {
         cout << label_dims.text() << endl;
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
 
     Popup popup(Size(100, 80));
@@ -153,7 +153,7 @@ int main(int argc, const char** argv)
         ss << "FPS: " << std::round(fps.fps());
         label.text(ss.str());
 
-        Screen::damage_array damage;
+        Screen::DamageArray damage;
         damage.push_back(rect);
         win.screen()->flip(damage);
 

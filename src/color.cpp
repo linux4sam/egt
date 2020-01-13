@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/detail/math.h"
 #include "egt/color.h"
+#include "egt/detail/math.h"
 #include <cmath>
 #include <iostream>
 

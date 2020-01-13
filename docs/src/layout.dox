@@ -62,9 +62,9 @@ dynamically respond to both internal and external changes.
 
 Each widget has an alignment setting. Each widget also has a min_size_hint() to
 bound the smallest size the widget can be. If a widget has an alignment value of
-alignmask::none, the default, whatever size it has will be used, while still
+AlignFlag::none, the default, whatever size it has will be used, while still
 taking the min_size_hint() into account. If the alignment value of the widget is
-not alignmask::none, the size of the widget will automatically be calculated
+not AlignFlag::none, the size of the widget will automatically be calculated
 based on several other properties, usually based on some ratio in relation to
 the widget's parent.
 

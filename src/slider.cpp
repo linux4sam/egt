@@ -19,33 +19,33 @@ inline namespace v1
 {
 
 Slider::Slider(const Rect& rect, int min, int max, int value,
-               orientation orient) noexcept
+               Orientation orient) noexcept
     : ValueRangeWidget<int>(rect, min, max, value),
       m_orient(orient)
 {
     name("Slider" + std::to_string(m_widgetid));
 
-    boxtype(Theme::boxtype::fill);
+    boxtype(Theme::BoxFlag::fill);
 
-    flags().set(Widget::flag::grab_mouse);
+    flags().set(Widget::Flag::grab_mouse);
 
-    slider_flags().set(flag::rectangle_handle);
+    slider_flags().set(SliderFlag::rectangle_handle);
 }
 
-Slider::Slider(int min, int max, int value, orientation orient) noexcept
+Slider::Slider(int min, int max, int value, Orientation orient) noexcept
     : Slider(Rect(), min, max, value, orient)
 {
 }
 
 Slider::Slider(Frame& parent, const Rect& rect, int min, int max, int value,
-               orientation orient) noexcept
+               Orientation orient) noexcept
     : Slider(rect, min, max, value, orient)
 {
     parent.add(*this);
 }
 
 Slider::Slider(Frame& parent, int min, int max, int value,
-               orientation orient) noexcept
+               Orientation orient) noexcept
     : Slider(Rect(), min, max, value, orient)
 {
     parent.add(*this);
@@ -58,26 +58,26 @@ int Slider::handle_width() const
     auto width = b.width();
     auto height = b.height();
 
-    if (slider_flags().is_set(flag::show_labels) ||
-        slider_flags().is_set(flag::show_label))
+    if (slider_flags().is_set(SliderFlag::show_labels) ||
+        slider_flags().is_set(SliderFlag::show_label))
     {
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             height /= 2;
         else
             width /= 2;
     }
 
-    if (slider_flags().is_set(flag::square_handle) ||
-        slider_flags().is_set(flag::round_handle))
+    if (slider_flags().is_set(SliderFlag::square_handle) ||
+        slider_flags().is_set(SliderFlag::round_handle))
     {
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             return std::min(width / 6, height);
         else
             return std::min(height / 6, width);
     }
     else
     {
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             return std::min(width / 6, height) * 2;
         else
             return std::min(height / 6, width);
@@ -91,26 +91,26 @@ int Slider::handle_height() const
     auto width = b.width();
     auto height = b.height();
 
-    if (slider_flags().is_set(flag::show_labels) ||
-        slider_flags().is_set(flag::show_label))
+    if (slider_flags().is_set(SliderFlag::show_labels) ||
+        slider_flags().is_set(SliderFlag::show_label))
     {
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             height /= 2;
         else
             width /= 2;
     }
 
-    if (slider_flags().is_set(flag::square_handle) ||
-        slider_flags().is_set(flag::round_handle))
+    if (slider_flags().is_set(SliderFlag::square_handle) ||
+        slider_flags().is_set(SliderFlag::round_handle))
     {
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             return std::min(width / 6, height);
         else
             return std::min(height / 6, width);
     }
     else
     {
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             return std::min(width / 6, height);
         else
             return std::min(height / 6, width) * 2;
@@ -128,14 +128,14 @@ Rect Slider::handle_box(int value) const
     auto dimw = handle_width();
     auto dimh = handle_height();
 
-    if (m_orient == orientation::horizontal)
+    if (m_orient == Orientation::horizontal)
     {
         auto xv = b.x() + to_offset(value);
-        if (slider_flags().is_set(flag::origin_opposite))
+        if (slider_flags().is_set(SliderFlag::origin_opposite))
             xv = b.x() + b.width() - to_offset(value) - dimw;
 
-        if (slider_flags().is_set(flag::show_labels) ||
-            slider_flags().is_set(flag::show_label))
+        if (slider_flags().is_set(SliderFlag::show_labels) ||
+            slider_flags().is_set(SliderFlag::show_label))
         {
             return Rect(xv,
                         b.y() + b.height() / 4 - dimh / 2 + b.height() / 2,
@@ -153,11 +153,11 @@ Rect Slider::handle_box(int value) const
     else
     {
         auto yv = b.y() + b.height() - to_offset(value) - dimh;
-        if (slider_flags().is_set(flag::origin_opposite))
+        if (slider_flags().is_set(SliderFlag::origin_opposite))
             yv = b.y() + to_offset(value);
 
-        if (slider_flags().is_set(flag::show_labels) ||
-            slider_flags().is_set(flag::show_label))
+        if (slider_flags().is_set(SliderFlag::show_labels) ||
+            slider_flags().is_set(SliderFlag::show_label))
         {
             return Rect(b.x() + b.width() / 4 - dimw / 2 + b.width() / 2,
                         yv,
@@ -180,18 +180,18 @@ void Slider::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::raw_pointer_up:
+    case EventId::raw_pointer_up:
         if (m_invoke_pending)
         {
             m_invoke_pending = false;
-            this->invoke_handlers(eventid::property_changed);
+            this->invoke_handlers(EventId::property_changed);
         }
         break;
-    case eventid::pointer_drag_start:
+    case EventId::pointer_drag_start:
         m_start_offset = to_offset(m_value);
         break;
-    case eventid::pointer_drag:
-        if (m_orient == orientation::horizontal)
+    case EventId::pointer_drag:
+        if (m_orient == Orientation::horizontal)
         {
             auto diff = event.pointer().point - event.pointer().drag_start;
             value(to_value(m_start_offset + diff.x()));
@@ -212,7 +212,7 @@ void Slider::draw_label(Painter& painter, int value)
     auto b = content_area();
     auto handle = handle_box(value);
 
-    if (m_orient == orientation::horizontal)
+    if (m_orient == Orientation::horizontal)
         handle -= Point(0, b.height() / 2.);
     else
         handle -= Point(b.width() / 2., 0);
@@ -226,7 +226,7 @@ void Slider::draw_label(Painter& painter, int value)
     auto text_size = painter.text_size(text);
     Rect target = detail::align_algorithm(text_size,
                                           handle,
-                                          alignmask::center,
+                                          AlignFlag::center,
                                           5);
     painter.draw(target.point());
     painter.draw(text);
@@ -236,21 +236,21 @@ void Slider::draw_handle(Painter& painter)
 {
     auto handle = handle_box();
 
-    if (slider_flags().is_set(flag::round_handle))
+    if (slider_flags().is_set(SliderFlag::round_handle))
     {
         theme().draw_circle(painter,
-                            Theme::boxtype::fill_rounded,
-                            handle,
-                            color(Palette::ColorId::border),
-                            color(Palette::ColorId::button_bg));
+        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+        handle,
+        color(Palette::ColorId::border),
+        color(Palette::ColorId::button_bg));
     }
     else
     {
         theme().draw_box(painter,
-                         Theme::boxtype::fill_rounded,
-                         handle,
-                         color(Palette::ColorId::border),
-                         color(Palette::ColorId::button_bg));
+        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+        handle,
+        color(Palette::ColorId::border),
+        color(Palette::ColorId::button_bg));
     }
 }
 
@@ -260,14 +260,14 @@ void Slider::draw(Painter& painter, const Rect&)
     auto yp = b.y() + b.height() / 2.;
     auto xp = b.x() + b.width() / 2.;
 
-    if (m_orient == orientation::horizontal)
+    if (m_orient == Orientation::horizontal)
     {
-        if (slider_flags().is_set(flag::show_labels) ||
-            slider_flags().is_set(flag::show_label))
+        if (slider_flags().is_set(SliderFlag::show_labels) ||
+            slider_flags().is_set(SliderFlag::show_label))
         {
             yp += b.height() / 4.;
 
-            if (slider_flags().is_set(flag::show_label))
+            if (slider_flags().is_set(SliderFlag::show_label))
             {
                 draw_label(painter, m_value);
             }
@@ -281,12 +281,12 @@ void Slider::draw(Painter& painter, const Rect&)
     }
     else
     {
-        if (slider_flags().is_set(flag::show_labels) ||
-            slider_flags().is_set(flag::show_label))
+        if (slider_flags().is_set(SliderFlag::show_labels) ||
+            slider_flags().is_set(SliderFlag::show_label))
         {
             xp += b.width() / 4.;
 
-            if (slider_flags().is_set(flag::show_label))
+            if (slider_flags().is_set(SliderFlag::show_label))
             {
                 draw_label(painter, m_value);
             }
@@ -317,7 +317,7 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
     Point b1;
     Point b2;
 
-    if (m_orient == orientation::horizontal)
+    if (m_orient == Orientation::horizontal)
     {
         a1 = Point(b.x(), yp);
         a2 = Point(handle.x(), yp);
@@ -336,7 +336,7 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
         painter.line_width(handle.width() / 5.0);
     }
 
-    if (slider_flags().is_set(flag::consistent_line))
+    if (slider_flags().is_set(SliderFlag::consistent_line))
     {
         painter.set(color(Palette::ColorId::button_fg, Palette::GroupId::disabled).color());
         painter.draw(a1, b2);

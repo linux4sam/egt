@@ -63,7 +63,7 @@ public:
         : Widget(rect)
     {
         name("LineWidget" + std::to_string(m_widgetid));
-        boxtype(Theme::boxtype::none);
+        boxtype().clear();
     }
 
     explicit LineWidget(Frame& parent, const Rect& rect = {})
@@ -99,7 +99,7 @@ public:
         : Widget(rect)
     {
         name("RectangleWidget" + std::to_string(m_widgetid));
-        boxtype(Theme::boxtype::fill);
+        boxtype(Theme::BoxFlag::fill);
     }
 
     explicit RectangleWidget(Frame& parent, const Rect& rect = {})

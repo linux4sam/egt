@@ -277,7 +277,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         }
 
         return 0;
-    }, {eventid::keyboard_down});
+    }, {EventId::keyboard_down});
 }
 
 void Application::signal_handler(const asio::error_code& error, int signum)
@@ -332,7 +332,7 @@ void Application::paint_to_file(const string& filename)
             continue;
 
         // draw top level frames and plane frames
-        if (w->top_level() || w->flags().is_set(Widget::flag::plane_window))
+        if (w->top_level() || w->flags().is_set(Widget::Flag::plane_window))
             w->paint(painter);
     }
 

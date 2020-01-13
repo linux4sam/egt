@@ -7,9 +7,9 @@
 #define EGT_SLIDER_H
 
 #include <cassert>
+#include <egt/detail/flags.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
-#include <egt/flags.h>
 #include <egt/valuewidget.h>
 #include <memory>
 
@@ -33,65 +33,65 @@ class EGT_API Slider : public ValueRangeWidget<int>
 {
 public:
 
-    enum class flag
+    enum class SliderFlag
     {
         /**
          * Draw a rectangle handle.
          */
-        rectangle_handle,
+        rectangle_handle = detail::bit(0),
 
         /**
          * Draw a square handle.
          */
-        square_handle,
+        square_handle = detail::bit(1),
 
         /**
          * Draw a round handle.
          */
-        round_handle,
+        round_handle = detail::bit(2),
 
         /**
          * Show range labels.
          */
-        show_labels,
+        show_labels = detail::bit(3),
 
         /**
          * Show value label.
          */
-        show_label,
+        show_label = detail::bit(4),
 
         /**
          * Horizontal slider origin (value min()), is to the left. Vertical is at
          * the bottom. Setting this flag will flip this origin.
          */
-        origin_opposite,
+        origin_opposite = detail::bit(5),
 
         /**
          * Solid color line.
          */
-        consistent_line,
+        consistent_line = detail::bit(6),
     };
 
-    using flags_type = Flags<Slider::flag>;
+    using SliderFlags = detail::Flags<Slider::SliderFlag>;
 
     /**
      * @param[in] rect Rectangle for the widget.
      * @param[in] min Minimum value for the range.
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] orient Vertical or horizontal Orientation.
      */
     explicit Slider(const Rect& rect, int min = 0, int max = 100, int value = 0,
-                    orientation orient = orientation::horizontal) noexcept;
+                    Orientation orient = Orientation::horizontal) noexcept;
 
     /**
      * @param[in] min Minimum value for the range.
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] orient Vertical or horizontal Orientation.
      */
     Slider(int min = 0, int max = 100, int value = 0,
-           orientation orient = orientation::horizontal) noexcept;
+           Orientation orient = Orientation::horizontal) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -99,20 +99,20 @@ public:
      * @param[in] min Minimum value for the range.
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] orient Vertical or horizontal Orientation.
      */
     Slider(Frame& parent, const Rect& rect, int min = 0, int max = 100, int value = 0,
-           orientation orient = orientation::horizontal) noexcept;
+           Orientation orient = Orientation::horizontal) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] min Minimum value for the range.
      * @param[in] max Maximum value in the range.
      * @param[in] value Current value in the range.
-     * @param[in] orient Vertical or horizontal orientation.
+     * @param[in] orient Vertical or horizontal Orientation.
      */
     explicit Slider(Frame& parent, int min = 0, int max = 100, int value = 0,
-                    orientation orient = orientation::horizontal) noexcept;
+                    Orientation orient = Orientation::horizontal) noexcept;
 
     virtual void handle(Event& event) override;
 
@@ -139,7 +139,7 @@ public:
             // live update to handlers?
             if (false)
             {
-                Event event(eventid::property_changed);
+                Event event(EventId::property_changed);
                 this->invoke_handlers(event);
             }
             else
@@ -149,9 +149,9 @@ public:
         return orig;
     }
 
-    inline const flags_type& slider_flags() const { return m_slider_flags; }
+    inline const SliderFlags& slider_flags() const { return m_slider_flags; }
 
-    inline flags_type& slider_flags() { return m_slider_flags; }
+    inline SliderFlags& slider_flags() { return m_slider_flags; }
 
     virtual ~Slider() = default;
 
@@ -161,7 +161,7 @@ protected:
     inline int to_offset(int value) const
     {
         auto b = content_area();
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             return egt::detail::normalize<float>(value, m_min, m_max, 0, b.width() - handle_width());
         else
             return egt::detail::normalize<float>(value, m_min, m_max, 0, b.height() - handle_height());
@@ -171,7 +171,7 @@ protected:
     inline int to_value(int offset) const
     {
         auto b = content_area();
-        if (m_orient == orientation::horizontal)
+        if (m_orient == Orientation::horizontal)
             return egt::detail::normalize<float>(offset, 0, b.width() - handle_width(), m_min, m_max);
         else
             return egt::detail::normalize<float>(offset, 0, b.height() - handle_height(), m_min, m_max);
@@ -186,13 +186,13 @@ protected:
     virtual void draw_handle(Painter& painter);
     virtual void draw_line(Painter& painter, float xp, float yp);
 
-    orientation m_orient{orientation::horizontal};
+    Orientation m_orient{Orientation::horizontal};
     bool m_invoke_pending{false};
 
     /**
      * Slider flags.
      */
-    flags_type m_slider_flags{};
+    SliderFlags m_slider_flags{};
 
     int m_start_offset{0};
 };

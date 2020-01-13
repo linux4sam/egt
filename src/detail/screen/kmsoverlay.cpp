@@ -38,7 +38,7 @@ struct FlipJob
     bool m_async{false};
 };
 
-KMSOverlay::KMSOverlay(const Size& size, pixel_format format, windowhint hint)
+KMSOverlay::KMSOverlay(const Size& size, PixelFormat format, WindowHint hint)
     : m_plane(KMSScreen::instance()->allocate_overlay(size, format, hint))
 {
     if (!m_plane)

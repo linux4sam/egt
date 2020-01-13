@@ -23,8 +23,8 @@ public:
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {
-        flags().set(Widget::flag::no_layout);
-        flags().set(Widget::flag::no_autoresize);
+        flags().set(Widget::Flag::no_layout);
+        flags().set(Widget::Flag::no_autoresize);
     }
 
     Ball(const Ball&) = default;
@@ -89,7 +89,7 @@ public:
 
         switch (event.id())
         {
-        case eventid::raw_pointer_move:
+        case EventId::raw_pointer_move:
             if (debounce_mouse(100))
                 spawn(display_to_local(event.pointer().point));
             break;
@@ -112,7 +112,7 @@ public:
 
         auto image = m_images.back();
         image->resize_by_ratio(scale);
-        image->image_align(alignmask::expand);
+        image->image_align(AlignFlag::expand);
         image->move_to_center(p);
         add(image);
     }
@@ -197,20 +197,20 @@ int main(int argc, const char** argv)
         {
             auto star = std::make_shared<Ball>(0, 0);
             star->resize_by_ratio(s_dist(e1));
-            star->image_align(alignmask::expand);
+            star->image_align(AlignFlag::expand);
             star->move_to_center(Point(x_dist(e1), y_dist(e1)));
             win.add(star);
 
             auto in = std::make_shared<PropertyAnimatorF>(0, 1,
                       std::chrono::milliseconds(d_dist(e1)),
                       easing_spring);
-            in->on_change([star](PropertyAnimatorF::Value v) {star->alpha(v);});
+            in->on_change([star](PropertyAnimatorF::Value value) { star->alpha(value); });
 
             auto out = std::make_shared<PropertyAnimatorF>(1, 0,
                        std::chrono::milliseconds(d_dist(e1)),
                        easing_spring);
             out->reverse(true);
-            out->on_change([star](PropertyAnimatorF::Value v) {star->alpha(v);});
+            out->on_change([star](PropertyAnimatorF::Value value) { star->alpha(value); });
 
             auto delay = std::make_shared<AnimationDelay>(std::chrono::milliseconds(d_dist(e1)));
 

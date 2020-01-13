@@ -37,8 +37,8 @@ int main(int argc, const char** argv)
     vsizer.add(elogo);
 
     TextBox text("");
-    text.text_flags().set(TextBox::flag::multiline);
-    text.text_align(alignmask::center | alignmask::right);
+    text.text_flags().set(TextBox::TextFlag::multiline);
+    text.text_align(AlignFlag::center | AlignFlag::right);
     text.font(Font(25));
     text.color(Palette::ColorId::bg, Color(0x272727ff));
     text.color(Palette::ColorId::text, Palette::white);
@@ -94,7 +94,7 @@ int main(int argc, const char** argv)
 
     for (size_t r = 0; r < buttons.size(); r++)
     {
-        auto line_sizer = make_shared<HorizontalBoxSizer>(justification::middle);
+        auto line_sizer = make_shared<HorizontalBoxSizer>(Justification::middle);
         vsizer.add(expand_horizontal(line_sizer));
 
         for (size_t c = 0; c < buttons[r].size(); c++)
@@ -104,9 +104,9 @@ int main(int argc, const char** argv)
                 continue;
 
             auto b = make_shared<Button>(label, Rect(Size(60, 60)));
-            b->flags().set(Widget::flag::no_autoresize);
+            b->flags().set(Widget::Flag::no_autoresize);
             b->border(1);
-            b->font(Font(25, Font::weightid::bold));
+            b->font(Font(25, Font::Weight::bold));
             b->color(colors[r][c].first, colors[r][c].second);
             b->color(Palette::ColorId::border, Palette::gray);
             line_sizer->add(b);

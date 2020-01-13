@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/alignment.h"
+#include "egt/detail/enum.h"
 #include "egt/grid.h"
 #include "egt/painter.h"
 #include <algorithm>
@@ -92,7 +93,7 @@ static inline Rect cell_rect(int columns, int rows, default_dim_type width, defa
 
 void StaticGrid::draw(Painter& painter, const Rect& rect)
 {
-    if (grid_flags().is_set(flag::show_border) && border() > 0)
+    if (grid_flags().is_set(GridFlag::show_border) && border() > 0)
     {
         const auto b = content_area();
 
@@ -276,7 +277,7 @@ void StaticGrid::reposition()
                 // re-position/resize widget
                 widget->box(target);
 
-                if (widget->flags().is_set(Widget::flag::frame))
+                if (widget->flags().is_set(Widget::Flag::frame))
                 {
                     auto frame = dynamic_cast<Frame*>(widget.get());
                     frame->layout();
@@ -304,16 +305,22 @@ void StaticGrid::layout()
         return;
 
     m_in_layout = true;
-    detail::scope_exit reset([this]() { m_in_layout = false; });
+    detail::ScopeExit reset([this]() { m_in_layout = false; });
 
     reposition();
 }
+
+template<>
+std::map<StaticGrid::GridFlag, char const*> detail::EnumStrings<StaticGrid::GridFlag>::data =
+{
+    {StaticGrid::GridFlag::show_border, "show_border"},
+};
 
 void SelectableGrid::handle(Event& event)
 {
     StaticGrid::handle(event);
 
-    if (event.id() == eventid::raw_pointer_down)
+    if (event.id() == EventId::raw_pointer_down)
     {
         auto b = content_area().size();
         Point pos = display_to_local(event.pointer().point);

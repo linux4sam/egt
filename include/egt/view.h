@@ -28,7 +28,7 @@ inline namespace v1
  * A ScrolledView is a sort of kitchen window. You can have a large surface
  * area on the other side of the window, but you only see a small portion of
  * it through the window.  The surface can be scrolled, or panned, in a single
- * orientation to see the rest.
+ * Orientation to see the rest.
  *
  * This is used internally by Widgets, but can also be used directly.
  */
@@ -36,7 +36,7 @@ class EGT_API ScrolledView : public Frame
 {
 public:
 
-    enum class policy
+    enum class Policy
     {
         never,
         always,
@@ -47,8 +47,8 @@ public:
      * @param[in] horizontal_policy Horizontal slider policy.
      * @param[in] vertical_policy Vertical slider policy.
      */
-    explicit ScrolledView(policy horizontal_policy = policy::as_needed,
-                          policy vertical_policy = policy::as_needed);
+    explicit ScrolledView(Policy horizontal_policy = Policy::as_needed,
+                          Policy vertical_policy = Policy::as_needed);
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -56,8 +56,8 @@ public:
      * @param[in] vertical_policy Vertical slider policy.
      */
     explicit ScrolledView(const Rect& rect,
-                          policy horizontal_policy = policy::as_needed,
-                          policy vertical_policy = policy::as_needed);
+                          Policy horizontal_policy = Policy::as_needed,
+                          Policy vertical_policy = Policy::as_needed);
 
     /**
      * @param[in] parent The parent Frame.
@@ -66,8 +66,8 @@ public:
      * @param[in] vertical_policy Vertical slider policy.
      */
     explicit ScrolledView(Frame& parent, const Rect& rect,
-                          policy horizontal_policy = policy::as_needed,
-                          policy vertical_policy = policy::as_needed);
+                          Policy horizontal_policy = Policy::as_needed,
+                          Policy vertical_policy = Policy::as_needed);
 
     /**
      * @param[in] parent The parent Frame.
@@ -75,8 +75,8 @@ public:
      * @param[in] vertical_policy Vertical slider policy.
      */
     explicit ScrolledView(Frame& parent,
-                          policy horizontal_policy = policy::as_needed,
-                          policy vertical_policy = policy::as_needed);
+                          Policy horizontal_policy = Policy::as_needed,
+                          Policy vertical_policy = Policy::as_needed);
 
     virtual void handle(Event& event) override;
 
@@ -155,10 +155,10 @@ protected:
     {
         auto super = super_rect();
 
-        m_hscrollable = (m_horizontal_policy == policy::always) ||
-                        (m_horizontal_policy == policy::as_needed && super.width() > content_area().width());
-        m_vscrollable = (m_vertical_policy == policy::always) ||
-                        (m_vertical_policy == policy::as_needed && super.height() > content_area().height());
+        m_hscrollable = (m_horizontal_policy == Policy::always) ||
+                        (m_horizontal_policy == Policy::as_needed && super.width() > content_area().width());
+        m_vscrollable = (m_vertical_policy == Policy::always) ||
+                        (m_vertical_policy == Policy::as_needed && super.height() > content_area().height());
 
         if (super.width() <= content_area().width())
             m_offset.x(0);
@@ -198,8 +198,8 @@ protected:
      */
     Point m_start_offset;
 
-    policy m_horizontal_policy{policy::as_needed};
-    policy m_vertical_policy{policy::as_needed};
+    Policy m_horizontal_policy{Policy::as_needed};
+    Policy m_vertical_policy{Policy::as_needed};
 
     std::shared_ptr<Canvas> m_canvas;
 

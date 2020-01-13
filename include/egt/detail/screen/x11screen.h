@@ -34,7 +34,7 @@ public:
 
     virtual void schedule_flip() override {}
 
-    virtual void flip(const damage_array& damage) override;
+    virtual void flip(const DamageArray& damage) override;
 
     virtual ~X11Screen();
 

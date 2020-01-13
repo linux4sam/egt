@@ -17,7 +17,7 @@ inline namespace v1
 
 FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     : Popup(rect.size(), rect.point()),
-      m_vsizer(std::make_shared<BoxSizer>(orientation::vertical)),
+      m_vsizer(std::make_shared<BoxSizer>(Orientation::vertical)),
       m_title(std::make_shared<ImageLabel>(Image("@folder.png"), filepath)),
       m_flist(std::make_shared<ListBox>()),
       m_filepath(filepath)
@@ -29,7 +29,7 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
 
     add(expand(m_vsizer));
 
-    m_title->text_align(alignmask::left | alignmask::center);
+    m_title->text_align(AlignFlag::left | AlignFlag::center);
     m_vsizer->add(expand_horizontal(m_title));
 
     m_vsizer->add(expand(m_flist));
@@ -38,7 +38,7 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     {
         SPDLOG_DEBUG("FileDialog index is {}", this->m_flist->selected());
         list_item_selected(this->m_flist->selected());
-    }, {eventid::property_changed});
+    }, {EventId::property_changed});
 
     if (m_filepath.empty())
         m_filepath = fs::current_path().string();
@@ -75,16 +75,16 @@ bool FileDialog::list_files(const std::string& filepath)
 
     if (filepath != "/")
     {
-        m_flist->add_item(std::make_shared<StringItem>("./", Rect(), alignmask::left | alignmask::center));
+        m_flist->add_item(std::make_shared<StringItem>("./", Rect(), AlignFlag::left | AlignFlag::center));
 
-        m_flist->add_item(std::make_shared<StringItem>("../", Rect(), alignmask::left | alignmask::center));
+        m_flist->add_item(std::make_shared<StringItem>("../", Rect(), AlignFlag::left | AlignFlag::center));
     }
 
     try
     {
         for (auto& dir : fs::directory_iterator(m_filepath))
         {
-            m_flist->add_item(std::make_shared<StringItem>(dir.path().filename().string(), Rect(), alignmask::left | alignmask::center));
+            m_flist->add_item(std::make_shared<StringItem>(dir.path().filename().string(), Rect(), AlignFlag::left | AlignFlag::center));
         }
     }
     catch (const fs::filesystem_error& ex)
@@ -145,14 +145,14 @@ FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
     m_okay->on_event([this](Event&)
     {
         list_item_selected(this->m_flist->selected());
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
     m_cancel->on_event([this](Event&)
     {
         this->m_fselected = std::string();
         this->m_flist->clear();
         this->hide();
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 }
 
 FileOpenDialog::FileOpenDialog(const Rect& rect)
@@ -175,7 +175,7 @@ void FileOpenDialog::selected(const std::string& fselect)
 {
     m_fselected = fselect;
     if (!m_fselected.empty())
-        invoke_handlers(eventid::property_changed);
+        invoke_handlers(EventId::property_changed);
 }
 
 std::string FileOpenDialog::selected() const
@@ -204,14 +204,14 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     {
         if (!m_fsave.empty())
         {
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
         }
         else if (!m_fsave_box->text().empty())
         {
             m_fsave = m_fsave_box->text();
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
         }
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 
     m_cancel->on_event([this](Event & event)
     {
@@ -219,7 +219,7 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
         this->m_flist->clear();
         this->m_fsave_box->text(std::string());
         this->hide();
-    }, {eventid::pointer_click});
+    }, {EventId::pointer_click});
 }
 
 FileSaveDialog::FileSaveDialog(const Rect& rect)

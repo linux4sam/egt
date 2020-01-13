@@ -56,18 +56,18 @@ std::vector<Window*>& windows()
     return the_windows;
 }
 
-const pixel_format Window::DEFAULT_FORMAT = pixel_format::argb8888;
+const PixelFormat Window::DEFAULT_FORMAT = PixelFormat::argb8888;
 
 Window::Window(const Rect& rect,
-               pixel_format format_hint,
-               windowhint hint)
+               PixelFormat format_hint,
+               WindowHint hint)
 // by default, windows are hidden
-    : Frame(rect, {Widget::flag::window, Widget::flag::invisible})
+    : Frame(rect, {Widget::Flag::window, Widget::Flag::invisible})
 {
     name("Window" + std::to_string(m_widgetid));
 
     // windows are not transparent by default
-    boxtype(Theme::boxtype::solid | Theme::boxtype::fill);
+    boxtype({Theme::BoxFlag::solid, Theme::BoxFlag::fill});
 
     // create the window implementation
     create_impl(box(), format_hint, hint);
@@ -159,7 +159,7 @@ void Window::do_draw()
 
     // bookkeeping to make sure we don't damage() in draw()
     m_in_draw = true;
-    detail::scope_exit reset([this]() { m_in_draw = false; });
+    detail::ScopeExit reset([this]() { m_in_draw = false; });
 
     SPDLOG_TRACE("{} do draw", name());
 
@@ -196,8 +196,8 @@ void Window::scale(float scalex, float scaley)
 }
 
 void Window::create_impl(const Rect& rect,
-                         pixel_format format_hint,
-                         windowhint hint)
+                         PixelFormat format_hint,
+                         WindowHint hint)
 {
     detail::ignoreparam(format_hint);
     detail::ignoreparam(hint);
@@ -218,15 +218,15 @@ void Window::create_impl(const Rect& rect,
         {
             switch (hint)
             {
-            case windowhint::software:
+            case WindowHint::software:
                 m_impl = detail::make_unique<detail::BasicWindow>(this);
                 break;
-            case windowhint::overlay:
-            case windowhint::heo_overlay:
-            case windowhint::cursor_overlay:
+            case WindowHint::overlay:
+            case WindowHint::heo_overlay:
+            case WindowHint::cursor_overlay:
 #ifdef HAVE_LIBPLANES
                 m_impl = detail::make_unique<detail::PlaneWindow>(this, format_hint, hint);
-                flags().set(Widget::flag::plane_window);
+                flags().set(Widget::Flag::plane_window);
 #endif
                 break;
             default:
@@ -244,7 +244,7 @@ void Window::create_impl(const Rect& rect,
             try
             {
                 m_impl = detail::make_unique<detail::PlaneWindow>(this, format_hint, hint);
-                flags().set(Widget::flag::plane_window);
+                flags().set(Widget::Flag::plane_window);
             }
             catch (std::exception& e)
             {
@@ -260,7 +260,7 @@ void Window::create_impl(const Rect& rect,
 
     assert(m_impl);
 
-    if (flags().is_set(Widget::flag::plane_window))
+    if (flags().is_set(Widget::Flag::plane_window))
     {
         SPDLOG_DEBUG("{} backend is PlaneWindow", name());
     }
@@ -282,7 +282,7 @@ void Window::main_window()
 
 void Window::background(const Image& image)
 {
-    boxtype(Theme::boxtype::none);
+    boxtype().clear();
 
     if (m_background)
     {
@@ -293,8 +293,8 @@ void Window::background(const Image& image)
     if (!image.empty())
     {
         m_background = std::make_shared<ImageLabel>(image);
-        m_background->align(alignmask::expand);
-        m_background->image_align(alignmask::expand);
+        m_background->align(AlignFlag::expand);
+        m_background->image_align(AlignFlag::expand);
         add(m_background);
         m_background->zorder_bottom();
     }
@@ -326,14 +326,14 @@ Window::~Window()
 struct CursorWindow : public Window
 {
     explicit CursorWindow(const Image& image)
-        : Window(image.size(), pixel_format::argb8888, windowhint::cursor_overlay),
+        : Window(image.size(), PixelFormat::argb8888, WindowHint::cursor_overlay),
           m_label(new ImageLabel(image))
     {
         color(Palette::ColorId::bg, Palette::transparent);
-        boxtype(Theme::boxtype::fill);
-        m_label->boxtype(Theme::boxtype::none);
+        boxtype(Theme::BoxFlag::fill);
+        m_label->boxtype().clear();
         add(m_label);
-        flags().set(Widget::flag::no_layout);
+        flags().set(Widget::Flag::no_layout);
         readonly(true);
     }
 
@@ -363,7 +363,7 @@ void TopWindow::show_cursor(const Image& image)
     /// @todo how to cleanup if destructed?
     Input::global_input().on_event(
         std::bind(&TopWindow::handle_mouse, this, std::placeholders::_1),
-    {eventid::raw_pointer_down, eventid::raw_pointer_up, eventid::raw_pointer_move});
+    {EventId::raw_pointer_down, EventId::raw_pointer_up, EventId::raw_pointer_move});
 }
 
 void TopWindow::handle_mouse(Event& event)
@@ -372,9 +372,9 @@ void TopWindow::handle_mouse(Event& event)
     {
         switch (event.id())
         {
-        case eventid::raw_pointer_down:
-        case eventid::raw_pointer_up:
-        case eventid::raw_pointer_move:
+        case EventId::raw_pointer_down:
+        case EventId::raw_pointer_up:
+        case EventId::raw_pointer_move:
         {
             auto p = event.pointer().point;
             m_cursor->move(Point(p.x(), p.y()));

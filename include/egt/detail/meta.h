@@ -88,11 +88,11 @@ std::unique_ptr<T> make_unique(Args&& ... args)
  * @see reverse_iterate
  */
 template <typename T>
-class reverse_range
+class ReverseRange
 {
     T& m_x;
 public:
-    explicit reverse_range(T& x) : m_x(x) {}
+    explicit ReverseRange(T& x) : m_x(x) {}
 
     auto begin() const -> decltype(this->m_x.rbegin())
     {
@@ -116,22 +116,22 @@ public:
  * @endcode
  */
 template <typename T>
-reverse_range<T> reverse_iterate(T& x)
+ReverseRange<T> reverse_iterate(T& x)
 {
-    return reverse_range<T>(x);
+    return ReverseRange<T>(x);
 }
 #endif
 
 /**
  * Utility base class to make a derived class non-copy-able.
  */
-class EGT_API noncopyable
+class EGT_API NonCopyable
 {
 public:
-    noncopyable() = default;
-    ~noncopyable() = default;
-    noncopyable(const noncopyable&) = delete;
-    noncopyable& operator=(const noncopyable&) = delete;
+    NonCopyable() = default;
+    ~NonCopyable() = default;
+    NonCopyable(const NonCopyable&) = delete;
+    NonCopyable& operator=(const NonCopyable&) = delete;
 };
 
 /**
@@ -226,13 +226,13 @@ inline bool change_if_diff(double& old, const double& to)
  * This can be used to run a function when an instance of a scope_exit goes out
  * of scope or is deleted.
  */
-struct EGT_API scope_exit : public noncopyable
+struct EGT_API ScopeExit : public NonCopyable
 {
-    explicit scope_exit(std::function<void()> f) noexcept
+    explicit ScopeExit(std::function<void()> f) noexcept
         : m_f(std::move(f))
     {}
 
-    ~scope_exit()
+    ~ScopeExit()
     {
         if (m_f)
             m_f();
@@ -241,6 +241,12 @@ struct EGT_API scope_exit : public noncopyable
 protected:
     std::function<void()> m_f;
 };
+
+template<class T>
+constexpr inline T bit(T n)
+{
+    return 1 << n;
+}
 
 }
 }

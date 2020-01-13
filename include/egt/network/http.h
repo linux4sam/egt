@@ -38,7 +38,7 @@ namespace experimental
  * });
  * @endcode
  */
-class EGT_API HttpClientRequest : public detail::noncopyable
+class EGT_API HttpClientRequest : public detail::NonCopyable
 {
 public:
 
@@ -46,7 +46,7 @@ public:
 
     using buffer_type = std::vector<char>;
 
-    using finish_callback_t = std::function < void(const std::string& url, buffer_type && buffer) >;
+    using FinishCallback = std::function < void(const std::string& url, buffer_type && buffer) >;
 
     /**
      * Create a request for the specified URL.
@@ -56,7 +56,7 @@ public:
     /**
      * Start the download.
      */
-    virtual void start(finish_callback_t finish);
+    virtual void start(FinishCallback finish);
 
     /**
      * @private
@@ -81,7 +81,7 @@ protected:
     /**
      * Finish callback.
      */
-    finish_callback_t m_finish_callback;
+    FinishCallback m_finish_callback;
 
     /**
      * Implementation pointer.

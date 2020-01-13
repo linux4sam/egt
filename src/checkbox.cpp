@@ -24,11 +24,11 @@ CheckBox::CheckBox(const std::string& text,
 {
     name("CheckBox" + std::to_string(m_widgetid));
 
-    boxtype(Theme::boxtype::none);
+    boxtype().clear();
     padding(5);
-    text_align(alignmask::left | alignmask::center);
+    text_align(AlignFlag::left | AlignFlag::center);
 
-    flags().set(Widget::flag::grab_mouse);
+    flags().set(Widget::Flag::grab_mouse);
 }
 
 CheckBox::CheckBox(Frame& parent,
@@ -45,7 +45,7 @@ void CheckBox::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::pointer_click:
+    case EventId::pointer_click:
         checked(!checked());
     default:
         break;
@@ -77,13 +77,13 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
                        Rect(0, 0, text_size.width(), text_size.height()),
                        widget.padding() / 2);
 
-    detail::flex_layout(b, rects, justification::start, orientation::horizontal);
+    detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
 
     auto handle = rects[0].rect + b.point();
     auto text = rects[1].rect + b.point();
     auto border = widget.theme().default_border();
 
-    widget.theme().draw_box(painter, Theme::boxtype::fill, handle,
+    widget.theme().draw_box(painter, Theme::BoxFlag::fill, handle,
                             widget.color(Palette::ColorId::button_fg),
                             Palette::transparent,
                             border);
@@ -136,7 +136,7 @@ ToggleBox::ToggleBox(const Rect& rect) noexcept
 {
     name("ToggleBox" + std::to_string(m_widgetid));
 
-    boxtype(Theme::boxtype::fill_rounded);
+    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
     border(theme().default_border());
 }
 
@@ -163,10 +163,10 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         rect.width(rect.width() / 2);
         rect.x(rect.x() + rect.width());
         widget.theme().draw_box(painter,
-                                Theme::boxtype::fill_rounded,
-                                rect,
-                                widget.color(Palette::ColorId::border),
-                                widget.color(Palette::ColorId::button_bg));
+        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+        rect,
+        widget.color(Palette::ColorId::border),
+        widget.color(Palette::ColorId::button_bg));
     }
     else
     {
@@ -176,18 +176,18 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         if (widget.enable_disable())
         {
             widget.theme().draw_box(painter,
-                                    Theme::boxtype::fill_rounded,
-                                    rect,
-                                    widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
-                                    widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
+            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+            rect,
+            widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
+            widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
         }
         else
         {
             widget.theme().draw_box(painter,
-                                    Theme::boxtype::fill_rounded,
-                                    rect,
-                                    widget.color(Palette::ColorId::border),
-                                    widget.color(Palette::ColorId::button_bg));
+            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
+            rect,
+            widget.color(Palette::ColorId::border),
+            widget.color(Palette::ColorId::button_bg));
         }
     }
 
@@ -205,7 +205,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         auto size = painter.text_size(widget.on_text());
         Rect target = detail::align_algorithm(size,
                                               rect,
-                                              alignmask::center);
+                                              AlignFlag::center);
         painter.draw(target.point());
         painter.draw(widget.on_text());
     }
@@ -223,7 +223,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         auto size = painter.text_size(widget.off_text());
         Rect target = detail::align_algorithm(size,
                                               rect,
-                                              alignmask::center);
+                                              AlignFlag::center);
         painter.draw(target.point());
         painter.draw(widget.off_text());
     }

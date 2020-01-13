@@ -38,15 +38,15 @@ public:
 
     MouseGesture();
 
-    using mouse_callback_t = std::function<void(Event& event)>;
+    using MouseCallback = std::function<void(Event& event)>;
 
     /**
      * Register a callback function to handle the async mouse events.
      */
-    void on_async_event(mouse_callback_t callback);
+    void on_async_event(MouseCallback callback);
 
     /**
-     * Pass the raw eventid to this function to get the emulated mouse event.
+     * Pass the raw EventId to this function to get the emulated mouse event.
      */
     virtual Event handle(const Event& event);
 
@@ -99,12 +99,12 @@ protected:
      */
     DisplayPoint m_mouse_start_pos;
 
-    using callback_array = std::vector<mouse_callback_t>;
+    using CallbackArray = std::vector<MouseCallback>;
 
     /**
      * Registered callback functions.
      */
-    callback_array m_callbacks;
+    CallbackArray m_callbacks;
 
     /**
      * Async timer for detecting long clicks.

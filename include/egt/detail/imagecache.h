@@ -29,7 +29,7 @@ namespace detail
  * This is a trade off in consuming more memory instead of possibly
  * constantly reloading or scaling the same image.
  */
-class EGT_API ImageCache : public detail::noncopyable
+class EGT_API ImageCache : public detail::NonCopyable
 {
 public:
 

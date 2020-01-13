@@ -43,7 +43,7 @@ class Input;
  * inputs, outputs, the event loop, and more. It also acts as sort of a
  * global access to get to these things because of this.
  */
-class EGT_API Application : public detail::noncopyable
+class EGT_API Application : public detail::NonCopyable
 {
 public:
     /**
@@ -149,7 +149,7 @@ private:
      */
     std::vector<std::unique_ptr<Input>> m_inputs;
 
-    detail::Object::handle_t m_handle{0};
+    detail::Object::RegisterHandle m_handle{0};
 };
 
 /**

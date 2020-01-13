@@ -25,7 +25,7 @@ namespace detail
  * This creates a flip queue used for queuing up flip calls when using more
  * than one buffer.
  */
-struct FlipThread : public noncopyable
+struct FlipThread : public NonCopyable
 {
     explicit FlipThread(uint32_t max_queue = 0)
         : m_max_queue(max_queue)

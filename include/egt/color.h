@@ -588,7 +588,7 @@ namespace experimental
  * A ColorMap contains a series of sequential color steps that can be used for
  * generating colors by interpolation.
  */
-class EGT_API ColorMap : public detail::noncopyable
+class EGT_API ColorMap : public detail::NonCopyable
 {
 public:
 

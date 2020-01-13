@@ -7,9 +7,9 @@
 #define EGT_RADIAL_H
 
 #include <algorithm>
+#include <egt/detail/flags.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
-#include <egt/flags.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
 #include <egt/text.h>
@@ -44,25 +44,25 @@ class RadialType : public Widget
 {
 public:
 
-    enum class flag
+    enum class RadialFlag
     {
         /**
          * Use the value for the center text of the widget.
          */
-        text_value,
+        text_value = detail::bit(0),
 
         /**
          * When drawing the value, use rounded ends.  The default is square.
          */
-        rounded_cap,
+        rounded_cap = detail::bit(1),
 
         /**
-         * This value is modified by use input.
+         * This value is modified by user input.
          */
-        input_value
+        input_value = detail::bit(2),
     };
 
-    using flags_type = Flags<flag>;
+    using RadialFlags = detail::Flags<RadialFlag>;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -71,8 +71,7 @@ public:
         : Widget(rect)
     {
         this->name("Radial" + std::to_string(m_widgetid));
-        this->boxtype(Theme::boxtype::none);
-        this->flags().set(Widget::flag::grab_mouse);
+        this->flags().set(Widget::Flag::grab_mouse);
     }
 
     explicit RadialType(Frame& parent, const Rect& rect = {})
@@ -81,10 +80,10 @@ public:
         parent.add(*this);
     }
 
-    virtual uint32_t add(const std::shared_ptr<RangeValue<T>>& range,
-                         const Color& color = {},
-                         default_dim_type width = 10,
-                         flags_type flags = {})
+    virtual detail::Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
+            const Color& color = {},
+            default_dim_type width = 10,
+            RadialFlags flags = {})
     {
         // TODO: m_handle_counter can wrap, making the handle non-unique
         auto handle = ++this->m_handle_counter;
@@ -94,7 +93,7 @@ public:
         range->on_event([this, flags](Event&)
         {
             this->damage();
-        }, {eventid::property_changed});
+        }, {EventId::property_changed});
 
         damage();
 
@@ -103,7 +102,7 @@ public:
 
     using Widget::color;
 
-    virtual void color(uint32_t handle, const Color& color)
+    virtual void color(detail::Object::RegisterHandle handle, const Color& color)
     {
         for (auto& value : this->m_values)
         {
@@ -136,15 +135,15 @@ public:
 
         switch (event.id())
         {
-        case eventid::pointer_click:
-        case eventid::pointer_drag:
+        case EventId::pointer_click:
+        case EventId::pointer_drag:
         {
             bool changed = false;
             auto angle = this->touch_to_degrees(this->display_to_local(event.pointer().point));
 
             for (auto& value : this->m_values)
             {
-                if (value.flags.is_set(flag::input_value))
+                if (value.flags.is_set(RadialFlag::input_value))
                 {
                     auto v = this->degrees_to_value(value.range->min(),
                                                     value.range->max(),
@@ -156,7 +155,7 @@ public:
             }
 
             if (changed)
-                this->invoke_handlers(eventid::input_property_changed);
+                this->invoke_handlers(EventId::input_property_changed);
         }
         default:
             break;
@@ -198,7 +197,7 @@ public:
             painter.set(value.color);
             painter.line_width(value.width);
             auto cr = painter.context().get();
-            if (value.flags.is_set(flag::rounded_cap))
+            if (value.flags.is_set(RadialFlag::rounded_cap))
                 cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
             else
                 cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
@@ -206,7 +205,7 @@ public:
             painter.draw(Arc(c, radius, angle1, angle2));
             painter.stroke();
 
-            if (value.flags.is_set(flag::text_value))
+            if (value.flags.is_set(RadialFlag::text_value))
             {
                 text = std::to_string(value.range->value());
             }
@@ -224,8 +223,8 @@ public:
                               text,
                               font,
                               {},
-                              alignmask::center,
-                              justification::middle,
+                              AlignFlag::center,
+                              Justification::middle,
                               widget.color(Palette::ColorId::label_text).color());
         }
     }
@@ -281,14 +280,14 @@ public:
 
 protected:
 
-    template< class T2>
+    template<class T2>
     struct ValueData
     {
         ValueData(std::shared_ptr<RangeValue<T2>> r,
                   const Color c,
                   size_t w = 10,
-                  flags_type f = {},
-                  uint32_t h = 0) noexcept
+                  RadialFlags f = {},
+                  detail::Object::RegisterHandle h = 0) noexcept
             : range(r),
               color(c),
               width(w),
@@ -299,8 +298,8 @@ protected:
         std::shared_ptr<RangeValue<T2>> range;
         Color color;
         default_dim_type width{};
-        flags_type flags{};
-        uint32_t handle{0};
+        RadialFlags flags{};
+        detail::Object::RegisterHandle handle{0};
     };
 
     /**
@@ -316,7 +315,7 @@ protected:
     /**
      * Counter used to generate unique handles for each handle registration.
      */
-    uint32_t m_handle_counter{0};
+    detail::Object::RegisterHandle m_handle_counter{0};
 
     /**
      * The starting angle in degrees for the min values.

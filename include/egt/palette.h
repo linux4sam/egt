@@ -208,12 +208,12 @@ public:
         normal = 1,
 
         /**
-         * Color group usually associated with the Widget::flag::active flag.
+         * Color group usually associated with the Widget::Flag::active flag.
          */
         active = 2,
 
         /**
-         * Color group usually associated with the Widget::flag::disabled flag.
+         * Color group usually associated with the Widget::Flag::disabled flag.
          */
         disabled = 3,
 

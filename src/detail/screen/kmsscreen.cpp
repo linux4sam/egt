@@ -73,7 +73,7 @@ static KMSScreen* the_kms = nullptr;
 std::vector<planeid> KMSScreen::m_used;
 
 KMSScreen::KMSScreen(bool allocate_primary_plane,
-                     pixel_format format)
+                     PixelFormat format)
 {
     spdlog::info("DRM/KMS Screen ({} buffers)", max_buffers());
 
@@ -176,7 +176,7 @@ inline bool operator==(const planeid& lhs, const planeid& rhs)
 }
 
 plane_data* KMSScreen::overlay_plane_create(const Size& size,
-        pixel_format format,
+        PixelFormat format,
         plane_type type)
 {
     int drm_type = DRM_PLANE_TYPE_OVERLAY;
@@ -232,20 +232,20 @@ plane_data* KMSScreen::overlay_plane_create(const Size& size,
 }
 
 unique_plane_t KMSScreen::allocate_overlay(const Size& size,
-        pixel_format format,
-        windowhint hint)
+        PixelFormat format,
+        WindowHint hint)
 {
     SPDLOG_TRACE("request to allocate overlay {} {} {}", size, format, hint);
     unique_plane_t plane;
 
-    if (hint == windowhint::software)
+    if (hint == WindowHint::software)
         return plane;
 
-    if (hint == windowhint::overlay)
+    if (hint == WindowHint::overlay)
     {
         plane = unique_plane_t(overlay_plane_create(size, format, plane_type::overlay));
     }
-    else if (hint == windowhint::heo_overlay)
+    else if (hint == WindowHint::heo_overlay)
     {
         /// @todo No explicit way to choose HEO plane. Just depending on the
         /// requiring the HEO plane for now even though that is not the only
@@ -253,7 +253,7 @@ unique_plane_t KMSScreen::allocate_overlay(const Size& size,
         /// scaleable and normal planes are not.
         plane = unique_plane_t(overlay_plane_create(size, format, plane_type::overlay));
     }
-    else if (hint == windowhint::cursor_overlay)
+    else if (hint == WindowHint::cursor_overlay)
     {
         plane = unique_plane_t(overlay_plane_create(size, format, plane_type::cursor));
     }

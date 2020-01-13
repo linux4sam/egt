@@ -20,11 +20,11 @@ public:
         explicit LauncherItem(const Image& image)
             : m_background(image)
         {
-            boxtype(Theme::boxtype::none);
-            flags().set(Widget::flag::no_layout);
+            boxtype().clear();
+            flags().set(Widget::Flag::no_layout);
 
-            m_background.align(alignmask::expand);
-            m_background.image_align(alignmask::expand);
+            m_background.align(AlignFlag::expand);
+            m_background.image_align(AlignFlag::expand);
             add(m_background);
         }
 
@@ -37,7 +37,7 @@ public:
         background(Image("background.png"));
 
         auto egt_logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
-        egt_logo->align(alignmask::center | alignmask::top);
+        egt_logo->align(AlignFlag::center | AlignFlag::top);
         egt_logo->margin(5);
         add(egt_logo);
 
@@ -58,17 +58,17 @@ public:
 
         switch (event.id())
         {
-        case eventid::pointer_drag_start:
+        case EventId::pointer_drag_start:
             m_seq.reset();
             if (!m_boxes.empty())
                 m_start = m_boxes.front()->x();
             break;
-        case eventid::pointer_drag:
+        case EventId::pointer_drag:
             move_boxes(event.pointer().point.x() -
                        event.pointer().drag_start.x());
             event.stop();
             break;
-        case eventid::pointer_drag_stop:
+        case EventId::pointer_drag_stop:
             if (!m_boxes.empty())
             {
                 m_start = m_boxes.front()->x();

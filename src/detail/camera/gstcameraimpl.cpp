@@ -113,7 +113,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         asio::post(Application::instance().event().io(), [cameraImpl, error_message]()
         {
             cameraImpl->m_err_message = error_message;
-            cameraImpl->m_interface.invoke_handlers(eventid::error);
+            cameraImpl->m_interface.invoke_handlers(EventId::error);
         });
         break;
     }
@@ -158,7 +158,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
             if (cameraImpl->start())
             {
                 cameraImpl->m_err_message = "";
-                cameraImpl->m_interface.invoke_handlers(eventid::error);
+                cameraImpl->m_interface.invoke_handlers(EventId::error);
             }
         });
 
@@ -176,7 +176,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         asio::post(Application::instance().event().io(), [cameraImpl, name]()
         {
             cameraImpl->m_err_message = std::string(name) + " Device removed";
-            cameraImpl->m_interface.invoke_handlers(eventid::error);
+            cameraImpl->m_interface.invoke_handlers(EventId::error);
         });
         cameraImpl->stop();
         break;
@@ -255,7 +255,7 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
     {
 #ifdef HAVE_LIBPLANES
         // TODO: this is not thread safe accessing cameraImpl here
-        if (cameraImpl->m_interface.flags().is_set(Widget::flag::plane_window))
+        if (cameraImpl->m_interface.flags().is_set(Widget::Flag::plane_window))
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
@@ -347,7 +347,7 @@ bool CameraImpl::start()
     get_camera_device_caps();
 
 #ifdef HAVE_LIBPLANES
-    if (m_interface.flags().is_set(Widget::flag::plane_window) && m_usekmssink)
+    if (m_interface.flags().is_set(Widget::Flag::plane_window) && m_usekmssink)
     {
         static const auto kmssink_pipe =
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=15/1 ! " \
@@ -386,7 +386,7 @@ bool CameraImpl::start()
     {
         m_err_message = error->message;
         spdlog::error("failed to create pipeline: {}", m_err_message);
-        m_interface.invoke_handlers(eventid::error);
+        m_interface.invoke_handlers(EventId::error);
         return false;
     }
 
@@ -397,7 +397,7 @@ bool CameraImpl::start()
         {
             m_err_message = "failed to get app sink element";
             spdlog::error(m_err_message);
-            m_interface.invoke_handlers(eventid::error);
+            m_interface.invoke_handlers(EventId::error);
             return false;
         }
 
@@ -414,7 +414,7 @@ bool CameraImpl::start()
     {
         m_err_message = "failed to set pipeline to play state";
         spdlog::error(m_err_message);
-        m_interface.invoke_handlers(eventid::error);
+        m_interface.invoke_handlers(EventId::error);
         stop();
         return false;
     }

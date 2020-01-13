@@ -100,7 +100,7 @@ void Gauge::add_layer(const std::shared_ptr<GaugeLayer>& layer)
     if (!layer)
         return;
 
-    flags().set(Widget::flag::no_layout);
+    flags().set(Widget::Flag::no_layout);
 
     auto i = std::find(m_layers.begin(), m_layers.end(), layer);
     if (i == m_layers.end())

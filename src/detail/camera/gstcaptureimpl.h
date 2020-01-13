@@ -25,13 +25,13 @@ class CaptureImpl
 public:
     CaptureImpl(experimental::CameraCapture& interface,
                 const std::string& output,
-                pixel_format format,
+                PixelFormat format,
                 experimental::CameraCapture::container_type container,
                 const std::string& device);
 
     virtual void set_output(const std::string& output,
                             experimental::CameraCapture::container_type container = experimental::CameraCapture::container_type::avi,
-                            pixel_format format = pixel_format::yuv420);
+                            PixelFormat format = PixelFormat::yuv420);
 
     virtual bool start();
 
@@ -44,7 +44,7 @@ public:
 protected:
     experimental::CameraCapture& m_interface;
     std::string m_output;
-    pixel_format m_format;
+    PixelFormat m_format;
     experimental::CameraCapture::container_type m_container;
     std::string m_devnode;
     GstElement* m_pipeline{nullptr};

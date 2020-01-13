@@ -17,29 +17,29 @@ namespace egt
 {
 inline namespace v1
 {
-const alignmask Button::DEFAULT_TEXT_ALIGN = alignmask::center;
+const AlignFlags Button::DEFAULT_TEXT_ALIGN = AlignFlag::center;
 
 static const auto DEFAULT_BUTTON_SIZE = Size(100, 30);
 
-Button::Button(const std::string& text, alignmask text_align) noexcept
+Button::Button(const std::string& text, const AlignFlags& text_align) noexcept
     : Button(text, {}, text_align)
 {}
 
 Button::Button(const std::string& text,
                const Rect& rect,
-               alignmask text_align) noexcept
+               const AlignFlags& text_align) noexcept
     : TextWidget(text, rect, text_align)
 {
     name("Button" + std::to_string(m_widgetid));
 
-    boxtype(Theme::boxtype::fill_rounded);
+    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
 
-    flags().set(Widget::flag::grab_mouse);
+    flags().set(Widget::Flag::grab_mouse);
 }
 
 Button::Button(Frame& parent,
                const std::string& text,
-               alignmask text_align) noexcept
+               const AlignFlags& text_align) noexcept
     : Button(text, text_align)
 {
     parent.add(*this);
@@ -48,7 +48,7 @@ Button::Button(Frame& parent,
 Button::Button(Frame& parent,
                const std::string& text,
                const Rect& rect,
-               alignmask text_align) noexcept
+               const AlignFlags& text_align) noexcept
     : Button(text, rect, text_align)
 {
     parent.add(*this);
@@ -60,12 +60,12 @@ void Button::handle(Event& event)
 
     switch (event.id())
     {
-    case eventid::raw_pointer_down:
+    case EventId::raw_pointer_down:
     {
         active(true);
         break;
     }
-    case eventid::raw_pointer_up:
+    case EventId::raw_pointer_up:
     {
         active(false);
         break;
@@ -97,24 +97,29 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect&)
                       widget.content_area(),
                       widget.text(),
                       widget.font(),
-                      TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                      TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                       widget.text_align(),
-                      justification::middle,
+                      Justification::middle,
                       widget.color(Palette::ColorId::button_text).color());
 }
 
 void Button::checked(bool value)
 {
-    if (detail::change_if_diff<>(m_checked, value))
+    if (flags().is_set(Widget::Flag::checked) != value)
     {
+        if (value)
+            flags().set(Widget::Flag::checked);
+        else
+            flags().clear(Widget::Flag::checked);
+
         if (m_group)
             m_group->checked_state_change(*this, value);
 
         /* Check if the button group has not cancelled the change. */
-        if (m_checked == value)
+        if (flags().is_set(Widget::Flag::checked) == value)
         {
             damage();
-            Event event(eventid::property_changed);
+            Event event(EventId::property_changed);
             invoke_handlers(event);
         }
     }
@@ -147,33 +152,33 @@ Button::~Button()
 }
 
 ImageButton::ImageButton(const std::string& text,
-                         alignmask text_align) noexcept
+                         const AlignFlags& text_align) noexcept
     : ImageButton(Image(), text, text_align)
 {}
 
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
-                         alignmask text_align) noexcept
+                         const AlignFlags& text_align) noexcept
     : ImageButton(image, text, {}, text_align)
 {}
 
 ImageButton::ImageButton(const Image& image,
                          const std::string& text,
                          const Rect& rect,
-                         alignmask text_align) noexcept
+                         const AlignFlags& text_align) noexcept
     : Button(text, rect, text_align)
 {
     name("ImageButton" + std::to_string(m_widgetid));
 
     if (text.empty())
-        image_align(alignmask::center);
-    do_image(image);
+        image_align(AlignFlag::center);
+    do_set_image(image);
 }
 
 ImageButton::ImageButton(Frame& parent,
                          const Image& image,
                          const std::string& text,
-                         alignmask text_align) noexcept
+                         const AlignFlags& text_align) noexcept
     : ImageButton(image, text, text_align)
 {
     parent.add(*this);
@@ -183,7 +188,7 @@ ImageButton::ImageButton(Frame& parent,
                          const Image& image,
                          const std::string& text,
                          const Rect& rect,
-                         alignmask text_align) noexcept
+                         const AlignFlags& text_align) noexcept
     : ImageButton(image, text, rect, text_align)
 {
     parent.add(*this);
@@ -195,13 +200,13 @@ Size ImageButton::min_size_hint() const
 
     if (!m_image.size().empty())
     {
-        if ((image_align() & alignmask::left) == alignmask::left ||
-            (image_align() & alignmask::right) == alignmask::right)
+        if (image_align().is_set(AlignFlag::left) ||
+            image_align().is_set(AlignFlag::right))
         {
             size += Size(m_image.width(), 0);
         }
-        else if ((image_align() & alignmask::top) == alignmask::top ||
-                 (image_align() & alignmask::bottom) == alignmask::bottom)
+        else if (image_align().is_set(AlignFlag::top) ||
+                 image_align().is_set(AlignFlag::bottom))
         {
             size += Size(0, m_image.height());
         }
@@ -213,7 +218,7 @@ Size ImageButton::min_size_hint() const
     return res;
 }
 
-void ImageButton::do_image(const Image& image)
+void ImageButton::do_set_image(const Image& image)
 {
     if (size().empty() && !image.empty())
         resize(image.size());
@@ -224,7 +229,7 @@ void ImageButton::do_image(const Image& image)
 
 void ImageButton::image(const Image& image)
 {
-    do_image(image);
+    do_set_image(image);
 }
 
 void ImageButton::draw(Painter& painter, const Rect& rect)
@@ -250,9 +255,9 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                               widget.content_area(),
                               text,
                               widget.font(),
-                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
-                              justification::middle,
+                              Justification::middle,
                               widget.color(Palette::ColorId::button_text).color(),
                               widget.image_align(),
                               widget.image());
@@ -263,9 +268,9 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                               widget.content_area(),
                               text,
                               widget.font(),
-                              TextBox::flags_type({TextBox::flag::multiline, TextBox::flag::word_wrap}),
+                              TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
-                              justification::middle,
+                              Justification::middle,
                               widget.color(Palette::ColorId::button_text).color());
         }
     }

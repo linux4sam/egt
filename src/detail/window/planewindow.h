@@ -30,8 +30,8 @@ class PlaneWindow : public BasicWindow
 public:
 
     explicit PlaneWindow(Window* interface,
-                         pixel_format format = pixel_format::argb8888,
-                         windowhint hint = windowhint::automatic);
+                         PixelFormat format = PixelFormat::argb8888,
+                         WindowHint hint = WindowHint::automatic);
 
     virtual void resize(const Size& size) override;
 
@@ -58,12 +58,12 @@ protected:
     /**
      * The requested pixel format for the plane.
      */
-    pixel_format m_format{pixel_format::argb8888};
+    PixelFormat m_format{PixelFormat::argb8888};
 
     /**
      * The requested window hint for allocating the plane.
      */
-    windowhint m_hint{windowhint::automatic};
+    WindowHint m_hint{WindowHint::automatic};
 
     /**
      * When true, we have settings that need to be flushed to the plane

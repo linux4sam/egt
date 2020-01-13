@@ -47,7 +47,7 @@ int main(int argc, const char** argv)
 
     auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
     logo->margin(10);
-    logo->align(alignmask::center | alignmask::bottom);
+    logo->align(AlignFlag::center | AlignFlag::bottom);
     window.add(logo);
 
     VerticalBoxSizer vsizer;

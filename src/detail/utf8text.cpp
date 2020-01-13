@@ -52,13 +52,13 @@ static void draw_text_common(std::vector<detail::LayoutRect>& rects,
                              const Rect& b,
                              const std::string& text,
                              const Font& font,
-                             const TextBox::flags_type& flags,
-                             alignmask text_align)
+                             const TextBox::TextFlags& flags,
+                             const AlignFlags& text_align)
 {
     // tokenize based on words or codepoints
     static const std::string delimiters = " \t\n\r";
     std::vector<std::string> tokens;
-    if (flags.is_set(TextBox::flag::multiline) && flags.is_set(TextBox::flag::word_wrap))
+    if (flags.is_set(TextBox::TextFlag::multiline) && flags.is_set(TextBox::TextFlag::word_wrap))
     {
         detail::tokenize_with_delimiters(text.cbegin(),
                                          text.cend(),
@@ -99,9 +99,9 @@ void draw_text(Painter& painter,
                const Rect& b,
                const std::string& text,
                const Font& font,
-               const TextBox::flags_type& flags,
-               alignmask text_align,
-               justification justify,
+               const TextBox::TextFlags& flags,
+               const AlignFlags& text_align,
+               Justification justify,
                const Color& text_color,
                const std::function<void(const Point& offset, size_t height)>& draw_cursor,
                size_t cursor_pos,
@@ -126,7 +126,7 @@ void draw_text(Painter& painter,
                      flags,
                      text_align);
 
-    detail::flex_layout(b, rects, justify, orientation::flex, text_align);
+    detail::flex_layout(b, rects, justify, Orientation::flex, text_align);
 
     // draw the codepoints, cursor, and selected box
     size_t pos = 0;
@@ -179,7 +179,7 @@ void draw_text(Painter& painter,
             }
             else
             {
-                if (!flags.is_set(TextBox::flag::multiline))
+                if (!flags.is_set(TextBox::TextFlag::multiline))
                     break;
 
                 // if first char is a "\n" layout doesn't respond right
@@ -233,11 +233,11 @@ void draw_text(Painter& painter,
                const Rect& b,
                const std::string& text,
                const Font& font,
-               const TextBox::flags_type& flags,
-               alignmask text_align,
-               justification justify,
+               const TextBox::TextFlags& flags,
+               const AlignFlags& text_align,
+               Justification justify,
                const Color& text_color,
-               alignmask image_align,
+               const AlignFlags& image_align,
                const Image& image,
                const std::function<void(const Point& offset, size_t height)>& draw_cursor,
                size_t cursor_pos,
@@ -262,7 +262,7 @@ void draw_text(Painter& painter,
                      flags,
                      text_align);
 
-    if ((image_align & alignmask::top) == alignmask::top)
+    if (image_align.is_set(AlignFlag::top))
     {
         detail::LayoutRect r(LAY_BREAK, Rect(0, 0, 1, fe.height), "\n");
         rects.insert(rects.begin(), r);
@@ -270,11 +270,11 @@ void draw_text(Painter& painter,
         detail::LayoutRect r2(0, Rect(Point(), image.size()));
         rects.insert(rects.begin(), r2);
     }
-    else if ((image_align & alignmask::right) == alignmask::right)
+    else if (image_align.is_set(AlignFlag::right))
     {
         rects.emplace_back(0, Rect(Point(), image.size()));
     }
-    else if ((image_align & alignmask::bottom) == alignmask::bottom)
+    else if (image_align.is_set(AlignFlag::bottom))
     {
         rects.emplace_back(LAY_BREAK, Rect(0, 0, 1, fe.height), "\n");
         rects.emplace_back(0, Rect(Point(), image.size()));
@@ -285,7 +285,7 @@ void draw_text(Painter& painter,
         rects.insert(rects.begin(), r);
     }
 
-    detail::flex_layout(b, rects, justify, orientation::flex, text_align);
+    detail::flex_layout(b, rects, justify, Orientation::flex, text_align);
 
     // draw the codepoints, cursor, and selected box
     size_t pos = 0;
@@ -348,7 +348,7 @@ void draw_text(Painter& painter,
             }
             else
             {
-                if (!flags.is_set(TextBox::flag::multiline))
+                if (!flags.is_set(TextBox::TextFlag::multiline))
                     break;
 
                 // if first char is a "\n" layout doesn't respond right

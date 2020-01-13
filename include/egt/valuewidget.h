@@ -54,7 +54,7 @@ public:
         if (detail::change_if_diff<T>(m_value, v))
         {
             damage();
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
         }
         return orig;
     }
@@ -135,7 +135,7 @@ public:
         if (detail::change_if_diff<T>(m_value, value))
         {
             damage();
-            invoke_handlers(eventid::property_changed);
+            invoke_handlers(EventId::property_changed);
         }
 
         return orig;

@@ -15,7 +15,7 @@ inline namespace v1
 namespace detail
 {
 
-uint32_t BasicInputKeyboard::on_key(uint32_t key, eventid event)
+uint32_t BasicInputKeyboard::on_key(uint32_t key, EventId event)
 {
     static const auto EVDEV_OFFSET = 8;
     auto code = detail::linux_to_ekey(key - EVDEV_OFFSET);
@@ -26,22 +26,22 @@ uint32_t BasicInputKeyboard::on_key(uint32_t key, eventid event)
 
     if (code == EKEY_CAPSLOCK)
     {
-        if (event == eventid::keyboard_down)
+        if (event == EventId::keyboard_down)
             m_key_states[EKEY_CAPSLOCK] = !m_key_states[EKEY_CAPSLOCK];
     }
     else if (code == EKEY_NUMLOCK)
     {
-        if (event == eventid::keyboard_down)
+        if (event == EventId::keyboard_down)
             m_key_states[EKEY_NUMLOCK] = !m_key_states[EKEY_NUMLOCK];
     }
     else
     {
         switch (event)
         {
-        case eventid::keyboard_down:
+        case EventId::keyboard_down:
             m_key_states[code] = true;
             break;
-        case eventid::keyboard_up:
+        case EventId::keyboard_up:
             m_key_states[code] = false;
             break;
         default:
@@ -191,7 +191,7 @@ XkbInputKeyboard::XkbInputKeyboard()
         throw std::runtime_error("could not create xkb state");
 }
 
-uint32_t XkbInputKeyboard::on_key(uint32_t key, eventid event)
+uint32_t XkbInputKeyboard::on_key(uint32_t key, EventId event)
 {
     uint32_t utf32 = 0;;
     xkb_keycode_t keycode = key;
@@ -205,14 +205,14 @@ uint32_t XkbInputKeyboard::on_key(uint32_t key, eventid event)
 
     utf32 = xkb_state_key_get_utf32(m_state.get(), keycode);
 
-    if (event == eventid::keyboard_repeat && !xkb_keymap_key_repeats(m_keymap.get(), keycode))
+    if (event == EventId::keyboard_repeat && !xkb_keymap_key_repeats(m_keymap.get(), keycode))
     {
     }
     else
     {
-        if (event == eventid::keyboard_down)
+        if (event == EventId::keyboard_down)
             xkb_state_update_key(m_state.get(), keycode, XKB_KEY_DOWN);
-        else if (event == eventid::keyboard_up)
+        else if (event == EventId::keyboard_up)
             xkb_state_update_key(m_state.get(), keycode, XKB_KEY_UP);
     }
 

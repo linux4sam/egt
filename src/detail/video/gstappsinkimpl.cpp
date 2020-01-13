@@ -129,7 +129,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
     if (sample)
     {
 #ifdef HAVE_LIBPLANES
-        if (impl->m_interface.flags().is_set(Widget::flag::plane_window))
+        if (impl->m_interface.flags().is_set(Widget::Flag::plane_window))
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
@@ -168,11 +168,11 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
 {
     std::string vc = " ! videoconvert ! video/x-raw,format=";
-    if (m_interface.flags().is_set(Widget::flag::plane_window))
+    if (m_interface.flags().is_set(Widget::Flag::plane_window))
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
-        pixel_format format = detail::egt_format(s->get_plane_format());
+        PixelFormat format = detail::egt_format(s->get_plane_format());
         SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
 
         vc += detail::gstreamer_format(format);
@@ -211,7 +211,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
-        m_interface.invoke_handlers(eventid::error);
+        m_interface.invoke_handlers(EventId::error);
         return false;
     }
 #endif
@@ -226,7 +226,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
         SPDLOG_ERROR("VideoWindow: failed to create video pipeline");
         if (error && error->message)
             m_err_message = error->message;
-        m_interface.invoke_handlers(eventid::error);
+        m_interface.invoke_handlers(EventId::error);
         return false;
     }
 
@@ -235,7 +235,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
     {
         SPDLOG_ERROR("VideoWindow: failed to get app sink element");
         m_err_message = "failed to get app sink element";
-        m_interface.invoke_handlers(eventid::error);
+        m_interface.invoke_handlers(EventId::error);
         return false;
     }
 
@@ -246,7 +246,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
         {
             SPDLOG_ERROR("VideoWindow: failed to get volume element");
             m_err_message = "failed to get volume element";
-            m_interface.invoke_handlers(eventid::error);
+            m_interface.invoke_handlers(EventId::error);
             return false;
         }
     }
@@ -273,7 +273,7 @@ gboolean GstAppSinkImpl::post_position(gpointer data)
 
     asio::post(Application::instance().event().io(), [impl]()
     {
-        impl->m_interface.invoke_handlers(eventid::property_changed);
+        impl->m_interface.invoke_handlers(EventId::property_changed);
     });
 
     return true;

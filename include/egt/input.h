@@ -47,14 +47,14 @@ public:
      *
      * @b Example
      * @code{.cpp}
-     * // receive any eventid::keyboard_down event from any Input device
+     * // receive any EventId::keyboard_down event from any Input device
      * Input::global_input().on_event([this](Event & event)
      * {
      *     switch (event.key().keycode)
      *     {
      *         ...
      *     }
-     * }, {eventid::keyboard_down});
+     * }, {EventId::keyboard_down});
      * @endcode
      */
     static inline detail::Object& global_input()
@@ -108,8 +108,8 @@ EGT_API void mouse_grab(Widget* widget);
 /**
  * Set the keyboard focus of a widget.
  *
- * This will result in calling eventid::on_gain_focus for the new widget and
- * eventid::on_lost_focus for any previous widget.
+ * This will result in calling EventId::on_gain_focus for the new widget and
+ * EventId::on_lost_focus for any previous widget.
  */
 EGT_API void keyboard_focus(Widget* widget);
 
