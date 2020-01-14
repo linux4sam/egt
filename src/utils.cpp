@@ -23,7 +23,7 @@ inline namespace v1
 
 std::string egt_version()
 {
-    return PACKAGE_VERSION;
+    return PACKAGE_VERSION; // NOLINT
 }
 
 namespace experimental

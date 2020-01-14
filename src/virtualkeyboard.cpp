@@ -228,7 +228,7 @@ void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
         k->m_multichoice_panel->update_key_size(Size(key_multichoice_size.width() * m_key_size_multichoice_factor,
                                                 key_multichoice_size.height() * m_key_size_multichoice_factor));
 
-        m_multichoice_popup.reset(new Popup());
+        m_multichoice_popup = std::make_shared<Popup>();
         m_multichoice_popup->resize(k->m_multichoice_panel->size());
         m_multichoice_popup->add(k->m_multichoice_panel);
         main_window()->add(m_multichoice_popup);
