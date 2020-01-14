@@ -249,7 +249,7 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
     float hw = dim - (text_size.width() * 2.0);
 
     // ticks and labels
-    for (float tick = 0.0; tick <= 100.0; tick += 10.0)
+    for (auto tick = 0; tick <= 100; tick += 10)
     {
         auto xangle = std::cos(detail::pi<float>() * tick * 0.01);
         auto yangle = std::sin(detail::pi<float>() * tick * 0.01);
@@ -260,7 +260,7 @@ void AnalogMeter::default_draw(AnalogMeter& widget, Painter& painter, const Rect
                            -(hw + 10.0) * yangle));
         painter.stroke();
 
-        auto text = detail::format(tick, 0);
+        auto text = std::to_string(tick);
         painter.set(widget.color(Palette::ColorId::text).color());
         auto size = painter.text_size(text);
         painter.draw(Point(-(hw + 30.0) * xangle - size.width() / 2.0,
