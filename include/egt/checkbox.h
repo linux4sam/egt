@@ -64,6 +64,8 @@ public:
      */
     static void default_draw(CheckBox& widget, Painter& painter, const Rect& rect);
 
+    using Button::min_size_hint;
+
     virtual Size min_size_hint() const override;
 
     virtual ~CheckBox() = default;
@@ -98,6 +100,8 @@ public:
      * Default draw method for the CheckBox.
      */
     static void default_draw(ToggleBox& widget, Painter& painter, const Rect& rect);
+
+    using CheckBox::min_size_hint;
 
     virtual Size min_size_hint() const override;
 

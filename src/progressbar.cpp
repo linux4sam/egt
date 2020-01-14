@@ -73,6 +73,9 @@ static const auto DEFAULT_PROGRESSBAR_SIZE = Size(200, 30);
 
 Size ProgressBar::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     return DEFAULT_PROGRESSBAR_SIZE + Widget::min_size_hint();
 }
 
@@ -140,6 +143,9 @@ static const auto DEFAULT_SPINPROGRESS_SIZE = Size(100, 100);
 
 Size SpinProgress::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     return DEFAULT_SPINPROGRESS_SIZE + Widget::min_size_hint();
 }
 
@@ -202,6 +208,9 @@ static const auto DEFAULT_LEVELMETER_SIZE = Size(40, 100);
 
 Size LevelMeter::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     return DEFAULT_LEVELMETER_SIZE + Widget::min_size_hint();
 }
 
@@ -275,6 +284,9 @@ static const auto DEFAULT_ANALOGMETER_SIZE = Size(200, 100);
 
 Size AnalogMeter::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     return DEFAULT_ANALOGMETER_SIZE + Widget::min_size_hint();
 }
 

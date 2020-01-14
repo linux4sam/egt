@@ -52,6 +52,8 @@ public:
      */
     static void default_draw(ProgressBar& widget, Painter& painter, const Rect& rect);
 
+    using ValueRangeWidget<int>::min_size_hint;
+
     virtual Size min_size_hint() const override;
 
     /**
@@ -110,6 +112,8 @@ public:
      * Default draw method for the SpinProgress.
      */
     static void default_draw(SpinProgress& widget, Painter& painter, const Rect& rect);
+
+    using ValueRangeWidget<int>::min_size_hint;
 
     virtual Size min_size_hint() const override;
 
@@ -184,6 +188,8 @@ public:
      */
     inline size_t num_bars() const { return m_num_bars; }
 
+    using ValueRangeWidget<int>::min_size_hint;
+
     virtual Size min_size_hint() const override;
 
     virtual ~LevelMeter() = default;
@@ -225,6 +231,8 @@ public:
      * Default draw method for the AnalogMeter.
      */
     static void default_draw(AnalogMeter& widget, Painter& painter, const Rect& rect);
+
+    using ValueRangeWidget<float>::min_size_hint;
 
     virtual Size min_size_hint() const override;
 

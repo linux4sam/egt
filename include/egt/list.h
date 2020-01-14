@@ -75,8 +75,12 @@ struct EGT_API StringItem : public ImageLabel
         boxtype(Theme::BoxFlag::fill);
     }
 
+    using ImageLabel::min_size_hint;
+
     virtual Size min_size_hint() const override
     {
+        if (!m_min_size.empty())
+            return m_min_size;
         return {100, 40};
     }
 

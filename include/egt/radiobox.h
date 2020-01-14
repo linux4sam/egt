@@ -57,6 +57,8 @@ public:
      */
     static void default_draw(RadioBox& widget, Painter& painter, const Rect& rect);
 
+    using Button::min_size_hint;
+
     virtual Size min_size_hint() const override;
 
     virtual ~RadioBox() = default;

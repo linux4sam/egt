@@ -115,6 +115,9 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
 
 Size CheckBox::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     const auto default_size = DEFAULT_CHECKBOX_SIZE + Widget::min_size_hint();
 
     if (!m_text.empty())
@@ -233,6 +236,9 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
 
 Size ToggleBox::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     return Size(100, 30) + Widget::min_size_hint();
 }
 

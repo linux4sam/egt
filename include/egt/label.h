@@ -86,6 +86,8 @@ public:
 
     static void default_draw(Label& widget, Painter& painter, const Rect& rect);
 
+    using TextWidget::min_size_hint;
+
     virtual Size min_size_hint() const override;
 
     virtual ~Label() = default;
@@ -170,6 +172,8 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     static void default_draw(ImageLabel& widget, Painter& painter, const Rect& rect);
+
+    using TextWidget::min_size_hint;
 
     virtual Size min_size_hint() const override;
 

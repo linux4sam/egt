@@ -133,6 +133,8 @@ public:
 
     virtual void clear() override;
 
+    using TextWidget::min_size_hint;
+
     virtual Size min_size_hint() const override;
 
     /**

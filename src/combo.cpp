@@ -214,6 +214,9 @@ void ComboBox::move(const Point& point)
 
 Size ComboBox::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     if (!m_text.empty())
     {
         auto s = text_size(m_text);

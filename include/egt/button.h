@@ -132,6 +132,8 @@ public:
 
     virtual void checked(bool value) override;
 
+    using TextWidget::min_size_hint;
+
     virtual Size min_size_hint() const override;
 
     virtual ~Button();
@@ -219,6 +221,8 @@ public:
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
+
+    using Button::min_size_hint;
 
     virtual Size min_size_hint() const override;
 

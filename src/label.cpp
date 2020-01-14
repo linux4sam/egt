@@ -78,6 +78,9 @@ void Label::parent(Frame* parent)
 
 Size Label::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     if (!m_text.empty())
     {
         auto s = text_size(m_text);
@@ -195,6 +198,9 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
 Size ImageLabel::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     Rect size = Label::min_size_hint() - Size(moat() * 2, moat() * 2);
 
     if (!m_image.size().empty())

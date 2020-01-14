@@ -350,6 +350,9 @@ DisplayPoint Widget::display_origin()
 
 Size Widget::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     return Size(moat() * 2., moat() * 2.);
 }
 

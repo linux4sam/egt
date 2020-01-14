@@ -813,6 +813,21 @@ public:
     virtual Size min_size_hint() const;
 
     /**
+     * Set the minimum size hint for the Widget.
+     *
+     * This is used by sizers to pick minimum and default dimensions when no
+     * other force is used.  When this is set to a non-zero value, this will
+     * override any computation done by min_size_hint().
+     *
+     * @param size The minimum size.
+     */
+    virtual void min_size_hint(const Size& size)
+    {
+        if (detail::change_if_diff<>(m_min_size, size))
+            parent_layout();
+    }
+
+    /**
      * Paint the Widget using Painter.
      *
      * paint() is not part of the normal draw path.  This is a utility
@@ -1101,6 +1116,11 @@ protected:
      * Call our parent to do a layout.
      */
     void parent_layout();
+
+    /**
+     * Minimum size of the widget when not an empty value.
+     */
+    Size m_min_size;
 
 private:
 

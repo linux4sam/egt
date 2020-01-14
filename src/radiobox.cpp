@@ -106,6 +106,9 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
 
 Size RadioBox::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     if (!m_text.empty())
     {
         auto s = text_size(m_text);

@@ -493,6 +493,9 @@ void TextBox::hide_cursor()
 
 Size TextBox::min_size_hint() const
 {
+    if (!m_min_size.empty())
+        return m_min_size;
+
     auto text = m_text;
     if (text.empty())
         text = "Hello World";
