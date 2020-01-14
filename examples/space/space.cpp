@@ -27,12 +27,6 @@ public:
         flags().set(Widget::Flag::no_autoresize);
     }
 
-    Ball(const Ball&) = default;
-    Ball(Ball&&) = default;
-    Ball& operator=(const Ball&) = default;
-    Ball& operator=(Ball&&) = default;
-    virtual ~Ball() = default;
-
     // returns false when it's no longer visible
     bool animate()
     {
