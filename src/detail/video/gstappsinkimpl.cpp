@@ -57,7 +57,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
 
         for (auto& plugin : plugins)
         {
-            GError* error = NULL;
+            GError* error = nullptr;
             gst_plugin_load_file(plugin, &error);
             if (error)
             {
