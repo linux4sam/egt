@@ -59,8 +59,9 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     Configure mapping of input devices to their EGT input backend.
 
     Available backends include:
+    - libinput (default)
     - tslib
-    - libinput
+    - evdev
 
     @b Example
     @code{.sh}
