@@ -1203,6 +1203,12 @@ private:
      */
     std::unique_ptr<Theme> m_theme;
 
+    /**
+     * Font instance for the widget.
+     *
+     * @note This should not be accessed directly.  Always use the access
+     * functions because this is not set until it is modified.
+     */
     mutable std::unique_ptr<Font> m_font;
 
     friend class Frame;

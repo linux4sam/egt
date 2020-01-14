@@ -104,11 +104,6 @@ public:
      */
     virtual void stop();
 
-    /**
-     * Scale the video by scale value.
-     *
-     * @param[in] scale
-     */
     virtual void scale(float scalex, float scaley) override;
 
     /**

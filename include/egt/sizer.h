@@ -29,6 +29,8 @@ inline namespace v1
  * These widgets, different from other types of widgets like @ref controls, are
  * used specifically for managing position and size of child widgets as well as
  * themselves.
+ *
+ * @see @ref layout_intro
  */
 
 /**
