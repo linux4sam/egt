@@ -189,23 +189,17 @@ public:
         return m_loopback;
     }
 
-    /**
-     * Scale the video by scale value.
-     *
-     * @param[in] scalex Horizontal scale value, 0-1.
-     * @param[in] scaley Vertical scale value, 0-1.
-     */
-    virtual void scale(float scalex, float scaley) override;
+    virtual void scale(float hscale, float vscale) override;
 
     /**
      * Get video scale value.
      */
-    inline float scalex() const
+    inline float hscale() const
     {
         return m_scalex;
     }
 
-    inline float scaley() const
+    inline float vscale() const
     {
         return m_scaley;
     }

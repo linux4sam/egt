@@ -245,7 +245,7 @@ int main(int argc, const char** argv)
         }
         case EventId::pointer_drag:
         {
-            if (!(detail::float_compare(player.scalex(), vscale)))
+            if (!(detail::float_compare(player.hscale(), vscale)))
             {
                 auto diff = event.pointer().drag_start - event.pointer().point;
                 auto p = m_start_point - Point(diff.x(), diff.y());

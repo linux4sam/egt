@@ -163,10 +163,10 @@ bool VideoWindow::seek(int64_t pos)
     return m_decoderImpl->seek(pos);
 }
 
-void VideoWindow::scale(float scalex, float scaley)
+void VideoWindow::scale(float hscale, float vscale)
 {
-    auto xs = detail::change_if_diff<float>(m_scalex, scalex);
-    auto ys = detail::change_if_diff<float>(m_scaley, scaley);
+    auto xs = detail::change_if_diff<float>(m_scalex, hscale);
+    auto ys = detail::change_if_diff<float>(m_scaley, vscale);
 
     if (xs || ys)
     {
