@@ -144,11 +144,13 @@ int main(int argc, const char** argv)
     label1.color(Palette::ColorId::label_bg, Palette::transparent);
     label1.x(SideBoard::HANDLE_WIDTH);
     window.add(bottom(label1));
+    label1.zorder_down();
 
     ImageLabel logo(Image("@128px/egt_logo_white.png"));
     logo.x(SideBoard::HANDLE_WIDTH);
     logo.margin(10);
     window.add(top(logo));
+    logo.zorder_down();
 
     egt::experimental::CPUMonitorUsage tools;
     PeriodicTimer cputimer(std::chrono::seconds(1));
