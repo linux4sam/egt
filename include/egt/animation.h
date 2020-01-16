@@ -528,9 +528,9 @@ public:
      * @param[in] func The easing function to use.
      * @param[in] callback Called whenever the animation value changes. May be nullptr.
      */
-    AutoAnimation(std::chrono::milliseconds duration,
-                  const EasingFunc& func = easing_linear,
-                  const AnimationCallback& callback = nullptr);
+    explicit AutoAnimation(std::chrono::milliseconds duration,
+                           const EasingFunc& func = easing_linear,
+                           const AnimationCallback& callback = nullptr);
 
     virtual void start() override;
     virtual void stop() override;
