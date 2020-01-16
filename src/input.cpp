@@ -74,7 +74,9 @@ void Input::dispatch(Event& event)
 {
     m_global_handler.invoke_handlers(event);
     }))
-    return;
+    {
+        return;
+    }
 
     if (modal_window())
     {
