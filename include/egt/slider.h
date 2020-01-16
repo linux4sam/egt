@@ -166,6 +166,11 @@ public:
 
     inline SliderFlags& slider_flags() { return m_slider_flags; }
 
+    virtual void serialize(detail::Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
+
     virtual ~Slider() = default;
 
 protected:

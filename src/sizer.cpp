@@ -116,9 +116,9 @@ void BoxSizer::deserialize(const std::string& name, const std::string& value,
                            const std::map<std::string, std::string>& attrs)
 {
     if (name == "orient")
-        set_orient(detail::enum_from_string<Orientation>(value));
+        orient(detail::enum_from_string<Orientation>(value));
     else if (name == "justify")
-        set_justify(detail::enum_from_string<Justification>(value));
+        justify(detail::enum_from_string<Justification>(value));
     else
         Frame::deserialize(name, value, attrs);
 }

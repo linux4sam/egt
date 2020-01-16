@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/alignment.h"
+#include "egt/detail/enum.h"
 #include "egt/detail/math.h"
+#include "egt/detail/serialize.h"
 #include "egt/detail/textwidget.h"
-#include "egt/input.h"
+#include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/slider.h"
-#include "egt/frame.h"
 
 using namespace std;
 
@@ -351,6 +352,46 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
         painter.draw(b1, b2);
         painter.stroke();
     }
+}
+
+template<>
+std::map<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data =
+{
+    {Slider::SliderFlag::rectangle_handle, "rectangle_handle"},
+    {Slider::SliderFlag::square_handle, "square_handle"},
+    {Slider::SliderFlag::round_handle, "round_handle"},
+    {Slider::SliderFlag::show_labels, "show_labels"},
+    {Slider::SliderFlag::show_label, "show_label"},
+    {Slider::SliderFlag::origin_opposite, "origin_opposite"},
+    {Slider::SliderFlag::consistent_line, "consistent_line"},
+};
+
+void Slider::serialize(detail::Serializer& serializer) const
+{
+    ValueRangeWidget<int>::serialize(serializer);
+
+    serializer.add_property("sliderflags", m_slider_flags.to_string());
+    serializer.add_property("orient", detail::enum_to_string(orient()));
+    serializer.add_property("min", min());
+    serializer.add_property("max", max());
+    serializer.add_property("value", value());
+}
+
+void Slider::deserialize(const std::string& name, const std::string& value,
+                         const std::map<std::string, std::string>& attrs)
+{
+    if (name == "sliderflags")
+        m_slider_flags.from_string(value);
+    else if (name == "orient")
+        orient(detail::enum_from_string<Orientation>(value));
+    else if (name == "min")
+        min(std::stoi(value));
+    else if (name == "max")
+        max(std::stoi(value));
+    else if (name == "value")
+        this->value(std::stoi(value));
+    else
+        ValueRangeWidget<int>::deserialize(name, value, attrs);
 }
 
 }
