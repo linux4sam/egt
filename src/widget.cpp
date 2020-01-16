@@ -262,7 +262,7 @@ void Widget::reset_palette()
 {
     assert(m_palette);
     if (m_palette)
-        m_palette->clear_all();
+        m_palette->clear();
     damage();
 }
 

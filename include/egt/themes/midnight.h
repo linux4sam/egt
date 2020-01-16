@@ -28,6 +28,8 @@ protected:
 
     virtual void init_palette() override
     {
+        m_palette->clear();
+
         m_palette->set(Palette::ColorId::cursor, Palette::GroupId::normal, Palette::red);
 
         auto pattern = [](const Color & color)
@@ -80,8 +82,6 @@ protected:
         m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::checked, Color(0xff9b29ff));
         m_palette->set(Palette::ColorId::label_text, Palette::GroupId::checked, Palette::white);
     }
-
-    virtual void init_draw() override;
 };
 
 }

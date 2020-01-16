@@ -28,6 +28,8 @@ protected:
 
     virtual void init_palette() override
     {
+        m_palette->clear();
+
         m_palette->set(Palette::ColorId::cursor, Palette::GroupId::normal, Palette::red);
 
         auto pattern = [](const Color & color)

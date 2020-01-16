@@ -321,7 +321,7 @@ public:
     /**
      * Remove all colors from the Palette.
      */
-    virtual void clear_all();
+    virtual void clear();
 
     /**
      * Check if a color exists in the palette.

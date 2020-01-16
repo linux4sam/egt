@@ -15,6 +15,8 @@ namespace egt
 inline namespace v1
 {
 
+std::vector<DrawerReset::ResetFunction> DrawerReset::m_reset_list;
+
 static std::shared_ptr<Theme> the_global_theme;
 
 Theme& global_theme()
@@ -42,6 +44,8 @@ float Theme::DEFAULT_ROUNDED_RADIUS = 4.0;
 
 void Theme::init_palette()
 {
+    m_palette->clear();
+
     m_palette->set(Palette::ColorId::cursor, Palette::GroupId::normal, Palette::red);
 
     auto pattern = [](const Color & color)
@@ -97,17 +101,12 @@ void Theme::init_palette()
 
 void Theme::init_draw()
 {
-    /**
-     * @todo When switching themes, a theme has to reset every single widget
-     * draw method, which is obviously not being done here.  It would be nice if
-     * there was a global method to reset back to default.  Maybe this function
-     * could be it if it listed all widget types.
-     */
-    Drawer<CheckBox>::draw(CheckBox::default_draw);
+    DrawerReset::reset();
 }
 
 void Theme::init_font()
 {
+    m_font = detail::make_unique<Font>();
 }
 
 void Theme::draw_box(Painter& painter, const Widget& widget,

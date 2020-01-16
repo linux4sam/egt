@@ -50,7 +50,7 @@ void Palette::clear(ColorId id, GroupId group)
         g->second.erase(id);
 }
 
-void Palette::clear_all()
+void Palette::clear()
 {
     m_colors.clear();
 }

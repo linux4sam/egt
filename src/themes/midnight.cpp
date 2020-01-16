@@ -13,10 +13,5 @@ namespace egt
 inline namespace v1
 {
 
-void MidnightTheme::init_draw()
-{
-    Drawer<CheckBox>::draw(CheckBox::default_draw);
-}
-
 }
 }

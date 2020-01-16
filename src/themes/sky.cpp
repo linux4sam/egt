@@ -18,6 +18,8 @@ inline namespace v1
 
 void SkyTheme::init_draw()
 {
+    Theme::init_draw();
+
     Drawer<CheckBox>::draw([](CheckBox & widget, Painter & painter, const Rect & rect)
     {
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);

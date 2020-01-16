@@ -42,12 +42,40 @@ public:
     /**
      * Definition of the draw function.
      */
-    using draw_t = std::function<void(T& widget, Painter& painter, const Rect& rect)>;
+    using DrawFunction = std::function<void(T& widget, Painter& painter, const Rect& rect)>;
 
     /**
      * Implementation of the actual draw function.
      */
     virtual void operator()(T& widget, Painter& painter, const Rect& rect) = 0;
+};
+
+/**
+ * Keeps track of what's been changed with Drawer::draw() changes.
+ *
+ * This provides a utility to reset or undo any of Drawer changes, specifically
+ * when switching themes.
+ */
+class EGT_API DrawerReset
+{
+public:
+    using ResetFunction = std::function<void()>;
+
+    static void add(const ResetFunction& func)
+    {
+        m_reset_list.push_back(func);
+    }
+
+    static void reset()
+    {
+        for (auto& x : m_reset_list)
+            x();
+        m_reset_list.clear();
+    }
+
+private:
+
+    static std::vector<ResetFunction> m_reset_list;
 };
 
 /**
@@ -73,10 +101,15 @@ class Drawer
 public:
 
     /**
-     * Set the default Drawable for all buttons.
+     * Set the default Drawable for all widgets of type T.
      */
-    static void draw(typename Drawable<T>::draw_t d)
+    static void draw(typename Drawable<T>::DrawFunction d)
     {
+        DrawerReset::add([]()
+        {
+            Drawer<T>::draw(T::default_draw);
+        });
+
         m_drawable = d;
     }
 
@@ -89,11 +122,11 @@ public:
     }
 
 private:
-    static typename Drawable<T>::draw_t m_drawable;
+    static typename Drawable<T>::DrawFunction m_drawable;
 };
 
 template<class T>
-typename Drawable<T>::draw_t Drawer<T>::m_drawable = T::default_draw;
+typename Drawable<T>::DrawFunction Drawer<T>::m_drawable = T::default_draw;
 
 class Color;
 
