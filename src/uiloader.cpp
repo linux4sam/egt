@@ -175,7 +175,7 @@ static const std::map<std::string, create_function> allocators =
 };
 
 static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
-        std::shared_ptr<Frame> parent = nullptr)
+        const std::shared_ptr<Frame>& parent = nullptr)
 {
     std::shared_ptr<Widget> result;
     std::string ttype;
