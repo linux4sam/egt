@@ -148,6 +148,20 @@ public:
         return orig;
     }
 
+    /**
+     * Get the Orientation.
+     */
+    inline Orientation orient() const { return m_orient; }
+
+    /**
+     * Set the Orientation.
+     */
+    inline void orient(Orientation orient)
+    {
+        if (detail::change_if_diff<>(m_orient, orient))
+            damage();
+    }
+
     inline const SliderFlags& slider_flags() const { return m_slider_flags; }
 
     inline SliderFlags& slider_flags() { return m_slider_flags; }
