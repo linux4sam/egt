@@ -173,10 +173,10 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
-        PixelFormat format = detail::egt_format(s->get_plane_format());
-        SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
+        PixelFormat fmt = detail::egt_format(s->get_plane_format());
+        SPDLOG_DEBUG("VideoWindow: egt_format = {}", fmt);
 
-        vc += detail::gstreamer_format(format);
+        vc += detail::gstreamer_format(fmt);
     }
     else
     {
