@@ -248,7 +248,11 @@ public:
     /**
      * Set the needle point.
      *
-     * This is the rotate point of the needle on the gauge surface.
+     * This is an alternate way to position the needle instead of using the
+     * normal Widget::move(), you can use the @b "needle center".
+     *
+     * @param point This is the rotate point of the @ref needle_center() on the
+     *              gauge surface.
      */
     inline void needle_point(const PointF& point)
     {
