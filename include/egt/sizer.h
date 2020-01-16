@@ -84,7 +84,7 @@ public:
     /**
      * Set the justify.
      */
-    inline void set_justify(Justification justify)
+    inline void justify(Justification justify)
     {
         if (detail::change_if_diff<>(m_justify, justify))
             layout();
@@ -98,7 +98,7 @@ public:
     /**
      * Set the Orientation.
      */
-    inline void set_orient(Orientation orient)
+    inline void orient(Orientation orient)
     {
         if (detail::change_if_diff<>(m_orient, orient))
             layout();
