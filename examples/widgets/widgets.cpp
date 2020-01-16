@@ -548,14 +548,14 @@ int main(int argc, const char** argv)
     combo->on_selected_changed([&combo_items, combo, &win]()
     {
         auto s = combo->item_at(combo->selected());
-        for (auto& i : combo_items)
+        auto i = std::find_if(combo_items.begin(),
+                              combo_items.end(),
+                              [&s](const auto & element)
         {
-            if (s == i.first)
-            {
-                global_theme(i.second());
-                break;
-            }
-        }
+            return s == element.first;
+        });
+        if (i != combo_items.end())
+            global_theme(i->second());
 
         win.damage();
     });
