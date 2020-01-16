@@ -40,9 +40,9 @@ CXXFLAGS="$CXXFLAGS -g"
 CFLAGS="$CFLAGS -g"
 
 if test "x$egt_os_win32" = "xyes"; then
-  CXXFLAGS="$CXXFLAGS -std=gnu++11"
+  CXXFLAGS="$CXXFLAGS -std=gnu++14"
 else
-  CXXFLAGS="$CXXFLAGS -std=c++11"
+  CXXFLAGS="$CXXFLAGS -std=c++14"
 fi
 
 AC_DISABLE_STATIC

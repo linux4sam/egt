@@ -17,7 +17,7 @@ with API reference is available for the latest version.
 ## Features
 
 - Anti-aliased 2D vector graphics.
-- Modern C++11 design and simplicity.
+- Modern C++ design and simplicity.
 - Optimized for Microchip microprocessors running Linux.
 - DRM/KMS, X11, and fbdev backends.
 - libinput, tslib, and evdev input support for mouse, keyboard, and touchscreen.
@@ -108,7 +108,7 @@ To link this example application, saved as example.cpp, use g++ and pkgconfig to
 pull in the required compiler flags.
 
 ```sh
-g++ -std=c++11 example.cpp -o example `pkg-config libegt --cflags --libs` -pthread
+g++ -std=c++14 example.cpp -o example `pkg-config libegt --cflags --libs` -pthread
 ```
 
 Then, run.

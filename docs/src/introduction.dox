@@ -67,7 +67,7 @@ work together.
 This is a list of high level features generally supported and provided by EGT:
 
 - Anti-aliased 2D vector graphics.
-- Modern C++11 design and simplicity.
+- Modern C++ design and simplicity.
 - Optimized for Microchip microprocessors running Linux.
 - DRM/KMS, X11, and fbdev backends.
 - libinput, tslib, and evdev input support for mouse, keyboard, and touchscreen.
@@ -80,8 +80,8 @@ This is a list of high level features generally supported and provided by EGT:
 
 @section intro_language C++ Language and Namespaces
 
-EGT takes advantage of and focuses on using features available in the C++11
-language standard.  The EGT API is all inside of an ::egt namespace.  This
+EGT takes advantage of and focuses on using features available in the C++11 and
+C++14 language standards.  The EGT API is all inside of an ::egt namespace.  This
 namespace contains an inline namespace ::egt::v1 which is used for versioning
 the API in the future.
 
