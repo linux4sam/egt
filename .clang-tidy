@@ -42,6 +42,7 @@ Checks: "*,\
 -readability-implicit-bool-cast,\
 -readability-implicit-bool-conversion,\
 -readability-named-parameter,\
+-clang-diagnostic-undefined-var-template,\
 "
 HeaderFilterRegex: '^.*include/egt/.*h$$'
 AnalyzeTemporaryDtors: false
