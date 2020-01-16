@@ -78,11 +78,7 @@ int main(int argc, const char** argv)
 
     player.on_error([&player, &errlabel]()
     {
-        auto msg = player.error_message();
-        if (msg.empty())
-            errlabel.text("");
-        else
-            errlabel.text("Error:\n" + line_break(msg));
+        errlabel.text(line_break("Error: " + player.error_message()));
     });
 
     Point m_start_point;
