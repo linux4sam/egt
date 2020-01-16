@@ -505,7 +505,7 @@ Size TextBox::min_size_hint() const
     return s;
 }
 
-TextBox::~TextBox()
+TextBox::~TextBox() noexcept
 {
     on_gain_focus.remove(m_gain_focus_reg);
     on_lost_focus.remove(m_lost_focus_reg);
