@@ -147,20 +147,20 @@ bool VideoWindow::play()
     return m_decoderImpl->play();
 }
 
-bool VideoWindow::volume(double volume)
+bool VideoWindow::volume(int volume)
 {
     m_decoderImpl->volume(volume);
     return true;
 }
 
-double VideoWindow::volume() const
+int VideoWindow::volume() const
 {
     return m_decoderImpl->volume();
 }
 
-bool VideoWindow::seek(int64_t time)
+bool VideoWindow::seek(int64_t pos)
 {
-    return m_decoderImpl->seek(time);
+    return m_decoderImpl->seek(pos);
 }
 
 void VideoWindow::scale(float scalex, float scaley)

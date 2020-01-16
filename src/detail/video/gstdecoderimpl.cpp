@@ -5,6 +5,7 @@
  */
 
 #include "detail/video/gstdecoderimpl.h"
+#include "detail/video/gstmeta.h"
 #include <egt/app.h>
 #include <exception>
 #include <fstream>
@@ -67,7 +68,7 @@ bool GstDecoderImpl::play()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            SPDLOG_ERROR("VideoWindow: Unable to set the pipeline to the play state.");
+            spdlog::error("unable to set the pipeline to the play state");
             destroyPipeline();
             return false;
         }
@@ -82,7 +83,7 @@ bool GstDecoderImpl::pause()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            SPDLOG_ERROR("VideoWindow: Unable to set the pipeline to the Pause state.");
+            spdlog::error("unable to set the pipeline to the pause state.");
             destroyPipeline();
             return false;
         }
@@ -90,28 +91,27 @@ bool GstDecoderImpl::pause()
     return true;
 }
 
-double GstDecoderImpl::volume() const
+int GstDecoderImpl::volume() const
 {
     if (!m_volume)
         return 0;
 
     gdouble volume = 0;
     g_object_get(m_volume, "volume", &volume, nullptr);
-    return volume;
+    return volume * 10.0;
 }
 
-bool GstDecoderImpl::volume(double volume)
+bool GstDecoderImpl::volume(int volume)
 {
     if (!m_volume)
         return false;
 
-    /* allowed values 0 to 10 */
-    if (volume <= 0)
+    if (volume < 0)
         volume = 0;
-    else if (volume > 10)
-        volume = 10;
+    else if (volume > 100)
+        volume = 100;
 
-    g_object_set(m_volume, "volume", volume, nullptr);
+    g_object_set(m_volume, "volume", volume / 10.0, nullptr);
     return true;
 }
 
@@ -165,7 +165,7 @@ void GstDecoderImpl::destroyPipeline()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            SPDLOG_ERROR("VideoWindow: failed to set pipeline to GST_STATE_NULL");
+            spdlog::error("failed to set pipeline to GST_STATE_NULL");
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
@@ -200,69 +200,76 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
 {
     ignoreparam(bus);
 
-    GError* error;
-    gchar* debug;
+    auto impl = reinterpret_cast<GstDecoderImpl*>(data);
 
-    auto decodeImpl = reinterpret_cast<GstDecoderImpl*>(data);
+    SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
     case GST_MESSAGE_ERROR:
     {
-        gst_message_parse_error(message, &error, &debug);
-        decodeImpl->m_err_message = error->message;
-        SPDLOG_ERROR("VideoWindow: GST_MESSAGE_ERROR from element {} {}", GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_ERROR("VideoWindow: GST_MESSAGE_ERROR Debugging info: {}", (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
-
-        asio::post(Application::instance().event().io(), [decodeImpl]()
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_error, message, error, debug);
+        if (error)
         {
-            decodeImpl->m_interface.on_error.invoke();
-        });
+            SPDLOG_DEBUG("gst error: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
+
+            std::string error_message = error->message;
+            asio::post(Application::instance().event().io(), [impl, error_message]()
+            {
+                impl->m_err_message = error_message;
+                impl->m_interface.on_error.invoke();
+            });
+        }
         break;
     }
     case GST_MESSAGE_WARNING:
     {
-        gst_message_parse_warning(message, &error, &debug);
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_WARNING from element {}", GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_WARNING Debugging info: {}", (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_warning, message, error, debug);
+        if (error)
+        {
+            SPDLOG_DEBUG("gst warning: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
+        }
         break;
     }
     case GST_MESSAGE_INFO:
     {
-        gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
-        gst_message_parse_info(message, &error, &debug);
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_INFO: {}", error->message);
-        if (debug)
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_info, message, error, debug);
+        if (error)
         {
-            SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_INFO: {}", debug);
+            SPDLOG_DEBUG("gst info: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
         }
-        g_clear_error(&error);
-        g_free(debug);
-        g_free(name);
         break;
     }
     break;
     case GST_MESSAGE_EOS:
     {
-        SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_EOS: LoopMode: {}", (decodeImpl->m_interface.loopback() ? "TRUE" : "FALSE"));
-        if (decodeImpl->m_interface.loopback())
+        SPDLOG_DEBUG("loopback: {}", (impl->m_interface.loopback() ? "TRUE" : "FALSE"));
+        if (impl->m_interface.loopback())
         {
-            gst_element_seek(decodeImpl->m_pipeline, 1.0, GST_FORMAT_TIME,
+            gst_element_seek(impl->m_pipeline, 1.0, GST_FORMAT_TIME,
                              GST_SEEK_FLAG_FLUSH,
                              GST_SEEK_TYPE_SET, 0,
                              GST_SEEK_TYPE_NONE, -1);
 
-            gst_element_set_state(decodeImpl->m_pipeline, GST_STATE_PLAYING);
+            gst_element_set_state(impl->m_pipeline, GST_STATE_PLAYING);
         }
         else
         {
-            asio::post(Application::instance().event().io(), [decodeImpl]()
+            asio::post(Application::instance().event().io(), [impl]()
             {
-                decodeImpl->m_interface.on_eos.invoke();
+                impl->m_interface.on_eos.invoke();
             });
         }
         break;
@@ -271,21 +278,26 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         GstState old_state, new_state, pending_state;
         gst_message_parse_state_changed(message, &old_state, &new_state, &pending_state);
-        if (GST_MESSAGE_SRC(message) == GST_OBJECT(decodeImpl->m_pipeline))
+        if (GST_MESSAGE_SRC(message) == GST_OBJECT(impl->m_pipeline))
         {
-            SPDLOG_DEBUG("VideoWindow: GST_MESSAGE_STATE_CHANGED: from {} to {}",
+            SPDLOG_DEBUG("state changed from {} to {}",
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
 
-            if (decodeImpl->playing())
+            if (impl->playing())
             {
                 GstQuery* query = gst_query_new_seeking(GST_FORMAT_TIME);
-                if (gst_element_query(decodeImpl->m_pipeline, query))
+                if (gst_element_query(impl->m_pipeline, query))
                 {
-                    gst_query_parse_seeking(query, nullptr, &decodeImpl->m_seek_enabled, &decodeImpl->m_start, &decodeImpl->m_duration);
+                    gst_query_parse_seeking(query, nullptr, &impl->m_seek_enabled, &impl->m_start, &impl->m_duration);
                 }
                 gst_query_unref(query);
             }
+
+            asio::post(Application::instance().event().io(), [impl]()
+            {
+                impl->m_interface.on_state_changed.invoke();
+            });
         }
         break;
     }
@@ -304,77 +316,68 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
 bool GstDecoderImpl::start_discoverer()
 {
     GError* err1 = nullptr;
-    std::shared_ptr<GstDiscoverer> discoverer =
-        std::shared_ptr<GstDiscoverer>(gst_discoverer_new(5 * GST_SECOND, &err1), g_object_unref);
-    if (!discoverer.get())
+    std::unique_ptr<GstDiscoverer, GstDeleter<void, g_object_unref>>
+            discoverer{gst_discoverer_new(5 * GST_SECOND, &err1)};
+    if (!discoverer)
     {
-        SPDLOG_ERROR("VideoWindow: Error creating discoverer instance: {}", err1->message);
+        m_err_message = "error creating discoverer instance: " + std::string(err1->message);
         g_clear_error(&err1);
         return false;
     }
 
     GError* err2 = nullptr;
-    std::shared_ptr<GstDiscovererInfo> info = std::shared_ptr<GstDiscovererInfo>(
-                gst_discoverer_discover_uri(discoverer.get(), ("file://" + m_uri).c_str(), &err2),
-                g_object_unref);
+    std::unique_ptr<GstDiscovererInfo, GstDeleter<void, g_object_unref>>
+            info{gst_discoverer_discover_uri(discoverer.get(), ("file://" + m_uri).c_str(), &err2)};
 
     GstDiscovererResult result = gst_discoverer_info_get_result(info.get());
-    SPDLOG_DEBUG("VideoWindow: Discoverer result: {} ", result);
+    SPDLOG_DEBUG("result: {} ", result);
     switch (result)
     {
     case GST_DISCOVERER_URI_INVALID:
     {
-        SPDLOG_ERROR("VideoWindow: Discoverer Invalid URI {} ", m_uri);
-        m_err_message = "Discoverer Invalid URI " + m_uri;
+        m_err_message = "invalid URI: " + m_uri;
         return false;
     }
     case GST_DISCOVERER_ERROR:
     {
-        SPDLOG_ERROR("VideoWindow: Discoverer error: {} ", err2->message);
-        m_err_message = "Discoverer Error: " + std::string(err2->message);
+        m_err_message = "error: " + std::string(err2->message);
         break;
     }
     case GST_DISCOVERER_TIMEOUT:
     {
-        SPDLOG_ERROR("VideoWindow: Discoverer Timeout");
-        m_err_message = "Discoverer Timeout ";
+        m_err_message = "timeout";
         return false;
     }
     case GST_DISCOVERER_BUSY:
     {
-        SPDLOG_ERROR("VideoWindow: Discoverer Busy");
-        m_err_message = "Discoverer Busy try later ";
+        m_err_message = "busy";
         return false;
     }
     case GST_DISCOVERER_MISSING_PLUGINS:
     {
         const GstStructure* s = gst_discoverer_info_get_misc(info.get());
-        std::shared_ptr<gchar> str = std::shared_ptr<gchar>(gst_structure_to_string(s), g_free);
-        SPDLOG_ERROR("VideoWindow: Discoverer Missing plugins: {}", str.get());
+        GstStringHandle str{gst_structure_to_string(s)};
         m_err_message = str.get();
         return false;
     }
     case GST_DISCOVERER_OK:
-        SPDLOG_DEBUG("VideoWindow: Discoverer Success");
+        SPDLOG_DEBUG("success");
         break;
     }
 
-    std::shared_ptr<GstDiscovererStreamInfo> sinfo = std::shared_ptr<GstDiscovererStreamInfo>(
-                gst_discoverer_info_get_stream_info(info.get()), g_object_unref);
-    if (!sinfo.get())
+    std::unique_ptr<GstDiscovererStreamInfo, GstDeleter<void, g_object_unref>>
+            sinfo{gst_discoverer_info_get_stream_info(info.get())};
+    if (!sinfo)
     {
-        SPDLOG_ERROR("VideoWindow: Discoverer error: get_stream_info failed");
-        m_err_message = "Discoverer error: failed to container_info ";
+        m_err_message = "failed to get stream info";
         return false;
     }
 
-    std::shared_ptr<GList> streams = std::shared_ptr<GList>(
-                                         gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO(sinfo.get())),
-                                         gst_discoverer_stream_info_list_free);
-    if (!streams.get())
+    std::unique_ptr<GList, GstDeleter<GList, gst_discoverer_stream_info_list_free>>
+            streams{gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO(sinfo.get()))};
+    if (!streams)
     {
-        SPDLOG_ERROR("VideoWindow: Discoverer error: failed to container_info");
-        m_err_message = "Discoverer error: failed to container_info ";
+        m_err_message = "failed to get stream info list";
         return false;
     }
 
@@ -391,10 +394,9 @@ bool GstDecoderImpl::start_discoverer()
 /* Print information regarding a stream */
 void GstDecoderImpl::get_stream_info(GstDiscovererStreamInfo* info)
 {
-    std::shared_ptr<GstCaps> caps = std::shared_ptr<GstCaps>(
-                                        gst_discoverer_stream_info_get_caps(info),
-                                        gst_caps_unref);
-    if (caps.get())
+    std::unique_ptr<GstCaps, GstDeleter<GstCaps, gst_caps_unref>>
+            caps{gst_discoverer_stream_info_get_caps(info)};
+    if (caps)
     {
         std::shared_ptr<gchar> desc;
         if (gst_caps_is_fixed(caps.get()))
@@ -402,7 +404,7 @@ void GstDecoderImpl::get_stream_info(GstDiscovererStreamInfo* info)
         else
             desc.reset(gst_caps_to_string(caps.get()), g_free);
 
-        if (desc.get())
+        if (desc)
         {
             std::string type = std::string(gst_discoverer_stream_info_get_stream_type_nick(info));
             if (!type.compare("video"))
@@ -418,7 +420,7 @@ void GstDecoderImpl::get_stream_info(GstDiscovererStreamInfo* info)
             {
                 m_container = desc.get();
             }
-            SPDLOG_DEBUG("VideoWindow: {} : {}", type, std::string(desc.get()));
+            SPDLOG_DEBUG("{} : {}", type, std::string(desc.get()));
         }
     }
 }

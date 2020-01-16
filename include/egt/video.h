@@ -56,6 +56,11 @@ public:
      * Invoked on end of stream.
      */
     detail::Signal<> on_eos;
+
+    /**
+     * Invoked when the state of the player changes.
+     */
+    detail::Signal<> on_state_changed;
     /** @} */
 
     /**
@@ -99,71 +104,75 @@ public:
      * Initialize gstreamer pipeline for specified media file.
      *
      * @param uri Media file
-     * @return true if success
+     * @return true on success
      */
     virtual bool media(const std::string& uri);
 
     /**
      * Play the video.
      *
-     * @return true if success
+     * @return true on success
      */
     virtual bool play();
 
     /**
      * Pause the video.
      *
-     * @return true if success
+     * @return true on success
      */
     virtual bool pause();
 
     /**
      * Check is video in play state.
      *
-     * @return true if success
+     * @return true on success
      */
     virtual bool playing() const;
 
     /**
      * Get the current position of the video being played.
      *
-     * @return 64bit time value nanosec's
+     * @return Time duration in nanoseconds.
      */
     int64_t position() const;
 
     /**
      * Get the total duration of the video.
      *
-     * @return 64bit time value in nanosec's
+     * @return Time duration in nanoseconds.
      */
     int64_t duration() const;
 
     /**
      * Adjust volume of the video being played.
      *
-     * @param volume is in range of 0 (no sound) to 10 (normal sound)
-     * @return true if success
+     * @param volume Value in the range 0 - 100.
+     * @return true on success
      */
-    virtual bool volume(double volume);
+    virtual bool volume(int volume);
 
     /**
      * Get the volume value for the video being played.
+     * @return Value in the range 0 - 100.
      */
-    virtual double volume() const;
+    virtual int volume() const;
 
     /**
-     * Seek the video being played.
+     * Seek to a position.
      *
-     * @param time in nanoseconds
-     * @return true if seek success
+     * The position is given by the position() function and the duration is
+     * given by the duration() method.
+     *
+     * @param pos Position in nanoseconds.
+     * @return true on success
      */
-    virtual bool seek(int64_t time);
+    virtual bool seek(int64_t pos);
 
     /**
      * Enable/disable continues loop-back mode of the video
      * being played. by default this is disabled.
      *
-     * @param enable to enable/disable loop-back mode.
+     * @param enable enable/disable loop-back mode.
      */
     inline void loopback(bool enable)
     {
@@ -217,7 +226,7 @@ public:
     virtual ~VideoWindow();
 
 protected:
-    bool m_loopback;
+    bool m_loopback{false};
     float m_scalex{1.0};
     float m_scaley{1.0};
 

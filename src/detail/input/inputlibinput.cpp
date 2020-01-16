@@ -158,7 +158,7 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
                 if (device.first != "libinput")
                 {
                     libinput_device_config_send_events_set_mode(dev,
-                                                                LIBINPUT_CONFIG_SEND_EVENTS_DISABLED);
+                            LIBINPUT_CONFIG_SEND_EVENTS_DISABLED);
                     return;
                 }
             }

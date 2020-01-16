@@ -251,7 +251,8 @@ detail/camera/gstcameraimpl.cpp \
 detail/camera/gstcameraimpl.h \
 capture.cpp \
 detail/camera/gstcaptureimpl.cpp \
-detail/camera/gstcaptureimpl.h
+detail/camera/gstcaptureimpl.h \
+detail/video/gstmeta.h
 
 if HAVE_LIBPLANES
 libegt_la_SOURCES += \

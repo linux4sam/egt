@@ -8,6 +8,7 @@
 #endif
 
 #include "detail/camera/gstcameraimpl.h"
+#include "detail/video/gstmeta.h"
 #include "egt/app.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
@@ -78,7 +79,7 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
             if (error)
             {
                 if (error->message)
-                    SPDLOG_ERROR("load plugin error: {}", error->message);
+                    spdlog::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -93,55 +94,56 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 {
     ignoreparam(bus);
 
-    auto cameraImpl = reinterpret_cast<CameraImpl*>(data);
+    auto impl = reinterpret_cast<CameraImpl*>(data);
+
+    SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
     case GST_MESSAGE_ERROR:
     {
-        GError* error;
-        gchar* debug;
-        gst_message_parse_error(message, &error, &debug);
-        std::string error_message = error->message;
-        SPDLOG_DEBUG("GST_MESSAGE_ERROR from element {} {}",
-                     GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("GST_MESSAGE_ERROR Debugging info: {}",
-                     (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
-
-        asio::post(Application::instance().event().io(), [cameraImpl, error_message]()
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_error, message, error, debug);
+        if (error)
         {
-            cameraImpl->m_err_message = error_message;
-            cameraImpl->m_interface.on_error.invoke();
-        });
+            SPDLOG_DEBUG("gst error: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
+
+            std::string error_message = error->message;
+            asio::post(Application::instance().event().io(), [impl, error_message]()
+            {
+                impl->m_err_message = error_message;
+                impl->m_interface.on_error.invoke();
+            });
+        }
         break;
     }
     case GST_MESSAGE_WARNING:
     {
-        GError* error;
-        gchar* debug;
-        gst_message_parse_warning(message, &error, &debug);
-        SPDLOG_DEBUG("GST_MESSAGE_WARNING from element {} {}", GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("GST_MESSAGE_WARNING Debugging info: {}", (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_warning, message, error, debug);
+        if (error)
+        {
+            SPDLOG_DEBUG("gst warning: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
+        }
         break;
     }
     case GST_MESSAGE_INFO:
     {
-        GError* error;
-        gchar* debug;
-        gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
-        gst_message_parse_info(message, &error, &debug);
-        SPDLOG_DEBUG("GST_MESSAGE_INFO: {} ", error->message);
-        if (debug)
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_info, message, error, debug);
+        if (error)
         {
-            SPDLOG_DEBUG("GST_MESSAGE_INFO: {}", debug);
+            SPDLOG_DEBUG("gst info: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
         }
-        g_clear_error(&error);
-        g_free(debug);
-        g_free(name);
         break;
     }
     case GST_MESSAGE_DEVICE_ADDED:
@@ -153,12 +155,12 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         g_free(name);
         gst_object_unref(device);
 
-        asio::post(Application::instance().event().io(), [cameraImpl]()
+        asio::post(Application::instance().event().io(), [impl]()
         {
-            if (cameraImpl->start())
+            if (impl->start())
             {
-                cameraImpl->m_err_message = "";
-                cameraImpl->m_interface.on_error.invoke();
+                impl->m_err_message = "";
+                impl->m_interface.on_error.invoke();
             }
         });
 
@@ -173,12 +175,12 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         g_free(name);
         gst_object_unref(device);
 
-        asio::post(Application::instance().event().io(), [cameraImpl, name]()
+        asio::post(Application::instance().event().io(), [impl, name]()
         {
-            cameraImpl->m_err_message = std::string(name) + " Device removed";
-            cameraImpl->m_interface.on_error.invoke();
+            impl->m_err_message = std::string(name) + " Device removed";
+            impl->m_interface.on_error.invoke();
         });
-        cameraImpl->stop();
+        impl->stop();
         break;
     }
     default:
@@ -247,15 +249,15 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
 
 GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
 {
-    auto cameraImpl = reinterpret_cast<CameraImpl*>(data);
+    auto impl = reinterpret_cast<CameraImpl*>(data);
 
     GstSample* sample;
     g_signal_emit_by_name(elt, "pull-sample", &sample);
     if (sample)
     {
 #ifdef HAVE_LIBPLANES
-        // TODO: this is not thread safe accessing cameraImpl here
-        if (cameraImpl->m_interface.flags().is_set(Widget::Flag::plane_window))
+        // TODO: this is not thread safe accessing impl here
+        if (impl->m_interface.flags().is_set(Widget::Flag::plane_window))
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
@@ -264,7 +266,7 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
                 if (gst_buffer_map(buffer, &map, GST_MAP_READ))
                 {
                     auto screen =
-                        reinterpret_cast<detail::KMSOverlay*>(cameraImpl->m_interface.screen());
+                        reinterpret_cast<detail::KMSOverlay*>(impl->m_interface.screen());
                     assert(screen);
                     if (screen)
                     {
@@ -279,13 +281,13 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
         else
 #endif
         {
-            asio::post(Application::instance().event().io(), [cameraImpl, sample]()
+            asio::post(Application::instance().event().io(), [impl, sample]()
             {
-                if (cameraImpl->m_camerasample)
-                    gst_sample_unref(cameraImpl->m_camerasample);
+                if (impl->m_camerasample)
+                    gst_sample_unref(impl->m_camerasample);
 
-                cameraImpl->m_camerasample = sample;
-                cameraImpl->m_interface.damage();
+                impl->m_camerasample = sample;
+                impl->m_interface.damage();
             });
         }
         return GST_FLOW_OK;

@@ -50,9 +50,9 @@ public:
 
     virtual bool playing() const;
 
-    virtual bool volume(double volume);
+    virtual bool volume(int volume);
 
-    virtual double volume() const;
+    virtual int volume() const;
 
     std::string error_message() const;
 

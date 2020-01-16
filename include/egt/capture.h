@@ -39,7 +39,15 @@ class EGT_API CameraCapture : public egt::detail::Object
 {
 public:
 
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when an error occurs.
+     */
     detail::Signal<> on_error;
+    /** @} */
 
     /**
      * Output container type.

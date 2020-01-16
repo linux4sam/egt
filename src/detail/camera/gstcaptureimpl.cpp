@@ -8,6 +8,7 @@
 #endif
 
 #include "detail/camera/gstcaptureimpl.h"
+#include "detail/video/gstmeta.h"
 #include "egt/app.h"
 #include "egt/detail/meta.h"
 #include "egt/types.h"
@@ -85,7 +86,7 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
             if (error)
             {
                 if (error->message)
-                    SPDLOG_ERROR("load plugin error: {}", error->message);
+                    spdlog::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -103,55 +104,54 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 
     std::unique_lock<std::mutex> lock(impl->m_mutex);
 
-    SPDLOG_DEBUG("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+    SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
     case GST_MESSAGE_ERROR:
     {
-        GError* error;
-        gchar* debug;
-        gst_message_parse_error(message, &error, &debug);
-        std::string error_message = error->message;
-        SPDLOG_DEBUG("GST_MESSAGE_ERROR from element {} {}",
-                     GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("GST_MESSAGE_ERROR Debugging info: {}",
-                     (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
-
-        asio::post(Application::instance().event().io(), [impl, error_message]()
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_error, message, error, debug);
+        if (error)
         {
-            impl->m_err_message = error_message;
-            impl->m_interface.on_error.invoke();
-        });
+            SPDLOG_DEBUG("gst error: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
+
+            std::string error_message = error->message;
+            asio::post(Application::instance().event().io(), [impl, error_message]()
+            {
+                impl->m_err_message = error_message;
+                impl->m_interface.on_error.invoke();
+            });
+        }
         break;
     }
     case GST_MESSAGE_WARNING:
     {
-        GError* error;
-        gchar* debug;
-        gst_message_parse_warning(message, &error, &debug);
-        SPDLOG_DEBUG("GST_MESSAGE_WARNING from element {} {}", GST_OBJECT_NAME(message->src), error->message);
-        SPDLOG_DEBUG("GST_MESSAGE_WARNING Debugging info: {}", (debug ? debug : "none"));
-        g_error_free(error);
-        g_free(debug);
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_warning, message, error, debug);
+        if (error)
+        {
+            SPDLOG_DEBUG("gst warning: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
+        }
         break;
     }
     case GST_MESSAGE_INFO:
     {
-        GError* error;
-        gchar* debug;
-        gchar* name = gst_object_get_path_string(GST_MESSAGE_SRC(message));
-        gst_message_parse_info(message, &error, &debug);
-        SPDLOG_DEBUG("GST_MESSAGE_INFO: {} ", error->message);
-        if (debug)
+        GstErrorHandle error;
+        GstStringHandle debug;
+        gst_message_parse(gst_message_parse_info, message, error, debug);
+        if (error)
         {
-            SPDLOG_DEBUG("GST_MESSAGE_INFO: {}", debug);
+            SPDLOG_DEBUG("gst info: {} {}",
+                         error->message,
+                         debug ? debug.get() : "");
         }
-        g_clear_error(&error);
-        g_free(debug);
-        g_free(name);
         break;
     }
     case GST_MESSAGE_EOS:

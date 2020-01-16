@@ -62,7 +62,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
             if (error)
             {
                 if (error->message)
-                    SPDLOG_ERROR("load plugin error: {}", error->message);
+                    spdlog::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -174,7 +174,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         PixelFormat fmt = detail::egt_format(s->get_plane_format());
-        SPDLOG_DEBUG("VideoWindow: egt_format = {}", fmt);
+        SPDLOG_DEBUG("egt_format = {}", fmt);
 
         vc += detail::gstreamer_format(fmt);
     }
@@ -212,21 +212,22 @@ bool GstAppSinkImpl::media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
+        spdlog::error("{}", m_err_message);
         m_interface.on_error.invoke();
         return false;
     }
 #endif
 
     std::string buffer = create_pipeline(uri, m_audiodevice);
-    SPDLOG_DEBUG("VideoWindow: {}", buffer);
+    SPDLOG_DEBUG("{}", buffer);
 
     GError* error = nullptr;
     m_pipeline = gst_parse_launch(buffer.c_str(), &error);
     if (!m_pipeline)
     {
-        SPDLOG_ERROR("VideoWindow: failed to create video pipeline");
         if (error && error->message)
             m_err_message = error->message;
+        spdlog::error("{}", m_err_message);
         m_interface.on_error.invoke();
         return false;
     }
@@ -234,8 +235,8 @@ bool GstAppSinkImpl::media(const std::string& uri)
     m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
     if (!m_appsink)
     {
-        SPDLOG_ERROR("VideoWindow: failed to get app sink element");
         m_err_message = "failed to get app sink element";
+        spdlog::error("{}", m_err_message);
         m_interface.on_error.invoke();
         return false;
     }
@@ -245,8 +246,8 @@ bool GstAppSinkImpl::media(const std::string& uri)
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
         if (!m_volume)
         {
-            SPDLOG_ERROR("VideoWindow: failed to get volume element");
             m_err_message = "failed to get volume element";
+            spdlog::error("{}", m_err_message);
             m_interface.on_error.invoke();
             return false;
         }

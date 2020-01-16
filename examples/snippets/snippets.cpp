@@ -428,7 +428,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
 
             VideoWindow player(window.content_area(), "assets/video.mp4");
             window.add(player);
-            player.volume(5);
+            player.volume(50);
             player.show();
             player.play();
 

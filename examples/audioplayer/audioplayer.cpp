@@ -169,7 +169,7 @@ public:
             m_player.seek(range2->value());
         });
 
-        m_player.on_state_changed([this, range2]()
+        m_player.on_position_changed([this, range2]()
         {
             if (m_player.playing())
             {
@@ -177,7 +177,11 @@ public:
                     range2->max(m_player.duration());
                 range2->value(m_player.position());
             }
-            else
+        });
+
+        m_player.on_state_changed([this, range2]()
+        {
+            if (!m_player.playing())
             {
                 m_controls.m_play.image(Image("play.png"));
                 m_animation.stop();

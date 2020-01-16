@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/video/gstkmssinkimpl.h"
+#include "detail/video/gstmeta.h"
 #include "egt/app.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
@@ -56,7 +57,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
             if (error)
             {
                 if (error->message)
-                    SPDLOG_ERROR("load plugin error: {}", error->message);
+                    spdlog::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -82,7 +83,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         assert(s);
         m_gem = s->gem();
         auto format = detail::egt_format(s->get_plane_format());
-        SPDLOG_DEBUG("VideoWindow: egt_format = {}", format);
+        SPDLOG_DEBUG("egt_format = {}", format);
 
         vc = detail::gstreamer_format(format);
     }
@@ -108,23 +109,23 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         {
             GstRegistry* reg = gst_registry_get();
 
-            std::shared_ptr<GstPluginFeature> g1h264_decode =
-                std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1h264dec"), gst_object_unref);
-            if (g1h264_decode.get())
+            std::unique_ptr<GstPluginFeature, detail::GstDeleter<void, gst_object_unref>>
+                    g1h264_decode{gst_registry_lookup_feature(reg, "g1h264dec")};
+            if (g1h264_decode)
             {
                 gst_plugin_feature_set_rank(g1h264_decode.get(), GST_RANK_PRIMARY + 1);
             }
 
-            std::shared_ptr<GstPluginFeature> g1mp4_decode =
-                std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1mp4dec"), gst_object_unref);
-            if (g1mp4_decode.get())
+            std::unique_ptr<GstPluginFeature, detail::GstDeleter<void, gst_object_unref>>
+                    g1mp4_decode{gst_registry_lookup_feature(reg, "g1mp4dec")};
+            if (g1mp4_decode)
             {
                 gst_plugin_feature_set_rank(g1mp4_decode.get(), GST_RANK_PRIMARY + 1);
             }
 
-            std::shared_ptr<GstPluginFeature> g1vp8_decode =
-                std::shared_ptr<GstPluginFeature>(gst_registry_lookup_feature(reg, "g1vp8dec"), gst_object_unref);
-            if (g1vp8_decode.get())
+            std::unique_ptr<GstPluginFeature, detail::GstDeleter<void, gst_object_unref>>
+                    g1vp8_decode{gst_registry_lookup_feature(reg, "g1vp8dec")};
+            if (g1vp8_decode)
             {
                 gst_plugin_feature_set_rank(g1vp8_decode.get(), GST_RANK_PRIMARY + 1);
             }
@@ -134,7 +135,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     }
     else
     {
-        SPDLOG_DEBUG("VideoWindow: Decoding through software decoders");
+        SPDLOG_DEBUG("Decoding through software decoders");
         v_pipe << " ! queue ! videoscale ! video/x-raw,width=" << m_size.width() << ",height=" << m_size.height() <<
                " ! videoconvert ! video/x-raw,format=" << vc;
     }
@@ -156,26 +157,27 @@ bool GstKmsSinkImpl::media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
+        spdlog::error("{}", m_err_message);
         m_interface.on_error.invoke();
         return false;
     }
 #endif
 
     std::string buffer = create_pipeline(uri, m_audiodevice);
-    SPDLOG_DEBUG("VideoWindow: {}", buffer);
+    SPDLOG_DEBUG("{}", buffer);
 
     GError* error = nullptr;
     m_pipeline = gst_parse_launch(buffer.c_str(), &error);
     if (!m_pipeline)
     {
-        SPDLOG_DEBUG("VideoWindow: gst_parse_launch failed ");
+        SPDLOG_DEBUG("gst_parse_launch failed ");
         if (error && error->message)
             m_err_message = error->message;
         m_interface.on_error.invoke();
         return false;
     }
 
-    SPDLOG_DEBUG("VideoWindow: gst_parse_launch success");
+    SPDLOG_DEBUG("gst_parse_launch success");
     if (m_audiodevice & m_audiotrack)
     {
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
