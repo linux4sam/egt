@@ -5,7 +5,6 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/alignment.h"
-#include "egt/detail/enum.h"
 #include "egt/detail/math.h"
 #include "egt/detail/serialize.h"
 #include "egt/frame.h"
