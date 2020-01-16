@@ -187,14 +187,19 @@ public:
     /**
      * Scale the image.
      *
-     * Change the size of the image.
+     * Change the scale of the image.
      *
-     * @param[in] hscale Horizontal scale, with 1.0 being 100%.
-     * @param[in] vscale Vertical scale, with 1.0 being 100%.
+     * This scales relative to the original size of the image.  Not the result
+     * of any subsequent Image::resize() or Image::scale() call.
+     *
+     * @see Image::scale().
+     *
+     * @param[in] hscale Horizontal scale [0.0 - 1.0], with 1.0 being 100%.
+     * @param[in] vscale Vertical scale [0.0 - 1.0], with 1.0 being 100%.
      * @param[in] approximate Approximate the scale to increase image cache
      *            hit efficiency.
      */
-    virtual void scale_image(double hscale, double vscale,
+    virtual void scale_image(float hscale, float vscale,
                              bool approximate = false)
     {
         m_image.scale(hscale, vscale, approximate);
@@ -204,15 +209,15 @@ public:
     /**
      * Scale the image.
      *
-     * @param[in] s Vertical and horizontal scale, with 1.0 being 100%.
+     * @param[in] scale Vertical and horizontal scale [0.0 - 1.0], with 1.0 being 100%.
      * @param[in] approximate Approximate the scale to increase image cache
      *            hit efficiency.
      *
      * @warning This does not damage the widget.
      */
-    virtual void scale_image(double s, bool approximate = false)
+    virtual void scale_image(float scale, bool approximate = false)
     {
-        scale_image(s, s, approximate);
+        scale_image(scale, scale, approximate);
     }
 
     /**

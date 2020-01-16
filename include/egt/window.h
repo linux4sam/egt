@@ -108,7 +108,7 @@ public:
 
     virtual void resize(const Size& size) override;
 
-    virtual void scale(float scalex, float scaley) override;
+    virtual void scale(float hscale, float vscale) override;
 
     virtual void paint(Painter& painter) override;
 

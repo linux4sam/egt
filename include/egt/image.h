@@ -48,14 +48,14 @@ public:
      * @param scale Scale of the image [0.0 - 1.0].
      */
     // cppcheck-suppress noExplicitConstructor
-    Image(const std::string& respath = {}, double scale = 1.0);
+    Image(const std::string& respath = {}, float scale = 1.0);
 
     /**
      * @param respath Resource path.
      * @param hscale Horizontal scale of the image [0.0 - 1.0].
      * @param vscale Vertical scale of the image [0.0 - 1.0].
      */
-    Image(const std::string& respath, double hscale, double vscale);
+    Image(const std::string& respath, float hscale, float vscale);
 
     /**
      * Load a new source image.
@@ -64,7 +64,7 @@ public:
      * @param hscale Horizontal scale of the image [0.0 - 1.0].
      * @param vscale Vertical scale of the image [0.0 - 1.0].
      */
-    void load(const std::string& respath, double hscale = 1.0, double vscale = 1.0);
+    void load(const std::string& respath, float hscale = 1.0, float vscale = 1.0);
 
     /**
      * @param surface A pre-existing surface.
@@ -99,12 +99,12 @@ public:
      * This scales relative to the original size of the image.  Not the result
      * of any subsequent Image::resize() or Image::scale() call.
      *
-     * @param hscale Horizontal scale of the image [0.0 - 1.0].
-     * @param vscale Vertical scale of the image [0.0 - 1.0].
+     * @param hscale Horizontal scale of the image [0.0 - 1.0], with 1.0 being 100%.
+     * @param vscale Vertical scale of the image [0.0 - 1.0], with 1.0 being 100%.
      * @param approximate Approximate the scale to increase image cache
      *            hit efficiency.
      */
-    virtual void scale(double hscale, double vscale,
+    virtual void scale(float hscale, float vscale,
                        bool approximate = false);
 
     /**
@@ -116,8 +116,8 @@ public:
     {
         if (this->size() != size)
         {
-            double hs = static_cast<double>(size.width()) / static_cast<double>(m_orig_size.width());
-            double vs = static_cast<double>(size.height()) / static_cast<double>(m_orig_size.height());
+            float hs = static_cast<float>(size.width()) / static_cast<float>(m_orig_size.width());
+            float vs = static_cast<float>(size.height()) / static_cast<float>(m_orig_size.height());
             scale(hs, vs);
         }
     }
@@ -125,12 +125,12 @@ public:
     /**
      * Get the horizontal scale value.
      */
-    inline double hscale() const { return m_hscale; }
+    inline float hscale() const { return m_hscale; }
 
     /**
      * Get the vertical scale value.
      */
-    inline double vscale() const { return m_vscale; }
+    inline float vscale() const { return m_vscale; }
 
     /**
      * Get the absolute size of the image.
@@ -224,12 +224,12 @@ protected:
     /**
      * Horizontal scale value, compared to original.
      */
-    double m_hscale{1.0};
+    float m_hscale{1.0};
 
     /**
      * Vertical scale value, compared to original.
      */
-    double m_vscale{1.0};
+    float m_vscale{1.0};
 
     /**
      * Shared surface pointer.

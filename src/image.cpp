@@ -13,7 +13,7 @@ namespace egt
 inline namespace v1
 {
 
-Image::Image(const std::string& respath, double scale)
+Image::Image(const std::string& respath, float scale)
     : m_respath(respath)
 {
     if (!respath.empty())
@@ -27,7 +27,7 @@ Image::Image(const std::string& respath, double scale)
 }
 
 Image::Image(const std::string& respath,
-             double hscale, double vscale)
+             float hscale, float vscale)
     : m_respath(respath)
 {
     if (!respath.empty())
@@ -61,7 +61,7 @@ Image::Image(cairo_surface_t* surface)
                        std::ceil(cairo_image_surface_get_height(m_surface.get())));
 }
 
-void Image::load(const std::string& respath, double hscale, double vscale)
+void Image::load(const std::string& respath, float hscale, float vscale)
 {
     if (detail::change_if_diff<>(m_respath, respath))
     {
@@ -76,7 +76,7 @@ void Image::load(const std::string& respath, double hscale, double vscale)
     }
 }
 
-void Image::scale(double hscale, double vscale, bool approximate)
+void Image::scale(float hscale, float vscale, bool approximate)
 {
     if (m_respath.empty())
         return;
@@ -118,8 +118,8 @@ void Image::serialize(const std::string& name, detail::Serializer& serializer) c
 void Image::deserialize(const std::string& name, const std::string& value,
                         const std::map<std::string, std::string>& attrs)
 {
-    double hscale = 1.0;
-    double vscale = 1.0;
+    float hscale = 1.0;
+    float vscale = 1.0;
 
     auto h = attrs.find("hscale");
     if (h != attrs.end())

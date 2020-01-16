@@ -274,13 +274,18 @@ public:
     /**
      * Set the scale of the widget.
      *
+     * @param[in] hscale Horizontal scale, with 1.0 being 100%.
+     * @param[in] vscale Vertical scale, with 1.0 being 100%.
+     *
      * @warning This is experimental.
      */
-    virtual void scale(float /*scalex*/, float /*scaley*/)
+    virtual void scale(float hscale, float vscale)
     {}
 
     /**
      * Set the scale of the widget.
+     *
+     * @param[in] scale Vertical and horizontal scale, with 1.0 being 100%.
      *
      * @warning This is experimental.
      */
