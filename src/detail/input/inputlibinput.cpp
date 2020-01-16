@@ -151,13 +151,16 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
         std::vector<std::string> tokens;
         detail::tokenize(device.second, '/', tokens);
 
-        if (tokens.back() == libinput_device_get_sysname(dev))
+        if (!tokens.empty())
         {
-            if (device.first != "libinput")
+            if (tokens.back() == libinput_device_get_sysname(dev))
             {
-                libinput_device_config_send_events_set_mode(dev,
-                        LIBINPUT_CONFIG_SEND_EVENTS_DISABLED);
-                return;
+                if (device.first != "libinput")
+                {
+                    libinput_device_config_send_events_set_mode(dev,
+                                                                LIBINPUT_CONFIG_SEND_EVENTS_DISABLED);
+                    return;
+                }
             }
         }
     }
