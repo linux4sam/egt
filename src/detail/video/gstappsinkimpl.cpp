@@ -79,7 +79,8 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
     {
         GstCaps* caps = gst_sample_get_caps(m_videosample);
         GstStructure* capsStruct = gst_caps_get_structure(caps, 0);
-        int width, height;
+        int width = 0;
+        int height = 0;
         gst_structure_get_int(capsStruct, "width", &width);
         gst_structure_get_int(capsStruct, "height", &height);
 
