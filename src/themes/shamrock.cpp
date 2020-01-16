@@ -7,6 +7,7 @@
 #include "egt/painter.h"
 #include "egt/widget.h"
 #include "egt/checkbox.h"
+#include "egt/text.h"
 
 namespace egt
 {
@@ -15,7 +16,25 @@ inline namespace v1
 
 void ShamrockTheme::init_draw()
 {
-    Drawer<CheckBox>::draw(CheckBox::default_draw);
+    Theme::init_draw();
+    /// @[RoundButtons]
+    // round buttons
+    Drawer<Button>::draw([](Button & widget, Painter & painter, const Rect & rect)
+    {
+        detail::ignoreparam(rect);
+
+        widget.draw_circle(painter, Palette::ColorId::button_bg, Palette::ColorId::border);
+
+        detail::draw_text(painter,
+                          widget.content_area(),
+                          widget.text(),
+                          widget.font(),
+        {TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap},
+        widget.text_align(),
+        Justification::middle,
+        widget.color(Palette::ColorId::button_text).color());
+    });
+    /// @[RoundButtons]
 }
 
 }

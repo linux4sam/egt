@@ -13,12 +13,12 @@ libraries in play.  Underneath, the Font class uses Fontconfig and Freetype for
 finding and rendering fonts.
 
 Creating and assigning a Font to a specific widget involves using the
-Widget::set_font() member function.
+Widget::font() member function.
 
 @code{.cpp}
 Button btn("Press Me");
 auto customfont = Font("Serif", 25, Font::weightid::bold, Font::slantid::italic);
-btn.set_font(customfont);
+btn.font(customfont);
 @endcode
 
 @section fonts_fontconfig Fontconfig

@@ -5,6 +5,11 @@ namespace egt { inline namespace v1 {
 
 This chapter discusses how to extend and customize widgets.
 
+Before creating new widget types, make sure you understand @ref colors_themes
+to know what you can already change about how a widget looks and operates.  You
+can change colors, fonts, and even the complete draw function of existing widget
+instances and types without having to create custom widget types.
+
 EGT is designed to support extension by way of custom widgets and functionality.
 Essentially, to change the behavior or look and feel of an existing widget,
 create a derived class of a similar and existing widget and reimplement the
@@ -13,108 +18,37 @@ widget, you would inherit directly from Widget or one of the other base
 widget types.
 
 An example of this happening is fluent throughout the EGT library itself.  For
-example, CheckBox implements a standard traditional checkBox that
-shows an *X* when the checkBox is CheckBox::checked().  However, to change the look
-and keep the same logical operation, ToggleBox derives from
-CheckBox and changes the ToggleBox::draw() method.
+example, CheckBox implements a standard traditional checkBox control that
+shows an *X* when the checkBox is CheckBox::checked().  However, to change the
+look and keep the same logical operation, ToggleBox derives from CheckBox and
+effectively changes the ToggleBox::draw() method.
 
 The new widget class that only intends to change the look of a widget would look
 something like this:
 
-@code
+@code{.cpp}
     class ToggleBox : public CheckBox
     {
     public:
         explicit ToggleBox(const Rect& rect = Rect());
 
-        virtual void draw(Painter& painter, const Rect& rect) override;
+        // standard draw function, which usually calls Drawer<T>::draw()
+        virtual void draw(Painter& painter, const Rect& rect) override
+        {
+            Drawer<ToggleBox>::draw(*this, painter, rect);
+        }
+
+        // default_draw() function to do real drawing which allows this widget to be themeable
+        static void default_draw(ToggleBox& widget, Painter& painter, const Rect& rect);
 
         virtual ~ToggleBox();
     };
 @endcode
 
-This new widget is basically a checkBox, but we want to change how it looks and
-operates. The new ToggleBox::draw() method looks like this:
+This new widget is basically a CheckBox, but we want to change how it looks. The
+new ToggleBox::default_draw() method looks like this:
 
-@code
-void ToggleBox::draw(Painter& painter, const Rect& rect)
-{
-    draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
-
-    auto b = content_area();
-
-    if (checked())
-    {
-        Rect rect = b;
-        rect.set_width(rect.width() / 2);
-        rect.set_x(rect.x() + rect.width());
-        theme().draw_box(painter,
-        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-        rect,
-        color(Palette::ColorId::border),
-        color(Palette::ColorId::button_bg));
-    }
-    else
-    {
-        Rect rect = b;
-        rect.set_width(rect.width() / 2);
-
-        if (enable_disable())
-        {
-            theme().draw_box(painter,
-            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-            rect,
-            color(Palette::ColorId::border, Palette::GroupId::disabled),
-            color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
-        }
-        else
-        {
-            theme().draw_box(painter,
-            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-            rect,
-            color(Palette::ColorId::border),
-            color(Palette::ColorId::button_bg));
-        }
-    }
-
-    if (!on_text().empty())
-    {
-        Rect rect = b;
-        rect.set_width(rect.width() / 2);
-        rect.set_x(rect.x() + rect.width());
-
-        if (checked())
-            painter.set(color(Palette::ColorId::button_text).color());
-        else
-            painter.set(color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
-        painter.set(font());
-        auto size = painter.text_size(on_text());
-        Rect target = detail::align_algorithm(size,
-                                              rect,
-                                              AlignFlag::center);
-        painter.draw(target.point());
-        painter.draw(on_text());
-    }
-
-    if (!off_text().empty())
-    {
-        Rect rect = b;
-        rect.set_width(rect.width() / 2);
-
-        if (checked())
-            painter.set(color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
-        else
-            painter.set(color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
-        painter.set(font());
-        auto size = painter.text_size(off_text());
-        Rect target = detail::align_algorithm(size,
-                                              rect,
-                                              AlignFlag::center);
-        painter.draw(target.point());
-        painter.draw(off_text());
-    }
-}
-@endcode
+@snippet "../src/checkbox.cpp" ToggleBoxDraw
 
 */
 }}

@@ -157,6 +157,7 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
 
 void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& rect)
 {
+    /// @[ToggleBoxDraw]
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
     auto b = widget.content_area();
@@ -231,7 +232,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         painter.draw(target.point());
         painter.draw(widget.off_text());
     }
-
+    /// @[ToggleBoxDraw]
 }
 
 Size ToggleBox::min_size_hint() const

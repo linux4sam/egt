@@ -31,7 +31,7 @@ For example, to change the position of a button from another thread, the
 following can be done.
 
 @code{.cpp}
-asio::post(Application::instance().event().io(), std::bind(&Button::set_x, button, 5));
+asio::post(Application::instance().event().io(), [&button](){ button.x(5); });
 @endcode
 
 To run any code you want from another thread on the EventLoop thread, post() a
@@ -58,7 +58,7 @@ int main(int argc, const char** argv)
 
     TopWindow window;
     Button button(window, "Press Me");
-    button.set_align(AlignFlag::center);
+    button.align(AlignFlag::center);
     window.show();
 
     return app.run();
