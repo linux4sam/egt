@@ -74,7 +74,7 @@ public:
     /**
      * Set option name text alignment.
      */
-    virtual void set_name_align(const AlignFlags& align)
+    virtual void name_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_name_align, align))
             parent_layout();
@@ -83,7 +83,7 @@ public:
     /**
      * Set group name text alignment.
      */
-    virtual void set_group_align(const AlignFlags& align)
+    virtual void group_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_group_align, align))
             parent_layout();
