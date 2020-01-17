@@ -79,7 +79,7 @@ VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
 {
     boxtype().clear();
 
-    createImpl(rect.size());
+    create_impl(rect.size());
 }
 
 VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
@@ -95,71 +95,71 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
     }
 }
 
-void VideoWindow::createImpl(const Size& size)
+void VideoWindow::create_impl(const Size& size)
 {
     if (flags().is_set(Widget::Flag::plane_window) && detail::is_target_sama5d4())
     {
         SPDLOG_DEBUG("VideoWindow: Using KMS sink");
 #ifdef HAVE_LIBPLANES
-        m_decoderImpl.reset(new detail::GstKmsSinkImpl(*this, size, detail::is_target_sama5d4()));
+        m_video_impl = detail::make_unique<detail::GstKmsSinkImpl>(*this, size, detail::is_target_sama5d4());
 #endif
     }
     else
     {
         SPDLOG_DEBUG("VideoWindow: Using APP sink");
-        m_decoderImpl.reset(new detail::GstAppSinkImpl(*this, size));
+        m_video_impl = detail::make_unique<detail::GstAppSinkImpl>(*this, size);
     }
 }
 
 void VideoWindow::draw(Painter& painter, const Rect& rect)
 {
-    m_decoderImpl->draw(painter, rect);
+    m_video_impl->draw(painter, rect);
 }
 
 int64_t VideoWindow::position() const
 {
-    return m_decoderImpl->position();
+    return m_video_impl->position();
 }
 
 int64_t VideoWindow::duration() const
 {
-    return m_decoderImpl->duration();
+    return m_video_impl->duration();
 }
 
 bool VideoWindow::media(const string& uri)
 {
-    return m_decoderImpl->media(detail::abspath(uri));
+    return m_video_impl->media(detail::abspath(uri));
 }
 
 bool VideoWindow::pause()
 {
-    return m_decoderImpl->pause();
+    return m_video_impl->pause();
 }
 
 bool VideoWindow::playing() const
 {
-    return m_decoderImpl->playing();
+    return m_video_impl->playing();
 }
 
 bool VideoWindow::play()
 {
-    return m_decoderImpl->play();
+    return m_video_impl->play();
 }
 
 bool VideoWindow::volume(int volume)
 {
-    m_decoderImpl->volume(volume);
+    m_video_impl->volume(volume);
     return true;
 }
 
 int VideoWindow::volume() const
 {
-    return m_decoderImpl->volume();
+    return m_video_impl->volume();
 }
 
 bool VideoWindow::seek(int64_t pos)
 {
-    return m_decoderImpl->seek(pos);
+    return m_video_impl->seek(pos);
 }
 
 void VideoWindow::scale(float hscale, float vscale)
@@ -171,7 +171,7 @@ void VideoWindow::scale(float hscale, float vscale)
     {
         if (!flags().is_set(Widget::Flag::plane_window))
         {
-            m_decoderImpl->scale(m_scalex, m_scaley);
+            m_video_impl->scale(m_scalex, m_scaley);
         }
         else
         {
@@ -182,17 +182,17 @@ void VideoWindow::scale(float hscale, float vscale)
 
 bool VideoWindow::has_audio() const
 {
-    return m_decoderImpl->has_audio();
+    return m_video_impl->has_audio();
 }
 
 std::string VideoWindow::error_message() const
 {
-    return m_decoderImpl->error_message();
+    return m_video_impl->error_message();
 }
 
 VideoWindow::~VideoWindow()
 {
-    m_decoderImpl->destroyPipeline();
+    m_video_impl->destroyPipeline();
 }
 
 } //namespace v1

@@ -224,9 +224,9 @@ protected:
     float m_scalex{1.0};
     float m_scaley{1.0};
 
-    void createImpl(const Size& size);
+    void create_impl(const Size& size);
 
-    std::shared_ptr<detail::GstDecoderImpl> m_decoderImpl;
+    std::unique_ptr<detail::GstDecoderImpl> m_video_impl;
 
     friend class detail::GstDecoderImpl;
     friend class detail::GstKmsSinkImpl;

@@ -117,7 +117,7 @@ protected:
     float m_scalex{1.0};
     float m_scaley{1.0};
 
-    std::unique_ptr<detail::CameraImpl> m_impl;
+    std::unique_ptr<detail::CameraImpl> m_camera_impl;
 
 };
 

@@ -23,18 +23,18 @@ CameraWindow::CameraWindow(const Rect& rect,
                            PixelFormat format_hint,
                            WindowHint hint)
     : Window(rect, format_hint, hint),
-      m_impl(new detail::CameraImpl(*this, rect, device, detail::is_target_sama5d4()))
+      m_camera_impl(new detail::CameraImpl(*this, rect, device, detail::is_target_sama5d4()))
 {}
 
 void CameraWindow::draw(Painter& painter, const Rect& rect)
 {
-    m_impl->draw(painter, rect);
+    m_camera_impl->draw(painter, rect);
 }
 
 bool CameraWindow::start()
 {
     allocate_screen();
-    return m_impl->start();
+    return m_camera_impl->start();
 }
 
 void CameraWindow::scale(float scalex, float scaley)
@@ -46,7 +46,7 @@ void CameraWindow::scale(float scalex, float scaley)
     {
         if (!flags().is_set(Widget::Flag::plane_window))
         {
-            m_impl->scale(m_scalex, m_scaley);
+            m_camera_impl->scale(m_scalex, m_scaley);
         }
         else
         {
@@ -57,12 +57,12 @@ void CameraWindow::scale(float scalex, float scaley)
 
 std::string CameraWindow::error_message() const
 {
-    return m_impl->error_message();
+    return m_camera_impl->error_message();
 }
 
 void CameraWindow::stop()
 {
-    m_impl->stop();
+    m_camera_impl->stop();
 }
 
 CameraWindow::~CameraWindow() = default;
