@@ -35,17 +35,20 @@ SvgImage::SvgImage(const std::string& respath, const SizeF& size)
 
 SvgImage::operator Image() const
 {
-    return render();
+    return do_render();
 }
 
-Image SvgImage::id(const std::string& id, const RectF& rect) const
+Image SvgImage::render(const std::string& id, const RectF& rect) const
 {
-    return render(id, rect);
+    return do_render(id, rect);
 }
 
 RectF SvgImage::id_box(const std::string& id) const
 {
     RectF result;
+
+    if (id.empty())
+        return size();
 
     if (m_impl->rsvg)
     {
@@ -135,7 +138,7 @@ void SvgImage::load()
     [](RsvgHandle * r) { g_object_unref(r); });
 }
 
-shared_cairo_surface_t SvgImage::render(const std::string& id, const RectF& rect) const
+shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& rect) const
 {
     auto s = size();
     if (!rect.empty())

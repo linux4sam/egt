@@ -61,11 +61,11 @@ int main(int argc, const char** argv)
     Gauge fuel;
     SvgImage fuelsvg("fuel_background.svg", SizeF(0, 150));
 
-    auto fuel_background = make_shared<GaugeLayer>(fuelsvg.id("#background"));
+    auto fuel_background = make_shared<GaugeLayer>(fuelsvg.render("#background"));
     fuel.add_layer(fuel_background);
 
     auto fuel_needle_box = fuelsvg.id_box("#needle");
-    auto fuel_needle = make_shared<NeedleLayer>(fuelsvg.id("#needle", fuel_needle_box),
+    auto fuel_needle = make_shared<NeedleLayer>(fuelsvg.render("#needle", fuel_needle_box),
                        0, 100, -63, 63, true);
 
     auto needle_point = fuelsvg.id_box("#needlepoint").center();
@@ -78,11 +78,11 @@ int main(int argc, const char** argv)
     Gauge custom1;
     SvgImage custom1svg("custom1_gauge.svg", SizeF(200, 0));
 
-    auto custom1_background = make_shared<GaugeLayer>(custom1svg.id("#g82"));
+    auto custom1_background = make_shared<GaugeLayer>(custom1svg.render("#g82"));
     custom1.add_layer(custom1_background);
 
     auto custom1_needle_box = custom1svg.id_box("#needle");
-    auto custom1_needle = make_shared<NeedleLayer>(custom1svg.id("#needle", custom1_needle_box),
+    auto custom1_needle = make_shared<NeedleLayer>(custom1svg.render("#needle", custom1_needle_box),
                           0, 100, 8, 150, true);
     auto custom1_needle_point = custom1svg.id_box("#needlepoint").center();
     custom1_needle->needle_point(custom1_needle_point);

@@ -28,7 +28,7 @@ class Serializer;
 }
 
 /**
- * Image resource used for drawing or displaying.
+ * Raster image resource used for drawing or displaying.
  *
  * This class by default shares the internal surface pointer with anything
  * else using the surface.  To force this class to keep its own copy, call
@@ -44,25 +44,33 @@ class EGT_API Image
 public:
 
     /**
+     * Construct a raster image from a respath with an optional scale.
+     *
+     * @code{.cpp}
+     * Image image("image.png");
+     * @endcode
+     *
      * @param respath Resource path.
-     * @param scale Scale of the image [0.0 - 1.0].
+     * @param scale Scale of the image, with 1.0 being 100%.
      */
     // cppcheck-suppress noExplicitConstructor
     Image(const std::string& respath = {}, float scale = 1.0);
 
     /**
+     * Construct a raster image from a respath with an optional scale.
+     *
      * @param respath Resource path.
-     * @param hscale Horizontal scale of the image [0.0 - 1.0].
-     * @param vscale Vertical scale of the image [0.0 - 1.0].
+     * @param hscale Horizontal scale of the image, with 1.0 being 100%.
+     * @param vscale Vertical scale of the image, with 1.0 being 100%.
      */
     Image(const std::string& respath, float hscale, float vscale);
 
     /**
-     * Load a new source image.
+     * Load a new source image with an optional scale.
      *
      * @param respath Resource path.
-     * @param hscale Horizontal scale of the image [0.0 - 1.0].
-     * @param vscale Vertical scale of the image [0.0 - 1.0].
+     * @param hscale Horizontal scale of the image, with 1.0 being 100%.
+     * @param vscale Vertical scale of the image, with 1.0 being 100%.
      */
     void load(const std::string& respath, float hscale = 1.0, float vscale = 1.0);
 
@@ -99,13 +107,12 @@ public:
      * This scales relative to the original size of the image.  Not the result
      * of any subsequent Image::resize() or Image::scale() call.
      *
-     * @param hscale Horizontal scale of the image [0.0 - 1.0], with 1.0 being 100%.
-     * @param vscale Vertical scale of the image [0.0 - 1.0], with 1.0 being 100%.
+     * @param hscale Horizontal scale of the image, with 1.0 being 100%.
+     * @param vscale Vertical scale of the image, with 1.0 being 100%.
      * @param approximate Approximate the scale to increase image cache
      *            hit efficiency.
      */
-    virtual void scale(float hscale, float vscale,
-                       bool approximate = false);
+    virtual void scale(float hscale, float vscale, bool approximate = false);
 
     /**
      * Resize the image to the specified absolute size.

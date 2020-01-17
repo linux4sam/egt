@@ -39,7 +39,7 @@ static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
         return nullptr;
 
     auto needle_box = svg.id_box(id);
-    auto needle = make_shared<NeedleLayer>(svg.id(id, needle_box),
+    auto needle = make_shared<NeedleLayer>(svg.render(id, needle_box),
                                            min, max, min_angle, max_angle);
     auto needle_point = svg.id_box(point_id).center();
     needle->needle_point(needle_point);
@@ -59,7 +59,7 @@ static shared_ptr<GaugeLayer> create_layer(Gauge& gauge, SvgImage& svg,
         return nullptr;
 
     auto box = svg.id_box(id);
-    auto layer = make_shared<GaugeLayer>(svg.id(id, box));
+    auto layer = make_shared<GaugeLayer>(svg.render(id, box));
     layer->box(Rect(std::floor(box.x()),
                     std::floor(box.y()),
                     std::ceil(box.width()),
@@ -93,7 +93,7 @@ int main(int argc, const char** argv)
     auto dash_background = detail::make_unique<SvgImage>("dash_background.svg", SizeF(win.content_area().width(), 0));
 
     // create a background layer
-    auto gauge_background = make_shared<GaugeLayer>(dash_background->id("#background"));
+    auto gauge_background = make_shared<GaugeLayer>(dash_background->render("#background"));
     gauge.add_layer(gauge_background);
 
     // pick out some other layers

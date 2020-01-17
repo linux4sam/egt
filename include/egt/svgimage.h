@@ -28,7 +28,15 @@ inline namespace v1
  *
  * This class is not just for working with a single Image. It allows loading an
  * SVG file or data once, and then rendering any number of images at different
- * sizes or made up of different objects from the SVG file.
+ * sizes or made up of different elements from the SVG file.
+ *
+ * @code{.cpp}
+ * SvgImage svg("file.svg");
+ * @endcode
+ *
+ * @note Some standard effects in SVG files are expensive to render. For
+ * example, some patterns and gradients.  In those cases, you can convert
+ * elements in the SVG itself to raster images to speed up rendering here.
  */
 class EGT_API SvgImage
 {
@@ -45,15 +53,43 @@ public:
     // cppcheck-suppress noExplicitConstructor
     SvgImage(const std::string& respath, const SizeF& size = {});
 
+    /**
+     * Overload to convert to an Image.
+     *
+     * This is the same as calling render().
+     */
     operator Image() const;
 
     /**
-     * Render a specific element in the SVG file.
+     * Render the SVG optionally with only the specified element id in the SVG
+     * file.
      *
-     * @param[in] id The id of the SVG element.
+     * @note If no rect is specified or an empty rect is specified, the raster
+     * Image returned will be the same size as the entire SVG.
+     *
+     * @param[in] id Optional id of the SVG element to render.  If no id is
+     *               specified, all elements in the SVG will be rendered.
      * @param[in] rect Optional rect to clip to.
      */
-    virtual Image id(const std::string& id, const RectF& rect = {}) const;
+    virtual Image render(const std::string& id = {}, const RectF& rect = {}) const;
+
+    /**
+     * Render the image of the specific element in the SVG file.
+     *
+     * This is the same as calling:
+     * @code{.cpp}
+     * render("id", svg.id_box("id"))
+     * @endcode
+     *
+     * @note The size of the returned image will be the size of the specific
+     * element in the SVG file.
+     *
+     * @see render().
+     */
+    virtual Image id_image(const std::string& id) const
+    {
+        return this->render(id, id_box(id));
+    }
 
     /**
      * Get the position and size of an element in the SVG.
@@ -66,6 +102,7 @@ public:
      * Test if an element exists in the SVG image.
      *
      * @param[in] id The id of the SVG element.
+     * @return true if found
      */
     virtual bool id_exists(const std::string& id) const;
 
@@ -109,7 +146,7 @@ protected:
     /**
      * Render and return a new surface.
      */
-    shared_cairo_surface_t render(const std::string& id = {}, const RectF& rect = {}) const;
+    shared_cairo_surface_t do_render(const std::string& id = {}, const RectF& rect = {}) const;
 
     struct SvgImpl;
 
