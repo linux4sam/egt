@@ -91,21 +91,21 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     spdlog::info("EGT Version {}", EGT_VERSION);
 
 #ifdef HAVE_SIMD
-    int info = SimdCpuInfo();
-    spdlog::debug("SSE: {}", (info & (1 << SimdCpuInfoSse) ? "Yes" : "No"));
-    spdlog::debug("SSE2: {}", (info & (1 << SimdCpuInfoSse2) ? "Yes" : "No"));
-    spdlog::debug("SSE3: {}", (info & (1 << SimdCpuInfoSse3) ? "Yes" : "No"));
-    spdlog::debug("SSSE3: {}", (info & (1 << SimdCpuInfoSsse3) ? "Yes" : "No"));
-    spdlog::debug("SSE4.1: {}", (info & (1 << SimdCpuInfoSse41) ? "Yes" : "No"));
-    spdlog::debug("SSE4.2: {}", (info & (1 << SimdCpuInfoSse42) ? "Yes" : "No"));
-    spdlog::debug("AVX: {}", (info & (1 << SimdCpuInfoAvx) ? "Yes" : "No"));
-    spdlog::debug("AVX2: {}", (info & (1 << SimdCpuInfoAvx2) ? "Yes" : "No"));
-    spdlog::debug("AVX-512F: {}", (info & (1 << SimdCpuInfoAvx512f) ? "Yes" : "No"));
-    spdlog::debug("AVX-512BW: {}", (info & (1 << SimdCpuInfoAvx512bw) ? "Yes" : "No"));
-    spdlog::debug("PowerPC-Altivec: {}", (info & (1 << SimdCpuInfoVmx) ? "Yes" : "No"));
-    spdlog::debug("PowerPC-VSX: {}", (info & (1 << SimdCpuInfoVsx) ? "Yes" : "No"));
-    spdlog::debug("ARM-NEON: {}", (info & (1 << SimdCpuInfoNeon) ? "Yes" : "No"));
-    spdlog::debug("MIPS-MSA: {}", (info & (1 << SimdCpuInfoMsa) ? "Yes" : "No"));
+    auto info = SimdCpuInfo();
+    spdlog::debug("SSE: {}", ((info & (1 << SimdCpuInfoSse)) ? "Yes" : "No"));
+    spdlog::debug("SSE2: {}", ((info & (1 << SimdCpuInfoSse2)) ? "Yes" : "No"));
+    spdlog::debug("SSE3: {}", ((info & (1 << SimdCpuInfoSse3)) ? "Yes" : "No"));
+    spdlog::debug("SSSE3: {}", ((info & (1 << SimdCpuInfoSsse3)) ? "Yes" : "No"));
+    spdlog::debug("SSE4.1: {}", ((info & (1 << SimdCpuInfoSse41)) ? "Yes" : "No"));
+    spdlog::debug("SSE4.2: {}", ((info & (1 << SimdCpuInfoSse42)) ? "Yes" : "No"));
+    spdlog::debug("AVX: {}", ((info & (1 << SimdCpuInfoAvx)) ? "Yes" : "No"));
+    spdlog::debug("AVX2: {}", ((info & (1 << SimdCpuInfoAvx2)) ? "Yes" : "No"));
+    spdlog::debug("AVX-512F: {}", ((info & (1 << SimdCpuInfoAvx512f)) ? "Yes" : "No"));
+    spdlog::debug("AVX-512BW: {}", ((info & (1 << SimdCpuInfoAvx512bw)) ? "Yes" : "No"));
+    spdlog::debug("PowerPC-Altivec: {}", ((info & (1 << SimdCpuInfoVmx)) ? "Yes" : "No"));
+    spdlog::debug("PowerPC-VSX: {}", ((info & (1 << SimdCpuInfoVsx)) ? "Yes" : "No"));
+    spdlog::debug("ARM-NEON: {}", ((info & (1 << SimdCpuInfoNeon)) ? "Yes" : "No"));
+    spdlog::debug("MIPS-MSA: {}", ((info & (1 << SimdCpuInfoMsa)) ? "Yes" : "No"));
 #endif
 
     if (the_app)

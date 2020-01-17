@@ -75,8 +75,7 @@ bool audio_device()
 } // End of detail.
 
 VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
-    : Window(rect, (detail::is_target_sama5d4() ? PixelFormat::xrgb8888 : format), hint),
-      m_loopback(false)
+    : Window(rect, (detail::is_target_sama5d4() ? PixelFormat::xrgb8888 : format), hint)
 {
     boxtype().clear();
 

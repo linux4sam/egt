@@ -166,7 +166,7 @@ public:
             return std::dynamic_pointer_cast<T>(*i);
 
         i = std::find_if(m_children.begin(), m_children.end(),
-                         [&name](const std::shared_ptr<Widget>& obj)
+                         [](const std::shared_ptr<Widget>& obj)
         {
             return obj->flags().is_set(Widget::Flag::frame);
         });

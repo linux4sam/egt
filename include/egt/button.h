@@ -200,10 +200,10 @@ public:
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    ImageButton(Frame& parent,
-                const Image& image = {},
-                const std::string& text = {},
-                const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+    explicit ImageButton(Frame& parent,
+                         const Image& image = {},
+                         const std::string& text = {},
+                         const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
     /**
      * @param[in] parent The parent Frame.

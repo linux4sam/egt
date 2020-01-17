@@ -17,7 +17,7 @@ class FloatingBox
 {
 public:
     FloatingBox(shared_ptr<Widget> widget, default_dim_type mx, default_dim_type my)
-        : m_widget(widget),
+        : m_widget(std::move(widget)),
           m_mx(mx),
           m_my(my)
     {

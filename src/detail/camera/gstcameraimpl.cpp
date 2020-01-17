@@ -208,7 +208,8 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
     {
         GstCaps* caps = gst_sample_get_caps(m_camerasample);
         GstStructure* capsStruct = gst_caps_get_structure(caps, 0);
-        int width, height;
+        int width = 0;
+        int height = 0;
         gst_structure_get_int(capsStruct, "width", &width);
         gst_structure_get_int(capsStruct, "height", &height);
 
@@ -310,12 +311,10 @@ void CameraImpl::get_camera_device_caps()
 
     if (gst_device_monitor_start(monitor))
     {
-        GList* devlist, *devIter;
-        devlist = gst_device_monitor_get_devices(monitor);
-
-        for (devIter = g_list_first(devlist); devIter; devIter = g_list_next(devIter))
+        GList* devlist = gst_device_monitor_get_devices(monitor);
+        for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
         {
-            auto device = static_cast<GstDevice*>(devIter->data);
+            auto device = static_cast<GstDevice*>(i->data);
             if (device == nullptr)
                 continue;
 
@@ -351,14 +350,15 @@ bool CameraImpl::start()
 #ifdef HAVE_LIBPLANES
     if (m_interface.flags().is_set(Widget::Flag::plane_window) && m_usekmssink)
     {
-        static const auto kmssink_pipe =
-            "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=15/1 ! " \
-            "g1kmssink gem-name={}";
-
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         if (s)
         {
+            static const auto kmssink_pipe =
+                "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=15/1 ! " \
+                "g1kmssink gem-name={}";
+
+
             const auto gem_name = s->gem();
             const auto format = detail::gstreamer_format(m_interface.format());
             const auto box = m_interface.content_area();
