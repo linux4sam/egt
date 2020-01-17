@@ -5,13 +5,14 @@
  */
 #include <egt/ui>
 #include <chrono>
+#include <memory>
 
 using namespace std;
 using namespace egt;
 using namespace egt::experimental;
 
 template<class T>
-static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
+static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
                                   std::chrono::milliseconds duration = std::chrono::seconds(10),
                                   EasingFunc easingin = easing_circular_easein,
                                   EasingFunc easingout = easing_circular_easeout)
@@ -22,18 +23,20 @@ static void demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
     auto animationdown = std::make_shared<PropertyAnimator>(max, min, duration, easingout);
     animationdown->on_change([widget](PropertyAnimator::Value value) { widget->value(value); });
 
-    /// @todo leak
-    auto sequence = new AnimationSequence(true);
+    auto sequence = std::make_unique<AnimationSequence>(true);
     sequence->add(animationup);
     sequence->add(animationdown);
     sequence->start();
+    return sequence;
 }
 
 static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
         const std::string& id, const std::string& point_id,
         int min, int max, int min_angle, int max_angle,
         std::chrono::milliseconds duration,
+        vector<std::unique_ptr<AnimationSequence>>& animations,
         EasingFunc easing = easing_circular_easein)
+
 {
     if (!svg.id_exists(id) || !svg.id_exists(point_id))
         return nullptr;
@@ -46,7 +49,7 @@ static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
     needle->needle_center(needle_point - needle_box.point());
     gauge.add_layer(needle);
 
-    demo_up_down_animator(needle, min, max, duration, easing);
+    animations.push_back(demo_up_down_animator(needle, min, max, duration, easing));
 
     return needle;
 }
@@ -104,13 +107,15 @@ int main(int argc, const char** argv)
     auto hazards = create_layer(gauge, *dash_background, "#hazards", std::chrono::seconds(2));
     auto heat = create_layer(gauge, *dash_background, "#heat", std::chrono::seconds(3));
 
+    vector<std::unique_ptr<AnimationSequence>> animations;
+
     // pick out the needles
     auto rpm_needle = create_needle(gauge, *dash_background, "#rpmneedle", "#rpmpoint",
-                                    0, 6000, -20, 190, std::chrono::seconds(8), easing_bounce);
+                                    0, 6000, -20, 190, std::chrono::seconds(8), animations, easing_bounce);
     auto mph_needle = create_needle(gauge, *dash_background, "#mphneedle", "#mphpoint",
-                                    0, 220, -20, 190, std::chrono::seconds(8));
+                                    0, 220, -20, 190, std::chrono::seconds(8), animations);
     auto fuel_needle = create_needle(gauge, *dash_background, "#fuelneedle", "#fuelpoint",
-                                     0, 100, 0, 90, std::chrono::seconds(3));
+                                     0, 100, 0, 90, std::chrono::seconds(3), animations);
 
     win.add(gauge);
 
