@@ -92,31 +92,31 @@ TEST(TextBox, Basic)
 
     TextBox text1(str1);
     ASSERT_EQ(str1, text1.text());
-    text1.set_text(str2);
+    text1.text(str2);
     ASSERT_EQ(str2, text1.text());
     ASSERT_EQ(str2.size(), text1.len());
     text1.append(str1);
     ASSERT_EQ(str2 + str1, text1.text());
-    text1.cursor_set_begin();
+    text1.cursor_begin();
     text1.insert(str1);
     ASSERT_EQ(str1 + str2 + str1, text1.text());
-    text1.cursor_set_end();
+    text1.cursor_end();
     text1.insert(str1);
     ASSERT_EQ(str1 + str2 + str1 + str1, text1.text());
-    text1.set_selection_all();
+    text1.selection_all();
     ASSERT_EQ(str1 + str2 + str1 + str1, text1.selected_text());
-    text1.set_selection(str1.size(), 5);
+    text1.selection(str1.size(), 5);
     ASSERT_EQ(str2, text1.selected_text());
     text1.clear_selection();
     ASSERT_EQ("", text1.selected_text());
-    text1.set_selection_all();
+    text1.selection_all();
     text1.delete_selection();
     ASSERT_EQ("", text1.text());
 }
 
 TEST(Screen, DamageAlgorithm)
 {
-    Screen::damage_array damage;
+    Screen::DamageArray damage;
     Screen::damage_algorithm(damage,Rect(0,0,100,100));
     EXPECT_EQ(damage.front(),Rect(0,0,100,100));
     Screen::damage_algorithm(damage,Rect(0,0,200,200));
@@ -128,18 +128,18 @@ TEST(Canvas, Basic)
 {
     Canvas canvas1(Size(100,100));
     EXPECT_EQ(canvas1.size(), Size(100,100));
-    EXPECT_EQ(canvas1.format(), pixel_format::argb8888);
+    EXPECT_EQ(canvas1.format(), PixelFormat::argb8888);
     Canvas canvas2(canvas1.surface());
     EXPECT_EQ(canvas2.size(), Size(100,100));
-    EXPECT_EQ(canvas2.format(), pixel_format::argb8888);
+    EXPECT_EQ(canvas2.format(), PixelFormat::argb8888);
 
-    Canvas canvas3(Size(100,100), pixel_format::rgb565);
+    Canvas canvas3(Size(100,100), PixelFormat::rgb565);
     EXPECT_EQ(canvas3.size(), Size(100,100));
-    EXPECT_EQ(canvas3.format(), pixel_format::rgb565);
+    EXPECT_EQ(canvas3.format(), PixelFormat::rgb565);
 
     Canvas canvas4(canvas3.surface());
     EXPECT_EQ(canvas4.size(), Size(100,100));
-    EXPECT_EQ(canvas4.format(), pixel_format::rgb565);
+    EXPECT_EQ(canvas4.format(), PixelFormat::rgb565);
 }
 
 TEST(Geometry, Basic)
@@ -240,16 +240,16 @@ TYPED_TEST(Widgets, Properties)
     EXPECT_EQ(widget->size(), Size(100,100));
     widget->move(Point(100,100));
     EXPECT_EQ(widget->point(), Point(100,100));
-    widget->set_width(10);
-    widget->set_height(10);
+    widget->width(10);
+    widget->height(10);
     EXPECT_EQ(widget->size(), Size(10,10));
-    widget->set_x(10);
-    widget->set_y(10);
+    widget->x(10);
+    widget->y(10);
     EXPECT_EQ(widget->point(), Point(10,10));
     widget->move_to_center(Point(10,10));
     EXPECT_EQ(widget->box(), Rect(5,5,10,10));
     EXPECT_EQ(widget->center(), Point(10,10));
-    widget->set_box(Rect(50,51,15,16));
+    widget->box(Rect(50,51,15,16));
     EXPECT_EQ(widget->box(), Rect(50,51,15,16));
     EXPECT_EQ(widget->width(), 15);
     EXPECT_EQ(widget->height(), 16);
@@ -265,15 +265,15 @@ TYPED_TEST(Widgets, Properties)
     widget->visible_toggle();
     EXPECT_EQ(widget->visible(), true);
     EXPECT_EQ(widget->readonly(), false);
-    widget->set_readonly(true);
+    widget->readonly(true);
     EXPECT_EQ(widget->readonly(), true);
-    widget->set_readonly(false);
+    widget->readonly(false);
     EXPECT_EQ(widget->readonly(), false);
-    widget->set_align(alignmask::right | alignmask::center);
-    EXPECT_EQ(widget->align(), alignmask::right | alignmask::center);
-    widget->set_padding(10);
-    widget->set_border(11);
-    widget->set_margin(12);
+    widget->align(AlignFlag::right | AlignFlag::center);
+    EXPECT_EQ(widget->align(), AlignFlag::right | AlignFlag::center);
+    widget->padding(10);
+    widget->border(11);
+    widget->margin(12);
     EXPECT_EQ(widget->moat(), 33U);
 }
 
