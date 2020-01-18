@@ -338,6 +338,22 @@ AX_PKG_CHECK_MODULES2(FONTCONFIG, [fontconfig], [], [], [AC_MSG_ERROR([
 LIBEGT_EXTRA_CXXFLAGS="${FONTCONFIG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
 LIBEGT_EXTRA_LDFLAGS="${FONTCONFIG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
+AC_ARG_WITH([plplot],
+    AS_HELP_STRING([--without-plplot], [Ignore presence of plplot and disable it]))
+AS_IF([test "x$with_plplpot" != "xno"],[
+AX_PKG_CHECK_MODULES2(PLPLOT, [plplot-c++], [], [have_plplot=yes], [have_plplot=no])
+if test "x${have_plplot}" = xno; then
+   AX_PKG_CHECK_MODULES2(PLPLOT, [plplotd-c++], [], [have_plplot=yes], [have_plplot=no])
+fi
+if test "x${have_plplot}" = xyes; then
+   AC_DEFINE(HAVE_PLPLOT, 1, [Have plplot support])
+   AC_SUBST(include_chart, ["#include <egt/chart.h>"])
+   LIBEGT_EXTRA_CXXFLAGS="${PLPLOT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${PLPLOT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+fi
+])
+AM_CONDITIONAL([HAVE_PLPLOT], [test "x${have_plplot}" = xyes])
+
 AC_ARG_WITH([libjpeg],
     AS_HELP_STRING([--without-libjpeg], [Ignore presence of libjpeg and disable it]))
 AS_IF([test "x$with_libjpeg" != "xno"],[
@@ -570,4 +586,5 @@ echo "  LUA Bindings           ${have_lua_bindings:-no}"
 echo "  C++17 Filesystem       ${have_libstdcppfs:-no}"
 echo "  ALSA Sound             ${have_alsa:-no}"
 echo "  sndfile                ${have_sndfile:-no}"
+echo "  plplot                 ${have_plplot:-no}"
 echo

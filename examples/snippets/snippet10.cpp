@@ -48,9 +48,9 @@ static vector<pair<EasingFunc, string>> easing_functions =
     {easing_cubic_bezier(), "cubic bezier"}
 };
 
-static LineChart::data_array create_data(EasingFunc easing)
+static LineChart::DataArray create_data(EasingFunc easing)
 {
-    LineChart::data_array data;
+    LineChart::DataArray data;
     for (float i = 0.; i <= 1.; i += .001)
         data.emplace_back(i, detail::interpolate(easing, i, 0.f, 100.f));
     return data;
@@ -70,7 +70,7 @@ int main(int argc, const char** argv)
     for (auto& e : easing_functions)
     {
         line.clear();
-        line.add_data(create_data(e.first), LineChart::chart_type::lines);
+        line.data(create_data(e.first));
 
         window.begin_draw();
         app.paint_to_file(detail::replace_all(e.second, " ", "_") + ".png");

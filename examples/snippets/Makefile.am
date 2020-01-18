@@ -21,7 +21,12 @@ CUSTOM_LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
 
 bin_PROGRAMS = snippets snippet0 snippet1 snippet2 \
 	snippet3 snippet4 snippet5 snippet6 snippet7 \
-	snippet8 snippet9 snippet10
+	snippet8 snippet9
+
+if HAVE_PLPLOT
+bin_PROGRAMS += \
+snippet10
+endif
 
 snippets_SOURCES = snippets.cpp
 nodist_snippets_SOURCES = $(BUILT_SOURCES)

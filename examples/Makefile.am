@@ -40,10 +40,8 @@ bin_PROGRAMS = \
 basic/basic \
 basicui/basicui \
 boards/boards \
-charts/charts \
 colors/colors \
 drag/drag \
-easing/easing \
 floating/floating \
 frames/frames \
 imagestack/imagestack \
@@ -84,6 +82,12 @@ endif
 if HAVE_ALSA
 bin_PROGRAMS += \
 drummachine/drummachine
+endif
+
+if HAVE_PLPLOT
+bin_PROGRAMS += \
+charts/charts \
+easing/easing
 endif
 
 calc_calc_SOURCES = calc/calc.cpp

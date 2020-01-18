@@ -49,19 +49,12 @@ static vector<pair<EasingFunc, string>> easing_functions =
     {easing_exponential_easeinout, "exponential easeinout"}
 };
 
-static LineChart::data_array create_data(EasingFunc easing)
-{
-    LineChart::data_array data;
-    for (float i = 0.; i <= 1.; i += .001)
-        data.emplace_back(i, detail::interpolate(easing, i, 0.f, 100.f));
-    return data;
-}
-
 class MainWindow : public TopWindow
 {
 public:
     MainWindow()
-        : m_animation(height() - 100, 0, std::chrono::seconds(2))
+        : m_animation(height() - 100, 0, std::chrono::seconds(2)),
+          m_line(std::make_shared<LineChart>(Rect(0, 0, width(), height())))
     {
         create_board();
 
@@ -81,8 +74,15 @@ public:
             m_animation.easing_func(easing_functions[list1->selected()].first);
             m_seq.start();
 
-            m_line.clear();
-            m_line.add_data(create_data(easing_functions[list1->selected()].first), LineChart::chart_type::lines);
+            LineChart::DataArray data;
+            for (float i = 0.; i <= 1.; i += .001)
+            {
+                data.push_back(make_pair(i, detail::interpolate(easing_functions[list1->selected()].first, i, 0.f, 100.f)));
+            }
+
+            m_line->data(data);
+            m_line->label("", "", easing_functions[list1->selected()].second);
+            m_line->show_ticks(true);
         });
 
         list1->selected(7);
@@ -119,9 +119,6 @@ private:
         add(m_board);
         m_board.show();
 
-        m_line.width(m_board.width() - SideBoard::HANDLE_WIDTH);
-        m_line.color(Palette::ColorId::bg, Palette::black);
-        m_line.color(Palette::ColorId::border, Palette::white);
         m_board.add(left(expand_vertical(m_line)));
     }
 
@@ -130,7 +127,7 @@ private:
     PropertyAnimator m_animation;
     AnimationDelay m_delay{std::chrono::seconds(1)};
     SideBoard m_board;
-    LineChart m_line;
+    std::shared_ptr<LineChart> m_line;
 };
 
 int main(int argc, const char** argv)

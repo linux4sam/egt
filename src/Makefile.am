@@ -41,7 +41,6 @@ app.cpp \
 button.cpp \
 buttongroup.cpp \
 canvas.cpp \
-chart.cpp \
 checkbox.cpp \
 color.cpp \
 combo.cpp \
@@ -142,7 +141,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/button.h \
 ../include/egt/buttongroup.h \
 ../include/egt/canvas.h \
-../include/egt/chart.h \
 ../include/egt/checkbox.h \
 ../include/egt/color.h \
 ../include/egt/combo.h \
@@ -347,6 +345,15 @@ sound.cpp
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/sound.h
+endif
+
+if HAVE_PLPLOT
+libegt_la_SOURCES += \
+chart.cpp \
+detail/charts/plplotimpl.cpp
+
+nobase_libegtinclude_HEADERS += \
+../include/egt/chart.h
 endif
 
 if OS_WIN32

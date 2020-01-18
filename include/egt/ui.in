@@ -16,7 +16,6 @@
 #include <egt/button.h>
 #include <egt/buttongroup.h>
 #include <egt/canvas.h>
-#include <egt/chart.h>
 #include <egt/checkbox.h>
 #include <egt/color.h>
 #include <egt/combo.h>
@@ -67,5 +66,6 @@
 @include_luaapp@
 @include_svg@
 @include_sound@
+@include_chart@
 
 #endif
