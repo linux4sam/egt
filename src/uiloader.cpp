@@ -3,6 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "egt/ui"
 #include "egt/uiloader.h"
 #include <rapidxml.hpp>
@@ -65,7 +69,6 @@ static const std::map<std::string, create_function> allocators =
     {"BoxSizer", create_widget<BoxSizer>},
     {"Button", create_widget<Button>},
     //{"ButtonGroup", create_widget<ButtonGroup>},
-    {"CameraWindow", create_widget<CameraWindow>},
     {"CheckBox", create_widget<CheckBox>},
     {"CheckButton", create_widget<CheckButton>},
     {"CircleWidget", create_widget<CircleWidget>},
@@ -101,7 +104,6 @@ static const std::map<std::string, create_function> allocators =
     {"ToggleBox", create_widget<ToggleBox>},
     {"TopWindow", create_widget<TopWindow>},
     {"VerticalBoxSizer", create_widget<VerticalBoxSizer>},
-    {"VideoWindow", create_widget<VideoWindow>},
     {"VirtualKeyboard", create_widget<VirtualKeyboard>},
     {"Window", create_widget<Window>},
     {"Form", create_widget<Form>},
@@ -114,16 +116,17 @@ static const std::map<std::string, create_function> allocators =
     //{"BarChart", create_widget<BarChart>},
     //{"HBarChart", create_widget<HBarChart>},
     //{"PointChart", create_widget<PointChart>},
-
-
+#ifdef HAVE_GSTREAMER
+    {"CameraWindow", create_widget<CameraWindow>},
+    {"VideoWindow", create_widget<VideoWindow>},
+#endif
     {"RadialType<int>", create_widget<RadialType<int>>},
-    {"egt::v1::experimental::RadialType<int>", create_widget<RadialType<int>>},
 
+    {"egt::v1::experimental::RadialType<int>", create_widget<RadialType<int>>},
     {"egt::v1::AnalogMeter", create_widget<AnalogMeter>},
     {"egt::v1::BoxSizer", create_widget<BoxSizer>},
     {"egt::v1::Button", create_widget<Button>},
     //{"egt::v1::ButtonGroup", create_widget<ButtonGroup>},
-    {"egt::v1::CameraWindow", create_widget<CameraWindow>},
     {"egt::v1::CheckBox", create_widget<CheckBox>},
     {"egt::v1::CheckButton", create_widget<CheckButton>},
     {"egt::v1::CircleWidget", create_widget<CircleWidget>},
@@ -159,7 +162,6 @@ static const std::map<std::string, create_function> allocators =
     {"egt::v1::ToggleBox", create_widget<ToggleBox>},
     {"egt::v1::TopWindow", create_widget<TopWindow>},
     {"egt::v1::VerticalBoxSizer", create_widget<VerticalBoxSizer>},
-    {"egt::v1::VideoWindow", create_widget<VideoWindow>},
     {"egt::v1::VirtualKeyboard", create_widget<VirtualKeyboard>},
     {"egt::v1::Window", create_widget<Window>},
     {"egt::v1::Form", create_widget<Form>},
@@ -172,6 +174,10 @@ static const std::map<std::string, create_function> allocators =
     //{"egt::v1::BarChart", create_widget<BarChart>},
     //{"egt::v1::HBarChart", create_widget<HBarChart>},
     //{"egt::v1::PointChart", create_widget<PointChart>},
+#ifdef HAVE_GSTREAMER
+    {"egt::v1::CameraWindow", create_widget<CameraWindow>},
+    {"egt::v1::VideoWindow", create_widget<VideoWindow>},
+#endif
 };
 
 static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
