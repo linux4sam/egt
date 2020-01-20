@@ -5,8 +5,6 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/utfcpp/source \
 	-isystem $(top_srcdir)/external/layout \
-	-isystem $(top_srcdir)/external/kplot \
-	-isystem $(top_builddir)/external/kplot \
 	-isystem $(top_srcdir)/external/spdlog/include
 
 CUSTOM_CXXFLAGS = -Woverloaded-virtual
@@ -124,7 +122,7 @@ images/jpeg/cairo_jpg.h
 endif
 
 libegt_la_LIBADD = $(CODE_COVERAGE_LDFLAGS)
-libegt_la_LIBADD += $(top_builddir)/external/libkplot.la $(top_builddir)/external/libspdlog.la
+libegt_la_LIBADD += $(top_builddir)/external/libspdlog.la
 if HAVE_SIMD
 libegt_la_LIBADD += $(top_builddir)/external/Simd/prj/cmake/libSimd.a
 endif
