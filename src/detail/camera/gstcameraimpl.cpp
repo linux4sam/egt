@@ -298,47 +298,7 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 void CameraImpl::get_camera_device_caps()
 {
-
-    GstDeviceMonitor* monitor = gst_device_monitor_new();
-
-    GstBus* bus = gst_device_monitor_get_bus(monitor);
-    gst_bus_add_watch(bus, &bus_callback, this);
-    gst_object_unref(bus);
-
-    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
-    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
-    gst_caps_unref(caps);
-
-    if (gst_device_monitor_start(monitor))
-    {
-        GList* devlist = gst_device_monitor_get_devices(monitor);
-        for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
-        {
-            auto device = static_cast<GstDevice*>(i->data);
-            if (device == nullptr)
-                continue;
-
-            // Probe all device properties and store them internally:
-            auto display_name = gst_device_get_display_name(device);
-            SPDLOG_DEBUG("In {} : display_name = {} \n", __func__, display_name);
-            g_free(display_name);
-
-            auto devString = gst_device_get_device_class(device);
-            SPDLOG_DEBUG("In {} : devString = {} \n", __func__, devString);
-            g_free(devString);
-
-            GstStructure* props = gst_device_get_properties(device);
-            if (props)
-            {
-                SPDLOG_DEBUG("In {} : Device Properties: \n {} \n", __func__, gst_structure_to_string(props));
-
-                m_devnode = gst_structure_get_string(props, "device.path");
-                SPDLOG_DEBUG("In {} : Using default Camera device = {} \n", __func__, m_devnode);
-                gst_structure_free(props);
-            }
-        }
-        g_list_free(devlist);
-    }
+    m_devnode = detail::get_camera_device_caps(&bus_callback, this);
 }
 
 bool CameraImpl::start()
@@ -462,6 +422,52 @@ CameraImpl::~CameraImpl()
         m_gmainThread.join();
         g_main_loop_unref(m_gmainLoop);
     }
+}
+
+std::string get_camera_device_caps(BusCallback bus_callback, void* instance)
+{
+    std::string devnode;
+
+    GstDeviceMonitor* monitor = gst_device_monitor_new();
+
+    GstBus* bus = gst_device_monitor_get_bus(monitor);
+    gst_bus_add_watch(bus, bus_callback, instance);
+    gst_object_unref(bus);
+
+    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
+    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
+    gst_caps_unref(caps);
+
+    if (gst_device_monitor_start(monitor))
+    {
+        GList* devlist = gst_device_monitor_get_devices(monitor);
+        for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
+        {
+            auto device = static_cast<GstDevice*>(i->data);
+            if (device == nullptr)
+                continue;
+
+            // Probe all device properties and store them internally:
+            GstStringHandle display_name{gst_device_get_display_name(device)};
+            SPDLOG_DEBUG("display_name = {} \n", display_name.get());
+
+            GstStringHandle dev_string{gst_device_get_device_class(device)};
+            SPDLOG_DEBUG("dev_string = {} \n", dev_string.get());
+
+            GstStructure* props = gst_device_get_properties(device);
+            if (props)
+            {
+                SPDLOG_DEBUG("device properties: \n {} \n", gst_structure_to_string(props));
+
+                devnode = gst_structure_get_string(props, "device.path");
+                SPDLOG_DEBUG("using default camera device = {} \n", devnode);
+                gst_structure_free(props);
+            }
+        }
+        g_list_free(devlist);
+    }
+
+    return devnode;
 }
 
 }

@@ -55,6 +55,10 @@ protected:
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 };
 
+using BusCallback = gboolean(*)(GstBus* bus, GstMessage* message, gpointer data);
+
+std::string get_camera_device_caps(BusCallback bus_callback, void* instance);
+
 } //End of detail
 
 } //End of v1

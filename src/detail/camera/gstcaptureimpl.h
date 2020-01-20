@@ -56,6 +56,7 @@ protected:
     std::condition_variable m_condition;
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
+    void get_camera_device_caps();
 };
 
 }

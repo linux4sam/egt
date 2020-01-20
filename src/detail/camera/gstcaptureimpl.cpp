@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/camera/gstcameraimpl.h"
 #include "detail/camera/gstcaptureimpl.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
@@ -159,6 +160,46 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         impl->m_condition.notify_one();
         break;
     }
+    case GST_MESSAGE_DEVICE_ADDED:
+    {
+        GstDevice* device;
+        gst_message_parse_device_added(message, &device);
+        gchar* name = gst_device_get_display_name(device);
+        SPDLOG_DEBUG("Device added: {} \n", name);
+        g_free(name);
+        gst_object_unref(device);
+
+        asio::post(Application::instance().event().io(), [impl]()
+        {
+            if (impl->start())
+            {
+                impl->m_err_message = "";
+                impl->m_interface.on_error.invoke();
+            }
+        });
+
+        break;
+    }
+    case GST_MESSAGE_DEVICE_REMOVED:
+    {
+        GstDevice* device;
+        gst_message_parse_device_removed(message, &device);
+        gchar* name = gst_device_get_display_name(device);
+        SPDLOG_DEBUG("Device removed: {} \n", name);
+        g_free(name);
+        gst_object_unref(device);
+
+        impl->m_condition.notify_one();
+
+        impl->stop();
+
+        asio::post(Application::instance().event().io(), [impl, name]()
+        {
+            impl->m_err_message = std::string(name) + " Device removed";
+            impl->m_interface.on_error.invoke();
+        });
+        break;
+    }
     default:
         break;
     }
@@ -179,9 +220,16 @@ void CaptureImpl::set_output(const std::string& output,
     m_container = container;
 }
 
+void CaptureImpl::get_camera_device_caps()
+{
+    m_devnode = detail::get_camera_device_caps(&bus_callback, this);
+}
+
 bool CaptureImpl::start()
 {
     std::string pipe;
+
+    get_camera_device_caps();
 
     switch (m_container)
     {

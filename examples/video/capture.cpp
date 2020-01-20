@@ -33,5 +33,12 @@ int main(int argc, const char** argv)
         stop_timer.start();
     }
 
+    capture.on_error([&capture, &app]()
+    {
+        cout << " Error:  " << capture.error_message() << endl;
+        capture.stop();
+        app.quit();
+    });
+
     return app.run();
 }
