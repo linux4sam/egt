@@ -230,7 +230,7 @@ int main(int argc, const char** argv)
 
     player.on_error([&player, &errlabel]()
     {
-        errlabel.text(line_break("Error: " + player.error_message()));
+        errlabel.text(line_break(player.error_message()));
     });
 
     player.on_event([&player, &win, vscale, size](Event & event)
