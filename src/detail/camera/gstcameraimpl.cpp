@@ -58,7 +58,7 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
      */
     if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
     {
-        SPDLOG_DEBUG(" Manually loading gstreamer plugins");
+        SPDLOG_DEBUG("manually loading gstreamer plugins");
         auto plugins =
         {
             "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
@@ -111,10 +111,9 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
                          error->message,
                          debug ? debug.get() : "");
 
-            std::string error_message = error->message;
-            asio::post(Application::instance().event().io(), [impl, error_message]()
+            asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
             {
-                impl->m_err_message = error_message;
+                impl->m_err_message = error->message;
                 impl->m_interface.on_error.invoke();
             });
         }
@@ -150,9 +149,8 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         GstDevice* device;
         gst_message_parse_device_added(message, &device);
-        gchar* name = gst_device_get_display_name(device);
-        SPDLOG_DEBUG("Device added: {} \n", name);
-        g_free(name);
+        GstStringHandle name{gst_device_get_display_name(device)};
+        SPDLOG_DEBUG("device added: {}", name.get());
         gst_object_unref(device);
 
         asio::post(Application::instance().event().io(), [impl]()
@@ -170,24 +168,20 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         GstDevice* device;
         gst_message_parse_device_removed(message, &device);
-        gchar* name = gst_device_get_display_name(device);
-        SPDLOG_DEBUG("Device removed: {} \n", name);
-        g_free(name);
+        GstStringHandle name{gst_device_get_display_name(device)};
+        SPDLOG_DEBUG("device removed: {}", name.get());
         gst_object_unref(device);
 
-        asio::post(Application::instance().event().io(), [impl, name]()
+        asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
         {
-            impl->m_err_message = std::string(name) + " Device removed";
+            impl->m_err_message = "device removed: " + std::string(name.get());
             impl->m_interface.on_error.invoke();
         });
         impl->stop();
         break;
     }
     default:
-    {
-        SPDLOG_DEBUG("default Message {}", std::to_string(GST_MESSAGE_TYPE(message)));
         break;
-    }
     }
 
     /* we want to be notified again if there is a message on the bus, so
@@ -449,18 +443,18 @@ std::string get_camera_device_caps(BusCallback bus_callback, void* instance)
 
             // Probe all device properties and store them internally:
             GstStringHandle display_name{gst_device_get_display_name(device)};
-            SPDLOG_DEBUG("display_name = {} \n", display_name.get());
+            SPDLOG_DEBUG("display_name = {}", display_name.get());
 
             GstStringHandle dev_string{gst_device_get_device_class(device)};
-            SPDLOG_DEBUG("dev_string = {} \n", dev_string.get());
+            SPDLOG_DEBUG("dev_string = {}", dev_string.get());
 
             GstStructure* props = gst_device_get_properties(device);
             if (props)
             {
-                SPDLOG_DEBUG("device properties: \n {} \n", gst_structure_to_string(props));
+                SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
 
                 devnode = gst_structure_get_string(props, "device.path");
-                SPDLOG_DEBUG("using default camera device = {} \n", devnode);
+                SPDLOG_DEBUG("using default camera device = {}", devnode);
                 gst_structure_free(props);
             }
         }

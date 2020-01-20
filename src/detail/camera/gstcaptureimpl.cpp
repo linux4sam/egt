@@ -63,7 +63,7 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
      */
     if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
     {
-        SPDLOG_DEBUG(" Manually loading gstreamer plugins");
+        SPDLOG_DEBUG("manually loading gstreamer plugins");
 
         auto plugins =
         {
@@ -120,10 +120,9 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
                          error->message,
                          debug ? debug.get() : "");
 
-            std::string error_message = error->message;
-            asio::post(Application::instance().event().io(), [impl, error_message]()
+            asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
             {
-                impl->m_err_message = error_message;
+                impl->m_err_message = error->message;
                 impl->m_interface.on_error.invoke();
             });
         }
@@ -164,9 +163,8 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         GstDevice* device;
         gst_message_parse_device_added(message, &device);
-        gchar* name = gst_device_get_display_name(device);
-        SPDLOG_DEBUG("Device added: {} \n", name);
-        g_free(name);
+        GstStringHandle name{gst_device_get_display_name(device)};
+        SPDLOG_DEBUG("device added: {}", name.get());
         gst_object_unref(device);
 
         asio::post(Application::instance().event().io(), [impl]()
@@ -184,18 +182,17 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         GstDevice* device;
         gst_message_parse_device_removed(message, &device);
-        gchar* name = gst_device_get_display_name(device);
-        SPDLOG_DEBUG("Device removed: {} \n", name);
-        g_free(name);
+        GstStringHandle name{gst_device_get_display_name(device)};
+        SPDLOG_DEBUG("device removed: {}", name.get());
         gst_object_unref(device);
 
         impl->m_condition.notify_one();
 
         impl->stop();
 
-        asio::post(Application::instance().event().io(), [impl, name]()
+        asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
         {
-            impl->m_err_message = std::string(name) + " Device removed";
+            impl->m_err_message = "device removed: " + std::string(name.get());
             impl->m_interface.on_error.invoke();
         });
         break;

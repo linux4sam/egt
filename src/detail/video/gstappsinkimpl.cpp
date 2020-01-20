@@ -36,7 +36,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
      */
     if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
     {
-        SPDLOG_DEBUG(" Manually loading gstreamer plugins");
+        SPDLOG_DEBUG("manually loading gstreamer plugins");
         auto plugins =
         {
             "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
