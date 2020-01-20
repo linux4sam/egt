@@ -103,6 +103,7 @@ tools.cpp \
 types.cpp \
 uiloader.cpp \
 utils.cpp \
+script.cpp \
 view.cpp \
 virtualkeyboard.cpp \
 widget.cpp \
@@ -111,8 +112,8 @@ window.cpp
 
 if HAVE_LUA
 libegt_la_SOURCES += \
-lua/script.c \
-lua/script.h
+detail/lua/script.c \
+detail/lua/script.h
 endif
 
 if HAVE_LIBJPEG
@@ -205,6 +206,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/types.h \
 ../include/egt/uiloader.h \
 ../include/egt/utils.h \
+../include/egt/script.h \
 ../include/egt/value.h \
 ../include/egt/valuewidget.h \
 ../include/egt/view.h \

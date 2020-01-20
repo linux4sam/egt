@@ -41,6 +41,7 @@
 #include <egt/radial.h>
 #include <egt/radiobox.h>
 #include <egt/respath.h>
+#include <egt/script.h>
 #include <egt/scrollwheel.h>
 #include <egt/shapes.h>
 #include <egt/sideboard.h>

@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_LUA_SCRIPT_H
-#define EGT_LUA_SCRIPT_H
+#ifndef EGT_DETAIL_LUA_SCRIPT_H
+#define EGT_DETAIL_LUA_SCRIPT_H
 
 #include <lua.h>
 #include <lualib.h>
