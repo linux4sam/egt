@@ -16,6 +16,7 @@
 #include "egt/painter.h"
 #include "egt/respath.h"
 #include "egt/timer.h"
+#include "egt/utils.h"
 #include "egt/version.h"
 #include "egt/window.h"
 #include <clocale>
@@ -88,7 +89,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         spdlog::set_pattern("%E.%e [%^%l%$] %@ %v");
     });
 
-    spdlog::info("EGT Version {}", EGT_VERSION);
+    spdlog::info("EGT Version {}", egt_version());
 
 #ifdef HAVE_SIMD
     auto info = SimdCpuInfo();
