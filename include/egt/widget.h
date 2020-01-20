@@ -208,7 +208,7 @@ public:
      * EventLoop will call this function with an already established
      * Painter when the Widget needs to be drawn.
      *
-     * @see @subpage colors and @subpage draw
+     * @see @ref colors and @ref draw
      *
      * @param[in] painter Instance of the Painter for the Screen.
      * @param[in] rect The rectangle to draw.
@@ -220,17 +220,17 @@ public:
      * Handle an event.
      *
      * This handles global events that usually do not originate at the widget.
-     * For example, a pointer event.
+     * For example, a pointer event.  All events are defined by egt::EventId.
      *
      * The default implementation in the Widget class, will dispatch the
-     * event to any third party handlers that have been registered. What
-     * this means is if you expect other handlers to receive the events
-     * then this must be called from derived classes.  Or, manually call
-     * Widget::invoke_handlers().
+     * event to any third party handlers that have been registered with
+     * on_event(). What this means is if you expect other handlers to receive
+     * the events then this must be called from derived classes. Or, manually
+     * call invoke_handlers().
      *
      * Override this function in a derived class to handle events.
      *
-     * @see @subpage events
+     * @see @ref events
      *
      * @param event The Event that occurred.
      */
@@ -252,21 +252,21 @@ public:
      * There is no automatic undo for this operation.  Each call to this function
      * uses the current size of the Widget.
      *
-     * @param[in] hratio Horizontal ratio of width().
-     * @param[in] vratio Vertical ratio of height().
+     * @param[in] hratio Horizontal ratio of width(), with 100 being 100%.
+     * @param[in] vratio Vertical ratio of height(), with 100 being 100%.
      *
-     * @see Widget::resize()
+     * @see resize()
      */
-    virtual void resize_by_ratio(int hratio, int vratio);
+    virtual void resize_by_ratio(default_dim_type hratio, default_dim_type vratio);
 
     /**
      * Scale the current size of the Widget given the ratio.
      *
-     * @param[in] ratio Horizontal and vertical ratio of size().
+     * @param[in] ratio Horizontal and vertical ratio of size(), with 100 being 100%.
      *
-     * @see Widget::resize()
+     * @see resize()
      */
-    inline void resize_by_ratio(int ratio)
+    inline void resize_by_ratio(default_dim_type ratio)
     {
         resize_by_ratio(ratio, ratio);
     }
@@ -311,7 +311,7 @@ public:
     /**
      * Move the Widget to a new position.
      *
-     * Changes the x and y position of the Widget.
+     * Changes the X and Y position of the Widget.
      *
      * @param[in] point The new origin point for the widget relative to its parent.
      * @note This will cause a redraw of the Widget.
@@ -319,14 +319,14 @@ public:
     virtual void move(const Point& point);
 
     /**
-     * Set the x coordinate of the box.
+     * Set the X coordinate of the box.
      *
      * @param[in] x The new origin X value for the widget relative to its parent.
      */
     inline void x(default_dim_type x) { move(Point(x, y())); }
 
     /**
-     * Set the y coordinate of the box.
+     * Set the Y coordinate of the box.
      *
      * @param[in] y The new origin Y value for the widget relative to its parent.
      */
@@ -335,7 +335,7 @@ public:
     /**
      * Move the widget to the specified center point.
      *
-     * Changes the x and y position of the widget relative to the center point.
+     * Changes the X and Y position of the widget relative to the center point.
      *
      * @note This will cause a redraw of the widget.
      */
@@ -344,7 +344,7 @@ public:
     /**
      * Move the widget to the center of its parent.
      *
-     * Changes the x and y position of the widget relative to the center point
+     * Changes the X and Y position of the widget relative to the center point
      * of its parent.
      *
      * @note This will cause a redraw of the widget.
@@ -352,31 +352,25 @@ public:
     virtual void move_to_center();
 
     /**
-     * Change the box.
-     *
-     * This is the same as calling Widget::move() and Widget::resize() at the
-     * same time.
-     */
-    virtual void box(const Rect& rect);
-
-    /**
      * Hide the Widget.
      *
      * A widget that is not visible will receive no draw() calls.
      *
-     * @note This changes the visible() property of the Widget.
+     * This changes the visible() state of the Widget.
      */
     virtual void hide();
 
     /**
      * Show the Widget.
      *
-     * @note This changes the visible() property of the Widget.
+     * This changes the visible() state of the Widget.
      */
     virtual void show();
 
     /**
-     * Return true if the widget is visible.
+     * Get the visible state of the widget.
+     *
+     * @return true if the widget is visible.
      */
     inline bool visible() const
     {
@@ -384,15 +378,14 @@ public:
     }
 
     /**
-     * Set the visible property.
+     * Set the visible state.
      */
     virtual void visible(bool value);
 
     /**
      * Toggle the visibility state.
      *
-     * @see Widget::show()
-     * @see Widget::hide()
+     * @see show() and hide() and visible()
      */
     inline void visible_toggle()
     {
@@ -403,21 +396,23 @@ public:
     }
 
     /**
-     * Return true if the widget is active.
+     * Get the active state.
      *
      * The meaning of active is largely up to the derived implementation.
      */
     virtual bool active() const;
 
     /**
-     * Set the active property.
+     * Set the active state.
      *
      * The meaning of active is largely up to the derived implementation.
      */
     virtual void active(bool value);
 
     /**
-     * Return true if the widget is readonly.
+     * Get the readonly state of the widget.
+     *
+     * @return true if the widget is readonly.
      */
     inline bool readonly() const
     {
@@ -425,10 +420,11 @@ public:
     }
 
     /**
-     * Set the readonly property of the widget.
+     * Set the readonly state of the widget.
      *
      * When a widget is readonly, it typically works as normal, except it does
-     * not accept any user input.
+     * not accept any user input.  Depending on the widget, the color scheme may
+     * change.
      *
      * @param value Readonly when true.
      */
@@ -436,6 +432,8 @@ public:
 
     /**
      * Toggle the readonly state.
+     *
+     * @see readonly()
      */
     inline void readonly_toggle()
     {
@@ -455,8 +453,8 @@ public:
     /**
      * Return the disabled state of the widget.
      *
-     * When a widget is disabled, it does not receive events. Also, the
-     * color scheme may change when a widget is disabled.
+     * When a widget is disabled, it does not receive events. Depending on the
+     * widget, the color scheme may change.
      */
     inline bool disabled() const
     {
@@ -465,6 +463,8 @@ public:
 
     /**
      * Toggle the disabled state.
+     *
+     * @see disable() and enable()
      */
     inline void disable_toggle()
     {
@@ -479,8 +479,7 @@ public:
      *
      * @param[in] value When true, the Widget is disabled.
      *
-     * @see Widget::enable()
-     * @see Widget::disable()
+     * @see enable() and disable()
      */
     inline void disabled(bool value)
     {
@@ -491,7 +490,9 @@ public:
     }
 
     /**
-     * Return true if the widget is visible.
+     * Get the alpha property.
+     *
+     * @return Alpha property in the range 0.0 to 1.0.
      */
     inline float alpha() const
     {
@@ -500,6 +501,9 @@ public:
 
     /**
      * Set the alpha property.
+     *
+     * This controls the alpha property of the entire widget and all of its
+     * children.
      *
      * @param[in] alpha Widget alpha component in range 0.0 - 1.0.
      */
@@ -530,6 +534,11 @@ public:
 
     /**
      * Bounding box for the Widget.
+     *
+     * This is the rectangle that defines where this widget is positioned
+     * relative to its parent and also the size of the widget.
+     *
+     * @see @ref layout_box
      */
     inline const Rect& box() const
     {
@@ -537,9 +546,17 @@ public:
     }
 
     /**
-     * Get the size.
+     * Change the bounding box of the widget.
      *
-     * @see Widget::box()
+     * This is the same as calling move() and resize() at the
+     * same time.
+     *
+     * @see @ref layout_box
+     */
+    virtual void box(const Rect& rect);
+
+    /**
+     * Get the size of the widget's box().
      */
     inline const Size& size() const
     {
@@ -547,9 +564,7 @@ public:
     }
 
     /**
-     * Get the origin point.
-     *
-     * @see Widget::box()
+     * Get the origin of the widget's box().
      */
     inline const Point& point() const
     {
@@ -557,32 +572,32 @@ public:
     }
 
     /**
-     * Width of the widget.
+     * Width of the widget's box().
      */
     inline default_dim_type width() const { return m_box.width(); }
 
     /**
-     * Height of the widget.
+     * Height of the widget's box().
      */
     inline default_dim_type height() const { return m_box.height(); }
 
     /**
-     * X coordinate of the widget origin.
+     * X coordinate of the widget's box().
      */
     inline default_dim_type x() const { return m_box.x(); }
 
     /**
-     * Y coordinate of the widget origin.
+     * Y coordinate of the widget's box().
      */
     inline default_dim_type y() const { return m_box.y(); }
 
     /**
-     * Get the center point.
+     * Get the center point of the widget's box().
      */
     inline Point center() const { return box().center(); }
 
     /**
-     * Set the widget Color Palette.
+     * Set the widget instance Palette.
      *
      * This will replace any Palette instance currently owned by the Widget.
      * This does not have to be a complete Palette, in which case the widget
@@ -595,7 +610,10 @@ public:
     virtual void palette(const Palette& palette);
 
     /**
-     * Reset the widget's palette to a default state.
+     * Clear the widget instance palette.
+     *
+     * This will clear the widget instance's palette.  Meaning, for all colors
+     * the widget will now use default_palette().
      */
     virtual void reset_palette();
 
@@ -606,6 +624,9 @@ public:
      * state of the Widget when the call is made.  To get a specific
      * Palette::GroupId color, use the overloaded function.
      *
+     * If the id and group exist in the widget instance palette, that will be
+     * used.  Otherwise, the default_palette() will be used.
+     *
      * @param id Palette::ColorId to get.
      */
     Palette::pattern_type color(Palette::ColorId id) const;
@@ -613,13 +634,19 @@ public:
     /**
      * Get a Widget color.
      *
+     * If the id and group exist in the widget instance palette, that will be
+     * used.  Otherwise, the default_palette() will be used.
+     *
      * @param id Palette::ColorId to get.
      * @param group Palette::GroupId to get.
      */
     Palette::pattern_type color(Palette::ColorId id, Palette::GroupId group) const;
 
     /**
-     * Set a Widget color.
+     * Add a color to the widget's instance palette.
+     *
+     * This will add the specified id, color, and group to the widget's instance
+     * palette.
      *
      * @param id Palette::ColorId to set.
      * @param color Color to set.
@@ -681,7 +708,9 @@ public:
     inline AlignFlags& align() { return m_align; }
 
     /**
-     * Set the alignment padding.
+     * Set the padding width.
+     *
+     * @see @ref layout_box
      */
     inline void padding(default_dim_type padding)
     {
@@ -693,12 +722,16 @@ public:
     }
 
     /**
-     * Return the alignment padding.
+     * Return the padding width.
+     *
+     * @see @ref layout_box
      */
     inline default_dim_type padding() const { return m_padding; }
 
     /**
-     * Set the margin.
+     * Set the margin width.
+     *
+     * @see @ref layout_box
      */
     inline void margin(default_dim_type margin)
     {
@@ -710,12 +743,18 @@ public:
     }
 
     /**
-     * Get the margin.
+     * Get the margin width.
+     *
+     * @see @ref layout_box
      */
     inline default_dim_type margin() const { return m_margin; }
 
     /**
-     * Set the border.
+     * Set the border width.
+     *
+     * In order for the border to be shown, the boxtype() must not be empty.
+     *
+     * @see @ref layout_box
      */
     inline void border(default_dim_type border)
     {
@@ -727,14 +766,18 @@ public:
     }
 
     /**
-     * Get the border.
+     * Get the border width.
+     *
+     * @see @ref layout_box
      */
     inline default_dim_type border() const { return m_border; }
 
     /**
-     * Set the horizontal and vertical ratio.
+     * Set the size ratio relative to parent.
      *
-     * @note This is the same as calling Widget::ratio(ratio, ratio).
+     * @param[in] ratio Horizontal and vertical ratio parent size, with 100 being 100%.
+     *
+     * @note This is the same as calling ratio(ratio, ratio).
      */
     inline void ratio(default_dim_type ratio)
     {
@@ -742,7 +785,10 @@ public:
     }
 
     /**
-     * Set the ratio.
+     * Set the size ratio relative to parent.
+     *
+     * @param[in] horizontal Horizontal ratio of parent width, with 100 being 100%.
+     * @param[in] vertical Vertical ratio of parent height, with 100 being 100%.
      */
     inline void ratio(default_dim_type horizontal,
                       default_dim_type vertical)
@@ -754,7 +800,9 @@ public:
     }
 
     /**
-     * Set the vertical ratio.
+     * Set the vertical ratio relative to parent.
+     *
+     * @param[in] vertical Vertical ratio of parent height, with 100 being 100%.
      */
     inline void vertical_ratio(default_dim_type vertical)
     {
@@ -763,12 +811,14 @@ public:
     }
 
     /**
-     * Get the vertical ratio.
+     * Get the vertical ratio relative to parent.
      */
     inline default_dim_type vertical_ratio() const { return m_vertical_ratio; }
 
     /**
-     * Set the horizontal ratio.
+     * Set the horizontal ratio relative to parent.
+     *
+     * @param[in] horizontal Horizontal ratio of parent width, with 100 being 100%.
      */
     inline void horizontal_ratio(default_dim_type horizontal)
     {
@@ -777,12 +827,14 @@ public:
     }
 
     /**
-     * Get the horizontal ratio.
+     * Get the horizontal ratio relative to parent.
      */
     inline default_dim_type horizontal_ratio() const { return m_horizontal_ratio; }
 
     /**
-     * Set the Y ratio.
+     * Set the Y position ratio relative to parent.
+     *
+     * @param[in] yratio Y ratio of parent height, with 100 being 100%.
      */
     inline void yratio(default_dim_type yratio)
     {
@@ -791,12 +843,14 @@ public:
     }
 
     /**
-     * Get the Y ratio.
+     * Get the Y position ratio relative to parent.
      */
     inline default_dim_type yratio() const { return m_yratio; }
 
     /**
-     * Set the X ratio.
+     * Set the X position ratio relative to parent.
+     *
+     * @param[in] xratio X ratio of parent width, with 100 being 100%.
      */
     inline void xratio(default_dim_type xratio)
     {
@@ -805,7 +859,7 @@ public:
     }
 
     /**
-     * Get the X ratio.
+     * Get the X position ratio relative to parent.
      */
     inline default_dim_type xratio() const { return m_xratio; }
 
@@ -813,7 +867,7 @@ public:
      * Get a minimum size hint for the Widget.
      *
      * This is used by sizers to pick minimum and default dimensions when no
-     * other force is used.
+     * other @b force is used.
      */
     virtual Size min_size_hint() const;
 
@@ -833,7 +887,7 @@ public:
     }
 
     /**
-     * Paint the Widget using Painter.
+     * Paint the Widget using a Painter.
      *
      * paint() is not part of the normal draw path.  This is a utility
      * function to get the widget to draw its contents to another
@@ -858,7 +912,7 @@ public:
     virtual void dump(std::ostream& out, int level = 0);
 
     /**
-     * Callback definition used by Widget::walk().
+     * Callback definition used by walk().
      */
     using WalkCallback = std::function<bool(Widget* widget, int level)>;
 
@@ -866,29 +920,30 @@ public:
      * Walk the Widget tree and call @b callback with each Widget.
      *
      * @param callback Function to call for each widget.
-     * @param level The current level of the widget hierarchy.
+     * @param level The current level of the widget hierarchy starting with the
+     *              level originally passed in.
      */
     virtual void walk(WalkCallback callback, int level = 0);
 
     /**
      * Get the current focus state.
      *
-     * @return True if in focus.
+     * @return true if in focus.
      */
     virtual bool focus() const { return m_focus; }
 
     /**
-     * Set the Widget's theme to a new theme.
-     */
-    void theme(const Theme& theme);
-
-    /**
-     * Reset the Widget's Theme to the default Theme.
-     */
-    void reset_theme();
-
-    /**
      * Set the boxtype.
+     *
+     * The boxtype of a widget is used to set predefined ways a widget is drawn.
+     * This provides a level of customization that is primarily for performance
+     * optimizations.
+     *
+     * Setting a boxtype of empty means that no background will be drawn and no
+     * border will be drawn no matter what the border width or background color
+     * of the widget is.
+     *
+     * @see Theme::BoxFlag
      */
     inline void boxtype(const Theme::BoxFlags& type)
     {
@@ -898,12 +953,19 @@ public:
 
     /**
      * Get the boxtype.
+     *
+     * @see Theme::BoxFlag
      */
     inline const Theme::BoxFlags& boxtype() const
     {
         return m_boxtype;
     }
 
+    /**
+     * Get a modifiable boxtype.
+     *
+     * @see Theme::BoxFlag
+     */
     inline Theme::BoxFlags& boxtype()
     {
         return m_boxtype;
@@ -912,42 +974,80 @@ public:
     /**
      * Get the Widget Theme.
      *
-     * If a custom theme was set for the instance, it will be returned.
-     * Otherwise, if this widget has a parent it will return the first parent in
-     * the widget hierarchy that has a theme.  If no theme is found, the default
-     * global theme will be returned.
+     * If a custom Theme was set for the instance, it will be returned.
+     * Otherwise, if this widget has a parent it will walk up the tree looking
+     * for a widget that has a Theme set.  If no widget is found with a theme,
+     * the global_theme() will be returned.
+     *
+     * What this means is themes are inherited from widget parents.  For
+     * example, if you set a custom theme on a egt::TopWindow, all of its
+     * children will inherit and use the theme by default.
+     *
+     * @see @ref colors_themes
      */
     const Theme& theme() const;
 
     /**
+     * Set the Widget's theme to a new theme.
+     *
+     * @see @ref colors_themes
+     */
+    void theme(const Theme& theme);
+
+    /**
+     * Reset the Widget's Theme to the default Theme.
+     *
+     * This is the inverse of setting a custom theme for this widget instance
+     * with theme().
+     *
+     * @see @ref colors_themes
+     */
+    void reset_theme();
+
+
+    /**
      * Move this widgets zorder down relative to other widgets with the same
      * parent.
+     *
+     * @see @ref layout_zorder
      */
     virtual void zorder_down();
 
     /**
      * Move this widgets zorder up relative to other widgets with the same
      * parent.
+     *
+     * @see @ref layout_zorder
      */
     virtual void zorder_up();
 
     /**
      * Move the widget to the bottom.
+     *
+     * @see @ref layout_zorder
      */
     virtual void zorder_bottom();
 
     /**
      * Move the widget to the top.
+     *
+     * @see @ref layout_zorder
      */
     virtual void zorder_top();
 
     /**
      * Get the zorder of the widget.
+     *
+     * @see @ref layout_zorder
      */
     virtual size_t zorder() const;
 
     /**
      * Detach this widget from its parent.
+     *
+     * @warning This can result in immediately deleting the instance of the
+     * widget if its lifetime is managed by a smart pointer and there are no
+     * more references.
      */
     void detach();
 
@@ -957,7 +1057,9 @@ public:
     Point to_parent(const Point& r) const;
 
     /**
-     * @see Widget::to_parent().
+     * Convert a point in a rect a local origin to a parent origin.
+     *
+     * @see to_parent().
      */
     inline Rect to_parent(const Rect& r) const
     {
@@ -970,8 +1072,8 @@ public:
     virtual DisplayPoint display_origin();
 
     /**
-     * Get the sum of the margin, padding, and border around the content of the
-     * widget.
+     * Get the sum of the margin(), padding(), and border() around the content
+     * of the widget.
      */
     virtual size_t moat() const;
 
@@ -982,11 +1084,17 @@ public:
      * margin + padding + border.  However, some widgets reserve more for
      * themselves, and only allow their children to be positioned in the
      * rest.
+     *
+     * @see @ref layout_box
      */
     virtual Rect content_area() const;
 
     /**
      * Perform layout of the Widget.
+     *
+     * This will cause the widget to layout itself and any of its children.
+     * This can mean, for example, the widget will resize() itself to respect
+     * its min_size_hint().
      */
     virtual void layout();
 
@@ -997,6 +1105,10 @@ public:
     void draw_box(Painter& painter, Palette::ColorId bg,
                   Palette::ColorId border) const;
 
+    /**
+     * Helper function to draw this widget's cicle using the appropriate
+     * theme.
+     */
     void draw_circle(Painter& painter, Palette::ColorId bg,
                      Palette::ColorId border) const;
 
@@ -1005,6 +1117,8 @@ public:
      *
      * A display point has origin in the top left of the display. A local point
      * has its origin at the top left of the position of this widget.
+     *
+     * @see @ref geometry_coord
      */
     virtual DisplayPoint local_to_display(const Point& p);
 
@@ -1013,11 +1127,16 @@ public:
      *
      * A display point has origin in the top left of the display. A local point
      * has its origin at the top left of the position of this widget.
+     *
+     * @see @ref geometry_coord
      */
     virtual Point display_to_local(const DisplayPoint& p);
 
     /**
      * Get the widget Font.
+     *
+     * This will return any font set on the widget instance, or default to the
+     * widget Theme font.
      */
     const Font& font() const
     {
@@ -1030,7 +1149,8 @@ public:
     /**
      * Set the widget Font.
      *
-     * @note This will overwrite the entire widget Font.
+     * Sets the widget font which means the widget instance will no longer use
+     * its Theme font.
      */
     void font(const Font& font)
     {
@@ -1044,7 +1164,9 @@ public:
     }
 
     /**
-     * Return the boolean checked state of the a widget.
+     * Get the boolean checked state of the a widget.
+     *
+     * @return true if checked.
      */
     inline bool checked() const
     {
@@ -1052,13 +1174,30 @@ public:
     }
 
     /**
-     * Set checked state of the widget.
+     * Set the checked state of the widget.
      */
     virtual void checked(bool value);
 
-    inline std::string type() const
+    /**
+     * Returns a string representation of the type of this widget.
+     */
+    virtual std::string type() const
     {
         return detail::demangle(typeid(*this).name());
+    }
+
+    using WidgetId = uint64_t;
+
+    /**
+     * Get the unique id of the widget.
+     *
+     * Every widget allocated is given a unique id.  This is used internally to
+     * create a default name() of the widget, but can also be used to uniquely
+     * identify widgets for other purposes.
+     */
+    inline WidgetId widgetid() const
+    {
+        return m_widgetid;
     }
 
     /**
@@ -1088,6 +1227,10 @@ protected:
 
     /**
      * Get a reference to the default palette.
+     *
+     * This returns the palette of the theme assigned to the widget.
+     *
+     * This is the same as calling theme().palette().
      */
     virtual const Palette& default_palette() const;
 
@@ -1115,7 +1258,7 @@ protected:
     /**
      * Unique ID of this widget.
      */
-    int m_widgetid{0};
+    WidgetId m_widgetid{0};
 
     /**
      * Call our parent to do a layout.

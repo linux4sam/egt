@@ -27,7 +27,7 @@ namespace egt
 inline namespace v1
 {
 
-static auto global_widget_id = 0;
+static Widget::WidgetId global_widget_id{0};
 
 Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
     : m_box(rect),
@@ -116,7 +116,7 @@ void Widget::resize(const Size& size)
     }
 }
 
-void Widget::resize_by_ratio(int hratio, int vratio)
+void Widget::resize_by_ratio(default_dim_type hratio, default_dim_type vratio)
 {
     Size size(static_cast<float>(width()) * (static_cast<float>(hratio) / 100.),
               static_cast<float>(height()) * (static_cast<float>(vratio) / 100.));

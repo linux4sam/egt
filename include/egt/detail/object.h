@@ -65,7 +65,7 @@ public:
     /**
      * Handle type.
      */
-    using RegisterHandle = uint32_t;
+    using RegisterHandle = uint64_t;
 
     /**
      * Add an event handler to be called when the widget generates an event.
