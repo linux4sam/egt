@@ -51,8 +51,6 @@
 #include "Simd/SimdLib.hpp"
 #endif
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -121,7 +119,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     // any added search paths take priority
     if (getenv("EGT_SEARCH_PATH"))
     {
-        vector<string> tokens;
+        std::vector<std::string> tokens;
         detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
 
         for (auto& token : tokens)
@@ -148,7 +146,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     bindtextdomain(name.c_str(), (detail::exe_pwd() + "/../share/locale/").c_str());
     textdomain(name.c_str());
 
-    static string backend;
+    std::string backend;
 
     const char* value = getenv("EGT_BACKEND");
     if (value)
@@ -170,7 +168,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     const char* sizestr = getenv("EGT_SCREEN_SIZE");
     if (sizestr)
     {
-        vector<string> dims;
+        std::vector<std::string> dims;
         detail::tokenize(sizestr, 'x', dims);
         if (dims.size() == 2)
         {
@@ -201,28 +199,28 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
     if (tmp)
     {
-        string env_val = string(tmp);
-        vector<string> inputs;
+        std::string env_val = tmp;
+        std::vector<std::string> inputs;
 
         detail::tokenize(env_val, ';', inputs);
 
         for (auto& input : inputs)
         {
-            vector<string> tokens;
+            std::vector<std::string> tokens;
             detail::tokenize(input, ':', tokens);
 
             if (tokens.size() != 2)
                 continue;
 
-            string library = tokens.front();
-            string devices = tokens.back();
-            vector<string> device_tokens;
+            auto library = tokens.front();
+            auto devices = tokens.back();
+            std::vector<std::string> device_tokens;
             detail::tokenize(devices, ',', device_tokens);
 
             for (auto& device : device_tokens)
             {
                 // deal with symlink
-                string target = detail::readlink(device);
+                auto target = detail::readlink(device);
                 if (!target.empty())
                 {
                     // absolute or relative path
@@ -239,7 +237,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
                 }
 
                 if (detail::exists(device))
-                    m_input_devices.emplace_back(pair<string, string>(library, device));
+                    m_input_devices.emplace_back(std::pair<std::string, std::string>(library, device));
             }
         }
     }
@@ -272,7 +270,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         if (event.key().keycode == EKEY_SNAPSHOT)
         {
             if (m_argc)
-                paint_to_file(string(m_argv[0]) + ".png");
+                paint_to_file(std::string(m_argv[0]) + ".png");
             else
                 paint_to_file();
         }
@@ -287,11 +285,11 @@ void Application::signal_handler(const asio::error_code& error, int signum)
         return;
 
     if (signum == SIGUSR1)
-        dump(cout);
+        dump(std::cout);
     else if (signum == SIGUSR2)
     {
         if (m_argc)
-            paint_to_file(string(m_argv[0]) + ".png");
+            paint_to_file(std::string(m_argv[0]) + ".png");
         else
             paint_to_file();
     }
@@ -310,9 +308,9 @@ void Application::quit()
     m_event.quit();
 }
 
-void Application::paint_to_file(const string& filename)
+void Application::paint_to_file(const std::string& filename)
 {
-    string name = filename;
+    auto name = filename;
     if (name.empty())
     {
         name = "screen.png";
@@ -352,7 +350,7 @@ void Application::dump(std::ostream& out)
     dump_timers(out);
 }
 
-vector<pair<string, string>> Application::get_input_devices()
+std::vector<std::pair<std::string, std::string>> Application::get_input_devices()
 {
     return m_input_devices;
 }
