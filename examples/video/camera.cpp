@@ -60,15 +60,15 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.color(Palette::ColorId::bg, Palette::black);
 
+    CameraWindow player(size, dev, format, WindowHint::overlay);
+    player.move_to_center(win.center());
+    win.add(player);
+
     Label errlabel;
     errlabel.color(Palette::ColorId::label_text, Palette::white);
     errlabel.align(AlignFlag::expand);
     errlabel.text_align(AlignFlag::center | AlignFlag::top);
     win.add(errlabel);
-
-    CameraWindow player(size, dev, format, WindowHint::overlay);
-    player.move_to_center(win.center());
-    win.add(player);
 
     // wait to start playing the video until the window is shown
     win.on_show([&player]()
