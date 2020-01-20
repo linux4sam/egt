@@ -14,6 +14,7 @@
 #include <rapidxml_utils.hpp>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <unordered_map>
 
 namespace egt
 {
@@ -63,65 +64,8 @@ using create_function =
     std::function<std::shared_ptr<Widget>(rapidxml::xml_node<>* widget,
             std::shared_ptr<Frame> parent)>;
 
-static const std::map<std::string, create_function> allocators =
+static const std::unordered_map<std::string, create_function> allocators =
 {
-    {"AnalogMeter", create_widget<AnalogMeter>},
-    {"BoxSizer", create_widget<BoxSizer>},
-    {"Button", create_widget<Button>},
-    //{"ButtonGroup", create_widget<ButtonGroup>},
-    {"CheckBox", create_widget<CheckBox>},
-    {"CheckButton", create_widget<CheckButton>},
-    {"CircleWidget", create_widget<CircleWidget>},
-    {"ComboBox", create_widget<ComboBox>},
-    {"Dialog", create_widget<Dialog>},
-    //{"FileDialog", create_widget<FileDialog>},
-    {"FileOpenDialog", create_widget<FileOpenDialog>},
-    {"FileSaveDialog", create_widget<FileSaveDialog>},
-    {"FlexBoxSizer", create_widget<FlexBoxSizer>},
-    {"Frame", create_widget<Frame>},
-    {"HorizontalBoxSizer", create_widget<HorizontalBoxSizer>},
-    {"ImageButton", create_widget<ImageButton>},
-    {"ImageLabel", create_widget<ImageLabel>},
-    {"Label", create_widget<Label>},
-    {"LevelMeter", create_widget<LevelMeter>},
-    {"LineWidget", create_widget<LineWidget>},
-    {"ListBox", create_widget<ListBox>},
-    {"Notebook", create_widget<Notebook>},
-    {"NotebookTab", create_widget<NotebookTab>},
-    //{"PopupVirtualKeyboard", create_widget<PopupVirtualKeyboard>},
-    {"ProgressBar", create_widget<ProgressBar>},
-    {"RadioBox", create_widget<RadioBox>},
-    {"RectangleWidget", create_widget<RectangleWidget>},
-    {"ScrolledView", create_widget<ScrolledView>},
-    {"Scrollwheel", create_widget<Scrollwheel>},
-    {"SelectableGrid", create_widget<SelectableGrid>},
-    {"SideBoard", create_widget<SideBoard>},
-    {"Slider", create_widget<Slider>},
-    {"SpinProgress", create_widget<SpinProgress>},
-    {"Sprite", create_widget<Sprite>},
-    {"StaticGrid", create_widget<StaticGrid>},
-    {"TextBox", create_widget<TextBox>},
-    {"ToggleBox", create_widget<ToggleBox>},
-    {"TopWindow", create_widget<TopWindow>},
-    {"VerticalBoxSizer", create_widget<VerticalBoxSizer>},
-    {"VirtualKeyboard", create_widget<VirtualKeyboard>},
-    {"Window", create_widget<Window>},
-    {"Form", create_widget<Form>},
-    //{"Gauge", create_widget<Gauge>},
-    //{"GaugeLayer", create_widget<GaugeLayer>},
-    //{"NeedleLayer", create_widget<NeedleLayer>},
-    //{"Radial", create_widget<Radial>},
-    {"LineChart", create_widget<LineChart>},
-    {"PieChart", create_widget<PieChart>},
-    //{"BarChart", create_widget<BarChart>},
-    //{"HBarChart", create_widget<HBarChart>},
-    //{"PointChart", create_widget<PointChart>},
-#ifdef HAVE_GSTREAMER
-    {"CameraWindow", create_widget<CameraWindow>},
-    {"VideoWindow", create_widget<VideoWindow>},
-#endif
-    {"RadialType<int>", create_widget<RadialType<int>>},
-
     {"egt::v1::experimental::RadialType<int>", create_widget<RadialType<int>>},
     {"egt::v1::AnalogMeter", create_widget<AnalogMeter>},
     {"egt::v1::BoxSizer", create_widget<BoxSizer>},
@@ -199,8 +143,27 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     }
     else
     {
-        spdlog::error("widget type {} unsupported", ttype);
-        return nullptr;
+        bool found = false;
+        for (const auto& x : allocators)
+        {
+            auto name = x.first;
+            std::size_t index = name.find_last_of(":");
+            if (index != std::string::npos)
+                name = name.substr(index + 1);
+
+            if (ttype == name)
+            {
+                found = true;
+                result = x.second(node, parent);
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            spdlog::error("widget type {} unsupported", ttype);
+            return nullptr;
+        }
     }
 
     for (auto child = node->first_node("widget"); child; child = child->next_sibling())
