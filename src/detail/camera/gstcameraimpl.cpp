@@ -10,8 +10,10 @@
 #include "detail/camera/gstcameraimpl.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
+#ifdef HAVE_LIBPLANES
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
+#endif
 #include "egt/types.h"
 #include "egt/video.h"
 #include <exception>

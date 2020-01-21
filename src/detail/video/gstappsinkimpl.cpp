@@ -10,8 +10,10 @@
 
 #include "detail/video/gstappsinkimpl.h"
 #include "egt/app.h"
+#ifdef HAVE_LIBPLANES
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
+#endif
 #include "egt/types.h"
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
@@ -169,6 +171,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
 {
     std::string vc = " ! videoconvert ! video/x-raw,format=";
+#ifdef HAVE_LIBPLANES
     if (m_interface.flags().is_set(Widget::Flag::plane_window))
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
@@ -179,6 +182,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         vc += detail::gstreamer_format(fmt);
     }
     else
+#endif
     {
         vc += "RGB16";
     }
