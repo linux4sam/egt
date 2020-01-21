@@ -91,10 +91,13 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
                          error.get()->message,
                          debug ? debug.get() : "");
 
-            asio::post(Application::instance().event().io(), [impl]()
+            if (Application::check_instance())
             {
-                impl->player.on_error.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl]()
+                {
+                    impl->player.on_error.invoke();
+                });
+            }
         }
         break;
     }
@@ -130,12 +133,15 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
                          GST_SEEK_FLAG_FLUSH,
                          GST_SEEK_TYPE_SET, 0,
                          GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
-        impl->player.pause();
 
-        asio::post(Application::instance().event().io(), [impl]()
+        if (Application::check_instance())
         {
-            impl->player.on_eos.invoke();
-        });
+            asio::post(Application::instance().event().io(), [impl]()
+            {
+                impl->player.pause();
+                impl->player.on_eos.invoke();
+            });
+        }
 
         break;
     }
@@ -145,13 +151,20 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
         if (gst_structure_has_name(info, PROGRESS_NAME))
         {
             const GValue* vtotal = gst_structure_get_value(info, "total");
-            impl->m_duration = g_value_get_int64(vtotal);
+            const auto total = g_value_get_int64(vtotal);
             const GValue* vcurrent = gst_structure_get_value(info, "current");
-            if (detail::change_if_diff<>(impl->m_position, g_value_get_int64(vcurrent)))
+            const auto current = g_value_get_int64(vcurrent);
+
+            if (Application::check_instance())
             {
-                asio::post(Application::instance().event().io(), [impl]()
+                asio::post(Application::instance().event().io(), [impl, current, total]()
                 {
-                    impl->player.on_position_changed.invoke();
+                    impl->m_duration = total;
+
+                    if (detail::change_if_diff<>(impl->m_position, current))
+                    {
+                        impl->player.on_position_changed.invoke();
+                    }
                 });
             }
         }
@@ -167,10 +180,13 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
 
-            asio::post(Application::instance().event().io(), [impl]()
+            if (Application::check_instance())
             {
-                impl->player.on_state_changed.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl]()
+                {
+                    impl->player.on_state_changed.invoke();
+                });
+            }
         }
         break;
     }

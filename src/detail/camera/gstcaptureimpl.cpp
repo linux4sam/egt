@@ -120,11 +120,14 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
                          error->message,
                          debug ? debug.get() : "");
 
-            asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
+            if (Application::check_instance())
             {
-                impl->m_err_message = error->message;
-                impl->m_interface.on_error.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
+                {
+                    impl->m_err_message = error->message;
+                    impl->m_interface.on_error.invoke();
+                });
+            }
         }
         break;
     }
@@ -167,14 +170,17 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         SPDLOG_DEBUG("device added: {}", name.get());
         gst_object_unref(device);
 
-        asio::post(Application::instance().event().io(), [impl]()
+        if (Application::check_instance())
         {
-            if (impl->start())
+            asio::post(Application::instance().event().io(), [impl]()
             {
-                impl->m_err_message = "";
-                impl->m_interface.on_error.invoke();
-            }
-        });
+                if (impl->start())
+                {
+                    impl->m_err_message = "";
+                    impl->m_interface.on_error.invoke();
+                }
+            });
+        }
 
         break;
     }
@@ -190,11 +196,14 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 
         impl->stop();
 
-        asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
+        if (Application::check_instance())
         {
-            impl->m_err_message = "device removed: " + std::string(name.get());
-            impl->m_interface.on_error.invoke();
-        });
+            asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
+            {
+                impl->m_err_message = "device removed: " + std::string(name.get());
+                impl->m_interface.on_error.invoke();
+            });
+        }
         break;
     }
     default:

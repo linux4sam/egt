@@ -200,10 +200,13 @@ gboolean GstKmsSinkImpl::query_position(gpointer data)
 
     if (gst_element_query_position(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_position))
     {
-        asio::post(Application::instance().event().io(), [impl]()
+        if (Application::check_instance())
         {
-            impl->m_interface.on_position_changed.invoke();
-        });
+            asio::post(Application::instance().event().io(), [impl]()
+            {
+                impl->m_interface.on_position_changed.invoke();
+            });
+        }
     }
     return true;
 }

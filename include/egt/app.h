@@ -62,6 +62,11 @@ public:
     static Application& instance();
 
     /**
+     * Check if there is an available instance.
+     */
+    static bool check_instance();
+
+    /**
      * Run the application.
      *
      * This will initialize the application and start running the event loop.

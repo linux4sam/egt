@@ -113,11 +113,14 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
                          error->message,
                          debug ? debug.get() : "");
 
-            asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
+            if (Application::check_instance())
             {
-                impl->m_err_message = error->message;
-                impl->m_interface.on_error.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
+                {
+                    impl->m_err_message = error->message;
+                    impl->m_interface.on_error.invoke();
+                });
+            }
         }
         break;
     }
@@ -155,14 +158,17 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         SPDLOG_DEBUG("device added: {}", name.get());
         gst_object_unref(device);
 
-        asio::post(Application::instance().event().io(), [impl]()
+        if (Application::check_instance())
         {
-            if (impl->start())
+            asio::post(Application::instance().event().io(), [impl]()
             {
-                impl->m_err_message = "";
-                impl->m_interface.on_error.invoke();
-            }
-        });
+                if (impl->start())
+                {
+                    impl->m_err_message = "";
+                    impl->m_interface.on_error.invoke();
+                }
+            });
+        }
 
         break;
     }
@@ -278,14 +284,17 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
         else
 #endif
         {
-            asio::post(Application::instance().event().io(), [impl, sample]()
+            if (Application::check_instance())
             {
-                if (impl->m_camerasample)
-                    gst_sample_unref(impl->m_camerasample);
+                asio::post(Application::instance().event().io(), [impl, sample]()
+                {
+                    if (impl->m_camerasample)
+                        gst_sample_unref(impl->m_camerasample);
 
-                impl->m_camerasample = sample;
-                impl->m_interface.damage();
-            });
+                    impl->m_camerasample = sample;
+                    impl->m_interface.damage();
+                });
+            }
         }
         return GST_FLOW_OK;
     }

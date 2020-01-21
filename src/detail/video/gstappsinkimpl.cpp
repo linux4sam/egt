@@ -154,14 +154,17 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
         else
 #endif
         {
-            asio::post(Application::instance().event().io(), [impl, sample]()
+            if (Application::check_instance())
             {
-                if (impl->m_videosample)
-                    gst_sample_unref(impl->m_videosample);
+                asio::post(Application::instance().event().io(), [impl, sample]()
+                {
+                    if (impl->m_videosample)
+                        gst_sample_unref(impl->m_videosample);
 
-                impl->m_videosample = sample;
-                impl->m_interface.damage();
-            });
+                    impl->m_videosample = sample;
+                    impl->m_interface.damage();
+                });
+            }
         }
         return GST_FLOW_OK;
     }
@@ -277,10 +280,13 @@ gboolean GstAppSinkImpl::post_position(gpointer data)
 {
     auto impl = reinterpret_cast<GstAppSinkImpl*>(data);
 
-    asio::post(Application::instance().event().io(), [impl]()
+    if (Application::check_instance())
     {
-        impl->m_interface.on_position_changed.invoke();
-    });
+        asio::post(Application::instance().event().io(), [impl]()
+        {
+            impl->m_interface.on_position_changed.invoke();
+        });
+    }
 
     return true;
 }

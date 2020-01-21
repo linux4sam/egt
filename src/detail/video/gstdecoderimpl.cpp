@@ -217,12 +217,14 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
                          error->message,
                          debug ? debug.get() : "");
 
-            std::string error_message = error->message;
-            asio::post(Application::instance().event().io(), [impl, error_message]()
+            if (Application::check_instance())
             {
-                impl->m_err_message = error_message;
-                impl->m_interface.on_error.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
+                {
+                    impl->m_err_message = error->message;
+                    impl->m_interface.on_error.invoke();
+                });
+            }
         }
         break;
     }
@@ -267,10 +269,13 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         }
         else
         {
-            asio::post(Application::instance().event().io(), [impl]()
+            if (Application::check_instance())
             {
-                impl->m_interface.on_eos.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl]()
+                {
+                    impl->m_interface.on_eos.invoke();
+                });
+            }
         }
         break;
     }
@@ -294,10 +299,13 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
                 gst_query_unref(query);
             }
 
-            asio::post(Application::instance().event().io(), [impl]()
+            if (Application::check_instance())
             {
-                impl->m_interface.on_state_changed.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl]()
+                {
+                    impl->m_interface.on_state_changed.invoke();
+                });
+            }
         }
         break;
     }

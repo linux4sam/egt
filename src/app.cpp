@@ -64,6 +64,11 @@ Application& Application::instance()
     return *the_app;
 }
 
+bool Application::check_instance()
+{
+    return !!the_app;
+}
+
 static std::once_flag env_flag;
 
 Application::Application(int argc, const char** argv, const std::string& name, bool primary)
