@@ -12,6 +12,7 @@
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
+#include "egt/types.h"
 #include "egt/widget.h"
 #include <cassert>
 #include <iostream>
@@ -518,6 +519,11 @@ void Widget::checked(bool value)
             flags().clear(Widget::Flag::checked);
         damage();
     }
+}
+
+std::string Widget::type() const
+{
+    return detail::demangle(typeid(*this).name());
 }
 
 void Widget::serialize(detail::Serializer& serializer) const

@@ -20,7 +20,6 @@
 #include <egt/geometry.h>
 #include <egt/palette.h>
 #include <egt/theme.h>
-#include <egt/types.h>
 #include <egt/widgetflags.h>
 #include <iosfwd>
 #include <memory>
@@ -1185,10 +1184,7 @@ public:
      *
      * Should this need to be changed, override this function.
      */
-    virtual std::string type() const
-    {
-        return detail::demangle(typeid(*this).name());
-    }
+    virtual std::string type() const;
 
     using WidgetId = uint64_t;
 
