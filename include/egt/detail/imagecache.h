@@ -51,11 +51,19 @@ public:
 
     /**
      * Return the mime type string for a filename.
+     *
+     * This uses libmagic to identify the file if available. The default
+     * database file will be used.  To override this, you can specify the path
+     * to the database file in the MAGIC environment variable.
      */
     static std::string get_mime_type(const std::string& filename);
 
     /**
      * Return the mime type string for a buffer.
+     *
+     * This uses libmagic to identify the buffer if available. The default
+     * database file will be used.  To override this, you can specify the path
+     * to the database file in the MAGIC environment variable.
      */
     static std::string get_mime_type(const void* buffer, size_t length);
 

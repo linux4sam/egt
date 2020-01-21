@@ -329,6 +329,15 @@ ImageCache::scale_surface(const shared_cairo_surface_t& old_surface,
 }
 #endif
 
+/*
+ * There is a known memory leak in magic_load() that may or may not be fixed:
+ *    https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=840754
+ *
+ * The workaround used here is to explicitly specify the default database file
+ * instead of using nullptr which makes magic chose the default file internally.
+ */
+static const auto MAGIC_DATABASE = "/usr/share/misc/magic";
+
 std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 {
     string result;
@@ -337,7 +346,7 @@ std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 
     if (magic)
     {
-        if (!magic_load(magic, nullptr))
+        if (!magic_load(magic, MAGIC_DATABASE))
         {
             auto mime = magic_buffer(magic, buffer, length);
             if (mime)
@@ -358,7 +367,7 @@ std::string ImageCache::get_mime_type(const std::string& filename)
 
     if (magic)
     {
-        if (!magic_load(magic, nullptr))
+        if (!magic_load(magic, MAGIC_DATABASE))
         {
             auto mime = magic_file(magic, filename.c_str());
             if (mime)
