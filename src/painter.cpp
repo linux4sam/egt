@@ -311,7 +311,7 @@ static inline bool check(const Size& size, cairo_format_t format,
                          size_t stride, const Point& point,
                          const Color& target_color, const Color& color) noexcept
 {
-    if (!Rect(Point(), size).intersect(point))
+    if (!Rect(Point(), size - Size(1, 1)).intersect(point))
         return false;
 
     switch (format)
