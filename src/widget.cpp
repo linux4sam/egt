@@ -21,8 +21,6 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -370,7 +368,7 @@ void Widget::paint(Painter& painter)
 
 void Widget::paint_to_file(const std::string& filename)
 {
-    string name = filename;
+    std::string name = filename;
     if (name.empty())
     {
         std::ostringstream ss;
