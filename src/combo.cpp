@@ -152,6 +152,18 @@ void ComboBox::add_item(const std::string& item)
         m_selected = 0;
 }
 
+bool ComboBox::remove(const std::string& item)
+{
+    auto it = std::find(m_items.begin(), m_items.end(), item);
+
+    if (it != m_items.end())
+    {
+        m_items.erase(it);
+        return true;
+    }
+    return false;
+}
+
 void ComboBox::parent(Frame* parent)
 {
     detail::TextWidget::parent(parent);

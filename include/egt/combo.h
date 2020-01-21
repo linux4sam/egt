@@ -146,6 +146,11 @@ public:
     virtual void add_item(const std::string& item);
 
     /**
+     * Remove a item from a ComboBox.
+     */
+    virtual bool remove(const std::string& item);
+
+    /**
      * Get an item at the specified index.
      */
     virtual std::string item_at(size_t index) const { return m_items[index]; }
