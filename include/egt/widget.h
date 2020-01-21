@@ -109,9 +109,9 @@ public:
         /**
          * Grab related mouse events.
          *
-         * For example, if a button is pressed with the EventId::MOUSE_DOWN
-         * event, make sure the button gets subsequent mouse events, including
-         * the EventId::MOUSE_UP event.
+         * For example, if a button receives the EventId::raw_pointer_down
+         * event, make sure the button also gets subsequent mouse events,
+         * including the EventId::raw_pointer_up event.
          */
         grab_mouse = detail::bit(7),
 
