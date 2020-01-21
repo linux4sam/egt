@@ -23,20 +23,20 @@ it can use hardware accelerated composition to animate the Sprite when
 available.
 
 There are a couple basic concepts to understand when working with animations in
-EGT.  An animation, in its most basic form, is some computed value in some range
-over some period of time.  If we were to graph this linearly, time would be on
-the X axis and a value would be on the Y axis.
+EGT.  An animation, in its most basic form, is some computed @b value in some
+@b range over some period of @b time.  If we were to graph this linearly with
+time on the X axis and a value on the Y axis, it would look like this.
 
 @image html easing_graph.png "Easing Curve Graph"
 @image latex easing_graph.png "Easing Curve Graph" width=8cm
 
-Of course the interesting question is how is that value computed over a
+Of course, the interesting question is how is that value computed over a
 specified timeframe? The most straightforward answer is just linearly as shown.
 The min value is at the starting time and the max value is at ending time, and
 every value in between is evenly spread out. However, more complex versions of
 this are necessary to add some life and diversity to animations, which leads to
-the idea of easing functions. Easing functions define what that value should be,
-linear or otherwise, at a given point in time for te animation.
+the idea of @b easing @b functions. Easing functions define what that value
+should be, linear or otherwise, at a given point in time for the animation.
 
 @section animations_easingfunctions Predefined Easing Functions
 
