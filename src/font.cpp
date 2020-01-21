@@ -248,5 +248,16 @@ std::ostream& operator<<(std::ostream& os, const Font& font)
     return os;
 }
 
+void Font::reset_font_cache()
+{
+    font_cache.cache.clear();
+}
+
+void Font::shutdown_fonts()
+{
+    reset_font_cache();
+    FcFini();
+}
+
 }
 }

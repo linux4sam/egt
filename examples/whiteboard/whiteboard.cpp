@@ -290,7 +290,7 @@ public:
     Canvas m_canvas;
 };
 
-int main(int argc, const char** argv)
+static int run(int argc, const char** argv)
 {
     Application app(argc, argv, "whiteboard");
 
@@ -299,4 +299,14 @@ int main(int argc, const char** argv)
     win.show();
 
     return app.run();
+}
+
+int main(int argc, const char** argv)
+{
+    auto res = run(argc, argv);
+
+    // cleanup any font allocations
+    Font::shutdown_fonts();
+
+    return res;
 }

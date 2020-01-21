@@ -186,6 +186,24 @@ public:
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs);
 
+    /**
+     * Clears any internal font cache.
+     *
+     * This will cause any new requests for fonts to be re-generated.
+     */
+    static void reset_font_cache();
+
+    /**
+     * Basically, this will clear the font cache and shutdown FontConfig which
+     * will release all memory allocated by FontConfig.
+     *
+     * Typically, you should not need to call this.  However, this is useful for
+     * debugging memory leaks and avoiding false positives in FontConfig.  Once
+     * you call this function, requesting any Font to be created is likely to
+     * not work out well.
+     */
+    static void shutdown_fonts();
+
     virtual ~Font() = default;
 
 protected:
