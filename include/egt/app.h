@@ -58,6 +58,8 @@ public:
 
     /**
      * Reference to the main Application instance.
+     *
+     * @throws std::runtime_error If there is no application instance.
      */
     static Application& instance();
 
@@ -85,20 +87,26 @@ public:
      */
     inline EventLoop& event() { return m_event; }
 
+    /**
+     * Get a pointer to the Screen instance.
+     */
     inline Screen* screen() const { return m_screen.get(); }
 
     /**
-     * Paint the entire screen to a file.
+     * Paint the entire Screen to a file.
      */
     void paint_to_file(const std::string& filename = {});
 
     /**
-     * Dump the widget hierarchy and properties to the specified ostream.
+     * Dump the widget hierarchy and properties to the specified std::ostream.
      *
      * Example:
      * @code{.cpp}
      * app.dump(cout);
      * @endcode
+     *
+     * @deprecated This will eventually be removed/changed in favor of using
+     * the detail::Serializer classes.
      */
     void dump(std::ostream& out = std::cout);
 

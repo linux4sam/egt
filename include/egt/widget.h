@@ -907,6 +907,9 @@ public:
      * Dump the state of the Widget to the specified ostream.
      * @param[in,out] out The output stream.
      * @param[in] level Indentation level.
+     *
+     * @deprecated This will eventually be removed/changed in favor of using
+     * the detail::Serializer classes.
      */
     virtual void dump(std::ostream& out, int level = 0);
 
@@ -1179,6 +1182,8 @@ public:
 
     /**
      * Returns a string representation of the type of this widget.
+     *
+     * Should this need to be changed, override this function.
      */
     virtual std::string type() const
     {

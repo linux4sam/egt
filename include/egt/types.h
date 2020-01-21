@@ -105,27 +105,41 @@ EGT_API std::ostream& operator<<(std::ostream& os, const PixelFormat& format);
  */
 namespace detail
 {
+
 /**
  * Convert a PixelFormat to a cairo format.
  */
 cairo_format_t cairo_format(PixelFormat format);
+
 /**
  * Convert a pixel format to a DRM format.
  */
 uint32_t drm_format(PixelFormat format);
+
 /**
  * Convert a DRM format to a pixel format.
  */
 PixelFormat egt_format(uint32_t format);
+
 /**
  * Convert a cairo format to a pixel format.
  */
 PixelFormat egt_format(cairo_format_t format);
+
 /**
  * Convert a pixel format to a gstreamer format.
  */
 std::string gstreamer_format(PixelFormat format);
 
+/**
+ * Demangle a C++ symbol into something human readable.
+ *
+ * @code{.cpp}
+ * detail::demangle(typeid(*this).name());
+ * @endcode
+ *
+ * @note This is g++ specific.
+ */
 std::string demangle(const char* name);
 
 }
