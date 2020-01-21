@@ -11,8 +11,6 @@
  * @brief Base class Widget definition.
  */
 
-#include <cairo.h>
-#include <cassert>
 #include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/object.h>
