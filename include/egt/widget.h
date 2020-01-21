@@ -20,6 +20,7 @@
 #include <egt/geometry.h>
 #include <egt/palette.h>
 #include <egt/theme.h>
+#include <egt/types.h>
 #include <egt/widgetflags.h>
 #include <iosfwd>
 #include <memory>
