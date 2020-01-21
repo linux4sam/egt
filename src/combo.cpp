@@ -150,6 +150,8 @@ void ComboBox::add_item(const std::string& item)
 
     if (m_items.size() == 1)
         m_selected = 0;
+
+    damage();
 }
 
 bool ComboBox::remove(const std::string& item)
@@ -159,6 +161,7 @@ bool ComboBox::remove(const std::string& item)
     if (it != m_items.end())
     {
         m_items.erase(it);
+        damage();
         return true;
     }
     return false;
