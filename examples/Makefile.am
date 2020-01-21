@@ -45,6 +45,7 @@ drag/drag \
 floating/floating \
 frames/frames \
 imagestack/imagestack \
+press/press \
 sizers/sizers \
 space/space \
 sprite/sprite \
@@ -259,6 +260,12 @@ drummachine_drummachine_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 drummachine_drummachinedir = $(prefix)/share/egt/examples/drummachine
 drummachine_drummachine_DATA = $(wildcard $(top_srcdir)/examples/drummachine/*.wav)
 drummachine_drummachine_LDFLAGS = $(AM_LDFLAGS)
+
+press_press_SOURCES = press/press.cpp
+press_press_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+press_press_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+press_pressdir = $(prefix)/share/egt/examples/press
+press_press_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
