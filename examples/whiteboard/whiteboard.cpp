@@ -170,31 +170,31 @@ public:
         m_sizer->add(m_clearbtn);
         m_sizer->add(m_snapshotbtn);
 
-        m_colorbtn.on_event([this](Event&)
+        m_colorbtn.on_click([this](Event&)
         {
             m_penpicker.show_modal(true);
-        }, {EventId::pointer_click});
+        });
 
-        m_fillbutton.on_event([this](Event&)
+        m_fillbutton.on_click([this](Event&)
         {
             m_fillpicker.show_modal(true);
-        }, {EventId::pointer_click});
+        });
 
-        m_widthbtn.on_event([this](Event&)
+        m_widthbtn.on_click([this](Event&)
         {
             m_widthpicker.show_modal(true);
-        }, {EventId::pointer_click});
+        });
 
-        m_clearbtn.on_event([this](Event&)
+        m_clearbtn.on_click([this](Event&)
         {
             clear();
             damage();
-        }, {EventId::pointer_click});
+        });
 
-        m_snapshotbtn.on_event([this](Event&)
+        m_snapshotbtn.on_click([this](Event&)
         {
             paint_to_file();
-        }, {EventId::pointer_click});
+        });
 
         auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
         logo->align(AlignFlag::right | AlignFlag::top);
