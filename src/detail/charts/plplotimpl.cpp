@@ -40,7 +40,7 @@ void PlPlotImpl::data(const DataArray& data)
         m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
         m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
 
-        SPDLOG_DEBUG("In: {} : m_xmin {} m_xmax {}  m_ymin {} m_ymax {} \n", __func__, m_xmin, m_xmax, m_ymin, m_ymax);
+        SPDLOG_DEBUG("m_xmin {} m_xmax {}  m_ymin {} m_ymax {}", m_xmin, m_xmax, m_ymin, m_ymax);
     }
 }
 
@@ -83,7 +83,7 @@ void PlPlotImpl::data(const StringDataArray& data)
         m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
         m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
 
-        SPDLOG_DEBUG("In: {} : m_ymin {} m_ymax {} \n", __func__, m_ymin, m_ymax);
+        SPDLOG_DEBUG("m_ymin {} m_ymax {}", m_ymin, m_ymax);
     }
 }
 
@@ -106,7 +106,7 @@ void PlPlotImpl::add_data(const StringDataArray& data)
         m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
         m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
 
-        SPDLOG_DEBUG("In: {} : m_ymin {} m_ymax {} \n", __func__, m_ymin, m_ymax);
+        SPDLOG_DEBUG("m_ymin {} m_ymax {}", m_ymin, m_ymax);
     }
 }
 
@@ -220,7 +220,7 @@ void PlPlotImpl::point_type(int ptype)
 void PlPlotImpl::plplot_font(const Font& font)
 {
     const std::string& face = font.face();
-    SPDLOG_TRACE("In {}: font face = {}", __func__, face);
+    SPDLOG_TRACE("font face = {}", face);
     PLINT font_family = 0;
     if (face.find("Sans") != std::string::npos)
     {
@@ -472,7 +472,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
             if (!m_sdata.empty())
             {
-                SPDLOG_TRACE("In {} m_ydata[{}] = {} ", __func__, i, m_ydata.at(i));
+                SPDLOG_TRACE("m_ydata[{}] = {} ", i, m_ydata.at(i));
                 plfbox((i * 2), m_ydata.at(i));
 
                 plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
