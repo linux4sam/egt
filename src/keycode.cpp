@@ -17,7 +17,7 @@ namespace detail
 
 KeyboardCode linux_to_ekey(int code)
 {
-    static std::map<int, KeyboardCode> keys =
+    static const std::map<int, KeyboardCode> keys =
     {
         //{KEY_UNKNOWN, EKEY_UNKNOWN},
         {KEY_BACKSPACE, EKEY_BACKSPACE},
@@ -153,9 +153,16 @@ KeyboardCode linux_to_ekey(int code)
         {0x104, EKEY_USER1},
     };
 
-    SPDLOG_TRACE("key {} to keycode {}", code, keys[code]);
+    auto i = keys.find(code);
+    if (i != keys.end())
+    {
+        SPDLOG_TRACE("key {} to keycode {}", code, i->second);
+        return i->second;
+    }
 
-    return keys[code];
+    SPDLOG_DEBUG("unable to map key {} to keycode", code);
+
+    return EKEY_UNKNOWN;
 }
 
 }
