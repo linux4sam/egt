@@ -253,12 +253,16 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         {
 #ifdef HAVE_TSLIB
             m_inputs.push_back(detail::make_unique<detail::InputTslib>(*this, device.second));
+#else
+            spdlog::warn("tslib requested but no support compiled in");
 #endif
         }
         else if (device.first == "evdev")
         {
 #ifdef HAVE_LINUX_INPUT_H
             m_inputs.push_back(detail::make_unique<detail::InputEvDev>(*this, device.second));
+#else
+            spdlog::warn("evdev requested but no support compiled in");
 #endif
         }
     }
