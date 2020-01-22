@@ -429,6 +429,9 @@ fi
 
 AC_CHECK_HEADER([linux/input.h], [have_linux_input_h=yes], [have_linux_input_h=no])
 AM_CONDITIONAL([HAVE_LINUX_INPUT_H], [test "x${have_linux_input_h}" = xyes])
+if test "x${have_linux_input_h}" = xyes; then
+   AC_DEFINE(HAVE_LINUX_INPUT_H, 1, [Have linux/input.h support])
+fi
 
 AC_CHECK_PROG(XXD, xxd, yes)
 if test "x${XXD}" != x"yes"; then
