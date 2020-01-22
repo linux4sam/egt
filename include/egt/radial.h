@@ -73,6 +73,7 @@ public:
         input_value = detail::bit(2),
     };
 
+    /// Radial flags.
     using RadialFlags = detail::Flags<RadialFlag>;
 
     /**
@@ -93,7 +94,7 @@ public:
 
     virtual detail::Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
             const Color& color = {},
-            default_dim_type width = 10,
+            DefaultDim width = 10,
             RadialFlags flags = {})
     {
         // TODO: m_handle_counter can wrap, making the handle non-unique
@@ -189,7 +190,7 @@ public:
         auto text = widget.text();
         const auto smalldim = std::min(b.width(), b.height());
 
-        default_dim_type maxwidth = 0;
+        DefaultDim maxwidth = 0;
         for (auto& value : widget.m_values)
         {
             if (value.width > maxwidth)
@@ -291,6 +292,7 @@ public:
 
 protected:
 
+    /// @private
     template<class T2>
     struct ValueData
     {
@@ -308,7 +310,7 @@ protected:
 
         std::shared_ptr<RangeValue<T2>> range;
         Color color;
-        default_dim_type width{};
+        DefaultDim width{};
         RadialFlags flags{};
         detail::Object::RegisterHandle handle{0};
     };
@@ -335,9 +337,13 @@ protected:
 };
 
 /**
- * Helper type for a default radial.
+ * Helper type for an int radial.
  */
 using Radial = RadialType<int>;
+
+/**
+ * Helper type for a float radial.
+ */
 using RadialF = RadialType<float>;
 
 }

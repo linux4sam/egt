@@ -29,9 +29,9 @@ inline namespace v1
  */
 
 /**
- * Helper type to define default dimension type used for geometry.
+ * Define the default dimension type used for geometry.
  */
-using default_dim_type = int;
+using DefaultDim = int;
 
 namespace detail
 {
@@ -41,7 +41,7 @@ namespace detail
  *
  * This is used to create strong incompatible types as a template argument.
  */
-enum class compatible
+enum class Compatible
 {
     normal,
     display,
@@ -54,7 +54,7 @@ enum class compatible
  * Simple x,y coordinate.
  * @ingroup geometry
  */
-template <class dim_t, detail::compatible dim_c = detail::compatible::normal>
+template <class Dim, detail::Compatible DimCompat = detail::Compatible::normal>
 class PointType
 {
 public:
@@ -62,69 +62,77 @@ public:
     /**
      * Helper to reference the dimension type.
      */
-    using dim_type = dim_t;
+    using DimType = Dim;
 
     constexpr PointType() noexcept = default;
 
-    constexpr PointType(dim_t x, dim_t y) noexcept
+    constexpr PointType(Dim x, Dim y) noexcept
         : m_x(x),
           m_y(y)
     {}
 
-    inline PointType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
+    /// PointType operator
+    inline PointType<Dim, DimCompat>& operator+=(const PointType<Dim, DimCompat>& rhs)
     {
         m_x += rhs.m_x;
         m_y += rhs.m_y;
         return *this;
     }
 
-    inline PointType<dim_t, dim_c>& operator-=(const PointType<dim_t, dim_c>& rhs)
+    /// PointType operator
+    inline PointType<Dim, DimCompat>& operator-=(const PointType<Dim, DimCompat>& rhs)
     {
         m_x -= rhs.m_x;
         m_y -= rhs.m_y;
         return *this;
     }
 
-    inline PointType<dim_t, dim_c>& operator*=(const PointType<dim_t, dim_c>& rhs)
+    /// PointType operator
+    inline PointType<Dim, DimCompat>& operator*=(const PointType<Dim, DimCompat>& rhs)
     {
         m_x *= rhs.m_x;
         m_y *= rhs.m_y;
         return *this;
     }
 
-    inline PointType<dim_t, dim_c>& operator/=(const PointType<dim_t, dim_c>& rhs)
+    /// PointType operator
+    inline PointType<Dim, DimCompat>& operator/=(const PointType<Dim, DimCompat>& rhs)
     {
         m_x /= rhs.m_x;
         m_y /= rhs.m_y;
         return *this;
     }
 
+    /// PointType operator
     template <class T>
-    inline PointType<dim_t, dim_c>& operator+=(const T& rhs)
+    inline PointType<Dim, DimCompat>& operator+=(const T& rhs)
     {
         m_x += rhs;
         m_y += rhs;
         return *this;
     }
 
+    /// PointType operator
     template <class T>
-    inline PointType<dim_t, dim_c>& operator-=(const T& rhs)
+    inline PointType<Dim, DimCompat>& operator-=(const T& rhs)
     {
         m_x -= rhs;
         m_y -= rhs;
         return *this;
     }
 
+    /// PointType operator
     template <class T>
-    inline PointType<dim_t, dim_c>& operator*=(const T& rhs)
+    inline PointType<Dim, DimCompat>& operator*=(const T& rhs)
     {
         m_x *= rhs;
         m_y *= rhs;
         return *this;
     }
 
+    /// PointType operator
     template <class T>
-    inline PointType<dim_t, dim_c>& operator/=(const T& rhs)
+    inline PointType<Dim, DimCompat>& operator/=(const T& rhs)
     {
         m_x /= rhs;
         m_y /= rhs;
@@ -139,7 +147,7 @@ public:
      * @param angle The angle in radians.
      */
     template <class T>
-    PointType<dim_t, dim_c> point_on_circumference(T radius, T angle) const
+    PointType<Dim, DimCompat> point_on_circumference(T radius, T angle) const
     {
         return PointType(m_x + radius * std::cos(angle),
                          m_y + radius * std::sin(angle));
@@ -151,7 +159,7 @@ public:
      * @param point The other point.
      */
     template <class T>
-    T angle_to(const PointType<dim_t, dim_c>& point) const
+    T angle_to(const PointType<Dim, DimCompat>& point) const
     {
         return std::atan2(point.m_x - m_x, m_y - point.m_y);
     }
@@ -161,101 +169,111 @@ public:
      *
      * @param point The other point.
      */
-    dim_t distance_to(const PointType<dim_t, dim_c>& point) const
+    Dim distance_to(const PointType<Dim, DimCompat>& point) const
     {
         return std::hypot(point.m_x - m_x, point.m_y - m_y);
     }
 
-    constexpr inline dim_t x() const { return m_x; }
-    constexpr inline dim_t y() const { return m_y; }
+    constexpr inline Dim x() const { return m_x; }
+    constexpr inline Dim y() const { return m_y; }
 
-    inline void x(dim_t x) { m_x = x; }
-    inline void y(dim_t y) { m_y = y; }
+    inline void x(Dim x) { m_x = x; }
+    inline void y(Dim y) { m_y = y; }
 
 protected:
-    dim_t m_x{0};
-    dim_t m_y{0};
+    Dim m_x{0};
+    Dim m_y{0};
 };
 
-/// Compares two @c PointType objects for equality.
-template<class dim_t, detail::compatible dim_c>
-inline bool operator==(const PointType<dim_t, dim_c>& lhs, const PointType<dim_t, dim_c>& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat>
+inline bool operator==(const PointType<Dim, DimCompat>& lhs, const PointType<Dim, DimCompat>& rhs)
 {
     return lhs.x() == rhs.x() && lhs.y() == rhs.y();
 }
 
-template<detail::compatible dim_c>
-inline bool operator==(const PointType<float, dim_c>& lhs, const PointType<float, dim_c>& rhs)
+/// PointType operator
+template<detail::Compatible DimCompat>
+inline bool operator==(const PointType<float, DimCompat>& lhs, const PointType<float, DimCompat>& rhs)
 {
     return detail::float_compare(lhs.x(), rhs.x()) &&
            detail::float_compare(lhs.y(), rhs.y());
 }
 
-/// Compares two @c PointType objects for inequality.
-template<class dim_t, detail::compatible dim_c>
-inline bool operator!=(const PointType<dim_t, dim_c>& lhs, const PointType<dim_t, dim_c>& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat>
+inline bool operator!=(const PointType<Dim, DimCompat>& lhs, const PointType<Dim, DimCompat>& rhs)
 {
     return !(lhs == rhs);
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator-(PointType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat>
+inline PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator+(PointType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat>
+inline PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator/(PointType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat>
+inline PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs /= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline PointType<dim_t, dim_c> operator*(PointType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat>
+inline PointType<Dim, DimCompat> operator*(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs *= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline PointType<dim_t, dim_c> operator-(PointType<dim_t, dim_c> lhs, const T& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline PointType<dim_t, dim_c> operator+(PointType<dim_t, dim_c> lhs, const T& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline PointType<dim_t, dim_c> operator/(PointType<dim_t, dim_c> lhs, const T& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs /= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline PointType<dim_t, dim_c> operator*(PointType<dim_t, dim_c> lhs, const T& rhs)
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline PointType<Dim, DimCompat> operator*(PointType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs *= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-std::ostream& operator<<(std::ostream& os, const PointType<dim_t, dim_c>& point)
+/// Overloaded std::ostream insertion operator
+template<class Dim, detail::Compatible DimCompat>
+std::ostream& operator<<(std::ostream& os, const PointType<Dim, DimCompat>& point)
 {
     os << "[" << point.x() << "," << point.y() << "]";
     return os;
@@ -264,26 +282,26 @@ std::ostream& operator<<(std::ostream& os, const PointType<dim_t, dim_c>& point)
 /**
  * Helper type for a default point.
  */
-using Point = PointType<default_dim_type, detail::compatible::normal>;
+using Point = PointType<DefaultDim, detail::Compatible::normal>;
 
 static_assert(detail::rule_of_5<Point>(),
               "Point : must fulfill rule of 5");
 
 /**
- * Helper type for a floating point.
+ * Helper type for a float point.
  */
-using PointF = PointType<float, detail::compatible::normal>;
+using PointF = PointType<float, detail::Compatible::normal>;
 
 /**
  * Helper type for a default display point.
  */
-using DisplayPoint = PointType<default_dim_type, detail::compatible::display>;
+using DisplayPoint = PointType<DefaultDim, detail::Compatible::display>;
 
 /**
  * Simple width and height.
  * @ingroup geometry
  */
-template<class dim_t, detail::compatible dim_c = detail::compatible::normal>
+template<class Dim, detail::Compatible DimCompat = detail::Compatible::normal>
 class SizeType
 {
 public:
@@ -291,7 +309,7 @@ public:
     /**
      * Helper to reference the dimension type.
      */
-    using dim_type = dim_t;
+    using DimType = Dim;
 
     constexpr SizeType() noexcept = default;
 
@@ -299,7 +317,7 @@ public:
      * @param width Width
      * @param height Height
      */
-    constexpr SizeType(dim_t width, dim_t height) noexcept
+    constexpr SizeType(Dim width, Dim height) noexcept
         : m_height(height),
           m_width(width)
     {}
@@ -325,163 +343,181 @@ public:
         m_height = m_width = 0;
     }
 
-    SizeType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)
+    /// SizeType operator
+    SizeType<Dim, DimCompat>& operator+=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_width += rhs.m_width;
         m_height += rhs.m_height;
         return *this;
     }
 
-    SizeType<dim_t, dim_c>& operator-=(const SizeType<dim_t, dim_c>& rhs)
+    /// SizeType operator
+    SizeType<Dim, DimCompat>& operator-=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_width -= rhs.m_width;
         m_height -= rhs.m_height;
         return *this;
     }
 
-    SizeType<dim_t, dim_c>& operator*=(const SizeType<dim_t, dim_c>& rhs)
+    /// SizeType operator
+    SizeType<Dim, DimCompat>& operator*=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_width *= rhs.m_width;
         m_height *= rhs.m_height;
         return *this;
     }
 
-    SizeType<dim_t, dim_c>& operator/=(const SizeType<dim_t, dim_c>& rhs)
+    /// SizeType operator
+    SizeType<Dim, DimCompat>& operator/=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_width /= rhs.m_width;
         m_height /= rhs.m_height;
         return *this;
     }
 
+    /// SizeType operator
     template<class T>
-    SizeType<dim_t, dim_c>& operator+=(const T& rhs)
+    SizeType<Dim, DimCompat>& operator+=(const T& rhs)
     {
         m_width += rhs;
         m_height += rhs;
         return *this;
     }
 
+    /// SizeType operator
     template<class T>
-    SizeType<dim_t, dim_c>& operator-=(const T& rhs)
+    SizeType<Dim, DimCompat>& operator-=(const T& rhs)
     {
         m_width -= rhs;
         m_height -= rhs;
         return *this;
     }
 
+    /// SizeType operator
     template<class T>
-    SizeType<dim_t, dim_c>& operator*=(const T& rhs)
+    SizeType<Dim, DimCompat>& operator*=(const T& rhs)
     {
         m_width *= rhs;
         m_height *= rhs;
         return *this;
     }
 
+    /// SizeType operator
     template<class T>
-    SizeType<dim_t, dim_c>& operator/=(const T& rhs)
+    SizeType<Dim, DimCompat>& operator/=(const T& rhs)
     {
         m_width /= rhs;
         m_height /= rhs;
         return *this;
     }
 
-    constexpr inline dim_t width() const { return m_width; }
-    constexpr inline dim_t height() const { return m_height; }
+    constexpr inline Dim width() const { return m_width; }
+    constexpr inline Dim height() const { return m_height; }
 
-    inline void width(dim_t width) { m_width = width; }
-    inline void height(dim_t height) { m_height = height; }
+    inline void width(Dim width) { m_width = width; }
+    inline void height(Dim height) { m_height = height; }
 
 protected:
     /**
      * Height
      */
-    dim_t m_height{0};
+    Dim m_height{0};
 
     /**
      * Width
      */
-    dim_t m_width{0};
+    Dim m_width{0};
 };
 
-/// Compares two @c SizeType objects for equality.
-template<class dim_t, detail::compatible dim_c>
-inline bool operator==(const SizeType<dim_t, dim_c>& lhs, const SizeType<dim_t, dim_c>& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat>
+inline bool operator==(const SizeType<Dim, DimCompat>& lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     return lhs.width() == rhs.width() && lhs.height() == rhs.height();
 }
 
-template<detail::compatible dim_c>
-inline bool operator==(const SizeType<float, dim_c>& lhs, const SizeType<float, dim_c>& rhs)
+/// SizeType operator
+template<detail::Compatible DimCompat>
+inline bool operator==(const SizeType<float, DimCompat>& lhs, const SizeType<float, DimCompat>& rhs)
 {
     return detail::float_compare(lhs.width(), rhs.width()) &&
            detail::float_compare(lhs.height(), rhs.height());
 }
 
-/// Compares two @c SizeType objects for inequality.
-template<class dim_t, detail::compatible dim_c>
-inline bool operator!=(const SizeType<dim_t, dim_c>& lhs, const SizeType<dim_t, dim_c>& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat>
+inline bool operator!=(const SizeType<Dim, DimCompat>& lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     return !(lhs == rhs);
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator-(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat>
+inline SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator+(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat>
+inline SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat>
+inline SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs *= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat>
+inline SizeType<Dim, DimCompat> operator/(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs /= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline SizeType<dim_t, dim_c> operator-(SizeType<dim_t, dim_c> lhs, const T& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline SizeType<dim_t, dim_c> operator+(SizeType<dim_t, dim_c> lhs, const T& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs += rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline SizeType<dim_t, dim_c> operator*(SizeType<dim_t, dim_c> lhs, const T& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs *= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c, class T>
-inline SizeType<dim_t, dim_c> operator/(SizeType<dim_t, dim_c> lhs, const T& rhs)
+/// SizeType operator
+template<class Dim, detail::Compatible DimCompat, class T>
+inline SizeType<Dim, DimCompat> operator/(SizeType<Dim, DimCompat> lhs, const T& rhs)
 {
     lhs /= rhs;
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
+/// Overloaded std::ostream insertion operator
+template<class Dim, detail::Compatible DimCompat>
+std::ostream& operator<<(std::ostream& os, const SizeType<Dim, DimCompat>& size)
 {
     os << size.width() << "x" << size.height();
     return os;
@@ -490,7 +526,7 @@ std::ostream& operator<<(std::ostream& os, const SizeType<dim_t, dim_c>& size)
 /**
  * Helper type for a default size.
  */
-using Size = SizeType<default_dim_type, detail::compatible::normal>;
+using Size = SizeType<DefaultDim, detail::Compatible::normal>;
 
 static_assert(detail::rule_of_5<Size>(),
               "Size : must fulfill rule of 5");
@@ -498,7 +534,7 @@ static_assert(detail::rule_of_5<Size>(),
 /**
  * Helper type for a float size.
  */
-using SizeF = SizeType<float, detail::compatible::normal>;
+using SizeF = SizeType<float, detail::Compatible::normal>;
 
 /**
  * A rectangle.
@@ -508,7 +544,7 @@ using SizeF = SizeType<float, detail::compatible::normal>;
  *
  * All rectangle points are at the top left.
  */
-template<class dim_t, detail::compatible dim_c = detail::compatible::normal>
+template<class Dim, detail::Compatible DimCompat = detail::Compatible::normal>
 class RectType
 {
 public:
@@ -516,14 +552,14 @@ public:
     /**
      * Helper to reference the dimension type.
      */
-    using dim_type = dim_t;
+    using DimType = Dim;
 
     constexpr RectType() noexcept = default;
 
     /**
      * Construct a rectangle with an explicit point and size.
      */
-    explicit RectType(const PointType<dim_t>& point, const SizeType<dim_t, dim_c>& size) noexcept
+    explicit RectType(const PointType<Dim>& point, const SizeType<Dim, DimCompat>& size) noexcept
         : m_origin(point),
           m_size(size)
     {
@@ -536,7 +572,7 @@ public:
      * the default origin 0,0.
      */
     // cppcheck-suppress noExplicitConstructor
-    RectType(const SizeType<dim_t, dim_c>& size) noexcept
+    RectType(const SizeType<Dim, DimCompat>& size) noexcept
         : m_size(size)
     {
         assert(width() >= 0);
@@ -549,7 +585,7 @@ public:
      * @param width Width
      * @param height Height
      */
-    RectType(dim_t x, dim_t y, dim_t width, dim_t height) noexcept
+    RectType(Dim x, Dim y, Dim width, Dim height) noexcept
         : m_origin(x, y),
           m_size(width, height)
     {
@@ -557,25 +593,29 @@ public:
         assert(height >= 0);
     }
 
-    RectType<dim_t, dim_c>& operator+=(const SizeType<dim_t, dim_c>& rhs)
+    /// RectType operator
+    RectType<Dim, DimCompat>& operator+=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_size += rhs;
         return *this;
     }
 
-    RectType<dim_t, dim_c>& operator-=(const SizeType<dim_t, dim_c>& rhs)
+    /// RectType operator
+    RectType<Dim, DimCompat>& operator-=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_size -= rhs;
         return *this;
     }
 
-    RectType<dim_t, dim_c>& operator+=(const PointType<dim_t, dim_c>& rhs)
+    /// RectType operator
+    RectType<Dim, DimCompat>& operator+=(const PointType<Dim, DimCompat>& rhs)
     {
         m_origin += rhs;
         return *this;
     }
 
-    RectType<dim_t, dim_c>& operator-=(const PointType<dim_t, dim_c>& rhs)
+    /// RectType operator
+    RectType<Dim, DimCompat>& operator-=(const PointType<Dim, DimCompat>& rhs)
     {
         m_origin -= rhs;
         return *this;
@@ -584,7 +624,7 @@ public:
     /**
      * Calculate the area of the rectangle.
      */
-    inline dim_t area() const
+    inline Dim area() const
     {
         return width() * height();
     }
@@ -592,18 +632,18 @@ public:
     /**
      * Return the center point of the rectangle.
      */
-    inline PointType<dim_t, dim_c> center() const
+    inline PointType<Dim, DimCompat> center() const
     {
-        return PointType<dim_t, dim_c>(x() + (width() / 2.), y() + (height() / 2.));
+        return PointType<Dim, DimCompat>(x() + (width() / 2.), y() + (height() / 2.));
     }
 
     /**
      * Move the rectangle's center to the specified point.
      */
-    inline void move_to_center(const PointType<dim_t, dim_c>& center)
+    inline void move_to_center(const PointType<Dim, DimCompat>& center)
     {
-        const PointType<dim_t, dim_c> pos(center.x() - width() / 2.,
-                                          center.y() - height() / 2.);
+        const PointType<Dim, DimCompat> pos(center.x() - width() / 2.,
+                                            center.y() - height() / 2.);
 
         m_origin = pos;
     }
@@ -613,7 +653,7 @@ public:
      *
      * @param radius Relative radius to change by.
      */
-    inline void grow_around_center(dim_t radius)
+    inline void grow_around_center(Dim radius)
     {
         m_origin -= (radius / 2);
         m_size += radius;
@@ -624,7 +664,7 @@ public:
      *
      * @param radius Relative radius to change by.
      */
-    inline void shrink_around_center(dim_t radius)
+    inline void shrink_around_center(Dim radius)
     {
         m_origin += (radius / 2);
         m_size -= radius;
@@ -633,7 +673,7 @@ public:
     /**
      * Get the PointType of the rectangle.
      */
-    inline const PointType<dim_t, dim_c>& point() const
+    inline const PointType<Dim, DimCompat>& point() const
     {
         return m_origin;
     }
@@ -641,7 +681,7 @@ public:
     /**
      * Set the rectangle's origin to the specified point.
      */
-    inline void point(const PointType<dim_t, dim_c>& p)
+    inline void point(const PointType<Dim, DimCompat>& p)
     {
         m_origin = p;
     }
@@ -649,7 +689,7 @@ public:
     /**
      * Get the SizeType of the rectangle.
      */
-    inline const SizeType<dim_t, dim_c>& size() const
+    inline const SizeType<Dim, DimCompat>& size() const
     {
         return m_size;
     }
@@ -657,7 +697,7 @@ public:
     /**
      * Set the SizeType of the rectangle.
      */
-    inline void size(const SizeType<dim_t, dim_c>& size)
+    inline void size(const SizeType<Dim, DimCompat>& size)
     {
         m_size = size;
     }
@@ -665,7 +705,7 @@ public:
     /**
      * Get the top side of the rectangle.
      */
-    constexpr inline dim_t top() const
+    constexpr inline Dim top() const
     {
         return m_origin.y();
     }
@@ -673,7 +713,7 @@ public:
     /**
      * Get the left side the rectangle.
      */
-    constexpr inline dim_t left() const
+    constexpr inline Dim left() const
     {
         return m_origin.x();
     }
@@ -681,7 +721,7 @@ public:
     /**
      * Get the bottom side the rectangle.
      */
-    constexpr inline dim_t bottom() const
+    constexpr inline Dim bottom() const
     {
         return top() + height();
     }
@@ -689,7 +729,7 @@ public:
     /**
      * Get the right side the rectangle.
      */
-    constexpr inline dim_t right() const
+    constexpr inline Dim right() const
     {
         return left() + width();
     }
@@ -699,33 +739,33 @@ public:
      *
      * @note This is usually the origin/point of the rectangle.
      */
-    inline PointType<dim_t, dim_c> top_left() const
+    inline PointType<Dim, DimCompat> top_left() const
     {
-        return PointType<dim_t, dim_c>(left(), top());
+        return PointType<Dim, DimCompat>(left(), top());
     }
 
     /**
      * Get the top right point of the rectangle.
      */
-    inline PointType<dim_t, dim_c> top_right() const
+    inline PointType<Dim, DimCompat> top_right() const
     {
-        return PointType<dim_t, dim_c>(right(), top());
+        return PointType<Dim, DimCompat>(right(), top());
     }
 
     /**
      * Get the bottom left point of the rectangle.
      */
-    inline PointType<dim_t, dim_c> bottom_left() const
+    inline PointType<Dim, DimCompat> bottom_left() const
     {
-        return PointType<dim_t, dim_c>(left(), bottom());
+        return PointType<Dim, DimCompat>(left(), bottom());
     }
 
     /**
      * Get the bottom right point of the rectangle.
      */
-    inline PointType<dim_t, dim_c> bottom_right() const
+    inline PointType<Dim, DimCompat> bottom_right() const
     {
-        return PointType<dim_t, dim_c>(right(), bottom());
+        return PointType<Dim, DimCompat>(right(), bottom());
     }
 
     /**
@@ -749,7 +789,7 @@ public:
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
      */
-    inline bool intersect(const PointType<dim_t, dim_c>& point) const
+    inline bool intersect(const PointType<Dim, DimCompat>& point) const
     {
         return (point.x() <= right() && point.x() >= left() &&
                 point.y() <= bottom() && point.y() >= top());
@@ -759,7 +799,7 @@ public:
      * Determine if two rectangles intersect, or, overlap.
      * @param rect The rect to test.
      */
-    inline bool intersect(const RectType<dim_t, dim_c>& rect) const
+    inline bool intersect(const RectType<Dim, DimCompat>& rect) const
     {
         return (x() < rect.x() + rect.width() && x() + width() > rect.x() &&
                 y() < rect.y() + rect.height() && y() + height() > rect.y());
@@ -769,8 +809,8 @@ public:
      * Merge two rectangles together into one super rectangle that contains
      * them both.
      */
-    static inline RectType<dim_t, dim_c> merge(const RectType<dim_t, dim_c>& lhs,
-            const RectType<dim_t, dim_c>& rhs) noexcept
+    static inline RectType<Dim, DimCompat> merge(const RectType<Dim, DimCompat>& lhs,
+            const RectType<Dim, DimCompat>& rhs) noexcept
     {
         const auto xmin = std::min(lhs.x(), rhs.x());
         const auto xmax = std::max(lhs.x() + lhs.width(),
@@ -779,14 +819,14 @@ public:
         const auto ymax = std::max(lhs.y() + lhs.height(),
                                    rhs.y() + rhs.height());
 
-        return RectType<dim_t, dim_c>(xmin, ymin, xmax - xmin, ymax - ymin);
+        return RectType<Dim, DimCompat>(xmin, ymin, xmax - xmin, ymax - ymin);
     }
 
     /**
      * Return the intersecting rectangle of two rectangles, if any.
      */
-    static inline RectType<dim_t, dim_c> intersection(const RectType<dim_t, dim_c>& lhs,
-            const RectType<dim_t, dim_c>& rhs) noexcept
+    static inline RectType<Dim, DimCompat> intersection(const RectType<Dim, DimCompat>& lhs,
+            const RectType<Dim, DimCompat>& rhs) noexcept
     {
         const auto x0 = std::max(lhs.x(), rhs.x());
         const auto y0 = std::max(lhs.y(), rhs.y());
@@ -794,9 +834,9 @@ public:
         const auto h0 = std::min(lhs.y() + lhs.height(), rhs.y() + rhs.height()) - y0;
 
         if (w0 < 0 || h0 < 0)
-            return RectType<dim_t, dim_c>();
+            return RectType<Dim, DimCompat>();
 
-        return RectType<dim_t, dim_c>(x0, y0, w0, h0);
+        return RectType<Dim, DimCompat>(x0, y0, w0, h0);
     }
 
     /**
@@ -805,7 +845,7 @@ public:
      * This is different than intersect().  The specified rectangle must be
      * completely inside this one.
      */
-    inline bool contains(const RectType<dim_t, dim_c>& rhs) const
+    inline bool contains(const RectType<Dim, DimCompat>& rhs) const
     {
         return rhs.right() < right() &&
                rhs.bottom() < bottom() &&
@@ -813,101 +853,110 @@ public:
                rhs.top() > top();
     }
 
-    constexpr inline dim_t x() const { return m_origin.x(); }
-    constexpr inline dim_t y() const { return m_origin.y(); }
+    constexpr inline Dim x() const { return m_origin.x(); }
+    constexpr inline Dim y() const { return m_origin.y(); }
 
-    inline void x(dim_t x) { m_origin.x(x); }
-    inline void y(dim_t y) { m_origin.y(y); }
+    inline void x(Dim x) { m_origin.x(x); }
+    inline void y(Dim y) { m_origin.y(y); }
 
-    constexpr inline dim_t width() const { return m_size.width(); }
-    constexpr inline dim_t height() const { return m_size.height(); }
+    constexpr inline Dim width() const { return m_size.width(); }
+    constexpr inline Dim height() const { return m_size.height(); }
 
-    inline void width(dim_t width) { m_size.width(width); }
-    inline void height(dim_t height) { m_size.height(height); }
+    inline void width(Dim width) { m_size.width(width); }
+    inline void height(Dim height) { m_size.height(height); }
 
 protected:
 
     /** Origin */
-    PointType<dim_t, dim_c> m_origin;
+    PointType<Dim, DimCompat> m_origin;
     /** Size */
-    SizeType<dim_t, dim_c> m_size;
+    SizeType<Dim, DimCompat> m_size;
 };
 
-template<class dim_t, detail::compatible dim_c>
-std::ostream& operator<<(std::ostream& os, const RectType<dim_t, dim_c>& rect)
+/// Overloaded std::ostream insertion operator
+template<class Dim, detail::Compatible DimCompat>
+std::ostream& operator<<(std::ostream& os, const RectType<Dim, DimCompat>& rect)
 {
     os << "["  << rect.x() << "," << rect.y() << "-" <<
        rect.width() << "x" << rect.height() << "]";
     return os;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs.size(lhs.size() - rhs);
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs.size(lhs.size() + rhs);
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator*(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs.size(lhs.size() * rhs);
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator/(RectType<dim_t, dim_c> lhs, const SizeType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
 {
     lhs.size(lhs.size() / rhs);
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator+(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs.point(lhs.point() + rhs);
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator-(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs.point(lhs.point() - rhs);
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator*(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs.point(lhs.point() * rhs);
     return lhs;
 }
 
-template<class dim_t, detail::compatible dim_c>
-inline RectType<dim_t, dim_c> operator/(RectType<dim_t, dim_c> lhs, const PointType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
 {
     lhs.point(lhs.point() / rhs);
     return lhs;
 }
 
-/// Compares two @c Rect objects for equality.
-template<class dim_t, detail::compatible dim_c>
-inline bool operator==(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline bool operator==(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, DimCompat>& rhs)
 {
     return lhs.point() == rhs.point() &&
            lhs.size() == rhs.size();
 }
 
-/// Compares two @c Rect objects for inequality.
-template<class dim_t, detail::compatible dim_c>
-inline bool operator!=(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, dim_c>& rhs)
+/// RectType operator
+template<class Dim, detail::Compatible DimCompat>
+inline bool operator!=(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, DimCompat>& rhs)
 {
     return !(lhs == rhs);
 }
@@ -915,21 +964,21 @@ inline bool operator!=(const RectType<dim_t, dim_c>& lhs, const RectType<dim_t, 
 /**
  * Helper type for a default rect.
  */
-using Rect = RectType<default_dim_type, detail::compatible::normal>;
+using Rect = RectType<DefaultDim, detail::Compatible::normal>;
 
 static_assert(detail::rule_of_5<Rect>(),
               "Rect : must fulfill rule of 5");
 
 /**
- * Helper type for a default float rect.
+ * Helper type for a float rect.
  */
-using RectF = RectType<float, detail::compatible::normal>;
+using RectF = RectType<float, detail::Compatible::normal>;
 
 /**
  * A line, with a starting and ending point.
  * @ingroup geometry
  */
-template<class dim_t>
+template<class Dim>
 class LineType
 {
 public:
@@ -937,39 +986,40 @@ public:
     /**
      * Helper to reference the dimension type.
      */
-    using dim_type = dim_t;
+    using DimType = Dim;
 
-    constexpr explicit LineType(const PointType<dim_t>& start, const PointType<dim_t>& end) noexcept
+    constexpr explicit LineType(const PointType<Dim>& start, const PointType<Dim>& end) noexcept
         : m_start(start),
           m_end(end)
     {}
 
-    inline PointType<dim_t> start() const { return m_start; }
-    inline PointType<dim_t> end() const { return m_end; }
+    inline PointType<Dim> start() const { return m_start; }
+    inline PointType<Dim> end() const { return m_end; }
 
-    inline void start(const PointType<dim_t>& start) { m_start = start; }
-    inline void end(const PointType<dim_t>& end) { m_end = end; }
+    inline void start(const PointType<Dim>& start) { m_start = start; }
+    inline void end(const PointType<Dim>& end) { m_end = end; }
 
     /**
      * Returns a rectangle containing the line.
      */
-    inline RectType<dim_t> rect() const
+    inline RectType<Dim> rect() const
     {
         const auto x = std::min(m_start.x(), m_end.x());
         const auto y = std::min(m_start.y(), m_end.y());
         const auto x2 = std::max(m_start.x(), m_end.x());
         const auto y2 = std::max(m_start.y(), m_end.y());
 
-        return RectType<dim_t>(x, y, x2 - x, y2 - y);
+        return RectType<Dim>(x, y, x2 - x, y2 - y);
     }
 
 protected:
-    PointType<dim_t> m_start;
-    PointType<dim_t> m_end;
+    PointType<Dim> m_start;
+    PointType<Dim> m_end;
 };
 
-template<class dim_t>
-std::ostream& operator<<(std::ostream& os, const LineType<dim_t>& line)
+/// Overloaded std::ostream insertion operator
+template<class Dim>
+std::ostream& operator<<(std::ostream& os, const LineType<Dim>& line)
 {
     os << "[" << line.start() << "-" << line.end() << "]";
     return os;
@@ -978,7 +1028,7 @@ std::ostream& operator<<(std::ostream& os, const LineType<dim_t>& line)
 /**
  * Helper type for a default line.
  */
-using Line = LineType<default_dim_type>;
+using Line = LineType<DefaultDim>;
 
 static_assert(detail::rule_of_5<Line>(),
               "Line : must fulfill rule of 5");
@@ -987,7 +1037,7 @@ static_assert(detail::rule_of_5<Line>(),
  * An Arc consists of a radius and two angles.
  * @ingroup geometry
  */
-template<class dim_t>
+template<class Dim>
 class ArcType
 {
 public:
@@ -995,7 +1045,7 @@ public:
     /**
      * Helper to reference the dimension type.
      */
-    using dim_type = dim_t;
+    using DimType = Dim;
 
     /**
      * Construct an Arc object.
@@ -1005,7 +1055,7 @@ public:
      * @param angle1 Angle 1 of the arc in radians.
      * @param angle2 Angle 2 of the arc in radians.
      */
-    constexpr explicit ArcType(const PointType<dim_t>& center = {}, dim_t radius = {},
+    constexpr explicit ArcType(const PointType<Dim>& center = {}, Dim radius = {},
                                float angle1 = 0.0f, float angle2 = 0.0f) noexcept
         : m_center(center),
           m_radius(radius),
@@ -1019,27 +1069,35 @@ public:
      */
     EGT_API bool empty() const;
 
-    inline void radius(dim_t radius) { m_radius = radius; }
+    /** Set the radius. */
+    inline void radius(Dim radius) { m_radius = radius; }
+    /** Set the angle1. */
     inline void angle1(float angle) { m_angle1 = angle; }
+    /** Set the angle2. */
     inline void angle2(float angle) { m_angle2 = angle; }
-    inline void center(const PointType<dim_t>& center) { m_center = center; }
+    /** Set the center point. */
+    inline void center(const PointType<Dim>& center) { m_center = center; }
 
-    constexpr inline dim_t radius() const { return m_radius; }
+    /** Get the radius. */
+    constexpr inline Dim radius() const { return m_radius; }
+    /** Get the angle1. */
     constexpr inline float angle1() const { return m_angle1; }
+    /** Get the angle2. */
     constexpr inline float angle2() const { return m_angle2; }
-    constexpr inline PointType<dim_t> center() const { return m_center; }
+    /** Get the center point. */
+    constexpr inline PointType<Dim> center() const { return m_center; }
 
 protected:
 
     /**
      * Center point of the arc.
      */
-    PointType<dim_t> m_center;
+    PointType<Dim> m_center;
 
     /**
      * Radius of the arc.
      */
-    dim_t m_radius{0};
+    Dim m_radius{0};
 
     /**
      * Angle of the arc in radians.
@@ -1055,7 +1113,7 @@ protected:
 /**
  * Helper type for a default arc.
  */
-using Arc = ArcType<default_dim_type>;
+using Arc = ArcType<DefaultDim>;
 
 static_assert(detail::rule_of_5<Arc>(),
               "Arc : must fulfill rule of 5");
@@ -1064,15 +1122,15 @@ static_assert(detail::rule_of_5<Arc>(),
  * A basic circle with a center point and radius.
  * @ingroup geometry
  */
-template<class dim_t>
-class CircleType : public ArcType<dim_t>
+template<class Dim>
+class CircleType : public ArcType<Dim>
 {
 public:
 
     /**
      * Helper to reference the dimension type.
      */
-    using dim_type = dim_t;
+    using DimType = Dim;
 
     /**
      * Construct a Circle object.
@@ -1080,24 +1138,25 @@ public:
      * @param center Center point of the arc.
      * @param radius Radius of the arc.
      */
-    constexpr explicit CircleType(const PointType<dim_t>& center = {}, dim_t radius = {}) noexcept
-        : ArcType<dim_t>(center, radius, 0, 2.f * detail::pi<float>())
+    constexpr explicit CircleType(const PointType<Dim>& center = {}, Dim radius = {}) noexcept
+        : ArcType<Dim>(center, radius, 0, 2.f * detail::pi<float>())
     {
     }
 
     /**
      * Get a Rect that covers the circle.
      */
-    inline RectType<dim_t> rect() const
+    inline RectType<Dim> rect() const
     {
-        RectType<dim_t> r(this->center() - Point(this->radius(), this->radius()),
-                          SizeType<dim_t>(this->radius() * 2, this->radius() * 2));
+        RectType<Dim> r(this->center() - Point(this->radius(), this->radius()),
+                        SizeType<Dim>(this->radius() * 2, this->radius() * 2));
         return r;
     }
 };
 
-template<class dim_t>
-std::ostream& operator<<(std::ostream& os, const CircleType<dim_t>& circle)
+/// Overloaded std::ostream insertion operator
+template<class Dim>
+std::ostream& operator<<(std::ostream& os, const CircleType<Dim>& circle)
 {
     os << "[" << circle.center() << "-" << circle.radius() << "]";
     return os;
@@ -1106,25 +1165,32 @@ std::ostream& operator<<(std::ostream& os, const CircleType<dim_t>& circle)
 /**
  * Helper type for a default circle.
  */
-using Circle = CircleType<default_dim_type>;
+using Circle = CircleType<DefaultDim>;
 
 static_assert(detail::rule_of_5<Circle>(),
               "Circle : must fulfill rule of 5");
 
+/**
+ * Helper type for a float circle.
+ */
 using CircleF = CircleType<float>;
 
-template<class dim_t>
+/**
+ * A basic ellipse with a center and 2 radiuses.
+ * @ingroup geometry
+ */
+template<class Dim>
 class EllipseType
 {
 public:
     /**
     * Helper to reference the dimension type.
     */
-    using dim_type = dim_t;
+    using DimType = Dim;
 
-    constexpr EllipseType(const PointType<dim_t>& center = {},
-                          dim_t radiusa = {},
-                          dim_t radiusb = {}) noexcept
+    constexpr EllipseType(const PointType<Dim>& center = {},
+                          Dim radiusa = {},
+                          Dim radiusb = {}) noexcept
         : m_center(center),
           m_radiusa(radiusa),
           m_radiusb(radiusb)
@@ -1136,7 +1202,7 @@ public:
      *
      * This is technically just an approximation.
      */
-    inline dim_t perimeter() const
+    inline Dim perimeter() const
     {
         return 2.f * detail::pi<float>() * std::sqrt((m_radiusa * m_radiusa +
                 m_radiusb * m_radiusb) / 2.f);
@@ -1146,41 +1212,42 @@ public:
      * @param angle The angle in degrees on the ellipse, with the center in the
      * middle of the ellipse.
      */
-    inline PointType<dim_t> point_on_perimeter(float angle)
+    inline PointType<Dim> point_on_perimeter(float angle)
     {
         const auto x = m_radiusa * std::cos(detail::to_radians(0.f, angle));
         const auto y = m_radiusb * std::sin(detail::to_radians(0.f, angle));
-        return center() + PointType<dim_t>(x, y);
+        return center() + PointType<Dim>(x, y);
     }
 
-    inline void radiusa(const dim_t radiusa) { m_radiusa = radiusa; }
-    inline void radiusb(const dim_t radiusb) { m_radiusb = radiusb; }
-    inline void center(const PointType<dim_t>& center) { m_center = center; }
+    inline void radiusa(const Dim radiusa) { m_radiusa = radiusa; }
+    inline void radiusb(const Dim radiusb) { m_radiusb = radiusb; }
+    inline void center(const PointType<Dim>& center) { m_center = center; }
 
-    constexpr inline dim_t radiusa() const { return m_radiusa; }
-    constexpr inline dim_t radiusb() const { return m_radiusb; }
-    constexpr inline PointType<dim_t> center() const { return m_center; }
+    constexpr inline Dim radiusa() const { return m_radiusa; }
+    constexpr inline Dim radiusb() const { return m_radiusb; }
+    constexpr inline PointType<Dim> center() const { return m_center; }
 
 protected:
 
     /**
      * Center point of the arc.
      */
-    PointType<dim_t> m_center;
+    PointType<Dim> m_center;
 
     /**
      * A radius.
      */
-    dim_t m_radiusa{0};
+    Dim m_radiusa{0};
 
     /**
      * B radius.
      */
-    dim_t m_radiusb{0};
+    Dim m_radiusb{0};
 };
 
-template<class dim_t>
-std::ostream& operator<<(std::ostream& os, const EllipseType<dim_t>& ellipse)
+/// Overloaded std::ostream insertion operator
+template<class Dim>
+std::ostream& operator<<(std::ostream& os, const EllipseType<Dim>& ellipse)
 {
     os << "[" << ellipse.center() << "-" << ellipse.radiusa() <<
        "-" << ellipse.radiusb() << "]";

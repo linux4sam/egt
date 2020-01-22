@@ -93,7 +93,7 @@ public:
 
 protected:
 
-    inline default_dim_type min_option_height() const
+    inline DefaultDim min_option_height() const
     {
         return 50;
     }

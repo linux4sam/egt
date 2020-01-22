@@ -32,8 +32,6 @@
 namespace fs = std::experimental::filesystem;
 #endif
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

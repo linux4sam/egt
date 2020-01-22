@@ -22,8 +22,6 @@
 #include <cxxabi.h>
 #endif
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -54,7 +52,7 @@ std::ostream& operator<<(std::ostream& os, const PixelFormat& format)
 
 namespace detail
 {
-static const map<PixelFormat, uint32_t> drm_formats =
+static const std::map<PixelFormat, uint32_t> drm_formats =
 {
 #ifdef HAVE_LIBDRM
     {PixelFormat::rgb565, DRM_FORMAT_RGB565},
@@ -81,7 +79,7 @@ static const map<PixelFormat, uint32_t> drm_formats =
 #endif
 };
 
-static const map<PixelFormat, cairo_format_t> cairo_formats =
+static const std::map<PixelFormat, cairo_format_t> cairo_formats =
 {
     {PixelFormat::rgb565, CAIRO_FORMAT_RGB16_565},
     {PixelFormat::argb8888, CAIRO_FORMAT_ARGB32},

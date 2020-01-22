@@ -60,13 +60,16 @@ enum class AlignFlag : uint32_t
     expand = expand_horizontal | expand_vertical,
 };
 
+/// Alignment flags.
 using AlignFlags = detail::Flags<AlignFlag>;
 
+/// AlignFlags operator
 inline AlignFlags operator|(AlignFlag lhs, AlignFlag rhs)
 {
     return {lhs, rhs};
 }
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const AlignFlags& align);
 
 /** Helper to set alignment of a widget. */
@@ -339,6 +342,7 @@ enum class WindowHint : uint32_t
     cursor_overlay = detail::bit(4),
 };
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const WindowHint& hint);
 
 }

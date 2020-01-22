@@ -76,6 +76,19 @@ public:
         Painter& m_painter;
     };
 
+    /**
+     * You are encouraged to use this instead of manually calling
+     * Painter::push_group() and Painter::pop_group().
+     *
+     * @b Example
+     * @code{.cpp}
+     * {
+     *     Painter::AutoGroup group(painter);
+     *
+     *     // group automatically popped when out of scope
+     * }
+     * @endcode
+     */
     struct AutoGroup
     {
         explicit AutoGroup(Painter& painter)
@@ -155,7 +168,7 @@ public:
      * @param[in] point The point.
      */
     template<class T>
-    Painter& draw(const PointType<T, detail::compatible::normal>& point)
+    Painter& draw(const PointType<T, detail::Compatible::normal>& point)
     {
         cairo_move_to(m_cr.get(), point.x(), point.y());
 

@@ -12,8 +12,6 @@
 #include "egt/progressbar.h"
 #include <string>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -57,7 +55,7 @@ void ProgressBar::default_draw(ProgressBar& widget, Painter& painter, const Rect
 
     if (widget.show_label())
     {
-        string text = std::to_string(widget.value()) + "%";
+        std::string text = std::to_string(widget.value()) + "%";
         auto f = detail::TextWidget::scale_font(Size(b.width() * 0.75, b.height() * 0.75), text, widget.font());
 
         painter.set(widget.color(Palette::ColorId::label_text).color());
@@ -128,7 +126,7 @@ void SpinProgress::default_draw(SpinProgress& widget, Painter& painter, const Re
 
     if (widget.show_label())
     {
-        string text = std::to_string(widget.value());
+        std::string text = std::to_string(widget.value());
         auto f = detail::TextWidget::scale_font(Size(dim * 0.75, dim * 0.75), text, widget.font());
         painter.set(f);
         painter.set(widget.color(Palette::ColorId::text).color());

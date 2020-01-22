@@ -23,6 +23,26 @@ inline namespace v1
 namespace detail
 {
 
+/**
+ * When using enum_to_string() and enum_from_string(), this type need to be
+ * defined and specialized to include the data for enum string conversions.
+ *
+ * @code{.cpp}
+ * template<>
+ * std::map<Pointer::Button, char const*> detail::EnumStrings<Pointer::Button>::data =
+ * {
+ *     {Pointer::Button::none, "none"},
+ *     {Pointer::Button::left, "left"},
+ *     {Pointer::Button::middle, "middle"},
+ *     {Pointer::Button::right, "right"},
+ * };
+ *
+ * std::ostream& operator<<(std::ostream& os, const Pointer::Button& btn)
+ * {
+ *     return os << detail::enum_to_string(btn);
+ * }
+ * @endcode
+ */
 template<class T>
 struct EnumStrings
 {

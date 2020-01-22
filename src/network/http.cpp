@@ -14,8 +14,6 @@
 #include <string>
 #include <unordered_map>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -185,7 +183,7 @@ public:
     CURLM* m_multi;
     int m_running;
     asio::steady_timer m_timer;
-    unordered_map<curl_socket_t, HttpClientRequest*> m_sockets;
+    std::unordered_map<curl_socket_t, HttpClientRequest*> m_sockets;
 
 private:
 
@@ -207,7 +205,7 @@ namespace experimental
 static size_t write_callback(char* ptr, size_t size, size_t nmemb, void* userdata)
 {
     auto written = size * nmemb;
-    string str(static_cast<const char*>(ptr), written);
+    std::string str(static_cast<const char*>(ptr), written);
     auto s = static_cast<detail::HttpClientRequestData*>(userdata);
     s->buffer.insert(s->buffer.end(), str.begin(), str.end());
     return written;

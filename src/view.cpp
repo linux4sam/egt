@@ -9,8 +9,6 @@
 #include "egt/view.h"
 #include <sstream>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

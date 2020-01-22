@@ -207,6 +207,10 @@ protected:
     T m_value{};
 };
 
+/**
+ * A specialized RangeValue<> that attempts to smooth values with an easing
+ * curve.
+ */
 template<class T>
 class SmoothRangeValue : public RangeValue<T>
 {

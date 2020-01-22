@@ -11,7 +11,6 @@
  * @brief Working with themes.
  */
 
-
 #include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
 #include <egt/font.h>
@@ -61,12 +60,12 @@ class EGT_API DrawerReset
 public:
     using ResetFunction = std::function<void()>;
 
-    static void add(const ResetFunction& func)
+    static inline void add(const ResetFunction& func)
     {
         m_reset_list.push_back(func);
     }
 
-    static void reset()
+    static inline void reset()
     {
         for (auto& x : m_reset_list)
             x();
@@ -141,8 +140,6 @@ class EGT_API Theme
 {
 public:
 
-    using pattern_type = Pattern;
-
     /**
      * Box types used to characterize how a widget's box should be drawn.
      */
@@ -161,6 +158,7 @@ public:
         border_bottom = detail::bit(3),
     };
 
+    /// Box flags.
     using BoxFlags = detail::Flags<BoxFlag>;
 
     static float DEFAULT_ROUNDED_RADIUS;
@@ -176,36 +174,54 @@ public:
             m_font = detail::make_unique<Font>(*rhs.m_font);
     }
 
+    /**
+     * Get a reference to the theme Palette.
+     */
     Palette& palette()
     {
         assert(m_palette);
         return *m_palette;
     }
 
+    /**
+     * Get a const reference to the theme Palette.
+     */
     const Palette& palette() const
     {
         assert(m_palette);
         return *m_palette;
     }
 
+    /**
+     * Set the theme palette.
+     */
     void palette(Palette& palette)
     {
         assert(m_palette);
         *m_palette = palette;
     }
 
+    /**
+     * Get a reference to the theme Font.
+     */
     Font& font()
     {
         assert(m_font);
         return *m_font;
     }
 
+    /**
+     * Get a const reference to the theme Font.
+     */
     const Font& font() const
     {
         assert(m_font);
         return *m_font;
     }
 
+    /**
+     * Set the theme Font.
+     */
     void font(const Font& font)
     {
         assert(m_font);
@@ -226,10 +242,10 @@ public:
     virtual void draw_box(Painter& painter,
                           const BoxFlags& type,
                           const Rect& rect,
-                          const pattern_type& border,
-                          const pattern_type& bg,
-                          default_dim_type border_width = 0,
-                          default_dim_type margin_width = 0) const;
+                          const Pattern& border,
+                          const Pattern& bg,
+                          DefaultDim border_width = 0,
+                          DefaultDim margin_width = 0) const;
 
     virtual void draw_circle(Painter& painter,
                              const Widget& widget,
@@ -239,16 +255,21 @@ public:
     virtual void draw_circle(Painter& painter,
                              const BoxFlags& type,
                              const Rect& rect,
-                             const pattern_type& border,
-                             const pattern_type& bg,
-                             default_dim_type border_width = 0,
-                             default_dim_type margin_width = 0) const;
+                             const Pattern& border,
+                             const Pattern& bg,
+                             DefaultDim border_width = 0,
+                             DefaultDim margin_width = 0) const;
 
-    virtual default_dim_type default_border() const
+    virtual DefaultDim default_border() const
     {
         return 2;
     }
 
+    /**
+     * Apply the Theme.
+     *
+     * Automatically called by global_theme() when setting a new theme.
+     */
     virtual void apply()
     {
         init_palette();
@@ -270,10 +291,25 @@ protected:
      */
     std::unique_ptr<Font> m_font{detail::make_unique<Font>()};
 
+    /**
+     * Setup for initializing the palette.
+     *
+     * Called by apply().
+     */
     virtual void init_palette();
 
+    /**
+     * Setup for initializing the font.
+     *
+     * Called by apply().
+     */
     virtual void init_font();
 
+    /**
+     * Setup for initializing drawing.
+     *
+     * Called by apply().
+     */
     virtual void init_draw();
 };
 
@@ -284,11 +320,15 @@ protected:
  *
  * @warning Keep in mind that themes can be set on individual widgets, in which
  * case, they are disconnected from the global theme.
+ *
+ * @return Reference to the current Theme.
  */
 EGT_API Theme& global_theme();
 
 /**
  * Set the global theme.
+ *
+ * This function will call Theme::apply() on the passed in Theme.
  *
  * @note This will destroy any pre-existing theme instance.
  */

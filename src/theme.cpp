@@ -33,11 +33,13 @@ Theme& global_theme()
 void global_theme(std::shared_ptr<Theme> theme)
 {
     assert(theme);
+    if (theme)
+    {
+        the_global_theme = std::move(theme);
 
-    the_global_theme = std::move(theme);
-
-    if (the_global_theme)
-        the_global_theme->apply();
+        if (the_global_theme)
+            the_global_theme->apply();
+    }
 }
 
 float Theme::DEFAULT_ROUNDED_RADIUS = 4.0;
@@ -138,10 +140,10 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
 void Theme::draw_box(Painter& painter,
                      const BoxFlags& type,
                      const Rect& rect,
-                     const pattern_type& border,
-                     const pattern_type& bg,
-                     default_dim_type border_width,
-                     default_dim_type margin_width) const
+                     const Pattern& border,
+                     const Pattern& bg,
+                     DefaultDim border_width,
+                     DefaultDim margin_width) const
 {
     if (type.empty())
         return;
@@ -273,10 +275,10 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
 void Theme::draw_circle(Painter& painter,
                         const BoxFlags& type,
                         const Rect& rect,
-                        const pattern_type& border,
-                        const pattern_type& bg,
-                        default_dim_type border_width,
-                        default_dim_type margin_width) const
+                        const Pattern& border,
+                        const Pattern& bg,
+                        DefaultDim border_width,
+                        DefaultDim margin_width) const
 {
     if (type.empty())
         return;

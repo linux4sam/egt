@@ -12,8 +12,6 @@
 #include "egt/painter.h"
 #include "egt/slider.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

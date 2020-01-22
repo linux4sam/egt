@@ -17,6 +17,7 @@ inline namespace v1
 namespace detail
 {
 
+/// @private
 struct plane_t_deleter
 {
     void operator()(plane_data* plane);

@@ -9,22 +9,20 @@
 #include <vector>
 #include <iostream>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
 {
 
-static vector<Timer*> timers;
+static std::vector<Timer*> timers;
 
-void dump_timers(ostream& out)
+void dump_timers(std::ostream& out)
 {
     for (auto& timer : timers)
     {
         out << "Timer (" << timer->name() << ") duration(" <<
             timer->duration().count() << " ms) " <<
-            (timer->running() ? "running" : "idle") << endl;
+            (timer->running() ? "running" : "idle") << std::endl;
     }
 }
 

@@ -17,8 +17,6 @@
 #include <string>
 #include <thread>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -126,7 +124,7 @@ int64_t VideoWindow::duration() const
     return m_video_impl->duration();
 }
 
-bool VideoWindow::media(const string& uri)
+bool VideoWindow::media(const std::string& uri)
 {
     return m_video_impl->media(detail::abspath(uri));
 }

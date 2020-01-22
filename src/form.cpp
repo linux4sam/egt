@@ -7,8 +7,6 @@
 #include "egt/grid.h"
 #include "egt/label.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

@@ -17,8 +17,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -31,15 +29,15 @@ std::string extract_filename(const std::string& path)
     const char sep = '/';
 
     size_t i = path.rfind(sep, path.length());
-    if (i != string::npos)
+    if (i != std::string::npos)
         return (path.substr(i + 1, path.length() - i));
 
-    return string();
+    return {};
 }
 
 std::string extract_dirname(const std::string& path)
 {
-    unique_ptr<char, decltype(std::free)*> p(strdup(path.c_str()), std::free);
+    std::unique_ptr<char, decltype(std::free)*> p(strdup(path.c_str()), std::free);
     auto dir = ::dirname(p.get());
     return std::string(dir);
 }

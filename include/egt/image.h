@@ -94,9 +94,13 @@ public:
     // cppcheck-suppress noExplicitConstructor
     Image(cairo_surface_t* surface);
 
+    /// Image operator
     Image(const Image&) = default;
+    /// Image operator
     Image(Image&&) = default;
+    /// Image operator
     Image& operator=(const Image&) = default;
+    /// Image operator
     Image& operator=(Image&&) = default;
 
     /**
@@ -151,12 +155,12 @@ public:
                 cairo_image_surface_get_height(surface().get())};
     }
 
-    inline default_dim_type width() const
+    inline DefaultDim width() const
     {
         return size().width();
     }
 
-    inline default_dim_type height() const
+    inline DefaultDim height() const
     {
         return size().height();
     }

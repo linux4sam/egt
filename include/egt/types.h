@@ -95,6 +95,7 @@ enum class PixelFormat
     uyvy,     ///< Reverse byte order of YUY2
 };
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const PixelFormat& format);
 
 /**

@@ -41,9 +41,18 @@ class EGT_API Color
 {
 public:
 
-    using rgb_t = uint32_t;
-    using rgba_t = uint32_t;
-    using component_t = uint32_t;
+    /**
+     * Red/Green/Blue type.
+     */
+    using RGBType = uint32_t;
+    /**
+     * Red/Green/Blue/Alpha type.
+     */
+    using RGBAType = uint32_t;
+    /**
+     * Single component of Red/Green/Blue/Alpha type.
+     */
+    using ComponentType = uint32_t;
 
     constexpr Color() = default;
 
@@ -57,7 +66,7 @@ public:
      *
      * @param[in] c RGBA value.
      */
-    explicit constexpr Color(rgba_t c) noexcept
+    explicit constexpr Color(RGBAType c) noexcept
         : m_rgba
     {
         {
@@ -75,7 +84,7 @@ public:
      * @param[in] color Pre-existing color.
      * @param[in] alpha Specific alpha value.
      */
-    constexpr Color(const Color& color, component_t alpha) noexcept
+    constexpr Color(const Color& color, ComponentType alpha) noexcept
         : m_rgba
     {
         {
@@ -95,7 +104,7 @@ public:
      * @param[in] b Blue component in range 0 - 255.
      * @param[in] a Alpha component in range 0 - 255.
      */
-    constexpr explicit Color(component_t r, component_t g, component_t b, component_t a = 255) noexcept
+    constexpr explicit Color(ComponentType r, ComponentType g, ComponentType b, ComponentType a = 255) noexcept
         : m_rgba
     {
         {
@@ -125,18 +134,18 @@ public:
 
     //@{
     /** Get RGBA component value as value from 0 to 255. */
-    constexpr inline component_t red() const { return assert(m_rgba[0] <= 255), m_rgba[0]; }
-    constexpr inline component_t green() const { return assert(m_rgba[1] <= 255), m_rgba[1]; }
-    constexpr inline component_t blue() const { return assert(m_rgba[2] <= 255), m_rgba[2]; }
-    constexpr inline component_t alpha() const { return assert(m_rgba[3] <= 255), m_rgba[3]; }
+    constexpr inline ComponentType red() const { return assert(m_rgba[0] <= 255), m_rgba[0]; }
+    constexpr inline ComponentType green() const { return assert(m_rgba[1] <= 255), m_rgba[1]; }
+    constexpr inline ComponentType blue() const { return assert(m_rgba[2] <= 255), m_rgba[2]; }
+    constexpr inline ComponentType alpha() const { return assert(m_rgba[3] <= 255), m_rgba[3]; }
     //@}
 
     //@{
     /** Set RGBA component value individually from 0 to 255. */
-    inline void red(component_t r) { m_rgba[0] = r & 0xff; }
-    inline void green(component_t g) { m_rgba[1] = g & 0xff; }
-    inline void blue(component_t b) { m_rgba[2] = b & 0xff; }
-    inline void alpha(component_t a) { m_rgba[3] = a & 0xff; }
+    inline void red(ComponentType r) { m_rgba[0] = r & 0xff; }
+    inline void green(ComponentType g) { m_rgba[1] = g & 0xff; }
+    inline void blue(ComponentType b) { m_rgba[2] = b & 0xff; }
+    inline void alpha(ComponentType a) { m_rgba[3] = a & 0xff; }
     //@}
 
     inline uint16_t pixel16() const
@@ -157,7 +166,7 @@ public:
         return Color(r, g, b, 0xff);
     }
 
-    inline constexpr rgba_t pixel24() const
+    inline constexpr RGBAType pixel24() const
     {
         return (red() << 16) |
                (green() << 8) |
@@ -165,7 +174,7 @@ public:
                (0xff);
     }
 
-    static inline constexpr Color pixel24(rgba_t c)
+    static inline constexpr Color pixel24(RGBAType c)
     {
         return Color((c >> 16) & 0xff,
                      (c >> 8) & 0xff,
@@ -173,7 +182,7 @@ public:
                      0xff);
     }
 
-    inline constexpr rgba_t pixel32() const
+    inline constexpr RGBAType pixel32() const
     {
         return (red() << 16) |
                (green() << 8) |
@@ -181,7 +190,7 @@ public:
                (alpha() << 24);
     }
 
-    static inline constexpr Color pixel32(rgba_t c)
+    static inline constexpr Color pixel32(RGBAType c)
     {
         return Color((c >> 16) & 0xff,
                      (c >> 8) & 0xff,
@@ -230,7 +239,7 @@ public:
      * @param[in] c RGB value.
      * @param[in] alpha Alpha component in range 0 - 255.
      */
-    constexpr static inline Color rgb(rgb_t c, component_t alpha = 255) noexcept
+    constexpr static inline Color rgb(RGBType c, ComponentType alpha = 255) noexcept
     {
         return Color(c << 8 | alpha);
     }
@@ -354,7 +363,7 @@ public:
      *
      * @param[in] c RGBA value.
      */
-    Color& operator=(rgba_t c)
+    Color& operator=(RGBAType c)
     {
         m_rgba[0] = (c >> 24) & 0xff;
         m_rgba[1] = (c >> 16) & 0xff;
@@ -364,6 +373,7 @@ public:
         return *this;
     }
 
+    /// Color operator
     template<class T>
     Color operator+(T scalar) const
     {
@@ -373,6 +383,7 @@ public:
                             alphaf() + scalar);
     }
 
+    /// Color operator
     template<class T>
     Color operator-(T scalar) const
     {
@@ -382,6 +393,7 @@ public:
                             alphaf() - scalar);
     }
 
+    /// Color operator
     template<class T>
     Color operator*(T scalar) const
     {
@@ -391,6 +403,7 @@ public:
                             alphaf() * scalar);
     }
 
+    /// Color operator
     template<class T>
     Color operator/(T scalar) const
     {
@@ -400,6 +413,7 @@ public:
                             alphaf() / scalar);
     }
 
+    /// Color operator
     Color operator+(const Color& rhs) const
     {
         return Color::rgbaf(redf() + rhs.redf(),
@@ -408,6 +422,7 @@ public:
                             alphaf() + rhs.alphaf());
     }
 
+    /// Color operator
     Color operator-(const Color& rhs) const
     {
         return Color::rgbaf(redf() - rhs.redf(),
@@ -416,6 +431,7 @@ public:
                             alphaf() - rhs.alphaf());
     }
 
+    /// Color operator
     Color operator*(const Color& rhs) const
     {
         return Color::rgbaf(redf() * rhs.redf(),
@@ -424,6 +440,7 @@ public:
                             alphaf() * rhs.alphaf());
     }
 
+    /// Color operator
     Color operator/(const Color& rhs) const
     {
         return Color::rgbaf(redf() / rhs.redf(),
@@ -472,12 +489,13 @@ protected:
      * @note std::valarray would have made more sense due to all the scalar
      * operations, but we lose constexpr with it.
      */
-    std::array<component_t, 4> m_rgba{};
+    std::array<ComponentType, 4> m_rgba{};
 };
 
 static_assert(detail::rule_of_5<Color>(),
               "Color : must fulfill rule of 5");
 
+/// Color operator
 inline bool operator==(const Color& lhs, const Color& rhs)
 {
     return lhs.red() == rhs.red() &&
@@ -486,11 +504,13 @@ inline bool operator==(const Color& lhs, const Color& rhs)
            lhs.alpha() == rhs.alpha();
 }
 
+/// Color operator
 inline bool operator!=(const Color& lhs, const Color& rhs)
 {
     return !(lhs == rhs);
 }
 
+/// Color operator
 template<class T>
 inline Color operator+(T scalar, const Color& rhs)
 {
@@ -500,6 +520,7 @@ inline Color operator+(T scalar, const Color& rhs)
                         rhs.alphaf() + scalar);
 }
 
+/// Color operator
 template<class T>
 inline Color operator-(T scalar, const Color& rhs)
 {
@@ -509,6 +530,7 @@ inline Color operator-(T scalar, const Color& rhs)
                         rhs.alphaf() - scalar);
 }
 
+/// Color operator
 template<class T>
 inline Color operator*(T scalar, const Color& rhs)
 {
@@ -518,6 +540,7 @@ inline Color operator*(T scalar, const Color& rhs)
                         rhs.alphaf() * scalar);
 }
 
+/// Color operator
 template<class T>
 inline Color operator/(T scalar, const Color& rhs)
 {
@@ -527,11 +550,12 @@ inline Color operator/(T scalar, const Color& rhs)
                         rhs.alphaf() / scalar);
 }
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Color& color);
 
 /**
  * A Pattern which can store one or more colors at different offsets (steps)
- * which can be used to create gradients.
+ * which can be used to create complex gradients.
  */
 class EGT_API Pattern
 {

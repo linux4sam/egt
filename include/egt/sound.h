@@ -87,8 +87,10 @@ protected:
     void init_alsa_params(unsigned int rate, int channels);
     void open_file();
 
+    /// Implementation pointer.
     std::unique_ptr<detail::soundimpl> m_impl;
 
+    /// Sound file.
     std::string m_file;
 };
 

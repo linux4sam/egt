@@ -11,8 +11,6 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -20,7 +18,7 @@ inline namespace v1
 namespace detail
 {
 
-FrameBuffer::FrameBuffer(const string& path)
+FrameBuffer::FrameBuffer(const std::string& path)
 {
     spdlog::info("Framebuffer Screen");
 

@@ -28,7 +28,7 @@
 namespace egt
 {
 /**
- * EGT API version 1 namespace.
+ * EGT API Version 1 inline namespace.
  */
 inline namespace v1
 {

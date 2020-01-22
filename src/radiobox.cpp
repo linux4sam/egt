@@ -10,8 +10,6 @@
 #include "egt/painter.h"
 #include "egt/radiobox.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -66,7 +64,7 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
     painter.set(widget.font());
     auto text_size = painter.text_size(widget.text());
 
-    vector<detail::LayoutRect> rects;
+    std::vector<detail::LayoutRect> rects;
 
     const auto circle_diameter = std::min(b.width() - text_size.width(), b.height());
 

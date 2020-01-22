@@ -9,8 +9,6 @@
 #include "egt/list.h"
 #include "egt/painter.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -26,8 +24,8 @@ ListBox::ListBox(const Rect& rect) noexcept
 
 ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
     : Frame(rect),
-      m_view(make_shared<ScrolledView>(*this, ScrolledView::Policy::never)),
-      m_sizer(make_shared<BoxSizer>(Orientation::vertical, Justification::start))
+      m_view(std::make_shared<ScrolledView>(*this, ScrolledView::Policy::never)),
+      m_sizer(std::make_shared<BoxSizer>(Orientation::vertical, Justification::start))
 {
     name("ListBox" + std::to_string(m_widgetid));
 

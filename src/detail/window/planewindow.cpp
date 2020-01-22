@@ -12,8 +12,6 @@
 #include <algorithm>
 #include <spdlog/spdlog.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

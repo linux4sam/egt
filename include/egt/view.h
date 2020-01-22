@@ -126,12 +126,12 @@ public:
     /**
      * Get the slider dimension.
      */
-    inline default_dim_type slider_dim() const { return m_slider_dim; }
+    inline DefaultDim slider_dim() const { return m_slider_dim; }
 
     /**
      * Set the slider dimension.
      */
-    inline void slider_dim(default_dim_type dim)
+    inline void slider_dim(DefaultDim dim)
     {
         if (detail::change_if_diff<>(m_slider_dim, dim))
             damage();
@@ -206,7 +206,7 @@ protected:
     /**
      * Width/height of the slider when shown.
      */
-    default_dim_type m_slider_dim{8};
+    DefaultDim m_slider_dim{8};
 
     bool m_update{false};
 };

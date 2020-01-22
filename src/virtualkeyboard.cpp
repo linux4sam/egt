@@ -6,19 +6,17 @@
 #include "egt/sizer.h"
 #include "egt/virtualkeyboard.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
 {
 
 VirtualKeyboard::Key::Key(uint32_t unicode, double length) noexcept
-    : m_button(make_shared<Button>()),
+    : m_button(std::make_shared<Button>()),
       m_unicode(unicode),
       m_length(length)
 {
-    string tmp;
+    std::string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
     m_button->text(tmp);
     m_button->flags().set(Widget::Flag::no_autoresize);
@@ -26,7 +24,7 @@ VirtualKeyboard::Key::Key(uint32_t unicode, double length) noexcept
 
 VirtualKeyboard::Key::Key(const std::string& label, KeyboardCode keycode,
                           double length) noexcept
-    : m_button(make_shared<Button>(label)),
+    : m_button(std::make_shared<Button>(label)),
       m_keycode(keycode),
       m_length(length)
 {
@@ -35,16 +33,16 @@ VirtualKeyboard::Key::Key(const std::string& label, KeyboardCode keycode,
 
 VirtualKeyboard::Key::Key(const Image& img, KeyboardCode keycode,
                           double length) noexcept
-    : m_button(make_shared<ImageButton>(img)),
+    : m_button(std::make_shared<ImageButton>(img)),
       m_keycode(keycode),
       m_length(length)
 {
     m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
-VirtualKeyboard::Key::Key(const string& label, int link,
+VirtualKeyboard::Key::Key(const std::string& label, int link,
                           double length) noexcept
-    : m_button(make_shared<Button>(label)),
+    : m_button(std::make_shared<Button>(label)),
       m_length(length),
       m_link(link)
 {
@@ -53,7 +51,7 @@ VirtualKeyboard::Key::Key(const string& label, int link,
 
 VirtualKeyboard::Key::Key(const Image& img, int link,
                           double length) noexcept
-    : m_button(make_shared<ImageButton>(img)),
+    : m_button(std::make_shared<ImageButton>(img)),
       m_length(length),
       m_link(link)
 {
@@ -63,18 +61,18 @@ VirtualKeyboard::Key::Key(const Image& img, int link,
 VirtualKeyboard::Key::Key(uint32_t unicode,
                           panel_keys keys_multichoice,
                           double length) noexcept
-    : m_button(make_shared<Button>()),
+    : m_button(std::make_shared<Button>()),
       m_unicode(unicode),
       m_length(length),
       m_keys_multichoice(std::move(keys_multichoice))
 {
-    string tmp;
+    std::string tmp;
     utf8::append(unicode, std::back_inserter(tmp));
     m_button->text(tmp);
     m_button->flags().set(Widget::Flag::no_autoresize);
 }
 
-void VirtualKeyboard::Key::color(Palette::ColorId id, const Palette::pattern_type& color, Palette::GroupId group)
+void VirtualKeyboard::Key::color(Palette::ColorId id, const Pattern& color, Palette::GroupId group)
 {
     m_button->color(id, color, group);
 }
@@ -84,7 +82,7 @@ void VirtualKeyboard::Key::font(const Font& font)
     m_button->font(font);
 }
 
-VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
+VirtualKeyboard::VirtualKeyboard(std::vector<panel_keys> keys, const Rect& rect)
     : Frame(rect)
 {
     name("VirtualKeyboard" + std::to_string(m_widgetid));
@@ -102,12 +100,12 @@ VirtualKeyboard::VirtualKeyboard(vector<panel_keys> keys, const Rect& rect)
 
     for (auto& keys_panel : keys)
     {
-        auto panel = make_shared<Panel>(keys_panel);
+        auto panel = std::make_shared<Panel>(keys_panel);
         panel->align(AlignFlag::expand);
         panel->update_key_space(m_key_space);
         m_main_panels.push_back(panel);
 
-        auto main_panel = make_shared<NotebookTab>();
+        auto main_panel = std::make_shared<NotebookTab>();
         main_panel->add(panel);
         main_panel->align(AlignFlag::expand);
         // By default NotebookTab are not transparent.
@@ -163,7 +161,7 @@ VirtualKeyboard::Panel::Panel(panel_keys keys)
 {
     for (auto& row : keys)
     {
-        auto hsizer = make_shared<HorizontalBoxSizer>();
+        auto hsizer = std::make_shared<HorizontalBoxSizer>();
         hsizer->align(AlignFlag::expand_horizontal | AlignFlag::top);
         add(hsizer);
 
@@ -186,7 +184,7 @@ void VirtualKeyboard::Panel::update_key_size(const Size& s)
             key->m_button->resize(Size(s.width() * key->m_length, s.height()));
 }
 
-void VirtualKeyboard::key_link(const shared_ptr<Key>& k)
+void VirtualKeyboard::key_link(const std::shared_ptr<Key>& k)
 {
     k->m_button->on_event([this, k](Event&)
     {
@@ -194,7 +192,7 @@ void VirtualKeyboard::key_link(const shared_ptr<Key>& k)
     }, {EventId::pointer_click});
 }
 
-void VirtualKeyboard::key_input_value(const shared_ptr<Key>& k)
+void VirtualKeyboard::key_input_value(const std::shared_ptr<Key>& k)
 {
     k->m_button->on_event([this, k](Event & event)
     {
@@ -215,9 +213,9 @@ void VirtualKeyboard::key_input_value(const shared_ptr<Key>& k)
     }, {EventId::pointer_click});
 }
 
-void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
+void VirtualKeyboard::key_multichoice(const std::shared_ptr<Key>& k)
 {
-    k->m_multichoice_panel = make_shared<Panel>(k->m_keys_multichoice);
+    k->m_multichoice_panel = std::make_shared<Panel>(k->m_keys_multichoice);
     k->m_multichoice_panel->align(AlignFlag::center);
 
     // Create a Popup to display the multichoice panel.
@@ -287,7 +285,7 @@ void VirtualKeyboard::key_multichoice(const shared_ptr<Key>& k)
 
 static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
 
-PopupVirtualKeyboard::PopupVirtualKeyboard(shared_ptr<VirtualKeyboard> keyboard) noexcept
+PopupVirtualKeyboard::PopupVirtualKeyboard(std::shared_ptr<VirtualKeyboard> keyboard) noexcept
 {
     // Make the keyboard partially transparent.
     boxtype(Theme::BoxFlag::fill);
@@ -351,17 +349,17 @@ VirtualKeyboard::panel_keys& multichoice_e()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0117),
-            make_shared<VirtualKeyboard::Key>(0x0119),
-            make_shared<VirtualKeyboard::Key>(0x011b),
-            make_shared<VirtualKeyboard::Key>(0x0115),
-            make_shared<VirtualKeyboard::Key>(0x04d9),
+            std::make_shared<VirtualKeyboard::Key>(0x0117),
+            std::make_shared<VirtualKeyboard::Key>(0x0119),
+            std::make_shared<VirtualKeyboard::Key>(0x011b),
+            std::make_shared<VirtualKeyboard::Key>(0x0115),
+            std::make_shared<VirtualKeyboard::Key>(0x04d9),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00e8),
-            make_shared<VirtualKeyboard::Key>(0x00e9),
-            make_shared<VirtualKeyboard::Key>(0x00ea),
-            make_shared<VirtualKeyboard::Key>(0x00eb),
-            make_shared<VirtualKeyboard::Key>(0x0113),
+            std::make_shared<VirtualKeyboard::Key>(0x00e8),
+            std::make_shared<VirtualKeyboard::Key>(0x00e9),
+            std::make_shared<VirtualKeyboard::Key>(0x00ea),
+            std::make_shared<VirtualKeyboard::Key>(0x00eb),
+            std::make_shared<VirtualKeyboard::Key>(0x0113),
         }
     };
     return keys;
@@ -372,17 +370,17 @@ VirtualKeyboard::panel_keys& multichoice_E()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0116),
-            make_shared<VirtualKeyboard::Key>(0x0118),
-            make_shared<VirtualKeyboard::Key>(0x011a),
-            make_shared<VirtualKeyboard::Key>(0x0115),
-            make_shared<VirtualKeyboard::Key>(0x04d8),
+            std::make_shared<VirtualKeyboard::Key>(0x0116),
+            std::make_shared<VirtualKeyboard::Key>(0x0118),
+            std::make_shared<VirtualKeyboard::Key>(0x011a),
+            std::make_shared<VirtualKeyboard::Key>(0x0115),
+            std::make_shared<VirtualKeyboard::Key>(0x04d8),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00c8),
-            make_shared<VirtualKeyboard::Key>(0x00c9),
-            make_shared<VirtualKeyboard::Key>(0x00ca),
-            make_shared<VirtualKeyboard::Key>(0x00cb),
-            make_shared<VirtualKeyboard::Key>(0x0112),
+            std::make_shared<VirtualKeyboard::Key>(0x00c8),
+            std::make_shared<VirtualKeyboard::Key>(0x00c9),
+            std::make_shared<VirtualKeyboard::Key>(0x00ca),
+            std::make_shared<VirtualKeyboard::Key>(0x00cb),
+            std::make_shared<VirtualKeyboard::Key>(0x0112),
         }
     };
     return keys;
@@ -393,8 +391,8 @@ VirtualKeyboard::panel_keys& multichoice_r()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0155),
-            make_shared<VirtualKeyboard::Key>(0x0159),
+            std::make_shared<VirtualKeyboard::Key>(0x0155),
+            std::make_shared<VirtualKeyboard::Key>(0x0159),
         }
     };
     return keys;
@@ -405,8 +403,8 @@ VirtualKeyboard::panel_keys& multichoice_R()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0154),
-            make_shared<VirtualKeyboard::Key>(0x0158),
+            std::make_shared<VirtualKeyboard::Key>(0x0154),
+            std::make_shared<VirtualKeyboard::Key>(0x0158),
         }
     };
     return keys;
@@ -417,10 +415,10 @@ VirtualKeyboard::panel_keys& multichoice_t()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0fe),
-            make_shared<VirtualKeyboard::Key>(0x0165),
-            make_shared<VirtualKeyboard::Key>(0x021b),
-            make_shared<VirtualKeyboard::Key>(0x0163),
+            std::make_shared<VirtualKeyboard::Key>(0x0fe),
+            std::make_shared<VirtualKeyboard::Key>(0x0165),
+            std::make_shared<VirtualKeyboard::Key>(0x021b),
+            std::make_shared<VirtualKeyboard::Key>(0x0163),
         }
     };
     return keys;
@@ -431,10 +429,10 @@ VirtualKeyboard::panel_keys& multichoice_T()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0fe),
-            make_shared<VirtualKeyboard::Key>(0x0164),
-            make_shared<VirtualKeyboard::Key>(0x021a),
-            make_shared<VirtualKeyboard::Key>(0x0162),
+            std::make_shared<VirtualKeyboard::Key>(0x0fe),
+            std::make_shared<VirtualKeyboard::Key>(0x0164),
+            std::make_shared<VirtualKeyboard::Key>(0x021a),
+            std::make_shared<VirtualKeyboard::Key>(0x0162),
         }
     };
     return keys;
@@ -445,7 +443,7 @@ VirtualKeyboard::panel_keys& multichoice_y()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0fd),
+            std::make_shared<VirtualKeyboard::Key>(0x0fd),
         }
     };
     return keys;
@@ -456,7 +454,7 @@ VirtualKeyboard::panel_keys& multichoice_Y()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0dd),
+            std::make_shared<VirtualKeyboard::Key>(0x0dd),
         }
     };
     return keys;
@@ -467,15 +465,15 @@ VirtualKeyboard::panel_keys& multichoice_u()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0173),
-            make_shared<VirtualKeyboard::Key>(0x0171),
-            make_shared<VirtualKeyboard::Key>(0x016f),
-            make_shared<VirtualKeyboard::Key>(0x016b),
+            std::make_shared<VirtualKeyboard::Key>(0x0173),
+            std::make_shared<VirtualKeyboard::Key>(0x0171),
+            std::make_shared<VirtualKeyboard::Key>(0x016f),
+            std::make_shared<VirtualKeyboard::Key>(0x016b),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00fc),
-            make_shared<VirtualKeyboard::Key>(0x00fb),
-            make_shared<VirtualKeyboard::Key>(0x00fa),
-            make_shared<VirtualKeyboard::Key>(0x00f9),
+            std::make_shared<VirtualKeyboard::Key>(0x00fc),
+            std::make_shared<VirtualKeyboard::Key>(0x00fb),
+            std::make_shared<VirtualKeyboard::Key>(0x00fa),
+            std::make_shared<VirtualKeyboard::Key>(0x00f9),
         }
     };
     return keys;
@@ -486,15 +484,15 @@ VirtualKeyboard::panel_keys& multichoice_U()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0172),
-            make_shared<VirtualKeyboard::Key>(0x0170),
-            make_shared<VirtualKeyboard::Key>(0x016e),
-            make_shared<VirtualKeyboard::Key>(0x016a),
+            std::make_shared<VirtualKeyboard::Key>(0x0172),
+            std::make_shared<VirtualKeyboard::Key>(0x0170),
+            std::make_shared<VirtualKeyboard::Key>(0x016e),
+            std::make_shared<VirtualKeyboard::Key>(0x016a),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00dc),
-            make_shared<VirtualKeyboard::Key>(0x00db),
-            make_shared<VirtualKeyboard::Key>(0x00da),
-            make_shared<VirtualKeyboard::Key>(0x00d9),
+            std::make_shared<VirtualKeyboard::Key>(0x00dc),
+            std::make_shared<VirtualKeyboard::Key>(0x00db),
+            std::make_shared<VirtualKeyboard::Key>(0x00da),
+            std::make_shared<VirtualKeyboard::Key>(0x00d9),
         }
     };
     return keys;
@@ -505,14 +503,14 @@ VirtualKeyboard::panel_keys& multichoice_i()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0131),
-            make_shared<VirtualKeyboard::Key>(0x012e),
-            make_shared<VirtualKeyboard::Key>(0x012b),
+            std::make_shared<VirtualKeyboard::Key>(0x0131),
+            std::make_shared<VirtualKeyboard::Key>(0x012e),
+            std::make_shared<VirtualKeyboard::Key>(0x012b),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00ef),
-            make_shared<VirtualKeyboard::Key>(0x00ee),
-            make_shared<VirtualKeyboard::Key>(0x00ed),
-            make_shared<VirtualKeyboard::Key>(0x00ec),
+            std::make_shared<VirtualKeyboard::Key>(0x00ef),
+            std::make_shared<VirtualKeyboard::Key>(0x00ee),
+            std::make_shared<VirtualKeyboard::Key>(0x00ed),
+            std::make_shared<VirtualKeyboard::Key>(0x00ec),
         }
     };
     return keys;
@@ -523,14 +521,14 @@ VirtualKeyboard::panel_keys& multichoice_I()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0130),
-            make_shared<VirtualKeyboard::Key>(0x012d),
-            make_shared<VirtualKeyboard::Key>(0x012a),
+            std::make_shared<VirtualKeyboard::Key>(0x0130),
+            std::make_shared<VirtualKeyboard::Key>(0x012d),
+            std::make_shared<VirtualKeyboard::Key>(0x012a),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00cf),
-            make_shared<VirtualKeyboard::Key>(0x00ce),
-            make_shared<VirtualKeyboard::Key>(0x00cd),
-            make_shared<VirtualKeyboard::Key>(0x00cc),
+            std::make_shared<VirtualKeyboard::Key>(0x00cf),
+            std::make_shared<VirtualKeyboard::Key>(0x00ce),
+            std::make_shared<VirtualKeyboard::Key>(0x00cd),
+            std::make_shared<VirtualKeyboard::Key>(0x00cc),
         }
     };
     return keys;
@@ -541,15 +539,15 @@ VirtualKeyboard::panel_keys& multichoice_o()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0153),
-            make_shared<VirtualKeyboard::Key>(0x0151),
-            make_shared<VirtualKeyboard::Key>(0x00f8),
-            make_shared<VirtualKeyboard::Key>(0x00f6),
+            std::make_shared<VirtualKeyboard::Key>(0x0153),
+            std::make_shared<VirtualKeyboard::Key>(0x0151),
+            std::make_shared<VirtualKeyboard::Key>(0x00f8),
+            std::make_shared<VirtualKeyboard::Key>(0x00f6),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00f5),
-            make_shared<VirtualKeyboard::Key>(0x00f4),
-            make_shared<VirtualKeyboard::Key>(0x00f3),
-            make_shared<VirtualKeyboard::Key>(0x00f2),
+            std::make_shared<VirtualKeyboard::Key>(0x00f5),
+            std::make_shared<VirtualKeyboard::Key>(0x00f4),
+            std::make_shared<VirtualKeyboard::Key>(0x00f3),
+            std::make_shared<VirtualKeyboard::Key>(0x00f2),
         }
     };
     return keys;
@@ -560,15 +558,15 @@ VirtualKeyboard::panel_keys& multichoice_O()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0152),
-            make_shared<VirtualKeyboard::Key>(0x0150),
-            make_shared<VirtualKeyboard::Key>(0x00d8),
-            make_shared<VirtualKeyboard::Key>(0x00d6),
+            std::make_shared<VirtualKeyboard::Key>(0x0152),
+            std::make_shared<VirtualKeyboard::Key>(0x0150),
+            std::make_shared<VirtualKeyboard::Key>(0x00d8),
+            std::make_shared<VirtualKeyboard::Key>(0x00d6),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00d5),
-            make_shared<VirtualKeyboard::Key>(0x00d4),
-            make_shared<VirtualKeyboard::Key>(0x00d3),
-            make_shared<VirtualKeyboard::Key>(0x00d2),
+            std::make_shared<VirtualKeyboard::Key>(0x00d5),
+            std::make_shared<VirtualKeyboard::Key>(0x00d4),
+            std::make_shared<VirtualKeyboard::Key>(0x00d3),
+            std::make_shared<VirtualKeyboard::Key>(0x00d2),
         }
     };
     return keys;
@@ -579,17 +577,17 @@ VirtualKeyboard::panel_keys& multichoice_a()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x00e5),
-            make_shared<VirtualKeyboard::Key>(0x00e6),
-            make_shared<VirtualKeyboard::Key>(0x0101),
-            make_shared<VirtualKeyboard::Key>(0x0103),
-            make_shared<VirtualKeyboard::Key>(0x0105),
+            std::make_shared<VirtualKeyboard::Key>(0x00e5),
+            std::make_shared<VirtualKeyboard::Key>(0x00e6),
+            std::make_shared<VirtualKeyboard::Key>(0x0101),
+            std::make_shared<VirtualKeyboard::Key>(0x0103),
+            std::make_shared<VirtualKeyboard::Key>(0x0105),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00e0),
-            make_shared<VirtualKeyboard::Key>(0x00e1),
-            make_shared<VirtualKeyboard::Key>(0x00e2),
-            make_shared<VirtualKeyboard::Key>(0x00e3),
-            make_shared<VirtualKeyboard::Key>(0x00e4),
+            std::make_shared<VirtualKeyboard::Key>(0x00e0),
+            std::make_shared<VirtualKeyboard::Key>(0x00e1),
+            std::make_shared<VirtualKeyboard::Key>(0x00e2),
+            std::make_shared<VirtualKeyboard::Key>(0x00e3),
+            std::make_shared<VirtualKeyboard::Key>(0x00e4),
         }
     };
     return keys;
@@ -600,17 +598,17 @@ VirtualKeyboard::panel_keys& multichoice_A()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x00c5),
-            make_shared<VirtualKeyboard::Key>(0x00c6),
-            make_shared<VirtualKeyboard::Key>(0x0100),
-            make_shared<VirtualKeyboard::Key>(0x0102),
-            make_shared<VirtualKeyboard::Key>(0x0104),
+            std::make_shared<VirtualKeyboard::Key>(0x00c5),
+            std::make_shared<VirtualKeyboard::Key>(0x00c6),
+            std::make_shared<VirtualKeyboard::Key>(0x0100),
+            std::make_shared<VirtualKeyboard::Key>(0x0102),
+            std::make_shared<VirtualKeyboard::Key>(0x0104),
         }, {
-            make_shared<VirtualKeyboard::Key>(0x00c0),
-            make_shared<VirtualKeyboard::Key>(0x00c1),
-            make_shared<VirtualKeyboard::Key>(0x00c2),
-            make_shared<VirtualKeyboard::Key>(0x00c3),
-            make_shared<VirtualKeyboard::Key>(0x00c4),
+            std::make_shared<VirtualKeyboard::Key>(0x00c0),
+            std::make_shared<VirtualKeyboard::Key>(0x00c1),
+            std::make_shared<VirtualKeyboard::Key>(0x00c2),
+            std::make_shared<VirtualKeyboard::Key>(0x00c3),
+            std::make_shared<VirtualKeyboard::Key>(0x00c4),
         }
     };
     return keys;
@@ -621,11 +619,11 @@ VirtualKeyboard::panel_keys& multichoice_s()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x00df),
-            make_shared<VirtualKeyboard::Key>(0x00a7),
-            make_shared<VirtualKeyboard::Key>(0x015b),
-            make_shared<VirtualKeyboard::Key>(0x0161),
-            make_shared<VirtualKeyboard::Key>(0x015f),
+            std::make_shared<VirtualKeyboard::Key>(0x00df),
+            std::make_shared<VirtualKeyboard::Key>(0x00a7),
+            std::make_shared<VirtualKeyboard::Key>(0x015b),
+            std::make_shared<VirtualKeyboard::Key>(0x0161),
+            std::make_shared<VirtualKeyboard::Key>(0x015f),
         }
     };
     return keys;
@@ -636,11 +634,11 @@ VirtualKeyboard::panel_keys& multichoice_S()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x00df),
-            make_shared<VirtualKeyboard::Key>(0x00a7),
-            make_shared<VirtualKeyboard::Key>(0x015a),
-            make_shared<VirtualKeyboard::Key>(0x0160),
-            make_shared<VirtualKeyboard::Key>(0x015e),
+            std::make_shared<VirtualKeyboard::Key>(0x00df),
+            std::make_shared<VirtualKeyboard::Key>(0x00a7),
+            std::make_shared<VirtualKeyboard::Key>(0x015a),
+            std::make_shared<VirtualKeyboard::Key>(0x0160),
+            std::make_shared<VirtualKeyboard::Key>(0x015e),
         }
     };
     return keys;
@@ -651,8 +649,8 @@ VirtualKeyboard::panel_keys& multichoice_d()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x010f),
-            make_shared<VirtualKeyboard::Key>(0x0111),
+            std::make_shared<VirtualKeyboard::Key>(0x010f),
+            std::make_shared<VirtualKeyboard::Key>(0x0111),
         }
     };
     return keys;
@@ -663,8 +661,8 @@ VirtualKeyboard::panel_keys& multichoice_D()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x010e),
-            make_shared<VirtualKeyboard::Key>(0x0110),
+            std::make_shared<VirtualKeyboard::Key>(0x010e),
+            std::make_shared<VirtualKeyboard::Key>(0x0110),
         }
     };
     return keys;
@@ -675,8 +673,8 @@ VirtualKeyboard::panel_keys& multichoice_g()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0123),
-            make_shared<VirtualKeyboard::Key>(0x011f),
+            std::make_shared<VirtualKeyboard::Key>(0x0123),
+            std::make_shared<VirtualKeyboard::Key>(0x011f),
         }
     };
     return keys;
@@ -687,8 +685,8 @@ VirtualKeyboard::panel_keys& multichoice_G()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0122),
-            make_shared<VirtualKeyboard::Key>(0x011e),
+            std::make_shared<VirtualKeyboard::Key>(0x0122),
+            std::make_shared<VirtualKeyboard::Key>(0x011e),
         }
     };
     return keys;
@@ -699,7 +697,7 @@ VirtualKeyboard::panel_keys& multichoice_k()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0137),
+            std::make_shared<VirtualKeyboard::Key>(0x0137),
         }
     };
     return keys;
@@ -710,7 +708,7 @@ VirtualKeyboard::panel_keys& multichoice_K()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0136),
+            std::make_shared<VirtualKeyboard::Key>(0x0136),
         }
     };
     return keys;
@@ -721,10 +719,10 @@ VirtualKeyboard::panel_keys& multichoice_l()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0142),
-            make_shared<VirtualKeyboard::Key>(0x013e),
-            make_shared<VirtualKeyboard::Key>(0x013c),
-            make_shared<VirtualKeyboard::Key>(0x013a),
+            std::make_shared<VirtualKeyboard::Key>(0x0142),
+            std::make_shared<VirtualKeyboard::Key>(0x013e),
+            std::make_shared<VirtualKeyboard::Key>(0x013c),
+            std::make_shared<VirtualKeyboard::Key>(0x013a),
         }
     };
     return keys;
@@ -735,10 +733,10 @@ VirtualKeyboard::panel_keys& multichoice_L()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0141),
-            make_shared<VirtualKeyboard::Key>(0x013d),
-            make_shared<VirtualKeyboard::Key>(0x013b),
-            make_shared<VirtualKeyboard::Key>(0x0139),
+            std::make_shared<VirtualKeyboard::Key>(0x0141),
+            std::make_shared<VirtualKeyboard::Key>(0x013d),
+            std::make_shared<VirtualKeyboard::Key>(0x013b),
+            std::make_shared<VirtualKeyboard::Key>(0x0139),
         }
     };
     return keys;
@@ -749,9 +747,9 @@ VirtualKeyboard::panel_keys& multichoice_z()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x017a),
-            make_shared<VirtualKeyboard::Key>(0x017c),
-            make_shared<VirtualKeyboard::Key>(0x017e),
+            std::make_shared<VirtualKeyboard::Key>(0x017a),
+            std::make_shared<VirtualKeyboard::Key>(0x017c),
+            std::make_shared<VirtualKeyboard::Key>(0x017e),
         }
     };
     return keys;
@@ -762,9 +760,9 @@ VirtualKeyboard::panel_keys& multichoice_Z()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0179),
-            make_shared<VirtualKeyboard::Key>(0x017b),
-            make_shared<VirtualKeyboard::Key>(0x017d),
+            std::make_shared<VirtualKeyboard::Key>(0x0179),
+            std::make_shared<VirtualKeyboard::Key>(0x017b),
+            std::make_shared<VirtualKeyboard::Key>(0x017d),
         }
     };
     return keys;
@@ -775,9 +773,9 @@ VirtualKeyboard::panel_keys& multichoice_c()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x00e7),
-            make_shared<VirtualKeyboard::Key>(0x0107),
-            make_shared<VirtualKeyboard::Key>(0x010d),
+            std::make_shared<VirtualKeyboard::Key>(0x00e7),
+            std::make_shared<VirtualKeyboard::Key>(0x0107),
+            std::make_shared<VirtualKeyboard::Key>(0x010d),
         }
     };
     return keys;
@@ -788,9 +786,9 @@ VirtualKeyboard::panel_keys& multichoice_C()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x00c7),
-            make_shared<VirtualKeyboard::Key>(0x0106),
-            make_shared<VirtualKeyboard::Key>(0x010c),
+            std::make_shared<VirtualKeyboard::Key>(0x00c7),
+            std::make_shared<VirtualKeyboard::Key>(0x0106),
+            std::make_shared<VirtualKeyboard::Key>(0x010c),
         }
     };
     return keys;
@@ -801,10 +799,10 @@ VirtualKeyboard::panel_keys& multichoice_n()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0148),
-            make_shared<VirtualKeyboard::Key>(0x0146),
-            make_shared<VirtualKeyboard::Key>(0x0144),
-            make_shared<VirtualKeyboard::Key>(0x00f1),
+            std::make_shared<VirtualKeyboard::Key>(0x0148),
+            std::make_shared<VirtualKeyboard::Key>(0x0146),
+            std::make_shared<VirtualKeyboard::Key>(0x0144),
+            std::make_shared<VirtualKeyboard::Key>(0x00f1),
         }
     };
     return keys;
@@ -815,10 +813,10 @@ VirtualKeyboard::panel_keys& multichoice_N()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0147),
-            make_shared<VirtualKeyboard::Key>(0x0145),
-            make_shared<VirtualKeyboard::Key>(0x0143),
-            make_shared<VirtualKeyboard::Key>(0x00d1),
+            std::make_shared<VirtualKeyboard::Key>(0x0147),
+            std::make_shared<VirtualKeyboard::Key>(0x0145),
+            std::make_shared<VirtualKeyboard::Key>(0x0143),
+            std::make_shared<VirtualKeyboard::Key>(0x00d1),
         }
     };
     return keys;
@@ -829,53 +827,53 @@ VirtualKeyboard::panel_keys& QwertyLettersLowerCase()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0031),
-            make_shared<VirtualKeyboard::Key>(0x0032),
-            make_shared<VirtualKeyboard::Key>(0x0033),
-            make_shared<VirtualKeyboard::Key>(0x0034),
-            make_shared<VirtualKeyboard::Key>(0x0035),
-            make_shared<VirtualKeyboard::Key>(0x0036),
-            make_shared<VirtualKeyboard::Key>(0x0037),
-            make_shared<VirtualKeyboard::Key>(0x0038),
-            make_shared<VirtualKeyboard::Key>(0x0039),
-            make_shared<VirtualKeyboard::Key>(0x0030)
+            std::make_shared<VirtualKeyboard::Key>(0x0031),
+            std::make_shared<VirtualKeyboard::Key>(0x0032),
+            std::make_shared<VirtualKeyboard::Key>(0x0033),
+            std::make_shared<VirtualKeyboard::Key>(0x0034),
+            std::make_shared<VirtualKeyboard::Key>(0x0035),
+            std::make_shared<VirtualKeyboard::Key>(0x0036),
+            std::make_shared<VirtualKeyboard::Key>(0x0037),
+            std::make_shared<VirtualKeyboard::Key>(0x0038),
+            std::make_shared<VirtualKeyboard::Key>(0x0039),
+            std::make_shared<VirtualKeyboard::Key>(0x0030)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x0071),
-            make_shared<VirtualKeyboard::Key>(0x0077),
-            make_shared<VirtualKeyboard::Key>(0x0065, multichoice_e()),
-            make_shared<VirtualKeyboard::Key>(0x0072, multichoice_r()),
-            make_shared<VirtualKeyboard::Key>(0x0074, multichoice_t()),
-            make_shared<VirtualKeyboard::Key>(0x0079, multichoice_y()),
-            make_shared<VirtualKeyboard::Key>(0x0075, multichoice_u()),
-            make_shared<VirtualKeyboard::Key>(0x0069, multichoice_i()),
-            make_shared<VirtualKeyboard::Key>(0x006f, multichoice_o()),
-            make_shared<VirtualKeyboard::Key>(0x0070)
+            std::make_shared<VirtualKeyboard::Key>(0x0071),
+            std::make_shared<VirtualKeyboard::Key>(0x0077),
+            std::make_shared<VirtualKeyboard::Key>(0x0065, multichoice_e()),
+            std::make_shared<VirtualKeyboard::Key>(0x0072, multichoice_r()),
+            std::make_shared<VirtualKeyboard::Key>(0x0074, multichoice_t()),
+            std::make_shared<VirtualKeyboard::Key>(0x0079, multichoice_y()),
+            std::make_shared<VirtualKeyboard::Key>(0x0075, multichoice_u()),
+            std::make_shared<VirtualKeyboard::Key>(0x0069, multichoice_i()),
+            std::make_shared<VirtualKeyboard::Key>(0x006f, multichoice_o()),
+            std::make_shared<VirtualKeyboard::Key>(0x0070)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x0061, multichoice_a()),
-            make_shared<VirtualKeyboard::Key>(0x0073, multichoice_s()),
-            make_shared<VirtualKeyboard::Key>(0x0064, multichoice_d()),
-            make_shared<VirtualKeyboard::Key>(0x0066),
-            make_shared<VirtualKeyboard::Key>(0x0067, multichoice_g()),
-            make_shared<VirtualKeyboard::Key>(0x0068),
-            make_shared<VirtualKeyboard::Key>(0x006a),
-            make_shared<VirtualKeyboard::Key>(0x006b, multichoice_k()),
-            make_shared<VirtualKeyboard::Key>(0x006c, multichoice_l())
+            std::make_shared<VirtualKeyboard::Key>(0x0061, multichoice_a()),
+            std::make_shared<VirtualKeyboard::Key>(0x0073, multichoice_s()),
+            std::make_shared<VirtualKeyboard::Key>(0x0064, multichoice_d()),
+            std::make_shared<VirtualKeyboard::Key>(0x0066),
+            std::make_shared<VirtualKeyboard::Key>(0x0067, multichoice_g()),
+            std::make_shared<VirtualKeyboard::Key>(0x0068),
+            std::make_shared<VirtualKeyboard::Key>(0x006a),
+            std::make_shared<VirtualKeyboard::Key>(0x006b, multichoice_k()),
+            std::make_shared<VirtualKeyboard::Key>(0x006c, multichoice_l())
         }, {
-            make_shared<VirtualKeyboard::Key>("\ua71b", 1, 1.5),
-            make_shared<VirtualKeyboard::Key>(0x007a, multichoice_z()),
-            make_shared<VirtualKeyboard::Key>(0x0078),
-            make_shared<VirtualKeyboard::Key>(0x0063, multichoice_c()),
-            make_shared<VirtualKeyboard::Key>(0x0076),
-            make_shared<VirtualKeyboard::Key>(0x0062),
-            make_shared<VirtualKeyboard::Key>(0x006e, multichoice_n()),
-            make_shared<VirtualKeyboard::Key>(0x006d),
-            make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("\ua71b", 1, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(0x007a, multichoice_z()),
+            std::make_shared<VirtualKeyboard::Key>(0x0078),
+            std::make_shared<VirtualKeyboard::Key>(0x0063, multichoice_c()),
+            std::make_shared<VirtualKeyboard::Key>(0x0076),
+            std::make_shared<VirtualKeyboard::Key>(0x0062),
+            std::make_shared<VirtualKeyboard::Key>(0x006e, multichoice_n()),
+            std::make_shared<VirtualKeyboard::Key>(0x006d),
+            std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
-            make_shared<VirtualKeyboard::Key>("!#\u263a", 2, 1.5),
-            make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
-            make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
-            make_shared<VirtualKeyboard::Key>(0x002e),
-            make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("!#\u263a", 2, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
+            std::make_shared<VirtualKeyboard::Key>(0x002e),
+            std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
         }
     };
     return keys;
@@ -886,53 +884,53 @@ VirtualKeyboard::panel_keys& QwertyLettersUpperCase()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0031),
-            make_shared<VirtualKeyboard::Key>(0x0032),
-            make_shared<VirtualKeyboard::Key>(0x0033),
-            make_shared<VirtualKeyboard::Key>(0x0034),
-            make_shared<VirtualKeyboard::Key>(0x0035),
-            make_shared<VirtualKeyboard::Key>(0x0036),
-            make_shared<VirtualKeyboard::Key>(0x0037),
-            make_shared<VirtualKeyboard::Key>(0x0038),
-            make_shared<VirtualKeyboard::Key>(0x0039),
-            make_shared<VirtualKeyboard::Key>(0x0030)
+            std::make_shared<VirtualKeyboard::Key>(0x0031),
+            std::make_shared<VirtualKeyboard::Key>(0x0032),
+            std::make_shared<VirtualKeyboard::Key>(0x0033),
+            std::make_shared<VirtualKeyboard::Key>(0x0034),
+            std::make_shared<VirtualKeyboard::Key>(0x0035),
+            std::make_shared<VirtualKeyboard::Key>(0x0036),
+            std::make_shared<VirtualKeyboard::Key>(0x0037),
+            std::make_shared<VirtualKeyboard::Key>(0x0038),
+            std::make_shared<VirtualKeyboard::Key>(0x0039),
+            std::make_shared<VirtualKeyboard::Key>(0x0030)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x0051),
-            make_shared<VirtualKeyboard::Key>(0x0057),
-            make_shared<VirtualKeyboard::Key>(0x0045, multichoice_E()),
-            make_shared<VirtualKeyboard::Key>(0x0052, multichoice_R()),
-            make_shared<VirtualKeyboard::Key>(0x0054, multichoice_T()),
-            make_shared<VirtualKeyboard::Key>(0x0059, multichoice_Y()),
-            make_shared<VirtualKeyboard::Key>(0x0055, multichoice_U()),
-            make_shared<VirtualKeyboard::Key>(0x0049, multichoice_I()),
-            make_shared<VirtualKeyboard::Key>(0x004f, multichoice_O()),
-            make_shared<VirtualKeyboard::Key>(0x0050)
+            std::make_shared<VirtualKeyboard::Key>(0x0051),
+            std::make_shared<VirtualKeyboard::Key>(0x0057),
+            std::make_shared<VirtualKeyboard::Key>(0x0045, multichoice_E()),
+            std::make_shared<VirtualKeyboard::Key>(0x0052, multichoice_R()),
+            std::make_shared<VirtualKeyboard::Key>(0x0054, multichoice_T()),
+            std::make_shared<VirtualKeyboard::Key>(0x0059, multichoice_Y()),
+            std::make_shared<VirtualKeyboard::Key>(0x0055, multichoice_U()),
+            std::make_shared<VirtualKeyboard::Key>(0x0049, multichoice_I()),
+            std::make_shared<VirtualKeyboard::Key>(0x004f, multichoice_O()),
+            std::make_shared<VirtualKeyboard::Key>(0x0050)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x0041, multichoice_A()),
-            make_shared<VirtualKeyboard::Key>(0x0053, multichoice_S()),
-            make_shared<VirtualKeyboard::Key>(0x0044, multichoice_D()),
-            make_shared<VirtualKeyboard::Key>(0x0046),
-            make_shared<VirtualKeyboard::Key>(0x0047, multichoice_G()),
-            make_shared<VirtualKeyboard::Key>(0x0048),
-            make_shared<VirtualKeyboard::Key>(0x004a),
-            make_shared<VirtualKeyboard::Key>(0x004b, multichoice_K()),
-            make_shared<VirtualKeyboard::Key>(0x004c, multichoice_L())
+            std::make_shared<VirtualKeyboard::Key>(0x0041, multichoice_A()),
+            std::make_shared<VirtualKeyboard::Key>(0x0053, multichoice_S()),
+            std::make_shared<VirtualKeyboard::Key>(0x0044, multichoice_D()),
+            std::make_shared<VirtualKeyboard::Key>(0x0046),
+            std::make_shared<VirtualKeyboard::Key>(0x0047, multichoice_G()),
+            std::make_shared<VirtualKeyboard::Key>(0x0048),
+            std::make_shared<VirtualKeyboard::Key>(0x004a),
+            std::make_shared<VirtualKeyboard::Key>(0x004b, multichoice_K()),
+            std::make_shared<VirtualKeyboard::Key>(0x004c, multichoice_L())
         }, {
-            make_shared<VirtualKeyboard::Key>("\ua71b", 0, 1.5),
-            make_shared<VirtualKeyboard::Key>(0x005a, multichoice_Z()),
-            make_shared<VirtualKeyboard::Key>(0x0058),
-            make_shared<VirtualKeyboard::Key>(0x0043, multichoice_C()),
-            make_shared<VirtualKeyboard::Key>(0x0056),
-            make_shared<VirtualKeyboard::Key>(0x0042),
-            make_shared<VirtualKeyboard::Key>(0x004e, multichoice_N()),
-            make_shared<VirtualKeyboard::Key>(0x004d),
-            make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("\ua71b", 0, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(0x005a, multichoice_Z()),
+            std::make_shared<VirtualKeyboard::Key>(0x0058),
+            std::make_shared<VirtualKeyboard::Key>(0x0043, multichoice_C()),
+            std::make_shared<VirtualKeyboard::Key>(0x0056),
+            std::make_shared<VirtualKeyboard::Key>(0x0042),
+            std::make_shared<VirtualKeyboard::Key>(0x004e, multichoice_N()),
+            std::make_shared<VirtualKeyboard::Key>(0x004d),
+            std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
-            make_shared<VirtualKeyboard::Key>("!#\u263a", 2, 1.5),
-            make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
-            make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
-            make_shared<VirtualKeyboard::Key>(0x002e),
-            make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("!#\u263a", 2, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
+            std::make_shared<VirtualKeyboard::Key>(0x002e),
+            std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
         }
     };
     return keys;
@@ -943,54 +941,54 @@ VirtualKeyboard::panel_keys& QwertySymbols1()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0031),
-            make_shared<VirtualKeyboard::Key>(0x0032),
-            make_shared<VirtualKeyboard::Key>(0x0033),
-            make_shared<VirtualKeyboard::Key>(0x0034),
-            make_shared<VirtualKeyboard::Key>(0x0035),
-            make_shared<VirtualKeyboard::Key>(0x0036),
-            make_shared<VirtualKeyboard::Key>(0x0037),
-            make_shared<VirtualKeyboard::Key>(0x0038),
-            make_shared<VirtualKeyboard::Key>(0x0039),
-            make_shared<VirtualKeyboard::Key>(0x0030)
+            std::make_shared<VirtualKeyboard::Key>(0x0031),
+            std::make_shared<VirtualKeyboard::Key>(0x0032),
+            std::make_shared<VirtualKeyboard::Key>(0x0033),
+            std::make_shared<VirtualKeyboard::Key>(0x0034),
+            std::make_shared<VirtualKeyboard::Key>(0x0035),
+            std::make_shared<VirtualKeyboard::Key>(0x0036),
+            std::make_shared<VirtualKeyboard::Key>(0x0037),
+            std::make_shared<VirtualKeyboard::Key>(0x0038),
+            std::make_shared<VirtualKeyboard::Key>(0x0039),
+            std::make_shared<VirtualKeyboard::Key>(0x0030)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x002b),
-            make_shared<VirtualKeyboard::Key>(0x0078),
-            make_shared<VirtualKeyboard::Key>(0x00f7),
-            make_shared<VirtualKeyboard::Key>(0x003d),
-            make_shared<VirtualKeyboard::Key>(0x002f),
-            make_shared<VirtualKeyboard::Key>(0x005f),
-            make_shared<VirtualKeyboard::Key>(0x20ac),
-            make_shared<VirtualKeyboard::Key>(0x00a3),
-            make_shared<VirtualKeyboard::Key>(0x00a5),
-            make_shared<VirtualKeyboard::Key>(0x20a9)
+            std::make_shared<VirtualKeyboard::Key>(0x002b),
+            std::make_shared<VirtualKeyboard::Key>(0x0078),
+            std::make_shared<VirtualKeyboard::Key>(0x00f7),
+            std::make_shared<VirtualKeyboard::Key>(0x003d),
+            std::make_shared<VirtualKeyboard::Key>(0x002f),
+            std::make_shared<VirtualKeyboard::Key>(0x005f),
+            std::make_shared<VirtualKeyboard::Key>(0x20ac),
+            std::make_shared<VirtualKeyboard::Key>(0x00a3),
+            std::make_shared<VirtualKeyboard::Key>(0x00a5),
+            std::make_shared<VirtualKeyboard::Key>(0x20a9)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x0021),
-            make_shared<VirtualKeyboard::Key>(0x0040),
-            make_shared<VirtualKeyboard::Key>(0x0023),
-            make_shared<VirtualKeyboard::Key>(0x0024),
-            make_shared<VirtualKeyboard::Key>(0x0025),
-            make_shared<VirtualKeyboard::Key>(0x005e),
-            make_shared<VirtualKeyboard::Key>(0x0026),
-            make_shared<VirtualKeyboard::Key>(0x002a),
-            make_shared<VirtualKeyboard::Key>(0x0028),
-            make_shared<VirtualKeyboard::Key>(0x0029)
+            std::make_shared<VirtualKeyboard::Key>(0x0021),
+            std::make_shared<VirtualKeyboard::Key>(0x0040),
+            std::make_shared<VirtualKeyboard::Key>(0x0023),
+            std::make_shared<VirtualKeyboard::Key>(0x0024),
+            std::make_shared<VirtualKeyboard::Key>(0x0025),
+            std::make_shared<VirtualKeyboard::Key>(0x005e),
+            std::make_shared<VirtualKeyboard::Key>(0x0026),
+            std::make_shared<VirtualKeyboard::Key>(0x002a),
+            std::make_shared<VirtualKeyboard::Key>(0x0028),
+            std::make_shared<VirtualKeyboard::Key>(0x0029)
         }, {
-            make_shared<VirtualKeyboard::Key>("1/2", 3, 1.5),
-            make_shared<VirtualKeyboard::Key>(0x002d),
-            make_shared<VirtualKeyboard::Key>(0x0027),
-            make_shared<VirtualKeyboard::Key>(0x0022),
-            make_shared<VirtualKeyboard::Key>(0x003a),
-            make_shared<VirtualKeyboard::Key>(0x003b),
-            make_shared<VirtualKeyboard::Key>(0x002c),
-            make_shared<VirtualKeyboard::Key>(0x003f),
-            make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("1/2", 3, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(0x002d),
+            std::make_shared<VirtualKeyboard::Key>(0x0027),
+            std::make_shared<VirtualKeyboard::Key>(0x0022),
+            std::make_shared<VirtualKeyboard::Key>(0x003a),
+            std::make_shared<VirtualKeyboard::Key>(0x003b),
+            std::make_shared<VirtualKeyboard::Key>(0x002c),
+            std::make_shared<VirtualKeyboard::Key>(0x003f),
+            std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
-            make_shared<VirtualKeyboard::Key>("ABC", 0, 1.5),
-            make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
-            make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
-            make_shared<VirtualKeyboard::Key>(0x002e),
-            make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("ABC", 0, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
+            std::make_shared<VirtualKeyboard::Key>(0x002e),
+            std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
         }
     };
     return keys;
@@ -1001,54 +999,54 @@ VirtualKeyboard::panel_keys& QwertySymbols2()
     static VirtualKeyboard::panel_keys keys =
     {
         {
-            make_shared<VirtualKeyboard::Key>(0x0031),
-            make_shared<VirtualKeyboard::Key>(0x0032),
-            make_shared<VirtualKeyboard::Key>(0x0033),
-            make_shared<VirtualKeyboard::Key>(0x0034),
-            make_shared<VirtualKeyboard::Key>(0x0035),
-            make_shared<VirtualKeyboard::Key>(0x0036),
-            make_shared<VirtualKeyboard::Key>(0x0037),
-            make_shared<VirtualKeyboard::Key>(0x0038),
-            make_shared<VirtualKeyboard::Key>(0x0039),
-            make_shared<VirtualKeyboard::Key>(0x0030)
+            std::make_shared<VirtualKeyboard::Key>(0x0031),
+            std::make_shared<VirtualKeyboard::Key>(0x0032),
+            std::make_shared<VirtualKeyboard::Key>(0x0033),
+            std::make_shared<VirtualKeyboard::Key>(0x0034),
+            std::make_shared<VirtualKeyboard::Key>(0x0035),
+            std::make_shared<VirtualKeyboard::Key>(0x0036),
+            std::make_shared<VirtualKeyboard::Key>(0x0037),
+            std::make_shared<VirtualKeyboard::Key>(0x0038),
+            std::make_shared<VirtualKeyboard::Key>(0x0039),
+            std::make_shared<VirtualKeyboard::Key>(0x0030)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x0060),
-            make_shared<VirtualKeyboard::Key>(0x007e),
-            make_shared<VirtualKeyboard::Key>(0x005c),
-            make_shared<VirtualKeyboard::Key>(0x007c),
-            make_shared<VirtualKeyboard::Key>(0x003c),
-            make_shared<VirtualKeyboard::Key>(0x003e),
-            make_shared<VirtualKeyboard::Key>(0x007b),
-            make_shared<VirtualKeyboard::Key>(0x007d),
-            make_shared<VirtualKeyboard::Key>(0x005b),
-            make_shared<VirtualKeyboard::Key>(0x005d)
+            std::make_shared<VirtualKeyboard::Key>(0x0060),
+            std::make_shared<VirtualKeyboard::Key>(0x007e),
+            std::make_shared<VirtualKeyboard::Key>(0x005c),
+            std::make_shared<VirtualKeyboard::Key>(0x007c),
+            std::make_shared<VirtualKeyboard::Key>(0x003c),
+            std::make_shared<VirtualKeyboard::Key>(0x003e),
+            std::make_shared<VirtualKeyboard::Key>(0x007b),
+            std::make_shared<VirtualKeyboard::Key>(0x007d),
+            std::make_shared<VirtualKeyboard::Key>(0x005b),
+            std::make_shared<VirtualKeyboard::Key>(0x005d)
         }, {
-            make_shared<VirtualKeyboard::Key>(0x25c4),
-            make_shared<VirtualKeyboard::Key>(0x25b2),
-            make_shared<VirtualKeyboard::Key>(0x25bc),
-            make_shared<VirtualKeyboard::Key>(0x25ba),
-            make_shared<VirtualKeyboard::Key>(0x25a0),
-            make_shared<VirtualKeyboard::Key>(0x25a1),
-            make_shared<VirtualKeyboard::Key>(0x25cf),
-            make_shared<VirtualKeyboard::Key>(0x25cb),
-            make_shared<VirtualKeyboard::Key>(0x25cc),
-            make_shared<VirtualKeyboard::Key>(0x25ca)
+            std::make_shared<VirtualKeyboard::Key>(0x25c4),
+            std::make_shared<VirtualKeyboard::Key>(0x25b2),
+            std::make_shared<VirtualKeyboard::Key>(0x25bc),
+            std::make_shared<VirtualKeyboard::Key>(0x25ba),
+            std::make_shared<VirtualKeyboard::Key>(0x25a0),
+            std::make_shared<VirtualKeyboard::Key>(0x25a1),
+            std::make_shared<VirtualKeyboard::Key>(0x25cf),
+            std::make_shared<VirtualKeyboard::Key>(0x25cb),
+            std::make_shared<VirtualKeyboard::Key>(0x25cc),
+            std::make_shared<VirtualKeyboard::Key>(0x25ca)
         }, {
-            make_shared<VirtualKeyboard::Key>("2/2", 2, 1.5),
-            make_shared<VirtualKeyboard::Key>(0x263a),
-            make_shared<VirtualKeyboard::Key>(0x263b),
-            make_shared<VirtualKeyboard::Key>(0x263c),
-            make_shared<VirtualKeyboard::Key>(0x00ab),
-            make_shared<VirtualKeyboard::Key>(0x00bb),
-            make_shared<VirtualKeyboard::Key>(0x00a1),
-            make_shared<VirtualKeyboard::Key>(0x00bf),
-            make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("2/2", 2, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(0x263a),
+            std::make_shared<VirtualKeyboard::Key>(0x263b),
+            std::make_shared<VirtualKeyboard::Key>(0x263c),
+            std::make_shared<VirtualKeyboard::Key>(0x00ab),
+            std::make_shared<VirtualKeyboard::Key>(0x00bb),
+            std::make_shared<VirtualKeyboard::Key>(0x00a1),
+            std::make_shared<VirtualKeyboard::Key>(0x00bf),
+            std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
-            make_shared<VirtualKeyboard::Key>("ABC", 0, 1.5),
-            make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
-            make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
-            make_shared<VirtualKeyboard::Key>(0x002e),
-            make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
+            std::make_shared<VirtualKeyboard::Key>("ABC", 0, 1.5),
+            std::make_shared<VirtualKeyboard::Key>(Image("@microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
+            std::make_shared<VirtualKeyboard::Key>(0x002e),
+            std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
         }
     };
     return keys;

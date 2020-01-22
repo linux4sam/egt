@@ -16,7 +16,7 @@ using namespace egt;
 class FloatingBox
 {
 public:
-    FloatingBox(shared_ptr<Widget> widget, default_dim_type mx, default_dim_type my)
+    FloatingBox(shared_ptr<Widget> widget, DefaultDim mx, DefaultDim my)
         : m_widget(std::move(widget)),
           m_mx(mx),
           m_my(my)
@@ -82,8 +82,8 @@ public:
 
 protected:
     shared_ptr<Widget> m_widget;
-    default_dim_type m_mx;
-    default_dim_type m_my;
+    DefaultDim m_mx;
+    DefaultDim m_my;
     Point m_start_point;
     bool m_dragging{false};
 };
@@ -98,9 +98,9 @@ int main(int argc, const char** argv)
     win.background(Image("background.png"));
     win.show();
 
-    default_dim_type f = 2;
+    DefaultDim f = 2;
 
-    vector<std::pair<default_dim_type, default_dim_type>> moveparms =
+    vector<std::pair<DefaultDim, DefaultDim>> moveparms =
     {
         std::make_pair(1 * f, 2 * f),
         std::make_pair(3 * f, -2 * f),

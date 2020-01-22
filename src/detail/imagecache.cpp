@@ -41,8 +41,6 @@ extern "C" {
 #include "Simd/SimdLib.hpp"
 #endif
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -59,7 +57,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         vscale = ImageCache::round(vscale, 0.01);
     }
 
-    const string nameid = id(filename, hscale, vscale);
+    const std::string nameid = id(filename, hscale, vscale);
 
     auto i = m_cache.find(nameid);
     if (i != m_cache.end())
@@ -76,7 +74,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 
         if (filename.compare(0, 1, ":") == 0)
         {
-            string name = filename;
+            std::string name = filename;
             name.erase(0, 1);
 
             auto data = read_resource_data(name.c_str());
@@ -117,7 +115,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         }
         else if (filename.compare(0, 1, "@") == 0)
         {
-            string name = filename;
+            std::string name = filename;
             name.erase(0, 1);
 
             static std::string egt_icons_dir = "32px";
@@ -133,7 +131,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
                 }
             });
 
-            if (name.find('/') != string::npos)
+            if (name.find('/') != std::string::npos)
                 name = resolve_file_path(name);
             else
                 name = resolve_file_path(egt_icons_dir + "/" + name);
@@ -177,7 +175,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         }
         else
         {
-            string name = resolve_file_path(filename);
+            std::string name = resolve_file_path(filename);
 
             if (!detail::exists(name))
                 throw std::runtime_error("file not found: " + name);
@@ -235,7 +233,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
 
     if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
     {
-        stringstream ss;
+        std::stringstream ss;
         ss << cairo_status_to_string(cairo_surface_status(image.get()))
            << ": " << filename;
         throw std::runtime_error(ss.str());
@@ -256,9 +254,9 @@ float ImageCache::round(float v, float fraction)
     return floor(v) + floor((v - floor(v)) / fraction) * fraction;
 }
 
-string ImageCache::id(const string& filename, float hscale, float vscale)
+std::string ImageCache::id(const std::string& filename, float hscale, float vscale)
 {
-    ostringstream ss;
+    std::ostringstream ss;
     ss << filename << "-" << hscale * 100. << "-" << vscale * 100.;
 
     return ss.str();
@@ -340,7 +338,7 @@ static const auto MAGIC_DATABASE = "/usr/share/misc/magic";
 
 std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 {
-    string result;
+    std::string result;
 #ifdef HAVE_LIBMAGIC
     magic_t magic = magic_open(MAGIC_MIME_TYPE);
 
@@ -361,7 +359,7 @@ std::string ImageCache::get_mime_type(const void* buffer, size_t length)
 
 std::string ImageCache::get_mime_type(const std::string& filename)
 {
-    string result;
+    std::string result;
 #ifdef HAVE_LIBMAGIC
     magic_t magic = magic_open(MAGIC_MIME_TYPE);
 

@@ -20,7 +20,7 @@ inline namespace v1
 {
 
 /**
- * Get the version of the egt library.
+ * Get the version of the EGT library.
  */
 EGT_API std::string egt_version();
 

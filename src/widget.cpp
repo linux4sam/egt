@@ -115,7 +115,7 @@ void Widget::resize(const Size& size)
     }
 }
 
-void Widget::resize_by_ratio(default_dim_type hratio, default_dim_type vratio)
+void Widget::resize_by_ratio(DefaultDim hratio, DefaultDim vratio)
 {
     Size size(static_cast<float>(width()) * (static_cast<float>(hratio) / 100.),
               static_cast<float>(height()) * (static_cast<float>(vratio) / 100.));
@@ -265,7 +265,7 @@ void Widget::reset_palette()
     damage();
 }
 
-Palette::pattern_type Widget::color(Palette::ColorId id) const
+Pattern Widget::color(Palette::ColorId id) const
 {
     Palette::GroupId group = Palette::GroupId::normal;
     if (disabled())
@@ -278,7 +278,7 @@ Palette::pattern_type Widget::color(Palette::ColorId id) const
     return color(id, group);
 }
 
-Palette::pattern_type Widget::color(Palette::ColorId id, Palette::GroupId group) const
+Pattern Widget::color(Palette::ColorId id, Palette::GroupId group) const
 {
     assert(m_palette);
 
@@ -289,7 +289,7 @@ Palette::pattern_type Widget::color(Palette::ColorId id, Palette::GroupId group)
 }
 
 void Widget::color(Palette::ColorId id,
-                   const Palette::pattern_type& color,
+                   const Pattern& color,
                    Palette::GroupId group)
 {
     assert(m_palette);

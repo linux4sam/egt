@@ -8,8 +8,6 @@
 #include "egt/theme.h"
 #include "egt/frame.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

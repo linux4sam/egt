@@ -183,6 +183,8 @@ inline void code_timer(bool enable, const std::string& prefix, const T& callback
  *
  * This is a very common pattern used by Widget functions to determine whether
  * damage() should be called when a property is changed.
+ *
+ * @return true if the value was changed.
  */
 template<class T>
 inline bool change_if_diff(T& old, const T& to)
@@ -242,6 +244,11 @@ protected:
     std::function<void()> m_f;
 };
 
+/**
+ * Utility to create a bit mask for the specified bit.
+ *
+ * @param[in] n The bit number.
+ */
 template<class T>
 constexpr inline T bit(T n)
 {

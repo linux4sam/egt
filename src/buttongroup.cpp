@@ -7,8 +7,6 @@
 #include "egt/buttongroup.h"
 #include <cassert>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -39,7 +37,7 @@ bool ButtonGroup::imperative() const
     return m_imperative;
 }
 
-void ButtonGroup::add(const shared_ptr<Button>& button)
+void ButtonGroup::add(const std::shared_ptr<Button>& button)
 {
     /*
      * Cannot belong to several groups or several times to the same

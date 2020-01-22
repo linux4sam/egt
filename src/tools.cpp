@@ -9,8 +9,6 @@
 #include <fstream>
 #include <sstream>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -28,11 +26,11 @@ void CPUMonitorUsage::update()
         std::string line;
         while (std::getline(fp, line) && i < 1)
         {
-            istringstream ss(line);
-            string field0;
+            std::istringstream ss(line);
+            std::string field0;
             ss >> field0;
 
-            ostringstream cpu_id;
+            std::ostringstream cpu_id;
             cpu_id << "cpu" << i;
 
             if (field0.find(cpu_id.str()) != std::string::npos)

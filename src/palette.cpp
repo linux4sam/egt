@@ -17,7 +17,7 @@ namespace egt
 inline namespace v1
 {
 
-const Palette::pattern_type& Palette::color(ColorId id, GroupId group) const
+const Pattern& Palette::color(ColorId id, GroupId group) const
 {
     auto g = m_colors.find(group);
     if (g != m_colors.end())
@@ -32,13 +32,13 @@ const Palette::pattern_type& Palette::color(ColorId id, GroupId group) const
     throw std::runtime_error(ss.str());
 }
 
-Palette& Palette::set(ColorId id, GroupId group, const pattern_type& color)
+Palette& Palette::set(ColorId id, GroupId group, const Pattern& color)
 {
     m_colors[group][id] = color;
     return *this;
 }
 
-Palette& Palette::set(ColorId id, const pattern_type& color, GroupId group)
+Palette& Palette::set(ColorId id, const Pattern& color, GroupId group)
 {
     return set(id, group, color);
 }

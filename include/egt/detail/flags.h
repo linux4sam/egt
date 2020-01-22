@@ -144,6 +144,7 @@ public:
     }
 };
 
+/// @private
 enum class RuleE {};
 static_assert(detail::rule_of_5<Flags<RuleE>>(),
               "Color : must fulfill rule of 5");

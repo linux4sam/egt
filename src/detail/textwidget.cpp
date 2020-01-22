@@ -9,8 +9,6 @@
 #include "egt/detail/textwidget.h"
 #include "egt/painter.h"
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

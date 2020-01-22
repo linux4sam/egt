@@ -66,6 +66,7 @@ enum class EventId
     ///@}
 };
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const EventId& event);
 
 /**
@@ -141,7 +142,9 @@ struct EGT_API Pointer
 static_assert(detail::rule_of_5<Pointer>(),
               "Pointer : must fulfill rule of 5");
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Pointer::Button& btn);
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
 
 /**
@@ -180,6 +183,7 @@ struct EGT_API Key
 static_assert(detail::rule_of_5<Key>(),
               "Key : must fulfill rule of 5");
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Key& key);
 
 /**
@@ -319,6 +323,7 @@ protected:
 static_assert(detail::rule_of_5<Event>(),
               "Event : must fulfill rule of 5");
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Event& event);
 
 }

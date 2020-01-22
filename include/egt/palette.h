@@ -28,19 +28,18 @@ class Serializer;
 }
 
 /**
- * Color palette.
+ * Color palette that contains a 2 dimensional array of colors.
  *
- * The Color Palette defines a bank of colors used by the Theme, and ultimately
- * widgets.
+ * The Palette defines a bank of colors, or complex patterns, used by the Theme,
+ * and ultimately widgets.
  *
- * The palette can be extended by simply inserting more groups and color
- * ids in the event the palette needs to be expanded to support more colors.
+ * The palette manages a 2 dimensional array.  The first dimension is the
+ * ColorId.  The second dimension is the GroupId, which supports the capability
+ * for a ColorId to change based on the state of a Widget.
  */
 class EGT_API Palette
 {
 public:
-
-    using pattern_type = Pattern;
 
     /**
      * @defgroup predefined_colors Predefined Colors
@@ -205,6 +204,15 @@ public:
     constexpr static Color yellowgreen = Color::rgb(0x9acd32);
     //@}
 
+    /**
+     * Used to define a category of patterns that usually relate to the state of
+     * a widget.
+     *
+     * This allows the Pallete to contain patterns like a background color, that
+     * can be different based on the state of the widget.
+     *
+     * @see ColorId
+     */
     enum class GroupId
     {
         /**
@@ -228,6 +236,11 @@ public:
         checked = 4
     };
 
+    /**
+     * The Pattern identifier in the Pallete.
+     *
+     * @see GroupId
+     */
     enum class ColorId
     {
         /**
@@ -288,7 +301,7 @@ public:
      * @param group Color group.
      * @return The color or pattern.
      */
-    virtual const pattern_type& color(ColorId id, GroupId group = GroupId::normal) const;
+    virtual const Pattern& color(ColorId id, GroupId group = GroupId::normal) const;
 
     /**
      * Set a color in the Palette.
@@ -298,7 +311,7 @@ public:
      * @param color The color or pattern.
      * @return Reference to the Palette instance.
      */
-    virtual Palette& set(ColorId id, GroupId group, const pattern_type& color);
+    virtual Palette& set(ColorId id, GroupId group, const Pattern& color);
 
     /**
      * Set a color in a Palette.
@@ -308,7 +321,7 @@ public:
      * @param group Color group.
      * @return Reference to the Palette instance.
      */
-    virtual Palette& set(ColorId id, const pattern_type& color, GroupId group = GroupId::normal);
+    virtual Palette& set(ColorId id, const Pattern& color, GroupId group = GroupId::normal);
 
     /**
      * Remove a color from the Palette.
@@ -350,13 +363,15 @@ protected:
     /**
      * Colors in the palette.
      */
-    std::map<GroupId, std::map<ColorId, pattern_type>> m_colors;
+    std::map<GroupId, std::map<ColorId, Pattern>> m_colors;
 };
 
 static_assert(std::is_move_constructible<Palette>::value, "Palette should be move constructable");
 static_assert(std::is_move_assignable<Palette>::value, "Palette should be move assignable");
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color);
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group);
 
 }

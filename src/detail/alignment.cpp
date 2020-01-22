@@ -13,11 +13,11 @@ namespace detail
 {
 
 Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
-                           const AlignFlags& align, default_dim_type padding,
-                           default_dim_type horizontal_ratio,
-                           default_dim_type vertical_ratio,
-                           default_dim_type xratio,
-                           default_dim_type yratio)
+                           const AlignFlags& align, DefaultDim padding,
+                           DefaultDim horizontal_ratio,
+                           DefaultDim vertical_ratio,
+                           DefaultDim xratio,
+                           DefaultDim yratio)
 {
     auto p = orig.point();
     auto s = orig.size();
@@ -84,11 +84,11 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
 }
 
 Rect align_algorithm(const Rect& orig, const Rect& bounding,
-                     const AlignFlags& align, default_dim_type padding,
-                     default_dim_type horizontal_ratio,
-                     default_dim_type vertical_ratio,
-                     default_dim_type xratio,
-                     default_dim_type yratio)
+                     const AlignFlags& align, DefaultDim padding,
+                     DefaultDim horizontal_ratio,
+                     DefaultDim vertical_ratio,
+                     DefaultDim xratio,
+                     DefaultDim yratio)
 {
     /// this needs to be here, but grids don't work when we don't make
     /// sure the object is at least inside bounding

@@ -40,6 +40,9 @@ class EGT_API Label : public detail::TextWidget
 {
 public:
 
+    /**
+     * Default value used for text alignment.
+     */
     static const AlignFlags DEFAULT_TEXT_ALIGN;
 
     /**

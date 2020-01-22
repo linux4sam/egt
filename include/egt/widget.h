@@ -137,6 +137,7 @@ public:
         checked = detail::bit(11),
     };
 
+    /// Widget flags
     using Flags = detail::Flags<Widget::Flag>;
 
     /**
@@ -184,7 +185,9 @@ public:
     explicit Widget(Frame& parent, const Rect& rect = {},
                     const Widget::Flags& flags = {}) noexcept;
 
+    /// Widget operator
     Widget(Widget&& rhs) noexcept;
+    /// Widget operator
     Widget& operator=(Widget&& rhs) noexcept;
 
     /**
@@ -255,7 +258,7 @@ public:
      *
      * @see resize()
      */
-    virtual void resize_by_ratio(default_dim_type hratio, default_dim_type vratio);
+    virtual void resize_by_ratio(DefaultDim hratio, DefaultDim vratio);
 
     /**
      * Scale the current size of the Widget given the ratio.
@@ -264,7 +267,7 @@ public:
      *
      * @see resize()
      */
-    inline void resize_by_ratio(default_dim_type ratio)
+    inline void resize_by_ratio(DefaultDim ratio)
     {
         resize_by_ratio(ratio, ratio);
     }
@@ -297,14 +300,14 @@ public:
      *
      * @param[in] w The new width of the Widget.
      */
-    inline void width(default_dim_type w) { resize(Size(w, height())); }
+    inline void width(DefaultDim w) { resize(Size(w, height())); }
 
     /**
      * Change the height.
      *
      * @param[in] h The new height of the Widget.
      */
-    inline void height(default_dim_type h) { resize(Size(width(), h)); }
+    inline void height(DefaultDim h) { resize(Size(width(), h)); }
 
     /**
      * Move the Widget to a new position.
@@ -321,14 +324,14 @@ public:
      *
      * @param[in] x The new origin X value for the widget relative to its parent.
      */
-    inline void x(default_dim_type x) { move(Point(x, y())); }
+    inline void x(DefaultDim x) { move(Point(x, y())); }
 
     /**
      * Set the Y coordinate of the box.
      *
      * @param[in] y The new origin Y value for the widget relative to its parent.
      */
-    inline void y(default_dim_type y) { move(Point(x(), y)); }
+    inline void y(DefaultDim y) { move(Point(x(), y)); }
 
     /**
      * Move the widget to the specified center point.
@@ -572,22 +575,22 @@ public:
     /**
      * Width of the widget's box().
      */
-    inline default_dim_type width() const { return m_box.width(); }
+    inline DefaultDim width() const { return m_box.width(); }
 
     /**
      * Height of the widget's box().
      */
-    inline default_dim_type height() const { return m_box.height(); }
+    inline DefaultDim height() const { return m_box.height(); }
 
     /**
      * X coordinate of the widget's box().
      */
-    inline default_dim_type x() const { return m_box.x(); }
+    inline DefaultDim x() const { return m_box.x(); }
 
     /**
      * Y coordinate of the widget's box().
      */
-    inline default_dim_type y() const { return m_box.y(); }
+    inline DefaultDim y() const { return m_box.y(); }
 
     /**
      * Get the center point of the widget's box().
@@ -627,7 +630,7 @@ public:
      *
      * @param id Palette::ColorId to get.
      */
-    Palette::pattern_type color(Palette::ColorId id) const;
+    Pattern color(Palette::ColorId id) const;
 
     /**
      * Get a Widget color.
@@ -638,7 +641,7 @@ public:
      * @param id Palette::ColorId to get.
      * @param group Palette::GroupId to get.
      */
-    Palette::pattern_type color(Palette::ColorId id, Palette::GroupId group) const;
+    Pattern color(Palette::ColorId id, Palette::GroupId group) const;
 
     /**
      * Add a color to the widget's instance palette.
@@ -651,7 +654,7 @@ public:
      * @param group Palette::GroupId to set.
      */
     void color(Palette::ColorId id,
-               const Palette::pattern_type& color,
+               const Pattern& color,
                Palette::GroupId group = Palette::GroupId::normal);
 
     /**
@@ -710,7 +713,7 @@ public:
      *
      * @see @ref layout_box
      */
-    inline void padding(default_dim_type padding)
+    inline void padding(DefaultDim padding)
     {
         if (detail::change_if_diff<>(m_padding, padding))
         {
@@ -724,14 +727,14 @@ public:
      *
      * @see @ref layout_box
      */
-    inline default_dim_type padding() const { return m_padding; }
+    inline DefaultDim padding() const { return m_padding; }
 
     /**
      * Set the margin width.
      *
      * @see @ref layout_box
      */
-    inline void margin(default_dim_type margin)
+    inline void margin(DefaultDim margin)
     {
         if (detail::change_if_diff<>(m_margin, margin))
         {
@@ -745,7 +748,7 @@ public:
      *
      * @see @ref layout_box
      */
-    inline default_dim_type margin() const { return m_margin; }
+    inline DefaultDim margin() const { return m_margin; }
 
     /**
      * Set the border width.
@@ -754,7 +757,7 @@ public:
      *
      * @see @ref layout_box
      */
-    inline void border(default_dim_type border)
+    inline void border(DefaultDim border)
     {
         if (detail::change_if_diff<>(m_border, border))
         {
@@ -768,7 +771,7 @@ public:
      *
      * @see @ref layout_box
      */
-    inline default_dim_type border() const { return m_border; }
+    inline DefaultDim border() const { return m_border; }
 
     /**
      * Set the size ratio relative to parent.
@@ -777,7 +780,7 @@ public:
      *
      * @note This is the same as calling ratio(ratio, ratio).
      */
-    inline void ratio(default_dim_type ratio)
+    inline void ratio(DefaultDim ratio)
     {
         this->ratio(ratio, ratio);
     }
@@ -788,8 +791,8 @@ public:
      * @param[in] horizontal Horizontal ratio of parent width, with 100 being 100%.
      * @param[in] vertical Vertical ratio of parent height, with 100 being 100%.
      */
-    inline void ratio(default_dim_type horizontal,
-                      default_dim_type vertical)
+    inline void ratio(DefaultDim horizontal,
+                      DefaultDim vertical)
     {
         auto a = detail::change_if_diff<>(m_horizontal_ratio, horizontal);
         auto b = detail::change_if_diff<>(m_vertical_ratio, vertical);
@@ -802,7 +805,7 @@ public:
      *
      * @param[in] vertical Vertical ratio of parent height, with 100 being 100%.
      */
-    inline void vertical_ratio(default_dim_type vertical)
+    inline void vertical_ratio(DefaultDim vertical)
     {
         if (detail::change_if_diff<>(m_vertical_ratio, vertical))
             parent_layout();
@@ -811,14 +814,14 @@ public:
     /**
      * Get the vertical ratio relative to parent.
      */
-    inline default_dim_type vertical_ratio() const { return m_vertical_ratio; }
+    inline DefaultDim vertical_ratio() const { return m_vertical_ratio; }
 
     /**
      * Set the horizontal ratio relative to parent.
      *
      * @param[in] horizontal Horizontal ratio of parent width, with 100 being 100%.
      */
-    inline void horizontal_ratio(default_dim_type horizontal)
+    inline void horizontal_ratio(DefaultDim horizontal)
     {
         if (detail::change_if_diff<>(m_horizontal_ratio, horizontal))
             parent_layout();
@@ -827,14 +830,14 @@ public:
     /**
      * Get the horizontal ratio relative to parent.
      */
-    inline default_dim_type horizontal_ratio() const { return m_horizontal_ratio; }
+    inline DefaultDim horizontal_ratio() const { return m_horizontal_ratio; }
 
     /**
      * Set the Y position ratio relative to parent.
      *
      * @param[in] yratio Y ratio of parent height, with 100 being 100%.
      */
-    inline void yratio(default_dim_type yratio)
+    inline void yratio(DefaultDim yratio)
     {
         if (detail::change_if_diff<>(m_yratio, yratio))
             parent_layout();
@@ -843,14 +846,14 @@ public:
     /**
      * Get the Y position ratio relative to parent.
      */
-    inline default_dim_type yratio() const { return m_yratio; }
+    inline DefaultDim yratio() const { return m_yratio; }
 
     /**
      * Set the X position ratio relative to parent.
      *
      * @param[in] xratio X ratio of parent width, with 100 being 100%.
      */
-    inline void xratio(default_dim_type xratio)
+    inline void xratio(DefaultDim xratio)
     {
         if (detail::change_if_diff<>(m_xratio, xratio))
             parent_layout();
@@ -859,7 +862,7 @@ public:
     /**
      * Get the X position ratio relative to parent.
      */
-    inline default_dim_type xratio() const { return m_xratio; }
+    inline DefaultDim xratio() const { return m_xratio; }
 
     /**
      * Get a minimum size hint for the Widget.
@@ -992,6 +995,9 @@ public:
      * Set the Widget's theme to a new theme.
      *
      * @see @ref colors_themes
+     *
+     * @todo This does not call Theme::apply() which creates an inconsistency
+     * with global_theme().
      */
     void theme(const Theme& theme);
 
@@ -1186,6 +1192,9 @@ public:
      */
     virtual std::string type() const;
 
+    /**
+     * Type used to identify a unique Widget ID.
+     */
     using WidgetId = uint64_t;
 
     /**
@@ -1296,37 +1305,37 @@ private:
     /**
      * Alignment padding.
      */
-    default_dim_type m_padding{0};
+    DefaultDim m_padding{0};
 
     /**
      * Alignment border.
      */
-    default_dim_type m_border{0};
+    DefaultDim m_border{0};
 
     /**
      * Alignment margin.
      */
-    default_dim_type m_margin{0};
+    DefaultDim m_margin{0};
 
     /**
      * Alignment X ratio.
      */
-    default_dim_type m_xratio{0};
+    DefaultDim m_xratio{0};
 
     /**
      * Alignment Y ratio.
      */
-    default_dim_type m_yratio{0};
+    DefaultDim m_yratio{0};
 
     /**
      * Horizontal alignment ratio.
      */
-    default_dim_type m_horizontal_ratio{0};
+    DefaultDim m_horizontal_ratio{0};
 
     /**
      * Vertical alignment ratio.
      */
-    default_dim_type m_vertical_ratio{0};
+    DefaultDim m_vertical_ratio{0};
 
     /**
      * Focus state.
@@ -1362,7 +1371,9 @@ private:
     friend class Frame;
 };
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag);
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flags& flags);
 
 }

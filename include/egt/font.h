@@ -229,8 +229,10 @@ protected:
     Font::Slant m_slant;
 };
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Font& font);
 
+/// Font operator
 inline bool EGT_API operator==(const Font& lhs, const Font& rhs)
 {
     return lhs.face() == rhs.face() &&
@@ -239,6 +241,7 @@ inline bool EGT_API operator==(const Font& lhs, const Font& rhs)
            lhs.slant() == rhs.slant();
 }
 
+/// Font operator
 inline bool EGT_API operator!=(const Font& lhs, const Font& rhs)
 {
     return !(lhs == rhs);

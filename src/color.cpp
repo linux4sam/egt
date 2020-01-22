@@ -17,10 +17,10 @@ inline namespace v1
 
 std::string Color::hex() const
 {
-    rgba_t value = ((red() & 0xff) << 24) |
-                   ((green() & 0xff) << 16) |
-                   ((blue() & 0xff) << 8) |
-                   (alpha() & 0xff);
+    RGBAType value = ((red() & 0xff) << 24) |
+                     ((green() & 0xff) << 16) |
+                     ((blue() & 0xff) << 8) |
+                     (alpha() & 0xff);
 
     std::ostringstream ss;
     ss << std::hex << std::setw(8) << std::setfill('0') << value;
@@ -282,7 +282,7 @@ Color Color::interp_hsv(const Color& a, const Color& b, float t)
     final.v = linear_interpolator(ca.v, cb.v, static_cast<double>(t));
 
     return {hsv2rgb(final),
-            static_cast<component_t>(a.alpha() + (b.alpha() - a.alpha()) * t)};
+            static_cast<ComponentType>(a.alpha() + (b.alpha() - a.alpha()) * t)};
 }
 
 Color Color::interp_hsl(const Color& a, const Color& b, float t)
@@ -311,7 +311,7 @@ Color Color::interp_hsl(const Color& a, const Color& b, float t)
     hsl.h = fmodf(hsl.h + 1.f, 1.f);
 
     return {hsl2rgb(hsl),
-            static_cast<component_t>(a.alpha() + (b.alpha() - a.alpha()) * t)};
+            static_cast<ComponentType>(a.alpha() + (b.alpha() - a.alpha()) * t)};
 }
 
 Color Color::interp_rgba(const Color& a, const Color& b, float t)

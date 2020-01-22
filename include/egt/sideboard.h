@@ -116,6 +116,7 @@ protected:
     bool m_dir{false};
 };
 
+/// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const SideBoard::PositionFlag& flag);
 
 }

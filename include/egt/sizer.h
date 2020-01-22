@@ -124,8 +124,8 @@ protected:
             return result.size();
         }
 
-        default_dim_type width = 0;
-        default_dim_type height = 0;
+        DefaultDim width = 0;
+        DefaultDim height = 0;
 
         if (orient() == Orientation::horizontal)
         {

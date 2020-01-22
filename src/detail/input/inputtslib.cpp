@@ -10,8 +10,6 @@
 #include <spdlog/spdlog.h>
 #include <tslib.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -29,7 +27,7 @@ struct tslibimpl
     std::array<std::chrono::time_point<std::chrono::steady_clock>, 2> last_down;
 };
 
-InputTslib::InputTslib(Application& app, const string& path)
+InputTslib::InputTslib(Application& app, const std::string& path)
     : m_input(app.event().io()),
       m_impl(new detail::tslibimpl)
 {
@@ -158,7 +156,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                     auto DOUBLE_CLICK_DELTA = 300;
 
                     if (m_impl->last_down[slot].time_since_epoch().count() &&
-                        chrono::duration<double, milli>(tv - m_impl->last_down[slot]).count() < DOUBLE_CLICK_DELTA)
+                        std::chrono::duration<double, std::milli>(tv - m_impl->last_down[slot]).count() < DOUBLE_CLICK_DELTA)
                     {
                         Event event(EventId::pointer_dblclick, Pointer(m_last_point[slot], Pointer::Button::left));
                         dispatch(event);

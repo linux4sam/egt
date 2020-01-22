@@ -38,19 +38,27 @@ class EGT_API Serializer
 public:
     virtual bool add(Widget* widget, int level) = 0;
 
+    /// Add a property.
     virtual void add_property(const std::string& name, const std::string& value,
                               const std::map<std::string, std::string>& attrs = {}) = 0;
+    /// Add a property.
     virtual void add_property(const std::string& name, int value,
                               const std::map<std::string, std::string>& attrs = {});
+    /// Add a property.
     virtual void add_property(const std::string& name, unsigned int value,
                               const std::map<std::string, std::string>& attrs = {});
+    /// Add a property.
     virtual void add_property(const std::string& name, const AlignFlags& value,
                               const std::map<std::string, std::string>& attrs = {});
+    /// Add a property.
     virtual void add_property(const std::string& name, float value,
                               const std::map<std::string, std::string>& attrs = {});
+    /// Add a property.
     virtual void add_property(const std::string& name, double value,
                               const std::map<std::string, std::string>& attrs = {});
+    /// Add a property.
     virtual void add_property(const std::string& name, const Theme::BoxFlags& value);
+    /// Add a property.
     virtual void add_property(const std::string& name, const Pattern& value);
 };
 

@@ -636,9 +636,13 @@ protected:
 };
 
 /**
- * Helper type.
+ * Helper type for an int PropertyAnimator.
  */
 using PropertyAnimator = PropertyAnimatorType<int>;
+
+/**
+ * Helper type for a float PropertyAnimator.
+ */
 using PropertyAnimatorF = PropertyAnimatorType<float>;
 
 /**

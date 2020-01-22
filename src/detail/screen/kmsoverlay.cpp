@@ -10,8 +10,6 @@
 #include <planes/kms.h>
 #include <planes/plane.h>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1

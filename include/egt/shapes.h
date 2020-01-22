@@ -39,7 +39,7 @@ public:
 
     explicit CircleWidget(Frame& parent, const Circle& circle = Circle());
 
-    inline Circle::dim_type radius() const
+    inline Circle::DimType radius() const
     {
         return m_radius;
     }
@@ -47,7 +47,7 @@ public:
     virtual void draw(Painter& painter, const Rect&) override;
 
 protected:
-    Circle::dim_type m_radius{};
+    Circle::DimType m_radius{};
 };
 
 /**

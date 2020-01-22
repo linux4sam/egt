@@ -136,7 +136,7 @@ public:
     virtual ~LineChart();
 
 protected:
-    std::unique_ptr<detail::PlPlotLineChart> m_chartimpl;
+    std::unique_ptr<detail::PlPlotLineChart> m_impl;
 };
 
 /**
@@ -241,7 +241,7 @@ public:
     virtual ~PointChart();
 
 protected:
-    std::unique_ptr<detail::PlPlotPointChart> m_chartimpl;
+    std::unique_ptr<detail::PlPlotPointChart> m_impl;
 };
 
 /**
@@ -254,7 +254,8 @@ class EGT_API BarChart: public Widget
 {
 public:
 
-    enum BarPattern
+    /// Bar pattern styles
+    enum class BarPattern
     {
         soild = 0,
         horizontal_line = 1,
@@ -275,6 +276,10 @@ public:
      * A data pair array for BarChart.
      */
     using DataArray = std::vector<std::pair<double, double>>;
+
+    /**
+     * A data pair array for BarChart.
+     */
     using StringDataArray = std::vector<std::pair<double, std::string>>;
 
     /**
@@ -329,7 +334,7 @@ public:
                        const std::string& title);
 
     /**
-     * Sets Bar style
+     * Set bar style.
      *
      * @param[in] pattern is one of the enum BarPattern
      */
@@ -361,7 +366,7 @@ public:
     virtual ~BarChart();
 
 protected:
-    std::unique_ptr<detail::PlPlotBarChart> m_chartimpl;
+    std::unique_ptr<detail::PlPlotBarChart> m_impl;
 };
 
 
@@ -375,7 +380,8 @@ class EGT_API HorizontalBarChart: public Widget
 {
 public:
 
-    enum BarPattern
+    /// Bar pattern styles
+    enum class BarPattern
     {
         soild = 0,
         horizontal_line = 1,
@@ -435,9 +441,9 @@ public:
                        const std::string& title);
 
     /**
-     * sets the Bar style
+     * Set bar style.
      *
-     * @param[in] pattern is one of the enum Bar_pattern
+     * @param[in] pattern is one of the enum BarPattern
      */
     virtual void bar_pattern(BarPattern pattern);
 
@@ -467,7 +473,7 @@ public:
     virtual ~HorizontalBarChart();
 
 protected:
-    std::unique_ptr<detail::PlPlotHBarChart> m_chartimpl;
+    std::unique_ptr<detail::PlPlotHBarChart> m_impl;
 };
 
 
@@ -540,7 +546,7 @@ public:
     virtual ~PieChart();
 
 protected:
-    std::unique_ptr<detail::PlPlotPieChart> m_chartimpl;
+    std::unique_ptr<detail::PlPlotPieChart> m_impl;
 };
 
 } //End of namespace v1

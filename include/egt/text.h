@@ -73,8 +73,13 @@ public:
         no_virt_keyboard = detail::bit(3),
     };
 
+    /// Text flags
     using TextFlags = detail::Flags<TextFlag>;
 
+    /**
+     * Validator callback type.
+     * @see add_validator_function()
+     */
     using ValidatorCallback = std::function<bool(std::string)>;
 
     static const AlignFlags default_align;
@@ -261,6 +266,11 @@ public:
 
     /**
      * Add a callback to be invoked to validate the input.
+     *
+     * Anytime the text is changed, the callback will be invoked with the new
+     * text for validation.
+     *
+     * To enable this, you must set input_validation_enabled() to true.
      */
     virtual void add_validator_function(ValidatorCallback callback);
 

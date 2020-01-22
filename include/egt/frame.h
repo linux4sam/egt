@@ -395,7 +395,9 @@ public:
     virtual bool has_screen() const { return false; }
 
     /**
-     * Starting at this Frame, work up and find Frame that has a Screen.
+     * Starting from this Frame, find the Frame that has a Screen.
+     *
+     * This searches up the widget hierarchy from here.
      */
     virtual Frame* find_screen()
     {
@@ -408,6 +410,11 @@ public:
         return nullptr;
     }
 
+    /**
+     * Starting from this Frame, find the Frame that has a Screen.
+     *
+     * This searches up the widget hierarchy from here.
+     */
     virtual const Frame* find_screen() const
     {
         if (has_screen())

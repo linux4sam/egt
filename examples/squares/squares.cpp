@@ -56,8 +56,8 @@ int main(int argc, const char** argv)
     win.add(popup);
     popup.show();
 
-    default_dim_type width = 100;
-    default_dim_type height = 100;
+    DefaultDim width = 100;
+    DefaultDim height = 100;
 
     {
         ostringstream ss;

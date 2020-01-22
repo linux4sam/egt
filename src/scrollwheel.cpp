@@ -13,8 +13,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace egt
 {
 inline namespace v1
@@ -29,9 +27,9 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
                          bool reversed) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_items(items),
-      m_button_up(make_shared<ImageButton>(Image("@arrow_up.png"))),
-      m_button_down(make_shared<ImageButton>(Image("@arrow_down.png"))),
-      m_label(make_shared<Label>())
+      m_button_up(std::make_shared<ImageButton>(Image("@arrow_up.png"))),
+      m_button_down(std::make_shared<ImageButton>(Image("@arrow_down.png"))),
+      m_label(std::make_shared<Label>())
 {
     init(reversed);
 
@@ -84,9 +82,9 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const item_array& item
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
                          bool reversed) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
-      m_button_up(make_shared<ImageButton>(Image("@arrow_up.png"))),
-      m_button_down(make_shared<ImageButton>(Image("@arrow_down.png"))),
-      m_label(make_shared<Label>())
+      m_button_up(std::make_shared<ImageButton>(Image("@arrow_up.png"))),
+      m_button_down(std::make_shared<ImageButton>(Image("@arrow_down.png"))),
+      m_label(std::make_shared<Label>())
 {
     for (auto i = min; i <= max; i += step)
         m_items.push_back(std::to_string(i));

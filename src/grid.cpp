@@ -17,7 +17,7 @@ inline namespace v1
 {
 
 StaticGrid::StaticGrid(const Rect& rect, const std::tuple<int, int>& size,
-                       default_dim_type border) noexcept
+                       DefaultDim border) noexcept
     : Frame(rect)
 {
     name("StaticGrid" + std::to_string(m_widgetid));
@@ -37,19 +37,19 @@ void StaticGrid::reallocate(const std::tuple<int, int>& size)
         x.resize(std::get<1>(size), {});
 }
 
-StaticGrid::StaticGrid(const std::tuple<int, int>& size, default_dim_type border) noexcept
+StaticGrid::StaticGrid(const std::tuple<int, int>& size, DefaultDim border) noexcept
     : StaticGrid(Rect(), size, border)
 {
 }
 
 StaticGrid::StaticGrid(Frame& parent, const Rect& rect,
-                       const std::tuple<int, int>& size, default_dim_type border) noexcept
+                       const std::tuple<int, int>& size, DefaultDim border) noexcept
     : StaticGrid(rect, size, border)
 {
     parent.add(*this);
 }
 
-StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, default_dim_type border) noexcept
+StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, DefaultDim border) noexcept
     : StaticGrid(size, border)
 {
     parent.add(*this);
@@ -57,7 +57,7 @@ StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, default_
 
 namespace detail
 {
-static inline default_dim_type round(default_dim_type x, default_dim_type y)
+static inline DefaultDim round(DefaultDim x, DefaultDim y)
 {
     return x  / y;
 }
@@ -67,7 +67,7 @@ static inline default_dim_type round(default_dim_type x, default_dim_type y)
  * Calculates the rectangle for a cell. This calculates the rectangle right
  * down the center of any border_width if one exists.
  */
-static inline Rect cell_rect(int columns, int rows, default_dim_type width, default_dim_type height,
+static inline Rect cell_rect(int columns, int rows, DefaultDim width, DefaultDim height,
                              int column, int row, int border_width = 0, int padding = 0)
 {
     const auto inner_width = detail::round((width - ((columns + 1) * border_width)), columns);

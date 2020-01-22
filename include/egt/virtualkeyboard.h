@@ -122,7 +122,7 @@ public:
         /**
          * Set the key color.
          */
-        void color(Palette::ColorId id, const Palette::pattern_type& color,
+        void color(Palette::ColorId id, const Pattern& color,
                    Palette::GroupId group = Palette::GroupId::normal);
 
         /*
@@ -319,6 +319,10 @@ protected:
  */
 PopupVirtualKeyboard*& popup_virtual_keyboard();
 
+/**
+ * Default panel defined for VirtualKeyboard.
+ * @{
+ */
 VirtualKeyboard::panel_keys& multichoice_e();
 VirtualKeyboard::panel_keys& multichoice_E();
 VirtualKeyboard::panel_keys& multichoice_r();
@@ -355,6 +359,7 @@ VirtualKeyboard::panel_keys& QwertyLettersLowerCase();
 VirtualKeyboard::panel_keys& QwertyLettersUpperCase();
 VirtualKeyboard::panel_keys& QwertySymbols1();
 VirtualKeyboard::panel_keys& QwertySymbols2();
+/** @} */
 
 }
 }

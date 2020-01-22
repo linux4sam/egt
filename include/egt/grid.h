@@ -59,7 +59,7 @@ public:
      * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(const std::tuple<int, int>& size = std::make_tuple(1, 1),
-                        default_dim_type border = 0) noexcept;
+                        DefaultDim border = 0) noexcept;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -67,7 +67,7 @@ public:
      * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(const Rect& rect, const std::tuple<int, int>& size = std::make_tuple(1, 1),
-                        default_dim_type border = 0) noexcept;
+                        DefaultDim border = 0) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -77,7 +77,7 @@ public:
      */
     StaticGrid(Frame& parent, const Rect& rect,
                const std::tuple<int, int>& size = std::make_tuple(1, 1),
-               default_dim_type border = 0) noexcept;
+               DefaultDim border = 0) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -85,7 +85,7 @@ public:
      * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(Frame& parent, const std::tuple<int, int>& size = std::make_tuple(1, 1),
-                        default_dim_type border = 0) noexcept;
+                        DefaultDim border = 0) noexcept;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 

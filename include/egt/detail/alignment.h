@@ -36,18 +36,18 @@ namespace detail
  * @param[in] yratio Y ratio value relative to bounding.
  */
 EGT_API Rect align_algorithm(const Rect& orig, const Rect& bounding,
-                             const AlignFlags& align, default_dim_type padding = 0,
-                             default_dim_type horizontal_ratio = 0,
-                             default_dim_type vertical_ratio = 0,
-                             default_dim_type xratio = 0,
-                             default_dim_type yratio = 0);
+                             const AlignFlags& align, DefaultDim padding = 0,
+                             DefaultDim horizontal_ratio = 0,
+                             DefaultDim vertical_ratio = 0,
+                             DefaultDim xratio = 0,
+                             DefaultDim yratio = 0);
 
 EGT_API Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
-                                   const AlignFlags& align, default_dim_type padding = 0,
-                                   default_dim_type horizontal_ratio = 0,
-                                   default_dim_type vertical_ratio = 0,
-                                   default_dim_type xratio = 0,
-                                   default_dim_type yratio = 0);
+                                   const AlignFlags& align, DefaultDim padding = 0,
+                                   DefaultDim horizontal_ratio = 0,
+                                   DefaultDim vertical_ratio = 0,
+                                   DefaultDim xratio = 0,
+                                   DefaultDim yratio = 0);
 
 }
 }

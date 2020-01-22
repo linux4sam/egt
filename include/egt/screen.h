@@ -140,6 +140,9 @@ public:
      */
     virtual void high_fidelity();
 
+    /**
+     * Get the format of the screen.
+     */
     inline PixelFormat format() const { return m_format; };
 
     virtual ~Screen();
@@ -208,8 +211,10 @@ protected:
      */
     Size m_size;
 
+    /// Perform flips asynchronously if supported
     bool m_async{false};
 
+    /// Format of the screen.
     PixelFormat m_format{};
 };
 
