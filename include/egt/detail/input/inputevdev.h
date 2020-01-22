@@ -33,6 +33,9 @@ class InputEvDev : public Input
 {
 public:
 
+    /**
+     * @throws std::runtime_error if unable to open device.
+     */
     explicit InputEvDev(Application& app, const std::string& path);
 
     virtual ~InputEvDev();

@@ -59,7 +59,9 @@ InputTslib::InputTslib(Application& app, const std::string& path)
     }
     else
     {
-        spdlog::error("ts device not found: {}", path);
+        std::ostringstream ss;
+        ss << "could not open tslib device: " << path;
+        throw std::runtime_error(ss.str());
     }
 }
 

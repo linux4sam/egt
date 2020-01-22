@@ -33,6 +33,9 @@ class InputTslib : public Input
 {
 public:
 
+    /**
+     * @throws std::runtime_error if unable to open device.
+     */
     explicit InputTslib(Application& app, const std::string& path);
 
     virtual ~InputTslib();

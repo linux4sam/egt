@@ -38,6 +38,9 @@ class InputLibInput : public Input
 {
 public:
 
+    /**
+     * @throws std::runtime_error if unable to open device.
+     */
     explicit InputLibInput(Application& app);
 
     virtual ~InputLibInput();

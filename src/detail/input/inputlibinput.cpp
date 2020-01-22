@@ -109,7 +109,12 @@ InputLibInput::InputLibInput(Application& app)
     const char* seat_or_device = "seat0";
     bool verbose = false;
     li = tools_open_udev(seat_or_device, verbose, false);
-    assert(li);
+    if (!li)
+    {
+        std::ostringstream ss;
+        ss << "could not open libinput device: " << seat_or_device;
+        throw std::runtime_error(ss.str());
+    }
 
     m_input.assign(libinput_get_fd(li));
 

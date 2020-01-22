@@ -49,7 +49,7 @@ InputEvDev::InputEvDev(Application& app, const std::string& path)
     else
     {
         std::ostringstream ss;
-        ss << "could not open evdev device " << path;
+        ss << "could not open evdev device: " << path;
         throw std::runtime_error(ss.str());
     }
 }
