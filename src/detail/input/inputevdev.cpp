@@ -42,6 +42,7 @@ InputEvDev::InputEvDev(Application& app, const std::string& path)
         m_input.assign(m_fd);
 
         asio::async_read(m_input, asio::buffer(m_input_buf.data(), m_input_buf.size()),
+                         egt::asio::transfer_at_least(sizeof(struct input_event)),
                          std::bind(&InputEvDev::handle_read, this,
                                    std::placeholders::_1,
                                    std::placeholders::_2));
@@ -80,9 +81,9 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     end = ev + (length / sizeof(e[0]));
     for (e = ev; e < end; e++)
     {
-        int value = e->value;
+        auto value = e->value;
 
-        SPDLOG_DEBUG("{}", value);
+        SPDLOG_DEBUG("event type: {}", e->type);
         switch (e->type)
         {
         case EV_REL:
@@ -197,6 +198,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     }
 
     asio::async_read(m_input, asio::buffer(m_input_buf.data(), m_input_buf.size()),
+                     egt::asio::transfer_at_least(sizeof(struct input_event)),
                      std::bind(&InputEvDev::handle_read, this,
                                std::placeholders::_1,
                                std::placeholders::_2));
