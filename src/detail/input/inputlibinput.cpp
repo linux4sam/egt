@@ -145,9 +145,6 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
     else
         type = "removed";
 
-    spdlog::info("{} {} {}", type, libinput_device_get_sysname(dev),
-                 libinput_device_get_name(dev));
-
     li = libinput_event_get_context(ev);
 
     // if the device is handled by another backend, disable libinput events
@@ -169,6 +166,9 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
             }
         }
     }
+
+    spdlog::info("{} {} {}", type, libinput_device_get_sysname(dev),
+                 libinput_device_get_name(dev));
 }
 
 void InputLibInput::handle_event_touch(struct libinput_event* ev)
