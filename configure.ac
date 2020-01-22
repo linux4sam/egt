@@ -160,6 +160,7 @@ then
   then
     CFLAGS="$CFLAGS --coverage"
     CXXFLAGS="$CXXFLAGS --coverage"
+    LDFLAGS="${LDFLAGS} -lgcov"
     dnl Turn off optimization so code coverage tool
     dnl can get accurate line numbers
     CFLAGS=`echo "$CFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
