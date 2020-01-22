@@ -154,6 +154,7 @@ enum KeyboardCode
     EKEY_WLAN = 0x97,
     EKEY_POWER = 0x98,
     EKEY_COMPOSE = 0xE6,
+    EKEY_USER1 = 0x104,
 };
 
 namespace detail

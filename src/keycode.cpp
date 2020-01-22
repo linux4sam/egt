@@ -149,6 +149,8 @@ KeyboardCode linux_to_ekey(int code)
         {KEY_WLAN, EKEY_WLAN},
         {KEY_POWER, EKEY_POWER},
         {KEY_COMPOSE, EKEY_COMPOSE},
+        // non-standard key code, used by some DTS gpio_keys
+        {0x104, EKEY_USER1},
     };
 
     SPDLOG_TRACE("key {} to keycode {}", code, keys[code]);
