@@ -8,42 +8,40 @@
 #include <string>
 #include <vector>
 
-using namespace egt;
-
-class MainWindow : public TopWindow
+class MainWindow : public egt::TopWindow
 {
 public:
 
-    class LauncherItem : public Frame
+    class LauncherItem : public egt::Frame
     {
     public:
-        explicit LauncherItem(const Image& image)
+        explicit LauncherItem(const egt::Image& image)
             : m_background(image)
         {
             boxtype().clear();
-            flags().set(Widget::Flag::no_layout);
+            flags().set(egt::Widget::Flag::no_layout);
 
-            m_background.align(AlignFlag::expand);
-            m_background.image_align(AlignFlag::expand);
+            m_background.align(egt::AlignFlag::expand);
+            m_background.image_align(egt::AlignFlag::expand);
             add(m_background);
         }
 
     private:
-        ImageLabel m_background;
+        egt::ImageLabel m_background;
     };
 
     MainWindow()
     {
-        background(Image("background.png"));
+        background(egt::Image("background.png"));
 
-        auto egt_logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
-        egt_logo->align(AlignFlag::center | AlignFlag::top);
+        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        egt_logo->align(egt::AlignFlag::center | egt::AlignFlag::top);
         egt_logo->margin(5);
         add(egt_logo);
 
         m_animation.starting(0);
         m_animation.duration(std::chrono::seconds(2));
-        m_animation.easing_func(easing_cubic_easeout);
+        m_animation.easing_func(egt::easing_cubic_easeout);
         m_animation.on_change(std::bind(&MainWindow::move_boxes,
                                         this, std::placeholders::_1));
         m_seq.add(m_delay);
@@ -52,23 +50,23 @@ public:
         load();
     }
 
-    void handle(Event& event) override
+    void handle(egt::Event& event) override
     {
-        TopWindow::handle(event);
+        egt::TopWindow::handle(event);
 
         switch (event.id())
         {
-        case EventId::pointer_drag_start:
+        case egt::EventId::pointer_drag_start:
             m_seq.reset();
             if (!m_boxes.empty())
                 m_start = m_boxes.front()->x();
             break;
-        case EventId::pointer_drag:
+        case egt::EventId::pointer_drag:
             move_boxes(event.pointer().point.x() -
                        event.pointer().drag_start.x());
             event.stop();
             break;
-        case EventId::pointer_drag_stop:
+        case egt::EventId::pointer_drag_stop:
             if (!m_boxes.empty())
             {
                 m_start = m_boxes.front()->x();
@@ -106,13 +104,13 @@ private:
     {
         for (auto x = 0; x < 9; x++)
         {
-            auto image = Image("image" + std::to_string(x) + ".png");
+            auto image = egt::Image("image" + std::to_string(x) + ".png");
             auto box = std::make_shared<LauncherItem>(image);
-            box->resize(Size(width() / 4, height() - 100));
+            box->resize(egt::Size(width() / 4, height() - 100));
             m_boxes.push_back(box);
         }
 
-        for (auto& box : detail::reverse_iterate(m_boxes))
+        for (auto& box : egt::detail::reverse_iterate(m_boxes))
         {
             box->y(center().y() - box->height() / 2);
             box->x(width() - box->width());
@@ -128,16 +126,16 @@ private:
 
     std::vector<std::shared_ptr<LauncherItem>> m_boxes;
     int m_start{0};
-    AnimationSequence m_seq;
-    AnimationDelay m_delay{std::chrono::seconds(2)};
-    PropertyAnimator m_animation;
+    egt::AnimationSequence m_seq;
+    egt::AnimationDelay m_delay{std::chrono::seconds(2)};
+    egt::PropertyAnimator m_animation;
 };
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "imagestack");
+    egt::Application app(argc, argv, "imagestack");
 
-    add_search_path("images/");
+    egt::add_search_path("images/");
 
     MainWindow window;
     window.show();

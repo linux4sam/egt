@@ -6,36 +6,34 @@
 #include <egt/ui>
 #include <iostream>
 
-using namespace std;
-using namespace egt;
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    egt::Application app(argc, argv);
     egt::experimental::CameraCapture capture("output.avi");
 
     capture.on_error([&capture]()
     {
-        cout << "error: " << capture.error_message() << endl;
+        std::cout << "error: " << capture.error_message() << std::endl;
     });
 
-    Timer stop_timer(std::chrono::seconds(10));
+    egt::Timer stop_timer(std::chrono::seconds(10));
     stop_timer.on_timeout([&capture, &app]()
     {
-        cout << "stopping capture." << endl;
+        std::cout << "stopping capture." << std::endl;
         capture.stop();
         app.quit();
     });
 
     if (capture.start())
     {
-        cout << "capturing for 10 seconds..." << flush;
+        std::cout << "capturing for 10 seconds..." << std::flush;
         stop_timer.start();
     }
 
     capture.on_error([&capture, &app]()
     {
-        cout << " Error:  " << capture.error_message() << endl;
+        std::cout << " Error:  " << capture.error_message() << std::endl;
         capture.stop();
         app.quit();
     });

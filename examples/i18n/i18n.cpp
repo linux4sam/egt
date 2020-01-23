@@ -10,9 +10,6 @@
 #include <string>
 #include <utf8.h>
 
-using namespace std;
-using namespace egt;
-
 /**
  * This is a wrapper around gettext().
  */
@@ -20,45 +17,47 @@ using namespace egt;
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "i18n");
+    egt::Application app(argc, argv, "i18n");
 
-    Drawer<Label>::draw([](Label & widget, Painter & painter, const Rect & rect)
+    egt::Drawer<egt::Label>::draw([](egt::Label & widget, egt::Painter & painter, const egt::Rect & rect)
     {
-        detail::ignoreparam(rect);
+        egt::detail::ignoreparam(rect);
 
-        widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
+        widget.draw_box(painter,
+                        egt::Palette::ColorId::label_bg,
+                        egt::Palette::ColorId::border);
 
         const auto b = widget.content_area();
 
 
         painter.set(widget.font());
         const auto size = painter.text_size(widget.text());
-        const auto target = detail::align_algorithm(size,
+        const auto target = egt::detail::align_algorithm(size,
                             b,
                             widget.text_align());
 
         // draw a shadow to an offset, but tint the real color and drop the alpha
-        auto color = widget.color(Palette::ColorId::label_text).color();
+        auto color = widget.color(egt::Palette::ColorId::label_text).color();
         auto shadow = color.tint(0.5);
         shadow.alphaf(0.3);
         painter.set(shadow);
-        painter.draw(target.point() + Point(4, 4));
+        painter.draw(target.point() + egt::Point(4, 4));
         painter.draw(widget.text());
         painter.set(color);
         painter.draw(target.point());
         painter.draw(widget.text());
     });
 
-    TopWindow window;
+    egt::TopWindow window;
 
-    auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
     logo->margin(10);
-    logo->align(AlignFlag::center | AlignFlag::bottom);
+    logo->align(egt::AlignFlag::center | egt::AlignFlag::bottom);
     window.add(logo);
 
-    VerticalBoxSizer vsizer;
+    egt::VerticalBoxSizer vsizer;
 
-    vector<string> variations =
+    std::vector<std::string> variations =
     {
         _("EGT supports all languages"),
         "EGT支持所有語言",
@@ -77,8 +76,8 @@ int main(int argc, const char** argv)
     int index = 0;
     for (auto& str : variations)
     {
-        auto label = make_shared<Label>(str);
-        string face;
+        auto label = std::make_shared<egt::Label>(str);
+        std::string face;
         if (index == static_cast<int>(variations.size()) - 1)
             label->font(egt::Font("Noto Color Emoji", 16));
         else
@@ -94,22 +93,26 @@ int main(int argc, const char** argv)
     int maxx = window.width();
     int half = (window.width() - vsizer.width()) / 2;
 
-    auto in = std::make_shared<PropertyAnimator>(maxx, half, std::chrono::seconds(3), easing_exponential_easeout);
+    auto in = std::make_shared<egt::PropertyAnimator>(maxx, half,
+              std::chrono::seconds(3),
+              egt::easing_exponential_easeout);
     in->on_change([&vsizer](int value)
     {
         vsizer.x(value);
     });
 
-    auto out = std::make_shared<PropertyAnimator>(half + 1, minx, std::chrono::seconds(3), easing_exponential_easeout);
+    auto out = std::make_shared<egt::PropertyAnimator>(half + 1, minx,
+               std::chrono::seconds(3),
+               egt::easing_exponential_easeout);
     out->reverse(true);
     out->on_change([&vsizer](int value)
     {
         vsizer.x(value);
     });
 
-    auto delay = std::make_shared<AnimationDelay>(std::chrono::seconds(1));
+    auto delay = std::make_shared<egt::AnimationDelay>(std::chrono::seconds(1));
 
-    AnimationSequence sequence(true);
+    egt::AnimationSequence sequence(true);
     sequence.add(in);
     sequence.add(out);
     sequence.add(delay);

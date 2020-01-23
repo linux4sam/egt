@@ -7,24 +7,23 @@
 #include <chrono>
 #include <cmath>
 #include <egt/ui>
+#include <memory>
 #include <random>
-#include <vector>
 #include <sstream>
+#include <vector>
 
-using namespace egt;
-
-class Ball : public ImageLabel
+class Ball : public egt::ImageLabel
 {
 public:
     Ball() = delete;
 
     Ball(int xspeed, int yspeed) noexcept
-        : ImageLabel(Image("star.png")),
+        : egt::ImageLabel(egt::Image("star.png")),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {
-        flags().set(Widget::Flag::no_layout);
-        flags().set(Widget::Flag::no_autoresize);
+        flags().set({egt::Widget::Flag::no_layout,
+                     egt::Widget::Flag::no_autoresize});
     }
 
     // returns false when it's no longer visible
@@ -35,11 +34,7 @@ public:
         bool visible = box().intersect(parent()->box());
 
         if (visible)
-        {
-            Point to(point());
-            to += Point(m_xspeed, m_yspeed);
-            move(to);
-        }
+            move(point() + egt::Point(m_xspeed, m_yspeed));
 
         return visible;
     }
@@ -65,25 +60,25 @@ static bool debounce_mouse(int delta)
     return false;
 }
 
-class MainWindow : public TopWindow
+class MainWindow : public egt::TopWindow
 {
 public:
     MainWindow()
     {
-        background(Image("background.png"));
+        background(egt::Image("background.png"));
 
-        auto logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_white.png"));
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_white.png"));
         logo->margin(10);
         add(top(left(logo)));
     }
 
-    void handle(Event& event) override
+    void handle(egt::Event& event) override
     {
-        TopWindow::handle(event);
+        egt::TopWindow::handle(event);
 
         switch (event.id())
         {
-        case EventId::raw_pointer_move:
+        case egt::EventId::raw_pointer_move:
             if (debounce_mouse(100))
                 spawn(display_to_local(event.pointer().point));
             break;
@@ -92,7 +87,7 @@ public:
         }
     }
 
-    void spawn(const Point& p)
+    void spawn(const egt::Point& p)
     {
         auto xspeed = speed_dist(e1);
         auto yspeed = speed_dist(e1);
@@ -106,7 +101,7 @@ public:
 
         auto image = m_images.back();
         image->resize_by_ratio(scale);
-        image->image_align(AlignFlag::expand);
+        image->image_align(egt::AlignFlag::expand);
         image->move_to_center(p);
         add(image);
     }
@@ -139,32 +134,32 @@ private:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "space");
+    egt::Application app(argc, argv, "space");
 
     MainWindow win;
     win.show();
 
-    PeriodicTimer animatetimer(std::chrono::milliseconds(30));
+    egt::PeriodicTimer animatetimer(std::chrono::milliseconds(30));
     animatetimer.on_timeout([&win]()
     {
         win.animate();
     });
     animatetimer.start();
 
-    PeriodicTimer spawntimer(std::chrono::seconds(1));
+    egt::PeriodicTimer spawntimer(std::chrono::seconds(1));
     spawntimer.on_timeout([&win]()
     {
         win.spawn(win.center());
     });
     spawntimer.start();
 
-    Label label1("CPU: ----");
-    label1.color(Palette::ColorId::text, Palette::white);
-    label1.color(Palette::ColorId::bg, Palette::transparent);
+    egt::Label label1("CPU: ----");
+    label1.color(egt::Palette::ColorId::text, egt::Palette::white);
+    label1.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     win.add(bottom(left(label1)));
 
-    experimental::CPUMonitorUsage tools;
-    PeriodicTimer cputimer(std::chrono::seconds(1));
+    egt::experimental::CPUMonitorUsage tools;
+    egt::PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&label1, &tools]()
     {
         tools.update();
@@ -174,7 +169,7 @@ int main(int argc, const char** argv)
     });
     cputimer.start();
 
-    std::vector<std::unique_ptr<AnimationSequence>> animations;
+    std::vector<std::unique_ptr<egt::AnimationSequence>> animations;
 
     if (argc > 1)
     {
@@ -191,29 +186,29 @@ int main(int argc, const char** argv)
         {
             auto star = std::make_shared<Ball>(0, 0);
             star->resize_by_ratio(s_dist(e1));
-            star->image_align(AlignFlag::expand);
-            star->move_to_center(Point(x_dist(e1), y_dist(e1)));
+            star->image_align(egt::AlignFlag::expand);
+            star->move_to_center(egt::Point(x_dist(e1), y_dist(e1)));
             win.add(star);
 
-            auto in = std::make_shared<PropertyAnimatorF>(0, 1,
+            auto in = std::make_shared<egt::PropertyAnimatorF>(0, 1,
                       std::chrono::milliseconds(d_dist(e1)),
-                      easing_spring);
-            in->on_change([star](PropertyAnimatorF::Value value) { star->alpha(value); });
+                      egt::easing_spring);
+            in->on_change([star](egt::PropertyAnimatorF::Value value) { star->alpha(value); });
 
-            auto out = std::make_shared<PropertyAnimatorF>(1, 0,
+            auto out = std::make_shared<egt::PropertyAnimatorF>(1, 0,
                        std::chrono::milliseconds(d_dist(e1)),
-                       easing_spring);
+                       egt::easing_spring);
             out->reverse(true);
-            out->on_change([star](PropertyAnimatorF::Value value) { star->alpha(value); });
+            out->on_change([star](egt::PropertyAnimatorF::Value value) { star->alpha(value); });
 
-            auto delay = std::make_shared<AnimationDelay>(std::chrono::milliseconds(d_dist(e1)));
+            auto delay = std::make_shared<egt::AnimationDelay>(std::chrono::milliseconds(d_dist(e1)));
 
-            animations.emplace_back(detail::make_unique<AnimationSequence>(true));
+            animations.emplace_back(egt::detail::make_unique<egt::AnimationSequence>(true));
+
             auto& sequence = animations.back();
             sequence->add(delay);
             sequence->add(in);
             sequence->add(out);
-
             sequence->start();
         }
     }

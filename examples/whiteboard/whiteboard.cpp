@@ -3,57 +3,55 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <egt/ui>
+#include <array>
 #include <egt/painter.h>
-#include <string>
-#include <vector>
+#include <egt/ui>
+#include <memory>
 #include <sstream>
+#include <string>
 
-using namespace egt;
-using namespace std;
-
-class ColorPickerWindow : public Popup
+class ColorPickerWindow : public egt::Popup
 {
 public:
 
-    explicit ColorPickerWindow(const Color& color)
-        : Popup(Application::instance().screen()->size() / 2),
+    explicit ColorPickerWindow(const egt::Color& color)
+        : egt::Popup(egt::Application::instance().screen()->size() / 2),
           m_grid(std::make_tuple(4, 5), 10),
           m_color(color)
     {
         expand(m_grid);
-        Popup::color(Palette::ColorId::bg, Palette::black);
+        egt::Popup::color(egt::Palette::ColorId::bg, egt::Palette::black);
         add(m_grid);
 
-        const vector<Color> colors =
+        const std::array<egt::Pattern, 20> colors =
         {
-            Palette::red,
-            Palette::green,
-            Palette::blue,
-            Palette::yellow,
-            Palette::cyan,
-            Palette::magenta,
-            Palette::silver,
-            Palette::gray,
-            Palette::lightgray,
-            Palette::maroon,
-            Palette::olive,
-            Palette::purple,
-            Palette::teal,
-            Palette::navy,
-            Palette::orange,
-            Palette::black,
-            Color::css("#F012BE"),
-            Color::css("#7FDBFF"),
-            Color::css("#01FF70"),
-            Color::css("#AA0070"),
+            egt::Palette::red,
+            egt::Palette::green,
+            egt::Palette::blue,
+            egt::Palette::yellow,
+            egt::Palette::cyan,
+            egt::Palette::magenta,
+            egt::Palette::silver,
+            egt::Palette::gray,
+            egt::Palette::lightgray,
+            egt::Palette::maroon,
+            egt::Palette::olive,
+            egt::Palette::purple,
+            egt::Palette::teal,
+            egt::Palette::navy,
+            egt::Palette::orange,
+            egt::Palette::black,
+            egt::Color::css("#F012BE"),
+            egt::Color::css("#7FDBFF"),
+            egt::Color::css("#01FF70"),
+            egt::Color::css("#AA0070"),
         };
 
         for (auto& c : colors)
         {
-            auto color_label = make_shared<RectangleWidget>();
+            auto color_label = std::make_shared<egt::RectangleWidget>();
 
-            color_label->color(Palette::ColorId::button_bg, c);
+            color_label->color(egt::Palette::ColorId::button_bg, c);
 
             m_grid.add(expand(color_label));
             int column = m_grid.last_add_column();
@@ -62,35 +60,35 @@ public:
             if (c == m_color)
                 m_grid.selected(column, row);
 
-            color_label->on_event([this](Event&)
+            color_label->on_event([this](egt::Event&)
             {
-                m_color = m_grid.get(m_grid.selected())->color(Palette::ColorId::button_bg).color();
+                m_color = m_grid.get(m_grid.selected())->color(egt::Palette::ColorId::button_bg).color();
                 this->hide();
-            }, {EventId::pointer_click});
+            }, egt::EventId::pointer_click);
         }
     }
 
-    const Color& color() const { return m_color; }
+    const egt::Color& color() const { return m_color; }
 
 protected:
-    SelectableGrid m_grid;
-    Color m_color{Palette::red};
+    egt::SelectableGrid m_grid;
+    egt::Color m_color{egt::Palette::red};
 };
 
-class WidthPickerWindow : public Popup
+class WidthPickerWindow : public egt::Popup
 {
 public:
 
     explicit WidthPickerWindow(int width)
-        : Popup(Application::instance().screen()->size() / 4),
+        : egt::Popup(egt::Application::instance().screen()->size() / 4),
           m_grid(std::make_tuple(4, 1), 10),
           m_width(width)
     {
         expand(m_grid);
-        color(Palette::ColorId::bg, Palette::black);
+        color(egt::Palette::ColorId::bg, egt::Palette::black);
         add(m_grid);
 
-        const vector<int> widths =
+        const std::array<int, 4> widths =
         {
             1,
             2,
@@ -100,52 +98,52 @@ public:
 
         for (auto& w : widths)
         {
-            auto width_label = make_shared<Label>(std::to_string(w), AlignFlag::center);
-            width_label->color(Palette::ColorId::label_text, Palette::white);
+            auto width_label = std::make_shared<egt::Label>(std::to_string(w), egt::AlignFlag::center);
+            width_label->color(egt::Palette::ColorId::label_text, egt::Palette::white);
 
-            m_grid.add(expand(width_label));
+            m_grid.add(egt::expand(width_label));
             int column = m_grid.last_add_column();
             int row = m_grid.last_add_row();
 
             if (w == m_width)
                 m_grid.selected(column, row);
 
-            width_label->on_event([this](Event&)
+            width_label->on_event([this](egt::Event&)
             {
-                m_width = std::stoi(reinterpret_cast<Label*>(m_grid.get(m_grid.selected()))->text());
+                m_width = std::stoi(reinterpret_cast<egt::Label*>(m_grid.get(m_grid.selected()))->text());
                 this->hide();
-            }, {EventId::pointer_click});
+            }, {egt::EventId::pointer_click});
         }
     }
 
-    int width() const { return m_width; }
+    inline int width() const { return m_width; }
 
 protected:
-    SelectableGrid m_grid;
+    egt::SelectableGrid m_grid;
     int m_width{2};
 };
 
 
-class MainWindow : public TopWindow
+class MainWindow : public egt::TopWindow
 {
 public:
 
     MainWindow()
-        : m_colorbtn(Image("palette.png")),
-          m_fillbutton(Image("fill.png")),
-          m_widthbtn(Image("width.png")),
-          m_clearbtn(Image("clear.png")),
-          m_snapshotbtn(Image("screenshot.png")),
-          m_penpicker(Palette::blue),
-          m_fillpicker(Palette::red),
+        : m_colorbtn(egt::Image("palette.png")),
+          m_fillbutton(egt::Image("fill.png")),
+          m_widthbtn(egt::Image("width.png")),
+          m_clearbtn(egt::Image("clear.png")),
+          m_snapshotbtn(egt::Image("screenshot.png")),
+          m_penpicker(egt::Palette::blue),
+          m_fillpicker(egt::Palette::red),
           m_widthpicker(2),
-          m_canvas(screen()->size(), PixelFormat::argb8888)
+          m_canvas(screen()->size(), egt::PixelFormat::argb8888)
     {
         // don't draw background, we'll do it in draw()
         boxtype().clear();
-        color(Palette::ColorId::bg, Palette::white);
+        color(egt::Palette::ColorId::bg, egt::Palette::white);
 
-        m_sizer = make_shared<VerticalBoxSizer>(*this);
+        m_sizer = std::make_shared<egt::VerticalBoxSizer>(*this);
         top(left(m_sizer));
 
         m_colorbtn.boxtype().clear();
@@ -154,11 +152,11 @@ public:
         m_clearbtn.boxtype().clear();
         m_snapshotbtn.boxtype().clear();
 
-        m_colorbtn.image_align(AlignFlag::expand);
-        m_fillbutton.image_align(AlignFlag::expand);
-        m_widthbtn.image_align(AlignFlag::expand);
-        m_clearbtn.image_align(AlignFlag::expand);
-        m_snapshotbtn.image_align(AlignFlag::expand);
+        m_colorbtn.image_align(egt::AlignFlag::expand);
+        m_fillbutton.image_align(egt::AlignFlag::expand);
+        m_widthbtn.image_align(egt::AlignFlag::expand);
+        m_clearbtn.image_align(egt::AlignFlag::expand);
+        m_snapshotbtn.image_align(egt::AlignFlag::expand);
 
         add(m_penpicker);
         add(m_fillpicker);
@@ -170,34 +168,34 @@ public:
         m_sizer->add(m_clearbtn);
         m_sizer->add(m_snapshotbtn);
 
-        m_colorbtn.on_click([this](Event&)
+        m_colorbtn.on_click([this](egt::Event&)
         {
             m_penpicker.show_modal(true);
         });
 
-        m_fillbutton.on_click([this](Event&)
+        m_fillbutton.on_click([this](egt::Event&)
         {
             m_fillpicker.show_modal(true);
         });
 
-        m_widthbtn.on_click([this](Event&)
+        m_widthbtn.on_click([this](egt::Event&)
         {
             m_widthpicker.show_modal(true);
         });
 
-        m_clearbtn.on_click([this](Event&)
+        m_clearbtn.on_click([this](egt::Event&)
         {
             clear();
             damage();
         });
 
-        m_snapshotbtn.on_click([this](Event&)
+        m_snapshotbtn.on_click([this](egt::Event&)
         {
             paint_to_file();
         });
 
-        auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
-        logo->align(AlignFlag::right | AlignFlag::top);
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        logo->align(egt::AlignFlag::right | egt::AlignFlag::top);
         logo->margin(10);
         add(logo);
 
@@ -206,32 +204,32 @@ public:
 
     void clear()
     {
-        Painter painter(m_canvas.context());
+        egt::Painter painter(m_canvas.context());
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-        painter.set(Palette::transparent);
+        painter.set(egt::Palette::transparent);
         painter.paint();
     }
 
-    void handle(Event& event) override
+    void handle(egt::Event& event) override
     {
-        TopWindow::handle(event);
+        egt::TopWindow::handle(event);
 
         switch (event.id())
         {
-        case EventId::pointer_click:
+        case egt::EventId::pointer_click:
         {
             auto mouse = display_to_local(event.pointer().point);
-            Painter painter(m_canvas.context());
+            egt::Painter painter(m_canvas.context());
             cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
             painter.flood(mouse, m_fillpicker.color());
             damage();
             break;
         }
-        case EventId::pointer_drag_start:
+        case egt::EventId::pointer_drag_start:
             m_last = display_to_local(event.pointer().point);
             event.grab(this);
             break;
-        case EventId::pointer_drag:
+        case egt::EventId::pointer_drag:
         {
             auto mouse = display_to_local(event.pointer().point);
 
@@ -239,8 +237,8 @@ public:
             {
                 int width = m_widthpicker.width();
 
-                Line line(m_last, mouse);
-                Painter painter(m_canvas.context());
+                egt::Line line(m_last, mouse);
+                egt::Painter painter(m_canvas.context());
                 cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
                 painter.line_width(width);
                 auto cr = painter.context();
@@ -250,9 +248,9 @@ public:
                 painter.stroke();
 
                 // damage only the rectangle containing the new line
-                Rect r = line.rect();
-                r += Size(width * 2, width * 2);
-                r -= Point(width, width);
+                auto r = line.rect();
+                r += egt::Size(width * 2, width * 2);
+                r -= egt::Point(width, width);
                 damage(r);
             }
 
@@ -265,37 +263,37 @@ public:
         }
     }
 
-    void draw(Painter& painter, const Rect& rect) override
+    void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
-        painter.set(color(Palette::ColorId::bg).color());
+        painter.set(color(egt::Palette::ColorId::bg).color());
         painter.draw(rect);
         painter.fill();
 
         painter.draw(rect.point());
-        painter.draw(rect, Image(m_canvas.surface()));
+        painter.draw(rect, egt::Image(m_canvas.surface()));
 
-        TopWindow::draw(painter, rect);
+        egt::TopWindow::draw(painter, rect);
     }
 
-    Point m_last;
-    shared_ptr<VerticalBoxSizer> m_sizer;
-    ImageButton m_colorbtn;
-    ImageButton m_fillbutton;
-    ImageButton m_widthbtn;
-    ImageButton m_clearbtn;
-    ImageButton m_snapshotbtn;
+    egt::Point m_last;
+    std::shared_ptr<egt::VerticalBoxSizer> m_sizer;
+    egt::ImageButton m_colorbtn;
+    egt::ImageButton m_fillbutton;
+    egt::ImageButton m_widthbtn;
+    egt::ImageButton m_clearbtn;
+    egt::ImageButton m_snapshotbtn;
     ColorPickerWindow m_penpicker;
     ColorPickerWindow m_fillpicker;
     WidthPickerWindow m_widthpicker;
-    Canvas m_canvas;
+    egt::Canvas m_canvas;
 };
 
 static int run(int argc, const char** argv)
 {
-    Application app(argc, argv, "whiteboard");
+    egt::Application app(argc, argv, "whiteboard");
 
     MainWindow win;
-    win.show_cursor(Image("icon:cursor_pencil.png"));
+    win.show_cursor(egt::Image("icon:cursor_pencil.png"));
     win.show();
 
     return app.run();
@@ -306,7 +304,7 @@ int main(int argc, const char** argv)
     auto res = run(argc, argv);
 
     // cleanup any font allocations
-    Font::shutdown_fonts();
+    egt::Font::shutdown_fonts();
 
     return res;
 }

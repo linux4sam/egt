@@ -11,17 +11,14 @@
 #include <string>
 #include <vector>
 
-using namespace egt;
-using namespace std;
-
-static std::vector<std::pair<std::string, std::function<int(Application& app)>>> examples =
+static std::vector<std::pair<std::string, std::function<int(egt::Application& app)>>> examples =
 {
     {
-        "label1", [](Application & app)
+        "label1", [](egt::Application & app)
         {
             /// @[label1]
-            TopWindow window;
-            Label label(window, "I'm a Label");
+            egt::TopWindow window;
+            egt::Label label(window, "I'm a Label");
             center(label);
             window.show();
             /// @[label1]
@@ -29,12 +26,12 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "label2", [](Application & app)
+        "label2", [](egt::Application & app)
         {
             /// @[label2]
-            TopWindow window;
-            Label label(window, "I'm a Bigger Label");
-            label.font(Font("Sans", 30));
+            egt::TopWindow window;
+            egt::Label label(window, "I'm a Bigger Label");
+            label.font(egt::Font("Sans", 30));
             center(label);
             window.show();
             /// @[label2]
@@ -42,12 +39,12 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "label3", [](Application & app)
+        "label3", [](egt::Application & app)
         {
             /// @[label3]
-            TopWindow window;
-            Label label(window, "I'm a Red Label");
-            label.color(Palette::ColorId::label_text, Palette::red);
+            egt::TopWindow window;
+            egt::Label label(window, "I'm a Red Label");
+            label.color(egt::Palette::ColorId::label_text, egt::Palette::red);
             center(label);
             window.show();
             /// @[label3]
@@ -55,11 +52,11 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "button0", [](Application & app)
+        "button0", [](egt::Application & app)
         {
             /// @[button0]
-            TopWindow window;
-            auto button = std::make_shared<Button>("Button");
+            egt::TopWindow window;
+            auto button = std::make_shared<egt::Button>("Button");
             window.add(center(button));
             window.show();
             /// @[button0]
@@ -67,11 +64,11 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "button1", [](Application & app)
+        "button1", [](egt::Application & app)
         {
             /// @[button1]
-            TopWindow window;
-            Button button(window, "Button");
+            egt::TopWindow window;
+            egt::Button button(window, "Button");
             center(button);
             window.show();
             /// @[button1]
@@ -79,14 +76,14 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "button2", [](Application & app)
+        "button2", [](egt::Application & app)
         {
             /// @[button2]
-            TopWindow window;
-            Button button(window, "Press Me");
+            egt::TopWindow window;
+            egt::Button button(window, "Press Me");
             center(button);
 
-            button.on_event([](Event & event)
+            button.on_event([](egt::Event & event)
             {
                 std::cout << "received event " << event.id() << std::endl;
             });
@@ -96,22 +93,22 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "button3", [](Application & app)
+        "button3", [](egt::Application & app)
         {
             /// @[button3]
-            TopWindow window;
-            Button button(window, "Change Colors");
+            egt::TopWindow window;
+            egt::Button button(window, "Change Colors");
             center(button);
 
-            egt::experimental::ColorMap colors({Palette::red, Palette::green});
-            button.on_click([&button, &colors](Event & event)
+            egt::experimental::ColorMap colors({egt::Palette::red, egt::Palette::green});
+            button.on_click([&button, &colors](egt::Event & event)
             {
                 static float step = 0;
-                button.color(Palette::ColorId::button_bg,
+                button.color(egt::Palette::ColorId::button_bg,
                              colors.interp(step += 0.1));
-                button.color(Palette::ColorId::button_bg,
+                button.color(egt::Palette::ColorId::button_bg,
                              colors.interp(1.0 - step),
-                             Palette::GroupId::active);
+                             egt::Palette::GroupId::active);
                 if (step >= 1.0)
                     step = 0.;
             });
@@ -122,17 +119,17 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "image1", [](Application & app)
+        "image1", [](egt::Application & app)
         {
             /// @[image1]
-            TopWindow window;
-            HorizontalBoxSizer sizer;
+            egt::TopWindow window;
+            egt::HorizontalBoxSizer sizer;
             window.add(center(sizer));
 
-            ImageLabel label1(sizer, Image("icon:unlock.png"));
-            ImageLabel label2(sizer, Image("icon:paint.png"));
-            ImageLabel label3(sizer, Image("icon:battery.png"));
-            ImageLabel label4(sizer, Image("icon:ok.png"));
+            egt::ImageLabel label1(sizer, egt::Image("icon:unlock.png"));
+            egt::ImageLabel label2(sizer, egt::Image("icon:paint.png"));
+            egt::ImageLabel label3(sizer, egt::Image("icon:battery.png"));
+            egt::ImageLabel label4(sizer, egt::Image("icon:ok.png"));
 
             window.show();
             /// @[image1]
@@ -140,19 +137,19 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "animation0", [](Application & app)
+        "animation0", [](egt::Application & app)
         {
             /// @[animation0]
-            TopWindow window;
-            Button button(window, "Can you see me now?");
+            egt::TopWindow window;
+            egt::Button button(window, "Can you see me now?");
             center(button);
 
-            PropertyAnimatorF animation;
+            egt::PropertyAnimatorF animation;
             animation.starting(0.0);
             animation.ending(1.0);
             animation.duration(std::chrono::seconds(5));
-            animation.easing_func(easing_linear);
-            animation.on_change([&button](PropertyAnimatorF::Value value) { button.alpha(value); });
+            animation.easing_func(egt::easing_linear);
+            animation.on_change([&button](egt::PropertyAnimatorF::Value value) { button.alpha(value); });
             animation.start();
 
             window.show();
@@ -161,20 +158,20 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "animation1", [](Application & app)
+        "animation1", [](egt::Application & app)
         {
             /// @[animation1]
-            TopWindow window;
+            egt::TopWindow window;
             /// @[animation1.1]
-            Button button(window, "I Move");
+            egt::Button button(window, "I Move");
             button.move_to_center(window.center());
 
-            PropertyAnimator animation;
+            egt::PropertyAnimator animation;
             animation.starting(button.y());
             animation.ending(button.y() + 100);
             animation.duration(std::chrono::seconds(5));
-            animation.easing_func(easing_linear);
-            animation.on_change([&button](PropertyAnimator::Value value) { button.y(value); });
+            animation.easing_func(egt::easing_linear);
+            animation.on_change([&button](egt::PropertyAnimator::Value value) { button.y(value); });
 
             animation.start();
             /// @[animation1.1]
@@ -185,20 +182,20 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "animation2", [](Application & app)
+        "animation2", [](egt::Application & app)
         {
             /// @[animation2]
-            TopWindow window;
-            Button button(window, "I Move");
+            egt::TopWindow window;
+            egt::Button button(window, "I Move");
             button.move_to_center(window.center());
-            const Point starting_point = button.point();
+            const egt::Point starting_point = button.point();
 
-            PropertyAnimator animation;
+            egt::PropertyAnimator animation;
             animation.starting(0);
             animation.ending(100);
             animation.duration(std::chrono::seconds(5));
-            animation.easing_func(easing_linear);
-            animation.on_change([&button, starting_point](int value)
+            animation.easing_func(egt::easing_linear);
+            animation.on_change([&button, starting_point](egt::PropertyAnimator::Value value)
             {
                 auto point = starting_point;
                 point += value;
@@ -213,19 +210,19 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "animation3", [](Application & app)
+        "animation3", [](egt::Application & app)
         {
             /// @[animation3]
-            TopWindow window;
-            Label label(window, "EGT");
+            egt::TopWindow window;
+            egt::Label label(window, "EGT");
             center(label);
 
-            PropertyAnimatorF animation;
+            egt::PropertyAnimatorF animation;
             animation.starting(8.f);
             animation.ending(120.f);
             animation.duration(std::chrono::seconds(5));
-            animation.easing_func(easing_linear);
-            animation.on_change([&label](float value)
+            animation.easing_func(egt::easing_linear);
+            animation.on_change([&label](egt::PropertyAnimatorF::Value value)
             {
                 auto font = label.font();
                 font.size(value);
@@ -240,21 +237,21 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "animation4", [](Application & app)
+        "animation4", [](egt::Application & app)
         {
             /// @[animation4]
-            TopWindow window;
-            Button button(window, "Hello World");
+            egt::TopWindow window;
+            egt::Button button(window, "Hello World");
             center(button);
 
-            PropertyAnimatorF animation;
+            egt::PropertyAnimatorF animation;
             animation.starting(0.0);
             animation.ending(app.screen()->max_brightness());
             animation.duration(std::chrono::seconds(5));
-            animation.easing_func(easing_linear);
-            animation.on_change([&app](float v)
+            animation.easing_func(egt::easing_linear);
+            animation.on_change([&app](egt::PropertyAnimatorF::Value value)
             {
-                app.screen()->brightness(v);
+                app.screen()->brightness(value);
             });
             animation.start();
 
@@ -264,15 +261,15 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "events1", [](Application & app)
+        "events1", [](egt::Application & app)
         {
             /// @[events1]
-            TopWindow window;
-            VerticalBoxSizer sizer;
+            egt::TopWindow window;
+            egt::VerticalBoxSizer sizer;
             window.add(expand(sizer));
 
-            Button button(sizer, "Disable Me");
-            CheckBox checkbox(sizer, "Button Disabled");
+            egt::Button button(sizer, "Disable Me");
+            egt::CheckBox checkbox(sizer, "Button Disabled");
             checkbox.on_checked_changed([&button, &checkbox]()
             {
                 button.disabled(checkbox.checked());
@@ -284,15 +281,15 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "timer1", [](Application & app)
+        "timer1", [](egt::Application & app)
         {
             /// @[timer1]
-            TopWindow window;
-            Label label(window);
-            label.text_align(AlignFlag::center);
+            egt::TopWindow window;
+            egt::Label label(window);
+            label.text_align(egt::AlignFlag::center);
             center(label);
 
-            PeriodicTimer timer(std::chrono::seconds(1));
+            egt::PeriodicTimer timer(std::chrono::seconds(1));
             timer.on_timeout([&label]()
             {
                 static auto count = 0;
@@ -308,33 +305,33 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "theme1", [](Application & app)
+        "theme1", [](egt::Application & app)
         {
             /// @[theme1]
-            TopWindow window;
+            egt::TopWindow window;
 
-            struct CustomTheme : public Theme
+            struct CustomTheme : public egt::Theme
             {
-                using Theme::Theme;
+                using egt::Theme::Theme;
                 void apply() override
                 {
-                    Theme::apply();
+                    egt::Theme::apply();
 
-                    palette().set(Palette::ColorId::button_bg,
-                                  Palette::GroupId::normal,
-                                  Palette::green);
-                    palette().set(Palette::ColorId::bg,
-                                  Palette::GroupId::normal,
-                                  Palette::blue);
+                    palette().set(egt::Palette::ColorId::button_bg,
+                                  egt::Palette::GroupId::normal,
+                                  egt::Palette::green);
+                    palette().set(egt::Palette::ColorId::bg,
+                                  egt::Palette::GroupId::normal,
+                                  egt::Palette::blue);
                 }
             } theme;
 
             theme.apply();
             window.theme(theme);
 
-            Button button0(window, "Button");
+            egt::Button button0(window, "Button");
             center(left(button0));
-            Button button1(window, "Button");
+            egt::Button button1(window, "Button");
             center(right(button1));
 
             window.show();
@@ -343,25 +340,25 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "theme2", [](Application & app)
+        "theme2", [](egt::Application & app)
         {
             /// @[theme2]
-            TopWindow window;
+            egt::TopWindow window;
 
             auto theme = window.theme();
-            theme.palette().set(Palette::ColorId::button_bg,
-                                Palette::GroupId::normal,
-                                Palette::green);
-            theme.palette().set(Palette::ColorId::bg,
-                                Palette::GroupId::normal,
-                                Palette::blue);
+            theme.palette().set(egt::Palette::ColorId::button_bg,
+                                egt::Palette::GroupId::normal,
+                                egt::Palette::green);
+            theme.palette().set(egt::Palette::ColorId::bg,
+                                egt::Palette::GroupId::normal,
+                                egt::Palette::blue);
 
             window.theme(theme);
 
-            Button button0(window, "Button");
+            egt::Button button0(window, "Button");
             center(left(button0));
 
-            Button button1(window, "Button");
+            egt::Button button1(window, "Button");
             center(right(button1));
 
             window.show();
@@ -370,9 +367,9 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "sound0", [](Application & app)
+        "sound0", [](egt::Application & app)
         {
-            TopWindow window;
+            egt::TopWindow window;
 
             /// @[sound0]
             egt::experimental::Sound sound("assets/tom.wav");
@@ -384,16 +381,16 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "sound1", [](Application & app)
+        "sound1", [](egt::Application & app)
         {
             /// @[sound1]
-            TopWindow window;
+            egt::TopWindow window;
 
             egt::experimental::Sound sound("assets/tom.wav");
 
-            Button button(window, "Play Sound");
+            egt::Button button(window, "Play Sound");
             center(button);
-            button.on_click([&sound](Event&)
+            button.on_click([&sound](egt::Event&)
             {
                 sound.play();
             });
@@ -404,15 +401,15 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "audio1", [](Application & app)
+        "audio1", [](egt::Application & app)
         {
-            TopWindow window;
+            egt::TopWindow window;
 
-            window.add(center(std::make_shared<ImageLabel>(Image("icon:volume_up.png"))));
+            window.add(center(std::make_shared<egt::ImageLabel>(egt::Image("icon:volume_up.png"))));
             window.show();
 
             /// @[audio1]
-            AudioPlayer player("assets/concerto.mp3");
+            egt::AudioPlayer player("assets/concerto.mp3");
             player.play();
             /// @[audio1]
 
@@ -421,12 +418,12 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         }
     },
     {
-        "video1", [](Application & app)
+        "video1", [](egt::Application & app)
         {
             /// @[video1]
-            TopWindow window;
+            egt::TopWindow window;
 
-            VideoWindow player(window.content_area(), "assets/video.mp4");
+            egt::VideoWindow player(window.content_area(), "assets/video.mp4");
             window.add(player);
             player.volume(50);
             player.show();
@@ -441,13 +438,13 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
 
 int main(int argc, const char** argv)
 {
-    Application app;
+    egt::Application app;
 
     if (argc == 2)
     {
         auto f = std::find_if(examples.begin(),
                               examples.end(),
-                              [argv](const std::pair<std::string, std::function<int(Application& app)>>& a)
+                              [argv](const std::pair<std::string, std::function<int(egt::Application& app)>>& a)
         {
             return a.first == std::string(argv[1]);
         });
@@ -460,14 +457,14 @@ int main(int argc, const char** argv)
     else if (argc == 3)
     {
         for (const auto& f : examples)
-            cout << f.first << endl;
+            std::cout << f.first << std::endl;
 
         return 0;
     }
 
     for (const auto& f : examples)
     {
-        Timer killtimer(std::chrono::seconds(5));
+        egt::Timer killtimer(std::chrono::seconds(5));
         killtimer.on_timeout([&app]()
         {
             app.event().quit();

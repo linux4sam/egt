@@ -5,38 +5,32 @@
  */
 #include <egt/ui>
 #include <egt/painter.h>
-#include <string>
-#include <vector>
-#include <sstream>
 
-using namespace egt;
-using namespace std;
-
-class MainWindow : public TopWindow
+class MainWindow : public egt::TopWindow
 {
 public:
 
     MainWindow()
-        : m_clearbtn(Image("icon:warning.png")),
-          m_canvas(screen()->size(), PixelFormat::argb8888)
+        : m_clearbtn(egt::Image("icon:warning.png")),
+          m_canvas(screen()->size(), egt::PixelFormat::argb8888)
     {
         // don't draw background, we'll do it in draw()
         boxtype().clear();
-        color(Palette::ColorId::bg, Palette::white);
+        color(egt::Palette::ColorId::bg, egt::Palette::white);
 
-        auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
-        logo->align(AlignFlag::left | AlignFlag::top);
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        logo->align(egt::AlignFlag::left | egt::AlignFlag::top);
         logo->margin(10);
         add(logo);
 
         clear();
 
         m_clearbtn.boxtype().clear();
-        m_clearbtn.min_size_hint(Size());
-        m_clearbtn.align(AlignFlag::bottom | AlignFlag::right);
+        m_clearbtn.min_size_hint(egt::Size());
+        m_clearbtn.align(egt::AlignFlag::bottom | egt::AlignFlag::right);
         add(m_clearbtn);
 
-        m_clearbtn.on_click([this](Event&)
+        m_clearbtn.on_click([this](egt::Event&)
         {
             clear();
             damage();
@@ -45,70 +39,74 @@ public:
 
     void clear()
     {
-        Painter painter(m_canvas.context());
+        egt::Painter painter(m_canvas.context());
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-        painter.set(Palette::transparent);
+        painter.set(egt::Palette::transparent);
         painter.paint();
     }
 
-    void handle(Event& event) override
+    void handle(egt::Event& event) override
     {
-        TopWindow::handle(event);
+        egt::TopWindow::handle(event);
 
         static const auto dim = 30;
 
         switch (event.id())
         {
-        case EventId::raw_pointer_down:
+        case egt::EventId::raw_pointer_down:
         {
             auto mouse = display_to_local(event.pointer().point);
-            Painter painter(m_canvas.context());
-            painter.set(Palette::red);
-            painter.draw(Line(Point(mouse.x() - dim, mouse.y()), Point(mouse.x() + dim, mouse.y())));
-            painter.draw(Line(Point(mouse.x(), mouse.y() - dim), Point(mouse.x(), mouse.y() + dim)));
+            egt::Painter painter(m_canvas.context());
+            painter.set(egt::Palette::red);
+            painter.draw(egt::Line(egt::Point(mouse.x() - dim, mouse.y()),
+                                   egt::Point(mouse.x() + dim, mouse.y())));
+            painter.draw(egt::Line(egt::Point(mouse.x(), mouse.y() - dim),
+                                   egt::Point(mouse.x(), mouse.y() + dim)));
             painter.stroke();
             damage();
             break;
         }
-        case EventId::raw_pointer_up:
+        case egt::EventId::raw_pointer_up:
         {
             auto mouse = display_to_local(event.pointer().point);
-            Painter painter(m_canvas.context());
-            painter.set(Palette::blue);
-            painter.draw(Line(Point(mouse.x() - dim, mouse.y()), Point(mouse.x() + dim, mouse.y())));
-            painter.draw(Line(Point(mouse.x(), mouse.y() - dim), Point(mouse.x(), mouse.y() + dim)));
+            egt::Painter painter(m_canvas.context());
+            painter.set(egt::Palette::blue);
+            painter.draw(egt::Line(egt::Point(mouse.x() - dim, mouse.y()),
+                                   egt::Point(mouse.x() + dim, mouse.y())));
+            painter.draw(egt::Line(egt::Point(mouse.x(), mouse.y() - dim),
+                                   egt::Point(mouse.x(), mouse.y() + dim)));
             painter.stroke();
             damage();
             break;
         }
-        case EventId::pointer_click:
+        case egt::EventId::pointer_click:
         {
             auto mouse = display_to_local(event.pointer().point);
-            Painter painter(m_canvas.context());
-            painter.set(Palette::green);
-            Circle circle(mouse, dim);
+            egt::Painter painter(m_canvas.context());
+            painter.set(egt::Palette::green);
+            egt::Circle circle(mouse, dim);
             painter.draw(circle);
             painter.stroke();
             damage();
             break;
         }
-        case EventId::pointer_dblclick:
+        case egt::EventId::pointer_dblclick:
         {
             auto mouse = display_to_local(event.pointer().point);
-            Painter painter(m_canvas.context());
-            painter.set(Palette::orange);
-            Circle circle(mouse, dim);
+            egt::Painter painter(m_canvas.context());
+            painter.set(egt::Palette::orange);
+            egt::Circle circle(mouse, dim);
             painter.draw(circle);
             painter.fill();
             damage();
             break;
         }
-        case EventId::pointer_drag:
+        case egt::EventId::pointer_drag:
         {
             auto mouse = display_to_local(event.pointer().point);
-            Painter painter(m_canvas.context());
-            painter.set(Palette::black);
-            Rect rect(Size(2, 2));
+            egt::Painter painter(m_canvas.context());
+            painter.set(egt::Palette::black);
+            egt::Rect rect(egt::Size(2, 2));
             rect.move_to_center(mouse);
             painter.draw(rect);
             painter.fill();
@@ -120,25 +118,25 @@ public:
         }
     }
 
-    void draw(Painter& painter, const Rect& rect) override
+    void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
-        painter.set(color(Palette::ColorId::bg).color());
+        painter.set(color(egt::Palette::ColorId::bg).color());
         painter.draw(rect);
         painter.fill();
 
         painter.draw(rect.point());
-        painter.draw(rect, Image(m_canvas.surface()));
+        painter.draw(rect, egt::Image(m_canvas.surface()));
 
-        TopWindow::draw(painter, rect);
+        egt::TopWindow::draw(painter, rect);
     }
 
-    ImageButton m_clearbtn;
-    Canvas m_canvas;
+    egt::ImageButton m_clearbtn;
+    egt::Canvas m_canvas;
 };
 
 static int run(int argc, const char** argv)
 {
-    Application app(argc, argv, "press");
+    egt::Application app(argc, argv, "press");
 
     MainWindow win;
     win.show();
@@ -151,7 +149,7 @@ int main(int argc, const char** argv)
     auto res = run(argc, argv);
 
     // cleanup any font allocations
-    Font::shutdown_fonts();
+    egt::Font::shutdown_fonts();
 
     return res;
 }

@@ -4,31 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
-#include <iostream>
 #include <vector>
-
-using namespace std;
-using namespace egt;
-using namespace egt::experimental;
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "drummachine");
+    egt::Application app(argc, argv, "drummachine");
 
-    TopWindow win;
-    win.color(Palette::ColorId::bg, Palette::black);
+    egt::TopWindow win;
+    win.color(egt::Palette::ColorId::bg, egt::Palette::black);
 
-    VerticalBoxSizer sizer;
+    egt::VerticalBoxSizer sizer;
     win.add(expand(sizer));
 
-    ImageLabel logo(Image("icon:128px/egt_logo_white.png"));
+    egt::ImageLabel logo(egt::Image("icon:128px/egt_logo_white.png"));
     logo.margin(10);
     sizer.add(top(center(logo)));
 
-    StaticGrid grid(std::make_tuple(3, 3));
+    egt::StaticGrid grid(std::make_tuple(3, 3));
     sizer.add(expand(grid));
 
-    vector<std::pair<std::string, std::string>> drums =
+    std::vector<std::pair<std::string, std::string>> drums =
     {
         {"Closed-Hi-Hat-1.wav", "Hi-Hat"},
         {"Crash-Cymbal-1.wav", "Symbol"},
@@ -40,21 +35,21 @@ int main(int argc, const char** argv)
 
     for (auto& drum : drums)
     {
-        auto button = make_shared<Button>(drum.second);
-        button->color(Palette::ColorId::button_bg, Palette::purple);
-        button->color(Palette::ColorId::button_bg, Palette::purple, Palette::GroupId::active);
+        auto button = std::make_shared<egt::Button>(drum.second);
+        button->color(egt::Palette::ColorId::button_bg, egt::Palette::purple);
+        button->color(egt::Palette::ColorId::button_bg, egt::Palette::purple, egt::Palette::GroupId::active);
         button->border(2);
-        button->color(Palette::ColorId::border, Palette::black);
-        button->color(Palette::ColorId::border, Palette::red, Palette::GroupId::active);
-        button->resize(Size(100, 100));
+        button->color(egt::Palette::ColorId::border, egt::Palette::black);
+        button->color(egt::Palette::ColorId::border, egt::Palette::red, egt::Palette::GroupId::active);
+        button->resize(egt::Size(100, 100));
 
-        auto sound = make_shared<Sound>(drum.first);
-        button->on_event([sound](Event&)
+        auto sound = std::make_shared<egt::experimental::Sound>(drum.first);
+        button->on_event([sound](egt::Event&)
         {
             sound->play();
-        }, {EventId::raw_pointer_down});
+        }, {egt::EventId::raw_pointer_down});
 
-        grid.add(center(button));
+        grid.add(egt::center(button));
     }
 
     win.show();

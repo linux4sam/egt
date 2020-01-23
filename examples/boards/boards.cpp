@@ -5,51 +5,50 @@
  */
 #include <egt/ui>
 
-using namespace std;
-using namespace egt;
-
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    egt::Application app(argc, argv);
 
-    TopWindow win;
+    egt::TopWindow win;
 
     auto create_label = [](const std::string & text)
     {
-        auto label = make_shared<Label>(text);
-        label->font(Font(30));
+        auto label = std::make_shared<egt::Label>(text);
+        label->font(egt::Font(30));
         label->boxtype().clear();
-        label->align(AlignFlag::center);
+        label->align(egt::AlignFlag::center);
         return label;
     };
 
-    auto label = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"), "SideBoard Widget");
-    label->font(Font(28));
+    auto label = std::make_shared<egt::ImageLabel>(
+                     egt::Image("icon:128px/egt_logo_black.png"),
+                     "SideBoard Widget");
+    label->font(egt::Font(28));
     label->boxtype().clear();
-    label->align(AlignFlag::center);
-    label->image_align(AlignFlag::top);
+    label->align(egt::AlignFlag::center);
+    label->image_align(egt::AlignFlag::top);
     win.add(label);
 
-    SideBoard board0;
-    board0.color(Palette::ColorId::bg, Palette::red);
+    egt::SideBoard board0;
+    board0.color(egt::Palette::ColorId::bg, egt::Palette::red);
     board0.add(create_label("LEFT"));
     win.add(board0);
     board0.show();
 
-    SideBoard board1(SideBoard::PositionFlag::bottom);
-    board1.color(Palette::ColorId::bg, Palette::blue);
+    egt::SideBoard board1(egt::SideBoard::PositionFlag::bottom);
+    board1.color(egt::Palette::ColorId::bg, egt::Palette::blue);
     board1.add(create_label("BOTTOM"));
     win.add(board1);
     board1.show();
 
-    SideBoard board2(SideBoard::PositionFlag::right);
-    board2.color(Palette::ColorId::bg, Palette::green);
+    egt::SideBoard board2(egt::SideBoard::PositionFlag::right);
+    board2.color(egt::Palette::ColorId::bg, egt::Palette::green);
     board2.add(create_label("RIGHT"));
     win.add(board2);
     board2.show();
 
-    SideBoard board3(SideBoard::PositionFlag::top);
-    board3.color(Palette::ColorId::bg, Palette::gray);
+    egt::SideBoard board3(egt::SideBoard::PositionFlag::top);
+    board3.color(egt::Palette::ColorId::bg, egt::Palette::gray);
     board3.add(create_label("TOP"));
     win.add(board3);
     board3.show();

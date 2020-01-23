@@ -3,17 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <chrono>
-#include <cmath>
-#include <egt/ui>
-#include <iomanip>
-#include <iostream>
 #include <libintl.h>
+#include <egt/ui>
 #include <memory>
 #include <string>
-
-using namespace std;
-using namespace egt;
 
 class MainWindow;
 
@@ -22,66 +15,66 @@ class MainWindow;
  */
 #define _(String) gettext(String)
 
-class ResourceFrame : public Frame
+class ResourceFrame : public egt::Frame
 {
 public:
-    ResourceFrame(const Image& image,
-                  const string& label)
+    ResourceFrame(const egt::Image& image,
+                  const std::string& label)
     {
-        auto sizer = std::make_shared<VerticalBoxSizer>();
+        auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto l = std::make_shared<Label>(label);
+        auto l = std::make_shared<egt::Label>(label);
         sizer->add(expand_horizontal(l));
 
-        auto i = std::make_shared<ImageLabel>(image);
-        i->image_align(AlignFlag::expand);
-        sizer->add(expand(i));
+        auto i = std::make_shared<egt::ImageLabel>(image);
+        i->image_align(egt::AlignFlag::expand);
+        sizer->add(egt::expand(i));
     }
 };
 
-class MainWindow : public TopWindow
+class MainWindow : public egt::TopWindow
 {
 public:
     explicit MainWindow()
         : m_grid(std::make_tuple(2, 3))
     {
-        auto sizer = std::make_shared<VerticalBoxSizer>();
+        auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto egt_logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
-        egt_logo->align(AlignFlag::center | AlignFlag::top);
+        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        egt_logo->align(egt::AlignFlag::center | egt::AlignFlag::top);
         egt_logo->margin(5);
         sizer->add(egt_logo);
 
-        sizer->add(expand(m_grid));
+        sizer->add(egt::expand(m_grid));
 
-        m_grid.add(expand(make_shared<ResourceFrame>(Image("image1.png"), _("PNG-filename"))));
-        m_grid.add(expand(make_shared<ResourceFrame>(Image("file:image2_png"), _("PNG-stream"))));
-        m_grid.add(expand(make_shared<ResourceFrame>(Image("image3.bmp"), _("BMP-filename"))));
-        m_grid.add(expand(make_shared<ResourceFrame>(Image("file:image4_bmp"), _("BMP-stream"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("image1.png"), _("PNG-filename"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("file:image2_png"), _("PNG-stream"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("image3.bmp"), _("BMP-filename"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("file:image4_bmp"), _("BMP-stream"))));
 
         try
         {
-            m_grid.add(expand(make_shared<ResourceFrame>(Image("image5.jpg"), _("JPEG-file"))));
+            m_grid.add(egt::expand(std::make_shared<ResourceFrame>(egt::Image("image5.jpg"), _("JPEG-file"))));
         }
         catch (...)
         {}
 
         try
         {
-            m_grid.add(expand(make_shared<ResourceFrame>(SvgImage("image6.svg", SizeF(0, 205)), _("SVG-file"))));
+            m_grid.add(egt::expand(std::make_shared<ResourceFrame>(egt::SvgImage("image6.svg", egt::SizeF(0, 205)), _("SVG-file"))));
         }
         catch (...)
         {}
     }
 
-    StaticGrid m_grid;
+    egt::StaticGrid m_grid;
 };
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "resource");
+    egt::Application app(argc, argv, "resource");
 
     MainWindow window;
     window.show();

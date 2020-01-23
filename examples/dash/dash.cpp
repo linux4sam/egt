@@ -7,43 +7,40 @@
 #include <chrono>
 #include <memory>
 
-using namespace std;
-using namespace egt;
-using namespace egt::experimental;
-
 template<class T>
 static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
                                   std::chrono::milliseconds duration = std::chrono::seconds(10),
-                                  EasingFunc easingin = easing_circular_easein,
-                                  EasingFunc easingout = easing_circular_easeout)
+                                  egt::EasingFunc easingin = egt::easing_circular_easein,
+                                  egt::EasingFunc easingout = egt::easing_circular_easeout)
 {
-    auto animationup = std::make_shared<PropertyAnimator>(min, max, duration, easingin);
-    animationup->on_change([widget](PropertyAnimator::Value value) { widget->value(value); });
+    auto animationup = std::make_shared<egt::PropertyAnimator>(min, max, duration, easingin);
+    animationup->on_change([widget](egt::PropertyAnimator::Value value) { widget->value(value); });
 
-    auto animationdown = std::make_shared<PropertyAnimator>(max, min, duration, easingout);
-    animationdown->on_change([widget](PropertyAnimator::Value value) { widget->value(value); });
+    auto animationdown = std::make_shared<egt::PropertyAnimator>(max, min, duration, easingout);
+    animationdown->on_change([widget](egt::PropertyAnimator::Value value) { widget->value(value); });
 
-    auto sequence = std::make_unique<AnimationSequence>(true);
+    auto sequence = std::make_unique<egt::AnimationSequence>(true);
     sequence->add(animationup);
     sequence->add(animationdown);
     sequence->start();
     return sequence;
 }
 
-static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
+static std::shared_ptr<egt::experimental::NeedleLayer> create_needle(egt::experimental::Gauge& gauge,
+        egt::SvgImage& svg,
         const std::string& id, const std::string& point_id,
         int min, int max, int min_angle, int max_angle,
         std::chrono::milliseconds duration,
-        vector<std::unique_ptr<AnimationSequence>>& animations,
-        EasingFunc easing = easing_circular_easein)
+        std::vector<std::unique_ptr<egt::AnimationSequence>>& animations,
+        egt::EasingFunc easing = egt::easing_circular_easein)
 
 {
     if (!svg.id_exists(id) || !svg.id_exists(point_id))
         return nullptr;
 
     auto needle_box = svg.id_box(id);
-    auto needle = make_shared<NeedleLayer>(svg.render(id, needle_box),
-                                           min, max, min_angle, max_angle);
+    auto needle = std::make_shared<egt::experimental::NeedleLayer>(svg.render(id, needle_box),
+                  min, max, min_angle, max_angle);
     auto needle_point = svg.id_box(point_id).center();
     needle->needle_point(needle_point);
     needle->needle_center(needle_point - needle_box.point());
@@ -54,7 +51,7 @@ static shared_ptr<NeedleLayer> create_needle(Gauge& gauge, SvgImage& svg,
     return needle;
 }
 
-static shared_ptr<GaugeLayer> create_layer(Gauge& gauge, SvgImage& svg,
+static std::shared_ptr<egt::experimental::GaugeLayer> create_layer(egt::experimental::Gauge& gauge, egt::SvgImage& svg,
         const std::string& id,
         std::chrono::milliseconds duration)
 {
@@ -62,16 +59,16 @@ static shared_ptr<GaugeLayer> create_layer(Gauge& gauge, SvgImage& svg,
         return nullptr;
 
     auto box = svg.id_box(id);
-    auto layer = make_shared<GaugeLayer>(svg.render(id, box));
-    layer->box(Rect(std::floor(box.x()),
-                    std::floor(box.y()),
-                    std::ceil(box.width()),
-                    std::ceil(box.height())));
+    auto layer = std::make_shared<egt::experimental::GaugeLayer>(svg.render(id, box));
+    layer->box(egt::Rect(std::floor(box.x()),
+                         std::floor(box.y()),
+                         std::ceil(box.width()),
+                         std::ceil(box.height())));
     layer->hide();
     gauge.add_layer(layer);
 
     /// @todo leak
-    auto timer = new PeriodicTimer(duration);
+    auto timer = new egt::PeriodicTimer(duration);
     timer->on_timeout([layer]() { layer->visible_toggle(); });
     timer->start();
 
@@ -80,23 +77,23 @@ static shared_ptr<GaugeLayer> create_layer(Gauge& gauge, SvgImage& svg,
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "dash");
+    egt::Application app(argc, argv, "dash");
 
-    TopWindow win;
+    egt::TopWindow win;
     win.padding(10);
-    win.color(Palette::ColorId::bg, Color::css("#1b1d43"));
+    win.color(egt::Palette::ColorId::bg, egt::Color::css("#1b1d43"));
 
-    auto logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_white.png"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_white.png"));
     win.add(top(left(logo)));
 
     // the gauge
-    Gauge gauge;
+    egt::experimental::Gauge gauge;
     center(gauge);
 
-    auto dash_background = detail::make_unique<SvgImage>("file:dash_background.svg", SizeF(win.content_area().width(), 0));
+    auto dash_background = egt::detail::make_unique<egt::SvgImage>("file:dash_background.svg", egt::SizeF(win.content_area().width(), 0));
 
     // create a background layer
-    auto gauge_background = make_shared<GaugeLayer>(dash_background->render("#background"));
+    auto gauge_background = std::make_shared<egt::experimental::GaugeLayer>(dash_background->render("#background"));
     gauge.add_layer(gauge_background);
 
     // pick out some other layers
@@ -107,11 +104,11 @@ int main(int argc, const char** argv)
     auto hazards = create_layer(gauge, *dash_background, "#hazards", std::chrono::seconds(2));
     auto heat = create_layer(gauge, *dash_background, "#heat", std::chrono::seconds(3));
 
-    vector<std::unique_ptr<AnimationSequence>> animations;
+    std::vector<std::unique_ptr<egt::AnimationSequence>> animations;
 
     // pick out the needles
     auto rpm_needle = create_needle(gauge, *dash_background, "#rpmneedle", "#rpmpoint",
-                                    0, 6000, -20, 190, std::chrono::seconds(8), animations, easing_bounce);
+                                    0, 6000, -20, 190, std::chrono::seconds(8), animations, egt::easing_bounce);
     auto mph_needle = create_needle(gauge, *dash_background, "#mphneedle", "#mphpoint",
                                     0, 220, -20, 190, std::chrono::seconds(8), animations);
     auto fuel_needle = create_needle(gauge, *dash_background, "#fuelneedle", "#fuelpoint",
@@ -122,43 +119,43 @@ int main(int argc, const char** argv)
     // add some labels to show updating text at specific places
 
     auto rpm_box = dash_background->id_box("#rpm");
-    auto rpm_text = make_shared<Label>();
-    rpm_text->text_align(AlignFlag::center);
-    rpm_text->box(Rect(rpm_box.x(), rpm_box.y(), rpm_box.width(), rpm_box.height()));
-    rpm_text->color(Palette::ColorId::label_text, Palette::cyan);
+    auto rpm_text = std::make_shared<egt::Label>();
+    rpm_text->text_align(egt::AlignFlag::center);
+    rpm_text->box(egt::Rect(rpm_box.x(), rpm_box.y(), rpm_box.width(), rpm_box.height()));
+    rpm_text->color(egt::Palette::ColorId::label_text, egt::Palette::cyan);
     rpm_text->text("Trip 1: 100.5 miles");
     gauge.add(rpm_text);
 
     auto speed_box = dash_background->id_box("#speed");
-    auto speed_text = make_shared<Label>();
-    speed_text->text_align(AlignFlag::center);
-    speed_text->box(Rect(speed_box.x(), speed_box.y(), speed_box.width(), speed_box.height()));
-    speed_text->color(Palette::ColorId::label_text, Palette::white);
-    speed_text->font(Font(28, Font::Weight::bold));
+    auto speed_text = std::make_shared<egt::Label>();
+    speed_text->text_align(egt::AlignFlag::center);
+    speed_text->box(egt::Rect(speed_box.x(), speed_box.y(), speed_box.width(), speed_box.height()));
+    speed_text->color(egt::Palette::ColorId::label_text, egt::Palette::white);
+    speed_text->font(egt::Font(28, egt::Font::Weight::bold));
     speed_text->text("0 mph");
     gauge.add(speed_text);
 
     mph_needle->on_value_changed([speed_text, mph_needle]()
     {
-        ostringstream ss;
+        std::ostringstream ss;
         ss << mph_needle->value() << " mph";
         speed_text->text(ss.str());
     });
 
     auto middle_box = dash_background->id_box("#middle");
-    auto middle_text = make_shared<Label>();
-    middle_text->text_align(AlignFlag::center);
-    middle_text->box(Rect(middle_box.x(), middle_box.y(), middle_box.width(), middle_box.height()));
-    middle_text->color(Palette::ColorId::label_text, Palette::aquamarine);
+    auto middle_text = std::make_shared<egt::Label>();
+    middle_text->text_align(egt::AlignFlag::center);
+    middle_text->box(egt::Rect(middle_box.x(), middle_box.y(), middle_box.width(), middle_box.height()));
+    middle_text->color(egt::Palette::ColorId::label_text, egt::Palette::aquamarine);
     middle_text->text("98.7 FM");
     gauge.add(middle_text);
 
     auto console_box = dash_background->id_box("#console");
-    auto console_text = make_shared<Label>();
-    console_text->text_align(AlignFlag::center);
-    console_text->box(Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
-    console_text->color(Palette::ColorId::label_text, Palette::orange);
-    console_text->font(Font(55, Font::Weight::bold));
+    auto console_text = std::make_shared<egt::Label>();
+    console_text->text_align(egt::AlignFlag::center);
+    console_text->box(egt::Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
+    console_text->color(egt::Palette::ColorId::label_text, egt::Palette::orange);
+    console_text->font(egt::Font(55, egt::Font::Weight::bold));
     console_text->text("D");
     gauge.add(console_text);
 

@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 #include <egt/ui>
+#include <iostream>
 #include <random>
-
-using namespace std;
-using namespace egt;
+#include <sstream>
+#include <vector>
 
 template<typename T, typename RandomGenerator>
 T random_item(T start, T end, RandomGenerator& e)
@@ -20,106 +19,106 @@ T random_item(T start, T end, RandomGenerator& e)
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "squares");
+    egt::Application app(argc, argv, "squares");
 
-    TopWindow win;
+    egt::TopWindow win;
 
-    const Color FUCHSIA(Color::css("#F012BE"));
+    const egt::Color FUCHSIA(egt::Color::css("#F012BE"));
 
-    VerticalBoxSizer sizer;
+    egt::VerticalBoxSizer sizer;
 
-    Label label("FPS: ---");
-    label.color(Palette::ColorId::text, Palette::black);
-    label.color(Palette::ColorId::bg, Palette::transparent);
+    egt::Label label("FPS: ---");
+    label.color(egt::Palette::ColorId::text, egt::Palette::black);
+    label.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     sizer.add(expand_horizontal(label));
 
     label.on_text_changed([&label]()
     {
-        cout << label.text() << endl;
+        std::cout << label.text() << std::endl;
     });
 
-    Label label_dims("");
-    label_dims.color(Palette::ColorId::text, Palette::black);
-    label_dims.color(Palette::ColorId::bg, Palette::transparent);
+    egt::Label label_dims("");
+    label_dims.color(egt::Palette::ColorId::text, egt::Palette::black);
+    label_dims.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     sizer.add(expand_horizontal(label_dims));
 
     label_dims.on_text_changed([&label_dims]()
     {
-        cout << label_dims.text() << endl;
+        std::cout << label_dims.text() << std::endl;
     });
 
-    Popup popup(Size(100, 80));
-    popup.color(Palette::ColorId::bg, FUCHSIA);
+    egt::Popup popup(egt::Size(100, 80));
+    popup.color(egt::Palette::ColorId::bg, FUCHSIA);
     popup.add(sizer);
-    expand(sizer);
-    top(right(popup));
+    egt::expand(sizer);
+    egt::top(egt::right(popup));
     win.add(popup);
     popup.show();
 
-    DefaultDim width = 100;
-    DefaultDim height = 100;
+    egt::DefaultDim width = 100;
+    egt::DefaultDim height = 100;
 
     {
-        ostringstream ss;
+        std::ostringstream ss;
         ss << width << "," << height;
         label_dims.text(ss.str());
     }
 
-    const vector<Color> colors1 =
+    const std::vector<egt::Color> colors1 =
     {
-        Palette::red,
-        Palette::green,
-        Palette::blue,
-        Palette::yellow,
-        Palette::cyan,
-        Palette::magenta,
-        Palette::silver,
-        Palette::gray,
-        Palette::lightgray,
-        Palette::maroon,
-        Palette::olive,
-        Palette::purple,
-        Palette::teal,
-        Palette::navy,
-        Palette::orange,
-        Palette::aqua,
-        Palette::lightblue,
+        egt::Palette::red,
+        egt::Palette::green,
+        egt::Palette::blue,
+        egt::Palette::yellow,
+        egt::Palette::cyan,
+        egt::Palette::magenta,
+        egt::Palette::silver,
+        egt::Palette::gray,
+        egt::Palette::lightgray,
+        egt::Palette::maroon,
+        egt::Palette::olive,
+        egt::Palette::purple,
+        egt::Palette::teal,
+        egt::Palette::navy,
+        egt::Palette::orange,
+        egt::Palette::aqua,
+        egt::Palette::lightblue,
     };
 
-    const vector<Color> colors2 =
+    const std::vector<egt::Color> colors2 =
     {
-        Color(Palette::red, 128),
-        Color(Palette::green, 128),
-        Color(Palette::blue, 128),
-        Color(Palette::yellow, 128),
-        Color(Palette::cyan, 128),
-        Color(Palette::magenta, 128),
-        Color(Palette::silver, 128),
-        Color(Palette::gray, 128),
-        Color(Palette::lightgray, 128),
-        Color(Palette::maroon, 128),
-        Color(Palette::olive, 128),
-        Color(Palette::purple, 128),
-        Color(Palette::teal, 128),
-        Color(Palette::navy, 128),
-        Color(Palette::orange, 128),
-        Color(Palette::aqua, 128),
-        Color(Palette::lightblue, 128),
+        egt::Color(egt::Palette::red, 128),
+        egt::Color(egt::Palette::green, 128),
+        egt::Color(egt::Palette::blue, 128),
+        egt::Color(egt::Palette::yellow, 128),
+        egt::Color(egt::Palette::cyan, 128),
+        egt::Color(egt::Palette::magenta, 128),
+        egt::Color(egt::Palette::silver, 128),
+        egt::Color(egt::Palette::gray, 128),
+        egt::Color(egt::Palette::lightgray, 128),
+        egt::Color(egt::Palette::maroon, 128),
+        egt::Color(egt::Palette::olive, 128),
+        egt::Color(egt::Palette::purple, 128),
+        egt::Color(egt::Palette::teal, 128),
+        egt::Color(egt::Palette::navy, 128),
+        egt::Color(egt::Palette::orange, 128),
+        egt::Color(egt::Palette::aqua, 128),
+        egt::Color(egt::Palette::lightblue, 128),
     };
 
     size_t index = 0;
     struct test_data
     {
-        test_data(int w, int h, const vector<Color>& colors)
+        test_data(int w, int h, const std::vector<egt::Color>& colors)
             : w(w), h(h), colors(colors)
         {}
 
         int w;
         int h;
-        vector<Color> colors;
+        std::vector<egt::Color> colors;
     };
 
-    vector<test_data> sets =
+    std::vector<test_data> sets =
     {
         test_data(100, 100, colors1),
         test_data(200, 200, colors1),
@@ -137,22 +136,22 @@ int main(int argc, const char** argv)
     egt::experimental::Fps fps;
     fps.start();
 
-    PeriodicTimer timer(std::chrono::milliseconds(1));
+    egt::PeriodicTimer timer(std::chrono::milliseconds(1));
     timer.on_timeout([&]()
     {
-        Rect rect(x_dist(e1), y_dist(e1), width, height);
+        egt::Rect rect(x_dist(e1), y_dist(e1), width, height);
 
-        Painter painter(win.screen()->context());
+        egt::Painter painter(win.screen()->context());
         auto color = *random_item(sets[index].colors.begin(), sets[index].colors.end(), e1);
         painter.set(color);
         painter.draw(rect);
         painter.fill();
 
-        ostringstream ss;
+        std::ostringstream ss;
         ss << "FPS: " << std::round(fps.fps());
         label.text(ss.str());
 
-        Screen::DamageArray damage;
+        egt::Screen::DamageArray damage;
         damage.push_back(rect);
         win.screen()->flip(damage);
 
@@ -160,7 +159,7 @@ int main(int argc, const char** argv)
     });
     timer.start();
 
-    PeriodicTimer vtimer(std::chrono::seconds(10));
+    egt::PeriodicTimer vtimer(std::chrono::seconds(10));
     vtimer.on_timeout([&]()
     {
         index++;
@@ -169,7 +168,7 @@ int main(int argc, const char** argv)
         width = sets[index].w;
         height = sets[index].h;
 
-        ostringstream ss;
+        std::ostringstream ss;
         ss << width << "," << height;
         label_dims.text(ss.str());
 

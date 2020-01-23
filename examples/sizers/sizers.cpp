@@ -6,45 +6,42 @@
 #include <egt/ui>
 #include <memory>
 
-using namespace egt;
-using namespace std;
-
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    egt::Application app(argc, argv);
 
-    TopWindow win;
+    egt::TopWindow win;
 
     win.border(2);
     win.padding(10);
     win.margin(10);
 
-    BoxSizer vsizer(win, Orientation::vertical);
+    egt::BoxSizer vsizer(win, egt::Orientation::vertical);
     expand(vsizer);
 
-    BoxSizer sizer0(vsizer, Orientation::horizontal);
+    egt::BoxSizer sizer0(vsizer, egt::Orientation::horizontal);
     expand_horizontal(sizer0);
     sizer0.margin(10);
 
     for (auto i = 0; i < 4; ++i)
     {
-        new Button(sizer0, "Button " + std::to_string(i));
+        new egt::Button(sizer0, "Button " + std::to_string(i));
     }
 
-    BoxSizer sizer3(vsizer, Orientation::horizontal);
+    egt::BoxSizer sizer3(vsizer, egt::Orientation::horizontal);
     expand_horizontal(sizer3);
 
     for (auto i = 0; i < 4; ++i)
     {
-        new Button(sizer3, "Button " + std::to_string(i));
+        new egt::Button(sizer3, "Button " + std::to_string(i));
     }
 
-    BoxSizer sizer1(vsizer, Orientation::vertical);
+    egt::BoxSizer sizer1(vsizer, egt::Orientation::vertical);
     expand(sizer1);
 
     for (auto i = 0; i < 4; ++i)
     {
-        auto b = new Button(sizer1, "Button " + std::to_string(i));
+        auto b = new egt::Button(sizer1, "Button " + std::to_string(i));
         center(*b);
     }
 
