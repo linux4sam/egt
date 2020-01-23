@@ -125,6 +125,9 @@ AC_SUBST(WARN_CFLAGS)
 AC_PATH_X
 AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h unistd.h glob.h])
 
+AC_CHECK_HEADERS([linux/gpio.h],[have_linux_gpio_h=yes],[])
+AM_CONDITIONAL([HAVE_LINUX_GPIO_H], [test "x${have_linux_gpio_h}" = xyes])
+
 CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -DEGT_DLL_EXPORTS"
 
 AC_ARG_ENABLE([debug],
