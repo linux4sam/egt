@@ -95,6 +95,11 @@ charts/charts \
 easing/easing
 endif
 
+if HAVE_LINUX_GPIO_H
+bin_PROGRAMS += \
+gpio/gpio
+endif
+
 calc_calc_SOURCES = calc/calc.cpp
 calc_calc_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 calc_calc_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
@@ -276,6 +281,12 @@ press_press_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 press_press_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 press_pressdir = $(prefix)/share/egt/examples/press
 press_press_LDFLAGS = $(AM_LDFLAGS)
+
+gpio_gpio_SOURCES = gpio/gpio.cpp
+gpio_gpio_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+gpio_gpio_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+gpio_gpiodir = $(prefix)/share/egt/examples/gpio
+gpio_gpio_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
