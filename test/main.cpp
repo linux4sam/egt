@@ -277,6 +277,89 @@ TYPED_TEST(Widgets, Properties)
     EXPECT_EQ(widget->moat(), 33U);
 }
 
+
+TEST(WidgetFlags, Basic)
+{
+    Widget::Flags flags1("window|readonly");
+    EXPECT_TRUE(flags1.is_set(Widget::Flag::window));
+    EXPECT_TRUE(flags1.is_set(Widget::Flag::readonly));
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::plane_window));
+
+    flags1.clear(Widget::Flag::readonly);
+    EXPECT_TRUE(flags1.is_set(Widget::Flag::window));
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::readonly));
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::plane_window));
+
+    flags1.set(Widget::Flag::plane_window);
+    EXPECT_TRUE(flags1.is_set(Widget::Flag::window));
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::readonly));
+    EXPECT_TRUE(flags1.is_set(Widget::Flag::plane_window));
+
+    flags1.clear();
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::window));
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::readonly));
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::plane_window));
+
+    flags1.set({Widget::Flag::window,Widget::Flag::readonly});
+    EXPECT_TRUE(flags1.is_set(Widget::Flag::window));
+    EXPECT_TRUE(flags1.is_set(Widget::Flag::readonly));
+    EXPECT_FALSE(flags1.is_set(Widget::Flag::plane_window));
+    EXPECT_EQ(flags1.to_string(), "window|readonly");
+}
+
+TEST(AlignFlags, Basic)
+{
+    bool state = false;
+    AlignFlags flags1("left|right");
+    flags1.on_change([&state](){ state = true; });
+    EXPECT_TRUE(flags1.is_set(AlignFlag::left));
+    EXPECT_TRUE(flags1.is_set(AlignFlag::right));
+    EXPECT_FALSE(flags1.is_set(AlignFlag::bottom));
+
+    flags1.clear(AlignFlag::right);
+    EXPECT_TRUE(state); state = false;
+    EXPECT_TRUE(flags1.is_set(AlignFlag::left));
+    EXPECT_FALSE(flags1.is_set(AlignFlag::right));
+    EXPECT_FALSE(flags1.is_set(AlignFlag::bottom));
+
+    flags1.set(AlignFlag::bottom);
+    EXPECT_TRUE(state); state = false;
+    flags1.set(AlignFlag::bottom);
+    EXPECT_FALSE(state);
+    EXPECT_TRUE(flags1.is_set(AlignFlag::left));
+    EXPECT_FALSE(flags1.is_set(AlignFlag::right));
+    EXPECT_TRUE(flags1.is_set(AlignFlag::bottom));
+
+    flags1.clear();
+    EXPECT_TRUE(state); state = false;
+    EXPECT_FALSE(flags1.is_set(AlignFlag::left));
+    EXPECT_FALSE(flags1.is_set(AlignFlag::right));
+    EXPECT_FALSE(flags1.is_set(AlignFlag::bottom));
+
+    flags1.set({AlignFlag::left,AlignFlag::right});
+    EXPECT_TRUE(state); state = false;
+    flags1.set({AlignFlag::left,AlignFlag::right});
+    EXPECT_FALSE(state);
+    EXPECT_TRUE(flags1.is_set(AlignFlag::left));
+    EXPECT_TRUE(flags1.is_set(AlignFlag::right));
+    EXPECT_FALSE(flags1.is_set(AlignFlag::bottom));
+    EXPECT_EQ(flags1.to_string(), "left|right");
+
+    Button b;
+    b.align().on_change([&state](){ state = true; });
+    b.align(flags1);
+    EXPECT_TRUE(state); state = false;
+    EXPECT_TRUE(b.align().is_set(AlignFlag::left));
+    EXPECT_TRUE(b.align().is_set(AlignFlag::right));
+    EXPECT_FALSE(b.align().is_set(AlignFlag::bottom));
+
+    b.align(b.align() | AlignFlag::bottom);
+    EXPECT_TRUE(state); state = false;
+    EXPECT_TRUE(b.align().is_set(AlignFlag::left));
+    EXPECT_TRUE(b.align().is_set(AlignFlag::right));
+    EXPECT_TRUE(b.align().is_set(AlignFlag::bottom));
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
