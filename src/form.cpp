@@ -15,7 +15,7 @@ namespace experimental
 {
 
 Form::Form(const std::string& title) noexcept
-    : m_vsizer(Orientation::vertical)
+    : m_vsizer(Orientation::vertical, Justification::start)
 {
     name("Form" + std::to_string(m_widgetid));
 
