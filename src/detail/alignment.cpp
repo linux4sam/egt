@@ -90,11 +90,6 @@ Rect align_algorithm(const Rect& orig, const Rect& bounding,
                      DefaultDim xratio,
                      DefaultDim yratio)
 {
-    /// this needs to be here, but grids don't work when we don't make
-    /// sure the object is at least inside bounding
-    //if (align == AlignFlag::none)
-    //    return orig;
-
     return align_algorithm_force(orig,
                                  bounding,
                                  align,

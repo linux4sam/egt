@@ -539,28 +539,21 @@ void Frame::layout()
 
     for (auto& child : m_children)
     {
-        //
-        // first directly align the child, then if it is a frame, tell the
-        // frame to layout().
-        //
-        if (!child->align().empty())
-        {
-            auto bounding = to_child(area);
-            if (bounding.empty())
-                return;
+        auto bounding = to_child(area);
+        if (bounding.empty())
+            continue;
 
-            child->layout();
+        child->layout();
 
-            auto r = detail::align_algorithm(child->box(),
-                                             bounding,
-                                             child->align(),
-                                             0,
-                                             child->horizontal_ratio(),
-                                             child->vertical_ratio(),
-                                             child->xratio(),
-                                             child->yratio());
-            child->box(r);
-        }
+        auto r = detail::align_algorithm(child->box(),
+                                         bounding,
+                                         child->align(),
+                                         0,
+                                         child->horizontal_ratio(),
+                                         child->vertical_ratio(),
+                                         child->xratio(),
+                                         child->yratio());
+        child->box(r);
     }
 }
 
