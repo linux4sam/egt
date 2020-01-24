@@ -61,8 +61,13 @@ public:
     {
         if (&rhs != this)
         {
+            const auto res = (*this != rhs);
+
             detail::Object::operator=(rhs);
             detail::FlagsBase<T>::operator=(rhs);
+
+            if (res)
+                on_change.invoke();
         }
         return *this;
     }
