@@ -293,12 +293,16 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(0, 0, b.width(), b.height(), b.x(), b.y());
+        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
         m_initalize = true;
     }
+    auto cr = painter.context();
 
-    m_plstream->cmd(PLESC_DEVINIT, painter.context().get());
+    if (b.x() || b.y())
+        cairo_translate(cr.get(), b.x(), b.y());
+
+    m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     if (m_clearsurface)
     {
@@ -351,12 +355,17 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(b.x(), b.y(), b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
         m_initalize = true;
     }
 
-    m_plstream->cmd(PLESC_DEVINIT, painter.context().get());
+    auto cr = painter.context();
+
+    if (b.x() || b.y())
+        cairo_translate(cr.get(), b.x(), b.y());
+
+    m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     if (m_clearsurface)
     {
@@ -424,12 +433,17 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(b.x(), b.y(), b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
         m_initalize = true;
     }
 
-    m_plstream->cmd(PLESC_DEVINIT, painter.context().get());
+    auto cr = painter.context();
+
+    if (b.x() || b.y())
+        cairo_translate(cr.get(), b.x(), b.y());
+
+    m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     if (m_clearsurface)
     {
@@ -540,12 +554,17 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(b.x(), b.y(), b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
         m_initalize = true;
     }
 
-    m_plstream->cmd(PLESC_DEVINIT, painter.context().get());
+    auto cr = painter.context();
+
+    if (b.x() || b.y())
+        cairo_translate(cr.get(), b.x(), b.y());
+
+    m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     if (m_clearsurface)
     {
@@ -620,12 +639,17 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(b.x(), b.y(), b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
         m_initalize = true;
     }
 
-    m_plstream->cmd(PLESC_DEVINIT, painter.context().get());
+    auto cr = painter.context();
+
+    if (b.x() || b.y())
+        cairo_translate(cr.get(), b.x(), b.y());
+
+    m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     if (m_clearsurface)
     {
