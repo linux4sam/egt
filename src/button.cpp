@@ -32,7 +32,8 @@ Button::Button(const std::string& text,
 {
     name("Button" + std::to_string(m_widgetid));
 
-    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
+    fill_flags(Theme::FillFlag::blend);
+    border_radius(4.0);
 
     flags().set(Widget::Flag::grab_mouse);
 }

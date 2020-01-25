@@ -560,6 +560,8 @@ void Widget::serialize(detail::Serializer& serializer) const
     serializer.add_property("height", height());
     if (!align().empty())
         serializer.add_property("align", align());
+    if (!border_flags().empty())
+        serializer.add_property("borderflags", border_flags().to_string());
     serializer.add_property("flags", flags().to_string());
     if (padding())
         serializer.add_property("padding", padding());
@@ -575,12 +577,10 @@ void Widget::serialize(detail::Serializer& serializer) const
         serializer.add_property("ratio:horizontal", horizontal_ratio());
     if (vertical_ratio())
         serializer.add_property("ratio:vertical", vertical_ratio());
-    if (!boxtype().empty())
-        serializer.add_property("boxtype", boxtype().to_string());
-
+    if (!fill_flags().empty())
+        serializer.add_property("fillflags", fill_flags().to_string());
     if (m_palette)
         m_palette->serialize("color", serializer);
-
     if (m_font)
         m_font->serialize("font", serializer);
 }
@@ -598,6 +598,8 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         y(std::stoi(value));
     else if (name == "align")
         align(AlignFlags(value));
+    else if (name == "borderflags")
+        border_flags(Theme::BorderFlags(value));
     else if (name == "flags")
         m_widget_flags.from_string(value);
     else if (name == "alpha")
@@ -608,8 +610,8 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         margin(std::stoi(value));
     else if (name == "border")
         border(std::stoi(value));
-    else if (name == "boxtype")
-        m_boxtype.from_string(value);
+    else if (name == "fillflags")
+        m_fill_flags.from_string(value);
     else if (name == "ratio:x")
     {}
     else if (name == "ratio:y")

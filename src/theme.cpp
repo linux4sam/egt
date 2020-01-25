@@ -42,8 +42,6 @@ void global_theme(std::shared_ptr<Theme> theme)
     }
 }
 
-float Theme::DEFAULT_ROUNDED_RADIUS = 4.0;
-
 void Theme::init_palette()
 {
     m_palette->clear();
@@ -115,7 +113,7 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
                      Palette::ColorId bg,
                      Palette::ColorId border) const
 {
-    const auto& type = widget.boxtype();
+    const auto& type = widget.fill_flags();
 
     if (type.empty())
         return;
@@ -134,16 +132,20 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
              widget.color(border, group),
              widget.color(bg, group),
              widget.border(),
-             widget.margin());
+             widget.margin(),
+             widget.border_radius(),
+             widget.border_flags());
 }
 
 void Theme::draw_box(Painter& painter,
-                     const BoxFlags& type,
+                     const FillFlags& type,
                      const Rect& rect,
                      const Pattern& border,
                      const Pattern& bg,
                      DefaultDim border_width,
-                     DefaultDim margin_width) const
+                     DefaultDim margin_width,
+                     float border_radius,
+                     const BorderFlags& border_flags) const
 {
     if (type.empty())
         return;
@@ -173,7 +175,7 @@ void Theme::draw_box(Painter& painter,
            width = box.width(),
            height = box.height(),
            aspect = 1.0,
-           corner_radius = DEFAULT_ROUNDED_RADIUS;
+           corner_radius = border_radius;
 
     double radius = corner_radius / aspect;
     double degrees = detail::pi<double>() / 180.0;
@@ -181,14 +183,14 @@ void Theme::draw_box(Painter& painter,
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
 
-    if (type.is_set(BoxFlag::solid))
+    if (type.is_set(FillFlag::solid))
     {
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
     }
 
     cairo_new_path(cr);
 
-    if (type.is_set(BoxFlag::border_rounded))
+    if (!detail::float_compare(border_radius, 0) && border_radius > 0)
     {
         cairo_arc(cr, rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
         cairo_arc(cr, rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
@@ -201,7 +203,7 @@ void Theme::draw_box(Painter& painter,
         painter.draw(box);
     }
 
-    if (type.is_set(BoxFlag::fill))
+    if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {
         const auto& steps = bg.steps();
         if (steps.size() == 1)
@@ -232,11 +234,20 @@ void Theme::draw_box(Painter& painter,
 
     if (border_width)
     {
-        if (type.is_set(BoxFlag::border_bottom))
-        {
+        if (!border_flags.empty())
             cairo_new_path(cr);
+
+        if (border_flags.is_set(BorderFlag::top))
+            painter.draw(box.top_left(), box.top_right());
+
+        if (border_flags.is_set(BorderFlag::right))
+            painter.draw(box.top_right(), box.bottom_right());
+
+        if (border_flags.is_set(BorderFlag::bottom))
             painter.draw(box.bottom_left(), box.bottom_right());
-        }
+
+        if (border_flags.is_set(BorderFlag::left))
+            painter.draw(box.top_left(), box.bottom_left());
 
         painter.set(border);
         painter.line_width(border_width);
@@ -250,7 +261,7 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
                         Palette::ColorId bg,
                         Palette::ColorId border) const
 {
-    const auto& type = widget.boxtype();
+    const auto& type = widget.fill_flags();
 
     if (type.empty())
         return;
@@ -273,7 +284,7 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
 }
 
 void Theme::draw_circle(Painter& painter,
-                        const BoxFlags& type,
+                        const FillFlags& type,
                         const Rect& rect,
                         const Pattern& border,
                         const Pattern& bg,
@@ -308,7 +319,7 @@ void Theme::draw_circle(Painter& painter,
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
 
-    if (type.is_set(BoxFlag::solid))
+    if (type.is_set(FillFlag::solid))
     {
         cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
     }
@@ -316,7 +327,7 @@ void Theme::draw_circle(Painter& painter,
     cairo_new_path(cr);
     painter.draw(circle);
 
-    if (type.is_set(BoxFlag::fill))
+    if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {
         const auto& steps = bg.steps();
         if (steps.size() == 1)
@@ -361,12 +372,19 @@ void Theme::draw_circle(Painter& painter,
 }
 
 template<>
-std::map<Theme::BoxFlag, char const*> detail::EnumStrings<Theme::BoxFlag>::data =
+std::map<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data =
 {
-    {Theme::BoxFlag::solid, "solid"},
-    {Theme::BoxFlag::fill, "fill"},
-    {Theme::BoxFlag::border_rounded, "border_rounded"},
-    {Theme::BoxFlag::border_bottom, "border_bottom"},
+    {Theme::FillFlag::solid, "solid"},
+    {Theme::FillFlag::blend, "blend"},
+};
+
+template<>
+std::map<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::BorderFlag>::data =
+{
+    {Theme::BorderFlag::top, "top"},
+    {Theme::BorderFlag::right, "right"},
+    {Theme::BorderFlag::bottom, "bottom"},
+    {Theme::BorderFlag::left, "left"},
 };
 
 }

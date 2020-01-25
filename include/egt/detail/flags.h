@@ -138,6 +138,8 @@ public:
 
     /**
      * Convert from string.
+     *
+     * @note This will clear any existing flags first.
      */
     inline void from_string(const std::string& str)
     {

@@ -18,7 +18,7 @@ public:
         explicit LauncherItem(const egt::Image& image)
             : m_background(image)
         {
-            boxtype().clear();
+            fill_flags().clear();
             flags().set(egt::Widget::Flag::no_layout);
 
             m_background.align(egt::AlignFlag::expand);

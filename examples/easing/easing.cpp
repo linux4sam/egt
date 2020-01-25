@@ -88,7 +88,7 @@ public:
         m_box.resize(image->size());
         m_box.add(image);
 
-        m_box.boxtype().clear();
+        m_box.fill_flags().clear();
         m_box.move(egt::Point(width() / 2 - m_box.width() / 2, -110));
         m_box.flags().set(egt::Widget::Flag::no_layout);
         m_box.show();

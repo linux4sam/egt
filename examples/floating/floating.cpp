@@ -134,7 +134,7 @@ int main(int argc, const char** argv)
         auto image = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
         auto plane = std::make_shared<egt::Window>(egt::Size(image->width(), image->height()));
         plane->color(egt::Palette::ColorId::bg, egt::Palette::transparent);
-        plane->boxtype().clear();
+        plane->fill_flags().clear();
         plane->add(image);
         plane->show();
         plane->move(egt::Point(100, 100));

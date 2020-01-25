@@ -24,7 +24,7 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
 {
     name("Slider" + std::to_string(m_widgetid));
 
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
 
     flags().set(Widget::Flag::grab_mouse);
 
@@ -238,18 +238,22 @@ void Slider::draw_handle(Painter& painter)
     if (slider_flags().is_set(SliderFlag::round_handle))
     {
         theme().draw_circle(painter,
-        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-        handle,
-        color(Palette::ColorId::border),
-        color(Palette::ColorId::button_bg));
+                            Theme::FillFlag::blend,
+                            handle,
+                            color(Palette::ColorId::border),
+                            color(Palette::ColorId::button_bg),
+                            border());
     }
     else
     {
         theme().draw_box(painter,
-        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-        handle,
-        color(Palette::ColorId::border),
-        color(Palette::ColorId::button_bg));
+                         Theme::FillFlag::blend,
+                         handle,
+                         color(Palette::ColorId::border),
+                         color(Palette::ColorId::button_bg),
+                         border(),
+                         0,
+                         border_radius());
     }
 }
 

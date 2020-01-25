@@ -15,7 +15,7 @@ int main(int argc, const char** argv)
     {
         auto label = std::make_shared<egt::Label>(text);
         label->font(egt::Font(30));
-        label->boxtype().clear();
+        label->fill_flags().clear();
         label->align(egt::AlignFlag::center);
         return label;
     };
@@ -24,7 +24,7 @@ int main(int argc, const char** argv)
                      egt::Image("icon:128px/egt_logo_black.png"),
                      "SideBoard Widget");
     label->font(egt::Font(28));
-    label->boxtype().clear();
+    label->fill_flags().clear();
     label->align(egt::AlignFlag::center);
     label->image_align(egt::AlignFlag::top);
     win.add(label);

@@ -80,7 +80,7 @@ public:
      * Validator callback type.
      * @see add_validator_function()
      */
-    using ValidatorCallback = std::function<bool(std::string)>;
+    using ValidatorCallback = std::function<bool(const std::string&)>;
 
     static const AlignFlags default_align;
 

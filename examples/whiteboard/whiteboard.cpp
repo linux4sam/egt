@@ -140,17 +140,17 @@ public:
           m_canvas(screen()->size(), egt::PixelFormat::argb8888)
     {
         // don't draw background, we'll do it in draw()
-        boxtype().clear();
+        fill_flags().clear();
         color(egt::Palette::ColorId::bg, egt::Palette::white);
 
         m_sizer = std::make_shared<egt::VerticalBoxSizer>(*this);
         top(left(m_sizer));
 
-        m_colorbtn.boxtype().clear();
-        m_fillbutton.boxtype().clear();
-        m_widthbtn.boxtype().clear();
-        m_clearbtn.boxtype().clear();
-        m_snapshotbtn.boxtype().clear();
+        m_colorbtn.fill_flags().clear();
+        m_fillbutton.fill_flags().clear();
+        m_widthbtn.fill_flags().clear();
+        m_clearbtn.fill_flags().clear();
+        m_snapshotbtn.fill_flags().clear();
 
         m_colorbtn.image_align(egt::AlignFlag::expand);
         m_fillbutton.image_align(egt::AlignFlag::expand);

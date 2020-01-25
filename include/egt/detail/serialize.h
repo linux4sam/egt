@@ -57,7 +57,7 @@ public:
     virtual void add_property(const std::string& name, double value,
                               const std::map<std::string, std::string>& attrs = {});
     /// Add a property.
-    virtual void add_property(const std::string& name, const Theme::BoxFlags& value);
+    virtual void add_property(const std::string& name, const Theme::FillFlags& value);
     /// Add a property.
     virtual void add_property(const std::string& name, const Pattern& value);
 };

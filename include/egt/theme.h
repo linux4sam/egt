@@ -142,27 +142,42 @@ class EGT_API Theme
 public:
 
     /**
-     * Box types used to characterize how a widget's box should be drawn.
+     * Fill flags are used to characterize how a widget's background should be
+     * drawn.
+     *
+     * This is an optimization to control whether a solid fill is done, it's
+     * blended, or if nothing is set - nothing will be drawn.
      */
-    enum class BoxFlag : uint32_t
+    enum class FillFlag : uint32_t
     {
         /**
          * Overwrite and don't blend.
          * @note This is the same as CAIRO_OPERATOR_SOURCE.
          */
         solid = detail::bit(0),
-        /// type of fill, if none is set, no fill will be done
-        fill = detail::bit(1),
-        /// type of border, border will always be drawn if border_width > 0
-        border_rounded = detail::bit(2),
-        /// type of border, border will always be drawn if border_width > 0
-        border_bottom = detail::bit(3),
+        /// perform a blend
+        blend = detail::bit(1),
     };
 
-    /// Box flags.
-    using BoxFlags = detail::Flags<BoxFlag>;
+    /// Fill flags.
+    using FillFlags = detail::Flags<FillFlag>;
 
-    static float DEFAULT_ROUNDED_RADIUS;
+    /**
+     * Border flags allow, when drawing a rectangle, control over what sides of
+     * the rectangle are drawn.
+     *
+     * If no flags are specified, the default assumption is that all flags are
+     * drawn.
+     */
+    enum class BorderFlag : uint32_t
+    {
+        top = detail::bit(0),
+        right = detail::bit(1),
+        bottom = detail::bit(2),
+        left = detail::bit(3),
+    };
+
+    using BorderFlags = detail::Flags<BorderFlag>;
 
     Theme() = default;
 
@@ -241,12 +256,14 @@ public:
      * Draw a box specifying the properties directly.
      */
     virtual void draw_box(Painter& painter,
-                          const BoxFlags& type,
+                          const FillFlags& type,
                           const Rect& rect,
                           const Pattern& border,
                           const Pattern& bg,
                           DefaultDim border_width = 0,
-                          DefaultDim margin_width = 0) const;
+                          DefaultDim margin_width = 0,
+                          float border_radius = 0.0,
+                          const BorderFlags& border_flags = {}) const;
 
     virtual void draw_circle(Painter& painter,
                              const Widget& widget,
@@ -254,7 +271,7 @@ public:
                              Palette::ColorId border) const;
 
     virtual void draw_circle(Painter& painter,
-                             const BoxFlags& type,
+                             const FillFlags& type,
                              const Rect& rect,
                              const Pattern& border,
                              const Pattern& bg,
@@ -264,6 +281,11 @@ public:
     virtual DefaultDim default_border() const
     {
         return 2;
+    }
+
+    virtual float default_border_radius() const
+    {
+        return 4.0;
     }
 
     /**
@@ -315,7 +337,7 @@ protected:
 };
 
 template<>
-std::map<Theme::BoxFlag, char const*> detail::EnumStrings<Theme::BoxFlag>::data;
+std::map<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data;
 
 /**
  * Get the global theme.

@@ -18,7 +18,7 @@ CircleWidget::CircleWidget(const Circle& circle)
       m_radius(circle.radius())
 {
     name("CircleWidget" + std::to_string(m_widgetid));
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
 }
 
 CircleWidget::CircleWidget(Frame& parent, const Circle& circle)
@@ -32,7 +32,7 @@ void CircleWidget::draw(Painter& painter, const Rect&)
     auto b = content_area();
 
     theme().draw_circle(painter,
-                        boxtype(),
+                        fill_flags(),
                         b,
                         color(Palette::ColorId::border),
                         color(Palette::ColorId::button_bg),
@@ -66,7 +66,7 @@ void RectangleWidget::draw(Painter& painter, const Rect&)
     auto b = content_area();
 
     theme().draw_box(painter,
-                     boxtype(),
+                     fill_flags(),
                      b,
                      color(Palette::ColorId::border),
                      color(Palette::ColorId::button_bg),

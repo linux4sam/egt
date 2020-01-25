@@ -139,11 +139,11 @@ void Scrollwheel::init(bool reversed)
 {
     name("Scrollwheel" + std::to_string(m_widgetid));
 
-    m_button_up->boxtype().clear();
-    m_button_down->boxtype().clear();
-    m_label->boxtype().clear();
+    m_button_up->fill_flags().clear();
+    m_button_down->fill_flags().clear();
+    m_label->fill_flags().clear();
 
-    boxtype().clear();
+    fill_flags().clear();
 
     if (!m_items.empty() && reversed)
         m_selected = m_items.size() - 1;

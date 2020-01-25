@@ -93,8 +93,8 @@ int main(int argc, const char** argv)
     logo->margin(10);
     hpos.add(logo);
 
-    ImageButton playbtn(Image("file:pause_png"));
-    playbtn.boxtype().clear();
+    egt::ImageButton playbtn(Image("file:pause_png"));
+    playbtn.fill_flags().clear();
     hpos.add(playbtn);
 
     playbtn.on_event([&playbtn, &player](Event&)
@@ -131,7 +131,7 @@ int main(int argc, const char** argv)
     });
 
     ImageButton volumei(Image("file:volumeup_png"));
-    volumei.boxtype().clear();
+    volumei.fill_flags().clear();
     hpos.add(volumei);
 
     Slider volume(Size(ctrlwindow.width() * 0.10, ctrlwindow.height()), 0, 10, 0, Orientation::horizontal);
@@ -147,7 +147,7 @@ int main(int argc, const char** argv)
     volume.value(5);
 
     ImageButton fullscreenbtn(Image("file:fullscreen_png"));
-    fullscreenbtn.boxtype().clear();
+    fullscreenbtn.fill_flags().clear();
     hpos.add(fullscreenbtn);
 
     const auto vscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
@@ -172,7 +172,7 @@ int main(int argc, const char** argv)
     }, {EventId::pointer_click});
 
     ImageButton loopbackbtn(Image("file:repeat_one_png"));
-    loopbackbtn.boxtype().clear();
+    loopbackbtn.fill_flags().clear();
     hpos.add(loopbackbtn);
 
     loopbackbtn.on_event([&loopbackbtn, &player](Event&)

@@ -15,7 +15,7 @@ public:
           m_canvas(screen()->size(), egt::PixelFormat::argb8888)
     {
         // don't draw background, we'll do it in draw()
-        boxtype().clear();
+        fill_flags().clear();
         color(egt::Palette::ColorId::bg, egt::Palette::white);
 
         auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
@@ -25,7 +25,7 @@ public:
 
         clear();
 
-        m_clearbtn.boxtype().clear();
+        m_clearbtn.fill_flags().clear();
         m_clearbtn.min_size_hint(egt::Size());
         m_clearbtn.align(egt::AlignFlag::bottom | egt::AlignFlag::right);
         add(m_clearbtn);

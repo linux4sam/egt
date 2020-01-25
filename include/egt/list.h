@@ -38,7 +38,7 @@ struct EGT_API StringItem : public ImageLabel
                const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(image, text, align)
     {
-        boxtype(Theme::BoxFlag::fill);
+        fill_flags(Theme::FillFlag::blend);
     }
 
     StringItem(const std::string& text,
@@ -47,7 +47,7 @@ struct EGT_API StringItem : public ImageLabel
                const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(image, text, rect, align)
     {
-        boxtype(Theme::BoxFlag::fill);
+        fill_flags(Theme::FillFlag::blend);
     }
 
     StringItem(const std::string& text,
@@ -55,7 +55,7 @@ struct EGT_API StringItem : public ImageLabel
                const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(Image(), text, rect, align)
     {
-        boxtype(Theme::BoxFlag::fill);
+        fill_flags(Theme::FillFlag::blend);
     }
 
     explicit StringItem(Frame& parent,
@@ -63,7 +63,7 @@ struct EGT_API StringItem : public ImageLabel
                         const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(parent, Image(), text, align)
     {
-        boxtype(Theme::BoxFlag::fill);
+        fill_flags(Theme::FillFlag::blend);
     }
 
     StringItem(Frame& parent,
@@ -72,7 +72,7 @@ struct EGT_API StringItem : public ImageLabel
                const AlignFlags& align = AlignFlag::center) noexcept
         : ImageLabel(parent, Image(), text, rect, align)
     {
-        boxtype(Theme::BoxFlag::fill);
+        fill_flags(Theme::FillFlag::blend);
     }
 
     using ImageLabel::min_size_hint;

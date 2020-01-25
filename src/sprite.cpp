@@ -203,7 +203,7 @@ Sprite::Sprite(const Image& image, const Size& frame_size,
     : Window(Rect({}, image.size()), PixelFormat::argb8888)
 {
     name("Sprite" + std::to_string(m_widgetid));
-    boxtype().clear();
+    fill_flags().clear();
     create_impl(image, frame_size, frame_count, frame_point);
 }
 

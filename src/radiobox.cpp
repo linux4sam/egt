@@ -21,7 +21,7 @@ RadioBox::RadioBox(const std::string& text,
 {
     name("RadioBox" + std::to_string(m_widgetid));
 
-    boxtype().clear();
+    fill_flags().clear();
     padding(5);
     text_align(AlignFlag::left | AlignFlag::center);
 

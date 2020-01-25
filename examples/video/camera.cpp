@@ -114,7 +114,7 @@ int main(int argc, const char** argv)
     ctrlwindow.add(hpos);
 
     ImageButton fullscreen(Image("file:fullscreen_png"));
-    fullscreen.boxtype().clear();
+    fullscreen.fill_flags().clear();
     hpos.add(fullscreen);
 
     const auto wscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();

@@ -25,7 +25,7 @@ CheckBox::CheckBox(const std::string& text,
 {
     name("CheckBox" + std::to_string(m_widgetid));
 
-    boxtype().clear();
+    fill_flags().clear();
     padding(5);
     text_align(AlignFlag::left | AlignFlag::center);
 
@@ -84,7 +84,7 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
     auto text = rects[1].rect + b.point();
     auto border = widget.theme().default_border();
 
-    widget.theme().draw_box(painter, Theme::BoxFlag::fill, handle,
+    widget.theme().draw_box(painter, Theme::FillFlag::blend, handle,
                             widget.color(Palette::ColorId::button_fg),
                             Palette::transparent,
                             border);
@@ -140,8 +140,9 @@ ToggleBox::ToggleBox(const Rect& rect) noexcept
 {
     name("ToggleBox" + std::to_string(m_widgetid));
 
-    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
+    fill_flags(Theme::FillFlag::blend);
     border(theme().default_border());
+    border_radius(4.0);
 }
 
 ToggleBox::ToggleBox(Frame& parent, const Rect& rect) noexcept
@@ -168,10 +169,13 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         rect.width(rect.width() / 2);
         rect.x(rect.x() + rect.width());
         widget.theme().draw_box(painter,
-        {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-        rect,
-        widget.color(Palette::ColorId::border),
-        widget.color(Palette::ColorId::button_bg));
+                                Theme::FillFlag::blend,
+                                rect,
+                                widget.color(Palette::ColorId::border),
+                                widget.color(Palette::ColorId::button_bg),
+                                0,
+                                0,
+                                widget.border_radius());
     }
     else
     {
@@ -181,18 +185,24 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         if (widget.enable_disable())
         {
             widget.theme().draw_box(painter,
-            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-            rect,
-            widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
-            widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled));
+                                    Theme::FillFlag::blend,
+                                    rect,
+                                    widget.color(Palette::ColorId::border, Palette::GroupId::disabled),
+                                    widget.color(Palette::ColorId::button_bg, Palette::GroupId::disabled),
+                                    0,
+                                    0,
+                                    widget.border_radius());
         }
         else
         {
             widget.theme().draw_box(painter,
-            {Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded},
-            rect,
-            widget.color(Palette::ColorId::border),
-            widget.color(Palette::ColorId::button_bg));
+                                    Theme::FillFlag::blend,
+                                    rect,
+                                    widget.color(Palette::ColorId::border),
+                                    widget.color(Palette::ColorId::button_bg),
+                                    0,
+                                    0,
+                                    widget.border_radius());
         }
     }
 

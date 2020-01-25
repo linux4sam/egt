@@ -29,7 +29,7 @@ ListBox::ListBox(const item_array& items, const Rect& rect) noexcept
 {
     name("ListBox" + std::to_string(m_widgetid));
 
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
     border(theme().default_border());
 
     m_sizer->align(AlignFlag::expand_horizontal);

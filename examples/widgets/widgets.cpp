@@ -161,13 +161,13 @@ struct LabelPage : public egt::NotebookTab
         imagelabel3->image_align(egt::AlignFlag::bottom);
 
         auto imagelabel4 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
-        imagelabel4->boxtype(egt::Theme::BoxFlag::fill);
+        imagelabel4->fill_flags(egt::Theme::FillFlag::blend);
         imagelabel4->border(1);
         grid0->add(egt::expand(imagelabel4));
         imagelabel4->text_align(egt::AlignFlag::center | egt::AlignFlag::bottom);
 
         auto imagelabel5 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"));
-        imagelabel5->boxtype(egt::Theme::BoxFlag::fill);
+        imagelabel5->fill_flags(egt::Theme::FillFlag::blend);
         imagelabel5->border(1);
         grid0->add(egt::expand(imagelabel5));
     }
@@ -191,12 +191,14 @@ struct TextPage : public egt::NotebookTab
         grid0->add(egt::expand(text2));
 
         auto text3 = std::make_shared<egt::TextBox>("right aligned text");
-        text3->boxtype({egt::Theme::BoxFlag::fill, egt::Theme::BoxFlag::border_bottom});
+        text3->fill_flags(egt::Theme::FillFlag::blend);
+        text3->border_flags({egt::Theme::BorderFlag::bottom, egt::Theme::BorderFlag::top});
         text3->text_align(egt::AlignFlag::right);
         grid0->add(egt::expand(text3));
 
         auto text4 = std::make_shared<egt::TextBox>("text 4");
-        text4->boxtype({egt::Theme::BoxFlag::fill, egt::Theme::BoxFlag::border_bottom});
+        text4->fill_flags(egt::Theme::FillFlag::blend);
+        text4->border_flags(egt::Theme::BorderFlag::bottom);
         text4->disable();
         grid0->add(egt::expand(text4));
 

@@ -71,7 +71,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
 
         Rect crect = to_child(super_rect());
 
-        if (!boxtype().empty())
+        if (!fill_flags().empty())
         {
             Palette::GroupId group = Palette::GroupId::normal;
             if (disabled())
@@ -80,7 +80,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
                 group = Palette::GroupId::active;
 
             theme().draw_box(cpainter,
-                             boxtype(),
+                             fill_flags(),
                              crect /*m_canvas->size()*//*to_child(box())*/,
                              color(Palette::ColorId::border, group),
                              color(Palette::ColorId::bg, group),

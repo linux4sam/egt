@@ -40,7 +40,8 @@ TextBox::TextBox(const std::string& text,
     name("TextBox" + std::to_string(m_widgetid));
 
     border(theme().default_border());
-    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
+    fill_flags(Theme::FillFlag::blend);
+    border_radius(4.0);
     padding(5);
 
     m_timer.on_timeout([this]() { cursor_timeout(); });

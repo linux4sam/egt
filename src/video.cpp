@@ -75,7 +75,7 @@ bool audio_device()
 VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
     : Window(rect, (detail::is_target_sama5d4() ? PixelFormat::xrgb8888 : format), hint)
 {
-    boxtype().clear();
+    fill_flags().clear();
 
     create_impl(rect.size());
 }

@@ -114,7 +114,7 @@ VirtualKeyboard::VirtualKeyboard(std::vector<panel_keys> keys, const Rect& rect)
         main_panel->add(panel);
         main_panel->align(AlignFlag::expand);
         // By default NotebookTab are not transparent.
-        main_panel->boxtype().clear();
+        main_panel->fill_flags().clear();
         m_main_panel.add(main_panel);
 
         for (auto& keys_row : keys_panel)
@@ -293,7 +293,7 @@ static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
 PopupVirtualKeyboard::PopupVirtualKeyboard(std::shared_ptr<VirtualKeyboard> keyboard) noexcept
 {
     // Make the keyboard partially transparent.
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
     color(Palette::ColorId::bg, Color(Palette::transparent, 80));
 
     auto popup_width = Application::instance().screen()->size().width();

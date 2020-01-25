@@ -17,7 +17,7 @@ LineChart::LineChart(const Rect& rect)
 {
     name("LineChart" + std::to_string(m_widgetid));
 
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
 
     m_impl = detail::make_unique<detail::PlPlotLineChart>(*this, rect);
 }
@@ -94,7 +94,7 @@ PointChart::PointChart(const Rect& rect)
 {
     name("PointChart" + std::to_string(m_widgetid));
 
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
 
     m_impl = detail::make_unique<detail::PlPlotPointChart>(*this, rect);
 }
@@ -165,7 +165,7 @@ BarChart::BarChart(const Rect& rect)
 {
     name("BarChart" + std::to_string(m_widgetid));
 
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
 
     m_impl = detail::make_unique<detail::PlPlotBarChart>(*this, rect);
 }
@@ -248,7 +248,7 @@ HorizontalBarChart::HorizontalBarChart(const Rect& rect)
 {
     name("HorizontalBarChart" + std::to_string(m_widgetid));
 
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
 
     m_impl = detail::make_unique<detail::PlPlotHBarChart>(*this, rect);
 }
@@ -319,7 +319,7 @@ PieChart::PieChart(const Rect& rect)
 {
     name("PieChart" + std::to_string(m_widgetid));
 
-    boxtype(Theme::BoxFlag::fill);
+    fill_flags(Theme::FillFlag::blend);
 
     m_impl = detail::make_unique<detail::PlPlotPieChart>(*this, rect);
 }

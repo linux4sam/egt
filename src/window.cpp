@@ -67,7 +67,7 @@ Window::Window(const Rect& rect,
     name("Window" + std::to_string(m_widgetid));
 
     // windows are not transparent by default
-    boxtype({Theme::BoxFlag::solid, Theme::BoxFlag::fill});
+    fill_flags(Theme::FillFlag::solid);
 
     // create the window implementation
     create_impl(box(), format_hint, hint);
@@ -282,7 +282,7 @@ void Window::main_window()
 
 void Window::background(const Image& image)
 {
-    boxtype().clear();
+    fill_flags().clear();
 
     if (m_background)
     {
@@ -330,8 +330,8 @@ struct CursorWindow : public Window
           m_label(new ImageLabel(image))
     {
         color(Palette::ColorId::bg, Palette::transparent);
-        boxtype(Theme::BoxFlag::fill);
-        m_label->boxtype().clear();
+        fill_flags(Theme::FillFlag::blend);
+        m_label->fill_flags().clear();
         add(m_label);
         flags().set(Widget::Flag::no_layout);
         readonly(true);

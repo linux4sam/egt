@@ -30,7 +30,7 @@ public:
         add(expand(m_next));
 
         for (auto& child : m_children)
-            child->boxtype().clear();
+            child->fill_flags().clear();
 
         // no forward/rewind support in this example for now
         m_next.hide();
@@ -154,7 +154,7 @@ public:
         add(message_dialog);
 
         auto note = std::make_shared<ImageButton>(Image("note.png"));
-        note->boxtype().clear();
+        note->fill_flags().clear();
         note->align(AlignFlag::right | AlignFlag::bottom);
         note->margin(10);
         add(note);

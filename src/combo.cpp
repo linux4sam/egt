@@ -127,7 +127,8 @@ ComboBox::ComboBox(const item_array& items,
 {
     name("ComboBox" + std::to_string(m_widgetid));
 
-    boxtype({Theme::BoxFlag::fill, Theme::BoxFlag::border_rounded});
+    fill_flags(Theme::FillFlag::blend);
+    border_radius(4.0);
     padding(5);
     border(theme().default_border());
 

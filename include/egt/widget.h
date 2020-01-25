@@ -754,8 +754,6 @@ public:
     /**
      * Set the border width.
      *
-     * In order for the border to be shown, the boxtype() must not be empty.
-     *
      * @see @ref layout_box
      */
     inline void border(DefaultDim border)
@@ -773,6 +771,38 @@ public:
      * @see @ref layout_box
      */
     inline DefaultDim border() const { return m_border; }
+
+    /**
+     * Set the border radius.
+     */
+    inline void border_radius(float radius)
+    {
+        if (detail::change_if_diff<>(m_border_radius, radius))
+            damage();
+    }
+
+    /**
+     * Get the border radius.
+     */
+    inline float border_radius() const { return m_border_radius; }
+
+    /**
+     * Set the border flags.
+     *
+     * @see Theme::BorderFlag
+     */
+    inline void border_flags(const Theme::BorderFlags& flags)
+    {
+        if (detail::change_if_diff<>(m_border_flags, flags))
+            damage();
+    }
+
+    /**
+     * Get the border flags.
+     *
+     * @see Theme::BorderFlag
+     */
+    inline Theme::BorderFlags border_flags() const { return m_border_flags; }
 
     /**
      * Set the size ratio relative to parent.
@@ -938,42 +968,42 @@ public:
     virtual bool focus() const { return m_focus; }
 
     /**
-     * Set the boxtype.
+     * Set the fill flags.
      *
-     * The boxtype of a widget is used to set predefined ways a widget is drawn.
-     * This provides a level of customization that is primarily for performance
-     * optimizations.
+     * The fill flags of a widget are used to set predefined draw operators
+     * for a widget. This provides a level of customization that is primarily
+     * for performance optimizations.
      *
-     * Setting a boxtype of empty means that no background will be drawn and no
-     * border will be drawn no matter what the border width or background color
-     * of the widget is.
+     * Setting a fill type of empty means that no background will be drawn and
+     * no border will be drawn no matter what the border width or background
+     * color of the widget is.
      *
-     * @see Theme::BoxFlag
+     * @see Theme::FillFlag
      */
-    inline void boxtype(const Theme::BoxFlags& type)
+    inline void fill_flags(const Theme::FillFlags& flags)
     {
-        if (detail::change_if_diff<>(m_boxtype, type))
+        if (detail::change_if_diff<>(m_fill_flags, flags))
             damage();
     }
 
     /**
-     * Get the boxtype.
+     * Get the fill flags.
      *
-     * @see Theme::BoxFlag
+     * @see Theme::FillFlag
      */
-    inline const Theme::BoxFlags& boxtype() const
+    inline const Theme::FillFlags& fill_flags() const
     {
-        return m_boxtype;
+        return m_fill_flags;
     }
 
     /**
-     * Get a modifiable boxtype.
+     * Get a modifiable fill flags reference.
      *
-     * @see Theme::BoxFlag
+     * @see Theme::FillFlag
      */
-    inline Theme::BoxFlags& boxtype()
+    inline Theme::FillFlags& fill_flags()
     {
-        return m_boxtype;
+        return m_fill_flags;
     }
 
     /**
@@ -1314,6 +1344,16 @@ private:
     DefaultDim m_border{0};
 
     /**
+     * Border radius.
+     */
+    float m_border_radius{};
+
+    /**
+     * Border flags.
+     */
+    Theme::BorderFlags m_border_flags{};
+
+    /**
      * Alignment margin.
      */
     DefaultDim m_margin{0};
@@ -1349,9 +1389,9 @@ private:
     float m_alpha{1.0f};
 
     /**
-     * The boxtype.
+     * Fill flags.
      */
-    Theme::BoxFlags m_boxtype{};
+    Theme::FillFlags m_fill_flags{};
 
     /**
      * Instance theme for the widget.
