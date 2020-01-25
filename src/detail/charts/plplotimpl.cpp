@@ -178,28 +178,32 @@ void PlPlotImpl::label(const std::string& xlabel, const std::string& ylabel, con
 
 void PlPlotImpl::show_ticks(bool enable)
 {
-    if (enable)
-    {
-        m_axis_old = m_axis;
+    m_ticks = enable;
+
+    if (m_ticks && m_grid)
+        m_axis = 2;
+    else if (m_ticks)
         m_axis = 0;
-    }
     else
-    {
         m_axis = -1;
-    }
 }
 
 void PlPlotImpl::show_grid(bool enable)
 {
-    if (enable)
-    {
-        m_axis_old = m_axis;
+    m_grid = enable;
+    /**
+     * if Grid is enable, then enable ticks to show
+     * grid at major tick positions
+     */
+    if (m_grid)
+        m_ticks = true;
+
+    if (m_ticks && m_grid)
         m_axis = 2;
-    }
+    else if (m_ticks)
+        m_axis = 0;
     else
-    {
-        m_axis = m_axis_old;
-    }
+        m_axis = -1;
 }
 
 void PlPlotImpl::width(int val)
@@ -446,8 +450,10 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
         m_plstream->wind(0.0, xmax, 0.0, m_ymax);
         if (m_axis == 2)
             m_plstream->box("bgit", 0, 0, "bginvst", 0, 0);
-        else
+        else if (m_axis == 0)
             m_plstream->box("bit", 0, 0, "binvst", 0, 0);
+        else
+            m_plstream->box("bi", 0, 0, "binvs", 0, 0);
     }
     else if ((!m_ydata.empty()) && (!m_xdata.empty()))
     {
@@ -475,9 +481,12 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
                 SPDLOG_TRACE("m_ydata[{}] = {} ", i, m_ydata.at(i));
                 plfbox((i * 2), m_ydata.at(i));
 
-                plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
-                float pos = (float)i / (float)n;
-                m_plstream->mtex("b", 1.0, pos, 0/*0.25*/, m_sdata.at(i).c_str());
+                if (m_axis != -1)
+                {
+                    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+                    auto pos = static_cast<float>(i) / static_cast<float>(n);
+                    m_plstream->mtex("b", 1.0, pos, 0, m_sdata.at(i).c_str());
+                }
             }
             else if (!m_xdata.empty())
             {
@@ -560,8 +569,10 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
         m_plstream->wind(0.0, m_ymax, 0.0, (m_sdata.size() * 2));
         if (m_axis == 2)
             m_plstream->box("bginvst", 0, 0, "bgit", 0, 0);
+        else if (m_axis == 0)
+            m_plstream->box("bit", 0, 0, "bitnvs", 0, 0);
         else
-            m_plstream->box("binvst", 0, 0, "bit", 0, 0);
+            m_plstream->box("bi", 0, 0, "binvs", 0, 0);
 
         std::size_t n = m_ydata.size();
         int i = 0;
@@ -577,8 +588,11 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
             plfHbox(data, (i * 2));
 
             //Set Y-axis text
-            float pos = (float)i / (float)n;
-            m_plstream->mtex("lv", 1.0, pos, 1, m_sdata.at(i).c_str());
+            if (m_axis != -1)
+            {
+                auto pos = static_cast<float>(i) / static_cast<float>(n);
+                m_plstream->mtex("lv", 1.0, pos, 1, m_sdata.at(i).c_str());
+            }
             ++i;
         }
     }

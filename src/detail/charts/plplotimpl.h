@@ -88,7 +88,8 @@ protected:
      *   2: also draw a grid at major tick positions in both coordinates.
      */
     PLINT m_axis{-1};
-    PLINT m_axis_old{-1};
+    bool m_ticks{false};
+    bool m_grid{false};
 
     bool m_clearsurface{false};
 
