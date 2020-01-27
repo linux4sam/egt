@@ -147,7 +147,7 @@ int main(int argc, const char** argv)
     PeriodicTimer movetimer(std::chrono::milliseconds(30));
     movetimer.on_timeout([&]()
     {
-        for (auto i : boxes)
+        for (auto& i : boxes)
             i->next_frame();
     });
     movetimer.start();
