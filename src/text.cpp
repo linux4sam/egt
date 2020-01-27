@@ -112,14 +112,14 @@ void TextBox::handle_key(const Key& key)
         if (cursor())
         {
             selection(cursor() - 1, 1);
-            delete_selection();
+            selection_delete();
         }
         break;
     }
     case EKEY_DELETE:
     {
         selection(cursor(), 1);
-        delete_selection();
+        selection_delete();
         break;
     }
     case EKEY_ENTER:
@@ -215,14 +215,14 @@ void TextBox::draw(Painter& painter, const Rect&)
 
 void TextBox::text(const std::string& str)
 {
-    clear_selection();
+    selection_clear();
     clear();
     insert(str);
 }
 
 void TextBox::clear()
 {
-    clear_selection();
+    selection_clear();
     cursor_begin();
     TextWidget::clear();
 }
@@ -329,7 +329,7 @@ size_t TextBox::insert(const std::string& str)
         utf8::advance(end, len, str.end());
         m_text.insert(i, str.begin(), end);
         cursor_forward(len);
-        clear_selection();
+        selection_clear();
 
         on_text_changed.invoke();
         damage();
@@ -407,7 +407,7 @@ void TextBox::selection(size_t pos, size_t length)
     }
 }
 
-void TextBox::clear_selection()
+void TextBox::selection_clear()
 {
     if (m_select_len)
     {
@@ -431,7 +431,7 @@ std::string TextBox::selected_text() const
     return std::string();
 }
 
-void TextBox::delete_selection()
+void TextBox::selection_delete()
 {
     if (m_select_len)
     {
@@ -443,7 +443,7 @@ void TextBox::delete_selection()
 
         m_text.erase(i, l);
         cursor_set(p);
-        clear_selection();
+        selection_clear();
         on_text_changed.invoke();
         damage();
     }

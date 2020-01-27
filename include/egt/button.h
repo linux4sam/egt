@@ -286,7 +286,7 @@ public:
      *
      * @param[in] align Only left, right, top, and bottom alignments are supported.
      */
-    virtual void image_align(const AlignFlags& align)
+    void image_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_image_align, align))
             damage();

@@ -147,7 +147,7 @@ public:
      *
      * @param len The maximum length of the text.
      */
-    virtual void max_length(size_t len);
+    void max_length(size_t len);
 
     /**
      * Get the max length of allowed text.
@@ -175,7 +175,7 @@ public:
      *
      * @param str The string to append.
      */
-    virtual size_t append(const std::string& str);
+    size_t append(const std::string& str);
 
     /**
      * Insert text at the cursor.
@@ -183,22 +183,22 @@ public:
      * @param str The string to insert.
      * @return The number of characters inserted.
      */
-    virtual size_t insert(const std::string& str);
+    size_t insert(const std::string& str);
 
     /**
      * Get the cursor position.
      */
-    virtual size_t cursor() const;
+    size_t cursor() const;
 
     /**
      * Move the cursor to the beginning.
      */
-    virtual void cursor_begin();
+    void cursor_begin();
 
     /**
      * Move the cursor to the end.
      */
-    virtual void cursor_end();
+    void cursor_end();
 
     /**
      * Move the cursor forward by the specified count from the current
@@ -206,7 +206,7 @@ public:
      *
      * @param count The number of characters to move.
      */
-    virtual void cursor_forward(size_t count = 1);
+    void cursor_forward(size_t count = 1);
 
     /**
      * Move the cursor backward by the specified count from the current
@@ -214,19 +214,19 @@ public:
      *
      * @param count The number of characters to move.
      */
-    virtual void cursor_backward(size_t count = 1);
+    void cursor_backward(size_t count = 1);
 
     /**
      * Set the cursor to the specific position.
      *
      * @param pos The new cursor position.
      */
-    virtual void cursor_set(size_t pos);
+    void cursor_set(size_t pos);
 
     /**
      * Select all of the text.
      */
-    virtual void selection_all();
+    void selection_all();
 
     /**
      * Set the selection of text.
@@ -234,7 +234,7 @@ public:
      * @param pos The starting position.
      * @param length The length of the selection.
      */
-    virtual void selection(size_t pos, size_t length);
+    void selection(size_t pos, size_t length);
 
     /**
      * Clear any selection.
@@ -242,7 +242,7 @@ public:
      * @note This does not delete text, it just clears the selection. To delete
      * the selected text call delete_selection().
      */
-    virtual void clear_selection();
+    void selection_clear();
 
     /**
      * Get, or copy, the selected text.
@@ -254,7 +254,7 @@ public:
     /**
      * Delete the selected text.
      */
-    virtual void delete_selection();
+    void selection_delete();
 
     /**
      * Enable or disable input validation.
@@ -262,7 +262,7 @@ public:
      * Invoke the validator callbacks. If one of them returns false, the input
      * is rejected.
      */
-    virtual void input_validation_enabled(bool enabled);
+    void input_validation_enabled(bool enabled);
 
     /**
      * Add a callback to be invoked to validate the input.

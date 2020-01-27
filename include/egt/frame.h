@@ -225,7 +225,7 @@ public:
 
     virtual void dump(std::ostream& out, int level = 0) override;
 
-    virtual void walk(WalkCallback callback, int level = 0) override;
+    virtual void walk(WalkCallback& callback, int level = 0) override;
 
     /**
      * Save the entire frame surface to a file.
@@ -461,6 +461,10 @@ protected:
      * Status for whether this frame is currently performing layout.
      */
     bool m_in_layout{false};
+
+private:
+
+    void remove_all_basic();
 };
 
 }

@@ -196,18 +196,17 @@ public:
     HttpClientRequestManager& operator=(const HttpClientRequestManager&) = delete;
     HttpClientRequestManager& operator=(HttpClientRequestManager&&) = delete;
 
-    CURLM* m_multi;
-    int m_running;
+    CURLM* m_multi{};
+    int m_running{0};
     asio::steady_timer m_timer;
     std::unordered_map<curl_socket_t, HttpClientRequest*> m_sockets;
 
 private:
 
     HttpClientRequestManager()
-        : m_running(0),
+        : m_multi(curl_multi_init()),
           m_timer(Application::instance().event().io())
     {
-        m_multi = curl_multi_init();
         curl_multi_setopt(m_multi, CURLMOPT_SOCKETFUNCTION, HttpClientRequestManager::socket_callback);
         curl_multi_setopt(m_multi, CURLMOPT_TIMERFUNCTION, HttpClientRequestManager::timer_callback);
     }

@@ -230,7 +230,7 @@ void Sound::init_alsa_params(unsigned int rate, int channels)
     SPDLOG_TRACE("PCM name: {}", snd_pcm_name(m_impl->handle));
     SPDLOG_TRACE("PCM state: {}", snd_pcm_state_name(snd_pcm_state(m_impl->handle)));
 
-    snd_pcm_hw_params_get_period_size(params, &m_impl->frames, 0);
+    snd_pcm_hw_params_get_period_size(params, &m_impl->frames, nullptr);
     m_impl->channels = channels;
     m_impl->rate = rate;
 

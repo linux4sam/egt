@@ -107,10 +107,10 @@ TEST(TextBox, Basic)
     ASSERT_EQ(str1 + str2 + str1 + str1, text1.selected_text());
     text1.selection(str1.size(), 5);
     ASSERT_EQ(str2, text1.selected_text());
-    text1.clear_selection();
+    text1.selection_clear();
     ASSERT_EQ("", text1.selected_text());
     text1.selection_all();
-    text1.delete_selection();
+    text1.selection_delete();
     ASSERT_EQ("", text1.text());
 }
 

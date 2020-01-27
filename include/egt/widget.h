@@ -927,7 +927,7 @@ public:
      * @param level The current level of the widget hierarchy starting with the
      *              level originally passed in.
      */
-    virtual void walk(WalkCallback callback, int level = 0);
+    virtual void walk(WalkCallback& callback, int level = 0);
 
     /**
      * Get the current focus state.

@@ -174,8 +174,6 @@ public:
      */
     inline GridFlags& grid_flags() { return m_grid_flags; }
 
-    virtual void reallocate(const std::tuple<int, int>& size);
-
     virtual void serialize(detail::Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
@@ -184,6 +182,8 @@ public:
     virtual ~StaticGrid() noexcept = default;
 
 protected:
+
+    void reallocate(const std::tuple<int, int>& size);
 
     /**
      * Re-position all child widgets.

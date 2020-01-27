@@ -148,7 +148,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
         for (const auto& x : allocators)
         {
             auto name = x.first;
-            std::size_t index = name.find_last_of(":");
+            std::size_t index = name.find_last_of(':');
             if (index != std::string::npos)
                 name = name.substr(index + 1);
 

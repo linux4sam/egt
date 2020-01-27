@@ -36,14 +36,11 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
 
     m_flist->on_selected_changed([this]()
     {
-        SPDLOG_DEBUG("FileDialog index is {}", m_flist->selected());
         list_item_selected(m_flist->selected());
     });
 
     if (m_filepath.empty())
         m_filepath = fs::current_path().string();
-
-    SPDLOG_DEBUG("FileDialog done");
 }
 
 FileDialog::FileDialog(const Rect& rect)

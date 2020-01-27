@@ -136,17 +136,17 @@ Rect Slider::handle_box(int value) const
         if (slider_flags().is_set(SliderFlag::show_labels) ||
             slider_flags().is_set(SliderFlag::show_label))
         {
-            return Rect(xv,
-                        b.y() + b.height() / 4 - dimh / 2 + b.height() / 2,
-                        dimw,
-                        dimh);
+            return {xv,
+                    b.y() + b.height() / 4 - dimh / 2 + b.height() / 2,
+                    dimw,
+                    dimh};
         }
         else
         {
-            return Rect(xv,
-                        b.y() + b.height() / 2 - dimh / 2,
-                        dimw,
-                        dimh);
+            return {xv,
+                    b.y() + b.height() / 2 - dimh / 2,
+                    dimw,
+                    dimh};
         }
     }
     else
@@ -158,17 +158,17 @@ Rect Slider::handle_box(int value) const
         if (slider_flags().is_set(SliderFlag::show_labels) ||
             slider_flags().is_set(SliderFlag::show_label))
         {
-            return Rect(b.x() + b.width() / 4 - dimw / 2 + b.width() / 2,
-                        yv,
-                        dimw,
-                        dimh);
+            return {b.x() + b.width() / 4 - dimw / 2 + b.width() / 2,
+                    yv,
+                    dimw,
+                    dimh};
         }
         else
         {
-            return Rect(b.x() + b.width() / 2 - dimw / 2,
-                        yv,
-                        dimw,
-                        dimh);
+            return {b.x() + b.width() / 2 - dimw / 2,
+                    yv,
+                    dimw,
+                    dimh};
         }
     }
 }

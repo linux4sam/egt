@@ -113,7 +113,6 @@ protected:
      * Get the List Item selected index.
      */
     void list_item_selected(int index);
-
 };
 
 /**
@@ -258,7 +257,6 @@ protected:
 };
 
 }
-
 }
 
 #endif

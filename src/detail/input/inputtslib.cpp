@@ -22,8 +22,8 @@ static const int SAMPLE_COUNT = 20;
 
 struct tslibimpl
 {
-    struct tsdev* ts;
-    struct ts_sample_mt** samp_mt;
+    struct tsdev* ts {nullptr};
+    struct ts_sample_mt** samp_mt {nullptr};
     std::array<std::chrono::time_point<std::chrono::steady_clock>, 2> last_down;
 };
 

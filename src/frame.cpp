@@ -61,7 +61,7 @@ void Frame::remove(Widget* widget)
     }
 }
 
-void Frame::remove_all()
+void Frame::remove_all_basic()
 {
     for (auto& i : m_children)
     {
@@ -71,6 +71,11 @@ void Frame::remove_all()
     }
 
     m_children.clear();
+}
+
+void Frame::remove_all()
+{
+    remove_all_basic();
     layout();
 }
 
@@ -218,7 +223,7 @@ void Frame::dump(std::ostream& out, int level)
         child->dump(out, level + 1);
 }
 
-void Frame::walk(WalkCallback callback, int level)
+void Frame::walk(WalkCallback& callback, int level)
 {
     if (!callback(this, level))
         return;
@@ -559,7 +564,7 @@ void Frame::layout()
 
 Frame::~Frame() noexcept
 {
-    remove_all();
+    remove_all_basic();
 }
 
 }
