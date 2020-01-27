@@ -427,13 +427,11 @@ if test "x${have_libmagic}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="${MAGIC_LIB} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-SAVED_LDFLAGS="${LDFLAGS}"
-
 AC_CHECK_LIB([stdc++fs], [main], [have_libstdcppfs=yes], [have_libstdcppfs=no])
 AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
 if test "x${have_libstdcppfs}" = xyes;
 then
-   LDFLAGS="${SAVED_LDFLAGS} -lstdc++fs"
+   LDFLAGS="${LDFLAGS} -lstdc++fs"
    AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
 fi
 AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
