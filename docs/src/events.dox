@@ -127,7 +127,7 @@ timer.start();
 
 The ::EventId lists global events that usually don't necessary originate in a
 widget itself.  To handle custom or widget type specific events,
-detail::::Signal<> member attributes can be added to a widget to provide custom
+detail::Signal<> member attributes can be added to a widget to provide custom
 handles any user can connect to in order to receive the event.
 
 The typical use case for detail::Signal<> is the same as Widget::on_event()

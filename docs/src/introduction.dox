@@ -16,8 +16,9 @@ use of the hardware available.
 @see For more information about Microchip MPU Xplained or EK type boards, visit
 [Linux4SAM](http://www.at91.com/linux4sam/bin/view/Linux4SAM).
 
-EGT uses and provides a standard API to many different third party and system
-libraries and resources.  Here are some of them:
+EGT uses and provides a standard API to many different third party, or system
+libraries and resources, in order to provide an easy to use and consistent
+interface for developing a GUI application.  Here are some of them:
 
 @imageSize{egt_libs.png,max-width:90%;height:auto;}
 @image html egt_libs.png "Integration"

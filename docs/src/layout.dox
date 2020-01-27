@@ -85,16 +85,5 @@ assigned as a child to a sizer and this sizer will set the recommended size of
 the widget. This sizer in turn will query its children (which can be other
 widgets or even sizers) so that a hierarchy of sizers can be constructed.
 
-@section layout_zorder Z-order
-
-The z-order of widgets is the order in which they are drawn, or composed.
-Widgets are drawn from the bottom up.  By default, widgets are drawn in the
-order in which they are added to a Frame.
-
-If you add() a Label, and then add() a background ImageLabel that covers the
-entire window, you will not see the label unless the background image is
-transparent. To change this, you have to fix the z-order of the widgets by
-either lowering the ImageLabel or raising the Label.
-
 */
 }}

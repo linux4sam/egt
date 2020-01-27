@@ -1016,7 +1016,7 @@ public:
      * Move this widgets zorder down relative to other widgets with the same
      * parent.
      *
-     * @see @ref layout_zorder
+     * @see @ref draw_zorder
      */
     virtual void zorder_down();
 
@@ -1024,28 +1024,28 @@ public:
      * Move this widgets zorder up relative to other widgets with the same
      * parent.
      *
-     * @see @ref layout_zorder
+     * @see @ref draw_zorder
      */
     virtual void zorder_up();
 
     /**
      * Move the widget to the bottom.
      *
-     * @see @ref layout_zorder
+     * @see @ref draw_zorder
      */
     virtual void zorder_bottom();
 
     /**
      * Move the widget to the top.
      *
-     * @see @ref layout_zorder
+     * @see @ref draw_zorder
      */
     virtual void zorder_top();
 
     /**
      * Get the zorder of the widget.
      *
-     * @see @ref layout_zorder
+     * @see @ref draw_zorder
      */
     virtual size_t zorder() const;
 
