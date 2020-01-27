@@ -2,6 +2,7 @@
 Checks: "*,\
 -android-cloexec-open,\
 -cert-err58-cpp,\
+-hicpp-no-assembler,\
 -clang-analyzer-alpha.core.CastToStruct,\
 -clang-analyzer-alpha.cplusplus.VirtualCall,\
 -clang-analyzer-alpha.deadcode.UnreachableCode,\

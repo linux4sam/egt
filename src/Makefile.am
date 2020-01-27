@@ -153,6 +153,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/flags.h \
 ../include/egt/detail/flagsbase.h \
 ../include/egt/detail/imagecache.h \
+../include/egt/detail/incbin.h \
 ../include/egt/detail/math.h \
 ../include/egt/detail/meta.h \
 ../include/egt/detail/mousegesture.h \
@@ -165,6 +166,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/textwidget.h \
 ../include/egt/detail/layout.h \
 ../include/egt/easing.h \
+../include/egt/embed.h \
 ../include/egt/event.h \
 ../include/egt/eventloop.h \
 ../include/egt/font.h \
