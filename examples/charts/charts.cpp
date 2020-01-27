@@ -45,7 +45,7 @@ struct PiePage : public NotebookTab
         int len = sizeof(pdata) / pdata[0];
         for (int i = 0; i < len; i++)
         {
-            data.push_back(make_pair(pdata[i], ("label" + std::to_string(i))));
+            data.push_back(make_pair(pdata[i], "label" + std::to_string(i)));
         }
         pie->data(data);
         sizer->add(expand(pie));
@@ -61,8 +61,8 @@ struct PiePage : public NotebookTab
             {
                 PieChart::DataArray data1;
                 static int i = 1;
-                data1.push_back(make_pair(random_item(1, 25), ("label" + std::to_string(++i))));
-                data1.push_back(make_pair(random_item(1, 10), ("label" + std::to_string(++i))));
+                data1.push_back(make_pair(random_item(1, 25), "label" + std::to_string(++i)));
+                data1.push_back(make_pair(random_item(1, 10), "label" + std::to_string(++i)));
                 pie->add_data(data1);
                 btn1->text("Remove Data");
             }
@@ -151,7 +151,6 @@ struct Points : public NotebookTab
         csizer->add(btn2);
         btn2->on_click([line, btn2](Event & event)
         {
-
             if (!btn2->text().compare("Add Data"))
             {
                 PointChart::DataArray data1;
@@ -169,7 +168,6 @@ struct Points : public NotebookTab
                 line->remove_data(15);
                 btn2->text("Add Data");
             }
-
         });
     }
 };
