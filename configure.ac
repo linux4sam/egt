@@ -404,6 +404,18 @@ AS_IF([test "x$with_librsvg" != "xno"],[
 ])
 AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
 
+AC_ARG_WITH([zlib],
+    AS_HELP_STRING([--without-zlib], [Ignore presence of zlib and disable it]))
+AS_IF([test "x$with_zlib" != "xno"],[
+   AX_PKG_CHECK_MODULES2(ZLIB, [zlib], [], [have_zlib=yes], [have_zlib=no])
+   if test "x${have_zlib}" = xyes; then
+      AC_DEFINE(HAVE_ZLIB, 1, [Have zlib support])
+      LIBEGT_EXTRA_CXXFLAGS="${ZLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${ZLIB_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
+AM_CONDITIONAL([HAVE_ZLIB], [test "x${have_zlib}" = xyes])
+
 AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
 AC_CHECK_HEADER([magic.h],
   [],
