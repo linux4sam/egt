@@ -281,7 +281,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     }
     else if (!widget.image().empty())
     {
-        Rect target = detail::align_algorithm(widget.image().size(),
+        auto target = detail::align_algorithm(widget.image().size(),
                                               widget.content_area(),
                                               widget.image_align());
         painter.draw(target.point());

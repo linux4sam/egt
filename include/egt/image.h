@@ -116,6 +116,16 @@ public:
     virtual void scale(float hscale, float vscale, bool approximate = false);
 
     /**
+     * Scale the image.
+     *
+     * @see scale()
+     */
+    inline void scale(float scale, bool approximate = false)
+    {
+        this->scale(scale, scale, approximate);
+    }
+
+    /**
      * Resize the image to the specified absolute size.
      *
      * @param size The new size of the image.
