@@ -5,6 +5,7 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/alignment.h"
+#include "egt/detail/enum.h"
 #include "egt/detail/math.h"
 #include "egt/detail/serialize.h"
 #include "egt/frame.h"
@@ -25,6 +26,33 @@ namespace egt
 {
 inline namespace v1
 {
+
+template<>
+std::map<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data =
+{
+    {Widget::Flag::plane_window, "plane_window"},
+    {Widget::Flag::window, "window"},
+    {Widget::Flag::frame, "frame"},
+    {Widget::Flag::disabled, "disabled"},
+    {Widget::Flag::readonly, "readonly"},
+    {Widget::Flag::active, "active"},
+    {Widget::Flag::invisible, "invisible"},
+    {Widget::Flag::grab_mouse, "grab_mouse"},
+    {Widget::Flag::no_clip, "no_clip"},
+    {Widget::Flag::no_layout, "no_layout"},
+    {Widget::Flag::no_autoresize, "no_autoresize"},
+    {Widget::Flag::checked, "checked"},
+};
+
+std::ostream& operator<<(std::ostream& os, const Widget::Flags& flags)
+{
+    return os << flags.to_string();
+}
+
+std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag)
+{
+    return os << detail::enum_to_string(flag);
+}
 
 static Widget::WidgetId global_widget_id{0};
 

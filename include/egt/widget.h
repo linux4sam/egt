@@ -11,6 +11,7 @@
  * @brief Base class Widget definition.
  */
 
+#include <egt/detail/enum.h>
 #include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/object.h>
@@ -1370,6 +1371,9 @@ private:
 
     friend class Frame;
 };
+
+template<>
+std::map<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data;
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag);

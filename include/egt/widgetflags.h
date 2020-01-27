@@ -12,6 +12,7 @@
  */
 
 #include <cstdint>
+#include <egt/detail/enum.h>
 #include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
 #include <iosfwd>
@@ -59,6 +60,9 @@ enum class AlignFlag : uint32_t
     /** Expand horizontally and vertically. */
     expand = expand_horizontal | expand_vertical,
 };
+
+template<>
+std::map<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data;
 
 /// Alignment flags.
 using AlignFlags = detail::Flags<AlignFlag>;
@@ -299,6 +303,9 @@ enum class Orientation : uint32_t
     none = detail::bit(3),
 };
 
+template<>
+std::map<Orientation, char const*> detail::EnumStrings<Orientation>::data;
+
 /**
  * Generic justification of children flags.
  */
@@ -310,6 +317,9 @@ enum class Justification : uint32_t
     justify = detail::bit(3),
     none = detail::bit(4),
 };
+
+template<>
+std::map<Justification, char const*> detail::EnumStrings<Justification>::data;
 
 /**
  * Hint used for configuring Window backends.
@@ -341,6 +351,9 @@ enum class WindowHint : uint32_t
      */
     cursor_overlay = detail::bit(4),
 };
+
+template<>
+std::map<WindowHint, char const*> detail::EnumStrings<WindowHint>::data;
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const WindowHint& hint);
