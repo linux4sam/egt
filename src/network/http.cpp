@@ -295,6 +295,7 @@ void HttpClientRequest::cleanup()
     {
         curl_multi_remove_handle(detail::HttpClientRequestManager::Instance()->m_multi, m_impl->easy);
         curl_easy_cleanup(m_impl->easy);
+        m_impl->easy = nullptr;
     }
 
     if (m_impl->socket)
