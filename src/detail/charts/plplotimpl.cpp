@@ -65,7 +65,8 @@ void PlPlotImpl::add_data(const DataArray& data)
         m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
         m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
 
-        SPDLOG_DEBUG("In: {} : m_xmin {} m_xmax {}  m_ymin {} m_ymax {} \n", __func__, m_xmin, m_xmax, m_ymin, m_ymax);
+        SPDLOG_DEBUG("m_xmin {} m_xmax {}  m_ymin {} m_ymax {}",
+                     m_xmin, m_xmax, m_ymin, m_ymax);
     }
 }
 
