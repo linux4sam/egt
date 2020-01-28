@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/canvas.h"
+#include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/serialize.h"
 #include "egt/image.h"
@@ -55,6 +56,16 @@ Image::Image(cairo_surface_t* surface)
                                            cairo_image_surface_get_height(surface)),
                 cairo_surface_destroy)
 {
+    assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
+
+    m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
+                       std::ceil(cairo_image_surface_get_height(m_surface.get())));
+}
+
+Image::Image(const unsigned char* data, size_t len)
+{
+    m_surface = detail::load_image_from_memory(data, len);
+
     assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
     m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),

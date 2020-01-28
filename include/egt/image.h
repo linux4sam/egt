@@ -63,6 +63,14 @@ public:
     Image(const std::string& uri, float hscale, float vscale);
 
     /**
+     * Construct a raster image from memory.
+     *
+     * @param data Pointer to the data.
+     * @param len Length of the data.
+     */
+    Image(const unsigned char* data, size_t len);
+
+    /**
      * Load a new source image with an optional scale.
      *
      * @param uri Resource path. @see @ref resources
