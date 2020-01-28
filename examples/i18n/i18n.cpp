@@ -6,11 +6,17 @@
 #include <egt/detail/meta.h>
 #include <egt/ui>
 #include <iostream>
+#include <libintl.h>
 #include <string>
 #include <utf8.h>
 
 using namespace std;
 using namespace egt;
+
+/**
+ * This is a wrapper around gettext().
+ */
+#define _(String) gettext(String)
 
 int main(int argc, const char** argv)
 {

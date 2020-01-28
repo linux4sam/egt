@@ -5,17 +5,22 @@
  */
 #include <chrono>
 #include <cmath>
+#include <egt/ui>
 #include <iomanip>
 #include <iostream>
-#include <egt/ui>
-#include <egt/painter.h>
-#include <sstream>
+#include <libintl.h>
+#include <memory>
 #include <string>
 
 using namespace std;
 using namespace egt;
 
 class MainWindow;
+
+/**
+ * This is a wrapper around gettext().
+ */
+#define _(String) gettext(String)
 
 class ResourceFrame : public Frame
 {

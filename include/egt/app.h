@@ -12,7 +12,6 @@
 #include <egt/detail/object.h>
 #include <egt/eventloop.h>
 #include <iosfwd>
-#include <libintl.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -164,11 +163,6 @@ private:
 
     detail::Object::RegisterHandle m_handle{0};
 };
-
-/**
- * This is a wrapper around gettext().
- */
-#define _(String) gettext(String)
 
 }
 }
