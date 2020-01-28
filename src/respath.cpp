@@ -79,7 +79,7 @@ SchemeType resolve_path(const std::string& path, std::string& result)
         type = SchemeType::filesystem;
         result = uri.path();
 
-        static std::string egt_icons_dir = "32px";
+        static std::string default_egt_icons_dir = "32px";
         static std::once_flag env_flag;
         std::call_once(env_flag, []()
         {
@@ -88,14 +88,21 @@ SchemeType resolve_path(const std::string& path, std::string& result)
             {
                 auto dir = std::string(icons_dir);
                 if (!dir.empty())
-                    egt_icons_dir = dir;
+                    default_egt_icons_dir = dir;
             }
         });
 
         if (result.find('/') != std::string::npos)
             result = resolve_file_path(result);
         else
+        {
+            auto egt_icons_dir = default_egt_icons_dir;
+            if (!uri.icon_size().empty())
+            {
+                egt_icons_dir = std::stoi(uri.icon_size()) + "px";
+            }
             result = resolve_file_path(egt_icons_dir + "/" + result);
+        }
     }
     else if (uri.scheme() == "http" || uri.scheme() == "https")
     {
