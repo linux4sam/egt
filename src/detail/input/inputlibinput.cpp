@@ -15,6 +15,7 @@
 #include <fstream>
 #include <libinput.h>
 #include <libudev.h>
+#include <linux/input.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <stdarg.h>
