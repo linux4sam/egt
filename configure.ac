@@ -128,7 +128,7 @@ AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h stdlib.
 CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -DEGT_DLL_EXPORTS"
 
 AC_ARG_ENABLE([debug],
-  [AS_HELP_STRING([--disable-debug], [build without debugging support [default=no]])],
+  [AS_HELP_STRING([--disable-debug], [disable debugging support [default=no]])],
   [enable_debug=no], [ ])
 
 if test "$enable_debug" = "no" ; then
@@ -217,7 +217,9 @@ AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
             CFLAGS="$CFLAGS $PTHREAD_CFLAGS"], AC_MSG_ERROR(Can not find pthreads.  This is required.))
 
 AC_ARG_WITH([x11],
-    AS_HELP_STRING([--without-x11], [Ignore presence of x11 and disable it]))
+    AS_HELP_STRING([--without-x11], [Ignore presence of x11 and disable it]),
+    [with_x11=$withval],
+    [with_x11=auto])
 AS_IF([test "x$with_x11" != "xno"],[
    AX_PKG_CHECK_MODULES2(X11, [], [x11 >= 1.6.3], [have_x11=yes], [have_x11=no])
    if test "x${have_x11}" = xyes; then
@@ -226,10 +228,15 @@ AS_IF([test "x$with_x11" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${X11_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_x11" = xyes && test "x${have_x11}" != xyes; then
+   AC_MSG_FAILURE([--with-x11 was given, but x11 not found])
+fi
 AM_CONDITIONAL([HAVE_X11], [test "x${have_x11}" = xyes])
 
 AC_ARG_WITH([xkbcommon],
-    AS_HELP_STRING([--without-xkbcommon], [Ignore presence of xkbcommon and disable it]))
+    AS_HELP_STRING([--without-xkbcommon], [Ignore presence of xkbcommon and disable it]),
+    [with_xkbcommon=$withval],
+    [with_xkbcommon=auto])
 AS_IF([test "x$with_xkbcommon" != "xno"],[
    AX_PKG_CHECK_MODULES2(XKBCOMMON, [], [xkbcommon], [have_xkbcommon=yes], [have_xkbcommon=no])
    if test "x${have_xkbcommon}" = xyes; then
@@ -238,10 +245,15 @@ AS_IF([test "x$with_xkbcommon" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${XKBCOMMON_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_xkbcommon" = xyes && test "x${have_xkbcommon}" != xyes; then
+   AC_MSG_FAILURE([--with-xkbcommon was given, but xkbcommon not found])
+fi
 AM_CONDITIONAL([HAVE_XKBCOMMON], [test "x${have_xkbcommon}" = xyes])
 
 AC_ARG_WITH([tslib],
-    AS_HELP_STRING([--without-tslib], [Ignore presence of tslib and disable it]))
+    AS_HELP_STRING([--without-tslib], [Ignore presence of tslib and disable it]),
+    [with_tslib=$withval],
+    [with_tslib=auto])
 AS_IF([test "x$with_tslib" != "xno"],[
    AX_PKG_CHECK_MODULES2(TSLIB, [], [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
    if test "x${have_tslib}" = xyes; then
@@ -250,10 +262,15 @@ AS_IF([test "x$with_tslib" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${TSLIB_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_tslib" = xyes && test "x${have_tslib}" != xyes; then
+   AC_MSG_FAILURE([--with-tslib was given, but tslib not found])
+fi
 AM_CONDITIONAL([HAVE_TSLIB], [test "x${have_tslib}" = xyes])
 
 AC_ARG_WITH([libinput],
-    AS_HELP_STRING([--without-libinput], [Ignore presence of libinput and disable it]))
+    AS_HELP_STRING([--without-libinput], [Ignore presence of libinput and disable it]),
+    [with_libinput=$withval],
+    [with_libinput=auto])
 AS_IF([test "x$with_libinput" != "xno"],[
    AX_PKG_CHECK_MODULES2(LIBINPUT, [], [libinput >= 1.6.3], [have_libinput=yes], [have_libinput=no])
    if test "x${have_libinput}" = xyes; then
@@ -262,10 +279,15 @@ AS_IF([test "x$with_libinput" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} -ludev ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_libinput" = xyes && test "x${have_libinput}" != xyes; then
+   AC_MSG_FAILURE([--with-libinput was given, but libinput not found])
+fi
 AM_CONDITIONAL([HAVE_LIBINPUT], [test "x${have_libinput}" = xyes])
 
 AC_ARG_WITH([gstreamer],
-    AS_HELP_STRING([--without-gstreamer], [Ignore presence of gstreamer and disable it]))
+    AS_HELP_STRING([--without-gstreamer], [Ignore presence of gstreamer and disable it]),
+    [with_gstreamer=$withval],
+    [with_gstreamer=auto])
 AS_IF([test "x$with_gstreamer" != "xno"],[
    AX_PKG_CHECK_MODULES2(GSTREAMER, [], [gstreamer-1.0 >= 1.8], [have_gstreamer=yes], [have_gstreamer=no])
    if test "x${have_gstreamer}" = xyes; then
@@ -281,11 +303,16 @@ AS_IF([test "x$with_gstreamer" != "xno"],[
       fi
    fi
 ])
+if test "x$with_gstreamer" = xyes && test "x${have_gstreamer}" != xyes; then
+   AC_MSG_FAILURE([--with-gstreamer was given, but gstreamer not found])
+fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 AM_CONDITIONAL([HAVE_GSTREAMER_PBUTILS], [test "x${have_gst_pbutils}" = xyes])
 
 AC_ARG_WITH([lua],
-    AS_HELP_STRING([--without-lua], [Ignore presence of lua and disable it]))
+    AS_HELP_STRING([--without-lua], [Ignore presence of lua and disable it]),
+    [with_lua=$withval],
+    [with_lua=auto])
 AS_IF([test "x$with_lua" != "xno"],[
    AX_PKG_CHECK_MODULES2(LUA, [], [lua >= 5.3.0], [have_lua=yes], [have_lua=no])
    if test "x${have_lua}" = xno; then
@@ -304,11 +331,14 @@ AS_IF([test "x$with_lua" != "xno"],[
             have_lua_bindings=yes
             AC_SUBST(include_luaapp, ["#include <egt/luaapp.h>"])
 	 else
-	    AC_MSG_ERROR([bindings requested but swig not found.])
+	    AC_MSG_ERROR([lua bindings requested but swig not found.])
          fi
       fi
    fi
 ])
+if test "x$with_lua" = xyes && test "x${have_lua}" != xyes; then
+   AC_MSG_FAILURE([--with-lua was given, but lua not found])
+fi
 AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
 AM_CONDITIONAL([ENABLE_LUA_BINDINGS], [test "x${have_lua_bindings}" = xyes])
 
@@ -351,23 +381,30 @@ LIBEGT_EXTRA_CXXFLAGS="${FONTCONFIG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
 LIBEGT_EXTRA_LDFLAGS="${FONTCONFIG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
 AC_ARG_WITH([plplot],
-    AS_HELP_STRING([--without-plplot], [Ignore presence of plplot and disable it]))
-AS_IF([test "x$with_plplpot" != "xno"],[
-AX_PKG_CHECK_MODULES2(PLPLOT, [], [plplot-c++], [have_plplot=yes], [have_plplot=no])
-if test "x${have_plplot}" = xno; then
-   AX_PKG_CHECK_MODULES2(PLPLOT, [], [plplotd-c++], [have_plplot=yes], [have_plplot=no])
-fi
-if test "x${have_plplot}" = xyes; then
-   AC_DEFINE(HAVE_PLPLOT, 1, [Have plplot support])
-   AC_SUBST(include_chart, ["#include <egt/chart.h>"])
-   LIBEGT_EXTRA_CXXFLAGS="${PLPLOT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${PLPLOT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
+    AS_HELP_STRING([--without-plplot], [Ignore presence of plplot and disable it]),
+    [with_plplot=$withval],
+    [with_plplot=auto])
+AS_IF([test "x$with_plplot" != "xno"],[
+   AX_PKG_CHECK_MODULES2(PLPLOT, [plplot-c++], [], [have_plplot=yes], [have_plplot=no])
+   if test "x${have_plplot}" = xno; then
+      AX_PKG_CHECK_MODULES2(PLPLOT, [plplotd-c++], [], [have_plplot=yes], [have_plplot=no])
+   fi
+   if test "x${have_plplot}" = xyes; then
+      AC_DEFINE(HAVE_PLPLOT, 1, [Have plplot support])
+      AC_SUBST(include_chart, ["#include <egt/chart.h>"])
+      LIBEGT_EXTRA_CXXFLAGS="${PLPLOT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${PLPLOT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
 ])
+if test "x$with_plplot" = xyes && test "x${have_plplot}" != xyes; then
+   AC_MSG_FAILURE([--with-plplot was given, but plplot not found])
+fi
 AM_CONDITIONAL([HAVE_PLPLOT], [test "x${have_plplot}" = xyes])
 
 AC_ARG_WITH([libjpeg],
-    AS_HELP_STRING([--without-libjpeg], [Ignore presence of libjpeg and disable it]))
+    AS_HELP_STRING([--without-libjpeg], [Ignore presence of libjpeg and disable it]),
+    [with_libjpeg=$withval],
+    [with_libjpeg=auto])
 AS_IF([test "x$with_libjpeg" != "xno"],[
    AX_PKG_CHECK_MODULES2(LIBJPEG, [], [libjpeg], [have_libjpeg=yes], [have_libjpeg=no])
    if test "x${have_libjpeg}" = xyes; then
@@ -376,10 +413,15 @@ AS_IF([test "x$with_libjpeg" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${LIBJPEG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_libjpeg" = xyes && test "x${have_libjpeg}" != xyes; then
+   AC_MSG_FAILURE([--with-libjpeg was given, but libjpeg not found])
+fi
 AM_CONDITIONAL([HAVE_LIBJPEG], [test "x${have_libjpeg}" = xyes])
 
 AC_ARG_WITH([libcurl],
-    AS_HELP_STRING([--without-libcurl], [Ignore presence of libcurl and disable it]))
+    AS_HELP_STRING([--without-libcurl], [Ignore presence of libcurl and disable it]),
+    [with_libcurl=$withval],
+    [with_libcurl=auto])
 AS_IF([test "x$with_libcurl" != "xno"],[
    AX_PKG_CHECK_MODULES2(LIBCURL, [], [libcurl >= 4.5], [have_libcurl=yes], [have_libcurl=no])
    if test "x${have_libcurl}" = xyes; then
@@ -389,10 +431,15 @@ AS_IF([test "x$with_libcurl" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_libcurl" = xyes && test "x${have_libcurl}" != xyes; then
+   AC_MSG_FAILURE([--with-libcurl was given, but libcurl not found])
+fi
 AM_CONDITIONAL([HAVE_LIBCURL], [test "x${have_libcurl}" = xyes])
 
 AC_ARG_WITH([librsvg],
-    AS_HELP_STRING([--without-librsvg], [Ignore presence of librsvg and disable it]))
+    AS_HELP_STRING([--without-librsvg], [Ignore presence of librsvg and disable it]),
+    [with_librsvg=$withval],
+    [with_librsvg=auto])
 AS_IF([test "x$with_librsvg" != "xno"],[
    AX_PKG_CHECK_MODULES2(LIBRSVG, [], [librsvg-2.0], [have_librsvg=yes], [have_librsvg=no])
    if test "x${have_librsvg}" = xyes; then
@@ -402,6 +449,9 @@ AS_IF([test "x$with_librsvg" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_librsvg" = xyes && test "x${have_librsvg}" != xyes; then
+   AC_MSG_FAILURE([--with-librsvg was given, but librsvg not found])
+fi
 AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
 
 AC_ARG_WITH([zlib],
@@ -471,7 +521,9 @@ fi
 AM_CONDITIONAL([HAVE_MSGFMT], [test "x${MSGFMT}" = xyes])
 
 AC_ARG_WITH([alsa],
-    AS_HELP_STRING([--without-alsa], [Ignore presence of alsa and disable it]))
+    AS_HELP_STRING([--without-alsa], [Ignore presence of alsa and disable it]),
+    [with_alsa=$withval],
+    [with_alsa=auto])
 AS_IF([test "x$with_alsa" != "xno"],[
    AX_PKG_CHECK_MODULES2(ALSA, [], [alsa], [have_alsa=yes], [have_alsa=no])
    if test "x${have_alsa}" = xyes; then
@@ -481,10 +533,15 @@ AS_IF([test "x$with_alsa" != "xno"],[
       AC_SUBST(include_sound, ["#include <egt/sound.h>"])
    fi
 ])
+if test "x$with_alsa" = xyes && test "x${have_alsa}" != xyes; then
+   AC_MSG_FAILURE([--with-alsa was given, but alsa not found])
+fi
 AM_CONDITIONAL([HAVE_ALSA], [test "x${have_alsa}" = xyes])
 
 AC_ARG_WITH([sndfile],
-    AS_HELP_STRING([--without-sndfile], [Ignore presence of sndfile and disable it]))
+    AS_HELP_STRING([--without-sndfile], [Ignore presence of sndfile and disable it]),
+    [with_sndfile=$withval],
+    [with_sndfile=auto])
 AS_IF([test "x$with_sndfile" != "xno"],[
    AX_PKG_CHECK_MODULES2(SNDFILE, [], [sndfile], [have_sndfile=yes], [have_sndfile=no])
    if test "x${have_sndfile}" = xyes; then
@@ -493,6 +550,9 @@ AS_IF([test "x$with_sndfile" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${SNDFILE_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_sndfile" = xyes && test "x${have_sndfile}" != xyes; then
+   AC_MSG_FAILURE([--with-sndfile was given, but sndfile not found])
+fi
 AM_CONDITIONAL([HAVE_SNDFILE], [test "x${have_sndfile}" = xyes])
 
 # Subst LIBEGT_EXTRA_CFLAGS & CXXFLAGS & LDFLAGS
