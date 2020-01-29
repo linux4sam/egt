@@ -331,7 +331,7 @@ AS_IF([test "x$with_lua" != "xno"],[
          AC_PATH_PROG([SWIG_BIN], [swig])
          if test "x${have_lua}" = xyes && test -n "$SWIG_BIN"; then
             have_lua_bindings=yes
-            AC_SUBST(include_luaapp, ["#include <egt/luaapp.h>"])
+            AC_SUBST(include_luaapp, ["#define EGT_HAS_LUA 1"])
 	 else
 	    AC_MSG_ERROR([lua bindings requested but swig not found.])
          fi
@@ -393,7 +393,7 @@ AS_IF([test "x$with_plplot" != "xno"],[
    fi
    if test "x${have_plplot}" = xyes; then
       AC_DEFINE(HAVE_PLPLOT, 1, [Have plplot support])
-      AC_SUBST(include_chart, ["#include <egt/chart.h>"])
+      AC_SUBST(include_chart, ["#define EGT_HAS_CHART 1"])
       LIBEGT_EXTRA_CXXFLAGS="${PLPLOT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
       LIBEGT_EXTRA_LDFLAGS="${PLPLOT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
@@ -428,7 +428,7 @@ AS_IF([test "x$with_libcurl" != "xno"],[
    AX_PKG_CHECK_MODULES2(LIBCURL, [], [libcurl >= 4.5], [have_libcurl=yes], [have_libcurl=no])
    if test "x${have_libcurl}" = xyes; then
       AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
-      AC_SUBST(include_http, ["#include <egt/network/http.h>"])
+      AC_SUBST(include_http, ["#define EGT_HAS_HTTP 1"])
       LIBEGT_EXTRA_CXXFLAGS="${LIBCURL_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
       LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
@@ -446,7 +446,7 @@ AS_IF([test "x$with_librsvg" != "xno"],[
    AX_PKG_CHECK_MODULES2(LIBRSVG, [], [librsvg-2.0], [have_librsvg=yes], [have_librsvg=no])
    if test "x${have_librsvg}" = xyes; then
       AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
-      AC_SUBST(include_svg, ["#include <egt/svgimage.h>"])
+      AC_SUBST(include_svg, ["#define EGT_HAS_SVG 1"])
       LIBEGT_EXTRA_CXXFLAGS="${LIBRSVG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
       LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
@@ -489,10 +489,10 @@ fi
 AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
 
 if test "x${have_gstreamer}" = xyes; then
-   AC_SUBST(include_audio, ["#include <egt/audio.h>"])
-   AC_SUBST(include_video, ["#include <egt/video.h>"])
-   AC_SUBST(include_camera, ["#include <egt/camera.h>"])
-   AC_SUBST(include_capture, ["#include <egt/capture.h>"])
+   AC_SUBST(include_audio, ["#define EGT_HAS_AUDIO 1"])
+   AC_SUBST(include_video, ["#define EGT_HAS_VIDEO 1"])
+   AC_SUBST(include_camera, ["#define EGT_HAS_CAMERA 1"])
+   AC_SUBST(include_capture, ["#define EGT_HAS_CAPTURE 1"])
 fi
 
 AC_CHECK_HEADER([linux/fb.h], [have_fbdev=yes], [have_fbdev=no])
@@ -532,7 +532,7 @@ AS_IF([test "x$with_alsa" != "xno"],[
       AC_DEFINE(HAVE_ALSA, 1, [Have alsa support])
       LIBEGT_EXTRA_CXXFLAGS="${ALSA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
       LIBEGT_EXTRA_LDFLAGS="${ALSA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-      AC_SUBST(include_sound, ["#include <egt/sound.h>"])
+      AC_SUBST(include_sound, ["#define EGT_HAS_SOUND 1"])
    fi
 ])
 if test "x$with_alsa" = xyes && test "x${have_alsa}" != xyes; then

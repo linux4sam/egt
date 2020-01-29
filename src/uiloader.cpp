@@ -3,10 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "egt/ui"
 #include "egt/uiloader.h"
 #include <rapidxml.hpp>
@@ -112,15 +108,17 @@ static const std::unordered_map<std::string, create_function> allocators =
     //{"egt::v1::Gauge", create_widget<Gauge>},
     //{"egt::v1::GaugeLayer", create_widget<GaugeLayer>},
     //{"egt::v1::NeedleLayer", create_widget<NeedleLayer>},
-#ifdef HAVE_PLPLOT
+#ifdef EGT_HAS_CHART
     {"egt::v1::LineChart", create_widget<LineChart>},
     {"egt::v1::PointChart", create_widget<PieChart>},
     {"egt::v1::BarChart", create_widget<BarChart>},
     {"egt::v1::HorizontalBarChart", create_widget<HorizontalBarChart>},
     {"egt::v1::PieChart", create_widget<PieChart>},
 #endif
-#ifdef HAVE_GSTREAMER
+#ifdef EGT_HAS_CAMERA
     {"egt::v1::CameraWindow", create_widget<CameraWindow>},
+#endif
+#ifdef EGT_HAS_VIDEO
     {"egt::v1::VideoWindow", create_widget<VideoWindow>},
 #endif
 };

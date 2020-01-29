@@ -366,6 +366,7 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             return app.run();
         }
     },
+#ifdef EGT_HAS_SOUND
     {
         "sound0", [](egt::Application & app)
         {
@@ -400,6 +401,8 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             return app.run();
         }
     },
+#endif
+#ifdef EGT_HAS_AUDIO
     {
         "audio1", [](egt::Application & app)
         {
@@ -417,6 +420,8 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             return app.run();
         }
     },
+#endif
+#ifdef EGT_HAS_VIDEO
     {
         "video1", [](egt::Application & app)
         {
@@ -434,6 +439,7 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             return app.run();
         }
     },
+#endif
 };
 
 int main(int argc, const char** argv)

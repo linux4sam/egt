@@ -63,13 +63,48 @@
 #include <egt/window.h>
 
 @include_audio@
+#ifdef EGT_HAS_AUDIO
+#include <egt/audio.h>
+#endif
+
 @include_video@
+#ifdef EGT_HAS_VIDEO
+#include <egt/video.h>
+#endif
+
 @include_camera@
+#ifdef EGT_HAS_CAMERA
+#include <egt/camera.h>
+#endif
+
 @include_capture@
+#ifdef EGT_HAS_CAPTURE
+#include <egt/capture.h>
+#endif
+
 @include_http@
+#ifdef EGT_HAS_HTTP
+#include <egt/network/http.h>
+#endif
+
 @include_luaapp@
+#ifdef EGT_HAS_LUA
+#include <egt/luaapp.h>
+#endif
+
 @include_svg@
+#ifdef EGT_HAS_SVG
+#include <egt/svgimage.h>
+#endif
+
 @include_sound@
+#ifdef EGT_HAS_SOUND
+#include <egt/sound.h>
+#endif
+
 @include_chart@
+#ifdef EGT_HAS_CHART
+#include <egt/chart.h>
+#endif
 
 #endif
