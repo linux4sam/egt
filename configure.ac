@@ -214,7 +214,9 @@ AC_FUNC_MMAP
 AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 
 AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
-            CFLAGS="$CFLAGS $PTHREAD_CFLAGS"], AC_MSG_ERROR(Can not find pthreads.  This is required.))
+            CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+            CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"],
+            AC_MSG_ERROR(Can not find pthreads.  This is required.))
 
 AC_ARG_WITH([x11],
     AS_HELP_STRING([--without-x11], [Ignore presence of x11 and disable it]),
