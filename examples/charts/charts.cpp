@@ -34,11 +34,11 @@ struct PiePage : public egt::NotebookTab
         pie->title("Pie Chart Example");
 
         egt::PieChart::DataArray data;
-        const int pdata[] = { 5, 10, 15, 20, 4, 8, 16, 12};
-        int len = sizeof(pdata) / pdata[0];
-        for (int i = 0; i < len; i++)
+        std::vector<int> pdata = { 5, 10, 15, 20, 4, 8, 16, 12};
+        int count = 0;
+        for (auto& i : pdata)
         {
-            data.push_back(std::make_pair(pdata[i], "label" + std::to_string(i)));
+            data.push_back(make_pair(i, ("label" + std::to_string(count++))));
         }
         pie->data(data);
         sizer->add(egt::expand(pie));
