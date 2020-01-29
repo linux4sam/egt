@@ -6,6 +6,11 @@
 #ifndef EGT_VIDEO_H
 #define EGT_VIDEO_H
 
+/**
+ * @file
+ * @brief Working with video.
+ */
+
 #include <egt/detail/meta.h>
 #include <egt/detail/signal.h>
 #include <egt/window.h>

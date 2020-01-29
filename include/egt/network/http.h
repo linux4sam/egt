@@ -6,6 +6,11 @@
 #ifndef EGT_NETWORK_HTTP_H
 #define EGT_NETWORK_HTTP_H
 
+/**
+ * @file
+ * @brief Working with http.
+ */
+
 #include <egt/detail/meta.h>
 #include <memory>
 #include <string>
