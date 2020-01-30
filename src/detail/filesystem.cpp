@@ -58,7 +58,7 @@ bool exists(const std::string& path)
     return !stat(path.c_str(), &buf);
 }
 
-std::vector<char> read_file(const std::string& path)
+std::vector<unsigned char> read_file(const std::string& path)
 {
     std::ifstream file(path.c_str(), std::ios::binary);
 
@@ -69,12 +69,12 @@ std::vector<char> read_file(const std::string& path)
     filesize = file.tellg();
     file.seekg(0, std::ios::beg);
 
-    std::vector<char> vec;
+    std::vector<unsigned char> vec;
     vec.reserve(filesize);
 
     vec.insert(vec.begin(),
-               std::istream_iterator<char>(file),
-               std::istream_iterator<char>());
+               std::istream_iterator<unsigned char>(file),
+               std::istream_iterator<unsigned char>());
 
     return vec;
 }

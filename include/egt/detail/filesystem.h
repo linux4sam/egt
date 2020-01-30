@@ -48,7 +48,7 @@ EGT_API bool exists(const std::string& path);
  *
  * @param[in] path File path.
  */
-EGT_API std::vector<char> read_file(const std::string& path);
+EGT_API std::vector<unsigned char> read_file(const std::string& path);
 
 /**
  * Read the path of a symlink.
