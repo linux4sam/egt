@@ -25,10 +25,19 @@ using namespace experimental;
 
 struct HttpClientRequestData
 {
+    std::string url;
     CURL* easy{nullptr};
     std::unique_ptr<asio::ip::tcp::socket> socket;
     int last_event{CURL_POLL_NONE};
-    HttpClientRequest::buffer_type buffer;
+    HttpClientRequest::ReadCallback m_read_callback;
+
+    inline void on_read(const unsigned char* data, size_t len, bool done = false)
+    {
+        SPDLOG_TRACE("http read data len {}", len);
+
+        if (m_read_callback)
+            m_read_callback(data, len, done);
+    }
 };
 
 class HttpClientRequestManager
@@ -49,26 +58,28 @@ public:
     {
         auto i = HttpClientRequestManager::Instance()->m_sockets.find(s);
         assert(i != HttpClientRequestManager::Instance()->m_sockets.end());
-
-        HttpClientRequest* session = i->second;
-        session->impl()->last_event = what;
-
-        if (what == CURL_POLL_REMOVE)
+        if (i != HttpClientRequestManager::Instance()->m_sockets.end())
         {
-            // must return 0
-            return 0;
-        }
+            auto request = i->second;
+            request->impl()->last_event = what;
 
-        if (what & CURL_POLL_IN)
-        {
-            session->impl()->socket->async_wait(asio::ip::tcp::socket::wait_read,
-                                                std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_IN, session));
-        }
+            if (what == CURL_POLL_REMOVE)
+            {
+                // must return 0
+                return 0;
+            }
 
-        if (what & CURL_POLL_OUT)
-        {
-            session->impl()->socket->async_wait(asio::ip::tcp::socket::wait_write,
-                                                std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_OUT, session));
+            if (what & CURL_POLL_IN)
+            {
+                request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_read,
+                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_IN, request));
+            }
+
+            if (what & CURL_POLL_OUT)
+            {
+                request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_write,
+                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_OUT, request));
+            }
         }
 
         // must return 0
@@ -104,7 +115,7 @@ public:
                                                     &(HttpClientRequestManager::Instance()->m_running));
             if (mc != CURLM_OK)
             {
-                spdlog::error("curl_multi_socket_action error: ", mc);
+                spdlog::warn("curl_multi_socket_action error: {}", mc);
             }
 
             check_multi_info();
@@ -115,7 +126,7 @@ public:
                                      CURL* easy,
                                      curl_socket_t s,
                                      int what,
-                                     HttpClientRequest* session)
+                                     HttpClientRequest* request)
     {
         if (ec)
         {
@@ -126,7 +137,7 @@ public:
         CURLMcode rc = curl_multi_socket_action(multi->m_multi, s, what, &multi->m_running);
         if (rc != CURLM_OK)
         {
-            spdlog::error("curl_multi_socket_action: ", int(rc));
+            spdlog::warn("curl_multi_socket_action: {}", int(rc));
         }
 
         check_multi_info();
@@ -139,19 +150,19 @@ public:
 
         if (!ec && multi->m_sockets.find(s) != multi->m_sockets.end())
         {
-            if (!session->impl())
+            if (!request->impl())
                 return;
 
-            if (what == CURL_POLL_IN && (session->impl()->last_event & CURL_POLL_IN))
+            if (what == CURL_POLL_IN && (request->impl()->last_event & CURL_POLL_IN))
             {
-                session->impl()->socket->async_wait(asio::ip::tcp::socket::wait_read,
-                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_IN, session));
+                request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_read,
+                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_IN, request));
             }
 
-            if (what == CURL_POLL_OUT && (session->impl()->last_event & CURL_POLL_OUT))
+            if (what == CURL_POLL_OUT && (request->impl()->last_event & CURL_POLL_OUT))
             {
-                session->impl()->socket->async_wait(asio::ip::tcp::socket::wait_write,
-                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_OUT, session));
+                request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_write,
+                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_OUT, request));
             }
         }
     }
@@ -167,10 +178,15 @@ public:
             if (msg && msg->msg == CURLMSG_DONE)
             {
                 CURL* easy = msg->easy_handle;
-                HttpClientRequest* s;
-                curl_easy_getinfo(easy, CURLINFO_PRIVATE, &s);
-                s->finish();
-                /// @todo when to delete s?
+                if (easy)
+                {
+                    HttpClientRequest* s{nullptr};
+                    curl_easy_getinfo(easy, CURLINFO_PRIVATE, &s);
+                    if (s)
+                    {
+                        s->finish();
+                    }
+                }
             }
         } while (msg);
     }
@@ -204,10 +220,10 @@ namespace experimental
 
 static size_t write_callback(char* ptr, size_t size, size_t nmemb, void* userdata)
 {
-    auto written = size * nmemb;
-    std::string str(static_cast<const char*>(ptr), written);
+    const auto written = size * nmemb;
     auto s = static_cast<detail::HttpClientRequestData*>(userdata);
-    s->buffer.insert(s->buffer.end(), str.begin(), str.end());
+    if (s)
+        s->on_read(reinterpret_cast<const unsigned char*>(ptr), written, false);
     return written;
 }
 
@@ -218,26 +234,28 @@ static curl_socket_t opensocket_callback(void* clientp,
     curl_socket_t ret = CURL_SOCKET_BAD;
 
     HttpClientRequest* s = static_cast<HttpClientRequest*>(clientp);
-
-    if (purpose == CURLSOCKTYPE_IPCXN && address->family == AF_INET)
+    if (s)
     {
-        s->impl()->socket = detail::make_unique<asio::ip::tcp::socket>(Application::instance().event().io());
-
-        asio::error_code ec;
-        s->impl()->socket->open(asio::ip::tcp::v4(), ec);
-        if (ec)
+        if (purpose == CURLSOCKTYPE_IPCXN && address->family == AF_INET)
         {
-            throw std::runtime_error("failed to open socket");
+            s->impl()->socket = detail::make_unique<asio::ip::tcp::socket>(Application::instance().event().io());
+
+            asio::error_code ec;
+            s->impl()->socket->open(asio::ip::tcp::v4(), ec);
+            if (ec)
+            {
+                throw std::runtime_error("failed to open socket");
+            }
+            else
+            {
+                ret = s->impl()->socket->native_handle();
+                detail::HttpClientRequestManager::Instance()->m_sockets.insert(std::make_pair(ret, s));
+            }
         }
         else
         {
-            ret = s->impl()->socket->native_handle();
-            detail::HttpClientRequestManager::Instance()->m_sockets.insert(std::make_pair(ret, s));
+            throw std::runtime_error("unsupported socket type");
         }
-    }
-    else
-    {
-        throw std::runtime_error("unsupported socket type");
     }
 
     return ret;
@@ -246,29 +264,35 @@ static curl_socket_t opensocket_callback(void* clientp,
 static int closesocket_callback(void* clientp, curl_socket_t item)
 {
     auto s = static_cast<HttpClientRequest*>(clientp);
-    assert(s);
-    asio::error_code ec;
-    if (s->impl()->socket)
-        s->impl()->socket->close(ec);
-    detail::HttpClientRequestManager::Instance()->m_sockets.erase(item);
-    return ec ? ec.value() : 0;
+    if (s)
+    {
+        asio::error_code ec;
+        if (s->impl()->socket)
+            s->impl()->socket->close(ec);
+        detail::HttpClientRequestManager::Instance()->m_sockets.erase(item);
+        return ec ? ec.value() : 0;
+    }
+
+    return 0;
 }
 
-HttpClientRequest::HttpClientRequest(const std::string& url)
-    : m_url(url),
-      m_impl(new detail::HttpClientRequestData)
+HttpClientRequest::HttpClientRequest()
+    : m_impl(std::make_unique<detail::HttpClientRequestData>())
 {}
 
-void HttpClientRequest::start(FinishCallback finish)
+void HttpClientRequest::start_async(const std::string& url, ReadCallback callback)
 {
-    m_finish_callback = finish;
+    cleanup();
+
+    m_impl->url = url;
+    m_impl->m_read_callback = callback;
     m_impl->easy = curl_easy_init();
 
     if (!m_impl->easy)
         throw std::runtime_error("curl_easy_init failed");
 
     curl_easy_setopt(m_impl->easy, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(m_impl->easy, CURLOPT_URL, m_url.c_str());
+    curl_easy_setopt(m_impl->easy, CURLOPT_URL, m_impl->url.c_str());
     curl_easy_setopt(m_impl->easy, CURLOPT_WRITEFUNCTION, write_callback);
     curl_easy_setopt(m_impl->easy, CURLOPT_WRITEDATA, m_impl.get());
     //curl_easy_setopt(m_impl->easy, CURLOPT_VERBOSE, 1L);
@@ -285,23 +309,29 @@ void HttpClientRequest::start(FinishCallback finish)
 
 void HttpClientRequest::finish()
 {
-    m_finish_callback(m_url, std::move(m_impl->buffer));
+    m_impl->on_read(nullptr, 0, true);
     cleanup();
 }
 
+// Not safe to call this in any curl callback.
+//
+// curl_multi_remove_handle:
+//    It is fine to remove a handle at any time during a
+//    transfer, just not from within any libcurl callback
+//    function.
 void HttpClientRequest::cleanup()
 {
+    if (m_impl->socket)
+    {
+        detail::HttpClientRequestManager::Instance()->m_sockets.erase(m_impl->socket->native_handle());
+        m_impl->socket.reset();
+    }
+
     if (m_impl->easy)
     {
         curl_multi_remove_handle(detail::HttpClientRequestManager::Instance()->m_multi, m_impl->easy);
         curl_easy_cleanup(m_impl->easy);
         m_impl->easy = nullptr;
-    }
-
-    if (m_impl->socket)
-    {
-        detail::HttpClientRequestManager::Instance()->m_sockets.erase(m_impl->socket->native_handle());
-        m_impl->socket.reset();
     }
 }
 

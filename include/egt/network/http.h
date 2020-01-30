@@ -33,7 +33,7 @@ namespace experimental
  *
  * @code{.cpp}
  * HttpClientRequest request("http://example.com");
- * request.start([](const std::string& url, buffer_type && buffer){
+ * request.start_async(url, [](const unsigned char* data, size_t len, bool done){
  *     ...
  * });
  * @endcode
@@ -42,25 +42,19 @@ class EGT_API HttpClientRequest : public detail::NonCopyable
 {
 public:
 
-    HttpClientRequest() = delete;
-
-    using buffer_type = std::vector<char>;
-
-    using FinishCallback = std::function < void(const std::string& url, buffer_type && buffer) >;
+    using ReadCallback = std::function < void(const unsigned char* data, size_t len, bool done) >;
 
     /**
      * Create a request for the specified URL.
      */
-    explicit HttpClientRequest(const std::string& url);
+    explicit HttpClientRequest();
 
     /**
      * Start the download.
      */
-    virtual void start(FinishCallback finish);
+    virtual void start_async(const std::string& url, ReadCallback callback);
 
-    /**
-     * @private
-     */
+    /// @private
     inline detail::HttpClientRequestData* impl()
     {
         return m_impl.get();
@@ -72,16 +66,6 @@ protected:
 
     void finish();
     void cleanup();
-
-    /**
-     * Requested URL.
-     */
-    std::string m_url;
-
-    /**
-     * Finish callback.
-     */
-    FinishCallback m_finish_callback;
 
     /**
      * Implementation pointer.
