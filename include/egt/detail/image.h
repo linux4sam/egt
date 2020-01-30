@@ -37,6 +37,9 @@ EGT_API shared_cairo_surface_t load_image_from_resource(const std::string& name)
  */
 EGT_API shared_cairo_surface_t load_image_from_filesystem(const std::string& path);
 
+/**
+ * Load an image from the network.
+ */
 EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url);
 
 /**

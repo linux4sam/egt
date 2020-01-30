@@ -10,12 +10,15 @@
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/image.h"
-#include "egt/network/http.h"
 #include "egt/resource.h"
 #include "images/bmp/cairo_bmp.h"
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <vector>
+
+#ifdef HAVE_LIBCURL
+#include "egt/network/http.h"
+#endif
 
 #ifdef HAVE_LIBMAGIC
 #include <magic.h>
@@ -176,9 +179,10 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
 
 EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url)
 {
+    shared_cairo_surface_t image;
+#ifdef HAVE_LIBCURL
     SPDLOG_DEBUG("starting network request: {}", url);
 
-    shared_cairo_surface_t image;
     experimental::HttpClientRequest request;
     std::vector<unsigned char> buffer;
     request.start_async(url, [&image, &buffer, url](const unsigned char* data, size_t len, bool done)
@@ -200,7 +204,10 @@ EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url)
 
     while (!image.get())
         Application::instance().event().step();
-
+#else
+    detail::ignoreparam(url);
+    spdlog::warn("network support not available");
+#endif
     return image;
 }
 
