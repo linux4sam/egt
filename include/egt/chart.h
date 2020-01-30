@@ -66,6 +66,11 @@ public:
     virtual void data(const DataArray& data);
 
     /**
+     * Get the number of data points.
+     */
+    virtual size_t data_size() const;
+
+    /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for LineChart.
@@ -179,6 +184,11 @@ public:
     virtual void data(const DataArray& data);
 
     /**
+    * Get the number of data points.
+    */
+    virtual size_t data_size() const;
+
+    /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for PointChart.
@@ -288,6 +298,11 @@ public:
      * @param[in] data is a data items for BarChart.
      */
     virtual void data(const DataArray& data);
+
+    /**
+    * Get the number of data points.
+    */
+    virtual size_t data_size() const;
 
     /**
      * Add data items to an existing array.
@@ -411,6 +426,11 @@ public:
     virtual void data(const DataArray& data);
 
     /**
+    * Get the number of data points.
+    */
+    virtual size_t data_size() const;
+
+    /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for HorizontalBarChart.
@@ -514,6 +534,11 @@ public:
      * @param[in] data is a data items for PieChart.
      */
     virtual void data(const DataArray& data);
+
+    /**
+    * Get the number of data points.
+    */
+    virtual size_t data_size() const;
 
     /**
      * Add data items to an existing array.

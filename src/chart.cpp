@@ -33,6 +33,11 @@ void LineChart::data(const DataArray& data)
     damage();
 }
 
+size_t LineChart::data_size() const
+{
+    return m_impl->data_size();
+}
+
 void LineChart::add_data(const DataArray& data)
 {
     m_impl->add_data(data);
@@ -108,6 +113,11 @@ void PointChart::data(const DataArray& data)
 {
     m_impl->data(data);
     damage();
+}
+
+size_t PointChart::data_size() const
+{
+    return m_impl->data_size();
 }
 
 void PointChart::add_data(const DataArray& data)
@@ -193,6 +203,11 @@ void BarChart::data(const DataArray& data)
     damage();
 }
 
+size_t BarChart::data_size() const
+{
+    return m_impl->data_size();
+}
+
 void BarChart::add_data(const DataArray& data)
 {
     m_impl->add_data(data);
@@ -262,6 +277,11 @@ void HorizontalBarChart::data(const DataArray& data)
 {
     m_impl->data(data);
     damage();
+}
+
+size_t HorizontalBarChart::data_size() const
+{
+    return m_impl->data_size();
 }
 
 void HorizontalBarChart::add_data(const DataArray& data)
@@ -339,6 +359,11 @@ void PieChart::data(const DataArray& data)
 {
     m_impl->data(data);
     damage();
+}
+
+size_t PieChart::data_size() const
+{
+    return m_impl->data_size();
 }
 
 void PieChart::add_data(const DataArray& data)

@@ -36,6 +36,8 @@ public:
     using DataArray = std::vector<std::pair<double, double>>;
     virtual void data(const DataArray& data);
 
+    size_t data_size() const;
+
     virtual void add_data(const DataArray& data);
 
     using StringDataArray = std::vector<std::pair<double, std::string>>;

@@ -88,6 +88,17 @@ void PlPlotImpl::data(const StringDataArray& data)
     }
 }
 
+size_t PlPlotImpl::data_size() const
+{
+    if (!m_xdata.empty())
+        return m_xdata.size();
+
+    if (!m_sdata.empty())
+        return m_sdata.size();
+
+    return 0;
+}
+
 void PlPlotImpl::add_data(const StringDataArray& data)
 {
     if (!data.empty())
