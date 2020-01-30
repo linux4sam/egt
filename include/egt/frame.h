@@ -225,7 +225,7 @@ public:
 
     virtual void dump(std::ostream& out, int level = 0) override;
 
-    virtual void walk(WalkCallback& callback, int level = 0) override;
+    virtual void walk(const WalkCallback& callback, int level = 0) override;
 
     /**
      * Save the entire frame surface to a file.

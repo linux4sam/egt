@@ -223,7 +223,7 @@ void Frame::dump(std::ostream& out, int level)
         child->dump(out, level + 1);
 }
 
-void Frame::walk(WalkCallback& callback, int level)
+void Frame::walk(const WalkCallback& callback, int level)
 {
     if (!callback(this, level))
         return;

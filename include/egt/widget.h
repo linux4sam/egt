@@ -948,6 +948,8 @@ public:
 
     /**
      * Callback definition used by walk().
+     *
+     * In the callback, return true to continue or false to stop.
      */
     using WalkCallback = std::function<bool(Widget* widget, int level)>;
 
@@ -958,7 +960,7 @@ public:
      * @param level The current level of the widget hierarchy starting with the
      *              level originally passed in.
      */
-    virtual void walk(WalkCallback& callback, int level = 0);
+    virtual void walk(const WalkCallback& callback, int level = 0);
 
     /**
      * Get the current focus state.

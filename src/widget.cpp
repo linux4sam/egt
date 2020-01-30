@@ -426,7 +426,7 @@ void Widget::dump(std::ostream& out, int level)
     out << std::endl;
 }
 
-void Widget::walk(WalkCallback& callback, int level)
+void Widget::walk(const WalkCallback& callback, int level)
 {
     callback(this, level);
 }
