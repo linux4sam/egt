@@ -22,7 +22,7 @@ namespace detail
 /**
  * Internal image cache.
  *
- * Provides an in-memory cache for images based on filename and scale. This
+ * Provides an in-memory cache for images based on name and scale. This
  * prevents multiple attempts at loading the same file as well as re-scaling
  * the image to the same scale multiple times.
  *
@@ -36,7 +36,7 @@ public:
     /**
      * Get an image surface.
      */
-    shared_cairo_surface_t get(const std::string& filename,
+    shared_cairo_surface_t get(const std::string& uri,
                                float hscale = 1.0, float vscale = 1.0,
                                bool approximate = true);
 
@@ -49,29 +49,11 @@ public:
             float old_width, float old_height,
             float new_width, float new_height);
 
-    /**
-     * Return the mime type string for a filename.
-     *
-     * This uses libmagic to identify the file if available. The default
-     * database file will be used.  To override this, you can specify the path
-     * to the database file in the MAGIC environment variable.
-     */
-    static std::string get_mime_type(const std::string& filename);
-
-    /**
-     * Return the mime type string for a buffer.
-     *
-     * This uses libmagic to identify the buffer if available. The default
-     * database file will be used.  To override this, you can specify the path
-     * to the database file in the MAGIC environment variable.
-     */
-    static std::string get_mime_type(const void* buffer, size_t length);
-
 protected:
 
     static float round(float v, float fraction);
 
-    std::string id(const std::string& filename, float hscale, float vscale);
+    static std::string id(const std::string& name, float hscale, float vscale);
 
     std::map<std::string, shared_cairo_surface_t> m_cache;
 };

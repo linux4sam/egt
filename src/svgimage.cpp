@@ -5,9 +5,12 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/meta.h"
+#include "egt/resource.h"
 #include "egt/respath.h"
 #include "egt/svgimage.h"
 #include <librsvg/rsvg.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -25,10 +28,10 @@ SvgImage::SvgImage()
 
 }
 
-SvgImage::SvgImage(const std::string& respath, const SizeF& size)
+SvgImage::SvgImage(const std::string& uri, const SizeF& size)
     : m_impl(new SvgImage::SvgImpl),
       m_size(size),
-      m_respath(respath)
+      m_uri(uri)
 {
     load();
 }
@@ -91,9 +94,9 @@ bool SvgImage::id_exists(const std::string& id) const
     return false;
 }
 
-void SvgImage::respath(const std::string& respath)
+void SvgImage::uri(const std::string& uri)
 {
-    if (detail::change_if_diff<>(m_respath, respath))
+    if (detail::change_if_diff<>(m_uri, uri))
         load();
 }
 
@@ -126,16 +129,46 @@ SizeF SvgImage::size() const
 
 void SvgImage::load()
 {
-    // TODO: this only supports file paths, not all respaths
+    std::string path;
+    auto type = detail::resolve_path(m_uri, path);
 
-    GError* error = nullptr;
-    auto handle = rsvg_handle_new_from_file(resolve_file_path(m_respath).c_str(), &error);
+    SPDLOG_DEBUG("loading svg: {}", m_uri);
 
-    if (!handle || error)
-        throw std::runtime_error("unable to load svg file: " + m_respath);
+    switch (type)
+    {
+    case detail::SchemeType::resource:
+    {
+        auto data = ResourceManager::instance().data(path.c_str());
+        if (!data)
+            throw std::runtime_error("resource not found: " + path);
 
-    m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
-    [](RsvgHandle * r) { g_object_unref(r); });
+        auto handle = rsvg_handle_new_from_data(data,
+                                                ResourceManager::instance().size(path.c_str()),
+                                                nullptr);
+
+        if (!handle)
+            throw std::runtime_error("unable to load svg resource: " + m_uri);
+
+        m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
+        [](RsvgHandle * r) { g_object_unref(r); });
+        break;
+    }
+    case detail::SchemeType::filesystem:
+    {
+        auto handle = rsvg_handle_new_from_file(path.c_str(), nullptr);
+
+        if (!handle)
+            throw std::runtime_error("unable to load svg file: " + m_uri);
+
+        m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
+        [](RsvgHandle * r) { g_object_unref(r); });
+        break;
+    }
+    default:
+    {
+        throw std::runtime_error("invalid uri: " + m_uri);
+    }
+    }
 }
 
 shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& rect) const

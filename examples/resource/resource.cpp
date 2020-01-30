@@ -44,7 +44,7 @@ public:
         auto sizer = std::make_shared<VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto egt_logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+        auto egt_logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
         egt_logo->align(AlignFlag::center | AlignFlag::top);
         egt_logo->margin(5);
         sizer->add(egt_logo);
@@ -52,9 +52,9 @@ public:
         sizer->add(expand(m_grid));
 
         m_grid.add(expand(make_shared<ResourceFrame>(Image("image1.png"), _("PNG-filename"))));
-        m_grid.add(expand(make_shared<ResourceFrame>(Image(":image2_png"), _("PNG-stream"))));
+        m_grid.add(expand(make_shared<ResourceFrame>(Image("file:image2_png"), _("PNG-stream"))));
         m_grid.add(expand(make_shared<ResourceFrame>(Image("image3.bmp"), _("BMP-filename"))));
-        m_grid.add(expand(make_shared<ResourceFrame>(Image(":image4_bmp"), _("BMP-stream"))));
+        m_grid.add(expand(make_shared<ResourceFrame>(Image("file:image4_bmp"), _("BMP-stream"))));
 
         try
         {

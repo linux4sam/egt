@@ -34,7 +34,7 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.color(Palette::ColorId::bg, Palette::black);
 
-    auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
+    auto logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_white.png"));
     logo->margin(10);
     win.add(top(center(logo)));
 
@@ -44,17 +44,17 @@ int main(int argc, const char** argv)
     vector<std::unique_ptr<AnimationSequence>> animations;
 
     Gauge gauge;
-    auto gauge_background = make_shared<GaugeLayer>(SvgImage("gauge_background.svg", SizeF(192, 192)));
+    auto gauge_background = make_shared<GaugeLayer>(SvgImage("file:gauge_background.svg", SizeF(192, 192)));
     gauge.add_layer(gauge_background);
 
-    auto gauge_needle1 = make_shared<NeedleLayer>(SvgImage("gauge_needle2.svg", SizeF(91, 14)),
+    auto gauge_needle1 = make_shared<NeedleLayer>(SvgImage("file:gauge_needle2.svg", SizeF(91, 14)),
                          0, 100, 135, 45);
     gauge_needle1->needle_point(PointF(192, 192) / PointF(2.0, 2.0));
     gauge_needle1->needle_center(PointF(6.8725, 6.87253));
     gauge.add_layer(gauge_needle1);
     animations.push_back(demo_up_down_animator(gauge_needle1, 0, 100, std::chrono::seconds(5)));
 
-    auto gauge_needle2 = make_shared<NeedleLayer>(SvgImage("gauge_needle1.svg", SizeF(91, 14)),
+    auto gauge_needle2 = make_shared<NeedleLayer>(SvgImage("file:gauge_needle1.svg", SizeF(91, 14)),
                          0, 100, 135, 45);
     gauge_needle2->needle_point(PointF(192, 192) / PointF(2.0, 2.0));
     gauge_needle2->needle_center(PointF(6.8725, 6.87253));
@@ -63,7 +63,7 @@ int main(int argc, const char** argv)
     grid.add(center(gauge));
 
     Gauge fuel;
-    SvgImage fuelsvg("fuel_background.svg", SizeF(0, 150));
+    SvgImage fuelsvg("file:fuel_background.svg", SizeF(0, 150));
 
     auto fuel_background = make_shared<GaugeLayer>(fuelsvg.render("#background"));
     fuel.add_layer(fuel_background);
@@ -80,7 +80,7 @@ int main(int argc, const char** argv)
     grid.add(center(fuel));
 
     Gauge custom1;
-    SvgImage custom1svg("custom1_gauge.svg", SizeF(200, 0));
+    SvgImage custom1svg("file:custom1_gauge.svg", SizeF(200, 0));
 
     auto custom1_background = make_shared<GaugeLayer>(custom1svg.render("#g82"));
     custom1.add_layer(custom1_background);
@@ -96,9 +96,9 @@ int main(int argc, const char** argv)
     grid.add(center(custom1));
 
     Gauge airspeed;
-    auto airspeed_background = make_shared<GaugeLayer>(SvgImage("airspeed_background.svg", SizeF(400, 400) / SizeF(2, 2)));
+    auto airspeed_background = make_shared<GaugeLayer>(SvgImage("file:airspeed_background.svg", SizeF(400, 400) / SizeF(2, 2)));
     airspeed.add_layer(airspeed_background);
-    auto airspeed_needle = make_shared<NeedleLayer>(SvgImage("airspeed_needle.svg", SizeF(168, 17) / SizeF(2, 2)),
+    auto airspeed_needle = make_shared<NeedleLayer>(SvgImage("file:airspeed_needle.svg", SizeF(168, 17) / SizeF(2, 2)),
                            0, 180, 270, 222);
     airspeed_needle->needle_point(PointF(200, 200) / PointF(2, 2));
     airspeed_needle->needle_center(PointF(8, 8.3) / PointF(2, 2));
@@ -107,9 +107,9 @@ int main(int argc, const char** argv)
     grid.add(center(airspeed));
 
     Gauge speedometer;
-    auto speedometer_background = make_shared<GaugeLayer>(SvgImage("speedometer_background.svg", SizeF(913, 908) / SizeF(4.6, 4.6)));
+    auto speedometer_background = make_shared<GaugeLayer>(SvgImage("file:speedometer_background.svg", SizeF(913, 908) / SizeF(4.6, 4.6)));
     speedometer.add_layer(speedometer_background);
-    auto speedometer_needle = make_shared<NeedleLayer>(SvgImage("speedometer_needle.svg", SizeF(467, 376) / SizeF(4.6, 4.6)),
+    auto speedometer_needle = make_shared<NeedleLayer>(SvgImage("file:speedometer_needle.svg", SizeF(467, 376) / SizeF(4.6, 4.6)),
                               0, 110, 136.52, 41.80);
     speedometer_needle->needle_point(PointF(913, 908) / PointF(4.6, 4.6) / PointF(2, 2));
     speedometer_needle->needle_center(PointF(85.88, 185.44) / PointF(4.6, 4.6));

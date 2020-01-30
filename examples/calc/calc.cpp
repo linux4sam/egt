@@ -32,7 +32,7 @@ int main(int argc, const char** argv)
     VerticalBoxSizer vsizer;
     win.add(expand(vsizer));
 
-    ImageLabel elogo(Image("@128px/egt_logo_white.png"));
+    ImageLabel elogo(Image("icon:128px/egt_logo_white.png"));
     elogo.margin(10);
     vsizer.add(elogo);
 

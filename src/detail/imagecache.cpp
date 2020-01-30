@@ -7,35 +7,13 @@
 #include "config.h"
 #endif
 
-#include "egt/canvas.h"
-#include "egt/detail/filesystem.h"
+#include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/math.h"
-#include "egt/detail/resource.h"
 #include "egt/respath.h"
-#include "images/bmp/cairo_bmp.h"
-#include <cassert>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
-
-#ifdef HAVE_LIBMAGIC
-#include <magic.h>
-#endif
-
-#ifdef HAVE_LIBJPEG
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "images/jpeg/cairo_jpg.h"
-#ifdef __cplusplus
-}
-#endif
-#endif
-
-#ifdef HAVE_LIBRSVG
-#include "egt/detail/svg.h"
-#endif
 
 #ifdef HAVE_SIMD
 #include "Simd/SimdLib.hpp"
@@ -48,7 +26,7 @@ inline namespace v1
 namespace detail
 {
 
-shared_cairo_surface_t ImageCache::get(const std::string& filename,
+shared_cairo_surface_t ImageCache::get(const std::string& uri,
                                        float hscale, float vscale, bool approximate)
 {
     if (approximate)
@@ -57,167 +35,48 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
         vscale = ImageCache::round(vscale, 0.01);
     }
 
-    const std::string nameid = id(filename, hscale, vscale);
+    const std::string nameid = id(uri, hscale, vscale);
 
     auto i = m_cache.find(nameid);
     if (i != m_cache.end())
         return i->second;
 
-    SPDLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", filename, hscale, vscale);
+    SPDLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", uri, hscale, vscale);
 
     shared_cairo_surface_t image;
 
     if (detail::float_compare(hscale, 1.0f) &&
         detail::float_compare(vscale, 1.0f))
     {
-        static_assert(CAIRO_HAS_PNG_FUNCTIONS == 1, "PNG support in cairo assumed.");
+        std::string path;
+        auto type = detail::resolve_path(uri, path);
 
-        if (filename.compare(0, 1, ":") == 0)
+        switch (type)
         {
-            std::string name = filename;
-            name.erase(0, 1);
-
-            auto data = read_resource_data(name.c_str());
-            if (!data)
-                throw std::runtime_error("resource not found: " + name);
-
-            auto mimetype = get_mime_type(data,
-                                          read_resource_length(name.c_str()));
-            SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
-
-            if (mimetype == "image/png")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_png_stream(
-                                read_resource_stream, const_cast<char*>(name.c_str())),
-                            cairo_surface_destroy);
-            }
-#ifdef HAVE_LIBJPEG
-            else if (mimetype == "image/jpeg")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_jpeg_stream(
-                                read_resource_stream, const_cast<char*>(name.c_str())),
-                            cairo_surface_destroy);
-            }
-#endif
-            else if (mimetype == "image/x-ms-bmp")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_bmp_stream(
-                                read_resource_stream, const_cast<char*>(name.c_str())),
-                            cairo_surface_destroy);
-            }
-            else
-            {
-                throw std::runtime_error("unsupported mimetype for: " + name);
-            }
+        case detail::SchemeType::resource:
+        {
+            image = detail::load_image_from_resource(path);
+            break;
         }
-        else if (filename.compare(0, 1, "@") == 0)
+        case detail::SchemeType::filesystem:
         {
-            std::string name = filename;
-            name.erase(0, 1);
-
-            static std::string egt_icons_dir = "32px";
-            static std::once_flag env_flag;
-            std::call_once(env_flag, []()
-            {
-                auto icons_dir = std::getenv("EGT_ICONS_DIRECTORY");
-                if (icons_dir)
-                {
-                    auto dir = std::string(icons_dir);
-                    if (!dir.empty())
-                        egt_icons_dir = dir;
-                }
-            });
-
-            if (name.find('/') != std::string::npos)
-                name = resolve_file_path(name);
-            else
-                name = resolve_file_path(egt_icons_dir + "/" + name);
-
-            if (!detail::exists(name))
-                throw std::runtime_error("file not found: " + name);
-
-            auto mimetype = get_mime_type(name);
-            SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
-
-            if (mimetype == "image/png")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_png(name.c_str()),
-                            cairo_surface_destroy);
-            }
-#ifdef HAVE_LIBJPEG
-            else if (mimetype == "image/jpeg")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_jpeg(name.c_str()),
-                            cairo_surface_destroy);
-            }
-#endif
-            else if (mimetype == "image/x-ms-bmp")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_bmp(name.c_str()),
-                            cairo_surface_destroy);
-            }
-#ifdef HAVE_LIBRSVG
-            else if (mimetype == "image/svg+xml")
-            {
-                image = load_svg(name);
-            }
-#endif
-            else
-            {
-                throw std::runtime_error("unsupported mimetype for: " + name);
-            }
+            image = detail::load_image_from_filesystem(path);
+            break;
         }
-        else
+        case detail::SchemeType::network:
         {
-            std::string name = resolve_file_path(filename);
-
-            if (!detail::exists(name))
-                throw std::runtime_error("file not found: " + name);
-
-            auto mimetype = get_mime_type(name);
-            SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
-
-            if (mimetype == "image/png")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_png(name.c_str()),
-                            cairo_surface_destroy);
-            }
-#ifdef HAVE_LIBJPEG
-            else if (mimetype == "image/jpeg")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_jpeg(name.c_str()),
-                            cairo_surface_destroy);
-            }
-#endif
-            else if (mimetype == "image/x-ms-bmp")
-            {
-                image = shared_cairo_surface_t(
-                            cairo_image_surface_create_from_bmp(name.c_str()),
-                            cairo_surface_destroy);
-            }
-#ifdef HAVE_LIBRSVG
-            else if (mimetype == "image/svg+xml")
-            {
-                image = load_svg(name);
-            }
-#endif
-            else
-            {
-                throw std::runtime_error("unsupported mimetype for: " + name);
-            }
+            image = detail::load_image_from_network(path);
+            break;
+        }
+        default:
+        {
+            throw std::runtime_error("invalid path: " + path);
+        }
         }
     }
     else
     {
-        shared_cairo_surface_t back = get(filename, 1.0);
+        shared_cairo_surface_t back = get(uri, 1.0);
 
         double width = cairo_image_surface_get_width(back.get());
         double height = cairo_image_surface_get_height(back.get());
@@ -234,8 +93,8 @@ shared_cairo_surface_t ImageCache::get(const std::string& filename,
     if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
     {
         std::stringstream ss;
-        ss << cairo_status_to_string(cairo_surface_status(image.get()))
-           << ": " << filename;
+        ss << "cairo: " << cairo_status_to_string(cairo_surface_status(image.get()))
+           << ": " << uri;
         throw std::runtime_error(ss.str());
     }
 
@@ -251,14 +110,13 @@ void ImageCache::clear()
 
 float ImageCache::round(float v, float fraction)
 {
-    return floor(v) + floor((v - floor(v)) / fraction) * fraction;
+    return floorf(v) + floorf((v - floorf(v)) / fraction) * fraction;
 }
 
-std::string ImageCache::id(const std::string& filename, float hscale, float vscale)
+std::string ImageCache::id(const std::string& name, float hscale, float vscale)
 {
     std::ostringstream ss;
-    ss << filename << "-" << hscale * 100. << "-" << vscale * 100.;
-
+    ss << name << "-" << hscale * 100. << "-" << vscale * 100.;
     return ss.str();
 }
 
@@ -326,62 +184,6 @@ ImageCache::scale_surface(const shared_cairo_surface_t& old_surface,
     return new_surface;
 }
 #endif
-
-/*
- * There is a known memory leak in magic_load() that may or may not be fixed:
- *    https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=840754
- *
- * The workaround used here is to explicitly specify the default database file
- * instead of using nullptr which makes magic chose the default file internally.
- */
-static const auto MAGIC_DATABASE = "/usr/share/misc/magic";
-
-std::string ImageCache::get_mime_type(const void* buffer, size_t length)
-{
-    std::string result;
-#ifdef HAVE_LIBMAGIC
-    magic_t magic = magic_open(MAGIC_MIME_TYPE);
-
-    if (magic)
-    {
-        if (!magic_load(magic, MAGIC_DATABASE))
-        {
-            auto mime = magic_buffer(magic, buffer, length);
-            if (mime)
-                result = mime;
-        }
-
-        magic_close(magic);
-    }
-#endif
-    return result;
-}
-
-std::string ImageCache::get_mime_type(const std::string& filename)
-{
-    std::string result;
-#ifdef HAVE_LIBMAGIC
-    magic_t magic = magic_open(MAGIC_MIME_TYPE);
-
-    if (magic)
-    {
-        if (!magic_load(magic, MAGIC_DATABASE))
-        {
-            auto mime = magic_file(magic, filename.c_str());
-            if (mime)
-                result = mime;
-        }
-
-        magic_close(magic);
-    }
-#else
-    if (filename.find("png") != std::string::npos)
-        result = "image/png";
-    else if (filename.find("jpg") != std::string::npos)
-        result = "image/jpeg";
-#endif
-    return result;
-}
 
 ImageCache& image_cache()
 {

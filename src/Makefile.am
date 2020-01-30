@@ -45,13 +45,14 @@ combo.cpp \
 detail/alignment.cpp \
 detail/collision.cpp \
 detail/filesystem.cpp \
+detail/image.cpp \
+detail/image.h \
 detail/imagecache.cpp \
 detail/input/inputkeyboard.cpp \
 detail/input/inputkeyboard.h \
 detail/layout.cpp \
 detail/mousegesture.cpp \
 detail/object.cpp \
-detail/resource.cpp \
 detail/screen/flipthread.h \
 detail/serialize.cpp \
 detail/spriteimpl.h \
@@ -85,6 +86,7 @@ painter.cpp \
 palette.cpp \
 progressbar.cpp \
 radiobox.cpp \
+resource.cpp \
 respath.cpp \
 screen.cpp \
 scrollwheel.cpp \
@@ -160,7 +162,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/mousegesture.h \
 ../include/egt/detail/object.h \
 ../include/egt/detail/priorityqueue.h \
-../include/egt/detail/resource.h \
 ../include/egt/detail/serialize.h \
 ../include/egt/detail/signal.h \
 ../include/egt/detail/string.h \
@@ -188,6 +189,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/progressbar.h \
 ../include/egt/radial.h \
 ../include/egt/radiobox.h \
+../include/egt/resource.h \
 ../include/egt/respath.h \
 ../include/egt/screen.h \
 ../include/egt/scrollwheel.h \
@@ -312,10 +314,10 @@ endif
 if HAVE_LIBRSVG
 libegt_la_SOURCES += \
 detail/svg.cpp \
+detail/svg.h \
 svgimage.cpp
 
 nobase_libegtinclude_HEADERS += \
-../include/egt/detail/svg.h \
 ../include/egt/svgimage.h
 endif
 

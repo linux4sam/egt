@@ -196,7 +196,7 @@ public:
             paint_to_file();
         });
 
-        auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+        auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
         logo->align(AlignFlag::right | AlignFlag::top);
         logo->margin(10);
         add(logo);
@@ -295,7 +295,7 @@ static int run(int argc, const char** argv)
     Application app(argc, argv, "whiteboard");
 
     MainWindow win;
-    win.show_cursor(Image("@cursor_pencil.png"));
+    win.show_cursor(Image("icon:cursor_pencil.png"));
     win.show();
 
     return app.run();

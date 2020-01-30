@@ -1,5 +1,9 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
+GZIP_V_GEN = $(gzip_v_GEN_$(V))
+gzip_v_GEN_ = $(gzip_v_GEN_$(AM_DEFAULT_VERBOSITY))
+gzip_v_GEN_0 = @echo "  GZIP    " $@;
+
 OPTIONAL =
 if HAVE_GSTREAMER
 OPTIONAL += video
@@ -229,6 +233,12 @@ dist_dash_dash_DATA = $(wildcard $(top_srcdir)/examples/dash/*.svg) \
 	$(wildcard $(top_srcdir)/examples/dash/*.png) \
 	$(top_srcdir)/examples/dash/dash.xml
 dash_dash_LDFLAGS = $(AM_LDFLAGS)
+dash_dash_DEPENDENCIES = dash/dash_background.svg.gz
+
+dash/dash_background.svg.gz : $(top_srcdir)/examples/dash/dash_background.svg
+	@$(GZIP_V_GEN)gzip -c -9 $< > $@
+
+CLEANFILES = dash/dash_background.svg.gz
 
 sizers_sizers_SOURCES = sizers/sizers.cpp
 sizers_sizers_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)

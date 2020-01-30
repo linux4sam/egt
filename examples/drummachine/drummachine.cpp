@@ -21,7 +21,7 @@ int main(int argc, const char** argv)
     VerticalBoxSizer sizer;
     win.add(expand(sizer));
 
-    ImageLabel logo(Image("@128px/egt_logo_white.png"));
+    ImageLabel logo(Image("icon:128px/egt_logo_white.png"));
     logo.margin(10);
     sizer.add(top(center(logo)));
 

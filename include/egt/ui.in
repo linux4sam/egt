@@ -21,6 +21,7 @@
 #include <egt/combo.h>
 #include <egt/dialog.h>
 #include <egt/easing.h>
+#include <egt/embed.h>
 #include <egt/event.h>
 #include <egt/filedialog.h>
 #include <egt/font.h>
@@ -40,6 +41,7 @@
 #include <egt/progressbar.h>
 #include <egt/radial.h>
 #include <egt/radiobox.h>
+#include <egt/resource.h>
 #include <egt/respath.h>
 #include <egt/script.h>
 #include <egt/scrollwheel.h>
@@ -52,6 +54,7 @@
 #include <egt/timer.h>
 #include <egt/tools.h>
 #include <egt/types.h>
+#include <egt/uri.h>
 #include <egt/value.h>
 #include <egt/valuewidget.h>
 #include <egt/version.h>

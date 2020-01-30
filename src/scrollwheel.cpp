@@ -5,13 +5,10 @@
  */
 #include "egt/button.h"
 #include "egt/grid.h"
-#include "egt/notebook.h"
 #include "egt/scrollwheel.h"
-
 #include <algorithm>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace egt
 {
@@ -27,8 +24,8 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
                          bool reversed) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_items(items),
-      m_button_up(std::make_shared<ImageButton>(Image("@arrow_up.png"))),
-      m_button_down(std::make_shared<ImageButton>(Image("@arrow_down.png"))),
+      m_button_up(std::make_shared<ImageButton>(Image("icon:arrow_up.png"))),
+      m_button_down(std::make_shared<ImageButton>(Image("icon:arrow_down.png"))),
       m_label(std::make_shared<Label>())
 {
     init(reversed);
@@ -82,8 +79,8 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const item_array& item
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
                          bool reversed) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
-      m_button_up(std::make_shared<ImageButton>(Image("@arrow_up.png"))),
-      m_button_down(std::make_shared<ImageButton>(Image("@arrow_down.png"))),
+      m_button_up(std::make_shared<ImageButton>(Image("icon:arrow_up.png"))),
+      m_button_down(std::make_shared<ImageButton>(Image("icon:arrow_down.png"))),
       m_label(std::make_shared<Label>())
 {
     for (auto i = min; i <= max; i += step)

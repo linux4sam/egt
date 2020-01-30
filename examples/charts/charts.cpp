@@ -689,7 +689,7 @@ int main(int argc, const char** argv)
     auto frame = make_shared<Frame>(Size(win.width(), win.height() * 0.15));
     vsizer.add(expand_horizontal(frame));
 
-    auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+    auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
     logo->align(AlignFlag::center);
     frame->add(logo);
 

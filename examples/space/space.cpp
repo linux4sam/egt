@@ -72,7 +72,7 @@ public:
     {
         background(Image("background.png"));
 
-        auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
+        auto logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_white.png"));
         logo->margin(10);
         add(top(left(logo)));
     }

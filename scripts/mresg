@@ -44,9 +44,9 @@ fi
 set -e
 
 cat <<EOF > "$output"
-#include <egt/detail/resource.h>
+#include <egt/resource.h>
 
-namespace resource {
+namespace egt { namespace resources {
 EOF
 
 for f in $@
@@ -63,20 +63,20 @@ done
 
 cat <<EOF >> "$output"
 
-struct initializer {
-    initializer() {
+struct resource_initializer_mresg {
+    resource_initializer_mresg() {
 EOF
 
 for f in $@
 do
     filename=$(basename "$f")
     name=$(echo "$filename" | sed "s/\./_/")
-    echo "        egt::detail::register_resource(\"${name}\", ${name}, ${name}_len);" >> "$output"
+    echo "        egt::ResourceManager::instance().add(\"${name}\", ${name}, ${name}_len);" >> "$output"
 done
 
 cat <<EOF >> "$output"
     }
-} ignore;
+} resource_initializer_mresg;
 
-}
+}}
 EOF

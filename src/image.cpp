@@ -13,12 +13,12 @@ namespace egt
 inline namespace v1
 {
 
-Image::Image(const std::string& respath, float scale)
-    : m_respath(respath)
+Image::Image(const std::string& uri, float scale)
+    : m_uri(uri)
 {
-    if (!respath.empty())
+    if (!uri.empty())
     {
-        m_surface = detail::image_cache().get(respath, scale, scale, false);
+        m_surface = detail::image_cache().get(uri, scale, scale, false);
         assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
         m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
@@ -26,13 +26,13 @@ Image::Image(const std::string& respath, float scale)
     }
 }
 
-Image::Image(const std::string& respath,
+Image::Image(const std::string& uri,
              float hscale, float vscale)
-    : m_respath(respath)
+    : m_uri(uri)
 {
-    if (!respath.empty())
+    if (!uri.empty())
     {
-        m_surface = detail::image_cache().get(respath, hscale, vscale, false);
+        m_surface = detail::image_cache().get(uri, hscale, vscale, false);
         assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
         m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
@@ -61,13 +61,13 @@ Image::Image(cairo_surface_t* surface)
                        std::ceil(cairo_image_surface_get_height(m_surface.get())));
 }
 
-void Image::load(const std::string& respath, float hscale, float vscale)
+void Image::load(const std::string& uri, float hscale, float vscale)
 {
-    if (detail::change_if_diff<>(m_respath, respath))
+    if (detail::change_if_diff<>(m_uri, uri))
     {
-        if (!respath.empty())
+        if (!uri.empty())
         {
-            m_surface = detail::image_cache().get(respath, hscale, vscale, false);
+            m_surface = detail::image_cache().get(uri, hscale, vscale, false);
             assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
             m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
@@ -78,13 +78,13 @@ void Image::load(const std::string& respath, float hscale, float vscale)
 
 void Image::scale(float hscale, float vscale, bool approximate)
 {
-    if (m_respath.empty())
+    if (m_uri.empty())
         return;
 
     if (!detail::float_compare(m_hscale, hscale) ||
         !detail::float_compare(m_vscale, vscale))
     {
-        m_surface = detail::image_cache().get(m_respath, hscale, vscale, approximate);
+        m_surface = detail::image_cache().get(m_uri, hscale, vscale, approximate);
         m_hscale = hscale;
         m_vscale = vscale;
     }
@@ -108,7 +108,7 @@ Image Image::crop(const RectF& rect)
 
 void Image::serialize(const std::string& name, detail::Serializer& serializer) const
 {
-    serializer.add_property(name, respath(),
+    serializer.add_property(name, m_uri,
     {
         {"hscale", std::to_string(hscale())},
         {"vscale", std::to_string(vscale())}

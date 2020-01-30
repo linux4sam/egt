@@ -43,9 +43,9 @@ int main(int argc, const char** argv)
 
     vector<shared_ptr<VirtualKeyboard::Key>> code_keyboard_row4 =
     {
-        make_shared<VirtualKeyboard::Key>(Image("@cancel.png"), EKEY_BACKSPACE),
+        make_shared<VirtualKeyboard::Key>(Image("icon:cancel.png"), EKEY_BACKSPACE),
         make_shared<VirtualKeyboard::Key>(0x0030),
-        make_shared<VirtualKeyboard::Key>(Image("@ok.png"), EKEY_ENTER),
+        make_shared<VirtualKeyboard::Key>(Image("icon:ok.png"), EKEY_ENTER),
     };
 
     VirtualKeyboard::panel_keys code_keyboard_panel_keys =

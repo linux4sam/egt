@@ -93,7 +93,7 @@ int main(int argc, const char** argv)
     label1.color(Palette::ColorId::bg, Palette::transparent);
     window.add(label1);
 
-    ImageLabel logo(Image("@128px/egt_logo_white.png"));
+    ImageLabel logo(Image("icon:128px/egt_logo_white.png"));
     logo.margin(10);
     window.add(center(top(logo)));
 

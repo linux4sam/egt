@@ -110,7 +110,7 @@ private:
 
     void create_board()
     {
-        auto imgicon = make_shared<ImageLabel>(Image("@cursor_hand.png"));
+        auto imgicon = make_shared<ImageLabel>(Image("icon:cursor_hand.png"));
         imgicon->margin(5);
         imgicon->resize(Size(SideBoard::HANDLE_WIDTH, SideBoard::HANDLE_WIDTH));
         imgicon->align(AlignFlag::top | AlignFlag::right);
@@ -143,7 +143,7 @@ int main(int argc, const char** argv)
     window.add(bottom(label1));
     label1.zorder_down();
 
-    ImageLabel logo(Image("@128px/egt_logo_white.png"));
+    ImageLabel logo(Image("icon:128px/egt_logo_white.png"));
     logo.x(SideBoard::HANDLE_WIDTH);
     logo.margin(10);
     window.add(top(logo));

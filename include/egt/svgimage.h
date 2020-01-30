@@ -45,13 +45,13 @@ public:
     SvgImage();
 
     /**
-     * @param[in] respath Resource path.
+     * @param uri Resource path. @see @ref resources
      * @param[in] size Size of the image.
      *
      * @see SvgImage::size() for more information about specifying size.
      */
     // cppcheck-suppress noExplicitConstructor
-    SvgImage(const std::string& respath, const SizeF& size = {});
+    SvgImage(const std::string& uri, const SizeF& size = {});
 
     /**
      * Overload to convert to an Image.
@@ -127,12 +127,12 @@ public:
     }
 
     /**
-     * Set the respath.
+     * Set the URI.
      *
-     * If this results in changing the respath, this will cause a re-load of the
-     * SVG file
+     * If this results in changing the URI for this instance, this will cause a
+     * re-load of the SVG file
      */
-    void respath(const std::string& respath);
+    void uri(const std::string& uri);
 
     virtual ~SvgImage();
 
@@ -162,9 +162,9 @@ protected:
     SizeF m_size;
 
     /**
-     * User set respath.
+     * User set URI.
      */
-    std::string m_respath;
+    std::string m_uri;
 };
 
 }

@@ -19,7 +19,7 @@ int main(int argc, const char** argv)
     TopWindow win;
     win.background(Image("background.png"));
 
-    ImageLabel logo(Image("@128px/microchip_logo_white.png"));
+    ImageLabel logo(Image("icon:128px/microchip_logo_white.png"));
     logo.align(AlignFlag::left | AlignFlag::top);
     logo.margin(10);
     win.add(logo);

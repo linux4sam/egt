@@ -34,9 +34,6 @@ class Serializer;
  * else using the surface.  To force this class to keep its own copy, call
  * the copy() function.
  *
- * If a filename is used to construct an Image, the detail::ImageCache class
- * will be used.
- *
  * @ingroup media
  */
 class EGT_API Image
@@ -44,35 +41,35 @@ class EGT_API Image
 public:
 
     /**
-     * Construct a raster image from a respath with an optional scale.
+     * Construct a raster image from a URI with an optional scale.
      *
      * @code{.cpp}
      * Image image("image.png");
      * @endcode
      *
-     * @param respath Resource path.
+     * @param uri Resource path. @see @ref resources
      * @param scale Scale of the image, with 1.0 being 100%.
      */
     // cppcheck-suppress noExplicitConstructor
-    Image(const std::string& respath = {}, float scale = 1.0);
+    Image(const std::string& uri = {}, float scale = 1.0);
 
     /**
-     * Construct a raster image from a respath with an optional scale.
+     * Construct a raster image from a URI with an optional scale.
      *
-     * @param respath Resource path.
+     * @param uri Resource path. @see @ref resources
      * @param hscale Horizontal scale of the image, with 1.0 being 100%.
      * @param vscale Vertical scale of the image, with 1.0 being 100%.
      */
-    Image(const std::string& respath, float hscale, float vscale);
+    Image(const std::string& uri, float hscale, float vscale);
 
     /**
      * Load a new source image with an optional scale.
      *
-     * @param respath Resource path.
+     * @param uri Resource path. @see @ref resources
      * @param hscale Horizontal scale of the image, with 1.0 being 100%.
      * @param vscale Vertical scale of the image, with 1.0 being 100%.
      */
-    void load(const std::string& respath, float hscale = 1.0, float vscale = 1.0);
+    void load(const std::string& uri, float hscale = 1.0, float vscale = 1.0);
 
     /**
      * @param surface A pre-existing surface.
@@ -199,9 +196,9 @@ public:
      */
     virtual void copy();
 
-    inline std::string respath() const
+    inline std::string uri() const
     {
-        return m_respath;
+        return m_uri;
     }
 
     virtual Image crop(const RectF& rect);
@@ -228,9 +225,9 @@ public:
 protected:
 
     /**
-     * If a respath was used, the respath.
+     * If a URI was used, the URI.
      */
-    std::string m_respath;
+    std::string m_uri;
 
     /**
      * Horizontal scale value, compared to original.

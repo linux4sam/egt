@@ -18,7 +18,7 @@ inline namespace v1
 FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     : Popup(rect.size(), rect.point()),
       m_vsizer(std::make_shared<BoxSizer>(Orientation::vertical)),
-      m_title(std::make_shared<ImageLabel>(Image("@folder.png"), filepath)),
+      m_title(std::make_shared<ImageLabel>(Image("icon:folder.png"), filepath)),
       m_flist(std::make_shared<ListBox>()),
       m_filepath(filepath)
 {

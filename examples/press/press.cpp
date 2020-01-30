@@ -17,14 +17,14 @@ class MainWindow : public TopWindow
 public:
 
     MainWindow()
-        : m_clearbtn(Image("@warning.png")),
+        : m_clearbtn(Image("icon:warning.png")),
           m_canvas(screen()->size(), PixelFormat::argb8888)
     {
         // don't draw background, we'll do it in draw()
         boxtype().clear();
         color(Palette::ColorId::bg, Palette::white);
 
-        auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+        auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
         logo->align(AlignFlag::left | AlignFlag::top);
         logo->margin(10);
         add(logo);

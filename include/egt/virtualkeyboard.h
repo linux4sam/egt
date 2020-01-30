@@ -300,13 +300,13 @@ protected:
     /**
      * A button to close the virtual keyboard.
      */
-    ImageButton m_close_button {Image("@cancel.png")};
+    ImageButton m_close_button {Image("icon:cancel.png")};
 
     /**
      * A button to move the virtual keyboard to the bottom or the top of the
      * screen.
      */
-    ImageButton m_top_bottom_button {Image("@arrow_up.png")};
+    ImageButton m_top_bottom_button {Image("icon:arrow_up.png")};
 
     /**
      * Store the position of the virtual keyboard on the screen.

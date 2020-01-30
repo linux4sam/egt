@@ -89,11 +89,11 @@ int main(int argc, const char** argv)
     hpos.resize(ctrlwindow.size());
     ctrlwindow.add(hpos);
 
-    auto logo = make_shared<ImageLabel>(Image("@32px/egt_logo_icon.png"));
+    auto logo = make_shared<ImageLabel>(Image("icon:32px/egt_logo_icon.png"));
     logo->margin(10);
     hpos.add(logo);
 
-    ImageButton playbtn(Image(":pause_png"));
+    ImageButton playbtn(Image("file:pause_png"));
     playbtn.boxtype().clear();
     hpos.add(playbtn);
 
@@ -102,12 +102,12 @@ int main(int argc, const char** argv)
         if (player.playing())
         {
             if (player.pause())
-                playbtn.image(Image(":play_png"));
+                playbtn.image(Image("file:play_png"));
         }
         else
         {
             if (player.play())
-                playbtn.image(Image(":pause_png"));
+                playbtn.image(Image("file:pause_png"));
         }
     }, {EventId::pointer_click});
 
@@ -130,7 +130,7 @@ int main(int argc, const char** argv)
 
     });
 
-    ImageButton volumei(Image(":volumeup_png"));
+    ImageButton volumei(Image("file:volumeup_png"));
     volumei.boxtype().clear();
     hpos.add(volumei);
 
@@ -146,7 +146,7 @@ int main(int argc, const char** argv)
     });
     volume.value(5);
 
-    ImageButton fullscreenbtn(Image(":fullscreen_png"));
+    ImageButton fullscreenbtn(Image("file:fullscreen_png"));
     fullscreenbtn.boxtype().clear();
     hpos.add(fullscreenbtn);
 
@@ -159,19 +159,19 @@ int main(int argc, const char** argv)
         {
             player.move(Point(0, 0));
             player.scale(vscale, vscale);
-            fullscreenbtn.image(Image(":fullscreen_exit_png"));
+            fullscreenbtn.image(Image("file:fullscreen_exit_png"));
             scaled = false;
         }
         else
         {
             player.move_to_center(win.center());
             player.scale(1.0, 1.0);
-            fullscreenbtn.image(Image(":fullscreen_png"));
+            fullscreenbtn.image(Image("file:fullscreen_png"));
             scaled = true;
         }
     }, {EventId::pointer_click});
 
-    ImageButton loopbackbtn(Image(":repeat_one_png"));
+    ImageButton loopbackbtn(Image("file:repeat_one_png"));
     loopbackbtn.boxtype().clear();
     hpos.add(loopbackbtn);
 
@@ -179,12 +179,12 @@ int main(int argc, const char** argv)
     {
         if (player.loopback())
         {
-            loopbackbtn.image(Image(":repeat_one_png"));
+            loopbackbtn.image(Image("file:repeat_one_png"));
             player.loopback(false);
         }
         else
         {
-            loopbackbtn.image(Image(":repeat_png"));
+            loopbackbtn.image(Image("file:repeat_png"));
             player.loopback(true);
         }
     }, {EventId::pointer_click});

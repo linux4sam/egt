@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/svg.h"
 #include "egt/canvas.h"
-#include "egt/detail/svg.h"
 #include "egt/respath.h"
 #include <librsvg/rsvg.h>
 
@@ -15,17 +15,10 @@ inline namespace v1
 namespace detail
 {
 
-shared_cairo_surface_t load_svg(const std::string& filename,
-                                const SizeF& size,
-                                const std::string& id)
+static shared_cairo_surface_t load_svg(std::shared_ptr<RsvgHandle>& rsvg,
+                                       const SizeF& size,
+                                       const std::string& id)
 {
-    GError* error = nullptr;
-    std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), &error),
-    [](RsvgHandle * r) { g_object_unref(r); });
-
-    if (error)
-        throw std::runtime_error("unable to load svg file: " + filename);
-
     RsvgDimensionData dim;
     rsvg_handle_get_dimensions(rsvg.get(), &dim);
 
@@ -59,6 +52,32 @@ shared_cairo_surface_t load_svg(const std::string& filename,
     return canvas.surface();
 }
 
+shared_cairo_surface_t load_svg(const std::string& filename,
+                                const SizeF& size,
+                                const std::string& id)
+{
+    std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), nullptr),
+    [](RsvgHandle * r) { g_object_unref(r); });
+
+    if (!rsvg)
+        throw std::runtime_error("unable to load svg file: " + filename);
+
+    return load_svg(rsvg, size, id);
+}
+
+shared_cairo_surface_t load_svg(const unsigned char* data,
+                                size_t len,
+                                const SizeF& size,
+                                const std::string& id)
+{
+    std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_data(data, len, nullptr),
+    [](RsvgHandle * r) { g_object_unref(r); });
+
+    if (!rsvg)
+        throw std::runtime_error("unable to load svg file from memory");
+
+    return load_svg(rsvg, size, id);
+}
 }
 }
 }

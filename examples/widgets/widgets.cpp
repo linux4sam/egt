@@ -33,26 +33,26 @@ struct ButtonPage : public NotebookTab
         btn2->disable();
         grid0->add(expand(btn2));
 
-        grid0->add(expand(make_shared<ImageButton>(Image("@calculator.png"), "Calculator")));
+        grid0->add(expand(make_shared<ImageButton>(Image("icon:calculator.png"), "Calculator")));
 
-        auto imagebutton1 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
+        auto imagebutton1 = make_shared<ImageButton>(Image("icon:calculator.png"), "Calculator");
         grid0->add(expand(imagebutton1));
         imagebutton1->text_align(AlignFlag::center | AlignFlag::left);
 
-        auto imagebutton2 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
+        auto imagebutton2 = make_shared<ImageButton>(Image("icon:calculator.png"), "Calculator");
         grid0->add(expand(imagebutton2));
         imagebutton2->text_align(AlignFlag::center | AlignFlag::right);
 
-        auto imagebutton3 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
+        auto imagebutton3 = make_shared<ImageButton>(Image("icon:calculator.png"), "Calculator");
         grid0->add(expand(imagebutton3));
         imagebutton3->text_align(AlignFlag::center | AlignFlag::top);
 
-        auto imagebutton4 = make_shared<ImageButton>(Image("@calculator.png"), "Calculator");
+        auto imagebutton4 = make_shared<ImageButton>(Image("icon:calculator.png"), "Calculator");
         grid0->add(expand(imagebutton4));
         imagebutton4->text_align(AlignFlag::center | AlignFlag::bottom);
         imagebutton4->image_align(AlignFlag::right);
 
-        auto imagebutton5 = make_shared<ImageButton>(Image("@calculator.png"));
+        auto imagebutton5 = make_shared<ImageButton>(Image("icon:calculator.png"));
         grid0->add(expand(imagebutton5));
 
         auto button6 = make_shared<Button>("Multiline\nButton Text");
@@ -146,32 +146,32 @@ struct LabelPage : public NotebookTab
         auto label5 = std::make_shared<Label>("Multiline\nLabel Text", AlignFlag::center);
         grid0->add(expand(label5));
 
-        auto imagelabel0 = std::make_shared<ImageLabel>(Image("@lock.png"), "Lock");
+        auto imagelabel0 = std::make_shared<ImageLabel>(Image("icon:lock.png"), "Lock");
         grid0->add(expand(imagelabel0));
         imagelabel0->image_align(AlignFlag::top);
         imagelabel0->text_align(AlignFlag::center);
 
-        auto imagelabel1 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
+        auto imagelabel1 = std::make_shared<ImageLabel>(Image("icon:camera.png"), "Camera");
         grid0->add(expand(imagelabel1));
         imagelabel1->text_align(AlignFlag::center);
 
-        auto imagelabel2 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
+        auto imagelabel2 = std::make_shared<ImageLabel>(Image("icon:camera.png"), "Camera");
         grid0->add(expand(imagelabel2));
         imagelabel2->text_align(AlignFlag::center | AlignFlag::right);
         imagelabel2->image_align(AlignFlag::right);
 
-        auto imagelabel3 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
+        auto imagelabel3 = std::make_shared<ImageLabel>(Image("icon:camera.png"), "Camera");
         grid0->add(expand(imagelabel3));
         imagelabel3->text_align(AlignFlag::center | AlignFlag::top);
         imagelabel3->image_align(AlignFlag::bottom);
 
-        auto imagelabel4 = std::make_shared<ImageLabel>(Image("@camera.png"), "Camera");
+        auto imagelabel4 = std::make_shared<ImageLabel>(Image("icon:camera.png"), "Camera");
         imagelabel4->boxtype(Theme::BoxFlag::fill);
         imagelabel4->border(1);
         grid0->add(expand(imagelabel4));
         imagelabel4->text_align(AlignFlag::center | AlignFlag::bottom);
 
-        auto imagelabel5 = std::make_shared<ImageLabel>(Image("@camera.png"));
+        auto imagelabel5 = std::make_shared<ImageLabel>(Image("icon:camera.png"));
         imagelabel5->boxtype(Theme::BoxFlag::fill);
         imagelabel5->border(1);
         grid0->add(expand(imagelabel5));
@@ -389,13 +389,13 @@ struct ListPage : public NotebookTab
 
         auto list1 = std::make_shared<ListBox>(Rect(0, 0, 200, 300));
         for (auto x = 0; x < 5; x++)
-            list1->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Image("@ok.png")));
+            list1->add_item(std::make_shared<StringItem>("item " + std::to_string(x), Image("icon:ok.png")));
         hsizer1->add(list1);
 
         auto list2 = std::make_shared<ListBox>(Rect(0, 0, 200, 0));
-        list2->add_item(std::make_shared<StringItem>("Help", Image("@help.png")));
-        list2->add_item(std::make_shared<StringItem>("Info", Image("@info.png")));
-        list2->add_item(std::make_shared<StringItem>("Warning", Image("@warning.png")));
+        list2->add_item(std::make_shared<StringItem>("Help", Image("icon:help.png")));
+        list2->add_item(std::make_shared<StringItem>("Info", Image("icon:info.png")));
+        list2->add_item(std::make_shared<StringItem>("Warning", Image("icon:warning.png")));
         list2->height((list2->border() * 2) + (40 * list2->item_count()));
         hsizer1->add(list2);
     }
@@ -523,7 +523,7 @@ int main(int argc, const char** argv)
     auto frame = make_shared<Frame>(Size(0, 60));
     vsizer.add(expand_horizontal(frame));
 
-    auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+    auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
     logo->align(AlignFlag::center);
     frame->add(logo);
 

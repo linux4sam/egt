@@ -45,7 +45,7 @@ int main(int argc, const char** argv)
 
     TopWindow window;
 
-    auto logo = make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+    auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
     logo->margin(10);
     logo->align(AlignFlag::center | AlignFlag::bottom);
     window.add(logo);

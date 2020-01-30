@@ -36,7 +36,7 @@ public:
     {
         background(Image("background.png"));
 
-        auto egt_logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_black.png"));
+        auto egt_logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
         egt_logo->align(AlignFlag::center | AlignFlag::top);
         egt_logo->margin(5);
         add(egt_logo);

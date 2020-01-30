@@ -129,10 +129,10 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
             HorizontalBoxSizer sizer;
             window.add(center(sizer));
 
-            ImageLabel label1(sizer, Image("@unlock.png"));
-            ImageLabel label2(sizer, Image("@paint.png"));
-            ImageLabel label3(sizer, Image("@battery.png"));
-            ImageLabel label4(sizer, Image("@ok.png"));
+            ImageLabel label1(sizer, Image("icon:unlock.png"));
+            ImageLabel label2(sizer, Image("icon:paint.png"));
+            ImageLabel label3(sizer, Image("icon:battery.png"));
+            ImageLabel label4(sizer, Image("icon:ok.png"));
 
             window.show();
             /// @[image1]
@@ -408,7 +408,7 @@ static std::vector<std::pair<std::string, std::function<int(Application& app)>>>
         {
             TopWindow window;
 
-            window.add(center(std::make_shared<ImageLabel>(Image("@volume_up.png"))));
+            window.add(center(std::make_shared<ImageLabel>(Image("icon:volume_up.png"))));
             window.show();
 
             /// @[audio1]

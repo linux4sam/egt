@@ -135,7 +135,7 @@ public:
             }
         }, {EventId::pointer_click});
 
-        auto logo = std::make_shared<ImageLabel>(Image("@128px/egt_logo_white.png"));
+        auto logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_white.png"));
         logo->align(AlignFlag::left | AlignFlag::top);
         logo->margin(10);
         add(logo);
