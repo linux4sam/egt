@@ -102,6 +102,7 @@ timer.cpp \
 tools.cpp \
 types.cpp \
 uiloader.cpp \
+uri.cpp \
 utils.cpp \
 script.cpp \
 view.cpp \
@@ -207,6 +208,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/tools.h \
 ../include/egt/types.h \
 ../include/egt/uiloader.h \
+../include/egt/uri.h \
 ../include/egt/utils.h \
 ../include/egt/script.h \
 ../include/egt/value.h \
