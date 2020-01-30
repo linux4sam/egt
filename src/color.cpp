@@ -166,14 +166,14 @@ static hsl rgb2hsl(const Color& rgb)
         (cmax + cmin) / 2.f
     };
 
-    if (detail::float_compare(delta, 0.f))
+    if (detail::float_equal(delta, 0.f))
         return hsl;
 
-    if (detail::float_compare(cmax, rgb.redf()))
+    if (detail::float_equal(cmax, rgb.redf()))
     {
         hsl.h = fmodf((rgb.greenf() - rgb.bluef()) / delta, 6.f);
     }
-    else if (detail::float_compare(cmax, rgb.greenf()))
+    else if (detail::float_equal(cmax, rgb.greenf()))
     {
         hsl.h = (rgb.bluef() - rgb.redf()) / delta + 2.f;
     }

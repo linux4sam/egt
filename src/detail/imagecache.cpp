@@ -45,8 +45,8 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
 
     shared_cairo_surface_t image;
 
-    if (detail::float_compare(hscale, 1.0f) &&
-        detail::float_compare(vscale, 1.0f))
+    if (detail::float_equal(hscale, 1.0f) &&
+        detail::float_equal(vscale, 1.0f))
     {
         std::string path;
         auto type = detail::resolve_path(uri, path);

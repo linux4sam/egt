@@ -190,7 +190,7 @@ void Theme::draw_box(Painter& painter,
 
     cairo_new_path(cr);
 
-    if (!detail::float_compare(border_radius, 0) && border_radius > 0)
+    if (!detail::float_equal(border_radius, 0) && border_radius > 0)
     {
         cairo_arc(cr, rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
         cairo_arc(cr, rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);

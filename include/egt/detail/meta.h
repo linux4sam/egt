@@ -201,7 +201,7 @@ inline bool change_if_diff(T& old, const T& to)
 template<>
 inline bool change_if_diff(float& old, const float& to)
 {
-    if (!detail::float_compare(old, to))
+    if (!detail::float_equal(old, to))
     {
         old = to;
         return true;
@@ -213,7 +213,7 @@ inline bool change_if_diff(float& old, const float& to)
 template<>
 inline bool change_if_diff(double& old, const double& to)
 {
-    if (!detail::float_compare(old, to))
+    if (!detail::float_equal(old, to))
     {
         old = to;
         return true;

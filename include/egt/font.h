@@ -236,7 +236,7 @@ EGT_API std::ostream& operator<<(std::ostream& os, const Font& font);
 inline bool EGT_API operator==(const Font& lhs, const Font& rhs)
 {
     return lhs.face() == rhs.face() &&
-           detail::float_compare(lhs.size(), rhs.size()) &&
+           detail::float_equal(lhs.size(), rhs.size()) &&
            lhs.weight() == rhs.weight() &&
            lhs.slant() == rhs.slant();
 }

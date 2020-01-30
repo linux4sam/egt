@@ -107,7 +107,7 @@ constexpr const T& clamp(const T& v, const T& lo, const T& hi)
            (v < lo) ? lo : (hi < v) ? hi : v;
 }
 
-inline bool float_compare(const float f1, const float f2)
+inline bool float_equal(const float f1, const float f2)
 {
     static constexpr auto epsilon = 1.0e-05f;
     if (std::fabs(f1 - f2) <= epsilon)
@@ -115,12 +115,24 @@ inline bool float_compare(const float f1, const float f2)
     return std::fabs(f1 - f2) <= epsilon * std::max(std::fabs(f1), std::fabs(f2));
 }
 
-inline bool float_compare(const double f1, const double f2)
+/// @deprecated
+inline bool float_compare(const float f1, const float f2)
+{
+    return float_equal(f1, f2);
+}
+
+inline bool float_equal(const double f1, const double f2)
 {
     static constexpr auto epsilon = 1.0e-9;
     if (std::fabs(f1 - f2) <= epsilon)
         return true;
     return std::fabs(f1 - f2) <= epsilon * std::max(std::fabs(f1), std::fabs(f2));
+}
+
+/// @deprecated
+inline bool float_compare(const double f1, const double f2)
+{
+    return float_equal(f1, f2);
 }
 
 }

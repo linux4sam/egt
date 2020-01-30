@@ -446,7 +446,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
         if (r.empty())
             return;
 
-        if (detail::float_compare(child->alpha(), 1.f))
+        if (detail::float_equal(child->alpha(), 1.f))
         {
             Painter::AutoSaveRestore sr2(painter);
 

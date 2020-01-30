@@ -64,7 +64,7 @@ bool Animation::next()
         if (m_round)
             result = std::round(result);
 
-        if (!detail::float_compare(result, m_current))
+        if (!detail::float_equal(result, m_current))
         {
             m_current = result;
             for (auto& callback : m_callbacks)

@@ -15,7 +15,7 @@ template<class dim_t>
 bool ArcType<dim_t>::empty() const
 {
     return this->radius() < 0.0f ||
-           detail::float_compare(this->radius(), 0.0f);
+           detail::float_equal(this->radius(), 0.0f);
 }
 
 template bool ArcType<float>::empty() const;

@@ -207,7 +207,7 @@ struct FontCache : detail::NonCopyable
         {
             if (lhs.face() != rhs.face())
                 return lhs.face() < rhs.face();
-            if (!detail::float_compare(lhs.size(), rhs.size()))
+            if (!detail::float_equal(lhs.size(), rhs.size()))
                 return lhs.size() < rhs.size();
             if (lhs.weight() != rhs.weight())
                 return lhs.weight() < rhs.weight();

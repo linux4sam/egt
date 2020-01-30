@@ -196,8 +196,8 @@ inline bool operator==(const PointType<Dim, DimCompat>& lhs, const PointType<Dim
 template<detail::Compatible DimCompat>
 inline bool operator==(const PointType<float, DimCompat>& lhs, const PointType<float, DimCompat>& rhs)
 {
-    return detail::float_compare(lhs.x(), rhs.x()) &&
-           detail::float_compare(lhs.y(), rhs.y());
+    return detail::float_equal(lhs.x(), rhs.x()) &&
+           detail::float_equal(lhs.y(), rhs.y());
 }
 
 /// PointType operator
@@ -440,8 +440,8 @@ inline bool operator==(const SizeType<Dim, DimCompat>& lhs, const SizeType<Dim, 
 template<detail::Compatible DimCompat>
 inline bool operator==(const SizeType<float, DimCompat>& lhs, const SizeType<float, DimCompat>& rhs)
 {
-    return detail::float_compare(lhs.width(), rhs.width()) &&
-           detail::float_compare(lhs.height(), rhs.height());
+    return detail::float_equal(lhs.width(), rhs.width()) &&
+           detail::float_equal(lhs.height(), rhs.height());
 }
 
 /// SizeType operator
