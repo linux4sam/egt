@@ -61,19 +61,27 @@ public:
 
     virtual void resize(const Size& size);
 
+    virtual void invoke_damage() = 0;
+
     virtual ~PlPlotImpl();
 
 protected:
+    Rect m_rect;
     std::unique_ptr<plstream> m_plstream;
     bool m_initalize{false};
     std::string m_xlabel;
     std::string m_ylabel;
     std::string m_title;
 
+    /**
+     * plenv
+     * m_xmin and m_xmax cannot be same
+     * m_ymin and m_ymax cannot be same
+     */
     PLFLT m_xmin{0.};
-    PLFLT m_xmax{0.};
+    PLFLT m_xmax{1.0};
     PLFLT m_ymin{0.};
-    PLFLT m_ymax{0.};
+    PLFLT m_ymax{1.0};
 
     PLINT m_pattern{0};
     PLINT m_pointtype{17}; //code 17 represents to dot.
@@ -101,7 +109,12 @@ protected:
 
     void plplot_color(Color& color);
 
+    void plplot_bg_color(Color& color);
+
     void plplot_font(const Font& font);
+
+    void plplot_verify_viewport();
+
 };
 
 class PlPlotLineChart: public PlPlotImpl
@@ -110,6 +123,11 @@ public:
     explicit PlPlotLineChart(LineChart& interface, const Rect& rect);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    virtual void invoke_damage() override
+    {
+        m_interface.damage();
+    }
 
     virtual ~PlPlotLineChart();
 
@@ -124,6 +142,11 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    virtual void invoke_damage() override
+    {
+        m_interface.damage();
+    }
+
     virtual ~PlPlotPointChart();
 
 protected:
@@ -136,6 +159,11 @@ public:
     explicit PlPlotBarChart(BarChart& interface, const Rect& rect);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    virtual void invoke_damage() override
+    {
+        m_interface.damage();
+    }
 
     virtual ~PlPlotBarChart();
 
@@ -153,6 +181,11 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    virtual void invoke_damage() override
+    {
+        m_interface.damage();
+    }
+
     virtual ~PlPlotHBarChart();
 
 protected:
@@ -169,6 +202,11 @@ public:
     explicit PlPlotPieChart(PieChart& interface, const Rect& rect);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
+
+    virtual void invoke_damage() override
+    {
+        m_interface.damage();
+    }
 
     virtual ~PlPlotPieChart();
 

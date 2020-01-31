@@ -18,29 +18,66 @@ namespace detail
 {
 
 PlPlotImpl::PlPlotImpl(const Rect& rect)
-    : m_plstream(detail::make_unique<plstream>())
+    : m_rect(rect),
+      m_plstream(detail::make_unique<plstream>())
 {
     m_plstream->sdev("extcairo");
 }
 
 void PlPlotImpl::data(const DataArray& data)
 {
-    clear();
-
     if (!data.empty())
     {
-        for (auto& elem : data)
+        bool damage_flag = true;
+        //compare vector elements.
+        if (data.size() == m_xdata.size())
         {
-            m_xdata.push_back(elem.first);
-            m_ydata.push_back(elem.second);
+            int i = 0;
+            damage_flag = false;
+            for (auto& elem : data)
+            {
+                if (detail::float_compare(elem.first, m_xdata.at(i)) &&
+                    detail::float_compare(elem.second, m_ydata.at(i)))
+                {
+                    ++i;
+                    continue;
+                }
+                else
+                {
+                    SPDLOG_DEBUG("Data elements are different");
+                    damage_flag = true;
+                    break;
+                }
+            }
         }
 
-        m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
-        m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
-        m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-        m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
+        if (damage_flag)
+        {
+            m_xdata.clear();
+            m_ydata.clear();
 
-        SPDLOG_DEBUG("m_xmin {} m_xmax {}  m_ymin {} m_ymax {}", m_xmin, m_xmax, m_ymin, m_ymax);
+            for (auto& elem : data)
+            {
+                m_xdata.push_back(elem.first);
+                m_ydata.push_back(elem.second);
+            }
+
+            m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
+            m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
+            m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
+            m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
+
+            SPDLOG_DEBUG(" m_xmin {} m_xmax {}  m_ymin {} m_ymax {}",
+                         m_xmin, m_xmax, m_ymin, m_ymax);
+
+            plplot_verify_viewport();
+
+            invoke_damage();
+        }
+    }
+    else
+    {
+        clear();
     }
 }
 
@@ -67,24 +104,62 @@ void PlPlotImpl::add_data(const DataArray& data)
 
         SPDLOG_DEBUG("m_xmin {} m_xmax {}  m_ymin {} m_ymax {}",
                      m_xmin, m_xmax, m_ymin, m_ymax);
+
+        plplot_verify_viewport();
+
+        invoke_damage();
     }
 }
 
 void PlPlotImpl::data(const StringDataArray& data)
 {
-    clear();
     if (!data.empty())
     {
-        for (auto& elem : data)
+        bool damage_flag = true;
+        if (data.size() == m_sdata.size())
         {
-            m_sdata.push_back(elem.second);
-            m_ydata.push_back(elem.first);
+            int i = 0;
+            damage_flag = false;
+            for (auto& elem : data)
+            {
+                if (detail::float_compare(elem.first, m_ydata.at(i)) &&
+                    (elem.second == m_sdata.at(i)))
+                {
+                    ++i;
+                    continue;
+                }
+                else
+                {
+                    SPDLOG_DEBUG("Data elements are different");
+                    damage_flag = true;
+                    break;
+                }
+            }
         }
 
-        m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-        m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
+        if (damage_flag)
+        {
+            clear();
 
-        SPDLOG_DEBUG("m_ymin {} m_ymax {}", m_ymin, m_ymax);
+            for (auto& elem : data)
+            {
+                m_sdata.push_back(elem.second);
+                m_ydata.push_back(elem.first);
+            }
+
+            m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
+            m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
+
+            SPDLOG_DEBUG("m_ymin {} m_ymax {}", m_ymin, m_ymax);
+
+            plplot_verify_viewport();
+
+            invoke_damage();
+        }
+    }
+    else
+    {
+        clear();
     }
 }
 
@@ -119,16 +194,23 @@ void PlPlotImpl::add_data(const StringDataArray& data)
         m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
 
         SPDLOG_DEBUG("m_ymin {} m_ymax {}", m_ymin, m_ymax);
+
+        plplot_verify_viewport();
+
+        invoke_damage();
     }
 }
 
 void PlPlotImpl::remove_data(uint32_t count)
 {
+    bool damage = false;
+
     if (!m_sdata.empty())
     {
         if (count <= m_sdata.size())
         {
             m_sdata.erase(m_sdata.begin(), m_sdata.begin() + count);
+            damage = true;
         }
         else
         {
@@ -143,6 +225,7 @@ void PlPlotImpl::remove_data(uint32_t count)
             m_xdata.erase(m_xdata.begin(), m_xdata.begin() + count);
             m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
             m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
+            damage = true;
         }
         else
         {
@@ -157,80 +240,140 @@ void PlPlotImpl::remove_data(uint32_t count)
             m_ydata.erase(m_ydata.begin(), m_ydata.begin() + count);
             m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
             m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
+            damage = true;
         }
         else
         {
             clear();
         }
     }
+
+    plplot_verify_viewport();
+
+    if (damage)
+        invoke_damage();
 }
 
 void PlPlotImpl::clear()
 {
-    m_xdata.clear();
-    m_sdata.clear();
-    m_ydata.clear();
-
-    m_ymin = m_ymax = m_xmin = m_xmax = 0.;
-
-    m_clearsurface = true;
+    if (!m_ydata.empty() ||
+        !m_xdata.empty() ||
+        !m_sdata.empty())
+    {
+        m_xdata.clear();
+        m_sdata.clear();
+        m_ydata.clear();
+        m_ymin = m_xmin = 0;
+        m_ymax = m_xmax = 1.0;
+        m_clearsurface = true;
+        invoke_damage();
+    }
 }
 
 void PlPlotImpl::title(const std::string& title)
 {
-    m_title = title;
+    if (detail::change_if_diff<>(m_title, title))
+        invoke_damage();
 }
 
 void PlPlotImpl::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
-    m_xlabel = xlabel;
-    m_ylabel = ylabel;
-    m_title = title;
+
+    bool damage_flag = false;
+
+    if (detail::change_if_diff<>(m_xlabel, xlabel))
+    {
+        damage_flag = true;
+    }
+    if (detail::change_if_diff<>(m_ylabel, ylabel))
+    {
+        damage_flag = true;
+    }
+    if (detail::change_if_diff<>(m_title, title))
+    {
+        damage_flag = true;
+    }
+
+    if (damage_flag)
+        invoke_damage();
 }
 
 void PlPlotImpl::show_ticks(bool enable)
 {
-    m_ticks = enable;
+    if (detail::change_if_diff<>(m_ticks, enable))
+    {
+        if (m_ticks && m_grid)
+            m_axis = 2;
+        else if (m_ticks)
+            m_axis = 0;
+        else
+            m_axis = -1;
+        invoke_damage();
+    }
 
-    if (m_ticks && m_grid)
-        m_axis = 2;
-    else if (m_ticks)
-        m_axis = 0;
-    else
-        m_axis = -1;
 }
 
 void PlPlotImpl::show_grid(bool enable)
 {
-    m_grid = enable;
-    /**
-     * if Grid is enable, then enable ticks to show
-     * grid at major tick positions
-     */
-    if (m_grid)
-        m_ticks = true;
+    if (detail::change_if_diff<>(m_grid, enable))
+    {
+        /**
+         * if Grid is enable, then enable ticks to show
+         * grid at major tick positions
+         */
+        if (m_grid)
+            m_ticks = true;
 
-    if (m_ticks && m_grid)
-        m_axis = 2;
-    else if (m_ticks)
-        m_axis = 0;
-    else
-        m_axis = -1;
+        if (m_ticks && m_grid)
+            m_axis = 2;
+        else if (m_ticks)
+            m_axis = 0;
+        else
+            m_axis = -1;
+        invoke_damage();
+    }
 }
 
 void PlPlotImpl::width(int val)
 {
-    m_line_width = val;
+    if (detail::change_if_diff<>(m_line_width, val))
+        invoke_damage();
 }
 
 void PlPlotImpl::pattern(int val)
 {
-    m_pattern = val;
+    if (detail::change_if_diff<>(m_pattern, val))
+        invoke_damage();
 }
 
 void PlPlotImpl::point_type(int ptype)
 {
-    m_pointtype = ptype;
+    if (detail::change_if_diff<>(m_pointtype, ptype))
+        invoke_damage();
+}
+
+/**
+ * Plplot reports error while creating a viewport
+ * if x_min & x_max and y_min & y_max values are
+ * same. as workaround modifying these value's.
+ */
+void PlPlotImpl::plplot_verify_viewport()
+{
+    if (detail::float_compare(m_xmin, m_xmax))
+    {
+        if (detail::float_compare(0., m_xmax))
+            m_xmax = 1.0;
+        else
+            m_xmin = m_xmax / 2.0;
+    }
+
+    if (detail::float_compare(m_ymin, m_ymax))
+    {
+        if (detail::float_compare(0., m_ymax))
+            m_ymax = 1.0;
+        else
+            m_ymin = m_ymax / 2.0;
+    }
 }
 
 void PlPlotImpl::plplot_font(const Font& font)
@@ -260,8 +403,19 @@ void PlPlotImpl::plplot_font(const Font& font)
     }
 
     auto slant = font.slant();
-    PLINT font_style = slant == Font::Slant::normal ? 0 : (slant == Font::Slant::italic ? 1 : 2);
-    PLINT font_weight = font.weight() == Font::Weight::normal ? 0 : 1;
+    PLINT font_style;
+    if (slant == Font::Slant::normal)
+        font_style = 0;
+    else if (slant == Font::Slant::italic)
+        font_style = 1;
+    else
+        font_style = 2;
+
+    PLINT font_weight;
+    if (font.weight() == Font::Weight::normal)
+        font_weight = 0;
+    else
+        font_weight = 1;
 
     m_plstream->sfont(font_family, font_style, font_weight);
 
@@ -280,16 +434,28 @@ void PlPlotImpl::plplot_color(Color& color)
     m_plstream->col1(1);
 }
 
+void PlPlotImpl::plplot_bg_color(Color& color)
+{
+    auto r = static_cast<PLINT>(color.red());
+    auto g = static_cast<PLINT>(color.green());
+    auto b = static_cast<PLINT>(color.blue());
+    auto a = static_cast<PLFLT>(color.alpha() / 255.0);
+    m_plstream->scolbga(r, g, b, a);
+}
+
 void PlPlotImpl::resize(const Size& size)
 {
-    m_plstream.reset(new plstream());
-    m_initalize = false;
-    m_clearsurface = true;
-    m_plstream->sdev("extcairo");
+    if (size != m_rect.size())
+    {
+        m_rect.size(size);
+        m_plstream = detail::make_unique<plstream>();
+        m_initalize = false;
+        m_clearsurface = true;
+        m_plstream->sdev("extcairo");
+    }
 }
 
 PlPlotImpl::~PlPlotImpl() = default;
-
 
 PlPlotLineChart::PlPlotLineChart(LineChart& interface, const Rect& rect)
     : PlPlotImpl(rect),
@@ -316,20 +482,22 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
+
     if (m_clearsurface)
     {
+        plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
         m_plstream->clear();
         m_clearsurface = false;
     }
 
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
+    // set env
+    m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
+
 
     if ((!m_xdata.empty()) && (!m_ydata.empty()))
     {
-        // set env
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
-
         //set line style
         m_plstream->lsty(m_pattern <= 0 ? 1 : m_pattern);
 
@@ -379,6 +547,8 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
+    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
+
     if (m_clearsurface)
     {
         m_plstream->clear();
@@ -388,11 +558,11 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
     //set axis color
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
+    // set env
+    m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
+
     if ((!m_xdata.empty()) && (!m_ydata.empty()))
     {
-        // set env
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
-
         // draw points
         m_plstream->poin(m_xdata.size(), m_xdata.data(), m_ydata.data(), m_pointtype);
     }
@@ -457,6 +627,8 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
+    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
+
     if (m_clearsurface)
     {
         m_plstream->clear();
@@ -481,7 +653,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
         else
             m_plstream->box("bi", 0, 0, "binvs", 0, 0);
     }
-    else if ((!m_ydata.empty()) && (!m_xdata.empty()))
+    else
     {
         m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
     }
@@ -510,7 +682,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
                 if (m_axis != -1)
                 {
                     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
-                    auto pos = static_cast<float>(i) / static_cast<float>(n);
+                    auto pos = static_cast<PLFLT>(i) / static_cast<PLFLT>(n);
                     m_plstream->mtex("b", 1.0, pos, 0, m_sdata.at(i).c_str());
                 }
             }
@@ -578,6 +750,8 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
+    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
+
     if (m_clearsurface)
     {
         m_plstream->clear();
@@ -621,7 +795,7 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
             //Set Y-axis text
             if (m_axis != -1)
             {
-                auto pos = static_cast<float>(i) / static_cast<float>(n);
+                auto pos = static_cast<PLFLT>(i) / static_cast<PLFLT>(n);
                 m_plstream->mtex("lv", 1.0, pos, 1, m_sdata.at(i).c_str());
             }
             ++i;
@@ -662,6 +836,8 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
         cairo_translate(cr.get(), b.x(), b.y());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
+
+    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
 
     if (m_clearsurface)
     {

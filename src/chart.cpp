@@ -30,7 +30,6 @@ void LineChart::draw(Painter& painter, const Rect& rect)
 void LineChart::data(const DataArray& data)
 {
     m_impl->data(data);
-    damage();
 }
 
 size_t LineChart::data_size() const
@@ -41,49 +40,41 @@ size_t LineChart::data_size() const
 void LineChart::add_data(const DataArray& data)
 {
     m_impl->add_data(data);
-    damage();
 }
 
 void LineChart::remove_data(uint32_t count)
 {
     m_impl->remove_data(count);
-    damage();
 }
 
 void LineChart::clear()
 {
     m_impl->clear();
-    damage();
 }
 
 void LineChart::line_width(const int val)
 {
     m_impl->width(val);
-    damage();
 }
 
 void LineChart::line_pattern(LinePattern pattern)
 {
     m_impl->pattern(static_cast<int>(pattern));
-    damage();
 }
 
 void LineChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
-    damage();
 }
 
 void LineChart::show_ticks(bool enable)
 {
     m_impl->show_ticks(enable);
-    damage();
 }
 
 void LineChart::show_grid(bool enable)
 {
     m_impl->show_grid(enable);
-    damage();
 }
 
 void LineChart::resize(const Size& size)
@@ -112,7 +103,6 @@ void PointChart::draw(Painter& painter, const Rect& rect)
 void PointChart::data(const DataArray& data)
 {
     m_impl->data(data);
-    damage();
 }
 
 size_t PointChart::data_size() const
@@ -123,37 +113,31 @@ size_t PointChart::data_size() const
 void PointChart::add_data(const DataArray& data)
 {
     m_impl->add_data(data);
-    damage();
 }
 
 void PointChart::remove_data(uint32_t count)
 {
     m_impl->remove_data(count);
-    damage();
 }
 
 void PointChart::clear()
 {
     m_impl->clear();
-    damage();
 }
 
 void PointChart::point_type(const PointType ptype)
 {
     m_impl->point_type(static_cast<int>(ptype));
-    damage();
 }
 
 void PointChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
-    damage();
 }
 
 void PointChart::show_ticks(bool enable)
 {
     m_impl->show_ticks(enable);
-    damage();
 }
 
 void PointChart::resize(const Size& size)
@@ -165,7 +149,6 @@ void PointChart::resize(const Size& size)
 void PointChart::show_grid(bool enable)
 {
     m_impl->show_grid(enable);
-    damage();
 }
 
 PointChart::~PointChart() = default;
@@ -188,19 +171,16 @@ void BarChart::draw(Painter& painter, const Rect& rect)
 void BarChart::bar_pattern(BarPattern pattern)
 {
     m_impl->pattern(static_cast<int>(pattern));
-    damage();
 }
 
 void BarChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
-    damage();
 }
 
 void BarChart::data(const DataArray& data)
 {
     m_impl->data(data);
-    damage();
 }
 
 size_t BarChart::data_size() const
@@ -211,43 +191,36 @@ size_t BarChart::data_size() const
 void BarChart::add_data(const DataArray& data)
 {
     m_impl->add_data(data);
-    damage();
 }
 
 void BarChart::data(const StringDataArray& data)
 {
     m_impl->data(data);
-    damage();
 }
 
 void BarChart::add_data(const StringDataArray& data)
 {
     m_impl->add_data(data);
-    damage();
 }
 
 void BarChart::remove_data(uint32_t count)
 {
     m_impl->remove_data(count);
-    damage();
 }
 
 void BarChart::clear()
 {
     m_impl->clear();
-    damage();
 }
 
 void BarChart::show_ticks(bool enable)
 {
     m_impl->show_ticks(enable);
-    damage();
 }
 
 void BarChart::show_grid(bool enable)
 {
     m_impl->show_grid(enable);
-    damage();
 }
 
 void BarChart::resize(const Size& size)
@@ -276,7 +249,6 @@ void HorizontalBarChart::draw(Painter& painter, const Rect& rect)
 void HorizontalBarChart::data(const DataArray& data)
 {
     m_impl->data(data);
-    damage();
 }
 
 size_t HorizontalBarChart::data_size() const
@@ -287,43 +259,36 @@ size_t HorizontalBarChart::data_size() const
 void HorizontalBarChart::add_data(const DataArray& data)
 {
     m_impl->add_data(data);
-    damage();
 }
 
 void HorizontalBarChart::remove_data(uint32_t count)
 {
     m_impl->remove_data(count);
-    damage();
 }
 
 void HorizontalBarChart::clear()
 {
     m_impl->clear();
-    damage();
 }
 
 void HorizontalBarChart::bar_pattern(BarPattern pattern)
 {
     m_impl->pattern(static_cast<int>(pattern));
-    damage();
 }
 
 void HorizontalBarChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
-    damage();
 }
 
 void HorizontalBarChart::show_ticks(bool enable)
 {
     m_impl->show_ticks(enable);
-    damage();
 }
 
 void HorizontalBarChart::show_grid(bool enable)
 {
     m_impl->show_grid(enable);
-    damage();
 }
 
 void HorizontalBarChart::resize(const Size& size)
@@ -352,13 +317,11 @@ void PieChart::draw(Painter& painter, const Rect& rect)
 void PieChart::title(const std::string& title)
 {
     return m_impl->title(title);
-    damage();
 }
 
 void PieChart::data(const DataArray& data)
 {
     m_impl->data(data);
-    damage();
 }
 
 size_t PieChart::data_size() const
@@ -369,19 +332,16 @@ size_t PieChart::data_size() const
 void PieChart::add_data(const DataArray& data)
 {
     m_impl->add_data(data);
-    damage();
 }
 
 void PieChart::remove_data(uint32_t count)
 {
     m_impl->remove_data(count);
-    damage();
 }
 
 void PieChart::clear()
 {
     m_impl->clear();
-    damage();
 }
 
 void PieChart::resize(const Size& size)
