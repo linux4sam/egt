@@ -45,7 +45,7 @@ Window* modal_window()
 
 namespace detail
 {
-void modal_window(Window* window)
+void set_modal_window(Window* window)
 {
     the_modal_window = window;
 }

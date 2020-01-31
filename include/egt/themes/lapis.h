@@ -6,6 +6,7 @@
 #ifndef EGT_THEMES_LAPIS_H
 #define EGT_THEMES_LAPIS_H
 
+#include <egt/detail/meta.h>
 #include <egt/theme.h>
 
 namespace egt
@@ -16,7 +17,7 @@ inline namespace v1
 /**
  * Lapis Theme.
  */
-class LapisTheme : public Theme
+class EGT_API LapisTheme : public Theme
 {
 public:
 

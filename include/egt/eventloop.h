@@ -12,7 +12,6 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/detail/priorityqueue.h>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -27,6 +26,11 @@ class io_context;
 
 inline namespace v1
 {
+
+namespace detail
+{
+class PriorityQueue;
+}
 
 /**
  * Event loop interface.
@@ -91,9 +95,8 @@ public:
      */
     void add_idle_callback(event_callback func);
 
-#ifdef USE_PRIORITY_QUEUE
-    inline detail::PriorityQueue& queue() { return m_queue; }
-#endif
+    /// @private
+    detail::PriorityQueue& queue();
 
     virtual ~EventLoop();
 
@@ -115,10 +118,6 @@ protected:
      * Registered idle callbacks.
      */
     std::vector<event_callback> m_idle;
-
-#ifdef USE_PRIORITY_QUEUE
-    detail::PriorityQueue m_queue;
-#endif
 
     /**
      * Used internally to determine whether the event loop should exit.

@@ -6,6 +6,7 @@
 #ifndef EGT_THEMES_ULTRAVIOLET_H
 #define EGT_THEMES_ULTRAVIOLET_H
 
+#include <egt/detail/meta.h>
 #include <egt/theme.h>
 
 namespace egt
@@ -16,7 +17,7 @@ inline namespace v1
 /**
  * Ultra Violet Theme.
  */
-class UltraVioletTheme : public Theme
+class EGT_API UltraVioletTheme : public Theme
 {
 public:
 

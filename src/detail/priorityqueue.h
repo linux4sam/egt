@@ -23,7 +23,6 @@ inline namespace v1
 namespace detail
 {
 
-#ifdef USE_PRIORITY_QUEUE
 enum class priorities
 {
     low = 0,
@@ -122,8 +121,6 @@ void asio_handler_invoke(Function f,
 {
     h->queue_.add(h->m_priority, std::forward<Function>(f));
 }
-
-#endif
 
 }
 }

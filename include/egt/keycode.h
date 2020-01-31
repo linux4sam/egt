@@ -7,6 +7,7 @@
 #define EGT_KEYCODE_H
 
 #include <cstdint>
+#include <egt/detail/meta.h>
 
 /**
  * @file
@@ -163,7 +164,7 @@ namespace detail
 /**
  * Map a linux key code to an EKEY.
  */
-KeyboardCode linux_to_ekey(int code);
+EGT_API KeyboardCode linux_to_ekey(int code);
 
 }
 

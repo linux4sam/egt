@@ -6,6 +6,11 @@
 #ifndef EGT_DETAIL_STRING_H
 #define EGT_DETAIL_STRING_H
 
+/**
+ * @file
+ * @brief String utilities.
+ */
+
 #include <egt/detail/meta.h>
 #include <iomanip>
 #include <iostream>

@@ -7,6 +7,7 @@
 #define EGT_LUAAPP_H
 
 #include <egt/app.h>
+#include <egt/detail/meta.h>
 
 /**
  * @file
@@ -25,13 +26,15 @@ namespace experimental
  * REPL.
  *
  */
-class LuaApplication : public egt::Application
+class EGT_API LuaApplication : public egt::Application
 {
 public:
 
-    using Application::Application;
+    using egt::Application::Application;
 
     virtual int run() override;
+
+    virtual ~LuaApplication();
 };
 
 }

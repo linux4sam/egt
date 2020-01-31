@@ -29,7 +29,7 @@ namespace detail
  * Base object class with fundamental properties.
  */
 template<typename... Args>
-class Signal : public detail::NonCopyable
+class Signal
 {
 public:
 

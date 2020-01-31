@@ -12,6 +12,7 @@
  */
 
 #include <egt/asio.hpp>
+#include <egt/detail/meta.h>
 #include <egt/input.h>
 #include <memory>
 #include <string>
@@ -29,7 +30,7 @@ struct tslibimpl;
 /**
  * Handles reading input from a tslib supported device.
  */
-class InputTslib : public Input
+class EGT_API InputTslib : public Input
 {
 public:
 

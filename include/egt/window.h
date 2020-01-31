@@ -108,6 +108,8 @@ public:
 
     virtual void resize(const Size& size) override;
 
+    using Frame::scale;
+
     virtual void scale(float hscale, float vscale) override;
 
     virtual void paint(Painter& painter) override;
@@ -278,7 +280,7 @@ namespace detail
 /**
  * Set the modal window.
  */
-EGT_API void modal_window(Window* window);
+EGT_API void set_modal_window(Window* window);
 
 }
 

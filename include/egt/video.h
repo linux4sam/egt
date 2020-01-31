@@ -194,6 +194,8 @@ public:
         return m_loopback;
     }
 
+    using Window::scale;
+
     virtual void scale(float hscale, float vscale) override;
 
     /**

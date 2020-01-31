@@ -6,6 +6,7 @@
 #ifndef EGT_THEMES_COCONUT_H
 #define EGT_THEMES_COCONUT_H
 
+#include <egt/detail/meta.h>
 #include <egt/theme.h>
 
 namespace egt
@@ -16,7 +17,7 @@ inline namespace v1
 /**
  * Coconut Theme.
  */
-class CoconutTheme : public Theme
+class EGT_API CoconutTheme : public Theme
 {
 public:
 

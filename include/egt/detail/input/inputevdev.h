@@ -12,6 +12,7 @@
  */
 
 #include <egt/asio.hpp>
+#include <egt/detail/meta.h>
 #include <egt/input.h>
 #include <string>
 #include <vector>
@@ -29,7 +30,7 @@ class InputKeyboard;
 /**
  * Handles reading input events from evdev devices.
  */
-class InputEvDev : public Input
+class EGT_API InputEvDev : public Input
 {
 public:
 

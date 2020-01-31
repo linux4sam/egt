@@ -26,7 +26,7 @@ inline namespace v1
  * The current implementation uses the regex recommended by
  * https://tools.ietf.org/html/rfc3986#page-50
  */
-class Uri
+class EGT_API Uri
 {
 public:
 

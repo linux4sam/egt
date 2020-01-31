@@ -6,14 +6,14 @@
 #ifndef EGT_DETAIL_FLAGSBASE_H
 #define EGT_DETAIL_FLAGSBASE_H
 
-#include <initializer_list>
-#include <limits>
-#include <set>
-
 /**
  * @file
  * @brief Flags handling.
  */
+
+#include <initializer_list>
+#include <limits>
+#include <set>
 
 namespace egt
 {

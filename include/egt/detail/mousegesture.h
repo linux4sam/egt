@@ -7,6 +7,7 @@
 #define EGT_DETAIL_MOUSEGESTURE_H
 
 #include <chrono>
+#include <egt/detail/meta.h>
 #include <egt/event.h>
 #include <egt/geometry.h>
 #include <egt/timer.h>
@@ -32,7 +33,7 @@ namespace detail
  * into higher level meaning.  Because some of those events can be asynchronous,
  * all events are generated through callbacks registered with on_async_event().
  */
-class MouseGesture
+class EGT_API MouseGesture
 {
 public:
 

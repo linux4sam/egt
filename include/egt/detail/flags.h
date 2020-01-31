@@ -44,6 +44,8 @@ class Flags : public detail::Object, public detail::FlagsBase<T>
 public:
     using detail::FlagsBase<T>::FlagsBase;
 
+    constexpr Flags() noexcept = default;
+
     detail::Signal<> on_change;
 
     explicit Flags(const std::string& str)

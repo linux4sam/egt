@@ -6,6 +6,11 @@
 #ifndef EGT_DETAIL_MATH_H
 #define EGT_DETAIL_MATH_H
 
+/**
+ * @file
+ * @brief Math utilities.
+ */
+
 #include <algorithm>
 #include <cassert>
 #include <cmath>

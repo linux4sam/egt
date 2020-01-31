@@ -53,6 +53,7 @@ detail/input/inputkeyboard.h \
 detail/layout.cpp \
 detail/mousegesture.cpp \
 detail/object.cpp \
+detail/priorityqueue.h \
 detail/screen/flipthread.h \
 detail/serialize.cpp \
 detail/spriteimpl.h \
@@ -161,7 +162,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/meta.h \
 ../include/egt/detail/mousegesture.h \
 ../include/egt/detail/object.h \
-../include/egt/detail/priorityqueue.h \
 ../include/egt/detail/serialize.h \
 ../include/egt/detail/signal.h \
 ../include/egt/detail/string.h \

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/priorityqueue.h"
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/tools.h"
@@ -22,6 +23,7 @@ struct EventLoop::EventLoopImpl
 {
     asio::io_context m_io;
     asio::executor_work_guard<asio::io_context::executor_type> m_work{egt::asio::make_work_guard(m_io)};
+    detail::PriorityQueue m_queue;
 };
 
 EventLoop::EventLoop() noexcept
@@ -66,7 +68,7 @@ int EventLoop::wait()
             {}
 
 #ifdef USE_PRIORITY_QUEUE
-            m_queue.execute_all();
+            m_impl->m_queue.execute_all();
 #endif
         }
     });
@@ -180,6 +182,11 @@ void EventLoop::invoke_idle_callbacks()
 {
     for (auto& i : m_idle)
         i();
+}
+
+detail::PriorityQueue& EventLoop::queue()
+{
+    return m_impl->m_queue;
 }
 
 EventLoop::~EventLoop() = default;

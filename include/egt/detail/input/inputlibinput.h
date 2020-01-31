@@ -13,6 +13,7 @@
  */
 
 #include <egt/asio.hpp>
+#include <egt/detail/meta.h>
 #include <egt/input.h>
 #include <memory>
 #include <array>
@@ -33,7 +34,7 @@ class InputKeyboard;
 /**
  * Handles populating and reading input events from libinput.
  */
-class InputLibInput : public Input
+class EGT_API InputLibInput : public Input
 {
 public:
 

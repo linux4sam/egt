@@ -6,6 +6,7 @@
 #ifndef EGT_DETAIL_LAYOUT_H
 #define EGT_DETAIL_LAYOUT_H
 
+#include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/widgetflags.h>
 #include <vector>
@@ -22,7 +23,7 @@ namespace detail
 /**
  * Wrapper around properties for managing a rect by flex_layout().
  */
-struct LayoutRect
+struct EGT_API LayoutRect
 {
     LayoutRect() = default;
 
@@ -68,20 +69,20 @@ struct LayoutRect
 /**
  * Perform a manual flex layout given a parent rect and children rects.
  */
-void flex_layout(const Rect& parent,
-                 std::vector<LayoutRect>& children,
-                 Justification justify,
-                 Orientation orient);
+EGT_API void flex_layout(const Rect& parent,
+                         std::vector<LayoutRect>& children,
+                         Justification justify,
+                         Orientation orient);
 
 /**
  * Perform a manual flex layout with a parent and child rect, but allow a global
  * child alignment with the @b align parameter.
  */
-void flex_layout(const Rect& parent,
-                 std::vector<LayoutRect>& children,
-                 Justification justify,
-                 Orientation orient,
-                 const AlignFlags& align);
+EGT_API void flex_layout(const Rect& parent,
+                         std::vector<LayoutRect>& children,
+                         Justification justify,
+                         Orientation orient,
+                         const AlignFlags& align);
 }
 }
 }
