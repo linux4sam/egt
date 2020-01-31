@@ -7,7 +7,6 @@
 #include "egt/detail/enum.h"
 #include "egt/detail/serialize.h"
 #include "egt/sideboard.h"
-#include <iostream>
 
 namespace egt
 {
@@ -17,8 +16,10 @@ inline namespace v1
 static inline Size calculate_size(SideBoard::PositionFlag position)
 {
     return Application::instance().screen()->size() +
-           Size(position == SideBoard::PositionFlag::left || position == SideBoard::PositionFlag::right ? SideBoard::HANDLE_WIDTH : 0,
-                position == SideBoard::PositionFlag::top || position == SideBoard::PositionFlag::bottom ? SideBoard::HANDLE_WIDTH : 0);
+           Size((position == SideBoard::PositionFlag::left ||
+                 position == SideBoard::PositionFlag::right) ? SideBoard::HANDLE_WIDTH : 0,
+                (position == SideBoard::PositionFlag::top ||
+                 position == SideBoard::PositionFlag::bottom) ? SideBoard::HANDLE_WIDTH : 0);
 }
 
 SideBoard::SideBoard(PositionFlag position,
