@@ -186,7 +186,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     gst_bus_add_watch(m_bus, &bus_callback, this);
 
-    g_timeout_add(1000, (GSourceFunc) &query_position, this);
+    g_timeout_add(5000, (GSourceFunc) &query_position, this);
 
     return true;
 }
