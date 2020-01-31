@@ -22,11 +22,15 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
     auto p = orig.point();
     auto s = orig.size();
 
-    if (p.x() < bounding.x())
-        p.x(bounding.x());
+    // if alignment is empty, then don't force inside of bounding
+    if (!align.empty())
+    {
+        if (p.x() < bounding.x())
+            p.x(bounding.x());
 
-    if (p.y() < bounding.y())
-        p.y(bounding.y());
+        if (p.y() < bounding.y())
+            p.y(bounding.y());
+    }
 
     if (xratio)
     {
