@@ -41,11 +41,11 @@ public:
     UiLoader() = default;
 
     /**
-     * Parses and loads a UI XML file and returns the parent Widget.
+     * Parses and loads UI XML and returns the parent Widget.
      *
-     * @param file Path to the XML file to load.
+     * @param uri URI to the XML to load.
      */
-    virtual std::shared_ptr<Widget> load(const std::string& file);
+    virtual std::shared_ptr<Widget> load(const std::string& uri);
 
     virtual ~UiLoader() = default;
 };

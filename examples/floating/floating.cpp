@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
-#include <iostream>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -93,7 +92,7 @@ int main(int argc, const char** argv)
     egt::Application app(argc, argv, "floating");
 
     egt::TopWindow win;
-    win.background(egt::Image("background.png"));
+    win.background(egt::Image("file:background.png"));
     win.show();
 
     egt::DefaultDim f = 2;
@@ -118,9 +117,11 @@ int main(int argc, const char** argv)
     for (auto x = 0; x < SOFT_COUNT; x++)
     {
         std::stringstream os;
-        os << "image" << image_index++ << ".png";
+        os << "file:image" << image_index++ << ".png";
         auto image = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
-        boxes.push_back(std::make_shared<FloatingBox>(image, moveparms[x].first, moveparms[x].second));
+        boxes.push_back(std::make_shared<FloatingBox>(image,
+                        moveparms[x].first,
+                        moveparms[x].second));
         win.add(image);
     }
 
@@ -130,15 +131,17 @@ int main(int argc, const char** argv)
     for (auto x = 0; x < SOFTHARD_COUNT; x++)
     {
         std::stringstream os;
-        os << "image" << image_index++ << ".png";
+        os << "file:image" << image_index++ << ".png";
         auto image = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
-        auto plane = std::make_shared<egt::Window>(egt::Size(image->width(), image->height()));
+        auto plane = std::make_shared<egt::Window>(egt::Size(image->width(),
+                     image->height()));
         plane->color(egt::Palette::ColorId::bg, egt::Palette::transparent);
         plane->fill_flags().clear();
         plane->add(image);
         plane->show();
         plane->move(egt::Point(100, 100));
-        boxes.push_back(std::make_shared<FloatingBox>(plane, moveparms[x].first, moveparms[x].second));
+        boxes.push_back(std::make_shared<FloatingBox>(plane, moveparms[x].first,
+                        moveparms[x].second));
         win.add(plane);
     }
 

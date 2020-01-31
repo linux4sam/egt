@@ -21,7 +21,7 @@ int main(int argc, const char** argv)
     };
 
     auto label = std::make_shared<egt::ImageLabel>(
-                     egt::Image("icon:128px/egt_logo_black.png"),
+                     egt::Image("icon:egt_logo_black.png;128"),
                      "SideBoard Widget");
     label->font(egt::Font(28));
     label->fill_flags().clear();

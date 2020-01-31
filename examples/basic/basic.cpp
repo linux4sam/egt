@@ -8,7 +8,7 @@
 
 int main(int argc, const char** argv)
 {
-    egt::Application app(argc, argv);
+    egt::Application app;
 
     egt::TopWindow window;
     egt::Button button(window, "Press Me");

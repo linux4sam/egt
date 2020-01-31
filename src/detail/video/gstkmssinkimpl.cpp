@@ -141,7 +141,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     }
 
     std::ostringstream pipeline;
-    pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
+    pipeline << "uridecodebin uri=" << uri << " expose-all-streams=false name=video"
              << caps << " video." << v_pipe.str()  << " ! g1kmssink gem-name=" << m_gem
              << " video. " << a_pipe ;
 

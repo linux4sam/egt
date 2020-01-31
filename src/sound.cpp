@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "egt/detail/filesystem.h"
 #include "egt/respath.h"
 #include "egt/sound.h"
 #include <alsa/asoundlib.h>
@@ -122,18 +123,18 @@ struct soundimpl
 namespace experimental
 {
 
-Sound::Sound(const std::string& file, unsigned int rate, int channels, const std::string& device)
+Sound::Sound(const std::string& uri, unsigned int rate, int channels, const std::string& device)
     : m_impl(new detail::soundimpl),
-      m_file(file)
+      m_uri(uri)
 {
     open_alsa_device(device);
     init_alsa_params(rate, channels);
     open_file();
 }
 
-Sound::Sound(const std::string& file, const std::string& device)
+Sound::Sound(const std::string& uri, const std::string& device)
     : m_impl(new detail::soundimpl),
-      m_file(file)
+      m_uri(uri)
 {
     open_alsa_device(device);
     open_file();
@@ -141,10 +142,27 @@ Sound::Sound(const std::string& file, const std::string& device)
 
 void Sound::open_file()
 {
-    auto file = resolve_file_path(m_file);
+    std::string path;
+    auto type = detail::resolve_path(m_uri, path);
+
+    switch (type)
+    {
+    case detail::SchemeType::filesystem:
+    {
+        if (!detail::exists(path))
+        {
+            throw std::runtime_error("file not found: " + path);
+        }
+        break;
+    }
+    default:
+    {
+        throw std::runtime_error("unsupported uri: " + m_uri);
+    }
+    }
 
 #ifdef HAVE_SNDFILE
-    m_impl->in = SndfileHandle(file.c_str());
+    m_impl->in = SndfileHandle(path.c_str());
     init_alsa_params(m_impl->in.samplerate(), m_impl->in.channels());
 #else
     if (m_impl->channels == 0 || m_impl->rate == 0)
@@ -154,12 +172,12 @@ void Sound::open_file()
         return;
     }
 
-    m_impl->in.open(file, std::ios::binary | std::ios::in);
+    m_impl->in.open(path, std::ios::binary | std::ios::in);
 #endif
 
     if (!m_impl->in)
     {
-        spdlog::error("can't open file: {}", file);
+        spdlog::error("can't open file: {}", path);
     }
 }
 

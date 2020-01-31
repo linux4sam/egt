@@ -8,6 +8,7 @@
 #include "egt/audio.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/meta.h"
+#include "egt/respath.h"
 #include "egt/video.h"
 #include <exception>
 #include <gst/gst.h>
@@ -62,7 +63,7 @@ struct AudioPlayerImpl
     GstElement* m_volume {nullptr};
     gint64 m_position {0};
     gint64 m_duration {0};
-    std::string m_filename;
+    std::string m_uri;
     int m_volume_value {100};
     GMainLoop* m_gmainLoop{nullptr};
     std::thread m_gmainThread;
@@ -296,15 +297,39 @@ bool AudioPlayer::null()
 bool AudioPlayer::media(const std::string& uri)
 {
     bool result = true;
-    std::string u = detail::abspath(uri);
-    if (detail::change_if_diff(m_impl->m_filename, u))
+
+    if (detail::change_if_diff(m_impl->m_uri, uri))
     {
         destroyPipeline();
-        result = createPipeline();
-        g_object_set(m_impl->m_src,
-                     "uri",
-                     (std::string("file://") + m_impl->m_filename).c_str(),
-                     nullptr);
+
+        std::string path;
+        auto type = detail::resolve_path(uri, path);
+
+        switch (type)
+        {
+        case detail::SchemeType::filesystem:
+        {
+            result = createPipeline();
+            g_object_set(m_impl->m_src,
+                         "uri",
+                         (std::string("file://") + path).c_str(),
+                         nullptr);
+            break;
+        }
+        case detail::SchemeType::network:
+        {
+            result = createPipeline();
+            g_object_set(m_impl->m_src,
+                         "uri",
+                         uri.c_str(),
+                         nullptr);
+            break;
+        }
+        default:
+        {
+            throw std::runtime_error("unsupported uri: " + uri);
+        }
+        }
     }
 
     return result;

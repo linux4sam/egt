@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/canvas.h"
+#include "egt/detail/filesystem.h"
 #include "egt/detail/meta.h"
 #include "egt/resource.h"
 #include "egt/respath.h"
@@ -132,8 +133,6 @@ void SvgImage::load()
     std::string path;
     auto type = detail::resolve_path(m_uri, path);
 
-    SPDLOG_DEBUG("loading svg: {}", m_uri);
-
     switch (type)
     {
     case detail::SchemeType::resource:
@@ -155,6 +154,9 @@ void SvgImage::load()
     }
     case detail::SchemeType::filesystem:
     {
+        if (!detail::exists(path))
+            throw std::runtime_error("file not found: " + path);
+
         auto handle = rsvg_handle_new_from_file(path.c_str(), nullptr);
 
         if (!handle)
@@ -166,7 +168,7 @@ void SvgImage::load()
     }
     default:
     {
-        throw std::runtime_error("invalid uri: " + m_uri);
+        throw std::runtime_error("unsupported uri: " + m_uri);
     }
     }
 }

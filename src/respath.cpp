@@ -92,17 +92,10 @@ SchemeType resolve_path(const std::string& path, std::string& result)
             }
         });
 
-        if (result.find('/') != std::string::npos)
-            result = resolve_file_path(result);
-        else
-        {
-            auto egt_icons_dir = default_egt_icons_dir;
-            if (!uri.icon_size().empty())
-            {
-                egt_icons_dir = std::stoi(uri.icon_size()) + "px";
-            }
-            result = resolve_file_path(egt_icons_dir + "/" + result);
-        }
+        auto egt_icons_dir = default_egt_icons_dir;
+        if (!uri.icon_size().empty())
+            egt_icons_dir = uri.icon_size() + "px";
+        result = resolve_file_path(egt_icons_dir + "/" + result);
     }
     else if (uri.scheme() == "http" || uri.scheme() == "https")
     {

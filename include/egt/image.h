@@ -44,7 +44,7 @@ public:
      * Construct a raster image from a URI with an optional scale.
      *
      * @code{.cpp}
-     * Image image("image.png");
+     * Image image("file:image.png");
      * @endcode
      *
      * @param uri Resource path. @see @ref resources

@@ -28,7 +28,7 @@ int main(int argc, const char** argv)
     egt::VerticalBoxSizer vsizer;
     win.add(expand(vsizer));
 
-    egt::ImageLabel elogo(egt::Image("icon:128px/egt_logo_white.png"));
+    egt::ImageLabel elogo(egt::Image("icon:egt_logo_white.png;128"));
     elogo.margin(10);
     vsizer.add(elogo);
 

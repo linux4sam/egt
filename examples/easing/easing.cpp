@@ -54,7 +54,7 @@ public:
     {
         create_board();
 
-        background(egt::Image("background.png"));
+        background(egt::Image("file:background.png"));
 
         egt::ListBox::item_array items;
         items.resize(easing_functions.size());
@@ -84,7 +84,7 @@ public:
 
         list1->selected(7);
 
-        auto image = std::make_shared<egt::ImageLabel>(egt::Image("ball.png"));
+        auto image = std::make_shared<egt::ImageLabel>(egt::Image("file:ball.png"));
         m_box.resize(image->size());
         m_box.add(image);
 
@@ -140,7 +140,7 @@ int main(int argc, const char** argv)
     window.add(bottom(label1));
     label1.zorder_down();
 
-    egt::ImageLabel logo(egt::Image("icon:128px/egt_logo_white.png"));
+    egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
     logo.x(egt::SideBoard::HANDLE_WIDTH);
     logo.margin(10);
     window.add(top(logo));

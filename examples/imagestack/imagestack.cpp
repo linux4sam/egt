@@ -32,9 +32,9 @@ public:
 
     MainWindow()
     {
-        background(egt::Image("background.png"));
+        background(egt::Image("file:images/background.png"));
 
-        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
         egt_logo->align(egt::AlignFlag::center | egt::AlignFlag::top);
         egt_logo->margin(5);
         add(egt_logo);
@@ -104,7 +104,7 @@ private:
     {
         for (auto x = 0; x < 9; x++)
         {
-            auto image = egt::Image("image" + std::to_string(x) + ".png");
+            auto image = egt::Image("file:images/image" + std::to_string(x) + ".png");
             auto box = std::make_shared<LauncherItem>(image);
             box->resize(egt::Size(width() / 4, height() - 100));
             m_boxes.push_back(box);

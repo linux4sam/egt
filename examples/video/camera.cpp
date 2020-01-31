@@ -113,7 +113,7 @@ int main(int argc, const char** argv)
     hpos.align(AlignFlag::center);
     ctrlwindow.add(hpos);
 
-    ImageButton fullscreen(Image("file:fullscreen_png"));
+    ImageButton fullscreen(Image("res:fullscreen_png"));
     fullscreen.fill_flags().clear();
     hpos.add(fullscreen);
 
@@ -127,14 +127,14 @@ int main(int argc, const char** argv)
         {
             player.move(Point(0, 0));
             player.scale(wscale, hscale);
-            fullscreen.image(Image("file:fullscreen_exit_png"));
+            fullscreen.image(Image("res:fullscreen_exit_png"));
             scaled = false;
         }
         else
         {
             player.move(Point(240, 120));
             player.scale(1.0, 1.0);
-            fullscreen.image(Image("file:fullscreen_png"));
+            fullscreen.image(Image("res:fullscreen_png"));
             scaled = true;
         }
     }, {EventId::pointer_click});

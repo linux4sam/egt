@@ -199,7 +199,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     }
 
     std::ostringstream pipeline;
-    pipeline << "uridecodebin uri=file://" << uri << " expose-all-streams=false name=video"
+    pipeline << "uridecodebin uri=" << uri << " expose-all-streams=false name=video"
              << caps  << " video. ! queue ! videoscale ! video/x-raw,width=" <<
              std::to_string(m_size.width()) << ",height=" << std::to_string(m_size.height()) << vc <<
              " ! appsink name=appsink video. " << a_pipe ;

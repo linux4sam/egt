@@ -335,7 +335,7 @@ bool GstDecoderImpl::start_discoverer()
 
     GError* err2 = nullptr;
     std::unique_ptr<GstDiscovererInfo, GstDeleter<void, g_object_unref>>
-            info{gst_discoverer_discover_uri(discoverer.get(), ("file://" + m_uri).c_str(), &err2)};
+            info{gst_discoverer_discover_uri(discoverer.get(), m_uri.c_str(), &err2)};
 
     GstDiscovererResult result = gst_discoverer_info_get_result(info.get());
     SPDLOG_DEBUG("result: {} ", result);

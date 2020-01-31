@@ -18,7 +18,7 @@ public:
         fill_flags().clear();
         color(egt::Palette::ColorId::bg, egt::Palette::white);
 
-        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
         logo->align(egt::AlignFlag::left | egt::AlignFlag::top);
         logo->margin(10);
         add(logo);

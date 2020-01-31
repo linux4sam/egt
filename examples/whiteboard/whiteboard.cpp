@@ -129,11 +129,11 @@ class MainWindow : public egt::TopWindow
 public:
 
     MainWindow()
-        : m_colorbtn(egt::Image("palette.png")),
-          m_fillbutton(egt::Image("fill.png")),
-          m_widthbtn(egt::Image("width.png")),
-          m_clearbtn(egt::Image("clear.png")),
-          m_snapshotbtn(egt::Image("screenshot.png")),
+        : m_colorbtn(egt::Image("file:palette.png")),
+          m_fillbutton(egt::Image("file:fill.png")),
+          m_widthbtn(egt::Image("file:width.png")),
+          m_clearbtn(egt::Image("file:clear.png")),
+          m_snapshotbtn(egt::Image("file:screenshot.png")),
           m_penpicker(egt::Palette::blue),
           m_fillpicker(egt::Palette::red),
           m_widthpicker(2),
@@ -194,7 +194,7 @@ public:
             paint_to_file();
         });
 
-        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
         logo->align(egt::AlignFlag::right | egt::AlignFlag::top);
         logo->margin(10);
         add(logo);
@@ -293,7 +293,7 @@ static int run(int argc, const char** argv)
     egt::Application app(argc, argv, "whiteboard");
 
     MainWindow win;
-    win.show_cursor(egt::Image("icon:cursor_pencil.png"));
+    win.show_cursor(egt::Image("icon:cursor_pencil.png;16"));
     win.show();
 
     return app.run();

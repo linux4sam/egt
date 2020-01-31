@@ -175,9 +175,24 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     return result;
 }
 
-std::shared_ptr<Widget> UiLoader::load(const std::string& file)
+std::shared_ptr<Widget> UiLoader::load(const std::string& uri)
 {
-    rapidxml::file<> xml_file(file.c_str());
+    std::string path;
+    auto type = detail::resolve_path(uri, path);
+
+    switch (type)
+    {
+    case detail::SchemeType::filesystem:
+    {
+        break;
+    }
+    default:
+    {
+        throw std::runtime_error("unsupported uri: " + uri);
+    }
+    }
+
+    rapidxml::file<> xml_file(path.c_str());
     rapidxml::xml_document<> doc;
     doc.parse < rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes > (xml_file.data());
 

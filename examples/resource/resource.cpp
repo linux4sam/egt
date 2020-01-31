@@ -42,28 +42,28 @@ public:
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
         egt_logo->align(egt::AlignFlag::center | egt::AlignFlag::top);
         egt_logo->margin(5);
         sizer->add(egt_logo);
 
         sizer->add(egt::expand(m_grid));
 
-        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("image1.png"), _("PNG-filename"))));
-        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("file:image2_png"), _("PNG-stream"))));
-        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("image3.bmp"), _("BMP-filename"))));
-        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("file:image4_bmp"), _("BMP-stream"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("file:image1.png"), _("PNG-filename"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("res:image2_png"), _("PNG-stream"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("file:image3.bmp"), _("BMP-filename"))));
+        m_grid.add(expand(std::make_shared<ResourceFrame>(egt::Image("res:image4_bmp"), _("BMP-stream"))));
 
         try
         {
-            m_grid.add(egt::expand(std::make_shared<ResourceFrame>(egt::Image("image5.jpg"), _("JPEG-file"))));
+            m_grid.add(egt::expand(std::make_shared<ResourceFrame>(egt::Image("file:image5.jpg"), _("JPEG-file"))));
         }
         catch (...)
         {}
 
         try
         {
-            m_grid.add(egt::expand(std::make_shared<ResourceFrame>(egt::SvgImage("image6.svg", egt::SizeF(0, 205)), _("SVG-file"))));
+            m_grid.add(egt::expand(std::make_shared<ResourceFrame>(egt::SvgImage("file:image6.svg", egt::SizeF(0, 205)), _("SVG-file"))));
         }
         catch (...)
         {}

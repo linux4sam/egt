@@ -11,6 +11,7 @@
 #include "detail/video/gstkmssinkimpl.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
+#include "egt/respath.h"
 #include "egt/video.h"
 #include <fstream>
 #include <spdlog/spdlog.h>
@@ -126,7 +127,25 @@ int64_t VideoWindow::duration() const
 
 bool VideoWindow::media(const std::string& uri)
 {
-    return m_video_impl->media(detail::abspath(uri));
+    std::string path;
+    auto type = detail::resolve_path(uri, path);
+
+    switch (type)
+    {
+    case detail::SchemeType::network:
+        return m_video_impl->media(uri);
+    case detail::SchemeType::filesystem:
+    {
+        auto gstpath = "file://" + path;
+        return m_video_impl->media(gstpath);
+    }
+    default:
+    {
+        throw std::runtime_error("unsupported uri: " + uri);
+    }
+    }
+
+    return false;
 }
 
 bool VideoWindow::pause()

@@ -523,7 +523,7 @@ int main(int argc, const char** argv)
     auto frame = std::make_shared<egt::Frame>(egt::Size(0, 60));
     vsizer.add(egt::expand_horizontal(frame));
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
     logo->align(egt::AlignFlag::center);
     frame->add(logo);
 

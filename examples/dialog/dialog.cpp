@@ -27,7 +27,7 @@ int main(int argc, const char** argv)
     grid->color(Palette::ColorId::bg, Palette::gray);
     layout->add(expand_horizontal(grid));
 
-    auto logo = make_shared<ImageLabel>(Image("icon:128px/egt_logo_black.png"));
+    auto logo = make_shared<ImageLabel>(Image("icon:egt_logo_black.png;128"));
     grid->add(center(logo), 1, 0);
 
     auto vsizer = make_shared<VerticalBoxSizer>();

@@ -50,7 +50,7 @@ int main(int argc, const char** argv)
 
     egt::TopWindow window;
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_black.png"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
     logo->margin(10);
     logo->align(egt::AlignFlag::center | egt::AlignFlag::bottom);
     window.add(logo);

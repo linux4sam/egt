@@ -33,7 +33,7 @@ namespace experimental
  *
  * The default sound card is used by default, but another one can be specified.
  * @code{.cpp}
- * Sound sound("myfile.wav", "1:0")
+ * Sound sound("file:myfile.wav", "1:0")
  * @endcode
  *
  * Another way to configure the default sound card is at the system level.
@@ -54,19 +54,19 @@ class EGT_API Sound
 public:
 
     /**
-     * @param file The WAV file to play.
+     * @param uri The WAV file to play.
      * @param device ALSA sound device.
      */
-    explicit Sound(const std::string& file,
+    explicit Sound(const std::string& uri,
                    const std::string& device = "default");
 
     /**
-     * @param file The WAV file to play.
+     * @param uri The WAV file to play.
      * @param rate Rate of the sound file, i.e. 44100.
      * @param channels The number of channels in the sound file.
      * @param device ALSA sound device.
      */
-    explicit Sound(const std::string& file, unsigned int rate, int channels,
+    explicit Sound(const std::string& uri, unsigned int rate, int channels,
                    const std::string& device = "default");
 
     /**
@@ -91,7 +91,7 @@ protected:
     std::unique_ptr<detail::soundimpl> m_impl;
 
     /// Sound file.
-    std::string m_file;
+    std::string m_uri;
 };
 
 }

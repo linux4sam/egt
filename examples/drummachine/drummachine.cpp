@@ -16,7 +16,7 @@ int main(int argc, const char** argv)
     egt::VerticalBoxSizer sizer;
     win.add(expand(sizer));
 
-    egt::ImageLabel logo(egt::Image("icon:128px/egt_logo_white.png"));
+    egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
     logo.margin(10);
     sizer.add(top(center(logo)));
 
@@ -25,12 +25,12 @@ int main(int argc, const char** argv)
 
     std::vector<std::pair<std::string, std::string>> drums =
     {
-        {"Closed-Hi-Hat-1.wav", "Hi-Hat"},
-        {"Crash-Cymbal-1.wav", "Symbol"},
-        {"Ensoniq-ESQ-1-Hi-Synth-Tom.wav", "Tom"},
-        {"Alesis-Sanctuary-QCard-Loose-Bell-C5.wav", "Bell"},
-        {"Ensoniq-ESQ-1-Snare.wav", "Snare"},
-        {"Bass-Drum-1.wav", "Bass"},
+        {"file:Closed-Hi-Hat-1.wav", "Hi-Hat"},
+        {"file:Crash-Cymbal-1.wav", "Symbol"},
+        {"file:Ensoniq-ESQ-1-Hi-Synth-Tom.wav", "Tom"},
+        {"file:Alesis-Sanctuary-QCard-Loose-Bell-C5.wav", "Bell"},
+        {"file:Ensoniq-ESQ-1-Snare.wav", "Snare"},
+        {"file:Bass-Drum-1.wav", "Bass"},
     };
 
     for (auto& drum : drums)

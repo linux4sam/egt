@@ -13,19 +13,19 @@ int main(int argc, const char** argv)
     egt::Application app(argc, argv, "sprite");
 
     egt::TopWindow win;
-    win.background(egt::Image("background.png"));
+    win.background(egt::Image("file:background.png"));
 
-    egt::ImageLabel logo(egt::Image("icon:128px/microchip_logo_white.png"));
+    egt::ImageLabel logo(egt::Image("icon:microchip_logo_white.png;128"));
     logo.align(egt::AlignFlag::left | egt::AlignFlag::top);
     logo.margin(10);
     win.add(logo);
 
     egt::StaticGrid grid(egt::Rect(egt::Size(win.width(), win.height() - 40)), std::make_tuple(2, 2));
 
-    egt::Sprite sprite1(egt::Image("walk.png"), egt::Size(75, 132), 8, egt::Point(0, 0));
+    egt::Sprite sprite1(egt::Image("file:walk.png"), egt::Size(75, 132), 8, egt::Point(0, 0));
     grid.add(center(sprite1), 0, 1);
 
-    egt::Sprite sprite2(egt::Image("walk.png"), egt::Size(75, 132), 8, egt::Point(0, 0));
+    egt::Sprite sprite2(egt::Image("file:walk.png"), egt::Size(75, 132), 8, egt::Point(0, 0));
     grid.add(center(sprite2), 1, 1);
 
     egt::CheckBox hardware_checkbox("Hardware", egt::Rect(egt::Point(0, 0), egt::Size(120, 40)));

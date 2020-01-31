@@ -13,8 +13,8 @@ class FloatingBox : public egt::Window
 public:
     explicit FloatingBox(const egt::Rect& rect)
         : egt::Window(rect),
-          m_grip(egt::Image("grip.png")),
-          m_arrows(egt::Image("arrows.png"))
+          m_grip(egt::Image("file:grip.png")),
+          m_arrows(egt::Image("file:arrows.png"))
     {
         flags().set(egt::Widget::Flag::grab_mouse);
         color(egt::Palette::ColorId::bg, egt::Color(0x526d7480));
@@ -63,7 +63,7 @@ int main(int argc, const char** argv)
     egt::Application app(argc, argv, "drag");
 
     egt::TopWindow window;
-    window.background(egt::Image("background.png"));
+    window.background(egt::Image("file:background.png"));
 
     FloatingBox box1(egt::Rect(egt::Ratio<int>(window.width(), 20),
                                egt::Ratio<int>(window.height(), 20),
@@ -86,7 +86,7 @@ int main(int argc, const char** argv)
     label1.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     window.add(label1);
 
-    egt::ImageLabel logo(egt::Image("icon:128px/egt_logo_white.png"));
+    egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
     logo.margin(10);
     window.add(center(top(logo)));
 

@@ -70,7 +70,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
         }
         default:
         {
-            throw std::runtime_error("invalid path: " + path);
+            throw std::runtime_error("unsupported uri: " + uri);
         }
         }
     }

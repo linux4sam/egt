@@ -19,9 +19,9 @@ public:
 
     Controls()
         : StaticGrid(Size(250, 64), std::make_tuple(3, 1)),
-          m_previous(Image("previous.png")),
-          m_play(Image("play.png")),
-          m_next(Image("next.png"))
+          m_previous(Image("file:previous.png")),
+          m_play(Image("file:play.png")),
+          m_next(Image("file:next.png"))
     {
         align(AlignFlag::center);
 
@@ -100,10 +100,12 @@ struct AudioRadial : public Radial
 class AudioPlayerWindow : public TopWindow
 {
 public:
-    explicit AudioPlayerWindow()
+    AudioPlayerWindow() = delete;
+
+    explicit AudioPlayerWindow(const std::string& uri)
         : m_colormap({Color(76, 181, 253), Color(34, 186, 133)})
     {
-        background(Image("background.png"));
+        background(Image("file:background.png"));
 
         auto range0 = std::make_shared<RangeValue<int>>(0, 100, 100);
         auto range1 = std::make_shared<RangeValue<int>>(0, 100, 100);
@@ -123,19 +125,19 @@ public:
         {
             if (m_player.playing())
             {
-                m_controls.m_play.image(Image("play.png"));
+                m_controls.m_play.image(Image("file:play.png"));
                 m_player.pause();
                 m_animation.stop();
             }
             else
             {
-                m_controls.m_play.image(Image("pause.png"));
+                m_controls.m_play.image(Image("file:pause.png"));
                 m_player.play();
                 m_animation.start();
             }
         }, {EventId::pointer_click});
 
-        auto logo = std::make_shared<ImageLabel>(Image("icon:128px/egt_logo_white.png"));
+        auto logo = std::make_shared<ImageLabel>(Image("icon:egt_logo_white.png;128"));
         logo->align(AlignFlag::left | AlignFlag::top);
         logo->margin(10);
         add(logo);
@@ -153,7 +155,7 @@ public:
         message_dialog->button(Dialog::ButtonId::button2, "OK");
         add(message_dialog);
 
-        auto note = std::make_shared<ImageButton>(Image("note.png"));
+        auto note = std::make_shared<ImageButton>(Image("file:note.png"));
         note->fill_flags().clear();
         note->align(AlignFlag::right | AlignFlag::bottom);
         note->margin(10);
@@ -183,12 +185,12 @@ public:
         {
             if (!m_player.playing())
             {
-                m_controls.m_play.image(Image("play.png"));
+                m_controls.m_play.image(Image("file:play.png"));
                 m_animation.stop();
             }
         });
 
-        m_player.media(resolve_file_path("concerto.mp3"));
+        m_player.media(uri);
 
         auto glow = [this, range2handle](float value)
         {
@@ -224,11 +226,15 @@ protected:
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "audioplayer");
+    Application app(argc, argv);
 
     Application::instance().screen()->high_fidelity();
 
-    AudioPlayerWindow win;
+    std::string uri = "file:concerto.mp3";
+    if (argc >= 2)
+        uri = argv[1];
+
+    AudioPlayerWindow win(uri);
     win.show();
 
     return app.run();

@@ -18,7 +18,7 @@ public:
     Ball() = delete;
 
     Ball(int xspeed, int yspeed) noexcept
-        : egt::ImageLabel(egt::Image("star.png")),
+        : egt::ImageLabel(egt::Image("file:star.png")),
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {
@@ -65,9 +65,9 @@ class MainWindow : public egt::TopWindow
 public:
     MainWindow()
     {
-        background(egt::Image("background.png"));
+        background(egt::Image("file:background.png"));
 
-        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:128px/egt_logo_white.png"));
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_white.png;128"));
         logo->margin(10);
         add(top(left(logo)));
     }
