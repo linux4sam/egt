@@ -135,6 +135,7 @@ private:
 int main(int argc, const char** argv)
 {
     egt::Application app(argc, argv, "space");
+    egt::add_search_path(EXAMPLEDATA);
 
     MainWindow win;
     win.show();

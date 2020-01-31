@@ -44,6 +44,7 @@ static std::string line_break(const std::string& in, size_t width = 50)
 int main(int argc, const char** argv)
 {
     Application app(argc, argv, "camera");
+    egt::add_search_path(EXAMPLEDATA);
 
     Size size(320, 240);
     auto format = PixelFormat::yuyv;

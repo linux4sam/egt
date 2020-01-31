@@ -121,34 +121,10 @@ Application::Application(int argc, const char** argv, const std::string& name, b
         the_app = this;
     }
 
-    // any added search paths take priority
-    if (getenv("EGT_SEARCH_PATH"))
-    {
-        std::vector<std::string> tokens;
-        detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
-
-        for (auto& token : tokens)
-            add_search_path(token);
-    }
-
-    // search exe pwd
-    add_search_path(detail::exe_pwd());
-
-    // libegt icons
-    add_search_path(std::string(DATADIR) + "/libegt/icons");
-
-    if (!name.empty())
-    {
-        // special handling for installed examples
-        add_search_path(std::string(DATADIR) + "/egt/examples/" + name);
-    }
-
-    // special handling for running example in the source directory
-    add_search_path(detail::exe_pwd() + "/../../../icons");
-    add_search_path(detail::exe_pwd() + "/../../icons");
+    add_search_paths();
 
     setlocale(LC_ALL, "");
-    bindtextdomain(name.c_str(), (detail::exe_pwd() + "/../share/locale/").c_str());
+    bindtextdomain(name.c_str(), (std::string(DATADIR) + "/locale/").c_str());
     textdomain(name.c_str());
 
     std::string backend;
@@ -286,6 +262,28 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 
         return 0;
     }, {EventId::keyboard_down});
+}
+
+void Application::add_search_paths()
+{
+    // any added search paths take priority
+    if (getenv("EGT_SEARCH_PATH"))
+    {
+        std::vector<std::string> tokens;
+        detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
+
+        for (auto& token : tokens)
+            add_search_path(token);
+    }
+
+    // search cwd
+    add_search_path(detail::cwd());
+
+    // search exe directory
+    add_search_path(detail::exe_pwd());
+
+    // libegt icons
+    add_search_path(std::string(DATADIR) + "/libegt/icons");
 }
 
 void Application::signal_handler(const asio::error_code& error, int signum)

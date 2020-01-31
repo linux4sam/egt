@@ -227,6 +227,7 @@ protected:
 int main(int argc, const char** argv)
 {
     Application app(argc, argv);
+    egt::add_search_path(EXAMPLEDATA);
 
     Application::instance().screen()->high_fidelity();
 

@@ -34,7 +34,8 @@ CLEANFILES = $(BUILT_SOURCES)
 
 resource_SOURCES = resource.cpp
 nodist_resource_SOURCES = $(BUILT_SOURCES)
-resource_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+resource_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/resource\"
 resource_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 resourcedir = $(prefix)/share/egt/examples/resource
 resource_DATA = $(wildcard $(top_srcdir)/examples/resource/*.png) \

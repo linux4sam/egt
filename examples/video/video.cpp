@@ -65,6 +65,8 @@ int main(int argc, const char** argv)
     }
 
     Application app(argc, argv, "video");
+    egt::add_search_path(EXAMPLEDATA);
+
     TopWindow win;
     win.color(Palette::ColorId::bg, Palette::black);
 

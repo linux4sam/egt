@@ -35,7 +35,8 @@ CLEANFILES = $(BUILT_SOURCES)
 
 video_SOURCES = video.cpp
 nodist_video_SOURCES = $(BUILT_SOURCES)
-video_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+video_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/video\"
 video_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 videodir = $(prefix)/share/egt/examples/video
 video_DATA = $(wildcard $(top_srcdir)/examples/video/*.png) \
@@ -44,7 +45,8 @@ video_LDFLAGS = $(AM_LDFLAGS)
 
 camera_SOURCES = camera.cpp
 nodist_camera_SOURCES = $(BUILT_SOURCES)
-camera_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+camera_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/video\"
 camera_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 cameradir = $(prefix)/share/egt/examples/camera
 camera_DATA = $(wildcard $(top_srcdir)/examples/video/*.png)
@@ -52,7 +54,8 @@ camera_LDFLAGS = $(AM_LDFLAGS)
 
 capture_SOURCES = capture.cpp
 nodist_capture_SOURCES = $(BUILT_SOURCES)
-capture_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+capture_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/video\"
 capture_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 capturedir = $(prefix)/share/egt/examples/capture
 capture_DATA = $(wildcard $(top_srcdir)/examples/video/*.png)

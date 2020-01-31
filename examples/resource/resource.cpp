@@ -75,6 +75,7 @@ public:
 int main(int argc, const char** argv)
 {
     egt::Application app(argc, argv, "resource");
+    egt::add_search_path(EXAMPLEDATA);
 
     MainWindow window;
     window.show();

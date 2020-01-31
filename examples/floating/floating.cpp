@@ -93,6 +93,7 @@ static std::vector<std::shared_ptr<FloatingBox>> boxes;
 int main(int argc, const char** argv)
 {
     egt::Application app(argc, argv, "floating");
+    egt::add_search_path(EXAMPLEDATA);
 
     egt::TopWindow win;
     win.background(egt::Image("file:background.png"));

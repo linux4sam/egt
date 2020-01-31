@@ -291,6 +291,7 @@ public:
 static int run(int argc, const char** argv)
 {
     egt::Application app(argc, argv, "whiteboard");
+    egt::add_search_path(EXAMPLEDATA);
 
     MainWindow win;
     win.show_cursor(egt::Image("icon:cursor_pencil.png;16"));

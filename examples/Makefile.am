@@ -117,7 +117,8 @@ dist_charts_charts_DATA = $(wildcard $(top_srcdir)/examples/charts/*.png) \
 charts_charts_LDFLAGS = $(AM_LDFLAGS)
 
 easing_easing_SOURCES = easing/easing.cpp
-easing_easing_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+easing_easing_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/easing\"
 easing_easing_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 easing_easingdir = $(prefix)/share/egt/examples/easing
 dist_easing_easing_DATA = $(wildcard $(top_srcdir)/examples/easing/*.png) \
@@ -125,14 +126,16 @@ dist_easing_easing_DATA = $(wildcard $(top_srcdir)/examples/easing/*.png) \
 easing_easing_LDFLAGS = $(AM_LDFLAGS)
 
 floating_floating_SOURCES = floating/floating.cpp
-floating_floating_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+floating_floating_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/floating\"
 floating_floating_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 floating_floatingdir = $(prefix)/share/egt/examples/floating
 dist_floating_floating_DATA = $(wildcard $(top_srcdir)/examples/floating/*.png)
 floating_floating_LDFLAGS = $(AM_LDFLAGS)
 
 space_space_SOURCES = space/space.cpp
-space_space_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+space_space_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/space\"
 space_space_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 space_spacedir = $(prefix)/share/egt/examples/space
 dist_space_space_DATA = $(wildcard $(top_srcdir)/examples/space/*.png) \
@@ -140,7 +143,8 @@ dist_space_space_DATA = $(wildcard $(top_srcdir)/examples/space/*.png) \
 space_space_LDFLAGS = $(AM_LDFLAGS)
 
 sprite_sprite_SOURCES = sprite/sprite.cpp
-sprite_sprite_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+sprite_sprite_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/sprite\"
 sprite_sprite_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 sprite_spritedir = $(prefix)/share/egt/examples/sprite
 dist_sprite_sprite_DATA = $(wildcard $(top_srcdir)/examples/sprite/*.png)
@@ -161,7 +165,8 @@ basic_basicdir = $(prefix)/share/egt/examples/basic
 basic_basic_LDFLAGS = $(AM_LDFLAGS)
 
 whiteboard_whiteboard_SOURCES = whiteboard/whiteboard.cpp
-whiteboard_whiteboard_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+whiteboard_whiteboard_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/whiteboard\"
 whiteboard_whiteboard_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 whiteboard_whiteboarddir = $(prefix)/share/egt/examples/whiteboard
 dist_whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*.png) \
@@ -169,7 +174,8 @@ dist_whiteboard_whiteboard_DATA = $(wildcard $(top_srcdir)/examples/whiteboard/*
 whiteboard_whiteboard_LDFLAGS = $(AM_LDFLAGS)
 
 drag_drag_SOURCES = drag/drag.cpp
-drag_drag_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+drag_drag_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/drag\"
 drag_drag_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 drag_dragdir = $(prefix)/share/egt/examples/drag
 dist_drag_drag_DATA = $(wildcard $(top_srcdir)/examples/drag/*.png) \
@@ -199,7 +205,8 @@ dist_basicui_basicui_DATA = $(wildcard $(top_srcdir)/examples/basicui/*.xml)
 basicui_basicui_LDFLAGS = $(AM_LDFLAGS)
 
 audioplayer_audioplayer_SOURCES = audioplayer/audioplayer.cpp
-audioplayer_audioplayer_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+audioplayer_audioplayer_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/audioplayer\"
 audioplayer_audioplayer_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 audioplayer_audioplayerdir = $(prefix)/share/egt/examples/audioplayer
 dist_audioplayer_audioplayer_DATA = $(wildcard $(top_srcdir)/examples/audioplayer/*.png) \
@@ -222,7 +229,8 @@ dialog_dialogdir = $(prefix)/share/egt/examples/dialog
 dialog_dialog_LDFLAGS = $(AM_LDFLAGS)
 
 gauge_gauge_SOURCES = gauge/gauge.cpp
-gauge_gauge_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+gauge_gauge_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/gauge\"
 gauge_gauge_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 gauge_gaugedir = $(prefix)/share/egt/examples/gauge
 dist_gauge_gauge_DATA = $(wildcard $(top_srcdir)/examples/gauge/*.svg) \
@@ -231,7 +239,8 @@ dist_gauge_gauge_DATA = $(wildcard $(top_srcdir)/examples/gauge/*.svg) \
 gauge_gauge_LDFLAGS = $(AM_LDFLAGS)
 
 dash_dash_SOURCES = dash/dash.cpp
-dash_dash_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+dash_dash_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/dash\"
 dash_dash_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 dash_dashdir = $(prefix)/share/egt/examples/dash
 dist_dash_dash_DATA = $(wildcard $(top_srcdir)/examples/dash/*.svg) \
@@ -263,14 +272,16 @@ luarepl_luarepldir = $(prefix)/share/egt/examples/luarepl
 luarepl_luarepl_LDFLAGS = $(AM_LDFLAGS)
 
 imagestack_imagestack_SOURCES = imagestack/imagestack.cpp
-imagestack_imagestack_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+imagestack_imagestack_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/imagestack\"
 imagestack_imagestack_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 imagestack_imagestackdir = $(prefix)/share/egt/examples/images/imagestack
 imagestack_imagestack_DATA = $(wildcard $(top_srcdir)/examples/imagestack/images/*.png)
 imagestack_imagestack_LDFLAGS = $(AM_LDFLAGS)
 
 drummachine_drummachine_SOURCES = drummachine/drummachine.cpp
-drummachine_drummachine_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+drummachine_drummachine_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/drummachine\"
 drummachine_drummachine_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 drummachine_drummachinedir = $(prefix)/share/egt/examples/drummachine
 drummachine_drummachine_DATA = $(wildcard $(top_srcdir)/examples/drummachine/*.wav)

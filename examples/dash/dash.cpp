@@ -78,6 +78,7 @@ static std::shared_ptr<egt::experimental::GaugeLayer> create_layer(egt::experime
 int main(int argc, const char** argv)
 {
     egt::Application app(argc, argv, "dash");
+    egt::add_search_path(EXAMPLEDATA);
 
     egt::TopWindow win;
     win.padding(10);

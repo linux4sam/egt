@@ -119,6 +119,8 @@ public:
 
 protected:
 
+    virtual void add_search_paths();
+
     /**
      * The event loop instance.
      */
