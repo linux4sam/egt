@@ -601,6 +601,9 @@ void Widget::deserialize(const std::string& name, const std::string& value,
     else if (name == "borderflags")
         border_flags(Theme::BorderFlags(value));
     else if (name == "flags")
+        /// @todo Widget flags set explicitly from deserialization are not safe
+        /// for things like frame/plane_window flags which should only come from
+        /// widget construction
         m_widget_flags.from_string(value);
     else if (name == "alpha")
         alpha(std::stoi(value));
