@@ -20,7 +20,10 @@ public:
     {
         m_widget->flags().set(egt::Widget::Flag::no_layout);
         m_widget->flags().set(egt::Widget::Flag::grab_mouse);
-        widget->on_event(std::bind(&FloatingBox::handle, this, std::placeholders::_1));
+        m_widget->on_event([this](egt::Event & event)
+        {
+            handle(event);
+        });
     }
 
     virtual void handle(egt::Event& event)
