@@ -66,10 +66,12 @@ auto bug = egt::Image("icon:bug.png");
 
 In the above example, bug.png is picked from a EGT installed default icons
 directory (i.e. /usr/share/libegt/icons). If a user wants to pick a different
-icon from a different directory, use the following syntax:
+icon size, use the following syntax as described in the provisional
+[IETF draft](http://www.iana.org/go/draft-lafayette-icon-uri-scheme) for the
+`icon:` scheme:
 
 @code{.cpp}
-auto bug = egt::Image("icon:128px/bug.png");
+auto bug = egt::Image("icon:bug.png;128");
 @endcode
 
 The EGT installed default icons directory can be changed by setting an
