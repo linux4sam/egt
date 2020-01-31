@@ -125,6 +125,10 @@ do
 	echo "$includedir/$f:0:0: error: includes config.h"
     fi
 
+    if ! grep -q 'EGT_API' $includedir/$f; then
+	echo "$includedir/$f:0:0: warning: no EGT_API used"
+    fi
+
     # deprecated or too new or otherwise disallowed headers
     for header in $disallowed_headers; do
 	if grep -q "\#include $header" $includedir/$f; then
