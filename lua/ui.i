@@ -151,7 +151,7 @@ namespace detail
         $self->on_event(lua_fn_ptr);
     }
 
-    virtual void on_event_filtered(SWIGLUA_REF callback, eventid id)
+    virtual void on_event_filtered(SWIGLUA_REF callback, EventId id)
     {
         LuaEventFnPtr lua_fn_ptr(callback);
         $self->on_event(lua_fn_ptr, {id});

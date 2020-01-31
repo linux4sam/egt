@@ -88,7 +88,7 @@
 #endif
 
 @include_luaapp@
-#ifdef EGT_HAS_LUA
+#ifdef EGT_HAS_LUA_BINDINGS
 #include <egt/luaapp.h>
 #endif
 

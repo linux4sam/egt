@@ -19,15 +19,18 @@ endif
 
 CLEANFILES = ui.cpp
 
+CUSTOM_CXXFLAGS = -Woverloaded-virtual -DLUA_USE_POSIX
+
 noinst_LTLIBRARIES = libegtlua.la
 libegtlua_la_SOURCES =
 nodist_libegtlua_la_SOURCES = ui.cpp
-libegtlua_la_CXXFLAGS = -fPIC -I$(top_srcdir)/include \
+libegtlua_la_CXXFLAGS = \
+	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
+	$(CUSTOM_CXXFLAGS) \
 	@LIBEGT_EXTRA_CXXFLAGS@ \
 	$(CODE_COVERAGE_CXXFLAGS) \
-	$(AM_CXXFLAGS) \
-	-DLUA_USE_POSIX
+	$(AM_CXXFLAGS)
 
 endif
 
