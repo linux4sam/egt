@@ -131,10 +131,10 @@ AM_CONDITIONAL([HAVE_LINUX_GPIO_H], [test "x${have_linux_gpio_h}" = xyes])
 CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -DEGT_DLL_EXPORTS"
 
 AC_ARG_ENABLE([debug],
-  [AS_HELP_STRING([--disable-debug], [disable debugging support [default=no]])],
-  [enable_debug=no], [ ])
+  [AS_HELP_STRING([--disable-debug], [enable debugging support [default=yes]])],
+  [enable_debug=$enableval], [enable_debug=yes])
 
-if test "$enable_debug" = "no" ; then
+if test "x$enable_debug" = "xyes" ; then
   AC_MSG_NOTICE([Disabling debugging])
   CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast \
   		      -fvisibility=hidden \
@@ -150,7 +150,9 @@ else
   CFLAGS="$CFLAGS -O0"
 fi
 
-AC_ARG_ENABLE(gcov, AC_HELP_STRING([--enable-gcov],[turn on code coverage analysis tools]))
+AC_ARG_ENABLE(gcov,
+  [AC_HELP_STRING([--enable-gcov],[turn on code coverage analysis tools])],
+  [enable_gcov=$enableval], [enable_gcov=no])
 
 dnl Check for --enable-gcov and add appropriate flags for gcc
 dnl Note that these extra switches are NOT applied to the loader
@@ -173,7 +175,9 @@ then
   fi
 fi
 
-AC_ARG_ENABLE(profile, AC_HELP_STRING([--enable-profile],[turn on profiling tools]))
+AC_ARG_ENABLE(profile,
+  [AC_HELP_STRING([--enable-profile],[turn on profiling tools])],
+  [enable_profile=$enableval], [enable_profile=no])
 
 if test "x$enable_profile" = "xyes";
 then
@@ -190,13 +194,13 @@ fi
 
 AC_ARG_ENABLE([examples],
   [AS_HELP_STRING([--enable-examples], [build examples [default=yes]])],
-  [enable_examples=${enableval}], [enable_examples=yes])
+  [enable_examples=$enableval], [enable_examples=yes])
 AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x${enable_examples}" = xyes])
 
 AC_ARG_ENABLE([lto],
   [AS_HELP_STRING([--enable-lto], [enable gcc's LTO [default=no]])],
-  [enable_lto=yes], [enable_lto=no])
-if test "$enable_lto" = "yes" ; then
+  [enable_lto=$enableval], [enable_lto=no])
+if test "x$enable_lto" = "xyes" ; then
   AC_MSG_NOTICE([enabling LTO])
   CFLAGS="$CFLAGS -flto"
   CXXFLAGS="$CXXFLAGS -flto"
@@ -328,13 +332,15 @@ AS_IF([test "x$with_lua" != "xno"],[
       LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
       LIBEGT_EXTRA_LDFLAGS="${LUA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
-      AC_ARG_ENABLE(lua-bindings, AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings (default: no)]))
+      AC_ARG_ENABLE(lua-bindings,
+        [AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings (default: no)])],
+        [enable_lua_bindings=$enableval], [enable_lua_bindings=no])
       if test "x$enable_lua_bindings" = "xyes";
       then
          AC_PATH_PROG([SWIG_BIN], [swig])
          if test "x${have_lua}" = xyes && test -n "$SWIG_BIN"; then
             have_lua_bindings=yes
-            AC_SUBST(include_luaapp, ["#define EGT_HAS_LUA 1"])
+            AC_SUBST(include_luaapp, ["#define EGT_HAS_LUA_BINDINGS 1"])
 	 else
 	    AC_MSG_ERROR([lua bindings requested but swig not found.])
          fi
@@ -604,7 +610,8 @@ AC_MSG_NOTICE([configuring simd])
 )
 
 AC_ARG_ENABLE([simd],
-  [AS_HELP_STRING([--enable-simd], [build with simd support [default=no]])])
+  [AS_HELP_STRING([--enable-simd], [build with simd support [default=no]])],
+  [enable_simd=$enableval], [enable_simd=no])
 if test "x$enable_simd" = "xyes";
 then
   AC_DEFINE(HAVE_SIMD, 1, [Have simd support])
@@ -612,7 +619,8 @@ fi
 AM_CONDITIONAL([HAVE_SIMD], [test "x${enable_simd}" = xyes])
 
 AC_ARG_ENABLE([snippets],
-  [AS_HELP_STRING([--enable-snippets], [build snippets examples [default=no]])])
+  [AS_HELP_STRING([--enable-snippets], [build snippets examples [default=no]])],
+  [enable_snippets=$enableval], [enable_snippets=no])
 AM_CONDITIONAL([ENABLE_SNIPPETS], [test "x${enable_snippets}" = xyes])
 
 AC_CONFIG_FILES([Makefile
