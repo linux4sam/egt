@@ -130,7 +130,7 @@ The primary compiler used is gcc.  Other compilers like clang and mingw are a
 work in progress and considered experimetal.  It is worth going over some common
 compiler flags used when compiling EGT and EGT applications.
 
-- `-std=c++11` - EGT requires C++11.
+- `-std=c++14` - EGT requires C++14.
 - `-fvisibility=hidden` - EGT uses explicit public visibility so everything else should be hidden by default.  gcc is particularly chatty about exporting symbols ina  shared library.
 - `-fvisibility-inlines-hidden` - Same as `-fvisibility=hidden`
 - `-fno-rtti` - EGT does not use runtime type information, like dynamic casting.
