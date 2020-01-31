@@ -65,9 +65,14 @@ EGT_API std::string readlink(const std::string& path);
 EGT_API std::string abspath(const std::string& path);
 
 /**
- * Get the path to the current executable.
+ * Get the directory to the current executable.
  */
 EGT_API std::string exe_pwd();
+
+/**
+ * Get the current working directory.
+ */
+EGT_API std::string cwd();
 
 /**
  * Given a a glob pattern, return a vector of matching path names.

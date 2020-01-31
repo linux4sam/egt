@@ -3,6 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "egt/detail/filesystem.h"
 #include <climits>
 #include <cstring>
@@ -16,6 +20,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#endif
 
 namespace egt
 {
@@ -94,6 +103,18 @@ std::string abspath(const std::string& path)
 std::string exe_pwd()
 {
     return extract_dirname(std::string(readlink("/proc/self/exe")));
+}
+
+std::string cwd()
+{
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
+    return fs::current_path();
+#else
+    std::unique_ptr<char, decltype(std::free)*> d(get_current_dir_name(), std::free);
+    if (d)
+        return d.get();
+#endif
+    return {};
 }
 
 std::vector<std::string> glob(const std::string& pattern)
