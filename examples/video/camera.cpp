@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <chrono>
+#include <cxxopts.hpp>
 #include <egt/detail/string.h>
 #include <egt/ui>
-#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -40,20 +40,27 @@ static std::string line_break(const std::string& in, size_t width = 50)
 
 int main(int argc, char** argv)
 {
+    cxxopts::Options options(argv[0], "display camera video stream");
+    options.add_options()
+    ("h,help", "Show help")
+    ("d,device", "V4L2 device", cxxopts::value<std::string>()->default_value("/dev/video"))
+    ("width", "Width of the stream", cxxopts::value<int>()->default_value("320"))
+    ("height", "Height of the stream", cxxopts::value<int>()->default_value("240"))
+    ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value("yuyv"), "[egt::PixelFormat]");
+    auto args = options.parse(argc, argv);
+
+    if (args.count("help"))
+    {
+        std::cout << options.help() << std::endl;
+        return 0;
+    }
+
     egt::Application app(argc, argv, "camera");
     egt::add_search_path(EXAMPLEDATA);
 
-    egt::Size size(320, 240);
-    auto format = egt::PixelFormat::yuyv;
-    std::string dev = "/dev/video0";
-    if (argc == 5)
-    {
-        dev = std::string(argv[1]);
-        size.width(atoi(argv[2]));
-        size.height(atoi(argv[3]));
-        if (atoi(argv[4]) <= 10)
-            format = static_cast<egt::PixelFormat>(atoi(argv[4]));
-    }
+    egt::Size size(args["width"].as<int>(), args["height"].as<int>());
+    auto format = egt::detail::enum_from_string<egt::PixelFormat>(args["format"].as<std::string>());
+    auto dev(args["device"].as<std::string>());
 
     egt::TopWindow win;
     win.color(egt::Palette::ColorId::bg, egt::Palette::black);

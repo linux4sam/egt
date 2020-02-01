@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <chrono>
+#include <cxxopts.hpp>
 #include <egt/detail/string.h>
 #include <egt/ui>
 #include <iostream>
@@ -45,21 +46,25 @@ static inline T ns2ms(T n)
 
 int main(int argc, char** argv)
 {
-    if (argc < 2)
+    cxxopts::Options options(argv[0], "play video file");
+    options.add_options()
+    ("h,help", "Show help")
+    ("i,input", "URI to video file", cxxopts::value<std::string>())
+    ("width", "Width of the stream", cxxopts::value<int>()->default_value("320"))
+    ("height", "Height of the stream", cxxopts::value<int>()->default_value("192"))
+    ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value("yuv420"), "[egt::PixelFormat]");
+    auto args = options.parse(argc, argv);
+
+    if (args.count("help") ||
+        !args.count("input"))
     {
-        std::cerr << argv[0] << " URI" << std::endl;
-        return 1;
+        std::cout << options.help() << std::endl;
+        return 0;
     }
 
-    egt::Size size(320, 192);
-    auto format = egt::PixelFormat::yuv420;
-    if (argc == 5)
-    {
-        size.width(atoi(argv[2]));
-        size.height(atoi(argv[3]));
-        if (atoi(argv[4]) <= 10)
-            format = static_cast<egt::PixelFormat>(atoi(argv[4]));
-    }
+    egt::Size size(args["width"].as<int>(), args["height"].as<int>());
+    auto format = egt::detail::enum_from_string<egt::PixelFormat>(args["format"].as<std::string>());
+    auto input(args["input"].as<std::string>());
 
     egt::Application app(argc, argv, "video");
     egt::add_search_path(EXAMPLEDATA);
@@ -207,9 +212,9 @@ int main(int argc, char** argv)
     cputimer.start();
 
     // wait to start playing the video until the window is shown
-    win.on_show([&player, argv, &position, &ctrlwindow, &volume, &volumei, &hpos]()
+    win.on_show([&player, input, &position, &ctrlwindow, &volume, &volumei, &hpos]()
     {
-        player.media(argv[1]);
+        player.media(input);
 
         if (!player.has_audio())
         {

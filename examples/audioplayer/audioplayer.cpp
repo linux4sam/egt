@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <cxxopts.hpp>
 #include <egt/asio.hpp>
-#include <egt/detail/filesystem.h>
 #include <egt/ui>
 #include <iomanip>
 #include <sstream>
@@ -226,16 +226,25 @@ protected:
 
 int main(int argc, char** argv)
 {
+    cxxopts::Options options(argv[0], "play audio file");
+    options.add_options()
+    ("h,help", "Show help")
+    ("i,input", "URI to audio file", cxxopts::value<std::string>()->default_value("file:concerto.mp3"));
+
+    auto args = options.parse(argc, argv);
+
+    if (args.count("help"))
+    {
+        std::cout << options.help() << std::endl;
+        return 0;
+    }
+
     egt::Application app(argc, argv);
     egt::add_search_path(EXAMPLEDATA);
 
     egt::Application::instance().screen()->high_fidelity();
 
-    std::string uri = "file:concerto.mp3";
-    if (argc >= 2)
-        uri = argv[1];
-
-    AudioPlayerWindow win(uri);
+    AudioPlayerWindow win(args["input"].as<std::string>());
     win.show();
 
     return app.run();

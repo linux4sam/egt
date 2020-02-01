@@ -11,8 +11,9 @@
  * Then, compile and run like this to receive events for the USER button on
  * PIN_PA29.
  *
- *     ./egt_gpio /dev/gpiochip0 29
+ *     ./egt_gpio -d /dev/gpiochip0 -l 29
  */
+#include <cxxopts.hpp>
 #include <egt/ui>
 #include <iostream>
 #include <linux/gpio.h>
@@ -75,10 +76,20 @@ private:
 
 int main(int argc, char** argv)
 {
-    if (argc != 3)
+    cxxopts::Options options(argv[0], "display camera video stream");
+    options.add_options()
+    ("h,help", "Show help")
+    ("d,device", "Char device node", cxxopts::value<std::string>())
+    ("l,line", "GPIO line", cxxopts::value<int>());
+
+    auto args = options.parse(argc, argv);
+
+    if (args.count("help") ||
+        !args.count("device") ||
+        !args.count("line"))
     {
-        std::cerr << argv[0] << " CHARDEV LINE" << std::endl;
-        return 1;
+        std::cout << options.help() << std::endl;
+        return 0;
     }
 
     egt::Application app(argc, argv);
@@ -88,16 +99,16 @@ int main(int argc, char** argv)
     egt::Label label("none");
     window.add(egt::center(label));
 
-    int fd = open(argv[1], 0);
+    int fd = open(args["device"].as<std::string>().c_str(), 0);
     if (fd < 0)
     {
-        std::cerr << "failed to open " << argv[1] << std::endl;
+        std::cerr << "failed to open " << args["device"].as<std::string>() << std::endl;
         return 1;
     }
 
     // setup the input and edges
     gpioevent_request ereq;
-    ereq.lineoffset = std::atoi(argv[2]);
+    ereq.lineoffset = args["line"].as<int>();
     ereq.handleflags = GPIOHANDLE_REQUEST_INPUT;
     ereq.eventflags = GPIOEVENT_REQUEST_BOTH_EDGES;
     if (ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &ereq) < 0)

@@ -23,6 +23,7 @@ CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
 	-isystem $(top_srcdir)/external/rapidxml \
+	-isystem $(top_srcdir)/external/cxxopts/include \
 	$(cairo_CFLAGS) \
 	$(CODE_COVERAGE_CXXFLAGS)
 
