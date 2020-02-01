@@ -131,10 +131,10 @@ AM_CONDITIONAL([HAVE_LINUX_GPIO_H], [test "x${have_linux_gpio_h}" = xyes])
 CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -DEGT_DLL_EXPORTS"
 
 AC_ARG_ENABLE([debug],
-  [AS_HELP_STRING([--disable-debug], [enable debugging support [default=yes]])],
+  [AS_HELP_STRING([--enable-debug], [enable debugging support [default=yes]])],
   [enable_debug=$enableval], [enable_debug=yes])
 
-if test "x$enable_debug" = "xyes" ; then
+if test "x$enable_debug" = "xno" ; then
   AC_MSG_NOTICE([Disabling debugging])
   CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast \
   		      -fvisibility=hidden \
