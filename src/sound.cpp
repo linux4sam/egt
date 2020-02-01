@@ -168,7 +168,7 @@ void Sound::open_file()
     if (m_impl->channels == 0 || m_impl->rate == 0)
     {
         spdlog::error("can't play sound file {}: sndfile not available and rate "
-                      "and channel not specified", file);
+                      "and channel not specified", path);
         return;
     }
 
