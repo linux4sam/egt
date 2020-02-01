@@ -2,13 +2,11 @@
 
 # Contributing
 
-After you have setup your development machine and you can build EGT, you now have
-everything you need to contribute to this project.  However, there are some
-extra tools that are useful for development.
-
 There are multiple ways of contributing to the future success of EGT.  For
 example,  one could contribute on the documentation, code, dependencies, or file
-bug reports.
+bug reports.  After you have setup your development machine and you can build
+EGT, you now have everything you need to get started contributing.  However,
+in some cases there are recommended or necessary extra tools that can help.
 
 ## Code of Conduct
 
@@ -55,8 +53,8 @@ builds.
 ## Static Analysis
 
 Static analysis is useful for detecting unexpected behavior or bugs before they
-happen.  The tool used by EGT is cppcheck to do this, but there are several other
-tools available.
+happen.  The tool used by EGT is cppcheck to do this, but there are several
+other tools available.
 
 ```sh
 make cppcheck
@@ -132,8 +130,13 @@ make docs
 ```
 
 Generate docset:
+Docset generation depends on a python tool called doxytag2zealdb.  It can be
+installed using pip:
 ```sh
-make docs
+pip install doxytag2zealdb
+```
+
+```sh
 make docset
 ```
 
@@ -171,4 +174,10 @@ effort.  For example:
 ```sh
 make distcheck \
     DISTCHECK_CONFIGURE_FLAGS="--host=arm-buildroot-linux-gnueabihf"
+```
+
+## clang
+
+```sh
+CC=clang-6.0 CXX=clang++-6.0 ./configure
 ```
