@@ -281,9 +281,6 @@ void Application::add_search_paths()
 
     // search exe directory
     add_search_path(detail::exe_pwd());
-
-    // libegt icons
-    add_search_path(std::string(DATADIR) + "/libegt/icons");
 }
 
 void Application::signal_handler(const asio::error_code& error, int signum)

@@ -21,21 +21,29 @@ inline namespace v1
 
 static std::vector<std::string> image_paths;
 
+static inline void normalize_dir(std::string& dir)
+{
+    if (dir.empty())
+        return;
+
+    if (*dir.rbegin() != '/')
+        dir += '/';
+}
+
 void add_search_path(const std::string& path)
 {
     if (path.empty())
         return;
 
     auto newpath = path;
-
-    if (*newpath.rbegin() != '/')
-        newpath += '/';
+    normalize_dir(newpath);
 
     if (find(image_paths.begin(), image_paths.end(), newpath) == image_paths.end())
         image_paths.push_back(newpath);
 }
 
-std::string resolve_file_path(const std::string& filename)
+static std::string resolve_file_path(const std::string& filename,
+                                     const std::vector<std::string>& search)
 {
     if (filename.empty())
         return filename;
@@ -44,7 +52,7 @@ std::string resolve_file_path(const std::string& filename)
     if (filename[0] == '/')
         return filename;
 
-    for (auto& path : image_paths)
+    for (auto& path : search)
     {
         auto test = path + filename;
 
@@ -59,6 +67,11 @@ std::string resolve_file_path(const std::string& filename)
     }
 
     return filename;
+}
+
+std::string resolve_file_path(const std::string& filename)
+{
+    return resolve_file_path(filename, image_paths);
 }
 
 namespace detail
@@ -79,23 +92,27 @@ SchemeType resolve_path(const std::string& path, std::string& result)
         type = SchemeType::filesystem;
         result = uri.path();
 
-        static std::string default_egt_icons_dir = "32px";
+        static std::string egt_icons_dir =
+            std::string(DATADIR) + "/libegt/icons/";
         static std::once_flag env_flag;
         std::call_once(env_flag, []()
         {
-            auto icons_dir = std::getenv("EGT_ICONS_DIRECTORY");
-            if (icons_dir)
+            auto dir = std::getenv("EGT_ICONS_DIRECTORY");
+            if (dir)
             {
-                auto dir = std::string(icons_dir);
-                if (!dir.empty())
-                    default_egt_icons_dir = dir;
+                auto icons_dir = std::string(dir);
+                if (!icons_dir.empty())
+                {
+                    egt_icons_dir = icons_dir;
+                    normalize_dir(egt_icons_dir);
+                }
             }
         });
 
-        auto egt_icons_dir = default_egt_icons_dir;
+        std::string icon_prefix = "32px";
         if (!uri.icon_size().empty())
-            egt_icons_dir = uri.icon_size() + "px";
-        result = resolve_file_path(egt_icons_dir + "/" + result);
+            icon_prefix = uri.icon_size() + "px";
+        result = resolve_file_path(icon_prefix + "/" + result, {egt_icons_dir});
     }
     else if (uri.scheme() == "http" || uri.scheme() == "https")
     {
