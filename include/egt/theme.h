@@ -339,6 +339,9 @@ protected:
 template<>
 std::map<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data;
 
+template<>
+std::map<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::BorderFlag>::data;
+
 /**
  * Get the global theme.
  *
