@@ -194,6 +194,11 @@ then
   fi
 fi
 
+AC_ARG_ENABLE([icons],
+  [AS_HELP_STRING([--disable-icons], [do not install icons [default=no]])],
+  [enable_icons=$enableval], [enable_icons=yes])
+AM_CONDITIONAL([ENABLE_ICONS], [test "x${enable_icons}" = xyes])
+
 AC_ARG_ENABLE([examples],
   [AS_HELP_STRING([--enable-examples], [build examples [default=yes]])],
   [enable_examples=$enableval], [enable_examples=yes])

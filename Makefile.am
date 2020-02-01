@@ -38,9 +38,11 @@ else
 	@echo "configured without astyle"
 endif
 
+if ENABLE_ICONS
 iconsdir = $(pkgdatadir)
 include $(top_srcdir)/icons/Makefile.icons
 nobase_dist_icons_DATA = $(PNG_ICONS_FILES)
+endif
 
 CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--inline-suppr \
