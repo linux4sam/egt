@@ -106,7 +106,9 @@ private:
     const unsigned char* m_data{nullptr};
     size_t m_len{0};
     std::vector<unsigned char> m_buf;
-    bool m_inflated{false};
+#ifdef HAVE_ZLIB
+    bool m_inflated {false};
+#endif
 };
 
 ResourceManager::ResourceManager() = default;
