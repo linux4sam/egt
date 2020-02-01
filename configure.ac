@@ -237,11 +237,11 @@ AC_ARG_WITH([x11],
     [with_x11=$withval],
     [with_x11=auto])
 AS_IF([test "x$with_x11" != "xno"],[
-   AX_PKG_CHECK_MODULES2(X11, [], [x11 >= 1.6.3], [have_x11=yes], [have_x11=no])
+   AX_PKG_CHECK_MODULES2(x11, [], [x11 >= 1.6.3], [have_x11=yes], [have_x11=no])
    if test "x${have_x11}" = xyes; then
       AC_DEFINE(HAVE_X11, 1, [Have x11 support])
-      LIBEGT_EXTRA_CXXFLAGS="${X11_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${X11_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${x11_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${x11_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_x11" = xyes && test "x${have_x11}" != xyes; then
@@ -254,11 +254,11 @@ AC_ARG_WITH([xkbcommon],
     [with_xkbcommon=$withval],
     [with_xkbcommon=auto])
 AS_IF([test "x$with_xkbcommon" != "xno"],[
-   AX_PKG_CHECK_MODULES2(XKBCOMMON, [], [xkbcommon], [have_xkbcommon=yes], [have_xkbcommon=no])
+   AX_PKG_CHECK_MODULES2(xkbcommon, [], [xkbcommon], [have_xkbcommon=yes], [have_xkbcommon=no])
    if test "x${have_xkbcommon}" = xyes; then
       AC_DEFINE(HAVE_XKBCOMMON, 1, [Have xkbcommon support])
-      LIBEGT_EXTRA_CXXFLAGS="${XKBCOMMON_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${XKBCOMMON_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${xkbcommon_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${xkbcommon_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_xkbcommon" = xyes && test "x${have_xkbcommon}" != xyes; then
@@ -271,11 +271,11 @@ AC_ARG_WITH([tslib],
     [with_tslib=$withval],
     [with_tslib=auto])
 AS_IF([test "x$with_tslib" != "xno"],[
-   AX_PKG_CHECK_MODULES2(TSLIB, [], [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
+   AX_PKG_CHECK_MODULES2(tslib, [], [tslib >= 1.15], [have_tslib=yes], [have_tslib=no])
    if test "x${have_tslib}" = xyes; then
       AC_DEFINE(HAVE_TSLIB, 1, [Have tslib support])
-      LIBEGT_EXTRA_CXXFLAGS="${TSLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${TSLIB_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${tslib_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${tslib_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_tslib" = xyes && test "x${have_tslib}" != xyes; then
@@ -288,11 +288,11 @@ AC_ARG_WITH([libinput],
     [with_libinput=$withval],
     [with_libinput=auto])
 AS_IF([test "x$with_libinput" != "xno"],[
-   AX_PKG_CHECK_MODULES2(LIBINPUT, [], [libinput >= 1.6.3], [have_libinput=yes], [have_libinput=no])
+   AX_PKG_CHECK_MODULES2(libinput, [], [libinput >= 1.6.3], [have_libinput=yes], [have_libinput=no])
    if test "x${have_libinput}" = xyes; then
       AC_DEFINE(HAVE_LIBINPUT, 1, [Have libinput support])
-      LIBEGT_EXTRA_CXXFLAGS="${LIBINPUT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${LIBINPUT_LIBS} -ludev ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${libinput_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${libinput_LIBS} -ludev ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_libinput" = xyes && test "x${have_libinput}" != xyes; then
@@ -305,17 +305,17 @@ AC_ARG_WITH([gstreamer],
     [with_gstreamer=$withval],
     [with_gstreamer=auto])
 AS_IF([test "x$with_gstreamer" != "xno"],[
-   AX_PKG_CHECK_MODULES2(GSTREAMER, [], [gstreamer-1.0 >= 1.8], [have_gstreamer=yes], [have_gstreamer=no])
+   AX_PKG_CHECK_MODULES2(gstreamer, [], [gstreamer-1.0 >= 1.8], [have_gstreamer=yes], [have_gstreamer=no])
    if test "x${have_gstreamer}" = xyes; then
       AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
-      LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${gstreamer_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${gstreamer_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
-      AX_PKG_CHECK_MODULES2(GSTREAMER_PBUTILS, [], [gstreamer-pbutils-1.0 >= 1.8], [have_gst_pbutils=yes], [have_gst_pbutils=no])
+      AX_PKG_CHECK_MODULES2(gstreamer_pbutils, [], [gstreamer-pbutils-1.0 >= 1.8], [have_gst_pbutils=yes], [have_gst_pbutils=no])
       if test "x${have_gst_pbutils}" = xyes; then
          AC_DEFINE(HAVE_GSTREAMER_PBUTILS, 1, [Have gstreamer pbutils support])
-         LIBEGT_EXTRA_CXXFLAGS="${GSTREAMER_PBUTILS_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-         LIBEGT_EXTRA_LDFLAGS="${GSTREAMER_PBUTILS_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+         LIBEGT_EXTRA_CXXFLAGS="${gstreamer_pbutils_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+         LIBEGT_EXTRA_LDFLAGS="${gstreamer_pbutils_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
       fi
    fi
 ])
@@ -330,14 +330,14 @@ AC_ARG_WITH([lua],
     [with_lua=$withval],
     [with_lua=auto])
 AS_IF([test "x$with_lua" != "xno"],[
-   AX_PKG_CHECK_MODULES2(LUA, [], [lua >= 5.3.0], [have_lua=yes], [have_lua=no])
+   AX_PKG_CHECK_MODULES2(lua, [], [lua >= 5.3.0], [have_lua=yes], [have_lua=no])
    if test "x${have_lua}" = xno; then
-      AX_PKG_CHECK_MODULES2(LUA, [], [lua5.3], [have_lua=yes], [have_lua=no])
+      AX_PKG_CHECK_MODULES2(lua, [], [lua5.3], [have_lua=yes], [have_lua=no])
    fi
    if test "x${have_lua}" = xyes; then
       AC_DEFINE(HAVE_LUA, 1, [Have lua support])
-      LIBEGT_EXTRA_CXXFLAGS="${LUA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${LUA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${lua_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${lua_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
       AC_ARG_ENABLE(lua-bindings,
         [AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings (default: no)])],
@@ -366,23 +366,23 @@ if test "x${have_readline}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="-lreadline ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(LIBPLANES, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
+AX_PKG_CHECK_MODULES2(libplanes, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
 if test "x${have_libplanes}" = xyes; then
-   AX_PKG_CHECK_MODULES2(LIBDRM, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
+   AX_PKG_CHECK_MODULES2(libdrm, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
      libdrm is a hard dependency, but a sufficient version was not found.])])
    AC_DEFINE(HAVE_LIBDRM, 1, [Have libdrm support])
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
-   LIBEGT_EXTRA_CXXFLAGS="${LIBPLANES_CFLAGS} ${LIBDRM_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="${LIBPLANES_LIBS} ${LIBDRM_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+   LIBEGT_EXTRA_CXXFLAGS="${libplanes_CFLAGS} ${libdrm_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+   LIBEGT_EXTRA_LDFLAGS="${libplanes_LIBS} ${libdrm_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(CAIRO, [cairo >= 1.14.6], [], [have_cairo=yes], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES2(cairo, [cairo >= 1.14.6], [], [have_cairo=yes], [AC_MSG_ERROR([
      cairo is a hard dependency, but a sufficient version was not found.])])
 AM_CONDITIONAL([HAVE_CAIRO], [test "x${have_cairo}" = xyes])
 if test "x${have_cairo}" = xyes; then
-  LIBEGT_EXTRA_CXXFLAGS="${CAIRO_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-  LIBEGT_EXTRA_LDFLAGS="${CAIRO_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+  LIBEGT_EXTRA_CXXFLAGS="${cairo_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+  LIBEGT_EXTRA_LDFLAGS="${cairo_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
   AC_SEARCH_LIBS([cairo_gfx2d_surface_create], [cairo], [have_cairo_gfx2d=yes], [have_cairo_gfx2d=no])
   AC_CHECK_HEADER([cairo/cairo-gfx2d.h],
     [],
@@ -393,19 +393,19 @@ if test "x${have_cairo}" = xyes; then
   fi
 fi
 
-AX_PKG_CHECK_MODULES2(FONTCONFIG, [], [fontconfig], [], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES2(fontconfig, [], [fontconfig], [], [AC_MSG_ERROR([
      fontconfig is a hard dependency, but a sufficient version was not found.])])
-LIBEGT_EXTRA_CXXFLAGS="${FONTCONFIG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-LIBEGT_EXTRA_LDFLAGS="${FONTCONFIG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+LIBEGT_EXTRA_CXXFLAGS="${fontconfig_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+LIBEGT_EXTRA_LDFLAGS="${fontconfig_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
 AC_ARG_WITH([plplot],
     AS_HELP_STRING([--without-plplot], [Ignore presence of plplot and disable it]),
     [with_plplot=$withval],
     [with_plplot=auto])
 AS_IF([test "x$with_plplot" != "xno"],[
-   AX_PKG_CHECK_MODULES2(PLPLOT, [plplot-c++], [], [have_plplot=yes], [have_plplot=no])
+   AX_PKG_CHECK_MODULES2(plplot, [plplot-c++], [], [have_plplot=yes], [have_plplot=no])
    if test "x${have_plplot}" = xno; then
-      AX_PKG_CHECK_MODULES2(PLPLOT, [plplotd-c++], [], [have_plplot=yes], [have_plplot=no])
+      AX_PKG_CHECK_MODULES2(plplot, [plplotd-c++], [], [have_plplot=yes], [have_plplot=no])
    fi
 
    if test "x${have_plplot}" = xyes; then
@@ -436,8 +436,8 @@ AS_IF([test "x$with_plplot" != "xno"],[
    if test "x${have_plplot}" = xyes; then
       AC_DEFINE(HAVE_PLPLOT, 1, [Have plplot support])
       AC_SUBST(include_chart, ["#define EGT_HAS_CHART 1"])
-      LIBEGT_EXTRA_CXXFLAGS="${PLPLOT_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${PLPLOT_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${plplot_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${plplot_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_plplot" = xyes && test "x${have_plplot}" != xyes; then
@@ -450,11 +450,11 @@ AC_ARG_WITH([libjpeg],
     [with_libjpeg=$withval],
     [with_libjpeg=auto])
 AS_IF([test "x$with_libjpeg" != "xno"],[
-   AX_PKG_CHECK_MODULES2(LIBJPEG, [], [libjpeg], [have_libjpeg=yes], [have_libjpeg=no])
+   AX_PKG_CHECK_MODULES2(libjpeg, [], [libjpeg], [have_libjpeg=yes], [have_libjpeg=no])
    if test "x${have_libjpeg}" = xyes; then
       AC_DEFINE(HAVE_LIBJPEG, 1, [Have libjpeg support])
-      LIBEGT_EXTRA_CXXFLAGS="${LIBJPEG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${LIBJPEG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${libjpeg_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${libjpeg_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_libjpeg" = xyes && test "x${have_libjpeg}" != xyes; then
@@ -467,12 +467,12 @@ AC_ARG_WITH([libcurl],
     [with_libcurl=$withval],
     [with_libcurl=auto])
 AS_IF([test "x$with_libcurl" != "xno"],[
-   AX_PKG_CHECK_MODULES2(LIBCURL, [], [libcurl >= 4.5], [have_libcurl=yes], [have_libcurl=no])
+   AX_PKG_CHECK_MODULES2(libcurl, [], [libcurl >= 4.5], [have_libcurl=yes], [have_libcurl=no])
    if test "x${have_libcurl}" = xyes; then
       AC_DEFINE(HAVE_LIBCURL, 1, [Have libcurl support])
       AC_SUBST(include_http, ["#define EGT_HAS_HTTP 1"])
-      LIBEGT_EXTRA_CXXFLAGS="${LIBCURL_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${LIBCURL_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${libcurl_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${libcurl_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_libcurl" = xyes && test "x${have_libcurl}" != xyes; then
@@ -485,12 +485,12 @@ AC_ARG_WITH([librsvg],
     [with_librsvg=$withval],
     [with_librsvg=auto])
 AS_IF([test "x$with_librsvg" != "xno"],[
-   AX_PKG_CHECK_MODULES2(LIBRSVG, [], [librsvg-2.0], [have_librsvg=yes], [have_librsvg=no])
+   AX_PKG_CHECK_MODULES2(librsvg, [], [librsvg-2.0], [have_librsvg=yes], [have_librsvg=no])
    if test "x${have_librsvg}" = xyes; then
       AC_DEFINE(HAVE_LIBRSVG, 1, [Have librsvg support])
       AC_SUBST(include_svg, ["#define EGT_HAS_SVG 1"])
-      LIBEGT_EXTRA_CXXFLAGS="${LIBRSVG_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${LIBRSVG_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${librsvg_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${librsvg_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_librsvg" = xyes && test "x${have_librsvg}" != xyes; then
@@ -501,11 +501,11 @@ AM_CONDITIONAL([HAVE_LIBRSVG], [test "x${have_librsvg}" = xyes])
 AC_ARG_WITH([zlib],
     AS_HELP_STRING([--without-zlib], [Ignore presence of zlib and disable it]))
 AS_IF([test "x$with_zlib" != "xno"],[
-   AX_PKG_CHECK_MODULES2(ZLIB, [], [zlib], [have_zlib=yes], [have_zlib=no])
+   AX_PKG_CHECK_MODULES2(zlib, [], [zlib], [have_zlib=yes], [have_zlib=no])
    if test "x${have_zlib}" = xyes; then
       AC_DEFINE(HAVE_ZLIB, 1, [Have zlib support])
-      LIBEGT_EXTRA_CXXFLAGS="${ZLIB_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${ZLIB_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${zlib_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${zlib_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test "x${have_zlib}" = xyes])
@@ -569,11 +569,11 @@ AC_ARG_WITH([alsa],
     [with_alsa=$withval],
     [with_alsa=auto])
 AS_IF([test "x$with_alsa" != "xno"],[
-   AX_PKG_CHECK_MODULES2(ALSA, [], [alsa], [have_alsa=yes], [have_alsa=no])
+   AX_PKG_CHECK_MODULES2(alsa, [], [alsa], [have_alsa=yes], [have_alsa=no])
    if test "x${have_alsa}" = xyes; then
       AC_DEFINE(HAVE_ALSA, 1, [Have alsa support])
-      LIBEGT_EXTRA_CXXFLAGS="${ALSA_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${ALSA_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${alsa_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${alsa_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
       AC_SUBST(include_sound, ["#define EGT_HAS_SOUND 1"])
    fi
 ])
@@ -587,11 +587,11 @@ AC_ARG_WITH([sndfile],
     [with_sndfile=$withval],
     [with_sndfile=auto])
 AS_IF([test "x$with_sndfile" != "xno"],[
-   AX_PKG_CHECK_MODULES2(SNDFILE, [], [sndfile], [have_sndfile=yes], [have_sndfile=no])
+   AX_PKG_CHECK_MODULES2(sndfile, [], [sndfile], [have_sndfile=yes], [have_sndfile=no])
    if test "x${have_sndfile}" = xyes; then
       AC_DEFINE(HAVE_SNDFILE, 1, [Have sndfile support])
-      LIBEGT_EXTRA_CXXFLAGS="${SNDFILE_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${SNDFILE_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${sndfile_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${sndfile_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_sndfile" = xyes && test "x${have_sndfile}" != xyes; then
