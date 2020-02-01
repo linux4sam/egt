@@ -7,7 +7,7 @@
 #include <egt/detail/filesystem.h>
 #include <egt/ui>
 #include <iomanip>
-#include <iostream>
+#include <sstream>
 
 using namespace std;
 using namespace egt;
@@ -114,7 +114,8 @@ public:
         m_dial = std::make_shared<AudioRadial>(range2);
         m_dial->add(range0, Color(Palette::white, 55), 21);
         m_dial->add(range1, Color(17, 17, 17, 180), 13);
-        Radial::RadialFlags flags = Radial::RadialFlags({Radial::RadialFlag::input_value, Radial::RadialFlag::rounded_cap});
+        Radial::RadialFlags flags = Radial::RadialFlags({Radial::RadialFlag::input_value,
+                                    Radial::RadialFlag::rounded_cap});
         auto range2handle = m_dial->add(range2, {}, 15, flags);
         m_dial->margin(50);
         m_dial->align(AlignFlag::expand);
