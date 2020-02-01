@@ -76,18 +76,15 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
 
   <dt>EGT_ICONS_DIRECTORY</dt>
   <dd>
-    Change EGT installed default icons directory with a absolute path or directory name.
-    If a directory name is set, then this directory name will be appended with an EGT
-    installed default icons directory path.
-    examples: /home/egt/icons, 64px, /usr/share/libegt/icons/128px.
+    Change EGT installed default icons directory with an absolute or relative path.
+
+    The directory path contents specified must be in the expected format as the
+    default EGT icons directory, containing subdirectories of icon size.  For
+    example, 16px, 32px, 64px, and 128px.
 
     @b Example
     @code{.sh}
     EGT_ICONS_DIRECTORY=/usr/share/icons
-    @endcode
-    or
-    @code{.sh}
-    EGT_ICONS_DIRECTORY=64px
     @endcode
   </dd>
 
