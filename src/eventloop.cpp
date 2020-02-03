@@ -173,7 +173,7 @@ int EventLoop::run()
     return 0;
 }
 
-void EventLoop::add_idle_callback(event_callback func)
+void EventLoop::add_idle_callback(IdleCallback func)
 {
     m_idle.emplace_back(std::move(func));
 }

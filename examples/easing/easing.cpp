@@ -56,7 +56,7 @@ public:
 
         background(egt::Image("file:background.png"));
 
-        egt::ListBox::item_array items;
+        egt::ListBox::ItemArray items;
         items.resize(easing_functions.size());
         transform(easing_functions.begin(), easing_functions.end(), items.begin(),
         [](const std::pair<egt::EasingFunc, std::string>& v) { return std::make_shared<egt::StringItem>(v.second);});

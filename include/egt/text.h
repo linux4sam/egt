@@ -283,7 +283,7 @@ public:
 
 protected:
 
-    using validator_callback_array = std::vector<ValidatorCallback>;
+    using ValidatorCallbackArray = std::vector<ValidatorCallback>;
 
     /**
      * Show/enable the visibility of the cursor.
@@ -335,7 +335,7 @@ protected:
     /**
      * Callbacks invoked to validate the input.
      */
-    validator_callback_array m_validator_callbacks;
+    ValidatorCallbackArray m_validator_callbacks;
 
     size_t width_to_len(const std::string& text) const;
 

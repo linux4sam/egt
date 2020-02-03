@@ -48,7 +48,7 @@ int main(int argc, const char** argv)
         make_shared<VirtualKeyboard::Key>(Image("icon:ok.png"), EKEY_ENTER),
     };
 
-    VirtualKeyboard::panel_keys code_keyboard_panel_keys =
+    VirtualKeyboard::PanelKeys code_keyboard_panel_keys =
     {
         code_keyboard_row1, code_keyboard_row2, code_keyboard_row3, code_keyboard_row4
     };

@@ -103,13 +103,13 @@ void ComboBoxPopup::handle(Event& event)
 
 }
 
-ComboBox::ComboBox(const item_array& items) noexcept
+ComboBox::ComboBox(const ItemArray& items) noexcept
     : ComboBox(items, {})
 {
 }
 
 ComboBox::ComboBox(const Rect& rect) noexcept
-    : ComboBox(item_array(), rect)
+    : ComboBox(ItemArray(), rect)
 {
 }
 
@@ -119,7 +119,7 @@ ComboBox::ComboBox(const Rect& rect) noexcept
  * happens in constructor.
  */
 
-ComboBox::ComboBox(const item_array& items,
+ComboBox::ComboBox(const ItemArray& items,
                    const Rect& rect) noexcept
     : detail::TextWidget("", rect, AlignFlag::left | AlignFlag::center),
       m_items(items),
@@ -139,7 +139,7 @@ ComboBox::ComboBox(const item_array& items,
         m_selected = 0;
 }
 
-ComboBox::ComboBox(Frame& parent, const item_array& items, const Rect& rect) noexcept
+ComboBox::ComboBox(Frame& parent, const ItemArray& items, const Rect& rect) noexcept
     : ComboBox(items, rect)
 {
     parent.add(*this);

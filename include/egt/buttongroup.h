@@ -86,7 +86,7 @@ public:
 
     virtual void checked_state_change(Button& button, bool checked) const;
 
-    using foreach_checked_callback_t = std::function<void (Button& button)>;
+    using CheckedCallback = std::function<void (Button& button)>;
 
     /**
      * Run a function on each checked button.
@@ -96,18 +96,18 @@ public:
      *
      * @param callback The callback to invoke.
      */
-    virtual void foreach_checked(const foreach_checked_callback_t& callback);
+    virtual void foreach_checked(const CheckedCallback& callback);
 
     virtual ~ButtonGroup();
 
 protected:
 
-    using button_array = std::vector<std::weak_ptr<Button>>;
+    using ButtonArray = std::vector<std::weak_ptr<Button>>;
 
     /**
      * Buttons in the group.
      */
-    button_array m_buttons;
+    ButtonArray m_buttons;
 
     /**
      * Only one button can be checked().

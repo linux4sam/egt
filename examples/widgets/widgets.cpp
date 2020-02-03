@@ -348,7 +348,7 @@ struct ComboPage : public egt::NotebookTab
         add(egt::expand(vsizer));
 
         {
-            egt::ComboBox::item_array combo_items;
+            egt::ComboBox::ItemArray combo_items;
             for (auto x = 0; x < 5; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo1 = std::make_shared<egt::ComboBox>(combo_items);
@@ -362,7 +362,7 @@ struct ComboPage : public egt::NotebookTab
         }
 
         {
-            egt::ComboBox::item_array combo_items;
+            egt::ComboBox::ItemArray combo_items;
             for (auto x = 0; x < 25; x++)
                 combo_items.push_back("item " + std::to_string(x));
             auto combo3 = std::make_shared<egt::ComboBox>(combo_items);

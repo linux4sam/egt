@@ -113,12 +113,12 @@ public:
     detail::Signal<> on_selected_changed;
     /** @} */
 
-    using item_array = std::vector<std::shared_ptr<Widget>>;
+    using ItemArray = std::vector<std::shared_ptr<Widget>>;
 
     /**
      * @param[in] items Array of items to insert into the list.
      */
-    explicit ListBox(const item_array& items = item_array()) noexcept;
+    explicit ListBox(const ItemArray& items = ItemArray()) noexcept;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -129,14 +129,14 @@ public:
      * @param[in] items Array of items to insert into the list.
      * @param[in] rect Rectangle for the widget.
      */
-    ListBox(const item_array& items, const Rect& rect) noexcept;
+    ListBox(const ItemArray& items, const Rect& rect) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] items Array of items to insert into the list.
      * @param[in] rect Rectangle for the widget.
      */
-    explicit ListBox(Frame& parent, const item_array& items = {}, const Rect& rect = {}) noexcept;
+    explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
 
     virtual void handle(Event& event) override;
 

@@ -39,13 +39,13 @@ public:
 
     detail::Signal<> on_value_changed;
 
-    using item_array = std::vector<std::string>;
+    using ItemArray = std::vector<std::string>;
 
     /**
      * @param[in] items Array of items to build the list.
      * @param[in] reversed Display the latest item instead of the first one.
      */
-    explicit Scrollwheel(const item_array& items = {},
+    explicit Scrollwheel(const ItemArray& items = {},
                          bool reversed = false) noexcept;
 
     /**
@@ -54,7 +54,7 @@ public:
      * @param[in] reversed Display the latest item instead of the first one.
      */
     explicit Scrollwheel(const Rect& rect,
-                         const item_array& items = {},
+                         const ItemArray& items = {},
                          bool reversed = false) noexcept;
 
     /**
@@ -63,7 +63,7 @@ public:
      * @param[in] reversed Display the latest item instead of the first one.
      */
     explicit Scrollwheel(Frame& parent,
-                         const item_array& items = {},
+                         const ItemArray& items = {},
                          bool reversed = false) noexcept;
 
     /**
@@ -74,7 +74,7 @@ public:
      */
     explicit Scrollwheel(Frame& parent,
                          const Rect& rect,
-                         const item_array& items = {},
+                         const ItemArray& items = {},
                          bool reversed = false) noexcept;
 
     /**
@@ -128,7 +128,7 @@ public:
 
 protected:
     void init(bool reversed);
-    item_array m_items;
+    ItemArray m_items;
     size_t m_selected{0};
     std::shared_ptr<ImageButton> m_button_up;
     std::shared_ptr<ImageButton> m_button_down;

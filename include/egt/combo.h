@@ -84,12 +84,12 @@ public:
     detail::Signal<> on_selected_changed;
     /** @} */
 
-    using item_array = std::vector<std::string>;
+    using ItemArray = std::vector<std::string>;
 
     /**
      * @param[in] items Array of items to insert into the list.
      */
-    explicit ComboBox(const item_array& items = item_array()) noexcept;
+    explicit ComboBox(const ItemArray& items = ItemArray()) noexcept;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -100,7 +100,7 @@ public:
      * @param[in] items Array of items to insert into the list.
      * @param[in] rect Rectangle for the widget.
      */
-    ComboBox(const item_array& items, const Rect& rect) noexcept;
+    ComboBox(const ItemArray& items, const Rect& rect) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -108,7 +108,7 @@ public:
      * @param[in] rect Rectangle for the widget.
      */
     explicit ComboBox(Frame& parent,
-                      const item_array& items = {},
+                      const ItemArray& items = {},
                       const Rect& rect = {}) noexcept;
 
     virtual void handle(Event& event) override;
@@ -170,7 +170,7 @@ protected:
     /**
      * Item array.
      */
-    item_array m_items;
+    ItemArray m_items;
 
     /**
      * Currently selected index.

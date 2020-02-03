@@ -428,12 +428,12 @@ protected:
         return result.size();
     }
 
-    using layer_array = std::vector<std::shared_ptr<GaugeLayer>>;
+    using LayerArray = std::vector<std::shared_ptr<GaugeLayer>>;
 
     /**
      * The layer's of the gauge.
      */
-    layer_array m_layers;
+    LayerArray m_layers;
 };
 
 }

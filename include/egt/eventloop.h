@@ -85,7 +85,7 @@ public:
     /**
      * Event callback function definition.
      */
-    using event_callback = std::function<void ()>;
+    using IdleCallback = std::function<void ()>;
 
     /**
      * Add a callback to be called any time the event loop is idle.
@@ -93,7 +93,7 @@ public:
      * This is useful for executing long running tasks that should otherwise
      * not impact any other event handling performance.
      */
-    void add_idle_callback(event_callback func);
+    void add_idle_callback(IdleCallback func);
 
     /// @private
     detail::PriorityQueue& queue();
@@ -117,7 +117,7 @@ protected:
     /**
      * Registered idle callbacks.
      */
-    std::vector<event_callback> m_idle;
+    std::vector<IdleCallback> m_idle;
 
     /**
      * Used internally to determine whether the event loop should exit.

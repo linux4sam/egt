@@ -113,9 +113,9 @@ public:
 
 protected:
 
-    using cell_array = std::vector<std::weak_ptr<NotebookTab>>;
+    using CellArray = std::vector<std::weak_ptr<NotebookTab>>;
 
-    cell_array m_cells;
+    CellArray m_cells;
 
     /**
      * Currently selected index.

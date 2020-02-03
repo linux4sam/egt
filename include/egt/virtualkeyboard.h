@@ -42,7 +42,7 @@ protected:
 
 public:
     class Key;
-    using panel_keys = std::vector<std::vector<std::shared_ptr<Key>>>;
+    using PanelKeys = std::vector<std::vector<std::shared_ptr<Key>>>;
     /**
      * @brief Key widget for the Keyboard widget.
      *
@@ -116,7 +116,7 @@ public:
          * @param[in] length Length of the key.
          */
         explicit Key(uint32_t unicode,
-                     panel_keys keys_multichoice,
+                     PanelKeys keys_multichoice,
                      double length = 1.0) noexcept;
 
         /**
@@ -159,7 +159,7 @@ public:
         /**
          * Keys for the multichoice panel.
          */
-        panel_keys m_keys_multichoice;
+        PanelKeys m_keys_multichoice;
 
         /**
          * Multichoice panel to display on long press event
@@ -182,7 +182,7 @@ public:
      * @param[in] keys Main panels of the keyboard.
      * @param[in] rect Rect of the Keyboard.
      */
-    explicit VirtualKeyboard(std::vector<panel_keys> keys,
+    explicit VirtualKeyboard(std::vector<PanelKeys> keys,
                              const Rect& rect = {});
 
     virtual void resize(const Size& s) override;
@@ -199,11 +199,11 @@ protected:
     struct Panel : public VerticalBoxSizer
     {
         // cppcheck-suppress noExplicitConstructor
-        Panel(panel_keys keys);
+        Panel(PanelKeys keys);
         void update_key_space(unsigned key_space);
         void update_key_size(const Size& s);
 
-        panel_keys m_keys;
+        PanelKeys m_keys;
     };
 
     /**
@@ -323,42 +323,42 @@ PopupVirtualKeyboard*& popup_virtual_keyboard();
  * Default panel defined for VirtualKeyboard.
  * @{
  */
-VirtualKeyboard::panel_keys& multichoice_e();
-VirtualKeyboard::panel_keys& multichoice_E();
-VirtualKeyboard::panel_keys& multichoice_r();
-VirtualKeyboard::panel_keys& multichoice_R();
-VirtualKeyboard::panel_keys& multichoice_t();
-VirtualKeyboard::panel_keys& multichoice_T();
-VirtualKeyboard::panel_keys& multichoice_y();
-VirtualKeyboard::panel_keys& multichoice_Y();
-VirtualKeyboard::panel_keys& multichoice_u();
-VirtualKeyboard::panel_keys& multichoice_U();
-VirtualKeyboard::panel_keys& multichoice_i();
-VirtualKeyboard::panel_keys& multichoice_I();
-VirtualKeyboard::panel_keys& multichoice_o();
-VirtualKeyboard::panel_keys& multichoice_O();
-VirtualKeyboard::panel_keys& multichoice_a();
-VirtualKeyboard::panel_keys& multichoice_A();
-VirtualKeyboard::panel_keys& multichoice_s();
-VirtualKeyboard::panel_keys& multichoice_S();
-VirtualKeyboard::panel_keys& multichoice_d();
-VirtualKeyboard::panel_keys& multichoice_D();
-VirtualKeyboard::panel_keys& multichoice_g();
-VirtualKeyboard::panel_keys& multichoice_G();
-VirtualKeyboard::panel_keys& multichoice_k();
-VirtualKeyboard::panel_keys& multichoice_K();
-VirtualKeyboard::panel_keys& multichoice_l();
-VirtualKeyboard::panel_keys& multichoice_L();
-VirtualKeyboard::panel_keys& multichoice_z();
-VirtualKeyboard::panel_keys& multichoice_Z();
-VirtualKeyboard::panel_keys& multichoice_c();
-VirtualKeyboard::panel_keys& multichoice_C();
-VirtualKeyboard::panel_keys& multichoice_n();
-VirtualKeyboard::panel_keys& multichoice_N();
-VirtualKeyboard::panel_keys& QwertyLettersLowerCase();
-VirtualKeyboard::panel_keys& QwertyLettersUpperCase();
-VirtualKeyboard::panel_keys& QwertySymbols1();
-VirtualKeyboard::panel_keys& QwertySymbols2();
+VirtualKeyboard::PanelKeys& multichoice_e();
+VirtualKeyboard::PanelKeys& multichoice_E();
+VirtualKeyboard::PanelKeys& multichoice_r();
+VirtualKeyboard::PanelKeys& multichoice_R();
+VirtualKeyboard::PanelKeys& multichoice_t();
+VirtualKeyboard::PanelKeys& multichoice_T();
+VirtualKeyboard::PanelKeys& multichoice_y();
+VirtualKeyboard::PanelKeys& multichoice_Y();
+VirtualKeyboard::PanelKeys& multichoice_u();
+VirtualKeyboard::PanelKeys& multichoice_U();
+VirtualKeyboard::PanelKeys& multichoice_i();
+VirtualKeyboard::PanelKeys& multichoice_I();
+VirtualKeyboard::PanelKeys& multichoice_o();
+VirtualKeyboard::PanelKeys& multichoice_O();
+VirtualKeyboard::PanelKeys& multichoice_a();
+VirtualKeyboard::PanelKeys& multichoice_A();
+VirtualKeyboard::PanelKeys& multichoice_s();
+VirtualKeyboard::PanelKeys& multichoice_S();
+VirtualKeyboard::PanelKeys& multichoice_d();
+VirtualKeyboard::PanelKeys& multichoice_D();
+VirtualKeyboard::PanelKeys& multichoice_g();
+VirtualKeyboard::PanelKeys& multichoice_G();
+VirtualKeyboard::PanelKeys& multichoice_k();
+VirtualKeyboard::PanelKeys& multichoice_K();
+VirtualKeyboard::PanelKeys& multichoice_l();
+VirtualKeyboard::PanelKeys& multichoice_L();
+VirtualKeyboard::PanelKeys& multichoice_z();
+VirtualKeyboard::PanelKeys& multichoice_Z();
+VirtualKeyboard::PanelKeys& multichoice_c();
+VirtualKeyboard::PanelKeys& multichoice_C();
+VirtualKeyboard::PanelKeys& multichoice_n();
+VirtualKeyboard::PanelKeys& multichoice_N();
+VirtualKeyboard::PanelKeys& QwertyLettersLowerCase();
+VirtualKeyboard::PanelKeys& QwertyLettersUpperCase();
+VirtualKeyboard::PanelKeys& QwertySymbols1();
+VirtualKeyboard::PanelKeys& QwertySymbols2();
 /** @} */
 
 }

@@ -15,12 +15,12 @@ namespace egt
 inline namespace v1
 {
 
-Scrollwheel::Scrollwheel(const item_array& items,
+Scrollwheel::Scrollwheel(const ItemArray& items,
                          bool reversed) noexcept
     : Scrollwheel( {}, items, reversed)
 {}
 
-Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
+Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items,
                          bool reversed) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_items(items),
@@ -62,14 +62,14 @@ Scrollwheel::Scrollwheel(const Rect& rect, const item_array& items,
     });
 }
 
-Scrollwheel::Scrollwheel(Frame& parent, const item_array& items,
+Scrollwheel::Scrollwheel(Frame& parent, const ItemArray& items,
                          bool reversed) noexcept
     : Scrollwheel( {}, items, reversed)
 {
     parent.add(*this);
 }
 
-Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const item_array& items,
+Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const ItemArray& items,
                          bool reversed) noexcept
     : Scrollwheel(rect, items, reversed)
 {
