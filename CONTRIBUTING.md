@@ -130,6 +130,7 @@ make docs
 ```
 
 Generate docset:
+
 Docset generation depends on a python tool called doxytag2zealdb.  It can be
 installed using pip:
 ```sh
