@@ -3,92 +3,71 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <cmath>
 #include <egt/detail/string.h>
 #include <egt/ui>
 #include <iostream>
-#include <map>
-#include <sstream>
+#include <memory>
 #include <string>
 #include <vector>
 
-using namespace std;
-using namespace egt;
+using WindowType = egt::Window;
 
-using WindowType = Window;
+static std::shared_ptr<WindowType> create_window(const egt::Size& size,
+        const egt::Color& color,
+        const std::string& name)
+{
+    auto win = std::make_shared<WindowType>(size);
+    win->color(egt::Palette::ColorId::bg, color);
+    win->name(name);
+
+    auto label = std::make_shared<egt::Label>("x,y", egt::Rect(0, 0, 100, 50));
+    win->on_event([win, label](egt::Event & event)
+    {
+        auto p = win->display_to_local(event.pointer().point);
+        label->text(egt::detail::to_string(p));
+    }, {egt::EventId::raw_pointer_move});
+    label->align(egt::AlignFlag::top | egt::AlignFlag::center);
+    win->add(label);
+
+    win->move(egt::Point(50, 50));
+    auto l1 = std::make_shared<egt::Label>(egt::detail::to_string(win->box()),
+                                           egt::Rect(0, 0, 100, 50));
+    l1->align(egt::AlignFlag::center | egt::AlignFlag::bottom);
+    win->add(l1);
+
+    return win;
+}
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv, "frames");
+    egt::Application app(argc, argv, "frames");
 
-    TopWindow win0;
-    win0.flags().set(Widget::Flag::no_layout);
-
-    auto a = AlignFlag::top | AlignFlag::center;
-
-    WindowType win1(Size(400, 400));
-    win1.color(Palette::ColorId::bg, Palette::red);
-    win1.name("red");
-    {
-        auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
-        win1.on_event([&win1, label](Event & event)
-        {
-            auto p = win1.display_to_local(event.pointer().point);
-            label->text(detail::to_string(p));
-        }, {EventId::raw_pointer_move});
-        label->align(a);
-        win1.add(label);
-    }
-    win0.add(win1);
-    win1.move(Point(50, 50));
-    auto l1 = make_shared<Label>(detail::to_string(win1.box()), Rect(0, 0, 100, 50));
-    l1->align(AlignFlag::center | AlignFlag::bottom);
-    win1.add(l1);
-
-    WindowType win2(Size(300, 300));
-    win2.color(Palette::ColorId::bg, Palette::blue);
-    win2.name("blue");
-    {
-        auto label = make_shared<Label>("x,y", Rect(0, 0, 100, 50));
-        win2.on_event([&win2, label](Event & event)
-        {
-            auto p = win2.display_to_local(event.pointer().point);
-            label->text(detail::to_string(p));
-        }, {EventId::raw_pointer_move});
-        label->align(a);
-        win2.add(label);
-    }
-    win1.add(win2);
-    win2.move(Point(50, 50));
-    auto l2 = make_shared<Label>(detail::to_string(win2.box()), Rect(0, 0, 100, 50));
-    l2->align(AlignFlag::center | AlignFlag::bottom);
-    win2.add(l2);
-
-    WindowType win3(Size(200, 200));
-    win3.color(Palette::ColorId::bg, Palette::green);
-    auto l3 = make_shared<Label>("win3", Rect(0, 0, 50, 50));
-    l3->align(a);
-    win3.add(l3);
-    win3.name("green");
-    win2.add(win3);
-    win3.move(Point(50, 50));
-
-    WindowType win4(Size(100, 100));
-    win4.color(Palette::ColorId::bg, Palette::purple);
-    auto l4 = make_shared<Label>("win4", Rect(0, 0, 50, 50));
-    l4->align(a);
-    win4.add(l4);
-    win4.name("purple");
-    win3.add(win4);
-    win4.move(Point(50, 50));
-
+    egt::TopWindow win0;
+    win0.flags().set(egt::Widget::Flag::no_layout);
     win0.show();
-    win1.show();
-    win2.show();
-    win3.show();
-    win4.show();
 
-    app.dump(cout);
+    const std::vector<std::pair<egt::Color, std::string>> items =
+    {
+        {egt::Palette::red, "red"},
+        {egt::Palette::blue, "blue"},
+        {egt::Palette::green, "green"},
+        {egt::Palette::purple, "purple"},
+    };
+
+    WindowType* parent = &win0;
+    egt::Size size(400, 400);
+
+    for (auto& item : items)
+    {
+        auto win = create_window(size, item.first, item.second);
+        parent->add(win);
+        win->show();
+
+        parent = win.get();
+        size -= egt::Size(100, 100);
+    }
+
+    app.dump(std::cout);
 
     return app.run();
 }
