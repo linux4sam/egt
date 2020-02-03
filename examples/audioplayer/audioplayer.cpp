@@ -9,21 +9,17 @@
 #include <iomanip>
 #include <sstream>
 
-using namespace std;
-using namespace egt;
-using namespace egt::experimental;
-
-class Controls : public StaticGrid
+class Controls : public egt::StaticGrid
 {
 public:
 
     Controls()
-        : StaticGrid(Size(250, 64), std::make_tuple(3, 1)),
-          m_previous(Image("file:previous.png")),
-          m_play(Image("file:play.png")),
-          m_next(Image("file:next.png"))
+        : egt::StaticGrid(egt::Size(250, 64), std::make_tuple(3, 1)),
+          m_previous(egt::Image("file:previous.png")),
+          m_play(egt::Image("file:play.png")),
+          m_next(egt::Image("file:next.png"))
     {
-        align(AlignFlag::center);
+        align(egt::AlignFlag::center);
 
         add(expand(m_previous));
         add(expand(m_play));
@@ -37,14 +33,14 @@ public:
         m_previous.hide();
     }
 
-    ImageButton m_previous;
-    ImageButton m_play;
-    ImageButton m_next;
+    egt::ImageButton m_previous;
+    egt::ImageButton m_play;
+    egt::ImageButton m_next;
 };
 
-inline static string seconds_to_human(int seconds)
+inline static std::string seconds_to_human(int seconds)
 {
-    ostringstream ss;
+    std::ostringstream ss;
 
     auto minutes = seconds / 60;
     auto hours = minutes / 60;
@@ -57,23 +53,23 @@ inline static string seconds_to_human(int seconds)
     return ss.str();
 }
 
-struct AudioRadial : public Radial
+struct AudioRadial : public egt::experimental::Radial
 {
-    explicit AudioRadial(std::shared_ptr<RangeValue<int>> value)
+    explicit AudioRadial(std::shared_ptr<egt::RangeValue<int>> value)
         : m_value(std::move(value))
     {
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override
+    virtual void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
-        Radial::draw(painter, rect);
+        egt::experimental::Radial::draw(painter, rect);
 
         const auto offset = 15;
 
         const auto b = content_area();
         const auto c = b.center();
         const auto radius = std::min(b.width(), b.height()) / 2.f;
-        const auto angle2 = detail::to_radians<float>(-90,
+        const auto angle2 = egt::detail::to_radians<float>(-90,
                             value_to_degrees(m_value->min(),
                                              m_value->max(),
                                              m_value->value()));
@@ -83,85 +79,88 @@ struct AudioRadial : public Radial
         auto s = painter.text_size(text);
 
         if (angle2 > 1.5)
-            p -= Point(s.width() + offset, 0);
+            p -= egt::Point(s.width() + offset, 0);
 
         if (angle2 < 1.5 || angle2 > 3.14)
-            p -= Point(0, s.height());
+            p -= egt::Point(0, s.height());
 
-        painter.set(Font());
-        painter.set(Palette::white);
+        painter.set(egt::Font());
+        painter.set(egt::Palette::white);
         painter.draw(p);
         painter.draw(text);
     }
 
-    std::shared_ptr<RangeValue<int>> m_value;
+    std::shared_ptr<egt::RangeValue<int>> m_value;
 };
 
-class AudioPlayerWindow : public TopWindow
+class AudioPlayerWindow : public egt::TopWindow
 {
 public:
     AudioPlayerWindow() = delete;
 
     explicit AudioPlayerWindow(const std::string& uri)
-        : m_colormap({Color(76, 181, 253), Color(34, 186, 133)})
+        : m_colormap({egt::Color(76, 181, 253), egt::Color(34, 186, 133)})
     {
-        background(Image("file:background.png"));
+        background(egt::Image("file:background.png"));
 
-        auto range0 = std::make_shared<RangeValue<int>>(0, 100, 100);
-        auto range1 = std::make_shared<RangeValue<int>>(0, 100, 100);
-        auto range2 = std::make_shared<RangeValue<int>>(0, 100, 0);
+        auto range0 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
+        auto range1 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
+        auto range2 = std::make_shared<egt::RangeValue<int>>(0, 100, 0);
 
         m_dial = std::make_shared<AudioRadial>(range2);
-        m_dial->add(range0, Color(Palette::white, 55), 21);
-        m_dial->add(range1, Color(17, 17, 17, 180), 13);
-        Radial::RadialFlags flags = Radial::RadialFlags({Radial::RadialFlag::input_value,
-                                    Radial::RadialFlag::rounded_cap});
+        m_dial->add(range0, egt::Color(egt::Palette::white, 55), 21);
+        m_dial->add(range1, egt::Color(17, 17, 17, 180), 13);
+        egt::experimental::Radial::RadialFlags flags
+        {
+            egt::experimental::Radial::RadialFlag::input_value,
+            egt::experimental::Radial::RadialFlag::rounded_cap
+        };
         auto range2handle = m_dial->add(range2, {}, 15, flags);
         m_dial->margin(50);
-        m_dial->align(AlignFlag::expand);
+        m_dial->align(egt::AlignFlag::expand);
         add(m_dial);
         add(m_controls);
 
-        m_controls.m_play.on_event([this](Event&)
+        m_controls.m_play.on_click([this](egt::Event&)
         {
             if (m_player.playing())
             {
-                m_controls.m_play.image(Image("file:play.png"));
+                m_controls.m_play.image(egt::Image("file:play.png"));
                 m_player.pause();
                 m_animation.stop();
             }
             else
             {
-                m_controls.m_play.image(Image("file:pause.png"));
+                m_controls.m_play.image(egt::Image("file:pause.png"));
                 m_player.play();
                 m_animation.start();
             }
-        }, {EventId::pointer_click});
+        });
 
-        auto logo = std::make_shared<ImageLabel>(Image("icon:egt_logo_white.png;128"));
-        logo->align(AlignFlag::left | AlignFlag::top);
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_white.png;128"));
+        logo->align(egt::AlignFlag::left | egt::AlignFlag::top);
         logo->margin(10);
         add(logo);
 
-        auto message_dialog = std::make_shared<Dialog>(this->size() * 0.75);
+        auto message_dialog = std::make_shared<egt::Dialog>(this->size() * 0.75);
         message_dialog->title("Audio Player Example");
-        auto text = std::make_shared<TextBox>("This is an Ensemble Graphics "
-                                              "Toolkit audio player example that "
-                                              "uses egt::AudioPlayer to play mp3, "
-                                              "wav, ogg, and more audio formats "
-                                              "seamlessly.");
+        auto text = std::make_shared<egt::TextBox>("This is an Ensemble Graphics "
+                    "Toolkit audio player example that "
+                    "uses egt::AudioPlayer to play mp3, "
+                    "wav, ogg, and more audio formats "
+                    "seamlessly.");
         text->readonly(true);
         message_dialog->widget(expand(text));
-        message_dialog->button(Dialog::ButtonId::button1, "");
-        message_dialog->button(Dialog::ButtonId::button2, "OK");
+        message_dialog->button(egt::Dialog::ButtonId::button1, "");
+        message_dialog->button(egt::Dialog::ButtonId::button2, "OK");
         add(message_dialog);
 
-        auto note = std::make_shared<ImageButton>(Image("file:note.png"));
+        auto note = std::make_shared<egt::ImageButton>(egt::Image("file:note.png"));
         note->fill_flags().clear();
-        note->align(AlignFlag::right | AlignFlag::bottom);
+        note->align(egt::AlignFlag::right | egt::AlignFlag::bottom);
         note->margin(10);
         add(note);
-        note->on_click([message_dialog](Event&)
+        note->on_click([message_dialog](egt::Event&)
         {
             message_dialog->show_modal(true);
         });
@@ -186,30 +185,30 @@ public:
         {
             if (!m_player.playing())
             {
-                m_controls.m_play.image(Image("file:play.png"));
+                m_controls.m_play.image(egt::Image("file:play.png"));
                 m_animation.stop();
             }
         });
 
         m_player.media(uri);
 
-        auto glow = [this, range2handle](float value)
+        auto glow = [this, range2handle](egt::PropertyAnimatorF::Value value)
         {
             m_dial->color(range2handle, m_colormap.interp_cached(value));
         };
 
-        auto glow_out = std::make_shared<PropertyAnimatorF>();
+        auto glow_out = std::make_shared<egt::PropertyAnimatorF>();
         glow_out->starting(0);
         glow_out->ending(1);
         glow_out->duration(std::chrono::milliseconds(1500));
-        glow_out->easing_func(easing_linear);
+        glow_out->easing_func(egt::easing_linear);
         glow_out->on_change(glow);
 
-        auto glow_in = std::make_shared<PropertyAnimatorF>();
+        auto glow_in = std::make_shared<egt::PropertyAnimatorF>();
         glow_in->starting(1);
         glow_in->ending(0);
         glow_in->duration(std::chrono::milliseconds(2000));
-        glow_in->easing_func(easing_linear);
+        glow_in->easing_func(egt::easing_linear);
         glow_in->on_change(glow);
 
         m_animation.add(glow_out);
@@ -220,17 +219,17 @@ protected:
 
     std::shared_ptr<AudioRadial> m_dial;
     Controls m_controls;
-    AudioPlayer m_player;
+    egt::AudioPlayer m_player;
     egt::AnimationSequence m_animation{true};
     egt::experimental::ColorMap m_colormap;
 };
 
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    egt::Application app(argc, argv);
     egt::add_search_path(EXAMPLEDATA);
 
-    Application::instance().screen()->high_fidelity();
+    egt::Application::instance().screen()->high_fidelity();
 
     std::string uri = "file:concerto.mp3";
     if (argc >= 2)

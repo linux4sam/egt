@@ -9,14 +9,11 @@
 #include <iostream>
 #include <sstream>
 
-using namespace std;
-using namespace egt;
-
 // warning: not utf-8 safe
 static std::string line_break(const std::string& in, size_t width = 50)
 {
-    string out;
-    string tmp;
+    std::string out;
+    std::string tmp;
     char last = '\0';
     size_t i = 0;
 
@@ -24,7 +21,7 @@ static std::string line_break(const std::string& in, size_t width = 50)
     {
         if (++i == width)
         {
-            tmp = detail::ltrim(tmp);
+            tmp = egt::detail::ltrim(tmp);
             out += "\n" + tmp;
             i = tmp.length();
             tmp.clear();
@@ -50,73 +47,73 @@ int main(int argc, const char** argv)
 {
     if (argc < 2)
     {
-        cerr << argv[0] << " URI" << endl;
+        std::cerr << argv[0] << " URI" << std::endl;
         return 1;
     }
 
-    Size size(320, 192);
-    auto format = PixelFormat::yuv420;
+    egt::Size size(320, 192);
+    auto format = egt::PixelFormat::yuv420;
     if (argc == 5)
     {
         size.width(atoi(argv[2]));
         size.height(atoi(argv[3]));
         if (atoi(argv[4]) <= 10)
-            format = static_cast<PixelFormat>(atoi(argv[4]));
+            format = static_cast<egt::PixelFormat>(atoi(argv[4]));
     }
 
-    Application app(argc, argv, "video");
+    egt::Application app(argc, argv, "video");
     egt::add_search_path(EXAMPLEDATA);
 
-    TopWindow win;
-    win.color(Palette::ColorId::bg, Palette::black);
+    egt::TopWindow win;
+    win.color(egt::Palette::ColorId::bg, egt::Palette::black);
 
-    Label errlabel;
-    errlabel.color(Palette::ColorId::label_text, Palette::white);
-    errlabel.align(AlignFlag::expand);
-    errlabel.text_align(AlignFlag::center | AlignFlag::top);
+    egt::Label errlabel;
+    errlabel.color(egt::Palette::ColorId::label_text, egt::Palette::white);
+    errlabel.align(egt::AlignFlag::expand);
+    errlabel.text_align(egt::AlignFlag::center | egt::AlignFlag::top);
     win.add(errlabel);
 
     // player after label to handle drag
-    VideoWindow player(size, format, WindowHint::overlay);
+    egt::VideoWindow player(size, format, egt::WindowHint::overlay);
     player.move_to_center(win.center());
     player.volume(5);
     win.add(player);
 
-    Window ctrlwindow(Size(win.width(), 72));
-    ctrlwindow.align(AlignFlag::bottom | AlignFlag::center);
-    ctrlwindow.color(Palette::ColorId::bg, Palette::transparent);
+    egt::Window ctrlwindow(egt::Size(win.width(), 72));
+    ctrlwindow.align(egt::AlignFlag::bottom | egt::AlignFlag::center);
+    ctrlwindow.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     win.add(ctrlwindow);
 
-    HorizontalBoxSizer hpos;
+    egt::HorizontalBoxSizer hpos;
     hpos.resize(ctrlwindow.size());
     ctrlwindow.add(hpos);
 
-    auto logo = make_shared<ImageLabel>(Image("icon:egt_logo_icon.png;32"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_icon.png;32"));
     logo->margin(10);
     hpos.add(logo);
 
-    egt::ImageButton playbtn(Image("res:pause_png"));
+    egt::ImageButton playbtn(egt::Image("res:pause_png"));
     playbtn.fill_flags().clear();
     hpos.add(playbtn);
 
-    playbtn.on_event([&playbtn, &player](Event&)
+    playbtn.on_click([&playbtn, &player](egt::Event&)
     {
         if (player.playing())
         {
             if (player.pause())
-                playbtn.image(Image("res:play_png"));
+                playbtn.image(egt::Image("res:play_png"));
         }
         else
         {
             if (player.play())
-                playbtn.image(Image("res:pause_png"));
+                playbtn.image(egt::Image("res:pause_png"));
         }
-    }, {EventId::pointer_click});
+    });
 
-    Slider position(0, 100, 0, Orientation::horizontal);
+    egt::Slider position(0, 100, 0, egt::Orientation::horizontal);
     position.width(ctrlwindow.width() * 0.20);
-    position.align(AlignFlag::expand_vertical);
-    position.slider_flags().set({Slider::SliderFlag::round_handle});
+    position.align(egt::AlignFlag::expand_vertical);
+    position.slider_flags().set({egt::Slider::SliderFlag::round_handle});
     hpos.add(position);
 
     position.on_value_changed([&position, &player]()
@@ -132,75 +129,78 @@ int main(int argc, const char** argv)
 
     });
 
-    ImageButton volumei(Image("res:volumeup_png"));
+    egt::ImageButton volumei(egt::Image("res:volumeup_png"));
     volumei.fill_flags().clear();
     hpos.add(volumei);
 
-    Slider volume(Size(ctrlwindow.width() * 0.10, ctrlwindow.height()), 0, 10, 0, Orientation::horizontal);
+    egt::Slider volume(egt::Size(ctrlwindow.width() * 0.10,
+                                 ctrlwindow.height()),
+                       0, 10, 0, egt::Orientation::horizontal);
     hpos.add(volume);
-    volume.slider_flags().set({Slider::SliderFlag::round_handle});
+    volume.slider_flags().set({egt::Slider::SliderFlag::round_handle});
     volume.value(5);
     player.volume(5.0);
-    volume.on_event([&volume, &player](Event&)
+    volume.on_value_changed([&volume, &player]()
     {
         auto val = static_cast<double>(volume.value());
         player.volume(val);
     });
     volume.value(5);
 
-    ImageButton fullscreenbtn(Image("res:fullscreen_png"));
+    egt::ImageButton fullscreenbtn(egt::Image("res:fullscreen_png"));
     fullscreenbtn.fill_flags().clear();
     hpos.add(fullscreenbtn);
 
-    const auto vscale = static_cast<float>(Application::instance().screen()->size().width()) / size.width();
+    const auto vscale
+        = static_cast<float>(egt::Application::instance().screen()->size().width()) / size.width();
 
-    fullscreenbtn.on_event([&fullscreenbtn, &player, vscale, &win](Event&)
+    fullscreenbtn.on_click([&fullscreenbtn, &player, vscale, &win](egt::Event&)
     {
         static bool scaled = true;
         if (scaled)
         {
-            player.move(Point(0, 0));
+            player.move(egt::Point(0, 0));
             player.scale(vscale, vscale);
-            fullscreenbtn.image(Image("res:fullscreen_exit_png"));
+            fullscreenbtn.image(egt::Image("res:fullscreen_exit_png"));
             scaled = false;
         }
         else
         {
             player.move_to_center(win.center());
             player.scale(1.0, 1.0);
-            fullscreenbtn.image(Image("res:fullscreen_png"));
+            fullscreenbtn.image(egt::Image("res:fullscreen_png"));
             scaled = true;
         }
-    }, {EventId::pointer_click});
+    });
 
-    ImageButton loopbackbtn(Image("res:repeat_one_png"));
+    egt::ImageButton loopbackbtn(egt::Image("res:repeat_one_png"));
     loopbackbtn.fill_flags().clear();
     hpos.add(loopbackbtn);
 
-    loopbackbtn.on_event([&loopbackbtn, &player](Event&)
+    loopbackbtn.on_click([&loopbackbtn, &player](egt::Event&)
     {
         if (player.loopback())
         {
-            loopbackbtn.image(Image("res:repeat_one_png"));
+            loopbackbtn.image(egt::Image("res:repeat_one_png"));
             player.loopback(false);
         }
         else
         {
-            loopbackbtn.image(Image("res:repeat_png"));
+            loopbackbtn.image(egt::Image("res:repeat_png"));
             player.loopback(true);
         }
-    }, {EventId::pointer_click});
+    });
 
-    Label cpulabel("CPU: 0%");
-    cpulabel.color(Palette::ColorId::label_text, Palette::white);
+    egt::Label cpulabel("CPU: 0%");
+    cpulabel.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     hpos.add(cpulabel);
 
     egt::experimental::CPUMonitorUsage tools;
-    PeriodicTimer cputimer(std::chrono::seconds(1));
+    egt::PeriodicTimer cputimer(std::chrono::seconds(1));
     cputimer.on_timeout([&cpulabel, &tools]()
     {
         tools.update();
-        ostringstream ss;
+        std::ostringstream ss;
         ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
         cpulabel.text(ss.str());
     });
@@ -235,22 +235,22 @@ int main(int argc, const char** argv)
         errlabel.text(line_break(player.error_message()));
     });
 
-    player.on_event([&player, &win, vscale, size](Event & event)
+    player.on_event([&player, &win, vscale, size](egt::Event & event)
     {
-        static Point m_start_point;
+        static egt::Point m_start_point;
         switch (event.id())
         {
-        case EventId::pointer_drag_start:
+        case egt::EventId::pointer_drag_start:
         {
             m_start_point = player.box().point();
             break;
         }
-        case EventId::pointer_drag:
+        case egt::EventId::pointer_drag:
         {
-            if (!(detail::float_compare(player.hscale(), vscale)))
+            if (!(egt::detail::float_equal(player.hscale(), vscale)))
             {
                 auto diff = event.pointer().drag_start - event.pointer().point;
-                auto p = m_start_point - Point(diff.x(), diff.y());
+                auto p = m_start_point - egt::Point(diff.x(), diff.y());
                 auto max_x = win.width() - size.width();
                 auto max_y = win.height() - size.height();
                 if (p.x() >= max_x)

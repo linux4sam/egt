@@ -321,8 +321,6 @@ struct MeterPage : public egt::NotebookTab
         auto am1 = std::make_shared<egt::AnalogMeter>();
         grid0->add(egt::expand(am1));
 
-        using namespace egt::experimental;
-
         auto r1 = std::make_shared<egt::experimental::Radial>();
         auto range0 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
         r1->add(range0, egt::Palette::grey, 10);
