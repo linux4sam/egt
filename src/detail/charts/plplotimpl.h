@@ -59,6 +59,8 @@ public:
 
     virtual void resize(const Size& size);
 
+    void bank(float bank);
+
     virtual void invoke_damage() = 0;
 
     virtual ~PlPlotImpl();

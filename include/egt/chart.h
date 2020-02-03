@@ -138,6 +138,11 @@ public:
      */
     virtual void resize(const Size& size) override;
 
+    /**
+     * Add a percent bank beyond the min and maximum values.
+     */
+    virtual void bank(float bank);
+
     virtual ~LineChart();
 
 protected:
@@ -247,6 +252,11 @@ public:
      * @param[in] size The new size of the PointChart.
      */
     virtual void resize(const Size& size) override;
+
+    /**
+     * Add a percent bank beyond the min and maximum values.
+     */
+    virtual void bank(float bank);
 
     virtual ~PointChart();
 
@@ -378,6 +388,11 @@ public:
      */
     virtual void resize(const Size& size) override;
 
+    /**
+     * Add a percent bank beyond the min and maximum values.
+     */
+    virtual void bank(float bank);
+
     virtual ~BarChart();
 
 protected:
@@ -489,6 +504,11 @@ public:
      * @param[in] size The new size of the HorizontalBarChart.
      */
     virtual void resize(const Size& size) override;
+
+    /**
+    * Add a percent bank beyond the min and maximum values.
+    */
+    virtual void bank(float bank);
 
     virtual ~HorizontalBarChart();
 

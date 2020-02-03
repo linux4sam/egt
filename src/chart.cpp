@@ -86,6 +86,11 @@ void LineChart::resize(const Size& size)
     }
 }
 
+void LineChart::bank(float bank)
+{
+    m_impl->bank(bank);
+}
+
 LineChart::~LineChart() = default;
 
 PointChart::PointChart(const Rect& rect)
@@ -150,6 +155,11 @@ void PointChart::resize(const Size& size)
         m_impl->resize(size);
         Widget::resize(size);
     }
+}
+
+void PointChart::bank(float bank)
+{
+    m_impl->bank(bank);
 }
 
 void PointChart::show_grid(bool enable)
@@ -238,6 +248,11 @@ void BarChart::resize(const Size& size)
     }
 }
 
+void BarChart::bank(float bank)
+{
+    m_impl->bank(bank);
+}
+
 BarChart::~BarChart() = default;
 
 HorizontalBarChart::HorizontalBarChart(const Rect& rect)
@@ -307,6 +322,11 @@ void HorizontalBarChart::resize(const Size& size)
         m_impl->resize(size);
         Widget::resize(size);
     }
+}
+
+void HorizontalBarChart::bank(float bank)
+{
+    m_impl->bank(bank);
 }
 
 HorizontalBarChart::~HorizontalBarChart() = default;

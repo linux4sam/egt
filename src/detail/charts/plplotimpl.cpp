@@ -373,6 +373,17 @@ void PlPlotImpl::plplot_verify_viewport()
         else
             m_ymin = m_ymax / 2.0;
     }
+
+    if (!detail::float_compare(m_bank, 0.0f))
+    {
+        auto xdiff = (m_xmax - m_xmin) * m_bank;
+        m_xmin -= xdiff;
+        m_xmax += xdiff;
+
+        auto ydiff = (m_ymax - m_ymin) * m_bank;
+        m_ymin -= ydiff;
+        m_ymax += ydiff;
+    }
 }
 
 void PlPlotImpl::plplot_font(const Font& font)
@@ -447,6 +458,12 @@ void PlPlotImpl::resize(const Size& size)
     m_plstream = detail::make_unique<plstream>();
     m_initalize = false;
     m_plstream->sdev("extcairo");
+}
+
+void PlPlotImpl::bank(float bank)
+{
+    if (detail::change_if_diff<float>(m_bank, bank))
+        invoke_damage();
 }
 
 PlPlotImpl::~PlPlotImpl() = default;
