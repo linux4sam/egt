@@ -85,8 +85,10 @@ dash/dash
 endif
 
 if HAVE_ALSA
+if HAVE_SNDFILE
 bin_PROGRAMS += \
 drummachine/drummachine
+endif
 endif
 
 if HAVE_PLPLOT
