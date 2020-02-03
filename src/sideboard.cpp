@@ -23,11 +23,22 @@ static inline Size calculate_size(SideBoard::PositionFlag position)
 }
 
 SideBoard::SideBoard(PositionFlag position,
+                     WindowHint hint)
+    : SideBoard(position,
+                std::chrono::milliseconds(1000),
+                easing_cubic_easeinout,
+                std::chrono::milliseconds(1000),
+                easing_circular_easeinout,
+                hint)
+{}
+
+SideBoard::SideBoard(PositionFlag position,
                      std::chrono::milliseconds open_duration,
                      EasingFunc open_func,
                      std::chrono::milliseconds close_duration,
-                     EasingFunc close_func)
-    : Window(calculate_size(position), PixelFormat::rgb565),
+                     EasingFunc close_func,
+                     WindowHint hint)
+    : Window(calculate_size(position), PixelFormat::rgb565, hint),
       m_position(position)
 {
     m_oanim.duration(open_duration);

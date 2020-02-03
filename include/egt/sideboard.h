@@ -50,12 +50,24 @@ public:
      * @param[in] open_func Open easing function.
      * @param[in] close_duration Duration of the close animation.
      * @param[in] close_func Close easing function.
+     * @param[in] hint Requested Window type. This only applies if this Window
+     *            will be responsible for creating a backing screen.  This is
+     *            only a hint.
      */
     explicit SideBoard(PositionFlag position = PositionFlag::left,
                        std::chrono::milliseconds open_duration = std::chrono::milliseconds(1000),
                        EasingFunc open_func = easing_cubic_easeinout,
                        std::chrono::milliseconds close_duration = std::chrono::milliseconds(1000),
-                       EasingFunc close_func = easing_circular_easeinout);
+                       EasingFunc close_func = easing_circular_easeinout,
+                       WindowHint hint = WindowHint::automatic);
+
+    /**
+     * @param[in] position Position of the SideBoard.
+     * @param[in] hint Requested Window type. This only applies if this Window
+     *            will be responsible for creating a backing screen.  This is
+     *            only a hint.
+     */
+    SideBoard(PositionFlag position, WindowHint hint);
 
     virtual void handle(Event& event) override;
 

@@ -15,7 +15,6 @@ int main(int argc, const char** argv)
     {
         auto label = std::make_shared<egt::Label>(text);
         label->font(egt::Font(30));
-        label->fill_flags().clear();
         label->align(egt::AlignFlag::center);
         return label;
     };
@@ -29,7 +28,8 @@ int main(int argc, const char** argv)
     label->image_align(egt::AlignFlag::top);
     win.add(label);
 
-    egt::SideBoard board0;
+    egt::SideBoard board0(egt::SideBoard::PositionFlag::left,
+                          egt::WindowHint::software);
     board0.color(egt::Palette::ColorId::bg, egt::Palette::red);
     board0.add(create_label("LEFT"));
     win.add(board0);
