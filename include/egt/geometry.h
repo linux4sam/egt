@@ -573,11 +573,8 @@ public:
      */
     // cppcheck-suppress noExplicitConstructor
     RectType(const SizeType<Dim, DimCompat>& size) noexcept
-        : m_size(size)
-    {
-        assert(width() >= 0);
-        assert(height() >= 0);
-    }
+        : RectType( {}, size)
+    {}
 
     /**
      * @param x X origin coordinate.
@@ -586,12 +583,8 @@ public:
      * @param height Height
      */
     RectType(Dim x, Dim y, Dim width, Dim height) noexcept
-        : m_origin(x, y),
-          m_size(width, height)
-    {
-        assert(width >= 0);
-        assert(height >= 0);
-    }
+        : RectType( {x, y}, {width, height})
+    {}
 
     /// RectType operator
     RectType<Dim, DimCompat>& operator+=(const SizeType<Dim, DimCompat>& rhs)
