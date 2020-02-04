@@ -35,7 +35,7 @@ public:
      *
      * @param index CPU index if more than one CPU.
      */
-    inline double usage(unsigned int index = 0) const { return m_cpu_usage[index]; }
+    inline double usage() const { return m_cpu_usage; }
 
     /**
      * Update the CPU usage.
@@ -48,9 +48,9 @@ public:
 
 private:
 
-    double m_total_cpu_last_time[4] = {0};
-    double m_work_cpu_last_time[4] = {0};
-    double m_cpu_usage[4] = {0};
+    size_t m_last_total_time{0};
+    size_t m_last_idle_time{0};
+    double m_cpu_usage{0};
 };
 
 /**

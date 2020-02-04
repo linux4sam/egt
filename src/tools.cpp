@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/tools.h"
-#include <cassert>
-#include <cstring>
 #include <fstream>
-#include <sstream>
+#include <numeric>
+#include <vector>
 
 namespace egt
 {
@@ -16,45 +15,41 @@ inline namespace v1
 namespace experimental
 {
 
+static void get_cpu_times(std::vector<size_t>& times)
+{
+    std::ifstream in("/proc/stat");
+    if (in.is_open())
+    {
+        in.ignore(5, ' ');
+        size_t time{};
+        while (in >> time)
+            times.push_back(time);
+    }
+}
+
+static bool get_cpu_times(size_t& idle_time, size_t& total_time)
+{
+    static std::vector<size_t> times;
+    times.clear();
+    get_cpu_times(times);
+    if (times.size() < 4)
+        return false;
+    idle_time = times[3];
+    total_time = std::accumulate(times.begin(), times.end(), 0);
+    return true;
+}
+
 void CPUMonitorUsage::update()
 {
-    std::ifstream fp("/proc/stat");
-
-    if (fp.is_open())
+    size_t idle_time{};
+    size_t total_time{};
+    if (get_cpu_times(idle_time, total_time))
     {
-        int i = 0;
-        std::string line;
-        while (std::getline(fp, line) && i < 1)
-        {
-            std::istringstream ss(line);
-            std::string field0;
-            ss >> field0;
-
-            std::ostringstream cpu_id;
-            cpu_id << "cpu" << i;
-
-            if (field0.find(cpu_id.str()) != std::string::npos)
-            {
-                uint64_t times[7];
-                for (auto& x : times)
-                    ss >> x;
-
-                double work_time = times[0] + times[1] + times[2];
-                double total_time = work_time + times[3] + times[4] + times[5] + times[6];
-
-                // Update CPU Usage
-                m_cpu_usage[i] = (work_time - m_work_cpu_last_time[i]) /
-                                 (total_time - m_total_cpu_last_time[i]) * 100.;
-
-                // Update last values
-                m_work_cpu_last_time[i] = work_time;
-                m_total_cpu_last_time[i] = total_time;
-
-                i++;
-            }
-        }
-
-        fp.close();
+        const float idle_time_diff = idle_time - m_last_idle_time;
+        const float total_time_diff = total_time - m_last_total_time;
+        m_cpu_usage = 100.0 * (1.0 - idle_time_diff / total_time_diff);
+        m_last_idle_time = idle_time;
+        m_last_total_time = total_time;
     }
 }
 

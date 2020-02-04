@@ -168,7 +168,7 @@ int main(int argc, const char** argv)
         tools.update();
 
         std::ostringstream ss;
-        ss << "CPU: " << static_cast<int>(tools.usage(0)) << "%";
+        ss << "CPU: " << static_cast<int>(tools.usage()) << "%";
         label1.text(ss.str());
     });
     cputimer.start();
