@@ -8,13 +8,13 @@
 #endif
 
 #include "detail/spriteimpl.h"
-#include "egt/detail/imagecache.h"
-#include "egt/detail/screen/kmsoverlay.h"
 #include "egt/image.h"
 #include "egt/label.h"
 #include "egt/painter.h"
 #include "egt/sprite.h"
+
 #ifdef HAVE_LIBPLANES
+#include "egt/detail/screen/kmsoverlay.h"
 #include <planes/plane.h>
 #endif
 
@@ -194,13 +194,14 @@ void SoftwareSprite::paint(Painter& painter)
 
 }
 
-Sprite::Sprite()
-    : Window(PixelFormat::argb8888)
+Sprite::Sprite(WindowHint hint)
+    : Window(PixelFormat::argb8888, hint)
 {}
 
 Sprite::Sprite(const Image& image, const Size& frame_size,
-               int frame_count, const Point& frame_point)
-    : Window(Rect({}, image.size()), PixelFormat::argb8888)
+               int frame_count, const Point& frame_point,
+               WindowHint hint)
+    : Window(Rect({}, image.size()), PixelFormat::argb8888, hint)
 {
     name("Sprite" + std::to_string(m_widgetid));
     fill_flags().clear();

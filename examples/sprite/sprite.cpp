@@ -21,20 +21,27 @@ int main(int argc, const char** argv)
     logo.margin(10);
     win.add(logo);
 
-    egt::StaticGrid grid(egt::Rect(egt::Size(win.width(), win.height() - 40)), std::make_tuple(2, 2));
+    egt::StaticGrid grid(egt::Rect(egt::Size(win.width(), win.height() - 40)),
+                         std::make_tuple(2, 2));
 
-    egt::Sprite sprite1(egt::Image("file:walk.png"), egt::Size(75, 132), 8, egt::Point(0, 0));
+    egt::Sprite sprite1(egt::Image("file:needle.png"),
+                        egt::Size(100, 100), 8 * 9, egt::Point(0, 0));
     grid.add(center(sprite1), 0, 1);
 
-    egt::Sprite sprite2(egt::Image("file:walk.png"), egt::Size(75, 132), 8, egt::Point(0, 0));
+    // force software window
+    egt::Sprite sprite2(egt::Image("file:walk.png"),
+                        egt::Size(75, 132), 8, egt::Point(0, 0),
+                        egt::WindowHint::software);
     grid.add(center(sprite2), 1, 1);
 
-    egt::CheckBox hardware_checkbox("Hardware", egt::Rect(egt::Point(0, 0), egt::Size(120, 40)));
+    egt::CheckBox hardware_checkbox("Hardware", egt::Rect(egt::Point(0, 0),
+                                    egt::Size(120, 40)));
     hardware_checkbox.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     grid.add(center(hardware_checkbox), 0, 0);
     hardware_checkbox.checked(true);
 
-    egt::CheckBox software_checkbox("Software", egt::Rect(egt::Point(0, 0), egt::Size(120, 40)));
+    egt::CheckBox software_checkbox("Software", egt::Rect(egt::Point(0, 0),
+                                    egt::Size(120, 40)));
     software_checkbox.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     grid.add(center(software_checkbox), 1, 0);
     software_checkbox.checked(true);
@@ -96,20 +103,29 @@ int main(int argc, const char** argv)
     });
     animatetimer.start();
 
-    egt::Slider slider1(egt::Rect(egt::Point(win.height() - 40, 300), egt::Size(win.width(), 40)), 10, 500);
-    win.add(egt::bottom(egt::center(slider1)));
-    slider1.value(DEFAULT_MS_INTERVAL);
-    slider1.on_value_changed([&]()
+    egt::Slider slider(egt::Rect(egt::Point(win.height() - 80, 300),
+                                 egt::Size(win.width(), 80)),
+                       1, 100);
+    slider.slider_flags().set(egt::Slider::SliderFlag::show_label);
+    win.add(egt::bottom(egt::center(slider)));
+    slider.on_value_changed([&]()
     {
-        animatetimer.change_duration(std::chrono::milliseconds(slider1.value()));
+        auto v = egt::detail::normalize<float>(slider.value(),
+                                               slider.min(),
+                                               slider.max(),
+                                               10, 300);
+        animatetimer.change_duration(std::chrono::milliseconds(static_cast<int>(v)));
     });
 
+    slider.value(egt::detail::normalize<float>(DEFAULT_MS_INTERVAL,
+                 10, 300,
+                 slider.min(),
+                 slider.max()));
     win.show();
 
     egt::Popup popup(egt::Size(100, 80));
     popup.move(egt::Point(win.width() - 100 - 10, 10));
     popup.color(egt::Palette::ColorId::bg, egt::Palette::fuchsia);
-    popup.name("popup");
 
     egt::Label label1("CPU: -",
                       egt::Rect(egt::Point(0, 0), egt::Size(100, 40)),
