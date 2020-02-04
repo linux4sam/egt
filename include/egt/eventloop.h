@@ -47,11 +47,6 @@ public:
     asio::io_context& io();
 
     /**
-     * Wait for an event to occur.
-     */
-    virtual int wait();
-
-    /**
      * Perform a draw.
      *
      * @note You do not normally need to call this directly.  It is called by
@@ -63,16 +58,33 @@ public:
      * Run the event loop.
      *
      * This will not return until quit() is called.
+     *
+     * @return The number of events handled.
      */
     virtual int run();
 
     /**
      * Single step on the event loop.
      *
+     * This is the same as calling:
+     * @code{.cpp}
+     * auto ret = poll();
+     * if (ret)
+     *     draw();
+     * @endcode
+     *
      * @note If calling this manually, this will not invoke any idle callbacks.
+     * @return The number of events handled.
      */
     virtual int step();
 
+    /**
+     * Run some pending events and return.
+     *
+     * @note This does not call draw().  If poll() returns a non-zero value,
+     * you must manually call draw().
+     * @return The number of events handled.
+     */
     virtual int poll();
 
     /**
@@ -89,9 +101,6 @@ public:
 
     /**
      * Add a callback to be called any time the event loop is idle.
-     *
-     * This is useful for executing long running tasks that should otherwise
-     * not impact any other event handling performance.
      */
     void add_idle_callback(IdleCallback func);
 
@@ -101,6 +110,11 @@ public:
     virtual ~EventLoop();
 
 protected:
+
+    /**
+     * Wait for an event to occur.
+     */
+    int wait();
 
     /**
      * Called to invoke idle callbacks.

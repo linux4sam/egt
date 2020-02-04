@@ -56,7 +56,8 @@ namespace egt
 inline namespace v1
 {
 
-static Application* the_app = nullptr;
+static Application* the_app{nullptr};
+
 Application& Application::instance()
 {
     if (!the_app)
@@ -69,29 +70,57 @@ bool Application::check_instance()
     return !!the_app;
 }
 
-static std::once_flag env_flag;
-
-Application::Application(int argc, const char** argv, const std::string& name, bool primary)
+Application::Application(int argc, const char** argv,
+                         const std::string& name, bool primary)
     : m_argc(argc),
       m_argv(argv),
       m_signals(event().io(), SIGUSR1, SIGUSR2)
 {
-    std::call_once(env_flag, []()
+    setup_logging();
+
+    setup_info();
+
+    if (the_app)
     {
-        if (getenv("EGT_DEBUG"))
+        spdlog::warn("more than one application instance created");
+    }
+    else
+    {
+        the_app = this;
+    }
+
+    setup_search_paths();
+
+    setup_locale(name);
+
+    setup_backend(primary);
+
+    setup_inputs();
+
+    setup_events();
+}
+
+void Application::setup_events()
+{
+    m_signals.async_wait(std::bind(&Application::signal_handler, this,
+                                   std::placeholders::_1, std::placeholders::_2));
+
+    m_handle = Input::global_input().on_event([this](Event & event)
+    {
+        if (event.key().keycode == EKEY_SNAPSHOT)
         {
-            auto loglevel = static_cast<spdlog::level::level_enum>(
-                                std::stoi(getenv("EGT_DEBUG")));
-            spdlog::set_level(loglevel);
-        }
-        else
-        {
-            spdlog::set_level(spdlog::level::level_enum::warn);
+            if (m_argc)
+                paint_to_file(std::string(m_argv[0]) + ".png");
+            else
+                paint_to_file();
         }
 
-        spdlog::set_pattern("%E.%e [%^%l%$] %@ %v");
-    });
+        return 0;
+    }, {EventId::keyboard_down});
+}
 
+void Application::setup_info()
+{
     spdlog::info("EGT Version {}", egt_version());
 
 #ifdef HAVE_SIMD
@@ -111,22 +140,61 @@ Application::Application(int argc, const char** argv, const std::string& name, b
     spdlog::debug("ARM-NEON: {}", ((info & (1 << SimdCpuInfoNeon)) ? "Yes" : "No"));
     spdlog::debug("MIPS-MSA: {}", ((info & (1 << SimdCpuInfoMsa)) ? "Yes" : "No"));
 #endif
+}
 
-    if (the_app)
+void Application::setup_locale(const std::string& name)
+{
+    if (!name.empty())
     {
-        spdlog::warn("more than one application instance created");
+        setlocale(LC_ALL, "");
+        bindtextdomain(name.c_str(), (std::string(DATADIR) + "/locale/").c_str());
+        textdomain(name.c_str());
     }
-    else
+}
+
+static std::once_flag env_flag;
+
+void Application::setup_logging()
+{
+    std::call_once(env_flag, []()
     {
-        the_app = this;
+        auto level = getenv("EGT_DEBUG");
+        if (level)
+        {
+            auto loglevel = static_cast<spdlog::level::level_enum>(
+                                std::stoi(level));
+            spdlog::set_level(loglevel);
+        }
+        else
+        {
+            spdlog::set_level(spdlog::level::level_enum::warn);
+        }
+
+        spdlog::set_pattern("%E.%e [%^%l%$] %@ %v");
+    });
+}
+
+void Application::setup_search_paths()
+{
+    // any added search paths take priority
+    if (getenv("EGT_SEARCH_PATH"))
+    {
+        std::vector<std::string> tokens;
+        detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
+
+        for (auto& token : tokens)
+            add_search_path(token);
     }
 
-    add_search_paths();
+    // search cwd
+    add_search_path(detail::cwd());
 
-    setlocale(LC_ALL, "");
-    bindtextdomain(name.c_str(), (std::string(DATADIR) + "/locale/").c_str());
-    textdomain(name.c_str());
+    // search exe directory
+    add_search_path(detail::exe_pwd());
+}
 
+void Application::setup_backend(bool primary)
+{
     std::string backend;
 
     const char* value = getenv("EGT_BACKEND");
@@ -159,6 +227,10 @@ Application::Application(int argc, const char** argv, const std::string& name, b
                 size.width(std::stoi(dims[0]));
                 size.height(std::stoi(dims[1]));
             }
+            else
+            {
+                spdlog::warn("invalid EGT_SCREEN_SIZE: {}", sizestr);
+            }
         }
 
         m_screen = detail::make_unique<detail::X11Screen>(*this, size);
@@ -177,6 +249,13 @@ Application::Application(int argc, const char** argv, const std::string& name, b
 #endif
                 spdlog::info("no screen backend");
 
+}
+
+void Application::setup_inputs()
+{
+    m_input_devices.clear();
+    m_inputs.clear();
+
     // EGT_INPUT_DEVICES=library:event_device1,event_device2;library:event_device3
     const char* tmp = getenv("EGT_INPUT_DEVICES");
 
@@ -193,7 +272,10 @@ Application::Application(int argc, const char** argv, const std::string& name, b
             detail::tokenize(input, ':', tokens);
 
             if (tokens.size() != 2)
+            {
+                spdlog::warn("invalid EGT_INPUT_DEVICES string: {}", input);
                 continue;
+            }
 
             auto library = tokens.front();
             auto devices = tokens.back();
@@ -220,7 +302,7 @@ Application::Application(int argc, const char** argv, const std::string& name, b
                 }
 
                 if (detail::exists(device))
-                    m_input_devices.emplace_back(std::pair<std::string, std::string>(library, device));
+                    m_input_devices.emplace_back(std::make_pair(library, device));
             }
         }
     }
@@ -243,46 +325,21 @@ Application::Application(int argc, const char** argv, const std::string& name, b
             spdlog::warn("evdev requested but no support compiled in");
 #endif
         }
+        else if (device.first == "libinput")
+        {
+#ifndef HAVE_LIBINPUT
+            spdlog::warn("libinput requested but no support compiled in");
+#endif
+        }
+        else
+        {
+            spdlog::warn("unknown input type requested: {}", device.first);
+        }
     }
 
 #ifdef HAVE_LIBINPUT
     m_inputs.push_back(detail::make_unique<detail::InputLibInput>(*this));
 #endif
-
-    m_signals.async_wait(std::bind(&Application::signal_handler, this,
-                                   std::placeholders::_1, std::placeholders::_2));
-
-    m_handle = Input::global_input().on_event([this](Event & event)
-    {
-        if (event.key().keycode == EKEY_SNAPSHOT)
-        {
-            if (m_argc)
-                paint_to_file(std::string(m_argv[0]) + ".png");
-            else
-                paint_to_file();
-        }
-
-        return 0;
-    }, {EventId::keyboard_down});
-}
-
-void Application::add_search_paths()
-{
-    // any added search paths take priority
-    if (getenv("EGT_SEARCH_PATH"))
-    {
-        std::vector<std::string> tokens;
-        detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
-
-        for (auto& token : tokens)
-            add_search_path(token);
-    }
-
-    // search cwd
-    add_search_path(detail::cwd());
-
-    // search exe directory
-    add_search_path(detail::exe_pwd());
 }
 
 void Application::signal_handler(const asio::error_code& error, int signum)
@@ -344,7 +401,7 @@ void Application::paint_to_file(const std::string& filename)
     cairo_surface_write_to_png(surface.get(), name.c_str());
 }
 
-void Application::dump(std::ostream& out)
+void Application::dump(std::ostream& out) const
 {
     for (auto& w : windows())
     {
@@ -356,7 +413,7 @@ void Application::dump(std::ostream& out)
     dump_timers(out);
 }
 
-std::vector<std::pair<std::string, std::string>> Application::get_input_devices()
+const std::vector<std::pair<std::string, std::string>>& Application::get_input_devices()
 {
     return m_input_devices;
 }

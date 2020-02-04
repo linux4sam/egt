@@ -54,7 +54,7 @@ public:
      *             including identifying the text domain used by gettext().
      */
     explicit Application(int argc = 0, const char** argv = nullptr,
-                         const std::string& name = "egt", bool primary = true);
+                         const std::string& name = {}, bool primary = true);
 
     /**
      * Reference to the main Application instance.
@@ -72,8 +72,8 @@ public:
      * Run the application.
      *
      * This will initialize the application and start running the event loop.
-     * This function will block until the event loop is told to exit, possibly
-     * with a call to EventLoop::quit().
+     * This function will block until the event loop is told to exit by calling
+     * quit().
      */
     virtual int run();
 
@@ -108,19 +108,29 @@ public:
      * @deprecated This will eventually be removed/changed in favor of using
      * the detail::Serializer classes.
      */
-    void dump(std::ostream& out);
+    void dump(std::ostream& out) const;
 
     /**
      * Get a list of input devices configured with the EGT_INPUT_DEVICES
      * environment variable.
      */
-    std::vector<std::pair<std::string, std::string>> get_input_devices();
+    const std::vector<std::pair<std::string, std::string>>& get_input_devices();
+
+    inline int argc() const { return m_argc; }
+
+    inline const char** argv() const { return m_argv; }
 
     virtual ~Application();
 
 protected:
 
-    virtual void add_search_paths();
+    void setup_info();
+    void setup_logging();
+    void setup_locale(const std::string& name);
+    void setup_search_paths();
+    void setup_backend(bool primary);
+    void setup_inputs();
+    void setup_events();
 
     /**
      * The event loop instance.
