@@ -11,14 +11,25 @@
 class FloatingBox : public egt::Window
 {
 public:
-    explicit FloatingBox(const egt::Rect& rect)
-        : egt::Window(rect),
+    explicit FloatingBox(const egt::Rect& rect,
+                         egt::WindowHint hint = egt::WindowHint::automatic)
+        : egt::Window(rect, egt::Window::DEFAULT_FORMAT, hint),
           m_grip(egt::Image("file:grip.png")),
           m_arrows(egt::Image("file:arrows.png"))
     {
         flags().set(egt::Widget::Flag::grab_mouse);
+
         color(egt::Palette::ColorId::bg, egt::Color(0x526d7480));
-        color(egt::Palette::ColorId::bg, egt::Color(0xff6d7480), egt::Palette::GroupId::active);
+
+        if (flags().is_set(egt::Widget::Flag::plane_window))
+        {
+            color(egt::Palette::ColorId::bg, egt::Color(0x9370db80), egt::Palette::GroupId::active);
+        }
+        else
+        {
+            fill_flags(egt::Theme::FillFlag::blend);
+            color(egt::Palette::ColorId::bg, egt::Color(0xff6d7480), egt::Palette::GroupId::active);
+        }
 
         add(m_grip);
         m_grip.resize(egt::Size(50, 50));
@@ -69,7 +80,8 @@ int main(int argc, const char** argv)
     FloatingBox box1(egt::Rect(egt::Ratio<int>(window.width(), 20),
                                egt::Ratio<int>(window.height(), 20),
                                egt::Ratio<int>(window.width(), 20),
-                               egt::Ratio<int>(window.width(), 20)));
+                               egt::Ratio<int>(window.width(), 20)),
+                     egt::WindowHint::software);
     window.add(box1);
 
     FloatingBox box2(egt::Rect(egt::Ratio<int>(window.width(), 20) * 3,
