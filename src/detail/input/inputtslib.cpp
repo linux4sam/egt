@@ -23,7 +23,7 @@ static const int SAMPLE_COUNT = 20;
 struct tslibimpl
 {
     struct tsdev* ts {nullptr};
-    struct ts_sample_mt** samp_mt {nullptr};
+    struct ts_sample_mt* samp_mt[SAMPLE_COUNT] {};
     std::array<std::chrono::time_point<std::chrono::steady_clock>, 2> last_down;
 };
 
@@ -38,19 +38,8 @@ InputTslib::InputTslib(Application& app, const std::string& path)
     {
         spdlog::info("added tslib device {}", path);
 
-        m_impl->samp_mt = (struct ts_sample_mt**)malloc(SAMPLE_COUNT * sizeof(struct ts_sample_mt*));
-        assert(m_impl->samp_mt);
-
-        for (int i = 0; i < SAMPLE_COUNT; i++)
-        {
-            m_impl->samp_mt[i] = (struct ts_sample_mt*)calloc(CHANNELS, sizeof(struct ts_sample_mt));
-            if (unlikely(!m_impl->samp_mt[i]))
-            {
-                free(m_impl->samp_mt);
-                ts_close(m_impl->ts);
-                assert(0);
-            }
-        }
+        for (auto i = 0; i < SAMPLE_COUNT; i++)
+            m_impl->samp_mt[i] = new ts_sample_mt[CHANNELS]();
 
         m_input.assign(ts_fd(m_impl->ts));
 
@@ -206,11 +195,7 @@ InputTslib::~InputTslib()
     ts_close(m_impl->ts);
 
     for (int i = 0; i < SAMPLE_COUNT; i++)
-    {
-        free(m_impl->samp_mt[i]);
-    }
-
-    free(m_impl->samp_mt);
+        delete [] m_impl->samp_mt[i];
 }
 
 }
