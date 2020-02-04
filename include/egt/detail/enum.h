@@ -46,13 +46,14 @@ namespace detail
 template<class T>
 struct EnumStrings
 {
-    static std::map<T, char const*> data;
+    static const std::map<T, char const*> data;
 };
 
 template<class T>
 std::string enum_to_string(T const& e)
 {
-    return EnumStrings<T>::data[e];
+    auto i = EnumStrings<T>::data.find(e);
+    return i->second;
 }
 
 template<class T>

@@ -357,7 +357,7 @@ void Slider::draw_line(Painter& painter, float xp, float yp)
 }
 
 template<>
-std::map<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data =
+const std::map<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data =
 {
     {Slider::SliderFlag::rectangle_handle, "rectangle_handle"},
     {Slider::SliderFlag::square_handle, "square_handle"},

@@ -28,7 +28,7 @@ inline namespace v1
 {
 
 template<>
-std::map<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data =
+const std::map<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data =
 {
     {Widget::Flag::plane_window, "plane_window"},
     {Widget::Flag::window, "window"},

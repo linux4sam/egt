@@ -200,7 +200,7 @@ void SideBoard::deserialize(const std::string& name, const std::string& value,
 }
 
 template<>
-std::map<SideBoard::PositionFlag, char const*> detail::EnumStrings<SideBoard::PositionFlag>::data =
+const std::map<SideBoard::PositionFlag, char const*> detail::EnumStrings<SideBoard::PositionFlag>::data =
 {
     {SideBoard::PositionFlag::left, "left"},
     {SideBoard::PositionFlag::right, "right"},

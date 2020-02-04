@@ -312,7 +312,7 @@ void StaticGrid::layout()
 }
 
 template<>
-std::map<StaticGrid::GridFlag, char const*> detail::EnumStrings<StaticGrid::GridFlag>::data =
+const std::map<StaticGrid::GridFlag, char const*> detail::EnumStrings<StaticGrid::GridFlag>::data =
 {
     {StaticGrid::GridFlag::show_border, "show_border"},
 };

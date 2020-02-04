@@ -16,7 +16,7 @@ inline namespace v1
 {
 
 template<>
-std::map<EventId, char const*> detail::EnumStrings<EventId>::data =
+const std::map<EventId, char const*> detail::EnumStrings<EventId>::data =
 {
     {EventId::none, "none"},
     {EventId::raw_pointer_down, "raw_pointer_down"},
@@ -45,7 +45,7 @@ void Event::grab(Widget* widget)
 }
 
 template<>
-std::map<Pointer::Button, char const*> detail::EnumStrings<Pointer::Button>::data =
+const std::map<Pointer::Button, char const*> detail::EnumStrings<Pointer::Button>::data =
 {
     {Pointer::Button::none, "none"},
     {Pointer::Button::left, "left"},
