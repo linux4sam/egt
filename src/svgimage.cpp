@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/canvas.h"
+#include "egt/detail/dump.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/meta.h"
 #include "egt/resource.h"

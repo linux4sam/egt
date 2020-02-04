@@ -13,7 +13,7 @@
 
 #include <egt/detail/meta.h>
 #include <iomanip>
-#include <iostream>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <vector>

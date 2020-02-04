@@ -5,6 +5,7 @@
  */
 #include "detail/priorityqueue.h"
 #include "egt/app.h"
+#include "egt/detail/dump.h"
 #include "egt/eventloop.h"
 #include "egt/tools.h"
 #include "egt/widget.h"

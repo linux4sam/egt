@@ -5,19 +5,19 @@
  */
 #include "detail/input/inputkeyboard.h"
 #include "egt/app.h"
+#include "egt/detail/dump.h"
 #include "egt/detail/input/inputlibinput.h"
 #include "egt/detail/meta.h"
 #include "egt/detail/string.h"
 #include "egt/eventloop.h"
 #include "egt/keycode.h"
 #include "egt/screen.h"
-#include <cassert>
-#include <fstream>
 #include <libinput.h>
 #include <libudev.h>
 #include <linux/input.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+#include <sstream>
 #include <stdarg.h>
 #include <string>
 #include <unistd.h>

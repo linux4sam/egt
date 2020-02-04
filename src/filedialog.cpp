@@ -3,7 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/button.h"
 #include "egt/filedialog.h"
+#include "egt/grid.h"
+#include "egt/label.h"
+#include "egt/list.h"
+#include "egt/sizer.h"
+#include "egt/text.h"
 #include <experimental/filesystem>
 #include <memory>
 #include <spdlog/spdlog.h>

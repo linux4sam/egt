@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "egt/detail/dump.h"
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/math.h"

@@ -14,6 +14,7 @@
  *     ./egt_gpio /dev/gpiochip0 29
  */
 #include <egt/ui>
+#include <iostream>
 #include <linux/gpio.h>
 
 /**

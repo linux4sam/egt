@@ -8,6 +8,7 @@
 #endif
 
 #include "egt/color.h"
+#include "egt/detail/dump.h"
 #include "egt/palette.h"
 #include "egt/screen.h"
 #include "egt/types.h"

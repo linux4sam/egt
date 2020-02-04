@@ -11,6 +11,7 @@
  * @brief Debug dump tools.
  */
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -21,6 +22,27 @@ inline namespace v1
 {
 namespace detail
 {
+
+template<class T>
+inline void code_timer(bool enable, const std::string& prefix, const T& callback)
+{
+    if (enable)
+    {
+        const auto start = std::chrono::steady_clock::now();
+
+        callback();
+
+        const auto end = std::chrono::steady_clock::now();
+        const auto diff = end - start;
+
+        std::cout << prefix <<
+                  std::chrono::duration<double, std::milli>(diff).count() << std::endl;
+    }
+    else
+    {
+        callback();
+    }
+}
 
 /**
  * Utility to print a somewhat standard hex display.

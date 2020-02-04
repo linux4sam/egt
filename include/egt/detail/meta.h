@@ -11,17 +11,14 @@
  * @brief Meta tools for compilation, debug, and language support.
  */
 
-#include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <egt/detail/math.h>
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <type_traits>
 #include <utility>
-#include <vector>
 
 #define likely(x)       __builtin_expect((x), 1)
 #define unlikely(x)     __builtin_expect((x), 0)
@@ -155,27 +152,6 @@ constexpr bool rule_of_5()
     return std::is_destructible<T>::value && std::is_copy_constructible<T>::value
            && std::is_move_constructible<T>::value && std::is_copy_assignable<T>::value
            && std::is_move_assignable<T>::value;
-}
-
-template<class T>
-inline void code_timer(bool enable, const std::string& prefix, const T& callback)
-{
-    if (enable)
-    {
-        const auto start = std::chrono::steady_clock::now();
-
-        callback();
-
-        const auto end = std::chrono::steady_clock::now();
-        const auto diff = end - start;
-
-        std::cout << prefix <<
-                  std::chrono::duration<double, std::milli>(diff).count() << std::endl;
-    }
-    else
-    {
-        callback();
-    }
 }
 
 /**

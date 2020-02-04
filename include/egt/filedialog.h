@@ -11,16 +11,9 @@
  * @brief Working with file dialog pop-ups.
  */
 
-#include <egt/button.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/signal.h>
-#include <egt/grid.h>
-#include <egt/label.h>
-#include <egt/list.h>
 #include <egt/popup.h>
-#include <egt/sizer.h>
-#include <egt/text.h>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -28,6 +21,11 @@ namespace egt
 {
 inline namespace v1
 {
+class BoxSizer;
+class ImageLabel;
+class ListBox;
+class StaticGrid;
+class TextBox;
 
 /**
  * A FileDialog is a widget that allows user to:

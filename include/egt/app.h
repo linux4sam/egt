@@ -13,6 +13,7 @@
 #include <egt/eventloop.h>
 #include <iosfwd>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -107,7 +108,7 @@ public:
      * @deprecated This will eventually be removed/changed in favor of using
      * the detail::Serializer classes.
      */
-    void dump(std::ostream& out = std::cout);
+    void dump(std::ostream& out);
 
     /**
      * Get a list of input devices configured with the EGT_INPUT_DEVICES

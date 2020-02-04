@@ -7,6 +7,7 @@
 #include <chrono>
 #include <cmath>
 #include <egt/ui>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <sstream>
