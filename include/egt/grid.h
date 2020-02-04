@@ -193,9 +193,9 @@ protected:
      */
     virtual void reposition();
 
-    using cell_array = std::vector<std::vector<std::weak_ptr<Widget>>>;
+    using CellArray = std::vector<std::vector<std::weak_ptr<Widget>>>;
 
-    cell_array m_cells;
+    CellArray m_cells;
     int m_last_add_column{-1};
     int m_last_add_row{-1};
     bool m_column_priority{false};
