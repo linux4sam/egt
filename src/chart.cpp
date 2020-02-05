@@ -13,13 +13,10 @@ inline namespace v1
 {
 
 LineChart::LineChart(const Rect& rect)
-    : Widget(rect)
+    : ChartBase(rect),
+      m_impl(detail::make_unique<detail::PlPlotLineChart>(*this))
 {
     name("LineChart" + std::to_string(m_widgetid));
-
-    fill_flags(Theme::FillFlag::blend);
-
-    m_impl = detail::make_unique<detail::PlPlotLineChart>(*this);
 }
 
 void LineChart::draw(Painter& painter, const Rect& rect)
@@ -52,29 +49,29 @@ void LineChart::clear()
     m_impl->clear();
 }
 
-void LineChart::line_width(const int val)
+void LineChart::grid_style(GridFlag flag)
 {
-    m_impl->width(val);
+    m_impl->grid_style(flag);
 }
 
-void LineChart::line_pattern(LinePattern pattern)
+void LineChart::grid_width(const int val)
 {
-    m_impl->pattern(static_cast<int>(pattern));
+    m_impl->grid_width(val);
+}
+
+void LineChart::line_width(const int val)
+{
+    m_impl->line_width(val);
+}
+
+void LineChart::line_style(LinePattern pattern)
+{
+    m_impl->line_style(static_cast<int>(pattern));
 }
 
 void LineChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
-}
-
-void LineChart::show_ticks(bool enable)
-{
-    m_impl->show_ticks(enable);
-}
-
-void LineChart::show_grid(bool enable)
-{
-    m_impl->show_grid(enable);
 }
 
 void LineChart::resize(const Size& size)
@@ -94,13 +91,10 @@ void LineChart::bank(float bank)
 LineChart::~LineChart() = default;
 
 PointChart::PointChart(const Rect& rect)
-    : Widget(rect)
+    : ChartBase(rect),
+      m_impl(detail::make_unique<detail::PlPlotPointChart>(*this))
 {
     name("PointChart" + std::to_string(m_widgetid));
-
-    fill_flags(Theme::FillFlag::blend);
-
-    m_impl = detail::make_unique<detail::PlPlotPointChart>(*this);
 }
 
 void PointChart::draw(Painter& painter, const Rect& rect)
@@ -143,11 +137,6 @@ void PointChart::label(const std::string& xlabel, const std::string& ylabel, con
     m_impl->label(xlabel, ylabel, title);
 }
 
-void PointChart::show_ticks(bool enable)
-{
-    m_impl->show_ticks(enable);
-}
-
 void PointChart::resize(const Size& size)
 {
     if (size != this->size())
@@ -162,21 +151,30 @@ void PointChart::bank(float bank)
     m_impl->bank(bank);
 }
 
-void PointChart::show_grid(bool enable)
+void PointChart::grid_style(GridFlag flag)
 {
-    m_impl->show_grid(enable);
+    m_impl->grid_style(flag);
+}
+
+void PointChart::grid_width(const int val)
+{
+    m_impl->grid_width(val);
 }
 
 PointChart::~PointChart() = default;
 
 BarChart::BarChart(const Rect& rect)
-    : Widget(rect)
+    : ChartBase(rect),
+      m_impl(detail::make_unique<detail::PlPlotBarChart>(*this))
 {
     name("BarChart" + std::to_string(m_widgetid));
+}
 
-    fill_flags(Theme::FillFlag::blend);
-
-    m_impl = detail::make_unique<detail::PlPlotBarChart>(*this);
+BarChart::BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl)
+    : ChartBase(rect),
+      m_impl(std::move(impl))
+{
+    name("BarChart" + std::to_string(m_widgetid));
 }
 
 void BarChart::draw(Painter& painter, const Rect& rect)
@@ -184,9 +182,9 @@ void BarChart::draw(Painter& painter, const Rect& rect)
     m_impl->draw(painter, rect);
 }
 
-void BarChart::bar_pattern(BarPattern pattern)
+void BarChart::bar_style(BarPattern pattern)
 {
-    m_impl->pattern(static_cast<int>(pattern));
+    m_impl->line_style(static_cast<int>(pattern));
 }
 
 void BarChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
@@ -229,14 +227,14 @@ void BarChart::clear()
     m_impl->clear();
 }
 
-void BarChart::show_ticks(bool enable)
+void BarChart::grid_style(GridFlag flag)
 {
-    m_impl->show_ticks(enable);
+    m_impl->grid_style(flag);
 }
 
-void BarChart::show_grid(bool enable)
+void BarChart::grid_width(const int val)
 {
-    m_impl->show_grid(enable);
+    m_impl->grid_width(val);
 }
 
 void BarChart::resize(const Size& size)
@@ -256,89 +254,18 @@ void BarChart::bank(float bank)
 BarChart::~BarChart() = default;
 
 HorizontalBarChart::HorizontalBarChart(const Rect& rect)
-    : Widget(rect)
+    : BarChart(rect, detail::make_unique<detail::PlPlotHBarChart>(*this))
 {
     name("HorizontalBarChart" + std::to_string(m_widgetid));
-
-    fill_flags(Theme::FillFlag::blend);
-
-    m_impl = detail::make_unique<detail::PlPlotHBarChart>(*this);
-}
-
-void HorizontalBarChart::draw(Painter& painter, const Rect& rect)
-{
-    m_impl->draw(painter, rect);
-}
-
-void HorizontalBarChart::data(const DataArray& data)
-{
-    m_impl->data(data);
-}
-
-size_t HorizontalBarChart::data_size() const
-{
-    return m_impl->data_size();
-}
-
-void HorizontalBarChart::add_data(const DataArray& data)
-{
-    m_impl->add_data(data);
-}
-
-void HorizontalBarChart::remove_data(uint32_t count)
-{
-    m_impl->remove_data(count);
-}
-
-void HorizontalBarChart::clear()
-{
-    m_impl->clear();
-}
-
-void HorizontalBarChart::bar_pattern(BarPattern pattern)
-{
-    m_impl->pattern(static_cast<int>(pattern));
-}
-
-void HorizontalBarChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
-{
-    m_impl->label(xlabel, ylabel, title);
-}
-
-void HorizontalBarChart::show_ticks(bool enable)
-{
-    m_impl->show_ticks(enable);
-}
-
-void HorizontalBarChart::show_grid(bool enable)
-{
-    m_impl->show_grid(enable);
-}
-
-void HorizontalBarChart::resize(const Size& size)
-{
-    if (size != this->size())
-    {
-        m_impl->resize(size);
-        Widget::resize(size);
-    }
-}
-
-void HorizontalBarChart::bank(float bank)
-{
-    m_impl->bank(bank);
 }
 
 HorizontalBarChart::~HorizontalBarChart() = default;
 
 PieChart::PieChart(const Rect& rect)
-    : Widget(rect)
+    : Widget(rect),
+      m_impl(detail::make_unique<detail::PlPlotPieChart>(*this))
 {
     name("PieChart" + std::to_string(m_widgetid));
-
-    fill_flags(Theme::FillFlag::blend);
-
-    m_impl = detail::make_unique<detail::PlPlotPieChart>(*this);
 }
 
 void PieChart::draw(Painter& painter, const Rect& rect)
@@ -351,7 +278,7 @@ void PieChart::title(const std::string& title)
     return m_impl->title(title);
 }
 
-void PieChart::data(const DataArray& data)
+void PieChart::data(const StringDataArray& data)
 {
     m_impl->data(data);
 }
@@ -361,7 +288,7 @@ size_t PieChart::data_size() const
     return m_impl->data_size();
 }
 
-void PieChart::add_data(const DataArray& data)
+void PieChart::add_data(const StringDataArray& data)
 {
     m_impl->add_data(data);
 }

@@ -26,37 +26,35 @@ public:
 
     PlPlotImpl();
 
-    virtual void title(const std::string& title);
+    void title(const std::string& title);
 
-    virtual void label(const std::string& xlabel, const std::string& ylabel, const std::string& title);
+    void label(const std::string& xlabel, const std::string& ylabel, const std::string& title);
 
     virtual void draw(Painter& painter, const Rect& rect) = 0;
 
-    using DataArray = std::vector<std::pair<double, double>>;
-    virtual void data(const DataArray& data);
+    void data(const ChartBase::DataArray& data);
 
     size_t data_size() const;
 
-    virtual void add_data(const DataArray& data);
+    void add_data(const ChartBase::DataArray& data);
 
-    using StringDataArray = std::vector<std::pair<double, std::string>>;
-    virtual void data(const StringDataArray& data);
+    void data(const ChartBase::StringDataArray& data);
 
-    virtual void add_data(const StringDataArray& data);
+    void add_data(const ChartBase::StringDataArray& data);
 
-    virtual void remove_data(uint32_t count);
+    void remove_data(uint32_t count);
 
-    virtual void clear();
+    void clear();
 
-    virtual void show_ticks(bool enable);
+    void grid_style(ChartBase::GridFlag flag);
 
-    virtual void show_grid(bool enable);
+    void grid_width(int val);
 
-    virtual void width(int val);
+    void line_width(int val);
 
-    virtual void pattern(int val);
+    void line_style(int val);
 
-    virtual void point_type(int ptype);
+    void point_type(int ptype);
 
     virtual void resize(const Size& size);
 
@@ -67,6 +65,13 @@ public:
     virtual ~PlPlotImpl();
 
 protected:
+
+    inline PLINT axis() const
+    {
+        return static_cast<PLINT>(m_grid);
+    }
+
+    ChartBase::GridFlag m_grid{ChartBase::GridFlag::box_ticks};
 
     std::unique_ptr<plstream> m_plstream;
     bool m_initalize{false};
@@ -87,30 +92,14 @@ protected:
     PLINT m_pattern{0};
     PLINT m_pointtype{17}; //code 17 represents to dot.
 
-    PLINT m_line_width{1};
-
-    Font m_font;
-
-    /** set axis value
-     *  -2: draw no box, no tick marks, no numeric tick labels, no axes.
-     *  -1: draw box only.
-     *   0: draw box, ticks, and numeric tick labels.
-     *   1: also draw coordinate axes at x=0 and y=0.
-     *   2: also draw a grid at major tick positions in both coordinates.
-     */
-    PLINT m_axis{-1};
-    bool m_ticks{false};
-    bool m_grid{false};
-
-    bool m_clearsurface{false};
+    PLINT m_grid_width{1};
+    PLINT m_line_width{2};
 
     std::vector<PLFLT> m_xdata;
     std::vector<PLFLT> m_ydata;
     std::vector<std::string> m_sdata;
 
     void plplot_color(Color& color);
-
-    void plplot_bg_color(Color& color);
 
     void plplot_font(const Font& font);
 

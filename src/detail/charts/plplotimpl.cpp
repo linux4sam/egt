@@ -4,11 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/charts/plplotimpl.h"
+#include "egt/app.h"
+#include "egt/canvas.h"
 #include "egt/screen.h"
-#include <egt/app.h>
 #include <math.h>
 #include <spdlog/spdlog.h>
-#include <sstream>
+
+#include <iostream>
+using namespace std;
 
 namespace egt
 {
@@ -21,6 +24,7 @@ PlPlotImpl::PlPlotImpl()
     : m_plstream(detail::make_unique<plstream>())
 {
     m_plstream->sdev("extcairo");
+    plplot_verify_viewport();
 }
 
 template<class T1, class T2, class T3>
@@ -42,12 +46,14 @@ inline bool change_if_diff(T1& first, T2& second, const T3& to)
 
     bool diff = false;
     size_t i = 0;
-    for (auto& elem : to)
+    for (const auto& elem : to)
     {
-        if (change_if_diff(first[i], elem.first))
+        auto f = first[i];
+        if (detail::change_if_diff(f, static_cast<decltype(f)>(elem.first)))
             diff = true;
 
-        if (change_if_diff(second[i], elem.second))
+        auto s = second[i];
+        if (detail::change_if_diff(s, static_cast<decltype(s)>(elem.second)))
             diff = true;
 
         ++i;
@@ -56,7 +62,7 @@ inline bool change_if_diff(T1& first, T2& second, const T3& to)
     return diff;
 }
 
-void PlPlotImpl::data(const DataArray& data)
+void PlPlotImpl::data(const ChartBase::DataArray& data)
 {
     if (change_if_diff(m_xdata, m_ydata, data))
     {
@@ -68,7 +74,7 @@ void PlPlotImpl::data(const DataArray& data)
     }
 }
 
-void PlPlotImpl::add_data(const DataArray& data)
+void PlPlotImpl::add_data(const ChartBase::DataArray& data)
 {
     if (!data.empty())
     {
@@ -90,7 +96,7 @@ void PlPlotImpl::add_data(const DataArray& data)
     }
 }
 
-void PlPlotImpl::data(const StringDataArray& data)
+void PlPlotImpl::data(const ChartBase::StringDataArray& data)
 {
     if (change_if_diff(m_ydata, m_sdata, data))
     {
@@ -113,7 +119,7 @@ size_t PlPlotImpl::data_size() const
     return 0;
 }
 
-void PlPlotImpl::add_data(const StringDataArray& data)
+void PlPlotImpl::add_data(const ChartBase::StringDataArray& data)
 {
     if (!data.empty())
     {
@@ -185,7 +191,6 @@ void PlPlotImpl::clear()
         m_xdata.clear();
         m_sdata.clear();
         m_ydata.clear();
-        m_clearsurface = true;
         invoke_damage();
     }
 }
@@ -198,7 +203,6 @@ void PlPlotImpl::title(const std::string& title)
 
 void PlPlotImpl::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
-
     bool damage_flag = false;
 
     if (detail::change_if_diff<>(m_xlabel, xlabel))
@@ -218,49 +222,24 @@ void PlPlotImpl::label(const std::string& xlabel, const std::string& ylabel, con
         invoke_damage();
 }
 
-void PlPlotImpl::show_ticks(bool enable)
+void PlPlotImpl::grid_style(ChartBase::GridFlag flag)
 {
-    if (detail::change_if_diff<>(m_ticks, enable))
-    {
-        if (m_ticks && m_grid)
-            m_axis = 2;
-        else if (m_ticks)
-            m_axis = 0;
-        else
-            m_axis = -1;
+    if (detail::change_if_diff<>(m_grid, flag))
         invoke_damage();
-    }
-
 }
 
-void PlPlotImpl::show_grid(bool enable)
+void PlPlotImpl::grid_width(int val)
 {
-    if (detail::change_if_diff<>(m_grid, enable))
-    {
-        /**
-         * if Grid is enable, then enable ticks to show
-         * grid at major tick positions
-         */
-        if (m_grid)
-            m_ticks = true;
-
-        if (m_ticks && m_grid)
-            m_axis = 2;
-        else if (m_ticks)
-            m_axis = 0;
-        else
-            m_axis = -1;
-        invoke_damage();
-    }
+    m_grid_width = val;
 }
 
-void PlPlotImpl::width(int val)
+void PlPlotImpl::line_width(int val)
 {
     if (detail::change_if_diff<>(m_line_width, val))
         invoke_damage();
 }
 
-void PlPlotImpl::pattern(int val)
+void PlPlotImpl::line_style(int val)
 {
     if (detail::change_if_diff<>(m_pattern, val))
         invoke_damage();
@@ -279,10 +258,17 @@ void PlPlotImpl::point_type(int ptype)
  */
 void PlPlotImpl::plplot_verify_viewport()
 {
-    m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
-    m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
-    m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-    m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
+    if (!m_xdata.empty())
+    {
+        m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
+        m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
+    }
+
+    if (!m_ydata.empty())
+    {
+        m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
+        m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
+    }
 
     if (!detail::float_compare(m_bank, 0.0f))
     {
@@ -291,6 +277,24 @@ void PlPlotImpl::plplot_verify_viewport()
         m_xmax += xdiff;
 
         auto ydiff = (m_ymax - m_ymin) * m_bank;
+        m_ymin -= ydiff;
+        m_ymax += ydiff;
+    }
+
+    if (detail::float_compare(m_xmin, m_xmax))
+    {
+        auto xdiff = m_xmax * 0.1;
+        if (detail::float_compare(xdiff, 0.0))
+            xdiff = 1;
+        m_xmin -= xdiff;
+        m_xmax += xdiff;
+    }
+
+    if (detail::float_compare(m_ymin, m_ymax))
+    {
+        auto ydiff = m_ymax * 0.1;
+        if (detail::float_compare(ydiff, 0.0))
+            ydiff = 1;
         m_ymin -= ydiff;
         m_ymax += ydiff;
     }
@@ -341,9 +345,6 @@ void PlPlotImpl::plplot_font(const Font& font)
         font_weight = 1;
 
     m_plstream->sfont(font_family, font_style, font_weight);
-
-    // Todo add setting font size. (i.e. need to convert font size to pixel size)
-
 }
 
 void PlPlotImpl::plplot_color(Color& color)
@@ -355,15 +356,6 @@ void PlPlotImpl::plplot_color(Color& color)
     m_plstream->scmap1n(1);
     m_plstream->scmap1a(&r, &g, &b, &a, 1);
     m_plstream->col1(1);
-}
-
-void PlPlotImpl::plplot_bg_color(Color& color)
-{
-    auto r = static_cast<PLINT>(color.red());
-    auto g = static_cast<PLINT>(color.green());
-    auto b = static_cast<PLINT>(color.blue());
-    auto a = static_cast<PLFLT>(color.alpha() / 255.0);
-    m_plstream->scolbga(r, g, b, a);
 }
 
 void PlPlotImpl::resize(const Size& size)
@@ -384,18 +376,20 @@ PlPlotImpl::~PlPlotImpl() = default;
 PlPlotLineChart::PlPlotLineChart(LineChart& interface)
     : m_interface(interface)
 {
-    m_font = m_interface.font();
-    plplot_font(m_font);
 }
 
 void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 {
+    m_interface.draw_box(painter, Palette::ColorId::bg,
+                         Palette::ColorId::border);
+
     auto b = m_interface.content_area();
 
     if (!m_initalize)
     {
         m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
+        plplot_font(m_interface.font());
         m_initalize = true;
     }
     auto cr = painter.context();
@@ -405,20 +399,16 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
-
-    if (m_clearsurface)
-    {
-        plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
-        m_plstream->clear();
-        m_clearsurface = false;
-    }
+    painter.set(m_interface.font());
 
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
     if (m_xdata.size() > 1 && m_ydata.size() > 1)
     {
+        m_plstream->width(m_grid_width);
+
         // set env
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
+        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
 
         //set line style
         m_plstream->lsty(m_pattern <= 0 ? 1 : m_pattern);
@@ -426,18 +416,16 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
         // set line width
         m_plstream->width(m_line_width);
 
+        plplot_color(m_interface.color(Palette::ColorId::button_fg).color());
+
         // plot
         m_plstream->line(m_xdata.size(), m_xdata.data(), m_ydata.data());
     }
     else
     {
-        // set env
-        m_plstream->env(0, 1, 0, 1, 0, m_axis);
+        m_plstream->width(m_grid_width);
+        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
     }
-
-    Font tfont = m_interface.font();
-    if (m_font != tfont)
-        plplot_font(tfont);
 
     // set text color
     plplot_color(m_interface.color(Palette::ColorId::label_text).color());
@@ -451,18 +439,20 @@ PlPlotLineChart::~PlPlotLineChart() = default;
 PlPlotPointChart::PlPlotPointChart(PointChart& interface)
     : m_interface(interface)
 {
-    m_font = m_interface.font();
-    plplot_font(m_font);
 }
 
 void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 {
+    m_interface.draw_box(painter, Palette::ColorId::bg,
+                         Palette::ColorId::border);
+
     auto b = m_interface.content_area();
 
     if (!m_initalize)
     {
         m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
+        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -473,21 +463,17 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
-    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
-
-    if (m_clearsurface)
-    {
-        m_plstream->clear();
-        m_clearsurface = false;
-    }
-
     //set axis color
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
-    if (m_xdata.size() > 1 && m_ydata.size() > 1)
+    if (!m_xdata.empty() && !m_ydata.empty())
     {
+        m_plstream->width(m_grid_width);
+
         // set env
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
+        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
+
+        plplot_color(m_interface.color(Palette::ColorId::button_fg).color());
 
         // draw points
         m_plstream->poin(m_xdata.size(), m_xdata.data(), m_ydata.data(), m_pointtype);
@@ -495,13 +481,8 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
     else
     {
         // set env
-        m_plstream->env(0, 1, 0, 1, 0, m_axis);
+        m_plstream->env(0, 1, 0, 1, 0, axis());
     }
-
-    // set font
-    Font tfont = m_interface.font();
-    if (m_font != tfont)
-        plplot_font(tfont);
 
     // set label color
     plplot_color(m_interface.color(Palette::ColorId::label_text).color());
@@ -515,8 +496,6 @@ PlPlotPointChart::~PlPlotPointChart() = default;
 PlPlotBarChart::PlPlotBarChart(BarChart& interface)
     : m_interface(interface)
 {
-    m_font = m_interface.font();
-    plplot_font(m_font);
 }
 
 void PlPlotBarChart::plfbox(PLFLT x0, PLFLT y0)
@@ -541,12 +520,16 @@ void PlPlotBarChart::plfbox(PLFLT x0, PLFLT y0)
 
 void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 {
+    m_interface.draw_box(painter, Palette::ColorId::bg,
+                         Palette::ColorId::border);
+
     auto b = m_interface.content_area();
 
     if (!m_initalize)
     {
         m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
+        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -556,14 +539,6 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
         cairo_translate(cr.get(), b.x(), b.y());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
-
-    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
-
-    if (m_clearsurface)
-    {
-        m_plstream->clear();
-        m_clearsurface = false;
-    }
 
     m_plstream->adv(0);
     m_plstream->vsta();
@@ -576,22 +551,18 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
     {
         std::size_t xmax = m_sdata.size() * 2;
         m_plstream->wind(0.0, xmax, 0.0, m_ymax);
-        if (m_axis == 2)
+        if (axis() == 2)
             m_plstream->box("bgit", 0, 0, "bginvst", 0, 0);
-        else if (m_axis == 0)
+        else if (axis() == 0)
             m_plstream->box("bit", 0, 0, "binvst", 0, 0);
         else
             m_plstream->box("bi", 0, 0, "binvs", 0, 0);
     }
     else
     {
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
+        m_plstream->width(m_grid_width);
+        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
     }
-
-    // set font
-    Font tfont = m_interface.font();
-    if (m_font != tfont)
-        plplot_font(tfont);
 
     if (!m_ydata.empty())
     {
@@ -609,7 +580,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
                 SPDLOG_TRACE("m_ydata[{}] = {} ", i, m_ydata.at(i));
                 plfbox((i * 2), m_ydata.at(i));
 
-                if (m_axis != -1)
+                if (axis() != -1)
                 {
                     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
                     auto pos = static_cast<PLFLT>(i) / static_cast<PLFLT>(n);
@@ -635,8 +606,6 @@ PlPlotBarChart::~PlPlotBarChart() = default;
 PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& interface)
     : m_interface(interface)
 {
-    m_font = m_interface.font();
-    plplot_font(m_font);
 }
 
 void PlPlotHBarChart::plfHbox(PLFLT x0, PLFLT y0)
@@ -663,12 +632,16 @@ void PlPlotHBarChart::plfHbox(PLFLT x0, PLFLT y0)
 
 void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 {
+    m_interface.draw_box(painter, Palette::ColorId::bg,
+                         Palette::ColorId::border);
+
     auto b = m_interface.content_area();
 
     if (!m_initalize)
     {
         m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
+        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -679,31 +652,20 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
-    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
-
-    if (m_clearsurface)
-    {
-        m_plstream->clear();
-        m_clearsurface = false;
-    }
-
     m_plstream->adv(0);
     m_plstream->vsta();
 
-    // set font
-    Font tfont = m_interface.font();
-    if (m_font != tfont)
-        plplot_font(tfont);
-
     if ((!m_sdata.empty()) && (!m_ydata.empty()))
     {
+        m_plstream->width(m_grid_width);
+
         //set axis color.
         plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
         m_plstream->wind(0.0, m_ymax, 0.0, (m_sdata.size() * 2));
-        if (m_axis == 2)
+        if (axis() == 2)
             m_plstream->box("bginvst", 0, 0, "bgit", 0, 0);
-        else if (m_axis == 0)
+        else if (axis() == 0)
             m_plstream->box("bit", 0, 0, "bitnvs", 0, 0);
         else
             m_plstream->box("bi", 0, 0, "binvs", 0, 0);
@@ -722,13 +684,19 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
             plfHbox(data, (i * 2));
 
             //Set Y-axis text
-            if (m_axis != -1)
+            if (axis() != -1)
             {
                 auto pos = static_cast<PLFLT>(i) / static_cast<PLFLT>(n);
                 m_plstream->mtex("lv", 1.0, pos, 1, m_sdata.at(i).c_str());
             }
             ++i;
         }
+    }
+    else
+    {
+        m_plstream->width(m_grid_width);
+
+        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
     }
 
     // set labels color
@@ -743,18 +711,20 @@ PlPlotHBarChart::~PlPlotHBarChart() = default;
 PlPlotPieChart::PlPlotPieChart(PieChart& interface)
     : m_interface(interface)
 {
-    m_font = m_interface.font();
-    plplot_font(m_font);
 }
 
 void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 {
+    m_interface.draw_box(painter, Palette::ColorId::bg,
+                         Palette::ColorId::border);
+
     auto b = m_interface.content_area();
 
     if (!m_initalize)
     {
         m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
         m_plstream->init();
+        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -765,24 +735,11 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
-    plplot_bg_color(m_interface.color(Palette::ColorId::bg).color());
-
-    if (m_clearsurface)
-    {
-        m_plstream->clear();
-        m_clearsurface = false;
-    }
-
     m_plstream->adv(0);
     // Ensure window has aspect ratio of one so plotted as a circle.
     m_plstream->vasp(1.0);
 
     m_plstream->wind(0.1, 10.0, 0.1, 10.0);
-
-    // set font
-    Font tfont = m_interface.font();
-    if (m_font != tfont)
-        plplot_font(tfont);
 
     // get labels color & set title color
     plplot_color(m_interface.color(Palette::ColorId::label_text).color());

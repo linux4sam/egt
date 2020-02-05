@@ -20,12 +20,53 @@ inline namespace v1
 
 namespace detail
 {
-class PlPlotLineChart;
-class PlPlotPointChart;
 class PlPlotBarChart;
 class PlPlotHBarChart;
+class PlPlotImpl;
+class PlPlotLineChart;
 class PlPlotPieChart;
+class PlPlotPointChart;
 }
+
+class EGT_API ChartBase: public Widget
+{
+public:
+
+    ChartBase(const Rect& rect)
+        : Widget(rect)
+    {}
+
+    enum class GridFlag
+    {
+        /// draw no box, no tick marks, no numeric tick labels, no axes
+        none = -2,
+        /// draw box only
+        box = -1,
+        /// draw box, ticks, and numeric tick labels
+        box_ticks = 0,
+        /// also draw coordinate axes at x=0 and y=0
+        box_ticks_coord = 1,
+        /// also draw a grid at major tick positions in both coordinates
+        box_major_ticks_coord = 2,
+        /// also draw a grid at minor tick positions in both coordinates
+        box_minor_ticks_coord = 3,
+    };
+
+    /**
+     * Set chart grid style.
+     */
+    virtual void grid_style(GridFlag flag) = 0;
+
+    /**
+     * A data pair array.
+     */
+    using DataArray = std::vector<std::pair<double, double>>;
+
+    /**
+     * A data pair array for strings.
+     */
+    using StringDataArray = std::vector<std::pair<double, std::string>>;
+};
 
 /**
  * LineChart Widget is used for displaying informations as a
@@ -33,10 +74,11 @@ class PlPlotPieChart;
  *
  * The LineChart widget is using plplot library api's.
  */
-class EGT_API LineChart: public Widget
+class EGT_API LineChart: public ChartBase
 {
 public:
 
+    /// Line style patterns.
     enum LinePattern
     {
         solid = 1,
@@ -52,11 +94,6 @@ public:
     explicit LineChart(const Rect& rect = {});
 
     virtual void draw(Painter& painter, const Rect& rect) override;
-
-    /**
-     * A data pair array for LineChart
-     */
-    using DataArray = std::vector<std::pair<double, double>>;
 
     /**
      * Set a new set of data to LineChart.
@@ -90,6 +127,18 @@ public:
     virtual void clear();
 
     /**
+     * Set the grid style.
+     */
+    virtual void grid_style(GridFlag flag);
+
+    /**
+     * Set grid width
+     *
+     * @param[in] val size of a grid width.
+     */
+    virtual void grid_width(int val);
+
+    /**
      * Set line width
      *
      * @param[in] val size of a line width.
@@ -102,7 +151,7 @@ public:
      *
      *  @param[in] pattern is one of the enum LinePattern
      */
-    virtual void line_pattern(LinePattern pattern);
+    virtual void line_style(LinePattern pattern);
 
     /**
      * Set chart labels.
@@ -114,20 +163,6 @@ public:
     virtual void label(const std::string& xlabel,
                        const std::string& ylabel,
                        const std::string& title);
-
-    /**
-     * Show x & y axis major ticks.
-     *
-     * @param[in] enable to show/hide ticks.
-     */
-    virtual void show_ticks(bool enable);
-
-    /**
-     * Show grid at major tick positions for x & y axis
-     *
-     * @param[in] enable to show/hide grid.
-     */
-    virtual void show_grid(bool enable);
 
     /**
      * Resize the LineChart.
@@ -146,6 +181,7 @@ public:
     virtual ~LineChart();
 
 protected:
+
     std::unique_ptr<detail::PlPlotLineChart> m_impl;
 };
 
@@ -155,10 +191,11 @@ protected:
  *
  * The PointChart widget is using plplot library api's.
  */
-class EGT_API PointChart: public Widget
+class EGT_API PointChart: public ChartBase
 {
 public:
 
+    /// Point styles.
     enum PointType
     {
         dot = 1,
@@ -175,11 +212,6 @@ public:
     explicit PointChart(const Rect& rect = {});
 
     virtual void draw(Painter& painter, const Rect& rect) override;
-
-    /**
-     * A data pair array for PointChart.
-     */
-    using DataArray = std::vector<std::pair<double, double>>;
 
     /**
      * Set a new set of data to PointChart.
@@ -231,18 +263,16 @@ public:
                        const std::string& title);
 
     /**
-     * Show x & y axis major ticks.
-     *
-     * @param[in] enable to show/hide ticks.
-     */
-    virtual void show_ticks(bool enable);
+    * Set the grid style.
+    */
+    virtual void grid_style(GridFlag flag);
 
     /**
-     * Show grid at major tick positions for x & y axis
+     * Set grid width
      *
-     * @param[in] enable to show/hide grid.
+     * @param[in] val size of a grid width.
      */
-    virtual void show_grid(bool enable);
+    virtual void grid_width(int val);
 
     /**
      * Resize the PointChart.
@@ -261,6 +291,7 @@ public:
     virtual ~PointChart();
 
 protected:
+
     std::unique_ptr<detail::PlPlotPointChart> m_impl;
 };
 
@@ -270,14 +301,14 @@ protected:
  *
  * The Vertical BarChart widget is using plplot library api's.
  */
-class EGT_API BarChart: public Widget
+class EGT_API BarChart: public ChartBase
 {
 public:
 
     /// Bar pattern styles
     enum class BarPattern
     {
-        soild = 0,
+        solid = 0,
         horizontal_line = 1,
         vertical_line = 2,
         boxes = 7,
@@ -292,15 +323,6 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    /**
-     * A data pair array for BarChart.
-     */
-    using DataArray = std::vector<std::pair<double, double>>;
-
-    /**
-     * A data pair array for BarChart.
-     */
-    using StringDataArray = std::vector<std::pair<double, std::string>>;
 
     /**
      * Set a new set of data to BarChart.
@@ -363,21 +385,19 @@ public:
      *
      * @param[in] pattern is one of the enum BarPattern
      */
-    virtual void bar_pattern(BarPattern pattern);
+    virtual void bar_style(BarPattern pattern);
 
     /**
-     * Show x & y axis major ticks.
-     *
-     * @param[in] enable to show/hide ticks.
-     */
-    virtual void show_ticks(bool enable);
+    * Set the grid style.
+    */
+    virtual void grid_style(GridFlag flag);
 
     /**
-     * Show grid at major tick positions for x & y axis
+     * Set grid width
      *
-     * @param[in] enable to show/hide grid.
+     * @param[in] val size of a grid width.
      */
-    virtual void show_grid(bool enable);
+    virtual void grid_width(int val);
 
     /**
      * Resize the BarChart.
@@ -396,7 +416,10 @@ public:
     virtual ~BarChart();
 
 protected:
-    std::unique_ptr<detail::PlPlotBarChart> m_impl;
+
+    BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl);
+
+    std::unique_ptr<detail::PlPlotImpl> m_impl;
 };
 
 
@@ -406,18 +429,9 @@ protected:
  *
  * The Horizontal BarChart Widget is using plplot library api's.
  */
-class EGT_API HorizontalBarChart: public Widget
+class EGT_API HorizontalBarChart: public BarChart
 {
 public:
-
-    /// Bar pattern styles
-    enum class BarPattern
-    {
-        soild = 0,
-        horizontal_line = 1,
-        vertical_line = 2,
-        boxes = 7,
-    };
 
     /**
      * Construct a HorizontalBarChart with the specified size.
@@ -426,96 +440,8 @@ public:
      */
     explicit HorizontalBarChart(const Rect& rect = {});
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
-
-    /**
-     * A data pair array for HorizontalBarChart.
-     */
-    using DataArray = std::vector<std::pair<double, std::string>>;
-
-    /**
-     * Set a new set of data to HorizontalBarChart.
-     *
-     * @param[in] data is a data items for HorizontalBarChart.
-     */
-    virtual void data(const DataArray& data);
-
-    /**
-    * Get the number of data points.
-    */
-    virtual size_t data_size() const;
-
-    /**
-     * Add data items to an existing array.
-     *
-     * @param[in] data is a data items for HorizontalBarChart.
-     */
-    virtual void add_data(const DataArray& data);
-
-    /**
-     * Remove data items from top in an array.
-     *
-     * @param[in] count is the number of items to remove.
-     */
-    virtual void remove_data(uint32_t count);
-
-    /**
-     * Remove all data items.
-     */
-    virtual void clear();
-
-    /**
-     * Set chart labels.
-     *
-     * @param[in] xlabel is x-axis label.
-     * @param[in] ylabel is y-axis label.
-     * @param[in] title is Chart title.
-     */
-    virtual void label(const std::string& xlabel,
-                       const std::string& ylabel,
-                       const std::string& title);
-
-    /**
-     * Set bar style.
-     *
-     * @param[in] pattern is one of the enum BarPattern
-     */
-    virtual void bar_pattern(BarPattern pattern);
-
-    /**
-     * Show x & y axis major ticks.
-     *
-     * @param[in] enable to show/hide ticks.
-     */
-    virtual void show_ticks(bool enable);
-
-    /**
-     * Show grid at major tick positions for x & y axis
-     *
-     * @param[in] enable to show/hide grid.
-     */
-    virtual void show_grid(bool enable);
-
-    /**
-     * Resize the HorizontalBarChart.
-     *
-     * Change width and height of the HorizontalBarChart.
-     *
-     * @param[in] size The new size of the HorizontalBarChart.
-     */
-    virtual void resize(const Size& size) override;
-
-    /**
-    * Add a percent bank beyond the min and maximum values.
-    */
-    virtual void bank(float bank);
-
     virtual ~HorizontalBarChart();
-
-protected:
-    std::unique_ptr<detail::PlPlotHBarChart> m_impl;
 };
-
 
 /**
  * PieChart Widget is a circular statistical graphic, which
@@ -526,6 +452,8 @@ protected:
 class EGT_API PieChart: public Widget
 {
 public:
+
+    using StringDataArray = ChartBase::StringDataArray;
 
     /**
      * Construct a PieChart with the specified size.
@@ -544,16 +472,11 @@ public:
     virtual void title(const std::string& title);
 
     /**
-     * A data pair array for PieChart.
-     */
-    using DataArray = std::vector<std::pair<double, std::string>>;
-
-    /**
      * Set a new set of data to PieChart.
      *
      * @param[in] data is a data items for PieChart.
      */
-    virtual void data(const DataArray& data);
+    virtual void data(const StringDataArray& data);
 
     /**
     * Get the number of data points.
@@ -565,7 +488,7 @@ public:
      *
      * @param[in] data is a data items for PieChart.
      */
-    virtual void add_data(const DataArray& data);
+    virtual void add_data(const StringDataArray& data);
 
     /**
      * Remove data items from top in an array.
@@ -591,11 +514,12 @@ public:
     virtual ~PieChart();
 
 protected:
+
     std::unique_ptr<detail::PlPlotPieChart> m_impl;
 };
 
-} //End of namespace v1
+}
 
-} //End of egt.
+}
 
 #endif

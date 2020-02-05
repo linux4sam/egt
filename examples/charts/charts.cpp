@@ -23,6 +23,41 @@ static int random_item(int start, int end)
     return dist(e);
 }
 
+static std::shared_ptr<egt::ComboBox> create_grid_combo(std::shared_ptr<egt::ChartBase> chart)
+{
+    static const std::vector<std::pair<std::string, egt::ChartBase::GridFlag>> combo_items =
+    {
+        {"None", egt::ChartBase::GridFlag::none },
+        {"Box", egt::ChartBase::GridFlag::box },
+        {"Ticks", egt::ChartBase::GridFlag::box_ticks },
+        {"Coordinates", egt::ChartBase::GridFlag::box_ticks_coord },
+        {"Major Ticks", egt::ChartBase::GridFlag::box_major_ticks_coord },
+        {"Minor Ticks", egt::ChartBase::GridFlag::box_minor_ticks_coord },
+    };
+
+    auto combo = std::make_shared<egt::ComboBox>();
+    for (auto& i : combo_items)
+        combo->add_item(i.first);
+    combo->margin(5);
+
+    combo->on_selected_changed([combo, chart]()
+    {
+        auto s = combo->item_at(combo->selected());
+        for (auto& i : combo_items)
+        {
+            if (s == i.first)
+            {
+                chart->grid_style(i.second);
+                break;
+            }
+        }
+    });
+
+    combo->selected(1);
+
+    return combo;
+}
+
 struct PiePage : public egt::NotebookTab
 {
     PiePage(const egt::Size& size)
@@ -33,7 +68,7 @@ struct PiePage : public egt::NotebookTab
         auto pie = std::make_shared<egt::PieChart>();
         pie->title("Pie Chart Example");
 
-        egt::PieChart::DataArray data;
+        egt::PieChart::StringDataArray data;
         std::vector<int> pdata = { 5, 10, 15, 20, 4, 8, 16, 12};
         int count = 0;
         for (auto& i : pdata)
@@ -52,7 +87,7 @@ struct PiePage : public egt::NotebookTab
         {
             if (btn1->text() == "Add Data")
             {
-                egt::PieChart::DataArray data1;
+                egt::PieChart::StringDataArray data1;
                 static int i = 1;
                 data1.push_back(std::make_pair(random_item(1, 25), "label" + std::to_string(++i)));
                 data1.push_back(std::make_pair(random_item(1, 10), "label" + std::to_string(++i)));
@@ -89,29 +124,7 @@ struct Points : public egt::NotebookTab
         }
         line->data(data);
 
-        auto ticks_checkbox = std::make_shared<egt::CheckBox>("show ticks");
-        csizer->add(ticks_checkbox);
-
-        ticks_checkbox->on_checked_changed([line, ticks_checkbox]()
-        {
-            if (ticks_checkbox->checked())
-                line->show_ticks(true);
-            else
-                line->show_ticks(false);
-        });
-
-        ticks_checkbox->checked(true);
-
-        auto gridy_checkbox = std::make_shared<egt::CheckBox>("show grid");
-        csizer->add(gridy_checkbox);
-
-        gridy_checkbox->on_checked_changed([line, gridy_checkbox]()
-        {
-            if (gridy_checkbox->checked())
-                line->show_grid(true);
-            else
-                line->show_grid(false);
-        });
+        csizer->add(create_grid_combo(line));
 
         auto point_type = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.25, size.height() * 0.10), 1, 4, 1);
         point_type->slider_flags().set(egt::Slider::SliderFlag::round_handle);
@@ -178,7 +191,7 @@ struct HorizontalBarPage : public egt::NotebookTab
 
         std::string x[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-        egt::HorizontalBarChart::DataArray data;
+        egt::HorizontalBarChart::StringDataArray data;
         for (int i = 0; i < 12; i++)
         {
             data.push_back(std::make_pair(random_item(1, 50), x[i]));
@@ -192,7 +205,7 @@ struct HorizontalBarPage : public egt::NotebookTab
         csizer->add(btn2);
         btn2->on_click([btn2, bar, x](egt::Event & event)
         {
-            egt::HorizontalBarChart::DataArray data1;
+            egt::HorizontalBarChart::StringDataArray data1;
             if (btn2->text() == "Add Data")
             {
                 static int i = 0;
@@ -223,16 +236,16 @@ struct HorizontalBarPage : public egt::NotebookTab
             switch (pattern->value())
             {
             case 1:
-                bar->bar_pattern(egt::HorizontalBarChart::BarPattern::soild);
+                bar->bar_style(egt::HorizontalBarChart::BarPattern::solid);
                 break;
             case 2:
-                bar->bar_pattern(egt::HorizontalBarChart::BarPattern::horizontal_line);
+                bar->bar_style(egt::HorizontalBarChart::BarPattern::horizontal_line);
                 break;
             case 3:
-                bar->bar_pattern(egt::HorizontalBarChart::BarPattern::vertical_line);
+                bar->bar_style(egt::HorizontalBarChart::BarPattern::vertical_line);
                 break;
             default:
-                bar->bar_pattern(egt::HorizontalBarChart::BarPattern::boxes);
+                bar->bar_style(egt::HorizontalBarChart::BarPattern::boxes);
                 break;
             }
         });
@@ -263,31 +276,7 @@ struct VerticalBarPage : public egt::NotebookTab
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
         sizer->add(csizer);
 
-        auto ticks_checkbox = std::make_shared<egt::CheckBox>("show ticks");
-        csizer->add(ticks_checkbox);
-
-        ticks_checkbox->on_checked_changed([bar, ticks_checkbox]()
-        {
-            if (ticks_checkbox->checked())
-                bar->show_ticks(true);
-            else
-                bar->show_ticks(false);
-
-        });
-
-        ticks_checkbox->checked(true);
-
-        auto gridy_checkbox = std::make_shared<egt::CheckBox>("show grid");
-        csizer->add(gridy_checkbox);
-
-        gridy_checkbox->on_checked_changed([bar, gridy_checkbox]()
-        {
-            if (gridy_checkbox->checked())
-                bar->show_grid(true);
-            else
-                bar->show_grid(false);
-
-        });
+        csizer->add(create_grid_combo(bar));
 
         auto pattern = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.25, size.height() * 0.10), 1, 4, 1);
         pattern->slider_flags().set(egt::Slider::SliderFlag::round_handle);
@@ -300,16 +289,16 @@ struct VerticalBarPage : public egt::NotebookTab
             switch (pattern->value())
             {
             case 1:
-                bar->bar_pattern(egt::BarChart::BarPattern::soild);
+                bar->bar_style(egt::BarChart::BarPattern::solid);
                 break;
             case 2:
-                bar->bar_pattern(egt::BarChart::BarPattern::horizontal_line);
+                bar->bar_style(egt::BarChart::BarPattern::horizontal_line);
                 break;
             case 3:
-                bar->bar_pattern(egt::BarChart::BarPattern::vertical_line);
+                bar->bar_style(egt::BarChart::BarPattern::vertical_line);
                 break;
             default:
-                bar->bar_pattern(egt::BarChart::BarPattern::boxes);
+                bar->bar_style(egt::BarChart::BarPattern::boxes);
                 break;
             }
         });
@@ -385,46 +374,20 @@ struct TanPage : public egt::NotebookTab
             switch (line_pattern->value())
             {
             case 1:
-                line->line_pattern(egt::LineChart::LinePattern::solid);
+                line->line_style(egt::LineChart::LinePattern::solid);
                 break;
             case 2:
-                line->line_pattern(egt::LineChart::LinePattern::dotted);
+                line->line_style(egt::LineChart::LinePattern::dotted);
                 break;
             case 3:
-                line->line_pattern(egt::LineChart::LinePattern::dashes);
+                line->line_style(egt::LineChart::LinePattern::dashes);
                 break;
             }
         });
 
         line_pattern->value(1);
 
-        auto ticks_checkbox = std::make_shared<egt::CheckBox>("show ticks");
-        csizer->add(ticks_checkbox);
-
-        ticks_checkbox->on_checked_changed([line, ticks_checkbox]()
-        {
-            if (ticks_checkbox->checked())
-                line->show_ticks(true);
-            else
-                line->show_ticks(false);
-
-        });
-
-        ticks_checkbox->checked(true);
-
-        auto gridy_checkbox = std::make_shared<egt::CheckBox>("show grid");
-        csizer->add(gridy_checkbox);
-
-        gridy_checkbox->on_checked_changed([line, gridy_checkbox]()
-        {
-            if (gridy_checkbox->checked())
-                line->show_grid(true);
-            else
-                line->show_grid(false);
-
-        });
-
-        gridy_checkbox->checked(true);
+        csizer->add(create_grid_combo(line));
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
@@ -499,42 +462,20 @@ struct SinePage : public egt::NotebookTab
             switch (line_pattern->value())
             {
             case 1:
-                line->line_pattern(egt::LineChart::LinePattern::solid);
+                line->line_style(egt::LineChart::LinePattern::solid);
                 break;
             case 2:
-                line->line_pattern(egt::LineChart::LinePattern::dotted);
+                line->line_style(egt::LineChart::LinePattern::dotted);
                 break;
             case 3:
-                line->line_pattern(egt::LineChart::LinePattern::dashes);
+                line->line_style(egt::LineChart::LinePattern::dashes);
                 break;
             }
         });
 
         line_pattern->value(1);
 
-        auto ticks_checkbox = std::make_shared<egt::CheckBox>("show ticks");
-        csizer->add(ticks_checkbox);
-
-        ticks_checkbox->on_checked_changed([line, ticks_checkbox]()
-        {
-            if (ticks_checkbox->checked())
-                line->show_ticks(true);
-            else
-                line->show_ticks(false);
-        });
-
-        ticks_checkbox->checked(true);
-
-        auto gridy_checkbox = std::make_shared<egt::CheckBox>("show grid");
-        csizer->add(gridy_checkbox);
-
-        gridy_checkbox->on_checked_changed([line, gridy_checkbox]()
-        {
-            if (gridy_checkbox->checked())
-                line->show_grid(true);
-            else
-                line->show_grid(false);
-        });
+        csizer->add(create_grid_combo(line));
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
@@ -606,43 +547,19 @@ struct CosinePage : public egt::NotebookTab
             switch (line_pattern->value())
             {
             case 1:
-                line->line_pattern(egt::LineChart::LinePattern::solid);
+                line->line_style(egt::LineChart::LinePattern::solid);
                 break;
             case 2:
-                line->line_pattern(egt::LineChart::LinePattern::dotted);
+                line->line_style(egt::LineChart::LinePattern::dotted);
                 break;
             case 3:
-                line->line_pattern(egt::LineChart::LinePattern::dashes);
+                line->line_style(egt::LineChart::LinePattern::dashes);
                 break;
             }
         });
         line_pattern->value(1);
 
-        auto ticks_checkbox = std::make_shared<egt::CheckBox>("show ticks");
-        csizer->add(ticks_checkbox);
-
-        ticks_checkbox->on_checked_changed([line, ticks_checkbox]()
-        {
-            if (ticks_checkbox->checked())
-                line->show_ticks(true);
-            else
-                line->show_ticks(false);
-
-        });
-
-        ticks_checkbox->checked(true);
-
-        auto gridy_checkbox = std::make_shared<egt::CheckBox>("show grid");
-        csizer->add(gridy_checkbox);
-
-        gridy_checkbox->on_checked_changed([line, gridy_checkbox]()
-        {
-            if (gridy_checkbox->checked())
-                line->show_grid(true);
-            else
-                line->show_grid(false);
-
-        });
+        csizer->add(create_grid_combo(line));
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);

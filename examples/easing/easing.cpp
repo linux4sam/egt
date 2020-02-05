@@ -79,7 +79,6 @@ public:
 
             m_line->data(data);
             m_line->label("", "", easing_functions[list1->selected()].second);
-            m_line->show_ticks(true);
         });
 
         list1->selected(7);
