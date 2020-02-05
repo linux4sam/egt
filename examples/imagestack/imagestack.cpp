@@ -128,7 +128,7 @@ private:
     int m_start{0};
     egt::AnimationSequence m_seq;
     egt::AnimationDelay m_delay{std::chrono::seconds(2)};
-    egt::PropertyAnimator m_animation;
+    egt::PropertyAnimator<egt::DefaultDim> m_animation;
 };
 
 int main(int argc, const char** argv)

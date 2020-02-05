@@ -555,7 +555,7 @@ protected:
  * @ingroup animation
  */
 template <class T>
-class PropertyAnimatorType : public AutoAnimation
+class PropertyAnimator : public AutoAnimation
 {
 public:
 
@@ -570,23 +570,20 @@ public:
      * @param[in] duration The duration of the animation.
      * @param[in] func The easing function to use.
      */
-    explicit PropertyAnimatorType(T start = T(),
-                                  T end = T(),
-                                  std::chrono::milliseconds duration = std::chrono::milliseconds(),
-                                  EasingFunc func = easing_linear)
+    explicit PropertyAnimator(T start = T(),
+                              T end = T(),
+                              std::chrono::milliseconds duration = std::chrono::milliseconds(),
+                              EasingFunc func = easing_linear)
         : AutoAnimation(start, end, duration, func,
-                        [this](T value)
-    {
-        invoke_handlers(value);
-    })
+                        [this](T value) { invoke_handlers(value); })
     {}
 
     /**
      * @param[in] duration The duration of the animation.
      * @param[in] func The easing function to use.
      */
-    explicit PropertyAnimatorType(std::chrono::milliseconds duration,
-                                  EasingFunc func = easing_linear)
+    explicit PropertyAnimator(std::chrono::milliseconds duration,
+                              EasingFunc func = easing_linear)
         : AutoAnimation(duration, func,
                         [this](T value)
     {
@@ -614,7 +611,7 @@ public:
         m_callbacks.clear();
     }
 
-    virtual ~PropertyAnimatorType() = default;
+    virtual ~PropertyAnimator() = default;
 
 protected:
 
@@ -634,16 +631,6 @@ protected:
      */
     CallbackArray m_callbacks;
 };
-
-/**
- * Helper type for an int PropertyAnimator.
- */
-using PropertyAnimator = PropertyAnimatorType<int>;
-
-/**
- * Helper type for a float PropertyAnimator.
- */
-using PropertyAnimatorF = PropertyAnimatorType<float>;
 
 /**
  * Simple delay, useful to insert a delay in an AnimationSequence.

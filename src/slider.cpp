@@ -17,9 +17,9 @@ namespace egt
 inline namespace v1
 {
 
-Slider::Slider(const Rect& rect, int min, int max, int value,
+Slider::Slider(const Rect& rect, int start, int end, int value,
                Orientation orient) noexcept
-    : ValueRangeWidget<int>(rect, min, max, value),
+    : ValueRangeWidget<int>(rect, start, end, value),
       m_orient(orient)
 {
     name("Slider" + std::to_string(m_widgetid));
@@ -31,21 +31,21 @@ Slider::Slider(const Rect& rect, int min, int max, int value,
     slider_flags().set(SliderFlag::rectangle_handle);
 }
 
-Slider::Slider(int min, int max, int value, Orientation orient) noexcept
-    : Slider(Rect(), min, max, value, orient)
+Slider::Slider(int start, int end, int value, Orientation orient) noexcept
+    : Slider(Rect(), start, end, value, orient)
 {
 }
 
-Slider::Slider(Frame& parent, const Rect& rect, int min, int max, int value,
+Slider::Slider(Frame& parent, const Rect& rect, int start, int end, int value,
                Orientation orient) noexcept
-    : Slider(rect, min, max, value, orient)
+    : Slider(rect, start, end, value, orient)
 {
     parent.add(*this);
 }
 
-Slider::Slider(Frame& parent, int min, int max, int value,
+Slider::Slider(Frame& parent, int start, int end, int value,
                Orientation orient) noexcept
-    : Slider(Rect(), min, max, value, orient)
+    : Slider(Rect(), start, end, value, orient)
 {
     parent.add(*this);
 }
@@ -276,9 +276,9 @@ void Slider::draw(Painter& painter, const Rect&)
             }
             else
             {
-                draw_label(painter, m_min);
-                draw_label(painter, m_min + ((m_max - m_min) / 2));
-                draw_label(painter, m_max);
+                draw_label(painter, m_start);
+                draw_label(painter, m_start + ((m_end - m_start) / 2));
+                draw_label(painter, m_end);
             }
         }
     }
@@ -295,9 +295,9 @@ void Slider::draw(Painter& painter, const Rect&)
             }
             else
             {
-                draw_label(painter, m_min);
-                draw_label(painter, m_min + ((m_max - m_min) / 2));
-                draw_label(painter, m_max);
+                draw_label(painter, m_start);
+                draw_label(painter, m_start + ((m_end - m_start) / 2));
+                draw_label(painter, m_end);
             }
         }
 
@@ -374,8 +374,8 @@ void Slider::serialize(detail::Serializer& serializer) const
 
     serializer.add_property("sliderflags", m_slider_flags.to_string());
     serializer.add_property("orient", detail::enum_to_string(orient()));
-    serializer.add_property("min", min());
-    serializer.add_property("max", max());
+    serializer.add_property("start", start());
+    serializer.add_property("end", end());
     serializer.add_property("value", value());
 }
 
@@ -386,10 +386,10 @@ void Slider::deserialize(const std::string& name, const std::string& value,
         m_slider_flags.from_string(value);
     else if (name == "orient")
         orient(detail::enum_from_string<Orientation>(value));
-    else if (name == "min")
-        min(std::stoi(value));
-    else if (name == "max")
-        max(std::stoi(value));
+    else if (name == "start")
+        start(std::stoi(value));
+    else if (name == "end")
+        end(std::stoi(value));
     else if (name == "value")
         this->value(std::stoi(value));
     else

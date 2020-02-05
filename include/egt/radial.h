@@ -40,8 +40,8 @@ namespace experimental
  *
  * @ingroup controls
  */
-template<class T>
-class RadialType : public Widget
+template<class T = int>
+class Radial : public Widget
 {
 public:
 
@@ -79,15 +79,15 @@ public:
     /**
      * @param[in] rect Rectangle for the widget.
      */
-    explicit RadialType(const Rect& rect = {})
+    explicit Radial(const Rect& rect = {})
         : Widget(rect)
     {
         this->name("Radial" + std::to_string(m_widgetid));
         this->flags().set(Widget::Flag::grab_mouse);
     }
 
-    explicit RadialType(Frame& parent, const Rect& rect = {})
-        : RadialType<T>(rect)
+    explicit Radial(Frame& parent, const Rect& rect = {})
+        : Radial<T>(rect)
     {
         parent.add(*this);
     }
@@ -176,10 +176,10 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        Drawer<RadialType<T>>::draw(*this, painter, rect);
+        Drawer<Radial<T>>::draw(*this, painter, rect);
     }
 
-    static void default_draw(RadialType<T>& widget, Painter& painter, const Rect& rect)
+    static void default_draw(Radial<T>& widget, Painter& painter, const Rect& rect)
     {
         detail::ignoreparam(rect);
 
@@ -288,7 +288,7 @@ public:
         m_start_angle = value;
     }
 
-    virtual ~RadialType() = default;
+    virtual ~Radial() = default;
 
 protected:
 
@@ -335,16 +335,6 @@ protected:
      */
     float m_start_angle{0.f};
 };
-
-/**
- * Helper type for an int radial.
- */
-using Radial = RadialType<int>;
-
-/**
- * Helper type for a float radial.
- */
-using RadialF = RadialType<float>;
 
 }
 }

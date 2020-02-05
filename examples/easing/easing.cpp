@@ -94,7 +94,7 @@ public:
         m_box.show();
         add(m_box);
 
-        m_animation.on_change([this](egt::PropertyAnimator::Value value) { m_box.y(value); });
+        m_animation.on_change([this](egt::PropertyAnimator<egt::DefaultDim>::Value value) { m_box.y(value); });
         m_animation.rounding(true);
         m_seq.add(m_animation);
         m_seq.add(m_delay);
@@ -121,7 +121,7 @@ private:
 
     egt::Window m_box;
     egt::AnimationSequence m_seq{true};
-    egt::PropertyAnimator m_animation;
+    egt::PropertyAnimator<egt::DefaultDim> m_animation;
     egt::AnimationDelay m_delay{std::chrono::seconds(1)};
     egt::SideBoard m_board;
     std::shared_ptr<egt::LineChart> m_line;

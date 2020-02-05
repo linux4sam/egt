@@ -111,16 +111,16 @@ int main(int argc, const char** argv)
     slider.on_value_changed([&]()
     {
         auto v = egt::detail::normalize<float>(slider.value(),
-                                               slider.min(),
-                                               slider.max(),
+                                               slider.start(),
+                                               slider.end(),
                                                10, 300);
         animatetimer.change_duration(std::chrono::milliseconds(static_cast<int>(v)));
     });
 
     slider.value(egt::detail::normalize<float>(DEFAULT_MS_INTERVAL,
                  10, 300,
-                 slider.min(),
-                 slider.max()));
+                 slider.start(),
+                 slider.end()));
     win.show();
 
     egt::Popup popup(egt::Size(100, 80));

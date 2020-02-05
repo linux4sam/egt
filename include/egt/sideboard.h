@@ -115,12 +115,12 @@ protected:
     /**
      * Open animation.
      */
-    PropertyAnimator m_oanim;
+    PropertyAnimator<DefaultDim> m_oanim;
 
     /**
      * Close animation.
      */
-    PropertyAnimator m_canim;
+    PropertyAnimator<DefaultDim> m_canim;
 
     /**
      * State of the current direction.

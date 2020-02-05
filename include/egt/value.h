@@ -258,7 +258,7 @@ protected:
     }
 
     T m_pending{};
-    PropertyAnimatorType<T> m_animation;
+    PropertyAnimator<T> m_animation;
 };
 
 }

@@ -12,17 +12,17 @@ static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
                                   std::chrono::seconds length = std::chrono::seconds(10))
 {
     auto animationup =
-        std::make_shared<egt::PropertyAnimator>(min, max, length,
+        std::make_shared<egt::PropertyAnimator<int>>(min, max, length,
                 egt::easing_circular_easein);
-    animationup->on_change([widget](egt::PropertyAnimator::Value v)
+    animationup->on_change([widget](egt::PropertyAnimator<int>::Value v)
     {
         widget->value(v);
     });
 
     auto animationdown =
-        std::make_shared<egt::PropertyAnimator>(max, min, length,
+        std::make_shared<egt::PropertyAnimator<int>>(max, min, length,
                 egt::easing_circular_easeout);
-    animationdown->on_change([widget](egt::PropertyAnimator::Value v)
+    animationdown->on_change([widget](egt::PropertyAnimator<int>::Value v)
     {
         widget->value(v);
     });

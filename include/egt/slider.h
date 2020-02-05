@@ -11,7 +11,6 @@
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
 #include <egt/valuewidget.h>
-#include <memory>
 
 namespace egt
 {
@@ -61,7 +60,7 @@ public:
         show_label = detail::bit(4),
 
         /**
-         * Horizontal slider origin (value min()), is to the left. Vertical is at
+         * Horizontal slider origin (value start()), is to the left. Vertical is at
          * the bottom. Setting this flag will flip this origin.
          */
         origin_opposite = detail::bit(5),
@@ -76,42 +75,42 @@ public:
 
     /**
      * @param[in] rect Rectangle for the widget.
-     * @param[in] min Minimum value for the range.
-     * @param[in] max Maximum value in the range.
+     * @param[in] start Starting value for the range.
+     * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal Orientation.
      */
-    explicit Slider(const Rect& rect, int min = 0, int max = 100, int value = 0,
+    explicit Slider(const Rect& rect, int start = 0, int end = 100, int value = 0,
                     Orientation orient = Orientation::horizontal) noexcept;
 
     /**
-     * @param[in] min Minimum value for the range.
-     * @param[in] max Maximum value in the range.
+     * @param[in] start Starting value for the range.
+     * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal Orientation.
      */
-    Slider(int min = 0, int max = 100, int value = 0,
+    Slider(int start = 0, int end = 100, int value = 0,
            Orientation orient = Orientation::horizontal) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the widget.
-     * @param[in] min Minimum value for the range.
-     * @param[in] max Maximum value in the range.
+     * @param[in] start Starting value for the range.
+     * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal Orientation.
      */
-    Slider(Frame& parent, const Rect& rect, int min = 0, int max = 100, int value = 0,
+    Slider(Frame& parent, const Rect& rect, int start = 0, int end = 100, int value = 0,
            Orientation orient = Orientation::horizontal) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] min Minimum value for the range.
-     * @param[in] max Maximum value in the range.
+     * @param[in] start Starting value for the range.
+     * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal Orientation.
      */
-    explicit Slider(Frame& parent, int min = 0, int max = 100, int value = 0,
+    explicit Slider(Frame& parent, int start = 0, int end = 100, int value = 0,
                     Orientation orient = Orientation::horizontal) noexcept;
 
     virtual void handle(Event& event) override;
@@ -124,13 +123,13 @@ public:
     {
         int orig = m_value;
 
-        assert(m_max > m_min);
+        assert(m_end > m_start);
 
-        if (value > m_max)
-            value = m_max;
+        if (value > m_end)
+            value = m_end;
 
-        if (value < m_min)
-            value = m_min;
+        if (value < m_start)
+            value = m_start;
 
         if (detail::change_if_diff<>(m_value, value))
         {
@@ -180,9 +179,9 @@ protected:
     {
         auto b = content_area();
         if (m_orient == Orientation::horizontal)
-            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.width() - handle_width());
+            return egt::detail::normalize<float>(value, m_start, m_end, 0, b.width() - handle_width());
         else
-            return egt::detail::normalize<float>(value, m_min, m_max, 0, b.height() - handle_height());
+            return egt::detail::normalize<float>(value, m_start, m_end, 0, b.height() - handle_height());
     }
 
     /// Convert an offset to value.
@@ -190,9 +189,9 @@ protected:
     {
         auto b = content_area();
         if (m_orient == Orientation::horizontal)
-            return egt::detail::normalize<float>(offset, 0, b.width() - handle_width(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, b.width() - handle_width(), m_start, m_end);
         else
-            return egt::detail::normalize<float>(offset, 0, b.height() - handle_height(), m_min, m_max);
+            return egt::detail::normalize<float>(offset, 0, b.height() - handle_height(), m_start, m_end);
     }
 
     int handle_width() const;

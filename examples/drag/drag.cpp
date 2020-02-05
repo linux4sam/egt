@@ -65,8 +65,8 @@ protected:
     egt::ImageLabel m_grip;
     egt::ImageLabel m_arrows;
     egt::Point m_start_point;
-    egt::PropertyAnimator m_animationx;
-    egt::PropertyAnimator m_animationy;
+    egt::PropertyAnimator<egt::DefaultDim> m_animationx;
+    egt::PropertyAnimator<egt::DefaultDim> m_animationy;
 };
 
 int main(int argc, const char** argv)

@@ -110,31 +110,31 @@ public:
 
     /**
      * @param[in] rect Rectangle for the widget.
-     * @param[in] min Minimum value for the range.
-     * @param[in] max Maximum value in the range.
+     * @param[in] start Starting value for the range.
+     * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    ValueRangeWidget(const Rect& rect, T min, T max,
+    ValueRangeWidget(const Rect& rect, T start, T end,
                      T value = T()) noexcept
         : Widget(rect),
-          m_min(min),
-          m_max(max),
+          m_start(start),
+          m_end(end),
           m_value(value)
     {
-        assert(m_max > m_min);
+        assert(m_end > m_start);
 
-        if (m_value > m_max)
-            m_value = m_max;
+        if (m_value > m_end)
+            m_value = m_end;
 
-        if (m_value < m_min)
-            m_value = m_min;
+        if (m_value < m_start)
+            m_value = m_start;
     }
 
     /**
      * Set value.
      *
-     * If the value is above max, the value will be set to max.  If the
-     * value is below min, the value will be set to min.
+     * If the value is above end, the value will be set to end.  If the
+     * value is below start, the value will be set to start.
      *
      * If this results in changing the value, it will damage() the widget.
      *
@@ -145,13 +145,13 @@ public:
     {
         T orig = m_value;
 
-        assert(m_max > m_min);
+        assert(m_end > m_start);
 
-        if (value > m_max)
-            value = m_max;
+        if (value > m_end)
+            value = m_end;
 
-        if (value < m_min)
-            value = m_min;
+        if (value < m_start)
+            value = m_start;
 
         if (detail::change_if_diff<T>(m_value, value))
         {
@@ -163,39 +163,39 @@ public:
     }
 
     /**
-     * Get the min value.
+     * Get the start value.
      */
-    inline T min() const { return m_min; }
+    inline T start() const { return m_start; }
 
     /**
-     * Get the max value.
+     * Get the end value.
      */
-    inline T max() const { return m_max; }
+    inline T end() const { return m_end; }
 
     /**
-     * Set the min value.
+     * Set the start value.
      *
-     * @param[in] v The min value.
+     * @param[in] v The start value.
      */
-    virtual void min(T v)
+    virtual void start(T v)
     {
-        if (detail::change_if_diff<>(m_min, v))
+        if (detail::change_if_diff<>(m_start, v))
             damage();
 
-        assert(m_max > m_min);
+        assert(m_end > m_start);
     }
 
     /**
-     * Set the max value.
+     * Set the end value.
      *
-     * @param[in] v The max value.
+     * @param[in] v The end value.
      */
-    virtual void max(T v)
+    virtual void end(T v)
     {
-        if (detail::change_if_diff<>(m_max, v))
+        if (detail::change_if_diff<>(m_end, v))
             damage();
 
-        assert(m_max > m_min);
+        assert(m_end > m_start);
     }
 
     /**
@@ -211,14 +211,14 @@ public:
 protected:
 
     /**
-     * The min value.
+     * The start value.
      */
-    T m_min;
+    T m_start;
 
     /**
-     * The max value.
+     * The end value.
      */
-    T m_max;
+    T m_end;
 
     /**
      * The current value.

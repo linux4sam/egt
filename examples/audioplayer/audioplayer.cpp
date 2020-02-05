@@ -53,7 +53,7 @@ inline static std::string seconds_to_human(int seconds)
     return ss.str();
 }
 
-struct AudioRadial : public egt::experimental::Radial
+struct AudioRadial : public egt::experimental::Radial<int>
 {
     explicit AudioRadial(std::shared_ptr<egt::RangeValue<int>> value)
         : m_value(std::move(value))
@@ -62,7 +62,7 @@ struct AudioRadial : public egt::experimental::Radial
 
     virtual void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
-        egt::experimental::Radial::draw(painter, rect);
+        egt::experimental::Radial<int>::draw(painter, rect);
 
         const auto offset = 15;
 
@@ -110,10 +110,10 @@ public:
         m_dial = std::make_shared<AudioRadial>(range2);
         m_dial->add(range0, egt::Color(egt::Palette::white, 55), 21);
         m_dial->add(range1, egt::Color(17, 17, 17, 180), 13);
-        egt::experimental::Radial::RadialFlags flags
+        egt::experimental::Radial<int>::RadialFlags flags
         {
-            egt::experimental::Radial::RadialFlag::input_value,
-            egt::experimental::Radial::RadialFlag::rounded_cap
+            egt::experimental::Radial<int>::RadialFlag::input_value,
+            egt::experimental::Radial<int>::RadialFlag::rounded_cap
         };
         auto range2handle = m_dial->add(range2, {}, 15, flags);
         m_dial->margin(50);
@@ -192,19 +192,19 @@ public:
 
         m_player.media(uri);
 
-        auto glow = [this, range2handle](egt::PropertyAnimatorF::Value value)
+        auto glow = [this, range2handle](egt::PropertyAnimator<float>::Value value)
         {
             m_dial->color(range2handle, m_colormap.interp_cached(value));
         };
 
-        auto glow_out = std::make_shared<egt::PropertyAnimatorF>();
+        auto glow_out = std::make_shared<egt::PropertyAnimator<float>>();
         glow_out->starting(0);
         glow_out->ending(1);
         glow_out->duration(std::chrono::milliseconds(1500));
         glow_out->easing_func(egt::easing_linear);
         glow_out->on_change(glow);
 
-        auto glow_in = std::make_shared<egt::PropertyAnimatorF>();
+        auto glow_in = std::make_shared<egt::PropertyAnimator<float>>();
         glow_in->starting(1);
         glow_in->ending(0);
         glow_in->duration(std::chrono::milliseconds(2000));
