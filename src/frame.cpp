@@ -415,7 +415,9 @@ void Frame::draw(Painter& painter, const Rect& rect)
                          color(Palette::ColorId::border, group),
                          color(Palette::ColorId::bg, group),
                          border(),
-                         margin());
+                         margin(),
+                         border_radius(),
+                         border_flags());
     }
 
     if (m_children.empty())
