@@ -407,6 +407,32 @@ AS_IF([test "x$with_plplot" != "xno"],[
    if test "x${have_plplot}" = xno; then
       AX_PKG_CHECK_MODULES2(PLPLOT, [plplotd-c++], [], [have_plplot=yes], [have_plplot=no])
    fi
+
+   if test "x${have_plplot}" = xyes; then
+      #check for the extcairo device
+      result=
+      AC_MSG_CHECKING([for plplot extcairo device])
+      ac_save_CFLAGS="$CFLAGS"
+      CFLAGS=$plplotcxx_CFLAGS
+      AC_LANG_PUSH([C])
+      AC_TRY_COMPILE([
+      #include <plplot/plDevs.h>
+      ],[
+      #ifndef PLD_extcairo
+      #error
+      #endif
+      ],[
+         result=yes
+         AC_DEFINE([HAVE_EXTCAIRO], [], [extcairo found])
+      ],[result=no])
+      AC_MSG_RESULT([$result])
+      if test x$result = xno ; then
+         AC_MSG_ERROR([plplot must be built with the extcairo device!])
+      fi
+      AC_LANG_POP
+      CFLAGS="$ac_save_CFLAGS"
+   fi
+
    if test "x${have_plplot}" = xyes; then
       AC_DEFINE(HAVE_PLPLOT, 1, [Have plplot support])
       AC_SUBST(include_chart, ["#define EGT_HAS_CHART 1"])
