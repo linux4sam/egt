@@ -94,7 +94,8 @@ endif
 if HAVE_PLPLOT
 bin_PROGRAMS += \
 charts/charts \
-easing/easing
+easing/easing \
+monitor/monitor
 endif
 
 if HAVE_LINUX_GPIO_H
@@ -301,6 +302,12 @@ gpio_gpio_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 gpio_gpio_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 gpio_gpiodir = $(prefix)/share/egt/examples/gpio
 gpio_gpio_LDFLAGS = $(AM_LDFLAGS)
+
+monitor_monitor_SOURCES = monitor/monitor.cpp
+monitor_monitor_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+monitor_monitor_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+monitor_monitordir = $(prefix)/share/egt/examples/monitor
+monitor_monitor_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
