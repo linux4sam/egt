@@ -200,7 +200,8 @@ virtualkeyboard_virtualkeyboard_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_L
 virtualkeyboard_virtualkeyboard_LDFLAGS = $(AM_LDFLAGS)
 
 basicui_basicui_SOURCES = basicui/basicui.cpp
-basicui_basicui_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+basicui_basicui_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/basicui\"
 basicui_basicui_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 basicui_basicuidir = $(prefix)/share/egt/examples/basicui
 dist_basicui_basicui_DATA = $(wildcard $(top_srcdir)/examples/basicui/*.xml)
@@ -277,7 +278,7 @@ imagestack_imagestack_SOURCES = imagestack/imagestack.cpp
 imagestack_imagestack_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
 	-DEXAMPLEDATA=\"$(datadir)/egt/examples/imagestack\"
 imagestack_imagestack_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-imagestack_imagestackdir = $(prefix)/share/egt/examples/images/imagestack
+imagestack_imagestackdir = $(prefix)/share/egt/examples/imagestack/images
 imagestack_imagestack_DATA = $(wildcard $(top_srcdir)/examples/imagestack/images/*.png)
 imagestack_imagestack_LDFLAGS = $(AM_LDFLAGS)
 

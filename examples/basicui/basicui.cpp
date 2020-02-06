@@ -10,6 +10,7 @@
 int main(int argc, const char** argv)
 {
     egt::Application app(argc, argv);
+    egt::add_search_path(EXAMPLEDATA);
 
     egt::experimental::UiLoader loader;
     auto window = loader.load("file:ui.xml");
