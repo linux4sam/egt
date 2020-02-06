@@ -192,16 +192,16 @@ int main(int argc, const char** argv)
             star->move_to_center(egt::Point(x_dist(e1), y_dist(e1)));
             win.add(star);
 
-            auto in = std::make_shared<egt::PropertyAnimator<float>>(0, 1,
+            auto in = std::make_shared<egt::PropertyAnimatorF>(0, 1,
                       std::chrono::milliseconds(d_dist(e1)),
                       egt::easing_spring);
-            in->on_change([star](egt::PropertyAnimator<float>::Value value) { star->alpha(value); });
+            in->on_change([star](egt::PropertyAnimatorF::Value value) { star->alpha(value); });
 
-            auto out = std::make_shared<egt::PropertyAnimator<float>>(1, 0,
+            auto out = std::make_shared<egt::PropertyAnimatorF>(1, 0,
                        std::chrono::milliseconds(d_dist(e1)),
                        egt::easing_spring);
             out->reverse(true);
-            out->on_change([star](egt::PropertyAnimator<float>::Value value) { star->alpha(value); });
+            out->on_change([star](egt::PropertyAnimatorF::Value value) { star->alpha(value); });
 
             auto delay = std::make_shared<egt::AnimationDelay>(std::chrono::milliseconds(d_dist(e1)));
 

@@ -52,6 +52,9 @@ enum class Compatible
 
 /**
  * Simple x,y coordinate.
+ *
+ * Typically @ref Point, @ref PointF, @ref DisplayPoint are used as aliases.
+ *
  * @ingroup geometry
  */
 template <class Dim, detail::Compatible DimCompat = detail::Compatible::normal>
@@ -280,7 +283,9 @@ std::ostream& operator<<(std::ostream& os, const PointType<Dim, DimCompat>& poin
 }
 
 /**
- * Helper type for a default point.
+ * Helper type alias.
+ * @copybrief PointType
+ * @ingroup geometry
  */
 using Point = PointType<DefaultDim, detail::Compatible::normal>;
 
@@ -288,17 +293,24 @@ static_assert(detail::rule_of_5<Point>(),
               "Point : must fulfill rule of 5");
 
 /**
- * Helper type for a float point.
+ * Helper type alias.
+ * @copybrief PointType
+ * @ingroup geometry
  */
 using PointF = PointType<float, detail::Compatible::normal>;
 
 /**
- * Helper type for a default display point.
+ * Helper type alias.
+ * @copybrief PointType
+ * @ingroup geometry
  */
 using DisplayPoint = PointType<DefaultDim, detail::Compatible::display>;
 
 /**
  * Simple width and height.
+ *
+ * Typically @ref Size, @ref SizeF are used as aliases.
+ *
  * @ingroup geometry
  */
 template<class Dim, detail::Compatible DimCompat = detail::Compatible::normal>
@@ -524,7 +536,9 @@ std::ostream& operator<<(std::ostream& os, const SizeType<Dim, DimCompat>& size)
 }
 
 /**
- * Helper type for a default size.
+ * Helper type alias.
+ * @copybrief SizeType
+ * @ingroup geometry
  */
 using Size = SizeType<DefaultDim, detail::Compatible::normal>;
 
@@ -532,17 +546,20 @@ static_assert(detail::rule_of_5<Size>(),
               "Size : must fulfill rule of 5");
 
 /**
- * Helper type for a float size.
+ * Helper type alias.
+ * @copybrief SizeType
+ * @ingroup geometry
  */
 using SizeF = SizeType<float, detail::Compatible::normal>;
 
 /**
- * A rectangle.
- * @ingroup geometry
+ * A rectangle with a point and a size.
  *
- * A point and a size.
+ * Typically @ref Rect, @ref RectF are used as aliases.
  *
  * All rectangle points are at the top left.
+ *
+ * @ingroup geometry
  */
 template<class Dim, detail::Compatible DimCompat = detail::Compatible::normal>
 class RectType
@@ -955,7 +972,9 @@ inline bool operator!=(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, 
 }
 
 /**
- * Helper type for a default rect.
+ * Helper type alias.
+ * @copybrief RectType
+ * @ingroup geometry
  */
 using Rect = RectType<DefaultDim, detail::Compatible::normal>;
 
@@ -963,12 +982,17 @@ static_assert(detail::rule_of_5<Rect>(),
               "Rect : must fulfill rule of 5");
 
 /**
- * Helper type for a float rect.
+ * Helper type alias.
+ * @copybrief RectType
+ * @ingroup geometry
  */
 using RectF = RectType<float, detail::Compatible::normal>;
 
 /**
  * A line, with a starting and ending point.
+ *
+ * Typically @ref Line, @ref LineF are used as aliases.
+ *
  * @ingroup geometry
  */
 template<class Dim>
@@ -1019,7 +1043,9 @@ std::ostream& operator<<(std::ostream& os, const LineType<Dim>& line)
 }
 
 /**
- * Helper type for a default line.
+ * Helper type alias.
+ * @copybrief LineType
+ * @ingroup geometry
  */
 using Line = LineType<DefaultDim>;
 
@@ -1028,6 +1054,9 @@ static_assert(detail::rule_of_5<Line>(),
 
 /**
  * An Arc consists of a radius and two angles.
+ *
+ * Typically @ref Arc is used as an alias.
+ *
  * @ingroup geometry
  */
 template<class Dim>
@@ -1104,7 +1133,9 @@ protected:
 };
 
 /**
- * Helper type for a default arc.
+ * Helper type alias.
+ * @copybrief ArcType
+ * @ingroup geometry
  */
 using Arc = ArcType<DefaultDim>;
 
@@ -1113,6 +1144,9 @@ static_assert(detail::rule_of_5<Arc>(),
 
 /**
  * A basic circle with a center point and radius.
+ *
+ * Typically @ref Circle, @ref CircleF are used as aliases.
+ *
  * @ingroup geometry
  */
 template<class Dim>
@@ -1156,7 +1190,9 @@ std::ostream& operator<<(std::ostream& os, const CircleType<Dim>& circle)
 }
 
 /**
- * Helper type for a default circle.
+ * Helper type alias.
+ * @copybrief CircleType
+ * @ingroup geometry
  */
 using Circle = CircleType<DefaultDim>;
 
@@ -1164,12 +1200,14 @@ static_assert(detail::rule_of_5<Circle>(),
               "Circle : must fulfill rule of 5");
 
 /**
- * Helper type for a float circle.
+ * Helper type alias.
+ * @copybrief CircleType
+ * @ingroup geometry
  */
 using CircleF = CircleType<float>;
 
 /**
- * A basic ellipse with a center and 2 radiuses.
+ * A basic ellipse with a center and 2 radii.
  * @ingroup geometry
  */
 template<class Dim>

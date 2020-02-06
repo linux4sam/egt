@@ -13,11 +13,11 @@ static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
                                   egt::EasingFunc easingin = egt::easing_circular_easein,
                                   egt::EasingFunc easingout = egt::easing_circular_easeout)
 {
-    auto animationup = std::make_shared<egt::PropertyAnimator<int>>(min, max, duration, easingin);
-    animationup->on_change([widget](egt::PropertyAnimator<int>::Value value) { widget->value(value); });
+    auto animationup = std::make_shared<egt::PropertyAnimator>(min, max, duration, easingin);
+    animationup->on_change([widget](egt::PropertyAnimator::Value value) { widget->value(value); });
 
-    auto animationdown = std::make_shared<egt::PropertyAnimator<int>>(max, min, duration, easingout);
-    animationdown->on_change([widget](egt::PropertyAnimator<int>::Value value) { widget->value(value); });
+    auto animationdown = std::make_shared<egt::PropertyAnimator>(max, min, duration, easingout);
+    animationdown->on_change([widget](egt::PropertyAnimator::Value value) { widget->value(value); });
 
     auto sequence = std::make_unique<egt::AnimationSequence>(true);
     sequence->add(animationup);

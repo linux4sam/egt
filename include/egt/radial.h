@@ -35,13 +35,15 @@ namespace experimental
 /**
  * Radial widget that draws a series of RangleValues on a circle.
  *
+ * Typically @ref Radial, @ref RadialF are used as aliases.
+ *
  * @image html widget_radial.png
  * @image latex widget_radial.png "widget_radial" width=5cm
  *
  * @ingroup controls
  */
-template<class T = int>
-class Radial : public Widget
+template<class T>
+class RadialType : public Widget
 {
 public:
 
@@ -79,15 +81,15 @@ public:
     /**
      * @param[in] rect Rectangle for the widget.
      */
-    explicit Radial(const Rect& rect = {})
+    explicit RadialType(const Rect& rect = {})
         : Widget(rect)
     {
         this->name("Radial" + std::to_string(m_widgetid));
         this->flags().set(Widget::Flag::grab_mouse);
     }
 
-    explicit Radial(Frame& parent, const Rect& rect = {})
-        : Radial<T>(rect)
+    explicit RadialType(Frame& parent, const Rect& rect = {})
+        : RadialType<T>(rect)
     {
         parent.add(*this);
     }
@@ -160,9 +162,8 @@ public:
                     auto v = this->degrees_to_value(value.range->min(),
                                                     value.range->max(),
                                                     angle);
-                    auto orig = value.range->value(v);
-                    if (!changed)
-                        changed = (orig != v);
+                    if (value.range->value(v))
+                        changed = true;
                 }
             }
 
@@ -176,10 +177,10 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        Drawer<Radial<T>>::draw(*this, painter, rect);
+        Drawer<RadialType<T>>::draw(*this, painter, rect);
     }
 
-    static void default_draw(Radial<T>& widget, Painter& painter, const Rect& rect)
+    static void default_draw(RadialType<T>& widget, Painter& painter, const Rect& rect)
     {
         detail::ignoreparam(rect);
 
@@ -288,7 +289,7 @@ public:
         m_start_angle = value;
     }
 
-    virtual ~Radial() = default;
+    virtual ~RadialType() = default;
 
 protected:
 
@@ -336,7 +337,25 @@ protected:
     float m_start_angle{0.f};
 };
 
+/**
+ * Helper type alias.
+ * @copybrief RadialType
+ * @ingroup controls
+ */
+using Radial = RadialType<int>;
+
+/**
+ * Helper type alias.
+ * @copybrief RadialType
+ * @ingroup controls
+ */
+using RadialF = RadialType<float>;
+
 }
+
+template<>
+EGT_API const std::map<experimental::Radial::RadialFlag, char const*> detail::EnumStrings<experimental::Radial::RadialFlag>::data;
+
 }
 }
 

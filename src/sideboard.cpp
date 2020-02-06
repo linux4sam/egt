@@ -52,32 +52,32 @@ SideBoard::SideBoard(PositionFlag position,
     {
     case PositionFlag::left:
     {
-        m_oanim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { x(value); });
-        m_canim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { x(value); });
+        m_oanim.on_change([this](PropertyAnimator::Value value) { x(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { x(value); });
 
         move(Point(m_oanim.starting(), 0));
         break;
     }
     case PositionFlag::right:
     {
-        m_oanim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { x(value); });
-        m_canim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { x(value); });
+        m_oanim.on_change([this](PropertyAnimator::Value value) { x(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { x(value); });
 
         move(Point(m_oanim.starting(), 0));
         break;
     }
     case PositionFlag::top:
     {
-        m_oanim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { y(value); });
-        m_canim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { y(value); });
+        m_oanim.on_change([this](PropertyAnimator::Value value) { y(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { y(value); });
 
         move(Point(0, m_oanim.starting()));
         break;
     }
     case PositionFlag::bottom:
     {
-        m_oanim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { y(value); });
-        m_canim.on_change([this](PropertyAnimator<DefaultDim>::Value value) { y(value); });
+        m_oanim.on_change([this](PropertyAnimator::Value value) { y(value); });
+        m_canim.on_change([this](PropertyAnimator::Value value) { y(value); });
 
         move(Point(0, m_oanim.starting()));
         break;

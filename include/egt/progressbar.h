@@ -14,6 +14,7 @@
 #include <egt/detail/alignment.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/serialize.h>
 #include <egt/detail/textwidget.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
@@ -28,10 +29,12 @@ inline namespace v1
 /**
  * Displays a progress bar based on a value.
  *
+ * Typically @ref ProgressBar, @ref ProgressBarF are used as aliases.
+ *
  * @ingroup controls
  */
-template<class T = int>
-class EGT_API ProgressBar : public ValueRangeWidget<T>
+template<class T>
+class EGT_API ProgressBarType : public ValueRangeWidget<T>
 {
 public:
 
@@ -41,8 +44,8 @@ public:
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit ProgressBar(const Rect& rect = {},
-                         T start = {}, T end = 100, T value = {}) noexcept
+    explicit ProgressBarType<T>(const Rect& rect = {},
+                                T start = {}, T end = 100, T value = {}) noexcept
         : ValueRangeWidget<T>(rect, start, end, value)
     {
         this->fill_flags(Theme::FillFlag::blend);
@@ -56,22 +59,22 @@ public:
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit ProgressBar(Frame& parent, const Rect& rect = {},
-                         T start = {}, T end = 100, T value = {}) noexcept
-        : ProgressBar(rect, start, end, value)
+    explicit ProgressBarType(Frame& parent, const Rect& rect = {},
+                             T start = {}, T end = 100, T value = {}) noexcept
+        : ProgressBarType(rect, start, end, value)
     {
         parent.add(*this);
     }
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        Drawer<ProgressBar<T>>::draw(*this, painter, rect);
+        Drawer<ProgressBarType<T>>::draw(*this, painter, rect);
     }
 
     /**
      * Default draw method for the ProgressBar.
      */
-    static void default_draw(ProgressBar& widget, Painter& painter, const Rect&)
+    static void default_draw(ProgressBarType<T>& widget, Painter& painter, const Rect&)
     {
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
@@ -137,7 +140,7 @@ public:
      */
     inline bool show_label() const { return m_show_label; }
 
-    virtual ~ProgressBar() = default;
+    virtual ~ProgressBarType() = default;
 
 protected:
     /**
@@ -146,16 +149,32 @@ protected:
     bool m_show_label{true};
 };
 
+/**
+ * Helper type alias.
+ * @copybrief ProgressBarType
+ * @ingroup controls
+ */
+using ProgressBar = ProgressBarType<int>;
+
+/**
+ * Helper type alias.
+ * @copybrief ProgressBarType
+ * @ingroup controls
+ */
+using ProgressBarF = ProgressBarType<float>;
+
 template <class T>
-const Size ProgressBar<T>::DEFAULT_PROGRESSBAR_SIZE{200, 30};
+const Size ProgressBarType<T>::DEFAULT_PROGRESSBAR_SIZE{200, 30};
 
 /**
  * Displays a spinning progress meter.
  *
+ * Typically @ref SpinProgress, @ref SpinProgressF are used as aliases.
+ *
  * @ingroup controls
  */
-template <class T = int>
-class EGT_API SpinProgress : public ValueRangeWidget<T>
+template <class T>
+class EGT_API SpinProgressType : public ValueRangeWidget<T>
 {
 public:
 
@@ -165,8 +184,8 @@ public:
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit SpinProgress(const Rect& rect = {},
-                          T start = 0, T end = 100, T value = 0) noexcept
+    explicit SpinProgressType(const Rect& rect = {},
+                              T start = 0, T end = 100, T value = 0) noexcept
         : ValueRangeWidget<T>(rect, start, end, value)
     {
         this->fill_flags(Theme::FillFlag::blend);
@@ -175,13 +194,13 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the widget.
-     * @param[in] min Starting value for the range.
-     * @param[in] max Ending value in the range.
+     * @param[in] start Starting value for the range.
+     * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit SpinProgress(Frame& parent, const Rect& rect = {},
-                          T start = 0, T end = 100, T value = 0) noexcept
-        : SpinProgress(rect, start, end, value)
+    explicit SpinProgressType(Frame& parent, const Rect& rect = {},
+                              T start = 0, T end = 100, T value = 0) noexcept
+        : SpinProgressType(rect, start, end, value)
     {
         parent.add(*this);
     }
@@ -189,13 +208,13 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        Drawer<SpinProgress<T>>::draw(*this, painter, rect);
+        Drawer<SpinProgressType<T>>::draw(*this, painter, rect);
     }
 
     /**
      * Default draw method for the SpinProgress.
      */
-    static void default_draw(SpinProgress& widget, Painter& painter, const Rect& rect)
+    static void default_draw(SpinProgressType<T>& widget, Painter& painter, const Rect& rect)
     {
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
@@ -228,6 +247,7 @@ public:
             painter.draw(text);
         }
     }
+
     using ValueRangeWidget<T>::min_size_hint;
 
     static const Size DEFAULT_SPINPROGRESS_SIZE;
@@ -259,7 +279,12 @@ public:
      */
     inline bool show_label() const { return m_show_label; }
 
-    virtual ~SpinProgress() = default;
+    virtual void serialize(detail::Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
+
+    virtual ~SpinProgressType() = default;
 protected:
     /**
      * When true, the label text is shown.
@@ -267,19 +292,53 @@ protected:
     bool m_show_label{true};
 };
 
+/**
+ * Helper type alias.
+ * @copybrief SpinProgressType
+ * @ingroup controls
+ */
+using SpinProgress = SpinProgressType<int>;
+
+/**
+ * Helper type alias.
+ * @copybrief SpinProgressType
+ * @ingroup controls
+ */
+using SpinProgressF = SpinProgressType<float>;
+
 template <class T>
-const Size SpinProgress<T>::DEFAULT_SPINPROGRESS_SIZE{100, 100};
+const Size SpinProgressType<T>::DEFAULT_SPINPROGRESS_SIZE{100, 100};
+
+template <class T>
+void SpinProgressType<T>::serialize(detail::Serializer& serializer) const
+{
+    ValueRangeWidget<T>::serialize(serializer);
+
+    serializer.add_property("show_label", detail::to_string(this->m_show_label));
+}
+
+template <class T>
+void SpinProgressType<T>::deserialize(const std::string& name, const std::string& value,
+                                      const std::map<std::string, std::string>& attrs)
+{
+    if (name == "show_label")
+        m_show_label = detail::from_string(value);
+    else
+        ValueRangeWidget<T>::deserialize(name, value, attrs);
+}
 
 /**
  * Displays a level meter based on a value.
+ *
+ * Typically @ref LevelMeter, @ref LevelMeterF are used as aliases.
  *
  * @image html widget_levelmeter.png
  * @image latex widget_levelmeter.png "widget_levelmeter" width=5cm
  *
  * @ingroup controls
  */
-template <class T = int>
-class EGT_API LevelMeter : public ValueRangeWidget<T>
+template <class T>
+class EGT_API LevelMeterType : public ValueRangeWidget<T>
 {
 public:
 
@@ -289,8 +348,8 @@ public:
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit LevelMeter(const Rect& rect = {},
-                        T start = 0, T end = 100, T value = 0) noexcept
+    explicit LevelMeterType(const Rect& rect = {},
+                            T start = 0, T end = 100, T value = 0) noexcept
         : ValueRangeWidget<T>(rect, start, end, value)
     {
         this->fill_flags(Theme::FillFlag::blend);
@@ -305,22 +364,22 @@ public:
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit LevelMeter(Frame& parent, const Rect& rect = {},
-                        T start = 0, T end = 100, T value = 0) noexcept
-        : LevelMeter(rect, start, end, value)
+    explicit LevelMeterType(Frame& parent, const Rect& rect = {},
+                            T start = 0, T end = 100, T value = 0) noexcept
+        : LevelMeterType(rect, start, end, value)
     {
         parent.add(*this);
     }
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        Drawer<LevelMeter<T>>::draw(*this, painter, rect);
+        Drawer<LevelMeterType<T>>::draw(*this, painter, rect);
     }
 
     /**
      * Default draw method for the LevelMeter.
      */
-    static void default_draw(LevelMeter<T>& widget, Painter& painter, const Rect& rect)
+    static void default_draw(LevelMeterType<T>& widget, Painter& painter, const Rect& rect)
     {
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
@@ -373,7 +432,12 @@ public:
         return DEFAULT_LEVELMETER_SIZE + Widget::min_size_hint();
     }
 
-    virtual ~LevelMeter() = default;
+    virtual void serialize(detail::Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
+
+    virtual ~LevelMeterType() = default;
 
 protected:
 
@@ -383,26 +447,60 @@ protected:
     size_t m_num_bars{10};
 };
 
+/**
+ * Helper type alias.
+ * @copybrief LevelMeterType
+ * @ingroup controls
+ */
+using LevelMeter = LevelMeterType<int>;
+
+/**
+ * Helper type alias.
+ * @copybrief LevelMeterType
+ * @ingroup controls
+ */
+using LevelMeterF = LevelMeterType<float>;
+
 template <class T>
-const Size LevelMeter<T>::DEFAULT_LEVELMETER_SIZE{40, 100};
+const Size LevelMeterType<T>::DEFAULT_LEVELMETER_SIZE{40, 100};
+
+template <class T>
+void LevelMeterType<T>::serialize(detail::Serializer& serializer) const
+{
+    ValueRangeWidget<T>::serialize(serializer);
+
+    serializer.add_property("num_bars", std::to_string(this->m_num_bars));
+}
+
+template <class T>
+void LevelMeterType<T>::deserialize(const std::string& name, const std::string& value,
+                                    const std::map<std::string, std::string>& attrs)
+{
+    if (name == "num_bars")
+        m_num_bars = std::stoi(value);
+    else
+        ValueRangeWidget<T>::deserialize(name, value, attrs);
+}
 
 /**
  * Displays an analog meter based on a percentage value.
+ *
+ * Typically @ref AnalogMeter, @ref AnalogMeterF are used as aliases.
  *
  * @image html widget_analogmeter.png
  * @image latex widget_analogmeter.png "widget_analogmeter" width=5cm
  *
  * @ingroup controls
  */
-template <class T = int>
-class EGT_API AnalogMeter : public ValueRangeWidget<T>
+template <class T>
+class EGT_API AnalogMeterType : public ValueRangeWidget<T>
 {
 public:
 
     /**
      * @param[in] rect Rectangle for the widget.
      */
-    explicit AnalogMeter(const Rect& rect = {}) noexcept
+    explicit AnalogMeterType(const Rect& rect = {}) noexcept
         : ValueRangeWidget<T>(rect, 0, 100, 0)
     {
         this->fill_flags(Theme::FillFlag::blend);
@@ -412,21 +510,21 @@ public:
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the widget.
      */
-    explicit AnalogMeter(Frame& parent, const Rect& rect = {}) noexcept
-        : AnalogMeter(rect)
+    explicit AnalogMeterType(Frame& parent, const Rect& rect = {}) noexcept
+        : AnalogMeterType(rect)
     {
         parent.add(*this);
     }
 
     virtual void draw(Painter& painter, const Rect& rect) override
     {
-        Drawer<AnalogMeter<T>>::draw(*this, painter, rect);
+        Drawer<AnalogMeterType<T>>::draw(*this, painter, rect);
     }
 
     /**
      * Default draw method for the AnalogMeter.
      */
-    static void default_draw(AnalogMeter<T>& widget, Painter& painter, const Rect& rect)
+    static void default_draw(AnalogMeterType<T>& widget, Painter& painter, const Rect& rect)
     {
         static const auto tick_width = 1.0;
 
@@ -490,11 +588,25 @@ public:
         return DEFAULT_ANALOGMETER_SIZE + Widget::min_size_hint();
     }
 
-    virtual ~AnalogMeter() = default;
+    virtual ~AnalogMeterType() = default;
 };
 
+/**
+ * Helper type alias.
+ * @copybrief AnalogMeterType
+ * @ingroup controls
+ */
+using AnalogMeter = AnalogMeterType<int>;
+
+/**
+ * Helper type alias.
+ * @copybrief AnalogMeterType
+ * @ingroup controls
+ */
+using AnalogMeterF = AnalogMeterType<float>;
+
 template <class T>
-const Size AnalogMeter<T>::DEFAULT_ANALOGMETER_SIZE{200, 100};
+const Size AnalogMeterType<T>::DEFAULT_ANALOGMETER_SIZE{200, 100};
 
 }
 }

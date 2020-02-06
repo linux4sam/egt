@@ -91,7 +91,7 @@ public:
 };
 
 /**
- * Helper type for a default Popup.
+ * Helper type alias.
  */
 using Popup = PopupType<Window>;
 

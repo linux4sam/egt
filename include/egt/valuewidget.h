@@ -88,7 +88,7 @@ protected:
 /**
  * Manages a value in a range.
  *
- * A Widget that manages a value that must reside between a min and max
+ * A Widget that manages a value that must reside between a start and end
  * value range.
  */
 template<class T>

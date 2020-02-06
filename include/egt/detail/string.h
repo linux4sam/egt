@@ -91,6 +91,34 @@ void join(std::ostream& os, const T& container, const std::string& delimiter = "
 }
 
 /**
+ * Convert a string to lowercase.
+ * @note Not UTF-8 aware.
+ */
+inline std::string tolower(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](unsigned char c)
+    {
+        return std::tolower(c);
+    });
+    return s;
+}
+
+/**
+ * Convert a string to lowercase.
+ * @note Not UTF-8 aware.
+ */
+inline std::string toupper(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](unsigned char c)
+    {
+        return std::toupper(c);
+    });
+    return s;
+}
+
+/**
  * Convert a type to a std::string using std::ostringstream.
  */
 template<class T>
@@ -99,6 +127,25 @@ inline std::string to_string(const T& x)
     std::ostringstream ss;
     ss << x;
     return ss.str();
+}
+
+/**
+ * Convert a bool to a lexical std::string.
+ */
+template<>
+inline std::string to_string(const bool& x)
+{
+    return x ? "true" : "false";
+}
+
+/**
+ * Convert a lexical std::string to a bool.
+ */
+inline bool from_string(const std::string& x)
+{
+    const auto s = tolower(x);
+    return (s == "true" ||
+            s == "yes");
 }
 
 }

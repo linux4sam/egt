@@ -231,19 +231,19 @@ template<class T>
 static std::unique_ptr<egt::AnimationSequence> demo_up_down_animator(std::shared_ptr<T> widget)
 {
     auto animationup =
-        std::make_shared<egt::PropertyAnimator<int>>(0, 100,
+        std::make_shared<egt::PropertyAnimator>(0, 100,
                 std::chrono::seconds(5),
                 egt::easing_circular_easein);
-    animationup->on_change([widget](egt::PropertyAnimator<int>::Value value)
+    animationup->on_change([widget](egt::PropertyAnimator::Value value)
     {
         widget->value(value);
     });
 
     auto animationdown =
-        std::make_shared<egt::PropertyAnimator<int>>(100, 0,
+        std::make_shared<egt::PropertyAnimator>(100, 0,
                 std::chrono::seconds(5),
                 egt::easing_circular_easeout);
-    animationdown->on_change([widget](egt::PropertyAnimator<int>::Value value)
+    animationdown->on_change([widget](egt::PropertyAnimator::Value value)
     {
         widget->value(value);
     });
@@ -262,13 +262,13 @@ struct ProgressPage : public egt::NotebookTab
         auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(2, 8), 5);
         add(egt::expand(grid0));
 
-        auto spinprogress = std::make_shared<egt::SpinProgress<>>();
+        auto spinprogress = std::make_shared<egt::SpinProgress>();
         grid0->add(egt::expand(spinprogress));
 
-        auto progressbar = std::make_shared<egt::ProgressBar<>>();
+        auto progressbar = std::make_shared<egt::ProgressBar>();
         grid0->add(egt::expand(progressbar));
 
-        auto progressbar1 = std::make_shared<egt::ProgressBar<>>();
+        auto progressbar1 = std::make_shared<egt::ProgressBar>();
         progressbar1->show_label(false);
         grid0->add(egt::expand(progressbar1));
 
@@ -326,18 +326,18 @@ struct MeterPage : public egt::NotebookTab
         auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(2, 2), 10);
         add(egt::expand(grid0));
 
-        auto lp1 = std::make_shared<egt::LevelMeter<>>();
+        auto lp1 = std::make_shared<egt::LevelMeter>();
         lp1->num_bars(10);
         grid0->add(egt::expand(lp1));
 
-        auto am1 = std::make_shared<egt::AnalogMeter<>>();
+        auto am1 = std::make_shared<egt::AnalogMeter>();
         grid0->add(egt::expand(am1));
 
-        auto r1 = std::make_shared<egt::experimental::Radial<int>>();
+        auto r1 = std::make_shared<egt::experimental::Radial>();
         auto range0 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
         r1->add(range0, egt::Palette::grey, 10);
         auto range1 = std::make_shared<egt::RangeValue<int>>(0, 100, 0);
-        r1->add(range1, egt::Palette::blue, 5, egt::experimental::Radial<int>::RadialFlag::text_value);
+        r1->add(range1, egt::Palette::blue, 5, egt::experimental::Radial::RadialFlag::text_value);
         r1->readonly(true);
         grid0->add(egt::expand(r1));
 

@@ -93,7 +93,7 @@ int main(int argc, const char** argv)
     int maxx = window.width();
     int half = (window.width() - vsizer.width()) / 2;
 
-    auto in = std::make_shared<egt::PropertyAnimator<egt::DefaultDim>>(maxx, half,
+    auto in = std::make_shared<egt::PropertyAnimator>(maxx, half,
               std::chrono::seconds(3),
               egt::easing_exponential_easeout);
     in->on_change([&vsizer](int value)
@@ -101,7 +101,7 @@ int main(int argc, const char** argv)
         vsizer.x(value);
     });
 
-    auto out = std::make_shared<egt::PropertyAnimator<egt::DefaultDim>>(half + 1, minx,
+    auto out = std::make_shared<egt::PropertyAnimator>(half + 1, minx,
                std::chrono::seconds(3),
                egt::easing_exponential_easeout);
     out->reverse(true);

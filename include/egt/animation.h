@@ -14,6 +14,7 @@
 #include <chrono>
 #include <egt/detail/meta.h>
 #include <egt/easing.h>
+#include <egt/geometry.h>
 #include <egt/timer.h>
 #include <functional>
 #include <memory>
@@ -555,7 +556,7 @@ protected:
  * @ingroup animation
  */
 template <class T>
-class PropertyAnimator : public AutoAnimation
+class PropertyAnimatorType : public AutoAnimation
 {
 public:
 
@@ -570,10 +571,10 @@ public:
      * @param[in] duration The duration of the animation.
      * @param[in] func The easing function to use.
      */
-    explicit PropertyAnimator(T start = T(),
-                              T end = T(),
-                              std::chrono::milliseconds duration = std::chrono::milliseconds(),
-                              EasingFunc func = easing_linear)
+    explicit PropertyAnimatorType(T start = T(),
+                                  T end = T(),
+                                  std::chrono::milliseconds duration = std::chrono::milliseconds(),
+                                  EasingFunc func = easing_linear)
         : AutoAnimation(start, end, duration, func,
                         [this](T value) { invoke_handlers(value); })
     {}
@@ -582,8 +583,8 @@ public:
      * @param[in] duration The duration of the animation.
      * @param[in] func The easing function to use.
      */
-    explicit PropertyAnimator(std::chrono::milliseconds duration,
-                              EasingFunc func = easing_linear)
+    explicit PropertyAnimatorType(std::chrono::milliseconds duration,
+                                  EasingFunc func = easing_linear)
         : AutoAnimation(duration, func,
                         [this](T value)
     {
@@ -611,7 +612,7 @@ public:
         m_callbacks.clear();
     }
 
-    virtual ~PropertyAnimator() = default;
+    virtual ~PropertyAnimatorType() = default;
 
 protected:
 
@@ -631,6 +632,9 @@ protected:
      */
     CallbackArray m_callbacks;
 };
+
+using PropertyAnimator = PropertyAnimatorType<DefaultDim>;
+using PropertyAnimatorF = PropertyAnimatorType<float>;
 
 /**
  * Simple delay, useful to insert a delay in an AnimationSequence.

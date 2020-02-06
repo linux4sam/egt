@@ -337,10 +337,10 @@ protected:
 };
 
 template<>
-const std::map<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data;
+EGT_API const std::map<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data;
 
 template<>
-const std::map<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::BorderFlag>::data;
+EGT_API const std::map<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::BorderFlag>::data;
 
 /**
  * Get the global theme.

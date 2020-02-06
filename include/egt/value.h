@@ -63,16 +63,17 @@ public:
      * Set value.
      *
      * @param[in] value Value to set.
-     * @return The old value.
+     * @return true if changed.
      */
-    T value(T value)
+    bool value(T value)
     {
-        T orig = m_value;
-
         if (detail::change_if_diff<T>(m_value, value))
+        {
             on_value_changed.invoke();
+            return true;
+        }
 
-        return orig;
+        return false;
     }
 
     virtual ~Value() = default;
@@ -139,20 +140,21 @@ public:
      * value is below min, the value will be set to min.
      *
      * @param[in] value Value to set.
-     * @return The old value.
+     * @return true if changed.
      */
-    virtual T value(T value)
+    virtual bool value(T value)
     {
         assert(m_max > m_min);
-
-        auto orig = m_value;
 
         value = detail::clamp<T>(value, m_min, m_max);
 
         if (detail::change_if_diff<T>(m_value, value))
+        {
             on_value_changed.invoke();
+            return true;
+        }
 
-        return orig;
+        return false;
     }
 
     /**
@@ -215,7 +217,8 @@ template<class T>
 class SmoothRangeValue : public RangeValue<T>
 {
 public:
-    SmoothRangeValue(T min, T max, T value = {}, std::chrono::milliseconds dur = std::chrono::milliseconds(500)) noexcept
+    SmoothRangeValue(T min, T max, T value = {},
+                     std::chrono::milliseconds dur = std::chrono::milliseconds(500)) noexcept
         : RangeValue<T>(min, max, value)
     {
         m_pending = value;
@@ -258,7 +261,7 @@ protected:
     }
 
     T m_pending{};
-    PropertyAnimator<T> m_animation;
+    PropertyAnimatorType<T> m_animation;
 };
 
 }

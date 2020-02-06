@@ -86,6 +86,7 @@ notebook.cpp \
 painter.cpp \
 palette.cpp \
 progressbar.cpp \
+radial.cpp \
 radiobox.cpp \
 resource.cpp \
 respath.cpp \
