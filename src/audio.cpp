@@ -296,7 +296,7 @@ bool AudioPlayer::null()
 
 bool AudioPlayer::media(const std::string& uri)
 {
-    bool result = true;
+    bool result = false;
 
     if (detail::change_if_diff(m_impl->m_uri, uri))
     {
