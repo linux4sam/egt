@@ -6,11 +6,12 @@
 #ifndef EGT_DETAIL_PLPLOTIMPL_H
 #define EGT_DETAIL_PLPLOTIMPL_H
 
-#include <egt/chart.h>
-#include <egt/painter.h>
+#include "egt/chart.h"
+#include "egt/painter.h"
 #include <memory>
 #include <plstream.h>
 #include <string>
+#include <vector>
 
 namespace egt
 {
@@ -66,6 +67,7 @@ public:
     virtual ~PlPlotImpl();
 
 protected:
+
     std::unique_ptr<plstream> m_plstream;
     bool m_initalize{false};
     std::string m_xlabel;
@@ -77,10 +79,10 @@ protected:
      * m_xmin and m_xmax cannot be same
      * m_ymin and m_ymax cannot be same
      */
-    PLFLT m_xmin{0.};
-    PLFLT m_xmax{1.0};
-    PLFLT m_ymin{0.};
-    PLFLT m_ymax{1.0};
+    PLFLT m_xmin{0};
+    PLFLT m_xmax{0};
+    PLFLT m_ymin{0};
+    PLFLT m_ymax{0};
 
     PLINT m_pattern{0};
     PLINT m_pointtype{17}; //code 17 represents to dot.

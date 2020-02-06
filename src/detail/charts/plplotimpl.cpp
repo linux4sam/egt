@@ -23,60 +23,48 @@ PlPlotImpl::PlPlotImpl()
     m_plstream->sdev("extcairo");
 }
 
+template<class T1, class T2, class T3>
+inline bool change_if_diff(T1& first, T2& second, const T3& to)
+{
+    if (to.size() != first.size() || to.size() != second.size())
+    {
+        first.clear();
+        second.clear();
+
+        for (auto& elem : to)
+        {
+            first.push_back(elem.first);
+            second.push_back(elem.second);
+        }
+
+        return true;
+    }
+
+    bool diff = false;
+    size_t i = 0;
+    for (auto& elem : to)
+    {
+        if (change_if_diff(first[i], elem.first))
+            diff = true;
+
+        if (change_if_diff(second[i], elem.second))
+            diff = true;
+
+        ++i;
+    }
+
+    return diff;
+}
+
 void PlPlotImpl::data(const DataArray& data)
 {
-    if (!data.empty())
+    if (change_if_diff(m_xdata, m_ydata, data))
     {
-        bool damage_flag = true;
-        //compare vector elements.
-        if (data.size() == m_xdata.size())
-        {
-            int i = 0;
-            damage_flag = false;
-            for (auto& elem : data)
-            {
-                if (detail::float_compare(elem.first, m_xdata.at(i)) &&
-                    detail::float_compare(elem.second, m_ydata.at(i)))
-                {
-                    ++i;
-                    continue;
-                }
-                else
-                {
-                    SPDLOG_DEBUG("Data elements are different");
-                    damage_flag = true;
-                    break;
-                }
-            }
-        }
+        m_sdata.clear();
 
-        if (damage_flag)
-        {
-            m_xdata.clear();
-            m_ydata.clear();
+        plplot_verify_viewport();
 
-            for (auto& elem : data)
-            {
-                m_xdata.push_back(elem.first);
-                m_ydata.push_back(elem.second);
-            }
-
-            m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
-            m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
-            m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-            m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
-
-            SPDLOG_DEBUG(" m_xmin {} m_xmax {}  m_ymin {} m_ymax {}",
-                         m_xmin, m_xmax, m_ymin, m_ymax);
-
-            plplot_verify_viewport();
-
-            invoke_damage();
-        }
-    }
-    else
-    {
-        clear();
+        invoke_damage();
     }
 }
 
@@ -96,14 +84,6 @@ void PlPlotImpl::add_data(const DataArray& data)
             m_ydata.push_back(elem.second);
         }
 
-        m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
-        m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
-        m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-        m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
-
-        SPDLOG_DEBUG("m_xmin {} m_xmax {}  m_ymin {} m_ymax {}",
-                     m_xmin, m_xmax, m_ymin, m_ymax);
-
         plplot_verify_viewport();
 
         invoke_damage();
@@ -112,53 +92,13 @@ void PlPlotImpl::add_data(const DataArray& data)
 
 void PlPlotImpl::data(const StringDataArray& data)
 {
-    if (!data.empty())
+    if (change_if_diff(m_ydata, m_sdata, data))
     {
-        bool damage_flag = true;
-        if (data.size() == m_sdata.size())
-        {
-            int i = 0;
-            damage_flag = false;
-            for (auto& elem : data)
-            {
-                if (detail::float_compare(elem.first, m_ydata.at(i)) &&
-                    (elem.second == m_sdata.at(i)))
-                {
-                    ++i;
-                    continue;
-                }
-                else
-                {
-                    SPDLOG_DEBUG("Data elements are different");
-                    damage_flag = true;
-                    break;
-                }
-            }
-        }
+        m_xdata.clear();
 
-        if (damage_flag)
-        {
-            clear();
+        plplot_verify_viewport();
 
-            for (auto& elem : data)
-            {
-                m_sdata.push_back(elem.second);
-                m_ydata.push_back(elem.first);
-            }
-
-            m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-            m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
-
-            SPDLOG_DEBUG("m_ymin {} m_ymax {}", m_ymin, m_ymax);
-
-            plplot_verify_viewport();
-
-            invoke_damage();
-        }
-    }
-    else
-    {
-        clear();
+        invoke_damage();
     }
 }
 
@@ -189,11 +129,6 @@ void PlPlotImpl::add_data(const StringDataArray& data)
             m_ydata.push_back(elem.first);
         }
 
-        m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-        m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
-
-        SPDLOG_DEBUG("m_ymin {} m_ymax {}", m_ymin, m_ymax);
-
         plplot_verify_viewport();
 
         invoke_damage();
@@ -202,55 +137,43 @@ void PlPlotImpl::add_data(const StringDataArray& data)
 
 void PlPlotImpl::remove_data(uint32_t count)
 {
+    if (!count)
+        return;
+
     bool damage = false;
 
     if (!m_sdata.empty())
     {
+        damage = true;
         if (count <= m_sdata.size())
-        {
             m_sdata.erase(m_sdata.begin(), m_sdata.begin() + count);
-            damage = true;
-        }
         else
-        {
-            clear();
-        }
+            m_sdata.clear();
     }
 
     if (!m_xdata.empty())
     {
+        damage = true;
         if (count <= m_xdata.size())
-        {
             m_xdata.erase(m_xdata.begin(), m_xdata.begin() + count);
-            m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
-            m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
-            damage = true;
-        }
         else
-        {
-            clear();
-        }
+            m_xdata.clear();
     }
 
     if (!m_ydata.empty())
     {
+        damage = true;
         if (count <= m_ydata.size())
-        {
             m_ydata.erase(m_ydata.begin(), m_ydata.begin() + count);
-            m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
-            m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
-            damage = true;
-        }
         else
-        {
-            clear();
-        }
+            m_ydata.clear();
     }
 
-    plplot_verify_viewport();
-
     if (damage)
+    {
+        plplot_verify_viewport();
         invoke_damage();
+    }
 }
 
 void PlPlotImpl::clear()
@@ -262,8 +185,6 @@ void PlPlotImpl::clear()
         m_xdata.clear();
         m_sdata.clear();
         m_ydata.clear();
-        m_ymin = m_xmin = 0;
-        m_ymax = m_xmax = 1.0;
         m_clearsurface = true;
         invoke_damage();
     }
@@ -358,21 +279,10 @@ void PlPlotImpl::point_type(int ptype)
  */
 void PlPlotImpl::plplot_verify_viewport()
 {
-    if (detail::float_compare(m_xmin, m_xmax))
-    {
-        if (detail::float_compare(0., m_xmax))
-            m_xmax = 1.0;
-        else
-            m_xmin = m_xmax / 2.0;
-    }
-
-    if (detail::float_compare(m_ymin, m_ymax))
-    {
-        if (detail::float_compare(0., m_ymax))
-            m_ymax = 1.0;
-        else
-            m_ymin = m_ymax / 2.0;
-    }
+    m_xmin = std::round(*std::min_element(m_xdata.begin(), m_xdata.end()));
+    m_xmax = std::round(*std::max_element(m_xdata.begin(), m_xdata.end()));
+    m_ymin = std::round(*std::min_element(m_ydata.begin(), m_ydata.end()));
+    m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
 
     if (!detail::float_compare(m_bank, 0.0f))
     {
@@ -384,6 +294,9 @@ void PlPlotImpl::plplot_verify_viewport()
         m_ymin -= ydiff;
         m_ymax += ydiff;
     }
+
+    SPDLOG_DEBUG("xmin {} xmax {} ymin {} ymax {}",
+                 m_xmin, m_xmax, m_ymin, m_ymax);
 }
 
 void PlPlotImpl::plplot_font(const Font& font)
@@ -502,12 +415,11 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
-    // set env
-    m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
-
-
-    if ((!m_xdata.empty()) && (!m_ydata.empty()))
+    if (m_xdata.size() > 1 && m_ydata.size() > 1)
     {
+        // set env
+        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
+
         //set line style
         m_plstream->lsty(m_pattern <= 0 ? 1 : m_pattern);
 
@@ -516,6 +428,11 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
         // plot
         m_plstream->line(m_xdata.size(), m_xdata.data(), m_ydata.data());
+    }
+    else
+    {
+        // set env
+        m_plstream->env(0, 1, 0, 1, 0, m_axis);
     }
 
     Font tfont = m_interface.font();
@@ -567,13 +484,18 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
     //set axis color
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
-    // set env
-    m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
-
-    if ((!m_xdata.empty()) && (!m_ydata.empty()))
+    if (m_xdata.size() > 1 && m_ydata.size() > 1)
     {
+        // set env
+        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, m_axis);
+
         // draw points
         m_plstream->poin(m_xdata.size(), m_xdata.data(), m_ydata.data(), m_pointtype);
+    }
+    else
+    {
+        // set env
+        m_plstream->env(0, 1, 0, 1, 0, m_axis);
     }
 
     // set font
