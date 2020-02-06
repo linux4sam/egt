@@ -19,7 +19,7 @@ LineChart::LineChart(const Rect& rect)
 
     fill_flags(Theme::FillFlag::blend);
 
-    m_impl = detail::make_unique<detail::PlPlotLineChart>(*this, rect);
+    m_impl = detail::make_unique<detail::PlPlotLineChart>(*this);
 }
 
 void LineChart::draw(Painter& painter, const Rect& rect)
@@ -79,8 +79,11 @@ void LineChart::show_grid(bool enable)
 
 void LineChart::resize(const Size& size)
 {
-    m_impl->resize(size);
-    Widget::resize(size);
+    if (size != this->size())
+    {
+        m_impl->resize(size);
+        Widget::resize(size);
+    }
 }
 
 LineChart::~LineChart() = default;
@@ -92,7 +95,7 @@ PointChart::PointChart(const Rect& rect)
 
     fill_flags(Theme::FillFlag::blend);
 
-    m_impl = detail::make_unique<detail::PlPlotPointChart>(*this, rect);
+    m_impl = detail::make_unique<detail::PlPlotPointChart>(*this);
 }
 
 void PointChart::draw(Painter& painter, const Rect& rect)
@@ -142,8 +145,11 @@ void PointChart::show_ticks(bool enable)
 
 void PointChart::resize(const Size& size)
 {
-    m_impl->resize(size);
-    Widget::resize(size);
+    if (size != this->size())
+    {
+        m_impl->resize(size);
+        Widget::resize(size);
+    }
 }
 
 void PointChart::show_grid(bool enable)
@@ -160,7 +166,7 @@ BarChart::BarChart(const Rect& rect)
 
     fill_flags(Theme::FillFlag::blend);
 
-    m_impl = detail::make_unique<detail::PlPlotBarChart>(*this, rect);
+    m_impl = detail::make_unique<detail::PlPlotBarChart>(*this);
 }
 
 void BarChart::draw(Painter& painter, const Rect& rect)
@@ -225,8 +231,11 @@ void BarChart::show_grid(bool enable)
 
 void BarChart::resize(const Size& size)
 {
-    m_impl->resize(size);
-    Widget::resize(size);
+    if (size != this->size())
+    {
+        m_impl->resize(size);
+        Widget::resize(size);
+    }
 }
 
 BarChart::~BarChart() = default;
@@ -238,7 +247,7 @@ HorizontalBarChart::HorizontalBarChart(const Rect& rect)
 
     fill_flags(Theme::FillFlag::blend);
 
-    m_impl = detail::make_unique<detail::PlPlotHBarChart>(*this, rect);
+    m_impl = detail::make_unique<detail::PlPlotHBarChart>(*this);
 }
 
 void HorizontalBarChart::draw(Painter& painter, const Rect& rect)
@@ -293,8 +302,11 @@ void HorizontalBarChart::show_grid(bool enable)
 
 void HorizontalBarChart::resize(const Size& size)
 {
-    m_impl->resize(size);
-    Widget::resize(size);
+    if (size != this->size())
+    {
+        m_impl->resize(size);
+        Widget::resize(size);
+    }
 }
 
 HorizontalBarChart::~HorizontalBarChart() = default;
@@ -306,7 +318,7 @@ PieChart::PieChart(const Rect& rect)
 
     fill_flags(Theme::FillFlag::blend);
 
-    m_impl = detail::make_unique<detail::PlPlotPieChart>(*this, rect);
+    m_impl = detail::make_unique<detail::PlPlotPieChart>(*this);
 }
 
 void PieChart::draw(Painter& painter, const Rect& rect)
@@ -346,12 +358,14 @@ void PieChart::clear()
 
 void PieChart::resize(const Size& size)
 {
-    m_impl->resize(size);
-    Widget::resize(size);
+    if (size != this->size())
+    {
+        m_impl->resize(size);
+        Widget::resize(size);
+    }
 }
 
 PieChart::~PieChart() = default;
 
 }
-
 }

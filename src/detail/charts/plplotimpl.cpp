@@ -17,9 +17,8 @@ inline namespace v1
 namespace detail
 {
 
-PlPlotImpl::PlPlotImpl(const Rect& rect)
-    : m_rect(rect),
-      m_plstream(detail::make_unique<plstream>())
+PlPlotImpl::PlPlotImpl()
+    : m_plstream(detail::make_unique<plstream>())
 {
     m_plstream->sdev("extcairo");
 }
@@ -445,21 +444,15 @@ void PlPlotImpl::plplot_bg_color(Color& color)
 
 void PlPlotImpl::resize(const Size& size)
 {
-    if (size != m_rect.size())
-    {
-        m_rect.size(size);
-        m_plstream = detail::make_unique<plstream>();
-        m_initalize = false;
-        m_clearsurface = true;
-        m_plstream->sdev("extcairo");
-    }
+    m_plstream = detail::make_unique<plstream>();
+    m_initalize = false;
+    m_plstream->sdev("extcairo");
 }
 
 PlPlotImpl::~PlPlotImpl() = default;
 
-PlPlotLineChart::PlPlotLineChart(LineChart& interface, const Rect& rect)
-    : PlPlotImpl(rect),
-      m_interface(interface)
+PlPlotLineChart::PlPlotLineChart(LineChart& interface)
+    : m_interface(interface)
 {
     m_font = m_interface.font();
     plplot_font(m_font);
@@ -521,9 +514,8 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
 PlPlotLineChart::~PlPlotLineChart() = default;
 
-PlPlotPointChart::PlPlotPointChart(PointChart& interface, const Rect& rect)
-    : PlPlotImpl(rect),
-      m_interface(interface)
+PlPlotPointChart::PlPlotPointChart(PointChart& interface)
+    : m_interface(interface)
 {
     m_font = m_interface.font();
     plplot_font(m_font);
@@ -581,9 +573,8 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
 PlPlotPointChart::~PlPlotPointChart() = default;
 
-PlPlotBarChart::PlPlotBarChart(BarChart& interface, const Rect& rect)
-    : PlPlotImpl(rect),
-      m_interface(interface)
+PlPlotBarChart::PlPlotBarChart(BarChart& interface)
+    : m_interface(interface)
 {
     m_font = m_interface.font();
     plplot_font(m_font);
@@ -702,9 +693,8 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
 PlPlotBarChart::~PlPlotBarChart() = default;
 
-PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& interface, const Rect& rect)
-    : PlPlotImpl(rect),
-      m_interface(interface)
+PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& interface)
+    : m_interface(interface)
 {
     m_font = m_interface.font();
     plplot_font(m_font);
@@ -811,9 +801,8 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 
 PlPlotHBarChart::~PlPlotHBarChart() = default;
 
-PlPlotPieChart::PlPlotPieChart(PieChart& interface, const Rect& rect)
-    : PlPlotImpl(rect),
-      m_interface(interface)
+PlPlotPieChart::PlPlotPieChart(PieChart& interface)
+    : m_interface(interface)
 {
     m_font = m_interface.font();
     plplot_font(m_font);

@@ -23,9 +23,7 @@ class PlPlotImpl
 {
 public:
 
-    PlPlotImpl() = delete;
-
-    explicit PlPlotImpl(const Rect& rect);
+    PlPlotImpl();
 
     virtual void title(const std::string& title);
 
@@ -66,7 +64,6 @@ public:
     virtual ~PlPlotImpl();
 
 protected:
-    Rect m_rect;
     std::unique_ptr<plstream> m_plstream;
     bool m_initalize{false};
     std::string m_xlabel;
@@ -115,12 +112,13 @@ protected:
 
     void plplot_verify_viewport();
 
+    float m_bank{0};
 };
 
 class PlPlotLineChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotLineChart(LineChart& interface, const Rect& rect);
+    explicit PlPlotLineChart(LineChart& interface);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -138,7 +136,7 @@ protected:
 class PlPlotPointChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotPointChart(PointChart& interface, const Rect& rect);
+    explicit PlPlotPointChart(PointChart& interface);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -156,7 +154,7 @@ protected:
 class PlPlotBarChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotBarChart(BarChart& interface, const Rect& rect);
+    explicit PlPlotBarChart(BarChart& interface);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -177,7 +175,7 @@ protected:
 class PlPlotHBarChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotHBarChart(HorizontalBarChart& interface, const Rect& rect);
+    explicit PlPlotHBarChart(HorizontalBarChart& interface);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
@@ -199,7 +197,7 @@ class PlPlotPieChart: public PlPlotImpl
 {
 public:
 
-    explicit PlPlotPieChart(PieChart& interface, const Rect& rect);
+    explicit PlPlotPieChart(PieChart& interface);
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
