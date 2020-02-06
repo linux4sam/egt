@@ -31,9 +31,7 @@ public:
     CPUMonitorUsage() = default;
 
     /**
-     * Get the CPU usage as a percentage.
-     *
-     * @param index CPU index if more than one CPU.
+     * Get the total CPU usage as a percentage.
      */
     inline double usage() const { return m_cpu_usage; }
 
