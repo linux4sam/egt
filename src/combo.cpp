@@ -28,6 +28,13 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
       m_parent(parent)
 {
     name("ComboBoxPopup" + std::to_string(m_widgetid));
+    border(20);
+    if (!flags().is_set(Widget::Flag::plane_window))
+        fill_flags(Theme::FillFlag::blend);
+    border_flags(Theme::BorderFlag::drop_shadow);
+    auto black = Palette::gray;
+    black.alpha(0x20);
+    color(egt::Palette::ColorId::border, black);
 
     m_list->align(AlignFlag::expand);
 
