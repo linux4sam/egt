@@ -175,6 +175,7 @@ public:
         right = detail::bit(1),
         bottom = detail::bit(2),
         left = detail::bit(3),
+        drop_shadow = detail::bit(4),
     };
 
     using BorderFlags = detail::Flags<BorderFlag>;

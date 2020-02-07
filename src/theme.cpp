@@ -166,9 +166,49 @@ void Theme::draw_box(Painter& painter,
         box -= Size(border_width, border_width);
     }
 
-    //assert(!box.empty());
     if (box.empty())
         return;
+
+    Painter::AutoSaveRestore sr(painter);
+    auto cr = painter.context().get();
+
+    if (type.is_set(FillFlag::solid))
+    {
+        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+    }
+
+    if (border_width && border_flags.is_set(BorderFlag::drop_shadow))
+    {
+        cairo_new_path(cr);
+        auto sbox = box;
+        sbox += Point(border_width, border_width);
+        sbox -= Size(border_width, border_width);
+        painter.set(border);
+
+        if (!detail::float_equal(border_radius, 0) && border_radius > 0)
+        {
+            const double degrees = detail::pi<double>() / 180.0;
+            cairo_arc(cr, sbox.x() + sbox.width() - border_radius, sbox.y() + border_radius,
+                      border_radius, -90. * degrees, 0. * degrees);
+            cairo_arc(cr, sbox.x() + sbox.width() - border_radius,
+                      sbox.y() + sbox.height() - border_radius, border_radius,
+                      0 * degrees, 90. * degrees);
+            cairo_arc(cr, sbox.x() + border_radius, sbox.y() + sbox.height() - border_radius,
+                      border_radius, 90. * degrees, 180. * degrees);
+            cairo_arc(cr, sbox.x() + border_radius, sbox.y() + border_radius,
+                      border_radius, 180. * degrees, 270. * degrees);
+            cairo_close_path(cr);
+        }
+        else
+        {
+            painter.draw(sbox);
+        }
+
+        painter.fill();
+
+        box += Point(border_width / 2., border_width / 2.);
+        box -= Size(border_width, border_width);
+    }
 
     double rx = box.x(),
            ry = box.y(),
@@ -179,14 +219,6 @@ void Theme::draw_box(Painter& painter,
 
     double radius = corner_radius / aspect;
     double degrees = detail::pi<double>() / 180.0;
-
-    Painter::AutoSaveRestore sr(painter);
-    auto cr = painter.context().get();
-
-    if (type.is_set(FillFlag::solid))
-    {
-        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
-    }
 
     cairo_new_path(cr);
 
@@ -232,26 +264,29 @@ void Theme::draw_box(Painter& painter,
         cairo_fill_preserve(cr);
     }
 
-    if (border_width)
+    if (!border_flags.is_set(BorderFlag::drop_shadow))
     {
-        if (!border_flags.empty())
-            cairo_new_path(cr);
+        if (border_width)
+        {
+            if (!border_flags.empty())
+                cairo_new_path(cr);
 
-        if (border_flags.is_set(BorderFlag::top))
-            painter.draw(box.top_left(), box.top_right());
+            if (border_flags.is_set(BorderFlag::top))
+                painter.draw(box.top_left(), box.top_right());
 
-        if (border_flags.is_set(BorderFlag::right))
-            painter.draw(box.top_right(), box.bottom_right());
+            if (border_flags.is_set(BorderFlag::right))
+                painter.draw(box.top_right(), box.bottom_right());
 
-        if (border_flags.is_set(BorderFlag::bottom))
-            painter.draw(box.bottom_left(), box.bottom_right());
+            if (border_flags.is_set(BorderFlag::bottom))
+                painter.draw(box.bottom_left(), box.bottom_right());
 
-        if (border_flags.is_set(BorderFlag::left))
-            painter.draw(box.top_left(), box.bottom_left());
+            if (border_flags.is_set(BorderFlag::left))
+                painter.draw(box.top_left(), box.bottom_left());
 
-        painter.set(border);
-        painter.line_width(border_width);
-        cairo_stroke(cr);
+            painter.set(border);
+            painter.line_width(border_width);
+            cairo_stroke(cr);
+        }
     }
 
     cairo_new_path(cr);
@@ -385,6 +420,7 @@ const std::map<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::Border
     {Theme::BorderFlag::right, "right"},
     {Theme::BorderFlag::bottom, "bottom"},
     {Theme::BorderFlag::left, "left"},
+    {Theme::BorderFlag::drop_shadow, "drop_shadow"},
 };
 
 }
