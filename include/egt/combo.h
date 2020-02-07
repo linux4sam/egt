@@ -119,6 +119,8 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    using TextWidget::parent;
+
     virtual void parent(Frame* parent) override;
 
     using TextWidget::min_size_hint;

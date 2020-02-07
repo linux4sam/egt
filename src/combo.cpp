@@ -44,16 +44,11 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 
 void ComboBoxPopup::smart_pos()
 {
-    auto origin = m_parent.local_to_display(Point());
-
-    auto real = origin + DisplayPoint(0, m_parent.size().height() + POPUP_OFFSET);
-    move(Point(real.x(), real.y()));
-
     if (Application::instance().screen())
     {
         auto ss = Application::instance().screen()->size();
         auto height =
-            std::min(static_cast<DefaultDim>((ss.height() - origin.y()) / 40),
+            std::min(static_cast<DefaultDim>(ss.height() / 40),
                      static_cast<DefaultDim>(m_list->item_count())) * 40;
 
         // hack because list child area is smaller by this much
@@ -65,6 +60,9 @@ void ComboBoxPopup::smart_pos()
     {
         resize(Size(m_parent.size().width(), 100));
     }
+
+    auto ss = Application::instance().screen()->size() / 2;
+    move_to_center(Point(ss.width(), ss.height()));
 }
 
 void ComboBoxPopup::show()
