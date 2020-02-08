@@ -12,6 +12,7 @@
  */
 
 #include <egt/widget.h>
+#include <deque>
 
 namespace egt
 {
@@ -60,12 +61,12 @@ public:
     /**
      * A data pair array.
      */
-    using DataArray = std::vector<std::pair<double, double>>;
+    using DataArray = std::deque<std::pair<double, double>>;
 
     /**
      * A data pair array for strings.
      */
-    using StringDataArray = std::vector<std::pair<double, std::string>>;
+    using StringDataArray = std::deque<std::pair<double, std::string>>;
 };
 
 /**
