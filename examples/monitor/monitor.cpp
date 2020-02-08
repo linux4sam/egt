@@ -41,8 +41,7 @@ int main(int argc, const char** argv)
     line1.label("", "%", "CPU");
     line1.font(egt::Font(24));
     line1.line_width(2);
-    line1.line_style(egt::LineChart::LinePattern::dotted);
-    line1.grid_style(egt::LineChart::GridFlag::box_minor_ticks_coord);
+    line1.grid_style(egt::LineChart::GridFlag::box_major_ticks_coord);
     line1.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     line1.color(egt::Palette::ColorId::button_bg, egt::Palette::gray);
     line1.color(egt::Palette::ColorId::button_fg, egt::Color(0xf3c626ff));
