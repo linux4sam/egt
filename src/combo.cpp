@@ -16,7 +16,6 @@ namespace egt
 inline namespace v1
 {
 
-static const auto POPUP_OFFSET = 5;
 static const auto DEFAULT_COMBOBOX_SIZE = Size(200, 30);
 
 namespace detail

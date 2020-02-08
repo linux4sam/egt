@@ -136,9 +136,9 @@ protected:
      */
     struct EGT_API CallbackMeta
     {
-        CallbackMeta(const EventCallback& c,
+        CallbackMeta(EventCallback c,
                      RegisterHandle h) noexcept
-            : callback(c),
+            : callback(std::move(c)),
               handle(h)
         {}
 

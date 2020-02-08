@@ -123,12 +123,12 @@ protected:
     /**
      * Manages metadata about a registered callback.
      */
-    struct EGT_API CallbackMeta
+    struct CallbackMeta
     {
-        CallbackMeta(const EventCallback& c,
+        CallbackMeta(EventCallback c,
                      const FilterFlags& m,
                      RegisterHandle h) noexcept
-            : callback(c),
+            : callback(std::move(c)),
               mask(m),
               handle(h)
         {}

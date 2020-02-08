@@ -266,7 +266,7 @@ public:
     /**
     * Set the grid style.
     */
-    virtual void grid_style(GridFlag flag);
+    virtual void grid_style(GridFlag flag) override;
 
     /**
      * Set grid width
