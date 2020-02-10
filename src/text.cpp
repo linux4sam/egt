@@ -240,6 +240,7 @@ void TextBox::max_length(size_t len)
                 auto i = m_text.begin();
                 utf8::advance(i, m_max_len, m_text.end());
                 m_text.erase(i, m_text.end());
+                on_text_changed.invoke();
             }
         }
 

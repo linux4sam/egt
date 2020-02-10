@@ -83,8 +83,6 @@ public:
 
     using TextWidget::text;
 
-    virtual void text(const std::string& text) override;
-
     virtual void draw(Painter& painter, const Rect& rect) override;
 
     static void default_draw(Label& widget, Painter& painter, const Rect& rect);

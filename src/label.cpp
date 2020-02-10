@@ -42,15 +42,6 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
     parent.add(*this);
 }
 
-void Label::text(const std::string& text)
-{
-    if (detail::change_if_diff<>(m_text, text))
-    {
-        damage();
-        layout();
-    }
-}
-
 void Label::draw(Painter& painter, const Rect& rect)
 {
     Drawer<Label>::draw(*this, painter, rect);
