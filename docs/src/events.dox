@@ -73,7 +73,7 @@ Widget::on_event() method can be used to register any number of callbacks. A
 used.
 
 @code{.cpp}
-ImageButton settings("@cog.png");
+ImageButton settings("icon:cog.png");
 settings.on_event([this](Event& event)
 {
     if (event.id() == EventId::pointer_click)
@@ -90,7 +90,7 @@ Another variation of the Widget::on_event() function allows for specifying
 what events to filter as a second parameter.
 
 @code{.cpp}
-ImageButton settings("@cog.png");
+ImageButton settings("icon:cog.png");
 settings.on_event([this](Event&)
 {
     if (m_popup.visible())
