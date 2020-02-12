@@ -1182,7 +1182,9 @@ HTML_EXTRA_STYLESHEET  = @srcdir@/extra_stylesheet.css
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = @srcdir@/src/microchip_logo_small.png
+HTML_EXTRA_FILES       = @srcdir@/src/microchip_logo_small.png \
+                         @srcdir@/highlight.pack.js \
+                         @srcdir@/shades-of-purple.css
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to

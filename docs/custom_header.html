@@ -16,6 +16,17 @@ $search
 $mathjax
 <link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
 $extrastylesheet
+<link rel="stylesheet" href="$relpath^shades-of-purple.css">
+<script src="$relpath^highlight.pack.js"></script>
+<script>
+  $(function() {
+  hljs.configure({useBR: false});
+  $(".fragment").each(function(i,node) {
+  $(node).removeClass("fragment");
+  hljs.highlightBlock(node);
+  });
+  });
+</script>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
