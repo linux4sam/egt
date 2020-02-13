@@ -106,7 +106,7 @@ private:
         {
             auto image = egt::Image("file:images/image" + std::to_string(x) + ".png");
             auto box = std::make_shared<LauncherItem>(image);
-            box->resize(egt::Size(width() / 4, height() - 100));
+            box->resize(egt::Size(width() / 4, height() - 80));
             m_boxes.push_back(box);
         }
 
@@ -135,8 +135,6 @@ int main(int argc, const char** argv)
 {
     egt::Application app(argc, argv, "imagestack");
     egt::add_search_path(EXAMPLEDATA);
-
-    egt::add_search_path("images/");
 
     MainWindow window;
     window.show();
