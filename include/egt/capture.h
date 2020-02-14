@@ -52,7 +52,7 @@ public:
     /**
      * Output container type.
      */
-    enum class container_type
+    enum class ContainerType
     {
         avi,
         mpeg2ts
@@ -67,7 +67,7 @@ public:
      * @param[in] device The camera device.
      */
     explicit CameraCapture(const std::string& output,
-                           container_type container = container_type::avi,
+                           ContainerType container = ContainerType::avi,
                            PixelFormat format = PixelFormat::yuyv,
                            const std::string& device = "/dev/video0");
 
@@ -82,7 +82,7 @@ public:
      * @param[in] format The input pixel format.
      */
     virtual void set_output(const std::string& output,
-                            container_type container = container_type::avi,
+                            ContainerType container = ContainerType::avi,
                             PixelFormat format = PixelFormat::yuyv);
 
     /**

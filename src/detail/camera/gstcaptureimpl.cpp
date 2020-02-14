@@ -29,7 +29,7 @@ namespace detail
 CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
                          const std::string& output,
                          PixelFormat format,
-                         experimental::CameraCapture::container_type container,
+                         experimental::CameraCapture::ContainerType container,
                          const std::string& device)
     : m_interface(interface),
       m_output(output),
@@ -218,7 +218,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 }
 
 void CaptureImpl::set_output(const std::string& output,
-                             experimental::CameraCapture::container_type container,
+                             experimental::CameraCapture::ContainerType container,
                              PixelFormat format)
 {
     m_output = output;
@@ -239,7 +239,7 @@ bool CaptureImpl::start()
 
     switch (m_container)
     {
-    case experimental::CameraCapture::container_type::avi:
+    case experimental::CameraCapture::ContainerType::avi:
     {
         static const auto avi_pipe =
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=30/1 ! " \
@@ -249,7 +249,7 @@ bool CaptureImpl::start()
         pipe = fmt::format(avi_pipe, m_devnode, 320, 240, format, m_output);
         break;
     }
-    case experimental::CameraCapture::container_type::mpeg2ts:
+    case experimental::CameraCapture::ContainerType::mpeg2ts:
     {
         static const auto mpeg2ts_pipe =
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=30/1 ! " \

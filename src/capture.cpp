@@ -19,14 +19,14 @@ CameraCapture::CameraCapture()
 
 
 CameraCapture::CameraCapture(const std::string& output,
-                             container_type container,
+                             ContainerType container,
                              PixelFormat format,
                              const std::string& device)
     : m_impl(new detail::CaptureImpl(*this, output, format, container, device))
 {}
 
 void CameraCapture::set_output(const std::string& output,
-                               container_type container,
+                               ContainerType container,
                                PixelFormat format)
 {
     stop();
