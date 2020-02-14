@@ -53,7 +53,7 @@ public:
      * @param[in] name Application name.  This is used for several things,
      *             including identifying the text domain used by gettext().
      */
-    explicit Application(int argc = 0, const char** argv = nullptr,
+    explicit Application(int argc = 0, char** argv = nullptr,
                          const std::string& name = {}, bool primary = true);
 
     /**
@@ -118,7 +118,10 @@ public:
 
     inline int argc() const { return m_argc; }
 
-    inline const char** argv() const { return m_argv; }
+    /**
+     * Get the argv value passed in.
+     */
+    inline const char** argv() const { return const_cast<const char**>(m_argv); }
 
     virtual ~Application();
 
@@ -145,7 +148,7 @@ protected:
     /**
      * Argument list.
      */
-    const char** m_argv{nullptr};
+    char** m_argv{nullptr};
 
     /**
      * Signal instance for registered signal handles by the Application.

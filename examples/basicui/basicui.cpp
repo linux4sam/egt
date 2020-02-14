@@ -7,7 +7,7 @@
 #include <egt/ui>
 #include <egt/uiloader.h>
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv);
     egt::add_search_path(EXAMPLEDATA);

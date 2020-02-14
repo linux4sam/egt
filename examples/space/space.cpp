@@ -133,7 +133,7 @@ private:
     std::uniform_int_distribution<int> size_dist {10, 100};
 };
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "space");
     egt::add_search_path(EXAMPLEDATA);

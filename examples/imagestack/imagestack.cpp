@@ -131,7 +131,7 @@ private:
     egt::PropertyAnimator m_animation;
 };
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "imagestack");
     egt::add_search_path(EXAMPLEDATA);

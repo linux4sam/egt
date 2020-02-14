@@ -7,7 +7,7 @@
 #include <egt/ui>
 #include <random>
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "keyboard");
 

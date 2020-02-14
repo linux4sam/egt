@@ -43,7 +43,7 @@ static inline T ns2ms(T n)
     return n / 1000000UL;
 }
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     if (argc < 2)
     {

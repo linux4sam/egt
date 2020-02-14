@@ -38,7 +38,7 @@ static std::shared_ptr<WindowType> create_window(const egt::Size& size,
     return win;
 }
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "frames");
 

@@ -38,7 +38,7 @@ static std::string line_break(const std::string& in, size_t width = 50)
     return out + tmp;
 }
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "camera");
     egt::add_search_path(EXAMPLEDATA);

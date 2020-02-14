@@ -69,7 +69,7 @@ protected:
     egt::PropertyAnimator m_animationy;
 };
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "drag");
     egt::add_search_path(EXAMPLEDATA);

@@ -70,7 +70,7 @@ bool Application::check_instance()
     return !!the_app;
 }
 
-Application::Application(int argc, const char** argv,
+Application::Application(int argc, char** argv,
                          const std::string& name, bool primary)
     : m_argc(argc),
       m_argv(argv),

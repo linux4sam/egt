@@ -6,7 +6,7 @@
 /// @[snippet0]
 #include <egt/ui>
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv);
 

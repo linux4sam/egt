@@ -134,7 +134,7 @@ public:
     egt::Canvas m_canvas;
 };
 
-static int run(int argc, const char** argv)
+static int run(int argc, char** argv)
 {
     egt::Application app(argc, argv, "press");
 
@@ -144,7 +144,7 @@ static int run(int argc, const char** argv)
     return app.run();
 }
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     auto res = run(argc, argv);
 

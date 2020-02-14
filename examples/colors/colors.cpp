@@ -41,7 +41,7 @@ struct ColorMapWidget : public egt::Widget
     std::string m_name;
 };
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv);
 

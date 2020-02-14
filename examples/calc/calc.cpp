@@ -18,7 +18,7 @@ static std::string last_line(const std::string& str)
     return line;
 }
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "calc");
 
