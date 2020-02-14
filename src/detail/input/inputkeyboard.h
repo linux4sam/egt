@@ -112,7 +112,7 @@ public:
 #ifdef HAVE_XKBCOMMON
         try
         {
-            m_impl = make_unique<XkbInputKeyboard>();
+            m_impl = std::make_unique<XkbInputKeyboard>();
             SPDLOG_DEBUG("using xkb input keyboard mapping");
             return;
         }
@@ -122,7 +122,7 @@ public:
         }
 #endif
 
-        m_impl = make_unique<BasicInputKeyboard>();
+        m_impl = std::make_unique<BasicInputKeyboard>();
         SPDLOG_DEBUG("using basic input keyboard mapping");
     }
 

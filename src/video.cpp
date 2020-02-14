@@ -100,13 +100,13 @@ void VideoWindow::create_impl(const Size& size)
     {
         SPDLOG_DEBUG("VideoWindow: Using KMS sink");
 #ifdef HAVE_LIBPLANES
-        m_video_impl = detail::make_unique<detail::GstKmsSinkImpl>(*this, size, detail::is_target_sama5d4());
+        m_video_impl = std::make_unique<detail::GstKmsSinkImpl>(*this, size, detail::is_target_sama5d4());
 #endif
     }
     else
     {
         SPDLOG_DEBUG("VideoWindow: Using APP sink");
-        m_video_impl = detail::make_unique<detail::GstAppSinkImpl>(*this, size);
+        m_video_impl = std::make_unique<detail::GstAppSinkImpl>(*this, size);
     }
 }
 

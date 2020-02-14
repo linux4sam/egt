@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     egt::experimental::Gauge gauge;
     center(gauge);
 
-    auto dash_background = egt::detail::make_unique<egt::SvgImage>("file:dash_background.svg", egt::SizeF(win.content_area().width(), 0));
+    auto dash_background = std::make_unique<egt::SvgImage>("file:dash_background.svg", egt::SizeF(win.content_area().width(), 0));
 
     // create a background layer
     auto gauge_background = std::make_shared<egt::experimental::GaugeLayer>(dash_background->render("#background"));

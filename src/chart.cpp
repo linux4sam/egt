@@ -14,7 +14,7 @@ inline namespace v1
 
 LineChart::LineChart(const Rect& rect)
     : ChartBase(rect),
-      m_impl(detail::make_unique<detail::PlPlotLineChart>(*this))
+      m_impl(std::make_unique<detail::PlPlotLineChart>(*this))
 {
     name("LineChart" + std::to_string(m_widgetid));
 }
@@ -92,7 +92,7 @@ LineChart::~LineChart() = default;
 
 PointChart::PointChart(const Rect& rect)
     : ChartBase(rect),
-      m_impl(detail::make_unique<detail::PlPlotPointChart>(*this))
+      m_impl(std::make_unique<detail::PlPlotPointChart>(*this))
 {
     name("PointChart" + std::to_string(m_widgetid));
 }
@@ -165,7 +165,7 @@ PointChart::~PointChart() = default;
 
 BarChart::BarChart(const Rect& rect)
     : ChartBase(rect),
-      m_impl(detail::make_unique<detail::PlPlotBarChart>(*this))
+      m_impl(std::make_unique<detail::PlPlotBarChart>(*this))
 {
     name("BarChart" + std::to_string(m_widgetid));
 }
@@ -254,7 +254,7 @@ void BarChart::bank(float bank)
 BarChart::~BarChart() = default;
 
 HorizontalBarChart::HorizontalBarChart(const Rect& rect)
-    : BarChart(rect, detail::make_unique<detail::PlPlotHBarChart>(*this))
+    : BarChart(rect, std::make_unique<detail::PlPlotHBarChart>(*this))
 {
     name("HorizontalBarChart" + std::to_string(m_widgetid));
 }
@@ -263,7 +263,7 @@ HorizontalBarChart::~HorizontalBarChart() = default;
 
 PieChart::PieChart(const Rect& rect)
     : Widget(rect),
-      m_impl(detail::make_unique<detail::PlPlotPieChart>(*this))
+      m_impl(std::make_unique<detail::PlPlotPieChart>(*this))
 {
     name("PieChart" + std::to_string(m_widgetid));
 }

@@ -209,7 +209,7 @@ void Window::create_impl(const Rect& rect,
     {
         the_main_window = this;
         m_box = Application::instance().screen()->box();
-        m_impl = detail::make_unique<detail::BasicTopWindow>(this);
+        m_impl = std::make_unique<detail::BasicTopWindow>(this);
     }
     else
     {
@@ -220,13 +220,13 @@ void Window::create_impl(const Rect& rect,
             switch (hint)
             {
             case WindowHint::software:
-                m_impl = detail::make_unique<detail::BasicWindow>(this);
+                m_impl = std::make_unique<detail::BasicWindow>(this);
                 break;
             case WindowHint::overlay:
             case WindowHint::heo_overlay:
             case WindowHint::cursor_overlay:
 #ifdef HAVE_LIBPLANES
-                m_impl = detail::make_unique<detail::PlaneWindow>(this, format_hint, hint);
+                m_impl = std::make_unique<detail::PlaneWindow>(this, format_hint, hint);
                 flags().set(Widget::Flag::plane_window);
 #endif
                 break;
@@ -244,7 +244,7 @@ void Window::create_impl(const Rect& rect,
 #ifdef HAVE_LIBPLANES
             try
             {
-                m_impl = detail::make_unique<detail::PlaneWindow>(this, format_hint, hint);
+                m_impl = std::make_unique<detail::PlaneWindow>(this, format_hint, hint);
                 flags().set(Widget::Flag::plane_window);
             }
             catch (std::exception& e)
@@ -252,7 +252,7 @@ void Window::create_impl(const Rect& rect,
                 SPDLOG_DEBUG("non-fatal exception: {}", e.what());
 #endif
 
-                m_impl = detail::make_unique<detail::BasicWindow>(this);
+                m_impl = std::make_unique<detail::BasicWindow>(this);
 #ifdef HAVE_LIBPLANES
             }
 #endif

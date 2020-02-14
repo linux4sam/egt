@@ -70,15 +70,6 @@ template <typename T>
 void ignoreparam(T&&)
 {}
 
-/**
- * C++11 does not provide std::make_unique(), so we provide a basic implementation.
- */
-template<typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&& ... args)
-{
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...)); // NOLINT
-}
-
 #ifndef SWIG
 /**
  * Range class to work with C++11 range based for loops in a reverse order.

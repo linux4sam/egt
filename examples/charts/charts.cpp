@@ -605,13 +605,13 @@ int main(int argc, char** argv)
 
     std::vector<std::pair<std::string, std::function<std::unique_ptr<egt::Theme>()>>> combo_items =
     {
-        {"Default Theme", []{ return egt::detail::make_unique<egt::Theme>(); }},
-        {"Lapis", []{ return egt::detail::make_unique<egt::LapisTheme>(); }},
-        {"Midnight", []{ return egt::detail::make_unique<egt::MidnightTheme>(); }},
-        {"Sky", []{ return egt::detail::make_unique<egt::SkyTheme>(); }},
-        {"Shamrock", []{ return egt::detail::make_unique<egt::ShamrockTheme>(); }},
-        {"Coconut", []{ return egt::detail::make_unique<egt::CoconutTheme>(); }},
-        {"Ultra Violet", []{ return egt::detail::make_unique<egt::UltraVioletTheme>(); }}
+        {"Default Theme", []{ return std::make_unique<egt::Theme>(); }},
+        {"Lapis", []{ return std::make_unique<egt::LapisTheme>(); }},
+        {"Midnight", []{ return std::make_unique<egt::MidnightTheme>(); }},
+        {"Sky", []{ return std::make_unique<egt::SkyTheme>(); }},
+        {"Shamrock", []{ return std::make_unique<egt::ShamrockTheme>(); }},
+        {"Coconut", []{ return std::make_unique<egt::CoconutTheme>(); }},
+        {"Ultra Violet", []{ return std::make_unique<egt::UltraVioletTheme>(); }}
     };
 
     auto combo = std::make_shared<egt::ComboBox>();

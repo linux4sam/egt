@@ -87,7 +87,7 @@ struct CheckBoxPage : public egt::NotebookTab
         checkbox4->disable();
         grid0->add(egt::expand(checkbox4));
 
-        m_checkbox_group = egt::detail::make_unique<egt::ButtonGroup>(true, false);
+        m_checkbox_group = std::make_unique<egt::ButtonGroup>(true, false);
         m_checkbox_group->add(checkbox1);
         m_checkbox_group->add(checkbox2);
         m_checkbox_group->add(checkbox3);
@@ -105,7 +105,7 @@ struct CheckBoxPage : public egt::NotebookTab
         grid0->add(egt::expand(radiobox3));
         radiobox3->disable();
 
-        m_radiobox_group = egt::detail::make_unique<egt::ButtonGroup>(true);
+        m_radiobox_group = std::make_unique<egt::ButtonGroup>(true);
         m_radiobox_group->add(radiobox1);
         m_radiobox_group->add(radiobox2);
         m_radiobox_group->add(radiobox3);
@@ -248,7 +248,7 @@ static std::unique_ptr<egt::AnimationSequence> demo_up_down_animator(std::shared
         widget->value(value);
     });
 
-    auto sequence = egt::detail::make_unique<egt::AnimationSequence>(true);
+    auto sequence = std::make_unique<egt::AnimationSequence>(true);
     sequence->add(animationup);
     sequence->add(animationdown);
     sequence->start();
@@ -539,13 +539,13 @@ int main(int argc, char** argv)
 
     std::vector<std::pair<std::string, std::function<std::unique_ptr<egt::Theme>()>>> combo_items =
     {
-        {"Default Theme", []{ return egt::detail::make_unique<egt::Theme>(); }},
-        {"Lapis", []{ return egt::detail::make_unique<egt::LapisTheme>(); }},
-        {"Midnight", []{ return egt::detail::make_unique<egt::MidnightTheme>(); }},
-        {"Sky", []{ return egt::detail::make_unique<egt::SkyTheme>(); }},
-        {"Shamrock", []{ return egt::detail::make_unique<egt::ShamrockTheme>(); }},
-        {"Coconut", []{ return egt::detail::make_unique<egt::CoconutTheme>(); }},
-        {"Ultra Violet", []{ return egt::detail::make_unique<egt::UltraVioletTheme>(); }}
+        {"Default Theme", []{ return std::make_unique<egt::Theme>(); }},
+        {"Lapis", []{ return std::make_unique<egt::LapisTheme>(); }},
+        {"Midnight", []{ return std::make_unique<egt::MidnightTheme>(); }},
+        {"Sky", []{ return std::make_unique<egt::SkyTheme>(); }},
+        {"Shamrock", []{ return std::make_unique<egt::ShamrockTheme>(); }},
+        {"Coconut", []{ return std::make_unique<egt::CoconutTheme>(); }},
+        {"Ultra Violet", []{ return std::make_unique<egt::UltraVioletTheme>(); }}
     };
 
     auto combo = std::make_shared<egt::ComboBox>();

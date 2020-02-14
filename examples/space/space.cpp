@@ -205,7 +205,7 @@ int main(int argc, char** argv)
 
             auto delay = std::make_shared<egt::AnimationDelay>(std::chrono::milliseconds(d_dist(e1)));
 
-            animations.emplace_back(egt::detail::make_unique<egt::AnimationSequence>(true));
+            animations.emplace_back(std::make_unique<egt::AnimationSequence>(true));
 
             auto& sequence = animations.back();
             sequence->add(delay);

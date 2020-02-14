@@ -1197,7 +1197,7 @@ public:
         if (m_font && *m_font == font)
             return;
 
-        m_font = detail::make_unique<Font>(font);
+        m_font = std::make_unique<Font>(font);
         damage();
         layout();
         parent_layout();

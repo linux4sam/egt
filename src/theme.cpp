@@ -106,7 +106,7 @@ void Theme::init_draw()
 
 void Theme::init_font()
 {
-    m_font = detail::make_unique<Font>();
+    m_font = std::make_unique<Font>();
 }
 
 void Theme::draw_box(Painter& painter, const Widget& widget,

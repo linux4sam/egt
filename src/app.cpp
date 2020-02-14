@@ -233,18 +233,18 @@ void Application::setup_backend(bool primary)
             }
         }
 
-        m_screen = detail::make_unique<detail::X11Screen>(*this, size);
+        m_screen = std::make_unique<detail::X11Screen>(*this, size);
     }
     else
 #endif
 #ifdef HAVE_LIBPLANES
         if (backend == "kms")
-            m_screen = detail::make_unique<detail::KMSScreen>(primary);
+            m_screen = std::make_unique<detail::KMSScreen>(primary);
         else
 #endif
 #ifdef HAVE_FBDEV
             if (backend == "fbdev")
-                m_screen = detail::make_unique<detail::FrameBuffer>("/dev/fb0");
+                m_screen = std::make_unique<detail::FrameBuffer>("/dev/fb0");
             else
 #endif
                 spdlog::info("no screen backend");
@@ -312,7 +312,7 @@ void Application::setup_inputs()
         if (device.first == "tslib")
         {
 #ifdef HAVE_TSLIB
-            m_inputs.push_back(detail::make_unique<detail::InputTslib>(*this, device.second));
+            m_inputs.push_back(std::make_unique<detail::InputTslib>(*this, device.second));
 #else
             spdlog::warn("tslib requested but no support compiled in");
 #endif
@@ -320,7 +320,7 @@ void Application::setup_inputs()
         else if (device.first == "evdev")
         {
 #ifdef HAVE_LINUX_INPUT_H
-            m_inputs.push_back(detail::make_unique<detail::InputEvDev>(*this, device.second));
+            m_inputs.push_back(std::make_unique<detail::InputEvDev>(*this, device.second));
 #else
             spdlog::warn("evdev requested but no support compiled in");
 #endif
@@ -338,7 +338,7 @@ void Application::setup_inputs()
     }
 
 #ifdef HAVE_LIBINPUT
-    m_inputs.push_back(detail::make_unique<detail::InputLibInput>(*this));
+    m_inputs.push_back(std::make_unique<detail::InputLibInput>(*this));
 #endif
 }
 

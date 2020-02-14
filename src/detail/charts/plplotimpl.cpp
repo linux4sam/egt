@@ -21,7 +21,7 @@ namespace detail
 {
 
 PlPlotImpl::PlPlotImpl()
-    : m_plstream(detail::make_unique<plstream>())
+    : m_plstream(std::make_unique<plstream>())
 {
     m_plstream->sdev("extcairo");
     plplot_verify_viewport();
@@ -360,7 +360,7 @@ void PlPlotImpl::plplot_color(Color& color)
 
 void PlPlotImpl::resize(const Size& size)
 {
-    m_plstream = detail::make_unique<plstream>();
+    m_plstream = std::make_unique<plstream>();
     m_initalize = false;
     m_plstream->sdev("extcairo");
 }

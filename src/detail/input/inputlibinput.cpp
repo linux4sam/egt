@@ -105,7 +105,7 @@ out:
 InputLibInput::InputLibInput(Application& app)
     : m_app(app),
       m_input(app.event().io()),
-      m_keyboard(make_unique<InputKeyboard>())
+      m_keyboard(std::make_unique<InputKeyboard>())
 {
     const char* seat_or_device = "seat0";
     bool verbose = false;

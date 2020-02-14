@@ -237,7 +237,7 @@ static curl_socket_t opensocket_callback(void* clientp,
     {
         if (purpose == CURLSOCKTYPE_IPCXN && address->family == AF_INET)
         {
-            s->impl()->socket = detail::make_unique<asio::ip::tcp::socket>(Application::instance().event().io());
+            s->impl()->socket = std::make_unique<asio::ip::tcp::socket>(Application::instance().event().io());
 
             asio::error_code ec;
             s->impl()->socket->open(asio::ip::tcp::v4(), ec);

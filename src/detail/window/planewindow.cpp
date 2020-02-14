@@ -89,7 +89,7 @@ void PlaneWindow::allocate_screen()
     {
         if (!m_interface->box().size().empty())
         {
-            m_overlay = detail::make_unique<KMSOverlay>(m_interface->box().size(),
+            m_overlay = std::make_unique<KMSOverlay>(m_interface->box().size(),
                         m_format, m_hint);
 
             m_screen = m_overlay.get();
