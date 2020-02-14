@@ -29,6 +29,7 @@ void TextWidget::clear()
     if (!m_text.empty())
     {
         m_text.clear();
+        on_text_changed.invoke();
         damage();
     }
 }
