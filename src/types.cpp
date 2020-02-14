@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "egt/detail/enum.h"
 #include "egt/types.h"
 #include <cairo.h>
 #include <iostream>
@@ -26,28 +27,25 @@ namespace egt
 {
 inline namespace v1
 {
+template<>
+const std::map<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data =
+{
+    {PixelFormat::invalid, "invalid"},
+    {PixelFormat::rgb565, "rgb565"},
+    {PixelFormat::argb8888, "argb8888"},
+    {PixelFormat::xrgb8888, "xrgb8888"},
+    {PixelFormat::yuyv, "yuyv"},
+    {PixelFormat::nv21, "nv21"},
+    {PixelFormat::yuv420, "yuv420"},
+    {PixelFormat::yvyu, "yvyu"},
+    {PixelFormat::nv61, "nv61"},
+    {PixelFormat::yuy2, "yuy2"},
+    {PixelFormat::uyvy, "uyvy"},
+};
+
 std::ostream& operator<<(std::ostream& os, const PixelFormat& format)
 {
-    static std::map<PixelFormat, std::string> strings;
-    if (strings.empty())
-    {
-#define MAPITEM(p) strings[p] = #p
-        MAPITEM(PixelFormat::invalid);
-        MAPITEM(PixelFormat::rgb565);
-        MAPITEM(PixelFormat::argb8888);
-        MAPITEM(PixelFormat::xrgb8888);
-        MAPITEM(PixelFormat::yuyv);
-        MAPITEM(PixelFormat::nv21);
-        MAPITEM(PixelFormat::yuv420);
-        MAPITEM(PixelFormat::yvyu);
-        MAPITEM(PixelFormat::nv61);
-        MAPITEM(PixelFormat::yuy2);
-        MAPITEM(PixelFormat::uyvy);
-#undef MAPITEM
-    }
-
-    os << strings[format];
-    return os;
+    return os << detail::enum_to_string(format);
 }
 
 namespace detail

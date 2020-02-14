@@ -12,6 +12,7 @@
  */
 
 #include <cairo.h>
+#include <egt/detail/enum.h>
 #include <egt/detail/meta.h>
 #include <iosfwd>
 #include <memory>
@@ -94,6 +95,9 @@ enum class PixelFormat
     yuy2,     ///< Packed YUY 4:2:2
     uyvy,     ///< Reverse byte order of YUY2
 };
+
+template<>
+EGT_API const std::map<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data;
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const PixelFormat& format);
