@@ -65,6 +65,11 @@ public:
     void clear();
 
     /**
+     * Clear the specified resource by name.
+     */
+    void clear(const char* name);
+
+    /**
      * Get the length of a resource.
      */
     size_t size(const char* name);

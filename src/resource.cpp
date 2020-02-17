@@ -132,6 +132,13 @@ void ResourceManager::clear()
     m_resources.clear();
 }
 
+void ResourceManager::clear(const char* name)
+{
+    auto i = m_resources.find(name);
+    if (i != m_resources.end())
+        m_resources.erase(i);
+}
+
 size_t ResourceManager::size(const char* name)
 {
     auto i = m_resources.find(name);
