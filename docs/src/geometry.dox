@@ -44,12 +44,17 @@ identical, they are not compatible C++ types.
 @section coord_radians Radians and Degrees
 
 While most of the geometry related to EGT deals with rectangles, it is sometimes
-necessary to deal with arcs when drawing.  The following unit circle is used
-when dealing with degrees or radians, depending on the API being used.  For
-example, creating a CircleType or ArcType.
+necessary to deal with arcs when drawing or rotating.  The following unit circle
+is used when dealing with degrees or radians, depending on the API being used.
+For example, creating a CircleType or ArcType.
 
-@image html unit_circle.png "Unit Circle Jim.belk [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]"
-@image latex unit_circle.png "Unit Circle Jim.belk [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]" width=8cm
+@image html unit_circle.png "Unit Circle"
+@image latex unit_circle.png "Unit Circle" width=8cm
+
+The Y positive direction is down.  An angle of 0.0 is in the direction of the
+positive X axis. An angle of 90 degrees is in the direction of the positive Y
+axis. Angles increase in the direction from the positive X axis toward the
+positive Y axis. Meaning, angles increase in a clockwise direction.
 
 */
 }}
