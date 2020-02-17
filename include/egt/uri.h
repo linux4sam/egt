@@ -21,7 +21,7 @@ inline namespace v1
 
 /**
  * A URI (Universal Resource Identifier) parser/builder that aims to be
- * RFC 3986 compliant, yet knowlingly falls short.
+ * RFC 3986 compliant.
  *
  * The current implementation uses the regex recommended by
  * https://tools.ietf.org/html/rfc3986#page-50

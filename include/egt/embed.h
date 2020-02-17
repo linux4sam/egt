@@ -29,7 +29,7 @@
  * @code{.cpp}
  * EGT_EMBED(my_image, "../images/my_image.png");
  *
- * Image my_image(":my_image");
+ * Image my_image("res:my_image");
  * @endcode
  */
 #define EGT_EMBED(name, path)						\
