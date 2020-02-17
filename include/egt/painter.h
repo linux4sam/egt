@@ -175,6 +175,14 @@ public:
         return *this;
     }
 
+    template<class T>
+    Painter& line(const PointType<T, detail::Compatible::normal>& point)
+    {
+        cairo_line_to(m_cr.get(), point.x(), point.y());
+
+        return *this;
+    }
+
     /**
      * Create a line from the start point to the end point.
      *
