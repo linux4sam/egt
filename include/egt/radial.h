@@ -228,8 +228,8 @@ public:
         {
             auto target = Rect(Size(smalldim, smalldim));
             target.move_to_center(b.center());
-            auto font = detail::TextWidget::scale_font(target.size(), text,
-                        widget.font());
+            auto font = TextWidget::scale_font(target.size(), text,
+                                               widget.font());
 
             detail::draw_text(painter,
                               widget.content_area(),

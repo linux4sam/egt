@@ -15,7 +15,7 @@
 #include <egt/detail/signal.h>
 #include <egt/list.h>
 #include <egt/popup.h>
-#include <egt/widget.h>
+#include <egt/textwidget.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -70,7 +70,7 @@ protected:
  *
  * @ingroup controls
  */
-class EGT_API ComboBox : public detail::TextWidget
+class EGT_API ComboBox : public TextWidget
 {
 public:
 

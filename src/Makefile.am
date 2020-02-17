@@ -58,7 +58,6 @@ detail/screen/flipthread.h \
 detail/serialize.cpp \
 detail/spriteimpl.h \
 detail/string.cpp \
-detail/textwidget.cpp \
 detail/utf8text.cpp \
 detail/utf8text.h \
 detail/window/basicwindow.cpp \
@@ -98,6 +97,7 @@ sizer.cpp \
 slider.cpp \
 sprite.cpp \
 text.cpp \
+textwidget.cpp \
 theme.cpp \
 themes/midnight.cpp \
 themes/shamrock.cpp \
@@ -166,7 +166,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/serialize.h \
 ../include/egt/detail/signal.h \
 ../include/egt/detail/string.h \
-../include/egt/detail/textwidget.h \
 ../include/egt/detail/layout.h \
 ../include/egt/easing.h \
 ../include/egt/embed.h \
@@ -200,6 +199,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/slider.h \
 ../include/egt/sprite.h \
 ../include/egt/text.h \
+../include/egt/textwidget.h \
 ../include/egt/theme.h \
 ../include/egt/themes/coconut.h \
 ../include/egt/themes/lapis.h \

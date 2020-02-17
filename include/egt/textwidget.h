@@ -22,8 +22,6 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
 
 /**
  * A widget with text and text related properties.
@@ -123,7 +121,6 @@ protected:
     std::string m_text;
 };
 
-}
 }
 }
 

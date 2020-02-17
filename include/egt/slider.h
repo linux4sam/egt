@@ -18,9 +18,9 @@
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/serialize.h>
-#include <egt/detail/textwidget.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
+#include <egt/textwidget.h>
 #include <egt/valuewidget.h>
 #include <egt/widgetflags.h>
 
@@ -276,7 +276,7 @@ protected:
             handle -= Point(b.width() / 2., 0);
 
         auto text = std::to_string(value);
-        auto f = detail::TextWidget::scale_font(handle.size(), text, this->font());
+        auto f = TextWidget::scale_font(handle.size(), text, this->font());
 
         painter.set(this->color(Palette::ColorId::label_text).color());
         painter.set(f);

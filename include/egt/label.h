@@ -11,9 +11,9 @@
  * @brief Working with labels.
  */
 
-#include <egt/detail/textwidget.h>
 #include <egt/detail/meta.h>
 #include <egt/image.h>
+#include <egt/textwidget.h>
 #include <memory>
 #include <string>
 
@@ -36,7 +36,7 @@ class Painter;
  *
  * @ingroup controls
  */
-class EGT_API Label : public detail::TextWidget
+class EGT_API Label : public TextWidget
 {
 public:
 

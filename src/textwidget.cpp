@@ -6,14 +6,12 @@
 #include "detail/utf8text.h"
 #include "egt/canvas.h"
 #include "egt/detail/serialize.h"
-#include "egt/detail/textwidget.h"
 #include "egt/painter.h"
+#include "egt/textwidget.h"
 
 namespace egt
 {
 inline namespace v1
-{
-namespace detail
 {
 
 TextWidget::TextWidget(const std::string& text,
@@ -46,7 +44,7 @@ void TextWidget::text(const std::string& str)
 
 size_t TextWidget::len() const
 {
-    return utf8len(m_text);
+    return detail::utf8len(m_text);
 }
 
 Font TextWidget::scale_font(const Size& target, const std::string& text, const Font& font)
@@ -96,6 +94,5 @@ void TextWidget::deserialize(const std::string& name, const std::string& value,
         Widget::deserialize(name, value, attrs);
 }
 
-}
 }
 }

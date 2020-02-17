@@ -13,9 +13,9 @@
 
 #include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/textwidget.h>
 #include <egt/font.h>
 #include <egt/image.h>
+#include <egt/textwidget.h>
 #include <egt/timer.h>
 #include <memory>
 #include <string>
@@ -46,7 +46,7 @@ inline namespace v1
  *
  * @ingroup controls
  */
-class EGT_API TextBox : public detail::TextWidget
+class EGT_API TextBox : public TextWidget
 {
 public:
 

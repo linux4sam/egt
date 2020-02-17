@@ -15,9 +15,9 @@
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/serialize.h>
-#include <egt/detail/textwidget.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
+#include <egt/textwidget.h>
 #include <egt/valuewidget.h>
 #include <string>
 
@@ -95,9 +95,9 @@ public:
         if (widget.show_label())
         {
             std::string text = std::to_string(widget.value()) + "%";
-            auto f = detail::TextWidget::scale_font(Size(b.width() * 0.75,
-                                                    b.height() * 0.75),
-                                                    text, widget.font());
+            auto f = TextWidget::scale_font(Size(b.width() * 0.75,
+                                                 b.height() * 0.75),
+                                            text, widget.font());
 
             painter.set(widget.color(Palette::ColorId::label_text).color());
             painter.set(f);
@@ -238,7 +238,7 @@ public:
         if (widget.show_label())
         {
             std::string text = std::to_string(widget.value());
-            auto f = detail::TextWidget::scale_font(Size(dim * 0.75, dim * 0.75), text, widget.font());
+            auto f = TextWidget::scale_font(Size(dim * 0.75, dim * 0.75), text, widget.font());
             painter.set(f);
             painter.set(widget.color(Palette::ColorId::text).color());
             auto size = painter.text_size(text);
