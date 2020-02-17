@@ -130,7 +130,7 @@ AC_CHECK_HEADERS([unistd.h glob.h])
 AC_CHECK_HEADERS([linux/gpio.h],[have_linux_gpio_h=yes],[])
 AM_CONDITIONAL([HAVE_LINUX_GPIO_H], [test "x${have_linux_gpio_h}" = xyes])
 
-CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -DEGT_DLL_EXPORTS"
+CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -fvisibility=hidden -fvisibility-inlines-hidden"
 
 AC_ARG_ENABLE([debug],
   [AS_HELP_STRING([--enable-debug], [enable debugging support [default=yes]])],
@@ -139,8 +139,6 @@ AC_ARG_ENABLE([debug],
 if test "x$enable_debug" = "xno" ; then
   AC_MSG_NOTICE([Disabling debugging])
   CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast \
-  		      -fvisibility=hidden \
-		      -fvisibility-inlines-hidden \
 		      -fno-math-errno \
 		      -fmerge-all-constants \
 		      -ftree-vectorize \

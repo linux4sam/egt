@@ -7,7 +7,7 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_srcdir)/external/layout \
 	-isystem $(top_srcdir)/external/spdlog/include
 
-CUSTOM_CXXFLAGS = -Woverloaded-virtual
+CUSTOM_CXXFLAGS = -Woverloaded-virtual -DEGT_DLL_EXPORTS
 
 if HAVE_SIMD
 CUSTOM_FLAGS += -isystem $(top_srcdir)/external/Simd/src/

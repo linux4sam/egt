@@ -43,7 +43,10 @@
 // EGT_API is used for the public API symbols. It either DLL imports or DLL exports (or does nothing for static build)
 // EGT_LOCAL is used for non-api symbols.
 
+#ifndef EGT_STATIC
 #define EGT_DLL
+#endif
+
 #ifdef EGT_DLL // defined if EGT is compiled as a DLL
 #ifdef EGT_DLL_EXPORTS // defined if we are building the EGT DLL (instead of using it)
 #define EGT_API EGT_HELPER_DLL_EXPORT
