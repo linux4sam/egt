@@ -13,7 +13,7 @@ if HAVE_SIMD
 CUSTOM_FLAGS += -isystem $(top_srcdir)/external/Simd/src/
 endif
 
-AM_CXXFLAGS = -DDATADIR=\"$(datadir)\"
+AM_CXXFLAGS = -DDATADIR=\"$(datadir)\" -DSRCDIR=\"$(abs_top_srcdir)\"
 
 lib_LTLIBRARIES = libegt.la
 libegt_la_CXXFLAGS = \

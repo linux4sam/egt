@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/button.h"
+#include "egt/embed.h"
 #include "egt/filedialog.h"
 #include "egt/grid.h"
 #include "egt/label.h"
@@ -13,6 +14,8 @@
 #include <experimental/filesystem>
 #include <memory>
 #include <spdlog/spdlog.h>
+
+EGT_EMBED(internal_folder, SRCDIR "/icons/32px/folder.png")
 
 namespace fs = std::experimental::filesystem;
 
@@ -24,7 +27,7 @@ inline namespace v1
 FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
     : Popup(rect.size(), rect.point()),
       m_vsizer(std::make_shared<BoxSizer>(Orientation::vertical)),
-      m_title(std::make_shared<ImageLabel>(Image("icon:folder.png"), filepath)),
+      m_title(std::make_shared<ImageLabel>(Image("res:internal_folder"), filepath)),
       m_flist(std::make_shared<ListBox>()),
       m_filepath(filepath)
 {

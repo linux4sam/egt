@@ -5,11 +5,14 @@
  */
 #include "detail/utf8text.h"
 #include "egt/button.h"
+#include "egt/embed.h"
 #include "egt/input.h"
 #include "egt/keycode.h"
 #include "egt/popup.h"
 #include "egt/sizer.h"
 #include "egt/virtualkeyboard.h"
+
+EGT_EMBED(internal_microphone, SRCDIR "/icons/32px/microphone.png")
 
 namespace egt
 {
@@ -315,12 +318,12 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(std::shared_ptr<VirtualKeyboard> keyb
         if (m_bottom_positionned)
         {
             move(Point(0, 0));
-            m_top_bottom_button.image(Image("icon:arrow_down.png"));
+            m_top_bottom_button.image(Image("res:internal_arrow_down"));
         }
         else
         {
             move(Point(0, y_keyboard_position));
-            m_top_bottom_button.image(Image("icon:arrow_up.png"));
+            m_top_bottom_button.image(Image("res:internal_arrow_up"));
         }
 
         m_bottom_positionned = !m_bottom_positionned;
@@ -333,7 +336,7 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(std::shared_ptr<VirtualKeyboard> keyb
         hide();
         // By default, the virtual keyboard is displayed at the bottom of the screen.
         move(Point(0, y_keyboard_position));
-        m_top_bottom_button.image(Image("icon:arrow_up.png"));
+        m_top_bottom_button.image(Image("res:internal_arrow_up"));
         m_bottom_positionned = true;
     }, {EventId::pointer_click});
     m_hsizer.add(m_close_button);
@@ -875,7 +878,7 @@ VirtualKeyboard::PanelKeys& QwertyLettersLowerCase()
             std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
             std::make_shared<VirtualKeyboard::Key>("!#\u263a", 2, 1.5),
-            std::make_shared<VirtualKeyboard::Key>(Image("icon:microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(Image("res:internal_microphone"), EKEY_UNKNOWN),
             std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
             std::make_shared<VirtualKeyboard::Key>(0x002e),
             std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
@@ -932,7 +935,7 @@ VirtualKeyboard::PanelKeys& QwertyLettersUpperCase()
             std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
             std::make_shared<VirtualKeyboard::Key>("!#\u263a", 2, 1.5),
-            std::make_shared<VirtualKeyboard::Key>(Image("icon:microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(Image("res:internal_microphone"), EKEY_UNKNOWN),
             std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
             std::make_shared<VirtualKeyboard::Key>(0x002e),
             std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
@@ -990,7 +993,7 @@ VirtualKeyboard::PanelKeys& QwertySymbols1()
             std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
             std::make_shared<VirtualKeyboard::Key>("ABC", 0, 1.5),
-            std::make_shared<VirtualKeyboard::Key>(Image("icon:microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(Image("res:internal_microphone"), EKEY_UNKNOWN),
             std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
             std::make_shared<VirtualKeyboard::Key>(0x002e),
             std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)
@@ -1048,7 +1051,7 @@ VirtualKeyboard::PanelKeys& QwertySymbols2()
             std::make_shared<VirtualKeyboard::Key>("\u2190", EKEY_BACKSPACE, 1.5)
         }, {
             std::make_shared<VirtualKeyboard::Key>("ABC", 0, 1.5),
-            std::make_shared<VirtualKeyboard::Key>(Image("icon:microphone.png"), EKEY_UNKNOWN),
+            std::make_shared<VirtualKeyboard::Key>(Image("res:internal_microphone"), EKEY_UNKNOWN),
             std::make_shared<VirtualKeyboard::Key>(0x0020, 5.0),
             std::make_shared<VirtualKeyboard::Key>(0x002e),
             std::make_shared<VirtualKeyboard::Key>("Enter", EKEY_ENTER, 1.5)

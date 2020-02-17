@@ -4,11 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/button.h"
+#include "egt/embed.h"
 #include "egt/grid.h"
 #include "egt/scrollwheel.h"
 #include <algorithm>
 #include <memory>
 #include <string>
+
+EGT_EMBED(internal_arrow_up, SRCDIR "/icons/32px/arrow_up.png")
+EGT_EMBED(internal_arrow_down, SRCDIR "/icons/32px/arrow_down.png")
 
 namespace egt
 {
@@ -24,8 +28,8 @@ Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items,
                          bool reversed) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_items(items),
-      m_button_up(std::make_shared<ImageButton>(Image("icon:arrow_up.png"))),
-      m_button_down(std::make_shared<ImageButton>(Image("icon:arrow_down.png"))),
+      m_button_up(std::make_shared<ImageButton>(Image("res:internal_arrow_up"))),
+      m_button_down(std::make_shared<ImageButton>(Image("res:internal_arrow_down"))),
       m_label(std::make_shared<Label>())
 {
     init(reversed);
@@ -79,8 +83,8 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const ItemArray& items
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
                          bool reversed) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
-      m_button_up(std::make_shared<ImageButton>(Image("icon:arrow_up.png"))),
-      m_button_down(std::make_shared<ImageButton>(Image("icon:arrow_down.png"))),
+      m_button_up(std::make_shared<ImageButton>(Image("res:internal_arrow_up"))),
+      m_button_down(std::make_shared<ImageButton>(Image("res:internal_arrow_down"))),
       m_label(std::make_shared<Label>())
 {
     for (auto i = min; i <= max; i += step)
