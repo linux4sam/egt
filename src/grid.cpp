@@ -208,9 +208,13 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget, int column, int row)
 
 Widget* StaticGrid::get(const Point& point)
 {
-    auto widget = m_cells[point.x()][point.y()].lock();
-    if (widget)
-        return widget.get();
+    if (point.x() >= 0 && point.x() < static_cast<Point::DimType>(m_cells.size()) &&
+        point.y() >= 0 && point.y() < static_cast<Point::DimType>(m_cells[point.x()].size()))
+    {
+        auto widget = m_cells[point.x()][point.y()].lock();
+        if (widget)
+            return widget.get();
+    }
     return nullptr;
 }
 
