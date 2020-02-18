@@ -3,24 +3,10 @@ AUTOMAKE_OPTIONS = subdir-objects
 CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
-	-isystem $(top_srcdir)/external/rapidxml \
-	$(LIBPLANES_CFLAGS) \
-	$(CAIRO_CFLAGS) \
-	$(LIBDRM_CFLAGS) \
-	$(TSLIB_CFLAGS) \
-	$(LUA_CFLAGS) \
-	$(CJSON_CFLAGS) \
-	$(GSTREAMER_CFLAGS) \
-	$(LIBJPEG_CFLAGS) \
-	$(LIBINPUT_CFLAGS) \
-	$(LIBCURL_CFLAGS) \
-	$(LIBRSVG_CFLAGS) \
+	$(cairo_CFLAGS) \
 	$(CODE_COVERAGE_CXXFLAGS)
 
-CUSTOM_LDADD = $(LIBPLANES_LIBS) $(CAIRO_LIBS) $(LIBDRM_LIBS) $(TSLIB_LIBS) \
-	$(LUA_LIBS) $(CJSON_LIBS) $(GSTREAMER_LIBS) $(LIBJPEG_LIBS) \
-	$(LIBINPUT_LIBS) $(MAGIC_LIB) $(LIBRSVG_LIBS) $(LIBCURL_LIBS) \
-	$(CODE_COVERAGE_LDFLAGS)
+CUSTOM_LDADD = $(cairo_LIBS) $(CODE_COVERAGE_LDFLAGS)
 
 check_LTLIBRARIES = libgtest.la
 libgtest_la_SOURCES = ../external/googletest/googletest/src/gtest-all.cc
