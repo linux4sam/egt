@@ -181,14 +181,11 @@ void KMSScreen::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-        if (m_async)
-            plane_flip_async(m_plane.get(), m_index);
-        else
-            m_pool->enqueue(FlipJob(m_plane.get(), m_index));
-    }
+        m_pool->enqueue(FlipJob(m_plane.get(), m_index, m_async));
 
-    if (++m_index >= m_plane->buffer_count)
-        m_index = 0;
+        if (++m_index >= m_plane->buffer_count)
+            m_index = 0;
+    }
 }
 
 uint32_t KMSScreen::index()
