@@ -362,72 +362,87 @@ TEST(AlignFlags, Basic)
 
 TEST(Network, URI)
 {
-    egt::uri uri1("http://www.example.com/glynos/?key=value#frag");
+    egt::Uri uri1("http://www.example.com/path/?key=value#frag");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "http");
-    EXPECT_EQ(uri1.host() , "www.example.com");
-    EXPECT_EQ(uri1.path() , "/glynos/");
-    EXPECT_EQ(uri1.query() , "key=value");
-    EXPECT_EQ(uri1.fragment() , "frag");
+    EXPECT_EQ(uri1.host(), "www.example.com");
+    EXPECT_EQ(uri1.path(), "/path/");
+    EXPECT_EQ(uri1.query(), "key=value");
+    EXPECT_EQ(uri1.fragment(), "frag");
 
     uri1.set("res:name");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "res");
-    EXPECT_EQ(uri1.host() , "");
-    EXPECT_EQ(uri1.path() , "name");
-    EXPECT_EQ(uri1.query() , "");
-    EXPECT_EQ(uri1.fragment() , "");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "name");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
 
     uri1.set("file:///absolute/path");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "file");
-    EXPECT_EQ(uri1.host() , "");
-    EXPECT_EQ(uri1.path() , "/absolute/path");
-    EXPECT_EQ(uri1.query() , "");
-    EXPECT_EQ(uri1.fragment() , "");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "/absolute/path");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
 
     uri1.set("file:relative/path");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "file");
-    EXPECT_EQ(uri1.host() , "");
-    EXPECT_EQ(uri1.path() , "relative/path");
-    EXPECT_EQ(uri1.query() , "");
-    EXPECT_EQ(uri1.fragment() , "");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "relative/path");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
 
+    uri1.set("file://relative/path");
+    EXPECT_TRUE(uri1.is_valid());
+    EXPECT_EQ(uri1.scheme(), "file");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "relative/path");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
+
+    uri1.set("file://relative");
+    EXPECT_TRUE(uri1.is_valid());
+    EXPECT_EQ(uri1.scheme(), "file");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "relative");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
 
     uri1.set("icon:relative/path");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "icon");
-    EXPECT_EQ(uri1.host() , "");
-    EXPECT_EQ(uri1.path() , "relative/path");
-    EXPECT_EQ(uri1.query() , "");
-    EXPECT_EQ(uri1.fragment() , "");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "relative/path");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
 
     uri1.set("icon:/absolute/path");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "icon");
-    EXPECT_EQ(uri1.host() , "");
-    EXPECT_EQ(uri1.path() , "/absolute/path");
-    EXPECT_EQ(uri1.query() , "");
-    EXPECT_EQ(uri1.fragment() , "");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "/absolute/path");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
 
     uri1.set("icon:/absolute/path;32");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "icon");
-    EXPECT_EQ(uri1.host() , "");
-    EXPECT_EQ(uri1.path() , "/absolute/path");
-    EXPECT_EQ(uri1.query() , "");
-    EXPECT_EQ(uri1.fragment() , "");
-    EXPECT_EQ(uri1.icon_size() , "32");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "/absolute/path");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
+    EXPECT_EQ(uri1.icon_size(), "32");
 
     uri1.set("icon:/absolute/path;SMALL");
     EXPECT_TRUE(uri1.is_valid());
     EXPECT_EQ(uri1.scheme(), "icon");
-    EXPECT_EQ(uri1.host() , "");
-    EXPECT_EQ(uri1.path() , "/absolute/path");
-    EXPECT_EQ(uri1.query() , "");
-    EXPECT_EQ(uri1.fragment() , "");
-    EXPECT_EQ(uri1.icon_size() , "16");
+    EXPECT_EQ(uri1.host(), "");
+    EXPECT_EQ(uri1.path(), "/absolute/path");
+    EXPECT_EQ(uri1.query(), "");
+    EXPECT_EQ(uri1.fragment(), "");
+    EXPECT_EQ(uri1.icon_size(), "16");
 }
 
 int main(int argc, char **argv)

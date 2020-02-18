@@ -117,6 +117,11 @@ void Uri::parse(const std::string& url)
                         m_icon_size = "256";
                 }
             }
+            else if (m_scheme == "file")
+            {
+                m_path = m_host + m_path;
+                m_host.clear();
+            }
         }
         if (match.size() >= 8)
             m_query = match.str(7);
