@@ -120,5 +120,10 @@ void AutoAnimation::stop()
     Animation::stop();
 }
 
+void AutoAnimation::interval(std::chrono::milliseconds duration)
+{
+    m_timer.change_duration(duration);
+}
+
 }
 }

@@ -536,6 +536,15 @@ public:
     virtual void start() override;
     virtual void stop() override;
 
+    /**
+     * Change the interval of the internal timer.
+     *
+     * The internal timer defaults to an interval of 30ms.  See
+     * @ref Timer::change_duration() for more information on the ramifications
+     * of making this change on a running timer.
+     */
+    void interval(std::chrono::milliseconds duration);
+
     virtual ~AutoAnimation() = default;
 
 protected:
