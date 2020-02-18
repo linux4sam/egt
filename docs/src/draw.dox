@@ -133,27 +133,27 @@ An example of doing a transformation in a class derived from an ImageLabel might
 look like this:
 
 @code{.cpp}
-    virtual void draw(Painter& painter, const Rect& rect) override
-    {
-        auto cr = painter.context().get();
+virtual void draw(Painter& painter, const Rect& rect) override
+{
+    auto cr = painter.context().get();
 
-        float yrotate;
-        if (m_scale > 0.5)
-            yrotate = .35 * (m_scale - .5);
-        else
-            yrotate = -1 * .35 * (.5 - m_scale);
+    float yrotate;
+    if (m_scale > 0.5)
+        yrotate = .35 * (m_scale - .5);
+    else
+        yrotate = -1 * .35 * (.5 - m_scale);
 
-        cairo_matrix_t matrix_perspective;
-        cairo_matrix_init(&matrix_perspective,
-                          1.0, yrotate,
-                          0.0, 1.0,
-                          parent()->w() / 2, 0.0);
+    cairo_matrix_t matrix_perspective;
+    cairo_matrix_init(&matrix_perspective,
+                      1.0, yrotate,
+                      0.0, 1.0,
+                      parent()->w() / 2, 0.0);
 
-        cairo_transform(cr, &matrix_perspective);
-        cairo_translate(cr, -parent()->w() / 2, 0);
+    cairo_transform(cr, &matrix_perspective);
+    cairo_translate(cr, -parent()->w() / 2, 0);
 
-        Drawer<ImageLabel>::draw(*this, painter, rect);
-    }
+    Drawer<ImageLabel>::draw(*this, painter, rect);
+}
 @endcode
 
 @section draw_zorder Z-order
