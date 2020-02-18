@@ -289,8 +289,7 @@ std::ostream& operator<<(std::ostream& os, const PointType<Dim, DimCompat>& poin
  */
 using Point = PointType<DefaultDim, detail::Compatible::normal>;
 
-static_assert(detail::rule_of_5<Point>(),
-              "Point : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Point>(), "must fulfill rule of 5");
 
 /**
  * Helper type alias.
@@ -542,8 +541,7 @@ std::ostream& operator<<(std::ostream& os, const SizeType<Dim, DimCompat>& size)
  */
 using Size = SizeType<DefaultDim, detail::Compatible::normal>;
 
-static_assert(detail::rule_of_5<Size>(),
-              "Size : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Size>(), "must fulfill rule of 5");
 
 /**
  * Helper type alias.
@@ -978,8 +976,7 @@ inline bool operator!=(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, 
  */
 using Rect = RectType<DefaultDim, detail::Compatible::normal>;
 
-static_assert(detail::rule_of_5<Rect>(),
-              "Rect : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Rect>(), "must fulfill rule of 5");
 
 /**
  * Helper type alias.
@@ -1049,8 +1046,14 @@ std::ostream& operator<<(std::ostream& os, const LineType<Dim>& line)
  */
 using Line = LineType<DefaultDim>;
 
-static_assert(detail::rule_of_5<Line>(),
-              "Line : must fulfill rule of 5");
+/**
+ * Helper type alias.
+ * @copybrief LineType
+ * @ingroup geometry
+ */
+using LineF = LineType<float>;
+
+static_assert(detail::rule_of_5<Line>(), "must fulfill rule of 5");
 
 /**
  * An Arc consists of a radius and two angles.
@@ -1139,8 +1142,7 @@ protected:
  */
 using Arc = ArcType<DefaultDim>;
 
-static_assert(detail::rule_of_5<Arc>(),
-              "Arc : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Arc>(), "must fulfill rule of 5");
 
 /**
  * A basic circle with a center point and radius.
@@ -1196,8 +1198,7 @@ std::ostream& operator<<(std::ostream& os, const CircleType<Dim>& circle)
  */
 using Circle = CircleType<DefaultDim>;
 
-static_assert(detail::rule_of_5<Circle>(),
-              "Circle : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Circle>(), "must fulfill rule of 5");
 
 /**
  * Helper type alias.
@@ -1275,6 +1276,15 @@ protected:
      */
     Dim m_radiusb{0};
 };
+
+/**
+ * Helper type alias.
+ * @copybrief EllipseType
+ * @ingroup geometry
+ */
+using Ellipse = EllipseType<DefaultDim>;
+
+static_assert(detail::rule_of_5<Ellipse>(), "must fulfill rule of 5");
 
 /// Overloaded std::ostream insertion operator
 template<class Dim>

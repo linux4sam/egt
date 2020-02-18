@@ -116,6 +116,9 @@ public:
      */
     const std::vector<std::pair<std::string, std::string>>& get_input_devices();
 
+    /**
+     * Get the argc value passed in.
+     */
     inline int argc() const { return m_argc; }
 
     /**
@@ -127,12 +130,19 @@ public:
 
 protected:
 
+    /// @private
     void setup_info();
+    /// @private
     void setup_logging();
+    /// @private
     void setup_locale(const std::string& name);
+    /// @private
     void setup_search_paths();
+    /// @private
     void setup_backend(bool primary);
+    /// @private
     void setup_inputs();
+    /// @private
     void setup_events();
 
     /**

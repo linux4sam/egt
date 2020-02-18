@@ -28,8 +28,8 @@ inline namespace v1
 {
 namespace detail
 {
-class KMSOverlay;
 struct planeid;
+class KMSOverlay;
 class FlipThread;
 
 /**

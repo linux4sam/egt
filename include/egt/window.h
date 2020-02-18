@@ -135,6 +135,9 @@ public:
      */
     virtual void background(const Image& image);
 
+    /**
+     * Get the pixel format of the window.
+     */
     virtual PixelFormat format() const
     {
         auto frame = find_screen();

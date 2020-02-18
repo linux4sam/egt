@@ -642,7 +642,18 @@ protected:
     CallbackArray m_callbacks;
 };
 
+/**
+ * Helper type alias.
+ * @copybrief PropertyAnimatorType
+ * @ingroup animation
+ */
 using PropertyAnimator = PropertyAnimatorType<DefaultDim>;
+
+/**
+ * Helper type alias.
+ * @copybrief PropertyAnimatorType
+ * @ingroup animation
+ */
 using PropertyAnimatorF = PropertyAnimatorType<float>;
 
 /**

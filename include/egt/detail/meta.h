@@ -137,11 +137,11 @@ public:
 template <class T>
 constexpr bool rule_of_5()
 {
-    static_assert(std::is_destructible<T>::value, "T : must be destructible");
-    static_assert(std::is_copy_constructible<T>::value, "T : must be copy constructible");
-    static_assert(std::is_move_constructible<T>::value, "T : must be move constructible");
-    static_assert(std::is_copy_assignable<T>::value, "T : must be copy assignable");
-    static_assert(std::is_move_assignable<T>::value, "T : must be move assignable");
+    static_assert(std::is_destructible<T>::value, "must be destructible");
+    static_assert(std::is_copy_constructible<T>::value, "must be copy constructible");
+    static_assert(std::is_move_constructible<T>::value, "must be move constructible");
+    static_assert(std::is_copy_assignable<T>::value, "must be copy assignable");
+    static_assert(std::is_move_assignable<T>::value, "must be move assignable");
 
     return std::is_destructible<T>::value && std::is_copy_constructible<T>::value
            && std::is_move_constructible<T>::value && std::is_copy_assignable<T>::value

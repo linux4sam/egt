@@ -82,9 +82,11 @@ public:
     virtual ~Sound();
 
 protected:
-
+    /// @private
     void open_alsa_device(const std::string& device);
+    /// @private
     void init_alsa_params(unsigned int rate, int channels);
+    /// @private
     void open_file();
 
     /// Implementation pointer.

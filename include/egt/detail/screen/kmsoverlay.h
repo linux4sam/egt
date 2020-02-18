@@ -59,7 +59,7 @@ public:
 
     void* raw();
 
-    plane_data* s() const
+    inline plane_data* s() const
     {
         return m_plane.get();
     }
