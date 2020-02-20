@@ -347,7 +347,7 @@ void PlPlotImpl::plplot_font(const Font& font)
     m_plstream->sfont(font_family, font_style, font_weight);
 }
 
-void PlPlotImpl::plplot_color(Color& color)
+void PlPlotImpl::plplot_color(const Color& color)
 {
     auto r = static_cast<PLINT>(color.red());
     auto g = static_cast<PLINT>(color.green());

@@ -99,7 +99,7 @@ protected:
     std::vector<PLFLT> m_ydata;
     std::vector<std::string> m_sdata;
 
-    void plplot_color(Color& color);
+    void plplot_color(const Color& color);
 
     void plplot_font(const Font& font);
 
