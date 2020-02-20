@@ -32,7 +32,7 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
         fill_flags(Theme::FillFlag::blend);
     border_flags(Theme::BorderFlag::drop_shadow);
     auto black = Palette::gray;
-    black.alpha(0x20);
+    black.alpha(0x30);
     color(egt::Palette::ColorId::border, black);
 
     m_list->align(AlignFlag::expand);
