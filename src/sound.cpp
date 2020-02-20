@@ -33,7 +33,7 @@ namespace egt
 inline namespace v1
 {
 
-struct PlaybackThread : public detail::NonCopyable
+struct PlaybackThread : private detail::NonCopyable<PlaybackThread>
 {
     PlaybackThread()
     {

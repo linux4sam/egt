@@ -75,7 +75,7 @@ T interpolate(Functor&& easing, T percent, T start, T end, bool reverse = false)
 /**
  * Base class for an animation.
  */
-class EGT_API IAnimation : public detail::NonCopyable
+class EGT_API IAnimation : private detail::NonCopyable<IAnimation>
 {
 public:
 

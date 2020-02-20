@@ -30,7 +30,7 @@ inline namespace v1
  * @note A Screen is not necessarily the same resolution and Orientation of
  * the Display.
  */
-class EGT_API Screen : public detail::NonCopyable
+class EGT_API Screen : private detail::NonCopyable<Screen>
 {
 public:
 

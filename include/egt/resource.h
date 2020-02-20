@@ -33,7 +33,7 @@ inline namespace v1
  *
  * @see @ref resources
  */
-class EGT_API ResourceManager : public detail::NonCopyable
+class EGT_API ResourceManager : private detail::NonCopyable<ResourceManager>
 {
 public:
 

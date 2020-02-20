@@ -43,7 +43,7 @@ class Input;
  * inputs, outputs, the event loop, and more. It also acts as sort of a
  * global access to get to these things because of this.
  */
-class EGT_API Application : public detail::NonCopyable
+class EGT_API Application : private detail::NonCopyable<Application>
 {
 public:
     /**

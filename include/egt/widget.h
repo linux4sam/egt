@@ -51,7 +51,7 @@ class Screen;
  * of what it means to handle an event or draw the Widget is implemented in
  * classes that are derived from this one, like a Button or a Label.
  */
-class EGT_API Widget : public detail::Object, public detail::NonCopyable
+class EGT_API Widget : public detail::Object, private detail::NonCopyable<Widget>
 {
 public:
 

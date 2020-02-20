@@ -116,13 +116,15 @@ ReverseRange<T> reverse_iterate(T& x)
 /**
  * Utility base class to make a derived class non-copy-able.
  */
+template<class T>
 class EGT_API NonCopyable
 {
 public:
+    NonCopyable(const NonCopyable&) = delete;
+    T& operator=(const T&) = delete;
+protected:
     NonCopyable() = default;
     ~NonCopyable() = default;
-    NonCopyable(const NonCopyable&) = delete;
-    NonCopyable& operator=(const NonCopyable&) = delete;
 };
 
 /**
@@ -198,7 +200,7 @@ inline bool change_if_diff(double& old, const double& to)
  * This can be used to run a function when an instance of a scope_exit goes out
  * of scope or is deleted.
  */
-struct EGT_API ScopeExit : public NonCopyable
+struct EGT_API ScopeExit : private NonCopyable<ScopeExit>
 {
     explicit ScopeExit(std::function<void()> f) noexcept
         : m_f(std::move(f))

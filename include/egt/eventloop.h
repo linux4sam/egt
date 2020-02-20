@@ -35,7 +35,7 @@ class PriorityQueue;
 /**
  * Event loop interface.
  */
-class EGT_API EventLoop : public detail::NonCopyable
+class EGT_API EventLoop : private detail::NonCopyable<EventLoop>
 {
 public:
 

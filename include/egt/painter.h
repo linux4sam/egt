@@ -40,7 +40,7 @@ class Image;
  *
  * @ingroup drawing
  */
-class EGT_API Painter : public detail::NonCopyable
+class EGT_API Painter : private detail::NonCopyable<Painter>
 {
 public:
 
