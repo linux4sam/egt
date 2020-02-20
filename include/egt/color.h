@@ -627,28 +627,28 @@ class EGT_API ColorMap : private detail::NonCopyable<ColorMap>
 {
 public:
 
-    enum class interpolation
+    enum class Interpolation
     {
         rgba,
         hsv,
         hsl
     };
 
-    using steps_array = std::vector<Color>;
+    using StepsArray = std::vector<Color>;
 
     ColorMap() noexcept = default;
 
-    explicit ColorMap(interpolation interp) noexcept
+    explicit ColorMap(Interpolation interp) noexcept
         : m_interp(interp)
     {}
 
-    explicit ColorMap(steps_array steps, interpolation interp = interpolation::rgba)
-        : m_interp(interp),
-          m_steps(std::move(steps))
+    explicit ColorMap(StepsArray steps, Interpolation interp = Interpolation::rgba)
+        : m_steps(std::move(steps)),
+          m_interp(interp)
     {}
 
     template<class T>
-    explicit ColorMap(std::initializer_list<T> steps, interpolation interp = interpolation::rgba)
+    explicit ColorMap(std::initializer_list<T> steps, Interpolation interp = Interpolation::rgba)
         : m_interp(interp)
     {
         m_steps.insert(m_steps.end(), steps.begin(), steps.end());
@@ -668,7 +668,7 @@ public:
     /**
      * Set the steps.
      */
-    inline void steps(const steps_array& steps)
+    inline void steps(const StepsArray& steps)
     {
         m_steps = steps;
         for (auto& x : m_cache)
@@ -694,7 +694,7 @@ public:
     /**
      * Get a reference to the color steps array.
      */
-    const steps_array& steps() const { return m_steps; }
+    const StepsArray& steps() const { return m_steps; }
 
     /**
      * Are there any color steps?
@@ -709,19 +709,19 @@ public:
 protected:
 
     /**
-     * Interpolation method.
-     */
-    interpolation m_interp{interpolation::rgba};
-
-    /**
      * Steps in the color map.
      */
-    steps_array m_steps;
+    StepsArray m_steps;
 
     /**
      * Interpolation cache.
      */
     mutable std::array<std::map<size_t, Color>, 3> m_cache{};
+
+    /**
+     * Interpolation method.
+     */
+    Interpolation m_interp{Interpolation::rgba};
 };
 
 }

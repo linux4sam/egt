@@ -10,8 +10,8 @@
 struct ColorMapWidget : public egt::Widget
 {
     explicit ColorMapWidget(const std::string& name,
-                            const egt::experimental::ColorMap::steps_array& steps,
-                            egt::experimental::ColorMap::interpolation interp = egt::experimental::ColorMap::interpolation::rgba)
+                            const egt::experimental::ColorMap::StepsArray& steps,
+                            egt::experimental::ColorMap::Interpolation interp = egt::experimental::ColorMap::Interpolation::rgba)
         : m_map(steps, interp),
           m_name(name)
     {}
@@ -52,31 +52,31 @@ int main(int argc, char** argv)
     struct triple
     {
         std::string first;
-        egt::experimental::ColorMap::steps_array second;
-        egt::experimental::ColorMap::interpolation third;
+        egt::experimental::ColorMap::StepsArray second;
+        egt::experimental::ColorMap::Interpolation third;
     };
 
     std::vector<triple> maps =
     {
-        { "RGB", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::interpolation::rgba },
-        { "HSV", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::interpolation::hsv },
-        { "HSL", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::interpolation::hsl },
+        { "RGB", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::Interpolation::rgba },
+        { "HSV", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::Interpolation::hsv },
+        { "HSL", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::Interpolation::hsl },
 
-        { "RGB", {egt::Palette::red, egt::Palette::green}, egt::experimental::ColorMap::interpolation::rgba },
-        { "HSV", {egt::Palette::red, egt::Palette::green}, egt::experimental::ColorMap::interpolation::hsv },
-        { "HSL", {egt::Palette::red, egt::Palette::green}, egt::experimental::ColorMap::interpolation::hsl },
+        { "RGB", {egt::Palette::red, egt::Palette::green}, egt::experimental::ColorMap::Interpolation::rgba },
+        { "HSV", {egt::Palette::red, egt::Palette::green}, egt::experimental::ColorMap::Interpolation::hsv },
+        { "HSL", {egt::Palette::red, egt::Palette::green}, egt::experimental::ColorMap::Interpolation::hsl },
 
-        { "RGB", {egt::Palette::red, egt::Palette::blue}, egt::experimental::ColorMap::interpolation::rgba },
-        { "HSV", {egt::Palette::red, egt::Palette::blue}, egt::experimental::ColorMap::interpolation::hsv },
-        { "HSL", {egt::Palette::red, egt::Palette::blue}, egt::experimental::ColorMap::interpolation::hsl },
+        { "RGB", {egt::Palette::red, egt::Palette::blue}, egt::experimental::ColorMap::Interpolation::rgba },
+        { "HSV", {egt::Palette::red, egt::Palette::blue}, egt::experimental::ColorMap::Interpolation::hsv },
+        { "HSL", {egt::Palette::red, egt::Palette::blue}, egt::experimental::ColorMap::Interpolation::hsl },
 
-        { "RGB", {egt::Palette::white, egt::Palette::orange}, egt::experimental::ColorMap::interpolation::rgba },
-        { "HSV", {egt::Palette::white, egt::Palette::orange}, egt::experimental::ColorMap::interpolation::hsv },
-        { "HSL", {egt::Palette::white, egt::Palette::orange}, egt::experimental::ColorMap::interpolation::hsl },
+        { "RGB", {egt::Palette::white, egt::Palette::orange}, egt::experimental::ColorMap::Interpolation::rgba },
+        { "HSV", {egt::Palette::white, egt::Palette::orange}, egt::experimental::ColorMap::Interpolation::hsv },
+        { "HSL", {egt::Palette::white, egt::Palette::orange}, egt::experimental::ColorMap::Interpolation::hsl },
 
-        { "RGB", {egt::Palette::purple, egt::Palette::yellow, egt::Palette::maroon}, egt::experimental::ColorMap::interpolation::rgba },
-        { "HSV", {egt::Palette::purple, egt::Palette::yellow, egt::Palette::maroon}, egt::experimental::ColorMap::interpolation::hsv },
-        { "HSL", {egt::Palette::purple, egt::Palette::yellow, egt::Palette::maroon}, egt::experimental::ColorMap::interpolation::hsl },
+        { "RGB", {egt::Palette::purple, egt::Palette::yellow, egt::Palette::maroon}, egt::experimental::ColorMap::Interpolation::rgba },
+        { "HSV", {egt::Palette::purple, egt::Palette::yellow, egt::Palette::maroon}, egt::experimental::ColorMap::Interpolation::hsv },
+        { "HSL", {egt::Palette::purple, egt::Palette::yellow, egt::Palette::maroon}, egt::experimental::ColorMap::Interpolation::hsl },
     };
 
     for (auto& m : maps)

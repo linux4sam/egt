@@ -343,17 +343,17 @@ Color ColorMap::interp(float t) const
     Color result;
     switch (m_interp)
     {
-    case interpolation::rgba:
+    case Interpolation::rgba:
         result = Color::interp_rgba(m_steps[k], m_steps[k + 1], u);
         break;
-    case interpolation::hsv:
+    case Interpolation::hsv:
         result = Color::interp_hsv(m_steps[k], m_steps[k + 1], u);
         break;
-    case interpolation::hsl:
+    case Interpolation::hsl:
         result = Color::interp_hsl(m_steps[k], m_steps[k + 1], u);
         break;
     default:
-        assert(!"unhandled interpolation type");
+        assert(!"unhandled Interpolation type");
         break;
     }
 
