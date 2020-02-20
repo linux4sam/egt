@@ -3,8 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <cxxopts.hpp>
 #include <egt/ui>
 #include <memory>
+#include <random>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -92,64 +94,91 @@ static std::vector<std::shared_ptr<FloatingBox>> boxes;
 
 int main(int argc, char** argv)
 {
+    cxxopts::Options options(argv[0], "display floating objects");
+    options.add_options()
+    ("h,help", "Show help")
+    ("no-image", "Don't use images but solid colors", cxxopts::value<bool>()->default_value("false"))
+    ("soft-objects", "Number of software objects to display", cxxopts::value<int>()->default_value("2"))
+    ("soft-hard-objects", "Number of hardware or emulated objects to display", cxxopts::value<int>()->default_value("2"))
+    ("move-timer", "Timer to move the objects in milliseconds", cxxopts::value<int>()->default_value("30"));
+
+    auto args = options.parse(argc, argv);
+
+    if (args.count("help"))
+    {
+        std::cout << options.help() << std::endl;
+        return 0;
+    }
+
     egt::Application app(argc, argv, "floating");
     egt::add_search_path(EXAMPLEDATA);
 
     egt::TopWindow win;
-    win.background(egt::Image("file:background.png"));
+    if (!args.count("no-image"))
+        win.background(egt::Image("file:background.png"));
     win.show();
+
+    std::random_device r;
+    std::default_random_engine e1 {r()};
+    std::uniform_int_distribution<egt::DefaultDim> move {-4, 4};
+    std::uniform_real_distribution<float> rgb {0.0, 1.0};
 
     egt::DefaultDim f = 2;
 
-    std::vector<std::pair<egt::DefaultDim, egt::DefaultDim>> moveparms =
-    {
-        std::make_pair(1 * f, 2 * f),
-        std::make_pair(3 * f, -2 * f),
-        std::make_pair(-3 * f, 2 * f),
-        std::make_pair(-3 * f, 3 * f),
-        std::make_pair(2 * f, 3 * f),
-        std::make_pair(2 * f, 2 * f),
-        std::make_pair(4 * f, 2 * f),
-        std::make_pair(-4 * f, 2 * f),
-    };
-
     auto image_index = 0;
 
-    const auto SOFT_COUNT = 2;
+    const auto N_IMAGE = 6;
 
     // software
-    for (auto x = 0; x < SOFT_COUNT; x++)
+    for (auto x = 0; x < args["soft-objects"].as<int>(); x++)
     {
-        std::stringstream os;
-        os << "file:image" << image_index++ << ".png";
-        auto image = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
-        boxes.push_back(std::make_shared<FloatingBox>(image,
-                        moveparms[x].first,
-                        moveparms[x].second));
-        win.add(image);
+        std::shared_ptr<egt::Widget> object;
+        if (args.count("no-image"))
+        {
+            object = std::make_shared<egt::RectangleWidget>(egt::Size(150, 150));
+            object->color(egt::Palette::ColorId::button_bg,
+                          egt::Color::rgbaf(rgb(e1), rgb(e1), rgb(e1), 0.75));
+        }
+        else
+        {
+            std::stringstream os;
+            os << "file:image" << image_index++ % N_IMAGE << ".png";
+            object = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
+        }
+        boxes.push_back(std::make_shared<FloatingBox>(object,
+                        move(e1) * f, move(e1) * f));
+        win.add(object);
     }
 
-    const auto SOFTHARD_COUNT = 2;
-
     // hardware (or emulated)
-    for (auto x = 0; x < SOFTHARD_COUNT; x++)
+    for (auto x = 0; x < args["soft-hard-objects"].as<int>(); x++)
     {
-        std::stringstream os;
-        os << "file:image" << image_index++ << ".png";
-        auto image = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
-        auto plane = std::make_shared<egt::Window>(egt::Size(image->width(),
-                     image->height()));
+        std::shared_ptr<egt::Widget> object;
+        if (args.count("no-image"))
+        {
+            object = std::make_shared<egt::RectangleWidget>(egt::Size(150, 150));
+            object->color(egt::Palette::ColorId::button_bg,
+                          egt::Color::rgbaf(rgb(e1), rgb(e1), rgb(e1), 0.75));
+        }
+        else
+        {
+            std::stringstream os;
+            os << "file:image" << image_index++ % N_IMAGE << ".png";
+            object = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
+        }
+        auto plane = std::make_shared<egt::Window>(egt::Size(object->width(),
+                     object->height()));
         plane->color(egt::Palette::ColorId::bg, egt::Palette::transparent);
         plane->fill_flags().clear();
-        plane->add(image);
+        plane->add(object);
         plane->show();
         plane->move(egt::Point(100, 100));
-        boxes.push_back(std::make_shared<FloatingBox>(plane, moveparms[x].first,
-                        moveparms[x].second));
+        boxes.push_back(std::make_shared<FloatingBox>(plane, move(e1) *f,
+                        move(e1) * f));
         win.add(plane);
     }
 
-    egt::PeriodicTimer movetimer(std::chrono::milliseconds(30));
+    egt::PeriodicTimer movetimer(std::chrono::milliseconds(args["move-timer"].as<int>()));
     movetimer.on_timeout([&]()
     {
         for (auto& i : boxes)
