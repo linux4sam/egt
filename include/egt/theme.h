@@ -323,6 +323,13 @@ public:
 
 protected:
 
+    inline void rounded_box(Painter& painter, const Rect& box, float border_radius) const
+    {
+        rounded_box(painter, RectF(box.x(), box.y(), box.width(), box.height()), border_radius);
+    }
+
+    virtual void rounded_box(Painter& painter, const RectF& box, float border_radius) const;
+
     /// Palette instance used by the theme.
     std::unique_ptr<Palette> m_palette{std::make_unique<Palette>()};
 

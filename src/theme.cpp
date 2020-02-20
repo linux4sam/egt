@@ -125,6 +125,34 @@ void Theme::init_font()
     m_font = std::make_unique<Font>();
 }
 
+void Theme::rounded_box(Painter& painter, const RectF& box, float border_radius) const
+{
+    auto cr = painter.context().get();
+
+    if (!detail::float_equal(border_radius, 0) && border_radius > 0)
+    {
+        const double rx = box.x();
+        const double ry = box.y();
+        const double width = box.width();
+        const double height = box.height();
+        const double aspect = 1.0;
+        const double corner_radius = border_radius;
+        const double radius = corner_radius / aspect;
+        const double degrees = detail::pi<double>() / 180.0;
+
+        cairo_new_path(cr);
+        cairo_arc(cr, rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
+        cairo_arc(cr, rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
+        cairo_arc(cr, rx + radius, ry + height - radius, radius, 90. * degrees, 180. * degrees);
+        cairo_arc(cr, rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
+        cairo_close_path(cr);
+    }
+    else
+    {
+        painter.draw(box);
+    }
+}
+
 void Theme::draw_box(Painter& painter, const Widget& widget,
                      Palette::ColorId bg,
                      Palette::ColorId border) const
@@ -195,30 +223,12 @@ void Theme::draw_box(Painter& painter,
 
     if (border_width && border_flags.is_set(BorderFlag::drop_shadow))
     {
-        cairo_new_path(cr);
         auto sbox = box;
         sbox += Point(border_width, border_width);
         sbox -= Size(border_width, border_width);
         painter.set(border);
 
-        if (!detail::float_equal(border_radius, 0) && border_radius > 0)
-        {
-            const double degrees = detail::pi<double>() / 180.0;
-            cairo_arc(cr, sbox.x() + sbox.width() - border_radius, sbox.y() + border_radius,
-                      border_radius, -90. * degrees, 0. * degrees);
-            cairo_arc(cr, sbox.x() + sbox.width() - border_radius,
-                      sbox.y() + sbox.height() - border_radius, border_radius,
-                      0 * degrees, 90. * degrees);
-            cairo_arc(cr, sbox.x() + border_radius, sbox.y() + sbox.height() - border_radius,
-                      border_radius, 90. * degrees, 180. * degrees);
-            cairo_arc(cr, sbox.x() + border_radius, sbox.y() + border_radius,
-                      border_radius, 180. * degrees, 270. * degrees);
-            cairo_close_path(cr);
-        }
-        else
-        {
-            painter.draw(sbox);
-        }
+        rounded_box(painter, sbox, border_radius);
 
         painter.fill();
 
@@ -226,29 +236,7 @@ void Theme::draw_box(Painter& painter,
         box -= Size(border_width, border_width);
     }
 
-    double rx = box.x();
-    double ry = box.y();
-    double width = box.width();
-    double height = box.height();
-    double aspect = 1.0;
-    double corner_radius = border_radius;
-    double radius = corner_radius / aspect;
-    double degrees = detail::pi<double>() / 180.0;
-
-    cairo_new_path(cr);
-
-    if (!detail::float_equal(border_radius, 0) && border_radius > 0)
-    {
-        cairo_arc(cr, rx + width - radius, ry + radius, radius, -90. * degrees, 0. * degrees);
-        cairo_arc(cr, rx + width - radius, ry + height - radius, radius, 0 * degrees, 90. * degrees);
-        cairo_arc(cr, rx + radius, ry + height - radius, radius, 90. * degrees, 180. * degrees);
-        cairo_arc(cr, rx + radius, ry + radius, radius, 180. * degrees, 270. * degrees);
-        cairo_close_path(cr);
-    }
-    else
-    {
-        painter.draw(box);
-    }
+    rounded_box(painter, box, border_radius);
 
     if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {
@@ -284,7 +272,7 @@ void Theme::draw_box(Painter& painter,
 
             painter.set(border);
             painter.line_width(border_width);
-            cairo_stroke(cr);
+            painter.stroke();
         }
     }
 
