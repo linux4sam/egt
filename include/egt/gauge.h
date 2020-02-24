@@ -393,6 +393,8 @@ public:
 
     using Frame::Frame;
 
+    using Frame::add;
+
     /**
      * Add a GaugeLayer to the Gauge.
      *
@@ -401,17 +403,19 @@ public:
      *
      * @todo This does not account for adding the same layer multiple times.
      */
-    virtual void add_layer(const std::shared_ptr<GaugeLayer>& layer);
+    void add(std::shared_ptr<GaugeLayer>& layer);
 
-    inline void add_layer(GaugeLayer& layer)
+    inline void add(GaugeLayer& widget)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
         // will not delete it.
-        add_layer(std::shared_ptr<GaugeLayer>(&layer, [](GaugeLayer*) {}));
+        add(std::shared_ptr<GaugeLayer>(&widget, [](GaugeLayer*) {}));
     }
 
-    virtual void remove_layer(const std::shared_ptr<GaugeLayer>& layer);
+    using Frame::remove;
+
+    virtual void remove(GaugeLayer* layer);
 
     virtual ~Gauge();
 

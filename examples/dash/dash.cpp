@@ -44,7 +44,7 @@ static std::shared_ptr<egt::experimental::NeedleLayer> create_needle(egt::experi
     auto needle_point = svg.id_box(point_id).center();
     needle->needle_point(needle_point);
     needle->needle_center(needle_point - needle_box.point());
-    gauge.add_layer(needle);
+    gauge.add(needle);
 
     animations.push_back(demo_up_down_animator(needle, min, max, duration, easing));
 
@@ -65,7 +65,7 @@ static std::shared_ptr<egt::experimental::GaugeLayer> create_layer(egt::experime
                          std::ceil(box.width()),
                          std::ceil(box.height())));
     layer->hide();
-    gauge.add_layer(layer);
+    gauge.add(layer);
 
     /// @todo leak
     auto timer = new egt::PeriodicTimer(duration);
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
 
     // create a background layer
     auto gauge_background = std::make_shared<egt::experimental::GaugeLayer>(dash_background->render("#background"));
-    gauge.add_layer(gauge_background);
+    gauge.add(gauge_background);
 
     // pick out some other layers
     auto right_blink = create_layer(gauge, *dash_background, "#right_blink", std::chrono::milliseconds(1500));

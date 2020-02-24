@@ -23,7 +23,7 @@ GaugeLayer::GaugeLayer(const Image& image) noexcept
 GaugeLayer::GaugeLayer(Gauge& gauge, const Image& image) noexcept
     : GaugeLayer(image)
 {
-    gauge.add_layer(*this);
+    gauge.add(*this);
 }
 
 void GaugeLayer::draw(Painter& painter, const Rect&)
@@ -95,7 +95,7 @@ void NeedleLayer::gauge(Gauge* gauge)
     }
 }
 
-void Gauge::add_layer(const std::shared_ptr<GaugeLayer>& layer)
+void Gauge::add(std::shared_ptr<GaugeLayer>& layer)
 {
     if (!layer)
         return;
@@ -114,12 +114,16 @@ void Gauge::add_layer(const std::shared_ptr<GaugeLayer>& layer)
     Frame::add(layer);
 }
 
-void Gauge::remove_layer(const std::shared_ptr<GaugeLayer>& layer)
+void Gauge::remove(GaugeLayer* layer)
 {
     if (!layer)
         return;
 
-    auto i = std::find(m_layers.begin(), m_layers.end(), layer);
+    auto i = std::find_if(m_layers.begin(), m_layers.end(), [layer](auto & ptr)
+    {
+        return layer == ptr.get();
+    });
+
     if (i != m_layers.end())
     {
         layer->gauge(nullptr);
