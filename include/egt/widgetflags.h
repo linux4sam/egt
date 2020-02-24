@@ -11,6 +11,7 @@
  * @brief Widget flags.
  */
 
+#include <cassert>
 #include <cstdint>
 #include <egt/detail/enum.h>
 #include <egt/detail/flags.h>
@@ -88,6 +89,7 @@ inline T& center(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& center(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::center);
     return widget;
 }
@@ -96,6 +98,7 @@ inline const std::shared_ptr<T>& center(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& center(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::center);
     return widget;
 }
@@ -112,6 +115,7 @@ inline T& left(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& left(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::left);
     return widget;
 }
@@ -120,6 +124,7 @@ inline const std::shared_ptr<T>& left(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& left(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::left);
     return widget;
 }
@@ -136,6 +141,7 @@ inline T& right(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& right(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::right);
     return widget;
 }
@@ -144,6 +150,7 @@ inline const std::shared_ptr<T>& right(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& right(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::right);
     return widget;
 }
@@ -160,6 +167,7 @@ inline T& top(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& top(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::top);
     return widget;
 }
@@ -168,6 +176,7 @@ inline const std::shared_ptr<T>& top(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& top(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::top);
     return widget;
 }
@@ -184,6 +193,7 @@ inline T& bottom(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& bottom(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::bottom);
     return widget;
 }
@@ -192,6 +202,7 @@ inline const std::shared_ptr<T>& bottom(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& bottom(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::bottom);
     return widget;
 }
@@ -208,6 +219,7 @@ inline T& expand_horizontal(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& expand_horizontal(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::expand_horizontal);
     return widget;
 }
@@ -216,6 +228,7 @@ inline const std::shared_ptr<T>& expand_horizontal(const std::shared_ptr<T>& wid
 template<class T>
 inline std::shared_ptr<T>& expand_horizontal(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::expand_horizontal);
     return widget;
 }
@@ -232,6 +245,7 @@ inline T& expand_vertical(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& expand_vertical(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::expand_vertical);
     return widget;
 }
@@ -240,6 +254,7 @@ inline const std::shared_ptr<T>& expand_vertical(const std::shared_ptr<T>& widge
 template<class T>
 inline std::shared_ptr<T>& expand_vertical(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::expand_vertical);
     return widget;
 }
@@ -256,6 +271,7 @@ inline T& expand(T& widget)
 template<class T>
 inline const std::shared_ptr<T>& expand(const std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::expand);
     return widget;
 }
@@ -264,6 +280,7 @@ inline const std::shared_ptr<T>& expand(const std::shared_ptr<T>& widget)
 template<class T>
 inline std::shared_ptr<T>& expand(std::shared_ptr<T>& widget)
 {
+    assert(widget);
     widget->align(widget->align() | AlignFlag::expand);
     return widget;
 }
@@ -280,6 +297,7 @@ inline T& align(T& widget, AlignFlags a)
 template<class T>
 inline const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, AlignFlags a)
 {
+    assert(widget);
     widget->align(a);
     return widget;
 }
@@ -288,6 +306,7 @@ inline const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, AlignFl
 template<class T>
 inline std::shared_ptr<T>& align(std::shared_ptr<T>& widget, AlignFlags a)
 {
+    assert(widget);
     widget->align(a);
     return widget;
 }
