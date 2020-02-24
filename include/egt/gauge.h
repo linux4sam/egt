@@ -28,7 +28,7 @@ namespace experimental
 class Gauge;
 
 /**
- * A layer of a GaugeWidget.
+ * A layer of a Gauge.
  */
 class EGT_API GaugeLayer : public Widget
 {
