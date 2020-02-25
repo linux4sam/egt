@@ -431,6 +431,27 @@ public:
         return nullptr;
     }
 
+    /**
+     * Create a child widget of the specified type.
+     *
+     * This allocated a widget of the specified type and automatically adds it
+     * as a child to this Frame.
+     *
+     * @code{.cpp}
+     * egt::TopWindow win;
+     * auto widget = win.spawn<egt::TextBox>("hello world");
+     * @endcode
+     *
+     * @return a std::shared_ptr of the allocated widget.
+     */
+    template<typename T, typename... Args>
+    std::shared_ptr<T> spawn(Args&& ... args)
+    {
+        auto w = std::make_shared<T>(std::forward<Args>(args)...);
+        add(w);
+        return w;
+    }
+
     virtual ~Frame() noexcept;
 
 protected:
