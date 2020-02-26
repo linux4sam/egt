@@ -80,7 +80,6 @@ MAYBE_WARN="-Wall -Wextra \
 -pedantic \
 -Wfloat-equal \
 -Wsign-compare \
--Werror-implicit-function-declaration \
 -Wpointer-arith \
 -Wwrite-strings \
 -Wmissing-declarations \
