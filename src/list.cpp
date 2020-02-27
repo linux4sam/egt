@@ -70,6 +70,8 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
         m_selected = 0;
         m_sizer->child_at(m_selected)->checked(true);
     }
+
+    on_items_changed.invoke();
 }
 
 std::shared_ptr<Widget> ListBox::item_at(size_t index) const
@@ -79,14 +81,19 @@ std::shared_ptr<Widget> ListBox::item_at(size_t index) const
 
 void ListBox::remove_item(Widget* widget)
 {
-    m_sizer->remove(widget);
-
-    if (m_selected >= static_cast<ssize_t>(m_sizer->count_children()))
+    if (m_sizer->is_child(widget))
     {
-        if (m_sizer->count_children())
-            selected(m_sizer->count_children() - 1);
-        else
-            m_selected = -1;
+        m_sizer->remove(widget);
+
+        if (m_selected >= static_cast<ssize_t>(m_sizer->count_children()))
+        {
+            if (m_sizer->count_children())
+                selected(m_sizer->count_children() - 1);
+            else
+                m_selected = -1;
+        }
+
+        on_items_changed.invoke();
     }
 }
 

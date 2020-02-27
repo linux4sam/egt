@@ -111,6 +111,11 @@ public:
      * Invoked when the selection changes.
      */
     detail::Signal<> on_selected_changed;
+
+    /**
+     * Invoked when items are added or removed.
+     */
+    detail::Signal<> on_items_changed;
     /** @} */
 
     using ItemArray = std::vector<std::shared_ptr<Widget>>;
