@@ -269,7 +269,9 @@ imagestack_imagestack_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
 	-DEXAMPLEDATA=\"$(datadir)/egt/examples/imagestack\"
 imagestack_imagestack_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 imagestack_imagestackdir = $(prefix)/share/egt/examples/imagestack/images
-imagestack_imagestack_DATA = $(wildcard $(top_srcdir)/examples/imagestack/images/*.png)
+imagestack_imagestack_DATA = $(wildcard $(top_srcdir)/examples/imagestack/images/*.png) \
+	$(wildcard $(top_srcdir)/examples/imagestack/*.png) \
+	$(top_srcdir)/examples/imagestack/imagestack.xml
 imagestack_imagestack_LDFLAGS = $(AM_LDFLAGS)
 
 drummachine_drummachine_SOURCES = drummachine/drummachine.cpp
