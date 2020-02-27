@@ -106,6 +106,11 @@ public:
     }
 
     /**
+     * Returns true if the child exists.
+     */
+    bool is_child(Widget* widget) const;
+
+    /**
      * Remove a child widget.
      *
      * The inverse of this call is Frame::add().

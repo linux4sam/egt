@@ -38,6 +38,20 @@ void Frame::add(std::shared_ptr<Widget> widget)
     layout();
 }
 
+bool Frame::is_child(Widget* widget) const
+{
+    if (!widget)
+        return false;
+
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const std::shared_ptr<Widget>& ptr)
+    {
+        return ptr.get() == widget;
+    });
+
+    return (i != m_children.end());
+}
+
 void Frame::remove(Widget* widget)
 {
     if (!widget)
