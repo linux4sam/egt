@@ -145,8 +145,16 @@ int main(int argc, char** argv)
             os << "file:image" << image_index++ % N_IMAGE << ".png";
             object = std::make_shared<egt::ImageLabel>(egt::Image(os.str()));
         }
-        boxes.push_back(std::make_shared<FloatingBox>(object,
-                        move(e1) * f, move(e1) * f));
+
+        // avoid 0 case
+        auto mx = move(e1);
+        while (!mx)
+            mx = move(e1);
+        auto my = move(e1);
+        while (!my)
+            my = move(e1);
+
+        boxes.push_back(std::make_shared<FloatingBox>(object, mx * f, my * f));
         win.add(object);
     }
 
@@ -173,8 +181,16 @@ int main(int argc, char** argv)
         plane->add(object);
         plane->show();
         plane->move(egt::Point(100, 100));
-        boxes.push_back(std::make_shared<FloatingBox>(plane, move(e1) *f,
-                        move(e1) * f));
+
+        // avoid 0 case
+        auto mx = move(e1);
+        while (!mx)
+            mx = move(e1);
+        auto my = move(e1);
+        while (!my)
+            my = move(e1);
+
+        boxes.push_back(std::make_shared<FloatingBox>(plane, mx * f, my * f));
         win.add(plane);
     }
 
