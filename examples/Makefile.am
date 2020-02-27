@@ -298,6 +298,8 @@ monitor_monitor_SOURCES = monitor/monitor.cpp
 monitor_monitor_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 monitor_monitor_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 monitor_monitordir = $(prefix)/share/egt/examples/monitor
+monitor_monitor_DATA = $(wildcard $(top_srcdir)/examples/monitor/*.png) \
+	$(top_srcdir)/examples/monitor/monitor.xml
 monitor_monitor_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
@@ -321,4 +323,6 @@ EXTRA_DIST = \
 	whiteboard/whiteboard.xml \
 	calc/calc.xml \
 	space/space.xml \
-	dash/dash.xml
+	dash/dash.xml \
+	monitor/monitor.xml \
+	imagestack/imagestack.xml
