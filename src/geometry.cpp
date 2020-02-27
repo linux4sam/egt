@@ -11,8 +11,8 @@ namespace egt
 inline namespace v1
 {
 
-template<class dim_t>
-bool ArcType<dim_t>::empty() const
+template<class Dim>
+bool ArcType<Dim>::empty() const
 {
     return this->radius() < 0.0f ||
            detail::float_equal(this->radius(), 0.0f);
