@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <entry>
-  <title>Boards</title>
+  <title>Side Menus</title>
   <arg>egt_boards</arg>
   <description></description>
   <link rel="enclosure" type="image/png" href="boards.png" />
