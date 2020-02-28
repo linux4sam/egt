@@ -198,6 +198,7 @@ int main(int argc, char** argv)
 
     egt::Label cpulabel("CPU: 0%");
     cpulabel.color(egt::Palette::ColorId::label_text, egt::Palette::white);
+    cpulabel.margin(5);
     hpos.add(cpulabel);
 
     egt::experimental::CPUMonitorUsage tools;
@@ -242,12 +243,12 @@ int main(int argc, char** argv)
 
     player.on_event([&player, &win, vscale, size](egt::Event & event)
     {
-        static egt::Point m_start_point;
+        static egt::Point drag_start_point;
         switch (event.id())
         {
         case egt::EventId::pointer_drag_start:
         {
-            m_start_point = player.box().point();
+            drag_start_point = player.box().point();
             break;
         }
         case egt::EventId::pointer_drag:
@@ -255,7 +256,7 @@ int main(int argc, char** argv)
             if (!(egt::detail::float_equal(player.hscale(), vscale)))
             {
                 auto diff = event.pointer().drag_start - event.pointer().point;
-                auto p = m_start_point - egt::Point(diff.x(), diff.y());
+                auto p = drag_start_point - egt::Point(diff.x(), diff.y());
                 auto max_x = win.width() - size.width();
                 auto max_y = win.height() - size.height();
                 if (p.x() >= max_x)

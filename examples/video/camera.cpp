@@ -85,27 +85,25 @@ int main(int argc, char** argv)
         errlabel.text(line_break(player.error_message()));
     });
 
-    egt::Point m_start_point;
-    player.on_event([&player, &m_start_point](egt::Event & event)
+    player.on_event([&player](egt::Event & event)
     {
+        static egt::Point drag_start_point;
         switch (event.id())
         {
         case egt::EventId::pointer_drag_start:
         {
-            m_start_point = player.box().point();
+            drag_start_point = player.box().point();
             break;
         }
         case egt::EventId::pointer_drag:
         {
             auto diff = event.pointer().drag_start - event.pointer().point;
-            player.move(m_start_point - egt::Point(diff.x(), diff.y()));
+            player.move(drag_start_point - egt::Point(diff.x(), diff.y()));
             break;
         }
         default:
             break;
         }
-
-        event.quit();
     });
 
     egt::Window ctrlwindow(egt::Size(win.width(), 72));
@@ -116,6 +114,10 @@ int main(int argc, char** argv)
     egt::HorizontalBoxSizer hpos;
     hpos.align(egt::AlignFlag::center);
     ctrlwindow.add(hpos);
+
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_icon.png;32"));
+    logo->margin(10);
+    hpos.add(logo);
 
     egt::ImageButton fullscreen(egt::Image("res:fullscreen_png"));
     fullscreen.fill_flags().clear();
