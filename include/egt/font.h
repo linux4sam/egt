@@ -81,18 +81,12 @@ public:
      *
      * @param[in] face The face name of the font.
      * @param[in] size The size of the font.
-     */
-    explicit Font(const std::string& face, Font::Size size);
-
-    /**
-     * Create a font based on the supplied parameters.
-     *
-     * @param[in] face The face name of the font.
-     * @param[in] size The size of the font.
      * @param[in] weight The weight of the font.
      * @param[in] slant The slant of the font.
      */
-    explicit Font(const std::string& face, Font::Size size, Font::Weight weight, Font::Slant slant);
+    explicit Font(const std::string& face, Font::Size size,
+                  Font::Weight weight = Weight::normal,
+                  Font::Slant slant = Slant::normal);
 
     /**
      * Create a font based on the global default font, but with the

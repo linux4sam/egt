@@ -114,13 +114,6 @@ Font::Font(const std::string& face)
       m_slant(DEFAULT_SLANT)
 {}
 
-Font::Font(const std::string& face, Font::Size size)
-    : m_face(face),
-      m_size(size),
-      m_weight(DEFAULT_WEIGHT),
-      m_slant(DEFAULT_SLANT)
-{}
-
 Font::Font(const std::string& face, Font::Size size, Font::Weight weight, Font::Slant slant)
     : m_face(face),
       m_size(size),
