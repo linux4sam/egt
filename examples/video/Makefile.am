@@ -29,6 +29,7 @@ video_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
 video_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 videodir = $(prefix)/share/egt/examples/video
 video_DATA = $(wildcard $(top_srcdir)/examples/video/*.png) \
+	$(wildcard $(top_srcdir)/examples/video/*.jpg) \
 	video.xml
 video_LDFLAGS = $(AM_LDFLAGS)
 

@@ -63,14 +63,13 @@ int main(int argc, char** argv)
     auto dev(args["device"].as<std::string>());
 
     egt::TopWindow win;
-    win.color(egt::Palette::ColorId::bg, egt::Palette::black);
+    win.background(egt::Image("file:background.jpg"));
 
     egt::CameraWindow player(size, dev, format, egt::WindowHint::overlay);
     player.move_to_center(win.center());
     win.add(player);
 
     egt::Label errlabel;
-    errlabel.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     errlabel.align(egt::AlignFlag::expand);
     errlabel.text_align(egt::AlignFlag::center | egt::AlignFlag::top);
     win.add(errlabel);
@@ -145,7 +144,7 @@ int main(int argc, char** argv)
     }, {egt::EventId::pointer_click});
 
     egt::Label cpulabel("CPU: 0%", egt::Size(100, 40));
-    cpulabel.color(egt::Palette::ColorId::label_text, egt::Palette::white);
+    cpulabel.margin(5);
     hpos.add(cpulabel);
 
     egt::experimental::CPUMonitorUsage tools;
