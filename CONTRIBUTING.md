@@ -115,14 +115,17 @@ especially on source that you are not currently working on.
 
 [SWIG Documentation](http://www.swig.org/Doc4.0/SWIGDocumentation.html)
 
-swig 4.0 or later should be used, mostly to pickup some improved support for
+swig @b 4.0 or later should be used, mostly to pickup some improved support for
 C++11.  This means you may need to download the swig release tarball and build
 it because the package not be available.
 
 ## Generating Documentation
 
 This documentation is generated with Doxygen, which is managed by the EGT build
-system.  To generate the documentation at any time run:
+system.  The recommended version of doxygen is @b 1.18.3.  If other versions are
+used, ther are sometimes noticeable differences.
+
+To generate the documentation at any time run:
 
 Generate HTML:
 ```sh
