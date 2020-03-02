@@ -103,6 +103,16 @@ public:
     virtual void add_item(const std::string& item);
 
     /**
+     * Remove an item from the array.
+     */
+    virtual bool remove_item(const std::string& item);
+
+    /**
+     * Remove all the items.
+     */
+    virtual void clear_items();
+
+    /**
      * Get the index of the item selected.
      */
     virtual size_t selected() const;

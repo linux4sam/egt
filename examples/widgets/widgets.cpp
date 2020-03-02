@@ -420,7 +420,8 @@ struct ScrollwheelPage : public egt::NotebookTab
         add(egt::expand(hsizer1));
 
         auto scrollwheel_day =
-            std::make_shared<egt::Scrollwheel>(egt::Rect(0, 0, 50, 100), 1, 31, 1);
+            std::make_shared<egt::Scrollwheel>(egt::Rect(0, 0, 50, 100), 1, 32, 1);
+        scrollwheel_day->remove_item("32");
 
         std::vector<std::string> months = { "January", "February", "March",
                                             "April", "May", "June", "July",

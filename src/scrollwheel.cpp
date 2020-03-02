@@ -223,6 +223,30 @@ void Scrollwheel::add_item(const std::string& item)
         m_label->text(m_items[m_selected]);
 }
 
+bool Scrollwheel::remove_item(const std::string& item)
+{
+    auto it = std::find(m_items.begin(), m_items.end(), item);
+
+    if (it == m_items.end())
+        return false;
+
+    m_items.erase(it);
+
+    if (m_selected > m_items.size() - 1)
+        m_selected = m_items.size() - 1;
+
+    m_label->text(m_items[m_selected]);
+
+    return true;
+}
+
+void Scrollwheel::clear_items()
+{
+    m_items.clear();
+    m_selected = 0;
+    m_label->text("");
+}
+
 size_t Scrollwheel::selected() const
 {
     return m_selected;
