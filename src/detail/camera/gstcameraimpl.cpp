@@ -182,10 +182,10 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 
         asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
         {
+            impl->stop();
             impl->m_err_message = "device removed: " + std::string(name.get());
             impl->m_interface.on_error.invoke();
         });
-        impl->stop();
         break;
     }
     default:
