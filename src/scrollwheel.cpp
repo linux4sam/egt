@@ -37,26 +37,45 @@ Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items) noexcept
         if (m_items.empty())
             return;
 
-        if (m_selected == m_items.size() - 1)
-            m_selected = 0;
+        if (m_reversed)
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
         else
-            m_selected++;
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
 
         m_label->text(m_items[m_selected]);
 
         on_value_changed.invoke();
     });
 
-
     m_button_down->on_click([this](Event&)
     {
         if (m_items.empty())
             return;
 
-        if (m_selected == 0)
-            m_selected = m_items.size() - 1;
+        if (m_reversed)
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
         else
-            m_selected--;
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
 
         m_label->text(m_items[m_selected]);
 
@@ -92,10 +111,20 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
         if (m_items.empty())
             return;
 
-        if (m_selected == m_items.size() - 1)
-            m_selected = 0;
+        if (m_reversed)
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
         else
-            m_selected++;
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
 
         m_label->text(m_items[m_selected]);
 
@@ -107,10 +136,20 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
         if (m_items.empty())
             return;
 
-        if (m_selected == 0)
-            m_selected = m_items.size() - 1;
+        if (m_reversed)
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
         else
-            m_selected--;
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
 
         m_label->text(m_items[m_selected]);
 
@@ -129,7 +168,6 @@ void Scrollwheel::orient(Orientation orient)
     if (detail::change_if_diff<>(m_orient, orient))
     {
         auto s = selected();
-        m_reversed = false;
         init(); // todo
         selected(s);
     }
@@ -144,9 +182,6 @@ void Scrollwheel::init()
     m_label->fill_flags().clear();
 
     fill_flags().clear();
-
-    if (!m_items.empty() && m_reversed)
-        m_selected = m_items.size() - 1;
 
     m_label->text_align(AlignFlag::center);
     if (!m_items.empty())

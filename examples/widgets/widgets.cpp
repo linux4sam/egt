@@ -433,7 +433,8 @@ struct ScrollwheelPage : public egt::NotebookTab
 
         auto scrollwheel_year =
             std::make_shared<egt::Scrollwheel>(egt::Rect(0, 0, 100, 100),
-                                               1900, 2019, 1);
+                                               1900, 2020, 1);
+        scrollwheel_year->selected(120);
         scrollwheel_year->reversed(true);
 
         auto label_day =

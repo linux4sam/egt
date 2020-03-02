@@ -118,7 +118,8 @@ public:
     virtual size_t item_count() const { return m_items.size(); }
 
     /**
-     * Enable or disable the reversed mode.
+     * Enable or disable the reversed mode. When enabled the behavior of
+     * the up and down button is swapped.
      */
     virtual void reversed(bool enabled);
 
