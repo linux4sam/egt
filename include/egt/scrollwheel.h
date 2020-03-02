@@ -43,48 +43,39 @@ public:
 
     /**
      * @param[in] items Array of items to build the list.
-     * @param[in] reversed Display the latest item instead of the first one.
      */
-    explicit Scrollwheel(const ItemArray& items = {},
-                         bool reversed = false) noexcept;
+    explicit Scrollwheel(const ItemArray& items = {}) noexcept;
 
     /**
      * @param[in] rect Rectangle for the Widget.
      * @param[in] items Array of items to build the list.
-     * @param[in] reversed Display the latest item instead of the first one.
      */
     explicit Scrollwheel(const Rect& rect,
-                         const ItemArray& items = {},
-                         bool reversed = false) noexcept;
+                         const ItemArray& items = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] items Array of items to build the list.
-     * @param[in] reversed Display the latest item instead of the first one.
      */
     explicit Scrollwheel(Frame& parent,
-                         const ItemArray& items = {},
-                         bool reversed = false) noexcept;
+                         const ItemArray& items = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the Widget.
      * @param[in] items Array of items to build the list.
-     * @param[in] reversed Display the latest item instead of the first one.
      */
     explicit Scrollwheel(Frame& parent,
                          const Rect& rect,
-                         const ItemArray& items = {},
-                         bool reversed = false) noexcept;
+                         const ItemArray& items = {}) noexcept;
 
     /**
      * @param[in] min The range minimum value.
      * @param[in] max The range maximum value.
      * @param[in] step The value of step to create a list from the minimum value to the maximum one.
-     * @param[in] reversed Display the latest item instead of the first one.
      * @param[in] rect Rectangle for the Widget.
      */
-    explicit Scrollwheel(const Rect& rect, int min, int max, int step, bool reversed = false) noexcept;
+    explicit Scrollwheel(const Rect& rect, int min, int max, int step) noexcept;
 
     /**
      * Change the images used for up and down buttons.

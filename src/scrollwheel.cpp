@@ -19,19 +19,16 @@ namespace egt
 inline namespace v1
 {
 
-Scrollwheel::Scrollwheel(const ItemArray& items,
-                         bool reversed) noexcept
-    : Scrollwheel( {}, items, reversed)
+Scrollwheel::Scrollwheel(const ItemArray& items) noexcept
+    : Scrollwheel( {}, items)
 {}
 
-Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items,
-                         bool reversed) noexcept
+Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_items(items),
       m_button_up(std::make_shared<ImageButton>(Image("res:internal_arrow_up"))),
       m_button_down(std::make_shared<ImageButton>(Image("res:internal_arrow_down"))),
-      m_label(std::make_shared<Label>()),
-      m_reversed(reversed)
+      m_label(std::make_shared<Label>())
 {
     init();
 
@@ -67,27 +64,23 @@ Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items,
     });
 }
 
-Scrollwheel::Scrollwheel(Frame& parent, const ItemArray& items,
-                         bool reversed) noexcept
-    : Scrollwheel( {}, items, reversed)
+Scrollwheel::Scrollwheel(Frame& parent, const ItemArray& items) noexcept
+    : Scrollwheel( {}, items)
 {
     parent.add(*this);
 }
 
-Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const ItemArray& items,
-                         bool reversed) noexcept
-    : Scrollwheel(rect, items, reversed)
+Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const ItemArray& items) noexcept
+    : Scrollwheel(rect, items)
 {
     parent.add(*this);
 }
 
-Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
-                         bool reversed) noexcept
+Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_button_up(std::make_shared<ImageButton>(Image("res:internal_arrow_up"))),
       m_button_down(std::make_shared<ImageButton>(Image("res:internal_arrow_down"))),
-      m_label(std::make_shared<Label>()),
-      m_reversed(reversed)
+      m_label(std::make_shared<Label>())
 {
     for (auto i = min; i <= max; i += step)
         m_items.push_back(std::to_string(i));
