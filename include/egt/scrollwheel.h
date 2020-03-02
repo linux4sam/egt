@@ -127,12 +127,13 @@ public:
     virtual size_t item_count() const { return m_items.size(); }
 
 protected:
-    void init(bool reversed);
+    void init();
     ItemArray m_items;
     size_t m_selected{0};
     std::shared_ptr<ImageButton> m_button_up;
     std::shared_ptr<ImageButton> m_button_down;
     std::shared_ptr<Label> m_label;
+    bool m_reversed{false};
     Orientation m_orient{Orientation::vertical};
 };
 

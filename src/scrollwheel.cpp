@@ -30,9 +30,10 @@ Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items,
       m_items(items),
       m_button_up(std::make_shared<ImageButton>(Image("res:internal_arrow_up"))),
       m_button_down(std::make_shared<ImageButton>(Image("res:internal_arrow_down"))),
-      m_label(std::make_shared<Label>())
+      m_label(std::make_shared<Label>()),
+      m_reversed(reversed)
 {
-    init(reversed);
+    init();
 
     m_button_up->on_click([this](Event&)
     {
@@ -85,12 +86,13 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step,
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
       m_button_up(std::make_shared<ImageButton>(Image("res:internal_arrow_up"))),
       m_button_down(std::make_shared<ImageButton>(Image("res:internal_arrow_down"))),
-      m_label(std::make_shared<Label>())
+      m_label(std::make_shared<Label>()),
+      m_reversed(reversed)
 {
     for (auto i = min; i <= max; i += step)
         m_items.push_back(std::to_string(i));
 
-    init(reversed);
+    init();
 
     m_button_up->on_click([this](Event&)
     {
@@ -134,12 +136,13 @@ void Scrollwheel::orient(Orientation orient)
     if (detail::change_if_diff<>(m_orient, orient))
     {
         auto s = selected();
-        init(false); // todo
+        m_reversed = false;
+        init(); // todo
         selected(s);
     }
 }
 
-void Scrollwheel::init(bool reversed)
+void Scrollwheel::init()
 {
     name("Scrollwheel" + std::to_string(m_widgetid));
 
@@ -149,7 +152,7 @@ void Scrollwheel::init(bool reversed)
 
     fill_flags().clear();
 
-    if (!m_items.empty() && reversed)
+    if (!m_items.empty() && m_reversed)
         m_selected = m_items.size() - 1;
 
     m_label->text_align(AlignFlag::center);
