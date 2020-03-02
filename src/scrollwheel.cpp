@@ -218,6 +218,9 @@ std::string Scrollwheel::value() const
 void Scrollwheel::add_item(const std::string& item)
 {
     m_items.push_back(item);
+
+    if (m_selected < m_items.size())
+        m_label->text(m_items[m_selected]);
 }
 
 size_t Scrollwheel::selected() const
