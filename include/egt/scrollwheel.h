@@ -126,6 +126,11 @@ public:
      */
     virtual size_t item_count() const { return m_items.size(); }
 
+    /**
+     * Enable or disable the reversed mode.
+     */
+    virtual void reversed(bool enabled);
+
 protected:
     void init();
     ItemArray m_items;

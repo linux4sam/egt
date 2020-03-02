@@ -212,6 +212,11 @@ void Scrollwheel::selected(size_t index)
     }
 }
 
+void Scrollwheel::reversed(bool enabled)
+{
+    m_reversed = enabled;
+}
+
 void Scrollwheel::image(const Image& down_image, const Image& up_image)
 {
     m_button_down->image(down_image);
