@@ -9,9 +9,7 @@
 #include "egt/screen.h"
 #include <math.h>
 #include <spdlog/spdlog.h>
-
-#include <iostream>
-using namespace std;
+#include <type_traits>
 
 namespace egt
 {
@@ -49,10 +47,10 @@ inline bool change_if_diff(T1& first, T2& second, const T3& to)
     auto s = second.begin();
     for (const auto& elem : to)
     {
-        if (detail::change_if_diff(*f, elem.first))
+        if (detail::change_if_diff<typename std::remove_reference<decltype(*f)>::type>(*f, elem.first))
             diff = true;
 
-        if (detail::change_if_diff(*s, elem.second))
+        if (detail::change_if_diff<typename std::remove_reference<decltype(*s)>::type>(*s, elem.second))
             diff = true;
 
         ++s;
