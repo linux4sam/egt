@@ -175,9 +175,6 @@ protected:
 
         inline void add_damage(const Rect& rect)
         {
-            if (rect.empty())
-                return;
-
             Screen::damage_algorithm(damage, rect);
         }
     };
