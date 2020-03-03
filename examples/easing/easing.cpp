@@ -133,10 +133,11 @@ int main(int argc, char** argv)
 
     MainWindow window;
 
-    egt::Label label1("CPU: ----");
+    egt::Label label1("CPU: 0000%", egt::AlignFlag::left | egt::AlignFlag::top);
     label1.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     label1.color(egt::Palette::ColorId::label_bg, egt::Palette::transparent);
-    label1.x(egt::SideBoard::HANDLE_WIDTH);
+    label1.x(egt::SideBoard::HANDLE_WIDTH + 10);
+    label1.flags().set(egt::Label::Flag::no_layout);
     window.add(bottom(label1));
     label1.zorder_down();
 
