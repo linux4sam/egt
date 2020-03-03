@@ -35,7 +35,7 @@ inline bool change_if_diff(T1& first, T2& second, const T3& to)
         first.clear();
         second.clear();
 
-        for (auto& elem : to)
+        for (const auto& elem : to)
         {
             first.push_back(elem.first);
             second.push_back(elem.second);
@@ -45,18 +45,18 @@ inline bool change_if_diff(T1& first, T2& second, const T3& to)
     }
 
     bool diff = false;
-    size_t i = 0;
+    auto f = first.begin();
+    auto s = second.begin();
     for (const auto& elem : to)
     {
-        auto f = first[i];
-        if (detail::change_if_diff(f, static_cast<decltype(f)>(elem.first)))
+        if (detail::change_if_diff(*f, elem.first))
             diff = true;
 
-        auto s = second[i];
-        if (detail::change_if_diff(s, static_cast<decltype(s)>(elem.second)))
+        if (detail::change_if_diff(*s, elem.second))
             diff = true;
 
-        ++i;
+        ++s;
+        ++f;
     }
 
     return diff;
