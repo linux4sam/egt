@@ -320,7 +320,7 @@ bool CameraImpl::start()
         if (s)
         {
             static const auto kmssink_pipe =
-                "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=15/1 ! " \
+                "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
                 "g1kmssink gem-name={}";
 
 
@@ -334,7 +334,7 @@ bool CameraImpl::start()
 #endif
     {
         static const auto appsink_pipe =
-            "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=15/1 ! " \
+            "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
             "appsink name=appsink async=false enable-last-sample=false sync=true";
 
         const auto box = m_interface.content_area();
