@@ -45,11 +45,13 @@ struct AudioPlayerImpl
             if (GST_STATE_CHANGE_FAILURE == ret)
             {
                 spdlog::error("unable to set audio pipeline to {}", state);
+                player->on_error.invoke("audio pipeline set state failed");
                 return false;
             }
         }
         else
         {
+            player->on_error.invoke("audio pipeline not yet initialized");
             return false;
         }
 
@@ -94,9 +96,9 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 
             if (Application::check_instance())
             {
-                asio::post(Application::instance().event().io(), [impl]()
+                asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
                 {
-                    impl->player.on_error.invoke();
+                    impl->player.on_error.invoke(error->message);
                 });
             }
         }
@@ -436,7 +438,7 @@ bool AudioPlayer::createPipeline()
     if (!m_impl->m_pipeline)
     {
         spdlog::error("failed to create audio pipeline");
-        on_error.invoke();
+        on_error.invoke("failed to create audio pipeline");
         return false;
     }
 
@@ -444,7 +446,7 @@ bool AudioPlayer::createPipeline()
     if (!m_impl->m_src)
     {
         spdlog::error("failed to get audio src element");
-        on_error.invoke();
+        on_error.invoke("failed to get audio src element");
         return false;
     }
 
@@ -452,7 +454,7 @@ bool AudioPlayer::createPipeline()
     if (!m_impl->m_volume)
     {
         spdlog::error("failed to get volume element");
-        on_error.invoke();
+        on_error.invoke("failed to get volume element");
         return false;
     }
 
