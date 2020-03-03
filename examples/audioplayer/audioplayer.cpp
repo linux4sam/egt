@@ -144,11 +144,12 @@ public:
 
         auto message_dialog = std::make_shared<egt::Dialog>(this->size() * 0.75);
         message_dialog->title("Audio Player Example");
-        auto text = std::make_shared<egt::TextBox>("This is an Ensemble Graphics "
-                    "Toolkit audio player example that "
-                    "uses egt::AudioPlayer to play mp3, "
-                    "wav, ogg, and more audio formats "
-                    "seamlessly.");
+        std::string dialog_text("This is an Ensemble Graphics "
+                                "Toolkit audio player example that "
+                                "uses egt::AudioPlayer to play mp3, "
+                                "wav, ogg, and more audio formats "
+                                "seamlessly.");
+        auto text = std::make_shared<egt::TextBox>(dialog_text);
         text->readonly(true);
         message_dialog->widget(expand(text));
         message_dialog->button(egt::Dialog::ButtonId::button1, "");
@@ -160,9 +161,21 @@ public:
         note->align(egt::AlignFlag::right | egt::AlignFlag::bottom);
         note->margin(10);
         add(note);
-        note->on_click([message_dialog](egt::Event&)
+        note->on_click([message_dialog, text, dialog_text](egt::Event&)
         {
+            text->text(dialog_text);
+            message_dialog->button(egt::Dialog::ButtonId::button2, "OK");
             message_dialog->show_modal(true);
+        });
+
+        m_player.on_error([message_dialog, text](std::string err)
+        {
+            if (!err.empty())
+            {
+                text->text("Error : " + err);
+                message_dialog->button(egt::Dialog::ButtonId::button2, "");
+                message_dialog->show_modal(true);
+            }
         });
 
         // handle input event to seek player
