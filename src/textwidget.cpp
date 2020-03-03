@@ -82,7 +82,8 @@ Size TextWidget::text_size(const std::string& text) const
 void TextWidget::serialize(detail::Serializer& serializer) const
 {
     Widget::serialize(serializer);
-    serializer.add_property("text", text());
+    if (!text().empty())
+        serializer.add_property("text", text());
 }
 
 void TextWidget::deserialize(const std::string& name, const std::string& value,

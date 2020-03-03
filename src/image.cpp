@@ -119,11 +119,15 @@ Image Image::crop(const RectF& rect)
 
 void Image::serialize(const std::string& name, detail::Serializer& serializer) const
 {
-    serializer.add_property(name, m_uri,
-    {
-        {"hscale", std::to_string(hscale())},
-        {"vscale", std::to_string(vscale())}
-    });
+    std::map<std::string, std::string> attrs;
+
+    if (!detail::float_equal(hscale(), 1.0f))
+        attrs.insert({"hscale", std::to_string(hscale())});
+
+    if (!detail::float_equal(vscale(), 1.0f))
+        attrs.insert({"vscale", std::to_string(vscale())});
+
+    serializer.add_property(name, m_uri, attrs);
 }
 
 void Image::deserialize(const std::string& name, const std::string& value,

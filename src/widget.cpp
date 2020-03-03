@@ -554,15 +554,20 @@ std::string Widget::type() const
 
 void Widget::serialize(detail::Serializer& serializer) const
 {
-    serializer.add_property("x", x());
-    serializer.add_property("y", y());
-    serializer.add_property("width", width());
-    serializer.add_property("height", height());
+    if (x())
+        serializer.add_property("x", x());
+    if (y())
+        serializer.add_property("y", y());
+    if (width())
+        serializer.add_property("width", width());
+    if (height())
+        serializer.add_property("height", height());
     if (!align().empty())
         serializer.add_property("align", align());
     if (!border_flags().empty())
         serializer.add_property("borderflags", border_flags().to_string());
-    serializer.add_property("flags", flags().to_string());
+    if (!flags().empty())
+        serializer.add_property("flags", flags().to_string());
     if (padding())
         serializer.add_property("padding", padding());
     if (margin())
