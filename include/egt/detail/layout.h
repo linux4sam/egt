@@ -25,16 +25,14 @@ namespace detail
  */
 struct EGT_API LayoutRect
 {
-    LayoutRect() = default;
-
     LayoutRect(uint32_t b,
                const Rect& r,
                uint32_t lm = 0,
                uint32_t tm = 0,
                uint32_t rm = 0,
                uint32_t bm = 0) noexcept
-        : behave(b),
-          rect(r),
+        : rect(r),
+          behave(b),
           lmargin(lm),
           tmargin(tm),
           rmargin(rm),
@@ -48,22 +46,22 @@ struct EGT_API LayoutRect
                uint32_t tm = 0,
                uint32_t rm = 0,
                uint32_t bm = 0) noexcept
-        : behave(b),
+        : str(std::move(s)),
           rect(r),
+          behave(b),
           lmargin(lm),
           tmargin(tm),
           rmargin(rm),
-          bmargin(bm),
-          str(std::move(s))
+          bmargin(bm)
     {}
 
-    uint32_t behave{0};
+    std::string str;
     Rect rect;
+    uint32_t behave{0};
     uint32_t lmargin{0};
     uint32_t tmargin{0};
     uint32_t rmargin{0};
     uint32_t bmargin{0};
-    std::string str;
 };
 
 /**
