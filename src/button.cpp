@@ -8,6 +8,7 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/meta.h"
+#include "egt/detail/serialize.h"
 #include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/theme.h"
@@ -294,6 +295,29 @@ void ImageButton::show_label(bool value)
 {
     if (detail::change_if_diff<>(m_show_label, value))
         damage();
+}
+
+void ImageButton::serialize(detail::Serializer& serializer) const
+{
+    Button::serialize(serializer);
+
+    serializer.add_property("showlabel", show_label());
+    m_image.serialize("image", serializer);
+
+    // TODO m_image_align
+}
+
+void ImageButton::deserialize(const std::string& name, const std::string& value,
+                              const std::map<std::string, std::string>& attrs)
+{
+    // TODO proper loading of all image properties
+
+    if (name == "showlabel")
+        show_label(std::stoul(value));
+    else if (name == "image")
+        m_image.deserialize(name, value, attrs);
+    else
+        Button::deserialize(name, value, attrs);
 }
 
 }

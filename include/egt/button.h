@@ -309,6 +309,11 @@ public:
      */
     inline bool show_label() const { return m_show_label; }
 
+    virtual void serialize(detail::Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
+
     virtual ~ImageButton() = default;
 
 protected:
