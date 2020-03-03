@@ -222,9 +222,6 @@ AudioPlayer::AudioPlayer()
 
         throw std::runtime_error(ss.str());
     }
-
-    m_impl->m_gmainLoop = g_main_loop_new(nullptr, FALSE);
-    m_impl->m_gmainThread = std::thread(g_main_loop_run, m_impl->m_gmainLoop);
 }
 
 AudioPlayer::AudioPlayer(const std::string& uri)
@@ -255,11 +252,6 @@ void AudioPlayer::destroyPipeline()
         g_object_unref(m_impl->m_pipeline);
         m_impl->m_pipeline = nullptr;
     }
-}
-
-AudioPlayer::~AudioPlayer()
-{
-    destroyPipeline();
 
     if (m_impl->m_gmainLoop)
     {
@@ -271,7 +263,13 @@ AudioPlayer::~AudioPlayer()
         }
         m_impl->m_gmainThread.join();
         g_main_loop_unref(m_impl->m_gmainLoop);
+        m_impl->m_gmainLoop = nullptr;
     }
+}
+
+AudioPlayer::~AudioPlayer()
+{
+    destroyPipeline();
 }
 
 bool AudioPlayer::play()
@@ -461,6 +459,12 @@ bool AudioPlayer::createPipeline()
     bus = gst_pipeline_get_bus(GST_PIPELINE(m_impl->m_pipeline));
     /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, m_impl.get());
     gst_object_unref(bus);
+
+    if (!m_impl->m_gmainLoop)
+    {
+        m_impl->m_gmainLoop = g_main_loop_new(nullptr, FALSE);
+        m_impl->m_gmainThread = std::thread(g_main_loop_run, m_impl->m_gmainLoop);
+    }
 
     return true;
 }
