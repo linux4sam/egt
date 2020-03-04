@@ -188,6 +188,12 @@ bool GstKmsSinkImpl::media(const std::string& uri)
 
     g_timeout_add(5000, (GSourceFunc) &query_position, this);
 
+    if (!m_gmainLoop)
+    {
+        m_gmainLoop = g_main_loop_new(nullptr, false);
+        m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
+    }
+
     return true;
 }
 
