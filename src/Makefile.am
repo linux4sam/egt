@@ -46,7 +46,6 @@ detail/alignment.cpp \
 detail/collision.cpp \
 detail/filesystem.cpp \
 detail/image.cpp \
-detail/image.h \
 detail/imagecache.cpp \
 detail/input/inputkeyboard.cpp \
 detail/input/inputkeyboard.h \
