@@ -624,26 +624,32 @@ AM_CONDITIONAL([HAVE_ASPELL_BIN], [test -n "$ASPELL_BIN"])
 AC_PATH_PROGS([CLANG_TIDY_BIN], [clang-tidy-6.0 clang-tidy])
 AM_CONDITIONAL([HAVE_CLANG_TIDY_BIN], [test -n "$CLANG_TIDY_BIN"])
 
-AC_MSG_NOTICE([configuring simd])
-(
-  SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
-  # if -Wno-psabi was there, add it back
-  SIMD_CXXFLAGS+=`echo "$CXXFLAGS" | grep -o '\-Wno-psabi'`
-  SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-pedantic//g'`
-  SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-flto//g'`
-
-  mkdir -p external/Simd/prj/cmake/ &&
-  cd external/Simd/prj/cmake/ &&
-  cmake ../../../../${srcdir}/external/Simd/prj/cmake/ -DTOOLCHAIN="$CXX" -DTARGET="$host_cpu" \
-  	-DCMAKE_BUILD_TYPE="Release" -DLIBRARY="STATIC" \
-	-DSIMD_TEST=off -DCMAKE_CXX_FLAGS="${SIMD_CXXFLAGS} -DCHECK_VERSION=0"
-)
-
 AC_ARG_ENABLE([simd],
   [AS_HELP_STRING([--enable-simd], [build with simd support [default=no]])],
   [enable_simd=$enableval], [enable_simd=no])
 if test "x$enable_simd" = "xyes";
 then
+  AC_CHECK_PROG(have_cmake, cmake, yes, no)
+  if test $have_cmake == "no"
+  then
+    AC_MSG_ERROR(cmake was not found on this system and is needed for simd)
+  fi
+
+  AC_MSG_NOTICE([configuring simd])
+  (
+    SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
+    # if -Wno-psabi was there, add it back
+    SIMD_CXXFLAGS+=`echo "$CXXFLAGS" | grep -o '\-Wno-psabi'`
+    SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-pedantic//g'`
+    SIMD_CXXFLAGS=`echo "$SIMD_CXXFLAGS" | sed -e 's/-flto//g'`
+
+    mkdir -p external/Simd/prj/cmake/ &&
+    cd external/Simd/prj/cmake/ &&
+    cmake ../../../../${srcdir}/external/Simd/prj/cmake/ -Wno-dev -DTOOLCHAIN="$CXX" -DTARGET="$host_cpu" \
+	  -DCMAKE_BUILD_TYPE="Release" -DLIBRARY="STATIC" \
+	  -DSIMD_TEST=off -DCMAKE_CXX_FLAGS="${SIMD_CXXFLAGS} -DCHECK_VERSION=0"
+  )
+
   AC_DEFINE(HAVE_SIMD, 1, [Have simd support])
 fi
 AM_CONDITIONAL([HAVE_SIMD], [test "x${enable_simd}" = xyes])
