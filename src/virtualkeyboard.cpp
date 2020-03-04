@@ -149,12 +149,16 @@ VirtualKeyboard::VirtualKeyboard(const Rect& rect) noexcept
 
 void VirtualKeyboard::resize(const Size& s)
 {
-    Frame::resize(s);
-
     auto key_base_size = Size(s.width() / m_max_cols, s.height() / m_max_rows);
 
     for (auto& main_panel : m_main_panels)
+    {
         main_panel->update_key_size(key_base_size);
+        main_panel->resize(s);
+    }
+
+    m_main_panel.resize(s);
+    Frame::resize(s);
 }
 
 void VirtualKeyboard::key_space(unsigned key_space)
