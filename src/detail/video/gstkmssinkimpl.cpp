@@ -93,7 +93,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     if (m_audiodevice && m_audiotrack)
     {
         caps += ";audio/x-raw";
-        a_pipe = " ! queue ! audioconvert ! volume name=volume ! alsasink async=false enable-last-sample=false sync=false";
+        a_pipe = " ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
     }
 
     std::ostringstream v_pipe;
@@ -171,7 +171,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
         if (error && error->message)
         {
             SPDLOG_DEBUG("gst_parse_launch failed : {}", error->message);
-            m_interface.on_error.invoke("gst_parse_launch failed " + error->message);
+            m_interface.on_error.invoke("gst_parse_launch failed " + std::string(error->message));
         }
         return false;
     }

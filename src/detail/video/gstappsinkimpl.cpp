@@ -195,7 +195,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     if (m_audiodevice && m_audiotrack)
     {
         caps += ";audio/x-raw";
-        a_pipe = "! queue ! audioconvert ! volume name=volume ! alsasink async=false enable-last-sample=false sync=false";
+        a_pipe = "! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
     }
 
     std::ostringstream pipeline;
