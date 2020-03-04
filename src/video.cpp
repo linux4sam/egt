@@ -202,11 +202,6 @@ bool VideoWindow::has_audio() const
     return m_video_impl->has_audio();
 }
 
-std::string VideoWindow::error_message() const
-{
-    return m_video_impl->error_message();
-}
-
 VideoWindow::~VideoWindow()
 {
     m_video_impl->destroyPipeline();

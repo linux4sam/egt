@@ -132,11 +132,6 @@ bool GstDecoderImpl::seek(int64_t time)
     return false;
 }
 
-std::string GstDecoderImpl::error_message() const
-{
-    return m_err_message;
-}
-
 int64_t GstDecoderImpl::duration() const
 {
     return m_duration;
@@ -220,8 +215,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
             {
                 asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
                 {
-                    impl->m_err_message = error->message;
-                    impl->m_interface.on_error.invoke();
+                    impl->m_interface.on_error.invoke(error->message);
                 });
             }
         }
@@ -327,7 +321,8 @@ bool GstDecoderImpl::start_discoverer()
             discoverer{gst_discoverer_new(5 * GST_SECOND, &err1)};
     if (!discoverer)
     {
-        m_err_message = "error creating discoverer instance: " + std::string(err1->message);
+        spdlog::error("error creating discoverer instance: {} ", std::string(err1->message));
+        m_interface.on_error.invoke("error creating discoverer instance: " + std::string(err1->message));
         g_clear_error(&err1);
         return false;
     }
@@ -342,29 +337,34 @@ bool GstDecoderImpl::start_discoverer()
     {
     case GST_DISCOVERER_URI_INVALID:
     {
-        m_err_message = "invalid URI: " + m_uri;
+        spdlog::error("invalid URI: {}", m_uri);
+        m_interface.on_error.invoke("invalid URI: " + m_uri);
         return false;
     }
     case GST_DISCOVERER_ERROR:
     {
-        m_err_message = "error: " + std::string(err2->message);
+        spdlog::error("error: {} ", std::string(err2->message));
+        m_interface.on_error.invoke("error: " + std::string(err2->message));
         break;
     }
     case GST_DISCOVERER_TIMEOUT:
     {
-        m_err_message = "timeout";
+
+        spdlog::error("gst discoverer timeout");
+        m_interface.on_error.invoke("gst discoverer timeout");
         return false;
     }
     case GST_DISCOVERER_BUSY:
     {
-        m_err_message = "busy";
+        spdlog::error("gst discoverer busy");
+        m_interface.on_error.invoke("gst discoverer busy");
         return false;
     }
     case GST_DISCOVERER_MISSING_PLUGINS:
     {
         const GstStructure* s = gst_discoverer_info_get_misc(info.get());
         GstStringHandle str{gst_structure_to_string(s)};
-        m_err_message = str.get();
+        m_interface.on_error.invoke(str.get());
         return false;
     }
     case GST_DISCOVERER_OK:
@@ -376,7 +376,8 @@ bool GstDecoderImpl::start_discoverer()
             sinfo{gst_discoverer_info_get_stream_info(info.get())};
     if (!sinfo)
     {
-        m_err_message = "failed to get stream info";
+        spdlog::error("failed to get stream info");
+        m_interface.on_error.invoke("failed to get stream info");
         return false;
     }
 
@@ -384,7 +385,8 @@ bool GstDecoderImpl::start_discoverer()
             streams{gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO(sinfo.get()))};
     if (!streams)
     {
-        m_err_message = "failed to get stream info list";
+        spdlog::error("failed to get stream info list");
+        m_interface.on_error.invoke("failed to get stream info list");
         return false;
     }
 

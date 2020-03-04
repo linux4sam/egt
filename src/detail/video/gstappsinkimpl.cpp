@@ -219,8 +219,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
-        spdlog::error("{}", m_err_message);
-        m_interface.on_error.invoke();
+        spdlog::error("media file discoverer failed");
         return false;
     }
 #endif
@@ -233,18 +232,18 @@ bool GstAppSinkImpl::media(const std::string& uri)
     if (!m_pipeline)
     {
         if (error && error->message)
-            m_err_message = error->message;
-        spdlog::error("{}", m_err_message);
-        m_interface.on_error.invoke();
+        {
+            spdlog::error("{}", error->message);
+            m_interface.on_error.invoke(error->message);
+        }
         return false;
     }
 
     m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
     if (!m_appsink)
     {
-        m_err_message = "failed to get app sink element";
-        spdlog::error("{}", m_err_message);
-        m_interface.on_error.invoke();
+        spdlog::error("failed to get app sink element");
+        m_interface.on_error.invoke("failed to get app sink element");
         return false;
     }
 
@@ -253,9 +252,8 @@ bool GstAppSinkImpl::media(const std::string& uri)
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
         if (!m_volume)
         {
-            m_err_message = "failed to get volume element";
-            spdlog::error("{}", m_err_message);
-            m_interface.on_error.invoke();
+            spdlog::error("failed to get volume element");
+            m_interface.on_error.invoke("failed to get volume element");
             return false;
         }
     }

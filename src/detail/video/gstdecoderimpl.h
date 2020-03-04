@@ -54,8 +54,6 @@ public:
 
     virtual int volume() const;
 
-    std::string error_message() const;
-
     int64_t duration() const;
 
     int64_t position() const;
@@ -77,7 +75,6 @@ protected:
     int64_t m_duration{0};
     int64_t m_position{0};
     GstElement* m_volume{nullptr};
-    std::string m_err_message;
     gboolean m_seek_enabled{false};
     gboolean m_seekdone{false};
     std::string m_uri;

@@ -55,7 +55,7 @@ public:
     /**
      * Invoked when an error occurs.
      */
-    detail::Signal<> on_error;
+    detail::Signal<std::string> on_error;
 
     /**
      * Invoked on end of stream.
@@ -218,11 +218,6 @@ public:
      * @return true if supported and false if not supported.
      */
     virtual bool has_audio() const;
-
-    /**
-     * Get error message
-     */
-    std::string error_message() const;
 
     virtual ~VideoWindow();
 

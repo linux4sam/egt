@@ -157,8 +157,6 @@ bool GstKmsSinkImpl::media(const std::string& uri)
 #ifdef HAVE_GSTREAMER_PBUTILS
     if (!start_discoverer())
     {
-        spdlog::error("{}", m_err_message);
-        m_interface.on_error.invoke();
         return false;
     }
 #endif
@@ -170,10 +168,11 @@ bool GstKmsSinkImpl::media(const std::string& uri)
     m_pipeline = gst_parse_launch(buffer.c_str(), &error);
     if (!m_pipeline)
     {
-        SPDLOG_DEBUG("gst_parse_launch failed ");
         if (error && error->message)
-            m_err_message = error->message;
-        m_interface.on_error.invoke();
+        {
+            SPDLOG_DEBUG("gst_parse_launch failed : {}", error->message);
+            m_interface.on_error.invoke("gst_parse_launch failed " + error->message);
+        }
         return false;
     }
 
