@@ -303,6 +303,8 @@ void HttpClientRequest::start_async(const std::string& url, ReadCallback callbac
     curl_easy_setopt(m_impl->easy, CURLOPT_OPENSOCKETDATA, this);
     curl_easy_setopt(m_impl->easy, CURLOPT_CLOSESOCKETFUNCTION, closesocket_callback);
     curl_easy_setopt(m_impl->easy, CURLOPT_CLOSESOCKETDATA, this);
+    curl_easy_setopt(m_impl->easy, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_easy_setopt(m_impl->easy, CURLOPT_NOSIGNAL, 1);
     curl_multi_add_handle(detail::HttpClientRequestManager::Instance()->m_multi, m_impl->easy);
 }
 
