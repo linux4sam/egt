@@ -49,9 +49,9 @@ sudo apt-get install libasound2-dev libsndfile1-dev
 @endcode
 
 Then, clone the source and initialize autotools.  Typically autotools only needs
-to be initialized once and it will automatically pick-up most changes.  However,
-sometimes making changes the configure scripts, the environment, or makefiles
-requires re-running autogen.sh or more simply autoreconf -vf.
+to be initialized once and it will automatically pick up most changes.  However,
+when making changes to the configure scripts, the environment, or makefiles
+re-running autogen.sh, or more simply autoreconf -fvi, is necessary.
 
 @code{.sh}
 git clone --recursive https://github.com/linux4sam/egt.git

@@ -24,6 +24,7 @@
  * To use this, you must first setup a gpioevent_request with the right
  * parameters and then just give the fd to this to monitor asynchronously.
  */
+/// @[ExampleFd2Event]
 class GpioEventMonitor
 {
 public:
@@ -73,6 +74,7 @@ private:
     // buffer to hold the gpioevent_data
     std::vector<char> buffer;
 };
+/// @[ExampleFd2Event]
 
 int main(int argc, char** argv)
 {

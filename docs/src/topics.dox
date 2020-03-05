@@ -24,21 +24,21 @@ the API in a thread safe manner through the event loop and Asio.  To call a
 function in the EGT API from another thread, you must egt::asio::post() or
 egt::asio::dispatch() a call to the EventLoop.  This should not be confused with
 messaging.  Calling egt::asio::post() or egt::asio::dispatch() is like calling a
-function; however, based on which variation you use it will either directly or
+function.  However, based on which variation you use it will either directly or
 indirectly happen in a thread safe manner.
 
 For example, to change the position of a button from another thread, the
 following can be done.
 
 @code{.cpp}
-asio::post(Application::instance().event().io(), [&button](){ button.x(5); });
+egt::asio::post(Application::instance().event().io(), [&button](){ button.x(5); });
 @endcode
 
 To run any code you want from another thread on the EventLoop thread, post() a
 lamba or function.
 
 @code{.cpp}
-asio::post(Application::instance().event().io(), []() {
+egt::asio::post(Application::instance().event().io(), []() {
         ...
     });
 @endcode
@@ -150,6 +150,93 @@ appropriate compiler and linker flags.
 - `--disable-shared`
 
 See @subpage started_configure for more information on available configure options.
+
+@section topics_thirdparty Using Third Party Libraries with the EGT Event Loop
+
+EGT has its own event loop, but sometimes when integrating third party libraries
+those libraries also have their own idea of an event loop.  There are at least 4
+different ways to integrate third party libraries and software with the EGT
+event loop:
+
+-# Attach a file descriptor to the EGT event loop.
+-# Using an egt::PeriodicTimer to run the third party library.
+-# Instead of using egt::Application::run(), implement your own loop.
+-# Spawn separate threads and use egt::asio::post() and egt::asio::dispatch().
+
+@subsection topics_thirdparty_fd Attach a file descriptor to the EGT event loop
+
+Some third party libraries open a resource that is identified with a file
+descriptor.  In most cases, you can get this file descriptor and provide it to
+the EGT event loop to have it monitor for when some action needs to be taken on
+the file descriptor - either dierctly or still using the third party library.  As
+long as the third party library does not block, this is usually the best option
+even though it can require a little more setup.
+
+The @b gpio example does this by attaching a gpioevent_request file descriptor
+into the event loop so that any read events that happen on the file descriptor
+can be seamlessly handled.
+
+@snippet "../examples/gpio/gpio.cpp" ExampleFd2Event
+
+EGT uses this method internally for several input backends like tslib and
+libinput.  You can view the the source code of the associated
+egt::detail::InputTsLib and egt::detail::InputLibInput classes for examples of
+how to do this.  Both of those classes use the egt::asio::posix::stream_descriptor
+class for wrapping the descriptor.
+
+@subsection topics_thirdparty_timer Using an egt::PeriodicTimer to run the third party library
+
+If the third party library provides the ability to poll or step to do processing
+at regular intervals, it can make sense to simply create an egt::PeriodicTimer
+and have it routinely call the third party library.
+
+@code{.cpp}
+int main()
+{
+    egt::Application app;
+    egt::TopWindow window;
+
+    egt::PeriodicTimer timer(std::chrono::seconds(1));
+    timer.on_timeout([]()
+    {
+        // call third party library
+    });
+    timer.start();
+
+    window.show();
+
+    return app.run();
+}
+@endcode
+
+@subsection topics_thirdparty_loop Instead of using egt::Application::run(), implement your own loop
+
+Normally, you call Application::run() and that blocks forever until told to exit.
+However, you may wish to implement your own loop in order to run the EGT event
+loop and any other third party processing.
+
+@code{.cpp}
+int main()
+{
+    egt::Application app;
+
+    while (true)
+    {
+        // call third party library
+
+        // run one iteration of the EGT event loop
+        app.event().step();
+    }
+
+    return 0;
+}
+@endcode
+
+@subsection topics_thirdparty_threads Spawn separate threads
+
+Spawn separate threads and use egt::asio::post() and egt::asio::dispatch() to
+communicate between the threads safely.  Remember, EGT is not thread safe.  It
+is never safe to assume it is ok to access any EGT object from multiple threads.
 
 */
 }}
