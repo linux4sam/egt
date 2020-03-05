@@ -182,27 +182,50 @@ std::shared_ptr<Widget> UiLoader::load(const std::string& uri)
     {
     case detail::SchemeType::filesystem:
     {
+        rapidxml::file<> xml_file(path.c_str());
+        rapidxml::xml_document<> doc;
+        doc.parse < rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes > (xml_file.data());
+
+        auto widgets = doc.first_node("widgets");
+        for (auto widget = widgets->first_node("widget");
+             widget; widget = widget->next_sibling())
+        {
+            // TODO: multiple root widgets not supported
+            return parse_widget(widget);
+        }
+
         break;
     }
+#ifdef EGT_HAS_HTTP
+    case detail::SchemeType::network:
+    {
+        auto buffer = experimental::load_file_from_network<std::vector<char>>(path);
+        if (!buffer.empty())
+        {
+            rapidxml::xml_document<> doc;
+            doc.parse < rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes > (buffer.data());
+
+            auto widgets = doc.first_node("widgets");
+            for (auto widget = widgets->first_node("widget");
+                 widget; widget = widget->next_sibling())
+            {
+                // TODO: multiple root widgets not supported
+                return parse_widget(widget);
+            }
+        }
+
+        break;
+    }
+#endif
     default:
     {
         throw std::runtime_error("unsupported uri: " + uri);
     }
     }
 
-    rapidxml::file<> xml_file(path.c_str());
-    rapidxml::xml_document<> doc;
-    doc.parse < rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes > (xml_file.data());
+    throw std::runtime_error("failed to parse any widget");
 
-    auto widgets = doc.first_node("widgets");
-    for (auto widget = widgets->first_node("widget");
-         widget; widget = widget->next_sibling())
-    {
-        // TODO: multiple root widgets not supported
-        return parse_widget(widget);
-    }
-
-    return std::shared_ptr<Widget>();
+    return {};
 }
 
 }

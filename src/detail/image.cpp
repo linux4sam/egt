@@ -180,30 +180,14 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
 EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url)
 {
     shared_cairo_surface_t image;
+
 #ifdef HAVE_LIBCURL
-    SPDLOG_DEBUG("starting network request: {}", url);
+    auto buffer = experimental::load_file_from_network<std::vector<unsigned char>>(url);
 
-    experimental::HttpClientRequest request;
-    std::vector<unsigned char> buffer;
-    request.start_async(url, [&image, &buffer, url](const unsigned char* data, size_t len, bool done)
-    {
-        if (data && len)
-            buffer.insert(buffer.end(), data, data + len);
-
-        if (done)
-        {
-            SPDLOG_DEBUG("loading image from network data len {}", buffer.size());
-
-            image = load_image_from_memory(reinterpret_cast<const unsigned char*>(buffer.data()),
-                                           buffer.size(),
-                                           url);
-        }
-    });
-
-    // TODO: super nasty way to block here
-
-    while (!image.get())
-        Application::instance().event().step();
+    if (!buffer.empty())
+        image = load_image_from_memory(reinterpret_cast<const unsigned char*>(buffer.data()),
+                                       buffer.size(),
+                                       url);
 #else
     detail::ignoreparam(url);
     spdlog::warn("network support not available");

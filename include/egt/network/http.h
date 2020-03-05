@@ -11,6 +11,7 @@
  * @brief Working with http.
  */
 
+#include <egt/app.h>
 #include <egt/detail/meta.h>
 #include <memory>
 #include <string>
@@ -79,6 +80,35 @@ protected:
 
     friend class detail::HttpClientRequestManager;
 };
+
+/**
+ * Blocking helper to download a file from the network using http.
+ *
+ * @warning This downloads the entire file into memory - which means this
+ * should be used with severe caution.
+ */
+template<class T>
+T load_file_from_network(const std::string& url)
+{
+    T buffer;
+    bool finished = false;
+    HttpClientRequest request;
+    request.start_async(url, [&buffer, url, &finished](const unsigned char* data, size_t len, bool done)
+    {
+        if (data && len)
+            buffer.insert(buffer.end(), data, data + len);
+
+        if (done)
+            finished = true;
+    });
+
+    // TODO: super nasty way to block here
+
+    while (!finished)
+        Application::instance().event().step();
+
+    return buffer;
+}
 
 }
 }
