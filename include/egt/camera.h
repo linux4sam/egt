@@ -6,6 +6,11 @@
 #ifndef EGT_CAMERA_H
 #define EGT_CAMERA_H
 
+/**
+ * @file
+ * @brief CameraWindow definition.
+ */
+
 #include <egt/detail/meta.h>
 #include <egt/window.h>
 #include <memory>
