@@ -187,9 +187,9 @@ public:
                     const Widget::Flags& flags = {}) noexcept;
 
     /// Widget operator
-    Widget(Widget&& rhs) noexcept;
+    Widget(Widget&& rhs) noexcept = default;
     /// Widget operator
-    Widget& operator=(Widget&& rhs) noexcept;
+    Widget& operator=(Widget&& rhs) noexcept = default;
 
     /**
      * Draw the widget.
