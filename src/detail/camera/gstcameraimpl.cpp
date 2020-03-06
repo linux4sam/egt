@@ -117,8 +117,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
             {
                 asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
                 {
-                    impl->m_err_message = error->message;
-                    impl->m_interface.on_error.invoke();
+                    impl->m_interface.on_error.invoke(error->message);
                 });
             }
         }
@@ -164,8 +163,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
             {
                 if (impl->start())
                 {
-                    impl->m_err_message = "";
-                    impl->m_interface.on_error.invoke();
+                    impl->m_interface.on_error.invoke({});
                 }
             });
         }
@@ -183,8 +181,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
         {
             impl->stop();
-            impl->m_err_message = "device removed: " + std::string(name.get());
-            impl->m_interface.on_error.invoke();
+            impl->m_interface.on_error.invoke(fmt::format("device removed: " + std::string(name.get())));
         });
         break;
     }
@@ -351,9 +348,7 @@ bool CameraImpl::start()
     m_pipeline = gst_parse_launch(pipe.c_str(), &error);
     if (!m_pipeline)
     {
-        m_err_message = error->message;
-        spdlog::error("failed to create pipeline: {}", m_err_message);
-        m_interface.on_error.invoke();
+        m_interface.on_error.invoke(fmt::format("failed to create pipeline: {}", error->message));
         return false;
     }
 
@@ -362,9 +357,7 @@ bool CameraImpl::start()
         m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
         if (!m_appsink)
         {
-            m_err_message = "failed to get app sink element";
-            spdlog::error(m_err_message);
-            m_interface.on_error.invoke();
+            m_interface.on_error.invoke("failed to get app sink element");
             return false;
         }
 
@@ -379,9 +372,7 @@ bool CameraImpl::start()
     int ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE)
     {
-        m_err_message = "failed to set pipeline to play state";
-        spdlog::error(m_err_message);
-        m_interface.on_error.invoke();
+        m_interface.on_error.invoke("failed to set pipeline to play state");
         stop();
         return false;
     }
@@ -405,11 +396,6 @@ void CameraImpl::stop()
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
     }
-}
-
-std::string CameraImpl::error_message() const
-{
-    return m_err_message;
 }
 
 CameraImpl::~CameraImpl()

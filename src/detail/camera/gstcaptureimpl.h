@@ -37,8 +37,6 @@ public:
 
     virtual void stop();
 
-    std::string error_message() const;
-
     virtual ~CaptureImpl();
 
 protected:
@@ -49,7 +47,6 @@ protected:
     std::string m_devnode;
     GstElement* m_pipeline{nullptr};
     GstSample* m_camerasample{nullptr};
-    std::string m_err_message;
     GMainLoop* m_gmainLoop{nullptr};
     std::thread m_gmainThread;
     std::mutex m_mutex;

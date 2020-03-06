@@ -38,11 +38,6 @@ bool CameraCapture::start()
     return m_impl->start();
 }
 
-std::string CameraCapture::error_message() const
-{
-    return m_impl->error_message();
-}
-
 void CameraCapture::stop()
 {
     m_impl->stop();

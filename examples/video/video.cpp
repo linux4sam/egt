@@ -238,7 +238,7 @@ int main(int argc, char** argv)
         }
     });
 
-    player.on_error([&player, &errlabel](std::string err)
+    player.on_error([&player, &errlabel](const std::string & err)
     {
         errlabel.text(line_break(err));
     });

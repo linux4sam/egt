@@ -29,9 +29,9 @@ int main(int argc, char** argv)
             egt::PixelFormat::yuyv,
             args["device"].as<std::string>());
 
-    capture.on_error([&capture, &app]()
+    capture.on_error([&capture, &app](const std::string & err)
     {
-        std::cout << "error: " << capture.error_message() << std::endl;
+        std::cout << "error: " << err << std::endl;
         app.quit();
     });
 

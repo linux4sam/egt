@@ -53,7 +53,7 @@ public:
     /**
      * Invoked when an error occurs.
      */
-    detail::Signal<std::string> on_error;
+    detail::Signal<const std::string&> on_error;
 
     /**
      * Invoked on end of stream.

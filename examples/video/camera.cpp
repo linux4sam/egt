@@ -80,9 +80,9 @@ int main(int argc, char** argv)
         player.start();
     });
 
-    player.on_error([&player, &errlabel]()
+    player.on_error([&player, &errlabel](const std::string & err)
     {
-        errlabel.text(line_break(player.error_message()));
+        errlabel.text(line_break(err));
     });
 
     player.on_event([&player](egt::Event & event)

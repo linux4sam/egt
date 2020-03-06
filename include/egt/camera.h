@@ -41,7 +41,7 @@ public:
     /**
      * Generated when an error occurs.
      */
-    detail::Signal<> on_error;
+    detail::Signal<const std::string&> on_error;
     /** @} */
 
     /**
@@ -105,11 +105,6 @@ public:
     virtual void stop();
 
     virtual void scale(float scalex, float scaley) override;
-
-    /**
-     * Get error message.
-     */
-    std::string error_message() const;
 
     virtual ~CameraWindow();
 

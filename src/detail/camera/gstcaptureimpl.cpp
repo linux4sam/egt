@@ -124,8 +124,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
             {
                 asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
                 {
-                    impl->m_err_message = error->message;
-                    impl->m_interface.on_error.invoke();
+                    impl->m_interface.on_error.invoke(error->message);
                 });
             }
         }
@@ -176,8 +175,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
             {
                 if (impl->start())
                 {
-                    impl->m_err_message = "";
-                    impl->m_interface.on_error.invoke();
+                    impl->m_interface.on_error.invoke({});
                 }
             });
         }
@@ -200,8 +198,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         {
             asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
             {
-                impl->m_err_message = "device removed: " + std::string(name.get());
-                impl->m_interface.on_error.invoke();
+                impl->m_interface.on_error.invoke(fmt::format("device removed: " + std::string(name.get())));
             });
         }
         break;
@@ -271,8 +268,7 @@ bool CaptureImpl::start()
     m_pipeline = gst_parse_launch(pipe.c_str(), &error);
     if (!m_pipeline)
     {
-        m_err_message = error->message;
-        spdlog::error("failed to create pipeline: {}", m_err_message);
+        m_interface.on_error.invoke(fmt::format("failed to create pipeline: {}", error->message));
         return false;
     }
 
@@ -283,8 +279,7 @@ bool CaptureImpl::start()
     int ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE)
     {
-        m_err_message = "failed to set pipeline to play state";
-        spdlog::error(m_err_message);
+        m_interface.on_error.invoke("failed to set pipeline to play state");
         stop();
         return false;
     }
@@ -307,18 +302,12 @@ void CaptureImpl::stop()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            m_err_message = "set pipeline to NULL state failed";
-            spdlog::error(m_err_message);
+            spdlog::error("set pipeline to NULL state failed");
         }
 
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
     }
-}
-
-std::string CaptureImpl::error_message() const
-{
-    return m_err_message;
 }
 
 CaptureImpl::~CaptureImpl()

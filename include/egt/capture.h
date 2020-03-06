@@ -46,7 +46,7 @@ public:
     /**
      * Invoked when an error occurs.
      */
-    detail::Signal<> on_error;
+    detail::Signal<const std::string&> on_error;
     /** @} */
 
     /**
@@ -96,11 +96,6 @@ public:
      * Stop camera capture and finish the output.
      */
     virtual void stop();
-
-    /**
-     * Get error message.
-     */
-    std::string error_message() const;
 
     virtual ~CameraCapture();
 

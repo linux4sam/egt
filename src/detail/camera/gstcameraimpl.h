@@ -32,8 +32,6 @@ public:
 
     virtual void scale(float scalex, float scaley);
 
-    std::string error_message() const;
-
     virtual ~CameraImpl();
 
 protected:
@@ -42,7 +40,6 @@ protected:
     GstElement* m_pipeline{nullptr};
     GstElement* m_appsink{nullptr};
     GstSample* m_camerasample{nullptr};
-    std::string m_err_message;
     Rect m_rect;
     bool m_usekmssink{};
     GMainLoop* m_gmainLoop{nullptr};

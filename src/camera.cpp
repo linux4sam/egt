@@ -55,11 +55,6 @@ void CameraWindow::scale(float scalex, float scaley)
     }
 }
 
-std::string CameraWindow::error_message() const
-{
-    return m_camera_impl->error_message();
-}
-
 void CameraWindow::stop()
 {
     m_camera_impl->stop();
