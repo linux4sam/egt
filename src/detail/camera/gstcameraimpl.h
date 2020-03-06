@@ -42,8 +42,8 @@ protected:
     GstSample* m_camerasample{nullptr};
     Rect m_rect;
     bool m_usekmssink{};
-    GMainLoop* m_gmainLoop{nullptr};
-    std::thread m_gmainThread;
+    GMainLoop* m_gmain_loop{nullptr};
+    std::thread m_gmain_thread;
 
     void get_camera_device_caps();
 

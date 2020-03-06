@@ -87,8 +87,8 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
         }
     }
 
-    m_gmainLoop = g_main_loop_new(nullptr, FALSE);
-    m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
+    m_gmain_loop = g_main_loop_new(nullptr, FALSE);
+    m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
 
 }
 
@@ -400,18 +400,18 @@ void CameraImpl::stop()
 
 CameraImpl::~CameraImpl()
 {
-    if (m_gmainLoop)
+    if (m_gmain_loop)
     {
         /*
          * check loop is running to avoid race condition when stop is called too early
          */
-        if (g_main_loop_is_running(m_gmainLoop))
+        if (g_main_loop_is_running(m_gmain_loop))
         {
             //stop loop and wait
-            g_main_loop_quit(m_gmainLoop);
+            g_main_loop_quit(m_gmain_loop);
         }
-        m_gmainThread.join();
-        g_main_loop_unref(m_gmainLoop);
+        m_gmain_thread.join();
+        g_main_loop_unref(m_gmain_loop);
     }
 }
 

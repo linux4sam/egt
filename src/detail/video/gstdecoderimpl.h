@@ -80,8 +80,8 @@ protected:
     std::string m_uri;
     GstBus* m_bus{nullptr};
     guint m_bus_watchid{0};
-    GMainLoop* m_gmainLoop{nullptr};
-    std::thread m_gmainThread;
+    GMainLoop* m_gmain_loop{nullptr};
+    std::thread m_gmain_thread;
     std::string m_vcodec;
     std::string m_acodec;
     bool m_audiotrack{false};

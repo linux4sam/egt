@@ -67,8 +67,8 @@ struct AudioPlayerImpl
     gint64 m_duration {0};
     std::string m_uri;
     int m_volume_value {100};
-    GMainLoop* m_gmainLoop{nullptr};
-    std::thread m_gmainThread;
+    GMainLoop* m_gmain_loop{nullptr};
+    std::thread m_gmain_thread;
 };
 
 }
@@ -255,17 +255,17 @@ void AudioPlayer::destroyPipeline()
         m_impl->m_pipeline = nullptr;
     }
 
-    if (m_impl->m_gmainLoop)
+    if (m_impl->m_gmain_loop)
     {
         // check loop is running to avoid race condition when stop is called too early
-        if (g_main_loop_is_running(m_impl->m_gmainLoop))
+        if (g_main_loop_is_running(m_impl->m_gmain_loop))
         {
             //stop loop and wait
-            g_main_loop_quit(m_impl->m_gmainLoop);
+            g_main_loop_quit(m_impl->m_gmain_loop);
         }
-        m_impl->m_gmainThread.join();
-        g_main_loop_unref(m_impl->m_gmainLoop);
-        m_impl->m_gmainLoop = nullptr;
+        m_impl->m_gmain_thread.join();
+        g_main_loop_unref(m_impl->m_gmain_loop);
+        m_impl->m_gmain_loop = nullptr;
     }
 }
 
@@ -462,10 +462,10 @@ bool AudioPlayer::createPipeline()
     /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, m_impl.get());
     gst_object_unref(bus);
 
-    if (!m_impl->m_gmainLoop)
+    if (!m_impl->m_gmain_loop)
     {
-        m_impl->m_gmainLoop = g_main_loop_new(nullptr, FALSE);
-        m_impl->m_gmainThread = std::thread(g_main_loop_run, m_impl->m_gmainLoop);
+        m_impl->m_gmain_loop = g_main_loop_new(nullptr, FALSE);
+        m_impl->m_gmain_thread = std::thread(g_main_loop_run, m_impl->m_gmain_loop);
     }
 
     return true;

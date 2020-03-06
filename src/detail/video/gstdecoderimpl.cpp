@@ -169,19 +169,19 @@ void GstDecoderImpl::destroyPipeline()
             m_bus = nullptr;
         }
 
-        if (m_gmainLoop)
+        if (m_gmain_loop)
         {
             /*
              * check loop is running to avoid race condition when stop is called too early
              */
-            if (g_main_loop_is_running(m_gmainLoop))
+            if (g_main_loop_is_running(m_gmain_loop))
             {
                 //stop loop and wait
-                g_main_loop_quit(m_gmainLoop);
+                g_main_loop_quit(m_gmain_loop);
             }
-            m_gmainThread.join();
-            g_main_loop_unref(m_gmainLoop);
-            m_gmainLoop = nullptr;
+            m_gmain_thread.join();
+            g_main_loop_unref(m_gmain_loop);
+            m_gmain_loop = nullptr;
         }
     }
 }
