@@ -35,7 +35,7 @@ static bool get_cpu_times(size_t& idle_time, size_t& total_time)
     if (times.size() < 4)
         return false;
     idle_time = times[3];
-    total_time = std::accumulate(times.begin(), times.end(), 0);
+    total_time = std::accumulate(times.begin(), times.end(), static_cast<size_t>(0));
     return true;
 }
 
