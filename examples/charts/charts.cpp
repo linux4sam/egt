@@ -189,12 +189,12 @@ struct HorizontalBarPage : public egt::NotebookTab
         bar->label("Widget Sales (millions)", "---- Months ---- ", "Horizontal BarChart Example");
         sizer->add(expand(bar));
 
-        std::string x[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        const std::string x[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
         egt::HorizontalBarChart::StringDataArray data;
-        for (int i = 0; i < 12; i++)
+        for (const auto& i : x)
         {
-            data.push_back(std::make_pair(random_item(1, 50), x[i]));
+            data.push_back(std::make_pair(random_item(1, 50), i));
         }
         bar->data(data);
 
