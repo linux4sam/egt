@@ -442,12 +442,12 @@ public:
      * auto widget = win.spawn<egt::TextBox>("hello world");
      * @endcode
      *
-     * @return a std::shared_ptr of the allocated widget.
+     * @return a std::unique_ptr of the allocated widget.
      */
     template<typename T, typename... Args>
-    std::shared_ptr<T> spawn(Args&& ... args)
+    std::unique_ptr<T> spawn(Args&& ... args)
     {
-        auto w = std::make_shared<T>(std::forward<Args>(args)...);
+        auto w = std::make_unique<T>(std::forward<Args>(args)...);
         add(w);
         return w;
     }
