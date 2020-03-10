@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_TEXTWIDGET_H
-#define EGT_DETAIL_TEXTWIDGET_H
+#ifndef EGT_TEXTWIDGET_H
+#define EGT_TEXTWIDGET_H
 
 /**
  * @file
