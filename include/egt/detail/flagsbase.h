@@ -146,9 +146,9 @@ public:
      */
     inline bool clear() noexcept
     {
-        auto orig = m_flags;
+        const bool diff = m_flags != 0;
         m_flags = 0;
-        return orig != m_flags;
+        return diff;
     }
 
     /**
