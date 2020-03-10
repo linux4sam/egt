@@ -177,11 +177,11 @@ public:
         return std::hypot(point.m_x - m_x, point.m_y - m_y);
     }
 
-    constexpr inline Dim x() const { return m_x; }
-    constexpr inline Dim y() const { return m_y; }
+    constexpr Dim x() const { return m_x; }
+    constexpr Dim y() const { return m_y; }
 
-    inline void x(Dim x) { m_x = x; }
-    inline void y(Dim y) { m_y = y; }
+    constexpr void x(Dim x) { m_x = x; }
+    constexpr void y(Dim y) { m_y = y; }
 
 protected:
     Dim m_x{0};
@@ -339,7 +339,7 @@ public:
      * This is a special case, and is the default state of a SizeType. This can
      * be used to determine if a size has not be set in many cases.
      */
-    inline bool empty() const
+    constexpr bool empty() const
     {
         return m_width <= 0 || m_height <= 0;
     }
@@ -422,8 +422,8 @@ public:
         return *this;
     }
 
-    constexpr inline Dim width() const { return m_width; }
-    constexpr inline Dim height() const { return m_height; }
+    constexpr Dim width() const { return m_width; }
+    constexpr Dim height() const { return m_height; }
 
     inline void width(Dim width) { m_width = width; }
     inline void height(Dim height) { m_height = height; }
@@ -632,7 +632,7 @@ public:
     /**
      * Calculate the area of the rectangle.
      */
-    inline Dim area() const
+    constexpr Dim area() const
     {
         return width() * height();
     }
@@ -681,7 +681,7 @@ public:
     /**
      * Get the PointType of the rectangle.
      */
-    inline const PointType<Dim, DimCompat>& point() const
+    constexpr const PointType<Dim, DimCompat>& point() const
     {
         return m_origin;
     }
@@ -697,7 +697,7 @@ public:
     /**
      * Get the SizeType of the rectangle.
      */
-    inline const SizeType<Dim, DimCompat>& size() const
+    constexpr const SizeType<Dim, DimCompat>& size() const
     {
         return m_size;
     }
@@ -713,7 +713,7 @@ public:
     /**
      * Get the top side of the rectangle.
      */
-    constexpr inline Dim top() const
+    constexpr Dim top() const
     {
         return m_origin.y();
     }
@@ -721,7 +721,7 @@ public:
     /**
      * Get the left side the rectangle.
      */
-    constexpr inline Dim left() const
+    constexpr Dim left() const
     {
         return m_origin.x();
     }
@@ -729,7 +729,7 @@ public:
     /**
      * Get the bottom side the rectangle.
      */
-    constexpr inline Dim bottom() const
+    constexpr Dim bottom() const
     {
         return top() + height();
     }
@@ -737,7 +737,7 @@ public:
     /**
      * Get the right side the rectangle.
      */
-    constexpr inline Dim right() const
+    constexpr Dim right() const
     {
         return left() + width();
     }
@@ -747,7 +747,7 @@ public:
      *
      * @note This is usually the origin/point of the rectangle.
      */
-    inline PointType<Dim, DimCompat> top_left() const
+    constexpr PointType<Dim, DimCompat> top_left() const
     {
         return PointType<Dim, DimCompat>(left(), top());
     }
@@ -755,7 +755,7 @@ public:
     /**
      * Get the top right point of the rectangle.
      */
-    inline PointType<Dim, DimCompat> top_right() const
+    constexpr PointType<Dim, DimCompat> top_right() const
     {
         return PointType<Dim, DimCompat>(right(), top());
     }
@@ -763,7 +763,7 @@ public:
     /**
      * Get the bottom left point of the rectangle.
      */
-    inline PointType<Dim, DimCompat> bottom_left() const
+    constexpr PointType<Dim, DimCompat> bottom_left() const
     {
         return PointType<Dim, DimCompat>(left(), bottom());
     }
@@ -771,15 +771,15 @@ public:
     /**
      * Get the bottom right point of the rectangle.
      */
-    inline PointType<Dim, DimCompat> bottom_right() const
+    constexpr PointType<Dim, DimCompat> bottom_right() const
     {
         return PointType<Dim, DimCompat>(right(), bottom());
     }
 
     /**
-     * Clear the rectangle by giving it no with or height.
+     * Clear the rectangle by giving it no width or height.
      */
-    inline void clear()
+    constexpr void clear()
     {
         m_origin = {};
         m_size = {};
@@ -788,7 +788,7 @@ public:
     /**
      * Returns true if the rectangle has no width or height.
      */
-    inline bool empty() const
+    constexpr bool empty() const
     {
         return width() <= 0 || height() <= 0;
     }
@@ -797,7 +797,7 @@ public:
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
      */
-    inline bool intersect(const PointType<Dim, DimCompat>& point) const
+    constexpr bool intersect(const PointType<Dim, DimCompat>& point) const
     {
         return (point.x() <= right() && point.x() >= left() &&
                 point.y() <= bottom() && point.y() >= top());
@@ -807,7 +807,7 @@ public:
      * Determine if two rectangles intersect, or, overlap.
      * @param rect The rect to test.
      */
-    inline bool intersect(const RectType<Dim, DimCompat>& rect) const
+    constexpr bool intersect(const RectType<Dim, DimCompat>& rect) const
     {
         return (x() < rect.x() + rect.width() && x() + width() > rect.x() &&
                 y() < rect.y() + rect.height() && y() + height() > rect.y());
@@ -817,7 +817,7 @@ public:
      * Merge two rectangles together into one super rectangle that contains
      * them both.
      */
-    static inline RectType<Dim, DimCompat> merge(const RectType<Dim, DimCompat>& lhs,
+    static constexpr RectType<Dim, DimCompat> merge(const RectType<Dim, DimCompat>& lhs,
             const RectType<Dim, DimCompat>& rhs) noexcept
     {
         const auto xmin = std::min(lhs.x(), rhs.x());
@@ -833,7 +833,7 @@ public:
     /**
      * Return the intersecting rectangle of two rectangles, if any.
      */
-    static inline RectType<Dim, DimCompat> intersection(const RectType<Dim, DimCompat>& lhs,
+    static constexpr RectType<Dim, DimCompat> intersection(const RectType<Dim, DimCompat>& lhs,
             const RectType<Dim, DimCompat>& rhs) noexcept
     {
         const auto x0 = std::max(lhs.x(), rhs.x());
@@ -853,7 +853,7 @@ public:
      * This is different than intersect().  The specified rectangle must be
      * completely inside this one.
      */
-    inline bool contains(const RectType<Dim, DimCompat>& rhs) const
+    constexpr bool contains(const RectType<Dim, DimCompat>& rhs) const
     {
         return rhs.right() < right() &&
                rhs.bottom() < bottom() &&
@@ -861,14 +861,14 @@ public:
                rhs.top() > top();
     }
 
-    constexpr inline Dim x() const { return m_origin.x(); }
-    constexpr inline Dim y() const { return m_origin.y(); }
+    constexpr Dim x() const { return m_origin.x(); }
+    constexpr Dim y() const { return m_origin.y(); }
 
     inline void x(Dim x) { m_origin.x(x); }
     inline void y(Dim y) { m_origin.y(y); }
 
-    constexpr inline Dim width() const { return m_size.width(); }
-    constexpr inline Dim height() const { return m_size.height(); }
+    constexpr Dim width() const { return m_size.width(); }
+    constexpr Dim height() const { return m_size.height(); }
 
     inline void width(Dim width) { m_size.width(width); }
     inline void height(Dim height) { m_size.height(height); }
@@ -1007,8 +1007,8 @@ public:
           m_end(end)
     {}
 
-    inline PointType<Dim> start() const { return m_start; }
-    inline PointType<Dim> end() const { return m_end; }
+    constexpr PointType<Dim> start() const { return m_start; }
+    constexpr PointType<Dim> end() const { return m_end; }
 
     inline void start(const PointType<Dim>& start) { m_start = start; }
     inline void end(const PointType<Dim>& end) { m_end = end; }
@@ -1016,7 +1016,7 @@ public:
     /**
      * Returns a rectangle containing the line.
      */
-    inline RectType<Dim> rect() const
+    constexpr RectType<Dim> rect() const
     {
         const auto x = std::min(m_start.x(), m_end.x());
         const auto y = std::min(m_start.y(), m_end.y());
@@ -1104,13 +1104,13 @@ public:
     inline void center(const PointType<Dim>& center) { m_center = center; }
 
     /** Get the radius. */
-    constexpr inline Dim radius() const { return m_radius; }
+    constexpr Dim radius() const { return m_radius; }
     /** Get the angle1. */
-    constexpr inline float angle1() const { return m_angle1; }
+    constexpr float angle1() const { return m_angle1; }
     /** Get the angle2. */
-    constexpr inline float angle2() const { return m_angle2; }
+    constexpr float angle2() const { return m_angle2; }
     /** Get the center point. */
-    constexpr inline PointType<Dim> center() const { return m_center; }
+    constexpr PointType<Dim> center() const { return m_center; }
 
 protected:
 
@@ -1175,7 +1175,7 @@ public:
     /**
      * Get a Rect that covers the circle.
      */
-    inline RectType<Dim> rect() const
+    constexpr RectType<Dim> rect() const
     {
         RectType<Dim> r(this->center() - Point(this->radius(), this->radius()),
                         SizeType<Dim>(this->radius() * 2, this->radius() * 2));
@@ -1234,7 +1234,7 @@ public:
      *
      * This is technically just an approximation.
      */
-    inline Dim perimeter() const
+    constexpr Dim perimeter() const
     {
         return 2.f * detail::pi<float>() * std::sqrt((m_radiusa * m_radiusa +
                 m_radiusb * m_radiusb) / 2.f);
@@ -1255,9 +1255,9 @@ public:
     inline void radiusb(const Dim radiusb) { m_radiusb = radiusb; }
     inline void center(const PointType<Dim>& center) { m_center = center; }
 
-    constexpr inline Dim radiusa() const { return m_radiusa; }
-    constexpr inline Dim radiusb() const { return m_radiusb; }
-    constexpr inline PointType<Dim> center() const { return m_center; }
+    constexpr Dim radiusa() const { return m_radiusa; }
+    constexpr Dim radiusb() const { return m_radiusb; }
+    constexpr PointType<Dim> center() const { return m_center; }
 
 protected:
 

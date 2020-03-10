@@ -222,7 +222,7 @@ protected:
  * @param[in] n The bit number.
  */
 template<class T>
-constexpr inline T bit(T n)
+constexpr T bit(T n)
 {
     return 1 << n;
 }

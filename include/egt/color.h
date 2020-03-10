@@ -118,10 +118,10 @@ public:
 
     //@{
     /** Get RGBA component value as a float from 0.0 to 1.0. */
-    constexpr inline float redf() const { return m_rgba[0] / 255.f; }
-    constexpr inline float greenf() const { return m_rgba[1] / 255.f; }
-    constexpr inline float bluef() const { return m_rgba[2] / 255.f; }
-    constexpr inline float alphaf() const { return m_rgba[3] / 255.f; }
+    constexpr float redf() const { return m_rgba[0] / 255.f; }
+    constexpr float greenf() const { return m_rgba[1] / 255.f; }
+    constexpr float bluef() const { return m_rgba[2] / 255.f; }
+    constexpr float alphaf() const { return m_rgba[3] / 255.f; }
     //@}
 
     //@{
@@ -134,10 +134,10 @@ public:
 
     //@{
     /** Get RGBA component value as value from 0 to 255. */
-    constexpr inline ComponentType red() const { return assert(m_rgba[0] <= 255), m_rgba[0]; }
-    constexpr inline ComponentType green() const { return assert(m_rgba[1] <= 255), m_rgba[1]; }
-    constexpr inline ComponentType blue() const { return assert(m_rgba[2] <= 255), m_rgba[2]; }
-    constexpr inline ComponentType alpha() const { return assert(m_rgba[3] <= 255), m_rgba[3]; }
+    constexpr ComponentType red() const { return assert(m_rgba[0] <= 255), m_rgba[0]; }
+    constexpr ComponentType green() const { return assert(m_rgba[1] <= 255), m_rgba[1]; }
+    constexpr ComponentType blue() const { return assert(m_rgba[2] <= 255), m_rgba[2]; }
+    constexpr ComponentType alpha() const { return assert(m_rgba[3] <= 255), m_rgba[3]; }
     //@}
 
     //@{
@@ -166,7 +166,7 @@ public:
         return Color(r, g, b, 0xff);
     }
 
-    inline constexpr RGBAType pixel24() const
+    constexpr RGBAType pixel24() const
     {
         return (red() << 16) |
                (green() << 8) |
@@ -174,7 +174,7 @@ public:
                (0xff);
     }
 
-    static inline constexpr Color pixel24(RGBAType c)
+    static constexpr Color pixel24(RGBAType c)
     {
         return Color((c >> 16) & 0xff,
                      (c >> 8) & 0xff,
@@ -182,7 +182,7 @@ public:
                      0xff);
     }
 
-    inline constexpr RGBAType pixel32() const
+    constexpr RGBAType pixel32() const
     {
         return (red() << 16) |
                (green() << 8) |
@@ -190,7 +190,7 @@ public:
                (alpha() << 24);
     }
 
-    static inline constexpr Color pixel32(RGBAType c)
+    static constexpr Color pixel32(RGBAType c)
     {
         return Color((c >> 16) & 0xff,
                      (c >> 8) & 0xff,
@@ -239,7 +239,7 @@ public:
      * @param[in] c RGB value.
      * @param[in] alpha Alpha component in range 0 - 255.
      */
-    constexpr static inline Color rgb(RGBType c, ComponentType alpha = 255) noexcept
+    constexpr static Color rgb(RGBType c, ComponentType alpha = 255) noexcept
     {
         return Color(c << 8 | alpha);
     }

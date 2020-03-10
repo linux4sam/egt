@@ -65,7 +65,7 @@ public:
      * Test if the specified flag is set.
      * @param flag The flag to test.
      */
-    constexpr inline bool is_set(const T flag) const noexcept
+    constexpr bool is_set(const T flag) const noexcept
     {
         return m_flags & static_cast<Underlying>(flag);
     }
@@ -136,7 +136,7 @@ public:
     /**
      * Returns true if there are no flags set.
      */
-    constexpr inline bool empty() const noexcept
+    constexpr bool empty() const noexcept
     {
         return m_flags == 0;
     }
