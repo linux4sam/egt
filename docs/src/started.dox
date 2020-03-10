@@ -48,17 +48,37 @@ sudo apt-get install libplplot-dev plplot-driver-cairo
 sudo apt-get install libasound2-dev libsndfile1-dev
 @endcode
 
-Then, clone the source and build.
+Then, clone the source and initialize autotools.  Typically autotools only needs
+to be initialized once and it will automatically pick-up most changes.  However,
+sometimes making changes the configure scripts, the environment, or makefiles
+requires re-running autogen.sh or more simply autoreconf -vf.
 
 @code{.sh}
 git clone --recursive https://github.com/linux4sam/egt.git
 cd egt
 ./autogen.sh
+@endcode
+
+Then, configure and build.
+
+@code{.sh}
 ./configure
 make
 @endcode
 
-Then, run.
+You can also build out of the source tree.  This is useful, for example, to use
+the same code tree with different parameters and environments to configure the
+build in as many different build directories as you wish.  It also avoids
+polutting the source tree with build artifacts.
+
+@code{.sh}
+mkdir -p build/host
+cd build/host
+../../configure
+make
+@endcode
+
+Then, run an example.
 
 @code{.sh}
 cd examples/basic
