@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page media_page Media
 
 This chapter discusses media formats supported by EGT.
@@ -8,10 +5,10 @@ This chapter discusses media formats supported by EGT.
 @section media_intro Supported Media Formats
 
 EGT has direct and indirect support for many standard image, video, and
-audio formats through classes like VideoWindow, AudioPlayer,
-experimental::Sound, Image, SvgImage, and more.  In most cases, the low level
-handling is implemented using third party libraries like libpng, libjpeg,
-gstreamer, librsvg, and so on.
+audio formats through classes like egt::VideoWindow, egt::AudioPlayer,
+egt::experimental::Sound, egt::Image, egt::SvgImage, and more.  In most cases,
+the low level handling is implemented using third party libraries like libpng,
+libjpeg, gstreamer, librsvg, and so on.
 
 @section media_image Image Formats
 
@@ -53,10 +50,10 @@ Working with an SVG file in EGT is mostly accomplished with the SvgImage class.
 This class allows fine grained access into SVG specific properties,
 while still allowing easy conversion to a normal raster Image instance.
 
-experimental::Gauge, experimental::GaugeLayer, and experimental::NeedleLayer are
-several classes useful in EGT for taking advantage of SVG files directly by
-using complete SVG files or individual objects in those SVG files to construct
-layered widgets.
+egt::v1::experimental::Gauge, egt::v1::experimental::GaugeLayer, and
+egt::v1::experimental::NeedleLayer are several classes useful in EGT for taking
+advantage of SVG files directly by using complete SVG files or individual
+objects in those SVG files to construct layered widgets.
 
 @section media_video Video Formats
 
@@ -82,6 +79,3 @@ Format           | Support Library
 ---------------- | ---------------
 XML              | RapidXML
 JSON             | JsonCpp
-
-*/
-}}

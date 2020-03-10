@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page draw Drawing
 
 This chapter discusses how drawing works and how rectangles are marked for
@@ -8,14 +5,15 @@ redraw.
 
 @section draw_loop Damaging, Drawing, and the Widget Tree
 
-Each widget has a Widget::box(), which holds the bounding
-rectangle for the widget. This is the rectangle a widget is responsible for at
-some z-order level for what content should be placed inside that bounding box.
+Each widget has a egt::v1::Widget::box(), which holds the bounding rectangle for
+the widget. This is the rectangle a widget is responsible for at some z-order
+level for what content should be placed inside that bounding box.
 
 Widgets are organized into a tree.  At the top of the tree there is a top level
-widget that is a special type of widget called a Window.  A Window is a frame
-widget, which is a composing widget.  This is just another way of saying a
-frame can deal with zero or more children widgets inside of its Widget::box().
+widget that is a special type of widget called a egt::Window.  A egt::Window is
+a frame widget, which is a composing widget.  This is just another way of saying
+a frame can deal with zero or more children widgets inside of its
+egt::v1::Widget::box().
 
 Widgets are essentially rectangles that are drawn.  The widget defines the
 content of what is drawn, but all that matters to the widget is its rectangle
@@ -23,11 +21,11 @@ of content.  That widget rectangle is directly drawn into a single global
 back buffer for the screen.  This is an internal buffer in memory.
 This back buffer is continuously updated in place by redrawing damaged
 rectangles using the widgets that cover it.  When all of the rectangles have
-been drawn in a single iteration of the EventLoop, only the damaged
+been drawn in a single iteration of the egt::EventLoop, only the damaged
 region of that back buffer is then copied to a display buffer.  The
 screen may actually have more than one buffer in order to handle double
-or triple buffering.  So, when switching between these buffers, the screen has to
-manage damaged regions for each of the buffers.
+or triple buffering.  So, when switching between these buffers, the screen has
+to manage damaged regions for each of the buffers.
 
 This means there are two flows up and down the widget hierarchy.  One is
 propagation of the damaged rectangles, and the other is propagation of redrawing
@@ -49,12 +47,13 @@ redraw their damaged regions.
 
 @section draw_paint Painting
 
-Typically, drawing should only be done inside the Widget::draw() method.
+Typically, drawing should only be done inside the egt::v1::Widget::draw()
+method.
 
 Typically, EGT default widgets have another level of indirection to implement
-the Widget::draw() function by using the Drawer class.  This allows draw
+the draw() function by using the Drawer class.  This allows draw
 functions to be overwritten by the theme.  However, this is not a technical
-requirement if there is no need to theme the Widget::draw() method of a widget.
+requirement if there is no need to theme the draw() method of a widget.
 See @ref colors_themes "Widget Theme" for more information.
 
 When a widget is asked to draw, it usually uses the Painter class to perform
@@ -80,8 +79,8 @@ The back-end used by Painter is the excellent
 [pixman](http://www.pixman.org/) for optimized pixel manipulation.  Both cairo
 and pixman take advantage of hardware acceleration when possible.
 
-To use cairo directly in a Widget::draw() method, get the cairo context by
-calling Painter::context() and then call cairo API functions like normal.
+To use cairo directly in a egt::v1::Widget::draw() method, get the cairo context by
+calling egt::v1::Painter::context() and then call cairo API functions like normal.
 
 @code{.cpp}
 auto cr = painter.context().get();
@@ -116,12 +115,12 @@ draw outside of its box(), it will not be seen.  This is important because EGT
 needs to know where things are drawn so it can account for repainting as
 necessary. If any widget were allowed to draw anywhere on the screen at any time,
 EGT would have no idea what needs to be redrawn.  To circumvent this operation
-at your own risk, set the Widget::Flag::no_clip flag on a widget.  This will
+at your own risk, set the egt::v1::Widget::Flag::no_clip flag on a widget.  This will
 disable automatic clipping.
 
 When the parent frame calls the draw() function of a widget, it will first setup
-a Painter::AutoSaveRestore instance.  Therefore there is not need to handle saving or
-restoring the state in any Widget::draw() function as this is done automatically.
+a egt::v1::Painter::AutoSaveRestore instance.  Therefore there is not need to handle saving or
+restoring the state in any egt::v1::Widget::draw() function as this is done automatically.
 
 @section draw_transforms Affine Matrix Transformations
 
@@ -166,8 +165,5 @@ default, widgets are drawn in the order in which they are added to a Frame.
 If you add() a Label, and then add() a background ImageLabel that covers the
 entire window, you will not see the label unless the background image is
 transparent. To change this, you have to modify the z-order of the widgets by
-either lowering the ImageLabel with Widget::zorder_down() or raising the Label
-with Widget::zorder_up().
-
-*/
-}}
+either lowering the ImageLabel with egt::v1::Widget::zorder_down() or raising the Label
+with egt::v1::Widget::zorder_up().

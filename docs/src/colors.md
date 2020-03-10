@@ -1,17 +1,14 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page colors Color, Palette, and Theme
 
 This chapter discusses how to to use colors, palettes, and themes.
 
 @section colors_colors Colors
 
-The Color class internally keeps track of a 32-bit RGBA (red, green, blue, and
+The egt::Color class internally keeps track of a 32-bit RGBA (red, green, blue, and
 alpha) color by managing the individual color components.  However, this class
 also supports at least the HSV and HSL colorspaces, and conversion between the
-different colorspaces.  The Pattern class helps with managing a pattern
-consisting of color steps at specific offsets.  Also, the experimental::ColorMap
+different colorspaces.  The egt::Pattern class helps with managing a pattern
+consisting of color steps at specific offsets.  Also, the egt::experimental::ColorMap
 class deals with color steps and allows interpolation between the different color
 steps in any of the supported colorspaces.
 
@@ -27,8 +24,8 @@ interpolation between colors.
 The Palette contains a list of @ref predefined_colors.
 
 The Palette class manages a set of colors.  However, colors are not stored as a
-one dimensional list internally.  Colors are identified by a Palette::ColorId
-and also a Palette::GroupId.  The GroupId is associated with different states of
+one dimensional list internally.  Colors are identified by a egt::v1::Palette::ColorId
+and also a egt::v1::Palette::GroupId.  The GroupId is associated with different states of
 a color in the palette, which corresponds with different states of a widget.
 For example, when a button is pressed, it changes from a normal to active state
 and uses the same Palette::ColorId to identify its background color, but uses a
@@ -39,8 +36,8 @@ override any individual color for a specific widget instance by calling
 Widget::color().
 
 @code{.cpp}
-Button button(window, "Press Me");
-button.color(Palette::ColorId::button_text, Palette::green);
+egt::Button button(window, "Press Me");
+button.color(egt::Palette::ColorId::button_text, egt::Palette::green);
 @endcode
 
 For a list of configurable palette colors, see Palette::ColorId.
@@ -56,15 +53,15 @@ standard](https://www.w3.org/TR/css-color-3/).
 @section colors_themes Theme
 
 The theme contains the default palette and font and also can be used as a place
-to override Widget::draw() methods.
+to override egt::v1::Widget::draw() methods.
 
 By default, themes are inherited in the widget hierarchy.  If the top level
 window does not have a custom theme or a widget does not have a parent, it will
-use global_theme() by default. So, when you add a button widget to a window,
+use egt::global_theme() by default. So, when you add a button widget to a window,
 that button will use the theme from the window and on up the widget hierarchy as
 needed.  This means if you change the font of the window theme, the button and
 all of its children will inherit that change.  Each Widget can hold its own
-instance of a theme, set with Widget::theme().
+instance of a theme, set with egt::v1::Widget::theme().
 
 @see @subpage custom for more information on how to create custom widgets.
 
@@ -84,12 +81,12 @@ Theme is a class that holds a palette, font, and other functions and properties
 used by widgets.  By default, there is a global_theme() that is used by all
 widgets. This can be changed by calling the set_global_theme() function.
 
-Each widget references a theme through its Widget::theme() call.  However,
+Each widget references a theme through its egt::v1::Widget::theme() call.  However,
 themes are inherited by default from a widget's parent.  If no parent widget
-has a theme, the global_theme() is used by default.
+has a theme, the egt::global_theme() is used by default.
 
-To break the inheritance, call Widget::theme().  This will cause the widget
-to maintain its own theme and not inherit from its parent or the global theme.
+To break the inheritance, call egt::v1::Widget::theme().  This will cause the
+widget to maintain its own theme and not inherit from its parent or the global theme.
 So, if you change the theme for a window, all of its child widgets will inherit
 that theme by default unless you call Widget::theme() on one of the
 children.
@@ -105,9 +102,9 @@ you would implement your own draw function to customize the look of a widget.
 
 @section theme_type_draw Widget Type Draw Functions
 
-It is possible to change the Widget::draw() function for a widget type globally
-based only on the widget's C++ type.  For example, you can change the draw()
-function for all Button widgets by setting one draw method.
+It is possible to change the egt::v1::Widget::draw() function for a widget type
+globally based only on the widget's C++ type.  For example, you can change the
+draw() function for all Button widgets by setting one draw method.
 
 @snippet "../src/themes/shamrock.cpp" RoundButtons
 
@@ -117,6 +114,3 @@ It is currently not possible to change the draw() function for a specific
 instance of a widget.  To accomplish this task, you must inherit from the widget
 type you wish to change and overload the draw() function.  Then, use the new
 widget type.
-
-*/
-}}

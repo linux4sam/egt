@@ -1,7 +1,4 @@
-﻿namespace egt { inline namespace v1 {
-/**
-
- @page eclipse Eclipse Development Environment Setup
+﻿ @page eclipse Eclipse Development Environment Setup
 
 Integration with Eclipse simplifies the compilation, remote execution
 and remote debugging of EGT applications using Buildroot
@@ -545,6 +542,3 @@ Machine.
 @imageSize{eclipse_host_debug_window.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_debug_window.png "Eclipse debug window"
 @image latex eclipse/eclipse_host_debug_window.png "Eclipse debug window"
-
-*/
-}}

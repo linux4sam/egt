@@ -1,14 +1,12 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page geometry Geometry
 
 This chapter discusses the coordinate system and how to deal with geometry in EGT.
 
 @section geometry_coord Coordinate System
 
-EGT defines a PointType, SizeType, RectType, LineType, ArcType, and CircleType
-along with several other classes for working with geometry.
+EGT defines a egt::PointType, egt::SizeType, egt::RectType, egt::LineType,
+egt::ArcType, and egt::CircleType along with several other classes for working
+with geometry.
 
 EGT uses a standard Cartesian coordinate system that specifies each point
 uniquely in a plane by a set of numerical coordinates, which are the signed
@@ -55,6 +53,3 @@ The Y positive direction is down.  An angle of 0.0 is in the direction of the
 positive X axis. An angle of 90 degrees is in the direction of the positive Y
 axis. Angles increase in the direction from the positive X axis toward the
 positive Y axis. Meaning, angles increase in a clockwise direction.
-
-*/
-}}

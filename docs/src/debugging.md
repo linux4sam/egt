@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page debug Debugging
 
 This chapter covers some of the many tools and techniques to debug an EGT
@@ -214,6 +211,3 @@ killall -SIGUSR2 binary-name
 @endcode
 
 @note This is Linux only.
-
-*/
-}}

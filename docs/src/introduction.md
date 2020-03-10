@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page intro Introduction
 
 @section intro_what_is_egt What is EGT?
@@ -53,15 +50,15 @@ abstraction layer to everything below it to an application programmer.
 @image latex architecture.png "Architecture" width=8cm
 
 In order to provide this abstraction, EGT provides a list of objects, or C++
-classes, some of which are specialized into a type called Widget. The @ref
+classes, some of which are specialized into a type called egt::Widget. The @ref
 controls are your standard interface components.  @ref sizers widgets help with
 layout and position of other widgets.  There are some basic @ref shapes widgets
 for drawing plain shapes.  And of course, the @ref media widgets handle playing
 audio and video related media.
 
 And then, there are some framework and application level classes like
-Application, EventLoop, Input, Screen, @ref timers, and Event that help everything
-work together.
+egt::Application, egt::EventLoop, egt::Input, egt::Screen, @ref timers, and
+egt::Event that help everything work together.
 
 @section intro_features EGT Features
 
@@ -97,6 +94,3 @@ Namespace                 | Meaning
 ::egt::v1::experimental   | A namespace for what is considered unstable and experimental.
 
 @remark Did you know the C++ Standard Draft Sources are [available on GitHub](https://github.com/cplusplus/draft)?
-
-*/
-}}

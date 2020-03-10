@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page environ Environment Variables
 
 This chapter discusses several environment variables that can be used to
@@ -156,6 +153,3 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
   </dd>
 
 </dl>
-
-*/
-}}

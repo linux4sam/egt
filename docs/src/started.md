@@ -1,7 +1,4 @@
-namespace egt { inline namespace v1 {
-/**
-
- @page started Getting Started
+@page started Getting Started
 
 There are various ways to get started with EGT depending on your requirements.
 If building for a Microchip MPU Xplained or EK type board, visit
@@ -18,12 +15,12 @@ compiling.
 
 Fetch the source:
 
-@code{.sh}
+@code{.unparsed}
 git clone --recursive https://github.com/linux4sam/egt.git
 @endcode
 
 @note Note the `--recursive` option.  This option is necessary to initialize any
-git submodules in the project.  If you forget to do this, autogen.sh will do it
+git submodules in the project.  If you forget to do this, autogen.txt will do it
 for you.
 
 @section started_building Building
@@ -33,14 +30,14 @@ platforms.
 
 To build for a PC, first install the required dependencies:
 
-@code{.sh}
+@code{.unparsed}
 sudo apt-get install build-essential automake autoconf libtool pkg-config \
     libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev gettext
 @endcode
 
 Optional, but recommended, dependencies include:
 
-@code{.sh}
+@code{.unparsed}
 sudo apt-get install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
      libxkbcommon-dev xkb-data
 sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
@@ -51,17 +48,17 @@ sudo apt-get install libasound2-dev libsndfile1-dev
 Then, clone the source and initialize autotools.  Typically autotools only needs
 to be initialized once and it will automatically pick up most changes.  However,
 when making changes to the configure scripts, the environment, or makefiles
-re-running autogen.sh, or more simply autoreconf -fvi, is necessary.
+re-running autogen.txt, or more simply autoreconf -fvi, is necessary.
 
-@code{.sh}
+@code{.unparsed}
 git clone --recursive https://github.com/linux4sam/egt.git
 cd egt
-./autogen.sh
+./autogen.txt
 @endcode
 
 Then, configure and build.
 
-@code{.sh}
+@code{.unparsed}
 ./configure
 make
 @endcode
@@ -71,7 +68,7 @@ the same code tree with different parameters and environments to configure the
 build in as many different build directories as you wish.  It also avoids
 polutting the source tree with build artifacts.
 
-@code{.sh}
+@code{.unparsed}
 mkdir -p build/host
 cd build/host
 ../../configure
@@ -80,7 +77,7 @@ make
 
 Then, run an example.
 
-@code{.sh}
+@code{.unparsed}
 cd examples/basic
 ./basic
 @endcode
@@ -92,8 +89,8 @@ PATH and follow the standard instructions.
 @note When adding cross compilation paths to the PATH environment variable, it
 should come before any existing system paths.
 
-@code{.sh}
-./autogen.sh
+@code{.unparsed}
+./autogen.txt
 ./configure --prefix=/nfsroot/root/egt/ --host=arm-buildroot-linux-gnueabi
 make
 @endcode
@@ -128,7 +125,7 @@ EGT is included as a package as part of the
 project. To build a complete SDK and target filesystem for a board, follow the
 instructions found in that project's README with the following versions.
 
-@code{.sh}
+@code{.unparsed}
 git clone https://github.com/linux4sam/buildroot-external-microchip.git -b egt_devel
 git clone https://git.buildroot.net/buildroot -b 2019.05.1
 cd buildroot
@@ -170,11 +167,8 @@ https://linux4sam.github.io/egt-docs/docset/EGT.xml
 @note To install Zeal, see the [official documentation to download and
     installing](https://zealdocs.org/download.html).  Specifically, on Ubuntu,
     you should get the latest version with their PPA.
-    @code{.sh}
+    @code{.unparsed}
     sudo add-apt-repository ppa:zeal-developers/ppa
     sudo apt-get update
     sudo apt-get install zeal
     @endcode
-
-*/
-}}

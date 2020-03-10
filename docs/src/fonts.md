@@ -1,23 +1,20 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page fonts Fonts
 
 This chapter discusses how to to use fonts.
 
 @section fonts_font Font Class
 
-The interface for working with fonts in EGT is the Font class. This class
+The interface for working with fonts in EGT is the egt::Font class. This class
 handles properties related to working with fonts, but there are still some other
-libraries in play.  Underneath, the Font class uses Fontconfig and Freetype for
-finding and rendering fonts.
+libraries in play.  Underneath, the egt::Font class uses Fontconfig and Freetype
+for finding and rendering fonts.
 
-Creating and assigning a Font to a specific widget involves using the
-Widget::font() member function.
+Creating and assigning a egt::Font to a specific widget involves using the
+egt::v1::Widget::font() member function.
 
 @code{.cpp}
-Button btn("Press Me");
-auto customfont = Font("Serif", 25, Font::weightid::bold, Font::slantid::italic);
+egt::Button btn("Press Me");
+auto customfont = egt::Font("Serif", 25, egt::Font::weightid::bold, egt::Font::slantid::italic);
 btn.font(customfont);
 @endcode
 
@@ -143,6 +140,3 @@ generation tools, and many other products as well.
 Both Fontconfig and FreeType support international fonts in many various
 languages and EGT takes advantage of this and in turn provides complete
 internationalization support for rendered text.
-
-*/
-}}

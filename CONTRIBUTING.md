@@ -122,7 +122,7 @@ it because the package not be available.
 ## Generating Documentation
 
 This documentation is generated with Doxygen, which is managed by the EGT build
-system.  The recommended version of doxygen is @b 1.18.3.  If other versions are
+system.  The recommended version of doxygen is @b 1.8.17.  If other versions are
 used, ther are sometimes noticeable differences.
 
 To generate the documentation at any time run:

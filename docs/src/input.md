@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page input Input
 
 This chapter discusses various input device support.
@@ -53,6 +50,3 @@ configuration of input devices.
 
 Also, take special note of [udev configuration of devices](https://wayland.freedesktop.org/libinput/doc/latest/device-configuration-via-udev.html#)
 that controls how they are introduced to libinput.
-
-*/
-}}

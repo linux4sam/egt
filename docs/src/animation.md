@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page animations Animations
 
 This chapter discusses how to to use animations.
@@ -8,13 +5,14 @@ This chapter discusses how to to use animations.
 @section animations_classes Animation Classes
 
 EGT provides a variety of classes for working with animations.  The
-Animation, AnimationSequence, AutoAnimation, and
-PropertyAnimatorType classes all provide ways to animate almost anything.  These
-classes can be instantiated and then attached to any property of widgets, for
-example, a widget's position or even Font size.  For that matter, you don't even
-have to animate widgets specifically.  For example, you could provide values
-from an animation class right into the brightness value of an LCD controller to
-slowly fade out the brightness of an LCD display over some time you specify.
+egt::Animation, egt::AnimationSequence, egt::AutoAnimation, and
+egt::PropertyAnimatorType classes all provide ways to animate almost anything.
+These classes can be instantiated and then attached to any property of widgets,
+for example, a widget's position or even egt::Font size.  For that matter, you
+don't even have to animate widgets specifically.  For example, you could provide
+values from an animation class right into the brightness value of an LCD
+controller to slowly fade out the brightness of an LCD display over some time
+you specify.
 
 On top of these base animation classes, there are also higher order classes such
 as Sprite that provide a built in way to animate sprite sheets and
@@ -47,7 +45,7 @@ easing function or select one of the predefined ones.
 All easing functions take a percent time, and return a percent value.  They have
 a very simple API, but what happens inside the easing function can be anywhere
 from a simple linear value to a complex mathematical curve. For example, the
-simplest of easing functions is the easing_linear() function that is
+simplest of easing functions is the egt::easing_linear() function that is
 implemented like this:
 
 @code{.cpp}
@@ -84,10 +82,7 @@ functions.
 
 @section animations_animating Animating Widgets
 
-For example, to change the Y position of a button, it might involve doing the
-following:
+For example, to change the Y position of a egt::Button, it might involve doing
+the following:
 
 @snippet "../examples/snippets/snippets.cpp" animation1.1
-
-*/
-}}

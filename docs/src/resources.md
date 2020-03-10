@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page resources Resources
 
 This chapter discusses resources and how to distribute and use them with EGT.
@@ -105,7 +102,7 @@ reference it at runtime with ResourceManager from any compilation unit using the
 @code{.cpp}
 EGT_EMBED(my_image, "../images/my_image.png");
 
-Image my_image("res:my_image");
+egt::Image my_image("res:my_image");
 @endcode
 
 @subsection resources_mresg Generate Code with mresg Tool
@@ -126,6 +123,3 @@ $ ./mresg --help
 
 Note that when using mresg the resource name registered with ResourceManager has
 all periods replaced with underscores.
-
-*/
-}}

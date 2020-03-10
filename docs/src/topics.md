@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page topics Developer Topics
 
 This chapter discusses some common problems and advanced developer topics.
@@ -8,16 +5,16 @@ This chapter discusses some common problems and advanced developer topics.
 @section topics_black Black Screen
 
 If you see a black screen when you run your application, make sure you call
-Window::show() at least once somewhere in your application.
+egt::v1::Window::show() at least once somewhere in your application.
 
 @section topics_threads Multiple Threads and Thread Safety
 
 The EGT API is not thread safe, but there are well defined ways provided and
-supported to use the EGT API in a multi-threaded application by following a couple
-simple rules.  The thread the main EventLoop is started on, usually through
-Application::run(), must not be directly accessed by a separate thread.  This
-means any widgets or windows that are managed by that main thread should not be
-directly accessed by another thread.
+supported to use the EGT API in a multi-threaded application by following a
+couple simple rules.  The thread the main egt::EventLoop is started on, usually
+through egt::v1::Application::run(), must not be directly accessed by a separate
+thread.  This means any widgets or windows that are managed by that main thread
+should not be directly accessed by another thread.
 
 Instead, EGT defines a solution to easily use multiple threads and interact with
 the API in a thread safe manner through the event loop and Asio.  To call a
@@ -31,14 +28,14 @@ For example, to change the position of a button from another thread, the
 following can be done.
 
 @code{.cpp}
-egt::asio::post(Application::instance().event().io(), [&button](){ button.x(5); });
+egt::asio::post(egt::Application::instance().event().io(), [&button](){ button.x(5); });
 @endcode
 
 To run any code you want from another thread on the EventLoop thread, post() a
 lamba or function.
 
 @code{.cpp}
-egt::asio::post(Application::instance().event().io(), []() {
+egt::asio::post(egt::Application::instance().event().io(), []() {
         ...
     });
 @endcode
@@ -54,11 +51,11 @@ Everything is on the stack.
 @code{.cpp}
 int main(int argc, const char** argv)
 {
-    Application app(argc, argv);
+    egt::Application app(argc, argv);
 
-    TopWindow window;
-    Button button(window, "Press Me");
-    button.align(AlignFlag::center);
+    egt::TopWindow window;
+    egt::Button button(window, "Press Me");
+    button.align(egt::AlignFlag::center);
     window.show();
 
     return app.run();
@@ -68,15 +65,15 @@ int main(int argc, const char** argv)
 Have EGT manage the lifetime of widgets.
 
 @code{.cpp}
-void add_buttons_to_window(Window& win)
+void add_buttons_to_window(egt::Window& win)
 {
-    win.add(make_shared<Button>("button 1", Rect(Point(), Size(100, 40))));
-    win.add(make_shared<Button>("button 2"));
+    win.add(make_shared<egt::Button>("button 1", egt::Rect(egt::Point(), egt::Size(100, 40))));
+    win.add(make_shared<egt::Button>("button 2"));
 }
 
 int main(int argc, const char** argv)
 {
-    TopWindow win;
+    egt::TopWindow win;
     ...
     add_buttons_to_window(win);
     ...
@@ -87,18 +84,18 @@ int main(int argc, const char** argv)
 Keep widgets around based on the scope of its owning object.
 
 @code{.cpp}
-class MyWindow : public TopWindow
+class MyWindow : public egt::TopWindow
 {
 public:
     explicit MyWindow(const Size& size)
-        : TopWindow(size),
+        : egt::TopWindow(size),
           m_grid(Tuple(2, 2))
     {
         add(m_grid);
     }
 
 protected:
-    StaticGrid m_grid;
+    egt::StaticGrid m_grid;
 };
 @endcode
 
@@ -121,8 +118,8 @@ A benefit of using Asio for networking is it it automatically built into the EGT
 event loop automatically.
 
 Outside of that, EGT provides some utility classes like
-experimental::HttpClientRequest that uses libcurl underneath for full HTTP/HTTPS
-support, and handles the integration of libcurl with Asio.
+egt::v1::experimental::HttpClientRequest that uses libcurl underneath for full
+HTTP/HTTPS support, and handles the integration of libcurl with Asio.
 
 @section topics_compiler Compiler Setup and Options
 
@@ -160,7 +157,7 @@ event loop:
 
 -# Attach a file descriptor to the EGT event loop.
 -# Using an egt::PeriodicTimer to run the third party library.
--# Instead of using egt::Application::run(), implement your own loop.
+-# Instead of using egt::v1::Application::run(), implement your own loop.
 -# Spawn separate threads and use egt::asio::post() and egt::asio::dispatch().
 
 @subsection topics_thirdparty_fd Attach a file descriptor to the EGT event loop
@@ -237,6 +234,3 @@ int main()
 Spawn separate threads and use egt::asio::post() and egt::asio::dispatch() to
 communicate between the threads safely.  Remember, EGT is not thread safe.  It
 is never safe to assume it is ok to access any EGT object from multiple threads.
-
-*/
-}}

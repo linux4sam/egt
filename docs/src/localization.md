@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page local Internationalization and Localization
 
 This chapter discusses how to make use of internationalization (i18n) and
@@ -84,6 +81,3 @@ LANGUAGE=es.utf8 ./i18n
 domain for:
 
     Symbol: BR2_GENERATE_LOCALE [=en_US es_MX]
-
-*/
-}}

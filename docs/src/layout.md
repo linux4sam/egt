@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page layout Layout
 
 This chapter discusses how Widget layout works.
@@ -10,16 +7,17 @@ semantics in EGT is necessary.
 
 @section layout_box The Widget Box Model
 
-@ref draw_loop first introduced the idea of the Widget @b box.  Understanding
-the Widget @b box is an important concept not only when it comes to understanding
-how widgets are drawn, but also in understanding position and layout. Each
-Widget has a @b box accessed with Widget::box().  This is a Rect that has an
-origin and a width and height.  If you call Widget::move() or Widget::resize(),
-the box is changed.  When drawing or performing layout, this is the box that is
-used or @a owned by the Widget.  By default, when a Widget is told to draw, the
-Painter will be clipped to be within the Widget's box.
+@ref draw_loop first introduced the idea of the egt::Widget @b box.
+Understanding the egt::Widget @b box is an important concept not only when it
+comes to understanding how widgets are drawn, but also in understanding position
+and layout. Each egt::Widget has a @b box accessed with egt::v1::Widget::box().
+This is a egt::Rect that has an origin and a width and height.  If you call
+egt::v1::Widget::move() or egt::v1::Widget::resize(), the box is changed.  When
+drawing or performing layout, this is the box that is used or @a owned by the
+egt::Widget.  By default, when a egt::Widget is told to draw, the egt::Painter
+will be clipped to be within the widget's box.
 
-Within the Widget @b box, each widget also has a @b margin, @b border, and @b
+Within the widget @b box, each widget also has a @b margin, @b border, and @b
 padding width. These are intrinsic properties that are used when drawing a
 widget.  How each of these properties applies visually is very similar to CSS
 constructs and is demonstrated with the following diagram.
@@ -63,19 +61,20 @@ is usually involved with fixed positioning.
 
 ## Widget Alignment and Layout Properties
 
-Each widget has a Widget::align() setting. Each widget also has a
-Widget::min_size_hint() to bound the smallest size the widget can be. If a
-widget has an alignment value of empty, usually the default, whatever size it
-has will be used while still taking the Widget::min_size_hint() into account. If
-the alignment value of the widget is empty, the size of the widget will
-automatically be calculated based on several other properties, usually based on
-some ratio like Widget::xratio(), Widget::yratio(), Widget::horizontal_ratio(),
-or Widget::vertical_ratio() in relation to the widget's parent.
+Each widget has a egt::v1::Widget::align() setting. Each widget also has a
+egt::v1::Widget::min_size_hint() to bound the smallest size the widget can be.
+If a widget has an alignment value of empty, usually the default, whatever size
+it has will be used while still taking the egt::v1::Widget::min_size_hint() into
+account. If the alignment value of the widget is empty, the size of the widget
+will automatically be calculated based on several other properties, usually
+based on some ratio like egt::v1::Widget::xratio(), egt::v1::Widget::yratio(),
+egt::v1::Widget::horizontal_ratio(), or egt::v1::Widget::vertical_ratio() in
+relation to the widget's parent.
 
 ## Layout Widgets
 
-EGT provides several widgets like BoxSizer and StaticGrid to help with automatic
-layout.  See @ref sizers for a complete list.
+EGT provides several widgets like egt::BoxSizer and egt::StaticGrid to help with
+automatic layout.  See @ref sizers for a complete list.
 
 The layout algorithm used by sizers is based upon the idea of individual widgets
 reporting their minimal required size and their ability to get stretched if the
@@ -84,6 +83,3 @@ programmer does not set the start-up size of a widget, the widget will rather be
 assigned as a child to a sizer and this sizer will set the recommended size of
 the widget. This sizer in turn will query its children (which can be other
 widgets or even sizers) so that a hierarchy of sizers can be constructed.
-
-*/
-}}

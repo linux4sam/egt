@@ -1,5 +1,3 @@
-/**
-
 @mainpage EGT Programmer's Manual
 
 The Ensemble Graphics Toolkit (EGT) is a C++ GUI Linux toolkit for
@@ -40,5 +38,3 @@ contribution guidelines.
 
 This software and manual are provided under the terms of the
 [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
-
-*/

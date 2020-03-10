@@ -1,6 +1,3 @@
-namespace egt { inline namespace v1 {
-/**
-
  @page events Events
 
 This chapter discusses the event model and how events are handled.
@@ -20,8 +17,8 @@ while (true)
 @endcode
 
 It does this until the event loop is told to exit, and in turn, this usually
-means the application exits.  For example, a call to EventLoop::quit() would
-cause the event loop to exit.
+means the application exits.  For example, a call to egt::v1::EventLoop::quit()
+would cause the event loop to exit.
 
 The event loop in EGT is implemented with the [Asio](https://think-async.com/)
 library.  Asio is a cross-platform C++ library for network and low-level I/O
@@ -58,25 +55,25 @@ navigate the widget tree.
 
 @section events_data Event Data
 
-Each event handler, like Widget::handle(), is called with an Event object.  This
-object maintains the unique ::EventId of the event, and any data
+Each event handler, like egt::v1::Widget::handle(), is called with an Event
+object.  This object maintains the unique egt::EventId of the event, and any data
 associated with the event such as pointer or key event data.
 
 @section events_handling Handling Events
 
 When implementing a widget that needs to handle events, overriding the the
-Widget::handle() virtual method is the expected method to handle events.
+egt::v1::Widget::handle() virtual method is the expected method to handle events.
 However, when using an existing widget, it can be a burden to the subclass just
 to handle events.  So, to handle events when using a widget, the
-Widget::on_event() method can be used to register any number of callbacks. A
+egt::v1::Widget::on_event() method can be used to register any number of callbacks. A
 [lambda](https://en.cppreference.com/w/cpp/language/lambda) function may also be
 used.
 
 @code{.cpp}
-ImageButton settings("icon:cog.png");
-settings.on_event([this](Event& event)
+egt::ImageButton settings("icon:cog.png");
+settings.on_event([this](egt::Event& event)
 {
-    if (event.id() == EventId::pointer_click)
+    if (event.id() == egt::EventId::pointer_click)
     {
         if (m_popup.visible())
             m_popup.hide();
@@ -86,22 +83,22 @@ settings.on_event([this](Event& event)
 });
 @endcode
 
-Another variation of the Widget::on_event() function allows for specifying
-what events to filter as a second parameter.
+Another variation of the egt::v1::Widget::on_event() function allows for
+specifying what events to filter as a second parameter.
 
 @code{.cpp}
-ImageButton settings("icon:cog.png");
-settings.on_event([this](Event&)
+egt::ImageButton settings("icon:cog.png");
+settings.on_event([this](egt::Event&)
 {
     if (m_popup.visible())
         m_popup.hide();
     else
         m_popup.show(true);
-}, {EventId::pointer_click});
+}, {egt::EventId::pointer_click});
 @endcode
 
-Widget::on_event() can be called any number of times to register any number
-of callbacks.
+egt::v1::Widget::on_event() can be called any number of times to register any
+number of callbacks.
 
 @section events_timers Timers
 
@@ -109,11 +106,11 @@ Timers are an intrinsic part of the EventLoop.  There are two main classes for
 working with timers: Timer and PeriodicTimer.
 
 Creating a timer is straightforward, and you can register any number of
-callbacks with the Timer::on_timeout() function of a Timer or a
+callbacks with the egt::v1::Timer::on_timeout() function of a Timer or a
 PeriodicTimer.
 
 @code{.cpp}
-PeriodicTimer timer(std::chrono::seconds(1));
+egt::PeriodicTimer timer(std::chrono::seconds(1));
 
 timer.on_timeout([]()
 {
@@ -125,21 +122,19 @@ timer.start();
 
 @section events_handling_extended Handling Extended or Custom Widget Events
 
-The ::EventId lists global events that usually don't necessary originate in a
+The egt::EventId lists global events that usually don't necessary originate in a
 widget itself.  To handle custom or widget type specific events,
-detail::Signal<> member attributes can be added to a widget to provide custom
+egt::v1::detail::Signal member attributes can be added to a widget to provide custom
 handles any user can connect to in order to receive the event.
 
-The typical use case for detail::Signal<> is the same as Widget::on_event()
-except it can take any number of type of arguments, including none.
+The typical use case for egt::v1::detail::Signal is the same as
+egt::v1::Widget::on_event() except it can take any number of type of arguments,
+including none.
 
 @code{.cpp}
-CheckBox box;
+egt::CheckBox box;
 box.on_checked_changed([&box]()
 {
     std::cout << "CheckBox state is: " << box.checked() << std::endl;
 });
 @endcode
-
-*/
-}}
