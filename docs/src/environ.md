@@ -138,7 +138,7 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
 
   <dt>EGT_NO_COMPOSITION_BUFFER</dt>
   <dd>
-    Instead of using a composition buffer, always render dirctly into the
+    Instead of using a composition buffer, always render directly into the
     framebuffer. This only works if there is a backend with a single
     framebuffer.  For example, when using KMS the environment variable
     EGT_KMS_BUFFERS must equal 1.  Otherwise has no effect and may not apply to
