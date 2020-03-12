@@ -207,6 +207,9 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 AudioPlayer::AudioPlayer()
     : m_impl(new detail::AudioPlayerImpl(*this))
 {
+    if (!detail::audio_device())
+        throw std::runtime_error("no soundcards");
+
     GError* err = nullptr;
     if (!gst_init_check(nullptr, nullptr, &err))
     {
