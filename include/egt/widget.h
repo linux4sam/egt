@@ -268,7 +268,7 @@ public:
      *
      * @see resize()
      */
-    inline void resize_by_ratio(DefaultDim ratio)
+    void resize_by_ratio(DefaultDim ratio)
     {
         resize_by_ratio(ratio, ratio);
     }
@@ -291,7 +291,7 @@ public:
      *
      * @warning This is experimental.
      */
-    inline void scale(float scale)
+    void scale(float scale)
     {
         this->scale(scale, scale);
     }
@@ -301,14 +301,14 @@ public:
      *
      * @param[in] w The new width of the Widget.
      */
-    inline void width(DefaultDim w) { resize(Size(w, height())); }
+    void width(DefaultDim w) { resize(Size(w, height())); }
 
     /**
      * Change the height.
      *
      * @param[in] h The new height of the Widget.
      */
-    inline void height(DefaultDim h) { resize(Size(width(), h)); }
+    void height(DefaultDim h) { resize(Size(width(), h)); }
 
     /**
      * Move the Widget to a new position.
@@ -325,14 +325,14 @@ public:
      *
      * @param[in] x The new origin X value for the widget relative to its parent.
      */
-    inline void x(DefaultDim x) { move(Point(x, y())); }
+    void x(DefaultDim x) { move(Point(x, y())); }
 
     /**
      * Set the Y coordinate of the box.
      *
      * @param[in] y The new origin Y value for the widget relative to its parent.
      */
-    inline void y(DefaultDim y) { move(Point(x(), y)); }
+    void y(DefaultDim y) { move(Point(x(), y)); }
 
     /**
      * Move the widget to the specified center point.
@@ -374,7 +374,7 @@ public:
      *
      * @return true if the widget is visible.
      */
-    inline bool visible() const
+    bool visible() const
     {
         return !flags().is_set(Widget::Flag::invisible);
     }
@@ -389,7 +389,7 @@ public:
      *
      * @see show() and hide() and visible()
      */
-    inline void visible_toggle()
+    void visible_toggle()
     {
         if (visible())
             hide();
@@ -416,7 +416,7 @@ public:
      *
      * @return true if the widget is readonly.
      */
-    inline bool readonly() const
+    bool readonly() const
     {
         return flags().is_set(Widget::Flag::readonly);
     }
@@ -437,7 +437,7 @@ public:
      *
      * @see readonly()
      */
-    inline void readonly_toggle()
+    void readonly_toggle()
     {
         readonly(!readonly());
     }
@@ -458,7 +458,7 @@ public:
      * When a widget is disabled, it does not receive events. Depending on the
      * widget, the color scheme may change.
      */
-    inline bool disabled() const
+    bool disabled() const
     {
         return flags().is_set(Widget::Flag::disabled);
     }
@@ -468,7 +468,7 @@ public:
      *
      * @see disable() and enable()
      */
-    inline void disable_toggle()
+    void disable_toggle()
     {
         if (disabled())
             enable();
@@ -483,7 +483,7 @@ public:
      *
      * @see enable() and disable()
      */
-    inline void disabled(bool value)
+    void disabled(bool value)
     {
         if (value)
             disable();
@@ -496,7 +496,7 @@ public:
      *
      * @return Alpha property in the range 0.0 to 1.0.
      */
-    inline float alpha() const
+    float alpha() const
     {
         return m_alpha;
     }
@@ -542,7 +542,7 @@ public:
      *
      * @see @ref layout_box
      */
-    inline const Rect& box() const
+    const Rect& box() const
     {
         return m_box;
     }
@@ -560,7 +560,7 @@ public:
     /**
      * Get the size of the widget's box().
      */
-    inline const Size& size() const
+    const Size& size() const
     {
         return box().size();
     }
@@ -568,7 +568,7 @@ public:
     /**
      * Get the origin of the widget's box().
      */
-    inline const Point& point() const
+    const Point& point() const
     {
         return box().point();
     }
@@ -576,27 +576,27 @@ public:
     /**
      * Width of the widget's box().
      */
-    inline DefaultDim width() const { return m_box.width(); }
+    DefaultDim width() const { return m_box.width(); }
 
     /**
      * Height of the widget's box().
      */
-    inline DefaultDim height() const { return m_box.height(); }
+    DefaultDim height() const { return m_box.height(); }
 
     /**
      * X coordinate of the widget's box().
      */
-    inline DefaultDim x() const { return m_box.x(); }
+    DefaultDim x() const { return m_box.x(); }
 
     /**
      * Y coordinate of the widget's box().
      */
-    inline DefaultDim y() const { return m_box.y(); }
+    DefaultDim y() const { return m_box.y(); }
 
     /**
      * Get the center point of the widget's box().
      */
-    inline Point center() const { return box().center(); }
+    Point center() const { return box().center(); }
 
     /**
      * Set the widget instance Palette.
@@ -679,7 +679,7 @@ public:
     /**
      * Get a const ref of the flags.
      */
-    inline const Widget::Flags& flags() const { return m_widget_flags; }
+    const Widget::Flags& flags() const { return m_widget_flags; }
 
     /**
      * Get a modifiable ref of the flags.
@@ -688,7 +688,7 @@ public:
      * widget. Always use the appropriate member functions (i.e. readonly(),
      * checked()).
      */
-    inline Widget::Flags& flags() { return m_widget_flags; }
+    Widget::Flags& flags() { return m_widget_flags; }
 
     /**
      * Align the widget.
@@ -702,19 +702,19 @@ public:
     /**
      * Get the alignment.
      */
-    inline const AlignFlags& align() const { return m_align; }
+    const AlignFlags& align() const { return m_align; }
 
     /**
      * Get the alignment.
      */
-    inline AlignFlags& align() { return m_align; }
+    AlignFlags& align() { return m_align; }
 
     /**
      * Set the padding width.
      *
      * @see @ref layout_box
      */
-    inline void padding(DefaultDim padding)
+    void padding(DefaultDim padding)
     {
         if (detail::change_if_diff<>(m_padding, padding))
         {
@@ -728,14 +728,14 @@ public:
      *
      * @see @ref layout_box
      */
-    inline DefaultDim padding() const { return m_padding; }
+    DefaultDim padding() const { return m_padding; }
 
     /**
      * Set the margin width.
      *
      * @see @ref layout_box
      */
-    inline void margin(DefaultDim margin)
+    void margin(DefaultDim margin)
     {
         if (detail::change_if_diff<>(m_margin, margin))
         {
@@ -749,14 +749,14 @@ public:
      *
      * @see @ref layout_box
      */
-    inline DefaultDim margin() const { return m_margin; }
+    DefaultDim margin() const { return m_margin; }
 
     /**
      * Set the border width.
      *
      * @see @ref layout_box
      */
-    inline void border(DefaultDim border)
+    void border(DefaultDim border)
     {
         if (detail::change_if_diff<>(m_border, border))
         {
@@ -770,12 +770,12 @@ public:
      *
      * @see @ref layout_box
      */
-    inline DefaultDim border() const { return m_border; }
+    DefaultDim border() const { return m_border; }
 
     /**
      * Set the border radius.
      */
-    inline void border_radius(float radius)
+    void border_radius(float radius)
     {
         if (detail::change_if_diff<>(m_border_radius, radius))
             damage();
@@ -784,14 +784,14 @@ public:
     /**
      * Get the border radius.
      */
-    inline float border_radius() const { return m_border_radius; }
+    float border_radius() const { return m_border_radius; }
 
     /**
      * Set the border flags.
      *
      * @see Theme::BorderFlag
      */
-    inline void border_flags(const Theme::BorderFlags& flags)
+    void border_flags(const Theme::BorderFlags& flags)
     {
         if (detail::change_if_diff<>(m_border_flags, flags))
             damage();
@@ -802,7 +802,7 @@ public:
      *
      * @see Theme::BorderFlag
      */
-    inline Theme::BorderFlags border_flags() const { return m_border_flags; }
+    Theme::BorderFlags border_flags() const { return m_border_flags; }
 
     /**
      * Set the size ratio relative to parent.
@@ -811,7 +811,7 @@ public:
      *
      * @note This is the same as calling ratio(ratio, ratio).
      */
-    inline void ratio(DefaultDim ratio)
+    void ratio(DefaultDim ratio)
     {
         this->ratio(ratio, ratio);
     }
@@ -822,8 +822,8 @@ public:
      * @param[in] horizontal Horizontal ratio of parent width, with 100 being 100%.
      * @param[in] vertical Vertical ratio of parent height, with 100 being 100%.
      */
-    inline void ratio(DefaultDim horizontal,
-                      DefaultDim vertical)
+    void ratio(DefaultDim horizontal,
+               DefaultDim vertical)
     {
         auto a = detail::change_if_diff<>(m_horizontal_ratio, horizontal);
         auto b = detail::change_if_diff<>(m_vertical_ratio, vertical);
@@ -836,7 +836,7 @@ public:
      *
      * @param[in] vertical Vertical ratio of parent height, with 100 being 100%.
      */
-    inline void vertical_ratio(DefaultDim vertical)
+    void vertical_ratio(DefaultDim vertical)
     {
         if (detail::change_if_diff<>(m_vertical_ratio, vertical))
             parent_layout();
@@ -845,14 +845,14 @@ public:
     /**
      * Get the vertical ratio relative to parent.
      */
-    inline DefaultDim vertical_ratio() const { return m_vertical_ratio; }
+    DefaultDim vertical_ratio() const { return m_vertical_ratio; }
 
     /**
      * Set the horizontal ratio relative to parent.
      *
      * @param[in] horizontal Horizontal ratio of parent width, with 100 being 100%.
      */
-    inline void horizontal_ratio(DefaultDim horizontal)
+    void horizontal_ratio(DefaultDim horizontal)
     {
         if (detail::change_if_diff<>(m_horizontal_ratio, horizontal))
             parent_layout();
@@ -861,14 +861,14 @@ public:
     /**
      * Get the horizontal ratio relative to parent.
      */
-    inline DefaultDim horizontal_ratio() const { return m_horizontal_ratio; }
+    DefaultDim horizontal_ratio() const { return m_horizontal_ratio; }
 
     /**
      * Set the Y position ratio relative to parent.
      *
      * @param[in] yratio Y ratio of parent height, with 100 being 100%.
      */
-    inline void yratio(DefaultDim yratio)
+    void yratio(DefaultDim yratio)
     {
         if (detail::change_if_diff<>(m_yratio, yratio))
             parent_layout();
@@ -877,14 +877,14 @@ public:
     /**
      * Get the Y position ratio relative to parent.
      */
-    inline DefaultDim yratio() const { return m_yratio; }
+    DefaultDim yratio() const { return m_yratio; }
 
     /**
      * Set the X position ratio relative to parent.
      *
      * @param[in] xratio X ratio of parent width, with 100 being 100%.
      */
-    inline void xratio(DefaultDim xratio)
+    void xratio(DefaultDim xratio)
     {
         if (detail::change_if_diff<>(m_xratio, xratio))
             parent_layout();
@@ -893,7 +893,7 @@ public:
     /**
      * Get the X position ratio relative to parent.
      */
-    inline DefaultDim xratio() const { return m_xratio; }
+    DefaultDim xratio() const { return m_xratio; }
 
     /**
      * Get a minimum size hint for the Widget.
@@ -982,7 +982,7 @@ public:
      *
      * @see Theme::FillFlag
      */
-    inline void fill_flags(const Theme::FillFlags& flags)
+    void fill_flags(const Theme::FillFlags& flags)
     {
         if (detail::change_if_diff<>(m_fill_flags, flags))
             damage();
@@ -993,7 +993,7 @@ public:
      *
      * @see Theme::FillFlag
      */
-    inline const Theme::FillFlags& fill_flags() const
+    const Theme::FillFlags& fill_flags() const
     {
         return m_fill_flags;
     }
@@ -1003,7 +1003,7 @@ public:
      *
      * @see Theme::FillFlag
      */
-    inline Theme::FillFlags& fill_flags()
+    Theme::FillFlags& fill_flags()
     {
         return m_fill_flags;
     }
@@ -1101,7 +1101,7 @@ public:
      *
      * @see to_parent().
      */
-    inline Rect to_parent(const Rect& r) const
+    Rect to_parent(const Rect& r) const
     {
         return Rect(to_parent(r.point()), r.size());
     }
@@ -1208,7 +1208,7 @@ public:
      *
      * @return true if checked.
      */
-    inline bool checked() const
+    bool checked() const
     {
         return flags().is_set(Widget::Flag::checked);
     }
@@ -1237,7 +1237,7 @@ public:
      * create a default name() of the widget, but can also be used to uniquely
      * identify widgets for other purposes.
      */
-    inline WidgetId widgetid() const
+    WidgetId widgetid() const
     {
         return m_widgetid;
     }
@@ -1280,7 +1280,7 @@ protected:
      * Get the local box which is the same size as box(), but with the
      * origin zeroed.
      */
-    inline Rect local_box() const
+    Rect local_box() const
     {
         return size();
     }

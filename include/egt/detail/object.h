@@ -40,7 +40,7 @@ public:
     /**
      * Get the name of the Object.
      */
-    inline const std::string& name() const { return m_name; }
+    const std::string& name() const { return m_name; }
 
     /**
      * Set the name of the Object.
@@ -50,7 +50,7 @@ public:
      *
      * @param[in] name Name to set for the Object.
      */
-    inline void name(const std::string& name) { m_name = name; }
+    void name(const std::string& name) { m_name = name; }
 
     /**
      * Event handler callback function.
