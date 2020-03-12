@@ -164,7 +164,7 @@ protected:
     /**
      * Create the pipeline.
      */
-    virtual bool createPipeline();
+    virtual bool createPipeline(const std::string& uri);
 
     /**
      * Destroy the pipeline.

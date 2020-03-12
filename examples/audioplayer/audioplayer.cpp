@@ -188,9 +188,12 @@ public:
         {
             if (m_player.playing())
             {
-                if (m_player.duration() > 0)
-                    range2->max(m_player.duration());
-                range2->value(m_player.position());
+                auto duration = static_cast<int>(m_player.duration() / 1000000000UL);
+                if (duration > 0)
+                    range2->max(duration);
+
+                auto position = static_cast<int>(m_player.position() / 1000000000UL);
+                range2->value(position);
             }
         });
 

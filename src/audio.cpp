@@ -17,10 +17,6 @@
 #include <sstream>
 #include <thread>
 
-#define SRC_NAME "srcAudio"
-#define PROGRESS_NAME "progress"
-#define VOLUME_NAME "volume"
-
 namespace egt
 {
 inline namespace v1
@@ -61,16 +57,40 @@ struct AudioPlayerImpl
 
     AudioPlayer& player;
     GstElement* m_pipeline {nullptr};
-    GstElement* m_src {nullptr};
     GstElement* m_volume {nullptr};
     gint64 m_position {0};
     gint64 m_duration {0};
     std::string m_uri;
     int m_volume_value {100};
-    GMainLoop* m_gmain_loop{nullptr};
+    GMainLoop* m_gmain_loop {nullptr};
     std::thread m_gmain_thread;
+    guint m_eventsource_id {0};
 };
 
+}
+
+static gboolean query_position(gpointer data)
+{
+    auto impl = reinterpret_cast<detail::AudioPlayerImpl*>(data);
+
+    /* don't query position if not playing */
+    if (!impl->player.playing())
+        return true;
+
+    if (gst_element_query_position(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_position) &&
+        gst_element_query_duration(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_duration))
+    {
+        SPDLOG_TRACE("position: {}  && duration: {}", impl->m_position, impl->m_duration);
+
+        if (Application::check_instance())
+        {
+            asio::post(Application::instance().event().io(), [impl]()
+            {
+                impl->player.on_position_changed.invoke();
+            });
+        }
+    }
+    return true;
 }
 
 static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
@@ -148,31 +168,6 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 
         break;
     }
-    case GST_MESSAGE_ELEMENT:
-    {
-        const GstStructure* info = gst_message_get_structure(message);
-        if (gst_structure_has_name(info, PROGRESS_NAME))
-        {
-            const GValue* vtotal = gst_structure_get_value(info, "total");
-            const auto total = g_value_get_int64(vtotal);
-            const GValue* vcurrent = gst_structure_get_value(info, "current");
-            const auto current = g_value_get_int64(vcurrent);
-
-            if (Application::check_instance())
-            {
-                asio::post(Application::instance().event().io(), [impl, current, total]()
-                {
-                    impl->m_duration = total;
-
-                    if (detail::change_if_diff<>(impl->m_position, current))
-                    {
-                        impl->player.on_position_changed.invoke();
-                    }
-                });
-            }
-        }
-        break;
-    }
     case GST_MESSAGE_STATE_CHANGED:
     {
         GstState old_state, new_state, pending_state;
@@ -243,16 +238,15 @@ void AudioPlayer::destroyPipeline()
         m_impl->m_volume = nullptr;
     }
 
-    if (m_impl->m_src)
-    {
-        g_object_unref(m_impl->m_src);
-        m_impl->m_src = nullptr;
-    }
-
     if (m_impl->m_pipeline)
     {
         g_object_unref(m_impl->m_pipeline);
         m_impl->m_pipeline = nullptr;
+    }
+
+    if (m_impl->m_eventsource_id > 0)
+    {
+        g_source_remove(m_impl->m_eventsource_id);
     }
 
     if (m_impl->m_gmain_loop)
@@ -300,29 +294,18 @@ bool AudioPlayer::media(const std::string& uri)
 
     if (detail::change_if_diff(m_impl->m_uri, uri))
     {
-        destroyPipeline();
-
         std::string path;
         auto type = detail::resolve_path(uri, path);
-
         switch (type)
         {
         case detail::SchemeType::filesystem:
         {
-            result = createPipeline();
-            g_object_set(m_impl->m_src,
-                         "uri",
-                         (std::string("file://") + path).c_str(),
-                         nullptr);
+            result = createPipeline(std::string("file://") + path);
             break;
         }
         case detail::SchemeType::network:
         {
-            result = createPipeline();
-            g_object_set(m_impl->m_src,
-                         "uri",
-                         uri.c_str(),
-                         nullptr);
+            result = createPipeline(uri);
             break;
         }
         default:
@@ -417,24 +400,18 @@ bool AudioPlayer::seek(uint64_t pos)
     return false;
 }
 
-#define PIPE "uridecodebin expose-all-streams=false name=" SRC_NAME " caps=audio/x-raw " \
-    "! progressreport silent=true do-query=true update-freq=1 format=time name=" PROGRESS_NAME " " \
-    "! audioconvert ! volume name=" VOLUME_NAME " " \
-    "! autoaudiosink"
-
-bool AudioPlayer::createPipeline()
+bool AudioPlayer::createPipeline(const std::string& uri)
 {
-    GError* error = nullptr;
-    GstBus* bus;
-    //guint bus_watch_id;
-
     // Make sure we don't leave orphan references
     destroyPipeline();
 
-    std::string pipe(PIPE);
-    SPDLOG_DEBUG(pipe);
+    auto pipeline = fmt::format("uridecodebin uri={} expose-all-streams=false caps=audio/x-raw " \
+                                "! audioconvert ! volume name=volume ! autoaudiosink", uri);
 
-    m_impl->m_pipeline = gst_parse_launch(pipe.c_str(), &error);
+    SPDLOG_DEBUG(pipeline);
+
+    GError* error = nullptr;
+    m_impl->m_pipeline = gst_parse_launch(pipeline.c_str(), &error);
     if (!m_impl->m_pipeline)
     {
         spdlog::error("failed to create audio pipeline");
@@ -442,15 +419,7 @@ bool AudioPlayer::createPipeline()
         return false;
     }
 
-    m_impl->m_src = gst_bin_get_by_name(GST_BIN(m_impl->m_pipeline), SRC_NAME);
-    if (!m_impl->m_src)
-    {
-        spdlog::error("failed to get audio src element");
-        on_error.invoke("failed to get audio src element");
-        return false;
-    }
-
-    m_impl->m_volume = gst_bin_get_by_name(GST_BIN(m_impl->m_pipeline), VOLUME_NAME);
+    m_impl->m_volume = gst_bin_get_by_name(GST_BIN(m_impl->m_pipeline), "volume");
     if (!m_impl->m_volume)
     {
         spdlog::error("failed to get volume element");
@@ -458,9 +427,11 @@ bool AudioPlayer::createPipeline()
         return false;
     }
 
-    bus = gst_pipeline_get_bus(GST_PIPELINE(m_impl->m_pipeline));
-    /*bus_watch_id =*/ gst_bus_add_watch(bus, &bus_callback, m_impl.get());
+    GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_impl->m_pipeline));
+    gst_bus_add_watch(bus, &bus_callback, m_impl.get());
     gst_object_unref(bus);
+
+    m_impl->m_eventsource_id = g_timeout_add(900, &query_position, m_impl.get());
 
     if (!m_impl->m_gmain_loop)
     {
