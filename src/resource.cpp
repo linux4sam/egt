@@ -115,9 +115,7 @@ ResourceManager::ResourceManager() = default;
 
 ResourceManager& ResourceManager::instance()
 {
-    static std::unique_ptr<ResourceManager> i;
-    if (!i)
-        i.reset(new ResourceManager()); //NOLINT
+    static std::unique_ptr<ResourceManager> i(new ResourceManager());
     return *i;
 }
 
