@@ -50,7 +50,23 @@ std::ostream& operator<<(std::ostream& os, const PixelFormat& format)
 
 namespace detail
 {
-static const std::map<PixelFormat, uint32_t> drm_formats =
+static const std::pair<PixelFormat, cairo_format_t> cairo_formats[] =
+{
+    {PixelFormat::rgb565, CAIRO_FORMAT_RGB16_565},
+    {PixelFormat::argb8888, CAIRO_FORMAT_ARGB32},
+    {PixelFormat::xrgb8888, CAIRO_FORMAT_RGB24},
+};
+
+cairo_format_t cairo_format(PixelFormat format)
+{
+    for (const auto& i : cairo_formats)
+        if (i.first == format)
+            return i.second;
+
+    return CAIRO_FORMAT_INVALID;
+}
+
+static const std::pair<PixelFormat, uint32_t> drm_formats[] =
 {
 #ifdef HAVE_LIBDRM
     {PixelFormat::rgb565, DRM_FORMAT_RGB565},
@@ -77,34 +93,18 @@ static const std::map<PixelFormat, uint32_t> drm_formats =
 #endif
 };
 
-static const std::map<PixelFormat, cairo_format_t> cairo_formats =
-{
-    {PixelFormat::rgb565, CAIRO_FORMAT_RGB16_565},
-    {PixelFormat::argb8888, CAIRO_FORMAT_ARGB32},
-    {PixelFormat::xrgb8888, CAIRO_FORMAT_RGB24},
-};
-
-cairo_format_t cairo_format(PixelFormat format)
-{
-    auto i = cairo_formats.find(format);
-    if (i != cairo_formats.end())
-        return i->second;
-
-    return CAIRO_FORMAT_INVALID;
-}
-
 uint32_t drm_format(PixelFormat format)
 {
-    auto i = drm_formats.find(format);
-    if (i != drm_formats.end())
-        return i->second;
+    for (const auto& i : drm_formats)
+        if (i.first == format)
+            return i.second;
 
     return 0;
 }
 
 PixelFormat egt_format(uint32_t format)
 {
-    for (auto& i : drm_formats)
+    for (const auto& i : drm_formats)
         // cppcheck-suppress useStlAlgorithm
         if (i.second == format)
             return i.first;
@@ -114,7 +114,7 @@ PixelFormat egt_format(uint32_t format)
 
 PixelFormat egt_format(cairo_format_t format)
 {
-    for (auto& i : cairo_formats)
+    for (const auto& i : cairo_formats)
         // cppcheck-suppress useStlAlgorithm
         if (i.second == format)
             return i.first;
@@ -122,25 +122,25 @@ PixelFormat egt_format(cairo_format_t format)
     return PixelFormat::invalid;
 }
 
+static const std::pair<PixelFormat, std::string> gstreamer_formats[] =
+{
+    {PixelFormat::argb8888, "BGRx"},
+    {PixelFormat::xrgb8888, "BGRx"},
+    {PixelFormat::rgb565, "RGB16"},
+    {PixelFormat::yuv420, "I420"},
+    {PixelFormat::yuyv, "YUY2"},
+    {PixelFormat::nv21, "NV21"},
+    {PixelFormat::yvyu, "YVYU"},
+    {PixelFormat::nv61, "NV61"},
+    {PixelFormat::yuy2, "YUY2"},
+    {PixelFormat::uyvy, "UYVY"},
+};
+
 std::string gstreamer_format(PixelFormat format)
 {
-    static const std::map<PixelFormat, std::string> formats =
-    {
-        {PixelFormat::argb8888, "BGRx"},
-        {PixelFormat::xrgb8888, "BGRx"},
-        {PixelFormat::rgb565, "RGB16"},
-        {PixelFormat::yuv420, "I420"},
-        {PixelFormat::yuyv, "YUY2"},
-        {PixelFormat::nv21, "NV21"},
-        {PixelFormat::yvyu, "YVYU"},
-        {PixelFormat::nv61, "NV61"},
-        {PixelFormat::yuy2, "YUY2"},
-        {PixelFormat::uyvy, "UYVY"},
-    };
-
-    const auto i = formats.find(format);
-    if (i != formats.end())
-        return i->second;
+    for (const auto& i : gstreamer_formats)
+        if (i.first == format)
+            return i.second;
 
     return {};
 }
