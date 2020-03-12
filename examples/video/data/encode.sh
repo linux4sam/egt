@@ -4,7 +4,7 @@ all_outputs="mpeg1 mpeg2 mpeg4 vp8 vp9 uncompressed raw h264"
 
 function usage()
 {
-    echo "$0 -i INPUT [-x WIDTH] [-y HEIGHT] [-f FORMAT] [TYPE...]"
+    echo "$0 -i INPUT [-x WIDTH] [-y HEIGHT] [-f FORMAT] [-r FPS] [-s] [TYPE...]"
     echo "    TYPE: $all_outputs"
     echo "    FORMAT: An output format from the command 'ffmpeg -pix_fmts'"
 }
@@ -18,7 +18,10 @@ height=192
 format=yuv420p
 #format=nv21
 
-while getopts ':hx:y:f:i:' opt;
+fps=24
+single=0
+
+while getopts ':hx:y:f:i:r:s' opt;
 do
     case "$opt" in
 	h)
@@ -36,6 +39,12 @@ do
 	    ;;
 	f)
 	    format="$OPTARG"
+	    ;;
+	r)
+	    fps="$OPTARG"
+	    ;;
+	s)
+	    single=1
 	    ;;
 	:)
 	    echo "Invalid option: $OPTARG requires an argument" 1>&2
@@ -67,7 +76,7 @@ audio_opts="-acodec pcm_s16le -ac 1 -ar 48000"
 size_opts="-vf scale=(iw*sar)*max(${width}/(iw*sar)\,${height}/ih):\
 ih*max(${width}/(iw*sar)\,${height}/ih),crop=${width}:${height} \
 -s ${width}x${height}"
-video_opts="-pix_fmt ${format} -r 24"
+video_opts="-pix_fmt ${format} -r ${fps}"
 mpeg_opts="-pre_dia_size 5 -dia_size 5 -qcomp 0.7 -qblur 0 -preme 2 \
 -me_method dia -sc_threshold 0 -sc_factor 4 -bidir_refine 4 -profile:v 4 \
 -mbd rd -mbcmp satd -precmp satd -cmp satd -subcmp satd -skipcmp satd -bf 2"
@@ -82,23 +91,35 @@ do
 		 -vcodec mpeg1video -qscale:v 2 -b_strategy 2 -brd_scale 2 \
 		 ${mpeg_opts} -threads 4)
 
-	    "${cmd[@]}" -pass 1 -f avi /dev/null
-	    "${cmd[@]}" -pass 2 "${base}_mpeg1.avi"
+	    if [ $single -eq 0 ]; then
+		"${cmd[@]}" -pass 1 -f avi /dev/null
+		"${cmd[@]}" -pass 2 "${base}_mpeg1.avi"
+	    else
+		"${cmd[@]}" "${base}_mpeg1.avi"
+	    fi
 	    ;;
 	mpeg2)
 	    cmd=(ffmpeg -y -i "${in}" ${size_opts} ${audio_opts} ${video_opts} \
 		 -vcodec mpeg2video -qscale:v 2 -b_strategy 2 -brd_scale 2 \
 		 ${mpeg_opts} -threads 4)
 
-	    "${cmd[@]}" -pass 1 -f avi /dev/null
-	    "${cmd[@]}" -pass 2 "${base}_mpeg2.avi"
+	    if [ $single -eq 0 ]; then
+		"${cmd[@]}" -pass 1 -f avi /dev/null
+		"${cmd[@]}" -pass 2 "${base}_mpeg2.avi"
+	    else
+		"${cmd[@]}" "${base}_mpeg2.avi"
+	    fi
 	    ;;
 	mpeg4)
 	    cmd=(ffmpeg -y -i "${in}" ${size_opts} ${audio_opts} ${video_opts} \
 		 -vcodec mpeg4 -qscale:v 2 ${mpeg_opts} -threads 4)
 
-	    "${cmd[@]}" -pass 1 -f avi /dev/null
-	    "${cmd[@]}" -pass 2 "${base}_mpeg4.avi"
+	    if [ $single -eq 0 ]; then
+		"${cmd[@]}" -pass 1 -f avi /dev/null
+		"${cmd[@]}" -pass 2 "${base}_mpeg4.avi"
+	    else
+		"${cmd[@]}" "${base}_mpeg4.avi"
+	    fi
 	    ;;
 	vp8)
 	    ffmpeg -y -i "${in}" ${size_opts} \
