@@ -51,7 +51,7 @@ constexpr T pi_2()
  * @param target_max The maximum of the range of your desired target scaling.
  */
 template<class T>
-T normalize(T value, T min, T max, T target_min, T target_max)
+constexpr T normalize(T value, T min, T max, T target_min, T target_max)
 {
     auto r = ((value - min) / (max - min)) *
              (target_max - target_min) + target_min;
@@ -59,13 +59,13 @@ T normalize(T value, T min, T max, T target_min, T target_max)
 }
 
 template<class T>
-T mmod(T a, T n)
+constexpr T mmod(T a, T n)
 {
     return a - std::floor(a / n) * n;
 }
 
 template<class T>
-T angle_diff(T angle_start, T angle_stop, bool clockwise = true)
+constexpr T angle_diff(T angle_start, T angle_stop, bool clockwise = true)
 {
     if (clockwise)
     {
@@ -80,7 +80,7 @@ T angle_diff(T angle_start, T angle_stop, bool clockwise = true)
 }
 
 template<class T>
-T normalize_to_angle(T value, T min, T max, T angle_start, T angle_stop, bool clockwise = true)
+constexpr T normalize_to_angle(T value, T min, T max, T angle_start, T angle_stop, bool clockwise = true)
 {
     auto v = normalize<T>(value, min, max, 0, angle_diff(angle_start, angle_stop, clockwise));
     return clockwise ? angle_start + v : angle_start - v;
@@ -90,7 +90,7 @@ T normalize_to_angle(T value, T min, T max, T angle_start, T angle_stop, bool cl
  * Convert from radians to degrees.
  */
 template <class T>
-inline T to_degrees(T radians)
+constexpr T to_degrees(T radians)
 {
     return radians * (180.0 / pi<T>());
 }
@@ -99,7 +99,7 @@ inline T to_degrees(T radians)
  * Convert from degrees to radians.
  */
 template <class T>
-inline T to_radians(T zero, T degrees)
+constexpr T to_radians(T zero, T degrees)
 {
     degrees += zero;
     return degrees * (pi<T>() / 180.0);
@@ -114,10 +114,10 @@ constexpr const T& clamp(const T& v, const T& lo, const T& hi)
 
 inline bool float_equal(const float f1, const float f2)
 {
-    static constexpr auto epsilon = 1.0e-05f;
-    if (std::fabs(f1 - f2) <= epsilon)
+    constexpr auto epsilon = 1.0e-05f;
+    if (fabsf(f1 - f2) <= epsilon)
         return true;
-    return std::fabs(f1 - f2) <= epsilon * std::max(std::fabs(f1), std::fabs(f2));
+    return fabsf(f1 - f2) <= epsilon * std::max(fabsf(f1), fabsf(f2));
 }
 
 /// @deprecated
@@ -128,7 +128,7 @@ inline bool float_compare(const float f1, const float f2)
 
 inline bool float_equal(const double f1, const double f2)
 {
-    static constexpr auto epsilon = 1.0e-9;
+    constexpr auto epsilon = 1.0e-9;
     if (std::fabs(f1 - f2) <= epsilon)
         return true;
     return std::fabs(f1 - f2) <= epsilon * std::max(std::fabs(f1), std::fabs(f2));
@@ -148,7 +148,7 @@ inline bool float_compare(const double f1, const double f2)
 template<class T>
 struct Ratio
 {
-    Ratio(T value, int ratio)
+    constexpr Ratio(T value, int ratio) noexcept
         : m_value(value),
           m_ratio(ratio)
     {

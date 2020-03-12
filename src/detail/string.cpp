@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/string.h"
+#include <algorithm>
 
 namespace egt
 {
@@ -20,6 +21,19 @@ std::string replace_all(std::string str, const std::string& from, const std::str
         str.replace(start_pos, from.length(), to);
         start_pos += to.length();
     }
+    return str;
+}
+
+std::string truncate(const std::string& str, size_t width, bool ellipsis)
+{
+    if (str.length() > width)
+    {
+        if (ellipsis)
+            return str.substr(0, width) + "...";
+        else
+            return str.substr(0, width);
+    }
+
     return str;
 }
 
@@ -53,6 +67,33 @@ void tokenize(const std::string& str, char delimiter, std::vector<std::string>& 
         tokens.push_back(str.substr(start, end - start));
         start = str.find_first_not_of(delimiter, end);
     }
+}
+
+std::string tolower(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](unsigned char c)
+    {
+        return std::tolower(c);
+    });
+    return s;
+}
+
+std::string toupper(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(),
+                   [](unsigned char c)
+    {
+        return std::toupper(c);
+    });
+    return s;
+}
+
+bool from_string(const std::string& x)
+{
+    const auto s = tolower(x);
+    return (s == "true" ||
+            s == "yes");
 }
 
 }

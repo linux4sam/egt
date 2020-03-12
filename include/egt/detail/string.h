@@ -28,19 +28,8 @@ namespace detail
 EGT_API std::string replace_all(std::string str, const std::string& from,
                                 const std::string& to);
 
-EGT_API inline std::string truncate(const std::string& str, size_t width,
-                                    bool ellipsis = true)
-{
-    if (str.length() > width)
-    {
-        if (ellipsis)
-            return str.substr(0, width) + "...";
-        else
-            return str.substr(0, width);
-    }
-
-    return str;
-}
+EGT_API std::string truncate(const std::string& str, size_t width,
+                             bool ellipsis = true);
 
 /**
  * Trim delimiters off the right side of a std::string
@@ -94,35 +83,19 @@ void join(std::ostream& os, const T& container, const std::string& delimiter = "
  * Convert a string to lowercase.
  * @note Not UTF-8 aware.
  */
-inline std::string tolower(std::string s)
-{
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c)
-    {
-        return std::tolower(c);
-    });
-    return s;
-}
+EGT_API std::string tolower(std::string s);
 
 /**
  * Convert a string to lowercase.
  * @note Not UTF-8 aware.
  */
-inline std::string toupper(std::string s)
-{
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c)
-    {
-        return std::toupper(c);
-    });
-    return s;
-}
+EGT_API std::string toupper(std::string s);
 
 /**
  * Convert a type to a std::string using std::ostringstream.
  */
 template<class T>
-inline std::string to_string(const T& x)
+std::string to_string(const T& x)
 {
     std::ostringstream ss;
     ss << x;
@@ -141,12 +114,7 @@ inline std::string to_string(const bool& x)
 /**
  * Convert a lexical std::string to a bool.
  */
-inline bool from_string(const std::string& x)
-{
-    const auto s = tolower(x);
-    return (s == "true" ||
-            s == "yes");
-}
+EGT_API bool from_string(const std::string& x);
 
 }
 }
