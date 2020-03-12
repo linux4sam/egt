@@ -50,23 +50,25 @@ bool is_target_sama5d4()
     return false;
 }
 
+/*
+ * Check if audio playback device is present
+ */
 bool audio_device()
 {
-    std::ifstream infile("/proc/asound/cards");
+    std::ifstream infile("/proc/asound/devices");
     if (infile.is_open())
     {
         std::string line;
         while (getline(infile, line))
         {
             SPDLOG_DEBUG("Sound : {}", line);
-            if (line.find("no soundcards") != std::string::npos)
+            if (line.find("audio playback") != std::string::npos)
             {
                 infile.close();
-                return false;
+                return true;
             }
         }
         infile.close();
-        return true;
     }
     return false;
 }
