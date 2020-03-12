@@ -69,12 +69,12 @@ public:
     explicit constexpr Color(RGBAType c) noexcept
         : m_rgba
     {
-        {
-            (c >> 24) & 0xff,
-            (c >> 16) & 0xff,
-            (c >> 8) & 0xff,
-            c & 0xff
-        }
+
+        (c >> 24) & 0xff,
+        (c >> 16) & 0xff,
+        (c >> 8) & 0xff,
+        c & 0xff
+
     }
     {}
 
@@ -87,12 +87,10 @@ public:
     constexpr Color(const Color& color, ComponentType alpha) noexcept
         : m_rgba
     {
-        {
-            color.m_rgba[0],
-                         color.m_rgba[1],
-                         color.m_rgba[2],
-                         alpha
-        }
+        color.m_rgba[0],
+                     color.m_rgba[1],
+                     color.m_rgba[2],
+                     alpha
     }
     {}
 
@@ -107,12 +105,10 @@ public:
     constexpr explicit Color(ComponentType r, ComponentType g, ComponentType b, ComponentType a = 255) noexcept
         : m_rgba
     {
-        {
-            r & 0xff,
-            g & 0xff,
-            b & 0xff,
-            a & 0xff
-        }
+        r & 0xff,
+        g & 0xff,
+        b & 0xff,
+        a & 0xff
     }
     {}
 
@@ -126,10 +122,10 @@ public:
 
     //@{
     /** Set RGBA component value as a float from 0.0 to 1.0. */
-    inline void redf(float v) { m_rgba[0] = detail::clamp(v, 0.f, 1.f) * 255.f; }
-    inline void greenf(float v) { m_rgba[1] = detail::clamp(v, 0.f, 1.f) * 255.f; }
-    inline void bluef(float v) { m_rgba[2] = detail::clamp(v, 0.f, 1.f) * 255.f; }
-    inline void alphaf(float v) { m_rgba[3] = detail::clamp(v, 0.f, 1.f) * 255.f; }
+    constexpr void redf(float v) { m_rgba[0] = detail::clamp(v, 0.f, 1.f) * 255.f; }
+    constexpr void greenf(float v) { m_rgba[1] = detail::clamp(v, 0.f, 1.f) * 255.f; }
+    constexpr void bluef(float v) { m_rgba[2] = detail::clamp(v, 0.f, 1.f) * 255.f; }
+    constexpr void alphaf(float v) { m_rgba[3] = detail::clamp(v, 0.f, 1.f) * 255.f; }
     //@}
 
     //@{
@@ -142,13 +138,13 @@ public:
 
     //@{
     /** Set RGBA component value individually from 0 to 255. */
-    inline void red(ComponentType r) { m_rgba[0] = r & 0xff; }
-    inline void green(ComponentType g) { m_rgba[1] = g & 0xff; }
-    inline void blue(ComponentType b) { m_rgba[2] = b & 0xff; }
-    inline void alpha(ComponentType a) { m_rgba[3] = a & 0xff; }
+    constexpr void red(ComponentType r) { m_rgba[0] = r & 0xff; }
+    constexpr void green(ComponentType g) { m_rgba[1] = g & 0xff; }
+    constexpr void blue(ComponentType b) { m_rgba[2] = b & 0xff; }
+    constexpr void alpha(ComponentType a) { m_rgba[3] = a & 0xff; }
     //@}
 
-    inline uint16_t pixel16() const
+    constexpr uint16_t pixel16() const
     {
         const uint16_t b = (blue() >> 3) & 0x1f;
         const uint16_t g = ((green() >> 2) & 0x3f) << 5;
@@ -157,7 +153,7 @@ public:
         return (uint16_t)(r | g | b);
     }
 
-    static inline Color pixel16(uint16_t c)
+    static constexpr Color pixel16(uint16_t c)
     {
         const uint16_t b = (c) & 0x1f;
         const uint16_t g = (c >> 5) & 0x3f;
@@ -239,7 +235,7 @@ public:
      * @param[in] c RGB value.
      * @param[in] alpha Alpha component in range 0 - 255.
      */
-    constexpr static Color rgb(RGBType c, ComponentType alpha = 255) noexcept
+    static constexpr Color rgb(RGBType c, ComponentType alpha = 255) noexcept
     {
         return Color(c << 8 | alpha);
     }
@@ -252,7 +248,7 @@ public:
      * @param[in] b Component value as a float from 0.0 to 1.0.
      * @param[in] a Component value as a float from 0.0 to 1.0.
      */
-    static inline Color rgbaf(float r, float g, float b, float a = 1.0)
+    static constexpr Color rgbaf(float r, float g, float b, float a = 1.0)
     {
         Color result;
         result.redf(r);
@@ -309,7 +305,7 @@ public:
      *
      * @param[in] factor Value from 0.0 to 1.0.
      */
-    inline Color shade(float factor) const
+    constexpr Color shade(float factor) const
     {
         return Color(red() * (1. - factor),
                      green() * (1. - factor),
@@ -324,7 +320,7 @@ public:
      *
      * @param[in] factor Value from 0.0 to 1.0.
      */
-    inline Color tint(float factor) const
+    constexpr Color tint(float factor) const
     {
         return Color(red() + ((255 - red()) * factor),
                      green() + ((255 - green()) * factor),
@@ -335,7 +331,7 @@ public:
     /**
      * Create a new color by applying a hue value.
      */
-    inline Color hue(float h) const
+    Color hue(float h) const
     {
         auto u = std::cos(h * detail::pi<float>() / 180.);
         auto w = std::sin(h * detail::pi<float>() / 180.);
@@ -375,7 +371,7 @@ public:
 
     /// Color operator
     template<class T>
-    Color operator+(T scalar) const
+    constexpr Color operator+(T scalar) const
     {
         return Color::rgbaf(redf() + scalar,
                             greenf() + scalar,
@@ -385,7 +381,7 @@ public:
 
     /// Color operator
     template<class T>
-    Color operator-(T scalar) const
+    constexpr Color operator-(T scalar) const
     {
         return Color::rgbaf(redf() - scalar,
                             greenf() - scalar,
@@ -395,7 +391,7 @@ public:
 
     /// Color operator
     template<class T>
-    Color operator*(T scalar) const
+    constexpr Color operator*(T scalar) const
     {
         return Color::rgbaf(redf() * scalar,
                             greenf() * scalar,
@@ -405,7 +401,7 @@ public:
 
     /// Color operator
     template<class T>
-    Color operator/(T scalar) const
+    constexpr Color operator/(T scalar) const
     {
         return Color::rgbaf(redf() / scalar,
                             greenf() / scalar,
@@ -414,7 +410,7 @@ public:
     }
 
     /// Color operator
-    Color operator+(const Color& rhs) const
+    constexpr Color operator+(const Color& rhs) const
     {
         return Color::rgbaf(redf() + rhs.redf(),
                             greenf() + rhs.greenf(),
@@ -423,7 +419,7 @@ public:
     }
 
     /// Color operator
-    Color operator-(const Color& rhs) const
+    constexpr Color operator-(const Color& rhs) const
     {
         return Color::rgbaf(redf() - rhs.redf(),
                             greenf() - rhs.greenf(),
@@ -441,7 +437,7 @@ public:
     }
 
     /// Color operator
-    Color operator/(const Color& rhs) const
+    constexpr Color operator/(const Color& rhs) const
     {
         return Color::rgbaf(redf() / rhs.redf(),
                             greenf() / rhs.greenf(),
@@ -489,14 +485,14 @@ protected:
      * @note std::valarray would have made more sense due to all the scalar
      * operations, but we lose constexpr with it.
      */
-    std::array<ComponentType, 4> m_rgba{};
+    ComponentType m_rgba[4] {};
 };
 
 static_assert(detail::rule_of_5<Color>(),
               "Color : must fulfill rule of 5");
 
 /// Color operator
-inline bool operator==(const Color& lhs, const Color& rhs)
+constexpr bool operator==(const Color& lhs, const Color& rhs)
 {
     return lhs.red() == rhs.red() &&
            lhs.green() == rhs.green() &&
@@ -505,14 +501,14 @@ inline bool operator==(const Color& lhs, const Color& rhs)
 }
 
 /// Color operator
-inline bool operator!=(const Color& lhs, const Color& rhs)
+constexpr bool operator!=(const Color& lhs, const Color& rhs)
 {
     return !(lhs == rhs);
 }
 
 /// Color operator
 template<class T>
-inline Color operator+(T scalar, const Color& rhs)
+constexpr Color operator+(T scalar, const Color& rhs)
 {
     return Color::rgbaf(rhs.redf() + scalar,
                         rhs.greenf() + scalar,
@@ -522,7 +518,7 @@ inline Color operator+(T scalar, const Color& rhs)
 
 /// Color operator
 template<class T>
-inline Color operator-(T scalar, const Color& rhs)
+constexpr Color operator-(T scalar, const Color& rhs)
 {
     return Color::rgbaf(rhs.redf() - scalar,
                         rhs.greenf() - scalar,
@@ -532,7 +528,7 @@ inline Color operator-(T scalar, const Color& rhs)
 
 /// Color operator
 template<class T>
-inline Color operator*(T scalar, const Color& rhs)
+constexpr Color operator*(T scalar, const Color& rhs)
 {
     return Color::rgbaf(rhs.redf() * scalar,
                         rhs.greenf() * scalar,
@@ -542,7 +538,7 @@ inline Color operator*(T scalar, const Color& rhs)
 
 /// Color operator
 template<class T>
-inline Color operator/(T scalar, const Color& rhs)
+constexpr Color operator/(T scalar, const Color& rhs)
 {
     return Color::rgbaf(rhs.redf() / scalar,
                         rhs.greenf() / scalar,
@@ -668,7 +664,7 @@ public:
     /**
      * Set the steps.
      */
-    inline void steps(const StepsArray& steps)
+    void steps(const StepsArray& steps)
     {
         m_steps = steps;
         for (auto& x : m_cache)
@@ -699,12 +695,12 @@ public:
     /**
      * Are there any color steps?
      */
-    inline bool empty() const { return m_steps.empty(); }
+    bool empty() const { return m_steps.empty(); }
 
     /**
      * Count the number of color steps.
      */
-    inline size_t count() const { return m_steps.size(); }
+    size_t count() const { return m_steps.size(); }
 
 protected:
 

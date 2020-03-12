@@ -266,7 +266,7 @@ Color Color::hslf(float h, float s, float l, float alpha)
 }
 
 template<class T>
-static inline T linear_interpolator(T a, T b, T t)
+static constexpr T linear_interpolator(T a, T b, T t)
 {
     return a * (1 - t) + b * t;
 }
