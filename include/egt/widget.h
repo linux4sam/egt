@@ -186,11 +186,6 @@ public:
     explicit Widget(Frame& parent, const Rect& rect = {},
                     const Widget::Flags& flags = {}) noexcept;
 
-    /// Widget operator
-    Widget(Widget&& rhs) noexcept = default;
-    /// Widget operator
-    Widget& operator=(Widget&& rhs) noexcept = default;
-
     /**
      * Draw the widget.
      *
