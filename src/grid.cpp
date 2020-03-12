@@ -416,7 +416,10 @@ void SelectableGrid::selected(int column, int row)
     auto c = detail::change_if_diff<>(m_selected_column, column);
     auto r = detail::change_if_diff<>(m_selected_row, row);
     if (c || r)
+    {
         damage();
+        on_selected_changed.invoke();
+    }
 }
 
 void SelectableGrid::serialize(detail::Serializer& serializer) const

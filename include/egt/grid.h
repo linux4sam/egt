@@ -218,6 +218,15 @@ class EGT_API SelectableGrid : public StaticGrid
 {
 public:
 
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when the selection changes.
+     */
+    detail::Signal<> on_selected_changed;
+
     using StaticGrid::StaticGrid;
 
     virtual void draw(Painter& painter, const Rect& rect) override;

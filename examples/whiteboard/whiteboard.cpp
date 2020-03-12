@@ -59,13 +59,13 @@ public:
 
             if (c == m_color)
                 m_grid.selected(column, row);
-
-            color_label->on_event([this](egt::Event&)
-            {
-                m_color = m_grid.get(m_grid.selected())->color(egt::Palette::ColorId::button_bg).color();
-                this->hide();
-            }, egt::EventId::pointer_click);
         }
+
+        m_grid.on_selected_changed([this]()
+        {
+            m_color = m_grid.get(m_grid.selected())->color(egt::Palette::ColorId::button_bg).color();
+            this->hide();
+        });
     }
 
     const egt::Color& color() const { return m_color; }
@@ -107,13 +107,13 @@ public:
 
             if (w == m_width)
                 m_grid.selected(column, row);
-
-            width_label->on_event([this](egt::Event&)
-            {
-                m_width = std::stoi(reinterpret_cast<egt::Label*>(m_grid.get(m_grid.selected()))->text());
-                this->hide();
-            }, {egt::EventId::pointer_click});
         }
+
+        m_grid.on_selected_changed([this]()
+        {
+            m_width = std::stoi(reinterpret_cast<egt::Label*>(m_grid.get(m_grid.selected()))->text());
+            this->hide();
+        });
     }
 
     inline int width() const { return m_width; }
