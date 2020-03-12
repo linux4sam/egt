@@ -273,11 +273,6 @@ bool AudioPlayer::play()
     return m_impl->change_state(this, GST_STATE_PLAYING);
 }
 
-bool AudioPlayer::unpause()
-{
-    return m_impl->change_state(this, GST_STATE_PLAYING);
-}
-
 bool AudioPlayer::pause()
 {
     return m_impl->change_state(this, GST_STATE_PAUSED);

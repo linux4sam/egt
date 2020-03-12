@@ -94,12 +94,6 @@ public:
     virtual bool pause();
 
     /**
-     * unpause Send Pipeline to unpaused state
-     * @return true on success
-     */
-    virtual bool unpause();
-
-    /**
      * Adjusts the volume of the audio being played.
      *
      * @param volume Value in the range 0 - 100.
