@@ -184,16 +184,15 @@ public:
             m_player.seek(range2->value());
         });
 
-        m_player.on_position_changed([this, range2]()
+        m_player.on_position_changed([this, range2](uint64_t position)
         {
             if (m_player.playing())
             {
-                auto duration = static_cast<int>(m_player.duration() / 1000000000UL);
+                auto duration = static_cast<int>(m_player.duration());
                 if (duration > 0)
                     range2->max(duration);
 
-                auto position = static_cast<int>(m_player.position() / 1000000000UL);
-                range2->value(position);
+                range2->value(static_cast<int>(position));
             }
         });
 

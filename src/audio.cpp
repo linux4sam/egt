@@ -69,6 +69,11 @@ struct AudioPlayerImpl
 
 }
 
+inline uint64_t nsec_to_sec(uint64_t s)
+{
+    return (s / 1000000000ULL);
+}
+
 static gboolean query_position(gpointer data)
 {
     auto impl = reinterpret_cast<detail::AudioPlayerImpl*>(data);
@@ -86,7 +91,7 @@ static gboolean query_position(gpointer data)
         {
             asio::post(Application::instance().event().io(), [impl]()
             {
-                impl->player.on_position_changed.invoke();
+                impl->player.on_position_changed.invoke(nsec_to_sec(impl->m_position));
             });
         }
     }
@@ -352,12 +357,12 @@ bool AudioPlayer::mute(bool mute)
 
 uint64_t AudioPlayer::position() const
 {
-    return m_impl->m_position;
+    return nsec_to_sec(m_impl->m_position);
 }
 
 uint64_t AudioPlayer::duration() const
 {
-    return m_impl->m_duration;
+    return nsec_to_sec(m_impl->m_duration);
 }
 
 bool AudioPlayer::playing() const

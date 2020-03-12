@@ -48,7 +48,7 @@ public:
     /**
      * Invoked when the position of the player changes.
      */
-    detail::Signal<> on_position_changed;
+    detail::Signal<uint64_t> on_position_changed;
 
     /**
      * Invoked when an error occurs.
