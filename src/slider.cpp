@@ -12,7 +12,7 @@ inline namespace v1
 {
 
 template<>
-const std::map<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data
+const std::pair<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data[] =
 {
     {Slider::SliderFlag::rectangle_handle, "rectangle_handle"},
     {Slider::SliderFlag::square_handle, "square_handle"},

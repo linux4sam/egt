@@ -621,7 +621,7 @@ void SliderType<T>::deserialize(const std::string& name, const std::string& valu
 }
 
 template<>
-EGT_API const std::map<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data;
+EGT_API const std::pair<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data[7];
 
 }
 }

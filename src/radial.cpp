@@ -12,7 +12,7 @@ inline namespace v1
 {
 
 template<>
-const std::map<experimental::Radial::RadialFlag, char const*> detail::EnumStrings<experimental::Radial::RadialFlag>::data
+const std::pair<experimental::Radial::RadialFlag, char const*> detail::EnumStrings<experimental::Radial::RadialFlag>::data[] =
 {
     {experimental::Radial::RadialFlag::text_value, "text_value"},
     {experimental::Radial::RadialFlag::rounded_cap, "rounded_cap"},

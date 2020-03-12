@@ -63,7 +63,7 @@ enum class AlignFlag : uint32_t
 };
 
 template<>
-EGT_API const std::map<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data;
+EGT_API const std::pair<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data[10];
 
 /// Alignment flags.
 using AlignFlags = detail::Flags<AlignFlag>;
@@ -323,7 +323,7 @@ enum class Orientation : uint32_t
 };
 
 template<>
-EGT_API const std::map<Orientation, char const*> detail::EnumStrings<Orientation>::data;
+EGT_API const std::pair<Orientation, char const*> detail::EnumStrings<Orientation>::data[4];
 
 /**
  * Generic justification of children flags.
@@ -338,7 +338,7 @@ enum class Justification : uint32_t
 };
 
 template<>
-EGT_API const std::map<Justification, char const*> detail::EnumStrings<Justification>::data;
+EGT_API const std::pair<Justification, char const*> detail::EnumStrings<Justification>::data[5];
 
 /**
  * Hint used for configuring Window backends.
@@ -372,7 +372,7 @@ enum class WindowHint : uint32_t
 };
 
 template<>
-EGT_API const std::map<WindowHint, char const*> detail::EnumStrings<WindowHint>::data;
+EGT_API const std::pair<WindowHint, char const*> detail::EnumStrings<WindowHint>::data[5];
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const WindowHint& hint);

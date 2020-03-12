@@ -183,6 +183,15 @@ void SideBoard::open()
     m_dir = true;
 }
 
+template<>
+const std::pair<SideBoard::PositionFlag, char const*> detail::EnumStrings<SideBoard::PositionFlag>::data[] =
+{
+    {SideBoard::PositionFlag::left, "left"},
+    {SideBoard::PositionFlag::right, "right"},
+    {SideBoard::PositionFlag::top, "top"},
+    {SideBoard::PositionFlag::bottom, "bottom"},
+};
+
 void SideBoard::serialize(detail::Serializer& serializer) const
 {
     Window::serialize(serializer);
@@ -198,15 +207,6 @@ void SideBoard::deserialize(const std::string& name, const std::string& value,
     else
         Window::deserialize(name, value, attrs);
 }
-
-template<>
-const std::map<SideBoard::PositionFlag, char const*> detail::EnumStrings<SideBoard::PositionFlag>::data =
-{
-    {SideBoard::PositionFlag::left, "left"},
-    {SideBoard::PositionFlag::right, "right"},
-    {SideBoard::PositionFlag::top, "top"},
-    {SideBoard::PositionFlag::bottom, "bottom"},
-};
 
 std::ostream& operator<<(std::ostream& os, const SideBoard::PositionFlag& flag)
 {

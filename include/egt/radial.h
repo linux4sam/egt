@@ -354,7 +354,7 @@ using RadialF = RadialType<float>;
 }
 
 template<>
-EGT_API const std::map<experimental::Radial::RadialFlag, char const*> detail::EnumStrings<experimental::Radial::RadialFlag>::data;
+EGT_API const std::pair<experimental::Radial::RadialFlag, char const*> detail::EnumStrings<experimental::Radial::RadialFlag>::data[3];
 
 }
 }

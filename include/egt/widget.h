@@ -1415,7 +1415,7 @@ private:
 };
 
 template<>
-EGT_API const std::map<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data;
+EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[];
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag);

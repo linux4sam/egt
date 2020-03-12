@@ -514,7 +514,7 @@ TextBox::~TextBox() noexcept
 }
 
 template<>
-const std::map<TextBox::TextFlag, char const*> detail::EnumStrings<TextBox::TextFlag>::data =
+const std::pair<TextBox::TextFlag, char const*> detail::EnumStrings<TextBox::TextFlag>::data[] =
 {
     {TextBox::TextFlag::fit_to_width, "fit_to_width"},
     {TextBox::TextFlag::multiline, "multiline"},

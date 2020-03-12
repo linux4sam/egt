@@ -17,7 +17,7 @@ inline namespace v1
 {
 
 template<>
-const std::map<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data =
+const std::pair<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data[] =
 {
     {AlignFlag::center_horizontal, "center_horizontal"},
     {AlignFlag::center_vertical, "center_vertical"},
@@ -37,7 +37,7 @@ std::ostream& operator<<(std::ostream& os, const AlignFlags& align)
 }
 
 template<>
-const std::map<WindowHint, char const*> detail::EnumStrings<WindowHint>::data =
+const std::pair<WindowHint, char const*> detail::EnumStrings<WindowHint>::data[] =
 {
     {WindowHint::automatic, "automatic"},
     {WindowHint::software, "software"},
@@ -52,7 +52,7 @@ std::ostream& operator<<(std::ostream& os, const WindowHint& hint)
 }
 
 template<>
-const std::map<Orientation, char const*> detail::EnumStrings<Orientation>::data =
+const std::pair<Orientation, char const*> detail::EnumStrings<Orientation>::data[] =
 {
     {Orientation::horizontal, "horizontal"},
     {Orientation::vertical, "vertical"},
@@ -61,7 +61,7 @@ const std::map<Orientation, char const*> detail::EnumStrings<Orientation>::data 
 };
 
 template<>
-const std::map<Justification, char const*> detail::EnumStrings<Justification>::data =
+const std::pair<Justification, char const*> detail::EnumStrings<Justification>::data[] =
 {
     {Justification::start, "start"},
     {Justification::middle, "middle"},

@@ -150,14 +150,14 @@ Font::Font(Font::Slant slant)
 {}
 
 template<>
-const std::map<Font::Weight, char const*> detail::EnumStrings<Font::Weight>::data =
+const std::pair<Font::Weight, char const*> detail::EnumStrings<Font::Weight>::data[] =
 {
     {Font::Weight::normal, "normal"},
     {Font::Weight::bold, "bold"},
 };
 
 template<>
-const std::map<Font::Slant, char const*> detail::EnumStrings<Font::Slant>::data =
+const std::pair<Font::Slant, char const*> detail::EnumStrings<Font::Slant>::data[] =
 {
     {Font::Slant::normal, "normal"},
     {Font::Slant::italic, "italic"},

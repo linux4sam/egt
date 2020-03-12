@@ -11,10 +11,10 @@
  * @brief Fun with enum <> string conversions.
  */
 
-#include <algorithm>
-#include <map>
+#include <cstring>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 namespace egt
 {
@@ -29,7 +29,7 @@ namespace detail
  *
  * @code{.cpp}
  * template<>
- * std::map<Pointer::Button, char const*> detail::EnumStrings<Pointer::Button>::data =
+ * const std::pair<Pointer::Button, char const*> detail::EnumStrings<Pointer::Button>::data[] =
  * {
  *     {Pointer::Button::none, "none"},
  *     {Pointer::Button::left, "left"},
@@ -46,31 +46,37 @@ namespace detail
 template<class T>
 struct EnumStrings
 {
-    static const std::map<T, char const*> data;
+    static const std::pair<T, char const*> data[];
 };
 
 template<class T>
-std::string enum_to_string(T const& e)
+constexpr const char* enum_to_string(T const& e)
 {
-    auto i = EnumStrings<T>::data.find(e);
-    return i->second;
+    for (const auto& i : EnumStrings<T>::data)
+        if (i.first == e)
+            return i.second;
+
+    throw std::runtime_error("invalid enum");
 }
 
 template<class T>
-T enum_from_string(const std::string& value)
+constexpr T enum_from_string(const char* value)
 {
-    static auto begin = std::begin(EnumStrings<T>::data);
-    static auto end = std::end(EnumStrings<T>::data);
+    for (const auto& i : EnumStrings<T>::data)
+        if (std::strcmp(i.second, value) == 0)
+            return i.first;
 
-    const auto result = std::find_if(begin, end,
-                                     [value](const std::pair<T, char const*>& i)
-    {
-        return i.second == value;
-    });
-    if (result != end)
-        return result->first;
+    throw std::runtime_error("invalid enum string");
+}
 
-    throw std::runtime_error("invalid enum string:" + value);
+template<class T>
+constexpr T enum_from_string(const std::string& value)
+{
+    for (const auto& i : EnumStrings<T>::data)
+        if (i.second == value)
+            return i.first;
+
+    throw std::runtime_error("invalid enum string");
 }
 
 }

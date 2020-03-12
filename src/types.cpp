@@ -11,7 +11,6 @@
 #include "egt/types.h"
 #include <cairo.h>
 #include <iostream>
-#include <map>
 
 #ifdef HAVE_LIBDRM
 #include <drm_fourcc.h>
@@ -28,7 +27,7 @@ namespace egt
 inline namespace v1
 {
 template<>
-const std::map<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data =
+const std::pair<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data[] =
 {
     {PixelFormat::invalid, "invalid"},
     {PixelFormat::rgb565, "rgb565"},

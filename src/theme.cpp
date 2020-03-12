@@ -407,14 +407,14 @@ void Theme::draw_circle(Painter& painter,
 }
 
 template<>
-const std::map<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data =
+const std::pair<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data[] =
 {
     {Theme::FillFlag::solid, "solid"},
     {Theme::FillFlag::blend, "blend"},
 };
 
 template<>
-const std::map<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::BorderFlag>::data =
+const std::pair<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::BorderFlag>::data[] =
 {
     {Theme::BorderFlag::top, "top"},
     {Theme::BorderFlag::right, "right"},

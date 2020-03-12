@@ -97,7 +97,7 @@ enum class PixelFormat
 };
 
 template<>
-EGT_API const std::map<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data;
+EGT_API const std::pair<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data[11];
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const PixelFormat& format);

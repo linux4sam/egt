@@ -214,7 +214,7 @@ constexpr Color Palette::yellow;
 constexpr Color Palette::yellowgreen;
 
 template<>
-const std::map<Palette::ColorId, char const*> detail::EnumStrings<Palette::ColorId>::data =
+const std::pair<Palette::ColorId, char const*> detail::EnumStrings<Palette::ColorId>::data[] =
 {
     {Palette::ColorId::bg, "bg"},
     {Palette::ColorId::text, "text"},
@@ -234,7 +234,7 @@ std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color)
 }
 
 template<>
-const std::map<Palette::GroupId, char const*> detail::EnumStrings<Palette::GroupId>::data =
+const std::pair<Palette::GroupId, char const*> detail::EnumStrings<Palette::GroupId>::data[] =
 {
     {Palette::GroupId::normal, "normal"},
     {Palette::GroupId::active, "active"},
