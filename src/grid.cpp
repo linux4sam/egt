@@ -57,7 +57,7 @@ StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, DefaultD
 
 namespace detail
 {
-static inline DefaultDim round(DefaultDim x, DefaultDim y)
+static constexpr DefaultDim round(DefaultDim x, DefaultDim y)
 {
     return x  / y;
 }
@@ -67,8 +67,8 @@ static inline DefaultDim round(DefaultDim x, DefaultDim y)
  * Calculates the rectangle for a cell. This calculates the rectangle right
  * down the center of any border_width if one exists.
  */
-static inline Rect cell_rect(int columns, int rows, DefaultDim width, DefaultDim height,
-                             int column, int row, int border_width = 0, int padding = 0)
+static constexpr Rect cell_rect(int columns, int rows, DefaultDim width, DefaultDim height,
+                                int column, int row, int border_width = 0, int padding = 0)
 {
     const auto inner_width = detail::round((width - ((columns + 1) * border_width)), columns);
     const auto inner_height = detail::round((height - ((rows + 1) * border_width)), rows);
