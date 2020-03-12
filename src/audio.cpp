@@ -295,6 +295,11 @@ bool AudioPlayer::media(const std::string& uri)
 {
     bool result = false;
 
+    if(uri.empty())
+    {
+        throw std::runtime_error("invalid uri");
+    }
+
     if (detail::change_if_diff(m_impl->m_uri, uri))
     {
         std::string path;
