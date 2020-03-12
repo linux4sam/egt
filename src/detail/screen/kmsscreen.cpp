@@ -236,7 +236,7 @@ plane_data* KMSScreen::overlay_plane_create(const Size& size,
     /*
      * overlay_index_zorder[num overlay planes][overlay index]
      */
-    static std::map<int, std::array<int, 5>> overlay_index_zorder =
+    static const std::pair<int, std::array<int, 5>> overlay_index_zorder[] =
     {
         {0, { 0, 0, 0, 0, 0 }},
         {1, { 0, 0, 0, 0, 0 }},
@@ -251,13 +251,13 @@ plane_data* KMSScreen::overlay_plane_create(const Size& size,
     assert(count <= 5);
     for (auto i = 0U; i < count; i++)
     {
-        auto id = planeid(overlay_index_zorder[count][i], drm_type);
+        auto id = planeid(overlay_index_zorder[count].second[i], drm_type);
         if (find(m_used.begin(), m_used.end(), id) != m_used.end())
             continue;
 
         plane = plane_create_buffered(m_device,
                                       drm_type,
-                                      overlay_index_zorder[count][i],
+                                      overlay_index_zorder[count].second[i],
                                       size.width(),
                                       size.height(),
                                       detail::drm_format(format),

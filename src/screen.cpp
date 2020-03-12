@@ -60,18 +60,18 @@ void Screen::flip(const DamageArray& damage)
 
 using View = Simd::View<Simd::Allocator>;
 
-static inline View::Format simd_format(cairo_format_t format)
+static const std::pair<cairo_format_t, View::Format> simd_formats[] =
 {
-    static const std::map<cairo_format_t, View::Format> simd_formats =
-    {
-        {CAIRO_FORMAT_RGB16_565, View::Int16},
-        {CAIRO_FORMAT_ARGB32, View::Int32},
-        {CAIRO_FORMAT_RGB24, View::Int32},
-    };
+    {CAIRO_FORMAT_RGB16_565, View::Int16},
+    {CAIRO_FORMAT_ARGB32, View::Int32},
+    {CAIRO_FORMAT_RGB24, View::Int32},
+};
 
-    const auto i = simd_formats.find(format);
-    if (i != simd_formats.end())
-        return i->second;
+static constexpr View::Format simd_format(cairo_format_t format)
+{
+    for (const auto& i : simd_formats)
+        if (format == i.first)
+            return i.second;
 
     return View::None;
 }
