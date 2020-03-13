@@ -73,13 +73,6 @@ public:
      */
     explicit FileDialog(const std::string& filepath, const Rect& rect = {});
 
-    /**
-     * File is selected in a file dialog window.
-     *
-     * @param[in] fselect is a selected filename.
-     */
-    virtual void selected(const std::string& fselect) = 0;
-
     virtual ~FileDialog() = default;
 
 protected:
@@ -112,6 +105,13 @@ protected:
      * Get the List Item selected index.
      */
     void list_item_selected(int index);
+
+    /**
+     * File selected.
+     *
+     * @param[in] fselect is a selected filename.
+     */
+    virtual void selected(const std::string& fselect) = 0;
 };
 
 /**
@@ -148,9 +148,6 @@ public:
     virtual void show() override;
 
     virtual void show_centered() override;
-
-    virtual void selected(const std::string& fselect) override;
-
     /**
      * return file selected in file open dialog window.
      *
@@ -180,6 +177,9 @@ protected:
      * File path of a selected file.
      */
     std::string m_fselected;
+
+    virtual void selected(const std::string& fselect) override;
+
 };
 
 /**
@@ -216,8 +216,6 @@ public:
 
     virtual void show_centered() override;
 
-    virtual void selected(const std::string& fselect) override;
-
     /**
      * Selected a location for saving a file.
      *
@@ -253,6 +251,8 @@ protected:
      * File path of a file save location.
      */
     std::string m_fsave;
+
+    virtual void selected(const std::string& fselect) override;
 };
 
 }
