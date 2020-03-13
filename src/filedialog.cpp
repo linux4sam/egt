@@ -126,7 +126,10 @@ void FileDialog::list_item_selected(int index)
     {
         SPDLOG_DEBUG("FileDialog : {} is a directory", fselect);
         selected("");
-        m_filepath =  m_filepath + "/" + fselect;
+        if (m_filepath == "/")
+            m_filepath += fselect;
+        else
+            m_filepath =  m_filepath + "/" + fselect;
         list_files(m_filepath);
     }
     else if (fs::is_regular_file(m_filepath + "/" + fselect))
