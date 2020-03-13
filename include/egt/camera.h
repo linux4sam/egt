@@ -109,7 +109,22 @@ public:
      */
     virtual void stop();
 
+    using Window::scale;
+
     virtual void scale(float scalex, float scaley) override;
+
+    /**
+     * Get scale value.
+     */
+    inline float hscale() const
+    {
+        return m_scalex;
+    }
+
+    inline float vscale() const
+    {
+        return m_scaley;
+    }
 
     virtual ~CameraWindow();
 
