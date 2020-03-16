@@ -1307,13 +1307,6 @@ protected:
      */
     Size m_min_size;
 
-private:
-
-    /**
-     * Flags for the widget.
-     */
-    Widget::Flags m_widget_flags{};
-
     /**
      * Palette for the widget.
      *
@@ -1323,7 +1316,14 @@ private:
      * @note This should not be accessed directly.  Always use the access
      * functions because this may not be a complete Palette.
      */
-    std::unique_ptr<Palette> m_palette;
+    Palette m_palette;
+
+private:
+
+    /**
+     * Flags for the widget.
+     */
+    Widget::Flags m_widget_flags{};
 
     /**
      * Alignment hint for this widget within its parent.

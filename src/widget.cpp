@@ -59,8 +59,7 @@ static Widget::WidgetId global_widget_id{0};
 Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
     : m_box(rect),
       m_widgetid(global_widget_id++),
-      m_widget_flags(flags),
-      m_palette(std::make_unique<Palette>())
+      m_widget_flags(flags)
 {
     name("Widget" + std::to_string(m_widgetid));
 
@@ -281,15 +280,13 @@ void Widget::damage(const Rect& rect)
 
 void Widget::palette(const Palette& palette)
 {
-    m_palette = std::make_unique<Palette>(palette);
+    m_palette = palette;
     damage();
 }
 
 void Widget::reset_palette()
 {
-    assert(m_palette);
-    if (m_palette)
-        m_palette->clear();
+    m_palette.clear();
     damage();
 }
 
@@ -308,10 +305,8 @@ Pattern Widget::color(Palette::ColorId id) const
 
 Pattern Widget::color(Palette::ColorId id, Palette::GroupId group) const
 {
-    assert(m_palette);
-
-    if (m_palette && m_palette->exists(id, group))
-        return m_palette->color(id, group);
+    if (m_palette.exists(id, group))
+        return m_palette.color(id, group);
 
     return default_palette().color(id, group);
 }
@@ -320,9 +315,7 @@ void Widget::color(Palette::ColorId id,
                    const Pattern& color,
                    Palette::GroupId group)
 {
-    assert(m_palette);
-    if (m_palette)
-        m_palette->set(id, group, color);
+    m_palette.set(id, group, color);
     damage();
 }
 
@@ -584,8 +577,7 @@ void Widget::serialize(detail::Serializer& serializer) const
         serializer.add_property("ratio:vertical", vertical_ratio());
     if (!fill_flags().empty())
         serializer.add_property("fillflags", fill_flags().to_string());
-    if (m_palette)
-        m_palette->serialize("color", serializer);
+    m_palette.serialize("color", serializer);
     if (m_font)
         m_font->serialize("font", serializer);
 }
@@ -635,7 +627,7 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         this->font(font);
     }
     else if (name == "color")
-        m_palette->deserialize(name, value, attrs);
+        m_palette.deserialize(name, value, attrs);
 }
 
 Widget::~Widget() noexcept
