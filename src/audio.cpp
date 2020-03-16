@@ -295,7 +295,7 @@ bool AudioPlayer::media(const std::string& uri)
 {
     bool result = false;
 
-    if(uri.empty())
+    if (uri.empty())
     {
         throw std::runtime_error("invalid uri");
     }
