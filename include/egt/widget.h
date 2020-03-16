@@ -649,9 +649,9 @@ public:
      * @param color Color to set.
      * @param group Palette::GroupId to set.
      */
-    void color(Palette::ColorId id,
-               const Pattern& color,
-               Palette::GroupId group = Palette::GroupId::normal);
+    virtual void color(Palette::ColorId id,
+                       const Pattern& color,
+                       Palette::GroupId group = Palette::GroupId::normal);
 
     /**
      * Get a pointer to the parent Frame, or nullptr if none exists.
