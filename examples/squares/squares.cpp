@@ -55,15 +55,6 @@ int main(int argc, char** argv)
     win.add(popup);
     popup.show();
 
-    egt::DefaultDim width = 100;
-    egt::DefaultDim height = 100;
-
-    {
-        std::ostringstream ss;
-        ss << width << "," << height;
-        label_dims.text(ss.str());
-    }
-
     const std::vector<egt::Color> colors1 =
     {
         egt::Palette::red,
@@ -128,10 +119,16 @@ int main(int argc, char** argv)
         test_data(800, 480, colors2),
     };
 
+    {
+        std::ostringstream ss;
+        ss << sets[index].w << "," << sets[index].h;
+        label_dims.text(ss.str());
+    }
+
     std::random_device r;
     std::default_random_engine e1 {r()};
-    std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.width() - width)};
-    std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.height() - height)};
+    std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.width() - sets[index].w)};
+    std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.height() - sets[index].h)};
 
     egt::experimental::Fps fps;
     fps.start();
@@ -139,7 +136,7 @@ int main(int argc, char** argv)
     egt::PeriodicTimer timer(std::chrono::milliseconds(1));
     timer.on_timeout([&]()
     {
-        egt::Rect rect(x_dist(e1), y_dist(e1), width, height);
+        egt::Rect rect(x_dist(e1), y_dist(e1), sets[index].w, sets[index].h);
 
         egt::Painter painter(win.screen()->context());
         auto color = *random_item(sets[index].colors.begin(), sets[index].colors.end(), e1);
@@ -165,15 +162,13 @@ int main(int argc, char** argv)
         index++;
         if (index >= sets.size())
             index = 0;
-        width = sets[index].w;
-        height = sets[index].h;
 
         std::ostringstream ss;
-        ss << width << "," << height;
+        ss << sets[index].w << "," << sets[index].h;
         label_dims.text(ss.str());
 
-        x_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.width() - width));
-        y_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.height() - height));
+        x_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.width() - sets[index].w));
+        y_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.height() - sets[index].h));
     });
     vtimer.start();
 
