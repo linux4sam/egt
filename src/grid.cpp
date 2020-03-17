@@ -220,7 +220,6 @@ Widget* StaticGrid::get(const Point& point)
 
 void StaticGrid::remove(Widget* widget)
 {
-    assert(widget);
     if (!widget)
         return;
 
