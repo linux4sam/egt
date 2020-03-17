@@ -90,6 +90,16 @@ MAYBE_WARN="-Wall -Wextra \
 -Wno-unused-parameter \
 -Wno-psabi" # no warnings about gcc abi changes
 
+AC_ARG_ENABLE(sanitize,
+  [AC_HELP_STRING([--enable-sanitize],[turn on sanitize analysis tools])],
+  [enable_sanitize=$enableval], [enable_sanitize=no])
+
+if test "x$enable_sanitize" = "xyes";
+then
+	MAYBE_WARN="$MAYBE_WARN -fsanitize=address -fsanitize=leak \
+			-fsanitize=undefined -fno-omit-frame-pointer"
+fi
+
 # invalidate cached value if MAYBE_WARN has changed
 if test "x$egt_cv_warn_maybe" != "x$MAYBE_WARN"; then
 	unset egt_cv_warn_cflags
