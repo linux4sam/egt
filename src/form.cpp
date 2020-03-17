@@ -81,6 +81,11 @@ void Form::add_option(const std::string& name, const std::shared_ptr<Widget>& wi
 
 void Form::add_option(const std::shared_ptr<Widget>& widget)
 {
+    if (!widget)
+        return;
+
+    assert(!widget->parent() && "widget already has parent!");
+
     widget->align(AlignFlag::expand);
     auto grid = std::make_shared<StaticGrid>(std::make_tuple(1, 1));
     grid->margin(2); /// @todo Not working
