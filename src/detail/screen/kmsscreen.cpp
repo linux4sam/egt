@@ -150,14 +150,14 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
             assert(m_cr);
         }
 #endif
+
+        m_pool.reset(new FlipThread(m_plane->buffer_count - 1));
     }
     else
     {
-        m_size = Size(m_device->screens[0]->width,
-                      m_device->screens[0]->height);
+        init(nullptr, 0, Size(m_device->screens[0]->width,
+                              m_device->screens[0]->height), format);
     }
-
-    m_pool.reset(new FlipThread(m_plane->buffer_count - 1));
 
     assert(!the_kms);
     the_kms = this;
