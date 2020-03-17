@@ -14,43 +14,40 @@ inline namespace v1
 
 Dialog::Dialog(const Rect& rect) noexcept
     : Popup(rect.size(), rect.point()),
-      m_layout(std::make_shared<VerticalBoxSizer>()),
-      m_content(std::make_shared<VerticalBoxSizer>()),
-      m_title(std::make_shared<ImageLabel>()),
-      m_button1(std::make_shared<Button>("OK")),
-      m_button2(std::make_shared<Button>("Cancel"))
+      m_button1("OK"),
+      m_button2("Cancel")
 {
     name("Dialog" + std::to_string(m_widgetid));
 
     border(theme().default_border());
     padding(5);
 
-    m_layout->align(AlignFlag::expand);
+    m_layout.align(AlignFlag::expand);
     add(m_layout);
 
-    m_title->text_align(AlignFlag::left | AlignFlag::center);
-    m_layout->add(expand_horizontal(m_title));
+    m_title.text_align(AlignFlag::left | AlignFlag::center);
+    m_layout.add(expand_horizontal(m_title));
 
-    m_layout->add(expand(m_content));
+    m_layout.add(expand(m_content));
 
     auto grid = std::make_shared<StaticGrid>(Rect(0, 0, 0, (rect.height() * 0.15)), std::make_tuple(2, 1), 5);
     grid->align(AlignFlag::bottom | AlignFlag::expand_horizontal);
-    m_layout->add(grid);
+    m_layout.add(grid);
 
-    m_button1->align(AlignFlag::center);
+    m_button1.align(AlignFlag::center);
     grid->add(expand(m_button1));
 
-    m_button2->align(AlignFlag::center);
+    m_button2.align(AlignFlag::center);
     grid->add(expand(m_button2));
 
-    m_button1->on_event([this](Event & event)
+    m_button1.on_event([this](Event & event)
     {
         event.stop();
         on_button1_click.invoke();
         hide();
     }, {EventId::pointer_click});
 
-    m_button2->on_event([this](Event & event)
+    m_button2.on_event([this](Event & event)
     {
         event.stop();
         on_button2_click.invoke();
@@ -61,18 +58,18 @@ Dialog::Dialog(const Rect& rect) noexcept
 
 void Dialog::title(const std::string& title)
 {
-    m_title->text(title);
+    m_title.text(title);
 }
 
 void Dialog::title(const Image& icon, const std::string& title)
 {
-    m_title->image(icon);
-    m_title->text(title);
+    m_title.image(icon);
+    m_title.text(title);
 }
 
 void Dialog::icon(const Image& icon)
 {
-    m_title->image(icon);
+    m_title.image(icon);
 }
 
 void Dialog::button(ButtonId button, const std::string& text)
@@ -80,28 +77,28 @@ void Dialog::button(ButtonId button, const std::string& text)
     if (button == ButtonId::button1)
     {
         if (text.empty())
-            m_button1->hide();
+            m_button1.hide();
         else
         {
-            m_button1->text(text);
-            m_button1->show();
+            m_button1.text(text);
+            m_button1.show();
         }
     }
     else if (button == ButtonId::button2)
     {
         if (text.empty())
-            m_button2->hide();
+            m_button2.hide();
         else
         {
-            m_button2->text(text);
-            m_button2->show();
+            m_button2.text(text);
+            m_button2.show();
         }
     }
 }
 
 void Dialog::widget(const std::shared_ptr<Widget>& widget)
 {
-    m_content->add(widget);
+    m_content.add(widget);
 }
 
 }

@@ -96,27 +96,27 @@ protected:
     /**
      * Layout sizer.
      */
-    std::shared_ptr<VerticalBoxSizer> m_layout;
+    VerticalBoxSizer m_layout;
 
     /**
      * Content sizer.
      */
-    std::shared_ptr<VerticalBoxSizer> m_content;
+    VerticalBoxSizer m_content;
 
     /**
      * m_title is for dialog title.
      */
-    std::shared_ptr<ImageLabel> m_title;
+    ImageLabel m_title;
 
     /**
      * m_button1 Button for okay or cancel.
      */
-    std::shared_ptr<Button> m_button1;
+    Button m_button1;
 
     /**
      * m_button2 Button for okay or cancel.
      */
-    std::shared_ptr<Button> m_button2;
+    Button m_button2;
 };
 
 }
