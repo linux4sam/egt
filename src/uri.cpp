@@ -74,8 +74,7 @@ void Uri::parse(const std::string& url)
         if (match.size() >= 3)
         {
             m_scheme = match.str(2);
-            std::transform(m_scheme.begin(), m_scheme.end(), m_scheme.begin(),
-            [](auto c) { return std::tolower(c); });
+            detail::tolower(m_scheme);
         }
         if (match.size() >= 5)
         {
@@ -89,8 +88,7 @@ void Uri::parse(const std::string& url)
                 m_port = tokens[1];
             }
 
-            std::transform(m_host.begin(), m_host.end(), m_host.begin(),
-            [](auto c) { return std::tolower(c); });
+            detail::tolower(m_host);
         }
         if (match.size() >= 6)
         {
@@ -106,8 +104,7 @@ void Uri::parse(const std::string& url)
                     m_path = tokens[0];
                     m_icon_size = tokens[1];
 
-                    std::transform(m_icon_size.begin(), m_icon_size.end(), m_icon_size.begin(),
-                    [](auto c) { return std::tolower(c); });
+                    detail::tolower(m_icon_size);
 
                     if (m_icon_size == "small")
                         m_icon_size = "16";

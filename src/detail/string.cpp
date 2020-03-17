@@ -69,29 +69,28 @@ void tokenize(const std::string& str, char delimiter, std::vector<std::string>& 
     }
 }
 
-std::string tolower(std::string s)
+void tolower(std::string& s)
 {
     std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c)
+                   [](auto c)
     {
         return std::tolower(c);
     });
-    return s;
 }
 
-std::string toupper(std::string s)
+void toupper(std::string& s)
 {
     std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c)
+                   [](auto c)
     {
         return std::toupper(c);
     });
-    return s;
 }
 
 bool from_string(const std::string& x)
 {
-    const auto s = tolower(x);
+    auto s = x;
+    tolower(s);
     return (s == "true" ||
             s == "yes");
 }

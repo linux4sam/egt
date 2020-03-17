@@ -83,13 +83,13 @@ void join(std::ostream& os, const T& container, const std::string& delimiter = "
  * Convert a string to lowercase.
  * @note Not UTF-8 aware.
  */
-EGT_API std::string tolower(std::string s);
+EGT_API void tolower(std::string& s);
 
 /**
  * Convert a string to lowercase.
  * @note Not UTF-8 aware.
  */
-EGT_API std::string toupper(std::string s);
+EGT_API void toupper(std::string& s);
 
 /**
  * Convert a type to a std::string using std::ostringstream.
