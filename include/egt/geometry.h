@@ -75,7 +75,7 @@ public:
     {}
 
     /// PointType operator
-    constexpr PointType<Dim, DimCompat>& operator+=(const PointType<Dim, DimCompat>& rhs)
+    constexpr PointType& operator+=(const PointType& rhs)
     {
         m_x += rhs.m_x;
         m_y += rhs.m_y;
@@ -83,7 +83,7 @@ public:
     }
 
     /// PointType operator
-    constexpr PointType<Dim, DimCompat>& operator-=(const PointType<Dim, DimCompat>& rhs)
+    constexpr PointType& operator-=(const PointType& rhs)
     {
         m_x -= rhs.m_x;
         m_y -= rhs.m_y;
@@ -91,7 +91,7 @@ public:
     }
 
     /// PointType operator
-    constexpr PointType<Dim, DimCompat>& operator*=(const PointType<Dim, DimCompat>& rhs)
+    constexpr PointType& operator*=(const PointType& rhs)
     {
         m_x *= rhs.m_x;
         m_y *= rhs.m_y;
@@ -99,7 +99,7 @@ public:
     }
 
     /// PointType operator
-    constexpr PointType<Dim, DimCompat>& operator/=(const PointType<Dim, DimCompat>& rhs)
+    constexpr PointType& operator/=(const PointType& rhs)
     {
         m_x /= rhs.m_x;
         m_y /= rhs.m_y;
@@ -108,7 +108,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType<Dim, DimCompat>& operator+=(const T& rhs)
+    constexpr PointType& operator+=(const T& rhs)
     {
         m_x += rhs;
         m_y += rhs;
@@ -117,7 +117,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType<Dim, DimCompat>& operator-=(const T& rhs)
+    constexpr PointType& operator-=(const T& rhs)
     {
         m_x -= rhs;
         m_y -= rhs;
@@ -126,7 +126,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType<Dim, DimCompat>& operator*=(const T& rhs)
+    constexpr PointType& operator*=(const T& rhs)
     {
         m_x *= rhs;
         m_y *= rhs;
@@ -135,7 +135,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType<Dim, DimCompat>& operator/=(const T& rhs)
+    constexpr PointType& operator/=(const T& rhs)
     {
         m_x /= rhs;
         m_y /= rhs;
@@ -150,7 +150,7 @@ public:
      * @param angle The angle in radians.
      */
     template <class T>
-    PointType<Dim, DimCompat> point_on_circumference(T radius, T angle) const
+    PointType point_on_circumference(T radius, T angle) const
     {
         return PointType(m_x + radius * std::cos(angle),
                          m_y + radius * std::sin(angle));
@@ -162,7 +162,7 @@ public:
      * @param point The other point.
      */
     template <class T>
-    T angle_to(const PointType<Dim, DimCompat>& point) const
+    T angle_to(const PointType& point) const
     {
         return std::atan2(point.m_x - m_x, m_y - point.m_y);
     }
@@ -172,7 +172,7 @@ public:
      *
      * @param point The other point.
      */
-    Dim distance_to(const PointType<Dim, DimCompat>& point) const
+    Dim distance_to(const PointType& point) const
     {
         return std::hypot(point.m_x - m_x, point.m_y - m_y);
     }
@@ -355,7 +355,7 @@ public:
     }
 
     /// SizeType operator
-    constexpr SizeType<Dim, DimCompat>& operator+=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr SizeType& operator+=(const SizeType& rhs)
     {
         m_width += rhs.m_width;
         m_height += rhs.m_height;
@@ -363,7 +363,7 @@ public:
     }
 
     /// SizeType operator
-    constexpr SizeType<Dim, DimCompat>& operator-=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr SizeType& operator-=(const SizeType& rhs)
     {
         m_width -= rhs.m_width;
         m_height -= rhs.m_height;
@@ -371,7 +371,7 @@ public:
     }
 
     /// SizeType operator
-    constexpr SizeType<Dim, DimCompat>& operator*=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr SizeType& operator*=(const SizeType& rhs)
     {
         m_width *= rhs.m_width;
         m_height *= rhs.m_height;
@@ -379,7 +379,7 @@ public:
     }
 
     /// SizeType operator
-    constexpr SizeType<Dim, DimCompat>& operator/=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr SizeType& operator/=(const SizeType& rhs)
     {
         m_width /= rhs.m_width;
         m_height /= rhs.m_height;
@@ -388,7 +388,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType<Dim, DimCompat>& operator+=(const T& rhs)
+    constexpr SizeType& operator+=(const T& rhs)
     {
         m_width += rhs;
         m_height += rhs;
@@ -397,7 +397,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType<Dim, DimCompat>& operator-=(const T& rhs)
+    constexpr SizeType& operator-=(const T& rhs)
     {
         m_width -= rhs;
         m_height -= rhs;
@@ -406,7 +406,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType<Dim, DimCompat>& operator*=(const T& rhs)
+    constexpr SizeType& operator*=(const T& rhs)
     {
         m_width *= rhs;
         m_height *= rhs;
@@ -415,7 +415,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType<Dim, DimCompat>& operator/=(const T& rhs)
+    constexpr SizeType& operator/=(const T& rhs)
     {
         m_width /= rhs;
         m_height /= rhs;
@@ -602,28 +602,28 @@ public:
     {}
 
     /// RectType operator
-    constexpr RectType<Dim, DimCompat>& operator+=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator+=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_size += rhs;
         return *this;
     }
 
     /// RectType operator
-    constexpr RectType<Dim, DimCompat>& operator-=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator-=(const SizeType<Dim, DimCompat>& rhs)
     {
         m_size -= rhs;
         return *this;
     }
 
     /// RectType operator
-    constexpr RectType<Dim, DimCompat>& operator+=(const PointType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator+=(const PointType<Dim, DimCompat>& rhs)
     {
         m_origin += rhs;
         return *this;
     }
 
     /// RectType operator
-    constexpr RectType<Dim, DimCompat>& operator-=(const PointType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator-=(const PointType<Dim, DimCompat>& rhs)
     {
         m_origin -= rhs;
         return *this;
@@ -807,7 +807,7 @@ public:
      * Determine if two rectangles intersect, or, overlap.
      * @param rect The rect to test.
      */
-    constexpr bool intersect(const RectType<Dim, DimCompat>& rect) const
+    constexpr bool intersect(const RectType& rect) const
     {
         return (x() < rect.x() + rect.width() && x() + width() > rect.x() &&
                 y() < rect.y() + rect.height() && y() + height() > rect.y());
@@ -817,8 +817,8 @@ public:
      * Merge two rectangles together into one super rectangle that contains
      * them both.
      */
-    static constexpr RectType<Dim, DimCompat> merge(const RectType<Dim, DimCompat>& lhs,
-            const RectType<Dim, DimCompat>& rhs) noexcept
+    static constexpr RectType merge(const RectType& lhs,
+                                    const RectType& rhs) noexcept
     {
         const auto xmin = std::min(lhs.x(), rhs.x());
         const auto xmax = std::max(lhs.x() + lhs.width(),
@@ -833,8 +833,8 @@ public:
     /**
      * Return the intersecting rectangle of two rectangles, if any.
      */
-    static constexpr RectType<Dim, DimCompat> intersection(const RectType<Dim, DimCompat>& lhs,
-            const RectType<Dim, DimCompat>& rhs) noexcept
+    static constexpr RectType intersection(const RectType& lhs,
+                                           const RectType& rhs) noexcept
     {
         const auto x0 = std::max(lhs.x(), rhs.x());
         const auto y0 = std::max(lhs.y(), rhs.y());
@@ -853,7 +853,7 @@ public:
      * This is different than intersect().  The specified rectangle must be
      * completely inside this one.
      */
-    constexpr bool contains(const RectType<Dim, DimCompat>& rhs) const
+    constexpr bool contains(const RectType& rhs) const
     {
         return rhs.right() < right() &&
                rhs.bottom() < bottom() &&
