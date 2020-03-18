@@ -172,6 +172,15 @@ bool ComboBox::remove(const std::string& item)
     return false;
 }
 
+void ComboBox::clear()
+{
+    if (!m_items.empty())
+    {
+        m_items.clear();
+        damage();
+    }
+}
+
 void ComboBox::parent(Frame* parent)
 {
     TextWidget::parent(parent);

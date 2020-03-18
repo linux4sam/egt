@@ -165,6 +165,11 @@ public:
         return m_items.size();
     }
 
+    /**
+     * Remove all items from the list.
+     */
+    virtual void clear();
+
     virtual ~ComboBox() = default;
 
 protected:
