@@ -276,7 +276,7 @@ protected:
 
     void draw_label(Painter& painter, T value)
     {
-        auto b = this->content_area();
+        const auto b = this->content_area();
         auto handle = handle_box(value);
 
         if (m_orient == Orientation::horizontal)
@@ -284,17 +284,17 @@ protected:
         else
             handle -= Point(b.width() / 2., 0);
 
-        auto text = std::to_string(value);
-        auto f = TextWidget::scale_font(handle.size(), text, this->font());
+        const auto text = std::to_string(value);
+        const auto f = TextWidget::scale_font(handle.size(), text, this->font());
 
         painter.set(this->color(Palette::ColorId::label_text).color());
         painter.set(f);
 
-        auto text_size = painter.text_size(text);
-        Rect target = detail::align_algorithm(text_size,
-                                              handle,
-                                              AlignFlag::center,
-                                              5);
+        const auto text_size = painter.text_size(text);
+        const auto target = detail::align_algorithm(text_size,
+                            handle,
+                            AlignFlag::center,
+                            5);
         painter.draw(target.point());
         painter.draw(text);
     }
@@ -599,6 +599,12 @@ void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
         painter.stroke();
     }
 }
+
+template<>
+EGT_API void SliderType<float>::draw_label(Painter& painter, float value);
+
+template<>
+EGT_API void SliderType<double>::draw_label(Painter& painter, double value);
 
 template <class T>
 void SliderType<T>::serialize(detail::Serializer& serializer) const
