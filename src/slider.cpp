@@ -12,15 +12,15 @@ inline namespace v1
 {
 
 template<>
-const std::pair<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data[] =
+const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderBase::SliderFlag>::data[] =
 {
-    {Slider::SliderFlag::rectangle_handle, "rectangle_handle"},
-    {Slider::SliderFlag::square_handle, "square_handle"},
-    {Slider::SliderFlag::round_handle, "round_handle"},
-    {Slider::SliderFlag::show_labels, "show_labels"},
-    {Slider::SliderFlag::show_label, "show_label"},
-    {Slider::SliderFlag::origin_opposite, "origin_opposite"},
-    {Slider::SliderFlag::consistent_line, "consistent_line"},
+    {SliderBase::SliderFlag::rectangle_handle, "rectangle_handle"},
+    {SliderBase::SliderFlag::square_handle, "square_handle"},
+    {SliderBase::SliderFlag::round_handle, "round_handle"},
+    {SliderBase::SliderFlag::show_labels, "show_labels"},
+    {SliderBase::SliderFlag::show_label, "show_label"},
+    {SliderBase::SliderFlag::origin_opposite, "origin_opposite"},
+    {SliderBase::SliderFlag::consistent_line, "consistent_line"},
 };
 
 }

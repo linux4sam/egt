@@ -295,10 +295,10 @@ struct SliderPage : public egt::NotebookTab
         slider2->value(75);
         hsizer1->add(slider2);
 
-        auto slider3 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 200, 80));
+        auto slider3 = std::make_shared<egt::SliderF>(egt::Rect(0, 0, 200, 80));
         slider3->value(50);
-        slider3->slider_flags().set({egt::Slider::SliderFlag::round_handle,
-                                     egt::Slider::SliderFlag::show_label});
+        slider3->slider_flags().set({egt::SliderF::SliderFlag::round_handle,
+                                     egt::SliderF::SliderFlag::show_label});
         hsizer1->add(slider3);
 
         auto slider4 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200), 0, 100, 0, egt::Orientation::vertical);

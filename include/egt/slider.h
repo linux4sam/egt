@@ -30,22 +30,10 @@ inline namespace v1
 {
 
 /**
- * This is a slider that can be used to select value from a range.
- *
- * Typically @ref Slider, @ref SliderF are used as aliases.
- *
- * @image html widget_slider1.png
- * @image latex widget_slider1.png "widget_slider1" width=5cm
- * @image html widget_slider2.png
- * @image latex widget_slider2.png "widget_slider2" height=5cm
- *
- * @ingroup controls
+ * Base class for SliderType.
  */
-template <class T>
-class SliderType : public ValueRangeWidget<T>
+struct SliderBase
 {
-public:
-
     enum class SliderFlag
     {
         /**
@@ -85,7 +73,28 @@ public:
         consistent_line = detail::bit(6),
     };
 
-    using SliderFlags = detail::Flags<SliderType::SliderFlag>;
+    using SliderFlags = detail::Flags<SliderBase::SliderFlag>;
+};
+
+/**
+ * This is a slider that can be used to select value from a range.
+ *
+ * Typically @ref Slider, @ref SliderF are used as aliases.
+ *
+ * @image html widget_slider1.png
+ * @image latex widget_slider1.png "widget_slider1" width=5cm
+ * @image html widget_slider2.png
+ * @image latex widget_slider2.png "widget_slider2" height=5cm
+ *
+ * @ingroup controls
+ */
+template <class T>
+class SliderType : protected SliderBase, public ValueRangeWidget<T>
+{
+public:
+
+    using SliderBase::SliderFlags;
+    using SliderBase::SliderFlag;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -621,7 +630,7 @@ void SliderType<T>::deserialize(const std::string& name, const std::string& valu
 }
 
 template<>
-EGT_API const std::pair<Slider::SliderFlag, char const*> detail::EnumStrings<Slider::SliderFlag>::data[7];
+EGT_API const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderBase::SliderFlag>::data[7];
 
 }
 }
