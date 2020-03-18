@@ -20,7 +20,7 @@ inline namespace v1
 {
 const AlignFlags Button::DEFAULT_TEXT_ALIGN = AlignFlag::center;
 
-static const auto DEFAULT_BUTTON_SIZE = Size(100, 30);
+static constexpr auto DEFAULT_BUTTON_SIZE = Size(100, 30);
 
 Button::Button(const std::string& text, const AlignFlags& text_align) noexcept
     : Button(text, {}, text_align)

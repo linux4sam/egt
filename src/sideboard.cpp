@@ -160,9 +160,9 @@ void SideBoard::handle(Event& event)
 void SideBoard::close()
 {
     m_canim.stop();
-    auto running = m_oanim.running();
+    const auto running = m_oanim.running();
     m_oanim.stop();
-    auto current = m_oanim.current();
+    const auto current = m_oanim.current();
     reset_animations();
     if (running)
         m_canim.starting(current);
@@ -173,9 +173,9 @@ void SideBoard::close()
 void SideBoard::open()
 {
     m_oanim.stop();
-    auto running = m_canim.running();
+    const auto running = m_canim.running();
     m_canim.stop();
-    auto current = m_canim.current();
+    const auto current = m_canim.current();
     reset_animations();
     if (running)
         m_oanim.starting(current);

@@ -115,13 +115,13 @@ ResourceManager::ResourceManager() = default;
 
 ResourceManager& ResourceManager::instance()
 {
-    static std::unique_ptr<ResourceManager> i(new ResourceManager());
+    static const std::unique_ptr<ResourceManager> i(new ResourceManager());
     return *i;
 }
 
 bool ResourceManager::exists(const char* name) const
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     return i != m_resources.end();
 }
 
@@ -132,14 +132,14 @@ void ResourceManager::clear()
 
 void ResourceManager::clear(const char* name)
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     if (i != m_resources.end())
         m_resources.erase(i);
 }
 
 size_t ResourceManager::size(const char* name)
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     if (i != m_resources.end())
         return i->second.len();
 
@@ -148,7 +148,7 @@ size_t ResourceManager::size(const char* name)
 
 const unsigned char* ResourceManager::data(const char* name)
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     if (i != m_resources.end())
         return i->second.data();
 
@@ -158,7 +158,7 @@ const unsigned char* ResourceManager::data(const char* name)
 bool ResourceManager::read(const char* name, unsigned char* data,
                            size_t length, size_t offset)
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     if (i != m_resources.end())
     {
         if ((offset + length) > i->second.len())
@@ -173,7 +173,7 @@ bool ResourceManager::read(const char* name, unsigned char* data,
 
 void ResourceManager::stream_reset(const char* name)
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     if (i != m_resources.end())
         i->second.index = 0;
 }
@@ -181,7 +181,7 @@ void ResourceManager::stream_reset(const char* name)
 bool ResourceManager::stream_read(const char* name, unsigned char* data,
                                   size_t length)
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     if (i != m_resources.end())
     {
         if ((i->second.index + length) > i->second.len())
@@ -222,7 +222,7 @@ void ResourceManager::add(const char* name, const unsigned char* data, size_t le
 
 void ResourceManager::remove(const char* name)
 {
-    auto i = m_resources.find(name);
+    const auto i = m_resources.find(name);
     if (i != m_resources.end())
         m_resources.erase(i);
 }
