@@ -215,20 +215,20 @@ public:
     /**
      * Get the Orientation.
      */
-    inline Orientation orient() const { return m_orient; }
+    Orientation orient() const { return m_orient; }
 
     /**
      * Set the Orientation.
      */
-    inline void orient(Orientation orient)
+    void orient(Orientation orient)
     {
         if (detail::change_if_diff<>(m_orient, orient))
             this->damage();
     }
 
-    inline const SliderFlags& slider_flags() const { return m_slider_flags; }
+    const SliderFlags& slider_flags() const { return m_slider_flags; }
 
-    inline SliderFlags& slider_flags() { return m_slider_flags; }
+    SliderFlags& slider_flags() { return m_slider_flags; }
 
     virtual void serialize(detail::Serializer& serializer) const override;
 
@@ -240,7 +240,7 @@ public:
 protected:
 
     /// Convert a value to an offset.
-    inline int to_offset(int value) const
+    int to_offset(int value) const
     {
         const auto b = this->content_area();
         if (m_orient == Orientation::horizontal)
@@ -252,7 +252,7 @@ protected:
     }
 
     /// Convert an offset to value.
-    inline T to_value(int offset) const
+    T to_value(int offset) const
     {
         const auto b = this->content_area();
         if (m_orient == Orientation::horizontal)
