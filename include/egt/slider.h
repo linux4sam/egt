@@ -167,12 +167,18 @@ public:
             if (m_orient == Orientation::horizontal)
             {
                 auto diff = event.pointer().point - event.pointer().drag_start;
-                value(to_value(m_start_offset + diff.x()));
+                if (slider_flags().is_set(SliderFlag::origin_opposite))
+                    value(to_value(m_start_offset - diff.x()));
+                else
+                    value(to_value(m_start_offset + diff.x()));
             }
             else
             {
                 auto diff = event.pointer().point - event.pointer().drag_start;
-                value(to_value(m_start_offset - diff.y()));
+                if (slider_flags().is_set(SliderFlag::origin_opposite))
+                    value(to_value(m_start_offset + diff.y()));
+                else
+                    value(to_value(m_start_offset - diff.y()));
             }
             break;
         default:
