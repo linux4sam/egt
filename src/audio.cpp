@@ -232,7 +232,10 @@ AudioPlayer::AudioPlayer()
 AudioPlayer::AudioPlayer(const std::string& uri)
     : AudioPlayer()
 {
-    media(uri);
+    if (!media(uri))
+    {
+        throw std::runtime_error("failed to initalize gstreamer pipeline");
+    }
 }
 
 void AudioPlayer::destroyPipeline()

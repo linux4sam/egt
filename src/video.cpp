@@ -90,9 +90,7 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
 
     if (!media(uri))
     {
-        std::ostringstream ss;
-        ss << "Error: failed to initalize gstreamer pipeline";
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error("failed to initalize gstreamer pipeline");
     }
 }
 
