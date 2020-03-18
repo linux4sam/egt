@@ -81,6 +81,7 @@ void Button::text(const std::string& text)
 {
     if (detail::change_if_diff<>(m_text, text))
     {
+        on_text_changed.invoke();
         damage();
         layout();
     }
