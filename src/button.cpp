@@ -313,12 +313,18 @@ void ImageButton::deserialize(const std::string& name, const std::string& value,
 {
     // TODO proper loading of all image properties
 
-    if (name == "showlabel")
+    switch (detail::hash(name))
+    {
+    case detail::hash("showlabel"):
         show_label(std::stoul(value));
-    else if (name == "image")
+        break;
+    case detail::hash("image"):
         m_image.deserialize(name, value, attrs);
-    else
+        break;
+    default:
         Button::deserialize(name, value, attrs);
+        break;
+    }
 }
 
 }

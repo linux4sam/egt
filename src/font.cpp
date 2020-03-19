@@ -183,12 +183,18 @@ void Font::deserialize(const std::string& name, const std::string& value,
 
     for (auto& a : attrs)
     {
-        if (a.first == "size")
+        switch (detail::hash(a.first))
+        {
+        case detail::hash("size"):
             size(std::stoi(a.second));
-        else if (a.first == "weight")
+            break;
+        case detail::hash("weight"):
             weight(detail::enum_from_string<Font::Weight>(a.second));
-        else if (a.first == "slant")
+            break;
+        case detail::hash("slant"):
             slant(detail::enum_from_string<Font::Slant>(a.second));
+            break;
+        }
     }
 }
 

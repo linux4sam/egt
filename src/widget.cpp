@@ -585,49 +585,68 @@ void Widget::serialize(detail::Serializer& serializer) const
 void Widget::deserialize(const std::string& name, const std::string& value,
                          const std::map<std::string, std::string>& attrs)
 {
-    if (name == "width")
+    switch (detail::hash(name))
+    {
+    case detail::hash("width"):
         width(std::stoi(value));
-    else if (name == "height")
+        break;
+    case detail::hash("height"):
         height(std::stoi(value));
-    else if (name == "x")
+        break;
+    case detail::hash("x"):
         x(std::stoi(value));
-    else if (name == "y")
+        break;
+    case detail::hash("y"):
         y(std::stoi(value));
-    else if (name == "align")
+        break;
+    case detail::hash("align"):
         align(AlignFlags(value));
-    else if (name == "borderflags")
+        break;
+    case detail::hash("borderflags"):
         border_flags(Theme::BorderFlags(value));
-    else if (name == "flags")
+        break;
+    case detail::hash("flags"):
         /// @todo Widget flags set explicitly from deserialization are not safe
         /// for things like frame/plane_window flags which should only come from
         /// widget construction
         m_widget_flags.from_string(value);
-    else if (name == "alpha")
+        break;
+    case detail::hash("alpha"):
         alpha(std::stoi(value));
-    else if (name == "padding")
+        break;
+    case detail::hash("padding"):
         padding(std::stoi(value));
-    else if (name == "margin")
+        break;
+    case detail::hash("margin"):
         margin(std::stoi(value));
-    else if (name == "border")
+        break;
+    case detail::hash("border"):
         border(std::stoi(value));
-    else if (name == "fillflags")
+        break;
+    case detail::hash("fillflags"):
         m_fill_flags.from_string(value);
-    else if (name == "ratio:x")
-    {}
-    else if (name == "ratio:y")
-    {}
-    else if (name == "ratio:horizontal")
-    {}
-    else if (name == "ratio:vertical")
-    {}
-    else if (name == "font")
+        break;
+    case detail::hash("ratio:x"):
+        break;
+    case detail::hash("ratio:y"):
+        break;
+    case detail::hash("ratio:horizontal"):
+        break;
+    case detail::hash("ratio:vertical"):
+        break;
+    case detail::hash("font"):
     {
         Font font;
         font.deserialize(name, value, attrs);
         this->font(font);
+        break;
     }
-    else if (name == "color")
+    case detail::hash("color"):
         m_palette.deserialize(name, value, attrs);
+        break;
+    default:
+        break;
+    }
 }
 
 Widget::~Widget() noexcept

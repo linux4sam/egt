@@ -165,6 +165,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/serialize.h \
 ../include/egt/detail/signal.h \
 ../include/egt/detail/string.h \
+../include/egt/detail/stringhash.h \
 ../include/egt/detail/layout.h \
 ../include/egt/easing.h \
 ../include/egt/embed.h \

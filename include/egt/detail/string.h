@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
+#include <egt/detail/stringhash.h>
 #include <iomanip>
 #include <ostream>
 #include <sstream>
