@@ -49,6 +49,7 @@ constexpr T mmod(T a, T n)
     return a - std::floor(a / n) * n;
 }
 
+/// Compute the angle different between two angles.
 template<class T>
 constexpr T angle_diff(T angle_start, T angle_stop, bool clockwise = true)
 {
@@ -83,6 +84,7 @@ constexpr T to_radians(T zero, T degrees)
     return degrees * (pi<T>() / 180.0);
 }
 
+/// Clamp a value between a hi and low value.
 template <class T>
 constexpr const T& clamp(const T& v, const T& lo, const T& hi)
 {
@@ -100,6 +102,7 @@ constexpr T fabs(T x,
            throw std::runtime_error("can't make sense of floating point value");
 }
 
+/// Safe equal comparison of float values.
 constexpr bool float_equal(const float f1, const float f2)
 {
     constexpr auto epsilon = 1.0e-05f;
@@ -108,6 +111,7 @@ constexpr bool float_equal(const float f1, const float f2)
     return fabs(f1 - f2) <= epsilon * std::max(fabs(f1), fabs(f2));
 }
 
+/// Safe equal comparison of float values.
 constexpr bool float_equal(const double f1, const double f2)
 {
     constexpr auto epsilon = 1.0e-9;

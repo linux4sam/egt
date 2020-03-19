@@ -34,31 +34,22 @@ inline namespace v1
  */
 struct SliderBase
 {
+    /// Slider flags.
     enum class SliderFlag
     {
-        /**
-         * Draw a rectangle handle.
-         */
+        /// Draw a rectangle handle.
         rectangle_handle = detail::bit(0),
 
-        /**
-         * Draw a square handle.
-         */
+        /// Draw a square handle.
         square_handle = detail::bit(1),
 
-        /**
-         * Draw a round handle.
-         */
+        /// Draw a round handle.
         round_handle = detail::bit(2),
 
-        /**
-         * Show range labels.
-         */
+        /// Show range labels.
         show_labels = detail::bit(3),
 
-        /**
-         * Show value label.
-         */
+        /// Show value label.
         show_label = detail::bit(4),
 
         /**
@@ -67,12 +58,11 @@ struct SliderBase
          */
         origin_opposite = detail::bit(5),
 
-        /**
-         * Solid color line.
-         */
+        /// Solid color line.
         consistent_line = detail::bit(6),
     };
 
+    /// Slider flags.
     using SliderFlags = detail::Flags<SliderBase::SliderFlag>;
 };
 
@@ -166,7 +156,7 @@ public:
         case EventId::pointer_drag:
             if (m_orient == Orientation::horizontal)
             {
-                auto diff = event.pointer().point - event.pointer().drag_start;
+                const auto diff = event.pointer().point - event.pointer().drag_start;
                 if (slider_flags().is_set(SliderFlag::origin_opposite))
                     value(to_value(m_start_offset - diff.x()));
                 else
@@ -174,7 +164,7 @@ public:
             }
             else
             {
-                auto diff = event.pointer().point - event.pointer().drag_start;
+                const auto diff = event.pointer().point - event.pointer().drag_start;
                 if (slider_flags().is_set(SliderFlag::origin_opposite))
                     value(to_value(m_start_offset + diff.y()));
                 else
@@ -225,6 +215,8 @@ public:
 
     /**
      * Set the Orientation.
+     *
+     * @param[in] orient Vertical or horizontal Orientation.
      */
     void orient(Orientation orient)
     {
@@ -232,8 +224,10 @@ public:
             this->damage();
     }
 
+    /// Get the current slider flags.
     const SliderFlags& slider_flags() const { return m_slider_flags; }
 
+    /// Get the current slider flags.
     SliderFlags& slider_flags() { return m_slider_flags; }
 
     virtual void serialize(detail::Serializer& serializer) const override;
@@ -269,17 +263,22 @@ protected:
                                                  this->m_start, this->m_end);
     }
 
+    /// Get the calculated handle width.
     int handle_width() const;
 
+    /// Get the calculated handle height.
     int handle_height() const;
 
-    inline Rect handle_box() const
+    /// Get the handle box for the current value.
+    Rect handle_box() const
     {
         return handle_box(this->m_value);
     }
 
+    /// Get the handle box for the specified value.
     Rect handle_box(T value) const;
 
+    /// Draw the value label.
     void draw_label(Painter& painter, T value)
     {
         const auto b = this->content_area();
@@ -305,28 +304,22 @@ protected:
         painter.draw(text);
     }
 
+    /// Draw the handle.
     void draw_handle(Painter& painter);
 
+    /// Draw the line.
     void draw_line(Painter& painter, float xp, float yp);
 
-    /**
-     * Orientation of the slider.
-     */
+    /// Orientation of the slider.
     Orientation m_orient{Orientation::horizontal};
 
-    /**
-     * When true, an invoke of events has been queued to occur.
-     */
+    /// When true, an invoke of events has been queued to occur.
     bool m_invoke_pending{false};
 
-    /**
-     * Slider flags.
-     */
+    /// Slider flags.
     SliderFlags m_slider_flags{};
 
-    /**
-     * When dragging, the offset at the drag start.
-     */
+    /// When dragging, the offset at the drag start.
     int m_start_offset{0};
 };
 
@@ -606,9 +599,11 @@ void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
     }
 }
 
+/// Draw the value label specialized for float.
 template<>
 EGT_API void SliderType<float>::draw_label(Painter& painter, float value);
 
+/// Draw the value label specialized for double.
 template<>
 EGT_API void SliderType<double>::draw_label(Painter& painter, double value);
 
@@ -642,6 +637,7 @@ void SliderType<T>::deserialize(const std::string& name, const std::string& valu
         ValueRangeWidget<T>::deserialize(name, value, attrs);
 }
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderBase::SliderFlag>::data[7];
 

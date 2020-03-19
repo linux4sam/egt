@@ -5,6 +5,7 @@
  */
 #include "egt/color.h"
 #include "egt/detail/math.h"
+#include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -17,12 +18,19 @@ namespace egt
 inline namespace v1
 {
 
+Color Color::css(const std::string& hex)
+{
+    std::string str = hex;
+    str.erase(std::remove(str.begin(), str.end(), '#'), str.end());
+    return Color((std::stoi(str, nullptr, 16) << 8) | 0xff);
+}
+
 std::string Color::hex() const
 {
-    RGBAType value = ((red() & 0xff) << 24) |
-                     ((green() & 0xff) << 16) |
-                     ((blue() & 0xff) << 8) |
-                     (alpha() & 0xff);
+    const RGBAType value = ((red() & 0xff) << 24) |
+                           ((green() & 0xff) << 16) |
+                           ((blue() & 0xff) << 8) |
+                           (alpha() & 0xff);
 
     std::ostringstream ss;
     ss << std::hex << std::setw(8) << std::setfill('0') << value;
@@ -31,7 +39,9 @@ std::string Color::hex() const
 
 std::ostream& operator<<(std::ostream& os, const Color& color)
 {
-    return os << fmt::format("({},{},{},{})", color.red(), color.green(), color.blue(), color.alpha());
+    return os << fmt::format("({},{},{},{})",
+                             color.red(), color.green(),
+                             color.blue(), color.alpha());
 }
 
 struct hsv
@@ -46,10 +56,10 @@ static hsv rgb2hsv(const Color& in)
     hsv out{};
 
     auto min = in.redf() < in.greenf() ? in.redf() : in.greenf();
-    min = min  < in.bluef() ? min  : in.bluef();
+    min = min < in.bluef() ? min : in.bluef();
 
     auto max = in.redf() > in.greenf() ? in.redf() : in.greenf();
-    max = max  > in.bluef() ? max  : in.bluef();
+    max = max > in.bluef() ? max : in.bluef();
 
     out.v = max;
     auto delta = max - min;
@@ -280,7 +290,6 @@ Color Color::interp_hsl(const Color& a, const Color& b, float t)
 {
     hsl hsla = rgb2hsl(a);
     hsl hslb = rgb2hsl(b);
-
     hsl hslaa = hsla;
 
     if (std::abs(hslaa.h - hslb.h) > 0.5f)

@@ -68,16 +68,24 @@ class EGT_API Notebook : public Frame
 {
 public:
 
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when a notebook tab changes.
+     */
     detail::Signal<> on_selected_changed;
+    /** @} */
 
-    /*
-     * @param[in] rect Initial rectangle of the Frame.
+    /**
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit Notebook(const Rect& rect = {}) noexcept;
 
-    /*
+    /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Initial rectangle of the Frame.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit Notebook(Frame& parent, const Rect& rect = {}) noexcept;
 
@@ -100,7 +108,7 @@ public:
     /**
      * Get the currently selected index.
      */
-    inline ssize_t selected() const { return m_selected; }
+    ssize_t selected() const { return m_selected; }
 
     /**
      * Get a widget at he specified index.
@@ -113,13 +121,13 @@ public:
 
 protected:
 
+    /// Type of array of notebook tabs.
     using CellArray = std::vector<std::weak_ptr<NotebookTab>>;
 
+    /// Array of notebook tabs.
     CellArray m_cells;
 
-    /**
-     * Currently selected index.
-     */
+    /// Currently selected index.
     ssize_t m_selected{-1};
 };
 

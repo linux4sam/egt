@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 
 #define DEFAULT_MS_INTERVAL 100
 
-    egt::experimental::Fps fps;
+    egt::experimental::FramesPerSecond fps;
     fps.start();
 
     egt::PeriodicTimer animatetimer(std::chrono::milliseconds(DEFAULT_MS_INTERVAL));

@@ -89,17 +89,31 @@ struct EGT_API Pointer
 
     constexpr Pointer() noexcept = default;
 
+    /**
+     * @param[in] p Display point of the event.
+     * @param[in] s Slot of the event.
+     */
     constexpr explicit Pointer(const DisplayPoint& p, size_t s = 0) noexcept
         : point(p),
           slot(s)
     {}
 
+    /**
+     * @param[in] p Display point of the event.
+     * @param[in] b Pointer button data of the event.
+     * @param[in] s Slot of the event.
+     */
     constexpr Pointer(const DisplayPoint& p, Button b, size_t s = 0) noexcept
         : point(p),
           btn(b),
           slot(s)
     {}
 
+    /**
+     * @param[in] p Display point of the event.
+     * @param[in] d Drag start of the event.
+     * @param[in] s Slot of the event.
+     */
     constexpr Pointer(const DisplayPoint& p,
                       const DisplayPoint& d,
                       size_t s = 0) noexcept
@@ -108,19 +122,16 @@ struct EGT_API Pointer
           slot(s)
     {}
 
-    inline DisplayPoint delta() const
+    /// Get the drag delta.
+    DisplayPoint delta() const
     {
         return point - drag_start;
     }
 
-    /**
-     * Mouse position in display coordinates.
-     */
+    /// Mouse position in display coordinates.
     DisplayPoint point;
 
-    /**
-     * Pointer button value.
-     */
+    /// Pointer button value.
     Button btn{Button::none};
 
     /**
@@ -133,14 +144,11 @@ struct EGT_API Pointer
      */
     DisplayPoint drag_start;
 
-    /**
-     * The event slot.  Used for multitouch.
-     */
+    /// The event slot.  Used for multitouch.
     size_t slot{};
 };
 
-static_assert(detail::rule_of_5<Pointer>(),
-              "Pointer : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Pointer>(), "must fulfill rule of 5");
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Pointer::Button& btn);
@@ -156,6 +164,10 @@ struct EGT_API Key
 {
     constexpr Key() noexcept = default;
 
+    /**
+     * @param[in] k Key code for the event.
+     * @param[in] u Unicode value of the event.
+     */
     constexpr explicit Key(KeyboardCode k, uint32_t u = 0) noexcept
         : keycode(k),
           unicode(u)
@@ -180,8 +192,7 @@ struct EGT_API Key
     uint32_t unicode{0};
 };
 
-static_assert(detail::rule_of_5<Key>(),
-              "Key : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Key>(), "must fulfill rule of 5");
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Key& key);
@@ -196,7 +207,7 @@ public:
     /**
      * Stop the event from propagating.
      */
-    inline void stop()
+    void stop()
     {
         m_stop = true;
     }
@@ -204,13 +215,14 @@ public:
     /**
      * Was the event stopped from propagating?
      */
-    inline bool quit() const
+    bool quit() const
     {
         return m_stop;
     }
 
 protected:
 
+    /// Is the event stopped.
     bool m_stop{false};
 };
 
@@ -223,26 +235,39 @@ class Widget;
  */
 struct EGT_API Event : public EventArg
 {
+    /**
+     * @param[in] id Event id.
+     */
     constexpr explicit Event(EventId id = EventId::none) noexcept
         : m_id(id)
     {}
 
+    /**
+     * @param[in] id Event id.
+     * @param[in] pointer Pointer data for the event.
+     */
     constexpr Event(EventId id, const Pointer& pointer) noexcept
         : m_id(id),
           m_pointer(pointer)
     {}
 
+    /**
+     * @param[in] id Event id.
+     * @param[in] key Key data for the event.
+     */
     constexpr Event(EventId id, const Key& key) noexcept
         : m_id(id),
           m_key(key)
     {}
 
-    inline const EventId& id() const noexcept
+    /// Get the id of the event.
+    const EventId& id() const noexcept
     {
         return m_id;
     }
 
-    inline void id(EventId id)
+    /// Change the id of the event.
+    void id(EventId id)
     {
         m_id = id;
     }
@@ -261,7 +286,7 @@ struct EGT_API Event : public EventArg
      *   - EventId::pointer_drag
      *   - EventId::pointer_drag_stop
      */
-    inline Pointer& pointer()
+    Pointer& pointer()
     {
         return m_pointer;
     }
@@ -269,7 +294,7 @@ struct EGT_API Event : public EventArg
     /**
      * @overload
      */
-    inline const Pointer& pointer() const
+    const Pointer& pointer() const
     {
         return m_pointer;
     }
@@ -282,7 +307,7 @@ struct EGT_API Event : public EventArg
      *   - EventId::keyboard_up,
      *   - EventId::keyboard_repeat,
      */
-    inline Key& key()
+    Key& key()
     {
         return m_key;
     }
@@ -290,7 +315,7 @@ struct EGT_API Event : public EventArg
     /**
      * @overload
      */
-    inline const Key& key() const
+    const Key& key() const
     {
         return m_key;
     };
@@ -320,8 +345,7 @@ protected:
     Pointer m_pointer;
 };
 
-static_assert(detail::rule_of_5<Event>(),
-              "Event : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Event>(), "must fulfill rule of 5");
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Event& event);

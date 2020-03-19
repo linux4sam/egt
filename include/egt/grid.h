@@ -44,6 +44,7 @@ class EGT_API StaticGrid : public Frame
 {
 public:
 
+    /// Grid flags.
     enum class GridFlag
     {
         /**
@@ -52,6 +53,7 @@ public:
         show_border = detail::bit(0),
     };
 
+    /// Grid flags.
     using GridFlags = detail::Flags<GridFlag>;
 
     /**
@@ -62,7 +64,7 @@ public:
                         DefaultDim border = 0) noexcept;
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::border().
      */
@@ -71,7 +73,7 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::border().
      */
@@ -113,6 +115,13 @@ public:
      */
     virtual void add(const std::shared_ptr<Widget>& widget, int column, int row);
 
+    /**
+     * Add a widget to the grid into a specific cell.
+     *
+     * @param widget The widget to add, or nullptr.
+     * @param column The column index.
+     * @param row The row index.
+     */
     virtual void add(Widget& widget, int column, int row)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
@@ -183,6 +192,7 @@ public:
 
 protected:
 
+    /// Reallocate the size of the grid keeping any existing cells intact.
     void reallocate(const std::tuple<int, int>& size);
 
     /**
@@ -193,16 +203,19 @@ protected:
      */
     virtual void reposition();
 
+    /// Type for cell array.
     using CellArray = std::vector<std::vector<std::weak_ptr<Widget>>>;
 
+    /// Cell array of the grid.
     CellArray m_cells;
-    int m_last_add_column{-1};
-    int m_last_add_row{-1};
-    bool m_column_priority{false};
 
-    /**
-     * Grid flags.
-     */
+    /// Last added column.
+    int m_last_add_column{-1};
+    /// Last added row.
+    int m_last_add_row{-1};
+    /// Column priority when expanding the grid automatically.
+    bool m_column_priority{false};
+    /// Grid flags.
     GridFlags m_grid_flags{};
 };
 
@@ -222,15 +235,15 @@ public:
      * Event signal.
      * @{
      */
-    /**
-     * Invoked when the selection changes.
-     */
+    /// Invoked when the selection changes.
     detail::Signal<> on_selected_changed;
+    /** @} */
 
     using StaticGrid::StaticGrid;
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    /// Get the selected cell.
     virtual Point selected() const
     {
         return {m_selected_column, m_selected_row};
@@ -254,7 +267,9 @@ public:
     virtual ~SelectableGrid() noexcept = default;
 
 protected:
+    /// Currently selected column.
     int m_selected_column{0};
+    /// Currently selected row.
     int m_selected_row{0};
 };
 

@@ -114,7 +114,7 @@ void Timer::timeout()
     invoke_handlers();
 }
 
-uint32_t Timer::on_timeout(timer_callback_t callback)
+uint32_t Timer::on_timeout(TimerCallback callback)
 {
     if (callback)
     {

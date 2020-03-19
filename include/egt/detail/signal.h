@@ -133,6 +133,7 @@ protected:
 
     /**
      * Manages metadata about a registered callback.
+     * @private
      */
     struct EGT_API CallbackMeta
     {
@@ -146,14 +147,10 @@ protected:
         RegisterHandle handle{0};
     };
 
-    /**
-     * Helper type for an array of callbacks.
-     */
+    /// Helper type for an array of callbacks.
     using CallbackArray = std::vector<CallbackMeta>;
 
-    /**
-     * Array of callbacks.
-     */
+    /// Array of callbacks.
     detail::CopyOnWriteAllocate<CallbackArray> m_callbacks;
 };
 

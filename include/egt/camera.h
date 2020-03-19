@@ -71,7 +71,7 @@ public:
     /**
      * Create a camera window.
      *
-     * @param[in] rect Initial rectangle of the Window.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] device Camera device node.
      * @param[in] format_hint Requested format of the Window. This only applies
      *            if this Window will be responsible for creating a backing
@@ -114,30 +114,37 @@ public:
     virtual void scale(float scalex, float scaley) override;
 
     /**
-     * Get scale value.
+     * Get horizontal scale value.
      */
-    inline float hscale() const
+    float hscale() const
     {
-        return m_scalex;
+        return m_hscale;
     }
 
-    inline float vscale() const
+    /**
+     * Get vertical scale value.
+     */
+    float vscale() const
     {
-        return m_scaley;
+        return m_vscale;
     }
 
     virtual ~CameraWindow();
 
 protected:
-    float m_scalex{1.0};
-    float m_scaley{1.0};
 
+    /// Horizontal scale value.
+    float m_hscale{1.0};
+
+    /// Vertical scale value.
+    float m_vscale{1.0};
+
+    /// @private
     std::unique_ptr<detail::CameraImpl> m_camera_impl;
 
 };
 
-} //namespace v1
-
-} //namespace egt
+}
+}
 
 #endif

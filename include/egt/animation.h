@@ -34,14 +34,10 @@ using EasingScalar = float;
  * Animation related classes.
  */
 
-/**
- * Animation callback type.
- */
+/// Animation callback type.
 using AnimationCallback = std::function<void (EasingScalar value)>;
 
-/**
- * Easing function type.
- */
+/// Easing function type.
 using EasingFunc = std::function<EasingScalar(EasingScalar percent)>;
 
 namespace detail
@@ -112,7 +108,7 @@ public:
      *
      * @todo Need to implement removing callbacks, similar to Object class.
      */
-    inline void add_callback(AnimationCallback callback)
+    void add_callback(AnimationCallback callback)
     {
         if (callback)
             m_callbacks.emplace_back(std::move(callback));
@@ -121,7 +117,7 @@ public:
     /**
      * Clear all callbacks.
      */
-    inline void clear_callbacks()
+    void clear_callbacks()
     {
         m_callbacks.clear();
     }
@@ -181,27 +177,27 @@ public:
     /**
      * Get the starting value.
      */
-    inline EasingScalar starting() const { return m_start; }
+    EasingScalar starting() const { return m_start; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void starting(EasingScalar start) { m_start = start; }
+    void starting(EasingScalar start) { m_start = start; }
 
     /**
      * Get the ending value.
      */
-    inline EasingScalar ending() const { return m_end; }
+    EasingScalar ending() const { return m_end; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void ending(EasingScalar end) { m_end = end; }
+    void ending(EasingScalar end) { m_end = end; }
 
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void duration(std::chrono::milliseconds dur) { m_duration = dur; }
+    void duration(std::chrono::milliseconds dur) { m_duration = dur; }
 
     /**
      * @note Calling this while running is undefined behavior.
@@ -211,11 +207,9 @@ public:
     /**
      * @note Calling this while running is undefined behavior.
      */
-    inline void reverse(bool rev) { m_reverse = rev; }
+    void reverse(bool rev) { m_reverse = rev; }
 
-    /**
-     * Start the animation.
-     */
+    /// Start the animation.
     virtual void start() override;
 
     /**
@@ -226,15 +220,11 @@ public:
      */
     virtual bool next() override;
 
-    /**
-     * Stop the animation.
-     */
+    /// Stop the animation.
     virtual void stop() override;
 
-    /**
-     * Get the current value.
-     */
-    inline EasingScalar current() const { return m_current; }
+    /// Get the current value.
+    EasingScalar current() const { return m_current; }
 
     /**
      * Should the value be rounded?
@@ -244,55 +234,37 @@ public:
      *
      * @param[in] enable When true, rounding is enabled. It is false by default.
      */
-    inline void rounding(bool enable) { m_round = enable; }
+    void rounding(bool enable) { m_round = enable; }
 
     virtual ~Animation() = default;
 
 protected:
 
-    /**
-     * Starting value.
-     */
+    /// Starting value.
     EasingScalar m_start{0};
 
-    /**
-     * Ending value.
-     */
+    /// Ending value.
     EasingScalar m_end{0};
 
-    /**
-     * Easing function.
-     */
+    /// Easing function.
     EasingFunc m_easing{easing_linear};
 
-    /**
-     * Current value.
-     */
+    /// Current value.
     EasingScalar m_current{0};
 
-    /**
-     * Duration of the animation.
-     */
+    /// Duration of the animation.
     std::chrono::milliseconds m_duration;
 
-    /**
-     * Absolute time when the animation was started.
-     */
+    /// Absolute time when the animation was started.
     std::chrono::time_point<std::chrono::steady_clock> m_start_time;
 
-    /**
-     * Absolute time when the animation will end.
-     */
+    /// Absolute time when the animation will end.
     std::chrono::time_point<std::chrono::steady_clock> m_stop_time;
 
-    /**
-     * Is the animation running in reverse.
-     */
+    /// Is the animation running in reverse.
     bool m_reverse{false};
 
-    /**
-     * Should the dispatched value be rounded?
-     */
+    /// Should the dispatched value be rounded?
     bool m_round{false};
 };
 
@@ -477,24 +449,16 @@ public:
 
 protected:
 
-    /**
-     * Helper type for an array of animations.
-     */
+    /// Helper type for an array of animations.
     using AnimationArray = std::vector<std::shared_ptr<detail::IAnimation>>;
 
-    /**
-     * The animations of the sequence.
-     */
+    /// The animations of the sequence.
     AnimationArray m_animations;
 
-    /**
-     * Index of the current animation.
-     */
+    /// Index of the current animation.
     size_t m_current{0};
 
-    /**
-     * Should the animation loop.
-     */
+    /// Should the animation sequence loop?
     bool m_loop{false};
 };
 
@@ -601,6 +565,7 @@ public:
     })
     {}
 
+    /// Property callback type
     using PropertyCallback = std::function<void (T v)>;
 
     /**
@@ -608,15 +573,13 @@ public:
      *
      * @param[in] callback The callback function to invoke.
      */
-    inline void on_change(PropertyCallback callback)
+    void on_change(PropertyCallback callback)
     {
         m_callbacks.push_back(callback);
     }
 
-    /**
-     * Clear all callbacks.
-     */
-    inline void clear_change_callbacks()
+    /// Clear all callbacks.
+    void clear_change_callbacks()
     {
         m_callbacks.clear();
     }
@@ -625,20 +588,17 @@ public:
 
 protected:
 
-    /**
-     * Invoke handlers with the specified value.
-     */
+    /// Invoke handlers with the specified value.
     void invoke_handlers(T value)
     {
         for (auto& callback : m_callbacks)
             callback(value);
     }
 
+    /// Property callback array type
     using CallbackArray = std::vector<PropertyCallback>;
 
-    /**
-     * Registered callbacks for the animation.
-     */
+    /// Registered callbacks for the animation.
     CallbackArray m_callbacks;
 };
 

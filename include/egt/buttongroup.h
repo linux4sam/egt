@@ -83,9 +83,7 @@ public:
      */
     virtual void remove(Button* button);
 
-
-    virtual void checked_state_change(Button& button, bool checked) const;
-
+    /// @see foreach_checked()
     using CheckedCallback = std::function<void (Button& button)>;
 
     /**
@@ -102,6 +100,10 @@ public:
 
 protected:
 
+    /// @private
+    virtual void checked_state_change(Button& button, bool checked) const;
+
+    /// @private
     using ButtonArray = std::vector<std::weak_ptr<Button>>;
 
     /**
@@ -118,6 +120,8 @@ protected:
      * At least one button must be checked().
      */
     bool m_imperative{true};
+
+    friend class Button;
 };
 
 }

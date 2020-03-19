@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/detail/string.h"
 #include "egt/respath.h"
 #include "egt/uri.h"
 #include <cstdlib>
@@ -21,7 +22,7 @@ inline namespace v1
 
 static std::vector<std::string> image_paths;
 
-static inline void normalize_dir(std::string& dir)
+static void normalize_dir(std::string& dir)
 {
     if (dir.empty())
         return;
@@ -82,12 +83,15 @@ SchemeType resolve_path(const std::string& path, std::string& result)
 
     Uri uri(path);
 
-    if (uri.scheme() == "res")
+    switch (detail::hash(uri.scheme()))
+    {
+    case detail::hash("res"):
     {
         type = SchemeType::resource;
         result = uri.path();
+        break;
     }
-    else if (uri.scheme() == "icon")
+    case detail::hash("icon"):
     {
         type = SchemeType::filesystem;
         result = uri.path();
@@ -113,24 +117,31 @@ SchemeType resolve_path(const std::string& path, std::string& result)
         if (!uri.icon_size().empty())
             icon_prefix = uri.icon_size() + "px";
         result = resolve_file_path(icon_prefix + "/" + result, {egt_icons_dir});
+        break;
     }
-    else if (uri.scheme() == "http" || uri.scheme() == "https")
+    case detail::hash("http"):
+    case detail::hash("https"):
     {
         type = SchemeType::network;
         result = uri.to_string();
+        break;
     }
-    else if (uri.scheme() == "file")
+    case detail::hash("file"):
     {
         type = SchemeType::filesystem;
         result = resolve_file_path(uri.path());
+        break;
     }
-    else
+    default:
     {
         spdlog::warn("unable to parse uri: {}", path);
+        break;
+    }
     }
 
     return type;
 }
 }
+
 }
 }

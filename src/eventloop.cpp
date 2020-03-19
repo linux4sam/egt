@@ -144,7 +144,7 @@ static inline bool show_fps_enabled()
 
 int EventLoop::run()
 {
-    experimental::Fps fps;
+    experimental::FramesPerSecond fps;
 
     // initial draw
     draw();

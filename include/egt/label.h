@@ -40,9 +40,7 @@ class EGT_API Label : public TextWidget
 {
 public:
 
-    /**
-     * Default value used for text alignment.
-     */
+    /// Default value used for text alignment.
     static const AlignFlags DEFAULT_TEXT_ALIGN;
 
     /**
@@ -54,7 +52,7 @@ public:
 
     /**
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     Label(const std::string& text,
@@ -73,7 +71,7 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     Label(Frame& parent,
@@ -85,6 +83,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    /// Default draw method for the widget.
     static void default_draw(Label& widget, Painter& painter, const Rect& rect);
 
     using TextWidget::min_size_hint;
@@ -138,7 +137,7 @@ public:
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     ImageLabel(const Image& image,
@@ -161,7 +160,7 @@ public:
      * @param[in] parent The parent Frame.
      * @param[in] image The image to display.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     ImageLabel(Frame& parent,
@@ -172,6 +171,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    /// Default draw method for the widget.
     static void default_draw(ImageLabel& widget, Painter& painter, const Rect& rect);
 
     using TextWidget::min_size_hint;
@@ -224,12 +224,12 @@ public:
     /**
      * Get a const reference of the image.
      */
-    inline const Image& image() const { return m_image; }
+    const Image& image() const { return m_image; }
 
     /**
      * Get a non-const reference to the image.
      */
-    inline Image& image() { return m_image; }
+    Image& image() { return m_image; }
 
     /**
      * Set the alignment of the image relative to the text.
@@ -245,7 +245,7 @@ public:
     /**
      * Get the image alignment.
      */
-    inline AlignFlags image_align() const { return m_image_align; }
+    AlignFlags image_align() const { return m_image_align; }
 
     /**
      * Enable/disable showing the label text.
@@ -255,9 +255,9 @@ public:
     virtual void show_label(bool value);
 
     /**
-    * Get the show label state.
-    */
-    inline bool show_label() const { return m_show_label; }
+     * Get the show label state.
+     */
+    bool show_label() const { return m_show_label; }
 
     virtual void serialize(detail::Serializer& serializer) const override;
 
@@ -268,22 +268,16 @@ public:
 
 protected:
 
+    /// @private
     void do_set_image(const Image& image);
 
-    /**
-     * The image.
-     * Allowed to be empty.
-     */
+    /// The image. Allowed to be empty.
     Image m_image;
 
-    /**
-     * When true, the label text is shown.
-     */
+    /// When true, the label text is shown.
     bool m_show_label{true};
 
-    /**
-     * Alignment of the image relative to the text.
-     */
+    /// Alignment of the image relative to the text.
     AlignFlags m_image_align{AlignFlag::left};
 };
 

@@ -21,6 +21,7 @@ inline namespace v1
 {
 namespace detail
 {
+/// @todo these functions should be internal
 bool is_target_sama5d4();
 bool audio_device();
 class GstDecoderImpl;
@@ -47,33 +48,25 @@ public:
      * Event signal.
      * @{
      */
-    /**
-     * Invoked when the position of the player changes.
-     */
+    /// Invoked when the position of the player changes.
     detail::Signal<> on_position_changed;
 
-    /**
-     * Invoked when an error occurs.
-     */
+    /// Invoked when an error occurs.
     detail::Signal<const std::string&> on_error;
 
-    /**
-     * Invoked on end of stream.
-     */
+    /// Invoked on end of stream.
     detail::Signal<> on_eos;
 
-    /**
-     * Invoked when the state of the player changes.
-     */
+    /// Invoked when the state of the player changes.
     detail::Signal<> on_state_changed;
     /** @} */
 
     /**
      * Create a video window to decode video and render it to a screen.
      *
-     * @param rect Size of window with offset x & y.
-     * @param format Pixel format of window or a overlay plane.
-     * @param hint Used for configuring window backend's.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] format Pixel format of window or a overlay plane.
+     * @param[in] hint Used for configuring window backend's.
      *
      * @note Only WindowHint::heo_overlay can use yuyv, nv21 and yuv420 pixel
      * formats.
@@ -85,10 +78,10 @@ public:
     /**
     * Create a video window to decode video and render it to a screen.
     *
-    * @param rect Size of window with offset x & y.
-    * @param uri Media file
-    * @param format Pixel format of window or a overlay plane.
-    * @param hint Used for configuring window backend's.
+    * @param[in] rect Initial rectangle of the widget.
+    * @param[in] uri Media file
+    * @param[in] format Pixel format of window or a overlay plane.
+    * @param[in] hint Used for configuring window backend's.
     *
     * @note Only WindowHint::heo_overlay can use yuyv, nv21 and yuv420 pixel
     * formats.
@@ -179,7 +172,7 @@ public:
      *
      * @param enable enable/disable loop-back mode.
      */
-    inline void loopback(bool enable)
+    void loopback(bool enable)
     {
         m_loopback = enable;
     }
@@ -189,7 +182,7 @@ public:
      *
      * @return true/false based on loop-back state
      */
-    inline bool loopback() const
+    bool loopback() const
     {
         return m_loopback;
     }
@@ -199,16 +192,19 @@ public:
     virtual void scale(float hscale, float vscale) override;
 
     /**
-     * Get video scale value.
+     * Get horizontal scale value.
      */
-    inline float hscale() const
+    float hscale() const
     {
-        return m_scalex;
+        return m_hscale;
     }
 
-    inline float vscale() const
+    /**
+     * Get vertical scale value.
+     */
+    float vscale() const
     {
-        return m_scaley;
+        return m_vscale;
     }
 
     /**
@@ -222,22 +218,28 @@ public:
     virtual ~VideoWindow();
 
 protected:
+    /// Loopback enabled.
     bool m_loopback{false};
-    float m_scalex{1.0};
-    float m_scaley{1.0};
 
+    /// Horizontal scale value.
+    float m_hscale{1.0};
+
+    /// Vertical scale value.
+    float m_vscale{1.0};
+
+    /// Create the internal implementation.
     void create_impl(const Size& size);
 
+    /// @private
     std::unique_ptr<detail::GstDecoderImpl> m_video_impl;
 
     friend class detail::GstDecoderImpl;
     friend class detail::GstKmsSinkImpl;
     friend class detail::GstAppSinkImpl;
-
 };
 
-} //namespace v1
+}
 
-} //namespace egt
+}
 
 #endif

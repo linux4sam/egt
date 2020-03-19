@@ -18,7 +18,7 @@ namespace egt
 {
 inline namespace v1
 {
-const AlignFlags Button::DEFAULT_TEXT_ALIGN = AlignFlag::center;
+const AlignFlags Button::DEFAULT_TEXT_ALIGN{AlignFlag::center};
 
 static constexpr auto DEFAULT_BUTTON_SIZE = Size(100, 30);
 

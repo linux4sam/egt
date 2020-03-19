@@ -76,6 +76,13 @@ public:
         }
     }
 
+    /**
+     * Hide the Widget.
+     *
+     * A widget that is not visible will receive no draw() calls.
+     *
+     * This changes the visible() state of the Widget.
+     */
     virtual void hide() override
     {
         T::hide();

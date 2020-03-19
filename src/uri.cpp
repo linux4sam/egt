@@ -17,9 +17,9 @@ namespace egt
 inline namespace v1
 {
 
-Uri::Uri(const std::string& url)
+Uri::Uri(const std::string& uri)
 {
-    parse(url);
+    parse(uri);
 }
 
 bool Uri::is_valid() const
@@ -50,18 +50,18 @@ void Uri::clear()
 }
 
 // Keep an eye on http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3420.html
-void Uri::parse(const std::string& url)
+void Uri::parse(const std::string& uri)
 {
     clear();
 
     // regex suggested by RFC 3986: https://tools.ietf.org/html/rfc3986#page-50
-    std::regex url_regex(
+    static const std::regex uri_regex(
         R"(^(([^:\/?#]+):)?(//([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?)",
         std::regex::extended
     );
 
     std::smatch match;
-    if (std::regex_match(url, match, url_regex))
+    if (std::regex_match(uri, match, uri_regex))
     {
 #ifndef NDEBUG
         int counter = 0;
@@ -127,7 +127,7 @@ void Uri::parse(const std::string& url)
     }
     else
     {
-        spdlog::warn("invalid uri: {}", url);
+        spdlog::warn("invalid uri: {}", uri);
         clear();
     }
 }

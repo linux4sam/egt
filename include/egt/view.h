@@ -36,6 +36,9 @@ class EGT_API ScrolledView : public Frame
 {
 public:
 
+    /**
+     * Scrollbar policy.
+     */
     enum class Policy
     {
         never,
@@ -51,7 +54,7 @@ public:
                           Policy vertical_policy = Policy::as_needed);
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] horizontal_policy Horizontal slider policy.
      * @param[in] vertical_policy Vertical slider policy.
      */
@@ -61,7 +64,7 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] horizontal_policy Horizontal slider policy.
      * @param[in] vertical_policy Vertical slider policy.
      */
@@ -106,19 +109,25 @@ public:
      *
      * @note The offset moves in the negative direction from zero.
      */
-    inline Point offset() const { return m_offset; }
+    Point offset() const { return m_offset; }
 
     /**
      * Set the position.
      */
     virtual void offset(Point offset);
 
-    inline void hoffset(int offset)
+    /**
+     * Get the horizontal offset.
+     */
+    void hoffset(int offset)
     {
         this->offset(Point(offset, m_offset.y()));
     }
 
-    inline void voffset(int offset)
+    /**
+     * Get the vertical offset.
+     */
+    void voffset(int offset)
     {
         this->offset(Point(m_offset.x(), offset));
     }
@@ -126,12 +135,12 @@ public:
     /**
      * Get the slider dimension.
      */
-    inline DefaultDim slider_dim() const { return m_slider_dim; }
+    DefaultDim slider_dim() const { return m_slider_dim; }
 
     /**
      * Set the slider dimension.
      */
-    inline void slider_dim(DefaultDim dim)
+    void slider_dim(DefaultDim dim)
     {
         if (detail::change_if_diff<>(m_slider_dim, dim))
             damage();
@@ -141,16 +150,19 @@ public:
 
 protected:
 
-    inline bool hscrollable() const
+    /// Horizontal scrollable
+    bool hscrollable() const
     {
         return m_hscrollable;
     }
 
-    inline bool vscrollable() const
+    /// Vertical scrollable
+    bool vscrollable() const
     {
         return m_vscrollable;
     }
 
+    /// Update scrollable settings based on current size
     void update_scrollable()
     {
         auto super = super_rect();
@@ -167,9 +179,12 @@ protected:
             m_offset.y(0);
     }
 
+    /// Update properties of the sliders.
     void update_sliders();
 
+    /// Horizontal scrollable
     bool m_hscrollable{false};
+    /// Vertical scrollable
     bool m_vscrollable{false};
 
     /**
@@ -187,20 +202,20 @@ protected:
      */
     Point m_offset;
 
-    /**
-     * Slider shown when scroll-able.
-     */
+    /// Horizontal slider shown when scroll-able.
     Slider m_hslider;
+    /// Vertical slider shown when scroll-able.
     Slider m_vslider;
 
-    /**
-     * Starting offset for the drag.
-     */
+    /// Starting offset for the drag.
     Point m_start_offset;
 
+    /// Horizontal scrollbar policy
     Policy m_horizontal_policy{Policy::as_needed};
+    /// Vertical scrollbar policy
     Policy m_vertical_policy{Policy::as_needed};
 
+    /// @private
     std::shared_ptr<Canvas> m_canvas;
 
     /**
@@ -208,6 +223,7 @@ protected:
      */
     DefaultDim m_slider_dim{8};
 
+    /// Internal update flag.
     bool m_update{false};
 };
 

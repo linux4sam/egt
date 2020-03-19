@@ -21,7 +21,7 @@ namespace egt
 inline namespace v1
 {
 
-const AlignFlags TextBox::default_align = AlignFlag::expand;
+const AlignFlags TextBox::DEFAULT_TEXT_ALIGN = AlignFlag::expand;
 
 TextBox::TextBox(const std::string& text,
                  const AlignFlags& text_align,

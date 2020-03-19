@@ -35,7 +35,7 @@ inline size_t utf8len(const std::string& str)
  * Convert a utf-8 iterator to a standalone std::string.
  */
 template<class T1, class T2>
-inline std::string utf8_char_to_string(T1 ch, T2 e)
+std::string utf8_char_to_string(T1 ch, T2 e)
 {
     auto ch2 = ch;
     utf8::advance(ch2, 1, e);

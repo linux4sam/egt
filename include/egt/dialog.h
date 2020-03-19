@@ -37,8 +37,9 @@ inline namespace v1
 class EGT_API Dialog : public Popup
 {
 public:
+
     /**
-     * buttonid used for dialog button properties.
+     * Used to identify the button on the dialog.
      */
     enum class ButtonId
     {
@@ -46,13 +47,20 @@ public:
         button2,
     };
 
+    /**
+     * Event signal.
+     * @{
+     */
+    /// Signal when button1 is clicked.
     detail::Signal<> on_button1_click;
+    /// Signal when button2 is clicked.
     detail::Signal<> on_button2_click;
+    /** @} */
 
     /**
      * Create a dialog with two buttons to handle decision.
      *
-     * @param[in] rect is a size of dialog.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit Dialog(const Rect& rect = {}) noexcept;
 

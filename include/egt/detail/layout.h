@@ -9,6 +9,7 @@
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/widgetflags.h>
+#include <string>
 #include <vector>
 
 namespace egt
@@ -25,6 +26,14 @@ namespace detail
  */
 struct EGT_API LayoutRect
 {
+    /**
+     * @param[in] b Behave flags.
+     * @param[in] r Current rectangle.
+     * @param[in] lm Left margin.
+     * @param[in] tm Top margin.
+     * @param[in] rm Right margin.
+     * @param[in] bm Bottom margin.
+     */
     LayoutRect(uint32_t b,
                const Rect& r,
                uint32_t lm = 0,
@@ -39,6 +48,15 @@ struct EGT_API LayoutRect
           bmargin(bm)
     {}
 
+    /**
+     * @param[in] b Behave flags.
+     * @param[in] r Current rectangle.
+     * @param[in] s String of the object.
+     * @param[in] lm Left margin.
+     * @param[in] tm Top margin.
+     * @param[in] rm Right margin.
+     * @param[in] bm Bottom margin.
+     */
     LayoutRect(uint32_t b,
                const Rect& r,
                std::string s,
@@ -55,12 +73,19 @@ struct EGT_API LayoutRect
           bmargin(bm)
     {}
 
+    /// String content of the object.
     std::string str;
+    /// Rectangke if the object.
     Rect rect;
+    /// Behavior flags of the object.
     uint32_t behave{0};
+    /// Left margin.
     uint32_t lmargin{0};
+    /// Top margin.
     uint32_t tmargin{0};
+    /// Right margin.
     uint32_t rmargin{0};
+    /// Bottom margin.
     uint32_t bmargin{0};
 };
 

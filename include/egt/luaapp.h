@@ -24,7 +24,6 @@ namespace experimental
 /**
  * Application instance that provides support for running LUA, including a LUA
  * REPL.
- *
  */
 class EGT_API LuaApplication : public egt::Application
 {
@@ -32,6 +31,13 @@ public:
 
     using egt::Application::Application;
 
+    /**
+     * Run the application.
+     *
+     * This will initialize the application and start running the event loop.
+     * This function will block until the event loop is told to exit by calling
+     * quit().
+     */
     virtual int run() override;
 
     virtual ~LuaApplication();

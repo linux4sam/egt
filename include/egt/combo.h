@@ -80,6 +80,7 @@ public:
     detail::Signal<> on_selected_changed;
     /** @} */
 
+    /// Item array type
     using ItemArray = std::vector<std::string>;
 
     /**

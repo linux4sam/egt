@@ -39,7 +39,7 @@ class EGT_API ProgressBarType : public ValueRangeWidget<T>
 public:
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] start Starting value for the range.
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
@@ -54,7 +54,7 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] start Starting value for the range.
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
@@ -71,9 +71,7 @@ public:
         Drawer<ProgressBarType<T>>::draw(*this, painter, rect);
     }
 
-    /**
-     * Default draw method for the ProgressBar.
-     */
+    /// Default draw method for the widget.
     static void default_draw(ProgressBarType<T>& widget, Painter& painter, const Rect&)
     {
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
@@ -111,6 +109,7 @@ public:
 
     using ValueRangeWidget<T>::min_size_hint;
 
+    /// Default ProgressBar size
     static const Size DEFAULT_PROGRESSBAR_SIZE;
 
     virtual Size min_size_hint() const override
@@ -138,7 +137,7 @@ public:
     /**
      * Get the show label state.
      */
-    inline bool show_label() const { return m_show_label; }
+    bool show_label() const { return m_show_label; }
 
     virtual ~ProgressBarType() = default;
 
@@ -179,7 +178,7 @@ class EGT_API SpinProgressType : public ValueRangeWidget<T>
 public:
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] start Starting value for the range.
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
@@ -193,7 +192,7 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] start Starting value for the range.
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
@@ -211,9 +210,7 @@ public:
         Drawer<SpinProgressType<T>>::draw(*this, painter, rect);
     }
 
-    /**
-     * Default draw method for the SpinProgress.
-     */
+    /// Default draw method for the widget.
     static void default_draw(SpinProgressType<T>& widget, Painter& painter, const Rect& rect)
     {
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
@@ -250,6 +247,7 @@ public:
 
     using ValueRangeWidget<T>::min_size_hint;
 
+    /// Default SpinProgress size
     static const Size DEFAULT_SPINPROGRESS_SIZE;
 
     virtual Size min_size_hint() const override
@@ -261,10 +259,10 @@ public:
     }
 
     /**
-    * Enable/disable showing the label text.
-    *
-    * @param[in] value When true, the label text is shown.
-    */
+     * Enable/disable showing the label text.
+     *
+     * @param[in] value When true, the label text is shown.
+     */
     virtual void show_label(bool value)
     {
         if (m_show_label != value)
@@ -277,7 +275,7 @@ public:
     /**
      * Get the show label state.
      */
-    inline bool show_label() const { return m_show_label; }
+    bool show_label() const { return m_show_label; }
 
     virtual void serialize(detail::Serializer& serializer) const override;
 
@@ -343,7 +341,7 @@ class EGT_API LevelMeterType : public ValueRangeWidget<T>
 public:
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] start Starting value for the range.
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
@@ -359,7 +357,7 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] start Starting value for the range.
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
@@ -376,9 +374,7 @@ public:
         Drawer<LevelMeterType<T>>::draw(*this, painter, rect);
     }
 
-    /**
-     * Default draw method for the LevelMeter.
-     */
+    /// Default draw method for the widget.
     static void default_draw(LevelMeterType<T>& widget, Painter& painter, const Rect& rect)
     {
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
@@ -418,11 +414,12 @@ public:
     /**
      * Get the number of bars to show.
      */
-    inline size_t num_bars() const { return m_num_bars; }
+    size_t num_bars() const { return m_num_bars; }
 
     using ValueRangeWidget<T>::min_size_hint;
 
-    static const Size DEFAULT_LEVELMETER_SIZE;
+    /// Default LevelMeter size
+    static constexpr Size DEFAULT_LEVELMETER_SIZE = Size(40, 100);
 
     virtual Size min_size_hint() const override
     {
@@ -462,7 +459,7 @@ using LevelMeter = LevelMeterType<int>;
 using LevelMeterF = LevelMeterType<float>;
 
 template <class T>
-const Size LevelMeterType<T>::DEFAULT_LEVELMETER_SIZE{40, 100};
+constexpr Size LevelMeterType<T>::DEFAULT_LEVELMETER_SIZE;
 
 template <class T>
 void LevelMeterType<T>::serialize(detail::Serializer& serializer) const
@@ -498,7 +495,7 @@ class EGT_API AnalogMeterType : public ValueRangeWidget<T>
 public:
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit AnalogMeterType(const Rect& rect = {}) noexcept
         : ValueRangeWidget<T>(rect, 0, 100, 0)
@@ -508,7 +505,7 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit AnalogMeterType(Frame& parent, const Rect& rect = {}) noexcept
         : AnalogMeterType(rect)
@@ -521,9 +518,7 @@ public:
         Drawer<AnalogMeterType<T>>::draw(*this, painter, rect);
     }
 
-    /**
-     * Default draw method for the AnalogMeter.
-     */
+    /// Default draw method for the widget.
     static void default_draw(AnalogMeterType<T>& widget, Painter& painter, const Rect& rect)
     {
         static const auto tick_width = 1.0;
@@ -578,6 +573,7 @@ public:
 
     using ValueRangeWidget<T>::min_size_hint;
 
+    /// Default size of AnalogMeter
     static const Size DEFAULT_ANALOGMETER_SIZE;
 
     virtual Size min_size_hint() const override

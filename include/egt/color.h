@@ -11,7 +11,6 @@
  * @brief Working with colors.
  */
 
-#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstdint>
@@ -41,17 +40,11 @@ class EGT_API Color
 {
 public:
 
-    /**
-     * Red/Green/Blue type.
-     */
+    /// Red/Green/Blue type.
     using RGBType = uint32_t;
-    /**
-     * Red/Green/Blue/Alpha type.
-     */
+    /// Red/Green/Blue/Alpha type.
     using RGBAType = uint32_t;
-    /**
-     * Single component of Red/Green/Blue/Alpha type.
-     */
+    /// Single component of Red/Green/Blue/Alpha type.
     using ComponentType = uint32_t;
 
     constexpr Color() = default;
@@ -144,6 +137,7 @@ public:
     constexpr void alpha(ComponentType a) { m_rgba[3] = a & 0xff; }
     //@}
 
+    /// Get a 16 bit pixel representation of the Color
     constexpr uint16_t pixel16() const
     {
         const uint16_t b = (blue() >> 3) & 0x1f;
@@ -153,6 +147,7 @@ public:
         return (uint16_t)(r | g | b);
     }
 
+    /// Create a Color from a 16 bit pixel representation
     static constexpr Color pixel16(uint16_t c)
     {
         const uint16_t b = (c) & 0x1f;
@@ -162,6 +157,7 @@ public:
         return Color(r, g, b, 0xff);
     }
 
+    /// Get a 24 bit pixel representation of the Color
     constexpr RGBAType pixel24() const
     {
         return (red() << 16) |
@@ -170,6 +166,7 @@ public:
                (0xff);
     }
 
+    /// Create a Color from a 24 bit pixel representation
     static constexpr Color pixel24(RGBAType c)
     {
         return Color((c >> 16) & 0xff,
@@ -178,6 +175,7 @@ public:
                      0xff);
     }
 
+    /// Get a 32 bit pixel representation of the Color
     constexpr RGBAType pixel32() const
     {
         return (red() << 16) |
@@ -186,6 +184,7 @@ public:
                (alpha() << 24);
     }
 
+    /// Create a Color from a 24 bit pixel representation
     static constexpr Color pixel32(RGBAType c)
     {
         return Color((c >> 16) & 0xff,
@@ -262,20 +261,19 @@ public:
      * Create a Color with a hex CSS string.
      *
      * For example, the string #0074D9 can be used to specify a blue-like
-     * color.
+     * color from red, green, blue values. Alpha is not included.
      *
      * @b Example
      * @code{.cpp}
      * auto a = Color::css("#0074D9");
+     * auto b = Color::css("0074D9");
      * @endcode
      */
-    static inline Color css(const std::string& hex)
-    {
-        std::string str = hex;
-        str.erase(std::remove(str.begin(), str.end(), '#'), str.end());
-        return Color((std::stoi(str, nullptr, 16) << 8) | 0xff);
-    }
+    static Color css(const std::string& hex);
 
+    /**
+     * Return a string hex representation of the color.
+     */
     std::string hex() const;
 
     /**
@@ -558,12 +556,27 @@ class EGT_API Pattern
 public:
     Pattern() noexcept = default;
 
+    /**
+     * @param[in] color Solid color of the pattern.
+     */
     // cppcheck-suppress noExplicitConstructor
     Pattern(const Color& color)
     {
         m_steps.insert(std::make_pair(0.f, color));
     }
 
+    /**
+     * @param[in] steps Color steps of the pattern.
+     */
+    explicit Pattern(const std::vector<std::pair<float, Color>>& steps)
+    {
+        for (auto& s : steps)
+            m_steps.insert(s);
+    }
+
+    /**
+     * Get the first color of the pattern.
+     */
     operator Color() const
     {
         if (!m_steps.empty())
@@ -572,6 +585,9 @@ public:
         return {};
     }
 
+    /**
+     * Get the first color of the pattern.
+     */
     const Color& color() const
     {
         if (!m_steps.empty())
@@ -581,6 +597,9 @@ public:
         return tmp;
     }
 
+    /**
+     * Get the first color of the pattern.
+     */
     Color& color()
     {
         if (!m_steps.empty())
@@ -590,18 +609,17 @@ public:
         return tmp;
     }
 
-    explicit Pattern(const std::vector<std::pair<float, Color>>& steps)
-    {
-        for (auto& s : steps)
-            m_steps.insert(s);
-    }
-
-    Pattern& step(float offset, const Color& color)
+    /**
+     * Add a new step to the pattern.
+     */
+    void step(float offset, const Color& color)
     {
         m_steps.insert(std::make_pair(offset, color));
-        return *this;
     }
 
+    /**
+     * Get each step of the pattern.
+     */
     const std::map<float, Color>& steps() const
     {
         return m_steps;
@@ -609,6 +627,7 @@ public:
 
 protected:
 
+    /// Steps of the pattern
     std::map<float, Color> m_steps;
 };
 
@@ -623,6 +642,7 @@ class EGT_API ColorMap : private detail::NonCopyable<ColorMap>
 {
 public:
 
+    /// Interpolation colorspace method
     enum class Interpolation
     {
         rgba,
@@ -630,19 +650,31 @@ public:
         hsl
     };
 
+    /// Type used for color steps array
     using StepsArray = std::vector<Color>;
 
     ColorMap() noexcept = default;
 
+    /**
+     * @param[in] interp Interpolation colorspace.
+     */
     explicit ColorMap(Interpolation interp) noexcept
         : m_interp(interp)
     {}
 
+    /**
+     * @param[in] steps Pre-defined color steps.
+     * @param[in] interp Interpolation colorspace.
+     */
     explicit ColorMap(StepsArray steps, Interpolation interp = Interpolation::rgba)
         : m_steps(std::move(steps)),
           m_interp(interp)
     {}
 
+    /**
+     * @param[in] steps Pre-defined color steps.
+     * @param[in] interp Interpolation colorspace.
+     */
     template<class T>
     explicit ColorMap(std::initializer_list<T> steps, Interpolation interp = Interpolation::rgba)
         : m_interp(interp)
@@ -650,20 +682,15 @@ public:
         m_steps.insert(m_steps.end(), steps.begin(), steps.end());
     }
 
-    /**
-     * Append a color step.
-     */
-    ColorMap& step(const Color& color)
+    /// Append a color step.
+    void step(const Color& color)
     {
         m_steps.emplace_back(color);
         for (auto& x : m_cache)
             x.clear();
-        return *this;
     }
 
-    /**
-     * Set the steps.
-     */
+    /// Set the color steps.
     void steps(const StepsArray& steps)
     {
         m_steps = steps;
@@ -687,36 +714,24 @@ public:
      */
     Color interp_cached(float t) const;
 
-    /**
-     * Get a reference to the color steps array.
-     */
+    /// Get a reference to the color steps array.
     const StepsArray& steps() const { return m_steps; }
 
-    /**
-     * Are there any color steps?
-     */
+    /// Are there any color steps?
     bool empty() const { return m_steps.empty(); }
 
-    /**
-     * Count the number of color steps.
-     */
+    /// Count the number of color steps.
     size_t count() const { return m_steps.size(); }
 
 protected:
 
-    /**
-     * Steps in the color map.
-     */
+    /// Steps in the color map.
     StepsArray m_steps;
 
-    /**
-     * Interpolation cache.
-     */
+    /// Interpolation cache.
     mutable std::array<std::map<size_t, Color>, 3> m_cache{};
 
-    /**
-     * Interpolation method.
-     */
+    /// Interpolation colorspace method.
     Interpolation m_interp{Interpolation::rgba};
 };
 

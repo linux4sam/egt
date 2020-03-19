@@ -50,30 +50,23 @@ class EGT_API TextBox : public TextWidget
 {
 public:
 
+    /// Text flags.
     enum class TextFlag : uint32_t
     {
-        /**
-         * When not multiline, only allow max length to be what can fit.
-         */
+        /// When not multiline, only allow max length to be what can fit.
         fit_to_width = detail::bit(0),
 
-        /**
-         * Enable multi-line text.
-         */
+        /// Enable multi-line text.
         multiline = detail::bit(1),
 
-        /**
-         * Wrap at word boundaries instead of character boundaries.  Must be flag::multiline.
-         */
+        /// Wrap at word boundaries instead of character boundaries.  Must be flag::multiline.
         word_wrap = detail::bit(2),
 
-        /**
-         * Do not display a virtual keyboard when focus is gained.
-         */
+        /// Do not display a virtual keyboard when focus is gained.
         no_virt_keyboard = detail::bit(3),
     };
 
-    /// Text flags
+    /// Text flags.
     using TextFlags = detail::Flags<TextFlag>;
 
     /**
@@ -82,7 +75,8 @@ public:
      */
     using ValidatorCallback = std::function<bool(const std::string&)>;
 
-    static const AlignFlags default_align;
+    /// Default value used for text alignment.
+    static const AlignFlags DEFAULT_TEXT_ALIGN;
 
     /**
      * @param[in] text The text to display.
@@ -90,7 +84,7 @@ public:
      * @param[in] flags TextBox flags.
      */
     explicit TextBox(const std::string& text = {},
-                     const AlignFlags& text_align = default_align,
+                     const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
                      const TextFlags& flags = {}) noexcept;
 
     /**
@@ -101,7 +95,7 @@ public:
      */
     TextBox(const std::string& text,
             const Rect& rect,
-            const AlignFlags& text_align = default_align,
+            const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
             const TextFlags& flags = {}) noexcept;
 
     /**
@@ -112,7 +106,7 @@ public:
      */
     explicit TextBox(Frame& parent,
                      const std::string& text = {},
-                     const AlignFlags& text_align = default_align,
+                     const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
                      const TextFlags& flags = {}) noexcept;
 
     /**
@@ -125,7 +119,7 @@ public:
     TextBox(Frame& parent,
             const std::string& text,
             const Rect& rect,
-            const AlignFlags& text_align = default_align,
+            const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
             const TextFlags& flags = {}) noexcept;
 
     virtual void handle(Event& event) override;
@@ -374,6 +368,7 @@ private:
 
 namespace detail
 {
+/// Internal draw text function.
 EGT_API void draw_text(Painter& painter,
                        const Rect& b,
                        const std::string& text,
@@ -388,6 +383,7 @@ EGT_API void draw_text(Painter& painter,
                        size_t select_start = 0,
                        size_t select_len = 0);
 
+/// Internal draw text function with associated image.
 EGT_API void draw_text(Painter& painter,
                        const Rect& b,
                        const std::string& text,

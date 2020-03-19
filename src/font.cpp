@@ -19,10 +19,10 @@ namespace egt
 inline namespace v1
 {
 
-const char* Font::DEFAULT_FACE = "Free Sans";
-const Font::Weight Font::DEFAULT_WEIGHT = Font::Weight::normal;
-const Font::Size Font::DEFAULT_SIZE = 18.f;
-const Font::Slant Font::DEFAULT_SLANT = Font::Slant::normal;
+constexpr const char* Font::DEFAULT_FACE;
+constexpr Font::Weight Font::DEFAULT_WEIGHT;
+constexpr Font::Size Font::DEFAULT_SIZE;
+constexpr Font::Slant Font::DEFAULT_SLANT;
 
 static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& font)
 {

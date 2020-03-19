@@ -13,7 +13,7 @@ namespace egt
 inline namespace v1
 {
 
-static inline Size calculate_size(SideBoard::PositionFlag position)
+static Size calculate_size(SideBoard::PositionFlag position)
 {
     return Application::instance().screen()->size() +
            Size((position == SideBoard::PositionFlag::left ||

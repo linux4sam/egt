@@ -69,6 +69,10 @@ public:
 
     constexpr PointType() noexcept = default;
 
+    /**
+     * @param[in] x X value.
+     * @param[in] y Y value.
+     */
     constexpr PointType(Dim x, Dim y) noexcept
         : m_x(x),
           m_y(y)
@@ -177,14 +181,20 @@ public:
         return std::hypot(point.m_x - m_x, point.m_y - m_y);
     }
 
+    /// Get the x value.
     constexpr Dim x() const { return m_x; }
+    /// Get the y value.
     constexpr Dim y() const { return m_y; }
 
+    /// Set the x value.
     constexpr void x(Dim x) { m_x = x; }
+    /// Set the y value.
     constexpr void y(Dim y) { m_y = y; }
 
 protected:
+    /// X value
     Dim m_x{0};
+    /// Y value
     Dim m_y{0};
 };
 
@@ -422,21 +432,21 @@ public:
         return *this;
     }
 
+    /// Get the width value.
     constexpr Dim width() const { return m_width; }
+    /// Get the height value.
     constexpr Dim height() const { return m_height; }
 
+    /// Set the width value.
     constexpr void width(Dim width) { m_width = width; }
+    /// Set the height value.
     constexpr void height(Dim height) { m_height = height; }
 
 protected:
-    /**
-     * Height
-     */
+    /// Height
     Dim m_height{0};
 
-    /**
-     * Width
-     */
+    /// Width
     Dim m_width{0};
 };
 
@@ -861,23 +871,31 @@ public:
                rhs.top() > top();
     }
 
+    /// Get the x value.
     constexpr Dim x() const { return m_origin.x(); }
+    /// Get the y value.
     constexpr Dim y() const { return m_origin.y(); }
 
+    /// Set the x value.
     constexpr void x(Dim x) { m_origin.x(x); }
+    /// Set the y value.
     constexpr void y(Dim y) { m_origin.y(y); }
 
+    /// Get the width value.
     constexpr Dim width() const { return m_size.width(); }
+    /// Get the height value.
     constexpr Dim height() const { return m_size.height(); }
 
+    /// Set the width value.
     constexpr void width(Dim width) { m_size.width(width); }
+    /// Set the height value.
     constexpr void height(Dim height) { m_size.height(height); }
 
 protected:
 
-    /** Origin */
+    /// Origin
     PointType<Dim, DimCompat> m_origin;
-    /** Size */
+    /// Size
     SizeType<Dim, DimCompat> m_size;
 };
 
@@ -1002,15 +1020,23 @@ public:
      */
     using DimType = Dim;
 
+    /**
+     * @param[in] start Start point of the line.
+     * @param[in] end End point of the line.
+     */
     constexpr explicit LineType(const PointType<Dim>& start, const PointType<Dim>& end) noexcept
         : m_start(start),
           m_end(end)
     {}
 
+    /// Get the start point of the line.
     constexpr PointType<Dim> start() const { return m_start; }
+    /// Get the end point of the line.
     constexpr PointType<Dim> end() const { return m_end; }
 
+    /// Set the start point of the line.
     constexpr void start(const PointType<Dim>& start) { m_start = start; }
+    /// Set the end point of the line.
     constexpr void end(const PointType<Dim>& end) { m_end = end; }
 
     /**
@@ -1027,7 +1053,9 @@ public:
     }
 
 protected:
+    /// Start point of the line.
     PointType<Dim> m_start;
+    /// End point of the line.
     PointType<Dim> m_end;
 };
 
@@ -1216,10 +1244,15 @@ class EllipseType
 {
 public:
     /**
-    * Helper to reference the dimension type.
-    */
+     * Helper to reference the dimension type.
+     */
     using DimType = Dim;
 
+    /**
+     * @param[in] center Center of the ellipse.
+     * @param[in] radiusa First radius of the ellipse.
+     * @param[in] radiusb Second radius of the ellipse.
+     */
     constexpr EllipseType(const PointType<Dim>& center = {},
                           Dim radiusa = {},
                           Dim radiusb = {}) noexcept
@@ -1251,12 +1284,18 @@ public:
         return center() + PointType<Dim>(x, y);
     }
 
+    /// Set the first radius of the ellipse.
     constexpr void radiusa(const Dim radiusa) { m_radiusa = radiusa; }
+    /// Set the second radius of the ellipse.
     constexpr void radiusb(const Dim radiusb) { m_radiusb = radiusb; }
+    /// Set the center of the ellipse.
     constexpr void center(const PointType<Dim>& center) { m_center = center; }
 
+    /// Get the first radius of the ellipse.
     constexpr Dim radiusa() const { return m_radiusa; }
+    /// Get the second radius of the ellipse.
     constexpr Dim radiusb() const { return m_radiusb; }
+    /// Get the center of the ellipse.
     constexpr PointType<Dim> center() const { return m_center; }
 
 protected:

@@ -62,6 +62,7 @@ enum class AlignFlag : uint32_t
     expand = expand_horizontal | expand_vertical,
 };
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data[10];
 
@@ -322,6 +323,7 @@ enum class Orientation : uint32_t
     none = detail::bit(3),
 };
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<Orientation, char const*> detail::EnumStrings<Orientation>::data[4];
 
@@ -337,6 +339,7 @@ enum class Justification : uint32_t
     none = detail::bit(4),
 };
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<Justification, char const*> detail::EnumStrings<Justification>::data[5];
 
@@ -371,6 +374,7 @@ enum class WindowHint : uint32_t
     cursor_overlay = detail::bit(4),
 };
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<WindowHint, char const*> detail::EnumStrings<WindowHint>::data[5];
 

@@ -157,6 +157,7 @@ protected:
      */
     virtual void do_draw();
 
+    /// @private
     virtual void allocate_screen();
 
     /**
@@ -166,26 +167,31 @@ protected:
                      PixelFormat format_hint,
                      WindowHint hint);
 
+    /// @private
     virtual void default_damage(const Rect& rect)
     {
         Frame::damage(rect);
     }
 
+    /// @private
     virtual void default_resize(const Size& size)
     {
         Frame::resize(size);
     }
 
+    /// @private
     virtual void default_scale(float scalex, float scaley)
     {
         Frame::scale(scalex, scaley);
     }
 
+    /// @private
     virtual void default_move(const Point& point)
     {
         Frame::move(point);
     }
 
+    /// @private
     virtual void default_begin_draw()
     {
         if (m_parent)
@@ -197,21 +203,25 @@ protected:
         do_draw();
     }
 
+    /// @private
     virtual void default_show()
     {
         Frame::show();
     }
 
+    /// @private
     virtual void default_hide()
     {
         Frame::hide();
     }
 
+    /// @private
     virtual void default_paint(Painter& painter)
     {
         Frame::paint(painter);
     }
 
+    /// @private
     std::unique_ptr<detail::WindowImpl> m_impl;
 
     /**

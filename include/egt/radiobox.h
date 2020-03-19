@@ -34,7 +34,7 @@ public:
 
     /**
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit RadioBox(const std::string& text = {},
                       const Rect& rect = {}) noexcept;
@@ -42,7 +42,7 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit RadioBox(Frame& parent,
                       const std::string& text = {},
@@ -52,9 +52,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    /**
-     * Default draw method for the RadioBox.
-     */
+    /// Default draw method for the widget.
     static void default_draw(RadioBox& widget, Painter& painter, const Rect& rect);
 
     using Button::min_size_hint;

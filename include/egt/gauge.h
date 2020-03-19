@@ -58,7 +58,7 @@ public:
      *
      * @param[in] image The image to display.
      */
-    inline void image(const Image& image)
+    void image(const Image& image)
     {
         m_image = image;
         resize(m_image.size());
@@ -68,7 +68,7 @@ public:
     /**
      * Get the gauge of the layer.
      */
-    inline Gauge* gauge() const { return m_gauge; }
+    Gauge* gauge() const { return m_gauge; }
 
     virtual ~GaugeLayer() = default;
 
@@ -112,7 +112,13 @@ class EGT_API NeedleLayer : public GaugeLayer
 {
 public:
 
+    /**
+     * Event signal.
+     * @{
+     */
+    /// Invoked when the value of the layer changes.
     detail::Signal<> on_value_changed;
+    /** @} */
 
     using GaugeLayer::GaugeLayer;
 
@@ -136,14 +142,14 @@ public:
     /**
      * Get the angle start value.
      */
-    inline float angle_start() const { return m_angle_start; }
+    float angle_start() const { return m_angle_start; }
 
     /**
      * Set the start angle of the needle.
      *
      * @param[in] angle_start The starting angle of the needle.
      */
-    inline float angle_start(float angle_start)
+    float angle_start(float angle_start)
     {
         float orig = m_angle_start;
         if (detail::change_if_diff<float>(m_angle_start, angle_start))
@@ -154,14 +160,14 @@ public:
     /**
      * Get the angle stop value.
      */
-    inline float angle_stop() const { return m_angle_stop; }
+    float angle_stop() const { return m_angle_stop; }
 
     /**
      * Set the stop angle of the needle.
      *
      * @param[in] angle_stop The stop angle of the needle.
      */
-    inline float angle_stop(float angle_stop)
+    float angle_stop(float angle_stop)
     {
         float orig = m_angle_stop;
         if (detail::change_if_diff<float>(m_angle_stop, angle_stop))
@@ -169,17 +175,15 @@ public:
         return orig;
     }
 
-    /**
-     * Get the min value.
-     */
-    inline float min() const { return m_min; }
+    /// Get the min value.
+    float min() const { return m_min; }
 
     /**
      * Set the min value.
      *
      * @param[in] min The min value.
      */
-    inline float min(float min)
+    float min(float min)
     {
         float orig = m_min;
         if (detail::change_if_diff<float>(m_min, min))
@@ -191,17 +195,15 @@ public:
         return orig;
     }
 
-    /**
-     * Get the max value.
-     */
-    inline float max() const { return m_max; }
+    /// Get the max value.
+    float max() const { return m_max; }
 
     /**
      * Set the max value.
      *
      * @param[in] max The max value.
      */
-    inline float max(float max)
+    float max(float max)
     {
         float orig = m_max;
         if (detail::change_if_diff<float>(m_max, max))
@@ -213,10 +215,8 @@ public:
         return orig;
     }
 
-    /**
-     * Get the value of the needle.
-     */
-    inline float value() const { return m_value; }
+    /// Get the value of the needle.
+    float value() const { return m_value; }
 
     /**
      * Set the value.
@@ -243,7 +243,7 @@ public:
     /**
      * Get the needle point.
      */
-    inline PointF needle_point() const { return m_point; }
+    PointF needle_point() const { return m_point; }
 
     /**
      * Set the needle point.
@@ -254,7 +254,7 @@ public:
      * @param point This is the rotate point of the @ref needle_center() on the
      *              gauge surface.
      */
-    inline void needle_point(const PointF& point)
+    void needle_point(const PointF& point)
     {
         if (detail::change_if_diff<PointF>(m_point, point))
         {
@@ -271,7 +271,7 @@ public:
     /**
      * Get the needle center.
      */
-    inline PointF needle_center() const { return m_center; }
+    PointF needle_center() const { return m_center; }
 
     /**
      * Set the needle center.
@@ -280,7 +280,7 @@ public:
      * if a symmetrical needle rotates on its center, this would be a point on
      * the center of the needle layer itself.
      */
-    inline void needle_center(const PointF& center)
+    void needle_center(const PointF& center)
     {
         if (detail::change_if_diff<PointF>(m_center, center))
             damage();
@@ -289,14 +289,14 @@ public:
     /**
      * Get the clockwise value.
      */
-    inline bool clockwise() const { return m_clockwise; }
+    bool clockwise() const { return m_clockwise; }
 
     /**
      * Set the clockwise value.
      *
      * @param[in] value The clockwise value.
      */
-    inline void clockwise(bool value)
+    void clockwise(bool value)
     {
         if (detail::change_if_diff<>(m_clockwise, value))
             damage();
@@ -306,46 +306,31 @@ public:
 
 protected:
 
+    /// @private
     virtual void gauge(Gauge* gauge) override;
 
-    /**
-     * Minimum value of the needle.
-     */
+    /// Minimum value of the needle.
     float m_min{0.0};
 
-    /**
-     * Maximum value of the needle.
-     */
+    /// Maximum value of the needle.
     float m_max{0.0};
 
-    /**
-     * The value of the needle.
-     */
+    /// The value of the needle.
     float m_value{0.0};
 
-    /**
-     * Starting angle of the needle.
-     */
+    /// Starting angle of the needle.
     float m_angle_start{0.0};
 
-    /*
-     * Stopping/Ending angle of the needle.
-     */
+    /// Stopping/Ending angle of the needle.
     float m_angle_stop{360.0};
 
-    /**
-     * Does the needle rotate clockwise or counterclockwise.
-     */
+    /// Does the needle rotate clockwise or counterclockwise.
     bool m_clockwise{true};
 
-    /**
-     * Center point of the needle.
-     */
+    /// Center point of the needle.
     PointF m_center;
 
-    /**
-     * Rotate point of the needle on the gauge.
-     */
+    /// Rotate point of the needle on the gauge.
     PointF m_point;
 };
 
@@ -392,7 +377,6 @@ class EGT_API Gauge : public Frame
 public:
 
     using Frame::Frame;
-
     using Frame::add;
 
     /**
@@ -405,16 +389,20 @@ public:
      */
     void add(std::shared_ptr<GaugeLayer>& layer);
 
-    inline void add(GaugeLayer& widget)
+    /**
+     * Add a GaugeLayer to the Gauge.
+     */
+    void add(GaugeLayer& layer)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
         // will not delete it.
-        add(std::shared_ptr<GaugeLayer>(&widget, [](GaugeLayer*) {}));
+        add(std::shared_ptr<GaugeLayer>(&layer, [](GaugeLayer*) {}));
     }
 
     using Frame::remove;
 
+    /// Remove a layer from the gauge.
     virtual void remove(GaugeLayer* layer);
 
     virtual ~Gauge();
@@ -422,9 +410,9 @@ public:
 protected:
 
     /**
-     * Get the size of the largest layer.
+     * Get the size of all of the layers together.
      */
-    inline Size super_size() const
+    Size super_size() const
     {
         Rect result = content_area().size();
         for (const auto& layer : m_layers)
@@ -432,11 +420,10 @@ protected:
         return result.size();
     }
 
+    /// Type for an aray of layers.
     using LayerArray = std::vector<std::shared_ptr<GaugeLayer>>;
 
-    /**
-     * The layer's of the gauge.
-     */
+    /// The layer's of the gauge.
     LayerArray m_layers;
 };
 

@@ -64,6 +64,7 @@ class EGT_API Button : public TextWidget
 {
 public:
 
+    /// Default value used for text alignment.
     static const AlignFlags DEFAULT_TEXT_ALIGN;
 
     /**
@@ -75,7 +76,7 @@ public:
 
     /**
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     Button(const std::string& text, const Rect& rect,
@@ -92,7 +93,7 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     Button(Frame& parent,
@@ -123,9 +124,7 @@ public:
         return on_event(handler, {EventId::pointer_click});
     }
 
-    /**
-     * Default draw method for Button.
-     */
+    /// Default draw method for the widget.
     static void default_draw(Button& widget, Painter& painter, const Rect& rect);
 
     using Widget::checked;
@@ -186,7 +185,7 @@ public:
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     explicit ImageButton(const Image& image,
@@ -209,7 +208,7 @@ public:
      * @param[in] parent The parent Frame.
      * @param[in] image The image to display.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     ImageButton(Frame& parent,
@@ -220,6 +219,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
+    /// Default draw method for the widget.
     static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
 
     using Button::min_size_hint;
@@ -318,22 +318,16 @@ public:
 
 protected:
 
+    /// @private
     void do_set_image(const Image& image);
 
-    /**
-     * The image.
-     * Allowed to be empty.
-     */
+    /// The image. Allowed to be empty.
     Image m_image;
 
-    /**
-     * When true, the label text is shown.
-     */
+    /// When true, the label text is shown.
     bool m_show_label{true};
 
-    /**
-     * Alignment of the image relative to the text.
-     */
+    /// Alignment of the image relative to the text.
     AlignFlags m_image_align{AlignFlag::left};
 };
 

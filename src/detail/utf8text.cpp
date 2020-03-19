@@ -46,19 +46,20 @@ enum
     LAY_BREAK = 0x200
 };
 
-static void draw_text_common(std::vector<detail::LayoutRect>& rects,
-                             cairo_t* cr,
-                             cairo_font_extents_t& fe,
-                             const Rect& b,
-                             const std::string& text,
-                             const Font& font,
-                             const TextBox::TextFlags& flags,
-                             const AlignFlags& text_align)
+static void draw_text_setup(std::vector<detail::LayoutRect>& rects,
+                            cairo_t* cr,
+                            cairo_font_extents_t& fe,
+                            const Rect& b,
+                            const std::string& text,
+                            const Font& font,
+                            const TextBox::TextFlags& flags,
+                            const AlignFlags& text_align)
 {
     // tokenize based on words or codepoints
     static const std::string delimiters = " \t\n\r";
     std::vector<std::string> tokens;
-    if (flags.is_set(TextBox::TextFlag::multiline) && flags.is_set(TextBox::TextFlag::word_wrap))
+    if (flags.is_set(TextBox::TextFlag::multiline) &&
+        flags.is_set(TextBox::TextFlag::word_wrap))
     {
         detail::tokenize_with_delimiters(text.cbegin(),
                                          text.cend(),
@@ -117,14 +118,14 @@ void draw_text(Painter& painter,
 
     std::vector<detail::LayoutRect> rects;
 
-    draw_text_common(rects,
-                     cr,
-                     fe,
-                     b,
-                     text,
-                     font,
-                     flags,
-                     text_align);
+    draw_text_setup(rects,
+                    cr,
+                    fe,
+                    b,
+                    text,
+                    font,
+                    flags,
+                    text_align);
 
     detail::flex_layout(b, rects, justify, Orientation::flex, text_align);
 
@@ -135,7 +136,8 @@ void draw_text(Painter& painter,
     for (const auto& r : rects)
     {
         float roff = 0.;
-        for (utf8_const_iterator ch(r.str.begin(), r.str.begin(), r.str.end()); ch != utf8_const_iterator(r.str.end(), r.str.begin(), r.str.end()); ++ch)
+        for (utf8_const_iterator ch(r.str.begin(), r.str.begin(), r.str.end());
+             ch != utf8_const_iterator(r.str.end(), r.str.begin(), r.str.end()); ++ch)
         {
             float char_width = 0;
             last_char = utf8_char_to_string(ch.base(), r.str.cend());
@@ -253,14 +255,14 @@ void draw_text(Painter& painter,
 
     std::vector<detail::LayoutRect> rects;
 
-    draw_text_common(rects,
-                     cr,
-                     fe,
-                     b,
-                     text,
-                     font,
-                     flags,
-                     text_align);
+    draw_text_setup(rects,
+                    cr,
+                    fe,
+                    b,
+                    text,
+                    font,
+                    flags,
+                    text_align);
 
     if (image_align.is_set(AlignFlag::top))
     {
@@ -304,7 +306,8 @@ void draw_text(Painter& painter,
         }
 
         float roff = 0.;
-        for (utf8_const_iterator ch(r.str.begin(), r.str.begin(), r.str.end()); ch != utf8_const_iterator(r.str.end(), r.str.begin(), r.str.end()); ++ch)
+        for (utf8_const_iterator ch(r.str.begin(), r.str.begin(), r.str.end());
+             ch != utf8_const_iterator(r.str.end(), r.str.begin(), r.str.end()); ++ch)
         {
             float char_width = 0;
             last_char = utf8_char_to_string(ch.base(), r.str.cend());

@@ -30,12 +30,19 @@ EGT_API std::string egt_version();
 template<class T>
 struct Ratio
 {
+    /**
+     * @param[in] value The value to base the ration off of.
+     * @param[in] ratio Ratio of value to compute.
+     */
     constexpr Ratio(T value, int ratio) noexcept
         : m_value(value),
           m_ratio(ratio)
     {
     }
 
+    /**
+     * Get the calculated ratio value.
+     */
     constexpr operator T() const
     {
         return static_cast<double>(m_value) *
@@ -43,7 +50,9 @@ struct Ratio
     }
 
 protected:
+    /// Value
     T m_value;
+    /// Ratio
     int m_ratio;
 };
 

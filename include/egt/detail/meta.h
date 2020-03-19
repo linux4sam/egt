@@ -83,13 +83,18 @@ class ReverseRange
 {
     T& m_x;
 public:
+    /**
+     * @param x Container reference.
+     */
     explicit ReverseRange(T& x) : m_x(x) {}
 
+    /// begin iterator
     auto begin() const -> decltype(this->m_x.rbegin())
     {
         return m_x.rbegin();
     }
 
+    /// end iterator
     auto end() const -> decltype(this->m_x.rend())
     {
         return m_x.rend();
@@ -156,6 +161,8 @@ constexpr bool rule_of_5()
  * This is a very common pattern used by Widget functions to determine whether
  * damage() should be called when a property is changed.
  *
+ * @param old Reference to the old value.
+ * @param to Potential new value.
  * @return true if the value was changed.
  */
 template<class T>
@@ -170,6 +177,10 @@ constexpr bool change_if_diff(T& old, const T& to)
     return false;
 }
 
+/**
+ * @param old Reference to the old value.
+ * @param to Potential new value.
+ */
 template<>
 constexpr bool change_if_diff(float& old, const float& to)
 {
@@ -182,6 +193,10 @@ constexpr bool change_if_diff(float& old, const float& to)
     return false;
 }
 
+/**
+ * @param old Reference to the old value.
+ * @param to Potential new value.
+ */
 template<>
 constexpr bool change_if_diff(double& old, const double& to)
 {

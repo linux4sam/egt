@@ -125,6 +125,11 @@ protected:
      */
     struct CallbackMeta
     {
+        /**
+         * @param[in] c Event callback function.
+         * @param[in] m Filter mask for events.
+         * @param[in] h Handle for this registration.
+         */
         CallbackMeta(EventCallback c,
                      const FilterFlags& m,
                      RegisterHandle h) noexcept
@@ -133,8 +138,11 @@ protected:
               handle(h)
         {}
 
+        /// Event callback function.
         EventCallback callback;
+        /// Filter mask for events.
         FilterFlags mask;
+        /// Handle for this registration.
         RegisterHandle handle{0};
     };
 

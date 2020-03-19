@@ -27,20 +27,26 @@ inline namespace v1
  * SideBoard Window for a sliding board that slides on and off the screen.
  *
  * This is a widget that manages a Window that slides on and off the screen,
- * with only a small portion of it shown so that sliding it out can be
- * initiated by default.
+ * with only a small portion of it, the "handle", shown so that sliding it out
+ * can be initiated by default.
  */
 class EGT_API SideBoard : public Window
 {
 public:
 
+    /// Default width shown when the SideBoard is closed.
     constexpr static const int HANDLE_WIDTH = 50;
 
+    /// Position flag of the SideBoard.
     enum class PositionFlag : uint32_t
     {
+        /// Left side.
         left,
+        /// Right side.
         right,
+        /// Top side.
         top,
+        /// Botom side.
         bottom,
     };
 
@@ -78,19 +84,13 @@ public:
      */
     virtual void position(PositionFlag position);
 
-    /**
-     * Get the position of the SideBoard.
-     */
-    inline PositionFlag position() const { return m_position; }
+    /// Get the position of the SideBoard.
+    PositionFlag position() const { return m_position; }
 
-    /**
-     * Move to a closed state.
-     */
+    /// Move to a closed state.
     virtual void close();
 
-    /**
-     * Move to an open state.
-     */
+    /// Move to an open state.
     virtual void open();
 
     virtual void serialize(detail::Serializer& serializer) const override;
@@ -102,29 +102,19 @@ public:
 
 protected:
 
-    /**
-     * Reset animation start/end values.
-     */
+    /// Reset animation start/end values.
     void reset_animations();
 
-    /**
-     * Sideboard flags.
-     */
+    /// SideBoard flags.
     PositionFlag m_position{PositionFlag::left};
 
-    /**
-     * Open animation.
-     */
+    /// Open animation.
     PropertyAnimator m_oanim;
 
-    /**
-     * Close animation.
-     */
+    /// Close animation.
     PropertyAnimator m_canim;
 
-    /**
-     * State of the current direction.
-     */
+    /// State of the current direction.
     bool m_dir{false};
 };
 

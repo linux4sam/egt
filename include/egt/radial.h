@@ -57,6 +57,7 @@ public:
     detail::Signal<> on_user_input_changed;
     /** @} */
 
+    /// Radial flags
     enum class RadialFlag
     {
         /**
@@ -75,7 +76,7 @@ public:
         input_value = detail::bit(2),
     };
 
-    /// Radial flags.
+    /// Radial flags
     using RadialFlags = detail::Flags<RadialFlag>;
 
     /**
@@ -88,12 +89,19 @@ public:
         this->flags().set(Widget::Flag::grab_mouse);
     }
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Rectangle for the widget.
+     */
     explicit RadialType(Frame& parent, const Rect& rect = {})
         : RadialType<T>(rect)
     {
         parent.add(*this);
     }
 
+    /**
+     * Add a range value to the radial.
+     */
     virtual detail::Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
             const Color& color = {},
             DefaultDim width = 10,
@@ -116,6 +124,9 @@ public:
 
     using Widget::color;
 
+    /**
+     * Set the idividual color of a range value.
+     */
     virtual void color(detail::Object::RegisterHandle handle, const Color& color)
     {
         for (auto& value : this->m_values)
@@ -180,6 +191,7 @@ public:
         Drawer<RadialType<T>>::draw(*this, painter, rect);
     }
 
+    /// Default draw method for the widget.
     static void default_draw(RadialType<T>& widget, Painter& painter, const Rect& rect)
     {
         detail::ignoreparam(rect);
@@ -242,7 +254,10 @@ public:
         }
     }
 
-    inline float touch_to_degrees(const Point& point) const
+    /**
+     * Convert a touch point to degrees on the radial.
+     */
+    float touch_to_degrees(const Point& point) const
     {
         const auto b = this->content_area();
         const Point c = b.center();
@@ -256,7 +271,7 @@ public:
     /**
      * Normalize a value to degrees.
      */
-    inline T value_to_degrees(T min, T max, T value) const
+    T value_to_degrees(T min, T max, T value) const
     {
         const auto n = (static_cast<float>(value) -
                         static_cast<float>(min)) /
@@ -267,7 +282,7 @@ public:
     /**
      * Normalize degrees to a value.
      */
-    inline T degrees_to_value(T min, T max, T degrees) const
+    T degrees_to_value(T min, T max, T degrees) const
     {
         const auto n = degrees / 360.;
         return (n * (max - min)) + min;
@@ -276,7 +291,7 @@ public:
     /**
      * The starting angle in degrees for the min values.
      */
-    inline float start_angle() const
+    float start_angle() const
     {
         return m_start_angle;
     }
@@ -284,7 +299,7 @@ public:
     /**
      * Set the starting angle in degrees for the min values.
      */
-    inline void start_angle(float value)
+    void start_angle(float value)
     {
         m_start_angle = value;
     }
@@ -353,6 +368,7 @@ using RadialF = RadialType<float>;
 
 }
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<experimental::Radial::RadialFlag, char const*> detail::EnumStrings<experimental::Radial::RadialFlag>::data[3];
 

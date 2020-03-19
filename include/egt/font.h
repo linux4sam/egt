@@ -38,6 +38,7 @@ class EGT_API Font
 {
 public:
 
+    /// Scaler used for font size
     using Size = float;
 
     /**
@@ -59,10 +60,14 @@ public:
         oblique = 2,
     };
 
-    static const char* DEFAULT_FACE;
-    static const Font::Weight DEFAULT_WEIGHT;
-    static const Font::Size DEFAULT_SIZE;
-    static const Font::Slant DEFAULT_SLANT;
+    /// Default font face
+    static constexpr const char* DEFAULT_FACE = "Free Sans";
+    /// Default font weight
+    static constexpr Font::Weight DEFAULT_WEIGHT = Font::Weight::normal;
+    /// Ddefault font size
+    static constexpr Font::Size DEFAULT_SIZE = 18.f;
+    /// Default font slant
+    static constexpr Font::Slant DEFAULT_SLANT = Font::Slant::normal;
 
     /**
      * Create a font based on the global default font.

@@ -35,11 +35,21 @@ class EGT_API CircleWidget : public Widget
 {
 public:
 
+    /**
+     * @param[in] circle Initial circle of the widget.
+     */
     explicit CircleWidget(const Circle& circle = Circle());
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] circle Initial circle of the widget.
+     */
     explicit CircleWidget(Frame& parent, const Circle& circle = Circle());
 
-    inline Circle::DimType radius() const
+    /**
+     * Get the radius of the widget.
+     */
+    Circle::DimType radius() const
     {
         return m_radius;
     }
@@ -47,6 +57,8 @@ public:
     virtual void draw(Painter& painter, const Rect&) override;
 
 protected:
+
+    /// @private
     Circle::DimType m_radius{};
 };
 
@@ -59,6 +71,9 @@ class EGT_API LineWidget : public Widget
 {
 public:
 
+    /**
+     * @param[in] rect Initial rectangle of the widget.
+     */
     explicit LineWidget(const Rect& rect = {})
         : Widget(rect)
     {
@@ -66,6 +81,10 @@ public:
         fill_flags().clear();
     }
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Initial rectangle of the widget.
+     */
     explicit LineWidget(Frame& parent, const Rect& rect = {})
         : LineWidget(rect)
     {
@@ -74,15 +93,22 @@ public:
 
     virtual void draw(Painter& painter, const Rect&) override;
 
-    inline bool horizontal() const { return m_horizontal; }
+    /**
+     * Get the horizontal state of the widget.
+     */
+    bool horizontal() const { return m_horizontal; }
 
-    inline void horizontal(bool horizontal)
+    /**
+     * Set the horizontal state of the widget.
+     */
+    void horizontal(bool horizontal)
     {
         if (detail::change_if_diff<>(m_horizontal, horizontal))
             damage();
     }
 
 protected:
+    /// Horizontal state
     bool m_horizontal{true};
 };
 
@@ -95,6 +121,9 @@ class EGT_API RectangleWidget : public Widget
 {
 public:
 
+    /**
+    * @param[in] rect Initial rectangle of the widget.
+    */
     explicit RectangleWidget(const Rect& rect = {})
         : Widget(rect)
     {
@@ -102,6 +131,10 @@ public:
         fill_flags(Theme::FillFlag::blend);
     }
 
+    /**
+     * @param[in] parent The parent Frame.
+    * @param[in] rect Initial rectangle of the widget.
+    */
     explicit RectangleWidget(Frame& parent, const Rect& rect = {})
         : RectangleWidget(rect)
     {

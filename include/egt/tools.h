@@ -53,12 +53,22 @@ private:
 
 /**
  * Calculate "frame-per-second" of something.
+ *
+ * @code{.cpp}
+ * FramesPerSecond fps;
+ * fps.start();
+ * while (true)
+ * {
+ *     std::cout << std::round(fps.fps()) << std::endl;
+ *     fps.end_frame();
+ * }
+ * @endcode
  */
-class EGT_API Fps
+class EGT_API FramesPerSecond
 {
 public:
 
-    Fps() noexcept
+    FramesPerSecond() noexcept
     {
         start();
     }
@@ -66,7 +76,7 @@ public:
     /**
      * Start/reset the counter.
      */
-    inline void start()
+    void start()
     {
         m_start = std::chrono::steady_clock::now();
         m_frames = 0;
@@ -75,12 +85,12 @@ public:
     /**
      * Call at the end of every frame.
      */
-    inline void end_frame()
+    void end_frame()
     {
         m_frames++;
 
-        auto now = std::chrono::steady_clock::now();
-        auto diff = std::chrono::duration<double>(now - m_start).count();
+        const auto now = std::chrono::steady_clock::now();
+        const auto diff = std::chrono::duration<double>(now - m_start).count();
         if (diff > 1.0)
         {
             m_fps = m_frames / diff;
@@ -92,21 +102,29 @@ public:
     /**
      * Is any calculation ready?
      */
-    inline bool ready() const { return m_ready && m_frames > 0; }
+    bool ready() const { return m_ready && m_frames > 0; }
 
     /**
      * Retrieve the current FPS value.
      */
-    inline float fps()
+    float fps()
     {
         m_ready = false;
         return m_fps;
     }
 
 protected:
+
+    /// Start time
     std::chrono::time_point<std::chrono::steady_clock> m_start{};
+
+    /// Number of frames recorded since start time.
     uint64_t m_frames{0};
+
+    /// Calculated FPS
     float m_fps{0.};
+
+    /// Is m_fps valid and ready?
     bool m_ready{false};
 };
 

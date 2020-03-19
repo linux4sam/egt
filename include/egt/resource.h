@@ -70,7 +70,7 @@ public:
     void clear(const char* name);
 
     /**
-     * Get the length of a resource.
+     * Get the data length of a resource.
      */
     size_t size(const char* name);
 
@@ -85,6 +85,7 @@ public:
     bool read(const char* name, unsigned char* data,
               size_t length, size_t offset = 0);
 
+    /// Item array type.
     using ItemArray = std::vector<std::string>;
 
     /**

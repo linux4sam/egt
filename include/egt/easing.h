@@ -239,6 +239,13 @@ EGT_API EasingScalar easing_exponential_easeinout(EasingScalar p);
  */
 struct EGT_API easing_cubic_bezier
 {
+
+    /**
+     * @param[in] p0 Point of the cubic-bezier function.
+     * @param[in] p1 Point of the cubic-bezier function.
+     * @param[in] p2 Point of the cubic-bezier function.
+     * @param[in] p3 Point of the cubic-bezier function.
+     */
     explicit constexpr easing_cubic_bezier(EasingScalar p0 = 0.42,
                                            EasingScalar p1 = 0,
                                            EasingScalar p2 = 0.58,
@@ -249,11 +256,16 @@ struct EGT_API easing_cubic_bezier
           m_p3(p3)
     {}
 
+    /// Get the easing value.
     EasingScalar operator()(EasingScalar p);
 
+    /// Point of the cubic-bezier function.
     EasingScalar m_p0{};
+    /// Point of the cubic-bezier function.
     EasingScalar m_p1{};
+    /// Point of the cubic-bezier function.
     EasingScalar m_p2{};
+    /// Point of the cubic-bezier function.
     EasingScalar m_p3{};
 };
 

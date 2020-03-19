@@ -41,6 +41,7 @@ EGT_API std::string resolve_file_path(const std::string& filename);
 
 namespace detail
 {
+/// URI scheme types.
 enum class SchemeType
 {
     unknown,

@@ -130,7 +130,7 @@ int main(int argc, char** argv)
     std::uniform_real_distribution<float> x_dist {0., static_cast<float>(win.width() - sets[index].w)};
     std::uniform_real_distribution<float> y_dist {0., static_cast<float>(win.height() - sets[index].h)};
 
-    egt::experimental::Fps fps;
+    egt::experimental::FramesPerSecond fps;
     fps.start();
 
     egt::PeriodicTimer timer(std::chrono::milliseconds(1));

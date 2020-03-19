@@ -29,14 +29,23 @@ class PlPlotPieChart;
 class PlPlotPointChart;
 }
 
+/**
+ * Abstract base chart class.
+ */
 class EGT_API ChartBase: public Widget
 {
 public:
 
+    /**
+     * @param[in] rect Initial rectangle of the widget.
+     */
     ChartBase(const Rect& rect)
         : Widget(rect)
     {}
 
+    /**
+     * Flags used to control how a chart grid is drawn.
+     */
     enum class GridFlag
     {
         /// draw no box, no tick marks, no numeric tick labels, no axes
@@ -58,14 +67,10 @@ public:
      */
     virtual void grid_style(GridFlag flag) = 0;
 
-    /**
-     * A data pair array.
-     */
+    /// A data pair array.
     using DataArray = std::deque<std::pair<double, double>>;
 
-    /**
-     * A data pair array for strings.
-     */
+    /// A data pair array for strings.
     using StringDataArray = std::deque<std::pair<double, std::string>>;
 };
 
@@ -90,7 +95,7 @@ public:
     /**
      * Construct a LineChart with the specified size.
      *
-     * @param[in] rect size of frame with offset x & y.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit LineChart(const Rect& rect = {});
 
@@ -183,6 +188,7 @@ public:
 
 protected:
 
+    /// @private
     std::unique_ptr<detail::PlPlotLineChart> m_impl;
 };
 
@@ -208,7 +214,7 @@ public:
     /**
      * Construct a PointChart with the specified size.
      *
-     * @param[in] rect size of frame with offset x & y.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit PointChart(const Rect& rect = {});
 
@@ -293,6 +299,7 @@ public:
 
 protected:
 
+    /// @private
     std::unique_ptr<detail::PlPlotPointChart> m_impl;
 };
 
@@ -318,7 +325,7 @@ public:
     /**
      * Construct a BarChart with the specified size.
      *
-     * @param[in] rect Size of frame with offset x & y.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit BarChart(const Rect& rect = {});
 
@@ -418,8 +425,10 @@ public:
 
 protected:
 
+    /// @private
     BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl);
 
+    /// @private
     std::unique_ptr<detail::PlPlotImpl> m_impl;
 };
 
@@ -437,7 +446,7 @@ public:
     /**
      * Construct a HorizontalBarChart with the specified size.
      *
-     * @param[in] rect Size of frame with offset x & y.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit HorizontalBarChart(const Rect& rect = {});
 
@@ -454,12 +463,13 @@ class EGT_API PieChart: public Widget
 {
 public:
 
+    /// String data array type
     using StringDataArray = ChartBase::StringDataArray;
 
     /**
      * Construct a PieChart with the specified size.
      *
-     * @param[in] rect Size of frame with offset x & y.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit PieChart(const Rect& rect = {});
 
@@ -516,6 +526,7 @@ public:
 
 protected:
 
+    /// @private
     std::unique_ptr<detail::PlPlotPieChart> m_impl;
 };
 

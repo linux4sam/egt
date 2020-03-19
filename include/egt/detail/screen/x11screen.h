@@ -30,7 +30,8 @@ class EGT_API X11Screen : public Screen
 {
 public:
 
-    explicit X11Screen(Application& app, const Size& size = Size(800, 480), bool borderless = false);
+    explicit X11Screen(Application& app, const Size& size = Size(800, 480),
+                       bool borderless = false);
 
     virtual void schedule_flip() override {}
 

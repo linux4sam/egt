@@ -31,13 +31,13 @@ namespace detail
 {
 
 /**
- * Base serializer class.
+ * Abstract base serializer class.
  */
 class EGT_API Serializer
 {
 public:
+    /// Add a widget to the serializer.
     virtual bool add(Widget* widget, int level) = 0;
-
     /// Add a property.
     virtual void add_property(const std::string& name, const std::string& value,
                               const std::map<std::string, std::string>& attrs = {}) = 0;
@@ -70,9 +70,12 @@ public:
 class EGT_API OstreamWidgetSerializer : public Serializer
 {
 public:
+    /**
+     * @param o Output stream reference.
+     */
     explicit OstreamWidgetSerializer(std::ostream& o);
 
-    bool add(Widget* widget, int level) override;
+    virtual bool add(Widget* widget, int level) override;
 
     using Serializer::add_property;
 
@@ -80,7 +83,10 @@ public:
                       const std::map<std::string, std::string>& attrs = {}) override;
 
 protected:
+    /// Output stream reference
     std::ostream& m_out;
+
+    /// Current serialize tree level
     int m_level{0};
 };
 
@@ -92,10 +98,9 @@ protected:
  * XmlWidgetSerializer xml;
  * win.walk(std::bind(&XmlWidgetSerializer::add, std::ref(xml),
  *                    std::placeholders::_1, std::placeholders::_2));
+ * // write the result
  * xml.write("output.xml");
- *
- * or
- *
+ * // or
  * xml.write(std::cout);
  *@endcode
  *
@@ -106,16 +111,21 @@ class EGT_API XmlWidgetSerializer : public Serializer
 public:
     XmlWidgetSerializer();
 
+    /// Clear or reset, the serializer for re-use.
     void reset();
 
-    bool add(Widget* widget, int level) override;
+    virtual bool add(Widget* widget, int level) override;
 
     using Serializer::add_property;
 
     void add_property(const std::string& name, const std::string& value,
                       const std::map<std::string, std::string>& attrs = {}) override;
 
+
+    /// Write top the specified file path.
     void write(const std::string& filename);
+
+    /// Write to the specified ostream.
     void write(std::ostream& out);
 
     virtual ~XmlWidgetSerializer() noexcept;
@@ -123,6 +133,8 @@ public:
 protected:
 
     struct XmlSerializerImpl;
+
+    /// @private
     std::unique_ptr<XmlSerializerImpl> m_impl;
 };
 

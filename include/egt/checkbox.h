@@ -41,7 +41,7 @@ public:
 
     /**
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit CheckBox(const std::string& text = {},
                       const Rect& rect = {}) noexcept;
@@ -49,7 +49,7 @@ public:
     /**
      * @param[in] parent The parent Frame.
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit CheckBox(Frame& parent,
                       const std::string& text = {},
@@ -84,13 +84,13 @@ class EGT_API ToggleBox : public CheckBox
 public:
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit ToggleBox(const Rect& rect = {}) noexcept;
 
     /**
     * @param[in] parent The parent Frame.
-    * @param[in] rect Rectangle for the widget.
+    * @param[in] rect Initial rectangle of the widget.
     */
     explicit ToggleBox(Frame& parent, const Rect& rect = {}) noexcept;
 

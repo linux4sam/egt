@@ -79,12 +79,12 @@ public:
     /**
      * Get the justify.
      */
-    inline Justification justify() const { return m_justify; }
+    Justification justify() const { return m_justify; }
 
     /**
      * Set the justify.
      */
-    inline void justify(Justification justify)
+    void justify(Justification justify)
     {
         if (detail::change_if_diff<>(m_justify, justify))
             layout();
@@ -93,12 +93,12 @@ public:
     /**
      * Get the Orientation.
      */
-    inline Orientation orient() const { return m_orient; }
+    Orientation orient() const { return m_orient; }
 
     /**
      * Set the Orientation.
      */
-    inline void orient(Orientation orient)
+    void orient(Orientation orient)
     {
         if (detail::change_if_diff<>(m_orient, orient))
             layout();
@@ -113,7 +113,8 @@ public:
 
 protected:
 
-    inline Size super_rect() const
+    /// Calculate the super rectangle of all the children
+    Size super_rect() const
     {
         if (orient() == Orientation::flex)
         {
@@ -163,7 +164,9 @@ protected:
         return {width, height};
     }
 
+    /// @private
     Orientation m_orient{Orientation::horizontal};
+    /// @private
     Justification m_justify{Justification::start};
 };
 
@@ -176,9 +179,17 @@ class EGT_API HorizontalBoxSizer : public BoxSizer
 {
 public:
 
+    /**
+     * @param[in] justify Justification of child widgets.
+     */
     explicit HorizontalBoxSizer(Justification justify = Justification::middle)
         : BoxSizer(Orientation::horizontal, justify)
     {}
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] justify Justification of child widgets.
+     */
     explicit HorizontalBoxSizer(Frame& parent, Justification justify = Justification::middle)
         : BoxSizer(parent, Orientation::horizontal, justify)
     {}
@@ -195,10 +206,17 @@ class EGT_API VerticalBoxSizer : public BoxSizer
 {
 public:
 
+    /**
+     * @param[in] justify Justification of child widgets.
+     */
     explicit VerticalBoxSizer(Justification justify = Justification::middle)
         : BoxSizer(Orientation::vertical, justify)
     {}
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] justify Justification of child widgets.
+     */
     explicit VerticalBoxSizer(Frame& parent, Justification justify = Justification::middle)
         : BoxSizer(parent, Orientation::vertical, justify)
     {}
@@ -215,10 +233,17 @@ class EGT_API FlexBoxSizer : public BoxSizer
 {
 public:
 
+    /**
+     * @param[in] justify Justification of child widgets.
+     */
     explicit FlexBoxSizer(Justification justify = Justification::middle)
         : BoxSizer(Orientation::flex, justify)
     {}
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] justify Justification of child widgets.
+     */
     explicit FlexBoxSizer(Frame& parent, Justification justify = Justification::middle)
         : BoxSizer(parent, Orientation::flex, justify)
     {}

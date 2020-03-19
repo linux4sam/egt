@@ -37,20 +37,20 @@ bool CameraWindow::start()
     return m_camera_impl->start();
 }
 
-void CameraWindow::scale(float scalex, float scaley)
+void CameraWindow::scale(float hscale, float vscale)
 {
-    auto xs = detail::change_if_diff<float>(m_scalex, scalex);
-    auto ys = detail::change_if_diff<float>(m_scaley, scaley);
+    auto xs = detail::change_if_diff<float>(m_hscale, hscale);
+    auto ys = detail::change_if_diff<float>(m_vscale, vscale);
 
     if (xs || ys)
     {
         if (!flags().is_set(Widget::Flag::plane_window))
         {
-            m_camera_impl->scale(m_scalex, m_scaley);
+            m_camera_impl->scale(m_hscale, m_vscale);
         }
         else
         {
-            Window::scale(m_scalex, m_scaley);
+            Window::scale(m_hscale, m_vscale);
         }
     }
 }

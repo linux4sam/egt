@@ -144,14 +144,17 @@ public:
 
 protected:
 
+    /// @private
     virtual void allocate_screen() override
     {
         Window::allocate_screen();
     }
 
+    /// Create the internal implementation.
     void create_impl(const Image& image, const Size& frame_size,
                      int frame_count, const Point& frame_point);
 
+    /// @private
     std::unique_ptr<detail::SpriteImpl> m_simpl;
 
     friend class detail::SoftwareSprite;

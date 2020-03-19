@@ -45,7 +45,7 @@ class EGT_API Frame : public Widget
 public:
 
     /**
-     * @param[in] rect Initial rectangle of the Frame.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] flags Widget flags.
      */
     explicit Frame(const Rect& rect = {},
@@ -456,6 +456,7 @@ public:
 
 protected:
 
+    /// @private
     void draw_child(Painter& painter, const Rect& crect, Widget* child);
 
     /**

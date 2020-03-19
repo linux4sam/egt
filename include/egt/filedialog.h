@@ -57,7 +57,7 @@ public:
      * Create a file open dialog window and list the contents
      * of current directory.
      *
-     * @param[in] rect is a size of a dialog window.
+     * @param[in] rect Initial rectangle of the Widget.
      *
      */
     explicit FileDialog(const Rect& rect = {});
@@ -65,7 +65,7 @@ public:
     /**
      * Create a file dialog window.
      *
-     * @param[in] rect is a size of a dialog window.
+     * @param[in] rect Initial rectangle of the Widget.
      * @param[in] filepath is to list the contents filepath directory.
      *
      * @note filepath should be a directory. If the file path is regular file,
@@ -129,15 +129,14 @@ public:
      * Create a file open dialog window and list the contents
      * of current directory.
      *
-     * @param[in] rect is a size of file open dialog window.
-     *
+     * @param[in] rect Initial rectangle of the Widget.
      */
     explicit FileOpenDialog(const Rect& rect = {});
 
     /**
      * Create a file open dialog window.
      *
-     * @param[in] rect is a size of a dialog window.
+     * @param[in] rect Initial rectangle of the Widget.
      * @param[in] filepath is to list the contents of filepath directory.
      *
      * @note filepath should be a directory. If the file path is regular file,
@@ -145,11 +144,17 @@ public:
      */
     explicit FileOpenDialog(const std::string& filepath, const Rect& rect = {});
 
+    /**
+     * Show the Widget.
+     *
+     * This changes the visible() state of the Widget.
+     */
     virtual void show() override;
 
     virtual void show_centered() override;
+
     /**
-     * return file selected in file open dialog window.
+     * Return file selected in file open dialog window.
      *
      * @return full path of the selected file.
      */
@@ -197,14 +202,14 @@ public:
      * Create a file save dialog window and list the contents
      * of current directory.
      *
-     * @param[in] rect is a size of file open dialog window.
+     * @param[in] rect Initial rectangle of the Widget.
      */
     explicit FileSaveDialog(const Rect& rect = {});
 
     /**
      * Create a file save dialog window.
      *
-     * @param[in] rect is a size of a dialog window.
+     * @param[in] rect Initial rectangle of the Widget.
      * @param[in] filepath is to list the contents of filepath directory.
      *
      * @note filepath should be a directory. If the file path is regular file,
@@ -212,6 +217,11 @@ public:
      */
     explicit FileSaveDialog(const std::string& filepath, const Rect& rect = {});
 
+    /**
+     * Show the Widget.
+     *
+     * This changes the visible() state of the Widget.
+     */
     virtual void show() override;
 
     virtual void show_centered() override;

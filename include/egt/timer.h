@@ -73,7 +73,7 @@ public:
     /**
      * Timer callback function definition.
      */
-    using timer_callback_t = std::function<void()>;
+    using TimerCallback = std::function<void()>;
 
     /**
      * Construct a one-shot timer.
@@ -120,7 +120,7 @@ public:
     /**
      * Alias for cancel().
      */
-    inline void stop() { cancel(); }
+    void stop() { cancel(); }
 
     /**
      * Called when the timer times out.
@@ -134,12 +134,12 @@ public:
     /**
      * Return the current duration of the timer.
      */
-    inline std::chrono::milliseconds duration() const { return m_duration; }
+    std::chrono::milliseconds duration() const { return m_duration; }
 
     /**
      * Returns true if the timer is currently running.
      */
-    inline bool running() const { return m_running; }
+    bool running() const { return m_running; }
 
     /**
      * Add a handler callback to be called with the timer times out.
@@ -150,7 +150,7 @@ public:
      * @return A handle used to identify the registration.  This can then be
      *         passed to remove_handler().
      */
-    virtual uint32_t on_timeout(timer_callback_t callback);
+    virtual uint32_t on_timeout(TimerCallback callback);
 
     /**
      * Clear all handlers.
@@ -167,7 +167,7 @@ public:
     /**
     * Get the name of the Timer.
     */
-    inline const std::string& name() const { return m_name; }
+    const std::string& name() const { return m_name; }
 
     /**
      * Set the name of the Timer.
@@ -177,7 +177,7 @@ public:
      *
      * @param[in] name Name to set for the Object.
      */
-    inline void name(const std::string& name) { m_name = name; }
+    void name(const std::string& name) { m_name = name; }
 
     virtual ~Timer() noexcept;
 
@@ -198,41 +198,32 @@ protected:
      */
     struct CallbackMeta
     {
-        CallbackMeta(timer_callback_t c,
+        CallbackMeta(TimerCallback c,
                      uint32_t h) noexcept
             : callback(std::move(c)),
               handle(h)
         {}
 
-        timer_callback_t callback;
+        TimerCallback callback;
         uint32_t handle{0};
     };
 
-    using callback_array_t = std::vector<CallbackMeta>;
+    /// Type for array of registered callbacks.
+    using CallbackArray = std::vector<CallbackMeta>;
 
-    /**
-     * ASIO timer object.
-     */
+    /// Asio timer object.
     asio::steady_timer m_timer;
 
-    /**
-     * The duration of the timer.
-     */
+    /// The duration of the timer.
     std::chrono::milliseconds m_duration{};
 
-    /**
-     * Array of registered callbacks.
-     */
-    callback_array_t m_callbacks;
+    /// Array of registered callbacks.
+    CallbackArray m_callbacks;
 
-    /**
-     * When true, currently running.
-     */
+    /// When true, currently running.
     bool m_running{false};
 
-    /**
-     * A user defined name for the Timer.
-     */
+    /// A user defined name for the Timer.
     std::string m_name;
 
 private:

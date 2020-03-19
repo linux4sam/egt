@@ -48,6 +48,7 @@ class EGT_API HttpClientRequest : private detail::NonCopyable<HttpClientRequest>
 {
 public:
 
+    /// Type used for callback on read.
     using ReadCallback = std::function < void(const unsigned char* data, size_t len, bool done) >;
 
     /**
@@ -70,12 +71,13 @@ public:
 
 protected:
 
+    /// @private
     void finish();
+
+    /// @private
     void cleanup();
 
-    /**
-     * Implementation pointer.
-     */
+    /// Implementation pointer.
     std::unique_ptr<detail::HttpClientRequestData> m_impl;
 
     friend class detail::HttpClientRequestManager;

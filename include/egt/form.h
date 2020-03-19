@@ -33,8 +33,15 @@ class EGT_API Form : public Frame
 {
 public:
 
+    /**
+     * @param[in] title Optional title of the form.
+     */
     explicit Form(const std::string& title = {}) noexcept;
 
+    /**
+     * @param[in] parent Parent Frame of the Widget.
+     * @param[in] title Optional title of the form.
+     */
     explicit Form(Frame& parent, const std::string& title = {}) noexcept;
 
     /**
@@ -42,6 +49,9 @@ public:
      */
     virtual void add_group(const std::string& caption);
 
+    /**
+     * Add an option to the form with a name.
+     */
     template<class T>
     void add_option(const std::string& name, const std::shared_ptr<T>& widget)
     {
@@ -54,6 +64,9 @@ public:
      */
     virtual void add_option(const std::string& name, const std::shared_ptr<Widget>& widget);
 
+    /**
+     * Add an option to the Form without a name.
+     */
     template<class T>
     void add_option(const std::shared_ptr<T>& widget)
     {
@@ -72,7 +85,7 @@ public:
     virtual void remove_options();
 
     /**
-     * Set option name text alignment.
+     * Set default option name text alignment.
      */
     virtual void name_align(const AlignFlags& align)
     {
@@ -93,14 +106,15 @@ public:
 
 protected:
 
-    inline DefaultDim min_option_height() const
+    /**
+     * Minimum option height.
+     */
+    virtual DefaultDim min_option_height() const
     {
         return 50;
     }
 
-    /**
-     * Internal BoxSizer used for layout.
-     */
+    /// Internal BoxSizer used for layout.
     BoxSizer m_vsizer;
 
     /**
@@ -110,14 +124,10 @@ protected:
      */
     std::vector<Widget*> m_options;
 
-    /**
-     * Option name text alignment.
-     */
+    /// Option name text alignment.
     AlignFlags m_name_align{AlignFlag::center | AlignFlag::left};
 
-    /**
-     * Group name text alignment.
-     */
+    /// Group name text alignment.
     AlignFlags m_group_align{AlignFlag::bottom | AlignFlag::left};
 };
 

@@ -24,7 +24,7 @@ namespace detail
 {
 
 /**
- * When using enum_to_string() and enum_from_string(), this type need to be
+ * When using enum_to_string() and enum_from_string(), this type needs to be
  * defined and specialized to include the data for enum string conversions.
  *
  * @code{.cpp}
@@ -46,9 +46,11 @@ namespace detail
 template<class T>
 struct EnumStrings
 {
+    /// Enum string conversion map
     static const std::pair<T, char const*> data[];
 };
 
+/// Convert an enum to a string.
 template<class T>
 constexpr const char* enum_to_string(T const& e)
 {
@@ -59,6 +61,7 @@ constexpr const char* enum_to_string(T const& e)
     throw std::runtime_error("invalid enum");
 }
 
+/// Convert a string to an enum value.
 template<class T>
 constexpr T enum_from_string(const char* value)
 {
@@ -69,6 +72,7 @@ constexpr T enum_from_string(const char* value)
     throw std::runtime_error("invalid enum string");
 }
 
+/// Convert a string to an enum value.
 template<class T>
 constexpr T enum_from_string(const std::string& value)
 {

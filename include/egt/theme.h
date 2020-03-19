@@ -59,13 +59,16 @@ public:
 class EGT_API DrawerReset
 {
 public:
+    /// Reset function type.
     using ResetFunction = std::function<void()>;
 
+    /// Add a custom reset function.
     static inline void add(const ResetFunction& func)
     {
         m_reset_list.push_back(func);
     }
 
+    /// Execute reset functions.
     static inline void reset()
     {
         for (auto& x : m_reset_list)
@@ -75,6 +78,7 @@ public:
 
 private:
 
+    /// Reset function array.
     static std::vector<ResetFunction> m_reset_list;
 };
 
@@ -178,10 +182,12 @@ public:
         drop_shadow = detail::bit(4),
     };
 
+    /// Border flags
     using BorderFlags = detail::Flags<BorderFlag>;
 
     Theme() = default;
 
+    /// Copy constructor
     Theme(const Theme& rhs)
     {
         if (rhs.m_palette)
@@ -266,11 +272,17 @@ public:
                           float border_radius = 0.0,
                           const BorderFlags& border_flags = {}) const;
 
+    /**
+     * Draw a circle using properties directly from the widget.
+     */
     virtual void draw_circle(Painter& painter,
                              const Widget& widget,
                              Palette::ColorId bg,
                              Palette::ColorId border) const;
 
+    /**
+     * Draw a circle specifying the properties directly.
+     */
     virtual void draw_circle(Painter& painter,
                              const FillFlags& type,
                              const Rect& rect,
@@ -279,11 +291,13 @@ public:
                              DefaultDim border_width = 0,
                              DefaultDim margin_width = 0) const;
 
+    /// Get the default border width
     virtual DefaultDim default_border() const
     {
         return 2;
     }
 
+    /// Get the default border radius
     virtual float default_border_radius() const
     {
         return 4.0;
@@ -337,9 +351,11 @@ protected:
     virtual void init_draw();
 };
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data[2];
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<Theme::BorderFlag, char const*> detail::EnumStrings<Theme::BorderFlag>::data[5];
 

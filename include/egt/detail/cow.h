@@ -23,7 +23,7 @@ namespace detail
 /**
  * Copy-On-Write wrapper for an object.
  *
- * This creates copy on write semantics for an object. This also preforms lazy
+ * This creates copy on write semantics for an object. This also performs lazy
  * initialization of the object and will automatically default construct it when
  * needed.
  */

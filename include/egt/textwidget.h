@@ -45,7 +45,7 @@ public:
 
     /**
      * @param[in] text The text to display.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
     explicit TextWidget(const std::string& text = {},

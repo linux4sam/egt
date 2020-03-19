@@ -33,44 +33,71 @@ inline namespace v1
  */
 struct EGT_API StringItem : public ImageLabel
 {
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
     StringItem(const std::string& text = {},
                const Image& image = {},
-               const AlignFlags& align = AlignFlag::center) noexcept
-        : ImageLabel(image, text, align)
+               const AlignFlags& text_align = AlignFlag::center) noexcept
+        : ImageLabel(image, text, text_align)
     {
         fill_flags(Theme::FillFlag::blend);
     }
 
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] text_align Alignment for the text.
+     */
     StringItem(const std::string& text,
                const Image& image,
                const Rect& rect,
-               const AlignFlags& align = AlignFlag::center) noexcept
-        : ImageLabel(image, text, rect, align)
+               const AlignFlags& text_align = AlignFlag::center) noexcept
+        : ImageLabel(image, text, rect, text_align)
     {
         fill_flags(Theme::FillFlag::blend);
     }
 
+    /**
+     * @param[in] text The text to display.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] text_align Alignment for the text.
+     */
     StringItem(const std::string& text,
                const Rect& rect,
-               const AlignFlags& align = AlignFlag::center) noexcept
-        : ImageLabel(Image(), text, rect, align)
+               const AlignFlags& text_align = AlignFlag::center) noexcept
+        : ImageLabel(Image(), text, rect, text_align)
     {
         fill_flags(Theme::FillFlag::blend);
     }
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
     explicit StringItem(Frame& parent,
                         const std::string& text = {},
-                        const AlignFlags& align = AlignFlag::center) noexcept
-        : ImageLabel(parent, Image(), text, align)
+                        const AlignFlags& text_align = AlignFlag::center) noexcept
+        : ImageLabel(parent, Image(), text, text_align)
     {
         fill_flags(Theme::FillFlag::blend);
     }
 
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] text The text to display.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] text_align Alignment for the text.
+     */
     StringItem(Frame& parent,
                const std::string& text,
                const Rect& rect,
-               const AlignFlags& align = AlignFlag::center) noexcept
-        : ImageLabel(parent, Image(), text, rect, align)
+               const AlignFlags& text_align = AlignFlag::center) noexcept
+        : ImageLabel(parent, Image(), text, rect, text_align)
     {
         fill_flags(Theme::FillFlag::blend);
     }
@@ -83,7 +110,6 @@ struct EGT_API StringItem : public ImageLabel
             return m_min_size;
         return {100, 40};
     }
-
 };
 
 /**
@@ -118,6 +144,7 @@ public:
     detail::Signal<> on_items_changed;
     /** @} */
 
+    /// Item array type
     using ItemArray = std::vector<std::shared_ptr<Widget>>;
 
     /**
@@ -126,20 +153,20 @@ public:
     explicit ListBox(const ItemArray& items = ItemArray()) noexcept;
 
     /**
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit ListBox(const Rect& rect) noexcept;
 
     /**
      * @param[in] items Array of items to insert into the list.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     ListBox(const ItemArray& items, const Rect& rect) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] items Array of items to insert into the list.
-     * @param[in] rect Rectangle for the widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
 

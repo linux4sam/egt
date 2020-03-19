@@ -145,29 +145,19 @@ public:
      * Event signal.
      * @{
      */
-    /**
-     * Invoked when the checked state of the widget changes.
-     */
+    /// Invoked when the checked state of the widget changes.
     detail::Signal<> on_checked_changed;
 
-    /**
-     * Invoked when the widget gains focus.
-     */
+    /// Invoked when the widget gains focus.
     detail::Signal<> on_gain_focus;
 
-    /**
-     * Invoked when the widget loses focus.
-     */
+    /// Invoked when the widget loses focus.
     detail::Signal<> on_lost_focus;
 
-    /**
-     * Invoked when a widget is shown.
-     */
+    /// Invoked when a widget is shown.
     detail::Signal<> on_show;
 
-    /**
-     * Invoked when a widget is hidden.
-     */
+    /// Invoked when a widget is hidden.
     detail::Signal<> on_hide;
     /** @} */
 
@@ -1409,6 +1399,7 @@ private:
     friend class Frame;
 };
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[12];
 

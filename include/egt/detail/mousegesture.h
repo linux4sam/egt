@@ -39,6 +39,7 @@ public:
 
     MouseGesture();
 
+    /// Type for mouse event callback.
     using MouseCallback = std::function<void(Event& event)>;
 
     /**
@@ -56,20 +57,17 @@ public:
      */
     virtual void start(const DisplayPoint& point);
 
-    inline const DisplayPoint& mouse_start() const
+    /// Get pointer start position.
+    const DisplayPoint& mouse_start() const
     {
         return m_mouse_start_pos;
     }
 
-    /**
-     * Is active?
-     */
-    inline bool active() const { return m_active; }
+    /// Is active?
+    bool active() const { return m_active; }
 
-    /**
-     * Is dragging?
-     */
-    inline bool dragging() const { return m_dragging; }
+    /// Is dragging?
+    bool dragging() const { return m_dragging; }
 
     /**
      * Stop any active dragging state.
@@ -80,36 +78,25 @@ public:
 
 protected:
 
-    /**
-     * Invoke an event on each of the handlers.
-     */
+    /// Invoke an event on each of the handlers.
     virtual void invoke_handlers(Event& event);
 
-    /**
-     * Currently processing subsequent events.
-     */
+    /// Currently processing subsequent events.
     bool m_active{false};
 
-    /**
-     * Currently in the dragging state.
-     */
+    /// Currently in the dragging state.
     bool m_dragging{false};
 
-    /**
-     * The starting position of the mouse.
-     */
+    /// The starting position of the mouse.
     DisplayPoint m_mouse_start_pos;
 
+    /// Type for array of registered callbacks.
     using CallbackArray = std::vector<MouseCallback>;
 
-    /**
-     * Registered callback functions.
-     */
+    /// Registered callback functions.
     CallbackArray m_callbacks;
 
-    /**
-     * Async timer for detecting long clicks.
-     */
+    /// Async timer for detecting long clicks.
     PeriodicTimer m_long_click_timer;
 };
 

@@ -17,7 +17,6 @@
 #include <egt/detail/signal.h>
 #include <egt/grid.h>
 #include <egt/label.h>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -37,8 +36,15 @@ class EGT_API Scrollwheel : public StaticGrid
 {
 public:
 
+    /**
+     * Event signal.
+     * @{
+     */
+    /// Invoked when the value changes.
     detail::Signal<> on_value_changed;
+    /** @} */
 
+    /// Item array type.
     using ItemArray = std::vector<std::string>;
 
     /**
@@ -47,7 +53,7 @@ public:
     explicit Scrollwheel(const ItemArray& items = {}) noexcept;
 
     /**
-     * @param[in] rect Rectangle for the Widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] items Array of items to build the list.
      */
     explicit Scrollwheel(const Rect& rect,
@@ -62,7 +68,7 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-     * @param[in] rect Rectangle for the Widget.
+     * @param[in] rect Initial rectangle of the widget.
      * @param[in] items Array of items to build the list.
      */
     explicit Scrollwheel(Frame& parent,
@@ -73,7 +79,7 @@ public:
      * @param[in] min The range minimum value.
      * @param[in] max The range maximum value.
      * @param[in] step The value of step to create a list from the minimum value to the maximum one.
-     * @param[in] rect Rectangle for the Widget.
+     * @param[in] rect Initial rectangle of the widget.
      */
     explicit Scrollwheel(const Rect& rect, int min, int max, int step) noexcept;
 
@@ -85,7 +91,7 @@ public:
     /**
      * Get the Orientation.
      */
-    inline Orientation orient() const { return m_orient; }
+    Orientation orient() const { return m_orient; }
 
     /**
      * Set the Orientation.
@@ -134,13 +140,21 @@ public:
     virtual void reversed(bool enabled);
 
 protected:
+    /// @private
     void init();
+    /// Array of items.
     ItemArray m_items;
+    /// Currently selected index.
     size_t m_selected{0};
-    std::shared_ptr<ImageButton> m_button_up;
-    std::shared_ptr<ImageButton> m_button_down;
-    std::shared_ptr<Label> m_label;
+    /// Up button.
+    ImageButton m_button_up;
+    /// Down button.
+    ImageButton m_button_down;
+    /// Label for the value.
+    Label m_label;
+    /// Reversed direction of up/down.
     bool m_reversed{false};
+    /// Orientation of the Scrollwheel.
     Orientation m_orient{Orientation::vertical};
 };
 

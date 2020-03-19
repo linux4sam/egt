@@ -96,6 +96,7 @@ enum class PixelFormat
     uyvy,     ///< Reverse byte order of YUY2
 };
 
+/// Enum string conversion map
 template<>
 EGT_API const std::pair<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data[11];
 
