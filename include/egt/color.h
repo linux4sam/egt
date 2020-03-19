@@ -202,7 +202,7 @@ public:
      * @param[out] v Value component in range 0 - 1.
      * @param[out] alpha Alpha component in range 0 - 1.
      */
-    void get_hsvf(float* h, float* s, float* v, float* alpha = nullptr);
+    void get_hsvf(float& h, float& s, float& v, float* alpha = nullptr);
 
     /**
      * Get the hue, saturation, lightness, and alpha channel components of the color.
@@ -212,7 +212,7 @@ public:
      * @param[out] l Lightness component in range 0 - 1.
      * @param[out] alpha Alpha component in range 0 - 1.
      */
-    void get_hslf(float* h, float* s, float* l, float* alpha = nullptr);
+    void get_hslf(float& h, float& s, float& l, float* alpha = nullptr);
 
     /**
      * Get the red, green, blue, and alpha channel components of the color.
@@ -222,7 +222,7 @@ public:
      * @param[out] b Blue component in range 0 - 1.
      * @param[out] alpha Alpha component in range 0 - 1.
      */
-    void get_rgbaf(float* r, float* g, float* b, float* alpha = nullptr);
+    void get_rgbaf(float& r, float& g, float& b, float* alpha = nullptr);
 
     /**
      * Create a color from only a RGB value with separate alpha channel component.

@@ -213,40 +213,31 @@ static Color hsl2rgb(hsl hsl)
     return out;
 }
 
-void Color::get_hsvf(float* h, float* s, float* v, float* alpha)
+void Color::get_hsvf(float& h, float& s, float& v, float* alpha)
 {
     hsv c = rgb2hsv(*this);
-    if (h)
-        *h = c.h;
-    if (s)
-        *s = c.s;
-    if (v)
-        *v = c.v;
+    h = c.h;
+    s = c.s;
+    v = c.v;
     if (alpha)
         *alpha = alphaf();
 }
 
-void Color::get_hslf(float* h, float* s, float* l, float* alpha)
+void Color::get_hslf(float& h, float& s, float& l, float* alpha)
 {
     hsl c = rgb2hsl(*this);
-    if (h)
-        *h = c.h;
-    if (s)
-        *s = c.s;
-    if (l)
-        *l = c.l;
+    h = c.h;
+    s = c.s;
+    l = c.l;
     if (alpha)
         *alpha = alphaf();
 }
 
-void Color::get_rgbaf(float* r, float* g, float* b, float* alpha)
+void Color::get_rgbaf(float& r, float& g, float& b, float* alpha)
 {
-    if (r)
-        *r = redf();
-    if (g)
-        *g = greenf();
-    if (b)
-        *b = bluef();
+    r = redf();
+    g = greenf();
+    b = bluef();
     if (alpha)
         *alpha = alphaf();
 }
