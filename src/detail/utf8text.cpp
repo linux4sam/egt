@@ -76,6 +76,8 @@ static void draw_text_setup(std::vector<detail::LayoutRect>& rects,
         }
     }
 
+    rects.reserve(tokens.size());
+
     uint32_t default_behave = 0;
     uint32_t behave = default_behave;
 
