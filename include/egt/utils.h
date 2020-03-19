@@ -24,6 +24,29 @@ inline namespace v1
  */
 EGT_API std::string egt_version();
 
+/**
+ * Creates and stores a simple ratio value.
+ */
+template<class T>
+struct Ratio
+{
+    constexpr Ratio(T value, int ratio) noexcept
+        : m_value(value),
+          m_ratio(ratio)
+    {
+    }
+
+    constexpr operator T() const
+    {
+        return static_cast<double>(m_value) *
+               (static_cast<double>(m_ratio) / 100.);
+    }
+
+protected:
+    T m_value;
+    int m_ratio;
+};
+
 }
 }
 

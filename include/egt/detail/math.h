@@ -159,31 +159,6 @@ constexpr T normalize_to_angle(T value, T min, T max, T angle_start, T angle_sto
 }
 
 }
-
-/**
- * Creates and stores a simple ratio value.
- */
-template<class T>
-struct Ratio
-{
-    constexpr Ratio(T value, int ratio) noexcept
-        : m_value(value),
-          m_ratio(ratio)
-    {
-    }
-
-    operator T() const
-    {
-        return static_cast<double>(m_value) *
-               (static_cast<double>(m_ratio) / 100.);
-    }
-
-protected:
-    T m_value;
-    int m_ratio;
-};
-
-
 }
 }
 
