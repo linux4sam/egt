@@ -18,10 +18,10 @@ inline namespace v1
 
 const Pattern& Palette::color(ColorId id, GroupId group) const
 {
-    auto g = m_colors.find(group);
+    const auto g = m_colors.find(group);
     if (g != m_colors.end())
     {
-        auto c = g->second.find(id);
+        const auto c = g->second.find(id);
         if (c != g->second.end())
             return c->second;
     }
@@ -43,7 +43,7 @@ Palette& Palette::set(ColorId id, const Pattern& color, GroupId group)
 
 void Palette::clear(ColorId id, GroupId group)
 {
-    auto g = m_colors.find(group);
+    const auto g = m_colors.find(group);
     if (g != m_colors.end())
         g->second.erase(id);
 }
@@ -267,8 +267,8 @@ void Palette::serialize(const std::string& name, detail::Serializer& serializer)
 void Palette::deserialize(const std::string& name, const std::string& value,
                           const std::map<std::string, std::string>& attrs)
 {
-    auto i = attrs.find("id");
-    auto g = attrs.find("group");
+    const auto i = attrs.find("id");
+    const auto g = attrs.find("group");
     if (i != attrs.end() && g != attrs.end())
     {
         const auto id = detail::enum_from_string<Palette::ColorId>(i->second);

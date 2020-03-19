@@ -36,7 +36,7 @@ std::string extract_filename(const std::string& path)
 {
     const char sep = '/';
 
-    size_t i = path.rfind(sep, path.length());
+    const size_t i = path.rfind(sep, path.length());
     if (i != std::string::npos)
         return (path.substr(i + 1, path.length() - i));
 
@@ -46,10 +46,9 @@ std::string extract_filename(const std::string& path)
 std::string extract_dirname(const std::string& path)
 {
     std::unique_ptr<char, decltype(std::free)*> p(strdup(path.c_str()), std::free);
-    auto dir = ::dirname(p.get());
+    const auto dir = ::dirname(p.get());
     return std::string(dir);
 }
-
 
 bool exists(const std::string& path)
 {
@@ -87,7 +86,7 @@ std::string readlink(const std::string& path)
         buff[len] = '\0';
         return std::string(buff);
     }
-    return std::string();
+    return {};
 }
 
 std::string abspath(const std::string& path)
@@ -96,7 +95,7 @@ std::string abspath(const std::string& path)
     if (::realpath(path.c_str(), buff))
         return std::string(buff);
 
-    return std::string();
+    return {};
 }
 
 std::string exe_pwd()
@@ -121,7 +120,7 @@ std::vector<std::string> glob(const std::string& pattern)
     glob_t glob_result;
     memset(&glob_result, 0, sizeof(glob_result));
 
-    int return_value = glob(pattern.c_str(), GLOB_TILDE, nullptr, &glob_result);
+    const auto return_value = glob(pattern.c_str(), GLOB_TILDE, nullptr, &glob_result);
     if (return_value != 0)
     {
         globfree(&glob_result);
