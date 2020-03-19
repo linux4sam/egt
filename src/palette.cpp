@@ -7,10 +7,9 @@
 #include "egt/detail/serialize.h"
 #include "egt/detail/string.h"
 #include "egt/palette.h"
-#include <cassert>
 #include <iostream>
-#include <sstream>
-#include <vector>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -27,9 +26,8 @@ const Pattern& Palette::color(ColorId id, GroupId group) const
             return c->second;
     }
 
-    std::ostringstream ss;
-    ss << "color not found in palette:" << group << "/" << id;
-    throw std::runtime_error(ss.str());
+    throw std::runtime_error(fmt::format("color not found in palette:{}/{}",
+                                         group, id));
 }
 
 Palette& Palette::set(ColorId id, GroupId group, const Pattern& color)

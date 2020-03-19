@@ -19,7 +19,6 @@
 #include "egt/painter.h"
 #include "egt/window.h"
 #include <algorithm>
-#include <iostream>
 #include <map>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>

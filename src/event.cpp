@@ -7,7 +7,8 @@
 #include "egt/event.h"
 #include "egt/input.h"
 #include <iostream>
-#include <map>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt
@@ -60,17 +61,17 @@ std::ostream& operator<<(std::ostream& os, const Pointer::Button& btn)
 
 std::ostream& operator<<(std::ostream& os, const Pointer& pointer)
 {
-    os << "point(" << pointer.point << ")" <<
-       " drag_point(" << pointer.drag_start << ")" <<
-       " btn(" << pointer.btn << ")";
-    return os;
+    return os << fmt::format("point({}) drag_point({}) btn({})",
+                             pointer.point,
+                             pointer.drag_start,
+                             pointer.btn);
 }
 
 std::ostream& operator<<(std::ostream& os, const Key& key)
 {
-    os << "keycode(" << key.keycode << ")" <<
-       " unicode(" << key.unicode << ")";
-    return os;
+    return os << fmt::format("keycode({}) unicode({})",
+                             key.keycode,
+                             key.unicode);
 }
 
 std::ostream& operator<<(std::ostream& os, const Event& event)

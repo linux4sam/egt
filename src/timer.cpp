@@ -6,8 +6,9 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/timer.h"
-#include <vector>
 #include <iostream>
+#include <spdlog/spdlog.h>
+#include <vector>
 
 namespace egt
 {
@@ -18,11 +19,12 @@ static std::vector<Timer*> timers;
 
 void dump_timers(std::ostream& out)
 {
-    for (auto& timer : timers)
+    for (const auto& timer : timers)
     {
-        out << "Timer (" << timer->name() << ") duration(" <<
-            timer->duration().count() << " ms) " <<
-            (timer->running() ? "running" : "idle") << std::endl;
+        out << fmt::format("Timer name({}) duration({} ms) status({})\n",
+                           timer->name(),
+                           timer->duration().count(),
+                           (timer->running() ? "running" : "idle"));
     }
 }
 

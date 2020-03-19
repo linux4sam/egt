@@ -12,11 +12,10 @@
 #include <cstring>
 #include <fstream>
 #include <glob.h>
-#include <iostream>
 #include <iterator>
 #include <libgen.h>
 #include <memory>
-#include <sstream>
+#include <spdlog/spdlog.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -126,9 +125,7 @@ std::vector<std::string> glob(const std::string& pattern)
     if (return_value != 0)
     {
         globfree(&glob_result);
-        std::stringstream ss;
-        ss << "glob() failed: " << return_value << std::endl;
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error(fmt::format("glob() failed: {}", return_value));
     }
 
     std::vector<std::string> filenames;

@@ -19,7 +19,6 @@
 #include <iostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <sstream>
 #include <string>
 
 namespace egt
@@ -391,11 +390,7 @@ void Widget::paint_to_file(const std::string& filename)
 {
     std::string name = filename;
     if (name.empty())
-    {
-        std::ostringstream ss;
-        ss << this->name() << ".png";
-        name = ss.str();
-    }
+        name = fmt::format("{}.png", this->name());
 
     auto surface = shared_cairo_surface_t(
                        cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
@@ -411,12 +406,16 @@ void Widget::paint_to_file(const std::string& filename)
 
 void Widget::dump(std::ostream& out, int level)
 {
-    out << std::string(level, ' ') << name() <<
-        " " << box() << " " << flags();
-    out << " box(" << margin() << "," << padding() << "," << border() << ")";
-    out << " align(" << align() << ")";
-    out << " zorder(" << zorder() << ")";
-    out << std::endl;
+    out << fmt::format("{}{} {} {} box({},{},{}) align({}) zorder({})\n",
+                       std::string(level, ' '),
+                       name(),
+                       box(),
+                       flags(),
+                       margin(),
+                       padding(),
+                       border(),
+                       align(),
+                       zorder());
 }
 
 void Widget::walk(const WalkCallback& callback, int level)

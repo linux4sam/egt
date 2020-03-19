@@ -16,11 +16,9 @@
 #include <cstdio>
 #include <deque>
 #include <fstream>
-#include <iostream>
 #include <mutex>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <sstream>
 #include <thread>
 #include <vector>
 
@@ -197,9 +195,9 @@ void Sound::open_alsa_device(const std::string& device)
 
     if (err < 0)
     {
-        std::ostringstream ss;
-        ss << "can't open '" << device << "' PCM device: " << snd_strerror(err);
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error(fmt::format("can't open '{}' PCM device: {}",
+                                             device, snd_strerror(err)));
+
     }
 }
 

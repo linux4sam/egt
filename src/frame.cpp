@@ -11,10 +11,8 @@
 #include "egt/painter.h"
 #include "egt/screen.h"
 #include <cstdlib>
-#include <iostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <sstream>
 #include <string>
 
 namespace egt
@@ -513,11 +511,7 @@ void Frame::paint_to_file(const std::string& filename)
     /// @todo should this be redirected to parent()?
     std::string name = filename;
     if (name.empty())
-    {
-        std::ostringstream ss;
-        ss << this->name() << ".png";
-        name = ss.str();
-    }
+        name = fmt::format("{}.png", this->name());
 
     auto surface = cairo_get_target(screen()->context().get());
     cairo_surface_write_to_png(surface, name.c_str());

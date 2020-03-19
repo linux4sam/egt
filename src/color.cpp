@@ -8,6 +8,8 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <sstream>
 
 namespace egt
@@ -29,9 +31,7 @@ std::string Color::hex() const
 
 std::ostream& operator<<(std::ostream& os, const Color& color)
 {
-    os << "(" << color.red() << "," << color.green() << "," <<
-       color.blue() << "," << color.alpha() << ")";
-    return os;
+    return os << fmt::format("({},{},{},{})", color.red(), color.green(), color.blue(), color.alpha());
 }
 
 struct hsv
