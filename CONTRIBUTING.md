@@ -20,7 +20,7 @@ There are some extra tools that you can install with your distribution package
 manager.
 
 ```sh
-sudo apt-get install cloc doxygen graphviz clang clang-tidy aspell
+sudo apt install cloc doxygen graphviz clang clang-tidy aspell
 ```
 
 ## Extra Development Tools

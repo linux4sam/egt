@@ -31,18 +31,18 @@ platforms.
 To build for a PC, first install the required dependencies:
 
 @code{.unparsed}
-sudo apt-get install build-essential automake autoconf libtool pkg-config \
+sudo apt install build-essential automake autoconf libtool pkg-config \
     libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev gettext
 @endcode
 
 Optional, but recommended, dependencies include:
 
 @code{.unparsed}
-sudo apt-get install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
+sudo apt install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
      libxkbcommon-dev xkb-data
-sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-sudo apt-get install libplplot-dev plplot-driver-cairo
-sudo apt-get install libasound2-dev libsndfile1-dev
+sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+sudo apt install libplplot-dev plplot-driver-cairo
+sudo apt install libasound2-dev libsndfile1-dev
 @endcode
 
 Then, clone the source and initialize autotools.  Typically autotools only needs
@@ -169,6 +169,6 @@ https://linux4sam.github.io/egt-docs/docset/EGT.xml
     you should get the latest version with their PPA.
     @code{.unparsed}
     sudo add-apt-repository ppa:zeal-developers/ppa
-    sudo apt-get update
-    sudo apt-get install zeal
+    sudo apt update
+    sudo apt install zeal
     @endcode

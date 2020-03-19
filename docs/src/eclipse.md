@@ -93,7 +93,7 @@ Eclipse needs to have either OpenJDK or Sun Java installed to be able to
 run eclipse and here is a simple example of installing Open JDK 1.8:
 
 @code{.sh}
-sudo apt-get install openjdk-8-jdk
+sudo apt install openjdk-8-jdk
 @endcode
 
 With Eclipse installed in /opt folder and it can now be accessed by any users.

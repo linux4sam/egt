@@ -34,18 +34,18 @@ with API reference is available for the latest version.
 To build for a PC, first install required dependencies:
 
 ```sh
-sudo apt-get install build-essential automake autoconf libtool pkg-config \
+sudo apt install build-essential automake autoconf libtool pkg-config \
     libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev gettext
 ```
 
 Optional, but recommended, dependencies include:
 
 ```sh
-sudo apt-get install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
+sudo apt install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
      libxkbcommon-dev xkb-data
-sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-sudo apt-get install libplplot-dev plplot-driver-cairo
-sudo apt-get install libasound2-dev libsndfile1-dev
+sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+sudo apt install libplplot-dev plplot-driver-cairo
+sudo apt install libasound2-dev libsndfile1-dev
 ```
 
 Then, clone the source and build.

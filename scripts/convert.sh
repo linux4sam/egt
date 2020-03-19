@@ -10,7 +10,7 @@
 
 if ! [ -x "$(command -v inkscape)" ]; then
     echo 'Error: inkscape is not installed.' >&2
-    echo 'install inkscape: apt-get install inkscape' >&2
+    echo 'install inkscape: apt install inkscape' >&2
     exit 1
 fi
 
