@@ -15,7 +15,7 @@
 #include <egt/detail/signal.h>
 #include <egt/list.h>
 #include <egt/popup.h>
-#include <egt/textwidget.h>
+#include <egt/widget.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -47,14 +47,10 @@ protected:
 
     void smart_pos();
 
-    /**
-     * ListBox of ComboBox items.
-     */
+    /// ListBox of ComboBox items.
     std::shared_ptr<ListBox> m_list;
 
-    /**
-     * Parent ComboBox.
-     */
+    /// Parent ComboBox.
     ComboBox& m_parent;
 
     friend class egt::ComboBox;
@@ -70,7 +66,7 @@ protected:
  *
  * @ingroup controls
  */
-class EGT_API ComboBox : public TextWidget
+class EGT_API ComboBox : public Widget
 {
 public:
 
@@ -119,11 +115,11 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    using TextWidget::parent;
+    using Widget::parent;
 
     virtual void parent(Frame* parent) override;
 
-    using TextWidget::min_size_hint;
+    using Widget::min_size_hint;
 
     virtual Size min_size_hint() const override;
 
@@ -155,12 +151,12 @@ public:
     /**
      * Get an item at the specified index.
      */
-    virtual std::string item_at(size_t index) const { return m_items[index]; }
+    virtual std::string item_at(size_t index) const { return m_items.at(index); }
 
     /**
      * Return the number of items in the list.
      */
-    inline size_t item_count() const
+    size_t item_count() const
     {
         return m_items.size();
     }
@@ -170,24 +166,37 @@ public:
      */
     virtual void clear();
 
+    /**
+     * Set the text alignment within the Label.
+     *
+     * @param[in] align Alignment for the text.
+     */
+    void text_align(const AlignFlags& align)
+    {
+        if (detail::change_if_diff<>(m_text_align, align))
+            damage();
+    }
+
+    /**
+     * Get the text alignment within the Label.
+     */
+    AlignFlags text_align() const { return m_text_align; }
+
     virtual ~ComboBox() = default;
 
 protected:
 
-    /**
-     * Item array.
-     */
+    /// Item array.
     ItemArray m_items;
 
-    /**
-     * Currently selected index.
-     */
+    /// Currently selected index.
     ssize_t m_selected{-1};
 
-    /**
-     * Popup associated with the ComboBox.
-     */
+    /// Popup associated with the ComboBox.
     std::shared_ptr<detail::ComboBoxPopup> m_popup;
+
+    /// Alignment of the text.
+    AlignFlags m_text_align{AlignFlag::left | AlignFlag::center};
 
     friend class detail::ComboBoxPopup;
 };

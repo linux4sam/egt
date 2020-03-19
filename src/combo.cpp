@@ -39,11 +39,11 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
 
     add(m_list);
 
-    m_list->on_selected_changed([this, &parent]()
+    m_list->on_selected_changed([this]()
     {
         // ?? how to stop event
         //event.stop();
-        parent.selected(m_list->selected());
+        m_parent.selected(m_list->selected());
         hide();
     });
 }
@@ -52,7 +52,7 @@ void ComboBoxPopup::smart_pos()
 {
     if (Application::instance().screen())
     {
-        auto ss = Application::instance().screen()->size();
+        const auto ss = Application::instance().screen()->size();
         auto height =
             std::min(static_cast<DefaultDim>(ss.height() / 40),
                      static_cast<DefaultDim>(m_list->item_count())) * 40;
@@ -67,16 +67,16 @@ void ComboBoxPopup::smart_pos()
         resize(Size(m_parent.size().width(), 100));
     }
 
-    auto ss = Application::instance().screen()->size() / 2;
+    const auto ss = Application::instance().screen()->size() / 2;
     move_to_center(Point(ss.width(), ss.height()));
 }
 
 void ComboBoxPopup::show()
 {
     m_list->clear();
-    for (auto& item : m_parent.m_items)
+    for (const auto& item : m_parent.m_items)
     {
-        auto p = std::make_shared<StringItem>(item);
+        const auto p = std::make_shared<StringItem>(item);
         m_list->add_item(p);
     }
 
@@ -125,9 +125,9 @@ ComboBox::ComboBox(const Rect& rect) noexcept
 
 ComboBox::ComboBox(const ItemArray& items,
                    const Rect& rect) noexcept
-    : TextWidget("", rect, AlignFlag::left | AlignFlag::center),
+    : Widget(rect),
       m_items(items),
-      m_popup(new detail::ComboBoxPopup(*this))
+      m_popup(std::make_shared<detail::ComboBoxPopup>(*this))
 {
     name("ComboBox" + std::to_string(m_widgetid));
 
@@ -161,8 +161,7 @@ void ComboBox::add_item(const std::string& item)
 
 bool ComboBox::remove(const std::string& item)
 {
-    auto it = std::find(m_items.begin(), m_items.end(), item);
-
+    const auto it = std::find(m_items.begin(), m_items.end(), item);
     if (it != m_items.end())
     {
         m_items.erase(it);
@@ -183,7 +182,7 @@ void ComboBox::clear()
 
 void ComboBox::parent(Frame* parent)
 {
-    TextWidget::parent(parent);
+    Widget::parent(parent);
 
     /// @todo unsafe to be using main_window() here
     main_window()->add(m_popup);
@@ -193,13 +192,13 @@ void ComboBox::parent(Frame* parent)
 
 void ComboBox::handle(Event& event)
 {
-    TextWidget::handle(event);
+    Widget::handle(event);
 
     switch (event.id())
     {
     case EventId::pointer_click:
     {
-        Point mouse = display_to_local(event.pointer().point);
+        const auto mouse = display_to_local(event.pointer().point);
         if (local_box().intersect(mouse))
         {
             m_popup->show_modal();
@@ -227,7 +226,7 @@ void ComboBox::selected(size_t index)
 
 void ComboBox::resize(const Size& s)
 {
-    TextWidget::resize(s);
+    Widget::resize(s);
 
     if (m_popup->visible())
         m_popup->smart_pos();
@@ -235,7 +234,7 @@ void ComboBox::resize(const Size& s)
 
 void ComboBox::move(const Point& point)
 {
-    TextWidget::move(point);
+    Widget::move(point);
 
     if (m_popup->visible())
         m_popup->smart_pos();
@@ -245,14 +244,6 @@ Size ComboBox::min_size_hint() const
 {
     if (!m_min_size.empty())
         return m_min_size;
-
-    if (!m_text.empty())
-    {
-        auto s = text_size(m_text);
-        s *= Size(1, 3);
-        s += Size(s.width() / 2 + 5, 0);
-        return s + Widget::min_size_hint();
-    }
 
     return DEFAULT_COMBOBOX_SIZE + Widget::min_size_hint();
 }
@@ -266,10 +257,10 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
 {
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    auto b = widget.content_area();
-    auto handle_dim = std::min(b.width(), b.height());
-    auto handle = Rect(b.top_right() - Point(handle_dim, 0), Size(handle_dim, handle_dim));
-    auto text = Rect(b.point(), b.size() - Size(handle.size().width(), 0));
+    const auto b = widget.content_area();
+    const auto handle_dim = std::min(b.width(), b.height());
+    const auto handle = Rect(b.top_right() - Point(handle_dim, 0), Size(handle_dim, handle_dim));
+    const auto text = Rect(b.point(), b.size() - Size(handle.size().width(), 0));
 
     // draw a down arrow
     painter.set(widget.color(Palette::ColorId::button_fg).color());
@@ -287,10 +278,10 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
         // text
         painter.set(widget.color(Palette::ColorId::text).color());
         painter.set(widget.font());
-        auto size = painter.text_size(widget.item_at(widget.selected()));
-        auto target = detail::align_algorithm(size,
-                                              text,
-                                              widget.text_align());
+        const auto size = painter.text_size(widget.item_at(widget.selected()));
+        const auto target = detail::align_algorithm(size,
+                            text,
+                            widget.text_align());
         painter.draw(target.point());
         painter.draw(widget.item_at(widget.selected()));
     }
