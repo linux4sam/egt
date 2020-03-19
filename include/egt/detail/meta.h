@@ -159,7 +159,7 @@ constexpr bool rule_of_5()
  * @return true if the value was changed.
  */
 template<class T>
-inline bool change_if_diff(T& old, const T& to)
+constexpr bool change_if_diff(T& old, const T& to)
 {
     if (old != to)
     {
@@ -171,7 +171,7 @@ inline bool change_if_diff(T& old, const T& to)
 }
 
 template<>
-inline bool change_if_diff(float& old, const float& to)
+constexpr bool change_if_diff(float& old, const float& to)
 {
     if (!detail::float_equal(old, to))
     {
@@ -183,7 +183,7 @@ inline bool change_if_diff(float& old, const float& to)
 }
 
 template<>
-inline bool change_if_diff(double& old, const double& to)
+constexpr bool change_if_diff(double& old, const double& to)
 {
     if (!detail::float_equal(old, to))
     {

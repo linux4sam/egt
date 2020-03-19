@@ -268,7 +268,7 @@ void PlPlotImpl::plplot_verify_viewport()
         m_ymax = std::round(*std::max_element(m_ydata.begin(), m_ydata.end()));
     }
 
-    if (!detail::float_compare(m_bank, 0.0f))
+    if (!detail::float_equal(m_bank, 0.0f))
     {
         auto xdiff = (m_xmax - m_xmin) * m_bank;
         m_xmin -= xdiff;
@@ -279,19 +279,19 @@ void PlPlotImpl::plplot_verify_viewport()
         m_ymax += ydiff;
     }
 
-    if (detail::float_compare(m_xmin, m_xmax))
+    if (detail::float_equal(m_xmin, m_xmax))
     {
         auto xdiff = m_xmax * 0.1;
-        if (detail::float_compare(xdiff, 0.0))
+        if (detail::float_equal(xdiff, 0.0))
             xdiff = 1;
         m_xmin -= xdiff;
         m_xmax += xdiff;
     }
 
-    if (detail::float_compare(m_ymin, m_ymax))
+    if (detail::float_equal(m_ymin, m_ymax))
     {
         auto ydiff = m_ymax * 0.1;
-        if (detail::float_compare(ydiff, 0.0))
+        if (detail::float_equal(ydiff, 0.0))
             ydiff = 1;
         m_ymin -= ydiff;
         m_ymax += ydiff;

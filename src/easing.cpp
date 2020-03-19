@@ -38,9 +38,9 @@ EasingScalar easing_extend(EasingScalar p)
 
 static inline EasingScalar power(EasingScalar base, EasingScalar exponent)
 {
-    if (detail::float_compare(exponent, 0.0f))
+    if (detail::float_equal(exponent, 0.0f))
         return 1.0f;
-    else if (detail::float_compare(base, 0.0f) && exponent > 0.0f)
+    else if (detail::float_equal(base, 0.0f) && exponent > 0.0f)
         return 0.0f;
 
     return std::exp(exponent * std::log(base));
@@ -293,17 +293,17 @@ EasingScalar easing_circular_easeinout(EasingScalar p)
 
 EasingScalar easing_exponential_easein(EasingScalar p)
 {
-    return detail::float_compare(p, 0.0f) ? p : std::pow(2, 10 * (p - 1));
+    return detail::float_equal(p, 0.0f) ? p : std::pow(2, 10 * (p - 1));
 }
 
 EasingScalar easing_exponential_easeout(EasingScalar p)
 {
-    return detail::float_compare(p, 1.0f) ? p : 1 - std::pow(2, -10 * p);
+    return detail::float_equal(p, 1.0f) ? p : 1 - std::pow(2, -10 * p);
 }
 
 EasingScalar easing_exponential_easeinout(EasingScalar p)
 {
-    if (detail::float_compare(p, 0.0f) || detail::float_compare(p, 1.0f))
+    if (detail::float_equal(p, 0.0f) || detail::float_equal(p, 1.0f))
         return p;
 
     if (p < 0.5)
