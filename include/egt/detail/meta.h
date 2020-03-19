@@ -215,21 +215,54 @@ constexpr bool change_if_diff(double& old, const double& to)
  * This can be used to run a function when an instance of a scope_exit goes out
  * of scope or is deleted.
  */
-struct EGT_API ScopeExit : private NonCopyable<ScopeExit>
+template<class T>
+struct EGT_API ScopeExit : private NonCopyable<ScopeExit<T>>
 {
-    explicit ScopeExit(std::function<void()> f) noexcept
-        : m_f(std::move(f))
+    /**
+     * @param f Callable to call on destruction.
+     */
+    ScopeExit(T&& f)
+        : m_f(std::move(f)),
+          m_active(true)
     {}
+
+    /**
+     * @param f Callable to call on destruction.
+     */
+    ScopeExit(const T& f)
+        : m_f(f),
+          m_active(true)
+    {}
+
+    ScopeExit(ScopeExit&& other)
+        : m_f(std::move(other.m_f)),
+          m_active(other.m_active)
+    {
+        other.m_active = false;
+    }
 
     ~ScopeExit()
     {
-        if (m_f)
+        if (m_active)
             m_f();
     }
 
 protected:
-    std::function<void()> m_f;
+    /// Callback function.
+    T m_f;
+    /// Used to manage move
+    bool m_active;
 };
+
+/**
+ * Helper to construct a ScopeExit with proper type deduction of the template
+ * parameter, which may be a lambda.
+ */
+template<class T>
+ScopeExit<T> on_scope_exit(T&& f)
+{
+    return ScopeExit<T>(std::forward<T>(f));
+}
 
 /**
  * Utility to create a bit mask for the specified bit.

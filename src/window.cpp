@@ -159,7 +159,7 @@ void Window::do_draw()
 
     // bookkeeping to make sure we don't damage() in draw()
     m_in_draw = true;
-    detail::ScopeExit reset([this]() { m_in_draw = false; });
+    auto reset = detail::on_scope_exit([this]() { m_in_draw = false; });
 
     SPDLOG_TRACE("{} do draw", name());
 

@@ -107,7 +107,7 @@ void flex_layout(const Rect& parent,
     lay_context ctx;
     lay_init_context(&ctx);
 
-    ScopeExit cleanup([&ctx]()
+    auto cleanup = on_scope_exit([&ctx]()
     {
         lay_destroy_context(&ctx);
     });
@@ -131,7 +131,7 @@ void flex_layout(const Rect& parent,
     lay_context ctx;
     lay_init_context(&ctx);
 
-    ScopeExit cleanup([&ctx]()
+    auto cleanup = on_scope_exit([&ctx]()
     {
         lay_destroy_context(&ctx);
     });

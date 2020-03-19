@@ -309,7 +309,7 @@ void StaticGrid::layout()
         return;
 
     m_in_layout = true;
-    detail::ScopeExit reset([this]() { m_in_layout = false; });
+    auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
 
     reposition();
 }

@@ -54,7 +54,7 @@ void Input::dispatch(Event& event)
     assert(!m_dispatching);
 
     m_dispatching = true;
-    detail::ScopeExit reset([this]() { m_dispatching = false; });
+    auto reset = detail::on_scope_exit([this]() { m_dispatching = false; });
 
     if (event.id() == EventId::raw_pointer_down)
     {
