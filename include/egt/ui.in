@@ -59,7 +59,6 @@
 #include <egt/valuewidget.h>
 #include <egt/version.h>
 #include <egt/view.h>
-#include <egt/virtualkeyboard.h>
 #include <egt/window.h>
 #include <egt/utils.h>
 
@@ -106,6 +105,11 @@
 @include_chart@
 #ifdef EGT_HAS_CHART
 #include <egt/chart.h>
+#endif
+
+@include_virtualkeyboard@
+#ifdef EGT_HAS_VIRTUALKEYBOARD
+#include <egt/virtualkeyboard.h>
 #endif
 
 #endif

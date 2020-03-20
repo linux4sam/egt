@@ -3,6 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "detail/utf8text.h"
 #include "egt/canvas.h"
 #include "egt/detail/alignment.h"
@@ -14,7 +18,10 @@
 #include "egt/painter.h"
 #include "egt/serialize.h"
 #include "egt/text.h"
+
+#ifdef ENABLE_VIRTUALKEYBOARD
 #include "egt/virtualkeyboard.h"
+#endif
 
 namespace egt
 {
@@ -51,17 +58,21 @@ TextBox::TextBox(const std::string& text,
     m_gain_focus_reg = on_gain_focus([this]()
     {
         show_cursor();
+#ifdef ENABLE_VIRTUALKEYBOARD
         if (!text_flags().is_set(TextFlag::no_virt_keyboard))
             if (popup_virtual_keyboard())
                 popup_virtual_keyboard()->show();
+#endif
     });
 
     m_lost_focus_reg = on_lost_focus([this]()
     {
         hide_cursor();
+#ifdef ENABLE_VIRTUALKEYBOARD
         if (!text_flags().is_set(TextFlag::no_virt_keyboard))
             if (popup_virtual_keyboard())
                 popup_virtual_keyboard()->hide();
+#endif
     });
 }
 

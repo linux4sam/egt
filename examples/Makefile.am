@@ -43,7 +43,6 @@ sizers/sizers \
 space/space \
 sprite/sprite \
 squares/squares \
-virtualkeyboard/virtualkeyboard \
 whiteboard/whiteboard \
 widgets/widgets
 
@@ -90,6 +89,11 @@ endif
 if HAVE_LINUX_GPIO_H
 bin_PROGRAMS += \
 gpio/gpio
+endif
+
+if ENABLE_VIRTUALKEYBOARD
+bin_PROGRAMS += \
+virtualkeyboard/virtualkeyboard
 endif
 
 calc_calc_SOURCES = calc/calc.cpp

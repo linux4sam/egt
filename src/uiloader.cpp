@@ -102,7 +102,9 @@ static const std::unordered_map<std::string, create_function> allocators =
     {"egt::v1::ToggleBox", create_widget<ToggleBox>},
     {"egt::v1::TopWindow", create_widget<TopWindow>},
     {"egt::v1::VerticalBoxSizer", create_widget<VerticalBoxSizer>},
+#ifdef EGT_HAS_VIRTUALKEYBOARD
     {"egt::v1::VirtualKeyboard", create_widget<VirtualKeyboard>},
+#endif
     {"egt::v1::Window", create_widget<Window>},
     {"egt::v1::Form", create_widget<Form>},
     //{"egt::v1::Gauge", create_widget<Gauge>},

@@ -211,6 +211,15 @@ AC_ARG_ENABLE([examples],
   [enable_examples=$enableval], [enable_examples=yes])
 AM_CONDITIONAL([ENABLE_EXAMPLES], [test "x${enable_examples}" = xyes])
 
+AC_ARG_ENABLE([virtualkeyboard],
+  [AS_HELP_STRING([--disable-virtualkeyboard], [include support for virtualkeyboard [default=yes]])],
+  [enable_virtualkeyboard=$enableval], [enable_virtualkeyboard=yes])
+AM_CONDITIONAL([ENABLE_VIRTUALKEYBOARD], [test "x${enable_virtualkeyboard}" = xyes])
+if test "x${enable_virtualkeyboard}" = xyes; then
+   AC_DEFINE(HAVE_VIRTUALKEYBOARD, 1, [Have virtualkeyboard support])
+   AC_SUBST(include_virtualkeyboard, ["#define EGT_HAS_VIRTUALKEYBOARD 1"])
+fi
+
 AC_ARG_ENABLE([lto],
   [AS_HELP_STRING([--enable-lto], [enable gcc's LTO [default=no]])],
   [enable_lto=$enableval], [enable_lto=no])

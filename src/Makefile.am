@@ -109,7 +109,6 @@ uri.cpp \
 utils.cpp \
 script.cpp \
 view.cpp \
-virtualkeyboard.cpp \
 widget.cpp \
 widgetflags.cpp \
 window.cpp
@@ -217,7 +216,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/value.h \
 ../include/egt/valuewidget.h \
 ../include/egt/view.h \
-../include/egt/virtualkeyboard.h \
 ../include/egt/widget.h \
 ../include/egt/widgetflags.h \
 ../include/egt/window.h
@@ -361,6 +359,14 @@ detail/charts/plplotimpl.cpp
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/chart.h
+endif
+
+if ENABLE_VIRTUALKEYBOARD
+libegt_la_SOURCES += \
+virtualkeyboard.cpp
+
+nobase_libegtinclude_HEADERS += \
+../include/egt/virtualkeyboard.h
 endif
 
 if OS_WIN32

@@ -611,10 +611,11 @@ int main(int argc, char** argv)
         notebook->selected(list->selected());
     });
 
+#ifdef EGT_HAS_VIRTUALKEYBOARD
     auto default_keyboard = std::make_shared<egt::VirtualKeyboard>();
     egt::PopupVirtualKeyboard popup_keyboard {default_keyboard};
-
     win.add(popup_keyboard);
+#endif
 
     win.show();
 
