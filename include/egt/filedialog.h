@@ -14,19 +14,18 @@
 #include <egt/button.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/signal.h>
+#include <egt/grid.h>
+#include <egt/label.h>
+#include <egt/list.h>
 #include <egt/popup.h>
-#include <memory>
+#include <egt/sizer.h>
+#include <egt/text.h>
 #include <string>
 
 namespace egt
 {
 inline namespace v1
 {
-class BoxSizer;
-class ImageLabel;
-class ListBox;
-class StaticGrid;
-class TextBox;
 
 /**
  * A FileDialog is a widget that allows user to:
@@ -79,17 +78,17 @@ protected:
     /**
      * Vertical BoxSizer
      */
-    std::shared_ptr<BoxSizer> m_vsizer;
+    BoxSizer m_vsizer;
 
     /**
      * Title of a FileDialog.
      */
-    std::shared_ptr<ImageLabel> m_title;
+    ImageLabel m_title;
 
     /**
      * List Box for file listing.
      */
-    std::shared_ptr<ListBox> m_flist;
+    ListBox m_flist;
 
     /**
      * string containing the file path of a directory.
@@ -166,17 +165,17 @@ protected:
     /**
      * grid for organizing okay & cancel Buttons.
      */
-    std::shared_ptr<StaticGrid> m_grid;
+    StaticGrid m_grid;
 
     /**
      * okay Button.
      */
-    std::shared_ptr<Button> m_okay;
+    Button m_okay;
 
     /**
      * cancel Button.
      */
-    std::shared_ptr<Button> m_cancel;
+    Button m_cancel;
 
     /**
      * File path of a selected file.
@@ -240,22 +239,22 @@ protected:
     /**
      * m_fsave_box to input a filename or file path.
      */
-    std::shared_ptr<TextBox> m_fsave_box;
+    TextBox m_fsave_box;
 
     /**
      * grid for organizing okay & cancel Buttons.
      */
-    std::shared_ptr<StaticGrid> m_grid;
+    StaticGrid m_grid;
 
     /**
      * okay Button.
      */
-    std::shared_ptr<Button> m_okay;
+    Button m_okay;
 
     /**
      * cancel Button.
      */
-    std::shared_ptr<Button> m_cancel;
+    Button m_cancel;
 
     /**
      * File path of a file save location.
