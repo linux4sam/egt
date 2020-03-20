@@ -5,9 +5,9 @@
  */
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
-#include "egt/detail/serialize.h"
 #include "egt/grid.h"
 #include "egt/painter.h"
+#include "egt/serialize.h"
 #include <algorithm>
 #include <cassert>
 
@@ -320,7 +320,7 @@ const std::pair<StaticGrid::GridFlag, char const*> detail::EnumStrings<StaticGri
     {StaticGrid::GridFlag::show_border, "show_border"},
 };
 
-void StaticGrid::serialize(detail::Serializer& serializer) const
+void StaticGrid::serialize(Serializer& serializer) const
 {
     Frame::serialize(serializer);
 
@@ -421,7 +421,7 @@ void SelectableGrid::selected(int column, int row)
     }
 }
 
-void SelectableGrid::serialize(detail::Serializer& serializer) const
+void SelectableGrid::serialize(Serializer& serializer) const
 {
     StaticGrid::serialize(serializer);
 

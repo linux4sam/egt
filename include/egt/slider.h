@@ -17,9 +17,9 @@
 #include <egt/detail/flags.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/serialize.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
+#include <egt/serialize.h>
 #include <egt/textwidget.h>
 #include <egt/valuewidget.h>
 #include <egt/widgetflags.h>
@@ -230,7 +230,7 @@ public:
     /// Get the current slider flags.
     SliderFlags& slider_flags() { return m_slider_flags; }
 
-    virtual void serialize(detail::Serializer& serializer) const override;
+    virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;
@@ -608,7 +608,7 @@ template<>
 EGT_API void SliderType<double>::draw_label(Painter& painter, double value);
 
 template <class T>
-void SliderType<T>::serialize(detail::Serializer& serializer) const
+void SliderType<T>::serialize(Serializer& serializer) const
 {
     ValueRangeWidget<T>::serialize(serializer);
 

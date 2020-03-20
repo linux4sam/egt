@@ -927,7 +927,7 @@ public:
      * @param[in] level Indentation level.
      *
      * @deprecated This will eventually be removed/changed in favor of using
-     * the detail::Serializer classes.
+     * the Serializer classes.
      */
     virtual void dump(std::ostream& out, int level = 0);
 
@@ -1230,7 +1230,7 @@ public:
     /**
      * Serialize the widget to the specified serializer.
      */
-    virtual void serialize(detail::Serializer& serializer) const;
+    virtual void serialize(Serializer& serializer) const;
 
     /**
      * Deserialize widget properties.

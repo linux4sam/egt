@@ -7,12 +7,12 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/math.h"
-#include "egt/detail/serialize.h"
 #include "egt/frame.h"
 #include "egt/geometry.h"
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
+#include "egt/serialize.h"
 #include "egt/types.h"
 #include "egt/widget.h"
 #include <cassert>
@@ -544,7 +544,7 @@ std::string Widget::type() const
     return detail::demangle(typeid(*this).name());
 }
 
-void Widget::serialize(detail::Serializer& serializer) const
+void Widget::serialize(Serializer& serializer) const
 {
     if (x())
         serializer.add_property("x", x());

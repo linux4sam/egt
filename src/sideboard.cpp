@@ -5,7 +5,7 @@
  */
 #include "egt/app.h"
 #include "egt/detail/enum.h"
-#include "egt/detail/serialize.h"
+#include "egt/serialize.h"
 #include "egt/sideboard.h"
 
 namespace egt
@@ -192,7 +192,7 @@ const std::pair<SideBoard::PositionFlag, char const*> detail::EnumStrings<SideBo
     {SideBoard::PositionFlag::bottom, "bottom"},
 };
 
-void SideBoard::serialize(detail::Serializer& serializer) const
+void SideBoard::serialize(Serializer& serializer) const
 {
     Window::serialize(serializer);
 

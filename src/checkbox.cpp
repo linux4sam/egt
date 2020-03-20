@@ -7,9 +7,9 @@
 #include "egt/checkbox.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/layout.h"
-#include "egt/detail/serialize.h"
 #include "egt/frame.h"
 #include "egt/painter.h"
+#include "egt/serialize.h"
 #include "egt/theme.h"
 
 namespace egt
@@ -253,7 +253,7 @@ Size ToggleBox::min_size_hint() const
     return Size(100, 30) + Widget::min_size_hint();
 }
 
-void ToggleBox::serialize(detail::Serializer& serializer) const
+void ToggleBox::serialize(Serializer& serializer) const
 {
     CheckBox::serialize(serializer);
 

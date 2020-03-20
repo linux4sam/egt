@@ -106,7 +106,7 @@ public:
      * @endcode
      *
      * @deprecated This will eventually be removed/changed in favor of using
-     * the detail::Serializer classes.
+     * the Serializer classes.
      */
     void dump(std::ostream& out) const;
 

@@ -22,10 +22,7 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
 class Serializer;
-}
 
 /**
  * Color palette that contains a 2 dimensional array of colors.
@@ -348,7 +345,7 @@ public:
     /**
      * Serialize to the specified serializer.
      */
-    virtual void serialize(const std::string& name, detail::Serializer& serializer) const;
+    virtual void serialize(const std::string& name, Serializer& serializer) const;
 
     /**
      * Deserialize.

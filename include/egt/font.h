@@ -21,10 +21,7 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
 class Serializer;
-}
 
 /**
  * Manages a font and properties of a font.
@@ -177,7 +174,7 @@ public:
     /**
      * Serialize to the specified serializer.
      */
-    virtual void serialize(const std::string& name, detail::Serializer& serializer) const;
+    virtual void serialize(const std::string& name, Serializer& serializer) const;
 
     /**
      * Deserialize.

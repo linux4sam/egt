@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/detail/enum.h"
-#include "egt/detail/serialize.h"
 #include "egt/detail/string.h"
 #include "egt/palette.h"
+#include "egt/serialize.h"
 #include <iostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
@@ -245,7 +245,7 @@ std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group)
     return os << detail::enum_to_string(group);
 }
 
-void Palette::serialize(const std::string& name, detail::Serializer& serializer) const
+void Palette::serialize(const std::string& name, Serializer& serializer) const
 {
     for (const auto& x : m_colors)
     {

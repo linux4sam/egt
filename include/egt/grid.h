@@ -183,7 +183,7 @@ public:
      */
     inline GridFlags& grid_flags() { return m_grid_flags; }
 
-    virtual void serialize(detail::Serializer& serializer) const override;
+    virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;
@@ -259,7 +259,7 @@ public:
      */
     virtual void selected(int column, int row);
 
-    virtual void serialize(detail::Serializer& serializer) const override;
+    virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;

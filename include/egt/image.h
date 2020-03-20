@@ -22,10 +22,7 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
 class Serializer;
-}
 
 /**
  * Raster image resource used for drawing or displaying.
@@ -229,7 +226,7 @@ public:
     /**
     * Serialize to the specified serializer.
     */
-    virtual void serialize(const std::string& name, detail::Serializer& serializer) const;
+    virtual void serialize(const std::string& name, Serializer& serializer) const;
 
     /**
      * Deserialized property.

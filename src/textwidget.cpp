@@ -5,8 +5,8 @@
  */
 #include "detail/utf8text.h"
 #include "egt/canvas.h"
-#include "egt/detail/serialize.h"
 #include "egt/painter.h"
+#include "egt/serialize.h"
 #include "egt/textwidget.h"
 
 namespace egt
@@ -79,7 +79,7 @@ Size TextWidget::text_size(const std::string& text) const
     return painter.font_size(text);
 }
 
-void TextWidget::serialize(detail::Serializer& serializer) const
+void TextWidget::serialize(Serializer& serializer) const
 {
     Widget::serialize(serializer);
     if (!text().empty())

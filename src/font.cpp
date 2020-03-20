@@ -5,8 +5,8 @@
  */
 #include "egt/canvas.h"
 #include "egt/detail/enum.h"
-#include "egt/detail/serialize.h"
 #include "egt/font.h"
+#include "egt/serialize.h"
 #include <cairo-ft.h>
 #include <cassert>
 #include <map>
@@ -164,7 +164,7 @@ const std::pair<Font::Slant, char const*> detail::EnumStrings<Font::Slant>::data
     {Font::Slant::oblique, "oblique"},
 };
 
-void Font::serialize(const std::string& name, detail::Serializer& serializer) const
+void Font::serialize(const std::string& name, Serializer& serializer) const
 {
     const std::map<std::string, std::string> attrs =
     {

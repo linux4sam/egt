@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_SERIALIZE_H
-#define EGT_DETAIL_SERIALIZE_H
+#ifndef EGT_SERIALIZE_H
+#define EGT_SERIALIZE_H
 
 /**
  * @file
@@ -26,9 +26,6 @@ inline namespace v1
 class Widget;
 class Image;
 class Pattern;
-
-namespace detail
-{
 
 /**
  * Abstract base serializer class.
@@ -138,7 +135,6 @@ protected:
     std::unique_ptr<XmlSerializerImpl> m_impl;
 };
 
-}
 }
 }
 

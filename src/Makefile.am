@@ -54,7 +54,6 @@ detail/mousegesture.cpp \
 detail/object.cpp \
 detail/priorityqueue.h \
 detail/screen/flipthread.h \
-detail/serialize.cpp \
 detail/spriteimpl.h \
 detail/string.cpp \
 detail/utf8text.cpp \
@@ -90,6 +89,7 @@ resource.cpp \
 respath.cpp \
 screen.cpp \
 scrollwheel.cpp \
+serialize.cpp \
 shapes.cpp \
 sideboard.cpp \
 sizer.cpp \
@@ -162,7 +162,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/meta.h \
 ../include/egt/detail/mousegesture.h \
 ../include/egt/detail/object.h \
-../include/egt/detail/serialize.h \
 ../include/egt/detail/signal.h \
 ../include/egt/detail/string.h \
 ../include/egt/detail/stringhash.h \
@@ -193,6 +192,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/respath.h \
 ../include/egt/screen.h \
 ../include/egt/scrollwheel.h \
+../include/egt/serialize.h \
 ../include/egt/sideboard.h \
 ../include/egt/sizer.h \
 ../include/egt/shapes.h \

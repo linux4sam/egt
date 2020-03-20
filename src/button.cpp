@@ -8,9 +8,9 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/meta.h"
-#include "egt/detail/serialize.h"
 #include "egt/frame.h"
 #include "egt/painter.h"
+#include "egt/serialize.h"
 #include "egt/theme.h"
 #include "egt/widget.h"
 
@@ -298,7 +298,7 @@ void ImageButton::show_label(bool value)
         damage();
 }
 
-void ImageButton::serialize(detail::Serializer& serializer) const
+void ImageButton::serialize(Serializer& serializer) const
 {
     Button::serialize(serializer);
 

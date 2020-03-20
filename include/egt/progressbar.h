@@ -14,9 +14,9 @@
 #include <egt/detail/alignment.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/serialize.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
+#include <egt/serialize.h>
 #include <egt/textwidget.h>
 #include <egt/valuewidget.h>
 #include <string>
@@ -277,7 +277,7 @@ public:
      */
     bool show_label() const { return m_show_label; }
 
-    virtual void serialize(detail::Serializer& serializer) const override;
+    virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;
@@ -308,7 +308,7 @@ template <class T>
 const Size SpinProgressType<T>::DEFAULT_SPINPROGRESS_SIZE{100, 100};
 
 template <class T>
-void SpinProgressType<T>::serialize(detail::Serializer& serializer) const
+void SpinProgressType<T>::serialize(Serializer& serializer) const
 {
     ValueRangeWidget<T>::serialize(serializer);
 
@@ -429,7 +429,7 @@ public:
         return DEFAULT_LEVELMETER_SIZE + Widget::min_size_hint();
     }
 
-    virtual void serialize(detail::Serializer& serializer) const override;
+    virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;
@@ -462,7 +462,7 @@ template <class T>
 constexpr Size LevelMeterType<T>::DEFAULT_LEVELMETER_SIZE;
 
 template <class T>
-void LevelMeterType<T>::serialize(detail::Serializer& serializer) const
+void LevelMeterType<T>::serialize(Serializer& serializer) const
 {
     ValueRangeWidget<T>::serialize(serializer);
 

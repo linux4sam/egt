@@ -7,10 +7,10 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/meta.h"
-#include "egt/detail/serialize.h"
 #include "egt/frame.h"
 #include "egt/label.h"
 #include "egt/painter.h"
+#include "egt/serialize.h"
 
 namespace egt
 {
@@ -233,7 +233,7 @@ void ImageLabel::show_label(bool value)
         damage();
 }
 
-void ImageLabel::serialize(detail::Serializer& serializer) const
+void ImageLabel::serialize(Serializer& serializer) const
 {
     Label::serialize(serializer);
 

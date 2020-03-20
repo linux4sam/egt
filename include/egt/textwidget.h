@@ -96,7 +96,7 @@ public:
      */
     static Font scale_font(const Size& target, const std::string& text, const Font& font);
 
-    virtual void serialize(detail::Serializer& serializer) const override;
+    virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;

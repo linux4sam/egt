@@ -6,8 +6,8 @@
 #include "egt/canvas.h"
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
-#include "egt/detail/serialize.h"
 #include "egt/image.h"
+#include "egt/serialize.h"
 
 namespace egt
 {
@@ -117,7 +117,7 @@ Image Image::crop(const RectF& rect)
     return canvas.surface();
 }
 
-void Image::serialize(const std::string& name, detail::Serializer& serializer) const
+void Image::serialize(const std::string& name, Serializer& serializer) const
 {
     std::map<std::string, std::string> attrs;
 

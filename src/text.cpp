@@ -8,11 +8,11 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/layout.h"
-#include "egt/detail/serialize.h"
 #include "egt/detail/string.h"
 #include "egt/frame.h"
 #include "egt/input.h"
 #include "egt/painter.h"
+#include "egt/serialize.h"
 #include "egt/text.h"
 #include "egt/virtualkeyboard.h"
 
@@ -522,7 +522,7 @@ const std::pair<TextBox::TextFlag, char const*> detail::EnumStrings<TextBox::Tex
     {TextBox::TextFlag::no_virt_keyboard, "no_virt_keyboard"},
 };
 
-void TextBox::serialize(detail::Serializer& serializer) const
+void TextBox::serialize(Serializer& serializer) const
 {
     TextWidget::serialize(serializer);
 

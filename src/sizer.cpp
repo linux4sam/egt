@@ -5,7 +5,7 @@
  */
 #include "egt/detail/enum.h"
 #include "egt/detail/layout.h"
-#include "egt/detail/serialize.h"
+#include "egt/serialize.h"
 #include "egt/sizer.h"
 
 namespace egt
@@ -104,7 +104,7 @@ void BoxSizer::layout()
     resize(super_rect());
 }
 
-void BoxSizer::serialize(detail::Serializer& serializer) const
+void BoxSizer::serialize(Serializer& serializer) const
 {
     Frame::serialize(serializer);
 

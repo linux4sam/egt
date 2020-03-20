@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/color.h>
-#include <egt/detail/serialize.h>
 #include <egt/font.h>
 #include <egt/image.h>
+#include <egt/serialize.h>
 #include <egt/widget.h>
 #include <fstream>
 #include <rapidxml.hpp>
@@ -17,8 +17,6 @@
 namespace egt
 {
 inline namespace v1
-{
-namespace detail
 {
 
 void Serializer::add_property(const std::string& name, int value,
@@ -195,6 +193,5 @@ void XmlWidgetSerializer::write(std::ostream& out)
 
 XmlWidgetSerializer::~XmlWidgetSerializer() noexcept = default;
 
-}
 }
 }
