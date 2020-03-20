@@ -10,7 +10,7 @@
 #include <rapidxml_utils.hpp>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <unordered_map>
+#include <map>
 
 namespace egt
 {
@@ -20,7 +20,8 @@ namespace experimental
 {
 
 template <class T>
-static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, const std::shared_ptr<Frame>& parent)
+static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
+					     const std::shared_ptr<Frame>& parent)
 {
     auto instance = std::make_shared<T>();
     if (parent)
@@ -39,7 +40,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, const s
         std::map<std::string, std::string> attrs;
         std::string pname;
 
-        for (rapidxml::xml_attribute<>* attr = prop->first_attribute(); attr;
+        for (const rapidxml::xml_attribute<>* attr = prop->first_attribute(); attr;
              attr = attr->next_attribute())
         {
             if (attr->name() == std::string("name"))
@@ -48,7 +49,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node, const s
                 attrs.insert({attr->name(), attr->value()});
         }
 
-        std::string pvalue = prop->value();
+        const std::string pvalue = prop->value();
 
         instance->deserialize(pname, pvalue, attrs);
     }
@@ -60,7 +61,7 @@ using create_function =
     std::function<std::shared_ptr<Widget>(rapidxml::xml_node<>* widget,
             std::shared_ptr<Frame> parent)>;
 
-static const std::unordered_map<std::string, create_function> allocators =
+static const std::pair<std::string, create_function> allocators[] =
 {
     {"egt::v1::experimental::Radial", create_widget<Radial>},
     {"egt::v1::AnalogMeter", create_widget<AnalogMeter>},
@@ -137,18 +138,22 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
         ttype = type->value();
     }
 
-    auto i = allocators.find(ttype);
-    if (i != allocators.end())
+    bool found = false;
+    for (const auto& i : allocators)
     {
-        result = i->second(node, parent);
+	if (i.first == ttype)
+	{
+	    result = i.second(node, parent);
+	    found = true;
+	}
     }
-    else
+
+    if (!found)
     {
-        bool found = false;
         for (const auto& x : allocators)
         {
             auto name = x.first;
-            std::size_t index = name.find_last_of(':');
+            const std::size_t index = name.find_last_of(':');
             if (index != std::string::npos)
                 name = name.substr(index + 1);
 
