@@ -287,5 +287,35 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
     }
 }
 
+void ComboBox::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+
+    auto index = 0;
+    for (const auto& item : m_items)
+    {
+	if (index == selected())
+	    serializer.add_property("item", item, {{"selected","true"}});
+	else
+	    serializer.add_property("item", item);
+
+	++index;
+    }
+}
+
+void ComboBox::deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs)
+{
+    if (name == "item")
+    {
+	add_item(value);
+	const auto i = attrs.find("selected");
+	if (i != attrs.end() && detail::from_string(i->second))
+	    selected(item_count()-1);
+    }
+    else
+        Widget::deserialize(name, value, attrs);
+}
+
 }
 }

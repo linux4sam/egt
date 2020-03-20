@@ -25,6 +25,7 @@ namespace egt
 inline namespace v1
 {
 class ComboBox;
+class Serializer;
 
 namespace detail
 {
@@ -182,6 +183,11 @@ public:
      * Get the text alignment within the Label.
      */
     AlignFlags text_align() const { return m_text_align; }
+
+    virtual void serialize(Serializer& serializer) const override;
+
+    virtual void deserialize(const std::string& name, const std::string& value,
+                             const std::map<std::string, std::string>& attrs) override;
 
     virtual ~ComboBox() = default;
 
