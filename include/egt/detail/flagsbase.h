@@ -43,11 +43,13 @@ public:
 
     constexpr FlagsBase() noexcept = default;
 
+    /// Construct with a single flag.
     // cppcheck-suppress noExplicitConstructor
     constexpr FlagsBase(const T flag) noexcept
         : m_flags(static_cast<Underlying>(flag))
     {}
 
+    /// Construct with an initializer_list of flags.
     // cppcheck-suppress noExplicitConstructor
     constexpr FlagsBase(std::initializer_list<T> flags) noexcept
     {
@@ -55,6 +57,7 @@ public:
             m_flags |= static_cast<Underlying>(flag);
     }
 
+    /// Copy contructor.
     constexpr FlagsBase(const FlagsBase& rhs)
         : m_flags(rhs.m_flags)
     {
@@ -180,6 +183,7 @@ public:
 
 protected:
 
+    /// @private
     // cppcheck-suppress noExplicitConstructor
     constexpr FlagsBase(const Underlying flags) noexcept
         : m_flags(flags)

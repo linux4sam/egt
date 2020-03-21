@@ -62,12 +62,14 @@ public:
         this->from_string(str);
     }
 
+    /// Copy constructor.
     constexpr Flags(const Flags& rhs)
         : detail::Object(rhs),
           detail::FlagsBase<T>(rhs)
     {
     }
 
+    /// Assignment operator.
     Flags& operator=(const Flags& rhs)
     {
         if (&rhs != this)
@@ -83,6 +85,7 @@ public:
         return *this;
     }
 
+    /// Set a single flag.
     bool set(const T flag) noexcept
     {
         const auto res = detail::FlagsBase<T>::set(flag);
@@ -91,6 +94,7 @@ public:
         return res;
     }
 
+    /// Set multimple flags.
     bool set(std::initializer_list<T> flags) noexcept
     {
         const auto res = detail::FlagsBase<T>::set(flags);
@@ -99,6 +103,7 @@ public:
         return res;
     }
 
+    /// Clear a single flag.
     bool clear(const T flag) noexcept
     {
         const auto res = detail::FlagsBase<T>::clear(flag);
@@ -107,6 +112,7 @@ public:
         return res;
     }
 
+    /// Clear all flags.
     bool clear() noexcept
     {
         const auto res = detail::FlagsBase<T>::clear();
@@ -115,15 +121,20 @@ public:
         return res;
     }
 
+    /// Or operator.
     constexpr Flags<T> operator|(const T& flag) const noexcept
     {
         return {this->m_flags | static_cast<typename detail::FlagsBase<T>::Underlying>(flag)};
     }
 
+    /// And operator.
     constexpr Flags<T> operator&(const T& flag) const noexcept
     {
         return {this->m_flags& static_cast<typename detail::FlagsBase<T>::Underlying>(flag)};
     }
+
+    /// Delimiter used to seperate flags in string representation.
+    constexpr static const auto FLAGS_DELIMITER = '|';
 
     /**
      * Convert the flags to strings.
@@ -134,13 +145,13 @@ public:
         if (!this->empty())
         {
             bool first = true;
-            auto container = this->get();
-            for (auto& item : container)
+            const auto container = this->get();
+            for (const auto& item : container)
             {
                 if (first)
                     first = false;
                 else
-                    ss << "|";
+                    ss << FLAGS_DELIMITER;
                 ss << detail::enum_to_string(item);
             }
         }
@@ -156,7 +167,7 @@ public:
     {
         this->clear();
         std::vector<std::string> tokens;
-        detail::tokenize(str, '|', tokens);
+        detail::tokenize(str, FLAGS_DELIMITER, tokens);
         for (auto& flag : tokens)
             this->set(detail::enum_from_string<T>(detail::trim(flag)));
     }

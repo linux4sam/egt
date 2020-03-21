@@ -33,6 +33,8 @@ class Pattern;
 class EGT_API Serializer
 {
 public:
+
+    /// Attributes array type.
     using Attributes = std::vector<std::pair<std::string, std::string>>;
 
     /// Add a widget to the serializer.

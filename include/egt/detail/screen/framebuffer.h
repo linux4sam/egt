@@ -32,14 +32,22 @@ class EGT_API FrameBuffer : public Screen
 {
 public:
 
+    /**
+     * @param path Framebuffer device node.
+     */
     explicit FrameBuffer(const std::string& path = "/dev/fb0");
 
-    virtual void schedule_flip() override {}
+    virtual void schedule_flip() override
+    {}
 
     virtual ~FrameBuffer();
 
 protected:
+
+    /// internal framebuffer file descriptor.
     int m_fd{-1};
+
+    /// Internal framebuffer pointer.
     void* m_fb{nullptr};
 };
 

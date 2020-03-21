@@ -65,9 +65,9 @@ public:
     /// Get a pointer to the KMSScreen instance.
     static KMSScreen* instance();
 
-    void schedule_flip() override;
+    virtual void schedule_flip() override;
 
-    uint32_t index() override;
+    virtual uint32_t index() override;
 
     /// Close and release the screen.
     void close();
@@ -105,9 +105,11 @@ protected:
     unique_plane_t m_plane;
     /// Current flip index.
     uint32_t m_index{0};
+    /// Global array used to keep track of allocated planes
     static std::vector<planeid> m_used;
     /// Internal thread pool for flipping.
     std::unique_ptr<FlipThread> m_pool;
+    /// Enable GFX2D
     bool m_gfx2d {false};
 
     friend class detail::KMSOverlay;

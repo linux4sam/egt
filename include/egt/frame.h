@@ -78,7 +78,7 @@ public:
      * @param widget The widget.
      */
     template<class T>
-    inline void add(std::shared_ptr<T>& widget)
+    void add(std::shared_ptr<T>& widget)
     {
         auto p = std::dynamic_pointer_cast<Widget>(widget);
         add(p);
@@ -97,7 +97,7 @@ public:
      * caller to make sure this Widget is available for as long as the instance
      * of this class is around.
      */
-    inline void add(Widget& widget)
+    void add(Widget& widget)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
@@ -127,7 +127,7 @@ public:
     /**
      * Get the number of children widgets.
      */
-    inline size_t count_children() const { return m_children.size(); }
+    size_t count_children() const { return m_children.size(); }
 
     /**
      * Get a child widget at a specific index.
@@ -277,7 +277,7 @@ public:
     /**
      * @see Frame::to_child();
      */
-    inline Rect to_child(Rect rect) const
+    Rect to_child(Rect rect) const
     {
         rect.point(to_child(rect.point()));
         return rect;
@@ -364,7 +364,7 @@ public:
     /**
      * Get the special child draw callback.
      */
-    inline ChildDrawCallback special_child_draw_callback() const
+    ChildDrawCallback special_child_draw_callback() const
     {
         return m_special_child_draw_callback;
     }
@@ -372,7 +372,7 @@ public:
     /**
      * Set the special child draw callback.
      */
-    inline void special_child_draw_callback(ChildDrawCallback func)
+    void special_child_draw_callback(ChildDrawCallback func)
     {
         m_special_child_draw_callback = std::move(func);
     }
@@ -386,7 +386,7 @@ public:
      * @param painter An instance of the Painter to use.
      * @param widget The widget.
      */
-    inline void special_child_draw(Painter& painter, Widget* widget)
+    void special_child_draw(Painter& painter, Widget* widget)
     {
         if (m_special_child_draw_callback)
             m_special_child_draw_callback(painter, widget);
@@ -434,7 +434,7 @@ public:
     /**
      * Create a child widget of the specified type.
      *
-     * This allocated a widget of the specified type and automatically adds it
+     * This allocates a widget of the specified type and automatically adds it
      * as a child to this Frame.
      *
      * @code{.cpp}
@@ -459,9 +459,7 @@ protected:
     /// @private
     void draw_child(Painter& painter, const Rect& crect, Widget* child);
 
-    /**
-     * Used internally for calling the special child draw function.
-     */
+    /// Used internally for calling the special child draw function.
     ChildDrawCallback m_special_child_draw_callback;
 
     /**
@@ -469,24 +467,16 @@ protected:
      */
     using ChildrenArray = std::deque<std::shared_ptr<Widget>>;
 
-    /**
-     * Array of child widgets in the order they were added.
-     */
+    /// Array of child widgets in the order they were added.
     ChildrenArray m_children;
 
-    /**
-     * The damage array for this frame.
-     */
+    /// The damage array for this frame.
     Screen::DamageArray m_damage;
 
-    /**
-     * Status for whether this frame is currently drawing.
-     */
+    /// Status for whether this frame is currently drawing.
     bool m_in_draw{false};
 
-    /**
-     * Status for whether this frame is currently performing layout.
-     */
+    /// Status for whether this frame is currently performing layout.
     bool m_in_layout{false};
 
 private:

@@ -67,7 +67,7 @@ public:
      */
     virtual void pan_size(const Size& size);
     /**
-     * Set the hadrware pan position in the plane buffer.
+     * Set the hardware pan position in the plane buffer.
      */
     virtual void pan_pos(const Point& point);
     /// Get the horizontal scale value.
@@ -90,6 +90,7 @@ public:
     /// Apply any pending changes to the hardware.
     virtual void apply();
 
+    /// Get a raw pointer to the current framebuffer.
     void* raw();
 
     /// Get a pointer to the internal plane structure
@@ -98,11 +99,12 @@ public:
         return m_plane.get();
     }
 
+    /// Rotate the hardware plane.
     virtual void rotate(uint32_t degrees);
 
-    void schedule_flip() override;
+    virtual void schedule_flip() override;
 
-    uint32_t index() override;
+    virtual uint32_t index() override;
 
 protected:
     /// Plane instance pointer.

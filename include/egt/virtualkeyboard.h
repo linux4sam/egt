@@ -42,7 +42,10 @@ protected:
 
 public:
     class Key;
+
+    /// Type used for the 2D array of keys.
     using PanelKeys = std::vector<std::vector<std::shared_ptr<Key>>>;
+
     /**
      * @brief Key widget for the Keyboard widget.
      *
@@ -125,7 +128,7 @@ public:
         void color(Palette::ColorId id, const Pattern& color,
                    Palette::GroupId group = Palette::GroupId::normal);
 
-        /*
+        /**
          * Set the key font.
          */
         void font(const Font& font);
@@ -195,6 +198,7 @@ public:
 protected:
     /**
      * Internal representation of a panel i.e. a set of keys organized by rows.
+     * @private
      */
     struct Panel : public VerticalBoxSizer
     {
