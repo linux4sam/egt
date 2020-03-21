@@ -336,14 +336,16 @@ void ComboBox::serialize(Serializer& serializer) const
 }
 
 void ComboBox::deserialize(const std::string& name, const std::string& value,
-                           const std::map<std::string, std::string>& attrs)
+                           const Serializer::Attributes& attrs)
 {
     if (name == "item")
     {
         add_item(value);
-        const auto i = attrs.find("selected");
-        if (i != attrs.end() && detail::from_string(i->second))
-            selected(item_count() - 1);
+        for (const auto& i : attrs)
+        {
+            if (i.first == "selected" && detail::from_string(i.second))
+                selected(item_count() - 1);
+        }
     }
     else
         Widget::deserialize(name, value, attrs);

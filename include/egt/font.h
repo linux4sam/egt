@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/math.h>
+#include <egt/serialize.h>
 #include <egt/types.h>
 #include <iosfwd>
 #include <map>
@@ -21,7 +22,6 @@ namespace egt
 {
 inline namespace v1
 {
-class Serializer;
 
 /**
  * Manages a font and properties of a font.
@@ -180,7 +180,7 @@ public:
      * Deserialize.
      */
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs);
+                             const Serializer::Attributes& attrs);
 
     /**
      * Clears any internal font cache.

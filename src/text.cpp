@@ -543,7 +543,7 @@ void TextBox::serialize(Serializer& serializer) const
 }
 
 void TextBox::deserialize(const std::string& name, const std::string& value,
-                          const std::map<std::string, std::string>& attrs)
+                          const Serializer::Attributes& attrs)
 {
     if (name == "maxlength")
         max_length(std::stoul(value));

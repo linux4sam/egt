@@ -329,7 +329,7 @@ void StaticGrid::serialize(Serializer& serializer) const
 }
 
 void StaticGrid::deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs)
+                             const Serializer::Attributes& attrs)
 {
     if (name == "grid_flags")
         m_grid_flags.from_string(value);
@@ -430,7 +430,7 @@ void SelectableGrid::serialize(Serializer& serializer) const
 }
 
 void SelectableGrid::deserialize(const std::string& name, const std::string& value,
-                                 const std::map<std::string, std::string>& attrs)
+                                 const Serializer::Attributes& attrs)
 {
     if (name == "selected_column")
         m_selected_column = std::stoul(value);

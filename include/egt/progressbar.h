@@ -280,7 +280,7 @@ public:
     virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs) override;
+                             const Serializer::Attributes& attrs) override;
 
     virtual ~SpinProgressType() = default;
 protected:
@@ -317,7 +317,7 @@ void SpinProgressType<T>::serialize(Serializer& serializer) const
 
 template <class T>
 void SpinProgressType<T>::deserialize(const std::string& name, const std::string& value,
-                                      const std::map<std::string, std::string>& attrs)
+                                      const Serializer::Attributes& attrs)
 {
     if (name == "show_label")
         m_show_label = detail::from_string(value);
@@ -432,7 +432,7 @@ public:
     virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs) override;
+                             const Serializer::Attributes& attrs) override;
 
     virtual ~LevelMeterType() = default;
 
@@ -471,7 +471,7 @@ void LevelMeterType<T>::serialize(Serializer& serializer) const
 
 template <class T>
 void LevelMeterType<T>::deserialize(const std::string& name, const std::string& value,
-                                    const std::map<std::string, std::string>& attrs)
+                                    const Serializer::Attributes& attrs)
 {
     if (name == "num_bars")
         m_num_bars = std::stoi(value);

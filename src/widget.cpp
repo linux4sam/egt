@@ -582,7 +582,7 @@ void Widget::serialize(Serializer& serializer) const
 }
 
 void Widget::deserialize(const std::string& name, const std::string& value,
-                         const std::map<std::string, std::string>& attrs)
+                         const Serializer::Attributes& attrs)
 {
     switch (detail::hash(name))
     {

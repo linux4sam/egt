@@ -233,7 +233,7 @@ public:
     virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs) override;
+                             const Serializer::Attributes& attrs) override;
 
     virtual ~SliderType() = default;
 
@@ -621,7 +621,7 @@ void SliderType<T>::serialize(Serializer& serializer) const
 
 template <class T>
 void SliderType<T>::deserialize(const std::string& name, const std::string& value,
-                                const std::map<std::string, std::string>& attrs)
+                                const Serializer::Attributes& attrs)
 {
     if (name == "sliderflags")
         m_slider_flags.from_string(value);

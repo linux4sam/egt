@@ -113,7 +113,7 @@ void BoxSizer::serialize(Serializer& serializer) const
 }
 
 void BoxSizer::deserialize(const std::string& name, const std::string& value,
-                           const std::map<std::string, std::string>& attrs)
+                           const Serializer::Attributes& attrs)
 {
     if (name == "orient")
         orient(detail::enum_from_string<Orientation>(value));

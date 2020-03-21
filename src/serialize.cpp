@@ -20,38 +20,33 @@ inline namespace v1
 {
 
 void Serializer::add_property(const std::string& name, int value,
-                              const std::map<std::string, std::string>& attrs)
+                              const Attributes& attrs)
 {
     add_property(name, std::to_string(value), attrs);
 }
 
 void Serializer::add_property(const std::string& name, unsigned int value,
-                              const std::map<std::string, std::string>& attrs)
+                              const Attributes& attrs)
 {
     add_property(name, std::to_string(value), attrs);
 }
 
 void Serializer::add_property(const std::string& name, const AlignFlags& value,
-                              const std::map<std::string, std::string>& attrs)
+                              const Attributes& attrs)
 {
     add_property(name, value.to_string(), attrs);
 }
 
 void Serializer::add_property(const std::string& name, float value,
-                              const std::map<std::string, std::string>& attrs)
+                              const Attributes& attrs)
 {
     add_property(name, std::to_string(value), attrs);
 }
 
 void Serializer::add_property(const std::string& name, double value,
-                              const std::map<std::string, std::string>& attrs)
+                              const Attributes& attrs)
 {
     add_property(name, std::to_string(value), attrs);
-}
-
-void Serializer::add_property(const std::string& name, const Theme::FillFlags& value)
-{
-    add_property(name, value.to_string());
 }
 
 void Serializer::add_property(const std::string& name, const Pattern& value)
@@ -80,7 +75,7 @@ bool OstreamWidgetSerializer::add(Widget* widget, int level)
 
 void OstreamWidgetSerializer::add_property(const std::string& name,
         const std::string& value,
-        const std::map<std::string, std::string>& attrs)
+        const Attributes& attrs)
 {
     m_out << std::endl << std::string(m_level + 1, ' ') << name << "=" << value;
 
@@ -161,7 +156,7 @@ bool XmlWidgetSerializer::add(Widget* widget, int level)
 
 void XmlWidgetSerializer::add_property(const std::string& name,
                                        const std::string& value,
-                                       const std::map<std::string, std::string>& attrs)
+                                       const Attributes& attrs)
 {
     auto node = m_impl->doc.allocate_node(rapidxml::node_element, "property");
     node->value(m_impl->doc.allocate_string(value.c_str()));

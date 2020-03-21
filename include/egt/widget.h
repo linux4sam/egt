@@ -20,6 +20,7 @@
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
+#include <egt/serialize.h>
 #include <egt/theme.h>
 #include <egt/widgetflags.h>
 #include <iosfwd>
@@ -31,12 +32,6 @@ namespace egt
 {
 inline namespace v1
 {
-
-namespace detail
-{
-class Serializer;
-}
-
 class Painter;
 class Frame;
 class Screen;
@@ -1236,7 +1231,7 @@ public:
      * Deserialize widget properties.
      */
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs);
+                             const Serializer::Attributes& attrs);
 
     virtual ~Widget() noexcept;
 

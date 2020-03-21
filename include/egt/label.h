@@ -262,7 +262,7 @@ public:
     virtual void serialize(Serializer& serializer) const override;
 
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs) override;
+                             const Serializer::Attributes& attrs) override;
 
     virtual ~ImageLabel() = default;
 

@@ -166,7 +166,7 @@ const std::pair<Font::Slant, char const*> detail::EnumStrings<Font::Slant>::data
 
 void Font::serialize(const std::string& name, Serializer& serializer) const
 {
-    const std::map<std::string, std::string> attrs =
+    const Serializer::Attributes attrs =
     {
         {"weight", detail::enum_to_string(weight())},
         {"slant", detail::enum_to_string(slant())},
@@ -177,7 +177,7 @@ void Font::serialize(const std::string& name, Serializer& serializer) const
 }
 
 void Font::deserialize(const std::string& name, const std::string& value,
-                       const std::map<std::string, std::string>& attrs)
+                       const Serializer::Attributes& attrs)
 {
     face(value);
 

@@ -15,6 +15,7 @@
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/painter.h>
+#include <egt/serialize.h>
 #include <map>
 #include <string>
 
@@ -231,9 +232,8 @@ public:
     /**
      * Deserialized property.
      */
-
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs);
+                             const Serializer::Attributes& attrs);
 
     virtual ~Image() = default;
 

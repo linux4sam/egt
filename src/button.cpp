@@ -309,7 +309,7 @@ void ImageButton::serialize(Serializer& serializer) const
 }
 
 void ImageButton::deserialize(const std::string& name, const std::string& value,
-                              const std::map<std::string, std::string>& attrs)
+                              const Serializer::Attributes& attrs)
 {
     // TODO proper loading of all image properties
 

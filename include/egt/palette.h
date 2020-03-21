@@ -13,6 +13,7 @@
 
 #include <egt/color.h>
 #include <egt/detail/meta.h>
+#include <egt/serialize.h>
 #include <iosfwd>
 #include <map>
 #include <memory>
@@ -22,7 +23,6 @@ namespace egt
 {
 inline namespace v1
 {
-class Serializer;
 
 /**
  * Color palette that contains a 2 dimensional array of colors.
@@ -351,7 +351,7 @@ public:
      * Deserialize.
      */
     virtual void deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs);
+                             const Serializer::Attributes& attrs);
 
     virtual ~Palette() = default;
 

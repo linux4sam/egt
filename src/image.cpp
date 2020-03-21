@@ -119,28 +119,30 @@ Image Image::crop(const RectF& rect)
 
 void Image::serialize(const std::string& name, Serializer& serializer) const
 {
-    std::map<std::string, std::string> attrs;
+    Serializer::Attributes attrs;
 
     if (!detail::float_equal(hscale(), 1.0f))
-        attrs.insert({"hscale", std::to_string(hscale())});
+        attrs.emplace_back("hscale", std::to_string(hscale()));
 
     if (!detail::float_equal(vscale(), 1.0f))
-        attrs.insert({"vscale", std::to_string(vscale())});
+        attrs.emplace_back("vscale", std::to_string(vscale()));
 
     serializer.add_property(name, m_uri, attrs);
 }
 
 void Image::deserialize(const std::string& name, const std::string& value,
-                        const std::map<std::string, std::string>& attrs)
+                        const Serializer::Attributes& attrs)
 {
     float hscale = 1.0;
     float vscale = 1.0;
 
-    auto h = attrs.find("hscale");
+    const auto h = std::find_if(attrs.begin(), attrs.end(),
+    [](const auto & element) { return element.first == "hscale";});
     if (h != attrs.end())
         hscale = std::stod(h->second);
 
-    auto v = attrs.find("vscale");
+    const auto v = std::find_if(attrs.begin(), attrs.end(),
+    [](const auto & element) { return element.first == "vscale";});
     if (v != attrs.end())
         vscale = std::stod(v->second);
 

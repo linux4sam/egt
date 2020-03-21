@@ -263,7 +263,7 @@ void ToggleBox::serialize(Serializer& serializer) const
 }
 
 void ToggleBox::deserialize(const std::string& name, const std::string& value,
-                            const std::map<std::string, std::string>& attrs)
+                            const Serializer::Attributes& attrs)
 {
     if (name == "off_text")
         toggle_text(value, on_text());

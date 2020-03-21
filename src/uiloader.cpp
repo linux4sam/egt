@@ -37,7 +37,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
 
     for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling())
     {
-        std::map<std::string, std::string> attrs;
+        Serializer::Attributes attrs;
         std::string pname;
 
         for (const rapidxml::xml_attribute<>* attr = prop->first_attribute(); attr;
@@ -46,7 +46,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
             if (attr->name() == std::string("name"))
                 pname = attr->value();
             else
-                attrs.insert({attr->name(), attr->value()});
+                attrs.emplace_back(attr->name(), attr->value());
         }
 
         const std::string pvalue = prop->value();

@@ -251,7 +251,7 @@ void Palette::serialize(const std::string& name, Serializer& serializer) const
     {
         for (const auto& y : x.second)
         {
-            const std::map<std::string, std::string> attrs =
+            const Serializer::Attributes attrs =
             {
                 {"id", detail::enum_to_string(y.first)},
                 {"group", detail::enum_to_string(x.first)},
@@ -265,11 +265,15 @@ void Palette::serialize(const std::string& name, Serializer& serializer) const
 }
 
 void Palette::deserialize(const std::string& name, const std::string& value,
-                          const std::map<std::string, std::string>& attrs)
+                          const Serializer::Attributes& attrs)
 {
-    const auto i = attrs.find("id");
-    const auto g = attrs.find("group");
-    if (i != attrs.end() && g != attrs.end())
+    const auto i = std::find_if(attrs.begin(), attrs.end(),
+    [](const auto & element) { return element.first == "id";});
+
+    const auto g = std::find_if(attrs.begin(), attrs.end(),
+    [](const auto & element) { return element.first == "group";});
+
+    if (i != attrs.end())
     {
         const auto id = detail::enum_from_string<Palette::ColorId>(i->second);
         Palette::GroupId group = Palette::GroupId::normal;
