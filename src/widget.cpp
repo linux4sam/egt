@@ -16,7 +16,7 @@
 #include "egt/types.h"
 #include "egt/widget.h"
 #include <cassert>
-#include <iostream>
+#include <ostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <string>

@@ -8,7 +8,7 @@
 #endif
 
 #include "egt/luaapp.h"
-#include <iostream>
+#include <ostream>
 extern "C" {
 #include <lauxlib.h>
 #include <lua.h>

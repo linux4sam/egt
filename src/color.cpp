@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iomanip>
-#include <iostream>
+#include <ostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>

@@ -6,7 +6,7 @@
 #include "egt/detail/enum.h"
 #include "egt/event.h"
 #include "egt/input.h"
-#include <iostream>
+#include <ostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <string>

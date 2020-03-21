@@ -7,7 +7,7 @@
 #include "egt/detail/string.h"
 #include "egt/palette.h"
 #include "egt/serialize.h"
-#include <iostream>
+#include <ostream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 

@@ -6,7 +6,7 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/timer.h"
-#include <iostream>
+#include <ostream>
 #include <spdlog/spdlog.h>
 #include <vector>
 

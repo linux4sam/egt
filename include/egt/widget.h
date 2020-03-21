@@ -26,7 +26,6 @@
 #include <iosfwd>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace egt
 {

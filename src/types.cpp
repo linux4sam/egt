@@ -10,7 +10,7 @@
 #include "egt/detail/enum.h"
 #include "egt/types.h"
 #include <cairo.h>
-#include <iostream>
+#include <ostream>
 
 #ifdef HAVE_LIBDRM
 #include <drm_fourcc.h>

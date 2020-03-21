@@ -7,7 +7,7 @@
 #include "egt/detail/string.h"
 #include "egt/widget.h"
 #include "egt/widgetflags.h"
-#include <iostream>
+#include <ostream>
 #include <map>
 #include <string>
 
