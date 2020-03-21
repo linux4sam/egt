@@ -111,7 +111,9 @@ int main(int argc, char** argv)
     }
 
     egt::Application app(argc, argv, "floating");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::TopWindow win;
     if (!args.count("no-image"))

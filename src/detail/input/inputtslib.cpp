@@ -38,8 +38,12 @@ InputTslib::InputTslib(Application& app, const std::string& path)
     {
         spdlog::info("added tslib device {}", path);
 
+        // NOLINTNEXTLINE(modernize-loop-convert)
         for (auto i = 0; i < SAMPLE_COUNT; i++)
+        {
+            // NOLINTNEXTLINE (cppcoreguidelines-owning-memory)
             m_impl->samp_mt[i] = new ts_sample_mt[CHANNELS]();
+        }
 
         m_input.assign(ts_fd(m_impl->ts));
 
@@ -193,8 +197,12 @@ InputTslib::~InputTslib()
 {
     ts_close(m_impl->ts);
 
+    // NOLINTNEXTLINE(modernize-loop-convert)
     for (int i = 0; i < SAMPLE_COUNT; i++)
+    {
+        // NOLINTNEXTLINE (cppcoreguidelines-owning-memory)
         delete [] m_impl->samp_mt[i];
+    }
 }
 
 }

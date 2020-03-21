@@ -10,8 +10,8 @@
 template<class T>
 static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
                                   std::chrono::milliseconds duration = std::chrono::seconds(10),
-                                  egt::EasingFunc easingin = egt::easing_circular_easein,
-                                  egt::EasingFunc easingout = egt::easing_circular_easeout)
+                                  const egt::EasingFunc& easingin = egt::easing_circular_easein,
+                                  const egt::EasingFunc& easingout = egt::easing_circular_easeout)
 {
     auto animationup = std::make_shared<egt::PropertyAnimator>(min, max, duration, easingin);
     animationup->on_change([widget](egt::PropertyAnimator::Value value) { widget->value(value); });
@@ -78,7 +78,9 @@ static std::shared_ptr<egt::experimental::GaugeLayer> create_layer(egt::experime
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "dash");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::TopWindow win;
     win.padding(10);

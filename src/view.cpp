@@ -272,9 +272,9 @@ void ScrolledView::offset(Point offset)
 
 void ScrolledView::update_sliders()
 {
-    auto super = super_rect();
-    auto offmax = Point(super.width() - content_area().width(),
-                        super.height() - content_area().height());
+    const auto super = super_rect();
+    const auto offmax = Point(super.width() - content_area().width(),
+                              super.height() - content_area().height());
 
     if (offmax.x() > 0)
     {

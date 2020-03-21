@@ -16,12 +16,12 @@
 #include <cstdint>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
+#include <initializer_list>
 #include <iosfwd>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
-#include <initializer_list>
 
 namespace egt
 {

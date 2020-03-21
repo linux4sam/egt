@@ -23,7 +23,6 @@ namespace egt
 {
 inline namespace v1
 {
-class Serializer;
 
 /**
  * Raster image resource used for drawing or displaying.

@@ -11,7 +11,9 @@
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "sprite");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::TopWindow win;
     win.background(egt::Image("file:background.png"));

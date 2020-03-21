@@ -111,7 +111,7 @@ constexpr bool float_equal(const float f1, const float f2)
     return fabs(f1 - f2) <= epsilon * std::max(fabs(f1), fabs(f2));
 }
 
-/// Safe equal comparison of float values.
+/// Safe equal comparison of double values.
 constexpr bool float_equal(const double f1, const double f2)
 {
     constexpr auto epsilon = 1.0e-9;

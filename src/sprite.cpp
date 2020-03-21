@@ -288,10 +288,14 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
 
 #ifdef HAVE_LIBPLANES
     if (flags().is_set(Widget::Flag::plane_window))
+    {
         m_simpl = std::make_unique<detail::HardwareSprite>(*this, image, frame_size, frame_count, frame_point);
+    }
     else
 #endif
+    {
         m_simpl = std::make_unique<detail::SoftwareSprite>(*this, image, frame_size, frame_count, frame_point);
+    }
 }
 
 Sprite::~Sprite() = default;

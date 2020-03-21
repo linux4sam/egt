@@ -43,9 +43,12 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     if (!m_priv->display)
         throw std::runtime_error("unable to connect to X11 display");
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     m_input.assign(ConnectionNumber(m_priv->display));
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     auto screen = DefaultScreen(m_priv->display);
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     auto win = RootWindow(m_priv->display, screen);
 
     m_priv->window = XCreateSimpleWindow(m_priv->display,
@@ -84,7 +87,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     // instead of using init() to create the buffer, create our own using cairo_xlib_surface_create
     m_buffers.emplace_back(
         cairo_xlib_surface_create(m_priv->display, m_priv->window,
-                                  DefaultVisual(m_priv->display, screen),
+                                  DefaultVisual(m_priv->display, screen), // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
                                   size.width(), size.height()));
     cairo_xlib_surface_set_size(m_buffers.back().surface.get(), size.width(), size.height());
 

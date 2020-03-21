@@ -35,7 +35,7 @@ public:
 
     GpioEventMonitor(int fd, Callback callback)
         : input(egt::Application::instance().event().io()),
-          callback(callback),
+          callback(std::move(callback)),
           buffer(sizeof(gpioevent_data))
     {
         // assign fd to input stream
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
     }
 
     // setup the input and edges
-    gpioevent_request ereq;
+    gpioevent_request ereq{};
     ereq.lineoffset = args["line"].as<int>();
     ereq.handleflags = GPIOHANDLE_REQUEST_INPUT;
     ereq.eventflags = GPIOEVENT_REQUEST_BOTH_EDGES;
@@ -117,7 +117,7 @@ int main(int argc, char** argv)
         std::cerr << "GPIO_GET_LINEEVENT_IOCTL failed" << std::endl;
 
     // read initial state and get it out of the way
-    gpiohandle_data data;
+    gpiohandle_data data{};
     if (ioctl(ereq.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data) < 0)
         std::cerr << "GPIOHANDLE_GET_LINE_VALUES_IOCTL failed" << std::endl;
 

@@ -72,7 +72,9 @@ protected:
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "drag");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::TopWindow window;
     window.background(egt::Image("file:background.png"));

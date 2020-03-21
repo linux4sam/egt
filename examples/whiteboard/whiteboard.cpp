@@ -23,7 +23,7 @@ public:
         egt::Popup::color(egt::Palette::ColorId::bg, egt::Palette::black);
         add(m_grid);
 
-        const std::array<egt::Pattern, 20> colors =
+        static const std::array<egt::Pattern, 20> colors =
         {
             egt::Palette::red,
             egt::Palette::green,
@@ -50,12 +50,11 @@ public:
         for (auto& c : colors)
         {
             auto color_label = std::make_shared<egt::RectangleWidget>();
-
             color_label->color(egt::Palette::ColorId::button_bg, c);
 
             m_grid.add(expand(color_label));
-            int column = m_grid.last_add_column();
-            int row = m_grid.last_add_row();
+            const auto column = m_grid.last_add_column();
+            const auto row = m_grid.last_add_row();
 
             if (c == m_color)
                 m_grid.selected(column, row);
@@ -68,7 +67,7 @@ public:
         });
     }
 
-    const egt::Color& color() const { return m_color; }
+    const egt::Color& selected_color() const { return m_color; }
 
 protected:
     egt::SelectableGrid m_grid;
@@ -88,7 +87,7 @@ public:
         color(egt::Palette::ColorId::bg, egt::Palette::black);
         add(m_grid);
 
-        const std::array<int, 4> widths =
+        static constexpr std::array<int, 4> widths =
         {
             1,
             2,
@@ -96,14 +95,14 @@ public:
             10
         };
 
-        for (auto& w : widths)
+        for (const auto& w : widths)
         {
             auto width_label = std::make_shared<egt::Label>(std::to_string(w), egt::AlignFlag::center);
             width_label->color(egt::Palette::ColorId::label_text, egt::Palette::white);
 
             m_grid.add(egt::expand(width_label));
-            int column = m_grid.last_add_column();
-            int row = m_grid.last_add_row();
+            const auto column = m_grid.last_add_column();
+            const auto row = m_grid.last_add_row();
 
             if (w == m_width)
                 m_grid.selected(column, row);
@@ -116,13 +115,12 @@ public:
         });
     }
 
-    inline int width() const { return m_width; }
+    int width() const { return m_width; }
 
 protected:
     egt::SelectableGrid m_grid;
     int m_width{2};
 };
-
 
 class MainWindow : public egt::TopWindow
 {
@@ -143,8 +141,8 @@ public:
         fill_flags().clear();
         color(egt::Palette::ColorId::bg, egt::Palette::white);
 
-        m_sizer = std::make_shared<egt::VerticalBoxSizer>(*this);
-        top(left(m_sizer));
+        m_sizer = std::make_unique<egt::VerticalBoxSizer>(*this);
+        top(left(*m_sizer));
 
         m_colorbtn.fill_flags().clear();
         m_fillbutton.fill_flags().clear();
@@ -218,10 +216,10 @@ public:
         {
         case egt::EventId::pointer_click:
         {
-            auto mouse = display_to_local(event.pointer().point);
+            const auto mouse = display_to_local(event.pointer().point);
             egt::Painter painter(m_canvas.context());
             cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
-            painter.flood(mouse, m_fillpicker.color());
+            painter.flood(mouse, m_fillpicker.selected_color());
             damage();
             break;
         }
@@ -231,11 +229,11 @@ public:
             break;
         case egt::EventId::pointer_drag:
         {
-            auto mouse = display_to_local(event.pointer().point);
+            const auto mouse = display_to_local(event.pointer().point);
 
             if (m_last != mouse)
             {
-                int width = m_widthpicker.width();
+                const auto width = m_widthpicker.width();
 
                 egt::Line line(m_last, mouse);
                 egt::Painter painter(m_canvas.context());
@@ -243,7 +241,7 @@ public:
                 painter.line_width(width);
                 auto cr = painter.context();
                 cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
-                painter.set(m_penpicker.color());
+                painter.set(m_penpicker.selected_color());
                 painter.draw(line.start(), line.end());
                 painter.stroke();
 
@@ -276,7 +274,7 @@ public:
     }
 
     egt::Point m_last;
-    std::shared_ptr<egt::VerticalBoxSizer> m_sizer;
+    std::unique_ptr<egt::VerticalBoxSizer> m_sizer;
     egt::ImageButton m_colorbtn;
     egt::ImageButton m_fillbutton;
     egt::ImageButton m_widthbtn;
@@ -291,7 +289,9 @@ public:
 static int run(int argc, char** argv)
 {
     egt::Application app(argc, argv, "whiteboard");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     MainWindow win;
     win.show_cursor(egt::Image("icon:cursor_pencil.png;16"));

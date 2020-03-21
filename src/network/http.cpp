@@ -46,8 +46,8 @@ public:
 
     static HttpClientRequestManager* Instance()
     {
-        static auto p = new HttpClientRequestManager;
-        return p;
+        static const std::unique_ptr<HttpClientRequestManager> i(new HttpClientRequestManager());
+        return i.get();
     }
 
     static int socket_callback(CURL* easy,
@@ -284,7 +284,7 @@ void HttpClientRequest::start_async(const std::string& url, ReadCallback callbac
     cleanup();
 
     m_impl->url = url;
-    m_impl->m_read_callback = callback;
+    m_impl->m_read_callback = std::move(callback);
     m_impl->easy = curl_easy_init();
 
     if (!m_impl->easy)

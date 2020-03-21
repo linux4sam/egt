@@ -16,7 +16,11 @@ inline namespace v1
 
 std::string egt_version()
 {
+#ifdef PACKAGE_VERSION
     return PACKAGE_VERSION; // NOLINT
+#else
+    return {};
+#endif
 }
 
 }

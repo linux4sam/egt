@@ -371,7 +371,8 @@ Size Widget::min_size_hint() const
     if (!m_min_size.empty())
         return m_min_size;
 
-    return Size(moat() * 2., moat() * 2.);
+    return {static_cast<DefaultDim>(moat() * 2.),
+            static_cast<DefaultDim>(moat() * 2.)};
 }
 
 void Widget::paint(Painter& painter)

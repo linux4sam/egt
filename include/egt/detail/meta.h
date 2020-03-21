@@ -210,9 +210,9 @@ constexpr bool change_if_diff(double& old, const double& to)
 }
 
 /**
- * Utility to run a callback std::function when this object goes out of scope.
+ * Utility to run a callback when this object goes out of scope.
  *
- * This can be used to run a function when an instance of a scope_exit goes out
+ * This can be used to run a callable when an instance of a ScopeExit goes out
  * of scope or is deleted.
  */
 template<class T>
@@ -235,7 +235,7 @@ struct EGT_API ScopeExit : private NonCopyable<ScopeExit<T>>
     {}
 
     /// Move constructor
-    ScopeExit(ScopeExit&& other)
+    ScopeExit(ScopeExit&& other) noexcept
         : m_f(std::move(other.m_f)),
           m_active(other.m_active)
     {

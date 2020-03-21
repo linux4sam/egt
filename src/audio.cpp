@@ -177,6 +177,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     {
         GstState old_state, new_state, pending_state;
         gst_message_parse_state_changed(message, &old_state, &new_state, &pending_state);
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(impl->m_pipeline))
         {
             SPDLOG_DEBUG("state changed from {} to {}",
@@ -430,6 +431,7 @@ bool AudioPlayer::createPipeline(const std::string& uri)
         return false;
     }
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     m_impl->m_volume = gst_bin_get_by_name(GST_BIN(m_impl->m_pipeline), "volume");
     if (!m_impl->m_volume)
     {
@@ -438,6 +440,7 @@ bool AudioPlayer::createPipeline(const std::string& uri)
         return false;
     }
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_impl->m_pipeline));
     gst_bus_add_watch(bus, &bus_callback, m_impl.get());
     gst_object_unref(bus);

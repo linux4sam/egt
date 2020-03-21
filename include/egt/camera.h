@@ -111,7 +111,7 @@ public:
 
     using Window::scale;
 
-    virtual void scale(float scalex, float scaley) override;
+    virtual void scale(float hscale, float vscale) override;
 
     /**
      * Get horizontal scale value.

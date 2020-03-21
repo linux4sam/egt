@@ -272,6 +272,7 @@ bool CaptureImpl::start()
         return false;
     }
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     gst_bus_add_watch(bus, &bus_callback, this);
     gst_object_unref(bus);

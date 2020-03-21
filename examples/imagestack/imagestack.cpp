@@ -134,7 +134,9 @@ private:
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "imagestack");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     MainWindow window;
     window.show();

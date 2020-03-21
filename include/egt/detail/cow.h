@@ -80,26 +80,18 @@ public:
 
 private:
 
-    /// Allocate the object if it has not been allocated.
     void allocate()
     {
         if (!m_ptr)
-        {
             m_ptr = std::make_shared<T>();
-        }
     }
 
-    /// Detach the instance.
     void detach()
     {
         if (!m_ptr)
-        {
             allocate();
-        }
         else if (m_ptr && !m_ptr.unique())
-        {
             m_ptr = std::make_shared<T>(*m_ptr);
-        }
     }
 
     std::shared_ptr<T> m_ptr;

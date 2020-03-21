@@ -37,7 +37,9 @@ static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "gauge");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::TopWindow win;
     win.color(egt::Palette::ColorId::bg, egt::Palette::black);

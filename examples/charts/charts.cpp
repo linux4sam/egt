@@ -23,9 +23,9 @@ static int random_item(int start, int end)
     return dist(e);
 }
 
-static std::shared_ptr<egt::ComboBox> create_grid_combo(std::shared_ptr<egt::ChartBase> chart)
+static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<egt::ChartBase>& chart)
 {
-    static const std::vector<std::pair<std::string, egt::ChartBase::GridFlag>> combo_items =
+    static const std::pair<std::string, egt::ChartBase::GridFlag> combo_items[] =
     {
         {"None", egt::ChartBase::GridFlag::none },
         {"Box", egt::ChartBase::GridFlag::box },

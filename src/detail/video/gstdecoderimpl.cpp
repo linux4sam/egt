@@ -144,10 +144,7 @@ int64_t GstDecoderImpl::position() const
 
 bool GstDecoderImpl::has_audio() const
 {
-    if (m_audiodevice && m_audiotrack)
-        return true;
-
-    return false;
+    return (m_audiodevice && m_audiotrack);
 }
 
 void GstDecoderImpl::destroyPipeline()
@@ -186,9 +183,7 @@ void GstDecoderImpl::destroyPipeline()
     }
 }
 
-GstDecoderImpl::~GstDecoderImpl()
-{
-}
+GstDecoderImpl::~GstDecoderImpl() = default;
 
 gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
@@ -276,6 +271,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         GstState old_state, new_state, pending_state;
         gst_message_parse_state_changed(message, &old_state, &new_state, &pending_state);
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(impl->m_pipeline))
         {
             SPDLOG_DEBUG("state changed from {} to {}",

@@ -7,7 +7,7 @@
 #include "egt/app.h"
 #include "egt/canvas.h"
 #include "egt/screen.h"
-#include <math.h>
+#include <cmath>
 #include <spdlog/spdlog.h>
 #include <type_traits>
 

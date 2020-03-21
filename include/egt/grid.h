@@ -23,11 +23,6 @@ namespace egt
 inline namespace v1
 {
 
-namespace detail
-{
-class Serializer;
-}
-
 /**
  * Static grid organization for widgets.
  *

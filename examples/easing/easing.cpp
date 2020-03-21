@@ -129,7 +129,9 @@ private:
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "easing");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     MainWindow window;
 

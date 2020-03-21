@@ -207,6 +207,7 @@ static const auto PERIOD = 4096;
 void Sound::init_alsa_params(unsigned int rate, int channels)
 {
     snd_pcm_hw_params_t* params;
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     snd_pcm_hw_params_alloca(&params);
     snd_pcm_hw_params_any(m_impl->handle, params);
 
@@ -340,6 +341,7 @@ void Sound::play(bool repeat)
                 }
                 else if (err < 0)
                 {
+                    // NOLINTNEXTLINE(misc-lambda-function-name)
                     SPDLOG_TRACE("PCM wait error");
                     return;
                 }
