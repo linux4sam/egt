@@ -33,7 +33,7 @@ struct X11Data
 
 X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     : m_app(app),
-      m_priv(new detail::X11Data),
+      m_priv(std::make_unique<detail::X11Data>()),
       m_input(m_app.event().io()),
       m_keyboard(std::make_unique<InputKeyboard>())
 {

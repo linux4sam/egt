@@ -5,17 +5,18 @@
  */
 #include <egt/ui>
 #include <gtest/gtest.h>
+#include <memory>
 
 using namespace egt;
 
-static float calculate(float start, float decrement, int count)
+static constexpr float calculate(float start, float decrement, int count)
 {
     for (int i = 0; i < count; ++i)
         start -= decrement;
     return start;
 }
 
-static double calculate(double start, double decrement, int count)
+static constexpr double calculate(double start, double decrement, int count)
 {
     for (int i = 0; i < count; ++i)
         start -= decrement;
@@ -30,7 +31,7 @@ TEST(Math, CompareFloat)
     {
         auto expected = (i / 10.0f);
         auto actual = calculate(9.0f + expected, 0.2f, 45);
-        if (detail::float_compare(actual, expected))
+        if (detail::float_equal(actual, expected))
             ++count;
     }
     EXPECT_EQ(count, total);
@@ -44,7 +45,7 @@ TEST(Math, CompareDouble)
     {
         auto expected = (i / 10.0);
         auto actual = calculate(9.0 + expected, 0.2, 45);
-        if (detail::float_compare(actual, expected))
+        if (detail::float_equal(actual, expected))
             ++count;
     }
     EXPECT_EQ(count, total);
@@ -234,7 +235,7 @@ using WidgetTypes = ::testing::Types<AnalogMeter,
 TYPED_TEST_SUITE(Widgets, WidgetTypes);
 TYPED_TEST(Widgets, Properties)
 {
-    auto widget = std::make_shared<TypeParam>();
+    auto widget = std::make_unique<TypeParam>();
 
     widget->resize(Size(100,100));
     EXPECT_EQ(widget->size(), Size(100,100));

@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/detail/dump.h"
+#include "detail/dump.h"
 #include "egt/detail/math.h"
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/view.h"
-#include <sstream>
 
 namespace egt
 {

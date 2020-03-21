@@ -277,6 +277,7 @@ public:
 
 protected:
 
+    /// Type array used for validator callbacks.
     using ValidatorCallbackArray = std::vector<ValidatorCallback>;
 
     /**
@@ -331,38 +332,30 @@ protected:
      */
     ValidatorCallbackArray m_validator_callbacks;
 
+    /**
+     * Given text, return the number of utf8 characters that will fit on a
+     * single line inside of the widget.
+     */
     size_t width_to_len(const std::string& text) const;
 
 private:
 
-    /**
-     * Callback for the cursor timeout.
-     */
+    /// Callback for the cursor timeout.
     void cursor_timeout();
 
-    /**
-     * The current visible state of the cursor.
-     */
+    /// The current visible state of the cursor.
     bool m_cursor_state{false};
 
-    /**
-     * TextBox flags.
-     */
+    /// TextBox flags.
     TextFlags m_text_flags{};
 
-    /**
-     * Maximum text length, or zero.
-     */
+    /// Maximum text length, or zero.
     size_t m_max_len{0};
 
-    /**
-     * Gain focus registration.
-     */
+    /// Gain focus registration.
     detail::Signal<>::RegisterHandle m_gain_focus_reg{};
 
-    /**
-     * Lost focus registration.
-     */
+    /// Lost focus registration.
     detail::Signal<>::RegisterHandle m_lost_focus_reg{};
 };
 

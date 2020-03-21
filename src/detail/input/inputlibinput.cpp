@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/dump.h"
 #include "detail/input/inputkeyboard.h"
 #include "egt/app.h"
-#include "egt/detail/dump.h"
 #include "egt/detail/input/inputlibinput.h"
 #include "egt/detail/meta.h"
 #include "egt/detail/string.h"

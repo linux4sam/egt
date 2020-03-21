@@ -21,6 +21,38 @@ static const auto DEFAULT_COMBOBOX_SIZE = Size(200, 30);
 namespace detail
 {
 
+/**
+* Popup class used by ComboBox.
+*/
+class EGT_API ComboBoxPopup : public Popup
+{
+public:
+
+    /// Construct a ComboBoxPopup with associated ComboBox
+    explicit ComboBoxPopup(ComboBox& parent);
+
+    /// @ref PopupType::handle()
+    virtual void handle(Event& event) override;
+
+    /// @ref PopupType::show()
+    virtual void show() override;
+
+    virtual ~ComboBoxPopup() = default;
+
+protected:
+
+    /// Position algorithm.
+    void smart_pos();
+
+    /// ListBox of ComboBox items.
+    std::shared_ptr<ListBox> m_list;
+
+    /// Parent ComboBox.
+    ComboBox& m_parent;
+
+    friend class egt::ComboBox;
+};
+
 ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
     : Popup(Size(parent.size().width(), 40)),
       m_list(std::make_shared<ListBox>()),
@@ -294,28 +326,30 @@ void ComboBox::serialize(Serializer& serializer) const
     auto index = 0;
     for (const auto& item : m_items)
     {
-	if (index == selected())
-	    serializer.add_property("item", item, {{"selected","true"}});
-	else
-	    serializer.add_property("item", item);
+        if (index == selected())
+            serializer.add_property("item", item, {{"selected", "true"}});
+        else
+            serializer.add_property("item", item);
 
-	++index;
+        ++index;
     }
 }
 
 void ComboBox::deserialize(const std::string& name, const std::string& value,
-                             const std::map<std::string, std::string>& attrs)
+                           const std::map<std::string, std::string>& attrs)
 {
     if (name == "item")
     {
-	add_item(value);
-	const auto i = attrs.find("selected");
-	if (i != attrs.end() && detail::from_string(i->second))
-	    selected(item_count()-1);
+        add_item(value);
+        const auto i = attrs.find("selected");
+        if (i != attrs.end() && detail::from_string(i->second))
+            selected(item_count() - 1);
     }
     else
         Widget::deserialize(name, value, attrs);
 }
+
+ComboBox::~ComboBox() = default;
 
 }
 }

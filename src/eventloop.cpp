@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/dump.h"
 #include "detail/priorityqueue.h"
 #include "egt/app.h"
-#include "egt/detail/dump.h"
 #include "egt/eventloop.h"
 #include "egt/tools.h"
 #include "egt/widget.h"
@@ -164,7 +164,7 @@ int EventLoop::run()
                 fps.end_frame();
 
                 if (fps.ready())
-                    std::cout << "fps: " << std::round(fps.fps()) << std::endl;
+                    fmt::print("fps: {}\n", std::round(fps.fps()));
             }
         }
     }

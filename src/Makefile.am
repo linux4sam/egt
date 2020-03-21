@@ -44,6 +44,7 @@ color.cpp \
 combo.cpp \
 detail/alignment.cpp \
 detail/collision.cpp \
+detail/dump.h \
 detail/filesystem.cpp \
 detail/image.cpp \
 detail/imagecache.cpp \
@@ -150,7 +151,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/alignment.h \
 ../include/egt/detail/collision.h \
 ../include/egt/detail/cow.h \
-../include/egt/detail/dump.h \
 ../include/egt/detail/enum.h \
 ../include/egt/detail/filesystem.h \
 ../include/egt/detail/flags.h \

@@ -68,12 +68,12 @@ public:
     /**
      * Size of the screen.
      */
-    inline Size size() const { return m_size; }
+    Size size() const { return m_size; }
 
     /**
      * Bounding box for the screen.
      */
-    inline Rect box() const { return Rect(Point(), m_size); }
+    Rect box() const { return Rect(Point(), m_size); }
 
     /**
      * Get the context for the screen.
@@ -96,7 +96,7 @@ public:
     /**
      * Set if asynchronous buffer flips are used.
      */
-    inline void async_flip(bool async)
+    void async_flip(bool async)
     {
         m_async = async;
     }
@@ -143,16 +143,23 @@ public:
     /**
      * Get the format of the screen.
      */
-    inline PixelFormat format() const { return m_format; };
+    PixelFormat format() const { return m_format; };
 
     virtual ~Screen();
 
 protected:
 
+    /**
+     * @param ptr Array of framebuffer pointers.
+     * @param count Size of ptr array.  Zero is allowed.
+     * @param size Size of the framebuffers.  They must all be the same.
+     * @param format Format of the framebuffers.
+     */
     void init(void** ptr, uint32_t count, const Size& size,
               PixelFormat format = PixelFormat::argb8888);
 
-    inline void init(const Size& size, PixelFormat format = PixelFormat::argb8888)
+    /// @see init()
+    void init(const Size& size, PixelFormat format = PixelFormat::argb8888)
     {
         init(nullptr, 0, size, format);
     }
@@ -173,39 +180,31 @@ protected:
          */
         DamageArray damage;
 
-        inline void add_damage(const Rect& rect)
+        void add_damage(const Rect& rect)
         {
             Screen::damage_algorithm(damage, rect);
         }
     };
 
+    /// Copy the framebuffer to the current composition buffer.
     virtual void copy_to_buffer(ScreenBuffer& buffer);
 
+    /// Copy the framebuffer to the current composition buffer.
     void copy_to_buffer_software(ScreenBuffer& buffer);
 
-    /**
-     * Composition surface.
-     */
+    /// Composition surface.
     shared_cairo_surface_t m_surface;
 
-    /**
-     * Composition surface context.
-     */
+    /// Composition surface context.
     shared_cairo_t m_cr;
 
-    /**
-     * Type used for an array of ScreenBuffer objects.
-     */
+    /// Type used for an array of ScreenBuffer objects.
     using BufferArray = std::vector<ScreenBuffer>;
 
-    /**
-     * Screen buffer array.
-     */
+    /// Screen buffer array.
     BufferArray m_buffers;
 
-    /**
-     * Size of the screen.
-     */
+    /// Size of the screen.
     Size m_size;
 
     /// Perform flips asynchronously if supported

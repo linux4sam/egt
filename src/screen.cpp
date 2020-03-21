@@ -7,15 +7,14 @@
 #include "config.h"
 #endif
 
+#include "detail/dump.h"
 #include "egt/color.h"
-#include "egt/detail/dump.h"
 #include "egt/palette.h"
 #include "egt/screen.h"
 #include "egt/types.h"
 #include <cairo.h>
 #include <cassert>
 #include <cstring>
-#include <map>
 
 #ifdef HAVE_SIMD
 #include "Simd/SimdLib.hpp"

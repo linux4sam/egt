@@ -49,7 +49,7 @@ public:
     {}
 
     // cppcheck-suppress noExplicitConstructor
-    FlagsBase(std::initializer_list<T> flags) noexcept
+    constexpr FlagsBase(std::initializer_list<T> flags) noexcept
     {
         for (auto& flag : flags)
             m_flags |= static_cast<Underlying>(flag);
@@ -59,7 +59,6 @@ public:
         : m_flags(rhs.m_flags)
     {
     }
-
 
     /**
      * Test if the specified flag is set.
@@ -75,7 +74,7 @@ public:
      * All must be set to return true.
      * @param flags The flags to test.
      */
-    inline bool is_set(std::initializer_list<T> flags) const noexcept
+    constexpr bool is_set(std::initializer_list<T> flags) const noexcept
     {
         for (auto& flag : flags)
             if (!is_set(flag))
@@ -88,7 +87,7 @@ public:
      * @param flag The flag to set.
      * @return True if a new item was added.
      */
-    inline bool set(const T flag) noexcept
+    constexpr bool set(const T flag) noexcept
     {
         auto state = is_set(flag);
         if (!state)
@@ -101,7 +100,7 @@ public:
      * @param flags Flags to set.
      * @return True if a new item was added.
      */
-    inline bool set(std::initializer_list<T> flags) noexcept
+    constexpr bool set(std::initializer_list<T> flags) noexcept
     {
         bool inserted = false;
         for (auto& flag : flags)
@@ -121,7 +120,7 @@ public:
      * @param flag Flag to clear.
      * @return True if the flag was deleted.
      */
-    inline bool clear(const T flag) noexcept
+    constexpr bool clear(const T flag) noexcept
     {
         bool changed = false;
         if (is_set(flag))
@@ -135,6 +134,7 @@ public:
 
     /**
      * Returns true if there are no flags set.
+     * @return true if no flags set.
      */
     constexpr bool empty() const noexcept
     {
@@ -143,18 +143,17 @@ public:
 
     /**
      * Unset all flags.
+     * @return true if changed.
      */
-    inline bool clear() noexcept
+    constexpr bool clear() noexcept
     {
         const bool diff = m_flags != 0;
         m_flags = 0;
         return diff;
     }
 
-    /**
-     * Get a std::set of all set flags.
-     */
-    inline std::set<T> get() const
+    /// Get a std::set of all set flags.
+    std::set<T> get() const
     {
         std::set<T> result;
         const auto bits = std::numeric_limits<Underlying>::digits;
@@ -167,18 +166,14 @@ public:
         return result;
     }
 
-    /**
-     * Get the raw underlying value.
-     */
-    inline const Underlying& raw() const
+    /// Get the raw underlying value.
+    constexpr const Underlying& raw() const
     {
         return m_flags;
     }
 
-    /**
-     * Get the raw underlying value.
-     */
-    inline Underlying& raw()
+    /// Get the raw underlying value.
+    constexpr Underlying& raw()
     {
         return m_flags;
     }
@@ -190,9 +185,7 @@ protected:
         : m_flags(flags)
     {}
 
-    /**
-     * The flags.
-     */
+    /// The flags.
     Underlying m_flags{};
 };
 

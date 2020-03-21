@@ -21,7 +21,7 @@ namespace detail
 {
 
 /**
- * Copy-On-Write wrapper for an object.
+ * Copy-On-Write wrapper for an object or container.
  *
  * This creates copy on write semantics for an object. This also performs lazy
  * initialization of the object and will automatically default construct it when

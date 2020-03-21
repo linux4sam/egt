@@ -22,6 +22,9 @@ inline namespace v1
 namespace detail
 {
 
+/**
+ * Load an image from memory.
+ */
 EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
         size_t len,
         const std::string& name = {});

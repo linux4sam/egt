@@ -22,7 +22,9 @@ inline namespace v1
 namespace detail
 {
 /// @todo these functions should be internal
+/// @private
 bool is_target_sama5d4();
+/// @private
 bool audio_device();
 class GstDecoderImpl;
 class GstKmsSinkImpl;

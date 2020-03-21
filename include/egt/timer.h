@@ -195,6 +195,7 @@ protected:
 
     /**
      * Manages metadata about a registered callback.
+     * @private
      */
     struct CallbackMeta
     {

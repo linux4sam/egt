@@ -29,34 +29,7 @@ class Serializer;
 
 namespace detail
 {
-
-/**
- * Popup class used by ComboBox.
- */
-class EGT_API ComboBoxPopup : public Popup
-{
-public:
-    explicit ComboBoxPopup(ComboBox& parent);
-
-    virtual void handle(Event& event) override;
-
-    virtual void show() override;
-
-    virtual ~ComboBoxPopup() = default;
-
-protected:
-
-    void smart_pos();
-
-    /// ListBox of ComboBox items.
-    std::shared_ptr<ListBox> m_list;
-
-    /// Parent ComboBox.
-    ComboBox& m_parent;
-
-    friend class egt::ComboBox;
-};
-
+class ComboBoxPopup;
 }
 
 /**
@@ -189,7 +162,7 @@ public:
     virtual void deserialize(const std::string& name, const std::string& value,
                              const std::map<std::string, std::string>& attrs) override;
 
-    virtual ~ComboBox() = default;
+    virtual ~ComboBox();
 
 protected:
 

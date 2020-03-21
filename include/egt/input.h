@@ -58,7 +58,7 @@ public:
      * }, {EventId::keyboard_down});
      * @endcode
      */
-    static inline detail::Object& global_input()
+    static detail::Object& global_input()
     {
         return m_global_handler;
     }

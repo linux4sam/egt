@@ -635,9 +635,9 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         break;
     case detail::hash("font"):
     {
-        Font font;
-        font.deserialize(name, value, attrs);
-        this->font(font);
+        Font f;
+        f.deserialize(name, value, attrs);
+        font(f);
         break;
     }
     case detail::hash("color"):

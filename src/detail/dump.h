@@ -13,7 +13,7 @@
 
 #include <chrono>
 #include <iomanip>
-#include <iostream>
+#include <spdlog/spdlog.h>
 #include <vector>
 
 namespace egt
@@ -24,7 +24,7 @@ namespace detail
 {
 
 template<class T>
-inline void code_timer(bool enable, const std::string& prefix, const T& callback)
+void code_timer(bool enable, const std::string& prefix, T&& callback)
 {
     if (enable)
     {
@@ -35,8 +35,8 @@ inline void code_timer(bool enable, const std::string& prefix, const T& callback
         const auto end = std::chrono::steady_clock::now();
         const auto diff = end - start;
 
-        std::cout << prefix <<
-                  std::chrono::duration<double, std::milli>(diff).count() << std::endl;
+        fmt::print("{} {}\n", prefix,
+                   std::chrono::duration<double, std::milli>(diff).count());
     }
     else
     {

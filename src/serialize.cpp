@@ -163,19 +163,17 @@ void XmlWidgetSerializer::add_property(const std::string& name,
                                        const std::string& value,
                                        const std::map<std::string, std::string>& attrs)
 {
-    auto node = m_impl->doc.allocate_node(rapidxml::node_element,
-                                          m_impl->doc.allocate_string("property"));
-    auto val = m_impl->doc.allocate_string(value.c_str());
+    auto node = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+    node->value(m_impl->doc.allocate_string(value.c_str()));
     node->append_attribute(m_impl->doc.allocate_attribute("name",
                            m_impl->doc.allocate_string(name.c_str())));
 
-    for (auto& a : attrs)
+    for (const auto& a : attrs)
     {
         node->append_attribute(m_impl->doc.allocate_attribute(m_impl->doc.allocate_string(a.first.c_str()),
                                m_impl->doc.allocate_string(a.second.c_str())));
     }
 
-    node->value(val);
     m_impl->current->append_node(node);
 }
 

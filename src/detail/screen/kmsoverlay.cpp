@@ -113,10 +113,10 @@ void KMSOverlay::position(const DisplayPoint& point)
     plane_set_pos(m_plane.get(), point.x(), point.y());
 }
 
-void KMSOverlay::scale(float scalex, float scaley)
+void KMSOverlay::scale(float hscale, float vscale)
 {
     /// This is only supported on HEO planes.
-    plane_set_scale_independent(m_plane.get(), scalex, scaley);
+    plane_set_scale_independent(m_plane.get(), hscale, vscale);
 }
 
 void KMSOverlay::pan_size(const Size& size)
@@ -129,12 +129,12 @@ void KMSOverlay::pan_pos(const Point& point)
     plane_set_pan_pos(m_plane.get(), point.x(), point.y());
 }
 
-float KMSOverlay::scale_x() const
+float KMSOverlay::hscale() const
 {
     return plane_scale_x(m_plane.get());
 }
 
-float KMSOverlay::scale_y() const
+float KMSOverlay::vscale() const
 {
     return plane_scale_y(m_plane.get());
 }

@@ -41,9 +41,15 @@ class EGT_API KMSScreen : public Screen
 {
 public:
 
+    /**
+     * @param allocate_primary_plane Allocate a primary plane, or create a trash
+     *        buffer instead.
+     * @param format Requested format for the screen.
+     */
     explicit KMSScreen(bool allocate_primary_plane = true,
                        PixelFormat format = PixelFormat::rgb565);
 
+    /// Available plane types.
     enum class plane_type
     {
         overlay,
@@ -52,23 +58,19 @@ public:
     };
 
     /**
-     * Count the number of planes with a specific type.
+     * Count the number of available hardware planes with a specific type.
      */
     uint32_t count_planes(plane_type type = plane_type::overlay);
 
+    /// Get a pointer to the KMSScreen instance.
     static KMSScreen* instance();
 
     void schedule_flip() override;
 
     uint32_t index() override;
 
+    /// Close and release the screen.
     void close();
-
-    unique_plane_t allocate_overlay(const Size& size,
-                                    PixelFormat format = PixelFormat::argb8888,
-                                    WindowHint hint = WindowHint::automatic);
-
-    void deallocate_overlay(plane_data* plane);
 
     virtual size_t max_brightness() const override;
 
@@ -78,22 +80,33 @@ public:
 
     virtual ~KMSScreen();
 
-    /**
-     * Get the number of buffers to use for KMS planes.
-     */
+    /// Get the number of buffers to use for KMS planes.
     static uint32_t max_buffers();
 
-protected:
+    /// Allocate an overlay plane.
+    unique_plane_t allocate_overlay(const Size& size,
+                                    PixelFormat format = PixelFormat::argb8888,
+                                    WindowHint hint = WindowHint::automatic);
 
+    /// Deallocate an overlay plane.
+    void deallocate_overlay(plane_data* plane);
+
+protected:
+    /// Allocate an overlay plane.
     plane_data* overlay_plane_create(const Size& size,
                                      PixelFormat format,
                                      plane_type type);
 
+    /// Internal DRM/KMS file descriptor.
     int m_fd{-1};
+    /// Instance of the KMS device.
     struct kms_device* m_device {nullptr};
+    /// Plane instance pointer.
     unique_plane_t m_plane;
+    /// Current flip index.
     uint32_t m_index{0};
     static std::vector<planeid> m_used;
+    /// Internal thread pool for flipping.
     std::unique_ptr<FlipThread> m_pool;
     bool m_gfx2d {false};
 

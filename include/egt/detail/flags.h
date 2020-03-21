@@ -46,8 +46,17 @@ public:
 
     constexpr Flags() noexcept = default;
 
+    /**
+     * Event signal.
+     * @{
+     */
+    /// Invoked when the flags are changed.
     detail::Signal<> on_change;
+    /** @} */
 
+    /**
+     * @param[in] str String representation of flags.
+     */
     explicit Flags(const std::string& str)
     {
         this->from_string(str);
@@ -74,7 +83,7 @@ public:
         return *this;
     }
 
-    inline bool set(const T flag) noexcept
+    bool set(const T flag) noexcept
     {
         const auto res = detail::FlagsBase<T>::set(flag);
         if (res)
@@ -82,7 +91,7 @@ public:
         return res;
     }
 
-    inline bool set(std::initializer_list<T> flags) noexcept
+    bool set(std::initializer_list<T> flags) noexcept
     {
         const auto res = detail::FlagsBase<T>::set(flags);
         if (res)
@@ -90,7 +99,7 @@ public:
         return res;
     }
 
-    inline bool clear(const T flag) noexcept
+    bool clear(const T flag) noexcept
     {
         const auto res = detail::FlagsBase<T>::clear(flag);
         if (res)
@@ -98,7 +107,7 @@ public:
         return res;
     }
 
-    inline bool clear() noexcept
+    bool clear() noexcept
     {
         const auto res = detail::FlagsBase<T>::clear();
         if (res)
@@ -106,12 +115,12 @@ public:
         return res;
     }
 
-    inline Flags<T> operator|(const T& flag) const noexcept
+    constexpr Flags<T> operator|(const T& flag) const noexcept
     {
         return {this->m_flags | static_cast<typename detail::FlagsBase<T>::Underlying>(flag)};
     }
 
-    inline Flags<T> operator&(const T& flag) const noexcept
+    constexpr Flags<T> operator&(const T& flag) const noexcept
     {
         return {this->m_flags& static_cast<typename detail::FlagsBase<T>::Underlying>(flag)};
     }
@@ -119,7 +128,7 @@ public:
     /**
      * Convert the flags to strings.
      */
-    inline std::string to_string() const
+    std::string to_string() const
     {
         std::ostringstream ss;
         if (!this->empty())
@@ -143,7 +152,7 @@ public:
      *
      * @note This will clear any existing flags first.
      */
-    inline void from_string(const std::string& str)
+    void from_string(const std::string& str)
     {
         this->clear();
         std::vector<std::string> tokens;
@@ -155,21 +164,23 @@ public:
 
 /// @private
 enum class RuleE {};
-static_assert(detail::rule_of_5<Flags<RuleE>>(),
-              "Color : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Flags<RuleE>>(), "must fulfill rule of 5");
 
+/// Flags operator
 template<class T>
-inline bool operator==(const Flags<T>& lhs, const Flags<T>& rhs)
+constexpr bool operator==(const Flags<T>& lhs, const Flags<T>& rhs)
 {
     return lhs.raw() == rhs.raw();
 }
 
+/// Flags operator
 template<class T>
-inline bool operator!=(const Flags<T>& lhs, const Flags<T>& rhs)
+constexpr bool operator!=(const Flags<T>& lhs, const Flags<T>& rhs)
 {
     return !(lhs == rhs);
 }
 
+/// Overloaded std::ostream insertion operator
 template<class T>
 std::ostream& operator<<(std::ostream& os, const Flags<T>& flags)
 {

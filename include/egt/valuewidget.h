@@ -73,7 +73,7 @@ public:
     /**
      * Get the value.
      */
-    inline T value() const { return m_value; }
+    T value() const { return m_value; }
 
     virtual ~ValueWidget() = default;
 
@@ -165,12 +165,12 @@ public:
     /**
      * Get the start value.
      */
-    inline T start() const { return m_start; }
+    T start() const { return m_start; }
 
     /**
      * Get the end value.
      */
-    inline T end() const { return m_end; }
+    T end() const { return m_end; }
 
     /**
      * Set the start value.
@@ -201,7 +201,7 @@ public:
     /**
      * Get the current value.
      */
-    inline T value() const
+    T value() const
     {
         return m_value;
     }
@@ -210,19 +210,13 @@ public:
 
 protected:
 
-    /**
-     * The start value.
-     */
+    /// The start value.
     T m_start;
 
-    /**
-     * The end value.
-     */
+    /// The end value.
     T m_end;
 
-    /**
-     * The current value.
-     */
+    /// The current value.
     T m_value;
 };
 

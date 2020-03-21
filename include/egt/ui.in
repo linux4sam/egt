@@ -23,7 +23,6 @@
 #include <egt/easing.h>
 #include <egt/embed.h>
 #include <egt/event.h>
-#include <egt/filedialog.h>
 #include <egt/font.h>
 #include <egt/form.h>
 #include <egt/frame.h>
@@ -110,6 +109,11 @@
 @include_virtualkeyboard@
 #ifdef EGT_HAS_VIRTUALKEYBOARD
 #include <egt/virtualkeyboard.h>
+#endif
+
+@include_filedialog@
+#ifdef EGT_HAS_FILEDIALOG
+#include <egt/filedialog.h>
 #endif
 
 #endif

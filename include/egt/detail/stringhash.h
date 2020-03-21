@@ -36,11 +36,13 @@ namespace detail
 // THE SOFTWARE.
 //
 
+/// Perform a hash of a string.
 constexpr unsigned int hash(const char* str, int h = 0)
 {
     return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
 
+/// Perform a hash of a string.
 inline unsigned int hash(const std::string& str)
 {
     return hash(str.c_str());

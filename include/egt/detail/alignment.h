@@ -42,6 +42,9 @@ EGT_API Rect align_algorithm(const Rect& orig, const Rect& bounding,
                              DefaultDim xratio = 0,
                              DefaultDim yratio = 0);
 
+/**
+ * @ref align_algorithm()
+ */
 EGT_API Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
                                    const AlignFlags& align, DefaultDim padding = 0,
                                    DefaultDim horizontal_ratio = 0,

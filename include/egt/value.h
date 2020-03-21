@@ -41,20 +41,20 @@ public:
     {
     }
 
+    /// Get the current value.
     operator T() const
     {
         return m_value;
     }
 
+    /// Assign new value.
     Value<T>& operator=(T value)
     {
         value(value);
         return *this;
     }
 
-    /**
-     * Get the current value.
-     */
+    /// Get the current value.
     T value() const { return m_value; }
 
     /**

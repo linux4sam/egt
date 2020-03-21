@@ -7,10 +7,10 @@
 #include "config.h"
 #endif
 
+#include "detail/dump.h"
 #include "detail/window/basicwindow.h"
 #include "detail/window/planewindow.h"
 #include "egt/app.h"
-#include "egt/detail/dump.h"
 #include "egt/detail/math.h"
 #include "egt/detail/meta.h"
 #include "egt/detail/screen/kmsscreen.h"

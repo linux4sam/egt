@@ -234,6 +234,7 @@ struct EGT_API ScopeExit : private NonCopyable<ScopeExit<T>>
           m_active(true)
     {}
 
+    /// Move constructor
     ScopeExit(ScopeExit&& other)
         : m_f(std::move(other.m_f)),
           m_active(other.m_active)

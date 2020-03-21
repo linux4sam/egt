@@ -21,7 +21,7 @@ namespace experimental
 
 template <class T>
 static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
-					     const std::shared_ptr<Frame>& parent)
+        const std::shared_ptr<Frame>& parent)
 {
     auto instance = std::make_shared<T>();
     if (parent)
@@ -143,11 +143,11 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     bool found = false;
     for (const auto& i : allocators)
     {
-	if (i.first == ttype)
-	{
-	    result = i.second(node, parent);
-	    found = true;
-	}
+        if (i.first == ttype)
+        {
+            result = i.second(node, parent);
+            found = true;
+        }
     }
 
     if (!found)

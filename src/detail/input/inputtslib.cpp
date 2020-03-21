@@ -17,8 +17,8 @@ inline namespace v1
 namespace detail
 {
 
-static const int CHANNELS = 2;
-static const int SAMPLE_COUNT = 20;
+static constexpr auto CHANNELS = 2;
+static constexpr auto SAMPLE_COUNT = 20;
 
 struct tslibimpl
 {
@@ -31,7 +31,7 @@ InputTslib::InputTslib(Application& app, const std::string& path)
     : m_input(app.event().io()),
       m_impl(new detail::tslibimpl)
 {
-    const int NONBLOCKING = 1;
+    constexpr int NONBLOCKING = 1;
     m_impl->ts = ts_setup(path.c_str(), NONBLOCKING);
 
     if (m_impl->ts)
@@ -48,9 +48,7 @@ InputTslib::InputTslib(Application& app, const std::string& path)
     }
     else
     {
-        std::ostringstream ss;
-        ss << "could not open tslib device: " << path;
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error(fmt::format("could not open tslib device: {}", path));
     }
 }
 
@@ -144,12 +142,13 @@ void InputTslib::handle_read(const asio::error_code& error)
                         std::chrono::milliseconds{samp_mt[j][i].tv.tv_sec * 1000 + samp_mt[j][i].tv.tv_usec / 1000}
                     };
 
-                    auto DOUBLE_CLICK_DELTA = 300;
+                    constexpr auto DOUBLE_CLICK_DELTA = 300;
 
                     if (m_impl->last_down[slot].time_since_epoch().count() &&
                         std::chrono::duration<double, std::milli>(tv - m_impl->last_down[slot]).count() < DOUBLE_CLICK_DELTA)
                     {
-                        Event event(EventId::pointer_dblclick, Pointer(m_last_point[slot], Pointer::Button::left));
+                        Event event(EventId::pointer_dblclick,
+                                    Pointer(m_last_point[slot], Pointer::Button::left));
                         dispatch(event);
                     }
                     else
@@ -158,8 +157,8 @@ void InputTslib::handle_read(const asio::error_code& error)
 
                         SPDLOG_TRACE("mouse down {}", m_last_point[slot]);
 
-                        Event event(EventId::raw_pointer_down, Pointer(m_last_point[slot],
-                                    Pointer::Button::left));
+                        Event event(EventId::raw_pointer_down,
+                                    Pointer(m_last_point[slot], Pointer::Button::left));
                         dispatch(event);
                     }
 
@@ -175,8 +174,8 @@ void InputTslib::handle_read(const asio::error_code& error)
         {
             SPDLOG_TRACE("mouse move {}", m_last_point[slot]);
 
-            Event event(EventId::raw_pointer_move, Pointer(m_last_point[slot],
-                        Pointer::Button::left));
+            Event event(EventId::raw_pointer_move,
+                        Pointer(m_last_point[slot], Pointer::Button::left));
             dispatch(event);
         }
     }
