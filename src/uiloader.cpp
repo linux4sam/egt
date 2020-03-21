@@ -74,8 +74,10 @@ static const std::pair<std::string, create_function> allocators[] =
     {"egt::v1::ComboBox", create_widget<ComboBox>},
     {"egt::v1::Dialog", create_widget<Dialog>},
     //{"egt::v1::FileDialog", create_widget<FileDialog>},
+#ifdef EGT_HAS_FILEDIALOG
     {"egt::v1::FileOpenDialog", create_widget<FileOpenDialog>},
     {"egt::v1::FileSaveDialog", create_widget<FileSaveDialog>},
+#endif
     {"egt::v1::FlexBoxSizer", create_widget<FlexBoxSizer>},
     {"egt::v1::Frame", create_widget<Frame>},
     {"egt::v1::HorizontalBoxSizer", create_widget<HorizontalBoxSizer>},

@@ -537,12 +537,22 @@ if test "x${have_libmagic}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="${MAGIC_LIB} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AC_CHECK_LIB([stdc++fs], [main], [have_libstdcppfs=yes], [have_libstdcppfs=no])
-AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
-if test "x${have_libstdcppfs}" = xyes;
-then
-   LDFLAGS="${LDFLAGS} -lstdc++fs"
-   AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
+AC_ARG_WITH([filesystem],
+    AS_HELP_STRING([--without-filesystem], [Ignore presence of filesystem and disable it]),
+    [with_filesystem=$withval],
+    [with_filesystem=auto])
+AS_IF([test "x$with_filesystem" != "xno"],[
+   AC_CHECK_LIB([stdc++fs], [main], [have_libstdcppfs=yes], [have_libstdcppfs=no])
+   AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
+   if test "x${have_libstdcppfs}" = xyes;
+   then
+      LDFLAGS="${LDFLAGS} -lstdc++fs"
+      AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
+      AC_SUBST(include_filedialog, ["#define EGT_HAS_FILEDIALOG 1"])
+   fi
+])
+if test "x$with_filesystem" = xyes && test "x${have_libstdcppfs}" != xyes; then
+   AC_MSG_FAILURE([--with-filesystem was given but not found])
 fi
 AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
 
