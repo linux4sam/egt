@@ -317,6 +317,11 @@ tidy-local: all-am
 	done
 
 tidy: tidy-local
+	@list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) tidy); \
+	  fi; \
+	done;
 
 EXTRA_DIST = \
 	boards/boards.xml \

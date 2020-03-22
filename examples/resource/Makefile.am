@@ -31,3 +31,15 @@ resource_DATA = $(wildcard $(top_srcdir)/examples/resource/*.png) \
 	$(wildcard $(top_srcdir)/examples/resource/*.jpg) \
 	$(wildcard $(top_srcdir)/examples/resource/*.svg)
 resource_LDFLAGS = $(AM_LDFLAGS)
+
+TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+
+tidy-local: all-am
+	@for source in $(SOURCES); do \
+		[[ $$source == *.c ]] && continue; \
+		[[ $$source == *.hpp ]] && continue; \
+		[[ $$source == *.ipp ]] && continue; \
+		$(CLANG_TIDY_BIN) $(srcdir)/$$source -- $(TIDY_OPTIONS); \
+	done
+
+tidy: tidy-local
