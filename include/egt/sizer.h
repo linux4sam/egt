@@ -74,7 +74,7 @@ public:
         parent.add(*this);
     }
 
-    virtual void layout() override;
+    void layout() override;
 
     /**
      * Get the justify.
@@ -104,12 +104,10 @@ public:
             layout();
     }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
-
-    virtual ~BoxSizer() noexcept = default;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
 protected:
 
@@ -193,8 +191,6 @@ public:
     explicit HorizontalBoxSizer(Frame& parent, Justification justify = Justification::middle)
         : BoxSizer(parent, Orientation::horizontal, justify)
     {}
-
-    virtual ~HorizontalBoxSizer() = default;
 };
 
 /**
@@ -220,8 +216,6 @@ public:
     explicit VerticalBoxSizer(Frame& parent, Justification justify = Justification::middle)
         : BoxSizer(parent, Orientation::vertical, justify)
     {}
-
-    virtual ~VerticalBoxSizer() = default;
 };
 
 /**
@@ -247,8 +241,6 @@ public:
     explicit FlexBoxSizer(Frame& parent, Justification justify = Justification::middle)
         : BoxSizer(parent, Orientation::flex, justify)
     {}
-
-    virtual ~FlexBoxSizer() = default;
 };
 
 }

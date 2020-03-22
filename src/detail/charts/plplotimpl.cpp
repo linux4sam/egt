@@ -356,7 +356,7 @@ void PlPlotImpl::plplot_color(const Color& color)
     m_plstream->col1(1);
 }
 
-void PlPlotImpl::resize(const Size& size)
+void PlPlotImpl::resize()
 {
     m_plstream = std::make_unique<plstream>();
     m_initalize = false;
@@ -378,6 +378,8 @@ PlPlotLineChart::PlPlotLineChart(LineChart& interface)
 
 void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 {
+    detail::ignoreparam(rect);
+
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
 
@@ -441,6 +443,8 @@ PlPlotPointChart::PlPlotPointChart(PointChart& interface)
 
 void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 {
+    detail::ignoreparam(rect);
+
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
 
@@ -518,6 +522,8 @@ void PlPlotBarChart::plfbox(PLFLT x0, PLFLT y0)
 
 void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 {
+    detail::ignoreparam(rect);
+
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
 
@@ -630,6 +636,8 @@ void PlPlotHBarChart::plfHbox(PLFLT x0, PLFLT y0)
 
 void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 {
+    detail::ignoreparam(rect);
+
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
 
@@ -713,6 +721,8 @@ PlPlotPieChart::PlPlotPieChart(PieChart& interface)
 
 void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 {
+    detail::ignoreparam(rect);
+
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
 

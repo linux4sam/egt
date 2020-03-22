@@ -30,6 +30,7 @@ SvgImage::SvgImage()
 
 }
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 SvgImage::SvgImage(const std::string& uri, const SizeF& size)
     : m_impl(new SvgImage::SvgImpl),
       m_size(size),

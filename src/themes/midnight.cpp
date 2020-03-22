@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/themes/midnight.h"
-#include "egt/painter.h"
-#include "egt/widget.h"
 #include "egt/checkbox.h"
+#include "egt/painter.h"
+#include "egt/themes/midnight.h"
+#include "egt/widget.h"
 
 namespace egt
 {

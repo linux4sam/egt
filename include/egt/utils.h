@@ -43,6 +43,7 @@ struct Ratio
     /**
      * Get the calculated ratio value.
      */
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     constexpr operator T() const
     {
         return static_cast<double>(m_value) *

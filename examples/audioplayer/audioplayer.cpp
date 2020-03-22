@@ -60,7 +60,7 @@ struct AudioRadial : public egt::experimental::Radial
     {
     }
 
-    virtual void draw(egt::Painter& painter, const egt::Rect& rect) override
+    void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
         egt::experimental::Radial::draw(painter, rect);
 

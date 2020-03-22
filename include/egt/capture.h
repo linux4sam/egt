@@ -97,7 +97,7 @@ public:
      */
     virtual void stop();
 
-    virtual ~CameraCapture();
+    ~CameraCapture() override;
 
 protected:
 

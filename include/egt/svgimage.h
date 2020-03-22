@@ -50,14 +50,14 @@ public:
      *
      * @see SvgImage::size() for more information about specifying size.
      */
-    // cppcheck-suppress noExplicitConstructor
-    SvgImage(const std::string& uri, const SizeF& size = {});
+    explicit SvgImage(const std::string& uri, const SizeF& size = {});
 
     /**
      * Overload to convert to an Image.
      *
      * This is the same as calling render().
      */
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     operator Image() const;
 
     /**

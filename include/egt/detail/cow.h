@@ -45,7 +45,7 @@ public:
     {}
 
     /// Bool operator.
-    operator bool() const
+    explicit operator bool() const
     {
         return !!m_ptr;
     }

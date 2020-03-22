@@ -72,7 +72,7 @@ public:
      */
     explicit FileDialog(const std::string& filepath, const Rect& rect = {});
 
-    virtual ~FileDialog() = default;
+    ~FileDialog() override = default;
 
 protected:
     /**
@@ -148,9 +148,9 @@ public:
      *
      * This changes the visible() state of the Widget.
      */
-    virtual void show() override;
+    void show() override;
 
-    virtual void show_centered() override;
+    void show_centered() override;
 
     /**
      * Return file selected in file open dialog window.
@@ -159,7 +159,7 @@ public:
      */
     virtual std::string selected() const;
 
-    virtual ~FileOpenDialog() = default;
+    ~FileOpenDialog() override = default;
 
 protected:
     /**
@@ -182,7 +182,7 @@ protected:
      */
     std::string m_fselected;
 
-    virtual void selected(const std::string& fselect) override;
+    void selected(const std::string& fselect) override;
 
 };
 
@@ -221,9 +221,9 @@ public:
      *
      * This changes the visible() state of the Widget.
      */
-    virtual void show() override;
+    void show() override;
 
-    virtual void show_centered() override;
+    void show_centered() override;
 
     /**
      * Selected a location for saving a file.
@@ -232,7 +232,7 @@ public:
      */
     virtual std::string selected() const;
 
-    virtual ~FileSaveDialog() = default;
+    ~FileSaveDialog() override = default;
 
 protected:
 
@@ -261,7 +261,7 @@ protected:
      */
     std::string m_fsave;
 
-    virtual void selected(const std::string& fselect) override;
+    void selected(const std::string& fselect) override;
 };
 
 }

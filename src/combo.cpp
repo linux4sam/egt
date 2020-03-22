@@ -32,12 +32,12 @@ public:
     explicit ComboBoxPopup(ComboBox& parent);
 
     /// @ref PopupType::handle()
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
     /// @ref PopupType::show()
-    virtual void show() override;
+    void show() override;
 
-    virtual ~ComboBoxPopup() = default;
+    ~ComboBoxPopup() override = default;
 
 protected:
 
@@ -155,10 +155,10 @@ ComboBox::ComboBox(const Rect& rect) noexcept
  * happens in constructor.
  */
 
-ComboBox::ComboBox(const ItemArray& items,
+ComboBox::ComboBox(ItemArray items,
                    const Rect& rect) noexcept
     : Widget(rect),
-      m_items(items),
+      m_items(std::move(items)),
       m_popup(std::make_shared<detail::ComboBoxPopup>(*this))
 {
     name("ComboBox" + std::to_string(m_widgetid));

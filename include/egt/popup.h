@@ -83,7 +83,7 @@ public:
      *
      * This changes the visible() state of the Widget.
      */
-    virtual void hide() override
+    void hide() override
     {
         T::hide();
 
@@ -93,7 +93,7 @@ public:
         }
     }
 
-    virtual ~PopupType() = default;
+    ~PopupType() override = default;
 
 };
 

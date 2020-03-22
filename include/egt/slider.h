@@ -102,8 +102,8 @@ public:
      * @param[in] value Current value in the range.
      * @param[in] orient Vertical or horizontal Orientation.
      */
-    SliderType(T start = 0, T end = 100, T value = 0,
-               Orientation orient = Orientation::horizontal) noexcept
+    explicit SliderType(T start = 0, T end = 100, T value = 0,
+                        Orientation orient = Orientation::horizontal) noexcept
         : SliderType(Rect(), start, end, value, orient)
     {
     }
@@ -137,7 +137,7 @@ public:
         parent.add(*this);
     }
 
-    virtual void handle(Event& event) override
+    void handle(Event& event) override
     {
         Widget::handle(event);
 
@@ -176,11 +176,11 @@ public:
         }
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     using ValueRangeWidget<T>::value;
 
-    virtual T value(T value) override
+    T value(T value) override
     {
         T orig = this->value();
 
@@ -230,12 +230,12 @@ public:
     /// Get the current slider flags.
     SliderFlags& slider_flags() { return m_slider_flags; }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~SliderType() = default;
+    ~SliderType() override = default;
 
 protected:
 
@@ -351,7 +351,7 @@ SliderType<T>::SliderType(const Rect& rect, T start, T end, T value,
 }
 
 template <class T>
-void SliderType<T>::draw(Painter& painter, const Rect& rect)
+void SliderType<T>::draw(Painter& painter, const Rect& /*rect*/)
 {
     auto b = this->content_area();
     auto yp = b.y() + b.height() / 2.;

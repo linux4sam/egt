@@ -89,12 +89,12 @@ public:
                           PixelFormat format_hint = PixelFormat::yuyv,
                           WindowHint hint = WindowHint::overlay);
 
-    virtual void do_draw() override
+    void do_draw() override
     {
         // video windows don't draw
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Initialize camera pipeline to capture image feed from the camera
@@ -111,7 +111,7 @@ public:
 
     using Window::scale;
 
-    virtual void scale(float hscale, float vscale) override;
+    void scale(float hscale, float vscale) override;
 
     /**
      * Get horizontal scale value.
@@ -129,7 +129,7 @@ public:
         return m_vscale;
     }
 
-    virtual ~CameraWindow();
+    ~CameraWindow() override;
 
 protected:
 

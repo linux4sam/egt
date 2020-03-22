@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <libintl.h>
 #include <egt/ui>
+#include <libintl.h>
 #include <memory>
 #include <string>
 
@@ -75,7 +75,9 @@ public:
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "resource");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     MainWindow window;
     window.show();

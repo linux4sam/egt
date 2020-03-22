@@ -112,7 +112,7 @@ static Color hsv2rgb(hsv in)
     if (hh >= 360.0)
         hh = 0.0;
     hh /= 60.0;
-    auto i = (int64_t)hh;
+    auto i = static_cast<int64_t>(hh);
     double ff = hh - i;
     double p = in.v * (1.0 - in.s);
     double q = in.v * (1.0 - (in.s * ff));

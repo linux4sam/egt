@@ -83,6 +83,7 @@ std::string readlink(const std::string& path)
     ssize_t len = ::readlink(path.c_str(), buff, sizeof(buff) - 1);
     if (len != -1)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
         buff[len] = '\0';
         return std::string(buff);
     }

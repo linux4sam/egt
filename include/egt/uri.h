@@ -38,22 +38,22 @@ public:
      * @param[in] uri URI string
      */
     // cppcheck-suppress noExplicitConstructor
-    Uri(const std::string& uri);
+    explicit Uri(const std::string& uri);
 
     /// Get the scheme part of the URI
-    std::string scheme() const { return m_scheme; }
+    const std::string& scheme() const { return m_scheme; }
     /// Get the host part of the URI
-    std::string host() const { return m_host; }
+    const std::string& host() const { return m_host; }
     /// Get the port poart of the URI
-    std::string port() const { return m_port; }
+    const std::string& port() const { return m_port; }
     /// Get the path part of the URI
-    std::string path() const { return m_path; }
+    const std::string& path() const { return m_path; }
     /// Get the query part of the URI
-    std::string query() const { return m_query; }
+    const std::string& query() const { return m_query; }
     /// Get the fragment part of the URI
-    std::string fragment() const { return m_fragment; }
+    const std::string& fragment() const { return m_fragment; }
     /// Get the icon size of the URI
-    std::string icon_size() const { return m_icon_size; }
+    const std::string& icon_size() const { return m_icon_size; }
 
     /// Is the URI syntactically valid.
     bool is_valid() const;
@@ -62,7 +62,7 @@ public:
     std::string to_string() const;
 
     /// Convert the URI to a string
-    operator std::string() const
+    explicit operator std::string() const
     {
         return to_string();
     }

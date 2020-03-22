@@ -101,13 +101,13 @@ public:
            const Rect& rect,
            const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
     using TextWidget::text;
 
-    virtual void text(const std::string& text) override;
+    void text(const std::string& text) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Add an event handler to be called when the widget receives an
@@ -129,17 +129,17 @@ public:
 
     using Widget::checked;
 
-    virtual void checked(bool value) override;
+    void checked(bool value) override;
 
     using TextWidget::min_size_hint;
 
-    virtual Size min_size_hint() const override;
+    Size min_size_hint() const override;
 
-    virtual ~Button();
+    ~Button() override;
 
 protected:
 
-    virtual void parent(Frame* parent) override;
+    void parent(Frame* parent) override;
 
 private:
 
@@ -217,14 +217,14 @@ public:
                 const Rect& rect,
                 const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /// Default draw method for the widget.
     static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
 
     using Button::min_size_hint;
 
-    virtual Size min_size_hint() const override;
+    Size min_size_hint() const override;
 
     /**
      * Set a new Image.
@@ -309,12 +309,12 @@ public:
      */
     inline bool show_label() const { return m_show_label; }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~ImageButton() = default;
+    ~ImageButton() override = default;
 
 protected:
 
@@ -339,7 +339,7 @@ class CheckButton : public Button
 {
     using Button::Button;
 
-    virtual void handle(Event& event) override
+    void handle(Event& event) override
     {
         Button::handle(event);
 

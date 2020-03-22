@@ -45,6 +45,7 @@ public:
 
     /// Construct with a single flag.
     // cppcheck-suppress noExplicitConstructor
+    // NOLINTNEXTLINE(google-explicit-constructor,hicpp-explicit-conversions)
     constexpr FlagsBase(const T flag) noexcept
         : m_flags(static_cast<Underlying>(flag))
     {}
@@ -162,8 +163,8 @@ public:
         const auto bits = std::numeric_limits<Underlying>::digits;
         for (auto b = 0; b < bits; b++)
         {
-            if ((m_flags & (1 << b)))
-                result.insert(static_cast<T>(1 << b));
+            if ((m_flags & (1u << b)))
+                result.insert(static_cast<T>(1u << b));
         }
 
         return result;
@@ -185,6 +186,7 @@ protected:
 
     /// @private
     // cppcheck-suppress noExplicitConstructor
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     constexpr FlagsBase(const Underlying flags) noexcept
         : m_flags(flags)
     {}

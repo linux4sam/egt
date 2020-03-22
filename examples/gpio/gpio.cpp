@@ -101,6 +101,7 @@ int main(int argc, char** argv)
     egt::Label label("none");
     window.add(egt::center(label));
 
+    // NOLINTNEXTLINE(android-cloexec-open)
     int fd = open(args["device"].as<std::string>().c_str(), 0);
     if (fd < 0)
     {

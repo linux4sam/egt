@@ -151,7 +151,7 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
         }
 #endif
 
-        m_pool.reset(new FlipThread(m_plane->buffer_count - 1));
+        m_pool = std::make_unique<FlipThread>(m_plane->buffer_count - 1);
     }
     else
     {
@@ -171,7 +171,7 @@ uint32_t KMSScreen::max_buffers()
     {
         if (getenv("EGT_KMS_BUFFERS"))
         {
-            num_buffers = std::atoi(getenv("EGT_KMS_BUFFERS"));
+            num_buffers = std::stoi(getenv("EGT_KMS_BUFFERS"));
         }
     });
     return num_buffers;

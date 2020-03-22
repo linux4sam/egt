@@ -121,6 +121,7 @@ struct soundimpl
 namespace experimental
 {
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 Sound::Sound(const std::string& uri, unsigned int rate, int channels, const std::string& device)
     : m_impl(new detail::soundimpl),
       m_uri(uri)
@@ -130,6 +131,7 @@ Sound::Sound(const std::string& uri, unsigned int rate, int channels, const std:
     open_file();
 }
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 Sound::Sound(const std::string& uri, const std::string& device)
     : m_impl(new detail::soundimpl),
       m_uri(uri)

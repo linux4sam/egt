@@ -31,10 +31,10 @@ bool alpha_collision(const Rect& lhs, cairo_surface_t* limage,
         {
             for (auto x = i.left(); x < i.right(); x++)
             {
-                auto l = ldata[static_cast<uint32_t>((x - lhs.left()) + (y - lhs.top()) * lpitch)];
-                auto r = rdata[static_cast<uint32_t>((x - rhs.left()) + (y - rhs.top()) * rpitch)];
+                const auto l = ldata[static_cast<uint32_t>((x - lhs.left()) + (y - lhs.top()) * lpitch)];
+                const auto r = rdata[static_cast<uint32_t>((x - rhs.left()) + (y - rhs.top()) * rpitch)];
 
-                if (((l >> 24) & 0xff) && ((r >> 24) & 0xff))
+                if (((l >> 24u) & 0xff) && ((r >> 24u) & 0xffu))
                 {
                     return true;
                 }
@@ -57,7 +57,7 @@ bool alpha_collision(const Rect& lhs, cairo_surface_t* limage,
 
         const auto l = ldata[static_cast<uint32_t>((rhs.x() - lhs.left()) + (rhs.y() - lhs.top()) * pitch)];
 
-        if ((l >> 24) & 0xff)
+        if ((l >> 24u) & 0xffu)
         {
             return true;
         }

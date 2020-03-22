@@ -26,7 +26,7 @@ inline namespace v1
 {
 namespace detail
 {
-class FlipThread;
+struct FlipThread;
 
 /**
  * Screen in a KMS dumb buffer inside of an overlay plane.
@@ -102,9 +102,9 @@ public:
     /// Rotate the hardware plane.
     virtual void rotate(uint32_t degrees);
 
-    virtual void schedule_flip() override;
+    void schedule_flip() override;
 
-    virtual uint32_t index() override;
+    uint32_t index() override;
 
 protected:
     /// Plane instance pointer.

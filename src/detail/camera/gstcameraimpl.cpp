@@ -29,6 +29,7 @@ namespace detail
 {
 
 CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
+                       // NOLINTNEXTLINE(modernize-pass-by-value)
                        const std::string& device, bool useKmssink)
     : m_interface(interface),
       m_devnode(device),
@@ -96,7 +97,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 {
     ignoreparam(bus);
 
-    auto impl = reinterpret_cast<CameraImpl*>(data);
+    auto impl = static_cast<CameraImpl*>(data);
 
     SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
@@ -249,7 +250,7 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
 
 GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
 {
-    auto impl = reinterpret_cast<CameraImpl*>(data);
+    auto impl = static_cast<CameraImpl*>(data);
 
     GstSample* sample;
     g_signal_emit_by_name(elt, "pull-sample", &sample);

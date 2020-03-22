@@ -78,7 +78,7 @@ void LineChart::resize(const Size& size)
 {
     if (size != this->size())
     {
-        m_impl->resize(size);
+        m_impl->resize();
         Widget::resize(size);
     }
 }
@@ -141,7 +141,7 @@ void PointChart::resize(const Size& size)
 {
     if (size != this->size())
     {
-        m_impl->resize(size);
+        m_impl->resize();
         Widget::resize(size);
     }
 }
@@ -241,7 +241,7 @@ void BarChart::resize(const Size& size)
 {
     if (size != this->size())
     {
-        m_impl->resize(size);
+        m_impl->resize();
         Widget::resize(size);
     }
 }
@@ -307,7 +307,7 @@ void PieChart::resize(const Size& size)
 {
     if (size != this->size())
     {
-        m_impl->resize(size);
+        m_impl->resize();
         Widget::resize(size);
     }
 }

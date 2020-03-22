@@ -84,7 +84,7 @@ public:
     explicit StaticGrid(Frame& parent, const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         DefaultDim border = 0) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     using Frame::add;
 
@@ -96,7 +96,7 @@ public:
      *
      * @param widget The widget to add, or nullptr.
      */
-    virtual void add(std::shared_ptr<Widget> widget) override;
+    void add(std::shared_ptr<Widget> widget) override;
 
     /**
      * Add a widget to the grid into a specific cell.
@@ -134,9 +134,9 @@ public:
      */
     virtual Widget* get(const Point& point);
 
-    virtual void remove(Widget* widget) override;
+    void remove(Widget* widget) override;
 
-    virtual void layout() override;
+    void layout() override;
 
     /**
      * Returns the last column used for an add() call.
@@ -158,7 +158,7 @@ public:
         return m_last_add_row;
     }
 
-    virtual Rect content_area() const override
+    Rect content_area() const override
     {
         // we don't include border, grid handles that itself
         auto moat = margin() + padding();
@@ -178,12 +178,12 @@ public:
      */
     inline GridFlags& grid_flags() { return m_grid_flags; }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~StaticGrid() noexcept = default;
+    ~StaticGrid() noexcept override = default;
 
 protected:
 
@@ -236,7 +236,7 @@ public:
 
     using StaticGrid::StaticGrid;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /// Get the selected cell.
     virtual Point selected() const
@@ -244,7 +244,7 @@ public:
         return {m_selected_column, m_selected_row};
     }
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
     /**
      * Set the selected cell.
@@ -254,12 +254,12 @@ public:
      */
     virtual void selected(int column, int row);
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~SelectableGrid() noexcept = default;
+    ~SelectableGrid() noexcept override = default;
 
 protected:
     /// Currently selected column.

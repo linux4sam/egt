@@ -56,7 +56,9 @@ int main(int argc, char** argv)
     }
 
     egt::Application app(argc, argv, "camera");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::Size size(args["width"].as<int>(), args["height"].as<int>());
     auto format = egt::detail::enum_from_string<egt::PixelFormat>(args["format"].as<std::string>());
@@ -80,7 +82,7 @@ int main(int argc, char** argv)
         player.start();
     });
 
-    player.on_error([&player, &errlabel](const std::string & err)
+    player.on_error([&errlabel](const std::string & err)
     {
         errlabel.text(line_break(err));
     });
@@ -157,7 +159,7 @@ int main(int argc, char** argv)
     {
         tools.update();
         std::ostringstream ss;
-        ss << "CPU: " << (int)tools.usage() << "%";
+        ss << "CPU: " << static_cast<int>(tools.usage()) << "%";
         cpulabel.text(ss.str());
     });
     cputimer.start();

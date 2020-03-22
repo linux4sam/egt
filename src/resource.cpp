@@ -231,7 +231,7 @@ namespace detail
 {
 cairo_status_t read_resource_stream(void* closure, unsigned char* data, unsigned int length)
 {
-    const auto id = reinterpret_cast<const char*>(closure);
+    const auto id = static_cast<const char*>(closure);
 
     if (ResourceManager::instance().stream_read(id, data, length))
         return CAIRO_STATUS_SUCCESS;

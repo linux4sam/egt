@@ -39,7 +39,7 @@ public:
      */
     explicit InputTslib(Application& app, const std::string& path);
 
-    virtual ~InputTslib();
+    ~InputTslib() override;
 
 private:
 

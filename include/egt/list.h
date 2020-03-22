@@ -38,9 +38,9 @@ struct EGT_API StringItem : public ImageLabel
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
-    StringItem(const std::string& text = {},
-               const Image& image = {},
-               const AlignFlags& text_align = AlignFlag::center) noexcept
+    explicit StringItem(const std::string& text = {},
+                        const Image& image = {},
+                        const AlignFlags& text_align = AlignFlag::center) noexcept
         : ImageLabel(image, text, text_align)
     {
         fill_flags(Theme::FillFlag::blend);
@@ -104,7 +104,7 @@ struct EGT_API StringItem : public ImageLabel
 
     using ImageLabel::min_size_hint;
 
-    virtual Size min_size_hint() const override
+    Size min_size_hint() const override
     {
         if (!m_min_size.empty())
             return m_min_size;
@@ -170,9 +170,9 @@ public:
      */
     explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
-    virtual void resize(const Size& s) override
+    void resize(const Size& s) override
     {
         if (s != size())
         {
@@ -224,7 +224,7 @@ public:
      */
     virtual void clear();
 
-    virtual ~ListBox() = default;
+    ~ListBox() override = default;
 
 protected:
 

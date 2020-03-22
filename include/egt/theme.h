@@ -130,6 +130,7 @@ private:
 };
 
 template<class T>
+// NOLINTNEXTLINE(cert-err58-cpp)
 typename Drawable<T>::DrawFunction Drawer<T>::m_drawable = T::default_draw;
 
 class Color;

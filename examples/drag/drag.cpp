@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <chrono>
-#include <egt/ui>
 #include <egt/detail/math.h>
+#include <egt/ui>
 #include <sstream>
 
 class FloatingBox : public egt::Window
@@ -41,7 +41,7 @@ public:
         m_arrows.align(egt::AlignFlag::center);
     }
 
-    virtual void handle(egt::Event& event) override
+    void handle(egt::Event& event) override
     {
         egt::Window::handle(event);
 

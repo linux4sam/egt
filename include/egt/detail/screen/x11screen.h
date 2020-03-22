@@ -6,10 +6,10 @@
 #ifndef EGT_DETAIL_SCREEN_X11SCREEN_H
 #define EGT_DETAIL_SCREEN_X11SCREEN_H
 
-#include <egt/detail/meta.h>
 #include <egt/asio.hpp>
-#include <egt/screen.h>
+#include <egt/detail/meta.h>
 #include <egt/input.h>
+#include <egt/screen.h>
 #include <memory>
 
 namespace egt
@@ -38,19 +38,19 @@ public:
     explicit X11Screen(Application& app, const Size& size = Size(800, 480),
                        bool borderless = false);
 
-    virtual void schedule_flip() override
+    void schedule_flip() override
     {}
 
     virtual void flip(const DamageArray& damage) override;
 
-    virtual ~X11Screen();
+    ~X11Screen() override;
 
 protected:
 
     /// Callback for X11 server data.
     void handle_read(const asio::error_code& error);
 
-    virtual void copy_to_buffer(ScreenBuffer& buffer) override;
+    void copy_to_buffer(ScreenBuffer& buffer) override;
 
     /// Application reference.
     Application& m_app;

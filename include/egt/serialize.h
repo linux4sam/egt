@@ -74,7 +74,7 @@ public:
      */
     explicit OstreamWidgetSerializer(std::ostream& o);
 
-    virtual bool add(Widget* widget, int level) override;
+    bool add(Widget* widget, int level) override;
 
     using Serializer::add_property;
 
@@ -113,7 +113,7 @@ public:
     /// Clear or reset, the serializer for re-use.
     void reset();
 
-    virtual bool add(Widget* widget, int level) override;
+    bool add(Widget* widget, int level) override;
 
     using Serializer::add_property;
 

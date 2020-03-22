@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <egt/ui>
 #include <chrono>
+#include <egt/ui>
 #include <memory>
 
 template<class T>
@@ -32,7 +32,7 @@ static std::shared_ptr<egt::experimental::NeedleLayer> create_needle(egt::experi
         int min, int max, int min_angle, int max_angle,
         std::chrono::milliseconds duration,
         std::vector<std::unique_ptr<egt::AnimationSequence>>& animations,
-        egt::EasingFunc easing = egt::easing_circular_easein)
+        const egt::EasingFunc& easing = egt::easing_circular_easein)
 
 {
     if (!svg.id_exists(id) || !svg.id_exists(point_id))
@@ -51,9 +51,11 @@ static std::shared_ptr<egt::experimental::NeedleLayer> create_needle(egt::experi
     return needle;
 }
 
-static std::shared_ptr<egt::experimental::GaugeLayer> create_layer(egt::experimental::Gauge& gauge, egt::SvgImage& svg,
-        const std::string& id,
-        std::chrono::milliseconds duration)
+static std::shared_ptr<egt::experimental::GaugeLayer>
+create_layer(egt::experimental::Gauge& gauge, egt::SvgImage& svg,
+             const std::string& id,
+             std::chrono::milliseconds duration,
+             std::vector<std::unique_ptr<egt::PeriodicTimer>>& timers)
 {
     if (!svg.id_exists(id))
         return nullptr;
@@ -67,10 +69,9 @@ static std::shared_ptr<egt::experimental::GaugeLayer> create_layer(egt::experime
     layer->hide();
     gauge.add(layer);
 
-    /// @todo leak
-    auto timer = new egt::PeriodicTimer(duration);
-    timer->on_timeout([layer]() { layer->visible_toggle(); });
-    timer->start();
+    timers.emplace_back(std::make_unique<egt::PeriodicTimer>(duration));
+    timers.back()->on_timeout([layer]() { layer->visible_toggle(); });
+    timers.back()->start();
 
     return layer;
 }
@@ -99,13 +100,15 @@ int main(int argc, char** argv)
     auto gauge_background = std::make_shared<egt::experimental::GaugeLayer>(dash_background->render("#background"));
     gauge.add(gauge_background);
 
+    std::vector<std::unique_ptr<egt::PeriodicTimer>> timers;
+
     // pick out some other layers
-    auto right_blink = create_layer(gauge, *dash_background, "#right_blink", std::chrono::milliseconds(1500));
-    auto left_blink = create_layer(gauge, *dash_background, "#left_blink", std::chrono::seconds(1));
-    auto brights = create_layer(gauge, *dash_background, "#brights", std::chrono::seconds(5));
-    auto high_brights = create_layer(gauge, *dash_background, "#highbrights", std::chrono::seconds(4));
-    auto hazards = create_layer(gauge, *dash_background, "#hazards", std::chrono::seconds(2));
-    auto heat = create_layer(gauge, *dash_background, "#heat", std::chrono::seconds(3));
+    auto right_blink = create_layer(gauge, *dash_background, "#right_blink", std::chrono::milliseconds(1500), timers);
+    auto left_blink = create_layer(gauge, *dash_background, "#left_blink", std::chrono::seconds(1), timers);
+    auto brights = create_layer(gauge, *dash_background, "#brights", std::chrono::seconds(5), timers);
+    auto high_brights = create_layer(gauge, *dash_background, "#highbrights", std::chrono::seconds(4), timers);
+    auto hazards = create_layer(gauge, *dash_background, "#hazards", std::chrono::seconds(2), timers);
+    auto heat = create_layer(gauge, *dash_background, "#heat", std::chrono::seconds(3), timers);
 
     std::vector<std::unique_ptr<egt::AnimationSequence>> animations;
 

@@ -92,7 +92,7 @@ void Button::draw(Painter& painter, const Rect& rect)
     Drawer<Button>::draw(*this, painter, rect);
 }
 
-void Button::default_draw(Button& widget, Painter& painter, const Rect&)
+void Button::default_draw(Button& widget, Painter& painter, const Rect& /*rect*/)
 {
     widget.draw_box(painter, Palette::ColorId::button_bg, Palette::ColorId::border);
 

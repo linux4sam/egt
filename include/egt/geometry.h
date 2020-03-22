@@ -597,6 +597,7 @@ public:
      * the default origin 0,0.
      */
     // cppcheck-suppress noExplicitConstructor
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     constexpr RectType(const SizeType<Dim, DimCompat>& size) noexcept
         : RectType( {}, size)
     {}
@@ -1253,9 +1254,9 @@ public:
      * @param[in] radiusa First radius of the ellipse.
      * @param[in] radiusb Second radius of the ellipse.
      */
-    constexpr EllipseType(const PointType<Dim>& center = {},
-                          Dim radiusa = {},
-                          Dim radiusb = {}) noexcept
+    explicit constexpr EllipseType(const PointType<Dim>& center = {},
+                                   Dim radiusa = {},
+                                   Dim radiusb = {}) noexcept
         : m_center(center),
           m_radiusa(radiusa),
           m_radiusb(radiusb)

@@ -55,9 +55,9 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Default draw method for the CheckBox.
@@ -66,9 +66,9 @@ public:
 
     using Button::min_size_hint;
 
-    virtual Size min_size_hint() const override;
+    Size min_size_hint() const override;
 
-    virtual ~CheckBox() = default;
+    ~CheckBox() override = default;
 };
 
 /**
@@ -94,7 +94,7 @@ public:
     */
     explicit ToggleBox(Frame& parent, const Rect& rect = {}) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Default draw method for the CheckBox.
@@ -103,7 +103,7 @@ public:
 
     using CheckBox::min_size_hint;
 
-    virtual Size min_size_hint() const override;
+    Size min_size_hint() const override;
 
     /**
      * Set the optional "on" and "off" text.
@@ -150,12 +150,12 @@ public:
             damage();
     }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~ToggleBox() = default;
+    ~ToggleBox() override = default;
 
 protected:
 

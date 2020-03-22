@@ -54,7 +54,7 @@ struct StreamObject
 
 static cairo_status_t read_stream(void* closure, unsigned char* data, unsigned int length)
 {
-    auto stream = reinterpret_cast<StreamObject*>(closure);
+    auto stream = static_cast<StreamObject*>(closure);
 
     if ((stream->offset + length) > stream->len)
         throw std::runtime_error("read past end of data stream");

@@ -60,7 +60,7 @@ public:
     /**
      * @param[in] items Array of items to insert into the list.
      */
-    explicit ComboBox(const ItemArray& items = ItemArray()) noexcept;
+    explicit ComboBox(const ItemArray& items = {}) noexcept;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -71,7 +71,7 @@ public:
      * @param[in] items Array of items to insert into the list.
      * @param[in] rect Rectangle for the widget.
      */
-    ComboBox(const ItemArray& items, const Rect& rect) noexcept;
+    ComboBox(ItemArray items, const Rect& rect) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -82,21 +82,21 @@ public:
                       const ItemArray& items = {},
                       const Rect& rect = {}) noexcept;
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
-    virtual void resize(const Size& s) override;
+    void resize(const Size& s) override;
 
-    virtual void move(const Point& point) override;
+    void move(const Point& point) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     using Widget::parent;
 
-    virtual void parent(Frame* parent) override;
+    void parent(Frame* parent) override;
 
     using Widget::min_size_hint;
 
-    virtual Size min_size_hint() const override;
+    Size min_size_hint() const override;
 
     /**
      * Default draw method for the ComboBox.
@@ -157,12 +157,12 @@ public:
      */
     AlignFlags text_align() const { return m_text_align; }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~ComboBox();
+    ~ComboBox() override;
 
 protected:
 

@@ -76,7 +76,7 @@ inline uint64_t nsec_to_sec(uint64_t s)
 
 static gboolean query_position(gpointer data)
 {
-    auto impl = reinterpret_cast<detail::AudioPlayerImpl*>(data);
+    auto impl = static_cast<detail::AudioPlayerImpl*>(data);
 
     /* don't query position if not playing */
     if (!impl->player.playing())
@@ -102,7 +102,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
     detail::ignoreparam(bus);
 
-    auto impl = reinterpret_cast<detail::AudioPlayerImpl*>(data);
+    auto impl = static_cast<detail::AudioPlayerImpl*>(data);
 
     SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 

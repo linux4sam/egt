@@ -67,7 +67,9 @@ int main(int argc, char** argv)
     auto input(args["input"].as<std::string>());
 
     egt::Application app(argc, argv, "video");
+#ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::TopWindow win;
     win.color(egt::Palette::ColorId::bg, egt::Palette::black);
@@ -238,7 +240,7 @@ int main(int argc, char** argv)
         }
     });
 
-    player.on_error([&player, &errlabel](const std::string & err)
+    player.on_error([&errlabel](const std::string & err)
     {
         errlabel.text(line_break(err));
     });

@@ -39,7 +39,7 @@ public:
      */
     explicit InputEvDev(Application& app, const std::string& path);
 
-    virtual ~InputEvDev();
+    ~InputEvDev() override;
 
 private:
     void handle_read(const asio::error_code& error, std::size_t length);

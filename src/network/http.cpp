@@ -21,15 +21,13 @@ inline namespace v1
 
 namespace detail
 {
-using namespace experimental;
-
 struct HttpClientRequestData
 {
     std::string url;
     CURL* easy{nullptr};
     std::unique_ptr<asio::ip::tcp::socket> socket;
     int last_event{CURL_POLL_NONE};
-    HttpClientRequest::ReadCallback m_read_callback;
+    experimental::HttpClientRequest::ReadCallback m_read_callback;
 
     inline void on_read(const unsigned char* data, size_t len, bool done = false)
     {
@@ -56,6 +54,9 @@ public:
                                void* userp,
                                void* socketp)
     {
+        detail::ignoreparam(userp);
+        detail::ignoreparam(socketp);
+
         auto i = HttpClientRequestManager::Instance()->m_sockets.find(s);
         assert(i != HttpClientRequestManager::Instance()->m_sockets.end());
         if (i != HttpClientRequestManager::Instance()->m_sockets.end())
@@ -72,13 +73,19 @@ public:
             if (what & CURL_POLL_IN)
             {
                 request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_read,
-                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_IN, request));
+                                                    [easy, s, request](const asio::error_code & ec)
+                {
+                    HttpClientRequestManager::asio_socket_callback(ec, easy, s, CURL_POLL_IN, request);
+                });
             }
 
             if (what & CURL_POLL_OUT)
             {
                 request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_write,
-                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_OUT, request));
+                                                    [easy, s, request](const asio::error_code & ec)
+                {
+                    HttpClientRequestManager::asio_socket_callback(ec, easy, s, CURL_POLL_OUT, request);
+                });
             }
         }
 
@@ -90,13 +97,19 @@ public:
                               long timeout_ms,
                               void* userp)
     {
+        detail::ignoreparam(multi);
+        detail::ignoreparam(userp);
+
         asio::steady_timer& timer = HttpClientRequestManager::Instance()->m_timer;
 
         timer.cancel();
         if (timeout_ms > 0)
         {
             timer.expires_after(std::chrono::milliseconds(timeout_ms));
-            timer.async_wait(std::bind(&asio_timer_callback, std::placeholders::_1));
+            timer.async_wait([](const asio::error_code & ec)
+            {
+                asio_timer_callback(ec);
+            });
         }
         else if (timeout_ms == 0)
         {
@@ -126,7 +139,7 @@ public:
                                      CURL* easy,
                                      curl_socket_t s,
                                      int what,
-                                     HttpClientRequest* request)
+                                     experimental::HttpClientRequest* request)
     {
         if (ec)
         {
@@ -156,13 +169,19 @@ public:
             if (what == CURL_POLL_IN && (request->impl()->last_event & CURL_POLL_IN))
             {
                 request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_read,
-                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_IN, request));
+                                                    [easy, s, request](const asio::error_code & ec)
+                {
+                    HttpClientRequestManager::asio_socket_callback(ec, easy, s, CURL_POLL_IN, request);
+                });
             }
 
             if (what == CURL_POLL_OUT && (request->impl()->last_event & CURL_POLL_OUT))
             {
                 request->impl()->socket->async_wait(asio::ip::tcp::socket::wait_write,
-                                                    std::bind(HttpClientRequestManager::asio_socket_callback, std::placeholders::_1, easy, s, CURL_POLL_OUT, request));
+                                                    [easy, s, request](const asio::error_code & ec)
+                {
+                    HttpClientRequestManager::asio_socket_callback(ec, easy, s, CURL_POLL_OUT, request);
+                });
             }
         }
     }
@@ -180,7 +199,7 @@ public:
                 CURL* easy = msg->easy_handle;
                 if (easy)
                 {
-                    HttpClientRequest* s{nullptr};
+                    experimental::HttpClientRequest* s{nullptr};
                     curl_easy_getinfo(easy, CURLINFO_PRIVATE, &s);
                     if (s)
                     {
@@ -199,7 +218,7 @@ public:
     CURLM* m_multi{};
     int m_running{0};
     asio::steady_timer m_timer;
-    std::unordered_map<curl_socket_t, HttpClientRequest*> m_sockets;
+    std::unordered_map<curl_socket_t, experimental::HttpClientRequest*> m_sockets;
 
 private:
 
@@ -232,7 +251,7 @@ static curl_socket_t opensocket_callback(void* clientp,
 {
     curl_socket_t ret = CURL_SOCKET_BAD;
 
-    HttpClientRequest* s = static_cast<HttpClientRequest*>(clientp);
+    auto s = static_cast<experimental::HttpClientRequest*>(clientp);
     if (s)
     {
         if (purpose == CURLSOCKTYPE_IPCXN && address->family == AF_INET)
@@ -262,7 +281,7 @@ static curl_socket_t opensocket_callback(void* clientp,
 
 static int closesocket_callback(void* clientp, curl_socket_t item)
 {
-    auto s = static_cast<HttpClientRequest*>(clientp);
+    auto s = static_cast<experimental::HttpClientRequest*>(clientp);
     if (s)
     {
         asio::error_code ec;

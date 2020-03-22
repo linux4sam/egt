@@ -49,11 +49,8 @@ enum
 static void draw_text_setup(std::vector<detail::LayoutRect>& rects,
                             cairo_t* cr,
                             cairo_font_extents_t& fe,
-                            const Rect& b,
                             const std::string& text,
-                            const Font& font,
-                            const TextBox::TextFlags& flags,
-                            const AlignFlags& text_align)
+                            const TextBox::TextFlags& flags)
 {
     // tokenize based on words or codepoints
     static const std::string delimiters = " \t\n\r";
@@ -123,11 +120,8 @@ void draw_text(Painter& painter,
     draw_text_setup(rects,
                     cr,
                     fe,
-                    b,
                     text,
-                    font,
-                    flags,
-                    text_align);
+                    flags);
 
     detail::flex_layout(b, rects, justify, Orientation::flex, text_align);
 
@@ -260,11 +254,8 @@ void draw_text(Painter& painter,
     draw_text_setup(rects,
                     cr,
                     fe,
-                    b,
                     text,
-                    font,
-                    flags,
-                    text_align);
+                    flags);
 
     if (image_align.is_set(AlignFlag::top))
     {

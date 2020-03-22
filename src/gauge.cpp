@@ -13,6 +13,7 @@ inline namespace v1
 namespace experimental
 {
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 GaugeLayer::GaugeLayer(const Image& image) noexcept
     : m_image(image)
 {

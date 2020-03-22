@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <egt/ui>
 #include <egt/painter.h>
+#include <egt/ui>
 
 class MainWindow : public egt::TopWindow
 {

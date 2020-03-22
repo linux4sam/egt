@@ -27,9 +27,11 @@ namespace detail
 {
 
 CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
+                         // NOLINTNEXTLINE(modernize-pass-by-value)
                          const std::string& output,
                          PixelFormat format,
                          experimental::CameraCapture::ContainerType container,
+                         // NOLINTNEXTLINE(modernize-pass-by-value)
                          const std::string& device)
     : m_interface(interface),
       m_output(output),
@@ -101,7 +103,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 {
     ignoreparam(bus);
 
-    auto impl = reinterpret_cast<CaptureImpl*>(data);
+    auto impl = static_cast<CaptureImpl*>(data);
 
     std::unique_lock<std::mutex> lock(impl->m_mutex);
 

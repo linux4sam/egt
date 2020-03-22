@@ -210,7 +210,7 @@ public:
     void reverse(bool rev) { m_reverse = rev; }
 
     /// Start the animation.
-    virtual void start() override;
+    void start() override;
 
     /**
      * Periodic call to the animation.
@@ -218,10 +218,10 @@ public:
      * This must be called until it returns false. When it returns false,
      * the animation is done.
      */
-    virtual bool next() override;
+    bool next() override;
 
     /// Stop the animation.
-    virtual void stop() override;
+    void stop() override;
 
     /// Get the current value.
     EasingScalar current() const { return m_current; }
@@ -236,7 +236,7 @@ public:
      */
     void rounding(bool enable) { m_round = enable; }
 
-    virtual ~Animation() = default;
+    ~Animation() override = default;
 
 protected:
 
@@ -396,7 +396,7 @@ public:
         m_current = 0;
     }
 
-    virtual void start() override
+    void start() override
     {
         // TODO: this does not handle an already running sequence
 
@@ -408,7 +408,7 @@ public:
         m_running = true;
     }
 
-    virtual bool next() override
+    bool next() override
     {
         if (!running())
             return true;
@@ -435,7 +435,7 @@ public:
         return m_running;
     }
 
-    virtual void stop() override
+    void stop() override
     {
         if (m_current >= m_animations.size())
             return;
@@ -445,7 +445,7 @@ public:
         m_running = false;
     }
 
-    virtual ~AnimationSequence() = default;
+    ~AnimationSequence() override = default;
 
 protected:
 
@@ -497,8 +497,8 @@ public:
                            const EasingFunc& func = easing_linear,
                            const AnimationCallback& callback = nullptr);
 
-    virtual void start() override;
-    virtual void stop() override;
+    void start() override;
+    void stop() override;
 
     /**
      * Change the interval of the internal timer.
@@ -509,7 +509,7 @@ public:
      */
     void interval(std::chrono::milliseconds duration);
 
-    virtual ~AutoAnimation() = default;
+    ~AutoAnimation() override = default;
 
 protected:
 
@@ -584,7 +584,7 @@ public:
         m_callbacks.clear();
     }
 
-    virtual ~PropertyAnimatorType() = default;
+    ~PropertyAnimatorType() override = default;
 
 protected:
 
@@ -645,12 +645,12 @@ public:
         });
     }
 
-    virtual void start() override
+    void start() override
     {
         m_timer.start();
     }
 
-    virtual bool next() override
+    bool next() override
     {
         for (auto& callback : m_callbacks)
             callback(0);
@@ -658,12 +658,12 @@ public:
         return false;
     }
 
-    virtual void stop() override
+    void stop() override
     {
         m_timer.cancel();
     }
 
-    virtual ~AnimationDelay() = default;
+    ~AnimationDelay() override = default;
 
 protected:
 

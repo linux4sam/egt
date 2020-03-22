@@ -143,7 +143,7 @@ VirtualKeyboard::VirtualKeyboard(const Rect& rect) noexcept
                            QwertyLettersUpperCase(),
                            QwertySymbols1(),
                            QwertySymbols2()
-})
+}, rect)
 {
 }
 

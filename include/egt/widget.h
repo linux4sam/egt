@@ -261,7 +261,10 @@ public:
      * @warning This is experimental.
      */
     virtual void scale(float hscale, float vscale)
-    {}
+    {
+        detail::ignoreparam(hscale);
+        detail::ignoreparam(vscale);
+    }
 
     /**
      * Set the scale of the widget.
@@ -1232,7 +1235,7 @@ public:
     virtual void deserialize(const std::string& name, const std::string& value,
                              const Serializer::Attributes& attrs);
 
-    virtual ~Widget() noexcept;
+    ~Widget() noexcept override;
 
 protected:
 

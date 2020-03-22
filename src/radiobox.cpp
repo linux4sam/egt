@@ -57,6 +57,8 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
 
 void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect)
 {
+    detail::ignoreparam(rect);
+
     widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 
     auto b = widget.content_area();

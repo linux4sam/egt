@@ -107,6 +107,7 @@ Font::Font()
       m_slant(DEFAULT_SLANT)
 {}
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 Font::Font(const std::string& face)
     : m_face(face),
       m_size(DEFAULT_SIZE),
@@ -114,6 +115,7 @@ Font::Font(const std::string& face)
       m_slant(DEFAULT_SLANT)
 {}
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 Font::Font(const std::string& face, Font::Size size, Font::Weight weight, Font::Slant slant)
     : m_face(face),
       m_size(size),
@@ -179,6 +181,8 @@ void Font::serialize(const std::string& name, Serializer& serializer) const
 void Font::deserialize(const std::string& name, const std::string& value,
                        const Serializer::Attributes& attrs)
 {
+    detail::ignoreparam(name);
+
     face(value);
 
     for (auto& a : attrs)

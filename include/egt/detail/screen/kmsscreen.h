@@ -30,7 +30,7 @@ namespace detail
 {
 struct planeid;
 class KMSOverlay;
-class FlipThread;
+struct FlipThread;
 
 /**
  * Screen in an KMS dumb buffer.
@@ -65,20 +65,20 @@ public:
     /// Get a pointer to the KMSScreen instance.
     static KMSScreen* instance();
 
-    virtual void schedule_flip() override;
+    void schedule_flip() override;
 
-    virtual uint32_t index() override;
+    uint32_t index() override;
 
     /// Close and release the screen.
     void close();
 
-    virtual size_t max_brightness() const override;
+    size_t max_brightness() const override;
 
-    virtual size_t brightness() const override;
+    size_t brightness() const override;
 
-    virtual void brightness(size_t brightness) override;
+    void brightness(size_t brightness) override;
 
-    virtual ~KMSScreen();
+    ~KMSScreen() override;
 
     /// Get the number of buffers to use for KMS planes.
     static uint32_t max_buffers();

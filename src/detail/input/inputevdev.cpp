@@ -34,7 +34,7 @@ InputEvDev::InputEvDev(Application& app, const std::string& path)
       m_input_buf(sizeof(struct input_event) * 10),
       m_keyboard(std::make_unique<InputKeyboard>())
 {
-    m_fd = open(path.c_str(), O_RDONLY);
+    m_fd = open(path.c_str(), O_RDONLY | O_CLOEXEC);
     if (m_fd >= 0)
     {
         spdlog::info("input device: {}", path);

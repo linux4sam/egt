@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/shapes.h"
-#include "egt/painter.h"
-#include "egt/theme.h"
 #include "egt/frame.h"
+#include "egt/painter.h"
+#include "egt/shapes.h"
+#include "egt/theme.h"
 
 namespace egt
 {

@@ -23,9 +23,9 @@ Scrollwheel::Scrollwheel(const ItemArray& items) noexcept
     : Scrollwheel( {}, items)
 {}
 
-Scrollwheel::Scrollwheel(const Rect& rect, const ItemArray& items) noexcept
+Scrollwheel::Scrollwheel(const Rect& rect, ItemArray items) noexcept
     : StaticGrid(rect, std::make_tuple(1, 3), 1),
-      m_items(items),
+      m_items(std::move(items)),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
 {

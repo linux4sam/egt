@@ -25,7 +25,7 @@ FrameBuffer::FrameBuffer(const std::string& path)
     struct fb_fix_screeninfo fixinfo {};
     struct fb_var_screeninfo varinfo {};
 
-    m_fd = ::open(path.c_str(), O_RDWR);
+    m_fd = ::open(path.c_str(), O_RDWR | O_CLOEXEC);
     if (m_fd < 0)
         throw std::runtime_error(("could not open device: " + path).c_str());
 

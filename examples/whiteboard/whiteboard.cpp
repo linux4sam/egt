@@ -110,7 +110,7 @@ public:
 
         m_grid.on_selected_changed([this]()
         {
-            m_width = std::stoi(reinterpret_cast<egt::Label*>(m_grid.get(m_grid.selected()))->text());
+            m_width = std::stoi(static_cast<egt::Label*>(m_grid.get(m_grid.selected()))->text());
             this->hide();
         });
     }

@@ -133,6 +133,8 @@ void Image::serialize(const std::string& name, Serializer& serializer) const
 void Image::deserialize(const std::string& name, const std::string& value,
                         const Serializer::Attributes& attrs)
 {
+    detail::ignoreparam(name);
+
     float hscale = 1.0;
     float vscale = 1.0;
 

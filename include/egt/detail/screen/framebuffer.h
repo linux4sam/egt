@@ -37,10 +37,10 @@ public:
      */
     explicit FrameBuffer(const std::string& path = "/dev/fb0");
 
-    virtual void schedule_flip() override
+    void schedule_flip() override
     {}
 
-    virtual ~FrameBuffer();
+    ~FrameBuffer() override;
 
 protected:
 

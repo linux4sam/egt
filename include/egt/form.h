@@ -102,7 +102,7 @@ public:
             parent_layout();
     }
 
-    virtual ~Form() = default;
+    ~Form() override = default;
 
 protected:
 

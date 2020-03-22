@@ -3,9 +3,9 @@
 // found in the LICENSE file.
 #include "detail/screen/keyboard_code_conversion_x.h"
 #include "detail/screen/x11wrap.h"
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
-#include <algorithm>
 #include <spdlog/spdlog.h>
 #define EKEY_UNSUPPORTED EKEY_UNKNOWN
 namespace egt

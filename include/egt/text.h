@@ -122,19 +122,19 @@ public:
             const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
             const TextFlags& flags = {}) noexcept;
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     using TextWidget::text;
 
-    virtual void text(const std::string& str) override;
+    void text(const std::string& str) override;
 
-    virtual void clear() override;
+    void clear() override;
 
     using TextWidget::min_size_hint;
 
-    virtual Size min_size_hint() const override;
+    Size min_size_hint() const override;
 
     /**
      * Set the maximum allowed length of the text.
@@ -268,12 +268,12 @@ public:
      */
     virtual void add_validator_function(ValidatorCallback callback);
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~TextBox() noexcept;
+    ~TextBox() noexcept override;
 
 protected:
 

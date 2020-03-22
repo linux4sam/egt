@@ -71,10 +71,10 @@ public:
             m_seq.start();
 
             egt::LineChart::DataArray data;
-            for (float i = 0.; i <= 1.; i += .001)
+            for (auto i = 0; i <= 1000; i++)
             {
-                data.push_back(std::make_pair(i,
-                                              egt::detail::interpolate(easing_functions[list1->selected()].first, i, 0.f, 100.f)));
+                data.push_back(std::make_pair(i / 1000.0f,
+                                              egt::detail::interpolate(easing_functions[list1->selected()].first, i / 1000.0f, 0.f, 100.f)));
             }
 
             m_line->data(data);

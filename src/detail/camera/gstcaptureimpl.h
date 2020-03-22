@@ -35,7 +35,7 @@ public:
 
     virtual bool start();
 
-    virtual void stop();
+    void stop();
 
     virtual ~CaptureImpl();
 

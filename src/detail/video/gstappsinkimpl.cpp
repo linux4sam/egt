@@ -126,7 +126,7 @@ void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)
 
 GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 {
-    auto impl = reinterpret_cast<GstAppSinkImpl*>(data);
+    auto impl = static_cast<GstAppSinkImpl*>(data);
     GstSample* sample;
     g_signal_emit_by_name(elt, "pull-sample", &sample);
     if (sample)
@@ -269,6 +269,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
+    // NOLINTNEXTLINE(google-readability-casting)
     g_timeout_add(5000, (GSourceFunc) &post_position, this);
 
     if (!m_gmain_loop)
@@ -287,7 +288,7 @@ void GstAppSinkImpl::scale(float scalex, float scaley)
 
 gboolean GstAppSinkImpl::post_position(gpointer data)
 {
-    auto impl = reinterpret_cast<GstAppSinkImpl*>(data);
+    auto impl = static_cast<GstAppSinkImpl*>(data);
 
     if (Application::check_instance())
     {

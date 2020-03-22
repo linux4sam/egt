@@ -22,11 +22,11 @@ public:
 
     SkyTheme() = default;
 
-    virtual ~SkyTheme() = default;
+    ~SkyTheme() override = default;
 
 protected:
 
-    virtual void init_palette() override
+    void init_palette() override
     {
         m_palette->clear();
 
@@ -82,7 +82,7 @@ protected:
         m_palette->set(Palette::ColorId::label_text, Palette::GroupId::checked, Color(0x576060ff));
     }
 
-    virtual void init_draw() override;
+    void init_draw() override;
 };
 
 }

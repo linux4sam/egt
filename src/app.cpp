@@ -195,6 +195,8 @@ void Application::setup_search_paths()
 
 void Application::setup_backend(bool primary)
 {
+    detail::ignoreparam(primary);
+
     std::string backend;
 
     const char* value = getenv("EGT_BACKEND");

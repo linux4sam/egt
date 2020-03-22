@@ -75,7 +75,7 @@ public:
      */
     SideBoard(PositionFlag position, WindowHint hint);
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
     /**
      * Set the position of the SideBoard.
@@ -93,12 +93,12 @@ public:
     /// Move to an open state.
     virtual void open();
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~SideBoard() = default;
+    ~SideBoard() override = default;
 
 protected:
 

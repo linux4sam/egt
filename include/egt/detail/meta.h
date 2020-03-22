@@ -70,7 +70,7 @@ namespace detail
  * Utility function to safely ignore a parameter to a function.
  */
 template <typename T>
-void ignoreparam(T&&)
+void ignoreparam(T&&) // NOLINT(readability-named-parameter)
 {}
 
 #ifndef SWIG
@@ -221,6 +221,7 @@ struct EGT_API ScopeExit : private NonCopyable<ScopeExit<T>>
     /**
      * @param f Callable to call on destruction.
      */
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     ScopeExit(T&& f)
         : m_f(std::move(f)),
           m_active(true)
@@ -229,6 +230,7 @@ struct EGT_API ScopeExit : private NonCopyable<ScopeExit<T>>
     /**
      * @param f Callable to call on destruction.
      */
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     ScopeExit(const T& f)
         : m_f(f),
           m_active(true)
@@ -273,7 +275,7 @@ ScopeExit<T> on_scope_exit(T&& f)
 template<class T>
 constexpr T bit(T n)
 {
-    return 1 << n;
+    return 1u << n;
 }
 
 }

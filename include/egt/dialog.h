@@ -97,7 +97,7 @@ public:
      */
     virtual void widget(const std::shared_ptr<Widget>& widget);
 
-    virtual ~Dialog() = default;
+    ~Dialog() override = default;
 
 protected:
 

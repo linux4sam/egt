@@ -145,7 +145,7 @@ public:
      */
     virtual bool playing() const;
 
-    virtual ~AudioPlayer();
+    ~AudioPlayer() override;
 
 protected:
 

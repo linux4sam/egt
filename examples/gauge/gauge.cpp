@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <egt/ui>
 #include <chrono>
+#include <egt/ui>
 #include <memory>
 
 template<class T>

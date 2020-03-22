@@ -11,8 +11,8 @@
  * @brief Working with charts.
  */
 
-#include <egt/widget.h>
 #include <deque>
+#include <egt/widget.h>
 
 namespace egt
 {
@@ -39,7 +39,7 @@ public:
     /**
      * @param[in] rect Initial rectangle of the widget.
      */
-    ChartBase(const Rect& rect)
+    explicit ChartBase(const Rect& rect)
         : Widget(rect)
     {}
 
@@ -99,7 +99,7 @@ public:
      */
     explicit LineChart(const Rect& rect = {});
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Set a new set of data to LineChart.
@@ -135,7 +135,7 @@ public:
     /**
      * Set the grid style.
      */
-    virtual void grid_style(GridFlag flag) override;
+    void grid_style(GridFlag flag) override;
 
     /**
      * Set grid width
@@ -177,14 +177,14 @@ public:
      *
      * @param[in] size The new size of the LineChart.
      */
-    virtual void resize(const Size& size) override;
+    void resize(const Size& size) override;
 
     /**
      * Add a percent bank beyond the min and maximum values.
      */
     virtual void bank(float bank);
 
-    virtual ~LineChart();
+    ~LineChart() override;
 
 protected:
 
@@ -218,7 +218,7 @@ public:
      */
     explicit PointChart(const Rect& rect = {});
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Set a new set of data to PointChart.
@@ -272,7 +272,7 @@ public:
     /**
     * Set the grid style.
     */
-    virtual void grid_style(GridFlag flag) override;
+    void grid_style(GridFlag flag) override;
 
     /**
      * Set grid width
@@ -288,14 +288,14 @@ public:
      *
      * @param[in] size The new size of the PointChart.
      */
-    virtual void resize(const Size& size) override;
+    void resize(const Size& size) override;
 
     /**
      * Add a percent bank beyond the min and maximum values.
      */
     virtual void bank(float bank);
 
-    virtual ~PointChart();
+    ~PointChart() override;
 
 protected:
 
@@ -329,7 +329,7 @@ public:
      */
     explicit BarChart(const Rect& rect = {});
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
 
     /**
@@ -398,7 +398,7 @@ public:
     /**
     * Set the grid style.
     */
-    virtual void grid_style(GridFlag flag) override;
+    void grid_style(GridFlag flag) override;
 
     /**
      * Set grid width
@@ -414,14 +414,14 @@ public:
      *
      * @param[in] size The new size of the BarChart.
      */
-    virtual void resize(const Size& size) override;
+    void resize(const Size& size) override;
 
     /**
      * Add a percent bank beyond the min and maximum values.
      */
     virtual void bank(float bank);
 
-    virtual ~BarChart();
+    ~BarChart() override;
 
 protected:
 
@@ -450,7 +450,7 @@ public:
      */
     explicit HorizontalBarChart(const Rect& rect = {});
 
-    virtual ~HorizontalBarChart();
+    ~HorizontalBarChart() override;
 };
 
 /**
@@ -473,7 +473,7 @@ public:
      */
     explicit PieChart(const Rect& rect = {});
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Set PieChart title
@@ -520,9 +520,9 @@ public:
      *
      * @param[in] size The new size of the PieChart.
      */
-    virtual void resize(const Size& size) override;
+    void resize(const Size& size) override;
 
-    virtual ~PieChart();
+    ~PieChart() override;
 
 protected:
 

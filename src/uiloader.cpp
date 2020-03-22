@@ -10,7 +10,6 @@
 #include <rapidxml_utils.hpp>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <map>
 
 namespace egt
 {

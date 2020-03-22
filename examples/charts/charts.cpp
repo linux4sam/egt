@@ -60,7 +60,7 @@ static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<eg
 
 struct PiePage : public egt::NotebookTab
 {
-    PiePage(const egt::Size& size)
+    PiePage()
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -105,7 +105,7 @@ struct PiePage : public egt::NotebookTab
 
 struct Points : public egt::NotebookTab
 {
-    Points(const egt::Size& size)
+    explicit Points(const egt::Size& size)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -180,7 +180,7 @@ struct Points : public egt::NotebookTab
 
 struct HorizontalBarPage : public egt::NotebookTab
 {
-    HorizontalBarPage(const egt::Size& size)
+    explicit HorizontalBarPage(const egt::Size& size)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -257,7 +257,7 @@ struct HorizontalBarPage : public egt::NotebookTab
 
 struct VerticalBarPage : public egt::NotebookTab
 {
-    VerticalBarPage(const egt::Size& size)
+    explicit VerticalBarPage(const egt::Size& size)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -331,7 +331,7 @@ struct VerticalBarPage : public egt::NotebookTab
 
 struct TanPage : public egt::NotebookTab
 {
-    TanPage(const egt::Size& size)
+    explicit TanPage(const egt::Size& size)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -419,7 +419,7 @@ struct TanPage : public egt::NotebookTab
 
 struct SinePage : public egt::NotebookTab
 {
-    SinePage(const egt::Size& size)
+    explicit SinePage(const egt::Size& size)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -505,7 +505,7 @@ struct SinePage : public egt::NotebookTab
 
 struct CosinePage : public egt::NotebookTab
 {
-    CosinePage(const egt::Size& size)
+    explicit CosinePage(const egt::Size& size)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -658,7 +658,7 @@ int main(int argc, char** argv)
     notebook.add(std::make_shared<Points>(size));
     notebook.add(std::make_shared<VerticalBarPage>(size));
     notebook.add(std::make_shared<HorizontalBarPage>(size));
-    notebook.add(std::make_shared<PiePage>(size));
+    notebook.add(std::make_shared<PiePage>());
 
     list.on_selected_changed([&]()
     {

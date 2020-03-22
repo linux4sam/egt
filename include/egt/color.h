@@ -63,10 +63,10 @@ public:
         : m_rgba
     {
 
-        (c >> 24) & 0xff,
-        (c >> 16) & 0xff,
-        (c >> 8) & 0xff,
-        c & 0xff
+        (c >> 24u) & 0xffu,
+        (c >> 16u) & 0xffu,
+        (c >> 8u) & 0xffu,
+        c & 0xffu
 
     }
     {}
@@ -98,10 +98,10 @@ public:
     constexpr explicit Color(ComponentType r, ComponentType g, ComponentType b, ComponentType a = 255) noexcept
         : m_rgba
     {
-        r & 0xff,
-        g & 0xff,
-        b & 0xff,
-        a & 0xff
+        r & 0xffu,
+        g & 0xffu,
+        b & 0xffu,
+        a & 0xffu
     }
     {}
 
@@ -131,37 +131,37 @@ public:
 
     //@{
     /** Set RGBA component value individually from 0 to 255. */
-    constexpr void red(ComponentType r) { m_rgba[0] = r & 0xff; }
-    constexpr void green(ComponentType g) { m_rgba[1] = g & 0xff; }
-    constexpr void blue(ComponentType b) { m_rgba[2] = b & 0xff; }
-    constexpr void alpha(ComponentType a) { m_rgba[3] = a & 0xff; }
+    constexpr void red(ComponentType r) { m_rgba[0] = r & 0xffu; }
+    constexpr void green(ComponentType g) { m_rgba[1] = g & 0xffu; }
+    constexpr void blue(ComponentType b) { m_rgba[2] = b & 0xffu; }
+    constexpr void alpha(ComponentType a) { m_rgba[3] = a & 0xffu; }
     //@}
 
     /// Get a 16 bit pixel representation of the Color
     constexpr uint16_t pixel16() const
     {
-        const uint16_t b = (blue() >> 3) & 0x1f;
-        const uint16_t g = ((green() >> 2) & 0x3f) << 5;
-        const uint16_t r = ((red() >> 3) & 0x1f) << 11;
+        const uint16_t b = (blue() >> 3u) & 0x1fu;
+        const uint16_t g = ((green() >> 2u) & 0x3fu) << 5u;
+        const uint16_t r = ((red() >> 3u) & 0x1fu) << 11u;
 
-        return (uint16_t)(r | g | b);
+        return static_cast<uint16_t>(r | g | b);
     }
 
     /// Create a Color from a 16 bit pixel representation
     static constexpr Color pixel16(uint16_t c)
     {
-        const uint16_t b = (c) & 0x1f;
-        const uint16_t g = (c >> 5) & 0x3f;
-        const uint16_t r = (c >> 11) & 0x1f;
+        const uint16_t b = (c) & 0x1fu;
+        const uint16_t g = (c >> 5u) & 0x3fu;
+        const uint16_t r = (c >> 11u) & 0x1fu;
 
-        return Color(r, g, b, 0xff);
+        return Color(r, g, b, 0xffu);
     }
 
     /// Get a 24 bit pixel representation of the Color
     constexpr RGBAType pixel24() const
     {
-        return (red() << 16) |
-               (green() << 8) |
+        return (red() << 16u) |
+               (green() << 8u) |
                blue() |
                (0xff);
     }
@@ -169,28 +169,28 @@ public:
     /// Create a Color from a 24 bit pixel representation
     static constexpr Color pixel24(RGBAType c)
     {
-        return Color((c >> 16) & 0xff,
-                     (c >> 8) & 0xff,
-                     c & 0xff,
-                     0xff);
+        return Color((c >> 16u) & 0xffu,
+                     (c >> 8u) & 0xffu,
+                     c & 0xffu,
+                     0xffu);
     }
 
     /// Get a 32 bit pixel representation of the Color
     constexpr RGBAType pixel32() const
     {
-        return (red() << 16) |
-               (green() << 8) |
+        return (red() << 16u) |
+               (green() << 8u) |
                blue() |
-               (alpha() << 24);
+               (alpha() << 24u);
     }
 
     /// Create a Color from a 24 bit pixel representation
     static constexpr Color pixel32(RGBAType c)
     {
-        return Color((c >> 16) & 0xff,
-                     (c >> 8) & 0xff,
-                     c & 0xff,
-                     (c >> 24) & 0xff);
+        return Color((c >> 16u) & 0xffu,
+                     (c >> 8u) & 0xffu,
+                     c & 0xffu,
+                     (c >> 24u) & 0xffu);
     }
 
     /**
@@ -236,7 +236,7 @@ public:
      */
     static constexpr Color rgb(RGBType c, ComponentType alpha = 255) noexcept
     {
-        return Color(c << 8 | alpha);
+        return Color(c << 8u | alpha);
     }
 
     /**
@@ -359,10 +359,10 @@ public:
      */
     Color& operator=(RGBAType c)
     {
-        m_rgba[0] = (c >> 24) & 0xff;
-        m_rgba[1] = (c >> 16) & 0xff;
-        m_rgba[2] = (c >> 8) & 0xff;
-        m_rgba[3] = c & 0xff;
+        m_rgba[0] = (c >> 24u) & 0xffu;
+        m_rgba[1] = (c >> 16u) & 0xffu;
+        m_rgba[2] = (c >> 8u) & 0xffu;
+        m_rgba[3] = c & 0xffu;
 
         return *this;
     }
@@ -486,8 +486,7 @@ protected:
     ComponentType m_rgba[4] {};
 };
 
-static_assert(detail::rule_of_5<Color>(),
-              "Color : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Color>(), "must fulfill rule of 5");
 
 /// Color operator
 constexpr bool operator==(const Color& lhs, const Color& rhs)
@@ -560,6 +559,7 @@ public:
      * @param[in] color Solid color of the pattern.
      */
     // cppcheck-suppress noExplicitConstructor
+    // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Pattern(const Color& color)
     {
         m_steps.insert(std::make_pair(0.f, color));
@@ -570,13 +570,14 @@ public:
      */
     explicit Pattern(const std::vector<std::pair<float, Color>>& steps)
     {
-        for (auto& s : steps)
+        for (const auto& s : steps)
             m_steps.insert(s);
     }
 
     /**
      * Get the first color of the pattern.
      */
+    // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     operator Color() const
     {
         if (!m_steps.empty())
@@ -676,7 +677,7 @@ public:
      * @param[in] interp Interpolation colorspace.
      */
     template<class T>
-    explicit ColorMap(std::initializer_list<T> steps, Interpolation interp = Interpolation::rgba)
+    ColorMap(std::initializer_list<T> steps, Interpolation interp = Interpolation::rgba)
         : m_interp(interp)
     {
         m_steps.insert(m_steps.end(), steps.begin(), steps.end());

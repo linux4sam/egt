@@ -39,6 +39,7 @@ namespace detail
 /// Perform a hash of a string.
 constexpr unsigned int hash(const char* str, int h = 0)
 {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic,readability-implicit-bool-conversion)
     return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
 

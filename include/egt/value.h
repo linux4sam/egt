@@ -42,7 +42,7 @@ public:
     }
 
     /// Get the current value.
-    operator T() const
+    explicit operator T() const
     {
         return m_value;
     }
@@ -74,7 +74,7 @@ public:
         return false;
     }
 
-    virtual ~Value() = default;
+    ~Value() override = default;
 
 protected:
 
@@ -114,7 +114,7 @@ public:
     }
 
     /// Get the current value.
-    operator T() const
+    explicit operator T() const
     {
         return m_value;
     }
@@ -181,7 +181,7 @@ public:
             value(m_value);
     }
 
-    virtual ~RangeValue() = default;
+    ~RangeValue() override = default;
 
 protected:
 

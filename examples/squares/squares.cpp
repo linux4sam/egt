@@ -100,8 +100,8 @@ int main(int argc, char** argv)
     size_t index = 0;
     struct test_data
     {
-        test_data(int w, int h, const std::vector<egt::Color>& colors)
-            : w(w), h(h), colors(colors)
+        test_data(int w, int h, std::vector<egt::Color> colors)
+            : w(w), h(h), colors(std::move(colors))
         {}
 
         int w;

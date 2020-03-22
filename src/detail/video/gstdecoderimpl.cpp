@@ -94,6 +94,7 @@ int GstDecoderImpl::volume() const
         return 0;
 
     gdouble volume = 0;
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     g_object_get(m_volume, "volume", &volume, nullptr);
     return volume * 10.0;
 }
@@ -108,6 +109,7 @@ bool GstDecoderImpl::volume(int volume)
     else if (volume > 100)
         volume = 100;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     g_object_set(m_volume, "volume", volume / 10.0, nullptr);
     return true;
 }
@@ -119,6 +121,7 @@ bool GstDecoderImpl::seek(int64_t time)
     {
         m_seekdone = true;
         if (gst_element_seek(m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
+                             // NOLINTNEXTLINE(google-readability-casting)
                              GST_SEEK_TYPE_SET, (gint64) time,
                              GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
         {
@@ -189,7 +192,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
 {
     ignoreparam(bus);
 
-    auto impl = reinterpret_cast<GstDecoderImpl*>(data);
+    auto impl = static_cast<GstDecoderImpl*>(data);
 
     SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 

@@ -46,7 +46,7 @@ KMSOverlay::KMSOverlay(const Size& size, PixelFormat format, WindowHint hint)
          Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
          detail::egt_format(plane_format(m_plane.get())));
 
-    m_pool.reset(new FlipThread(m_plane->buffer_count - 1));
+    m_pool = std::make_unique<FlipThread>(m_plane->buffer_count - 1);
 }
 
 void KMSOverlay::resize(const Size& size)

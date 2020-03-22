@@ -82,9 +82,9 @@ public:
            int frame_count, const Point& frame_point = {},
            WindowHint hint = WindowHint::automatic);
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void paint(Painter& painter) override;
+    void paint(Painter& painter) override;
 
     /**
      * Initialize the sprite with new configuration.
@@ -140,12 +140,12 @@ public:
      */
     virtual uint32_t add_strip(int frame_count, const Point& frame_point = {});
 
-    virtual ~Sprite();
+    ~Sprite() override;
 
 protected:
 
     /// @private
-    virtual void allocate_screen() override
+    void allocate_screen() override
     {
         Window::allocate_screen();
     }

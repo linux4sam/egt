@@ -23,11 +23,11 @@ public:
 
     CoconutTheme() = default;
 
-    virtual ~CoconutTheme() = default;
+    ~CoconutTheme() override = default;
 
 protected:
 
-    virtual void init_palette() override
+    void init_palette() override
     {
         m_palette->clear();
 
@@ -99,7 +99,7 @@ protected:
         m_palette->set(Palette::ColorId::label_text, Palette::GroupId::checked, colors[8]);
     }
 
-    virtual void init_font() override
+    void init_font() override
     {
         m_font->face("Courier New");
     }

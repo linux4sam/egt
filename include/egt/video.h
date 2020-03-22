@@ -93,12 +93,12 @@ public:
                 PixelFormat format = PixelFormat::xrgb8888,
                 WindowHint hint = WindowHint::overlay);
 
-    virtual void do_draw() override
+    void do_draw() override
     {
         // video windows don't draw
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Initialize gstreamer pipeline for specified media file.
@@ -191,7 +191,7 @@ public:
 
     using Window::scale;
 
-    virtual void scale(float hscale, float vscale) override;
+    void scale(float hscale, float vscale) override;
 
     /**
      * Get horizontal scale value.
@@ -217,7 +217,7 @@ public:
      */
     virtual bool has_audio() const;
 
-    virtual ~VideoWindow();
+    ~VideoWindow() override;
 
 protected:
     /// Loopback enabled.

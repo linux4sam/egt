@@ -81,25 +81,25 @@ public:
                           Policy horizontal_policy = Policy::as_needed,
                           Policy vertical_policy = Policy::as_needed);
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void resize(const Size& size) override;
+    void resize(const Size& size) override;
 
-    virtual void layout() override;
+    void layout() override;
 
-    virtual void damage() override
+    void damage() override
     {
         damage(box());
     }
 
-    virtual void damage(const Rect& /*rect*/) override
+    void damage(const Rect& /*rect*/) override
     {
         Frame::damage(box());
     }
 
-    virtual void damage_from_child(const Rect& rect) override
+    void damage_from_child(const Rect& rect) override
     {
         damage(rect + m_offset);
     }
@@ -146,7 +146,7 @@ public:
             damage();
     }
 
-    virtual ~ScrolledView() noexcept = default;
+    ~ScrolledView() noexcept override = default;
 
 protected:
 

@@ -66,7 +66,7 @@ public:
         parent.add(*this);
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override
+    void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<ProgressBarType<T>>::draw(*this, painter, rect);
     }
@@ -112,7 +112,7 @@ public:
     /// Default ProgressBar size
     static const Size DEFAULT_PROGRESSBAR_SIZE;
 
-    virtual Size min_size_hint() const override
+    Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
@@ -139,7 +139,7 @@ public:
      */
     bool show_label() const { return m_show_label; }
 
-    virtual ~ProgressBarType() = default;
+    ~ProgressBarType() override = default;
 
 protected:
     /**
@@ -205,7 +205,7 @@ public:
     }
 
 
-    virtual void draw(Painter& painter, const Rect& rect) override
+    void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<SpinProgressType<T>>::draw(*this, painter, rect);
     }
@@ -213,6 +213,8 @@ public:
     /// Default draw method for the widget.
     static void default_draw(SpinProgressType<T>& widget, Painter& painter, const Rect& rect)
     {
+        detail::ignoreparam(rect);
+
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
         auto b = widget.content_area();
@@ -250,7 +252,7 @@ public:
     /// Default SpinProgress size
     static const Size DEFAULT_SPINPROGRESS_SIZE;
 
-    virtual Size min_size_hint() const override
+    Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
@@ -277,12 +279,12 @@ public:
      */
     bool show_label() const { return m_show_label; }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~SpinProgressType() = default;
+    ~SpinProgressType() override = default;
 protected:
     /**
      * When true, the label text is shown.
@@ -369,7 +371,7 @@ public:
         parent.add(*this);
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override
+    void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<LevelMeterType<T>>::draw(*this, painter, rect);
     }
@@ -377,6 +379,8 @@ public:
     /// Default draw method for the widget.
     static void default_draw(LevelMeterType<T>& widget, Painter& painter, const Rect& rect)
     {
+        detail::ignoreparam(rect);
+
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
         const auto b = widget.content_area();
@@ -421,7 +425,7 @@ public:
     /// Default LevelMeter size
     static constexpr Size DEFAULT_LEVELMETER_SIZE = Size(40, 100);
 
-    virtual Size min_size_hint() const override
+    Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
@@ -429,12 +433,12 @@ public:
         return DEFAULT_LEVELMETER_SIZE + Widget::min_size_hint();
     }
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~LevelMeterType() = default;
+    ~LevelMeterType() override = default;
 
 protected:
 
@@ -513,7 +517,7 @@ public:
         parent.add(*this);
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override
+    void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<AnalogMeterType<T>>::draw(*this, painter, rect);
     }
@@ -521,6 +525,8 @@ public:
     /// Default draw method for the widget.
     static void default_draw(AnalogMeterType<T>& widget, Painter& painter, const Rect& rect)
     {
+        detail::ignoreparam(rect);
+
         static const auto tick_width = 1.0;
 
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
@@ -576,7 +582,7 @@ public:
     /// Default size of AnalogMeter
     static const Size DEFAULT_ANALOGMETER_SIZE;
 
-    virtual Size min_size_hint() const override
+    Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
@@ -584,7 +590,7 @@ public:
         return DEFAULT_ANALOGMETER_SIZE + Widget::min_size_hint();
     }
 
-    virtual ~AnalogMeterType() = default;
+    ~AnalogMeterType() override = default;
 };
 
 /**

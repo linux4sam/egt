@@ -154,7 +154,7 @@ public:
             this->damage();
     }
 
-    virtual void handle(Event& event) override
+    void handle(Event& event) override
     {
         Widget::handle(event);
 
@@ -186,7 +186,7 @@ public:
         }
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override
+    void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<RadialType<T>>::draw(*this, painter, rect);
     }
@@ -304,7 +304,7 @@ public:
         m_start_angle = value;
     }
 
-    virtual ~RadialType() = default;
+    ~RadialType() override = default;
 
 protected:
 
@@ -317,7 +317,7 @@ protected:
                   size_t w = 10,
                   RadialFlags f = {},
                   detail::Object::RegisterHandle h = 0) noexcept
-            : range(r),
+            : range(std::move(r)),
               color(c),
               width(w),
               flags(f),

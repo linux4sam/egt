@@ -48,7 +48,7 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
-    explicit TextWidget(const std::string& text = {},
+    explicit TextWidget(std::string text = {},
                         const Rect& rect = {},
                         const AlignFlags& text_align = AlignFlag::center) noexcept;
 
@@ -96,12 +96,12 @@ public:
      */
     static Font scale_font(const Size& target, const std::string& text, const Font& font);
 
-    virtual void serialize(Serializer& serializer) const override;
+    void serialize(Serializer& serializer) const override;
 
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs) override;
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
-    virtual ~TextWidget() noexcept = default;
+    ~TextWidget() noexcept override = default;
 
 protected:
 

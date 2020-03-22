@@ -49,7 +49,7 @@ public:
      */
     explicit GaugeLayer(Gauge& gauge, const Image& image = {}) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Set the image of the gauge layer.
@@ -70,7 +70,7 @@ public:
      */
     Gauge* gauge() const { return m_gauge; }
 
-    virtual ~GaugeLayer() = default;
+    ~GaugeLayer() override = default;
 
 protected:
 
@@ -137,7 +137,7 @@ public:
                          float angle_stop = 360,
                          bool clockwise = true) noexcept;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Get the angle start value.
@@ -302,12 +302,12 @@ public:
             damage();
     }
 
-    virtual ~NeedleLayer() = default;
+    ~NeedleLayer() override = default;
 
 protected:
 
     /// @private
-    virtual void gauge(Gauge* gauge) override;
+    void gauge(Gauge* gauge) override;
 
     /// Minimum value of the needle.
     float m_min{0.0};
@@ -405,7 +405,7 @@ public:
     /// Remove a layer from the gauge.
     virtual void remove(GaugeLayer* layer);
 
-    virtual ~Gauge();
+    ~Gauge() override;
 
 protected:
 

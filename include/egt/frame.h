@@ -11,14 +11,14 @@
  * @brief Working with frames.
  */
 
-#include <deque>
-#include <egt/screen.h>
-#include <egt/widget.h>
 #include <egt/detail/alignment.h>
 #include <egt/detail/meta.h>
+#include <egt/screen.h>
+#include <egt/widget.h>
 #include <exception>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace egt
 {
@@ -51,7 +51,7 @@ public:
     explicit Frame(const Rect& rect = {},
                    const Flags& flags = {}) noexcept;
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
     /**
      * Add a child widget.
@@ -140,7 +140,7 @@ public:
     /**
      * Return true if this is a top level frame, with no parent.
      */
-    virtual bool top_level() const override
+    bool top_level() const override
     {
         return !m_parent;
     }
@@ -193,7 +193,7 @@ public:
     /**
      * Damage the rectangle of the entire Frame.
      */
-    virtual void damage() override
+    void damage() override
     {
         damage(m_box);
     }
@@ -204,7 +204,7 @@ public:
      * to be checked again to make sure the new rectangle doesn't conflict with
      * another existing rectangle.
      */
-    virtual void damage(const Rect& rect) override;
+    void damage(const Rect& rect) override;
 
     /**
      * Special variation of damage() that is to be called explicitly by child
@@ -215,7 +215,7 @@ public:
         damage(rect);
     }
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /**
      * Cause the frame to draw itself and all of its children.
@@ -228,21 +228,21 @@ public:
         assert(0);
     }
 
-    virtual void dump(std::ostream& out, int level = 0) override;
+    void dump(std::ostream& out, int level = 0) override;
 
-    virtual void walk(const WalkCallback& callback, int level = 0) override;
+    void walk(const WalkCallback& callback, int level = 0) override;
 
     /**
      * Save the entire frame surface to a file.
      */
-    virtual void paint_to_file(const std::string& filename = {}) override;
+    void paint_to_file(const std::string& filename = {}) override;
 
     /**
      * Paint individual children to file.
      */
     virtual void paint_children_to_file();
 
-    virtual void show() override
+    void show() override
     {
         if (visible())
             return;
@@ -255,9 +255,9 @@ public:
      * @note Remember that when overriding this function as a Frame, you must
      * call layout on each child Frame to propagate the layout.
      */
-    virtual void layout() override;
+    void layout() override;
 
-    virtual void resize(const Size& size) override
+    void resize(const Size& size) override
     {
         if (size != this->size())
         {
@@ -291,9 +291,9 @@ public:
      */
     virtual Point to_panel(const Point& p);
 
-    virtual void zorder_down() override;
+    void zorder_down() override;
 
-    virtual void zorder_up() override;
+    void zorder_up() override;
 
     /**
      * Move the specified widget zorder down relative to other widgets with the
@@ -311,9 +311,9 @@ public:
      */
     virtual void zorder_up(const Widget* widget);
 
-    virtual void zorder_bottom() override;
+    void zorder_bottom() override;
 
-    virtual void zorder_top() override;
+    void zorder_top() override;
 
     /**
      * Move the specified widget zorder to the bottom of the current list of widgets
@@ -338,7 +338,7 @@ public:
      */
     virtual size_t zorder(const Widget* widget) const;
 
-    virtual size_t zorder() const override;
+    size_t zorder() const override;
 
     /**
      * Get the widget under the given DisplayPoint.
@@ -452,7 +452,7 @@ public:
         return w;
     }
 
-    virtual ~Frame() noexcept;
+    ~Frame() noexcept override;
 
 protected:
 
@@ -462,10 +462,8 @@ protected:
     /// Used internally for calling the special child draw function.
     ChildDrawCallback m_special_child_draw_callback;
 
-    /**
-     * Helper type for an array of children.
-     */
-    using ChildrenArray = std::deque<std::shared_ptr<Widget>>;
+    /// Helper type for an array of children.
+    using ChildrenArray = std::vector<std::shared_ptr<Widget>>;
 
     /// Array of child widgets in the order they were added.
     ChildrenArray m_children;

@@ -8,7 +8,6 @@
 #include "egt/widget.h"
 #include "egt/widgetflags.h"
 #include <ostream>
-#include <map>
 #include <string>
 
 namespace egt

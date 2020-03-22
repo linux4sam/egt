@@ -54,7 +54,7 @@ public:
         return m_radius;
     }
 
-    virtual void draw(Painter& painter, const Rect&) override;
+    void draw(Painter& painter, const Rect&) override;
 
 protected:
 
@@ -91,7 +91,7 @@ public:
         parent.add(*this);
     }
 
-    virtual void draw(Painter& painter, const Rect&) override;
+    void draw(Painter& painter, const Rect&) override;
 
     /**
      * Get the horizontal state of the widget.
@@ -141,7 +141,7 @@ public:
         parent.add(*this);
     }
 
-    virtual void draw(Painter& painter, const Rect&) override;
+    void draw(Painter& painter, const Rect& rect) override;
 };
 
 }

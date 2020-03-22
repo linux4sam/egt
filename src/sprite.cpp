@@ -60,15 +60,15 @@ public:
     SoftwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
                    int frame_count, const Point& frame_point);
 
-    virtual void show_frame(int index) override;
+    void show_frame(int index) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void paint(Painter& painter) override;
+    void paint(Painter& painter) override;
 
-    virtual shared_cairo_surface_t surface() const override;
+    shared_cairo_surface_t surface() const override;
 
-    virtual ~SoftwareSprite() = default;
+    ~SoftwareSprite() override = default;
 protected:
     Sprite& m_interface;
 };

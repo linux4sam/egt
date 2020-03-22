@@ -124,6 +124,7 @@ public:
     /**
      * Get the argv value passed in.
      */
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     inline const char** argv() const { return const_cast<const char**>(m_argv); }
 
     virtual ~Application();

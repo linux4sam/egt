@@ -91,9 +91,9 @@ public:
 
     using Frame::add;
 
-    virtual void add(std::shared_ptr<Widget> widget) override;
+    void add(std::shared_ptr<Widget> widget) override;
 
-    virtual void remove(Widget* widget) override;
+    void remove(Widget* widget) override;
 
     /**
      * Set the selected widget by index.
@@ -117,7 +117,7 @@ public:
      */
     virtual NotebookTab* get(size_t index) const;
 
-    virtual ~Notebook() = default;
+    ~Notebook() override = default;
 
 protected:
 

@@ -267,6 +267,8 @@ void Palette::serialize(const std::string& name, Serializer& serializer) const
 void Palette::deserialize(const std::string& name, const std::string& value,
                           const Serializer::Attributes& attrs)
 {
+    detail::ignoreparam(name);
+
     const auto i = std::find_if(attrs.begin(), attrs.end(),
     [](const auto & element) { return element.first == "id";});
 

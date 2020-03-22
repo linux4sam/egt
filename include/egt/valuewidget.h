@@ -75,7 +75,7 @@ public:
      */
     T value() const { return m_value; }
 
-    virtual ~ValueWidget() = default;
+    ~ValueWidget() override = default;
 
 protected:
 
@@ -206,7 +206,7 @@ public:
         return m_value;
     }
 
-    virtual ~ValueRangeWidget() = default;
+    ~ValueRangeWidget() override = default;
 
 protected:
 

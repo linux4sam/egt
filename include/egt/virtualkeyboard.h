@@ -188,7 +188,7 @@ public:
     explicit VirtualKeyboard(std::vector<PanelKeys> keys,
                              const Rect& rect = {});
 
-    virtual void resize(const Size& s) override;
+    void resize(const Size& s) override;
 
     /**
      * Set the space between keys.
@@ -203,7 +203,7 @@ protected:
     struct Panel : public VerticalBoxSizer
     {
         // cppcheck-suppress noExplicitConstructor
-        Panel(PanelKeys keys);
+        explicit Panel(PanelKeys keys);
         void update_key_space(unsigned key_space);
         void update_key_size(const Size& s);
 

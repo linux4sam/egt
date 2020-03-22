@@ -207,7 +207,7 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, PixelFormat form
     if (count == 1 && no_composition_buffer())
     {
         m_surface = shared_cairo_surface_t(
-                        cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[0]),
+                        cairo_image_surface_create_for_data(static_cast<unsigned char*>(ptr[0]),
                                 f,
                                 size.width(), size.height(),
                                 cairo_format_stride_for_width(f, size.width())),
@@ -218,7 +218,7 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, PixelFormat form
         for (uint32_t x = 0; x < count; x++)
         {
             m_buffers.emplace_back(
-                cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(ptr[x]),
+                cairo_image_surface_create_for_data(static_cast<unsigned char*>(ptr[x]),
                                                     f,
                                                     size.width(), size.height(),
                                                     cairo_format_stride_for_width(f, size.width())));
@@ -277,6 +277,7 @@ size_t Screen::brightness() const
 
 void Screen::brightness(size_t brightness)
 {
+    detail::ignoreparam(brightness);
 }
 
 Screen::~Screen() = default;

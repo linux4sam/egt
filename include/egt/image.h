@@ -48,6 +48,7 @@ public:
      * @param scale Scale of the image, with 1.0 being 100%.
      */
     // cppcheck-suppress noExplicitConstructor
+    // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Image(const std::string& uri = {}, float scale = 1.0);
 
     /**
@@ -85,6 +86,7 @@ public:
      * Need consistency.
      */
     // cppcheck-suppress noExplicitConstructor
+    // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Image(shared_cairo_surface_t surface);
 
     /**
@@ -94,6 +96,7 @@ public:
      * a copy of the surface.
      */
     // cppcheck-suppress noExplicitConstructor
+    // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Image(cairo_surface_t* surface);
 
     /// Image operator

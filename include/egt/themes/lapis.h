@@ -23,11 +23,11 @@ public:
 
     LapisTheme() = default;
 
-    virtual ~LapisTheme() = default;
+    ~LapisTheme() override = default;
 
 protected:
 
-    virtual void init_palette() override
+    void init_palette() override
     {
         m_palette->clear();
 

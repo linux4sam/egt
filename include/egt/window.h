@@ -85,34 +85,34 @@ public:
                     PixelFormat format_hint = DEFAULT_FORMAT,
                     WindowHint hint = WindowHint::automatic);
 
-    virtual void damage() override
+    void damage() override
     {
         Frame::damage();
     }
 
-    virtual void damage(const Rect& rect) override;
+    void damage(const Rect& rect) override;
 
     /**
      * The buck stops on this call to Widget::screen() with a Window
      * because the Window contains the screen.
      */
-    virtual Screen* screen() const override;
+    Screen* screen() const override;
 
-    virtual bool has_screen() const override;
+    bool has_screen() const override;
 
-    virtual void move(const Point& point) override;
+    void move(const Point& point) override;
 
-    virtual void show() override;
+    void show() override;
 
-    virtual void hide() override;
+    void hide() override;
 
-    virtual void resize(const Size& size) override;
+    void resize(const Size& size) override;
 
     using Frame::scale;
 
-    virtual void scale(float hscale, float vscale) override;
+    void scale(float hscale, float vscale) override;
 
-    virtual void paint(Painter& painter) override;
+    void paint(Painter& painter) override;
 
     /*
      * Damage rectangles propagate up the widget tree and stop at a top level
@@ -121,7 +121,7 @@ public:
      * drawing those rectangles, as they propagate down the widget hierarchy
      * the opposite change happens to the rectangle origin.
      */
-    virtual void begin_draw() override;
+    void begin_draw() override;
 
     /**
      * Set a background image of the window.
@@ -147,7 +147,7 @@ public:
         return PixelFormat::invalid;
     }
 
-    virtual ~Window();
+    ~Window() override;
 
 protected:
 

@@ -9,29 +9,29 @@
 
 struct ColorMapWidget : public egt::Widget
 {
-    explicit ColorMapWidget(const std::string& name,
+    explicit ColorMapWidget(std::string name,
                             const egt::experimental::ColorMap::StepsArray& steps,
                             egt::experimental::ColorMap::Interpolation interp = egt::experimental::ColorMap::Interpolation::rgba)
         : m_map(steps, interp),
-          m_name(name)
+          m_name(std::move(name))
     {}
 
-    virtual void draw(egt::Painter& painter, const egt::Rect& rect) override
+    void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
+        (void)rect;
+
         auto b = content_area();
-
-        auto inc = 1.0 / b.width();
-
-        for (auto x = 0.0; x <= 1.0; x += inc)
+        for (auto x = 0; x < b.width(); ++x)
         {
+            auto p = static_cast<float>(x) / b.width();
             egt::RectF seg(b.x(), b.y(), b.width(), b.height());
-            seg.x(x * seg.width());
-            painter.set(m_map.interp(x));
+            seg.x(p * seg.width());
+            painter.set(m_map.interp(p));
             painter.draw(seg);
             painter.fill();
         }
 
-        painter.set(m_map.interp(1.0));
+        painter.set(m_map.interp(0.5));
         painter.set(font());
         painter.draw(b.point());
         painter.draw(m_name);

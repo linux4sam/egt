@@ -22,11 +22,11 @@ public:
 
     MidnightTheme() = default;
 
-    virtual ~MidnightTheme() = default;
+    ~MidnightTheme() override = default;
 
 protected:
 
-    virtual void init_palette() override
+    void init_palette() override
     {
         m_palette->clear();
 

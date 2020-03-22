@@ -57,7 +57,7 @@ public:
      * @param[in] items Array of items to build the list.
      */
     explicit Scrollwheel(const Rect& rect,
-                         const ItemArray& items = {}) noexcept;
+                         ItemArray items = {}) noexcept;
 
     /**
      * @param[in] parent The parent Frame.

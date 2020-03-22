@@ -95,6 +95,7 @@ constexpr const T& clamp(const T& v, const T& lo, const T& hi)
 /// constexpr version of fabs/fabsf
 template <class T>
 constexpr T fabs(T x,
+                 // NOLINTNEXTLINE(readability-named-parameter)
                  typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr)
 {
     return x >= 0 ? x :

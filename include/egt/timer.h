@@ -270,9 +270,9 @@ public:
      */
     explicit PeriodicTimer(std::chrono::milliseconds interval) noexcept;
 
-    virtual void start() override;
+    void start() override;
 
-    virtual ~PeriodicTimer() noexcept = default;
+    ~PeriodicTimer() noexcept override = default;
 
 private:
 

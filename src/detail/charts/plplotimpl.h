@@ -56,7 +56,7 @@ public:
 
     void point_type(int ptype);
 
-    virtual void resize(const Size& size);
+    virtual void resize();
 
     void bank(float bank);
 

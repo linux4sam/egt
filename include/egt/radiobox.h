@@ -11,8 +11,8 @@
  * @brief Working with radioboxes.
  */
 
-#include <egt/detail/meta.h>
 #include <egt/button.h>
+#include <egt/detail/meta.h>
 #include <string>
 
 namespace egt
@@ -48,18 +48,18 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
-    virtual void handle(Event& event) override;
+    void handle(Event& event) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
     /// Default draw method for the widget.
     static void default_draw(RadioBox& widget, Painter& painter, const Rect& rect);
 
     using Button::min_size_hint;
 
-    virtual Size min_size_hint() const override;
+    Size min_size_hint() const override;
 
-    virtual ~RadioBox() = default;
+    ~RadioBox() override = default;
 };
 
 }

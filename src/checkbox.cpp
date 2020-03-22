@@ -158,6 +158,8 @@ void ToggleBox::draw(Painter& painter, const Rect& rect)
 
 void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& rect)
 {
+    detail::ignoreparam(rect);
+
     /// @[ToggleBoxDraw]
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 

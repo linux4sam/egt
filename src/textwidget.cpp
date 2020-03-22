@@ -14,12 +14,12 @@ namespace egt
 inline namespace v1
 {
 
-TextWidget::TextWidget(const std::string& text,
+TextWidget::TextWidget(std::string text,
                        const Rect& rect,
                        const AlignFlags& text_align) noexcept
     : Widget(rect),
       m_text_align(text_align),
-      m_text(text)
+      m_text(std::move(text))
 {}
 
 void TextWidget::clear()

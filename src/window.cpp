@@ -337,12 +337,12 @@ struct CursorWindow : public Window
         readonly(true);
     }
 
-    virtual void handle(Event&) override
+    void handle(Event&) override
     {
         // no events handled
     }
 
-    virtual ~CursorWindow() = default;
+    ~CursorWindow() override = default;
 
     std::shared_ptr<ImageLabel> m_label;
 };

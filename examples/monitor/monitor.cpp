@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <egt/ui>
 #include <egt/detail/string.h>
+#include <egt/ui>
 #include <random>
 
 int main(int argc, char** argv)

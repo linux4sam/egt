@@ -18,8 +18,8 @@
 
 #ifdef __GNUG__
 #include <cstdlib>
-#include <memory>
 #include <cxxabi.h>
+#include <memory>
 #endif
 
 namespace egt

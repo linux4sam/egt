@@ -22,11 +22,11 @@ public:
 
     ShamrockTheme() = default;
 
-    virtual ~ShamrockTheme() = default;
+    ~ShamrockTheme() override = default;
 
 protected:
 
-    virtual void init_palette() override
+    void init_palette() override
     {
         m_palette->clear();
 
@@ -98,9 +98,9 @@ protected:
         m_palette->set(Palette::ColorId::label_text, Palette::GroupId::checked, colors[8]);
     }
 
-    virtual void init_draw() override;
+    void init_draw() override;
 
-    virtual void init_font() override
+    void init_font() override
     {
         m_font->face("Verdana");
     }
