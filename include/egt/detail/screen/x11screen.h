@@ -41,7 +41,10 @@ public:
     void schedule_flip() override
     {}
 
-    virtual void flip(const DamageArray& damage) override;
+    void flip(const DamageArray& damage) override;
+
+    /// Disable window decorations
+    void disable_window_decorations();
 
     ~X11Screen() override;
 

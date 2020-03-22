@@ -94,24 +94,9 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     m_buffers.back().damage.emplace_back(0, 0, size.width(), size.height());
 
     // remove window decorations
-    if (getenv("EGT_X11_NODECORATION") &&
-        strlen(getenv("EGT_X11_NODECORATION")))
+    if (std::getenv("EGT_X11_NODECORATION"))
     {
-        struct
-        {
-            unsigned long flags{};
-            unsigned long functions{};
-            unsigned long decorations{};
-            signed long input_mode{};
-            unsigned long status{};
-        } hints;
-
-        hints.flags = 2;
-        hints.decorations = 0;
-        Atom property = XInternAtom(m_priv->display, "_MOTIF_WM_HINTS", true);
-        XChangeProperty(m_priv->display, m_priv->window,
-                        property, property, 32, PropModeReplace,
-                        (unsigned char*)&hints, 5);
+        disable_window_decorations();
     }
 
     XMapWindow(m_priv->display, m_priv->window);
@@ -127,6 +112,25 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     {
         handle_read(error);
     });
+}
+
+void X11Screen::disable_window_decorations()
+{
+    struct
+    {
+        unsigned long flags{}; // NOLINT
+        unsigned long functions{}; // NOLINT
+        unsigned long decorations{}; // NOLINT
+        signed long input_mode{}; // NOLINT
+        unsigned long status{}; // NOLINT
+    } hints;
+
+    hints.flags = 2;
+    hints.decorations = 0;
+    Atom property = XInternAtom(m_priv->display, "_MOTIF_WM_HINTS", true);
+    XChangeProperty(m_priv->display, m_priv->window,
+                    property, property, 32, PropModeReplace,
+                    reinterpret_cast<unsigned char*>(&hints), 5);
 }
 
 void X11Screen::flip(const DamageArray& damage)
