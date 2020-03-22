@@ -137,8 +137,7 @@ protected:
  *
  * Example usage is intended for static_assert:
  * @code{.cpp}
- * static_assert(detail::rule_of_5<Color>(),
- *               "Color : must fulfill rule of 5");
+ * static_assert(detail::rule_of_5<Color>(), "must fulfill rule of 5");
  * @endcode
  */
 template <class T>

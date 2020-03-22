@@ -28,7 +28,7 @@ struct EventLoop::EventLoopImpl
 };
 
 EventLoop::EventLoop() noexcept
-    : m_impl(new EventLoopImpl)
+    : m_impl(std::make_unique<EventLoopImpl>())
 {}
 
 asio::io_context& EventLoop::io()

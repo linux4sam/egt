@@ -126,9 +126,7 @@ public:
 
 protected:
 
-    /**
-     * The running state of the animation.
-     */
+    /// The running state of the animation.
     bool m_running{false};
 
     /**
@@ -253,7 +251,7 @@ protected:
     EasingScalar m_current{0};
 
     /// Duration of the animation.
-    std::chrono::milliseconds m_duration;
+    std::chrono::milliseconds m_duration{};
 
     /// Absolute time when the animation was started.
     std::chrono::time_point<std::chrono::steady_clock> m_start_time;
@@ -667,9 +665,7 @@ public:
 
 protected:
 
-    /**
-     * One-shot timer.
-     */
+    /// One-shot timer.
     Timer m_timer;
 };
 

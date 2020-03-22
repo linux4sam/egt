@@ -126,42 +126,42 @@ public:
     /**
      * Get the face name the font.
      */
-    inline const std::string& face() const { return m_face; }
+    const std::string& face() const { return m_face; }
 
     /**
      * Set the face of the font.
      */
-    inline void face(const std::string& face) { m_face = face; }
+    void face(const std::string& face) { m_face = face; }
 
     /**
      * Get the size of the font.
      */
-    inline Font::Size size() const { return m_size; }
+    Font::Size size() const { return m_size; }
 
     /**
      * Set the size of the font.
      */
-    inline void size(const Font::Size& s) { m_size = s; }
+    void size(const Font::Size& s) { m_size = s; }
 
     /**
      * Get the weight of the font.
      */
-    inline Font::Weight weight() const { return m_weight; }
+    Font::Weight weight() const { return m_weight; }
 
     /**
      * Set the weight of the font.
      */
-    inline void weight(Font::Weight w) { m_weight = w; }
+    void weight(Font::Weight w) { m_weight = w; }
 
     /**
      * Get the slant of the font.
      */
-    inline Font::Slant slant() const { return m_slant; }
+    Font::Slant slant() const { return m_slant; }
 
     /**
      * Set the slant of the font.
      */
-    inline void slant(Font::Slant s) { m_slant = s; }
+    void slant(Font::Slant s) { m_slant = s; }
 
     /**
      * Generates a FontConfig scaled font instance.
@@ -204,24 +204,16 @@ public:
 
 protected:
 
-    /**
-     * Font face name.
-     */
+    /// Font face name.
     std::string m_face;
 
-    /**
-     * Font size.
-     */
+    /// Font size.
     Font::Size m_size{};
 
-    /**
-     * Font weight.
-     */
+    /// Font weight.
     Font::Weight m_weight;
 
-    /**
-     * Font slant.
-     */
+    /// Font slant.
     Font::Slant m_slant;
 };
 

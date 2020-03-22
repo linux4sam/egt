@@ -110,12 +110,10 @@ void Application::setup_events()
         if (event.key().keycode == EKEY_SNAPSHOT)
         {
             if (m_argc)
-                paint_to_file(std::string(m_argv[0]) + ".png");
+                paint_to_file(fmt::format("{}.png", m_argv[0]));
             else
                 paint_to_file();
         }
-
-        return 0;
     }, {EventId::keyboard_down});
 }
 

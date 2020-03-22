@@ -24,7 +24,6 @@ namespace egt
 {
 inline namespace v1
 {
-
 namespace detail
 {
 
@@ -37,9 +36,7 @@ public:
 
     Object() noexcept = default;
 
-    /**
-     * Get the name of the Object.
-     */
+    /// Get the name of the Object.
     const std::string& name() const { return m_name; }
 
     /**
@@ -52,19 +49,13 @@ public:
      */
     void name(const std::string& name) { m_name = name; }
 
-    /**
-     * Event handler callback function.
-     */
+    /// Event handler callback function.
     using EventCallback = std::function<void (Event& event)>;
 
-    /**
-     * Event handler EventId filter.
-     */
+    /// Event handler EventId filter.
     using FilterFlags = detail::FlagsBase<EventId>;
 
-    /**
-     * Handle type.
-     */
+    /// Handle type.
     using RegisterHandle = uint64_t;
 
     /**
@@ -115,9 +106,7 @@ public:
 
 protected:
 
-    /**
-     * Counter used to generate unique handles for each callback registration.
-     */
+    /// Counter used to generate unique handles for each callback registration.
     RegisterHandle m_handle_counter{0};
 
     /**
@@ -146,24 +135,17 @@ protected:
         RegisterHandle handle{0};
     };
 
-    /**
-     * Helper type for an array of callbacks.
-     */
+    /// Helper type for an array of callbacks.
     using CallbackArray = std::vector<CallbackMeta>;
 
-    /**
-     * Array of callbacks.
-     */
+    /// Array of callbacks.
     detail::CopyOnWriteAllocate<CallbackArray> m_callbacks;
 
-    /**
-     * A user defined name for the Object.
-     */
+    /// A user defined name for the Object.
     std::string m_name;
 };
 
 }
-
 }
 }
 

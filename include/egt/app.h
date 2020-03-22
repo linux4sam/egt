@@ -173,21 +173,16 @@ protected:
 
 private:
 
-    /**
-     * Signal handler to handle some default signals to the application.
-     */
+    /// Signal handler to handle some default signals to the application.
     void signal_handler(const asio::error_code& error, int signum);
 
-    /**
-     * The screen instance.
-     */
+    /// The screen instance.
     std::unique_ptr<Screen> m_screen;
 
-    /**
-     * Array of inputs.
-     */
+    /// Array of inputs.
     std::vector<std::unique_ptr<Input>> m_inputs;
 
+    /// Internal registration handle
     detail::Object::RegisterHandle m_handle{0};
 };
 

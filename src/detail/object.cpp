@@ -62,8 +62,8 @@ void Object::remove_handler(RegisterHandle handle)
     if (!m_callbacks)
         return;
 
-    auto i = std::find_if(m_callbacks->begin(), m_callbacks->end(),
-                          [handle](const CallbackMeta & meta)
+    const auto i = std::find_if(m_callbacks->begin(), m_callbacks->end(),
+                                [handle](const CallbackMeta & meta)
     {
         return meta.handle == handle;
     });

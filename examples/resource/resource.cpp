@@ -10,9 +10,7 @@
 
 class MainWindow;
 
-/**
- * This is a wrapper around gettext().
- */
+/// Wrapper around gettext().
 #define _(String) gettext(String)
 
 class ResourceFrame : public egt::Frame

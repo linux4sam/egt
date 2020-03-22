@@ -292,10 +292,10 @@ void Window::background(const Image& image)
 
     if (!image.empty())
     {
-        m_background = std::make_shared<ImageLabel>(image);
+        m_background = std::make_unique<ImageLabel>(image);
         m_background->align(AlignFlag::expand);
         m_background->image_align(AlignFlag::expand);
-        add(m_background);
+        add(*m_background);
         m_background->zorder_bottom();
     }
 }
@@ -355,14 +355,13 @@ void TopWindow::hide_cursor()
 
 void TopWindow::show_cursor(const Image& image)
 {
-    m_cursor = std::make_shared<CursorWindow>(image);
+    m_cursor = std::make_unique<CursorWindow>(image);
     m_cursor->move(Application::instance().screen()->box().center());
-    add(m_cursor);
+    add(*m_cursor);
     m_cursor->show();
 
-    /// @todo how to cleanup if destructed?
-    Input::global_input().on_event(
-        std::bind(&TopWindow::handle_mouse, this, std::placeholders::_1),
+    m_handle = Input::global_input().on_event(
+                   std::bind(&TopWindow::handle_mouse, this, std::placeholders::_1),
     {EventId::raw_pointer_down, EventId::raw_pointer_up, EventId::raw_pointer_move});
 }
 
@@ -385,6 +384,11 @@ void TopWindow::handle_mouse(Event& event)
             break;
         }
     }
+}
+
+TopWindow::~TopWindow()
+{
+    Input::global_input().remove_handler(m_handle);
 }
 
 }

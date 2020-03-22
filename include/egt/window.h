@@ -221,15 +221,11 @@ protected:
     /// @private
     std::unique_ptr<detail::WindowImpl> m_impl;
 
-    /**
-     * Change this window as the main window.
-     */
+    /// Set this window as the main window.
     void main_window();
 
-    /**
-     * Optional background image.
-     */
-    std::shared_ptr<ImageLabel> m_background;
+    /// Optional background image.
+    std::unique_ptr<ImageLabel> m_background;
 
     friend class detail::WindowImpl;
     friend class detail::PlaneWindow;
@@ -238,7 +234,7 @@ protected:
 /**
  * Top level Window.
  *
- * Special Window type that is the top level Window, or main Window.  It
+ * Special Window type that is the top level Window, or MainWindow.  It
  * provides features like a pointer cursor, that usually only make sense as a
  * top level Window.
  */
@@ -251,31 +247,35 @@ public:
     /// Show the cursor.
     virtual void show_cursor(const Image& image = Image("icon:cursor.png;64"));
 
-    /**
-     * Hide the cursor.
-     */
+    /// Hide the cursor.
     virtual void hide_cursor();
+
+    ~TopWindow() override;
 
 protected:
 
-    /**
-     * Handle mouse events.
-     */
+    /// Handle mouse events.
     virtual void handle_mouse(Event& event);
 
-    /**
-     * Cursor window, if created.
-     */
-    std::shared_ptr<Window> m_cursor;
+    /// Cursor window, if created.
+    std::unique_ptr<Window> m_cursor;
+
+private:
+
+    /// Internal registration handle
+    detail::Object::RegisterHandle m_handle{0};
 };
 
+/// Alias for a TopWindow
+using MainWindow = TopWindow;
+
 /**
- * Get a pointer reference to the main window.
+ * Get a pointer to the main window.
  */
 EGT_API Window* main_window();
 
 /**
- * Get a pointer reference to the modal window.
+ * Get a pointer to the modal window.
  *
  * The modal window is a single window that will receive all events. Only
  * one window can be modal at any given time.
