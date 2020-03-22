@@ -248,10 +248,8 @@ public:
 
     using Window::Window;
 
-    /**
-     * Show the cursor.
-     */
-    virtual void show_cursor(const Image& image = Image("@cursor.png"));
+    /// Show the cursor.
+    virtual void show_cursor(const Image& image = Image("icon:cursor.png;64"));
 
     /**
      * Hide the cursor.
