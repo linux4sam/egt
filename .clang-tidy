@@ -1,50 +1,46 @@
 ---
 Checks: "*,\
--android-cloexec-open,\
 -cert-err58-cpp,\
--hicpp-no-assembler,\
--clang-analyzer-alpha.core.CastToStruct,\
--clang-analyzer-alpha.cplusplus.VirtualCall,\
--clang-analyzer-alpha.deadcode.UnreachableCode,\
--clang-analyzer-alpha.unix.PthreadLock,\
--clang-analyzer-core.StackAddressEscape,\
+-clang-diagnostic-unknown-warning-option,\
 -clang-diagnostic-unknown-warning-option,\
 -cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
 -cppcoreguidelines-pro-bounds-constant-array-index,\
 -cppcoreguidelines-pro-bounds-pointer-arithmetic,\
--cppcoreguidelines-pro-type-const-cast,\
--cppcoreguidelines-pro-type-reinterpret-cast,\
--cppcoreguidelines-pro-type-union-access,\
 -cppcoreguidelines-pro-type-vararg,\
 -cppcoreguidelines-special-member-functions,\
 -fuchsia-default-arguments,\
 -fuchsia-overloaded-operator,\
--google-build-using-namespace,\
 -google-default-arguments,\
 -google-explicit-constructor,\
--google-readability-*,\
+-google-readability-braces-around-statements,\
+-google-readability-namespace-comments,\
+-google-readability-todo,\
+-google-runtime-int,\
 -google-runtime-references,\
 -hicpp-braces-around-statements,\
--hicpp-explicit-conversions,\
 -hicpp-no-array-decay,\
+-hicpp-no-assembler,\
 -hicpp-signed-bitwise,\
 -hicpp-special-member-functions,\
--hicpp-use-override,\
 -hicpp-vararg,\
--llvm-include-order,\
 -llvm-namespace-comment,\
--misc-macro-parentheses,\
--misc-noexcept-move-constructor,\
--misc-unused-parameters,\
--modernize-pass-by-value,\
--modernize-use-override,\
 -readability-braces-around-statements,\
 -readability-else-after-return,\
--readability-implicit-bool-cast,\
 -readability-implicit-bool-conversion,\
 -readability-named-parameter,\
--clang-diagnostic-undefined-var-template,\
 "
 HeaderFilterRegex: '^.*include/egt/.*h$$'
 AnalyzeTemporaryDtors: false
 ...
+#
+# Notes About Disabled Warnings
+# -----------------------------
+#
+# hicpp-signed-bitwise
+# https://stackoverflow.com/questions/50399090/use-of-a-signed-integer-operand-with-a-binary-bitwise-operator-when-using-un/58845898#58845898
+#
+# google-explicit-constructor and hicpp-explicit-conversions seem redundant
+#
+# hicpp-special-member-functions
+# Disabled because of many warnings. This needs to be addressed.
+#
