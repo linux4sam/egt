@@ -6,7 +6,8 @@ There are multiple ways of contributing to the future success of EGT.  For
 example,  one could contribute on the documentation, code, dependencies, or file
 bug reports.  After you have setup your development machine and you can build
 EGT, you now have everything you need to get started contributing.  However,
-in some cases there are recommended or necessary extra tools that can help.
+in some cases there are recommended or necessary extra tools that can help. This
+document covers many aspects of what you need to know.
 
 ## Code of Conduct
 
@@ -16,8 +17,8 @@ uphold this code of conduct.
 
 ## Development Tools Packages
 
-There are some extra tools that you can install with your distribution package
-manager.
+Development of EGT requires a Linux machine.  There are some extra tools that
+you can install with your distribution package manager.
 
 ```sh
 sudo apt install cloc doxygen graphviz clang clang-tidy aspell
@@ -31,16 +32,19 @@ You should download and install the latest version of these tools manually.
 
 - [Astyle](http://astyle.sourceforge.net/)
 - [cppcheck](http://cppcheck.sourceforge.net/)
+- [doxygen](http://www.doxygen.nl/)
 - Your favorite editor: [Emacs](https://www.gnu.org/software/emacs/).
 
 ## General Coding Rules
 
 There are some general guidelines, or rules, that must be followed.
 
-- Prefer standard C++11 before anything else to solve any problem.  A compelling
+- Prefer standard C++14 before anything else to solve any problem.  A compelling
 reason is needed to diverge from this.
 - Conditional build compilation, and specifically any dependency on config.h,
 must not be in any public include file.
+- Prefer not to use the preprocessor.  constexpr, templates, and normal functions
+usually provide a far greater benefit.
 - Anything not part of the public API goes in the egt::detail namespace, and
 additionally if it can be treated as a different compilation unit or header,
 then it goes in the include/egt/detail/ or src/detail/ dir.
@@ -48,13 +52,21 @@ then it goes in the include/egt/detail/ or src/detail/ dir.
 remain in the src dir.
 - As a general rule, no compiler warnings should be emitted in debug or release
 builds.
-- As a general rule, no cppcheck warnings should be emitted.
+- As a general rule, no cppcheck or clang-tidy warnings should be emitted.
 
 ## Static Analysis
 
 Static analysis is useful for detecting unexpected behavior or bugs before they
 happen.  The tool used by EGT is cppcheck to do this, but there are several
 other tools available.
+
+```sh
+make tidy
+```
+
+If any warnings are emitted by clang-tidy, they should be fixed or judiciously
+silenced with the [clang-tidy comment syntax](https://clang.llvm.org/extra/clang-tidy/).
+
 
 ```sh
 make cppcheck
@@ -71,6 +83,13 @@ static std::thread t([]()
     g_main_loop_run(mainloop);
 });
 ```
+
+```sh
+make checkheaders
+```
+
+This runs some custom checks on public EGT headers to make sure they follow
+specific rules.
 
 ## Coding Style
 
@@ -181,6 +200,8 @@ make distcheck \
 ```
 
 ## clang
+
+gcc is the recommended compiler version.  Clang support is experimental.  However, you can try it out with something like:
 
 ```sh
 CC=clang-6.0 CXX=clang++-6.0 ./configure
