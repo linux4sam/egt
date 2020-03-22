@@ -85,10 +85,7 @@ public:
                     PixelFormat format_hint = DEFAULT_FORMAT,
                     WindowHint hint = WindowHint::automatic);
 
-    void damage() override
-    {
-        Frame::damage();
-    }
+    using Frame::damage;
 
     void damage(const Rect& rect) override;
 
