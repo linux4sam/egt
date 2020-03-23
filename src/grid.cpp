@@ -261,7 +261,7 @@ void StaticGrid::reposition()
             auto widget = m_cells[column][row].lock();
             if (widget)
             {
-                Rect bounding = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
+                auto bounding = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
                 bounding += b.point() - point();
 
                 if (border())
@@ -274,9 +274,9 @@ void StaticGrid::reposition()
                     continue;
 
                 // get the aligning rect
-                Rect target = detail::align_algorithm(widget->box().size(),
-                                                      bounding,
-                                                      widget->align());
+                const auto target = detail::align_algorithm(widget->box().size(),
+                                    bounding,
+                                    widget->align());
 
                 // re-position/resize widget
                 widget->box(target);
@@ -354,7 +354,7 @@ void SelectableGrid::handle(Event& event)
             auto rows = m_cells[column].size();
             for (size_t row = 0; row < rows; row++)
             {
-                Rect bounding = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
+                auto bounding = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
 
                 if (border())
                 {
@@ -393,7 +393,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
 
         auto b = content_area();
 
-        Rect r = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
+        auto r = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
         r += b.point();
 
         painter.draw(r);
