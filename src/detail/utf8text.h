@@ -76,7 +76,7 @@ void tokenize_with_delimiters(T begin, T end,
         {
             if (!token.empty())
             {
-                tokens.push_back(token);
+                tokens.emplace_back(std::move(token));
                 token.clear();
             }
 
@@ -91,7 +91,7 @@ void tokenize_with_delimiters(T begin, T end,
     }
 
     if (!token.empty())
-        tokens.push_back(token);
+        tokens.emplace_back(token);
 }
 
 }

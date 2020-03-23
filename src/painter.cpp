@@ -365,7 +365,7 @@ void Painter::flood(cairo_surface_t* image,
     // non-recursive breadth first search
 
     std::deque<Point> q;
-    q.push_back(point);
+    q.emplace_back(point);
 
     while (!q.empty())
     {
@@ -392,13 +392,13 @@ void Painter::flood(cairo_surface_t* image,
         }
 
         if (check(size, format, data, stride, p + Point(1, 0), target_color, color))
-            q.push_back(p + Point(1, 0));
+            q.emplace_back(p + Point(1, 0));
         if (check(size, format, data, stride, p - Point(1, 0), target_color, color))
-            q.push_back(p - Point(1, 0));
+            q.emplace_back(p - Point(1, 0));
         if (check(size, format, data, stride, p + Point(0, 1), target_color, color))
-            q.push_back(p + Point(0, 1));
+            q.emplace_back(p + Point(0, 1));
         if (check(size, format, data, stride, p - Point(0, 1), target_color, color))
-            q.push_back(p - Point(0, 1));
+            q.emplace_back(p - Point(0, 1));
     }
 
     cairo_surface_mark_dirty(image);
