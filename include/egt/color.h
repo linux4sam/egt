@@ -553,6 +553,10 @@ EGT_API std::ostream& operator<<(std::ostream& os, const Color& color);
 class EGT_API Pattern
 {
 public:
+
+    /// Step array type.
+    using StepArray = std::vector<std::pair<float, Color>>;
+
     Pattern() noexcept = default;
 
     /**
@@ -561,17 +565,17 @@ public:
     // cppcheck-suppress noExplicitConstructor
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Pattern(const Color& color)
+        : m_steps(1, std::make_pair(0.f, color))
     {
-        m_steps.insert(std::make_pair(0.f, color));
     }
 
     /**
      * @param[in] steps Color steps of the pattern.
      */
-    explicit Pattern(const std::vector<std::pair<float, Color>>& steps)
+    explicit Pattern(StepArray steps)
+        : m_steps(std::move(steps))
     {
-        for (const auto& s : steps)
-            m_steps.insert(s);
+        std::sort(m_steps.begin(), m_steps.end(), sort_by_first);
     }
 
     /**
@@ -581,7 +585,7 @@ public:
     operator Color() const
     {
         if (!m_steps.empty())
-            return m_steps.begin()->second;
+            return m_steps.front().second;
 
         return {};
     }
@@ -592,19 +596,7 @@ public:
     const Color& color() const
     {
         if (!m_steps.empty())
-            return m_steps.begin()->second;
-
-        static Color tmp;
-        return tmp;
-    }
-
-    /**
-     * Get the first color of the pattern.
-     */
-    Color& color()
-    {
-        if (!m_steps.empty())
-            return m_steps.begin()->second;
+            return m_steps.front().second;
 
         static Color tmp;
         return tmp;
@@ -615,21 +607,28 @@ public:
      */
     void step(float offset, const Color& color)
     {
-        m_steps.insert(std::make_pair(offset, color));
+        m_steps.emplace_back(offset, color);
+        std::sort(m_steps.begin(), m_steps.end(), sort_by_first);
     }
 
     /**
      * Get each step of the pattern.
      */
-    const std::map<float, Color>& steps() const
+    const StepArray& steps() const
     {
         return m_steps;
     }
 
 protected:
 
+    static bool sort_by_first(const std::pair<float, Color>& a,
+                              const std::pair<float, Color>& b)
+    {
+        return (a.first < b.first);
+    }
+
     /// Steps of the pattern
-    std::map<float, Color> m_steps;
+    StepArray m_steps;
 };
 
 namespace experimental
