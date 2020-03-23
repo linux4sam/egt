@@ -212,24 +212,16 @@ public:
      */
     enum class GroupId
     {
-        /**
-         * Default color group associated with a normal Widget state.
-         */
+        /// Default color group associated with a normal Widget state.
         normal = 1,
 
-        /**
-         * Color group usually associated with the Widget::Flag::active flag.
-         */
+        /// Color group usually associated with the Widget::Flag::active flag.
         active = 2,
 
-        /**
-         * Color group usually associated with the Widget::Flag::disabled flag.
-         */
+        /// Color group usually associated with the Widget::Flag::disabled flag.
         disabled = 3,
 
-        /**
-         * Checked state associated with buttons.
-        */
+        /// Checked state associated with buttons.
         checked = 4
     };
 
@@ -240,54 +232,34 @@ public:
      */
     enum class ColorId
     {
-        /**
-         * General (Window, Frame) background color.
-         */
+        /// General (Window, Frame) background color.
         bg = 1,
 
-        /**
-         * Control (TextBox) text color.
-         */
+        /// Control (TextBox) text color.
         text,
 
-        /**
-         * TextBox highlight color.
-         */
+        /// TextBox highlight color.
         text_highlight,
 
-        /**
-         * TextBox cursor color.
-         */
+        /// TextBox cursor color.
         cursor,
 
-        /**
-         * Border color.
-         */
+        /// Border color.
         border,
 
-        /**
-         * Button background color.
-         */
+        /// Button background color.
         button_bg,
 
-        /**
-         * Button foreground color.
-         */
+        /// Button foreground color.
         button_fg,
 
-        /**
-         * Button text color.
-         */
+        /// Button text color.
         button_text,
 
-        /**
-         * Label background color.
-         */
+        /// Label background color.
         label_bg,
 
-        /**
-         * Label text color.
-         */
+        /// Label text color.
         label_text,
     };
 
@@ -357,14 +329,12 @@ public:
 
 protected:
 
-    /**
-     * Colors in the palette.
-     */
+    /// Patterns in the palette.
     std::map<GroupId, std::map<ColorId, Pattern>> m_colors;
 };
 
-static_assert(std::is_move_constructible<Palette>::value, "Palette should be move constructable");
-static_assert(std::is_move_assignable<Palette>::value, "Palette should be move assignable");
+static_assert(std::is_move_constructible<Palette>::value, "must be move constructable");
+static_assert(std::is_move_assignable<Palette>::value, "must be move assignable");
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color);
