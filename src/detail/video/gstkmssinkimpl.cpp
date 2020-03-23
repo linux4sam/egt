@@ -150,52 +150,52 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 
 bool GstKmsSinkImpl::media(const std::string& uri)
 {
-    m_uri = uri;
-
-    destroyPipeline();
+    if (detail::change_if_diff(m_uri, uri))
+    {
+        destroyPipeline();
 
 #ifdef HAVE_GSTREAMER_PBUTILS
-    if (!start_discoverer())
-    {
-        return false;
-    }
+        if (!start_discoverer())
+        {
+            return false;
+        }
 #endif
 
-    std::string buffer = create_pipeline(uri, m_audiodevice);
-    SPDLOG_DEBUG("{}", buffer);
+        std::string buffer = create_pipeline(uri, m_audiodevice);
+        SPDLOG_DEBUG("{}", buffer);
 
-    GError* error = nullptr;
-    m_pipeline = gst_parse_launch(buffer.c_str(), &error);
-    if (!m_pipeline)
-    {
-        if (error && error->message)
+        GError* error = nullptr;
+        m_pipeline = gst_parse_launch(buffer.c_str(), &error);
+        if (!m_pipeline)
         {
-            SPDLOG_DEBUG("gst_parse_launch failed : {}", error->message);
-            m_interface.on_error.invoke("gst_parse_launch failed " + std::string(error->message));
+            if (error && error->message)
+            {
+                SPDLOG_DEBUG("gst_parse_launch failed : {}", error->message);
+                m_interface.on_error.invoke("gst_parse_launch failed " + std::string(error->message));
+            }
+            return false;
         }
-        return false;
-    }
 
-    SPDLOG_DEBUG("gst_parse_launch success");
-    if (m_audiodevice & m_audiotrack)
-    {
+        SPDLOG_DEBUG("gst_parse_launch success");
+        if (m_audiodevice & m_audiotrack)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+            m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
+        }
+
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
+        m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
+        gst_bus_add_watch(m_bus, &bus_callback, this);
+
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+        g_timeout_add(1000, (GSourceFunc) &query_position, this);
+
+        if (!m_gmain_loop)
+        {
+            m_gmain_loop = g_main_loop_new(nullptr, false);
+            m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
+        }
     }
-
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
-    gst_bus_add_watch(m_bus, &bus_callback, this);
-
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    g_timeout_add(5000, (GSourceFunc) &query_position, this);
-
-    if (!m_gmain_loop)
-    {
-        m_gmain_loop = g_main_loop_new(nullptr, false);
-        m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
-    }
-
     return true;
 }
 
