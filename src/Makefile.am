@@ -155,6 +155,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/filesystem.h \
 ../include/egt/detail/flags.h \
 ../include/egt/detail/flagsbase.h \
+../include/egt/detail/image.h \
 ../include/egt/detail/imagecache.h \
 ../include/egt/detail/incbin.h \
 ../include/egt/detail/math.h \
@@ -355,7 +356,8 @@ endif
 if HAVE_PLPLOT
 libegt_la_SOURCES += \
 chart.cpp \
-detail/charts/plplotimpl.cpp
+detail/charts/plplotimpl.cpp \
+detail/charts/plplotimpl.h
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/chart.h

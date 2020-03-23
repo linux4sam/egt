@@ -22,7 +22,9 @@ EXTRA_DIST = \
 	utfcpp \
 	spdlog \
 	googletest \
-	Simd
+	Simd \
+	spdlog \
+	cxxopts
 
 if HAVE_SIMD
 all-local:

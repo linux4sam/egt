@@ -1,13 +1,15 @@
 EXTRA_DIST = \
 Doxyfile.in \
+Doxyfile.in \
+Info.plist.in \
 custom_footer.html \
 custom_header.html \
-Doxyfile.in \
 extra_stylesheet.css \
 footer.tex \
 header.tex  \
-src \
-Info.plist.in
+highlight.pack.js \
+shades-of-purple.css \
+src
 
 if HAVE_DOXYGEN_BIN
 docs: Doxyfile

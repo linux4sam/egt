@@ -32,6 +32,11 @@ resource_DATA = $(wildcard $(top_srcdir)/examples/resource/*.png) \
 	$(wildcard $(top_srcdir)/examples/resource/*.svg)
 resource_LDFLAGS = $(AM_LDFLAGS)
 
+EXTRA_DIST = $(wildcard $(top_srcdir)/examples/resource/*.png) \
+	$(wildcard $(top_srcdir)/examples/resource/*.bmp) \
+	$(wildcard $(top_srcdir)/examples/resource/*.jpg) \
+	$(wildcard $(top_srcdir)/examples/resource/*.svg)
+
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
 tidy-local: all-am
