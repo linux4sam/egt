@@ -188,7 +188,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
         gst_bus_add_watch(m_bus, &bus_callback, this);
 
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        g_timeout_add(1000, (GSourceFunc) &query_position, this);
+        m_eventsource_id = g_timeout_add(1000, (GSourceFunc) &query_position, this);
 
         if (!m_gmain_loop)
         {

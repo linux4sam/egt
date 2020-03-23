@@ -169,6 +169,12 @@ void GstDecoderImpl::destroyPipeline()
             m_bus = nullptr;
         }
 
+        if (m_eventsource_id > 0)
+        {
+            g_source_remove(m_eventsource_id);
+            m_eventsource_id = 0;
+        }
+
         if (m_gmain_loop)
         {
             /*
