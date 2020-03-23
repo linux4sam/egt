@@ -71,7 +71,7 @@ T interpolate(Functor&& easing, T percent, T start, T end, bool reverse = false)
 /**
  * Base class for an animation.
  */
-class EGT_API IAnimation : private detail::NonCopyable<IAnimation>
+class EGT_API AnimationBase : private detail::NonCopyable<AnimationBase>
 {
 public:
 
@@ -122,16 +122,14 @@ public:
         m_callbacks.clear();
     }
 
-    virtual ~IAnimation() = default;
+    virtual ~AnimationBase() noexcept = default;
 
 protected:
 
     /// The running state of the animation.
     bool m_running{false};
 
-    /**
-     * Registered callbacks for the animation.
-     */
+    /// Registered callbacks for the animation.
     std::vector<AnimationCallback> m_callbacks;
 };
 }
@@ -155,7 +153,7 @@ protected:
  *
  * @ingroup animation
  */
-class EGT_API Animation : public detail::IAnimation
+class EGT_API Animation : public detail::AnimationBase
 {
 public:
 
@@ -279,7 +277,7 @@ protected:
  *
  * @ingroup animation
  */
-class EGT_API AnimationSequence : public detail::IAnimation
+class EGT_API AnimationSequence : public detail::AnimationBase
 {
 public:
 
@@ -295,12 +293,12 @@ public:
      *
      * @param animation The animation.
      */
-    virtual void add(detail::IAnimation& animation)
+    virtual void add(detail::AnimationBase& animation)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
         // will not delete it.
-        add(std::shared_ptr<detail::IAnimation>(&animation, [](detail::IAnimation*) {}));
+        add(std::shared_ptr<detail::AnimationBase>(&animation, [](detail::AnimationBase*) {}));
     }
 
     /**
@@ -314,7 +312,7 @@ public:
     template<class T>
     void add(std::shared_ptr<T> animation)
     {
-        add(std::dynamic_pointer_cast<detail::IAnimation>(animation));
+        add(std::dynamic_pointer_cast<detail::AnimationBase>(animation));
     }
 
     /**
@@ -322,13 +320,13 @@ public:
      *
      * @param animation The animation.
      */
-    virtual void add(const std::shared_ptr<detail::IAnimation>& animation)
+    virtual void add(const std::shared_ptr<detail::AnimationBase>& animation)
     {
         if (!animation)
             return;
 
         auto i = std::find_if(m_animations.begin(), m_animations.end(),
-                              [animation](const std::shared_ptr<detail::IAnimation>& ptr)
+                              [animation](const std::shared_ptr<detail::AnimationBase>& ptr)
         {
             return ptr.get() == animation.get();
         });
@@ -351,13 +349,13 @@ public:
      *
      * @param animation The animation.
      */
-    void remove(detail::IAnimation* animation)
+    void remove(detail::AnimationBase* animation)
     {
         if (!animation)
             return;
 
         auto i = std::find_if(m_animations.begin(), m_animations.end(),
-                              [animation](const std::shared_ptr<detail::IAnimation>& ptr)
+                              [animation](const std::shared_ptr<detail::AnimationBase>& ptr)
         {
             return ptr.get() == animation;
         });
@@ -448,7 +446,7 @@ public:
 protected:
 
     /// Helper type for an array of animations.
-    using AnimationArray = std::vector<std::shared_ptr<detail::IAnimation>>;
+    using AnimationArray = std::vector<std::shared_ptr<detail::AnimationBase>>;
 
     /// The animations of the sequence.
     AnimationArray m_animations;
@@ -622,7 +620,7 @@ using PropertyAnimatorF = PropertyAnimatorType<float>;
  *
  * @ingroup animation
  */
-class EGT_API AnimationDelay : public detail::IAnimation
+class EGT_API AnimationDelay : public detail::AnimationBase
 {
 public:
 
