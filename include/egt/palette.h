@@ -15,9 +15,9 @@
 #include <egt/detail/meta.h>
 #include <egt/serialize.h>
 #include <iosfwd>
-#include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 namespace egt
 {
@@ -332,7 +332,7 @@ public:
 protected:
 
     /// Patterns in the palette.
-    std::map<GroupId, std::map<ColorId, Pattern>> m_colors;
+    std::unordered_map<GroupId, std::unordered_map<ColorId, Pattern>> m_colors;
 };
 
 static_assert(std::is_move_constructible<Palette>::value, "must be move constructable");
