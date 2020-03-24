@@ -45,11 +45,7 @@ void global_theme(std::shared_ptr<Theme> theme)
 
 void Theme::init_palette()
 {
-    m_palette->clear();
-
-    m_palette->set(Palette::ColorId::cursor, Palette::GroupId::normal, Palette::red);
-
-    auto pattern = [](const Color & color)
+    const auto pattern = [](const Color & color)
     {
         Pattern pattern1;
         pattern1.step(0, color);
@@ -59,45 +55,62 @@ void Theme::init_palette()
         return pattern1;
     };
 
-    m_palette->set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::white);
-    m_palette->set(Palette::ColorId::text, Palette::GroupId::normal, Palette::black);
-    m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::normal, Palette::hotpink);
-    m_palette->set(Palette::ColorId::border, Palette::GroupId::normal, Color(0xed192dff));
-    m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::normal, pattern(Color(0xed192dff)));
-    m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::normal, Color(0xed192dff));
-    m_palette->set(Palette::ColorId::button_text, Palette::GroupId::normal, Palette::white);
-    m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::normal, Palette::white);
-    m_palette->set(Palette::ColorId::label_text, Palette::GroupId::normal, Palette::black);
-
-    m_palette->set(Palette::ColorId::bg, Palette::GroupId::disabled, Palette::white);
-    m_palette->set(Palette::ColorId::text, Palette::GroupId::disabled, Color(0x989a9aff));
-    m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::disabled, Palette::hotpink);
-    m_palette->set(Palette::ColorId::border, Palette::GroupId::disabled, Color(0xcbcecfff));
-    m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::disabled, pattern(Color(0xcbcecfff)));
-    m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::disabled, Color(0xcbcecfff));
-    m_palette->set(Palette::ColorId::button_text, Palette::GroupId::disabled, Palette::black);
-    m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::disabled, Palette::white);
-    m_palette->set(Palette::ColorId::label_text, Palette::GroupId::disabled, Palette::black);
-
-    m_palette->set(Palette::ColorId::bg, Palette::GroupId::active, Palette::white);
-    m_palette->set(Palette::ColorId::text, Palette::GroupId::active, Palette::black);
-    m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::active, Palette::hotpink);
-    m_palette->set(Palette::ColorId::border, Palette::GroupId::active, Color(0xed192dff));
-    m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::active, pattern(Color(0xc01f2aff)));
-    m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::active, Color(0xed192dff));
-    m_palette->set(Palette::ColorId::button_text, Palette::GroupId::active, Palette::white);
-    m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::active, Palette::white);
-    m_palette->set(Palette::ColorId::label_text, Palette::GroupId::active, Palette::gray);
-
-    m_palette->set(Palette::ColorId::bg, Palette::GroupId::checked, Palette::white);
-    m_palette->set(Palette::ColorId::text, Palette::GroupId::checked, Palette::black);
-    m_palette->set(Palette::ColorId::text_highlight, Palette::GroupId::checked, Palette::hotpink);
-    m_palette->set(Palette::ColorId::border, Palette::GroupId::checked, Color(0xed192dff));
-    m_palette->set(Palette::ColorId::button_bg, Palette::GroupId::checked, pattern(Color(0xed192dff)));
-    m_palette->set(Palette::ColorId::button_fg, Palette::GroupId::checked, Color(0xed192dff));
-    m_palette->set(Palette::ColorId::button_text, Palette::GroupId::checked, Palette::white);
-    m_palette->set(Palette::ColorId::label_bg, Palette::GroupId::checked, pattern(Color(0xed192dff)));
-    m_palette->set(Palette::ColorId::label_text, Palette::GroupId::checked, Palette::black);
+    *m_palette =
+    {
+        {
+            Palette::GroupId::normal, {
+                {Palette::ColorId::cursor, Palette::red},
+                {Palette::ColorId::bg, Palette::white},
+                {Palette::ColorId::text, Palette::black},
+                {Palette::ColorId::text_highlight, Palette::hotpink},
+                {Palette::ColorId::border, Color(0xed192dff)},
+                {Palette::ColorId::button_bg, pattern(Color(0xed192dff))},
+                {Palette::ColorId::button_fg, Color(0xed192dff)},
+                {Palette::ColorId::button_text, Palette::white},
+                {Palette::ColorId::label_bg, Palette::white},
+                {Palette::ColorId::label_text, Palette::black},
+            }
+        },
+        {
+            Palette::GroupId::disabled, {
+                {Palette::ColorId::bg, Palette::white},
+                {Palette::ColorId::text, Color(0x989a9aff)},
+                {Palette::ColorId::text_highlight, Palette::hotpink},
+                {Palette::ColorId::border, Color(0xcbcecfff)},
+                {Palette::ColorId::button_bg, pattern(Color(0xcbcecfff))},
+                {Palette::ColorId::button_fg, Color(0xcbcecfff)},
+                {Palette::ColorId::button_text, Palette::black},
+                {Palette::ColorId::label_bg, Palette::white},
+                {Palette::ColorId::label_text, Palette::black},
+            }
+        },
+        {
+            Palette::GroupId::active, {
+                {Palette::ColorId::bg, Palette::white},
+                {Palette::ColorId::text, Palette::black},
+                {Palette::ColorId::text_highlight, Palette::hotpink},
+                {Palette::ColorId::border, Color(0xed192dff)},
+                {Palette::ColorId::button_bg, pattern(Color(0xc01f2aff))},
+                {Palette::ColorId::button_fg, Color(0xed192dff)},
+                {Palette::ColorId::button_text, Palette::white},
+                {Palette::ColorId::label_bg, Palette::white},
+                {Palette::ColorId::label_text, Palette::gray},
+            }
+        },
+        {
+            Palette::GroupId::checked, {
+                {Palette::ColorId::bg, Palette::white},
+                {Palette::ColorId::text, Palette::black},
+                {Palette::ColorId::text_highlight, Palette::hotpink},
+                {Palette::ColorId::border, Color(0xed192dff)},
+                {Palette::ColorId::button_bg, pattern(Color(0xed192dff))},
+                {Palette::ColorId::button_fg, Color(0xed192dff)},
+                {Palette::ColorId::button_text, Palette::white},
+                {Palette::ColorId::label_bg, pattern(Color(0xed192dff))},
+                {Palette::ColorId::label_text, Palette::black},
+            }
+        }
+    };
 }
 
 void Theme::init_draw()

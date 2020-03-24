@@ -263,9 +263,12 @@ public:
         label_text,
     };
 
+    using ColorArray = std::unordered_map<GroupId, std::unordered_map<ColorId, Pattern>>;
+
     Palette() = default;
     EGT_OPS_COPY_MOVE(Palette);
-    virtual ~Palette() = default;
+    Palette& operator=(const ColorArray& colors);
+    virtual ~Palette() noexcept = default;
 
     /**
      * Get a color.
@@ -332,7 +335,7 @@ public:
 protected:
 
     /// Patterns in the palette.
-    std::unordered_map<GroupId, std::unordered_map<ColorId, Pattern>> m_colors;
+    ColorArray m_colors;
 };
 
 static_assert(std::is_move_constructible<Palette>::value, "must be move constructable");

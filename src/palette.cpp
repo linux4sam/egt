@@ -16,6 +16,12 @@ namespace egt
 inline namespace v1
 {
 
+Palette& Palette::operator=(const ColorArray& colors)
+{
+    m_colors = colors;
+    return *this;
+}
+
 const Pattern& Palette::color(ColorId id, GroupId group) const
 {
     const auto g = m_colors.find(group);
