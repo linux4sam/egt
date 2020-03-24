@@ -44,6 +44,7 @@
 #include <egt/respath.h>
 #include <egt/script.h>
 #include <egt/scrollwheel.h>
+#include <egt/serialize.h>
 #include <egt/shapes.h>
 #include <egt/sideboard.h>
 #include <egt/sizer.h>
@@ -54,12 +55,12 @@
 #include <egt/tools.h>
 #include <egt/types.h>
 #include <egt/uri.h>
+#include <egt/utils.h>
 #include <egt/value.h>
 #include <egt/valuewidget.h>
 #include <egt/version.h>
 #include <egt/view.h>
 #include <egt/window.h>
-#include <egt/utils.h>
 
 @include_audio@
 #ifdef EGT_HAS_AUDIO
