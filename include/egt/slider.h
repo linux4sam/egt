@@ -199,6 +199,19 @@ public:
     }
 
     /**
+     *  Enable or disable the live update feature.
+     *
+     *  When enabled, the on_value_changed event happens also during
+     *  cursor dragging.
+     *
+     *  @param[in] enable Enable or disable the live update mode.
+     */
+    void live_update(bool enable)
+    {
+        m_live_update = enable;
+    }
+
+    /**
      * Get the Orientation.
      */
     Orientation orient() const { return m_orient; }
@@ -265,7 +278,7 @@ protected:
         if (detail::change_if_diff<>(this->m_value, value))
         {
             this->damage();
-            if (false)
+            if (m_live_update)
             {
                 this->on_value_changed.invoke();
             }
@@ -326,6 +339,9 @@ protected:
 
     /// When true, an invoke of events has been queued to occur.
     bool m_invoke_pending{false};
+
+    /// When true, notify handlers even during drag.
+    bool m_live_update{false};
 
     /// Slider flags.
     SliderFlags m_slider_flags{};
