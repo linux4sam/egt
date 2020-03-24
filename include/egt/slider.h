@@ -161,17 +161,17 @@ public:
             {
                 const auto diff = event.pointer().point - event.pointer().drag_start;
                 if (slider_flags().is_set(SliderFlag::origin_opposite))
-                    value(to_value(m_start_offset - diff.x()));
+                    update_value(to_value(m_start_offset - diff.x()));
                 else
-                    value(to_value(m_start_offset + diff.x()));
+                    update_value(to_value(m_start_offset + diff.x()));
             }
             else
             {
                 const auto diff = event.pointer().point - event.pointer().drag_start;
                 if (slider_flags().is_set(SliderFlag::origin_opposite))
-                    value(to_value(m_start_offset + diff.y()));
+                    update_value(to_value(m_start_offset + diff.y()));
                 else
-                    value(to_value(m_start_offset - diff.y()));
+                    update_value(to_value(m_start_offset - diff.y()));
             }
             break;
         default:
@@ -187,25 +187,12 @@ public:
     {
         T orig = this->value();
 
-        assert(this->m_end > this->m_start);
+        update_value(value);
 
-        if (value > this->m_end)
-            value = this->m_end;
-
-        if (value < this->m_start)
-            value = this->m_start;
-
-        if (detail::change_if_diff<>(this->m_value, value))
+        if (m_invoke_pending)
         {
-            this->damage();
-
-            // live update to handlers?
-            if (false)
-            {
-                this->on_value_changed.invoke();
-            }
-            else
-                m_invoke_pending = true;
+            m_invoke_pending = false;
+            this->on_value_changed.invoke();
         }
 
         return orig;
@@ -262,6 +249,29 @@ protected:
         else
             return egt::detail::normalize<float>(offset, 0, b.height() - handle_height(),
                                                  this->m_start, this->m_end);
+    }
+
+    /// Update the value without notifying the handlers.
+    void update_value(T value)
+    {
+        assert(this->m_end > this->m_start);
+
+        if (value > this->m_end)
+            value = this->m_end;
+
+        if (value < this->m_start)
+            value = this->m_start;
+
+        if (detail::change_if_diff<>(this->m_value, value))
+        {
+            this->damage();
+            if (false)
+            {
+                this->on_value_changed.invoke();
+            }
+            else
+                m_invoke_pending = true;
+        }
     }
 
     /// Get the calculated handle width.
