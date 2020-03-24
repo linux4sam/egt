@@ -268,9 +268,6 @@ private:
     detail::Object::RegisterHandle m_handle{0};
 };
 
-/// Alias for a TopWindow
-using MainWindow = TopWindow;
-
 /**
  * Get a pointer to the main window.
  */
