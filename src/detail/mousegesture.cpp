@@ -13,7 +13,7 @@ inline namespace v1
 namespace detail
 {
 
-MouseGesture::MouseGesture()
+MouseGesture::MouseGesture() noexcept
 {
     // setup long click timer handler
     m_long_click_timer.on_timeout([this]()
@@ -97,7 +97,7 @@ Event MouseGesture::handle(const Event& event)
         break;
     }
 
-    return Event();
+    return {};
 }
 
 void MouseGesture::start(const DisplayPoint& point)

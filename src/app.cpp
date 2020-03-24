@@ -418,7 +418,7 @@ const std::vector<std::pair<std::string, std::string>>& Application::get_input_d
     return m_input_devices;
 }
 
-Application::~Application()
+Application::~Application() noexcept
 {
     Input::global_input().remove_handler(m_handle);
 

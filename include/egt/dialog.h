@@ -64,6 +64,9 @@ public:
      */
     explicit Dialog(const Rect& rect = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(Dialog);
+    ~Dialog() noexcept override = default;
+
     /**
      * Set the title info for this dialog.
      *
@@ -97,33 +100,21 @@ public:
      */
     virtual void widget(const std::shared_ptr<Widget>& widget);
 
-    ~Dialog() override = default;
-
 protected:
 
-    /**
-     * Layout sizer.
-     */
+    /// Layout sizer.
     VerticalBoxSizer m_layout;
 
-    /**
-     * Content sizer.
-     */
+    /// Content sizer.
     VerticalBoxSizer m_content;
 
-    /**
-     * m_title is for dialog title.
-     */
+    /// Dialog title.
     ImageLabel m_title;
 
-    /**
-     * m_button1 Button for okay or cancel.
-     */
+    /// Button for okay or cancel.
     Button m_button1;
 
-    /**
-     * m_button2 Button for okay or cancel.
-     */
+    /// Button for okay or cancel.
     Button m_button2;
 };
 

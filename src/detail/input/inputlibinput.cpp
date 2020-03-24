@@ -12,13 +12,13 @@
 #include "egt/eventloop.h"
 #include "egt/keycode.h"
 #include "egt/screen.h"
+#include <cstdarg>
 #include <libinput.h>
 #include <libudev.h>
 #include <linux/input.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
-#include <stdarg.h>
 #include <string>
 #include <unistd.h>
 #include <vector>
@@ -369,7 +369,7 @@ void InputLibInput::handle_read(const asio::error_code& error)
     });
 }
 
-InputLibInput::~InputLibInput()
+InputLibInput::~InputLibInput() noexcept
 {
     libinput_unref(li);
 }

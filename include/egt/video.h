@@ -93,6 +93,9 @@ public:
                 PixelFormat format = PixelFormat::xrgb8888,
                 WindowHint hint = WindowHint::overlay);
 
+    EGT_OPS_NOCOPY_MOVE(VideoWindow);
+    ~VideoWindow() noexcept override;
+
     void do_draw() override
     {
         // video windows don't draw
@@ -216,8 +219,6 @@ public:
      * @return true if supported and false if not supported.
      */
     virtual bool has_audio() const;
-
-    ~VideoWindow() override;
 
 protected:
     /// Loopback enabled.

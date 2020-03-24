@@ -52,6 +52,9 @@ public:
                         const Rect& rect = {},
                         const AlignFlags& text_align = AlignFlag::center) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(TextWidget);
+    ~TextWidget() noexcept override = default;
+
     /**
      * Set the text.
      *
@@ -101,23 +104,15 @@ public:
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
 
-    ~TextWidget() noexcept override = default;
-
 protected:
 
-    /**
-     * Get the size of the text.
-     */
+    /// Get the size of the text.
     Size text_size(const std::string& text) const;
 
-    /**
-     * Alignment of the text.
-     */
+    /// Alignment of the text.
     AlignFlags m_text_align{AlignFlag::center};
 
-    /**
-     * The text.
-     */
+    /// The text.
     std::string m_text;
 };
 

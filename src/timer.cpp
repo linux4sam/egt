@@ -159,10 +159,6 @@ Timer::~Timer() noexcept
         timers.erase(i);
 }
 
-PeriodicTimer::PeriodicTimer(std::chrono::milliseconds interval) noexcept
-    : Timer(interval)
-{}
-
 void PeriodicTimer::start()
 {
     // error::operation_aborted occurs when expires_from_now() is called on the

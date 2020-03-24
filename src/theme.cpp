@@ -9,6 +9,7 @@
 #include "egt/painter.h"
 #include "egt/theme.h"
 #include "egt/widget.h"
+#include <cassert>
 
 namespace egt
 {

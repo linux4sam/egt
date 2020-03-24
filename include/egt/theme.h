@@ -188,6 +188,9 @@ public:
 
     Theme() = default;
 
+    EGT_OPS_MOVE(Theme);
+    Theme& operator=(const Theme&) = delete;
+
     /// Copy constructor
     Theme(const Theme& rhs)
     {
@@ -197,6 +200,8 @@ public:
         if (rhs.m_font)
             m_font = std::make_unique<Font>(*rhs.m_font);
     }
+
+    virtual ~Theme() noexcept = default;
 
     /**
      * Get a reference to the theme Palette.
@@ -316,18 +321,12 @@ public:
         init_draw();
     }
 
-    virtual ~Theme() = default;
-
 protected:
 
-    /**
-     * Palette instance used by the theme.
-     */
+    /// Palette instance used by the theme.
     std::unique_ptr<Palette> m_palette{std::make_unique<Palette>()};
 
-    /**
-     * Default font instance used by the theme.
-     */
+    /// Default font instance used by the theme.
     std::unique_ptr<Font> m_font{std::make_unique<Font>()};
 
     /**

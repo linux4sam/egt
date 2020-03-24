@@ -41,8 +41,6 @@ class EGT_API Canvas
 {
 public:
 
-    Canvas() = default;
-
     /**
      * Construct a canvas with the specified format and size.
      *
@@ -135,8 +133,6 @@ public:
     void copy(const shared_cairo_surface_t& surface);
 
     void copy(const shared_cairo_surface_t& surface, const RectF& rect);
-
-    virtual ~Canvas() = default;
 
 protected:
 

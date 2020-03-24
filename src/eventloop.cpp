@@ -190,7 +190,7 @@ detail::PriorityQueue& EventLoop::queue()
     return m_impl->m_queue;
 }
 
-EventLoop::~EventLoop() = default;
+EventLoop::~EventLoop() noexcept = default;
 
 }
 }

@@ -263,6 +263,10 @@ public:
         label_text,
     };
 
+    Palette() = default;
+    EGT_OPS_COPY_MOVE(Palette);
+    virtual ~Palette() = default;
+
     /**
      * Get a color.
      *
@@ -324,8 +328,6 @@ public:
      */
     virtual void deserialize(const std::string& name, const std::string& value,
                              const Serializer::Attributes& attrs);
-
-    virtual ~Palette() = default;
 
 protected:
 

@@ -39,7 +39,8 @@ public:
      */
     explicit InputTslib(Application& app, const std::string& path);
 
-    ~InputTslib() override;
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(InputTslib);
+    ~InputTslib() noexcept override;
 
 private:
 

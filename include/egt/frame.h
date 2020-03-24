@@ -51,6 +51,10 @@ public:
     explicit Frame(const Rect& rect = {},
                    const Flags& flags = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(Frame);
+
+    ~Frame() noexcept override;
+
     void handle(Event& event) override;
 
     /**
@@ -451,8 +455,6 @@ public:
         add(w);
         return w;
     }
-
-    ~Frame() noexcept override;
 
 protected:
 

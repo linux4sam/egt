@@ -69,6 +69,10 @@ public:
 class EGT_API OstreamWidgetSerializer : public Serializer
 {
 public:
+    OstreamWidgetSerializer() = delete;
+    EGT_OPS_NOCOPY_NOMOVE(OstreamWidgetSerializer);
+    virtual ~OstreamWidgetSerializer() noexcept = default;
+
     /**
      * @param o Output stream reference.
      */
@@ -109,6 +113,8 @@ class EGT_API XmlWidgetSerializer : public Serializer
 {
 public:
     XmlWidgetSerializer();
+    EGT_OPS_NOCOPY_MOVE(XmlWidgetSerializer);
+    virtual ~XmlWidgetSerializer() noexcept;
 
     /// Clear or reset, the serializer for re-use.
     void reset();
@@ -126,8 +132,6 @@ public:
 
     /// Write to the specified ostream.
     void write(std::ostream& out);
-
-    virtual ~XmlWidgetSerializer() noexcept;
 
 protected:
 

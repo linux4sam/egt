@@ -82,7 +82,7 @@ public:
     /**
      * @param[in] rect Rectangle for the widget.
      */
-    explicit RadialType(const Rect& rect = {})
+    explicit RadialType(const Rect& rect = {}) noexcept
         : Widget(rect)
     {
         this->name("Radial" + std::to_string(m_widgetid));
@@ -93,11 +93,14 @@ public:
      * @param[in] parent The parent Frame.
      * @param[in] rect Rectangle for the widget.
      */
-    explicit RadialType(Frame& parent, const Rect& rect = {})
+    explicit RadialType(Frame& parent, const Rect& rect = {}) noexcept
         : RadialType<T>(rect)
     {
         parent.add(*this);
     }
+
+    EGT_OPS_NOCOPY_MOVE(RadialType);
+    ~RadialType() noexcept override = default;
 
     /**
      * Add a range value to the radial.
@@ -304,8 +307,6 @@ public:
         m_start_angle = value;
     }
 
-    ~RadialType() override = default;
-
 protected:
 
     /// @private
@@ -315,6 +316,7 @@ protected:
         ValueData(std::shared_ptr<RangeValue<T2>> r,
                   const Color c,
                   size_t w = 10,
+                  // NOLINTNEXTLINE(modernize-pass-by-value)
                   RadialFlags f = {},
                   detail::Object::RegisterHandle h = 0) noexcept
             : range(std::move(r)),

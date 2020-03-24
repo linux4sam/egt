@@ -39,6 +39,7 @@ TextBox::TextBox(const std::string& text,
 TextBox::TextBox(const std::string& text,
                  const Rect& rect,
                  const AlignFlags& text_align,
+                 // NOLINTNEXTLINE(modernize-pass-by-value)
                  const TextFlags& flags) noexcept
     : TextWidget(text, rect, text_align),
       m_timer(std::chrono::seconds(1)),

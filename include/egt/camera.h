@@ -89,6 +89,9 @@ public:
                           PixelFormat format_hint = PixelFormat::yuyv,
                           WindowHint hint = WindowHint::overlay);
 
+    EGT_OPS_NOCOPY_MOVE(CameraWindow);
+    ~CameraWindow() noexcept override;
+
     void do_draw() override
     {
         // video windows don't draw
@@ -128,8 +131,6 @@ public:
     {
         return m_vscale;
     }
-
-    ~CameraWindow() override;
 
 protected:
 

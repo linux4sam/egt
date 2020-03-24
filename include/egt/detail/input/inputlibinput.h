@@ -12,11 +12,11 @@
  * @brief Working with libinput devices.
  */
 
+#include <array>
 #include <egt/asio.hpp>
 #include <egt/detail/meta.h>
 #include <egt/input.h>
 #include <memory>
-#include <array>
 
 struct libinput;
 struct libinput_event;
@@ -42,8 +42,8 @@ public:
      * @throws std::runtime_error if unable to open device.
      */
     explicit InputLibInput(Application& app);
-
-    virtual ~InputLibInput();
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(InputLibInput);
+    ~InputLibInput() noexcept override;
 
 private:
 

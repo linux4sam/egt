@@ -40,6 +40,8 @@ class EGT_API Input
 public:
 
     Input();
+    EGT_OPS_NOCOPY_MOVE(Input);
+    virtual ~Input() noexcept;
 
     /**
      * Get a reference to the global input Object.
@@ -62,8 +64,6 @@ public:
     {
         return m_global_handler;
     }
-
-    virtual ~Input();
 
 protected:
 

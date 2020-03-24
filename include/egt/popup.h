@@ -35,11 +35,14 @@ public:
      * @param point The origin point of the window.
      */
     explicit PopupType(const Size& size = {},
-                       const Point& point = {})
+                       const Point& point = {}) noexcept
         : T(size)
     {
         this->move(point);
     }
+
+    EGT_OPS_NOCOPY_MOVE(PopupType);
+    ~PopupType() noexcept override = default;
 
     /**
      * Show the window centered.
@@ -92,9 +95,6 @@ public:
             detail::set_modal_window(nullptr);
         }
     }
-
-    ~PopupType() override = default;
-
 };
 
 /**

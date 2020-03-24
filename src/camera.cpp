@@ -23,7 +23,7 @@ CameraWindow::CameraWindow(const Rect& rect,
                            PixelFormat format_hint,
                            WindowHint hint)
     : Window(rect, format_hint, hint),
-      m_camera_impl(new detail::CameraImpl(*this, rect, device, detail::is_target_sama5d4()))
+      m_camera_impl(std::make_unique<detail::CameraImpl>(*this, rect, device, detail::is_target_sama5d4()))
 {}
 
 void CameraWindow::draw(Painter& painter, const Rect& rect)
@@ -60,7 +60,7 @@ void CameraWindow::stop()
     m_camera_impl->stop();
 }
 
-CameraWindow::~CameraWindow() = default;
+CameraWindow::~CameraWindow() noexcept = default;
 
 } //namespace v1
 

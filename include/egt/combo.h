@@ -82,6 +82,9 @@ public:
                       const ItemArray& items = {},
                       const Rect& rect = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(ComboBox);
+    ~ComboBox() noexcept override;
+
     void handle(Event& event) override;
 
     void resize(const Size& s) override;
@@ -161,8 +164,6 @@ public:
 
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
-
-    ~ComboBox() override;
 
 protected:
 

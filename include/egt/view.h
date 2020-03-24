@@ -51,7 +51,7 @@ public:
      * @param[in] vertical_policy Vertical slider policy.
      */
     explicit ScrolledView(Policy horizontal_policy = Policy::as_needed,
-                          Policy vertical_policy = Policy::as_needed);
+                          Policy vertical_policy = Policy::as_needed) noexcept;
 
     /**
      * @param[in] rect Initial rectangle of the widget.
@@ -60,7 +60,7 @@ public:
      */
     explicit ScrolledView(const Rect& rect,
                           Policy horizontal_policy = Policy::as_needed,
-                          Policy vertical_policy = Policy::as_needed);
+                          Policy vertical_policy = Policy::as_needed) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -70,7 +70,7 @@ public:
      */
     explicit ScrolledView(Frame& parent, const Rect& rect,
                           Policy horizontal_policy = Policy::as_needed,
-                          Policy vertical_policy = Policy::as_needed);
+                          Policy vertical_policy = Policy::as_needed) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -79,7 +79,10 @@ public:
      */
     explicit ScrolledView(Frame& parent,
                           Policy horizontal_policy = Policy::as_needed,
-                          Policy vertical_policy = Policy::as_needed);
+                          Policy vertical_policy = Policy::as_needed) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE(ScrolledView);
+    ~ScrolledView() noexcept override = default;
 
     void handle(Event& event) override;
 
@@ -89,10 +92,7 @@ public:
 
     void layout() override;
 
-    void damage() override
-    {
-        damage(box());
-    }
+    using Frame::damage;
 
     void damage(const Rect& /*rect*/) override
     {
@@ -146,8 +146,6 @@ public:
             damage();
     }
 
-    ~ScrolledView() noexcept override = default;
-
 protected:
 
     /// Horizontal scrollable
@@ -182,28 +180,24 @@ protected:
     /// Update properties of the sliders.
     void update_sliders();
 
+    /// Return the super rectangle that includes all of the child widgets.
+    Rect super_rect() const;
+
+    /// Resize the slider whenever the size of this changes.
+    void resize_slider();
+
     /// Horizontal scrollable
     bool m_hscrollable{false};
+
     /// Vertical scrollable
     bool m_vscrollable{false};
 
-    /**
-     * Return the super rectangle that includes all of the child widgets.
-     */
-    Rect super_rect() const;
-
-    /**
-     * Resize the slider whenever the size of this changes.
-     */
-    void resize_slider();
-
-    /**
-     * Current offset of the view.
-     */
+    /// Current offset of the view.
     Point m_offset;
 
     /// Horizontal slider shown when scroll-able.
     Slider m_hslider;
+
     /// Vertical slider shown when scroll-able.
     Slider m_vslider;
 
@@ -212,15 +206,14 @@ protected:
 
     /// Horizontal scrollbar policy
     Policy m_horizontal_policy{Policy::as_needed};
+
     /// Vertical scrollbar policy
     Policy m_vertical_policy{Policy::as_needed};
 
     /// @private
     std::shared_ptr<Canvas> m_canvas;
 
-    /**
-     * Width/height of the slider when shown.
-     */
+    /// Width/height of the slider when shown.
     DefaultDim m_slider_dim{8};
 
     /// Internal update flag.

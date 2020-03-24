@@ -44,7 +44,7 @@ FrameBuffer::FrameBuffer(const std::string& path)
     init(&m_fb, 1, Size(varinfo.xres, varinfo.yres));
 }
 
-FrameBuffer::~FrameBuffer()
+FrameBuffer::~FrameBuffer() noexcept
 {
     if (m_fb)
         ::munmap(m_fb, 0);

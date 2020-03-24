@@ -34,7 +34,9 @@ class EGT_API Object
 {
 public:
 
-    Object() noexcept = default;
+    Object() = default;
+    EGT_OPS_NOCOPY_MOVE(Object);
+    virtual ~Object() noexcept = default;
 
     /// Get the name of the Object.
     const std::string& name() const { return m_name; }
@@ -102,8 +104,6 @@ public:
      */
     virtual void remove_handler(RegisterHandle handle);
 
-    virtual ~Object() = default;
-
 protected:
 
     /// Counter used to generate unique handles for each callback registration.
@@ -120,6 +120,7 @@ protected:
          * @param[in] h Handle for this registration.
          */
         CallbackMeta(EventCallback c,
+                     // NOLINTNEXTLINE(modernize-pass-by-value)
                      const FilterFlags& m,
                      RegisterHandle h) noexcept
             : callback(std::move(c)),

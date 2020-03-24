@@ -33,8 +33,6 @@ class Signal
 {
 public:
 
-    Signal() noexcept = default;
-
     /**
      * Event handler callback function.
      */
@@ -121,8 +119,6 @@ public:
         if (i != m_callbacks->end())
             m_callbacks->erase(i);
     }
-
-    ~Signal() = default;
 
 protected:
 

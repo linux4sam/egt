@@ -137,6 +137,9 @@ public:
         parent.add(*this);
     }
 
+    EGT_OPS_NOCOPY_MOVE(SliderType);
+    ~SliderType() override = default;
+
     void handle(Event& event) override
     {
         Widget::handle(event);
@@ -234,8 +237,6 @@ public:
 
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
-
-    ~SliderType() override = default;
 
 protected:
 

@@ -52,6 +52,9 @@ public:
           m_value(value)
     {}
 
+    EGT_OPS_NOCOPY_MOVE(ValueWidget);
+    ~ValueWidget() noexcept override = default;
+
     /**
      * Set the value.
      *
@@ -74,8 +77,6 @@ public:
      * Get the value.
      */
     T value() const { return m_value; }
-
-    ~ValueWidget() override = default;
 
 protected:
 
@@ -129,6 +130,9 @@ public:
         if (m_value < m_start)
             m_value = m_start;
     }
+
+    EGT_OPS_NOCOPY_MOVE(ValueRangeWidget);
+    ~ValueRangeWidget() noexcept override = default;
 
     /**
      * Set value.
@@ -205,8 +209,6 @@ public:
     {
         return m_value;
     }
-
-    ~ValueRangeWidget() override = default;
 
 protected:
 

@@ -419,7 +419,7 @@ void KMSScreen::brightness(size_t brightness)
 #endif
 }
 
-KMSScreen::~KMSScreen()
+KMSScreen::~KMSScreen() noexcept
 {
     close();
 

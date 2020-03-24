@@ -45,7 +45,7 @@ class Screen;
  * of what it means to handle an event or draw the Widget is implemented in
  * classes that are derived from this one, like a Button or a Label.
  */
-class EGT_API Widget : public detail::Object, private detail::NonCopyable<Widget>
+class EGT_API Widget : public detail::Object
 {
 public:
 
@@ -169,6 +169,9 @@ public:
      */
     explicit Widget(Frame& parent, const Rect& rect = {},
                     const Widget::Flags& flags = {}) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE(Widget);
+    ~Widget() noexcept override;
 
     /**
      * Draw the widget.
@@ -1234,8 +1237,6 @@ public:
      */
     virtual void deserialize(const std::string& name, const std::string& value,
                              const Serializer::Attributes& attrs);
-
-    ~Widget() noexcept override;
 
 protected:
 

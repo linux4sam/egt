@@ -122,8 +122,8 @@ class EGT_API RectangleWidget : public Widget
 public:
 
     /**
-    * @param[in] rect Initial rectangle of the widget.
-    */
+     * @param[in] rect Initial rectangle of the widget.
+     */
     explicit RectangleWidget(const Rect& rect = {})
         : Widget(rect)
     {
@@ -133,8 +133,8 @@ public:
 
     /**
      * @param[in] parent The parent Frame.
-    * @param[in] rect Initial rectangle of the widget.
-    */
+     * @param[in] rect Initial rectangle of the widget.
+     */
     explicit RectangleWidget(Frame& parent, const Rect& rect = {})
         : RectangleWidget(rect)
     {

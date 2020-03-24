@@ -66,7 +66,7 @@ inline namespace v1
  * @ingroup timers
  * @see PeriodicTimer
  */
-class EGT_API Timer : private detail::NonCopyable<Timer>
+class EGT_API Timer
 {
 public:
 
@@ -87,6 +87,9 @@ public:
      * Construct a one-shot timer with the specified duration.
      */
     explicit Timer(std::chrono::milliseconds duration) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(Timer);
+    virtual ~Timer() noexcept;
 
     /**
      * Start the timer.
@@ -179,8 +182,6 @@ public:
      */
     void name(const std::string& name) { m_name = name; }
 
-    virtual ~Timer() noexcept;
-
 protected:
 
     /**
@@ -257,22 +258,9 @@ class EGT_API PeriodicTimer : public Timer
 {
 public:
 
-    /**
-     * Construct a periodic timer.
-     *
-     * The duration of the timer can be specified when calling
-     * start_with_duration() instead.
-     */
-    PeriodicTimer() noexcept = default;
-
-    /**
-     * Construct a periodic timer with the specified duration.
-     */
-    explicit PeriodicTimer(std::chrono::milliseconds interval) noexcept;
+    using Timer::Timer;
 
     void start() override;
-
-    ~PeriodicTimer() noexcept override = default;
 
 private:
 

@@ -204,7 +204,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                                std::placeholders::_2));
 }
 
-InputEvDev::~InputEvDev()
+InputEvDev::~InputEvDev() noexcept
 {
     if (m_fd >= 0)
         close(m_fd);

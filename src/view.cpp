@@ -14,14 +14,14 @@ namespace egt
 inline namespace v1
 {
 ScrolledView::ScrolledView(Policy horizontal_policy,
-                           Policy vertical_policy)
+                           Policy vertical_policy) noexcept
     : ScrolledView(Rect(), horizontal_policy, vertical_policy)
 {
 }
 
 ScrolledView::ScrolledView(const Rect& rect,
                            Policy horizontal_policy,
-                           Policy vertical_policy)
+                           Policy vertical_policy) noexcept
     : Frame(rect),
       m_hslider(0, 100, 0, Orientation::horizontal),
       m_vslider(0, 100, 0, Orientation::vertical),
@@ -42,7 +42,7 @@ ScrolledView::ScrolledView(const Rect& rect,
 
 ScrolledView::ScrolledView(Frame& parent, const Rect& rect,
                            Policy horizontal_policy,
-                           Policy vertical_policy)
+                           Policy vertical_policy) noexcept
     : ScrolledView(rect, horizontal_policy, vertical_policy)
 {
     parent.add(*this);
@@ -50,7 +50,7 @@ ScrolledView::ScrolledView(Frame& parent, const Rect& rect,
 
 ScrolledView::ScrolledView(Frame& parent,
                            Policy horizontal_policy,
-                           Policy vertical_policy)
+                           Policy vertical_policy) noexcept
     : ScrolledView(horizontal_policy, vertical_policy)
 {
     parent.add(*this);

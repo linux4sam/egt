@@ -49,6 +49,9 @@ public:
      */
     explicit GaugeLayer(Gauge& gauge, const Image& image = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(GaugeLayer);
+    ~GaugeLayer() noexcept override = default;
+
     void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -69,8 +72,6 @@ public:
      * Get the gauge of the layer.
      */
     Gauge* gauge() const { return m_gauge; }
-
-    ~GaugeLayer() override = default;
 
 protected:
 
@@ -136,6 +137,9 @@ public:
                          float angle_start = 0,
                          float angle_stop = 360,
                          bool clockwise = true) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE(NeedleLayer);
+    ~NeedleLayer() noexcept override = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -302,8 +306,6 @@ public:
             damage();
     }
 
-    ~NeedleLayer() override = default;
-
 protected:
 
     /// @private
@@ -379,6 +381,9 @@ public:
     using Frame::Frame;
     using Frame::add;
 
+    EGT_OPS_NOCOPY_MOVE(Gauge);
+    ~Gauge() noexcept override;
+
     /**
      * Add a GaugeLayer to the Gauge.
      *
@@ -404,8 +409,6 @@ public:
 
     /// Remove a layer from the gauge.
     virtual void remove(GaugeLayer* layer);
-
-    ~Gauge() override;
 
 protected:
 

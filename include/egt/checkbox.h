@@ -55,6 +55,9 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(CheckBox);
+    ~CheckBox() override = default;
+
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;
@@ -67,8 +70,6 @@ public:
     using Button::min_size_hint;
 
     Size min_size_hint() const override;
-
-    ~CheckBox() override = default;
 };
 
 /**
@@ -93,6 +94,9 @@ public:
     * @param[in] rect Initial rectangle of the widget.
     */
     explicit ToggleBox(Frame& parent, const Rect& rect = {}) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE(ToggleBox);
+    ~ToggleBox() override = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -154,8 +158,6 @@ public:
 
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
-
-    ~ToggleBox() override = default;
 
 protected:
 

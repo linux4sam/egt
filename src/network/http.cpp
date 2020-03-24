@@ -48,6 +48,9 @@ public:
         return i.get();
     }
 
+    EGT_OPS_NOCOPY_NOMOVE(HttpClientRequestManager);
+    ~HttpClientRequestManager() noexcept = default;
+
     static int socket_callback(CURL* easy,
                                curl_socket_t s,
                                int what,
@@ -210,11 +213,6 @@ public:
         } while (msg);
     }
 
-    HttpClientRequestManager(const HttpClientRequestManager&) = delete;
-    HttpClientRequestManager(HttpClientRequestManager&&) = delete;
-    HttpClientRequestManager& operator=(const HttpClientRequestManager&) = delete;
-    HttpClientRequestManager& operator=(HttpClientRequestManager&&) = delete;
-
     CURLM* m_multi{};
     int m_running{0};
     asio::steady_timer m_timer;
@@ -294,7 +292,7 @@ static int closesocket_callback(void* clientp, curl_socket_t item)
     return 0;
 }
 
-HttpClientRequest::HttpClientRequest()
+HttpClientRequest::HttpClientRequest() noexcept
     : m_impl(std::make_unique<detail::HttpClientRequestData>())
 {}
 
@@ -355,7 +353,7 @@ void HttpClientRequest::cleanup()
     }
 }
 
-HttpClientRequest::~HttpClientRequest()
+HttpClientRequest::~HttpClientRequest() noexcept
 {
     cleanup();
 }

@@ -89,6 +89,9 @@ public:
      */
     explicit Notebook(Frame& parent, const Rect& rect = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(Notebook);
+    ~Notebook() noexcept override = default;
+
     using Frame::add;
 
     void add(std::shared_ptr<Widget> widget) override;
@@ -116,8 +119,6 @@ public:
      * @param index The index of the widget.
      */
     virtual NotebookTab* get(size_t index) const;
-
-    ~Notebook() override = default;
 
 protected:
 

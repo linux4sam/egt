@@ -25,7 +25,7 @@ namespace egt
 inline namespace v1
 {
 
-Screen::Screen()
+Screen::Screen() noexcept
 {
     if (getenv("EGT_SCREEN_ASYNC_FLIP"))
     {
@@ -280,7 +280,7 @@ void Screen::brightness(size_t brightness)
     detail::ignoreparam(brightness);
 }
 
-Screen::~Screen() = default;
+Screen::~Screen() noexcept = default;
 
 }
 }

@@ -74,6 +74,9 @@ public:
         parent.add(*this);
     }
 
+    EGT_OPS_NOCOPY_MOVE(BoxSizer);
+    ~BoxSizer() noexcept override = default;
+
     void layout() override;
 
     /**

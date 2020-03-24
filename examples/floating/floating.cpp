@@ -28,7 +28,7 @@ public:
         });
     }
 
-    virtual void handle(egt::Event& event)
+    void handle(egt::Event& event)
     {
         switch (event.id())
         {
@@ -57,7 +57,7 @@ public:
         }
     }
 
-    virtual void next_frame()
+    void next_frame()
     {
         if (m_dragging)
             return;
@@ -79,8 +79,6 @@ public:
 
         m_widget->move(p);
     }
-
-    virtual ~FloatingBox() = default;
 
 protected:
     std::shared_ptr<egt::Widget> m_widget;

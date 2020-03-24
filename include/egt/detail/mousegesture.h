@@ -37,7 +37,9 @@ class EGT_API MouseGesture
 {
 public:
 
-    MouseGesture();
+    MouseGesture() noexcept;
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(MouseGesture);
+    virtual ~MouseGesture() noexcept = default;
 
     /// Type for mouse event callback.
     using MouseCallback = std::function<void(Event& event)>;
@@ -73,8 +75,6 @@ public:
      * Stop any active dragging state.
      */
     virtual void stop();
-
-    virtual ~MouseGesture() = default;
 
 protected:
 

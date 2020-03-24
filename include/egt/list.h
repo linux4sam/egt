@@ -102,6 +102,10 @@ struct EGT_API StringItem : public ImageLabel
         fill_flags(Theme::FillFlag::blend);
     }
 
+    StringItem() noexcept = default;
+    EGT_OPS_NOCOPY_MOVE(StringItem);
+    ~StringItem() noexcept override = default;
+
     using ImageLabel::min_size_hint;
 
     Size min_size_hint() const override
@@ -170,6 +174,9 @@ public:
      */
     explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(ListBox);
+    ~ListBox() noexcept override = default;
+
     void handle(Event& event) override;
 
     void resize(const Size& s) override
@@ -197,7 +204,7 @@ public:
     /**
      * Get the currently selected index.
      */
-    inline ssize_t selected() const { return m_selected; }
+    ssize_t selected() const { return m_selected; }
 
     /**
      * Return the number of items in the list.
@@ -223,8 +230,6 @@ public:
      * Remove all items from the list.
      */
     virtual void clear();
-
-    ~ListBox() override = default;
 
 protected:
 

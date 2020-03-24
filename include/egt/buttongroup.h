@@ -45,6 +45,9 @@ public:
      */
     explicit ButtonGroup(bool imperative = false, bool exclusive = true) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(ButtonGroup);
+    ~ButtonGroup() noexcept;
+
     /**
      * Set the exclusive property of the group.
      *
@@ -52,12 +55,12 @@ public:
      *
      * @note Changing this after adding buttons is undefined.
      */
-    virtual void exclusive(bool exclusive);
+    void exclusive(bool exclusive);
 
     /**
      * Get the exclusive property.
      */
-    virtual bool exclusive() const;
+    bool exclusive() const;
 
     /**
      * Set the imperative property of the group.
@@ -66,22 +69,22 @@ public:
      *
      * @note Changing this after adding buttons is undefined.
      */
-    virtual void imperative(bool imperative);
+    void imperative(bool imperative);
 
     /**
      * Get the imperative property.
      */
-    virtual bool imperative() const;
+    bool imperative() const;
 
     /**
      * Add a button to the group.
      */
-    virtual void add(const std::shared_ptr<Button>& button);
+    void add(const std::shared_ptr<Button>& button);
 
     /**
      * Remove a button from the group.
      */
-    virtual void remove(Button* button);
+    void remove(Button* button);
 
     /// @see foreach_checked()
     using CheckedCallback = std::function<void (Button& button)>;
@@ -94,14 +97,12 @@ public:
      *
      * @param callback The callback to invoke.
      */
-    virtual void foreach_checked(const CheckedCallback& callback);
-
-    virtual ~ButtonGroup();
+    void foreach_checked(const CheckedCallback& callback);
 
 protected:
 
     /// @private
-    virtual void checked_state_change(Button& button, bool checked) const;
+    void checked_state_change(Button& button, bool checked) const;
 
     /// @private
     using ButtonArray = std::vector<std::weak_ptr<Button>>;

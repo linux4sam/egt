@@ -43,9 +43,10 @@ class Input;
  * inputs, outputs, the event loop, and more. It also acts as sort of a
  * global access to get to these things because of this.
  */
-class EGT_API Application : private detail::NonCopyable<Application>
+class EGT_API Application
 {
 public:
+
     /**
      * @param[in] argc Application argument count.
      * @param[in] argv Application argument array.
@@ -55,6 +56,9 @@ public:
      */
     explicit Application(int argc = 0, char** argv = nullptr,
                          const std::string& name = {}, bool primary = true);
+
+    EGT_OPS_NOCOPY_NOMOVE(Application);
+    virtual ~Application() noexcept;
 
     /**
      * Reference to the main Application instance.
@@ -126,8 +130,6 @@ public:
      */
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     inline const char** argv() const { return const_cast<const char**>(m_argv); }
-
-    virtual ~Application();
 
 protected:
 

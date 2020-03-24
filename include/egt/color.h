@@ -558,6 +558,8 @@ public:
     using StepArray = std::vector<std::pair<float, Color>>;
 
     Pattern() noexcept = default;
+    EGT_OPS_COPY_MOVE(Pattern);
+    ~Pattern() noexcept = default;
 
     /**
      * @param[in] color Solid color of the pattern.
@@ -638,7 +640,7 @@ namespace experimental
  * A ColorMap contains a series of sequential color steps that can be used for
  * generating colors by interpolation.
  */
-class EGT_API ColorMap : private detail::NonCopyable<ColorMap>
+class EGT_API ColorMap
 {
 public:
 
@@ -654,6 +656,8 @@ public:
     using StepsArray = std::vector<Color>;
 
     ColorMap() noexcept = default;
+    EGT_OPS_COPY_MOVE(ColorMap);
+    ~ColorMap() noexcept = default;
 
     /**
      * @param[in] interp Interpolation colorspace.

@@ -16,7 +16,7 @@ inline namespace v1
 {
 
 Input::Input()
-    : m_mouse(new detail::MouseGesture)
+    : m_mouse(std::make_unique<detail::MouseGesture>())
 {
     m_mouse->on_async_event([this](Event & event)
     {
@@ -70,10 +70,7 @@ void Input::dispatch(Event& event)
         SPDLOG_TRACE("input event: {}", eevent);
     }
 
-    if (handler_dispatch(event, eevent, [](Event & event)
-{
-    m_global_handler.invoke_handlers(event);
-    }))
+    if (handler_dispatch(event, eevent, [](Event & event) { m_global_handler.invoke_handlers(event); }))
     {
         return;
     }
@@ -171,7 +168,7 @@ void Input::dispatch(Event& event)
     }
 }
 
-Input::~Input() = default;
+Input::~Input() noexcept = default;
 
 detail::Object Input::m_global_handler;
 

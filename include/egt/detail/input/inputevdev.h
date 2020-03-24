@@ -34,12 +34,14 @@ class EGT_API InputEvDev : public Input
 {
 public:
 
+    InputEvDev() = delete;
+
     /**
      * @throws std::runtime_error if unable to open device.
      */
     explicit InputEvDev(Application& app, const std::string& path);
-
-    ~InputEvDev() override;
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(InputEvDev);
+    ~InputEvDev() noexcept override;
 
 private:
     void handle_read(const asio::error_code& error, std::size_t length);

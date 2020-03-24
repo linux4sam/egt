@@ -16,6 +16,7 @@ inline namespace v1
 
 TextWidget::TextWidget(std::string text,
                        const Rect& rect,
+                       // NOLINTNEXTLINE(modernize-pass-by-value)
                        const AlignFlags& text_align) noexcept
     : Widget(rect),
       m_text_align(text_align),

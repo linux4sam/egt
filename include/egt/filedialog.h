@@ -36,7 +36,6 @@ inline namespace v1
  *
  * @note FileDialog widget is using a std::experimental::filesystem
  * library
- *
  */
 class EGT_API FileDialog : public Popup
 {
@@ -59,7 +58,7 @@ public:
      * @param[in] rect Initial rectangle of the Widget.
      *
      */
-    explicit FileDialog(const Rect& rect = {});
+    explicit FileDialog(const Rect& rect = {}) noexcept;
 
     /**
      * Create a file dialog window.
@@ -70,45 +69,35 @@ public:
      * @note filepath should be a directory. If the file path is regular file,
      * then content of its parent directory will be listed.
      */
-    explicit FileDialog(const std::string& filepath, const Rect& rect = {});
+    explicit FileDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
-    ~FileDialog() override = default;
+    EGT_OPS_NOCOPY_MOVE(FileDialog);
+    ~FileDialog() noexcept override = default;
 
 protected:
-    /**
-     * Vertical BoxSizer
-     */
+
+    /// Vertical BoxSizer
     BoxSizer m_vsizer;
 
-    /**
-     * Title of a FileDialog.
-     */
+    /// Title of a FileDialog.
     ImageLabel m_title;
 
-    /**
-     * List Box for file listing.
-     */
+    /// List Box for file listing.
     ListBox m_flist;
 
-    /**
-     * string containing the file path of a directory.
-     */
+    /// File path of a directory.
     std::string m_filepath;
 
-    /**
-     * List the contents of file path directory.
-     */
+    /// List the contents of file path directory.
     bool list_files(const std::string& filepath);
 
-    /**
-     * Get the List Item selected index.
-     */
+    /// Get the List Item selected index.
     void list_item_selected(int index);
 
     /**
      * File selected.
      *
-     * @param[in] fselect is a selected filename.
+     * @param[in] fselect Selected filename.
      */
     virtual void selected(const std::string& fselect) = 0;
 };
@@ -130,7 +119,7 @@ public:
      *
      * @param[in] rect Initial rectangle of the Widget.
      */
-    explicit FileOpenDialog(const Rect& rect = {});
+    explicit FileOpenDialog(const Rect& rect = {}) noexcept;
 
     /**
      * Create a file open dialog window.
@@ -141,7 +130,10 @@ public:
      * @note filepath should be a directory. If the file path is regular file,
      * then content of its parent directory will be listed.
      */
-    explicit FileOpenDialog(const std::string& filepath, const Rect& rect = {});
+    explicit FileOpenDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE(FileOpenDialog);
+    ~FileOpenDialog() noexcept override = default;
 
     /**
      * Show the Widget.
@@ -159,31 +151,25 @@ public:
      */
     virtual std::string selected() const;
 
-    ~FileOpenDialog() override = default;
-
 protected:
-    /**
-     * grid for organizing okay & cancel Buttons.
-     */
+    /// Grid for organizing okay & cancel Buttons.
     StaticGrid m_grid;
 
-    /**
-     * okay Button.
-     */
+    /// Okay Button.
     Button m_okay;
 
-    /**
-     * cancel Button.
-     */
+    /// Cancel button.
     Button m_cancel;
 
-    /**
-     * File path of a selected file.
-     */
+    /// File path of a selected file.
     std::string m_fselected;
 
+    /**
+     * File selected.
+     *
+     * @param[in] fselect Selected filename.
+     */
     void selected(const std::string& fselect) override;
-
 };
 
 /**
@@ -203,7 +189,7 @@ public:
      *
      * @param[in] rect Initial rectangle of the Widget.
      */
-    explicit FileSaveDialog(const Rect& rect = {});
+    explicit FileSaveDialog(const Rect& rect = {}) noexcept;
 
     /**
      * Create a file save dialog window.
@@ -214,7 +200,10 @@ public:
      * @note filepath should be a directory. If the file path is regular file,
      * then content of its parent directory will be listed.
      */
-    explicit FileSaveDialog(const std::string& filepath, const Rect& rect = {});
+    explicit FileSaveDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(FileSaveDialog);
+    ~FileSaveDialog() noexcept override = default;
 
     /**
      * Show the Widget.
@@ -232,35 +221,28 @@ public:
      */
     virtual std::string selected() const;
 
-    ~FileSaveDialog() override = default;
-
 protected:
 
-    /**
-     * m_fsave_box to input a filename or file path.
-     */
+    /// Input a filename or file path.
     TextBox m_fsave_box;
 
-    /**
-     * grid for organizing okay & cancel Buttons.
-     */
+    /// Grid for organizing okay & cancel Buttons.
     StaticGrid m_grid;
 
-    /**
-     * okay Button.
-     */
+    /// Okay Button.
     Button m_okay;
 
-    /**
-     * cancel Button.
-     */
+    /// Cancel Button.
     Button m_cancel;
 
-    /**
-     * File path of a file save location.
-     */
+    /// File path of a file save location.
     std::string m_fsave;
 
+    /**
+     * File selected.
+     *
+     * @param[in] fselect Selected filename.
+     */
     void selected(const std::string& fselect) override;
 };
 

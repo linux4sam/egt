@@ -132,7 +132,7 @@ void Gauge::remove(GaugeLayer* layer)
     }
 }
 
-Gauge::~Gauge()
+Gauge::~Gauge() noexcept
 {
     for (auto& layer : m_layers)
         layer->gauge(nullptr);

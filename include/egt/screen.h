@@ -30,7 +30,7 @@ inline namespace v1
  * @note A Screen is not necessarily the same resolution and Orientation of
  * the Display.
  */
-class EGT_API Screen : private detail::NonCopyable<Screen>
+class EGT_API Screen
 {
 public:
 
@@ -39,7 +39,9 @@ public:
      */
     using DamageArray = std::vector<Rect>;
 
-    Screen();
+    Screen() noexcept;
+    EGT_OPS_NOCOPY_MOVE(Screen);
+    virtual ~Screen() noexcept;
 
     /**
      * Perform a flip of the buffers.
@@ -144,8 +146,6 @@ public:
      * Get the format of the screen.
      */
     PixelFormat format() const { return m_format; };
-
-    virtual ~Screen();
 
 protected:
 

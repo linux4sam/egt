@@ -19,12 +19,6 @@ inline namespace v1
  */
 class EGT_API UltraVioletTheme : public Theme
 {
-public:
-
-    UltraVioletTheme() = default;
-
-    ~UltraVioletTheme() override = default;
-
 protected:
 
     void init_palette() override

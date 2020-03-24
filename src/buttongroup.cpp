@@ -140,7 +140,7 @@ void ButtonGroup::foreach_checked(const CheckedCallback& callback)
     }
 }
 
-ButtonGroup::~ButtonGroup()
+ButtonGroup::~ButtonGroup() noexcept
 {
     for (auto& button : m_buttons)
     {

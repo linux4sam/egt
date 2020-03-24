@@ -39,12 +39,13 @@ namespace detail
  * @warning All flags must be a power of 2.
  */
 template<class T>
-class Flags : public detail::Object, public detail::FlagsBase<T>
+class Flags : public detail::FlagsBase<T>
 {
 public:
     using detail::FlagsBase<T>::FlagsBase;
 
-    constexpr Flags() noexcept = default;
+    EGT_OPS_MOVE(Flags);
+    ~Flags() noexcept override = default;
 
     /**
      * Event signal.
@@ -64,9 +65,9 @@ public:
 
     /// Copy constructor.
     constexpr Flags(const Flags& rhs)
-        : detail::Object(rhs),
-          detail::FlagsBase<T>(rhs)
+        : detail::FlagsBase<T>(rhs)
     {
+        // signals are not copied!
     }
 
     /// Assignment operator.
@@ -76,7 +77,7 @@ public:
         {
             const auto res = (*this != rhs);
 
-            detail::Object::operator=(rhs);
+            // signals are not copied!
             detail::FlagsBase<T>::operator=(rhs);
 
             if (res)

@@ -235,10 +235,12 @@ class Widget;
  */
 struct EGT_API Event : public EventArg
 {
+    constexpr Event() noexcept = default;
+
     /**
      * @param[in] id Event id.
      */
-    constexpr explicit Event(EventId id = EventId::none) noexcept
+    constexpr explicit Event(EventId id) noexcept
         : m_id(id)
     {}
 

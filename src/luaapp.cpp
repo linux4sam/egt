@@ -663,8 +663,6 @@ int LuaApplication::run()
     return (result && status == LUA_OK) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-LuaApplication::~LuaApplication() = default;
-
 }
 }
 }

@@ -122,6 +122,9 @@ public:
             const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
             const TextFlags& flags = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(TextBox);
+    ~TextBox() noexcept override;
+
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;
@@ -146,17 +149,17 @@ public:
     /**
      * Get the max length of allowed text.
      */
-    inline size_t max_length() const { return m_max_len;}
+    size_t max_length() const { return m_max_len;}
 
     /**
      * Get a const ref of the flags.
      */
-    inline const TextFlags& text_flags() const { return m_text_flags; }
+    const TextFlags& text_flags() const { return m_text_flags; }
 
     /**
      * Get a modifiable ref of the flags.
      */
-    inline TextFlags& text_flags() { return m_text_flags; }
+    TextFlags& text_flags() { return m_text_flags; }
 
     /**
      * Move the cursor to the end and insert.
@@ -272,8 +275,6 @@ public:
 
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
-
-    ~TextBox() noexcept override;
 
 protected:
 

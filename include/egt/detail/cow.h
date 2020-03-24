@@ -6,6 +6,7 @@
 #ifndef EGT_DETAIL_COW_H
 #define EGT_DETAIL_COW_H
 
+#include <egt/detail/meta.h>
 #include <memory>
 
 /**
@@ -32,7 +33,9 @@ class CopyOnWriteAllocate
 {
 public:
 
-    CopyOnWriteAllocate() = default;
+    CopyOnWriteAllocate() noexcept = default;
+    EGT_OPS_COPY_MOVE(CopyOnWriteAllocate);
+    ~CopyOnWriteAllocate() noexcept = default;
 
     /// Construct with a pointer to the object. This now owns the pointer.
     explicit CopyOnWriteAllocate(T* t)

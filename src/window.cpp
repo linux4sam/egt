@@ -337,12 +337,13 @@ struct CursorWindow : public Window
         readonly(true);
     }
 
+    EGT_OPS_NOCOPY_MOVE(CursorWindow);
+    ~CursorWindow() noexcept override = default;
+
     void handle(Event&) override
     {
         // no events handled
     }
-
-    ~CursorWindow() override = default;
 
     std::shared_ptr<ImageLabel> m_label;
 };

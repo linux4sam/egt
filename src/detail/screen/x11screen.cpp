@@ -251,7 +251,7 @@ void X11Screen::handle_read(const asio::error_code& error)
     });
 }
 
-X11Screen::~X11Screen()
+X11Screen::~X11Screen() noexcept
 {
     if (m_priv->display)
         XCloseDisplay(m_priv->display);

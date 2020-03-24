@@ -202,7 +202,7 @@ bool VideoWindow::has_audio() const
     return m_video_impl->has_audio();
 }
 
-VideoWindow::~VideoWindow()
+VideoWindow::~VideoWindow() noexcept
 {
     m_video_impl->destroyPipeline();
 }

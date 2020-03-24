@@ -52,6 +52,9 @@ public:
      */
     explicit SvgImage(const std::string& uri, const SizeF& size = {});
 
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(SvgImage);
+    virtual ~SvgImage() noexcept;
+
     /**
      * Overload to convert to an Image.
      *
@@ -121,7 +124,7 @@ public:
      * If both dimensions are zero, the default size will be loaded from the SVG
      * file.
      */
-    inline void size(const SizeF& size)
+    void size(const SizeF& size)
     {
         m_size = size;
     }
@@ -134,13 +137,9 @@ public:
      */
     void uri(const std::string& uri);
 
-    virtual ~SvgImage();
-
 protected:
 
-    /**
-     * Load the SVG file.
-     */
+    /// Load the SVG file.
     void load();
 
     /**
@@ -150,9 +149,7 @@ protected:
 
     struct SvgImpl;
 
-    /**
-     * Implementation pointer.
-     */
+    /// Implementation pointer.
     std::unique_ptr<SvgImpl> m_impl;
 
     /**
@@ -161,9 +158,7 @@ protected:
      */
     SizeF m_size;
 
-    /**
-     * User set URI.
-     */
+    /// User set URI.
     std::string m_uri;
 };
 

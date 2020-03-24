@@ -19,12 +19,6 @@ inline namespace v1
  */
 class EGT_API CoconutTheme : public Theme
 {
-public:
-
-    CoconutTheme() = default;
-
-    ~CoconutTheme() override = default;
-
 protected:
 
     void init_palette() override

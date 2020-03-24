@@ -71,9 +71,13 @@ T interpolate(Functor&& easing, T percent, T start, T end, bool reverse = false)
 /**
  * Base class for an animation.
  */
-class EGT_API AnimationBase : private detail::NonCopyable<AnimationBase>
+class EGT_API AnimationBase
 {
 public:
+
+    AnimationBase() noexcept = default;
+    EGT_OPS_NOCOPY_MOVE(AnimationBase);
+    virtual ~AnimationBase() noexcept = default;
 
     /**
      * Start the animation.
@@ -122,8 +126,6 @@ public:
         m_callbacks.clear();
     }
 
-    virtual ~AnimationBase() noexcept = default;
-
 protected:
 
     /// The running state of the animation.
@@ -156,6 +158,10 @@ protected:
 class EGT_API Animation : public detail::AnimationBase
 {
 public:
+
+    Animation() = default;
+    EGT_OPS_NOCOPY_MOVE(Animation);
+    ~Animation() noexcept override = default;
 
     /**
      * @param[in] start The starting value of the animation.
@@ -232,8 +238,6 @@ public:
      */
     void rounding(bool enable) { m_round = enable; }
 
-    ~Animation() override = default;
-
 protected:
 
     /// Starting value.
@@ -288,6 +292,9 @@ public:
         : m_loop(loop)
     {}
 
+    EGT_OPS_NOCOPY_MOVE(AnimationSequence);
+    ~AnimationSequence() noexcept override = default;
+
     /**
      * Add an animation to the animation sequence.
      *
@@ -325,8 +332,8 @@ public:
         if (!animation)
             return;
 
-        auto i = std::find_if(m_animations.begin(), m_animations.end(),
-                              [animation](const std::shared_ptr<detail::AnimationBase>& ptr)
+        const auto i = std::find_if(m_animations.begin(), m_animations.end(),
+                                    [animation](const auto & ptr)
         {
             return ptr.get() == animation.get();
         });
@@ -354,8 +361,8 @@ public:
         if (!animation)
             return;
 
-        auto i = std::find_if(m_animations.begin(), m_animations.end(),
-                              [animation](const std::shared_ptr<detail::AnimationBase>& ptr)
+        const auto i = std::find_if(m_animations.begin(), m_animations.end(),
+                                    [animation](const auto & ptr)
         {
             return ptr.get() == animation;
         });
@@ -441,8 +448,6 @@ public:
         m_running = false;
     }
 
-    ~AnimationSequence() override = default;
-
 protected:
 
     /// Helper type for an array of animations.
@@ -470,6 +475,10 @@ protected:
 class EGT_API AutoAnimation : public Animation
 {
 public:
+
+    AutoAnimation() = default;
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(AutoAnimation);
+    ~AutoAnimation() noexcept override = default;
 
     /**
      * @param[in] start The starting value of the animation.
@@ -504,8 +513,6 @@ public:
      * of making this change on a running timer.
      */
     void interval(std::chrono::milliseconds duration);
-
-    ~AutoAnimation() override = default;
 
 protected:
 
@@ -561,6 +568,9 @@ public:
     })
     {}
 
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(PropertyAnimatorType);
+    ~PropertyAnimatorType() noexcept override = default;
+
     /// Property callback type
     using PropertyCallback = std::function<void (T v)>;
 
@@ -571,7 +581,7 @@ public:
      */
     void on_change(PropertyCallback callback)
     {
-        m_callbacks.push_back(callback);
+        m_callbacks.emplace_back(std::move(callback));
     }
 
     /// Clear all callbacks.
@@ -580,14 +590,12 @@ public:
         m_callbacks.clear();
     }
 
-    ~PropertyAnimatorType() override = default;
-
 protected:
 
     /// Invoke handlers with the specified value.
     void invoke_handlers(T value)
     {
-        for (auto& callback : m_callbacks)
+        for (const auto& callback : m_callbacks)
             callback(value);
     }
 
@@ -625,6 +633,8 @@ class EGT_API AnimationDelay : public detail::AnimationBase
 public:
 
     AnimationDelay() = delete;
+    EGT_OPS_NOCOPY_MOVE_EXCEPT(AnimationDelay);
+    ~AnimationDelay() noexcept override = default;
 
     /**
      * @param duration The delay time for the animation.
@@ -648,7 +658,7 @@ public:
 
     bool next() override
     {
-        for (auto& callback : m_callbacks)
+        for (const auto& callback : m_callbacks)
             callback(0);
 
         return false;
@@ -658,8 +668,6 @@ public:
     {
         m_timer.cancel();
     }
-
-    ~AnimationDelay() override = default;
 
 protected:
 

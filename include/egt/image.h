@@ -99,14 +99,8 @@ public:
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Image(cairo_surface_t* surface);
 
-    /// Image operator
-    Image(const Image&) = default;
-    /// Image operator
-    Image(Image&&) = default;
-    /// Image operator
-    Image& operator=(const Image&) = default;
-    /// Image operator
-    Image& operator=(Image&&) = default;
+    EGT_OPS_COPY_MOVE(Image);
+    virtual ~Image() noexcept = default;
 
     /**
      * Scale the image.
@@ -151,17 +145,17 @@ public:
     /**
      * Get the horizontal scale value.
      */
-    inline float hscale() const { return m_hscale; }
+    float hscale() const { return m_hscale; }
 
     /**
      * Get the vertical scale value.
      */
-    inline float vscale() const { return m_vscale; }
+    float vscale() const { return m_vscale; }
 
     /**
      * Get the absolute size of the image.
      */
-    inline Size size() const
+    Size size() const
     {
         if (empty())
             return {};
@@ -170,12 +164,12 @@ public:
                 cairo_image_surface_get_height(surface().get())};
     }
 
-    inline DefaultDim width() const
+    DefaultDim width() const
     {
         return size().width();
     }
 
-    inline DefaultDim height() const
+    DefaultDim height() const
     {
         return size().height();
     }
@@ -183,7 +177,7 @@ public:
     /**
      * Returns true if no internal surface is set.
      */
-    inline bool empty() const
+    bool empty() const
     {
         return !surface();
     }
@@ -191,7 +185,7 @@ public:
     /**
      * Get a reference to the internal image surface.
      */
-    inline shared_cairo_surface_t surface() const
+    shared_cairo_surface_t surface() const
     {
         if (m_surface_local.get())
             return m_surface_local;
@@ -202,7 +196,7 @@ public:
      * Get the original size of the image before any Image::resize() or
      * Image::scale() calls.
      */
-    inline Size size_orig() const { return m_orig_size; }
+    Size size_orig() const { return m_orig_size; }
 
     /**
      * This function must be called any time the surface is going to be
@@ -214,14 +208,14 @@ public:
      */
     virtual void copy();
 
-    inline std::string uri() const
+    std::string uri() const
     {
         return m_uri;
     }
 
     virtual Image crop(const RectF& rect);
 
-    inline Image crop(const Rect& rect)
+    Image crop(const Rect& rect)
     {
         return crop(RectF(rect.x(), rect.y(), rect.width(), rect.height()));
     }
@@ -237,43 +231,28 @@ public:
     virtual void deserialize(const std::string& name, const std::string& value,
                              const Serializer::Attributes& attrs);
 
-    virtual ~Image() = default;
-
 protected:
 
-    /**
-     * If a URI was used, the URI.
-     */
+    /// If a URI was used, the URI.
     std::string m_uri;
 
-    /**
-     * Horizontal scale value, compared to original.
-     */
+    /// Horizontal scale value, compared to original.
     float m_hscale{1.0};
 
-    /**
-     * Vertical scale value, compared to original.
-     */
+    /// Vertical scale value, compared to original.
     float m_vscale{1.0};
 
-    /**
-     * Shared surface pointer.
-     */
+    /// Shared surface pointer.
     shared_cairo_surface_t m_surface;
 
-    /**
-     * Local surface pointer.
-     */
+    /// Local surface pointer.
     shared_cairo_surface_t m_surface_local;
 
-    /**
-     * Original image size.
-     */
+    /// Original image size.
     Size m_orig_size;
 };
 
-static_assert(detail::rule_of_5<Image>(),
-              "Image : must fulfill rule of 5");
+static_assert(detail::rule_of_5<Image>(), "must fulfill rule of 5");
 
 }
 }

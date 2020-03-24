@@ -39,8 +39,6 @@ public:
      * quit().
      */
     virtual int run() override;
-
-    virtual ~LuaApplication();
 };
 
 }

@@ -99,6 +99,9 @@ public:
      */
     explicit LineChart(const Rect& rect = {});
 
+    EGT_OPS_NOCOPY_MOVE(LineChart);
+    ~LineChart() noexcept override;
+
     void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -184,8 +187,6 @@ public:
      */
     virtual void bank(float bank);
 
-    ~LineChart() override;
-
 protected:
 
     /// @private
@@ -217,6 +218,9 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit PointChart(const Rect& rect = {});
+
+    EGT_OPS_NOCOPY_MOVE(PointChart);
+    ~PointChart() noexcept override;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -295,8 +299,6 @@ public:
      */
     virtual void bank(float bank);
 
-    ~PointChart() override;
-
 protected:
 
     /// @private
@@ -328,6 +330,9 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit BarChart(const Rect& rect = {});
+
+    EGT_OPS_NOCOPY_MOVE(BarChart);
+    ~BarChart() noexcept override;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -421,8 +426,6 @@ public:
      */
     virtual void bank(float bank);
 
-    ~BarChart() override;
-
 protected:
 
     /// @private
@@ -450,7 +453,8 @@ public:
      */
     explicit HorizontalBarChart(const Rect& rect = {});
 
-    ~HorizontalBarChart() override;
+    EGT_OPS_NOCOPY_MOVE(HorizontalBarChart);
+    ~HorizontalBarChart() noexcept override;
 };
 
 /**
@@ -472,6 +476,9 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit PieChart(const Rect& rect = {});
+
+    EGT_OPS_NOCOPY_MOVE(PieChart);
+    ~PieChart() noexcept override;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -521,8 +528,6 @@ public:
      * @param[in] size The new size of the PieChart.
      */
     void resize(const Size& size) override;
-
-    ~PieChart() override;
 
 protected:
 

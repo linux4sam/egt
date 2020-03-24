@@ -85,6 +85,9 @@ public:
                     PixelFormat format_hint = DEFAULT_FORMAT,
                     WindowHint hint = WindowHint::automatic);
 
+    EGT_OPS_NOCOPY_MOVE(Window);
+    ~Window() override;
+
     using Frame::damage;
 
     void damage(const Rect& rect) override;
@@ -143,8 +146,6 @@ public:
 
         return PixelFormat::invalid;
     }
-
-    ~Window() override;
 
 protected:
 
@@ -244,13 +245,14 @@ public:
 
     using Window::Window;
 
+    EGT_OPS_NOCOPY_MOVE(TopWindow);
+    ~TopWindow() override;
+
     /// Show the cursor.
     virtual void show_cursor(const Image& image = Image("icon:cursor.png;64"));
 
     /// Hide the cursor.
     virtual void hide_cursor();
-
-    ~TopWindow() override;
 
 protected:
 

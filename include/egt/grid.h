@@ -84,6 +84,9 @@ public:
     explicit StaticGrid(Frame& parent, const std::tuple<int, int>& size = std::make_tuple(1, 1),
                         DefaultDim border = 0) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(StaticGrid);
+    ~StaticGrid() noexcept override = default;
+
     void draw(Painter& painter, const Rect& rect) override;
 
     using Frame::add;
@@ -183,8 +186,6 @@ public:
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
 
-    ~StaticGrid() noexcept override = default;
-
 protected:
 
     /// Reallocate the size of the grid keeping any existing cells intact.
@@ -236,6 +237,9 @@ public:
 
     using StaticGrid::StaticGrid;
 
+    EGT_OPS_NOCOPY_MOVE(SelectableGrid);
+    ~SelectableGrid() noexcept override = default;
+
     void draw(Painter& painter, const Rect& rect) override;
 
     /// Get the selected cell.
@@ -258,8 +262,6 @@ public:
 
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
-
-    ~SelectableGrid() noexcept override = default;
 
 protected:
     /// Currently selected column.

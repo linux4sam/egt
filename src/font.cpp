@@ -100,7 +100,7 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
     return scaled_font;
 }
 
-Font::Font()
+Font::Font() noexcept
     : m_face(DEFAULT_FACE),
       m_size(DEFAULT_SIZE),
       m_weight(DEFAULT_WEIGHT),
@@ -202,7 +202,7 @@ void Font::deserialize(const std::string& name, const std::string& value,
     }
 }
 
-struct FontCache : private detail::NonCopyable<FontCache>
+struct FontCache
 {
     struct FontCompare
     {

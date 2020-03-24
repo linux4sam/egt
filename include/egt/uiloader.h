@@ -38,16 +38,12 @@ class EGT_API UiLoader
 {
 public:
 
-    UiLoader() = default;
-
     /**
      * Parses and loads UI XML and returns the parent Widget.
      *
      * @param uri URI to the XML to load.
      */
     virtual std::shared_ptr<Widget> load(const std::string& uri);
-
-    virtual ~UiLoader() = default;
 };
 
 }

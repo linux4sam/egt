@@ -74,6 +74,9 @@ public:
      */
     explicit AudioPlayer(const std::string& uri);
 
+    EGT_OPS_NOCOPY_MOVE(AudioPlayer);
+    ~AudioPlayer() noexcept override;
+
     /**
      * Sets the media file URI to the current pipeline
      * @param uri file URI
@@ -145,8 +148,6 @@ public:
      */
     virtual bool playing() const;
 
-    ~AudioPlayer() override;
-
 protected:
 
     /**
@@ -155,19 +156,13 @@ protected:
      */
     bool null();
 
-    /**
-     * Create the pipeline.
-     */
+    /// Create the pipeline.
     virtual bool createPipeline(const std::string& uri);
 
-    /**
-     * Destroy the pipeline.
-     */
+    /// Destroy the pipeline.
     void destroyPipeline();
 
-    /**
-     * Implementation pointer.
-     */
+    /// Implementation pointer.
     std::unique_ptr<detail::AudioPlayerImpl> m_impl;
 };
 

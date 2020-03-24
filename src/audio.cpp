@@ -206,7 +206,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 }
 
 AudioPlayer::AudioPlayer()
-    : m_impl(new detail::AudioPlayerImpl(*this))
+    : m_impl(std::make_unique<detail::AudioPlayerImpl>(*this))
 {
     if (!detail::audio_device())
         throw std::runtime_error("no soundcards");
@@ -275,7 +275,7 @@ void AudioPlayer::destroyPipeline()
     }
 }
 
-AudioPlayer::~AudioPlayer()
+AudioPlayer::~AudioPlayer() noexcept
 {
     destroyPipeline();
 }

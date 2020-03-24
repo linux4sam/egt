@@ -17,7 +17,7 @@ namespace egt
 inline namespace v1
 {
 
-FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
+FileDialog::FileDialog(const std::string& filepath, const Rect& rect) noexcept
     : Popup(rect.size(), rect.point()),
       m_vsizer(Orientation::vertical),
       m_title(Image("res:internal_folder"), filepath),
@@ -44,8 +44,8 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect)
         m_filepath = fs::current_path().string();
 }
 
-FileDialog::FileDialog(const Rect& rect)
-    : FileDialog({}, rect)
+FileDialog::FileDialog(const Rect& rect) noexcept
+    : FileDialog( {}, rect)
 {
 
 }
@@ -131,7 +131,7 @@ void FileDialog::list_item_selected(int index)
     }
 }
 
-FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
+FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect) noexcept
     : FileDialog(filepath, rect),
       m_grid(Size(0, (rect.height() * 0.15)), std::make_tuple(2, 1), 5),
       m_okay("OK"),
@@ -156,8 +156,8 @@ FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect)
     }, {EventId::pointer_click});
 }
 
-FileOpenDialog::FileOpenDialog(const Rect& rect)
-    : FileOpenDialog({}, rect)
+FileOpenDialog::FileOpenDialog(const Rect& rect) noexcept
+    : FileOpenDialog( {}, rect)
 {}
 
 void FileOpenDialog::show()
@@ -184,7 +184,7 @@ std::string FileOpenDialog::selected() const
     return (m_filepath + "/" + m_fselected);
 }
 
-FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
+FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) noexcept
     : FileDialog(filepath, rect),
       m_fsave_box("", Size(0, rect.height() * 0.15)),
       m_grid(Size(rect.width() * 0.30, rect.height() * 0.15), std::make_tuple(2, 1), 5),
@@ -223,7 +223,7 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect)
     }, {EventId::pointer_click});
 }
 
-FileSaveDialog::FileSaveDialog(const Rect& rect)
+FileSaveDialog::FileSaveDialog(const Rect& rect) noexcept
     : FileSaveDialog(std::string(), rect)
 {
 
@@ -253,7 +253,6 @@ std::string FileSaveDialog::selected() const
 {
     return (m_filepath + "/" + m_fsave);
 }
-
 
 }
 }

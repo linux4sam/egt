@@ -69,7 +69,9 @@ public:
     /**
      * Create a font based on the global default font.
      */
-    Font();
+    Font() noexcept;
+    EGT_OPS_COPY_MOVE(Font);
+    virtual ~Font() noexcept = default;
 
     /**
      * Create a font based on the supplied parameters.
@@ -200,8 +202,6 @@ public:
      */
     static void shutdown_fonts();
 
-    virtual ~Font() = default;
-
 protected:
 
     /// Font face name.
@@ -216,6 +216,9 @@ protected:
     /// Font slant.
     Font::Slant m_slant;
 };
+
+/// @private
+static_assert(detail::rule_of_5<Font>(), "must fulfill rule of 5");
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Font& font);

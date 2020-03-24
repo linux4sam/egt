@@ -40,7 +40,7 @@ class Image;
  *
  * @ingroup drawing
  */
-class EGT_API Painter : private detail::NonCopyable<Painter>
+class EGT_API Painter
 {
 public:
 
@@ -62,6 +62,9 @@ public:
      */
     struct AutoSaveRestore
     {
+        AutoSaveRestore() = delete;
+        EGT_OPS_NOCOPY_NOMOVE(AutoSaveRestore);
+
         explicit AutoSaveRestore(Painter& painter)
             : m_painter(painter)
         {
@@ -91,6 +94,9 @@ public:
      */
     struct AutoGroup
     {
+        AutoGroup() = delete;
+        EGT_OPS_NOCOPY_NOMOVE(AutoGroup);
+
         explicit AutoGroup(Painter& painter)
             : m_painter(painter)
         {
@@ -106,6 +112,8 @@ public:
     };
 
     Painter() = delete;
+    EGT_OPS_NOCOPY_MOVE(Painter);
+    virtual ~Painter() = default;
 
     /**
      * Construct a Painter with an existing context.
@@ -339,8 +347,6 @@ public:
         return {cairo_image_surface_get_width(surface),
                 cairo_image_surface_get_height(surface)};
     }
-
-    virtual ~Painter() = default;
 
 protected:
 

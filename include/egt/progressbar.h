@@ -66,6 +66,9 @@ public:
         parent.add(*this);
     }
 
+    EGT_OPS_NOCOPY_MOVE(ProgressBarType);
+    ~ProgressBarType() noexcept override = default;
+
     void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<ProgressBarType<T>>::draw(*this, painter, rect);
@@ -139,8 +142,6 @@ public:
      */
     bool show_label() const { return m_show_label; }
 
-    ~ProgressBarType() override = default;
-
 protected:
     /**
      * When true, the label text is shown.
@@ -204,6 +205,8 @@ public:
         parent.add(*this);
     }
 
+    EGT_OPS_NOCOPY_MOVE(SpinProgressType);
+    ~SpinProgressType() noexcept override = default;
 
     void draw(Painter& painter, const Rect& rect) override
     {
@@ -284,7 +287,6 @@ public:
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
 
-    ~SpinProgressType() override = default;
 protected:
     /**
      * When true, the label text is shown.
@@ -371,6 +373,9 @@ public:
         parent.add(*this);
     }
 
+    EGT_OPS_NOCOPY_MOVE(LevelMeterType);
+    ~LevelMeterType() noexcept override = default;
+
     void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<LevelMeterType<T>>::draw(*this, painter, rect);
@@ -438,13 +443,9 @@ public:
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
 
-    ~LevelMeterType() override = default;
-
 protected:
 
-    /**
-     * The number of bars to display.
-     */
+    /// The number of bars to display.
     size_t m_num_bars{10};
 };
 
@@ -516,6 +517,9 @@ public:
     {
         parent.add(*this);
     }
+
+    EGT_OPS_NOCOPY_MOVE(AnalogMeterType);
+    ~AnalogMeterType() noexcept override = default;
 
     void draw(Painter& painter, const Rect& rect) override
     {
@@ -589,8 +593,6 @@ public:
 
         return DEFAULT_ANALOGMETER_SIZE + Widget::min_size_hint();
     }
-
-    ~AnalogMeterType() override = default;
 };
 
 /**

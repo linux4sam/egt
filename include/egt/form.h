@@ -44,6 +44,9 @@ public:
      */
     explicit Form(Frame& parent, const std::string& title = {}) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(Form);
+    ~Form() noexcept override = default;
+
     /**
      * Add a group to the Form.
      */
@@ -101,8 +104,6 @@ public:
         if (detail::change_if_diff<>(m_group_align, align))
             parent_layout();
     }
-
-    ~Form() override = default;
 
 protected:
 

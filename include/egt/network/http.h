@@ -44,7 +44,7 @@ namespace experimental
  * });
  * @endcode
  */
-class EGT_API HttpClientRequest : private detail::NonCopyable<HttpClientRequest>
+class EGT_API HttpClientRequest
 {
 public:
 
@@ -54,7 +54,9 @@ public:
     /**
      * Create a request for the specified URL.
      */
-    explicit HttpClientRequest();
+    HttpClientRequest() noexcept;
+    EGT_OPS_NOCOPY_NOMOVE(HttpClientRequest);
+    virtual ~HttpClientRequest() noexcept;
 
     /**
      * Start the download.
@@ -66,8 +68,6 @@ public:
     {
         return m_impl.get();
     }
-
-    virtual ~HttpClientRequest();
 
 protected:
 

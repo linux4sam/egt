@@ -31,12 +31,14 @@ namespace egt
 inline namespace v1
 {
 
-struct PlaybackThread : private detail::NonCopyable<PlaybackThread>
+struct PlaybackThread
 {
     PlaybackThread()
     {
         m_thread = std::thread(&PlaybackThread::run, this);
     }
+
+    EGT_OPS_NOCOPY_NOMOVE(PlaybackThread);
 
     void run()
     {
@@ -123,7 +125,7 @@ namespace experimental
 
 // NOLINTNEXTLINE(modernize-pass-by-value)
 Sound::Sound(const std::string& uri, unsigned int rate, int channels, const std::string& device)
-    : m_impl(new detail::soundimpl),
+    : m_impl(std::make_unique<detail::soundimpl>()),
       m_uri(uri)
 {
     open_alsa_device(device);
@@ -133,7 +135,7 @@ Sound::Sound(const std::string& uri, unsigned int rate, int channels, const std:
 
 // NOLINTNEXTLINE(modernize-pass-by-value)
 Sound::Sound(const std::string& uri, const std::string& device)
-    : m_impl(new detail::soundimpl),
+    : m_impl(std::make_unique<detail::soundimpl>()),
       m_uri(uri)
 {
     open_alsa_device(device);
@@ -420,7 +422,7 @@ void Sound::play(bool repeat)
     });
 }
 
-Sound::~Sound()
+Sound::~Sound() noexcept
 {
     m_impl->interrupt = true;
     m_impl->play_thread.quit();

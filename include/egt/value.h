@@ -41,6 +41,9 @@ public:
     {
     }
 
+    EGT_OPS_NOCOPY_MOVE(Value);
+    ~Value() noexcept override = default;
+
     /// Get the current value.
     explicit operator T() const
     {
@@ -74,13 +77,9 @@ public:
         return false;
     }
 
-    ~Value() override = default;
-
 protected:
 
-    /**
-     * The current value.
-     */
+    /// The current value.
     T m_value{};
 };
 
@@ -112,6 +111,10 @@ public:
     {
         assert(m_max > m_min);
     }
+
+    RangeValue() noexcept = default;
+    EGT_OPS_NOCOPY_MOVE(RangeValue);
+    ~RangeValue() noexcept override = default;
 
     /// Get the current value.
     explicit operator T() const
@@ -180,8 +183,6 @@ public:
         if (detail::change_if_diff<>(m_max, max))
             value(m_value);
     }
-
-    ~RangeValue() override = default;
 
 protected:
 

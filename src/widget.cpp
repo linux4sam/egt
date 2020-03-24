@@ -55,6 +55,7 @@ std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag)
 
 static Widget::WidgetId global_widget_id{0};
 
+// NOLINTNEXTLINE(modernize-pass-by-value)
 Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
     : m_box(rect),
       m_widgetid(global_widget_id++),

@@ -44,7 +44,6 @@ public:
 
     virtual shared_cairo_surface_t surface() const override;
 
-    virtual ~HardwareSprite() = default;
 protected:
     ImageLabel m_label;
     Sprite& m_interface;
@@ -68,7 +67,6 @@ public:
 
     shared_cairo_surface_t surface() const override;
 
-    ~SoftwareSprite() override = default;
 protected:
     Sprite& m_interface;
 };
@@ -298,7 +296,7 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
     }
 }
 
-Sprite::~Sprite() = default;
+Sprite::~Sprite() noexcept = default;
 
 }
 }

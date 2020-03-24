@@ -101,6 +101,9 @@ public:
            const Rect& rect,
            const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
 
+    EGT_OPS_NOCOPY_MOVE(Button);
+    ~Button() override;
+
     void handle(Event& event) override;
 
     using TextWidget::text;
@@ -134,8 +137,6 @@ public:
     using TextWidget::min_size_hint;
 
     Size min_size_hint() const override;
-
-    ~Button() override;
 
 protected:
 
@@ -216,6 +217,9 @@ public:
                 const std::string& text,
                 const Rect& rect,
                 const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+
+    EGT_OPS_NOCOPY_MOVE(ImageButton);
+    ~ImageButton() override = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -313,8 +317,6 @@ public:
 
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
-
-    ~ImageButton() override = default;
 
 protected:
 

@@ -35,6 +35,9 @@ public:
         m_strip = add_strip(framecount, frame_point);
     }
 
+    EGT_OPS_NOCOPY_MOVE(SpriteImpl);
+    virtual ~SpriteImpl() noexcept = default;
+
     /**
      * Jump to the specified frame index.
      */
@@ -106,8 +109,6 @@ public:
         m_strips.push_back(s);
         return m_strips.size() - 1;
     }
-
-    virtual ~SpriteImpl() = default;
 
 protected:
 

@@ -11,6 +11,7 @@
  * @brief Flags handling.
  */
 
+#include <egt/detail/meta.h>
 #include <initializer_list>
 #include <limits>
 #include <set>
@@ -42,6 +43,8 @@ public:
     using Underlying = typename std::underlying_type<T>::type;
 
     constexpr FlagsBase() noexcept = default;
+    EGT_OPS_COPY_MOVE(FlagsBase);
+    virtual ~FlagsBase() noexcept = default;
 
     /// Construct with a single flag.
     // cppcheck-suppress noExplicitConstructor
@@ -56,12 +59,6 @@ public:
     {
         for (auto& flag : flags)
             m_flags |= static_cast<Underlying>(flag);
-    }
-
-    /// Copy contructor.
-    constexpr FlagsBase(const FlagsBase& rhs)
-        : m_flags(rhs.m_flags)
-    {
     }
 
     /**

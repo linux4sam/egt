@@ -28,8 +28,6 @@ class EGT_API CPUMonitorUsage
 {
 public:
 
-    CPUMonitorUsage() = default;
-
     /**
      * Get the total CPU usage as a percentage.
      */
@@ -41,8 +39,6 @@ public:
      * This must be called periodically to perform the calculation.
      */
     void update();
-
-    virtual ~CPUMonitorUsage() = default;
 
 private:
 
@@ -72,6 +68,9 @@ public:
     {
         start();
     }
+
+    EGT_OPS_COPY_MOVE(FramesPerSecond);
+    ~FramesPerSecond() noexcept = default;
 
     /**
      * Start/reset the counter.

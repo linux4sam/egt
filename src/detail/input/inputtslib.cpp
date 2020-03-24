@@ -193,7 +193,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 #endif
 }
 
-InputTslib::~InputTslib()
+InputTslib::~InputTslib() noexcept
 {
     ts_close(m_impl->ts);
 

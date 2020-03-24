@@ -35,11 +35,14 @@ class PriorityQueue;
 /**
  * Event loop interface.
  */
-class EGT_API EventLoop : private detail::NonCopyable<EventLoop>
+class EGT_API EventLoop
 {
 public:
 
     EventLoop() noexcept;
+
+    EGT_OPS_NOCOPY_MOVE(EventLoop);
+    virtual ~EventLoop() noexcept;
 
     /**
      * Get a reference to the internal ASIO io_context object.
@@ -107,35 +110,23 @@ public:
     /// @private
     detail::PriorityQueue& queue();
 
-    virtual ~EventLoop();
-
 protected:
 
-    /**
-     * Wait for an event to occur.
-     */
+    /// Wait for an event to occur.
     int wait();
 
-    /**
-     * Called to invoke idle callbacks.
-     */
+    /// Invoke idle callbacks.
     void invoke_idle_callbacks();
 
     struct EventLoopImpl;
 
-    /**
-     * Internal event loop implementation.
-     */
+    /// Internal event loop implementation.
     std::unique_ptr<EventLoopImpl> m_impl;
 
-    /**
-     * Registered idle callbacks.
-     */
+    /// Registered idle callbacks.
     std::vector<IdleCallback> m_idle;
 
-    /**
-     * Used internally to determine whether the event loop should exit.
-     */
+    /// Used internally to determine whether the event loop should exit.
     bool m_do_quit{false};
 };
 

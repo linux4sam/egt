@@ -25,14 +25,14 @@ struct SvgImage::SvgImpl
 };
 
 SvgImage::SvgImage()
-    : m_impl(new SvgImage::SvgImpl)
+    : m_impl(std::make_unique<SvgImage::SvgImpl>())
 {
 
 }
 
 // NOLINTNEXTLINE(modernize-pass-by-value)
 SvgImage::SvgImage(const std::string& uri, const SizeF& size)
-    : m_impl(new SvgImage::SvgImpl),
+    : m_impl(std::make_unique<SvgImage::SvgImpl>()),
       m_size(size),
       m_uri(uri)
 {
@@ -229,7 +229,7 @@ shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& r
     return canvas.surface();
 }
 
-SvgImage::~SvgImage() = default;
+SvgImage::~SvgImage() noexcept = default;
 
 }
 }

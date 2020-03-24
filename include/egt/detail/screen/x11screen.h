@@ -30,6 +30,8 @@ class EGT_API X11Screen : public Screen
 {
 public:
 
+    X11Screen() = delete;
+
     /**
      * @param app Application instance this screen is associated with.
      * @param size Size of the screen.
@@ -38,6 +40,9 @@ public:
     explicit X11Screen(Application& app, const Size& size = Size(800, 480),
                        bool borderless = false);
 
+    EGT_OPS_NOCOPY_NOMOVE(X11Screen);
+    ~X11Screen() noexcept override;
+
     void schedule_flip() override
     {}
 
@@ -45,8 +50,6 @@ public:
 
     /// Disable window decorations
     void disable_window_decorations();
-
-    ~X11Screen() override;
 
 protected:
 
