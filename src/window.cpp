@@ -14,15 +14,17 @@
 #include "egt/detail/math.h"
 #include "egt/detail/meta.h"
 #include "egt/detail/screen/kmsscreen.h"
+#include "egt/embed.h"
 #include "egt/input.h"
 #include "egt/label.h"
 #include "egt/painter.h"
 #include "egt/window.h"
 #include <algorithm>
-#include <map>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <vector>
+
+EGT_EMBED(internal_cursor, SRCDIR "/icons/16px/cursor.png")
 
 namespace egt
 {

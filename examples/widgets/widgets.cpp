@@ -617,7 +617,6 @@ int main(int argc, char** argv)
     win.add(popup_keyboard);
 #endif
 
-    win.show_cursor();
     win.show();
 
     return app.run();

@@ -249,7 +249,7 @@ public:
     ~TopWindow() override;
 
     /// Show the cursor.
-    virtual void show_cursor(const Image& image = Image("icon:cursor.png;64"));
+    virtual void show_cursor(const Image& image = Image("res:internal_cursor"));
 
     /// Hide the cursor.
     virtual void hide_cursor();
