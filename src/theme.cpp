@@ -47,11 +47,13 @@ void Theme::init_palette()
 {
     const auto pattern = [](const Color & color)
     {
-        Pattern pattern1;
-        pattern1.step(0, color);
-        pattern1.step(0.43, color.shade(.1));
-        pattern1.step(0.5, color.shade(.15));
-        pattern1.step(1.0, color.shade(.18));
+        Pattern pattern1(
+        {
+            {0, color},
+            {0.43, color.shade(.1)},
+            {0.5, color.shade(.15)},
+            {1.0, color.shade(.18)},
+        });
         return pattern1;
     };
 
