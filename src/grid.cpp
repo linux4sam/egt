@@ -28,6 +28,9 @@ StaticGrid::StaticGrid(const Rect& rect, const std::tuple<int, int>& size,
 
 void StaticGrid::reallocate(const std::tuple<int, int>& size)
 {
+    if (!std::get<0>(size) || !std::get<1>(size))
+        throw std::invalid_argument("a static grid needs at least one cell i.e. one row and one col");
+
     /*
      * The grid size is set here.  Every column should be the same size.  Don't
      * delete from the column vectors.  Only set empty cells to nullptr.
