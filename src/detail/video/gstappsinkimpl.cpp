@@ -10,14 +10,16 @@
 
 #include "detail/video/gstappsinkimpl.h"
 #include "egt/app.h"
+#include "egt/types.h"
+#include "egt/uri.h"
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
+#include <string>
+
 #ifdef HAVE_LIBPLANES
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
 #endif
-#include "egt/types.h"
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
-#include <string>
 
 namespace egt
 {
@@ -218,14 +220,18 @@ bool GstAppSinkImpl::media(const std::string& uri)
         destroyPipeline();
 
 #ifdef HAVE_GSTREAMER_PBUTILS
-        if (!start_discoverer())
+        Uri u(m_uri);
+        if (u.scheme() != "rtsp")
         {
-            spdlog::error("media file discoverer failed");
-            return false;
+            if (!start_discoverer())
+            {
+                spdlog::error("media file discoverer failed");
+                return false;
+            }
         }
 #endif
 
-        std::string buffer = create_pipeline(uri, m_audiodevice);
+        const auto buffer = create_pipeline(uri, m_audiodevice);
         SPDLOG_DEBUG("{}", buffer);
 
         GError* error = nullptr;

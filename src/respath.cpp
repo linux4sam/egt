@@ -121,6 +121,7 @@ SchemeType resolve_path(const std::string& path, std::string& result)
     }
     case detail::hash("http"):
     case detail::hash("https"):
+    case detail::hash("rtsp"):
     {
         type = SchemeType::network;
         result = uri.to_string();
