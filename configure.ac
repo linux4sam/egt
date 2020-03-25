@@ -216,7 +216,7 @@ AC_ARG_ENABLE([virtualkeyboard],
   [enable_virtualkeyboard=$enableval], [enable_virtualkeyboard=yes])
 AM_CONDITIONAL([ENABLE_VIRTUALKEYBOARD], [test "x${enable_virtualkeyboard}" = xyes])
 if test "x${enable_virtualkeyboard}" = xyes; then
-   AC_DEFINE(HAVE_VIRTUALKEYBOARD, 1, [Have virtualkeyboard support])
+   AC_DEFINE(ENABLE_VIRTUALKEYBOARD, 1, [Enable virtualkeyboard support])
    AC_SUBST(include_virtualkeyboard, ["#define EGT_HAS_VIRTUALKEYBOARD 1"])
 fi
 
