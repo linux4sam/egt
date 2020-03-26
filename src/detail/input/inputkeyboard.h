@@ -52,7 +52,7 @@ protected:
 
     uint32_t ekey_to_utf32(KeyboardCode code, bool shift, bool caps, bool numlock);
 
-    std::array<bool, 256> m_key_states{};
+    std::array<bool, 512> m_key_states{};
 };
 
 #ifdef HAVE_XKBCOMMON
