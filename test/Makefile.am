@@ -21,7 +21,8 @@ main.cpp \
 widgets/slider.cpp \
 widgets/valuerange.cpp \
 widgets/combobox.cpp \
-widgets/listbox.cpp
+widgets/listbox.cpp  \
+widgets/scrollwheel.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
