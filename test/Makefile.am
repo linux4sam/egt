@@ -18,7 +18,8 @@ test
 
 test_SOURCES = \
 main.cpp \
-widgets/slider.cpp
+widgets/slider.cpp \
+widgets/valuerange.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
