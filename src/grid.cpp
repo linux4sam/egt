@@ -276,8 +276,15 @@ void StaticGrid::reposition()
                 if (bounding.size().empty())
                     continue;
 
+                // the widget has to be inside the cell
+                if (widget->x() < bounding.x())
+                    widget->x(bounding.x());
+
+                if (widget->y() < bounding.y())
+                    widget->y(bounding.y());
+
                 // get the aligning rect
-                const auto target = detail::align_algorithm(widget->box().size(),
+                const auto target = detail::align_algorithm(widget->box(),
                                     bounding,
                                     widget->align());
 
