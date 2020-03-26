@@ -74,7 +74,6 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
         // ?? how to stop event
         //event.stop();
         m_parent.selected(m_list->selected());
-        hide();
     });
 }
 
