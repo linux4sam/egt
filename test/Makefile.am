@@ -20,7 +20,8 @@ test_SOURCES = \
 main.cpp \
 widgets/slider.cpp \
 widgets/valuerange.cpp \
-widgets/combobox.cpp
+widgets/combobox.cpp \
+widgets/listbox.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
