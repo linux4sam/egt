@@ -199,10 +199,33 @@ make distcheck \
     DISTCHECK_CONFIGURE_FLAGS="--host=arm-buildroot-linux-gnueabihf"
 ```
 
-## clang
+## Compilers
 
-gcc is the recommended compiler version.  Clang support is experimental.  However, you can try it out with something like:
+gcc is the recommended compiler version.  The minimum support version is gcc 5
+which [contains c++14 support](https://gcc.gnu.org/projects/cxx-status.html#cxx14).
+You can compile with a specific version of gcc, even though multiple versions
+may be installed, by specifically providing the CC and CXX environment variables
+to configure.
+
+Install gcc 5.
+```sh
+sudo apt install gcc-5 g++-5
+```
+
+Configure with gcc 5.
+```sh
+CC=gcc-5 CXX=g++-5 ./configure
+```
+
+Compiling with Clang is experimental.  However, you can try it out with
+something like:
 
 ```sh
 CC=clang-6.0 CXX=clang++-6.0 ./configure
+```
+
+If enabling LTO, you have to specify the AR and RANLIB parameters.
+
+```sh
+RANLIB=true AR=llvm-ar-9 CC=clang-9 CXX=clang++-9 ../configure --enable-lto
 ```
