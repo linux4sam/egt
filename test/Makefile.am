@@ -17,7 +17,8 @@ check_PROGRAMS = \
 test
 
 test_SOURCES = \
-main.cpp
+main.cpp \
+widgets/slider.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
