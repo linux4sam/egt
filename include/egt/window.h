@@ -86,7 +86,7 @@ public:
                     WindowHint hint = WindowHint::automatic);
 
     EGT_OPS_NOCOPY_MOVE(Window);
-    ~Window() override;
+    ~Window() noexcept override;
 
     using Frame::damage;
 
@@ -239,14 +239,14 @@ protected:
  * provides features like a pointer cursor, that usually only make sense as a
  * top level Window.
  */
+// NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
 class EGT_API TopWindow : public Window
 {
 public:
 
     using Window::Window;
 
-    EGT_OPS_NOCOPY_MOVE(TopWindow);
-    ~TopWindow() override;
+    ~TopWindow() noexcept override;
 
     /// Show the cursor.
     virtual void show_cursor(const Image& image = Image("res:internal_cursor"));

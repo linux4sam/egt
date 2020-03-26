@@ -302,7 +302,7 @@ void Window::background(const Image& image)
     }
 }
 
-Window::~Window()
+Window::~Window() noexcept
 {
     auto i = find(the_windows.begin(), the_windows.end(), this);
     if (i != the_windows.end())
@@ -389,7 +389,7 @@ void TopWindow::handle_mouse(Event& event)
     }
 }
 
-TopWindow::~TopWindow()
+TopWindow::~TopWindow() noexcept
 {
     Input::global_input().remove_handler(m_handle);
 }

@@ -42,7 +42,7 @@ public:
      * @throws std::runtime_error if unable to open device.
      */
     explicit InputLibInput(Application& app);
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(InputLibInput);
+    EGT_OPS_NOCOPY_NOMOVE(InputLibInput);
     ~InputLibInput() noexcept override;
 
 private:
@@ -54,26 +54,18 @@ private:
 
     void handle_read(const asio::error_code& error);
 
-    /**
-     * Application instance.
-     */
+    /// Application instance.
     Application& m_app;
 
-    /**
-     * Input handler to read from the evdev fd.
-     */
+    /// Input handler to read from the evdev fd.
     asio::posix::stream_descriptor m_input;
 
     struct libinput* li;
 
-    /**
-     * The last point seen, indexed by slot, used for reference internally.
-     */
+    /// The last point seen, indexed by slot, used for reference internally.
     std::array<DisplayPoint, 2> m_last_point;
 
-    /**
-     * Keyboard mapping instance.
-     */
+    /// Keyboard mapping instance.
     std::unique_ptr<InputKeyboard> m_keyboard;
 };
 

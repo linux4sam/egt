@@ -381,7 +381,6 @@ public:
     using Frame::Frame;
     using Frame::add;
 
-    EGT_OPS_NOCOPY_MOVE(Gauge);
     ~Gauge() noexcept override;
 
     /**

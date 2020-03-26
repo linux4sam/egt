@@ -56,15 +56,16 @@ public:
      * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(const std::tuple<int, int>& size = std::make_tuple(1, 1),
-                        DefaultDim border = 0) noexcept;
+                        DefaultDim border = 0);
 
     /**
      * @param[in] rect Initial rectangle of the widget.
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::border().
      */
-    explicit StaticGrid(const Rect& rect, const std::tuple<int, int>& size = std::make_tuple(1, 1),
-                        DefaultDim border = 0) noexcept;
+    explicit StaticGrid(const Rect& rect,
+                        const std::tuple<int, int>& size = std::make_tuple(1, 1),
+                        DefaultDim border = 0);
 
     /**
      * @param[in] parent The parent Frame.
@@ -74,7 +75,7 @@ public:
      */
     StaticGrid(Frame& parent, const Rect& rect,
                const std::tuple<int, int>& size = std::make_tuple(1, 1),
-               DefaultDim border = 0) noexcept;
+               DefaultDim border = 0);
 
     /**
      * @param[in] parent The parent Frame.
@@ -82,7 +83,7 @@ public:
      * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(Frame& parent, const std::tuple<int, int>& size = std::make_tuple(1, 1),
-                        DefaultDim border = 0) noexcept;
+                        DefaultDim border = 0);
 
     EGT_OPS_NOCOPY_MOVE(StaticGrid);
     ~StaticGrid() noexcept override = default;
@@ -146,7 +147,7 @@ public:
      *
      * @note This will return -1 if nothing has been added.
      */
-    inline int last_add_column() const
+    int last_add_column() const
     {
         return m_last_add_column;
     }
@@ -156,7 +157,7 @@ public:
      *
      * @note This will return -1 if nothing has been added.
      */
-    inline int last_add_row() const
+    int last_add_row() const
     {
         return m_last_add_row;
     }
@@ -174,12 +175,12 @@ public:
     /**
      * Get a const ref of the flags.
      */
-    inline const GridFlags& grid_flags() const { return m_grid_flags; }
+    const GridFlags& grid_flags() const { return m_grid_flags; }
 
     /**
      * Get a modifiable ref of the flags.
      */
-    inline GridFlags& grid_flags() { return m_grid_flags; }
+    GridFlags& grid_flags() { return m_grid_flags; }
 
     void serialize(Serializer& serializer) const override;
 
@@ -223,6 +224,7 @@ protected:
  *
  * @ingroup sizers
  */
+// NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
 class EGT_API SelectableGrid : public StaticGrid
 {
 public:
@@ -236,9 +238,6 @@ public:
     /** @} */
 
     using StaticGrid::StaticGrid;
-
-    EGT_OPS_NOCOPY_MOVE(SelectableGrid);
-    ~SelectableGrid() noexcept override = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 

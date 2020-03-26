@@ -17,7 +17,7 @@ inline namespace v1
 {
 
 StaticGrid::StaticGrid(const Rect& rect, const std::tuple<int, int>& size,
-                       DefaultDim border) noexcept
+                       DefaultDim border)
     : Frame(rect)
 {
     name("StaticGrid" + std::to_string(m_widgetid));
@@ -40,19 +40,19 @@ void StaticGrid::reallocate(const std::tuple<int, int>& size)
         x.resize(std::get<1>(size), {});
 }
 
-StaticGrid::StaticGrid(const std::tuple<int, int>& size, DefaultDim border) noexcept
+StaticGrid::StaticGrid(const std::tuple<int, int>& size, DefaultDim border)
     : StaticGrid(Rect(), size, border)
 {
 }
 
 StaticGrid::StaticGrid(Frame& parent, const Rect& rect,
-                       const std::tuple<int, int>& size, DefaultDim border) noexcept
+                       const std::tuple<int, int>& size, DefaultDim border)
     : StaticGrid(rect, size, border)
 {
     parent.add(*this);
 }
 
-StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, DefaultDim border) noexcept
+StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, DefaultDim border)
     : StaticGrid(size, border)
 {
     parent.add(*this);

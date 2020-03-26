@@ -36,6 +36,17 @@ inline namespace v1
  */
 class EGT_API Palette
 {
+private:
+
+    struct EnumClassHash
+    {
+        template <class T>
+        std::size_t operator()(T t) const
+        {
+            return static_cast<std::size_t>(t);
+        }
+    };
+
 public:
 
     /**
@@ -263,7 +274,9 @@ public:
         label_text,
     };
 
-    using ColorArray = std::unordered_map<GroupId, std::unordered_map<ColorId, Pattern>>;
+    using ColorArray = std::unordered_map<GroupId,
+          std::unordered_map<ColorId, Pattern, EnumClassHash>,
+          EnumClassHash>;
 
     Palette() = default;
     EGT_OPS_COPY_MOVE(Palette);

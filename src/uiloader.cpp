@@ -56,11 +56,11 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
     return std::static_pointer_cast<Widget>(instance);
 }
 
-using create_function =
+using CreateFunction =
     std::function<std::shared_ptr<Widget>(rapidxml::xml_node<>* widget,
-            std::shared_ptr<Frame> parent)>;
+            const std::shared_ptr<Frame>& parent)>;
 
-static const std::pair<std::string, create_function> allocators[] =
+static const std::pair<std::string, CreateFunction> allocators[] =
 {
     {"egt::v1::experimental::Radial", create_widget<Radial>},
     {"egt::v1::AnalogMeter", create_widget<AnalogMeter>},
