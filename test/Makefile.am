@@ -25,7 +25,8 @@ widgets/listbox.cpp  \
 widgets/scrollwheel.cpp \
 widgets/button.cpp \
 widgets/grid.cpp \
-widgets/frame.cpp
+widgets/frame.cpp \
+widgets/form.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
