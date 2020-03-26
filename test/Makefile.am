@@ -28,7 +28,8 @@ widgets/grid.cpp \
 widgets/frame.cpp \
 widgets/form.cpp \
 widgets/sizer.cpp \
-widgets/view.cpp
+widgets/view.cpp \
+widgets/notebook.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
