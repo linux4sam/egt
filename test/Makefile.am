@@ -22,7 +22,8 @@ main.cpp
 if HAVE_GSTREAMER
 test_SOURCES += \
 audio/audio.cpp \
-video/video.cpp
+video/video.cpp \
+video/camera.cpp
 endif
 
 test_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include -I$(top_srcdir)/external/googletest/googletest -pthread
