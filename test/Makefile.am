@@ -23,7 +23,8 @@ widgets/valuerange.cpp \
 widgets/combobox.cpp \
 widgets/listbox.cpp  \
 widgets/scrollwheel.cpp \
-widgets/button.cpp
+widgets/button.cpp \
+widgets/grid.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
