@@ -28,7 +28,8 @@ ASTYLE_WILDCARDS = \
 "$(top_srcdir)/include/egt/\*.h" \
 "$(top_srcdir)/src/\*.c" \
 "$(top_srcdir)/src/\*.cpp" \
-"$(top_srcdir)/src/\*.h"
+"$(top_srcdir)/src/\*.h" \
+"$(top_srcdir)/test/\*.cpp"
 
 .PHONY: style
 style:
