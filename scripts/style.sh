@@ -8,7 +8,9 @@
 # Script to enforce the coding style of this project.
 #
 
-if [ "$(astyle -V)" \< "Artistic Style Version 3.1" ]
+ASTYLE_BIN=${ASTYLE_BIN:-astyle}
+
+if [ "$(${ASTYLE_BIN} -V)" \< "Artistic Style Version 3.1" ]
 then
     echo "Your astyle version is too old. Update astyle to at least version 3.1"
     exit 1
@@ -34,4 +36,4 @@ OPTIONS="--style=allman \
 --attach-closing-while \
 --indent=spaces=4"
 
-astyle ${OPTIONS} $@
+${ASTYLE_BIN} ${OPTIONS} $@

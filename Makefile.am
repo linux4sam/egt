@@ -33,7 +33,7 @@ ASTYLE_WILDCARDS = \
 .PHONY: style
 style:
 if HAVE_ASTYLE_BIN
-	$(top_srcdir)/scripts/style.sh --recursive $(ASTYLE_WILDCARDS) \
+	ASTYLE_BIN=$(ASTYLE_BIN) $(top_srcdir)/scripts/style.sh --recursive $(ASTYLE_WILDCARDS) \
 		--exclude=images/jpeg -i
 else
 	@echo "configured without astyle" >&2; \
