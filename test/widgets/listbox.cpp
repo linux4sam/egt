@@ -1,8 +1,10 @@
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
-
-using namespace egt;
 
 using ::testing::TestWithParam;
 using ::testing::Values;
@@ -33,7 +35,7 @@ TEST_P(ListBoxWidgetTest, TestWidget)
     }
     else if (type == 1)
     {
-        EXPECT_NO_THROW(widget.reset(new egt::ListBox(Rect(0, 0, 200, 100))));
+        EXPECT_NO_THROW(widget.reset(new egt::ListBox(egt::Rect(0, 0, 200, 100))));
         EXPECT_NO_THROW(win.add(widget));
 
         for (auto x = 0; x <= 6; x++)
@@ -46,12 +48,12 @@ TEST_P(ListBoxWidgetTest, TestWidget)
     }
     else if (type == 3)
     {
-        EXPECT_NO_THROW(widget.reset(new egt::ListBox(items, Rect(0, 0, 400, 200))));
+        EXPECT_NO_THROW(widget.reset(new egt::ListBox(items, egt::Rect(0, 0, 400, 200))));
         EXPECT_NO_THROW(win.add(widget));
     }
     else if (type == 4)
     {
-        EXPECT_NO_THROW(widget.reset(new egt::ListBox(win, items, Rect(0, 0, 300, 600))));
+        EXPECT_NO_THROW(widget.reset(new egt::ListBox(win, items, egt::Rect(0, 0, 300, 600))));
     }
 
     EXPECT_EQ(static_cast<int>(widget->item_count()), 7);
@@ -62,7 +64,6 @@ TEST_P(ListBoxWidgetTest, TestWidget)
     bool state = false;
     widget->on_selected_changed([&state]()
     {
-        std::cout << "on_selected_changed" << std::endl;
         state = true;
     });
     widget->selected(4);
@@ -70,7 +71,7 @@ TEST_P(ListBoxWidgetTest, TestWidget)
     EXPECT_TRUE(state);
 
 
-    PeriodicTimer cputimer(std::chrono::seconds(1));
+    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     cputimer.on_timeout([widget, &cputimer, &app]()
     {
         static int count = 0;

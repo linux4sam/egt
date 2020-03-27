@@ -1,9 +1,11 @@
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <random>
-
-using namespace egt;
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
@@ -37,8 +39,8 @@ TEST_P(FormTest, TestWidget)
     {
         auto text1 = std::make_shared<egt::TextBox>("textBox " + std::to_string(i));
         widget->add_option(text1);
-        widget->group_align(AlignFlag::center);
-        widget->name_align(AlignFlag::right);
+        widget->group_align(egt::AlignFlag::center);
+        widget->name_align(egt::AlignFlag::right);
         widget->remove_options();
     }
 }

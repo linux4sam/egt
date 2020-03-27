@@ -1,13 +1,11 @@
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <random>
-
-using namespace egt;
 
 using ::testing::TestWithParam;
 using ::testing::Values;
@@ -27,16 +25,15 @@ static int random_item(int start, int end)
 
 TEST_P(VideoWidgetTest, VideoWidget)
 {
-    Application app;
-    TopWindow win;
+    egt::Application app;
+    egt::TopWindow win;
     std::shared_ptr<egt::VideoWindow> m_player;
 
     std::string file = GetParam();
-    std::cout << "File : " << file << std::endl;
 
     bool play = false;
     bool error_flag = false;
-    Size size(320, 192);
+    egt::Size size(320, 192);
     if (file.empty())
     {
         EXPECT_NO_THROW(m_player.reset(new egt::VideoWindow(size)));
@@ -52,7 +49,6 @@ TEST_P(VideoWidgetTest, VideoWidget)
             m_player->on_error([m_player, &app, &error_flag](std::string err)
             {
                 error_flag = true;
-                std::cout << "VideoWindow : Error : " << err << std::endl;
                 EXPECT_NO_THROW(app.quit());
             });
 
@@ -110,7 +106,7 @@ TEST_P(VideoWidgetTest, VideoWidget)
             });
 
             egt::experimental::CPUMonitorUsage tools;
-            PeriodicTimer cputimer(std::chrono::seconds(3));
+            egt::PeriodicTimer cputimer(std::chrono::seconds(3));
             cputimer.on_timeout([m_player, &play, &tools]()
             {
                 if (m_player->playing())
@@ -118,7 +114,7 @@ TEST_P(VideoWidgetTest, VideoWidget)
                     EXPECT_TRUE(m_player->pause());
                     play = false;
 
-                    auto p = Point(random_item(0, 480), random_item(0, 240));
+                    auto p = egt::Point(random_item(0, 480), random_item(0, 240));
                     m_player->move(p);
                     EXPECT_EQ(m_player->point(), p);
 
@@ -140,8 +136,6 @@ TEST_P(VideoWidgetTest, VideoWidget)
                     if (count <= 10)
                     {
                         EXPECT_TRUE(m_player->seek(m_player->duration() * seek));
-                        std::cout << "VideoWindow : seeking : " << seek << std::endl;
-                        std::cout << "VideoWindow : position : " << static_cast<int>(m_player->position() / 1000000000UL) << std::endl;
                         count++;
                     }
 
@@ -172,13 +166,13 @@ TEST_P(VideoWidgetTest, VideoWidget)
     }
 }
 
-std::string videofiles[] =
+static const std::string videofiles[] =
 {
-    "file:/usr/share/egt/examples/video/microchip_corporate_mpeg2.avi"
+    "file:microchip_corporate_mpeg2.avi"
     "",
     "file:/ewfgfewyyewfyfewylfew",
 };
-INSTANTIATE_TEST_SUITE_P(VideoWindowTestGroup, VideoWidgetTest, testing::ValuesIn(videofiles));
+INSTANTIATE_TEST_SUITE_P(DISABLED_VideoWindowTestGroup, VideoWidgetTest, testing::ValuesIn(videofiles));
 
 class CreateVideoWindowTest : public testing::TestWithParam<::testing::tuple<int, int>>
 {
@@ -190,12 +184,10 @@ TEST_P(CreateVideoWindowTest, DefaultVideoWindow)
     egt::TopWindow win;
     std::shared_ptr<egt::VideoWindow> m_player;
 
-    PixelFormat format = static_cast<PixelFormat>(::testing::get<0>(GetParam()));
-    WindowHint hint = static_cast<WindowHint>(::testing::get<1>(GetParam()));
-    std::cout << "PixelFormat " << format << std::endl;
-    std::cout << "WindowHint " << hint << std::endl;
+    egt::PixelFormat format = static_cast<egt::PixelFormat>(::testing::get<0>(GetParam()));
+    egt::WindowHint hint = static_cast<egt::WindowHint>(::testing::get<1>(GetParam()));
 
-    EXPECT_NO_THROW(m_player.reset(new egt::VideoWindow(Size(320, 240), format, hint)));
+    EXPECT_NO_THROW(m_player.reset(new egt::VideoWindow(egt::Size(320, 240), format, hint)));
 
     if (m_player)
     {
@@ -203,7 +195,7 @@ TEST_P(CreateVideoWindowTest, DefaultVideoWindow)
 
         bool res = false;
         std::string file;
-        file = "file:/usr/share/egt/examples/video/microchip_corporate_mpeg2.avi";
+        file = "file:microchip_corporate_mpeg2.avi";
         EXPECT_EQ(res = m_player->media(file), true);
         if (res)
         {
@@ -215,4 +207,4 @@ TEST_P(CreateVideoWindowTest, DefaultVideoWindow)
     }
 }
 
-INSTANTIATE_TEST_SUITE_P(CreateVideoWindowGroup, CreateVideoWindowTest, Combine(Range(1, 11), Values(1, 2, 4, 8, 16)));
+INSTANTIATE_TEST_SUITE_P(DISABLED_CreateVideoWindowGroup, CreateVideoWindowTest, Combine(Range(1, 11), Values(1, 2, 4, 8, 16)));

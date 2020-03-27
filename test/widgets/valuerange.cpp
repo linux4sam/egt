@@ -1,8 +1,10 @@
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
-
-using namespace egt;
 
 template <class T>
 class ValueRangeWidgets : public testing::Test
@@ -13,11 +15,11 @@ protected:
     egt::Application app;
 };
 
-using ValueRangeWidgetTypes = ::testing::Types<AnalogMeter,
-      ProgressBar,
-      SpinProgress,
-      LevelMeter,
-      Slider>;
+using ValueRangeWidgetTypes = ::testing::Types<egt::AnalogMeter,
+      egt::ProgressBar,
+      egt::SpinProgress,
+      egt::LevelMeter,
+      egt::Slider>;
 TYPED_TEST_SUITE(ValueRangeWidgets, ValueRangeWidgetTypes);
 TYPED_TEST(ValueRangeWidgets, TestValueRange)
 {
@@ -57,10 +59,10 @@ protected:
     egt::Application app;
 };
 
-using WidgetFloatTypes = ::testing::Types<AnalogMeterF,
-      ProgressBarF,
-      SpinProgressF,
-      LevelMeterF>;
+using WidgetFloatTypes = ::testing::Types<egt::AnalogMeterF,
+      egt::ProgressBarF,
+      egt::SpinProgressF,
+      egt::LevelMeterF>;
 TYPED_TEST_SUITE(FloatWidgets, WidgetFloatTypes);
 
 TYPED_TEST(FloatWidgets, TestValueRangeF)

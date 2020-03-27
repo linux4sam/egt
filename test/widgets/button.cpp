@@ -1,8 +1,10 @@
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
-
-using namespace egt;
 
 template <class T>
 class ButtonWidgets : public testing::Test
@@ -14,11 +16,11 @@ protected:
 
 std::string DefaultText = "Button Text";
 
-using WidgetTypes = ::testing::Types<Button,
-      RadioBox,
-      ImageButton,
-      CheckButton,
-      CheckBox>;
+using WidgetTypes = ::testing::Types<egt::Button,
+      egt::RadioBox,
+      egt::ImageButton,
+      egt::CheckButton,
+      egt::CheckBox>;
 TYPED_TEST_SUITE(ButtonWidgets, WidgetTypes);
 
 TYPED_TEST(ButtonWidgets, TestValueRange)

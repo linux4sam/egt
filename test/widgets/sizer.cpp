@@ -1,9 +1,11 @@
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <random>
-
-using namespace egt;
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
@@ -20,13 +22,13 @@ TEST_P(SizerTest, TestWidget)
 
     egt::Orientation orient = static_cast<egt::Orientation>(GetParam());
 
-    widget.reset(new BoxSizer(orient));
+    widget.reset(new egt::BoxSizer(orient));
     win.add(widget);
 
     auto text1 = std::make_shared<egt::TextBox>("text 1");
     widget->add((text1));
 
-    auto text2 = std::make_shared<egt::TextBox>("text 2", Rect(0, 0, 200, 100));
+    auto text2 = std::make_shared<egt::TextBox>("text 2", egt::Rect(0, 0, 200, 100));
     widget->add((text2));
 
     auto text3 = std::make_shared<egt::Window>();
@@ -34,7 +36,7 @@ TEST_P(SizerTest, TestWidget)
 
     EXPECT_EQ(widget->orient(), orient);
 
-    PeriodicTimer cputimer(std::chrono::seconds(2));
+    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     cputimer.on_timeout([widget, &cputimer, &app]()
     {
         static int count = 0;

@@ -1,9 +1,11 @@
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <random>
-
-using namespace egt;
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
@@ -26,34 +28,32 @@ TEST_P(FrameTest, TestWidget)
     egt::TopWindow win;
     std::shared_ptr<egt::Frame> widget;
 
-    Widget::Flags flag = static_cast<Widget::Flag>(GetParam());
+    egt::Widget::Flags flag = static_cast<egt::Widget::Flag>(GetParam());
 
-    std::cout << " flag : " << flag << std::endl;
-    EXPECT_NO_THROW(widget.reset(new Frame(Rect(0, 0, 800, 480), flag)));
+    EXPECT_NO_THROW(widget.reset(new egt::Frame(egt::Rect(0, 0, 800, 480), flag)));
     EXPECT_NO_THROW(win.add(widget));
     int wcount = 0;
     for (int i = 0; i < 10; i++)
     {
         auto w = random_item(40, 150);
         auto h = random_item(40, 150);
-        auto text1 = std::make_shared<egt::TextBox>("textBox " + std::to_string(i), Rect(0, 0, w, h), AlignFlag::center);
+        auto text1 = std::make_shared<egt::TextBox>("textBox " + std::to_string(i), egt::Rect(0, 0, w, h), egt::AlignFlag::center);
         EXPECT_NO_THROW(widget->add(text1));
         wcount++;
     }
     auto c = widget->count_children();
     EXPECT_EQ(static_cast<int>(c), wcount);
 
-    PeriodicTimer cputimer(std::chrono::seconds(2));
+    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     cputimer.on_timeout([widget, &app, &cputimer, &c]()
     {
         static bool remove_all = false;
         c = widget->count_children();
-        std::cout << " count : " << c << std::endl;
         if (c == 0)
         {
             for (int j = 10; j < 20; j++)
             {
-                auto text2 = std::make_shared<egt::TextBox>("textBox " + std::to_string(j), Rect(random_item(0, 720), random_item(0, 340), 80, 100));
+                auto text2 = std::make_shared<egt::TextBox>("textBox " + std::to_string(j), egt::Rect(random_item(0, 720), random_item(0, 340), 80, 100));
                 EXPECT_NO_THROW(widget->add(text2));
             }
             remove_all = true;
@@ -67,8 +67,6 @@ TEST_P(FrameTest, TestWidget)
                 if (w != nullptr)
                 {
                     auto n = w->name();
-                    //auto f = widget->find_child(n);
-                    std::cout << " name  : " << n  << std::endl;
                     EXPECT_NO_THROW(widget->remove(w.get()));
                 }
             }

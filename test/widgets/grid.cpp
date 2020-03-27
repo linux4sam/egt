@@ -1,9 +1,11 @@
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <random>
-
-using namespace egt;
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
@@ -29,25 +31,23 @@ TEST_P(StaticGridTest, TestWidget)
     auto rows = ::testing::get<0>(GetParam());
     auto columns = ::testing::get<1>(GetParam());
 
-    std::cout << "Grid size = " << rows << " x " << columns << std::endl;
-
-    widget.reset(new StaticGrid(std::make_tuple(columns, rows), 5));
+    widget.reset(new egt::StaticGrid(std::make_tuple(columns, rows), 5));
     win.add(egt::expand(widget));
 
     EXPECT_TRUE(widget->last_add_column() == -1);
     EXPECT_TRUE(widget->last_add_row() == -1);
 
-    PeriodicTimer cputimer(std::chrono::seconds(2));
+    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     if ((rows == 0) || (columns == 0))
     {
-        ASSERT_EXIT((widget->get(Point(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
+        ASSERT_EXIT((widget->get(egt::Point(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
 
-        auto text1 = std::make_shared<egt::TextBox>("text 1", Rect(0, 0, 200, 100));
+        auto text1 = std::make_shared<egt::TextBox>("text 1", egt::Rect(0, 0, 200, 100));
         ASSERT_EXIT((widget->add(egt::expand(text1)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
     }
     else
     {
-        EXPECT_TRUE(widget->get(Point(0, 0)) == nullptr);
+        EXPECT_TRUE(widget->get(egt::Point(0, 0)) == nullptr);
 
         for (int i = 0; i <  rows;  i++)
         {
@@ -65,7 +65,7 @@ TEST_P(StaticGridTest, TestWidget)
         {
             int r = widget->last_add_row();
             int c = widget->last_add_column();
-            auto rm = widget->get(Point(c, r));
+            auto rm = widget->get(egt::Point(c, r));
             if (rm != nullptr)
             {
                 widget->remove(rm);
@@ -97,25 +97,23 @@ TEST_P(SelectableGridTest, TestWidget)
     auto rows = ::testing::get<0>(GetParam());
     auto columns = ::testing::get<1>(GetParam());
 
-    std::cout << "Grid size = " << rows << " x " << columns << std::endl;
-
-    widget.reset(new SelectableGrid(std::make_tuple(columns, rows), 5));
+    widget.reset(new egt::SelectableGrid(std::make_tuple(columns, rows), 5));
     win.add(egt::expand(widget));
 
     EXPECT_TRUE(widget->last_add_column() == -1);
     EXPECT_TRUE(widget->last_add_row() == -1);
 
-    PeriodicTimer cputimer(std::chrono::seconds(2));
+    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     if ((rows == 0) || (columns == 0))
     {
-        ASSERT_EXIT((widget->get(Point(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
+        ASSERT_EXIT((widget->get(egt::Point(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
 
-        auto text1 = std::make_shared<egt::TextBox>("text 1", Rect(0, 0, 200, 100));
+        auto text1 = std::make_shared<egt::TextBox>("text 1", egt::Rect(0, 0, 200, 100));
         ASSERT_EXIT((widget->add(egt::expand(text1)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
     }
     else
     {
-        EXPECT_TRUE(widget->get(Point(0, 0)) == nullptr);
+        EXPECT_TRUE(widget->get(egt::Point(0, 0)) == nullptr);
 
         for (int i = 0; i <  rows;  i++)
         {
@@ -134,7 +132,6 @@ TEST_P(SelectableGridTest, TestWidget)
             static int count = 8;
             int r = random_item(0, widget->last_add_row());
             int c = random_item(0, widget->last_add_column());
-            std::cout << "Selecting Widget = " << c << " x " << r << std::endl;
             widget->selected(c, r);
             if (++count >= 8)
             {

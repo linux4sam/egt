@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <cmath>
 #include <egt/ui>
 #include <gtest/gtest.h>
@@ -5,9 +10,6 @@
 #include <regex>
 #include <string>
 #include <vector>
-#include <iostream>
-
-using namespace egt;
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
@@ -531,12 +533,12 @@ TEST_P(NoteBookTest, TestWidget)
     auto type = GetParam();
     if (type == 0)
     {
-        EXPECT_NO_THROW(notebook.reset(new Notebook()));
+        EXPECT_NO_THROW(notebook.reset(new egt::Notebook()));
         EXPECT_NO_THROW(win.add(egt::expand(notebook)));
     }
     else
     {
-        EXPECT_NO_THROW(notebook.reset(new Notebook(win, Rect(0, 0, 640, 400))));
+        EXPECT_NO_THROW(notebook.reset(new egt::Notebook(win, egt::Rect(0, 0, 640, 400))));
         win.center();
     }
 
@@ -573,7 +575,7 @@ TEST_P(NoteBookTest, TestWidget)
         ++scount;
     });
 
-    PeriodicTimer cputimer(std::chrono::seconds(2));
+    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     cputimer.on_timeout([notebook, &cputimer, &app, &count, &scount, &win]()
     {
         auto rm = notebook->count_children();
@@ -598,7 +600,7 @@ TEST_P(NoteBookTest, TestWidget)
         }
     });
 
-    PeriodicTimer cputimer1(std::chrono::seconds(2));
+    egt::PeriodicTimer cputimer1(std::chrono::milliseconds(1));
     cputimer1.on_timeout([notebook, &cputimer1, &count, &cputimer]()
     {
         if (count % 2)
@@ -622,7 +624,6 @@ TEST_P(NoteBookTest, TestWidget)
 
     win.show();
     app.run();
-
 }
 
 INSTANTIATE_TEST_SUITE_P(NoteBookTestGroup, NoteBookTest, Range(0, 2));

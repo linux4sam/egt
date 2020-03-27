@@ -1,13 +1,11 @@
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <random>
-
-using namespace egt;
 
 using ::testing::TestWithParam;
 using ::testing::Values;
@@ -27,16 +25,13 @@ class CameraWindowTest : public testing::TestWithParam<std::string> {};
 
 TEST_P(CameraWindowTest, CameraWidget)
 {
-    Application app;
-    TopWindow win;
-    std::shared_ptr<CameraWindow> m_camera;
-
+    egt::Application app;
+    egt::TopWindow win;
+    std::shared_ptr<egt::CameraWindow> m_camera;
     std::string file = GetParam();
-    std::cout << "File : " << file << std::endl;
+    egt::Size size(320, 240);
 
-    Size size(320, 240);
-
-    EXPECT_NO_THROW(m_camera.reset(new CameraWindow(size, file)));
+    EXPECT_NO_THROW(m_camera.reset(new egt::CameraWindow(size, file)));
 
     if (m_camera)
     {
@@ -57,10 +52,10 @@ TEST_P(CameraWindowTest, CameraWidget)
         if (result)
         {
             egt::experimental::CPUMonitorUsage tools;
-            PeriodicTimer cputimer(std::chrono::seconds(5));
+            egt::PeriodicTimer cputimer(std::chrono::seconds(5));
             cputimer.on_timeout([m_camera, &tools, &app, &cputimer]()
             {
-                auto p = Point(random_item(1, 480), random_item(1, 240));
+                auto p = egt::Point(random_item(1, 480), random_item(1, 240));
                 EXPECT_NO_THROW(m_camera->move(p));
                 EXPECT_EQ(m_camera->point(), p);
 
@@ -95,4 +90,4 @@ TEST_P(CameraWindowTest, CameraWidget)
     }
 }
 
-INSTANTIATE_TEST_SUITE_P(CameraWindowTestGroup, CameraWindowTest, testing::Values("/dev/video0"));
+INSTANTIATE_TEST_SUITE_P(DISABLED_CameraWindowTestGroup, CameraWindowTest, testing::Values("/dev/video0"));

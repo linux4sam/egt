@@ -10,7 +10,8 @@ CUSTOM_LDADD = $(cairo_LIBS) $(CODE_COVERAGE_LDFLAGS)
 
 check_LTLIBRARIES = libgtest.la
 libgtest_la_SOURCES = ../external/googletest/googletest/src/gtest-all.cc
-libgtest_la_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include -I$(top_srcdir)/external/googletest/googletest
+libgtest_la_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include \
+	-I$(top_srcdir)/external/googletest/googletest
 libgtest_la_LDFLAGS = -pthread
 
 check_PROGRAMS = \
@@ -18,18 +19,18 @@ test
 
 test_SOURCES = \
 main.cpp \
+widgets/button.cpp \
+widgets/combobox.cpp \
+widgets/form.cpp \
+widgets/frame.cpp \
+widgets/grid.cpp \
+widgets/listbox.cpp  \
+widgets/notebook.cpp \
+widgets/scrollwheel.cpp \
+widgets/sizer.cpp \
 widgets/slider.cpp \
 widgets/valuerange.cpp \
-widgets/combobox.cpp \
-widgets/listbox.cpp  \
-widgets/scrollwheel.cpp \
-widgets/button.cpp \
-widgets/grid.cpp \
-widgets/frame.cpp \
-widgets/form.cpp \
-widgets/sizer.cpp \
-widgets/view.cpp \
-widgets/notebook.cpp
+widgets/view.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \
@@ -38,7 +39,8 @@ video/video.cpp \
 video/camera.cpp
 endif
 
-test_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include -I$(top_srcdir)/external/googletest/googletest -pthread
+test_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include \
+	-I$(top_srcdir)/external/googletest/googletest -pthread
 test_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 test_LDADD = libgtest.la $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 test_LDFLAGS = $(AM_LDFLAGS)

@@ -1,8 +1,8 @@
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
+/*
+ * Copyright (C) 2018 Microchip Technology Inc.  All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <fstream>
@@ -53,7 +53,6 @@ TEST_P(AudioPlayerTest, AudioPlayer)
     }
 
     std::string file = GetParam();
-    std::cout << "File : " << file << std::endl;
 
     bool on_error = false;
     bool play = false;
@@ -76,7 +75,6 @@ TEST_P(AudioPlayerTest, AudioPlayer)
             egt::PeriodicTimer cputimer(std::chrono::seconds(5));
             m_player->on_error([&cputimer, &app, &on_error](std::string err)
             {
-                std::cout << "on_error : " << err << std::endl;
                 on_error = true;
                 if (cputimer.running())
                     cputimer.stop();
@@ -118,7 +116,6 @@ TEST_P(AudioPlayerTest, AudioPlayer)
                 auto d = static_cast<int>(m_player->duration());
                 EXPECT_EQ(d, 865);
                 EXPECT_LE(static_cast<int>(position), d);
-                std::cout << "AudioPlayer : Position = " << position << std::endl;
             });
 
             /**
@@ -148,14 +145,12 @@ TEST_P(AudioPlayerTest, AudioPlayer)
                     {
                         EXPECT_TRUE(m_player->seek(dur * seek));
                         count++;
-                        std::cout << "AudioPlayer : seeking to = " << seek << std::endl;
                     }
 
                     if (count == 4)
                     {
                         EXPECT_TRUE(m_player->seek(dur * 0.98));
                         count++;
-                        std::cout << "AudioPlayer : seeking to 0.98 " << std::endl;
                     }
 
                     int volume = random_item(1, 5);
@@ -178,14 +173,10 @@ TEST_P(AudioPlayerTest, AudioPlayer)
     }
 }
 
-std::string audiofiles[] =
+static const std::string audiofiles[] =
 {
     "",
     "file:/vgfweyquwfudqwfufcdqwcudqw.kc",
-#ifdef HAVE_LIBPLANES
-    "file:/usr/share/egt/examples/audioplayer/concerto.mp3"
-#else
-    "file:/home/sandeep/egt/share/egt/examples/audioplayer/concerto.mp3",
-#endif
+    "file:concerto.mp3"
 };
-INSTANTIATE_TEST_SUITE_P(AudioPlayerGroup, AudioPlayerTest, testing::ValuesIn(audiofiles));
+INSTANTIATE_TEST_SUITE_P(DISABLED_AudioPlayerGroup, AudioPlayerTest, testing::ValuesIn(audiofiles));
