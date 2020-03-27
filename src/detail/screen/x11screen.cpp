@@ -161,8 +161,8 @@ void X11Screen::handle_read(const asio::error_code& error)
 
         switch (e.type)
         {
+        default:
         case MapNotify:
-            break;
         case ConfigureNotify:
             break;
         case Expose:
@@ -238,8 +238,6 @@ void X11Screen::handle_read(const asio::error_code& error)
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access)
             if (static_cast<int>(e.xclient.data.l[0]) == static_cast<int>(m_priv->wmDeleteMessage))
                 m_app.event().quit();
-            break;
-        default:
             break;
         }
     }

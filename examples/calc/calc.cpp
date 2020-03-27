@@ -107,7 +107,7 @@ int main(int argc, char** argv)
             b->color(egt::Palette::ColorId::border, egt::Palette::gray);
             line_sizer->add(b);
 
-            b->on_click([&text, b](egt::Event & event)
+            b->on_click([&text, b](egt::Event&)
             {
                 static bool do_clear = false;
 

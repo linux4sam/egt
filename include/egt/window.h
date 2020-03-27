@@ -239,7 +239,7 @@ protected:
  * provides features like a pointer cursor, that usually only make sense as a
  * top level Window.
  */
-// NOLINTNEXTLINE(cppcoreguidelines-special-member-functions)
+// NOLINTNEXTLINE(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
 class EGT_API TopWindow : public Window
 {
 public:

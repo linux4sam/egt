@@ -201,7 +201,7 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) no
     m_grid.add(expand(m_okay));
     m_grid.add(expand(m_cancel));
 
-    m_okay.on_event([this](Event & event)
+    m_okay.on_event([this](Event&)
     {
         if (!m_fsave.empty())
         {
@@ -214,7 +214,7 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) no
         }
     }, {EventId::pointer_click});
 
-    m_cancel.on_event([this](Event & event)
+    m_cancel.on_event([this](Event&)
     {
         this->m_fsave = std::string();
         this->m_flist.clear();

@@ -42,6 +42,7 @@ CheckBox::CheckBox(Frame& parent,
 
 void CheckBox::handle(Event& event)
 {
+    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     Widget::handle(event);
 
     switch (event.id())
@@ -118,12 +119,14 @@ Size CheckBox::min_size_hint() const
     if (!m_min_size.empty())
         return m_min_size;
 
+    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     const auto default_size = DEFAULT_CHECKBOX_SIZE + Widget::min_size_hint();
 
     if (!m_text.empty())
     {
         auto s = text_size(m_text);
         s += Size(s.width() / 2 + 5, 0);
+        // NOLINTNEXTLINE(bugprone-parent-virtual-call)
         s += Widget::min_size_hint();
         if (s.width() < default_size.width())
             s.width(default_size.width());
@@ -232,10 +235,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         Rect rect = b;
         rect.width(rect.width() / 2);
 
-        if (widget.checked())
-            painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
-        else
-            painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+        painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
         painter.set(widget.font());
         auto size = painter.text_size(widget.off_text());
         Rect target = detail::align_algorithm(size,
@@ -252,6 +252,7 @@ Size ToggleBox::min_size_hint() const
     if (!m_min_size.empty())
         return m_min_size;
 
+    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     return Size(100, 30) + Widget::min_size_hint();
 }
 

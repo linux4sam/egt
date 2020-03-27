@@ -403,6 +403,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
         painter.stroke();
     }
 
+    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     Frame::draw(painter, rect);
 }
 

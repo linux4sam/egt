@@ -90,7 +90,7 @@ void VirtualKeyboard::Key::font(const Font& font)
     m_button->font(font);
 }
 
-VirtualKeyboard::VirtualKeyboard(std::vector<PanelKeys> keys, const Rect& rect)
+VirtualKeyboard::VirtualKeyboard(const std::vector<PanelKeys>& keys, const Rect& rect)
     : Frame(rect)
 {
     name("VirtualKeyboard" + std::to_string(m_widgetid));
@@ -168,7 +168,7 @@ void VirtualKeyboard::key_space(unsigned key_space)
         main_panel->update_key_space(key_space);
 }
 
-VirtualKeyboard::Panel::Panel(PanelKeys keys)
+VirtualKeyboard::Panel::Panel(const PanelKeys& keys)
     : m_keys(keys)
 {
     for (auto& row : keys)
@@ -206,7 +206,7 @@ void VirtualKeyboard::key_link(const std::shared_ptr<Key>& k)
 
 void VirtualKeyboard::key_input_value(const std::shared_ptr<Key>& k)
 {
-    k->m_button->on_event([this, k](Event & event)
+    k->m_button->on_event([this, k](Event&)
     {
         if (!k->m_button->text().empty())
         {
@@ -271,7 +271,7 @@ void VirtualKeyboard::key_multichoice(const std::shared_ptr<Key>& k)
     {
         for (auto& key_multichoice : key_multichoice_row)
         {
-            key_multichoice->m_button->on_event([this, k, key_multichoice](Event & event)
+            key_multichoice->m_button->on_event([this, k, key_multichoice](Event&)
             {
                 m_multichoice_popup->hide();
                 main_window()->remove(m_multichoice_popup.get());

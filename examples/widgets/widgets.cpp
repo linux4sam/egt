@@ -203,12 +203,12 @@ struct TextPage : public egt::NotebookTab
         grid0->add(egt::expand(text4));
 
         auto text5 = std::make_shared<egt::TextBox>("all characters allowed");
-        text5->add_validator_function([](std::string s) { return true; });
+        text5->add_validator_function([](const std::string&) { return true; });
         text5->input_validation_enabled(true);
         grid0->add(egt::expand(text5));
 
         auto text6 = std::make_shared<egt::TextBox>("abc123 only");
-        text6->add_validator_function([](std::string s)
+        text6->add_validator_function([](const std::string & s)
         {
             return std::regex_match(s, std::regex("[abc123]*"));
         });

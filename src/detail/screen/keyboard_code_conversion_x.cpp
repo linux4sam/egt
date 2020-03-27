@@ -704,7 +704,7 @@ KeyboardCode KeyboardCodeFromXKeyEvent(const XEvent* xev)
     XKeyEvent* xkey = &xkeyevent.xkey;
     // XLookupKeysym does not take into consideration the state of the lock/shift
     // etc. keys. So it is necessary to use XLookupString instead.
-    XLookupString(xkey, NULL, 0, &keysym, NULL);
+    XLookupString(xkey, nullptr, 0, &keysym, nullptr);
     if (IsKeypadKey(keysym) || IsPrivateKeypadKey(keysym) ||
         IsCursorKey(keysym) || IsPFKey(keysym) || IsFunctionKey(keysym) ||
         IsModifierKey(keysym) || IsTtyFunctionOrSpaceKey(keysym))
@@ -717,7 +717,7 @@ KeyboardCode KeyboardCodeFromXKeyEvent(const XEvent* xev)
     if (xkey->state & 0xFF & ~Mod2Mask)
     {
         xkey->state &= (~0xFF | Mod2Mask);
-        XLookupString(xkey, NULL, 0, &keysym, NULL);
+        XLookupString(xkey, nullptr, 0, &keysym, nullptr);
     }
     // [a-z] cases.
     if (keysym >= XK_a && keysym <= XK_z)
@@ -739,7 +739,7 @@ KeyboardCode KeyboardCodeFromXKeyEvent(const XEvent* xev)
             return keycode;
         KeySym keysym_shift = NoSymbol;
         xkey->state |= ShiftMask;
-        XLookupString(xkey, NULL, 0, &keysym_shift, NULL);
+        XLookupString(xkey, nullptr, 0, &keysym_shift, nullptr);
         MAP2 key2 = {keysym & 0xFFFF, xkey->keycode, keysym_shift & 0xFFFF, 0};
         keycode = FindVK(key2, map2, base::size(map2));
         if (keycode != EKEY_UNKNOWN)
@@ -747,7 +747,7 @@ KeyboardCode KeyboardCodeFromXKeyEvent(const XEvent* xev)
         KeySym keysym_altgr = NoSymbol;
         xkey->state &= ~ShiftMask;
         xkey->state |= Mod1Mask;
-        XLookupString(xkey, NULL, 0, &keysym_altgr, NULL);
+        XLookupString(xkey, nullptr, 0, &keysym_altgr, nullptr);
         MAP3 key3 = {keysym & 0xFFFF, xkey->keycode, keysym_shift & 0xFFFF,
                      keysym_altgr & 0xFFFF, 0
                     };

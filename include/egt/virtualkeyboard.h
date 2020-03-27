@@ -185,7 +185,7 @@ public:
      * @param[in] keys Main panels of the keyboard.
      * @param[in] rect Rect of the Keyboard.
      */
-    explicit VirtualKeyboard(std::vector<PanelKeys> keys,
+    explicit VirtualKeyboard(const std::vector<PanelKeys>& keys,
                              const Rect& rect = {});
 
     void resize(const Size& s) override;
@@ -203,7 +203,7 @@ protected:
     struct Panel : public VerticalBoxSizer
     {
         // cppcheck-suppress noExplicitConstructor
-        explicit Panel(PanelKeys keys);
+        explicit Panel(const PanelKeys& keys);
         void update_key_space(unsigned key_space);
         void update_key_size(const Size& s);
 

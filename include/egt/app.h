@@ -134,13 +134,13 @@ public:
 protected:
 
     /// @private
-    void setup_info();
+    static void setup_info();
     /// @private
-    void setup_logging();
+    static void setup_logging();
     /// @private
-    void setup_locale(const std::string& name);
+    static void setup_locale(const std::string& name);
     /// @private
-    void setup_search_paths();
+    static void setup_search_paths();
     /// @private
     void setup_backend(bool primary);
     /// @private

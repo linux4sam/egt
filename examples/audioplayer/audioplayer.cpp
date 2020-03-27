@@ -168,7 +168,7 @@ public:
             message_dialog->show_modal(true);
         });
 
-        m_player.on_error([message_dialog, text](std::string err)
+        m_player.on_error([message_dialog, text](const std::string & err)
         {
             if (!err.empty())
             {

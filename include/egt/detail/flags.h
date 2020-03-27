@@ -71,6 +71,7 @@ public:
     }
 
     /// Assignment operator.
+    // NOLINTNEXTLINE(cert-oop54-cpp)
     Flags& operator=(const Flags& rhs)
     {
         if (&rhs != this)

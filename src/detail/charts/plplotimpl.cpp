@@ -757,7 +757,8 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 
     if ((!m_ydata.empty()) && (!m_sdata.empty()))
     {
-        int theta, theta0 = 0;
+        int theta = 0;
+        int theta0 = 0;
         int color = 1;
         int size = m_ydata.size();
         for (int i = 0; i < size; i++)

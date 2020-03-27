@@ -38,6 +38,7 @@ RadioBox::RadioBox(Frame& parent,
 
 void RadioBox::handle(Event& event)
 {
+    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     Widget::handle(event);
 
     switch (event.id())
@@ -113,9 +114,11 @@ Size RadioBox::min_size_hint() const
     {
         auto s = text_size(m_text);
         s += Size(s.width() / 2 + 5, 0);
+        // NOLINTNEXTLINE(bugprone-parent-virtual-call)
         return s + Widget::min_size_hint();
     }
 
+    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     return Size(100, 30) + Widget::min_size_hint();
 }
 

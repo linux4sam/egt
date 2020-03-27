@@ -191,6 +191,7 @@ void Application::setup_search_paths()
     add_search_path(detail::exe_pwd());
 }
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void Application::setup_backend(bool primary)
 {
     detail::ignoreparam(primary);
@@ -401,6 +402,7 @@ void Application::paint_to_file(const std::string& filename)
     cairo_surface_write_to_png(surface.get(), name.c_str());
 }
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void Application::dump(std::ostream& out) const
 {
     for (auto& w : windows())

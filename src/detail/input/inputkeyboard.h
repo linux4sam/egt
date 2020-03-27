@@ -50,7 +50,7 @@ public:
     virtual uint32_t on_key(uint32_t key, EventId event) override;
 protected:
 
-    uint32_t ekey_to_utf32(KeyboardCode code, bool shift, bool caps, bool numlock);
+    static uint32_t ekey_to_utf32(KeyboardCode code, bool shift, bool caps, bool numlock);
 
     std::array<bool, 512> m_key_states{};
 };

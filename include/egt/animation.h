@@ -550,7 +550,7 @@ public:
     explicit PropertyAnimatorType(T start = T(),
                                   T end = T(),
                                   std::chrono::milliseconds duration = std::chrono::milliseconds(),
-                                  EasingFunc func = easing_linear)
+                                  const EasingFunc& func = easing_linear)
         : AutoAnimation(start, end, duration, func,
                         [this](T value) { invoke_handlers(value); })
     {}
@@ -560,7 +560,7 @@ public:
      * @param[in] func The easing function to use.
      */
     explicit PropertyAnimatorType(std::chrono::milliseconds duration,
-                                  EasingFunc func = easing_linear)
+                                  const EasingFunc& func = easing_linear)
         : AutoAnimation(duration, func,
                         [this](T value)
     {

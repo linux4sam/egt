@@ -63,8 +63,8 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
         return;
     }
 
-    auto ev = reinterpret_cast<struct input_event*>(m_input_buf.data());
-    struct input_event* e, *end;
+    const auto ev = reinterpret_cast<struct input_event*>(m_input_buf.data());
+    const struct input_event* e;
 
     int dx = 0;
     int dy = 0;
@@ -78,7 +78,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
         return;
     }
 
-    end = ev + (length / sizeof(e[0]));
+    const struct input_event* end = ev + (length / sizeof(e[0]));
     for (e = ev; e < end; e++)
     {
         auto value = e->value;
@@ -173,6 +173,8 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
                     dispatch(event);
                     break;
                 }
+                default:
+                    break;
                 }
 
                 break;

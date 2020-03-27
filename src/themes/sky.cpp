@@ -20,6 +20,8 @@ void SkyTheme::init_draw()
 
     Drawer<CheckBox>::draw([](CheckBox & widget, Painter & painter, const Rect & rect)
     {
+        detail::ignoreparam(rect);
+
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
         auto b = widget.content_area();

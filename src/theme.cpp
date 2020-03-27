@@ -226,13 +226,12 @@ void Theme::draw_box(Painter& painter,
         box -= Size(border_width, border_width);
     }
 
-    double rx = box.x(),
-           ry = box.y(),
-           width = box.width(),
-           height = box.height(),
-           aspect = 1.0,
-           corner_radius = border_radius;
-
+    double rx = box.x();
+    double ry = box.y();
+    double width = box.width();
+    double height = box.height();
+    double aspect = 1.0;
+    double corner_radius = border_radius;
     double radius = corner_radius / aspect;
     double degrees = detail::pi<double>() / 180.0;
 

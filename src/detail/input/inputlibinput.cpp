@@ -81,7 +81,8 @@ static struct libinput* tools_open_udev(const char* seat, bool verbose, bool gra
     if (!li)
     {
         spdlog::warn("Failed to initialize context from udev");
-        goto out;
+        udev_unref(udev);
+        return nullptr;
     }
 
 #ifdef LIBINPUT_VERBOSE_LOG
@@ -93,11 +94,10 @@ static struct libinput* tools_open_udev(const char* seat, bool verbose, bool gra
     {
         spdlog::warn("failed to set seat");
         libinput_unref(li);
-        li = nullptr;
-        goto out;
+        udev_unref(udev);
+        return nullptr;
     }
 
-out:
     udev_unref(udev);
     return li;
 }

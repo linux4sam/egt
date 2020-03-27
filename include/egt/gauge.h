@@ -374,6 +374,7 @@ protected:
  * [Inkscape](https://inkscape.org/).  Of course, any tool that can create
  * standard SVG files works just as well.
  */
+// NOLINTNEXTLINE(cppcoreguidelines-special-member-functions,hicpp-special-member-functions)
 class EGT_API Gauge : public Frame
 {
 public:

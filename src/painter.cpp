@@ -74,7 +74,8 @@ Painter& Painter::draw(const Image& image)
     if (!cairo_has_current_point(m_cr.get()))
         return *this;
 
-    double x, y;
+    double x;
+    double y;
     cairo_get_current_point(m_cr.get(), &x, &y);
     cairo_set_source_surface(m_cr.get(), image.surface().get(), x, y);
     cairo_rectangle(m_cr.get(), x, y, image.size().width(), image.size().height());
@@ -87,7 +88,8 @@ Painter& Painter::draw(const Image& image)
 
 Painter& Painter::draw(const Rect& rect, const Image& image)
 {
-    double x, y;
+    double x;
+    double y;
 
     assert(!image.empty());
     if (image.empty())
@@ -115,7 +117,8 @@ Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)
     if (!cairo_has_current_point(m_cr.get()))
         return *this;
 
-    double x, y;
+    double x;
+    double y;
     cairo_text_extents_t textext;
     cairo_text_extents(m_cr.get(), str.c_str(), &textext);
 

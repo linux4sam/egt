@@ -155,7 +155,7 @@ struct Points : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
-        btn2->on_click([line, btn2](egt::Event & event)
+        btn2->on_click([line, btn2](egt::Event&)
         {
             if (btn2->text() == "Add Data")
             {
@@ -203,7 +203,7 @@ struct HorizontalBarPage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::Button>("Remove Data");
         csizer->add(btn2);
-        btn2->on_click([btn2, bar, x](egt::Event & event)
+        btn2->on_click([btn2, bar, x](egt::Event&)
         {
             egt::HorizontalBarChart::StringDataArray data1;
             if (btn2->text() == "Add Data")
@@ -307,7 +307,7 @@ struct VerticalBarPage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
-        btn2->on_click([bar, btn2](egt::Event & event)
+        btn2->on_click([bar, btn2](egt::Event&)
         {
             if (btn2->text() == "Add Data")
             {
@@ -391,7 +391,7 @@ struct TanPage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
-        btn2->on_click([btn2, line](egt::Event & event)
+        btn2->on_click([btn2, line](egt::Event&)
         {
             if (btn2->text() == "Add Data")
             {
@@ -479,7 +479,7 @@ struct SinePage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
-        btn2->on_click([btn2, line](egt::Event & event)
+        btn2->on_click([btn2, line](egt::Event&)
         {
             if (btn2->text() == "Add Data")
             {
