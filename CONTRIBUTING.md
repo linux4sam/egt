@@ -201,7 +201,7 @@ make distcheck \
 
 ## Compilers
 
-gcc is the recommended compiler version.  The minimum support version is gcc 5
+gcc is the recommended compiler version.  The minimum supported version is gcc 5.2
 which [contains c++14 support](https://gcc.gnu.org/projects/cxx-status.html#cxx14).
 You can compile with a specific version of gcc, even though multiple versions
 may be installed, by specifically providing the CC and CXX environment variables
