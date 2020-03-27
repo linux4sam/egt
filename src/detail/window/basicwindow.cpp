@@ -24,8 +24,7 @@ BasicWindow::BasicWindow(Window* interface, Screen* screen)
 BasicTopWindow::BasicTopWindow(Window* interface)
     : BasicWindow(interface, Application::instance().screen())
 {
-    // go ahead and pick up the default screen
-    assert(Application::instance().screen());
+
 }
 
 }

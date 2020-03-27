@@ -204,12 +204,11 @@ void Window::create_impl(const Rect& rect,
     detail::ignoreparam(format_hint);
     detail::ignoreparam(hint);
 
-    assert(Application::instance().screen());
-
     if (!the_main_window)
     {
         the_main_window = this;
-        m_box = Application::instance().screen()->box();
+        if (Application::instance().screen())
+            m_box = Application::instance().screen()->box();
         m_impl = std::make_unique<detail::BasicTopWindow>(this);
     }
     else
@@ -359,7 +358,8 @@ void TopWindow::hide_cursor()
 void TopWindow::show_cursor(const Image& image)
 {
     m_cursor = std::make_unique<CursorWindow>(image);
-    m_cursor->move(Application::instance().screen()->box().center());
+    if (Application::instance().screen())
+        m_cursor->move(Application::instance().screen()->box().center());
     add(*m_cursor);
     m_cursor->show();
 
