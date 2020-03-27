@@ -38,9 +38,10 @@ EXTRA_DIST = $(wildcard $(top_srcdir)/examples/resource/*.png) \
 	$(wildcard $(top_srcdir)/examples/resource/*.svg)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+TIDY_SOURCE = $(filter-out $(BUILT_SOURCES),$(SOURCES))
 
 tidy-local: all-am
-	@for source in $(SOURCES); do \
+	@for source in $(TIDY_SOURCE); do \
 		[[ $$source == *.c ]] && continue; \
 		[[ $$source == *.hpp ]] && continue; \
 		[[ $$source == *.ipp ]] && continue; \

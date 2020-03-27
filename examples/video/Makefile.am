@@ -48,9 +48,10 @@ capture_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 capture_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
+TIDY_SOURCE = $(filter-out $(BUILT_SOURCES),$(SOURCES))
 
 tidy-local: all-am
-	@for source in $(SOURCES); do \
+	@for source in $(TIDY_SOURCE); do \
 		[[ $$source == *.c ]] && continue; \
 		[[ $$source == *.hpp ]] && continue; \
 		[[ $$source == *.ipp ]] && continue; \

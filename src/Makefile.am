@@ -389,9 +389,10 @@ BUILT_SOURCES = $(top_builddir)/include/egt/version.h $(top_builddir)/include/eg
 EXTRA_DIST = $(top_srcdir)/include/egt/version.h.in $(top_srcdir)/include/egt/ui.in
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
+TIDY_SOURCE = $(filter-out $(BUILT_SOURCES),$(SOURCES))
 
 tidy-local: all-am
-	@for source in $(SOURCES); do \
+	@for source in $(TIDY_SOURCE); do \
 		[[ $$source == *.c ]] && continue; \
 		[[ $$source == *.h ]] && continue; \
 		$(CLANG_TIDY_BIN) $(srcdir)/$$source -- $(TIDY_OPTIONS); \
