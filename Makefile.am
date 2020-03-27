@@ -19,7 +19,8 @@ docs docset:
 if HAVE_DOXYGEN_BIN
 	@cd docs && $(MAKE) $(AM_MAKEFLAGS) $@
 else
-	@echo "configured without doxygen"
+	@echo "configured without doxygen" >&2; \
+	exit 1
 endif
 
 ASTYLE_WILDCARDS = \
@@ -35,7 +36,8 @@ if HAVE_ASTYLE_BIN
 	$(top_srcdir)/scripts/style.sh --recursive $(ASTYLE_WILDCARDS) \
 		--exclude=images/jpeg -i
 else
-	@echo "configured without astyle"
+	@echo "configured without astyle" >&2; \
+	exit 1
 endif
 
 if ENABLE_ICONS
@@ -69,7 +71,8 @@ cppcheck:
 if HAVE_CPPCHECK_BIN
 	$(CPPCHECK_CMD) --enable=all $(CPPCHECK_DIRS)
 else
-	@echo "configured without cppcheck"
+	@echo "configured without cppcheck" >&2; \
+	exit 1
 endif
 
 lc:
