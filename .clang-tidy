@@ -1,14 +1,25 @@
 ---
 Checks: "*,\
+-bugprone-exception-escape,\
+-bugprone-lambda-function-name,\
+-bugprone-narrowing-conversions,\
 -cert-err58-cpp,\
 -clang-diagnostic-unknown-warning-option,\
 -clang-diagnostic-unknown-warning-option,\
+-cppcoreguidelines-avoid-c-arrays,\
+-cppcoreguidelines-avoid-magic-numbers,\
+-cppcoreguidelines-macro-usage,\
+-cppcoreguidelines-narrowing-conversions,\
+-cppcoreguidelines-non-private-member-variables-in-classes,\
 -cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
 -cppcoreguidelines-pro-bounds-constant-array-index,\
 -cppcoreguidelines-pro-bounds-pointer-arithmetic,\
 -cppcoreguidelines-pro-type-vararg,\
 -fuchsia-default-arguments,\
+-fuchsia-default-arguments-calls,\
+-fuchsia-default-arguments-declarations,\
 -fuchsia-overloaded-operator,\
+-fuchsia-statically-constructed-objects,\
 -google-default-arguments,\
 -google-explicit-constructor,\
 -google-readability-braces-around-statements,\
@@ -16,16 +27,23 @@ Checks: "*,\
 -google-readability-todo,\
 -google-runtime-int,\
 -google-runtime-references,\
+-hicpp-avoid-c-arrays,\
 -hicpp-braces-around-statements,\
 -hicpp-no-array-decay,\
 -hicpp-no-assembler,\
 -hicpp-signed-bitwise,\
+-hicpp-uppercase-literal-suffix,\
 -hicpp-vararg,\
 -llvm-namespace-comment,\
+-misc-non-private-member-variables-in-classes,\
+-modernize-avoid-c-arrays,\
+-modernize-use-trailing-return-type,\
 -readability-braces-around-statements,\
 -readability-else-after-return,\
 -readability-implicit-bool-conversion,\
+-readability-magic-numbers,\
 -readability-named-parameter,\
+-readability-uppercase-literal-suffix,\
 "
 HeaderFilterRegex: '^.*include/egt/.*h$$'
 AnalyzeTemporaryDtors: false
