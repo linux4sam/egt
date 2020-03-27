@@ -628,12 +628,16 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         m_fill_flags.from_string(value);
         break;
     case detail::hash("ratio:x"):
+        xratio(std::stoi(value));
         break;
     case detail::hash("ratio:y"):
+        yratio(std::stoi(value));
         break;
     case detail::hash("ratio:horizontal"):
+        horizontal_ratio(std::stoi(value));
         break;
     case detail::hash("ratio:vertical"):
+        vertical_ratio(std::stoi(value));
         break;
     case detail::hash("font"):
     {
