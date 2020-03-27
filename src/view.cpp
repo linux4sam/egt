@@ -295,7 +295,7 @@ void ScrolledView::update_sliders()
 
 void ScrolledView::handle(Event& event)
 {
-    Widget::handle(event);
+    Frame::handle(event);
 
     switch (event.id())
     {
