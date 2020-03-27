@@ -165,7 +165,7 @@ int main(int argc, char** argv)
     console_text->text("D");
     gauge.add(console_text);
 
-    dash_background.release();
+    dash_background.reset(nullptr);
 
     win.show();
 
