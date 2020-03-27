@@ -17,7 +17,6 @@
 #include <linux/input.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <sstream>
 #include <string>
 #include <sys/time.h>
 #include <unistd.h>
@@ -49,9 +48,7 @@ InputEvDev::InputEvDev(Application& app, const std::string& path)
     }
     else
     {
-        std::ostringstream ss;
-        ss << "could not open evdev device: " << path;
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error(fmt::format("could not open evdev device: {}", path));
     }
 }
 
