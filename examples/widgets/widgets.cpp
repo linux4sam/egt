@@ -423,11 +423,14 @@ struct ScrollwheelPage : public egt::NotebookTab
             std::make_shared<egt::Scrollwheel>(egt::Rect(0, 0, 50, 100), 1, 32, 1);
         scrollwheel_day->remove_item("32");
 
-        std::vector<std::string> months = { "January", "February", "March",
-                                            "April", "May", "June", "July",
-                                            "August", "September", "October",
-                                            "November", "December"
-                                          };
+        const egt::Scrollwheel::ItemArray months =
+        {
+            "January", "February", "March",
+            "April", "May", "June", "July",
+            "August", "September", "October",
+            "November", "December"
+        };
+
         auto scrollwheel_month =
             std::make_shared<egt::Scrollwheel>(egt::Rect(0, 0, 200, 100), months);
         scrollwheel_month->add_item("");
@@ -450,19 +453,34 @@ struct ScrollwheelPage : public egt::NotebookTab
             std::make_shared<egt::Label>(scrollwheel_year->value(),
                                          egt::Rect(0, 0, 75, 30));
 
-        scrollwheel_day->on_value_changed([label_day, scrollwheel_day]()
+        auto weak_label_day = std::weak_ptr<egt::Label>(label_day);
+        auto weak_scrollwheel_day = std::weak_ptr<egt::Scrollwheel>(scrollwheel_day);
+        scrollwheel_day->on_value_changed([weak_label_day, weak_scrollwheel_day]()
         {
-            label_day->text(scrollwheel_day->value());
+            auto label_day = weak_label_day.lock();
+            auto scrollwheel_day = weak_scrollwheel_day.lock();
+            if (label_day && scrollwheel_day)
+                label_day->text(scrollwheel_day->value());
         });
 
-        scrollwheel_month->on_value_changed([label_month, scrollwheel_month]()
+        auto weak_label_month = std::weak_ptr<egt::Label>(label_month);
+        auto weak_scrollwheel_month = std::weak_ptr<egt::Scrollwheel>(scrollwheel_month);
+        scrollwheel_month->on_value_changed([weak_label_month, weak_scrollwheel_month]()
         {
-            label_month->text(scrollwheel_month->value());
+            auto label_month = weak_label_month.lock();
+            auto scrollwheel_month = weak_scrollwheel_month.lock();
+            if (label_month && scrollwheel_month)
+                label_month->text(scrollwheel_month->value());
         });
 
-        scrollwheel_year->on_value_changed([label_year, scrollwheel_year]()
+        auto weak_label_year = std::weak_ptr<egt::Label>(label_year);
+        auto weak_scrollwheel_year = std::weak_ptr<egt::Scrollwheel>(scrollwheel_year);
+        scrollwheel_year->on_value_changed([weak_label_year, weak_scrollwheel_year]()
         {
-            label_year->text(scrollwheel_year->value());
+            auto label_year = weak_label_year.lock();
+            auto scrollwheel_year = weak_scrollwheel_year.lock();
+            if (label_year && scrollwheel_year)
+                label_year->text(scrollwheel_year->value());
         });
 
         hsizer1->add(scrollwheel_day);
@@ -558,7 +576,7 @@ int main(int argc, char** argv)
     combo->margin(5);
     frame->add(combo);
 
-    combo->on_selected_changed([&combo_items, combo, &win]()
+    combo->on_selected_changed([&combo_items, &combo, &win]()
     {
         auto s = combo->item_at(combo->selected());
         auto i = std::find_if(combo_items.begin(),
