@@ -17,6 +17,7 @@
 #include <egt/detail/meta.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
+#include <egt/pattern.h>
 #include <egt/types.h>
 #include <string>
 
@@ -156,7 +157,7 @@ public:
     /**
      * Set the current color.
      */
-    virtual Painter& set(const Color& color);
+    virtual Painter& set(const Pattern& pattern);
 
     /**
      * Set the active font.

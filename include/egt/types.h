@@ -59,6 +59,12 @@ struct cairo_surface_t_deleter
 {
     void operator()(cairo_surface_t* surface) { cairo_surface_destroy(surface); }
 };
+
+/// @private
+struct cairo_pattern_t_deleter
+{
+    void operator()(cairo_pattern_t* pattern) { cairo_pattern_destroy(pattern); }
+};
 }
 
 /**
@@ -72,6 +78,11 @@ using unique_cairo_t =
  */
 using unique_cairo_surface_t =
     std::unique_ptr<cairo_surface_t, detail::cairo_surface_t_deleter>;
+/**
+ * Unique pointer for a cairo pattern.
+ */
+using unique_cairo_pattern_t =
+    std::unique_ptr<cairo_pattern_t, detail::cairo_pattern_t_deleter>;
 
 
 /**

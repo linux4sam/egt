@@ -47,14 +47,14 @@ void Theme::init_palette()
 {
     const auto pattern = [](const Color & color)
     {
-        Pattern pattern1(
+        const Pattern patt(Pattern::Type::linear,
         {
             {0, color},
             {0.43, color.shade(.1)},
             {0.5, color.shade(.15)},
             {1.0, color.shade(.18)},
         });
-        return pattern1;
+        return patt;
     };
 
     *m_palette =
@@ -252,30 +252,14 @@ void Theme::draw_box(Painter& painter,
 
     if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {
-        const auto& steps = bg.steps();
-        if (steps.size() == 1)
-        {
-            painter.set(steps.begin()->second);
-        }
-        else if (steps.size() > 1)
-        {
-            auto pat = shared_cairo_pattern_t(cairo_pattern_create_linear(rx + width / 2., ry,
-                                              rx + width / 2., ry + height),
-                                              cairo_pattern_destroy);
+        auto pattern = bg;
 
-            for (const auto& step : steps)
-            {
-                cairo_pattern_add_color_stop_rgba(pat.get(),
-                                                  step.first,
-                                                  step.second.redf(),
-                                                  step.second.greenf(),
-                                                  step.second.bluef(),
-                                                  step.second.alphaf());
-            }
+        // force the pattern on the center of the widget box vertically
+        if (pattern.type() == Pattern::Type::linear)
+            pattern.linear(Point(box.x() + box.width() / 2., box.y()),
+                           Point(box.x() + box.width() / 2., box.y() + box.height()));
 
-            cairo_set_source(cr, pat.get());
-        }
-
+        painter.set(pattern);
         cairo_fill_preserve(cr);
     }
 
@@ -379,35 +363,14 @@ void Theme::draw_circle(Painter& painter,
 
     if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {
-        const auto& steps = bg.steps();
-        if (steps.size() == 1)
-        {
-            painter.set(steps.begin()->second);
-        }
-        else if (steps.size() > 1)
-        {
-            auto pat = shared_cairo_pattern_t(cairo_pattern_create_radial(
-                                                  circle.center().x(),
-                                                  circle.center().y(),
-                                                  circle.radius(),
-                                                  circle.center().x(),
-                                                  circle.center().y(),
-                                                  0),
-                                              cairo_pattern_destroy);
+        auto pattern = bg;
 
-            for (const auto& step : steps)
-            {
-                cairo_pattern_add_color_stop_rgba(pat.get(),
-                                                  step.first,
-                                                  step.second.redf(),
-                                                  step.second.greenf(),
-                                                  step.second.bluef(),
-                                                  step.second.alphaf());
-            }
+        // force the pattern on the center of the widget box
+        if (pattern.type() == Pattern::Type::linear)
+            pattern.radial(circle.center(), circle.radius(),
+                           circle.center(), 0);
 
-            cairo_set_source(cr, pat.get());
-        }
-
+        painter.set(pattern);
         cairo_fill_preserve(cr);
     }
 

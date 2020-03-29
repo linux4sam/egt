@@ -13,6 +13,7 @@
 
 #include <egt/color.h>
 #include <egt/detail/meta.h>
+#include <egt/pattern.h>
 #include <egt/serialize.h>
 #include <iosfwd>
 #include <memory>
@@ -279,9 +280,7 @@ public:
           EnumClassHash>;
 
     Palette() = default;
-    EGT_OPS_COPY_MOVE(Palette);
     Palette& operator=(const ColorArray& colors);
-    virtual ~Palette() noexcept = default;
 
     /**
      * Get a color.
@@ -290,7 +289,7 @@ public:
      * @param group Color group.
      * @return The color or pattern.
      */
-    virtual const Pattern& color(ColorId id, GroupId group = GroupId::normal) const;
+    const Pattern& color(ColorId id, GroupId group = GroupId::normal) const;
 
     /**
      * Set a color in the Palette.
@@ -300,7 +299,7 @@ public:
      * @param color The color or pattern.
      * @return Reference to the Palette instance.
      */
-    virtual Palette& set(ColorId id, GroupId group, const Pattern& color);
+    Palette& set(ColorId id, GroupId group, const Pattern& color);
 
     /**
      * Set a color in a Palette.
@@ -310,7 +309,7 @@ public:
      * @param group Color group.
      * @return Reference to the Palette instance.
      */
-    virtual Palette& set(ColorId id, const Pattern& color, GroupId group = GroupId::normal);
+    Palette& set(ColorId id, const Pattern& color, GroupId group = GroupId::normal);
 
     /**
      * Remove a color from the Palette.
@@ -318,12 +317,12 @@ public:
      * @param id Color id.
      * @param group Color group.
      */
-    virtual void clear(ColorId id, GroupId group = GroupId::normal);
+    void clear(ColorId id, GroupId group = GroupId::normal);
 
     /**
      * Remove all colors from the Palette.
      */
-    virtual void clear();
+    void clear();
 
     /**
      * Check if a color exists in the palette.
@@ -332,18 +331,18 @@ public:
      * @param group Color group.
      * @return True if exists.
      */
-    virtual bool exists(ColorId id, GroupId group = GroupId::normal) const;
+    bool exists(ColorId id, GroupId group = GroupId::normal) const;
 
     /**
      * Serialize to the specified serializer.
      */
-    virtual void serialize(const std::string& name, Serializer& serializer) const;
+    void serialize(const std::string& name, Serializer& serializer) const;
 
     /**
      * Deserialize.
      */
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs);
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs);
 
 protected:
 
@@ -351,8 +350,7 @@ protected:
     ColorArray m_colors;
 };
 
-static_assert(std::is_move_constructible<Palette>::value, "must be move constructable");
-static_assert(std::is_move_assignable<Palette>::value, "must be move assignable");
+static_assert(detail::rule_of_5<Palette>(), "must fulfill rule of 5");
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color);
