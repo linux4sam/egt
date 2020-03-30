@@ -545,20 +545,19 @@ struct ShapesPage : public egt::NotebookTab
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "widgets");
-
     egt::TopWindow win;
 
     egt::VerticalBoxSizer vsizer(win);
     egt::expand(vsizer);
 
-    auto frame = std::make_shared<egt::Frame>(egt::Size(0, 60));
+    egt::Frame frame(egt::Size(0, 60));
     vsizer.add(egt::expand_horizontal(frame));
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
-    logo->align(egt::AlignFlag::center);
-    frame->add(logo);
+    egt::ImageLabel logo(egt::Image("icon:egt_logo_black.png;128"));
+    logo.align(egt::AlignFlag::center);
+    frame.add(logo);
 
-    std::vector<std::pair<std::string, std::function<std::unique_ptr<egt::Theme>()>>> combo_items =
+    const std::pair<std::string, std::function<std::unique_ptr<egt::Theme>()>> combo_items[] =
     {
         {"Default Theme", []{ return std::make_unique<egt::Theme>(); }},
         {"Lapis", []{ return std::make_unique<egt::LapisTheme>(); }},
@@ -569,37 +568,37 @@ int main(int argc, char** argv)
         {"Ultra Violet", []{ return std::make_unique<egt::UltraVioletTheme>(); }}
     };
 
-    auto combo = std::make_shared<egt::ComboBox>();
-    for (auto& i : combo_items)
-        combo->add_item(i.first);
-    combo->align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
-    combo->margin(5);
-    frame->add(combo);
+    egt::ComboBox combo;
+    for (const auto& i : combo_items)
+        combo.add_item(i.first);
+    combo.align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
+    combo.margin(5);
+    frame.add(combo);
 
-    combo->on_selected_changed([&combo_items, &combo, &win]()
+    combo.on_selected_changed([&combo_items, &combo, &win]()
     {
-        auto s = combo->item_at(combo->selected());
-        auto i = std::find_if(combo_items.begin(),
-                              combo_items.end(),
-                              [&s](const auto & element)
+        const auto s = combo.item_at(combo.selected());
+        const auto i = std::find_if(begin(combo_items),
+                                    end(combo_items),
+                                    [&s](const auto & element)
         {
             return s == element.first;
         });
-        if (i != combo_items.end())
+        if (i != end(combo_items))
             global_theme(i->second());
 
         win.damage();
     });
 
-    egt:: BoxSizer hsizer(egt::Orientation::horizontal);
+    egt::BoxSizer hsizer(egt::Orientation::horizontal);
     vsizer.add(egt::expand(hsizer));
 
-    auto list = std::make_shared<egt::ListBox>();
-    list->resize(egt::Size(150, 0));
+    egt::ListBox list;
+    list.resize(egt::Size(150, 0));
 
-    auto notebook = std::make_shared<egt::Notebook>();
+    egt::Notebook notebook;
 
-    std::vector<std::pair<std::string, std::shared_ptr<egt::NotebookTab>>> pages =
+    const std::pair<std::string, std::shared_ptr<egt::NotebookTab>> pages[] =
     {
         {"Buttons", std::make_shared<ButtonPage>()},
         {"Text", std::make_shared<TextPage>()},
@@ -615,18 +614,18 @@ int main(int argc, char** argv)
         {"Shapes", std::make_shared<ShapesPage>()},
     };
 
-    for (auto& i : pages)
+    for (const auto& i : pages)
     {
-        list->add_item(std::make_shared<egt::StringItem>(i.first));
-        notebook->add(i.second);
+        list.add_item(std::make_shared<egt::StringItem>(i.first));
+        notebook.add(i.second);
     }
 
     hsizer.add(egt::expand_vertical(list));
     hsizer.add(egt::expand(notebook));
 
-    list->on_selected_changed([&notebook, &list]()
+    list.on_selected_changed([&notebook, &list]()
     {
-        notebook->selected(list->selected());
+        notebook.selected(list.selected());
     });
 
 #ifdef EGT_HAS_VIRTUALKEYBOARD
