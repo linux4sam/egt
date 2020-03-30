@@ -373,7 +373,7 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             egt::TopWindow window;
 
             /// @[sound0]
-            egt::experimental::Sound sound("assets/tom.wav");
+            egt::experimental::Sound sound("file:assets/tom.wav");
             sound.play();
             /// @[sound0]
 
@@ -387,7 +387,7 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             /// @[sound1]
             egt::TopWindow window;
 
-            egt::experimental::Sound sound("assets/tom.wav");
+            egt::experimental::Sound sound("file:assets/tom.wav");
 
             egt::Button button(window, "Play Sound");
             center(button);
@@ -412,7 +412,7 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             window.show();
 
             /// @[audio1]
-            egt::AudioPlayer player("assets/concerto.mp3");
+            egt::AudioPlayer player("file:assets/concerto.mp3");
             player.play();
             /// @[audio1]
 
@@ -428,7 +428,7 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             /// @[video1]
             egt::TopWindow window;
 
-            egt::VideoWindow player(window.content_area(), "assets/video.mp4");
+            egt::VideoWindow player(window.content_area(), "file:assets/video.mp4");
             window.add(player);
             player.volume(50);
             player.show();
