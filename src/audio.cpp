@@ -65,6 +65,7 @@ struct AudioPlayerImpl
     GMainLoop* m_gmain_loop {nullptr};
     std::thread m_gmain_thread;
     guint m_eventsource_id {0};
+    bool m_no_events{false};
 };
 
 }
@@ -118,13 +119,15 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
             SPDLOG_DEBUG("gst error: {} {}",
                          error.get()->message,
                          debug ? debug.get() : "");
-
-            if (Application::check_instance())
+            if (!impl->m_no_events)
             {
-                asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
+                if (Application::check_instance())
                 {
-                    impl->player.on_error.invoke(error->message);
-                });
+                    asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
+                    {
+                        impl->player.on_error.invoke(error->message);
+                    });
+                }
             }
         }
         break;
@@ -162,13 +165,16 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
                          GST_SEEK_TYPE_SET, 0,
                          GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
 
-        if (Application::check_instance())
+        if (!impl->m_no_events)
         {
-            asio::post(Application::instance().event().io(), [impl]()
+            if (Application::check_instance())
             {
-                impl->player.pause();
-                impl->player.on_eos.invoke();
-            });
+                asio::post(Application::instance().event().io(), [impl]()
+                {
+                    impl->player.pause();
+                    impl->player.on_eos.invoke();
+                });
+            }
         }
 
         break;
@@ -186,12 +192,15 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
 
-            if (Application::check_instance())
+            if (!impl->m_no_events)
             {
-                asio::post(Application::instance().event().io(), [impl]()
+                if (Application::check_instance())
                 {
-                    impl->player.on_state_changed.invoke();
-                });
+                    asio::post(Application::instance().event().io(), [impl]()
+                    {
+                        impl->player.on_state_changed.invoke();
+                    });
+                }
             }
         }
         break;
@@ -279,6 +288,7 @@ void AudioPlayer::destroyPipeline()
 
 AudioPlayer::~AudioPlayer() noexcept
 {
+    m_impl->m_no_events = true;
     destroyPipeline();
 }
 
