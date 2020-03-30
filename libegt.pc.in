@@ -7,6 +7,6 @@ Name: @PACKAGE_NAME@
 Description: Ensemble Graphics Toolkit
 Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -legt
-Cflags: -I${includedir} -I${includedir}/egt
+Cflags: -I${includedir}
 Requires: @AX_PACKAGE_REQUIRES@
 Requires.private: @AX_PACKAGE_REQUIRES_PRIVATE@
