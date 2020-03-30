@@ -12,9 +12,9 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/detail/object.h>
-#include <egt/detail/signal.h>
 #include <egt/event.h>
+#include <egt/object.h>
+#include <egt/signal.h>
 #include <memory>
 
 namespace egt
@@ -60,7 +60,7 @@ public:
      * }, {EventId::keyboard_down});
      * @endcode
      */
-    static detail::Object& global_input()
+    static Object& global_input()
     {
         return m_global_handler;
     }
@@ -78,7 +78,7 @@ protected:
      *
      * This can be useful for debugging, or simply capturing any events.
      */
-    static detail::Object m_global_handler;
+    static Object m_global_handler;
 
     /**
      * The mouse gesture handler for this input.

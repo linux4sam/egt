@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_OBJECT_H
-#define EGT_DETAIL_OBJECT_H
+#ifndef EGT_OBJECT_H
+#define EGT_OBJECT_H
 
 /**
  * @file
@@ -13,9 +13,9 @@
 
 #include <cstdint>
 #include <egt/detail/cow.h>
-#include <egt/detail/flagsbase.h>
 #include <egt/detail/meta.h>
 #include <egt/event.h>
+#include <egt/flagsbase.h>
 #include <functional>
 #include <string>
 #include <vector>
@@ -23,8 +23,6 @@
 namespace egt
 {
 inline namespace v1
-{
-namespace detail
 {
 
 /**
@@ -55,7 +53,7 @@ public:
     using EventCallback = std::function<void (Event& event)>;
 
     /// Event handler EventId filter.
-    using FilterFlags = detail::FlagsBase<EventId>;
+    using FilterFlags = FlagsBase<EventId>;
 
     /// Handle type.
     using RegisterHandle = uint64_t;
@@ -146,7 +144,6 @@ protected:
     std::string m_name;
 };
 
-}
 }
 }
 

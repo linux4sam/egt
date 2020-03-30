@@ -3,15 +3,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_FLAGS_H
-#define EGT_DETAIL_FLAGS_H
+#ifndef EGT_FLAGS_H
+#define EGT_FLAGS_H
 
 #include <egt/detail/enum.h>
-#include <egt/detail/flagsbase.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/object.h>
-#include <egt/detail/signal.h>
 #include <egt/detail/string.h>
+#include <egt/flagsbase.h>
+#include <egt/signal.h>
 #include <iosfwd>
 #include <sstream>
 #include <string>
@@ -26,8 +25,6 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
 
 /**
  * Utility class for managing a set of flags with the ability to observe changes
@@ -39,10 +36,10 @@ namespace detail
  * @warning All flags must be a power of 2.
  */
 template<class T>
-class Flags : public detail::FlagsBase<T>
+class Flags : public FlagsBase<T>
 {
 public:
-    using detail::FlagsBase<T>::FlagsBase;
+    using FlagsBase<T>::FlagsBase;
 
     EGT_OPS_MOVE(Flags);
     ~Flags() noexcept override = default;
@@ -52,7 +49,7 @@ public:
      * @{
      */
     /// Invoked when the flags are changed.
-    detail::Signal<> on_change;
+    Signal<> on_change;
     /** @} */
 
     /**
@@ -65,7 +62,7 @@ public:
 
     /// Copy constructor.
     constexpr Flags(const Flags& rhs)
-        : detail::FlagsBase<T>(rhs)
+        : FlagsBase<T>(rhs)
     {
         // signals are not copied!
     }
@@ -79,7 +76,7 @@ public:
             const auto res = (*this != rhs);
 
             // signals are not copied!
-            detail::FlagsBase<T>::operator=(rhs);
+            FlagsBase<T>::operator=(rhs);
 
             if (res)
                 on_change.invoke();
@@ -90,7 +87,7 @@ public:
     /// Set a single flag.
     bool set(const T flag) noexcept
     {
-        const auto res = detail::FlagsBase<T>::set(flag);
+        const auto res = FlagsBase<T>::set(flag);
         if (res)
             on_change.invoke();
         return res;
@@ -99,7 +96,7 @@ public:
     /// Set multimple flags.
     bool set(std::initializer_list<T> flags) noexcept
     {
-        const auto res = detail::FlagsBase<T>::set(flags);
+        const auto res = FlagsBase<T>::set(flags);
         if (res)
             on_change.invoke();
         return res;
@@ -108,7 +105,7 @@ public:
     /// Clear a single flag.
     bool clear(const T flag) noexcept
     {
-        const auto res = detail::FlagsBase<T>::clear(flag);
+        const auto res = FlagsBase<T>::clear(flag);
         if (res)
             on_change.invoke();
         return res;
@@ -117,7 +114,7 @@ public:
     /// Clear all flags.
     bool clear() noexcept
     {
-        const auto res = detail::FlagsBase<T>::clear();
+        const auto res = FlagsBase<T>::clear();
         if (res)
             on_change.invoke();
         return res;
@@ -126,13 +123,13 @@ public:
     /// Or operator.
     constexpr Flags<T> operator|(const T& flag) const noexcept
     {
-        return {this->m_flags | static_cast<typename detail::FlagsBase<T>::Underlying>(flag)};
+        return {this->m_flags | static_cast<typename FlagsBase<T>::Underlying>(flag)};
     }
 
     /// And operator.
     constexpr Flags<T> operator&(const T& flag) const noexcept
     {
-        return {this->m_flags& static_cast<typename detail::FlagsBase<T>::Underlying>(flag)};
+        return {this->m_flags& static_cast<typename FlagsBase<T>::Underlying>(flag)};
     }
 
     /// Delimiter used to seperate flags in string representation.
@@ -200,7 +197,6 @@ std::ostream& operator<<(std::ostream& os, const Flags<T>& flags)
     return os << flags.tostring();
 }
 
-}
 }
 }
 

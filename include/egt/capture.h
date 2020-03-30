@@ -6,8 +6,8 @@
 #ifndef EGT_CAPTURE_H
 #define EGT_CAPTURE_H
 
-#include <egt/detail/object.h>
-#include <egt/detail/signal.h>
+#include <egt/object.h>
+#include <egt/signal.h>
 #include <egt/types.h>
 #include <memory>
 #include <string>
@@ -35,7 +35,7 @@ namespace experimental
  * capture.stop();
  * @endcode
  */
-class EGT_API CameraCapture : public egt::detail::Object
+class EGT_API CameraCapture : public Object
 {
 public:
 
@@ -46,7 +46,7 @@ public:
     /**
      * Invoked when an error occurs.
      */
-    detail::Signal<const std::string&> on_error;
+    Signal<const std::string&> on_error;
     /** @} */
 
     /**

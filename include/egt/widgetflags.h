@@ -14,8 +14,8 @@
 #include <cassert>
 #include <cstdint>
 #include <egt/detail/enum.h>
-#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
+#include <egt/flags.h>
 #include <iosfwd>
 #include <memory>
 
@@ -67,7 +67,7 @@ template<>
 EGT_API const std::pair<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data[10];
 
 /// Alignment flags.
-using AlignFlags = detail::Flags<AlignFlag>;
+using AlignFlags = Flags<AlignFlag>;
 
 /// AlignFlags operator
 inline AlignFlags operator|(AlignFlag lhs, AlignFlag rhs)

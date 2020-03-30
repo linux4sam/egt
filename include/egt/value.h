@@ -9,8 +9,8 @@
 #include <cassert>
 #include <egt/animation.h>
 #include <egt/detail/math.h>
-#include <egt/detail/object.h>
-#include <egt/detail/signal.h>
+#include <egt/object.h>
+#include <egt/signal.h>
 
 namespace egt
 {
@@ -21,7 +21,7 @@ inline namespace v1
  * Manages a single value.
  */
 template<class T>
-class Value : public detail::Object
+class Value : public Object
 {
 public:
 
@@ -30,7 +30,7 @@ public:
      * @{
      */
     /// Invoked when the value changes.
-    detail::Signal<> on_value_changed;
+    Signal<> on_value_changed;
     /** @} */
 
     /**
@@ -87,7 +87,7 @@ protected:
  * Manages a value in a range.
  */
 template<class T>
-class RangeValue : public detail::Object
+class RangeValue : public Object
 {
 public:
 
@@ -96,7 +96,7 @@ public:
      * @{
      */
     /// Invoked when the value of the widget changes.
-    detail::Signal<> on_value_changed;
+    Signal<> on_value_changed;
     /** @} */
 
     /**

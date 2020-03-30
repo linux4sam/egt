@@ -14,9 +14,9 @@
 
 #include <egt/button.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
 #include <egt/grid.h>
 #include <egt/label.h>
+#include <egt/signal.h>
 #include <string>
 #include <vector>
 
@@ -41,7 +41,7 @@ public:
      * @{
      */
     /// Invoked when the value changes.
-    detail::Signal<> on_value_changed;
+    Signal<> on_value_changed;
     /** @} */
 
     /// Item array type.

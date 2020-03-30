@@ -14,9 +14,9 @@
 #include <cassert>
 #include <egt/detail/alignment.h>
 #include <egt/detail/enum.h>
-#include <egt/detail/flags.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
+#include <egt/flags.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
 #include <egt/serialize.h>
@@ -63,7 +63,7 @@ struct SliderBase
     };
 
     /// Slider flags.
-    using SliderFlags = detail::Flags<SliderBase::SliderFlag>;
+    using SliderFlags = Flags<SliderBase::SliderFlag>;
 };
 
 /**

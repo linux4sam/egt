@@ -3,13 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/detail/object.h"
+#include "egt/object.h"
 
 namespace egt
 {
 inline namespace v1
-{
-namespace detail
 {
 
 Object::RegisterHandle Object::on_event(const EventCallback& handler,
@@ -72,6 +70,5 @@ void Object::remove_handler(RegisterHandle handle)
         m_callbacks->erase(i);
 }
 
-}
 }
 }

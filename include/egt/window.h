@@ -265,7 +265,7 @@ protected:
 private:
 
     /// Internal registration handle
-    detail::Object::RegisterHandle m_handle{0};
+    Object::RegisterHandle m_handle{0};
 };
 
 /**

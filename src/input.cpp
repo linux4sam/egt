@@ -170,7 +170,7 @@ void Input::dispatch(Event& event)
 
 Input::~Input() noexcept = default;
 
-detail::Object Input::m_global_handler;
+Object Input::m_global_handler;
 
 namespace detail
 {

@@ -12,8 +12,8 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
 #include <egt/image.h>
+#include <egt/signal.h>
 #include <egt/widget.h>
 #include <memory>
 #include <string>
@@ -40,7 +40,7 @@ public:
     /**
      * Invoked when the text of the widget changes.
      */
-    detail::Signal<> on_text_changed;
+    Signal<> on_text_changed;
     /** @} */
 
     /**

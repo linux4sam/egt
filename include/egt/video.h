@@ -12,7 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
+#include <egt/signal.h>
 #include <egt/window.h>
 
 namespace egt
@@ -51,16 +51,16 @@ public:
      * @{
      */
     /// Invoked when the position of the player changes.
-    detail::Signal<> on_position_changed;
+    Signal<> on_position_changed;
 
     /// Invoked when an error occurs.
-    detail::Signal<const std::string&> on_error;
+    Signal<const std::string&> on_error;
 
     /// Invoked on end of stream.
-    detail::Signal<> on_eos;
+    Signal<> on_eos;
 
     /// Invoked when the state of the player changes.
-    detail::Signal<> on_state_changed;
+    Signal<> on_state_changed;
     /** @} */
 
     /**

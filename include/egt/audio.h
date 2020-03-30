@@ -17,8 +17,8 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/detail/object.h>
-#include <egt/detail/signal.h>
+#include <egt/object.h>
+#include <egt/signal.h>
 #include <memory>
 #include <string>
 
@@ -37,7 +37,7 @@ struct AudioPlayerImpl;
  *
  * @ingroup media
  */
-class EGT_API AudioPlayer : public detail::Object
+class EGT_API AudioPlayer : public Object
 {
 public:
 
@@ -48,22 +48,22 @@ public:
     /**
      * Invoked when the position of the player changes.
      */
-    detail::Signal<uint64_t> on_position_changed;
+    Signal<uint64_t> on_position_changed;
 
     /**
      * Invoked when an error occurs.
      */
-    detail::Signal<const std::string&> on_error;
+    Signal<const std::string&> on_error;
 
     /**
      * Invoked on end of stream.
      */
-    detail::Signal<> on_eos;
+    Signal<> on_eos;
 
     /**
      * Invoked when the state of the player changes.
      */
-    detail::Signal<> on_state_changed;
+    Signal<> on_state_changed;
     /** @} */
 
     AudioPlayer();

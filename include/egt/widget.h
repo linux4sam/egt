@@ -12,15 +12,15 @@
  */
 
 #include <egt/detail/enum.h>
-#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/object.h>
-#include <egt/detail/signal.h>
 #include <egt/event.h>
+#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
+#include <egt/object.h>
 #include <egt/palette.h>
 #include <egt/serialize.h>
+#include <egt/signal.h>
 #include <egt/theme.h>
 #include <egt/widgetflags.h>
 #include <iosfwd>
@@ -45,7 +45,7 @@ class Screen;
  * of what it means to handle an event or draw the Widget is implemented in
  * classes that are derived from this one, like a Button or a Label.
  */
-class EGT_API Widget : public detail::Object
+class EGT_API Widget : public Object
 {
 public:
 
@@ -133,26 +133,26 @@ public:
     };
 
     /// Widget flags
-    using Flags = detail::Flags<Widget::Flag>;
+    using Flags = egt::Flags<Widget::Flag>;
 
     /**
      * Event signal.
      * @{
      */
     /// Invoked when the checked state of the widget changes.
-    detail::Signal<> on_checked_changed;
+    Signal<> on_checked_changed;
 
     /// Invoked when the widget gains focus.
-    detail::Signal<> on_gain_focus;
+    Signal<> on_gain_focus;
 
     /// Invoked when the widget loses focus.
-    detail::Signal<> on_lost_focus;
+    Signal<> on_lost_focus;
 
     /// Invoked when a widget is shown.
-    detail::Signal<> on_show;
+    Signal<> on_show;
 
     /// Invoked when a widget is hidden.
-    detail::Signal<> on_hide;
+    Signal<> on_hide;
     /** @} */
 
     /**

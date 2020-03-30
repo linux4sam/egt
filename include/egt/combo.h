@@ -12,9 +12,9 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
 #include <egt/list.h>
 #include <egt/popup.h>
+#include <egt/signal.h>
 #include <egt/widget.h>
 #include <memory>
 #include <string>
@@ -51,7 +51,7 @@ public:
     /**
      * Invoked when the selection changes.
      */
-    detail::Signal<> on_selected_changed;
+    Signal<> on_selected_changed;
     /** @} */
 
     /// Item array type

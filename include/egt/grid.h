@@ -49,7 +49,7 @@ public:
     };
 
     /// Grid flags.
-    using GridFlags = detail::Flags<GridFlag>;
+    using GridFlags = egt::Flags<GridFlag>;
 
     /**
      * @param[in] size Rows and columns.
@@ -234,7 +234,7 @@ public:
      * @{
      */
     /// Invoked when the selection changes.
-    detail::Signal<> on_selected_changed;
+    Signal<> on_selected_changed;
     /** @} */
 
     using StaticGrid::StaticGrid;

@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_FLAGSBASE_H
-#define EGT_DETAIL_FLAGSBASE_H
+#ifndef EGT_FLAGSBASE_H
+#define EGT_FLAGSBASE_H
 
 /**
  * @file
@@ -19,8 +19,6 @@
 namespace egt
 {
 inline namespace v1
-{
-namespace detail
 {
 
 /**
@@ -192,7 +190,6 @@ protected:
     Underlying m_flags{};
 };
 
-}
 }
 }
 

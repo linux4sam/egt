@@ -7,12 +7,12 @@
 #define EGT_RADIAL_H
 
 #include <algorithm>
-#include <egt/detail/flags.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
+#include <egt/flags.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
+#include <egt/signal.h>
 #include <egt/text.h>
 #include <egt/value.h>
 #include <egt/widget.h>
@@ -54,7 +54,7 @@ public:
     /**
      * Invoked when user input changes the value of the radial.
      */
-    detail::Signal<> on_user_input_changed;
+    Signal<> on_user_input_changed;
     /** @} */
 
     /// Radial flags
@@ -77,7 +77,7 @@ public:
     };
 
     /// Radial flags
-    using RadialFlags = detail::Flags<RadialFlag>;
+    using RadialFlags = egt::Flags<RadialFlag>;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -105,10 +105,10 @@ public:
     /**
      * Add a range value to the radial.
      */
-    virtual detail::Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
-            const Color& color = {},
-            DefaultDim width = 10,
-            RadialFlags flags = {})
+    virtual Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
+                                       const Color& color = {},
+                                       DefaultDim width = 10,
+                                       RadialFlags flags = {})
     {
         // TODO: m_handle_counter can wrap, making the handle non-unique
         auto handle = ++this->m_handle_counter;
@@ -130,7 +130,7 @@ public:
     /**
      * Set the idividual color of a range value.
      */
-    virtual void color(detail::Object::RegisterHandle handle, const Color& color)
+    virtual void color(Object::RegisterHandle handle, const Color& color)
     {
         for (auto& value : this->m_values)
         {
@@ -318,7 +318,7 @@ protected:
                   size_t w = 10,
                   // NOLINTNEXTLINE(modernize-pass-by-value)
                   RadialFlags f = {},
-                  detail::Object::RegisterHandle h = 0) noexcept
+                  Object::RegisterHandle h = 0) noexcept
             : range(std::move(r)),
               color(c),
               width(w),
@@ -330,7 +330,7 @@ protected:
         Color color;
         DefaultDim width{};
         RadialFlags flags{};
-        detail::Object::RegisterHandle handle{0};
+        Object::RegisterHandle handle{0};
     };
 
     /**
@@ -346,7 +346,7 @@ protected:
     /**
      * Counter used to generate unique handles for each handle registration.
      */
-    detail::Object::RegisterHandle m_handle_counter{0};
+    Object::RegisterHandle m_handle_counter{0};
 
     /**
      * The starting angle in degrees for the min values.

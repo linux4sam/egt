@@ -124,10 +124,10 @@ timer.start();
 
 The egt::EventId lists global events that usually don't necessary originate in a
 widget itself.  To handle custom or widget type specific events,
-egt::v1::detail::Signal member attributes can be added to a widget to provide custom
+egt::v1::Signal member attributes can be added to a widget to provide custom
 handles any user can connect to in order to receive the event.
 
-The typical use case for egt::v1::detail::Signal is the same as
+The typical use case for egt::v1::Signal is the same as
 egt::v1::Widget::on_event() except it can take any number of type of arguments,
 including none.
 

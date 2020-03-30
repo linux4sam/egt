@@ -8,10 +8,10 @@
 
 #include <egt/button.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <egt/popup.h>
+#include <egt/signal.h>
 #include <egt/sizer.h>
 #include <memory>
 #include <string>
@@ -52,9 +52,9 @@ public:
      * @{
      */
     /// Signal when button1 is clicked.
-    detail::Signal<> on_button1_click;
+    Signal<> on_button1_click;
     /// Signal when button2 is clicked.
-    detail::Signal<> on_button2_click;
+    Signal<> on_button2_click;
     /** @} */
 
     /**

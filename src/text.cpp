@@ -103,7 +103,7 @@ void TextBox::handle(Event& event)
     switch (event.id())
     {
     case EventId::pointer_click:
-        keyboard_focus(this);
+        detail::keyboard_focus(this);
         break;
     case EventId::keyboard_down:
         handle_key(event.key());

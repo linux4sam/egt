@@ -13,8 +13,8 @@
 
 #include <cairo.h>
 #include <egt/color.h>
-#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
+#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/pattern.h>
@@ -292,7 +292,7 @@ public:
         shadow = detail::bit(0),
     };
 
-    using TextDrawFlags = detail::Flags<TextDrawFlag>;
+    using TextDrawFlags = Flags<TextDrawFlag>;
 
     /**
      * Draw text inside the specified rectangle.

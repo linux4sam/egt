@@ -12,8 +12,8 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
 #include <egt/frame.h>
+#include <egt/signal.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -75,7 +75,7 @@ public:
     /**
      * Invoked when a notebook tab changes.
      */
-    detail::Signal<> on_selected_changed;
+    Signal<> on_selected_changed;
     /** @} */
 
     /**

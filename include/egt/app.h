@@ -9,8 +9,8 @@
 #include <clocale>
 #include <egt/asio.hpp>
 #include <egt/detail/meta.h>
-#include <egt/detail/object.h>
 #include <egt/eventloop.h>
+#include <egt/object.h>
 #include <iosfwd>
 #include <memory>
 #include <ostream>
@@ -185,7 +185,7 @@ private:
     std::vector<std::unique_ptr<Input>> m_inputs;
 
     /// Internal registration handle
-    detail::Object::RegisterHandle m_handle{0};
+    Object::RegisterHandle m_handle{0};
 };
 
 }

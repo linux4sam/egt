@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_SIGNAL_H
-#define EGT_DETAIL_SIGNAL_H
+#ifndef EGT_SIGNAL_H
+#define EGT_SIGNAL_H
 
 /**
  * @file
@@ -20,9 +20,6 @@
 namespace egt
 {
 inline namespace v1
-{
-
-namespace detail
 {
 
 /**
@@ -149,8 +146,6 @@ protected:
     /// Array of callbacks.
     detail::CopyOnWriteAllocate<CallbackArray> m_callbacks;
 };
-
-}
 
 }
 }

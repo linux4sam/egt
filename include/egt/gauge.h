@@ -118,7 +118,7 @@ public:
      * @{
      */
     /// Invoked when the value of the layer changes.
-    detail::Signal<> on_value_changed;
+    Signal<> on_value_changed;
     /** @} */
 
     using GaugeLayer::GaugeLayer;

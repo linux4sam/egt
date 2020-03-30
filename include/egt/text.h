@@ -11,8 +11,8 @@
  * @brief Working with text input.
  */
 
-#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
+#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/image.h>
 #include <egt/textwidget.h>
@@ -67,7 +67,7 @@ public:
     };
 
     /// Text flags.
-    using TextFlags = detail::Flags<TextFlag>;
+    using TextFlags = egt::Flags<TextFlag>;
 
     /**
      * Validator callback type.
@@ -354,10 +354,10 @@ private:
     size_t m_max_len{0};
 
     /// Gain focus registration.
-    detail::Signal<>::RegisterHandle m_gain_focus_reg{};
+    Signal<>::RegisterHandle m_gain_focus_reg{};
 
     /// Lost focus registration.
-    detail::Signal<>::RegisterHandle m_lost_focus_reg{};
+    Signal<>::RegisterHandle m_lost_focus_reg{};
 };
 
 namespace detail

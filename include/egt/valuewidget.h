@@ -12,7 +12,7 @@
  */
 
 #include <cassert>
-#include <egt/detail/signal.h>
+#include <egt/signal.h>
 #include <egt/widget.h>
 
 namespace egt
@@ -38,7 +38,7 @@ public:
     /**
      * Invoked when the value of the widget changes.
      */
-    detail::Signal<> on_value_changed;
+    Signal<> on_value_changed;
     /** @} */
 
     ValueWidget() = delete;
@@ -104,7 +104,7 @@ public:
     /**
      * Invoked when the value of the widget changes.
      */
-    detail::Signal<> on_value_changed;
+    Signal<> on_value_changed;
     /** @} */
 
     ValueRangeWidget() = delete;

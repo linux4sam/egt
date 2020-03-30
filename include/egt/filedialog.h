@@ -13,11 +13,11 @@
 
 #include <egt/button.h>
 #include <egt/detail/meta.h>
-#include <egt/detail/signal.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <egt/list.h>
 #include <egt/popup.h>
+#include <egt/signal.h>
 #include <egt/sizer.h>
 #include <egt/text.h>
 #include <string>
@@ -48,7 +48,7 @@ public:
     /**
      * Invoked when a selection is made.
      */
-    detail::Signal<> on_selected;
+    Signal<> on_selected;
     /** @} */
 
     /**

@@ -12,8 +12,8 @@
  */
 
 #include <egt/detail/enum.h>
-#include <egt/detail/flags.h>
 #include <egt/detail/meta.h>
+#include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
 #include <egt/palette.h>
@@ -165,7 +165,7 @@ public:
     };
 
     /// Fill flags.
-    using FillFlags = detail::Flags<FillFlag>;
+    using FillFlags = Flags<FillFlag>;
 
     /**
      * Border flags allow, when drawing a rectangle, control over what sides of
@@ -184,7 +184,7 @@ public:
     };
 
     /// Border flags
-    using BorderFlags = detail::Flags<BorderFlag>;
+    using BorderFlags = Flags<BorderFlag>;
 
     Theme() = default;
 

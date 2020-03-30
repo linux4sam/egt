@@ -46,7 +46,7 @@ public:
     /**
      * Generated when an error occurs.
      */
-    detail::Signal<const std::string&> on_error;
+    Signal<const std::string&> on_error;
     /** @} */
 
     /**
