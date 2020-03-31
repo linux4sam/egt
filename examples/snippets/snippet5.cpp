@@ -3,11 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <iostream>
 #include <egt/ui>
-
-using namespace egt;
-using namespace std;
+#include <iostream>
 
 template<class T>
 void register_callback(T)
@@ -16,10 +13,10 @@ void register_callback(T)
 /// @[snippet5]
 static int value = 0;
 
-static void callback(Event& event)
+static void callback(egt::Event& event)
 {
     value++;
-    cout << value << endl;
+    std::cout << value << std::endl;
 }
 
 int main(int argc, const char** argv)

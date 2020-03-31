@@ -3,9 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <iostream>
-using namespace std;
-
 void do_something(const char*) {}
 
 /// @[snippet8]

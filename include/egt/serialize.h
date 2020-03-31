@@ -64,15 +64,18 @@ public:
 /**
  * Serialize a widget tree to an std::ostream
  *
+ * @code{.cpp}
+ * // already have a Window variable named win
+ * OstreamWidgetSerializer s;
+ * win.walk(std::bind(&OstreamWidgetSerializer::add, std::ref(s),
+ *                    std::placeholders::_1, std::placeholders::_2));
+ * @endcode
+ *
  * @see Widget::walk()
  */
 class EGT_API OstreamWidgetSerializer : public Serializer
 {
 public:
-    OstreamWidgetSerializer() = delete;
-    EGT_OPS_NOCOPY_NOMOVE(OstreamWidgetSerializer);
-    virtual ~OstreamWidgetSerializer() noexcept = default;
-
     /**
      * @param o Output stream reference.
      */
@@ -105,7 +108,7 @@ protected:
  * xml.write("output.xml");
  * // or
  * xml.write(std::cout);
- *@endcode
+ * @endcode
  *
  * @see Widget::walk()
  */
@@ -114,7 +117,7 @@ class EGT_API XmlWidgetSerializer : public Serializer
 public:
     XmlWidgetSerializer();
     EGT_OPS_NOCOPY_MOVE(XmlWidgetSerializer);
-    virtual ~XmlWidgetSerializer() noexcept;
+    ~XmlWidgetSerializer() noexcept;
 
     /// Clear or reset, the serializer for re-use.
     void reset();

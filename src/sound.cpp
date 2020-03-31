@@ -145,22 +145,16 @@ Sound::Sound(const std::string& uri, const std::string& device)
 void Sound::open_file()
 {
     std::string path;
-    auto type = detail::resolve_path(m_uri, path);
+    const auto type = detail::resolve_path(m_uri, path);
 
-    switch (type)
-    {
-    case detail::SchemeType::filesystem:
+    if (type == detail::SchemeType::filesystem)
     {
         if (!detail::exists(path))
-        {
             throw std::runtime_error("file not found: " + path);
-        }
-        break;
     }
-    default:
+    else
     {
         throw std::runtime_error("unsupported uri: " + m_uri);
-    }
     }
 
 #ifdef HAVE_SNDFILE

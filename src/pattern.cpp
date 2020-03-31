@@ -15,17 +15,17 @@ Pattern::Pattern(const Color& color)
 {
 }
 
-Pattern::Pattern(Type type, const StepArray& steps)
-    : m_steps(steps),
+Pattern::Pattern(Type type, StepArray steps)
+    : m_steps(std::move(steps)),
       m_type(type)
 {
     std::sort(m_steps.begin(), m_steps.end(), sort_by_first);
 }
 
-Pattern::Pattern(const StepArray& steps,
+Pattern::Pattern(StepArray steps,
                  const Point& start,
                  const Point& end)
-    : m_steps(steps),
+    : m_steps(std::move(steps)),
       m_type(Type::linear),
       m_start(start),
       m_end(end)
@@ -33,12 +33,12 @@ Pattern::Pattern(const StepArray& steps,
     std::sort(m_steps.begin(), m_steps.end(), sort_by_first);
 }
 
-Pattern::Pattern(const StepArray& steps,
+Pattern::Pattern(StepArray steps,
                  const Point& start,
                  float start_radius,
                  const Point& end,
                  float end_radius)
-    : m_steps(steps),
+    : m_steps(std::move(steps)),
       m_type(Type::radial),
       m_start(start),
       m_start_radius(start_radius),

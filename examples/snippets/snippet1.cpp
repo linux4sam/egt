@@ -6,15 +6,13 @@
 /// @[snippet1]
 #include <egt/ui>
 
-using namespace egt;
-
 int main(int argc, char** argv)
 {
-    Application app(argc, argv);
+    egt::Application app(argc, argv);
 
-    TopWindow window;
-    Button button(window, "Press Me");
-    center(button);
+    egt::TopWindow window;
+    egt::Button button(window, "Press Me");
+    egt::center(button);
     window.show();
 
     return app.run();

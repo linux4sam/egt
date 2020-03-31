@@ -4,19 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <iostream>
-using namespace std;
 
 /// @[snippet7]
 struct MyClass
 {
     MyClass()
     {
-        cout << "constructed" << endl;
+        std::cout << "constructed" << std::endl;
     }
 
     ~MyClass()
     {
-        cout << "destructed" << endl;
+        std::cout << "destructed" << std::endl;
     }
 };
 

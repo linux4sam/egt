@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <iostream>
-using namespace std;
+#include <cstdint>
 
 void do_something(const char*) {}
 
@@ -12,7 +11,7 @@ void do_something(const char*) {}
 class MyClass
 {
 public:
-    MyClass(size_t size)
+    MyClass(std::size_t size)
     {
         m_ptr = new char[size];
     }
@@ -33,7 +32,7 @@ void func()
     do_something(instance.get());
 }
 
-int main(int argc, const char** argv)
+int main()
 {
     try
     {

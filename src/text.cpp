@@ -151,6 +151,7 @@ void TextBox::handle_key(const Key& key)
         cursor_forward();
         break;
     }
+    /// NOLINTNEXTLINE(bugprone-branch-clone)
     case EKEY_UP:
     {
         if (text_flags().is_set(TextFlag::multiline))
@@ -167,6 +168,7 @@ void TextBox::handle_key(const Key& key)
         }
         break;
     }
+    /// NOLINTNEXTLINE(bugprone-branch-clone)
     case EKEY_END:
     {
         // TODO

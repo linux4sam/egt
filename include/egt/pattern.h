@@ -49,13 +49,13 @@ public:
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Pattern(const Color& color);
 
-    explicit Pattern(Type type, const StepArray& steps = {});
+    explicit Pattern(Type type, StepArray steps = {});
 
-    Pattern(const StepArray& steps,
+    Pattern(StepArray steps,
             const Point& start,
             const Point& end);
 
-    Pattern(const StepArray& steps,
+    Pattern(StepArray steps,
             const Point& start,
             float start_radius,
             const Point& end,

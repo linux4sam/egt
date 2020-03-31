@@ -222,6 +222,7 @@ void Window::create_impl(const Rect& rect,
             case WindowHint::software:
                 m_impl = std::make_unique<detail::BasicWindow>(this);
                 break;
+            /// NOLINTNEXTLINE(bugprone-branch-clone)
             case WindowHint::overlay:
             case WindowHint::heo_overlay:
             case WindowHint::cursor_overlay:
@@ -261,6 +262,7 @@ void Window::create_impl(const Rect& rect,
 
     assert(m_impl);
 
+    /// NOLINTNEXTLINE(bugprone-branch-clone)
     if (flags().is_set(Widget::Flag::plane_window))
     {
         SPDLOG_DEBUG("{} backend is PlaneWindow", name());

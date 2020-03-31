@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <iostream>
-using namespace std;
 
 /// @[snippet4]
 template<class T>
@@ -17,8 +16,8 @@ int main()
 {
     int x = add(5, 5);
     float y = add(.4f, .6f);
-    cout << x << endl;
-    cout << y << endl;
+    std::cout << x << std::endl;
+    std::cout << y << std::endl;
     return 0;
 }
 /// @[snippet4]

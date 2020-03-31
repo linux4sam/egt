@@ -6,12 +6,11 @@
 #include <egt/ui>
 #include <functional>
 #include <iostream>
-#include <map>
 #include <sstream>
 #include <string>
-#include <vector>
+#include <utility>
 
-static std::vector<std::pair<std::string, std::function<int(egt::Application& app)>>> examples =
+static const std::pair<std::string, std::function<int(egt::Application& app)>> examples[] =
 {
     {
         "label1", [](egt::Application & app)
@@ -101,7 +100,7 @@ static std::vector<std::pair<std::string, std::function<int(egt::Application& ap
             center(button);
 
             egt::experimental::ColorMap colors({egt::Palette::red, egt::Palette::green});
-            button.on_click([&button, &colors](egt::Event & event)
+            button.on_click([&button, &colors](egt::Event&)
             {
                 static float step = 0;
                 button.color(egt::Palette::ColorId::button_bg,
@@ -448,14 +447,14 @@ int main(int argc, const char** argv)
 
     if (argc == 2)
     {
-        auto f = std::find_if(examples.begin(),
-                              examples.end(),
-                              [argv](const std::pair<std::string, std::function<int(egt::Application& app)>>& a)
+        const auto f = std::find_if(begin(examples),
+                                    end(examples),
+                                    [argv](const auto & a)
         {
             return a.first == std::string(argv[1]);
         });
 
-        if (f != examples.end())
+        if (f != end(examples))
             return f->second(app);
 
         return 1;

@@ -185,6 +185,7 @@ Widget* mouse_grab()
 void mouse_grab(Widget* widget)
 {
     if (widget)
+        /// NOLINTNEXTLINE(bugprone-branch-clone)
     {
         SPDLOG_DEBUG("mouse grab by {}", widget->name());
     }

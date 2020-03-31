@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <iostream>
-using namespace std;
 
 /// @[snippet3]
 int add(int first, int second)
@@ -15,7 +14,7 @@ int add(int first, int second)
 int main()
 {
     float x = add(.4f, .6f);
-    cout << x << endl;
+    std::cout << x << std::endl;
     return 0;
 }
 /// @[snippet3]
