@@ -337,7 +337,7 @@ protected:
      * Given text, return the number of utf8 characters that will fit on a
      * single line inside of the widget.
      */
-    size_t width_to_len(const std::string& text) const;
+    size_t width_to_len(const std::string& str) const;
 
 private:
 

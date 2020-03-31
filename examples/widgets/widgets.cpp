@@ -184,6 +184,7 @@ struct TextPage : public egt::NotebookTab
         grid1->add(egt::expand(grid0));
 
         auto text1 = std::make_shared<egt::TextBox>("text 1");
+        text1->text_flags().set({egt::TextBox::TextFlag::fit_to_width});
         grid0->add(egt::expand(text1));
 
         auto text2 = std::make_shared<egt::TextBox>("text 2 disabled");

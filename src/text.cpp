@@ -190,7 +190,7 @@ void TextBox::handle_key(const Key& key)
     }
 }
 
-auto CURSOR_Y_OFFSET = 2.;
+constexpr static auto CURSOR_Y_OFFSET = 2.;
 
 void TextBox::draw(Painter& painter, const Rect&)
 {
@@ -198,7 +198,7 @@ void TextBox::draw(Painter& painter, const Rect&)
     draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
     // function to draw the cursor
-    auto draw_cursor = [&](const Point & offset, size_t height)
+    const auto draw_cursor = [&](const Point & offset, size_t height)
     {
         if (focus() && m_cursor_state)
         {
@@ -246,7 +246,7 @@ void TextBox::max_length(size_t len)
     {
         if (m_max_len)
         {
-            auto len = detail::utf8len(m_text);
+            const auto len = detail::utf8len(m_text);
             if (len > m_max_len)
             {
                 auto i = m_text.begin();
@@ -266,28 +266,25 @@ size_t TextBox::append(const std::string& str)
     return insert(str);
 }
 
-size_t TextBox::width_to_len(const std::string& text) const
+size_t TextBox::width_to_len(const std::string& str) const
 {
-    auto b = content_area();
+    const auto b = content_area();
 
-    Canvas canvas(Size(100, 100));
-    auto cr = canvas.context();
-
+    Canvas c(Size(1,1));
+    auto cr = c.context();
     Painter painter(cr);
     painter.set(font());
 
     size_t len = 0;
     float total = 0;
-    for (detail::utf8_const_iterator ch(text.begin(), m_text.begin(), m_text.end());
-         ch != detail::utf8_const_iterator(text.end(), m_text.begin(), m_text.end()); ++ch)
+    for (detail::utf8_const_iterator ch(str.begin(), str.begin(), str.end());
+         ch != detail::utf8_const_iterator(str.end(), str.begin(), str.end()); ++ch)
     {
-        auto txt = detail::utf8_char_to_string(ch.base(), m_text.cend());
+        const auto txt = detail::utf8_char_to_string(ch.base(), str.cend());
         cairo_text_extents_t te;
         cairo_text_extents(cr.get(), txt.c_str(), &te);
         if (total + te.x_advance > b.width())
-        {
             return len;
-        }
         total += te.x_advance;
         len++;
     }
@@ -300,7 +297,7 @@ size_t TextBox::insert(const std::string& str)
     if (str.empty())
         return 0;
 
-    auto current_len = detail::utf8len(m_text);
+    const auto current_len = detail::utf8len(m_text);
     auto len = detail::utf8len(str);
 
     if (m_max_len)
@@ -325,7 +322,7 @@ size_t TextBox::insert(const std::string& str)
         utf8::advance(end, len, str.end());
         text.insert(i, str.begin(), end);
 
-        auto maxlen = width_to_len(text);
+        const auto maxlen = width_to_len(text);
         if (current_len + len > maxlen)
             len = maxlen - current_len;
     }
@@ -334,7 +331,7 @@ size_t TextBox::insert(const std::string& str)
         if (!validate_input(str))
             return 0;
 
-    if (len)
+    if (len > 0)
     {
         // insert at cursor position
         auto i = m_text.begin();
@@ -477,7 +474,7 @@ bool TextBox::validate_input(const std::string& str)
 {
     for (auto& callback : m_validator_callbacks)
     {
-        auto valid = callback(str);
+        const auto valid = callback(str);
         if (!valid)
             return false;
     }
