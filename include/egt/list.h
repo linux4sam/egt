@@ -17,7 +17,6 @@
 #include <egt/signal.h>
 #include <egt/sizer.h>
 #include <egt/view.h>
-#include <memory>
 #include <string>
 
 namespace egt
@@ -184,14 +183,11 @@ public:
         if (s != size())
         {
             Frame::resize(s);
-            if (m_view)
+            auto carea = content_area();
+            if (!carea.empty())
             {
-                auto carea = content_area();
-                if (!carea.empty())
-                {
-                    m_view->box(to_child(carea));
-                    m_sizer->resize(carea.size());
-                }
+                m_view.box(to_child(carea));
+                m_sizer.resize(carea.size());
             }
         }
     }
@@ -199,7 +195,7 @@ public:
     /**
      * Select an item by index.
      */
-    virtual void selected(size_t index);
+    void selected(size_t index);
 
     /**
      * Get the currently selected index.
@@ -209,27 +205,27 @@ public:
     /**
      * Return the number of items in the list.
      */
-    virtual size_t item_count() const { return m_sizer->count_children(); }
+    size_t item_count() const { return m_sizer.count_children(); }
 
     /**
      * Add a new item to the end of the list.
      */
-    virtual void add_item(const std::shared_ptr<Widget>& widget);
+    void add_item(const std::shared_ptr<Widget>& widget);
 
     /**
      * Get the currently selected index item from list.
      */
-    virtual std::shared_ptr<Widget> item_at(size_t index) const;
+    std::shared_ptr<Widget> item_at(size_t index) const;
 
     /**
      * Remove an item from the list.
      */
-    virtual void remove_item(Widget* widget);
+    void remove_item(Widget* widget);
 
     /**
      * Remove all items from the list.
      */
-    virtual void clear();
+    void clear();
 
 protected:
 
@@ -241,12 +237,12 @@ protected:
     /**
      * View used to contain the possible large sizer.
      */
-    std::shared_ptr<ScrolledView> m_view;
+    ScrolledView m_view;
 
     /**
      * Internal sizer used to layout items.
      */
-    std::shared_ptr<BoxSizer> m_sizer;
+    BoxSizer m_sizer;
 
 private:
 

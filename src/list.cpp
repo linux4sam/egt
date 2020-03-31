@@ -24,23 +24,23 @@ ListBox::ListBox(const Rect& rect) noexcept
 
 ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
     : Frame(rect),
-      m_view(std::make_shared<ScrolledView>(*this, ScrolledView::Policy::never)),
-      m_sizer(std::make_shared<BoxSizer>(Orientation::vertical, Justification::start))
+      m_view(*this, ScrolledView::Policy::never),
+      m_sizer(Orientation::vertical, Justification::start)
 {
     name("ListBox" + std::to_string(m_widgetid));
 
     fill_flags(Theme::FillFlag::blend);
     border(theme().default_border());
 
-    m_sizer->align(AlignFlag::expand_horizontal);
+    m_sizer.align(AlignFlag::expand_horizontal);
 
-    m_view->add(m_sizer);
+    m_view.add(m_sizer);
 
     auto carea = content_area();
     if (!carea.empty())
     {
-        m_view->box(to_child(carea));
-        m_sizer->resize(carea.size());
+        m_view.box(to_child(carea));
+        m_sizer.resize(carea.size());
     }
 
     for (auto& i : items)
@@ -62,13 +62,13 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
 {
     widget->align(AlignFlag::expand_horizontal);
 
-    m_sizer->add(widget);
+    m_sizer.add(widget);
 
     // automatically select the first item
-    if (m_sizer->count_children() == 1)
+    if (m_sizer.count_children() == 1)
     {
         m_selected = 0;
-        m_sizer->child_at(m_selected)->checked(true);
+        m_sizer.child_at(m_selected)->checked(true);
     }
 
     on_items_changed.invoke();
@@ -76,19 +76,19 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
 
 std::shared_ptr<Widget> ListBox::item_at(size_t index) const
 {
-    return m_sizer->child_at(index);
+    return m_sizer.child_at(index);
 }
 
 void ListBox::remove_item(Widget* widget)
 {
-    if (m_sizer->is_child(widget))
+    if (m_sizer.is_child(widget))
     {
-        m_sizer->remove(widget);
+        m_sizer.remove(widget);
 
-        if (m_selected >= static_cast<ssize_t>(m_sizer->count_children()))
+        if (m_selected >= static_cast<ssize_t>(m_sizer.count_children()))
         {
-            if (m_sizer->count_children())
-                selected(m_sizer->count_children() - 1);
+            if (m_sizer.count_children())
+                selected(m_sizer.count_children() - 1);
             else
                 m_selected = -1;
         }
@@ -105,10 +105,10 @@ void ListBox::handle(Event& event)
     {
         Point pos = display_to_local(event.pointer().point);
 
-        for (size_t i = 0; i < m_sizer->count_children(); i++)
+        for (size_t i = 0; i < m_sizer.count_children(); i++)
         {
-            auto cbox = m_sizer->child_at(i)->box();
-            cbox.y(cbox.y() + m_view->offset().y());
+            auto cbox = m_sizer.child_at(i)->box();
+            cbox.y(cbox.y() + m_view.offset().y());
 
             if (cbox.intersect(pos))
             {
@@ -134,13 +134,13 @@ void ListBox::selected(size_t index)
 {
     if (m_selected != static_cast<ssize_t>(index))
     {
-        if (index < m_sizer->count_children())
+        if (index < m_sizer.count_children())
         {
-            if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
-                m_sizer->child_at(m_selected)->checked(false);
+            if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected)
+                m_sizer.child_at(m_selected)->checked(false);
             m_selected = index;
-            if (static_cast<ssize_t>(m_sizer->count_children()) > m_selected)
-                m_sizer->child_at(m_selected)->checked(true);
+            if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected)
+                m_sizer.child_at(m_selected)->checked(true);
 
             damage();
             on_selected_changed.invoke();
@@ -150,7 +150,7 @@ void ListBox::selected(size_t index)
 
 void ListBox::clear()
 {
-    m_sizer->remove_all();
+    m_sizer.remove_all();
 }
 
 }
