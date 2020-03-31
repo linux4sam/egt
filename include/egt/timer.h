@@ -105,7 +105,7 @@ public:
      * Start the timer with the specified duration.  This overwrites any
      * duration specified previously.
      */
-    virtual void start_with_duration(std::chrono::milliseconds duration);
+    void start_with_duration(std::chrono::milliseconds duration);
 
     /**
      * Change the duration of the timer.
@@ -113,12 +113,12 @@ public:
      * This will stop the timer, change the duration, and restart the timer
      * with the new duration if the timer was already running.
      */
-    virtual void change_duration(std::chrono::milliseconds duration);
+    void change_duration(std::chrono::milliseconds duration);
 
     /**
      * Cancel, or stop, the timer.
      */
-    virtual void cancel();
+    void cancel();
 
     /**
      * Alias for cancel().
@@ -132,7 +132,7 @@ public:
      * override this you must make sure to call Timer::timeout() or
      * equivalent if you want callbacks to still be called.
      */
-    virtual void timeout();
+    void timeout();
 
     /**
      * Return the current duration of the timer.
@@ -153,19 +153,19 @@ public:
      * @return A handle used to identify the registration.  This can then be
      *         passed to remove_handler().
      */
-    virtual uint32_t on_timeout(TimerCallback callback);
+    uint32_t on_timeout(TimerCallback callback);
 
     /**
      * Clear all handlers.
      */
-    virtual void clear_handlers();
+    void clear_handlers();
 
     /**
      * Remove an event handler.
      *
      * @param handle The handle returned from on_timeout().
      */
-    virtual void remove_handler(uint32_t handle);
+    void remove_handler(uint32_t handle);
 
     /**
     * Get the name of the Timer.
@@ -192,7 +192,7 @@ protected:
     /**
      * Invoke any registered handlers.
      */
-    virtual void invoke_handlers();
+    void invoke_handlers();
 
     /**
      * Manages metadata about a registered callback.

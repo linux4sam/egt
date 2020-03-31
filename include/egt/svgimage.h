@@ -53,7 +53,7 @@ public:
     explicit SvgImage(const std::string& uri, const SizeF& size = {});
 
     EGT_OPS_NOCOPY_MOVE_EXCEPT(SvgImage);
-    virtual ~SvgImage() noexcept;
+    ~SvgImage() noexcept;
 
     /**
      * Overload to convert to an Image.
@@ -74,7 +74,7 @@ public:
      *               specified, all elements in the SVG will be rendered.
      * @param[in] rect Optional rect to clip to.
      */
-    virtual Image render(const std::string& id = {}, const RectF& rect = {}) const;
+    Image render(const std::string& id = {}, const RectF& rect = {}) const;
 
     /**
      * Render the image of the specific element in the SVG file.
@@ -89,7 +89,7 @@ public:
      *
      * @see render().
      */
-    virtual Image id_image(const std::string& id) const
+    Image id_image(const std::string& id) const
     {
         return this->render(id, id_box(id));
     }
@@ -99,7 +99,7 @@ public:
      *
      * @param[in] id The id of the SVG element.
      */
-    virtual RectF id_box(const std::string& id) const;
+    RectF id_box(const std::string& id) const;
 
     /**
      * Test if an element exists in the SVG image.
@@ -107,7 +107,7 @@ public:
      * @param[in] id The id of the SVG element.
      * @return true if found
      */
-    virtual bool id_exists(const std::string& id) const;
+    bool id_exists(const std::string& id) const;
 
     /**
      * Get the SVG size.

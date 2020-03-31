@@ -109,27 +109,27 @@ public:
     /**
      * Set the index of the selected item.
      */
-    virtual void selected(size_t index);
+    void selected(size_t index);
 
     /**
      * Get the index of the selected item.
      */
-    virtual ssize_t selected() const { return m_selected; }
+    ssize_t selected() const { return m_selected; }
 
     /**
      * Append a new item to the ComboBox.
      */
-    virtual void add_item(const std::string& item);
+    void add_item(const std::string& item);
 
     /**
      * Remove a item from a ComboBox.
      */
-    virtual bool remove(const std::string& item);
+    bool remove(const std::string& item);
 
     /**
      * Get an item at the specified index.
      */
-    virtual std::string item_at(size_t index) const { return m_items.at(index); }
+    std::string item_at(size_t index) const { return m_items.at(index); }
 
     /**
      * Return the number of items in the list.
@@ -142,7 +142,7 @@ public:
     /**
      * Remove all items from the list.
      */
-    virtual void clear();
+    void clear();
 
     /**
      * Set the text alignment within the Label.

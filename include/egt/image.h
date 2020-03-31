@@ -99,9 +99,6 @@ public:
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     Image(cairo_surface_t* surface);
 
-    EGT_OPS_COPY_MOVE(Image);
-    virtual ~Image() noexcept = default;
-
     /**
      * Scale the image.
      *
@@ -115,7 +112,7 @@ public:
      * @param approximate Approximate the scale to increase image cache
      *            hit efficiency.
      */
-    virtual void scale(float hscale, float vscale, bool approximate = false);
+    void scale(float hscale, float vscale, bool approximate = false);
 
     /**
      * Scale the image.
@@ -132,7 +129,7 @@ public:
      *
      * @param size The new size of the image.
      */
-    virtual void resize(const Size& size)
+    void resize(const Size& size)
     {
         if (this->size() != size)
         {
@@ -206,14 +203,14 @@ public:
      *
      * @todo Tricky API.
      */
-    virtual void copy();
+    void copy();
 
     std::string uri() const
     {
         return m_uri;
     }
 
-    virtual Image crop(const RectF& rect);
+    Image crop(const RectF& rect);
 
     Image crop(const Rect& rect)
     {
@@ -223,13 +220,13 @@ public:
     /**
     * Serialize to the specified serializer.
     */
-    virtual void serialize(const std::string& name, Serializer& serializer) const;
+    void serialize(const std::string& name, Serializer& serializer) const;
 
     /**
      * Deserialized property.
      */
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs);
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs);
 
 protected:
 

@@ -187,7 +187,7 @@ public:
      *
      * @param[in] image The new image to use.
      */
-    virtual void image(const Image& image);
+    void image(const Image& image);
 
     /**
      * Scale the image.
@@ -204,8 +204,8 @@ public:
      * @param[in] approximate Approximate the scale to increase image cache
      *            hit efficiency.
      */
-    virtual void scale_image(float hscale, float vscale,
-                             bool approximate = false)
+    void scale_image(float hscale, float vscale,
+                     bool approximate = false)
     {
         m_image.scale(hscale, vscale, approximate);
         parent_layout();
@@ -220,7 +220,7 @@ public:
      *
      * @warning This does not damage the widget.
      */
-    virtual void scale_image(float scale, bool approximate = false)
+    void scale_image(float scale, bool approximate = false)
     {
         scale_image(scale, scale, approximate);
     }
@@ -256,7 +256,7 @@ public:
      *
      * @param[in] value When true, the label text is shown.
      */
-    virtual void show_label(bool value);
+    void show_label(bool value);
 
     /**
      * Get the show label state.

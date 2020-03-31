@@ -17,12 +17,12 @@ CameraCapture::CameraCapture()
     : CameraCapture("output.avi")
 {}
 
-
 CameraCapture::CameraCapture(const std::string& output,
                              ContainerType container,
                              PixelFormat format,
                              const std::string& device)
-    : m_impl(std::make_unique<detail::CaptureImpl>(*this, output, format, container, device))
+    : m_impl(std::make_unique<detail::CaptureImpl>(*this, output, format,
+             container, device))
 {}
 
 void CameraCapture::set_output(const std::string& output,

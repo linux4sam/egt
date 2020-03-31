@@ -105,10 +105,10 @@ public:
     /**
      * Add a range value to the radial.
      */
-    virtual Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
-                                       const Color& color = {},
-                                       DefaultDim width = 10,
-                                       RadialFlags flags = {})
+    Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
+                               const Color& color = {},
+                               DefaultDim width = 10,
+                               RadialFlags flags = {})
     {
         // TODO: m_handle_counter can wrap, making the handle non-unique
         auto handle = ++this->m_handle_counter;
@@ -130,7 +130,7 @@ public:
     /**
      * Set the idividual color of a range value.
      */
-    virtual void color(Object::RegisterHandle handle, const Color& color)
+    void color(Object::RegisterHandle handle, const Color& color)
     {
         for (auto& value : this->m_values)
         {
@@ -146,12 +146,12 @@ public:
     /**
      * Get the current text of the radial.
      */
-    virtual const std::string& text() const { return m_text; }
+    const std::string& text() const { return m_text; }
 
     /**
      * Set the center label text of the dial.
      */
-    virtual void text(const std::string& text)
+    void text(const std::string& text)
     {
         if (detail::change_if_diff<>(m_text, text))
             this->damage();

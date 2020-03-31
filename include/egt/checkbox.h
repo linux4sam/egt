@@ -55,9 +55,6 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(CheckBox);
-    ~CheckBox() override = default;
-
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;
@@ -95,9 +92,6 @@ public:
     */
     explicit ToggleBox(Frame& parent, const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(ToggleBox);
-    ~ToggleBox() override = default;
-
     void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -115,8 +109,8 @@ public:
      * @param[in] off_text The "off" text to display.
      * @param[in] on_text The "on" text to display.
      */
-    virtual void toggle_text(const std::string& off_text,
-                             const std::string& on_text)
+    void toggle_text(const std::string& off_text,
+                     const std::string& on_text)
     {
         bool off = detail::change_if_diff<>(m_off_text, off_text);
         bool on = detail::change_if_diff<>(m_on_text, on_text);
@@ -128,17 +122,17 @@ public:
     /**
      * Get the "off" text.
      */
-    inline const std::string& off_text() const { return m_off_text; }
+    const std::string& off_text() const { return m_off_text; }
 
     /**
      * Get the "on" text.
      */
-    inline const std::string& on_text() const { return m_on_text; }
+    const std::string& on_text() const { return m_on_text; }
 
     /**
      * Get the enable/disable mode.
      */
-    inline bool enable_disable() const { return m_enable_disable; }
+    bool enable_disable() const { return m_enable_disable; }
 
     /**
      * Set the enable/disable mode.

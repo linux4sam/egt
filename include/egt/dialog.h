@@ -73,17 +73,17 @@ public:
      * @param[in] icon set the icon in a title.
      * @param[in] title set the title text.
      */
-    virtual void title(const Image& icon, const std::string& title);
+    void title(const Image& icon, const std::string& title);
 
     /**
      * Set a title text for this dialog.
      */
-    virtual void title(const std::string& title);
+    void title(const std::string& title);
 
     /**
      * Set a icon in a title area of a dialog.
      */
-    virtual void icon(const Image& icon);
+    void icon(const Image& icon);
 
     /**
      * Set Button details for this dialog.
@@ -91,14 +91,14 @@ public:
      * @param[in] button is buttonid
      * @param[in] text is a text to display on button.
      */
-    virtual void button(ButtonId button, const std::string& text);
+    void button(ButtonId button, const std::string& text);
 
     /**
      * Set a widget for this dialog.
      *
      * @param[in] widget
      */
-    virtual void widget(const std::shared_ptr<Widget>& widget);
+    void widget(const std::shared_ptr<Widget>& widget);
 
 protected:
 

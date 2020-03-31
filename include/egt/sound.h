@@ -81,7 +81,7 @@ public:
      *
      * @param repeat Should the sound keep repeating?
      */
-    virtual void play(bool repeat = false);
+    void play(bool repeat = false);
 
 protected:
     /// @private

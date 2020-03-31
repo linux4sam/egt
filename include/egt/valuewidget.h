@@ -62,7 +62,7 @@ public:
      *
      * @return The old value.
      */
-    virtual T value(T v)
+    T value(T v)
     {
         T orig = m_value;
         if (detail::change_if_diff<T>(m_value, v))
@@ -181,7 +181,7 @@ public:
      *
      * @param[in] v The start value.
      */
-    virtual void start(T v)
+    void start(T v)
     {
         if (detail::change_if_diff<>(m_start, v))
             damage();
@@ -194,7 +194,7 @@ public:
      *
      * @param[in] v The end value.
      */
-    virtual void end(T v)
+    void end(T v)
     {
         if (detail::change_if_diff<>(m_end, v))
             damage();

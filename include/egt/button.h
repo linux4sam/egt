@@ -122,7 +122,7 @@ public:
      *
      * @see detail::Object::on_event()
      */
-    virtual RegisterHandle on_click(const EventCallback& handler)
+    RegisterHandle on_click(const EventCallback& handler)
     {
         return on_event(handler, {EventId::pointer_click});
     }
@@ -235,7 +235,7 @@ public:
      *
      * @param[in] image The new image to use.
      */
-    virtual void image(const Image& image);
+    void image(const Image& image);
 
     /**
      * Scale the image.
@@ -254,8 +254,8 @@ public:
      *
      * @warning This does not damage the widget.
      */
-    virtual void scale_image(float hscale, float vscale,
-                             bool approximate = false)
+    void scale_image(float hscale, float vscale,
+                     bool approximate = false)
     {
         m_image.scale(hscale, vscale, approximate);
         parent_layout();
@@ -270,7 +270,7 @@ public:
      *
      * @warning This does not damage the widget.
      */
-    virtual void scale_image(float scale, bool approximate = false)
+    void scale_image(float scale, bool approximate = false)
     {
         scale_image(scale, scale, approximate);
     }
@@ -278,12 +278,12 @@ public:
     /**
      * Get a const reference of the image.
      */
-    inline const Image& image() const { return m_image; }
+    const Image& image() const { return m_image; }
 
     /**
      * Get a non-const reference to the image.
      */
-    inline Image& image() { return m_image; }
+    Image& image() { return m_image; }
 
     /**
      * Set the alignment of the image relative to the text.
@@ -299,19 +299,19 @@ public:
     /**
      * Get the image alignment.
      */
-    inline AlignFlags image_align() const { return m_image_align; }
+    AlignFlags image_align() const { return m_image_align; }
 
     /**
      * Enable/disable showing the label text.
      *
      * @param[in] value When true, the label text is shown.
      */
-    virtual void show_label(bool value);
+    void show_label(bool value);
 
     /**
      * Get the show label state.
      */
-    inline bool show_label() const { return m_show_label; }
+    bool show_label() const { return m_show_label; }
 
     void serialize(Serializer& serializer) const override;
 

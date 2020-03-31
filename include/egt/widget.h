@@ -241,7 +241,7 @@ public:
      *
      * @see resize()
      */
-    virtual void resize_by_ratio(DefaultDim hratio, DefaultDim vratio);
+    void resize_by_ratio(DefaultDim hratio, DefaultDim vratio);
 
     /**
      * Scale the current size of the Widget given the ratio.
@@ -326,7 +326,7 @@ public:
      *
      * @note This will cause a redraw of the widget.
      */
-    virtual void move_to_center(const Point& point);
+    void move_to_center(const Point& point);
 
     /**
      * Move the widget to the center of its parent.
@@ -336,7 +336,7 @@ public:
      *
      * @note This will cause a redraw of the widget.
      */
-    virtual void move_to_center();
+    void move_to_center();
 
     /**
      * Hide the Widget.
@@ -367,7 +367,7 @@ public:
     /**
      * Set the visible state.
      */
-    virtual void visible(bool value);
+    void visible(bool value);
 
     /**
      * Toggle the visibility state.
@@ -387,14 +387,14 @@ public:
      *
      * The meaning of active is largely up to the derived implementation.
      */
-    virtual bool active() const;
+    bool active() const;
 
     /**
      * Set the active state.
      *
      * The meaning of active is largely up to the derived implementation.
      */
-    virtual void active(bool value);
+    void active(bool value);
 
     /**
      * Get the readonly state of the widget.
@@ -415,7 +415,7 @@ public:
      *
      * @param value Readonly when true.
      */
-    virtual void readonly(bool value);
+    void readonly(bool value);
 
     /**
      * Toggle the readonly state.
@@ -430,12 +430,12 @@ public:
     /**
      * Set the disabled state to true.
      */
-    virtual void disable();
+    void disable();
 
     /**
      * Set the disabled state to false.
      */
-    virtual void enable();
+    void enable();
 
     /**
      * Return the disabled state of the widget.
@@ -494,7 +494,7 @@ public:
      *
      * @param[in] alpha Widget alpha component in range 0.0 - 1.0.
      */
-    virtual void alpha(float alpha);
+    void alpha(float alpha);
 
     /**
      * Damage the box() of the widget and cause a redraw.
@@ -540,7 +540,7 @@ public:
      *
      * @see @ref layout_box
      */
-    virtual void box(const Rect& rect);
+    void box(const Rect& rect);
 
     /**
      * Get the size of the widget's box().
@@ -594,7 +594,7 @@ public:
      * @param palette The new palette to assign to the widget.
      * @note This will overwrite the entire widget Palette.
      */
-    virtual void palette(const Palette& palette);
+    void palette(const Palette& palette);
 
     /**
      * Clear the widget instance palette.
@@ -602,7 +602,7 @@ public:
      * This will clear the widget instance's palette.  Meaning, for all colors
      * the widget will now use default_palette().
      */
-    virtual void reset_palette();
+    void reset_palette();
 
     /**
      * Get a Widget color.
@@ -639,9 +639,9 @@ public:
      * @param color Color to set.
      * @param group Palette::GroupId to set.
      */
-    virtual void color(Palette::ColorId id,
-                       const Pattern& color,
-                       Palette::GroupId group = Palette::GroupId::normal);
+    void color(Palette::ColorId id,
+               const Pattern& color,
+               Palette::GroupId group = Palette::GroupId::normal);
 
     /**
      * Get a pointer to the parent Frame, or nullptr if none exists.
@@ -682,7 +682,7 @@ public:
      *
      * @param[in] a The AlignFlags.
      */
-    virtual void align(const AlignFlags& a);
+    void align(const AlignFlags& a);
 
     /**
      * Get the alignment.
@@ -897,7 +897,7 @@ public:
      *
      * @param size The minimum size.
      */
-    virtual void min_size_hint(const Size& size)
+    void min_size_hint(const Size& size)
     {
         if (detail::change_if_diff<>(m_min_size, size))
             parent_layout();
@@ -952,7 +952,7 @@ public:
      *
      * @return true if in focus.
      */
-    virtual bool focus() const { return m_focus; }
+    bool focus() const { return m_focus; }
 
     /**
      * Set the fill flags.
@@ -1094,13 +1094,13 @@ public:
     /**
      * Get the display origin of the Widget.
      */
-    virtual DisplayPoint display_origin();
+    DisplayPoint display_origin();
 
     /**
      * Get the sum of the margin(), padding(), and border() around the content
      * of the widget.
      */
-    virtual size_t moat() const;
+    size_t moat() const;
 
     /**
      * Return the area that content is allowed to be positioned into.
@@ -1145,7 +1145,7 @@ public:
      *
      * @see @ref geometry_coord
      */
-    virtual DisplayPoint local_to_display(const Point& p);
+    DisplayPoint local_to_display(const Point& p);
 
     /**
      * Convert a display point to a local point.
@@ -1208,7 +1208,7 @@ public:
      *
      * Should this need to be changed, override this function.
      */
-    virtual std::string type() const;
+    std::string type() const;
 
     /**
      * Type used to identify a unique Widget ID.
@@ -1257,7 +1257,7 @@ protected:
      *
      * This is the same as calling theme().palette().
      */
-    virtual const Palette& default_palette() const;
+    const Palette& default_palette() const;
 
     /**
      * Get the local box which is the same size as box(), but with the

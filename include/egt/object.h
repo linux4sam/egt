@@ -73,34 +73,34 @@ public:
      * @return A handle used to identify the registration.  This can then be
      *         passed to remove_handler().
      */
-    virtual RegisterHandle on_event(const EventCallback& handler,
-                                    const FilterFlags& mask = {});
+    RegisterHandle on_event(const EventCallback& handler,
+                            const FilterFlags& mask = {});
 
     /**
      * Invoke all handlers with the specified event.
      *
      * @param event The event to invoke.
      */
-    virtual void invoke_handlers(Event& event);
+    void invoke_handlers(Event& event);
 
     /**
      * Invoke all handlers with the specified EventId.
      *
      * @param event The EventId to invoke.
      */
-    virtual void invoke_handlers(EventId event);
+    void invoke_handlers(EventId event);
 
     /**
      * Clear all registered event handlers.
      */
-    virtual void clear_handlers();
+    void clear_handlers();
 
     /**
      * Remove an event handler.
      *
      * @param handle The handle returned from on_event().
      */
-    virtual void remove_handler(RegisterHandle handle);
+    void remove_handler(RegisterHandle handle);
 
 protected:
 

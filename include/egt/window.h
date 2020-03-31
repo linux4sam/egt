@@ -133,12 +133,12 @@ public:
      * technically put another child widget before the background using
      * zorder.
      */
-    virtual void background(const Image& image);
+    void background(const Image& image);
 
     /**
      * Get the pixel format of the window.
      */
-    virtual PixelFormat format() const
+    PixelFormat format() const
     {
         auto frame = find_screen();
         if (frame)
@@ -249,15 +249,15 @@ public:
     ~TopWindow() noexcept override;
 
     /// Show the cursor.
-    virtual void show_cursor(const Image& image = Image("res:internal_cursor"));
+    void show_cursor(const Image& image = Image("res:internal_cursor"));
 
     /// Hide the cursor.
-    virtual void hide_cursor();
+    void hide_cursor();
 
 protected:
 
     /// Handle mouse events.
-    virtual void handle_mouse(Event& event);
+    void handle_mouse(Event& event);
 
     /// Cursor window, if created.
     std::unique_ptr<Window> m_cursor;

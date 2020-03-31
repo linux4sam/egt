@@ -6,6 +6,11 @@
 #ifndef EGT_FLAGS_H
 #define EGT_FLAGS_H
 
+/**
+ * @file
+ * @brief Flags handling.
+ */
+
 #include <egt/detail/enum.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/string.h>
@@ -15,11 +20,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
-/**
- * @file
- * @brief Flags handling.
- */
 
 namespace egt
 {

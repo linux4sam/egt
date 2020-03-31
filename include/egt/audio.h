@@ -82,19 +82,19 @@ public:
      * @param uri file URI
      * @return true on success
      */
-    virtual bool media(const std::string& uri);
+    bool media(const std::string& uri);
 
     /**
      * Send pipeline to play state
      * @return true on success
      */
-    virtual bool play();
+    bool play();
 
     /**
      * pause Send Pipeline to pause state
      * @return true on success
      */
-    virtual bool pause();
+    bool pause();
 
     /**
      * Adjusts the volume of the audio being played.
@@ -102,13 +102,13 @@ public:
      * @param volume Value in the range 0 - 100.
      * @return true on success
      */
-    virtual bool volume(int volume);
+    bool volume(int volume);
 
     /**
      * Get the volume.
      * @return Value in the range 0 - 100.
      */
-    virtual int volume() const;
+    int volume() const;
 
     /**
      * Mutes the audio being played.
@@ -116,7 +116,7 @@ public:
      * @param mute When true, audio is to be muted.
      * @return true on success
      */
-    virtual bool mute(bool mute);
+    bool mute(bool mute);
 
     /**
      * Get the current position of the audio stream.
@@ -141,12 +141,12 @@ public:
      * @param pos Position in nanoseconds.
      * @return true on success
      */
-    virtual bool seek(uint64_t pos);
+    bool seek(uint64_t pos);
 
     /**
      * Returns true if the stream is currently playing.
      */
-    virtual bool playing() const;
+    bool playing() const;
 
 protected:
 
@@ -157,7 +157,7 @@ protected:
     bool null();
 
     /// Create the pipeline.
-    virtual bool createPipeline(const std::string& uri);
+    bool createPipeline(const std::string& uri);
 
     /// Destroy the pipeline.
     void destroyPipeline();

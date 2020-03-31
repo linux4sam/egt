@@ -141,7 +141,7 @@ public:
      * @param[in] value Value to set.
      * @return true if changed.
      */
-    virtual bool value(T value)
+    bool value(T value)
     {
         assert(m_max > m_min);
 

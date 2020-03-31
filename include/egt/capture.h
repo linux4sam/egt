@@ -6,6 +6,11 @@
 #ifndef EGT_CAPTURE_H
 #define EGT_CAPTURE_H
 
+/**
+ * @file
+ * @brief Camera capture support.
+ */
+
 #include <egt/object.h>
 #include <egt/signal.h>
 #include <egt/types.h>
@@ -84,29 +89,26 @@ public:
      * @param[in] container The output container format.
      * @param[in] format The input pixel format.
      */
-    virtual void set_output(const std::string& output,
-                            ContainerType container = ContainerType::avi,
-                            PixelFormat format = PixelFormat::yuyv);
+    void set_output(const std::string& output,
+                    ContainerType container = ContainerType::avi,
+                    PixelFormat format = PixelFormat::yuyv);
 
     /**
      * Initialize camera pipeline to capture from the camera.
      *
      * @return true on success
      */
-    virtual bool start();
+    bool start();
 
     /**
      * Stop camera capture and finish the output.
      */
-    virtual void stop();
+    void stop();
 
 protected:
 
-    /**
-     * Internal capture implementation.
-     */
+    /// Internal capture implementation.
     std::unique_ptr<detail::CaptureImpl> m_impl;
-
 };
 
 }

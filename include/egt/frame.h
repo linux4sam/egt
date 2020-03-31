@@ -11,6 +11,7 @@
  * @brief Working with frames.
  */
 
+#include <cassert>
 #include <egt/detail/alignment.h>
 #include <egt/detail/meta.h>
 #include <egt/screen.h>
@@ -136,7 +137,7 @@ public:
     /**
      * Get a child widget at a specific index.
      */
-    std::shared_ptr<Widget> child_at(size_t index)
+    std::shared_ptr<Widget> child_at(size_t index) const
     {
         return m_children.at(index);
     }
@@ -244,7 +245,7 @@ public:
     /**
      * Paint individual children to file.
      */
-    virtual void paint_children_to_file();
+    void paint_children_to_file();
 
     void show() override
     {
@@ -313,7 +314,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_up(const Widget* widget);
+    void zorder_up(const Widget* widget);
 
     void zorder_bottom() override;
 
@@ -325,7 +326,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_bottom(const Widget* widget);
+    void zorder_bottom(const Widget* widget);
 
     /**
      * Move the specified widget zorder to the top of the current list of widgets
@@ -333,14 +334,14 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_top(const Widget* widget);
+    void zorder_top(const Widget* widget);
 
     /**
      * Get the zorder of the widget.
      *
      * @param widget The widget.
      */
-    virtual size_t zorder(const Widget* widget) const;
+    size_t zorder(const Widget* widget) const;
 
     size_t zorder() const override;
 
@@ -349,7 +350,7 @@ public:
      *
      * @return The widget pointer or nullptr if not found.
      */
-    virtual Widget* hit_test(const DisplayPoint& point);
+    Widget* hit_test(const DisplayPoint& point);
 
     /**
      * Add damage to the damage array.
@@ -358,7 +359,7 @@ public:
      * is done for several reasons, including if this frame is moved, all of the
      * damage rects are still valid.
      */
-    virtual void add_damage(const Rect& rect);
+    void add_damage(const Rect& rect);
 
     /**
      * Helper type that defines the special draw child callback.
@@ -408,7 +409,7 @@ public:
      *
      * This searches up the widget hierarchy from here.
      */
-    virtual Frame* find_screen()
+    Frame* find_screen()
     {
         if (has_screen())
             return this;
@@ -424,7 +425,7 @@ public:
      *
      * This searches up the widget hierarchy from here.
      */
-    virtual const Frame* find_screen() const
+    const Frame* find_screen() const
     {
         if (has_screen())
             return this;

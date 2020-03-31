@@ -71,9 +71,6 @@ public:
      */
     explicit FileDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(FileDialog);
-    ~FileDialog() noexcept override = default;
-
 protected:
 
     /// Vertical BoxSizer
@@ -132,9 +129,6 @@ public:
      */
     explicit FileOpenDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(FileOpenDialog);
-    ~FileOpenDialog() noexcept override = default;
-
     /**
      * Show the Widget.
      *
@@ -149,7 +143,7 @@ public:
      *
      * @return full path of the selected file.
      */
-    virtual std::string selected() const;
+    std::string selected() const;
 
 protected:
     /// Grid for organizing okay & cancel Buttons.
@@ -202,9 +196,6 @@ public:
      */
     explicit FileSaveDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(FileSaveDialog);
-    ~FileSaveDialog() noexcept override = default;
-
     /**
      * Show the Widget.
      *
@@ -219,7 +210,7 @@ public:
      *
      * @return file path of the file save location.
      */
-    virtual std::string selected() const;
+    std::string selected() const;
 
 protected:
 

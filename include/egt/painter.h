@@ -113,8 +113,6 @@ public:
     };
 
     Painter() = delete;
-    EGT_OPS_NOCOPY_MOVE(Painter);
-    virtual ~Painter() = default;
 
     /**
      * Construct a Painter with an existing context.
@@ -131,45 +129,45 @@ public:
      *
      * @see AutoSaveRestore
      */
-    virtual void save();
+    void save();
 
     /**
      * Restore the previous saved state of the current context.
      *
      * @see AutoSaveRestore
      */
-    virtual void restore();
+    void restore();
 
     /**
      * Push a group onto the stack.
      *
      * @see AutoGroup
      */
-    virtual void push_group();
+    void push_group();
 
     /**
      * Pop a group off the stack and automatically make it the source.
      *
      * @see AutoGroup
      */
-    virtual void pop_group();
+    void pop_group();
 
     /**
      * Set the current color.
      */
-    virtual Painter& set(const Pattern& pattern);
+    Painter& set(const Pattern& pattern);
 
     /**
      * Set the active font.
      */
-    virtual Painter& set(const Font& font);
+    Painter& set(const Font& font);
 
     /**
      * Set the current line width.
      *
      * @param[in] width Line width.
      */
-    virtual Painter& line_width(float width);
+    Painter& line_width(float width);
 
     /**
      * Move to a point.
@@ -278,14 +276,14 @@ public:
     /**
      * Draw an image surface at the specified point.
      */
-    virtual Painter& draw(const Image& image);
+    Painter& draw(const Image& image);
 
     /**
      * @param[in] rect The source rect to copy.
      * @param[in] image The image surface to draw.
      */
-    virtual Painter& draw(const Rect& rect,
-                          const Image& image);
+    Painter& draw(const Rect& rect,
+                  const Image& image);
 
     enum class TextDrawFlag : uint32_t
     {
@@ -297,28 +295,28 @@ public:
     /**
      * Draw text inside the specified rectangle.
      */
-    virtual Painter& draw(const std::string& str, const TextDrawFlags& flags = {});
+    Painter& draw(const std::string& str, const TextDrawFlags& flags = {});
 
-    virtual Painter& clip();
+    Painter& clip();
 
-    virtual Painter& fill();
+    Painter& fill();
 
-    virtual Painter& paint();
+    Painter& paint();
 
-    virtual Painter& paint(float alpha);
+    Painter& paint(float alpha);
 
-    virtual Painter& stroke();
+    Painter& stroke();
 
-    virtual Size text_size(const std::string& text);
+    Size text_size(const std::string& text);
 
-    virtual Size font_size(const std::string& text);
+    Size font_size(const std::string& text);
 
-    virtual void color_at(const Point& point, const Color& color) noexcept;
+    void color_at(const Point& point, const Color& color) noexcept;
     static void color_at(cairo_surface_t* image, const Point& point, const Color& color) noexcept;
-    virtual Color color_at(const Point& point) noexcept;
+    Color color_at(const Point& point) noexcept;
     static Color color_at(cairo_surface_t* image, const Point& point) noexcept;
 
-    virtual Painter& flood(const Point& point, const Color& color);
+    Painter& flood(const Point& point, const Color& color);
 
     static void flood(cairo_surface_t* image,
                       const Point& point, const Color& color);

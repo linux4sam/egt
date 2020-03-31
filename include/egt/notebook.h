@@ -101,12 +101,12 @@ public:
     /**
      * Set the selected widget by index.
      */
-    virtual void selected(size_t index);
+    void selected(size_t index);
 
     /**
      * Set the selected widget by widget.
      */
-    virtual void selected(Widget* widget);
+    void selected(Widget* widget);
 
     /**
      * Get the currently selected index.
@@ -118,7 +118,7 @@ public:
      *
      * @param index The index of the widget.
      */
-    virtual NotebookTab* get(size_t index) const;
+    NotebookTab* get(size_t index) const;
 
 protected:
 

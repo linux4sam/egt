@@ -130,7 +130,7 @@ public:
                       const Attributes& attrs = {}) override;
 
 
-    /// Write top the specified file path.
+    /// Write to the specified file path.
     void write(const std::string& filename);
 
     /// Write to the specified ostream.

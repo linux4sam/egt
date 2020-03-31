@@ -109,31 +109,31 @@ public:
      *
      * @param[in] data is a data items for LineChart.
      */
-    virtual void data(const DataArray& data);
+    void data(const DataArray& data);
 
     /**
      * Get the number of data points.
      */
-    virtual size_t data_size() const;
+    size_t data_size() const;
 
     /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for LineChart.
      */
-    virtual void add_data(const DataArray& data);
+    void add_data(const DataArray& data);
 
     /**
      * Remove data items from top in an array.
      *
      * @param[in] count is the number of items to remove.
      */
-    virtual void remove_data(uint32_t count);
+    void remove_data(uint32_t count);
 
     /**
      * Remove all data items.
      */
-    virtual void clear();
+    void clear();
 
     /**
      * Set the grid style.
@@ -145,7 +145,7 @@ public:
      *
      * @param[in] val size of a grid width.
      */
-    virtual void grid_width(int val);
+    void grid_width(int val);
 
     /**
      * Set line width
@@ -153,14 +153,14 @@ public:
      * @param[in] val size of a line width.
      *
      */
-    virtual void line_width(int val);
+    void line_width(int val);
 
     /**
      * Sets line style
      *
      *  @param[in] pattern is one of the enum LinePattern
      */
-    virtual void line_style(LinePattern pattern);
+    void line_style(LinePattern pattern);
 
     /**
      * Set chart labels.
@@ -169,9 +169,9 @@ public:
      * @param[in] ylabel is y-axis label.
      * @param[in] title is Chart title.
      */
-    virtual void label(const std::string& xlabel,
-                       const std::string& ylabel,
-                       const std::string& title);
+    void label(const std::string& xlabel,
+               const std::string& ylabel,
+               const std::string& title);
 
     /**
      * Resize the LineChart.
@@ -185,7 +185,7 @@ public:
     /**
      * Add a percent bank beyond the min and maximum values.
      */
-    virtual void bank(float bank);
+    void bank(float bank);
 
 protected:
 
@@ -229,38 +229,38 @@ public:
      *
      * @param[in] data is a data items for PointChart.
      */
-    virtual void data(const DataArray& data);
+    void data(const DataArray& data);
 
     /**
     * Get the number of data points.
     */
-    virtual size_t data_size() const;
+    size_t data_size() const;
 
     /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for PointChart.
      */
-    virtual void add_data(const DataArray& data);
+    void add_data(const DataArray& data);
 
     /**
      * Remove data items from top in an array.
      *
      * @param[in] count is the number of items to remove.
      */
-    virtual void remove_data(uint32_t count);
+    void remove_data(uint32_t count);
 
     /**
      * Remove all data items.
      */
-    virtual void clear();
+    void clear();
 
     /**
      * Select the point type.
      *
      * @param[in] ptype one of the enum point_type
      */
-    virtual void point_type(PointType ptype);
+    void point_type(PointType ptype);
 
     /**
      * Set chart labels.
@@ -269,9 +269,9 @@ public:
      * @param[in] ylabel is y-axis label.
      * @param[in] title is Chart title.
      */
-    virtual void label(const std::string& xlabel,
-                       const std::string& ylabel,
-                       const std::string& title);
+    void label(const std::string& xlabel,
+               const std::string& ylabel,
+               const std::string& title);
 
     /**
     * Set the grid style.
@@ -283,7 +283,7 @@ public:
      *
      * @param[in] val size of a grid width.
      */
-    virtual void grid_width(int val);
+    void grid_width(int val);
 
     /**
      * Resize the PointChart.
@@ -297,7 +297,7 @@ public:
     /**
      * Add a percent bank beyond the min and maximum values.
      */
-    virtual void bank(float bank);
+    void bank(float bank);
 
 protected:
 
@@ -342,45 +342,45 @@ public:
      *
      * @param[in] data is a data items for BarChart.
      */
-    virtual void data(const DataArray& data);
+    void data(const DataArray& data);
 
     /**
     * Get the number of data points.
     */
-    virtual size_t data_size() const;
+    size_t data_size() const;
 
     /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for BarChart.
      */
-    virtual void add_data(const DataArray& data);
+    void add_data(const DataArray& data);
 
     /**
      * Set a new set of data to BarChart.
      *
      * @param[in] data is a data items for BarChart.
      */
-    virtual void data(const StringDataArray& data);
+    void data(const StringDataArray& data);
 
     /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for BarChart.
      */
-    virtual void add_data(const StringDataArray& data);
+    void add_data(const StringDataArray& data);
 
     /**
      * Remove data items from top in an array.
      *
      * @param[in] count is the number of items to remove.
      */
-    virtual void remove_data(uint32_t count);
+    void remove_data(uint32_t count);
 
     /**
      * Remove all data items.
      */
-    virtual void clear();
+    void clear();
 
     /**
      * Set chart labels.
@@ -389,16 +389,16 @@ public:
      * @param[in] ylabel is y-axis label.
      * @param[in] title is Chart title.
      */
-    virtual void label(const std::string& xlabel,
-                       const std::string& ylabel,
-                       const std::string& title);
+    void label(const std::string& xlabel,
+               const std::string& ylabel,
+               const std::string& title);
 
     /**
      * Set bar style.
      *
      * @param[in] pattern is one of the enum BarPattern
      */
-    virtual void bar_style(BarPattern pattern);
+    void bar_style(BarPattern pattern);
 
     /**
     * Set the grid style.
@@ -410,7 +410,7 @@ public:
      *
      * @param[in] val size of a grid width.
      */
-    virtual void grid_width(int val);
+    void grid_width(int val);
 
     /**
      * Resize the BarChart.
@@ -424,7 +424,7 @@ public:
     /**
      * Add a percent bank beyond the min and maximum values.
      */
-    virtual void bank(float bank);
+    void bank(float bank);
 
 protected:
 
@@ -487,38 +487,38 @@ public:
      *
      * @param[in] title is PieChart title.
      */
-    virtual void title(const std::string& title);
+    void title(const std::string& title);
 
     /**
      * Set a new set of data to PieChart.
      *
      * @param[in] data is a data items for PieChart.
      */
-    virtual void data(const StringDataArray& data);
+    void data(const StringDataArray& data);
 
     /**
-    * Get the number of data points.
-    */
-    virtual size_t data_size() const;
+     * Get the number of data points.
+     */
+    size_t data_size() const;
 
     /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for PieChart.
      */
-    virtual void add_data(const StringDataArray& data);
+    void add_data(const StringDataArray& data);
 
     /**
      * Remove data items from top in an array.
      *
      * @param[in] count is the number of items to remove.
      */
-    virtual void remove_data(uint32_t count);
+    void remove_data(uint32_t count);
 
     /**
      * Remove all data items.
      */
-    virtual void clear();
+    void clear();
 
     /**
      * Resize the PieChart.

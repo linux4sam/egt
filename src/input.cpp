@@ -25,8 +25,8 @@ Input::Input()
 }
 
 template<class Callable>
-static inline bool handler_dispatch(Event& event, Event& eevent,
-                                    const Callable& handler)
+static bool handler_dispatch(Event& event, Event& eevent,
+                             const Callable& handler)
 {
     handler(event);
     if (event.quit())

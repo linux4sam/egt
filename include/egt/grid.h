@@ -136,7 +136,7 @@ public:
      *
      * @param point The row and column to get.
      */
-    virtual Widget* get(const Point& point);
+    Widget* get(const Point& point);
 
     void remove(Widget* widget) override;
 
@@ -198,7 +198,7 @@ protected:
      * @note You should *not* have to manually call this under normal
      * circumstances.
      */
-    virtual void reposition();
+    void reposition();
 
     /// Type for cell array.
     using CellArray = std::vector<std::vector<std::weak_ptr<Widget>>>;
@@ -242,7 +242,7 @@ public:
     void draw(Painter& painter, const Rect& rect) override;
 
     /// Get the selected cell.
-    virtual Point selected() const
+    Point selected() const
     {
         return {m_selected_column, m_selected_row};
     }
@@ -255,7 +255,7 @@ public:
      * @param[in] column The column to select.
      * @param[in] row The row to select.
      */
-    virtual void selected(int column, int row);
+    void selected(int column, int row);
 
     void serialize(Serializer& serializer) const override;
 

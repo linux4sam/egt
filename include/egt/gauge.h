@@ -229,7 +229,7 @@ public:
      *
      * @return The old value.
      */
-    virtual float value(float value)
+    float value(float value)
     {
         auto orig = m_value;
 
@@ -408,7 +408,7 @@ public:
     using Frame::remove;
 
     /// Remove a layer from the gauge.
-    virtual void remove(GaugeLayer* layer);
+    void remove(GaugeLayer* layer);
 
 protected:
 

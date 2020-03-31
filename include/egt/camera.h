@@ -8,7 +8,7 @@
 
 /**
  * @file
- * @brief CameraWindow definition.
+ * @brief Camera window support.
  */
 
 #include <egt/detail/meta.h>
@@ -105,12 +105,12 @@ public:
      *
      * @return true on success
      */
-    virtual bool start();
+    bool start();
 
     /**
      * Stop camera.
      */
-    virtual void stop();
+    void stop();
 
     using Window::scale;
 

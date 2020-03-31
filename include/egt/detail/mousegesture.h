@@ -38,8 +38,6 @@ class EGT_API MouseGesture
 public:
 
     MouseGesture() noexcept;
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(MouseGesture);
-    virtual ~MouseGesture() noexcept = default;
 
     /// Type for mouse event callback.
     using MouseCallback = std::function<void(Event& event)>;
@@ -52,12 +50,12 @@ public:
     /**
      * Pass the raw EventId to this function to get the emulated mouse event.
      */
-    virtual Event handle(const Event& event);
+    Event handle(const Event& event);
 
     /**
      * Start.
      */
-    virtual void start(const DisplayPoint& point);
+    void start(const DisplayPoint& point);
 
     /// Get pointer start position.
     const DisplayPoint& mouse_start() const
@@ -74,12 +72,12 @@ public:
     /**
      * Stop any active dragging state.
      */
-    virtual void stop();
+    void stop();
 
 protected:
 
     /// Invoke an event on each of the handlers.
-    virtual void invoke_handlers(Event& event);
+    void invoke_handlers(Event& event);
 
     /// Currently processing subsequent events.
     bool m_active{false};

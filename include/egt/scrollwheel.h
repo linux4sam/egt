@@ -86,7 +86,7 @@ public:
     /**
      * Change the images used for up and down buttons.
      */
-    virtual void image(const Image& down_image, const Image& up_image);
+    void image(const Image& down_image, const Image& up_image);
 
     /**
      * Get the Orientation.
@@ -106,38 +106,38 @@ public:
     /**
      * Add an item at the end of the array.
      */
-    virtual void add_item(const std::string& item);
+    void add_item(const std::string& item);
 
     /**
      * Remove an item from the array.
      */
-    virtual bool remove_item(const std::string& item);
+    bool remove_item(const std::string& item);
 
     /**
      * Remove all the items.
      */
-    virtual void clear_items();
+    void clear_items();
 
     /**
      * Get the index of the item selected.
      */
-    virtual size_t selected() const;
+    size_t selected() const;
 
     /**
      * Set the index to select a specific item.
      */
-    virtual void selected(size_t index);
+    void selected(size_t index);
 
     /**
      * Return the number of items.
      */
-    virtual size_t item_count() const { return m_items.size(); }
+    size_t item_count() const { return m_items.size(); }
 
     /**
      * Enable or disable the reversed mode. When enabled the behavior of
      * the up and down button is swapped.
      */
-    virtual void reversed(bool enabled);
+    void reversed(bool enabled);
 
 protected:
     /// @private

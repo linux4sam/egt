@@ -85,16 +85,16 @@ public:
      *
      * @param[in] position Position of the SideBoard.
      */
-    virtual void position(PositionFlag position);
+    void position(PositionFlag position);
 
     /// Get the position of the SideBoard.
     PositionFlag position() const { return m_position; }
 
     /// Move to a closed state.
-    virtual void close();
+    void close();
 
     /// Move to an open state.
-    virtual void open();
+    void open();
 
     void serialize(Serializer& serializer) const override;
 

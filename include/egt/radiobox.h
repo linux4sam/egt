@@ -48,9 +48,6 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(RadioBox);
-    ~RadioBox() noexcept override = default;
-
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;

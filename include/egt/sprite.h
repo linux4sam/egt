@@ -98,13 +98,13 @@ public:
      * @param[in] frame_point If the first frame of this strip is not in the top
      *            left corner of the image, specify where the top left corner is.
      */
-    virtual void init(const Image& image, const Size& frame_size,
-                      int frame_count, const Point& frame_point = {});
+    void init(const Image& image, const Size& frame_size,
+              int frame_count, const Point& frame_point = {});
 
     /**
      * Show the frame specified by the index.
      */
-    virtual void show_frame(int index);
+    void show_frame(int index);
 
     /**
      * Get a surface for the current frame.
@@ -112,27 +112,27 @@ public:
      * @warning This does not return the whole image surface.  Just the current
      * frame.
      */
-    virtual shared_cairo_surface_t surface() const;
+    shared_cairo_surface_t surface() const;
 
     /**
      * Advance to the next frame in the strip.
      */
-    virtual void advance();
+    void advance();
 
     /**
      * Returns true if the current frame is the last frame.
      */
-    virtual bool is_last_frame() const;
+    bool is_last_frame() const;
 
     /**
      * Returns the number of frames in the current strip.
      */
-    virtual uint32_t frame_count() const;
+    uint32_t frame_count() const;
 
     /**
      * Change the strip to the specified id.
      */
-    virtual void change_strip(uint32_t id);
+    void change_strip(uint32_t id);
 
     /**
      * Add a new strip.
@@ -141,7 +141,7 @@ public:
      * @param[in] frame_point If the first frame of this strip is not in the top
      * left corner of the image, specify where the top left corner is.
      */
-    virtual uint32_t add_strip(int frame_count, const Point& frame_point = {});
+    uint32_t add_strip(int frame_count, const Point& frame_point = {});
 
 protected:
 

@@ -50,7 +50,7 @@ public:
     /**
      * Add a group to the Form.
      */
-    virtual void add_group(const std::string& caption);
+    void add_group(const std::string& caption);
 
     /**
      * Add an option to the form with a name.
@@ -65,7 +65,7 @@ public:
     /**
      * Add an option to the form with a name.
      */
-    virtual void add_option(const std::string& name, const std::shared_ptr<Widget>& widget);
+    void add_option(const std::string& name, const std::shared_ptr<Widget>& widget);
 
     /**
      * Add an option to the Form without a name.
@@ -80,17 +80,17 @@ public:
     /**
      * Add an option to the Form without a name.
      */
-    virtual void add_option(const std::shared_ptr<Widget>& widget);
+    void add_option(const std::shared_ptr<Widget>& widget);
 
     /**
      * Remove all options from the Form.
      */
-    virtual void remove_options();
+    void remove_options();
 
     /**
      * Set default option name text alignment.
      */
-    virtual void name_align(const AlignFlags& align)
+    void name_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_name_align, align))
             parent_layout();
@@ -99,7 +99,7 @@ public:
     /**
      * Set group name text alignment.
      */
-    virtual void group_align(const AlignFlags& align)
+    void group_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_group_align, align))
             parent_layout();

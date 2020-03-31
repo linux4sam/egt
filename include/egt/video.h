@@ -109,28 +109,28 @@ public:
      * @param uri Media file
      * @return true on success
      */
-    virtual bool media(const std::string& uri);
+    bool media(const std::string& uri);
 
     /**
      * Play the video.
      *
      * @return true on success
      */
-    virtual bool play();
+    bool play();
 
     /**
      * Pause the video.
      *
      * @return true on success
      */
-    virtual bool pause();
+    bool pause();
 
     /**
      * Check is video in play state.
      *
      * @return true on success
      */
-    virtual bool playing() const;
+    bool playing() const;
 
     /**
      * Get the current position of the video being played.
@@ -152,13 +152,13 @@ public:
      * @param volume Value in the range 0 - 100.
      * @return true on success
      */
-    virtual bool volume(int volume);
+    bool volume(int volume);
 
     /**
      * Get the volume value for the video being played.
      * @return Value in the range 0 - 100.
      */
-    virtual int volume() const;
+    int volume() const;
 
     /**
      * Seek to a position.
@@ -169,7 +169,7 @@ public:
      * @param pos Position in nanoseconds.
      * @return true on success
      */
-    virtual bool seek(int64_t pos);
+    bool seek(int64_t pos);
 
     /**
      * Enable/disable continues loop-back mode of the video
@@ -218,7 +218,7 @@ public:
      *
      * @return true if supported and false if not supported.
      */
-    virtual bool has_audio() const;
+    bool has_audio() const;
 
 protected:
     /// Loopback enabled.

@@ -41,9 +41,6 @@ public:
         this->move(point);
     }
 
-    EGT_OPS_NOCOPY_MOVE(PopupType);
-    ~PopupType() noexcept override = default;
-
     /**
      * Show the window centered.
      *

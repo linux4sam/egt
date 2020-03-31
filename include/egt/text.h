@@ -269,7 +269,7 @@ public:
      *
      * To enable this, you must set input_validation_enabled() to true.
      */
-    virtual void add_validator_function(ValidatorCallback callback);
+    void add_validator_function(ValidatorCallback callback);
 
     void serialize(Serializer& serializer) const override;
 
@@ -294,7 +294,7 @@ protected:
     /**
      * Process key events.
      */
-    virtual void handle_key(const Key& key);
+    void handle_key(const Key& key);
 
     /**
      * Validate the input against the validator pattern.
