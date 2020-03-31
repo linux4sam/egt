@@ -66,12 +66,7 @@ public:
     /// Default font slant
     static constexpr Font::Slant DEFAULT_SLANT = Font::Slant::normal;
 
-    /**
-     * Create a font based on the global default font.
-     */
-    Font() noexcept;
-    EGT_OPS_COPY_MOVE(Font);
-    virtual ~Font() noexcept = default;
+    constexpr Font() = default;
 
     /**
      * Create a font based on the supplied parameters.
@@ -176,13 +171,13 @@ public:
     /**
      * Serialize to the specified serializer.
      */
-    virtual void serialize(const std::string& name, Serializer& serializer) const;
+    void serialize(const std::string& name, Serializer& serializer) const;
 
     /**
      * Deserialize.
      */
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs);
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs);
 
     /**
      * Clears any internal font cache.
@@ -205,16 +200,16 @@ public:
 protected:
 
     /// Font face name.
-    std::string m_face;
+    std::string m_face{DEFAULT_FACE};
 
     /// Font size.
-    Font::Size m_size{};
+    Font::Size m_size{DEFAULT_SIZE};
 
     /// Font weight.
-    Font::Weight m_weight;
+    Font::Weight m_weight{DEFAULT_WEIGHT};
 
     /// Font slant.
-    Font::Slant m_slant;
+    Font::Slant m_slant{DEFAULT_SLANT};
 };
 
 /// @private

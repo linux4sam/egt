@@ -100,19 +100,9 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
     return scaled_font;
 }
 
-Font::Font() noexcept
-    : m_face(DEFAULT_FACE),
-      m_size(DEFAULT_SIZE),
-      m_weight(DEFAULT_WEIGHT),
-      m_slant(DEFAULT_SLANT)
-{}
-
 // NOLINTNEXTLINE(modernize-pass-by-value)
 Font::Font(const std::string& face)
-    : m_face(face),
-      m_size(DEFAULT_SIZE),
-      m_weight(DEFAULT_WEIGHT),
-      m_slant(DEFAULT_SLANT)
+    : m_face(face)
 {}
 
 // NOLINTNEXTLINE(modernize-pass-by-value)
@@ -124,31 +114,20 @@ Font::Font(const std::string& face, Font::Size size, Font::Weight weight, Font::
 {}
 
 Font::Font(Font::Size size)
-    : m_face(DEFAULT_FACE),
-      m_size(size),
-      m_weight(DEFAULT_WEIGHT),
-      m_slant(DEFAULT_SLANT)
+    : m_size(size)
 {}
 
 Font::Font(Font::Size size, Font::Weight weight)
-    : m_face(DEFAULT_FACE),
-      m_size(size),
-      m_weight(weight),
-      m_slant(DEFAULT_SLANT)
+    : m_size(size),
+      m_weight(weight)
 {}
 
 Font::Font(Font::Weight weight)
-    : m_face(DEFAULT_FACE),
-      m_size(DEFAULT_SIZE),
-      m_weight(weight),
-      m_slant(DEFAULT_SLANT)
+    : m_weight(weight)
 {}
 
 Font::Font(Font::Slant slant)
-    : m_face(DEFAULT_FACE),
-      m_size(DEFAULT_SIZE),
-      m_weight(DEFAULT_WEIGHT),
-      m_slant(slant)
+    : m_slant(slant)
 {}
 
 template<>
