@@ -36,7 +36,7 @@ public:
     GpioEventMonitor(int fd, Callback callback)
         : input(egt::Application::instance().event().io()),
           callback(std::move(callback)),
-          buffer(sizeof(gpioevent_data))
+          buffer(1)
     {
         // assign fd to input stream
         input.assign(fd);
@@ -56,8 +56,7 @@ public:
             return;
         }
 
-        const auto event = reinterpret_cast<gpioevent_data*>(buffer.data());
-        callback(*event);
+        callback(buffer.front());
 
         // register any additional async read
         egt::asio::async_read(input, egt::asio::buffer(buffer),
@@ -72,7 +71,7 @@ private:
     // registered callback
     Callback callback;
     // buffer to hold the gpioevent_data
-    std::vector<char> buffer;
+    std::vector<gpioevent_data> buffer;
 };
 /// @[ExampleFd2Event]
 
