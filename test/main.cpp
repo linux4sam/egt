@@ -113,6 +113,38 @@ TEST(TextBox, Basic)
     ASSERT_EQ("", text1.text());
 }
 
+TEST(TextBoxFixed, Basic)
+{
+    egt::Application app;
+
+    std::string str1 = "hello world\nthis is EGT";
+    std::string str2 = "howdy";
+
+    egt::TextBox text1(str1);
+    text1.text_flags().set({egt::TextBox::TextFlag::fit_to_width});
+    ASSERT_EQ(str1, text1.text());
+    text1.text(str2);
+    ASSERT_EQ(str2, text1.text());
+    ASSERT_EQ(str2.size(), text1.len());
+    text1.append(str1);
+    ASSERT_EQ(str2 + str1, text1.text());
+    text1.cursor_begin();
+    text1.insert(str1);
+    ASSERT_EQ(str1 + str2 + str1, text1.text());
+    text1.cursor_end();
+    text1.insert(str1);
+    ASSERT_EQ(str1 + str2 + str1 + str1, text1.text());
+    text1.selection_all();
+    ASSERT_EQ(str1 + str2 + str1 + str1, text1.selected_text());
+    text1.selection(str1.size(), 5);
+    ASSERT_EQ(str2, text1.selected_text());
+    text1.selection_clear();
+    ASSERT_EQ("", text1.selected_text());
+    text1.selection_all();
+    text1.selection_delete();
+    ASSERT_EQ("", text1.text());
+}
+
 TEST(Screen, DamageAlgorithm)
 {
     egt::Screen::DamageArray damage;
