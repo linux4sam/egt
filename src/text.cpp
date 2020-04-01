@@ -272,7 +272,7 @@ size_t TextBox::width_to_len(const std::string& str) const
 {
     const auto b = content_area();
 
-    Canvas c(Size(1,1));
+    Canvas c(Size(1, 1));
     auto cr = c.context();
     Painter painter(cr);
     painter.set(font());
