@@ -439,6 +439,35 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
         }
     },
 #endif
+#ifdef EGT_HAS_CAMERA
+    {
+        "camera0", [](egt::Application & app)
+        {
+            /// @[camera0]
+            egt::TopWindow window;
+
+            egt::CameraWindow player("/dev/video0");
+            window.add(player);
+            player.start();
+
+            window.show();
+            /// @[camera0]
+            return app.run();
+        }
+    },
+#endif
+#ifdef EGT_HAS_CAPTURE
+    {
+        "capture0", [](egt::Application & app)
+        {
+            /// @[capture0]
+            egt::experimental::CameraCapture capture("output.avi");
+            capture.start();
+            /// @[capture0]
+            return app.run();
+        }
+    },
+#endif
 };
 
 int main(int argc, const char** argv)

@@ -8,7 +8,7 @@ The egt::Color class internally keeps track of a 32-bit RGBA (red, green, blue, 
 alpha) color by managing the individual color components.  However, this class
 also supports at least the HSV and HSL colorspaces, and conversion between the
 different colorspaces.  The egt::Pattern class helps with managing a pattern
-consisting of color steps at specific offsets.  Also, the egt::experimental::ColorMap
+consisting of color steps at specific offsets.  Also, the egt::v1::experimental::ColorMap
 class deals with color steps and allows interpolation between the different color
 steps in any of the supported colorspaces.
 
@@ -28,12 +28,12 @@ one dimensional list internally.  Colors are identified by a egt::v1::Palette::C
 and also a egt::v1::Palette::GroupId.  The GroupId is associated with different states of
 a color in the palette, which corresponds with different states of a widget.
 For example, when a button is pressed, it changes from a normal to active state
-and uses the same Palette::ColorId to identify its background color, but uses a
-different Palette::GroupId.
+and uses the same egt::v1::Palette::ColorId to identify its background color, but uses a
+different egt::v1::Palette::GroupId.
 
 The default palette for every widget comes from the theme. However, you can
 override any individual color for a specific widget instance by calling
-Widget::color().
+egt::v1::Widget::color().
 
 @code{.cpp}
 egt::Button button(window, "Press Me");
@@ -43,8 +43,8 @@ button.color(egt::Palette::ColorId::button_text, egt::Palette::green);
 For a list of configurable palette colors, see Palette::ColorId.
 
 If you change the global theme, it will retroactively have an effect on any
-widget, as long as that widget does not have an override for a Palette::ColorId
-and Palette::GroupId set.
+widget, as long as that widget does not have an override for a
+egt::v1::Palette::ColorId and egt::v1::Palette::GroupId set.
 
 The Palette class also defines a set of default colors to reference and use.
 With a few minor exceptions, these are the same colors defined by the [CSS
@@ -88,7 +88,7 @@ has a theme, the egt::global_theme() is used by default.
 To break the inheritance, call egt::v1::Widget::theme().  This will cause the
 widget to maintain its own theme and not inherit from its parent or the global theme.
 So, if you change the theme for a window, all of its child widgets will inherit
-that theme by default unless you call Widget::theme() on one of the
+that theme by default unless you call egt::v1::Widget::theme() on one of the
 children.
 
 Inheritance of the theme provides a natural and flexible way to manage the look

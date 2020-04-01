@@ -7,13 +7,13 @@ redraw.
 
 Each widget has a egt::v1::Widget::box(), which holds the bounding rectangle for
 the widget. This is the rectangle a widget is responsible for at some z-order
-level for what content should be placed inside that bounding box.
+for what content should be placed inside that bounding box.
 
 Widgets are organized into a tree.  At the top of the tree there is a top level
-widget that is a special type of widget called a egt::Window.  A egt::Window is
-a frame widget, which is a composing widget.  This is just another way of saying
-a frame can deal with zero or more children widgets inside of its
-egt::v1::Widget::box().
+widget that is a special type of widget called a egt::v1::Window.  A
+egt::v1::Window is a frame widget, which is a composing widget.  This is just
+another way of saying a frame can deal with zero or more children widgets inside
+of its egt::v1::Widget::box().
 
 Widgets are essentially rectangles that are drawn.  The widget defines the
 content of what is drawn, but all that matters to the widget is its rectangle
@@ -21,7 +21,7 @@ of content.  That widget rectangle is directly drawn into a single global
 back buffer for the screen.  This is an internal buffer in memory.
 This back buffer is continuously updated in place by redrawing damaged
 rectangles using the widgets that cover it.  When all of the rectangles have
-been drawn in a single iteration of the egt::EventLoop, only the damaged
+been drawn in a single iteration of the egt::v1::EventLoop, only the damaged
 region of that back buffer is then copied to a display buffer.  The
 screen may actually have more than one buffer in order to handle double
 or triple buffering.  So, when switching between these buffers, the screen has
@@ -165,5 +165,5 @@ default, widgets are drawn in the order in which they are added to a Frame.
 If you add() a Label, and then add() a background ImageLabel that covers the
 entire window, you will not see the label unless the background image is
 transparent. To change this, you have to modify the z-order of the widgets by
-either lowering the ImageLabel with egt::v1::Widget::zorder_down() or raising the Label
-with egt::v1::Widget::zorder_up().
+either lowering the ImageLabel with egt::v1::Widget::zorder_down() or raising
+the Label with egt::v1::Widget::zorder_up().

@@ -76,10 +76,57 @@ This is a list of high level features generally supported and provided by EGT:
 - Multimedia support for video playback, raster images, and vector graphics.
 - Customizable look and feel with theme-able widget drawing, colors, and fonts.
 
+@section intro_deps EGT Dependencies
+
+EGT depends on a variety of different third party libraries.  Some of them are
+required or recommended, and others are optional for conditional features in
+EGT.  EGT is configurable so you can remove support for third party libraries if
+they are not needed.
+
+Library              | Dependency        | Notes
+-------------------- | ----------------- | --------------
+libplanes >= 1.0.0   | Required (Target) | Access to Microchip DRM/KMS hardware driver.
+libdrm >= 2.4.0      | Required (Target) | Access to DRM/KMS hardware drivers.
+cairo >= 1.14.6      | Required          | 2D drawing library.
+fontconfig           | Required          | Support for system level font configuration.
+x11 >= 1.6.3         | Required (Host)   | Support for X11 display server.
+libinput >= 1.6.3    | Recommended       | Support for reading input devices (keyboard, touchscreen, mouse).
+libjpeg              | Recommended       | Support for JPEG content.
+libmagic             | Recommended       | Support for automatically detecting mime types of content.
+zlib                 | Recommended       | Support for zlib compression.
+libpng               | Recommended       | Support for PNG content.
+lua >= 5.3.1         | Optional          | Support for lua bindings and built in lua interpreter.
+xkbcommon            | Optional          | Support for system configured key mappings.
+tslib >= 1.15        | Optional          | Support for some touchscreen events.
+gstreamer-1.0 >= 1.8 | Optional          | Video, audio, camera playback.
+libcurl >= 4.5       | Optional          | Built in application level networking protocols.
+librsvg-2.0          | Optional          | SVG rendering support.
+libsndfile           | Optional          | Support for parsing wav files.
+alsa                 | Optional          | Support for audio playback.
+plplot               | Optional          | Charting support.
+
+The `<egt/ui>` file provides several macros to compile time check what is support
+in EGT based on conditional support.  For example, `EGT_HAS_SVG` and `EGT_HAS_CHART`
+are defined when those features are available.
+
+@section intro_internal_deps EGT Internal Dependencies
+
+EGT also unconditionally includes some third party developed libraries.  These
+libraries are included internally by EGT, however the capabilities they provide
+can sometimes be controlled by EGT compilation options.
+
+- [cxxopts](https://github.com/jarro2783/cxxopts)
+- [googletest](https://github.com/google/googletest)
+- [layout](https://github.com/randrew/layout)
+- [rapidxml](http://rapidxml.sourceforge.net/)
+- [Simd](https://github.com/ermig1979/Simd)
+- [spdlog](https://github.com/gabime/spdlog)
+- [utfcpp](http://utfcpp.sourceforge.net/)
+
 @section intro_language C++ Language and Namespaces
 
-EGT takes advantage of and focuses on using features available in the C++11 and
-C++14 language standards.  The EGT API is all inside of an ::egt namespace.  This
+EGT takes advantage of and focuses on using features available in the C++14
+language standard.  The EGT API is all inside of an ::egt namespace.  This
 namespace contains an inline namespace ::egt::v1 which is used for versioning
 the API in the future.
 

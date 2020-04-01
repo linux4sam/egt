@@ -133,34 +133,6 @@ Then, run.
 
 ![Animating Images Example](docs/src/screenshot5.png "Animating Images Example")
 
-***
-## Dependencies
-
-EGT depends on a variety of different libraries.  Some of them are required or
-recommended, and others are optional for conditional features in EGT.
-
-*Recommended:*
-
-- libplanes >= 1.0.0
-- libdrm >= 2.4.0
-- lua >= 5.3.1
-- cairo >= 1.14.6
-- fontconfig
-- libinput >= 1.6.3
-- libjpeg
-- libmagic
-
-*Optional:*
-
-- x11 >= 1.6.3
-- xkbcommon
-- tslib >= 1.15
-- gstreamer-1.0 >= 1.8
-- lua >= 5.3.0
-- libcurl >= 4.5
-- librsvg-2.0
-- asound2
-- libsndfile
 
 ***
 ## License

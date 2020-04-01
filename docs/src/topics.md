@@ -11,7 +11,7 @@ egt::v1::Window::show() at least once somewhere in your application.
 
 The EGT API is not thread safe, but there are well defined ways provided and
 supported to use the EGT API in a multi-threaded application by following a
-couple simple rules.  The thread the main egt::EventLoop is started on, usually
+couple simple rules.  The thread the main egt::v1::EventLoop is started on, usually
 through egt::v1::Application::run(), must not be directly accessed by a separate
 thread.  This means any widgets or windows that are managed by that main thread
 should not be directly accessed by another thread.
@@ -177,7 +177,7 @@ can be seamlessly handled.
 
 EGT uses this method internally for several input backends like tslib and
 libinput.  You can view the the source code of the associated
-egt::detail::InputTsLib and egt::detail::InputLibInput classes for examples of
+egt::v1::detail::InputTslib and egt::v1::detail::InputLibInput classes for examples of
 how to do this.  Both of those classes use the egt::asio::posix::stream_descriptor
 class for wrapping the descriptor.
 
@@ -206,11 +206,11 @@ int main()
 }
 @endcode
 
-@subsection topics_thirdparty_loop Instead of using egt::Application::run(), implement your own loop
+@subsection topics_thirdparty_loop Instead of using egt::v1::Application::run(), implement your own loop
 
-Normally, you call Application::run() and that blocks forever until told to exit.
-However, you may wish to implement your own loop in order to run the EGT event
-loop and any other third party processing.
+Normally, you call egt::v1::Application::run() and that blocks forever until
+told to exit. However, you may wish to implement your own loop in order to run
+the EGT event loop and any other third party processing.
 
 @code{.cpp}
 int main()

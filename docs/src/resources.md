@@ -94,10 +94,13 @@ ResourceManager.
 
 @subsection resources_embed Embed by Including Files Directly in Code
 
-EGT provides a preprocessor macro called EGT_EMBED().  This allows you, in one
-line, to directly include any arbitrary file in your source code and then
+EGT provides a preprocessor macro called EGT_EMBED().  This allows you to, in
+one line, directly include any arbitrary file in your source code and then
 reference it at runtime with ResourceManager from any compilation unit using the
-`res` URI scheme.
+`res` URI scheme.  While this is typically useful for images, it can be used to
+embed and retrieve any arbitrary file type.  The embedded file can optionally be
+compressed with gzip to conserve binary size and EGT's ResourceManager will
+automatically uncompress it for you at runtime when the file is read.
 
 @code{.cpp}
 EGT_EMBED(my_image, "../images/my_image.png");

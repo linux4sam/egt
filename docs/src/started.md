@@ -8,8 +8,10 @@ project.  If you are developing for and deploying to a target board, the easiest
 way to work with EGT is part of a buildroot SDK which already includes a cross
 compiler and all of the necessary dependencies and tools.
 
-Also, see @subpage eclipse for how to setup the Eclipse IDE for host or cross
-compiling.
+See @subpage eclipse for how to setup the Eclipse IDE for host or cross compiling.
+
+If you are planning to work on EGT itself, see the `CONTRIBUTING.md` file in the
+root of the EGT repository.
 
 @section started_fetching Fetching Source
 
@@ -20,22 +22,21 @@ git clone --recursive https://github.com/linux4sam/egt.git
 @endcode
 
 @note Note the `--recursive` option.  This option is necessary to initialize any
-git submodules in the project.  If you forget to do this, autogen.txt will do it
+git submodules in the project.  If you forget to do this, autogen.sh will do it
 for you.
 
 @section started_building Building
 
-EGT uses the GNU autotools, like autoconf and automake, for building on Linux
-platforms.
+EGT uses the GNU autotools, like [automake](https://www.gnu.org/software/automake/manual/html_node/index.html), for building on Linux platforms.
 
-To build for a PC, first install the required dependencies:
+To build for a PC, first install the required dependencies for building EGT:
 
 @code{.unparsed}
 sudo apt install build-essential automake autoconf libtool pkg-config \
     libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev gettext
 @endcode
 
-Optional, but recommended, dependencies include:
+Optional, but recommended, @ref intro_deps include:
 
 @code{.unparsed}
 sudo apt install librsvg2-dev liblua5.3-dev libcurl4-openssl-dev \
@@ -48,7 +49,7 @@ sudo apt install libasound2-dev libsndfile1-dev
 Then, clone the source and initialize autotools.  Typically autotools only needs
 to be initialized once and it will automatically pick up most changes.  However,
 when making changes to the configure scripts, the environment, or makefiles
-re-running autogen.txt, or more simply autoreconf -fvi, is necessary.
+re-running autogen.txt, or more simply `autoreconf -fvi`, is necessary.
 
 @code{.unparsed}
 git clone --recursive https://github.com/linux4sam/egt.git
@@ -142,7 +143,7 @@ The *examples* folder of the EGT project contains various examples.  This is the
 basic example which shows the minimum necessary to create a window with a button
 on it.
 
-The include file <egt/ui> contains most basic functionality needed.
+The include file `<egt/ui>` contains most basic functionality needed.
 
 @snippet "../examples/basic/basic.cpp" Example
 
@@ -158,7 +159,7 @@ read and searched using a tool like [Dash](https://kapeli.com/dash) (macOS) and
 [Zeal](https://zealdocs.org/) (macOS/Windows/Linux).  In turn, the documentation
 can be integrated into an IDE or tools like Atom/VSCode for an indexed and
 easily searchable API reference.  These tools also provide a method for
-automatically or manually updating the documentation.
+automatically or manually updating to the latest EGT documentation.
 
 Once you have one of these tools installed, the docset feed URL is located at:
 
@@ -166,7 +167,7 @@ https://linux4sam.github.io/egt-docs/docset/EGT.xml
 
 @note To install Zeal, see the [official documentation to download and
     installing](https://zealdocs.org/download.html).  Specifically, on Ubuntu,
-    you should get the latest version with their PPA.
+    it is recommended to get the latest version with their PPA.
     @code{.unparsed}
     sudo add-apt-repository ppa:zeal-developers/ppa
     sudo apt update
