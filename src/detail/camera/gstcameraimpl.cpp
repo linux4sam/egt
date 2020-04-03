@@ -317,7 +317,7 @@ bool CameraImpl::start()
         assert(s);
         if (s)
         {
-            static const auto kmssink_pipe =
+            static constexpr auto kmssink_pipe =
                 "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
                 "g1kmssink gem-name={}";
 
@@ -331,7 +331,7 @@ bool CameraImpl::start()
     else
 #endif
     {
-        static const auto appsink_pipe =
+        static constexpr auto appsink_pipe =
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
             "appsink name=appsink async=false enable-last-sample=false sync=true";
 

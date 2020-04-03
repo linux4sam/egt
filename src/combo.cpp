@@ -16,7 +16,7 @@ namespace egt
 inline namespace v1
 {
 
-static const auto DEFAULT_COMBOBOX_SIZE = Size(200, 30);
+static constexpr auto DEFAULT_COMBOBOX_SIZE = Size(200, 30);
 
 namespace detail
 {

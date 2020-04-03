@@ -32,7 +32,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
      */
     if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
     {
-        auto plugins =
+        static constexpr auto plugins =
         {
             "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
             "/usr/lib/gstreamer-1.0/libgsttypefindfunctions.so",
@@ -51,7 +51,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
             "/usr/lib/gstreamer-1.0/libgstvideoconvert.so",
         };
 
-        for (auto& plugin : plugins)
+        for (const auto& plugin : plugins)
         {
             GError* error = nullptr;
             gst_plugin_load_file(plugin, &error);

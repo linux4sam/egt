@@ -57,7 +57,7 @@ void Theme::init_palette()
         return patt;
     };
 
-    *m_palette =
+    m_palette =
     {
         {
             Palette::GroupId::normal, {
@@ -122,7 +122,7 @@ void Theme::init_draw()
 
 void Theme::init_font()
 {
-    m_font = std::make_unique<Font>();
+    m_font = Font();
 }
 
 void Theme::rounded_box(Painter& painter, const RectF& box, float border_radius) const

@@ -49,7 +49,7 @@ std::ostream& operator<<(std::ostream& os, const PixelFormat& format)
 
 namespace detail
 {
-static const std::pair<PixelFormat, cairo_format_t> cairo_formats[] =
+static constexpr std::pair<PixelFormat, cairo_format_t> cairo_formats[] =
 {
     {PixelFormat::rgb565, CAIRO_FORMAT_RGB16_565},
     {PixelFormat::argb8888, CAIRO_FORMAT_ARGB32},
@@ -65,7 +65,7 @@ cairo_format_t cairo_format(PixelFormat format)
     return CAIRO_FORMAT_INVALID;
 }
 
-static const std::pair<PixelFormat, uint32_t> drm_formats[] =
+static constexpr std::pair<PixelFormat, uint32_t> drm_formats[] =
 {
 #ifdef HAVE_LIBDRM
     {PixelFormat::rgb565, DRM_FORMAT_RGB565},
@@ -121,7 +121,7 @@ PixelFormat egt_format(cairo_format_t format)
     return PixelFormat::invalid;
 }
 
-static const std::pair<PixelFormat, std::string> gstreamer_formats[] =
+static constexpr std::pair<PixelFormat, const char*> gstreamer_formats[] =
 {
     {PixelFormat::argb8888, "BGRx"},
     {PixelFormat::xrgb8888, "BGRx"},

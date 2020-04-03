@@ -429,8 +429,8 @@ bool AudioPlayer::createPipeline(const std::string& uri)
     // Make sure we don't leave orphan references
     destroyPipeline();
 
-    auto pipeline = fmt::format("uridecodebin uri={} expose-all-streams=false caps=audio/x-raw " \
-                                "! audioconvert ! volume name=volume ! autoaudiosink", uri);
+    const auto pipeline = fmt::format("uridecodebin uri={} expose-all-streams=false caps=audio/x-raw " \
+                                      "! audioconvert ! volume name=volume ! autoaudiosink", uri);
 
     SPDLOG_DEBUG(pipeline);
 

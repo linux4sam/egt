@@ -17,7 +17,7 @@ namespace egt
 inline namespace v1
 {
 
-static const auto DEFAULT_CHECKBOX_SIZE = Size(100, 30);
+static constexpr auto DEFAULT_CHECKBOX_SIZE = Size(100, 30);
 
 CheckBox::CheckBox(const std::string& text,
                    const Rect& rect) noexcept

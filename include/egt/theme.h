@@ -190,17 +190,7 @@ public:
 
     EGT_OPS_MOVE(Theme);
     Theme& operator=(const Theme&) = delete;
-
-    /// Copy constructor
-    Theme(const Theme& rhs)
-    {
-        if (rhs.m_palette)
-            m_palette = std::make_unique<Palette>(*rhs.m_palette);
-
-        if (rhs.m_font)
-            m_font = std::make_unique<Font>(*rhs.m_font);
-    }
-
+    Theme(const Theme& rhs) = default;
     virtual ~Theme() noexcept = default;
 
     /**
@@ -208,8 +198,7 @@ public:
      */
     Palette& palette()
     {
-        assert(m_palette);
-        return *m_palette;
+        return m_palette;
     }
 
     /**
@@ -217,8 +206,7 @@ public:
      */
     const Palette& palette() const
     {
-        assert(m_palette);
-        return *m_palette;
+        return m_palette;
     }
 
     /**
@@ -226,8 +214,7 @@ public:
      */
     void palette(Palette& palette)
     {
-        assert(m_palette);
-        *m_palette = palette;
+        m_palette = palette;
     }
 
     /**
@@ -235,8 +222,7 @@ public:
      */
     Font& font()
     {
-        assert(m_font);
-        return *m_font;
+        return m_font;
     }
 
     /**
@@ -244,8 +230,7 @@ public:
      */
     const Font& font() const
     {
-        assert(m_font);
-        return *m_font;
+        return m_font;
     }
 
     /**
@@ -253,8 +238,7 @@ public:
      */
     void font(const Font& font)
     {
-        assert(m_font);
-        *m_font = font;
+        m_font = font;
     }
 
     /**
@@ -331,10 +315,10 @@ protected:
     virtual void rounded_box(Painter& painter, const RectF& box, float border_radius) const;
 
     /// Palette instance used by the theme.
-    std::unique_ptr<Palette> m_palette{std::make_unique<Palette>()};
+    Palette m_palette;
 
     /// Default font instance used by the theme.
-    std::unique_ptr<Font> m_font{std::make_unique<Font>()};
+    Font m_font;
 
     /**
      * Setup for initializing the palette.

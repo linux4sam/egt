@@ -212,7 +212,7 @@ struct EGT_API ScopeExit
      * @param f Callable to call on destruction.
      */
     // NOLINTNEXTLINE(hicpp-explicit-conversions)
-    ScopeExit(T&& f)
+    explicit ScopeExit(T&& f) noexcept
         : m_f(std::move(f)),
           m_active(true)
     {}
@@ -221,7 +221,7 @@ struct EGT_API ScopeExit
      * @param f Callable to call on destruction.
      */
     // NOLINTNEXTLINE(hicpp-explicit-conversions)
-    ScopeExit(const T& f)
+    explicit ScopeExit(const T& f) noexcept
         : m_f(f),
           m_active(true)
     {}

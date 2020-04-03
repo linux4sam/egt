@@ -240,7 +240,7 @@ bool CaptureImpl::start()
     {
     case experimental::CameraCapture::ContainerType::avi:
     {
-        static const auto avi_pipe =
+        static constexpr auto avi_pipe =
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=30/1 ! " \
             "avimux ! filesink location={}";
 
@@ -250,7 +250,7 @@ bool CaptureImpl::start()
     }
     case experimental::CameraCapture::ContainerType::mpeg2ts:
     {
-        static const auto mpeg2ts_pipe =
+        static constexpr auto mpeg2ts_pipe =
             "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={},framerate=30/1 ! " \
             "avenc_mpeg2video ! mpegtsmux ! filesink location={}";
 

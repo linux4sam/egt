@@ -59,7 +59,7 @@ void Screen::flip(const DamageArray& damage)
 
 using View = Simd::View<Simd::Allocator>;
 
-static const std::pair<cairo_format_t, View::Format> simd_formats[] =
+static constexpr std::pair<cairo_format_t, View::Format> simd_formats[] =
 {
     {CAIRO_FORMAT_RGB16_565, View::Int16},
     {CAIRO_FORMAT_ARGB32, View::Int32},
