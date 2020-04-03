@@ -8,7 +8,7 @@ The typical usage model of our EGT integration with Eclipse would be:
 1. Creating the buildroot system for a particular target board to execute
    or debug EGT applications or libraries. This involves configure your
    buildroot system, enable EGT package with their dependencies and Build
-   the buildroot system. Refer section @ref started_buildroot
+   the buildroot system. Refer to section @ref started_buildroot.
 
 2. Once Buildroot compilation is done. The output/image folder contains all
    the files to boot Linux on to the target board. To create a sdcard image

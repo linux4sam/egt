@@ -115,13 +115,13 @@ EGT also unconditionally includes some third party developed libraries.  These
 libraries are included internally by EGT, however the capabilities they provide
 can sometimes be controlled by EGT compilation options.
 
-- [cxxopts](https://github.com/jarro2783/cxxopts)
-- [googletest](https://github.com/google/googletest)
-- [layout](https://github.com/randrew/layout)
-- [rapidxml](http://rapidxml.sourceforge.net/)
-- [Simd](https://github.com/ermig1979/Simd)
-- [spdlog](https://github.com/gabime/spdlog)
-- [utfcpp](http://utfcpp.sourceforge.net/)
+- [cxxopts](https://github.com/jarro2783/cxxopts) - Lightweight C++ command line option parser
+- [googletest](https://github.com/google/googletest) - Google Testing and Mocking Framework
+- [layout](https://github.com/randrew/layout) - Single-file library for calculating 2D UI layouts using stacking boxes
+- [rapidxml](http://rapidxml.sourceforge.net/) - Fast XML parser
+- [Simd](https://github.com/ermig1979/Simd) - C++ image processing and machine learning library with using of SIMD
+- [spdlog](https://github.com/gabime/spdlog) - Fast C++ logging library
+- [utfcpp](http://utfcpp.sourceforge.net/) - UTF-8 with C++ in a Portable Way
 
 @section intro_language C++ Language and Namespaces
 

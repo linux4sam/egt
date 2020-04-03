@@ -125,13 +125,17 @@ Then, run.
 
 ![Widgets CheckBox Example](docs/src/screenshot1.png "Widgets CheckBox Example")
 
-![Widgets Easing Example](docs/src/screenshot2.png "Widgets Easing Example")
+![Easing Animation Example](docs/src/screenshot2.png "Easing Animation Example")
 
-![Widgets i18n Example](docs/src/screenshot3.png "Widgets i18n Example")
+![i18n Example](docs/src/screenshot3.png "i18n Example")
 
 ![Car Dashboard Example](docs/src/screenshot4.png "Car Dashboard Example")
 
 ![Animating Images Example](docs/src/screenshot5.png "Animating Images Example")
+
+![Monitor Example](docs/src/screenshot6.png "Monitor Example")
+
+![Audio Player Example](docs/src/screenshot7.png "Audio Player Example")
 
 
 ***

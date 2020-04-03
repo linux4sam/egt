@@ -1,17 +1,19 @@
 @page started Getting Started
 
 There are various ways to get started with EGT depending on your requirements.
-If building for a Microchip MPU Xplained or EK type board, visit
-[Linux4SAM](http://www.at91.com/linux4sam/bin/view/Linux4SAM). If you
-are building EGT on a PC, you can start by just fetching the source of the EGT
-project.  If you are developing for and deploying to a target board, the easiest
-way to work with EGT is part of a buildroot SDK which already includes a cross
-compiler and all of the necessary dependencies and tools.
+If you are building EGT on a PC, you can start by just fetching the source of
+the EGT project.  If you are developing for and deploying to a target board,
+the easiest way to work with EGT is part of a
+[buildroot](https://www.linux4sam.org/bin/view/Linux4SAM/BuildRoot)
+or [Yocto Project](https://www.linux4sam.org/bin/view/Linux4SAM/YoctoProject)
+SDK which already includes a cross compiler and all of the necessary
+dependencies and tools.
 
 See @subpage eclipse for how to setup the Eclipse IDE for host or cross compiling.
 
-If you are planning to work on EGT itself, see the `CONTRIBUTING.md` file in the
-root of the EGT repository.
+If you are planning to work on EGT itself, see the
+<a href="https://github.com/linux4sam/egt/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>
+file in the root of the EGT repository.
 
 @section started_fetching Fetching Source
 
@@ -27,7 +29,9 @@ for you.
 
 @section started_building Building
 
-EGT uses the GNU autotools, like [automake](https://www.gnu.org/software/automake/manual/html_node/index.html), for building on Linux platforms.
+EGT uses the GNU autotools, like
+[automake](https://www.gnu.org/software/automake/manual/html_node/index.html),
+for building on Linux platforms.
 
 To build for a PC, first install the required dependencies for building EGT:
 
@@ -104,8 +108,11 @@ options are listed here, but not all.
 @par `--enable-code-coverage`
 Whether to enable code coverage support
 
-@par `--disable-debug`
-build without debugging support [default=no]
+@par `--enable-sanitize`
+turn on sanitize analysis tools
+
+@par `--enable-debug`
+enable debugging support [default=yes]
 
 @par `--enable-gcov`
 turn on code coverage analysis tools
@@ -113,29 +120,48 @@ turn on code coverage analysis tools
 @par `--enable-profile`
 turn on profiling tools
 
+@par `--disable-icons`
+do not install icons [default=no]
+
 @par `--enable-examples`
 build examples [default=yes]
 
+@par `--disable-virtualkeyboard`
+include support for virtualkeyboard [default=yes]
+
 @par `--enable-lto`
 enable gcc's LTO [default=no]
+
+@par `--enable-lua-bindings`
+enable lua bindings (default: no)
+
+@par `--enable-simd`
+build with simd support [default=no]
+
+@par `--enable-snippets`
+build snippets examples [default=no]
+
 
 @section started_buildroot Cross Compiling With Buildroot
 
 EGT is included as a package as part of the
 [buildroot-external-microchip](https://github.com/linux4sam/buildroot-external-microchip)
 project. To build a complete SDK and target filesystem for a board, follow the
-instructions found in that project's README with the following versions.
-
-@code{.unparsed}
-git clone https://github.com/linux4sam/buildroot-external-microchip.git -b egt_devel
-git clone https://git.buildroot.net/buildroot -b 2019.05.1
-cd buildroot
-BR2_EXTERNAL=../buildroot-external-microchip/ make sam9x60ek_egt_defconfig
-make
-@endcode
+instructions found in that project's
+<a href="https://github.com/linux4sam/buildroot-external-microchip/blob/master/README.md">README</a>.
 
 See the configs directory in the buildroot-external-microchip project for
-alternate EGT defconfigs.
+a graphics defconfig for your processor and board.
+
+
+@section started_yocto Cross Compiling With Yocto
+
+EGT is included as a package as part of the
+[meta-atmel](https://github.com/linux4sam/meta-atmel) Yocto layer project. To
+build a complete SDK and target filesystem for a board, follow the
+instructions found in that project's
+[README](https://github.com/linux4sam/meta-atmel/blob/warrior/README).
+
 
 @section started_first First Application
 
@@ -146,6 +172,10 @@ on it.
 The include file `<egt/ui>` contains most basic functionality needed.
 
 @snippet "../examples/basic/basic.cpp" Example
+
+@imageSize{basic.png,width:400;height:auto;}
+@image html basic.png "Basic Example"
+@image latex basic.png "Basic Example"
 
 If you want to use a UI file instead.
 
