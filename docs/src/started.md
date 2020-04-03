@@ -29,6 +29,10 @@ for you.
 
 @section started_building Building
 
+EGT is tested on Ubuntu 18.04, but is also known to work on Ubuntu 16.04 as well
+as other distributions like Debian and Fedora.  These instructions should be
+adjusted accordingly.
+
 EGT uses the GNU autotools, like
 [automake](https://www.gnu.org/software/automake/manual/html_node/index.html),
 for building on Linux platforms.
@@ -49,6 +53,9 @@ sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 sudo apt install libplplot-dev plplot-driver-cairo
 sudo apt install libasound2-dev libsndfile1-dev
 @endcode
+
+@note On Ubuntu 16.04 the package plplot12-driver-cairo should be used instead
+of plplot-driver-cairo.
 
 Then, clone the source and initialize autotools.  Typically autotools only needs
 to be initialized once and it will automatically pick up most changes.  However,

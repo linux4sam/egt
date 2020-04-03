@@ -31,6 +31,10 @@ with API reference is available for the latest version.
 ***
 ## Build
 
+For more complete instructions, refer to the
+[Getting Started](https://linux4sam.github.io/egt-docs/started.html) section of
+the EGT Programmer's Manual.
+
 To build for a PC, first install required dependencies:
 
 ```sh
@@ -58,9 +62,15 @@ cd egt
 make
 ```
 
-You can run the examples in the `examples` directory at this point.  If you need
-to compile against the EGT library, or run the compile example below, the
-simplest option is to simply install the library.
+You can run the examples in the `examples` directory at this point.
+
+```sh
+cd examples/basic
+./basic
+```
+
+If you need to compile against the EGT library, or run the compile example
+below, the simplest option is to simply install the library.
 
 ```sh
 make install
