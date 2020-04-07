@@ -61,8 +61,6 @@ Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
       m_widgetid(global_widget_id++),
       m_widget_flags(flags)
 {
-    name("Widget" + std::to_string(m_widgetid));
-
     m_align.on_change([this]()
     {
         parent_layout();
