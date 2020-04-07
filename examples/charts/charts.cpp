@@ -201,6 +201,8 @@ struct HorizontalBarPage : public egt::NotebookTab
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
         sizer->add(csizer);
 
+        csizer->add(create_grid_combo(bar));
+
         auto btn2 = std::make_shared<egt::Button>("Remove Data");
         csizer->add(btn2);
         btn2->on_click([btn2, bar, x](egt::Event&)
