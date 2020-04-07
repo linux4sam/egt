@@ -84,9 +84,14 @@ public:
     explicit Scrollwheel(const Rect& rect, int min, int max, int step) noexcept;
 
     /**
-     * Change the images used for up and down buttons.
+     * Change the down button image.
      */
-    void image(const Image& down_image, const Image& up_image);
+    void image_down(const Image& image);
+
+    /**
+     * Change the up button image.
+     */
+    void image_up(const Image& image);
 
     /**
      * Get the Orientation.

@@ -270,10 +270,14 @@ void Scrollwheel::reversed(bool enabled)
     m_reversed = enabled;
 }
 
-void Scrollwheel::image(const Image& down_image, const Image& up_image)
+void Scrollwheel::image_down(const Image& image)
 {
-    m_button_down.image(down_image);
-    m_button_up.image(up_image);
+    m_button_down.image(image);
+}
+
+void Scrollwheel::image_up(const Image& image)
+{
+    m_button_up.image(image);
 }
 
 }
