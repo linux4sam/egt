@@ -139,6 +139,11 @@ public:
      */
     void reversed(bool enabled);
 
+    /**
+     * Get the boolean reversed state of the scrollwheel.
+     */
+    bool reversed() const { return m_reversed; }
+
 protected:
     /// @private
     void init();
