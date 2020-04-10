@@ -41,25 +41,25 @@ public:
     explicit Uri(const std::string& uri);
 
     /// Get the scheme part of the URI
-    const std::string& scheme() const { return m_scheme; }
+    EGT_NODISCARD const std::string& scheme() const { return m_scheme; }
     /// Get the host part of the URI
-    const std::string& host() const { return m_host; }
+    EGT_NODISCARD const std::string& host() const { return m_host; }
     /// Get the port part of the URI
-    const std::string& port() const { return m_port; }
+    EGT_NODISCARD const std::string& port() const { return m_port; }
     /// Get the path part of the URI
-    const std::string& path() const { return m_path; }
+    EGT_NODISCARD const std::string& path() const { return m_path; }
     /// Get the query part of the URI
-    const std::string& query() const { return m_query; }
+    EGT_NODISCARD const std::string& query() const { return m_query; }
     /// Get the fragment part of the URI
-    const std::string& fragment() const { return m_fragment; }
+    EGT_NODISCARD const std::string& fragment() const { return m_fragment; }
     /// Get the icon size of the URI
-    const std::string& icon_size() const { return m_icon_size; }
+    EGT_NODISCARD const std::string& icon_size() const { return m_icon_size; }
 
     /// Is the URI syntactically valid.
-    bool is_valid() const;
+    EGT_NODISCARD bool is_valid() const;
 
     /// Convert the URI to a string
-    std::string to_string() const;
+    EGT_NODISCARD std::string to_string() const;
 
     /// Convert the URI to a string
     explicit operator std::string() const

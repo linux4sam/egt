@@ -175,7 +175,7 @@ public:
     /**
      * Get the current text of the radial.
      */
-    const std::string& text() const { return m_text; }
+    EGT_NODISCARD const std::string& text() const { return m_text; }
 
     /**
      * Set the center label text of the dial.
@@ -289,7 +289,7 @@ public:
     /**
      * Convert a touch point to degrees on the radial.
      */
-    float touch_to_degrees(const Point& point) const
+    EGT_NODISCARD float touch_to_degrees(const Point& point) const
     {
         const auto b = this->content_area();
         const Point c = b.center();
@@ -303,7 +303,7 @@ public:
     /**
      * Normalize a value to degrees.
      */
-    T value_to_degrees(T min, T max, T value) const
+    EGT_NODISCARD T value_to_degrees(T min, T max, T value) const
     {
         const auto n = (static_cast<float>(value) -
                         static_cast<float>(min)) /
@@ -314,7 +314,7 @@ public:
     /**
      * Normalize degrees to a value.
      */
-    T degrees_to_value(T min, T max, T degrees) const
+    EGT_NODISCARD T degrees_to_value(T min, T max, T degrees) const
     {
         const auto n = degrees / 360.;
         return (n * (max - min)) + min;
@@ -323,7 +323,7 @@ public:
     /**
      * The starting angle in degrees for the min values.
      */
-    float start_angle() const
+    EGT_NODISCARD float start_angle() const
     {
         return m_start_angle;
     }

@@ -112,7 +112,7 @@ public:
      * @warning This does not return the whole image surface.  Just the current
      * frame.
      */
-    shared_cairo_surface_t surface() const;
+    EGT_NODISCARD shared_cairo_surface_t surface() const;
 
     /**
      * Advance to the next frame in the strip.
@@ -122,12 +122,12 @@ public:
     /**
      * Returns true if the current frame is the last frame.
      */
-    bool is_last_frame() const;
+    EGT_NODISCARD bool is_last_frame() const;
 
     /**
      * Returns the number of frames in the current strip.
      */
-    uint32_t frame_count() const;
+    EGT_NODISCARD uint32_t frame_count() const;
 
     /**
      * Change the strip to the specified id.

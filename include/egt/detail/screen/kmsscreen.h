@@ -76,9 +76,9 @@ public:
     /// Close and release the screen.
     void close();
 
-    size_t max_brightness() const override;
+    EGT_NODISCARD size_t max_brightness() const override;
 
-    size_t brightness() const override;
+    EGT_NODISCARD size_t brightness() const override;
 
     void brightness(size_t brightness) override;
 

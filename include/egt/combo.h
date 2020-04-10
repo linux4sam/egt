@@ -95,7 +95,7 @@ public:
 
     using Widget::min_size_hint;
 
-    Size min_size_hint() const override;
+    EGT_NODISCARD Size min_size_hint() const override;
 
     /**
      * Default draw method for the ComboBox.
@@ -110,7 +110,7 @@ public:
     /**
      * Get the index of the selected item.
      */
-    ssize_t selected() const { return m_selected; }
+    EGT_NODISCARD ssize_t selected() const { return m_selected; }
 
     /**
      * Append a new item to the ComboBox.
@@ -125,12 +125,12 @@ public:
     /**
      * Get an item at the specified index.
      */
-    std::string item_at(size_t index) const { return m_items.at(index); }
+    EGT_NODISCARD std::string item_at(size_t index) const { return m_items.at(index); }
 
     /**
      * Return the number of items in the list.
      */
-    size_t item_count() const
+    EGT_NODISCARD size_t item_count() const
     {
         return m_items.size();
     }
@@ -154,7 +154,7 @@ public:
     /**
      * Get the text alignment within the Label.
      */
-    AlignFlags text_align() const { return m_text_align; }
+    EGT_NODISCARD AlignFlags text_align() const { return m_text_align; }
 
     void serialize(Serializer& serializer) const override;
 

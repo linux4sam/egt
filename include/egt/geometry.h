@@ -167,7 +167,7 @@ public:
      * @param point The other point.
      */
     template <class T>
-    T angle_to(const PointType& point) const noexcept
+    EGT_NODISCARD T angle_to(const PointType& point) const noexcept
     {
         return std::atan2(point.m_x - m_x, m_y - point.m_y);
     }
@@ -177,15 +177,15 @@ public:
      *
      * @param point The other point.
      */
-    Dim distance_to(const PointType& point) const noexcept
+    EGT_NODISCARD Dim distance_to(const PointType& point) const noexcept
     {
         return std::hypot(point.m_x - m_x, point.m_y - m_y);
     }
 
     /// Get the x value.
-    constexpr Dim x() const noexcept { return m_x; }
+    EGT_NODISCARD constexpr Dim x() const noexcept { return m_x; }
     /// Get the y value.
-    constexpr Dim y() const noexcept { return m_y; }
+    EGT_NODISCARD constexpr Dim y() const noexcept { return m_y; }
 
     /// Set the x value.
     constexpr void x(Dim x) noexcept { m_x = x; }
@@ -350,7 +350,7 @@ public:
      * This is a special case, and is the default state of a SizeType. This can
      * be used to determine if a size has not been set in many cases.
      */
-    constexpr bool empty() const noexcept
+    EGT_NODISCARD constexpr bool empty() const noexcept
     {
         return m_width <= 0 || m_height <= 0;
     }
@@ -434,9 +434,9 @@ public:
     }
 
     /// Get the width value.
-    constexpr Dim width() const  noexcept { return m_width; }
+    EGT_NODISCARD constexpr Dim width() const  noexcept { return m_width; }
     /// Get the height value.
-    constexpr Dim height() const  noexcept { return m_height; }
+    EGT_NODISCARD constexpr Dim height() const  noexcept { return m_height; }
 
     /// Set the width value.
     constexpr void width(Dim width)  noexcept { m_width = width; }
@@ -644,7 +644,7 @@ public:
     /**
      * Calculate the area of the rectangle.
      */
-    constexpr Dim area() const noexcept
+    EGT_NODISCARD constexpr Dim area() const noexcept
     {
         return width() * height();
     }
@@ -652,7 +652,7 @@ public:
     /**
      * Return the center point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> center() const noexcept
+    EGT_NODISCARD constexpr PointType<Dim, DimCompat> center() const noexcept
     {
         return PointType<Dim, DimCompat>(x() + (width() / 2.), y() + (height() / 2.));
     }
@@ -693,7 +693,7 @@ public:
     /**
      * Get the PointType of the rectangle.
      */
-    constexpr const PointType<Dim, DimCompat>& point() const noexcept
+    EGT_NODISCARD constexpr const PointType<Dim, DimCompat>& point() const noexcept
     {
         return m_origin;
     }
@@ -709,7 +709,7 @@ public:
     /**
      * Get the SizeType of the rectangle.
      */
-    constexpr const SizeType<Dim, DimCompat>& size() const noexcept
+    EGT_NODISCARD constexpr const SizeType<Dim, DimCompat>& size() const noexcept
     {
         return m_size;
     }
@@ -725,7 +725,7 @@ public:
     /**
      * Get the top side of the rectangle.
      */
-    constexpr Dim top() const noexcept
+    EGT_NODISCARD constexpr Dim top() const noexcept
     {
         return m_origin.y();
     }
@@ -733,7 +733,7 @@ public:
     /**
      * Get the left side the rectangle.
      */
-    constexpr Dim left() const noexcept
+    EGT_NODISCARD constexpr Dim left() const noexcept
     {
         return m_origin.x();
     }
@@ -741,7 +741,7 @@ public:
     /**
      * Get the bottom side the rectangle.
      */
-    constexpr Dim bottom() const noexcept
+    EGT_NODISCARD constexpr Dim bottom() const noexcept
     {
         return top() + height();
     }
@@ -749,7 +749,7 @@ public:
     /**
      * Get the right side the rectangle.
      */
-    constexpr Dim right() const noexcept
+    EGT_NODISCARD constexpr Dim right() const noexcept
     {
         return left() + width();
     }
@@ -759,7 +759,7 @@ public:
      *
      * @note This is usually the origin/point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> top_left() const noexcept
+    EGT_NODISCARD constexpr PointType<Dim, DimCompat> top_left() const noexcept
     {
         return PointType<Dim, DimCompat>(left(), top());
     }
@@ -767,7 +767,7 @@ public:
     /**
      * Get the top right point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> top_right() const noexcept
+    EGT_NODISCARD constexpr PointType<Dim, DimCompat> top_right() const noexcept
     {
         return PointType<Dim, DimCompat>(right(), top());
     }
@@ -775,7 +775,7 @@ public:
     /**
      * Get the bottom left point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> bottom_left() const noexcept
+    EGT_NODISCARD constexpr PointType<Dim, DimCompat> bottom_left() const noexcept
     {
         return PointType<Dim, DimCompat>(left(), bottom());
     }
@@ -783,7 +783,7 @@ public:
     /**
      * Get the bottom right point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> bottom_right() const noexcept
+    EGT_NODISCARD constexpr PointType<Dim, DimCompat> bottom_right() const noexcept
     {
         return PointType<Dim, DimCompat>(right(), bottom());
     }
@@ -800,7 +800,7 @@ public:
     /**
      * Returns true if the rectangle has no width or height.
      */
-    constexpr bool empty() const noexcept
+    EGT_NODISCARD constexpr bool empty() const noexcept
     {
         return width() <= 0 || height() <= 0;
     }
@@ -809,7 +809,7 @@ public:
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
      */
-    constexpr bool intersect(const PointType<Dim, DimCompat>& point) const noexcept
+    EGT_NODISCARD constexpr bool intersect(const PointType<Dim, DimCompat>& point) const noexcept
     {
         return (point.x() <= right() && point.x() >= left() &&
                 point.y() <= bottom() && point.y() >= top());
@@ -819,7 +819,7 @@ public:
      * Determine if two rectangles intersect, or, overlap.
      * @param rect The rect to test.
      */
-    constexpr bool intersect(const RectType& rect) const noexcept
+    EGT_NODISCARD constexpr bool intersect(const RectType& rect) const noexcept
     {
         return (x() < rect.x() + rect.width() && x() + width() > rect.x() &&
                 y() < rect.y() + rect.height() && y() + height() > rect.y());
@@ -865,7 +865,7 @@ public:
      * This is different than intersect().  The specified rectangle must be
      * completely inside this one.
      */
-    constexpr bool contains(const RectType& rhs) const noexcept
+    EGT_NODISCARD constexpr bool contains(const RectType& rhs) const noexcept
     {
         return rhs.right() < right() &&
                rhs.bottom() < bottom() &&
@@ -874,9 +874,9 @@ public:
     }
 
     /// Get the x value.
-    constexpr Dim x() const noexcept { return m_origin.x(); }
+    EGT_NODISCARD constexpr Dim x() const noexcept { return m_origin.x(); }
     /// Get the y value.
-    constexpr Dim y() const noexcept { return m_origin.y(); }
+    EGT_NODISCARD constexpr Dim y() const noexcept { return m_origin.y(); }
 
     /// Set the x value.
     constexpr void x(Dim x) noexcept { m_origin.x(x); }
@@ -884,9 +884,9 @@ public:
     constexpr void y(Dim y) noexcept { m_origin.y(y); }
 
     /// Get the width value.
-    constexpr Dim width() const noexcept { return m_size.width(); }
+    EGT_NODISCARD constexpr Dim width() const noexcept { return m_size.width(); }
     /// Get the height value.
-    constexpr Dim height() const noexcept { return m_size.height(); }
+    EGT_NODISCARD constexpr Dim height() const noexcept { return m_size.height(); }
 
     /// Set the width value.
     constexpr void width(Dim width) noexcept { m_size.width(width); }
@@ -1032,9 +1032,9 @@ public:
     {}
 
     /// Get the start point of the line.
-    constexpr PointType<Dim> start() const noexcept { return m_start; }
+    EGT_NODISCARD constexpr PointType<Dim> start() const noexcept { return m_start; }
     /// Get the end point of the line.
-    constexpr PointType<Dim> end() const noexcept { return m_end; }
+    EGT_NODISCARD constexpr PointType<Dim> end() const noexcept { return m_end; }
 
     /// Set the start point of the line.
     constexpr void start(const PointType<Dim>& start) noexcept { m_start = start; }
@@ -1044,7 +1044,7 @@ public:
     /**
      * Returns a rectangle containing the line.
      */
-    constexpr RectType<Dim> rect() const noexcept
+    EGT_NODISCARD constexpr RectType<Dim> rect() const noexcept
     {
         const auto x = std::min(m_start.x(), m_end.x());
         const auto y = std::min(m_start.y(), m_end.y());
@@ -1122,7 +1122,7 @@ public:
     /**
      * Returns true if the arc has no radius.
      */
-    EGT_API bool empty() const noexcept;
+    EGT_NODISCARD EGT_API bool empty() const noexcept;
 
     /** Set the radius. */
     constexpr void radius(Dim radius) noexcept { m_radius = radius; }
@@ -1134,13 +1134,13 @@ public:
     constexpr void center(const PointType<Dim>& center) noexcept { m_center = center; }
 
     /** Get the radius. */
-    constexpr Dim radius() const noexcept { return m_radius; }
+    EGT_NODISCARD constexpr Dim radius() const noexcept { return m_radius; }
     /** Get the angle1. */
-    constexpr float angle1() const noexcept { return m_angle1; }
+    EGT_NODISCARD constexpr float angle1() const noexcept { return m_angle1; }
     /** Get the angle2. */
-    constexpr float angle2() const noexcept { return m_angle2; }
+    EGT_NODISCARD constexpr float angle2() const noexcept { return m_angle2; }
     /** Get the center point. */
-    constexpr PointType<Dim> center() const noexcept { return m_center; }
+    EGT_NODISCARD constexpr PointType<Dim> center() const noexcept { return m_center; }
 
 protected:
 
@@ -1197,7 +1197,7 @@ public:
     /**
      * Get a Rect that covers the circle.
      */
-    constexpr RectType<Dim> rect() const noexcept
+    EGT_NODISCARD constexpr RectType<Dim> rect() const noexcept
     {
         RectType<Dim> r(this->center() - Point(this->radius(), this->radius()),
                         SizeType<Dim>(this->radius() * 2, this->radius() * 2));
@@ -1273,7 +1273,7 @@ public:
      *
      * This is technically just an approximation.
      */
-    constexpr Dim perimeter() const noexcept
+    EGT_NODISCARD constexpr Dim perimeter() const noexcept
     {
         return 2.f * detail::pi<float>() * std::sqrt((m_radiusa * m_radiusa +
                 m_radiusb * m_radiusb) / 2.f);
@@ -1301,11 +1301,11 @@ public:
     constexpr void center(const PointType<Dim>& center) noexcept { m_center = center; }
 
     /// Get the first radius of the ellipse.
-    constexpr Dim radiusa() const noexcept { return m_radiusa; }
+    EGT_NODISCARD constexpr Dim radiusa() const noexcept { return m_radiusa; }
     /// Get the second radius of the ellipse.
-    constexpr Dim radiusb() const noexcept { return m_radiusb; }
+    EGT_NODISCARD constexpr Dim radiusb() const noexcept { return m_radiusb; }
     /// Get the center of the ellipse.
-    constexpr PointType<Dim> center() const noexcept { return m_center; }
+    EGT_NODISCARD constexpr PointType<Dim> center() const noexcept { return m_center; }
 
 protected:
 

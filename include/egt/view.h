@@ -109,7 +109,7 @@ public:
      *
      * @note The offset moves in the negative direction from zero.
      */
-    Point offset() const { return m_offset; }
+    EGT_NODISCARD Point offset() const { return m_offset; }
 
     /**
      * Set the position.
@@ -123,7 +123,7 @@ public:
      *
      * @note The offset moves in the negative direction from zero.
      */
-    Point offset_max() const;
+    EGT_NODISCARD Point offset_max() const;
 
     /**
      * Set the horizontal offset.
@@ -148,7 +148,7 @@ public:
     /**
      * Get the slider dimension.
      */
-    DefaultDim slider_dim() const { return m_slider_dim; }
+    EGT_NODISCARD DefaultDim slider_dim() const { return m_slider_dim; }
 
     /**
      * Set the slider dimension.
@@ -162,13 +162,13 @@ public:
 protected:
 
     /// Horizontal scrollable
-    bool hscrollable() const
+    EGT_NODISCARD bool hscrollable() const
     {
         return m_hscrollable;
     }
 
     /// Vertical scrollable
-    bool vscrollable() const
+    EGT_NODISCARD bool vscrollable() const
     {
         return m_vscrollable;
     }
@@ -194,7 +194,7 @@ protected:
     void update_sliders();
 
     /// Return the super rectangle that includes all of the child widgets.
-    Rect super_rect() const;
+    EGT_NODISCARD Rect super_rect() const;
 
     /// Resize the slider whenever the size of this changes.
     void resize_slider();

@@ -70,19 +70,19 @@ public:
     /**
      * Size of the screen.
      */
-    Size size() const { return m_size; }
+    EGT_NODISCARD Size size() const { return m_size; }
 
     /**
      * Bounding box for the screen.
      */
-    Rect box() const { return Rect(Point(), m_size); }
+    EGT_NODISCARD Rect box() const { return Rect(Point(), m_size); }
 
     /**
      * Get the context for the screen.
      *
      * Get the target surface from this using cairo_get_target().
      */
-    shared_cairo_t context() const { return m_cr; }
+    EGT_NODISCARD shared_cairo_t context() const { return m_cr; }
 
     /**
      * This function implements the algorithm for adding damage rectangles
@@ -108,14 +108,14 @@ public:
      *
      * @note Not all screens support this capability.
      */
-    virtual size_t max_brightness() const;
+    EGT_NODISCARD virtual size_t max_brightness() const;
 
     /**
      * Get the current brightness of the screen.
      *
      * @note Not all screens support this capability.
      */
-    virtual size_t brightness() const;
+    EGT_NODISCARD virtual size_t brightness() const;
 
     /**
      * Set the brightness of the screen.
@@ -145,7 +145,7 @@ public:
     /**
      * Get the format of the screen.
      */
-    PixelFormat format() const { return m_format; };
+    EGT_NODISCARD PixelFormat format() const { return m_format; };
 
 protected:
 

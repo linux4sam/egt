@@ -169,12 +169,12 @@ public:
     /**
      * Get the start value.
      */
-    T starting() const { return m_start; }
+    EGT_NODISCARD T starting() const { return m_start; }
 
     /**
      * Get the end value.
      */
-    T ending() const { return m_end; }
+    EGT_NODISCARD T ending() const { return m_end; }
 
     /**
      * Set the start value.
@@ -205,7 +205,7 @@ public:
     /**
      * Get the current value.
      */
-    T value() const
+    EGT_NODISCARD T value() const
     {
         return m_value;
     }

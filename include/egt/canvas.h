@@ -86,17 +86,17 @@ public:
     /**
      * Get the context for the Canvas.
      */
-    shared_cairo_t context() const { return m_cr; }
+    EGT_NODISCARD shared_cairo_t context() const { return m_cr; }
 
     /**
      * Get the surface for the Canvas.
      */
-    shared_cairo_surface_t surface() const { return m_surface; }
+    EGT_NODISCARD shared_cairo_surface_t surface() const { return m_surface; }
 
     /**
      * Get the size of the surface.
      */
-    Size size() const;
+    EGT_NODISCARD Size size() const;
 
     /**
      * Reallocate the canvas to a different size.
@@ -125,7 +125,7 @@ public:
     /**
      * Get the format of the surface.
      */
-    PixelFormat format() const;
+    EGT_NODISCARD PixelFormat format() const;
 
     /**
      * Create a copy of a surface.

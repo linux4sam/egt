@@ -73,7 +73,7 @@ public:
                       const Attributes& attrs = {});
 
     /// Get the current level
-    int level() const { return m_level; }
+    EGT_NODISCARD int level() const { return m_level; }
 
     /// Write to the specified ostream.
     virtual void write(std::ostream& out) = 0;

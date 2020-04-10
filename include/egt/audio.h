@@ -108,7 +108,7 @@ public:
      * Get the volume.
      * @return Value in the range 0 - 100.
      */
-    int volume() const;
+    EGT_NODISCARD int volume() const;
 
     /**
      * Mutes the audio being played.
@@ -123,14 +123,14 @@ public:
      *
      * @return Time duration in nanoseconds.
      */
-    uint64_t position() const;
+    EGT_NODISCARD uint64_t position() const;
 
     /**
      * Get the duration of the audio stream.
      *
      * @return Time duration in nanoseconds.
      */
-    uint64_t duration() const;
+    EGT_NODISCARD uint64_t duration() const;
 
     /**
      * Seek to a position.
@@ -146,7 +146,7 @@ public:
     /**
      * Returns true if the stream is currently playing.
      */
-    bool playing() const;
+    EGT_NODISCARD bool playing() const;
 
 protected:
 

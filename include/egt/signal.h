@@ -139,7 +139,7 @@ public:
     /**
      * Is callback invoking enabled?
      */
-    bool enabled() const { return m_enabled; }
+    EGT_NODISCARD bool enabled() const { return m_enabled; }
 
 private:
 

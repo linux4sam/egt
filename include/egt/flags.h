@@ -153,7 +153,7 @@ public:
     /**
      * Convert the flags to strings.
      */
-    std::string to_string() const
+    EGT_NODISCARD std::string to_string() const
     {
         std::ostringstream ss;
         if (!this->empty())

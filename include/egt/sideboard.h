@@ -88,7 +88,7 @@ public:
     void position(PositionFlag position);
 
     /// Get the position of the SideBoard.
-    PositionFlag position() const { return m_position; }
+    EGT_NODISCARD PositionFlag position() const { return m_position; }
 
     /// Move to a closed state.
     void close();

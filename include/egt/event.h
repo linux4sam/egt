@@ -123,7 +123,7 @@ struct EGT_API Pointer
     {}
 
     /// Get the drag delta.
-    DisplayPoint delta() const
+    EGT_NODISCARD DisplayPoint delta() const
     {
         return point - drag_start;
     }
@@ -215,7 +215,7 @@ public:
     /**
      * Was the event stopped from propagating?
      */
-    bool quit() const
+    EGT_NODISCARD bool quit() const
     {
         return m_stop;
     }
@@ -263,7 +263,7 @@ struct EGT_API Event : public EventArg
     {}
 
     /// Get the id of the event.
-    const EventId& id() const noexcept
+    EGT_NODISCARD const EventId& id() const noexcept
     {
         return m_id;
     }
@@ -296,7 +296,7 @@ struct EGT_API Event : public EventArg
     /**
      * @overload
      */
-    const Pointer& pointer() const
+    EGT_NODISCARD const Pointer& pointer() const
     {
         return m_pointer;
     }
@@ -317,7 +317,7 @@ struct EGT_API Event : public EventArg
     /**
      * @overload
      */
-    const Key& key() const
+    EGT_NODISCARD const Key& key() const
     {
         return m_key;
     };

@@ -82,7 +82,7 @@ public:
     /**
      * Get the justify.
      */
-    Justification justify() const { return m_justify; }
+    EGT_NODISCARD Justification justify() const { return m_justify; }
 
     /**
      * Set the justify.
@@ -96,7 +96,7 @@ public:
     /**
      * Get the Orientation.
      */
-    Orientation orient() const { return m_orient; }
+    EGT_NODISCARD Orientation orient() const { return m_orient; }
 
     /**
      * Set the Orientation.
@@ -115,7 +115,7 @@ public:
 protected:
 
     /// Calculate the super rectangle of all the children
-    Size super_rect() const
+    EGT_NODISCARD Size super_rect() const
     {
         if (orient() == Orientation::flex)
         {

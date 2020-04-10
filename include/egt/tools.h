@@ -31,7 +31,7 @@ public:
     /**
      * Get the total CPU usage as a percentage.
      */
-    inline double usage() const { return m_cpu_usage; }
+    EGT_NODISCARD inline double usage() const { return m_cpu_usage; }
 
     /**
      * Update the CPU usage.
@@ -101,7 +101,7 @@ public:
     /**
      * Is any calculation ready?
      */
-    bool ready() const { return m_ready && m_frames > 0; }
+    EGT_NODISCARD bool ready() const { return m_ready && m_frames > 0; }
 
     /**
      * Retrieve the current FPS value.

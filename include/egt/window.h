@@ -113,9 +113,9 @@ public:
      * The buck stops on this call to Widget::screen() with a Window
      * because the Window contains the screen.
      */
-    Screen* screen() const override;
+    EGT_NODISCARD Screen* screen() const override;
 
-    bool has_screen() const override;
+    EGT_NODISCARD bool has_screen() const override;
 
     void move(const Point& point) override;
 
@@ -155,7 +155,7 @@ public:
     /**
      * Get the pixel format of the window.
      */
-    PixelFormat format() const
+    EGT_NODISCARD PixelFormat format() const
     {
         auto frame = find_screen();
         if (frame)

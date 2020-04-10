@@ -50,7 +50,7 @@ public:
     /**
      * Get the radius of the widget.
      */
-    Circle::DimType radius() const
+    EGT_NODISCARD Circle::DimType radius() const
     {
         return m_radius;
     }
@@ -97,7 +97,7 @@ public:
     /**
      * Get the horizontal state of the widget.
      */
-    bool horizontal() const { return m_horizontal; }
+    EGT_NODISCARD bool horizontal() const { return m_horizontal; }
 
     /**
      * Set the horizontal state of the widget.

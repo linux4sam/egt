@@ -117,7 +117,7 @@ public:
     /// Change default ProgressBar size.
     static void default_size(const Size& size);
 
-    Size min_size_hint() const override
+    EGT_NODISCARD Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
@@ -142,7 +142,7 @@ public:
     /**
      * Get the show label state.
      */
-    bool show_label() const { return m_show_label; }
+    EGT_NODISCARD bool show_label() const { return m_show_label; }
 
 protected:
     /**
@@ -276,7 +276,7 @@ public:
 
     using ValueRangeWidget<T>::min_size_hint;
 
-    Size min_size_hint() const override
+    EGT_NODISCARD Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
@@ -301,7 +301,7 @@ public:
     /**
      * Get the show label state.
      */
-    bool show_label() const { return m_show_label; }
+    EGT_NODISCARD bool show_label() const { return m_show_label; }
 
     void serialize(Serializer& serializer) const override;
 
@@ -459,7 +459,7 @@ public:
     /**
      * Get the number of bars to show.
      */
-    size_t num_bars() const { return m_num_bars; }
+    EGT_NODISCARD size_t num_bars() const { return m_num_bars; }
 
     /// Default LevelMeter size.
     static Size default_size();
@@ -468,7 +468,7 @@ public:
 
     using ValueRangeWidget<T>::min_size_hint;
 
-    Size min_size_hint() const override
+    EGT_NODISCARD Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
@@ -643,7 +643,7 @@ public:
 
     using ValueRangeWidget<T>::min_size_hint;
 
-    Size min_size_hint() const override
+    EGT_NODISCARD Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;

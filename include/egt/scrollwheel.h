@@ -96,7 +96,7 @@ public:
     /**
      * Get the Orientation.
      */
-    Orientation orient() const { return m_orient; }
+    EGT_NODISCARD Orientation orient() const { return m_orient; }
 
     /**
      * Set the Orientation.
@@ -106,7 +106,7 @@ public:
     /**
      * Returns a string of the item selected.
      */
-    std::string value() const;
+    EGT_NODISCARD std::string value() const;
 
     /**
      * Add an item at the end of the array.
@@ -126,7 +126,7 @@ public:
     /**
      * Get the index of the item selected.
      */
-    size_t selected() const;
+    EGT_NODISCARD size_t selected() const;
 
     /**
      * Set the index to select a specific item.
@@ -136,7 +136,7 @@ public:
     /**
      * Return the number of items.
      */
-    size_t item_count() const { return m_items.size(); }
+    EGT_NODISCARD size_t item_count() const { return m_items.size(); }
 
     /**
      * Enable or disable the reversed mode. When enabled the behavior of
@@ -147,7 +147,7 @@ public:
     /**
      * Get the boolean reversed state of the scrollwheel.
      */
-    bool reversed() const { return m_reversed; }
+    EGT_NODISCARD bool reversed() const { return m_reversed; }
 
 protected:
     /// @private

@@ -100,7 +100,7 @@ public:
     /**
      * Returns true if the animation is currently running.
      */
-    virtual bool running() const { return m_running; }
+    EGT_NODISCARD virtual bool running() const { return m_running; }
 
     /**
      * Register a callback for the animation.
@@ -179,7 +179,7 @@ public:
     /**
      * Get the starting value.
      */
-    EasingScalar starting() const { return m_start; }
+    EGT_NODISCARD EasingScalar starting() const { return m_start; }
 
     /**
      * @note Calling this while running is undefined behavior.
@@ -189,7 +189,7 @@ public:
     /**
      * Get the ending value.
      */
-    EasingScalar ending() const { return m_end; }
+    EGT_NODISCARD EasingScalar ending() const { return m_end; }
 
     /**
      * @note Calling this while running is undefined behavior.
@@ -226,7 +226,7 @@ public:
     void stop() override;
 
     /// Get the current value.
-    EasingScalar current() const { return m_current; }
+    EGT_NODISCARD EasingScalar current() const { return m_current; }
 
     /**
      * Should the value be rounded?

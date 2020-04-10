@@ -70,7 +70,7 @@ public:
     /**
      * Get the text of the Label.
      */
-    virtual const std::string& text() const { return m_text; }
+    EGT_NODISCARD virtual const std::string& text() const { return m_text; }
 
     /**
      * Set the text alignment within the Label.
@@ -86,12 +86,12 @@ public:
     /**
      * Get the text alignment within the Label.
      */
-    AlignFlags text_align() const { return m_text_align; }
+    EGT_NODISCARD AlignFlags text_align() const { return m_text_align; }
 
     /**
      * Get the length of the text.
      */
-    virtual size_t len() const;
+    EGT_NODISCARD virtual size_t len() const;
 
     /**
      * Given a Font, text, and a target Size, scale the font size so that
@@ -107,7 +107,7 @@ public:
 protected:
 
     /// Get the size of the text.
-    Size text_size(const std::string& text) const;
+    EGT_NODISCARD Size text_size(const std::string& text) const;
 
     /// Alignment of the text.
     AlignFlags m_text_align{AlignFlag::center};

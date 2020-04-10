@@ -59,6 +59,28 @@
 #define EGT_LOCAL
 #endif // EGT_DLL
 
+#ifndef SWIG
+#define EGT_DEPRECATED [[deprecated]]
+
+#ifdef __has_cpp_attribute
+#define EGT_HAVE_ATTRIBUTE(x) __has_cpp_attribute(x)
+#else
+#define EGT_HAVE_ATTRIBUTE(x) 0
+#endif
+
+#if EGT_HAVE_ATTRIBUTE(nodiscard)
+#define EGT_NODISCARD [[nodiscard]]
+#elif EGT_HAVE_ATTRIBUTE(warn_unused_result)
+#define EGT_NODISCARD __attribute__((warn_unused_result))
+#else
+#define EGT_NODISCARD
+#endif
+
+#else
+#define EGT_DEPRECATED
+#define EGT_NODISCARD
+#endif
+
 namespace egt
 {
 inline namespace v1
@@ -89,13 +111,13 @@ public:
     explicit ReverseRange(T& x) : m_x(x) {}
 
     /// begin iterator
-    auto begin() const -> decltype(this->m_x.rbegin())
+    EGT_NODISCARD auto begin() const -> decltype(this->m_x.rbegin())
     {
         return m_x.rbegin();
     }
 
     /// end iterator
-    auto end() const -> decltype(this->m_x.rend())
+    EGT_NODISCARD auto end() const -> decltype(this->m_x.rend())
     {
         return m_x.rend();
     }
@@ -328,12 +350,6 @@ constexpr T bit(T n)
 #define EGT_OPS_NOCOPY_MOVE_EXCEPT(T)
 #define EGT_OPS_NOCOPY_NOMOVE(T)
 #define EGT_OPS_COPY_NOMOVE(T)
-#endif
-
-#ifndef SWIG
-#define EGT_DEPRECATED [[deprecated]]
-#else
-#define EGT_DEPRECATED
 #endif
 
 #endif

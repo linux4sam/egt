@@ -71,7 +71,7 @@ public:
     /**
      * Get the gauge of the layer.
      */
-    Gauge* gauge() const { return m_gauge; }
+    EGT_NODISCARD Gauge* gauge() const { return m_gauge; }
 
 protected:
 
@@ -146,7 +146,7 @@ public:
     /**
      * Get the angle start value.
      */
-    float angle_start() const { return m_angle_start; }
+    EGT_NODISCARD float angle_start() const { return m_angle_start; }
 
     /**
      * Set the start angle of the needle.
@@ -164,7 +164,7 @@ public:
     /**
      * Get the angle stop value.
      */
-    float angle_stop() const { return m_angle_stop; }
+    EGT_NODISCARD float angle_stop() const { return m_angle_stop; }
 
     /**
      * Set the stop angle of the needle.
@@ -180,7 +180,7 @@ public:
     }
 
     /// Get the min value.
-    float min() const { return m_min; }
+    EGT_NODISCARD float min() const { return m_min; }
 
     /**
      * Set the min value.
@@ -200,7 +200,7 @@ public:
     }
 
     /// Get the max value.
-    float max() const { return m_max; }
+    EGT_NODISCARD float max() const { return m_max; }
 
     /**
      * Set the max value.
@@ -220,7 +220,7 @@ public:
     }
 
     /// Get the value of the needle.
-    float value() const { return m_value; }
+    EGT_NODISCARD float value() const { return m_value; }
 
     /**
      * Set the value.
@@ -247,7 +247,7 @@ public:
     /**
      * Get the needle point.
      */
-    PointF needle_point() const { return m_point; }
+    EGT_NODISCARD PointF needle_point() const { return m_point; }
 
     /**
      * Set the needle point.
@@ -275,7 +275,7 @@ public:
     /**
      * Get the needle center.
      */
-    PointF needle_center() const { return m_center; }
+    EGT_NODISCARD PointF needle_center() const { return m_center; }
 
     /**
      * Set the needle center.
@@ -293,7 +293,7 @@ public:
     /**
      * Get the clockwise value.
      */
-    bool clockwise() const { return m_clockwise; }
+    EGT_NODISCARD bool clockwise() const { return m_clockwise; }
 
     /**
      * Set the clockwise value.
@@ -415,7 +415,7 @@ protected:
     /**
      * Get the size of all of the layers together.
      */
-    Size super_size() const
+    EGT_NODISCARD Size super_size() const
     {
         Rect result = content_area().size();
         for (const auto& layer : m_layers)

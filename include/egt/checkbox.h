@@ -66,7 +66,7 @@ public:
 
     using Button::min_size_hint;
 
-    Size min_size_hint() const override;
+    EGT_NODISCARD Size min_size_hint() const override;
 };
 
 /**
@@ -101,7 +101,7 @@ public:
 
     using CheckBox::min_size_hint;
 
-    Size min_size_hint() const override;
+    EGT_NODISCARD Size min_size_hint() const override;
 
     /**
      * Set the optional "on" and "off" text.
@@ -122,17 +122,17 @@ public:
     /**
      * Get the "off" text.
      */
-    const std::string& off_text() const { return m_off_text; }
+    EGT_NODISCARD const std::string& off_text() const { return m_off_text; }
 
     /**
      * Get the "on" text.
      */
-    const std::string& on_text() const { return m_on_text; }
+    EGT_NODISCARD const std::string& on_text() const { return m_on_text; }
 
     /**
      * Get the enable/disable mode.
      */
-    bool enable_disable() const { return m_enable_disable; }
+    EGT_NODISCARD bool enable_disable() const { return m_enable_disable; }
 
     /**
      * Set the enable/disable mode.

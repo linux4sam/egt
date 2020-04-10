@@ -214,7 +214,7 @@ public:
     /**
      * Get the Orientation.
      */
-    Orientation orient() const { return m_orient; }
+    EGT_NODISCARD Orientation orient() const { return m_orient; }
 
     /**
      * Set the Orientation.
@@ -228,7 +228,7 @@ public:
     }
 
     /// Get the current slider flags.
-    const SliderFlags& slider_flags() const { return m_slider_flags; }
+    EGT_NODISCARD const SliderFlags& slider_flags() const { return m_slider_flags; }
 
     /// Get the current slider flags.
     SliderFlags& slider_flags() { return m_slider_flags; }
@@ -241,7 +241,7 @@ public:
 protected:
 
     /// Convert a value to an offset.
-    int to_offset(int value) const
+    EGT_NODISCARD int to_offset(int value) const
     {
         const auto b = this->content_area();
         if (m_orient == Orientation::horizontal)
@@ -253,7 +253,7 @@ protected:
     }
 
     /// Convert an offset to value.
-    T to_value(int offset) const
+    EGT_NODISCARD T to_value(int offset) const
     {
         const auto b = this->content_area();
         if (m_orient == Orientation::horizontal)
@@ -288,19 +288,19 @@ protected:
     }
 
     /// Get the calculated handle width.
-    int handle_width() const;
+    EGT_NODISCARD int handle_width() const;
 
     /// Get the calculated handle height.
-    int handle_height() const;
+    EGT_NODISCARD int handle_height() const;
 
     /// Get the handle box for the current value.
-    Rect handle_box() const
+    EGT_NODISCARD Rect handle_box() const
     {
         return handle_box(this->m_value);
     }
 
     /// Get the handle box for the specified value.
-    Rect handle_box(T value) const;
+    EGT_NODISCARD Rect handle_box(T value) const;
 
     /// Draw the value label.
     void draw_label(Painter& painter, T value)
@@ -360,7 +360,7 @@ class EGT_API Slider : public SliderType<int>
 public:
     using SliderType<int>::SliderType;
 
-    std::string type() const override
+    EGT_NODISCARD std::string type() const override
     {
         return "Slider";
     }
@@ -376,7 +376,7 @@ class EGT_API SliderF : public SliderType<float>
 public:
     using SliderType<float>::SliderType;
 
-    std::string type() const override
+    EGT_NODISCARD std::string type() const override
     {
         return "SliderF";
     }

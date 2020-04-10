@@ -93,7 +93,7 @@ public:
 
     using TextWidget::min_size_hint;
 
-    Size min_size_hint() const override;
+    EGT_NODISCARD Size min_size_hint() const override;
 
 protected:
 
@@ -180,7 +180,7 @@ public:
 
     using TextWidget::min_size_hint;
 
-    Size min_size_hint() const override;
+    EGT_NODISCARD Size min_size_hint() const override;
 
     /**
      * Set a new Image.
@@ -228,7 +228,7 @@ public:
     /**
      * Get a const reference of the image.
      */
-    const Image& image() const { return m_image; }
+    EGT_NODISCARD const Image& image() const { return m_image; }
 
     /**
      * Get a non-const reference to the image.
@@ -249,7 +249,7 @@ public:
     /**
      * Get the image alignment.
      */
-    AlignFlags image_align() const { return m_image_align; }
+    EGT_NODISCARD AlignFlags image_align() const { return m_image_align; }
 
     /**
      * Enable/disable showing the label text.
@@ -261,7 +261,7 @@ public:
     /**
      * Get the show label state.
      */
-    bool show_label() const { return m_show_label; }
+    EGT_NODISCARD bool show_label() const { return m_show_label; }
 
     void serialize(Serializer& serializer) const override;
 

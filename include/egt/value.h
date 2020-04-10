@@ -130,7 +130,7 @@ public:
     }
 
     /// Get the current value.
-    T value() const { return m_value; }
+    EGT_NODISCARD T value() const { return m_value; }
 
     /**
      * Set value.
@@ -157,7 +157,7 @@ public:
     }
 
     /// Get the min value.
-    T min() const { return m_min; }
+    EGT_NODISCARD T min() const { return m_min; }
 
     /**
      * Set the min value.
@@ -171,7 +171,7 @@ public:
     }
 
     /// Get the max value.
-    T max() const { return m_max; }
+    EGT_NODISCARD T max() const { return m_max; }
 
     /**
      * Set the max value.

@@ -324,7 +324,7 @@ public:
     /**
      * Get the current underlying context the painter is using.
      */
-    inline shared_cairo_t context() const
+    EGT_NODISCARD inline shared_cairo_t context() const
     {
         return m_cr;
     }

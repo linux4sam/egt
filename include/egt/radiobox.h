@@ -57,7 +57,7 @@ public:
 
     using Button::min_size_hint;
 
-    Size min_size_hint() const override;
+    EGT_NODISCARD Size min_size_hint() const override;
 };
 
 }

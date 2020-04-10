@@ -74,7 +74,7 @@ public:
      *               specified, all elements in the SVG will be rendered.
      * @param[in] rect Optional rect to clip to.
      */
-    Image render(const std::string& id = {}, const RectF& rect = {}) const;
+    EGT_NODISCARD Image render(const std::string& id = {}, const RectF& rect = {}) const;
 
     /**
      * Render the image of the specific element in the SVG file.
@@ -89,7 +89,7 @@ public:
      *
      * @see render().
      */
-    Image id_image(const std::string& id) const
+    EGT_NODISCARD Image id_image(const std::string& id) const
     {
         return this->render(id, id_box(id));
     }
@@ -99,7 +99,7 @@ public:
      *
      * @param[in] id The id of the SVG element.
      */
-    RectF id_box(const std::string& id) const;
+    EGT_NODISCARD RectF id_box(const std::string& id) const;
 
     /**
      * Test if an element exists in the SVG image.
@@ -107,12 +107,12 @@ public:
      * @param[in] id The id of the SVG element.
      * @return true if found
      */
-    bool id_exists(const std::string& id) const;
+    EGT_NODISCARD bool id_exists(const std::string& id) const;
 
     /**
      * Get the SVG size.
      */
-    SizeF size() const;
+    EGT_NODISCARD SizeF size() const;
 
     /**
      * Set the size you want any rendered Image to be.
@@ -145,7 +145,7 @@ protected:
     /**
      * Render and return a new surface.
      */
-    shared_cairo_surface_t do_render(const std::string& id = {}, const RectF& rect = {}) const;
+    EGT_NODISCARD shared_cairo_surface_t do_render(const std::string& id = {}, const RectF& rect = {}) const;
 
     struct SvgImpl;
 

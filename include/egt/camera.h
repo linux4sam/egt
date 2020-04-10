@@ -129,7 +129,7 @@ public:
     /**
      * Get horizontal scale value.
      */
-    float hscale() const
+    EGT_NODISCARD float hscale() const
     {
         return m_hscale;
     }
@@ -137,7 +137,7 @@ public:
     /**
      * Get vertical scale value.
      */
-    float vscale() const
+    EGT_NODISCARD float vscale() const
     {
         return m_vscale;
     }

@@ -140,12 +140,12 @@ public:
     /**
      * Get the number of children widgets.
      */
-    size_t count_children() const { return m_children.size(); }
+    EGT_NODISCARD size_t count_children() const { return m_children.size(); }
 
     /**
      * Get a child widget at a specific index.
      */
-    std::shared_ptr<Widget> child_at(size_t index) const
+    EGT_NODISCARD std::shared_ptr<Widget> child_at(size_t index) const
     {
         return m_children.at(index);
     }
@@ -153,7 +153,7 @@ public:
     /**
      * Return true if this is a top level frame, with no parent.
      */
-    bool top_level() const override
+    EGT_NODISCARD bool top_level() const override
     {
         return !m_parent;
     }
@@ -280,7 +280,7 @@ public:
     /**
      * Convert a point with an origin of the current frame to child origin.
      */
-    virtual Point to_child(const Point& p) const
+    EGT_NODISCARD virtual Point to_child(const Point& p) const
     {
         return p - point();
     }
@@ -288,7 +288,7 @@ public:
     /**
      * @see Frame::to_child();
      */
-    Rect to_child(Rect rect) const
+    EGT_NODISCARD Rect to_child(Rect rect) const
     {
         rect.point(to_child(rect.point()));
         return rect;
@@ -373,7 +373,7 @@ public:
     /**
      * Get the special child draw callback.
      */
-    ChildDrawCallback special_child_draw_callback() const
+    EGT_NODISCARD ChildDrawCallback special_child_draw_callback() const
     {
         return m_special_child_draw_callback;
     }
@@ -406,7 +406,7 @@ public:
     /**
      * Does this Frame have a screen?
      */
-    virtual bool has_screen() const { return false; }
+    EGT_NODISCARD virtual bool has_screen() const { return false; }
 
     /**
      * Starting from this Frame, find the Frame that has a Screen.
@@ -429,7 +429,7 @@ public:
      *
      * This searches up the widget hierarchy from here.
      */
-    const Frame* find_screen() const
+    EGT_NODISCARD const Frame* find_screen() const
     {
         if (has_screen())
             return this;

@@ -148,7 +148,7 @@ public:
 
     using TextWidget::min_size_hint;
 
-    Size min_size_hint() const override;
+    EGT_NODISCARD Size min_size_hint() const override;
 
     /**
      * Set the maximum allowed length of the text.
@@ -160,12 +160,12 @@ public:
     /**
      * Get the max length of allowed text.
      */
-    size_t max_length() const { return m_max_len;}
+    EGT_NODISCARD size_t max_length() const { return m_max_len;}
 
     /**
      * Get a const ref of the flags.
      */
-    const TextFlags& text_flags() const { return m_text_flags; }
+    EGT_NODISCARD const TextFlags& text_flags() const { return m_text_flags; }
 
     /**
      * Move the cursor to the end and insert.
@@ -191,7 +191,7 @@ public:
     /**
      * Get the cursor position.
      */
-    size_t cursor() const;
+    EGT_NODISCARD size_t cursor() const;
 
     /**
      * Move the cursor to the beginning.
@@ -252,7 +252,7 @@ public:
      *
      * @return The selected text, or an empty string if there is no selection.
      */
-    std::string selected_text() const;
+    EGT_NODISCARD std::string selected_text() const;
 
     /**
      * Delete the selected text.
@@ -330,7 +330,7 @@ protected:
      * Given text, return the number of UTF8 characters that will fit on a
      * single line inside of the widget.
      */
-    size_t width_to_len(const std::string& str) const;
+    EGT_NODISCARD size_t width_to_len(const std::string& str) const;
 
 private:
 

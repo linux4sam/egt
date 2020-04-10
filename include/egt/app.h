@@ -96,12 +96,12 @@ public:
     /**
      * Get a pointer to the Screen instance.
      */
-    Screen* screen() const { return m_screen.get(); }
+    EGT_NODISCARD Screen* screen() const { return m_screen.get(); }
 
     /**
      * Get a pointer to the main Window.
      */
-    Window* main_window() const { return m_main_window; }
+    EGT_NODISCARD Window* main_window() const { return m_main_window; }
 
     /**
      * Get a pointer to the modal Window.
@@ -109,7 +109,7 @@ public:
      * The modal window is a single window that will receive all events. Only
      * one window can be modal at any given time.
      */
-    Window* modal_window() const { return m_modal_window; }
+    EGT_NODISCARD Window* modal_window() const { return m_modal_window; }
 
     /// @private
     void set_modal_window(Window* window)
@@ -120,7 +120,7 @@ public:
     /**
      * Get the list of all currently allocated Windows.
      */
-    const std::vector<Window*>& windows() const { return m_windows; }
+    EGT_NODISCARD const std::vector<Window*>& windows() const { return m_windows; }
 
     /**
      * Paint the entire Screen to a file.
@@ -156,13 +156,13 @@ public:
     /**
      * Get the argc value passed in.
      */
-    inline int argc() const { return m_argc; }
+    EGT_NODISCARD inline int argc() const { return m_argc; }
 
     /**
      * Get the argv value passed in.
      */
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-    inline const char** argv() const { return const_cast<const char**>(m_argv); }
+    EGT_NODISCARD inline const char** argv() const { return const_cast<const char**>(m_argv); }
 
 protected:
 

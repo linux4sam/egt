@@ -147,12 +147,12 @@ public:
     /**
      * Return the current duration of the timer.
      */
-    std::chrono::milliseconds duration() const { return m_duration; }
+    EGT_NODISCARD std::chrono::milliseconds duration() const { return m_duration; }
 
     /**
      * Returns true if the timer is currently running.
      */
-    bool running() const { return m_running; }
+    EGT_NODISCARD bool running() const { return m_running; }
 
     /// Handle type.
     using RegisterHandle = uint64_t;
@@ -183,7 +183,7 @@ public:
     /**
      * Get the name of the Timer.
      */
-    const std::string& name() const { return m_name; }
+    EGT_NODISCARD const std::string& name() const { return m_name; }
 
     /**
      * Set the name of the Timer.

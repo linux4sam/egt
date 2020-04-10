@@ -143,7 +143,7 @@ public:
      *
      * @return full path of the selected file.
      */
-    std::string selected() const;
+    EGT_NODISCARD std::string selected() const;
 
 protected:
     /// Grid for organizing okay & cancel Buttons.
@@ -210,7 +210,7 @@ public:
      *
      * @return file path of the file save location.
      */
-    std::string selected() const;
+    EGT_NODISCARD std::string selected() const;
 
 protected:
 

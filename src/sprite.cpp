@@ -65,7 +65,7 @@ public:
 
     void paint(Painter& painter) override;
 
-    shared_cairo_surface_t surface() const override;
+    EGT_NODISCARD shared_cairo_surface_t surface() const override;
 
 protected:
     Sprite& m_interface;

@@ -111,14 +111,14 @@ public:
     /**
      * Get the currently selected index.
      */
-    ssize_t selected() const { return m_selected; }
+    EGT_NODISCARD ssize_t selected() const { return m_selected; }
 
     /**
      * Get a widget at the specified index.
      *
      * @param index The index of the widget.
      */
-    NotebookTab* get(size_t index) const;
+    EGT_NODISCARD NotebookTab* get(size_t index) const;
 
 protected:
 

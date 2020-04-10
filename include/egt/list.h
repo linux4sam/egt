@@ -94,7 +94,7 @@ struct EGT_API StringItem : public ImageLabel
 
     using ImageLabel::min_size_hint;
 
-    Size min_size_hint() const override
+    EGT_NODISCARD Size min_size_hint() const override
     {
         if (!m_min_size.empty())
             return m_min_size;
@@ -194,12 +194,12 @@ public:
      *
      * @return The selected index, or -1 if there is no selection.
      */
-    ssize_t selected() const;
+    EGT_NODISCARD ssize_t selected() const;
 
     /**
      * Return the number of items in the list.
      */
-    size_t item_count() const { return m_sizer.count_children(); }
+    EGT_NODISCARD size_t item_count() const { return m_sizer.count_children(); }
 
     /**
      * Add a new item to the end of the list.
@@ -209,7 +209,7 @@ public:
     /**
      * Get the currently selected index item from list.
      */
-    std::shared_ptr<Widget> item_at(size_t index) const;
+    EGT_NODISCARD std::shared_ptr<Widget> item_at(size_t index) const;
 
     /**
      * Remove an item from the list.

@@ -78,7 +78,7 @@ public:
     /**
      * Get the first color of the pattern.
      */
-    const Color& color() const;
+    EGT_NODISCARD const Color& color() const;
 
     /**
      * Add a step to the gradient.
@@ -88,7 +88,7 @@ public:
     /**
      * Get the type of pattern.
      */
-    Type type() const { return m_type; }
+    EGT_NODISCARD Type type() const { return m_type; }
 
     /**
      * Create a linear gradient from start to end.
@@ -102,16 +102,16 @@ public:
                 const Point& end, float end_radius);
 
     /// Get the starting point of the pattern.
-    Point starting() const { return m_start; }
+    EGT_NODISCARD Point starting() const { return m_start; }
     /// Set the starting point of the pattern.
-    float starting_radius() const { return m_start_radius; }
+    EGT_NODISCARD float starting_radius() const { return m_start_radius; }
     /// Get the ending  point of the pattern.
-    Point ending() const { return m_end; }
+    EGT_NODISCARD Point ending() const { return m_end; }
     /// Set the ending  point of the pattern.
-    float ending_radius() const { return m_end_radius; }
+    EGT_NODISCARD float ending_radius() const { return m_end_radius; }
 
     /// Get all of the steps of the pattern
-    const StepArray& steps() const;
+    EGT_NODISCARD const StepArray& steps() const;
 
 protected:
 

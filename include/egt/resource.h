@@ -99,7 +99,7 @@ public:
     /**
      * Get a list of registered resource names.
      */
-    ItemArray list() const;
+    EGT_NODISCARD ItemArray list() const;
 
     /**
      * Reset internal read stream offset.

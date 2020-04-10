@@ -359,7 +359,7 @@ public:
      *
      * @return true if the widget is visible.
      */
-    bool visible() const
+    EGT_NODISCARD bool visible() const
     {
         return !flags().is_set(Widget::Flag::invisible);
     }
@@ -387,7 +387,7 @@ public:
      *
      * The meaning of active is largely up to the derived implementation.
      */
-    bool active() const;
+    EGT_NODISCARD bool active() const;
 
     /**
      * Set the active state.
@@ -401,7 +401,7 @@ public:
      *
      * @return true if the widget is readonly.
      */
-    bool readonly() const
+    EGT_NODISCARD bool readonly() const
     {
         return flags().is_set(Widget::Flag::readonly);
     }
@@ -443,7 +443,7 @@ public:
      * When a widget is disabled, it does not receive events. Depending on the
      * widget, the color scheme may change.
      */
-    bool disabled() const
+    EGT_NODISCARD bool disabled() const
     {
         return flags().is_set(Widget::Flag::disabled);
     }
@@ -488,12 +488,12 @@ public:
     /**
      * Return the grab_mouse state of the widget.
      */
-    bool grab_mouse() const;
+    EGT_NODISCARD bool grab_mouse() const;
 
     /**
      * Return the plane_window state of the widget.
      */
-    bool plane_window() const;
+    EGT_NODISCARD bool plane_window() const;
 
     /**
      * Set the autoresize state.
@@ -507,17 +507,17 @@ public:
     /**
      * Return the autoresize state of the widget.
      */
-    bool autoresize() const;
+    EGT_NODISCARD bool autoresize() const;
 
     /**
      * Return the frame state of the widget.
      */
-    bool frame() const;
+    EGT_NODISCARD bool frame() const;
 
     /**
      * Return the clip state of the widget.
      */
-    bool clip() const;
+    EGT_NODISCARD bool clip() const;
 
     /**
      * Set the no_layout state.
@@ -531,14 +531,14 @@ public:
     /**
      * Return the no_layout state of the widget.
      */
-    bool no_layout() const;
+    EGT_NODISCARD bool no_layout() const;
 
     /**
      * Get the alpha property.
      *
      * @return Alpha property in the range 0.0 to 1.0.
      */
-    float alpha() const
+    EGT_NODISCARD float alpha() const
     {
         return m_alpha;
     }
@@ -584,7 +584,7 @@ public:
      *
      * @see @ref layout_box
      */
-    const Rect& box() const
+    EGT_NODISCARD const Rect& box() const
     {
         return m_box;
     }
@@ -602,7 +602,7 @@ public:
     /**
      * Get the size of the widget's box().
      */
-    const Size& size() const
+    EGT_NODISCARD const Size& size() const
     {
         return box().size();
     }
@@ -610,7 +610,7 @@ public:
     /**
      * Get the origin of the widget's box().
      */
-    const Point& point() const
+    EGT_NODISCARD const Point& point() const
     {
         return box().point();
     }
@@ -618,27 +618,27 @@ public:
     /**
      * Width of the widget's box().
      */
-    DefaultDim width() const { return m_box.width(); }
+    EGT_NODISCARD DefaultDim width() const { return m_box.width(); }
 
     /**
      * Height of the widget's box().
      */
-    DefaultDim height() const { return m_box.height(); }
+    EGT_NODISCARD DefaultDim height() const { return m_box.height(); }
 
     /**
      * X coordinate of the widget's box().
      */
-    DefaultDim x() const { return m_box.x(); }
+    EGT_NODISCARD DefaultDim x() const { return m_box.x(); }
 
     /**
      * Y coordinate of the widget's box().
      */
-    DefaultDim y() const { return m_box.y(); }
+    EGT_NODISCARD DefaultDim y() const { return m_box.y(); }
 
     /**
      * Get the center point of the widget's box().
      */
-    Point center() const { return box().center(); }
+    EGT_NODISCARD Point center() const { return box().center(); }
 
     /**
      * Set the widget instance Palette.
@@ -673,7 +673,7 @@ public:
      *
      * @param id Palette::ColorId to get.
      */
-    Pattern color(Palette::ColorId id) const;
+    EGT_NODISCARD Pattern color(Palette::ColorId id) const;
 
     /**
      * Get a Widget color.
@@ -684,7 +684,7 @@ public:
      * @param id Palette::ColorId to get.
      * @param group Palette::GroupId to get.
      */
-    Pattern color(Palette::ColorId id, Palette::GroupId group) const;
+    EGT_NODISCARD Pattern color(Palette::ColorId id, Palette::GroupId group) const;
 
     /**
      * Add a color to the widget's instance palette.
@@ -708,7 +708,7 @@ public:
     /**
      * Get a pointer to the parent Frame, or nullptr if none exists.
      */
-    const Frame* parent() const;
+    EGT_NODISCARD const Frame* parent() const;
 
     /**
      * Get a pointer to the Screen instance, using using a parent as
@@ -716,7 +716,7 @@ public:
      *
      * @return An Screen if available, or nullptr.
      */
-    virtual Screen* screen() const;
+    EGT_NODISCARD virtual Screen* screen() const;
 
     /**
      * Align the widget.
@@ -730,7 +730,7 @@ public:
     /**
      * Get the alignment.
      */
-    const AlignFlags& align() const { return m_align; }
+    EGT_NODISCARD const AlignFlags& align() const { return m_align; }
 
     /**
      * Get the alignment.
@@ -756,7 +756,7 @@ public:
      *
      * @see @ref layout_box
      */
-    DefaultDim padding() const { return m_padding; }
+    EGT_NODISCARD DefaultDim padding() const { return m_padding; }
 
     /**
      * Set the margin width.
@@ -777,7 +777,7 @@ public:
      *
      * @see @ref layout_box
      */
-    DefaultDim margin() const { return m_margin; }
+    EGT_NODISCARD DefaultDim margin() const { return m_margin; }
 
     /**
      * Set the border width.
@@ -798,7 +798,7 @@ public:
      *
      * @see @ref layout_box
      */
-    DefaultDim border() const { return m_border; }
+    EGT_NODISCARD DefaultDim border() const { return m_border; }
 
     /**
      * Set the border radius.
@@ -812,7 +812,7 @@ public:
     /**
      * Get the border radius.
      */
-    float border_radius() const { return m_border_radius; }
+    EGT_NODISCARD float border_radius() const { return m_border_radius; }
 
     /**
      * Set the border flags.
@@ -830,7 +830,7 @@ public:
      *
      * @see Theme::BorderFlag
      */
-    Theme::BorderFlags border_flags() const { return m_border_flags; }
+    EGT_NODISCARD Theme::BorderFlags border_flags() const { return m_border_flags; }
 
     /**
      * Set the size ratio relative to parent.
@@ -873,7 +873,7 @@ public:
     /**
      * Get the vertical ratio relative to parent.
      */
-    DefaultDim vertical_ratio() const { return m_vertical_ratio; }
+    EGT_NODISCARD DefaultDim vertical_ratio() const { return m_vertical_ratio; }
 
     /**
      * Set the horizontal ratio relative to parent.
@@ -889,7 +889,7 @@ public:
     /**
      * Get the horizontal ratio relative to parent.
      */
-    DefaultDim horizontal_ratio() const { return m_horizontal_ratio; }
+    EGT_NODISCARD DefaultDim horizontal_ratio() const { return m_horizontal_ratio; }
 
     /**
      * Set the Y position ratio relative to parent.
@@ -905,7 +905,7 @@ public:
     /**
      * Get the Y position ratio relative to parent.
      */
-    DefaultDim yratio() const { return m_yratio; }
+    EGT_NODISCARD DefaultDim yratio() const { return m_yratio; }
 
     /**
      * Set the X position ratio relative to parent.
@@ -921,7 +921,7 @@ public:
     /**
      * Get the X position ratio relative to parent.
      */
-    DefaultDim xratio() const { return m_xratio; }
+    EGT_NODISCARD DefaultDim xratio() const { return m_xratio; }
 
     /**
      * Get a minimum size hint for the Widget.
@@ -929,7 +929,7 @@ public:
      * This is used by sizers to pick minimum and default dimensions when no
      * other @b force is used.
      */
-    virtual Size min_size_hint() const;
+    EGT_NODISCARD virtual Size min_size_hint() const;
 
     /**
      * Set the minimum size hint for the Widget.
@@ -989,7 +989,7 @@ public:
      *
      * @return true if in focus.
      */
-    bool focus() const { return m_focus; }
+    EGT_NODISCARD bool focus() const { return m_focus; }
 
     /**
      * Set the fill flags.
@@ -1015,7 +1015,7 @@ public:
      *
      * @see Theme::FillFlag
      */
-    const Theme::FillFlags& fill_flags() const
+    EGT_NODISCARD const Theme::FillFlags& fill_flags() const
     {
         return m_fill_flags;
     }
@@ -1044,7 +1044,7 @@ public:
      *
      * @see @ref colors_themes
      */
-    const Theme& theme() const;
+    EGT_NODISCARD const Theme& theme() const;
 
     /**
      * Set the Widget's theme to a new theme.
@@ -1102,7 +1102,7 @@ public:
      *
      * @see @ref draw_zorder
      */
-    virtual size_t zorder() const;
+    EGT_NODISCARD virtual size_t zorder() const;
 
     /**
      * Detach this widget from its parent.
@@ -1116,14 +1116,14 @@ public:
     /**
      * Convert a point with a local origin to a parent origin.
      */
-    Point to_parent(const Point& r) const;
+    EGT_NODISCARD Point to_parent(const Point& r) const;
 
     /**
      * Convert a point in a rect a local origin to a parent origin.
      *
      * @see to_parent().
      */
-    Rect to_parent(const Rect& r) const
+    EGT_NODISCARD Rect to_parent(const Rect& r) const
     {
         return Rect(to_parent(r.point()), r.size());
     }
@@ -1137,7 +1137,7 @@ public:
      * Get the sum of the margin(), padding(), and border() around the content
      * of the widget.
      */
-    size_t moat() const;
+    EGT_NODISCARD size_t moat() const;
 
     /**
      * Return the area that content is allowed to be positioned into.
@@ -1149,7 +1149,7 @@ public:
      *
      * @see @ref layout_box
      */
-    virtual Rect content_area() const;
+    EGT_NODISCARD virtual Rect content_area() const;
 
     /**
      * Perform layout of the Widget.
@@ -1200,7 +1200,7 @@ public:
      * This will return any font set on the widget instance, or default to the
      * widget Theme font.
      */
-    const Font& font() const
+    EGT_NODISCARD const Font& font() const
     {
         if (m_font)
             return *m_font;
@@ -1230,7 +1230,7 @@ public:
      *
      * @return true if checked.
      */
-    bool checked() const
+    EGT_NODISCARD bool checked() const
     {
         return flags().is_set(Widget::Flag::checked);
     }
@@ -1245,7 +1245,7 @@ public:
      *
      * Should this need to be changed, override this function.
      */
-    virtual std::string type() const;
+    EGT_NODISCARD virtual std::string type() const;
 
     /**
      * Type used to identify a unique Widget ID.
@@ -1259,7 +1259,7 @@ public:
      * create a default name() of the widget, but can also be used to uniquely
      * identify widgets for other purposes.
      */
-    WidgetId widgetid() const
+    EGT_NODISCARD WidgetId widgetid() const
     {
         return m_widgetid;
     }
@@ -1280,7 +1280,7 @@ protected:
     /**
      * Get a const ref of the flags.
      */
-    const Widget::Flags& flags() const { return m_widget_flags; }
+    EGT_NODISCARD const Widget::Flags& flags() const { return m_widget_flags; }
 
     /**
      * Get a modifiable ref of the flags.
@@ -1294,7 +1294,7 @@ protected:
     /**
      * Is this widget a top level widget?
      */
-    virtual bool top_level() const { return false; }
+    EGT_NODISCARD virtual bool top_level() const { return false; }
 
     /**
      * Set this widget's parent.
@@ -1308,13 +1308,13 @@ protected:
      *
      * This is the same as calling theme().palette().
      */
-    const Palette& default_palette() const;
+    EGT_NODISCARD const Palette& default_palette() const;
 
     /**
      * Get the local box which is the same size as box(), but with the
      * origin zeroed.
      */
-    Rect local_box() const
+    EGT_NODISCARD Rect local_box() const
     {
         return size();
     }

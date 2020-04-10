@@ -37,7 +37,7 @@ public:
     virtual ~Object() noexcept = default;
 
     /// Get the name of the Object.
-    const std::string& name() const { return m_name; }
+    EGT_NODISCARD const std::string& name() const { return m_name; }
 
     /**
      * Set the name of the Object.

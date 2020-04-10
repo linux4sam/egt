@@ -58,16 +58,16 @@ public:
     void start(const DisplayPoint& point);
 
     /// Get pointer start position.
-    const DisplayPoint& mouse_start() const
+    EGT_NODISCARD const DisplayPoint& mouse_start() const
     {
         return m_mouse_start_pos;
     }
 
     /// Is active?
-    bool active() const { return m_active; }
+    EGT_NODISCARD bool active() const { return m_active; }
 
     /// Is dragging?
-    bool dragging() const { return m_dragging; }
+    EGT_NODISCARD bool dragging() const { return m_dragging; }
 
     /**
      * Stop any active dragging state.

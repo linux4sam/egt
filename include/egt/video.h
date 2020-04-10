@@ -130,21 +130,21 @@ public:
      *
      * @return true on success
      */
-    bool playing() const;
+    EGT_NODISCARD bool playing() const;
 
     /**
      * Get the current position of the video being played.
      *
      * @return Time duration in nanoseconds.
      */
-    int64_t position() const;
+    EGT_NODISCARD int64_t position() const;
 
     /**
      * Get the total duration of the video.
      *
      * @return Time duration in nanoseconds.
      */
-    int64_t duration() const;
+    EGT_NODISCARD int64_t duration() const;
 
     /**
      * Adjust volume of the video being played.
@@ -158,7 +158,7 @@ public:
      * Get the volume value for the video being played.
      * @return Value in the range 0 - 100.
      */
-    int volume() const;
+    EGT_NODISCARD int volume() const;
 
     /**
      * Seek to a position.
@@ -187,7 +187,7 @@ public:
      *
      * @return true/false based on loop-back state
      */
-    bool loopback() const
+    EGT_NODISCARD bool loopback() const
     {
         return m_loopback;
     }
@@ -199,7 +199,7 @@ public:
     /**
      * Get horizontal scale value.
      */
-    float hscale() const
+    EGT_NODISCARD float hscale() const
     {
         return m_hscale;
     }
@@ -207,7 +207,7 @@ public:
     /**
      * Get vertical scale value.
      */
-    float vscale() const
+    EGT_NODISCARD float vscale() const
     {
         return m_vscale;
     }
@@ -218,7 +218,7 @@ public:
      *
      * @return true if supported and false if not supported.
      */
-    bool has_audio() const;
+    EGT_NODISCARD bool has_audio() const;
 
 protected:
     /// Loopback enabled.

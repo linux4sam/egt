@@ -63,7 +63,7 @@ public:
      * Test if the specified flag is set.
      * @param flag The flag to test.
      */
-    constexpr bool is_set(const T flag) const noexcept
+    EGT_NODISCARD constexpr bool is_set(const T flag) const noexcept
     {
         return m_flags & static_cast<Underlying>(flag);
     }
@@ -73,7 +73,7 @@ public:
      * All must be set to return true.
      * @param flags The flags to test.
      */
-    constexpr bool is_set(std::initializer_list<T> flags) const noexcept
+    EGT_NODISCARD constexpr bool is_set(std::initializer_list<T> flags) const noexcept
     {
         for (auto& flag : flags)
             if (!is_set(flag))
@@ -135,7 +135,7 @@ public:
      * Returns true if there are no flags set.
      * @return true if no flags set.
      */
-    constexpr bool empty() const noexcept
+    EGT_NODISCARD constexpr bool empty() const noexcept
     {
         return m_flags == 0;
     }
@@ -152,7 +152,7 @@ public:
     }
 
     /// Get a std::set of all set flags.
-    std::set<T> get() const
+    EGT_NODISCARD std::set<T> get() const
     {
         std::set<T> result;
         const auto bits = std::numeric_limits<Underlying>::digits;
@@ -166,7 +166,7 @@ public:
     }
 
     /// Get the raw underlying value.
-    constexpr const Underlying& raw() const
+    EGT_NODISCARD constexpr const Underlying& raw() const
     {
         return m_flags;
     }

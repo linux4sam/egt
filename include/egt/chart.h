@@ -114,7 +114,7 @@ public:
     /**
      * Get the number of data points.
      */
-    size_t data_size() const;
+    EGT_NODISCARD size_t data_size() const;
 
     /**
      * Add data items to an existing array.
@@ -234,7 +234,7 @@ public:
     /**
     * Get the number of data points.
     */
-    size_t data_size() const;
+    EGT_NODISCARD size_t data_size() const;
 
     /**
      * Add data items to an existing array.
@@ -347,7 +347,7 @@ public:
     /**
     * Get the number of data points.
     */
-    size_t data_size() const;
+    EGT_NODISCARD size_t data_size() const;
 
     /**
      * Add data items to an existing array.
@@ -499,7 +499,7 @@ public:
     /**
      * Get the number of data points.
      */
-    size_t data_size() const;
+    EGT_NODISCARD size_t data_size() const;
 
     /**
      * Add data items to an existing array.

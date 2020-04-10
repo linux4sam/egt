@@ -60,7 +60,7 @@ public:
     /**
      * Get the exclusive property.
      */
-    bool exclusive() const;
+    EGT_NODISCARD bool exclusive() const;
 
     /**
      * Set the imperative property of the group.
@@ -74,7 +74,7 @@ public:
     /**
      * Get the imperative property.
      */
-    bool imperative() const;
+    EGT_NODISCARD bool imperative() const;
 
     /**
      * Add a button to the group.

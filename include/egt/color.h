@@ -107,10 +107,10 @@ public:
 
     //@{
     /** Get RGBA component value as a float from 0.0 to 1.0. */
-    constexpr float redf() const { return m_rgba[0] / 255.f; }
-    constexpr float greenf() const { return m_rgba[1] / 255.f; }
-    constexpr float bluef() const { return m_rgba[2] / 255.f; }
-    constexpr float alphaf() const { return m_rgba[3] / 255.f; }
+    EGT_NODISCARD constexpr float redf() const { return m_rgba[0] / 255.f; }
+    EGT_NODISCARD constexpr float greenf() const { return m_rgba[1] / 255.f; }
+    EGT_NODISCARD constexpr float bluef() const { return m_rgba[2] / 255.f; }
+    EGT_NODISCARD constexpr float alphaf() const { return m_rgba[3] / 255.f; }
     //@}
 
     //@{
@@ -123,10 +123,10 @@ public:
 
     //@{
     /** Get RGBA component value as value from 0 to 255. */
-    constexpr ComponentType red() const { return assert(m_rgba[0] <= 255), m_rgba[0]; }
-    constexpr ComponentType green() const { return assert(m_rgba[1] <= 255), m_rgba[1]; }
-    constexpr ComponentType blue() const { return assert(m_rgba[2] <= 255), m_rgba[2]; }
-    constexpr ComponentType alpha() const { return assert(m_rgba[3] <= 255), m_rgba[3]; }
+    EGT_NODISCARD constexpr ComponentType red() const { return assert(m_rgba[0] <= 255), m_rgba[0]; }
+    EGT_NODISCARD constexpr ComponentType green() const { return assert(m_rgba[1] <= 255), m_rgba[1]; }
+    EGT_NODISCARD constexpr ComponentType blue() const { return assert(m_rgba[2] <= 255), m_rgba[2]; }
+    EGT_NODISCARD constexpr ComponentType alpha() const { return assert(m_rgba[3] <= 255), m_rgba[3]; }
     //@}
 
     //@{
@@ -138,7 +138,7 @@ public:
     //@}
 
     /// Get a 16 bit pixel representation of the Color
-    constexpr uint16_t pixel16() const
+    EGT_NODISCARD constexpr uint16_t pixel16() const
     {
         const uint16_t b = (blue() >> 3u) & 0x1fu;
         const uint16_t g = ((green() >> 2u) & 0x3fu) << 5u;
@@ -158,7 +158,7 @@ public:
     }
 
     /// Get a 24 bit pixel representation of the Color
-    constexpr RGBAType pixel24() const
+    EGT_NODISCARD constexpr RGBAType pixel24() const
     {
         return (red() << 16u) |
                (green() << 8u) |
@@ -176,7 +176,7 @@ public:
     }
 
     /// Get a 32 bit pixel representation of the Color
-    constexpr RGBAType pixel32() const
+    EGT_NODISCARD constexpr RGBAType pixel32() const
     {
         return (red() << 16u) |
                (green() << 8u) |
@@ -274,7 +274,7 @@ public:
     /**
      * Return a string hex representation of the color.
      */
-    std::string hex() const;
+    EGT_NODISCARD std::string hex() const;
 
     /**
      * Create a color from HSV values.
@@ -303,7 +303,7 @@ public:
      *
      * @param[in] factor Value from 0.0 to 1.0.
      */
-    constexpr Color shade(float factor) const
+    EGT_NODISCARD constexpr Color shade(float factor) const
     {
         return Color(red() * (1. - factor),
                      green() * (1. - factor),
@@ -318,7 +318,7 @@ public:
      *
      * @param[in] factor Value from 0.0 to 1.0.
      */
-    constexpr Color tint(float factor) const
+    EGT_NODISCARD constexpr Color tint(float factor) const
     {
         return Color(red() + ((255 - red()) * factor),
                      green() + ((255 - green()) * factor),
@@ -329,7 +329,7 @@ public:
     /**
      * Create a new color by applying a hue value.
      */
-    Color hue(float h) const
+    EGT_NODISCARD Color hue(float h) const
     {
         auto u = std::cos(h * detail::pi<float>() / 180.);
         auto w = std::sin(h * detail::pi<float>() / 180.);

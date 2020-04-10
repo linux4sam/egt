@@ -123,7 +123,7 @@ public:
     /**
      * Get the face name the font.
      */
-    const std::string& face() const { return m_face; }
+    EGT_NODISCARD const std::string& face() const { return m_face; }
 
     /**
      * Set the face of the font.
@@ -133,7 +133,7 @@ public:
     /**
      * Get the size of the font.
      */
-    Font::Size size() const { return m_size; }
+    EGT_NODISCARD Font::Size size() const { return m_size; }
 
     /**
      * Set the size of the font.
@@ -143,7 +143,7 @@ public:
     /**
      * Get the weight of the font.
      */
-    Font::Weight weight() const { return m_weight; }
+    EGT_NODISCARD Font::Weight weight() const { return m_weight; }
 
     /**
      * Set the weight of the font.
@@ -153,7 +153,7 @@ public:
     /**
      * Get the slant of the font.
      */
-    Font::Slant slant() const { return m_slant; }
+    EGT_NODISCARD Font::Slant slant() const { return m_slant; }
 
     /**
      * Set the slant of the font.
@@ -166,7 +166,7 @@ public:
      * Internally, this may use a font cache to limit regeneration of the same
      * font more than once.
      */
-    cairo_scaled_font_t* scaled_font() const;
+    EGT_NODISCARD cairo_scaled_font_t* scaled_font() const;
 
     /**
      * Serialize to the specified serializer.

@@ -181,7 +181,7 @@ public:
      *
      * @note This will return -1 if nothing has been added.
      */
-    int last_add_column() const
+    EGT_NODISCARD int last_add_column() const
     {
         return m_last_add_column;
     }
@@ -191,12 +191,12 @@ public:
      *
      * @note This will return -1 if nothing has been added.
      */
-    int last_add_row() const
+    EGT_NODISCARD int last_add_row() const
     {
         return m_last_add_row;
     }
 
-    Rect content_area() const override
+    EGT_NODISCARD Rect content_area() const override
     {
         // we don't include border, grid handles that itself
         auto moat = margin() + padding();
@@ -209,7 +209,7 @@ public:
     /**
      * Get a const ref of the flags.
      */
-    const GridFlags& grid_flags() const { return m_grid_flags; }
+    EGT_NODISCARD const GridFlags& grid_flags() const { return m_grid_flags; }
 
     /**
      * Get a modifiable ref of the flags.
@@ -219,7 +219,7 @@ public:
     /**
      * Get the column priority status.
      */
-    bool column_priority() const { return m_column_priority; }
+    EGT_NODISCARD bool column_priority() const { return m_column_priority; }
 
     /**
      * Set the column priority status.
@@ -289,7 +289,7 @@ public:
     void draw(Painter& painter, const Rect& rect) override;
 
     /// Get the selected cell.
-    GridPoint selected() const
+    EGT_NODISCARD GridPoint selected() const
     {
         return {m_selected_column, m_selected_row};
     }

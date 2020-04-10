@@ -110,7 +110,7 @@ protected:
     /**
      * Minimum option height.
      */
-    virtual DefaultDim min_option_height() const
+    EGT_NODISCARD virtual DefaultDim min_option_height() const
     {
         return 50;
     }
