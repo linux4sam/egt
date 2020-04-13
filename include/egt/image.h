@@ -80,7 +80,7 @@ public:
     /**
      * @param surface A pre-existing surface.
      *
-     * This take a reference to the passed in image.
+     * This takes a reference to the passed in image.
      *
      * @todo This is a broken API.  It's different from the constructor below.
      * Need consistency.

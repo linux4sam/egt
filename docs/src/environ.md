@@ -118,7 +118,7 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
 
   <dt>EGT_X11_NODECORATION</dt>
   <dd>
-    A non-empty valye turns off window decorations on an X11 window.
+    A non-empty value turns off window decorations on an X11 window.
   </dd>
 
   <dt>EGT_TIME_DRAW</dt>
@@ -140,8 +140,8 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
   <dd>
     Instead of using a composition buffer, always render directly into the
     framebuffer. This only works if there is a backend with a single
-    framebuffer.  For example, when using KMS the environment variable
-    EGT_KMS_BUFFERS must equal 1.  Otherwise has no effect and may not apply to
+    framebuffer.  For example, when using KMS, the environment variable
+    EGT_KMS_BUFFERS must equal 1.  Otherwise it has no effect and may not apply to
     all backends.
   </dd>
 

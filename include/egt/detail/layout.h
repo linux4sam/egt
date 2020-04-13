@@ -75,7 +75,7 @@ struct EGT_API LayoutRect
 
     /// String content of the object.
     std::string str;
-    /// Rectangke if the object.
+    /// Rectangle if the object.
     Rect rect;
     /// Behavior flags of the object.
     uint32_t behave{0};

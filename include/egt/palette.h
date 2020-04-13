@@ -217,7 +217,7 @@ public:
      * Used to define a category of patterns that usually relate to the state of
      * a widget.
      *
-     * This allows the Pallete to contain patterns like a background color, that
+     * This allows the Palette to contain patterns like a background color, that
      * can be different based on the state of the widget.
      *
      * @see ColorId
@@ -238,7 +238,7 @@ public:
     };
 
     /**
-     * The Pattern identifier in the Pallete.
+     * The Pattern identifier in the Palette.
      *
      * @see GroupId
      */

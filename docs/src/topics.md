@@ -9,7 +9,7 @@ egt::v1::Window::show() at least once somewhere in your application.
 
 @section topics_threads Multiple Threads and Thread Safety
 
-The EGT API is not thread safe, but there are well defined ways provided and
+The EGT API is not thread safe, but there are well-defined ways provided and
 supported to use the EGT API in a multi-threaded application by following a
 couple simple rules.  The thread the main egt::v1::EventLoop is started on, usually
 through egt::v1::Application::run(), must not be directly accessed by a separate
@@ -21,7 +21,7 @@ the API in a thread safe manner through the event loop and Asio.  To call a
 function in the EGT API from another thread, you must egt::asio::post() or
 egt::asio::dispatch() a call to the EventLoop.  This should not be confused with
 messaging.  Calling egt::asio::post() or egt::asio::dispatch() is like calling a
-function.  However, based on which variation you use it will either directly or
+function.  However, based on which variation you use, it will either directly or
 indirectly happen in a thread safe manner.
 
 For example, to change the position of a button from another thread, the
@@ -114,11 +114,11 @@ plain and TLS secured sockets when the appropriate libraries are available.
 The same is true for reading and writing to several other interfaces, including
 serial ports using the asio::serial_port object.
 
-A benefit of using Asio for networking is it it automatically built into the EGT
+A benefit of using Asio for networking is it is automatically built into the EGT
 event loop automatically.
 
 Outside of that, EGT provides some utility classes like
-egt::v1::experimental::HttpClientRequest that uses libcurl underneath for full
+egt::v1::experimental::HttpClientRequest that use libcurl underneath for full
 HTTP/HTTPS support, and handles the integration of libcurl with Asio.
 
 @section topics_compiler Compiler Setup and Options
@@ -176,8 +176,8 @@ can be seamlessly handled.
 @snippet "../examples/gpio/gpio.cpp" ExampleFd2Event
 
 EGT uses this method internally for several input backends like tslib and
-libinput.  You can view the the source code of the associated
-egt::v1::detail::InputTslib and egt::v1::detail::InputLibInput classes for examples of
+libinput.  You can view the source code of the associated
+egt::v1::detail::InputTsLib and egt::v1::detail::InputLibInput classes for examples of
 how to do this.  Both of those classes use the egt::asio::posix::stream_descriptor
 class for wrapping the descriptor.
 

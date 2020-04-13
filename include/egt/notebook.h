@@ -114,7 +114,7 @@ public:
     ssize_t selected() const { return m_selected; }
 
     /**
-     * Get a widget at he specified index.
+     * Get a widget at the specified index.
      *
      * @param index The index of the widget.
      */

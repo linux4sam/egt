@@ -41,7 +41,7 @@ class HardwareSprite;
  * having to do any redrawing or copying in software.
  *
  * This class supports dividing up a single sprite sheet into different strips,
- * or animations.  Each strip consisting of one or more frames.  For example,
+ * or animations.  Each strip consists of one or more frames.  For example,
  * imagine you have several different animations of a character - one running
  * left, one jumping, one standing, etc. You can put all of these sequences of
  * frames, or strips, into a single sprite sheet image and then use this class

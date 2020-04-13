@@ -277,7 +277,7 @@ protected:
  * other animation sequences to build up complex sequences.
  *
  * You can skip the current sub-animation, you can restart to the
- * beginning, of the sequence, or you can stop the entire thing.
+ * beginning of the sequence, or you can stop the entire thing.
  *
  * @ingroup animation
  */

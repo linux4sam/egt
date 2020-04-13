@@ -116,7 +116,7 @@ struct EGT_API StringItem : public ImageLabel
 };
 
 /**
- * ListBox that manages a select-able list of widgets.
+ * ListBox that manages a selectable list of widgets.
  *
  * Only one item may be selected at a time. The items are based on Widget, so
  * any Widget can be used.

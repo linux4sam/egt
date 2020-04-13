@@ -41,7 +41,7 @@ class PlaneWindow;
  * Windows, unlike other basic widgets, are hidden by default. Windows always
  * require a call to show() before they will be drawn.
  *
- * This class acts as normal Frame/Widget but punts many operations to a
+ * This class acts as a normal Frame/Widget but punts many operations to a
  * dynamically selected backend to work with the screen.
  */
 class EGT_API Window : public Frame

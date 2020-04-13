@@ -60,7 +60,7 @@ public:
      * - The multichoice key is a basic key which allows to display a
      * multichoice panel with several keys when a long press event happens.
      *
-     * Even if the VirtualKeyboard class computes automatically the base size
+     * Even if the VirtualKeyboard class automatically computes the base size
      * of the keys, it's still possible to customize the size of a key by
      * setting its length which is a factor for the base size width.
      */
@@ -292,12 +292,12 @@ public:
 
 protected:
     /**
-     * A vertical sizer for the keyboard and the two additionnal buttons.
+     * A vertical sizer for the keyboard and the two additional buttons.
      */
     VerticalBoxSizer m_vsizer;
 
     /**
-     * A horizontal sizer for the two additionnal buttons.
+     * A horizontal sizer for the two additional buttons.
      */
     HorizontalBoxSizer m_hsizer;
 

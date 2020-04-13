@@ -11,10 +11,10 @@ semantics in EGT is necessary.
 Understanding the egt::Widget @b box is an important concept not only when it
 comes to understanding how widgets are drawn, but also in understanding position
 and layout. Each egt::Widget has a @b box accessed with egt::v1::Widget::box().
-This is a egt::Rect that has an origin and a width and height.  If you call
+This is an egt::Rect that has an origin and a width and height.  If you call
 egt::v1::Widget::move() or egt::v1::Widget::resize(), the box is changed.  When
 drawing or performing layout, this is the box that is used or @a owned by the
-egt::Widget.  By default, when a egt::Widget is told to draw, the egt::Painter
+egt::Widget.  By default, when an egt::Widget is told to draw, the egt::Painter
 will be clipped to be within the widget's box.
 
 Within the widget @b box, each widget also has a @b margin, @b border, and @b
@@ -61,7 +61,7 @@ is usually involved with fixed positioning.
 
 ## Widget Alignment and Layout Properties
 
-Each widget has a egt::v1::Widget::align() setting. Each widget also has a
+Each widget has an egt::v1::Widget::align() setting. Each widget also has an
 egt::v1::Widget::min_size_hint() to bound the smallest size the widget can be.
 If a widget has an alignment value of empty, usually the default, whatever size
 it has will be used while still taking the egt::v1::Widget::min_size_hint() into

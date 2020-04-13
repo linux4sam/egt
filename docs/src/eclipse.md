@@ -1,43 +1,43 @@
 ﻿ @page eclipse Eclipse Development Environment Setup
 
 Integration with Eclipse simplifies the compilation, remote execution
-and remote debugging of EGT applications using Buildroot
+and remote debugging of EGT applications using Buildroot.
 
 The typical usage model of our EGT integration with Eclipse would be:
 
 1. Creating the buildroot system for a particular target board to execute
-   or debug EGT applications or libraries. This involves configure your
-   buildroot system, enable EGT package with their dependencies and Build
-   the buildroot system. Refer to section @ref started_buildroot.
+   or debug EGT applications or libraries. For this you must configure your
+   buildroot system, enable the EGT package with their dependencies and Build
+   the buildroot system. Refer to section @ref started_buildroot
 
 2. Once Buildroot compilation is done. The output/image folder contains all
-   the files to boot Linux on to the target board. To create a sdcard image
-   to boot Linux on to sam9x60EK board refer [create sdcard image](http://www.at91.com/linux4sam/bin/view/Linux4SAM/DemoSD).
+   the files to boot Linux on the target board. To create an sdcard image
+   to boot Linux on the sam9x60EK board, refer to [create sdcard image](http://www.at91.com/linux4sam/bin/view/Linux4SAM/DemoSD).
 
 3. Start Eclipse to develop, execute or debug your own custom EGT
-   applications/libraries, that will rely on EGT library built and installed
+   applications/libraries that will rely on the EGT library built and installed
    by Buildroot.
 
-This tutorial will guide you through the installation, usage of Eclipse
-for developing EGT application using Buildroot.
+This tutorial will guide you through the installation and usage of Eclipse
+for developing an EGT application using Buildroot.
 
 @section eclipse_installation Eclipse Installation
 
 At the current time, the latest stable version of Eclipse is called 2019-06.
 Most Linux distributions come either with an Eclipse package or allow it to be
 easily installed by the package manager in the distribution. However, note that
-this is frequently an out of date version. You can get hold of the latest version
-from the central download site at http://www.eclipse.org As an IDE, Eclipse supports
+this is frequently an out of date version. You can download the latest version
+from the central download site at http://www.eclipse.org. As an IDE, Eclipse supports
 many different programming languages including Java, C, C++, Python, and many others.
-At installation time you need to select the version to support the package(s) that
-you want. To make this easier there is an installation tool which will guide you
+At installation time, you need to select the version to support the package(s) that
+you want. To make this easier, there is an installation tool which will guide you
 through the steps.
 
 @imageSize{eclipse_install.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_install.png "Eclipse installer"
 @image latex eclipse/eclipse_install.png "Eclipse installer"
 
-Download Eclipse IDE for C/C++ Developers and follow below steps for
+Download Eclipse IDE for C/C++ Developers and follow the steps below for
 installation.
 
 @see https://www.eclipse.org/downloads/packages/
@@ -56,7 +56,7 @@ Create a desktop file and install it:
 gedit eclipse.desktop
 @endcode
 
-copy below lines to the eclipse.desktop file
+copy the below lines to the eclipse.desktop file
 
 @code{.sh}
 [Desktop Entry]
@@ -71,7 +71,7 @@ Categories=Development;IDE;
 Name[en]=Eclipse
 @endcode
 
-Set a executable permission and execute following command to install it:
+Set an executable permission and execute the following command to install it:
 
 @code{.sh}
 sudo desktop-file-install eclipse.desktop
@@ -83,75 +83,75 @@ Create a symlink in /usr/local/bin
 sudo ln -s /opt/eclipse/eclipse /usr/local/bin/eclipse
 @endcode
 
-For eclipse icon to be displayed in dash, eclipse icon can be added as
+For an eclipse icon to be displayed in dash, the eclipse icon can be added as:
 
 @code{.sh}
 sudo cp /opt/eclipse/icon.xpm /usr/share/pixmaps/eclipse.xpm
 @endcode
 
 Eclipse needs to have either OpenJDK or Sun Java installed to be able to
-run eclipse and here is a simple example of installing Open JDK 1.8:
+run eclipse. Here is a simple example of installing Open JDK 1.8:
 
 @code{.sh}
 sudo apt install openjdk-8-jdk
 @endcode
 
-With Eclipse installed in /opt folder and it can now be accessed by any users.
+With Eclipse installed in the /opt folder, it can now be accessed by any users.
 
-@section start_eclipse_create_new_project Start Eclipse and Create EGT project
+@section start_eclipse_create_new_project Start Eclipse and Create an EGT Project
 
 Start Eclipse from the Ubuntu Applications tray and you will be asked where to
-place your workspace directory. By default, the location will be under users
-home directory. i.e. /home/\<user\>/eclipse-workspace.
+place your workspace directory. By default, the location will be under the users
+home directory, i.e. /home/\<user\>/eclipse-workspace.
 
 @imageSize{eclipse_workspace.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_workspace.png "Eclipse workspace"
 @image latex eclipse/eclipse_workspace.png "Eclipse workspace"
 
-With the workspace set and clicking launch, Eclipse will start with a startup screen.
+With the workspace set, click launch and Eclipse will start with a startup screen.
 
 @imageSize{eclipse_startup_screen.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_startup_screen.png "Eclipse startup screen"
 @image latex eclipse/eclipse_startup_screen.png "Eclipse startup screen"
 
-Now we create a new EGT project that will use a toolchain generated by Buildroot.
-In the below example we create an EGT project using autotool and it is up to the developer
+Now we can create a new EGT project that will use a toolchain generated by Buildroot.
+In the example below, we created an EGT project using autotool and it is up to the developer
 to write the configure.ac file and Makefile.am. This allows the project to be built outside
-of Eclipse and to use standard Unix tools as your project build system. For more info on autotools,
-refer [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html)
+Eclipse and to use standard Unix tools as your project build system. For more information on autotools,
+refer to [GNU Autotools](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html)
 
-Click on Create a new C/C++ Project and Select "C++ Managed Build" in New C/C++ Project window then click Next
+Click on "Create a new C/C++ Project" and Select "C++ Managed Build" in the New C/C++ Project window and then click Next.
 
 @imageSize{eclipse_new_c_cpp_project.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_new_c_cpp_project.png "Select C++ Managed Build"
 @image latex eclipse/eclipse_new_c_cpp_project.png "Select C++ Managed Build"
 
-In Create C/C++ Project window:
+In the Create C/C++ Project window:
 
-1. Set the project name,
-2. In Project type, Expand GNU Autotools and Select Empty project.
-3. In Toolchains, Select GNU Autotools Toolchain
+1. Set the project name.
+2. In Project type, expand GNU Autotools and select Empty project.
+3. In Toolchains, select GNU Autotools Toolchain.
 4. Click on Next.
 
 @imageSize{eclipse_cpp_project.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_cpp_project.png "Create C++ Project"
 @image latex eclipse/eclipse_cpp_project.png "Create C++ Project"
 
-To cross-compile this Project using Buildroot toolchain. we need to set few environments
-variables and this can be done clicking Advance Setting in Select Configurations window.
+To cross-compile this Project using the Buildroot toolchain, we need to set a few environment
+variables and this can be done clicking "Advance Setting" in the Select Configurations window.
 
 @imageSize{eclipse_cpp_project_select_configurations.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_cpp_project_select_configurations.png "C++ Project Select Configurations"
 @image latex eclipse/eclipse_cpp_project_select_configurations.png "C++ Project Select Configurations"
 
-In the Properties window, Expand Autotools and select configure settings. Under Configure Settings,
-select platform specifiers and set "Host platform (--host)" to "arm-buildroot-linux-gnueabi"
+In the Properties window, expand Autotools and select Configure Settings. Under Configure Settings,
+select platform specifiers and set "Host platform (--host)" to "arm-buildroot-linux-gnueabi".
 
 @imageSize{/eclipse_cpp_project_properties_autotools_configue.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_cpp_project_properties_autotools_configue.png  "C++ Project Properties Autotools"
 @image latex eclipse/eclipse_cpp_project_properties_autotools_configue.png  "C++ Project Properties Autotools"
 
-Now select Environment Variables and click New. Under New Environment Variable window set
+Now select Environment Variables and click New. Under the New Environment Variable window, set the
 buildroot toolchain path and Click OK.
 
 1. Name: PATH
@@ -161,14 +161,14 @@ buildroot toolchain path and Click OK.
 @image html eclipse/eclipse_cpp_project_properties_autotools_env.png  "C++ Project Properties Autotools Environment"
 @image latex eclipse/eclipse_cpp_project_properties_autotools_env.png  "C++ Project Properties Autotools Environment"
 
-To enable debug options, Select Advance and check Debug(-g) option and then click Apply.
+To enable debug options, select Advance and check the Debug(-g) option and then click Apply.
 
 @imageSize{/eclipse_cpp_project_properties_autotools_advance.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_cpp_project_properties_autotools_advance.png  "C++ Project Properties Autotools Advance"
 @image latex eclipse/eclipse_cpp_project_properties_autotools_advance.png  "C++ Project Properties Autotools Advance"
 
-Now expand the C/C++ Build. Select Environment and click Add. In New Variable window set
-buildroot toolchain path with below details. click OK & "Apply and Close" an then Finish.
+Now expand the C/C++ Build. Select Environment and click Add. In the New Variable window, set the
+buildroot toolchain path using the below details. Click OK and "Apply and Close" and then click Finish.
 
 1. Name: PATH
 2. Value: buildroot/output/host/bin:$PATH
@@ -178,19 +178,19 @@ buildroot toolchain path with below details. click OK & "Apply and Close" an the
 @image html eclipse/eclipse_cpp_project_properties_build_env.png  "C++ Project Properties Build Environment"
 @image latex eclipse/eclipse_cpp_project_properties_build_env.png  "C++ Project Properties Build Environment"
 
-Create source files in the Project by right Clicking on Project name and Select New -> Source File.
+Create source files in the Project by right Clicking on the Project name and select New -> Source File.
 
 @imageSize{eclipse_new_source_file.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_new_source_file.png "New C++ Source file"
 @image latex eclipse/eclipse_new_source_file.png "New C++ Source File"
 
-In New Source File window, set File name basic.cpp & Click Finish
+In the New Source File window, set the File name basic.cpp and click Finish
 
 @imageSize{eclipse_new_file_basic.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_set_filename.png "Enter filename"
 @image latex eclipse/eclipse_set_filename.png "Enter filename"
 
-copy below lines to basic.cpp file
+Copy the lines below to basic.cpp file:
 
 @snippet "../examples/basic/basic.cpp" Example
 
@@ -198,7 +198,7 @@ copy below lines to basic.cpp file
 @image html eclipse/eclipse_new_cpp.png "Create cpp file"
 @image latex eclipse/eclipse_new_cpp.png "Create cpp file"
 
-Similarly create a new configure.ac file and copy below lines.
+Similarly, create a new configure.ac file and copy the below lines:
 
 @code{.sh}
 AC_PREREQ(2.59)
@@ -219,7 +219,7 @@ AC_OUTPUT
 @image html eclipse/eclipse_new_configure.png "Create configure.ac file"
 @image latex eclipse/eclipse_new_configure.png "Create configure.ac file"
 
-Now create a new Makefile.am file and copy below lines.
+Now create a new Makefile.am file and copy the below lines:
 
 @code{.sh}
 bin_PROGRAMS=basic
@@ -233,66 +233,66 @@ basic_LDFLAGS = $(EGT_LIBS) -lpthread
 @image html eclipse/eclipse_new_Makefile_am.png "Create Makefile.am file"
 @image latex eclipse/eclipse_new_Makefile_am.png "Create Makefile.am file"
 
-save all using file->saveall or press (shift + Ctrl + S)
+Save all using file->saveall or press (shift + Ctrl + S).
 
-To Build this Project, first Invoke Autoreconf tool by right-click on the
-project and select Invoke Autotools->Invoke Autoreconf. This operation will
-call the autotools to generate configure script & Makefile.in files. This
+To Build this Project, first invoke the Autoreconf tool by right clicking on the
+project and selecting Invoke Autotools->Invoke Autoreconf. This operation will
+call the autotools to generate the configure script and Makefile.in files. This
 operation has to be done again if you make changes to configure.ac or Makefile.am.
 
 @imageSize{eclipse_invoke_autoreconf.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_invoke_autoreconf.png "Invoke autoreconf"
 @image latex eclipse/eclipse_invoke_autoreconf.png "Invoke autoreconf"
 
-Set the "-i -v -f" option to autoreconf window and click OK. This tells
-autoreconf to automatically install some additional scripts and files that
-are needed for correct operation of configure script.
+Set the "-i -v -f" option to the autoreconf window and click OK. This tells
+autoreconf to automatically install additional scripts and files that
+are needed for correct operation of the configure script.
 
 @imageSize{eclipse_autoreconf_args.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_autoreconf_args.png "Set autoreconf arguments"
 @image latex eclipse/eclipse_autoreconf_args.png "Set autoreconf arguments"
 
-Now we can see in the console that autoreconf command finished successfully and
+Now we can see in the console that the autoreconf command finished successfully and the
 configure and Makefile.in files have generated in the project folder.
 
 @imageSize{eclipse_autoreconf_success.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_autoreconf_success.png "Autoreconf success"
 @image latex eclipse/eclipse_autoreconf_success.png "Autoreconf success"
 
-Now Reconfigure project by right-click on the project and select Reconfigure Project.
-This will call configure script with argument --host option & set Environment variable
-values to ensures that your project will be cross-compiled with the Buildroot toolchain.
-You may define additional options in project properties.
+Now reconfigure the project by right clicking on the project and selecting Reconfigure Project.
+This will call the configure script with the argument --host option and set Environment variable
+values to ensure that your project will be cross-compiled with the Buildroot toolchain.
+You may define additional options in the project properties.
 
 @imageSize{eclipse_reconfigure_project.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_reconfigure_project.png "Reconfigure project"
 @image latex eclipse/eclipse_reconfigure_project.png "Reconfigure project"
 
-In the console, we can see operation finished successfully and Makefile generated in
+In the console, we can see that the operation finished successfully and Makefile generated in
 the Project folder.
 
 @imageSize{eclipse_reconfigure_success.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_reconfigure_success.png "Reconfigure project finished"
 @image latex eclipse/eclipse_reconfigure_success.png "Reconfigure project finished"
 
-Finally to build this project. Select Project-> "Build All" or Press (Ctrl-b).
+Finally, to build this project, select Project-> "Build All" or Press (Ctrl-b).
 
 @imageSize{eclipse_build_success.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_build_success.png "Build project"
 @image latex eclipse/eclipse_build_success.png "Build project"
 
-@section eclipse_execute_egt  Executing EGT application on Target Remotely
+@section eclipse_execute_egt  Executing EGT application on a Target Remotely
 
-Eclipse will execute a EGT application on to target board by transfer the
-application binary using SSH and SSH server must have installed on target board.
+Eclipse will execute an EGT application on a target board by transfering the
+application binary using SSH. SSH server must have been installed on the target board.
 
 Buildroot offers you two choices:
 
 1. The Dropbear package can be enabled in Networking applications -> dropbear.
-2. The full-blown SSH implementation, OpenSSH, which can be enabled in Networking applications -> openssh.
+2. The full-blown SSH implementation, OpenSSH, can be enabled in Networking applications -> openssh.
 
-Most SSH servers do not allow log in as root with an empty password. To set the root password login
-on the target board, type below commands:
+Most SSH servers do not allow log in as root with an empty password. To set the root password, log in
+on the target board and type the below commands:
 
 @code{.sh}
 # passwd
@@ -303,32 +303,32 @@ Retype password:
 Password for root changed by root
 @endcode
 
-Type below commands to configure Ethernet interface and make sure host machine and target board
+Type the below commands to configure the Ethernet interface and to make sure the host machine and target board
 are connected.
 
 @code{.sh}
 # ifconfig eth0 192.168.1.12 up
 @endcode
 
-First step is to create a new run configuration. Right click your EGT project and click on Run As->Run Configurations...
+The first step is to create a new run configuration. Right click your EGT project and click on Run As->Run Configurations...
 
 @imageSize{eclipse_run_as.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_run_as.png "Run as"
 @image latex eclipse/eclipse_run_as.png "Run as"
 
-Double click on "C/C++ Remote Application" to create a Run configurations for a target board.
+Double click on "C/C++ Remote Application" to create a Run configuration for the target board.
 
 @imageSize{eclipse_run_create_new.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_run_create_new.png "New launch configuration"
 @image latex eclipse/eclipse_run_create_new.png "New launch configuration"
 
-To setup a ssh connection with the target, click “New” under connection. select SSH and click on Okay.
+To setup an ssh connection with the target, click “New” under connection and select SSH and click on Okay.
 
 @imageSize{eclipse_run_ssh_conn.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_run_ssh_conn.png "SSH connection setup"
 @image latex eclipse/eclipse_run_ssh_conn.png "SSH connection setup"
 
-In New Connection window, Set the below details and click Finish.
+In the New Connection window, set the below details and click Finish.
 
 1. Connection Name: Remote Host
 2. Host: IP Address of a target board.
@@ -342,19 +342,19 @@ In New Connection window, Set the below details and click Finish.
 
 Set the Remote Absolute File Path to /root/basic and click Run.
 
-Wait while application is copied to the target using SSH protocols.
+Wait while the application is copied to the target using SSH protocols.
 
 @imageSize{eclipse_run_wait.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_run_wait.png "Coping application to target"
 @image latex eclipse/eclipse_run_wait.png "Coping application to target"
 
-Finally in the Console, see the traces and EGT application running on target
+Finally, in the Console, see the traces and EGT application running on the target
 board.
 
 @section eclipse_debug Debug EGT Application Remotely
 
 As a preliminary step, you also need to ensure that gdbserver is
-present on your target. if gdbserver not preset, then enable following
+present on your target. If gdbserver not present, then enable following
 options in buildroot menuconfig:
 
 1. Toolchain -> GDB debugger Version
@@ -373,38 +373,38 @@ The create remote debug configuration will connect to the target board and
 it will automatically download the compiled binary, start a gdb-server session and
 connect to it from within the Eclipse IDE.
 
-Create remote debug configuration by right click on Project and select "Debug As" -> "Debug Configurations…"
+Create a remote debug configuration by right clicking on Project and select "Debug As" -> "Debug Configurations…"
 
 @imageSize{eclipse_debug_configuration.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_debug_configuration.png "Select Debug Configurations"
 @image latex eclipse/eclipse_debug_configuration.png "Select Debug Configurations"
 
-In the Debug Configurations window, Double Click "C/C++ Remote Application"
+In the Debug Configurations window, double Click "C/C++ Remote Application".
 
 @imageSize{eclipse_debug_remote_app.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_debug_remote_app.png "Select C/C++ Remote Application"
 @image latex eclipse/eclipse_debug_remote_app.png "Select C/C++ Remote Application"
 
-To set up the remote debugging connection. Select New under Connection and Choose
+To set up the remote debugging connection, select New under Connection and Choose
 a connection type of SSH and configure the New Connection as follows:
 
 @imageSize{eclipse_run_conn_finish.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_run_conn_finish.png "setup SSH Connection"
 @image latex eclipse/eclipse_run_conn_finish.png "setup SSH Connection"
 
-Set Remote Absolute File Path to /root/basic.
+Set the Remote Absolute File Path to /root/basic.
 
-To configure the gdb connection over ssh. Go to Debugger tab and in the Debugger tab,
+To configure the gdb connection over ssh, go to the Debugger tab and in it you will see that
 the GDB debugger: gdb setting currently points to the default debugger
 on the host system. This is a x86_64 debugger and it does not understand the symbols and
-messages from the gdb-server on the target. You must change this to point to the ARM specific
-gdb that is created by Buildroot, change it to:
+messages from the gdb-server on the target. You must change this to point to the ARM-specific
+gdb that is created by Buildroot. Change it to:
 
 \<buildroot\>/output/host/bin/arm-buildroot-linux-gnueabi-gdb
 
-To prevent some spurious SIGNALS and to help the GDB debugger we have provided an
-initialization script. Create a gdbinit file in your project folder and copy below
-line and Set gdbinit file path to GDB command file:
+To prevent some spurious SIGNALS and to help the GDB debugger, we have provided an
+initialization script. Create a gdbinit file in your project folder and copy the below
+line and set the gdbinit file path to the GDB command file:
 
 @code{.sh}
 handle SIGILL nostop
@@ -415,14 +415,14 @@ set sysroot buildroot/output/target
 @image html eclipse/eclipse_debug_debugger_tab.png "setup GDB Debugger"
 @image latex eclipse/eclipse_debug_debugger_tab.png "setup GDB Debugger"
 
-click on Apply and Debug button.
+click on the Apply and Debug button.
 
-Now Eclipse you should be able to select the new Debug Configuration and
-if a pop up appears, then clicking on Yes in confirm perspective switch window.
-If you get a authentication Message dialog box. Select Yes to accept it or else
+Now in Eclipse you should be able to select the new Debug Configuration.
+If a pop up appears, click on Yes in the confirm perspective switch window.
+If you get an authentication Message dialog box, select Yes to accept it or else
 Eclipse will change to the debug perspective and the application will
 halt at main(). Press Resume (F8) to continue execution and the application should
-to running the target. You can view variables & disassembly code.
+continue to run on the target. You can view variables and disassembly code.
 
 Enjoying the enhanced debug experience.
 
@@ -433,17 +433,17 @@ Enjoying the enhanced debug experience.
 @section eclipse_host_libegt Build libegt on Host Machine
 
 This sections describes how to build a standalone EGT library and its examples
-on host machine in Eclipse using Autotools. To fetch the Source from Git repository
-refer section @ref started_fetching
+on the host machine in Eclipse using Autotools. To fetch the Source from the Git repository,
+refer to section @ref started_fetching.
 
-Create a new CPP Project using File-> New -> Project. In New Project window,
-Expand C/C++ and Select C/C++ Project then Click Next
+Create a new CPP Project using File-> New -> Project. In the New Project window,
+expand C/C++ and select C/C++ Project, then click Next.
 
 @imageSize{eclipse_new_cpp_project.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_new_cpp_project.png "Create new cpp project"
 @image latex eclipse/eclipse_new_cpp_project.png "Create new cpp project"
 
-In the New C/C++ Project window, Select C++ Managed Builds and Click Next.
+In the New C/C++ Project window, select C++ Managed Builds and click Next.
 
 @imageSize{eclipse_new_cpp_project_template.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_new_cpp_project_template.png "Select C++ Managed Builds"
@@ -452,10 +452,10 @@ In the New C/C++ Project window, Select C++ Managed Builds and Click Next.
 In C++ Project window,
 
 1. Set the project name.
-2. Uncheck default location
-3. Browse to git clone location of a EGT directory
-4. Select "GNU Autotools Empty project" type
-5. Select "GNU Autotools Toolchain" and Click on Finish button.
+2. Uncheck default location.
+3. Browse to git clone location of a EGT directory.
+4. Select "GNU Autotools Empty project" type.
+5. Select "GNU Autotools Toolchain" and Click on the Finish button.
 
 @imageSize{eclipse_host_create_cpp_project.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_create_cpp_project.png  "Eclipse create new cpp project"
@@ -463,14 +463,14 @@ In C++ Project window,
 
 Now we can see in the console Tab:
 
-1. The autoreconf command finished successfully and generated configure and Makefile.in files in Project folder.
-2. Executed a configure scripts and generated Makefile's in the project folder
+1. The autoreconf command finished successfully and generated configure and Makefile.in files in the Project folder.
+2. Executed configure scripts and generated Makefiles in the project folder.
 
 @imageSize{eclipse_host_reconfigure_done.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_reconfigure_done.png  "Eclipse reconfigure done"
 @image latex eclipse/eclipse_host_reconfigure_done.png "Eclipse reconfigure done"
 
-To build the libegt project (Ctrl-b) or select Project->"build all" option and observe build messages in Console.
+To build the libegt project, press (Ctrl-b) or select the Project->"build all" option and observe build messages in Console.
 
 @imageSize{eclipse_host_buildall.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_buildall.png  "Eclipse build libegt project"
@@ -478,41 +478,41 @@ To build the libegt project (Ctrl-b) or select Project->"build all" option and o
 
 @section eclipse_host_execute Execute EGT application on Host Machine.
 
-Before we start execute/debug a application, we need to set environment variable LD_LIBRARY_PATH
-pointing to libegt.so folder (i.e. src/.libs/)
+Before we start to execute/debug an application, we need to set the environment variable LD_LIBRARY_PATH
+to point to the libegt.so folder (i.e. src/.libs/).
 
-Go to Project properties by right clicking project and select Properties or Press (Alt + Enter).
-In Project properties window, Expand "C/C++ Build" and Select "Environment" and then Click ADD.
+Go to Project properties by right clicking the project and selecting Properties or Press (Alt + Enter).
+In the Project properties window, Expand "C/C++ Build" and Select "Environment" and then click ADD.
 
 @imageSize{eclipse_host_env.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_env.png  "Add Project Environment Variables"
 @image latex eclipse/eclipse_host_env.png "Add Project Environment Variables"
 
-In a New Environment variable window set below details and click OK and again OK to close
+In a New Environment variable window, set the below details and click OK and the OK again to close
 the Project properties window.
 
 1. Name: LD_LIBRARY_PATH
 2. PATH: project/src/.libs/:$LD_LIBRARY_PATH.
-3. check Add to all Configurations.
+3. Check Add to all Configurations.
 
 @imageSize{eclipse_host_set_env.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_set_env.png "Eclipse set environment variable"
 @image latex eclipse/eclipse_host_set_env.png "Eclipse set environment variable"
 
-We can start executing EGT examples application by right Clicking on libegt Project
-and Select Run As -> "2.Local C/C++ Application".
+We can start executing the EGT example application by right clicking on the libegt Project
+and selecting Run As -> "2.Local C/C++ Application".
 
 @imageSize{eclipse_host_Run_as.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_Run_as.png "Select Local C/C++ Application"
 @image latex eclipse/eclipse_host_Run_as.png "Select Local C/C++ Application"
 
-In "C Local Application" window, Select basic under Binaries and click OK.
+In the "C Local Application" window, select basic under Binaries and click OK.
 
 @imageSize{eclipse_host_select_application.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_select_application.png "Select basic Application under Binaries"
 @image latex eclipse/eclipse_host_select_application.png "Select basic Application under Binaries"
 
-A new EGT window will pop up running EGT Basic example application.
+A new EGT window will pop up running the EGT Basic example application.
 
 @imageSize{eclipse_host_basic_example.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_basic_example.png "Eclipse basic example demo"
@@ -520,23 +520,23 @@ A new EGT window will pop up running EGT Basic example application.
 
 @section eclipse_host_debug  Debug EGT application on Host Machine
 
-To debug EGT example applications, right Click on libegt Project
-and Select "Debug As" -> "2.Local C/C++ Application"
+To debug EGT example applications, right click on the libegt project
+and select "Debug As" -> "2.Local C/C++ Application".
 
 @imageSize{eclipse_host_debug_as.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_debug_as.png "Select Local C/C++ Application"
 @image latex eclipse/eclipse_host_debug_as.png "Select Local C/C++ Application"
 
-In "C Local Application" window, Select basic under Binaries and click OK.
+In the "C Local Application" window, select basic under Binaries and click OK.
 
 @imageSize{eclipse_host_select_application.png,max-width:90%;height:auto;}
 @image html eclipse/eclipse_host_select_application.png "Select basic Application under Binaries"
 @image latex eclipse/eclipse_host_select_application.png "Select basic Application under Binaries"
 
 
-Eclipse will switch automatically to Debug perspective window and debugger stops
+Eclipse will automatically switch to the Debug perspective window and the debugger stops
 on the main function of the application and you can see disassembly code. Press
-Resume (F8) to continue execution and the application should to running the Host
+Resume (F8) to continue execution and the application should continue to run on the Host
 Machine.
 
 @imageSize{eclipse_host_debug_window.png,max-width:90%;height:auto;}

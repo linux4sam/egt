@@ -16,7 +16,7 @@ This is something that can be converted to and from a simple std::string.  It
 can be used to identify relative and absolute file paths, EGT icons, network
 URLs, and resources registered with ResourceManager.
 
-There general form of a URI, as defined by RFC 3986 is:
+The general form of a URI, as defined by RFC 3986 is:
 
     URI = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
 
@@ -36,7 +36,7 @@ file path.
 If an absolute file path is used, nothing extra will happen and it should work
 just like you would expect.  That file path will attempt to be accessed as-is.
 
-However, if a relative path is given then a more advanced search will happen by
+However, if a relative path is given, then a more advanced search will happen by
 calling the internal EGT function resolve_file_path().  This function will
 search any directory registered with add_search_path(), very similar to how the
 `PATH` variable works on UNIX system shells to find binary files.  The default
@@ -55,7 +55,7 @@ auto forward = egt::Image("file:forward.png");
 @subsection resources_icons EGT Provided Icon and Image Files
 
 The EGT library comes with a set of icons and images installed with EGT by
-default.  To access these icons and images, the scheme uses is `icon` like so:
+default.  To access these icons and images, the scheme uses `icon` like so:
 
 @code{.cpp}
 auto bug = egt::Image("icon:bug.png");
@@ -124,5 +124,5 @@ $ ./mresg --help
 ./mresg INPUT... -o OUTPUT
 @endcode
 
-Note that when using mresg the resource name registered with ResourceManager has
+Note that when using mresg, the resource name registered with ResourceManager has
 all periods replaced with underscores.

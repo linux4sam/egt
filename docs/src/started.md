@@ -78,7 +78,7 @@ make
 You can also build out of the source tree.  This is useful, for example, to use
 the same code tree with different parameters and environments to configure the
 build in as many different build directories as you wish.  It also avoids
-polutting the source tree with build artifacts.
+poluting the source tree with build artifacts.
 
 @code{.unparsed}
 mkdir -p build/host

@@ -140,7 +140,7 @@ class Color;
  *
  * Theme implements common characteristics of drawing widgets. This can be
  * overloaded and supplied with different properties like Palette and Font
- * to change how Widget are rendered globally.
+ * to change how a Widget is rendered globally.
  */
 class EGT_API Theme
 {

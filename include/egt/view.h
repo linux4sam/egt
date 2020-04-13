@@ -23,7 +23,7 @@ inline namespace v1
 {
 
 /**
- * A scroll-able view.
+ * A scrollable view.
  *
  * A ScrolledView is a sort of kitchen window. You can have a large surface
  * area on the other side of the window, but you only see a small portion of
@@ -195,10 +195,10 @@ protected:
     /// Current offset of the view.
     Point m_offset;
 
-    /// Horizontal slider shown when scroll-able.
+    /// Horizontal slider shown when scrollable.
     Slider m_hslider;
 
-    /// Vertical slider shown when scroll-able.
+    /// Vertical slider shown when scrollable.
     Slider m_vslider;
 
     /// Starting offset for the drag.

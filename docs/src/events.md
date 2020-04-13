@@ -32,7 +32,7 @@ than what is directly used by EGT itself.
 @image latex asio.png "Asio" width=8cm
 
 EGT abstracts out any required direct involvement with Asio; however, should you
-choose to use it directly it is available for use in, for example, @ref
+choose to use it directly, it is available for use in, for example, @ref
 topics_networking "networking" and @ref topics_threads "multi-threaded"
 applications. [Asio Documentation](http://think-async.com/Asio/asio-1.12.2/doc/index.html)
 is a good reference point if you want to start using the Asio API directly.
@@ -45,9 +45,9 @@ handlers. Events can also come from other things like a window manager,
 timers, or networking sockets.
 
 Events are usually propagated from the top level widget down.  There are
-exceptions to this, for example, when a widget grabs the pointer or keyboard,
+exceptions to this; for example, when a widget grabs the pointer or keyboard,
 and the natural top-down flow is short circuited.  For example, when a TextBox
-has keyboard focus it will be directly send keyboard events without having to
+has keyboard focus, it will be directly sent keyboard events without having to
 navigate the widget tree.
 
 @image html widget_hierarchy_event.png "Event"
@@ -57,11 +57,11 @@ navigate the widget tree.
 
 Each event handler, like egt::v1::Widget::handle(), is called with an Event
 object.  This object maintains the unique egt::EventId of the event, and any data
-associated with the event such as pointer or key event data.
+associated with the event, such as pointer or key event data.
 
 @section events_handling Handling Events
 
-When implementing a widget that needs to handle events, overriding the the
+When implementing a widget that needs to handle events, overriding the
 egt::v1::Widget::handle() virtual method is the expected method to handle events.
 However, when using an existing widget, it can be a burden to the subclass just
 to handle events.  So, to handle events when using a widget, the
@@ -122,7 +122,7 @@ timer.start();
 
 @section events_handling_extended Handling Extended or Custom Widget Events
 
-The egt::EventId lists global events that usually don't necessary originate in a
+The egt::EventId lists global events that don't necessarily originate in a
 widget itself.  To handle custom or widget type specific events,
 egt::v1::Signal member attributes can be added to a widget to provide custom
 handles any user can connect to in order to receive the event.

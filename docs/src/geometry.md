@@ -4,7 +4,7 @@ This chapter discusses the coordinate system and how to deal with geometry in EG
 
 @section geometry_coord Coordinate System
 
-EGT defines a egt::PointType, egt::SizeType, egt::RectType, egt::LineType,
+EGT defines an egt::PointType, egt::SizeType, egt::RectType, egt::LineType,
 egt::ArcType, and egt::CircleType along with several other classes for working
 with geometry.
 

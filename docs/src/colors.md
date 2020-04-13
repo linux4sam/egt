@@ -24,8 +24,8 @@ interpolation between colors.
 The Palette contains a list of @ref predefined_colors.
 
 The Palette class manages a set of colors.  However, colors are not stored as a
-one dimensional list internally.  Colors are identified by a egt::v1::Palette::ColorId
-and also a egt::v1::Palette::GroupId.  The GroupId is associated with different states of
+one dimensional list internally.  Colors are identified by an egt::v1::Palette::ColorId
+and also an egt::v1::Palette::GroupId.  The GroupId is associated with different states of
 a color in the palette, which corresponds with different states of a widget.
 For example, when a button is pressed, it changes from a normal to active state
 and uses the same egt::v1::Palette::ColorId to identify its background color, but uses a
@@ -52,7 +52,7 @@ standard](https://www.w3.org/TR/css-color-3/).
 
 @section colors_themes Theme
 
-The theme contains the default palette and font and also can be used as a place
+The theme contains the default palette and font, and also can be used as a place
 to override egt::v1::Widget::draw() methods.
 
 By default, themes are inherited in the widget hierarchy.  If the top level

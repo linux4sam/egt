@@ -35,7 +35,7 @@ class ComboBoxPopup;
 /**
  * Combo box widget.
  *
- * This manages a list of select-able items, but otherwise just shows only what
+ * This manages a list of selectable items, but otherwise just shows only what
  * is selected.
  *
  * @ingroup controls

@@ -130,7 +130,7 @@ public:
     }
 
     /**
-     * Get a widget at he specified row and column.
+     * Get a widget at the specified row and column.
      *
      * @note Point here is used as a column and row.
      *
@@ -217,9 +217,9 @@ protected:
 };
 
 /**
- * StaticGrid with select-able cells.
+ * StaticGrid with selectable cells.
  *
- * A StaticGrid where each item is visually select-able with a highlighted
+ * A StaticGrid where each item is visually selectable with a highlighted
  * border.
  *
  * @ingroup sizers

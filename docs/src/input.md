@@ -19,7 +19,7 @@ input devices.
 
 @section input_mapping Keyboard Mapping
 
-By default EGT will use a built in static keyboard mapping.  In most cases, this
+By default, EGT will use a built-in static keyboard mapping.  In most cases, this
 should be sufficient.  However, in the event you wish to have a system level and
 more flexible way of managing simple or complex keyboard mappings, EGT also
 supports the use of [libxkbcommon](https://xkbcommon.org/) irrelevant of using

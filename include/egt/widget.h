@@ -182,7 +182,7 @@ public:
      *
      * To optimize drawing, a Widget may use the Rect parameter to limit
      * what needs to be redrawn, which may be smaller than the widget's box(),
-     * but will never be outside of the widget's box().
+     * but will never be outside the widget's box().
      *
      * Painter will always be supplied in a default state to this function,
      * so there is no need to do any cleanup or state saving inside this

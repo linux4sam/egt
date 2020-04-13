@@ -9,7 +9,7 @@ handles properties related to working with fonts, but there are still some other
 libraries in play.  Underneath, the egt::Font class uses Fontconfig and Freetype
 for finding and rendering fonts.
 
-Creating and assigning a egt::Font to a specific widget involves using the
+Creating and assigning an egt::Font to a specific widget involves using the
 egt::v1::Widget::font() member function.
 
 @code{.cpp}

@@ -7,7 +7,7 @@ This chapter discusses how to to use animations.
 EGT provides a variety of classes for working with animations.  The
 egt::Animation, egt::AnimationSequence, egt::AutoAnimation, and
 egt::PropertyAnimatorType classes all provide ways to animate almost anything.
-These classes can be instantiated and then attached to any property of widgets,
+These classes can be instantiated and then attached to any property of widgets;
 for example, a widget's position or even egt::Font size.  For that matter, you
 don't even have to animate widgets specifically.  For example, you could provide
 values from an animation class right into the brightness value of an LCD
@@ -30,7 +30,7 @@ time on the X axis and a value on the Y axis, it would look like this.
 
 Of course, the interesting question is how is that value computed over a
 specified timeframe? The most straightforward answer is just linearly as shown.
-The min value is at the starting time and the max value is at ending time, and
+The min value is at the starting time and the max value is at the ending time, and
 every value in between is evenly spread out. However, more complex versions of
 this are necessary to add some life and diversity to animations, which leads to
 the idea of @b easing @b functions. Easing functions define what that value
@@ -82,7 +82,7 @@ functions.
 
 @section animations_animating Animating Widgets
 
-For example, to change the Y position of a egt::Button, it might involve doing
+For example, to change the Y position of an egt::Button, it might involve doing
 the following:
 
 @snippet "../examples/snippets/snippets.cpp" animation1.1

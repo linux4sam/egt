@@ -11,7 +11,7 @@ useful for debugging.  Specifically, configuring logging internal to EGT.
 @section debug_gdb GDB Tips
 
 Outside of typical debugging with GDB, there are a couple cases where
-specifically instructing GDB to break before an event occures is useful.
+specifically instructing GDB to break before an event occurs is useful.
 
 EGT uses runtime asserts internally.  Be sure to compile the library without
 -DNDEBUG and then you can break on any assert using GDB to examine the callstack

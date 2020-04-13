@@ -347,7 +347,7 @@ public:
      * Returns true if the size has no width or height.
      *
      * This is a special case, and is the default state of a SizeType. This can
-     * be used to determine if a size has not be set in many cases.
+     * be used to determine if a size has not been set in many cases.
      */
     constexpr bool empty() const
     {

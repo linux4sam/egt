@@ -56,7 +56,7 @@ public:
     /**
      * Schedule a flip to occur later.
      *
-     * This is needed if a flip should to occur sometime in the future to the
+     * This is needed if a flip should occur sometime in the future to the
      * hardware.
      */
     virtual void schedule_flip()  = 0;

@@ -5,12 +5,12 @@ redraw.
 
 @section draw_loop Damaging, Drawing, and the Widget Tree
 
-Each widget has a egt::v1::Widget::box(), which holds the bounding rectangle for
+Each widget has an egt::v1::Widget::box(), which holds the bounding rectangle for
 the widget. This is the rectangle a widget is responsible for at some z-order
 for what content should be placed inside that bounding box.
 
 Widgets are organized into a tree.  At the top of the tree there is a top level
-widget that is a special type of widget called a egt::v1::Window.  A
+widget that is a special type of widget called an egt::v1::Window.  An
 egt::v1::Window is a frame widget, which is a composing widget.  This is just
 another way of saying a frame can deal with zero or more children widgets inside
 of its egt::v1::Widget::box().
@@ -60,7 +60,7 @@ When a widget is asked to draw, it usually uses the Painter class to perform
 all drawing.  However, underneath the Painter class is a cairo context and
 surface.  This means the draw function for a widget can be implemented
 completely with Painter by using a combination of Painter and cairo directly,
-or just use the cairo API directly.
+or just using the cairo API directly.
 
 The Painter API provides basic 2D primitive drawing functions that work well
 with EGT primitives like colors and geometry classes. Painter can be used to
@@ -79,8 +79,8 @@ The back-end used by Painter is the excellent
 [pixman](http://www.pixman.org/) for optimized pixel manipulation.  Both cairo
 and pixman take advantage of hardware acceleration when possible.
 
-To use cairo directly in a egt::v1::Widget::draw() method, get the cairo context by
-calling egt::v1::Painter::context() and then call cairo API functions like normal.
+To use cairo directly in an egt::v1::Widget::draw() method, get the cairo context by
+calling egt::v1::Painter::context(), and then call cairo API functions like normal.
 
 @code{.cpp}
 auto cr = painter.context().get();
@@ -119,7 +119,7 @@ at your own risk, set the egt::v1::Widget::Flag::no_clip flag on a widget.  This
 disable automatic clipping.
 
 When the parent frame calls the draw() function of a widget, it will first setup
-a egt::v1::Painter::AutoSaveRestore instance.  Therefore there is not need to handle saving or
+an egt::v1::Painter::AutoSaveRestore instance.  Therefore, there is no need to handle saving or
 restoring the state in any egt::v1::Widget::draw() function as this is done automatically.
 
 @section draw_transforms Affine Matrix Transformations
@@ -157,7 +157,7 @@ virtual void draw(Painter& painter, const Rect& rect) override
 
 @section draw_zorder Z-order
 
-The z-order of widgets is the order in which they are drawn, or composed.  It is
+The z-order of widgets is the order in which they are drawn or composed.  It is
 also the order in which they receive events through the widget hierarchy as
 explained in @ref events_prop. Widgets are drawn from the bottom up.  By
 default, widgets are drawn in the order in which they are added to a Frame.

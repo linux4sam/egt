@@ -7,14 +7,14 @@ The Ensemble Graphics Toolkit (EGT) is a C++ GUI Linux toolkit for
 modern GUI functionality, look-and-feel, and maximizes performance while staying
 as close to the metal as possible in embedded Linux applications. EGT provides a
 consistent API and solution for working across all Microchip AT91/SAMA5
-processors in order to build robust GUI based applications that make the best
+processors in order to build robust GUI-based applications that make the best
 use of the hardware available.
 
 @see For more information about Microchip MPU Xplained or EK type boards, visit
 [Linux4SAM](http://www.at91.com/linux4sam/bin/view/Linux4SAM).
 
-EGT uses and provides a standard API to many different third party, or system
-libraries and resources, in order to provide an easy to use and consistent
+EGT uses and provides a standard API to many different third parties, or system
+libraries and resources, in order to provide an easy-to-use and consistent
 interface for developing a GUI application.  Here are some of them:
 
 @imageSize{egt_libs.png,max-width:90%;height:auto;}
@@ -126,7 +126,7 @@ can sometimes be controlled by EGT compilation options.
 @section intro_language C++ Language and Namespaces
 
 EGT takes advantage of and focuses on using features available in the C++14
-language standard.  The EGT API is all inside of an ::egt namespace.  This
+language standard.  The EGT API is all inside a ::egt namespace.  This
 namespace contains an inline namespace ::egt::v1 which is used for versioning
 the API in the future.
 

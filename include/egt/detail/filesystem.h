@@ -75,7 +75,7 @@ EGT_API std::string exe_pwd();
 EGT_API std::string cwd();
 
 /**
- * Given a a glob pattern, return a vector of matching path names.
+ * Given a glob pattern, return a vector of matching path names.
  */
 EGT_API std::vector<std::string> glob(const std::string& pattern);
 
