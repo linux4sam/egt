@@ -33,7 +33,7 @@ EGT is tested on Ubuntu 18.04, but is also known to work on Ubuntu 16.04 as well
 as other distributions like Debian and Fedora.  These instructions should be
 adjusted accordingly.
 
-EGT uses the GNU autotools, like
+EGT uses the GNU Autotools, like
 [automake](https://www.gnu.org/software/automake/manual/html_node/index.html),
 for building on Linux platforms.
 
@@ -57,7 +57,7 @@ sudo apt install libasound2-dev libsndfile1-dev
 @note On Ubuntu 16.04 the package plplot12-driver-cairo should be used instead
 of plplot-driver-cairo.
 
-Then, clone the source and initialize autotools.  Typically autotools only needs
+Then, clone the source and initialize Autotools.  Typically Autotools only needs
 to be initialized once and it will automatically pick up most changes.  However,
 when making changes to the configure scripts, the environment, or makefiles
 re-running autogen.txt, or more simply `autoreconf -fvi`, is necessary.
@@ -78,7 +78,7 @@ make
 You can also build out of the source tree.  This is useful, for example, to use
 the same code tree with different parameters and environments to configure the
 build in as many different build directories as you wish.  It also avoids
-poluting the source tree with build artifacts.
+polluting the source tree with build artifacts.
 
 @code{.unparsed}
 mkdir -p build/host

@@ -1131,7 +1131,7 @@ public:
                   Palette::ColorId border) const;
 
     /**
-     * Helper function to draw this widget's cicle using the appropriate
+     * Helper function to draw this widget's circle using the appropriate
      * theme.
      */
     void draw_circle(Painter& painter, Palette::ColorId bg,

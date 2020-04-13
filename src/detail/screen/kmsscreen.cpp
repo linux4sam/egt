@@ -289,7 +289,7 @@ unique_plane_t KMSScreen::allocate_overlay(const Size& size,
         /// @todo No explicit way to choose HEO plane. Just depending on the
         /// requiring the HEO plane for now even though that is not the only
         /// thing different about an HEO plane.  For example, HEO planes are
-        /// scaleable and normal planes are not.
+        /// scale-able and normal planes are not.
         plane = unique_plane_t(overlay_plane_create(size, format, plane_type::overlay));
     }
     else if (hint == WindowHint::cursor_overlay)

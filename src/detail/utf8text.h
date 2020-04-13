@@ -32,7 +32,7 @@ inline size_t utf8len(const std::string& str)
 }
 
 /**
- * Convert a utf-8 iterator to a standalone std::string.
+ * Convert a UTF-8 iterator to a standalone std::string.
  */
 template<class T1, class T2>
 std::string utf8_char_to_string(T1 ch, T2 e)
@@ -43,7 +43,7 @@ std::string utf8_char_to_string(T1 ch, T2 e)
 }
 
 /**
- * Special utf-8 aware string tokenizer which keeps delimiters as tokens.
+ * Special UTF-8 aware string tokenizer which keeps delimiters as tokens.
  *
  * @param[in] begin Input string begin iterator.
  * @param[in] end Input string end iterator.

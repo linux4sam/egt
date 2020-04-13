@@ -124,7 +124,7 @@ HTTP/HTTPS support, and handles the integration of libcurl with Asio.
 @section topics_compiler Compiler Setup and Options
 
 The primary compiler used is gcc.  Other compilers like clang and mingw are a
-work in progress and considered experimetal.  It is worth going over some common
+work in progress and considered experimental.  It is worth going over some common
 compiler flags used when compiling EGT and EGT applications.
 
 - `-std=c++14` - EGT requires C++14.
@@ -165,7 +165,7 @@ event loop:
 Some third party libraries open a resource that is identified with a file
 descriptor.  In most cases, you can get this file descriptor and provide it to
 the EGT event loop to have it monitor for when some action needs to be taken on
-the file descriptor - either dierctly or still using the third party library.  As
+the file descriptor - either directly or still using the third party library.  As
 long as the third party library does not block, this is usually the best option
 even though it can require a little more setup.
 

@@ -162,7 +162,7 @@ namespace detail
 {
 
 /**
- * Map a linux key code to an EKEY.
+ * Map a Linux key code to an EKEY.
  */
 EGT_API KeyboardCode linux_to_ekey(int code);
 

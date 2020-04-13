@@ -36,7 +36,7 @@ border, or padding are set to zero they have no width.
 @section layout_intro Layout
 
 There are two main ways to layout widgets: @b Fixed and @b Fluid.  These are not
-mutually exclusive within the same application and can easily be mised together.
+mutually exclusive within the same application and can easily be mixed together.
 
 @par Fixed
 The first is absolute position and sizing.  This is limiting and usually less

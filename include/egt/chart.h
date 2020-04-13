@@ -75,7 +75,7 @@ public:
 };
 
 /**
- * LineChart Widget is used for displaying informations as a
+ * LineChart Widget is used for displaying information as a
  * series of data points.
  *
  * The LineChart widget is using plplot library api's.
@@ -194,7 +194,7 @@ protected:
 };
 
 /**
- * PointChart Widget is used for displaying informations as a
+ * PointChart Widget is used for displaying information as a
  * series of data points.
  *
  * The PointChart widget is using plplot library api's.

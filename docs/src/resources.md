@@ -100,7 +100,7 @@ reference it at runtime with ResourceManager from any compilation unit using the
 `res` URI scheme.  While this is typically useful for images, it can be used to
 embed and retrieve any arbitrary file type.  The embedded file can optionally be
 compressed with gzip to conserve binary size and EGT's ResourceManager will
-automatically uncompress it for you at runtime when the file is read.
+automatically decompress it for you at run time when the file is read.
 
 @code{.cpp}
 EGT_EMBED(my_image, "../images/my_image.png");

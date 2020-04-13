@@ -144,7 +144,7 @@ struct EGT_API Pointer
      */
     DisplayPoint drag_start;
 
-    /// The event slot.  Used for multitouch.
+    /// The event slot.  Used for multi-touch.
     size_t slot{};
 };
 

@@ -177,7 +177,7 @@ int main(int argc, char** argv)
 
     if (argc > 1)
     {
-        // create starfield effect
+        // create star field effect
 
         std::random_device r;
         std::default_random_engine e1 {r()};

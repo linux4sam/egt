@@ -5,10 +5,10 @@ and remote debugging of EGT applications using Buildroot.
 
 The typical usage model of our EGT integration with Eclipse would be:
 
-1. Creating the buildroot system for a particular target board to execute
+1. Creating the Buildroot system for a particular target board to execute
    or debug EGT applications or libraries. For this you must configure your
-   buildroot system, enable the EGT package with their dependencies and Build
-   the buildroot system. Refer to section @ref started_buildroot
+   Buildroot system, enable the EGT package with their dependencies and Build
+   the Buildroot system. Refer to section @ref started_buildroot
 
 2. Once Buildroot compilation is done. The output/image folder contains all
    the files to boot Linux on the target board. To create an sdcard image
@@ -152,7 +152,7 @@ select platform specifiers and set "Host platform (--host)" to "arm-buildroot-li
 @image latex eclipse/eclipse_cpp_project_properties_autotools_configue.png  "C++ Project Properties Autotools"
 
 Now select Environment Variables and click New. Under the New Environment Variable window, set the
-buildroot toolchain path and Click OK.
+Buildroot toolchain path and Click OK.
 
 1. Name: PATH
 2. Value: buildroot/output/host/bin:$PATH
@@ -168,7 +168,7 @@ To enable debug options, select Advance and check the Debug(-g) option and then 
 @image latex eclipse/eclipse_cpp_project_properties_autotools_advance.png  "C++ Project Properties Autotools Advance"
 
 Now expand the C/C++ Build. Select Environment and click Add. In the New Variable window, set the
-buildroot toolchain path using the below details. Click OK and "Apply and Close" and then click Finish.
+Buildroot toolchain path using the below details. Click OK and "Apply and Close" and then click Finish.
 
 1. Name: PATH
 2. Value: buildroot/output/host/bin:$PATH
@@ -355,7 +355,7 @@ board.
 
 As a preliminary step, you also need to ensure that gdbserver is
 present on your target. If gdbserver not present, then enable following
-options in buildroot menuconfig:
+options in Buildroot menuconfig:
 
 1. Toolchain -> GDB debugger Version
 2. Toolchain -> Build cross gdb for the host

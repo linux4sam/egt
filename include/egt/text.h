@@ -308,13 +308,13 @@ protected:
 
     /**
      * The current position of the cursor.
-     * This is a utf-8 offset.
+     * This is a UTF-8 offset.
      */
     size_t m_cursor_pos{0};
 
     /**
      * Selection start position.
-     * This is a utf-8 offset.
+     * This is a UTF-8 offset.
      */
     size_t m_select_start{0};
 
@@ -334,7 +334,7 @@ protected:
     ValidatorCallbackArray m_validator_callbacks;
 
     /**
-     * Given text, return the number of utf8 characters that will fit on a
+     * Given text, return the number of UTF8 characters that will fit on a
      * single line inside of the widget.
      */
     size_t width_to_len(const std::string& str) const;

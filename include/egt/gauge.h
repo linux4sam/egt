@@ -423,7 +423,7 @@ protected:
         return result.size();
     }
 
-    /// Type for an aray of layers.
+    /// Type for an array of layers.
     using LayerArray = std::vector<std::shared_ptr<GaugeLayer>>;
 
     /// The layer's of the gauge.

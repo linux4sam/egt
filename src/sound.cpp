@@ -239,7 +239,7 @@ void Sound::init_alsa_params(unsigned int rate, int channels)
     err = snd_pcm_hw_params(m_impl->handle, params);
     if (err < 0)
     {
-        spdlog::error("can't set harware parameters. {}", snd_strerror(err));
+        spdlog::error("can't set hardware parameters. {}", snd_strerror(err));
     }
 
     SPDLOG_TRACE("PCM name: {}", snd_pcm_name(m_impl->handle));
@@ -355,11 +355,11 @@ void Sound::play(bool repeat)
                 {
                     if (frames_to_deliver == -EPIPE)
                     {
-                        spdlog::error("PCM xrun occured\n");
+                        spdlog::error("PCM xrun occurred\n");
                     }
                     else
                     {
-                        spdlog::error("PCM unknown aail update return value: {}",
+                        spdlog::error("PCM unknown avail update return value: {}",
                                       frames_to_deliver);
                     }
 

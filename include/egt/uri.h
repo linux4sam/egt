@@ -44,7 +44,7 @@ public:
     const std::string& scheme() const { return m_scheme; }
     /// Get the host part of the URI
     const std::string& host() const { return m_host; }
-    /// Get the port poart of the URI
+    /// Get the port part of the URI
     const std::string& port() const { return m_port; }
     /// Get the path part of the URI
     const std::string& path() const { return m_path; }

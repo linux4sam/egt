@@ -6,13 +6,13 @@ This chapter discusses how to to use colors, palettes, and themes.
 
 The egt::Color class internally keeps track of a 32-bit RGBA (red, green, blue, and
 alpha) color by managing the individual color components.  However, this class
-also supports at least the HSV and HSL colorspaces, and conversion between the
-different colorspaces.  The egt::Pattern class helps with managing a pattern
+also supports at least the HSV and HSL color spaces, and conversion between the
+different color spaces.  The egt::Pattern class helps with managing a pattern
 consisting of color steps at specific offsets.  Also, the egt::v1::experimental::ColorMap
 class deals with color steps and allows interpolation between the different color
-steps in any of the supported colorspaces.
+steps in any of the supported color spaces.
 
-Supporting different colorspaces provides a variety of different ways to perform
+Supporting different color spaces provides a variety of different ways to perform
 interpolation between colors.
 
 @imageSize{high_level.png,width:500px;}

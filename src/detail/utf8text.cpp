@@ -52,7 +52,7 @@ static void draw_text_setup(std::vector<detail::LayoutRect>& rects,
                             const std::string& text,
                             const TextBox::TextFlags& flags)
 {
-    // tokenize based on words or codepoints
+    // tokenize based on words or code points
     static const std::string delimiters = " \t\n\r";
     std::vector<std::string> tokens;
     if (flags.is_set(TextBox::TextFlag::multiline) &&
@@ -125,7 +125,7 @@ void draw_text(Painter& painter,
 
     detail::flex_layout(b, rects, justify, Orientation::flex, text_align);
 
-    // draw the codepoints, cursor, and selected box
+    // draw the code points, cursor, and selected box
     size_t pos = 0;
     std::string last_char;
     bool workaround = false;
@@ -282,7 +282,7 @@ void draw_text(Painter& painter,
 
     detail::flex_layout(b, rects, justify, Orientation::flex, text_align);
 
-    // draw the codepoints, cursor, and selected box
+    // draw the code points, cursor, and selected box
     size_t pos = 0;
     std::string last_char;
     bool workaround = false;

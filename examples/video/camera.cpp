@@ -10,7 +10,7 @@
 #include <sstream>
 #include <string>
 
-// warning: not utf-8 safe
+// warning: not UTF-8 safe
 static std::string line_break(const std::string& in, size_t width = 50)
 {
     std::string out;

@@ -220,7 +220,7 @@ AudioPlayer::AudioPlayer()
     : m_impl(std::make_unique<detail::AudioPlayerImpl>(*this))
 {
     if (!detail::audio_device())
-        throw std::runtime_error("no soundcards");
+        throw std::runtime_error("no sound cards");
 
     GError* err = nullptr;
     if (!gst_init_check(nullptr, nullptr, &err))
@@ -246,7 +246,7 @@ AudioPlayer::AudioPlayer(const std::string& uri)
 {
     if (!media(uri))
     {
-        throw std::runtime_error("failed to initalize gstreamer pipeline");
+        throw std::runtime_error("failed to initialize gstreamer pipeline");
     }
 }
 

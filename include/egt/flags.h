@@ -93,7 +93,7 @@ public:
         return res;
     }
 
-    /// Set multimple flags.
+    /// Set multiple flags.
     bool set(std::initializer_list<T> flags) noexcept
     {
         const auto res = FlagsBase<T>::set(flags);
@@ -132,7 +132,7 @@ public:
         return {this->m_flags& static_cast<typename FlagsBase<T>::Underlying>(flag)};
     }
 
-    /// Delimiter used to seperate flags in string representation.
+    /// Delimiter used to separate flags in string representation.
     constexpr static const auto FLAGS_DELIMITER = '|';
 
     /**

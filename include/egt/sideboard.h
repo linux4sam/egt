@@ -46,7 +46,7 @@ public:
         right,
         /// Top side.
         top,
-        /// Botom side.
+        /// Bottom side.
         bottom,
     };
 

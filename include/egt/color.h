@@ -444,7 +444,7 @@ public:
     }
 
     /**
-     * Perform linear interpolation between two colors in the HSV colorspace.
+     * Perform linear interpolation between two colors in the HSV color space.
      *
      * @param a The first color.
      * @param b The second color.
@@ -453,7 +453,7 @@ public:
     static Color interp_hsv(const Color& a, const Color& b, float t);
 
     /**
-     * Perform linear interpolation between two colors in the HSL colorspace.
+     * Perform linear interpolation between two colors in the HSL color space.
      *
      * @param a The first color.
      * @param b The second color.
@@ -462,13 +462,13 @@ public:
     static Color interp_hsl(const Color& a, const Color& b, float t);
 
     /**
-     * Perform linear interpolation between two colors in the RGB colorspace.
+     * Perform linear interpolation between two colors in the RGB color space.
      *
      * @param a The first color.
      * @param b The second color.
      * @param t Value from 0 to 1.
      *
-     * @note The interpolation happens in the RGB colorspace with the formula
+     * @note The interpolation happens in the RGB color space with the formula
      * c = a + (b - a) * t.
      */
     static Color interp_rgba(const Color& a, const Color& b, float t);
@@ -557,7 +557,7 @@ class EGT_API ColorMap
 {
 public:
 
-    /// Interpolation colorspace method
+    /// Interpolation color space method
     enum class Interpolation
     {
         rgba,
@@ -573,7 +573,7 @@ public:
     ~ColorMap() noexcept = default;
 
     /**
-     * @param[in] interp Interpolation colorspace.
+     * @param[in] interp Interpolation color space.
      */
     explicit ColorMap(Interpolation interp) noexcept
         : m_interp(interp)
@@ -581,7 +581,7 @@ public:
 
     /**
      * @param[in] steps Pre-defined color steps.
-     * @param[in] interp Interpolation colorspace.
+     * @param[in] interp Interpolation color space.
      */
     explicit ColorMap(StepsArray steps, Interpolation interp = Interpolation::rgba)
         : m_steps(std::move(steps)),
@@ -590,7 +590,7 @@ public:
 
     /**
      * @param[in] steps Pre-defined color steps.
-     * @param[in] interp Interpolation colorspace.
+     * @param[in] interp Interpolation color space.
      */
     template<class T>
     ColorMap(std::initializer_list<T> steps, Interpolation interp = Interpolation::rgba)
@@ -625,7 +625,7 @@ public:
     /**
      * Get a color at the specified offset.
      *
-     * This will use a cache to speed up repetative calls to interpolate.
+     * This will use a cache to speed up repetitive calls to interpolate.
      *
      * @param[in] t Offset from 0 to 1.
      */
@@ -648,7 +648,7 @@ protected:
     /// Interpolation cache.
     mutable std::array<std::map<size_t, Color>, 3> m_cache{};
 
-    /// Interpolation colorspace method.
+    /// Interpolation color space method.
     Interpolation m_interp{Interpolation::rgba};
 };
 

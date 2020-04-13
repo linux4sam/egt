@@ -128,7 +128,7 @@ public:
     using Widget::color;
 
     /**
-     * Set the idividual color of a range value.
+     * Set the individual color of a range value.
      */
     void color(Object::RegisterHandle handle, const Color& color)
     {

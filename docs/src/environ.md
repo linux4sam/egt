@@ -1,9 +1,9 @@
  @page environ Environment Variables
 
 This chapter discusses several environment variables that can be used to
-configure the EGT library at runtime.
+configure the EGT library at run time.
 
-EGT will look at several runtime environment variables to change the operation
+EGT will look at several run time environment variables to change the operation
 of the library.  For example, you can change some configurations and set log
 levels using environment variables.
 
@@ -133,7 +133,7 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
 
   <dt>EGT_SHOW_FPS</dt>
   <dd>
-    Print the frames per second of the eventloop.
+    Print the frames per second of the event loop.
   </dd>
 
   <dt>EGT_NO_COMPOSITION_BUFFER</dt>
