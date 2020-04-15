@@ -35,9 +35,9 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect) noexcept
 
     m_vsizer.add(expand(m_flist));
 
-    m_flist.on_selected_changed([this]()
+    m_flist.on_selected([this](size_t index)
     {
-        list_item_selected(m_flist.selected());
+        list_item_selected(index);
     });
 
     if (m_filepath.empty())
