@@ -141,6 +141,11 @@ public:
     Signal<> on_selected_changed;
 
     /**
+     * Invoked when an item is selected with the index of the item selected.
+     */
+    Signal<size_t> on_selected;
+
+    /**
      * Invoked when items are added or removed.
      */
     Signal<> on_items_changed;

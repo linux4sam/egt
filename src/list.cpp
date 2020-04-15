@@ -132,9 +132,9 @@ void ListBox::handle(Event& event)
 
 void ListBox::selected(size_t index)
 {
-    if (m_selected != static_cast<ssize_t>(index))
+    if (index < m_sizer.count_children())
     {
-        if (index < m_sizer.count_children())
+        if (m_selected != static_cast<ssize_t>(index))
         {
             if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected)
                 m_sizer.child_at(m_selected)->checked(false);
@@ -145,12 +145,18 @@ void ListBox::selected(size_t index)
             damage();
             on_selected_changed.invoke();
         }
+
+        on_selected.invoke(index);
     }
 }
 
 void ListBox::clear()
 {
-    m_sizer.remove_all();
+    if (m_sizer.count_children())
+    {
+        m_sizer.remove_all();
+        on_items_changed.invoke();
+    }
 }
 
 }
