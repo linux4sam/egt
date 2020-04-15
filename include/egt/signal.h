@@ -79,6 +79,9 @@ public:
      */
     void invoke(Args... args)
     {
+        if (!m_enabled)
+            return;
+
         if (!m_callbacks)
             return;
 
@@ -117,7 +120,28 @@ public:
             m_callbacks->erase(i);
     }
 
-protected:
+    /**
+     * Disable invoking callbacks.
+     */
+    void disable()
+    {
+        m_enabled = false;
+    }
+
+    /**
+     * Enable invoking callbacks.
+     */
+    void enable()
+    {
+        m_enabled = true;
+    }
+
+    /**
+     * Is callback invoking enabled?
+     */
+    bool enabled() const { return m_enabled; }
+
+private:
 
     /**
      * Counter used to generate unique handles for each callback registration.
@@ -128,7 +152,7 @@ protected:
      * Manages metadata about a registered callback.
      * @private
      */
-    struct EGT_API CallbackMeta
+    struct CallbackMeta
     {
         CallbackMeta(EventCallback c,
                      RegisterHandle h) noexcept
@@ -145,6 +169,9 @@ protected:
 
     /// Array of callbacks.
     detail::CopyOnWriteAllocate<CallbackArray> m_callbacks;
+
+    // Enabled state for dispatching callbacks.
+    bool m_enabled{true};
 };
 
 }
