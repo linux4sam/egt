@@ -280,14 +280,17 @@ void Widget::damage(const Rect& rect)
 
 void Widget::palette(const Palette& palette)
 {
-    m_palette = palette;
+    m_palette = std::make_unique<Palette>(palette);
     damage();
 }
 
 void Widget::reset_palette()
 {
-    m_palette.clear();
-    damage();
+    if (m_palette)
+    {
+        m_palette.reset();
+        damage();
+    }
 }
 
 Pattern Widget::color(Palette::ColorId id) const
@@ -305,8 +308,9 @@ Pattern Widget::color(Palette::ColorId id) const
 
 Pattern Widget::color(Palette::ColorId id, Palette::GroupId group) const
 {
-    if (m_palette.exists(id, group))
-        return m_palette.color(id, group);
+    if (m_palette)
+        if (m_palette->exists(id, group))
+            return m_palette->color(id, group);
 
     return default_palette().color(id, group);
 }
@@ -315,7 +319,9 @@ void Widget::color(Palette::ColorId id,
                    const Pattern& color,
                    Palette::GroupId group)
 {
-    m_palette.set(id, group, color);
+    if (!m_palette)
+        m_palette = std::make_unique<Palette>();
+    m_palette->set(id, group, color);
     damage();
 }
 
@@ -578,7 +584,8 @@ void Widget::serialize(Serializer& serializer) const
         serializer.add_property("ratio:vertical", vertical_ratio());
     if (!fill_flags().empty())
         serializer.add_property("fillflags", fill_flags().to_string());
-    m_palette.serialize("color", serializer);
+    if (m_palette)
+        m_palette->serialize("color", serializer);
     if (m_font)
         m_font->serialize("font", serializer);
 }
@@ -647,7 +654,9 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         break;
     }
     case detail::hash("color"):
-        m_palette.deserialize(name, value, attrs);
+        if (!m_palette)
+            m_palette = std::make_unique<Palette>();
+        m_palette->deserialize(name, value, attrs);
         break;
     default:
         break;

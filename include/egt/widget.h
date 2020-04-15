@@ -1295,6 +1295,8 @@ protected:
      */
     Size m_min_size;
 
+private:
+
     /**
      * Palette for the widget.
      *
@@ -1304,9 +1306,7 @@ protected:
      * @note This should not be accessed directly.  Always use the access
      * functions because this may not be a complete Palette.
      */
-    Palette m_palette;
-
-private:
+    std::unique_ptr<Palette> m_palette;
 
     /**
      * Flags for the widget.
