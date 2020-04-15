@@ -1392,7 +1392,7 @@ private:
      * @note This should not be accessed directly.  Always use the access
      * functions because this is not set until it is modified.
      */
-    mutable std::unique_ptr<Font> m_font;
+    std::unique_ptr<Font> m_font;
 
     friend class Frame;
 };
