@@ -155,6 +155,7 @@ void ListBox::clear()
     if (m_sizer.count_children())
     {
         m_sizer.remove_all();
+        m_selected = -1;
         on_items_changed.invoke();
     }
 }
