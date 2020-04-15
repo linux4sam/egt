@@ -136,7 +136,8 @@ void ListBox::selected(size_t index)
     {
         if (m_selected != static_cast<ssize_t>(index))
         {
-            if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected)
+            if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected
+                && m_selected > -1)
                 m_sizer.child_at(m_selected)->checked(false);
             m_selected = index;
             if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected)
