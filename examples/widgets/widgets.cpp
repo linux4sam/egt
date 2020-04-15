@@ -317,6 +317,26 @@ struct SliderPage : public egt::NotebookTab
         slider6->slider_flags().set({egt::Slider::SliderFlag::rectangle_handle,
                                      egt::Slider::SliderFlag::show_labels});
         hsizer1->add(slider6);
+
+        auto slider7 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200));
+        slider7->orient(egt::Orientation::vertical);
+        slider7->live_update(true);
+        hsizer1->add(slider7);
+
+        auto slider8 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200));
+        slider8->orient(egt::Orientation::vertical);
+        slider8->live_update(true);
+        hsizer1->add(slider8);
+
+        slider7->on_value_changed([slider7, slider8]()
+        {
+            slider8->value(slider7->value());
+        });
+
+        slider8->on_value_changed([slider7, slider8]()
+        {
+            slider7->value(slider8->value());
+        });
     }
 };
 
