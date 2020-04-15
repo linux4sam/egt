@@ -8,7 +8,7 @@
 
 /**
  * @file
- * @brief Base signal definition.
+ * @brief Signal definition.
  */
 
 #include <cstdint>
@@ -23,7 +23,7 @@ inline namespace v1
 {
 
 /**
- * Base object class with fundamental properties.
+ * Signal class used for defining a signal and dispatching events.
  */
 template<typename... Args>
 class Signal
