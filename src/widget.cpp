@@ -418,11 +418,16 @@ void Widget::walk(const WalkCallback& callback, int level)
 void Widget::theme(const Theme& theme)
 {
     m_theme = std::make_unique<Theme>(theme);
+    damage();
 }
 
 void Widget::reset_theme()
 {
-    m_theme.reset();
+    if (m_theme)
+    {
+        m_theme.reset();
+        damage();
+    }
 }
 
 void Widget::draw_box(Painter& painter, Palette::ColorId bg,
