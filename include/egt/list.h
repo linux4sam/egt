@@ -101,7 +101,6 @@ struct EGT_API StringItem : public ImageLabel
         fill_flags(Theme::FillFlag::blend);
     }
 
-    StringItem() noexcept = default;
     EGT_OPS_NOCOPY_MOVE(StringItem);
     ~StringItem() noexcept override = default;
 
