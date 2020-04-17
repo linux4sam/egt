@@ -35,25 +35,12 @@ struct EGT_API StringItem : public ImageLabel
     /**
      * @param[in] image The image to display.
      * @param[in] text The text to display.
-     * @param[in] text_align Alignment for the text.
-     */
-    explicit StringItem(const std::string& text = {},
-                        const Image& image = {},
-                        const AlignFlags& text_align = AlignFlag::center) noexcept
-        : ImageLabel(image, text, text_align)
-    {
-        fill_flags(Theme::FillFlag::blend);
-    }
-
-    /**
-     * @param[in] image The image to display.
-     * @param[in] text The text to display.
      * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
-    StringItem(const std::string& text,
-               const Image& image,
-               const Rect& rect,
+    StringItem(const std::string& text = {},
+               const Image& image = {},
+               const Rect& rect = {},
                const AlignFlags& text_align = AlignFlag::center) noexcept
         : ImageLabel(image, text, rect, text_align)
     {
