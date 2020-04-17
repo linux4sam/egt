@@ -81,8 +81,8 @@ public:
 
         auto b = widget.content_area();
         auto width = detail::normalize<float>(widget.value(),
-                                              widget.start(),
-                                              widget.end(), 0, b.width());
+                                              widget.starting(),
+                                              widget.ending(), 0, b.width());
 
         if (width > 0.f)
         {
@@ -391,8 +391,8 @@ public:
         const auto b = widget.content_area();
 
         const auto limit = egt::detail::normalize<float>(widget.value(),
-                           widget.start(),
-                           widget.end(),
+                           widget.starting(),
+                           widget.ending(),
                            widget.num_bars(), 0);
         const auto barheight = b.height() / widget.num_bars();
 

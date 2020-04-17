@@ -131,7 +131,7 @@ int main(int argc, char** argv)
         if (state)
             player.pause();
 
-        player.seek((player.duration() * position.value()) / position.end());
+        player.seek((player.duration() * position.value()) / position.ending());
 
         if (state)
             player.play();

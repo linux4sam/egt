@@ -397,9 +397,9 @@ void SliderType<T>::draw(Painter& painter, const Rect& /*rect*/)
             }
             else
             {
-                draw_label(painter, this->start());
-                draw_label(painter, this->start() + ((this->end() - this->start()) / 2));
-                draw_label(painter, this->end());
+                draw_label(painter, this->starting());
+                draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
+                draw_label(painter, this->ending());
             }
         }
     }
@@ -416,9 +416,9 @@ void SliderType<T>::draw(Painter& painter, const Rect& /*rect*/)
             }
             else
             {
-                draw_label(painter, this->start());
-                draw_label(painter, this->start() + ((this->end() - this->start()) / 2));
-                draw_label(painter, this->end());
+                draw_label(painter, this->starting());
+                draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
+                draw_label(painter, this->ending());
             }
         }
 
@@ -641,8 +641,8 @@ void SliderType<T>::serialize(Serializer& serializer) const
 
     serializer.add_property("sliderflags", m_slider_flags.to_string());
     serializer.add_property("orient", detail::enum_to_string(orient()));
-    serializer.add_property("start", this->start());
-    serializer.add_property("end", this->end());
+    serializer.add_property("starting", this->starting());
+    serializer.add_property("ending", this->ending());
     serializer.add_property("value", this->value());
 }
 
@@ -654,10 +654,10 @@ void SliderType<T>::deserialize(const std::string& name, const std::string& valu
         m_slider_flags.from_string(value);
     else if (name == "orient")
         orient(detail::enum_from_string<Orientation>(value));
-    else if (name == "start")
-        this->start(std::stoi(value));
-    else if (name == "end")
-        this->end(std::stoi(value));
+    else if (name == "starting")
+        this->starting(std::stoi(value));
+    else if (name == "ending")
+        this->ending(std::stoi(value));
     else if (name == "value")
         this->value(std::stoi(value));
     else

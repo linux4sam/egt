@@ -169,19 +169,19 @@ public:
     /**
      * Get the start value.
      */
-    T start() const { return m_start; }
+    T starting() const { return m_start; }
 
     /**
      * Get the end value.
      */
-    T end() const { return m_end; }
+    T ending() const { return m_end; }
 
     /**
      * Set the start value.
      *
      * @param[in] v The start value.
      */
-    void start(T v)
+    void starting(T v)
     {
         if (detail::change_if_diff<>(m_start, v))
             damage();
@@ -194,7 +194,7 @@ public:
      *
      * @param[in] v The end value.
      */
-    void end(T v)
+    void ending(T v)
     {
         if (detail::change_if_diff<>(m_end, v))
             damage();
