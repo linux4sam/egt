@@ -15,7 +15,6 @@
 #include <egt/frame.h>
 #include <egt/widget.h>
 #include <memory>
-#include <tuple>
 #include <vector>
 
 namespace egt
@@ -51,11 +50,14 @@ public:
     /// Grid flags.
     using GridFlags = egt::Flags<GridFlag>;
 
+    /// Rows and columns size of the grid.
+    using GridSize = SizeType<size_t, detail::Compatible::grid>;
+
     /**
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::border().
      */
-    explicit StaticGrid(const std::tuple<int, int>& size = std::make_tuple(1, 1),
+    explicit StaticGrid(const GridSize& size = GridSize(1, 1),
                         DefaultDim border = 0);
 
     /**
@@ -64,7 +66,7 @@ public:
      * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(const Rect& rect,
-                        const std::tuple<int, int>& size = std::make_tuple(1, 1),
+                        const GridSize& size = GridSize(1, 1),
                         DefaultDim border = 0);
 
     /**
@@ -74,7 +76,7 @@ public:
      * @param[in] border Border width. @see Widget::border().
      */
     StaticGrid(Frame& parent, const Rect& rect,
-               const std::tuple<int, int>& size = std::make_tuple(1, 1),
+               const GridSize& size = GridSize(1, 1),
                DefaultDim border = 0);
 
     /**
@@ -82,7 +84,8 @@ public:
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::border().
      */
-    explicit StaticGrid(Frame& parent, const std::tuple<int, int>& size = std::make_tuple(1, 1),
+    explicit StaticGrid(Frame& parent,
+                        const GridSize& size = GridSize(1, 1),
                         DefaultDim border = 0);
 
     EGT_OPS_NOCOPY_MOVE(StaticGrid);
@@ -190,7 +193,7 @@ public:
 protected:
 
     /// Reallocate the size of the grid keeping any existing cells intact.
-    void reallocate(const std::tuple<int, int>& size);
+    void reallocate(const GridSize& size);
 
     /**
      * Re-position all child widgets.

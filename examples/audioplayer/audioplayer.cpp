@@ -14,7 +14,7 @@ class Controls : public egt::StaticGrid
 public:
 
     Controls()
-        : egt::StaticGrid(egt::Size(250, 64), std::make_tuple(3, 1)),
+        : egt::StaticGrid(egt::Size(250, 64), egt::StaticGrid::GridSize(3, 1)),
           m_previous(egt::Image("file:previous.png")),
           m_play(egt::Image("file:play.png")),
           m_next(egt::Image("file:next.png"))

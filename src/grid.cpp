@@ -16,7 +16,7 @@ namespace egt
 inline namespace v1
 {
 
-StaticGrid::StaticGrid(const Rect& rect, const std::tuple<int, int>& size,
+StaticGrid::StaticGrid(const Rect& rect, const GridSize& size,
                        DefaultDim border)
     : Frame(rect)
 {
@@ -26,33 +26,33 @@ StaticGrid::StaticGrid(const Rect& rect, const std::tuple<int, int>& size,
     reallocate(size);
 }
 
-void StaticGrid::reallocate(const std::tuple<int, int>& size)
+void StaticGrid::reallocate(const GridSize& size)
 {
-    if (!std::get<0>(size) || !std::get<1>(size))
+    if (!size.width() || !size.height())
         throw std::invalid_argument("a static grid needs at least one cell i.e. one row and one col");
 
     /*
      * The grid size is set here.  Every column should be the same size.  Don't
      * delete from the column vectors.  Only set empty cells to nullptr.
      */
-    m_cells.resize(std::get<0>(size));
+    m_cells.resize(size.width());
     for (auto& x : m_cells)
-        x.resize(std::get<1>(size), {});
+        x.resize(size.height(), {});
 }
 
-StaticGrid::StaticGrid(const std::tuple<int, int>& size, DefaultDim border)
+StaticGrid::StaticGrid(const GridSize& size, DefaultDim border)
     : StaticGrid(Rect(), size, border)
 {
 }
 
 StaticGrid::StaticGrid(Frame& parent, const Rect& rect,
-                       const std::tuple<int, int>& size, DefaultDim border)
+                       const GridSize& size, DefaultDim border)
     : StaticGrid(rect, size, border)
 {
     parent.add(*this);
 }
 
-StaticGrid::StaticGrid(Frame& parent, const std::tuple<int, int>& size, DefaultDim border)
+StaticGrid::StaticGrid(Frame& parent, const GridSize& size, DefaultDim border)
     : StaticGrid(size, border)
 {
     parent.add(*this);

@@ -133,7 +133,7 @@ void FileDialog::list_item_selected(int index)
 
 FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect) noexcept
     : FileDialog(filepath, rect),
-      m_grid(Size(0, (rect.height() * 0.15)), std::make_tuple(2, 1), 5),
+      m_grid(Size(0, (rect.height() * 0.15)), StaticGrid::GridSize(2, 1), 5),
       m_okay("OK"),
       m_cancel("Cancel")
 {
@@ -187,7 +187,7 @@ std::string FileOpenDialog::selected() const
 FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) noexcept
     : FileDialog(filepath, rect),
       m_fsave_box("", Size(0, rect.height() * 0.15)),
-      m_grid(Size(rect.width() * 0.30, rect.height() * 0.15), std::make_tuple(2, 1), 5),
+      m_grid(Size(rect.width() * 0.30, rect.height() * 0.15), StaticGrid::GridSize(2, 1), 5),
       m_okay("OK"),
       m_cancel("Cancel")
 {

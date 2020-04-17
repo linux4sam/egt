@@ -35,7 +35,7 @@ class MainWindow : public egt::TopWindow
 {
 public:
     explicit MainWindow()
-        : m_grid(std::make_tuple(2, 3))
+        : m_grid(egt::StaticGrid::GridSize(2, 3))
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));

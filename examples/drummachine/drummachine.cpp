@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     logo.margin(10);
     sizer.add(top(center(logo)));
 
-    egt::StaticGrid grid(std::make_tuple(3, 3));
+    egt::StaticGrid grid(egt::StaticGrid::GridSize(3, 3));
     sizer.add(expand(grid));
 
     std::vector<std::pair<std::string, std::string>> drums =

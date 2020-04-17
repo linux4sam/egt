@@ -19,7 +19,7 @@ struct ButtonPage : public egt::NotebookTab
 {
     ButtonPage()
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(3, 6), 5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 6), 5);
         add(expand(grid0));
 
         grid0->add(egt::expand(std::make_shared<egt::Button>("Button", egt::Size(100, 40))));
@@ -59,7 +59,7 @@ struct CheckBoxPage : public egt::NotebookTab
 {
     CheckBoxPage()
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(3, 10), 5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 10), 5);
         add(egt::expand(grid0));
 
         auto toggle1 = std::make_shared<egt::ToggleBox>();
@@ -119,7 +119,7 @@ struct LabelPage : public egt::NotebookTab
 {
     LabelPage()
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(3, 5), 5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 5), 5);
         add(egt::expand(grid0));
 
         auto label1 = std::make_shared<egt::Label>("left align",
@@ -177,10 +177,10 @@ struct TextPage : public egt::NotebookTab
 {
     TextPage()
     {
-        auto grid1 = std::make_shared<egt::StaticGrid>(std::make_tuple(2, 1), 5);
+        auto grid1 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(2, 1), 5);
         add(egt::expand(grid1));
 
-        auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(1, 10), 5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(1, 10), 5);
         grid1->add(egt::expand(grid0));
 
         auto text1 = std::make_shared<egt::TextBox>("text 1");
@@ -260,7 +260,7 @@ struct ProgressPage : public egt::NotebookTab
 {
     ProgressPage()
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(2, 8), 5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(2, 8), 5);
         add(egt::expand(grid0));
 
         auto spinprogress = std::make_shared<egt::SpinProgress>();
@@ -344,7 +344,7 @@ struct MeterPage : public egt::NotebookTab
 {
     MeterPage()
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(std::make_tuple(2, 2), 10);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(2, 2), 10);
         add(egt::expand(grid0));
 
         auto lp1 = std::make_shared<egt::LevelMeter>();

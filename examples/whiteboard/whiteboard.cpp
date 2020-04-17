@@ -16,7 +16,7 @@ public:
 
     explicit ColorPickerWindow(const egt::Color& color)
         : egt::Popup(egt::Application::instance().screen()->size() / 2),
-          m_grid(std::make_tuple(4, 5), 10),
+          m_grid(egt::SelectableGrid::GridSize(4, 5), 10),
           m_color(color)
     {
         expand(m_grid);
@@ -80,7 +80,7 @@ public:
 
     explicit WidthPickerWindow(int width)
         : egt::Popup(egt::Application::instance().screen()->size() / 4),
-          m_grid(std::make_tuple(4, 1), 10),
+          m_grid(egt::SelectableGrid::GridSize(4, 1), 10),
           m_width(width)
     {
         expand(m_grid);

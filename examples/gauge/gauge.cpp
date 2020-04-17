@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     logo->margin(10);
     win.add(top(center(logo)));
 
-    egt::StaticGrid grid(std::make_tuple(3, 2));
+    egt::StaticGrid grid(egt::StaticGrid::GridSize(3, 2));
     win.add(expand(grid));
 
     std::vector<std::unique_ptr<egt::AnimationSequence>> animations;

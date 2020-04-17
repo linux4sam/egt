@@ -45,6 +45,7 @@ enum class Compatible
 {
     normal,
     display,
+    grid
 };
 
 }

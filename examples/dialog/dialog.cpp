@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     auto layout = std::make_shared<egt::VerticalBoxSizer>();
     win.add(expand(layout));
 
-    auto grid = std::make_shared<egt::StaticGrid>(std::make_tuple(3, 1));
+    auto grid = std::make_shared<egt::StaticGrid>(egt::Size(3, 1));
     grid->height(50);
     grid->color(egt::Palette::ColorId::bg, egt::Palette::gray);
     layout->add(expand_horizontal(grid));

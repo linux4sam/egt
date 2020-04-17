@@ -24,7 +24,7 @@ Scrollwheel::Scrollwheel(const ItemArray& items) noexcept
 {}
 
 Scrollwheel::Scrollwheel(const Rect& rect, ItemArray items) noexcept
-    : StaticGrid(rect, std::make_tuple(1, 3), 1),
+    : StaticGrid(rect, StaticGrid::GridSize(1, 3), 1),
       m_items(std::move(items)),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
@@ -95,7 +95,7 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const ItemArray& items
 }
 
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
-    : StaticGrid(rect, std::make_tuple(1, 3), 1),
+    : StaticGrid(rect, StaticGrid::GridSize(1, 3), 1),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
 {
@@ -191,14 +191,14 @@ void Scrollwheel::init()
 
     if (m_orient == Orientation::vertical)
     {
-        reallocate(std::make_tuple(1, 3));
+        reallocate(StaticGrid::GridSize(1, 3));
         add(expand(m_label), 0, 1);
         add(expand(m_button_up), 0, 0);
         add(expand(m_button_down), 0, 2);
     }
     else
     {
-        reallocate(std::make_tuple(3, 1));
+        reallocate(StaticGrid::GridSize(3, 1));
         add(expand(m_button_up), 0, 0);
         add(expand(m_label), 1, 0);
         add(expand(m_button_down), 2, 0);

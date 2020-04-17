@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     win.add(logo);
 
     egt::StaticGrid grid(egt::Rect(egt::Size(win.width(), win.height() - 40)),
-                         std::make_tuple(2, 2));
+                         egt::StaticGrid::GridSize(2, 2));
 
     egt::Sprite sprite1(egt::Image("file:needle.png"),
                         egt::Size(100, 100), 8 * 9, egt::Point(0, 0));

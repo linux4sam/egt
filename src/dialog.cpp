@@ -30,7 +30,7 @@ Dialog::Dialog(const Rect& rect) noexcept
 
     m_layout.add(expand(m_content));
 
-    auto grid = std::make_shared<StaticGrid>(Rect(0, 0, 0, (rect.height() * 0.15)), std::make_tuple(2, 1), 5);
+    auto grid = std::make_shared<StaticGrid>(Rect(0, 0, 0, (rect.height() * 0.15)), StaticGrid::GridSize(2, 1), 5);
     grid->align(AlignFlag::bottom | AlignFlag::expand_horizontal);
     m_layout.add(grid);
 
