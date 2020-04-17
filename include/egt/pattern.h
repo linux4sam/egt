@@ -102,13 +102,13 @@ public:
                 const Point& end, float end_radius);
 
     /// Get the starting point of the pattern.
-    Point start() const { return m_start; }
+    Point starting() const { return m_start; }
     /// Set the starting point of the pattern.
-    float start_radius() const { return m_start_radius; }
+    float starting_radius() const { return m_start_radius; }
     /// Get the ending  point of the pattern.
-    Point end() const { return m_end; }
+    Point ending() const { return m_end; }
     /// Set the ending  point of the pattern.
-    float end_radius() const { return m_end_radius; }
+    float ending_radius() const { return m_end_radius; }
 
     /// Get all of the steps of the pattern
     const StepArray& steps() const;
