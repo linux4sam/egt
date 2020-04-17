@@ -133,7 +133,7 @@ public:
     }
 
     /// Delimiter used to separate flags in string representation.
-    constexpr static const auto FLAGS_DELIMITER = '|';
+    constexpr static const char FLAGS_DELIMITER = '|';
 
     /**
      * Convert the flags to strings.
