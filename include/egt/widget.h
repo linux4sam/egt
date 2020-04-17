@@ -1248,7 +1248,7 @@ protected:
     /**
      * Set this widget's parent.
      */
-    virtual void parent(Frame* parent);
+    virtual void set_parent(Frame* parent);
 
     /**
      * Get a reference to the default palette.

@@ -209,9 +209,9 @@ void ComboBox::clear()
     }
 }
 
-void ComboBox::parent(Frame* parent)
+void ComboBox::set_parent(Frame* parent)
 {
-    Widget::parent(parent);
+    Widget::set_parent(parent);
 
     /// @todo unsafe to be using main_window() here
     main_window()->add(m_popup);

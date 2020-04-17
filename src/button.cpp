@@ -127,9 +127,9 @@ void Button::checked(bool value)
     }
 }
 
-void Button::parent(Frame* parent)
+void Button::set_parent(Frame* parent)
 {
-    TextWidget::parent(parent);
+    TextWidget::set_parent(parent);
     layout();
 }
 

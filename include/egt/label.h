@@ -95,9 +95,7 @@ public:
 
 protected:
 
-    using TextWidget::parent;
-
-    void parent(Frame* parent) override;
+    void set_parent(Frame* parent) override;
 };
 
 /**

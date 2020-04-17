@@ -665,7 +665,7 @@ Widget::~Widget() noexcept
         detail::keyboard_focus(nullptr);
 }
 
-void Widget::parent(Frame* parent)
+void Widget::set_parent(Frame* parent)
 {
     // cannot already have a parent
     assert(!m_parent);

@@ -140,7 +140,7 @@ public:
 
 protected:
 
-    void parent(Frame* parent) override;
+    void set_parent(Frame* parent) override;
 
 private:
 

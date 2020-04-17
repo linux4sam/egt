@@ -93,10 +93,6 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
-    using Widget::parent;
-
-    void parent(Frame* parent) override;
-
     using Widget::min_size_hint;
 
     Size min_size_hint() const override;
@@ -166,6 +162,8 @@ public:
                      const Serializer::Attributes& attrs) override;
 
 protected:
+
+    void set_parent(Frame* parent) override;
 
     /// Item array.
     ItemArray m_items;

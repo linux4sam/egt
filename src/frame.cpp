@@ -31,7 +31,7 @@ void Frame::add(std::shared_ptr<Widget> widget)
     if (!widget)
         return;
 
-    widget->parent(this);
+    widget->set_parent(this);
     m_children.emplace_back(std::move(widget));
     layout();
 }
