@@ -657,6 +657,7 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         m_palette->deserialize(name, value, attrs);
         break;
     default:
+        spdlog::warn("unhandled property {}", name);
         break;
     }
 }

@@ -177,6 +177,9 @@ void Font::deserialize(const std::string& name, const std::string& value,
         case detail::hash("slant"):
             slant(detail::enum_from_string<Font::Slant>(a.second));
             break;
+        default:
+            spdlog::warn("unhandled attribute {}", a.first);
+            break;
         }
     }
 }
