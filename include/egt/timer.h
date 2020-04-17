@@ -144,6 +144,9 @@ public:
      */
     bool running() const { return m_running; }
 
+    /// Handle type.
+    using RegisterHandle = uint64_t;
+
     /**
      * Add a handler callback to be called with the timer times out.
      *
@@ -153,7 +156,7 @@ public:
      * @return A handle used to identify the registration.  This can then be
      *         passed to remove_handler().
      */
-    uint32_t on_timeout(TimerCallback callback);
+    RegisterHandle on_timeout(TimerCallback callback);
 
     /**
      * Clear all handlers.
@@ -165,7 +168,7 @@ public:
      *
      * @param handle The handle returned from on_timeout().
      */
-    void remove_handler(uint32_t handle);
+    void remove_handler(RegisterHandle handle);
 
     /**
     * Get the name of the Timer.
@@ -187,7 +190,7 @@ protected:
     /**
      * Counter used to generate unique handles for each callback registration.
      */
-    uint32_t m_handle_counter{0};
+    RegisterHandle m_handle_counter{0};
 
     /**
      * Invoke any registered handlers.
@@ -201,13 +204,13 @@ protected:
     struct CallbackMeta
     {
         CallbackMeta(TimerCallback c,
-                     uint32_t h) noexcept
+                     RegisterHandle h) noexcept
             : callback(std::move(c)),
               handle(h)
         {}
 
         TimerCallback callback;
-        uint32_t handle{0};
+        RegisterHandle handle{0};
     };
 
     /// Type for array of registered callbacks.

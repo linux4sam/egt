@@ -114,7 +114,7 @@ void Timer::timeout()
     invoke_handlers();
 }
 
-uint32_t Timer::on_timeout(TimerCallback callback)
+Timer::RegisterHandle Timer::on_timeout(TimerCallback callback)
 {
     if (callback)
     {
@@ -132,7 +132,7 @@ void Timer::clear_handlers()
     m_callbacks.clear();
 }
 
-void Timer::remove_handler(uint32_t handle)
+void Timer::remove_handler(RegisterHandle handle)
 {
     auto i = std::find_if(m_callbacks.begin(), m_callbacks.end(),
                           [handle](const CallbackMeta & meta)
