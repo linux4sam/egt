@@ -170,7 +170,7 @@ private:
     /// Array of callbacks.
     detail::CopyOnWriteAllocate<CallbackArray> m_callbacks;
 
-    // Enabled state for dispatching callbacks.
+    /// Enabled state for dispatching callbacks.
     bool m_enabled{true};
 };
 
