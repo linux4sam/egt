@@ -46,9 +46,9 @@ Painter& Painter::set(const Pattern& pattern)
     {
         auto pat =
             unique_cairo_pattern_t(cairo_pattern_create_linear(pattern.starting().x(),
-                                                               pattern.starting().y(),
-                                                               pattern.ending().x(),
-                                                               pattern.ending().y()));
+                                   pattern.starting().y(),
+                                   pattern.ending().x(),
+                                   pattern.ending().y()));
 
         for (const auto& step : pattern.steps())
         {
@@ -67,11 +67,11 @@ Painter& Painter::set(const Pattern& pattern)
     {
         auto pat =
             unique_cairo_pattern_t(cairo_pattern_create_radial(pattern.starting().x(),
-                                                               pattern.starting().y(),
-                                                               pattern.starting_radius(),
-                                                               pattern.ending().x(),
-                                                               pattern.ending().y(),
-                                                               pattern.ending_radius()));
+                                   pattern.starting().y(),
+                                   pattern.starting_radius(),
+                                   pattern.ending().x(),
+                                   pattern.ending().y(),
+                                   pattern.ending_radius()));
         for (const auto& step : pattern.steps())
         {
             cairo_pattern_add_color_stop_rgba(pat.get(),
