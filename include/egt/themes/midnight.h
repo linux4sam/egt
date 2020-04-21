@@ -26,14 +26,16 @@ protected:
 
         m_palette.set(Palette::ColorId::cursor, Palette::GroupId::normal, Palette::red);
 
-        auto pattern = [](const Color & color)
+        const auto pattern = [](const Color & color)
         {
-            Pattern pattern1;
-            pattern1.step(0, color);
-            pattern1.step(0.43, color.shade(.1));
-            pattern1.step(0.5, color.shade(.15));
-            pattern1.step(1.0, color.shade(.18));
-            return pattern1;
+            const Pattern patt(Pattern::Type::linear,
+            {
+                {0, color},
+                {0.43, color.shade(.1)},
+                {0.5, color.shade(.15)},
+                {1.0, color.shade(.18)},
+            });
+            return patt;
         };
 
         m_palette.set(Palette::ColorId::bg, Palette::GroupId::normal, Palette::black);

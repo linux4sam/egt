@@ -26,13 +26,15 @@ protected:
 
         m_palette.set(Palette::ColorId::cursor, Palette::GroupId::normal, Palette::red);
 
-        auto pattern = [](const Color & color)
+        const auto pattern = [](const Color & color)
         {
-            Pattern pattern1;
-            pattern1.step(0, color.tint(.20));
-            pattern1.step(0.5, color);
-            pattern1.step(1.0, color.tint(.20));
-            return pattern1;
+            const Pattern patt(Pattern::Type::linear,
+            {
+                {0, color.tint(0.20)},
+                {0.5, color},
+                {1.0, color.tint(.20)},
+            });
+            return patt;
         };
 
         // colors light to dark
